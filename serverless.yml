@@ -1,0 +1,335 @@
+---
+service: pickle-v2
+frameworkVersion: '2'
+
+plugins:
+  - serverless-offline
+  - serverless-plugin-warmup
+  - serverless-secrets-plugin
+  - serverless-aws-documentation
+  - serverless-export-swagger
+
+custom:
+  stage: ${opt:stage, self:provider.stage}
+  secretsFilePathPrefix: secrets
+  secrets: ${file(${self:custom.secretsFilePathPrefix}/secrets.${self:custom.stage}.yml)}
+  documentation:
+    api:
+      info:
+        version: "1.0"
+        title: "Pickle API"
+        description: "Pickle Finance Serverless API"
+        tags:
+          - name: "Protocol"
+            description: "Protocol related API"
+          - name: "Chart"
+            description: "Chart related API"
+  bucket:
+    SWAGGER:
+      brining: "brining-docs"
+      prod: "pickle-finance-docs"
+  swaggerDestinations:
+    s3BucketName: ${self:custom.bucket.SWAGGER.${self:custom.stage}}
+    s3KeyName: "swagger/swagger.json"
+    acl: public-read
+  table:
+    ASSET_DATA:
+      brining: "brining-asset"
+      prod: "asset"
+    REWARD_DATA:
+      brining: "brining-reward"
+      prod: "reward"
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: brining
+  region: us-west-1
+  apiGateway:
+    shouldStartNameWithService: true
+  environment:
+    PICKLE: "https://api.thegraph.com/subgraphs/name/axejintao/pickle"
+    UNISWAP: "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2"
+    ASSET_DATA: ${self:custom.table.ASSET_DATA.${self:custom.stage}}
+    REWARD_DATA: ${self:custom.table.REWARD_DATA.${self:custom.stage}}
+    INFURA_PROJECT_ID: ${self:custom.secrets.INFURA_PROJECT_ID}
+    INFURA_PROJECT_SECRET: ${self:custom.secrets.INFURA_PROJECT_SECRET}
+
+functions:
+  get-protocol-reward:
+    handler: service/protocol/reward/handler.handler
+    role: arn:aws:iam::135612478587:role/pickle-brining-us-west-1-lambdaRole
+    timeout: 30
+    events:
+      - http:
+          path: /protocol/reward
+          method: get
+          cors: true
+          documentation:
+            summary: "Retrieve staking information"
+            description: "Get information surrounding staked tokens, values, percentages, and apy"
+            tags:
+              - "Protocol"
+            methodResponses:
+              - statusCode: "200"
+              - statusCode: "500"
+
+  get-protocol-value:
+    handler: service/protocol/handler.handler
+    role: arn:aws:iam::135612478587:role/pickle-brining-us-west-1-lambdaRole
+    timeout: 30
+    events:
+      - http:
+          path: /protocol/value
+          method: get
+          cors: true
+          request:
+            parameters:
+              querystrings:
+                tokens: false
+          documentation:
+            summary: "Retrieve value locked in all jars and protocol"
+            description: "Jar values are pulled from indexed chain data with the total value included as the sum of all jars"
+            queryParams:
+              - name: "tokens"
+                description: "Optionally include token balances"
+                required: false
+            tags:
+              - "Protocol"
+            methodResponses:
+              - statusCode: "200"
+              - statusCode: "500"
+
+  get-protocol-earnings:
+    handler: service/protocol/earnings/handler.handler
+    role: arn:aws:iam::135612478587:role/pickle-brining-us-west-1-lambdaRole
+    timeout: 30
+    events:
+      - http:
+          path: /protocol/earnings/{userId}
+          method: get
+          cors: true
+          documentation:
+            summary: "Get earnings for a given ethereum address"
+            description: "Get the token based earnings for all jars and their current USD valuation"
+            pathParams:
+              - name: "userId"
+                description: "Ethereum address"
+                required: true
+            tags:
+              - "Protocol"
+            methodResponses:
+              - statusCode: "200"
+              - statusCode: "500"
+
+  get-protocol-farm:
+    handler: service/protocol/farm/handler.handler
+    role: arn:aws:iam::135612478587:role/pickle-brining-us-west-1-lambdaRole
+    timeout: 30
+    events:
+      - http:
+          path: /protocol/farm
+          method: get
+          cors: true
+          documentation:
+            summary: "Get active PickleChef farms"
+            description: "Get the current active Pickle farms emission allocation"
+            tags:
+              - "Protocol"
+            methodResponses:
+              - statusCode: "200"
+              - statusCode: "500"
+
+  get-protocol-jar-performance:
+    handler: service/protocol/performance/handler.handler
+    role: arn:aws:iam::135612478587:role/pickle-brining-us-west-1-lambdaRole
+    timeout: 30
+    events:
+      - http:
+          path: /protocol/jar/{jarname}/performance
+          method: get
+          cors: true
+          documentation:
+            summary: "Estimated ROI per jar"
+            description: "Return multiple ROI values for sampled periods"
+            pathParams:
+              - name: "jarname"
+                description: "Pickle jar name"
+                required: true
+            tags:
+              - "Protocol"
+            methodResponses:
+              - statusCode: "200"
+              - statusCode: "500"
+
+  get-chart-jar-performance:
+    handler: service/chart/jar/performance/handler.handler
+    role: arn:aws:iam::135612478587:role/pickle-brining-us-west-1-lambdaRole
+    timeout: 30
+    events:
+      - http:
+          path: /chart/jar/{jarname}/performance
+          method: get
+          cors: true
+          documentation:
+            summary: "Chart data for historic jar performance"
+            description: "Return an array of data point objects with coordinate values corresponding to jar ratio"
+            pathParams:
+              - name: "jarname"
+                description: "Pickle jar name"
+                required: true
+            tags:
+              - "Chart"
+            methodResponses:
+              - statusCode: "200"
+              - statusCode: "500"
+
+  get-chart-jar:
+    handler: service/chart/jar/handler.handler
+    role: arn:aws:iam::135612478587:role/pickle-brining-us-west-1-lambdaRole
+    timeout: 30
+    events:
+      - http:
+          path: /chart/jar/{jarname}
+          method: get
+          cors: true
+          request:
+            parameters:
+              querystrings:
+                count: false
+          documentation:
+            summary: "Chart data for historic jar assets under management"
+            description: "Return an array of data point objects with coordinate values corresponding to jar asset USD valuation"
+            pathParams:
+              - name: "jarname"
+                description: "Pickle jar name"
+                required: true
+            queryParams:
+              - name: "count"
+                description: "Number of data points to limit response"
+                required: false
+            tags:
+              - "Chart"
+            methodResponses:
+              - statusCode: "200"
+              - statusCode: "500"
+
+  get-chart-reward:
+    handler: service/chart/reward/handler.handler
+    role: arn:aws:iam::135612478587:role/pickle-brining-us-west-1-lambdaRole
+    timeout: 30
+    events:
+      - http:
+          path: /chart/reward/{token}
+          method: get
+          cors: true
+          request:
+            parameters:
+              querystrings:
+                count: false
+          documentation:
+            summary: "Chart data for historic staking percentages"
+            description: "Return an array of data point objects with coordinate values corresponding to staked PICKLE"
+            pathParams:
+              - name: "token"
+                description: "Pickle reward token name"
+                required: true
+            queryParams:
+              - name: "count"
+                description: "Number of data points to limit response"
+                required: false
+            tags:
+              - "Chart"
+            methodResponses:
+              - statusCode: "200"
+              - statusCode: "500"
+
+  index-staking:
+    handler: service/index/handler.handler
+    role: arn:aws:iam::135612478587:role/pickle-brining-us-west-1-lambdaRole
+    timeout: 300
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-staking-weth
+          description: "index historical data for pickle rewards contract weth token"
+          rate: rate(5 minutes)
+          input:
+            contract: "0xa17a8883da1abd57c690df9ebf58fc194edab66f"
+            createdBlock: 11147661
+            asset: "weth"
+
+  index-curve:
+    handler: service/index/curve/handler.handler
+    role: arn:aws:iam::135612478587:role/pickle-brining-us-west-1-lambdaRole
+    timeout: 300
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-curve-3pool
+          description: "index historical data for pickle curve 3pool jar"
+          rate: rate(5 minutes)
+          input:
+            contract: "0x1bb74b5ddc1f4fc91d6f9e7906cf68bc93538e33"
+            createdBlock: 11010885
+            asset: "3poolcrv"
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-curve-scrv
+          description: "index historical data for pickle curve scrv jar"
+          rate: rate(5 minutes)
+          input:
+            contract: "0x68d14d66b2b0d6e157c06dc8fefa3d8ba0e66a89"
+            createdBlock: 10973000
+            asset: "scrv"
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-compound-cdai
+          description: "index historical data for pickle compound cdai jar"
+          rate: rate(5 minutes)
+          input:
+            contract: "0x6949bb624e8e8a90f87cd2058139fcd77d2f3f87"
+            createdBlock: 11044218
+            asset: "cdai"
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-curve-renbtc
+          description: "index historical data for pickle curve renbtc jar"
+          rate: rate(5 minutes)
+          input:
+            contract: "0x2e35392f4c36eba7ecafe4de34199b2373af22ec"
+            createdBlock: 11010898
+            asset: "renbtccrv"
+
+  index-uniswap:
+    handler: service/index/uniswap/handler.handler
+    role: arn:aws:iam::135612478587:role/pickle-brining-us-west-1-lambdaRole
+    timeout: 300
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-uniswap-wbtc-eth
+          description: "index historical data for pickle uniswap wbtc-eth jar"
+          rate: rate(5 minutes)
+          input:
+            contract: "0xc80090aa05374d336875907372ee4ee636cbc562"
+            createdBlock: 11010902
+            asset: "wbtc-eth"
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-uniswap-usdc-eth
+          description: "index historical data for pickle uniswap usdc-eth jar"
+          rate: rate(5 minutes)
+          input:
+            contract: "0x53bf2e62fa20e2b4522f05de3597890ec1b352c6"
+            createdBlock: 10960599
+            asset: "usdc-eth"
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-uniswap-usdt-eth
+          description: "index historical data for pickle uniswap usdt-eth jar"
+          rate: rate(5 minutes)
+          input:
+            contract: "0x09fc573c502037b149ba87782acc81cf093ec6ef"
+            createdBlock: 10960612
+            asset: "usdt-eth"
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-uniswap-dai-eth
+          description: "index historical data for pickle uniswap dai-eth jar"
+          rate: rate(5 minutes)
+          input:
+            contract: "0xcffa068f1e44d98d3753966ebd58d4cfe3bb5162"
+            createdBlock: 10960588
+            asset: "dai-eth"
