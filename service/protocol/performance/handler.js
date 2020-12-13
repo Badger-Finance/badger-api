@@ -1,7 +1,6 @@
 const { getAssetData, respond } = require("../../util/util");
+const { setts } = require("../../setts");
 const { getFarmData } = require("../farm/handler");
-const { UNI_PICKLE } = require("../../util/constants");
-const { jars } = require("../../jars");
 const fetch = require("node-fetch");
 
 // data point constants - index twice per hour, 48 per day
@@ -19,24 +18,24 @@ exports.handler = async (event) => {
   }
 
   try {
-    const asset = event.pathParameters.jarname;
+    const asset = event.pathParameters.settName;
     console.log("Request performance data for", asset);
 
-    const isAsset = asset !== "pickle-eth";
     const performanceInfo = await Promise.all([
       getProtocolPerformance(asset),
-      getFarmPerformance(asset),
-      ...isAsset ? [getAssetData(process.env.ASSET_DATA, asset, SAMPLE_DAYS)] : [],
+      getFarmData(),
+      getAssetData(process.env.ASSET_DATA, asset, SAMPLE_DAYS),
     ]);
 
     const protocol = performanceInfo[0];
     const farmPerformance = performanceInfo[1];
+    console.log(farmPerformance);
     const data = performanceInfo[2];
-    const farmApy = farmPerformance ? farmPerformance : 0;
-    const oneDay = isAsset ? getSamplePerformance(data, ONE_DAY) : 0 + protocol.oneDay;
-    const threeDay = isAsset ? getSamplePerformance(data, THREE_DAYS) : 0 + protocol.oneDay;
-    const sevenDay = isAsset ? getSamplePerformance(data, SEVEN_DAYS) : 0 + protocol.sevenDay;
-    const thirtyDay = isAsset ? getSamplePerformance(data, THIRTY_DAYS) : 0 + protocol.thirtyDay;
+    const farmApy = farmPerformance[asset] ? farmPerformance[asset].apy : 0;
+    const oneDay = getSamplePerformance(data, ONE_DAY) + protocol.oneDay;
+    const threeDay = getSamplePerformance(data, THREE_DAYS) + protocol.oneDay;
+    const sevenDay = getSamplePerformance(data, SEVEN_DAYS) + protocol.sevenDay;
+    const thirtyDay = getSamplePerformance(data, THIRTY_DAYS) + protocol.thirtyDay;
     const jarPerformance = {
       oneDay: format(oneDay),
       threeDay: format(threeDay),
@@ -53,21 +52,21 @@ exports.handler = async (event) => {
     console.log(err);
     return respond(500, {
       statusCode: 500,
-      message: "Unable to retreive jar performance"
+      message: "Unable to retreive sett performance"
     });
   }
 }
 
 // helper functions
-const format = (value) => value ? parseFloat(value.toFixed(2)) : undefined;
-const getRatio = (data, offset) => data.length >= offset ? data[data.length - (offset + 1)].ratio : undefined;
-const getBlock = (data, offset) => data.length >= offset ? data[data.length - (offset + 1)].height : undefined;
-const getTimestamp = (data, offset) => data.length >= offset ? data[data.length - (offset + 1)].timestamp : undefined;
+const format = (value) => value ? parseFloat(value) : undefined;
+const getRatio = (data, offset) => data.length > offset ? data[data.length - (offset + 1)].ratio : undefined;
+const getBlock = (data, offset) => data.length > offset ? data[data.length - (offset + 1)].height : undefined;
+const getTimestamp = (data, offset) => data.length > offset ? data[data.length - (offset + 1)].timestamp : undefined;
 
 const getPerformance = (ratioDiff, blockDiff, timeDiff) => {
   const scalar = (ONE_YEAR_MS / timeDiff) * blockDiff;
   const slope = ratioDiff / blockDiff;
-  return scalar * slope * 100;
+  return scalar * slope;
 };
 
 const getSamplePerformance = (data, offset) => {
@@ -91,43 +90,40 @@ const getSamplePerformance = (data, offset) => {
   return getPerformance(ratioDiff, blockDiff, timestampDiff);
 };
 
-const getFarmPerformance = async (asset) => {
-  const performanceData = await getFarmData();
-  const farmData = performanceData[asset];
-  if (!farmData) {
-    return farmData;
-  }
-  return farmData.apy * 100;
-};
-
 // TODO: handle 3 / 7 / 30 days, handle liqduidity edge case more gracefully
 const getProtocolPerformance = async (asset) => {
-  const jarKey = Object.keys(jars).find(jar => jars[jar].asset.toLowerCase() === asset);
-  const switchKey = jars[jarKey] ? jars[jarKey].protocol : "uniswap"; // pickle-eth
+  const settKey = Object.keys(setts).find(sett => setts[sett].asset.toLowerCase() === asset);
+  const switchKey = setts[settKey].protocol;
   switch (switchKey) {
     case "curve":
       return await getCurvePerformance(asset);
     case "uniswap":
-      return await getUniswapPerformance(jars[jarKey] ? jars[jarKey].token : UNI_PICKLE);
+      return await getUniswapPerformance(setts[settKey].token);
     default:
-      return 0;
+      return {
+        oneDay: 0,
+        threeDay: 0,
+        sevenDay: 0,
+        thirtyDay: 0,
+      };;
   }
 };
 
 const curveApi = "https://www.curve.fi/raw-stats/apys.json";
 const apyMapping = {
-  "3poolcrv": "3pool",
+  "hrenbtccrv": "ren2",
   "renbtccrv": "ren2",
-  "scrv": "susd",
+  "sbtccrv": "rens",
+  "tbtccrv": "tbtc",
 }
 const getCurvePerformance = async (asset) => {
   const curveData = await fetch(curveApi)
     .then(response => response.json());
   return {
-    oneDay: curveData.apy.day[apyMapping[asset]] * 100,
-    threeDay: curveData.apy.day[apyMapping[asset]] * 100,
-    sevenDay: curveData.apy.day[apyMapping[asset]] * 100,
-    thirtyDay: curveData.apy.month[apyMapping[asset]] * 100,
+    oneDay: curveData.apy.day[apyMapping[asset]],
+    threeDay: curveData.apy.day[apyMapping[asset]],
+    sevenDay: curveData.apy.day[apyMapping[asset]],
+    thirtyDay: curveData.apy.month[apyMapping[asset]],
   };
 };
 
@@ -154,9 +150,9 @@ const getUniswapPerformance = async (asset) => {
   };
   const performance = {}
   let totalApy = 0;
-  for (let i = 0; i < 30; i++) {
+  for (let i = 0; i < Math.min(30, pairDayResponse.length); i++) {
     let fees = pairDayResponse[i].dailyVolumeUSD * 0.003;
-    totalApy += fees / pairDayResponse[i].reserveUSD * 365 * 100;
+    totalApy += fees / pairDayResponse[i].reserveUSD * 365;
     if (apyMap[i.toString()]) {
       performance[apyMap[i.toString()]] = totalApy / (i + 1);
     }

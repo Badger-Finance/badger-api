@@ -1,4 +1,4 @@
-const { getJar, getBlock, getIndexedBlock, saveItem } = require("../util/util");
+const { getSett, getBlock, getIndexedBlock, saveItem } = require("../util/util");
 
 const TEN_MIN_BLOCKS = parseInt(10 * 60 / 13);
 module.exports.indexAsset =  async (event, getPrice) => {
@@ -7,24 +7,24 @@ module.exports.indexAsset =  async (event, getPrice) => {
   console.log(`Index ${asset} at height: ${block}`);
 
   while (true) {
-    const jar = await getJar(contract, block);
+    const sett = await getSett(contract, block);
 
-    if (jar.errors != undefined && jar.errors != null) {
+    if (sett.errors != undefined && sett.errors != null) {
       break;
     }
 
-    if (jar.data == null || jar.data.jar == null) {
+    if (sett.data == null || sett.data.sett == null) {
       block += TEN_MIN_BLOCKS;
       continue;
     }
 
-    const jarData = jar.data.jar;
+    const settData = sett.data.sett;
     const blockData = await getBlock(block);
     const timestamp = blockData.timestamp * 1000;
-    const balance = jarData.balance / Math.pow(10, 18);
-    const supply = jarData.totalSupply / Math.pow(10, 18);
-    const ratio = jarData.ratio / Math.pow(10, 18);
-    const value = balance * await getPrice(jarData);
+    const balance = settData.balance / Math.pow(10, 18);
+    const supply = settData.totalSupply / Math.pow(10, 18);
+    const ratio = settData.pricePerFullShare / Math.pow(10, 18);
+    const value = balance * await getPrice(settData);
     
     const snapshot = {
       asset: asset,

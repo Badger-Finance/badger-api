@@ -1,7 +1,6 @@
-const { getMasterChef } = require("../../util/masterChef");
-const { respond, getContractPrice, getUsdValue, getJar } = require("../../util/util");
-const { jars } = require("../../jars");
-const { PICKLE } = require("../../util/constants");
+const { respond, getUsdValue, getGeysers, getPrices } = require("../../util/util");
+const { BADGER } = require("../../util/constants");
+const { setts } = require("../../setts");
 
 exports.handler = async (event) => {
   if (event.source === "serverless-plugin-warmup") {
@@ -13,49 +12,45 @@ exports.handler = async (event) => {
 module.exports.getFarmData = async () => {
   // parallelize calls
   const prerequisites = await Promise.all([
-    getContractPrice(PICKLE),
-    getMasterChef()
+    getPrices(),
+    getGeysers(),
   ]);
 
-  const picklePrice = prerequisites[0];
-  const masterChefData = prerequisites[1];
-  const masterChef = masterChefData.data.masterChef;
-  const masterChefPools = masterChefData.data.masterChefPools;
-  const farms = {
-    picklePerBlock: masterChef.rewardsPerBlock / 1e18,
-  };
+  const priceData = prerequisites[0];
+  const geyserData = prerequisites[1];
+  const geysers = geyserData.data.geysers;
+  const geyserSetts = geyserData.data.setts;
+  const farms = {};
 
-  await Promise.all(masterChefPools.map(async (pool) => {
+  const totalAlloc = geysers.map((geyser) => geyser.cycleRewardTokens / 1e18)
+    .reduce((total, tokens) => total + tokens);
+  await Promise.all(geysers.map(async (geyser) => {
     // evaluate farm key & token
-    const jarKey = Object.keys(jars).find(key => key === pool.token.id);
-    const farmName = jarKey ? jars[jarKey].asset.toLowerCase() : "pickle-eth"; // only non-jar farm
-    const poolToken = jarKey ? jars[jarKey].token : pool.token.id;
+    const sett = geyserSetts.find(sett => sett.id === geyser.stakingToken.id);
+    const geyserName = setts[sett.id].asset.toLowerCase();
+    const geyserToken = sett.token.id;
+    const geyserShares = geyser.netShareDeposit;
+    const pricePerFullShare = sett.pricePerFullShare / 1e18;
+    const geyserDeposits = geyserShares * pricePerFullShare / 1e18;
+    const geyserDepositsValue = getUsdValue(geyserToken, geyserDeposits, priceData);
 
     // calculate pool related information
-    const allocShare = pool.allocPoint / masterChef.totalAllocPoint;
-    const picklePerBlock = allocShare * farms.picklePerBlock;
-    const valuePerBlock = picklePerBlock * picklePrice;
-    const tokenBalance = pool.balance / 1e18;
+    const geyserEmission = geyser.cycleRewardTokens / 1e18;
+    const geyserEmissionValue = geyserEmission * priceData.badger;
+    const allocShare = geyserEmission / totalAlloc;
+    const geyserEmissionRate = geyserEmission / geyser.cycleDuration;
+    const geyserEmissionValueRate = geyserEmissionValue / geyser.cycleDuration;
+    const apy = toDay(geyserEmissionValueRate) * 365 / geyserDepositsValue;
 
-    const valueInfo = await Promise.all([
-      getUsdValue(poolToken, tokenBalance),
-      ...jarKey ? [getJar(jarKey)] : [],
-    ]);
-
-    const ratio = jarKey ? valueInfo[1].data.jar.ratio / 1e18 : 1;
-    const valueBalance = valueInfo[0] * ratio;
-    const apy = toDay(valuePerBlock) / valueBalance * 365;
-    farms[farmName] = {
-      tokenBalance: tokenBalance,
-      valueBalance: format(valueBalance),
+    farms[geyserName] = {
+      tokenBalance: geyserDeposits,
+      valueBalance: geyserDepositsValue,
       allocShare: allocShare,
-      picklePerBlock: format(picklePerBlock),
-      valuePerBlock: format(valuePerBlock),
-      picklePerHour: format(toHour(picklePerBlock)),
-      valuePerHour: format(toHour(valuePerBlock)),
-      picklePerDay: format(toDay(picklePerBlock)),
-      valuePerDay: format(toDay(valuePerBlock)),
-      apy: format(apy)
+      badgerPerHour: toHour(geyserEmissionRate),
+      valuePerHour: toHour(geyserEmissionValueRate),
+      badgerPerDay: toDay(geyserEmissionRate),
+      valuePerDay: toDay(geyserEmissionValueRate),
+      apy: apy
     };
   }));
 
@@ -63,6 +58,5 @@ module.exports.getFarmData = async () => {
 };
 
 // scaling functions
-const toHour = (value) => value * 276;
+const toHour = (value) => value * 3600;
 const toDay = (value) => toHour(value) * 24;
-const format = (value) => parseFloat(value.toFixed(4));

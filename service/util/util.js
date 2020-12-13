@@ -1,7 +1,7 @@
 const AWS = require("aws-sdk");
 const Web3 = require("web3");
 const fetch = require("node-fetch");
-const { SCRV, THREE_CRV, DAI, UNI_DAI, UNI_USDC, UNI_USDT, UNI_WBTC, RENBTC, UNI_PICKLE } = require("./constants");
+const { UNI_BADGER, RENBTC, SBTC, BADGER, TBTC } = require("./constants");
 const ddb = new AWS.DynamoDB.DocumentClient({apiVersion: "2012-08-10"});
 const web3 = new Web3(new Web3.providers.HttpProvider(`https://:${process.env.INFURA_PROJECT_SECRET}@mainnet.infura.io/v3/${process.env.INFURA_PROJECT_ID}`));
 
@@ -65,7 +65,12 @@ module.exports.getIndexedBlock = async (table, asset, createdBlock) => {
 module.exports.getContractPrice = async (contract) => {
   return await fetch(`https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=${contract}&vs_currencies=usd`)
   .then(response => response.json())
-  .then(json => json[contract].usd);
+  .then(json => {
+    if (json[contract]) {
+      return json[contract].usd;
+    }
+    return undefined;
+  });
 };
 
 module.exports.getTokenPrice = async (token) => {
@@ -74,46 +79,47 @@ module.exports.getTokenPrice = async (token) => {
     .then(json => json[token].usd);
 };
 
-module.exports.getJar = async (contract, block) => {
+module.exports.getSett = async (contract, block) => {
   let query = `
     {
-      jar(id: "${contract}"${block ? `, block: {number: ${block}}`: ""}) {
+      sett(id: "${contract}"${block ? `, block: {number: ${block}}`: ""}) {
         token {
           id
         }
         balance
-        ratio
+        pricePerFullShare
         totalSupply
       }
     }
   `;
-  return await fetch(process.env.PICKLE, {
+  return await fetch(process.env.BADGER, {
     method: "POST",
     body: JSON.stringify({query})
   }).then(response => response.json());
 };
 
-module.exports.getMasterChef = async () => {
+module.exports.getGeysers = async () => {
   let query = `
     {
-      masterChef(id: "0xbd17b1ce622d73bd438b9e658aca5996dc394b0d") {
+      geysers(orderDirection: asc) {
         id
-        totalAllocPoint
-        rewardsPerBlock
+        stakingToken {
+          id
+        }
+        netShareDeposit
+        cycleDuration
+        cycleRewardTokens
       },
-      masterChefPools(where: {allocPoint_gt: 0}, orderBy: allocPoint, orderDirection: desc) {
+      setts(orderDirection: asc) {
         id
         token {
           id
         }
-        balance
-        allocPoint
-        lastRewardBlock
-        accPicklePerShare
+        pricePerFullShare
       }
     }
   `;
-  return await fetch(process.env.PICKLE, {
+  return await fetch(process.env.BADGER, {
     method: "POST",
     body: JSON.stringify({query})
   }).then(response => response.json());
@@ -141,24 +147,36 @@ module.exports.getUniswapPrice = async (token) => {
   return reserveUSD * liquidityPrice;
 };
 
-module.exports.getUsdValue = async (asset, balance) => {
-  let assetPrice = 0;
+module.exports.getPrices = async () => {
+  const prices = await Promise.all([
+    this.getTokenPrice("tbtc"),
+    this.getContractPrice(SBTC),
+    this.getContractPrice(RENBTC),
+    this.getContractPrice(BADGER),
+    this.getUniswapPrice(UNI_BADGER),
+  ]);
+  return {
+    tbtc: prices[0],
+    sbtc: prices[1],
+    renbtc: prices[2],
+    badger: prices[3],
+    unibadger: prices[4],
+  };
+};
+
+module.exports.getUsdValue = (asset, tokens, prices) => {
   switch (asset) {
-    case SCRV:
-    case THREE_CRV:
+    case UNI_BADGER:
+      return tokens * prices.unibadger;
+    case BADGER:
+      return tokens * prices.badger;
+    case TBTC:
+      return tokens * prices.tbtc;
+    case SBTC:
+      return tokens * prices.sbtc;
     case RENBTC:
-    case DAI:
-      assetPrice = await this.getContractPrice(asset);
-      break;
-    case UNI_DAI:
-    case UNI_USDC:
-    case UNI_USDT:
-    case UNI_WBTC:
-    case UNI_PICKLE:
-      assetPrice = await this.getUniswapPrice(asset);
-      break;
+      return tokens * prices.renbtc;
     default:
-      break;
+      return 0;
   }
-  return assetPrice * balance;
 };

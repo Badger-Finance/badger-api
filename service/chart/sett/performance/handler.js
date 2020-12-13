@@ -5,17 +5,8 @@ exports.handler = async (event) => {
     return 200;
   }
 
-  const asset = event.pathParameters.jarname;
+  const asset = event.pathParameters.settName;
   let data = await getAssetData(process.env.ASSET_DATA, asset);
-
-  if (asset === "cdai") {
-    const diffRatio = data[0].ratio - 1;
-    data = data.map(d => {
-      d.ratio -= diffRatio;
-      return d;
-    });
-  }
-
   const points = data.map(item => ({x: item.timestamp, y: parseFloat(item.ratio)}));
   return respond(200, points);
 }

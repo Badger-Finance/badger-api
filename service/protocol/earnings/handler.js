@@ -1,60 +1,54 @@
 const fetch = require("node-fetch");
-const { jars } = require("../../jars");
-const { getContractPrice, getUniswapPrice, respond } = require("../../util/util");
-const { WETH, SCRV, THREE_CRV, DAI, UNI_DAI, UNI_USDC, UNI_USDT, UNI_WBTC, RENBTC } = require("../../util/constants");
+const { setts } = require("../../setts");
+const { getPrices, respond } = require("../../util/util");
+const { UNI_BADGER, SBTC, BADGER, RENBTC, TBTC } = require("../../util/constants");
 
 exports.handler = async (event) => {
   if (event.source === "serverless-plugin-warmup") {
     return 200;
   }
 
-  const userId = event.pathParameters.userId;
+  const userId = event.pathParameters.userId.toLowerCase();
+  console.log(userId);
   const userData = await getUserData(userId);
   
   if (userData.data == null || userData.data.user == null) {
-    return {
-      statusCode: 404,
-      headers: headers,
-    }
+    return respond(404);
   }
 
   const data = userData.data.user;
   const prices = await getPrices();
-  const jarEarnings = data.jarBalances.map(data => {
-    const asset = jars[data.jar.id].asset;
-    const jarRatio = parseInt(data.jar.ratio) / Math.pow(10, 18);
+  const settEarnings = data.settBalances.map(data => {
+    const asset = setts[data.sett.id].asset;
+    const settPricePerFullShare = parseInt(data.sett.pricePerFullShare) / 1e18;
     const netShareDeposit = parseInt(data.netShareDeposit);
     const grossDeposit = parseInt(data.grossDeposit);
     const grossWithdraw = parseInt(data.grossWithdraw);
-    const jarTokens = jarRatio * netShareDeposit;
-    const earned = (jarTokens - grossDeposit + grossWithdraw) / Math.pow(10, 18);
-    const earnedUsd = getUsdValue(data.jar.token.id, earned, prices);
+    const settTokens = parseFloat(settPricePerFullShare * netShareDeposit);
+    const earned = (settTokens - grossDeposit + grossWithdraw) / 1e18;
+    const earnedUsd = getUsdValue(data.sett.token.id, earned, prices);
+    const balance = settTokens / 1e18;
+    const balanceUsd = getUsdValue(data.sett.token.id, balance, prices);
     return {
-      id: data.jar.id,
+      id: data.sett.id,
       asset: asset,
+      balance: balance,
+      balanceUsd: balanceUsd,
       earned: earned,
       earnedUsd: earnedUsd,
     };
   });
 
-  const wethRewards = data.wethRewards / Math.pow(10, 18);
-  const wethEarningsUsd = wethRewards * prices.ethereum;
-  const wethEarnings = {
-    asset: "WETH",
-    earned: wethRewards,
-    earnedUsd: wethEarningsUsd,
-  };
-  jarEarnings.push(wethEarnings);
-
-  let jarEarningsUsd = 0;
-  if (jarEarnings && jarEarnings.length > 0) {
-    jarEarningsUsd = jarEarnings.map(jar => jar.earnedUsd).reduce((total, earnedUsd) => total + earnedUsd);
+  console.log(settEarnings);
+  let settEarningsUsd = 0;
+  if (settEarnings && settEarnings.length > 0) {
+    settEarningsUsd = settEarnings.map(jar => jar.earnedUsd).reduce((total, earnedUsd) => total + earnedUsd);
   }
 
   const user = {
     userId: userId,
-    earnings: jarEarningsUsd,
-    jarEarnings: jarEarnings.filter(jar => jar.earnedUsd > 0),
+    earnings: settEarningsUsd,
+    settEarnings: settEarnings.filter(jar => jar.earnedUsd > 0),
   };
 
   return respond(200, user);
@@ -63,29 +57,20 @@ exports.handler = async (event) => {
 const getUsdValue = (asset, tokens, prices) => {
   let earnedUsd;
   switch (asset) {
-    case SCRV:
-      earnedUsd = tokens * prices.scrv;
+    case UNI_BADGER:
+      earnedUsd = tokens * prices.unibadger;
       break;
-    case THREE_CRV:
-      earnedUsd = tokens * prices.tcrv;
+    case BADGER:
+      earnedUsd = tokens * prices.badger;
       break;
-    case DAI:
-      earnedUsd = tokens * prices.dai;
+    case SBTC:
+      earnedUsd = tokens * prices.sbtc;
       break;
-    case UNI_DAI:
-      earnedUsd = tokens * prices.unidai;
-      break;
-    case UNI_USDC:
-      earnedUsd = tokens * prices.uniusdc;
-      break;
-    case UNI_USDT:
-      earnedUsd = tokens * prices.uniusdt;
-      break;
-    case UNI_WBTC:
-      earnedUsd = tokens * prices.uniwbtc;
+    case TBTC:
+      earnedUsd = tokens * prices.tbtc;
       break;
     case RENBTC:
-      earnedUsd = tokens * prices.renbtccrv;
+      earnedUsd = tokens * prices.renbtc;
       break;
     default:
       earnedUsd = 0;
@@ -93,40 +78,15 @@ const getUsdValue = (asset, tokens, prices) => {
   return earnedUsd;
 };
 
-const getPrices = async () => {
-  const prices = await Promise.all([
-    getContractPrice(WETH),
-    getContractPrice(SCRV),
-    getContractPrice(THREE_CRV),
-    getContractPrice(RENBTC),
-    getContractPrice(DAI),
-    getUniswapPrice(UNI_DAI),
-    getUniswapPrice(UNI_USDC),
-    getUniswapPrice(UNI_USDT),
-    getUniswapPrice(UNI_WBTC),
-  ]);
-  return {
-    ethereum: prices[0],
-    scrv: prices[1],
-    tcrv: prices[2],
-    renbtccrv: prices[3],
-    dai: prices[4],
-    unidai: prices[5],
-    uniusdc: prices[6],
-    uniusdt: prices[7],
-    uniwbtc: prices[8],
-  };
-};
-
 const getUserData = async (userId) => {
   const query = `
     {
       user(id: "${userId}") {
-        jarBalances(orderDirection: asc) {
-          jar {
+        settBalances(orderDirection: asc) {
+          sett {
             id
             name
-            ratio
+            pricePerFullShare
             symbol
             token {
               id
@@ -139,13 +99,11 @@ const getUserData = async (userId) => {
           grossShareDeposit
           grossShareWithdraw
         }
-        staked
-        sCrvRewards
-        wethRewards
       }
     }
   `;
-  const queryResult = await fetch(process.env.PICKLE, {
+  console.log(query);
+  const queryResult = await fetch(process.env.BADGER, {
     method: "POST",
     body: JSON.stringify({query})
   });

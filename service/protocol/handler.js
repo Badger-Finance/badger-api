@@ -1,5 +1,5 @@
-const { jars } = require("../jars");
-const { UNI_PICKLE } = require("../util/constants");
+const { setts } = require("../setts");
+const { UNI_BADGER } = require("../util/constants");
 const { getAssetData, getUniswapPair, respond } = require("../util/util");
 
 const formatFloat = (value) => parseFloat(parseFloat(value).toFixed(2));
@@ -9,17 +9,22 @@ exports.handler = async (event) => {
   }
 
   const includeToken = event.queryStringParameters ? event.queryStringParameters.tokens : false;
-  const liquidity = await getUniswapPair(UNI_PICKLE);
+  const liquidity = await getUniswapPair(UNI_BADGER);
   const assetValues = {
-    "pickle-eth": formatFloat(liquidity.data.pair.reserveUSD),
-    ...includeToken && {"pickle-ethTokens": parseFloat(liquidity.data.pair.totalSupply)},
+    "liquidity": formatFloat(liquidity.data.pair.reserveUSD),
+    ...includeToken && {"liquidityTokens": parseFloat(liquidity.data.pair.totalSupply)},
   };
 
   let updatedAt = 0;
-  let jarValue = 0;
-  for (const key of Object.keys(jars)) {
-    const asset = jars[key].asset.toLowerCase();
+  let settValue = 0;
+  for (const key of Object.keys(setts)) {
+    const asset = setts[key].asset.toLowerCase();
     const assetData = await getAssetData(process.env.ASSET_DATA, asset, 1);
+    console.log("Getting values for ", asset);
+    console.log(assetData);
+    if (assetData == null || assetData == undefined) {
+      continue;
+    }
     const value = formatFloat(assetData[0].value);
     updatedAt = Math.max(updatedAt, assetData[0].timestamp);
     assetValues[asset] = value;
@@ -27,10 +32,9 @@ exports.handler = async (event) => {
       const tokenValueKey = asset + "Tokens";
       assetValues[tokenValueKey] = parseFloat(assetData[0].balance);
     }
-    jarValue += value;
+    settValue += value;
   }
-  assetValues.jarValue = jarValue;
-  assetValues.totalValue = jarValue + assetValues["pickle-eth"];
+  assetValues.totalValue = settValue;
   assetValues.updatedAt = updatedAt;
 
   return respond(200, assetValues);
