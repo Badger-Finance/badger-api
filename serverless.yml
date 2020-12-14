@@ -70,8 +70,8 @@ functions:
               querystrings:
                 tokens: false
           documentation:
-            summary: "Retrieve value locked in all jars and protocol"
-            description: "Jar values are pulled from indexed chain data with the total value included as the sum of all jars"
+            summary: "Retrieve value locked in all setts and protocol"
+            description: "Sett values are pulled from indexed chain data with the total value included as the sum of all setts"
             queryParams:
               - name: "tokens"
                 description: "Optionally include token balances"
@@ -93,7 +93,7 @@ functions:
           cors: true
           documentation:
             summary: "Get earnings for a given ethereum address"
-            description: "Get the token based earnings for all jars and their current USD valuation"
+            description: "Get the token based earnings for all setts and their current USD valuation"
             pathParams:
               - name: "userId"
                 description: "Ethereum address"
@@ -114,8 +114,8 @@ functions:
           method: get
           cors: true
           documentation:
-            summary: "Get active PickleChef farms"
-            description: "Get the current active Pickle farms emission allocation"
+            summary: "Get active Geyser farms"
+            description: "Get the current active Geyser emission allocation"
             tags:
               - "Protocol"
             methodResponses:
@@ -132,11 +132,11 @@ functions:
           method: get
           cors: true
           documentation:
-            summary: "Estimated ROI per jar"
+            summary: "Estimated ROI per sett"
             description: "Return multiple ROI values for sampled periods"
             pathParams:
               - name: "settName"
-                description: "Pickle jar name"
+                description: "Sett name"
                 required: true
             tags:
               - "Protocol"
@@ -154,8 +154,8 @@ functions:
           method: get
           cors: true
           documentation:
-            summary: "Chart data for historic jar performance"
-            description: "Return an array of data point objects with coordinate values corresponding to jar ratio"
+            summary: "Chart data for historic sett performance"
+            description: "Return an array of data point objects with coordinate values corresponding to sett ratio"
             pathParams:
               - name: "settName"
                 description: "Sett name"
@@ -180,11 +180,11 @@ functions:
               querystrings:
                 count: false
           documentation:
-            summary: "Chart data for historic jar assets under management"
-            description: "Return an array of data point objects with coordinate values corresponding to jar asset USD valuation"
+            summary: "Chart data for historic sett assets under management"
+            description: "Return an array of data point objects with coordinate values corresponding to sett asset USD valuation"
             pathParams:
-              - name: "jarname"
-                description: "Pickle jar name"
+              - name: "settName"
+                description: "Sett name"
                 required: true
             queryParams:
               - name: "count"
@@ -249,7 +249,7 @@ functions:
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-uniswap-badger-wbtc
-          description: "index historical data for badger uniswap badger-wbtc jar"
+          description: "index historical data for badger uniswap badger-wbtc sett"
           rate: rate(5 minutes)
           input:
             contract: "0x235c9e24d3fb2fafd58a2e49d454fdcd2dbf7ff1"
