@@ -19,18 +19,20 @@ exports.handler = async (event) => {
   let settValue = 0;
   for (const key of Object.keys(setts)) {
     const asset = setts[key].asset.toLowerCase();
-    const assetData = await getAssetData(process.env.ASSET_DATA, asset, 1);
-    console.log("Getting values for ", asset);
-    console.log(assetData);
+    const tokenValueKey = asset + "Tokens";
+    const assetData = (await getAssetData(process.env.ASSET_DATA, asset, 1))[0];
     if (assetData == null || assetData == undefined) {
+      assetValues[asset] = 0;
+      if (includeToken) {
+        assetValues[tokenValueKey] = 0;
+      }
       continue;
     }
-    const value = formatFloat(assetData[0].value);
-    updatedAt = Math.max(updatedAt, assetData[0].timestamp);
+    const value = formatFloat(assetData.value);
+    updatedAt = Math.max(updatedAt, assetData.timestamp);
     assetValues[asset] = value;
     if (includeToken) {
-      const tokenValueKey = asset + "Tokens";
-      assetValues[tokenValueKey] = parseFloat(assetData[0].balance);
+      assetValues[tokenValueKey] = parseFloat(assetData.balance);
     }
     settValue += value;
   }

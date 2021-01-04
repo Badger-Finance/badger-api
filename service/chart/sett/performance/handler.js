@@ -6,7 +6,9 @@ exports.handler = async (event) => {
   }
 
   const asset = event.pathParameters.settName;
-  let data = await getAssetData(process.env.ASSET_DATA, asset);
-  const points = data.map(item => ({x: item.timestamp, y: parseFloat(item.ratio)}));
+  const count = event.queryStringParameters ? event.queryStringParameters.count : null;
+  let data = await getAssetData(process.env.ASSET_DATA, asset, count);
+  const initialRatioDiff = data.length > 0 ? parseFloat(data[0].ratio) - 1 : 0;
+  const points = data.map(item => ({x: item.timestamp, y: item.ratio - initialRatioDiff}));
   return respond(200, points);
 }

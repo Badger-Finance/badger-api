@@ -1,7 +1,7 @@
 const fetch = require("node-fetch");
 const { setts } = require("../../setts");
 const { getPrices, respond } = require("../../util/util");
-const { UNI_BADGER, SBTC, BADGER, RENBTC, TBTC } = require("../../util/constants");
+const { UNI_BADGER, SBTC, BADGER, RENBTC, TBTC, SUSHI_BADGER, SUSHI_WBTC } = require("../../util/constants");
 
 exports.handler = async (event) => {
   if (event.source === "serverless-plugin-warmup") {
@@ -25,7 +25,7 @@ exports.handler = async (event) => {
     const grossDeposit = parseInt(data.grossDeposit);
     const grossWithdraw = parseInt(data.grossWithdraw);
     const settTokens = parseFloat(settPricePerFullShare * netShareDeposit);
-    const earned = (settTokens - grossDeposit + grossWithdraw) / 1e18;
+    const earned = (settTokens - grossDeposit + grossWithdraw) / Math.pow(10, data.sett.token.decimals);
     const earnedUsd = getUsdValue(data.sett.token.id, earned, prices);
     const balance = settTokens / 1e18;
     const balanceUsd = getUsdValue(data.sett.token.id, balance, prices);
@@ -48,7 +48,7 @@ exports.handler = async (event) => {
   const user = {
     userId: userId,
     earnings: settEarningsUsd,
-    settEarnings: settEarnings.filter(jar => jar.earnedUsd > 0),
+    settEarnings: settEarnings,
   };
 
   return respond(200, user);
@@ -72,6 +72,12 @@ const getUsdValue = (asset, tokens, prices) => {
     case RENBTC:
       earnedUsd = tokens * prices.renbtc;
       break;
+    case SUSHI_BADGER:
+      earnedUsd = tokens * prices.sushibadger;
+      break;
+    case SUSHI_WBTC:
+      earnedUsd = tokens * prices.sushiwbtc;
+      break;
     default:
       earnedUsd = 0;
   }
@@ -90,6 +96,7 @@ const getUserData = async (userId) => {
             symbol
             token {
               id
+              decimals
             }
           }
           netDeposit
@@ -102,7 +109,6 @@ const getUserData = async (userId) => {
       }
     }
   `;
-  console.log(query);
   const queryResult = await fetch(process.env.BADGER, {
     method: "POST",
     body: JSON.stringify({query})

@@ -35,10 +35,7 @@ custom:
   table:
     ASSET_DATA:
       staging: "badger-staging-asset"
-      prod: "badget-asset"
-    REWARD_DATA:
-      staging: "badger-staging-reward"
-      prod: "badger-reward"
+      prod: "badger-asset"
 
 provider:
   name: aws
@@ -50,8 +47,8 @@ provider:
   environment:
     BADGER: "https://api.thegraph.com/subgraphs/name/axejintao/badger-dao"
     UNISWAP: "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2"
+    SUSHISWAP: "https://api.thegraph.com/subgraphs/name/croco-finance/sushiswap"
     ASSET_DATA: ${self:custom.table.ASSET_DATA.${self:custom.stage}}
-    REWARD_DATA: ${self:custom.table.REWARD_DATA.${self:custom.stage}}
     INFURA_PROJECT_ID: ${self:custom.secrets.INFURA_PROJECT_ID}
     INFURA_PROJECT_SECRET: ${self:custom.secrets.INFURA_PROJECT_SECRET}
 
@@ -98,6 +95,24 @@ functions:
               - name: "userId"
                 description: "Ethereum address"
                 required: true
+            tags:
+              - "Protocol"
+            methodResponses:
+              - statusCode: "200"
+              - statusCode: "500"
+
+  get-protocol-performance-summary:
+    handler: service/protocol/performance/handler.summaryHandler
+    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
+    timeout: 30
+    events:
+      - http:
+          path: /protocol/performance
+          method: get
+          cors: true
+          documentation:
+            summary: "Estimated ROI per sett"
+            description: "Return multiple ROI values for sampled periods"
             tags:
               - "Protocol"
             methodResponses:
@@ -153,6 +168,10 @@ functions:
           path: /chart/sett/{settName}/performance
           method: get
           cors: true
+          request:
+            parameters:
+              querystrings:
+                count: false
           documentation:
             summary: "Chart data for historic sett performance"
             description: "Return an array of data point objects with coordinate values corresponding to sett ratio"
@@ -160,6 +179,10 @@ functions:
               - name: "settName"
                 description: "Sett name"
                 required: true
+            queryParams:
+              - name: "count"
+                description: "Number of data points to limit response"
+                required: false
             tags:
               - "Chart"
             methodResponses:
@@ -255,3 +278,25 @@ functions:
             contract: "0x235c9e24d3fb2fafd58a2e49d454fdcd2dbf7ff1"
             createdBlock: 11380883
             asset: "badger-wbtc"
+
+  index-sushiswap:
+    handler: service/index/sushiswap/handler.handler
+    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
+    timeout: 300
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-sushiswap-badger-wbtc
+          description: "index historical data for badger sushiswap badger-wbtc jar"
+          rate: rate(5 minutes)
+          input:
+            contract: "0x1862a18181346ebd9edaf800804f89190def24a5"
+            createdBlock: 11537600
+            asset: "slp-badger-wbtc"
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-sushiswap-wbtc-eth
+          description: "index historical data for badger sushiswap wbtc-eth jar"
+          rate: rate(5 minutes)
+          input:
+            contract: "0x758a43ee2bff8230eeb784879cdcff4828f2544d"
+            createdBlock: 11539529
+            asset: "slp-wbtc-eth"

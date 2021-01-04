@@ -40,7 +40,7 @@ module.exports.getFarmData = async () => {
     const allocShare = geyserEmission / totalAlloc;
     const geyserEmissionRate = geyserEmission / geyser.cycleDuration;
     const geyserEmissionValueRate = geyserEmissionValue / geyser.cycleDuration;
-    const apy = toDay(geyserEmissionValueRate) * 365 / geyserDepositsValue;
+    const apy = toDay(geyserEmissionValueRate) * 365 / geyserDepositsValue * 100;
 
     farms[geyserName] = {
       tokenBalance: geyserDeposits,

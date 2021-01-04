@@ -1,6 +1,6 @@
 const { getSett, getBlock, getIndexedBlock, saveItem } = require("../util/util");
 
-const TEN_MIN_BLOCKS = parseInt(10 * 60 / 13);
+const HOUR_BLOCKS = parseInt(60 * 60 / 13);
 module.exports.indexAsset =  async (event, getPrice) => {
   const { asset, createdBlock, contract } = event;
   let block = await getIndexedBlock(process.env.ASSET_DATA, asset, createdBlock);
@@ -14,7 +14,7 @@ module.exports.indexAsset =  async (event, getPrice) => {
     }
 
     if (sett.data == null || sett.data.sett == null) {
-      block += TEN_MIN_BLOCKS;
+      block += HOUR_BLOCKS;
       continue;
     }
 
@@ -37,7 +37,7 @@ module.exports.indexAsset =  async (event, getPrice) => {
     };
 
     saveItem(process.env.ASSET_DATA, snapshot);
-    block += TEN_MIN_BLOCKS;
+    block += HOUR_BLOCKS;
   }
 
   return 200;

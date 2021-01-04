@@ -1,4 +1,4 @@
-const { UNI_BADGER, SBTC, RENBTC, BADGER, TBTC } = require("./util/constants");
+const { UNI_BADGER, SBTC, RENBTC, BADGER, TBTC, SUSHI_BADGER, SUSHI_WBTC } = require("./util/constants");
 
 module.exports.setts = {
   "0xd04c48a53c111300ad41190d63681ed3dad998ec": {
@@ -36,5 +36,17 @@ module.exports.setts = {
     protocol: "uniswap",
     token: UNI_BADGER,
     geyser: "0xa207d69ea6fb967e54baa8639c408c31767ba62d",
+  },
+  "0x758a43ee2bff8230eeb784879cdcff4828f2544d": {
+    asset: "SLP-WBTC-ETH",
+    protocol: "sushiswap",
+    token: SUSHI_WBTC,
+    geyser: "0x612f681bcd12a0b284518d42d2dbcc73b146eb65",
+  },
+  "0x1862a18181346ebd9edaf800804f89190def24a5": {
+    asset: "SLP-BADGER-WBTC",
+    protocol: "sushiswap",
+    token: SUSHI_BADGER,
+    geyser: "0xb5b654efba23596ed49fade44f7e67e23d6712e7",
   }
 };

@@ -1,7 +1,7 @@
 const AWS = require("aws-sdk");
 const Web3 = require("web3");
 const fetch = require("node-fetch");
-const { UNI_BADGER, RENBTC, SBTC, BADGER, TBTC } = require("./constants");
+const { UNI_BADGER, RENBTC, SBTC, BADGER, TBTC, SUSHI_BADGER, SUSHI_WBTC } = require("./constants");
 const ddb = new AWS.DynamoDB.DocumentClient({apiVersion: "2012-08-10"});
 const web3 = new Web3(new Web3.providers.HttpProvider(`https://:${process.env.INFURA_PROJECT_SECRET}@mainnet.infura.io/v3/${process.env.INFURA_PROJECT_ID}`));
 
@@ -147,6 +147,35 @@ module.exports.getUniswapPrice = async (token) => {
   return reserveUSD * liquidityPrice;
 };
 
+module.exports.getSushiswapPair = async (token, block) => {
+  const query = `
+    {
+      pair(id: "${token}"${block ? `, block: {number: ${block}}`: ""}) {
+        reserve0
+        reserve1
+        token0 {
+          id
+        }
+        token1 {
+          id
+        }
+        totalSupply
+      }
+    }
+  `;
+  return await fetch(process.env.SUSHISWAP, {
+    method: "POST",
+    body: JSON.stringify({query})
+  }).then(response => response.json());
+};
+
+module.exports.getSushiswapPrice = async (token) => {
+  const pair = (await this.getSushiswapPair(token)).data.pair;
+  const token0Price = await this.getContractPrice(pair.token0.id);
+  const token1Price = await this.getContractPrice(pair.token1.id);
+  return (token0Price * pair.reserve0 + token1Price * pair.reserve1) / pair.totalSupply;
+};
+
 module.exports.getPrices = async () => {
   const prices = await Promise.all([
     this.getTokenPrice("tbtc"),
@@ -154,6 +183,8 @@ module.exports.getPrices = async () => {
     this.getContractPrice(RENBTC),
     this.getContractPrice(BADGER),
     this.getUniswapPrice(UNI_BADGER),
+    this.getSushiswapPrice(SUSHI_BADGER),
+    this.getSushiswapPrice(SUSHI_WBTC),
   ]);
   return {
     tbtc: prices[0],
@@ -161,6 +192,8 @@ module.exports.getPrices = async () => {
     renbtc: prices[2],
     badger: prices[3],
     unibadger: prices[4],
+    sushibadger: prices[5],
+    sushiwbtc: prices[6],
   };
 };
 
@@ -176,6 +209,10 @@ module.exports.getUsdValue = (asset, tokens, prices) => {
       return tokens * prices.sbtc;
     case RENBTC:
       return tokens * prices.renbtc;
+    case SUSHI_BADGER:
+      return tokens * prices.sushibadger;
+    case SUSHI_WBTC:
+      return tokens * prices.sushiwbtc;
     default:
       return 0;
   }

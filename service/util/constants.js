@@ -7,5 +7,6 @@ module.exports.SBTC = "0x075b1bb99792c9e1041ba13afef80c91a1e70fb3";
 // uniswap tokens
 module.exports.UNI_BADGER = "0xcd7989894bc033581532d2cd88da5db0a4b12859";
 
-// sett tokens
-
+// sushiswap tokens
+module.exports.SUSHI_WBTC = "0xceff51756c56ceffca006cd410b03ffc46dd3a58";
+module.exports.SUSHI_BADGER = "0x110492b31c59716ac47337e616804e3e3adc0b4a";
