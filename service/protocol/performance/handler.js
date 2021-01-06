@@ -1,4 +1,4 @@
-const { getAssetData, respond } = require("../../util/util");
+const { getAssetData, respond, getMasterChef, getTokenPrice, getSett, getUsdValue, getSushiswapPrice } = require("../../util/util");
 const { setts } = require("../../setts");
 const { getFarmData } = require("../farm/handler");
 const fetch = require("node-fetch");
@@ -16,7 +16,7 @@ exports.handler = async (event) => {
   try {
     const asset = event.pathParameters.settName;
     const farmData = await getFarmData();
-    return respond(200, await getAssetPerformance(asset, farmData));
+    return respond(200, await this.getAssetPerformance(asset, farmData));
   } catch (err) {
     console.log(err);
     return respond(500, {
@@ -26,23 +26,7 @@ exports.handler = async (event) => {
   }
 };
 
-exports.summaryHandler = async (event) => {
-  try {
-    const settPerformance = {};
-    const farmData = await getFarmData();
-    const settData = await Promise.all(Object.entries(setts).map(sett => getAssetPerformance(sett[1].asset.toLowerCase(), farmData)));
-    Object.entries(setts).forEach((sett, i) => settPerformance[sett[1].asset.toLowerCase()] = settData[i]);
-    return respond(200, settPerformance);
-  } catch (err) {
-    console.log(err);
-    return respond(500, {
-      statusCode: 500,
-      message: "Unable to retreive sett performance"
-    });
-  }
-};
-
-const getAssetPerformance = async (asset, farmPerformance) => {
+module.exports.getAssetPerformance  = async (asset, farmPerformance) => {
   console.log("Request performance data for", asset);
 
   const performanceInfo = await Promise.all([
@@ -112,7 +96,19 @@ const getProtocolPerformance = async (asset) => {
     case "curve":
       return await getCurvePerformance(asset);
     case "uniswap":
-      return await getUniswapPerformance(setts[settKey].token);
+      return await getSwapPerformance(setts[settKey].token, switchKey);
+    case "sushiswap":
+      const earnings = await Promise.all([
+        getSwapPerformance(setts[settKey].token, switchKey),
+        getSushiswapEmissions()
+      ]);
+      const sushiswapApy = earnings[0];
+      const sushiEmissionApy = earnings[1][asset.toLowerCase()].apy * 100;
+      sushiswapApy.oneDay += sushiEmissionApy;
+      sushiswapApy.threeDay += sushiEmissionApy;
+      sushiswapApy.sevenDay += sushiEmissionApy;
+      sushiswapApy.thirtyDay += sushiEmissionApy;
+      return sushiswapApy;
     default:
       return {
         oneDay: 0,
@@ -141,7 +137,7 @@ const getCurvePerformance = async (asset) => {
   };
 };
 
-const getUniswapPerformance = async (asset) => {
+const getSwapPerformance = async (asset, protocol) => {
   const query = `
     {
       pairDayDatas(first: 30, orderBy: date, orderDirection: desc, where:{pairAddress: "${asset}"}) {
@@ -150,7 +146,7 @@ const getUniswapPerformance = async (asset) => {
       }
     }
   `;
-  const pairDayResponse = await fetch(process.env.UNISWAP, {
+  const pairDayResponse = await fetch(protocol === "uniswap" ? process.env.UNISWAP : process.env.SUSHISWAP, {
     method: "POST",
     body: JSON.stringify({query})
   }).then(response => response.json())
@@ -164,12 +160,79 @@ const getUniswapPerformance = async (asset) => {
   };
   const performance = {}
   let totalApy = 0;
-  for (let i = 0; i < Math.min(30, pairDayResponse.length); i++) {
-    let fees = pairDayResponse[i].dailyVolumeUSD * 0.003;
-    totalApy += fees / pairDayResponse[i].reserveUSD * 365;
+  for (let i = 0; i < pairDayResponse.length; i++) {
+    const volume = parseFloat(pairDayResponse[i].dailyVolumeUSD);
+    const poolReserve = parseFloat(pairDayResponse[i].reserveUSD);
+    let fees = volume * 0.003;
+    totalApy += fees / poolReserve * 365 * 100;
     if (apyMap[i.toString()]) {
       performance[apyMap[i.toString()]] = totalApy / (i + 1);
     }
   }
+  Object.entries(apyMap).forEach(e => {
+    if (!performance[e[1]]) {
+      performance[e[1]] = 0;
+    }
+  });
   return performance;
 };
+
+const getSushiswapEmissions = async () => {
+  // parallelize calls
+  const prerequisites = await Promise.all([
+    getTokenPrice('sushi'),
+    getMasterChef(),
+  ]);
+
+  const sushiPrice = prerequisites[0];
+  const masterChefData = prerequisites[1];
+  const masterChef = masterChefData.data.masterChefs[0];
+  const masterChefPools = masterChefData.data.pools;
+  const farms = {
+    sushiPerBlock: masterChef.sushiPerBlock / 1e18,
+  };
+
+  await Promise.all(masterChefPools.map(async (pool) => {
+    // evaluate farm key & token
+    const settKey = Object.keys(setts).find(key => setts[key].token === pool.pair);
+    if (!settKey) {
+      return;
+    }
+    const farmName = setts[settKey].asset.toLowerCase();
+    const poolToken = setts[settKey].token;
+
+    // calculate pool related information
+    const allocShare = pool.allocPoint / masterChef.totalAllocPoint;
+    const sushiPerBlock = allocShare * farms.sushiPerBlock;
+    const valuePerBlock = sushiPerBlock * sushiPrice;
+    const tokenBalance = pool.balance / 1e18;
+
+    const valueInfo = await Promise.all([
+      getSett(settKey),
+      getSushiswapPrice(poolToken),
+    ]);
+
+    const ratio = valueInfo[0].data.sett.pricePerFullShare / 1e18;
+    const valueBalance = valueInfo[1] * ratio * tokenBalance;
+    const apy = toDay(valuePerBlock) / valueBalance * 365;
+    farms[farmName] = {
+      tokenBalance: tokenBalance,
+      valueBalance: formatApy(valueBalance),
+      allocShare: allocShare,
+      sushiPerBlock: formatApy(sushiPerBlock),
+      valuePerBlock: formatApy(valuePerBlock),
+      sushiPerHour: formatApy(toHour(sushiPerBlock)),
+      valuePerHour: formatApy(toHour(valuePerBlock)),
+      sushiPerDay: formatApy(toDay(sushiPerBlock)),
+      valuePerDay: formatApy(toDay(valuePerBlock)),
+      apy: formatApy(apy)
+    };
+  }));
+
+  return farms;
+};
+
+// scaling functions
+const toHour = (value) => value * 276;
+const toDay = (value) => toHour(value) * 24;
+const formatApy = (value) => parseFloat(value.toFixed(4));

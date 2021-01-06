@@ -1,12 +1,26 @@
 const { respond, getUsdValue, getGeysers, getPrices } = require("../../util/util");
-const { BADGER } = require("../../util/constants");
+const { getAssetPerformance } = require("../performance/handler");
 const { setts } = require("../../setts");
 
 exports.handler = async (event) => {
-  if (event.source === "serverless-plugin-warmup") {
-    return 200;
+  try {
+    const farmData = await this.getFarmData();
+    const settData = await Promise.all(Object.entries(setts).map(sett => getAssetPerformance(sett[1].asset.toLowerCase(), farmData)));
+    Object.entries(setts).forEach((sett, i) => {
+      const apy = farmData[sett[1].asset.toLowerCase()].apy;
+      const combinedApy = settData[i].threeDayFarm;
+      console.log('base apy', apy)
+      console.log('combined apy', combinedApy)
+      farmData[sett[1].asset.toLowerCase()].apy = combinedApy ? combinedApy : apy;
+    });
+    return respond(200, farmData);
+  } catch (err) {
+    console.log(err);
+    return respond(500, {
+      statusCode: 500,
+      message: "Unable to retreive sett performance"
+    });
   }
-  return respond(200, await this.getFarmData());
 };
 
 module.exports.getFarmData = async () => {

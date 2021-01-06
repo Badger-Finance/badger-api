@@ -217,3 +217,27 @@ module.exports.getUsdValue = (asset, tokens, prices) => {
       return 0;
   }
 };
+
+module.exports.getMasterChef = async () => {
+  let query = `
+    {
+      masterChefs(first: 1) {
+        id
+        totalAllocPoint
+        sushiPerBlock
+      },
+      pools(where: {allocPoint_gt: 0}, orderBy: allocPoint, orderDirection: desc) {
+        id
+        pair
+        balance
+        allocPoint
+        lastRewardBlock
+        accSushiPerShare
+      }
+    }
+  `;
+  return await fetch(process.env.MASTERCHEF, {
+    method: "POST",
+    body: JSON.stringify({query})
+  }).then(response => response.json());
+};

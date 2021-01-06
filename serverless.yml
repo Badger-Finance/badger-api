@@ -48,6 +48,7 @@ provider:
     BADGER: "https://api.thegraph.com/subgraphs/name/axejintao/badger-dao"
     UNISWAP: "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2"
     SUSHISWAP: "https://api.thegraph.com/subgraphs/name/croco-finance/sushiswap"
+    MASTERCHEF: "https://api.thegraph.com/subgraphs/name/sushiswap/master-chef"
     ASSET_DATA: ${self:custom.table.ASSET_DATA.${self:custom.stage}}
     INFURA_PROJECT_ID: ${self:custom.secrets.INFURA_PROJECT_ID}
     INFURA_PROJECT_SECRET: ${self:custom.secrets.INFURA_PROJECT_SECRET}
@@ -95,24 +96,6 @@ functions:
               - name: "userId"
                 description: "Ethereum address"
                 required: true
-            tags:
-              - "Protocol"
-            methodResponses:
-              - statusCode: "200"
-              - statusCode: "500"
-
-  get-protocol-performance-summary:
-    handler: service/protocol/performance/handler.summaryHandler
-    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
-    timeout: 30
-    events:
-      - http:
-          path: /protocol/performance
-          method: get
-          cors: true
-          documentation:
-            summary: "Estimated ROI per sett"
-            description: "Return multiple ROI values for sampled periods"
             tags:
               - "Protocol"
             methodResponses:
