@@ -247,6 +247,14 @@ functions:
             contract: "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28"
             createdBlock: 11380871
             asset: "badger"
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-digg
+          description: "index historical data for digg sett"
+          rate: rate(5 minutes)
+          input:
+            contract: "0x7e7e112a68d8d2e221e11047a72ffc1065c38e1a"
+            createdBlock: 11680422
+            asset: "digg"
 
   index-uniswap:
     handler: service/index/uniswap/handler.handler
@@ -261,6 +269,14 @@ functions:
             contract: "0x235c9e24d3fb2fafd58a2e49d454fdcd2dbf7ff1"
             createdBlock: 11380883
             asset: "badger-wbtc"
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-uniswap-digg-wbtc
+          description: "index historical data for badger uniswap digg-wbtc sett"
+          rate: rate(5 minutes)
+          input:
+            contract: "0xc17078fdd324cc473f8175dc5290fae5f2e84714"
+            createdBlock: 11680833
+            asset: "digg-wbtc"
 
   index-sushiswap:
     handler: service/index/sushiswap/handler.handler
@@ -283,3 +299,11 @@ functions:
             contract: "0x758a43ee2bff8230eeb784879cdcff4828f2544d"
             createdBlock: 11539529
             asset: "slp-wbtc-eth"
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-sushiswap-digg-wbtc
+          description: "index historical data for badger sushiswap digg-wbtc jar"
+          rate: rate(5 minutes)
+          input:
+            contract: "0x88128580acdd9c04ce47afce196875747bf2a9f6"
+            createdBlock: 11681030
+            asset: "slp-digg-wbtc"

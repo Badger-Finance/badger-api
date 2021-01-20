@@ -3,9 +3,9 @@ const { setts } = require("../../setts");
 const { getFarmData } = require("../farm/handler");
 const fetch = require("node-fetch");
 
-// data point constants - index twice per hour, 48 per day
+// data point constants - index once per hour, 24 per day
 const CURRENT = 0;
-const ONE_DAY = 24; // data points indexed at 10 minute intervals
+const ONE_DAY = 24;
 const THREE_DAYS = ONE_DAY * 3;
 const SEVEN_DAYS = ONE_DAY * 7;
 const THIRTY_DAYS = ONE_DAY * 30;
@@ -88,7 +88,6 @@ const getSamplePerformance = (data, offset) => {
   return getPerformance(ratioDiff, blockDiff, timestampDiff) * 100;
 };
 
-// TODO: handle 3 / 7 / 30 days, handle liqduidity edge case more gracefully
 const getProtocolPerformance = async (asset) => {
   const settKey = Object.keys(setts).find(sett => setts[sett].asset.toLowerCase() === asset);
   const switchKey = setts[settKey].protocol;
@@ -103,7 +102,8 @@ const getProtocolPerformance = async (asset) => {
         getSushiswapEmissions()
       ]);
       const sushiswapApy = earnings[0];
-      const sushiEmissionApy = earnings[1][asset.toLowerCase()].apy * 100;
+      const sushiEmission = earnings[1][asset.toLowerCase()];
+      const sushiEmissionApy = sushiEmission ? sushiEmission.apy * 100 : 0;
       sushiswapApy.oneDay += sushiEmissionApy;
       sushiswapApy.threeDay += sushiEmissionApy;
       sushiswapApy.sevenDay += sushiEmissionApy;

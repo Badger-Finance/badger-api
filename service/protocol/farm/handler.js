@@ -7,11 +7,11 @@ exports.handler = async (event) => {
     const farmData = await this.getFarmData();
     const settData = await Promise.all(Object.entries(setts).map(sett => getAssetPerformance(sett[1].asset.toLowerCase(), farmData)));
     Object.entries(setts).forEach((sett, i) => {
-      const apy = farmData[sett[1].asset.toLowerCase()].apy;
-      const combinedApy = settData[i].threeDayFarm;
-      console.log('base apy', apy)
-      console.log('combined apy', combinedApy)
-      farmData[sett[1].asset.toLowerCase()].apy = combinedApy ? combinedApy : apy;
+      const farm = farmData[sett[1].asset.toLowerCase()];
+      if (farm) {
+        const combinedApy = settData[i].threeDayFarm;
+        farm.apy = combinedApy ? combinedApy : farm.apy;
+      }
     });
     return respond(200, farmData);
   } catch (err) {
@@ -66,6 +66,30 @@ module.exports.getFarmData = async () => {
       valuePerDay: toDay(geyserEmissionValueRate),
       apy: apy
     };
+  }));
+
+  // Setts that do not get badger emissions - these will only measure ppfs growth
+  await Promise.all(Object.entries(setts).map(async (noFarmSett, i) => {
+    const sett = geyserSetts.find(s => s.id === noFarmSett[0]);
+    const asset = noFarmSett[1].asset.toLowerCase();
+    const farm = farms[asset];
+    if (!farm) {
+      const token = sett.token.id;
+      const settShares = sett.netShareDeposit;
+      const pricePerFullShare = sett. pricePerFullShare / 1e18;
+      const settDeposits = settShares * pricePerFullShare;
+      const settDepositsValue = getUsdValue(token, settDeposits, priceData);
+      farms[asset] = {
+        tokenBalance: settDeposits,
+        valueBalance: settDepositsValue,
+        allocShare: 0,
+        badgerPerHour: 0,
+        valuePerHour: 0,
+        badgerPerDay: 0,
+        valuePerDay: 0,
+        apy: 0,
+      };
+    }
   }));
 
   return farms;

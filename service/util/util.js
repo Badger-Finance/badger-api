@@ -1,7 +1,7 @@
 const AWS = require("aws-sdk");
 const Web3 = require("web3");
 const fetch = require("node-fetch");
-const { UNI_BADGER, RENBTC, SBTC, BADGER, TBTC, SUSHI_BADGER, SUSHI_WBTC } = require("./constants");
+const { UNI_BADGER, RENBTC, SBTC, BADGER, TBTC, SUSHI_BADGER, SUSHI_WBTC, DIGG, UNI_DIGG, SUSHI_DIGG } = require("./constants");
 const ddb = new AWS.DynamoDB.DocumentClient({apiVersion: "2012-08-10"});
 const web3 = new Web3(new Web3.providers.HttpProvider(`https://:${process.env.INFURA_PROJECT_SECRET}@mainnet.infura.io/v3/${process.env.INFURA_PROJECT_ID}`));
 
@@ -185,6 +185,9 @@ module.exports.getPrices = async () => {
     this.getUniswapPrice(UNI_BADGER),
     this.getSushiswapPrice(SUSHI_BADGER),
     this.getSushiswapPrice(SUSHI_WBTC),
+    this.getContractPrice(DIGG),
+    this.getUniswapPrice(UNI_DIGG),
+    this.getSushiswapPrice(SUSHI_DIGG),
   ]);
   return {
     tbtc: prices[0],
@@ -194,6 +197,9 @@ module.exports.getPrices = async () => {
     unibadger: prices[4],
     sushibadger: prices[5],
     sushiwbtc: prices[6],
+    digg: prices[7],
+    unidigg: prices[8],
+    sushidigg: prices[9],
   };
 };
 
@@ -213,6 +219,12 @@ module.exports.getUsdValue = (asset, tokens, prices) => {
       return tokens * prices.sushibadger;
     case SUSHI_WBTC:
       return tokens * prices.sushiwbtc;
+    case DIGG: 
+      return tokens * prices.digg;
+    case UNI_DIGG: 
+      return tokens * prices.unidigg;
+    case SUSHI_DIGG: 
+      return tokens * prices.sushidigg;
     default:
       return 0;
   }
