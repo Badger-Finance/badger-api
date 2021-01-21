@@ -1,6 +1,7 @@
 const { respond, getUsdValue, getGeysers, getPrices } = require("../../util/util");
 const { getAssetPerformance } = require("../performance/handler");
-const { setts } = require("../../setts");
+const { setts, diggSetts } = require("../../setts");
+const { DIGG, BADGER } = require("../../util/constants");
 
 exports.handler = async (event) => {
   try {
@@ -55,39 +56,50 @@ module.exports.getFarmData = async () => {
     const geyserEmissionRate = geyserEmission / geyser.cycleDuration;
     const geyserEmissionValueRate = geyserEmissionValue / geyser.cycleDuration;
     const apy = toDay(geyserEmissionValueRate) * 365 / geyserDepositsValue * 100;
+    const tokenName = diggSetts.includes(sett.id) ? 'DIGG' : 'BADGER';
 
     farms[geyserName] = {
       tokenBalance: geyserDeposits,
       valueBalance: geyserDepositsValue,
       allocShare: allocShare,
-      badgerPerHour: toHour(geyserEmissionRate),
+      tokensPerHour: toHour(geyserEmissionRate),
       valuePerHour: toHour(geyserEmissionValueRate),
-      badgerPerDay: toDay(geyserEmissionRate),
+      tokensPerDay: toDay(geyserEmissionRate),
       valuePerDay: toDay(geyserEmissionValueRate),
-      apy: apy
+      apy: apy,
+      token: tokenName,
     };
   }));
-
+  
   // Setts that do not get badger emissions - these will only measure ppfs growth
   await Promise.all(Object.entries(setts).map(async (noFarmSett, i) => {
     const sett = geyserSetts.find(s => s.id === noFarmSett[0]);
     const asset = noFarmSett[1].asset.toLowerCase();
     const farm = farms[asset];
+    const tokenName = diggSetts.includes(noFarmSett[0]) ? 'DIGG' : 'BADGER';
+    
     if (!farm) {
-      const token = sett.token.id;
-      const settShares = sett.netShareDeposit;
-      const pricePerFullShare = sett. pricePerFullShare / 1e18;
-      const settDeposits = settShares * pricePerFullShare;
-      const settDepositsValue = getUsdValue(token, settDeposits, priceData);
+      let settDeposits = 0;
+      let settDepositsValue = 0;
+
+      if (sett) {
+        const token = sett.token.id;
+        const settShares = sett.netShareDeposit;
+        const pricePerFullShare = sett. pricePerFullShare / 1e18;
+        settDeposits = settShares * pricePerFullShare;
+        settDepositsValue = getUsdValue(token, settDeposits, priceData);
+      }
+
       farms[asset] = {
         tokenBalance: settDeposits,
         valueBalance: settDepositsValue,
         allocShare: 0,
-        badgerPerHour: 0,
+        tokensPerHour: 0,
         valuePerHour: 0,
-        badgerPerDay: 0,
+        tokensPerDay: 0,
         valuePerDay: 0,
         apy: 0,
+        token: tokenName,
       };
     }
   }));

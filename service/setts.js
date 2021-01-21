@@ -67,3 +67,9 @@ module.exports.setts = {
     geyser: "0x7f6fe274e172ac7d096a7b214c78584d99ca988b",
   }
 };
+
+module.exports.diggSetts = [
+  "0x7e7e112a68d8d2e221e11047a72ffc1065c38e1a",
+  "0xc17078fdd324cc473f8175dc5290fae5f2e84714",
+  "0x88128580acdd9c04ce47afce196875747bf2a9f6"
+];
