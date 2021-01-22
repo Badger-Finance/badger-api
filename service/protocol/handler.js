@@ -1,6 +1,5 @@
 const { setts } = require("../setts");
-const { UNI_BADGER } = require("../util/constants");
-const { getAssetData, getUniswapPair, respond } = require("../util/util");
+const { getAssetData, respond, getGeysers, getPrices, getUsdValue } = require("../util/util");
 
 const formatFloat = (value) => parseFloat(parseFloat(value).toFixed(2));
 exports.handler = async (event) => {
@@ -9,35 +8,36 @@ exports.handler = async (event) => {
   }
 
   const includeToken = event.queryStringParameters ? event.queryStringParameters.tokens : false;
-  const liquidity = await getUniswapPair(UNI_BADGER);
-  const assetValues = {
-    "liquidity": formatFloat(liquidity.data.pair.reserveUSD),
-    ...includeToken && {"liquidityTokens": parseFloat(liquidity.data.pair.totalSupply)},
-  };
+  const assetValues = {};
+  const data = await Promise.all([
+    getPrices(),
+    getGeysers(),
+  ]);
+  const prices = data[0];
+  const geyserData = data[1];
+  const settData = geyserData.data.setts;
 
-  let updatedAt = 0;
-  let settValue = 0;
+  let totalValue = 0;
   for (const key of Object.keys(setts)) {
     const asset = setts[key].asset.toLowerCase();
     const tokenValueKey = asset + "Tokens";
-    const assetData = (await getAssetData(process.env.ASSET_DATA, asset, 1))[0];
-    if (assetData == null || assetData == undefined) {
+    const settInfo = settData.find(s => s.id === key);
+    if (settInfo == null || settInfo == undefined) {
       assetValues[asset] = 0;
       if (includeToken) {
         assetValues[tokenValueKey] = 0;
       }
       continue;
     }
-    const value = formatFloat(assetData.value);
-    updatedAt = Math.max(updatedAt, assetData.timestamp);
+    const tokens = settInfo.netDeposit / 1e18;
+    const value = formatFloat(getUsdValue(settInfo.token.id, tokens, prices));
     assetValues[asset] = value;
     if (includeToken) {
-      assetValues[tokenValueKey] = parseFloat(assetData.balance);
+      assetValues[tokenValueKey] = formatFloat(parseFloat(tokens));
     }
-    settValue += value;
+    totalValue += value;
   }
-  assetValues.totalValue = settValue;
-  assetValues.updatedAt = updatedAt;
+  assetValues.totalValue = totalValue;
 
   return respond(200, assetValues);
 };

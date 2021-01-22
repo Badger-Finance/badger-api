@@ -37,7 +37,9 @@ module.exports.getFarmData = async () => {
   const geyserSetts = geyserData.data.setts;
   const farms = {};
 
-  const totalAlloc = geysers.map((geyser) => geyser.cycleRewardTokens / 1e18)
+  const badgerTotalAlloc = geysers.map((geyser) => geyser.badgerCycleRewardTokens / 1e18)
+    .reduce((total, tokens) => total + tokens);
+  const diggTotalAlloc = geysers.map((geyser) => geyser.diggCycleRewardTokens / 1e18)
     .reduce((total, tokens) => total + tokens);
   await Promise.all(geysers.map(async (geyser) => {
     // evaluate farm key & token
@@ -49,25 +51,33 @@ module.exports.getFarmData = async () => {
     const geyserDeposits = geyserShares * pricePerFullShare / 1e18;
     const geyserDepositsValue = getUsdValue(geyserToken, geyserDeposits, priceData);
 
+    const getRate = (value, duration) => duration > 0 ? value / duration : 0;
     // calculate pool related information
-    const geyserEmission = geyser.cycleRewardTokens / 1e18;
-    const geyserEmissionValue = geyserEmission * priceData.badger;
-    const allocShare = geyserEmission / totalAlloc;
-    const geyserEmissionRate = geyserEmission / geyser.cycleDuration;
-    const geyserEmissionValueRate = geyserEmissionValue / geyser.cycleDuration;
-    const apy = toDay(geyserEmissionValueRate) * 365 / geyserDepositsValue * 100;
-    const tokenName = diggSetts.includes(sett.id) ? 'DIGG' : 'BADGER';
+    const badgerEmission = geyser.badgerCycleRewardTokens / 1e18;
+    const badgerEmissionValue = badgerEmission * priceData.badger;
+    const allocShareBadger = badgerEmission / badgerTotalAlloc;
+    const badgerEmissionRate = getRate(badgerEmission, geyser.badgerCycleDuration);
+    const badgerEmissionValueRate = getRate(badgerEmissionValue, geyser.badgerCycleDuration);
+    const badgerApy = toDay(badgerEmissionValueRate) * 365 / geyserDepositsValue * 100;
+
+    const diggEmission = geyser.diggCycleRewardTokens / 1e18;
+    const diggEmissionValue = diggEmission * priceData.digg;
+    const allocShareDigg = diggEmission / diggTotalAlloc;
+    const diggEmissionRate = getRate(diggEmission, geyser.diggCycleDuration);
+    const diggEmissionValueRate = getRate(diggEmissionValue, geyser.diggCycleDuration);
+    const diggApy = toDay(diggEmissionValueRate) * 365 / geyserDepositsValue * 100;
 
     farms[geyserName] = {
       tokenBalance: geyserDeposits,
       valueBalance: geyserDepositsValue,
-      allocShare: allocShare,
-      tokensPerHour: toHour(geyserEmissionRate),
-      valuePerHour: toHour(geyserEmissionValueRate),
-      tokensPerDay: toDay(geyserEmissionRate),
-      valuePerDay: toDay(geyserEmissionValueRate),
-      apy: apy,
-      token: tokenName,
+      allocShareBadger: allocShareBadger,
+      allocShareDigg: allocShareDigg ? allocShareDigg : 0,
+      badgerPerDay: toDay(badgerEmissionRate),
+      diggPerDay: toDay(diggEmissionRate),
+      badgerValuePerDay: toDay(badgerEmissionValueRate),
+      diggValuePerDay: toDay(diggEmissionValueRate),
+      valuePerDay: toDay(badgerEmissionValueRate + diggEmissionValueRate),
+      apy: badgerApy + diggApy,
     };
   }));
   
@@ -76,7 +86,6 @@ module.exports.getFarmData = async () => {
     const sett = geyserSetts.find(s => s.id === noFarmSett[0]);
     const asset = noFarmSett[1].asset.toLowerCase();
     const farm = farms[asset];
-    const tokenName = diggSetts.includes(noFarmSett[0]) ? 'DIGG' : 'BADGER';
     
     if (!farm) {
       let settDeposits = 0;
@@ -93,13 +102,14 @@ module.exports.getFarmData = async () => {
       farms[asset] = {
         tokenBalance: settDeposits,
         valueBalance: settDepositsValue,
-        allocShare: 0,
-        tokensPerHour: 0,
-        valuePerHour: 0,
-        tokensPerDay: 0,
+        allocShareBadger: 0,
+        allocShareDigg: 0,
+        badgerPerDay: 0,
+        diggPerDay: 0,
+        badgerValuePerDay: 0,
+        diggValuePerDay: 0,
         valuePerDay: 0,
         apy: 0,
-        token: tokenName,
       };
     }
   }));

@@ -69,7 +69,7 @@ module.exports.getContractPrice = async (contract) => {
     if (json[contract]) {
       return json[contract].usd;
     }
-    return undefined;
+    return 0;
   });
 };
 
@@ -107,14 +107,17 @@ module.exports.getGeysers = async () => {
           id
         }
         netShareDeposit
-        cycleDuration
-        cycleRewardTokens
+        badgerCycleDuration
+        badgerCycleRewardTokens
+        diggCycleDuration
+        diggCycleRewardTokens
       },
       setts(orderDirection: asc) {
         id
         token {
           id
         }
+        netDeposit
         pricePerFullShare
       }
     }
@@ -142,6 +145,9 @@ module.exports.getUniswapPair = async (token, block) => {
 
 module.exports.getUniswapPrice = async (token) => {
   const uniswapPair = await this.getUniswapPair(token);
+  if (uniswapPair.data.pair.totalSupply === 0) {
+    return 0;
+  }
   const reserveUSD = uniswapPair.data.pair.reserveUSD;
   const liquidityPrice = (1 / uniswapPair.data.pair.totalSupply);
   return reserveUSD * liquidityPrice;
@@ -171,6 +177,9 @@ module.exports.getSushiswapPair = async (token, block) => {
 
 module.exports.getSushiswapPrice = async (token) => {
   const pair = (await this.getSushiswapPair(token)).data.pair;
+  if (pair.totalSupply === 0) {
+    return 0;
+  }
   const token0Price = await this.getContractPrice(pair.token0.id);
   const token1Price = await this.getContractPrice(pair.token1.id);
   return (token0Price * pair.reserve0 + token1Price * pair.reserve1) / pair.totalSupply;
