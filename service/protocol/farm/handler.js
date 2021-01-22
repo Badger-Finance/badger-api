@@ -93,9 +93,7 @@ module.exports.getFarmData = async () => {
 
       if (sett) {
         const token = sett.token.id;
-        const settShares = sett.netShareDeposit;
-        const pricePerFullShare = sett. pricePerFullShare / 1e18;
-        settDeposits = settShares * pricePerFullShare;
+        settDeposits = sett.balance;
         settDepositsValue = getUsdValue(token, settDeposits, priceData);
       }
 

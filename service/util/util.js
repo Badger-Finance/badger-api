@@ -66,7 +66,7 @@ module.exports.getContractPrice = async (contract) => {
   return await fetch(`https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=${contract}&vs_currencies=usd`)
   .then(response => response.json())
   .then(json => {
-    if (json[contract]) {
+    if (json[contract] && json[contract].usd) {
       return json[contract].usd;
     }
     return 0;
@@ -117,7 +117,9 @@ module.exports.getGeysers = async () => {
         token {
           id
         }
+        balance
         netDeposit
+        netShareDeposit
         pricePerFullShare
       }
     }

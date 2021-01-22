@@ -29,11 +29,11 @@ exports.handler = async (event) => {
       }
       continue;
     }
-    const tokens = settInfo.netDeposit / 1e18;
+    const tokens = settInfo.balance / 1e18;
     const value = formatFloat(getUsdValue(settInfo.token.id, tokens, prices));
     assetValues[asset] = value;
     if (includeToken) {
-      assetValues[tokenValueKey] = formatFloat(parseFloat(tokens));
+      assetValues[tokenValueKey] = parseFloat(tokens);
     }
     totalValue += value;
   }
