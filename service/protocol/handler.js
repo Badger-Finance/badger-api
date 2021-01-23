@@ -1,12 +1,8 @@
 const { setts } = require("../setts");
-const { getAssetData, respond, getGeysers, getPrices, getUsdValue } = require("../util/util");
+const { respond, getGeysers, getPrices, getUsdValue } = require("../util/util");
 
 const formatFloat = (value) => parseFloat(parseFloat(value).toFixed(2));
 exports.handler = async (event) => {
-  if (event.source === "serverless-plugin-warmup") {
-    return 200;
-  }
-
   const includeToken = event.queryStringParameters ? event.queryStringParameters.tokens : false;
   const assetValues = {};
   const data = await Promise.all([
@@ -29,7 +25,12 @@ exports.handler = async (event) => {
       }
       continue;
     }
-    const tokens = settInfo.balance / 1e18;
+    let tokens;
+    if (asset === 'digg') {
+      tokens = settInfo.balance / 1e9;
+    } else {
+      tokens = settInfo.balance / 1e18;
+    }
     const value = formatFloat(getUsdValue(settInfo.token.id, tokens, prices));
     assetValues[asset] = value;
     if (includeToken) {

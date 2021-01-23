@@ -3,7 +3,7 @@ const Web3 = require("web3");
 const fetch = require("node-fetch");
 const { UNI_BADGER, RENBTC, SBTC, BADGER, TBTC, SUSHI_BADGER, SUSHI_WBTC, DIGG, UNI_DIGG, SUSHI_DIGG } = require("./constants");
 const ddb = new AWS.DynamoDB.DocumentClient({apiVersion: "2012-08-10"});
-const web3 = new Web3(new Web3.providers.HttpProvider(`https://:${process.env.INFURA_PROJECT_SECRET}@mainnet.infura.io/v3/${process.env.INFURA_PROJECT_ID}`));
+const web3 = new Web3(new Web3.providers.HttpProvider('https://web3.1inch.exchange/'));
 
 module.exports.respond = (statusCode, body) => {
   return {
@@ -134,7 +134,14 @@ module.exports.getUniswapPair = async (token, block) => {
   const query = `
     {
       pair(id: "${token}"${block ? `, block: {number: ${block}}`: ""}) {
-        reserveUSD
+        reserve0
+        reserve1
+        token0 {
+          id
+        }
+        token1 {
+          id
+        }
         totalSupply
       }
     }
@@ -146,13 +153,13 @@ module.exports.getUniswapPair = async (token, block) => {
 };
 
 module.exports.getUniswapPrice = async (token) => {
-  const uniswapPair = await this.getUniswapPair(token);
-  if (uniswapPair.data.pair.totalSupply === 0) {
+  const pair = (await this.getUniswapPair(token)).data.pair;
+  if (pair.totalSupply === 0) {
     return 0;
   }
-  const reserveUSD = uniswapPair.data.pair.reserveUSD;
-  const liquidityPrice = (1 / uniswapPair.data.pair.totalSupply);
-  return reserveUSD * liquidityPrice;
+  const token0Price = await this.getContractPrice(pair.token0.id);
+  const token1Price = await this.getContractPrice(pair.token1.id);
+  return (token0Price * pair.reserve0 + token1Price * pair.reserve1) / pair.totalSupply;
 };
 
 module.exports.getSushiswapPair = async (token, block) => {
@@ -196,7 +203,7 @@ module.exports.getPrices = async () => {
     this.getUniswapPrice(UNI_BADGER),
     this.getSushiswapPrice(SUSHI_BADGER),
     this.getSushiswapPrice(SUSHI_WBTC),
-    this.getContractPrice(DIGG),
+    this.getTokenPrice("digg"),
     this.getUniswapPrice(UNI_DIGG),
     this.getSushiswapPrice(SUSHI_DIGG),
   ]);

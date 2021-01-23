@@ -18,11 +18,12 @@ module.exports.indexAsset =  async (event, getPrice) => {
       continue;
     }
 
+    const decimals = asset === 'digg' ? 9 : 18;
     const settData = sett.data.sett;
     const blockData = await getBlock(block);
     const timestamp = blockData.timestamp * 1000;
-    const balance = settData.balance / Math.pow(10, 18);
-    const supply = settData.totalSupply / Math.pow(10, 18);
+    const balance = settData.balance / Math.pow(10, decimals);
+    const supply = settData.totalSupply / Math.pow(10, decimals);
     const ratio = settData.pricePerFullShare / Math.pow(10, 18);
     const value = balance * await getPrice(settData);
     

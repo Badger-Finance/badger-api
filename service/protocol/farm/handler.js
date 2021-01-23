@@ -46,27 +46,32 @@ module.exports.getFarmData = async () => {
     const sett = geyserSetts.find(sett => sett.id === geyser.stakingToken.id);
     const geyserName = setts[sett.id].asset.toLowerCase();
     const geyserToken = sett.token.id;
-    const geyserShares = geyser.netShareDeposit;
+    const geyserShares = geyser.netShareDeposit > 0 ? geyser.netShareDeposit : sett.balance;
     const pricePerFullShare = sett.pricePerFullShare / 1e18;
     const geyserDeposits = geyserShares * pricePerFullShare / 1e18;
     const geyserDepositsValue = getUsdValue(geyserToken, geyserDeposits, priceData);
 
-    const getRate = (value, duration) => duration > 0 ? value / duration : 0;
     // calculate pool related information
-    const badgerEmission = geyser.badgerCycleRewardTokens / 1e18;
+    const getRate = (value, duration) => duration > 0 ? value / duration : 0;
+
+    // badger emissions
+    const badgerEmission = parseFloat(geyser.badgerCycleRewardTokens / 1e18);
     const badgerEmissionValue = badgerEmission * priceData.badger;
     const allocShareBadger = badgerEmission / badgerTotalAlloc;
     const badgerEmissionRate = getRate(badgerEmission, geyser.badgerCycleDuration);
     const badgerEmissionValueRate = getRate(badgerEmissionValue, geyser.badgerCycleDuration);
     const badgerApy = toDay(badgerEmissionValueRate) * 365 / geyserDepositsValue * 100;
 
-    const diggEmission = geyser.diggCycleRewardTokens / 1e18;
+    // digg emissions
+    let diggEmission = parseFloat(geyser.diggCycleRewardTokens / 1e9);
     const diggEmissionValue = diggEmission * priceData.digg;
     const allocShareDigg = diggEmission / diggTotalAlloc;
     const diggEmissionRate = getRate(diggEmission, geyser.diggCycleDuration);
     const diggEmissionValueRate = getRate(diggEmissionValue, geyser.diggCycleDuration);
     const diggApy = toDay(diggEmissionValueRate) * 365 / geyserDepositsValue * 100;
 
+    // avoid using infinity directly - replace with a huge value
+    const combinedApy = isFinite(badgerApy) && isFinite(diggApy) ? badgerApy + diggApy : 1e99;
     farms[geyserName] = {
       tokenBalance: geyserDeposits,
       valueBalance: geyserDepositsValue,
@@ -77,7 +82,7 @@ module.exports.getFarmData = async () => {
       badgerValuePerDay: toDay(badgerEmissionValueRate),
       diggValuePerDay: toDay(diggEmissionValueRate),
       valuePerDay: toDay(badgerEmissionValueRate + diggEmissionValueRate),
-      apy: badgerApy + diggApy,
+      apy: combinedApy,
     };
   }));
   

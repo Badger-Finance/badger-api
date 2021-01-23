@@ -54,6 +54,28 @@ provider:
     INFURA_PROJECT_SECRET: ${self:custom.secrets.INFURA_PROJECT_SECRET}
 
 functions:
+  get-protocol-ppfs:
+    handler: service/protocol/ppfs/handler.handler
+    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
+    timeout: 30
+    events:
+      - http:
+          path: /protocol/ppfs
+          method: get
+          cors: true
+          documentation:
+            summary: "Retrieve ppfs for all setts"
+            description: "PPFS values are pulled from indexed chain data"
+            queryParams:
+              - name: "tokens"
+                description: "Optionally include token balances"
+                required: false
+            tags:
+              - "Protocol"
+            methodResponses:
+              - statusCode: "200"
+              - statusCode: "500"
+  
   get-protocol-value:
     handler: service/protocol/handler.handler
     role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
@@ -202,7 +224,7 @@ functions:
               - statusCode: "200"
               - statusCode: "500"
 
-  index-token:
+  index-crv-btc:
     handler: service/index/curve/handler.handler
     role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
     timeout: 300
@@ -239,6 +261,12 @@ functions:
             contract: "0xaf5a1decfa95baf63e0084a35c62592b774a2a87"
             createdBlock: 11380939
             asset: "hrenbtccrv"
+
+  index-token:
+    handler: service/index/token/handler.handler
+    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
+    timeout: 300
+    events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-badger
           description: "index historical data for badger sett"
@@ -247,6 +275,7 @@ functions:
             contract: "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28"
             createdBlock: 11380871
             asset: "badger"
+            token: "badger-dao"
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-digg
           description: "index historical data for digg sett"
@@ -255,6 +284,7 @@ functions:
             contract: "0x7e7e112a68d8d2e221e11047a72ffc1065c38e1a"
             createdBlock: 11680422
             asset: "digg"
+            token: "digg"
 
   index-uniswap:
     handler: service/index/uniswap/handler.handler
