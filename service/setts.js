@@ -1,4 +1,4 @@
-const { UNI_BADGER, SBTC, RENBTC, BADGER, TBTC, SUSHI_BADGER, SUSHI_WBTC } = require("./util/constants");
+const { UNI_BADGER, SBTC, RENBTC, BADGER, TBTC, SUSHI_BADGER, SUSHI_WBTC, DIGG, SUSHI_DIGG, UNI_DIGG } = require("./util/constants");
 
 module.exports.setts = {
   "0xd04c48a53c111300ad41190d63681ed3dad998ec": {
@@ -48,5 +48,28 @@ module.exports.setts = {
     protocol: "sushiswap",
     token: SUSHI_BADGER,
     geyser: "0xb5b654efba23596ed49fade44f7e67e23d6712e7",
+  },
+  "0x7e7e112a68d8d2e221e11047a72ffc1065c38e1a": {
+    asset: "DIGG",
+    protocol: "digg",
+    token: DIGG,
+  },
+  "0xc17078fdd324cc473f8175dc5290fae5f2e84714": {
+    asset: "DIGG-WBTC",
+    protocol: "uniswap",
+    token: UNI_DIGG,
+    geyser: "0x0194b5fe9ab7e0c43a08acbb771516fc057402e7",
+  },
+  "0x88128580acdd9c04ce47afce196875747bf2a9f6": {
+    asset: "SLP-DIGG-WBTC",
+    protocol: "sushiswap",
+    token: SUSHI_DIGG,
+    geyser: "0x7f6fe274e172ac7d096a7b214c78584d99ca988b",
   }
 };
+
+module.exports.diggSetts = [
+  "0x7e7e112a68d8d2e221e11047a72ffc1065c38e1a",
+  "0xc17078fdd324cc473f8175dc5290fae5f2e84714",
+  "0x88128580acdd9c04ce47afce196875747bf2a9f6"
+];

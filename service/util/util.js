@@ -1,9 +1,9 @@
 const AWS = require("aws-sdk");
 const Web3 = require("web3");
 const fetch = require("node-fetch");
-const { UNI_BADGER, RENBTC, SBTC, BADGER, TBTC, SUSHI_BADGER, SUSHI_WBTC } = require("./constants");
+const { UNI_BADGER, RENBTC, SBTC, BADGER, TBTC, SUSHI_BADGER, SUSHI_WBTC, DIGG, UNI_DIGG, SUSHI_DIGG } = require("./constants");
 const ddb = new AWS.DynamoDB.DocumentClient({apiVersion: "2012-08-10"});
-const web3 = new Web3(new Web3.providers.HttpProvider(`https://:${process.env.INFURA_PROJECT_SECRET}@mainnet.infura.io/v3/${process.env.INFURA_PROJECT_ID}`));
+const web3 = new Web3(new Web3.providers.HttpProvider('https://web3.1inch.exchange/'));
 
 module.exports.respond = (statusCode, body) => {
   return {
@@ -66,10 +66,10 @@ module.exports.getContractPrice = async (contract) => {
   return await fetch(`https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=${contract}&vs_currencies=usd`)
   .then(response => response.json())
   .then(json => {
-    if (json[contract]) {
+    if (json[contract] && json[contract].usd) {
       return json[contract].usd;
     }
-    return undefined;
+    return 0;
   });
 };
 
@@ -107,14 +107,19 @@ module.exports.getGeysers = async () => {
           id
         }
         netShareDeposit
-        cycleDuration
-        cycleRewardTokens
+        badgerCycleDuration
+        badgerCycleRewardTokens
+        diggCycleDuration
+        diggCycleRewardTokens
       },
       setts(orderDirection: asc) {
         id
         token {
           id
         }
+        balance
+        netDeposit
+        netShareDeposit
         pricePerFullShare
       }
     }
@@ -129,7 +134,14 @@ module.exports.getUniswapPair = async (token, block) => {
   const query = `
     {
       pair(id: "${token}"${block ? `, block: {number: ${block}}`: ""}) {
-        reserveUSD
+        reserve0
+        reserve1
+        token0 {
+          id
+        }
+        token1 {
+          id
+        }
         totalSupply
       }
     }
@@ -141,10 +153,13 @@ module.exports.getUniswapPair = async (token, block) => {
 };
 
 module.exports.getUniswapPrice = async (token) => {
-  const uniswapPair = await this.getUniswapPair(token);
-  const reserveUSD = uniswapPair.data.pair.reserveUSD;
-  const liquidityPrice = (1 / uniswapPair.data.pair.totalSupply);
-  return reserveUSD * liquidityPrice;
+  const pair = (await this.getUniswapPair(token)).data.pair;
+  if (pair.totalSupply === 0) {
+    return 0;
+  }
+  const token0Price = await this.getContractPrice(pair.token0.id);
+  const token1Price = await this.getContractPrice(pair.token1.id);
+  return (token0Price * pair.reserve0 + token1Price * pair.reserve1) / pair.totalSupply;
 };
 
 module.exports.getSushiswapPair = async (token, block) => {
@@ -171,6 +186,9 @@ module.exports.getSushiswapPair = async (token, block) => {
 
 module.exports.getSushiswapPrice = async (token) => {
   const pair = (await this.getSushiswapPair(token)).data.pair;
+  if (pair.totalSupply === 0) {
+    return 0;
+  }
   const token0Price = await this.getContractPrice(pair.token0.id);
   const token1Price = await this.getContractPrice(pair.token1.id);
   return (token0Price * pair.reserve0 + token1Price * pair.reserve1) / pair.totalSupply;
@@ -185,6 +203,9 @@ module.exports.getPrices = async () => {
     this.getUniswapPrice(UNI_BADGER),
     this.getSushiswapPrice(SUSHI_BADGER),
     this.getSushiswapPrice(SUSHI_WBTC),
+    this.getTokenPrice("digg"),
+    this.getUniswapPrice(UNI_DIGG),
+    this.getSushiswapPrice(SUSHI_DIGG),
   ]);
   return {
     tbtc: prices[0],
@@ -194,6 +215,9 @@ module.exports.getPrices = async () => {
     unibadger: prices[4],
     sushibadger: prices[5],
     sushiwbtc: prices[6],
+    digg: prices[7],
+    unidigg: prices[8],
+    sushidigg: prices[9],
   };
 };
 
@@ -213,6 +237,12 @@ module.exports.getUsdValue = (asset, tokens, prices) => {
       return tokens * prices.sushibadger;
     case SUSHI_WBTC:
       return tokens * prices.sushiwbtc;
+    case DIGG: 
+      return tokens * prices.digg;
+    case UNI_DIGG: 
+      return tokens * prices.unidigg;
+    case SUSHI_DIGG: 
+      return tokens * prices.sushidigg;
     default:
       return 0;
   }

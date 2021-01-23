@@ -3,9 +3,9 @@ const { setts } = require("../../setts");
 const { getFarmData } = require("../farm/handler");
 const fetch = require("node-fetch");
 
-// data point constants - index twice per hour, 48 per day
+// data point constants - index two times per hour, 48 per day
 const CURRENT = 0;
-const ONE_DAY = 24; // data points indexed at 10 minute intervals
+const ONE_DAY = 24 * 2;
 const THREE_DAYS = ONE_DAY * 3;
 const SEVEN_DAYS = ONE_DAY * 7;
 const THIRTY_DAYS = ONE_DAY * 30;
@@ -37,25 +37,26 @@ module.exports.getAssetPerformance  = async (asset, farmPerformance) => {
   const protocol = performanceInfo[0];
   const data = performanceInfo[1];
   const farmApy = farmPerformance[asset] ? farmPerformance[asset].apy : 0;
-  const oneDay = getSamplePerformance(data, ONE_DAY) + protocol.oneDay;
-  const threeDay = getSamplePerformance(data, THREE_DAYS) + protocol.oneDay;
-  const sevenDay = getSamplePerformance(data, SEVEN_DAYS) + protocol.sevenDay;
-  const thirtyDay = getSamplePerformance(data, THIRTY_DAYS) + protocol.thirtyDay;
+  const oneDay = getSamplePerformance(data, ONE_DAY, protocol.oneDay);
+  const threeDay = getSamplePerformance(data, THREE_DAYS, protocol.oneDay);
+  const sevenDay = getSamplePerformance(data, SEVEN_DAYS, protocol.sevenDay);
+  const thirtyDay = getSamplePerformance(data, THIRTY_DAYS, protocol.thirtyDay)
   const settPerformance = {
     oneDay: format(oneDay),
     threeDay: format(threeDay),
-    sevenDay: format(sevenDay),
+    sevenDay: format(sevenDay), 
     thirtyDay: format(thirtyDay),
-    oneDayFarm: format(oneDay + farmApy),
-    threeDayFarm: format(threeDay + farmApy),
-    sevenDayFarm: format(sevenDay + farmApy),
-    thirtyDayFarm: format(thirtyDay + farmApy),
+    oneDayFarm: combineApy(oneDay, farmApy),
+    threeDayFarm: combineApy(threeDay, farmApy),
+    sevenDayFarm: combineApy(sevenDay, farmApy),
+    thirtyDayFarm: combineApy(thirtyDay, farmApy),
   };
 
   return settPerformance;
 };
 
 // helper functions
+const combineApy = (base, farm) => base && isFinite(farm) ? format(base + farm) : farm;
 const format = (value) => value !== undefined ? parseFloat(value) : undefined;
 const getRatio = (data, offset) => data.length > offset ? data[data.length - (offset + 1)].ratio : undefined;
 const getBlock = (data, offset) => data.length > offset ? data[data.length - (offset + 1)].height : undefined;
@@ -63,11 +64,11 @@ const getTimestamp = (data, offset) => data.length > offset ? data[data.length -
 
 const getPerformance = (ratioDiff, blockDiff, timeDiff) => {
   const scalar = (ONE_YEAR_MS / timeDiff) * blockDiff;
-  const slope = ratioDiff / blockDiff;
-  return scalar * slope;
+  const slope = ratioDiff / blockDiff;  
+  return scalar * slope ;
 };
 
-const getSamplePerformance = (data, offset) => {
+const getSamplePerformance = (data, offset, protocol) => {
   // get current values
   const currentRatio = getRatio(data, CURRENT);
   const currentBlock = getBlock(data, CURRENT);
@@ -85,10 +86,9 @@ const getSamplePerformance = (data, offset) => {
   const ratioDiff = currentRatio - sampledRatio;
   const blockDiff = currentBlock - sampledBlock;
   const timestampDiff = currentTimestamp - sampledTimestamp;
-  return getPerformance(ratioDiff, blockDiff, timestampDiff) * 100;
+  return getPerformance(ratioDiff, blockDiff, timestampDiff) * 100 + protocol;
 };
 
-// TODO: handle 3 / 7 / 30 days, handle liqduidity edge case more gracefully
 const getProtocolPerformance = async (asset) => {
   const settKey = Object.keys(setts).find(sett => setts[sett].asset.toLowerCase() === asset);
   const switchKey = setts[settKey].protocol;
@@ -103,7 +103,8 @@ const getProtocolPerformance = async (asset) => {
         getSushiswapEmissions()
       ]);
       const sushiswapApy = earnings[0];
-      const sushiEmissionApy = earnings[1][asset.toLowerCase()].apy * 100;
+      const sushiEmission = earnings[1][asset.toLowerCase()];
+      const sushiEmissionApy = sushiEmission ? sushiEmission.apy * 100 : 0;
       sushiswapApy.oneDay += sushiEmissionApy;
       sushiswapApy.threeDay += sushiEmissionApy;
       sushiswapApy.sevenDay += sushiEmissionApy;
