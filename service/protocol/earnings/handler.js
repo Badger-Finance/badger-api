@@ -21,25 +21,25 @@ exports.handler = async (event) => {
 
   const data = userData.data.user;
   const prices = await getPrices();
-  const contract = new web3.eth.Contract(diggAbi, diggContract);
-  const sharesPerFragment = await contract.methods._sharesPerFragment().call();
-  const settEarnings = data.settBalances.map(data => {
-    const asset = setts[data.sett.id].asset;
-    const settPricePerFullShare = parseInt(data.sett.pricePerFullShare) / 1e18;
-    const netShareDeposit = parseInt(data.netShareDeposit);
-    const grossDeposit = parseInt(data.grossDeposit);
-    const grossWithdraw = parseInt(data.grossWithdraw);
-    const settTokens = parseFloat(settPricePerFullShare * netShareDeposit);
-    const earned = (settTokens - grossDeposit + grossWithdraw) / 1e18;
-    const balance = settTokens / 1e18;
-    if (asset === 'digg') {
-      earned /= sharesPerFragment;
-      balance /= sharesPerFragment;
+  const settEarnings = data.settBalances.map(settBalance => {
+    const sett = settBalance.sett;
+    const asset = setts[sett.id].asset;
+    let settPricePerFullShare = parseInt(sett.pricePerFullShare) / 1e18;
+    let ratio = 1;
+    if (asset.toLowerCase() === 'digg') {
+      ratio = (sett.balance / sett.totalSupply) / settPricePerFullShare;
+      settPricePerFullShare = sett.balance / sett.totalSupply;
     }
-    const earnedUsd = getUsdValue(data.sett.token.id, earned, prices);
-    const balanceUsd = getUsdValue(data.sett.token.id, balance, prices);
+    const netShareDeposit = parseInt(settBalance.netShareDeposit);
+    const grossDeposit = parseInt(settBalance.grossDeposit * ratio);
+    const grossWithdraw = parseInt(settBalance.grossWithdraw * ratio);
+    const settTokens = parseFloat(settPricePerFullShare * netShareDeposit);
+    const earned = (settTokens - grossDeposit + grossWithdraw) / Math.pow(10, sett.token.decimals);
+    const balance = settTokens / Math.pow(10, sett.token.decimals);
+    const earnedUsd = getUsdValue(sett.token.id, earned, prices);
+    const balanceUsd = getUsdValue(sett.token.id, balance, prices);
     return {
-      id: data.sett.id,
+      id: sett.id,
       asset: asset,
       balance: balance,
       balanceUsd: balanceUsd,
@@ -109,6 +109,9 @@ const getUserData = async (userId) => {
           sett {
             id
             name
+            balance
+            totalSupply
+            netShareDeposit
             pricePerFullShare
             symbol
             token {

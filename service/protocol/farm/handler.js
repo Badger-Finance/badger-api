@@ -1,7 +1,6 @@
 const { respond, getUsdValue, getGeysers, getPrices } = require("../../util/util");
 const { getAssetPerformance } = require("../performance/handler");
-const { setts, diggSetts } = require("../../setts");
-const { DIGG, BADGER } = require("../../util/constants");
+const { setts } = require("../../setts");
 
 exports.handler = async (event) => {
   try {
