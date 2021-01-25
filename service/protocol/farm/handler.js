@@ -43,18 +43,12 @@ module.exports.getFarmData = async () => {
   const farms = {};
 
   const now = new Date();
-  const badgerTotalAlloc = geysers.map((geyser) => geyser.badgerCycleRewardTokens / 1e18)
-    .reduce((total, tokens) => total + tokens);
-  const diggTotalAlloc = geysers.map((geyser) => geyser.diggCycleRewardTokens / 1e18)
-    .reduce((total, tokens) => total + tokens);
   await Promise.all(geysers.map(async (geyser) => {
     // evaluate farm key & token
     const sett = geyserSetts.find(sett => sett.id === geyser.stakingToken.id);
     const geyserName = setts[sett.id].asset.toLowerCase();
     const geyserToken = sett.token.id;
-    const geyserShares = geyser.netShareDeposit > 0 ? geyser.netShareDeposit : sett.balance;
-    const pricePerFullShare = sett.pricePerFullShare / 1e18;
-    const geyserDeposits = geyserShares * pricePerFullShare / 1e18;
+    const geyserDeposits = sett.balance / 1e18;
     const geyserDepositsValue = getUsdValue(geyserToken, geyserDeposits, priceData);
 
     // calculate pool related information
@@ -69,7 +63,6 @@ module.exports.getFarmData = async () => {
       badgerEmissionDuration += s.durationSec;
     });
     const badgerEmissionValue = badgerEmission * priceData.badger;
-    const allocShareBadger = badgerEmission / badgerTotalAlloc;
     const badgerEmissionRate = getRate(badgerEmission, badgerEmissionDuration);
     const badgerEmissionValueRate = getRate(badgerEmissionValue, badgerEmissionDuration);
     const badgerApy = toDay(badgerEmissionValueRate) * 365 / geyserDepositsValue * 100;
@@ -84,7 +77,6 @@ module.exports.getFarmData = async () => {
     });
     diggEmission /= sharesPerFragment;
     const diggEmissionValue = diggEmission * priceData.digg;
-    const allocShareDigg = diggEmission / diggTotalAlloc;
     const diggEmissionRate = getRate(diggEmission, diggEmissionDuration);
     const diggEmissionValueRate = getRate(diggEmissionValue, diggEmissionDuration);
     const diggApy = toDay(diggEmissionValueRate) * 365 / geyserDepositsValue * 100;
@@ -94,14 +86,14 @@ module.exports.getFarmData = async () => {
     farms[geyserName] = {
       tokenBalance: geyserDeposits,
       valueBalance: geyserDepositsValue,
-      allocShareBadger: allocShareBadger,
-      allocShareDigg: allocShareDigg ? allocShareDigg : 0,
       badgerPerDay: toDay(badgerEmissionRate),
       diggPerDay: toDay(diggEmissionRate),
       badgerValuePerDay: toDay(badgerEmissionValueRate),
       diggValuePerDay: toDay(diggEmissionValueRate),
       valuePerDay: toDay(badgerEmissionValueRate + diggEmissionValueRate),
       apy: combinedApy,
+      badgerApy: badgerApy,
+      diggApy: diggApy,
     };
   }));
   
@@ -117,21 +109,21 @@ module.exports.getFarmData = async () => {
 
       if (sett) {
         const token = sett.token.id;
-        settDeposits = sett.balance;
+        settDeposits = parseInt(sett.balance);
         settDepositsValue = getUsdValue(token, settDeposits, priceData);
       }
 
       farms[asset] = {
         tokenBalance: settDeposits,
         valueBalance: settDepositsValue,
-        allocShareBadger: 0,
-        allocShareDigg: 0,
         badgerPerDay: 0,
         diggPerDay: 0,
         badgerValuePerDay: 0,
         diggValuePerDay: 0,
         valuePerDay: 0,
         apy: 0,
+        badgerApy: 0,
+        diggApy: 0,
       };
     }
   }));

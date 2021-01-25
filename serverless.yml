@@ -4,13 +4,16 @@ frameworkVersion: '2'
 
 plugins:
   - serverless-offline
-  - serverless-plugin-warmup
   - serverless-secrets-plugin
   - serverless-aws-documentation
   - serverless-export-swagger
+  - serverless-api-gateway-caching
 
 custom:
   stage: ${opt:stage, self:provider.stage}
+  apiGatewayCaching:
+    enabled: ${self:custom.caching.${self:custom.stage}}
+    ttlInSeconds: 300
   secretsFilePathPrefix: secrets
   secrets: ${file(${self:custom.secretsFilePathPrefix}/secrets.${self:custom.stage}.yml)}
   documentation:
@@ -36,6 +39,9 @@ custom:
     ASSET_DATA:
       staging: "badger-staging-asset"
       prod: "badger-asset"
+  caching:
+    staging: false
+    prod: true
 
 provider:
   name: aws
@@ -63,6 +69,8 @@ functions:
           path: /protocol/ppfs
           method: get
           cors: true
+          caching:
+            enabled: ${self:custom.caching.${self:custom.stage}}
           documentation:
             summary: "Retrieve ppfs for all setts"
             description: "PPFS values are pulled from indexed chain data"
@@ -85,6 +93,8 @@ functions:
           path: /protocol/value
           method: get
           cors: true
+          caching:
+            enabled: ${self:custom.caching.${self:custom.stage}}
           request:
             parameters:
               querystrings:
@@ -111,6 +121,11 @@ functions:
           path: /protocol/earnings/{userId}
           method: get
           cors: true
+          caching:
+            enabled: ${self:custom.caching.${self:custom.stage}}
+            ttlInSeconds: 14400
+            cacheKeyParameters:
+              - name: request.path.userId
           documentation:
             summary: "Get earnings for a given ethereum address"
             description: "Get the token based earnings for all setts and their current USD valuation"
@@ -133,6 +148,8 @@ functions:
           path: /protocol/farm
           method: get
           cors: true
+          caching:
+            enabled: ${self:custom.caching.${self:custom.stage}}
           documentation:
             summary: "Get active Geyser farms"
             description: "Get the current active Geyser emission allocation"
@@ -151,6 +168,10 @@ functions:
           path: /protocol/sett/{settName}/performance
           method: get
           cors: true
+          caching:
+            enabled: ${self:custom.caching.${self:custom.stage}}
+            cacheKeyParameters:
+              - name: request.path.settName
           documentation:
             summary: "Estimated ROI per sett"
             description: "Return multiple ROI values for sampled periods"
@@ -173,6 +194,10 @@ functions:
           path: /chart/sett/{settName}/performance
           method: get
           cors: true
+          caching:
+            enabled: ${self:custom.caching.${self:custom.stage}}
+            cacheKeyParameters:
+              - name: request.path.settName
           request:
             parameters:
               querystrings:
@@ -203,6 +228,10 @@ functions:
           path: /chart/sett/{settName}
           method: get
           cors: true
+          caching:
+            enabled: ${self:custom.caching.${self:custom.stage}}
+            cacheKeyParameters:
+              - name: request.path.settName
           request:
             parameters:
               querystrings:
