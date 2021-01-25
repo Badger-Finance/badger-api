@@ -2,9 +2,6 @@ const fetch = require("node-fetch");
 const { setts } = require("../../setts");
 const { getPrices, respond } = require("../../util/util");
 const { UNI_BADGER, SBTC, BADGER, RENBTC, TBTC, SUSHI_BADGER, SUSHI_WBTC, SUSHI_DIGG, UNI_DIGG, DIGG } = require("../../util/constants");
-const Web3 = require("web3");
-const web3 = new Web3(new Web3.providers.HttpProvider('https://web3.1inch.exchange/'));
-const { diggContract, diggAbi } = require("../../util/abi");
 
 exports.handler = async (event) => {
   if (event.source === "serverless-plugin-warmup") {
