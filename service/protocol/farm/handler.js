@@ -1,7 +1,10 @@
 const { respond, getUsdValue, getGeysers, getPrices } = require("../../util/util");
 const { getAssetPerformance } = require("../performance/handler");
-const { setts, diggSetts } = require("../../setts");
-const { DIGG, BADGER } = require("../../util/constants");
+const { BADGER, DIGG } = require("../../util/constants");
+const { geyserAbi, diggAbi } = require('../../util/abi');
+const { setts } = require("../../setts");
+const { ethers } = require("ethers");
+const provider = new ethers.providers.JsonRpcProvider('https://cloudflare-eth.com/');
 
 exports.handler = async (event) => {
   try {
@@ -29,14 +32,17 @@ module.exports.getFarmData = async () => {
   const prerequisites = await Promise.all([
     getPrices(),
     getGeysers(),
+    getSharesPerFragment(),
   ]);
 
   const priceData = prerequisites[0];
   const geyserData = prerequisites[1];
+  const sharesPerFragment = prerequisites[2];
   const geysers = geyserData.data.geysers;
   const geyserSetts = geyserData.data.setts;
   const farms = {};
 
+  const now = new Date();
   const badgerTotalAlloc = geysers.map((geyser) => geyser.badgerCycleRewardTokens / 1e18)
     .reduce((total, tokens) => total + tokens);
   const diggTotalAlloc = geysers.map((geyser) => geyser.diggCycleRewardTokens / 1e18)
@@ -55,19 +61,32 @@ module.exports.getFarmData = async () => {
     const getRate = (value, duration) => duration > 0 ? value / duration : 0;
 
     // badger emissions
-    const badgerEmission = parseFloat(geyser.badgerCycleRewardTokens / 1e18);
+    const badgerUnlockSchedules = (await getEmissions(geyser.id, BADGER)).filter(d => new Date(d.endAtSec.toNumber() * 1000) > now);
+    let badgerEmission = 0;
+    let badgerEmissionDuration = 0;
+    badgerUnlockSchedules.forEach(s => {
+      badgerEmission += s.initialLocked / 1e18;
+      badgerEmissionDuration += s.durationSec;
+    });
     const badgerEmissionValue = badgerEmission * priceData.badger;
     const allocShareBadger = badgerEmission / badgerTotalAlloc;
-    const badgerEmissionRate = getRate(badgerEmission, geyser.badgerCycleDuration);
-    const badgerEmissionValueRate = getRate(badgerEmissionValue, geyser.badgerCycleDuration);
+    const badgerEmissionRate = getRate(badgerEmission, badgerEmissionDuration);
+    const badgerEmissionValueRate = getRate(badgerEmissionValue, badgerEmissionDuration);
     const badgerApy = toDay(badgerEmissionValueRate) * 365 / geyserDepositsValue * 100;
 
     // digg emissions
-    let diggEmission = parseFloat(geyser.diggCycleRewardTokens / 1e9);
+    const diggUnlockSchedules = (await getEmissions(geyser.id, DIGG)).filter(d => new Date(d.endAtSec.toNumber() * 1000) > now);
+    let diggEmission = 0;
+    let diggEmissionDuration = 0;
+    diggUnlockSchedules.forEach(s => {
+      diggEmission += s.initialLocked / 1e9;
+      diggEmissionDuration += s.durationSec;
+    });
+    diggEmission /= sharesPerFragment;
     const diggEmissionValue = diggEmission * priceData.digg;
     const allocShareDigg = diggEmission / diggTotalAlloc;
-    const diggEmissionRate = getRate(diggEmission, geyser.diggCycleDuration);
-    const diggEmissionValueRate = getRate(diggEmissionValue, geyser.diggCycleDuration);
+    const diggEmissionRate = getRate(diggEmission, diggEmissionDuration);
+    const diggEmissionValueRate = getRate(diggEmissionValue, diggEmissionDuration);
     const diggApy = toDay(diggEmissionValueRate) * 365 / geyserDepositsValue * 100;
 
     // avoid using infinity directly - replace with a huge value
@@ -119,6 +138,16 @@ module.exports.getFarmData = async () => {
 
   return farms;
 };
+
+const getEmissions = async (geyser, token) => {
+  const geyserContract = new ethers.Contract(geyser, geyserAbi, provider);
+  return await geyserContract.getUnlockSchedulesFor(token);
+};
+
+const getSharesPerFragment = async () => {
+  const diggContract = new ethers.Contract(DIGG, diggAbi, provider);
+  return await diggContract._sharesPerFragment();
+}
 
 // scaling functions
 const toHour = (value) => value * 3600;
