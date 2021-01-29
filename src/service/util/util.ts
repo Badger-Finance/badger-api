@@ -1,0 +1,314 @@
+import AWS from 'aws-sdk';
+import { PutItemInput, QueryInput } from 'aws-sdk/clients/dynamodb';
+import { DocumentClient } from 'aws-sdk/lib/dynamodb/document_client';
+import Web3 from 'web3';
+import fetch from 'node-fetch';
+import { BlockNumber } from 'web3-core';
+import { BlockTransactionString } from 'web3-eth';
+import { TOKENS } from './constants';
+import AttributeValue = DocumentClient.AttributeValue;
+
+export const THIRTY_MIN_BLOCKS = parseInt(String((30 * 60) / 13));
+
+const ddb = new AWS.DynamoDB.DocumentClient({ apiVersion: '2012-08-10' });
+const web3 = new Web3(new Web3.providers.HttpProvider('https://web3.1inch.exchange/'));
+
+const BADGER_URL = process.env.BADGER || ''; // FIXME: sane default?
+const UNISWAP_URL = process.env.UNISWAP || '';
+const SUSHISWAP_URL = process.env.SUSHISWAP || '';
+const MASTERCHEF_URL = process.env.MASTERCHEF || '';
+
+export const respond = (statusCode: number, body?: Record<string, unknown> | Record<string, unknown>[]) => {
+	return {
+		statusCode: statusCode,
+		headers: {
+			'Access-Control-Allow-Origin': '*',
+			'Access-Control-Allow-Methods': 'OPTIONS,GET',
+			'Access-Control-Allow-Headers': 'Content-Type',
+		},
+		...(body && { body: JSON.stringify(body) }),
+	};
+};
+
+export const getBlock = async (blockNumber: BlockNumber): Promise<BlockTransactionString> =>
+	await web3.eth.getBlock(blockNumber);
+
+export const saveItem = async (table: string, item: AttributeValue) => {
+	const params = {
+		TableName: table,
+		Item: item,
+	} as PutItemInput;
+	return await ddb.put(params).promise();
+};
+
+export const getAssetData = async (table: string, asset: AttributeValue, count: number | null) => {
+	let params = {
+		TableName: table,
+		KeyConditionExpression: 'asset = :asset',
+		ExpressionAttributeValues: {
+			':asset': asset,
+		},
+	} as QueryInput;
+
+	if (count) {
+		params = {
+			...params,
+			Limit: count,
+			ScanIndexForward: false,
+		};
+	}
+
+	const data = await ddb.query(params).promise();
+	return count && data.Items ? data.Items.reverse() : data.Items;
+};
+
+export const getIndexedBlock = async (table: string, asset: AttributeValue, createdBlock: number): Promise<number> => {
+	const params = {
+		TableName: table,
+		KeyConditionExpression: 'asset = :asset',
+		ExpressionAttributeValues: {
+			':asset': asset,
+		},
+		ScanIndexForward: false,
+		Limit: 1,
+	};
+	const result = await ddb.query(params).promise();
+	return result.Items && result.Items.length > 0 ? result.Items[0].height : createdBlock;
+};
+
+export const getContractPrice = async (contract: string) => {
+	return await fetch(
+		`https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=${contract}&vs_currencies=usd`,
+	)
+		.then((response) => response.json())
+		.then((json) => {
+			if (json[contract] && json[contract].usd) {
+				return json[contract].usd;
+			}
+			return 0;
+		});
+};
+
+export const getTokenPrice = async (token: string) => {
+	return await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${token}&vs_currencies=usd`)
+		.then((response) => response.json())
+		.then((json) => json[token].usd);
+};
+
+// eslint-disable-next-line autofix/no-unused-vars
+export type GetPriceFunc = (settData: SettData) => Promise<number>;
+
+export interface EventInput {
+	asset: string;
+	createdBlock: number;
+	contract: string;
+	token?: string;
+	source?: string;
+	pathParameters?: Record<string, unknown>;
+	queryStringParameters?: Record<string, unknown>;
+}
+
+export type SettData = {
+	data: {
+		sett: {
+			token: { id: string };
+			balance: number;
+			pricePerFullShare: number;
+			totalSupply: number;
+		};
+	};
+	errors?: unknown;
+};
+
+export const getSett = async (contract: string, block: number): Promise<SettData> => {
+	const query = `
+    {
+      sett(id: "${contract}"${block ? `, block: {number: ${block}}` : ''}) {
+        token {
+          id
+        }
+        balance
+        pricePerFullShare
+        totalSupply
+      }
+    }
+  `;
+	return await fetch(BADGER_URL, {
+		method: 'POST',
+		body: JSON.stringify({ query }),
+	}).then((response) => response.json());
+};
+
+export const getGeysers = async () => {
+	const query = `
+    {
+      geysers(orderDirection: asc) {
+        id
+        stakingToken {
+          id
+        }
+        netShareDeposit
+        badgerCycleDuration
+        badgerCycleRewardTokens
+        diggCycleDuration
+        diggCycleRewardTokens
+      },
+      setts(orderDirection: asc) {
+        id
+        token {
+          id
+        }
+        balance
+        netDeposit
+        netShareDeposit
+        pricePerFullShare
+      }
+    }
+  `;
+	return await fetch(BADGER_URL, {
+		method: 'POST',
+		body: JSON.stringify({ query }),
+	}).then((response) => response.json());
+};
+
+export const getUniswapPair = async (token: string, block?: number) => {
+	const query = `
+    {
+      pair(id: "${token}"${block ? `, block: {number: ${block}}` : ''}) {
+        reserve0
+        reserve1
+        token0 {
+          id
+        }
+        token1 {
+          id
+        }
+        totalSupply
+      }
+    }
+  `;
+	return await fetch(UNISWAP_URL, {
+		method: 'POST',
+		body: JSON.stringify({ query }),
+	}).then((response) => response.json());
+};
+
+export const getUniswapPrice = async (token: string) => {
+	const pair = (await getUniswapPair(token)).data.pair;
+	if (pair.totalSupply === 0) {
+		return 0;
+	}
+	const token0Price = await getContractPrice(pair.token0.id);
+	const token1Price = await getContractPrice(pair.token1.id);
+	return (token0Price * pair.reserve0 + token1Price * pair.reserve1) / pair.totalSupply;
+};
+
+export const getSushiswapPair = async (token: string, block?: number) => {
+	const query = `
+    {
+      pair(id: "${token}"${block ? `, block: {number: ${block}}` : ''}) {
+        reserve0
+        reserve1
+        token0 {
+          id
+        }
+        token1 {
+          id
+        }
+        totalSupply
+      }
+    }
+  `;
+	return await fetch(SUSHISWAP_URL, {
+		method: 'POST',
+		body: JSON.stringify({ query }),
+	}).then((response) => response.json());
+};
+
+export const getSushiswapPrice = async (token: string) => {
+	const pair = (await getSushiswapPair(token)).data.pair;
+	if (pair.totalSupply === 0) {
+		return 0;
+	}
+	const token0Price = await getContractPrice(pair.token0.id);
+	const token1Price = await getContractPrice(pair.token1.id);
+	return (token0Price * pair.reserve0 + token1Price * pair.reserve1) / pair.totalSupply;
+};
+
+export const getPrices = async () => {
+	const prices = await Promise.all([
+		getTokenPrice('tbtc'),
+		getContractPrice(TOKENS.SBTC),
+		getContractPrice(TOKENS.RENBTC),
+		getContractPrice(TOKENS.BADGER),
+		getUniswapPrice(TOKENS.UNI_BADGER),
+		getSushiswapPrice(TOKENS.SUSHI_BADGER),
+		getSushiswapPrice(TOKENS.SUSHI_WBTC),
+		getTokenPrice('digg'),
+		getUniswapPrice(TOKENS.UNI_DIGG),
+		getSushiswapPrice(TOKENS.SUSHI_DIGG),
+	]);
+	return {
+		tbtc: prices[0],
+		sbtc: prices[1],
+		renbtc: prices[2],
+		badger: prices[3],
+		unibadger: prices[4],
+		sushibadger: prices[5],
+		sushiwbtc: prices[6],
+		digg: prices[7],
+		unidigg: prices[8],
+		sushidigg: prices[9],
+	};
+};
+
+export const getUsdValue = (asset: string, tokens: number, prices: { [index: string]: number }) => {
+	switch (asset) {
+		case UNI_BADGER:
+			return tokens * prices.unibadger;
+		case BADGER:
+			return tokens * prices.badger;
+		case TBTC:
+			return tokens * prices.tbtc;
+		case SBTC:
+			return tokens * prices.sbtc;
+		case RENBTC:
+			return tokens * prices.renbtc;
+		case SUSHI_BADGER:
+			return tokens * prices.sushibadger;
+		case SUSHI_WBTC:
+			return tokens * prices.sushiwbtc;
+		case DIGG:
+			return tokens * prices.digg;
+		case UNI_DIGG:
+			return tokens * prices.unidigg;
+		case SUSHI_DIGG:
+			return tokens * prices.sushidigg;
+		default:
+			return 0;
+	}
+};
+
+export const getMasterChef = async () => {
+	const query = `
+    {
+      masterChefs(first: 1) {
+        id
+        totalAllocPoint
+        sushiPerBlock
+      },
+      pools(where: {allocPoint_gt: 0}, orderBy: allocPoint, orderDirection: desc) {
+        id
+        pair
+        balance
+        allocPoint
+        lastRewardBlock
+        accSushiPerShare
+      }
+    }
+  `;
+	return await fetch(MASTERCHEF_URL, {
+		method: 'POST',
+		body: JSON.stringify({ query }),
+	}).then((response) => response.json());
+};

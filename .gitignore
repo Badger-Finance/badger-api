@@ -1,11 +1,11 @@
+.idea
+.DS_Store
+
 node_modules
+build
 
 .serverless
-
-.DS_Store
 
 secrets/*.yml
 
 yarn-error.log
-
-.idea
