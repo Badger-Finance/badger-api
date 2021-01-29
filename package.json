@@ -1,8 +1,8 @@
 {
-  "name": "pickle-api",
+  "name": "badger-api",
   "version": "1.0.0",
-  "description": "Pickle Serverless API",
-  "repository": "git@github.com:axejintao/pickle-api.git",
+  "description": "Badger Serverless API",
+  "repository": "git@github.com:axejintao/badger-api.git",
   "author": "axejintao",
   "license": "MIT",
   "dependencies": {
