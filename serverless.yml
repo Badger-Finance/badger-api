@@ -123,7 +123,7 @@ functions:
           cors: true
           caching:
             enabled: ${self:custom.caching.${self:custom.stage}}
-            ttlInSeconds: 14400
+            ttlInSeconds: 3600
             cacheKeyParameters:
               - name: request.path.userId
           documentation:
