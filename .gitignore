@@ -1,12 +1,11 @@
-# package directories
 node_modules
-jspm_packages
 
-# Serverless directories
 .serverless
 
-# MacOS
 .DS_Store
 
-# Secrets
 secrets/*.yml
+
+yarn-error.log
+
+.idea
