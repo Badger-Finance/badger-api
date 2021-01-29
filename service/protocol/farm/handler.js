@@ -54,14 +54,24 @@ module.exports.getFarmData = async () => {
     // calculate pool related information
     const getRate = (value, duration) => duration > 0 ? value / duration : 0;
 
+    // todo: refactor digg / badger calculations into a helper function
     // badger emissions
     const badgerUnlockSchedules = (await getEmissions(geyser.id, BADGER)).filter(d => new Date(d.endAtSec.toNumber() * 1000) > now);
     let badgerEmission = 0;
-    let badgerEmissionDuration = 0;
+    let badgerEmissionStart = 0;
+    let badgerEmisisonEnd = 0;
     badgerUnlockSchedules.forEach(s => {
-      badgerEmission += s.initialLocked / 1e18;
-      badgerEmissionDuration += s.durationSec;
+      badgerEmission += parseInt(s.initialLocked) / 1e18;
+      const start = parseInt(s.startTime);
+      const end = parseInt(s.endAtSec);
+      if (badgerEmissionStart == 0 || start < badgerEmissionStart) {
+        badgerEmissionStart = start;
+      }
+      if (badgerEmisisonEnd == 0 || end > badgerEmisisonEnd) {
+        badgerEmisisonEnd = end;
+      }
     });
+    const badgerEmissionDuration = badgerEmisisonEnd - badgerEmissionStart;
     const badgerEmissionValue = badgerEmission * priceData.badger;
     const badgerEmissionRate = getRate(badgerEmission, badgerEmissionDuration);
     const badgerEmissionValueRate = getRate(badgerEmissionValue, badgerEmissionDuration);
@@ -70,11 +80,20 @@ module.exports.getFarmData = async () => {
     // digg emissions
     const diggUnlockSchedules = (await getEmissions(geyser.id, DIGG)).filter(d => new Date(d.endAtSec.toNumber() * 1000) > now);
     let diggEmission = 0;
-    let diggEmissionDuration = 0;
+    let diggEmissionStart = 0;
+    let diggEmisisonEnd = 0;
     diggUnlockSchedules.forEach(s => {
-      diggEmission += s.initialLocked / 1e9;
-      diggEmissionDuration += s.durationSec;
+      diggEmission += parseInt(s.initialLocked) / 1e9;
+      const start = parseInt(s.startTime);
+      const end = parseInt(s.endAtSec);
+      if (diggEmissionStart == 0 || start < diggEmissionStart) {
+        diggEmissionStart = start;
+      }
+      if (diggEmisisonEnd == 0 || end > diggEmisisonEnd) {
+        diggEmisisonEnd = end;
+      }
     });
+    const diggEmissionDuration = diggEmisisonEnd - diggEmissionStart;
     diggEmission /= sharesPerFragment;
     const diggEmissionValue = diggEmission * priceData.digg;
     const diggEmissionRate = getRate(diggEmission, diggEmissionDuration);
