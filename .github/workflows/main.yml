@@ -18,15 +18,9 @@ jobs:
           uses: actions/setup-node@v1
           with:
             node-version: ${{ matrix.node-version }}
-        - run: npm ci
-        - name: serverless deploy
-          uses: serverless/github-action@master
-          with:
-            args: deploy
-          env:
-            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        - name: Upload Documentation
+        - name: Deploy + Upload Documentation
           run: |
+            yarn
+            sls deploy --stage prod
             sls downloadDocumentation --outputFileName=swagger/swagger.json
             npx ts-code src/swagger/sanitize.js
