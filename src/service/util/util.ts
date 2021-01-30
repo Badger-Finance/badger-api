@@ -1,19 +1,15 @@
 import AWS from 'aws-sdk';
 import { PutItemInput, QueryInput } from 'aws-sdk/clients/dynamodb';
 import { DocumentClient } from 'aws-sdk/lib/dynamodb/document_client';
-import Web3 from 'web3';
 import fetch from 'node-fetch';
-import { BlockNumber } from 'web3-core';
-import { BlockTransactionString } from 'web3-eth';
+import { Block } from "@ethersproject/abstract-provider";
 import { DataData } from '../protocol/performance/handler';
 
-import { BADGER_URL, MASTERCHEF_URL, SUSHISWAP_URL, TOKENS, UNISWAP_URL } from './constants';
+import { BADGER_URL, MASTERCHEF_URL, SUSHISWAP_URL, TOKENS, UNISWAP_URL, ETHERS_JSONRPC_PROVIDER } from './constants';
 import AttributeValue = DocumentClient.AttributeValue;
 
 export const THIRTY_MIN_BLOCKS = parseInt(String((30 * 60) / 13));
-
 const ddb = new AWS.DynamoDB.DocumentClient({ apiVersion: '2012-08-10' });
-const web3 = new Web3(new Web3.providers.HttpProvider('https://web3.1inch.exchange/'));
 
 // eslint-disable-next-line autofix/no-unused-vars
 export type GetPriceFunc = (settData: SettData) => Promise<number>;
@@ -52,8 +48,8 @@ export const respond = (statusCode: number, body?: Record<string, unknown> | Rec
 	};
 };
 
-export const getBlock = async (blockNumber: BlockNumber): Promise<BlockTransactionString> =>
-	await web3.eth.getBlock(blockNumber);
+export const getBlock = async (blockNumber: number): Promise<Block> =>
+	await ETHERS_JSONRPC_PROVIDER.getBlock(blockNumber);
 
 export const saveItem = async (table: string, item: AttributeValue) => {
 	const params = {

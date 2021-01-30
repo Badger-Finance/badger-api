@@ -27,15 +27,13 @@ export const THIRTY_DAYS = ONE_DAY * 30;
 export const SAMPLE_DAYS = THIRTY_DAYS + 1;
 export const ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000;
 
-// FIXME: sane defaults?
-export const ASSET_DATA = process.env.ASSET_DATA || '';
-export const UNISWAP_URL = process.env.UNISWAP || '';
-export const SUSHISWAP_URL = process.env.SUSHISWAP || '';
-export const BADGER_URL = process.env.BADGER || '';
-export const MASTERCHEF_URL = process.env.MASTERCHEF || '';
-export const PICKLE_URL = process.env.PICKLE || '';
-export const REWARD_DATA_TABLE = process.env.REWARD_DATA || '';
+// data access constants
+export const ASSET_DATA = process.env.ASSET_DATA || 'MISSING REQUIRED ENV VAR';
+export const UNISWAP_URL = process.env.UNISWAP || 'MISSING REQUIRED ENV VAR';
+export const SUSHISWAP_URL = process.env.SUSHISWAP || 'MISSING REQUIRED ENV VAR';
+export const BADGER_URL = process.env.BADGER || 'MISSING REQUIRED ENV VAR';
+export const MASTERCHEF_URL = process.env.MASTERCHEF || 'MISSING REQUIRED ENV VAR';
 
-// FIXME: env variables?
+// third party api constants
 export const CURVE_API_URL = 'https://www.curve.fi/raw-stats/apys.json';
 export const ETHERS_JSONRPC_PROVIDER = new ethers.providers.JsonRpcProvider('https://cloudflare-eth.com/');
