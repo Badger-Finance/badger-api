@@ -5,6 +5,8 @@ node_modules
 build
 
 .serverless
+.build
+.dynamodb
 
 secrets/*.yml
 
