@@ -1,7 +1,7 @@
 import { ASSET_DATA } from '../../util/constants';
 import { EventInput, getAssetData, respond } from '../../util/util';
 
-exports.handler = async (event: EventInput) => {
+export const handler = async (event: EventInput) => {
 	if (event.source === 'serverless-plugin-warmup') {
 		return respond(200);
 	}

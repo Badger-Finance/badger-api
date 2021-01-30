@@ -4,7 +4,7 @@ import { EventInput, getGeysers, getPrices, getUsdValue, respond } from '../util
 
 const formatFloat = (value: string) => parseFloat(parseFloat(value).toFixed(2));
 
-exports.handler = async (event: EventInput) => {
+export const handler = async (event: EventInput) => {
 	const includeToken = event.queryStringParameters ? event.queryStringParameters.tokens : false;
 	const assetValues = {} as Record<string, unknown>;
 

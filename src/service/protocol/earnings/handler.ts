@@ -6,7 +6,7 @@ import { EventInput, getPrices, respond } from '../../util/util';
 
 import { BADGER_URL, TOKENS } from '../../util/constants';
 
-exports.handler = async (event: EventInput) => {
+export const handler = async (event: EventInput) => {
 	if (event.source === 'serverless-plugin-warmup') {
 		return respond(200);
 	}
