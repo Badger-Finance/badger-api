@@ -22,7 +22,8 @@ jobs:
         - name: serverless decrypt secrets
           uses: serverless/github-action@master
           with:
-            args: decrypt --stage prod --password ${{ secrets.SECRETS_PASSWORD }}
+            args: -c "sls plugin install --name serverless-secrets-plugin && sls decrypt --stage prod --password ${{ secrets.SECRETS_PASSWORD }}"
+            entrypoint: /bin/bash
         - name: serverless deploy
           uses: serverless/github-action@master
           with:
