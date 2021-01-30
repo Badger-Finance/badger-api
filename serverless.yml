@@ -3,12 +3,12 @@ service: badger
 frameworkVersion: '2'
 
 plugins:
-  - serverless-offline
   - serverless-secrets-plugin
   - serverless-aws-documentation
   - serverless-export-swagger
   - serverless-api-gateway-caching
   - serverless-plugin-typescript
+  - serverless-offline
 
 custom:
   stage: ${opt:stage, self:provider.stage}
