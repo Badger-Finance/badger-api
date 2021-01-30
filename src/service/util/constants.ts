@@ -1,3 +1,5 @@
+import { ethers } from 'ethers';
+
 export const TOKENS = {
 	// general tokens
 	RENBTC: '0x49849c98ae39fff122806c06791fa73784fb3675',
@@ -15,3 +17,25 @@ export const TOKENS = {
 	SUSHI_BADGER: '0x110492b31c59716ac47337e616804e3e3adc0b4a',
 	SUSHI_DIGG: '0x9a13867048e01c663ce8ce2fe0cdae69ff9f35e3',
 };
+
+// data point constants - index two times per hour, 48 per day
+export const CURRENT = 0;
+export const ONE_DAY = 24 * 2;
+export const THREE_DAYS = ONE_DAY * 3;
+export const SEVEN_DAYS = ONE_DAY * 7;
+export const THIRTY_DAYS = ONE_DAY * 30;
+export const SAMPLE_DAYS = THIRTY_DAYS + 1;
+export const ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000;
+
+// FIXME: sane defaults?
+export const ASSET_DATA = process.env.ASSET_DATA || '';
+export const UNISWAP_URL = process.env.UNISWAP || '';
+export const SUSHISWAP_URL = process.env.SUSHISWAP || '';
+export const BADGER_URL = process.env.BADGER || '';
+export const MASTERCHEF_URL = process.env.MASTERCHEF || '';
+export const PICKLE_URL = process.env.PICKLE || '';
+export const REWARD_DATA_TABLE = process.env.REWARD_DATA || '';
+
+// FIXME: env variables?
+export const CURVE_API_URL = 'https://www.curve.fi/raw-stats/apys.json';
+export const ETHERS_JSONRPC_PROVIDER = new ethers.providers.JsonRpcProvider('https://cloudflare-eth.com/');

@@ -864,8 +864,9 @@ export const distributorAbi = [
 		type: 'function',
 	},
 ];
-module.exports.diggContract = '0x798D1bE841a82a273720CE31c822C61a67a601C3';
-module.exports.diggAbi = [
+
+export const diggContract = '0x798D1bE841a82a273720CE31c822C61a67a601C3';
+export const diggAbi = [
 	{
 		constant: true,
 		inputs: [],
@@ -1475,7 +1476,7 @@ module.exports.diggAbi = [
 		type: 'event',
 	},
 ];
-module.exports.geyserAbi = [
+export const geyserAbi = [
 	{
 		anonymous: false,
 		inputs: [

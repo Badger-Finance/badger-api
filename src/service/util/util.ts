@@ -5,7 +5,9 @@ import Web3 from 'web3';
 import fetch from 'node-fetch';
 import { BlockNumber } from 'web3-core';
 import { BlockTransactionString } from 'web3-eth';
-import { TOKENS } from './constants';
+import { DataData } from '../protocol/performance/handler';
+
+import { BADGER_URL, MASTERCHEF_URL, SUSHISWAP_URL, TOKENS, UNISWAP_URL } from './constants';
 import AttributeValue = DocumentClient.AttributeValue;
 
 export const THIRTY_MIN_BLOCKS = parseInt(String((30 * 60) / 13));
@@ -13,10 +15,30 @@ export const THIRTY_MIN_BLOCKS = parseInt(String((30 * 60) / 13));
 const ddb = new AWS.DynamoDB.DocumentClient({ apiVersion: '2012-08-10' });
 const web3 = new Web3(new Web3.providers.HttpProvider('https://web3.1inch.exchange/'));
 
-const BADGER_URL = process.env.BADGER || ''; // FIXME: sane default?
-const UNISWAP_URL = process.env.UNISWAP || '';
-const SUSHISWAP_URL = process.env.SUSHISWAP || '';
-const MASTERCHEF_URL = process.env.MASTERCHEF || '';
+// eslint-disable-next-line autofix/no-unused-vars
+export type GetPriceFunc = (settData: SettData) => Promise<number>;
+
+export interface EventInput {
+	asset: string;
+	createdBlock: number;
+	contract: string;
+	token?: string;
+	source?: string;
+	pathParameters?: Record<string, string>;
+	queryStringParameters?: Record<string, string>;
+}
+
+export type SettData = {
+	data: {
+		sett: {
+			token: { id: string };
+			balance: number;
+			pricePerFullShare: number;
+			totalSupply: number;
+		};
+	};
+	errors?: unknown;
+};
 
 export const respond = (statusCode: number, body?: Record<string, unknown> | Record<string, unknown>[]) => {
 	return {
@@ -41,7 +63,11 @@ export const saveItem = async (table: string, item: AttributeValue) => {
 	return await ddb.put(params).promise();
 };
 
-export const getAssetData = async (table: string, asset: AttributeValue, count: number | null) => {
+export const getAssetData = async (
+	table: string,
+	asset: AttributeValue,
+	count: number | null,
+): Promise<DataData | undefined> => {
 	let params = {
 		TableName: table,
 		KeyConditionExpression: 'asset = :asset',
@@ -59,7 +85,7 @@ export const getAssetData = async (table: string, asset: AttributeValue, count: 
 	}
 
 	const data = await ddb.query(params).promise();
-	return count && data.Items ? data.Items.reverse() : data.Items;
+	return count && data.Items ? (data.Items.reverse() as DataData) : (data.Items as DataData);
 };
 
 export const getIndexedBlock = async (table: string, asset: AttributeValue, createdBlock: number): Promise<number> => {
@@ -95,32 +121,7 @@ export const getTokenPrice = async (token: string) => {
 		.then((json) => json[token].usd);
 };
 
-// eslint-disable-next-line autofix/no-unused-vars
-export type GetPriceFunc = (settData: SettData) => Promise<number>;
-
-export interface EventInput {
-	asset: string;
-	createdBlock: number;
-	contract: string;
-	token?: string;
-	source?: string;
-	pathParameters?: Record<string, unknown>;
-	queryStringParameters?: Record<string, unknown>;
-}
-
-export type SettData = {
-	data: {
-		sett: {
-			token: { id: string };
-			balance: number;
-			pricePerFullShare: number;
-			totalSupply: number;
-		};
-	};
-	errors?: unknown;
-};
-
-export const getSett = async (contract: string, block: number): Promise<SettData> => {
+export const getSett = async (contract: string, block?: number): Promise<SettData> => {
 	const query = `
     {
       sett(id: "${contract}"${block ? `, block: {number: ${block}}` : ''}) {
@@ -139,7 +140,35 @@ export const getSett = async (contract: string, block: number): Promise<SettData
 	}).then((response) => response.json());
 };
 
-export const getGeysers = async () => {
+export type Geyser = {
+	id: string;
+	stakingToken: {
+		id: string;
+	};
+	netShareDeposit: string;
+	badgerCycleDuration: string;
+	badgerCycleRewardTokens: string;
+	diggCycleDuration: string;
+	diggCycleRewardTokens: string;
+};
+
+export type GeyserSett = {
+	id: string;
+	token: { id: string };
+	balance: number;
+	netDeposit: string;
+	netShareDeposit: string;
+	pricePerFullShare: number;
+};
+
+export type Geysers = {
+	data: {
+		geysers: Geyser[];
+		setts: GeyserSett[];
+	};
+};
+
+export const getGeysers = async (): Promise<Geysers> => {
 	const query = `
     {
       geysers(orderDirection: asc) {
@@ -264,32 +293,50 @@ export const getPrices = async () => {
 
 export const getUsdValue = (asset: string, tokens: number, prices: { [index: string]: number }) => {
 	switch (asset) {
-		case UNI_BADGER:
+		case TOKENS.UNI_BADGER:
 			return tokens * prices.unibadger;
-		case BADGER:
+		case TOKENS.BADGER:
 			return tokens * prices.badger;
-		case TBTC:
+		case TOKENS.TBTC:
 			return tokens * prices.tbtc;
-		case SBTC:
+		case TOKENS.SBTC:
 			return tokens * prices.sbtc;
-		case RENBTC:
+		case TOKENS.RENBTC:
 			return tokens * prices.renbtc;
-		case SUSHI_BADGER:
+		case TOKENS.SUSHI_BADGER:
 			return tokens * prices.sushibadger;
-		case SUSHI_WBTC:
+		case TOKENS.SUSHI_WBTC:
 			return tokens * prices.sushiwbtc;
-		case DIGG:
+		case TOKENS.DIGG:
 			return tokens * prices.digg;
-		case UNI_DIGG:
+		case TOKENS.UNI_DIGG:
 			return tokens * prices.unidigg;
-		case SUSHI_DIGG:
+		case TOKENS.SUSHI_DIGG:
 			return tokens * prices.sushidigg;
 		default:
 			return 0;
 	}
 };
 
-export const getMasterChef = async () => {
+export type MasterChefData = {
+	data: {
+		masterChefs: {
+			id: string;
+			totalAllocPoint: number;
+			sushiPerBlock: number;
+		}[];
+		pools: {
+			id: string;
+			pair: string;
+			balance: number;
+			allocPoint: number;
+			lasatRewardBlock: string;
+			accSushiPerShare: string;
+		}[];
+	};
+};
+
+export const getMasterChef = async (): Promise<MasterChefData> => {
 	const query = `
     {
       masterChefs(first: 1) {

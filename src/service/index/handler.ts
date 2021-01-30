@@ -1,13 +1,11 @@
 import fetch from 'node-fetch';
+import { PICKLE_URL, REWARD_DATA_TABLE } from '../util/constants';
 
 import { EventInput, getBlock, getIndexedBlock, respond, saveItem, THIRTY_MIN_BLOCKS } from '../util/util';
 
-const REWARD_DATA = process.env.REWARD_DATA || ''; // FIXME: sane defaults?
-const PICKLE = process.env.PICKLE || '';
-
 export const handler = async (event: EventInput) => {
 	const { asset, createdBlock, contract } = event;
-	let block = await getIndexedBlock(REWARD_DATA, asset, createdBlock);
+	let block = await getIndexedBlock(REWARD_DATA_TABLE, asset, createdBlock);
 	console.log(`Index rewards contract ${asset} at height: ${block}`);
 
 	while (true) {
@@ -39,7 +37,7 @@ export const handler = async (event: EventInput) => {
 			current: current,
 		};
 
-		await saveItem(REWARD_DATA, snapshot);
+		await saveItem(REWARD_DATA_TABLE, snapshot);
 		block += THIRTY_MIN_BLOCKS;
 	}
 
@@ -57,7 +55,7 @@ const queryRewardsContract = async (contract: string, block: number) => {
       }
     }
   `;
-	const queryResult = await fetch(PICKLE, {
+	const queryResult = await fetch(PICKLE_URL, {
 		method: 'POST',
 		body: JSON.stringify({ query }),
 	});

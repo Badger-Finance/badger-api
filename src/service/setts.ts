@@ -1,6 +1,15 @@
 import { TOKENS } from './util/constants';
 
-export const setts = {
+export type Setts = {
+	[index: string]: {
+		asset: string;
+		protocol: string;
+		token: string;
+		geyser?: string;
+	};
+};
+
+export const setts: Setts = {
 	'0xd04c48a53c111300ad41190d63681ed3dad998ec': {
 		asset: 'sBTCCRV',
 		protocol: 'curve',

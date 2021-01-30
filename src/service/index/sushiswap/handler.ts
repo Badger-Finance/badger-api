@@ -1,7 +1,8 @@
-const { getSushiswapPrice } = require("../../util/util");
-const { indexAsset } = require("../indexer");
+import { EventInput, getSushiswapPrice, SettData } from '../../util/util';
 
-exports.handler = async (event) => {
-  const getPrice = async (settData) => await getSushiswapPrice(settData.token.id);
-  return await indexAsset(event, getPrice);
+import { indexAsset } from '../indexer';
+
+exports.handler = async (event: EventInput) => {
+	const getPrice = async (settData: SettData) => await getSushiswapPrice(settData.data.sett.token.id);
+	return await indexAsset(event, getPrice);
 };

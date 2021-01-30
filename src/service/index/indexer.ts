@@ -1,3 +1,4 @@
+import { ASSET_DATA } from '../util/constants';
 import {
 	EventInput,
 	getBlock,
@@ -8,8 +9,6 @@ import {
 	saveItem,
 	THIRTY_MIN_BLOCKS,
 } from '../util/util';
-
-const ASSET_DATA = process.env.ASSET_DATA || ''; // FIXME: sane defaults?
 
 export const indexAsset = async (event: EventInput, getPrice: GetPriceFunc) => {
 	const { asset, createdBlock, contract } = event;
