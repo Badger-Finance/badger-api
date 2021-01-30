@@ -19,26 +19,29 @@ jobs:
           with:
             node-version: ${{ matrix.node-version }}
         - run: yarn install --frozen-lockfile
-        - name: decrypt secrets
-          uses: serverless/github-action@master
-          with:
-            args: -c "sls plugin install --name serverless-secrets-plugin && sls decrypt --stage prod --password ${{ secrets.SECRETS_PASSWORD }}"
-            entrypoint: /bin/bash
-        - name: deploy serverless
-          uses: serverless/github-action@master
-          with:
-            args: -c "sls plugin install --name serverless-plugin-typescript && sls plugin install --name serverless-aws-documentation && sls plugin install --name serverless-export-swagger && sls deploy --stage prod"
-            entrypoint: /bin/bash
-          env:
-            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        - name: serverless download documentation
-          uses: serverless/github-action@master
-          with:
-            args: -c "sls plugin install --name serverless-aws-documentation && sls downloadDocumentation --outputFileName=swagger/swagger.json"
-            entrypoint: /bin/bash
-          env:
-            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        - run: sls decrypt --stage prod --password ${{ secrets.SECRETS_PASSWORD }}
+        - run: sls deploy --stage prod
+        - run: sls downloadDocumentation --outputFileName="src/swagger/swagger.json"
+#         - name: decrypt secrets
+#           uses: serverless/github-action@master
+#           with:
+#             args: -c "sls plugin install --name serverless-secrets-plugin && sls decrypt --stage prod --password ${{ secrets.SECRETS_PASSWORD }}"
+#             entrypoint: /bin/bash
+#         - name: deploy serverless
+#           uses: serverless/github-action@master
+#           with:
+#             args: -c "sls plugin install --name serverless-plugin-typescript && sls plugin install --name serverless-aws-documentation && sls plugin install --name serverless-export-swagger && sls deploy --stage prod"
+#             entrypoint: /bin/bash
+#           env:
+#             AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#             AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#         - name: serverless download documentation
+#           uses: serverless/github-action@master
+#           with:
+#             args: -c "sls plugin install --name serverless-aws-documentation && sls downloadDocumentation --outputFileName=swagger/swagger.json"
+#             entrypoint: /bin/bash
+#           env:
+#             AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#             AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         - name: sanitize documentation
           run: npx ts-code src/swagger/sanitize.js
