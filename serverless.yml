@@ -8,6 +8,7 @@ plugins:
   - serverless-aws-documentation
   - serverless-export-swagger
   - serverless-api-gateway-caching
+  - serverless-plugin-typescript
 
 custom:
   stage: ${opt:stage, self:provider.stage}
@@ -61,7 +62,7 @@ provider:
 
 functions:
   get-protocol-ppfs:
-    handler: build/service/protocol/ppfs/handler.handler
+    handler: src/service/protocol/ppfs/handler.handler
     role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
     timeout: 30
     events:
@@ -85,7 +86,7 @@ functions:
               - statusCode: "500"
   
   get-protocol-value:
-    handler: build/service/protocol/handler.handler
+    handler: src/service/protocol/handler.handler
     role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
     timeout: 30
     events:
@@ -113,7 +114,7 @@ functions:
               - statusCode: "500"
 
   get-protocol-earnings:
-    handler: build/service/protocol/earnings/handler.handler
+    handler: src/service/protocol/earnings/handler.handler
     role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
     timeout: 30
     events:
@@ -140,7 +141,7 @@ functions:
               - statusCode: "500"
 
   get-protocol-farm:
-    handler: build/service/protocol/farm/handler.handler
+    handler: src/service/protocol/farm/handler.handler
     role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
     timeout: 30
     events:
@@ -160,7 +161,7 @@ functions:
               - statusCode: "500"
 
   get-protocol-sett-performance:
-    handler: build/service/protocol/performance/handler.handler
+    handler: src/service/protocol/performance/handler.handler
     role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
     timeout: 30
     events:
@@ -186,7 +187,7 @@ functions:
               - statusCode: "500"
 
   get-chart-sett-performance:
-    handler: build/service/chart/sett/performance/handler.handler
+    handler: src/service/chart/sett/performance/handler.handler
     role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
     timeout: 30
     events:
@@ -220,7 +221,7 @@ functions:
               - statusCode: "500"
 
   get-chart-sett:
-    handler: build/service/chart/sett/handler.handler
+    handler: src/service/chart/sett/handler.handler
     role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
     timeout: 30
     events:
@@ -254,7 +255,7 @@ functions:
               - statusCode: "500"
 
   index-crv-btc:
-    handler: build/service/index/curve/handler.handler
+    handler: src/service/index/curve/handler.handler
     role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
     timeout: 300
     events:
@@ -292,7 +293,7 @@ functions:
             asset: "hrenbtccrv"
 
   index-token:
-    handler: build/service/index/token/handler.handler
+    handler: src/service/index/token/handler.handler
     role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
     timeout: 300
     events:
@@ -316,7 +317,7 @@ functions:
             token: "digg"
 
   index-uniswap:
-    handler: build/service/index/uniswap/handler.handler
+    handler: src/service/index/uniswap/handler.handler
     role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
     timeout: 300
     events:
@@ -338,7 +339,7 @@ functions:
             asset: "digg-wbtc"
 
   index-sushiswap:
-    handler: build/service/index/sushiswap/handler.handler
+    handler: src/service/index/sushiswap/handler.handler
     role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
     timeout: 300
     events:
