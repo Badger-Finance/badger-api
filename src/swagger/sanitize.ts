@@ -1,6 +1,12 @@
 import jsonfile from 'jsonfile';
 
-const file = './swagger.json';
+/**
+ * This file should never be invoked manually.
+ * Path is set for Github Actions to properly sanitize
+ * Swagger documentation for upload to production documentation
+ * bucket.
+ */
+const file = './src/swagger/swagger.json';
 
 jsonfile.readFile(file, (err: NodeJS.ErrnoException | null, obj: any) => {
 	if (err) {

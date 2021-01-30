@@ -16,6 +16,17 @@ Install project dependencies
 yarn
 ```
 
+Decrypt secrets file
+```bash
+sls decrypt --stage <staing | prod> --password <password>
+```
+
+Currently no values are used from the secrets file.
+Adding the following as empty files will allow you to run the API:
+
+- `secrets.staging.yml`
+- `secrets.prod.yml`
+
 Start the API locally
 
 ```bash
@@ -23,6 +34,7 @@ sls offline
 ```
 
 ### Resources
+
 - [Swagger API Documentation](https://docs.sett.vision/)
 
 ### Sett Options 
