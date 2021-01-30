@@ -33,129 +33,6 @@ export const handler = async () => {
 	}
 };
 
-<<<<<<< HEAD
-module.exports.getFarmData = async () => {
-  // parallelize calls
-  const prerequisites = await Promise.all([
-    getPrices(),
-    getGeysers(),
-    getSharesPerFragment(),
-  ]);
-
-  const priceData = prerequisites[0];
-  const geyserData = prerequisites[1];
-  const sharesPerFragment = prerequisites[2];
-  const geysers = geyserData.data.geysers;
-  const geyserSetts = geyserData.data.setts;
-  const farms = {};
-
-  const now = new Date();
-  await Promise.all(geysers.map(async (geyser) => {
-    // evaluate farm key & token
-    const sett = geyserSetts.find(sett => sett.id === geyser.stakingToken.id);
-    const geyserName = setts[sett.id].asset.toLowerCase();
-    const geyserToken = sett.token.id;
-    const geyserDeposits = sett.balance / 1e18;
-    const geyserDepositsValue = getUsdValue(geyserToken, geyserDeposits, priceData);
-
-    // calculate pool related information
-    const getRate = (value, duration) => duration > 0 ? value / duration : 0;
-
-    // todo: refactor digg / badger calculations into a helper function
-    // badger emissions
-    const badgerUnlockSchedules = (await getEmissions(geyser.id, BADGER)).filter(d => new Date(d.endAtSec.toNumber() * 1000) > now);
-    let badgerEmission = 0;
-    let badgerEmissionStart = 0;
-    let badgerEmisisonEnd = 0;
-    badgerUnlockSchedules.forEach(s => {
-      badgerEmission += parseInt(s.initialLocked) / 1e18;
-      const start = parseInt(s.startTime);
-      const end = parseInt(s.endAtSec);
-      if (badgerEmissionStart == 0 || start < badgerEmissionStart) {
-        badgerEmissionStart = start;
-      }
-      if (badgerEmisisonEnd == 0 || end > badgerEmisisonEnd) {
-        badgerEmisisonEnd = end;
-      }
-    });
-    const badgerEmissionDuration = badgerEmisisonEnd - badgerEmissionStart;
-    const badgerEmissionValue = badgerEmission * priceData.badger;
-    const badgerEmissionRate = getRate(badgerEmission, badgerEmissionDuration);
-    const badgerEmissionValueRate = getRate(badgerEmissionValue, badgerEmissionDuration);
-    const badgerApy = toDay(badgerEmissionValueRate) * 365 / geyserDepositsValue * 100;
-
-    // digg emissions
-    const diggUnlockSchedules = (await getEmissions(geyser.id, DIGG)).filter(d => new Date(d.endAtSec.toNumber() * 1000) > now);
-    let diggEmission = 0;
-    let diggEmissionStart = 0;
-    let diggEmisisonEnd = 0;
-    diggUnlockSchedules.forEach(s => {
-      diggEmission += parseInt(s.initialLocked) / 1e9;
-      const start = parseInt(s.startTime);
-      const end = parseInt(s.endAtSec);
-      if (diggEmissionStart == 0 || start < diggEmissionStart) {
-        diggEmissionStart = start;
-      }
-      if (diggEmisisonEnd == 0 || end > diggEmisisonEnd) {
-        diggEmisisonEnd = end;
-      }
-    });
-    const diggEmissionDuration = diggEmisisonEnd - diggEmissionStart;
-    diggEmission /= sharesPerFragment;
-    const diggEmissionValue = diggEmission * priceData.digg;
-    const diggEmissionRate = getRate(diggEmission, diggEmissionDuration);
-    const diggEmissionValueRate = getRate(diggEmissionValue, diggEmissionDuration);
-    const diggApy = toDay(diggEmissionValueRate) * 365 / geyserDepositsValue * 100;
-
-    // avoid using infinity directly - replace with a huge value
-    const combinedApy = isFinite(badgerApy) && isFinite(diggApy) ? badgerApy + diggApy : 1e99;
-    farms[geyserName] = {
-      tokenBalance: geyserDeposits,
-      valueBalance: geyserDepositsValue,
-      badgerPerDay: toDay(badgerEmissionRate),
-      diggPerDay: toDay(diggEmissionRate),
-      badgerValuePerDay: toDay(badgerEmissionValueRate),
-      diggValuePerDay: toDay(diggEmissionValueRate),
-      valuePerDay: toDay(badgerEmissionValueRate + diggEmissionValueRate),
-      apy: combinedApy,
-      badgerApy: badgerApy,
-      diggApy: diggApy,
-    };
-  }));
-  
-  // Setts that do not get badger emissions - these will only measure ppfs growth
-  await Promise.all(Object.entries(setts).map(async (noFarmSett, i) => {
-    const sett = geyserSetts.find(s => s.id === noFarmSett[0]);
-    const asset = noFarmSett[1].asset.toLowerCase();
-    const farm = farms[asset];
-    
-    if (!farm) {
-      let settDeposits = 0;
-      let settDepositsValue = 0;
-
-      if (sett) {
-        const token = sett.token.id;
-        settDeposits = parseInt(sett.balance);
-        settDepositsValue = getUsdValue(token, settDeposits, priceData);
-      }
-
-      farms[asset] = {
-        tokenBalance: settDeposits,
-        valueBalance: settDepositsValue,
-        badgerPerDay: 0,
-        diggPerDay: 0,
-        badgerValuePerDay: 0,
-        diggValuePerDay: 0,
-        valuePerDay: 0,
-        apy: 0,
-        badgerApy: 0,
-        diggApy: 0,
-      };
-    }
-  }));
-
-  return farms;
-=======
 export type FarmData = {
 	tokenBalance: number;
 	valueBalance: number;
@@ -200,11 +77,20 @@ export const getFarmData = async () => {
 				(d) => new Date(d.endAtSec && d.endAtSec.toNumber() * 1000) > now,
 			);
 			let badgerEmission = 0;
-			let badgerEmissionDuration = 0;
-			badgerUnlockSchedules.forEach((s) => {
+			let badgerEmissionStart = 0;
+			let badgerEmisisonEnd = 0;
+			badgerUnlockSchedules.forEach(s => {
 				badgerEmission += s.initialLocked / 1e18;
-				badgerEmissionDuration += s.durationSec;
+				const start = s.startTime.toNumber();
+				const end = s.endAtSec.toNumber();
+				if (badgerEmissionStart == 0 || start < badgerEmissionStart) {
+					badgerEmissionStart = start;
+				}
+				if (badgerEmisisonEnd == 0 || end > badgerEmisisonEnd) {
+					badgerEmisisonEnd = end;
+				}
 			});
+			const badgerEmissionDuration = badgerEmisisonEnd - badgerEmissionStart;
 			const badgerEmissionValue = badgerEmission * priceData.badger;
 			const badgerEmissionRate = getRate(badgerEmission, badgerEmissionDuration);
 			const badgerEmissionValueRate = getRate(badgerEmissionValue, badgerEmissionDuration);
@@ -215,11 +101,20 @@ export const getFarmData = async () => {
 				(d) => new Date(d.endAtSec.toNumber() * 1000) > now,
 			);
 			let diggEmission = 0;
-			let diggEmissionDuration = 0;
-			diggUnlockSchedules.forEach((s) => {
+			let diggEmissionStart = 0;
+			let diggEmisisonEnd = 0;
+			diggUnlockSchedules.forEach(s => {
 				diggEmission += s.initialLocked / 1e9;
-				diggEmissionDuration += s.durationSec;
+				const start = s.startTime.toNumber();
+				const end = s.endAtSec.toNumber();
+				if (diggEmissionStart == 0 || start < diggEmissionStart) {
+					diggEmissionStart = start;
+				}
+				if (diggEmisisonEnd == 0 || end > diggEmisisonEnd) {
+					diggEmisisonEnd = end;
+				}
 			});
+			const diggEmissionDuration = diggEmisisonEnd - diggEmissionStart;
 			diggEmission /= sharesPerFragment;
 			const diggEmissionValue = diggEmission * priceData.digg;
 			const diggEmissionRate = getRate(diggEmission, diggEmissionDuration);
@@ -277,7 +172,6 @@ export const getFarmData = async () => {
 	);
 
 	return farms;
->>>>>>> WIP: ts compiles cleanly now
 };
 
 export type UnlockSchedules = {
