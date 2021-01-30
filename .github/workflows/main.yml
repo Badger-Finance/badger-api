@@ -24,4 +24,4 @@ jobs:
         - run: sls decrypt --stage staging --password ${{ secrets.SECRETS_PASSWORD }}
         - run: sls deploy
         - run: sls downloadDocumentation --outputFileName="src/swagger/swagger.json"
-        - run: npx ts-node src/swagger/sanitize.js
+        - run: npx ts-node src/swagger/sanitize.ts
