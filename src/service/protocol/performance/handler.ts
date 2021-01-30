@@ -58,24 +58,22 @@ export const getAssetPerformance = async (asset: string, farmData: Record<string
 	const sevenDay = getSamplePerformance(data, SEVEN_DAYS, protocol.sevenDay);
 	const thirtyDay = getSamplePerformance(data, THIRTY_DAYS, protocol.thirtyDay);
 
-	// FIXME: figure out better type conversion
 	const settPerformance = {
-		oneDay: format(oneDay + ''),
-		threeDay: format(threeDay + ''),
-		sevenDay: format(sevenDay + ''),
-		thirtyDay: format(thirtyDay + ''),
-		oneDayFarm: combineApy(oneDay + '', farmApy),
-		threeDayFarm: combineApy(threeDay + '', farmApy),
-		sevenDayFarm: combineApy(sevenDay + '', farmApy),
-		thirtyDayFarm: combineApy(thirtyDay + '', farmApy),
+		oneDay: oneDay,
+		threeDay: threeDay,
+		sevenDay: sevenDay,
+		thirtyDay: thirtyDay,
+		oneDayFarm: combineApy(oneDay, farmApy),
+		threeDayFarm: combineApy(threeDay, farmApy),
+		sevenDayFarm: combineApy(sevenDay, farmApy),
+		thirtyDayFarm: combineApy(thirtyDay, farmApy),
 	};
 
 	return settPerformance;
 };
 
 // helper functions
-const combineApy = (base: string, farm: number) => (base && isFinite(farm) ? format(base + farm) : farm);
-const format = (value: string | undefined) => (value !== undefined ? parseFloat(value) : undefined);
+const combineApy = (base: number | undefined, farm: number) => (base && isFinite(farm) ? base + farm : farm);
 const getRatio = (data: { ratio: number }[], offset: number) =>
 	data.length > offset ? data[data.length - (offset + 1)].ratio : undefined;
 const getBlock = (data: { height: number }[], offset: number) =>
