@@ -22,10 +22,10 @@ sls decrypt --stage <staing | prod> --password <password>
 ```
 
 Currently no values are used from the secrets file.
-Adding the following as empty files will allow you to run the API:
+Adding the following as empty files will allow you to run the API without being bothered by missing secrets files:
 
-- `secrets.staging.yml`
-- `secrets.prod.yml`
+- `secrets/secrets.staging.yml`
+- `secrets/secrets.prod.yml`
 
 Start the API locally
 
