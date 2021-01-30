@@ -8,7 +8,7 @@ on:
 jobs:
   deploy:
       name: deploy
-      runs-on: ubuntu-latest
+      runs-on: macos-latest
       strategy:
         matrix:
           node-version: [14.x]
@@ -18,9 +18,20 @@ jobs:
           uses: actions/setup-node@v1
           with:
             node-version: ${{ matrix.node-version }}
-        - name: Deploy + Upload Documentation
-          run: |
-            yarn
-            sls deploy --stage prod
-            sls downloadDocumentation --outputFileName=swagger/swagger.json
-            npx ts-code src/swagger/sanitize.js
+        - run: yarn install --frozen-lockfile
+        - name: serverless deploy
+          uses: serverless/github-action@master
+          with:
+            args: deploy --stage prod
+          env:
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        - name: serverless download documentation
+          uses: serverless/github-action@master
+          with:
+            args: downloadDocumentation --outputFileName=swagger/swagger.json
+          env:
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        - name: sanitize documentation
+          run: npx ts-code src/swagger/sanitize.js
