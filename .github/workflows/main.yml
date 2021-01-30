@@ -19,6 +19,7 @@ jobs:
           with:
             node-version: ${{ matrix.node-version }}
         - run: yarn install --frozen-lockfile
+        - run: npm install -g serverless
         - run: sls decrypt --stage prod --password ${{ secrets.SECRETS_PASSWORD }}
         - run: sls deploy --stage prod
         - run: sls downloadDocumentation --outputFileName="src/swagger/swagger.json"
