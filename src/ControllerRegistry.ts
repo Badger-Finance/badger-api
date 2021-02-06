@@ -3,6 +3,7 @@ import { LinkController } from "./controller/LinkController";
 import { SettController } from "./controller/SettController";
 import { ChartController } from "./controller/ChartController";
 import { GeyserController } from "./controller/GeyserController";
+import { ClawController } from "./controller/ClawController";
 
 /**
  * Controller registry forces serverless offline to load
@@ -16,4 +17,5 @@ export const controllers = [
   SettController,
   ChartController,
   GeyserController,
+  ClawController,
 ];
