@@ -99,6 +99,24 @@ resources:
           - AttributeName: "updatedAt"
             AttributeType: "N"
 
+resources:
+  Resources:
+    protocolTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.table.ASSET_DATA.${self:custom.stage}}
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: "asset"
+            KeyType: "HASH"
+          - AttributeName: "height"
+            KeyType: "RANGE"
+        AttributeDefinitions:
+          - AttributeName: "asset"
+            AttributeType: "S"
+          - AttributeName: "height"
+            AttributeType: "N"
+
 functions:
   request-handler:
     handler: src/LambdaServer.handler
