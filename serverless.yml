@@ -1,6 +1,8 @@
 ---
-service: badger
+service: badger-v2
 frameworkVersion: '2'
+# temporarily silence complaints about v1 swagger documentation
+configValidationMode: off
 
 plugins:
   - serverless-offline
@@ -51,6 +53,8 @@ provider:
   runtime: nodejs12.x
   stage: staging
   region: us-west-1
+  iamManagedPolicies:
+    - arn:aws:iam::aws:policy/AWSLambdaFullAccess
   versionFunctions: false
   apiGateway:
     shouldStartNameWithService: true
@@ -63,10 +67,27 @@ provider:
     INFURA_PROJECT_ID: ${self:custom.secrets.INFURA_PROJECT_ID}
     INFURA_PROJECT_SECRET: ${self:custom.secrets.INFURA_PROJECT_SECRET}
 
+resources:
+  Resources:
+    protocolTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.table.ASSET_DATA.${self:custom.stage}}
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: "asset"
+            KeyType: "HASH"
+          - AttributeName: "height"
+            KeyType: "RANGE"
+        AttributeDefinitions:
+          - AttributeName: "asset"
+            AttributeType: "S"
+          - AttributeName: "height"
+            AttributeType: "N"
+
 functions:
   request-handler:
     handler: src/LambdaServer.handler
-    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
     timeout: 5
     events:
       - http:
@@ -80,7 +101,6 @@ functions:
 
   get-protocol-ppfs:
     handler: src/v1/protocol/ppfs/handler.handler
-    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
     timeout: 30
     events:
       - http:
@@ -104,7 +124,6 @@ functions:
   
   get-protocol-value:
     handler: src/v1/protocol/handler.handler
-    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
     timeout: 30
     events:
       - http:
@@ -132,7 +151,6 @@ functions:
 
   get-protocol-earnings:
     handler: src/v1/protocol/earnings/handler.handler
-    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
     timeout: 30
     events:
       - http:
@@ -159,7 +177,6 @@ functions:
 
   get-protocol-farm:
     handler: src/v1/protocol/farm/handler.handler
-    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
     timeout: 30
     events:
       - http:
@@ -179,7 +196,6 @@ functions:
 
   get-protocol-sett-performance:
     handler: src/v1/protocol/performance/handler.handler
-    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
     timeout: 30
     events:
       - http:
@@ -205,7 +221,6 @@ functions:
 
   get-chart-sett-performance:
     handler: src/v1/chart/sett/performance/handler.handler
-    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
     timeout: 30
     events:
       - http:
@@ -239,7 +254,6 @@ functions:
 
   get-chart-sett:
     handler: src/v1/chart/sett/handler.handler
-    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
     timeout: 30
     events:
       - http:
@@ -273,7 +287,6 @@ functions:
 
   index-crv-btc:
     handler: src/indexer/curve/handler.handler
-    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
     timeout: 300
     events:
       - schedule:
@@ -311,7 +324,6 @@ functions:
 
   index-token:
     handler: src/indexer/token/handler.handler
-    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
     timeout: 300
     events:
       - schedule:
@@ -335,7 +347,6 @@ functions:
 
   index-uniswap:
     handler: src/indexer/uniswap/handler.handler
-    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
     timeout: 300
     events:
       - schedule:
@@ -357,7 +368,6 @@ functions:
 
   index-sushiswap:
     handler: src/indexer/sushiswap/handler.handler
-    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
     timeout: 300
     events:
       - schedule:
