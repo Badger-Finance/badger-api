@@ -33,6 +33,12 @@ const rootDir = __dirname;
     disableRoutesSummary: true,
     disableBootstrapLog: true,
   },
+  swagger: [
+    {
+      path: "/v2/docs",
+      specVersion: "3.0.1"
+    },
+  ]
 })
 export class Server {
   @Inject()

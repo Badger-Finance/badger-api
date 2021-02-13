@@ -3,7 +3,7 @@ import { PutItemInput, QueryInput } from 'aws-sdk/clients/dynamodb';
 import { DocumentClient } from 'aws-sdk/lib/dynamodb/document_client';
 import fetch from 'node-fetch';
 import { Block } from "@ethersproject/abstract-provider";
-import { DataData } from '../protocol/performance/handler';
+import {SettSnapshot} from "../interface/SettSnapshot";
 
 import { BADGER_URL, MASTERCHEF_URL, SUSHISWAP_URL, TOKENS, UNISWAP_URL, ETHERS_JSONRPC_PROVIDER } from './constants';
 import AttributeValue = DocumentClient.AttributeValue;
@@ -62,8 +62,8 @@ export const saveItem = async (table: string, item: AttributeValue) => {
 export const getAssetData = async (
 	table: string,
 	asset: AttributeValue,
-	count: number | null,
-): Promise<DataData | undefined> => {
+	count: number | undefined,
+): Promise<SettSnapshot[] | undefined> => {
 	let params = {
 		TableName: table,
 		KeyConditionExpression: 'asset = :asset',
@@ -81,7 +81,7 @@ export const getAssetData = async (
 	}
 
 	const data = await ddb.query(params).promise();
-	return count && data.Items ? (data.Items.reverse() as DataData) : (data.Items as DataData);
+	return data.Items as SettSnapshot[];
 };
 
 export const getIndexedBlock = async (table: string, asset: AttributeValue, createdBlock: number): Promise<number> => {
@@ -136,16 +136,12 @@ export const getSett = async (contract: string, block?: number): Promise<SettDat
 	}).then((response) => response.json());
 };
 
-export type Geyser = {
+export type GeyserIdentifier = {
 	id: string;
 	stakingToken: {
 		id: string;
 	};
 	netShareDeposit: string;
-	badgerCycleDuration: string;
-	badgerCycleRewardTokens: string;
-	diggCycleDuration: string;
-	diggCycleRewardTokens: string;
 };
 
 export type GeyserSett = {
@@ -159,7 +155,7 @@ export type GeyserSett = {
 
 export type Geysers = {
 	data: {
-		geysers: Geyser[];
+		geysers: GeyserIdentifier[];
 		setts: GeyserSett[];
 	};
 };
@@ -172,7 +168,6 @@ export const getGeysers = async (): Promise<Geysers> => {
         stakingToken {
           id
         }
-        balance
         netShareDeposit
       },
       setts(orderDirection: asc) {
@@ -201,9 +196,15 @@ export const getUniswapPair = async (token: string, block?: number) => {
         reserve1
         token0 {
           id
+					symbol
+					name
+					decimals
         }
         token1 {
-          id
+					id
+					symbol
+					name
+					decimals
         }
         totalSupply
       }
@@ -233,9 +234,15 @@ export const getSushiswapPair = async (token: string, block?: number) => {
         reserve1
         token0 {
           id
+					symbol
+					name
+					decimals
         }
         token1 {
           id
+					symbol
+					name
+					decimals
         }
         totalSupply
       }
@@ -257,6 +264,7 @@ export const getSushiswapPrice = async (token: string) => {
 	return (token0Price * pair.reserve0 + token1Price * pair.reserve1) / pair.totalSupply;
 };
 
+// TODO: Price object, with defined price fields.
 export const getPrices = async () => {
 	const prices = await Promise.all([
 		getTokenPrice('tbtc'),
@@ -269,6 +277,7 @@ export const getPrices = async () => {
 		getTokenPrice('digg'),
 		getUniswapPrice(TOKENS.UNI_DIGG),
 		getSushiswapPrice(TOKENS.SUSHI_DIGG),
+		getContractPrice(TOKENS.WBTC),
 	]);
 	return {
 		tbtc: prices[0],
@@ -281,6 +290,7 @@ export const getPrices = async () => {
 		digg: prices[7],
 		unidigg: prices[8],
 		sushidigg: prices[9],
+		wbtc: prices[10],
 	};
 };
 
@@ -306,6 +316,8 @@ export const getUsdValue = (asset: string, tokens: number, prices: { [index: str
 			return tokens * prices.unidigg;
 		case TOKENS.SUSHI_DIGG:
 			return tokens * prices.sushidigg;
+		case TOKENS.WBTC:
+			return tokens * prices.wbtc;
 		default:
 			return 0;
 	}
@@ -351,4 +363,69 @@ export const getMasterChef = async (): Promise<MasterChefData> => {
 		method: 'POST',
 		body: JSON.stringify({ query }),
 	}).then((response) => response.json());
+};
+
+export type SettBalanceData = {
+	sett: {
+		id: string;
+		name: string;
+		balance: number;
+		totalSupply: number;
+		pricePerFullShare: string;
+		symbol: string;
+		token: {
+			id: string;
+			decimals: number;
+		};
+	};
+	netDeposit: number;
+	grossDeposit: string;
+	grossWithdraw: string;
+	netShareDeposit: string;
+	grossShareDeposit: string;
+	grossShareWithdraw: string;
+};
+
+export type UserData = {
+	data: {
+		user: {
+			settBalances: SettBalanceData[];
+		};
+	};
+	errors: any;
+};
+
+export const getUserData = async (userId: string): Promise<UserData> => {
+	const query = `
+    {
+      user(id: "${userId}") {
+        settBalances(orderDirection: asc) {
+          sett {
+            id
+            name
+            balance
+            totalSupply
+            netShareDeposit
+            pricePerFullShare
+            symbol
+            token {
+              id
+              decimals
+            }
+          }
+          netDeposit
+          grossDeposit
+          grossWithdraw
+          netShareDeposit
+          grossShareDeposit
+          grossShareWithdraw
+        }
+      }
+    }
+  `;
+	const queryResult = await fetch(BADGER_URL, {
+		method: 'POST',
+		body: JSON.stringify({ query }),
+	});
+	return queryResult.json();
 };

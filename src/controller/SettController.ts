@@ -9,13 +9,13 @@ export class SettController {
   constructor(private settService: SettService) {}
 
   @Get()
-  @ContentType('json')
+  @ContentType("json")
   async listSetts(): Promise<Sett[]> {
     return this.settService.listSetts();
   }
 
   @Get("/:settName")
-  @ContentType('json')
+  @ContentType("json")
   async getSett(@PathParams("settName") settName: string): Promise<Sett> {
     return this.settService.getSett(settName);
   }

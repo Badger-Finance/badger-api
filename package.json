@@ -69,7 +69,6 @@
     "eslint-plugin-simple-import-sort": "7.0.0",
     "ethers-typescript-typings": "^0.0.4",
     "express": "4",
-    "ethers-typescript-typings": "^0.0.4",
     "jest": "^26.6.3",
     "jest-fetch-mock": "^3.0.3",
     "jsonfile": "^6.1.0",

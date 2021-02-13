@@ -3273,7 +3273,7 @@ aws-sign2@~0.7.0:
   resolved "https://registry.yarnpkg.com/aws-sign2/-/aws-sign2-0.7.0.tgz#b46e890934a9591f2d2f6f86d7e6a9f1b3fe76a8"
   integrity sha1-tG6JCTSpWR8tL2+G1+ap8bP+dqg=
 
-aws4@^1.8.0:
+aws4@^1.11.0, aws4@^1.8.0:
   version "1.11.0"
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.11.0.tgz#d61f46d83b2519250e2784daf5b09479a8b41c59"
   integrity sha512-xh1Rl34h6Fi1DC2WWKfxUTVqRsNnr6LsKz2+hfwDxQJWmrx8+c7ylaqBMcHfl1U1r2dsifOvKX3LQuLNZ+XSvA==
@@ -11616,9 +11616,9 @@ supports-hyperlinks@^2.0.0:
     supports-color "^7.0.0"
 
 swagger-ui-dist@^3.31.1:
-  version "3.45.0"
-  resolved "https://registry.yarnpkg.com/swagger-ui-dist/-/swagger-ui-dist-3.45.0.tgz#22df05373dea1fab22f48ebc32d956aa0555f3e3"
-  integrity sha512-SUqZbt0WQytjaI/bUr2gn8IqFE+Te6Tl4uA7n4xtylRdXKXmMm5s/mfTtvpnleHBjxcmQ6ONTA9ilN4iOxMulQ==
+  version "3.43.0"
+  resolved "https://registry.yarnpkg.com/swagger-ui-dist/-/swagger-ui-dist-3.43.0.tgz#b064a2cec1d27776f9a124bc70423cfa0bbc0d3f"
+  integrity sha512-PtE+g23bNbYv8qqAVoPBqNQth8hU5Sl5ZsQ7gHXlO5jlCt31dVTiKI9ArHIT1b23ZzUYTnKsFgPYYFoiWyNCAw==
 
 swap-case@^2.0.1:
   version "2.0.2"
@@ -12971,7 +12971,7 @@ yamljs@^0.3.0:
     argparse "^1.0.7"
     glob "^7.0.5"
 
-yargs-parser@20.x, yargs-parser@^20.2.2:
+yargs-parser@20.x, yargs-parser@^20.2.2, yargs-parser@^20.2.4:
   version "20.2.7"
   resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-20.2.7.tgz#61df85c113edfb5a7a4e36eb8aa60ef423cbc90a"
   integrity sha512-FiNkvbeHzB/syOjIUxFDCnhSfzAL8R5vs40MgLFBorXACCOAEaWu0gRZl14vG8MR9AOJIZbmkjhusqBYZ3HTHw==
