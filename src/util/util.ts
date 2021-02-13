@@ -169,10 +169,6 @@ export const getGeysers = async (): Promise<Geysers> => {
           id
         }
         netShareDeposit
-        badgerCycleDuration
-        badgerCycleRewardTokens
-        diggCycleDuration
-        diggCycleRewardTokens
       },
       setts(orderDirection: asc) {
         id
@@ -200,9 +196,15 @@ export const getUniswapPair = async (token: string, block?: number) => {
         reserve1
         token0 {
           id
+					symbol
+					name
+					decimals
         }
         token1 {
-          id
+					id
+					symbol
+					name
+					decimals
         }
         totalSupply
       }
@@ -232,9 +234,15 @@ export const getSushiswapPair = async (token: string, block?: number) => {
         reserve1
         token0 {
           id
+					symbol
+					name
+					decimals
         }
         token1 {
           id
+					symbol
+					name
+					decimals
         }
         totalSupply
       }
@@ -269,6 +277,7 @@ export const getPrices = async () => {
 		getTokenPrice('digg'),
 		getUniswapPrice(TOKENS.UNI_DIGG),
 		getSushiswapPrice(TOKENS.SUSHI_DIGG),
+		getContractPrice(TOKENS.WBTC),
 	]);
 	return {
 		tbtc: prices[0],
@@ -281,6 +290,7 @@ export const getPrices = async () => {
 		digg: prices[7],
 		unidigg: prices[8],
 		sushidigg: prices[9],
+		wbtc: prices[10],
 	};
 };
 
@@ -306,6 +316,8 @@ export const getUsdValue = (asset: string, tokens: number, prices: { [index: str
 			return tokens * prices.unidigg;
 		case TOKENS.SUSHI_DIGG:
 			return tokens * prices.sushidigg;
+		case TOKENS.WBTC:
+			return tokens * prices.wbtc;
 		default:
 			return 0;
 	}

@@ -1621,6 +1621,14 @@
     micromatch "4.0.2"
     tslib "2.0.1"
 
+"@tsed/swagger@^6.25.2":
+  version "6.25.2"
+  resolved "https://registry.yarnpkg.com/@tsed/swagger/-/swagger-6.25.2.tgz#6dfad22510788d1b8ee980bbbd1640b10d1a8158"
+  integrity sha512-bfKxf0p78C+/bqd9RzW3gl06D8nG9XhSv08evvSG1Fr27BPrl54/Divs6TwMnVsamVcdz/fKImn4xfa30dcprQ==
+  dependencies:
+    swagger-ui-dist "^3.31.1"
+    tslib "2.0.1"
+
 "@types/aws-lambda@*":
   version "8.10.71"
   resolved "https://registry.yarnpkg.com/@types/aws-lambda/-/aws-lambda-8.10.71.tgz#ab3084038411ce42f63b975e67aafb163f3aa353"
@@ -9860,6 +9868,11 @@ supports-hyperlinks@^2.0.0:
   dependencies:
     has-flag "^4.0.0"
     supports-color "^7.0.0"
+
+swagger-ui-dist@^3.31.1:
+  version "3.43.0"
+  resolved "https://registry.yarnpkg.com/swagger-ui-dist/-/swagger-ui-dist-3.43.0.tgz#b064a2cec1d27776f9a124bc70423cfa0bbc0d3f"
+  integrity sha512-PtE+g23bNbYv8qqAVoPBqNQth8hU5Sl5ZsQ7gHXlO5jlCt31dVTiKI9ArHIT1b23ZzUYTnKsFgPYYFoiWyNCAw==
 
 swarm-js@^0.1.40:
   version "0.1.40"

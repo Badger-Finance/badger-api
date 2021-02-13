@@ -13,13 +13,19 @@ const rootDir = __dirname;
   mount: {
     "/v2/": controllers
   },
+  swagger: [
+    {
+      path: "/v2/docs",
+      specVersion: "3.0.1"
+    },
+  ]
 })
 export class Server {
   @Inject()
   app!: PlatformApplication;
 
   /**
-   * This method let you configure the express middleware required by your application to works.
+   * This method let you configure the express middleware required by your application to work.
    * @returns {Server}
    */
   public $beforeRoutesInit(): void | Promise<any> {

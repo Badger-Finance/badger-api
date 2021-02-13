@@ -8,16 +8,17 @@ import { SettSnapshot } from "../../interface/SettSnapshot";
 import { ValueSource } from "../../interface/ValueSource";
 import { Performance } from "../../interface/Performance";
 import { NotFound, BadRequest } from "@tsed/exceptions";
+import { TokenService } from "../token/TokenService";
 import { SettSummary } from "../../interface/Sett";
+import { getAssetData, getPrices } from "../../util/util";
 import { Sett } from "../../interface/Sett";
-import { getAssetData } from "../../util/util";
 import { Service } from "@tsed/common";
 import { setts } from "../setts";
 
 @Service()
 export class SettService {
 
-  constructor(private protocolService: ProtocolService) {}
+  constructor(private protocolService: ProtocolService, private tokenSerivce: TokenService) {}
 
   async getProtocolSummary(): Promise<ProtocolSummary> {
     const setts = await this.listSetts();
@@ -60,9 +61,10 @@ export class SettService {
     };
 
     // TODO: TheGraphService, PriceService
-    const [protocolValueSource, settSnapshots] = await Promise.all([
+    const [protocolValueSource, settSnapshots, prices] = await Promise.all([
       this.protocolService.getProtocolPerformance(settData),
-      this.getSettSnapshots(settName, SAMPLE_DAYS)
+      this.getSettSnapshots(settName, SAMPLE_DAYS),
+      getPrices(),
     ]);
     const settState = settSnapshots[CURRENT];
     const settValueSource = this.getSettUnderlyingValueSource(settName, settSnapshots);
@@ -70,7 +72,7 @@ export class SettService {
     sett.ppfs = settState.ratio;
     sett.value = settState.value;
     sett.apy = protocolValueSource.apy + settValueSource.apy;
-    sett.tokens = [];
+    sett.tokens = await this.tokenSerivce.getSettTokens(settData.settToken, settState.balance, prices);
     sett.sources = [settValueSource, protocolValueSource];
 
     return sett;

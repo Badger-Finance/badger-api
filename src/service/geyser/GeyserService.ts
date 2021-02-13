@@ -2,8 +2,9 @@ import { Geyser, UnlockSchedule, Emission } from "../../interface/Geyser";
 import { TOKENS, ETHERS_JSONRPC_PROVIDER } from "../../util/constants";
 import { getGeysers, getPrices, getUsdValue } from "../../util/util";
 import { ValueSource } from "../../interface/ValueSource";
-import { SettService } from "../sett/SettService";
+import { TokenService } from "../token/TokenService";
 import { diggAbi, geyserAbi } from "../../util/abi";
+import { SettService } from "../sett/SettService";
 import { Sett } from "../../interface/Sett";
 import { ethers, constants } from "ethers";
 import { Service } from "@tsed/common";
@@ -17,7 +18,7 @@ const getRate = (value: number, duration: number) => duration > 0 ? value / dura
 @Service()
 export class GeyserService {
 
-  constructor(private settService: SettService) {}
+  constructor(private settService: SettService, private tokenService: TokenService) {}
 
   async listFarms(): Promise<Sett[]> {
     const diggContract = new ethers.Contract(TOKENS.DIGG, diggAbi, ETHERS_JSONRPC_PROVIDER);
@@ -109,6 +110,7 @@ export class GeyserService {
     if (badgerUnlockSchedules.length > 0) {
       const badgerUnlock = badgerUnlockSchedules[badgerUnlockSchedules.length - 1];
       const badgerEmission: Emission = {
+        token: this.tokenService.getTokenByName('Badger'),
         unlockSchedule: {
           startTime: badgerUnlock.startTime,
           endAtSec: badgerUnlock.endAtSec,
@@ -123,6 +125,7 @@ export class GeyserService {
     if (diggUnlockSchedules.length > 0) {
       const diggUnlock = diggUnlockSchedules[diggUnlockSchedules.length - 1];
       const diggEmission: Emission = {
+        token: this.tokenService.getTokenByName('Digg'),
         unlockSchedule: {
           startTime: diggUnlock.startTime,
           endAtSec: diggUnlock.endAtSec,

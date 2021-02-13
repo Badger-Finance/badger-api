@@ -16,17 +16,6 @@ Install project dependencies
 yarn
 ```
 
-Decrypt secrets file
-```bash
-sls decrypt --stage <staing | prod> --password <password>
-```
-
-Currently no values are used from the secrets file.
-Adding the following as empty files will allow you to run the API without being bothered by missing secrets files:
-
-- `secrets/secrets.staging.yml`
-- `secrets/secrets.prod.yml`
-
 Start the API locally
 
 ```bash

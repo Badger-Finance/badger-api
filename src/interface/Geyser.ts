@@ -6,7 +6,7 @@ export interface Geyser {
 }
 
 export interface Emission {
-  // token: Token,
+  token: Token,
   unlockSchedule: UnlockSchedule,
 }
 

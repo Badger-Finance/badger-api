@@ -7,6 +7,7 @@ export const TOKENS = {
 	TBTC: '0x64eda51d3ad40d56b9dfc5554e06f94e1dd786fd',
 	SBTC: '0x075b1bb99792c9e1041ba13afef80c91a1e70fb3',
 	DIGG: '0x798d1be841a82a273720ce31c822c61a67a601c3',
+	WBTC: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599',
 
 	// uniswap tokens
 	UNI_BADGER: '0xcd7989894bc033581532d2cd88da5db0a4b12859',
