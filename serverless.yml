@@ -6,7 +6,6 @@ configValidationMode: off
 
 plugins:
   - serverless-offline
-  - serverless-secrets-plugin
   - serverless-aws-documentation
   - serverless-export-swagger
   - serverless-api-gateway-caching
@@ -17,8 +16,6 @@ custom:
   apiGatewayCaching:
     enabled: ${self:custom.caching.${self:custom.stage}}
     ttlInSeconds: 300
-  secretsFilePathPrefix: secrets
-  secrets: ${file(${self:custom.secretsFilePathPrefix}/secrets.${self:custom.stage}.yml)}
   serverless-offline:
     noPrependStageInUrl: true
   documentation:
@@ -64,8 +61,6 @@ provider:
     SUSHISWAP: "https://api.thegraph.com/subgraphs/name/croco-finance/sushiswap"
     MASTERCHEF: "https://api.thegraph.com/subgraphs/name/sushiswap/master-chef"
     ASSET_DATA: ${self:custom.table.ASSET_DATA.${self:custom.stage}}
-    INFURA_PROJECT_ID: ${self:custom.secrets.INFURA_PROJECT_ID}
-    INFURA_PROJECT_SECRET: ${self:custom.secrets.INFURA_PROJECT_SECRET}
 
 resources:
   Resources:

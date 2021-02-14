@@ -172,11 +172,8 @@ export const getGeysers = async (): Promise<Geysers> => {
         stakingToken {
           id
         }
+        balance
         netShareDeposit
-        badgerCycleDuration
-        badgerCycleRewardTokens
-        diggCycleDuration
-        diggCycleRewardTokens
       },
       setts(orderDirection: asc) {
         id
