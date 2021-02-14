@@ -172,7 +172,6 @@ export const getGeysers = async (): Promise<Geysers> => {
         stakingToken {
           id
         }
-        balance
         netShareDeposit
       },
       setts(orderDirection: asc) {
