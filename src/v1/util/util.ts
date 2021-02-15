@@ -259,7 +259,7 @@ export const getSushiswapPrice = async (token: string) => {
 export const getPrices = async () => {
 	const prices = await Promise.all([
 		getTokenPrice('tbtc'),
-		getContractPrice(TOKENS.SBTC),
+		getContractPrice(TOKENS.RENBTC),
 		getContractPrice(TOKENS.RENBTC),
 		getContractPrice(TOKENS.BADGER),
 		getUniswapPrice(TOKENS.UNI_BADGER),
