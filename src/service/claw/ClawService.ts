@@ -15,12 +15,20 @@ export class ClawService {
       totalTokensOutstanding,
       totalPositionCollateral,
       collateralRequirement,
-    ] : [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] = (await Promise.all([
+      expirationTimestamp,
+      minSponsorTokens,
+      withdrawalLiveness,
+      liquidationLiveness,
+    ] : [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] = (await Promise.all([
       empContract.cumulativeFeeMultiplier(),
       empContract.rawTotalPositionCollateral(),
       empContract.totalTokensOutstanding(),
       empContract.totalPositionCollateral(),
       empContract.collateralRequirement(),
+      empContract.expirationTimestamp(),
+      empContract.minSponsorTokens(),
+      empContract.withdrawalLiveness(),
+      empContract.liquidationLiveness(),
     ]));
     const globalCollateralizationRatio = (cumulativeFeeMultiplier.mul(rawTotalPositionCollateral)).div(totalTokensOutstanding)
     return {
@@ -28,6 +36,10 @@ export class ClawService {
       totalPositionCollateral,
       totalTokensOutstanding,
       collateralRequirement,
+      expirationTimestamp,
+      minSponsorTokens,
+      withdrawalLiveness,
+      liquidationLiveness,
     } as SyntheticData;
   }
 

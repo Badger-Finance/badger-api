@@ -48,4 +48,13 @@ export interface SyntheticData {
   totalPositionCollateral: BigNumber; // Total collateral supplied.
   totalTokensOutstanding: BigNumber; // Token debt issued.
   collateralRequirement: BigNumber;
+  expirationTimestamp: BigNumber;
+  // Min number of sponsor tokens to mint (will default to 100 tokens or ~$100). 
+  minSponsorTokens: BigNumber;
+  // Amount of time (in seconds) a sponsor must wait to withdraw without liquidation 
+  // for "slow" withdrawals.
+  withdrawalLiveness: BigNumber;  
+  // Amount of time (in seconds) a liquidator must wait to liquidate a sponsor 
+  // position without a dispute.
+  liquidationLiveness: BigNumber;
 }
