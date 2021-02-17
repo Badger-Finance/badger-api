@@ -98,7 +98,7 @@ export const getFarmData = async () => {
 
 			// digg emissions
 			const diggSchedules = await getEmissions(geyser.id, TOKENS.DIGG);
-			const diggUnlockSchedules = badgerSchedules.filter(
+			const diggUnlockSchedules = diggSchedules.filter(
 				(d, i) => new Date(d.endAtSec && d.endAtSec.toNumber() * 1000) > now || i === diggSchedules.length - 1);
 			let diggEmission = 0;
 			let diggEmissionStart = 0;

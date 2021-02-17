@@ -7,7 +7,6 @@ configValidationMode: off
 plugins:
   - serverless-offline
   - serverless-aws-documentation
-  - serverless-export-swagger
   - serverless-api-gateway-caching
   - serverless-plugin-typescript
 
@@ -29,14 +28,6 @@ custom:
             description: "Protocol related API"
           - name: "Chart"
             description: "Chart related API"
-  bucket:
-    SWAGGER:
-      staging: "badger-staging-docs"
-      prod: "badger-docs"
-  swaggerDestinations:
-    s3BucketName: ${self:custom.bucket.SWAGGER.${self:custom.stage}}
-    s3KeyName: "swagger/swagger.json"
-    acl: public-read
   table:
     ASSET_DATA:
       staging: "badger-staging-asset"
