@@ -1,12 +1,12 @@
 import { TOKENS } from '../util/constants';
 
 export type SettData = {
-	name: string,
-	symbol: string,
-	depositToken: string,
-	settToken: string,
-	geyserAddress?: string,
-	protocol: string,
+	name: string;
+	symbol: string;
+	depositToken: string;
+	settToken: string;
+	geyserAddress?: string;
+	protocol: string;
 };
 
 export const setts: SettData[] = [

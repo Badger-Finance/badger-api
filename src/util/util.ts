@@ -2,8 +2,8 @@ import AWS from 'aws-sdk';
 import { PutItemInput, QueryInput } from 'aws-sdk/clients/dynamodb';
 import { DocumentClient } from 'aws-sdk/lib/dynamodb/document_client';
 import fetch from 'node-fetch';
-import { Block } from "@ethersproject/abstract-provider";
-import {SettSnapshot} from "../interface/SettSnapshot";
+import { Block } from '@ethersproject/abstract-provider';
+import { SettSnapshot } from '../interface/SettSnapshot';
 
 import { BADGER_URL, MASTERCHEF_URL, SUSHISWAP_URL, TOKENS, UNISWAP_URL, ETHERS_JSONRPC_PROVIDER } from './constants';
 import AttributeValue = DocumentClient.AttributeValue;
