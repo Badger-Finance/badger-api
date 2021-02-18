@@ -1,12 +1,11 @@
-import { Service } from "@tsed/common";
-import { ethers, BigNumber } from "ethers";
-import { ETHERS_JSONRPC_PROVIDER } from "../../util/constants";
-import { empAbi } from "../../util/abi";
-import { SponsorData, SyntheticData } from "../../interface/Claw";
+import { Service } from '@tsed/common';
+import { ethers, BigNumber } from 'ethers';
+import { ETHERS_JSONRPC_PROVIDER } from '../../util/constants';
+import { empAbi } from '../../util/abi';
+import { SponsorData, SyntheticData } from '../../interface/Claw';
 
 @Service()
 export class ClawService {
-
   async getSyntheticData(empAddress: string): Promise<SyntheticData> {
     const empContract = new ethers.Contract(empAddress, empAbi, ETHERS_JSONRPC_PROVIDER);
     const [

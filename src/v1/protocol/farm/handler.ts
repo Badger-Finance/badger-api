@@ -75,11 +75,13 @@ export const getFarmData = async () => {
 			// badger emissions
 			const badgerSchedules = await getEmissions(geyser.id, TOKENS.BADGER);
 			const badgerUnlockSchedules = badgerSchedules.filter(
-				(d, i) => new Date(d.endAtSec && d.endAtSec.toNumber() * 1000) > now || i === badgerSchedules.length - 1);
+				(d, i) =>
+					new Date(d.endAtSec && d.endAtSec.toNumber() * 1000) > now || i === badgerSchedules.length - 1,
+			);
 			let badgerEmission = 0;
 			let badgerEmissionStart = 0;
 			let badgerEmisisonEnd = 0;
-			badgerUnlockSchedules.forEach(s => {
+			badgerUnlockSchedules.forEach((s) => {
 				badgerEmission += s.initialLocked / 1e18;
 				const start = s.startTime.toNumber();
 				const end = s.endAtSec.toNumber();
@@ -99,11 +101,12 @@ export const getFarmData = async () => {
 			// digg emissions
 			const diggSchedules = await getEmissions(geyser.id, TOKENS.DIGG);
 			const diggUnlockSchedules = diggSchedules.filter(
-				(d, i) => new Date(d.endAtSec && d.endAtSec.toNumber() * 1000) > now || i === diggSchedules.length - 1);
+				(d, i) => new Date(d.endAtSec && d.endAtSec.toNumber() * 1000) > now || i === diggSchedules.length - 1,
+			);
 			let diggEmission = 0;
 			let diggEmissionStart = 0;
 			let diggEmisisonEnd = 0;
-			diggUnlockSchedules.forEach(s => {
+			diggUnlockSchedules.forEach((s) => {
 				diggEmission += s.initialLocked / 1e9;
 				const start = s.startTime.toNumber();
 				const end = s.endAtSec.toNumber();

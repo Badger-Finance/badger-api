@@ -1,6 +1,6 @@
-import { SettSummary } from "./Sett";
+import { SettSummary } from './Sett';
 
 export interface ProtocolSummary {
-  totalValue: number,
-  setts?: SettSummary[],
+	totalValue: number;
+	setts?: SettSummary[];
 }

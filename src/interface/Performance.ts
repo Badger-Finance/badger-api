@@ -4,8 +4,8 @@
  * seven days.
  */
 export interface Performance {
-  oneDay: number,
-  threeDay: number,
-  sevenDay: number,
-  thirtyDay: number,
+	oneDay: number;
+	threeDay: number;
+	sevenDay: number;
+	thirtyDay: number;
 }

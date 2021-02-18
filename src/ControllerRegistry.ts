@@ -1,9 +1,9 @@
-import { ProtocolController } from "./controller/ProtocolController";
-import { LinkController } from "./controller/LinkController";
-import { SettController } from "./controller/SettController";
-import { ChartController } from "./controller/ChartController";
-import { GeyserController } from "./controller/GeyserController";
-import { ClawController } from "./controller/ClawController";
+import { ProtocolController } from './controller/ProtocolController';
+import { LinkController } from './controller/LinkController';
+import { SettController } from './controller/SettController';
+import { ChartController } from './controller/ChartController';
+import { GeyserController } from './controller/GeyserController';
+import { ClawController } from './controller/ClawController';
 
 /**
  * Controller registry forces serverless offline to load
@@ -12,10 +12,10 @@ import { ClawController } from "./controller/ClawController";
  * without this.
  */
 export const controllers = [
-  LinkController,
-  ProtocolController,
-  SettController,
-  ChartController,
-  GeyserController,
-  ClawController,
+	LinkController,
+	ProtocolController,
+	SettController,
+	ChartController,
+	GeyserController,
+	ClawController,
 ];
