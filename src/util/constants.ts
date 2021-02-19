@@ -34,6 +34,7 @@ export const UNISWAP_URL = process.env.UNISWAP || 'MISSING REQUIRED ENV VAR';
 export const SUSHISWAP_URL = process.env.SUSHISWAP || 'MISSING REQUIRED ENV VAR';
 export const BADGER_URL = process.env.BADGER || 'MISSING REQUIRED ENV VAR';
 export const MASTERCHEF_URL = process.env.MASTERCHEF || 'MISSING REQUIRED ENV VAR';
+export const MERKLE_CLAIM_BUCKET = process.env.MERKLE_CLAIM_BUCKET || 'MISSING REQUIRED ENV VAR';
 
 // third party api constants
 export const CURVE_API_URL = 'https://www.curve.fi/raw-stats/apys.json';
