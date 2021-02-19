@@ -4,6 +4,7 @@ import methodOverride from 'method-override';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import compress from 'compression';
+import cors from 'cors';
 
 const rootDir = __dirname;
 
@@ -34,6 +35,7 @@ export class Server {
 			.use(compress({}))
 			.use(methodOverride())
 			.use(bodyParser.json())
+			.use(cors())
 			.use(
 				bodyParser.urlencoded({
 					extended: true,

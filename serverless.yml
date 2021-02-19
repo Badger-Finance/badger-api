@@ -52,6 +52,7 @@ provider:
     SUSHISWAP: "https://api.thegraph.com/subgraphs/name/croco-finance/sushiswap"
     MASTERCHEF: "https://api.thegraph.com/subgraphs/name/sushiswap/master-chef"
     ASSET_DATA: ${self:custom.table.ASSET_DATA.${self:custom.stage}}
+    MERKLE_CLAIM_BUCKET: "badger-merkle-proofs"
 
 resources:
   Resources:
