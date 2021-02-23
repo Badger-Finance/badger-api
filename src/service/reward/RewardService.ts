@@ -45,7 +45,7 @@ export class RewardService {
 		const fileContents: RewardMerkleDistribution = JSON.parse(rewardFile.Body.toString('utf-8'));
 		const claim = fileContents.claims[address];
 		if (!claim) {
-			throw new NotFound(`${address} does not qualify for airdrop`);
+			throw new NotFound(`${address} does not have claimable rewards.`);
 		}
 		return claim;
 	}

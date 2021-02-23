@@ -3,7 +3,6 @@ import { controllers } from './ControllerRegistry';
 import methodOverride from 'method-override';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
-import compress from 'compression';
 import cors from 'cors';
 
 const rootDir = __dirname;
@@ -31,11 +30,10 @@ export class Server {
 	 */
 	public $beforeRoutesInit(): void | Promise<any> {
 		this.app
+			.use(cors())
 			.use(cookieParser())
-			.use(compress({}))
 			.use(methodOverride())
 			.use(bodyParser.json())
-			.use(cors())
 			.use(
 				bodyParser.urlencoded({
 					extended: true,
