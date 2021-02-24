@@ -19,7 +19,17 @@ export class ClawService {
       minSponsorTokens,
       withdrawalLiveness,
       liquidationLiveness,
-    ] : [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] = (await Promise.all([
+    ] : [
+      BigNumber,
+	  BigNumber,
+	  BigNumber,
+	  BigNumber,
+	  BigNumber,
+	  BigNumber,
+	  BigNumber,
+	  BigNumber,
+	  BigNumber
+    ] = (await Promise.all([
       empContract.cumulativeFeeMultiplier(),
       empContract.rawTotalPositionCollateral(),
       empContract.totalTokensOutstanding(),
@@ -30,7 +40,12 @@ export class ClawService {
       empContract.withdrawalLiveness(),
       empContract.liquidationLiveness(),
     ]));
-    const globalCollateralizationRatio = (cumulativeFeeMultiplier.mul(rawTotalPositionCollateral)).div(totalTokensOutstanding)
+    let globalCollateralizationRatio = BigNumber.from(0);
+    if (totalTokensOutstanding.gt(BigNumber.from(0))) {
+      globalCollateralizationRatio = (
+        cumulativeFeeMultiplier.mul(rawTotalPositionCollateral)
+      ).div(totalTokensOutstanding)
+    }
     return {
       globalCollateralizationRatio,
       totalPositionCollateral,
