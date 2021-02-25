@@ -2,7 +2,7 @@ import AWS from 'aws-sdk';
 import { PutItemInput, QueryInput } from 'aws-sdk/clients/dynamodb';
 import { DocumentClient } from 'aws-sdk/lib/dynamodb/document_client';
 import fetch from 'node-fetch';
-import { Block } from "@ethersproject/abstract-provider";
+import { Block } from '@ethersproject/abstract-provider';
 import { DataData } from '../protocol/performance/handler';
 
 import { BADGER_URL, MASTERCHEF_URL, SUSHISWAP_URL, TOKENS, UNISWAP_URL, ETHERS_JSONRPC_PROVIDER } from './constants';
@@ -259,7 +259,7 @@ export const getSushiswapPrice = async (token: string) => {
 export const getPrices = async () => {
 	const prices = await Promise.all([
 		getTokenPrice('tbtc'),
-		getContractPrice(TOKENS.SBTC),
+		getContractPrice(TOKENS.RENBTC),
 		getContractPrice(TOKENS.RENBTC),
 		getContractPrice(TOKENS.BADGER),
 		getUniswapPrice(TOKENS.UNI_BADGER),

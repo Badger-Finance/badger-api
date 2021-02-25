@@ -7,7 +7,6 @@ configValidationMode: off
 plugins:
   - serverless-offline
   - serverless-aws-documentation
-  - serverless-export-swagger
   - serverless-api-gateway-caching
   - serverless-plugin-typescript
 
@@ -29,18 +28,13 @@ custom:
             description: "Protocol related API"
           - name: "Chart"
             description: "Chart related API"
-  bucket:
-    SWAGGER:
-      staging: "badger-staging-docs"
-      prod: "badger-docs"
-  swaggerDestinations:
-    s3BucketName: ${self:custom.bucket.SWAGGER.${self:custom.stage}}
-    s3KeyName: "swagger/swagger.json"
-    acl: public-read
   table:
     ASSET_DATA:
       staging: "badger-staging-asset"
       prod: "badger-asset"
+  merkleProofs:
+    staging: "badger-staging-merkle-proofs"
+    prod: "badger-merkle-proofs"
   caching:
     staging: false
     prod: true
@@ -55,12 +49,14 @@ provider:
   versionFunctions: false
   apiGateway:
     shouldStartNameWithService: true
+    minimumCompressionSize: 1024
   environment:
     BADGER: "https://api.thegraph.com/subgraphs/name/axejintao/badger-dao"
     UNISWAP: "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2"
     SUSHISWAP: "https://api.thegraph.com/subgraphs/name/croco-finance/sushiswap"
     MASTERCHEF: "https://api.thegraph.com/subgraphs/name/sushiswap/master-chef"
     ASSET_DATA: ${self:custom.table.ASSET_DATA.${self:custom.stage}}
+    MERKLE_CLAIM_BUCKET: ${self:custom.merkleProofs.${self:custom.stage}}
 
 resources:
   Resources:

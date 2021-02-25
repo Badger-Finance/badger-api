@@ -1,6 +1,6 @@
-import { TokenBalance } from "./TokenBalance";
-import { ValueSource } from "./ValueSource";
-import { Geyser } from "./Geyser";
+import { TokenBalance } from './TokenBalance';
+import { ValueSource } from './ValueSource';
+import { Geyser } from './Geyser';
 
 /**
  * Sett and geyser objects will be represented by the same
@@ -10,19 +10,19 @@ import { Geyser } from "./Geyser";
  * native underlying value source.
  */
 export interface Sett {
-  name: string,
-  asset: string,
-  ppfs: number,
-  value: number,
-  apy: number,
-  tokens: TokenBalance[],
-  sources: ValueSource[],
-  geyser?: Geyser,
+	name: string;
+	asset: string;
+	ppfs: number;
+	value: number;
+	apy: number;
+	tokens: TokenBalance[];
+	sources: ValueSource[];
+	geyser?: Geyser;
 }
 
 export interface SettSummary {
-  name: string,
-  asset: string,
-  value: number,
-  tokens: TokenBalance[],
+	name: string;
+	asset: string;
+	value: number;
+	tokens: TokenBalance[];
 }
