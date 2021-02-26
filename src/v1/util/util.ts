@@ -1,17 +1,15 @@
+import { Block } from '@ethersproject/abstract-provider';
 import AWS from 'aws-sdk';
 import { PutItemInput, QueryInput } from 'aws-sdk/clients/dynamodb';
 import { DocumentClient } from 'aws-sdk/lib/dynamodb/document_client';
 import fetch from 'node-fetch';
-import { Block } from '@ethersproject/abstract-provider';
 import { DataData } from '../protocol/performance/handler';
-
-import { BADGER_URL, MASTERCHEF_URL, SUSHISWAP_URL, TOKENS, UNISWAP_URL, ETHERS_JSONRPC_PROVIDER } from './constants';
+import { BADGER_URL, ETHERS_JSONRPC_PROVIDER, MASTERCHEF_URL, SUSHISWAP_URL, TOKENS, UNISWAP_URL } from './constants';
 import AttributeValue = DocumentClient.AttributeValue;
 
 export const THIRTY_MIN_BLOCKS = parseInt(String((30 * 60) / 13));
 const ddb = new AWS.DynamoDB.DocumentClient({ apiVersion: '2012-08-10' });
 
-// eslint-disable-next-line autofix/no-unused-vars
 export type GetPriceFunc = (settData: SettData) => Promise<number>;
 
 export interface EventInput {

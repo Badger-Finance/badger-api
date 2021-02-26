@@ -1,5 +1,4 @@
 import { EventInput, getContractPrice, getTokenPrice, SettData } from '../../util/util';
-
 import { indexAsset } from '../indexer';
 
 export const handler = async (event: EventInput) => {

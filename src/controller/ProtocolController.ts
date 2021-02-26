@@ -1,9 +1,9 @@
-import { ProtocolSummary } from '../interface/ProtocolSummary';
 import { Controller, Get, PathParams } from '@tsed/common';
+import { ContentType } from '@tsed/schema';
+import { ProtocolSummary } from '../interface/ProtocolSummary';
+import { UserAccount } from '../interface/UserAccount';
 import { SettService } from '../service/sett/SettService';
 import { UserService } from '../service/user/UserService';
-import { UserAccount } from '../interface/UserAccount';
-import { ContentType } from '@tsed/schema';
 
 @Controller('/protocol')
 export class ProtocolController {

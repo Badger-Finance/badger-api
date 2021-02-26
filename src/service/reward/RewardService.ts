@@ -1,13 +1,13 @@
-import {
-	AirdropMerkleDistribution,
-	AirdropMerkleClaim,
-	RewardMerkleDistribution,
-	RewardMerkleClaim,
-} from '../../interface/MerkleDistribution';
 import { Service } from '@tsed/common';
-import { S3Service } from '../s3/S3Service';
-import { MERKLE_CLAIM_BUCKET } from '../../util/constants';
 import { BadRequest, NotFound } from '@tsed/exceptions';
+import {
+	AirdropMerkleClaim,
+	AirdropMerkleDistribution,
+	RewardMerkleClaim,
+	RewardMerkleDistribution,
+} from '../../interface/MerkleDistribution';
+import { MERKLE_CLAIM_BUCKET } from '../../util/constants';
+import { S3Service } from '../s3/S3Service';
 
 @Service()
 export class RewardService {

@@ -1,14 +1,9 @@
-import { getGeysers, getPrices, getUsdValue, Geyser, respond } from '../../util/util';
-
-import { getAssetPerformance } from '../performance/handler';
-
-import { ETHERS_JSONRPC_PROVIDER, TOKENS } from '../../util/constants';
-
-import { diggAbi, geyserAbi } from '../../util/abi';
-
-import { setts } from '../../setts';
-
 import { BigNumber, ethers } from 'ethers';
+import { setts } from '../../setts';
+import { diggAbi, geyserAbi } from '../../util/abi';
+import { ETHERS_JSONRPC_PROVIDER, TOKENS } from '../../util/constants';
+import { getGeysers, getPrices, getUsdValue, Geyser, respond } from '../../util/util';
+import { getAssetPerformance } from '../performance/handler';
 
 export const handler = async () => {
 	try {

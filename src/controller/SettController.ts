@@ -1,7 +1,7 @@
 import { Controller, Get, PathParams } from '@tsed/common';
-import { SettService } from '../service/sett/SettService';
 import { ContentType } from '@tsed/schema';
 import { Sett } from '../interface/Sett';
+import { SettService } from '../service/sett/SettService';
 
 @Controller('/protocol/sett')
 export class SettController {

@@ -1,7 +1,7 @@
-import { AirdropMerkleClaim, RewardMerkleClaim } from '../interface/MerkleDistribution';
-import { RewardService } from '../service/reward/RewardService';
 import { Controller, Get, PathParams } from '@tsed/common';
 import { ContentType } from '@tsed/schema';
+import { AirdropMerkleClaim, RewardMerkleClaim } from '../interface/MerkleDistribution';
+import { RewardService } from '../service/reward/RewardService';
 
 @Controller('/reward')
 export class RewardController {
