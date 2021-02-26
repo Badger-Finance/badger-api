@@ -1,12 +1,12 @@
 ---
-service: badger
+service: badger-v2
 frameworkVersion: '2'
+# temporarily silence complaints about v1 swagger documentation
+configValidationMode: off
 
 plugins:
   - serverless-offline
-  - serverless-secrets-plugin
   - serverless-aws-documentation
-  - serverless-export-swagger
   - serverless-api-gateway-caching
   - serverless-plugin-typescript
 
@@ -15,8 +15,8 @@ custom:
   apiGatewayCaching:
     enabled: ${self:custom.caching.${self:custom.stage}}
     ttlInSeconds: 300
-  secretsFilePathPrefix: secrets
-  secrets: ${file(${self:custom.secretsFilePathPrefix}/secrets.${self:custom.stage}.yml)}
+  serverless-offline:
+    noPrependStageInUrl: true
   documentation:
     api:
       info:
@@ -28,18 +28,13 @@ custom:
             description: "Protocol related API"
           - name: "Chart"
             description: "Chart related API"
-  bucket:
-    SWAGGER:
-      staging: "badger-staging-docs"
-      prod: "badger-docs"
-  swaggerDestinations:
-    s3BucketName: ${self:custom.bucket.SWAGGER.${self:custom.stage}}
-    s3KeyName: "swagger/swagger.json"
-    acl: public-read
   table:
     ASSET_DATA:
       staging: "badger-staging-asset"
       prod: "badger-asset"
+  merkleProofs:
+    staging: "badger-staging-merkle-proofs"
+    prod: "badger-merkle-proofs"
   caching:
     staging: false
     prod: true
@@ -49,22 +44,54 @@ provider:
   runtime: nodejs12.x
   stage: staging
   region: us-west-1
+  iamManagedPolicies:
+    - arn:aws:iam::aws:policy/AWSLambdaFullAccess
   versionFunctions: false
   apiGateway:
     shouldStartNameWithService: true
+    minimumCompressionSize: 1024
   environment:
     BADGER: "https://api.thegraph.com/subgraphs/name/axejintao/badger-dao"
     UNISWAP: "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2"
     SUSHISWAP: "https://api.thegraph.com/subgraphs/name/croco-finance/sushiswap"
     MASTERCHEF: "https://api.thegraph.com/subgraphs/name/sushiswap/master-chef"
     ASSET_DATA: ${self:custom.table.ASSET_DATA.${self:custom.stage}}
-    INFURA_PROJECT_ID: ${self:custom.secrets.INFURA_PROJECT_ID}
-    INFURA_PROJECT_SECRET: ${self:custom.secrets.INFURA_PROJECT_SECRET}
+    MERKLE_CLAIM_BUCKET: ${self:custom.merkleProofs.${self:custom.stage}}
+
+resources:
+  Resources:
+    protocolTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.table.ASSET_DATA.${self:custom.stage}}
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: "asset"
+            KeyType: "HASH"
+          - AttributeName: "height"
+            KeyType: "RANGE"
+        AttributeDefinitions:
+          - AttributeName: "asset"
+            AttributeType: "S"
+          - AttributeName: "height"
+            AttributeType: "N"
 
 functions:
+  request-handler:
+    handler: src/LambdaServer.handler
+    timeout: 5
+    events:
+      - http:
+          path: /v2/{proxy+}
+          method: any
+          cors: true
+      - http:
+          path: /v2/
+          method: any
+          cors: true
+
   get-protocol-ppfs:
-    handler: src/service/protocol/ppfs/handler.handler
-    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
+    handler: src/v1/protocol/ppfs/handler.handler
     timeout: 30
     events:
       - http:
@@ -87,8 +114,7 @@ functions:
               - statusCode: "500"
   
   get-protocol-value:
-    handler: src/service/protocol/handler.handler
-    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
+    handler: src/v1/protocol/handler.handler
     timeout: 30
     events:
       - http:
@@ -115,8 +141,7 @@ functions:
               - statusCode: "500"
 
   get-protocol-earnings:
-    handler: src/service/protocol/earnings/handler.handler
-    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
+    handler: src/v1/protocol/earnings/handler.handler
     timeout: 30
     events:
       - http:
@@ -142,8 +167,7 @@ functions:
               - statusCode: "500"
 
   get-protocol-farm:
-    handler: src/service/protocol/farm/handler.handler
-    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
+    handler: src/v1/protocol/farm/handler.handler
     timeout: 30
     events:
       - http:
@@ -162,8 +186,7 @@ functions:
               - statusCode: "500"
 
   get-protocol-sett-performance:
-    handler: src/service/protocol/performance/handler.handler
-    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
+    handler: src/v1/protocol/performance/handler.handler
     timeout: 30
     events:
       - http:
@@ -188,8 +211,7 @@ functions:
               - statusCode: "500"
 
   get-chart-sett-performance:
-    handler: src/service/chart/sett/performance/handler.handler
-    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
+    handler: src/v1/chart/sett/performance/handler.handler
     timeout: 30
     events:
       - http:
@@ -222,8 +244,7 @@ functions:
               - statusCode: "500"
 
   get-chart-sett:
-    handler: src/service/chart/sett/handler.handler
-    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
+    handler: src/v1/chart/sett/handler.handler
     timeout: 30
     events:
       - http:
@@ -256,8 +277,7 @@ functions:
               - statusCode: "500"
 
   index-crv-btc:
-    handler: src/service/index/curve/handler.handler
-    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
+    handler: src/indexer/curve/handler.handler
     timeout: 300
     events:
       - schedule:
@@ -294,8 +314,7 @@ functions:
             asset: "hrenbtccrv"
 
   index-token:
-    handler: src/service/index/token/handler.handler
-    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
+    handler: src/indexer/token/handler.handler
     timeout: 300
     events:
       - schedule:
@@ -318,8 +337,7 @@ functions:
             token: "digg"
 
   index-uniswap:
-    handler: src/service/index/uniswap/handler.handler
-    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
+    handler: src/indexer/uniswap/handler.handler
     timeout: 300
     events:
       - schedule:
@@ -340,8 +358,7 @@ functions:
             asset: "digg-wbtc"
 
   index-sushiswap:
-    handler: src/service/index/sushiswap/handler.handler
-    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
+    handler: src/indexer/sushiswap/handler.handler
     timeout: 300
     events:
       - schedule:

@@ -1,4 +1,4 @@
-import { respond } from '../../src/service/util/util';
+import { respond } from '../../src/util/util';
 
 describe('util', () => {
 	describe('respond', () => {

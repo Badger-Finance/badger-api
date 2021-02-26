@@ -73,8 +73,10 @@ export const getFarmData = async () => {
 			const getRate = (value: number, duration: number) => (duration > 0 ? value / duration : 0);
 
 			// badger emissions
-			const badgerUnlockSchedules = (await getEmissions(geyser.id, TOKENS.BADGER)).filter(
-				(d) => new Date(d.endAtSec && d.endAtSec.toNumber() * 1000) > now,
+			const badgerSchedules = await getEmissions(geyser.id, TOKENS.BADGER);
+			const badgerUnlockSchedules = badgerSchedules.filter(
+				(d, i) =>
+					new Date(d.endAtSec && d.endAtSec.toNumber() * 1000) > now || i === badgerSchedules.length - 1,
 			);
 			let badgerEmission = 0;
 			let badgerEmissionStart = 0;
@@ -97,8 +99,9 @@ export const getFarmData = async () => {
 			const badgerApy = ((toDay(badgerEmissionValueRate) * 365) / geyserDepositsValue) * 100;
 
 			// digg emissions
-			const diggUnlockSchedules = (await getEmissions(geyser.id, TOKENS.DIGG)).filter(
-				(d) => new Date(d.endAtSec.toNumber() * 1000) > now,
+			const diggSchedules = await getEmissions(geyser.id, TOKENS.DIGG);
+			const diggUnlockSchedules = diggSchedules.filter(
+				(d, i) => new Date(d.endAtSec && d.endAtSec.toNumber() * 1000) > now || i === diggSchedules.length - 1,
 			);
 			let diggEmission = 0;
 			let diggEmissionStart = 0;

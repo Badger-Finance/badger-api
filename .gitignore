@@ -11,3 +11,5 @@ build
 secrets/*.yml
 
 yarn-error.log
+
+*.swp
