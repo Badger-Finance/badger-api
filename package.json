@@ -6,7 +6,8 @@
   "author": "axejintao",
   "license": "MIT",
   "scripts": {
-    "lint": "tslint --project tsconfig.json",
+    "format": "yarn run lint --fix",
+    "lint": "eslint .",
     "build": "tsc",
     "clean": "rm -rf ./build",
     "deploy": "sls deploy",
