@@ -1,9 +1,9 @@
-import { CURVE_API_URL, UNISWAP_URL, SUSHISWAP_URL } from '../../util/constants';
-import { ValueSource } from '../../interface/ValueSource';
-import { Performance } from '../../interface/Performance';
 import { Service } from '@tsed/common';
-import { SettData } from '../setts';
 import fetch from 'node-fetch';
+import { Performance } from '../../interface/Performance';
+import { ValueSource } from '../../interface/ValueSource';
+import { CURVE_API_URL, SUSHISWAP_URL, UNISWAP_URL } from '../../util/constants';
+import { SettData } from '../setts';
 
 /**
  * External protocol performance retrieval service.

@@ -1,14 +1,14 @@
-import { Geyser, UnlockSchedule, Emission } from '../../interface/Geyser';
-import { TOKENS, ETHERS_JSONRPC_PROVIDER } from '../../util/constants';
-import { getGeysers, getPrices, getUsdValue } from '../../util/util';
-import { ValueSource } from '../../interface/ValueSource';
-import { TokenService } from '../token/TokenService';
-import { diggAbi, geyserAbi } from '../../util/abi';
-import { SettService } from '../sett/SettService';
-import { Sett } from '../../interface/Sett';
-import { ethers, constants } from 'ethers';
 import { Service } from '@tsed/common';
+import { constants, ethers } from 'ethers';
+import { Emission, Geyser, UnlockSchedule } from '../../interface/Geyser';
+import { Sett } from '../../interface/Sett';
+import { ValueSource } from '../../interface/ValueSource';
+import { diggAbi, geyserAbi } from '../../util/abi';
+import { ETHERS_JSONRPC_PROVIDER, TOKENS } from '../../util/constants';
+import { getGeysers, getPrices, getUsdValue } from '../../util/util';
+import { SettService } from '../sett/SettService';
 import { setts } from '../setts';
+import { TokenService } from '../token/TokenService';
 
 // Helper Functions - TODO: utils? service functions?
 const toHour = (value: number) => value * 3600;

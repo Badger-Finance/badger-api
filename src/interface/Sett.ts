@@ -1,6 +1,6 @@
+import { Geyser } from './Geyser';
 import { TokenBalance } from './TokenBalance';
 import { ValueSource } from './ValueSource';
-import { Geyser } from './Geyser';
 
 /**
  * Sett and geyser objects will be represented by the same

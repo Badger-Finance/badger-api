@@ -1,3 +1,5 @@
+import fetch from 'node-fetch';
+import { setts } from '../../setts';
 import {
 	ASSET_DATA,
 	CURRENT,
@@ -20,9 +22,7 @@ import {
 	getTokenPrice,
 	respond,
 } from '../../util/util';
-import { setts } from '../../setts';
 import { FarmData, getFarmData } from '../farm/handler';
-import fetch from 'node-fetch';
 
 export const handler = async (event: EventInput) => {
 	try {

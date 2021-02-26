@@ -1,7 +1,7 @@
-import { NotFound, BadRequest, InternalServerError } from '@tsed/exceptions';
-import { UserAccount, SettBalance } from '../../interface/UserAccount';
-import { getUsdValue, getUserData, getPrices } from '../../util/util';
 import { Service } from '@tsed/common';
+import { BadRequest, InternalServerError, NotFound } from '@tsed/exceptions';
+import { SettBalance, UserAccount } from '../../interface/UserAccount';
+import { getPrices, getUsdValue, getUserData } from '../../util/util';
 import { setts } from '../setts';
 
 @Service()
