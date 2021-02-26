@@ -1,9 +1,9 @@
 import { Configuration, Inject, PlatformApplication } from '@tsed/common';
-import { controllers } from './ControllerRegistry';
-import methodOverride from 'method-override';
-import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import methodOverride from 'method-override';
+import { controllers } from './ControllerRegistry';
 
 const rootDir = __dirname;
 
@@ -28,7 +28,7 @@ export class Server {
 	 * This method let you configure the express middleware required by your application to work.
 	 * @returns {Server}
 	 */
-	public $beforeRoutesInit(): void | Promise<any> {
+	public $beforeRoutesInit(): void {
 		this.app
 			.use(cors())
 			.use(cookieParser())

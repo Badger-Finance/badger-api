@@ -1,9 +1,9 @@
-import { InternalServerError, NotFound } from '@tsed/exceptions';
-import { TokenBalance } from '../../interface/TokenBalance';
-import { getSushiswapPair, getUniswapPair, getUsdValue } from '../../util/util';
-import { Token } from '../../interface/Token';
-import { TOKENS } from '../../util/constants';
 import { Service } from '@tsed/common';
+import { InternalServerError, NotFound } from '@tsed/exceptions';
+import { Token } from '../../interface/Token';
+import { TokenBalance } from '../../interface/TokenBalance';
+import { TOKENS } from '../../util/constants';
+import { getSushiswapPair, getUniswapPair, getUsdValue } from '../../util/util';
 import { setts } from '../setts';
 
 /**

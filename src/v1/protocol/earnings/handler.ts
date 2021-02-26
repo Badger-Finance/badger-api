@@ -1,10 +1,7 @@
 import fetch from 'node-fetch';
-
 import { setts } from '../../setts';
-
-import { EventInput, getPrices, respond } from '../../util/util';
-
 import { BADGER_URL, TOKENS } from '../../util/constants';
+import { EventInput, getPrices, respond } from '../../util/util';
 
 export const handler = async (event: EventInput) => {
 	if (event.source === 'serverless-plugin-warmup') {

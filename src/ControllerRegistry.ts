@@ -1,10 +1,10 @@
-import { ProtocolController } from './controller/ProtocolController';
-import { LinkController } from './controller/LinkController';
-import { SettController } from './controller/SettController';
 import { ChartController } from './controller/ChartController';
-import { GeyserController } from './controller/GeyserController';
 import { ClawController } from './controller/ClawController';
+import { GeyserController } from './controller/GeyserController';
+import { LinkController } from './controller/LinkController';
+import { ProtocolController } from './controller/ProtocolController';
 import { RewardController } from './controller/RewardController';
+import { SettController } from './controller/SettController';
 
 /**
  * Controller registry forces serverless offline to load

@@ -1,5 +1,4 @@
 import { setts } from '../setts';
-
 import { EventInput, getGeysers, getPrices, getUsdValue, respond } from '../util/util';
 
 const formatFloat = (value: string) => parseFloat(parseFloat(value).toFixed(2));
