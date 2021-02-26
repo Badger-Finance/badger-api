@@ -79,7 +79,7 @@ export const getFarmData = async () => {
 			let badgerEmission = 0;
 			let badgerEmissionStart = 0;
 			let badgerEmisisonEnd = 0;
-			badgerUnlockSchedules.forEach(s => {
+			badgerUnlockSchedules.forEach((s) => {
 				badgerEmission += s.initialLocked / 1e18;
 				const start = s.startTime.toNumber();
 				const end = s.endAtSec.toNumber();
@@ -103,7 +103,7 @@ export const getFarmData = async () => {
 			let diggEmission = 0;
 			let diggEmissionStart = 0;
 			let diggEmisisonEnd = 0;
-			diggUnlockSchedules.forEach(s => {
+			diggUnlockSchedules.forEach((s) => {
 				diggEmission += s.initialLocked / 1e9;
 				const start = s.startTime.toNumber();
 				const end = s.endAtSec.toNumber();
