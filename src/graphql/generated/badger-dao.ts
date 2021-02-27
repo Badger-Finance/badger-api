@@ -697,86 +697,6 @@ export enum Deposit_OrderBy {
   Transaction = 'transaction',
 }
 
-export type FarmHarvestEvent = {
-  __typename?: 'FarmHarvestEvent';
-  id: Scalars['ID'];
-  totalFarmHarvested: Scalars['BigInt'];
-  farmToRewards: Scalars['BigInt'];
-  governancePerformanceFee: Scalars['BigInt'];
-  strategistPerformanceFee: Scalars['BigInt'];
-  timestamp: Scalars['BigInt'];
-  blockNumber: Scalars['BigInt'];
-};
-
-export type FarmHarvestEvent_Filter = {
-  id?: Maybe<Scalars['ID']>;
-  id_not?: Maybe<Scalars['ID']>;
-  id_gt?: Maybe<Scalars['ID']>;
-  id_lt?: Maybe<Scalars['ID']>;
-  id_gte?: Maybe<Scalars['ID']>;
-  id_lte?: Maybe<Scalars['ID']>;
-  id_in?: Maybe<Array<Scalars['ID']>>;
-  id_not_in?: Maybe<Array<Scalars['ID']>>;
-  totalFarmHarvested?: Maybe<Scalars['BigInt']>;
-  totalFarmHarvested_not?: Maybe<Scalars['BigInt']>;
-  totalFarmHarvested_gt?: Maybe<Scalars['BigInt']>;
-  totalFarmHarvested_lt?: Maybe<Scalars['BigInt']>;
-  totalFarmHarvested_gte?: Maybe<Scalars['BigInt']>;
-  totalFarmHarvested_lte?: Maybe<Scalars['BigInt']>;
-  totalFarmHarvested_in?: Maybe<Array<Scalars['BigInt']>>;
-  totalFarmHarvested_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  farmToRewards?: Maybe<Scalars['BigInt']>;
-  farmToRewards_not?: Maybe<Scalars['BigInt']>;
-  farmToRewards_gt?: Maybe<Scalars['BigInt']>;
-  farmToRewards_lt?: Maybe<Scalars['BigInt']>;
-  farmToRewards_gte?: Maybe<Scalars['BigInt']>;
-  farmToRewards_lte?: Maybe<Scalars['BigInt']>;
-  farmToRewards_in?: Maybe<Array<Scalars['BigInt']>>;
-  farmToRewards_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  governancePerformanceFee?: Maybe<Scalars['BigInt']>;
-  governancePerformanceFee_not?: Maybe<Scalars['BigInt']>;
-  governancePerformanceFee_gt?: Maybe<Scalars['BigInt']>;
-  governancePerformanceFee_lt?: Maybe<Scalars['BigInt']>;
-  governancePerformanceFee_gte?: Maybe<Scalars['BigInt']>;
-  governancePerformanceFee_lte?: Maybe<Scalars['BigInt']>;
-  governancePerformanceFee_in?: Maybe<Array<Scalars['BigInt']>>;
-  governancePerformanceFee_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  strategistPerformanceFee?: Maybe<Scalars['BigInt']>;
-  strategistPerformanceFee_not?: Maybe<Scalars['BigInt']>;
-  strategistPerformanceFee_gt?: Maybe<Scalars['BigInt']>;
-  strategistPerformanceFee_lt?: Maybe<Scalars['BigInt']>;
-  strategistPerformanceFee_gte?: Maybe<Scalars['BigInt']>;
-  strategistPerformanceFee_lte?: Maybe<Scalars['BigInt']>;
-  strategistPerformanceFee_in?: Maybe<Array<Scalars['BigInt']>>;
-  strategistPerformanceFee_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  timestamp?: Maybe<Scalars['BigInt']>;
-  timestamp_not?: Maybe<Scalars['BigInt']>;
-  timestamp_gt?: Maybe<Scalars['BigInt']>;
-  timestamp_lt?: Maybe<Scalars['BigInt']>;
-  timestamp_gte?: Maybe<Scalars['BigInt']>;
-  timestamp_lte?: Maybe<Scalars['BigInt']>;
-  timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
-  timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  blockNumber?: Maybe<Scalars['BigInt']>;
-  blockNumber_not?: Maybe<Scalars['BigInt']>;
-  blockNumber_gt?: Maybe<Scalars['BigInt']>;
-  blockNumber_lt?: Maybe<Scalars['BigInt']>;
-  blockNumber_gte?: Maybe<Scalars['BigInt']>;
-  blockNumber_lte?: Maybe<Scalars['BigInt']>;
-  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
-  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
-};
-
-export enum FarmHarvestEvent_OrderBy {
-  Id = 'id',
-  TotalFarmHarvested = 'totalFarmHarvested',
-  FarmToRewards = 'farmToRewards',
-  GovernancePerformanceFee = 'governancePerformanceFee',
-  StrategistPerformanceFee = 'strategistPerformanceFee',
-  Timestamp = 'timestamp',
-  BlockNumber = 'blockNumber',
-}
-
 export type Geyser = {
   __typename?: 'Geyser';
   id: Scalars['ID'];
@@ -899,6 +819,82 @@ export enum HarvestEvent_OrderBy {
   Id = 'id',
   SourceAddress = 'sourceAddress',
   SourceId = 'sourceId',
+}
+
+export type HarvestFarmEvent = {
+  __typename?: 'HarvestFarmEvent';
+  id: Scalars['ID'];
+  sourceAddress: Scalars['Bytes'];
+  sourceId: Scalars['String'];
+  displayName: Scalars['String'];
+  imageUrl: Scalars['String'];
+};
+
+export type HarvestFarmEvent_Filter = {
+  id?: Maybe<Scalars['ID']>;
+  id_not?: Maybe<Scalars['ID']>;
+  id_gt?: Maybe<Scalars['ID']>;
+  id_lt?: Maybe<Scalars['ID']>;
+  id_gte?: Maybe<Scalars['ID']>;
+  id_lte?: Maybe<Scalars['ID']>;
+  id_in?: Maybe<Array<Scalars['ID']>>;
+  id_not_in?: Maybe<Array<Scalars['ID']>>;
+  sourceAddress?: Maybe<Scalars['Bytes']>;
+  sourceAddress_not?: Maybe<Scalars['Bytes']>;
+  sourceAddress_in?: Maybe<Array<Scalars['Bytes']>>;
+  sourceAddress_not_in?: Maybe<Array<Scalars['Bytes']>>;
+  sourceAddress_contains?: Maybe<Scalars['Bytes']>;
+  sourceAddress_not_contains?: Maybe<Scalars['Bytes']>;
+  sourceId?: Maybe<Scalars['String']>;
+  sourceId_not?: Maybe<Scalars['String']>;
+  sourceId_gt?: Maybe<Scalars['String']>;
+  sourceId_lt?: Maybe<Scalars['String']>;
+  sourceId_gte?: Maybe<Scalars['String']>;
+  sourceId_lte?: Maybe<Scalars['String']>;
+  sourceId_in?: Maybe<Array<Scalars['String']>>;
+  sourceId_not_in?: Maybe<Array<Scalars['String']>>;
+  sourceId_contains?: Maybe<Scalars['String']>;
+  sourceId_not_contains?: Maybe<Scalars['String']>;
+  sourceId_starts_with?: Maybe<Scalars['String']>;
+  sourceId_not_starts_with?: Maybe<Scalars['String']>;
+  sourceId_ends_with?: Maybe<Scalars['String']>;
+  sourceId_not_ends_with?: Maybe<Scalars['String']>;
+  displayName?: Maybe<Scalars['String']>;
+  displayName_not?: Maybe<Scalars['String']>;
+  displayName_gt?: Maybe<Scalars['String']>;
+  displayName_lt?: Maybe<Scalars['String']>;
+  displayName_gte?: Maybe<Scalars['String']>;
+  displayName_lte?: Maybe<Scalars['String']>;
+  displayName_in?: Maybe<Array<Scalars['String']>>;
+  displayName_not_in?: Maybe<Array<Scalars['String']>>;
+  displayName_contains?: Maybe<Scalars['String']>;
+  displayName_not_contains?: Maybe<Scalars['String']>;
+  displayName_starts_with?: Maybe<Scalars['String']>;
+  displayName_not_starts_with?: Maybe<Scalars['String']>;
+  displayName_ends_with?: Maybe<Scalars['String']>;
+  displayName_not_ends_with?: Maybe<Scalars['String']>;
+  imageUrl?: Maybe<Scalars['String']>;
+  imageUrl_not?: Maybe<Scalars['String']>;
+  imageUrl_gt?: Maybe<Scalars['String']>;
+  imageUrl_lt?: Maybe<Scalars['String']>;
+  imageUrl_gte?: Maybe<Scalars['String']>;
+  imageUrl_lte?: Maybe<Scalars['String']>;
+  imageUrl_in?: Maybe<Array<Scalars['String']>>;
+  imageUrl_not_in?: Maybe<Array<Scalars['String']>>;
+  imageUrl_contains?: Maybe<Scalars['String']>;
+  imageUrl_not_contains?: Maybe<Scalars['String']>;
+  imageUrl_starts_with?: Maybe<Scalars['String']>;
+  imageUrl_not_starts_with?: Maybe<Scalars['String']>;
+  imageUrl_ends_with?: Maybe<Scalars['String']>;
+  imageUrl_not_ends_with?: Maybe<Scalars['String']>;
+};
+
+export enum HarvestFarmEvent_OrderBy {
+  Id = 'id',
+  SourceAddress = 'sourceAddress',
+  SourceId = 'sourceId',
+  DisplayName = 'displayName',
+  ImageUrl = 'imageUrl',
 }
 
 export type Harvest_Filter = {
@@ -1124,12 +1120,8 @@ export type Query = {
   unstakedEvents: Array<UnstakedEvent>;
   harvestEvent?: Maybe<HarvestEvent>;
   harvestEvents: Array<HarvestEvent>;
-  farmHarvestEvent?: Maybe<FarmHarvestEvent>;
-  farmHarvestEvents: Array<FarmHarvestEvent>;
-  sushiHarvestEvent?: Maybe<SushiHarvestEvent>;
-  sushiHarvestEvents: Array<SushiHarvestEvent>;
-  tokenBalance?: Maybe<TokenBalance>;
-  tokenBalances: Array<TokenBalance>;
+  harvestFarmEvent?: Maybe<HarvestFarmEvent>;
+  harvestFarmEvents: Array<HarvestFarmEvent>;
   action?: Maybe<Action>;
   actions: Array<Action>;
   /** Access to subgraph metadata */
@@ -1346,45 +1338,17 @@ export type QueryHarvestEventsArgs = {
   block?: Maybe<Block_Height>;
 };
 
-export type QueryFarmHarvestEventArgs = {
+export type QueryHarvestFarmEventArgs = {
   id: Scalars['ID'];
   block?: Maybe<Block_Height>;
 };
 
-export type QueryFarmHarvestEventsArgs = {
+export type QueryHarvestFarmEventsArgs = {
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<FarmHarvestEvent_OrderBy>;
+  orderBy?: Maybe<HarvestFarmEvent_OrderBy>;
   orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<FarmHarvestEvent_Filter>;
-  block?: Maybe<Block_Height>;
-};
-
-export type QuerySushiHarvestEventArgs = {
-  id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
-};
-
-export type QuerySushiHarvestEventsArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<SushiHarvestEvent_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<SushiHarvestEvent_Filter>;
-  block?: Maybe<Block_Height>;
-};
-
-export type QueryTokenBalanceArgs = {
-  id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
-};
-
-export type QueryTokenBalancesArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<TokenBalance_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<TokenBalance_Filter>;
+  where?: Maybe<HarvestFarmEvent_Filter>;
   block?: Maybe<Block_Height>;
 };
 
@@ -1607,12 +1571,8 @@ export type Subscription = {
   unstakedEvents: Array<UnstakedEvent>;
   harvestEvent?: Maybe<HarvestEvent>;
   harvestEvents: Array<HarvestEvent>;
-  farmHarvestEvent?: Maybe<FarmHarvestEvent>;
-  farmHarvestEvents: Array<FarmHarvestEvent>;
-  sushiHarvestEvent?: Maybe<SushiHarvestEvent>;
-  sushiHarvestEvents: Array<SushiHarvestEvent>;
-  tokenBalance?: Maybe<TokenBalance>;
-  tokenBalances: Array<TokenBalance>;
+  harvestFarmEvent?: Maybe<HarvestFarmEvent>;
+  harvestFarmEvents: Array<HarvestFarmEvent>;
   action?: Maybe<Action>;
   actions: Array<Action>;
   /** Access to subgraph metadata */
@@ -1829,45 +1789,17 @@ export type SubscriptionHarvestEventsArgs = {
   block?: Maybe<Block_Height>;
 };
 
-export type SubscriptionFarmHarvestEventArgs = {
+export type SubscriptionHarvestFarmEventArgs = {
   id: Scalars['ID'];
   block?: Maybe<Block_Height>;
 };
 
-export type SubscriptionFarmHarvestEventsArgs = {
+export type SubscriptionHarvestFarmEventsArgs = {
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<FarmHarvestEvent_OrderBy>;
+  orderBy?: Maybe<HarvestFarmEvent_OrderBy>;
   orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<FarmHarvestEvent_Filter>;
-  block?: Maybe<Block_Height>;
-};
-
-export type SubscriptionSushiHarvestEventArgs = {
-  id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
-};
-
-export type SubscriptionSushiHarvestEventsArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<SushiHarvestEvent_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<SushiHarvestEvent_Filter>;
-  block?: Maybe<Block_Height>;
-};
-
-export type SubscriptionTokenBalanceArgs = {
-  id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
-};
-
-export type SubscriptionTokenBalancesArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<TokenBalance_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<TokenBalance_Filter>;
+  where?: Maybe<HarvestFarmEvent_Filter>;
   block?: Maybe<Block_Height>;
 };
 
@@ -1889,96 +1821,6 @@ export type Subscription_MetaArgs = {
   block?: Maybe<Block_Height>;
 };
 
-export type SushiHarvestEvent = {
-  __typename?: 'SushiHarvestEvent';
-  id: Scalars['ID'];
-  xSushiHarvested: Scalars['BigInt'];
-  totalxSushi: Scalars['BigInt'];
-  toStrategist: Scalars['BigInt'];
-  toGovernance: Scalars['BigInt'];
-  toBadgerTree: Scalars['BigInt'];
-  timestamp: Scalars['BigInt'];
-  blockNumber: Scalars['BigInt'];
-};
-
-export type SushiHarvestEvent_Filter = {
-  id?: Maybe<Scalars['ID']>;
-  id_not?: Maybe<Scalars['ID']>;
-  id_gt?: Maybe<Scalars['ID']>;
-  id_lt?: Maybe<Scalars['ID']>;
-  id_gte?: Maybe<Scalars['ID']>;
-  id_lte?: Maybe<Scalars['ID']>;
-  id_in?: Maybe<Array<Scalars['ID']>>;
-  id_not_in?: Maybe<Array<Scalars['ID']>>;
-  xSushiHarvested?: Maybe<Scalars['BigInt']>;
-  xSushiHarvested_not?: Maybe<Scalars['BigInt']>;
-  xSushiHarvested_gt?: Maybe<Scalars['BigInt']>;
-  xSushiHarvested_lt?: Maybe<Scalars['BigInt']>;
-  xSushiHarvested_gte?: Maybe<Scalars['BigInt']>;
-  xSushiHarvested_lte?: Maybe<Scalars['BigInt']>;
-  xSushiHarvested_in?: Maybe<Array<Scalars['BigInt']>>;
-  xSushiHarvested_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  totalxSushi?: Maybe<Scalars['BigInt']>;
-  totalxSushi_not?: Maybe<Scalars['BigInt']>;
-  totalxSushi_gt?: Maybe<Scalars['BigInt']>;
-  totalxSushi_lt?: Maybe<Scalars['BigInt']>;
-  totalxSushi_gte?: Maybe<Scalars['BigInt']>;
-  totalxSushi_lte?: Maybe<Scalars['BigInt']>;
-  totalxSushi_in?: Maybe<Array<Scalars['BigInt']>>;
-  totalxSushi_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  toStrategist?: Maybe<Scalars['BigInt']>;
-  toStrategist_not?: Maybe<Scalars['BigInt']>;
-  toStrategist_gt?: Maybe<Scalars['BigInt']>;
-  toStrategist_lt?: Maybe<Scalars['BigInt']>;
-  toStrategist_gte?: Maybe<Scalars['BigInt']>;
-  toStrategist_lte?: Maybe<Scalars['BigInt']>;
-  toStrategist_in?: Maybe<Array<Scalars['BigInt']>>;
-  toStrategist_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  toGovernance?: Maybe<Scalars['BigInt']>;
-  toGovernance_not?: Maybe<Scalars['BigInt']>;
-  toGovernance_gt?: Maybe<Scalars['BigInt']>;
-  toGovernance_lt?: Maybe<Scalars['BigInt']>;
-  toGovernance_gte?: Maybe<Scalars['BigInt']>;
-  toGovernance_lte?: Maybe<Scalars['BigInt']>;
-  toGovernance_in?: Maybe<Array<Scalars['BigInt']>>;
-  toGovernance_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  toBadgerTree?: Maybe<Scalars['BigInt']>;
-  toBadgerTree_not?: Maybe<Scalars['BigInt']>;
-  toBadgerTree_gt?: Maybe<Scalars['BigInt']>;
-  toBadgerTree_lt?: Maybe<Scalars['BigInt']>;
-  toBadgerTree_gte?: Maybe<Scalars['BigInt']>;
-  toBadgerTree_lte?: Maybe<Scalars['BigInt']>;
-  toBadgerTree_in?: Maybe<Array<Scalars['BigInt']>>;
-  toBadgerTree_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  timestamp?: Maybe<Scalars['BigInt']>;
-  timestamp_not?: Maybe<Scalars['BigInt']>;
-  timestamp_gt?: Maybe<Scalars['BigInt']>;
-  timestamp_lt?: Maybe<Scalars['BigInt']>;
-  timestamp_gte?: Maybe<Scalars['BigInt']>;
-  timestamp_lte?: Maybe<Scalars['BigInt']>;
-  timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
-  timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  blockNumber?: Maybe<Scalars['BigInt']>;
-  blockNumber_not?: Maybe<Scalars['BigInt']>;
-  blockNumber_gt?: Maybe<Scalars['BigInt']>;
-  blockNumber_lt?: Maybe<Scalars['BigInt']>;
-  blockNumber_gte?: Maybe<Scalars['BigInt']>;
-  blockNumber_lte?: Maybe<Scalars['BigInt']>;
-  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
-  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
-};
-
-export enum SushiHarvestEvent_OrderBy {
-  Id = 'id',
-  XSushiHarvested = 'xSushiHarvested',
-  TotalxSushi = 'totalxSushi',
-  ToStrategist = 'toStrategist',
-  ToGovernance = 'toGovernance',
-  ToBadgerTree = 'toBadgerTree',
-  Timestamp = 'timestamp',
-  BlockNumber = 'blockNumber',
-}
-
 export type Token = {
   __typename?: 'Token';
   id: Scalars['ID'];
@@ -1987,52 +1829,6 @@ export type Token = {
   name: Scalars['String'];
   symbol: Scalars['String'];
 };
-
-export type TokenBalance = {
-  __typename?: 'TokenBalance';
-  id: Scalars['ID'];
-  balance: Scalars['BigInt'];
-  token: Token;
-};
-
-export type TokenBalance_Filter = {
-  id?: Maybe<Scalars['ID']>;
-  id_not?: Maybe<Scalars['ID']>;
-  id_gt?: Maybe<Scalars['ID']>;
-  id_lt?: Maybe<Scalars['ID']>;
-  id_gte?: Maybe<Scalars['ID']>;
-  id_lte?: Maybe<Scalars['ID']>;
-  id_in?: Maybe<Array<Scalars['ID']>>;
-  id_not_in?: Maybe<Array<Scalars['ID']>>;
-  balance?: Maybe<Scalars['BigInt']>;
-  balance_not?: Maybe<Scalars['BigInt']>;
-  balance_gt?: Maybe<Scalars['BigInt']>;
-  balance_lt?: Maybe<Scalars['BigInt']>;
-  balance_gte?: Maybe<Scalars['BigInt']>;
-  balance_lte?: Maybe<Scalars['BigInt']>;
-  balance_in?: Maybe<Array<Scalars['BigInt']>>;
-  balance_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  token?: Maybe<Scalars['String']>;
-  token_not?: Maybe<Scalars['String']>;
-  token_gt?: Maybe<Scalars['String']>;
-  token_lt?: Maybe<Scalars['String']>;
-  token_gte?: Maybe<Scalars['String']>;
-  token_lte?: Maybe<Scalars['String']>;
-  token_in?: Maybe<Array<Scalars['String']>>;
-  token_not_in?: Maybe<Array<Scalars['String']>>;
-  token_contains?: Maybe<Scalars['String']>;
-  token_not_contains?: Maybe<Scalars['String']>;
-  token_starts_with?: Maybe<Scalars['String']>;
-  token_not_starts_with?: Maybe<Scalars['String']>;
-  token_ends_with?: Maybe<Scalars['String']>;
-  token_not_ends_with?: Maybe<Scalars['String']>;
-};
-
-export enum TokenBalance_OrderBy {
-  Id = 'id',
-  Balance = 'balance',
-  Token = 'token',
-}
 
 export type Token_Filter = {
   id?: Maybe<Scalars['ID']>;
