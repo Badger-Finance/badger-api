@@ -7,13 +7,14 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "tsc:build": "tsc -p .",
+    "clean": "rm -rf ./build",
+    "codegen": "graphql-codegen -r dotenv/config -c codegen.yml dotenv_config_path=.env.development",
+    "deploy": "sls deploy",
     "format": "yarn run lint --fix",
     "lint": "eslint .",
-    "clean": "rm -rf ./build",
-    "deploy": "sls deploy",
-    "ui": "yarn upgradeInteractive",
-    "test": "jest"
+    "test": "jest",
+    "tsc:build": "tsc -p .",
+    "ui": "yarn upgradeInteractive"
   },
   "dependencies": {
     "@tsed/common": "^6.24.1",
@@ -38,6 +39,10 @@
     "tslib": "^2.1.0"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "1.21.1",
+    "@graphql-codegen/typescript": "1.21.0",
+    "@graphql-codegen/typescript-graphql-request": "3.0.2",
+    "@graphql-codegen/typescript-operations": "1.17.14",
     "@types/cookie-parser": "^1.4.2",
     "@types/express": "^4.17.11",
     "@types/jsonfile": "^6.0.0",
@@ -48,6 +53,7 @@
     "@types/web3": "^1.2.2",
     "@typescript-eslint/eslint-plugin": "^4.14.1",
     "@typescript-eslint/parser": "^4.14.1",
+    "dotenv": "8.2.0",
     "eslint": "^7.18.0",
     "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-import": "2.22.1",
@@ -56,6 +62,7 @@
     "eslint-plugin-simple-import-sort": "7.0.0",
     "ethers-typescript-typings": "^0.0.4",
     "express": "4",
+    "graphql": "15.5.0",
     "jest": "^26.6.3",
     "jsonfile": "^6.1.0",
     "prettier": "^2.2.1",

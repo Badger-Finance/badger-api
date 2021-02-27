@@ -1,0 +1,35 @@
+overwrite: true
+hooks:
+  afterAllFileWrite:
+    - prettier --write
+generates:
+  src/graphql/generated/badger.ts:
+    schema: ${BADGER_SUBGRAPH_URL}
+    plugins:
+      - typescript
+      - typescript-graphql-request
+      - typescript-operations
+  src/graphql/generated/badger-dao.ts:
+    schema: ${BADGER_DAO_SUBGRAPH_URL}
+    plugins:
+      - typescript
+      - typescript-graphql-request
+      - typescript-operations
+  src/graphql/generated/masterchef.ts:
+    schema: ${MASTERCHEF_SUBGRAPH_URL}
+    plugins:
+      - typescript
+      - typescript-graphql-request
+      - typescript-operations
+  src/graphql/generated/sushiswap.ts:
+    schema: ${SUSHISWAP_SUBGRAPH_URL}
+    plugins:
+      - typescript
+      - typescript-graphql-request
+      - typescript-operations
+  src/graphql/generated/uniswap.ts:
+    schema: ${UNISWAP_SUBGRAPH_URL}
+    plugins:
+      - typescript
+      - typescript-graphql-request
+      - typescript-operations
