@@ -32,12 +32,9 @@ custom:
     ASSET_DATA:
       staging: "badger-staging-asset"
       prod: "badger-asset"
-<<<<<<< HEAD
     PRICE_DATA:
       staging: "badger-staging-prices"
       prod: "badger-prices"
-=======
->>>>>>> 93a369a (add staging claim bucket (#27))
   merkleProofs:
     staging: "badger-staging-merkle-proofs"
     prod: "badger-merkle-proofs"
