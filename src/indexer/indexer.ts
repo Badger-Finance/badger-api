@@ -5,7 +5,6 @@ import {
 	getIndexedBlock,
 	GetPriceFunc,
 	getSett,
-	respond,
 	saveItem,
 	THIRTY_MIN_BLOCKS,
 } from '../util/util';
@@ -27,15 +26,14 @@ export const indexAsset = async (event: EventInput, getPrice: GetPriceFunc) => {
 			continue;
 		}
 
-		const { balance, totalSupply, pricePerFullShare } = sett.data.sett;
+		const { balance, totalSupply, pricePerFullShare, token } = sett.data.sett;
 
-		const decimals = asset === 'digg' ? 9 : 18;
 		const blockData = await getBlock(block);
 		const timestamp = Number(blockData.timestamp) * 1000;
-		const balanceComputed = balance / Math.pow(10, decimals);
-		const supply = totalSupply / Math.pow(10, decimals);
+		const tokenBalance = balance / Math.pow(10, token.decimals);
+		const supply = totalSupply / Math.pow(10, token.decimals);
 		const ratio = pricePerFullShare / Math.pow(10, 18);
-		const value = balanceComputed * (await getPrice(sett));
+		const value = tokenBalance * (await getPrice(sett)).usd;
 
 		const snapshot = {
 			asset: asset,
@@ -50,6 +48,4 @@ export const indexAsset = async (event: EventInput, getPrice: GetPriceFunc) => {
 		await saveItem(ASSET_DATA, snapshot);
 		block += THIRTY_MIN_BLOCKS;
 	}
-
-	return respond(200); // FIXME: is this right?
 };

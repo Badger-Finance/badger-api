@@ -2,7 +2,9 @@ import { Service } from '@tsed/common';
 import fetch from 'node-fetch';
 import { Performance } from '../../interface/Performance';
 import { ValueSource } from '../../interface/ValueSource';
-import { CURVE_API_URL, SUSHISWAP_URL, UNISWAP_URL } from '../../util/constants';
+import { CURVE_API_URL, SUSHISWAP_URL, TOKENS, UNISWAP_URL } from '../../util/constants';
+import { blockToDay, getMasterChef, getSushiswapPrice, toRate } from '../../util/util';
+import { PriceService } from '../price/PriceService';
 import { SettData } from '../setts';
 
 /**
@@ -10,11 +12,13 @@ import { SettData } from '../setts';
  */
 @Service()
 export class ProtocolService {
+	constructor(private priceService: PriceService) {}
 	/**
 	 * Retrieve performance of underlying protocol for a given sett.
 	 * @param sett Sett to retrieve protocol performance.
 	 */
-	async getProtocolPerformance(sett: SettData): Promise<ValueSource> {
+	async getProtocolPerformance(sett: SettData): Promise<ValueSource | undefined> {
+		if (!sett.protocol) return undefined;
 		let protocolPerformance: Performance;
 
 		switch (sett.protocol) {
@@ -25,8 +29,16 @@ export class ProtocolService {
 				protocolPerformance = await this.getSwapPerformance(sett.depositToken, sett.protocol);
 				break;
 			case 'sushiswap':
-				// TODO: Add MasterChef / xSushi APY
-				protocolPerformance = await this.getSwapPerformance(sett.depositToken, sett.protocol);
+				const [swapPerformance, sushiEmission] = await Promise.all([
+					this.getSwapPerformance(sett.depositToken, sett.protocol),
+					this.getSushiChefPerformance(sett),
+				]);
+				protocolPerformance = {
+					oneDay: swapPerformance.oneDay + sushiEmission.oneDay,
+					threeDay: swapPerformance.threeDay + sushiEmission.threeDay,
+					sevenDay: swapPerformance.sevenDay + sushiEmission.sevenDay,
+					thirtyDay: swapPerformance.thirtyDay + sushiEmission.thirtyDay,
+				};
 				break;
 			default:
 				protocolPerformance = {
@@ -77,7 +89,7 @@ export class ProtocolService {
 		// TODO: Move query to GraphService
 		const query = `
       {
-        pairDayDatas(first: 30, orderBy: date, orderDirection: desc, where:{pairAddress: "${poolAddress}"}) {
+        pairDayDatas(first: 30, orderBy: date, orderDirection: desc, where:{pairAddress: "${poolAddress.toLowerCase()}"}) {
           reserveUSD
           dailyVolumeUSD
         }
@@ -109,5 +121,40 @@ export class ProtocolService {
 			if (i === 29) performance.thirtyDay = currentApy;
 		}
 		return performance;
+	}
+
+	async getSushiChefPerformance(sett: SettData): Promise<Performance> {
+		const [sushiPrice, masterChefData] = await Promise.all([
+			this.priceService.getTokenPriceData(TOKENS.SUSHI),
+			getMasterChef(),
+		]);
+		const masterChef = masterChefData.data.masterChefs[0];
+		const masterChefPools = masterChefData.data.pools;
+		const baseSushiPerBlock = masterChef.sushiPerBlock / 1e18;
+		const sushiPool = masterChefPools.find((pool) => sett.depositToken.toLowerCase() === pool.pair);
+
+		if (!sushiPool) {
+			return {
+				oneDay: 0,
+				threeDay: 0,
+				sevenDay: 0,
+				thirtyDay: 0,
+			};
+		}
+
+		const allocShare = sushiPool.allocPoint / masterChef.totalAllocPoint;
+		const sushiPerBlock = allocShare * baseSushiPerBlock;
+		const valuePerBlock = sushiPerBlock * sushiPrice.usd;
+		const tokenBalance = sushiPool.balance / 1e18;
+		const liquidityPrice = await getSushiswapPrice(sushiPool.pair);
+		const valueBalance = liquidityPrice.usd * tokenBalance;
+		const apy = toRate(blockToDay(valuePerBlock), valueBalance) * 365 * 100;
+
+		return {
+			oneDay: apy,
+			threeDay: apy,
+			sevenDay: apy,
+			thirtyDay: apy,
+		};
 	}
 }

@@ -5,27 +5,26 @@ import { Sett } from '../../interface/Sett';
 import { ValueSource } from '../../interface/ValueSource';
 import { diggAbi, geyserAbi } from '../../util/abi';
 import { ETHERS_JSONRPC_PROVIDER, TOKENS } from '../../util/constants';
-import { getGeysers, getPrices, getUsdValue } from '../../util/util';
+import { getGeysers, secondToDay, toRate } from '../../util/util';
+import { PriceService } from '../price/PriceService';
 import { SettService } from '../sett/SettService';
 import { setts } from '../setts';
 import { TokenService } from '../token/TokenService';
 
-// Helper Functions - TODO: utils? service functions?
-const toHour = (value: number) => value * 3600;
-const toDay = (value: number) => toHour(value) * 24;
-const getRate = (value: number, duration: number) => (duration > 0 ? value / duration : 0);
-
 @Service()
 export class GeyserService {
-	constructor(private settService: SettService, private tokenService: TokenService) {}
+	constructor(
+		private settService: SettService,
+		private tokenService: TokenService,
+		private priceService: PriceService,
+	) {}
 
 	async listFarms(): Promise<Sett[]> {
 		const diggContract = new ethers.Contract(TOKENS.DIGG, diggAbi, ETHERS_JSONRPC_PROVIDER);
 
-		const [settData, geyserData, prices, sharesPerFragment] = await Promise.all([
+		const [settData, geyserData, sharesPerFragment] = await Promise.all([
 			this.settService.listSetts(),
 			getGeysers(),
-			getPrices(),
 			diggContract._sharesPerFragment(),
 		]);
 		const geysers = geyserData.data.geysers;
@@ -40,8 +39,9 @@ export class GeyserService {
 
 				// Collect Geyser Information
 				const geyserToken = sett.token.id;
-				const geyserDeposits = sett.balance / 1e18;
-				const geyserDepositsValue = getUsdValue(geyserToken, geyserDeposits, prices);
+				const pricePerFullShare = sett.pricePerFullShare / 1e18;
+				const geyserDeposits = (geyser.netShareDeposit * pricePerFullShare) / 1e18;
+				const geyserDepositsValue = await this.priceService.getUsdValue(geyserToken, geyserDeposits);
 				const geyserData = await this.getGeyserData(geyser.id, sharesPerFragment);
 				const [badgerEmissionData, diggEmissionData] = geyserData.emissions;
 				const emissionSources = [] as ValueSource[];
@@ -53,9 +53,9 @@ export class GeyserService {
 					const badgerEmissionDuration = badgerUnlockSchedule.endAtSec
 						.sub(badgerUnlockSchedule.startTime)
 						.toNumber();
-					const badgerEmissionValue = badgerEmitted * prices.badger;
-					const badgerEmissionValueRate = getRate(badgerEmissionValue, badgerEmissionDuration);
-					const badgerApy = ((toDay(badgerEmissionValueRate) * 365) / geyserDepositsValue) * 100;
+					const badgerEmissionValue = await this.priceService.getUsdValue(TOKENS.BADGER, badgerEmitted);
+					const badgerEmissionValueRate = toRate(badgerEmissionValue, badgerEmissionDuration);
+					const badgerApy = ((secondToDay(badgerEmissionValueRate) * 365) / geyserDepositsValue) * 100;
 
 					// Emission value is constant, so performance values a identical for every sample
 					const badgerSource: ValueSource = {
@@ -77,9 +77,9 @@ export class GeyserService {
 					const diggEmissionDuration = diggUnlockSchedule.endAtSec
 						.sub(diggUnlockSchedule.startTime)
 						.toNumber();
-					const diggEmissionValue = diggEmitted * prices.digg;
-					const diggEmissionValueRate = getRate(diggEmissionValue, diggEmissionDuration);
-					const diggApy = ((toDay(diggEmissionValueRate) * 365) / geyserDepositsValue) * 100;
+					const diggEmissionValue = await this.priceService.getUsdValue(TOKENS.DIGG, diggEmitted);
+					const diggEmissionValueRate = toRate(diggEmissionValue, diggEmissionDuration);
+					const diggApy = ((secondToDay(diggEmissionValueRate) * 365) / geyserDepositsValue) * 100;
 
 					const diggSource: ValueSource = {
 						name: 'digg',

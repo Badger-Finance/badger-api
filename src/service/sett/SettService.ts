@@ -15,7 +15,7 @@ import {
 	THIRTY_DAYS,
 	THREE_DAYS,
 } from '../../util/constants';
-import { getAssetData, getPrices } from '../../util/util';
+import { getAssetData } from '../../util/util';
 import { ProtocolService } from '../protocol/ProtocolService';
 import { setts } from '../setts';
 import { TokenService } from '../token/TokenService';
@@ -67,20 +67,24 @@ export class SettService {
 			sources: [],
 		};
 
-		// TODO: TheGraphService, PriceService
-		const [protocolValueSource, settSnapshots, prices] = await Promise.all([
+		// TODO: TheGraphService
+		const [protocolValueSource, settSnapshots] = await Promise.all([
 			this.protocolService.getProtocolPerformance(settData),
 			this.getSettSnapshots(settName, SAMPLE_DAYS),
-			getPrices(),
 		]);
 		const settState = settSnapshots[CURRENT];
 		const settValueSource = this.getSettUnderlyingValueSource(settName, settSnapshots);
 
 		sett.ppfs = settState.ratio;
 		sett.value = settState.value;
-		sett.apy = protocolValueSource.apy + settValueSource.apy;
-		sett.tokens = await this.tokenSerivce.getSettTokens(settData.settToken, settState.balance, prices);
-		sett.sources = [settValueSource, protocolValueSource];
+		sett.tokens = await this.tokenSerivce.getSettTokens(settData.settToken, settState);
+		sett.apy = settValueSource.apy;
+		sett.sources = [settValueSource];
+
+		if (protocolValueSource) {
+			sett.apy += protocolValueSource.apy;
+			sett.sources.push(protocolValueSource);
+		}
 
 		return sett;
 	}

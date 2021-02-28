@@ -1,10 +1,12 @@
 import { Service } from '@tsed/common';
 import { InternalServerError, NotFound } from '@tsed/exceptions';
+import { SettSnapshot } from '../../interface/SettSnapshot';
 import { Token } from '../../interface/Token';
 import { TokenBalance } from '../../interface/TokenBalance';
 import { TOKENS } from '../../util/constants';
-import { getSushiswapPair, getUniswapPair, getUsdValue } from '../../util/util';
-import { setts } from '../setts';
+import { getSushiswapPair, getUniswapPair } from '../../util/util';
+import { PriceService } from '../price/PriceService';
+import { SettData, setts } from '../setts';
 
 /**
  * TODO: Integrate price service with token service,
@@ -14,19 +16,19 @@ import { setts } from '../setts';
  */
 @Service()
 export class TokenService {
+	constructor(private priceService: PriceService) {}
 	/**
-	 * TODO: Create type data type and define here
 	 * @param settAddress Sett contract address
 	 * @param settBalance Sett token balance
 	 * @param prices Price data object
 	 */
-	async getSettTokens(settAddress: string, settBalance: number, prices: any): Promise<TokenBalance[]> {
+	async getSettTokens(settAddress: string, settSnapshot: SettSnapshot): Promise<TokenBalance[]> {
 		const sett = setts.find((s) => s.settToken === settAddress);
 		if (!sett) throw new NotFound(`${settAddress} is not a known Sett`);
 		if (this.isLPToken(sett.depositToken)) {
-			return await this.getLiquidtyPoolTokenBalances(sett.depositToken, sett.protocol, prices);
+			return await this.getLiquidtyPoolTokenBalances(sett, settSnapshot);
 		}
-		const tokens = settBalance / 1e18;
+		const tokens = (settSnapshot.balance * settSnapshot.ratio) / 1e18;
 		const token = this.getTokenByAddress(sett.depositToken);
 		return [
 			{
@@ -35,7 +37,7 @@ export class TokenService {
 				symbol: token.symbol,
 				decimals: token.decimals,
 				balance: tokens,
-				value: getUsdValue(token.address, tokens, prices),
+				value: await this.priceService.getUsdValue(token.address, tokens),
 			} as TokenBalance,
 		];
 	}
@@ -53,31 +55,39 @@ export class TokenService {
 	}
 
 	isLPToken(token: string) {
-		return [TOKENS.UNI_BADGER, TOKENS.UNI_DIGG, TOKENS.SUSHI_BADGER, TOKENS.SUSHI_DIGG, TOKENS.SUSHI_WBTC].includes(
-			token,
-		);
+		return [
+			TOKENS.UNI_BADGER_WBTC,
+			TOKENS.UNI_DIGG_WBTC,
+			TOKENS.SUSHI_BADGER_WBTC,
+			TOKENS.SUSHI_DIGG_WBTC,
+			TOKENS.SUSHI_ETH_WBTC,
+		].includes(token);
 	}
 
 	// TODO: More flexibly look up pools (sushi / uni share subgraph schema)
-	async getLiquidtyPoolTokenBalances(poolAddress: string, protocol: string, prices: any): Promise<TokenBalance[]> {
+	async getLiquidtyPoolTokenBalances(sett: SettData, settSnapshot: SettSnapshot): Promise<TokenBalance[]> {
+		const { depositToken, protocol } = sett;
+
 		let poolData;
 		if (protocol === 'uniswap') {
-			poolData = await getUniswapPair(poolAddress);
+			poolData = await getUniswapPair(depositToken);
 		}
 		if (protocol === 'sushiswap') {
-			poolData = await getSushiswapPair(poolAddress);
+			poolData = await getSushiswapPair(depositToken);
 		}
 		if (!poolData || !poolData.data) {
-			throw new NotFound(`${protocol} pool ${poolAddress} does not exist`);
+			throw new NotFound(`${protocol} pool ${depositToken} does not exist`);
 		}
 		const pair = poolData.data.pair;
+		// poolData returns the full liquidity pool, valueScalar acts to calculate the portion within the sett
+		const valueScalar = (settSnapshot.supply * settSnapshot.ratio) / pair.totalSupply;
 		const token0: TokenBalance = {
 			name: pair.token0.name,
 			address: pair.token0.id,
 			symbol: pair.token0.symbol,
 			decimals: pair.token0.decimals,
 			balance: pair.reserve0,
-			value: getUsdValue(pair.token0.id, pair.reserve0, prices),
+			value: (await this.priceService.getUsdValue(pair.token0.id, pair.reserve0)) * valueScalar,
 		};
 		const token1: TokenBalance = {
 			name: pair.token1.name,
@@ -85,7 +95,7 @@ export class TokenService {
 			symbol: pair.token1.symbol,
 			decimals: pair.token1.decimals,
 			balance: pair.reserve1,
-			value: getUsdValue(pair.token1.id, pair.reserve1, prices),
+			value: (await this.priceService.getUsdValue(pair.token1.id, pair.reserve1)) * valueScalar,
 		};
 		return [token0, token1];
 	}
@@ -104,49 +114,49 @@ export class TokenService {
 			decimals: 9,
 		},
 		{
-			address: TOKENS.SUSHI_DIGG,
+			address: TOKENS.SUSHI_DIGG_WBTC,
 			name: 'SushiSwap: WBTC-DIGG',
 			symbol: 'SushiSwap WBTC/DIGG LP (SLP)',
 			decimals: 18,
 		},
 		{
-			address: TOKENS.UNI_DIGG,
+			address: TOKENS.UNI_DIGG_WBTC,
 			name: 'Uniswap V2: WBTC-DIGG',
 			symbol: 'Uniswap WBTC/DIGG LP (UNI-V2)',
 			decimals: 18,
 		},
 		{
-			address: TOKENS.SUSHI_BADGER,
+			address: TOKENS.SUSHI_BADGER_WBTC,
 			name: 'SushiSwap: WBTC-BADGER',
 			symbol: 'Badger Sett SushiSwap LP Token (bSLP)',
 			decimals: 18,
 		},
 		{
-			address: TOKENS.SUSHI_WBTC,
+			address: TOKENS.SUSHI_ETH_WBTC,
 			name: 'SushiSwap: WBTC-ETH',
 			symbol: 'SushiSwap WBTC/ETH LP (SLP)',
 			decimals: 18,
 		},
 		{
-			address: TOKENS.UNI_BADGER,
+			address: TOKENS.UNI_BADGER_WBTC,
 			name: 'Uniswap V2: WBTC-BADGER',
 			symbol: 'Uniswap WBTC/BADGER LP (UNI-V2)',
 			decimals: 18,
 		},
 		{
-			address: TOKENS.RENBTC,
+			address: TOKENS.CRV_RENBTC,
 			name: 'Curve.fi: renCrv Token',
 			symbol: 'Curve.fi renBTC/wBTC (crvRenWBTC)',
 			decimals: 18,
 		},
 		{
-			address: TOKENS.TBTC,
+			address: TOKENS.CRV_TBTC,
 			name: 'Curve.fi tBTC/sbtcCrv',
 			symbol: 'Curve.fi tBTC/sbtcCrv (tbtc/sbtc)',
 			decimals: 18,
 		},
 		{
-			address: TOKENS.SBTC,
+			address: TOKENS.CRV_SBTC,
 			name: 'Curve.fi renBTC/wBTC/sBTC',
 			symbol: 'Curve.fi renBTC/wBTC/sBTC',
 			decimals: 18,
