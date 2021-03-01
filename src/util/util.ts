@@ -4,13 +4,15 @@ import { PutItemInput, QueryInput } from 'aws-sdk/clients/dynamodb';
 import { DocumentClient } from 'aws-sdk/lib/dynamodb/document_client';
 import fetch from 'node-fetch';
 import { SettSnapshot } from '../interface/SettSnapshot';
-import { BADGER_URL, ETHERS_JSONRPC_PROVIDER, MASTERCHEF_URL, SUSHISWAP_URL, TOKENS, UNISWAP_URL } from './constants';
+import { TokenPrice } from '../interface/TokenPrice';
+import { getContractPrice } from '../service/price/PriceService';
+import { BADGER_URL, ETHERS_JSONRPC_PROVIDER, MASTERCHEF_URL, SUSHISWAP_URL, UNISWAP_URL } from './constants';
 import AttributeValue = DocumentClient.AttributeValue;
 
 export const THIRTY_MIN_BLOCKS = parseInt(String((30 * 60) / 13));
 const ddb = new AWS.DynamoDB.DocumentClient({ apiVersion: '2012-08-10' });
 
-export type GetPriceFunc = (settData: SettData) => Promise<number>;
+export type GetPriceFunc = (settData: SettData) => Promise<TokenPrice>;
 
 export interface EventInput {
 	asset: string;
@@ -25,25 +27,16 @@ export interface EventInput {
 export type SettData = {
 	data: {
 		sett: {
-			token: { id: string };
+			token: {
+				id: string;
+				decimals: number;
+			};
 			balance: number;
 			pricePerFullShare: number;
 			totalSupply: number;
 		};
 	};
 	errors?: unknown;
-};
-
-export const respond = (statusCode: number, body?: Record<string, unknown> | Record<string, unknown>[]) => {
-	return {
-		statusCode: statusCode,
-		headers: {
-			'Access-Control-Allow-Origin': '*',
-			'Access-Control-Allow-Methods': 'OPTIONS,GET',
-			'Access-Control-Allow-Headers': 'Content-Type',
-		},
-		...(body && { body: JSON.stringify(body) }),
-	};
 };
 
 export const getBlock = async (blockNumber: number): Promise<Block> =>
@@ -96,31 +89,13 @@ export const getIndexedBlock = async (table: string, asset: AttributeValue, crea
 	return result.Items && result.Items.length > 0 ? result.Items[0].height : createdBlock;
 };
 
-export const getContractPrice = async (contract: string) => {
-	return await fetch(
-		`https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=${contract}&vs_currencies=usd`,
-	)
-		.then((response) => response.json())
-		.then((json) => {
-			if (json[contract] && json[contract].usd) {
-				return json[contract].usd;
-			}
-			return 0;
-		});
-};
-
-export const getTokenPrice = async (token: string) => {
-	return await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${token}&vs_currencies=usd`)
-		.then((response) => response.json())
-		.then((json) => json[token].usd);
-};
-
 export const getSett = async (contract: string, block?: number): Promise<SettData> => {
 	const query = `
     {
       sett(id: "${contract}"${block ? `, block: {number: ${block}}` : ''}) {
         token {
           id
+					decimals
         }
         balance
         pricePerFullShare
@@ -134,12 +109,12 @@ export const getSett = async (contract: string, block?: number): Promise<SettDat
 	}).then((response) => response.json());
 };
 
-export type GeyserIdentifier = {
+export type GeyserData = {
 	id: string;
 	stakingToken: {
 		id: string;
 	};
-	netShareDeposit: string;
+	netShareDeposit: number;
 };
 
 export type GeyserSett = {
@@ -153,7 +128,7 @@ export type GeyserSett = {
 
 export type Geysers = {
 	data: {
-		geysers: GeyserIdentifier[];
+		geysers: GeyserData[];
 		setts: GeyserSett[];
 	};
 };
@@ -189,7 +164,8 @@ export const getGeysers = async (): Promise<Geysers> => {
 export const getUniswapPair = async (token: string, block?: number) => {
 	const query = `
     {
-      pair(id: "${token}"${block ? `, block: {number: ${block}}` : ''}) {
+      pair(id: "${token.toLowerCase()}"${block ? `, block: {number: ${block}}` : ''}) {
+				id
         reserve0
         reserve1
         token0 {
@@ -214,20 +190,31 @@ export const getUniswapPair = async (token: string, block?: number) => {
 	}).then((response) => response.json());
 };
 
-export const getUniswapPrice = async (token: string) => {
-	const pair = (await getUniswapPair(token)).data.pair;
+export const getUniswapPrice = async (contract: string): Promise<TokenPrice> => {
+	const pair = (await getUniswapPair(contract)).data.pair;
 	if (pair.totalSupply === 0) {
-		return 0;
+		return {
+			address: contract,
+			usd: 0,
+			eth: 0,
+		};
 	}
-	const token0Price = await getContractPrice(pair.token0.id);
-	const token1Price = await getContractPrice(pair.token1.id);
-	return (token0Price * pair.reserve0 + token1Price * pair.reserve1) / pair.totalSupply;
+	const t0Price = await getContractPrice(pair.token0.id);
+	const t1Price = await getContractPrice(pair.token1.id);
+	const usdPrice = (t0Price.usd * pair.reserve0 + t1Price.usd * pair.reserve1) / pair.totalSupply;
+	const ethPrice = (t0Price.eth * pair.reserve0 + t1Price.eth * pair.reserve1) / pair.totalSupply;
+	return {
+		address: contract,
+		usd: usdPrice,
+		eth: ethPrice,
+	};
 };
 
 export const getSushiswapPair = async (token: string, block?: number) => {
 	const query = `
     {
-      pair(id: "${token}"${block ? `, block: {number: ${block}}` : ''}) {
+      pair(id: "${token.toLowerCase()}"${block ? `, block: {number: ${block}}` : ''}) {
+				id
         reserve0
         reserve1
         token0 {
@@ -252,73 +239,24 @@ export const getSushiswapPair = async (token: string, block?: number) => {
 	}).then((response) => response.json());
 };
 
-export const getSushiswapPrice = async (token: string) => {
-	const pair = (await getSushiswapPair(token)).data.pair;
+export const getSushiswapPrice = async (contract: string): Promise<TokenPrice> => {
+	const pair = (await getSushiswapPair(contract)).data.pair;
 	if (pair.totalSupply === 0) {
-		return 0;
+		return {
+			address: contract,
+			usd: 0,
+			eth: 0,
+		};
 	}
-	const token0Price = await getContractPrice(pair.token0.id);
-	const token1Price = await getContractPrice(pair.token1.id);
-	return (token0Price * pair.reserve0 + token1Price * pair.reserve1) / pair.totalSupply;
-};
-
-// TODO: Price object, with defined price fields.
-export const getPrices = async () => {
-	const prices = await Promise.all([
-		getTokenPrice('tbtc'),
-		getContractPrice(TOKENS.SBTC),
-		getContractPrice(TOKENS.RENBTC),
-		getContractPrice(TOKENS.BADGER),
-		getUniswapPrice(TOKENS.UNI_BADGER),
-		getSushiswapPrice(TOKENS.SUSHI_BADGER),
-		getSushiswapPrice(TOKENS.SUSHI_WBTC),
-		getTokenPrice('digg'),
-		getUniswapPrice(TOKENS.UNI_DIGG),
-		getSushiswapPrice(TOKENS.SUSHI_DIGG),
-		getContractPrice(TOKENS.WBTC),
-	]);
+	const t0Price = await getContractPrice(pair.token0.id);
+	const t1Price = await getContractPrice(pair.token1.id);
+	const usdPrice = (t0Price.usd * pair.reserve0 + t1Price.usd * pair.reserve1) / pair.totalSupply;
+	const ethPrice = (t0Price.eth * pair.reserve0 + t1Price.eth * pair.reserve1) / pair.totalSupply;
 	return {
-		tbtc: prices[0],
-		sbtc: prices[1],
-		renbtc: prices[2],
-		badger: prices[3],
-		unibadger: prices[4],
-		sushibadger: prices[5],
-		sushiwbtc: prices[6],
-		digg: prices[7],
-		unidigg: prices[8],
-		sushidigg: prices[9],
-		wbtc: prices[10],
+		address: contract,
+		usd: usdPrice,
+		eth: ethPrice,
 	};
-};
-
-export const getUsdValue = (asset: string, tokens: number, prices: { [index: string]: number }) => {
-	switch (asset) {
-		case TOKENS.UNI_BADGER:
-			return tokens * prices.unibadger;
-		case TOKENS.BADGER:
-			return tokens * prices.badger;
-		case TOKENS.TBTC:
-			return tokens * prices.tbtc;
-		case TOKENS.SBTC:
-			return tokens * prices.sbtc;
-		case TOKENS.RENBTC:
-			return tokens * prices.renbtc;
-		case TOKENS.SUSHI_BADGER:
-			return tokens * prices.sushibadger;
-		case TOKENS.SUSHI_WBTC:
-			return tokens * prices.sushiwbtc;
-		case TOKENS.DIGG:
-			return tokens * prices.digg;
-		case TOKENS.UNI_DIGG:
-			return tokens * prices.unidigg;
-		case TOKENS.SUSHI_DIGG:
-			return tokens * prices.sushidigg;
-		case TOKENS.WBTC:
-			return tokens * prices.wbtc;
-		default:
-			return 0;
-	}
 };
 
 export type MasterChefData = {
@@ -427,3 +365,9 @@ export const getUserData = async (userId: string): Promise<UserData> => {
 	});
 	return queryResult.json();
 };
+
+const blockToHour = (value: number) => value * 276;
+export const blockToDay = (value: number) => blockToHour(value) * 24;
+const secondToHour = (value: number) => value * 3600;
+export const secondToDay = (value: number) => secondToHour(value) * 24;
+export const toRate = (value: number, duration: number) => (duration !== 0 ? value / duration : value);
