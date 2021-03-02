@@ -4,6 +4,6 @@ import { EventInput, SettData } from '../../util/util';
 import { indexAsset } from '../indexer';
 
 export const handler = async (event: EventInput) => {
-	const getPrice = async (settData: SettData): Promise<TokenPrice> => getTokenPrice('bitcoin');
+	const getPrice = async (_settData: SettData): Promise<TokenPrice> => getTokenPrice('bitcoin');
 	return await indexAsset(event, getPrice);
 };
