@@ -5,10 +5,10 @@ frameworkVersion: '2'
 configValidationMode: off
 
 plugins:
-  - serverless-offline
   - serverless-aws-documentation
   - serverless-api-gateway-caching
   - serverless-plugin-typescript
+  - serverless-offline
 
 custom:
   stage: ${opt:stage, self:provider.stage}
