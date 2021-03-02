@@ -2,7 +2,7 @@ import { Service } from '@tsed/common';
 import { InternalServerError } from '@tsed/exceptions';
 import NodeCache from 'node-cache';
 import fetch from 'node-fetch';
-import { PriceData, TokenPrice } from '../../interface/TokenPrice';
+import { PriceData, PriceSummary, TokenPrice } from '../../interface/TokenPrice';
 import { COINGECKO_URL, TOKENS } from '../../util/constants';
 import { getSushiswapPrice, getUniswapPrice } from '../../util/util';
 
@@ -96,6 +96,15 @@ export class PriceService {
 		priceData[TOKENS.WETH] = wethPrice;
 		priceData[TOKENS.SUSHI] = sushiPrice;
 		return priceData;
+	}
+
+	async getPriceSummary(): Promise<PriceSummary> {
+		const priceData = await this.getPriceData();
+		const priceSummary: PriceSummary = {};
+		for (const [key, value] of Object.entries(priceData)) {
+			priceSummary[key] = value.usd;
+		}
+		return priceSummary;
 	}
 }
 
