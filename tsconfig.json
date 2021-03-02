@@ -12,10 +12,10 @@
     "resolveJsonModule": true,	
     "sourceMap": true,	
     "strict": true,	
-    "target": "esnext",	
+    "target": "es2019",
     "lib": [	
-      "es2019",	
-      "dom"	
+      "es2019",
+      "dom"
     ],	
     "typeRoots": [	
       "./node_modules/@types"	
