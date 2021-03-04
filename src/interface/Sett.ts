@@ -9,13 +9,11 @@ import { ValueSource } from './ValueSource';
  * have emissions value sources while setts only have the
  * native underlying value source.
  */
-export interface Sett {
-	name: string;
-	asset: string;
+export interface Sett extends SettSummary {
 	ppfs: number;
-	value: number;
 	apy: number;
-	tokens: TokenBalance[];
+	vaultToken: string;
+	underlyingToken: string;
 	sources: ValueSource[];
 	geyser?: Geyser;
 }

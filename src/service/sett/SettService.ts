@@ -60,6 +60,8 @@ export class SettService {
 		const sett: Sett = {
 			name: settData.name,
 			asset: settData.symbol,
+			vaultToken: settData.settToken,
+			underlyingToken: settData.depositToken,
 			ppfs: 0,
 			value: 0,
 			apy: 0,
