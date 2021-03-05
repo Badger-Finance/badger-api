@@ -1,6 +1,12 @@
 import { Service } from '@tsed/common';
 import { BigNumber, ethers, utils } from 'ethers';
-import { SponsorData, SyntheticData } from '../../interface/Claw';
+import { 
+        SponsorData, 
+        SyntheticData, 
+        FixedPointUnsigned, 
+        Position,
+        Liquidation,
+} from '../../interface/Claw';
 import { empAbi } from '../../util/abi';
 import { ETHERS_JSONRPC_PROVIDER } from '../../util/constants';
 
@@ -24,7 +30,7 @@ export class ClawService {
 			BigNumber,
 			BigNumber,
 			BigNumber,
-			BigNumber,
+			FixedPointUnsigned,
 			BigNumber,
 			BigNumber,
 			BigNumber,
@@ -48,7 +54,7 @@ export class ClawService {
 			BigNumber,
 			BigNumber,
 			BigNumber,
-			BigNumber,
+			FixedPointUnsigned,
 			BigNumber,
 			BigNumber,
 			BigNumber,
@@ -71,7 +77,7 @@ export class ClawService {
 			collateralCurrency,
 			globalCollateralizationRatio,
 			cumulativeFeeMultiplier,
-			totalPositionCollateral,
+			totalPositionCollateral: convertFixedPointUnsigned(totalPositionCollateral),
 			totalTokensOutstanding,
 			collateralRequirement,
 			expirationTimestamp,
@@ -83,12 +89,95 @@ export class ClawService {
 
 	async getSponsorData(empAddress: string, sponsorAddress: string): Promise<SponsorData> {
 		const empContract = new ethers.Contract(empAddress, empAbi, ETHERS_JSONRPC_PROVIDER);
-		const liquidations = await empContract.getLiquidations(sponsorAddress);
-		const position = await empContract.positions(sponsorAddress);
+		const liquidations = await getLiqudations(empContract, sponsorAddress);
+                const position = await getPosition(empContract, sponsorAddress);
 		return {
 			liquidations,
-			position,
+                        position,
 			pendingWithdrawal: position.transferPositionRequestPassTimestamp.toNumber() != 0,
 		} as SponsorData;
 	}
+}
+
+const getLiqudations = async (empContract: ethers.Contract, sponsorAddress: string): Promise<Liquidation[]> => {
+        const liquidations: any[] = await empContract.getLiqudations(sponsorAddress);
+        return liquidations.map(convertLiquidation);
+}
+
+const convertLiquidation = (liquidation: any): Liquidation => {
+        const [
+                sponsor,
+                liquidator,
+                state,
+                liquidationTime,
+                tokensOutstanding,
+                lockedCollateral,
+                liquidatedCollateral,
+                rawUnitCollateral,
+                disputer,
+                settlementPrice,
+                finalFee,
+        ] : [
+                string,
+                string,
+                number,
+                BigNumber,
+                FixedPointUnsigned,
+                FixedPointUnsigned,
+                FixedPointUnsigned,
+                FixedPointUnsigned,
+                string,
+                FixedPointUnsigned,
+                FixedPointUnsigned,
+        ] = liquidation;
+        return {
+                sponsor,
+                liquidator,
+                state,
+                liquidationTime,
+                tokensOutstanding: convertFixedPointUnsigned(tokensOutstanding),
+                lockedCollateral: convertFixedPointUnsigned(lockedCollateral),
+                liquidatedCollateral: convertFixedPointUnsigned(liquidatedCollateral),
+                rawUnitCollateral: convertFixedPointUnsigned(rawUnitCollateral),
+                disputer,
+                settlementPrice: convertFixedPointUnsigned(settlementPrice),
+                finalFee: convertFixedPointUnsigned(finalFee),
+        };
+}
+
+const getPosition = async (empContract: ethers.Contract, sponsorAddress: string): Promise<Position> => {
+        const [
+                tokensOutstanding,
+                withdrawalRequestPassTimestamp,
+                withdrawalRequestAmount,
+                rawCollateral,
+                transferPositionRequestPassTimestamp,
+        ] : [
+                FixedPointUnsigned,
+                BigNumber,
+                FixedPointUnsigned,
+                FixedPointUnsigned,
+                BigNumber,
+        ] = await empContract.positions(sponsorAddress);
+        return {
+                tokensOutstanding: convertFixedPointUnsigned(tokensOutstanding),
+                withdrawalRequestPassTimestamp,
+                withdrawalRequestAmount: convertFixedPointUnsigned(withdrawalRequestAmount),
+                rawCollateral: convertFixedPointUnsigned(rawCollateral),
+                transferPositionRequestPassTimestamp,
+        };
+}
+
+// Many UMA contracts return custom type FixedPoint.Unsigned for uint256 which is a struct defined below. 
+// ```
+// struct FixedPoint.Unsigned {
+//     uint256 rawValue;
+// }
+// ```
+// These resolve to be an single value arr -> [BigNumber] so we need to validate/extract the internal value.
+const convertFixedPointUnsigned = (maybeUnsigned: FixedPointUnsigned): BigNumber => {
+        if (!Array.isArray(maybeUnsigned) || maybeUnsigned.length !== 1) {
+                throw new Error(`value not unsigned value ${maybeUnsigned}`);
+        }
+        return maybeUnsigned[0];
 }
