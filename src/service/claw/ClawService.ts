@@ -89,7 +89,7 @@ export class ClawService {
 
 	async getSponsorData(empAddress: string, sponsorAddress: string): Promise<SponsorData> {
 		const empContract = new ethers.Contract(empAddress, empAbi, ETHERS_JSONRPC_PROVIDER);
-		const liquidations = await getLiqudations(empContract, sponsorAddress);
+		const liquidations = await getLiquidations(empContract, sponsorAddress);
                 const position = await getPosition(empContract, sponsorAddress);
 		return {
 			liquidations,
@@ -99,8 +99,8 @@ export class ClawService {
 	}
 }
 
-const getLiqudations = async (empContract: ethers.Contract, sponsorAddress: string): Promise<Liquidation[]> => {
-        const liquidations: any[] = await empContract.getLiqudations(sponsorAddress);
+const getLiquidations = async (empContract: ethers.Contract, sponsorAddress: string): Promise<Liquidation[]> => {
+        const liquidations: any[] = await empContract.getLiquidations(sponsorAddress);
         return liquidations.map(convertLiquidation);
 }
 
