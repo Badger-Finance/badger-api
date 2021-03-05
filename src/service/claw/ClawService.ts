@@ -1,12 +1,6 @@
 import { Service } from '@tsed/common';
 import { BigNumber, ethers, utils } from 'ethers';
-import { 
-        SponsorData, 
-        SyntheticData, 
-        FixedPointUnsigned, 
-        Position,
-        Liquidation,
-} from '../../interface/Claw';
+import { FixedPointUnsigned, Liquidation, Position, SponsorData, SyntheticData } from '../../interface/Claw';
 import { empAbi } from '../../util/abi';
 import { ETHERS_JSONRPC_PROVIDER } from '../../util/constants';
 
@@ -90,85 +84,83 @@ export class ClawService {
 	async getSponsorData(empAddress: string, sponsorAddress: string): Promise<SponsorData> {
 		const empContract = new ethers.Contract(empAddress, empAbi, ETHERS_JSONRPC_PROVIDER);
 		const liquidations = await getLiquidations(empContract, sponsorAddress);
-                const position = await getPosition(empContract, sponsorAddress);
+		const position = await getPosition(empContract, sponsorAddress);
 		return {
 			liquidations,
-                        position,
+			position,
 			pendingWithdrawal: position.transferPositionRequestPassTimestamp.toNumber() != 0,
 		} as SponsorData;
 	}
 }
 
 const getLiquidations = async (empContract: ethers.Contract, sponsorAddress: string): Promise<Liquidation[]> => {
-        const liquidations: any[] = await empContract.getLiquidations(sponsorAddress);
-        return liquidations.map(convertLiquidation);
-}
+	const liquidations: (BigNumber | FixedPointUnsigned | string)[][] = await empContract.getLiquidations(
+		sponsorAddress,
+	);
+	return liquidations.map(convertLiquidation);
+};
 
-const convertLiquidation = (liquidation: any): Liquidation => {
-        const [
-                sponsor,
-                liquidator,
-                state,
-                liquidationTime,
-                tokensOutstanding,
-                lockedCollateral,
-                liquidatedCollateral,
-                rawUnitCollateral,
-                disputer,
-                settlementPrice,
-                finalFee,
-        ] : [
-                string,
-                string,
-                number,
-                BigNumber,
-                FixedPointUnsigned,
-                FixedPointUnsigned,
-                FixedPointUnsigned,
-                FixedPointUnsigned,
-                string,
-                FixedPointUnsigned,
-                FixedPointUnsigned,
-        ] = liquidation;
-        return {
-                sponsor,
-                liquidator,
-                state,
-                liquidationTime,
-                tokensOutstanding: convertFixedPointUnsigned(tokensOutstanding),
-                lockedCollateral: convertFixedPointUnsigned(lockedCollateral),
-                liquidatedCollateral: convertFixedPointUnsigned(liquidatedCollateral),
-                rawUnitCollateral: convertFixedPointUnsigned(rawUnitCollateral),
-                disputer,
-                settlementPrice: convertFixedPointUnsigned(settlementPrice),
-                finalFee: convertFixedPointUnsigned(finalFee),
-        };
-}
+const convertLiquidation = (liquidation: (BigNumber | FixedPointUnsigned | string)[]): Liquidation => {
+	const [
+		sponsor,
+		liquidator,
+		state,
+		liquidationTime,
+		tokensOutstanding,
+		lockedCollateral,
+		liquidatedCollateral,
+		rawUnitCollateral,
+		disputer,
+		settlementPrice,
+		finalFee,
+	]: [
+		string,
+		string,
+		number,
+		BigNumber,
+		FixedPointUnsigned,
+		FixedPointUnsigned,
+		FixedPointUnsigned,
+		FixedPointUnsigned,
+		string,
+		FixedPointUnsigned,
+		FixedPointUnsigned,
+	] = liquidation;
+	return {
+		sponsor,
+		liquidator,
+		state,
+		liquidationTime,
+		tokensOutstanding: convertFixedPointUnsigned(tokensOutstanding),
+		lockedCollateral: convertFixedPointUnsigned(lockedCollateral),
+		liquidatedCollateral: convertFixedPointUnsigned(liquidatedCollateral),
+		rawUnitCollateral: convertFixedPointUnsigned(rawUnitCollateral),
+		disputer,
+		settlementPrice: convertFixedPointUnsigned(settlementPrice),
+		finalFee: convertFixedPointUnsigned(finalFee),
+	};
+};
 
 const getPosition = async (empContract: ethers.Contract, sponsorAddress: string): Promise<Position> => {
-        const [
-                tokensOutstanding,
-                withdrawalRequestPassTimestamp,
-                withdrawalRequestAmount,
-                rawCollateral,
-                transferPositionRequestPassTimestamp,
-        ] : [
-                FixedPointUnsigned,
-                BigNumber,
-                FixedPointUnsigned,
-                FixedPointUnsigned,
-                BigNumber,
-        ] = await empContract.positions(sponsorAddress);
-        return {
-                tokensOutstanding: convertFixedPointUnsigned(tokensOutstanding),
-                withdrawalRequestPassTimestamp,
-                withdrawalRequestAmount: convertFixedPointUnsigned(withdrawalRequestAmount),
-                rawCollateral: convertFixedPointUnsigned(rawCollateral),
-                transferPositionRequestPassTimestamp,
-        };
-}
+	const [
+		tokensOutstanding,
+		withdrawalRequestPassTimestamp,
+		withdrawalRequestAmount,
+		rawCollateral,
+		transferPositionRequestPassTimestamp,
+	]: [FixedPointUnsigned, BigNumber, FixedPointUnsigned, FixedPointUnsigned, BigNumber] = await empContract.positions(
+		sponsorAddress,
+	);
+	return {
+		tokensOutstanding: convertFixedPointUnsigned(tokensOutstanding),
+		withdrawalRequestPassTimestamp,
+		withdrawalRequestAmount: convertFixedPointUnsigned(withdrawalRequestAmount),
+		rawCollateral: convertFixedPointUnsigned(rawCollateral),
+		transferPositionRequestPassTimestamp,
+	};
+};
 
-// Many UMA contracts return custom type FixedPoint.Unsigned for uint256 which is a struct defined below. 
+// Many UMA contracts return custom type FixedPoint.Unsigned for uint256 which is a struct defined below.
 // ```
 // struct FixedPoint.Unsigned {
 //     uint256 rawValue;
@@ -176,8 +168,8 @@ const getPosition = async (empContract: ethers.Contract, sponsorAddress: string)
 // ```
 // These resolve to be an single value arr -> [BigNumber] so we need to validate/extract the internal value.
 const convertFixedPointUnsigned = (maybeUnsigned: FixedPointUnsigned): BigNumber => {
-        if (!Array.isArray(maybeUnsigned) || maybeUnsigned.length !== 1) {
-                throw new Error(`value not unsigned value ${maybeUnsigned}`);
-        }
-        return maybeUnsigned[0];
-}
+	if (!Array.isArray(maybeUnsigned) || maybeUnsigned.length !== 1) {
+		throw new Error(`value not unsigned value ${maybeUnsigned}`);
+	}
+	return maybeUnsigned[0];
+};

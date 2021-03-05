@@ -79,5 +79,5 @@ export interface SyntheticData {
 // ```
 // These resolve to be an single value arr -> [BigNumber] so we define a type here to represent these.
 export interface FixedPointUnsigned {
-    [index: number]: BigNumber;
+	[index: number]: BigNumber;
 }
