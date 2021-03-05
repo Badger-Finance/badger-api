@@ -4,6 +4,34 @@ import { FixedPointUnsigned, Liquidation, Position, SponsorData, SyntheticData }
 import { empAbi } from '../../util/abi';
 import { ETHERS_JSONRPC_PROVIDER } from '../../util/constants';
 
+type LiqudationUnformatted = [
+	string,
+	string,
+	number,
+	BigNumber,
+	FixedPointUnsigned,
+	FixedPointUnsigned,
+	FixedPointUnsigned,
+	FixedPointUnsigned,
+	string,
+	FixedPointUnsigned,
+	FixedPointUnsigned,
+];
+
+type SyntheticDataPayload = [
+	BigNumber,
+	BigNumber,
+	BigNumber,
+	FixedPointUnsigned,
+	BigNumber,
+	BigNumber,
+	BigNumber,
+	BigNumber,
+	BigNumber,
+	string,
+	string,
+];
+
 @Service()
 export class ClawService {
 	async getSyntheticData(empAddress: string): Promise<SyntheticData> {
@@ -20,19 +48,7 @@ export class ClawService {
 			liquidationLiveness,
 			priceIdentifier,
 			collateralCurrency,
-		]: [
-			BigNumber,
-			BigNumber,
-			BigNumber,
-			FixedPointUnsigned,
-			BigNumber,
-			BigNumber,
-			BigNumber,
-			BigNumber,
-			BigNumber,
-			string,
-			string,
-		] = (await Promise.all([
+		]: SyntheticDataPayload = (await Promise.all([
 			empContract.cumulativeFeeMultiplier(),
 			empContract.rawTotalPositionCollateral(),
 			empContract.totalTokensOutstanding(),
@@ -44,19 +60,7 @@ export class ClawService {
 			empContract.liquidationLiveness(),
 			empContract.priceIdentifier(),
 			empContract.collateralCurrency(),
-		])) as [
-			BigNumber,
-			BigNumber,
-			BigNumber,
-			FixedPointUnsigned,
-			BigNumber,
-			BigNumber,
-			BigNumber,
-			BigNumber,
-			BigNumber,
-			string,
-			string,
-		];
+		])) as SyntheticDataPayload;
 		let globalCollateralizationRatio = BigNumber.from(0);
 		if (totalTokensOutstanding.gt(BigNumber.from(0))) {
 			globalCollateralizationRatio = cumulativeFeeMultiplier
@@ -94,13 +98,11 @@ export class ClawService {
 }
 
 const getLiquidations = async (empContract: ethers.Contract, sponsorAddress: string): Promise<Liquidation[]> => {
-	const liquidations: (BigNumber | FixedPointUnsigned | string)[][] = await empContract.getLiquidations(
-		sponsorAddress,
-	);
+	const liquidations: LiqudationUnformatted[] = await empContract.getLiquidations(sponsorAddress);
 	return liquidations.map(convertLiquidation);
 };
 
-const convertLiquidation = (liquidation: (BigNumber | FixedPointUnsigned | string)[]): Liquidation => {
+const convertLiquidation = (liquidation: LiqudationUnformatted): Liquidation => {
 	const [
 		sponsor,
 		liquidator,
@@ -113,18 +115,6 @@ const convertLiquidation = (liquidation: (BigNumber | FixedPointUnsigned | strin
 		disputer,
 		settlementPrice,
 		finalFee,
-	]: [
-		string,
-		string,
-		number,
-		BigNumber,
-		FixedPointUnsigned,
-		FixedPointUnsigned,
-		FixedPointUnsigned,
-		FixedPointUnsigned,
-		string,
-		FixedPointUnsigned,
-		FixedPointUnsigned,
 	] = liquidation;
 	return {
 		sponsor,
