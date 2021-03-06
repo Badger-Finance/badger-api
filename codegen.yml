@@ -11,6 +11,8 @@ generates:
       - typescript-operations
   src/graphql/generated/badger-dao.ts:
     schema: ${BADGER_DAO_SUBGRAPH_URL}
+    documents:
+      - src/graphql/queries/harvests.query.graphql
     plugins:
       - typescript
       - typescript-graphql-request
