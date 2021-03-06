@@ -17,15 +17,19 @@ export class S3Service {
 	 */
 	async getObject(bucket: string, key: string): Promise<AWS.S3.GetObjectOutput> {
 		try {
-			const cacheKey = `s3://${bucket}/${key}`;
-			const cachedObject = s3Cache.get(cacheKey) as AWS.S3.GetObjectOutput;
-			if (cachedObject) {
-				return cachedObject;
-			}
 			const params = {
 				Bucket: bucket,
 				Key: key,
 			};
+			const objectMetadata = await s3.headObject(params).promise();
+			const cacheKey = objectMetadata.ETag ? objectMetadata.ETag : `s3://${bucket}/${key}`;
+			console.log('Cache Key:', cacheKey);
+			const cachedObject = s3Cache.get(cacheKey) as AWS.S3.GetObjectOutput;
+			if (cachedObject) {
+				console.log('Returned Cached Object');
+				return cachedObject;
+			}
+			console.log('Returned Queried Object');
 			const object = await s3.getObject(params).promise();
 			s3Cache.set(cacheKey, object);
 			return object;
