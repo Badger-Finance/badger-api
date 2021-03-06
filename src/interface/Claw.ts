@@ -1,6 +1,6 @@
 import { BigNumber } from 'ethers';
 
-interface Liqudation {
+export interface Liquidation {
 	/*
 	 * Following variables set upon creation of liquidation:
 	 * Liquidated (and expired or not), Pending a Dispute, or Dispute has resolved
@@ -10,7 +10,7 @@ interface Liqudation {
 	 *  - 3 == DisputeSucceeded
 	 *  - 4 == DisputeFailed
 	 */
-	state: BigNumber;
+	state: number;
 	liquidationTime: BigNumber; // Time when liquidation is initiated, needed to get price from Oracle
 	tokensOutstanding: BigNumber; // Synthetic tokens required to be burned by liquidator to initiate dispute
 	lockedCollateral: BigNumber; // Collateral locked by contract and released upon expiry or post-dispute
@@ -29,7 +29,7 @@ interface Liqudation {
 	finalFee: BigNumber;
 }
 
-interface Position {
+export interface Position {
 	tokensOutstanding: BigNumber;
 	withdrawalRequestPassTimestamp: BigNumber;
 	withdrawalRequestAmount: BigNumber;
@@ -38,7 +38,7 @@ interface Position {
 }
 
 export interface SponsorData {
-	liquidations: Liqudation[];
+	liquidations: Liquidation[];
 	position: Position;
 	pendingWithdrawal: boolean;
 }
@@ -69,4 +69,15 @@ export interface SyntheticData {
 	// If a 1% fee is charged, the multiplier should update to .99.
 	// If another 1% fee is charged, the multiplier should be 0.99^2 (0.9801).
 	cumulativeFeeMultiplier: BigNumber;
+}
+
+// Many UMA contracts return custom type FixedPoint.Unsigned for uint256 which is a struct defined below.
+// ```
+// struct FixedPoint.Unsigned {
+//     uint256 rawValue;
+// }
+// ```
+// These resolve to be an single value arr -> [BigNumber] so we define a type here to represent these.
+export interface FixedPointUnsigned {
+	[index: number]: BigNumber;
 }
