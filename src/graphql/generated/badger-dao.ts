@@ -1128,6 +1128,8 @@ export type Query = {
 	farmHarvestEvents: Array<FarmHarvestEvent>;
 	sushiHarvestEvent?: Maybe<SushiHarvestEvent>;
 	sushiHarvestEvents: Array<SushiHarvestEvent>;
+	tokenBalance?: Maybe<TokenBalance>;
+	tokenBalances: Array<TokenBalance>;
 	action?: Maybe<Action>;
 	actions: Array<Action>;
 	/** Access to subgraph metadata */
@@ -1372,6 +1374,20 @@ export type QuerySushiHarvestEventsArgs = {
 	block?: Maybe<Block_Height>;
 };
 
+export type QueryTokenBalanceArgs = {
+	id: Scalars['ID'];
+	block?: Maybe<Block_Height>;
+};
+
+export type QueryTokenBalancesArgs = {
+	skip?: Maybe<Scalars['Int']>;
+	first?: Maybe<Scalars['Int']>;
+	orderBy?: Maybe<TokenBalance_OrderBy>;
+	orderDirection?: Maybe<OrderDirection>;
+	where?: Maybe<TokenBalance_Filter>;
+	block?: Maybe<Block_Height>;
+};
+
 export type QueryActionArgs = {
 	id: Scalars['ID'];
 	block?: Maybe<Block_Height>;
@@ -1595,6 +1611,8 @@ export type Subscription = {
 	farmHarvestEvents: Array<FarmHarvestEvent>;
 	sushiHarvestEvent?: Maybe<SushiHarvestEvent>;
 	sushiHarvestEvents: Array<SushiHarvestEvent>;
+	tokenBalance?: Maybe<TokenBalance>;
+	tokenBalances: Array<TokenBalance>;
 	action?: Maybe<Action>;
 	actions: Array<Action>;
 	/** Access to subgraph metadata */
@@ -1839,6 +1857,20 @@ export type SubscriptionSushiHarvestEventsArgs = {
 	block?: Maybe<Block_Height>;
 };
 
+export type SubscriptionTokenBalanceArgs = {
+	id: Scalars['ID'];
+	block?: Maybe<Block_Height>;
+};
+
+export type SubscriptionTokenBalancesArgs = {
+	skip?: Maybe<Scalars['Int']>;
+	first?: Maybe<Scalars['Int']>;
+	orderBy?: Maybe<TokenBalance_OrderBy>;
+	orderDirection?: Maybe<OrderDirection>;
+	where?: Maybe<TokenBalance_Filter>;
+	block?: Maybe<Block_Height>;
+};
+
 export type SubscriptionActionArgs = {
 	id: Scalars['ID'];
 	block?: Maybe<Block_Height>;
@@ -1955,6 +1987,52 @@ export type Token = {
 	name: Scalars['String'];
 	symbol: Scalars['String'];
 };
+
+export type TokenBalance = {
+	__typename?: 'TokenBalance';
+	id: Scalars['ID'];
+	balance: Scalars['BigInt'];
+	token: Token;
+};
+
+export type TokenBalance_Filter = {
+	id?: Maybe<Scalars['ID']>;
+	id_not?: Maybe<Scalars['ID']>;
+	id_gt?: Maybe<Scalars['ID']>;
+	id_lt?: Maybe<Scalars['ID']>;
+	id_gte?: Maybe<Scalars['ID']>;
+	id_lte?: Maybe<Scalars['ID']>;
+	id_in?: Maybe<Array<Scalars['ID']>>;
+	id_not_in?: Maybe<Array<Scalars['ID']>>;
+	balance?: Maybe<Scalars['BigInt']>;
+	balance_not?: Maybe<Scalars['BigInt']>;
+	balance_gt?: Maybe<Scalars['BigInt']>;
+	balance_lt?: Maybe<Scalars['BigInt']>;
+	balance_gte?: Maybe<Scalars['BigInt']>;
+	balance_lte?: Maybe<Scalars['BigInt']>;
+	balance_in?: Maybe<Array<Scalars['BigInt']>>;
+	balance_not_in?: Maybe<Array<Scalars['BigInt']>>;
+	token?: Maybe<Scalars['String']>;
+	token_not?: Maybe<Scalars['String']>;
+	token_gt?: Maybe<Scalars['String']>;
+	token_lt?: Maybe<Scalars['String']>;
+	token_gte?: Maybe<Scalars['String']>;
+	token_lte?: Maybe<Scalars['String']>;
+	token_in?: Maybe<Array<Scalars['String']>>;
+	token_not_in?: Maybe<Array<Scalars['String']>>;
+	token_contains?: Maybe<Scalars['String']>;
+	token_not_contains?: Maybe<Scalars['String']>;
+	token_starts_with?: Maybe<Scalars['String']>;
+	token_not_starts_with?: Maybe<Scalars['String']>;
+	token_ends_with?: Maybe<Scalars['String']>;
+	token_not_ends_with?: Maybe<Scalars['String']>;
+};
+
+export enum TokenBalance_OrderBy {
+	Id = 'id',
+	Balance = 'balance',
+	Token = 'token',
+}
 
 export type Token_Filter = {
 	id?: Maybe<Scalars['ID']>;
@@ -2945,14 +3023,7 @@ export enum _SubgraphErrorPolicy_ {
 }
 
 export const HarvestsDocument = gql`
-	query Harvests(
-		$first: Int
-		$skip: Int
-		$orderBy: Harvest_orderBy
-		$orderDirection: OrderDirection
-		$where: Harvest_filter
-		$block: Block_height
-	) {
+	query Harvests($first: Int, $skip: Int, $orderBy: Harvest_orderBy, $orderDirection: OrderDirection) {
 		harvests {
 			id
 			vault {
@@ -3002,8 +3073,6 @@ export type HarvestsQueryVariables = Exact<{
 	skip?: Maybe<Scalars['Int']>;
 	orderBy?: Maybe<Harvest_OrderBy>;
 	orderDirection?: Maybe<OrderDirection>;
-	where?: Maybe<Harvest_Filter>;
-	block?: Maybe<Block_Height>;
 }>;
 
 export type HarvestsQuery = { __typename?: 'Query' } & {

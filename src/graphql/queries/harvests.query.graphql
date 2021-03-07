@@ -3,8 +3,6 @@ query Harvests(
   $skip: Int
   $orderBy: Harvest_orderBy
   $orderDirection: OrderDirection
-  $where: Harvest_filter
-  $block: Block_height
 ) {
   harvests {
     id
