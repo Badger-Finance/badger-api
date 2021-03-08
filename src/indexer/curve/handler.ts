@@ -1,5 +1,5 @@
 import { TokenPrice } from '../../interface/TokenPrice';
-import { getTokenPrice } from '../../service/price/PriceService';
+import { getTokenPrice } from '../../prices/PricesService';
 import { EventInput, SettData } from '../../util/util';
 import { indexAsset } from '../indexer';
 

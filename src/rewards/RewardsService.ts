@@ -1,13 +1,13 @@
 import { Service } from '@tsed/common';
 import { BadRequest, NotFound } from '@tsed/exceptions';
+import { S3Service } from '../aws/S3Service';
 import {
 	AirdropMerkleClaim,
 	AirdropMerkleDistribution,
 	RewardMerkleClaim,
 	RewardMerkleDistribution,
-} from '../../interface/MerkleDistribution';
-import { MERKLE_CLAIM_BUCKET } from '../../util/constants';
-import { S3Service } from '../s3/S3Service';
+} from '../interface/MerkleDistribution';
+import { MERKLE_CLAIM_BUCKET } from '../util/constants';
 
 @Service()
 export class RewardService {

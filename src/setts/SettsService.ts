@@ -1,10 +1,13 @@
 import { Service } from '@tsed/common';
 import { BadRequest, NotFound } from '@tsed/exceptions';
-import { Performance } from '../../interface/Performance';
-import { ProtocolSummary } from '../../interface/ProtocolSummary';
-import { Sett, SettSummary } from '../../interface/Sett';
-import { SettSnapshot } from '../../interface/SettSnapshot';
-import { ValueSource } from '../../interface/ValueSource';
+import { Performance } from '../interface/Performance';
+import { ProtocolSummary } from '../interface/ProtocolSummary';
+import { Sett, SettSummary } from '../interface/Sett';
+import { SettSnapshot } from '../interface/SettSnapshot';
+import { ValueSource } from '../interface/ValueSource';
+import { ProtocolService } from '../protocols/ProtocolsService';
+import { setts } from '../service/setts';
+import { TokenService } from '../tokens/TokenService';
 import {
 	ASSET_DATA,
 	CURRENT,
@@ -14,11 +17,8 @@ import {
 	SEVEN_DAYS,
 	THIRTY_DAYS,
 	THREE_DAYS,
-} from '../../util/constants';
-import { getAssetData } from '../../util/util';
-import { ProtocolService } from '../protocol/ProtocolService';
-import { setts } from '../setts';
-import { TokenService } from '../token/TokenService';
+} from '../util/constants';
+import { getAssetData } from '../util/util';
 
 @Service()
 export class SettService {
@@ -69,7 +69,6 @@ export class SettService {
 			sources: [],
 		};
 
-		// TODO: TheGraphService
 		const [protocolValueSource, settSnapshots] = await Promise.all([
 			this.protocolService.getProtocolPerformance(settData),
 			this.getSettSnapshots(settName, SAMPLE_DAYS),

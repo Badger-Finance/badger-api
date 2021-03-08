@@ -5,7 +5,7 @@ import { DocumentClient } from 'aws-sdk/lib/dynamodb/document_client';
 import fetch from 'node-fetch';
 import { SettSnapshot } from '../interface/SettSnapshot';
 import { TokenPrice } from '../interface/TokenPrice';
-import { getContractPrice } from '../service/price/PriceService';
+import { getContractPrice } from '../prices/PricesService';
 import { BADGER_URL, ETHERS_JSONRPC_PROVIDER, MASTERCHEF_URL, SUSHISWAP_URL, UNISWAP_URL } from './constants';
 import AttributeValue = DocumentClient.AttributeValue;
 

@@ -1,15 +1,15 @@
 import { Service } from '@tsed/common';
 import { constants, ethers } from 'ethers';
-import { Emission, Geyser, UnlockSchedule } from '../../interface/Geyser';
-import { Sett } from '../../interface/Sett';
-import { ValueSource } from '../../interface/ValueSource';
-import { diggAbi, geyserAbi } from '../../util/abi';
-import { ETHERS_JSONRPC_PROVIDER, TOKENS } from '../../util/constants';
-import { getGeysers, secondToDay, toRate } from '../../util/util';
-import { PriceService } from '../price/PriceService';
-import { SettService } from '../sett/SettService';
-import { setts } from '../setts';
-import { TokenService } from '../token/TokenService';
+import { Emission, Geyser, UnlockSchedule } from '../interface/Geyser';
+import { Sett } from '../interface/Sett';
+import { ValueSource } from '../interface/ValueSource';
+import { PriceService } from '../prices/PricesService';
+import { setts } from '../service/setts';
+import { SettService } from '../setts/SettsService';
+import { TokenService } from '../tokens/TokenService';
+import { diggAbi, geyserAbi } from '../util/abi';
+import { ETHERS_JSONRPC_PROVIDER, TOKENS } from '../util/constants';
+import { getGeysers, secondToDay, toRate } from '../util/util';
 
 @Service()
 export class GeyserService {

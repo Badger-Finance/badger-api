@@ -20,6 +20,9 @@ const rootDir = __dirname;
 			specVersion: '3.0.1',
 		},
 	],
+	logger: {
+		disableRoutesSummary: true,
+	},
 })
 export class Server {
 	@Inject()

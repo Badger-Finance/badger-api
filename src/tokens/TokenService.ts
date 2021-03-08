@@ -1,19 +1,13 @@
 import { Service } from '@tsed/common';
 import { InternalServerError, NotFound } from '@tsed/exceptions';
-import { SettSnapshot } from '../../interface/SettSnapshot';
-import { Token } from '../../interface/Token';
-import { TokenBalance } from '../../interface/TokenBalance';
-import { TOKENS } from '../../util/constants';
-import { getSushiswapPair, getUniswapPair } from '../../util/util';
-import { PriceService } from '../price/PriceService';
-import { SettData, setts } from '../setts';
+import { SettSnapshot } from '../interface/SettSnapshot';
+import { Token } from '../interface/Token';
+import { TokenBalance } from '../interface/TokenBalance';
+import { PriceService } from '../prices/PricesService';
+import { SettData, setts } from '../service/setts';
+import { TOKENS } from '../util/constants';
+import { getSushiswapPair, getUniswapPair } from '../util/util';
 
-/**
- * TODO: Integrate price service with token service,
- * introduce price field under token.
- * TODO: Allow bulk token look ups using parallel price
- * gathering / population of token prices.
- */
 @Service()
 export class TokenService {
 	constructor(private priceService: PriceService) {}
