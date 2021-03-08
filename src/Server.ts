@@ -1,3 +1,4 @@
+import '@tsed/platform-express';
 import { Configuration, Inject, PlatformApplication } from '@tsed/common';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
