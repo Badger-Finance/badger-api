@@ -7,7 +7,7 @@ import { diggAbi, geyserAbi } from '../../util/abi';
 import { ETHERS_JSONRPC_PROVIDER, TOKENS } from '../../util/constants';
 import { getGeysers, secondToDay, toRate } from '../../util/util';
 import { PriceService } from '../price/PriceService';
-import { SettService } from '../sett/SettService';
+import { SettService } from '../../setts/SettsService';
 import { setts } from '../setts';
 import { TokenService } from '../token/TokenService';
 

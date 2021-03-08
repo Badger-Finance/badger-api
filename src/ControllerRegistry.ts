@@ -5,7 +5,7 @@ import { LinkController } from './controller/LinkController';
 import { PriceController } from './controller/PriceController';
 import { ProtocolController } from './controller/ProtocolController';
 import { RewardController } from './controller/RewardController';
-import { SettController } from './controller/SettController';
+import { SettController } from './setts/SettsController';
 import { HarvestsController } from './harvests/HarvestsController';
 
 /**
