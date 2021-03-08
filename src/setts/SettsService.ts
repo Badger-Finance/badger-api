@@ -7,7 +7,7 @@ import { SettSnapshot } from '../interface/SettSnapshot';
 import { ValueSource } from '../interface/ValueSource';
 import { ProtocolService } from '../protocols/ProtocolsService';
 import { setts } from '../service/setts';
-import { TokenService } from '../service/token/TokenService';
+import { TokenService } from '../tokens/TokenService';
 import {
 	ASSET_DATA,
 	CURRENT,
