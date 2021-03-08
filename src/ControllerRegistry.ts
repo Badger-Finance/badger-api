@@ -1,12 +1,11 @@
 import { ChartController } from './controller/ChartController';
 import { ClawController } from './controller/ClawController';
-import { GeyserController } from './controller/GeyserController';
-import { LinkController } from './controller/LinkController';
-import { PriceController } from './controller/PriceController';
-import { ProtocolController } from './controller/ProtocolController';
-import { RewardController } from './controller/RewardController';
-import { SettController } from './setts/SettsController';
+import { GeyserController } from './geysers/GeysersController';
 import { HarvestsController } from './harvests/HarvestsController';
+import { PriceController } from './prices/PricesController';
+import { ProtocolController } from './protocols/ProtocolsController';
+import { RewardController } from './rewards/RewardsController';
+import { SettController } from './setts/SettsController';
 
 /**
  * Controller registry forces serverless offline to load
@@ -19,7 +18,6 @@ export const controllers = [
 	ClawController,
 	GeyserController,
 	HarvestsController,
-	LinkController,
 	PriceController,
 	ProtocolController,
 	RewardController,

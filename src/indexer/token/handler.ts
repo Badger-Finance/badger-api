@@ -1,4 +1,4 @@
-import { getTokenPrice } from '../../service/price/PriceService';
+import { getTokenPrice } from '../../prices/PricesService';
 import { EventInput } from '../../util/util';
 import { indexAsset } from '../indexer';
 

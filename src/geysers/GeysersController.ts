@@ -1,7 +1,7 @@
 import { Controller, Get } from '@tsed/common';
 import { ContentType } from '@tsed/schema';
 import { Sett } from '../interface/Sett';
-import { GeyserService } from '../service/geyser/GeyserService';
+import { GeyserService } from './GeysersService';
 
 @Controller('/protocol/geyser')
 export class GeyserController {

@@ -5,6 +5,9 @@ import { ProtocolSummary } from '../interface/ProtocolSummary';
 import { Sett, SettSummary } from '../interface/Sett';
 import { SettSnapshot } from '../interface/SettSnapshot';
 import { ValueSource } from '../interface/ValueSource';
+import { ProtocolService } from '../protocols/ProtocolsService';
+import { setts } from '../service/setts';
+import { TokenService } from '../service/token/TokenService';
 import {
 	ASSET_DATA,
 	CURRENT,
@@ -16,9 +19,6 @@ import {
 	THREE_DAYS,
 } from '../util/constants';
 import { getAssetData } from '../util/util';
-import { ProtocolService } from '../service/protocol/ProtocolService';
-import { setts } from '../service/setts';
-import { TokenService } from '../service/token/TokenService';
 
 @Service()
 export class SettService {

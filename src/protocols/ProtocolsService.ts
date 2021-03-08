@@ -1,11 +1,11 @@
 import { Service } from '@tsed/common';
 import fetch from 'node-fetch';
-import { Performance } from '../../interface/Performance';
-import { ValueSource } from '../../interface/ValueSource';
-import { CURVE_API_URL, SUSHISWAP_URL, TOKENS, UNISWAP_URL } from '../../util/constants';
-import { blockToDay, getMasterChef, getSushiswapPrice, toRate } from '../../util/util';
-import { PriceService } from '../price/PriceService';
-import { SettData } from '../setts';
+import { Performance } from '../interface/Performance';
+import { ValueSource } from '../interface/ValueSource';
+import { PriceService } from '../prices/PricesService';
+import { SettData } from '../service/setts';
+import { CURVE_API_URL, SUSHISWAP_URL, TOKENS, UNISWAP_URL } from '../util/constants';
+import { blockToDay, getMasterChef, getSushiswapPrice, toRate } from '../util/util';
 
 /**
  * External protocol performance retrieval service.
