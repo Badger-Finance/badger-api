@@ -6,6 +6,7 @@ import { PriceController } from './controller/PriceController';
 import { ProtocolController } from './controller/ProtocolController';
 import { RewardController } from './controller/RewardController';
 import { SettController } from './controller/SettController';
+import { HarvestsController } from './harvests/HarvestsController';
 
 /**
  * Controller registry forces serverless offline to load
@@ -14,12 +15,13 @@ import { SettController } from './controller/SettController';
  * without this.
  */
 export const controllers = [
-	LinkController,
-	ProtocolController,
-	SettController,
 	ChartController,
-	GeyserController,
 	ClawController,
-	RewardController,
+	GeyserController,
+	HarvestsController,
+	LinkController,
 	PriceController,
+	ProtocolController,
+	RewardController,
+	SettController,
 ];

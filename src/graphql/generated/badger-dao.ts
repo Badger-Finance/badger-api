@@ -19,7 +19,6 @@ export type Scalars = {
 };
 
 export type Account = {
-	__typename?: 'Account';
 	/** User ethereum address */
 	id: Scalars['ID'];
 	vaultBalances: Array<AccountVaultBalance>;
@@ -74,7 +73,6 @@ export type AccountSentTransfersArgs = {
 };
 
 export type AccountVaultBalance = {
-	__typename?: 'AccountVaultBalance';
 	id: Scalars['ID'];
 	vault: Vault;
 	account: Account;
@@ -523,7 +521,6 @@ export type Block_Height = {
 };
 
 export type Controller = {
-	__typename?: 'Controller';
 	/** Ethereum address */
 	id: Scalars['ID'];
 	vault: Vault;
@@ -570,7 +567,6 @@ export enum Controller_OrderBy {
 }
 
 export type Deposit = Action & {
-	__typename?: 'Deposit';
 	id: Scalars['ID'];
 	vault: Vault;
 	account: Account;
@@ -698,7 +694,6 @@ export enum Deposit_OrderBy {
 }
 
 export type FarmHarvestEvent = {
-	__typename?: 'FarmHarvestEvent';
 	id: Scalars['ID'];
 	totalFarmHarvested: Scalars['BigInt'];
 	farmToRewards: Scalars['BigInt'];
@@ -778,7 +773,6 @@ export enum FarmHarvestEvent_OrderBy {
 }
 
 export type Geyser = {
-	__typename?: 'Geyser';
 	id: Scalars['ID'];
 	totalStaked: Scalars['BigInt'];
 	stakeEvents: Array<StakedEvent>;
@@ -828,7 +822,6 @@ export enum Geyser_OrderBy {
 }
 
 export type Harvest = {
-	__typename?: 'Harvest';
 	id: Scalars['ID'];
 	vault: Vault;
 	strategy: Strategy;
@@ -850,7 +843,6 @@ export type Harvest = {
 };
 
 export type HarvestEvent = {
-	__typename?: 'HarvestEvent';
 	id: Scalars['ID'];
 	sourceAddress: Scalars['String'];
 	sourceId: Scalars['String'];
@@ -1093,7 +1085,6 @@ export enum OrderDirection {
 }
 
 export type Query = {
-	__typename?: 'Query';
 	vault?: Maybe<Vault>;
 	vaults: Array<Vault>;
 	account?: Maybe<Account>;
@@ -1128,6 +1119,8 @@ export type Query = {
 	farmHarvestEvents: Array<FarmHarvestEvent>;
 	sushiHarvestEvent?: Maybe<SushiHarvestEvent>;
 	sushiHarvestEvents: Array<SushiHarvestEvent>;
+	tokenBalance?: Maybe<TokenBalance>;
+	tokenBalances: Array<TokenBalance>;
 	action?: Maybe<Action>;
 	actions: Array<Action>;
 	/** Access to subgraph metadata */
@@ -1372,6 +1365,20 @@ export type QuerySushiHarvestEventsArgs = {
 	block?: Maybe<Block_Height>;
 };
 
+export type QueryTokenBalanceArgs = {
+	id: Scalars['ID'];
+	block?: Maybe<Block_Height>;
+};
+
+export type QueryTokenBalancesArgs = {
+	skip?: Maybe<Scalars['Int']>;
+	first?: Maybe<Scalars['Int']>;
+	orderBy?: Maybe<TokenBalance_OrderBy>;
+	orderDirection?: Maybe<OrderDirection>;
+	where?: Maybe<TokenBalance_Filter>;
+	block?: Maybe<Block_Height>;
+};
+
 export type QueryActionArgs = {
 	id: Scalars['ID'];
 	block?: Maybe<Block_Height>;
@@ -1391,7 +1398,6 @@ export type Query_MetaArgs = {
 };
 
 export type StakedEvent = {
-	__typename?: 'StakedEvent';
 	id: Scalars['ID'];
 	geyser: Geyser;
 	user: Scalars['Bytes'];
@@ -1483,7 +1489,6 @@ export enum StakedEvent_OrderBy {
 }
 
 export type Strategy = {
-	__typename?: 'Strategy';
 	/** Ethereum address */
 	id: Scalars['ID'];
 	vault: Vault;
@@ -1560,7 +1565,6 @@ export enum Strategy_OrderBy {
 }
 
 export type Subscription = {
-	__typename?: 'Subscription';
 	vault?: Maybe<Vault>;
 	vaults: Array<Vault>;
 	account?: Maybe<Account>;
@@ -1595,6 +1599,8 @@ export type Subscription = {
 	farmHarvestEvents: Array<FarmHarvestEvent>;
 	sushiHarvestEvent?: Maybe<SushiHarvestEvent>;
 	sushiHarvestEvents: Array<SushiHarvestEvent>;
+	tokenBalance?: Maybe<TokenBalance>;
+	tokenBalances: Array<TokenBalance>;
 	action?: Maybe<Action>;
 	actions: Array<Action>;
 	/** Access to subgraph metadata */
@@ -1839,6 +1845,20 @@ export type SubscriptionSushiHarvestEventsArgs = {
 	block?: Maybe<Block_Height>;
 };
 
+export type SubscriptionTokenBalanceArgs = {
+	id: Scalars['ID'];
+	block?: Maybe<Block_Height>;
+};
+
+export type SubscriptionTokenBalancesArgs = {
+	skip?: Maybe<Scalars['Int']>;
+	first?: Maybe<Scalars['Int']>;
+	orderBy?: Maybe<TokenBalance_OrderBy>;
+	orderDirection?: Maybe<OrderDirection>;
+	where?: Maybe<TokenBalance_Filter>;
+	block?: Maybe<Block_Height>;
+};
+
 export type SubscriptionActionArgs = {
 	id: Scalars['ID'];
 	block?: Maybe<Block_Height>;
@@ -1858,7 +1878,6 @@ export type Subscription_MetaArgs = {
 };
 
 export type SushiHarvestEvent = {
-	__typename?: 'SushiHarvestEvent';
 	id: Scalars['ID'];
 	xSushiHarvested: Scalars['BigInt'];
 	totalxSushi: Scalars['BigInt'];
@@ -1948,13 +1967,57 @@ export enum SushiHarvestEvent_OrderBy {
 }
 
 export type Token = {
-	__typename?: 'Token';
 	id: Scalars['ID'];
 	address: Scalars['Bytes'];
 	decimals: Scalars['Int'];
 	name: Scalars['String'];
 	symbol: Scalars['String'];
 };
+
+export type TokenBalance = {
+	id: Scalars['ID'];
+	balance: Scalars['BigInt'];
+	token: Token;
+};
+
+export type TokenBalance_Filter = {
+	id?: Maybe<Scalars['ID']>;
+	id_not?: Maybe<Scalars['ID']>;
+	id_gt?: Maybe<Scalars['ID']>;
+	id_lt?: Maybe<Scalars['ID']>;
+	id_gte?: Maybe<Scalars['ID']>;
+	id_lte?: Maybe<Scalars['ID']>;
+	id_in?: Maybe<Array<Scalars['ID']>>;
+	id_not_in?: Maybe<Array<Scalars['ID']>>;
+	balance?: Maybe<Scalars['BigInt']>;
+	balance_not?: Maybe<Scalars['BigInt']>;
+	balance_gt?: Maybe<Scalars['BigInt']>;
+	balance_lt?: Maybe<Scalars['BigInt']>;
+	balance_gte?: Maybe<Scalars['BigInt']>;
+	balance_lte?: Maybe<Scalars['BigInt']>;
+	balance_in?: Maybe<Array<Scalars['BigInt']>>;
+	balance_not_in?: Maybe<Array<Scalars['BigInt']>>;
+	token?: Maybe<Scalars['String']>;
+	token_not?: Maybe<Scalars['String']>;
+	token_gt?: Maybe<Scalars['String']>;
+	token_lt?: Maybe<Scalars['String']>;
+	token_gte?: Maybe<Scalars['String']>;
+	token_lte?: Maybe<Scalars['String']>;
+	token_in?: Maybe<Array<Scalars['String']>>;
+	token_not_in?: Maybe<Array<Scalars['String']>>;
+	token_contains?: Maybe<Scalars['String']>;
+	token_not_contains?: Maybe<Scalars['String']>;
+	token_starts_with?: Maybe<Scalars['String']>;
+	token_not_starts_with?: Maybe<Scalars['String']>;
+	token_ends_with?: Maybe<Scalars['String']>;
+	token_not_ends_with?: Maybe<Scalars['String']>;
+};
+
+export enum TokenBalance_OrderBy {
+	Id = 'id',
+	Balance = 'balance',
+	Token = 'token',
+}
 
 export type Token_Filter = {
 	id?: Maybe<Scalars['ID']>;
@@ -2018,7 +2081,6 @@ export enum Token_OrderBy {
 }
 
 export type Transaction = {
-	__typename?: 'Transaction';
 	/** ID = Transaction Hash */
 	id: Scalars['ID'];
 	timestamp: Scalars['BigInt'];
@@ -2118,7 +2180,6 @@ export enum Transaction_OrderBy {
 }
 
 export type Transfer = {
-	__typename?: 'Transfer';
 	id: Scalars['ID'];
 	from: Account;
 	to: Account;
@@ -2262,7 +2323,6 @@ export enum Transfer_OrderBy {
 }
 
 export type UnstakedEvent = {
-	__typename?: 'UnstakedEvent';
 	id: Scalars['ID'];
 	geyser: Geyser;
 	user: Scalars['Bytes'];
@@ -2354,7 +2414,6 @@ export enum UnstakedEvent_OrderBy {
 }
 
 export type Vault = {
-	__typename?: 'Vault';
 	id: Scalars['ID'];
 	/** Amount of underlying token per 1 share */
 	pricePerFullShare: Scalars['BigDecimal'];
@@ -2786,7 +2845,6 @@ export enum Vault_OrderBy {
 }
 
 export type Withdrawal = Action & {
-	__typename?: 'Withdrawal';
 	id: Scalars['ID'];
 	vault: Vault;
 	account: Account;
@@ -2914,7 +2972,6 @@ export enum Withdrawal_OrderBy {
 }
 
 export type _Block_ = {
-	__typename?: '_Block_';
 	/** The hash of the block */
 	hash?: Maybe<Scalars['Bytes']>;
 	/** The block number */
@@ -2923,7 +2980,6 @@ export type _Block_ = {
 
 /** The type for the top-level _meta field */
 export type _Meta_ = {
-	__typename?: '_Meta_';
 	/**
 	 * Information about a specific subgraph block. The hash of the block
 	 * will be null if the _meta field has a block constraint that asks for
@@ -2944,43 +3000,42 @@ export enum _SubgraphErrorPolicy_ {
 	Deny = 'deny',
 }
 
-export const HarvestsDocument = gql`
-	query Harvests(
-		$first: Int
-		$skip: Int
-		$orderBy: Harvest_orderBy
-		$orderDirection: OrderDirection
-		$where: Harvest_filter
-		$block: Block_height
-	) {
-		harvests {
+export const HarvestFragmentDoc = gql`
+	fragment Harvest on Harvest {
+		id
+		vault {
 			id
-			vault {
-				id
-				pricePerFullShare
-				totalSupply
-				vaultBalance
-				strategyBalance
-				available
-			}
-			transaction {
-				id
-				timestamp
-				blockNumber
-				transactionHash
-			}
-			earnings
-			pricePerFullShareBefore
-			pricePerFullShareAfter
-			pricePerFullShareBeforeRaw
-			pricePerFullShareAfterRaw
-			vaultBalanceBeforeRaw
-			vaultBalanceAfterRaw
-			strategyBalanceBeforeRaw
-			strategyBalanceAfterRaw
-			earningsRaw
+			pricePerFullShare
+			totalSupply
+			vaultBalance
+			strategyBalance
+			available
+		}
+		transaction {
+			id
+			timestamp
+			blockNumber
+			transactionHash
+		}
+		earnings
+		pricePerFullShareBefore
+		pricePerFullShareAfter
+		pricePerFullShareBeforeRaw
+		pricePerFullShareAfterRaw
+		vaultBalanceBeforeRaw
+		vaultBalanceAfterRaw
+		strategyBalanceBeforeRaw
+		strategyBalanceAfterRaw
+		earningsRaw
+	}
+`;
+export const HarvestsDocument = gql`
+	query Harvests($first: Int, $skip: Int, $orderBy: Harvest_orderBy, $orderDirection: OrderDirection) {
+		harvests {
+			...Harvest
 		}
 	}
+	${HarvestFragmentDoc}
 `;
 
 export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
@@ -2997,39 +3052,29 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
 	};
 }
 export type Sdk = ReturnType<typeof getSdk>;
+export type HarvestFragment = Pick<
+	Harvest,
+	| 'id'
+	| 'earnings'
+	| 'pricePerFullShareBefore'
+	| 'pricePerFullShareAfter'
+	| 'pricePerFullShareBeforeRaw'
+	| 'pricePerFullShareAfterRaw'
+	| 'vaultBalanceBeforeRaw'
+	| 'vaultBalanceAfterRaw'
+	| 'strategyBalanceBeforeRaw'
+	| 'strategyBalanceAfterRaw'
+	| 'earningsRaw'
+> & {
+	vault: Pick<Vault, 'id' | 'pricePerFullShare' | 'totalSupply' | 'vaultBalance' | 'strategyBalance' | 'available'>;
+	transaction: Pick<Transaction, 'id' | 'timestamp' | 'blockNumber' | 'transactionHash'>;
+};
+
 export type HarvestsQueryVariables = Exact<{
 	first?: Maybe<Scalars['Int']>;
 	skip?: Maybe<Scalars['Int']>;
 	orderBy?: Maybe<Harvest_OrderBy>;
 	orderDirection?: Maybe<OrderDirection>;
-	where?: Maybe<Harvest_Filter>;
-	block?: Maybe<Block_Height>;
 }>;
 
-export type HarvestsQuery = { __typename?: 'Query' } & {
-	harvests: Array<
-		{ __typename?: 'Harvest' } & Pick<
-			Harvest,
-			| 'id'
-			| 'earnings'
-			| 'pricePerFullShareBefore'
-			| 'pricePerFullShareAfter'
-			| 'pricePerFullShareBeforeRaw'
-			| 'pricePerFullShareAfterRaw'
-			| 'vaultBalanceBeforeRaw'
-			| 'vaultBalanceAfterRaw'
-			| 'strategyBalanceBeforeRaw'
-			| 'strategyBalanceAfterRaw'
-			| 'earningsRaw'
-		> & {
-				vault: { __typename?: 'Vault' } & Pick<
-					Vault,
-					'id' | 'pricePerFullShare' | 'totalSupply' | 'vaultBalance' | 'strategyBalance' | 'available'
-				>;
-				transaction: { __typename?: 'Transaction' } & Pick<
-					Transaction,
-					'id' | 'timestamp' | 'blockNumber' | 'transactionHash'
-				>;
-			}
-	>;
-};
+export type HarvestsQuery = { harvests: Array<HarvestFragment> };
