@@ -6,12 +6,14 @@ if (nodeEnv !== 'test' && nodeEnv !== 'ci') {
 }
 
 module.exports = {
-	preset: 'ts-jest',
+	clearMocks: true,
+	moduleFileExtensions: ['js', 'json', 'ts'],
+	resetMocks: true,
+	restoreMocks: true,
 	testEnvironment: 'node',
-	automock: false,
-	testRegex: 'test/.*.spec.ts$',
-	moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
-	testTimeout: 30000,
+	testRegex: '.spec.ts$',
+	testTimeout: 10000,
+	transform: { '^.+\\.(t|j)s$': 'ts-jest' },
 };
 
 //	setupFilesAfterEnv: ['./test/jest.setup.ts'],

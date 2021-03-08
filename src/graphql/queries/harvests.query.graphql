@@ -5,30 +5,6 @@ query Harvests(
   $orderDirection: OrderDirection
 ) {
   harvests {
-    id
-    vault {
-      id
-      pricePerFullShare
-      totalSupply
-      vaultBalance
-      strategyBalance
-      available
-    }
-    transaction {
-      id
-      timestamp
-      blockNumber
-      transactionHash
-    }
-    earnings
-    pricePerFullShareBefore
-    pricePerFullShareAfter
-    pricePerFullShareBeforeRaw
-    pricePerFullShareAfterRaw
-    vaultBalanceBeforeRaw
-    vaultBalanceAfterRaw
-    strategyBalanceBeforeRaw
-    strategyBalanceAfterRaw
-    earningsRaw
+    ...Harvest
   }
 }

@@ -1,5 +1,5 @@
 import { IsEnum, IsInt, IsOptional, Min } from 'class-validator';
-import { Harvest_OrderBy, OrderDirection } from '../graphql/generated/badger-dao';
+import { Harvest_OrderBy, OrderDirection } from '../../graphql/generated/badger-dao';
 
 export class HarvestsQueryArgs {
 	@IsOptional()
