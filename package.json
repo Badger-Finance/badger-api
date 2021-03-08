@@ -12,7 +12,7 @@
     "deploy": "sls deploy",
     "format": "yarn run lint --fix",
     "lint": "eslint .",
-    "test": "jest",
+    "test": "jest --runInBand",
     "tsc:build": "tsc -p .",
     "ui": "yarn upgradeInteractive"
   },
