@@ -7,7 +7,7 @@ import {
 	RewardMerkleClaim,
 	RewardMerkleDistribution,
 } from '../interface/MerkleDistribution';
-import { MERKLE_CLAIM_BUCKET } from '../util/constants';
+import { MERKLE_CLAIM_BUCKET } from '../config/constants';
 
 @Service()
 export class RewardService {

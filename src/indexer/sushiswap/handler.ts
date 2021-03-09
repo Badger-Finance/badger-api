@@ -1,4 +1,4 @@
-import { EventInput, getSushiswapPrice, SettData } from '../../util/util';
+import { EventInput, getSushiswapPrice, SettData } from '../../config/util';
 import { indexAsset } from '../indexer';
 
 export const handler = async (event: EventInput) => {

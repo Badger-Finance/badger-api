@@ -5,8 +5,8 @@ import { Token } from '../interface/Token';
 import { TokenBalance } from '../interface/TokenBalance';
 import { PriceService } from '../prices/PricesService';
 import { SettData, setts } from '../service/setts';
-import { TOKENS } from '../util/constants';
-import { getSushiswapPair, getUniswapPair } from '../util/util';
+import { TOKENS } from '../config/constants';
+import { getSushiswapPair, getUniswapPair } from '../config/util';
 
 @Service()
 export class TokenService {

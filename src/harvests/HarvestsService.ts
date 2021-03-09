@@ -6,7 +6,7 @@ import {
 	HarvestsQueryVariables,
 	Sdk as BadgerDaoGraphqlSdk,
 } from '../graphql/generated/badger-dao';
-import { BADGER_DAO_SUBGRAPH_URL } from '../util/constants';
+import { BADGER_DAO_SUBGRAPH_URL } from '../config/constants';
 
 @Service()
 export class HarvestsService {

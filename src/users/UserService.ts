@@ -3,7 +3,7 @@ import { BadRequest, InternalServerError, NotFound } from '@tsed/exceptions';
 import { SettBalance, UserAccount } from '../interface/UserAccount';
 import { PriceService } from '../prices/PricesService';
 import { setts } from '../service/setts';
-import { getUserData } from '../util/util';
+import { getUserData } from '../config/util';
 
 @Service()
 export class UserService {

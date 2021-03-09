@@ -1,6 +1,6 @@
 import { TokenPrice } from '../../interface/TokenPrice';
 import { getTokenPrice } from '../../prices/PricesService';
-import { EventInput, SettData } from '../../util/util';
+import { EventInput, SettData } from '../../config/util';
 import { indexAsset } from '../indexer';
 
 export const handler = async (event: EventInput) => {

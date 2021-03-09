@@ -17,8 +17,8 @@ import {
 	SEVEN_DAYS,
 	THIRTY_DAYS,
 	THREE_DAYS,
-} from '../util/constants';
-import { getAssetData } from '../util/util';
+} from '../config/constants';
+import { getAssetData } from '../config/util';
 
 @Service()
 export class SettService {

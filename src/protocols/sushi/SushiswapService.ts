@@ -4,10 +4,10 @@ import NodeCache from "node-cache";
 import { MasterChefPool, PoolInfo } from "../../interface/MasterChef";
 import { PriceService } from "../../prices/PricesService";
 import { TokenService } from "../../tokens/TokenService";
-import { erc20Abi, masterChefAbi } from "../../util/abi";
-import { Chain } from "../../util/chain";
-import { BLOCKS_PER_YEAR, TOKENS } from "../../util/constants";
-import { getSushiswapPrice } from "../../util/util";
+import { erc20Abi, masterChefAbi } from "../../config/abi";
+import { Chain } from "../../config/chain";
+import { BLOCKS_PER_YEAR, TOKENS } from "../../config/constants";
+import { getSushiswapPrice } from "../../config/util";
 
 @Service()
 export class SushiswapService {

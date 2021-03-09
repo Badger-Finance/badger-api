@@ -7,10 +7,10 @@ import { PriceService } from '../prices/PricesService';
 import { setts } from '../service/setts';
 import { SettService } from '../setts/SettsService';
 import { TokenService } from '../tokens/TokenService';
-import { diggAbi, geyserAbi } from '../util/abi';
-import { eth } from '../util/chain';
-import { TOKENS } from '../util/constants';
-import { getGeysers, secondToDay, toRate } from '../util/util';
+import { diggAbi, geyserAbi } from '../config/abi';
+import { eth } from '../config/chain';
+import { TOKENS } from '../config/constants';
+import { getGeysers, secondToDay, toRate } from '../config/util';
 
 @Service()
 export class GeyserService {

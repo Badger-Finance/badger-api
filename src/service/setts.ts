@@ -1,4 +1,4 @@
-import { TOKENS } from '../util/constants';
+import { TOKENS } from '../config/constants';
 
 export type SettData = {
 	name: string;

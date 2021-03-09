@@ -3,8 +3,8 @@ import { InternalServerError } from '@tsed/exceptions';
 import NodeCache from 'node-cache';
 import fetch from 'node-fetch';
 import { PriceData, PriceSummary, TokenPrice } from '../interface/TokenPrice';
-import { COINGECKO_URL, TOKENS } from '../util/constants';
-import { getSushiswapPrice, getUniswapPrice } from '../util/util';
+import { COINGECKO_URL, TOKENS } from '../config/constants';
+import { getSushiswapPrice, getUniswapPrice } from '../config/util';
 
 const priceCache = new NodeCache({ stdTTL: 300, checkperiod: 480 });
 
