@@ -1,8 +1,8 @@
 import { Service } from '@tsed/common';
 import { BigNumber, ethers, utils } from 'ethers';
-import { FixedPointUnsigned, Liquidation, Position, SponsorData, SyntheticData } from '../../interface/Claw';
 import { empAbi } from '../../config/abi';
 import { eth } from '../../config/chain';
+import { FixedPointUnsigned, Liquidation, Position, SponsorData, SyntheticData } from '../../interface/Claw';
 
 type LiqudationUnformatted = [
 	string,

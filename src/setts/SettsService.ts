@@ -1,13 +1,5 @@
 import { Service } from '@tsed/common';
 import { BadRequest, NotFound } from '@tsed/exceptions';
-import { Performance } from '../interface/Performance';
-import { ProtocolSummary } from '../interface/ProtocolSummary';
-import { Sett, SettSummary } from '../interface/Sett';
-import { SettSnapshot } from '../interface/SettSnapshot';
-import { ValueSource } from '../interface/ValueSource';
-import { ProtocolService } from '../protocols/ProtocolsService';
-import { setts } from '../service/setts';
-import { TokenService } from '../tokens/TokenService';
 import {
 	ASSET_DATA,
 	CURRENT,
@@ -19,6 +11,14 @@ import {
 	THREE_DAYS,
 } from '../config/constants';
 import { getAssetData } from '../config/util';
+import { Performance } from '../interface/Performance';
+import { ProtocolSummary } from '../interface/ProtocolSummary';
+import { Sett, SettSummary } from '../interface/Sett';
+import { SettSnapshot } from '../interface/SettSnapshot';
+import { ValueSource } from '../interface/ValueSource';
+import { ProtocolService } from '../protocols/ProtocolsService';
+import { setts } from '../service/setts';
+import { TokenService } from '../tokens/TokenService';
 
 @Service()
 export class SettService {

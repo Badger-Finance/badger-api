@@ -46,5 +46,5 @@ export const COINGECKO_URL = 'https://api.coingecko.com/api/v3/simple';
 
 export enum Provider {
 	Cloudflare = 'https://cloudflare-eth.com/',
-	Binance = 'https://bsc-dataseed.binance.org/'
-};
+	Binance = 'https://bsc-dataseed.binance.org/',
+}

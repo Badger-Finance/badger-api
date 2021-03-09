@@ -1,5 +1,9 @@
 import { Inject, Service } from '@tsed/common';
 import { constants, ethers } from 'ethers';
+import { diggAbi, geyserAbi } from '../config/abi';
+import { eth } from '../config/chain';
+import { TOKENS } from '../config/constants';
+import { getGeysers, secondToDay, toRate } from '../config/util';
 import { Emission, Geyser, UnlockSchedule } from '../interface/Geyser';
 import { Sett } from '../interface/Sett';
 import { ValueSource } from '../interface/ValueSource';
@@ -7,10 +11,6 @@ import { PriceService } from '../prices/PricesService';
 import { setts } from '../service/setts';
 import { SettService } from '../setts/SettsService';
 import { TokenService } from '../tokens/TokenService';
-import { diggAbi, geyserAbi } from '../config/abi';
-import { eth } from '../config/chain';
-import { TOKENS } from '../config/constants';
-import { getGeysers, secondToDay, toRate } from '../config/util';
 
 @Service()
 export class GeyserService {

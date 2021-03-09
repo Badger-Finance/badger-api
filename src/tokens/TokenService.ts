@@ -1,12 +1,12 @@
 import { Service } from '@tsed/common';
 import { InternalServerError, NotFound } from '@tsed/exceptions';
+import { TOKENS } from '../config/constants';
+import { getSushiswapPair, getUniswapPair } from '../config/util';
 import { SettSnapshot } from '../interface/SettSnapshot';
 import { Token } from '../interface/Token';
 import { TokenBalance } from '../interface/TokenBalance';
 import { PriceService } from '../prices/PricesService';
 import { SettData, setts } from '../service/setts';
-import { TOKENS } from '../config/constants';
-import { getSushiswapPair, getUniswapPair } from '../config/util';
 
 @Service()
 export class TokenService {

@@ -1,9 +1,9 @@
 import { Service } from '@tsed/common';
 import { BadRequest, InternalServerError, NotFound } from '@tsed/exceptions';
+import { getUserData } from '../config/util';
 import { SettBalance, UserAccount } from '../interface/UserAccount';
 import { PriceService } from '../prices/PricesService';
 import { setts } from '../service/setts';
-import { getUserData } from '../config/util';
 
 @Service()
 export class UserService {
