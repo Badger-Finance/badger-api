@@ -2,11 +2,12 @@ import { Block } from '@ethersproject/abstract-provider';
 import AWS from 'aws-sdk';
 import { PutItemInput, QueryInput } from 'aws-sdk/clients/dynamodb';
 import { DocumentClient } from 'aws-sdk/lib/dynamodb/document_client';
+import { ethers } from 'ethers';
 import fetch from 'node-fetch';
 import { SettSnapshot } from '../interface/SettSnapshot';
 import { TokenPrice } from '../interface/TokenPrice';
 import { getContractPrice } from '../prices/PricesService';
-import { BADGER_URL, ETHERS_JSONRPC_PROVIDER, MASTERCHEF_URL, SUSHISWAP_URL, UNISWAP_URL } from './constants';
+import { BADGER_URL, Chain, MASTERCHEF_URL, Provider, SUSHISWAP_URL, UNISWAP_URL } from './constants';
 import AttributeValue = DocumentClient.AttributeValue;
 
 export const THIRTY_MIN_BLOCKS = parseInt(String((30 * 60) / 13));
@@ -40,7 +41,7 @@ export type SettData = {
 };
 
 export const getBlock = async (blockNumber: number): Promise<Block> =>
-	await ETHERS_JSONRPC_PROVIDER.getBlock(blockNumber);
+	await getProvider(Chain.ETH).getBlock(blockNumber);
 
 export const saveItem = async (table: string, item: AttributeValue) => {
 	const params = {
@@ -371,3 +372,12 @@ export const blockToDay = (value: number) => blockToHour(value) * 24;
 const secondToHour = (value: number) => value * 3600;
 export const secondToDay = (value: number) => secondToHour(value) * 24;
 export const toRate = (value: number, duration: number) => (duration !== 0 ? value / duration : value);
+
+export const getProvider = (chain: Chain): ethers.providers.JsonRpcProvider => {
+	switch (chain) {
+		case Chain.BSC:
+			return new ethers.providers.JsonRpcProvider(Provider.Binance);
+		default:
+			return new ethers.providers.JsonRpcProvider(Provider.Cloudflare);
+	}
+};
