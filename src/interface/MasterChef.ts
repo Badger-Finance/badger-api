@@ -1,17 +1,6 @@
-import { Token } from "./Token";
-
-export interface MasterChefPool {
-  poolId: number;
+export interface PoolInfo {
+  lpToken: string;
   allocPoint: number;
-  depositToken: Token;
-  emission: PoolEmission;
-};
-
-/**
- * TODO: Maybe we move this to a generic
- * file for abstract farming classes. 
- */
-export interface PoolEmission {
-  token: Token;
-  apr: number;
+  lastRewardBlock: number;
+  accSushiPerShare: number;
 };

@@ -3,7 +3,7 @@ import { ContentType } from '@tsed/schema';
 import { Sett } from '../interface/Sett';
 import { GeyserService } from './GeysersService';
 
-@Controller('/protocol/geyser')
+@Controller('/geysers')
 export class GeyserController {
 	constructor(private geyserService: GeyserService) {}
 

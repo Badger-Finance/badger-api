@@ -8,8 +8,9 @@ import { setts } from '../service/setts';
 import { SettService } from '../setts/SettsService';
 import { TokenService } from '../tokens/TokenService';
 import { diggAbi, geyserAbi } from '../util/abi';
-import { Chain, TOKENS } from '../util/constants';
-import { getGeysers, getProvider, secondToDay, toRate } from '../util/util';
+import { eth } from '../util/chain';
+import { TOKENS } from '../util/constants';
+import { getGeysers, secondToDay, toRate } from '../util/util';
 
 @Service()
 export class GeyserService {
@@ -20,14 +21,8 @@ export class GeyserService {
 	@Inject()
 	priceService!: PriceService;
 
-	private provider: ethers.providers.JsonRpcProvider;
-
-	constructor() {
-		this.provider = getProvider(Chain.ETH);
-	}
-
 	async listFarms(): Promise<Sett[]> {
-		const diggContract = new ethers.Contract(TOKENS.DIGG, diggAbi, this.provider);
+		const diggContract = new ethers.Contract(TOKENS.DIGG, diggAbi, eth.provider);
 
 		const [settData, geyserData, sharesPerFragment] = await Promise.all([
 			this.settService.listSetts(),
@@ -111,7 +106,7 @@ export class GeyserService {
 	}
 
 	async getGeyserData(geyserAddress: string, sharesPerFragment: number): Promise<Geyser> {
-		const geyserContract = new ethers.Contract(geyserAddress, geyserAbi, this.provider);
+		const geyserContract = new ethers.Contract(geyserAddress, geyserAbi, eth.provider);
 		const [badgerUnlockSchedules, diggUnlockSchedules] = await Promise.all([
 			geyserContract.getUnlockSchedulesFor(TOKENS.BADGER) as UnlockSchedule[],
 			geyserContract.getUnlockSchedulesFor(TOKENS.DIGG) as UnlockSchedule[],

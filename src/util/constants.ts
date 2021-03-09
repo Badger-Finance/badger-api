@@ -21,13 +21,6 @@ export const TOKENS = {
 	SUSHI_DIGG_WBTC: '0x9a13867048e01c663ce8ce2fe0cdae69ff9f35e3',
 };
 
-export enum Chain {
-	ETH,
-	BSC,
-	MATIC,
-	AVAX,
-};
-
 // data point constants - index two times per hour, 48 per day
 export const CURRENT = 0;
 export const ONE_DAY = 24 * 2;
@@ -36,6 +29,7 @@ export const SEVEN_DAYS = ONE_DAY * 7;
 export const THIRTY_DAYS = ONE_DAY * 30;
 export const SAMPLE_DAYS = THIRTY_DAYS + 1;
 export const ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000;
+export const BLOCKS_PER_YEAR = 2425847;
 
 // data access constants
 export const ASSET_DATA = process.env.ASSET_DATA || 'MISSING REQUIRED ENV VAR';
