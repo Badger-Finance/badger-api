@@ -1,15 +1,15 @@
-import { ethers } from 'ethers';
-
 export const TOKENS = {
 	// general tokens
-	CRV_RENBTC: '0x49849c98ae39fff122806c06791fa73784fb3675',
 	BADGER: '0x3472a5a71965499acd81997a54bba8d852c6e53d',
-	CRV_TBTC: '0x64eda51d3ad40d56b9dfc5554e06f94e1dd786fd',
-	CRV_SBTC: '0x075b1bb99792c9e1041ba13afef80c91a1e70fb3',
 	DIGG: '0x798d1be841a82a273720ce31c822c61a67a601c3',
 	WBTC: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599',
 	WETH: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
 	SUSHI: '0x6b3595068778dd592e39a122f4f5a5cf09c90fe2',
+
+	// curve tokens
+	CRV_RENBTC: '0x49849c98ae39fff122806c06791fa73784fb3675',
+	CRV_TBTC: '0x64eda51d3ad40d56b9dfc5554e06f94e1dd786fd',
+	CRV_SBTC: '0x075b1bb99792c9e1041ba13afef80c91a1e70fb3',
 
 	// uniswap tokens
 	UNI_BADGER_WBTC: '0xcd7989894bc033581532d2cd88da5db0a4b12859',
@@ -29,6 +29,7 @@ export const SEVEN_DAYS = ONE_DAY * 7;
 export const THIRTY_DAYS = ONE_DAY * 30;
 export const SAMPLE_DAYS = THIRTY_DAYS + 1;
 export const ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000;
+export const BLOCKS_PER_YEAR = 2425847;
 
 // data access constants
 export const ASSET_DATA = process.env.ASSET_DATA || 'MISSING REQUIRED ENV VAR';
@@ -42,4 +43,8 @@ export const MERKLE_CLAIM_BUCKET = process.env.MERKLE_CLAIM_BUCKET || 'MISSING R
 // third party api constants
 export const CURVE_API_URL = 'https://www.curve.fi/raw-stats/apys.json';
 export const COINGECKO_URL = 'https://api.coingecko.com/api/v3/simple';
-export const ETHERS_JSONRPC_PROVIDER = new ethers.providers.JsonRpcProvider('https://cloudflare-eth.com/');
+
+export enum Provider {
+	Cloudflare = 'https://cloudflare-eth.com/',
+	Binance = 'https://bsc-dataseed.binance.org/',
+}

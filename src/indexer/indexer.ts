@@ -1,4 +1,4 @@
-import { ASSET_DATA } from '../util/constants';
+import { ASSET_DATA } from '../config/constants';
 import {
 	EventInput,
 	getBlock,
@@ -7,7 +7,7 @@ import {
 	getSett,
 	saveItem,
 	THIRTY_MIN_BLOCKS,
-} from '../util/util';
+} from '../config/util';
 
 export const indexAsset = async (event: EventInput, getPrice: GetPriceFunc) => {
 	const { asset, createdBlock, contract } = event;

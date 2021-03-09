@@ -1,5 +1,9 @@
-import { Service } from '@tsed/common';
+import { Inject, Service } from '@tsed/common';
 import { constants, ethers } from 'ethers';
+import { diggAbi, geyserAbi } from '../config/abi';
+import { eth } from '../config/chain';
+import { TOKENS } from '../config/constants';
+import { getGeysers, secondToDay, toRate } from '../config/util';
 import { Emission, Geyser, UnlockSchedule } from '../interface/Geyser';
 import { Sett } from '../interface/Sett';
 import { ValueSource } from '../interface/ValueSource';
@@ -7,20 +11,18 @@ import { PriceService } from '../prices/PricesService';
 import { setts } from '../service/setts';
 import { SettService } from '../setts/SettsService';
 import { TokenService } from '../tokens/TokenService';
-import { diggAbi, geyserAbi } from '../util/abi';
-import { ETHERS_JSONRPC_PROVIDER, TOKENS } from '../util/constants';
-import { getGeysers, secondToDay, toRate } from '../util/util';
 
 @Service()
 export class GeyserService {
-	constructor(
-		private settService: SettService,
-		private tokenService: TokenService,
-		private priceService: PriceService,
-	) {}
+	@Inject()
+	settService!: SettService;
+	@Inject()
+	tokenService!: TokenService;
+	@Inject()
+	priceService!: PriceService;
 
 	async listFarms(): Promise<Sett[]> {
-		const diggContract = new ethers.Contract(TOKENS.DIGG, diggAbi, ETHERS_JSONRPC_PROVIDER);
+		const diggContract = new ethers.Contract(TOKENS.DIGG, diggAbi, eth.provider);
 
 		const [settData, geyserData, sharesPerFragment] = await Promise.all([
 			this.settService.listSetts(),
@@ -104,7 +106,7 @@ export class GeyserService {
 	}
 
 	async getGeyserData(geyserAddress: string, sharesPerFragment: number): Promise<Geyser> {
-		const geyserContract = new ethers.Contract(geyserAddress, geyserAbi, ETHERS_JSONRPC_PROVIDER);
+		const geyserContract = new ethers.Contract(geyserAddress, geyserAbi, eth.provider);
 		const [badgerUnlockSchedules, diggUnlockSchedules] = await Promise.all([
 			geyserContract.getUnlockSchedulesFor(TOKENS.BADGER) as UnlockSchedule[],
 			geyserContract.getUnlockSchedulesFor(TOKENS.DIGG) as UnlockSchedule[],

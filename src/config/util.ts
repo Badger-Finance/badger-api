@@ -6,7 +6,8 @@ import fetch from 'node-fetch';
 import { SettSnapshot } from '../interface/SettSnapshot';
 import { TokenPrice } from '../interface/TokenPrice';
 import { getContractPrice } from '../prices/PricesService';
-import { BADGER_URL, ETHERS_JSONRPC_PROVIDER, MASTERCHEF_URL, SUSHISWAP_URL, UNISWAP_URL } from './constants';
+import { Ethereum } from './chain';
+import { BADGER_URL, MASTERCHEF_URL, SUSHISWAP_URL, UNISWAP_URL } from './constants';
 import AttributeValue = DocumentClient.AttributeValue;
 
 export const THIRTY_MIN_BLOCKS = parseInt(String((30 * 60) / 13));
@@ -40,7 +41,7 @@ export type SettData = {
 };
 
 export const getBlock = async (blockNumber: number): Promise<Block> =>
-	await ETHERS_JSONRPC_PROVIDER.getBlock(blockNumber);
+	await new Ethereum().provider.getBlock(blockNumber);
 
 export const saveItem = async (table: string, item: AttributeValue) => {
 	const params = {

@@ -3,7 +3,7 @@ import { ContentType } from '@tsed/schema';
 import { PriceSummary } from '../interface/TokenPrice';
 import { PriceService } from './PricesService';
 
-@Controller('/price')
+@Controller('/prices')
 export class PriceController {
 	constructor(private priceService: PriceService) {}
 

@@ -1,5 +1,5 @@
+import { EventInput } from '../../config/util';
 import { getTokenPrice } from '../../prices/PricesService';
-import { EventInput } from '../../util/util';
 import { indexAsset } from '../indexer';
 
 export const handler = async (event: EventInput) => {

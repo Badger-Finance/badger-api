@@ -1,8 +1,8 @@
 import { Service } from '@tsed/common';
 import { BigNumber, ethers, utils } from 'ethers';
+import { empAbi } from '../../config/abi';
+import { eth } from '../../config/chain';
 import { FixedPointUnsigned, Liquidation, Position, SponsorData, SyntheticData } from '../../interface/Claw';
-import { empAbi } from '../../util/abi';
-import { ETHERS_JSONRPC_PROVIDER } from '../../util/constants';
 
 type LiqudationUnformatted = [
 	string,
@@ -35,7 +35,7 @@ type SyntheticDataPayload = [
 @Service()
 export class ClawService {
 	async getSyntheticData(empAddress: string): Promise<SyntheticData> {
-		const empContract = new ethers.Contract(empAddress, empAbi, ETHERS_JSONRPC_PROVIDER);
+		const empContract = new ethers.Contract(empAddress, empAbi, eth.provider);
 		const [
 			cumulativeFeeMultiplier,
 			rawTotalPositionCollateral,
@@ -86,7 +86,7 @@ export class ClawService {
 	}
 
 	async getSponsorData(empAddress: string, sponsorAddress: string): Promise<SponsorData> {
-		const empContract = new ethers.Contract(empAddress, empAbi, ETHERS_JSONRPC_PROVIDER);
+		const empContract = new ethers.Contract(empAddress, empAbi, eth.provider);
 		const liquidations = await getLiquidations(empContract, sponsorAddress);
 		const position = await getPosition(empContract, sponsorAddress);
 		return {

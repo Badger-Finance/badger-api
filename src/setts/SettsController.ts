@@ -4,7 +4,7 @@ import { Sett } from '../interface/Sett';
 import { SettService } from './SettsService';
 
 @Controller('/setts')
-export class SettController {
+export class SettsController {
 	constructor(private settService: SettService) {}
 
 	@Get()
