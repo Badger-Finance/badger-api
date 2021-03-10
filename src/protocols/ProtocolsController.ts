@@ -1,5 +1,6 @@
-import { Controller, Get, PathParams } from '@tsed/common';
+import { Controller, Get, PathParams, QueryParams } from '@tsed/common';
 import { ContentType } from '@tsed/schema';
+import { resolveChainQuery } from '../config/chain';
 import { ProtocolSummary } from '../interface/ProtocolSummary';
 import { UserAccount } from '../interface/UserAccount';
 import { SettService } from '../setts/SettsService';
@@ -11,8 +12,8 @@ export class ProtocolController {
 
 	@Get('/value')
 	@ContentType('json')
-	async getAssetsUnderManagement(): Promise<ProtocolSummary> {
-		return this.settService.getProtocolSummary();
+	async getAssetsUnderManagement(@QueryParams('chain') chain: string): Promise<ProtocolSummary> {
+		return this.settService.getProtocolSummary(resolveChainQuery(chain));
 	}
 
 	@Get('/user/:userId')

@@ -1,15 +1,7 @@
-import { Protocol, TOKENS } from '../config/constants';
+import { SettDefinition } from '../../interface/Sett';
+import { Protocol, TOKENS } from '../constants';
 
-export type SettData = {
-	name: string;
-	symbol: string;
-	depositToken: string;
-	settToken: string;
-	geyserAddress?: string;
-	protocol?: Protocol;
-};
-
-export const setts: SettData[] = [
+export const ethSetts: SettDefinition[] = [
 	{
 		name: 'Curve.fi renBTC/wBTC/sBTC',
 		symbol: 'sBTCCRV',

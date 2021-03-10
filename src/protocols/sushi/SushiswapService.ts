@@ -7,15 +7,15 @@ import { BLOCKS_PER_YEAR, SUSHI_CHEF, SUSHISWAP_URL, TOKENS } from '../../config
 import { getMasterChef, getSushiswapPrice, MasterChefData } from '../../config/util';
 import { PoolInfo } from '../../interface/MasterChef';
 import { combinePerformance, Performance, uniformPerformance } from '../../interface/Performance';
+import { SettDefinition } from '../../interface/Sett';
 import { PriceService } from '../../prices/PricesService';
-import { SettData } from '../../service/setts';
-import { TokenService } from '../../tokens/TokenService';
+import { TokensService } from '../../tokens/TokensService';
 import { SwapService } from '../common/SwapService';
 
 @Service()
 export class SushiswapService extends SwapService {
 	@Inject()
-	tokenService!: TokenService;
+	tokensService!: TokensService;
 	@Inject()
 	priceService!: PriceService;
 	@Inject()
@@ -25,7 +25,7 @@ export class SushiswapService extends SwapService {
 		super(SUSHISWAP_URL);
 	}
 
-	async getPairPerformance(chain: Chain, sett: SettData): Promise<Performance> {
+	async getPairPerformance(chain: Chain, sett: SettDefinition): Promise<Performance> {
 		const { depositToken } = sett;
 		const cacheKey = CacheService.getCacheKey(chain.name, depositToken);
 		const cachedPool = this.cacheService.get(cacheKey);

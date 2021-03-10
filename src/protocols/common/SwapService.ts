@@ -1,12 +1,12 @@
 import fetch from 'node-fetch';
 import { Chain } from '../../config/chain';
 import { Performance, uniformPerformance } from '../../interface/Performance';
-import { SettData } from '../../service/setts';
+import { SettDefinition } from '../../interface/Sett';
 
 export abstract class SwapService {
 	constructor(private graphUrl: string) {}
 
-	abstract getPairPerformance(chain: Chain, sett: SettData): Promise<Performance>;
+	abstract getPairPerformance(chain: Chain, sett: SettDefinition): Promise<Performance>;
 
 	/**
 	 * Retrieve Uniswap v2 variant pool performance from trading fees.

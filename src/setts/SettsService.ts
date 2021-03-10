@@ -1,5 +1,6 @@
 import { Service } from '@tsed/common';
 import { BadRequest, NotFound } from '@tsed/exceptions';
+import { Chain } from '../config/chain';
 import {
 	ASSET_DATA,
 	CURRENT,
@@ -17,15 +18,14 @@ import { Sett, SettSummary } from '../interface/Sett';
 import { SettSnapshot } from '../interface/SettSnapshot';
 import { ValueSource } from '../interface/ValueSource';
 import { ProtocolService } from '../protocols/ProtocolsService';
-import { setts } from '../service/setts';
-import { TokenService } from '../tokens/TokenService';
+import { TokensService } from '../tokens/TokensService';
 
 @Service()
 export class SettService {
-	constructor(private protocolService: ProtocolService, private tokenSerivce: TokenService) {}
+	constructor(private protocolService: ProtocolService, private tokenSerivce: TokensService) {}
 
-	async getProtocolSummary(): Promise<ProtocolSummary> {
-		const setts = await this.listSetts();
+	async getProtocolSummary(chain: Chain): Promise<ProtocolSummary> {
+		const setts = await this.listSetts(chain);
 		const settSummaries = setts.map(
 			(s) =>
 				({
@@ -42,16 +42,16 @@ export class SettService {
 		} as ProtocolSummary;
 	}
 
-	async listSetts(): Promise<Sett[]> {
-		const settNames = Object.values(setts).map((s) => s.symbol.toLocaleLowerCase());
-		return await Promise.all(settNames.map((s) => this.getSett(s)));
+	async listSetts(chain: Chain): Promise<Sett[]> {
+		const settNames = Object.values(chain.setts).map((s) => s.symbol.toLocaleLowerCase());
+		return await Promise.all(settNames.map((s) => this.getSett(chain, s)));
 	}
 
-	async getSett(settName: string): Promise<Sett> {
+	async getSett(chain: Chain, settName: string): Promise<Sett> {
 		if (!settName) {
 			throw new BadRequest('settName is required');
 		}
-		const settData = setts.find((s) => s.symbol.toLowerCase() === settName.toLowerCase());
+		const settData = chain.setts.find((s) => s.symbol.toLowerCase() === settName.toLowerCase());
 
 		if (!settData) {
 			throw new NotFound(`${settName} is not a valid sett`);
@@ -78,7 +78,7 @@ export class SettService {
 
 		sett.ppfs = settState.ratio;
 		sett.value = settState.value;
-		sett.tokens = await this.tokenSerivce.getSettTokens(settData.settToken, settState);
+		sett.tokens = await this.tokenSerivce.getSettTokens(chain, settData.settToken, settState);
 		sett.apy = settValueSource.apy;
 		sett.sources = [settValueSource];
 
@@ -98,7 +98,7 @@ export class SettService {
 		return snapshots;
 	}
 
-	private getSettUnderlyingValueSource(settName: string, settSnapshots: SettSnapshot[]): ValueSource {
+	getSettUnderlyingValueSource(settName: string, settSnapshots: SettSnapshot[]): ValueSource {
 		const settPerformance: Performance = {
 			oneDay: this.getSettSampledPerformance(settSnapshots, ONE_DAY),
 			threeDay: this.getSettSampledPerformance(settSnapshots, THREE_DAYS),
@@ -112,7 +112,7 @@ export class SettService {
 		} as ValueSource;
 	}
 
-	private getSettSampledPerformance(settSnapshots: SettSnapshot[], sampleIndex: number): number {
+	getSettSampledPerformance(settSnapshots: SettSnapshot[], sampleIndex: number): number {
 		const currentSnapshot = settSnapshots[CURRENT];
 		if (sampleIndex > settSnapshots.length - 1) {
 			return 0;

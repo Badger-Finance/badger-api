@@ -1,23 +1,24 @@
 import { Service } from '@tsed/common';
 import { InternalServerError, NotFound } from '@tsed/exceptions';
+import { Chain } from '../config/chain';
 import { TOKENS } from '../config/constants';
 import { getSushiswapPair, getUniswapPair } from '../config/util';
+import { SettDefinition } from '../interface/Sett';
 import { SettSnapshot } from '../interface/SettSnapshot';
 import { Token } from '../interface/Token';
 import { TokenBalance } from '../interface/TokenBalance';
 import { PriceService } from '../prices/PricesService';
-import { SettData, setts } from '../service/setts';
 
 @Service()
-export class TokenService {
+export class TokensService {
 	constructor(private priceService: PriceService) {}
 	/**
 	 * @param settAddress Sett contract address
 	 * @param settBalance Sett token balance
 	 * @param prices Price data object
 	 */
-	async getSettTokens(settAddress: string, settSnapshot: SettSnapshot): Promise<TokenBalance[]> {
-		const sett = setts.find((s) => s.settToken === settAddress);
+	async getSettTokens(chain: Chain, settAddress: string, settSnapshot: SettSnapshot): Promise<TokenBalance[]> {
+		const sett = chain.setts.find((s) => s.settToken === settAddress);
 		if (!sett) throw new NotFound(`${settAddress} is not a known Sett`);
 		if (this.isLPToken(sett.depositToken)) {
 			return await this.getLiquidtyPoolTokenBalances(sett, settSnapshot);
@@ -59,7 +60,7 @@ export class TokenService {
 	}
 
 	// TODO: More flexibly look up pools (sushi / uni share subgraph schema)
-	async getLiquidtyPoolTokenBalances(sett: SettData, settSnapshot: SettSnapshot): Promise<TokenBalance[]> {
+	async getLiquidtyPoolTokenBalances(sett: SettDefinition, settSnapshot: SettSnapshot): Promise<TokenBalance[]> {
 		const { depositToken, protocol } = sett;
 
 		let poolData;

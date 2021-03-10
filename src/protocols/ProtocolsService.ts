@@ -3,9 +3,9 @@ import fetch from 'node-fetch';
 import { eth } from '../config/chain';
 import { CURVE_API_URL, Protocol } from '../config/constants';
 import { Performance } from '../interface/Performance';
+import { SettDefinition } from '../interface/Sett';
 import { ValueSource } from '../interface/ValueSource';
 import { PriceService } from '../prices/PricesService';
-import { SettData } from '../service/setts';
 import { SushiswapService } from './sushi/SushiswapService';
 import { UniswapService } from './uni/UniswapService';
 
@@ -25,7 +25,7 @@ export class ProtocolService {
 	 * Retrieve performance of underlying protocol for a given sett.
 	 * @param sett Sett to retrieve protocol performance.
 	 */
-	async getProtocolPerformance(sett: SettData): Promise<ValueSource | undefined> {
+	async getProtocolPerformance(sett: SettDefinition): Promise<ValueSource | undefined> {
 		if (!sett.protocol) return undefined;
 		let protocolPerformance: Performance;
 
@@ -63,7 +63,7 @@ export class ProtocolService {
 	 * differential.
 	 * @param sett Sett to retrieve curve performance for.
 	 */
-	private async getCurvePerformance(sett: SettData): Promise<Performance> {
+	private async getCurvePerformance(sett: SettDefinition): Promise<Performance> {
 		const assetMap = {
 			hrenbtccrv: 'ren2',
 			renbtccrv: 'ren2',
