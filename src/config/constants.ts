@@ -21,6 +21,13 @@ export const TOKENS = {
 	SUSHI_DIGG_WBTC: '0x9a13867048e01c663ce8ce2fe0cdae69ff9f35e3',
 };
 
+export enum Protocol {
+	Curve = 'curve',
+	Sushiswap = 'sushiswap',
+	Uniswap = 'uniswap',
+	Pancakeswap = 'pancakeswap',
+}
+
 // data point constants - index two times per hour, 48 per day
 export const CURRENT = 0;
 export const ONE_DAY = 24 * 2;
@@ -48,3 +55,4 @@ export enum Provider {
 	Cloudflare = 'https://cloudflare-eth.com/',
 	Binance = 'https://bsc-dataseed.binance.org/',
 }
+export const SUSHI_CHEF = '0xc2EdaD668740f1aA35E4D8f227fB8E17dcA888Cd';
