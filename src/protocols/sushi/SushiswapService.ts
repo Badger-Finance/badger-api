@@ -4,7 +4,7 @@ import { CacheService } from '../../cache/CacheService';
 import { erc20Abi, masterChefAbi } from '../../config/abi';
 import { Chain } from '../../config/chain';
 import { BLOCKS_PER_YEAR, SUSHI_CHEF, SUSHISWAP_URL, TOKENS } from '../../config/constants';
-import { getMasterChef, getSushiswapPrice } from '../../config/util';
+import { getMasterChef, getSushiswapPrice, MasterChefData } from '../../config/util';
 import { PoolInfo } from '../../interface/MasterChef';
 import { combinePerformance, Performance, uniformPerformance } from '../../interface/Performance';
 import { PriceService } from '../../prices/PricesService';
@@ -27,7 +27,7 @@ export class SushiswapService extends SwapService {
 
 	async getPairPerformance(chain: Chain, sett: SettData): Promise<Performance> {
 		const { depositToken } = sett;
-		const cacheKey = this.cacheService.getCacheKey(chain.name, depositToken);
+		const cacheKey = CacheService.getCacheKey(chain.name, depositToken);
 		const cachedPool = this.cacheService.get(cacheKey);
 		if (cachedPool) {
 			return cachedPool as Performance;
@@ -40,13 +40,13 @@ export class SushiswapService extends SwapService {
 			this.cacheService.set(cacheKey, tradeFeePerformance);
 			return tradeFeePerformance;
 		}
-		const emissionPerformance = await this.getPoolApr(chain, depositToken, poolId);
+		const emissionPerformance = await this.getPoolApr(chain, poolId);
 		const combinedPerformance = combinePerformance(tradeFeePerformance, emissionPerformance);
 		this.cacheService.set(cacheKey, combinedPerformance);
 		return combinedPerformance;
 	}
 
-	async getPoolApr(chain: Chain, pair: string, poolId: number): Promise<Performance> {
+	async getPoolApr(chain: Chain, poolId: number): Promise<Performance> {
 		const masterChef = new ethers.Contract(SUSHI_CHEF, masterChefAbi, chain.provider);
 		const [totalAllocPoint, sushiPerBlock, poolInfo, tokenPrice] = await Promise.all([
 			masterChef.totalAllocPoint() as number,
@@ -55,8 +55,7 @@ export class SushiswapService extends SwapService {
 			this.priceService.getTokenPriceData(TOKENS.SUSHI),
 		]);
 		const depositToken = new ethers.Contract(poolInfo.lpToken, erc20Abi, chain.provider);
-		const poolBalance = (await depositToken.balanceOf(pair)) / 1e18;
-		console.log(poolBalance);
+		const poolBalance = (await depositToken.balanceOf(SUSHI_CHEF)) / 1e18;
 		const depositTokenValue = await getSushiswapPrice(poolInfo.lpToken);
 		const poolValue = poolBalance * depositTokenValue.usd;
 		const emissionScalar = poolInfo.allocPoint / totalAllocPoint;
@@ -66,7 +65,11 @@ export class SushiswapService extends SwapService {
 	}
 
 	async getPoolId(depositToken: string): Promise<number | undefined> {
-		const masterChefData = await getMasterChef();
+		let masterChefData: MasterChefData | undefined = this.cacheService.get(SUSHI_CHEF);
+		if (!masterChefData) {
+			masterChefData = await getMasterChef();
+			this.cacheService.set(SUSHI_CHEF, masterChefData);
+		}
 		const masterChefPools = masterChefData.data.pools;
 		const sushiPool = masterChefPools.find((pool) => depositToken.toLowerCase() === pool.pair);
 		if (sushiPool) {

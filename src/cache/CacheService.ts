@@ -22,7 +22,7 @@ export class CacheService {
 		this.cache.set(key, value);
 	}
 
-	getCacheKey(...parts: string[]): string {
+	static getCacheKey(...parts: string[]): string {
 		return parts.join('-');
 	}
 }
