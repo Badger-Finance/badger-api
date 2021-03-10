@@ -85,7 +85,7 @@ export class ClawService {
 			minSponsorTokens,
 			withdrawalLiveness,
 			liquidationLiveness,
-                        tokenCurrency,
+			tokenCurrency,
 		} as SyntheticData;
 	}
 
