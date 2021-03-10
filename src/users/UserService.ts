@@ -1,9 +1,9 @@
 import { Service } from '@tsed/common';
 import { BadRequest, InternalServerError, NotFound } from '@tsed/exceptions';
+import { Chain } from '../config/chain';
 import { getUserData } from '../config/util';
 import { SettBalance, UserAccount } from '../interface/UserAccount';
 import { PriceService } from '../prices/PricesService';
-import { setts } from '../service/setts';
 
 @Service()
 export class UserService {
@@ -16,7 +16,7 @@ export class UserService {
 	 *
 	 * @param userId User ethereum account address
 	 */
-	async getUserDetails(userId: string): Promise<UserAccount> {
+	async getUserDetails(chain: Chain, userId: string): Promise<UserAccount> {
 		if (!userId) {
 			throw new BadRequest('userId is required');
 		}
@@ -32,7 +32,7 @@ export class UserService {
 		const settBalances = await Promise.all(
 			userBalances.map(async (settBalance) => {
 				const sett = settBalance.sett;
-				const settInfo = setts.find((s) => s.settToken === settBalance.sett.id);
+				const settInfo = chain.setts.find((s) => s.settToken === settBalance.sett.id);
 
 				// SettInfo should not be undefined - if so there is a config issue
 				if (!settInfo) {

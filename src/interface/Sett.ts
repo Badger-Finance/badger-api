@@ -34,3 +34,12 @@ export interface SettDefinition {
   geyserAddress?: string;
   protocol?: Protocol;
 }
+
+export interface SettDefinition {
+	name: string;
+	symbol: string;
+	depositToken: string;
+	settToken: string;
+	geyserAddress?: string;
+	protocol?: Protocol;
+}
