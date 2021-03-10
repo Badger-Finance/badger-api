@@ -30,6 +30,7 @@ type SyntheticDataPayload = [
 	BigNumber,
 	string,
 	string,
+	string,
 ];
 
 @Service()
@@ -48,6 +49,7 @@ export class ClawService {
 			liquidationLiveness,
 			priceIdentifier,
 			collateralCurrency,
+			tokenCurrency,
 		]: SyntheticDataPayload = (await Promise.all([
 			empContract.cumulativeFeeMultiplier(),
 			empContract.rawTotalPositionCollateral(),
@@ -60,6 +62,7 @@ export class ClawService {
 			empContract.liquidationLiveness(),
 			empContract.priceIdentifier(),
 			empContract.collateralCurrency(),
+			empContract.tokenCurrency(),
 		])) as SyntheticDataPayload;
 		let globalCollateralizationRatio = BigNumber.from(0);
 		if (totalTokensOutstanding.gt(BigNumber.from(0))) {
@@ -82,6 +85,7 @@ export class ClawService {
 			minSponsorTokens,
 			withdrawalLiveness,
 			liquidationLiveness,
+			tokenCurrency,
 		} as SyntheticData;
 	}
 

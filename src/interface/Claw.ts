@@ -48,6 +48,8 @@ export interface SyntheticData {
 	name: string;
 	// Token address of the underlying collateral currency.
 	collateralCurrency: string;
+	// Token address of the synthetic token currency.
+	tokenCurrency: string;
 	globalCollateralizationRatio: BigNumber;
 	totalPositionCollateral: BigNumber; // Total collateral supplied.
 	totalTokensOutstanding: BigNumber; // Token debt issued.
@@ -61,13 +63,15 @@ export interface SyntheticData {
 	// Amount of time (in seconds) a liquidator must wait to liquidate a sponsor
 	// position without a dispute.
 	liquidationLiveness: BigNumber;
-	// Tracks the cumulative fees that have been paid by the contract for use by derived contracts.
-	// The multiplier starts at 1, and is updated by computing cumulativeFeeMultiplier * (1 - effectiveFee).
-	// Put another way, the cumulativeFeeMultiplier is (1 - effectiveFee1) * (1 - effectiveFee2) ...
-	// For example:
-	// The cumulativeFeeMultiplier should start at 1.
-	// If a 1% fee is charged, the multiplier should update to .99.
-	// If another 1% fee is charged, the multiplier should be 0.99^2 (0.9801).
+	/*
+	 * Tracks the cumulative fees that have been paid by the contract for use by derived contracts.
+	 * The multiplier starts at 1, and is updated by computing cumulativeFeeMultiplier * (1 - effectiveFee).
+	 * Put another way, the cumulativeFeeMultiplier is (1 - effectiveFee1) * (1 - effectiveFee2) ...
+	 * For example:
+	 * The cumulativeFeeMultiplier should start at 1.
+	 * If a 1% fee is charged, the multiplier should update to .99.
+	 * If another 1% fee is charged, the multiplier should be 0.99^2 (0.9801).
+	 */
 	cumulativeFeeMultiplier: BigNumber;
 }
 
