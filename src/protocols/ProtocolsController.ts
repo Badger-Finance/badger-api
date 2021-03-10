@@ -18,7 +18,10 @@ export class ProtocolController {
 
 	@Get('/user/:userId')
 	@ContentType('json')
-	async getUserProfile(@PathParams('userId') userId: string): Promise<UserAccount> {
-		return this.userService.getUserDetails(userId);
+	async getUserProfile(
+		@PathParams('userId') userId: string,
+		@QueryParams('chain') chain: string,
+	): Promise<UserAccount> {
+		return this.userService.getUserDetails(resolveChainQuery(chain), userId);
 	}
 }
