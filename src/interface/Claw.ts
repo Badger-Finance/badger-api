@@ -48,6 +48,8 @@ export interface SyntheticData {
 	name: string;
 	// Token address of the underlying collateral currency.
 	collateralCurrency: string;
+        // Token address of the synthetic token currency.
+	tokenCurrency: string;
 	globalCollateralizationRatio: BigNumber;
 	totalPositionCollateral: BigNumber; // Total collateral supplied.
 	totalTokensOutstanding: BigNumber; // Token debt issued.
