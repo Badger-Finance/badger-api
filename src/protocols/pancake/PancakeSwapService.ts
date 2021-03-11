@@ -7,12 +7,9 @@ import { BLOCKS_PER_YEAR, TOKENS } from '../../config/constants';
 import { getSushiswapPrice } from '../../config/util';
 import { PoolInfo } from '../../interface/MasterChef';
 import { PriceService } from '../../prices/PricesService';
-import { TokenService } from '../../tokens/TokenService';
 
 @Service()
 export class PancakeSwapService {
-	@Inject()
-	tokenService!: TokenService;
 	@Inject()
 	priceService!: PriceService;
 

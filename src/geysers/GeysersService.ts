@@ -1,31 +1,30 @@
 import { Inject, Service } from '@tsed/common';
 import { constants, ethers } from 'ethers';
 import { diggAbi, geyserAbi } from '../config/abi';
-import { eth } from '../config/chain';
+import { Chain, eth } from '../config/chain';
 import { TOKENS } from '../config/constants';
 import { getGeysers, secondToDay, toRate } from '../config/util';
 import { Emission, Geyser, UnlockSchedule } from '../interface/Geyser';
 import { Sett } from '../interface/Sett';
 import { ValueSource } from '../interface/ValueSource';
 import { PriceService } from '../prices/PricesService';
-import { setts } from '../service/setts';
 import { SettService } from '../setts/SettsService';
-import { TokenService } from '../tokens/TokenService';
+import { TokensService } from '../tokens/TokensService';
 
 @Service()
 export class GeyserService {
 	@Inject()
 	settService!: SettService;
 	@Inject()
-	tokenService!: TokenService;
+	tokensService!: TokensService;
 	@Inject()
 	priceService!: PriceService;
 
-	async listFarms(): Promise<Sett[]> {
+	async listFarms(chain: Chain): Promise<Sett[]> {
 		const diggContract = new ethers.Contract(TOKENS.DIGG, diggAbi, eth.provider);
 
 		const [settData, geyserData, sharesPerFragment] = await Promise.all([
-			this.settService.listSetts(),
+			this.settService.listSetts(chain),
 			getGeysers(),
 			diggContract._sharesPerFragment(),
 		]);
@@ -35,7 +34,7 @@ export class GeyserService {
 		await Promise.all(
 			geysers.map(async (geyser) => {
 				const sett = geyserSetts.find((geyserSett) => geyserSett.id === geyser.stakingToken.id);
-				const settLink = setts.find((s) => s.geyserAddress && s.geyserAddress === geyser.id);
+				const settLink = chain.setts.find((s) => s.geyserAddress && s.geyserAddress === geyser.id);
 				const settInfo = settData.find((s) => s.asset.toLowerCase() === settLink?.symbol.toLowerCase());
 				if (!sett || !settLink || !settInfo) return;
 
@@ -117,7 +116,7 @@ export class GeyserService {
 		if (badgerUnlockSchedules.length > 0) {
 			const badgerUnlock = badgerUnlockSchedules[badgerUnlockSchedules.length - 1];
 			const badgerEmission: Emission = {
-				token: this.tokenService.getTokenByName('Badger'),
+				token: this.tokensService.getTokenByName('Badger'),
 				unlockSchedule: {
 					startTime: badgerUnlock.startTime,
 					endAtSec: badgerUnlock.endAtSec,
@@ -132,7 +131,7 @@ export class GeyserService {
 		if (diggUnlockSchedules.length > 0) {
 			const diggUnlock = diggUnlockSchedules[diggUnlockSchedules.length - 1];
 			const diggEmission: Emission = {
-				token: this.tokenService.getTokenByName('Digg'),
+				token: this.tokensService.getTokenByName('Digg'),
 				unlockSchedule: {
 					startTime: diggUnlock.startTime,
 					endAtSec: diggUnlock.endAtSec,

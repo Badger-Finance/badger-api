@@ -1,5 +1,6 @@
-import { Controller, Get, PathParams } from '@tsed/common';
+import { Controller, Get, PathParams, QueryParams } from '@tsed/common';
 import { ContentType } from '@tsed/schema';
+import { resolveChainQuery } from '../config/chain';
 import { Sett } from '../interface/Sett';
 import { SettService } from './SettsService';
 
@@ -9,13 +10,13 @@ export class SettsController {
 
 	@Get()
 	@ContentType('json')
-	async listSetts(): Promise<Sett[]> {
-		return this.settService.listSetts();
+	async listSetts(@QueryParams('chain') chain: string): Promise<Sett[]> {
+		return this.settService.listSetts(resolveChainQuery(chain));
 	}
 
 	@Get('/:settName')
 	@ContentType('json')
-	async getSett(@PathParams('settName') settName: string): Promise<Sett> {
-		return this.settService.getSett(settName);
+	async getSett(@PathParams('settName') settName: string, @QueryParams('chain') chain: string): Promise<Sett> {
+		return this.settService.getSett(resolveChainQuery(chain), settName);
 	}
 }

@@ -1,3 +1,4 @@
+import { Protocol } from '../config/constants';
 import { Geyser } from './Geyser';
 import { TokenBalance } from './TokenBalance';
 import { ValueSource } from './ValueSource';
@@ -23,4 +24,13 @@ export interface SettSummary {
 	asset: string;
 	value: number;
 	tokens: TokenBalance[];
+}
+
+export interface SettDefinition {
+	name: string;
+	symbol: string;
+	depositToken: string;
+	settToken: string;
+	geyserAddress?: string;
+	protocol?: Protocol;
 }
