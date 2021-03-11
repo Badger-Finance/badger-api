@@ -1,4 +1,7 @@
 import { GraphQLClient } from 'graphql-request';
+import * as Dom from 'graphql-request/dist/types.dom';
+import { print } from 'graphql';
+import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
@@ -1068,10 +1071,75 @@ export enum _SubgraphErrorPolicy_ {
 	Deny = 'deny',
 }
 
+export const MasterChefFragmentDoc = gql`
+	fragment MasterChef on MasterChef {
+		id
+		totalAllocPoint
+		sushiPerBlock
+	}
+`;
+export const PoolFragmentDoc = gql`
+	fragment Pool on Pool {
+		id
+		pair
+		balance
+		allocPoint
+		lastRewardBlock
+		accSushiPerShare
+	}
+`;
+export const MasterChefsAndPoolsDocument = gql`
+	query MasterChefsAndPools(
+		$first: Int
+		$where: Pool_filter
+		$orderBy: Pool_orderBy
+		$orderDirection: OrderDirection
+	) {
+		masterChefs(first: $first) {
+			...MasterChef
+		}
+		pools(where: $where, orderBy: $orderBy, orderDirection: $orderDirection) {
+			...Pool
+		}
+	}
+	${MasterChefFragmentDoc}
+	${PoolFragmentDoc}
+`;
+
 export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
 
 const defaultWrapper: SdkFunctionWrapper = (sdkFunction) => sdkFunction();
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
-	return {};
+	return {
+		MasterChefsAndPools(
+			variables?: MasterChefsAndPoolsQueryVariables,
+			requestHeaders?: Dom.RequestInit['headers'],
+		): Promise<MasterChefsAndPoolsQuery> {
+			return withWrapper(() =>
+				client.request<MasterChefsAndPoolsQuery>(print(MasterChefsAndPoolsDocument), variables, requestHeaders),
+			);
+		},
+	};
 }
 export type Sdk = ReturnType<typeof getSdk>;
+export type MasterChefFragment = { __typename?: 'MasterChef' } & Pick<
+	MasterChef,
+	'id' | 'totalAllocPoint' | 'sushiPerBlock'
+>;
+
+export type PoolFragment = { __typename?: 'Pool' } & Pick<
+	Pool,
+	'id' | 'pair' | 'balance' | 'allocPoint' | 'lastRewardBlock' | 'accSushiPerShare'
+>;
+
+export type MasterChefsAndPoolsQueryVariables = Exact<{
+	first?: Maybe<Scalars['Int']>;
+	where?: Maybe<Pool_Filter>;
+	orderBy?: Maybe<Pool_OrderBy>;
+	orderDirection?: Maybe<OrderDirection>;
+}>;
+
+export type MasterChefsAndPoolsQuery = { __typename?: 'Query' } & {
+	masterChefs: Array<{ __typename?: 'MasterChef' } & MasterChefFragment>;
+	pools: Array<{ __typename?: 'Pool' } & PoolFragment>;
+};

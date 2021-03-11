@@ -1,0 +1,13 @@
+query MasterChefsAndPools(
+  $first: Int
+  $where: Pool_filter
+  $orderBy: Pool_orderBy
+  $orderDirection: OrderDirection
+) {
+  masterChefs(first: $first) {
+    ...MasterChef
+  }
+  pools(where: $where, orderBy: $orderBy, orderDirection: $orderDirection) {
+    ...Pool
+  }
+}

@@ -7,7 +7,7 @@ import { SettSnapshot } from '../interface/SettSnapshot';
 import { TokenPrice } from '../interface/TokenPrice';
 import { getContractPrice } from '../prices/PricesService';
 import { Ethereum } from './chain';
-import { BADGER_URL, MASTERCHEF_URL, SUSHISWAP_URL, UNISWAP_URL } from './constants';
+import { BADGER_URL, SUSHISWAP_URL, UNISWAP_URL } from './constants';
 import AttributeValue = DocumentClient.AttributeValue;
 
 export const THIRTY_MIN_BLOCKS = parseInt(String((30 * 60) / 13));
@@ -258,48 +258,6 @@ export const getSushiswapPrice = async (contract: string): Promise<TokenPrice> =
 		usd: usdPrice,
 		eth: ethPrice,
 	};
-};
-
-export type MasterChefData = {
-	data: {
-		masterChefs: {
-			id: string;
-			totalAllocPoint: number;
-			sushiPerBlock: number;
-		}[];
-		pools: {
-			id: string;
-			pair: string;
-			balance: number;
-			allocPoint: number;
-			lasatRewardBlock: string;
-			accSushiPerShare: string;
-		}[];
-	};
-};
-
-export const getMasterChef = async (): Promise<MasterChefData> => {
-	const query = `
-    {
-      masterChefs(first: 1) {
-        id
-        totalAllocPoint
-        sushiPerBlock
-      },
-      pools(where: {allocPoint_gt: 0}, orderBy: allocPoint, orderDirection: desc) {
-        id
-        pair
-        balance
-        allocPoint
-        lastRewardBlock
-        accSushiPerShare
-      }
-    }
-  `;
-	return await fetch(MASTERCHEF_URL, {
-		method: 'POST',
-		body: JSON.stringify({ query }),
-	}).then((response) => response.json());
 };
 
 export type SettBalanceData = {
