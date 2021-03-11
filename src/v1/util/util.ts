@@ -320,7 +320,7 @@ export type MasterChefData = {
 			pair: string;
 			balance: number;
 			allocPoint: number;
-			lasatRewardBlock: string;
+			lastRewardBlock: string;
 			accSushiPerShare: string;
 		}[];
 	};

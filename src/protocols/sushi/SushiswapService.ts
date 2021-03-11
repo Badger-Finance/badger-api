@@ -90,16 +90,25 @@ export class SushiswapService extends SwapService {
   }
 =======
 import { ethers } from 'ethers';
+import { GraphQLClient } from 'graphql-request';
 import { CacheService } from '../../cache/CacheService';
 import { erc20Abi, masterChefAbi } from '../../config/abi';
 import { Chain } from '../../config/chain';
 import { BLOCKS_PER_YEAR, SUSHI_CHEF, SUSHISWAP_URL, TOKENS } from '../../config/constants';
-import { getMasterChef, getSushiswapPrice, MasterChefData } from '../../config/util';
+import { getSushiswapPrice } from '../../config/util';
+import {
+	getSdk,
+	MasterChefsAndPoolsQuery,
+	OrderDirection,
+	Pool_OrderBy,
+	Sdk as MasterChefGraphqlSdk,
+} from '../../graphql/generated/master-chef';
 import { PoolInfo } from '../../interface/MasterChef';
 import { combinePerformance, Performance, uniformPerformance } from '../../interface/Performance';
 import { SettDefinition } from '../../interface/Sett';
 import { PriceService } from '../../prices/PricesService';
 import { TokensService } from '../../tokens/TokensService';
+import { MASTERCHEF_URL } from '../../v1/util/constants';
 import { SwapService } from '../common/SwapService';
 
 @Service()
@@ -111,8 +120,12 @@ export class SushiswapService extends SwapService {
 	@Inject()
 	cacheService!: CacheService;
 
+	private masterChefGraphqlSdk: MasterChefGraphqlSdk;
+
 	constructor() {
 		super(SUSHISWAP_URL);
+		const masterChefDaoGraphqlClient = new GraphQLClient(MASTERCHEF_URL);
+		this.masterChefGraphqlSdk = getSdk(masterChefDaoGraphqlClient);
 	}
 
 	async getPairPerformance(chain: Chain, sett: SettDefinition): Promise<Performance> {
@@ -155,12 +168,19 @@ export class SushiswapService extends SwapService {
 	}
 
 	async getPoolId(depositToken: string): Promise<number | undefined> {
-		let masterChefData: MasterChefData | undefined = this.cacheService.get(SUSHI_CHEF);
+		let masterChefData: MasterChefsAndPoolsQuery | undefined = this.cacheService.get<MasterChefsAndPoolsQuery>(
+			SUSHI_CHEF,
+		);
 		if (!masterChefData) {
-			masterChefData = await getMasterChef();
+			masterChefData = await this.masterChefGraphqlSdk.MasterChefsAndPools({
+				first: 1,
+				orderBy: Pool_OrderBy.AllocPoint,
+				orderDirection: OrderDirection.Desc,
+				where: { allocPoint_gt: 0 },
+			});
 			this.cacheService.set(SUSHI_CHEF, masterChefData);
 		}
-		const masterChefPools = masterChefData.data.pools;
+		const masterChefPools = masterChefData.pools;
 		const sushiPool = masterChefPools.find((pool) => depositToken.toLowerCase() === pool.pair);
 		if (sushiPool) {
 			return parseInt(sushiPool.id);
