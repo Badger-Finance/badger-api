@@ -1,0 +1,8 @@
+fragment Pool on Pool {
+  id
+  pair
+  balance
+  allocPoint
+  lastRewardBlock
+  accSushiPerShare
+}
