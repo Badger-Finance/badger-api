@@ -6,7 +6,7 @@ import fetch from 'node-fetch';
 import { SettSnapshot } from '../interface/SettSnapshot';
 import { TokenPrice } from '../interface/TokenPrice';
 import { getContractPrice } from '../prices/PricesService';
-import { Ethereum } from './chain';
+import { Ethereum } from './chain/chain';
 import { BADGER_URL, SUSHISWAP_URL, UNISWAP_URL } from './constants';
 import AttributeValue = DocumentClient.AttributeValue;
 

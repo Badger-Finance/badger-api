@@ -1,12 +1,12 @@
 import { Service } from '@tsed/common';
 import { BadRequest, InternalServerError, NotFound } from '@tsed/exceptions';
-import { Chain } from '../config/chain';
+import { Chain } from '../config/chain/chain';
 import { getUserData } from '../config/util';
 import { SettBalance, UserAccount } from '../interface/UserAccount';
 import { PriceService } from '../prices/PricesService';
 
 @Service()
-export class UserService {
+export class UsersService {
 	constructor(private priceService: PriceService) {}
 
 	/**

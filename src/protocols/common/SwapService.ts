@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import { Chain } from '../../config/chain';
+import { Chain } from '../../config/chain/chain';
 import { Performance, uniformPerformance } from '../../interface/Performance';
 import { SettDefinition } from '../../interface/Sett';
 

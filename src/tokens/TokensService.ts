@@ -1,6 +1,6 @@
 import { Service } from '@tsed/common';
 import { InternalServerError, NotFound } from '@tsed/exceptions';
-import { Chain } from '../config/chain';
+import { Chain } from '../config/chain/chain';
 import { TOKENS } from '../config/constants';
 import { getSushiswapPair, getUniswapPair } from '../config/util';
 import { SettDefinition } from '../interface/Sett';

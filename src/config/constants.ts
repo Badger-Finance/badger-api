@@ -19,6 +19,8 @@ export const TOKENS = {
 	SUSHI_ETH_WBTC: '0xceff51756c56ceffca006cd410b03ffc46dd3a58',
 	SUSHI_BADGER_WBTC: '0x110492b31c59716ac47337e616804e3e3adc0b4a',
 	SUSHI_DIGG_WBTC: '0x9a13867048e01c663ce8ce2fe0cdae69ff9f35e3',
+
+	// pancakeswap tokens
 };
 
 export enum Protocol {

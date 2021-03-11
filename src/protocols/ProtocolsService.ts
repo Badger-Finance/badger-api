@@ -1,6 +1,6 @@
 import { Inject, Service } from '@tsed/common';
 import fetch from 'node-fetch';
-import { eth } from '../config/chain';
+import { eth } from '../config/chain/chain';
 import { CURVE_API_URL, Protocol } from '../config/constants';
 import { Performance } from '../interface/Performance';
 import { SettDefinition } from '../interface/Sett';

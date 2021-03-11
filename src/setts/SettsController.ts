@@ -1,6 +1,6 @@
 import { Controller, Get, PathParams, QueryParams } from '@tsed/common';
 import { ContentType } from '@tsed/schema';
-import { resolveChainQuery } from '../config/chain';
+import { resolveChainQuery } from '../config/chain/chain';
 import { Sett } from '../interface/Sett';
 import { SettService } from './SettsService';
 

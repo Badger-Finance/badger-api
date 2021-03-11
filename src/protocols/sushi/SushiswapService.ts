@@ -3,7 +3,7 @@ import { ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
 import { CacheService } from '../../cache/CacheService';
 import { erc20Abi, masterChefAbi } from '../../config/abi';
-import { Chain } from '../../config/chain';
+import { Chain } from '../../config/chain/chain';
 import { BLOCKS_PER_YEAR, SUSHI_CHEF, SUSHISWAP_URL, TOKENS } from '../../config/constants';
 import { getSushiswapPrice } from '../../config/util';
 import {

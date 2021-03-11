@@ -1,6 +1,6 @@
 import { Service } from '@tsed/common';
 import { BadRequest, NotFound } from '@tsed/exceptions';
-import { Chain } from '../config/chain';
+import { Chain } from '../config/chain/chain';
 import {
 	ASSET_DATA,
 	CURRENT,
@@ -35,7 +35,7 @@ export class SettService {
 					tokens: s.tokens,
 				} as SettSummary),
 		);
-		const totalValue = settSummaries.map((s) => s.value).reduce((total, value) => (total += value));
+		const totalValue = settSummaries.map((s) => s.value).reduce((total, value) => (total += value), 0);
 		return {
 			totalValue: totalValue,
 			setts: settSummaries,

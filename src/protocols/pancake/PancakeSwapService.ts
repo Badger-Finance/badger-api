@@ -2,7 +2,7 @@ import { Inject, Service } from '@tsed/di';
 import { ethers } from 'ethers';
 import NodeCache from 'node-cache';
 import { erc20Abi, pancakeChefAbi } from '../../config/abi';
-import { Chain } from '../../config/chain';
+import { Chain } from '../../config/chain/chain';
 import { BLOCKS_PER_YEAR, TOKENS } from '../../config/constants';
 import { getSushiswapPrice } from '../../config/util';
 import { PoolInfo } from '../../interface/MasterChef';
