@@ -44,8 +44,10 @@ provider:
   runtime: nodejs12.x
   stage: staging
   region: us-west-1
-  iamManagedPolicies:
-    - arn:aws:iam::aws:policy/AWSLambdaFullAccess
+  iam:
+    role:
+      managedPolicies:
+        - arn:aws:iam::aws:policy/AWSLambdaFullAccess
   versionFunctions: false
   apiGateway:
     shouldStartNameWithService: true

@@ -22,6 +22,7 @@ const rootDir = __dirname;
 	],
 	logger: {
 		disableRoutesSummary: true,
+		disableBootstrapLog: true,
 	},
 })
 export class Server {
