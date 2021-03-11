@@ -1,8 +1,10 @@
-import { EventInput, getSushiswapPrice } from '../../config/util';
+import { SUSHISWAP_URL } from '../../config/constants';
+import { EventInput } from '../../config/util';
 import { SettFragment } from '../../graphql/generated/badger';
+import { getLiquidityPrice } from '../../protocols/common/swap-util';
 import { indexAsset } from '../indexer';
 
 export const handler = async (event: EventInput) => {
-  const getPrice = async (settFragment: SettFragment) => await getSushiswapPrice(settFragment.token.id);
+  const getPrice = async (settFragment: SettFragment) => await getLiquidityPrice(SUSHISWAP_URL, settFragment.token.id);
   return await indexAsset(event, getPrice);
 };

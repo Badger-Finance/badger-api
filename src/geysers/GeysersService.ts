@@ -2,7 +2,7 @@ import { Inject, Service } from '@tsed/common';
 import { constants, ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
 import { diggAbi, geyserAbi } from '../config/abi';
-import { Chain, eth } from '../config/chain';
+import { Chain, eth } from '../config/chain/chain';
 import { BADGER_URL, TOKENS } from '../config/constants';
 import { secondToDay, toRate } from '../config/util';
 import { getSdk, OrderDirection, Sdk as BadgerGraphqlSdk } from '../graphql/generated/badger';
@@ -10,13 +10,13 @@ import { Emission, Geyser, UnlockSchedule } from '../interface/Geyser';
 import { Sett } from '../interface/Sett';
 import { ValueSource } from '../interface/ValueSource';
 import { PricesService } from '../prices/PricesService';
-import { SettService } from '../setts/SettsService';
+import { SettsService } from '../setts/SettsService';
 import { TokensService } from '../tokens/TokensService';
 
 @Service()
 export class GeyserService {
   @Inject()
-  settService!: SettService;
+  settsService!: SettsService;
   @Inject()
   tokensService!: TokensService;
   @Inject()
@@ -33,7 +33,7 @@ export class GeyserService {
     const diggContract = new ethers.Contract(TOKENS.DIGG, diggAbi, eth.provider);
 
     const [settData, geyserData, sharesPerFragment] = await Promise.all([
-      this.settService.listSetts(chain),
+      this.settsService.listSetts(chain),
       this.badgerGraphqlSdk.GeysersAndSetts({
         geysersOrderDirection: OrderDirection.Asc,
         settsOrderDirection: OrderDirection.Asc,

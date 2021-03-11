@@ -1,6 +1,8 @@
+import { BigNumber } from 'ethers';
+
 export interface PoolInfo {
   lpToken: string;
-  allocPoint: number;
-  lastRewardBlock: number;
-  accSushiPerShare: number;
+  allocPoint: BigNumber;
+  lastRewardBlock: BigNumber;
+  accSushiPerShare: BigNumber;
 }

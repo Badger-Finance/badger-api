@@ -5,6 +5,7 @@ export const TOKENS = {
   WBTC: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599',
   WETH: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
   SUSHI: '0x6b3595068778dd592e39a122f4f5a5cf09c90fe2',
+  CAKE: '0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82',
 
   // curve tokens
   CRV_RENBTC: '0x49849c98ae39fff122806c06791fa73784fb3675',
@@ -19,6 +20,8 @@ export const TOKENS = {
   SUSHI_ETH_WBTC: '0xceff51756c56ceffca006cd410b03ffc46dd3a58',
   SUSHI_BADGER_WBTC: '0x110492b31c59716ac47337e616804e3e3adc0b4a',
   SUSHI_DIGG_WBTC: '0x9a13867048e01c663ce8ce2fe0cdae69ff9f35e3',
+
+  // pancakeswap tokens
 };
 
 export enum Protocol {
@@ -57,3 +60,4 @@ export enum Provider {
   Binance = 'https://bsc-dataseed.binance.org/',
 }
 export const SUSHI_CHEF = '0xc2EdaD668740f1aA35E4D8f227fB8E17dcA888Cd';
+export const PANCAKE_CHEF = '0x73feaa1eE314F8c655E354234017bE2193C9E24E';

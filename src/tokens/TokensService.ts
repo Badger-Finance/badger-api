@@ -1,14 +1,9 @@
 import { Inject, Service } from '@tsed/common';
 import { InternalServerError, NotFound } from '@tsed/exceptions';
 import { GraphQLClient } from 'graphql-request';
-import { Chain } from '../config/chain';
-import { SUSHISWAP_URL, TOKENS, UNISWAP_URL } from '../config/constants';
-import {
-  getSdk as getSushiswapSdk,
-  Sdk as SushiswapGraphqlSdk,
-  SushiswapPairQuery,
-} from '../graphql/generated/sushiswap';
-import { getSdk as getUniswapSdk, Sdk as UniswapGraphqlSdk, UniswapPairQuery } from '../graphql/generated/uniswap';
+import { Chain } from '../config/chain/chain';
+import { PANCAKESWAP_URL, Protocol, SUSHISWAP_URL, TOKENS, UNISWAP_URL } from '../config/constants';
+import { getSdk as getUniV2Sdk, Sdk as UniV2GraphqlSdk, UniV2PairQuery } from '../graphql/generated/uniswap';
 import { SettDefinition } from '../interface/Sett';
 import { SettSnapshot } from '../interface/SettSnapshot';
 import { Token } from '../interface/Token';
@@ -20,14 +15,17 @@ export class TokensService {
   @Inject()
   pricesService!: PricesService;
 
-  private sushiswapGraphqlSdk: SushiswapGraphqlSdk;
-  private uniswapGraphqlSdk: UniswapGraphqlSdk;
+  private sushiswapGraphqlSdk: UniV2GraphqlSdk;
+  private uniswapGraphqlSdk: UniV2GraphqlSdk;
+  private pancakeswapGraphqlSdk: UniV2GraphqlSdk;
 
   constructor() {
     const sushiswapGraphqlClient = new GraphQLClient(SUSHISWAP_URL);
-    this.sushiswapGraphqlSdk = getSushiswapSdk(sushiswapGraphqlClient);
+    this.sushiswapGraphqlSdk = getUniV2Sdk(sushiswapGraphqlClient);
     const uniswapGraphqlClient = new GraphQLClient(UNISWAP_URL);
-    this.uniswapGraphqlSdk = getUniswapSdk(uniswapGraphqlClient);
+    this.uniswapGraphqlSdk = getUniV2Sdk(uniswapGraphqlClient);
+    const pancakeswapGraphqlClient = new GraphQLClient(PANCAKESWAP_URL);
+    this.pancakeswapGraphqlSdk = getUniV2Sdk(pancakeswapGraphqlClient);
   }
 
   /**
@@ -77,21 +75,26 @@ export class TokensService {
     ].includes(token);
   }
 
-  // TODO: More flexibly look up pools (sushi / uni share subgraph schema)
   async getLiquidtyPoolTokenBalances(sett: SettDefinition, settSnapshot: SettSnapshot): Promise<TokenBalance[]> {
     const { depositToken, protocol } = sett;
 
-    let poolData: SushiswapPairQuery | UniswapPairQuery | undefined;
-    if (protocol === 'uniswap') {
-      poolData = await this.uniswapGraphqlSdk.UniswapPair({
+    let poolData: UniV2PairQuery | undefined;
+    if (protocol === Protocol.Uniswap) {
+      poolData = await this.uniswapGraphqlSdk.UniV2Pair({
         id: depositToken.toLowerCase(),
       });
     }
-    if (protocol === 'sushiswap') {
-      poolData = await this.sushiswapGraphqlSdk.SushiswapPair({
+    if (protocol === Protocol.Sushiswap) {
+      poolData = await this.sushiswapGraphqlSdk.UniV2Pair({
         id: depositToken.toLowerCase(),
       });
     }
+    if (protocol === Protocol.Pancakeswap) {
+      poolData = await this.pancakeswapGraphqlSdk.UniV2Pair({
+        id: depositToken.toLowerCase(),
+      });
+    }
+
     if (!poolData) {
       throw new NotFound(`${protocol} pool ${depositToken} does not exist`);
     }

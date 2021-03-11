@@ -1,6 +1,6 @@
 import { Service } from '@tsed/common';
 import { BadRequest, NotFound } from '@tsed/exceptions';
-import { Chain } from '../config/chain';
+import { Chain } from '../config/chain/chain';
 import {
   ASSET_DATA,
   CURRENT,
@@ -21,7 +21,7 @@ import { ProtocolService } from '../protocols/ProtocolsService';
 import { TokensService } from '../tokens/TokensService';
 
 @Service()
-export class SettService {
+export class SettsService {
   constructor(private protocolService: ProtocolService, private tokenSerivce: TokensService) {}
 
   async getProtocolSummary(chain: Chain): Promise<ProtocolSummary> {
@@ -35,7 +35,7 @@ export class SettService {
           tokens: s.tokens,
         } as SettSummary),
     );
-    const totalValue = settSummaries.map((s) => s.value).reduce((total, value) => (total += value));
+    const totalValue = settSummaries.map((s) => s.value).reduce((total, value) => (total += value), 0);
     return {
       totalValue: totalValue,
       setts: settSummaries,
@@ -62,7 +62,7 @@ export class SettService {
       asset: settData.symbol,
       vaultToken: settData.settToken,
       underlyingToken: settData.depositToken,
-      ppfs: 0,
+      ppfs: 1,
       value: 0,
       apy: 0,
       tokens: [],
@@ -70,21 +70,28 @@ export class SettService {
     };
 
     const [protocolValueSource, settSnapshots] = await Promise.all([
-      this.protocolService.getProtocolPerformance(settData),
+      this.protocolService.getProtocolPerformance(chain, settData),
       this.getSettSnapshots(settName, SAMPLE_DAYS),
     ]);
-    const settState = settSnapshots[CURRENT];
-    const settValueSource = this.getSettUnderlyingValueSource(settName, settSnapshots);
-
-    sett.ppfs = settState.ratio;
-    sett.value = settState.value;
-    sett.tokens = await this.tokenSerivce.getSettTokens(chain, settData.settToken, settState);
-    sett.apy = settValueSource.apy;
-    sett.sources = [settValueSource];
 
     if (protocolValueSource) {
       sett.apy += protocolValueSource.apy;
       sett.sources.push(protocolValueSource);
+    }
+
+    if (settSnapshots.length > 0) {
+      const settState = settSnapshots[CURRENT];
+      const settValueSource = this.getSettUnderlyingValueSource(settName, settSnapshots);
+
+      sett.ppfs = settState.ratio;
+      sett.value = settState.value;
+      sett.tokens = await this.tokenSerivce.getSettTokens(chain, settData.settToken, settState);
+
+      // sett has measurable apy, replace underlying with measured actual apy
+      if (settValueSource.apy > 0) {
+        sett.sources = sett.sources.filter((s) => !s.underlying).concat(settValueSource);
+        sett.apy = sett.sources.map((s) => s.apy).reduce((total, apy) => (total += apy), 0);
+      }
     }
 
     return sett;

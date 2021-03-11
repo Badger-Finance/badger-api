@@ -1,10 +1,11 @@
 import { Inject, Service } from '@tsed/common';
 import fetch from 'node-fetch';
-import { eth } from '../config/chain';
+import { Chain } from '../config/chain/chain';
 import { CURVE_API_URL, Protocol } from '../config/constants';
 import { Performance } from '../interface/Performance';
 import { SettDefinition } from '../interface/Sett';
 import { ValueSource } from '../interface/ValueSource';
+import { PancakeSwapService } from './pancake/PancakeSwapService';
 import { SushiswapService } from './sushi/SushiswapService';
 import { UniswapService } from './uni/UniswapService';
 
@@ -17,12 +18,14 @@ export class ProtocolService {
   uniswapService!: UniswapService;
   @Inject()
   sushiswapService!: SushiswapService;
+  @Inject()
+  pancakeSwapService!: PancakeSwapService;
 
   /**
    * Retrieve performance of underlying protocol for a given sett.
    * @param sett Sett to retrieve protocol performance.
    */
-  async getProtocolPerformance(sett: SettDefinition): Promise<ValueSource | undefined> {
+  async getProtocolPerformance(chain: Chain, sett: SettDefinition): Promise<ValueSource | undefined> {
     if (!sett.protocol) return undefined;
     let protocolPerformance: Performance;
 
@@ -31,12 +34,14 @@ export class ProtocolService {
         protocolPerformance = await this.getCurvePerformance(sett);
         break;
       case Protocol.Uniswap:
-        protocolPerformance = await this.uniswapService.getPairPerformance(eth, sett);
+        protocolPerformance = await this.uniswapService.getPairPerformance(chain, sett);
         break;
       case Protocol.Sushiswap:
-        protocolPerformance = await this.sushiswapService.getPairPerformance(eth, sett);
+        protocolPerformance = await this.sushiswapService.getPairPerformance(chain, sett);
         break;
       case Protocol.Pancakeswap:
+        protocolPerformance = await this.pancakeSwapService.getPairPerformance(chain, sett);
+        break;
       default:
         protocolPerformance = {
           oneDay: 0,

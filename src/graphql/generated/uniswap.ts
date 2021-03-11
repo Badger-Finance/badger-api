@@ -2379,8 +2379,8 @@ export enum _SubgraphErrorPolicy_ {
   Deny = 'deny',
 }
 
-export const UniswapPairFragmentDoc = gql`
-  fragment UniswapPair on Pair {
+export const UniV2PairFragmentDoc = gql`
+  fragment UniV2Pair on Pair {
     id
     reserve0
     reserve1
@@ -2399,13 +2399,13 @@ export const UniswapPairFragmentDoc = gql`
     totalSupply
   }
 `;
-export const UniswapPairDocument = gql`
-  query UniswapPair($id: ID!, $block: Block_height) {
+export const UniV2PairDocument = gql`
+  query UniV2Pair($id: ID!, $block: Block_height) {
     pair(id: $id, block: $block) {
-      ...UniswapPair
+      ...UniV2Pair
     }
   }
-  ${UniswapPairFragmentDoc}
+  ${UniV2PairFragmentDoc}
 `;
 
 export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
@@ -2413,28 +2413,23 @@ export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
 const defaultWrapper: SdkFunctionWrapper = (sdkFunction) => sdkFunction();
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    UniswapPair(
-      variables: UniswapPairQueryVariables,
+    UniV2Pair(
+      variables: UniV2PairQueryVariables,
       requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<UniswapPairQuery> {
-      return withWrapper(() => client.request<UniswapPairQuery>(print(UniswapPairDocument), variables, requestHeaders));
+    ): Promise<UniV2PairQuery> {
+      return withWrapper(() => client.request<UniV2PairQuery>(print(UniV2PairDocument), variables, requestHeaders));
     },
   };
 }
 export type Sdk = ReturnType<typeof getSdk>;
-export type UniswapPairFragment = { __typename?: 'Pair' } & Pick<
-  Pair,
-  'id' | 'reserve0' | 'reserve1' | 'totalSupply'
-> & {
+export type UniV2PairFragment = { __typename?: 'Pair' } & Pick<Pair, 'id' | 'reserve0' | 'reserve1' | 'totalSupply'> & {
     token0: { __typename?: 'Token' } & Pick<Token, 'id' | 'symbol' | 'name' | 'decimals'>;
     token1: { __typename?: 'Token' } & Pick<Token, 'id' | 'symbol' | 'name' | 'decimals'>;
   };
 
-export type UniswapPairQueryVariables = Exact<{
+export type UniV2PairQueryVariables = Exact<{
   id: Scalars['ID'];
   block?: Maybe<Block_Height>;
 }>;
 
-export type UniswapPairQuery = { __typename?: 'Query' } & {
-  pair?: Maybe<{ __typename?: 'Pair' } & UniswapPairFragment>;
-};
+export type UniV2PairQuery = { __typename?: 'Query' } & { pair?: Maybe<{ __typename?: 'Pair' } & UniV2PairFragment> };

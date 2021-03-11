@@ -1,8 +1,10 @@
+import { BadRequest } from '@tsed/exceptions';
 import { ethers } from 'ethers';
-import { SettDefinition } from '../interface/Sett';
-import { Token } from '../interface/Token';
-import { Provider } from './constants';
-import { ethSetts } from './setts/eth-setts';
+import { SettDefinition } from '../../interface/Sett';
+import { Token } from '../../interface/Token';
+import { Provider } from '../constants';
+import { bscSetts } from './bsc';
+import { ethSetts } from './eth';
 
 export interface Chain {
   readonly name: string;
@@ -25,9 +27,9 @@ export class Ethereum implements Chain {
 export class BinanceSmartChain implements Chain {
   public name = 'BinanceSmartChain';
   public symbol = 'bsc';
-  public chainId = '0x61';
+  public chainId = '0x38';
   public tokens = [];
-  public setts = [];
+  public setts = bscSetts;
   public provider = new ethers.providers.JsonRpcProvider(Provider.Binance);
 }
 
@@ -40,11 +42,10 @@ export const supportedChains = [eth, bsc];
  * Resolve a request query param chain lookup.
  * Failure to specify a chain, or requesting a non-supported
  * chain will default to Ethereum.
- * TODO: Should not supported throw a bad request instead?
  */
 export const resolveChainQuery = (symbol: string): Chain => {
   if (!symbol) return eth;
   const chain = supportedChains.find((c) => c.symbol.toLowerCase() === symbol.toLowerCase());
-  if (!chain) return eth;
+  if (!chain) throw new BadRequest('Invalid chain');
   return chain;
 };

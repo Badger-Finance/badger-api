@@ -1,4 +1,4 @@
-import { ChartController } from './controller/ChartController';
+import { ChartsController } from './charts/ChartsController';
 import { ClawController } from './controller/ClawController';
 import { GeyserController } from './geysers/GeysersController';
 import { HarvestsController } from './harvests/HarvestsController';
@@ -14,7 +14,7 @@ import { SettsController } from './setts/SettsController';
  * without this.
  */
 export const controllers = [
-  ChartController,
+  ChartsController,
   ClawController,
   GeyserController,
   HarvestsController,

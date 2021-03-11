@@ -1,17 +1,11 @@
 import { Block } from '@ethersproject/abstract-provider';
-import { NotFound } from '@tsed/exceptions';
 import AWS from 'aws-sdk';
 import { PutItemInput, QueryInput } from 'aws-sdk/clients/dynamodb';
 import { DocumentClient } from 'aws-sdk/lib/dynamodb/document_client';
-import { GraphQLClient } from 'graphql-request';
 import { SettFragment } from '../graphql/generated/badger';
-import { getSdk as getSushiswapSdk } from '../graphql/generated/sushiswap';
-import { getSdk as getUniswapSdk } from '../graphql/generated/uniswap';
 import { SettSnapshot } from '../interface/SettSnapshot';
 import { TokenPrice } from '../interface/TokenPrice';
-import { getContractPrice } from '../prices/PricesService';
-import { Ethereum } from './chain';
-import { SUSHISWAP_URL, UNISWAP_URL } from './constants';
+import { Ethereum } from './chain/chain';
 import AttributeValue = DocumentClient.AttributeValue;
 
 export const THIRTY_MIN_BLOCKS = parseInt(String((30 * 60) / 13));
@@ -77,98 +71,6 @@ export const getIndexedBlock = async (table: string, asset: AttributeValue, crea
   };
   const result = await ddb.query(params).promise();
   return result.Items && result.Items.length > 0 ? result.Items[0].height : createdBlock;
-};
-
-export type GeyserData = {
-  id: string;
-  stakingToken: {
-    id: string;
-  };
-  netShareDeposit: number;
-};
-
-export type GeyserSett = {
-  id: string;
-  token: { id: string };
-  balance: number;
-  netDeposit: string;
-  netShareDeposit: string;
-  pricePerFullShare: number;
-};
-
-export const getUniswapPrice = async (contract: string): Promise<TokenPrice> => {
-  const uniswapGraphqlClient = new GraphQLClient(UNISWAP_URL);
-  const uniswapGraphqlSdk = getUniswapSdk(uniswapGraphqlClient);
-  const { pair } = await uniswapGraphqlSdk.UniswapPair({
-    id: contract.toLowerCase(),
-  });
-  if (!pair) {
-    throw new NotFound(`No pair found for ${contract}`);
-  }
-  if (pair.totalSupply === 0) {
-    return {
-      address: contract,
-      usd: 0,
-      eth: 0,
-    };
-  }
-  const t0Price = await getContractPrice(pair.token0.id);
-  const t1Price = await getContractPrice(pair.token1.id);
-  const usdPrice = (t0Price.usd * pair.reserve0 + t1Price.usd * pair.reserve1) / pair.totalSupply;
-  const ethPrice = (t0Price.eth * pair.reserve0 + t1Price.eth * pair.reserve1) / pair.totalSupply;
-  return {
-    address: contract,
-    usd: usdPrice,
-    eth: ethPrice,
-  };
-};
-
-export const getSushiswapPrice = async (contract: string): Promise<TokenPrice> => {
-  const sushiswapGraphqlClient = new GraphQLClient(SUSHISWAP_URL);
-  const sushiswapGraphqlSdk = getSushiswapSdk(sushiswapGraphqlClient);
-  const { pair } = await sushiswapGraphqlSdk.SushiswapPair({
-    id: contract.toLowerCase(),
-  });
-  if (!pair) {
-    throw new NotFound(`No pair found for ${contract}`);
-  }
-  if (pair.totalSupply === 0) {
-    return {
-      address: contract,
-      usd: 0,
-      eth: 0,
-    };
-  }
-  const t0Price = await getContractPrice(pair.token0.id);
-  const t1Price = await getContractPrice(pair.token1.id);
-  const usdPrice = (t0Price.usd * pair.reserve0 + t1Price.usd * pair.reserve1) / pair.totalSupply;
-  const ethPrice = (t0Price.eth * pair.reserve0 + t1Price.eth * pair.reserve1) / pair.totalSupply;
-  return {
-    address: contract,
-    usd: usdPrice,
-    eth: ethPrice,
-  };
-};
-
-export type SettBalanceData = {
-  sett: {
-    id: string;
-    name: string;
-    balance: number;
-    totalSupply: number;
-    pricePerFullShare: string;
-    symbol: string;
-    token: {
-      id: string;
-      decimals: number;
-    };
-  };
-  netDeposit: number;
-  grossDeposit: string;
-  grossWithdraw: string;
-  netShareDeposit: string;
-  grossShareDeposit: string;
-  grossShareWithdraw: string;
 };
 
 const blockToHour = (value: number) => value * 276;

@@ -1,14 +1,14 @@
 import { Inject, Service } from '@tsed/di';
 import { BadRequest, InternalServerError, NotFound } from '@tsed/exceptions';
 import { GraphQLClient } from 'graphql-request';
-import { Chain } from '../config/chain';
+import { Chain } from '../config/chain/chain';
 import { BADGER_URL } from '../config/constants';
 import { getSdk, OrderDirection, Sdk as BadgerGraphqlSdk } from '../graphql/generated/badger';
 import { SettBalance, UserAccount } from '../interface/UserAccount';
 import { PricesService } from '../prices/PricesService';
 
 @Service()
-export class UserService {
+export class UsersService {
   @Inject()
   pricesService!: PricesService;
 
