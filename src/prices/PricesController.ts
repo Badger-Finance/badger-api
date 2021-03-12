@@ -5,12 +5,12 @@ import { PricesService } from './PricesService';
 
 @Controller('/prices')
 export class PriceController {
-	@Inject()
-	pricesService!: PricesService;
+  @Inject()
+  pricesService!: PricesService;
 
-	@ContentType('json')
-	@Get('/')
-	async listPrices(): Promise<PriceSummary> {
-		return this.pricesService.getPriceSummary();
-	}
+  @ContentType('json')
+  @Get('/')
+  async listPrices(): Promise<PriceSummary> {
+    return this.pricesService.getPriceSummary();
+  }
 }

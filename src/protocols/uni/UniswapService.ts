@@ -7,13 +7,13 @@ import { SwapService } from '../common/SwapService';
 
 @Service()
 export class UniswapService extends SwapService {
-	constructor() {
-		super(UNISWAP_URL);
-	}
+  constructor() {
+    super(UNISWAP_URL);
+  }
 
-	// required abstract method, uniswap is not currently cross chain
-	/* eslint-disable @typescript-eslint/no-unused-vars-experimental */
-	async getPairPerformance(chain: Chain, sett: SettDefinition): Promise<Performance> {
-		return await this.getSwapPerformance(sett.depositToken);
-	}
+  // required abstract method, uniswap is not currently cross chain
+  /* eslint-disable @typescript-eslint/no-unused-vars-experimental */
+  async getPairPerformance(chain: Chain, sett: SettDefinition): Promise<Performance> {
+    return await this.getSwapPerformance(sett.depositToken);
+  }
 }

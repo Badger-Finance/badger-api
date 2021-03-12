@@ -14,12 +14,12 @@ import { SettsController } from './setts/SettsController';
  * without this.
  */
 export const controllers = [
-	ChartController,
-	ClawController,
-	GeyserController,
-	HarvestsController,
-	PriceController,
-	ProtocolController,
-	RewardController,
-	SettsController,
+  ChartController,
+  ClawController,
+  GeyserController,
+  HarvestsController,
+  PriceController,
+  ProtocolController,
+  RewardController,
+  SettsController,
 ];

@@ -6,11 +6,11 @@ import { GeyserService } from './GeysersService';
 
 @Controller('/geysers')
 export class GeyserController {
-	constructor(private geyserService: GeyserService) {}
+  constructor(private geyserService: GeyserService) {}
 
-	@Get()
-	@ContentType('json')
-	async listFarms(@QueryParams('chain') chain: string): Promise<Sett[]> {
-		return this.geyserService.listFarms(resolveChainQuery(chain));
-	}
+  @Get()
+  @ContentType('json')
+  async listFarms(@QueryParams('chain') chain: string): Promise<Sett[]> {
+    return this.geyserService.listFarms(resolveChainQuery(chain));
+  }
 }
