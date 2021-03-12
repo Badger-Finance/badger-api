@@ -44,3 +44,9 @@ generates:
       - typescript
       - typescript-graphql-request
       - typescript-operations
+  src/graphql/generated/pancakeswap.ts:
+    schema: ${PANCAKESWAP_SUBGRAPH_URL}
+    plugins:
+      - typescript
+      - typescript-graphql-request
+      - typescript-operations
