@@ -16,7 +16,7 @@ import {
 import { PoolInfo } from '../../interface/MasterChef';
 import { combinePerformance, Performance, uniformPerformance } from '../../interface/Performance';
 import { SettDefinition } from '../../interface/Sett';
-import { PriceService } from '../../prices/PricesService';
+import { PricesService } from '../../prices/PricesService';
 import { TokensService } from '../../tokens/TokensService';
 import { MASTERCHEF_URL } from '../../v1/util/constants';
 import { SwapService } from '../common/SwapService';
@@ -26,7 +26,7 @@ export class SushiswapService extends SwapService {
 	@Inject()
 	tokensService!: TokensService;
 	@Inject()
-	priceService!: PriceService;
+	pricesService!: PricesService;
 	@Inject()
 	cacheService!: CacheService;
 
@@ -65,7 +65,7 @@ export class SushiswapService extends SwapService {
 			masterChef.totalAllocPoint() as number,
 			masterChef.sushiPerBlock() as number,
 			masterChef.poolInfo(poolId) as PoolInfo,
-			this.priceService.getTokenPriceData(TOKENS.SUSHI),
+			this.pricesService.getTokenPriceData(TOKENS.SUSHI),
 		]);
 		const depositToken = new ethers.Contract(poolInfo.lpToken, erc20Abi, chain.provider);
 		const poolBalance = (await depositToken.balanceOf(SUSHI_CHEF)) / 1e18;

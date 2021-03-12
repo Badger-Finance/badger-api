@@ -5,7 +5,6 @@ import { CURVE_API_URL, Protocol } from '../config/constants';
 import { Performance } from '../interface/Performance';
 import { SettDefinition } from '../interface/Sett';
 import { ValueSource } from '../interface/ValueSource';
-import { PriceService } from '../prices/PricesService';
 import { SushiswapService } from './sushi/SushiswapService';
 import { UniswapService } from './uni/UniswapService';
 
@@ -14,8 +13,6 @@ import { UniswapService } from './uni/UniswapService';
  */
 @Service()
 export class ProtocolService {
-	@Inject()
-	priceService!: PriceService;
 	@Inject()
 	uniswapService!: UniswapService;
 	@Inject()
@@ -58,9 +55,6 @@ export class ProtocolService {
 
 	/**
 	 * Retrieve Curve DAO pool performance from trading fees.
-	 * This does not calculate the CRV (or third party) token emissions as
-	 * the performance from these are tracked inherently via pricePerFullShare
-	 * differential.
 	 * @param sett Sett to retrieve curve performance for.
 	 */
 	private async getCurvePerformance(sett: SettDefinition): Promise<Performance> {

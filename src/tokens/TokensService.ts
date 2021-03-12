@@ -1,4 +1,4 @@
-import { Service } from '@tsed/common';
+import { Inject, Service } from '@tsed/common';
 import { InternalServerError, NotFound } from '@tsed/exceptions';
 import { Chain } from '../config/chain';
 import { TOKENS } from '../config/constants';
@@ -7,11 +7,13 @@ import { SettDefinition } from '../interface/Sett';
 import { SettSnapshot } from '../interface/SettSnapshot';
 import { Token } from '../interface/Token';
 import { TokenBalance } from '../interface/TokenBalance';
-import { PriceService } from '../prices/PricesService';
+import { PricesService } from '../prices/PricesService';
 
 @Service()
 export class TokensService {
-	constructor(private priceService: PriceService) {}
+	@Inject()
+	pricesService!: PricesService;
+
 	/**
 	 * @param settAddress Sett contract address
 	 * @param settBalance Sett token balance
@@ -32,7 +34,7 @@ export class TokensService {
 				symbol: token.symbol,
 				decimals: token.decimals,
 				balance: tokens,
-				value: await this.priceService.getUsdValue(token.address, tokens),
+				value: await this.pricesService.getUsdValue(token.address, tokens),
 			} as TokenBalance,
 		];
 	}
@@ -82,7 +84,7 @@ export class TokensService {
 			symbol: pair.token0.symbol,
 			decimals: pair.token0.decimals,
 			balance: pair.reserve0,
-			value: (await this.priceService.getUsdValue(pair.token0.id, pair.reserve0)) * valueScalar,
+			value: (await this.pricesService.getUsdValue(pair.token0.id, pair.reserve0)) * valueScalar,
 		};
 		const token1: TokenBalance = {
 			name: pair.token1.name,
@@ -90,7 +92,7 @@ export class TokensService {
 			symbol: pair.token1.symbol,
 			decimals: pair.token1.decimals,
 			balance: pair.reserve1,
-			value: (await this.priceService.getUsdValue(pair.token1.id, pair.reserve1)) * valueScalar,
+			value: (await this.pricesService.getUsdValue(pair.token1.id, pair.reserve1)) * valueScalar,
 		};
 		return [token0, token1];
 	}

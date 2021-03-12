@@ -1,15 +1,16 @@
-import { Controller, Get } from '@tsed/common';
+import { Controller, Get, Inject } from '@tsed/common';
 import { ContentType } from '@tsed/schema';
 import { PriceSummary } from '../interface/TokenPrice';
-import { PriceService } from './PricesService';
+import { PricesService } from './PricesService';
 
 @Controller('/prices')
 export class PriceController {
-	constructor(private priceService: PriceService) {}
+	@Inject()
+	pricesService!: PricesService;
 
 	@ContentType('json')
 	@Get('/')
 	async listPrices(): Promise<PriceSummary> {
-		return this.priceService.getPriceSummary();
+		return this.pricesService.getPriceSummary();
 	}
 }

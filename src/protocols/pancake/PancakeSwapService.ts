@@ -6,12 +6,16 @@ import { Chain } from '../../config/chain';
 import { BLOCKS_PER_YEAR, TOKENS } from '../../config/constants';
 import { getSushiswapPrice } from '../../config/util';
 import { PoolInfo } from '../../interface/MasterChef';
-import { PriceService } from '../../prices/PricesService';
+import { PricesService } from '../../prices/PricesService';
 
+/**
+ * TODO: Implement the real pancake swap service once GraphQL queries
+ * are updated and useable vs. string queries.
+ */
 @Service()
 export class PancakeSwapService {
 	@Inject()
-	priceService!: PriceService;
+	pricesService!: PricesService;
 
 	private cache: NodeCache;
 
@@ -30,7 +34,7 @@ export class PancakeSwapService {
 			masterChef.totalAllocPoint() as number,
 			masterChef.sushiPerBlock() as number,
 			masterChef.poolInfo(poolId) as PoolInfo,
-			this.priceService.getTokenPriceData(TOKENS.SUSHI),
+			this.pricesService.getTokenPriceData(TOKENS.SUSHI),
 		]);
 		const depositToken = new ethers.Contract(poolInfo.lpToken, erc20Abi, chain.provider);
 		const poolBalance = (await depositToken.balanceOf(contract)) / 1e18;

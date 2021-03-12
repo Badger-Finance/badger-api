@@ -14,7 +14,7 @@ const priceCache = new NodeCache({ stdTTL: 300, checkperiod: 480 });
  * via CG. Prices are cached for 5 minutes at a time, but may live up to 8.
  */
 @Service()
-export class PriceService {
+export class PricesService {
 	/**
 	 * Retrieve the USD price for a given token balance.
 	 * @param contract Token contract address.
