@@ -7,7 +7,7 @@ import { getGeysers, secondToDay, toRate } from '../config/util';
 import { Emission, Geyser, UnlockSchedule } from '../interface/Geyser';
 import { Sett } from '../interface/Sett';
 import { ValueSource } from '../interface/ValueSource';
-import { PriceService } from '../prices/PricesService';
+import { PricesService } from '../prices/PricesService';
 import { SettService } from '../setts/SettsService';
 import { TokensService } from '../tokens/TokensService';
 
@@ -18,7 +18,7 @@ export class GeyserService {
 	@Inject()
 	tokensService!: TokensService;
 	@Inject()
-	priceService!: PriceService;
+	pricesService!: PricesService;
 
 	async listFarms(chain: Chain): Promise<Sett[]> {
 		const diggContract = new ethers.Contract(TOKENS.DIGG, diggAbi, eth.provider);
@@ -42,7 +42,7 @@ export class GeyserService {
 				const geyserToken = sett.token.id;
 				const pricePerFullShare = sett.pricePerFullShare / 1e18;
 				const geyserDeposits = (geyser.netShareDeposit * pricePerFullShare) / 1e18;
-				const geyserDepositsValue = await this.priceService.getUsdValue(geyserToken, geyserDeposits);
+				const geyserDepositsValue = await this.pricesService.getUsdValue(geyserToken, geyserDeposits);
 				const geyserData = await this.getGeyserData(geyser.id, sharesPerFragment);
 				const [badgerEmissionData, diggEmissionData] = geyserData.emissions;
 				const emissionSources = [] as ValueSource[];
@@ -54,7 +54,7 @@ export class GeyserService {
 					const badgerEmissionDuration = badgerUnlockSchedule.endAtSec
 						.sub(badgerUnlockSchedule.startTime)
 						.toNumber();
-					const badgerEmissionValue = await this.priceService.getUsdValue(TOKENS.BADGER, badgerEmitted);
+					const badgerEmissionValue = await this.pricesService.getUsdValue(TOKENS.BADGER, badgerEmitted);
 					const badgerEmissionValueRate = toRate(badgerEmissionValue, badgerEmissionDuration);
 					const badgerApy = ((secondToDay(badgerEmissionValueRate) * 365) / geyserDepositsValue) * 100;
 
@@ -78,7 +78,7 @@ export class GeyserService {
 					const diggEmissionDuration = diggUnlockSchedule.endAtSec
 						.sub(diggUnlockSchedule.startTime)
 						.toNumber();
-					const diggEmissionValue = await this.priceService.getUsdValue(TOKENS.DIGG, diggEmitted);
+					const diggEmissionValue = await this.pricesService.getUsdValue(TOKENS.DIGG, diggEmitted);
 					const diggEmissionValueRate = toRate(diggEmissionValue, diggEmissionDuration);
 					const diggApy = ((secondToDay(diggEmissionValueRate) * 365) / geyserDepositsValue) * 100;
 
