@@ -3,6 +3,7 @@ import AWS from 'aws-sdk';
 import { PutItemInput, QueryInput } from 'aws-sdk/clients/dynamodb';
 import { DocumentClient } from 'aws-sdk/lib/dynamodb/document_client';
 import fetch from 'node-fetch';
+import { SettFragment } from '../graphql/generated/badger';
 import { SettSnapshot } from '../interface/SettSnapshot';
 import { TokenPrice } from '../interface/TokenPrice';
 import { getContractPrice } from '../prices/PricesService';
@@ -13,7 +14,7 @@ import AttributeValue = DocumentClient.AttributeValue;
 export const THIRTY_MIN_BLOCKS = parseInt(String((30 * 60) / 13));
 const ddb = new AWS.DynamoDB.DocumentClient({ apiVersion: '2012-08-10' });
 
-export type GetPriceFunc = (settData: SettData) => Promise<TokenPrice>;
+export type GetPriceFunc = (settFragment: SettFragment) => Promise<TokenPrice>;
 
 export interface EventInput {
 	asset: string;
@@ -24,21 +25,6 @@ export interface EventInput {
 	pathParameters?: Record<string, string>;
 	queryStringParameters?: Record<string, string>;
 }
-
-export type SettData = {
-	data: {
-		sett: {
-			token: {
-				id: string;
-				decimals: number;
-			};
-			balance: number;
-			pricePerFullShare: number;
-			totalSupply: number;
-		};
-	};
-	errors?: unknown;
-};
 
 export const getBlock = async (blockNumber: number): Promise<Block> =>
 	await new Ethereum().provider.getBlock(blockNumber);
@@ -88,26 +74,6 @@ export const getIndexedBlock = async (table: string, asset: AttributeValue, crea
 	};
 	const result = await ddb.query(params).promise();
 	return result.Items && result.Items.length > 0 ? result.Items[0].height : createdBlock;
-};
-
-export const getSett = async (contract: string, block?: number): Promise<SettData> => {
-	const query = `
-    {
-      sett(id: "${contract}"${block ? `, block: {number: ${block}}` : ''}) {
-        token {
-          id
-					decimals
-        }
-        balance
-        pricePerFullShare
-        totalSupply
-      }
-    }
-  `;
-	return await fetch(BADGER_URL, {
-		method: 'POST',
-		body: JSON.stringify({ query }),
-	}).then((response) => response.json());
 };
 
 export type GeyserData = {
