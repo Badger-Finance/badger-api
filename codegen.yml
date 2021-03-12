@@ -5,6 +5,9 @@ hooks:
 generates:
   src/graphql/generated/badger.ts:
     schema: ${BADGER_SUBGRAPH_URL}
+    documents:
+      - src/graphql/fragments/sett.fragment.graphql
+      - src/graphql/queries/setts.query.graphql
     plugins:
       - typescript
       - typescript-graphql-request

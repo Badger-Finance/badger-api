@@ -1,4 +1,7 @@
 import { GraphQLClient } from 'graphql-request';
+import * as Dom from 'graphql-request/dist/types.dom';
+import { print } from 'graphql';
+import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
@@ -751,10 +754,44 @@ export enum _SubgraphErrorPolicy_ {
 	Deny = 'deny',
 }
 
+export const SettFragmentDoc = gql`
+	fragment Sett on Sett {
+		token {
+			id
+			decimals
+		}
+		balance
+		pricePerFullShare
+		totalSupply
+	}
+`;
+export const SettDocument = gql`
+	query Sett($id: ID!, $block: Block_height) {
+		sett(id: $id, block: $block) {
+			...Sett
+		}
+	}
+	${SettFragmentDoc}
+`;
+
 export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
 
 const defaultWrapper: SdkFunctionWrapper = (sdkFunction) => sdkFunction();
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
-	return {};
+	return {
+		Sett(variables: SettQueryVariables, requestHeaders?: Dom.RequestInit['headers']): Promise<SettQuery> {
+			return withWrapper(() => client.request<SettQuery>(print(SettDocument), variables, requestHeaders));
+		},
+	};
 }
 export type Sdk = ReturnType<typeof getSdk>;
+export type SettFragment = { __typename?: 'Sett' } & Pick<Sett, 'balance' | 'pricePerFullShare' | 'totalSupply'> & {
+		token: { __typename?: 'Token' } & Pick<Token, 'id' | 'decimals'>;
+	};
+
+export type SettQueryVariables = Exact<{
+	id: Scalars['ID'];
+	block?: Maybe<Block_Height>;
+}>;
+
+export type SettQuery = { __typename?: 'Query' } & { sett?: Maybe<{ __typename?: 'Sett' } & SettFragment> };
