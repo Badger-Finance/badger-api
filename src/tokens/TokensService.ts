@@ -1,8 +1,10 @@
 import { Inject, Service } from '@tsed/common';
 import { InternalServerError, NotFound } from '@tsed/exceptions';
+import { GraphQLClient } from 'graphql-request';
 import { Chain } from '../config/chain';
-import { TOKENS } from '../config/constants';
-import { getSushiswapPair, getUniswapPair } from '../config/util';
+import { SUSHISWAP_URL, TOKENS } from '../config/constants';
+import { getUniswapPair } from '../config/util';
+import { getSdk, Sdk as SushiswapGraphqlSdk } from '../graphql/generated/sushiswap';
 import { SettDefinition } from '../interface/Sett';
 import { SettSnapshot } from '../interface/SettSnapshot';
 import { Token } from '../interface/Token';
@@ -13,6 +15,13 @@ import { PricesService } from '../prices/PricesService';
 export class TokensService {
   @Inject()
   pricesService!: PricesService;
+
+  private sushiswapGraphqlSdk: SushiswapGraphqlSdk;
+
+  constructor() {
+    const sushiswapGraphqlClient = new GraphQLClient(SUSHISWAP_URL);
+    this.sushiswapGraphqlSdk = getSdk(sushiswapGraphqlClient);
+  }
 
   /**
    * @param settAddress Sett contract address
@@ -70,7 +79,9 @@ export class TokensService {
       poolData = await getUniswapPair(depositToken);
     }
     if (protocol === 'sushiswap') {
-      poolData = await getSushiswapPair(depositToken);
+      poolData = await this.sushiswapGraphqlSdk.SushiswapPair({
+        id: depositToken.toLowerCase(),
+      });
     }
     if (!poolData || !poolData.data) {
       throw new NotFound(`${protocol} pool ${depositToken} does not exist`);
