@@ -6,12 +6,12 @@ import { HarvestsService } from './HarvestsService';
 
 @Controller('/harvests')
 export class HarvestsController {
-	constructor(private harvestsService: HarvestsService) {}
+  constructor(private harvestsService: HarvestsService) {}
 
-	@Get()
-	@ContentType('json')
-	async listHarvests(@QueryParams() query: HarvestsQueryArgs): Promise<HarvestFragment[]> {
-		const { harvests } = await this.harvestsService.listHarvests(query);
-		return harvests;
-	}
+  @Get()
+  @ContentType('json')
+  async listHarvests(@QueryParams() query: HarvestsQueryArgs): Promise<HarvestFragment[]> {
+    const { harvests } = await this.harvestsService.listHarvests(query);
+    return harvests;
+  }
 }

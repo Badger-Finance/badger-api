@@ -8,21 +8,21 @@ import NodeCache from 'node-cache';
  */
 @Service()
 export class CacheService {
-	private cache: NodeCache;
+  private cache: NodeCache;
 
-	constructor() {
-		this.cache = new NodeCache({ stdTTL: 300, checkperiod: 480 });
-	}
+  constructor() {
+    this.cache = new NodeCache({ stdTTL: 300, checkperiod: 480 });
+  }
 
-	get<T>(key: string): T | undefined {
-		return this.cache.get(key);
-	}
+  get<T>(key: string): T | undefined {
+    return this.cache.get(key);
+  }
 
-	set<T>(key: string, value: T): void {
-		this.cache.set(key, value);
-	}
+  set<T>(key: string, value: T): void {
+    this.cache.set(key, value);
+  }
 
-	static getCacheKey(...parts: string[]): string {
-		return parts.join('-');
-	}
+  static getCacheKey(...parts: string[]): string {
+    return parts.join('-');
+  }
 }

@@ -18,20 +18,20 @@ import { ClawService } from '../service/claw/ClawService';
  */
 @Controller('/claw')
 export class ClawController {
-	constructor(private clawService: ClawService) {}
+  constructor(private clawService: ClawService) {}
 
-	@Get('/emp/:empAddress')
-	@ContentType('json')
-	async getSyntheticData(@PathParams('empAddress') empAddress: string): Promise<SyntheticData> {
-		return await this.clawService.getSyntheticData(empAddress);
-	}
+  @Get('/emp/:empAddress')
+  @ContentType('json')
+  async getSyntheticData(@PathParams('empAddress') empAddress: string): Promise<SyntheticData> {
+    return await this.clawService.getSyntheticData(empAddress);
+  }
 
-	@Get('/emp/:empAddress/sponsor/:sponsorAddress')
-	@ContentType('json')
-	async getSponsorData(
-		@PathParams('empAddress') empAddress: string,
-		@PathParams('sponsorAddress') sponsorAddress: string,
-	): Promise<SponsorData> {
-		return await this.clawService.getSponsorData(empAddress, sponsorAddress);
-	}
+  @Get('/emp/:empAddress/sponsor/:sponsorAddress')
+  @ContentType('json')
+  async getSponsorData(
+    @PathParams('empAddress') empAddress: string,
+    @PathParams('sponsorAddress') sponsorAddress: string,
+  ): Promise<SponsorData> {
+    return await this.clawService.getSponsorData(empAddress, sponsorAddress);
+  }
 }

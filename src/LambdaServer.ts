@@ -3,9 +3,9 @@ import { PlatformAws } from '@tsed/platform-aws';
 import { Server } from './Server';
 
 PlatformAws.bootstrap(Server, {
-	aws: {
-		binaryMimeTypes: [],
-	},
+  aws: {
+    binaryMimeTypes: [],
+  },
 });
 
 export const handler = PlatformAws.callback();

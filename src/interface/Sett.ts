@@ -11,26 +11,26 @@ import { ValueSource } from './ValueSource';
  * native underlying value source.
  */
 export interface Sett extends SettSummary {
-	ppfs: number;
-	apy: number;
-	vaultToken: string;
-	underlyingToken: string;
-	sources: ValueSource[];
-	geyser?: Geyser;
+  ppfs: number;
+  apy: number;
+  vaultToken: string;
+  underlyingToken: string;
+  sources: ValueSource[];
+  geyser?: Geyser;
 }
 
 export interface SettSummary {
-	name: string;
-	asset: string;
-	value: number;
-	tokens: TokenBalance[];
+  name: string;
+  asset: string;
+  value: number;
+  tokens: TokenBalance[];
 }
 
 export interface SettDefinition {
-	name: string;
-	symbol: string;
-	depositToken: string;
-	settToken: string;
-	geyserAddress?: string;
-	protocol?: Protocol;
+  name: string;
+  symbol: string;
+  depositToken: string;
+  settToken: string;
+  geyserAddress?: string;
+  protocol?: Protocol;
 }
