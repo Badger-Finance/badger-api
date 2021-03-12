@@ -1,13 +1,14 @@
-import { Service } from '@tsed/common';
+import { Inject, Service } from '@tsed/di';
 import { BadRequest, InternalServerError, NotFound } from '@tsed/exceptions';
 import { Chain } from '../config/chain';
 import { getUserData } from '../config/util';
 import { SettBalance, UserAccount } from '../interface/UserAccount';
-import { PriceService } from '../prices/PricesService';
+import { PricesService } from '../prices/PricesService';
 
 @Service()
 export class UserService {
-	constructor(private priceService: PriceService) {}
+	@Inject()
+	pricesService!: PricesService;
 
 	/**
 	 * Retrieve a user's account details. This includes all positions in setts,
@@ -51,8 +52,8 @@ export class UserService {
 				const settTokens = settPricePerFullShare * netShareDeposit;
 				const earned = (settTokens - grossDeposit + grossWithdraw) / Math.pow(10, sett.token.decimals);
 				const balance = settTokens / Math.pow(10, sett.token.decimals);
-				const earnedUsd = await this.priceService.getUsdValue(sett.token.id, earned);
-				const balanceUsd = await this.priceService.getUsdValue(sett.token.id, balance);
+				const earnedUsd = await this.pricesService.getUsdValue(sett.token.id, earned);
+				const balanceUsd = await this.pricesService.getUsdValue(sett.token.id, balance);
 
 				return {
 					id: settInfo.settToken,
