@@ -26,8 +26,8 @@ const rootDir = __dirname;
   },
 })
 export class Server {
-	@Inject()
-	app!: PlatformApplication;
+  @Inject()
+  app!: PlatformApplication;
 
   /**
    * This method let you configure the express middleware required by your application to work.

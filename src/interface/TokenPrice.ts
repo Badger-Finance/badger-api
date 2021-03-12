@@ -3,10 +3,10 @@
  * USD and ETH base currencies.
  */
 export interface TokenPrice {
-	name?: string;
-	address?: string;
-	usd: number;
-	eth: number;
+  name?: string;
+  address?: string;
+  usd: number;
+  eth: number;
 }
 
 /**
@@ -14,7 +14,7 @@ export interface TokenPrice {
  * token price data.
  */
 export interface PriceData {
-	[address: string]: TokenPrice;
+  [address: string]: TokenPrice;
 }
 
 /**
@@ -22,5 +22,5 @@ export interface PriceData {
  * currency price data.
  */
 export interface PriceSummary {
-	[address: string]: number;
+  [address: string]: number;
 }

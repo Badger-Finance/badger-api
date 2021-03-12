@@ -43,13 +43,6 @@ export enum Protocol {
   Pancakeswap = 'pancakeswap',
 }
 
-export enum Protocol {
-	Curve = 'curve',
-	Sushiswap = 'sushiswap',
-	Uniswap = 'uniswap',
-	Pancakeswap = 'pancakeswap',
-}
-
 // data point constants - index two times per hour, 48 per day
 export const CURRENT = 0;
 export const ONE_DAY = 24 * 2;
