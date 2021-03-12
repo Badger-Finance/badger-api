@@ -20,13 +20,11 @@ describe('PricesService', () => {
 
 		expect(fetchMock).toHaveBeenCalled();
 		expect(response).toBeDefined();
-		expect(response.address).toBeDefined();
-		expect(response.address).toEqual(contract);
-		expect(response.name).toBeUndefined();
-		expect(response.usd).toBeDefined();
-		expect(response.usd).toEqual(usdPrice);
-		expect(response.eth).toBeDefined();
-		expect(response.eth).toEqual(etherPrice);
+		expect(response).toMatchObject({
+			address: contract,
+			usd: usdPrice,
+			eth: etherPrice,
+		});
 	});
 
 	it('Fetches the token price in USD and ETH', async () => {
@@ -45,12 +43,10 @@ describe('PricesService', () => {
 
 		expect(fetchMock).toHaveBeenCalled();
 		expect(response).toBeDefined();
-		expect(response.name).toBeDefined();
-		expect(response.name).toEqual(token);
-		expect(response.address).toBeUndefined();
-		expect(response.usd).toBeDefined();
-		expect(response.usd).toEqual(usdPrice);
-		expect(response.eth).toBeDefined();
-		expect(response.eth).toEqual(etherPrice);
+		expect(response).toMatchObject({
+			name: token,
+			usd: usdPrice,
+			eth: etherPrice,
+		});
 	});
 });
