@@ -33,6 +33,9 @@ generates:
       - typescript-operations
   src/graphql/generated/sushiswap.ts:
     schema: ${SUSHISWAP_SUBGRAPH_URL}
+    documents:
+      - src/graphql/fragments/sushiswap-pair.fragment.graphql
+      - src/graphql/queries/sushiswap-pair.query.graphql
     plugins:
       - typescript
       - typescript-graphql-request
