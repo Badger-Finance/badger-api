@@ -1,0 +1,8 @@
+query UniswapPair(
+  $id: ID!
+  $block: Block_height
+) {
+  pair(id: $id, block: $block) {
+    ...UniswapPair
+  }
+}

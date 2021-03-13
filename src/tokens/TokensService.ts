@@ -2,9 +2,13 @@ import { Inject, Service } from '@tsed/common';
 import { InternalServerError, NotFound } from '@tsed/exceptions';
 import { GraphQLClient } from 'graphql-request';
 import { Chain } from '../config/chain';
-import { SUSHISWAP_URL, TOKENS } from '../config/constants';
-import { getUniswapPair } from '../config/util';
-import { getSdk, Sdk as SushiswapGraphqlSdk } from '../graphql/generated/sushiswap';
+import { SUSHISWAP_URL, TOKENS, UNISWAP_URL } from '../config/constants';
+import {
+  getSdk as getSushiswapSdk,
+  Sdk as SushiswapGraphqlSdk,
+  SushiswapPairQuery,
+} from '../graphql/generated/sushiswap';
+import { getSdk as getUniswapSdk, Sdk as UniswapGraphqlSdk, UniswapPairQuery } from '../graphql/generated/uniswap';
 import { SettDefinition } from '../interface/Sett';
 import { SettSnapshot } from '../interface/SettSnapshot';
 import { Token } from '../interface/Token';
@@ -17,10 +21,13 @@ export class TokensService {
   pricesService!: PricesService;
 
   private sushiswapGraphqlSdk: SushiswapGraphqlSdk;
+  private uniswapGraphqlSdk: UniswapGraphqlSdk;
 
   constructor() {
     const sushiswapGraphqlClient = new GraphQLClient(SUSHISWAP_URL);
-    this.sushiswapGraphqlSdk = getSdk(sushiswapGraphqlClient);
+    this.sushiswapGraphqlSdk = getSushiswapSdk(sushiswapGraphqlClient);
+    const uniswapGraphqlClient = new GraphQLClient(UNISWAP_URL);
+    this.uniswapGraphqlSdk = getUniswapSdk(uniswapGraphqlClient);
   }
 
   /**
@@ -74,19 +81,24 @@ export class TokensService {
   async getLiquidtyPoolTokenBalances(sett: SettDefinition, settSnapshot: SettSnapshot): Promise<TokenBalance[]> {
     const { depositToken, protocol } = sett;
 
-    let poolData;
+    let poolData: SushiswapPairQuery | UniswapPairQuery | undefined;
     if (protocol === 'uniswap') {
-      poolData = await getUniswapPair(depositToken);
+      poolData = await this.uniswapGraphqlSdk.UniswapPair({
+        id: depositToken.toLowerCase(),
+      });
     }
     if (protocol === 'sushiswap') {
       poolData = await this.sushiswapGraphqlSdk.SushiswapPair({
         id: depositToken.toLowerCase(),
       });
     }
-    if (!poolData || !poolData.data) {
+    if (!poolData) {
       throw new NotFound(`${protocol} pool ${depositToken} does not exist`);
     }
-    const pair = poolData.data.pair;
+    const { pair } = poolData;
+    if (!pair) {
+      throw new NotFound(`${protocol} pool ${depositToken} pair does not exist`);
+    }
     // poolData returns the full liquidity pool, valueScalar acts to calculate the portion within the sett
     const valueScalar = (settSnapshot.supply * settSnapshot.ratio) / pair.totalSupply;
     const token0: TokenBalance = {
