@@ -754,13 +754,25 @@ export enum _SubgraphErrorPolicy_ {
   Deny = 'deny',
 }
 
+export const GeyserFragmentDoc = gql`
+  fragment Geyser on Geyser {
+    id
+    stakingToken {
+      id
+    }
+    netShareDeposit
+  }
+`;
 export const SettFragmentDoc = gql`
   fragment Sett on Sett {
+    id
     token {
       id
       decimals
     }
     balance
+    netDeposit
+    netShareDeposit
     pricePerFullShare
     totalSupply
   }
@@ -788,6 +800,18 @@ export const UserSettBalanceFragmentDoc = gql`
     grossShareWithdraw
   }
 `;
+export const GeysersAndSettsDocument = gql`
+  query GeysersAndSetts($geysersOrderDirection: OrderDirection, $settsOrderDirection: OrderDirection) {
+    geysers(orderDirection: $geysersOrderDirection) {
+      ...Geyser
+    }
+    setts(orderDirection: $settsOrderDirection) {
+      ...Sett
+    }
+  }
+  ${GeyserFragmentDoc}
+  ${SettFragmentDoc}
+`;
 export const SettDocument = gql`
   query Sett($id: ID!, $block: Block_height) {
     sett(id: $id, block: $block) {
@@ -812,6 +836,14 @@ export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
 const defaultWrapper: SdkFunctionWrapper = (sdkFunction) => sdkFunction();
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+    GeysersAndSetts(
+      variables?: GeysersAndSettsQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<GeysersAndSettsQuery> {
+      return withWrapper(() =>
+        client.request<GeysersAndSettsQuery>(print(GeysersAndSettsDocument), variables, requestHeaders),
+      );
+    },
     Sett(variables: SettQueryVariables, requestHeaders?: Dom.RequestInit['headers']): Promise<SettQuery> {
       return withWrapper(() => client.request<SettQuery>(print(SettDocument), variables, requestHeaders));
     },
@@ -821,9 +853,14 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
   };
 }
 export type Sdk = ReturnType<typeof getSdk>;
-export type SettFragment = { __typename?: 'Sett' } & Pick<Sett, 'balance' | 'pricePerFullShare' | 'totalSupply'> & {
-    token: { __typename?: 'Token' } & Pick<Token, 'id' | 'decimals'>;
+export type GeyserFragment = { __typename?: 'Geyser' } & Pick<Geyser, 'id' | 'netShareDeposit'> & {
+    stakingToken: { __typename?: 'Token' } & Pick<Token, 'id'>;
   };
+
+export type SettFragment = { __typename?: 'Sett' } & Pick<
+  Sett,
+  'id' | 'balance' | 'netDeposit' | 'netShareDeposit' | 'pricePerFullShare' | 'totalSupply'
+> & { token: { __typename?: 'Token' } & Pick<Token, 'id' | 'decimals'> };
 
 export type UserSettBalanceFragment = { __typename?: 'UserSettBalance' } & Pick<
   UserSettBalance,
@@ -834,6 +871,16 @@ export type UserSettBalanceFragment = { __typename?: 'UserSettBalance' } & Pick<
       'id' | 'name' | 'balance' | 'totalSupply' | 'netShareDeposit' | 'pricePerFullShare' | 'symbol'
     > & { token: { __typename?: 'Token' } & Pick<Token, 'id' | 'decimals'> };
   };
+
+export type GeysersAndSettsQueryVariables = Exact<{
+  geysersOrderDirection?: Maybe<OrderDirection>;
+  settsOrderDirection?: Maybe<OrderDirection>;
+}>;
+
+export type GeysersAndSettsQuery = { __typename?: 'Query' } & {
+  geysers: Array<{ __typename?: 'Geyser' } & GeyserFragment>;
+  setts: Array<{ __typename?: 'Sett' } & SettFragment>;
+};
 
 export type SettQueryVariables = Exact<{
   id: Scalars['ID'];

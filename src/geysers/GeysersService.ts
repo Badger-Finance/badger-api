@@ -1,9 +1,11 @@
 import { Inject, Service } from '@tsed/common';
 import { constants, ethers } from 'ethers';
+import { GraphQLClient } from 'graphql-request';
 import { diggAbi, geyserAbi } from '../config/abi';
 import { Chain, eth } from '../config/chain';
-import { TOKENS } from '../config/constants';
-import { getGeysers, secondToDay, toRate } from '../config/util';
+import { BADGER_URL, TOKENS } from '../config/constants';
+import { secondToDay, toRate } from '../config/util';
+import { getSdk, OrderDirection, Sdk as BadgerGraphqlSdk } from '../graphql/generated/badger';
 import { Emission, Geyser, UnlockSchedule } from '../interface/Geyser';
 import { Sett } from '../interface/Sett';
 import { ValueSource } from '../interface/ValueSource';
@@ -20,20 +22,29 @@ export class GeyserService {
   @Inject()
   pricesService!: PricesService;
 
+  private badgerGraphqlSdk: BadgerGraphqlSdk;
+
+  constructor() {
+    const badgerDaoGraphqlClient = new GraphQLClient(BADGER_URL);
+    this.badgerGraphqlSdk = getSdk(badgerDaoGraphqlClient);
+  }
+
   async listFarms(chain: Chain): Promise<Sett[]> {
     const diggContract = new ethers.Contract(TOKENS.DIGG, diggAbi, eth.provider);
 
     const [settData, geyserData, sharesPerFragment] = await Promise.all([
       this.settService.listSetts(chain),
-      getGeysers(),
+      this.badgerGraphqlSdk.GeysersAndSetts({
+        geysersOrderDirection: OrderDirection.Asc,
+        settsOrderDirection: OrderDirection.Asc,
+      }),
       diggContract._sharesPerFragment(),
     ]);
-    const geysers = geyserData.data.geysers;
-    const geyserSetts = geyserData.data.setts;
+    const { geysers, setts } = geyserData;
 
     await Promise.all(
       geysers.map(async (geyser) => {
-        const sett = geyserSetts.find((geyserSett) => geyserSett.id === geyser.stakingToken.id);
+        const sett = setts.find((geyserSett) => geyserSett.id === geyser.stakingToken.id);
         const settLink = chain.setts.find((s) => s.geyserAddress && s.geyserAddress === geyser.id);
         const settInfo = settData.find((s) => s.asset.toLowerCase() === settLink?.symbol.toLowerCase());
         if (!sett || !settLink || !settInfo) return;
