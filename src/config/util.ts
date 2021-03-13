@@ -1,9 +1,12 @@
 import { Block } from '@ethersproject/abstract-provider';
+import { NotFound } from '@tsed/exceptions';
 import AWS from 'aws-sdk';
 import { PutItemInput, QueryInput } from 'aws-sdk/clients/dynamodb';
 import { DocumentClient } from 'aws-sdk/lib/dynamodb/document_client';
+import { GraphQLClient } from 'graphql-request';
 import fetch from 'node-fetch';
 import { SettFragment } from '../graphql/generated/badger';
+import { getSdk } from '../graphql/generated/sushiswap';
 import { SettSnapshot } from '../interface/SettSnapshot';
 import { TokenPrice } from '../interface/TokenPrice';
 import { getContractPrice } from '../prices/PricesService';
@@ -177,37 +180,15 @@ export const getUniswapPrice = async (contract: string): Promise<TokenPrice> => 
   };
 };
 
-export const getSushiswapPair = async (token: string, block?: number) => {
-  const query = `
-    {
-      pair(id: "${token.toLowerCase()}"${block ? `, block: {number: ${block}}` : ''}) {
-				id
-        reserve0
-        reserve1
-        token0 {
-          id
-					symbol
-					name
-					decimals
-        }
-        token1 {
-          id
-					symbol
-					name
-					decimals
-        }
-        totalSupply
-      }
-    }
-  `;
-  return await fetch(SUSHISWAP_URL, {
-    method: 'POST',
-    body: JSON.stringify({ query }),
-  }).then((response) => response.json());
-};
-
 export const getSushiswapPrice = async (contract: string): Promise<TokenPrice> => {
-  const pair = (await getSushiswapPair(contract)).data.pair;
+  const sushiswapGraphqlClient = new GraphQLClient(SUSHISWAP_URL);
+  const sushiswapGraphqlSdk = getSdk(sushiswapGraphqlClient);
+  const { pair } = await sushiswapGraphqlSdk.SushiswapPair({
+    id: contract,
+  });
+  if (!pair) {
+    throw new NotFound(`No pair found for ${contract}`);
+  }
   if (pair.totalSupply === 0) {
     return {
       address: contract,

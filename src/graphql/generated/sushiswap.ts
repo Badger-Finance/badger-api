@@ -1,4 +1,7 @@
 import { GraphQLClient } from 'graphql-request';
+import * as Dom from 'graphql-request/dist/types.dom';
+import { print } from 'graphql';
+import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
@@ -2310,10 +2313,64 @@ export enum _SubgraphErrorPolicy_ {
   Deny = 'deny',
 }
 
+export const SushiswapPairFragmentDoc = gql`
+  fragment SushiswapPair on Pair {
+    id
+    reserve0
+    reserve1
+    token0 {
+      id
+      symbol
+      name
+      decimals
+    }
+    token1 {
+      id
+      symbol
+      name
+      decimals
+    }
+    totalSupply
+  }
+`;
+export const SushiswapPairDocument = gql`
+  query SushiswapPair($id: ID!, $block: Block_height) {
+    pair(id: $id, block: $block) {
+      ...SushiswapPair
+    }
+  }
+  ${SushiswapPairFragmentDoc}
+`;
+
 export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
 
 const defaultWrapper: SdkFunctionWrapper = (sdkFunction) => sdkFunction();
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
-  return {};
+  return {
+    SushiswapPair(
+      variables: SushiswapPairQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<SushiswapPairQuery> {
+      return withWrapper(() =>
+        client.request<SushiswapPairQuery>(print(SushiswapPairDocument), variables, requestHeaders),
+      );
+    },
+  };
 }
 export type Sdk = ReturnType<typeof getSdk>;
+export type SushiswapPairFragment = { __typename?: 'Pair' } & Pick<
+  Pair,
+  'id' | 'reserve0' | 'reserve1' | 'totalSupply'
+> & {
+    token0: { __typename?: 'Token' } & Pick<Token, 'id' | 'symbol' | 'name' | 'decimals'>;
+    token1: { __typename?: 'Token' } & Pick<Token, 'id' | 'symbol' | 'name' | 'decimals'>;
+  };
+
+export type SushiswapPairQueryVariables = Exact<{
+  id: Scalars['ID'];
+  block?: Maybe<Block_Height>;
+}>;
+
+export type SushiswapPairQuery = { __typename?: 'Query' } & {
+  pair?: Maybe<{ __typename?: 'Pair' } & SushiswapPairFragment>;
+};
