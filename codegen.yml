@@ -42,6 +42,9 @@ generates:
       - typescript-operations
   src/graphql/generated/uniswap.ts:
     schema: ${UNISWAP_SUBGRAPH_URL}
+    documents:
+      - src/graphql/fragments/uniswap-pair.fragment.graphql
+      - src/graphql/queries/uniswap-pair.query.graphql
     plugins:
       - typescript
       - typescript-graphql-request

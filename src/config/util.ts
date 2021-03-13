@@ -6,7 +6,8 @@ import { DocumentClient } from 'aws-sdk/lib/dynamodb/document_client';
 import { GraphQLClient } from 'graphql-request';
 import fetch from 'node-fetch';
 import { SettFragment } from '../graphql/generated/badger';
-import { getSdk } from '../graphql/generated/sushiswap';
+import { getSdk as getSushiswapSdk } from '../graphql/generated/sushiswap';
+import { getSdk as getUniswapSdk } from '../graphql/generated/uniswap';
 import { SettSnapshot } from '../interface/SettSnapshot';
 import { TokenPrice } from '../interface/TokenPrice';
 import { getContractPrice } from '../prices/PricesService';
@@ -131,37 +132,15 @@ export const getGeysers = async (): Promise<Geysers> => {
   }).then((response) => response.json());
 };
 
-export const getUniswapPair = async (token: string, block?: number) => {
-  const query = `
-    {
-      pair(id: "${token.toLowerCase()}"${block ? `, block: {number: ${block}}` : ''}) {
-				id
-        reserve0
-        reserve1
-        token0 {
-          id
-					symbol
-					name
-					decimals
-        }
-        token1 {
-					id
-					symbol
-					name
-					decimals
-        }
-        totalSupply
-      }
-    }
-  `;
-  return await fetch(UNISWAP_URL, {
-    method: 'POST',
-    body: JSON.stringify({ query }),
-  }).then((response) => response.json());
-};
-
 export const getUniswapPrice = async (contract: string): Promise<TokenPrice> => {
-  const pair = (await getUniswapPair(contract)).data.pair;
+  const uniswapGraphqlClient = new GraphQLClient(UNISWAP_URL);
+  const uniswapGraphqlSdk = getUniswapSdk(uniswapGraphqlClient);
+  const { pair } = await uniswapGraphqlSdk.UniswapPair({
+    id: contract,
+  });
+  if (!pair) {
+    throw new NotFound(`No pair found for ${contract}`);
+  }
   if (pair.totalSupply === 0) {
     return {
       address: contract,
@@ -182,7 +161,7 @@ export const getUniswapPrice = async (contract: string): Promise<TokenPrice> => 
 
 export const getSushiswapPrice = async (contract: string): Promise<TokenPrice> => {
   const sushiswapGraphqlClient = new GraphQLClient(SUSHISWAP_URL);
-  const sushiswapGraphqlSdk = getSdk(sushiswapGraphqlClient);
+  const sushiswapGraphqlSdk = getSushiswapSdk(sushiswapGraphqlClient);
   const { pair } = await sushiswapGraphqlSdk.SushiswapPair({
     id: contract,
   });
