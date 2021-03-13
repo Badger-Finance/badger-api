@@ -1,7 +1,9 @@
 import { Inject, Service } from '@tsed/di';
 import { BadRequest, InternalServerError, NotFound } from '@tsed/exceptions';
+import { GraphQLClient } from 'graphql-request';
 import { Chain } from '../config/chain';
-import { getUserData } from '../config/util';
+import { BADGER_URL } from '../config/constants';
+import { getSdk, OrderDirection, Sdk as BadgerGraphqlSdk } from '../graphql/generated/badger';
 import { SettBalance, UserAccount } from '../interface/UserAccount';
 import { PricesService } from '../prices/PricesService';
 
@@ -9,6 +11,13 @@ import { PricesService } from '../prices/PricesService';
 export class UserService {
   @Inject()
   pricesService!: PricesService;
+
+  private badgerGraphqlSdk: BadgerGraphqlSdk;
+
+  constructor() {
+    const badgerGraphqlClient = new GraphQLClient(BADGER_URL);
+    this.badgerGraphqlSdk = getSdk(badgerGraphqlClient);
+  }
 
   /**
    * Retrieve a user's account details. This includes all positions in setts,
@@ -23,13 +32,16 @@ export class UserService {
     }
 
     // TheGraph address are all lower case, this is required
-    const userData = await getUserData(userId.toLowerCase());
+    const { user } = await this.badgerGraphqlSdk.User({
+      id: userId.toLowerCase(),
+      orderDirection: OrderDirection.Asc,
+    });
 
-    if (!userData.data || !userData.data.user) {
+    if (!user) {
       throw new NotFound(`${userId} is not a protocol participant`);
     }
 
-    const userBalances = userData.data.user.settBalances;
+    const userBalances = user.settBalances;
     const settBalances = await Promise.all(
       userBalances.map(async (settBalance) => {
         const sett = settBalance.sett;
