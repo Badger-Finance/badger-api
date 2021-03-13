@@ -765,6 +765,29 @@ export const SettFragmentDoc = gql`
     totalSupply
   }
 `;
+export const UserSettBalanceFragmentDoc = gql`
+  fragment UserSettBalance on UserSettBalance {
+    sett {
+      id
+      name
+      balance
+      totalSupply
+      netShareDeposit
+      pricePerFullShare
+      symbol
+      token {
+        id
+        decimals
+      }
+    }
+    netDeposit
+    grossDeposit
+    grossWithdraw
+    netShareDeposit
+    grossShareDeposit
+    grossShareWithdraw
+  }
+`;
 export const SettDocument = gql`
   query Sett($id: ID!, $block: Block_height) {
     sett(id: $id, block: $block) {
@@ -772,6 +795,16 @@ export const SettDocument = gql`
     }
   }
   ${SettFragmentDoc}
+`;
+export const UserDocument = gql`
+  query User($id: ID!, $orderDirection: OrderDirection!) {
+    user(id: $id) {
+      settBalances(orderDirection: $orderDirection) {
+        ...UserSettBalance
+      }
+    }
+  }
+  ${UserSettBalanceFragmentDoc}
 `;
 
 export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
@@ -782,11 +815,24 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     Sett(variables: SettQueryVariables, requestHeaders?: Dom.RequestInit['headers']): Promise<SettQuery> {
       return withWrapper(() => client.request<SettQuery>(print(SettDocument), variables, requestHeaders));
     },
+    User(variables: UserQueryVariables, requestHeaders?: Dom.RequestInit['headers']): Promise<UserQuery> {
+      return withWrapper(() => client.request<UserQuery>(print(UserDocument), variables, requestHeaders));
+    },
   };
 }
 export type Sdk = ReturnType<typeof getSdk>;
 export type SettFragment = { __typename?: 'Sett' } & Pick<Sett, 'balance' | 'pricePerFullShare' | 'totalSupply'> & {
     token: { __typename?: 'Token' } & Pick<Token, 'id' | 'decimals'>;
+  };
+
+export type UserSettBalanceFragment = { __typename?: 'UserSettBalance' } & Pick<
+  UserSettBalance,
+  'netDeposit' | 'grossDeposit' | 'grossWithdraw' | 'netShareDeposit' | 'grossShareDeposit' | 'grossShareWithdraw'
+> & {
+    sett: { __typename?: 'Sett' } & Pick<
+      Sett,
+      'id' | 'name' | 'balance' | 'totalSupply' | 'netShareDeposit' | 'pricePerFullShare' | 'symbol'
+    > & { token: { __typename?: 'Token' } & Pick<Token, 'id' | 'decimals'> };
   };
 
 export type SettQueryVariables = Exact<{
@@ -795,3 +841,14 @@ export type SettQueryVariables = Exact<{
 }>;
 
 export type SettQuery = { __typename?: 'Query' } & { sett?: Maybe<{ __typename?: 'Sett' } & SettFragment> };
+
+export type UserQueryVariables = Exact<{
+  id: Scalars['ID'];
+  orderDirection: OrderDirection;
+}>;
+
+export type UserQuery = { __typename?: 'Query' } & {
+  user?: Maybe<
+    { __typename?: 'User' } & { settBalances: Array<{ __typename?: 'UserSettBalance' } & UserSettBalanceFragment> }
+  >;
+};
