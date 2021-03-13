@@ -4,7 +4,6 @@ import AWS from 'aws-sdk';
 import { PutItemInput, QueryInput } from 'aws-sdk/clients/dynamodb';
 import { DocumentClient } from 'aws-sdk/lib/dynamodb/document_client';
 import { GraphQLClient } from 'graphql-request';
-import fetch from 'node-fetch';
 import { SettFragment } from '../graphql/generated/badger';
 import { getSdk as getSushiswapSdk } from '../graphql/generated/sushiswap';
 import { getSdk as getUniswapSdk } from '../graphql/generated/uniswap';
@@ -12,7 +11,7 @@ import { SettSnapshot } from '../interface/SettSnapshot';
 import { TokenPrice } from '../interface/TokenPrice';
 import { getContractPrice } from '../prices/PricesService';
 import { Ethereum } from './chain';
-import { BADGER_URL, SUSHISWAP_URL, UNISWAP_URL } from './constants';
+import { SUSHISWAP_URL, UNISWAP_URL } from './constants';
 import AttributeValue = DocumentClient.AttributeValue;
 
 export const THIRTY_MIN_BLOCKS = parseInt(String((30 * 60) / 13));
@@ -95,41 +94,6 @@ export type GeyserSett = {
   netDeposit: string;
   netShareDeposit: string;
   pricePerFullShare: number;
-};
-
-export type Geysers = {
-  data: {
-    geysers: GeyserData[];
-    setts: GeyserSett[];
-  };
-};
-
-export const getGeysers = async (): Promise<Geysers> => {
-  const query = `
-    {
-      geysers(orderDirection: asc) {
-        id
-        stakingToken {
-          id
-        }
-        netShareDeposit
-      },
-      setts(orderDirection: asc) {
-        id
-        token {
-          id
-        }
-        balance
-        netDeposit
-        netShareDeposit
-        pricePerFullShare
-      }
-    }
-  `;
-  return await fetch(BADGER_URL, {
-    method: 'POST',
-    body: JSON.stringify({ query }),
-  }).then((response) => response.json());
 };
 
 export const getUniswapPrice = async (contract: string): Promise<TokenPrice> => {

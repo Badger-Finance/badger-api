@@ -1,0 +1,11 @@
+query GeysersAndSetts(
+  $geysersOrderDirection: OrderDirection
+  $settsOrderDirection: OrderDirection
+) {
+  geysers(orderDirection: $geysersOrderDirection) {
+    ...Geyser
+  },
+  setts(orderDirection: $settsOrderDirection) {
+    ...Sett
+  }
+}
