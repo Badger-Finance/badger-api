@@ -49,7 +49,7 @@ export const MASTERCHEF_URL = process.env.MASTERCHEF || 'MISSING REQUIRED ENV VA
 export const MERKLE_CLAIM_BUCKET = process.env.MERKLE_CLAIM_BUCKET || 'MISSING REQUIRED ENV VAR';
 
 // third party api constants
-export const CURVE_API_URL = 'https://www.curve.fi/raw-stats/apys.json';
+export const CURVE_API_URL = 'https://stats.curve.fi/raw-stats/apys.json';
 export const COINGECKO_URL = 'https://api.coingecko.com/api/v3/simple';
 
 export enum Provider {

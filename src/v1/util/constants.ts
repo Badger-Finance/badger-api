@@ -36,5 +36,5 @@ export const BADGER_DAO_SUBGRAPH_URL = process.env.BADGER_DAO_SUBGRAPH_URL || 'M
 export const MASTERCHEF_URL = process.env.MASTERCHEF || 'MISSING REQUIRED ENV VAR';
 
 // third party api constants
-export const CURVE_API_URL = 'https://www.stats.curve.fi/raw-stats/apys.json';
+export const CURVE_API_URL = 'https://stats.curve.fi/raw-stats/apys.json';
 export const ETHERS_JSONRPC_PROVIDER = new ethers.providers.JsonRpcProvider('https://cloudflare-eth.com/');
