@@ -207,50 +207,6 @@ export type SettBalanceData = {
   grossShareWithdraw: string;
 };
 
-export type UserData = {
-  data: {
-    user: {
-      settBalances: SettBalanceData[];
-    };
-  };
-  errors: any;
-};
-
-export const getUserData = async (userId: string): Promise<UserData> => {
-  const query = `
-    {
-      user(id: "${userId}") {
-        settBalances(orderDirection: asc) {
-          sett {
-            id
-            name
-            balance
-            totalSupply
-            netShareDeposit
-            pricePerFullShare
-            symbol
-            token {
-              id
-              decimals
-            }
-          }
-          netDeposit
-          grossDeposit
-          grossWithdraw
-          netShareDeposit
-          grossShareDeposit
-          grossShareWithdraw
-        }
-      }
-    }
-  `;
-  const queryResult = await fetch(BADGER_URL, {
-    method: 'POST',
-    body: JSON.stringify({ query }),
-  });
-  return queryResult.json();
-};
-
 const blockToHour = (value: number) => value * 276;
 export const blockToDay = (value: number) => blockToHour(value) * 24;
 const secondToHour = (value: number) => value * 3600;
