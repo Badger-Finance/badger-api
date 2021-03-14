@@ -43,7 +43,8 @@ export const saveItem = async (table: string, item: AttributeValue) => {
 export const getAssetData = async (
   table: string,
   asset: AttributeValue,
-  count: number | undefined,
+  count?: number,
+  reverse?: boolean,
 ): Promise<SettSnapshot[] | undefined> => {
   let params = {
     TableName: table,
@@ -62,6 +63,7 @@ export const getAssetData = async (
   }
 
   const data = await ddb.query(params).promise();
+  if (reverse && data.Items) data.Items = data.Items.reverse();
   return data.Items as SettSnapshot[];
 };
 
