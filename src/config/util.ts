@@ -100,7 +100,7 @@ export const getUniswapPrice = async (contract: string): Promise<TokenPrice> => 
   const uniswapGraphqlClient = new GraphQLClient(UNISWAP_URL);
   const uniswapGraphqlSdk = getUniswapSdk(uniswapGraphqlClient);
   const { pair } = await uniswapGraphqlSdk.UniswapPair({
-    id: contract,
+    id: contract.toLowerCase(),
   });
   if (!pair) {
     throw new NotFound(`No pair found for ${contract}`);
@@ -127,7 +127,7 @@ export const getSushiswapPrice = async (contract: string): Promise<TokenPrice> =
   const sushiswapGraphqlClient = new GraphQLClient(SUSHISWAP_URL);
   const sushiswapGraphqlSdk = getSushiswapSdk(sushiswapGraphqlClient);
   const { pair } = await sushiswapGraphqlSdk.SushiswapPair({
-    id: contract,
+    id: contract.toLowerCase(),
   });
   if (!pair) {
     throw new NotFound(`No pair found for ${contract}`);
