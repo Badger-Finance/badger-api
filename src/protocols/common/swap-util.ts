@@ -9,7 +9,7 @@ export const getLiquidityPrice = async (graphUrl: string, contract: string): Pro
   const graphqlClient = new GraphQLClient(graphUrl);
   const graphqlSdk = getUniswapSdk(graphqlClient);
   const { pair } = await graphqlSdk.UniV2Pair({
-    id: contract,
+    id: contract.toLowerCase(),
   });
   if (!pair) {
     throw new NotFound(`No pair found for ${contract}`);
@@ -33,13 +33,13 @@ export const getLiquidityPrice = async (graphUrl: string, contract: string): Pro
 };
 
 export const getSushiswapPrice = async (contract: string): Promise<TokenPrice> => {
-  return getLiquidityPrice(SUSHISWAP_URL, contract.toLowerCase());
+  return getLiquidityPrice(SUSHISWAP_URL, contract);
 };
 
 export const getUniswapPrice = async (contract: string): Promise<TokenPrice> => {
-  return getLiquidityPrice(UNISWAP_URL, contract.toLowerCase());
+  return getLiquidityPrice(UNISWAP_URL, contract);
 };
 
 export const getPancakeswapPrice = async (contract: string): Promise<TokenPrice> => {
-  return getLiquidityPrice(PANCAKESWAP_URL, contract.toLowerCase());
+  return getLiquidityPrice(PANCAKESWAP_URL, contract);
 };
