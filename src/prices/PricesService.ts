@@ -101,13 +101,23 @@ export class PricesService {
     return priceData;
   }
 
-  async getPriceSummary(): Promise<PriceSummary> {
+  async getPriceSummary(currency?: string): Promise<PriceSummary> {
     const priceData = await this.getPriceData();
     const priceSummary: PriceSummary = {};
     for (const [key, value] of Object.entries(priceData)) {
-      priceSummary[key] = value.usd;
+      priceSummary[key] = this.inCurrency(value, currency);
     }
     return priceSummary;
+  }
+
+  inCurrency(tokenPrice: TokenPrice, currency?: string) {
+    switch (currency) {
+      case 'eth':
+        return tokenPrice.eth;
+      case 'usd':
+      default:
+        return tokenPrice.usd;
+    }
   }
 }
 
