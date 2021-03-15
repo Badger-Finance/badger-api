@@ -13,7 +13,7 @@ describe('PricesService', () => {
   });
 
   afterEach(PlatformTest.reset);
-  
+
   beforeEach(fetchMock.resetMocks);
 
   it('Fetches the contract price in USD and ETH', async () => {
@@ -71,13 +71,13 @@ describe('PricesService', () => {
     const defaultPrice = service.inCurrency(priceData);
     expect(defaultPrice).toEqual(priceData.usd);
 
-    const usdPrice = service.inCurrency(priceData, "usd");
+    const usdPrice = service.inCurrency(priceData, 'usd');
     expect(usdPrice).toEqual(priceData.usd);
 
-    const badInputPrice = service.inCurrency(priceData, "bchabc");
+    const badInputPrice = service.inCurrency(priceData, 'bchabc');
     expect(badInputPrice).toEqual(priceData.usd);
 
-    const ethPrice = service.inCurrency(priceData, "eth");
+    const ethPrice = service.inCurrency(priceData, 'eth');
     expect(ethPrice).toEqual(priceData.eth);
   });
 });
