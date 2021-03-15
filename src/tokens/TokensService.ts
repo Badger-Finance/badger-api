@@ -39,8 +39,8 @@ export class TokensService {
     if (this.isLPToken(sett.depositToken)) {
       return await this.getLiquidtyPoolTokenBalances(sett, settSnapshot);
     }
-    const tokens = (settSnapshot.balance * settSnapshot.ratio) / 1e18;
     const token = this.getTokenByAddress(sett.depositToken);
+    const tokens = settSnapshot.balance / Math.pow(10, token.decimals);
     return [
       {
         address: token.address,
