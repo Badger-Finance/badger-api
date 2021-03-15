@@ -13,10 +13,6 @@ import { PricesService } from '../../prices/PricesService';
 import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
 import { SwapService } from '../common/SwapService';
 
-/**
- * TODO: Implement the real pancake swap service once GraphQL queries
- * are updated and useable vs. string queries.
- */
 @Service()
 export class PancakeSwapService extends SwapService {
   @Inject()

@@ -1,5 +1,4 @@
 import { Block } from '@ethersproject/abstract-provider';
-import { NotFound } from '@tsed/exceptions';
 import AWS from 'aws-sdk';
 import { PutItemInput, QueryInput } from 'aws-sdk/clients/dynamodb';
 import { DocumentClient } from 'aws-sdk/lib/dynamodb/document_client';
