@@ -1,7 +1,9 @@
 import fetch from 'node-fetch';
-import { Chain } from '../../config/chain';
+import { Chain } from '../../config/chain/chain';
 import { Performance, uniformPerformance } from '../../interface/Performance';
 import { SettDefinition } from '../../interface/Sett';
+import { TokenPrice } from '../../interface/TokenPrice';
+import { getLiquidityPrice } from './swap-util';
 
 export abstract class SwapService {
   constructor(private graphUrl: string) {}
@@ -44,5 +46,9 @@ export abstract class SwapService {
       if (i === 29) performance.thirtyDay = currentApy;
     }
     return performance;
+  }
+
+  async getPairPrice(contract: string): Promise<TokenPrice> {
+    return getLiquidityPrice(this.graphUrl, contract.toLowerCase());
   }
 }

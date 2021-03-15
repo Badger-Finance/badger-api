@@ -1,4 +1,4 @@
-fragment UniswapPair on Pair {
+fragment UniV2Pair on Pair {
   id
   reserve0
   reserve1

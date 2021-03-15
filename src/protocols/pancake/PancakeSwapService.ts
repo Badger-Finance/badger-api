@@ -1,49 +1,68 @@
+import { formatEther } from '@ethersproject/units';
 import { Inject, Service } from '@tsed/di';
-import { ethers } from 'ethers';
-import NodeCache from 'node-cache';
+import { BigNumber, ethers } from 'ethers';
+import { CacheService } from '../../cache/CacheService';
 import { erc20Abi, pancakeChefAbi } from '../../config/abi';
-import { Chain } from '../../config/chain';
-import { BLOCKS_PER_YEAR, TOKENS } from '../../config/constants';
-import { getSushiswapPrice } from '../../config/util';
+import { Chain } from '../../config/chain/chain';
+import { BLOCKS_PER_YEAR, PANCAKE_CHEF, PANCAKESWAP_URL, TOKENS } from '../../config/constants';
 import { PoolInfo } from '../../interface/MasterChef';
+import { combinePerformance, Performance, uniformPerformance } from '../../interface/Performance';
+import { SettDefinition } from '../../interface/Sett';
+import { TokenPrice } from '../../interface/TokenPrice';
 import { PricesService } from '../../prices/PricesService';
+import { SwapService } from '../common/SwapService';
 
-/**
- * TODO: Implement the real pancake swap service once GraphQL queries
- * are updated and useable vs. string queries.
- */
 @Service()
-export class PancakeSwapService {
+export class PancakeSwapService extends SwapService {
   @Inject()
   pricesService!: PricesService;
-
-  private cache: NodeCache;
+  @Inject()
+  cacheService!: CacheService;
 
   constructor() {
-    this.cache = new NodeCache({ stdTTL: 300, checkperiod: 480 });
+    super(PANCAKESWAP_URL);
   }
 
-  async getPoolApr(chain: Chain, contract: string, poolId: number): Promise<number> {
-    const cacheKey = `${chain}-${contract}-${poolId}`;
-    const cachedPool: number | undefined = this.cache.get(cacheKey);
+  async getPairPerformance(chain: Chain, sett: SettDefinition): Promise<Performance> {
+    const { depositToken } = sett;
+    const cacheKey = CacheService.getCacheKey(chain.name, depositToken);
+    const cachedPool = this.cacheService.get<Performance>(cacheKey);
     if (cachedPool) {
       return cachedPool;
     }
-    const masterChef = new ethers.Contract(contract, pancakeChefAbi, chain.provider);
-    const [totalAllocPoint, sushiPerBlock, poolInfo, tokenPrice] = await Promise.all([
-      masterChef.totalAllocPoint() as number,
-      masterChef.sushiPerBlock() as number,
-      masterChef.poolInfo(poolId) as PoolInfo,
-      this.pricesService.getTokenPriceData(TOKENS.SUSHI),
+    const [tradeFeePerformance, poolApr] = await Promise.all([
+      this.getSwapPerformance(depositToken),
+      this.getPoolApr(chain, sett.depositToken, 15),
+    ]);
+    return combinePerformance(tradeFeePerformance, poolApr);
+  }
+
+  async getPoolApr(chain: Chain, contract: string, poolId: number): Promise<Performance> {
+    const cacheKey = CacheService.getCacheKey(chain.name, contract, poolId.toString());
+    const cachedPool = this.cacheService.get<Performance>(cacheKey);
+    if (cachedPool) {
+      return cachedPool;
+    }
+    const masterChef = new ethers.Contract(PANCAKE_CHEF, pancakeChefAbi, chain.provider);
+    const [totalAllocPoint, cakePerBlock, poolInfo, tokenPrice]: [
+      BigNumber,
+      BigNumber,
+      PoolInfo,
+      TokenPrice,
+    ] = await Promise.all([
+      masterChef.totalAllocPoint(),
+      masterChef.cakePerBlock(),
+      masterChef.poolInfo(poolId),
+      this.pricesService.getTokenPriceData(TOKENS.CAKE),
     ]);
     const depositToken = new ethers.Contract(poolInfo.lpToken, erc20Abi, chain.provider);
-    const poolBalance = (await depositToken.balanceOf(contract)) / 1e18;
-    const depositTokenValue = await getSushiswapPrice(poolInfo.lpToken);
+    const poolBalance = (await depositToken.balanceOf(PANCAKE_CHEF)) / 1e18;
+    const depositTokenValue = await this.getPairPrice(poolInfo.lpToken);
     const poolValue = poolBalance * depositTokenValue.usd;
-    const emissionScalar = poolInfo.allocPoint / totalAllocPoint;
-    const sushiEmission = (sushiPerBlock / 1e18) * emissionScalar * BLOCKS_PER_YEAR * tokenPrice.usd;
-    const poolApr = (sushiEmission / poolValue) * 100;
-    this.cache.set(cacheKey, poolApr);
+    const emissionScalar = poolInfo.allocPoint.toNumber() / totalAllocPoint.toNumber();
+    const cakeEmission = parseFloat(formatEther(cakePerBlock)) * emissionScalar * BLOCKS_PER_YEAR * tokenPrice.usd;
+    const poolApr = uniformPerformance((cakeEmission / poolValue) * 100);
+    this.cacheService.set(cacheKey, poolApr);
     return poolApr;
   }
 }

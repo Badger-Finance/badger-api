@@ -3,8 +3,8 @@ import { InternalServerError } from '@tsed/exceptions';
 import NodeCache from 'node-cache';
 import fetch from 'node-fetch';
 import { COINGECKO_URL, TOKENS } from '../config/constants';
-import { getSushiswapPrice, getUniswapPrice } from '../config/util';
 import { PriceData, PriceSummary, TokenPrice } from '../interface/TokenPrice';
+import { getSushiswapPrice, getUniswapPrice } from '../protocols/common/swap-util';
 
 const priceCache = new NodeCache({ stdTTL: 300, checkperiod: 480 });
 
@@ -66,6 +66,7 @@ export class PricesService {
       tBtcPrice,
       wethPrice,
       sushiPrice,
+      cakePrice,
     ] = await Promise.all([
       getContractPrice(TOKENS.BADGER),
       getContractPrice(TOKENS.DIGG),
@@ -80,6 +81,7 @@ export class PricesService {
       getTokenPrice('tbtc'),
       getContractPrice(TOKENS.WETH),
       getContractPrice(TOKENS.SUSHI),
+      getTokenPrice('pancakeswap-token'),
     ]);
     const priceData: PriceData = {};
     priceData[TOKENS.BADGER] = badgerPrice;
@@ -95,6 +97,7 @@ export class PricesService {
     priceData[TOKENS.CRV_TBTC] = tBtcPrice;
     priceData[TOKENS.WETH] = wethPrice;
     priceData[TOKENS.SUSHI] = sushiPrice;
+    priceData[TOKENS.CAKE] = cakePrice;
     return priceData;
   }
 
@@ -144,10 +147,10 @@ export const getTokenPrice = async (token: string): Promise<TokenPrice> => {
   const cachedPrice: TokenPrice | undefined = priceCache.get(token);
   if (cachedPrice) return cachedPrice;
   const response = await fetch(`${COINGECKO_URL}/price?ids=${token}&vs_currencies=usd,eth`);
-  if (!response.ok) throw new InternalServerError('Unable to query token price');
+  if (!response.ok) throw new InternalServerError(`Unable to query ${token} price`);
   const json = await response.json();
   if (!json[token] || !json[token].usd || !json[token].eth)
-    throw new InternalServerError('Unable to resolve token price');
+    throw new InternalServerError(`Unable to resolve ${token} price`);
   const tokenPrice: TokenPrice = {
     name: token,
     usd: json[token].usd,
