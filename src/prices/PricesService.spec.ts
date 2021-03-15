@@ -62,22 +62,38 @@ describe('PricesService', () => {
     });
   });
 
-  it('Picks appropriate currency prices', () => {
+  describe('inCurrency', () => {
     const priceData: TokenPrice = {
       usd: 10,
       eth: 10 / 1500,
     };
 
-    const defaultPrice = service.inCurrency(priceData);
-    expect(defaultPrice).toEqual(priceData.usd);
+    describe('without a currency', () => {
+      it('returns the usd price', () => {
+        const defaultPrice = service.inCurrency(priceData);
+        expect(defaultPrice).toEqual(priceData.usd);
+      });
+    });
 
-    const usdPrice = service.inCurrency(priceData, 'usd');
-    expect(usdPrice).toEqual(priceData.usd);
+    describe('with usd selected', () => {
+      it('returns the usd price', () => {
+        const defaultPrice = service.inCurrency(priceData, 'usd');
+        expect(defaultPrice).toEqual(priceData.usd);
+      });
+    });
 
-    const badInputPrice = service.inCurrency(priceData, 'bchabc');
-    expect(badInputPrice).toEqual(priceData.usd);
+    describe('with eth selected', () => {
+      it('returns the eth price', () => {
+        const ethPrice = service.inCurrency(priceData, 'eth');
+        expect(ethPrice).toEqual(priceData.eth);
+      });
+    });
 
-    const ethPrice = service.inCurrency(priceData, 'eth');
-    expect(ethPrice).toEqual(priceData.eth);
+    describe('with an unsupported currency', () => {
+      it('returns the usd price', () => {
+        const ethPrice = service.inCurrency(priceData, 'bchabc');
+        expect(ethPrice).toEqual(priceData.usd);
+      });
+    });
   });
 });
