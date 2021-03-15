@@ -1,4 +1,4 @@
-import { Controller, Get, Inject } from '@tsed/common';
+import { Controller, Get, Inject, QueryParams } from '@tsed/common';
 import { ContentType } from '@tsed/schema';
 import { PriceSummary } from '../interface/TokenPrice';
 import { PricesService } from './PricesService';
@@ -10,7 +10,7 @@ export class PriceController {
 
   @ContentType('json')
   @Get('/')
-  async listPrices(): Promise<PriceSummary> {
-    return this.pricesService.getPriceSummary();
+  async listPrices(@QueryParams('currency') currency?: string): Promise<PriceSummary> {
+    return this.pricesService.getPriceSummary(currency);
   }
 }
