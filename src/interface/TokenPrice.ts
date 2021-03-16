@@ -9,6 +9,10 @@ export interface TokenPrice {
   eth: number;
 }
 
+export interface TokenPriceSnapshot extends TokenPrice {
+  updatedAt: number;
+}
+
 /**
  * Mapping from token contract address to detailed
  * token price data.

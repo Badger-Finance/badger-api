@@ -99,24 +99,6 @@ resources:
           - AttributeName: "updatedAt"
             AttributeType: "N"
 
-resources:
-  Resources:
-    protocolTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: ${self:custom.table.ASSET_DATA.${self:custom.stage}}
-        BillingMode: PAY_PER_REQUEST
-        KeySchema:
-          - AttributeName: "asset"
-            KeyType: "HASH"
-          - AttributeName: "height"
-            KeyType: "RANGE"
-        AttributeDefinitions:
-          - AttributeName: "asset"
-            AttributeType: "S"
-          - AttributeName: "height"
-            AttributeType: "N"
-
 functions:
   request-handler:
     handler: src/LambdaServer.handler
@@ -411,7 +393,11 @@ functions:
             asset: "slp-digg-wbtc"
 
   index-prices:
+<<<<<<< HEAD
     handler: src/indexer/price-indexer.indexPrices
+=======
+    handler: src/indexer/prices/handler.handler
+>>>>>>> e8bc845 (feat: update token config (#48))
     timeout: 30
     events:
       - schedule:
