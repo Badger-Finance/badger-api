@@ -89,12 +89,12 @@ resources:
         TableName: ${self:custom.table.PRICE_DATA.${self:custom.stage}}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
-          - AttributeName: "adress"
+          - AttributeName: "address"
             KeyType: "HASH"
           - AttributeName: "updatedAt"
             KeyType: "RANGE"
         AttributeDefinitions:
-          - AttributeName: "adress"
+          - AttributeName: "address"
             AttributeType: "S"
           - AttributeName: "updatedAt"
             AttributeType: "N"
@@ -408,3 +408,12 @@ functions:
             contract: "0x88128580acdd9c04ce47afce196875747bf2a9f6"
             createdBlock: 11681030
             asset: "slp-digg-wbtc"
+
+  index-prices:
+    handler: src/indexer/prices/handler.handler
+    timeout: 30
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-prices
+          description: "index price data for all protocol tokens"
+          rate: rate(5 minutes)

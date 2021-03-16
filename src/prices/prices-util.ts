@@ -1,46 +1,51 @@
-import { UnprocessableEntity } from '@tsed/exceptions';
-import { QueryInput } from 'aws-sdk/clients/dynamodb';
+import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
+import { DocumentClient, PutItemOutput, QueryInput } from 'aws-sdk/clients/dynamodb';
 import { ethers } from 'ethers';
-import { getItem, saveItem } from '../aws/dynamodb-utils';
+import { getItems, saveItem } from '../aws/dynamodb-utils';
 import { PRICE_DATA } from '../config/constants';
-import { TokenPrice, TokenPriceSnapshot, TokenSnapshot } from '../interface/TokenPrice';
+import { TokenPrice, TokenPriceSnapshot } from '../interface/TokenPrice';
+import { protocolTokens } from '../tokens/tokens-util';
+import AttributeValue = DocumentClient.AttributeValue;
 
 export type PricingFunction = () => Promise<TokenPrice>;
 export interface PriceUpdateRequest {
   [contract: string]: PricingFunction;
 }
 
-export const updatePrice = async (contract: string, getPrice: PricingFunction): Promise<void> => {
+export const updatePrice = async (contract: string, getPrice: PricingFunction): Promise<PutItemOutput> => {
   const checksumContract = ethers.utils.getAddress(contract);
+  const token = protocolTokens.find((token) => ethers.utils.getAddress(token.address) === checksumContract);
+  if (!token) {
+    throw new BadRequest(`${contract} not supported for pricing`);
+  }
   const tokenPriceData = await getPrice();
+  tokenPriceData.name = token.name;
   tokenPriceData.address = checksumContract;
   const tokenPriceSnapshot: TokenPriceSnapshot = {
     ...tokenPriceData,
     updatedAt: Date.now(),
   };
-  const tokenSnapshot = new TokenSnapshot(tokenPriceSnapshot).toAttributeMap();
-  await saveItem(PRICE_DATA, tokenSnapshot);
+  return saveItem(PRICE_DATA, tokenPriceSnapshot);
 };
 
-export const updatePrices = async (request: PriceUpdateRequest): Promise<void> => {
-  await Promise.all(Object.keys(request).map((contract) => updatePrice(contract, request[contract])));
+export const updatePrices = async (request: PriceUpdateRequest): Promise<PutItemOutput[]> => {
+  return Promise.all(Object.keys(request).map((contract) => updatePrice(contract, request[contract])));
 };
 
-export const getPrice = async (contract: string): Promise<TokenSnapshot> => {
+export const getPrice = async (contract: string): Promise<TokenPriceSnapshot> => {
+  const checksumContract: AttributeValue = ethers.utils.getAddress(contract);
   const params: QueryInput = {
     TableName: PRICE_DATA,
-    KeyConditionExpression: 'contract = :contract',
+    KeyConditionExpression: 'address = :address',
     ExpressionAttributeValues: {
-      ':contract': {
-        S: contract,
-      },
+      ':address': checksumContract,
     },
     Limit: 1,
     ScanIndexForward: false,
   };
-  const price = await getItem(params);
-  if (!price) {
+  const prices = await getItems<TokenPriceSnapshot>(params);
+  if (!prices || prices.length !== 1) {
     throw new UnprocessableEntity(`Unable to price ${contract}`);
   }
-  return TokenSnapshot.fromAtrributeMap(price[0]);
+  return prices[0];
 };

@@ -1,6 +1,6 @@
 import { TOKENS } from '../../config/constants';
 import { Token } from '../../interface/Token';
-import { getContractPrice, getTokenPrice } from '../../prices/PricesService';
+import { getContractPrice } from '../../prices/PricesService';
 import { getSushiswapPrice, getUniswapPrice } from '../../protocols/common/swap-util';
 
 const badger: Token = {
@@ -64,7 +64,7 @@ const crvRenBtc: Token = {
   name: 'Curve.fi: renCrv Token',
   symbol: 'Curve.fi renBTC/wBTC (crvRenWBTC)',
   decimals: 18,
-  price: () => getTokenPrice(TOKENS.WBTC),
+  price: () => getContractPrice(TOKENS.WBTC),
 };
 
 const crvTbtc: Token = {
@@ -72,7 +72,7 @@ const crvTbtc: Token = {
   name: 'Curve.fi tBTC/sbtcCrv',
   symbol: 'Curve.fi tBTC/sbtcCrv (tbtc/sbtc)',
   decimals: 18,
-  price: () => getTokenPrice(TOKENS.WBTC),
+  price: () => getContractPrice(TOKENS.WBTC),
 };
 
 const crvSbtc: Token = {
@@ -80,7 +80,15 @@ const crvSbtc: Token = {
   name: 'Curve.fi renBTC/wBTC/sBTC',
   symbol: 'Curve.fi renBTC/wBTC/sBTC',
   decimals: 18,
-  price: () => getTokenPrice(TOKENS.WBTC),
+  price: () => getContractPrice(TOKENS.WBTC),
+};
+
+const sushi: Token = {
+  address: TOKENS.SUSHI,
+  name: 'Sushi',
+  symbol: 'Sushi',
+  decimals: 18,
+  price: () => getContractPrice(TOKENS.SUSHI),
 };
 
 export const ethTokens = [
@@ -94,4 +102,5 @@ export const ethTokens = [
   crvRenBtc,
   crvTbtc,
   crvSbtc,
+  sushi,
 ];

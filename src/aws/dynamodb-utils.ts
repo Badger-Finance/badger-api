@@ -3,32 +3,32 @@ import {
   BatchWriteItemInput,
   BatchWriteItemOutput,
   BatchWriteItemRequestMap,
-  ItemList,
+  DocumentClient,
   PutItemInput,
-  PutItemInputAttributeMap,
   PutItemOutput,
   QueryInput,
 } from 'aws-sdk/clients/dynamodb';
+import AttributeValue = DocumentClient.AttributeValue;
 
 const ddb = new AWS.DynamoDB.DocumentClient();
 
-export const saveItem = async (table: string, item: PutItemInputAttributeMap): Promise<PutItemOutput> => {
+export const saveItem = async (table: string, item: AttributeValue): Promise<PutItemOutput> => {
   const params: PutItemInput = {
     TableName: table,
     Item: item,
   };
-  return await ddb.put(params).promise();
+  return ddb.put(params).promise();
 };
 
 export const saveItems = async (items: BatchWriteItemRequestMap): Promise<BatchWriteItemOutput> => {
   const params: BatchWriteItemInput = {
     RequestItems: items,
   };
-  return await ddb.batchWrite(params).promise();
+  return ddb.batchWrite(params).promise();
 };
 
-export const getItem = async (query: QueryInput): Promise<ItemList | null> => {
+export const getItems = async <T>(query: QueryInput): Promise<T[] | null> => {
   const data = await ddb.query(query).promise();
   if (!data.Items || data.Items.length === 0) return null;
-  return data.Items;
+  return data.Items as T[];
 };
