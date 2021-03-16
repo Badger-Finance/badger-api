@@ -34,7 +34,7 @@ custom:
       prod: "badger-asset"
     PRICE_DATA:
       staging: "badger-staging-prices"
-      staging: "badger-prices"
+      prod: "badger-prices"
   merkleProofs:
     staging: "badger-staging-merkle-proofs"
     prod: "badger-merkle-proofs"
