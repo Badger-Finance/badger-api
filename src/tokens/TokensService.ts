@@ -6,10 +6,9 @@ import { PANCAKESWAP_URL, Protocol, SUSHISWAP_URL, UNISWAP_URL } from '../config
 import { getSdk as getUniV2Sdk, Sdk as UniV2GraphqlSdk, UniV2PairQuery } from '../graphql/generated/uniswap';
 import { SettDefinition } from '../interface/Sett';
 import { SettSnapshot } from '../interface/SettSnapshot';
-import { Token } from '../interface/Token';
 import { TokenBalance } from '../interface/TokenBalance';
 import { PricesService } from '../prices/PricesService';
-import { ethTokens } from './config/eth-tokens';
+import { getToken } from './tokens-util';
 
 @Service()
 export class TokensService {
@@ -37,7 +36,7 @@ export class TokensService {
   async getSettTokens(chain: Chain, settAddress: string, settSnapshot: SettSnapshot): Promise<TokenBalance[]> {
     const sett = chain.setts.find((s) => s.settToken === settAddress);
     if (!sett) throw new NotFound(`${settAddress} is not a known Sett`);
-    const token = this.getTokenByAddress(sett.depositToken);
+    const token = getToken(sett.depositToken);
     if (token.isLPToken) {
       return await this.getLiquidtyPoolTokenBalances(sett, settSnapshot);
     }
@@ -52,18 +51,6 @@ export class TokensService {
         value: await this.pricesService.getUsdValue(token.address, tokens),
       } as TokenBalance,
     ];
-  }
-
-  getTokenByName(token: string): Token {
-    const knownToken = ethTokens.find((t) => t.name.toLowerCase() === token.toLowerCase());
-    if (!knownToken) throw new NotFound(`${token} definition not in TokenRegistry`);
-    return knownToken;
-  }
-
-  getTokenByAddress(token: string): Token {
-    const knownToken = ethTokens.find((t) => t.address.toLowerCase() === token.toLowerCase());
-    if (!knownToken) throw new NotFound(`${token} definition not in TokenRegistry`);
-    return knownToken;
   }
 
   async getLiquidtyPoolTokenBalances(sett: SettDefinition, settSnapshot: SettSnapshot): Promise<TokenBalance[]> {

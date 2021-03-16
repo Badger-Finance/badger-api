@@ -11,6 +11,7 @@ import { Sett } from '../interface/Sett';
 import { ValueSource } from '../interface/ValueSource';
 import { PricesService } from '../prices/PricesService';
 import { SettsService } from '../setts/SettsService';
+import { getToken } from '../tokens/tokens-util';
 import { TokensService } from '../tokens/TokensService';
 
 @Service()
@@ -123,7 +124,7 @@ export class GeyserService {
     if (badgerUnlockSchedules.length > 0) {
       const badgerUnlock = badgerUnlockSchedules[badgerUnlockSchedules.length - 1];
       const badgerEmission: Emission = {
-        token: this.tokensService.getTokenByName('Badger'),
+        token: getToken(TOKENS.BADGER),
         unlockSchedule: {
           startTime: badgerUnlock.startTime,
           endAtSec: badgerUnlock.endAtSec,
@@ -138,7 +139,7 @@ export class GeyserService {
     if (diggUnlockSchedules.length > 0) {
       const diggUnlock = diggUnlockSchedules[diggUnlockSchedules.length - 1];
       const diggEmission: Emission = {
-        token: this.tokensService.getTokenByName('Digg'),
+        token: getToken(TOKENS.DIGG),
         unlockSchedule: {
           startTime: diggUnlock.startTime,
           endAtSec: diggUnlock.endAtSec,
