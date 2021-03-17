@@ -1,10 +1,12 @@
 import { Service } from '@tsed/common';
 import { InternalServerError } from '@tsed/exceptions';
+import { ethers } from 'ethers';
 import NodeCache from 'node-cache';
 import fetch from 'node-fetch';
-import { COINGECKO_URL, TOKENS } from '../config/constants';
+import { COINGECKO_URL } from '../config/constants';
 import { PriceData, PriceSummary, TokenPrice } from '../interface/TokenPrice';
-import { getSushiswapPrice, getUniswapPrice } from '../protocols/common/swap-util';
+import { protocolTokens } from '../tokens/tokens-util';
+import { getPrice } from './prices-util';
 
 const priceCache = new NodeCache({ stdTTL: 300, checkperiod: 480 });
 
@@ -40,10 +42,11 @@ export class PricesService {
    * @param contract Token contract address.
    */
   async getTokenPriceData(contract: string): Promise<TokenPrice> {
-    const cachedPrice: TokenPrice | undefined = priceCache.get(contract);
+    const checksumContract = ethers.utils.getAddress(contract);
+    const cachedPrice: TokenPrice | undefined = priceCache.get(checksumContract);
     if (!cachedPrice) {
       const priceData = await this.getPriceData();
-      return priceData[contract];
+      return priceData[checksumContract];
     }
     return cachedPrice;
   }
@@ -52,52 +55,14 @@ export class PricesService {
    * Retrieve all protocol token prices in both USD and ETH.
    */
   async getPriceData(): Promise<PriceData> {
-    const [
-      badgerPrice,
-      diggPrice,
-      wbtcPrice,
-      uniBadgerWbtcPrice,
-      uniDiggWbtcPrice,
-      slpBadgerWbtcPrice,
-      slpDiggWbtcPrice,
-      slpEthWbtcPrice,
-      renBtcPrice,
-      sBtcPrice,
-      tBtcPrice,
-      wethPrice,
-      sushiPrice,
-      cakePrice,
-    ] = await Promise.all([
-      getContractPrice(TOKENS.BADGER),
-      getContractPrice(TOKENS.DIGG),
-      getContractPrice(TOKENS.WBTC),
-      getUniswapPrice(TOKENS.UNI_BADGER_WBTC),
-      getUniswapPrice(TOKENS.UNI_DIGG_WBTC),
-      getSushiswapPrice(TOKENS.SUSHI_BADGER_WBTC),
-      getSushiswapPrice(TOKENS.SUSHI_DIGG_WBTC),
-      getSushiswapPrice(TOKENS.SUSHI_ETH_WBTC),
-      getContractPrice(TOKENS.CRV_RENBTC),
-      getTokenPrice('sbtc'),
-      getTokenPrice('tbtc'),
-      getContractPrice(TOKENS.WETH),
-      getContractPrice(TOKENS.SUSHI),
-      getTokenPrice('pancakeswap-token'),
-    ]);
     const priceData: PriceData = {};
-    priceData[TOKENS.BADGER] = badgerPrice;
-    priceData[TOKENS.DIGG] = diggPrice;
-    priceData[TOKENS.WBTC] = wbtcPrice;
-    priceData[TOKENS.UNI_BADGER_WBTC] = uniBadgerWbtcPrice;
-    priceData[TOKENS.UNI_DIGG_WBTC] = uniDiggWbtcPrice;
-    priceData[TOKENS.SUSHI_BADGER_WBTC] = slpBadgerWbtcPrice;
-    priceData[TOKENS.SUSHI_DIGG_WBTC] = slpDiggWbtcPrice;
-    priceData[TOKENS.SUSHI_ETH_WBTC] = slpEthWbtcPrice;
-    priceData[TOKENS.CRV_RENBTC] = renBtcPrice;
-    priceData[TOKENS.CRV_SBTC] = sBtcPrice;
-    priceData[TOKENS.CRV_TBTC] = tBtcPrice;
-    priceData[TOKENS.WETH] = wethPrice;
-    priceData[TOKENS.SUSHI] = sushiPrice;
-    priceData[TOKENS.CAKE] = cakePrice;
+    const prices = await Promise.all(protocolTokens.map((token) => getPrice(token.address)));
+    /* eslint-disable @typescript-eslint/no-non-null-assertion */
+    prices.forEach((token) => {
+      priceData[token.address!] = token;
+      priceCache.set(token.address!, token);
+    });
+    /* eslint-disable @typescript-eslint/no-non-null-assertion */
     return priceData;
   }
 

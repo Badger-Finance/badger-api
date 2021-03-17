@@ -43,6 +43,7 @@ export const BLOCKS_PER_YEAR = 2425847;
 
 // data access constants
 export const ASSET_DATA = process.env.ASSET_DATA || 'MISSING REQUIRED ENV VAR';
+export const PRICE_DATA = process.env.PRICE_DATA || 'MISSING REQUIRED ENV VAR';
 export const UNISWAP_URL = process.env.UNISWAP || 'MISSING REQUIRED ENV VAR';
 export const SUSHISWAP_URL = process.env.SUSHISWAP || 'MISSING REQUIRED ENV VAR';
 export const PANCAKESWAP_URL = process.env.PANCAKESWAP || 'MISSING REQUIRED ENV VAR';

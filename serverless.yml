@@ -32,6 +32,9 @@ custom:
     ASSET_DATA:
       staging: "badger-staging-asset"
       prod: "badger-asset"
+    PRICE_DATA:
+      staging: "badger-staging-prices"
+      prod: "badger-prices"
   merkleProofs:
     staging: "badger-staging-merkle-proofs"
     prod: "badger-merkle-proofs"
@@ -60,6 +63,7 @@ provider:
     PANCAKESWAP: "https://api.thegraph.com/subgraphs/name/pancakeswap/exchange"
     MASTERCHEF: "https://api.thegraph.com/subgraphs/name/sushiswap/master-chef"
     ASSET_DATA: ${self:custom.table.ASSET_DATA.${self:custom.stage}}
+    PRICE_DATA: ${self:custom.table.PRICE_DATA.${self:custom.stage}}
     MERKLE_CLAIM_BUCKET: ${self:custom.merkleProofs.${self:custom.stage}}
 
 resources:
@@ -78,6 +82,21 @@ resources:
           - AttributeName: "asset"
             AttributeType: "S"
           - AttributeName: "height"
+            AttributeType: "N"
+    priceTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.table.PRICE_DATA.${self:custom.stage}}
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: "address"
+            KeyType: "HASH"
+          - AttributeName: "updatedAt"
+            KeyType: "RANGE"
+        AttributeDefinitions:
+          - AttributeName: "address"
+            AttributeType: "S"
+          - AttributeName: "updatedAt"
             AttributeType: "N"
 
 functions:
@@ -389,3 +408,12 @@ functions:
             contract: "0x88128580acdd9c04ce47afce196875747bf2a9f6"
             createdBlock: 11681030
             asset: "slp-digg-wbtc"
+
+  index-prices:
+    handler: src/indexer/prices/handler.handler
+    timeout: 30
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-prices
+          description: "index price data for all protocol tokens"
+          rate: rate(5 minutes)
