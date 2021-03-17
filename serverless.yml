@@ -393,11 +393,7 @@ functions:
             asset: "slp-digg-wbtc"
 
   index-prices:
-<<<<<<< HEAD
-    handler: src/indexer/price-indexer.indexPrices
-=======
     handler: src/indexer/prices/handler.handler
->>>>>>> e8bc845 (feat: update token config (#48))
     timeout: 30
     events:
       - schedule:
