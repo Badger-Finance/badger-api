@@ -49,6 +49,6 @@ export abstract class SwapService {
   }
 
   async getPairPrice(contract: string): Promise<TokenPrice> {
-    return getLiquidityPrice(this.graphUrl, contract.toLowerCase());
+    return getLiquidityPrice(this.graphUrl, contract);
   }
 }

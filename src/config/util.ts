@@ -2,16 +2,12 @@ import { Block } from '@ethersproject/abstract-provider';
 import AWS from 'aws-sdk';
 import { PutItemInput, QueryInput } from 'aws-sdk/clients/dynamodb';
 import { DocumentClient } from 'aws-sdk/lib/dynamodb/document_client';
-import { SettFragment } from '../graphql/generated/badger';
 import { SettSnapshot } from '../interface/SettSnapshot';
-import { TokenPrice } from '../tokens/interfaces/token-price.interface';
 import { Ethereum } from './chain/chain';
 import AttributeValue = DocumentClient.AttributeValue;
 
 export const THIRTY_MIN_BLOCKS = parseInt(String((30 * 60) / 13));
 const ddb = new AWS.DynamoDB.DocumentClient({ apiVersion: '2012-08-10' });
-
-export type GetPriceFunc = (settFragment: SettFragment) => Promise<TokenPrice>;
 
 export interface EventInput {
   asset: string;

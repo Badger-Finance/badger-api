@@ -299,47 +299,42 @@ functions:
               - statusCode: "200"
               - statusCode: "500"
 
-  index-crv-btc:
-    handler: src/indexer/curve/handler.handler
+  index-sett:
+    handler: src/indexer/sett-indexer.indexAsset
     timeout: 300
     events:
       - schedule:
-          name: ${self:service}-${self:custom.stage}-index-badger-sbtccrv
-          description: "index historical data for badger sbtc sett"
+          name: ${self:service}-${self:custom.stage}-index-sbtccrv
+          description: "index historical data for sbtc sett"
           rate: rate(5 minutes)
           input:
             contract: "0xd04c48a53c111300ad41190d63681ed3dad998ec"
             createdBlock: 11380877
             asset: "sbtccrv"
       - schedule:
-          name: ${self:service}-${self:custom.stage}-index-badger-renbtccrv
-          description: "index historical data for badger renbtccrv sett"
+          name: ${self:service}-${self:custom.stage}-index-renbtccrv
+          description: "index historical data for renbtccrv sett"
           rate: rate(5 minutes)
           input:
             contract: "0x6def55d2e18486b9ddfaa075bc4e4ee0b28c1545"
             createdBlock: 11380872
             asset: "renbtccrv"
       - schedule:
-          name: ${self:service}-${self:custom.stage}-index-badger-tbtccrv
-          description: "index historical data for badger tbtccrv sett"
+          name: ${self:service}-${self:custom.stage}-index-tbtccrv
+          description: "index historical data for tbtccrv sett"
           rate: rate(5 minutes)
           input:
             contract: "0xb9d076fde463dbc9f915e5392f807315bf940334"
             createdBlock: 11380878
             asset: "tbtccrv"
       - schedule:
-          name: ${self:service}-${self:custom.stage}-index-badger-hrenbtccrv
-          description: "index historical data for badger hrenbtccrv sett"
+          name: ${self:service}-${self:custom.stage}-index-hrenbtccrv
+          description: "index historical data for hrenbtccrv sett"
           rate: rate(5 minutes)
           input:
             contract: "0xaf5a1decfa95baf63e0084a35c62592b774a2a87"
             createdBlock: 11380939
             asset: "hrenbtccrv"
-
-  index-token:
-    handler: src/indexer/token/handler.handler
-    timeout: 300
-    events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-badger
           description: "index historical data for badger sett"
@@ -348,7 +343,6 @@ functions:
             contract: "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28"
             createdBlock: 11380871
             asset: "badger"
-            token: "badger-dao"
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-digg
           description: "index historical data for digg sett"
@@ -357,12 +351,6 @@ functions:
             contract: "0x7e7e112a68d8d2e221e11047a72ffc1065c38e1a"
             createdBlock: 11680422
             asset: "digg"
-            token: "digg"
-
-  index-uniswap:
-    handler: src/indexer/uniswap/handler.handler
-    timeout: 300
-    events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-uniswap-badger-wbtc
           description: "index historical data for badger uniswap badger-wbtc sett"
@@ -379,11 +367,6 @@ functions:
             contract: "0xc17078fdd324cc473f8175dc5290fae5f2e84714"
             createdBlock: 11680833
             asset: "digg-wbtc"
-
-  index-sushiswap:
-    handler: src/indexer/sushiswap/handler.handler
-    timeout: 300
-    events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-sushiswap-badger-wbtc
           description: "index historical data for badger sushiswap badger-wbtc jar"
@@ -410,7 +393,7 @@ functions:
             asset: "slp-digg-wbtc"
 
   index-prices:
-    handler: src/indexer/prices/handler.handler
+    handler: src/indexer/price-indexer.indexPrices
     timeout: 30
     events:
       - schedule:

@@ -8,6 +8,7 @@ import { BLOCKS_PER_YEAR, PANCAKE_CHEF, PANCAKESWAP_URL, TOKENS } from '../../co
 import { PoolInfo } from '../../interface/MasterChef';
 import { combinePerformance, Performance, uniformPerformance } from '../../interface/Performance';
 import { SettDefinition } from '../../interface/Sett';
+import { getTokenPriceData } from '../../prices/prices-util';
 import { PricesService } from '../../prices/PricesService';
 import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
 import { SwapService } from '../common/SwapService';
@@ -53,11 +54,11 @@ export class PancakeSwapService extends SwapService {
       masterChef.totalAllocPoint(),
       masterChef.cakePerBlock(),
       masterChef.poolInfo(poolId),
-      this.pricesService.getTokenPriceData(TOKENS.CAKE),
+      getTokenPriceData(TOKENS.CAKE),
     ]);
     const depositToken = new ethers.Contract(poolInfo.lpToken, erc20Abi, chain.provider);
     const poolBalance = (await depositToken.balanceOf(PANCAKE_CHEF)) / 1e18;
-    const depositTokenValue = await this.getPairPrice(poolInfo.lpToken);
+    const depositTokenValue = await getTokenPriceData(poolInfo.lpToken);
     const poolValue = poolBalance * depositTokenValue.usd;
     const emissionScalar = poolInfo.allocPoint.toNumber() / totalAllocPoint.toNumber();
     const cakeEmission = parseFloat(formatEther(cakePerBlock)) * emissionScalar * BLOCKS_PER_YEAR * tokenPrice.usd;

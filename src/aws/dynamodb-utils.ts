@@ -1,30 +1,28 @@
 import AWS from 'aws-sdk';
 import {
   BatchWriteItemInput,
-  BatchWriteItemOutput,
   BatchWriteItemRequestMap,
   DocumentClient,
   PutItemInput,
-  PutItemOutput,
   QueryInput,
 } from 'aws-sdk/clients/dynamodb';
 import AttributeValue = DocumentClient.AttributeValue;
 
 const ddb = new AWS.DynamoDB.DocumentClient();
 
-export const saveItem = async (table: string, item: AttributeValue): Promise<PutItemOutput> => {
+export const saveItem = async (table: string, item: AttributeValue): Promise<void> => {
   const params: PutItemInput = {
     TableName: table,
     Item: item,
   };
-  return ddb.put(params).promise();
+  await ddb.put(params).promise();
 };
 
-export const saveItems = async (items: BatchWriteItemRequestMap): Promise<BatchWriteItemOutput> => {
+export const saveItems = async (items: BatchWriteItemRequestMap): Promise<void> => {
   const params: BatchWriteItemInput = {
     RequestItems: items,
   };
-  return ddb.batchWrite(params).promise();
+  await ddb.batchWrite(params).promise();
 };
 
 export const getItems = async <T>(query: QueryInput): Promise<T[] | null> => {

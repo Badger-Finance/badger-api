@@ -1,19 +1,8 @@
-import { PlatformTest } from '@tsed/common';
 import fetchMock from 'jest-fetch-mock';
 import { TokenPrice } from '../tokens/interfaces/token-price.interface';
-import { getContractPrice, getTokenPrice, PricesService } from './PricesService';
+import { getContractPrice, getTokenPrice, inCurrency } from './prices-util';
 
-describe('PricesService', () => {
-  let service: PricesService;
-
-  beforeAll(async () => {
-    await PlatformTest.create();
-
-    service = PlatformTest.get<PricesService>(PricesService);
-  });
-
-  afterEach(PlatformTest.reset);
-
+describe('prices-util', () => {
   beforeEach(fetchMock.resetMocks);
 
   it('Fetches the contract price in USD and ETH', async () => {
@@ -70,28 +59,28 @@ describe('PricesService', () => {
 
     describe('without a currency', () => {
       it('returns the usd price', () => {
-        const defaultPrice = service.inCurrency(priceData);
+        const defaultPrice = inCurrency(priceData);
         expect(defaultPrice).toEqual(priceData.usd);
       });
     });
 
     describe('with usd selected', () => {
       it('returns the usd price', () => {
-        const defaultPrice = service.inCurrency(priceData, 'usd');
+        const defaultPrice = inCurrency(priceData, 'usd');
         expect(defaultPrice).toEqual(priceData.usd);
       });
     });
 
     describe('with eth selected', () => {
       it('returns the eth price', () => {
-        const ethPrice = service.inCurrency(priceData, 'eth');
+        const ethPrice = inCurrency(priceData, 'eth');
         expect(ethPrice).toEqual(priceData.eth);
       });
     });
 
     describe('with an unsupported currency', () => {
       it('returns the usd price', () => {
-        const ethPrice = service.inCurrency(priceData, 'bchabc');
+        const ethPrice = inCurrency(priceData, 'bchabc');
         expect(ethPrice).toEqual(priceData.usd);
       });
     });
