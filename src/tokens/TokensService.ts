@@ -37,7 +37,7 @@ export class TokensService {
     const sett = chain.setts.find((s) => s.settToken === settAddress);
     if (!sett) throw new NotFound(`${settAddress} is not a known Sett`);
     const token = getToken(sett.depositToken);
-    if (token.isLPToken) {
+    if (token.lpToken) {
       return await this.getLiquidtyPoolTokenBalances(sett, settSnapshot);
     }
     const tokens = settSnapshot.balance / Math.pow(10, token.decimals);

@@ -1,4 +1,6 @@
-export const TOKENS = {
+import { ethers } from 'ethers';
+
+const RAW_TOKENS = {
   // general tokens
   BADGER: '0x3472a5a71965499acd81997a54bba8d852c6e53d',
   DIGG: '0x798d1be841a82a273720ce31c822c61a67a601c3',
@@ -23,6 +25,9 @@ export const TOKENS = {
 
   // pancakeswap tokens
 };
+export const TOKENS = Object.fromEntries(
+  Object.entries(RAW_TOKENS).map(([key, val]) => [key, ethers.utils.getAddress(val)]),
+);
 
 export enum Protocol {
   Curve = 'curve',

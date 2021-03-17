@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 import { Chain } from '../../config/chain/chain';
 import { Performance, uniformPerformance } from '../../interface/Performance';
 import { SettDefinition } from '../../interface/Sett';
-import { TokenPrice } from '../../interface/TokenPrice';
+import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
 import { getLiquidityPrice } from './swap-util';
 
 export abstract class SwapService {

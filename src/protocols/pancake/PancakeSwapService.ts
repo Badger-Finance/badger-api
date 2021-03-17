@@ -8,8 +8,8 @@ import { BLOCKS_PER_YEAR, PANCAKE_CHEF, PANCAKESWAP_URL, TOKENS } from '../../co
 import { PoolInfo } from '../../interface/MasterChef';
 import { combinePerformance, Performance, uniformPerformance } from '../../interface/Performance';
 import { SettDefinition } from '../../interface/Sett';
-import { TokenPrice } from '../../interface/TokenPrice';
 import { PricesService } from '../../prices/PricesService';
+import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
 import { SwapService } from '../common/SwapService';
 
 @Service()

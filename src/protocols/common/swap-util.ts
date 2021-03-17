@@ -2,8 +2,8 @@ import { NotFound } from '@tsed/exceptions';
 import { GraphQLClient } from 'graphql-request';
 import { PANCAKESWAP_URL, SUSHISWAP_URL, UNISWAP_URL } from '../../config/constants';
 import { getSdk as getUniswapSdk } from '../../graphql/generated/uniswap';
-import { TokenPrice } from '../../interface/TokenPrice';
 import { getContractPrice } from '../../prices/PricesService';
+import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
 
 export const getLiquidityPrice = async (graphUrl: string, contract: string): Promise<TokenPrice> => {
   const graphqlClient = new GraphQLClient(graphUrl);

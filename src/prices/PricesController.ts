@@ -1,6 +1,6 @@
 import { Controller, Get, Inject, QueryParams } from '@tsed/common';
 import { ContentType } from '@tsed/schema';
-import { PriceSummary } from '../interface/TokenPrice';
+import { PriceSummary } from '../tokens/interfaces/token-price.interface';
 import { PricesService } from './PricesService';
 
 @Controller('/prices')

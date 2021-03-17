@@ -1,17 +1,19 @@
-import { ChainType } from '../enums/chain-type.enum';
+import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
 
-type Strategies = { [key in ChainType]: ChainStrategy }
-
-export interface ChainStrategy {
-
-}
+type Strategies = Record<string, ChainStrategy>;
 
 export abstract class ChainStrategy {
   private static strategies: Strategies = {} as Strategies;
 
-  static register(types: ChainType[], strategy: ChainStrategy): void {
-    for (const type of types) {
-      ChainStrategy.strategies[type] = strategy;
+  static register(addresses: string[], strategy: ChainStrategy): void {
+    for (const address of addresses) {
+      ChainStrategy.strategies[address] = strategy;
     }
   }
+
+  static getStrategy(address: string): ChainStrategy {
+    return this.strategies[address];
+  }
+
+  abstract getPrice(address: string): Promise<TokenPrice>;
 }
