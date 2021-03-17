@@ -4,7 +4,7 @@ import { ethers } from 'ethers';
 import NodeCache from 'node-cache';
 import fetch from 'node-fetch';
 import { COINGECKO_URL } from '../config/constants';
-import { PriceData, PriceSummary, TokenPrice } from '../interface/TokenPrice';
+import { PriceData, PriceSummary, TokenPrice } from '../tokens/interfaces/token-price.interface';
 import { protocolTokens } from '../tokens/tokens-util';
 import { getPrice } from './prices-util';
 
@@ -56,7 +56,7 @@ export class PricesService {
    */
   async getPriceData(): Promise<PriceData> {
     const priceData: PriceData = {};
-    const prices = await Promise.all(protocolTokens.map((token) => getPrice(token.address)));
+    const prices = await Promise.all(Object.values(protocolTokens).map((token) => getPrice(token.address)));
     /* eslint-disable @typescript-eslint/no-non-null-assertion */
     prices.forEach((token) => {
       priceData[token.address!] = token;

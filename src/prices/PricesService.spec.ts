@@ -1,6 +1,6 @@
 import { PlatformTest } from '@tsed/common';
 import fetchMock from 'jest-fetch-mock';
-import { TokenPrice } from '../interface/TokenPrice';
+import { TokenPrice } from '../tokens/interfaces/token-price.interface';
 import { getContractPrice, getTokenPrice, PricesService } from './PricesService';
 
 describe('PricesService', () => {

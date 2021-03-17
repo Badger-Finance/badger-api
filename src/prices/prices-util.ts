@@ -2,25 +2,27 @@ import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
 import { DocumentClient, PutItemOutput, QueryInput } from 'aws-sdk/clients/dynamodb';
 import { ethers } from 'ethers';
 import { getItems, saveItem } from '../aws/dynamodb-utils';
+import { ChainStrategy } from '../chains/strategies/chain.strategy';
 import { PRICE_DATA } from '../config/constants';
-import { TokenPrice, TokenPriceSnapshot } from '../interface/TokenPrice';
-import { protocolTokens } from '../tokens/tokens-util';
+import { Token } from '../tokens/interfaces/token.interface';
+import { TokenPrice, TokenPriceSnapshot } from '../tokens/interfaces/token-price.interface';
+import { TokenConfig } from '../tokens/types/token-config.type';
 import AttributeValue = DocumentClient.AttributeValue;
 
-export type PricingFunction = () => Promise<TokenPrice>;
+export type PricingFunction = (address: string) => Promise<TokenPrice>;
 export interface PriceUpdateRequest {
   [contract: string]: PricingFunction;
 }
 
-export const updatePrice = async (contract: string, getPrice: PricingFunction): Promise<PutItemOutput> => {
-  const checksumContract = ethers.utils.getAddress(contract);
-  const token = protocolTokens.find((token) => ethers.utils.getAddress(token.address) === checksumContract);
+export const updatePrice = async (token: Token): Promise<PutItemOutput> => {
   if (!token) {
-    throw new BadRequest(`${contract} not supported for pricing`);
+    throw new BadRequest('Token not supported for pricing');
   }
-  const tokenPriceData = await getPrice();
-  tokenPriceData.name = token.name;
-  tokenPriceData.address = checksumContract;
+  const { address, name } = token;
+  const strategy = ChainStrategy.getStrategy(address);
+  const tokenPriceData = await strategy.getPrice(address);
+  tokenPriceData.name = name;
+  tokenPriceData.address = address;
   const tokenPriceSnapshot: TokenPriceSnapshot = {
     ...tokenPriceData,
     updatedAt: Date.now(),
@@ -28,8 +30,8 @@ export const updatePrice = async (contract: string, getPrice: PricingFunction): 
   return saveItem(PRICE_DATA, tokenPriceSnapshot);
 };
 
-export const updatePrices = async (request: PriceUpdateRequest): Promise<PutItemOutput[]> => {
-  return Promise.all(Object.keys(request).map((contract) => updatePrice(contract, request[contract])));
+export const updatePrices = async (tokenConfig: TokenConfig): Promise<PutItemOutput[]> => {
+  return Promise.all(Object.values(tokenConfig).map((token) => updatePrice(token)));
 };
 
 export const getPrice = async (contract: string): Promise<TokenPriceSnapshot> => {

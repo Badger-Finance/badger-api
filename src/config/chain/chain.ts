@@ -1,7 +1,7 @@
 import { BadRequest } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { SettDefinition } from '../../interface/Sett';
-import { Token } from '../../interface/Token';
+import { Token } from '../../tokens/interfaces/token.interface';
 import { Provider } from '../constants';
 import { bscSetts } from './bsc';
 import { ethSetts } from './eth';

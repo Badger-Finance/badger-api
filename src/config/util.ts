@@ -4,7 +4,7 @@ import { PutItemInput, QueryInput } from 'aws-sdk/clients/dynamodb';
 import { DocumentClient } from 'aws-sdk/lib/dynamodb/document_client';
 import { SettFragment } from '../graphql/generated/badger';
 import { SettSnapshot } from '../interface/SettSnapshot';
-import { TokenPrice } from '../interface/TokenPrice';
+import { TokenPrice } from '../tokens/interfaces/token-price.interface';
 import { Ethereum } from './chain/chain';
 import AttributeValue = DocumentClient.AttributeValue;
 
