@@ -11,23 +11,14 @@ import { getPrice, getPriceData, inCurrency } from './prices-util';
 @Service()
 export class PricesService {
   /**
-   * Retrieve the USD price for a given token balance.
+   * Retrieve the price for a given token balance.
    * @param contract Token contract address.
    * @param balance Token balance to calculate price.
+   * @param currency Currency to return the value in.
    */
-  async getUsdValue(contract: string, balance: number): Promise<number> {
+  async getValue(contract: string, balance: number, currency?: string): Promise<number> {
     const tokenPrice = await getPrice(contract);
-    return tokenPrice.usd * balance;
-  }
-
-  /**
-   * Retrieve the ETH price for a given token balance.
-   * @param contract Token contract address.
-   * @param balance Token balance to calculate price.
-   */
-  async getEthValue(contract: string, balance: number): Promise<number> {
-    const tokenPrice = await getPrice(contract);
-    return tokenPrice.eth * balance;
+    return inCurrency(tokenPrice, currency) * balance;
   }
 
   async getPriceSummary(chain: Chain, currency?: string): Promise<PriceSummary> {

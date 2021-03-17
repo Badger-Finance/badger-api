@@ -1,13 +1,12 @@
 import { Inject, Service } from '@tsed/common';
 import { NotFound } from '@tsed/exceptions';
 import { GraphQLClient } from 'graphql-request';
-import { Chain } from '../config/chain/chain';
 import { PANCAKESWAP_URL, Protocol, SUSHISWAP_URL, UNISWAP_URL } from '../config/constants';
 import { getSdk as getUniV2Sdk, Sdk as UniV2GraphqlSdk, UniV2PairQuery } from '../graphql/generated/uniswap';
-import { SettDefinition } from '../interface/Sett';
-import { SettSnapshot } from '../interface/SettSnapshot';
 import { TokenBalance } from '../interface/TokenBalance';
 import { PricesService } from '../prices/PricesService';
+import { getLiquidityData } from '../protocols/common/swap-util';
+import { TokenRequest } from './interfaces/token-request.interface';
 import { getToken } from './tokens-util';
 
 @Service()
@@ -29,66 +28,71 @@ export class TokensService {
   }
 
   /**
-   * @param settAddress Sett contract address
-   * @param settBalance Sett token balance
-   * @param prices Price data object
+   * Get token balances within a sett.
+   * @param sett Sett requested.
+   * @param balance Balance in wei.
+   * @param currency Optional currency denomination.
+   * @returns Array of token balances from the Sett.
    */
-  async getSettTokens(chain: Chain, settAddress: string, settSnapshot: SettSnapshot): Promise<TokenBalance[]> {
-    const sett = chain.setts.find((s) => s.settToken === settAddress);
-    if (!sett) throw new NotFound(`${settAddress} is not a known Sett`);
+  async getSettTokens(request: TokenRequest): Promise<TokenBalance[]> {
+    const { sett, balance, currency } = request;
     const token = getToken(sett.depositToken);
+    const tokenBalance = balance / Math.pow(10, token.decimals);
+    request.balance = tokenBalance;
     if (token.lpToken) {
-      return await this.getLiquidtyPoolTokenBalances(sett, settSnapshot);
+      return await this.getLiquidtyPoolTokenBalances(request);
     }
-    const tokens = settSnapshot.balance / Math.pow(10, token.decimals);
     return [
       {
         address: token.address,
         name: token.name,
         symbol: token.symbol,
         decimals: token.decimals,
-        balance: tokens,
-        value: await this.pricesService.getUsdValue(token.address, tokens),
-      } as TokenBalance,
+        balance: tokenBalance,
+        value: await this.pricesService.getValue(token.address, tokenBalance, currency),
+      },
     ];
   }
 
-  async getLiquidtyPoolTokenBalances(sett: SettDefinition, settSnapshot: SettSnapshot): Promise<TokenBalance[]> {
+  async getLiquidtyPoolTokenBalances(request: TokenRequest): Promise<TokenBalance[]> {
+    const { sett, balance, currency } = request;
     const { depositToken, protocol } = sett;
 
+    const pairId = depositToken.toLowerCase();
     let poolData: UniV2PairQuery | undefined;
     if (protocol === Protocol.Uniswap) {
       poolData = await this.uniswapGraphqlSdk.UniV2Pair({
-        id: depositToken.toLowerCase(),
+        id: pairId,
       });
     }
     if (protocol === Protocol.Sushiswap) {
       poolData = await this.sushiswapGraphqlSdk.UniV2Pair({
-        id: depositToken.toLowerCase(),
+        id: pairId,
       });
     }
     if (protocol === Protocol.Pancakeswap) {
       poolData = await this.pancakeswapGraphqlSdk.UniV2Pair({
-        id: depositToken.toLowerCase(),
+        id: pairId,
       });
     }
 
     if (!poolData) {
-      throw new NotFound(`${protocol} pool ${depositToken} does not exist`);
+      throw new NotFound(`${protocol} pool ${pairId} does not exist`);
     }
     const { pair } = poolData;
     if (!pair) {
-      throw new NotFound(`${protocol} pool ${depositToken} pair does not exist`);
+      return await this.getOnChainLiquidtyPoolTokenBalances(request);
     }
+
     // poolData returns the full liquidity pool, valueScalar acts to calculate the portion within the sett
-    const valueScalar = (settSnapshot.supply * settSnapshot.ratio) / pair.totalSupply;
+    const valueScalar = pair.totalSupply > 0 ? balance / pair.totalSupply : 0;
     const token0: TokenBalance = {
       name: pair.token0.name,
       address: pair.token0.id,
       symbol: pair.token0.symbol,
       decimals: pair.token0.decimals,
       balance: pair.reserve0,
-      value: (await this.pricesService.getUsdValue(pair.token0.id, pair.reserve0)) * valueScalar,
+      value: (await this.pricesService.getValue(pair.token0.id, pair.reserve0, currency)) * valueScalar,
     };
     const token1: TokenBalance = {
       name: pair.token1.name,
@@ -96,8 +100,43 @@ export class TokensService {
       symbol: pair.token1.symbol,
       decimals: pair.token1.decimals,
       balance: pair.reserve1,
-      value: (await this.pricesService.getUsdValue(pair.token1.id, pair.reserve1)) * valueScalar,
+      value: (await this.pricesService.getValue(pair.token1.id, pair.reserve1, currency)) * valueScalar,
     };
     return [token0, token1];
+  }
+
+  async getOnChainLiquidtyPoolTokenBalances(request: TokenRequest): Promise<TokenBalance[]> {
+    const { chain, sett, balance, currency } = request;
+    try {
+      const liquidityData = await getLiquidityData(chain, sett.depositToken);
+
+      const { token0, token1, reserve0, reserve1, totalSupply } = liquidityData;
+
+      const t0Token = getToken(token0);
+      const t1Token = getToken(token1);
+
+      // poolData returns the full liquidity pool, valueScalar acts to calculate the portion within the sett
+      const valueScalar = totalSupply > 0 ? balance / totalSupply : 0;
+      const token0Balance: TokenBalance = {
+        name: t0Token.name,
+        address: t0Token.address,
+        symbol: t0Token.symbol,
+        decimals: t0Token.decimals,
+        balance: reserve0,
+        value: (await this.pricesService.getValue(t0Token.address, reserve0, currency)) * valueScalar,
+      };
+      const token1Balance: TokenBalance = {
+        name: t1Token.name,
+        address: t1Token.address,
+        symbol: t1Token.symbol,
+        decimals: t1Token.decimals,
+        balance: reserve1,
+        value: (await this.pricesService.getValue(t1Token.address, reserve1, currency)) * valueScalar,
+      };
+      return [token0Balance, token1Balance];
+    } catch (err) {
+      console.error(err);
+      throw new NotFound(`${sett.protocol} pool pair ${sett.depositToken} does not exist`);
+    }
   }
 }

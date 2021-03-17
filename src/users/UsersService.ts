@@ -64,8 +64,8 @@ export class UsersService {
         const settTokens = settPricePerFullShare * netShareDeposit;
         const earned = (settTokens - grossDeposit + grossWithdraw) / Math.pow(10, sett.token.decimals);
         const balance = settTokens / Math.pow(10, sett.token.decimals);
-        const earnedUsd = await this.pricesService.getUsdValue(sett.token.id, earned);
-        const balanceUsd = await this.pricesService.getUsdValue(sett.token.id, balance);
+        const earnedUsd = await this.pricesService.getValue(sett.token.id, earned);
+        const balanceUsd = await this.pricesService.getValue(sett.token.id, balance);
 
         return {
           id: settInfo.settToken,

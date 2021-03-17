@@ -13,7 +13,7 @@ import { UniswapService } from './uni/UniswapService';
  * External protocol performance retrieval service.
  */
 @Service()
-export class ProtocolService {
+export class ProtocolsService {
   @Inject()
   uniswapService!: UniswapService;
   @Inject()

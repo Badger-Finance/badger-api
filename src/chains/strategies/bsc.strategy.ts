@@ -32,7 +32,9 @@ export class BscStrategy extends ChainStrategy {
     }
     switch (attributes.type) {
       case TokenType.Contract:
-        if (!attributes.lookupName) throw new UnprocessableEntity(`No lookup name availabe for ${checksummedAddress}`);
+        if (!attributes.lookupName) {
+          throw new UnprocessableEntity(`No lookup name available for ${checksummedAddress}`);
+        }
         return getTokenPrice(attributes.lookupName);
       case TokenType.PancakeswapLp:
         return getPancakeswapPrice(checksummedAddress);

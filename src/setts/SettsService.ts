@@ -1,4 +1,4 @@
-import { Service } from '@tsed/common';
+import { Inject, Service } from '@tsed/common';
 import { BadRequest, NotFound } from '@tsed/exceptions';
 import { Chain } from '../config/chain/chain';
 import {
@@ -17,12 +17,20 @@ import { ProtocolSummary } from '../interface/ProtocolSummary';
 import { Sett, SettSummary } from '../interface/Sett';
 import { SettSnapshot } from '../interface/SettSnapshot';
 import { ValueSource } from '../interface/ValueSource';
-import { ProtocolService } from '../protocols/ProtocolsService';
+import { PricesService } from '../prices/PricesService';
+import { ProtocolsService } from '../protocols/ProtocolsService';
+import { TokenRequest } from '../tokens/interfaces/token-request.interface';
 import { TokensService } from '../tokens/TokensService';
+import { getSett } from './setts-util';
 
 @Service()
 export class SettsService {
-  constructor(private protocolService: ProtocolService, private tokenSerivce: TokensService) {}
+  @Inject()
+  protocolsService!: ProtocolsService;
+  @Inject()
+  tokensSerivce!: TokensService;
+  @Inject()
+  pricesService!: PricesService;
 
   async getProtocolSummary(chain: Chain): Promise<ProtocolSummary> {
     const setts = await this.listSetts(chain);
@@ -51,17 +59,18 @@ export class SettsService {
     if (!settName) {
       throw new BadRequest('settName is required');
     }
-    const settData = chain.setts.find((s) => s.symbol.toLowerCase() === settName.toLowerCase());
+    const asset = settName.toLowerCase();
+    const settDefinition = chain.setts.find((s) => s.symbol.toLowerCase() === asset);
 
-    if (!settData) {
+    if (!settDefinition) {
       throw new NotFound(`${settName} is not a valid sett`);
     }
 
     const sett: Sett = {
-      name: settData.name,
-      asset: settData.symbol,
-      vaultToken: settData.settToken,
-      underlyingToken: settData.depositToken,
+      name: settDefinition.name,
+      asset: settDefinition.symbol,
+      vaultToken: settDefinition.settToken,
+      underlyingToken: settDefinition.depositToken,
       ppfs: 1,
       value: 0,
       apy: 0,
@@ -69,9 +78,10 @@ export class SettsService {
       sources: [],
     };
 
-    const [protocolValueSource, settSnapshots] = await Promise.all([
-      this.protocolService.getProtocolPerformance(chain, settData),
+    const [protocolValueSource, settSnapshots, settData] = await Promise.all([
+      this.protocolsService.getProtocolPerformance(chain, settDefinition),
       this.getSettSnapshots(settName, SAMPLE_DAYS),
+      getSett(settDefinition.settToken),
     ]);
 
     if (protocolValueSource) {
@@ -79,13 +89,21 @@ export class SettsService {
       sett.sources.push(protocolValueSource);
     }
 
-    if (settSnapshots.length > 0) {
-      const settState = settSnapshots[CURRENT];
-      const settValueSource = this.getSettUnderlyingValueSource(settName, settSnapshots);
+    // set to current balance, fallback to snapshot
+    let balance = 0;
+    if (settData.sett) {
+      const currentSett = settData.sett;
+      balance = currentSett.balance;
+      sett.ppfs = currentSett.pricePerFullShare;
+    } else if (settSnapshots.length > 0) {
+      const latestSett = settSnapshots[CURRENT];
+      balance = latestSett.balance;
+      sett.ppfs = latestSett.ratio;
+    }
 
-      sett.ppfs = settState.ratio;
-      sett.value = settState.value;
-      sett.tokens = await this.tokenSerivce.getSettTokens(chain, settData.settToken, settState);
+    // check for historical performance data
+    if (settSnapshots.length > 0) {
+      const settValueSource = this.getSettUnderlyingValueSource(settName, settSnapshots);
 
       // sett has measurable apy, replace underlying with measured actual apy
       if (settValueSource.apy > 0) {
@@ -93,6 +111,14 @@ export class SettsService {
         sett.apy = sett.sources.map((s) => s.apy).reduce((total, apy) => (total += apy), 0);
       }
     }
+
+    const tokenRequest: TokenRequest = {
+      chain: chain,
+      sett: settDefinition,
+      balance: balance,
+    };
+    sett.tokens = await this.tokensSerivce.getSettTokens(tokenRequest);
+    sett.value = sett.tokens.reduce((total, tokenBalance) => (total += tokenBalance.value), 0);
 
     return sett;
   }

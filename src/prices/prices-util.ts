@@ -11,6 +11,7 @@ import { getToken, protocolTokens } from '../tokens/tokens-util';
 import { TokenConfig } from '../tokens/types/token-config.type';
 import AttributeValue = DocumentClient.AttributeValue;
 import fetch from 'node-fetch';
+import { TokenType } from '../tokens/enums/token-type.enum';
 
 export type PricingFunction = (address: string) => Promise<TokenPrice>;
 export interface PriceUpdateRequest {
@@ -23,6 +24,7 @@ export const updatePrice = async (token: Token): Promise<void> => {
   if (!token) {
     throw new BadRequest('Token not supported for pricing');
   }
+  if (token.type === TokenType.Wrapper) return;
   const { address, name } = token;
   const strategy = ChainStrategy.getStrategy(address);
   const tokenPriceData = await strategy.getPrice(address);

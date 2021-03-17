@@ -39,7 +39,9 @@ export class EthStrategy extends ChainStrategy {
     }
     switch (attributes.type) {
       case TokenType.Contract:
-        if (attributes.lookupName) return getTokenPrice(attributes.lookupName);
+        if (attributes.lookupName) {
+          return getTokenPrice(attributes.lookupName);
+        }
         return getContractPrice(checksummedAddress);
       case TokenType.SushiswapLp:
         return getSushiswapPrice(checksummedAddress);
