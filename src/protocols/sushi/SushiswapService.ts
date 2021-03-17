@@ -12,6 +12,7 @@ import {
 } from '../../graphql/generated/master-chef';
 import { combinePerformance, Performance, uniformPerformance } from '../../interface/Performance';
 import { SettDefinition } from '../../interface/Sett';
+import { getTokenPriceData } from '../../prices/prices-util';
 import { PricesService } from '../../prices/PricesService';
 import { TokensService } from '../../tokens/TokensService';
 import { MASTERCHEF_URL } from '../../v1/util/constants';
@@ -63,7 +64,7 @@ export class SushiswapService extends SwapService {
     }
     const [depositTokenPrice, sushiPrice] = await Promise.all([
       this.getPairPrice(pool.pair),
-      this.pricesService.getTokenPriceData(TOKENS.SUSHI),
+      getTokenPriceData(TOKENS.SUSHI),
     ]);
     const totalAllocPoint = masterChef.totalAllocPoint;
     const poolValue = pool.balance * depositTokenPrice.usd;

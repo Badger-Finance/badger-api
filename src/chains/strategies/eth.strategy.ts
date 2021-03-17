@@ -1,6 +1,7 @@
-import { BadRequest } from '@tsed/exceptions';
+import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
+import { ethers } from 'ethers';
 import { TOKENS } from '../../config/constants';
-import { getContractPrice } from '../../prices/PricesService';
+import { getContractPrice, getTokenPrice } from '../../prices/prices-util';
 import { getSushiswapPrice, getUniswapPrice } from '../../protocols/common/swap-util';
 import { ethTokensConfig } from '../../tokens/config/eth-tokens.config';
 import { TokenType } from '../../tokens/enums/token-type.enum';
@@ -15,6 +16,8 @@ export class EthStrategy extends ChainStrategy {
         TOKENS.BADGER,
         TOKENS.DIGG,
         TOKENS.SUSHI,
+        TOKENS.WBTC,
+        TOKENS.WETH,
         TOKENS.CRV_RENBTC,
         TOKENS.CRV_TBTC,
         TOKENS.CRV_SBTC,
@@ -29,17 +32,21 @@ export class EthStrategy extends ChainStrategy {
   }
 
   async getPrice(address: string): Promise<TokenPrice> {
-    const attributes = ethTokensConfig[address];
+    const checksummedAddress = ethers.utils.getAddress(address);
+    const attributes = ethTokensConfig[checksummedAddress];
     if (!attributes) {
-      throw new BadRequest(`No attributes found for ${address}`);
+      throw new BadRequest(`No attributes found for ${checksummedAddress}`);
     }
     switch (attributes.type) {
       case TokenType.Contract:
-        return getContractPrice(address);
+        if (attributes.lookupName) return getTokenPrice(attributes.lookupName);
+        return getContractPrice(checksummedAddress);
       case TokenType.SushiswapLp:
-        return getSushiswapPrice(address);
+        return getSushiswapPrice(checksummedAddress);
       case TokenType.UniswapLp:
-        return getUniswapPrice(address);
+        return getUniswapPrice(checksummedAddress);
+      default:
+        throw new UnprocessableEntity('Unsupported TokenType');
     }
   }
 }

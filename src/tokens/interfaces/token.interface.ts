@@ -7,4 +7,5 @@ export interface Token {
   symbol: string;
   type: TokenType;
   lpToken?: boolean;
+  lookupName?: string;
 }

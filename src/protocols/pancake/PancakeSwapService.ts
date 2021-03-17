@@ -4,10 +4,11 @@ import { BigNumber, ethers } from 'ethers';
 import { CacheService } from '../../cache/CacheService';
 import { erc20Abi, pancakeChefAbi } from '../../config/abi';
 import { Chain } from '../../config/chain/chain';
-import { BLOCKS_PER_YEAR, PANCAKE_CHEF, PANCAKESWAP_URL, TOKENS } from '../../config/constants';
+import { BSC_BLOCKS_PER_YEAR, PANCAKE_CHEF, PANCAKESWAP_URL, TOKENS } from '../../config/constants';
 import { PoolInfo } from '../../interface/MasterChef';
 import { combinePerformance, Performance, uniformPerformance } from '../../interface/Performance';
 import { SettDefinition } from '../../interface/Sett';
+import { getTokenPriceData } from '../../prices/prices-util';
 import { PricesService } from '../../prices/PricesService';
 import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
 import { SwapService } from '../common/SwapService';
@@ -32,12 +33,13 @@ export class PancakeSwapService extends SwapService {
     }
     const [tradeFeePerformance, poolApr] = await Promise.all([
       this.getSwapPerformance(depositToken),
-      this.getPoolApr(chain, sett.depositToken, 15),
+      this.getPoolApr(chain, sett.depositToken, getPoolId(sett.depositToken)),
     ]);
     return combinePerformance(tradeFeePerformance, poolApr);
   }
 
   async getPoolApr(chain: Chain, contract: string, poolId: number): Promise<Performance> {
+    if (!poolId) return uniformPerformance(0);
     const cacheKey = CacheService.getCacheKey(chain.name, contract, poolId.toString());
     const cachedPool = this.cacheService.get<Performance>(cacheKey);
     if (cachedPool) {
@@ -53,16 +55,23 @@ export class PancakeSwapService extends SwapService {
       masterChef.totalAllocPoint(),
       masterChef.cakePerBlock(),
       masterChef.poolInfo(poolId),
-      this.pricesService.getTokenPriceData(TOKENS.CAKE),
+      getTokenPriceData(TOKENS.CAKE),
     ]);
     const depositToken = new ethers.Contract(poolInfo.lpToken, erc20Abi, chain.provider);
     const poolBalance = (await depositToken.balanceOf(PANCAKE_CHEF)) / 1e18;
-    const depositTokenValue = await this.getPairPrice(poolInfo.lpToken);
+    const depositTokenValue = await getTokenPriceData(poolInfo.lpToken);
     const poolValue = poolBalance * depositTokenValue.usd;
     const emissionScalar = poolInfo.allocPoint.toNumber() / totalAllocPoint.toNumber();
-    const cakeEmission = parseFloat(formatEther(cakePerBlock)) * emissionScalar * BLOCKS_PER_YEAR * tokenPrice.usd;
+    const cakeEmission = parseFloat(formatEther(cakePerBlock)) * emissionScalar * BSC_BLOCKS_PER_YEAR * tokenPrice.usd;
     const poolApr = uniformPerformance((cakeEmission / poolValue) * 100);
     this.cacheService.set(cacheKey, poolApr);
     return poolApr;
   }
 }
+
+// TODO: Remove this once pancakeswap masterchef subgraph has synced
+const getPoolId = (depositToken: string): number => {
+  const poolMap: Record<string, number> = {};
+  poolMap[TOKENS.PANCAKE_BNB_BTCB] = 15;
+  return poolMap[depositToken];
+};
