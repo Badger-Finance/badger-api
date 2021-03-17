@@ -1,4 +1,5 @@
 import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
+import { ethers } from 'ethers';
 import { TOKENS } from '../../config/constants';
 import { getContractPrice, getTokenPrice } from '../../prices/prices-util';
 import { getSushiswapPrice, getUniswapPrice } from '../../protocols/common/swap-util';
@@ -31,18 +32,19 @@ export class EthStrategy extends ChainStrategy {
   }
 
   async getPrice(address: string): Promise<TokenPrice> {
-    const attributes = ethTokensConfig[address];
+    const checksummedAddress = ethers.utils.getAddress(address);
+    const attributes = ethTokensConfig[checksummedAddress];
     if (!attributes) {
-      throw new BadRequest(`No attributes found for ${address}`);
+      throw new BadRequest(`No attributes found for ${checksummedAddress}`);
     }
     switch (attributes.type) {
       case TokenType.Contract:
         if (attributes.lookupName) return getTokenPrice(attributes.lookupName);
-        return getContractPrice(address);
+        return getContractPrice(checksummedAddress);
       case TokenType.SushiswapLp:
-        return getSushiswapPrice(address);
+        return getSushiswapPrice(checksummedAddress);
       case TokenType.UniswapLp:
-        return getUniswapPrice(address);
+        return getUniswapPrice(checksummedAddress);
       default:
         throw new UnprocessableEntity('Unsupported TokenType');
     }

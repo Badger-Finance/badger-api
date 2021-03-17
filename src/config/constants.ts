@@ -50,6 +50,7 @@ export const THIRTY_DAYS = ONE_DAY * 30;
 export const SAMPLE_DAYS = THIRTY_DAYS + 1;
 export const ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000;
 export const BLOCKS_PER_YEAR = 2425847;
+export const BSC_BLOCKS_PER_YEAR = 10512000;
 
 // data access constants
 export const ASSET_DATA = process.env.ASSET_DATA || 'MISSING REQUIRED ENV VAR';

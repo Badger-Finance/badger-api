@@ -79,7 +79,7 @@ export const getTokenPriceData = async (contract: string): Promise<TokenPrice> =
 };
 
 /**
- * Retrieve all protocol token prices in both USD and ETH.
+ * Retrieve all chain token prices in both USD and ETH.
  */
 export const getPriceData = async (): Promise<PriceData> => {
   const priceData: PriceData = {};

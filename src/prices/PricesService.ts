@@ -1,6 +1,7 @@
 import { Service } from '@tsed/common';
+import { Chain } from '../config/chain/chain';
 import { PriceSummary } from '../tokens/interfaces/token-price.interface';
-import { getPriceData, getTokenPriceData, inCurrency } from './prices-util';
+import { getPrice, getPriceData, inCurrency } from './prices-util';
 
 /**
  * API price oracle service. Uses CoinGecko as a source of truth for most
@@ -15,7 +16,7 @@ export class PricesService {
    * @param balance Token balance to calculate price.
    */
   async getUsdValue(contract: string, balance: number): Promise<number> {
-    const tokenPrice = await getTokenPriceData(contract);
+    const tokenPrice = await getPrice(contract);
     return tokenPrice.usd * balance;
   }
 
@@ -25,14 +26,16 @@ export class PricesService {
    * @param balance Token balance to calculate price.
    */
   async getEthValue(contract: string, balance: number): Promise<number> {
-    const tokenPrice = await getTokenPriceData(contract);
+    const tokenPrice = await getPrice(contract);
     return tokenPrice.eth * balance;
   }
 
-  async getPriceSummary(currency?: string): Promise<PriceSummary> {
+  async getPriceSummary(chain: Chain, currency?: string): Promise<PriceSummary> {
+    const chainTokens = Object.keys(chain.tokens);
     const priceData = await getPriceData();
     const priceSummary: PriceSummary = {};
-    for (const [key, value] of Object.entries(priceData)) {
+    const chainTokenPrices = Object.entries(priceData).filter(([key]) => chainTokens.includes(key));
+    for (const [key, value] of chainTokenPrices) {
       priceSummary[key] = inCurrency(value, currency);
     }
     return priceSummary;

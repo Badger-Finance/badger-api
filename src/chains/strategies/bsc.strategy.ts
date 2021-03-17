@@ -1,4 +1,5 @@
 import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
+import { ethers } from 'ethers';
 import { TOKENS } from '../../config/constants';
 import { getTokenPrice } from '../../prices/prices-util';
 import { getPancakeswapPrice } from '../../protocols/common/swap-util';
@@ -24,16 +25,17 @@ export class BscStrategy extends ChainStrategy {
   }
 
   async getPrice(address: string): Promise<TokenPrice> {
-    const attributes = bscTokensConfig[address];
+    const checksummedAddress = ethers.utils.getAddress(address);
+    const attributes = bscTokensConfig[checksummedAddress];
     if (!attributes) {
-      throw new BadRequest(`No attributes found for ${address}`);
+      throw new BadRequest(`No attributes found for ${checksummedAddress}`);
     }
     switch (attributes.type) {
       case TokenType.Contract:
-        if (!attributes.lookupName) throw new UnprocessableEntity(`No lookup name availabe for ${address}`);
+        if (!attributes.lookupName) throw new UnprocessableEntity(`No lookup name availabe for ${checksummedAddress}`);
         return getTokenPrice(attributes.lookupName);
       case TokenType.PancakeswapLp:
-        return getPancakeswapPrice(address);
+        return getPancakeswapPrice(checksummedAddress);
       default:
         throw new UnprocessableEntity('Unsupported TokenType');
     }
