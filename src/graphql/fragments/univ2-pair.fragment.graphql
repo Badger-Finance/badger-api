@@ -1,0 +1,18 @@
+fragment UniV2Pair on Pair {
+  id
+  reserve0
+  reserve1
+  token0 {
+    id
+    symbol
+    name
+    decimals
+  }
+  token1 {
+    id
+    symbol
+    name
+    decimals
+  }
+  totalSupply
+}

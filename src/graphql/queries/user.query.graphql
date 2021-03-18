@@ -1,0 +1,10 @@
+query User(
+  $id: ID!
+  $orderDirection: OrderDirection!
+) {
+  user(id: $id) {
+    settBalances(orderDirection: $orderDirection) {
+      ...UserSettBalance
+    }
+  }
+}

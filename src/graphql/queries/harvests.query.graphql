@@ -1,0 +1,10 @@
+query Harvests(
+  $first: Int
+  $skip: Int
+  $orderBy: Harvest_orderBy
+  $orderDirection: OrderDirection
+) {
+  harvests {
+    ...Harvest
+  }
+}

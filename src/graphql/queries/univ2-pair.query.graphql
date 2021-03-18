@@ -1,0 +1,8 @@
+query UniV2Pair(
+  $id: ID!
+  $block: Block_height
+) {
+  pair(id: $id, block: $block) {
+    ...UniV2Pair
+  }
+}

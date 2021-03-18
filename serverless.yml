@@ -1,22 +1,22 @@
 ---
-service: badger
+service: badger-v2
 frameworkVersion: '2'
+# temporarily silence complaints about v1 swagger documentation
+configValidationMode: off
 
 plugins:
-  - serverless-offline
-  - serverless-secrets-plugin
   - serverless-aws-documentation
-  - serverless-export-swagger
   - serverless-api-gateway-caching
   - serverless-plugin-typescript
+  - serverless-offline
 
 custom:
   stage: ${opt:stage, self:provider.stage}
   apiGatewayCaching:
     enabled: ${self:custom.caching.${self:custom.stage}}
     ttlInSeconds: 300
-  secretsFilePathPrefix: secrets
-  secrets: ${file(${self:custom.secretsFilePathPrefix}/secrets.${self:custom.stage}.yml)}
+  serverless-offline:
+    noPrependStageInUrl: true
   documentation:
     api:
       info:
@@ -28,18 +28,16 @@ custom:
             description: "Protocol related API"
           - name: "Chart"
             description: "Chart related API"
-  bucket:
-    SWAGGER:
-      staging: "badger-staging-docs"
-      prod: "badger-docs"
-  swaggerDestinations:
-    s3BucketName: ${self:custom.bucket.SWAGGER.${self:custom.stage}}
-    s3KeyName: "swagger/swagger.json"
-    acl: public-read
   table:
     ASSET_DATA:
       staging: "badger-staging-asset"
       prod: "badger-asset"
+    PRICE_DATA:
+      staging: "badger-staging-prices"
+      prod: "badger-prices"
+  merkleProofs:
+    staging: "badger-staging-merkle-proofs"
+    prod: "badger-merkle-proofs"
   caching:
     staging: false
     prod: true
@@ -49,22 +47,74 @@ provider:
   runtime: nodejs12.x
   stage: staging
   region: us-west-1
+  iam:
+    role:
+      managedPolicies:
+        - arn:aws:iam::aws:policy/AWSLambdaFullAccess
   versionFunctions: false
   apiGateway:
     shouldStartNameWithService: true
+    minimumCompressionSize: 1024
   environment:
     BADGER: "https://api.thegraph.com/subgraphs/name/axejintao/badger-dao"
+    BADGER_DAO: "https://api.thegraph.com/subgraphs/name/darruma/badger"
     UNISWAP: "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2"
-    SUSHISWAP: "https://api.thegraph.com/subgraphs/name/croco-finance/sushiswap"
+    SUSHISWAP: "https://api.thegraph.com/subgraphs/name/jiro-ono/sushiswap-v1-exchange-staging"
+    PANCAKESWAP: "https://api.thegraph.com/subgraphs/name/pancakeswap/exchange"
     MASTERCHEF: "https://api.thegraph.com/subgraphs/name/sushiswap/master-chef"
     ASSET_DATA: ${self:custom.table.ASSET_DATA.${self:custom.stage}}
-    INFURA_PROJECT_ID: ${self:custom.secrets.INFURA_PROJECT_ID}
-    INFURA_PROJECT_SECRET: ${self:custom.secrets.INFURA_PROJECT_SECRET}
+    PRICE_DATA: ${self:custom.table.PRICE_DATA.${self:custom.stage}}
+    MERKLE_CLAIM_BUCKET: ${self:custom.merkleProofs.${self:custom.stage}}
+
+resources:
+  Resources:
+    protocolTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.table.ASSET_DATA.${self:custom.stage}}
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: "asset"
+            KeyType: "HASH"
+          - AttributeName: "height"
+            KeyType: "RANGE"
+        AttributeDefinitions:
+          - AttributeName: "asset"
+            AttributeType: "S"
+          - AttributeName: "height"
+            AttributeType: "N"
+    priceTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.table.PRICE_DATA.${self:custom.stage}}
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: "address"
+            KeyType: "HASH"
+          - AttributeName: "updatedAt"
+            KeyType: "RANGE"
+        AttributeDefinitions:
+          - AttributeName: "address"
+            AttributeType: "S"
+          - AttributeName: "updatedAt"
+            AttributeType: "N"
 
 functions:
+  request-handler:
+    handler: src/LambdaServer.handler
+    timeout: 5
+    events:
+      - http:
+          path: /v2/{proxy+}
+          method: any
+          cors: true
+      - http:
+          path: /v2/
+          method: any
+          cors: true
+
   get-protocol-ppfs:
-    handler: src/service/protocol/ppfs/handler.handler
-    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
+    handler: src/v1/protocol/ppfs/handler.handler
     timeout: 30
     events:
       - http:
@@ -87,8 +137,7 @@ functions:
               - statusCode: "500"
   
   get-protocol-value:
-    handler: src/service/protocol/handler.handler
-    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
+    handler: src/v1/protocol/handler.handler
     timeout: 30
     events:
       - http:
@@ -115,8 +164,7 @@ functions:
               - statusCode: "500"
 
   get-protocol-earnings:
-    handler: src/service/protocol/earnings/handler.handler
-    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
+    handler: src/v1/protocol/earnings/handler.handler
     timeout: 30
     events:
       - http:
@@ -142,8 +190,7 @@ functions:
               - statusCode: "500"
 
   get-protocol-farm:
-    handler: src/service/protocol/farm/handler.handler
-    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
+    handler: src/v1/protocol/farm/handler.handler
     timeout: 30
     events:
       - http:
@@ -162,8 +209,7 @@ functions:
               - statusCode: "500"
 
   get-protocol-sett-performance:
-    handler: src/service/protocol/performance/handler.handler
-    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
+    handler: src/v1/protocol/performance/handler.handler
     timeout: 30
     events:
       - http:
@@ -188,8 +234,7 @@ functions:
               - statusCode: "500"
 
   get-chart-sett-performance:
-    handler: src/service/chart/sett/performance/handler.handler
-    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
+    handler: src/v1/chart/sett/performance/handler.handler
     timeout: 30
     events:
       - http:
@@ -222,8 +267,7 @@ functions:
               - statusCode: "500"
 
   get-chart-sett:
-    handler: src/service/chart/sett/handler.handler
-    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
+    handler: src/v1/chart/sett/handler.handler
     timeout: 30
     events:
       - http:
@@ -255,49 +299,42 @@ functions:
               - statusCode: "200"
               - statusCode: "500"
 
-  index-crv-btc:
-    handler: src/service/index/curve/handler.handler
-    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
+  index-sett:
+    handler: src/indexer/sett-indexer.indexAsset
     timeout: 300
     events:
       - schedule:
-          name: ${self:service}-${self:custom.stage}-index-badger-sbtccrv
-          description: "index historical data for badger sbtc sett"
+          name: ${self:service}-${self:custom.stage}-index-sbtccrv
+          description: "index historical data for sbtc sett"
           rate: rate(5 minutes)
           input:
             contract: "0xd04c48a53c111300ad41190d63681ed3dad998ec"
             createdBlock: 11380877
             asset: "sbtccrv"
       - schedule:
-          name: ${self:service}-${self:custom.stage}-index-badger-renbtccrv
-          description: "index historical data for badger renbtccrv sett"
+          name: ${self:service}-${self:custom.stage}-index-renbtccrv
+          description: "index historical data for renbtccrv sett"
           rate: rate(5 minutes)
           input:
             contract: "0x6def55d2e18486b9ddfaa075bc4e4ee0b28c1545"
             createdBlock: 11380872
             asset: "renbtccrv"
       - schedule:
-          name: ${self:service}-${self:custom.stage}-index-badger-tbtccrv
-          description: "index historical data for badger tbtccrv sett"
+          name: ${self:service}-${self:custom.stage}-index-tbtccrv
+          description: "index historical data for tbtccrv sett"
           rate: rate(5 minutes)
           input:
             contract: "0xb9d076fde463dbc9f915e5392f807315bf940334"
             createdBlock: 11380878
             asset: "tbtccrv"
       - schedule:
-          name: ${self:service}-${self:custom.stage}-index-badger-hrenbtccrv
-          description: "index historical data for badger hrenbtccrv sett"
+          name: ${self:service}-${self:custom.stage}-index-hrenbtccrv
+          description: "index historical data for hrenbtccrv sett"
           rate: rate(5 minutes)
           input:
             contract: "0xaf5a1decfa95baf63e0084a35c62592b774a2a87"
             createdBlock: 11380939
             asset: "hrenbtccrv"
-
-  index-token:
-    handler: src/service/index/token/handler.handler
-    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
-    timeout: 300
-    events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-badger
           description: "index historical data for badger sett"
@@ -306,7 +343,6 @@ functions:
             contract: "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28"
             createdBlock: 11380871
             asset: "badger"
-            token: "badger-dao"
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-digg
           description: "index historical data for digg sett"
@@ -315,13 +351,6 @@ functions:
             contract: "0x7e7e112a68d8d2e221e11047a72ffc1065c38e1a"
             createdBlock: 11680422
             asset: "digg"
-            token: "digg"
-
-  index-uniswap:
-    handler: src/service/index/uniswap/handler.handler
-    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
-    timeout: 300
-    events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-uniswap-badger-wbtc
           description: "index historical data for badger uniswap badger-wbtc sett"
@@ -338,12 +367,6 @@ functions:
             contract: "0xc17078fdd324cc473f8175dc5290fae5f2e84714"
             createdBlock: 11680833
             asset: "digg-wbtc"
-
-  index-sushiswap:
-    handler: src/service/index/sushiswap/handler.handler
-    role: arn:aws:iam::135612478587:role/badger-staging-us-west-1-lambdaRole
-    timeout: 300
-    events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-sushiswap-badger-wbtc
           description: "index historical data for badger sushiswap badger-wbtc jar"
@@ -368,3 +391,12 @@ functions:
             contract: "0x88128580acdd9c04ce47afce196875747bf2a9f6"
             createdBlock: 11681030
             asset: "slp-digg-wbtc"
+
+  index-prices:
+    handler: src/indexer/price-indexer.indexPrices
+    timeout: 30
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-prices
+          description: "index price data for all protocol tokens"
+          rate: rate(5 minutes)
