@@ -23,6 +23,24 @@ interface GetReservesResponse {
   _blockTimestampLast: number;
 }
 
+export const getLiquidityData = async (chain: Chain, contract: string): Promise<LiquidityData> => {
+  const pairContract = new ethers.Contract(contract, uniV2LPAbi, chain.provider);
+  const totalSupply = parseFloat(ethers.utils.formatEther(await pairContract.totalSupply()));
+  const token0 = await pairContract.token0();
+  const token1 = await pairContract.token1();
+  const reserves: GetReservesResponse = await pairContract.getReserves();
+  const reserve0 = parseFloat(ethers.utils.formatEther(reserves._reserve0));
+  const reserve1 = parseFloat(ethers.utils.formatEther(reserves._reserve1));
+  return {
+    contract: contract,
+    token0: token0,
+    token1: token1,
+    reserve0: reserve0,
+    reserve1: reserve1,
+    totalSupply: totalSupply,
+  };
+};
+
 export const getLiquidityPrice = async (graphUrl: string, contract: string): Promise<TokenPrice> => {
   const graphqlClient = new GraphQLClient(graphUrl);
   const graphqlSdk = getUniswapSdk(graphqlClient);
@@ -52,28 +70,14 @@ export const getLiquidityPrice = async (graphUrl: string, contract: string): Pro
 
 export const getOnChainLiquidityPrice = async (chain: Chain, contract: string): Promise<TokenPrice> => {
   try {
-    const pairContract = new ethers.Contract(contract, uniV2LPAbi, chain.provider);
-    const totalSupply = parseFloat(ethers.utils.formatEther(await pairContract.totalSupply()));
-    if (totalSupply === 0) {
+    const liquidityData = await getLiquidityData(chain, contract);
+    if (liquidityData.totalSupply === 0) {
       return {
         address: contract,
         usd: 0,
         eth: 0,
       };
     }
-    const token0 = await pairContract.token0();
-    const token1 = await pairContract.token1();
-    const reserves: GetReservesResponse = await pairContract.getReserves();
-    const reserve0 = parseFloat(ethers.utils.formatEther(reserves._reserve0));
-    const reserve1 = parseFloat(ethers.utils.formatEther(reserves._reserve1));
-    const liquidityData: LiquidityData = {
-      contract: contract,
-      token0: token0,
-      token1: token1,
-      reserve0: reserve0,
-      reserve1: reserve1,
-      totalSupply: totalSupply,
-    };
     return resolveLiquidityPrice(liquidityData);
   } catch (err) {
     throw new NotFound(`No pair found for ${contract}`);

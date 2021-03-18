@@ -3,4 +3,5 @@ export enum TokenType {
   SushiswapLp = 'SushiswapLp',
   UniswapLp = 'UniswapLp',
   PancakeswapLp = 'PancakeswapLp',
+  Wrapper = 'Wrapper',
 }

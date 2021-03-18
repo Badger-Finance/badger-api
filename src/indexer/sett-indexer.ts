@@ -1,24 +1,16 @@
-import { GraphQLClient } from 'graphql-request';
 import { ChainStrategy } from '../chains/strategies/chain.strategy';
 import { initStrategies } from '../config/chain/chain';
-import { ASSET_DATA, BADGER_URL } from '../config/constants';
+import { ASSET_DATA } from '../config/constants';
 import { EventInput, getBlock, getIndexedBlock, saveItem, THIRTY_MIN_BLOCKS } from '../config/util';
-import { getSdk } from '../graphql/generated/badger';
+import { getSett } from '../setts/setts-util';
 
 export const indexAsset = async (event: EventInput) => {
   initStrategies();
-  const badgerGraphqlClient = new GraphQLClient(BADGER_URL);
-  const badgerGraphqlSdk = getSdk(badgerGraphqlClient);
   const { asset, createdBlock, contract } = event;
   let block = await getIndexedBlock(ASSET_DATA, asset, createdBlock);
 
   while (true) {
-    const sett = await badgerGraphqlSdk.Sett({
-      id: contract,
-      block: {
-        number: block,
-      },
-    });
+    const sett = await getSett(contract, block);
 
     if (sett.sett == null) {
       block += THIRTY_MIN_BLOCKS;

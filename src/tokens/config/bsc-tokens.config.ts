@@ -51,4 +51,18 @@ export const bscTokensConfig: TokenConfig = {
     symbol: 'Pancakeswap BDIGG/BTCB LP (PLP)',
     type: TokenType.PancakeswapLp,
   },
+  [TOKENS.BSC_BBADGER]: {
+    address: TOKENS.BSC_BBADGER,
+    decimals: 18,
+    name: 'bBadger',
+    symbol: 'bBADGER',
+    type: TokenType.Wrapper,
+  },
+  [TOKENS.BSC_BDIGG]: {
+    address: TOKENS.BSC_BDIGG,
+    decimals: 18,
+    name: 'bDigg',
+    symbol: 'bDIGG',
+    type: TokenType.Wrapper,
+  },
 };

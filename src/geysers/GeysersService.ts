@@ -54,7 +54,7 @@ export class GeyserService {
         const geyserToken = sett.token.id;
         const pricePerFullShare = sett.pricePerFullShare / 1e18;
         const geyserDeposits = (geyser.netShareDeposit * pricePerFullShare) / 1e18;
-        const geyserDepositsValue = await this.pricesService.getUsdValue(geyserToken, geyserDeposits);
+        const geyserDepositsValue = await this.pricesService.getValue(geyserToken, geyserDeposits);
         const geyserData = await this.getGeyserData(geyser.id, sharesPerFragment);
         const [badgerEmissionData, diggEmissionData] = geyserData.emissions;
         const emissionSources = [] as ValueSource[];
@@ -64,7 +64,7 @@ export class GeyserService {
           const badgerUnlockSchedule = badgerEmissionData.unlockSchedule;
           const badgerEmitted = badgerUnlockSchedule.initialLocked.toNumber();
           const badgerEmissionDuration = badgerUnlockSchedule.endAtSec.sub(badgerUnlockSchedule.startTime).toNumber();
-          const badgerEmissionValue = await this.pricesService.getUsdValue(TOKENS.BADGER, badgerEmitted);
+          const badgerEmissionValue = await this.pricesService.getValue(TOKENS.BADGER, badgerEmitted);
           const badgerEmissionValueRate = toRate(badgerEmissionValue, badgerEmissionDuration);
           const badgerApy = ((secondToDay(badgerEmissionValueRate) * 365) / geyserDepositsValue) * 100;
 
@@ -86,7 +86,7 @@ export class GeyserService {
           const diggUnlockSchedule = diggEmissionData.unlockSchedule;
           const diggEmitted = diggUnlockSchedule.initialLocked.toNumber();
           const diggEmissionDuration = diggUnlockSchedule.endAtSec.sub(diggUnlockSchedule.startTime).toNumber();
-          const diggEmissionValue = await this.pricesService.getUsdValue(TOKENS.DIGG, diggEmitted);
+          const diggEmissionValue = await this.pricesService.getValue(TOKENS.DIGG, diggEmitted);
           const diggEmissionValueRate = toRate(diggEmissionValue, diggEmissionDuration);
           const diggApy = ((secondToDay(diggEmissionValueRate) * 365) / geyserDepositsValue) * 100;
 
