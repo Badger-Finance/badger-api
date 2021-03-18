@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import methodOverride from 'method-override';
+import { loadChains } from './chains/chain';
 import { controllers } from './ControllerRegistry';
 
 const rootDir = __dirname;
@@ -28,6 +29,10 @@ const rootDir = __dirname;
 export class Server {
   @Inject()
   app!: PlatformApplication;
+
+  public $beforeInit(): void {
+    loadChains();
+  }
 
   /**
    * This method let you configure the express middleware required by your application to work.

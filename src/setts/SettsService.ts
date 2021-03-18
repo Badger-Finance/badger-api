@@ -1,6 +1,6 @@
 import { Inject, Service } from '@tsed/common';
 import { BadRequest, NotFound } from '@tsed/exceptions';
-import { Chain } from '../config/chain/chain';
+import { Chain } from '../chains/config/chain.config';
 import {
   ASSET_DATA,
   CURRENT,
@@ -81,7 +81,7 @@ export class SettsService {
     const [protocolValueSource, settSnapshots, settData] = await Promise.all([
       this.protocolsService.getProtocolPerformance(chain, settDefinition),
       this.getSettSnapshots(settName, SAMPLE_DAYS),
-      getSett(settDefinition.settToken),
+      getSett(chain.graphUrl, settDefinition.settToken),
     ]);
 
     if (protocolValueSource) {

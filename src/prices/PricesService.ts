@@ -1,5 +1,5 @@
 import { Service } from '@tsed/common';
-import { Chain } from '../config/chain/chain';
+import { Chain } from '../chains/config/chain.config';
 import { PriceSummary } from '../tokens/interfaces/token-price.interface';
 import { getPrice, getPriceData, inCurrency } from './prices-util';
 

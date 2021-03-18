@@ -1,6 +1,6 @@
 import { Service } from '@tsed/common';
 import { GraphQLClient } from 'graphql-request';
-import { BADGER_DAO_SUBGRAPH_URL } from '../config/constants';
+import { BADGER_DAO_URL } from '../config/constants';
 import {
   getSdk,
   HarvestsQuery,
@@ -13,7 +13,7 @@ export class HarvestsService {
   private badgerDaoGraphqlSdk: BadgerDaoGraphqlSdk;
 
   constructor() {
-    const badgerDaoGraphqlClient = new GraphQLClient(BADGER_DAO_SUBGRAPH_URL);
+    const badgerDaoGraphqlClient = new GraphQLClient(BADGER_DAO_URL);
     this.badgerDaoGraphqlSdk = getSdk(badgerDaoGraphqlClient);
   }
 
