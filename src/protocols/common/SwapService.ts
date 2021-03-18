@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import { Chain } from '../../config/chain/chain';
+import { Chain } from '../../chains/config/chain.config';
 import { Performance, uniformPerformance } from '../../interface/Performance';
 import { SettDefinition } from '../../interface/Sett';
 import { TokenPrice } from '../../tokens/interfaces/token-price.interface';

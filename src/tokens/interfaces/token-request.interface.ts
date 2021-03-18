@@ -1,4 +1,4 @@
-import { Chain } from '../../config/chain/chain';
+import { Chain } from '../../chains/config/chain.config';
 import { SettDefinition } from '../../interface/Sett';
 
 export interface TokenRequest {
