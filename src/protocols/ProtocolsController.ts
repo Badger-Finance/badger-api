@@ -11,7 +11,10 @@ export class ProtocolController {
 
   @Get('/value')
   @ContentType('json')
-  async getAssetsUnderManagement(@QueryParams('chain') chain: string): Promise<ProtocolSummary> {
-    return this.settsService.getProtocolSummary(resolveChainQuery(chain));
+  async getAssetsUnderManagement(
+    @QueryParams('chain') chain?: string,
+    @QueryParams('currency') currency?: string,
+  ): Promise<ProtocolSummary> {
+    return this.settsService.getProtocolSummary(resolveChainQuery(chain), currency);
   }
 }

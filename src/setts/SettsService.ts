@@ -32,8 +32,8 @@ export class SettsService {
   @Inject()
   pricesService!: PricesService;
 
-  async getProtocolSummary(chain: Chain): Promise<ProtocolSummary> {
-    const setts = await this.listSetts(chain);
+  async getProtocolSummary(chain: Chain, currency?: string): Promise<ProtocolSummary> {
+    const setts = await this.listSetts(chain, currency);
     const settSummaries = setts.map(
       (s) =>
         ({
@@ -50,12 +50,12 @@ export class SettsService {
     } as ProtocolSummary;
   }
 
-  async listSetts(chain: Chain): Promise<Sett[]> {
+  async listSetts(chain: Chain, currency?: string): Promise<Sett[]> {
     const settNames = Object.values(chain.setts).map((s) => s.symbol.toLocaleLowerCase());
-    return await Promise.all(settNames.map((s) => this.getSett(chain, s)));
+    return await Promise.all(settNames.map((s) => this.getSett(chain, s, currency)));
   }
 
-  async getSett(chain: Chain, settName: string): Promise<Sett> {
+  async getSett(chain: Chain, settName: string, currency?: string): Promise<Sett> {
     if (!settName) {
       throw new BadRequest('settName is required');
     }
@@ -116,6 +116,7 @@ export class SettsService {
       chain: chain,
       sett: settDefinition,
       balance: balance,
+      currency: currency,
     };
     sett.tokens = await this.tokensSerivce.getSettTokens(tokenRequest);
     sett.value = sett.tokens.reduce((total, tokenBalance) => (total += tokenBalance.value), 0);

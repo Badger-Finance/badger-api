@@ -47,7 +47,7 @@ export const supportedChains = [eth, bsc];
  * Failure to specify a chain, or requesting a non-supported
  * chain will default to Ethereum.
  */
-export const resolveChainQuery = (symbol: string): Chain => {
+export const resolveChainQuery = (symbol?: string): Chain => {
   if (!symbol) return eth;
   const chain = supportedChains.find((c) => c.symbol.toLowerCase() === symbol.toLowerCase());
   if (!chain) throw new BadRequest('Invalid chain');

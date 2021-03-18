@@ -103,7 +103,7 @@ export const getPriceData = async (): Promise<PriceData> => {
  * @throws {InternalServerError} Failed price lookup.
  */
 export const getContractPrice = async (contract: string): Promise<TokenPrice> => {
-  const cachedPrice: TokenPrice | undefined = priceCache.get(contract);
+  const cachedPrice = priceCache.get<TokenPrice>(contract);
   if (cachedPrice) return cachedPrice;
   const response = await fetch(
     `${COINGECKO_URL}/token_price/ethereum?contract_addresses=${contract}&vs_currencies=usd,eth`,
@@ -128,7 +128,7 @@ export const getContractPrice = async (contract: string): Promise<TokenPrice> =>
  * @throws {InternalServerError} Failed price lookup.
  */
 export const getTokenPrice = async (token: string): Promise<TokenPrice> => {
-  const cachedPrice: TokenPrice | undefined = priceCache.get(token);
+  const cachedPrice = priceCache.get<TokenPrice>(token);
   if (cachedPrice) return cachedPrice;
   const response = await fetch(`${COINGECKO_URL}/price?ids=${token}&vs_currencies=usd,eth`);
   if (!response.ok) throw new InternalServerError(`Unable to query ${token} price`);
@@ -144,7 +144,7 @@ export const getTokenPrice = async (token: string): Promise<TokenPrice> => {
   return tokenPrice;
 };
 
-export const inCurrency = (tokenPrice: TokenPrice, currency?: string) => {
+export const inCurrency = (tokenPrice: TokenPrice, currency?: string): number => {
   switch (currency) {
     case 'eth':
       return tokenPrice.eth;

@@ -11,13 +11,17 @@ export class SettsController {
 
   @Get()
   @ContentType('json')
-  async listSetts(@QueryParams('chain') chain: string): Promise<Sett[]> {
-    return this.settsService.listSetts(resolveChainQuery(chain));
+  async listSetts(@QueryParams('chain') chain?: string, @QueryParams('currency') currency?: string): Promise<Sett[]> {
+    return this.settsService.listSetts(resolveChainQuery(chain), currency);
   }
 
   @Get('/:settName')
   @ContentType('json')
-  async getSett(@PathParams('settName') settName: string, @QueryParams('chain') chain: string): Promise<Sett> {
-    return this.settsService.getSett(resolveChainQuery(chain), settName);
+  async getSett(
+    @PathParams('settName') settName: string,
+    @QueryParams('chain') chain?: string,
+    @QueryParams('currency') currency?: string,
+  ): Promise<Sett> {
+    return this.settsService.getSett(resolveChainQuery(chain), settName, currency);
   }
 }
