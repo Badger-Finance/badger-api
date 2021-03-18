@@ -81,7 +81,7 @@ export class SettsService {
     const [protocolValueSource, settSnapshots, settData] = await Promise.all([
       this.protocolsService.getProtocolPerformance(chain, settDefinition),
       this.getSettSnapshots(settName, SAMPLE_DAYS),
-      getSett(settDefinition.settToken),
+      getSett(chain.graphUrl, settDefinition.settToken),
     ]);
 
     if (protocolValueSource) {

@@ -1,11 +1,9 @@
 import { GraphQLClient } from 'graphql-request';
-import { BADGER_URL } from '../config/constants';
 import { getSdk, SettQuery, SettQueryVariables } from '../graphql/generated/badger';
 
-const badgerGraphqlClient = new GraphQLClient(BADGER_URL);
-const badgerGraphqlSdk = getSdk(badgerGraphqlClient);
-
-export const getSett = async (contract: string, block?: number): Promise<SettQuery> => {
+export const getSett = async (graphUrl: string, contract: string, block?: number): Promise<SettQuery> => {
+  const badgerGraphqlClient = new GraphQLClient(graphUrl);
+  const badgerGraphqlSdk = getSdk(badgerGraphqlClient);
   let vars: SettQueryVariables = {
     id: contract,
   };

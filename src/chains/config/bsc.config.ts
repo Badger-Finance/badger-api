@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import { Protocol, Provider, TOKENS } from '../../config/constants';
+import { BADGER_BSC_URL, Protocol, Provider, TOKENS } from '../../config/constants';
 import { SettDefinition } from '../../interface/Sett';
 import { bscTokensConfig } from '../../tokens/config/bsc-tokens.config';
 import { BscStrategy } from '../strategies/bsc.strategy';
@@ -15,6 +15,7 @@ export class BinanceSmartChain extends Chain {
       bscSetts,
       new ethers.providers.JsonRpcProvider(Provider.Binance),
       new BscStrategy(),
+      BADGER_BSC_URL,
     );
     Chain.register('bsc', this);
   }

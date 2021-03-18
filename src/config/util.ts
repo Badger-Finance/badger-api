@@ -13,7 +13,7 @@ export interface EventInput {
   asset: string;
   createdBlock: number;
   contract: string;
-  token?: string;
+  chain?: string;
   source?: string;
   pathParameters?: Record<string, string>;
   queryStringParameters?: Record<string, string>;

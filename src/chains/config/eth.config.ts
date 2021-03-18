@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import { Protocol, Provider, TOKENS } from '../../config/constants';
+import { BADGER_URL, Protocol, Provider, TOKENS } from '../../config/constants';
 import { SettDefinition } from '../../interface/Sett';
 import { ethTokensConfig } from '../../tokens/config/eth-tokens.config';
 import { EthStrategy } from '../strategies/eth.strategy';
@@ -15,6 +15,7 @@ export class Ethereum extends Chain {
       ethSetts,
       new ethers.providers.JsonRpcProvider(Provider.Cloudflare),
       new EthStrategy(),
+      BADGER_URL,
     );
     Chain.register('eth', this);
   }

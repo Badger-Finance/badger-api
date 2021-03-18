@@ -1,16 +1,17 @@
 import { loadChains } from '../chains/chain';
-import { ChainStrategy } from '../chains/strategies/chain.strategy';
+import { Chain } from '../chains/config/chain.config';
 import { ASSET_DATA } from '../config/constants';
 import { EventInput, getBlock, getIndexedBlock, saveItem, THIRTY_MIN_BLOCKS } from '../config/util';
 import { getSett } from '../setts/setts-util';
 
 export const indexAsset = async (event: EventInput) => {
   loadChains();
-  const { asset, createdBlock, contract } = event;
+  const { asset, createdBlock, contract, chain } = event;
+  const targetChain = Chain.getChain(chain);
   let block = await getIndexedBlock(ASSET_DATA, asset, createdBlock);
 
   while (true) {
-    const sett = await getSett(contract, block);
+    const sett = await getSett(targetChain.graphUrl, contract, block);
 
     if (sett.sett == null) {
       block += THIRTY_MIN_BLOCKS;
@@ -23,8 +24,7 @@ export const indexAsset = async (event: EventInput) => {
     const tokenBalance = balance / Math.pow(10, token.decimals);
     const supply = totalSupply / Math.pow(10, token.decimals);
     const ratio = pricePerFullShare / Math.pow(10, 18);
-    const strategy = ChainStrategy.getStrategy(token.id);
-    const tokenPriceData = await strategy.getPrice(token.id);
+    const tokenPriceData = await targetChain.strategy.getPrice(token.id);
     const value = tokenBalance * tokenPriceData.usd;
 
     const snapshot = {

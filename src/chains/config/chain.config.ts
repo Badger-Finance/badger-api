@@ -16,6 +16,7 @@ export abstract class Chain {
   readonly setts: SettDefinition[];
   readonly provider: ethers.providers.JsonRpcProvider;
   readonly strategy: ChainStrategy;
+  readonly graphUrl: string;
 
   constructor(
     name: string,
@@ -25,6 +26,7 @@ export abstract class Chain {
     setts: SettDefinition[],
     provider: ethers.providers.JsonRpcProvider,
     strategy: ChainStrategy,
+    graphUrl: string,
   ) {
     this.name = name;
     this.symbol = symbol;
@@ -33,6 +35,7 @@ export abstract class Chain {
     this.setts = setts;
     this.provider = provider;
     this.strategy = strategy;
+    this.graphUrl = graphUrl;
   }
 
   static register(network: string, chain: Chain): void {
