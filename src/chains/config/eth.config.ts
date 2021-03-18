@@ -1,5 +1,24 @@
+import { ethers } from 'ethers';
+import { Protocol, Provider, TOKENS } from '../../config/constants';
 import { SettDefinition } from '../../interface/Sett';
-import { Protocol, TOKENS } from '../constants';
+import { ethTokensConfig } from '../../tokens/config/eth-tokens.config';
+import { EthStrategy } from '../strategies/eth.strategy';
+import { Chain } from './chain.config';
+
+export class Ethereum extends Chain {
+  constructor() {
+    super(
+      'Ethereum',
+      'eth',
+      '0x01',
+      ethTokensConfig,
+      ethSetts,
+      new ethers.providers.JsonRpcProvider(Provider.Cloudflare),
+      new EthStrategy(),
+    );
+    Chain.register('eth', this);
+  }
+}
 
 export const ethSetts: SettDefinition[] = [
   {

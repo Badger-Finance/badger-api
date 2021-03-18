@@ -1,11 +1,11 @@
+import { loadChains } from '../chains/chain';
 import { ChainStrategy } from '../chains/strategies/chain.strategy';
-import { initStrategies } from '../config/chain/chain';
 import { ASSET_DATA } from '../config/constants';
 import { EventInput, getBlock, getIndexedBlock, saveItem, THIRTY_MIN_BLOCKS } from '../config/util';
 import { getSett } from '../setts/setts-util';
 
 export const indexAsset = async (event: EventInput) => {
-  initStrategies();
+  loadChains();
   const { asset, createdBlock, contract } = event;
   let block = await getIndexedBlock(ASSET_DATA, asset, createdBlock);
 
@@ -18,7 +18,6 @@ export const indexAsset = async (event: EventInput) => {
     }
 
     const { balance, totalSupply, pricePerFullShare, token } = sett.sett;
-
     const blockData = await getBlock(block);
     const timestamp = blockData.timestamp * 1000;
     const tokenBalance = balance / Math.pow(10, token.decimals);

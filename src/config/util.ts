@@ -2,8 +2,8 @@ import { Block } from '@ethersproject/abstract-provider';
 import AWS from 'aws-sdk';
 import { PutItemInput, QueryInput } from 'aws-sdk/clients/dynamodb';
 import { DocumentClient } from 'aws-sdk/lib/dynamodb/document_client';
+import { Chain } from '../chains/config/chain.config';
 import { SettSnapshot } from '../interface/SettSnapshot';
-import { Ethereum } from './chain/chain';
 import AttributeValue = DocumentClient.AttributeValue;
 
 export const THIRTY_MIN_BLOCKS = parseInt(String((30 * 60) / 13));
@@ -19,8 +19,8 @@ export interface EventInput {
   queryStringParameters?: Record<string, string>;
 }
 
-export const getBlock = async (blockNumber: number): Promise<Block> =>
-  await new Ethereum().provider.getBlock(blockNumber);
+export const getBlock = async (blockNumber: number, chain?: string): Promise<Block> =>
+  await Chain.getChain(chain).provider.getBlock(blockNumber);
 
 export const saveItem = async (table: string, item: AttributeValue) => {
   const params = {

@@ -1,7 +1,7 @@
 import { Inject, Service } from '@tsed/di';
 import { GraphQLClient } from 'graphql-request';
 import { CacheService } from '../../cache/CacheService';
-import { Chain } from '../../config/chain/chain';
+import { Chain } from '../../chains/config/chain.config';
 import { BLOCKS_PER_YEAR, SUSHI_CHEF, SUSHISWAP_URL, TOKENS } from '../../config/constants';
 import {
   getSdk,

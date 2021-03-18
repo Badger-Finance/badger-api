@@ -1,8 +1,8 @@
 import { NotFound, UnprocessableEntity } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
+import { Chain } from '../../chains/config/chain.config';
 import { uniV2LPAbi } from '../../config/abi';
-import { bsc, Chain } from '../../config/chain/chain';
 import { SUSHISWAP_URL, UNISWAP_URL } from '../../config/constants';
 import { getSdk as getUniswapSdk } from '../../graphql/generated/uniswap';
 import { getTokenPriceData } from '../../prices/prices-util';
@@ -123,5 +123,5 @@ export const getUniswapPrice = async (contract: string): Promise<TokenPrice> => 
 };
 
 export const getPancakeswapPrice = async (contract: string): Promise<TokenPrice> => {
-  return getOnChainLiquidityPrice(bsc, contract);
+  return getOnChainLiquidityPrice(Chain.getChain('bsc'), contract);
 };

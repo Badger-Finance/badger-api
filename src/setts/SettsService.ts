@@ -1,6 +1,6 @@
 import { Inject, Service } from '@tsed/common';
 import { BadRequest, NotFound } from '@tsed/exceptions';
-import { Chain } from '../config/chain/chain';
+import { Chain } from '../chains/config/chain.config';
 import {
   ASSET_DATA,
   CURRENT,

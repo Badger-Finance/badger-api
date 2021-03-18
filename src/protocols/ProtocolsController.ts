@@ -1,6 +1,6 @@
 import { Controller, Get, Inject, QueryParams } from '@tsed/common';
 import { ContentType } from '@tsed/schema';
-import { resolveChainQuery } from '../config/chain/chain';
+import { Chain } from '../chains/config/chain.config';
 import { ProtocolSummary } from '../interface/ProtocolSummary';
 import { SettsService } from '../setts/SettsService';
 
@@ -15,6 +15,6 @@ export class ProtocolController {
     @QueryParams('chain') chain?: string,
     @QueryParams('currency') currency?: string,
   ): Promise<ProtocolSummary> {
-    return this.settsService.getProtocolSummary(resolveChainQuery(chain), currency);
+    return this.settsService.getProtocolSummary(Chain.getChain(chain), currency);
   }
 }

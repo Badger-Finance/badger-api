@@ -1,5 +1,5 @@
 import { Service } from '@tsed/di';
-import { Chain } from '../../config/chain/chain';
+import { Chain } from '../../chains/config/chain.config';
 import { UNISWAP_URL } from '../../config/constants';
 import { Performance } from '../../interface/Performance';
 import { SettDefinition } from '../../interface/Sett';

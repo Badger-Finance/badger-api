@@ -1,8 +1,8 @@
 import { Inject, Service } from '@tsed/common';
 import { constants, ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
+import { Chain } from '../chains/config/chain.config';
 import { diggAbi, geyserAbi } from '../config/abi';
-import { Chain, eth } from '../config/chain/chain';
 import { BADGER_URL, TOKENS } from '../config/constants';
 import { secondToDay, toRate } from '../config/util';
 import { getSdk, OrderDirection, Sdk as BadgerGraphqlSdk } from '../graphql/generated/badger';
@@ -14,6 +14,10 @@ import { SettsService } from '../setts/SettsService';
 import { getToken } from '../tokens/tokens-util';
 import { TokensService } from '../tokens/TokensService';
 
+/**
+ * TODO: Remove geysers service + geysers controller once they are
+ * removed from the protocol.
+ */
 @Service()
 export class GeyserService {
   @Inject()
@@ -31,7 +35,7 @@ export class GeyserService {
   }
 
   async listFarms(chain: Chain): Promise<Sett[]> {
-    const diggContract = new ethers.Contract(TOKENS.DIGG, diggAbi, eth.provider);
+    const diggContract = new ethers.Contract(TOKENS.DIGG, diggAbi, Chain.getChain('eth').provider);
 
     const [settData, geyserData, sharesPerFragment] = await Promise.all([
       this.settsService.listSetts(chain),
@@ -113,7 +117,7 @@ export class GeyserService {
   }
 
   async getGeyserData(geyserAddress: string, sharesPerFragment: number): Promise<Geyser> {
-    const geyserContract = new ethers.Contract(geyserAddress, geyserAbi, eth.provider);
+    const geyserContract = new ethers.Contract(geyserAddress, geyserAbi, Chain.getChain('eth').provider);
     const [badgerUnlockSchedules, diggUnlockSchedules] = await Promise.all([
       geyserContract.getUnlockSchedulesFor(TOKENS.BADGER) as UnlockSchedule[],
       geyserContract.getUnlockSchedulesFor(TOKENS.DIGG) as UnlockSchedule[],

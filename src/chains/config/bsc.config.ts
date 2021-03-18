@@ -1,5 +1,24 @@
+import { ethers } from 'ethers';
+import { Protocol, Provider, TOKENS } from '../../config/constants';
 import { SettDefinition } from '../../interface/Sett';
-import { Protocol, TOKENS } from '../constants';
+import { bscTokensConfig } from '../../tokens/config/bsc-tokens.config';
+import { BscStrategy } from '../strategies/bsc.strategy';
+import { Chain } from './chain.config';
+
+export class BinanceSmartChain extends Chain {
+  constructor() {
+    super(
+      'BinanceSmartChain',
+      'bsc',
+      '0x38',
+      bscTokensConfig,
+      bscSetts,
+      new ethers.providers.JsonRpcProvider(Provider.Binance),
+      new BscStrategy(),
+    );
+    Chain.register('bsc', this);
+  }
+}
 
 export const bscSetts: SettDefinition[] = [
   {
