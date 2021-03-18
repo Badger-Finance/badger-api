@@ -37,15 +37,10 @@ export class TokensService {
   async getSettTokens(request: TokenRequest): Promise<TokenBalance[]> {
     const { sett, balance, currency } = request;
     const token = getToken(sett.depositToken);
-<<<<<<< HEAD
     const tokenBalance = balance / Math.pow(10, token.decimals);
     request.balance = tokenBalance;
     if (token.lpToken) {
       return await this.getLiquidtyPoolTokenBalances(request);
-=======
-    if (token.lpToken) {
-      return await this.getLiquidtyPoolTokenBalances(sett, settSnapshot);
->>>>>>> d3b6579 (refactor(badger-api): Abstract fetching pricing data with strategies (#49))
     }
     return [
       {
