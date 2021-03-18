@@ -135,7 +135,6 @@ export class TokensService {
       };
       return [token0Balance, token1Balance];
     } catch (err) {
-      console.error(err);
       throw new NotFound(`${sett.protocol} pool pair ${sett.depositToken} does not exist`);
     }
   }

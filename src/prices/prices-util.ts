@@ -24,7 +24,9 @@ export const updatePrice = async (token: Token): Promise<void> => {
   if (!token) {
     throw new BadRequest('Token not supported for pricing');
   }
-  if (token.type === TokenType.Wrapper) return;
+  if (token.type === TokenType.Wrapper) {
+    return;
+  }
   const { address, name } = token;
   const strategy = ChainStrategy.getStrategy(address);
   const tokenPriceData = await strategy.getPrice(address);
