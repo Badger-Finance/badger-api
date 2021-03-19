@@ -19,7 +19,9 @@ import { SettSnapshot } from '../interface/SettSnapshot';
 import { ValueSource } from '../interface/ValueSource';
 import { PricesService } from '../prices/PricesService';
 import { ProtocolsService } from '../protocols/ProtocolsService';
+import { TokenType } from '../tokens/enums/token-type.enum';
 import { TokenRequest } from '../tokens/interfaces/token-request.interface';
+import { getToken } from '../tokens/tokens-util';
 import { TokensService } from '../tokens/TokensService';
 import { getSett } from './setts-util';
 
@@ -128,6 +130,18 @@ export class SettsService {
     sett.tokens = await this.tokensSerivce.getSettTokens(tokenRequest);
     sett.value = sett.tokens.reduce((total, tokenBalance) => (total += tokenBalance.value), 0);
 
+    await Promise.all(
+      sett.tokens.map(async (tokenBalance) => {
+        const token = getToken(tokenBalance.address);
+        if (token.type === TokenType.Wrapper && token.vaultToken) {
+          const { network, symbol } = token.vaultToken;
+          const vault = await this.getSett(Chain.getChain(network), symbol, currency);
+          sett.sources = sett.sources.concat(vault.sources);
+        }
+      }),
+    );
+
+    sett.apy = sett.sources.map((s) => s.apy).reduce((total, apy) => (total += apy), 0);
     return sett;
   }
 

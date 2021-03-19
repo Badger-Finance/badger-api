@@ -5,7 +5,7 @@ export const getSett = async (graphUrl: string, contract: string, block?: number
   const badgerGraphqlClient = new GraphQLClient(graphUrl);
   const badgerGraphqlSdk = getSdk(badgerGraphqlClient);
   let vars: SettQueryVariables = {
-    id: contract,
+    id: contract.toLowerCase(),
   };
   if (block) {
     vars = {

@@ -2,6 +2,7 @@ import { ethers } from 'ethers';
 import { BADGER_URL, Protocol, Provider, TOKENS } from '../../config/constants';
 import { SettDefinition } from '../../interface/Sett';
 import { ethTokensConfig } from '../../tokens/config/eth-tokens.config';
+import { ChainNetwork } from '../enums/chain-network.enum';
 import { EthStrategy } from '../strategies/eth.strategy';
 import { Chain } from './chain.config';
 
@@ -17,7 +18,7 @@ export class Ethereum extends Chain {
       new EthStrategy(),
       BADGER_URL,
     );
-    Chain.register('eth', this);
+    Chain.register(ChainNetwork.Ethereum, this);
   }
 }
 
