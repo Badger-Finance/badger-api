@@ -2,7 +2,7 @@ import { Inject, Service } from '@tsed/common';
 import { constants, ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
 import { Chain } from '../chains/config/chain.config';
-import { Network } from '../chains/enums/chain-network.enum';
+import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { diggAbi, geyserAbi } from '../config/abi';
 import { BADGER_URL, TOKENS } from '../config/constants';
 import { secondToDay, toRate } from '../config/util';
@@ -29,7 +29,7 @@ export class GeyserService {
   pricesService!: PricesService;
 
   private badgerGraphqlSdk: BadgerGraphqlSdk;
-  private provider = Chain.getChain(Network.Ethereum).provider;
+  private provider = Chain.getChain(ChainNetwork.Ethereum).provider;
 
   constructor() {
     const badgerDaoGraphqlClient = new GraphQLClient(BADGER_URL);

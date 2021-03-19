@@ -1,7 +1,7 @@
 import { Service } from '@tsed/common';
 import { BigNumber, ethers, utils } from 'ethers';
 import { Chain } from '../../chains/config/chain.config';
-import { Network } from '../../chains/enums/chain-network.enum';
+import { ChainNetwork } from '../../chains/enums/chain-network.enum';
 import { empAbi } from '../../config/abi';
 import { FixedPointUnsigned, Liquidation, Position, SponsorData, SyntheticData } from '../../interface/Claw';
 
@@ -36,7 +36,7 @@ type SyntheticDataPayload = [
 
 @Service()
 export class ClawService {
-  private eth: ethers.providers.JsonRpcProvider = Chain.getChain(Network.Ethereum).provider;
+  private eth: ethers.providers.JsonRpcProvider = Chain.getChain(ChainNetwork.Ethereum).provider;
 
   async getSyntheticData(empAddress: string): Promise<SyntheticData> {
     const empContract = new ethers.Contract(empAddress, empAbi, this.eth);

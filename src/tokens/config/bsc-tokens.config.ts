@@ -1,4 +1,4 @@
-import { Network } from '../../chains/enums/chain-network.enum';
+import { ChainNetwork } from '../../chains/enums/chain-network.enum';
 import { TOKENS } from '../../config/constants';
 import { TokenType } from '../enums/token-type.enum';
 import { TokenConfig } from '../types/token-config.type';
@@ -61,7 +61,7 @@ export const bscTokensConfig: TokenConfig = {
     type: TokenType.Wrapper,
     vaultToken: {
       symbol: ethTokensConfig[TOKENS.BADGER].symbol,
-      network: Network.Ethereum,
+      network: ChainNetwork.Ethereum,
     },
   },
   [TOKENS.BSC_BDIGG]: {
@@ -72,7 +72,7 @@ export const bscTokensConfig: TokenConfig = {
     type: TokenType.Wrapper,
     vaultToken: {
       symbol: ethTokensConfig[TOKENS.DIGG].symbol,
-      network: Network.Ethereum,
+      network: ChainNetwork.Ethereum,
     },
   },
 };

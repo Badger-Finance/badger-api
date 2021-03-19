@@ -1,6 +1,6 @@
-import { Network } from '../../chains/enums/chain-network.enum';
+import { ChainNetwork } from '../../chains/enums/chain-network.enum';
 
 export interface WrappedToken {
   symbol: string;
-  network: Network;
+  network: ChainNetwork;
 }

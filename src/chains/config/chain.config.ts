@@ -2,7 +2,7 @@ import { BadRequest } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { SettDefinition } from '../../interface/Sett';
 import { TokenConfig } from '../../tokens/types/token-config.type';
-import { Network } from '../enums/chain-network.enum';
+import { ChainNetwork } from '../enums/chain-network.enum';
 import { ChainStrategy } from '../strategies/chain.strategy';
 
 type Chains = Record<string, Chain>;
@@ -39,11 +39,11 @@ export abstract class Chain {
     this.graphUrl = graphUrl;
   }
 
-  static register(network: Network, chain: Chain): void {
+  static register(network: ChainNetwork, chain: Chain): void {
     Chain.chains[network] = chain;
   }
 
-  static getChain(network?: Network): Chain {
+  static getChain(network?: ChainNetwork): Chain {
     if (!network) {
       return this.chains[this.defaultChain];
     }
