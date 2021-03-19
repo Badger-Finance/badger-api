@@ -8,6 +8,7 @@ export interface Performance {
   threeDay: number;
   sevenDay: number;
   thirtyDay: number;
+  harvestable?: boolean;
 }
 
 export const uniformPerformance = (apr: number): Performance => {
@@ -19,13 +20,19 @@ export const uniformPerformance = (apr: number): Performance => {
   };
 };
 
-export const combinePerformance = (...performances: Performance[]) => {
+export const combinePerformance = (
+  performances: Performance[],
+  filterHarvestablePerformances?: boolean,
+): Performance => {
   const basePerformance = uniformPerformance(0);
-  performances.forEach((p) => {
-    basePerformance.oneDay += p.oneDay;
-    basePerformance.threeDay += p.threeDay;
-    basePerformance.sevenDay += p.sevenDay;
-    basePerformance.thirtyDay += p.thirtyDay;
-  });
+  for (const performance of performances) {
+    if (filterHarvestablePerformances && performance.harvestable) {
+      continue;
+    }
+    basePerformance.oneDay += performance.oneDay;
+    basePerformance.threeDay += performance.threeDay;
+    basePerformance.sevenDay += performance.sevenDay;
+    basePerformance.thirtyDay += performance.thirtyDay;
+  }
   return basePerformance;
 };

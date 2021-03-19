@@ -51,7 +51,7 @@ export class SushiswapService extends SwapService {
       this.cacheService.set(cacheKey, tradeFeePerformance);
       return tradeFeePerformance;
     }
-    const combinedPerformance = combinePerformance(tradeFeePerformance, emissionPerformance);
+    const combinedPerformance = combinePerformance([tradeFeePerformance, emissionPerformance]);
     this.cacheService.set(cacheKey, combinedPerformance);
     return combinedPerformance;
   }
