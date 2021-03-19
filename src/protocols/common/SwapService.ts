@@ -8,7 +8,11 @@ import { getLiquidityPrice } from './swap-util';
 export abstract class SwapService {
   constructor(private graphUrl: string) {}
 
-  abstract getPairPerformance(chain: Chain, sett: SettDefinition): Promise<Performance>;
+  abstract getPairPerformance(
+    chain: Chain,
+    sett: SettDefinition,
+    filterHarvestablePerformances?: boolean,
+  ): Promise<Performance>;
 
   /**
    * Retrieve Uniswap v2 variant pool performance from trading fees.
