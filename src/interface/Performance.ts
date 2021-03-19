@@ -20,7 +20,10 @@ export const uniformPerformance = (apr: number): Performance => {
   };
 };
 
-export const combinePerformance = (performances: Performance[], filterHarvestablePerformances?: boolean) => {
+export const combinePerformance = (
+  performances: Performance[],
+  filterHarvestablePerformances?: boolean,
+): Performance => {
   const basePerformance = uniformPerformance(0);
   for (const performance of performances) {
     if (filterHarvestablePerformances && performance.harvestable) {
