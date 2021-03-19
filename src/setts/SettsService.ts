@@ -78,16 +78,10 @@ export class SettsService {
       sources: [],
     };
 
-    const [protocolValueSource, settSnapshots, settData] = await Promise.all([
-      this.protocolsService.getProtocolPerformance(chain, settDefinition),
+    const [settSnapshots, settData] = await Promise.all([
       this.getSettSnapshots(settName, SAMPLE_DAYS),
       getSett(chain.graphUrl, settDefinition.settToken),
     ]);
-
-    if (protocolValueSource) {
-      sett.apy += protocolValueSource.apy;
-      sett.sources.push(protocolValueSource);
-    }
 
     // set to current balance, fallback to snapshot
     let balance = 0;
@@ -101,16 +95,29 @@ export class SettsService {
       sett.ppfs = latestSett.ratio;
     }
 
+    let filterHarvestablePerformances = false;
+
     // check for historical performance data
     if (settSnapshots.length > 0) {
       const settValueSource = this.getSettUnderlyingValueSource(settName, settSnapshots);
 
       // sett has measurable apy, replace underlying with measured actual apy
       if (settValueSource.apy > 0) {
-        sett.sources = sett.sources.filter((s) => !s.underlying).concat(settValueSource);
-        sett.apy = sett.sources.map((s) => s.apy).reduce((total, apy) => (total += apy), 0);
+        sett.sources.push(settValueSource);
+        filterHarvestablePerformances = true;
       }
     }
+
+    const protocolValueSource = await this.protocolsService.getProtocolPerformance(
+      chain,
+      settDefinition,
+      filterHarvestablePerformances,
+    );
+    if (protocolValueSource) {
+      sett.sources.push(protocolValueSource);
+    }
+
+    sett.apy = sett.sources.map((s) => s.apy).reduce((total, apy) => (total += apy), 0);
 
     const tokenRequest: TokenRequest = {
       chain: chain,

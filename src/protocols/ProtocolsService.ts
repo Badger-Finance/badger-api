@@ -25,7 +25,11 @@ export class ProtocolsService {
    * Retrieve performance of underlying protocol for a given sett.
    * @param sett Sett to retrieve protocol performance.
    */
-  async getProtocolPerformance(chain: Chain, sett: SettDefinition): Promise<ValueSource | undefined> {
+  async getProtocolPerformance(
+    chain: Chain,
+    sett: SettDefinition,
+    filterHarvestablePerformances: boolean,
+  ): Promise<ValueSource | undefined> {
     if (!sett.protocol) return undefined;
     let protocolPerformance: Performance;
 
@@ -40,7 +44,11 @@ export class ProtocolsService {
         protocolPerformance = await this.sushiswapService.getPairPerformance(chain, sett);
         break;
       case Protocol.Pancakeswap:
-        protocolPerformance = await this.pancakeSwapService.getPairPerformance(chain, sett);
+        protocolPerformance = await this.pancakeSwapService.getPairPerformance(
+          chain,
+          sett,
+          filterHarvestablePerformances,
+        );
         break;
       default:
         protocolPerformance = {
@@ -53,7 +61,6 @@ export class ProtocolsService {
 
     return {
       name: sett.protocol,
-      apy: protocolPerformance.threeDay,
       performance: protocolPerformance,
     } as ValueSource;
   }

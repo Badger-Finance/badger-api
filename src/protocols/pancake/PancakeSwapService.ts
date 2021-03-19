@@ -24,7 +24,11 @@ export class PancakeSwapService extends SwapService {
     super(PANCAKESWAP_URL);
   }
 
-  async getPairPerformance(chain: Chain, sett: SettDefinition): Promise<Performance> {
+  async getPairPerformance(
+    chain: Chain,
+    sett: SettDefinition,
+    filterHarvestablePerformances?: boolean,
+  ): Promise<Performance> {
     const { depositToken } = sett;
     const cacheKey = CacheService.getCacheKey(chain.name, depositToken);
     const cachedPool = this.cacheService.get<Performance>(cacheKey);
@@ -35,7 +39,7 @@ export class PancakeSwapService extends SwapService {
       this.getSwapPerformance(depositToken),
       this.getPoolApr(chain, sett.depositToken, getPoolId(sett.depositToken)),
     ]);
-    return combinePerformance(tradeFeePerformance, poolApr);
+    return combinePerformance([tradeFeePerformance, poolApr], filterHarvestablePerformances);
   }
 
   async getPoolApr(chain: Chain, contract: string, poolId: number): Promise<Performance> {
@@ -64,6 +68,7 @@ export class PancakeSwapService extends SwapService {
     const emissionScalar = poolInfo.allocPoint.toNumber() / totalAllocPoint.toNumber();
     const cakeEmission = parseFloat(formatEther(cakePerBlock)) * emissionScalar * BSC_BLOCKS_PER_YEAR * tokenPrice.usd;
     const poolApr = uniformPerformance((cakeEmission / poolValue) * 100);
+    poolApr.harvestable = true;
     this.cacheService.set(cacheKey, poolApr);
     return poolApr;
   }
