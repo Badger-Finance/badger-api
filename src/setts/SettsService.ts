@@ -119,8 +119,6 @@ export class SettsService {
       sett.sources.push(protocolValueSource);
     }
 
-    sett.apy = sett.sources.map((s) => s.apy).reduce((total, apy) => (total += apy), 0);
-
     const tokenRequest: TokenRequest = {
       chain: chain,
       sett: settDefinition,
