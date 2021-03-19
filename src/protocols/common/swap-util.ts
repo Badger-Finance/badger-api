@@ -2,6 +2,7 @@ import { NotFound, UnprocessableEntity } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
 import { Chain } from '../../chains/config/chain.config';
+import { Network } from '../../chains/enums/chain-network.enum';
 import { uniV2LPAbi } from '../../config/abi';
 import { SUSHISWAP_URL, UNISWAP_URL } from '../../config/constants';
 import { getSdk as getUniswapSdk } from '../../graphql/generated/uniswap';
@@ -123,5 +124,5 @@ export const getUniswapPrice = async (contract: string): Promise<TokenPrice> => 
 };
 
 export const getPancakeswapPrice = async (contract: string): Promise<TokenPrice> => {
-  return getOnChainLiquidityPrice(Chain.getChain('bsc'), contract);
+  return getOnChainLiquidityPrice(Chain.getChain(Network.BinanceSmartChain), contract);
 };

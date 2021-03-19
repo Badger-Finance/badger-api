@@ -80,7 +80,7 @@ export class TokensService {
       throw new NotFound(`${protocol} pool ${pairId} does not exist`);
     }
     const { pair } = poolData;
-    if (!pair) {
+    if (!pair || protocol === Protocol.Pancakeswap) {
       return await this.getOnChainLiquidtyPoolTokenBalances(request);
     }
 
@@ -91,7 +91,7 @@ export class TokensService {
       address: pair.token0.id,
       symbol: pair.token0.symbol,
       decimals: pair.token0.decimals,
-      balance: pair.reserve0,
+      balance: pair.reserve0 * valueScalar,
       value: (await this.pricesService.getValue(pair.token0.id, pair.reserve0, currency)) * valueScalar,
     };
     const token1: TokenBalance = {
@@ -99,7 +99,7 @@ export class TokensService {
       address: pair.token1.id,
       symbol: pair.token1.symbol,
       decimals: pair.token1.decimals,
-      balance: pair.reserve1,
+      balance: pair.reserve1 * valueScalar,
       value: (await this.pricesService.getValue(pair.token1.id, pair.reserve1, currency)) * valueScalar,
     };
     return [token0, token1];
@@ -111,7 +111,6 @@ export class TokensService {
       const liquidityData = await getLiquidityData(chain, sett.depositToken);
 
       const { token0, token1, reserve0, reserve1, totalSupply } = liquidityData;
-
       const t0Token = getToken(token0);
       const t1Token = getToken(token1);
 
@@ -122,7 +121,7 @@ export class TokensService {
         address: t0Token.address,
         symbol: t0Token.symbol,
         decimals: t0Token.decimals,
-        balance: reserve0,
+        balance: reserve0 * valueScalar,
         value: (await this.pricesService.getValue(t0Token.address, reserve0, currency)) * valueScalar,
       };
       const token1Balance: TokenBalance = {
@@ -130,7 +129,7 @@ export class TokensService {
         address: t1Token.address,
         symbol: t1Token.symbol,
         decimals: t1Token.decimals,
-        balance: reserve1,
+        balance: reserve1 * valueScalar,
         value: (await this.pricesService.getValue(t1Token.address, reserve1, currency)) * valueScalar,
       };
       return [token0Balance, token1Balance];

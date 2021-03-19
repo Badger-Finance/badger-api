@@ -1,6 +1,7 @@
 import { Controller, Get, Inject, PathParams, QueryParams } from '@tsed/common';
 import { ContentType } from '@tsed/schema';
 import { Chain } from '../chains/config/chain.config';
+import { Network } from '../chains/enums/chain-network.enum';
 import { UserAccount } from '../interface/UserAccount';
 import { UsersService } from './UsersService';
 
@@ -13,7 +14,7 @@ export class UsersController {
   @ContentType('json')
   async getUserProfile(
     @PathParams('userId') userId: string,
-    @QueryParams('chain') chain?: string,
+    @QueryParams('chain') chain?: Network,
   ): Promise<UserAccount> {
     return this.usersService.getUserDetails(Chain.getChain(chain), userId);
   }

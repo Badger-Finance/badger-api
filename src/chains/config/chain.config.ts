@@ -2,6 +2,7 @@ import { BadRequest } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { SettDefinition } from '../../interface/Sett';
 import { TokenConfig } from '../../tokens/types/token-config.type';
+import { Network } from '../enums/chain-network.enum';
 import { ChainStrategy } from '../strategies/chain.strategy';
 
 type Chains = Record<string, Chain>;
@@ -38,15 +39,15 @@ export abstract class Chain {
     this.graphUrl = graphUrl;
   }
 
-  static register(network: string, chain: Chain): void {
-    Chain.chains[network.toLowerCase()] = chain;
+  static register(network: Network, chain: Chain): void {
+    Chain.chains[network] = chain;
   }
 
-  static getChain(network?: string): Chain {
+  static getChain(network?: Network): Chain {
     if (!network) {
       return this.chains[this.defaultChain];
     }
-    const chain = this.chains[network.toLowerCase()];
+    const chain = this.chains[network];
     if (!chain) {
       throw new BadRequest(`${network} is not a supported chain`);
     }

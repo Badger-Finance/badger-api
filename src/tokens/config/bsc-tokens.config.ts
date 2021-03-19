@@ -1,6 +1,8 @@
+import { Network } from '../../chains/enums/chain-network.enum';
 import { TOKENS } from '../../config/constants';
 import { TokenType } from '../enums/token-type.enum';
 import { TokenConfig } from '../types/token-config.type';
+import { ethTokensConfig } from './eth-tokens.config';
 
 export const bscTokensConfig: TokenConfig = {
   [TOKENS.CAKE]: {
@@ -57,6 +59,10 @@ export const bscTokensConfig: TokenConfig = {
     name: 'bBadger',
     symbol: 'bBADGER',
     type: TokenType.Wrapper,
+    vaultToken: {
+      symbol: ethTokensConfig[TOKENS.BADGER].symbol,
+      network: Network.Ethereum,
+    },
   },
   [TOKENS.BSC_BDIGG]: {
     address: TOKENS.BSC_BDIGG,
@@ -64,5 +70,9 @@ export const bscTokensConfig: TokenConfig = {
     name: 'bDigg',
     symbol: 'bDIGG',
     type: TokenType.Wrapper,
+    vaultToken: {
+      symbol: ethTokensConfig[TOKENS.DIGG].symbol,
+      network: Network.Ethereum,
+    },
   },
 };

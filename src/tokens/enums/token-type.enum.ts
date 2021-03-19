@@ -4,4 +4,5 @@ export enum TokenType {
   UniswapLp = 'UniswapLp',
   PancakeswapLp = 'PancakeswapLp',
   Wrapper = 'Wrapper',
+  Vault = 'Vault',
 }
