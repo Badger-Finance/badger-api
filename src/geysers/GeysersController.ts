@@ -1,6 +1,7 @@
 import { Controller, Get, QueryParams } from '@tsed/common';
 import { ContentType } from '@tsed/schema';
 import { Chain } from '../chains/config/chain.config';
+import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { Sett } from '../interface/Sett';
 import { GeyserService } from './GeysersService';
 
@@ -10,7 +11,7 @@ export class GeyserController {
 
   @Get()
   @ContentType('json')
-  async listFarms(@QueryParams('chain') chain?: string): Promise<Sett[]> {
+  async listFarms(@QueryParams('chain') chain?: ChainNetwork): Promise<Sett[]> {
     return this.geyserService.listFarms(Chain.getChain(chain));
   }
 }

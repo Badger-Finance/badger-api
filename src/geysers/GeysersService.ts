@@ -2,6 +2,7 @@ import { Inject, Service } from '@tsed/common';
 import { constants, ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
 import { Chain } from '../chains/config/chain.config';
+import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { diggAbi, geyserAbi } from '../config/abi';
 import { BADGER_URL, TOKENS } from '../config/constants';
 import { secondToDay, toRate } from '../config/util';
@@ -28,6 +29,7 @@ export class GeyserService {
   pricesService!: PricesService;
 
   private badgerGraphqlSdk: BadgerGraphqlSdk;
+  private provider = Chain.getChain(ChainNetwork.Ethereum).provider;
 
   constructor() {
     const badgerDaoGraphqlClient = new GraphQLClient(BADGER_URL);
@@ -35,7 +37,7 @@ export class GeyserService {
   }
 
   async listFarms(chain: Chain): Promise<Sett[]> {
-    const diggContract = new ethers.Contract(TOKENS.DIGG, diggAbi, Chain.getChain('eth').provider);
+    const diggContract = new ethers.Contract(TOKENS.DIGG, diggAbi, this.provider);
 
     const [settData, geyserData, sharesPerFragment] = await Promise.all([
       this.settsService.listSetts(chain),
@@ -117,7 +119,7 @@ export class GeyserService {
   }
 
   async getGeyserData(geyserAddress: string, sharesPerFragment: number): Promise<Geyser> {
-    const geyserContract = new ethers.Contract(geyserAddress, geyserAbi, Chain.getChain('eth').provider);
+    const geyserContract = new ethers.Contract(geyserAddress, geyserAbi, this.provider);
     const [badgerUnlockSchedules, diggUnlockSchedules] = await Promise.all([
       geyserContract.getUnlockSchedulesFor(TOKENS.BADGER) as UnlockSchedule[],
       geyserContract.getUnlockSchedulesFor(TOKENS.DIGG) as UnlockSchedule[],

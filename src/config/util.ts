@@ -3,6 +3,7 @@ import AWS from 'aws-sdk';
 import { PutItemInput, QueryInput } from 'aws-sdk/clients/dynamodb';
 import { DocumentClient } from 'aws-sdk/lib/dynamodb/document_client';
 import { Chain } from '../chains/config/chain.config';
+import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { SettSnapshot } from '../interface/SettSnapshot';
 import AttributeValue = DocumentClient.AttributeValue;
 
@@ -13,13 +14,13 @@ export interface EventInput {
   asset: string;
   createdBlock: number;
   contract: string;
-  chain?: string;
+  chain?: ChainNetwork;
   source?: string;
   pathParameters?: Record<string, string>;
   queryStringParameters?: Record<string, string>;
 }
 
-export const getBlock = async (blockNumber: number, chain?: string): Promise<Block> =>
+export const getBlock = async (blockNumber: number, chain?: ChainNetwork): Promise<Block> =>
   await Chain.getChain(chain).provider.getBlock(blockNumber);
 
 export const saveItem = async (table: string, item: AttributeValue) => {
