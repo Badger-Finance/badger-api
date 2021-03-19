@@ -61,6 +61,7 @@ export class ProtocolsService {
 
     return {
       name: sett.protocol,
+      apy: protocolPerformance.threeDay,
       performance: protocolPerformance,
     } as ValueSource;
   }
