@@ -60,6 +60,7 @@ export const bscTokensConfig: TokenConfig = {
     symbol: 'bBADGER',
     type: TokenType.Wrapper,
     vaultToken: {
+      address: TOKENS.BADGER,
       symbol: ethTokensConfig[TOKENS.BADGER].symbol,
       network: ChainNetwork.Ethereum,
     },
@@ -71,6 +72,7 @@ export const bscTokensConfig: TokenConfig = {
     symbol: 'bDIGG',
     type: TokenType.Wrapper,
     vaultToken: {
+      address: TOKENS.DIGG,
       symbol: ethTokensConfig[TOKENS.DIGG].symbol,
       network: ChainNetwork.Ethereum,
     },

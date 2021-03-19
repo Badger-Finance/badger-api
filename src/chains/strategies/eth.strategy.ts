@@ -1,7 +1,7 @@
 import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { TOKENS } from '../../config/constants';
-import { getContractPrice, getTokenPrice } from '../../prices/prices-util';
+import { getContractPrice, getTokenPrice, getVaultTokenPrice } from '../../prices/prices-util';
 import { getSushiswapPrice, getUniswapPrice } from '../../protocols/common/swap-util';
 import { ethTokensConfig } from '../../tokens/config/eth-tokens.config';
 import { TokenType } from '../../tokens/enums/token-type.enum';
@@ -26,6 +26,17 @@ export class EthStrategy extends ChainStrategy {
         TOKENS.SUSHI_DIGG_WBTC,
         TOKENS.UNI_BADGER_WBTC,
         TOKENS.UNI_DIGG_WBTC,
+        TOKENS.BBADGER,
+        TOKENS.BDIGG,
+        TOKENS.BUNI_DIGG_WBTC,
+        TOKENS.BUNI_BADGER_WBTC,
+        TOKENS.BSUSHI_ETH_WBTC,
+        TOKENS.BSUSHI_BADGER_WBTC,
+        TOKENS.BSUSHI_DIGG_WBTC,
+        TOKENS.BCRV_RENBTC,
+        TOKENS.BCRV_SBTC,
+        TOKENS.BCRV_TBTC,
+        TOKENS.BCRV_HRENBTC,
       ],
       this,
     );
@@ -47,6 +58,8 @@ export class EthStrategy extends ChainStrategy {
         return getSushiswapPrice(checksummedAddress);
       case TokenType.UniswapLp:
         return getUniswapPrice(checksummedAddress);
+      case TokenType.Vault:
+        return getVaultTokenPrice(checksummedAddress);
       default:
         throw new UnprocessableEntity('Unsupported TokenType');
     }
