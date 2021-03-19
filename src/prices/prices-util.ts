@@ -1,4 +1,4 @@
-import { BadRequest, InternalServerError } from '@tsed/exceptions';
+import { BadRequest, InternalServerError, UnprocessableEntity } from '@tsed/exceptions';
 import { DocumentClient, QueryInput } from 'aws-sdk/clients/dynamodb';
 import { ethers } from 'ethers';
 import NodeCache = require('node-cache');
@@ -11,6 +11,8 @@ import { getToken, protocolTokens } from '../tokens/tokens-util';
 import { TokenConfig } from '../tokens/types/token-config.type';
 import AttributeValue = DocumentClient.AttributeValue;
 import fetch from 'node-fetch';
+import { Chain } from '../chains/config/chain.config';
+import { getSett } from '../setts/setts-util';
 import { TokenType } from '../tokens/enums/token-type.enum';
 
 export type PricingFunction = (address: string) => Promise<TokenPrice>;
@@ -154,4 +156,29 @@ export const inCurrency = (tokenPrice: TokenPrice, currency?: string): number =>
     default:
       return tokenPrice.usd;
   }
+};
+
+export const getVaultTokenPrice = async (contract: string): Promise<TokenPrice> => {
+  const token = getToken(contract);
+  if (token.type !== TokenType.Vault) {
+    throw new BadRequest(`${token.name} is not a vault token`);
+  }
+  if (!token.vaultToken) {
+    throw new UnprocessableEntity(`${token.name} vault token missing`);
+  }
+  const vaultToken = token.vaultToken;
+  const targetChain = Chain.getChain(vaultToken.network);
+  const [vaultTokenPrice, vaultTokenSnapshot] = await Promise.all([
+    getPrice(vaultToken.address),
+    getSett(targetChain.graphUrl, token.address),
+  ]);
+  if (!vaultTokenSnapshot.sett) {
+    throw new InternalServerError('Failed to load sett data');
+  }
+  vaultTokenPrice.name = token.name;
+  vaultTokenPrice.address = token.address;
+  const sett = vaultTokenSnapshot.sett;
+  vaultTokenPrice.usd *= sett.pricePerFullShare / 1e18;
+  vaultTokenPrice.eth *= sett.pricePerFullShare / 1e18;
+  return vaultTokenPrice;
 };
