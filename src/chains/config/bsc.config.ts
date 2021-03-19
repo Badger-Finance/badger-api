@@ -2,6 +2,7 @@ import { ethers } from 'ethers';
 import { BADGER_BSC_URL, Protocol, Provider, TOKENS } from '../../config/constants';
 import { SettDefinition } from '../../interface/Sett';
 import { bscTokensConfig } from '../../tokens/config/bsc-tokens.config';
+import { ChainNetwork } from '../enums/chain-network.enum';
 import { BscStrategy } from '../strategies/bsc.strategy';
 import { Chain } from './chain.config';
 
@@ -17,7 +18,7 @@ export class BinanceSmartChain extends Chain {
       new BscStrategy(),
       BADGER_BSC_URL,
     );
-    Chain.register('bsc', this);
+    Chain.register(ChainNetwork.BinanceSmartChain, this);
   }
 }
 
