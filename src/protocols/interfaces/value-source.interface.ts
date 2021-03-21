@@ -1,8 +1,8 @@
-import { Performance } from './Performance';
+import { Performance } from './performance.interface';
 
 export interface ValueSource {
   name: string;
   apy: number;
   performance: Performance;
-  underlying?: boolean;
+  harvestable?: boolean;
 }

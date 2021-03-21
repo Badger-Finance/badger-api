@@ -9,8 +9,8 @@ import { secondToDay, toRate } from '../config/util';
 import { getSdk, OrderDirection, Sdk as BadgerGraphqlSdk } from '../graphql/generated/badger';
 import { Emission, Geyser, UnlockSchedule } from '../interface/Geyser';
 import { Sett } from '../interface/Sett';
-import { ValueSource } from '../interface/ValueSource';
 import { PricesService } from '../prices/PricesService';
+import { ValueSource } from '../protocols/interfaces/value-source.interface';
 import { SettsService } from '../setts/SettsService';
 import { getToken } from '../tokens/tokens-util';
 import { TokensService } from '../tokens/TokensService';
@@ -76,7 +76,7 @@ export class GeyserService {
 
           // Emission value is constant, so performance values a identical for every sample
           const badgerSource: ValueSource = {
-            name: 'badger',
+            name: 'Badger Rewards',
             apy: badgerApy,
             performance: {
               oneDay: badgerApy,
@@ -97,7 +97,7 @@ export class GeyserService {
           const diggApy = ((secondToDay(diggEmissionValueRate) * 365) / geyserDepositsValue) * 100;
 
           const diggSource: ValueSource = {
-            name: 'digg',
+            name: 'Digg Rewards',
             apy: diggApy,
             performance: {
               oneDay: diggApy,

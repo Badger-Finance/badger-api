@@ -77,4 +77,49 @@ export const bscTokensConfig: TokenConfig = {
       network: ChainNetwork.Ethereum,
     },
   },
+  [TOKENS.BSC_BADGER]: {
+    address: TOKENS.BSC_BADGER,
+    decimals: 18,
+    lookupName: 'badger-dao',
+    name: 'Badger',
+    symbol: 'BADGER',
+    type: TokenType.Contract,
+  },
+
+  [TOKENS.BPANCAKE_BNB_BTCB]: {
+    address: TOKENS.BPANCAKE_BNB_BTCB,
+    decimals: 18,
+    name: 'bPancakeswap: WBNB-BTCB',
+    symbol: 'bPLP-BNB-BTCB',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.PANCAKE_BNB_BTCB,
+      symbol: 'PLP-BNB-BTCB',
+      network: ChainNetwork.BinanceSmartChain,
+    },
+  },
+  [TOKENS.BPANCAKE_BBADGER_BTCB]: {
+    address: TOKENS.BPANCAKE_BBADGER_BTCB,
+    decimals: 18,
+    name: 'bPancakeswap: BBADGER-BTCB',
+    symbol: 'bPLP-BBADGER-BTCB',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.PANCAKE_BBADGER_BTCB,
+      symbol: 'PLP-BBADGER-BTCB',
+      network: ChainNetwork.BinanceSmartChain,
+    },
+  },
+  [TOKENS.BPANCAKE_BDIGG_BTCB]: {
+    address: TOKENS.BPANCAKE_BDIGG_BTCB,
+    decimals: 18,
+    name: 'Pancakeswap: BDIGG-BTCB',
+    symbol: 'bPLP-BDIGG-BTCB',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.PANCAKE_BDIGG_BTCB,
+      symbol: 'PLP-BDIGG-BTCB',
+      network: ChainNetwork.BinanceSmartChain,
+    },
+  },
 };
