@@ -102,7 +102,7 @@ export class SettsService {
 
     // check for historical performance data
     if (settSnapshots.length > 0) {
-      const settValueSource = this.getSettUnderlyingValueSource(settName, settSnapshots);
+      const settValueSource = this.getSettUnderlyingValueSource(settSnapshots);
 
       // sett has measurable apy, replace underlying with measured actual apy
       if (settValueSource.apy > 0) {
@@ -132,9 +132,9 @@ export class SettsService {
           const { network, symbol, address } = token.vaultToken;
           const chain = Chain.getChain(network);
           const vault = await this.getSett(chain, symbol, currency);
-          vault.sources.forEach(source => {
+          vault.sources.forEach((source) => {
             if (source.name === VAULT_SOURCE) {
-              const backingVault = chain.setts.find(sett => ethers.utils.getAddress(sett.depositToken) === address);
+              const backingVault = chain.setts.find((sett) => ethers.utils.getAddress(sett.depositToken) === address);
               if (!backingVault) {
                 source.apy = 0;
                 return;
@@ -167,7 +167,7 @@ export class SettsService {
     return snapshots;
   }
 
-  getSettUnderlyingValueSource(settName: string, settSnapshots: SettSnapshot[]): ValueSource {
+  getSettUnderlyingValueSource(settSnapshots: SettSnapshot[]): ValueSource {
     const settPerformance: Performance = {
       oneDay: this.getSettSampledPerformance(settSnapshots, ONE_DAY),
       threeDay: this.getSettSampledPerformance(settSnapshots, THREE_DAYS),
