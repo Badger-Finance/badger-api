@@ -2,7 +2,7 @@ import { BigNumber } from 'ethers';
 import { Token } from '../tokens/interfaces/token.interface';
 
 export interface Geyser {
-  emissions: Emission[];
+  emissions: (Emission | undefined)[];
 }
 
 export interface Emission {

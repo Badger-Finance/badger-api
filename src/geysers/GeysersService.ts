@@ -1,6 +1,7 @@
 import { Inject, Service } from '@tsed/common';
 import { constants, ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
+import { CacheService } from '../cache/CacheService';
 import { Chain } from '../chains/config/chain.config';
 import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { diggAbi, geyserAbi } from '../config/abi';
@@ -27,9 +28,10 @@ export class GeyserService {
   tokensService!: TokensService;
   @Inject()
   pricesService!: PricesService;
+  @Inject()
+  cacheService!: CacheService;
 
   private badgerGraphqlSdk: BadgerGraphqlSdk;
-  private provider = Chain.getChain(ChainNetwork.Ethereum).provider;
 
   constructor() {
     const badgerDaoGraphqlClient = new GraphQLClient(BADGER_URL);
@@ -37,7 +39,8 @@ export class GeyserService {
   }
 
   async listFarms(chain: Chain): Promise<Sett[]> {
-    const diggContract = new ethers.Contract(TOKENS.DIGG, diggAbi, this.provider);
+    const provider = Chain.getChain(ChainNetwork.Ethereum).provider;
+    const diggContract = new ethers.Contract(TOKENS.DIGG, diggAbi, provider);
 
     const [settData, geyserData, sharesPerFragment] = await Promise.all([
       this.settsService.listSetts(chain),
@@ -73,19 +76,20 @@ export class GeyserService {
           const badgerEmissionValue = await this.pricesService.getValue(TOKENS.BADGER, badgerEmitted);
           const badgerEmissionValueRate = toRate(badgerEmissionValue, badgerEmissionDuration);
           const badgerApy = ((secondToDay(badgerEmissionValueRate) * 365) / geyserDepositsValue) * 100;
-
-          // Emission value is constant, so performance values a identical for every sample
-          const badgerSource: ValueSource = {
-            name: 'Badger Rewards',
-            apy: badgerApy,
-            performance: {
-              oneDay: badgerApy,
-              threeDay: badgerApy,
-              sevenDay: badgerApy,
-              thirtyDay: badgerApy,
-            },
-          };
-          emissionSources.push(badgerSource);
+          if (badgerApy > 0) {
+            // Emission value is constant, so performance values a identical for every sample
+            const badgerSource: ValueSource = {
+              name: 'Badger Rewards',
+              apy: badgerApy,
+              performance: {
+                oneDay: badgerApy,
+                threeDay: badgerApy,
+                sevenDay: badgerApy,
+                thirtyDay: badgerApy,
+              },
+            };
+            emissionSources.push(badgerSource);
+          }
         }
 
         if (diggEmissionData) {
@@ -95,18 +99,19 @@ export class GeyserService {
           const diggEmissionValue = await this.pricesService.getValue(TOKENS.DIGG, diggEmitted);
           const diggEmissionValueRate = toRate(diggEmissionValue, diggEmissionDuration);
           const diggApy = ((secondToDay(diggEmissionValueRate) * 365) / geyserDepositsValue) * 100;
-
-          const diggSource: ValueSource = {
-            name: 'Digg Rewards',
-            apy: diggApy,
-            performance: {
-              oneDay: diggApy,
-              threeDay: diggApy,
-              sevenDay: diggApy,
-              thirtyDay: diggApy,
-            },
-          };
-          emissionSources.push(diggSource);
+          if (diggApy > 0) {
+            const diggSource: ValueSource = {
+              name: 'Digg Rewards',
+              apy: diggApy,
+              performance: {
+                oneDay: diggApy,
+                threeDay: diggApy,
+                sevenDay: diggApy,
+                thirtyDay: diggApy,
+              },
+            };
+            emissionSources.push(diggSource);
+          }
         }
 
         settInfo.value = geyserDepositsValue;
@@ -118,11 +123,23 @@ export class GeyserService {
     return settData;
   }
 
-  async getGeyserData(geyserAddress: string, sharesPerFragment: number): Promise<Geyser> {
-    const geyserContract = new ethers.Contract(geyserAddress, geyserAbi, this.provider);
+  async loadUnlockSchedule(geyser: string, token: string): Promise<UnlockSchedule[]> {
+    const provider = Chain.getChain(ChainNetwork.Ethereum).provider;
+    const geyserContract = new ethers.Contract(geyser, geyserAbi, provider);
+    const cacheKey = CacheService.getCacheKey(geyser, token);
+    const cachedData = this.cacheService.get<UnlockSchedule[]>(cacheKey);
+    if (cachedData) {
+      return cachedData;
+    }
+    const unlockSchedules = await geyserContract.getUnlockSchedulesFor(token);
+    this.cacheService.set(cacheKey, unlockSchedules);
+    return unlockSchedules;
+  }
+
+  async getGeyserData(geyser: string, sharesPerFragment: number): Promise<Geyser> {
     const [badgerUnlockSchedules, diggUnlockSchedules] = await Promise.all([
-      geyserContract.getUnlockSchedulesFor(TOKENS.BADGER) as UnlockSchedule[],
-      geyserContract.getUnlockSchedulesFor(TOKENS.DIGG) as UnlockSchedule[],
+      this.loadUnlockSchedule(geyser, TOKENS.BADGER),
+      this.loadUnlockSchedule(geyser, TOKENS.DIGG),
     ]);
 
     // UnlockSchedule objects are recreated due to returned objects underlying as arrays.
@@ -159,6 +176,6 @@ export class GeyserService {
     }
     return {
       emissions: emissions,
-    } as Geyser;
+    };
   }
 }

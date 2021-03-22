@@ -17,7 +17,7 @@ import { ProtocolSummary } from '../interface/ProtocolSummary';
 import { Sett, SettSummary } from '../interface/Sett';
 import { SettSnapshot } from '../interface/SettSnapshot';
 import { PricesService } from '../prices/PricesService';
-import { Performance } from '../protocols/interfaces/performance.interface';
+import { Performance, scalePerformance } from '../protocols/interfaces/performance.interface';
 import { ValueSource } from '../protocols/interfaces/value-source.interface';
 import { ProtocolsService } from '../protocols/ProtocolsService';
 import { TokenType } from '../tokens/enums/token-type.enum';
@@ -50,7 +50,7 @@ export class SettsService {
     return {
       totalValue: totalValue,
       setts: settSummaries,
-    } as ProtocolSummary;
+    };
   }
 
   async listSetts(chain: Chain, currency?: string): Promise<Sett[]> {
@@ -101,7 +101,7 @@ export class SettsService {
     let filterHarvestablePerformances = false;
 
     // check for historical performance data
-    if (settSnapshots.length > 0) {
+    if (chain.name != 'BinanceSmartChain' && settSnapshots.length > 0) {
       const settValueSource = this.getSettUnderlyingValueSource(settSnapshots);
 
       // sett has measurable apy, replace underlying with measured actual apy
@@ -111,20 +111,26 @@ export class SettsService {
       }
     }
 
-    const protocolValueSource = await this.protocolsService.getProtocolPerformance(chain, settDefinition);
-    if (protocolValueSource) {
-      sett.sources.push(...protocolValueSource);
-    }
-
     const tokenRequest: TokenRequest = {
       chain: chain,
       sett: settDefinition,
       balance: balance,
       currency: currency,
     };
-    sett.tokens = await this.tokensSerivce.getSettTokens(tokenRequest);
+
+    const [protocolValueSource, settTokens] = await Promise.all([
+      this.protocolsService.getProtocolPerformance(chain, settDefinition),
+      this.tokensSerivce.getSettTokens(tokenRequest),
+    ]);
+
+    if (protocolValueSource) {
+      sett.sources.push(...protocolValueSource);
+    }
+
+    sett.tokens = settTokens;
     sett.value = sett.tokens.reduce((total, tokenBalance) => (total += tokenBalance.value), 0);
 
+    const vaultToken = getToken(sett.vaultToken);
     await Promise.all(
       sett.tokens.map(async (tokenBalance) => {
         const token = getToken(tokenBalance.address);
@@ -140,7 +146,11 @@ export class SettsService {
                 return;
               }
               const bToken = getToken(backingVault.settToken);
-              source.name = bToken.name;
+              source.name = `${chain.name} ${bToken.name} Deposit`;
+              if (vaultToken.lpToken) {
+                source.apy /= 2;
+                source.performance = scalePerformance(source.performance, 0.5);
+              }
             }
           });
           sett.sources.push(...vault.sources);

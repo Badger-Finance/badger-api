@@ -36,10 +36,9 @@ type SyntheticDataPayload = [
 
 @Service()
 export class ClawService {
-  private eth: ethers.providers.JsonRpcProvider = Chain.getChain(ChainNetwork.Ethereum).provider;
-
   async getSyntheticData(empAddress: string): Promise<SyntheticData> {
-    const empContract = new ethers.Contract(empAddress, empAbi, this.eth);
+    const provider = Chain.getChain(ChainNetwork.Ethereum).provider;
+    const empContract = new ethers.Contract(empAddress, empAbi, provider);
     const [
       cumulativeFeeMultiplier,
       rawTotalPositionCollateral,
@@ -93,7 +92,8 @@ export class ClawService {
   }
 
   async getSponsorData(empAddress: string, sponsorAddress: string): Promise<SponsorData> {
-    const empContract = new ethers.Contract(empAddress, empAbi, this.eth);
+    const provider = Chain.getChain(ChainNetwork.Ethereum).provider;
+    const empContract = new ethers.Contract(empAddress, empAbi, provider);
     const liquidations = await getLiquidations(empContract, sponsorAddress);
     const position = await getPosition(empContract, sponsorAddress);
     return {

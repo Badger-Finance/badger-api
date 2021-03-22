@@ -9,7 +9,6 @@ type Chains = Record<string, Chain>;
 
 export abstract class Chain {
   private static chains: Chains = {};
-  private static defaultChain = 'eth';
   readonly name: string;
   readonly symbol: string;
   readonly chainId: string;
@@ -45,7 +44,7 @@ export abstract class Chain {
 
   static getChain(network?: ChainNetwork): Chain {
     if (!network) {
-      return this.chains[this.defaultChain];
+      network = ChainNetwork.Ethereum;
     }
     const chain = this.chains[network];
     if (!chain) {
