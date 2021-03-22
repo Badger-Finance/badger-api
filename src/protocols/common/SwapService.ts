@@ -1,25 +1,26 @@
 import fetch from 'node-fetch';
 import { Chain } from '../../chains/config/chain.config';
-import { Performance, uniformPerformance } from '../../interface/Performance';
 import { SettDefinition } from '../../interface/Sett';
 import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
+import { Performance, uniformPerformance } from '../interfaces/performance.interface';
+import { ValueSource } from '../interfaces/value-source.interface';
 import { getLiquidityPrice } from './swap-util';
 
 export abstract class SwapService {
-  constructor(private graphUrl: string) {}
+  constructor(private graphUrl: string, private name: string) {}
 
   abstract getPairPerformance(
     chain: Chain,
     sett: SettDefinition,
     filterHarvestablePerformances?: boolean,
-  ): Promise<Performance>;
+  ): Promise<ValueSource[]>;
 
   /**
    * Retrieve Uniswap v2 variant pool performance from trading fees.
    * @param poolAddress Liquidity pair contract address.
    * @param protocol Uniswap v2 variant type.
    */
-  async getSwapPerformance(poolAddress: string): Promise<Performance> {
+  async getSwapPerformance(poolAddress: string): Promise<ValueSource> {
     // TODO: Move query to GraphService
     const query = `
       {
@@ -49,7 +50,11 @@ export abstract class SwapService {
       if (i === 6) performance.sevenDay = currentApy;
       if (i === 29) performance.thirtyDay = currentApy;
     }
-    return performance;
+    return {
+      name: `${this.name} LP Fees`,
+      apy: performance.threeDay,
+      performance: performance,
+    };
   }
 
   async getPairPrice(contract: string): Promise<TokenPrice> {

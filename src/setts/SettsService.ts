@@ -1,5 +1,6 @@
 import { Inject, Service } from '@tsed/common';
 import { BadRequest, NotFound } from '@tsed/exceptions';
+import { ethers } from 'ethers';
 import { Chain } from '../chains/config/chain.config';
 import {
   ASSET_DATA,
@@ -12,18 +13,18 @@ import {
   THREE_DAYS,
 } from '../config/constants';
 import { getAssetData } from '../config/util';
-import { Performance } from '../interface/Performance';
 import { ProtocolSummary } from '../interface/ProtocolSummary';
 import { Sett, SettSummary } from '../interface/Sett';
 import { SettSnapshot } from '../interface/SettSnapshot';
-import { ValueSource } from '../interface/ValueSource';
 import { PricesService } from '../prices/PricesService';
+import { Performance } from '../protocols/interfaces/performance.interface';
+import { ValueSource } from '../protocols/interfaces/value-source.interface';
 import { ProtocolsService } from '../protocols/ProtocolsService';
 import { TokenType } from '../tokens/enums/token-type.enum';
 import { TokenRequest } from '../tokens/interfaces/token-request.interface';
 import { getToken } from '../tokens/tokens-util';
 import { TokensService } from '../tokens/TokensService';
-import { getSett } from './setts-util';
+import { getSett, VAULT_SOURCE } from './setts-util';
 
 @Service()
 export class SettsService {
@@ -90,7 +91,7 @@ export class SettsService {
     if (settData.sett) {
       const currentSett = settData.sett;
       balance = currentSett.balance;
-      sett.ppfs = currentSett.pricePerFullShare;
+      sett.ppfs = currentSett.pricePerFullShare / 1e18;
     } else if (settSnapshots.length > 0) {
       const latestSett = settSnapshots[CURRENT];
       balance = latestSett.balance;
@@ -101,7 +102,7 @@ export class SettsService {
 
     // check for historical performance data
     if (settSnapshots.length > 0) {
-      const settValueSource = this.getSettUnderlyingValueSource(settName, settSnapshots);
+      const settValueSource = this.getSettUnderlyingValueSource(settSnapshots);
 
       // sett has measurable apy, replace underlying with measured actual apy
       if (settValueSource.apy > 0) {
@@ -110,13 +111,9 @@ export class SettsService {
       }
     }
 
-    const protocolValueSource = await this.protocolsService.getProtocolPerformance(
-      chain,
-      settDefinition,
-      filterHarvestablePerformances,
-    );
+    const protocolValueSource = await this.protocolsService.getProtocolPerformance(chain, settDefinition);
     if (protocolValueSource) {
-      sett.sources.push(protocolValueSource);
+      sett.sources.push(...protocolValueSource);
     }
 
     const tokenRequest: TokenRequest = {
@@ -132,13 +129,32 @@ export class SettsService {
       sett.tokens.map(async (tokenBalance) => {
         const token = getToken(tokenBalance.address);
         if (token.type === TokenType.Wrapper && token.vaultToken) {
-          const { network, symbol } = token.vaultToken;
-          const vault = await this.getSett(Chain.getChain(network), symbol, currency);
-          sett.sources = sett.sources.concat(vault.sources);
+          const { network, symbol, address } = token.vaultToken;
+          const chain = Chain.getChain(network);
+          const vault = await this.getSett(chain, symbol, currency);
+          vault.sources.forEach((source) => {
+            if (source.name === VAULT_SOURCE) {
+              const backingVault = chain.setts.find((sett) => ethers.utils.getAddress(sett.depositToken) === address);
+              if (!backingVault) {
+                source.apy = 0;
+                return;
+              }
+              const bToken = getToken(backingVault.settToken);
+              source.name = bToken.name;
+            }
+          });
+          sett.sources.push(...vault.sources);
         }
       }),
     );
 
+    sett.sources = sett.sources.filter((source) => {
+      const report = source.apy > 0;
+      if (filterHarvestablePerformances) {
+        return !source.harvestable && report;
+      }
+      return report;
+    });
     sett.apy = sett.sources.map((s) => s.apy).reduce((total, apy) => (total += apy), 0);
     return sett;
   }
@@ -151,7 +167,7 @@ export class SettsService {
     return snapshots;
   }
 
-  getSettUnderlyingValueSource(settName: string, settSnapshots: SettSnapshot[]): ValueSource {
+  getSettUnderlyingValueSource(settSnapshots: SettSnapshot[]): ValueSource {
     const settPerformance: Performance = {
       oneDay: this.getSettSampledPerformance(settSnapshots, ONE_DAY),
       threeDay: this.getSettSampledPerformance(settSnapshots, THREE_DAYS),
@@ -159,7 +175,7 @@ export class SettsService {
       thirtyDay: this.getSettSampledPerformance(settSnapshots, THIRTY_DAYS),
     };
     return {
-      name: settName,
+      name: VAULT_SOURCE,
       apy: settPerformance.threeDay,
       performance: settPerformance,
     } as ValueSource;
