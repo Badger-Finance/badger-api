@@ -85,10 +85,10 @@ export const bscTokensConfig: TokenConfig = {
     symbol: 'BADGER',
     type: TokenType.Contract,
   },
-
   [TOKENS.BPANCAKE_BNB_BTCB]: {
     address: TOKENS.BPANCAKE_BNB_BTCB,
     decimals: 18,
+    lpToken: true,
     name: 'bPancakeswap: WBNB-BTCB',
     symbol: 'bPLP-BNB-BTCB',
     type: TokenType.Vault,
@@ -101,6 +101,7 @@ export const bscTokensConfig: TokenConfig = {
   [TOKENS.BPANCAKE_BBADGER_BTCB]: {
     address: TOKENS.BPANCAKE_BBADGER_BTCB,
     decimals: 18,
+    lpToken: true,
     name: 'bPancakeswap: BBADGER-BTCB',
     symbol: 'bPLP-BBADGER-BTCB',
     type: TokenType.Vault,
@@ -113,6 +114,7 @@ export const bscTokensConfig: TokenConfig = {
   [TOKENS.BPANCAKE_BDIGG_BTCB]: {
     address: TOKENS.BPANCAKE_BDIGG_BTCB,
     decimals: 18,
+    lpToken: true,
     name: 'Pancakeswap: BDIGG-BTCB',
     symbol: 'bPLP-BDIGG-BTCB',
     type: TokenType.Vault,

@@ -30,18 +30,33 @@ export abstract class SwapService {
         }
       }
     `;
-    const pairDayResponse = await fetch(this.graphUrl, {
+    const response = await fetch(this.graphUrl, {
       method: 'POST',
       body: JSON.stringify({ query }),
-    })
-      .then((response) => response.json())
-      .then((pairInfo) => pairInfo.data.pairDayDatas);
+    });
+
+    const unknownPerformance = uniformPerformance(0);
+    const uknownValuSource = {
+      name: `${this.name} LP Fees`,
+      apy: unknownPerformance.threeDay,
+      performance: unknownPerformance,
+    };
+
+    if (!response.ok) {
+      return uknownValuSource;
+    }
+
+    const pairDayResponse = await response.json();
+    if (pairDayResponse.errors) {
+      return uknownValuSource;
+    }
+    const pairDayData = pairDayResponse.data.pairDayDatas;
 
     let totalApy = 0;
     const performance: Performance = uniformPerformance(0);
-    for (let i = 0; i < pairDayResponse.length; i++) {
-      const volume = parseFloat(pairDayResponse[i].dailyVolumeUSD);
-      const poolReserve = parseFloat(pairDayResponse[i].reserveUSD);
+    for (let i = 0; i < pairDayData.length; i++) {
+      const volume = parseFloat(pairDayData[i].dailyVolumeUSD);
+      const poolReserve = parseFloat(pairDayData[i].reserveUSD);
       const fees = volume * 0.003;
       totalApy += (fees / poolReserve) * 365 * 100;
       const currentApy = totalApy / (i + 1);

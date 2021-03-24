@@ -11,6 +11,7 @@ import { getToken, protocolTokens } from '../tokens/tokens-util';
 import { TokenConfig } from '../tokens/types/token-config.type';
 import AttributeValue = DocumentClient.AttributeValue;
 import fetch from 'node-fetch';
+import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { getSett } from '../setts/setts-util';
 import { TokenType } from '../tokens/enums/token-type.enum';
@@ -25,9 +26,6 @@ const priceCache = new NodeCache({ stdTTL: 300, checkperiod: 480 });
 export const updatePrice = async (token: Token): Promise<void> => {
   if (!token) {
     throw new BadRequest('Token not supported for pricing');
-  }
-  if (token.type === TokenType.Wrapper) {
-    return;
   }
   const { address, name } = token;
   const strategy = ChainStrategy.getStrategy(address);
@@ -173,7 +171,7 @@ export const getVaultTokenPrice = async (contract: string): Promise<TokenPrice> 
     getSett(targetChain.graphUrl, token.address),
   ]);
   if (!vaultTokenSnapshot.sett) {
-    throw new InternalServerError('Failed to load sett data');
+    throw new InternalServerError(`Failed to load ${contract} sett data`);
   }
   vaultTokenPrice.name = token.name;
   vaultTokenPrice.address = token.address;
@@ -181,4 +179,28 @@ export const getVaultTokenPrice = async (contract: string): Promise<TokenPrice> 
   vaultTokenPrice.usd *= sett.pricePerFullShare / 1e18;
   vaultTokenPrice.eth *= sett.pricePerFullShare / 1e18;
   return vaultTokenPrice;
+};
+
+export const getWrapperTokenPrice = async (contract: string): Promise<TokenPrice> => {
+  const token = getToken(contract);
+  if (token.type !== TokenType.Wrapper) {
+    throw new BadRequest(`${token.name} is not a wrapper token`);
+  }
+  if (!token.vaultToken) {
+    throw new UnprocessableEntity(`${token.name} vault token missing`);
+  }
+  const vaultToken = token.vaultToken;
+  const allSetts = [];
+  for (const chain of loadChains()) {
+    allSetts.push(...chain.setts);
+  }
+  const backingVault = allSetts.find((sett) => ethers.utils.getAddress(sett.depositToken) === vaultToken.address);
+  if (!backingVault) {
+    throw new UnprocessableEntity(`${token.name} vault token missing`);
+  }
+  const price = await getPrice(backingVault.settToken);
+  if (!price) {
+    throw new InternalServerError(`Failed to load ${contract} sett data`);
+  }
+  return price;
 };

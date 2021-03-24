@@ -1,6 +1,7 @@
 import { Inject, Service } from '@tsed/common';
 import { NotFound } from '@tsed/exceptions';
 import { GraphQLClient } from 'graphql-request';
+import { CacheService } from '../cache/CacheService';
 import { PANCAKESWAP_URL, Protocol, SUSHISWAP_URL, UNISWAP_URL } from '../config/constants';
 import { getSdk as getUniV2Sdk, Sdk as UniV2GraphqlSdk, UniV2PairQuery } from '../graphql/generated/uniswap';
 import { TokenBalance } from '../interface/TokenBalance';
@@ -13,6 +14,8 @@ import { getToken } from './tokens-util';
 export class TokensService {
   @Inject()
   pricesService!: PricesService;
+  @Inject()
+  cacheService!: CacheService;
 
   private sushiswapGraphqlSdk: UniV2GraphqlSdk;
   private uniswapGraphqlSdk: UniV2GraphqlSdk;
@@ -36,13 +39,22 @@ export class TokensService {
    */
   async getSettTokens(request: TokenRequest): Promise<TokenBalance[]> {
     const { sett, balance, currency } = request;
+
+    const cacheKey = CacheService.getCacheKey(sett.name, 'tokens');
+    const cachedData = this.cacheService.get<TokenBalance[]>(cacheKey);
+    if (cachedData) {
+      return cachedData;
+    }
+
     const token = getToken(sett.depositToken);
     const tokenBalance = balance / Math.pow(10, token.decimals);
     request.balance = tokenBalance;
     if (token.lpToken) {
-      return await this.getLiquidtyPoolTokenBalances(request);
+      const tokens = await this.getLiquidtyPoolTokenBalances(request);
+      this.cacheService.set(cacheKey, tokens);
+      return tokens;
     }
-    return [
+    const tokens = [
       {
         address: token.address,
         name: token.name,
@@ -52,6 +64,8 @@ export class TokensService {
         value: await this.pricesService.getValue(token.address, tokenBalance, currency),
       },
     ];
+    this.cacheService.set(cacheKey, tokens);
+    return tokens;
   }
 
   async getLiquidtyPoolTokenBalances(request: TokenRequest): Promise<TokenBalance[]> {
@@ -81,7 +95,7 @@ export class TokensService {
     }
     const { pair } = poolData;
     if (!pair || protocol === Protocol.Pancakeswap) {
-      return await this.getOnChainLiquidtyPoolTokenBalances(request);
+      return this.getOnChainLiquidtyPoolTokenBalances(request);
     }
 
     // poolData returns the full liquidity pool, valueScalar acts to calculate the portion within the sett
