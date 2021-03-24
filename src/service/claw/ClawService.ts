@@ -99,7 +99,7 @@ export class ClawService {
     return {
       liquidations,
       position,
-      pendingWithdrawal: position.transferPositionRequestPassTimestamp.toNumber() != 0,
+      pendingWithdrawal: position.withdrawalRequestPassTimestamp.toNumber() != 0,
     } as SponsorData;
   }
 }
@@ -139,21 +139,17 @@ const convertLiquidation = (liquidation: LiqudationUnformatted): Liquidation => 
 };
 
 const getPosition = async (empContract: ethers.Contract, sponsorAddress: string): Promise<Position> => {
-  const [
-    tokensOutstanding,
-    withdrawalRequestPassTimestamp,
-    withdrawalRequestAmount,
-    rawCollateral,
-    transferPositionRequestPassTimestamp,
-  ]: [FixedPointUnsigned, BigNumber, FixedPointUnsigned, FixedPointUnsigned, BigNumber] = await empContract.positions(
-    sponsorAddress,
-  );
+  const [tokensOutstanding, withdrawalRequestPassTimestamp, withdrawalRequestAmount, rawCollateral]: [
+    FixedPointUnsigned,
+    BigNumber,
+    FixedPointUnsigned,
+    FixedPointUnsigned,
+  ] = await empContract.positions(sponsorAddress);
   return {
     tokensOutstanding: convertFixedPointUnsigned(tokensOutstanding),
     withdrawalRequestPassTimestamp,
     withdrawalRequestAmount: convertFixedPointUnsigned(withdrawalRequestAmount),
     rawCollateral: convertFixedPointUnsigned(rawCollateral),
-    transferPositionRequestPassTimestamp,
   };
 };
 
