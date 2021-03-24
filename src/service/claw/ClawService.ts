@@ -144,7 +144,6 @@ const getPosition = async (empContract: ethers.Contract, sponsorAddress: string)
     BigNumber,
     FixedPointUnsigned,
     FixedPointUnsigned,
-    BigNumber,
   ] = await empContract.positions(sponsorAddress);
   return {
     tokensOutstanding: convertFixedPointUnsigned(tokensOutstanding),
