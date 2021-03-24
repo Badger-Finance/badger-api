@@ -34,7 +34,6 @@ export interface Position {
   withdrawalRequestPassTimestamp: BigNumber;
   withdrawalRequestAmount: BigNumber;
   rawCollateral: BigNumber;
-  transferPositionRequestPassTimestamp: BigNumber;
 }
 
 export interface SponsorData {
