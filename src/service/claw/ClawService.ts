@@ -139,14 +139,13 @@ const convertLiquidation = (liquidation: LiqudationUnformatted): Liquidation => 
 };
 
 const getPosition = async (empContract: ethers.Contract, sponsorAddress: string): Promise<Position> => {
-  const [
-    tokensOutstanding,
-    withdrawalRequestPassTimestamp,
-    withdrawalRequestAmount,
-    rawCollateral,
-  ]: [FixedPointUnsigned, BigNumber, FixedPointUnsigned, FixedPointUnsigned, BigNumber] = await empContract.positions(
-    sponsorAddress,
-  );
+  const [tokensOutstanding, withdrawalRequestPassTimestamp, withdrawalRequestAmount, rawCollateral]: [
+    FixedPointUnsigned,
+    BigNumber,
+    FixedPointUnsigned,
+    FixedPointUnsigned,
+    BigNumber,
+  ] = await empContract.positions(sponsorAddress);
   return {
     tokensOutstanding: convertFixedPointUnsigned(tokensOutstanding),
     withdrawalRequestPassTimestamp,
