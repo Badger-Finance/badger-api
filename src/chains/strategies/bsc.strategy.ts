@@ -1,7 +1,7 @@
 import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { TOKENS } from '../../config/constants';
-import { getTokenPrice, getVaultTokenPrice } from '../../prices/prices-util';
+import { getTokenPrice, getVaultTokenPrice, getWrapperTokenPrice } from '../../prices/prices-util';
 import { getPancakeswapPrice } from '../../protocols/common/swap-util';
 import { bscTokensConfig } from '../../tokens/config/bsc-tokens.config';
 import { TokenType } from '../../tokens/enums/token-type.enum';
@@ -23,6 +23,8 @@ export class BscStrategy extends ChainStrategy {
         TOKENS.BPANCAKE_BNB_BTCB,
         TOKENS.BPANCAKE_BBADGER_BTCB,
         TOKENS.BPANCAKE_BDIGG_BTCB,
+        TOKENS.BSC_BBADGER,
+        TOKENS.BSC_BDIGG,
       ],
       this,
     );
@@ -44,6 +46,8 @@ export class BscStrategy extends ChainStrategy {
         return getPancakeswapPrice(checksummedAddress);
       case TokenType.Vault:
         return getVaultTokenPrice(checksummedAddress);
+      case TokenType.Wrapper:
+        return getWrapperTokenPrice(checksummedAddress);
       default:
         throw new UnprocessableEntity('Unsupported TokenType');
     }

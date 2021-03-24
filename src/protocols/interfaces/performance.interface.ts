@@ -18,3 +18,12 @@ export const uniformPerformance = (apr: number): Performance => {
     thirtyDay: apr,
   };
 };
+
+export const scalePerformance = (performance: Performance, scalar: number): Performance => {
+  return {
+    oneDay: performance.oneDay * scalar,
+    threeDay: performance.threeDay * scalar,
+    sevenDay: performance.sevenDay * scalar,
+    thirtyDay: performance.thirtyDay * scalar,
+  };
+};
