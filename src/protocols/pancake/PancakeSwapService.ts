@@ -83,7 +83,7 @@ export class PancakeSwapService extends SwapService {
 const getPoolId = (depositToken: string): number => {
   const poolMap: Record<string, number> = {};
   poolMap[TOKENS.PANCAKE_BNB_BTCB] = 15;
-  poolMap[TOKENS.PANCAKE_BBADGER_BTCB] = 104;
+  poolMap[TOKENS.PANCAKE_BBADGER_BTCB] = 106;
   poolMap[TOKENS.PANCAKE_BDIGG_BTCB] = 104;
   return poolMap[depositToken];
 };
