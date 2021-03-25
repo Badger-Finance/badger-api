@@ -8,7 +8,7 @@ import jsonfile from 'jsonfile';
  */
 const file = './src/swagger/swagger.json';
 
-jsonfile.readFile(file, (err: NodeJS.ErrnoException | null, obj: any) => {
+jsonfile.readFile(file, (err: NodeJS.ErrnoException | null, obj: unknown) => {
   if (err) {
     console.error(err);
   } else {
