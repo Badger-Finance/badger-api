@@ -99,7 +99,11 @@ export class SettsService {
     } else if (settSnapshots.length > 0) {
       const latestSett = settSnapshots[CURRENT];
       balance = latestSett.balance;
-      sett.ppfs = latestSett.ratio;
+      if (settDefinition.depositToken === TOKENS.DIGG) {
+        sett.ppfs = latestSett.supply / latestSett.balance;
+      } else {
+        sett.ppfs = latestSett.ratio;
+      }
     }
 
     let filterHarvestablePerformances = false;

@@ -1,6 +1,6 @@
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
-import { ASSET_DATA, TOKENS } from '../config/constants';
+import { ASSET_DATA } from '../config/constants';
 import { EventInput, getBlock, getIndexedBlock, saveItem, THIRTY_MIN_BLOCKS } from '../config/util';
 import { getSett } from '../setts/setts-util';
 
@@ -18,18 +18,14 @@ export const indexAsset = async (event: EventInput) => {
       continue;
     }
 
-    const { balance, totalSupply, token } = sett.sett;
+    const { balance, totalSupply, pricePerFullShare, token } = sett.sett;
     const blockData = await getBlock(block);
     const timestamp = blockData.timestamp * 1000;
     const tokenBalance = balance / Math.pow(10, token.decimals);
     const supply = totalSupply / Math.pow(10, token.decimals);
+    const ratio = pricePerFullShare / Math.pow(10, 18);
     const tokenPriceData = await targetChain.strategy.getPrice(token.id);
-
-    let ratio = tokenBalance / supply;
     const value = tokenBalance * tokenPriceData.usd;
-    if (token.id === TOKENS.DIGG) {
-      ratio *= 1e9;
-    }
 
     const snapshot = {
       asset: asset,
