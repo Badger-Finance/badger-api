@@ -1,7 +1,7 @@
 import { ChartsController } from './charts/ChartsController';
 import { ClawController } from './controller/ClawController';
 import { GeyserController } from './geysers/GeysersController';
-import { HarvestsController } from './harvests/HarvestsController';
+import { HarvestsController } from './harvests/harvests.controller';
 import { PriceController } from './prices/PricesController';
 import { ProtocolController } from './protocols/ProtocolsController';
 import { RewardController } from './rewards/RewardsController';

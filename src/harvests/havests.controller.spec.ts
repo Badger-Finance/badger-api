@@ -1,7 +1,7 @@
 import { PlatformTest } from '@tsed/common';
 import SuperTest from 'supertest';
 import { Server } from '../Server';
-import { HarvestsService } from './HarvestsService';
+import { HarvestsService } from './harvests.service';
 
 describe('HarvestsController', () => {
   let request: SuperTest.SuperTest<SuperTest.Test>;

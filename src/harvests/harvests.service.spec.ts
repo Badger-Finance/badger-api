@@ -1,7 +1,7 @@
 import { PlatformTest } from '@tsed/common';
 import { GraphQLClient } from 'graphql-request';
 import { HarvestFragment, HarvestsQuery } from '../graphql/generated/badger-dao';
-import { HarvestsService } from './HarvestsService';
+import { HarvestsService } from './harvests.service';
 
 describe('HarvestsService', () => {
   let service: HarvestsService;
