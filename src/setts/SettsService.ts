@@ -11,6 +11,7 @@ import {
   SEVEN_DAYS,
   THIRTY_DAYS,
   THREE_DAYS,
+  TOKENS,
 } from '../config/constants';
 import { getAssetData } from '../config/util';
 import { ProtocolSummary } from '../interface/ProtocolSummary';
@@ -91,11 +92,18 @@ export class SettsService {
     if (settData.sett) {
       const currentSett = settData.sett;
       balance = currentSett.balance;
-      sett.ppfs = currentSett.pricePerFullShare / 1e18;
+      sett.ppfs = currentSett.balance / currentSett.totalSupply;
+      if (settDefinition.depositToken === TOKENS.DIGG) {
+        sett.ppfs *= 1e9;
+      }
     } else if (settSnapshots.length > 0) {
       const latestSett = settSnapshots[CURRENT];
       balance = latestSett.balance;
-      sett.ppfs = latestSett.ratio;
+      if (settDefinition.depositToken === TOKENS.DIGG) {
+        sett.ppfs = latestSett.supply / latestSett.balance;
+      } else {
+        sett.ppfs = latestSett.ratio;
+      }
     }
 
     let filterHarvestablePerformances = false;

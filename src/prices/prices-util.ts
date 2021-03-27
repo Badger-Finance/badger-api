@@ -4,7 +4,7 @@ import { ethers } from 'ethers';
 import NodeCache = require('node-cache');
 import { getItems, saveItem } from '../aws/dynamodb-utils';
 import { ChainStrategy } from '../chains/strategies/chain.strategy';
-import { COINGECKO_URL, PRICE_DATA } from '../config/constants';
+import { COINGECKO_URL, PRICE_DATA, TOKENS } from '../config/constants';
 import { Token } from '../tokens/interfaces/token.interface';
 import { PriceData, TokenPrice, TokenPriceSnapshot } from '../tokens/interfaces/token-price.interface';
 import { getToken, protocolTokens } from '../tokens/tokens-util';
@@ -176,8 +176,16 @@ export const getVaultTokenPrice = async (contract: string): Promise<TokenPrice> 
   vaultTokenPrice.name = token.name;
   vaultTokenPrice.address = token.address;
   const sett = vaultTokenSnapshot.sett;
-  vaultTokenPrice.usd *= sett.pricePerFullShare / 1e18;
-  vaultTokenPrice.eth *= sett.pricePerFullShare / 1e18;
+
+  let multiplier;
+  if (token.address === TOKENS.BDIGG) {
+    multiplier = (sett.balance / sett.totalSupply) * 1e9;
+  } else {
+    multiplier = sett.pricePerFullShare / 1e18;
+  }
+  vaultTokenPrice.usd *= multiplier;
+  vaultTokenPrice.eth *= multiplier;
+
   return vaultTokenPrice;
 };
 
