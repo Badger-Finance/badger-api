@@ -421,7 +421,7 @@ functions:
       #       chain: "bsc"
 
   index-prices:
-    handler: src/indexer/prices/handler.handler
+    handler: src/indexer/price-indexer.indexPrices
     timeout: 30
     events:
       - schedule:
