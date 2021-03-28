@@ -21,6 +21,7 @@ export interface RewardMerkleDistribution {
 export interface RewardMerkleClaim {
   index: BigNumber;
   cycle: BigNumber;
+  boost: BigNumber;
   user: string;
   tokens: string[];
   cumulativeAmounts: BigNumber[];
