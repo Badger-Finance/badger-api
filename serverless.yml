@@ -8,10 +8,16 @@ plugins:
   - serverless-aws-documentation
   - serverless-api-gateway-caching
   - serverless-plugin-typescript
+  - serverless-dynamodb-local
   - serverless-offline
 
 custom:
   stage: ${opt:stage, self:provider.stage}
+  dynamodb:
+    stages:
+      - ${self:custom.stage}
+    inMemory: true
+    migration: true
   apiGatewayCaching:
     enabled: ${self:custom.caching.${self:custom.stage}}
     ttlInSeconds: 300

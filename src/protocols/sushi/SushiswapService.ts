@@ -2,7 +2,7 @@ import { Inject, Service } from '@tsed/di';
 import { GraphQLClient } from 'graphql-request';
 import { CacheService } from '../../cache/CacheService';
 import { Chain } from '../../chains/config/chain.config';
-import { BLOCKS_PER_YEAR, SUSHI_CHEF, SUSHISWAP_URL, TOKENS } from '../../config/constants';
+import { BLOCKS_PER_YEAR, MASTERCHEF_URL, SUSHI_CHEF, SUSHISWAP_URL, TOKENS } from '../../config/constants';
 import {
   getSdk,
   MasterChefsAndPoolsQuery,
@@ -14,7 +14,6 @@ import { SettDefinition } from '../../interface/Sett';
 import { getTokenPriceData } from '../../prices/prices-util';
 import { PricesService } from '../../prices/PricesService';
 import { TokensService } from '../../tokens/TokensService';
-import { MASTERCHEF_URL } from '../../v1/util/constants';
 import { SwapService } from '../common/SwapService';
 import { uniformPerformance } from '../interfaces/performance.interface';
 import { ValueSource } from '../interfaces/value-source.interface';
