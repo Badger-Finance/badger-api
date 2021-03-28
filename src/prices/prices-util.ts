@@ -1,4 +1,4 @@
-import { BadRequest, InternalServerError, UnprocessableEntity } from '@tsed/exceptions';
+import { BadRequest, InternalServerError, NotFound, UnprocessableEntity } from '@tsed/exceptions';
 import { DocumentClient, QueryInput } from 'aws-sdk/clients/dynamodb';
 import { ethers } from 'ethers';
 import NodeCache = require('node-cache');
@@ -171,7 +171,7 @@ export const getVaultTokenPrice = async (contract: string): Promise<TokenPrice> 
     getSett(targetChain.graphUrl, token.address),
   ]);
   if (!vaultTokenSnapshot.sett) {
-    throw new InternalServerError(`Failed to load ${contract} sett data`);
+    throw new NotFound(`Failed to load ${contract} sett data`);
   }
   vaultTokenPrice.name = token.name;
   vaultTokenPrice.address = token.address;
