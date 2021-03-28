@@ -1,16 +1,19 @@
-import { BadRequest, InternalServerError } from '@tsed/exceptions';
+import { BadRequest, InternalServerError, NotFound, UnprocessableEntity } from '@tsed/exceptions';
 import { DocumentClient, QueryInput } from 'aws-sdk/clients/dynamodb';
 import { ethers } from 'ethers';
 import NodeCache = require('node-cache');
 import { getItems, saveItem } from '../aws/dynamodb-utils';
 import { ChainStrategy } from '../chains/strategies/chain.strategy';
-import { COINGECKO_URL, PRICE_DATA } from '../config/constants';
+import { COINGECKO_URL, PRICE_DATA, TOKENS } from '../config/constants';
 import { Token } from '../tokens/interfaces/token.interface';
 import { PriceData, TokenPrice, TokenPriceSnapshot } from '../tokens/interfaces/token-price.interface';
 import { getToken, protocolTokens } from '../tokens/tokens-util';
 import { TokenConfig } from '../tokens/types/token-config.type';
 import AttributeValue = DocumentClient.AttributeValue;
 import fetch from 'node-fetch';
+import { loadChains } from '../chains/chain';
+import { Chain } from '../chains/config/chain.config';
+import { getSett } from '../setts/setts-util';
 import { TokenType } from '../tokens/enums/token-type.enum';
 
 export type PricingFunction = (address: string) => Promise<TokenPrice>;
@@ -23,9 +26,6 @@ const priceCache = new NodeCache({ stdTTL: 300, checkperiod: 480 });
 export const updatePrice = async (token: Token): Promise<void> => {
   if (!token) {
     throw new BadRequest('Token not supported for pricing');
-  }
-  if (token.type === TokenType.Wrapper) {
-    return;
   }
   const { address, name } = token;
   const strategy = ChainStrategy.getStrategy(address);
@@ -154,4 +154,61 @@ export const inCurrency = (tokenPrice: TokenPrice, currency?: string): number =>
     default:
       return tokenPrice.usd;
   }
+};
+
+export const getVaultTokenPrice = async (contract: string): Promise<TokenPrice> => {
+  const token = getToken(contract);
+  if (token.type !== TokenType.Vault) {
+    throw new BadRequest(`${token.name} is not a vault token`);
+  }
+  if (!token.vaultToken) {
+    throw new UnprocessableEntity(`${token.name} vault token missing`);
+  }
+  const vaultToken = token.vaultToken;
+  const targetChain = Chain.getChain(vaultToken.network);
+  const [vaultTokenPrice, vaultTokenSnapshot] = await Promise.all([
+    getPrice(vaultToken.address),
+    getSett(targetChain.graphUrl, token.address),
+  ]);
+  if (!vaultTokenSnapshot.sett) {
+    throw new NotFound(`Failed to load ${contract} sett data`);
+  }
+  vaultTokenPrice.name = token.name;
+  vaultTokenPrice.address = token.address;
+  const sett = vaultTokenSnapshot.sett;
+
+  let multiplier;
+  if (token.address === TOKENS.BDIGG) {
+    multiplier = (sett.balance / sett.totalSupply) * 1e9;
+  } else {
+    multiplier = sett.pricePerFullShare / 1e18;
+  }
+  vaultTokenPrice.usd *= multiplier;
+  vaultTokenPrice.eth *= multiplier;
+
+  return vaultTokenPrice;
+};
+
+export const getWrapperTokenPrice = async (contract: string): Promise<TokenPrice> => {
+  const token = getToken(contract);
+  if (token.type !== TokenType.Wrapper) {
+    throw new BadRequest(`${token.name} is not a wrapper token`);
+  }
+  if (!token.vaultToken) {
+    throw new UnprocessableEntity(`${token.name} vault token missing`);
+  }
+  const vaultToken = token.vaultToken;
+  const allSetts = [];
+  for (const chain of loadChains()) {
+    allSetts.push(...chain.setts);
+  }
+  const backingVault = allSetts.find((sett) => ethers.utils.getAddress(sett.depositToken) === vaultToken.address);
+  if (!backingVault) {
+    throw new UnprocessableEntity(`${token.name} vault token missing`);
+  }
+  const price = await getPrice(backingVault.settToken);
+  if (!price) {
+    throw new InternalServerError(`Failed to load ${contract} sett data`);
+  }
+  return price;
 };

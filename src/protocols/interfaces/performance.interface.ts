@@ -19,13 +19,11 @@ export const uniformPerformance = (apr: number): Performance => {
   };
 };
 
-export const combinePerformance = (...performances: Performance[]) => {
-  const basePerformance = uniformPerformance(0);
-  performances.forEach((p) => {
-    basePerformance.oneDay += p.oneDay;
-    basePerformance.threeDay += p.threeDay;
-    basePerformance.sevenDay += p.sevenDay;
-    basePerformance.thirtyDay += p.thirtyDay;
-  });
-  return basePerformance;
+export const scalePerformance = (performance: Performance, scalar: number): Performance => {
+  return {
+    oneDay: performance.oneDay * scalar,
+    threeDay: performance.threeDay * scalar,
+    sevenDay: performance.sevenDay * scalar,
+    thirtyDay: performance.thirtyDay * scalar,
+  };
 };

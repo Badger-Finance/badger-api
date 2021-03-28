@@ -1,6 +1,7 @@
 import { Controller, Get, Inject, PathParams, QueryParams } from '@tsed/common';
 import { ContentType } from '@tsed/schema';
-import { resolveChainQuery } from '../config/chain/chain';
+import { Chain } from '../chains/config/chain.config';
+import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { UserAccount } from '../interface/UserAccount';
 import { UsersService } from './UsersService';
 
@@ -13,8 +14,8 @@ export class UsersController {
   @ContentType('json')
   async getUserProfile(
     @PathParams('userId') userId: string,
-    @QueryParams('chain') chain: string,
+    @QueryParams('chain') chain?: ChainNetwork,
   ): Promise<UserAccount> {
-    return this.usersService.getUserDetails(resolveChainQuery(chain), userId);
+    return this.usersService.getUserDetails(Chain.getChain(chain), userId);
   }
 }

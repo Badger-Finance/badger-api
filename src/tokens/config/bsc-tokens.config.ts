@@ -1,6 +1,8 @@
+import { ChainNetwork } from '../../chains/enums/chain-network.enum';
 import { TOKENS } from '../../config/constants';
 import { TokenType } from '../enums/token-type.enum';
 import { TokenConfig } from '../types/token-config.type';
+import { ethTokensConfig } from './eth-tokens.config';
 
 export const bscTokensConfig: TokenConfig = {
   [TOKENS.CAKE]: {
@@ -57,6 +59,11 @@ export const bscTokensConfig: TokenConfig = {
     name: 'bBadger',
     symbol: 'bBADGER',
     type: TokenType.Wrapper,
+    vaultToken: {
+      address: TOKENS.BADGER,
+      symbol: ethTokensConfig[TOKENS.BADGER].symbol,
+      network: ChainNetwork.Ethereum,
+    },
   },
   [TOKENS.BSC_BDIGG]: {
     address: TOKENS.BSC_BDIGG,
@@ -64,5 +71,57 @@ export const bscTokensConfig: TokenConfig = {
     name: 'bDigg',
     symbol: 'bDIGG',
     type: TokenType.Wrapper,
+    vaultToken: {
+      address: TOKENS.DIGG,
+      symbol: ethTokensConfig[TOKENS.DIGG].symbol,
+      network: ChainNetwork.Ethereum,
+    },
+  },
+  [TOKENS.BSC_BADGER]: {
+    address: TOKENS.BSC_BADGER,
+    decimals: 18,
+    lookupName: 'badger-dao',
+    name: 'Badger',
+    symbol: 'BADGER',
+    type: TokenType.Contract,
+  },
+  [TOKENS.BPANCAKE_BNB_BTCB]: {
+    address: TOKENS.BPANCAKE_BNB_BTCB,
+    decimals: 18,
+    lpToken: true,
+    name: 'bPancakeswap: WBNB-BTCB',
+    symbol: 'bPLP-BNB-BTCB',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.PANCAKE_BNB_BTCB,
+      symbol: 'PLP-BNB-BTCB',
+      network: ChainNetwork.BinanceSmartChain,
+    },
+  },
+  [TOKENS.BPANCAKE_BBADGER_BTCB]: {
+    address: TOKENS.BPANCAKE_BBADGER_BTCB,
+    decimals: 18,
+    lpToken: true,
+    name: 'bPancakeswap: BBADGER-BTCB',
+    symbol: 'bPLP-BBADGER-BTCB',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.PANCAKE_BBADGER_BTCB,
+      symbol: 'PLP-BBADGER-BTCB',
+      network: ChainNetwork.BinanceSmartChain,
+    },
+  },
+  [TOKENS.BPANCAKE_BDIGG_BTCB]: {
+    address: TOKENS.BPANCAKE_BDIGG_BTCB,
+    decimals: 18,
+    lpToken: true,
+    name: 'Pancakeswap: BDIGG-BTCB',
+    symbol: 'bPLP-BDIGG-BTCB',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.PANCAKE_BDIGG_BTCB,
+      symbol: 'PLP-BDIGG-BTCB',
+      network: ChainNetwork.BinanceSmartChain,
+    },
   },
 };

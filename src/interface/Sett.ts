@@ -1,7 +1,7 @@
 import { Protocol } from '../config/constants';
+import { ValueSource } from '../protocols/interfaces/value-source.interface';
 import { Geyser } from './Geyser';
 import { TokenBalance } from './TokenBalance';
-import { ValueSource } from './ValueSource';
 
 /**
  * Sett and geyser objects will be represented by the same

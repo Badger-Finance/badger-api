@@ -1,12 +1,14 @@
 import { NotFound, UnprocessableEntity } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
+import { Chain } from '../../chains/config/chain.config';
+import { ChainNetwork } from '../../chains/enums/chain-network.enum';
 import { uniV2LPAbi } from '../../config/abi';
-import { bsc, Chain } from '../../config/chain/chain';
 import { SUSHISWAP_URL, UNISWAP_URL } from '../../config/constants';
 import { getSdk as getUniswapSdk } from '../../graphql/generated/uniswap';
 import { getTokenPriceData } from '../../prices/prices-util';
 import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
+import { getToken } from '../../tokens/tokens-util';
 
 interface LiquidityData {
   contract: string;
@@ -28,9 +30,11 @@ export const getLiquidityData = async (chain: Chain, contract: string): Promise<
   const totalSupply = parseFloat(ethers.utils.formatEther(await pairContract.totalSupply()));
   const token0 = await pairContract.token0();
   const token1 = await pairContract.token1();
+  const token0Decimals = getToken(token0).decimals;
+  const token1Decimals = getToken(token1).decimals;
   const reserves: GetReservesResponse = await pairContract.getReserves();
-  const reserve0 = parseFloat(ethers.utils.formatEther(reserves._reserve0));
-  const reserve1 = parseFloat(ethers.utils.formatEther(reserves._reserve1));
+  const reserve0 = parseFloat(ethers.utils.formatUnits(reserves._reserve0, token0Decimals));
+  const reserve1 = parseFloat(ethers.utils.formatUnits(reserves._reserve1, token1Decimals));
   return {
     contract: contract,
     token0: token0,
@@ -123,5 +127,5 @@ export const getUniswapPrice = async (contract: string): Promise<TokenPrice> => 
 };
 
 export const getPancakeswapPrice = async (contract: string): Promise<TokenPrice> => {
-  return getOnChainLiquidityPrice(bsc, contract);
+  return getOnChainLiquidityPrice(Chain.getChain(ChainNetwork.BinanceSmartChain), contract);
 };

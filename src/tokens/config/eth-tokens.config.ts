@@ -1,3 +1,4 @@
+import { ChainNetwork } from '../../chains/enums/chain-network.enum';
 import { TOKENS } from '../../config/constants';
 import { TokenType } from '../enums/token-type.enum';
 import { TokenConfig } from '../types/token-config.type';
@@ -35,7 +36,7 @@ export const ethTokensConfig: TokenConfig = {
   [TOKENS.CRV_SBTC]: {
     address: TOKENS.CRV_SBTC,
     decimals: 18,
-    lookupName: 'wrapped-bitcoin',
+    lookupName: 'sbtc',
     name: 'Curve.fi renBTC/wBTC/sBTC',
     symbol: 'Curve.fi renBTC/wBTC/sBTC',
     type: TokenType.Contract,
@@ -43,7 +44,7 @@ export const ethTokensConfig: TokenConfig = {
   [TOKENS.CRV_TBTC]: {
     address: TOKENS.CRV_TBTC,
     decimals: 18,
-    lookupName: 'wrapped-bitcoin',
+    lookupName: 'tbtc',
     name: 'Curve.fi tBTC/sbtcCrv',
     symbol: 'Curve.fi tBTC/sbtcCrv (tbtc/sbtc)',
     type: TokenType.Contract,
@@ -101,5 +102,137 @@ export const ethTokensConfig: TokenConfig = {
     name: 'Uniswap V2: WBTC-DIGG',
     symbol: 'Uniswap WBTC/DIGG LP (UNI-V2)',
     type: TokenType.UniswapLp,
+  },
+  [TOKENS.BBADGER]: {
+    address: TOKENS.BBADGER,
+    decimals: 18,
+    name: 'bBadger',
+    symbol: 'bBADGER',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.BADGER,
+      symbol: 'BADGER',
+      network: ChainNetwork.Ethereum,
+    },
+  },
+  [TOKENS.BDIGG]: {
+    address: TOKENS.BDIGG,
+    decimals: 18,
+    name: 'bDigg',
+    symbol: 'bDIGG',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.DIGG,
+      symbol: 'DIGG',
+      network: ChainNetwork.Ethereum,
+    },
+  },
+  [TOKENS.BUNI_DIGG_WBTC]: {
+    address: TOKENS.BUNI_DIGG_WBTC,
+    decimals: 18,
+    name: 'bUniswap V2: WBTC-DIGG',
+    symbol: 'bDIGG-WBTC',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.UNI_DIGG_WBTC,
+      symbol: 'DIGG-WBTC',
+      network: ChainNetwork.Ethereum,
+    },
+  },
+  [TOKENS.BUNI_BADGER_WBTC]: {
+    address: TOKENS.BUNI_BADGER_WBTC,
+    decimals: 18,
+    name: 'bUniswap V2: WBTC-BADGER',
+    symbol: 'bBADGER-WBTC',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.UNI_BADGER_WBTC,
+      symbol: 'BADGER-WBTC',
+      network: ChainNetwork.Ethereum,
+    },
+  },
+  [TOKENS.BSUSHI_ETH_WBTC]: {
+    address: TOKENS.BSUSHI_ETH_WBTC,
+    decimals: 18,
+    name: 'bSushiSwap: WBTC-ETH',
+    symbol: 'bSLP-WBTC-ETH',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.SUSHI_ETH_WBTC,
+      symbol: 'SLP-WBTC-ETH',
+      network: ChainNetwork.Ethereum,
+    },
+  },
+  [TOKENS.BSUSHI_BADGER_WBTC]: {
+    address: TOKENS.BSUSHI_BADGER_WBTC,
+    decimals: 18,
+    name: 'bSushiSwap: WBTC-BADGER',
+    symbol: 'bSLP-BADGER-ETH',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.SUSHI_BADGER_WBTC,
+      symbol: 'SLP-BADGER-ETH',
+      network: ChainNetwork.Ethereum,
+    },
+  },
+  [TOKENS.BSUSHI_DIGG_WBTC]: {
+    address: TOKENS.BSUSHI_DIGG_WBTC,
+    decimals: 18,
+    name: 'bSushiSwap: WBTC-DIGG',
+    symbol: 'bSLP-DIGG-ETH',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.SUSHI_DIGG_WBTC,
+      symbol: 'SLP-DIGG-ETH',
+      network: ChainNetwork.Ethereum,
+    },
+  },
+  [TOKENS.BCRV_RENBTC]: {
+    address: TOKENS.BCRV_RENBTC,
+    decimals: 18,
+    name: 'bCurve.fi: renCrv Token',
+    symbol: 'brenBTCCRV',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.CRV_RENBTC,
+      symbol: 'renBTCCRV',
+      network: ChainNetwork.Ethereum,
+    },
+  },
+  [TOKENS.BCRV_SBTC]: {
+    address: TOKENS.BCRV_SBTC,
+    decimals: 18,
+    name: 'bCurve.fi renBTC/wBTC/sBTC',
+    symbol: 'bsBTCCRV',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.CRV_SBTC,
+      symbol: 'sBTCCRV',
+      network: ChainNetwork.Ethereum,
+    },
+  },
+  [TOKENS.BCRV_TBTC]: {
+    address: TOKENS.BCRV_TBTC,
+    decimals: 18,
+    name: 'bCurve.fi tBTC/sbtcCrv',
+    symbol: 'btBTCCRV',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.CRV_TBTC,
+      symbol: 'tBTCCRV',
+      network: ChainNetwork.Ethereum,
+    },
+  },
+  [TOKENS.BCRV_HRENBTC]: {
+    address: TOKENS.BCRV_HRENBTC,
+    decimals: 18,
+    name: 'bHarvest Curve.fi crvRenWBTC',
+    symbol: 'bhrenBTCCRV',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.CRV_RENBTC,
+      symbol: 'renBTCCRV',
+      network: ChainNetwork.Ethereum,
+    },
   },
 };

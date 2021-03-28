@@ -1,6 +1,7 @@
 import { Inject, Service } from '@tsed/common';
 import { NotFound } from '@tsed/exceptions';
 import { GraphQLClient } from 'graphql-request';
+import { CacheService } from '../cache/CacheService';
 import { PANCAKESWAP_URL, Protocol, SUSHISWAP_URL, UNISWAP_URL } from '../config/constants';
 import { getSdk as getUniV2Sdk, Sdk as UniV2GraphqlSdk, UniV2PairQuery } from '../graphql/generated/uniswap';
 import { TokenBalance } from '../interface/TokenBalance';
@@ -13,6 +14,8 @@ import { getToken } from './tokens-util';
 export class TokensService {
   @Inject()
   pricesService!: PricesService;
+  @Inject()
+  cacheService!: CacheService;
 
   private sushiswapGraphqlSdk: UniV2GraphqlSdk;
   private uniswapGraphqlSdk: UniV2GraphqlSdk;
@@ -36,13 +39,22 @@ export class TokensService {
    */
   async getSettTokens(request: TokenRequest): Promise<TokenBalance[]> {
     const { sett, balance, currency } = request;
+
+    const cacheKey = CacheService.getCacheKey(sett.name, 'tokens');
+    const cachedData = this.cacheService.get<TokenBalance[]>(cacheKey);
+    if (cachedData) {
+      return cachedData;
+    }
+
     const token = getToken(sett.depositToken);
     const tokenBalance = balance / Math.pow(10, token.decimals);
     request.balance = tokenBalance;
     if (token.lpToken) {
-      return await this.getLiquidtyPoolTokenBalances(request);
+      const tokens = await this.getLiquidtyPoolTokenBalances(request);
+      this.cacheService.set(cacheKey, tokens);
+      return tokens;
     }
-    return [
+    const tokens = [
       {
         address: token.address,
         name: token.name,
@@ -52,6 +64,8 @@ export class TokensService {
         value: await this.pricesService.getValue(token.address, tokenBalance, currency),
       },
     ];
+    this.cacheService.set(cacheKey, tokens);
+    return tokens;
   }
 
   async getLiquidtyPoolTokenBalances(request: TokenRequest): Promise<TokenBalance[]> {
@@ -80,8 +94,8 @@ export class TokensService {
       throw new NotFound(`${protocol} pool ${pairId} does not exist`);
     }
     const { pair } = poolData;
-    if (!pair) {
-      return await this.getOnChainLiquidtyPoolTokenBalances(request);
+    if (!pair || protocol === Protocol.Pancakeswap) {
+      return this.getOnChainLiquidtyPoolTokenBalances(request);
     }
 
     // poolData returns the full liquidity pool, valueScalar acts to calculate the portion within the sett
@@ -91,7 +105,7 @@ export class TokensService {
       address: pair.token0.id,
       symbol: pair.token0.symbol,
       decimals: pair.token0.decimals,
-      balance: pair.reserve0,
+      balance: pair.reserve0 * valueScalar,
       value: (await this.pricesService.getValue(pair.token0.id, pair.reserve0, currency)) * valueScalar,
     };
     const token1: TokenBalance = {
@@ -99,7 +113,7 @@ export class TokensService {
       address: pair.token1.id,
       symbol: pair.token1.symbol,
       decimals: pair.token1.decimals,
-      balance: pair.reserve1,
+      balance: pair.reserve1 * valueScalar,
       value: (await this.pricesService.getValue(pair.token1.id, pair.reserve1, currency)) * valueScalar,
     };
     return [token0, token1];
@@ -111,7 +125,6 @@ export class TokensService {
       const liquidityData = await getLiquidityData(chain, sett.depositToken);
 
       const { token0, token1, reserve0, reserve1, totalSupply } = liquidityData;
-
       const t0Token = getToken(token0);
       const t1Token = getToken(token1);
 
@@ -122,7 +135,7 @@ export class TokensService {
         address: t0Token.address,
         symbol: t0Token.symbol,
         decimals: t0Token.decimals,
-        balance: reserve0,
+        balance: reserve0 * valueScalar,
         value: (await this.pricesService.getValue(t0Token.address, reserve0, currency)) * valueScalar,
       };
       const token1Balance: TokenBalance = {
@@ -130,7 +143,7 @@ export class TokensService {
         address: t1Token.address,
         symbol: t1Token.symbol,
         decimals: t1Token.decimals,
-        balance: reserve1,
+        balance: reserve1 * valueScalar,
         value: (await this.pricesService.getValue(t1Token.address, reserve1, currency)) * valueScalar,
       };
       return [token0Balance, token1Balance];

@@ -1,7 +1,8 @@
 import { Service } from '@tsed/common';
 import { BigNumber, ethers, utils } from 'ethers';
+import { Chain } from '../../chains/config/chain.config';
+import { ChainNetwork } from '../../chains/enums/chain-network.enum';
 import { empAbi } from '../../config/abi';
-import { eth } from '../../config/chain/chain';
 import { FixedPointUnsigned, Liquidation, Position, SponsorData, SyntheticData } from '../../interface/Claw';
 
 type LiqudationUnformatted = [
@@ -36,7 +37,8 @@ type SyntheticDataPayload = [
 @Service()
 export class ClawService {
   async getSyntheticData(empAddress: string): Promise<SyntheticData> {
-    const empContract = new ethers.Contract(empAddress, empAbi, eth.provider);
+    const provider = Chain.getChain(ChainNetwork.Ethereum).provider;
+    const empContract = new ethers.Contract(empAddress, empAbi, provider);
     const [
       cumulativeFeeMultiplier,
       rawTotalPositionCollateral,
@@ -90,13 +92,14 @@ export class ClawService {
   }
 
   async getSponsorData(empAddress: string, sponsorAddress: string): Promise<SponsorData> {
-    const empContract = new ethers.Contract(empAddress, empAbi, eth.provider);
+    const provider = Chain.getChain(ChainNetwork.Ethereum).provider;
+    const empContract = new ethers.Contract(empAddress, empAbi, provider);
     const liquidations = await getLiquidations(empContract, sponsorAddress);
     const position = await getPosition(empContract, sponsorAddress);
     return {
       liquidations,
       position,
-      pendingWithdrawal: position.transferPositionRequestPassTimestamp.toNumber() != 0,
+      pendingWithdrawal: position.withdrawalRequestPassTimestamp.toNumber() != 0,
     } as SponsorData;
   }
 }
@@ -136,21 +139,17 @@ const convertLiquidation = (liquidation: LiqudationUnformatted): Liquidation => 
 };
 
 const getPosition = async (empContract: ethers.Contract, sponsorAddress: string): Promise<Position> => {
-  const [
-    tokensOutstanding,
-    withdrawalRequestPassTimestamp,
-    withdrawalRequestAmount,
-    rawCollateral,
-    transferPositionRequestPassTimestamp,
-  ]: [FixedPointUnsigned, BigNumber, FixedPointUnsigned, FixedPointUnsigned, BigNumber] = await empContract.positions(
-    sponsorAddress,
-  );
+  const [tokensOutstanding, withdrawalRequestPassTimestamp, withdrawalRequestAmount, rawCollateral]: [
+    FixedPointUnsigned,
+    BigNumber,
+    FixedPointUnsigned,
+    FixedPointUnsigned,
+  ] = await empContract.positions(sponsorAddress);
   return {
     tokensOutstanding: convertFixedPointUnsigned(tokensOutstanding),
     withdrawalRequestPassTimestamp,
     withdrawalRequestAmount: convertFixedPointUnsigned(withdrawalRequestAmount),
     rawCollateral: convertFixedPointUnsigned(rawCollateral),
-    transferPositionRequestPassTimestamp,
   };
 };
 
