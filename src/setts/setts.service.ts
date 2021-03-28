@@ -1,13 +1,21 @@
 import { Inject, Service } from '@tsed/common';
-import { BadRequest, NotFound } from '@tsed/exceptions';
+import { BadRequest, InternalServerError, NotFound } from '@tsed/exceptions';
+import * as AWS from 'aws-sdk';
 import { ethers } from 'ethers';
+import * as E from 'fp-ts/lib/Either';
+import { identity } from 'fp-ts/lib/function';
+import { pipe } from 'fp-ts/lib/pipeable';
+import { Affiliate } from '../affiliates/config/affiliate.config';
+import { query } from '../aws/dynamodb-utils';
 import { Chain } from '../chains/config/chain.config';
 import {
   ASSET_DATA,
   CURRENT,
   ONE_DAY,
+  ONE_MINUTE_MS,
   ONE_YEAR_MS,
   SAMPLE_DAYS,
+  SETT_SNAPSHOTS_DATA,
   SEVEN_DAYS,
   THIRTY_DAYS,
   THREE_DAYS,
@@ -15,43 +23,36 @@ import {
 } from '../config/constants';
 import { getAssetData } from '../config/util';
 import { ProtocolSummary } from '../interface/ProtocolSummary';
-import { Sett, SettSummary } from '../interface/Sett';
 import { SettSnapshot } from '../interface/SettSnapshot';
-import { PricesService } from '../prices/PricesService';
-import { Performance, scalePerformance } from '../protocols/interfaces/performance.interface';
+import { Performance, scalePerformance, uniformPerformance } from '../protocols/interfaces/performance.interface';
 import { ValueSource } from '../protocols/interfaces/value-source.interface';
 import { ProtocolsService } from '../protocols/ProtocolsService';
 import { TokenType } from '../tokens/enums/token-type.enum';
 import { TokenRequest } from '../tokens/interfaces/token-request.interface';
 import { getToken } from '../tokens/tokens-util';
 import { TokensService } from '../tokens/TokensService';
+import { CachedSettSnapshot } from './interfaces/cached-sett-snapshot.interface';
+import { Sett } from './interfaces/sett.interface.';
+import { SettSummary } from './interfaces/sett-summary.interface';
 import { getSett, VAULT_SOURCE } from './setts-util';
 
 @Service()
 export class SettsService {
   @Inject()
-  protocolsService!: ProtocolsService;
+  private readonly protocolsService!: ProtocolsService;
   @Inject()
-  tokensSerivce!: TokensService;
-  @Inject()
-  pricesService!: PricesService;
+  private readonly tokensSerivce!: TokensService;
 
   async getProtocolSummary(chain: Chain, currency?: string): Promise<ProtocolSummary> {
     const setts = await this.listSetts(chain, currency);
-    const settSummaries = setts.map(
-      (s) =>
-        ({
-          name: s.name,
-          asset: s.asset,
-          value: s.value,
-          tokens: s.tokens,
-        } as SettSummary),
-    );
+    const settSummaries: SettSummary[] = setts.map((s) => ({
+      balance: s.balance,
+      name: s.name,
+      tokens: s.tokens,
+      value: s.value,
+    }));
     const totalValue = settSummaries.map((s) => s.value).reduce((total, value) => (total += value), 0);
-    return {
-      totalValue: totalValue,
-      setts: settSummaries,
-    };
+    return { totalValue: totalValue, setts: settSummaries };
   }
 
   async listSetts(chain: Chain, currency?: string): Promise<Sett[]> {
@@ -71,31 +72,57 @@ export class SettsService {
     }
 
     const sett: Sett = {
-      name: settDefinition.name,
       asset: settDefinition.symbol,
-      vaultToken: settDefinition.settToken,
-      underlyingToken: settDefinition.depositToken,
-      ppfs: 1,
-      value: 0,
       apy: 0,
-      tokens: [],
+      balance: 0,
+      hasBouncer: !!settDefinition.hasBouncer,
+      name: settDefinition.name,
+      ppfs: 1,
       sources: [],
+      tokens: [],
+      underlyingToken: settDefinition.depositToken,
+      value: 0,
+      vaultToken: settDefinition.settToken,
     };
 
-    const [settSnapshots, settData] = await Promise.all([
+    // Set to current balance, fallback to snapshot
+    let balance = 0;
+    const [settSnapshots, latestSettRecord] = await Promise.all([
       this.getSettSnapshots(settName, SAMPLE_DAYS),
-      getSett(chain.graphUrl, settDefinition.settToken),
+      query({
+        TableName: SETT_SNAPSHOTS_DATA,
+        KeyConditionExpression: '#address = :address',
+        ExpressionAttributeValues: {
+          ':address': { S: settDefinition.settToken },
+        },
+        ExpressionAttributeNames: {
+          '#address': 'address',
+        },
+      }),
     ]);
 
-    // set to current balance, fallback to snapshot
-    let balance = 0;
-    if (settData.sett) {
-      const currentSett = settData.sett;
-      balance = currentSett.balance;
-      sett.ppfs = currentSett.balance / currentSett.totalSupply;
-      if (settDefinition.depositToken === TOKENS.DIGG) {
-        sett.ppfs *= 1e9;
+    if (latestSettRecord && latestSettRecord.Items && latestSettRecord.Items.length > 0) {
+      const item = AWS.DynamoDB.Converter.unmarshall(latestSettRecord.Items[0]);
+      const settSnapshot = pipe(
+        item,
+        CachedSettSnapshot.decode,
+        E.fold((errors) => {
+          throw new InternalServerError(errors.join(' '));
+        }, identity),
+      );
+      let supply = settSnapshot.supply;
+      balance = settSnapshot.balance;
+
+      if (Date.now() - settSnapshot.updatedAt > ONE_MINUTE_MS) {
+        const { sett } = await getSett(chain.graphUrl, settDefinition.settToken);
+        if (sett) {
+          ({ balance, totalSupply: supply } = sett);
+          balance /= Math.pow(10, getToken(settDefinition.depositToken).decimals);
+          supply /= Math.pow(10, 18);
+        }
       }
+
+      sett.ppfs = balance / supply;
     } else if (settSnapshots.length > 0) {
       const latestSett = settSnapshots[CURRENT];
       balance = latestSett.balance;
@@ -136,6 +163,7 @@ export class SettsService {
     }
 
     sett.tokens = settTokens;
+    sett.balance = balance;
     sett.value = sett.tokens.reduce((total, tokenBalance) => (total += tokenBalance.value), 0);
 
     const vaultToken = getToken(sett.vaultToken);
@@ -174,6 +202,21 @@ export class SettsService {
       return report;
     });
     sett.apy = sett.sources.map((s) => s.apy).reduce((total, apy) => (total += apy), 0);
+
+    // check for a new vault, no ppfs measurement
+    if (sett.sources.length === 0) {
+      sett.sources.push({
+        name: 'New Vault Offering',
+        apy: 0,
+        performance: uniformPerformance(0),
+      });
+    }
+
+    if (settDefinition.affiliate) {
+      const affiliate = Affiliate.getAffiliate(settDefinition.affiliate);
+      sett.affiliate = await affiliate.getAffiliateVaultData(chain, settDefinition);
+    }
+
     return sett;
   }
 
@@ -206,10 +249,9 @@ export class SettsService {
     }
     const sampledSnapshot = settSnapshots[sampleIndex];
     const ratioDiff = currentSnapshot.ratio - sampledSnapshot.ratio;
-    const blockDiff = currentSnapshot.height - sampledSnapshot.height;
     const timestampDiff = currentSnapshot.timestamp - sampledSnapshot.timestamp;
-    const slope = ratioDiff / blockDiff;
-    const scalar = (ONE_YEAR_MS / timestampDiff) * blockDiff;
-    return slope * scalar * 100;
+    const scalar = ONE_YEAR_MS / timestampDiff;
+    const finalRatio = sampledSnapshot.ratio + scalar * ratioDiff;
+    return ((finalRatio - sampledSnapshot.ratio) / sampledSnapshot.ratio) * 100;
   }
 }

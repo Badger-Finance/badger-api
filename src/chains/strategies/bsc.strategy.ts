@@ -1,6 +1,5 @@
 import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
-import { TOKENS } from '../../config/constants';
 import { getTokenPrice, getVaultTokenPrice, getWrapperTokenPrice } from '../../prices/prices-util';
 import { getPancakeswapPrice } from '../../protocols/common/swap-util';
 import { bscTokensConfig } from '../../tokens/config/bsc-tokens.config';
@@ -11,23 +10,7 @@ import { ChainStrategy } from './chain.strategy';
 export class BscStrategy extends ChainStrategy {
   constructor() {
     super();
-    ChainStrategy.register(
-      [
-        TOKENS.CAKE,
-        TOKENS.BTCB,
-        TOKENS.WBNB,
-        TOKENS.PANCAKE_BDIGG_BTCB,
-        TOKENS.PANCAKE_BNB_BTCB,
-        TOKENS.PANCAKE_BBADGER_BTCB,
-        TOKENS.BSC_BADGER,
-        TOKENS.BPANCAKE_BNB_BTCB,
-        TOKENS.BPANCAKE_BBADGER_BTCB,
-        TOKENS.BPANCAKE_BDIGG_BTCB,
-        TOKENS.BSC_BBADGER,
-        TOKENS.BSC_BDIGG,
-      ],
-      this,
-    );
+    ChainStrategy.register(Object.keys(bscTokensConfig), this);
   }
 
   async getPrice(address: string): Promise<TokenPrice> {

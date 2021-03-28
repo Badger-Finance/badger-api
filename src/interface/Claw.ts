@@ -54,6 +54,8 @@ export interface SyntheticData {
   totalTokensOutstanding: BigNumber; // Token debt issued.
   collateralRequirement: BigNumber;
   expirationTimestamp: BigNumber;
+  // # of collateral tokens worth $1 at expiry.
+  expiryPrice: BigNumber;
   // Min number of sponsor tokens to mint (will default to 100 tokens or ~$100).
   minSponsorTokens: BigNumber;
   // Amount of time (in seconds) a sponsor must wait to withdraw without liquidation

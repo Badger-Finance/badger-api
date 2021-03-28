@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 import { BADGER_BSC_URL, Protocol, Provider, TOKENS } from '../../config/constants';
-import { SettDefinition } from '../../interface/Sett';
+import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { bscTokensConfig } from '../../tokens/config/bsc-tokens.config';
 import { ChainNetwork } from '../enums/chain-network.enum';
 import { BscStrategy } from '../strategies/bsc.strategy';
@@ -17,6 +17,7 @@ export class BinanceSmartChain extends Chain {
       new ethers.providers.JsonRpcProvider(Provider.Binance),
       new BscStrategy(),
       BADGER_BSC_URL,
+      10512000,
     );
     Chain.register(ChainNetwork.BinanceSmartChain, this);
   }
@@ -43,5 +44,15 @@ export const bscSetts: SettDefinition[] = [
     depositToken: TOKENS.PANCAKE_BDIGG_BTCB,
     settToken: TOKENS.BPANCAKE_BDIGG_BTCB,
     protocol: Protocol.Pancakeswap,
+  },
+  {
+    hasBouncer: true,
+    name: 'Yearn WBTC',
+    symbol: 'bvyWBTC',
+    depositToken: TOKENS.TEST,
+    settToken: TOKENS.BVYWBTC,
+    affiliate: {
+      protocol: Protocol.Yearn,
+    },
   },
 ];

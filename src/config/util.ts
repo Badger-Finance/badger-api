@@ -7,7 +7,6 @@ import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { SettSnapshot } from '../interface/SettSnapshot';
 import AttributeValue = DocumentClient.AttributeValue;
 
-export const THIRTY_MIN_BLOCKS = parseInt(String((30 * 60) / 13));
 const ddb = new AWS.DynamoDB.DocumentClient({ apiVersion: '2012-08-10' });
 
 export interface EventInput {
@@ -69,3 +68,7 @@ export const blockToDay = (value: number) => blockToHour(value) * 24;
 const secondToHour = (value: number) => value * 3600;
 export const secondToDay = (value: number) => secondToHour(value) * 24;
 export const toRate = (value: number, duration: number) => (duration !== 0 ? value / duration : value);
+
+export const successfulCapture = <T>(value: T | null | undefined): value is T => {
+  return value !== null && value !== undefined;
+};

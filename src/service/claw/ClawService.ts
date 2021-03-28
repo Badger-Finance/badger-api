@@ -2,7 +2,7 @@ import { Service } from '@tsed/common';
 import { BigNumber, ethers, utils } from 'ethers';
 import { Chain } from '../../chains/config/chain.config';
 import { ChainNetwork } from '../../chains/enums/chain-network.enum';
-import { empAbi } from '../../config/abi';
+import { empAbi } from '../../config/abi/abi';
 import { FixedPointUnsigned, Liquidation, Position, SponsorData, SyntheticData } from '../../interface/Claw';
 
 type LiqudationUnformatted = [
@@ -29,6 +29,7 @@ type SyntheticDataPayload = [
   BigNumber,
   BigNumber,
   BigNumber,
+  BigNumber,
   string,
   string,
   string,
@@ -46,6 +47,7 @@ export class ClawService {
       totalPositionCollateral,
       collateralRequirement,
       expirationTimestamp,
+      expiryPrice,
       minSponsorTokens,
       withdrawalLiveness,
       liquidationLiveness,
@@ -59,6 +61,7 @@ export class ClawService {
       empContract.totalPositionCollateral(),
       empContract.collateralRequirement(),
       empContract.expirationTimestamp(),
+      empContract.expiryPrice(),
       empContract.minSponsorTokens(),
       empContract.withdrawalLiveness(),
       empContract.liquidationLiveness(),
@@ -84,6 +87,7 @@ export class ClawService {
       totalTokensOutstanding,
       collateralRequirement,
       expirationTimestamp,
+      expiryPrice,
       minSponsorTokens,
       withdrawalLiveness,
       liquidationLiveness,
