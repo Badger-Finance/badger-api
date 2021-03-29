@@ -81,6 +81,7 @@ export const BSC_BLOCKS_PER_YEAR = 10512000;
 // data access constants
 export const ASSET_DATA = process.env.ASSET_DATA || 'MISSING REQUIRED ENV VAR';
 export const PRICE_DATA = process.env.PRICE_DATA || 'MISSING REQUIRED ENV VAR';
+export const REWARD_DATA = process.env.REWARD_DATA || 'MISSING REQUIRED ENV VAR';
 export const UNISWAP_URL = process.env.UNISWAP || 'MISSING REQUIRED ENV VAR';
 export const SUSHISWAP_URL = process.env.SUSHISWAP || 'MISSING REQUIRED ENV VAR';
 export const PANCAKESWAP_URL = process.env.PANCAKESWAP || 'MISSING REQUIRED ENV VAR';
@@ -88,7 +89,6 @@ export const BADGER_URL = process.env.BADGER || 'MISSING REQUIRED ENV VAR';
 export const BADGER_BSC_URL = process.env.BADGER_BSC || 'MISSING REQUIRED ENV VAR';
 export const BADGER_DAO_URL = process.env.BADGER_DAO || 'MISSING REQUIRED ENV VAR';
 export const MASTERCHEF_URL = process.env.MASTERCHEF || 'MISSING REQUIRED ENV VAR';
-export const MERKLE_CLAIM_BUCKET = process.env.MERKLE_CLAIM_BUCKET || 'MISSING REQUIRED ENV VAR';
 
 // third party api constants
 export const CURVE_API_URL = 'https://stats.curve.fi/raw-stats/apys.json';
