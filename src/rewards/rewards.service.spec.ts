@@ -1,5 +1,4 @@
 import { PlatformTest } from '@tsed/common';
-import { Forbidden } from '@tsed/exceptions';
 import { S3Service } from '../aws/S3Service';
 import { CacheService } from '../cache/CacheService';
 import { RewardsService } from './rewards.service';
@@ -28,7 +27,9 @@ describe('RewardsService', () => {
         const address = '0xC257274276a4E539741Ca11b590B9447B26A8051';
         const addresses = JSON.stringify([address]);
         jest.spyOn(s3, 'getObject').mockImplementationOnce(async () => Promise.resolve(addresses));
-        await service.checkBadgerShopEligibility(address);
+        const eligibility = await service.checkBadgerShopEligibility(address);
+        expect(eligibility).toBeDefined();
+        expect(eligibility.isEligible).toBeTruthy();
       });
     });
 
@@ -37,7 +38,9 @@ describe('RewardsService', () => {
         const address = '0xC257274276a4E539741Ca11b590B9447B26A8051';
         const addresses = JSON.stringify([]);
         jest.spyOn(s3, 'getObject').mockImplementationOnce(async () => Promise.resolve(addresses));
-        await expect(service.checkBadgerShopEligibility(address)).rejects.toThrow(Forbidden);
+        const eligibility = await service.checkBadgerShopEligibility(address);
+        expect(eligibility).toBeDefined();
+        expect(eligibility.isEligible).toBeFalsy();
       });
     });
   });

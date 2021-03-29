@@ -1,6 +1,7 @@
 import { Controller, Get, Inject, PathParams } from '@tsed/common';
 import { ContentType } from '@tsed/schema';
 import { AirdropMerkleClaim, RewardMerkleClaim } from '../interface/MerkleDistribution';
+import { Eligibility } from './interfaces/eligibility.interface';
 import { RewardsService } from './rewards.service';
 
 @Controller('/reward')
@@ -22,7 +23,7 @@ export class RewardController {
 
   @ContentType('json')
   @Get('/shop/:address')
-  async getBadgerShopEntry(@PathParams('address') address: string): Promise<void> {
+  async getBadgerShopEntry(@PathParams('address') address: string): Promise<Eligibility> {
     return this.rewardsService.checkBadgerShopEligibility(address);
   }
 }

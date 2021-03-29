@@ -1,5 +1,5 @@
 import { Inject, Service } from '@tsed/common';
-import { Forbidden, NotFound } from '@tsed/exceptions';
+import { NotFound } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { S3Service } from '../aws/S3Service';
 import { CacheService } from '../cache/CacheService';
@@ -10,6 +10,7 @@ import {
   RewardMerkleClaim,
   RewardMerkleDistribution,
 } from '../interface/MerkleDistribution';
+import { Eligibility } from './interfaces/eligibility.interface';
 
 @Service()
 export class RewardsService {
@@ -52,7 +53,7 @@ export class RewardsService {
    * Returns 200 on eligible, 403 on not eligible.
    * @param address User Ethereum address.
    */
-  async checkBadgerShopEligibility(address: string): Promise<void> {
+  async checkBadgerShopEligibility(address: string): Promise<Eligibility> {
     const cacheKey = CacheService.getCacheKey('badger-shop');
     let elligibleAddresses = this.cacheService.get<Set<string>>(cacheKey);
     if (!elligibleAddresses) {
@@ -62,8 +63,8 @@ export class RewardsService {
       this.cacheService.set(cacheKey, elligibleAddresses);
     }
     const checksumAddress = ethers.utils.getAddress(address);
-    if (!elligibleAddresses.has(checksumAddress)) {
-      throw new Forbidden('Access Denied');
-    }
+    return {
+      isEligible: elligibleAddresses.has(checksumAddress),
+    };
   }
 }
