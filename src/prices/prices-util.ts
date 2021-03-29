@@ -7,7 +7,7 @@ import { ChainStrategy } from '../chains/strategies/chain.strategy';
 import { COINGECKO_URL, PRICE_DATA, TOKENS } from '../config/constants';
 import { Token } from '../tokens/interfaces/token.interface';
 import { PriceData, TokenPrice, TokenPriceSnapshot } from '../tokens/interfaces/token-price.interface';
-import { getToken, protocolTokens } from '../tokens/tokens-util';
+import { getToken, getTokenByName, protocolTokens } from '../tokens/tokens-util';
 import { TokenConfig } from '../tokens/types/token-config.type';
 import AttributeValue = DocumentClient.AttributeValue;
 import fetch from 'node-fetch';
@@ -16,17 +16,28 @@ import { Chain } from '../chains/config/chain.config';
 import { getSett } from '../setts/setts-util';
 import { TokenType } from '../tokens/enums/token-type.enum';
 
+/**
+ * Protoype for a token address pricing function.
+ * @param address Target for price retrieval.
+ */
 export type PricingFunction = (address: string) => Promise<TokenPrice>;
+
+/**
+ * Mass price update request object.
+ * Mapping of token address to respective pricing function.
+ * @see {PricingFunction}
+ */
 export interface PriceUpdateRequest {
-  [contract: string]: PricingFunction;
+  [token: string]: PricingFunction;
 }
 
-const priceCache = new NodeCache({ stdTTL: 300, checkperiod: 480 });
+export const priceCache = new NodeCache({ stdTTL: 300, checkperiod: 480 });
 
+/**
+ * Update pricing db entry using chain strategy.
+ * @param token Target for price update.
+ */
 export const updatePrice = async (token: Token): Promise<void> => {
-  if (!token) {
-    throw new BadRequest('Token not supported for pricing');
-  }
   const { address, name } = token;
   const strategy = ChainStrategy.getStrategy(address);
   const tokenPriceData = await strategy.getPrice(address);
@@ -39,10 +50,19 @@ export const updatePrice = async (token: Token): Promise<void> => {
   await saveItem(PRICE_DATA, tokenPriceSnapshot);
 };
 
+/**
+ * Mass update token pricing db entries.
+ * @param tokenConfig Target for price updates.
+ */
 export const updatePrices = async (tokenConfig: TokenConfig): Promise<void> => {
   await Promise.all(Object.values(tokenConfig).map(async (token) => updatePrice(token)));
 };
 
+/**
+ * Load token price fromt he pricing database.
+ * @param contract Address for the token price being requested.
+ * @returns Most recent price data for the requested contract.
+ */
 export const getPrice = async (contract: string): Promise<TokenPriceSnapshot> => {
   const checksumContract: AttributeValue = ethers.utils.getAddress(contract);
   const params: QueryInput = {
@@ -56,14 +76,7 @@ export const getPrice = async (contract: string): Promise<TokenPriceSnapshot> =>
   };
   const prices = await getItems<TokenPriceSnapshot>(params);
   if (!prices || prices.length !== 1) {
-    const token = getToken(contract);
-    return {
-      name: token.name,
-      address: token.address,
-      usd: 0,
-      eth: 0,
-      updatedAt: Date.now(),
-    };
+    throw new NotFound(`No price data stored for ${checksumContract}`);
   }
   return prices[0];
 };
@@ -71,6 +84,7 @@ export const getPrice = async (contract: string): Promise<TokenPriceSnapshot> =>
 /**
  * Retrieve the price data for a given token in USD and ETH.
  * @param contract Token contract address.
+ * @returns Most recently updated token pricing data.
  */
 export const getTokenPriceData = async (contract: string): Promise<TokenPrice> => {
   const checksumContract = ethers.utils.getAddress(contract);
@@ -84,14 +98,15 @@ export const getTokenPriceData = async (contract: string): Promise<TokenPrice> =
 
 /**
  * Retrieve all chain token prices in both USD and ETH.
+ * @returns Most recently updated token pricing data for all tokens.
  */
 export const getPriceData = async (): Promise<PriceData> => {
   const priceData: PriceData = {};
   const prices = await Promise.all(Object.keys(protocolTokens).map((key) => getPrice(protocolTokens[key].address)));
   /* eslint-disable @typescript-eslint/no-non-null-assertion */
   prices.forEach((token) => {
-    priceData[token.address!] = token;
-    priceCache.set(token.address!, token);
+    priceData[token.address] = token;
+    priceCache.set(token.address, token);
   });
   /* eslint-disable @typescript-eslint/no-non-null-assertion */
   return priceData;
@@ -106,17 +121,24 @@ export const getPriceData = async (): Promise<PriceData> => {
  */
 export const getContractPrice = async (contract: string): Promise<TokenPrice> => {
   const cachedPrice = priceCache.get<TokenPrice>(contract);
-  if (cachedPrice) return cachedPrice;
+  if (cachedPrice) {
+    return cachedPrice;
+  }
   const response = await fetch(
     `${COINGECKO_URL}/token_price/ethereum?contract_addresses=${contract}&vs_currencies=usd,eth`,
   );
-  if (!response.ok) throw new InternalServerError(`Unable to query ${contract} price`);
+  if (!response.ok) {
+    throw new InternalServerError(`Unable to query ${contract} price`);
+  }
   const json = await response.json();
   const contractKey = contract.toLowerCase(); // coingecko return key in lower case
-  if (!json[contractKey] || !json[contractKey].usd || !json[contractKey].eth)
+  if (!json[contractKey] || !json[contractKey].usd || !json[contractKey].eth) {
     throw new InternalServerError(`Unable to resolve ${contract} price`);
+  }
+  const token = getToken(contract);
   const contractPrice: TokenPrice = {
-    address: contract,
+    name: token.name,
+    address: token.address,
     usd: json[contractKey].usd,
     eth: json[contractKey].eth,
   };
@@ -129,23 +151,36 @@ export const getContractPrice = async (contract: string): Promise<TokenPrice> =>
  * @param token CoinGecko token name.
  * @throws {InternalServerError} Failed price lookup.
  */
-export const getTokenPrice = async (token: string): Promise<TokenPrice> => {
-  const cachedPrice = priceCache.get<TokenPrice>(token);
-  if (cachedPrice) return cachedPrice;
-  const response = await fetch(`${COINGECKO_URL}/price?ids=${token}&vs_currencies=usd,eth`);
-  if (!response.ok) throw new InternalServerError(`Unable to query ${token} price`);
+export const getTokenPrice = async (name: string): Promise<TokenPrice> => {
+  const cachedPrice = priceCache.get<TokenPrice>(name);
+  if (cachedPrice) {
+    return cachedPrice;
+  }
+  const response = await fetch(`${COINGECKO_URL}/price?ids=${name}&vs_currencies=usd,eth`);
+  if (!response.ok) {
+    throw new InternalServerError(`Unable to query ${name} price`);
+  }
   const json = await response.json();
-  if (!json[token] || !json[token].usd || !json[token].eth)
-    throw new InternalServerError(`Unable to resolve ${token} price`);
+  if (!json[name] || !json[name].usd || !json[name].eth) {
+    throw new InternalServerError(`Unable to resolve ${name} price`);
+  }
+  const token = getTokenByName(name);
   const tokenPrice: TokenPrice = {
-    name: token,
-    usd: json[token].usd,
-    eth: json[token].eth,
+    name: token.name,
+    address: token.address,
+    usd: json[name].usd,
+    eth: json[name].eth,
   };
-  priceCache.set(token, tokenPrice);
+  priceCache.set(name, tokenPrice);
   return tokenPrice;
 };
 
+/**
+ * Convert a given token price to a defined currency option.
+ * @param tokenPrice Pricing data for the given token.
+ * @param currency Currency requested from the pricing data.
+ * @returns Price value in currency if exists, default to usd if not.
+ */
 export const inCurrency = (tokenPrice: TokenPrice, currency?: string): number => {
   switch (currency) {
     case 'eth':
@@ -156,6 +191,11 @@ export const inCurrency = (tokenPrice: TokenPrice, currency?: string): number =>
   }
 };
 
+/**
+ * Get pricing information for a vault token.
+ * @param contract Address for vault token.
+ * @returns Pricing data for the given vault token based on the pricePerFullShare.
+ */
 export const getVaultTokenPrice = async (contract: string): Promise<TokenPrice> => {
   const token = getToken(contract);
   if (token.type !== TokenType.Vault) {
@@ -189,6 +229,13 @@ export const getVaultTokenPrice = async (contract: string): Promise<TokenPrice> 
   return vaultTokenPrice;
 };
 
+/**
+ * Get pricing information for a wrapper token.
+ * Wrapper tokens are tokens on their non-native chain that represent another token
+ * in the system. i.e. bDigg on Binance Smart Chain.
+ * @param contract Address for wrapper token.
+ * @returns Pricing data for the given wrapper token.
+ */
 export const getWrapperTokenPrice = async (contract: string): Promise<TokenPrice> => {
   const token = getToken(contract);
   if (token.type !== TokenType.Wrapper) {

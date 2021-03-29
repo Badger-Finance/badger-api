@@ -3,8 +3,8 @@
  * USD and ETH base currencies.
  */
 export interface TokenPrice {
-  name?: string;
-  address?: string;
+  name: string;
+  address: string;
   usd: number;
   eth: number;
 }

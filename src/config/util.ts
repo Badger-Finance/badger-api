@@ -1,6 +1,6 @@
 import { Block } from '@ethersproject/abstract-provider';
 import AWS from 'aws-sdk';
-import { PutItemInput, QueryInput } from 'aws-sdk/clients/dynamodb';
+import { QueryInput } from 'aws-sdk/clients/dynamodb';
 import { DocumentClient } from 'aws-sdk/lib/dynamodb/document_client';
 import { Chain } from '../chains/config/chain.config';
 import { ChainNetwork } from '../chains/enums/chain-network.enum';
@@ -22,14 +22,6 @@ export interface EventInput {
 
 export const getBlock = async (blockNumber: number, chain?: ChainNetwork): Promise<Block> =>
   await Chain.getChain(chain).provider.getBlock(blockNumber);
-
-export const saveItem = async (table: string, item: AttributeValue) => {
-  const params = {
-    TableName: table,
-    Item: item,
-  } as PutItemInput;
-  return await ddb.put(params).promise();
-};
 
 export const getAssetData = async (
   table: string,

@@ -1,7 +1,8 @@
+import { saveItem } from '../aws/dynamodb-utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { ASSET_DATA } from '../config/constants';
-import { EventInput, getBlock, getIndexedBlock, saveItem, THIRTY_MIN_BLOCKS } from '../config/util';
+import { EventInput, getBlock, getIndexedBlock, THIRTY_MIN_BLOCKS } from '../config/util';
 import { getSett } from '../setts/setts-util';
 
 export const indexAsset = async (event: EventInput) => {

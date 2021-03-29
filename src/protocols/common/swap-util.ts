@@ -55,8 +55,10 @@ export const getLiquidityPrice = async (graphUrl: string, contract: string): Pro
     throw new NotFound(`No pair found for ${contract}`);
   }
   if (pair.totalSupply === 0) {
+    const token = getToken(contract);
     return {
-      address: contract,
+      name: token.name,
+      address: token.address,
       usd: 0,
       eth: 0,
     };
@@ -76,8 +78,10 @@ export const getOnChainLiquidityPrice = async (chain: Chain, contract: string): 
   try {
     const liquidityData = await getLiquidityData(chain, contract);
     if (liquidityData.totalSupply === 0) {
+      const token = getToken(contract);
       return {
-        address: contract,
+        name: token.name,
+        address: token.address,
         usd: 0,
         eth: 0,
       };
@@ -95,24 +99,30 @@ const resolveLiquidityPrice = async (liquidityData: LiquidityData): Promise<Toke
   if (!t0Price && !t1Price) throw new UnprocessableEntity(`Token pair ${contract} cannot be priced`);
   if (!t0Price) {
     const t1Scalar = reserve0 / reserve1;
+    const t0Info = getToken(token0);
     t0Price = {
-      address: token0,
+      name: t0Info.name,
+      address: t0Info.address,
       usd: t1Price.usd * t1Scalar,
       eth: t1Price.eth * t1Scalar,
     };
   }
   if (!t1Price) {
     const t0Scalar = reserve1 / reserve0;
+    const t1Info = getToken(token1);
     t1Price = {
-      address: token1,
+      name: t1Info.name,
+      address: t1Info.address,
       usd: t0Price.usd * t0Scalar,
       eth: t0Price.eth * t0Scalar,
     };
   }
+  const token = getToken(contract);
   const usdPrice = (t0Price.usd * reserve0 + t1Price.usd * reserve1) / totalSupply;
   const ethPrice = (t0Price.eth * reserve0 + t1Price.eth * reserve1) / totalSupply;
   return {
-    address: contract,
+    name: token.name,
+    address: token.address,
     usd: usdPrice,
     eth: ethPrice,
   };
