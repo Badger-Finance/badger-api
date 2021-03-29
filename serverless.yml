@@ -114,11 +114,9 @@ resources:
         AttributeDefinitions:
           - AttributeName: "address"
             AttributeType: "S"
-          - AttributeName: "ttl"
-            AttributeType: "N"
         TimeToLiveSpecification:
-          - AttributeName: "ttl"
-            Enabled: true
+          AttributeName: "ttl"
+          Enabled: true
 
 functions:
   request-handler:
