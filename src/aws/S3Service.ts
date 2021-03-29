@@ -1,5 +1,5 @@
 import { Service } from '@tsed/common';
-import { BadRequest, Forbidden } from '@tsed/exceptions';
+import { BadRequest, NotFound } from '@tsed/exceptions';
 import AWS from 'aws-sdk';
 import NodeCache from 'node-cache';
 
@@ -29,13 +29,11 @@ export class S3Service {
       }
       const object = await s3.getObject(params).promise();
       if (!object.Body) {
-        // do not leak key data
-        throw new Forbidden('Access denied');
+        throw new NotFound('Object does not exist');
       }
       s3Cache.set(cacheKey, object.Body);
       return object.Body;
     } catch (err) {
-      // do not leak details on exception
       throw new BadRequest('Unable to satisfy object request');
     }
   }
