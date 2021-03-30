@@ -8,10 +8,16 @@ plugins:
   - serverless-aws-documentation
   - serverless-api-gateway-caching
   - serverless-plugin-typescript
+  - serverless-dynamodb-local
   - serverless-offline
 
 custom:
   stage: ${opt:stage, self:provider.stage}
+  dynamodb:
+    stages:
+      - ${self:custom.stage}
+    inMemory: true
+    migration: true
   apiGatewayCaching:
     enabled: ${self:custom.caching.${self:custom.stage}}
     ttlInSeconds: 300
@@ -35,6 +41,9 @@ custom:
     PRICE_DATA:
       staging: "badger-staging-prices"
       prod: "badger-prices"
+    SETT_SNAPSHOTS_DATA:
+      staging: "badger-staging-sett-snapshots"
+      prod: "badger-sett-snapshots"
   merkleProofs:
     staging: "badger-staging-merkle-proofs"
     prod: "badger-merkle-proofs"
@@ -65,6 +74,7 @@ provider:
     MASTERCHEF: "https://api.thegraph.com/subgraphs/name/sushiswap/master-chef"
     ASSET_DATA: ${self:custom.table.ASSET_DATA.${self:custom.stage}}
     PRICE_DATA: ${self:custom.table.PRICE_DATA.${self:custom.stage}}
+    SETT_SNAPSHOTS_DATA: ${self:custom.table.SETT_SNAPSHOTS_DATA.${self:custom.stage}}
     MERKLE_CLAIM_BUCKET: ${self:custom.merkleProofs.${self:custom.stage}}
 
 resources:
@@ -99,6 +109,20 @@ resources:
             AttributeType: "S"
           - AttributeName: "updatedAt"
             AttributeType: "N"
+    settsSnapshotsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.table.SETT_SNAPSHOTS_DATA.${self:custom.stage}}
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: "address"
+            KeyType: "HASH"
+        AttributeDefinitions:
+          - AttributeName: "address"
+            AttributeType: "S"
+        TimeToLiveSpecification:
+          AttributeName: "ttl"
+          Enabled: true
 
 functions:
   request-handler:

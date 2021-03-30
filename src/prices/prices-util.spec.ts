@@ -1,58 +1,259 @@
+import { BadRequest, NotFound } from '@tsed/exceptions';
 import fetchMock from 'jest-fetch-mock';
-import { TokenPrice } from '../tokens/interfaces/token-price.interface';
-import { getContractPrice, getTokenPrice, inCurrency } from './prices-util';
+import { createTable, deleteTable, priceAttributes, priceKeySchema, saveItem } from '../aws/dynamodb-utils';
+import { ChainStrategy } from '../chains/strategies/chain.strategy';
+import { TestStrategy } from '../chains/strategies/test.strategy';
+import { PRICE_DATA, TOKENS } from '../config/constants';
+import { TokenType } from '../tokens/enums/token-type.enum';
+import { Token } from '../tokens/interfaces/token.interface';
+import { PriceData, TokenPrice, TokenPriceSnapshot } from '../tokens/interfaces/token-price.interface';
+import { getToken, protocolTokens } from '../tokens/tokens-util';
+import {
+  getContractPrice,
+  getPrice,
+  getPriceData,
+  getTokenPrice,
+  getTokenPriceData,
+  getVaultTokenPrice,
+  inCurrency,
+  priceCache,
+  updatePrice,
+  updatePrices,
+} from './prices-util';
 
 describe('prices-util', () => {
-  beforeEach(fetchMock.resetMocks);
+  let testStrategy: ChainStrategy;
 
-  it('Fetches the contract price in USD and ETH', async () => {
-    const contract = '0x3472A5A71965499acd81997a54BBA8D852C6E53d';
-    const usdPrice = Math.random() * 100;
-    const etherPrice = usdPrice / 1500;
-    const mockResponse = {
-      '0x3472a5a71965499acd81997a54bba8d852c6e53d': {
-        usd: usdPrice,
-        eth: etherPrice,
-      },
+  const randomPrice = () => Math.random() * 100;
+
+  beforeAll(async () => {
+    const ethPrice = Math.max(1500, Math.random() * 3000);
+    const priceData: PriceData = {};
+
+    const badger = getToken(TOKENS.BADGER);
+    const badgerUsd = randomPrice();
+    const badgerPrice: TokenPrice = {
+      name: badger.name,
+      address: badger.address,
+      usd: badgerUsd,
+      eth: badgerUsd / ethPrice,
     };
-    fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
+    priceData[TOKENS.BADGER] = badgerPrice;
 
-    const response = await getContractPrice(contract);
+    const digg = getToken(TOKENS.DIGG);
+    const diggUsd = randomPrice();
+    const diggPrice: TokenPrice = {
+      name: digg.name,
+      address: digg.address,
+      usd: diggUsd,
+      eth: diggUsd / ethPrice,
+    };
+    priceData[TOKENS.DIGG] = diggPrice;
 
-    expect(fetchMock).toHaveBeenCalled();
-    expect(response).toBeDefined();
-    expect(response).toMatchObject({
-      address: contract,
-      usd: usdPrice,
-      eth: etherPrice,
+    testStrategy = new TestStrategy(priceData);
+  });
+
+  beforeEach(async () => {
+    priceCache.flushAll();
+    fetchMock.resetMocks();
+    await deleteTable(PRICE_DATA);
+    await createTable(PRICE_DATA, priceKeySchema, priceAttributes);
+  });
+
+  describe('getPrice', () => {
+    describe('when price is not available', () => {
+      it('throws an error', async () => {
+        await expect(getPrice(TOKENS.CAKE)).rejects.toThrow(NotFound);
+      });
+    });
+
+    describe('when price is available', () => {
+      it('returns a token snapshot with the latest price data', async () => {
+        const badgerPrice = await testStrategy.getPrice(TOKENS.BADGER);
+        const badgerPriceSnapshot: TokenPriceSnapshot = {
+          ...badgerPrice,
+          updatedAt: Date.now(),
+        };
+        await saveItem(PRICE_DATA, badgerPriceSnapshot);
+        const fetchedBadgerPrice = await getPrice(TOKENS.BADGER);
+        expect(fetchedBadgerPrice).toBeDefined();
+        expect(fetchedBadgerPrice).toMatchObject(badgerPriceSnapshot);
+      });
     });
   });
 
-  it('Fetches the token price in USD and ETH', async () => {
-    const token = 'Badger';
-    const usdPrice = Math.random() * 100;
-    const etherPrice = usdPrice / 1500;
-    const mockResponse = {
-      Badger: {
+  describe('updatePrice', () => {
+    describe('update unsupported token', () => {
+      it('throws an bad request error', async () => {
+        const unsupportedToken: Token = {
+          name: 'Fake Token',
+          symbol: 'FTK',
+          address: '0xfA5047c9c78B8877af97BDcb85Db743fD7313d4a',
+          decimals: 18,
+          type: TokenType.Contract,
+        };
+        await expect(updatePrice(unsupportedToken)).rejects.toThrow(BadRequest);
+      });
+    });
+
+    describe('update supported token', () => {
+      it('creates an price db entry', async () => {
+        await expect(getPrice(TOKENS.BADGER)).rejects.toThrow(NotFound);
+        const badgerToken = getToken(TOKENS.BADGER);
+        await updatePrice(badgerToken);
+        const badgerPrice = await getPrice(TOKENS.BADGER);
+        expect(badgerPrice).toBeDefined();
+      });
+    });
+  });
+
+  describe('updatePrices', () => {
+    describe('update unsupported token', () => {
+      it('throws an bad request error', async () => {
+        const unsupportedToken: Token = {
+          name: 'Fake Token',
+          symbol: 'FTK',
+          address: '0xfA5047c9c78B8877af97BDcb85Db743fD7313d4a',
+          decimals: 18,
+          type: TokenType.Contract,
+        };
+        await expect(updatePrices({ [unsupportedToken.address]: unsupportedToken })).rejects.toThrow(BadRequest);
+      });
+    });
+
+    describe('update a mix of unsupported and supported tokens', () => {
+      it('throws a bad request error', async () => {
+        const unsupportedToken: Token = {
+          name: 'Fake Token',
+          symbol: 'FTK',
+          address: '0xfA5047c9c78B8877af97BDcb85Db743fD7313d4a',
+          decimals: 18,
+          type: TokenType.Contract,
+        };
+        const badgerToken = getToken(TOKENS.BADGER);
+        const tokenConfig = {
+          [unsupportedToken.address]: unsupportedToken,
+          [TOKENS.BADGER]: badgerToken,
+        };
+        await expect(updatePrices(tokenConfig)).rejects.toThrow(BadRequest);
+      });
+    });
+
+    describe('update supported tokens', () => {
+      it('updates prices for all tokens requested', async () => {
+        await expect(getPrice(TOKENS.DIGG)).rejects.toThrow(NotFound);
+        await expect(getPrice(TOKENS.BADGER)).rejects.toThrow(NotFound);
+        const diggToken = getToken(TOKENS.DIGG);
+        const badgerToken = getToken(TOKENS.BADGER);
+        const tokenConfig = {
+          [TOKENS.DIGG]: diggToken,
+          [TOKENS.BADGER]: badgerToken,
+        };
+        await updatePrices(tokenConfig);
+        const diggPrice = await getPrice(TOKENS.DIGG);
+        expect(diggPrice).toBeDefined();
+        const badgerPrice = await getPrice(TOKENS.BADGER);
+        expect(badgerPrice).toBeDefined();
+      });
+    });
+  });
+
+  describe('getTokenPriceData', () => {
+    describe('get unsupported token price', () => {
+      it('throws a not found error', async () => {
+        const unsupportedToken: Token = {
+          name: 'Fake Token',
+          symbol: 'FTK',
+          address: '0xfA5047c9c78B8877af97BDcb85Db743fD7313d4a',
+          decimals: 18,
+          type: TokenType.Contract,
+        };
+        await expect(getTokenPriceData(unsupportedToken.address)).rejects.toThrow(NotFound);
+      });
+    });
+
+    describe('get supported token price', () => {
+      it('gets the latest price snapshot the from the db', async () => {
+        await updatePrices(protocolTokens);
+        const badgerToken = getToken(TOKENS.BADGER);
+        const badgerPrice = await getPrice(badgerToken.address);
+        const tokenPrice: TokenPrice = {
+          name: badgerPrice.name,
+          address: badgerPrice.address,
+          usd: badgerPrice.usd,
+          eth: badgerPrice.eth,
+        };
+        const badgerActualPrice = await getTokenPriceData(badgerToken.address);
+        expect(badgerActualPrice).toMatchObject(tokenPrice);
+      });
+    });
+  });
+
+  describe('getPriceData', () => {
+    it('gets all token pricing for the system', async () => {
+      await updatePrices(protocolTokens);
+      const priceData = await getPriceData();
+      for (const token of Object.keys(protocolTokens)) {
+        const tokenPrice = getPrice(token);
+        expect(priceData[token]).toMatchObject(tokenPrice);
+      }
+    });
+  });
+
+  describe('getContractPrice', () => {
+    it('Fetches the contract price in USD and ETH', async () => {
+      const contract = '0x3472A5A71965499acd81997a54BBA8D852C6E53d';
+      const usdPrice = Math.random() * 100;
+      const etherPrice = usdPrice / 1500;
+      const mockResponse = {
+        '0x3472a5a71965499acd81997a54bba8d852c6e53d': {
+          usd: usdPrice,
+          eth: etherPrice,
+        },
+      };
+      fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
+
+      const response = await getContractPrice(contract);
+
+      expect(fetchMock).toHaveBeenCalled();
+      expect(response).toBeDefined();
+      expect(response).toMatchObject({
+        address: contract,
         usd: usdPrice,
         eth: etherPrice,
-      },
-    };
-    fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
+      });
+    });
+  });
 
-    const response = await getTokenPrice(token);
+  describe('getTokenPrice', () => {
+    it('Fetches the token price in USD and ETH', async () => {
+      const token = 'Badger';
+      const usdPrice = Math.random() * 100;
+      const etherPrice = usdPrice / 1500;
+      const mockResponse = {
+        Badger: {
+          usd: usdPrice,
+          eth: etherPrice,
+        },
+      };
+      fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
 
-    expect(fetchMock).toHaveBeenCalled();
-    expect(response).toBeDefined();
-    expect(response).toMatchObject({
-      name: token,
-      usd: usdPrice,
-      eth: etherPrice,
+      const response = await getTokenPrice(token);
+
+      expect(fetchMock).toHaveBeenCalled();
+      expect(response).toBeDefined();
+      expect(response).toMatchObject({
+        name: token,
+        usd: usdPrice,
+        eth: etherPrice,
+      });
     });
   });
 
   describe('inCurrency', () => {
     const priceData: TokenPrice = {
+      name: 'Test',
+      address: '0x0',
       usd: 10,
       eth: 10 / 1500,
     };
@@ -82,6 +283,15 @@ describe('prices-util', () => {
       it('returns the usd price', () => {
         const ethPrice = inCurrency(priceData, 'bchabc');
         expect(ethPrice).toEqual(priceData.usd);
+      });
+    });
+  });
+
+  describe('getVaultTokenPrice', () => {
+    describe('look up non vault token price', () => {
+      it('throws a bad request error', async () => {
+        await updatePrices(protocolTokens);
+        await expect(getVaultTokenPrice(TOKENS.BADGER)).rejects.toThrow(BadRequest);
       });
     });
   });

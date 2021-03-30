@@ -4,7 +4,7 @@ import { GeyserController } from './geysers/GeysersController';
 import { HarvestsController } from './harvests/harvests.controller';
 import { PriceController } from './prices/PricesController';
 import { ProtocolController } from './protocols/ProtocolsController';
-import { RewardController } from './rewards/RewardsController';
+import { RewardController } from './rewards/rewards.controller';
 import { SettsController } from './setts/SettsController';
 
 /**

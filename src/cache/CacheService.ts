@@ -22,6 +22,10 @@ export class CacheService {
     this.cache.set(key, value);
   }
 
+  flush(): void {
+    this.cache.flushAll();
+  }
+
   static getCacheKey(...parts: string[]): string {
     return parts.join('-');
   }

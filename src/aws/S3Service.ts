@@ -1,5 +1,5 @@
 import { Service } from '@tsed/common';
-import { BadRequest } from '@tsed/exceptions';
+import { BadRequest, NotFound } from '@tsed/exceptions';
 import AWS from 'aws-sdk';
 import NodeCache from 'node-cache';
 
@@ -15,7 +15,7 @@ export class S3Service {
    * @param bucket Bucket containing object.
    * @param key Key path to object.
    */
-  async getObject(bucket: string, key: string): Promise<AWS.S3.GetObjectOutput> {
+  async getObject(bucket: string, key: string): Promise<AWS.S3.Body> {
     try {
       const params = {
         Bucket: bucket,
@@ -28,11 +28,12 @@ export class S3Service {
         return cachedObject;
       }
       const object = await s3.getObject(params).promise();
-      s3Cache.set(cacheKey, object);
-      return object;
+      if (!object.Body) {
+        throw new NotFound('Object does not exist');
+      }
+      s3Cache.set(cacheKey, object.Body);
+      return object.Body;
     } catch (err) {
-      // do not error deatils on exception
-      console.error(err);
       throw new BadRequest('Unable to satisfy object request');
     }
   }

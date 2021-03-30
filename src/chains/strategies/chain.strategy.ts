@@ -1,3 +1,4 @@
+import { BadRequest } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
 
@@ -13,7 +14,11 @@ export abstract class ChainStrategy {
   }
 
   static getStrategy(address: string): ChainStrategy {
-    return this.strategies[ethers.utils.getAddress(address)];
+    const strategy = this.strategies[ethers.utils.getAddress(address)];
+    if (!strategy) {
+      throw new BadRequest('Token not supported for pricing');
+    }
+    return strategy;
   }
 
   abstract getPrice(address: string): Promise<TokenPrice>;
