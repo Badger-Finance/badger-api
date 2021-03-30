@@ -117,12 +117,13 @@ resources:
         KeySchema:
           - AttributeName: "address"
             KeyType: "HASH"
+          - AttributeName: "updatedAt"
+            KeyType: "RANGE"
         AttributeDefinitions:
           - AttributeName: "address"
             AttributeType: "S"
-        TimeToLiveSpecification:
-          AttributeName: "ttl"
-          Enabled: true
+          - AttributeName: "updatedAt"
+            AttributeType: "N"
 
 functions:
   request-handler:
@@ -451,4 +452,13 @@ functions:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-prices
           description: "index price data for all protocol tokens"
+          rate: rate(5 minutes)
+
+  index-sett-snapshots:
+    handler: src/indexer/sett-snapshots.indexer
+    timeout: 30
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-sett-snapshots
+          description: "index data for supported setts"
           rate: rate(5 minutes)
