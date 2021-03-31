@@ -11,6 +11,7 @@ import {
   PutItemInput,
   QueryInput,
   TableDescription,
+  TransactWriteItemsInput,
 } from 'aws-sdk/clients/dynamodb';
 import AttributeValue = DocumentClient.AttributeValue;
 const dynamodb: DynamoDbClient = require('serverless-dynamodb-client');
@@ -41,6 +42,10 @@ export const getItems = async <T>(query: QueryInput): Promise<T[] | null> => {
   const data = await documentClient.query(query).promise();
   if (!data.Items || data.Items.length === 0) return null;
   return data.Items as T[];
+};
+
+export const transactWrite = async (input: TransactWriteItemsInput): Promise<void> => {
+  await documentClient.transactWrite(input).promise();
 };
 
 export const getTable = async (table: string): Promise<TableDescription | undefined> => {

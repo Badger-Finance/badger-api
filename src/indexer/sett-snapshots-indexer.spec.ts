@@ -1,3 +1,4 @@
+import { TransactWriteItemsInput } from 'aws-sdk/clients/dynamodb';
 import * as dynamodbUtils from '../aws/dynamodb-utils';
 import { bscSetts } from '../chains/config/bsc.config';
 import { ethSetts } from '../chains/config/eth.config';
@@ -5,7 +6,7 @@ import { BscStrategy } from '../chains/strategies/bsc.strategy';
 import { EthStrategy } from '../chains/strategies/eth.strategy';
 import { SettQuery } from '../graphql/generated/badger';
 import * as settUtils from '../setts/setts-util';
-import { CachedSettSnapshot, refreshSettSnapshots } from './sett-snapshots.indexer';
+import { refreshSettSnapshots } from './sett-snapshots-indexer';
 
 describe('refreshSettSnapshots', () => {
   const supportedAddresses = [...bscSetts, ...ethSetts].map((settDefinition) => settDefinition.settToken).sort();
@@ -14,7 +15,7 @@ describe('refreshSettSnapshots', () => {
     Promise<SettQuery>,
     [graphUrl: string, contract: string, block?: number | undefined]
   >;
-  let saveItem: jest.SpyInstance<Promise<void>, [table: string, item: CachedSettSnapshot]>;
+  let transactWrite: jest.SpyInstance<Promise<void>, [input: TransactWriteItemsInput]>;
 
   beforeEach(async () => {
     getSettMock = jest.spyOn(settUtils, 'getSett').mockImplementation(async (_graphUrl: string, _contract: string) => ({
@@ -32,7 +33,7 @@ describe('refreshSettSnapshots', () => {
       },
     }));
 
-    saveItem = jest.spyOn(dynamodbUtils, 'saveItem').mockImplementation();
+    transactWrite = jest.spyOn(dynamodbUtils, 'transactWrite').mockImplementation();
 
     const mockTokenPrice = { name: 'mock', usd: 10, eth: 0, address: '0xbeef' };
     jest.spyOn(BscStrategy.prototype, 'getPrice').mockImplementation(async (_address: string) => mockTokenPrice);
@@ -49,18 +50,30 @@ describe('refreshSettSnapshots', () => {
   it('saves Setts in Dynamo', () => {
     const requestedAddresses = [];
     // Verify each saved object.
-    for (const call of saveItem.mock.calls) {
-      const object = call[1];
-      expect(object).toMatchObject({
-        balance: expect.any(Number),
-        supply: expect.any(Number),
-        ratio: expect.any(Number),
-        value: expect.any(Number),
-        address: expect.any(String),
-        updatedAt: expect.any(Number),
-      });
+    for (const input of transactWrite.mock.calls[0]) {
+      const { TransactItems: transactItems } = input;
+      for (const transactItem of transactItems) {
+        expect(transactItem.Update).toBeDefined();
 
-      requestedAddresses.push(object.address);
+        const attributeValues = transactItem.Update?.ExpressionAttributeValues;
+        expect(attributeValues).toBeDefined();
+
+        expect(attributeValues).toMatchObject({
+          ':balance': { N: expect.any(String) },
+          ':supply': { N: expect.any(String) },
+          ':ratio': { N: expect.any(String) },
+          ':value': { N: expect.any(String) },
+          ':updatedAt': { N: expect.any(String) },
+        });
+
+        const key = transactItem.Update?.Key;
+        expect(key).toBeDefined();
+        expect(key).toMatchObject({
+          address: { S: expect.any(String) },
+        });
+
+        requestedAddresses.push(key?.address.S);
+      }
     }
     // Verify addresses match supported setts.
     expect(requestedAddresses.sort()).toEqual(supportedAddresses);

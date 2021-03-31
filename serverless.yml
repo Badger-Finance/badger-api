@@ -455,7 +455,7 @@ functions:
           rate: rate(5 minutes)
 
   index-sett-snapshots:
-    handler: src/indexer/sett-snapshots.refreshSettSnapshots
+    handler: src/indexer/sett-snapshots-indexer.refreshSettSnapshots
     timeout: 30
     events:
       - schedule:
