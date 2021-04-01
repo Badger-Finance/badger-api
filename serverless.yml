@@ -457,4 +457,4 @@ functions:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-sett-snapshots
           description: "index data for supported setts"
-          rate: rate(5 minutes)
+          rate: rate(1 minute)
