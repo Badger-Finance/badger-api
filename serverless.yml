@@ -75,7 +75,7 @@ provider:
     ASSET_DATA: ${self:custom.table.ASSET_DATA.${self:custom.stage}}
     PRICE_DATA: ${self:custom.table.PRICE_DATA.${self:custom.stage}}
     SETT_SNAPSHOTS_DATA: ${self:custom.table.SETT_SNAPSHOTS_DATA.${self:custom.stage}}
-    MERKLE_CLAIM_BUCKET: ${self:custom.merkleProofs.${self:custom.stage}}
+    REWARD_DATA: ${self:custom.merkleProofs.${self:custom.stage}}
 
 resources:
   Resources:
