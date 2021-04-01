@@ -10,7 +10,6 @@ import { SETT_SNAPSHOTS_DATA } from '../config/constants';
 import { CachedSettSnapshot } from '../setts/interfaces/cached-sett-snapshot.interface';
 import { getSett } from '../setts/setts-util';
 
-// Maximum default by AWS
 const BATCH_SIZE = 10;
 
 function snapshotToTransactItem(snapshot: CachedSettSnapshot): TransactWriteItem {
