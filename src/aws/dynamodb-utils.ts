@@ -45,7 +45,7 @@ export const getItems = async <T>(query: QueryInput): Promise<T[] | null> => {
 };
 
 export const transactWrite = async (input: TransactWriteItemsInput): Promise<void> => {
-  await documentClient.transactWrite(input).promise();
+  await client.transactWriteItems(input).promise();
 };
 
 export const getTable = async (table: string): Promise<TableDescription | undefined> => {

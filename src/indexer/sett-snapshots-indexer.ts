@@ -7,30 +7,46 @@ import { Chain } from '../chains/config/chain.config';
 import { ethSetts } from '../chains/config/eth.config';
 import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { SETT_SNAPSHOTS_DATA } from '../config/constants';
-import { SettSnapshot } from '../interface/SettSnapshot';
+import { CachedSettSnapshot } from '../setts/interfaces/cached-sett-snapshot.interface';
 import { getSett } from '../setts/setts-util';
 
 // Maximum default by AWS
-const BATCH_SIZE = 25;
-
-export type CachedSettSnapshot = Partial<SettSnapshot> & {
-  address: string;
-  updatedAt: number;
-};
+const BATCH_SIZE = 10;
 
 function snapshotToTransactItem(snapshot: CachedSettSnapshot): TransactWriteItem {
   return {
     Update: {
       TableName: SETT_SNAPSHOTS_DATA,
-      Key: { address: { S: snapshot.address } },
+      Key: {
+        address: {
+          S: snapshot.address,
+        },
+      },
       UpdateExpression:
-        'SET asset = :asset, balance = :balance, ratio = :ratio, supply = :supply, updatedAt = :updatedAt, value = :value',
+        'SET #balance = :balance, #ratio = :ratio, #supply = :supply, #updatedAt = :updatedAt, #settValue = :settValue',
+      ExpressionAttributeNames: {
+        '#balance': 'balance',
+        '#ratio': 'ratio',
+        '#supply': 'supply',
+        '#updatedAt': 'updatedAt',
+        '#settValue': 'settValue',
+      },
       ExpressionAttributeValues: {
-        ':balance': { N: snapshot.balance?.toString() },
-        ':ratio': { N: snapshot.ratio?.toString() },
-        ':supply': { N: snapshot.supply?.toString() },
-        ':updatedAt': { N: snapshot.updatedAt.toString() },
-        ':value': { N: snapshot.value?.toString() },
+        ':balance': {
+          N: snapshot.balance.toString(),
+        },
+        ':ratio': {
+          N: snapshot.ratio.toString(),
+        },
+        ':supply': {
+          N: snapshot.supply.toString(),
+        },
+        ':updatedAt': {
+          N: Date.now().toString(),
+        },
+        ':settValue': {
+          N: snapshot.settValue.toString(),
+        },
       },
     },
   };
@@ -56,7 +72,7 @@ function settToSnapshot(chainNetwork: ChainNetwork): (settToken: string) => Prom
       ratio,
       address: settToken,
       updatedAt: Date.now(),
-      value: parseFloat(value.toFixed(2)),
+      settValue: parseFloat(value.toFixed(2)),
     };
   };
 }
@@ -75,10 +91,11 @@ export async function refreshSettSnapshots() {
     }),
   ]);
 
+  const transactItems = snapshots.map((snapshot) => snapshotToTransactItem(snapshot));
   for (let i = 0; i < snapshots.length; i += BATCH_SIZE) {
-    const batchedSnapshots = snapshots.slice(i, i + BATCH_SIZE);
+    const batchedTransactItems = transactItems.slice(i, i + BATCH_SIZE);
     await transactWrite({
-      TransactItems: batchedSnapshots.map((snapshot) => snapshotToTransactItem(snapshot)),
+      TransactItems: batchedTransactItems,
     });
   }
 }

@@ -117,13 +117,9 @@ resources:
         KeySchema:
           - AttributeName: "address"
             KeyType: "HASH"
-          - AttributeName: "updatedAt"
-            KeyType: "RANGE"
         AttributeDefinitions:
           - AttributeName: "address"
             AttributeType: "S"
-          - AttributeName: "updatedAt"
-            AttributeType: "N"
 
 functions:
   request-handler:

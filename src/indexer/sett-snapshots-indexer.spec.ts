@@ -50,8 +50,8 @@ describe('refreshSettSnapshots', () => {
   it('saves Setts in Dynamo', () => {
     const requestedAddresses = [];
     // Verify each saved object.
-    for (const input of transactWrite.mock.calls[0]) {
-      const { TransactItems: transactItems } = input;
+    for (const input of transactWrite.mock.calls) {
+      const { TransactItems: transactItems } = input[0];
       for (const transactItem of transactItems) {
         expect(transactItem.Update).toBeDefined();
 
@@ -62,7 +62,7 @@ describe('refreshSettSnapshots', () => {
           ':balance': { N: expect.any(String) },
           ':supply': { N: expect.any(String) },
           ':ratio': { N: expect.any(String) },
-          ':value': { N: expect.any(String) },
+          ':settValue': { N: expect.any(String) },
           ':updatedAt': { N: expect.any(String) },
         });
 

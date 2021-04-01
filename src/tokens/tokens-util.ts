@@ -17,7 +17,9 @@ export const getToken = (contract: string): Token => {
 
 export const getTokenByName = (name: string): Token => {
   const searchName = name.toLowerCase();
-  const token = Object.values(protocolTokens).find((token) => token.name.toLowerCase() === searchName);
+  const token = Object.values(protocolTokens).find(
+    (token) => token.name.toLowerCase() === searchName || token.lookupName?.toLowerCase() === searchName,
+  );
   if (!token) {
     throw new BadRequest(`${name} not supported`);
   }
