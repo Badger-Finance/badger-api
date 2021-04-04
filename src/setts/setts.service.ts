@@ -11,6 +11,7 @@ import {
   ASSET_DATA,
   CURRENT,
   ONE_DAY,
+  ONE_MINUTE_MS,
   ONE_YEAR_MS,
   SAMPLE_DAYS,
   SETT_SNAPSHOTS_DATA,
@@ -31,7 +32,7 @@ import { TokenRequest } from '../tokens/interfaces/token-request.interface';
 import { getToken } from '../tokens/tokens-util';
 import { TokensService } from '../tokens/TokensService';
 import { CachedSettSnapshot } from './interfaces/cached-sett-snapshot.interface';
-import { VAULT_SOURCE } from './setts-util';
+import { getSett, VAULT_SOURCE } from './setts-util';
 
 @Service()
 export class SettsService {
@@ -111,9 +112,18 @@ export class SettsService {
           throw new InternalServerError(errors.join(' '));
         }, identity),
       );
-
+      let supply = settSnapshot.supply;
       balance = settSnapshot.balance;
-      sett.ppfs = settSnapshot.balance / settSnapshot.supply;
+
+      if (Date.now() - settSnapshot.updatedAt > ONE_MINUTE_MS) {
+        const { sett } = await getSett(chain.graphUrl, settDefinition.settToken);
+        if (sett) {
+          balance = sett.balance;
+          supply = sett.totalSupply;
+        }
+      }
+
+      sett.ppfs = balance / supply;
       if (settDefinition.depositToken === TOKENS.DIGG) {
         sett.ppfs *= 1e9;
       }
