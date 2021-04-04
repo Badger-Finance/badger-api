@@ -118,8 +118,7 @@ export class SettsService {
       if (Date.now() - settSnapshot.updatedAt > ONE_MINUTE_MS) {
         const { sett } = await getSett(chain.graphUrl, settDefinition.settToken);
         if (sett) {
-          balance = sett.balance;
-          supply = sett.totalSupply;
+          ({ balance, totalSupply: supply } = sett);
         }
       }
 
