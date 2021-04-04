@@ -12,7 +12,7 @@ import { Emission, Geyser, UnlockSchedule } from '../interface/Geyser';
 import { Sett } from '../interface/Sett';
 import { PricesService } from '../prices/PricesService';
 import { ValueSource } from '../protocols/interfaces/value-source.interface';
-import { SettsService } from '../setts/SettsService';
+import { SettsService } from '../setts/setts.service';
 import { getToken } from '../tokens/tokens-util';
 import { TokensService } from '../tokens/TokensService';
 

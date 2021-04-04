@@ -3,7 +3,7 @@ import { ContentType } from '@tsed/schema';
 import { Chain } from '../chains/config/chain.config';
 import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { Sett } from '../interface/Sett';
-import { SettsService } from './SettsService';
+import { SettsService } from './setts.service';
 
 @Controller('/setts')
 export class SettsController {
