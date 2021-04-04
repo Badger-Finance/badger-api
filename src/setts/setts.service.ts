@@ -86,23 +86,24 @@ export class SettsService {
       sources: [],
     };
 
-    const record = await query({
-      TableName: SETT_SNAPSHOTS_DATA,
-      KeyConditionExpression: '#address = :address',
-      ExpressionAttributeValues: {
-        ':address': { S: settDefinition.settToken },
-      },
-      ExpressionAttributeNames: {
-        '#address': 'address',
-      },
-    });
-
     // Set to current balance, fallback to snapshot
     let balance = 0;
-    let settSnapshots: SettSnapshot[] = [];
+    const [settSnapshots, latestSettRecord] = await Promise.all([
+      this.getSettSnapshots(settName, SAMPLE_DAYS),
+      query({
+        TableName: SETT_SNAPSHOTS_DATA,
+        KeyConditionExpression: '#address = :address',
+        ExpressionAttributeValues: {
+          ':address': { S: settDefinition.settToken },
+        },
+        ExpressionAttributeNames: {
+          '#address': 'address',
+        },
+      }),
+    ]);
 
-    if (record && record.Items && record.Items.length > 0) {
-      const item = AWS.DynamoDB.Converter.unmarshall(record.Items[0]);
+    if (latestSettRecord && latestSettRecord.Items && latestSettRecord.Items.length > 0) {
+      const item = AWS.DynamoDB.Converter.unmarshall(latestSettRecord.Items[0]);
       const settSnapshot = pipe(
         item,
         CachedSettSnapshot.decode,
@@ -116,16 +117,13 @@ export class SettsService {
       if (settDefinition.depositToken === TOKENS.DIGG) {
         sett.ppfs *= 1e9;
       }
-    } else {
-      settSnapshots = await this.getSettSnapshots(settName, SAMPLE_DAYS);
-      if (settSnapshots.length > 0) {
-        const latestSett = settSnapshots[CURRENT];
-        balance = latestSett.balance;
-        if (settDefinition.depositToken === TOKENS.DIGG) {
-          sett.ppfs = latestSett.supply / latestSett.balance;
-        } else {
-          sett.ppfs = latestSett.ratio;
-        }
+    } else if (settSnapshots.length > 0) {
+      const latestSett = settSnapshots[CURRENT];
+      balance = latestSett.balance;
+      if (settDefinition.depositToken === TOKENS.DIGG) {
+        sett.ppfs = latestSett.supply / latestSett.balance;
+      } else {
+        sett.ppfs = latestSett.ratio;
       }
     }
 
