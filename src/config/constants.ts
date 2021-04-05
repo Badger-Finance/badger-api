@@ -80,6 +80,7 @@ export const BLOCKS_PER_YEAR = 2425847;
 export const BSC_BLOCKS_PER_YEAR = 10512000;
 
 // data access constants
+export const APY_SNAPSHOTS_DATA = process.env.APY_SNAPSHOTS_DATA || 'MISSING REQUIRED ENV VAR';
 export const ASSET_DATA = process.env.ASSET_DATA || 'MISSING REQUIRED ENV VAR';
 export const PRICE_DATA = process.env.PRICE_DATA || 'MISSING REQUIRED ENV VAR';
 export const SETT_SNAPSHOTS_DATA = process.env.SETT_SNAPSHOTS_DATA || 'MISSING REQUIRED ENV VAR';

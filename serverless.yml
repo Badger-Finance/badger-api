@@ -35,6 +35,9 @@ custom:
           - name: "Chart"
             description: "Chart related API"
   table:
+    APY_SNAPSHOTS_DATA:
+      staging: "badger-staging-apy-snapshots"
+      prod: "badger-apy-snapshots"
     ASSET_DATA:
       staging: "badger-staging-asset"
       prod: "badger-asset"
@@ -72,6 +75,7 @@ provider:
     SUSHISWAP: "https://api.thegraph.com/subgraphs/name/jiro-ono/sushiswap-v1-exchange-staging"
     PANCAKESWAP: "https://api.thegraph.com/subgraphs/name/pancakeswap/exchange"
     MASTERCHEF: "https://api.thegraph.com/subgraphs/name/sushiswap/master-chef"
+    APY_SNAPSHOTS_DATA: ${self:custom.table.APY_SNAPSHOTS_DATA.${self:custom.stage}}
     ASSET_DATA: ${self:custom.table.ASSET_DATA.${self:custom.stage}}
     PRICE_DATA: ${self:custom.table.PRICE_DATA.${self:custom.stage}}
     SETT_SNAPSHOTS_DATA: ${self:custom.table.SETT_SNAPSHOTS_DATA.${self:custom.stage}}
@@ -79,6 +83,17 @@ provider:
 
 resources:
   Resources:
+    apySnapshotsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.table.APY_SNAPSHOTS_DATA.${self:custom.stage}}
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: "address"
+            KeyType: "HASH"
+        AttributeDefinitions:
+          - AttributeName: "address"
+            AttributeType: "S" 
     protocolTable:
       Type: AWS::DynamoDB::Table
       Properties:
