@@ -2,7 +2,8 @@ import { Inject, Service } from '@tsed/di';
 import { GraphQLClient } from 'graphql-request';
 import { CacheService } from '../../cache/CacheService';
 import { Chain } from '../../chains/config/chain.config';
-import { BLOCKS_PER_YEAR, MASTERCHEF_URL, SUSHI_CHEF, SUSHISWAP_URL, TOKENS } from '../../config/constants';
+import { Ethereum } from '../../chains/config/eth.config';
+import { MASTERCHEF_URL, SUSHI_CHEF, SUSHISWAP_URL, TOKENS } from '../../config/constants';
 import {
   getSdk,
   MasterChefsAndPoolsQuery,
@@ -66,7 +67,7 @@ export class SushiswapService extends SwapService {
     const totalAllocPoint = masterChef.totalAllocPoint;
     const poolValue = pool.balance * depositTokenPrice.usd;
     const emissionScalar = pool.allocPoint / totalAllocPoint;
-    const sushiEmission = masterChef.sushiPerBlock * emissionScalar * BLOCKS_PER_YEAR * sushiPrice.usd;
+    const sushiEmission = masterChef.sushiPerBlock * emissionScalar * Ethereum.BLOCKS_PER_YEAR * sushiPrice.usd;
     emissionSource.performance = uniformPerformance((sushiEmission / poolValue) * 100);
     emissionSource.apy = emissionSource.performance.threeDay;
     return emissionSource;
