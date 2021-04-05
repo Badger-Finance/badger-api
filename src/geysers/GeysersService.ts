@@ -71,7 +71,11 @@ export class GeyserService {
         // Calculate Emission Values
         if (badgerEmissionData) {
           const badgerUnlockSchedule = badgerEmissionData.unlockSchedule;
-          const badgerEmitted = badgerUnlockSchedule.initialLocked.toNumber();
+          const badgerAmount = ethers.utils.formatUnits(
+            badgerUnlockSchedule.initialLocked.mul(1000).div(constants.WeiPerEther),
+            3,
+          );
+          const badgerEmitted = parseFloat(badgerAmount);
           const badgerEmissionDuration = badgerUnlockSchedule.endAtSec.sub(badgerUnlockSchedule.startTime).toNumber();
           const badgerEmissionValue = await this.pricesService.getValue(TOKENS.BADGER, badgerEmitted);
           const badgerEmissionValueRate = toRate(badgerEmissionValue, badgerEmissionDuration);
@@ -94,7 +98,8 @@ export class GeyserService {
 
         if (diggEmissionData) {
           const diggUnlockSchedule = diggEmissionData.unlockSchedule;
-          const diggEmitted = diggUnlockSchedule.initialLocked.toNumber();
+          const diggAmount = ethers.utils.formatUnits(diggUnlockSchedule.initialLocked.mul(1000).div(1e9), 3);
+          const diggEmitted = parseFloat(diggAmount);
           const diggEmissionDuration = diggUnlockSchedule.endAtSec.sub(diggUnlockSchedule.startTime).toNumber();
           const diggEmissionValue = await this.pricesService.getValue(TOKENS.DIGG, diggEmitted);
           const diggEmissionValueRate = toRate(diggEmissionValue, diggEmissionDuration);
@@ -152,7 +157,7 @@ export class GeyserService {
           startTime: badgerUnlock.startTime,
           endAtSec: badgerUnlock.endAtSec,
           durationSec: badgerUnlock.durationSec,
-          initialLocked: badgerUnlock.initialLocked.div(constants.WeiPerEther),
+          initialLocked: badgerUnlock.initialLocked,
         },
       };
       emissions.push(badgerEmission);
@@ -167,7 +172,7 @@ export class GeyserService {
           startTime: diggUnlock.startTime,
           endAtSec: diggUnlock.endAtSec,
           durationSec: diggUnlock.durationSec,
-          initialLocked: diggUnlock.initialLocked.div(1e9).div(sharesPerFragment),
+          initialLocked: diggUnlock.initialLocked.div(sharesPerFragment),
         },
       };
       emissions.push(diggEmission);
