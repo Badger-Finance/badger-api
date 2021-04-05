@@ -1,13 +1,20 @@
 import { Inject, Service } from '@tsed/common';
-import { BadRequest, NotFound } from '@tsed/exceptions';
+import { BadRequest, InternalServerError, NotFound } from '@tsed/exceptions';
+import * as AWS from 'aws-sdk';
 import { ethers } from 'ethers';
+import * as E from 'fp-ts/lib/Either';
+import { identity } from 'fp-ts/lib/function';
+import { pipe } from 'fp-ts/lib/pipeable';
+import { query } from '../aws/dynamodb-utils';
 import { Chain } from '../chains/config/chain.config';
 import {
   ASSET_DATA,
   CURRENT,
   ONE_DAY,
+  ONE_MINUTE_MS,
   ONE_YEAR_MS,
   SAMPLE_DAYS,
+  SETT_SNAPSHOTS_DATA,
   SEVEN_DAYS,
   THIRTY_DAYS,
   THREE_DAYS,
@@ -17,7 +24,6 @@ import { getAssetData } from '../config/util';
 import { ProtocolSummary } from '../interface/ProtocolSummary';
 import { Sett, SettSummary } from '../interface/Sett';
 import { SettSnapshot } from '../interface/SettSnapshot';
-import { PricesService } from '../prices/PricesService';
 import { Performance, scalePerformance } from '../protocols/interfaces/performance.interface';
 import { ValueSource } from '../protocols/interfaces/value-source.interface';
 import { ProtocolsService } from '../protocols/ProtocolsService';
@@ -25,16 +31,15 @@ import { TokenType } from '../tokens/enums/token-type.enum';
 import { TokenRequest } from '../tokens/interfaces/token-request.interface';
 import { getToken } from '../tokens/tokens-util';
 import { TokensService } from '../tokens/TokensService';
+import { CachedSettSnapshot } from './interfaces/cached-sett-snapshot.interface';
 import { getSett, VAULT_SOURCE } from './setts-util';
 
 @Service()
 export class SettsService {
   @Inject()
-  protocolsService!: ProtocolsService;
+  private readonly protocolsService!: ProtocolsService;
   @Inject()
-  tokensSerivce!: TokensService;
-  @Inject()
-  pricesService!: PricesService;
+  private readonly tokensSerivce!: TokensService;
 
   async getProtocolSummary(chain: Chain, currency?: string): Promise<ProtocolSummary> {
     const setts = await this.listSetts(chain, currency);
@@ -82,17 +87,42 @@ export class SettsService {
       sources: [],
     };
 
-    const [settSnapshots, settData] = await Promise.all([
+    // Set to current balance, fallback to snapshot
+    let balance = 0;
+    const [settSnapshots, latestSettRecord] = await Promise.all([
       this.getSettSnapshots(settName, SAMPLE_DAYS),
-      getSett(chain.graphUrl, settDefinition.settToken),
+      query({
+        TableName: SETT_SNAPSHOTS_DATA,
+        KeyConditionExpression: '#address = :address',
+        ExpressionAttributeValues: {
+          ':address': { S: settDefinition.settToken },
+        },
+        ExpressionAttributeNames: {
+          '#address': 'address',
+        },
+      }),
     ]);
 
-    // set to current balance, fallback to snapshot
-    let balance = 0;
-    if (settData.sett) {
-      const currentSett = settData.sett;
-      balance = currentSett.balance;
-      sett.ppfs = currentSett.balance / currentSett.totalSupply;
+    if (latestSettRecord && latestSettRecord.Items && latestSettRecord.Items.length > 0) {
+      const item = AWS.DynamoDB.Converter.unmarshall(latestSettRecord.Items[0]);
+      const settSnapshot = pipe(
+        item,
+        CachedSettSnapshot.decode,
+        E.fold((errors) => {
+          throw new InternalServerError(errors.join(' '));
+        }, identity),
+      );
+      let supply = settSnapshot.supply;
+      balance = settSnapshot.balance;
+
+      if (Date.now() - settSnapshot.updatedAt > ONE_MINUTE_MS) {
+        const { sett } = await getSett(chain.graphUrl, settDefinition.settToken);
+        if (sett) {
+          ({ balance, totalSupply: supply } = sett);
+        }
+      }
+
+      sett.ppfs = balance / supply;
       if (settDefinition.depositToken === TOKENS.DIGG) {
         sett.ppfs *= 1e9;
       }

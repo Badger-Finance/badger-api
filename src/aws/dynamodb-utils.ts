@@ -10,6 +10,7 @@ import {
   KeySchema,
   PutItemInput,
   QueryInput,
+  QueryOutput,
   TableDescription,
   TransactWriteItemsInput,
 } from 'aws-sdk/clients/dynamodb';
@@ -36,6 +37,10 @@ export const saveItems = async (items: BatchWriteItemRequestMap): Promise<void> 
     RequestItems: items,
   };
   await documentClient.batchWrite(params).promise();
+};
+
+export const query = async (input: QueryInput): Promise<QueryOutput> => {
+  return client.query(input).promise();
 };
 
 export const getItems = async <T>(query: QueryInput): Promise<T[] | null> => {

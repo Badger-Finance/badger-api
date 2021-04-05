@@ -1,7 +1,7 @@
 import { Controller, Get, Inject, QueryParams } from '@tsed/common';
 import { ContentType } from '@tsed/schema';
 import { SettSnapshot } from '../interface/SettSnapshot';
-import { SettsService } from '../setts/SettsService';
+import { SettsService } from '../setts/setts.service';
 
 @Controller('/charts')
 export class ChartsController {
