@@ -123,9 +123,6 @@ export class SettsService {
       }
 
       sett.ppfs = balance / supply;
-      if (settDefinition.depositToken === TOKENS.DIGG) {
-        sett.ppfs *= 1e9;
-      }
     } else if (settSnapshots.length > 0) {
       const latestSett = settSnapshots[CURRENT];
       balance = latestSett.balance;

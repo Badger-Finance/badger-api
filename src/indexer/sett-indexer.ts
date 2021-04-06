@@ -25,7 +25,7 @@ export const indexAsset = async (event: EventInput) => {
     const blockData = await getBlock(block, chain);
     const timestamp = blockData.timestamp * 1000;
     const tokenBalance = balance / Math.pow(10, token.decimals);
-    const supply = totalSupply / Math.pow(10, token.decimals);
+    const supply = totalSupply / Math.pow(10, 18);
     const ratio = pricePerFullShare / Math.pow(10, 18);
     const tokenPriceData = await targetChain.strategy.getPrice(token.id);
     const value = tokenBalance * tokenPriceData.usd;
@@ -34,7 +34,7 @@ export const indexAsset = async (event: EventInput) => {
       asset: asset,
       height: block,
       timestamp: timestamp,
-      balance: balance,
+      balance: tokenBalance,
       supply: supply,
       ratio: ratio,
       value: parseFloat(value.toFixed(2)),

@@ -62,13 +62,13 @@ function settToSnapshot(chainNetwork: ChainNetwork): (settToken: string) => Prom
     }
     const { balance, totalSupply, pricePerFullShare, token } = sett;
     const tokenBalance = balance / Math.pow(10, token.decimals);
-    const supply = totalSupply / Math.pow(10, token.decimals);
+    const supply = totalSupply / Math.pow(10, 18);
     const ratio = pricePerFullShare / Math.pow(10, 18);
     const tokenPriceData = await chain.strategy.getPrice(token.id);
     const value = tokenBalance * tokenPriceData.usd;
 
     return {
-      balance,
+      balance: tokenBalance,
       supply,
       ratio,
       address: settToken,
