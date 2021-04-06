@@ -17,6 +17,7 @@ export class Ethereum extends Chain {
       new ethers.providers.JsonRpcProvider(Provider.Cloudflare),
       new EthStrategy(),
       BADGER_URL,
+      2425847,
     );
     Chain.register(ChainNetwork.Ethereum, this);
   }

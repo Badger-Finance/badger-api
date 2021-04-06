@@ -17,6 +17,7 @@ export class BinanceSmartChain extends Chain {
       new ethers.providers.JsonRpcProvider(Provider.Binance),
       new BscStrategy(),
       BADGER_BSC_URL,
+      10512000,
     );
     Chain.register(ChainNetwork.BinanceSmartChain, this);
   }

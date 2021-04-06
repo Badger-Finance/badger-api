@@ -7,7 +7,6 @@ import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { SettSnapshot } from '../interface/SettSnapshot';
 import AttributeValue = DocumentClient.AttributeValue;
 
-export const THIRTY_MIN_BLOCKS = parseInt(String((30 * 60) / 13));
 const ddb = new AWS.DynamoDB.DocumentClient({ apiVersion: '2012-08-10' });
 
 export interface EventInput {

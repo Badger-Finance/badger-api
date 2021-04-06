@@ -428,33 +428,33 @@ functions:
             contract: "0x88128580acdd9c04ce47afce196875747bf2a9f6"
             createdBlock: 11681030
             asset: "slp-digg-wbtc"
-      # - schedule:
-      #     name: ${self:service}-${self:custom.stage}-index-pancakeswap-bdigg-btcb
-      #     description: "index historical data for badger pancakeswap bdigg-btcb vault"
-      #     rate: rate(5 minutes)
-      #     input:
-      #       contract: "0xaf4B9C4b545D5324904bAa15e29796D2E2f90813"
-      #       createdBlock: 5712807
-      #       asset: "plp-bdigg-btcb"
-      #       chain: "bsc"
-      # - schedule:
-      #     name: ${self:service}-${self:custom.stage}-index-pancakeswap-bbadger-btcb
-      #     description: "index historical data for badger pancakeswap bbadger-btcb vault"
-      #     rate: rate(5 minutes)
-      #     input:
-      #       contract: "0x857F91f735f4B03b19D2b5c6E476C73DB8241F55"
-      #       createdBlock: 5712803
-      #       asset: "plp-bbadger-btcb"
-      #       chain: "bsc"
-      # - schedule:
-      #     name: ${self:service}-${self:custom.stage}-index-pancakeswap-bnb-btcb
-      #     description: "index historical data for badger pancakeswap bnb-btcb vault"
-      #     rate: rate(5 minutes)
-      #     input:
-      #       contract: "0xaf4B9C4b545D5324904bAa15e29796D2E2f90813"
-      #       createdBlock: 5516404
-      #       asset: "plp-bnb-btcb"
-      #       chain: "bsc"
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-pancakeswap-bdigg-btcb
+          description: "index historical data for badger pancakeswap bdigg-btcb vault"
+          rate: rate(5 minutes)
+          input:
+            contract: "0xaf4B9C4b545D5324904bAa15e29796D2E2f90813"
+            createdBlock: 5712807
+            asset: "plp-bdigg-btcb"
+            chain: "bsc"
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-pancakeswap-bbadger-btcb
+          description: "index historical data for badger pancakeswap bbadger-btcb vault"
+          rate: rate(5 minutes)
+          input:
+            contract: "0x857F91f735f4B03b19D2b5c6E476C73DB8241F55"
+            createdBlock: 5712803
+            asset: "plp-bbadger-btcb"
+            chain: "bsc"
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-pancakeswap-bnb-btcb
+          description: "index historical data for badger pancakeswap bnb-btcb vault"
+          rate: rate(5 minutes)
+          input:
+            contract: "0xaf4B9C4b545D5324904bAa15e29796D2E2f90813"
+            createdBlock: 5516404
+            asset: "plp-bnb-btcb"
+            chain: "bsc"
 
   index-prices:
     handler: src/indexer/price-indexer.indexPrices
