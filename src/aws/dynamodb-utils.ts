@@ -4,6 +4,7 @@ import {
   BatchWriteItemInput,
   BatchWriteItemRequestMap,
   CreateTableInput,
+  DeleteItemInput,
   DeleteTableInput,
   DescribeTableInput,
   DocumentClient,
@@ -14,6 +15,8 @@ import {
   TableDescription,
   TransactWriteItemsInput,
 } from 'aws-sdk/clients/dynamodb';
+import { ASSET_DATA } from '../config/constants';
+import { getAssetData } from '../config/util';
 import AttributeValue = DocumentClient.AttributeValue;
 const dynamodb: DynamoDbClient = require('serverless-dynamodb-client');
 
@@ -115,3 +118,22 @@ export const priceAttributes: AttributeDefinitions = [
     AttributeType: 'N',
   },
 ];
+
+// clear all historic data for reindexing
+export const truncateAsset = async (asset: AttributeValue): Promise<void> => {
+  const snapshots = await getAssetData(ASSET_DATA, asset);
+  if (!snapshots) {
+    return;
+  }
+  await Promise.all(snapshots.map(async snapshot => {
+    const params: DeleteItemInput = {
+      TableName: ASSET_DATA,
+      Key: {
+        asset: asset,
+        height: snapshot.height as AttributeValue,
+      },
+    };
+    console.log("delete", asset, snapshot.height);
+    await documentClient.delete(params).promise();
+  }));
+};
