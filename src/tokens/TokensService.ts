@@ -47,8 +47,6 @@ export class TokensService {
     }
 
     const token = getToken(sett.depositToken);
-    const tokenBalance = balance / Math.pow(10, token.decimals);
-    request.balance = tokenBalance;
     if (token.lpToken) {
       const tokens = await this.getLiquidtyPoolTokenBalances(request);
       this.cacheService.set(cacheKey, tokens);
@@ -60,8 +58,8 @@ export class TokensService {
         name: token.name,
         symbol: token.symbol,
         decimals: token.decimals,
-        balance: tokenBalance,
-        value: await this.pricesService.getValue(token.address, tokenBalance, currency),
+        balance: balance,
+        value: await this.pricesService.getValue(token.address, balance, currency),
       },
     ];
     this.cacheService.set(cacheKey, tokens);
