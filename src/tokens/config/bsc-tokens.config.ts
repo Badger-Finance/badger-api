@@ -64,7 +64,7 @@ export const bscTokensConfig: TokenConfig = {
   [TOKENS.TEST]: {
     address: TOKENS.TEST,
     decimals: 18,
-    lookupName: 'badger-dao',
+    lookupName: 'wrapped-bitcoin',
     name: 'Test',
     symbol: 'TEST',
     type: TokenType.Contract,
