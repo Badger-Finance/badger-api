@@ -9,6 +9,7 @@ import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { SETT_SNAPSHOTS_DATA } from '../config/constants';
 import { CachedSettSnapshot } from '../setts/interfaces/cached-sett-snapshot.interface';
 import { getSett } from '../setts/setts-util';
+import { getToken } from '../tokens/tokens-util';
 
 const BATCH_SIZE = 10;
 
@@ -54,9 +55,10 @@ function snapshotToTransactItem(snapshot: CachedSettSnapshot): TransactWriteItem
 function settToSnapshot(chainNetwork: ChainNetwork): (settToken: string) => Promise<CachedSettSnapshot> {
   const chain = Chain.getChain(chainNetwork);
   return async (settToken: string) => {
+    const targetToken = getToken(settToken);
     const { sett } = await getSett(chain.graphUrl, settToken);
     if (!sett) {
-      throw new NotFound('Sett not found');
+      throw new NotFound(`${targetToken.name} sett not found`);
     }
     const { balance, totalSupply, pricePerFullShare, token } = sett;
     const tokenBalance = balance / Math.pow(10, token.decimals);
