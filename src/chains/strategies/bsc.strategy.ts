@@ -10,10 +10,7 @@ import { ChainStrategy } from './chain.strategy';
 export class BscStrategy extends ChainStrategy {
   constructor() {
     super();
-    ChainStrategy.register(
-      Object.keys(bscTokensConfig),
-      this,
-    );
+    ChainStrategy.register(Object.keys(bscTokensConfig), this);
   }
 
   async getPrice(address: string): Promise<TokenPrice> {

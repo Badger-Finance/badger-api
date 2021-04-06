@@ -10,10 +10,7 @@ import { ChainStrategy } from './chain.strategy';
 export class EthStrategy extends ChainStrategy {
   constructor() {
     super();
-    ChainStrategy.register(
-      Object.keys(ethTokensConfig),
-      this,
-    );
+    ChainStrategy.register(Object.keys(ethTokensConfig), this);
   }
 
   async getPrice(address: string): Promise<TokenPrice> {
