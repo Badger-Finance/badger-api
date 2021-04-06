@@ -53,6 +53,22 @@ export const bscTokensConfig: TokenConfig = {
     symbol: 'Pancakeswap BDIGG/BTCB LP (PLP)',
     type: TokenType.PancakeswapLp,
   },
+  [TOKENS.BSC_BADGER]: {
+    address: TOKENS.BSC_BADGER,
+    decimals: 18,
+    lookupName: 'badger-dao',
+    name: 'Badger',
+    symbol: 'BADGER',
+    type: TokenType.Contract,
+  },
+  [TOKENS.TEST]: {
+    address: TOKENS.TEST,
+    decimals: 18,
+    lookupName: 'badger-dao',
+    name: 'Test',
+    symbol: 'TEST',
+    type: TokenType.Contract,
+  },
   [TOKENS.BSC_BBADGER]: {
     address: TOKENS.BSC_BBADGER,
     decimals: 18,
@@ -76,14 +92,6 @@ export const bscTokensConfig: TokenConfig = {
       symbol: ethTokensConfig[TOKENS.DIGG].symbol,
       network: ChainNetwork.Ethereum,
     },
-  },
-  [TOKENS.BSC_BADGER]: {
-    address: TOKENS.BSC_BADGER,
-    decimals: 18,
-    lookupName: 'badger-dao',
-    name: 'Badger',
-    symbol: 'BADGER',
-    type: TokenType.Contract,
   },
   [TOKENS.BPANCAKE_BNB_BTCB]: {
     address: TOKENS.BPANCAKE_BNB_BTCB,
@@ -121,6 +129,18 @@ export const bscTokensConfig: TokenConfig = {
     vaultToken: {
       address: TOKENS.PANCAKE_BDIGG_BTCB,
       symbol: 'PLP-BDIGG-BTCB',
+      network: ChainNetwork.BinanceSmartChain,
+    },
+  },
+  [TOKENS.BVYWBTC]: {
+    address: TOKENS.BVYWBTC,
+    decimals: 18,
+    name: 'Yearn WBTC',
+    symbol: 'bvyWBTC',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.TEST,
+      symbol: 'TEST',
       network: ChainNetwork.BinanceSmartChain,
     },
   },

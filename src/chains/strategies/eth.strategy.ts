@@ -1,6 +1,5 @@
 import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
-import { TOKENS } from '../../config/constants';
 import { getContractPrice, getTokenPrice, getVaultTokenPrice } from '../../prices/prices-util';
 import { getSushiswapPrice, getUniswapPrice } from '../../protocols/common/swap-util';
 import { ethTokensConfig } from '../../tokens/config/eth-tokens.config';
@@ -12,32 +11,7 @@ export class EthStrategy extends ChainStrategy {
   constructor() {
     super();
     ChainStrategy.register(
-      [
-        TOKENS.BADGER,
-        TOKENS.DIGG,
-        TOKENS.SUSHI,
-        TOKENS.WBTC,
-        TOKENS.WETH,
-        TOKENS.CRV_RENBTC,
-        TOKENS.CRV_TBTC,
-        TOKENS.CRV_SBTC,
-        TOKENS.SUSHI_ETH_WBTC,
-        TOKENS.SUSHI_BADGER_WBTC,
-        TOKENS.SUSHI_DIGG_WBTC,
-        TOKENS.UNI_BADGER_WBTC,
-        TOKENS.UNI_DIGG_WBTC,
-        TOKENS.BBADGER,
-        TOKENS.BDIGG,
-        TOKENS.BUNI_DIGG_WBTC,
-        TOKENS.BUNI_BADGER_WBTC,
-        TOKENS.BSUSHI_ETH_WBTC,
-        TOKENS.BSUSHI_BADGER_WBTC,
-        TOKENS.BSUSHI_DIGG_WBTC,
-        TOKENS.BCRV_RENBTC,
-        TOKENS.BCRV_SBTC,
-        TOKENS.BCRV_TBTC,
-        TOKENS.BCRV_HRENBTC,
-      ],
+      Object.keys(ethTokensConfig),
       this,
     );
   }

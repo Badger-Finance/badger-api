@@ -7,6 +7,8 @@ import { BscStrategy } from '../strategies/bsc.strategy';
 import { Chain } from './chain.config';
 
 export class BinanceSmartChain extends Chain {
+  public static BLOCKS_PER_YEAR = 10512000;
+
   constructor() {
     super(
       'BinanceSmartChain',
@@ -44,4 +46,11 @@ export const bscSetts: SettDefinition[] = [
     settToken: TOKENS.BPANCAKE_BDIGG_BTCB,
     protocol: Protocol.Pancakeswap,
   },
+  {
+    name: 'Yearn WBTC',
+    symbol: 'bvyWBTC',
+    depositToken: TOKENS.TEST,
+    settToken: TOKENS.BVYWBTC,
+    protocol: Protocol.Yearn,
+  }
 ];
