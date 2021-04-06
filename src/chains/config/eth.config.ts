@@ -7,8 +7,6 @@ import { EthStrategy } from '../strategies/eth.strategy';
 import { Chain } from './chain.config';
 
 export class Ethereum extends Chain {
-  public static BLOCKS_PER_YEAR = 2425847;
-
   constructor() {
     super(
       'Ethereum',
@@ -19,7 +17,7 @@ export class Ethereum extends Chain {
       new ethers.providers.JsonRpcProvider(Provider.Cloudflare),
       new EthStrategy(),
       BADGER_URL,
-      Ethereum.BLOCKS_PER_YEAR,
+      2425847,
     );
     Chain.register(ChainNetwork.Ethereum, this);
   }

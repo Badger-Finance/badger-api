@@ -7,8 +7,6 @@ import { BscStrategy } from '../strategies/bsc.strategy';
 import { Chain } from './chain.config';
 
 export class BinanceSmartChain extends Chain {
-  public static BLOCKS_PER_YEAR = 10512000;
-
   constructor() {
     super(
       'BinanceSmartChain',
@@ -19,7 +17,7 @@ export class BinanceSmartChain extends Chain {
       new ethers.providers.JsonRpcProvider(Provider.Binance),
       new BscStrategy(),
       BADGER_BSC_URL,
-      BinanceSmartChain.BLOCKS_PER_YEAR,
+      10512000,
     );
     Chain.register(ChainNetwork.BinanceSmartChain, this);
   }

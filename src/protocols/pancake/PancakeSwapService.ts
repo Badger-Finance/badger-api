@@ -2,7 +2,6 @@ import { formatEther } from '@ethersproject/units';
 import { Inject, Service } from '@tsed/di';
 import { BigNumber, ethers } from 'ethers';
 import { CacheService } from '../../cache/CacheService';
-import { BinanceSmartChain } from '../../chains/config/bsc.config';
 import { Chain } from '../../chains/config/chain.config';
 import { erc20Abi, pancakeChefAbi } from '../../config/abi';
 import { PANCAKE_CHEF, PANCAKESWAP_URL, TOKENS } from '../../config/constants';
@@ -71,8 +70,7 @@ export class PancakeSwapService extends SwapService {
     const depositTokenValue = await getTokenPriceData(poolInfo.lpToken);
     const poolValue = poolBalance * depositTokenValue.usd;
     const emissionScalar = poolInfo.allocPoint.toNumber() / totalAllocPoint.toNumber();
-    const cakeEmission =
-      parseFloat(formatEther(cakePerBlock)) * emissionScalar * BinanceSmartChain.BLOCKS_PER_YEAR * tokenPrice.usd;
+    const cakeEmission = parseFloat(formatEther(cakePerBlock)) * emissionScalar * chain.blocksPerYear * tokenPrice.usd;
     emissionSource.performance = uniformPerformance((cakeEmission / poolValue) * 100);
     emissionSource.apy = emissionSource.performance.threeDay;
     emissionSource.harvestable = true;
