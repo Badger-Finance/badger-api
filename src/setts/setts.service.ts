@@ -133,7 +133,7 @@ export class SettsService {
     let filterHarvestablePerformances = false;
 
     // check for historical performance data
-    if (settSnapshots.length > 0) {
+    if (chain.name != 'BinanceSmartChain' && settSnapshots.length > 0) {
       const settValueSource = this.getSettUnderlyingValueSource(settSnapshots);
 
       // sett has measurable apy, replace underlying with measured actual apy
@@ -233,6 +233,6 @@ export class SettsService {
     const timestampDiff = currentSnapshot.timestamp - sampledSnapshot.timestamp;
     const scalar = ONE_YEAR_MS / timestampDiff;
     const finalRatio = sampledSnapshot.ratio + scalar * ratioDiff;
-    return (finalRatio - sampledSnapshot.ratio) / sampledSnapshot.ratio * 100;
+    return ((finalRatio - sampledSnapshot.ratio) / sampledSnapshot.ratio) * 100;
   }
 }
