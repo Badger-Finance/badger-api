@@ -125,15 +125,17 @@ export const truncateAsset = async (asset: AttributeValue): Promise<void> => {
   if (!snapshots) {
     return;
   }
-  await Promise.all(snapshots.map(async snapshot => {
-    const params: DeleteItemInput = {
-      TableName: ASSET_DATA,
-      Key: {
-        asset: asset,
-        height: snapshot.height as AttributeValue,
-      },
-    };
-    console.log("delete", asset, snapshot.height);
-    await documentClient.delete(params).promise();
-  }));
+  await Promise.all(
+    snapshots.map(async (snapshot) => {
+      const params: DeleteItemInput = {
+        TableName: ASSET_DATA,
+        Key: {
+          asset: asset,
+          height: snapshot.height as AttributeValue,
+        },
+      };
+      console.log('delete', asset, snapshot.height);
+      await documentClient.delete(params).promise();
+    }),
+  );
 };
