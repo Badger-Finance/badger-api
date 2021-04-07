@@ -11,6 +11,7 @@ plugins:
 
 custom:
   stage: ${opt:stage, self:provider.stage}
+
   dynamodb:
     stages:
       - ${self:custom.stage}
@@ -32,6 +33,7 @@ custom:
     SETT_SNAPSHOTS_DATA:
       staging: "badger-staging-sett-snapshots"
       prod: "badger-sett-snapshots"
+
   merkleProofs:
     staging: "badger-staging-merkle-proofs"
     prod: "badger-merkle-proofs"
