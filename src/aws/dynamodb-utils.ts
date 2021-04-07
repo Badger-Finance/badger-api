@@ -134,7 +134,6 @@ export const truncateAsset = async (asset: AttributeValue): Promise<void> => {
           height: snapshot.height as AttributeValue,
         },
       };
-      console.log('delete', asset, snapshot.height);
       await documentClient.delete(params).promise();
     }),
   );
