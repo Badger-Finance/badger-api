@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 import { BADGER_URL, Protocol, Provider, TOKENS } from '../../config/constants';
-import { SettDefinition } from '../../interface/Sett';
+import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { ethTokensConfig } from '../../tokens/config/eth-tokens.config';
 import { ChainNetwork } from '../enums/chain-network.enum';
 import { EthStrategy } from '../strategies/eth.strategy';

@@ -10,9 +10,9 @@ import {
   Pool_OrderBy,
   Sdk as MasterChefGraphqlSdk,
 } from '../../graphql/generated/master-chef';
-import { SettDefinition } from '../../interface/Sett';
 import { getTokenPriceData } from '../../prices/prices-util';
 import { PricesService } from '../../prices/PricesService';
+import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { TokensService } from '../../tokens/TokensService';
 import { SwapService } from '../common/SwapService';
 import { uniformPerformance } from '../interfaces/performance.interface';

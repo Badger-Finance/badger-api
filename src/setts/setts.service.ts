@@ -22,7 +22,6 @@ import {
 } from '../config/constants';
 import { getAssetData } from '../config/util';
 import { ProtocolSummary } from '../interface/ProtocolSummary';
-import { Sett, SettSummary } from '../interface/Sett';
 import { SettSnapshot } from '../interface/SettSnapshot';
 import { Performance, scalePerformance } from '../protocols/interfaces/performance.interface';
 import { ValueSource } from '../protocols/interfaces/value-source.interface';
@@ -32,6 +31,8 @@ import { TokenRequest } from '../tokens/interfaces/token-request.interface';
 import { getToken } from '../tokens/tokens-util';
 import { TokensService } from '../tokens/TokensService';
 import { CachedSettSnapshot } from './interfaces/cached-sett-snapshot.interface';
+import { Sett } from './interfaces/sett.interface.';
+import { SettSummary } from './interfaces/sett-summary.interface';
 import { getSett, VAULT_SOURCE } from './setts-util';
 
 @Service()
@@ -43,20 +44,14 @@ export class SettsService {
 
   async getProtocolSummary(chain: Chain, currency?: string): Promise<ProtocolSummary> {
     const setts = await this.listSetts(chain, currency);
-    const settSummaries = setts.map(
-      (s) =>
-        ({
-          name: s.name,
-          asset: s.asset,
-          value: s.value,
-          tokens: s.tokens,
-        } as SettSummary),
-    );
+    const settSummaries: SettSummary[] = setts.map((s) => ({
+      balance: s.balance,
+      name: s.name,
+      tokens: s.tokens,
+      value: s.value,
+    }));
     const totalValue = settSummaries.map((s) => s.value).reduce((total, value) => (total += value), 0);
-    return {
-      totalValue: totalValue,
-      setts: settSummaries,
-    };
+    return { totalValue: totalValue, setts: settSummaries };
   }
 
   async listSetts(chain: Chain, currency?: string): Promise<Sett[]> {
@@ -76,15 +71,17 @@ export class SettsService {
     }
 
     const sett: Sett = {
-      name: settDefinition.name,
       asset: settDefinition.symbol,
-      vaultToken: settDefinition.settToken,
-      underlyingToken: settDefinition.depositToken,
-      ppfs: 1,
-      value: 0,
       apy: 0,
-      tokens: [],
+      balance: 0,
+      hasBouncer: !!settDefinition.hasBouncer,
+      name: settDefinition.name,
+      ppfs: 1,
       sources: [],
+      tokens: [],
+      underlyingToken: settDefinition.depositToken,
+      value: 0,
+      vaultToken: settDefinition.settToken,
     };
 
     // Set to current balance, fallback to snapshot
@@ -136,7 +133,7 @@ export class SettsService {
     let filterHarvestablePerformances = false;
 
     // check for historical performance data
-    if (chain.name != 'BinanceSmartChain' && settSnapshots.length > 0) {
+    if (settSnapshots.length > 0) {
       const settValueSource = this.getSettUnderlyingValueSource(settSnapshots);
 
       // sett has measurable apy, replace underlying with measured actual apy
@@ -233,10 +230,9 @@ export class SettsService {
     }
     const sampledSnapshot = settSnapshots[sampleIndex];
     const ratioDiff = currentSnapshot.ratio - sampledSnapshot.ratio;
-    const blockDiff = currentSnapshot.height - sampledSnapshot.height;
     const timestampDiff = currentSnapshot.timestamp - sampledSnapshot.timestamp;
-    const slope = ratioDiff / blockDiff;
-    const scalar = (ONE_YEAR_MS / timestampDiff) * blockDiff;
-    return slope * scalar * 100;
+    const scalar = ONE_YEAR_MS / timestampDiff;
+    const finalRatio = sampledSnapshot.ratio + scalar * ratioDiff;
+    return (finalRatio - sampledSnapshot.ratio) / sampledSnapshot.ratio * 100;
   }
 }

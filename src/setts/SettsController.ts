@@ -2,7 +2,7 @@ import { Controller, Get, Inject, PathParams, QueryParams } from '@tsed/common';
 import { ContentType } from '@tsed/schema';
 import { Chain } from '../chains/config/chain.config';
 import { ChainNetwork } from '../chains/enums/chain-network.enum';
-import { Sett } from '../interface/Sett';
+import { Sett } from './interfaces/sett.interface.';
 import { SettsService } from './setts.service';
 
 @Controller('/setts')
