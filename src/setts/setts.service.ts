@@ -5,6 +5,7 @@ import { ethers } from 'ethers';
 import * as E from 'fp-ts/lib/Either';
 import { identity } from 'fp-ts/lib/function';
 import { pipe } from 'fp-ts/lib/pipeable';
+import { Affiliate } from '../affiliates/config/affiliate.config';
 import { query } from '../aws/dynamodb-utils';
 import { Chain } from '../chains/config/chain.config';
 import {
@@ -23,7 +24,7 @@ import {
 import { getAssetData } from '../config/util';
 import { ProtocolSummary } from '../interface/ProtocolSummary';
 import { SettSnapshot } from '../interface/SettSnapshot';
-import { Performance, scalePerformance } from '../protocols/interfaces/performance.interface';
+import { Performance, scalePerformance, uniformPerformance } from '../protocols/interfaces/performance.interface';
 import { ValueSource } from '../protocols/interfaces/value-source.interface';
 import { ProtocolsService } from '../protocols/ProtocolsService';
 import { TokenType } from '../tokens/enums/token-type.enum';
@@ -160,6 +161,7 @@ export class SettsService {
     }
 
     sett.tokens = settTokens;
+    sett.balance = balance;
     sett.value = sett.tokens.reduce((total, tokenBalance) => (total += tokenBalance.value), 0);
 
     const vaultToken = getToken(sett.vaultToken);
@@ -198,6 +200,21 @@ export class SettsService {
       return report;
     });
     sett.apy = sett.sources.map((s) => s.apy).reduce((total, apy) => (total += apy), 0);
+
+    // check for a new vault, no ppfs measurement
+    if (sett.sources.length === 0) {
+      sett.sources.push({
+        name: 'New Vault Offering',
+        apy: 0,
+        performance: uniformPerformance(0),
+      });
+    }
+
+    if (settDefinition.affiliate) {
+      const affiliate = Affiliate.getAffiliate(settDefinition.affiliate);
+      sett.affiliate = await affiliate.getAffiliateVaultData(chain, settDefinition);
+    }
+
     return sett;
   }
 

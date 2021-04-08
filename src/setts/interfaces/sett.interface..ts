@@ -1,7 +1,7 @@
 import { Geyser } from '../../interface/Geyser';
 import { TokenBalance } from '../../interface/TokenBalance';
 import { ValueSource } from '../../protocols/interfaces/value-source.interface';
-import { Affiliate } from './affiliate.interface';
+import { SettAffiliateData } from './sett-affiliate-data.interface';
 import { SettSummary } from './sett-summary.interface';
 
 /**
@@ -21,5 +21,5 @@ export interface Sett extends SettSummary {
   tokens: TokenBalance[];
   underlyingToken: string;
   vaultToken: string;
-  affiliate?: Affiliate;
+  affiliate?: SettAffiliateData;
 }

@@ -1,8 +1,8 @@
 import { Protocol } from '../../config/constants';
-import { Affiliate } from './affiliate.interface';
+import { SettAffiliateData } from './sett-affiliate-data.interface';
 
 export interface SettDefinition {
-  affiliate?: Affiliate;
+  affiliate?: SettAffiliateData;
   depositToken: string;
   geyserAddress?: string;
   hasBouncer?: boolean;
