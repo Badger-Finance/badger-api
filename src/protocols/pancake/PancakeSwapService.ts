@@ -34,13 +34,13 @@ export class PancakeSwapService extends SwapService {
     }
     const [tradeFeePerformance, poolApr] = await Promise.all([
       this.getSwapPerformance(depositToken),
-      this.getPoolApr(chain, sett.depositToken, getPoolId(sett.depositToken)),
+      this.getPoolApr(chain, sett.depositToken, PancakeSwapService.getPoolId(sett.depositToken)),
     ]);
     return [tradeFeePerformance, poolApr];
   }
 
   async getPoolApr(chain: Chain, contract: string, poolId: number): Promise<ValueSource> {
-    const emissionSource: ValueSource = {
+    let emissionSource: ValueSource = {
       name: 'Cake',
       apy: 0,
       performance: uniformPerformance(0),
@@ -53,6 +53,17 @@ export class PancakeSwapService extends SwapService {
     if (cachedValueSource) {
       return cachedValueSource;
     }
+    emissionSource = await PancakeSwapService.getEmissionSource(chain, poolId);
+    this.cacheService.set(cacheKey, emissionSource);
+    return emissionSource;
+  }
+
+  static async getEmissionSource(chain: Chain, poolId: number): Promise<ValueSource> {
+    const emissionSource: ValueSource = {
+      name: 'Cake',
+      apy: 0,
+      performance: uniformPerformance(0),
+    };
     const masterChef = new ethers.Contract(PANCAKE_CHEF, pancakeChefAbi, chain.provider);
     const [totalAllocPoint, cakePerBlock, poolInfo, tokenPrice]: [
       BigNumber,
@@ -74,16 +85,15 @@ export class PancakeSwapService extends SwapService {
     emissionSource.performance = uniformPerformance((cakeEmission / poolValue) * 100);
     emissionSource.apy = emissionSource.performance.threeDay;
     emissionSource.harvestable = true;
-    this.cacheService.set(cacheKey, emissionSource);
     return emissionSource;
   }
-}
 
-// TODO: Remove this once pancakeswap masterchef subgraph has synced
-const getPoolId = (depositToken: string): number => {
-  const poolMap: Record<string, number> = {};
-  poolMap[TOKENS.PANCAKE_BNB_BTCB] = 15;
-  poolMap[TOKENS.PANCAKE_BBADGER_BTCB] = 106;
-  poolMap[TOKENS.PANCAKE_BDIGG_BTCB] = 104;
-  return poolMap[depositToken];
-};
+  // TODO: Remove this once pancakeswap masterchef subgraph has synced
+  static getPoolId(depositToken: string): number {
+    const poolMap: Record<string, number> = {};
+    poolMap[TOKENS.PANCAKE_BNB_BTCB] = 15;
+    poolMap[TOKENS.PANCAKE_BBADGER_BTCB] = 106;
+    poolMap[TOKENS.PANCAKE_BDIGG_BTCB] = 104;
+    return poolMap[depositToken];
+  }
+}
