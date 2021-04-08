@@ -15,16 +15,14 @@ import {
   TransactWriteItemsInput,
 } from 'aws-sdk/clients/dynamodb';
 import AttributeValue = DocumentClient.AttributeValue;
-// const dynamodb: DynamoDbClient = require('serverless-dynamodb-client');
+const dynamodb: DynamoDbClient = require('serverless-dynamodb-client');
 
-// interface DynamoDbClient {
-//   doc: AWS.DynamoDB.DocumentClient;
-//   raw: AWS.DynamoDB;
-// }
-// const documentClient = dynamodb.doc;
-// const client = dynamodb.raw;
-const documentClient = new AWS.DynamoDB.DocumentClient();
-const client = new AWS.DynamoDB();
+interface DynamoDbClient {
+  doc: AWS.DynamoDB.DocumentClient;
+  raw: AWS.DynamoDB;
+}
+const documentClient = dynamodb.doc;
+const client = dynamodb.raw;
 
 export const saveItem = async (table: string, item: AttributeValue): Promise<void> => {
   const params: PutItemInput = {
