@@ -16,6 +16,7 @@ import {
   getTokenPriceData,
   getVaultTokenPrice,
   inCurrency,
+  noPrice,
   priceCache,
   updatePrice,
   updatePrices,
@@ -62,8 +63,13 @@ describe('prices-util', () => {
 
   describe('getPrice', () => {
     describe('when price is not available', () => {
-      it('throws an error', async () => {
-        await expect(getPrice(TOKENS.CAKE)).rejects.toThrow(NotFound);
+      it('returns a price of 0', async () => {
+        const cake = getToken(TOKENS.CAKE);
+        const cakePrice = await getPrice(cake.address);
+        expect(cakePrice).toBeDefined();
+        const expected = noPrice(cake);
+        expected.updatedAt = cakePrice.updatedAt;
+        expect(cakePrice).toMatchObject(expected);
       });
     });
 
@@ -98,11 +104,21 @@ describe('prices-util', () => {
 
     describe('update supported token', () => {
       it('creates an price db entry', async () => {
-        await expect(getPrice(TOKENS.BADGER)).rejects.toThrow(NotFound);
-        const badgerToken = getToken(TOKENS.BADGER);
-        await updatePrice(badgerToken);
+        const badger = getToken(TOKENS.BADGER);
+        const noPrice = await getPrice(badger.address);
+        const expected: TokenPriceSnapshot = {
+          name: badger.name,
+          address: badger.address,
+          usd: 0,
+          eth: 0,
+          updatedAt: noPrice.updatedAt,
+        };
+        expect(noPrice).toMatchObject(expected);
+        await updatePrice(badger);
         const badgerPrice = await getPrice(TOKENS.BADGER);
         expect(badgerPrice).toBeDefined();
+        expect(badgerPrice.usd).toBeGreaterThan(0);
+        expect(badgerPrice.eth).toBeGreaterThan(0);
       });
     });
   });
@@ -141,19 +157,37 @@ describe('prices-util', () => {
 
     describe('update supported tokens', () => {
       it('updates prices for all tokens requested', async () => {
-        await expect(getPrice(TOKENS.DIGG)).rejects.toThrow(NotFound);
-        await expect(getPrice(TOKENS.BADGER)).rejects.toThrow(NotFound);
-        const diggToken = getToken(TOKENS.DIGG);
-        const badgerToken = getToken(TOKENS.BADGER);
+        const digg = getToken(TOKENS.DIGG);
+        const badger = getToken(TOKENS.BADGER);
+
+        const noDigg = await getPrice(digg.address);
+        const expectNoDigg = noPrice(digg);
+        expectNoDigg.updatedAt = noDigg.updatedAt;
+        expect(noDigg).toMatchObject(expectNoDigg);
+
+        const noBadger = await getPrice(badger.address);
+        const expectNoBadger = noPrice(badger);
+        expectNoBadger.updatedAt = noBadger.updatedAt;
+        expect(noBadger).toMatchObject(expectNoBadger);
+
         const tokenConfig = {
-          [TOKENS.DIGG]: diggToken,
-          [TOKENS.BADGER]: badgerToken,
+          [TOKENS.DIGG]: digg,
+          [TOKENS.BADGER]: badger,
         };
+
         await updatePrices(tokenConfig);
-        const diggPrice = await getPrice(TOKENS.DIGG);
-        expect(diggPrice).toBeDefined();
-        const badgerPrice = await getPrice(TOKENS.BADGER);
-        expect(badgerPrice).toBeDefined();
+        const diggPrice = await getPrice(digg.address);
+        const expectedDigg = {
+          ...(await testStrategy.getPrice(digg.address)),
+          updatedAt: diggPrice.updatedAt,
+        };
+        expect(diggPrice).toMatchObject(expectedDigg);
+        const badgerPrice = await getPrice(badger.address);
+        const expectedBadger = {
+          ...(await testStrategy.getPrice(badger.address)),
+          updatedAt: badgerPrice.updatedAt,
+        };
+        expect(badgerPrice).toMatchObject(expectedBadger);
       });
     });
   });
@@ -192,7 +226,7 @@ describe('prices-util', () => {
   describe('getPriceData', () => {
     it('gets all token pricing for the system', async () => {
       await updatePrices(protocolTokens);
-      const priceData = await getPriceData();
+      const priceData = await getPriceData(protocolTokens);
       for (const token of Object.keys(protocolTokens)) {
         const tokenPrice = getPrice(token);
         expect(priceData[token]).toMatchObject(tokenPrice);

@@ -12,15 +12,28 @@ plugins:
 custom:
   stage: ${opt:stage, self:provider.stage}
 
+  # todo: enable a local stage
   dynamodb:
     stages:
-      - ${self:custom.stage}
-    inMemory: true
-    migration: true
+      - staging
+    start:
+      port: 8000
+      inMemory: true
+      heapInitial: 200m
+      heapMax: 1g
+      migrate: true
+      seed: true
+      convertEmptyValues: true
+    seed:
+      default:
+        sources:
+          - table: ${self:custom.table.PRICE_DATA.${self:custom.stage}}
+            sources: [./seed/prices.json]
 
   serverless-offline:
     noPrependStageInUrl: true
 
+  # todo: rename tables using stage variable
   table:
     APY_SNAPSHOTS_DATA:
       staging: "badger-staging-apy-snapshots"
@@ -78,7 +91,8 @@ resources:
             KeyType: "HASH"
         AttributeDefinitions:
           - AttributeName: "address"
-            AttributeType: "S" 
+            AttributeType: "S"
+
     protocolTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -94,6 +108,7 @@ resources:
             AttributeType: "S"
           - AttributeName: "height"
             AttributeType: "N"
+
     priceTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -109,6 +124,7 @@ resources:
             AttributeType: "S"
           - AttributeName: "updatedAt"
             AttributeType: "N"
+
     settsSnapshotsTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -262,7 +278,7 @@ functions:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-prices
           description: "index price data for all protocol tokens"
-          rate: rate(5 minutes)
+          rate: rate(1 minute)
 
   index-sett-snapshots:
     handler: src/indexer/sett-snapshots-indexer.refreshSettSnapshots
