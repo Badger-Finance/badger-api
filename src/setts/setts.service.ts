@@ -117,6 +117,8 @@ export class SettsService {
         const { sett } = await getSett(chain.graphUrl, settDefinition.settToken);
         if (sett) {
           ({ balance, totalSupply: supply } = sett);
+          balance /= Math.pow(10, getToken(settDefinition.depositToken).decimals);
+          supply /= Math.pow(10, 18);
         }
       }
 

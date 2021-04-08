@@ -7,7 +7,9 @@ import { Chain } from '../chains/config/chain.config';
 import { ethSetts } from '../chains/config/eth.config';
 import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { SETT_SNAPSHOTS_DATA } from '../config/constants';
+import { successfulCapture } from '../config/util';
 import { CachedSettSnapshot } from '../setts/interfaces/cached-sett-snapshot.interface';
+import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { getSett } from '../setts/setts-util';
 import { getToken } from '../tokens/tokens-util';
 
@@ -58,6 +60,7 @@ function settToSnapshot(chainNetwork: ChainNetwork): (settToken: string) => Prom
     const targetToken = getToken(settToken);
     const { sett } = await getSett(chain.graphUrl, settToken);
     if (!sett) {
+      // sett has not been indexed yet, or encountered a graph error
       throw new NotFound(`${targetToken.name} sett not found`);
     }
     const { balance, totalSupply, pricePerFullShare, token } = sett;
@@ -78,19 +81,26 @@ function settToSnapshot(chainNetwork: ChainNetwork): (settToken: string) => Prom
   };
 }
 
+const captureSnapshot = async (network: ChainNetwork, sett: SettDefinition): Promise<CachedSettSnapshot | null> => {
+  try {
+    const snapshotTranslateFn = settToSnapshot(network);
+    // purposefully await to leverage try / catch
+    const result = await snapshotTranslateFn(sett.settToken);
+    return result;
+  } catch (err) {
+    return null;
+  }
+};
+
 export async function refreshSettSnapshots() {
   loadChains();
 
-  const snapshots = await Promise.all([
-    ...bscSetts.map(async (settDefinition) => {
-      const snapshotTranslateFn = settToSnapshot(ChainNetwork.BinanceSmartChain);
-      return snapshotTranslateFn(settDefinition.settToken);
-    }),
-    ...ethSetts.map(async (settDefinition) => {
-      const snapshotTranslateFn = settToSnapshot(ChainNetwork.Ethereum);
-      return snapshotTranslateFn(settDefinition.settToken);
-    }),
-  ]);
+  const snapshots = (
+    await Promise.all([
+      ...bscSetts.map(async (settDefinition) => captureSnapshot(ChainNetwork.BinanceSmartChain, settDefinition)),
+      ...ethSetts.map(async (settDefinition) => captureSnapshot(ChainNetwork.Ethereum, settDefinition)),
+    ])
+  ).filter(successfulCapture);
 
   const transactItems = snapshots.map((snapshot) => snapshotToTransactItem(snapshot));
   for (let i = 0; i < snapshots.length; i += BATCH_SIZE) {
