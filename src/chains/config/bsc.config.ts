@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 import { BADGER_BSC_URL, Protocol, Provider, TOKENS } from '../../config/constants';
-import { SettDefinition } from '../../interface/Sett';
+import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { bscTokensConfig } from '../../tokens/config/bsc-tokens.config';
 import { ChainNetwork } from '../enums/chain-network.enum';
 import { BscStrategy } from '../strategies/bsc.strategy';
@@ -46,10 +46,13 @@ export const bscSetts: SettDefinition[] = [
     protocol: Protocol.Pancakeswap,
   },
   {
+    hasBouncer: true,
     name: 'Yearn WBTC',
     symbol: 'bvyWBTC',
     depositToken: TOKENS.TEST,
     settToken: TOKENS.BVYWBTC,
-    protocol: Protocol.Yearn,
+    affiliate: {
+      protocol: Protocol.Yearn,
+    },
   },
 ];
