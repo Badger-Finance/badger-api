@@ -44,6 +44,7 @@
     "method-override": "^3.0.0",
     "node-cache": "^5.1.2",
     "node-fetch": "^2.6.1",
+    "serverless-dynamodb-client": "^0.0.2",
     "tslib": "^2.1.0"
   },
   "devDependencies": {
@@ -77,7 +78,6 @@
     "jsonfile": "^6.1.0",
     "prettier": "^2.2.1",
     "serverless": "^2.23.0",
-    "serverless-dynamodb-client": "^0.0.2",
     "serverless-dynamodb-local": "^0.2.39",
     "serverless-offline": "^6.8.0",
     "serverless-plugin-typescript": "^1.1.9",
