@@ -1,6 +1,6 @@
 import { BadRequest } from '@tsed/exceptions';
 import { ethers } from 'ethers';
-import { SettDefinition } from '../../interface/Sett';
+import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { TokenConfig } from '../../tokens/types/token-config.type';
 import { ChainNetwork } from '../enums/chain-network.enum';
 import { ChainStrategy } from '../strategies/chain.strategy';
@@ -17,6 +17,7 @@ export abstract class Chain {
   readonly provider: ethers.providers.JsonRpcProvider;
   readonly strategy: ChainStrategy;
   readonly graphUrl: string;
+  readonly blocksPerYear: number;
 
   constructor(
     name: string,
@@ -27,6 +28,7 @@ export abstract class Chain {
     provider: ethers.providers.JsonRpcProvider,
     strategy: ChainStrategy,
     graphUrl: string,
+    blocksPerYear: number,
   ) {
     this.name = name;
     this.symbol = symbol;
@@ -36,6 +38,7 @@ export abstract class Chain {
     this.provider = provider;
     this.strategy = strategy;
     this.graphUrl = graphUrl;
+    this.blocksPerYear = blocksPerYear;
   }
 
   static register(network: ChainNetwork, chain: Chain): void {

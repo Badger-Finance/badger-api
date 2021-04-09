@@ -4,14 +4,19 @@ import {
   BatchWriteItemInput,
   BatchWriteItemRequestMap,
   CreateTableInput,
+  DeleteItemInput,
   DeleteTableInput,
   DescribeTableInput,
   DocumentClient,
   KeySchema,
   PutItemInput,
   QueryInput,
+  QueryOutput,
   TableDescription,
+  TransactWriteItemsInput,
 } from 'aws-sdk/clients/dynamodb';
+import { ASSET_DATA } from '../config/constants';
+import { getAssetData } from '../config/util';
 import AttributeValue = DocumentClient.AttributeValue;
 const dynamodb: DynamoDbClient = require('serverless-dynamodb-client');
 
@@ -37,10 +42,18 @@ export const saveItems = async (items: BatchWriteItemRequestMap): Promise<void> 
   await documentClient.batchWrite(params).promise();
 };
 
+export const query = async (input: QueryInput): Promise<QueryOutput> => {
+  return client.query(input).promise();
+};
+
 export const getItems = async <T>(query: QueryInput): Promise<T[] | null> => {
   const data = await documentClient.query(query).promise();
   if (!data.Items || data.Items.length === 0) return null;
   return data.Items as T[];
+};
+
+export const transactWrite = async (input: TransactWriteItemsInput): Promise<void> => {
+  await client.transactWriteItems(input).promise();
 };
 
 export const getTable = async (table: string): Promise<TableDescription | undefined> => {
@@ -105,3 +118,23 @@ export const priceAttributes: AttributeDefinitions = [
     AttributeType: 'N',
   },
 ];
+
+// clear all historic data for reindexing
+export const truncateAsset = async (asset: AttributeValue): Promise<void> => {
+  const snapshots = await getAssetData(ASSET_DATA, asset);
+  if (!snapshots) {
+    return;
+  }
+  await Promise.all(
+    snapshots.map(async (snapshot) => {
+      const params: DeleteItemInput = {
+        TableName: ASSET_DATA,
+        Key: {
+          asset: asset,
+          height: snapshot.height as AttributeValue,
+        },
+      };
+      await documentClient.delete(params).promise();
+    }),
+  );
+};

@@ -1,4 +1,4 @@
-import { SettSummary } from './Sett';
+import { SettSummary } from '../setts/interfaces/sett-summary.interface';
 
 export interface ProtocolSummary {
   totalValue: number;

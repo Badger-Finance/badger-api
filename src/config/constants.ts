@@ -35,16 +35,17 @@ const RAW_TOKENS = {
   PANCAKE_BBADGER_BTCB: '0x10F461CEAC7A17F59e249954Db0784d42EfF5DB5',
   PANCAKE_BDIGG_BTCB: '0xE1E33459505bB3763843a426F7Fd9933418184ae',
 
+  // test tokens
+  TEST: '0xEd2a8Ab49DcbCb8C27650cC8D5229Cefcad52e2a',
+
   // eth vault tokens
   BBADGER: '0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28',
   BDIGG: '0x7e7e112a68d8d2e221e11047a72ffc1065c38e1a',
   BUNI_BADGER_WBTC: '0x235c9e24d3fb2fafd58a2e49d454fdcd2dbf7ff1',
   BUNI_DIGG_WBTC: '0xc17078fdd324cc473f8175dc5290fae5f2e84714',
-
   BSUSHI_ETH_WBTC: '0x758a43ee2bff8230eeb784879cdcff4828f2544d',
   BSUSHI_BADGER_WBTC: '0x1862a18181346ebd9edaf800804f89190def24a5',
   BSUSHI_DIGG_WBTC: '0x88128580acdd9c04ce47afce196875747bf2a9f6',
-
   BCRV_SBTC: '0xd04c48a53c111300ad41190d63681ed3dad998ec',
   BCRV_RENBTC: '0x6def55d2e18486b9ddfaa075bc4e4ee0b28c1545',
   BCRV_TBTC: '0xb9d076fde463dbc9f915e5392f807315bf940334',
@@ -54,6 +55,7 @@ const RAW_TOKENS = {
   BPANCAKE_BNB_BTCB: '0xaf4B9C4b545D5324904bAa15e29796D2E2f90813',
   BPANCAKE_BBADGER_BTCB: '0x857F91f735f4B03b19D2b5c6E476C73DB8241F55',
   BPANCAKE_BDIGG_BTCB: '0xa861Ba302674b08f7F2F24381b705870521DDfed',
+  BVYWBTC: '0x64f9dcdf4accc3365725f1eccba2f9427e108a73',
 };
 
 export const TOKENS = Object.fromEntries(
@@ -65,22 +67,24 @@ export enum Protocol {
   Sushiswap = 'sushiswap',
   Uniswap = 'uniswap',
   Pancakeswap = 'pancakeswap',
+  Yearn = 'yearn',
 }
 
 // data point constants - index two times per hour, 48 per day
 export const CURRENT = 0;
 export const ONE_DAY = 24 * 2;
+export const ONE_MINUTE_MS = 60 * 1000;
 export const THREE_DAYS = ONE_DAY * 3;
 export const SEVEN_DAYS = ONE_DAY * 7;
 export const THIRTY_DAYS = ONE_DAY * 30;
 export const SAMPLE_DAYS = THIRTY_DAYS + 1;
 export const ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000;
-export const BLOCKS_PER_YEAR = 2425847;
-export const BSC_BLOCKS_PER_YEAR = 10512000;
 
 // data access constants
+export const APY_SNAPSHOTS_DATA = process.env.APY_SNAPSHOTS_DATA || 'MISSING REQUIRED ENV VAR';
 export const ASSET_DATA = process.env.ASSET_DATA || 'MISSING REQUIRED ENV VAR';
 export const PRICE_DATA = process.env.PRICE_DATA || 'MISSING REQUIRED ENV VAR';
+export const SETT_SNAPSHOTS_DATA = process.env.SETT_SNAPSHOTS_DATA || 'MISSING REQUIRED ENV VAR';
 export const REWARD_DATA = process.env.REWARD_DATA || 'MISSING REQUIRED ENV VAR';
 export const UNISWAP_URL = process.env.UNISWAP || 'MISSING REQUIRED ENV VAR';
 export const SUSHISWAP_URL = process.env.SUSHISWAP || 'MISSING REQUIRED ENV VAR';

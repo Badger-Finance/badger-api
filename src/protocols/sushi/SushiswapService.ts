@@ -2,7 +2,7 @@ import { Inject, Service } from '@tsed/di';
 import { GraphQLClient } from 'graphql-request';
 import { CacheService } from '../../cache/CacheService';
 import { Chain } from '../../chains/config/chain.config';
-import { BLOCKS_PER_YEAR, MASTERCHEF_URL, SUSHI_CHEF, SUSHISWAP_URL, TOKENS } from '../../config/constants';
+import { MASTERCHEF_URL, SUSHI_CHEF, SUSHISWAP_URL, TOKENS } from '../../config/constants';
 import {
   getSdk,
   MasterChefsAndPoolsQuery,
@@ -10,9 +10,9 @@ import {
   Pool_OrderBy,
   Sdk as MasterChefGraphqlSdk,
 } from '../../graphql/generated/master-chef';
-import { SettDefinition } from '../../interface/Sett';
 import { getTokenPriceData } from '../../prices/prices-util';
 import { PricesService } from '../../prices/PricesService';
+import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { TokensService } from '../../tokens/TokensService';
 import { SwapService } from '../common/SwapService';
 import { uniformPerformance } from '../interfaces/performance.interface';
@@ -42,12 +42,12 @@ export class SushiswapService extends SwapService {
     if (cachedValueSource) {
       return cachedValueSource;
     }
-    const sources = await Promise.all([this.getSwapPerformance(depositToken), this.getPoolApr(sett)]);
+    const sources = await Promise.all([this.getSwapPerformance(depositToken), this.getPoolApr(chain, sett)]);
     this.cacheService.set(cacheKey, sources);
     return sources;
   }
 
-  async getPoolApr(sett: SettDefinition): Promise<ValueSource> {
+  async getPoolApr(chain: Chain, sett: SettDefinition): Promise<ValueSource> {
     const masterChefQuery = await this.getMasterChef();
     const masterChef = masterChefQuery.masterChefs[0];
     const pool = masterChefQuery.pools.find((p) => p.pair === sett.depositToken.toLowerCase());
@@ -66,7 +66,7 @@ export class SushiswapService extends SwapService {
     const totalAllocPoint = masterChef.totalAllocPoint;
     const poolValue = pool.balance * depositTokenPrice.usd;
     const emissionScalar = pool.allocPoint / totalAllocPoint;
-    const sushiEmission = masterChef.sushiPerBlock * emissionScalar * BLOCKS_PER_YEAR * sushiPrice.usd;
+    const sushiEmission = masterChef.sushiPerBlock * emissionScalar * chain.blocksPerYear * sushiPrice.usd;
     emissionSource.performance = uniformPerformance((sushiEmission / poolValue) * 100);
     emissionSource.apy = emissionSource.performance.threeDay;
     return emissionSource;

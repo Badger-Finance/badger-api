@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import methodOverride from 'method-override';
+import { loadAffiliates } from './affiliates/affiliate';
 import { loadChains } from './chains/chain';
 import { BinanceSmartChain } from './chains/config/bsc.config';
 import { Chain } from './chains/config/chain.config';
@@ -36,6 +37,7 @@ export class Server {
   app!: PlatformApplication;
 
   public $beforeInit(): void {
+    loadAffiliates();
     loadChains();
   }
 

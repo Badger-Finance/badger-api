@@ -5,8 +5,6 @@ frameworkVersion: '2'
 configValidationMode: off
 
 plugins:
-  - serverless-aws-documentation
-  - serverless-api-gateway-caching
   - serverless-plugin-typescript
   - serverless-dynamodb-local
   - serverless-offline
@@ -18,23 +16,13 @@ custom:
       - ${self:custom.stage}
     inMemory: true
     migration: true
-  apiGatewayCaching:
-    enabled: ${self:custom.caching.${self:custom.stage}}
-    ttlInSeconds: 300
   serverless-offline:
     noPrependStageInUrl: true
-  documentation:
-    api:
-      info:
-        version: "1.0"
-        title: "Badger API"
-        description: "Badger Finance Serverless API"
-        tags:
-          - name: "Protocol"
-            description: "Protocol related API"
-          - name: "Chart"
-            description: "Chart related API"
+
   table:
+    APY_SNAPSHOTS_DATA:
+      staging: "badger-staging-apy-snapshots"
+      prod: "badger-apy-snapshots"
     ASSET_DATA:
       staging: "badger-staging-asset"
       prod: "badger-asset"
@@ -47,9 +35,6 @@ custom:
   merkleProofs:
     staging: "badger-staging-merkle-proofs"
     prod: "badger-merkle-proofs"
-  caching:
-    staging: false
-    prod: true
 
 provider:
   name: aws
@@ -72,13 +57,25 @@ provider:
     SUSHISWAP: "https://api.thegraph.com/subgraphs/name/jiro-ono/sushiswap-v1-exchange-staging"
     PANCAKESWAP: "https://api.thegraph.com/subgraphs/name/pancakeswap/exchange"
     MASTERCHEF: "https://api.thegraph.com/subgraphs/name/sushiswap/master-chef"
+    APY_SNAPSHOTS_DATA: ${self:custom.table.APY_SNAPSHOTS_DATA.${self:custom.stage}}
     ASSET_DATA: ${self:custom.table.ASSET_DATA.${self:custom.stage}}
     PRICE_DATA: ${self:custom.table.PRICE_DATA.${self:custom.stage}}
     SETT_SNAPSHOTS_DATA: ${self:custom.table.SETT_SNAPSHOTS_DATA.${self:custom.stage}}
-    MERKLE_CLAIM_BUCKET: ${self:custom.merkleProofs.${self:custom.stage}}
+    REWARD_DATA: ${self:custom.merkleProofs.${self:custom.stage}}
 
 resources:
   Resources:
+    apySnapshotsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.table.APY_SNAPSHOTS_DATA.${self:custom.stage}}
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: "address"
+            KeyType: "HASH"
+        AttributeDefinitions:
+          - AttributeName: "address"
+            AttributeType: "S" 
     protocolTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -120,9 +117,6 @@ resources:
         AttributeDefinitions:
           - AttributeName: "address"
             AttributeType: "S"
-        TimeToLiveSpecification:
-          AttributeName: "ttl"
-          Enabled: true
 
 functions:
   request-handler:
@@ -137,192 +131,6 @@ functions:
           path: /v2/
           method: any
           cors: true
-
-  get-protocol-ppfs:
-    handler: src/v1/protocol/ppfs/handler.handler
-    timeout: 30
-    events:
-      - http:
-          path: /protocol/ppfs
-          method: get
-          cors: true
-          caching:
-            enabled: ${self:custom.caching.${self:custom.stage}}
-          documentation:
-            summary: "Retrieve ppfs for all setts"
-            description: "PPFS values are pulled from indexed chain data"
-            queryParams:
-              - name: "tokens"
-                description: "Optionally include token balances"
-                required: false
-            tags:
-              - "Protocol"
-            methodResponses:
-              - statusCode: "200"
-              - statusCode: "500"
-  
-  get-protocol-value:
-    handler: src/v1/protocol/handler.handler
-    timeout: 30
-    events:
-      - http:
-          path: /protocol/value
-          method: get
-          cors: true
-          caching:
-            enabled: ${self:custom.caching.${self:custom.stage}}
-          request:
-            parameters:
-              querystrings:
-                tokens: false
-          documentation:
-            summary: "Retrieve value locked in all setts and protocol"
-            description: "Sett values are pulled from indexed chain data with the total value included as the sum of all setts"
-            queryParams:
-              - name: "tokens"
-                description: "Optionally include token balances"
-                required: false
-            tags:
-              - "Protocol"
-            methodResponses:
-              - statusCode: "200"
-              - statusCode: "500"
-
-  get-protocol-earnings:
-    handler: src/v1/protocol/earnings/handler.handler
-    timeout: 30
-    events:
-      - http:
-          path: /protocol/earnings/{userId}
-          method: get
-          cors: true
-          caching:
-            enabled: ${self:custom.caching.${self:custom.stage}}
-            ttlInSeconds: 3600
-            cacheKeyParameters:
-              - name: request.path.userId
-          documentation:
-            summary: "Get earnings for a given ethereum address"
-            description: "Get the token based earnings for all setts and their current USD valuation"
-            pathParams:
-              - name: "userId"
-                description: "Ethereum address"
-                required: true
-            tags:
-              - "Protocol"
-            methodResponses:
-              - statusCode: "200"
-              - statusCode: "500"
-
-  get-protocol-farm:
-    handler: src/v1/protocol/farm/handler.handler
-    timeout: 30
-    events:
-      - http:
-          path: /protocol/farm
-          method: get
-          cors: true
-          caching:
-            enabled: ${self:custom.caching.${self:custom.stage}}
-          documentation:
-            summary: "Get active Geyser farms"
-            description: "Get the current active Geyser emission allocation"
-            tags:
-              - "Protocol"
-            methodResponses:
-              - statusCode: "200"
-              - statusCode: "500"
-
-  get-protocol-sett-performance:
-    handler: src/v1/protocol/performance/handler.handler
-    timeout: 30
-    events:
-      - http:
-          path: /protocol/sett/{settName}/performance
-          method: get
-          cors: true
-          caching:
-            enabled: ${self:custom.caching.${self:custom.stage}}
-            cacheKeyParameters:
-              - name: request.path.settName
-          documentation:
-            summary: "Estimated ROI per sett"
-            description: "Return multiple ROI values for sampled periods"
-            pathParams:
-              - name: "settName"
-                description: "Sett name"
-                required: true
-            tags:
-              - "Protocol"
-            methodResponses:
-              - statusCode: "200"
-              - statusCode: "500"
-
-  get-chart-sett-performance:
-    handler: src/v1/chart/sett/performance/handler.handler
-    timeout: 30
-    events:
-      - http:
-          path: /chart/sett/{settName}/performance
-          method: get
-          cors: true
-          caching:
-            enabled: ${self:custom.caching.${self:custom.stage}}
-            cacheKeyParameters:
-              - name: request.path.settName
-          request:
-            parameters:
-              querystrings:
-                count: false
-          documentation:
-            summary: "Chart data for historic sett performance"
-            description: "Return an array of data point objects with coordinate values corresponding to sett ratio"
-            pathParams:
-              - name: "settName"
-                description: "Sett name"
-                required: true
-            queryParams:
-              - name: "count"
-                description: "Number of data points to limit response"
-                required: false
-            tags:
-              - "Chart"
-            methodResponses:
-              - statusCode: "200"
-              - statusCode: "500"
-
-  get-chart-sett:
-    handler: src/v1/chart/sett/handler.handler
-    timeout: 30
-    events:
-      - http:
-          path: /chart/sett/{settName}
-          method: get
-          cors: true
-          caching:
-            enabled: ${self:custom.caching.${self:custom.stage}}
-            cacheKeyParameters:
-              - name: request.path.settName
-          request:
-            parameters:
-              querystrings:
-                count: false
-          documentation:
-            summary: "Chart data for historic sett assets under management"
-            description: "Return an array of data point objects with coordinate values corresponding to sett asset USD valuation"
-            pathParams:
-              - name: "settName"
-                description: "Sett name"
-                required: true
-            queryParams:
-              - name: "count"
-                description: "Number of data points to limit response"
-                required: false
-            tags:
-              - "Chart"
-            methodResponses:
-              - statusCode: "200"
-              - statusCode: "500"
 
   index-sett:
     handler: src/indexer/sett-indexer.indexAsset
@@ -416,33 +224,33 @@ functions:
             contract: "0x88128580acdd9c04ce47afce196875747bf2a9f6"
             createdBlock: 11681030
             asset: "slp-digg-wbtc"
-      # - schedule:
-      #     name: ${self:service}-${self:custom.stage}-index-pancakeswap-bdigg-btcb
-      #     description: "index historical data for badger pancakeswap bdigg-btcb vault"
-      #     rate: rate(5 minutes)
-      #     input:
-      #       contract: "0xaf4B9C4b545D5324904bAa15e29796D2E2f90813"
-      #       createdBlock: 5712807
-      #       asset: "plp-bdigg-btcb"
-      #       chain: "bsc"
-      # - schedule:
-      #     name: ${self:service}-${self:custom.stage}-index-pancakeswap-bbadger-btcb
-      #     description: "index historical data for badger pancakeswap bbadger-btcb vault"
-      #     rate: rate(5 minutes)
-      #     input:
-      #       contract: "0x857F91f735f4B03b19D2b5c6E476C73DB8241F55"
-      #       createdBlock: 5712803
-      #       asset: "plp-bbadger-btcb"
-      #       chain: "bsc"
-      # - schedule:
-      #     name: ${self:service}-${self:custom.stage}-index-pancakeswap-bnb-btcb
-      #     description: "index historical data for badger pancakeswap bnb-btcb vault"
-      #     rate: rate(5 minutes)
-      #     input:
-      #       contract: "0xaf4B9C4b545D5324904bAa15e29796D2E2f90813"
-      #       createdBlock: 5516404
-      #       asset: "plp-bnb-btcb"
-      #       chain: "bsc"
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-pancakeswap-bdigg-btcb
+          description: "index historical data for badger pancakeswap bdigg-btcb vault"
+          rate: rate(5 minutes)
+          input:
+            contract: "0xaf4B9C4b545D5324904bAa15e29796D2E2f90813"
+            createdBlock: 5712807
+            asset: "plp-bdigg-btcb"
+            chain: "bsc"
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-pancakeswap-bbadger-btcb
+          description: "index historical data for badger pancakeswap bbadger-btcb vault"
+          rate: rate(5 minutes)
+          input:
+            contract: "0x857F91f735f4B03b19D2b5c6E476C73DB8241F55"
+            createdBlock: 5712803
+            asset: "plp-bbadger-btcb"
+            chain: "bsc"
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-pancakeswap-bnb-btcb
+          description: "index historical data for badger pancakeswap bnb-btcb vault"
+          rate: rate(5 minutes)
+          input:
+            contract: "0xaf4B9C4b545D5324904bAa15e29796D2E2f90813"
+            createdBlock: 5516404
+            asset: "plp-bnb-btcb"
+            chain: "bsc"
 
   index-prices:
     handler: src/indexer/price-indexer.indexPrices
@@ -452,3 +260,12 @@ functions:
           name: ${self:service}-${self:custom.stage}-index-prices
           description: "index price data for all protocol tokens"
           rate: rate(5 minutes)
+
+  index-sett-snapshots:
+    handler: src/indexer/sett-snapshots-indexer.refreshSettSnapshots
+    timeout: 30
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-sett-snapshots
+          description: "index data for supported setts"
+          rate: rate(1 minute)

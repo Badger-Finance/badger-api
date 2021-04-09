@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 import { Chain } from '../../chains/config/chain.config';
-import { SettDefinition } from '../../interface/Sett';
+import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
 import { Performance, uniformPerformance } from '../interfaces/performance.interface';
 import { ValueSource } from '../interfaces/value-source.interface';
