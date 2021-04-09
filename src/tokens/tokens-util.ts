@@ -1,4 +1,4 @@
-import { BadRequest } from '@tsed/exceptions';
+import { NotFound } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { bscTokensConfig } from './config/bsc-tokens.config';
 import { ethTokensConfig } from './config/eth-tokens.config';
@@ -10,7 +10,7 @@ export const getToken = (contract: string): Token => {
   const checksummedAddress = ethers.utils.getAddress(contract);
   const token = protocolTokens[checksummedAddress];
   if (!token) {
-    throw new BadRequest(`${contract} not supported`);
+    throw new NotFound(`${contract} not supported`);
   }
   return token;
 };
@@ -21,7 +21,7 @@ export const getTokenByName = (name: string): Token => {
     (token) => token.name.toLowerCase() === searchName || token.lookupName?.toLowerCase() === searchName,
   );
   if (!token) {
-    throw new BadRequest(`${name} not supported`);
+    throw new NotFound(`${name} not supported`);
   }
   return token;
 };

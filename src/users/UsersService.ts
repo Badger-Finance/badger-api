@@ -5,7 +5,7 @@ import { Chain } from '../chains/config/chain.config';
 import { BADGER_URL } from '../config/constants';
 import { getSdk, OrderDirection, Sdk as BadgerGraphqlSdk } from '../graphql/generated/badger';
 import { SettBalance, UserAccount } from '../interface/UserAccount';
-import { PricesService } from '../prices/PricesService';
+import { PricesService } from '../prices/prices.service';
 
 @Service()
 export class UsersService {

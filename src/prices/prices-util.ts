@@ -7,7 +7,7 @@ import { ChainStrategy } from '../chains/strategies/chain.strategy';
 import { COINGECKO_URL, PRICE_DATA, TOKENS } from '../config/constants';
 import { Token } from '../tokens/interfaces/token.interface';
 import { PriceData, TokenPrice, TokenPriceSnapshot } from '../tokens/interfaces/token-price.interface';
-import { getToken, getTokenByName, protocolTokens } from '../tokens/tokens-util';
+import { getToken, getTokenByName } from '../tokens/tokens-util';
 import { TokenConfig } from '../tokens/types/token-config.type';
 import AttributeValue = DocumentClient.AttributeValue;
 import fetch from 'node-fetch';
@@ -33,29 +33,45 @@ export interface PriceUpdateRequest {
 
 export const priceCache = new NodeCache({ stdTTL: 300, checkperiod: 480 });
 
+export const noPrice = (token: Token): TokenPriceSnapshot => {
+  return {
+    name: token.name,
+    address: token.address,
+    usd: 0,
+    eth: 0,
+    updatedAt: Date.now(),
+  };
+};
+
 /**
  * Update pricing db entry using chain strategy.
  * @param token Target for price update.
  */
-export const updatePrice = async (token: Token): Promise<void> => {
+export const updatePrice = async (token: Token): Promise<TokenPriceSnapshot> => {
   const { address, name } = token;
   const strategy = ChainStrategy.getStrategy(address);
-  const tokenPriceData = await strategy.getPrice(address);
-  tokenPriceData.name = name;
-  tokenPriceData.address = address;
-  const tokenPriceSnapshot: TokenPriceSnapshot = {
-    ...tokenPriceData,
-    updatedAt: Date.now(),
-  };
-  await saveItem(PRICE_DATA, tokenPriceSnapshot);
+
+  try {
+    const tokenPriceData = await strategy.getPrice(address);
+    tokenPriceData.name = name;
+    tokenPriceData.address = address;
+    const tokenPriceSnapshot: TokenPriceSnapshot = {
+      ...tokenPriceData,
+      updatedAt: Date.now(),
+    };
+    await saveItem(PRICE_DATA, tokenPriceSnapshot);
+    return tokenPriceSnapshot;
+  } catch (err) {
+    return noPrice(token);
+  } // ignore issues to allow for price updates of other coins
 };
 
 /**
  * Mass update token pricing db entries.
  * @param tokenConfig Target for price updates.
  */
-export const updatePrices = async (tokenConfig: TokenConfig): Promise<void> => {
-  await Promise.all(Object.values(tokenConfig).map(async (token) => updatePrice(token)));
+export const updatePrices = async (tokenConfig: TokenConfig): Promise<TokenPriceSnapshot[]> => {
+  return Promise.all(Object.values(tokenConfig).map(async (token) => updatePrice(token)));
 };
 
 /**
@@ -64,6 +80,7 @@ export const updatePrices = async (tokenConfig: TokenConfig): Promise<void> => {
  * @returns Most recent price data for the requested contract.
  */
 export const getPrice = async (contract: string): Promise<TokenPriceSnapshot> => {
+  const token = getToken(contract);
   const checksumContract: AttributeValue = ethers.utils.getAddress(contract);
   const params: QueryInput = {
     TableName: PRICE_DATA,
@@ -76,7 +93,7 @@ export const getPrice = async (contract: string): Promise<TokenPriceSnapshot> =>
   };
   const prices = await getItems<TokenPriceSnapshot>(params);
   if (!prices || prices.length !== 1) {
-    throw new NotFound(`No price data stored for ${checksumContract}`);
+    return noPrice(token);
   }
   return prices[0];
 };
@@ -90,8 +107,7 @@ export const getTokenPriceData = async (contract: string): Promise<TokenPrice> =
   const checksumContract = ethers.utils.getAddress(contract);
   const cachedPrice = priceCache.get<TokenPrice>(checksumContract);
   if (!cachedPrice) {
-    const priceData = await getPriceData();
-    return priceData[checksumContract];
+    return getPrice(checksumContract);
   }
   return cachedPrice;
 };
@@ -100,9 +116,9 @@ export const getTokenPriceData = async (contract: string): Promise<TokenPrice> =
  * Retrieve all chain token prices in both USD and ETH.
  * @returns Most recently updated token pricing data for all tokens.
  */
-export const getPriceData = async (): Promise<PriceData> => {
+export const getPriceData = async (tokens: TokenConfig): Promise<PriceData> => {
   const priceData: PriceData = {};
-  const prices = await Promise.all(Object.keys(protocolTokens).map((key) => getPrice(protocolTokens[key].address)));
+  const prices = await Promise.all(Object.keys(tokens).map((key) => getPrice(tokens[key].address)));
   /* eslint-disable @typescript-eslint/no-non-null-assertion */
   prices.forEach((token) => {
     priceData[token.address] = token;
