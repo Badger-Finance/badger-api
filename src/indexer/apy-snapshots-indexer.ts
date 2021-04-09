@@ -8,13 +8,13 @@ import { Chain } from '../chains/config/chain.config';
 import { ethSetts } from '../chains/config/eth.config';
 import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { APY_SNAPSHOTS_DATA, PANCAKESWAP_URL, Protocol, SUSHISWAP_URL } from '../config/constants';
-import { SettDefinition } from '../interface/Sett';
 import { getSwapValueSource } from '../protocols/common/performance-utils';
 import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
 import { ValueSource } from '../protocols/interfaces/value-source.interface';
 import { PancakeSwapService } from '../protocols/pancake/PancakeSwapService';
 import { ProtocolsService } from '../protocols/ProtocolsService';
 import { SushiswapService } from '../protocols/sushi/SushiswapService';
+import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 
 const BATCH_SIZE = 10;
 

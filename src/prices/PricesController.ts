@@ -3,7 +3,7 @@ import { ContentType } from '@tsed/schema';
 import { Chain } from '../chains/config/chain.config';
 import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { PriceSummary } from '../tokens/interfaces/token-price.interface';
-import { PricesService } from './PricesService';
+import { PricesService } from './prices.service';
 
 @Controller('/prices')
 export class PriceController {

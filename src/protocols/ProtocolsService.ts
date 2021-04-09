@@ -3,7 +3,7 @@ import fetch from 'node-fetch';
 import { CacheService } from '../cache/CacheService';
 import { Chain } from '../chains/config/chain.config';
 import { CURVE_API_URL, Protocol } from '../config/constants';
-import { SettDefinition } from '../interface/Sett';
+import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { ValueSource } from './interfaces/value-source.interface';
 import { PancakeSwapService } from './pancake/PancakeSwapService';
 import { SushiswapService } from './sushi/SushiswapService';

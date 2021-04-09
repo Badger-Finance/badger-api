@@ -1,6 +1,6 @@
 import { BadRequest } from '@tsed/exceptions';
 import { ethers } from 'ethers';
-import { SettDefinition } from '../../interface/Sett';
+import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { TokenConfig } from '../../tokens/types/token-config.type';
 import { ChainNetwork } from '../enums/chain-network.enum';
 import { ChainStrategy } from '../strategies/chain.strategy';

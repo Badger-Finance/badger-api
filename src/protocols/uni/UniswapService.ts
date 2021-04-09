@@ -1,7 +1,7 @@
 import { Service } from '@tsed/di';
 import { Chain } from '../../chains/config/chain.config';
 import { UNISWAP_URL } from '../../config/constants';
-import { SettDefinition } from '../../interface/Sett';
+import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { SwapService } from '../common/SwapService';
 import { ValueSource } from '../interfaces/value-source.interface';
 

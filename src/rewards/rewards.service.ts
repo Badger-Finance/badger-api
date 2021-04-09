@@ -53,11 +53,11 @@ export class RewardsService {
    * Returns 200 on eligible, 403 on not eligible.
    * @param address User Ethereum address.
    */
-  async checkBadgerShopEligibility(address: string): Promise<Eligibility> {
-    const cacheKey = CacheService.getCacheKey('badger-shop');
+  async checkBouncerList(address: string): Promise<Eligibility> {
+    const cacheKey = CacheService.getCacheKey('badger-bouncer');
     let elligibleAddresses = this.cacheService.get<Set<string>>(cacheKey);
     if (!elligibleAddresses) {
-      const addressFile = await this.s3Service.getObject(REWARD_DATA, 'badger-shop.json');
+      const addressFile = await this.s3Service.getObject(REWARD_DATA, 'badger-bouncer.json');
       const addresses: string[] = JSON.parse(addressFile.toString('utf-8'));
       elligibleAddresses = new Set(addresses.map((a) => ethers.utils.getAddress(a)));
       this.cacheService.set(cacheKey, elligibleAddresses);
