@@ -23,7 +23,7 @@ export class RewardController {
 
   @ContentType('json')
   @Get('/shop/:address')
-  async getBadgerShopEntry(@PathParams('address') address: string): Promise<Eligibility> {
-    return this.rewardsService.checkBadgerShopEligibility(address);
+  async checkBouncerList(@PathParams('address') address: string): Promise<Eligibility> {
+    return this.rewardsService.checkBouncerList(address);
   }
 }
