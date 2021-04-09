@@ -22,11 +22,9 @@ export class PricesService {
   }
 
   async getPriceSummary(chain: Chain, currency?: string): Promise<PriceSummary> {
-    const chainTokens = Object.keys(chain.tokens);
-    const priceData = await getPriceData();
+    const priceData = await getPriceData(chain.tokens);
     const priceSummary: PriceSummary = {};
-    const chainTokenPrices = Object.entries(priceData).filter(([key]) => chainTokens.includes(key));
-    for (const [key, value] of chainTokenPrices) {
+    for (const [key, value] of Object.entries(priceData)) {
       priceSummary[key] = inCurrency(value, currency);
     }
     return priceSummary;

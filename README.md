@@ -21,12 +21,8 @@ yarn
 Start the API locally
 
 ```bash
-sls offline
+yarn dev
 ```
-
-### Resources
-
-- [Swagger API Documentation](https://docs.sett.vision/)
 
 ### Sett Options 
 
