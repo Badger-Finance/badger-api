@@ -48,7 +48,6 @@ export class SettsService {
     const settSummaries: SettSummary[] = setts.map((s) => ({
       balance: s.balance,
       name: s.name,
-      tokens: s.tokens,
       value: s.value,
     }));
     const totalValue = settSummaries.map((s) => s.value).reduce((total, value) => (total += value), 0);
