@@ -87,9 +87,20 @@ resources:
         TableName: ${self:custom.table.APY_SNAPSHOTS_DATA.${self:custom.stage}}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
-          - AttributeName: "address"
+          - AttributeName: "addressValueSourceType"
             KeyType: "HASH"
         AttributeDefinitions:
+          - AttributeName: "addressValueSourceType"
+            AttributeType: "S" 
+          - AttributeName: "address"
+            AttributeType: "S"
+        GlobalSecondaryIndexes:
+          - IndexName: IndexApySnapshotsOnAddress
+            KeySchema:
+              - AttributeName: address
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
           - AttributeName: "address"
             AttributeType: "S"
 
@@ -270,6 +281,15 @@ functions:
             createdBlock: 5516404
             asset: "plp-bnb-btcb"
             chain: "bsc"
+
+  index-apy-snapshots:
+    handler: src/indexer/apy-snapshots-indexer.refreshApySnapshots
+    timeout: 30
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-apy-snapshots
+          description: "index data for sett apy"
+          rate: rate(1 minute)
 
   index-prices:
     handler: src/indexer/price-indexer.indexPrices

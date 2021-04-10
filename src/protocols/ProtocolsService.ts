@@ -41,7 +41,7 @@ export class ProtocolsService {
     let valueSources: ValueSource[];
     switch (sett.protocol) {
       case Protocol.Curve:
-        valueSources = await this.getCurvePerformance(sett);
+        valueSources = await ProtocolsService.getCurvePerformance(sett);
         break;
       case Protocol.Uniswap:
         valueSources = await this.uniswapService.getPairPerformance(chain, sett);
@@ -64,7 +64,7 @@ export class ProtocolsService {
    * Retrieve Curve DAO pool performance from trading fees.
    * @param sett Sett to retrieve curve performance for.
    */
-  private async getCurvePerformance(sett: SettDefinition): Promise<ValueSource[]> {
+  static async getCurvePerformance(sett: SettDefinition): Promise<ValueSource[]> {
     const assetMap: { [asset: string]: string } = {
       hrenbtccrv: 'ren2',
       renbtccrv: 'ren2',
