@@ -297,6 +297,15 @@ functions:
           description: "index data for sett apy"
           rate: rate(1 minute)
 
+  index-apy-snapshots:
+    handler: src/indexer/apy-snapshots-indexer.refreshApySnapshots
+    timeout: 30
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-apy-snapshots
+          description: "index data for sett apy"
+          rate: rate(1 minute)
+
   index-prices:
     handler: src/indexer/price-indexer.indexPrices
     timeout: 30
