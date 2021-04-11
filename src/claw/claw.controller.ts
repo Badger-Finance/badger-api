@@ -1,7 +1,7 @@
 import { Controller, Get, PathParams } from '@tsed/common';
 import { ContentType } from '@tsed/schema';
 import { SponsorData, SyntheticData } from '../interface/Claw';
-import { ClawService } from '../service/claw/ClawService';
+import { ClawService } from './claw.service';
 
 /*
  * The expiring multiparty (EMP) contract represents a collaterizable synthetic token.

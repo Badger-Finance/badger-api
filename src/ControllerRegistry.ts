@@ -1,5 +1,5 @@
 import { ChartsController } from './charts/ChartsController';
-import { ClawController } from './controller/ClawController';
+import { ClawController } from './claw/claw.controller';
 import { GeyserController } from './geysers/GeysersController';
 import { HarvestsController } from './harvests/harvests.controller';
 import { PriceController } from './prices/PricesController';
