@@ -279,6 +279,14 @@ functions:
             createdBlock: 5516404
             asset: "plp-bnb-btcb"
             chain: "bsc"
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-yearn-wbtc
+          description: "index historical data for badger yfi wbtc vault"
+          rate: rate(5 minutes)
+          input:
+            contract: "0xf9512aaa68ee8ea73c2244e9f75202ff022d0ef1"
+            createdBlock: 12207041
+            asset: "bvywbtc"
 
   index-apy-snapshots:
     handler: src/indexer/apy-snapshots-indexer.refreshApySnapshots

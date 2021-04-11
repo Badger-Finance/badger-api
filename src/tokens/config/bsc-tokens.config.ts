@@ -61,14 +61,6 @@ export const bscTokensConfig: TokenConfig = {
     symbol: 'BADGER',
     type: TokenType.Contract,
   },
-  [TOKENS.TEST]: {
-    address: TOKENS.TEST,
-    decimals: 18,
-    lookupName: 'wrapped-bitcoin',
-    name: 'Test',
-    symbol: 'TEST',
-    type: TokenType.Contract,
-  },
   [TOKENS.BSC_BBADGER]: {
     address: TOKENS.BSC_BBADGER,
     decimals: 18,

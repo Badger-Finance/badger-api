@@ -235,4 +235,16 @@ export const ethTokensConfig: TokenConfig = {
       network: ChainNetwork.Ethereum,
     },
   },
+  [TOKENS.BVYWBTC]: {
+    address: TOKENS.BVYWBTC,
+    decimals: 18,
+    name: 'Yearn WBTC',
+    symbol: 'bvyWBTC',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.WBTC,
+      symbol: 'WBTC',
+      network: ChainNetwork.Ethereum,
+    },
+  },
 };
