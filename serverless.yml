@@ -101,8 +101,6 @@ resources:
                 KeyType: HASH
             Projection:
               ProjectionType: ALL
-          - AttributeName: "address"
-            AttributeType: "S"
 
     protocolTable:
       Type: AWS::DynamoDB::Table
