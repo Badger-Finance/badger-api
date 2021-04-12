@@ -1,9 +1,9 @@
 import { Service } from '@tsed/common';
 import { BigNumber, ethers, utils } from 'ethers';
-import { Chain } from '../../chains/config/chain.config';
-import { ChainNetwork } from '../../chains/enums/chain-network.enum';
-import { empAbi } from '../../config/abi/abi';
-import { FixedPointUnsigned, Liquidation, Position, SponsorData, SyntheticData } from '../../interface/Claw';
+import { Chain } from '../chains/config/chain.config';
+import { ChainNetwork } from '../chains/enums/chain-network.enum';
+import { empAbi } from '../config/abi/abi';
+import { FixedPointUnsigned, Liquidation, Position, SponsorData, SyntheticData } from '../interface/Claw';
 
 type LiqudationUnformatted = [
   string,
