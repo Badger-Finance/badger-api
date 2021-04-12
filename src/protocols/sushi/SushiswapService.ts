@@ -3,17 +3,12 @@ import { GraphQLClient } from 'graphql-request';
 import { CacheService } from '../../cache/CacheService';
 import { Chain } from '../../chains/config/chain.config';
 import { MASTERCHEF_URL, SUSHI_CHEF, SUSHISWAP_URL, TOKENS } from '../../config/constants';
-import {
-  getSdk,
-  MasterChefsAndPoolsQuery,
-  OrderDirection,
-  Pool_OrderBy,
-  Sdk as MasterChefGraphqlSdk,
-} from '../../graphql/generated/master-chef';
+import { getSdk, MasterChefsAndPoolsQuery, OrderDirection, Pool_OrderBy } from '../../graphql/generated/master-chef';
 import { PricesService } from '../../prices/prices.service';
 import { getTokenPriceData } from '../../prices/prices-util';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { TokensService } from '../../tokens/TokensService';
+import { getLiquidityPrice } from '../common/swap-util';
 import { SwapService } from '../common/SwapService';
 import { uniformPerformance } from '../interfaces/performance.interface';
 import { ValueSource } from '../interfaces/value-source.interface';
@@ -27,12 +22,8 @@ export class SushiswapService extends SwapService {
   @Inject()
   cacheService!: CacheService;
 
-  private masterChefGraphqlSdk: MasterChefGraphqlSdk;
-
   constructor() {
     super(SUSHISWAP_URL, 'Sushiswap');
-    const masterChefDaoGraphqlClient = new GraphQLClient(MASTERCHEF_URL);
-    this.masterChefGraphqlSdk = getSdk(masterChefDaoGraphqlClient);
   }
 
   async getPairPerformance(chain: Chain, sett: SettDefinition): Promise<ValueSource[]> {
@@ -48,9 +39,21 @@ export class SushiswapService extends SwapService {
   }
 
   async getPoolApr(chain: Chain, sett: SettDefinition): Promise<ValueSource> {
-    const masterChefQuery = await this.getMasterChef();
-    const masterChef = masterChefQuery.masterChefs[0];
-    const pool = masterChefQuery.pools.find((p) => p.pair === sett.depositToken.toLowerCase());
+    let masterChefData = this.cacheService.get<MasterChefsAndPoolsQuery>(SUSHI_CHEF);
+    if (!masterChefData) {
+      masterChefData = await SushiswapService.getMasterChef();
+      this.cacheService.set(SUSHI_CHEF, masterChefData);
+    }
+    return SushiswapService.getEmissionSource(chain, sett.depositToken, masterChefData);
+  }
+
+  static async getEmissionSource(
+    chain: Chain,
+    depositToken: string,
+    masterChefData: MasterChefsAndPoolsQuery,
+  ): Promise<ValueSource> {
+    const masterChef = masterChefData.masterChefs[0];
+    const pool = masterChefData.pools.find((p) => p.pair === depositToken.toLowerCase());
     const emissionSource = {
       name: 'Sushi',
       apy: 0,
@@ -60,7 +63,7 @@ export class SushiswapService extends SwapService {
       return emissionSource;
     }
     const [depositTokenPrice, sushiPrice] = await Promise.all([
-      this.getPairPrice(pool.pair),
+      getLiquidityPrice(SUSHISWAP_URL, pool.pair),
       getTokenPriceData(TOKENS.SUSHI),
     ]);
     const totalAllocPoint = masterChef.totalAllocPoint;
@@ -72,17 +75,14 @@ export class SushiswapService extends SwapService {
     return emissionSource;
   }
 
-  async getMasterChef(): Promise<MasterChefsAndPoolsQuery> {
-    let masterChefData = this.cacheService.get<MasterChefsAndPoolsQuery>(SUSHI_CHEF);
-    if (!masterChefData) {
-      masterChefData = await this.masterChefGraphqlSdk.MasterChefsAndPools({
-        first: 1,
-        orderBy: Pool_OrderBy.AllocPoint,
-        orderDirection: OrderDirection.Desc,
-        where: { allocPoint_gt: 0 },
-      });
-      this.cacheService.set(SUSHI_CHEF, masterChefData);
-    }
-    return masterChefData;
+  static async getMasterChef(): Promise<MasterChefsAndPoolsQuery> {
+    const masterChefDaoGraphqlClient = new GraphQLClient(MASTERCHEF_URL);
+    const masterChefGraphqlSdk = getSdk(masterChefDaoGraphqlClient);
+    return masterChefGraphqlSdk.MasterChefsAndPools({
+      first: 1,
+      orderBy: Pool_OrderBy.AllocPoint,
+      orderDirection: OrderDirection.Desc,
+      where: { allocPoint_gt: 0 },
+    });
   }
 }

@@ -109,4 +109,14 @@ export const ethSetts: SettDefinition[] = [
     settToken: TOKENS.BBADGER,
     geyserAddress: '0xa9429271a28f8543efffa136994c0839e7d7bf77',
   },
+  {
+    hasBouncer: true,
+    name: 'Yearn WBTC',
+    symbol: 'bvyWBTC',
+    depositToken: TOKENS.WBTC,
+    settToken: TOKENS.BVYWBTC,
+    affiliate: {
+      protocol: Protocol.Yearn,
+    },
+  },
 ];
