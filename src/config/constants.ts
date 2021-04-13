@@ -53,6 +53,10 @@ const RAW_TOKENS = {
   BPANCAKE_BNB_BTCB: '0xaf4B9C4b545D5324904bAa15e29796D2E2f90813',
   BPANCAKE_BBADGER_BTCB: '0x857F91f735f4B03b19D2b5c6E476C73DB8241F55',
   BPANCAKE_BDIGG_BTCB: '0xa861Ba302674b08f7F2F24381b705870521DDfed',
+  BSC_BVYWBTC: '0xB6bd5ae3d5F78A6Bb04bBb031E24fA9C2BbD090d',
+
+  // test tokens
+  BSC_YWBTC_TEST: '0xEd2a8Ab49DcbCb8C27650cC8D5229Cefcad52e2a',
 };
 
 export const TOKENS = Object.fromEntries(
@@ -98,6 +102,7 @@ export const COINGECKO_URL = 'https://api.coingecko.com/api/v3/simple';
 export enum Provider {
   Cloudflare = 'https://cloudflare-eth.com/',
   Binance = 'https://bsc-dataseed.binance.org/',
+  MyEtherWallet = 'https://nodes.mewapi.io/rpc/eth',
 }
 export const SUSHI_CHEF = '0xc2EdaD668740f1aA35E4D8f227fB8E17dcA888Cd';
 export const PANCAKE_CHEF = '0x73feaa1eE314F8c655E354234017bE2193C9E24E';

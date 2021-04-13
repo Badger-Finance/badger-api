@@ -124,16 +124,24 @@ export const bscTokensConfig: TokenConfig = {
       network: ChainNetwork.BinanceSmartChain,
     },
   },
-  [TOKENS.BVYWBTC]: {
-    address: TOKENS.BVYWBTC,
+  [TOKENS.BSC_BVYWBTC]: {
+    address: TOKENS.BSC_BVYWBTC,
     decimals: 18,
     name: 'Yearn WBTC',
-    symbol: 'bvyWBTC',
+    symbol: 'bsc_bvyWBTC',
     type: TokenType.Vault,
     vaultToken: {
-      address: TOKENS.TEST,
-      symbol: 'TEST',
+      address: TOKENS.BSC_YWBTC_TEST,
+      symbol: 'BSC-WBTC-TEST',
       network: ChainNetwork.BinanceSmartChain,
     },
+  },
+  [TOKENS.BSC_YWBTC_TEST]: {
+    address: TOKENS.BSC_YWBTC_TEST,
+    decimals: 18,
+    lookupName: 'wrapped-bitcoin',
+    name: 'BSC Wrapped Bitcoin TEST',
+    symbol: 'BSC-WBTC-TEST',
+    type: TokenType.Contract,
   },
 };
