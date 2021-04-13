@@ -12,7 +12,7 @@ export class AccountsController {
 
   @Get('/:accountId')
   @ContentType('json')
-  async getUserProfile(
+  async getAccount(
     @PathParams('accountId') userId: string,
     @QueryParams('chain') chain?: ChainNetwork,
   ): Promise<Account> {
