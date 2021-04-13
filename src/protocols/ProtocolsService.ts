@@ -1,9 +1,17 @@
 import { Inject, Service } from '@tsed/common';
+import { InternalServerError } from '@tsed/exceptions';
+import * as AWS from 'aws-sdk';
+import * as E from 'fp-ts/lib/Either';
+import { identity } from 'fp-ts/lib/function';
+import { pipe } from 'fp-ts/lib/pipeable';
 import fetch from 'node-fetch';
+import { query } from '../aws/dynamodb-utils';
 import { CacheService } from '../cache/CacheService';
 import { Chain } from '../chains/config/chain.config';
-import { CURVE_API_URL, Protocol } from '../config/constants';
+import { APY_SNAPSHOTS_DATA, CURVE_API_URL, ONE_MINUTE_MS, Protocol } from '../config/constants';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
+import { cachedValueSourceToValueSource } from './common/value-source.utils';
+import { CachedValueSource } from './interfaces/cached-value-source.interface';
 import { ValueSource } from './interfaces/value-source.interface';
 import { PancakeSwapService } from './pancake/PancakeSwapService';
 import { SushiswapService } from './sushi/SushiswapService';
@@ -30,6 +38,35 @@ export class ProtocolsService {
   async getProtocolPerformance(chain: Chain, sett: SettDefinition): Promise<ValueSource[]> {
     if (!sett.protocol) {
       return [];
+    }
+
+    const latestValueSourceSnapshots = await query({
+      TableName: APY_SNAPSHOTS_DATA,
+      IndexName: 'IndexApySnapshotsOnAddress',
+      KeyConditionExpression: '#address = :address',
+      ExpressionAttributeValues: {
+        ':address': { S: sett.settToken },
+      },
+      ExpressionAttributeNames: {
+        '#address': 'address',
+      },
+    });
+
+    if (latestValueSourceSnapshots && latestValueSourceSnapshots.Items && latestValueSourceSnapshots.Items.length > 0) {
+      const snapshots = latestValueSourceSnapshots.Items.map((item) => {
+        const record = AWS.DynamoDB.Converter.unmarshall(item);
+        return pipe(
+          record,
+          CachedValueSource.decode,
+          E.fold((errors) => {
+            throw new InternalServerError(errors.join(' '));
+          }, identity),
+        );
+      });
+
+      if (Date.now() - snapshots[0].updatedAt <= ONE_MINUTE_MS) {
+        return snapshots.map((snapshot) => cachedValueSourceToValueSource(snapshot));
+      }
     }
 
     const cacheKey = CacheService.getCacheKey(chain.name, sett.name);
