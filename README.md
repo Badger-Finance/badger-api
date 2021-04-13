@@ -18,6 +18,12 @@ Install project dependencies
 yarn
 ```
 
+Install DynamoDB libraries
+
+```bash
+yarn sls dynamodb install
+```
+
 Start the API locally
 
 ```bash
