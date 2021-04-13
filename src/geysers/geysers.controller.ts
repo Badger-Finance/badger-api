@@ -1,13 +1,14 @@
-import { Controller, Get, QueryParams } from '@tsed/common';
+import { Controller, Get, Inject, QueryParams } from '@tsed/common';
 import { ContentType } from '@tsed/schema';
 import { Chain } from '../chains/config/chain.config';
 import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { Sett } from '../setts/interfaces/sett.interface.';
-import { GeyserService } from './GeysersService';
+import { GeyserService } from './geysers.service';
 
 @Controller('/geysers')
 export class GeyserController {
-  constructor(private geyserService: GeyserService) {}
+  @Inject()
+  geyserService!: GeyserService;
 
   @Get()
   @ContentType('json')
