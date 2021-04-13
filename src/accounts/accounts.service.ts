@@ -2,22 +2,18 @@ import { Inject, Service } from '@tsed/di';
 import { BadRequest, InternalServerError, NotFound } from '@tsed/exceptions';
 import { GraphQLClient } from 'graphql-request';
 import { Chain } from '../chains/config/chain.config';
-import { BADGER_URL } from '../config/constants';
-import { getSdk, OrderDirection, Sdk as BadgerGraphqlSdk } from '../graphql/generated/badger';
-import { SettBalance, UserAccount } from '../interface/UserAccount';
+import { getSdk, OrderDirection } from '../graphql/generated/badger';
 import { PricesService } from '../prices/prices.service';
+import { TokenRequest } from '../tokens/interfaces/token-request.interface';
+import { TokensService } from '../tokens/tokens.service';
+import { Account } from './interfaces/account.interface';
 
 @Service()
-export class UsersService {
+export class AccountsService {
   @Inject()
   pricesService!: PricesService;
-
-  private badgerGraphqlSdk: BadgerGraphqlSdk;
-
-  constructor() {
-    const badgerGraphqlClient = new GraphQLClient(BADGER_URL);
-    this.badgerGraphqlSdk = getSdk(badgerGraphqlClient);
-  }
+  @Inject()
+  tokensService!: TokensService;
 
   /**
    * Retrieve a user's account details. This includes all positions in setts,
@@ -26,13 +22,16 @@ export class UsersService {
    *
    * @param userId User ethereum account address
    */
-  async getUserDetails(chain: Chain, userId: string): Promise<UserAccount> {
+  async getAccount(chain: Chain, userId: string): Promise<Account> {
     if (!userId) {
       throw new BadRequest('userId is required');
     }
 
+    const badgerGraphqlClient = new GraphQLClient(chain.graphUrl);
+    const badgerGraphqlSdk = getSdk(badgerGraphqlClient);
+
     // TheGraph address are all lower case, this is required
-    const { user } = await this.badgerGraphqlSdk.User({
+    const { user } = await badgerGraphqlSdk.User({
       id: userId.toLowerCase(),
       orderDirection: OrderDirection.Asc,
     });
@@ -45,16 +44,16 @@ export class UsersService {
     const settBalances = await Promise.all(
       userBalances.map(async (settBalance) => {
         const sett = settBalance.sett;
-        const settInfo = chain.setts.find((s) => s.settToken === settBalance.sett.id);
+        const settDefinition = chain.setts.find((s) => s.settToken.toLowerCase() === settBalance.sett.id);
 
-        // SettInfo should not be undefined - if so there is a config issue
-        if (!settInfo) {
+        // settDefinition should not be undefined - if so there is a config issue
+        if (!settDefinition) {
           throw new InternalServerError('Unable to fetch user account');
         }
 
         let ratio = 1;
         let settPricePerFullShare = parseInt(sett.pricePerFullShare) / 1e18;
-        if (settInfo.symbol.toLowerCase() === 'digg') {
+        if (settDefinition.symbol.toLowerCase() === 'digg') {
           ratio = sett.balance / sett.totalSupply / settPricePerFullShare;
           settPricePerFullShare = sett.balance / sett.totalSupply;
         }
@@ -64,16 +63,35 @@ export class UsersService {
         const settTokens = settPricePerFullShare * netShareDeposit;
         const earned = (settTokens - grossDeposit + grossWithdraw) / Math.pow(10, sett.token.decimals);
         const balance = settTokens / Math.pow(10, sett.token.decimals);
-        const earnedUsd = await this.pricesService.getValue(sett.token.id, earned);
-        const balanceUsd = await this.pricesService.getValue(sett.token.id, balance);
+
+        const earnedTokenRequest: TokenRequest = {
+          chain: chain,
+          sett: settDefinition,
+          balance: earned,
+          // currency: currency,
+        };
+        const balanceTokenRequest: TokenRequest = {
+          chain: chain,
+          sett: settDefinition,
+          balance: balance,
+          // currency: currency,
+        };
+        const [earnedUsd, balanceUsd, earnedTokens, balanceTokens] = await Promise.all([
+          this.pricesService.getValue(sett.token.id, earned),
+          this.pricesService.getValue(sett.token.id, balance),
+          this.tokensService.getSettTokens(earnedTokenRequest),
+          this.tokensService.getSettTokens(balanceTokenRequest),
+        ]);
 
         return {
-          id: settInfo.settToken,
-          name: settInfo.name,
-          asset: settInfo.symbol,
+          id: settDefinition.settToken,
+          name: settDefinition.name,
+          asset: settDefinition.symbol,
           value: balanceUsd,
           earnedValue: earnedUsd,
-        } as SettBalance;
+          earnedTokens: earnedTokens,
+          balance: balanceTokens,
+        };
       }),
     );
 
@@ -83,7 +101,7 @@ export class UsersService {
       id: userId,
       value: accountValue,
       earnedValue: accountEarnedValue,
-      settAccounts: settBalances,
-    } as UserAccount;
+      balances: settBalances,
+    };
   }
 }

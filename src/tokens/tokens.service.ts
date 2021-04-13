@@ -4,9 +4,9 @@ import { GraphQLClient } from 'graphql-request';
 import { CacheService } from '../cache/CacheService';
 import { PANCAKESWAP_URL, Protocol, SUSHISWAP_URL, UNISWAP_URL } from '../config/constants';
 import { getSdk as getUniV2Sdk, Sdk as UniV2GraphqlSdk, UniV2PairQuery } from '../graphql/generated/uniswap';
-import { TokenBalance } from '../interface/TokenBalance';
 import { PricesService } from '../prices/prices.service';
 import { getLiquidityData } from '../protocols/common/swap-util';
+import { TokenBalance } from './interfaces/token-balance.interface';
 import { TokenRequest } from './interfaces/token-request.interface';
 import { getToken } from './tokens-util';
 

@@ -7,7 +7,7 @@ import { getSdk, MasterChefsAndPoolsQuery, OrderDirection, Pool_OrderBy } from '
 import { PricesService } from '../../prices/prices.service';
 import { getTokenPriceData } from '../../prices/prices-util';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
-import { TokensService } from '../../tokens/TokensService';
+import { TokensService } from '../../tokens/tokens.service';
 import { getLiquidityPrice } from '../common/swap-util';
 import { SwapService } from '../common/SwapService';
 import { uniformPerformance } from '../interfaces/performance.interface';

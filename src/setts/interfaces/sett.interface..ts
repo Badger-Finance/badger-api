@@ -1,6 +1,6 @@
 import { Geyser } from '../../interface/Geyser';
-import { TokenBalance } from '../../interface/TokenBalance';
 import { ValueSource } from '../../protocols/interfaces/value-source.interface';
+import { TokenBalance } from '../../tokens/interfaces/token-balance.interface';
 import { SettAffiliateData } from './sett-affiliate-data.interface';
 import { SettSummary } from './sett-summary.interface';
 

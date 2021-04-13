@@ -13,8 +13,8 @@ import { PricesService } from '../prices/prices.service';
 import { ValueSource } from '../protocols/interfaces/value-source.interface';
 import { Sett } from '../setts/interfaces/sett.interface.';
 import { SettsService } from '../setts/setts.service';
+import { TokensService } from '../tokens/tokens.service';
 import { getToken } from '../tokens/tokens-util';
-import { TokensService } from '../tokens/TokensService';
 
 /**
  * TODO: Remove geysers service + geysers controller once they are
