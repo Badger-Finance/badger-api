@@ -1,3 +1,4 @@
+import { AccountsController } from './accounts/accounts.controller';
 import { ChartsController } from './charts/ChartsController';
 import { ClawController } from './claw/claw.controller';
 import { GeyserController } from './geysers/geysers.controller';
@@ -22,4 +23,5 @@ export const controllers = [
   ProtocolController,
   RewardController,
   SettsController,
+  AccountsController,
 ];
