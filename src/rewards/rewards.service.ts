@@ -35,6 +35,21 @@ export class RewardsService {
   }
 
   /**
+   * Get airdrop merkle claim for a user.
+   * @param airdrop Airdrop JSON filename.
+   * @param address User Ethereum address.
+   */
+  async getBouncerProof(airdrop: string, address: string): Promise<AirdropMerkleClaim> {
+    const airdropFile = await this.s3Service.getObject(REWARD_DATA, airdrop);
+    const fileContents: AirdropMerkleDistribution = JSON.parse(airdropFile.toString('utf-8'));
+    const claim = fileContents.claims[ethers.utils.getAddress(address)];
+    if (!claim) {
+      throw new NotFound(`${address} does not qualify for airdrop`);
+    }
+    return claim;
+  }
+
+  /**
    * Get badger tree reward merkle claim for a user.
    * @param address User Ethereum address.
    */
