@@ -55,7 +55,7 @@ export class SushiswapService extends SwapService {
     const masterChef = masterChefData.masterChefs[0];
     const pool = masterChefData.pools.find((p) => p.pair === depositToken.toLowerCase());
     const emissionSource = {
-      name: 'Sushi',
+      name: 'Sushi Rewards',
       apy: 0,
       performance: uniformPerformance(0),
     };

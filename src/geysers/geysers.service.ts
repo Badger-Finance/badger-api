@@ -1,5 +1,5 @@
 import { Inject, Service } from '@tsed/common';
-import { constants, ethers } from 'ethers';
+import { BigNumber, constants, ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
 import { CacheService } from '../cache/CacheService';
 import { Chain } from '../chains/config/chain.config';
@@ -42,13 +42,23 @@ export class GeyserService {
     const provider = Chain.getChain(ChainNetwork.Ethereum).provider;
     const diggContract = new ethers.Contract(TOKENS.DIGG, diggAbi, provider);
 
-    const [settData, geyserData, sharesPerFragment] = await Promise.all([
+    const sharesKey = CacheService.getCacheKey('sharesPerFragment');
+    const cachedSharesPerFragment = this.cacheService.get<BigNumber>(sharesKey);
+
+    let sharesPerFragment: BigNumber;
+    if (!cachedSharesPerFragment) {
+      sharesPerFragment = await diggContract._sharesPerFragment();
+      this.cacheService.set(sharesKey, sharesPerFragment);
+    } else {
+      sharesPerFragment = cachedSharesPerFragment;
+    }
+
+    const [settData, geyserData] = await Promise.all([
       this.settsService.listSetts(chain),
       this.badgerGraphqlSdk.GeysersAndSetts({
         geysersOrderDirection: OrderDirection.Asc,
         settsOrderDirection: OrderDirection.Asc,
       }),
-      diggContract._sharesPerFragment(),
     ]);
     const { geysers, setts } = geyserData;
 
@@ -141,46 +151,49 @@ export class GeyserService {
     return unlockSchedules;
   }
 
-  async getGeyserData(geyser: string, sharesPerFragment: number): Promise<Geyser> {
+  async getGeyserData(geyser: string, sharesPerFragment: BigNumber): Promise<Geyser> {
     const [badgerUnlockSchedules, diggUnlockSchedules] = await Promise.all([
       this.loadUnlockSchedule(geyser, TOKENS.BADGER),
       this.loadUnlockSchedule(geyser, TOKENS.DIGG),
     ]);
 
-    // UnlockSchedule objects are recreated due to returned objects underlying as arrays.
-    const emissions = [];
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - 2);
+    const cutoffSecs = parseInt((cutoff.getTime() / 1000).toString());
+
+    let badgerEmission: Emission | undefined = undefined;
     if (badgerUnlockSchedules.length > 0) {
       const badgerUnlock = badgerUnlockSchedules[badgerUnlockSchedules.length - 1];
-      const badgerEmission: Emission = {
-        token: getToken(TOKENS.BADGER),
-        unlockSchedule: {
-          startTime: badgerUnlock.startTime,
-          endAtSec: badgerUnlock.endAtSec,
-          durationSec: badgerUnlock.durationSec,
-          initialLocked: badgerUnlock.initialLocked,
-        },
-      };
-      emissions.push(badgerEmission);
-    } else {
-      emissions.push(undefined);
+      if (badgerUnlock.endAtSec.gte(cutoffSecs)) {
+        badgerEmission = {
+          token: getToken(TOKENS.BADGER),
+          unlockSchedule: {
+            startTime: badgerUnlock.startTime,
+            endAtSec: badgerUnlock.endAtSec,
+            durationSec: badgerUnlock.durationSec,
+            initialLocked: badgerUnlock.initialLocked,
+          },
+        };
+      }
     }
+
+    let diggEmission: Emission | undefined = undefined;
     if (diggUnlockSchedules.length > 0) {
       const diggUnlock = diggUnlockSchedules[diggUnlockSchedules.length - 1];
-      const diggEmission: Emission = {
-        token: getToken(TOKENS.DIGG),
-        unlockSchedule: {
-          startTime: diggUnlock.startTime,
-          endAtSec: diggUnlock.endAtSec,
-          durationSec: diggUnlock.durationSec,
-          initialLocked: diggUnlock.initialLocked.div(sharesPerFragment),
-        },
-      };
-      emissions.push(diggEmission);
-    } else {
-      emissions.push(undefined);
+      if (diggUnlock.endAtSec.gte(cutoffSecs)) {
+        diggEmission = {
+          token: getToken(TOKENS.DIGG),
+          unlockSchedule: {
+            startTime: diggUnlock.startTime,
+            endAtSec: diggUnlock.endAtSec,
+            durationSec: diggUnlock.durationSec,
+            initialLocked: diggUnlock.initialLocked.div(sharesPerFragment),
+          },
+        };
+      }
     }
     return {
-      emissions: emissions,
+      emissions: [badgerEmission, diggEmission],
     };
   }
 }
