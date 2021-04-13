@@ -42,6 +42,7 @@ export class ProtocolsService {
 
     const latestValueSourceSnapshots = await query({
       TableName: APY_SNAPSHOTS_DATA,
+      IndexName: 'IndexApySnapshotsOnAddress',
       KeyConditionExpression: '#address = :address',
       ExpressionAttributeValues: {
         ':address': { S: sett.settToken },
