@@ -45,14 +45,4 @@ export const bscSetts: SettDefinition[] = [
     settToken: TOKENS.BPANCAKE_BDIGG_BTCB,
     protocol: Protocol.Pancakeswap,
   },
-  {
-    hasBouncer: true,
-    name: 'Yearn WBTC',
-    symbol: 'bsc_bvyWBTC',
-    depositToken: TOKENS.BSC_YWBTC_TEST,
-    settToken: TOKENS.BSC_BVYWBTC,
-    affiliate: {
-      protocol: Protocol.Yearn,
-    },
-  },
 ];

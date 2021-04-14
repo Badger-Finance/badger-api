@@ -6,7 +6,7 @@ import { bscSetts } from '../chains/config/bsc.config';
 import { Chain } from '../chains/config/chain.config';
 import { ethSetts } from '../chains/config/eth.config';
 import { ChainNetwork } from '../chains/enums/chain-network.enum';
-import { SETT_SNAPSHOTS_DATA } from '../config/constants';
+import { Protocol, SETT_SNAPSHOTS_DATA } from '../config/constants';
 import { successfulCapture } from '../config/util';
 import { CachedSettSnapshot } from '../setts/interfaces/cached-sett-snapshot.interface';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
@@ -66,7 +66,13 @@ function settToSnapshot(chainNetwork: ChainNetwork): (settToken: string) => Prom
     const { balance, totalSupply, pricePerFullShare, token } = sett;
     const tokenBalance = balance / Math.pow(10, token.decimals);
     const supply = totalSupply / Math.pow(10, 18);
-    const ratio = pricePerFullShare / Math.pow(10, 18);
+    const settDefintion = chain.setts.find((sett) => sett.settToken.toLowerCase() === settToken);
+    if (!settDefintion) {
+      throw new NotFound(`${settToken} is not a valid sett token`);
+    }
+    const ratioDecimals =
+      settDefintion.affiliate && settDefintion.affiliate.protocol === Protocol.Yearn ? token.decimals : 18;
+    const ratio = pricePerFullShare / Math.pow(10, ratioDecimals);
     const tokenPriceData = await chain.strategy.getPrice(token.id);
     const value = tokenBalance * tokenPriceData.usd;
 

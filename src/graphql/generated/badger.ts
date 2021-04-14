@@ -34,10 +34,6 @@ export type Geyser = {
   grossShareWithdraw: Scalars['BigInt'];
   stakingToken: Token;
   rewardToken: Token;
-  badgerCycleRewardTokens: Scalars['BigInt'];
-  badgerCycleDuration: Scalars['BigInt'];
-  diggCycleRewardTokens: Scalars['BigInt'];
-  diggCycleDuration: Scalars['BigInt'];
 };
 
 export type Geyser_Filter = {
@@ -101,38 +97,6 @@ export type Geyser_Filter = {
   rewardToken_not_starts_with?: Maybe<Scalars['String']>;
   rewardToken_ends_with?: Maybe<Scalars['String']>;
   rewardToken_not_ends_with?: Maybe<Scalars['String']>;
-  badgerCycleRewardTokens?: Maybe<Scalars['BigInt']>;
-  badgerCycleRewardTokens_not?: Maybe<Scalars['BigInt']>;
-  badgerCycleRewardTokens_gt?: Maybe<Scalars['BigInt']>;
-  badgerCycleRewardTokens_lt?: Maybe<Scalars['BigInt']>;
-  badgerCycleRewardTokens_gte?: Maybe<Scalars['BigInt']>;
-  badgerCycleRewardTokens_lte?: Maybe<Scalars['BigInt']>;
-  badgerCycleRewardTokens_in?: Maybe<Array<Scalars['BigInt']>>;
-  badgerCycleRewardTokens_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  badgerCycleDuration?: Maybe<Scalars['BigInt']>;
-  badgerCycleDuration_not?: Maybe<Scalars['BigInt']>;
-  badgerCycleDuration_gt?: Maybe<Scalars['BigInt']>;
-  badgerCycleDuration_lt?: Maybe<Scalars['BigInt']>;
-  badgerCycleDuration_gte?: Maybe<Scalars['BigInt']>;
-  badgerCycleDuration_lte?: Maybe<Scalars['BigInt']>;
-  badgerCycleDuration_in?: Maybe<Array<Scalars['BigInt']>>;
-  badgerCycleDuration_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  diggCycleRewardTokens?: Maybe<Scalars['BigInt']>;
-  diggCycleRewardTokens_not?: Maybe<Scalars['BigInt']>;
-  diggCycleRewardTokens_gt?: Maybe<Scalars['BigInt']>;
-  diggCycleRewardTokens_lt?: Maybe<Scalars['BigInt']>;
-  diggCycleRewardTokens_gte?: Maybe<Scalars['BigInt']>;
-  diggCycleRewardTokens_lte?: Maybe<Scalars['BigInt']>;
-  diggCycleRewardTokens_in?: Maybe<Array<Scalars['BigInt']>>;
-  diggCycleRewardTokens_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  diggCycleDuration?: Maybe<Scalars['BigInt']>;
-  diggCycleDuration_not?: Maybe<Scalars['BigInt']>;
-  diggCycleDuration_gt?: Maybe<Scalars['BigInt']>;
-  diggCycleDuration_lt?: Maybe<Scalars['BigInt']>;
-  diggCycleDuration_gte?: Maybe<Scalars['BigInt']>;
-  diggCycleDuration_lte?: Maybe<Scalars['BigInt']>;
-  diggCycleDuration_in?: Maybe<Array<Scalars['BigInt']>>;
-  diggCycleDuration_not_in?: Maybe<Array<Scalars['BigInt']>>;
 };
 
 export enum Geyser_OrderBy {
@@ -142,10 +106,6 @@ export enum Geyser_OrderBy {
   GrossShareWithdraw = 'grossShareWithdraw',
   StakingToken = 'stakingToken',
   RewardToken = 'rewardToken',
-  BadgerCycleRewardTokens = 'badgerCycleRewardTokens',
-  BadgerCycleDuration = 'badgerCycleDuration',
-  DiggCycleRewardTokens = 'diggCycleRewardTokens',
-  DiggCycleDuration = 'diggCycleDuration',
 }
 
 export enum OrderDirection {

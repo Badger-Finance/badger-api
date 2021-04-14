@@ -3,7 +3,7 @@ import { ChartsController } from './charts/ChartsController';
 import { ClawController } from './claw/claw.controller';
 import { GeyserController } from './geysers/geysers.controller';
 import { HarvestsController } from './harvests/harvests.controller';
-import { PriceController } from './prices/PricesController';
+import { PriceController } from './prices/prices.controller';
 import { ProtocolController } from './protocols/protocols.controller';
 import { RewardController } from './rewards/rewards.controller';
 import { SettsController } from './setts/SettsController';

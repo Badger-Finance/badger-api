@@ -20,7 +20,7 @@ export interface EventInput {
 }
 
 export const getBlock = async (blockNumber: number, chain?: ChainNetwork): Promise<Block> =>
-  await Chain.getChain(chain).provider.getBlock(blockNumber);
+  Chain.getChain(chain).provider.getBlock(blockNumber);
 
 export const getAssetData = async (
   table: string,

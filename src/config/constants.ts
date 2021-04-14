@@ -47,7 +47,7 @@ const RAW_TOKENS = {
   BCRV_RENBTC: '0x6def55d2e18486b9ddfaa075bc4e4ee0b28c1545',
   BCRV_TBTC: '0xb9d076fde463dbc9f915e5392f807315bf940334',
   BCRV_HRENBTC: '0xaf5a1decfa95baf63e0084a35c62592b774a2a87',
-  BVYWBTC: '0xf9512aaa68ee8ea73c2244e9f75202ff022d0ef1',
+  BVYWBTC: '0x4b92d19c11435614cd49af1b589001b7c08cd4d5',
 
   // bsc vault tokens
   BPANCAKE_BNB_BTCB: '0xaf4B9C4b545D5324904bAa15e29796D2E2f90813',
@@ -94,6 +94,7 @@ export const BADGER_URL = process.env.BADGER || 'MISSING REQUIRED ENV VAR';
 export const BADGER_BSC_URL = process.env.BADGER_BSC || 'MISSING REQUIRED ENV VAR';
 export const BADGER_DAO_URL = process.env.BADGER_DAO || 'MISSING REQUIRED ENV VAR';
 export const MASTERCHEF_URL = process.env.MASTERCHEF || 'MISSING REQUIRED ENV VAR';
+export const BOUNCER_PROOFS = process.env.BOUNCER_PROOFS || 'MISSING REQUIRED ENV VAR';
 
 // third party api constants
 export const CURVE_API_URL = 'https://stats.curve.fi/raw-stats/apys.json';

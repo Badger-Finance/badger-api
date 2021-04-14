@@ -115,6 +115,7 @@ export const ethSetts: SettDefinition[] = [
     symbol: 'bvyWBTC',
     depositToken: TOKENS.WBTC,
     settToken: TOKENS.BVYWBTC,
+    geyserAddress: '0x155482d1e2cb0909333326504f0ea4350760c927',
     affiliate: {
       protocol: Protocol.Yearn,
     },
