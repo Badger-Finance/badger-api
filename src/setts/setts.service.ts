@@ -26,7 +26,7 @@ import { ProtocolSummary } from '../interface/ProtocolSummary';
 import { SettSnapshot } from '../interface/SettSnapshot';
 import { Performance, scalePerformance, uniformPerformance } from '../protocols/interfaces/performance.interface';
 import { ValueSource } from '../protocols/interfaces/value-source.interface';
-import { ProtocolsService } from '../protocols/ProtocolsService';
+import { ProtocolsService } from '../protocols/protocols.service';
 import { TokenType } from '../tokens/enums/token-type.enum';
 import { TokenRequest } from '../tokens/interfaces/token-request.interface';
 import { TokensService } from '../tokens/tokens.service';
