@@ -12,7 +12,7 @@ import { getSwapValueSource } from '../protocols/common/performance.utils';
 import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
 import { ValueSource } from '../protocols/interfaces/value-source.interface';
 import { PancakeSwapService } from '../protocols/pancake/PancakeSwapService';
-import { ProtocolsService } from '../protocols/ProtocolsService';
+import { ProtocolsService } from '../protocols/protocols.service';
 import { SushiswapService } from '../protocols/sushi/SushiswapService';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 
