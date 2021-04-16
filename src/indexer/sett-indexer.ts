@@ -30,10 +30,10 @@ export const indexAsset = async (event: EventInput) => {
     const blockData = await getBlock(block, chain);
     const timestamp = blockData.timestamp * 1000;
     const tokenBalance = balance / Math.pow(10, token.decimals);
-    const supply = totalSupply / Math.pow(10, 18);
-    const ratioDecimals =
+    const divDecimals =
       settDefintion.affiliate && settDefintion.affiliate.protocol === Protocol.Yearn ? token.decimals : 18;
-    const ratio = pricePerFullShare / Math.pow(10, ratioDecimals);
+    const supply = totalSupply / Math.pow(10, divDecimals);
+    const ratio = pricePerFullShare / Math.pow(10, divDecimals);
     const tokenPriceData = await targetChain.strategy.getPrice(token.id);
     const value = tokenBalance * tokenPriceData.usd;
 

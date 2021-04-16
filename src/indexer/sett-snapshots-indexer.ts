@@ -54,9 +54,10 @@ function snapshotToTransactItem(snapshot: CachedSettSnapshot): TransactWriteItem
   };
 }
 
-function settToSnapshot(chainNetwork: ChainNetwork): (settToken: string) => Promise<CachedSettSnapshot> {
+function settToSnapshot(chainNetwork: ChainNetwork): (settDefinition: SettDefinition) => Promise<CachedSettSnapshot> {
   const chain = Chain.getChain(chainNetwork);
-  return async (settToken: string) => {
+  return async (settDefinition: SettDefinition) => {
+    const { settToken } = settDefinition;
     const targetToken = getToken(settToken);
     const { sett } = await getSett(chain.graphUrl, settToken);
     if (!sett) {
@@ -65,14 +66,10 @@ function settToSnapshot(chainNetwork: ChainNetwork): (settToken: string) => Prom
     }
     const { balance, totalSupply, pricePerFullShare, token } = sett;
     const tokenBalance = balance / Math.pow(10, token.decimals);
-    const supply = totalSupply / Math.pow(10, 18);
-    const settDefintion = chain.setts.find((sett) => sett.settToken.toLowerCase() === settToken);
-    if (!settDefintion) {
-      throw new NotFound(`${settToken} is not a valid sett token`);
-    }
-    const ratioDecimals =
-      settDefintion.affiliate && settDefintion.affiliate.protocol === Protocol.Yearn ? token.decimals : 18;
-    const ratio = pricePerFullShare / Math.pow(10, ratioDecimals);
+    const divDecimals =
+      settDefinition.affiliate && settDefinition.affiliate.protocol === Protocol.Yearn ? token.decimals : 18;
+    const supply = totalSupply / Math.pow(10, divDecimals);
+    const ratio = pricePerFullShare / Math.pow(10, divDecimals);
     const tokenPriceData = await chain.strategy.getPrice(token.id);
     const value = tokenBalance * tokenPriceData.usd;
 
@@ -91,9 +88,10 @@ const captureSnapshot = async (network: ChainNetwork, sett: SettDefinition): Pro
   try {
     const snapshotTranslateFn = settToSnapshot(network);
     // purposefully await to leverage try / catch
-    const result = await snapshotTranslateFn(sett.settToken);
+    const result = await snapshotTranslateFn(sett);
     return result;
   } catch (err) {
+    console.error(err);
     return null;
   }
 };

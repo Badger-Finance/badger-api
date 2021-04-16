@@ -78,7 +78,7 @@ provider:
     PRICE_DATA: ${self:custom.table.PRICE_DATA.${self:custom.stage}}
     SETT_SNAPSHOTS_DATA: ${self:custom.table.SETT_SNAPSHOTS_DATA.${self:custom.stage}}
     REWARD_DATA: ${self:custom.merkleProofs.${self:custom.stage}}
-    BOUNCER_PROOFS: badger-bouncer-proofs.json
+    BOUNCER_PROOFS: badger-bouncer.json
 
 resources:
   Resources:
@@ -287,7 +287,7 @@ functions:
           input:
             contract: "0x4b92d19c11435614cd49af1b589001b7c08cd4d5"
             createdBlock: 12246710
-            asset: "bvywbtc"
+            asset: "byvwbtc"
 
   index-apy-snapshots:
     handler: src/indexer/apy-snapshots-indexer.refreshApySnapshots

@@ -3,12 +3,14 @@ import { BadRequest, InternalServerError } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
 import { Chain } from '../chains/config/chain.config';
+import { guestListAbi } from '../config/abi/guest-list.abi';
 import { yearnAffiliateVaultWrapperAbi } from '../config/abi/yearn-affiliate-vault-wrapper.abi';
 import { Protocol } from '../config/constants';
 import { getSdk, OrderDirection } from '../graphql/generated/badger';
 import { PricesService } from '../prices/prices.service';
 import { TokenRequest } from '../tokens/interfaces/token-request.interface';
 import { TokensService } from '../tokens/tokens.service';
+import { getToken } from '../tokens/tokens-util';
 import { Account } from './interfaces/account.interface';
 import { AccountLimits } from './interfaces/account-limits.interface';
 
@@ -113,12 +115,19 @@ export class AccountsService {
 
     await Promise.all(
       yearnVaults.map(async (vault) => {
-        const wrapper = new ethers.Contract(vault.settToken, yearnAffiliateVaultWrapperAbi, chain.provider);
-        const limit = 0.5; // todo: verify this on the guest list
+        const vaultToken = getToken(vault.settToken);
+
+        let limit = 0.5;
         try {
-          const balance = (await wrapper.totalWrapperBalance(accountId)) / 1e18;
+          const wrapper = new ethers.Contract(vault.settToken, yearnAffiliateVaultWrapperAbi, chain.provider);
+          const guestListContract = await wrapper.guestList();
+          const guestList = new ethers.Contract(guestListContract, guestListAbi, chain.provider);
+
+          const divisor = Math.pow(10, vaultToken.decimals);
+          limit = (await guestList.userDepositCap()) / divisor;
+          const available = (await guestList.remainingUserDepositAllowed(accountId)) / divisor;
           limits[vault.settToken] = {
-            available: limit - balance,
+            available: available,
             limit: limit,
           };
         } catch (err) {

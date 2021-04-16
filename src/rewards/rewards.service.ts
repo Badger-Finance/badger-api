@@ -73,9 +73,7 @@ export class RewardsService {
     try {
       await this.getBouncerProof(address);
       eligible = true;
-    } catch (err) {
-      console.log(err);
-    } // not found, not eligible
+    } catch (err) {} // not found, not eligible
     return {
       isEligible: eligible,
     };
