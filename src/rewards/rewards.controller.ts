@@ -18,7 +18,7 @@ export class RewardController {
   @ContentType('json')
   @Get('/bouncer/:address')
   async getBouncerProof(@PathParams('address') address: string): Promise<AirdropMerkleClaim> {
-    return this.rewardsService.getBouncerProof('badger-bouncer-proofs.json', address);
+    return this.rewardsService.getBouncerProof(address);
   }
 
   @ContentType('json')

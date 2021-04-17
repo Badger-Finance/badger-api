@@ -5,7 +5,7 @@ import { CacheService } from '../cache/CacheService';
 import { Chain } from '../chains/config/chain.config';
 import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { diggAbi, geyserAbi } from '../config/abi/abi';
-import { BADGER_URL, TOKENS } from '../config/constants';
+import { BADGER_URL, Protocol, TOKENS } from '../config/constants';
 import { secondToDay, toRate } from '../config/util';
 import { getSdk, OrderDirection, Sdk as BadgerGraphqlSdk } from '../graphql/generated/badger';
 import { Emission, Geyser, UnlockSchedule } from '../interface/Geyser';
@@ -60,19 +60,20 @@ export class GeyserService {
         settsOrderDirection: OrderDirection.Asc,
       }),
     ]);
-    const { geysers, setts } = geyserData;
+    const { geysers } = geyserData;
 
     await Promise.all(
       geysers.map(async (geyser) => {
-        const sett = setts.find((geyserSett) => geyserSett.id === geyser.stakingToken.id);
         const settLink = chain.setts.find((s) => s.geyserAddress && s.geyserAddress === geyser.id);
         const settInfo = settData.find((s) => s.asset.toLowerCase() === settLink?.symbol.toLowerCase());
-        if (!sett || !settLink || !settInfo) return;
+        if (!settLink || !settInfo) return;
 
         // Collect Geyser Information
-        const geyserToken = sett.token.id;
-        const pricePerFullShare = sett.pricePerFullShare / 1e18;
-        const geyserDeposits = (geyser.netShareDeposit * pricePerFullShare) / 1e18;
+        const geyserToken = settInfo.underlyingToken;
+        const pricePerFullShare = settInfo.ppfs;
+        const token = getToken(geyserToken);
+        const divDecimals = settLink.affiliate && settLink.affiliate.protocol === Protocol.Yearn ? token.decimals : 18;
+        const geyserDeposits = (geyser.netShareDeposit * pricePerFullShare) / Math.pow(10, divDecimals);
         const geyserDepositsValue = await this.pricesService.getValue(geyserToken, geyserDeposits);
         const geyserData = await this.getGeyserData(geyser.id, sharesPerFragment);
         const [badgerEmissionData, diggEmissionData] = geyserData.emissions;
@@ -129,9 +130,8 @@ export class GeyserService {
           }
         }
 
-        settInfo.value = geyserDepositsValue;
         settInfo.sources = settInfo.sources.concat(emissionSources);
-        settInfo.apy = settInfo.sources.map((s) => s.apy).reduce((total, apy) => (total += apy));
+        settInfo.apy = settInfo.sources.map((s) => s.apy).reduce((total, apy) => (total += apy), 0);
       }),
     );
 

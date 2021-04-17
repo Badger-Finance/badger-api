@@ -13,7 +13,7 @@ import { CachedValueSource } from '../protocols/interfaces/cached-value-source.i
 import { ValueSource } from '../protocols/interfaces/value-source.interface';
 import { PancakeSwapService } from '../protocols/pancake/PancakeSwapService';
 import { ProtocolsService } from '../protocols/protocols.service';
-import { SushiswapService } from '../protocols/sushi/SushiswapService';
+import { SushiswapService } from '../protocols/sushi/sushiswap.service';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 
 const BATCH_SIZE = 10;

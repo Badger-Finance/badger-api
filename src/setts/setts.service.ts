@@ -121,14 +121,19 @@ export class SettsService {
         }
       }
 
-      sett.ppfs = balance / supply;
+      // TODO: cleanup sett value logic
+      if (supply > 0) {
+        sett.ppfs = balance / supply;
+      }
     } else if (settSnapshots.length > 0) {
       const latestSett = settSnapshots[CURRENT];
       balance = latestSett.balance;
-      if (settDefinition.depositToken === TOKENS.DIGG) {
-        sett.ppfs = latestSett.supply / latestSett.balance;
-      } else {
-        sett.ppfs = latestSett.ratio;
+      if (latestSett.supply > 0) {
+        if (settDefinition.depositToken === TOKENS.DIGG) {
+          sett.ppfs = latestSett.supply / latestSett.balance;
+        } else {
+          sett.ppfs = latestSett.ratio;
+        }
       }
     }
 

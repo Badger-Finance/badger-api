@@ -3,7 +3,7 @@ import { NotFound } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { S3Service } from '../aws/S3Service';
 import { CacheService } from '../cache/CacheService';
-import { REWARD_DATA } from '../config/constants';
+import { BOUNCER_PROOFS, REWARD_DATA } from '../config/constants';
 import {
   AirdropMerkleClaim,
   AirdropMerkleDistribution,
@@ -39,12 +39,12 @@ export class RewardsService {
    * @param airdrop Airdrop JSON filename.
    * @param address User Ethereum address.
    */
-  async getBouncerProof(airdrop: string, address: string): Promise<AirdropMerkleClaim> {
-    const airdropFile = await this.s3Service.getObject(REWARD_DATA, airdrop);
+  async getBouncerProof(address: string): Promise<AirdropMerkleClaim> {
+    const airdropFile = await this.s3Service.getObject(REWARD_DATA, BOUNCER_PROOFS);
     const fileContents: AirdropMerkleDistribution = JSON.parse(airdropFile.toString('utf-8'));
     const claim = fileContents.claims[ethers.utils.getAddress(address)];
     if (!claim) {
-      throw new NotFound(`${address} does not qualify for airdrop`);
+      throw new NotFound(`${address} is not on the bouncer list`);
     }
     return claim;
   }
@@ -69,17 +69,13 @@ export class RewardsService {
    * @param address User Ethereum address.
    */
   async checkBouncerList(address: string): Promise<Eligibility> {
-    const cacheKey = CacheService.getCacheKey('badger-bouncer');
-    let elligibleAddresses = this.cacheService.get<Set<string>>(cacheKey);
-    if (!elligibleAddresses) {
-      const addressFile = await this.s3Service.getObject(REWARD_DATA, 'badger-bouncer.json');
-      const addresses: string[] = JSON.parse(addressFile.toString('utf-8'));
-      elligibleAddresses = new Set(addresses.map((a) => ethers.utils.getAddress(a)));
-      this.cacheService.set(cacheKey, elligibleAddresses);
-    }
-    const checksumAddress = ethers.utils.getAddress(address);
+    let eligible = false;
+    try {
+      await this.getBouncerProof(address);
+      eligible = true;
+    } catch (err) {} // not found, not eligible
     return {
-      isEligible: elligibleAddresses.has(checksumAddress),
+      isEligible: eligible,
     };
   }
 }

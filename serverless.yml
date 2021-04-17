@@ -66,7 +66,7 @@ provider:
     shouldStartNameWithService: true
     minimumCompressionSize: 1024
   environment:
-    BADGER: "https://api.thegraph.com/subgraphs/name/axejintao/badger-dao"
+    BADGER: "https://bgraph-eth.badger.guru/subgraphs/name/axejintao/badger-dao"
     BADGER_BSC: "https://api.thegraph.com/subgraphs/name/axejintao/badger-dao-bsc"
     BADGER_DAO: "https://api.thegraph.com/subgraphs/name/darruma/badger"
     UNISWAP: "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2"
@@ -78,6 +78,7 @@ provider:
     PRICE_DATA: ${self:custom.table.PRICE_DATA.${self:custom.stage}}
     SETT_SNAPSHOTS_DATA: ${self:custom.table.SETT_SNAPSHOTS_DATA.${self:custom.stage}}
     REWARD_DATA: ${self:custom.merkleProofs.${self:custom.stage}}
+    BOUNCER_PROOFS: badger-bouncer.json
 
 resources:
   Resources:
@@ -284,9 +285,9 @@ functions:
           description: "index historical data for badger yfi wbtc vault"
           rate: rate(5 minutes)
           input:
-            contract: "0xf9512aaa68ee8ea73c2244e9f75202ff022d0ef1"
-            createdBlock: 12207041
-            asset: "bvywbtc"
+            contract: "0x4b92d19c11435614cd49af1b589001b7c08cd4d5"
+            createdBlock: 12246710
+            asset: "byvwbtc"
 
   index-apy-snapshots:
     handler: src/indexer/apy-snapshots-indexer.refreshApySnapshots

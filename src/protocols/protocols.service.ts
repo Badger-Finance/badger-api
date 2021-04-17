@@ -14,8 +14,8 @@ import { cachedValueSourceToValueSource } from './common/value-source.utils';
 import { CachedValueSource } from './interfaces/cached-value-source.interface';
 import { ValueSource } from './interfaces/value-source.interface';
 import { PancakeSwapService } from './pancake/PancakeSwapService';
-import { SushiswapService } from './sushi/SushiswapService';
-import { UniswapService } from './uni/UniswapService';
+import { SushiswapService } from './sushi/sushiswap.service';
+import { UniswapService } from './uni/uniswap.service';
 
 /**
  * External protocol performance retrieval service.
@@ -110,11 +110,12 @@ export class ProtocolsService {
     };
 
     const curveData = await fetch(CURVE_API_URL).then((response) => response.json());
+    const assetKey = sett.symbol.toLocaleLowerCase();
     const tradeFeePerformance = {
-      oneDay: curveData.apy.day[assetMap[sett.symbol.toLocaleLowerCase()]] * 100,
-      threeDay: curveData.apy.day[assetMap[sett.symbol.toLocaleLowerCase()]] * 100,
-      sevenDay: curveData.apy.week[assetMap[sett.symbol.toLocaleLowerCase()]] * 100,
-      thirtyDay: curveData.apy.month[assetMap[sett.symbol.toLocaleLowerCase()]] * 100,
+      oneDay: curveData.apy.day[assetMap[assetKey]] * 100,
+      threeDay: curveData.apy.day[assetMap[assetKey]] * 100,
+      sevenDay: curveData.apy.week[assetMap[assetKey]] * 100,
+      thirtyDay: curveData.apy.month[assetMap[assetKey]] * 100,
     };
     return [
       {

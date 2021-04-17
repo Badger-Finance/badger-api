@@ -6,7 +6,7 @@ import { bscSetts } from '../chains/config/bsc.config';
 import { Chain } from '../chains/config/chain.config';
 import { ethSetts } from '../chains/config/eth.config';
 import { ChainNetwork } from '../chains/enums/chain-network.enum';
-import { SETT_SNAPSHOTS_DATA } from '../config/constants';
+import { Protocol, SETT_SNAPSHOTS_DATA } from '../config/constants';
 import { successfulCapture } from '../config/util';
 import { CachedSettSnapshot } from '../setts/interfaces/cached-sett-snapshot.interface';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
@@ -54,9 +54,10 @@ function snapshotToTransactItem(snapshot: CachedSettSnapshot): TransactWriteItem
   };
 }
 
-function settToSnapshot(chainNetwork: ChainNetwork): (settToken: string) => Promise<CachedSettSnapshot> {
+function settToSnapshot(chainNetwork: ChainNetwork): (settDefinition: SettDefinition) => Promise<CachedSettSnapshot> {
   const chain = Chain.getChain(chainNetwork);
-  return async (settToken: string) => {
+  return async (settDefinition: SettDefinition) => {
+    const { settToken } = settDefinition;
     const targetToken = getToken(settToken);
     const { sett } = await getSett(chain.graphUrl, settToken);
     if (!sett) {
@@ -65,8 +66,10 @@ function settToSnapshot(chainNetwork: ChainNetwork): (settToken: string) => Prom
     }
     const { balance, totalSupply, pricePerFullShare, token } = sett;
     const tokenBalance = balance / Math.pow(10, token.decimals);
-    const supply = totalSupply / Math.pow(10, 18);
-    const ratio = pricePerFullShare / Math.pow(10, 18);
+    const divDecimals =
+      settDefinition.affiliate && settDefinition.affiliate.protocol === Protocol.Yearn ? token.decimals : 18;
+    const supply = totalSupply / Math.pow(10, divDecimals);
+    const ratio = pricePerFullShare / Math.pow(10, divDecimals);
     const tokenPriceData = await chain.strategy.getPrice(token.id);
     const value = tokenBalance * tokenPriceData.usd;
 
@@ -85,9 +88,10 @@ const captureSnapshot = async (network: ChainNetwork, sett: SettDefinition): Pro
   try {
     const snapshotTranslateFn = settToSnapshot(network);
     // purposefully await to leverage try / catch
-    const result = await snapshotTranslateFn(sett.settToken);
+    const result = await snapshotTranslateFn(sett);
     return result;
   } catch (err) {
+    console.error(err);
     return null;
   }
 };

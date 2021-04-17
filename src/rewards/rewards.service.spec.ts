@@ -23,10 +23,14 @@ describe('RewardsService', () => {
 
   describe('checkBouncerList', () => {
     describe('check an eligible user', () => {
-      it('completes check successfully', async () => {
+      it('returns user is eligible', async () => {
         const address = '0xC257274276a4E539741Ca11b590B9447B26A8051';
-        const addresses = JSON.stringify([address]);
-        jest.spyOn(s3, 'getObject').mockImplementationOnce(async () => Promise.resolve(addresses));
+        const proofs = JSON.stringify({
+          claims: {
+            [address]: {},
+          },
+        });
+        jest.spyOn(s3, 'getObject').mockImplementationOnce(async () => Promise.resolve(proofs));
         const eligibility = await service.checkBouncerList(address);
         expect(eligibility).toBeDefined();
         expect(eligibility.isEligible).toBeTruthy();
@@ -34,10 +38,12 @@ describe('RewardsService', () => {
     });
 
     describe('check an ineligible user', () => {
-      it('throws a foribbden error', async () => {
+      it('returns user is not eligible', async () => {
         const address = '0xC257274276a4E539741Ca11b590B9447B26A8051';
-        const addresses = JSON.stringify([]);
-        jest.spyOn(s3, 'getObject').mockImplementationOnce(async () => Promise.resolve(addresses));
+        const proofs = JSON.stringify({
+          claims: {},
+        });
+        jest.spyOn(s3, 'getObject').mockImplementationOnce(async () => Promise.resolve(proofs));
         const eligibility = await service.checkBouncerList(address);
         expect(eligibility).toBeDefined();
         expect(eligibility.isEligible).toBeFalsy();
