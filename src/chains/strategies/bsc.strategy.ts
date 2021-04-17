@@ -1,7 +1,7 @@
 import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
-import { getTokenPrice, getVaultTokenPrice, getWrapperTokenPrice } from '../../prices/prices-util';
-import { getPancakeswapPrice } from '../../protocols/common/swap-util';
+import { getTokenPrice, getVaultTokenPrice, getWrapperTokenPrice } from '../../prices/prices.utils';
+import { getPancakeswapPrice } from '../../protocols/common/swap.utils';
 import { bscTokensConfig } from '../../tokens/config/bsc-tokens.config';
 import { TokenType } from '../../tokens/enums/token-type.enum';
 import { TokenPrice } from '../../tokens/interfaces/token-price.interface';

@@ -17,6 +17,70 @@
   dependencies:
     tslib "~2.0.1"
 
+"@aws/dynamodb-auto-marshaller@^0.7.1":
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@aws/dynamodb-auto-marshaller/-/dynamodb-auto-marshaller-0.7.1.tgz#70676c056e4ecb798c08ec2e398a3d93e703858d"
+  integrity sha512-LeURlf6/avrfFo9+4Yht9J3CUTJ72yoBpm1FOUmlexuHNW4Ka61tG30w3ZDCXXXmCO2rG0k3ywAgNJEo3WPbyw==
+  dependencies:
+    tslib "^1.8.1"
+
+"@aws/dynamodb-batch-iterator@^0.7.1":
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@aws/dynamodb-batch-iterator/-/dynamodb-batch-iterator-0.7.1.tgz#aa3062b2e7816ddb88ac64575a11476930c990e9"
+  integrity sha512-SdwBFnjN+ncIl+MOogTeEh1/C6O0jAcqD5YA3AujcH5JPWiMescKAefO4VQbgR0Q9ohcYcMnwL3q6mCdUpyJ9w==
+  dependencies:
+    tslib "^1.8.1"
+    utf8-bytes "^0.0.1"
+
+"@aws/dynamodb-data-mapper-annotations@^0.7.3":
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/@aws/dynamodb-data-mapper-annotations/-/dynamodb-data-mapper-annotations-0.7.3.tgz#8c04598a1dd3ec1b69996020afebcecc6f2c41f7"
+  integrity sha512-RROw+6EIJd0bJsl/76wxfvDkv/irY9pfpp/VRlmEIVixKW2UtMqpni+Hs0XuBRtmGKGfFrWB2WGYiikSnfv4FA==
+  dependencies:
+    "@aws/dynamodb-auto-marshaller" "^0.7.1"
+    "@aws/dynamodb-data-mapper" "^0.7.3"
+    "@aws/dynamodb-data-marshaller" "^0.7.3"
+    reflect-metadata "^0.1.10"
+    tslib "^1.8.1"
+    uuid "^3.0.0"
+
+"@aws/dynamodb-data-mapper@^0.7.3":
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/@aws/dynamodb-data-mapper/-/dynamodb-data-mapper-0.7.3.tgz#813aea68590017f27bc706989f8500a3c7869c3b"
+  integrity sha512-2DYHoF2jvO7L2TfwfJoTfdJz0M6qSVJ0wM0zQ97ehrTyVSz/yWDO3GqMA9jsUqf0fZl3CIItHBhiXdddsH5cpA==
+  dependencies:
+    "@aws/dynamodb-auto-marshaller" "^0.7.1"
+    "@aws/dynamodb-batch-iterator" "^0.7.1"
+    "@aws/dynamodb-data-marshaller" "^0.7.3"
+    "@aws/dynamodb-expressions" "^0.7.3"
+    "@aws/dynamodb-query-iterator" "^0.7.1"
+    tslib "^1.8.1"
+
+"@aws/dynamodb-data-marshaller@^0.7.3":
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/@aws/dynamodb-data-marshaller/-/dynamodb-data-marshaller-0.7.3.tgz#6769362551c01396ab224840933432a9db701f5b"
+  integrity sha512-ea9PR19J2uY7lNSUo2bEcbfI8GiD0n66dISoBHZFrHjgCO2ao2P6UlyG/k0EMhr2zNzTWYNd08VYgTSYz5GBAA==
+  dependencies:
+    "@aws/dynamodb-auto-marshaller" "^0.7.1"
+    "@aws/dynamodb-expressions" "^0.7.3"
+    tslib "^1.8.1"
+    utf8-bytes "^0.0.1"
+
+"@aws/dynamodb-expressions@^0.7.3":
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/@aws/dynamodb-expressions/-/dynamodb-expressions-0.7.3.tgz#abfda5dbda54f51c58a3bd038c710b7119fc8949"
+  integrity sha512-63vaCyNKmO8BE/JWlQ3DSFG+qCAWgO5MGif31E5CPdWKaBt5yBG5qnh5w5oFelKRK6/1M6cYKl/Yui08wimUig==
+  dependencies:
+    "@aws/dynamodb-auto-marshaller" "^0.7.1"
+    tslib "^1.8.1"
+
+"@aws/dynamodb-query-iterator@^0.7.1":
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@aws/dynamodb-query-iterator/-/dynamodb-query-iterator-0.7.1.tgz#d43bbf7644cfee55de0aec273475d680a05f3981"
+  integrity sha512-x28lcgj2HDadxszYEwQjAJyGMrdy3aznLM2TSEeQxqCxKzFT1qewmKxgWSMslH+CiLuuqs9H1FaIwvP15b6UHQ==
+  dependencies:
+    tslib "^1.8.1"
+
 "@babel/code-frame@7.12.11":
   version "7.12.11"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.12.11.tgz#f4ad435aa263db935b8f10f2c552d23fb716a63f"
@@ -6267,11 +6331,6 @@ forwarded@~0.1.2:
   resolved "https://registry.yarnpkg.com/forwarded/-/forwarded-0.1.2.tgz#98c23dab1175657b8c0573e8ceccd91b0ff18c84"
   integrity sha1-mMI9qxF1ZXuMBXPozszZGw/xjIQ=
 
-fp-ts@2.9.5:
-  version "2.9.5"
-  resolved "https://registry.yarnpkg.com/fp-ts/-/fp-ts-2.9.5.tgz#6690cd8b76b84214a38fc77cbbbd04a38f86ea90"
-  integrity sha512-MiHrA5teO6t8zKArE3DdMPT/Db6v2GUt5yfWnhBTrrsVfeCJUUnV6sgFvjGNBKDmEMqVwRFkEePL7wPwqrLKKA==
-
 fragment-cache@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/fragment-cache/-/fragment-cache-0.2.1.tgz#4290fad27f13e89be7f33799c6bc5a0abfff0d19"
@@ -7178,11 +7237,6 @@ into-stream@^3.1.0:
   dependencies:
     from2 "^2.1.1"
     p-is-promise "^1.1.0"
-
-io-ts@2.2.16:
-  version "2.2.16"
-  resolved "https://registry.yarnpkg.com/io-ts/-/io-ts-2.2.16.tgz#597dffa03db1913fc318c9c6df6931cb4ed808b2"
-  integrity sha512-y5TTSa6VP6le0hhmIyN0dqEXkrZeJLeC5KApJq6VLci3UEKF80lZ+KuoUs02RhBxNWlrqSNxzfI7otLX1Euv8Q==
 
 ipaddr.js@1.9.1:
   version "1.9.1"
@@ -10490,7 +10544,7 @@ readdirp@~3.5.0:
   dependencies:
     picomatch "^2.2.1"
 
-reflect-metadata@^0.1.13:
+reflect-metadata@^0.1.10, reflect-metadata@^0.1.13:
   version "0.1.13"
   resolved "https://registry.yarnpkg.com/reflect-metadata/-/reflect-metadata-0.1.13.tgz#67ae3ca57c972a2aa1642b10fe363fe32d49dc08"
   integrity sha512-Ts1Y/anZELhSsjMcU605fU9RE4Oi3p5ORujwbIKXfWa+0Zxs510Qrmrce5/Jowq3cHSZSJqBjypxmHarc+vEWg==
@@ -12394,6 +12448,11 @@ utf-8-validate@^5.0.2:
   integrity sha512-MEF05cPSq3AwJ2C7B7sHAA6i53vONoZbMGX8My5auEVm6W+dJ2Jd/TZPyGJ5CH42V2XtbI5FD28HeHeqlPzZ3Q==
   dependencies:
     node-gyp-build "^4.2.0"
+
+utf8-bytes@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/utf8-bytes/-/utf8-bytes-0.0.1.tgz#116b025448c9b500081cdfbf1f4d6c6c37d8837d"
+  integrity sha1-EWsCVEjJtQAIHN+/H01sbDfYg30=
 
 utf8@3.0.0:
   version "3.0.0"

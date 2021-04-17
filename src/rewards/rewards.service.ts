@@ -1,16 +1,16 @@
 import { Inject, Service } from '@tsed/common';
 import { NotFound } from '@tsed/exceptions';
 import { ethers } from 'ethers';
-import { S3Service } from '../aws/S3Service';
+import { S3Service } from '../aws/s3.service';
 import { CacheService } from '../cache/CacheService';
 import { BOUNCER_PROOFS, REWARD_DATA } from '../config/constants';
+import { Eligibility } from './interfaces/eligibility.interface';
 import {
   AirdropMerkleClaim,
   AirdropMerkleDistribution,
   RewardMerkleClaim,
   RewardMerkleDistribution,
-} from '../interface/MerkleDistribution';
-import { Eligibility } from './interfaces/eligibility.interface';
+} from './interfaces/merkle-distributor.interface';
 
 @Service()
 export class RewardsService {

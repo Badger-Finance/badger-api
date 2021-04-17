@@ -1,20 +1,20 @@
 import { BadRequest, InternalServerError, NotFound, UnprocessableEntity } from '@tsed/exceptions';
-import { DocumentClient, QueryInput } from 'aws-sdk/clients/dynamodb';
 import { ethers } from 'ethers';
 import NodeCache = require('node-cache');
-import { getItems, saveItem } from '../aws/dynamodb-utils';
-import { ChainStrategy } from '../chains/strategies/chain.strategy';
-import { COINGECKO_URL, PRICE_DATA, TOKENS } from '../config/constants';
-import { Token } from '../tokens/interfaces/token.interface';
-import { PriceData, TokenPrice, TokenPriceSnapshot } from '../tokens/interfaces/token-price.interface';
-import { getToken, getTokenByName } from '../tokens/tokens-util';
-import { TokenConfig } from '../tokens/types/token-config.type';
-import AttributeValue = DocumentClient.AttributeValue;
+import { DataMapper } from '@aws/dynamodb-data-mapper';
 import fetch from 'node-fetch';
+import { dynamo } from '../aws/dynamodb-utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
-import { getSett } from '../setts/setts-util';
+import { ChainStrategy } from '../chains/strategies/chain.strategy';
+import { COINGECKO_URL, TOKENS } from '../config/constants';
+import { getSett } from '../setts/setts.utils';
 import { TokenType } from '../tokens/enums/token-type.enum';
+import { Token } from '../tokens/interfaces/token.interface';
+import { PriceData, TokenPrice } from '../tokens/interfaces/token-price.interface';
+import { TokenPriceSnapshot } from '../tokens/interfaces/token-price-snapshot.interface';
+import { getToken, getTokenByName } from '../tokens/tokens-util';
+import { TokenConfig } from '../tokens/types/token-config.type';
 
 /**
  * Protoype for a token address pricing function.
@@ -52,15 +52,16 @@ export const updatePrice = async (token: Token): Promise<TokenPriceSnapshot> => 
   const strategy = ChainStrategy.getStrategy(address);
 
   try {
-    const tokenPriceData = await strategy.getPrice(address);
-    tokenPriceData.name = name;
-    tokenPriceData.address = address;
-    const tokenPriceSnapshot: TokenPriceSnapshot = {
-      ...tokenPriceData,
-      updatedAt: Date.now(),
-    };
-    await saveItem(PRICE_DATA, tokenPriceSnapshot);
-    return tokenPriceSnapshot;
+    const price = await strategy.getPrice(address);
+    const mapper = new DataMapper({ client: dynamo });
+    return mapper.put(
+      Object.assign(new TokenPriceSnapshot(), {
+        address: address,
+        name: name,
+        eth: price.eth,
+        usd: price.usd,
+      }),
+    );
   } catch (err) {
     return noPrice(token);
   } // ignore issues to allow for price updates of other coins
@@ -71,7 +72,7 @@ export const updatePrice = async (token: Token): Promise<TokenPriceSnapshot> => 
  * @param tokenConfig Target for price updates.
  */
 export const updatePrices = async (tokenConfig: TokenConfig): Promise<TokenPriceSnapshot[]> => {
-  return Promise.all(Object.values(tokenConfig).map(async (token) => updatePrice(token)));
+  return Promise.all(Object.keys(tokenConfig).map(async (token) => updatePrice(tokenConfig[token])));
 };
 
 /**
@@ -81,21 +82,20 @@ export const updatePrices = async (tokenConfig: TokenConfig): Promise<TokenPrice
  */
 export const getPrice = async (contract: string): Promise<TokenPriceSnapshot> => {
   const token = getToken(contract);
-  const checksumContract: AttributeValue = ethers.utils.getAddress(contract);
-  const params: QueryInput = {
-    TableName: PRICE_DATA,
-    KeyConditionExpression: 'address = :address',
-    ExpressionAttributeValues: {
-      ':address': checksumContract,
-    },
-    Limit: 1,
-    ScanIndexForward: false,
-  };
-  const prices = await getItems<TokenPriceSnapshot>(params);
-  if (!prices || prices.length !== 1) {
+  try {
+    const mapper = new DataMapper({ client: dynamo });
+    for await (const item of mapper.query(
+      TokenPriceSnapshot,
+      { address: token.address },
+      { limit: 1, scanIndexForward: false },
+    )) {
+      return item;
+    }
+    return noPrice(token);
+  } catch (err) {
+    console.error(err);
     return noPrice(token);
   }
-  return prices[0];
 };
 
 /**
@@ -104,12 +104,7 @@ export const getPrice = async (contract: string): Promise<TokenPriceSnapshot> =>
  * @returns Most recently updated token pricing data.
  */
 export const getTokenPriceData = async (contract: string): Promise<TokenPrice> => {
-  const checksumContract = ethers.utils.getAddress(contract);
-  const cachedPrice = priceCache.get<TokenPrice>(checksumContract);
-  if (!cachedPrice) {
-    return getPrice(checksumContract);
-  }
-  return cachedPrice;
+  return getPrice(contract);
 };
 
 /**
@@ -237,7 +232,7 @@ export const getVaultTokenPrice = async (contract: string): Promise<TokenPrice> 
   if (token.address === TOKENS.BDIGG) {
     multiplier = (sett.balance / sett.totalSupply) * 1e9;
   } else {
-    multiplier = sett.pricePerFullShare / 1e18;
+    multiplier = sett.pricePerFullShare / Math.pow(10, token.decimals);
   }
   vaultTokenPrice.usd *= multiplier;
   vaultTokenPrice.eth *= multiplier;

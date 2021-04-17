@@ -26,6 +26,7 @@ export class BinanceSmartChain extends Chain {
 export const bscSetts: SettDefinition[] = [
   {
     name: 'Pancakeswap BNB/BTCB',
+    createdBlock: 5516404,
     symbol: 'PLP-BNB-BTCB',
     depositToken: TOKENS.PANCAKE_BNB_BTCB,
     settToken: TOKENS.BPANCAKE_BNB_BTCB,
@@ -33,6 +34,7 @@ export const bscSetts: SettDefinition[] = [
   },
   {
     name: 'Pancakeswap bBADGER/BTCB',
+    createdBlock: 5712803,
     symbol: 'PLP-BBADGER-BTCB',
     depositToken: TOKENS.PANCAKE_BBADGER_BTCB,
     settToken: TOKENS.BPANCAKE_BBADGER_BTCB,
@@ -40,6 +42,7 @@ export const bscSetts: SettDefinition[] = [
   },
   {
     name: 'Pancakeswap bDIGG/BTCB',
+    createdBlock: 5712807,
     symbol: 'PLP-BDIGG-BTCB',
     depositToken: TOKENS.PANCAKE_BDIGG_BTCB,
     settToken: TOKENS.BPANCAKE_BDIGG_BTCB,

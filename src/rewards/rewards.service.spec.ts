@@ -1,5 +1,5 @@
 import { PlatformTest } from '@tsed/common';
-import { S3Service } from '../aws/S3Service';
+import { S3Service } from '../aws/s3.service';
 import { CacheService } from '../cache/CacheService';
 import { RewardsService } from './rewards.service';
 

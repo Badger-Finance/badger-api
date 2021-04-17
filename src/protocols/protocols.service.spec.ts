@@ -3,9 +3,7 @@ import { QueryOutput } from 'aws-sdk/clients/dynamodb';
 import * as dynamoDbUtils from '../aws/dynamodb-utils';
 import { CacheService } from '../cache/CacheService';
 import { loadChains } from '../chains/chain';
-import { Chain } from '../chains/config/chain.config';
 import { ethSetts } from '../chains/config/eth.config';
-import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { ProtocolsService } from './protocols.service';
 
 describe('ProtocolsService', () => {
@@ -26,10 +24,7 @@ describe('ProtocolsService', () => {
       it('returns an empty array', async () => {
         const asset = 'badger';
         const settDefinition = ethSetts.find((s) => s.symbol.toLowerCase() === asset.toLowerCase());
-        const valueSources = await service.getProtocolPerformance(
-          Chain.getChain(ChainNetwork.Ethereum),
-          settDefinition!,
-        );
+        const valueSources = await service.getProtocolPerformance(settDefinition!);
         expect(valueSources).toEqual([]);
       });
     });
@@ -87,10 +82,7 @@ describe('ProtocolsService', () => {
 
         const asset = 'renBTCCRV';
         const settDefinition = ethSetts.find((s) => s.symbol.toLowerCase() === asset.toLowerCase());
-        const valueSources = await service.getProtocolPerformance(
-          Chain.getChain(ChainNetwork.Ethereum),
-          settDefinition!,
-        );
+        const valueSources = await service.getProtocolPerformance(settDefinition!);
         expect(valueSources.length).toBe(mockResponse.Items!.length);
         expect(valueSources[0]).toMatchObject({
           name,
@@ -125,10 +117,7 @@ describe('ProtocolsService', () => {
 
         const asset = 'hrenBTCCRV';
         const settDefinition = ethSetts.find((s) => s.symbol.toLowerCase() === asset.toLowerCase());
-        const valueSources = await service.getProtocolPerformance(
-          Chain.getChain(ChainNetwork.Ethereum),
-          settDefinition!,
-        );
+        const valueSources = await service.getProtocolPerformance(settDefinition!);
         expect(valueSources).toEqual(mockValueSources);
       });
     });

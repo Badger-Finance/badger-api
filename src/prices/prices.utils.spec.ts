@@ -20,7 +20,7 @@ import {
   priceCache,
   updatePrice,
   updatePrices,
-} from './prices-util';
+} from './prices.utils';
 
 describe('prices-util', () => {
   let testStrategy: ChainStrategy;

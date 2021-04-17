@@ -7,10 +7,10 @@ import { erc20Abi, pancakeChefAbi } from '../../config/abi/abi';
 import { PANCAKE_CHEF, PANCAKESWAP_URL, TOKENS } from '../../config/constants';
 import { PoolInfo } from '../../interface/MasterChef';
 import { PricesService } from '../../prices/prices.service';
-import { getTokenPriceData } from '../../prices/prices-util';
+import { getTokenPriceData } from '../../prices/prices.utils';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
-import { SwapService } from '../common/SwapService';
+import { SwapService } from '../common/swap.service';
 import { uniformPerformance } from '../interfaces/performance.interface';
 import { ValueSource } from '../interfaces/value-source.interface';
 

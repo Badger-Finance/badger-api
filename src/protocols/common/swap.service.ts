@@ -3,7 +3,7 @@ import { SettDefinition } from '../../setts/interfaces/sett-definition.interface
 import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
 import { ValueSource } from '../interfaces/value-source.interface';
 import { getSwapValueSource } from './performance.utils';
-import { getLiquidityPrice } from './swap-util';
+import { getLiquidityPrice } from './swap.utils';
 
 export abstract class SwapService {
   constructor(private graphUrl: string, private name: string) {}

@@ -1,8 +1,6 @@
 ---
 service: badger-v2
 frameworkVersion: '2'
-# temporarily silence complaints about v1 swagger documentation
-configValidationMode: off
 
 plugins:
   - serverless-plugin-typescript
@@ -29,6 +27,10 @@ custom:
         sources:
           - table: ${self:custom.table.PRICE_DATA.${self:custom.stage}}
             sources: [./seed/prices.json]
+          - table: ${self:custom.table.APY_SNAPSHOTS_DATA.${self:custom.stage}}
+            sources: [./seed/value-sources.json]
+          - table: ${self:custom.table.SETT_SNAPSHOTS_DATA.${self:custom.stage}}
+            sources: [./seed/cached-sett-snapshots.json]
 
   serverless-offline:
     noPrependStageInUrl: true
@@ -161,133 +163,14 @@ functions:
           method: any
           cors: true
 
-  index-sett:
+  index-setts:
     handler: src/indexer/sett-indexer.indexAsset
     timeout: 300
     events:
       - schedule:
-          name: ${self:service}-${self:custom.stage}-index-sbtccrv
-          description: "index historical data for sbtc sett"
+          name: ${self:service}-${self:custom.stage}-index-setts
+          description: "index historical data for all setts"
           rate: rate(5 minutes)
-          input:
-            contract: "0xd04c48a53c111300ad41190d63681ed3dad998ec"
-            createdBlock: 11380877
-            asset: "sbtccrv"
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-renbtccrv
-          description: "index historical data for renbtccrv sett"
-          rate: rate(5 minutes)
-          input:
-            contract: "0x6def55d2e18486b9ddfaa075bc4e4ee0b28c1545"
-            createdBlock: 11380872
-            asset: "renbtccrv"
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-tbtccrv
-          description: "index historical data for tbtccrv sett"
-          rate: rate(5 minutes)
-          input:
-            contract: "0xb9d076fde463dbc9f915e5392f807315bf940334"
-            createdBlock: 11380878
-            asset: "tbtccrv"
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-hrenbtccrv
-          description: "index historical data for hrenbtccrv sett"
-          rate: rate(5 minutes)
-          input:
-            contract: "0xaf5a1decfa95baf63e0084a35c62592b774a2a87"
-            createdBlock: 11380939
-            asset: "hrenbtccrv"
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-badger
-          description: "index historical data for badger sett"
-          rate: rate(5 minutes)
-          input:
-            contract: "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28"
-            createdBlock: 11380871
-            asset: "badger"
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-digg
-          description: "index historical data for digg sett"
-          rate: rate(5 minutes)
-          input:
-            contract: "0x7e7e112a68d8d2e221e11047a72ffc1065c38e1a"
-            createdBlock: 11680422
-            asset: "digg"
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-uniswap-badger-wbtc
-          description: "index historical data for badger uniswap badger-wbtc sett"
-          rate: rate(5 minutes)
-          input:
-            contract: "0x235c9e24d3fb2fafd58a2e49d454fdcd2dbf7ff1"
-            createdBlock: 11380883
-            asset: "badger-wbtc"
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-uniswap-digg-wbtc
-          description: "index historical data for badger uniswap digg-wbtc sett"
-          rate: rate(5 minutes)
-          input:
-            contract: "0xc17078fdd324cc473f8175dc5290fae5f2e84714"
-            createdBlock: 11680833
-            asset: "digg-wbtc"
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-sushiswap-badger-wbtc
-          description: "index historical data for badger sushiswap badger-wbtc vault"
-          rate: rate(5 minutes)
-          input:
-            contract: "0x1862a18181346ebd9edaf800804f89190def24a5"
-            createdBlock: 11537600
-            asset: "slp-badger-wbtc"
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-sushiswap-wbtc-eth
-          description: "index historical data for badger sushiswap wbtc-eth vault"
-          rate: rate(5 minutes)
-          input:
-            contract: "0x758a43ee2bff8230eeb784879cdcff4828f2544d"
-            createdBlock: 11539529
-            asset: "slp-wbtc-eth"
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-sushiswap-digg-wbtc
-          description: "index historical data for badger sushiswap digg-wbtc vault"
-          rate: rate(5 minutes)
-          input:
-            contract: "0x88128580acdd9c04ce47afce196875747bf2a9f6"
-            createdBlock: 11681030
-            asset: "slp-digg-wbtc"
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-pancakeswap-bdigg-btcb
-          description: "index historical data for badger pancakeswap bdigg-btcb vault"
-          rate: rate(5 minutes)
-          input:
-            contract: "0xaf4B9C4b545D5324904bAa15e29796D2E2f90813"
-            createdBlock: 5712807
-            asset: "plp-bdigg-btcb"
-            chain: "bsc"
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-pancakeswap-bbadger-btcb
-          description: "index historical data for badger pancakeswap bbadger-btcb vault"
-          rate: rate(5 minutes)
-          input:
-            contract: "0x857F91f735f4B03b19D2b5c6E476C73DB8241F55"
-            createdBlock: 5712803
-            asset: "plp-bbadger-btcb"
-            chain: "bsc"
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-pancakeswap-bnb-btcb
-          description: "index historical data for badger pancakeswap bnb-btcb vault"
-          rate: rate(5 minutes)
-          input:
-            contract: "0xaf4B9C4b545D5324904bAa15e29796D2E2f90813"
-            createdBlock: 5516404
-            asset: "plp-bnb-btcb"
-            chain: "bsc"
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-yearn-wbtc
-          description: "index historical data for badger yfi wbtc vault"
-          rate: rate(5 minutes)
-          input:
-            contract: "0x4b92d19c11435614cd49af1b589001b7c08cd4d5"
-            createdBlock: 12246710
-            asset: "byvwbtc"
 
   index-apy-snapshots:
     handler: src/indexer/apy-snapshots-indexer.refreshApySnapshots

@@ -1,12 +1,23 @@
-import * as t from 'io-ts';
+import { attribute, hashKey, table } from '@aws/dynamodb-data-mapper-annotations';
+import { SETT_SNAPSHOTS_DATA } from '../../config/constants';
 
-export const CachedSettSnapshot = t.type({
-  address: t.string,
-  balance: t.number,
-  ratio: t.number,
-  settValue: t.number,
-  supply: t.number,
-  updatedAt: t.number,
-});
+@table(SETT_SNAPSHOTS_DATA)
+export class CachedSettSnapshot {
+  @hashKey()
+  address!: string;
 
-export type CachedSettSnapshot = t.TypeOf<typeof CachedSettSnapshot>;
+  @attribute()
+  balance!: number;
+
+  @attribute()
+  ratio!: number;
+
+  @attribute()
+  settValue!: number;
+
+  @attribute()
+  supply!: number;
+
+  @attribute({ defaultProvider: () => Date.now() })
+  updatedAt!: number;
+}

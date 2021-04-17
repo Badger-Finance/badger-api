@@ -5,7 +5,7 @@ import { ethSetts } from '../chains/config/eth.config';
 import { BscStrategy } from '../chains/strategies/bsc.strategy';
 import { EthStrategy } from '../chains/strategies/eth.strategy';
 import { SettQuery } from '../graphql/generated/badger';
-import * as settUtils from '../setts/setts-util';
+import * as settUtils from '../setts/setts.utils';
 import { refreshSettSnapshots } from './sett-snapshots-indexer';
 
 describe('refreshSettSnapshots', () => {

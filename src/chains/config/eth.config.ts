@@ -14,7 +14,7 @@ export class Ethereum extends Chain {
       '0x01',
       ethTokensConfig,
       ethSetts,
-      new ethers.providers.JsonRpcProvider(Provider.MyEtherWallet),
+      new ethers.providers.JsonRpcProvider(Provider.Cloudflare),
       new EthStrategy(),
       BADGER_URL,
       2425847,
@@ -26,14 +26,16 @@ export class Ethereum extends Chain {
 export const ethSetts: SettDefinition[] = [
   {
     name: 'Curve.fi renBTC/wBTC/sBTC',
-    symbol: 'sBTCCRV',
+    createdBlock: 11380877,
+    geyserAddress: '0x10fc82867013fce1bd624fafc719bb92df3172fc',
     depositToken: TOKENS.CRV_SBTC,
     settToken: TOKENS.BCRV_SBTC,
-    geyserAddress: '0x10fc82867013fce1bd624fafc719bb92df3172fc',
+    symbol: 'sBTCCRV',
     protocol: Protocol.Curve,
   },
   {
     name: 'Curve.fi crvRenWBTC',
+    createdBlock: 11380872,
     symbol: 'renBTCCRV',
     depositToken: TOKENS.CRV_RENBTC,
     settToken: TOKENS.BCRV_RENBTC,
@@ -42,6 +44,7 @@ export const ethSetts: SettDefinition[] = [
   },
   {
     name: 'Curve.fi tBTC/sBTCCrv LP',
+    createdBlock: 11380878,
     symbol: 'tBTCCRV',
     depositToken: TOKENS.CRV_TBTC,
     settToken: TOKENS.BCRV_TBTC,
@@ -50,6 +53,7 @@ export const ethSetts: SettDefinition[] = [
   },
   {
     name: 'Harvest Curve.fi crvRenWBTC',
+    createdBlock: 11380939,
     symbol: 'hrenBTCCRV',
     depositToken: TOKENS.CRV_RENBTC,
     settToken: TOKENS.BCRV_HRENBTC,
@@ -58,6 +62,7 @@ export const ethSetts: SettDefinition[] = [
   },
   {
     name: 'Uniswap Wrapped BTC/Badger',
+    createdBlock: 11380883,
     symbol: 'BADGER-WBTC',
     depositToken: TOKENS.UNI_BADGER_WBTC,
     settToken: TOKENS.BUNI_BADGER_WBTC,
@@ -66,6 +71,7 @@ export const ethSetts: SettDefinition[] = [
   },
   {
     name: 'Uniswap Wrapped BTC/Digg',
+    createdBlock: 11680833,
     symbol: 'DIGG-WBTC',
     depositToken: TOKENS.UNI_DIGG_WBTC,
     settToken: TOKENS.BUNI_DIGG_WBTC,
@@ -74,6 +80,7 @@ export const ethSetts: SettDefinition[] = [
   },
   {
     name: 'Sushiswap Wrapped BTC/Wrapped Ether',
+    createdBlock: 11539529,
     symbol: 'SLP-WBTC-ETH',
     depositToken: TOKENS.SUSHI_ETH_WBTC,
     settToken: TOKENS.BSUSHI_ETH_WBTC,
@@ -82,6 +89,7 @@ export const ethSetts: SettDefinition[] = [
   },
   {
     name: 'Sushiswap Wrapped BTC/Badger',
+    createdBlock: 11537600,
     symbol: 'SLP-BADGER-WBTC',
     depositToken: TOKENS.SUSHI_BADGER_WBTC,
     settToken: TOKENS.BSUSHI_BADGER_WBTC,
@@ -90,6 +98,7 @@ export const ethSetts: SettDefinition[] = [
   },
   {
     name: 'Sushiswap Wrapped BTC/Digg',
+    createdBlock: 11681030,
     symbol: 'SLP-DIGG-WBTC',
     depositToken: TOKENS.SUSHI_DIGG_WBTC,
     settToken: TOKENS.BSUSHI_DIGG_WBTC,
@@ -98,12 +107,14 @@ export const ethSetts: SettDefinition[] = [
   },
   {
     name: 'Digg',
+    createdBlock: 11680422,
     symbol: 'DIGG',
     depositToken: TOKENS.DIGG,
     settToken: TOKENS.BDIGG,
   },
   {
     name: 'Badger',
+    createdBlock: 11380871,
     symbol: 'BADGER',
     depositToken: TOKENS.BADGER,
     settToken: TOKENS.BBADGER,
@@ -111,6 +122,7 @@ export const ethSetts: SettDefinition[] = [
   },
   {
     hasBouncer: true,
+    createdBlock: 12246710,
     name: 'Yearn WBTC',
     symbol: 'byvWBTC',
     depositToken: TOKENS.WBTC,

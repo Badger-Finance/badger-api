@@ -19,6 +19,8 @@
     "ui": "yarn upgradeInteractive"
   },
   "dependencies": {
+    "@aws/dynamodb-data-mapper": "^0.7.3",
+    "@aws/dynamodb-data-mapper-annotations": "^0.7.3",
     "@tsed/common": "^6.33.0",
     "@tsed/core": "^6.33.0",
     "@tsed/di": "^6.33.0",
@@ -35,12 +37,10 @@
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "ethers": "^5.0.26",
-    "fp-ts": "2.9.5",
     "globby": "^11.0.2",
     "graphql": "^15.5.0",
     "graphql-request": "^3.4.0",
     "graphql-tag": "^2.11.0",
-    "io-ts": "2.2.16",
     "method-override": "^3.0.0",
     "node-cache": "^5.1.2",
     "node-fetch": "^2.6.1",

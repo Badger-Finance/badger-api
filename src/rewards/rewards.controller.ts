@@ -1,7 +1,7 @@
 import { Controller, Get, Inject, PathParams } from '@tsed/common';
 import { ContentType } from '@tsed/schema';
-import { AirdropMerkleClaim, RewardMerkleClaim } from '../interface/MerkleDistribution';
 import { Eligibility } from './interfaces/eligibility.interface';
+import { AirdropMerkleClaim, RewardMerkleClaim } from './interfaces/merkle-distributor.interface';
 import { RewardsService } from './rewards.service';
 
 @Controller('/reward')

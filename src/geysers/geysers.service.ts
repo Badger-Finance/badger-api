@@ -8,13 +8,13 @@ import { diggAbi, geyserAbi } from '../config/abi/abi';
 import { BADGER_URL, Protocol, TOKENS } from '../config/constants';
 import { secondToDay, toRate } from '../config/util';
 import { getSdk, OrderDirection, Sdk as BadgerGraphqlSdk } from '../graphql/generated/badger';
-import { Emission, Geyser, UnlockSchedule } from '../interface/Geyser';
 import { PricesService } from '../prices/prices.service';
 import { ValueSource } from '../protocols/interfaces/value-source.interface';
 import { Sett } from '../setts/interfaces/sett.interface.';
 import { SettsService } from '../setts/setts.service';
 import { TokensService } from '../tokens/tokens.service';
 import { getToken } from '../tokens/tokens-util';
+import { Emission, Geyser, UnlockSchedule } from './interface/geyser.interface';
 
 /**
  * TODO: Remove geysers service + geysers controller once they are
