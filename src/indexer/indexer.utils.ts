@@ -12,20 +12,20 @@ export const settToCachedSnapshot = async (
   chain: Chain,
   settDefinition: SettDefinition,
 ): Promise<CachedSettSnapshot> => {
-  const { settToken } = settDefinition;
-  const targetToken = getToken(settToken);
-  const { sett } = await getSett(chain.graphUrl, settToken);
+  const settToken = getToken(settDefinition.settToken);
+  const depositToken = getToken(settDefinition.depositToken);
+  const { sett } = await getSett(chain.graphUrl, settToken.address);
 
   if (!sett) {
     // sett has not been indexed yet, or encountered a graph error
-    throw new NotFound(`${targetToken.name} sett not found`);
+    throw new NotFound(`${settToken.name} sett not found`);
   }
 
-  const { balance, totalSupply, pricePerFullShare, token } = sett;
-  const tokenBalance = balance / Math.pow(10, token.decimals);
-  const supply = totalSupply / Math.pow(10, token.decimals);
-  const ratio = pricePerFullShare / Math.pow(10, token.decimals);
-  const tokenPriceData = await chain.strategy.getPrice(token.id);
+  const { balance, totalSupply, pricePerFullShare } = sett;
+  const tokenBalance = balance / Math.pow(10, depositToken.decimals);
+  const supply = totalSupply / Math.pow(10, settToken.decimals);
+  const ratio = pricePerFullShare / Math.pow(10, settToken.decimals);
+  const tokenPriceData = await chain.strategy.getPrice(depositToken.address);
   const value = tokenBalance * tokenPriceData.usd;
 
   return Object.assign(new CachedSettSnapshot(), {
@@ -43,18 +43,20 @@ export const settToSnapshot = async (
   block: number,
 ): Promise<SettSnapshot | null> => {
   const sett = await getSett(chain.graphUrl, settDefinition.settToken, block);
+  const settToken = getToken(settDefinition.settToken);
+  const depositToken = getToken(settDefinition.depositToken);
 
   if (sett.sett == null) {
     return null;
   }
 
-  const { balance, totalSupply, pricePerFullShare, token } = sett.sett;
+  const { balance, totalSupply, pricePerFullShare } = sett.sett;
   const blockData = await chain.provider.getBlock(block);
   const timestamp = blockData.timestamp * 1000;
-  const tokenBalance = balance / Math.pow(10, token.decimals);
-  const supply = totalSupply / Math.pow(10, token.decimals);
-  const ratio = pricePerFullShare / Math.pow(10, token.decimals);
-  const tokenPriceData = await chain.strategy.getPrice(token.id);
+  const tokenBalance = balance / Math.pow(10, depositToken.decimals);
+  const supply = totalSupply / Math.pow(10, settToken.decimals);
+  const ratio = pricePerFullShare / Math.pow(10, settToken.decimals);
+  const tokenPriceData = await chain.strategy.getPrice(depositToken.address);
   const value = tokenBalance * tokenPriceData.usd;
 
   return Object.assign(new SettSnapshot(), {

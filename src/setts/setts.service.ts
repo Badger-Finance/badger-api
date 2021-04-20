@@ -170,7 +170,7 @@ export class SettsService {
       name: VAULT_SOURCE,
       apy: settPerformance.threeDay,
       performance: settPerformance,
-    } as ValueSource;
+    };
   }
 
   getSettSampledPerformance(settSnapshots: SettSnapshot[], sampleIndex: number): number {
