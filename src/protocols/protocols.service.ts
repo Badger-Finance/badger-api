@@ -1,6 +1,5 @@
 import { Inject, Service } from '@tsed/common';
 import fetch from 'node-fetch';
-import { CacheService } from '../cache/CacheService';
 import { CURVE_API_URL } from '../config/constants';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { ValueSource } from './interfaces/value-source.interface';
@@ -20,8 +19,6 @@ export class ProtocolsService {
   sushiswapService!: SushiswapService;
   @Inject()
   pancakeSwapService!: PancakeSwapService;
-  @Inject()
-  cacheService!: CacheService;
 
   /**
    * Retrieve performance of underlying protocol for a given sett.

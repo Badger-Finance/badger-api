@@ -1,7 +1,6 @@
-import { DataMapper } from '@aws/dynamodb-data-mapper';
+import { DataMapper, PutOptions, PutParameters, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
 import { BadRequest, NotFound } from '@tsed/exceptions';
 import fetchMock from 'jest-fetch-mock';
-import { dynamo } from '../aws/dynamodb.utils';
 import { ChainStrategy } from '../chains/strategies/chain.strategy';
 import { TestStrategy } from '../chains/strategies/test.strategy';
 import { TOKENS } from '../config/constants';
@@ -25,9 +24,11 @@ import {
 
 describe('prices-util', () => {
   let testStrategy: ChainStrategy;
+  let put: jest.SpyInstance<StringToAnyObjectMap,
+    [item: StringToAnyObjectMap, options: PutOptions]
+  >;
 
   const randomPrice = () => Math.random() * 100;
-  const mapper = new DataMapper({ client: dynamo });
 
   beforeAll(async () => {
     const ethPrice = Math.max(1500, Math.random() * 3000);
@@ -54,11 +55,10 @@ describe('prices-util', () => {
     priceData[TOKENS.DIGG] = diggPrice;
 
     testStrategy = new TestStrategy(priceData);
+    put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation(async (item: StringToAnyObjectMap, options?: PutOptions) => item);
   });
 
   beforeEach(async () => {
-    await mapper.deleteTable(TokenPriceSnapshot);
-    await mapper.createTable(TokenPriceSnapshot, {readCapacityUnits: 1, writeCapacityUnits: 1});
     fetchMock.resetMocks();
   });
 
