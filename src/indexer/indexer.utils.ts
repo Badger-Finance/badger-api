@@ -28,13 +28,14 @@ export const settToCachedSnapshot = async (
   const tokenPriceData = await chain.strategy.getPrice(depositToken.address);
   const value = tokenBalance * tokenPriceData.usd;
 
-  return Object.assign(new CachedSettSnapshot(), {
+  return {
     address: settToken,
     balance: tokenBalance,
     ratio,
     settValue: parseFloat(value.toFixed(2)),
     supply,
-  });
+    updatedAt: Date.now(),
+  };
 };
 
 export const settToSnapshot = async (
