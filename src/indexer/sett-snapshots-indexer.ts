@@ -1,5 +1,5 @@
 import { DataMapper } from '@aws/dynamodb-data-mapper';
-import { dynamo } from '../aws/dynamodb-utils';
+import { dynamo } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { successfulCapture } from '../config/util';

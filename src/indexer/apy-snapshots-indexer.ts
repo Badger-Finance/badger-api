@@ -1,7 +1,7 @@
 import { DataMapper } from '@aws/dynamodb-data-mapper';
 import { isNil } from '@tsed/core';
 import flatten from 'lodash/flatten';
-import { dynamo } from '../aws/dynamodb-utils';
+import { dynamo } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { PANCAKESWAP_URL, Protocol, SUSHISWAP_URL } from '../config/constants';

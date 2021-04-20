@@ -1,12 +1,14 @@
+import { DataMapper } from '@aws/dynamodb-data-mapper';
 import { BadRequest, NotFound } from '@tsed/exceptions';
 import fetchMock from 'jest-fetch-mock';
-import { createTable, deleteTable, priceAttributes, priceKeySchema, saveItem } from '../aws/dynamodb-utils';
+import { dynamo } from '../aws/dynamodb.utils';
 import { ChainStrategy } from '../chains/strategies/chain.strategy';
 import { TestStrategy } from '../chains/strategies/test.strategy';
-import { PRICE_DATA, TOKENS } from '../config/constants';
+import { TOKENS } from '../config/constants';
 import { TokenType } from '../tokens/enums/token-type.enum';
 import { Token } from '../tokens/interfaces/token.interface';
-import { PriceData, TokenPrice, TokenPriceSnapshot } from '../tokens/interfaces/token-price.interface';
+import { PriceData, TokenPrice } from '../tokens/interfaces/token-price.interface';
+import { TokenPriceSnapshot } from '../tokens/interfaces/token-price-snapshot.interface';
 import { getToken, protocolTokens } from '../tokens/tokens-util';
 import {
   getContractPrice,
@@ -17,7 +19,6 @@ import {
   getVaultTokenPrice,
   inCurrency,
   noPrice,
-  priceCache,
   updatePrice,
   updatePrices,
 } from './prices.utils';
@@ -26,6 +27,7 @@ describe('prices-util', () => {
   let testStrategy: ChainStrategy;
 
   const randomPrice = () => Math.random() * 100;
+  const mapper = new DataMapper({ client: dynamo });
 
   beforeAll(async () => {
     const ethPrice = Math.max(1500, Math.random() * 3000);
@@ -55,10 +57,9 @@ describe('prices-util', () => {
   });
 
   beforeEach(async () => {
-    priceCache.flushAll();
+    await mapper.deleteTable(TokenPriceSnapshot);
+    await mapper.createTable(TokenPriceSnapshot, {readCapacityUnits: 1, writeCapacityUnits: 1});
     fetchMock.resetMocks();
-    await deleteTable(PRICE_DATA);
-    await createTable(PRICE_DATA, priceKeySchema, priceAttributes);
   });
 
   describe('getPrice', () => {
@@ -76,14 +77,11 @@ describe('prices-util', () => {
     describe('when price is available', () => {
       it('returns a token snapshot with the latest price data', async () => {
         const badgerPrice = await testStrategy.getPrice(TOKENS.BADGER);
-        const badgerPriceSnapshot: TokenPriceSnapshot = {
-          ...badgerPrice,
-          updatedAt: Date.now(),
-        };
-        await saveItem(PRICE_DATA, badgerPriceSnapshot);
+        const price = Object.assign(new TokenPriceSnapshot(), badgerPrice);
+        const snapshot = await mapper.put(price);
         const fetchedBadgerPrice = await getPrice(TOKENS.BADGER);
         expect(fetchedBadgerPrice).toBeDefined();
-        expect(fetchedBadgerPrice).toMatchObject(badgerPriceSnapshot);
+        expect(fetchedBadgerPrice).toMatchObject(snapshot);
       });
     });
   });

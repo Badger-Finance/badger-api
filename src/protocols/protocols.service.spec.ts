@@ -1,6 +1,6 @@
 import { PlatformTest } from '@tsed/common';
 import { QueryOutput } from 'aws-sdk/clients/dynamodb';
-import * as dynamoDbUtils from '../aws/dynamodb-utils';
+import * as dynamoDbUtils from '../aws/dynamodb.utils';
 import { CacheService } from '../cache/CacheService';
 import { loadChains } from '../chains/chain';
 import { ethSetts } from '../chains/config/eth.config';

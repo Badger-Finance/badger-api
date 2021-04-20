@@ -1,6 +1,6 @@
 import { DataMapper } from '@aws/dynamodb-data-mapper';
 import { NotFound } from '@tsed/exceptions';
-import { dynamo } from '../aws/dynamodb-utils';
+import { dynamo } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
 import { CachedSettSnapshot } from '../setts/interfaces/cached-sett-snapshot.interface';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';

@@ -1,9 +1,8 @@
+import { DataMapper } from '@aws/dynamodb-data-mapper';
 import { BadRequest, InternalServerError, NotFound, UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
-import NodeCache = require('node-cache');
-import { DataMapper } from '@aws/dynamodb-data-mapper';
 import fetch from 'node-fetch';
-import { dynamo } from '../aws/dynamodb-utils';
+import { dynamo } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { ChainStrategy } from '../chains/strategies/chain.strategy';
@@ -30,8 +29,6 @@ export type PricingFunction = (address: string) => Promise<TokenPrice>;
 export interface PriceUpdateRequest {
   [token: string]: PricingFunction;
 }
-
-export const priceCache = new NodeCache({ stdTTL: 300, checkperiod: 480 });
 
 export const noPrice = (token: Token): TokenPriceSnapshot => {
   return {
@@ -115,10 +112,7 @@ export const getPriceData = async (tokens: TokenConfig): Promise<PriceData> => {
   const priceData: PriceData = {};
   const prices = await Promise.all(Object.keys(tokens).map((key) => getPrice(tokens[key].address)));
   /* eslint-disable @typescript-eslint/no-non-null-assertion */
-  prices.forEach((token) => {
-    priceData[token.address] = token;
-    priceCache.set(token.address, token);
-  });
+  prices.forEach((token) => (priceData[token.address] = token));
   /* eslint-disable @typescript-eslint/no-non-null-assertion */
   return priceData;
 };
@@ -131,10 +125,6 @@ export const getPriceData = async (tokens: TokenConfig): Promise<PriceData> => {
  * @throws {InternalServerError} Failed price lookup.
  */
 export const getContractPrice = async (contract: string): Promise<TokenPrice> => {
-  const cachedPrice = priceCache.get<TokenPrice>(contract);
-  if (cachedPrice) {
-    return cachedPrice;
-  }
   const response = await fetch(
     `${COINGECKO_URL}/token_price/ethereum?contract_addresses=${contract}&vs_currencies=usd,eth`,
   );
@@ -153,7 +143,6 @@ export const getContractPrice = async (contract: string): Promise<TokenPrice> =>
     usd: json[contractKey].usd,
     eth: json[contractKey].eth,
   };
-  priceCache.set(contract, contractPrice);
   return contractPrice;
 };
 
@@ -163,10 +152,6 @@ export const getContractPrice = async (contract: string): Promise<TokenPrice> =>
  * @throws {InternalServerError} Failed price lookup.
  */
 export const getTokenPrice = async (name: string): Promise<TokenPrice> => {
-  const cachedPrice = priceCache.get<TokenPrice>(name);
-  if (cachedPrice) {
-    return cachedPrice;
-  }
   const response = await fetch(`${COINGECKO_URL}/price?ids=${name}&vs_currencies=usd,eth`);
   if (!response.ok) {
     throw new InternalServerError(`Unable to query ${name} price`);
@@ -182,7 +167,6 @@ export const getTokenPrice = async (name: string): Promise<TokenPrice> => {
     usd: json[name].usd,
     eth: json[name].eth,
   };
-  priceCache.set(name, tokenPrice);
   return tokenPrice;
 };
 

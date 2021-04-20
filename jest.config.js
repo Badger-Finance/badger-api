@@ -8,11 +8,12 @@ if (nodeEnv !== 'test' && nodeEnv !== 'ci') {
 module.exports = {
   clearMocks: true,
   moduleFileExtensions: ['js', 'json', 'ts'],
+  preset: '@shelf/jest-dynamodb',
   resetMocks: true,
   restoreMocks: true,
   testEnvironment: 'node',
   testRegex: '.spec.ts$',
   testTimeout: 10000,
   setupFilesAfterEnv: ['./test/jest.setup.ts'],
-  transform: { '^.+\\.(t|j)s$': 'ts-jest' },
+  transform: { '^.+\\.ts$': 'ts-jest' },
 };
