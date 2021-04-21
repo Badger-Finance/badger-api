@@ -16,13 +16,19 @@ describe('HarvestsController', () => {
   afterEach(PlatformTest.reset);
 
   describe('GET /v2/harvests', () => {
-    it('returns a list of harvests', async () => {
+    it('returns a list of harvests', async (done) => {
       jest.spyOn(harvestsService, 'listHarvests').mockImplementationOnce(() => Promise.resolve({ harvests: [] }));
 
-      const response = await request.get('/v2/harvests').expect(200);
-      expect(response).toMatchObject({
-        body: expect.any(Array),
-      });
+      request
+        .get('/v2/harvests')
+        .expect(200)
+        .end((err, response) => {
+          expect(err).toBeUndefined();
+          expect(response).toMatchObject({
+            body: expect.any(Array),
+          });
+          done();
+        });
     });
   });
 });
