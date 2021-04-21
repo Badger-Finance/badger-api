@@ -1,12 +1,12 @@
 import { AccountsController } from './accounts/accounts.controller';
-import { ChartsController } from './charts/ChartsController';
+import { ChartsController } from './charts/charts.controller';
 import { ClawController } from './claw/claw.controller';
 import { GeyserController } from './geysers/geysers.controller';
 import { HarvestsController } from './harvests/harvests.controller';
 import { PriceController } from './prices/prices.controller';
 import { ProtocolController } from './protocols/protocols.controller';
 import { RewardController } from './rewards/rewards.controller';
-import { SettsController } from './setts/SettsController';
+import { SettsController } from './setts/setts.controller';
 
 /**
  * Controller registry forces serverless offline to load

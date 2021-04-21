@@ -1,7 +1,7 @@
 import { Service } from '@tsed/common';
 import { Chain } from '../chains/config/chain.config';
 import { PriceSummary } from '../tokens/interfaces/token-price.interface';
-import { getPrice, getPriceData, inCurrency } from './prices-util';
+import { getPrice, getPriceData, inCurrency } from './prices.utils';
 
 /**
  * API price oracle service. Uses CoinGecko as a source of truth for most

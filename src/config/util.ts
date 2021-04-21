@@ -1,10 +1,8 @@
-import { Block } from '@ethersproject/abstract-provider';
 import AWS from 'aws-sdk';
 import { QueryInput } from 'aws-sdk/clients/dynamodb';
 import { DocumentClient } from 'aws-sdk/lib/dynamodb/document_client';
-import { Chain } from '../chains/config/chain.config';
 import { ChainNetwork } from '../chains/enums/chain-network.enum';
-import { SettSnapshot } from '../interface/SettSnapshot';
+import { SettSnapshot } from '../setts/interfaces/sett-snapshot.interface';
 import AttributeValue = DocumentClient.AttributeValue;
 
 const ddb = new AWS.DynamoDB.DocumentClient({ apiVersion: '2012-08-10' });
@@ -18,9 +16,6 @@ export interface EventInput {
   pathParameters?: Record<string, string>;
   queryStringParameters?: Record<string, string>;
 }
-
-export const getBlock = async (blockNumber: number, chain?: ChainNetwork): Promise<Block> =>
-  Chain.getChain(chain).provider.getBlock(blockNumber);
 
 export const getAssetData = async (
   table: string,

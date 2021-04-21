@@ -5,11 +5,10 @@ import { Chain } from '../../chains/config/chain.config';
 import { MASTERCHEF_URL, SUSHI_CHEF, SUSHISWAP_URL, TOKENS } from '../../config/constants';
 import { getSdk, MasterChefsAndPoolsQuery, OrderDirection, Pool_OrderBy } from '../../graphql/generated/master-chef';
 import { PricesService } from '../../prices/prices.service';
-import { getTokenPriceData } from '../../prices/prices-util';
+import { getPrice } from '../../prices/prices.utils';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { TokensService } from '../../tokens/tokens.service';
-import { getLiquidityPrice } from '../common/swap-util';
-import { SwapService } from '../common/SwapService';
+import { SwapService } from '../common/swap.service';
 import { uniformPerformance } from '../interfaces/performance.interface';
 import { ValueSource } from '../interfaces/value-source.interface';
 
@@ -62,10 +61,7 @@ export class SushiswapService extends SwapService {
     if (!pool) {
       return emissionSource;
     }
-    const [depositTokenPrice, sushiPrice] = await Promise.all([
-      getLiquidityPrice(SUSHISWAP_URL, pool.pair),
-      getTokenPriceData(TOKENS.SUSHI),
-    ]);
+    const [depositTokenPrice, sushiPrice] = await Promise.all([getPrice(pool.pair), getPrice(TOKENS.SUSHI)]);
     const totalAllocPoint = masterChef.totalAllocPoint;
     const poolValue = pool.balance * depositTokenPrice.usd;
     const emissionScalar = pool.allocPoint / totalAllocPoint;

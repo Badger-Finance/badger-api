@@ -4,11 +4,10 @@ import { getToken, protocolTokens } from '../../tokens/tokens-util';
 import { ChainStrategy } from './chain.strategy';
 
 export class TestStrategy extends ChainStrategy {
-  private priceData: PriceData;
+  private priceData: PriceData = {};
 
-  constructor(priceData: PriceData) {
+  constructor() {
     super();
-    this.priceData = priceData;
     ChainStrategy.register(Object.keys(protocolTokens), this);
   }
 
@@ -17,13 +16,23 @@ export class TestStrategy extends ChainStrategy {
     const price = this.priceData[checksummedAddress];
     if (!price) {
       const token = getToken(checksummedAddress);
-      return {
+      const ethPrice = this.randomPrice(1500, 3000);
+      const usdPrice = this.randomPrice();
+      const tokenPrice = {
         name: token.name,
         address: token.address,
-        usd: 0,
-        eth: 0,
+        usd: usdPrice,
+        eth: usdPrice / ethPrice,
       };
+      this.priceData[checksummedAddress] = tokenPrice;
+      return tokenPrice;
     }
     return price;
+  }
+
+  randomPrice(min?: number, max?: number): number {
+    const minPrice = min || 10;
+    const maxPrice = max || 50000;
+    return minPrice + Math.random() * (maxPrice - minPrice);
   }
 }

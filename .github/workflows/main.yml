@@ -11,21 +11,11 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '14.x'
-      - name: Use Java
-        uses: joschi/setup-jdk@v2
-        with:
-          java-version: '11'
       - name: Install Dependencies
         run: yarn install --frozen-lockfile
       - name: Build
         run: yarn build
       - name: Lint
         run: yarn lint
-      - name: Install Serverless
-        run: npm install -g serverless
-      - name: Install DynamoDB
-        run: sls dynamodb install
-      - name: Start DynamoDB
-        run: sls dynamodb start &
       - name: Run Tests
         run: yarn test

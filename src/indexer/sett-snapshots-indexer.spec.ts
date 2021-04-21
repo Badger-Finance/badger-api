@@ -1,11 +1,11 @@
-import { TransactWriteItemsInput } from 'aws-sdk/clients/dynamodb';
-import * as dynamodbUtils from '../aws/dynamodb-utils';
+import { DataMapper, StringToAnyObjectMap, SyncOrAsyncIterable } from '@aws/dynamodb-data-mapper';
 import { bscSetts } from '../chains/config/bsc.config';
 import { ethSetts } from '../chains/config/eth.config';
 import { BscStrategy } from '../chains/strategies/bsc.strategy';
 import { EthStrategy } from '../chains/strategies/eth.strategy';
 import { SettQuery } from '../graphql/generated/badger';
-import * as settUtils from '../setts/setts-util';
+import { CachedSettSnapshot } from '../setts/interfaces/cached-sett-snapshot.interface';
+import * as settUtils from '../setts/setts.utils';
 import { refreshSettSnapshots } from './sett-snapshots-indexer';
 
 describe('refreshSettSnapshots', () => {
@@ -15,7 +15,10 @@ describe('refreshSettSnapshots', () => {
     Promise<SettQuery>,
     [graphUrl: string, contract: string, block?: number | undefined]
   >;
-  let transactWrite: jest.SpyInstance<Promise<void>, [input: TransactWriteItemsInput]>;
+  let batchPut: jest.SpyInstance<
+    AsyncIterableIterator<StringToAnyObjectMap>,
+    [items: SyncOrAsyncIterable<StringToAnyObjectMap>]
+  >;
 
   beforeEach(async () => {
     getSettMock = jest.spyOn(settUtils, 'getSett').mockImplementation(async (_graphUrl: string, _contract: string) => ({
@@ -33,7 +36,7 @@ describe('refreshSettSnapshots', () => {
       },
     }));
 
-    transactWrite = jest.spyOn(dynamodbUtils, 'transactWrite').mockImplementation();
+    batchPut = jest.spyOn(DataMapper.prototype, 'batchPut').mockImplementation();
 
     const mockTokenPrice = { name: 'mock', usd: 10, eth: 0, address: '0xbeef' };
     jest.spyOn(BscStrategy.prototype, 'getPrice').mockImplementation(async (_address: string) => mockTokenPrice);
@@ -50,29 +53,18 @@ describe('refreshSettSnapshots', () => {
   it('saves Setts in Dynamo', () => {
     const requestedAddresses = [];
     // Verify each saved object.
-    for (const input of transactWrite.mock.calls) {
-      const { TransactItems: transactItems } = input[0];
-      for (const transactItem of transactItems) {
-        expect(transactItem.Update).toBeDefined();
-
-        const attributeValues = transactItem.Update?.ExpressionAttributeValues;
-        expect(attributeValues).toBeDefined();
-
-        expect(attributeValues).toMatchObject({
-          ':balance': { N: expect.any(String) },
-          ':supply': { N: expect.any(String) },
-          ':ratio': { N: expect.any(String) },
-          ':settValue': { N: expect.any(String) },
-          ':updatedAt': { N: expect.any(String) },
+    for (const calls of batchPut.mock.calls[0]) {
+      for (const snapshot of calls as Iterable<CachedSettSnapshot>) {
+        expect(snapshot).toMatchObject({
+          address: expect.any(String),
+          balance: expect.any(Number),
+          supply: expect.any(Number),
+          ratio: expect.any(Number),
+          settValue: expect.any(Number),
+          updatedAt: expect.any(Number),
         });
 
-        const key = transactItem.Update?.Key;
-        expect(key).toBeDefined();
-        expect(key).toMatchObject({
-          address: { S: expect.any(String) },
-        });
-
-        requestedAddresses.push(key?.address.S);
+        requestedAddresses.push(snapshot.address);
       }
     }
     // Verify addresses match supported setts.

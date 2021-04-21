@@ -6,7 +6,7 @@ import { ChainNetwork } from '../../chains/enums/chain-network.enum';
 import { uniV2LPAbi } from '../../config/abi/abi';
 import { SUSHISWAP_URL, UNISWAP_URL } from '../../config/constants';
 import { getSdk as getUniswapSdk } from '../../graphql/generated/uniswap';
-import { getTokenPriceData } from '../../prices/prices-util';
+import { getTokenPriceData } from '../../prices/prices.utils';
 import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
 import { getToken } from '../../tokens/tokens-util';
 

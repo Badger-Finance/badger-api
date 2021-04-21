@@ -1,12 +1,13 @@
+import { DataMapper, QueryIterator, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
 import { BadRequest, NotFound } from '@tsed/exceptions';
+import createMockInstance from 'jest-create-mock-instance';
 import fetchMock from 'jest-fetch-mock';
-import { createTable, deleteTable, priceAttributes, priceKeySchema, saveItem } from '../aws/dynamodb-utils';
-import { ChainStrategy } from '../chains/strategies/chain.strategy';
 import { TestStrategy } from '../chains/strategies/test.strategy';
-import { PRICE_DATA, TOKENS } from '../config/constants';
+import { TOKENS } from '../config/constants';
 import { TokenType } from '../tokens/enums/token-type.enum';
 import { Token } from '../tokens/interfaces/token.interface';
-import { PriceData, TokenPrice, TokenPriceSnapshot } from '../tokens/interfaces/token-price.interface';
+import { TokenPrice } from '../tokens/interfaces/token-price.interface';
+import { TokenPriceSnapshot } from '../tokens/interfaces/token-price-snapshot.interface';
 import { getToken, protocolTokens } from '../tokens/tokens-util';
 import {
   getContractPrice,
@@ -17,54 +18,33 @@ import {
   getVaultTokenPrice,
   inCurrency,
   noPrice,
-  priceCache,
   updatePrice,
   updatePrices,
-} from './prices-util';
+} from './prices.utils';
 
 describe('prices-util', () => {
-  let testStrategy: ChainStrategy;
+  const strategy = new TestStrategy();
 
-  const randomPrice = () => Math.random() * 100;
-
-  beforeAll(async () => {
-    const ethPrice = Math.max(1500, Math.random() * 3000);
-    const priceData: PriceData = {};
-
-    const badger = getToken(TOKENS.BADGER);
-    const badgerUsd = randomPrice();
-    const badgerPrice: TokenPrice = {
-      name: badger.name,
-      address: badger.address,
-      usd: badgerUsd,
-      eth: badgerUsd / ethPrice,
-    };
-    priceData[TOKENS.BADGER] = badgerPrice;
-
-    const digg = getToken(TOKENS.DIGG);
-    const diggUsd = randomPrice();
-    const diggPrice: TokenPrice = {
-      name: digg.name,
-      address: digg.address,
-      usd: diggUsd,
-      eth: diggUsd / ethPrice,
-    };
-    priceData[TOKENS.DIGG] = diggPrice;
-
-    testStrategy = new TestStrategy(priceData);
-  });
+  // Father forgive me for I have sinned
+  /* eslint-disable @typescript-eslint/ban-ts-comment */
+  const setupMapper = (items: unknown[]) => {
+    // @ts-ignore
+    const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
+    // @ts-ignore
+    qi[Symbol.iterator] = jest.fn(() => items.values());
+    return jest.spyOn(DataMapper.prototype, 'query').mockImplementation(() => qi);
+  };
+  /* eslint-enable @typescript-eslint/ban-ts-comment */
 
   beforeEach(async () => {
-    priceCache.flushAll();
     fetchMock.resetMocks();
-    await deleteTable(PRICE_DATA);
-    await createTable(PRICE_DATA, priceKeySchema, priceAttributes);
   });
 
   describe('getPrice', () => {
     describe('when price is not available', () => {
       it('returns a price of 0', async () => {
         const cake = getToken(TOKENS.CAKE);
+        setupMapper([]);
         const cakePrice = await getPrice(cake.address);
         expect(cakePrice).toBeDefined();
         const expected = noPrice(cake);
@@ -75,15 +55,14 @@ describe('prices-util', () => {
 
     describe('when price is available', () => {
       it('returns a token snapshot with the latest price data', async () => {
-        const badgerPrice = await testStrategy.getPrice(TOKENS.BADGER);
-        const badgerPriceSnapshot: TokenPriceSnapshot = {
-          ...badgerPrice,
-          updatedAt: Date.now(),
+        const price = {
+          ...(await strategy.getPrice(TOKENS.BADGER)),
+          updateAt: Date.now(),
         };
-        await saveItem(PRICE_DATA, badgerPriceSnapshot);
+        setupMapper([price]);
         const fetchedBadgerPrice = await getPrice(TOKENS.BADGER);
         expect(fetchedBadgerPrice).toBeDefined();
-        expect(fetchedBadgerPrice).toMatchObject(badgerPriceSnapshot);
+        expect(fetchedBadgerPrice).toMatchObject(price);
       });
     });
   });
@@ -105,20 +84,9 @@ describe('prices-util', () => {
     describe('update supported token', () => {
       it('creates an price db entry', async () => {
         const badger = getToken(TOKENS.BADGER);
-        const noPrice = await getPrice(badger.address);
-        const expected: TokenPriceSnapshot = {
-          name: badger.name,
-          address: badger.address,
-          usd: 0,
-          eth: 0,
-          updatedAt: noPrice.updatedAt,
-        };
-        expect(noPrice).toMatchObject(expected);
+        const put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
         await updatePrice(badger);
-        const badgerPrice = await getPrice(TOKENS.BADGER);
-        expect(badgerPrice).toBeDefined();
-        expect(badgerPrice.usd).toBeGreaterThan(0);
-        expect(badgerPrice.eth).toBeGreaterThan(0);
+        expect(put.mock.calls.length).toEqual(1);
       });
     });
   });
@@ -159,35 +127,18 @@ describe('prices-util', () => {
       it('updates prices for all tokens requested', async () => {
         const digg = getToken(TOKENS.DIGG);
         const badger = getToken(TOKENS.BADGER);
-
-        const noDigg = await getPrice(digg.address);
-        const expectNoDigg = noPrice(digg);
-        expectNoDigg.updatedAt = noDigg.updatedAt;
-        expect(noDigg).toMatchObject(expectNoDigg);
-
-        const noBadger = await getPrice(badger.address);
-        const expectNoBadger = noPrice(badger);
-        expectNoBadger.updatedAt = noBadger.updatedAt;
-        expect(noBadger).toMatchObject(expectNoBadger);
-
         const tokenConfig = {
-          [TOKENS.DIGG]: digg,
-          [TOKENS.BADGER]: badger,
+          [digg.address]: digg,
+          [badger.address]: badger,
         };
-
+        const put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
         await updatePrices(tokenConfig);
-        const diggPrice = await getPrice(digg.address);
-        const expectedDigg = {
-          ...(await testStrategy.getPrice(digg.address)),
-          updatedAt: diggPrice.updatedAt,
-        };
-        expect(diggPrice).toMatchObject(expectedDigg);
-        const badgerPrice = await getPrice(badger.address);
-        const expectedBadger = {
-          ...(await testStrategy.getPrice(badger.address)),
-          updatedAt: badgerPrice.updatedAt,
-        };
-        expect(badgerPrice).toMatchObject(expectedBadger);
+        expect(put.mock.calls.length).toEqual(Object.keys(tokenConfig).length);
+        for (const call of put.mock.calls[0] as Iterable<TokenPriceSnapshot>) {
+          expect(call.address).toBeDefined();
+          const price = await strategy.getPrice(call.address);
+          expect(call).toMatchObject(price);
+        }
       });
     });
   });
@@ -208,29 +159,33 @@ describe('prices-util', () => {
 
     describe('get supported token price', () => {
       it('gets the latest price snapshot the from the db', async () => {
-        await updatePrices(protocolTokens);
-        const badgerToken = getToken(TOKENS.BADGER);
-        const badgerPrice = await getPrice(badgerToken.address);
-        const tokenPrice: TokenPrice = {
-          name: badgerPrice.name,
-          address: badgerPrice.address,
-          usd: badgerPrice.usd,
-          eth: badgerPrice.eth,
+        const badger = getToken(TOKENS.BADGER);
+        const mockPrice = {
+          ...(await strategy.getPrice(badger.address)),
+          updatedAt: Date.now(),
         };
-        const badgerActualPrice = await getTokenPriceData(badgerToken.address);
-        expect(badgerActualPrice).toMatchObject(tokenPrice);
+        setupMapper([mockPrice]);
+        const price = await getTokenPriceData(badger.address);
+        expect(price).toMatchObject(mockPrice);
       });
     });
   });
 
   describe('getPriceData', () => {
     it('gets all token pricing for the system', async () => {
-      await updatePrices(protocolTokens);
-      const priceData = await getPriceData(protocolTokens);
-      for (const token of Object.keys(protocolTokens)) {
-        const tokenPrice = getPrice(token);
-        expect(priceData[token]).toMatchObject(tokenPrice);
+      const query = setupMapper([]);
+      const data = await getPriceData(protocolTokens);
+      expect(query.mock.calls.length).toEqual(Object.keys(data).length);
+      const requests = [];
+      /* eslint-disable @typescript-eslint/no-explicit-any */
+      for (const call of query.mock.calls as Iterable<any>) {
+        expect(call[1]).toBeDefined();
+        const { address } = call[1];
+        expect(address).toBeDefined();
+        requests.push(address);
       }
+      /* eslint-enable @typescript-eslint/no-explicit-any */
+      expect(requests).toMatchObject(Object.keys(protocolTokens));
     });
   });
 
@@ -324,7 +279,6 @@ describe('prices-util', () => {
   describe('getVaultTokenPrice', () => {
     describe('look up non vault token price', () => {
       it('throws a bad request error', async () => {
-        await updatePrices(protocolTokens);
         await expect(getVaultTokenPrice(TOKENS.BADGER)).rejects.toThrow(BadRequest);
       });
     });
