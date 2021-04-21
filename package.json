@@ -14,7 +14,7 @@
     "dev": "sls offline start",
     "format": "yarn run lint --fix",
     "lint": "eslint .",
-    "test": "jest --runInBand",
+    "test": "jest --runInBand --detectOpenHandles",
     "tsc:build": "tsc -p .",
     "ui": "yarn upgradeInteractive"
   },
@@ -52,7 +52,6 @@
     "@graphql-codegen/typescript": "1.21.0",
     "@graphql-codegen/typescript-graphql-request": "3.0.2",
     "@graphql-codegen/typescript-operations": "1.17.14",
-    "@shelf/jest-dynamodb": "^1.8.1",
     "@types/cookie-parser": "^1.4.2",
     "@types/express": "^4.17.11",
     "@types/jest": "^26.0.20",

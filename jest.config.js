@@ -8,7 +8,6 @@ if (nodeEnv !== 'test' && nodeEnv !== 'ci') {
 module.exports = {
   clearMocks: true,
   moduleFileExtensions: ['js', 'json', 'ts'],
-  preset: '@shelf/jest-dynamodb',
   resetMocks: true,
   restoreMocks: true,
   testEnvironment: 'node',
