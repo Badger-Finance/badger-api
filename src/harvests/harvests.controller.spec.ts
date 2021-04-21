@@ -23,7 +23,7 @@ describe('HarvestsController', () => {
         .get('/v2/harvests')
         .expect(200)
         .end((err, response) => {
-          expect(err).toBeUndefined();
+          expect(err).toBeNull();
           expect(response).toMatchObject({
             body: expect.any(Array),
           });
