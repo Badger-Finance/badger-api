@@ -1,11 +1,10 @@
 import { BadRequest, NotFound } from '@tsed/exceptions';
 import fetchMock from 'jest-fetch-mock';
-import { ChainStrategy } from '../chains/strategies/chain.strategy';
 import { TestStrategy } from '../chains/strategies/test.strategy';
 import { TOKENS } from '../config/constants';
 import { TokenType } from '../tokens/enums/token-type.enum';
 import { Token } from '../tokens/interfaces/token.interface';
-import { PriceData, TokenPrice } from '../tokens/interfaces/token-price.interface';
+import { TokenPrice } from '../tokens/interfaces/token-price.interface';
 import { TokenPriceSnapshot } from '../tokens/interfaces/token-price-snapshot.interface';
 import { getToken, protocolTokens } from '../tokens/tokens-util';
 import {
@@ -20,44 +19,16 @@ import {
   updatePrice,
   updatePrices,
 } from './prices.utils';
+import { DataMapper } from '@aws/dynamodb-data-mapper';
+import { dynamo } from '../aws/dynamodb.utils';
 
 describe('prices-util', () => {
-  let testStrategy: ChainStrategy;
+  const strategy = new TestStrategy();
+  const mapper = new DataMapper({ client: dynamo });
 
-  const randomPrice = () => Math.random() * 100;
+  beforeAll(() => jest.mock('@aws/dynamodb-data-mapper'));
 
-  beforeAll(async () => {
-    jest.mock('@aws/dynamodb-data-mapper')
-
-    const ethPrice = Math.max(1500, Math.random() * 3000);
-    const priceData: PriceData = {};
-
-    const badger = getToken(TOKENS.BADGER);
-    const badgerUsd = randomPrice();
-    const badgerPrice: TokenPrice = {
-      name: badger.name,
-      address: badger.address,
-      usd: badgerUsd,
-      eth: badgerUsd / ethPrice,
-    };
-    priceData[TOKENS.BADGER] = badgerPrice;
-
-    const digg = getToken(TOKENS.DIGG);
-    const diggUsd = randomPrice();
-    const diggPrice: TokenPrice = {
-      name: digg.name,
-      address: digg.address,
-      usd: diggUsd,
-      eth: diggUsd / ethPrice,
-    };
-    priceData[TOKENS.DIGG] = diggPrice;
-
-    testStrategy = new TestStrategy(priceData);
-  });
-
-  afterAll(() => {
-    jest.unmock('@aws/dynamodb-data-mapper')
-  })
+  afterAll(() => jest.unmock('@aws/dynamodb-data-mapper'));
 
   beforeEach(async () => {
     fetchMock.resetMocks();
@@ -77,7 +48,7 @@ describe('prices-util', () => {
 
     describe('when price is available', () => {
       it('returns a token snapshot with the latest price data', async () => {
-        const badgerPrice = await testStrategy.getPrice(TOKENS.BADGER);
+        const badgerPrice = await strategy.getPrice(TOKENS.BADGER);
         const price = Object.assign(new TokenPriceSnapshot(), badgerPrice);
         const snapshot = await mapper.put(price);
         const fetchedBadgerPrice = await getPrice(TOKENS.BADGER);
@@ -177,13 +148,13 @@ describe('prices-util', () => {
         await updatePrices(tokenConfig);
         const diggPrice = await getPrice(digg.address);
         const expectedDigg = {
-          ...(await testStrategy.getPrice(digg.address)),
+          ...(await strategy.getPrice(digg.address)),
           updatedAt: diggPrice.updatedAt,
         };
         expect(diggPrice).toMatchObject(expectedDigg);
         const badgerPrice = await getPrice(badger.address);
         const expectedBadger = {
-          ...(await testStrategy.getPrice(badger.address)),
+          ...(await strategy.getPrice(badger.address)),
           updatedAt: badgerPrice.updatedAt,
         };
         expect(badgerPrice).toMatchObject(expectedBadger);
