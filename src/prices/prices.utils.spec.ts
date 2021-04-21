@@ -1,4 +1,6 @@
+import { DataMapper, QueryIterator, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
 import { BadRequest, NotFound } from '@tsed/exceptions';
+import createMockInstance from 'jest-create-mock-instance';
 import fetchMock from 'jest-fetch-mock';
 import { TestStrategy } from '../chains/strategies/test.strategy';
 import { TOKENS } from '../config/constants';
@@ -19,16 +21,20 @@ import {
   updatePrice,
   updatePrices,
 } from './prices.utils';
-import { DataMapper } from '@aws/dynamodb-data-mapper';
-import { dynamo } from '../aws/dynamodb.utils';
 
 describe('prices-util', () => {
   const strategy = new TestStrategy();
-  const mapper = new DataMapper({ client: dynamo });
 
-  beforeAll(() => jest.mock('@aws/dynamodb-data-mapper'));
-
-  afterAll(() => jest.unmock('@aws/dynamodb-data-mapper'));
+  // Father forgive me for I have sinned
+  /* eslint-disable @typescript-eslint/ban-ts-comment */
+  const setupMapper = (items: unknown[]) => {
+    // @ts-ignore
+    const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
+    // @ts-ignore
+    qi[Symbol.iterator] = jest.fn(() => items.values());
+    jest.spyOn(DataMapper.prototype, 'query').mockImplementationOnce(() => qi);
+  };
+  /* eslint-enable @typescript-eslint/ban-ts-comment */
 
   beforeEach(async () => {
     fetchMock.resetMocks();
@@ -50,10 +56,10 @@ describe('prices-util', () => {
       it('returns a token snapshot with the latest price data', async () => {
         const badgerPrice = await strategy.getPrice(TOKENS.BADGER);
         const price = Object.assign(new TokenPriceSnapshot(), badgerPrice);
-        const snapshot = await mapper.put(price);
+        setupMapper([price]);
         const fetchedBadgerPrice = await getPrice(TOKENS.BADGER);
         expect(fetchedBadgerPrice).toBeDefined();
-        expect(fetchedBadgerPrice).toMatchObject(snapshot);
+        expect(fetchedBadgerPrice).toMatchObject(price);
       });
     });
   });
@@ -74,7 +80,16 @@ describe('prices-util', () => {
 
     describe('update supported token', () => {
       it('creates an price db entry', async () => {
+        const ethPrice = Math.max(1500, Math.random() * 3000);
         const badger = getToken(TOKENS.BADGER);
+        const badgerUsd = Math.random() * 100;
+        const mockBadgerPrice: TokenPrice = {
+          name: badger.name,
+          address: badger.address,
+          usd: badgerUsd,
+          eth: badgerUsd / ethPrice,
+        };
+
         const noPrice = await getPrice(badger.address);
         const expected: TokenPriceSnapshot = {
           name: badger.name,
@@ -85,6 +100,8 @@ describe('prices-util', () => {
         };
         expect(noPrice).toMatchObject(expected);
         await updatePrice(badger);
+
+        setupMapper([mockBadgerPrice]);
         const badgerPrice = await getPrice(TOKENS.BADGER);
         expect(badgerPrice).toBeDefined();
         expect(badgerPrice.usd).toBeGreaterThan(0);
@@ -130,11 +147,13 @@ describe('prices-util', () => {
         const digg = getToken(TOKENS.DIGG);
         const badger = getToken(TOKENS.BADGER);
 
+        setupMapper([]);
         const noDigg = await getPrice(digg.address);
         const expectNoDigg = noPrice(digg);
         expectNoDigg.updatedAt = noDigg.updatedAt;
         expect(noDigg).toMatchObject(expectNoDigg);
 
+        setupMapper([]);
         const noBadger = await getPrice(badger.address);
         const expectNoBadger = noPrice(badger);
         expectNoBadger.updatedAt = noBadger.updatedAt;

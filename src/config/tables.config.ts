@@ -1,4 +1,4 @@
-import { DynamoDbTable } from "../aws/interfaces/dynamo-table.interface";
+import { DynamoDbTable } from '../aws/interfaces/dynamo-table.interface';
 
 export const pricesTable: DynamoDbTable = {
   TableName: 'badger-local-prices',
