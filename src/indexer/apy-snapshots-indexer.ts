@@ -13,7 +13,7 @@ import { ProtocolsService } from '../protocols/protocols.service';
 import { SushiswapService } from '../protocols/sushi/sushiswap.service';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 
-export async function refreshApySnapshots() {
+export async function refreshApySnapshots(): Promise<void> {
   const chains = loadChains();
   const rawValueSources = await Promise.all(
     chains.flatMap((chain) => chain.setts.map((sett) => getSettValueSources(chain, sett))),

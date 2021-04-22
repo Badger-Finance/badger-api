@@ -163,23 +163,23 @@ functions:
           method: any
           cors: true
 
-  index-setts:
-    handler: src/indexer/sett-indexer.indexAsset
-    timeout: 300
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-setts
-          description: "index historical data for all setts"
-          rate: rate(5 minutes)
+  # index-setts:
+  #   handler: src/indexer/sett-indexer.indexAsset
+  #   timeout: 300
+  #   events:
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-setts
+  #         description: "index historical data for all setts"
+  #         rate: rate(5 minutes)
 
-  index-apy-snapshots:
-    handler: src/indexer/apy-snapshots-indexer.refreshApySnapshots
-    timeout: 30
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-apy-snapshots
-          description: "index data for sett apy"
-          rate: rate(1 minute)
+  # index-apy-snapshots:
+  #   handler: src/indexer/apy-snapshots-indexer.refreshApySnapshots
+  #   timeout: 30
+  #   events:
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-apy-snapshots
+  #         description: "index data for sett apy"
+  #         rate: rate(1 minute)
 
   index-prices:
     handler: src/indexer/price-indexer.indexPrices
