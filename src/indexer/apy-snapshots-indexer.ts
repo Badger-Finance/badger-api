@@ -21,9 +21,10 @@ export async function refreshApySnapshots() {
   const valueSources = flatten(rawValueSources.filter((rawValueSource) => !isNil(rawValueSource))).filter(
     (source) => !isNaN(source.apy),
   );
-
   const mapper = new DataMapper({ client: dynamo });
-  await mapper.batchPut(valueSources);
+  for (const source of valueSources) {
+    await mapper.put(source);
+  }
 }
 
 async function getSettValueSources(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {

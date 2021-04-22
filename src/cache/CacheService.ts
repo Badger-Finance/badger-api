@@ -11,7 +11,7 @@ export class CacheService {
   private cache: NodeCache;
 
   constructor() {
-    this.cache = new NodeCache({ stdTTL: 300, checkperiod: 480 });
+    this.cache = new NodeCache({ stdTTL: 3000, checkperiod: 4800 });
   }
 
   get<T>(key: string): T | undefined {
