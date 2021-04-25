@@ -39,17 +39,9 @@ export class TokensService {
    */
   async getSettTokens(request: TokenRequest): Promise<TokenBalance[]> {
     const { sett, balance, currency } = request;
-
-    const cacheKey = CacheService.getCacheKey(sett.name, 'tokens');
-    const cachedData = this.cacheService.get<TokenBalance[]>(cacheKey);
-    if (cachedData) {
-      return cachedData;
-    }
-
     const token = getToken(sett.depositToken);
     if (token.lpToken) {
       const tokens = await this.getLiquidtyPoolTokenBalances(request);
-      this.cacheService.set(cacheKey, tokens);
       return tokens;
     }
     const tokens = [
@@ -62,7 +54,6 @@ export class TokensService {
         value: await this.pricesService.getValue(token.address, balance, currency),
       },
     ];
-    this.cacheService.set(cacheKey, tokens);
     return tokens;
   }
 
