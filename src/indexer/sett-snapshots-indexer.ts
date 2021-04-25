@@ -24,5 +24,7 @@ export async function refreshSettSnapshots() {
     chains.flatMap((chain) => chain.setts.map((sett) => captureSnapshot(chain, sett))),
   );
   const mapper = new DataMapper({ client: dynamo });
-  await mapper.batchPut(snapshots.filter(successfulCapture));
+  for (const snapshot of snapshots.filter(successfulCapture)) {
+    await mapper.put(snapshot);
+  }
 }
