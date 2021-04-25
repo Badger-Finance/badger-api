@@ -1,4 +1,4 @@
-import { DataMapper, StringToAnyObjectMap, SyncOrAsyncIterable } from '@aws/dynamodb-data-mapper';
+import { DataMapper, PutParameters, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
 import { bscSetts } from '../chains/config/bsc.config';
 import { ethSetts } from '../chains/config/eth.config';
 import { BscStrategy } from '../chains/strategies/bsc.strategy';
@@ -15,10 +15,7 @@ describe('refreshSettSnapshots', () => {
     Promise<SettQuery>,
     [graphUrl: string, contract: string, block?: number | undefined]
   >;
-  let batchPut: jest.SpyInstance<
-    AsyncIterableIterator<StringToAnyObjectMap>,
-    [items: SyncOrAsyncIterable<StringToAnyObjectMap>]
-  >;
+  let put: jest.SpyInstance<Promise<StringToAnyObjectMap>, [items: PutParameters<StringToAnyObjectMap>]>;
 
   beforeEach(async () => {
     getSettMock = jest.spyOn(settUtils, 'getSett').mockImplementation(async (_graphUrl: string, _contract: string) => ({
@@ -36,7 +33,7 @@ describe('refreshSettSnapshots', () => {
       },
     }));
 
-    batchPut = jest.spyOn(DataMapper.prototype, 'batchPut').mockImplementation();
+    put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
 
     const mockTokenPrice = { name: 'mock', usd: 10, eth: 0, address: '0xbeef' };
     jest.spyOn(BscStrategy.prototype, 'getPrice').mockImplementation(async (_address: string) => mockTokenPrice);
@@ -53,19 +50,18 @@ describe('refreshSettSnapshots', () => {
   it('saves Setts in Dynamo', () => {
     const requestedAddresses = [];
     // Verify each saved object.
-    for (const calls of batchPut.mock.calls[0]) {
-      for (const snapshot of calls as Iterable<CachedSettSnapshot>) {
-        expect(snapshot).toMatchObject({
-          address: expect.any(String),
-          balance: expect.any(Number),
-          supply: expect.any(Number),
-          ratio: expect.any(Number),
-          settValue: expect.any(Number),
-          updatedAt: expect.any(Number),
-        });
-
-        requestedAddresses.push(snapshot.address);
-      }
+    for (const inputs of put.mock.calls) {
+      // force convert input as jest overload mock causes issues
+      const snapshot = (inputs[0] as unknown) as CachedSettSnapshot;
+      expect(snapshot).toMatchObject({
+        address: expect.any(String),
+        balance: expect.any(Number),
+        supply: expect.any(Number),
+        ratio: expect.any(Number),
+        settValue: expect.any(Number),
+        updatedAt: expect.any(Number),
+      });
+      requestedAddresses.push(snapshot.address);
     }
     // Verify addresses match supported setts.
     expect(requestedAddresses.sort()).toEqual(supportedAddresses);
