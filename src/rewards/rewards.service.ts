@@ -2,7 +2,7 @@ import { Inject, Service } from '@tsed/common';
 import { NotFound } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { S3Service } from '../aws/s3.service';
-import { CacheService } from '../cache/CacheService';
+import { CacheService } from '../cache/cache.service';
 import { BOUNCER_PROOFS, REWARD_DATA } from '../config/constants';
 import { Eligibility } from './interfaces/eligibility.interface';
 import {

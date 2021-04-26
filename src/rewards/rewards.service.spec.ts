@@ -1,6 +1,6 @@
 import { PlatformTest } from '@tsed/common';
 import { S3Service } from '../aws/s3.service';
-import { CacheService } from '../cache/CacheService';
+import { CacheService } from '../cache/cache.service';
 import { RewardsService } from './rewards.service';
 
 describe('RewardsService', () => {

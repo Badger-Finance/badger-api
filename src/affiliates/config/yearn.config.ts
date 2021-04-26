@@ -5,7 +5,7 @@ import { yearnAffiliateVaultWrapperAbi } from '../../config/abi/yearn-affiliate-
 import { Protocol } from '../../config/constants';
 import { SettAffiliateData } from '../../setts/interfaces/sett-affiliate-data.interface';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
-import { getToken } from '../../tokens/tokens-util';
+import { getToken } from '../../tokens/tokens.utils';
 import { Affiliate } from './affiliate.config';
 
 export class Yearn extends Affiliate {

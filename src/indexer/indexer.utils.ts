@@ -6,7 +6,7 @@ import { CachedSettSnapshot } from '../setts/interfaces/cached-sett-snapshot.int
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { SettSnapshot } from '../setts/interfaces/sett-snapshot.interface';
 import { getSett } from '../setts/setts.utils';
-import { getToken } from '../tokens/tokens-util';
+import { getToken } from '../tokens/tokens.utils';
 
 export const settToCachedSnapshot = async (
   chain: Chain,

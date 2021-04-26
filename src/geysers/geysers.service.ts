@@ -1,7 +1,7 @@
 import { Inject, Service } from '@tsed/common';
 import { BigNumber, constants, ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
-import { CacheService } from '../cache/CacheService';
+import { CacheService } from '../cache/cache.service';
 import { Chain } from '../chains/config/chain.config';
 import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { diggAbi, geyserAbi } from '../config/abi/abi';
@@ -13,7 +13,7 @@ import { ValueSource } from '../protocols/interfaces/value-source.interface';
 import { Sett } from '../setts/interfaces/sett.interface.';
 import { SettsService } from '../setts/setts.service';
 import { TokensService } from '../tokens/tokens.service';
-import { getToken } from '../tokens/tokens-util';
+import { getToken } from '../tokens/tokens.utils';
 import { Emission, Geyser, UnlockSchedule } from './interface/geyser.interface';
 
 /**

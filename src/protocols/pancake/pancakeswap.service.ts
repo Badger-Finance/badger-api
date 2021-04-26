@@ -1,7 +1,7 @@
 import { formatEther } from '@ethersproject/units';
 import { Inject, Service } from '@tsed/di';
 import { BigNumber, ethers } from 'ethers';
-import { CacheService } from '../../cache/CacheService';
+import { CacheService } from '../../cache/cache.service';
 import { Chain } from '../../chains/config/chain.config';
 import { erc20Abi, pancakeChefAbi } from '../../config/abi/abi';
 import { PANCAKE_CHEF, PANCAKESWAP_URL, TOKENS } from '../../config/constants';
@@ -91,9 +91,9 @@ export class PancakeSwapService extends SwapService {
   // TODO: Remove this once pancakeswap masterchef subgraph has synced
   static getPoolId(depositToken: string): number {
     const poolMap: Record<string, number> = {};
-    poolMap[TOKENS.PANCAKE_BNB_BTCB] = 15;
-    poolMap[TOKENS.PANCAKE_BBADGER_BTCB] = 106;
-    poolMap[TOKENS.PANCAKE_BDIGG_BTCB] = 104;
+    poolMap[TOKENS.PANCAKE_BNB_BTCB] = 262;
+    poolMap[TOKENS.PANCAKE_BBADGER_BTCB] = 332;
+    poolMap[TOKENS.PANCAKE_BDIGG_BTCB] = 331;
     return poolMap[depositToken];
   }
 }
