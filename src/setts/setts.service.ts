@@ -11,7 +11,7 @@ import { ProtocolsService } from '../protocols/protocols.service';
 import { TokenType } from '../tokens/enums/token-type.enum';
 import { TokenRequest } from '../tokens/interfaces/token-request.interface';
 import { TokensService } from '../tokens/tokens.service';
-import { getToken } from '../tokens/tokens-util';
+import { getToken } from '../tokens/tokens.utils';
 import { Sett } from './interfaces/sett.interface.';
 import { SettSnapshot } from './interfaces/sett-snapshot.interface';
 import { SettSummary } from './interfaces/sett-summary.interface';

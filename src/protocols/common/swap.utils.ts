@@ -8,7 +8,7 @@ import { SUSHISWAP_URL, UNISWAP_URL } from '../../config/constants';
 import { getSdk as getUniswapSdk } from '../../graphql/generated/uniswap';
 import { getTokenPriceData } from '../../prices/prices.utils';
 import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
-import { getToken } from '../../tokens/tokens-util';
+import { getToken } from '../../tokens/tokens.utils';
 
 interface LiquidityData {
   contract: string;

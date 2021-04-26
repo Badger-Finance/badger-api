@@ -10,7 +10,7 @@ import { getSdk, OrderDirection } from '../graphql/generated/badger';
 import { PricesService } from '../prices/prices.service';
 import { TokenRequest } from '../tokens/interfaces/token-request.interface';
 import { TokensService } from '../tokens/tokens.service';
-import { getToken } from '../tokens/tokens-util';
+import { getToken } from '../tokens/tokens.utils';
 import { Account } from './interfaces/account.interface';
 import { AccountLimits } from './interfaces/account-limits.interface';
 

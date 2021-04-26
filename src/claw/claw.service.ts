@@ -3,7 +3,7 @@ import { BigNumber, ethers, utils } from 'ethers';
 import { Chain } from '../chains/config/chain.config';
 import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { empAbi } from '../config/abi/abi';
-import { FixedPointUnsigned, Liquidation, Position, SponsorData, SyntheticData } from '../interface/Claw';
+import { FixedPointUnsigned, Liquidation, Position, SponsorData, SyntheticData } from './interface/claw.interface';
 
 type LiqudationUnformatted = [
   string,

@@ -8,7 +8,7 @@ import { TokenType } from '../tokens/enums/token-type.enum';
 import { Token } from '../tokens/interfaces/token.interface';
 import { TokenPrice } from '../tokens/interfaces/token-price.interface';
 import { TokenPriceSnapshot } from '../tokens/interfaces/token-price-snapshot.interface';
-import { getToken, protocolTokens } from '../tokens/tokens-util';
+import { getToken, protocolTokens } from '../tokens/tokens.utils';
 import {
   getContractPrice,
   getPrice,

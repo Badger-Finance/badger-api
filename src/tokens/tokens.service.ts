@@ -1,14 +1,14 @@
 import { Inject, Service } from '@tsed/common';
 import { NotFound } from '@tsed/exceptions';
 import { GraphQLClient } from 'graphql-request';
-import { CacheService } from '../cache/CacheService';
+import { CacheService } from '../cache/cache.service';
 import { PANCAKESWAP_URL, Protocol, SUSHISWAP_URL, UNISWAP_URL } from '../config/constants';
 import { getSdk as getUniV2Sdk, Sdk as UniV2GraphqlSdk, UniV2PairQuery } from '../graphql/generated/uniswap';
 import { PricesService } from '../prices/prices.service';
 import { getLiquidityData } from '../protocols/common/swap.utils';
 import { TokenBalance } from './interfaces/token-balance.interface';
 import { TokenRequest } from './interfaces/token-request.interface';
-import { getToken } from './tokens-util';
+import { getToken } from './tokens.utils';
 
 @Service()
 export class TokensService {

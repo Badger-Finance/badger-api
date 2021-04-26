@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 import { PriceData, TokenPrice } from '../../tokens/interfaces/token-price.interface';
-import { getToken, protocolTokens } from '../../tokens/tokens-util';
+import { getToken, protocolTokens } from '../../tokens/tokens.utils';
 import { ChainStrategy } from './chain.strategy';
 
 export class TestStrategy extends ChainStrategy {

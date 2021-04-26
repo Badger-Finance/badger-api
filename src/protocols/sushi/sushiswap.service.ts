@@ -1,6 +1,6 @@
 import { Inject, Service } from '@tsed/di';
 import { GraphQLClient } from 'graphql-request';
-import { CacheService } from '../../cache/CacheService';
+import { CacheService } from '../../cache/cache.service';
 import { Chain } from '../../chains/config/chain.config';
 import { MASTERCHEF_URL, SUSHI_CHEF, SUSHISWAP_URL, TOKENS } from '../../config/constants';
 import { getSdk, MasterChefsAndPoolsQuery, OrderDirection, Pool_OrderBy } from '../../graphql/generated/master-chef';

@@ -1,7 +1,7 @@
-import { Controller, Get, PathParams } from '@tsed/common';
+import { Controller, Get, Inject, PathParams } from '@tsed/common';
 import { ContentType } from '@tsed/schema';
-import { SponsorData, SyntheticData } from '../interface/Claw';
 import { ClawService } from './claw.service';
+import { SponsorData, SyntheticData } from './interface/claw.interface';
 
 /*
  * The expiring multiparty (EMP) contract represents a collaterizable synthetic token.
@@ -18,7 +18,8 @@ import { ClawService } from './claw.service';
  */
 @Controller('/claw')
 export class ClawController {
-  constructor(private clawService: ClawService) {}
+  @Inject()
+  clawService!: ClawService;
 
   @Get('/emp/:empAddress')
   @ContentType('json')
