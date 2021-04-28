@@ -100,6 +100,7 @@ export enum Provider {
   Cloudflare = 'https://cloudflare-eth.com/',
   Binance = 'https://bsc-dataseed.binance.org/',
   MyEtherWallet = 'https://nodes.mewapi.io/rpc/eth',
+  Alchemy = 'https://eth-mainnet.alchemyapi.io/v2/MnO3SuHlzuCydPWE1XhsYZM_pHZP8_ix',
 }
 export const SUSHI_CHEF = '0xc2EdaD668740f1aA35E4D8f227fB8E17dcA888Cd';
 export const PANCAKE_CHEF = '0x73feaa1eE314F8c655E354234017bE2193C9E24E';
