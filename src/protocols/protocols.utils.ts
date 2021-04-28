@@ -1,7 +1,6 @@
 import { DataMapper } from '@aws/dynamodb-data-mapper';
 import { dynamo } from '../aws/dynamodb.utils';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
-import { cachedValueSourceToValueSource } from './common/value-source.utils';
 import { CachedValueSource } from './interfaces/cached-value-source.interface';
 import { ValueSource } from './interfaces/value-source.interface';
 
@@ -13,7 +12,7 @@ export const getVaultValueSources = async (sett: SettDefinition): Promise<ValueS
     { address: sett.settToken },
     { indexName: 'IndexApySnapshotsOnAddress' },
   )) {
-    valueSources.push(cachedValueSourceToValueSource(source));
+    valueSources.push(source.toValueSource());
   }
   return valueSources;
 };

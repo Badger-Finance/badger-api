@@ -3,7 +3,6 @@ import { PlatformTest } from '@tsed/common';
 import createMockInstance from 'jest-create-mock-instance';
 import { loadChains } from '../chains/chain';
 import { ethSetts } from '../chains/config/eth.config';
-import { TOKENS } from '../config/constants';
 import { CachedValueSource } from './interfaces/cached-value-source.interface';
 import { ProtocolsService } from './protocols.service';
 
@@ -32,14 +31,6 @@ describe('ProtocolsService', () => {
 
   /* eslint-disable @typescript-eslint/no-non-null-assertion */
   describe('getProtocolPerformance', () => {
-    describe('with a sett without a protocol', () => {
-      it('returns an empty array', async () => {
-        const settDefinition = ethSetts.find((s) => s.settToken === TOKENS.BBADGER);
-        const valueSources = await service.getProtocolPerformance(settDefinition!);
-        expect(valueSources).toEqual([]);
-      });
-    });
-
     describe('with a sett that has performance recently cached in DynamoDB', () => {
       it('returns the cached value sources', async () => {
         const address = '0x6dEf55d2e18486B9dDfaA075bc4e4EE0B28c1545';

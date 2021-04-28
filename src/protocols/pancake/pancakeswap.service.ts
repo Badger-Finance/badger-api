@@ -5,7 +5,7 @@ import { CacheService } from '../../cache/cache.service';
 import { Chain } from '../../chains/config/chain.config';
 import { erc20Abi, pancakeChefAbi } from '../../config/abi/abi';
 import { PANCAKE_CHEF, PANCAKESWAP_URL, TOKENS } from '../../config/constants';
-import { PoolInfo } from '../../interface/MasterChef';
+import { PoolInfo } from '../../interface/master-chef.interface';
 import { PricesService } from '../../prices/prices.service';
 import { getTokenPriceData } from '../../prices/prices.utils';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';

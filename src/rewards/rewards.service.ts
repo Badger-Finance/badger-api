@@ -1,9 +1,19 @@
 import { Inject, Service } from '@tsed/common';
 import { NotFound } from '@tsed/exceptions';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { S3Service } from '../aws/s3.service';
 import { CacheService } from '../cache/cache.service';
-import { BOUNCER_PROOFS, REWARD_DATA } from '../config/constants';
+import { Chain } from '../chains/config/chain.config';
+import { ChainNetwork } from '../chains/enums/chain-network.enum';
+import { diggAbi } from '../config/abi/abi';
+import { rewardsLoggerAbi, rewardsLoggerAddress } from '../config/abi/rewards-logger.abi';
+import { BOUNCER_PROOFS, ONE_YEAR_SECONDS, REWARD_DATA, TOKENS } from '../config/constants';
+import { getPrice } from '../prices/prices.utils';
+import { uniformPerformance } from '../protocols/interfaces/performance.interface';
+import { ValueSource } from '../protocols/interfaces/value-source.interface';
+import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
+import { getCachcedSett } from '../setts/setts.utils';
+import { getToken } from '../tokens/tokens.utils';
 import { Eligibility } from './interfaces/eligibility.interface';
 import {
   AirdropMerkleClaim,
@@ -11,6 +21,7 @@ import {
   RewardMerkleClaim,
   RewardMerkleDistribution,
 } from './interfaces/merkle-distributor.interface';
+import { UnlockSchedule } from './interfaces/unlock-schedule.interface';
 
 @Service()
 export class RewardsService {
@@ -77,5 +88,39 @@ export class RewardsService {
     return {
       isEligible: eligible,
     };
+  }
+
+  static async getRewardEmission(chain: Chain, settDefinition: SettDefinition): Promise<ValueSource[]> {
+    if (chain.network !== ChainNetwork.Ethereum) {
+      return [];
+    }
+    const { settToken } = settDefinition;
+    const sett = await getCachcedSett(settDefinition);
+
+    // contracts
+    const rewardsLogger = new ethers.Contract(rewardsLoggerAddress, rewardsLoggerAbi, chain.provider);
+    const diggContract = new ethers.Contract(TOKENS.DIGG, diggAbi, chain.provider);
+    const sharesPerFragment: BigNumber = await diggContract._sharesPerFragment();
+
+    const unlockSchedules: UnlockSchedule[] = await rewardsLogger.getAllUnlockSchedulesFor(settToken);
+    const emissionSources: ValueSource[] = [];
+    for (const schedule of unlockSchedules) {
+      const price = await getPrice(schedule.token);
+      const token = getToken(schedule.token);
+      let emission = schedule.totalAmount;
+      if (token.address === TOKENS.DIGG) {
+        emission = emission.div(sharesPerFragment);
+      }
+      const amount = parseFloat(ethers.utils.formatUnits(emission, token.decimals));
+      const durationScalar = ONE_YEAR_SECONDS / schedule.duration.toNumber();
+      const yearlyEmission = price.usd * amount * durationScalar;
+      const apr = (yearlyEmission / sett.settValue) * 100;
+      emissionSources.push({
+        name: `${token.name} Rewards`,
+        apy: apr,
+        performance: uniformPerformance(apr),
+      });
+    }
+    return emissionSources;
   }
 }

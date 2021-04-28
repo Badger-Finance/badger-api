@@ -12,6 +12,7 @@ export abstract class Chain {
   readonly name: string;
   readonly symbol: string;
   readonly chainId: string;
+  readonly network: ChainNetwork;
   readonly tokens: TokenConfig;
   readonly setts: SettDefinition[];
   readonly provider: ethers.providers.JsonRpcProvider;
@@ -23,6 +24,7 @@ export abstract class Chain {
     name: string,
     symbol: string,
     chainId: string,
+    network: ChainNetwork,
     tokens: TokenConfig,
     setts: SettDefinition[],
     provider: ethers.providers.JsonRpcProvider,
@@ -33,6 +35,7 @@ export abstract class Chain {
     this.name = name;
     this.symbol = symbol;
     this.chainId = chainId;
+    this.network = network;
     this.tokens = tokens;
     this.setts = setts;
     this.provider = provider;
