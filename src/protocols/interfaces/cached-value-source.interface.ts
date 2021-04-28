@@ -1,5 +1,6 @@
 import { attribute, hashKey, table } from '@aws/dynamodb-data-mapper-annotations';
 import { APY_SNAPSHOTS_DATA } from '../../config/constants';
+import { ValueSource } from './value-source.interface';
 
 @table(APY_SNAPSHOTS_DATA)
 export class CachedValueSource {
@@ -35,4 +36,18 @@ export class CachedValueSource {
 
   @attribute({ defaultProvider: () => Date.now() })
   updatedAt!: number;
+
+  toValueSource(): ValueSource {
+    return {
+      name: this.name,
+      apy: this.apy,
+      harvestable: this.harvestable,
+      performance: {
+        oneDay: this.oneDay,
+        threeDay: this.threeDay,
+        sevenDay: this.sevenDay,
+        thirtyDay: this.thirtyDay,
+      },
+    };
+  }
 }

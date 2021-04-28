@@ -12,6 +12,7 @@ export class Ethereum extends Chain {
       'Ethereum',
       'eth',
       '0x01',
+      ChainNetwork.Ethereum,
       ethTokensConfig,
       ethSetts,
       new ethers.providers.JsonRpcProvider(Provider.Alchemy),

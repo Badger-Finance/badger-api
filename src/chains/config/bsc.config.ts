@@ -12,6 +12,7 @@ export class BinanceSmartChain extends Chain {
       'BinanceSmartChain',
       'bsc',
       '0x38',
+      ChainNetwork.BinanceSmartChain,
       bscTokensConfig,
       bscSetts,
       new ethers.providers.JsonRpcProvider(Provider.Binance),

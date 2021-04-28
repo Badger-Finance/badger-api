@@ -11,6 +11,7 @@ import { ValueSource } from '../protocols/interfaces/value-source.interface';
 import { PancakeSwapService } from '../protocols/pancake/pancakeswap.service';
 import { ProtocolsService } from '../protocols/protocols.service';
 import { SushiswapService } from '../protocols/sushi/sushiswap.service';
+import { RewardsService } from '../rewards/rewards.service';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 
 export async function refreshApySnapshots() {
@@ -23,12 +24,15 @@ export async function refreshApySnapshots() {
   );
   const mapper = new DataMapper({ client: dynamo });
   for (const source of valueSources) {
+    // console.log(source);
     await mapper.put(source);
   }
 }
 
 async function getSettValueSources(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
   try {
+    await RewardsService.getRewardEmission(chain, settDefinition);
+    return [];
     switch (settDefinition.protocol) {
       case Protocol.Curve:
         return getCurveApySnapshots(settDefinition);
