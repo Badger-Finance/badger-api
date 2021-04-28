@@ -14,7 +14,7 @@ export class Ethereum extends Chain {
       '0x01',
       ethTokensConfig,
       ethSetts,
-      new ethers.providers.JsonRpcProvider(Provider.Cloudflare),
+      new ethers.providers.JsonRpcProvider(Provider.Alchemy),
       new EthStrategy(),
       BADGER_URL,
       2425847,
