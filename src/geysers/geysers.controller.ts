@@ -3,16 +3,16 @@ import { ContentType } from '@tsed/schema';
 import { Chain } from '../chains/config/chain.config';
 import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { Sett } from '../setts/interfaces/sett.interface.';
-import { GeyserService } from './geysers.service';
+import { SettsService } from '../setts/setts.service';
 
 @Controller('/geysers')
 export class GeyserController {
   @Inject()
-  geyserService!: GeyserService;
+  settsService!: SettsService;
 
   @Get()
   @ContentType('json')
   async listFarms(@QueryParams('chain') chain?: ChainNetwork): Promise<Sett[]> {
-    return this.geyserService.listFarms(Chain.getChain(chain));
+    return this.settsService.listSetts(Chain.getChain(chain));
   }
 }

@@ -1,12 +1,13 @@
 import { Inject, Service } from '@tsed/common';
 import { NotFound } from '@tsed/exceptions';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { S3Service } from '../aws/s3.service';
 import { CacheService } from '../cache/cache.service';
 import { Chain } from '../chains/config/chain.config';
 import { ChainNetwork } from '../chains/enums/chain-network.enum';
+import { diggAbi } from '../config/abi/abi';
 import { rewardsLoggerAbi, rewardsLoggerAddress } from '../config/abi/rewards-logger.abi';
-import { BOUNCER_PROOFS, ONE_YEAR_SECONDS, REWARD_DATA } from '../config/constants';
+import { BOUNCER_PROOFS, ONE_YEAR_SECONDS, REWARD_DATA, TOKENS } from '../config/constants';
 import { getPrice } from '../prices/prices.utils';
 import { uniformPerformance } from '../protocols/interfaces/performance.interface';
 import { ValueSource } from '../protocols/interfaces/value-source.interface';
@@ -95,24 +96,31 @@ export class RewardsService {
     }
     const { settToken } = settDefinition;
     const sett = await getCachcedSett(settDefinition);
+
+    // contracts
     const rewardsLogger = new ethers.Contract(rewardsLoggerAddress, rewardsLoggerAbi, chain.provider);
+    const diggContract = new ethers.Contract(TOKENS.DIGG, diggAbi, chain.provider);
+    const sharesPerFragment: BigNumber = await diggContract._sharesPerFragment();
+
     const unlockSchedules: UnlockSchedule[] = await rewardsLogger.getAllUnlockSchedulesFor(settToken);
     const emissionSources: ValueSource[] = [];
     for (const schedule of unlockSchedules) {
       const price = await getPrice(schedule.token);
       const token = getToken(schedule.token);
-      const amount = parseFloat(ethers.utils.formatUnits(schedule.totalAmount, token.decimals));
+      let emission = schedule.totalAmount;
+      if (token.address === TOKENS.DIGG) {
+        emission = emission.div(sharesPerFragment);
+      }
+      const amount = parseFloat(ethers.utils.formatUnits(emission, token.decimals));
       const durationScalar = ONE_YEAR_SECONDS / schedule.duration.toNumber();
       const yearlyEmission = price.usd * amount * durationScalar;
-      const apr = yearlyEmission / sett.settValue * 100;
-      console.log({ price, token, amount, value: sett.settValue, yearlyEmission });
+      const apr = (yearlyEmission / sett.settValue) * 100;
       emissionSources.push({
         name: `${token.name} Rewards`,
         apy: apr,
         performance: uniformPerformance(apr),
       });
     }
-    // console.log({ settToken, emissionSources });
     return emissionSources;
   }
 }

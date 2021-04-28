@@ -24,15 +24,23 @@ export async function refreshApySnapshots() {
   );
   const mapper = new DataMapper({ client: dynamo });
   for (const source of valueSources) {
-    // console.log(source);
-    await mapper.put(source);
+    try {
+      await mapper.put(source);
+    } catch (err) {
+      console.log({ message: err.message, source });
+    }
   }
 }
 
 async function getSettValueSources(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
+  const [emission, protocol] = await Promise.all([
+    getEmissionApySnapshots(chain, settDefinition),
+    getProtocolValueSources(chain, settDefinition),
+  ]);
+  return [...emission, ...protocol];
+}
+async function getProtocolValueSources(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
   try {
-    await RewardsService.getRewardEmission(chain, settDefinition);
-    return [];
     switch (settDefinition.protocol) {
       case Protocol.Curve:
         return getCurveApySnapshots(settDefinition);
@@ -50,6 +58,13 @@ async function getSettValueSources(chain: Chain, settDefinition: SettDefinition)
     // Silently return no value sources
     return [];
   }
+}
+
+async function getEmissionApySnapshots(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
+  const emissions = await RewardsService.getRewardEmission(chain, settDefinition);
+  return emissions.map((source) =>
+    valueSourceToCachedValueSource(source, settDefinition, source.name.replace(' ', '_')),
+  );
 }
 
 async function getCurveApySnapshots(settDefinition: SettDefinition): Promise<CachedValueSource[]> {

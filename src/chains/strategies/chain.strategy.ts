@@ -1,6 +1,7 @@
 import { BadRequest } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
+import { getToken } from '../../tokens/tokens.utils';
 
 type Strategies = Record<string, ChainStrategy>;
 
@@ -14,7 +15,8 @@ export abstract class ChainStrategy {
   }
 
   static getStrategy(address: string): ChainStrategy {
-    const strategy = this.strategies[ethers.utils.getAddress(address)];
+    const token = getToken(address);
+    const strategy = this.strategies[token.address];
     if (!strategy) {
       throw new BadRequest('Token not supported for pricing');
     }

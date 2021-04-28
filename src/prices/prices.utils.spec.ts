@@ -22,7 +22,7 @@ import {
   updatePrices,
 } from './prices.utils';
 
-describe('prices-util', () => {
+describe('prices.utils', () => {
   const strategy = new TestStrategy();
 
   // Father forgive me for I have sinned
@@ -77,7 +77,7 @@ describe('prices-util', () => {
           decimals: 18,
           type: TokenType.Contract,
         };
-        await expect(updatePrice(unsupportedToken)).rejects.toThrow(BadRequest);
+        await expect(updatePrice(unsupportedToken)).rejects.toThrow(NotFound);
       });
     });
 
@@ -101,7 +101,7 @@ describe('prices-util', () => {
           decimals: 18,
           type: TokenType.Contract,
         };
-        await expect(updatePrices({ [unsupportedToken.address]: unsupportedToken })).rejects.toThrow(BadRequest);
+        await expect(updatePrices({ [unsupportedToken.address]: unsupportedToken })).rejects.toThrow(NotFound);
       });
     });
 
@@ -119,7 +119,7 @@ describe('prices-util', () => {
           [unsupportedToken.address]: unsupportedToken,
           [TOKENS.BADGER]: badgerToken,
         };
-        await expect(updatePrices(tokenConfig)).rejects.toThrow(BadRequest);
+        await expect(updatePrices(tokenConfig)).rejects.toThrow(NotFound);
       });
     });
 

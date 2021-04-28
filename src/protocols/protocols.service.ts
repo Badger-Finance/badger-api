@@ -15,9 +15,6 @@ export class ProtocolsService {
    * @param sett Sett to retrieve protocol performance.
    */
   async getProtocolPerformance(sett: SettDefinition): Promise<ValueSource[]> {
-    if (!sett.protocol) {
-      return [];
-    }
     return getVaultValueSources(sett);
   }
 

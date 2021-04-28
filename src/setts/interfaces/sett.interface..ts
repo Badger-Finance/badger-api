@@ -1,4 +1,3 @@
-import { Geyser } from '../../geysers/interface/geyser.interface';
 import { ValueSource } from '../../protocols/interfaces/value-source.interface';
 import { TokenBalance } from '../../tokens/interfaces/token-balance.interface';
 import { SettAffiliateData } from './sett-affiliate-data.interface';
@@ -14,7 +13,6 @@ import { SettSummary } from './sett-summary.interface';
 export interface Sett extends SettSummary {
   asset: string;
   apy: number;
-  geyser?: Geyser;
   hasBouncer: boolean;
   ppfs: number;
   sources: ValueSource[];
