@@ -6,9 +6,11 @@ import { Chain } from '../chains/config/chain.config';
 import { PANCAKESWAP_URL, Protocol, SUSHISWAP_URL } from '../config/constants';
 import { getSwapValueSource } from '../protocols/common/performance.utils';
 import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
+import { uniformPerformance } from '../protocols/interfaces/performance.interface';
 import { ValueSource } from '../protocols/interfaces/value-source.interface';
 import { PancakeSwapService } from '../protocols/pancake/pancakeswap.service';
 import { ProtocolsService } from '../protocols/protocols.service';
+import { getVaultCachedValueSources } from '../protocols/protocols.utils';
 import { SushiswapService } from '../protocols/sushi/sushiswap.service';
 import { RewardsService } from '../rewards/rewards.service';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
@@ -36,7 +38,23 @@ async function getSettValueSources(chain: Chain, settDefinition: SettDefinition)
     getEmissionApySnapshots(chain, settDefinition),
     getProtocolValueSources(chain, settDefinition),
   ]);
-  return [...emission, ...protocol];
+
+  // check for any emission removal
+  const oldSources: { [index: string]: CachedValueSource } = {};
+  const oldEmission = await getVaultCachedValueSources(settDefinition);
+  oldEmission.forEach((source) => (oldSources[source.addressValueSourceType] = source));
+
+  // remove updates sources from old source list
+  const newSources = [...emission, ...protocol];
+  newSources.forEach((source) => delete oldSources[source.addressValueSourceType]);
+  const removedSources = Array.from(Object.values(oldSources)).map((source) => {
+    const valueSource = source.toValueSource();
+    valueSource.performance = uniformPerformance(0);
+    valueSource.apy = 0;
+    return valueSourceToCachedValueSource(valueSource, settDefinition, source.type);
+  });
+
+  return [...emission, ...protocol, ...removedSources];
 }
 async function getProtocolValueSources(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
   try {

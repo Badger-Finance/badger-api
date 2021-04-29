@@ -4,7 +4,7 @@ import { CachedValueSource } from './interfaces/cached-value-source.interface';
 import { ValueSource } from './interfaces/value-source.interface';
 
 export const getVaultValueSources = async (sett: SettDefinition): Promise<ValueSource[]> => {
-  const valueSources: ValueSource[] = [];
+  const valueSources = [];
   const mapper = getDataMapper();
   for await (const source of mapper.query(
     CachedValueSource,
@@ -12,6 +12,19 @@ export const getVaultValueSources = async (sett: SettDefinition): Promise<ValueS
     { indexName: 'IndexApySnapshotsOnAddress' },
   )) {
     valueSources.push(source.toValueSource());
+  }
+  return valueSources;
+};
+
+export const getVaultCachedValueSources = async (sett: SettDefinition): Promise<CachedValueSource[]> => {
+  const valueSources = [];
+  const mapper = getDataMapper();
+  for await (const source of mapper.query(
+    CachedValueSource,
+    { address: sett.settToken },
+    { indexName: 'IndexApySnapshotsOnAddress' },
+  )) {
+    valueSources.push(source);
   }
   return valueSources;
 };
