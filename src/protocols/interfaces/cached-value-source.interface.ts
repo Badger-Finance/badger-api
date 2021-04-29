@@ -14,7 +14,7 @@ export class CachedValueSource {
   name!: string;
 
   @attribute()
-  apy!: number;
+  apr!: number;
 
   @attribute()
   oneDay!: number;
@@ -40,7 +40,7 @@ export class CachedValueSource {
   toValueSource(): ValueSource {
     return {
       name: this.name,
-      apy: this.apy,
+      apr: this.apr,
       harvestable: this.harvestable,
       performance: {
         oneDay: this.oneDay,

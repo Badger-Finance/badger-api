@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 import { Performance, uniformPerformance } from '../interfaces/performance.interface';
-import { ValueSource } from '../interfaces/value-source.interface';
+import { createValueSource, ValueSource } from '../interfaces/value-source.interface';
 
 export async function getSwapValueSource(graphUrl: string, name: string, poolAddress: string): Promise<ValueSource> {
   // TODO: Move query to GraphService
@@ -17,20 +17,16 @@ export async function getSwapValueSource(graphUrl: string, name: string, poolAdd
     body: JSON.stringify({ query }),
   });
 
-  const unknownPerformance = uniformPerformance(0);
-  const unknownValuSource = {
-    name: `${name} LP Fees`,
-    apy: unknownPerformance.threeDay,
-    performance: unknownPerformance,
-  };
+  const sourceName = `${name} LP Fees`;
+  const unknownValueSource = createValueSource(sourceName, uniformPerformance(0));
 
   if (!response.ok) {
-    return unknownValuSource;
+    return unknownValueSource;
   }
 
   const pairDayResponse = await response.json();
   if (pairDayResponse.errors) {
-    return unknownValuSource;
+    return unknownValueSource;
   }
   const pairDayData = pairDayResponse.data.pairDayDatas;
 
@@ -47,9 +43,6 @@ export async function getSwapValueSource(graphUrl: string, name: string, poolAdd
     if (i === 6) performance.sevenDay = currentApy;
     if (i === 29) performance.thirtyDay = currentApy;
   }
-  return {
-    name: `${name} LP Fees`,
-    apy: performance.threeDay,
-    performance: performance,
-  };
+
+  return createValueSource(sourceName, performance);
 }

@@ -1,12 +1,10 @@
 import { isNil } from '@tsed/core';
-import flatten from 'lodash/flatten';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { PANCAKESWAP_URL, Protocol, SUSHISWAP_URL } from '../config/constants';
 import { getSwapValueSource } from '../protocols/common/performance.utils';
 import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
-import { uniformPerformance } from '../protocols/interfaces/performance.interface';
 import { ValueSource } from '../protocols/interfaces/value-source.interface';
 import { PancakeSwapService } from '../protocols/pancake/pancakeswap.service';
 import { ProtocolsService } from '../protocols/protocols.service';
@@ -20,9 +18,10 @@ export async function refreshApySnapshots() {
   const rawValueSources = await Promise.all(
     chains.flatMap((chain) => chain.setts.map((sett) => getSettValueSources(chain, sett))),
   );
-  const valueSources = flatten(rawValueSources.filter((rawValueSource) => !isNil(rawValueSource))).filter(
-    (source) => !isNaN(source.apy),
-  );
+
+  const valueSources = rawValueSources
+    .filter((rawValueSource) => !isNil(rawValueSource))
+    .flatMap((sources) => sources.filter((source) => !isNaN(source.apr)));
   const mapper = getDataMapper();
   for (const source of valueSources) {
     try {
@@ -47,14 +46,12 @@ async function getSettValueSources(chain: Chain, settDefinition: SettDefinition)
   // remove updates sources from old source list
   const newSources = [...emission, ...protocol];
   newSources.forEach((source) => delete oldSources[source.addressValueSourceType]);
-  const removedSources = Array.from(Object.values(oldSources)).map((source) => {
-    const valueSource = source.toValueSource();
-    valueSource.performance = uniformPerformance(0);
-    valueSource.apy = 0;
-    return valueSourceToCachedValueSource(valueSource, settDefinition, source.type);
-  });
 
-  return [...emission, ...protocol, ...removedSources];
+  // delete sources which are no longer valid
+  const mapper = getDataMapper();
+  Array.from(Object.values(oldSources)).map((source) => mapper.delete(source));
+
+  return [...emission, ...protocol];
 }
 async function getProtocolValueSources(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
   try {
@@ -80,7 +77,7 @@ async function getProtocolValueSources(chain: Chain, settDefinition: SettDefinit
 async function getEmissionApySnapshots(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
   const emissions = await RewardsService.getRewardEmission(chain, settDefinition);
   return emissions.map((source) =>
-    valueSourceToCachedValueSource(source, settDefinition, source.name.replace(' ', '_')),
+    valueSourceToCachedValueSource(source, settDefinition, source.name.replace(' ', '_').toLowerCase()),
   );
 }
 
@@ -97,7 +94,7 @@ async function getPancakeswapApySnapshots(chain: Chain, settDefinition: SettDefi
       settDefinition,
       'swap',
     ),
-    valueSourceToCachedValueSource(await getPancakeswapPoolApr(chain, depositToken), settDefinition, 'pool-apr'),
+    valueSourceToCachedValueSource(await getPancakeswapPoolApr(chain, depositToken), settDefinition, 'pool_apr'),
   ];
 }
 
@@ -109,7 +106,7 @@ async function getSushiswapApySnapshots(chain: Chain, settDefinition: SettDefini
       settDefinition,
       'swap',
     ),
-    valueSourceToCachedValueSource(await getSushiwapPoolApr(chain, depositToken), settDefinition, 'pool-apr'),
+    valueSourceToCachedValueSource(await getSushiwapPoolApr(chain, depositToken), settDefinition, 'pool_apr'),
   ];
 }
 
@@ -130,7 +127,7 @@ function valueSourceToCachedValueSource(
     addressValueSourceType: `${settDefinition.settToken}_${type}`,
     address: settDefinition.settToken,
     type,
-    apy: valueSource.apy,
+    apr: valueSource.apr,
     name: valueSource.name,
     oneDay: valueSource.performance.oneDay,
     threeDay: valueSource.performance.threeDay,

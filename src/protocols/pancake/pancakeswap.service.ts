@@ -12,7 +12,7 @@ import { SettDefinition } from '../../setts/interfaces/sett-definition.interface
 import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
 import { SwapService } from '../common/swap.service';
 import { uniformPerformance } from '../interfaces/performance.interface';
-import { ValueSource } from '../interfaces/value-source.interface';
+import { createValueSource, ValueSource } from '../interfaces/value-source.interface';
 
 @Service()
 export class PancakeSwapService extends SwapService {
@@ -40,11 +40,7 @@ export class PancakeSwapService extends SwapService {
   }
 
   async getPoolApr(chain: Chain, contract: string, poolId: number): Promise<ValueSource> {
-    let emissionSource: ValueSource = {
-      name: 'Cake',
-      apy: 0,
-      performance: uniformPerformance(0),
-    };
+    let emissionSource = createValueSource('Cake Rewards', uniformPerformance(0));
     if (!poolId) {
       return emissionSource;
     }
@@ -59,11 +55,7 @@ export class PancakeSwapService extends SwapService {
   }
 
   static async getEmissionSource(chain: Chain, poolId: number): Promise<ValueSource> {
-    const emissionSource: ValueSource = {
-      name: 'Cake',
-      apy: 0,
-      performance: uniformPerformance(0),
-    };
+    const emissionSource = createValueSource('Cake Rewards', uniformPerformance(0));
     const masterChef = new ethers.Contract(PANCAKE_CHEF, pancakeChefAbi, chain.provider);
     const [totalAllocPoint, cakePerBlock, poolInfo, tokenPrice]: [
       BigNumber,
@@ -83,7 +75,7 @@ export class PancakeSwapService extends SwapService {
     const emissionScalar = poolInfo.allocPoint.toNumber() / totalAllocPoint.toNumber();
     const cakeEmission = parseFloat(formatEther(cakePerBlock)) * emissionScalar * chain.blocksPerYear * tokenPrice.usd;
     emissionSource.performance = uniformPerformance((cakeEmission / poolValue) * 100);
-    emissionSource.apy = emissionSource.performance.threeDay;
+    emissionSource.apr = emissionSource.performance.threeDay;
     emissionSource.harvestable = true;
     return emissionSource;
   }

@@ -10,7 +10,7 @@ import { rewardsLoggerAbi, rewardsLoggerAddress } from '../config/abi/rewards-lo
 import { BOUNCER_PROOFS, ONE_YEAR_SECONDS, REWARD_DATA, TOKENS } from '../config/constants';
 import { getPrice } from '../prices/prices.utils';
 import { uniformPerformance } from '../protocols/interfaces/performance.interface';
-import { ValueSource } from '../protocols/interfaces/value-source.interface';
+import { createValueSource, ValueSource } from '../protocols/interfaces/value-source.interface';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { getCachcedSett } from '../setts/setts.utils';
 import { getToken } from '../tokens/tokens.utils';
@@ -157,11 +157,7 @@ export class RewardsService {
       const durationScalar = ONE_YEAR_SECONDS / schedule.duration.toNumber();
       const yearlyEmission = price.usd * amount * durationScalar;
       const apr = (yearlyEmission / sett.settValue) * 100;
-      emissionSources.push({
-        name: `${token.name} Rewards`,
-        apy: apr,
-        performance: uniformPerformance(apr),
-      });
+      emissionSources.push(createValueSource(`${token.name} Rewards`, uniformPerformance(apr)));
     }
     return emissionSources;
   }
