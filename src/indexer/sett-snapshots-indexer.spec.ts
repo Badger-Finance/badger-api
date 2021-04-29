@@ -4,6 +4,7 @@ import { ethSetts } from '../chains/config/eth.config';
 import { BscStrategy } from '../chains/strategies/bsc.strategy';
 import { EthStrategy } from '../chains/strategies/eth.strategy';
 import { SettQuery } from '../graphql/generated/badger';
+import * as priceUtils from '../prices/prices.utils';
 import { CachedSettSnapshot } from '../setts/interfaces/cached-sett-snapshot.interface';
 import * as settUtils from '../setts/setts.utils';
 import { refreshSettSnapshots } from './sett-snapshots-indexer';
@@ -39,6 +40,9 @@ describe('refreshSettSnapshots', () => {
     jest.spyOn(BscStrategy.prototype, 'getPrice').mockImplementation(async (_address: string) => mockTokenPrice);
     jest.spyOn(EthStrategy.prototype, 'getPrice').mockImplementation(async (_address: string) => mockTokenPrice);
 
+    const mockTokenPriceSnapshot = { name: 'mock', usd: 10, eth: 0, address: '0xbeef', updatedAt: Date.now() };
+    jest.spyOn(priceUtils, 'getPrice').mockImplementation(async (_address: string) => mockTokenPriceSnapshot);
+
     await refreshSettSnapshots();
   });
 
@@ -59,7 +63,6 @@ describe('refreshSettSnapshots', () => {
         supply: expect.any(Number),
         ratio: expect.any(Number),
         settValue: expect.any(Number),
-        updatedAt: expect.any(Number),
       });
       requestedAddresses.push(snapshot.address);
     }

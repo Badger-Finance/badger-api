@@ -1,6 +1,5 @@
-import { DataMapper } from '@aws/dynamodb-data-mapper';
 import { NotFound } from '@tsed/exceptions';
-import { dynamo } from '../aws/dynamodb.utils';
+import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
@@ -21,17 +20,22 @@ const indexSett = async (chain: Chain, sett: SettDefinition) => {
     throw new NotFound(`${settToken} is not a valid sett token`);
   }
 
+  const mapper = getDataMapper();
   let block = await getIndexedBlock(sett, createdBlock);
   while (true) {
-    const snapshot = await settToSnapshot(chain, sett, block);
-
-    if (snapshot == null) {
+    try {
       block += thirtyMinutesBlocks;
-      continue;
-    }
+      const snapshot = await settToSnapshot(chain, sett, block);
 
-    const mapper = new DataMapper({ client: dynamo });
-    await mapper.put(snapshot);
-    block += thirtyMinutesBlocks;
+      if (snapshot == null) {
+        block += thirtyMinutesBlocks;
+        continue;
+      }
+
+      await mapper.put(snapshot);
+    } catch (err) {
+      // request block is not indexed
+      break;
+    }
   }
 };

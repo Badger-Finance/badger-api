@@ -1,6 +1,5 @@
-import { DataMapper } from '@aws/dynamodb-data-mapper';
 import { GraphQLClient } from 'graphql-request';
-import { dynamo } from '../aws/dynamodb.utils';
+import { getDataMapper } from '../aws/dynamodb.utils';
 import { SAMPLE_DAYS } from '../config/constants';
 import { getSdk, SettQuery, SettQueryVariables } from '../graphql/generated/badger';
 import { CachedSettSnapshot } from './interfaces/cached-sett-snapshot.interface';
@@ -37,7 +36,7 @@ export const getCachcedSett = async (sett: SettDefinition): Promise<CachedSettSn
   };
 
   try {
-    const mapper = new DataMapper({ client: dynamo });
+    const mapper = getDataMapper();
     for await (const item of mapper.query(
       CachedSettSnapshot,
       { address: sett.settToken },
@@ -55,7 +54,7 @@ export const getCachcedSett = async (sett: SettDefinition): Promise<CachedSettSn
 export const getSettSnapshots = async (sett: SettDefinition): Promise<SettSnapshot[]> => {
   try {
     const snapshots = [];
-    const mapper = new DataMapper({ client: dynamo });
+    const mapper = getDataMapper();
     for await (const snapshot of mapper.query(
       SettSnapshot,
       { asset: sett.symbol.toLowerCase() },

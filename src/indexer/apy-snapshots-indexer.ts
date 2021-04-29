@@ -1,7 +1,6 @@
-import { DataMapper } from '@aws/dynamodb-data-mapper';
 import { isNil } from '@tsed/core';
 import flatten from 'lodash/flatten';
-import { dynamo } from '../aws/dynamodb.utils';
+import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { PANCAKESWAP_URL, Protocol, SUSHISWAP_URL } from '../config/constants';
@@ -22,7 +21,7 @@ export async function refreshApySnapshots() {
   const valueSources = flatten(rawValueSources.filter((rawValueSource) => !isNil(rawValueSource))).filter(
     (source) => !isNaN(source.apy),
   );
-  const mapper = new DataMapper({ client: dynamo });
+  const mapper = getDataMapper();
   for (const source of valueSources) {
     try {
       await mapper.put(source);

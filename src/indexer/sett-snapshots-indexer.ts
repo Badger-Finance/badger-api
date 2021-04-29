@@ -1,5 +1,4 @@
-import { DataMapper } from '@aws/dynamodb-data-mapper';
-import { dynamo } from '../aws/dynamodb.utils';
+import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { successfulCapture } from '../config/util';
@@ -23,8 +22,12 @@ export async function refreshSettSnapshots() {
   const snapshots = await Promise.all(
     chains.flatMap((chain) => chain.setts.map((sett) => captureSnapshot(chain, sett))),
   );
-  const mapper = new DataMapper({ client: dynamo });
+  const mapper = getDataMapper();
   for (const snapshot of snapshots.filter(successfulCapture)) {
-    await mapper.put(snapshot);
+    try {
+      await mapper.put(snapshot);
+    } catch (err) {
+      console.log({ message: err.message, snapshot });
+    }
   }
 }
