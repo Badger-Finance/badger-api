@@ -1,268 +1,261 @@
 [
   {
-    "name":"Badger",
     "address":"0x3472A5A71965499acd81997a54BBA8D852C6E53d",
-    "usd":39.34,
-    "eth":0.01914461,
-    "updatedAt":1617915540410
-  },
-  {
-    "name":"Wrapped Bitcoin",
-    "address":"0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
-    "usd":57674,
-    "eth":28.065713,
-    "updatedAt":1617915540379
-  },
-  {
-    "name":"Wrapped Ethereum",
-    "address":"0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
-    "usd":2055.7,
-    "eth":1.000192,
-    "updatedAt":1617915540395
-  },
-  {
-    "name":"Curve.fi: renCrv Token",
-    "address":"0x49849C98ae39Fff122806C06791Fa73784FB3675",
-    "usd":57674,
-    "eth":28.065713,
-    "updatedAt":1617915540400
-  },
-  {
-    "name":"Curve.fi renBTC/wBTC/sBTC",
-    "address":"0x075b1bb99792c9E1041bA13afEf80C91a1e70fB3",
-    "usd":58271,
-    "eth":28.336782,
-    "updatedAt":1617915540377
-  },
-  {
-    "name":"Curve.fi tBTC/sbtcCrv",
-    "address":"0x64eda51d3Ad40D56b9dFc5554E06F94e1Dd786Fd",
-    "usd":59838,
-    "eth":29.094465,
-    "updatedAt":1617915540407
-  },
-  {
-    "name":"Digg",
-    "address":"0x798D1bE841a82a273720CE31c822C61a67a601C3",
-    "usd":41376,
-    "eth":20.126307,
-    "updatedAt":1617915540385
-  },
-  {
-    "name":"Sushi",
-    "address":"0x6B3595068778DD592e39A122f4f5a5cF09C90fE2",
-    "usd":14.26,
-    "eth":0.00694104,
-    "updatedAt":1617915540401
-  },
-  {
-    "name":"SushiSwap: WBTC-BADGER",
-    "address":"0x110492b31c59716AC47337E616804E3E3AdC0b4a",
-    "usd":311706617.59339386,
-    "eth":151687.60742214837,
-    "updatedAt":1617915540467
-  },
-  {
-    "name":"SushiSwap: WBTC-DIGG",
-    "address":"0x9a13867048e01c663ce8Ce2fE0cDAE69Ff9F35E3",
-    "usd":210328102738333.84,
-    "eth":102330057643.10521,
-    "updatedAt":1617915540455
-  },
-  {
-    "name":"SushiSwap: WBTC-ETH",
-    "address":"0xCEfF51756c56CeFFCA006cD410B03FFC46dd3a58",
-    "usd":51906465559.2445,
-    "eth":25256974.5189279,
-    "updatedAt":1617915540466
-  },
-  {
-    "name":"Uniswap V2: WBTC-BADGER",
-    "address":"0xcD7989894bc033581532D2cd88Da5db0A4b12859",
-    "usd":334829888.982007,
-    "eth":162940.21764784525,
-    "updatedAt":1617915540463
-  },
-  {
-    "name":"Uniswap V2: WBTC-DIGG",
-    "address":"0xE86204c4eDDd2f70eE00EAd6805f917671F56c52",
-    "usd":228388977191011.78,
-    "eth":111117133637.09953,
-    "updatedAt":1617915540451
-  },
-  {
-    "name":"bBadger",
-    "eth":0.02343237328669554,
-    "address":"0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "usd":48.15086675041188,
-    "updatedAt":1617915540431
-  },
-  {
-    "name":"bDigg",
-    "eth":13.33957432283894,
-    "address":"0x7e7E112A68d8D2E221E11047a72fFC1065c38e1a",
-    "usd":27423.72096290611,
-    "updatedAt":1617915540434
-  },
-  {
-    "name":"bUniswap V2: WBTC-DIGG",
-    "eth":158698525400.37592,
-    "address":"0xC17078FDd324CC473F8175Dc5290fae5f2E84714",
-    "usd":326214490798312.3,
-    "updatedAt":1617915540482
-  },
-  {
-    "name":"bUniswap V2: WBTC-BADGER",
-    "eth":247697.24698827096,
-    "address":"0x235c9e24D3FB2FAFd58a2E49D454Fdcd2DBf7FF1",
-    "usd":509081673.1550877,
-    "updatedAt":1617915540479
-  },
-  {
-    "name":"bSushiSwap: WBTC-ETH",
-    "eth":25255085.420293845,
-    "address":"0x758A43EE2BFf8230eeb784879CdcFF4828F2544D",
-    "usd":51906916095.52736,
-    "updatedAt":1617915540451
-  },
-  {
-    "name":"bSushiSwap: WBTC-BADGER",
-    "eth":195876.84241567526,
-    "address":"0x1862A18181346EBd9EdAf800804f89190DeF24a5",
-    "usd":402577381.47525,
-    "updatedAt":1617915540448
-  },
-  {
-    "name":"bSushiSwap: WBTC-DIGG",
-    "eth":142611075960.5052,
-    "address":"0x88128580ACdD9c04Ce47AFcE196875747bF2A9f6",
-    "usd":293145748258135.06,
-    "updatedAt":1617915540460
-  },
-  {
-    "name":"bCurve.fi: renCrv Token",
-    "eth":28.23632680627089,
-    "address":"0x6dEf55d2e18486B9dDfaA075bc4e4EE0B28c1545",
-    "usd":58024.60504833308,
-    "updatedAt":1617915540457
-  },
-  {
-    "name":"bCurve.fi renBTC/wBTC/sBTC",
-    "eth":28.550364836876742,
-    "address":"0xd04c48A53c111300aD41190D63681ed3dAd998eC",
-    "usd":58710.20602867484,
-    "updatedAt":1617915540439
-  },
-  {
-    "name":"bCurve.fi tBTC/sbtcCrv",
-    "eth":29.512622098735903,
-    "address":"0xb9D076fDe463dbc9f915E5392F807315Bf940334",
-    "usd":60698.01528036893,
-    "updatedAt":1617915540442
-  },
-  {
-    "name":"bHarvest Curve.fi crvRenWBTC",
-    "eth":28.18118565909313,
-    "address":"0xAf5A1DECfa95BAF63E0084a35c62592B774A2A87",
-    "usd":57911.29203460954,
-    "updatedAt":1617915540481
-  },
-  {
-    "name":"Cake",
-    "address":"0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
-    "usd":20.33,
-    "eth":0.00989561,
-    "updatedAt":1617915540456
-  },
-  {
-    "name":"Wrapped Binance Coin",
-    "address":"0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
-    "usd":414.23,
-    "eth":0.20157486,
-    "updatedAt":1617915540382
-  },
-  {
-    "name":"Binance Pegged Bitcoin",
-    "address":"0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c",
-    "usd":57483,
-    "eth":27.972933,
-    "updatedAt":1617915540393
-  },
-  {
-    "name":"Pancakeswap: WBNB-BTCB",
-    "address":"0x7561EEe90e24F3b348E1087A005F78B4c8453524",
-    "usd":10401.359440550421,
-    "eth":5.061588101990266,
-    "updatedAt":1617915541457
-  },
-  {
-    "name":"Pancakeswap: BBADGER-BTCB",
-    "address":"0x10F461CEAC7A17F59e249954Db0784d42EfF5DB5",
-    "usd":3336.9890480150084,
-    "eth":1.6237753499824086,
-    "updatedAt":1617915541377
-  },
-  {
-    "name":"Pancakeswap: BDIGG-BTCB",
-    "address":"0xE1E33459505bB3763843a426F7Fd9933418184ae",
-    "usd":79735.05786197158,
-    "eth":38.79313544970799,
-    "updatedAt":1617915541370
-  },
-  {
     "name":"Badger",
-    "address":"0x753fbc5800a8C8e3Fb6DC6415810d627A387Dfc9",
-    "usd":39.34,
-    "eth":0.01914461,
-    "updatedAt":1617915540389
+    "usd":33.34,
+    "eth":0.01223345,
+    "updatedAt":1619659560589
   },
   {
-    "name":"Test",
-    "address":"0xEd2a8Ab49DcbCb8C27650cC8D5229Cefcad52e2a",
-    "usd":57674,
-    "eth":28.065713,
-    "updatedAt":1617915540398
+    "address":"0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+    "name":"Wrapped Bitcoin",
+    "usd":54672,
+    "eth":20.060603,
+    "updatedAt":1619659560616
   },
   {
+    "address":"0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+    "name":"Wrapped Ethereum",
+    "usd":2714.56,
+    "eth":0.99599194,
+    "updatedAt":1619659560682
+  },
+  {
+    "address":"0x49849C98ae39Fff122806C06791Fa73784FB3675",
+    "name":"Curve.fi: renCrv Token",
+    "usd":54672,
+    "eth":20.060603,
+    "updatedAt":1619659560591
+  },
+  {
+    "address":"0x075b1bb99792c9E1041bA13afEf80C91a1e70fB3",
+    "name":"Curve.fi renBTC/wBTC/sBTC",
+    "usd":55906,
+    "eth":20.459192,
+    "updatedAt":1619659560619
+  },
+  {
+    "address":"0x64eda51d3Ad40D56b9dFc5554E06F94e1Dd786Fd",
+    "name":"Curve.fi tBTC/sbtcCrv",
+    "usd":54757,
+    "eth":20.091124,
+    "updatedAt":1619659560512
+  },
+  {
+    "address":"0x798D1bE841a82a273720CE31c822C61a67a601C3",
+    "name":"Digg",
+    "usd":46330,
+    "eth":16.999383,
+    "updatedAt":1619659560627
+  },
+  {
+    "address":"0x6B3595068778DD592e39A122f4f5a5cF09C90fE2",
+    "name":"Sushi",
+    "usd":14.4,
+    "eth":0.00528457,
+    "updatedAt":1619659560642
+  },
+  {
+    "address":"0x110492b31c59716AC47337E616804E3E3AdC0b4a",
+    "name":"SushiSwap: WBTC-BADGER",
+    "usd":280510883.4051517,
+    "eth":102926.42661196459,
+    "updatedAt":1619659560701
+  },
+  {
+    "address":"0x9a13867048e01c663ce8Ce2fE0cDAE69Ff9F35E3",
+    "name":"SushiSwap: WBTC-DIGG",
+    "usd":176123664089578,
+    "eth":64623225789.535515,
+    "updatedAt":1619659560697
+  },
+  {
+    "address":"0xCEfF51756c56CeFFCA006cD410B03FFC46dd3a58",
+    "name":"SushiSwap: WBTC-ETH",
+    "usd":58208001699.42382,
+    "eth":21357499.8291161,
+    "updatedAt":1619659560725
+  },
+  {
+    "address":"0xcD7989894bc033581532D2cd88Da5db0A4b12859",
+    "name":"Uniswap V2: WBTC-BADGER",
+    "usd":301933573.75640404,
+    "eth":110786.94748309333,
+    "updatedAt":1619659560688
+  },
+  {
+    "address":"0xE86204c4eDDd2f70eE00EAd6805f917671F56c52",
+    "name":"Uniswap V2: WBTC-DIGG",
+    "usd":191334422273594.1,
+    "eth":70205039452.21855,
+    "updatedAt":1619659560877
+  },
+  {
+    "address":"0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
     "name":"bBadger",
-    "eth":0.023428689145645245,
-    "address":"0x1F7216fdB338247512Ec99715587bb97BBf96eae",
-    "usd":48.15086675041188,
-    "updatedAt":1617915540338
+    "usd":40.88174803305266,
+    "eth":0.015000744465355369,
+    "updatedAt":1619659560798
   },
   {
+    "address":"0x7e7E112A68d8D2E221E11047a72fFC1065c38e1a",
     "name":"bDigg",
-    "eth":13.33957432283894,
-    "address":"0x5986D5c77c65e5801a5cAa4fAE80089f870A71dA",
-    "usd":27423.72096290611,
-    "updatedAt":1617915540347
+    "usd":20109.49988518431,
+    "eth":7.378568756458107,
+    "updatedAt":1619659560800
   },
   {
-    "name":"bPancakeswap: WBNB-BTCB",
-    "eth":5.085067778695678,
-    "address":"0xaf4B9C4b545D5324904bAa15e29796D2E2f90813",
-    "usd":10449.609229100543,
-    "updatedAt":1617915540452
+    "address":"0xC17078FDd324CC473F8175Dc5290fae5f2E84714",
+    "name":"bUniswap V2: WBTC-DIGG",
+    "usd":287431081734061.94,
+    "eth":105464099803.03633,
+    "updatedAt":1619659560801
   },
   {
-    "name":"bPancakeswap: BBADGER-BTCB",
-    "eth":0.8378817426388682,
-    "address":"0x857F91f735f4B03b19D2b5c6E476C73DB8241F55",
-    "usd":1721.8057259891216,
-    "updatedAt":1617915540443
+    "address":"0x235c9e24D3FB2FAFd58a2E49D454Fdcd2DBf7FF1",
+    "name":"bUniswap V2: WBTC-BADGER",
+    "usd":467539188.83388144,
+    "eth":171551.7718523631,
+    "updatedAt":1619659560790
   },
   {
-    "name":"Pancakeswap: BDIGG-BTCB",
-    "eth":20.17143253560778,
-    "address":"0xa861Ba302674b08f7F2F24381b705870521DDfed",
-    "usd":41451.30067141483,
-    "updatedAt":1617915540443
+    "address":"0x758A43EE2BFf8230eeb784879CdcFF4828F2544D",
+    "name":"bSushiSwap: WBTC-ETH",
+    "usd":58216683878.41962,
+    "eth":21373096.435375165,
+    "updatedAt":1619659560806
   },
   {
+    "address":"0x1862A18181346EBd9EdAf800804f89190DeF24a5",
+    "name":"bSushiSwap: WBTC-BADGER",
+    "usd":368274925.26890785,
+    "eth":135129.23851146674,
+    "updatedAt":1619659560799
+  },
+  {
+    "address":"0x88128580ACdD9c04Ce47AFcE196875747bF2A9f6",
+    "name":"bSushiSwap: WBTC-DIGG",
+    "usd":254761326490376.53,
+    "eth":93476926052.68365,
+    "updatedAt":1619659560795
+  },
+  {
+    "address":"0x6dEf55d2e18486B9dDfaA075bc4e4EE0B28c1545",
+    "name":"bCurve.fi: renCrv Token",
+    "usd":55054.60434989793,
+    "eth":20.200616413156563,
+    "updatedAt":1619659560780
+  },
+  {
+    "address":"0xd04c48A53c111300aD41190D63681ed3dAd998eC",
+    "name":"bCurve.fi renBTC/wBTC/sBTC",
+    "usd":56403.22192466176,
+    "eth":20.641153843509905,
+    "updatedAt":1619659560802
+  },
+  {
+    "address":"0xb9D076fDe463dbc9f915E5392F807315Bf940334",
+    "name":"bCurve.fi tBTC/sbtcCrv",
+    "usd":55654.0344648643,
+    "eth":20.420258734661545,
+    "updatedAt":1619659560803
+  },
+  {
+    "address":"0xAf5A1DECfa95BAF63E0084a35c62592B774A2A87",
+    "name":"bHarvest Curve.fi crvRenWBTC",
+    "usd":54928.30326813907,
+    "eth":20.154274063859813,
+    "updatedAt":1619659560804
+  },
+  {
+    "address":"0x4b92d19c11435614CD49Af1b589001b7c08cD4D5",
     "name":"Yearn WBTC",
-    "address":"0x64f9dCdF4acCC3365725F1eCcba2F9427e108a73",
-    "usd":0,
-    "eth":0,
-    "updatedAt":1617915540438
+    "usd":54931.00740128,
+    "eth":20.15526626345792,
+    "updatedAt":1619659560787
+  },
+  {
+    "address":"0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+    "name":"Cake",
+    "usd":38.01,
+    "eth":0.01394512,
+    "updatedAt":1619659560621
+  },
+  {
+    "address":"0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+    "name":"Wrapped Binance Coin",
+    "usd":569.82,
+    "eth":0.2090708,
+    "updatedAt":1619659560606
+  },
+  {
+    "address":"0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c",
+    "name":"Binance Pegged Bitcoin",
+    "usd":54461,
+    "eth":19.982658,
+    "updatedAt":1619659560646
+  },
+  {
+    "address":"0x61EB789d75A95CAa3fF50ed7E47b96c132fEc082",
+    "name":"Pancakeswap: WBNB-BTCB",
+    "usd":11230.62409562235,
+    "eth":4.120648252196549,
+    "updatedAt":1619659564207
+  },
+  {
+    "address":"0x5A58609dA96469E9dEf3fE344bC39B00d18eb9A5",
+    "name":"Pancakeswap: BBADGER-BTCB",
+    "usd":2986.120955081817,
+    "eth":1.0956779818397164,
+    "updatedAt":1619659563244
+  },
+  {
+    "address":"0x81d776C90c89B8d51E9497D58338933127e2fA80",
+    "name":"Pancakeswap: BDIGG-BTCB",
+    "usd":66395.16346517805,
+    "eth":24.361588015141596,
+    "updatedAt":1619659562885
+  },
+  {
+    "address":"0x753fbc5800a8C8e3Fb6DC6415810d627A387Dfc9",
+    "name":"Badger",
+    "usd":33.34,
+    "eth":0.01223345,
+    "updatedAt":1619659560616
+  },
+  {
+    "address":"0x1F7216fdB338247512Ec99715587bb97BBf96eae",
+    "name":"bBadger",
+    "usd":40.88174803305266,
+    "eth":0.015000744465355369,
+    "updatedAt":1619659560464
+  },
+  {
+    "address":"0x5986D5c77c65e5801a5cAa4fAE80089f870A71dA",
+    "name":"bDigg",
+    "usd":20109.49988518431,
+    "eth":7.378568756458107,
+    "updatedAt":1619659560458
+  },
+  {
+    "address":"0xaf4B9C4b545D5324904bAa15e29796D2E2f90813",
+    "name":"bPancakeswap: WBNB-BTCB",
+    "usd":11360.710200848742,
+    "eth":4.1708703182177675,
+    "updatedAt":1619659560613
+  },
+  {
+    "address":"0x857F91f735f4B03b19D2b5c6E476C73DB8241F55",
+    "name":"bPancakeswap: BBADGER-BTCB",
+    "usd":3176.465669880641,
+    "eth":1.166186643204517,
+    "updatedAt":1619659560612
+  },
+  {
+    "address":"0xa861Ba302674b08f7F2F24381b705870521DDfed",
+    "name":"Pancakeswap: BDIGG-BTCB",
+    "usd":73673.68688099358,
+    "eth":27.06815152045417,
+    "updatedAt":1619659560592
   }
 ]

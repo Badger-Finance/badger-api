@@ -1,7 +1,13 @@
-import { DataMapper } from '@aws/dynamodb-data-mapper';
+import { BigNumber } from '@ethersproject/bignumber';
 import { NotFound } from '@tsed/exceptions';
-import { dynamo } from '../aws/dynamodb.utils';
+import { ethers } from 'ethers';
+import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
+import { settAbi } from '../config/abi/abi';
+import { yearnAffiliateVaultWrapperAbi } from '../config/abi/yearn-affiliate-vault-wrapper.abi';
+import { Protocol } from '../config/constants';
+import { toFloat } from '../config/util';
+import { getPrice } from '../prices/prices.utils';
 import { CachedSettSnapshot } from '../setts/interfaces/cached-sett-snapshot.interface';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { SettSnapshot } from '../setts/interfaces/sett-snapshot.interface';
@@ -24,8 +30,8 @@ export const settToCachedSnapshot = async (
   const { balance, totalSupply, pricePerFullShare } = sett;
   const tokenBalance = balance / Math.pow(10, depositToken.decimals);
   const supply = totalSupply / Math.pow(10, settToken.decimals);
-  const ratio = pricePerFullShare / Math.pow(10, settToken.decimals);
-  const tokenPriceData = await chain.strategy.getPrice(depositToken.address);
+  const ratio = await getPricePerShare(chain, pricePerFullShare, settDefinition);
+  const tokenPriceData = await getPrice(depositToken.address);
   const value = tokenBalance * tokenPriceData.usd;
 
   return Object.assign(new CachedSettSnapshot(), {
@@ -34,7 +40,6 @@ export const settToCachedSnapshot = async (
     ratio,
     settValue: parseFloat(value.toFixed(2)),
     supply,
-    updatedAt: Date.now(),
   });
 };
 
@@ -56,8 +61,8 @@ export const settToSnapshot = async (
   const timestamp = blockData.timestamp * 1000;
   const tokenBalance = balance / Math.pow(10, depositToken.decimals);
   const supply = totalSupply / Math.pow(10, settToken.decimals);
-  const ratio = pricePerFullShare / Math.pow(10, settToken.decimals);
-  const tokenPriceData = await chain.strategy.getPrice(depositToken.address);
+  const ratio = await getPricePerShare(chain, pricePerFullShare, settDefinition, block);
+  const tokenPriceData = await getPrice(depositToken.address);
   const value = tokenBalance * tokenPriceData.usd;
 
   return Object.assign(new SettSnapshot(), {
@@ -71,9 +76,39 @@ export const settToSnapshot = async (
   });
 };
 
+const getPricePerShare = async (
+  chain: Chain,
+  pricePerShare: BigNumber,
+  sett: SettDefinition,
+  block?: number,
+): Promise<number> => {
+  const token = getToken(sett.settToken);
+  try {
+    let ppfs: BigNumber;
+    if (sett.affiliate && sett.affiliate.protocol === Protocol.Yearn) {
+      const contract = new ethers.Contract(sett.settToken, yearnAffiliateVaultWrapperAbi, chain.provider);
+      if (block) {
+        ppfs = await contract.pricePerShare({ blockTag: block });
+      } else {
+        ppfs = await contract.pricePerShare();
+      }
+    } else {
+      const contract = new ethers.Contract(sett.settToken, settAbi, chain.provider);
+      if (block) {
+        ppfs = await contract.getPricePerFulLShare({ blockTag: block });
+      } else {
+        ppfs = await contract.getPricePerFulLShare();
+      }
+    }
+    return toFloat(ppfs, token.decimals);
+  } catch (err) {
+    return toFloat(pricePerShare, token.decimals);
+  }
+};
+
 export const getIndexedBlock = async (sett: SettDefinition, startBlock: number): Promise<number> => {
   try {
-    const mapper = new DataMapper({ client: dynamo });
+    const mapper = getDataMapper();
     for await (const snapshot of mapper.query(
       SettSnapshot,
       { asset: sett.symbol.toLowerCase() },

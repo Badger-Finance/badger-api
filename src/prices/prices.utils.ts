@@ -1,8 +1,7 @@
-import { DataMapper } from '@aws/dynamodb-data-mapper';
 import { BadRequest, InternalServerError, NotFound, UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import fetch from 'node-fetch';
-import { dynamo } from '../aws/dynamodb.utils';
+import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { ChainStrategy } from '../chains/strategies/chain.strategy';
@@ -49,8 +48,8 @@ export const updatePrice = async (token: Token): Promise<TokenPriceSnapshot> => 
   const strategy = ChainStrategy.getStrategy(address);
 
   try {
+    const mapper = getDataMapper();
     const price = await strategy.getPrice(address);
-    const mapper = new DataMapper({ client: dynamo });
     return mapper.put(
       Object.assign(new TokenPriceSnapshot(), {
         address: address,
@@ -80,7 +79,7 @@ export const updatePrices = async (tokenConfig: TokenConfig): Promise<TokenPrice
 export const getPrice = async (contract: string): Promise<TokenPriceSnapshot> => {
   const token = getToken(contract);
   try {
-    const mapper = new DataMapper({ client: dynamo });
+    const mapper = getDataMapper();
     for await (const item of mapper.query(
       TokenPriceSnapshot,
       { address: token.address },
