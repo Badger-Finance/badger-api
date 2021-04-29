@@ -12,6 +12,12 @@ Install serverless framework
 npm install -g serverless
 ```
 
+Setup local [serverless credentials for AWS](https://www.serverless.com/framework/docs/providers/aws/cli-reference/config-credentials/)
+
+```bash
+serverless config credentials --provider aws --key something --secret somethingElse
+```
+
 Install project dependencies
 
 ```bash
