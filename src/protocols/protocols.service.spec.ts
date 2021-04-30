@@ -34,19 +34,19 @@ describe('ProtocolsService', () => {
     describe('with a sett that has performance recently cached in DynamoDB', () => {
       it('returns the cached value sources', async () => {
         const address = '0x6dEf55d2e18486B9dDfaA075bc4e4EE0B28c1545';
-        const apy = 0.2387638742723519;
         const harvestable = false;
         const name = 'Curve LP Fees';
         const oneDay = 0.2387638742723519;
         const sevenDay = 0.7173954961724682;
         const thirtyDay = 0.36767706689757595;
         const threeDay = 0.2387638742723519;
+        const apr = sevenDay;
         const mockResponse = [
           Object.assign(new CachedValueSource(), {
             name,
             address,
             addressValueSourceType: '0x6dEf55d2e18486B9dDfaA075bc4e4EE0B28c1545_swap',
-            apy,
+            apr,
             harvestable,
             oneDay,
             threeDay,
@@ -63,7 +63,7 @@ describe('ProtocolsService', () => {
         expect(valueSources.length).toBe(mockResponse.length);
         expect(valueSources[0]).toMatchObject({
           name,
-          apy,
+          apr,
           harvestable,
           performance: {
             oneDay,

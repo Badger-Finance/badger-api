@@ -6,7 +6,7 @@ import { Chain } from '../chains/config/chain.config';
 import { CURRENT, ONE_DAY, ONE_YEAR_MS, SEVEN_DAYS, THIRTY_DAYS, THREE_DAYS } from '../config/constants';
 import { Performance, scalePerformance, uniformPerformance } from '../protocols/interfaces/performance.interface';
 import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interface';
-import { ValueSource } from '../protocols/interfaces/value-source.interface';
+import { createValueSource, ValueSource } from '../protocols/interfaces/value-source.interface';
 import { ProtocolsService } from '../protocols/protocols.service';
 import { TokenType } from '../tokens/enums/token-type.enum';
 import { TokenRequest } from '../tokens/interfaces/token-request.interface';
@@ -80,7 +80,7 @@ export class SettsService {
       const settValueSource = this.getSettUnderlyingValueSource(settSnapshots);
 
       // sett has measurable apy, replace underlying with measured actual apy
-      if (settValueSource.apy > 0) {
+      if (settValueSource.apr > 0) {
         sett.sources.push(settValueSource);
         filterHarvestablePerformances = true;
       }
@@ -117,13 +117,13 @@ export class SettsService {
             if (source.name === VAULT_SOURCE) {
               const backingVault = chain.setts.find((sett) => ethers.utils.getAddress(sett.depositToken) === address);
               if (!backingVault) {
-                source.apy = 0;
+                source.apr = 0;
                 return;
               }
               const bToken = getToken(backingVault.settToken);
               source.name = `${chain.name} ${bToken.name} Deposit`;
               if (vaultToken.lpToken) {
-                source.apy /= 2;
+                source.apr /= 2;
                 source.performance = scalePerformance(source.performance, 0.5);
               }
             }
@@ -134,21 +134,17 @@ export class SettsService {
     );
 
     sett.sources = sett.sources.filter((source) => {
-      const report = source.apy > 0;
+      const report = source.apr > 0;
       if (filterHarvestablePerformances) {
         return !source.harvestable && report;
       }
       return report;
     });
-    sett.apy = sett.sources.map((s) => s.apy).reduce((total, apy) => (total += apy), 0);
+    sett.apy = sett.sources.map((s) => s.apr).reduce((total, apy) => (total += apy), 0);
 
     // check for a new vault, no ppfs measurement
     if (sett.sources.length === 0) {
-      sett.sources.push({
-        name: 'New Vault Offering',
-        apy: 0,
-        performance: uniformPerformance(0),
-      });
+      sett.sources.push(createValueSource('New Vault Offering', uniformPerformance(0)));
     }
 
     if (settDefinition.affiliate) {
@@ -166,11 +162,7 @@ export class SettsService {
       sevenDay: this.getSettSampledPerformance(settSnapshots, SEVEN_DAYS),
       thirtyDay: this.getSettSampledPerformance(settSnapshots, THIRTY_DAYS),
     };
-    return {
-      name: VAULT_SOURCE,
-      apy: settPerformance.threeDay,
-      performance: settPerformance,
-    };
+    return createValueSource(VAULT_SOURCE, settPerformance);
   }
 
   getSettSampledPerformance(settSnapshots: SettSnapshot[], sampleIndex: number): number {

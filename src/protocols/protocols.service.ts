@@ -2,7 +2,7 @@ import { Service } from '@tsed/common';
 import fetch from 'node-fetch';
 import { CURVE_API_URL } from '../config/constants';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
-import { ValueSource } from './interfaces/value-source.interface';
+import { createValueSource, ValueSource } from './interfaces/value-source.interface';
 import { getVaultValueSources } from './protocols.utils';
 
 /**
@@ -38,12 +38,6 @@ export class ProtocolsService {
       sevenDay: curveData.apy.week[assetMap[assetKey]] * 100,
       thirtyDay: curveData.apy.month[assetMap[assetKey]] * 100,
     };
-    return [
-      {
-        name: 'Curve LP Fees',
-        apy: tradeFeePerformance.threeDay,
-        performance: tradeFeePerformance,
-      },
-    ];
+    return [createValueSource('Curve LP Fees', tradeFeePerformance)];
   }
 }
