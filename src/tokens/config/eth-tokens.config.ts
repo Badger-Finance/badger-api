@@ -68,7 +68,7 @@ export const ethTokensConfig: TokenConfig = {
     decimals: 18,
     name: 'xSushi',
     symbol: 'xSUSHI',
-    type: TokenType.Contract
+    type: TokenType.Contract,
   },
   [TOKENS.SUSHI_BADGER_WBTC]: {
     address: TOKENS.SUSHI_BADGER_WBTC,
@@ -115,7 +115,7 @@ export const ethTokensConfig: TokenConfig = {
     decimals: 18,
     name: 'Farm',
     symbol: 'FARM',
-    type: TokenType.Contract
+    type: TokenType.Contract,
   },
   [TOKENS.BBADGER]: {
     address: TOKENS.BBADGER,
