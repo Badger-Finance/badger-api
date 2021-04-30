@@ -63,6 +63,13 @@ export const ethTokensConfig: TokenConfig = {
     symbol: 'Sushi',
     type: TokenType.Contract,
   },
+  [TOKENS.XSUSHI]: {
+    address: TOKENS.XSUSHI,
+    decimals: 18,
+    name: 'xSushi',
+    symbol: 'xSUSHI',
+    type: TokenType.Contract
+  },
   [TOKENS.SUSHI_BADGER_WBTC]: {
     address: TOKENS.SUSHI_BADGER_WBTC,
     decimals: 18,
@@ -102,6 +109,13 @@ export const ethTokensConfig: TokenConfig = {
     name: 'Uniswap V2: WBTC-DIGG',
     symbol: 'Uniswap WBTC/DIGG LP (UNI-V2)',
     type: TokenType.UniswapLp,
+  },
+  [TOKENS.FARM]: {
+    address: TOKENS.FARM,
+    decimals: 18,
+    name: 'Farm',
+    symbol: 'FARM',
+    type: TokenType.Contract
   },
   [TOKENS.BBADGER]: {
     address: TOKENS.BBADGER,
