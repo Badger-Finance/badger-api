@@ -163,14 +163,14 @@ functions:
           method: any
           cors: true
 
-  index-setts:
-    handler: src/indexer/sett-indexer.indexAsset
-    timeout: 300
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-setts
-          description: "index historical data for all setts"
-          rate: rate(5 minutes)
+  # index-setts:
+  #   handler: src/indexer/sett-indexer.indexAsset
+  #   timeout: 60
+  #   events:
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-setts
+  #         description: "index historical data for all setts"
+  #         rate: rate(4 hours)
 
   index-apy-snapshots:
     handler: src/indexer/apy-snapshots-indexer.refreshApySnapshots
@@ -181,20 +181,20 @@ functions:
           description: "index data for sett apy"
           rate: rate(1 minute)
 
-  index-prices:
-    handler: src/indexer/price-indexer.indexPrices
-    timeout: 30
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-prices
-          description: "index price data for all protocol tokens"
-          rate: rate(1 minute)
+  # index-prices:
+  #   handler: src/indexer/price-indexer.indexPrices
+  #   timeout: 30
+  #   events:
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-prices
+  #         description: "index price data for all protocol tokens"
+  #         rate: rate(1 minute)
 
-  index-sett-snapshots:
-    handler: src/indexer/sett-snapshots-indexer.refreshSettSnapshots
-    timeout: 30
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-sett-snapshots
-          description: "index data for supported setts"
-          rate: rate(1 minute)
+  # index-sett-snapshots:
+  #   handler: src/indexer/sett-snapshots-indexer.refreshSettSnapshots
+  #   timeout: 30
+  #   events:
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-sett-snapshots
+  #         description: "index data for supported setts"
+  #         rate: rate(1 minute)

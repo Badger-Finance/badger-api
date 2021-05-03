@@ -1,8 +1,12 @@
+import { BadRequest, NotFound } from '@tsed/exceptions';
+import { ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
 import { getDataMapper } from '../aws/dynamodb.utils';
-import { SAMPLE_DAYS } from '../config/constants';
+import { Chain } from '../chains/config/chain.config';
+import { ONE_YEAR_MS, SAMPLE_DAYS } from '../config/constants';
 import { getSdk, SettQuery, SettQueryVariables } from '../graphql/generated/badger';
 import { CachedSettSnapshot } from './interfaces/cached-sett-snapshot.interface';
+import { Sett } from './interfaces/sett.interface.';
 import { SettDefinition } from './interfaces/sett-definition.interface';
 import { SettSnapshot } from './interfaces/sett-snapshot.interface';
 
@@ -25,29 +29,36 @@ export const getSett = async (graphUrl: string, contract: string, block?: number
   return badgerGraphqlSdk.Sett(vars);
 };
 
-export const getCachcedSett = async (sett: SettDefinition): Promise<CachedSettSnapshot> => {
-  const noSett = {
-    address: sett.settToken,
+export const getCachcedSett = async (settDefinition: SettDefinition): Promise<Sett> => {
+  const sett: Sett = {
+    asset: settDefinition.symbol,
+    apy: 0,
     balance: 0,
-    ratio: 1,
-    settValue: 0,
-    supply: 0,
-    updatedAt: Date.now(),
+    hasBouncer: !!settDefinition.hasBouncer,
+    name: settDefinition.name,
+    ppfs: 1,
+    sources: [],
+    tokens: [],
+    underlyingToken: settDefinition.depositToken,
+    value: 0,
+    vaultToken: settDefinition.settToken,
   };
 
   try {
     const mapper = getDataMapper();
     for await (const item of mapper.query(
       CachedSettSnapshot,
-      { address: sett.settToken },
+      { address: settDefinition.settToken },
       { limit: 1, scanIndexForward: false },
     )) {
-      return item;
+      sett.balance = item.balance;
+      sett.ppfs = item.ratio;
+      sett.value = item.settValue;
     }
-    return noSett;
+    return sett;
   } catch (err) {
     console.error(err);
-    return noSett;
+    return sett;
   }
 };
 
@@ -67,4 +78,30 @@ export const getSettSnapshots = async (sett: SettDefinition): Promise<SettSnapsh
     console.error(err);
     return [];
   }
+};
+
+export const getPerformance = (current: SettSnapshot, initial: SettSnapshot): number => {
+  if (!current || !initial) {
+    return 0;
+  }
+  const ratioDiff = current.ratio - initial.ratio;
+  const timestampDiff = current.timestamp - initial.timestamp;
+  const scalar = ONE_YEAR_MS / timestampDiff;
+  const finalRatio = initial.ratio + scalar * ratioDiff;
+  return ((finalRatio - initial.ratio) / initial.ratio) * 100;
+};
+
+export const getSettDefinition = (chain: Chain, contract: string): SettDefinition => {
+  if (!contract) {
+    throw new BadRequest('contract address is required');
+  }
+
+  const contractAddress = ethers.utils.getAddress(contract);
+  const settDefinition = chain.setts.find((s) => s.settToken === contractAddress);
+
+  if (!settDefinition) {
+    throw new NotFound(`${contract} is not a valid sett`);
+  }
+
+  return settDefinition;
 };

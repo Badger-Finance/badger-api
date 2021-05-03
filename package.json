@@ -15,8 +15,7 @@
     "format": "yarn run lint --fix",
     "lint": "eslint .",
     "test": "jest --runInBand --detectOpenHandles",
-    "tsc:build": "tsc -p .",
-    "ui": "yarn upgradeInteractive"
+    "tsc:build": "tsc -p ."
   },
   "dependencies": {
     "@aws/dynamodb-data-mapper": "^0.7.3",

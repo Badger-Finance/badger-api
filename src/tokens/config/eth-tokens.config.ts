@@ -125,7 +125,6 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.BADGER,
-      symbol: 'BADGER',
       network: ChainNetwork.Ethereum,
     },
   },
@@ -137,7 +136,6 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.DIGG,
-      symbol: 'DIGG',
       network: ChainNetwork.Ethereum,
     },
   },
@@ -149,7 +147,6 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.UNI_DIGG_WBTC,
-      symbol: 'DIGG-WBTC',
       network: ChainNetwork.Ethereum,
     },
   },
@@ -161,7 +158,6 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.UNI_BADGER_WBTC,
-      symbol: 'BADGER-WBTC',
       network: ChainNetwork.Ethereum,
     },
   },
@@ -173,7 +169,6 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.SUSHI_ETH_WBTC,
-      symbol: 'SLP-WBTC-ETH',
       network: ChainNetwork.Ethereum,
     },
   },
@@ -185,7 +180,6 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.SUSHI_BADGER_WBTC,
-      symbol: 'SLP-BADGER-ETH',
       network: ChainNetwork.Ethereum,
     },
   },
@@ -197,7 +191,6 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.SUSHI_DIGG_WBTC,
-      symbol: 'SLP-DIGG-ETH',
       network: ChainNetwork.Ethereum,
     },
   },
@@ -209,7 +202,6 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.CRV_RENBTC,
-      symbol: 'renBTCCRV',
       network: ChainNetwork.Ethereum,
     },
   },
@@ -221,7 +213,6 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.CRV_SBTC,
-      symbol: 'sBTCCRV',
       network: ChainNetwork.Ethereum,
     },
   },
@@ -233,7 +224,6 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.CRV_TBTC,
-      symbol: 'tBTCCRV',
       network: ChainNetwork.Ethereum,
     },
   },
@@ -245,7 +235,6 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.CRV_RENBTC,
-      symbol: 'renBTCCRV',
       network: ChainNetwork.Ethereum,
     },
   },
@@ -257,7 +246,6 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.WBTC,
-      symbol: 'WBTC',
       network: ChainNetwork.Ethereum,
     },
   },

@@ -2,7 +2,6 @@ import { ChainNetwork } from '../../chains/enums/chain-network.enum';
 import { TOKENS } from '../../config/constants';
 import { TokenType } from '../enums/token-type.enum';
 import { TokenConfig } from '../types/token-config.type';
-import { ethTokensConfig } from './eth-tokens.config';
 
 export const bscTokensConfig: TokenConfig = {
   [TOKENS.CAKE]: {
@@ -68,8 +67,7 @@ export const bscTokensConfig: TokenConfig = {
     symbol: 'bBADGER',
     type: TokenType.Wrapper,
     vaultToken: {
-      address: TOKENS.BADGER,
-      symbol: ethTokensConfig[TOKENS.BADGER].symbol,
+      address: TOKENS.BBADGER,
       network: ChainNetwork.Ethereum,
     },
   },
@@ -80,8 +78,7 @@ export const bscTokensConfig: TokenConfig = {
     symbol: 'bDIGG',
     type: TokenType.Wrapper,
     vaultToken: {
-      address: TOKENS.DIGG,
-      symbol: ethTokensConfig[TOKENS.DIGG].symbol,
+      address: TOKENS.BDIGG,
       network: ChainNetwork.Ethereum,
     },
   },
@@ -94,7 +91,6 @@ export const bscTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.PANCAKE_BNB_BTCB,
-      symbol: 'PLP-BNB-BTCB',
       network: ChainNetwork.BinanceSmartChain,
     },
   },
@@ -107,7 +103,6 @@ export const bscTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.PANCAKE_BBADGER_BTCB,
-      symbol: 'PLP-BBADGER-BTCB',
       network: ChainNetwork.BinanceSmartChain,
     },
   },
@@ -120,7 +115,6 @@ export const bscTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.PANCAKE_BDIGG_BTCB,
-      symbol: 'PLP-BDIGG-BTCB',
       network: ChainNetwork.BinanceSmartChain,
     },
   },

@@ -8,6 +8,8 @@ import { yearnAffiliateVaultWrapperAbi } from '../config/abi/yearn-affiliate-vau
 import { Protocol } from '../config/constants';
 import { toFloat } from '../config/util';
 import { getPrice } from '../prices/prices.utils';
+import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
+import { ValueSource } from '../protocols/interfaces/value-source.interface';
 import { CachedSettSnapshot } from '../setts/interfaces/cached-sett-snapshot.interface';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { SettSnapshot } from '../setts/interfaces/sett-snapshot.interface';
@@ -120,4 +122,23 @@ export const getIndexedBlock = async (sett: SettDefinition, startBlock: number):
   } catch (err) {
     return startBlock;
   }
+};
+
+export const valueSourceToCachedValueSource = (
+  valueSource: ValueSource,
+  settDefinition: SettDefinition,
+  type: string,
+): CachedValueSource => {
+  return Object.assign(new CachedValueSource(), {
+    addressValueSourceType: `${settDefinition.settToken}_${type}`,
+    address: settDefinition.settToken,
+    type,
+    apr: valueSource.apr,
+    name: valueSource.name,
+    oneDay: valueSource.performance.oneDay,
+    threeDay: valueSource.performance.threeDay,
+    sevenDay: valueSource.performance.sevenDay,
+    thirtyDay: valueSource.performance.thirtyDay,
+    harvestable: Boolean(valueSource.harvestable),
+  });
 };
