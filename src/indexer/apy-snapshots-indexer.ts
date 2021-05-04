@@ -12,6 +12,8 @@ import { getVaultCachedValueSources } from '../protocols/protocols.utils';
 import { SushiswapService } from '../protocols/sushi/sushiswap.service';
 import { RewardsService } from '../rewards/rewards.service';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
+import { SettsService } from '../setts/setts.service';
+import { valueSourceToCachedValueSource } from './indexer.utils';
 
 export async function refreshApySnapshots() {
   const chains = loadChains();
@@ -33,9 +35,11 @@ export async function refreshApySnapshots() {
 }
 
 async function getSettValueSources(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
-  const [emission, protocol] = await Promise.all([
+  const [underlying, emission, protocol, derivative] = await Promise.all([
+    getUnderlyingPerformance(settDefinition),
     getEmissionApySnapshots(chain, settDefinition),
     getProtocolValueSources(chain, settDefinition),
+    getSettTokenPerformances(chain, settDefinition),
   ]);
 
   // check for any emission removal
@@ -44,15 +48,29 @@ async function getSettValueSources(chain: Chain, settDefinition: SettDefinition)
   oldEmission.forEach((source) => (oldSources[source.addressValueSourceType] = source));
 
   // remove updates sources from old source list
-  const newSources = [...emission, ...protocol];
+  const newSources = [underlying, ...emission, ...protocol, ...derivative];
   newSources.forEach((source) => delete oldSources[source.addressValueSourceType]);
 
   // delete sources which are no longer valid
   const mapper = getDataMapper();
   Array.from(Object.values(oldSources)).map((source) => mapper.delete(source));
 
-  return [...emission, ...protocol];
+  return newSources;
 }
+
+async function getUnderlyingPerformance(settDefinition: SettDefinition): Promise<CachedValueSource> {
+  return valueSourceToCachedValueSource(
+    await SettsService.getSettPerformance(settDefinition),
+    settDefinition,
+    'underlying',
+  );
+}
+
+async function getSettTokenPerformances(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
+  const performances = await SettsService.getSettTokenPerformance(chain, settDefinition);
+  return performances.map((perf) => valueSourceToCachedValueSource(perf, settDefinition, 'derivative'));
+}
+
 async function getProtocolValueSources(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
   try {
     switch (settDefinition.protocol) {
@@ -116,23 +134,4 @@ async function getPancakeswapPoolApr(chain: Chain, depositToken: string): Promis
 
 async function getSushiwapPoolApr(chain: Chain, depositToken: string): Promise<ValueSource> {
   return SushiswapService.getEmissionSource(chain, depositToken, await SushiswapService.getMasterChef());
-}
-
-function valueSourceToCachedValueSource(
-  valueSource: ValueSource,
-  settDefinition: SettDefinition,
-  type: string,
-): CachedValueSource {
-  return Object.assign(new CachedValueSource(), {
-    addressValueSourceType: `${settDefinition.settToken}_${type}`,
-    address: settDefinition.settToken,
-    type,
-    apr: valueSource.apr,
-    name: valueSource.name,
-    oneDay: valueSource.performance.oneDay,
-    threeDay: valueSource.performance.threeDay,
-    sevenDay: valueSource.performance.sevenDay,
-    thirtyDay: valueSource.performance.thirtyDay,
-    harvestable: Boolean(valueSource.harvestable),
-  });
 }

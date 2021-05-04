@@ -19,13 +19,13 @@ export class SettsController {
     return this.settsService.listSetts(Chain.getChain(chain), currency);
   }
 
-  @Get('/:settName')
+  @Get('/:contract')
   @ContentType('json')
   async getSett(
-    @PathParams('settName') settName: string,
+    @PathParams('contract') contract: string,
     @QueryParams('chain') chain?: ChainNetwork,
     @QueryParams('currency') currency?: string,
   ): Promise<Sett> {
-    return this.settsService.getSett(Chain.getChain(chain), settName, currency);
+    return this.settsService.getSett(Chain.getChain(chain), contract, currency);
   }
 }

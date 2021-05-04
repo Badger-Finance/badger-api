@@ -3,21 +3,12 @@ import fetch from 'node-fetch';
 import { CURVE_API_URL } from '../config/constants';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { createValueSource, ValueSource } from './interfaces/value-source.interface';
-import { getVaultValueSources } from './protocols.utils';
 
 /**
  * External protocol performance retrieval service.
  */
 @Service()
 export class ProtocolsService {
-  /**
-   * Retrieve performance of underlying protocol for a given sett.
-   * @param sett Sett to retrieve protocol performance.
-   */
-  async getProtocolPerformance(sett: SettDefinition): Promise<ValueSource[]> {
-    return getVaultValueSources(sett);
-  }
-
   /**
    * Retrieve Curve DAO pool performance from trading fees.
    * @param sett Sett to retrieve curve performance for.

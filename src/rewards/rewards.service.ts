@@ -156,7 +156,7 @@ export class RewardsService {
       const amount = parseFloat(ethers.utils.formatUnits(emission, token.decimals));
       const durationScalar = ONE_YEAR_SECONDS / schedule.duration.toNumber();
       const yearlyEmission = price.usd * amount * durationScalar;
-      const apr = (yearlyEmission / sett.settValue) * 100;
+      const apr = (yearlyEmission / sett.value) * 100;
       emissionSources.push(createValueSource(`${token.name} Rewards`, uniformPerformance(apr)));
     }
     return emissionSources;
