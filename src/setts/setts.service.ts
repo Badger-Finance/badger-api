@@ -1,7 +1,6 @@
 import { Inject, Service } from '@tsed/common';
 import { ethers } from 'ethers';
 import { Chain } from '../chains/config/chain.config';
-import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { CURRENT, ONE_DAY, SEVEN_DAYS, THIRTY_DAYS, THREE_DAYS } from '../config/constants';
 import { scalePerformance } from '../protocols/interfaces/performance.interface';
 import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interface';
@@ -63,42 +62,6 @@ export class SettsService {
     // }
     return sett;
   }
-
-  // async getSett2(chain: Chain, contract: string, currency?: string): Promise<Sett> {
-  //   let filterHarvestablePerformances = false;
-
-  //   // check for historical performance data
-  //   if (chain.name != 'BinanceSmartChain' && settSnapshots.length > 0) {
-  //     const settValueSource = this.getSettUnderlyingValueSource(settSnapshots);
-
-  //     // sett has measurable apy, replace underlying with measured actual apy
-  //     if (settValueSource.apr > 0) {
-  //       sett.sources.push(settValueSource);
-  //       filterHarvestablePerformances = true;
-  //     }
-  //   }
-
-  //   sett.sources = sett.sources.filter((source) => {
-  //     const report = source.apr > 0;
-  //     if (filterHarvestablePerformances) {
-  //       return !source.harvestable && report;
-  //     }
-  //     return report;
-  //   });
-  //   sett.apy = sett.sources.map((s) => s.apr).reduce((total, apy) => (total += apy), 0);
-
-  //   // check for a new vault, no ppfs measurement
-  //   if (sett.sources.length === 0) {
-  //     sett.sources.push(createValueSource('New Vault Offering', uniformPerformance(0)));
-  //   }
-
-  //   if (settDefinition.affiliate) {
-  //     const affiliate = Affiliate.getAffiliate(settDefinition.affiliate);
-  //     sett.affiliate = await affiliate.getAffiliateVaultData(chain, settDefinition);
-  //   }
-
-  //   return sett;
-  // }
 
   static async getSettPerformance(settDefinition: SettDefinition): Promise<ValueSource> {
     const snapshots = await getSettSnapshots(settDefinition);

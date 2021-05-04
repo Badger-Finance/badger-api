@@ -26,7 +26,6 @@ const indexSett = async (chain: Chain, sett: SettDefinition) => {
     try {
       block += thirtyMinutesBlocks;
       const snapshot = await settToSnapshot(chain, sett, block);
-      console.log(`Index ${sett.name} at block ${block}`);
 
       if (snapshot == null) {
         block += thirtyMinutesBlocks;
