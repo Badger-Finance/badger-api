@@ -21,13 +21,6 @@ export class AccountsService {
   @Inject()
   tokensService!: TokensService;
 
-  /**
-   * Retrieve a user's account details. This includes all positions in setts,
-   * the individual earnings from each sett, and claimed amounts of Badger /
-   * Digg per sett.
-   *
-   * @param userId User ethereum account address
-   */
   async getAccount(chain: Chain, accountId: string): Promise<Account> {
     if (!accountId) {
       throw new BadRequest('accountId is required');
@@ -42,6 +35,8 @@ export class AccountsService {
 
     const account: Account = {
       id: accountId,
+      boost: 1,
+      multipliers: {},
       value: 0,
       earnedValue: 0,
       balances: [],
@@ -105,7 +100,8 @@ export class AccountsService {
 
     account.value = account.balances.map((b) => b.value).reduce((total, value) => (total += value), 0);
     account.earnedValue = account.balances.map((b) => b.earnedValue).reduce((total, value) => (total += value), 0);
-    account.depositLimits = await this.getAccountLimits(chain, accountId);
+    // TODO: Enable once deposit limits are used again, slows down endpoint
+    // account.depositLimits = await this.getAccountLimits(chain, accountId);
     return account;
   }
 
