@@ -60,7 +60,14 @@ export class SettsService {
       sources = sources.filter((source) => !source.harvestable);
     }
     sett.sources = sources.filter((source) => source.apr > 0);
-    sett.apy = sett.sources.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
+    sett.apr = sett.sources.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
+
+    const hasBoostedApr = sett.sources.some((source) => source.boostable);
+    if (hasBoostedApr) {
+      sett.boostable = true;
+      sett.minApr = sett.sources.map((s) => s.minApr || s.apr).reduce((total, apr) => (total += apr), 0);
+      sett.maxApr = sett.sources.map((s) => s.maxApr || s.apr).reduce((total, apr) => (total += apr), 0);
+    }
 
     // TODO: Re-enable this once its better offlined (or used again)
     // if (settDefinition.affiliate) {

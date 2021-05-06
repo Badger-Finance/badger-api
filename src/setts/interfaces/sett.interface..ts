@@ -12,7 +12,10 @@ import { SettSummary } from './sett-summary.interface';
  */
 export interface Sett extends SettSummary {
   asset: string;
-  apy: number;
+  apr: number;
+  minApr?: number;
+  maxApr?: number;
+  boostable: boolean;
   hasBouncer: boolean;
   ppfs: number;
   sources: ValueSource[];

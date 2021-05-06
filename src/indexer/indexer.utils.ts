@@ -140,5 +140,8 @@ export const valueSourceToCachedValueSource = (
     sevenDay: valueSource.performance.sevenDay,
     thirtyDay: valueSource.performance.thirtyDay,
     harvestable: Boolean(valueSource.harvestable),
+    minApr: valueSource.minApr,
+    maxApr: valueSource.maxApr,
+    boostable: valueSource.boostable,
   });
 };
