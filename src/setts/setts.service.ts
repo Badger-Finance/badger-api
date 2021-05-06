@@ -12,7 +12,14 @@ import { TokensService } from '../tokens/tokens.service';
 import { getSettTokens, getToken } from '../tokens/tokens.utils';
 import { Sett } from './interfaces/sett.interface.';
 import { SettDefinition } from './interfaces/sett-definition.interface';
-import { getCachcedSett, getPerformance, getSettDefinition, getSettSnapshots, VAULT_SOURCE } from './setts.utils';
+import {
+  getCachcedSett,
+  getPerformance,
+  getSettDefinition,
+  getSettSnapshots,
+  getSnapshot,
+  VAULT_SOURCE,
+} from './setts.utils';
 
 @Service()
 export class SettsService {
@@ -67,10 +74,10 @@ export class SettsService {
     const snapshots = await getSettSnapshots(settDefinition);
     const current = snapshots[CURRENT];
     const performance = {
-      oneDay: getPerformance(current, snapshots[ONE_DAY]),
-      threeDay: getPerformance(current, snapshots[THREE_DAYS]),
-      sevenDay: getPerformance(current, snapshots[SEVEN_DAYS]),
-      thirtyDay: getPerformance(current, snapshots[THIRTY_DAYS]),
+      oneDay: getPerformance(current, getSnapshot(snapshots, ONE_DAY)),
+      threeDay: getPerformance(current, getSnapshot(snapshots, THREE_DAYS)),
+      sevenDay: getPerformance(current, getSnapshot(snapshots, SEVEN_DAYS)),
+      thirtyDay: getPerformance(current, getSnapshot(snapshots, THIRTY_DAYS)),
     };
     return createValueSource(VAULT_SOURCE, performance);
   }

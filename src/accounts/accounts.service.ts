@@ -1,16 +1,16 @@
 import { Inject, Service } from '@tsed/di';
 import { BadRequest, InternalServerError } from '@tsed/exceptions';
 import { ethers } from 'ethers';
-import { GraphQLClient } from 'graphql-request';
 import { Chain } from '../chains/config/chain.config';
 import { guestListAbi } from '../config/abi/guest-list.abi';
 import { yearnAffiliateVaultWrapperAbi } from '../config/abi/yearn-affiliate-vault-wrapper.abi';
 import { Protocol } from '../config/constants';
-import { getSdk, OrderDirection } from '../graphql/generated/badger';
 import { PricesService } from '../prices/prices.service';
+import { RewardsService } from '../rewards/rewards.service';
 import { TokenRequest } from '../tokens/interfaces/token-request.interface';
 import { TokensService } from '../tokens/tokens.service';
 import { getToken } from '../tokens/tokens.utils';
+import { getUserAccount } from './accounts.utils';
 import { Account } from './interfaces/account.interface';
 import { AccountLimits } from './interfaces/account-limits.interface';
 
@@ -20,23 +20,24 @@ export class AccountsService {
   pricesService!: PricesService;
   @Inject()
   tokensService!: TokensService;
+  @Inject()
+  rewardsService!: RewardsService;
 
   async getAccount(chain: Chain, accountId: string): Promise<Account> {
     if (!accountId) {
       throw new BadRequest('accountId is required');
     }
 
-    const badgerGraphqlClient = new GraphQLClient(chain.graphUrl);
-    const badgerGraphqlSdk = getSdk(badgerGraphqlClient);
-    const { user } = await badgerGraphqlSdk.User({
-      id: accountId.toLowerCase(),
-      orderDirection: OrderDirection.Asc,
-    });
+    const [accountData, boostData] = await Promise.all([
+      getUserAccount(chain, accountId),
+      this.rewardsService.getUserBoost(accountId),
+    ]);
+    const { user } = accountData;
 
     const account: Account = {
       id: accountId,
-      boost: 1,
-      multipliers: {},
+      boost: boostData.boost,
+      multipliers: boostData.multipliers,
       value: 0,
       earnedValue: 0,
       balances: [],
