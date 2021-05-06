@@ -2,7 +2,6 @@ import { Inject, Service } from '@tsed/common';
 import { NotFound } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';
 import { S3Service } from '../aws/s3.service';
-import { CacheService } from '../cache/cache.service';
 import { Chain } from '../chains/config/chain.config';
 import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { diggAbi } from '../config/abi/abi';
@@ -14,6 +13,8 @@ import { createValueSource, ValueSource } from '../protocols/interfaces/value-so
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { getCachcedSett } from '../setts/setts.utils';
 import { getToken } from '../tokens/tokens.utils';
+import { Boost } from './interfaces/boost.interface';
+import { BoostData } from './interfaces/boost-data.interface';
 import { Eligibility } from './interfaces/eligibility.interface';
 import {
   AirdropMerkleClaim,
@@ -27,8 +28,6 @@ import { UnlockSchedule } from './interfaces/unlock-schedule.interface';
 export class RewardsService {
   @Inject()
   s3Service!: S3Service;
-  @Inject()
-  cacheService!: CacheService;
 
   /**
    * Get airdrop merkle claim for a user.
@@ -88,6 +87,16 @@ export class RewardsService {
     return {
       isEligible: eligible,
     };
+  }
+
+  async getUserBoost(address: string): Promise<Boost> {
+    const boostFile = await this.s3Service.getObject(REWARD_DATA, 'badger-boosts.json');
+    const fileContents: BoostData = JSON.parse(boostFile.toString('utf-8'));
+    const boostData = fileContents.userData[address.toLowerCase()];
+    if (!boostData) {
+      throw new NotFound(`${address} does not boost data.`);
+    }
+    return boostData;
   }
 
   static async getRewardEmission(chain: Chain, settDefinition: SettDefinition): Promise<ValueSource[]> {

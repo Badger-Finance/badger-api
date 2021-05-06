@@ -80,6 +80,13 @@ export const getSettSnapshots = async (sett: SettDefinition): Promise<SettSnapsh
   }
 };
 
+export const getSnapshot = (snapshots: SettSnapshot[], index: number): SettSnapshot => {
+  if (snapshots.length <= index) {
+    return snapshots[snapshots.length - 1];
+  }
+  return snapshots[index];
+};
+
 export const getPerformance = (current: SettSnapshot, initial: SettSnapshot): number => {
   if (!current || !initial) {
     return 0;
@@ -95,13 +102,11 @@ export const getSettDefinition = (chain: Chain, contract: string): SettDefinitio
   if (!contract) {
     throw new BadRequest('contract address is required');
   }
-
   const contractAddress = ethers.utils.getAddress(contract);
   const settDefinition = chain.setts.find((s) => s.settToken === contractAddress);
 
   if (!settDefinition) {
     throw new NotFound(`${contract} is not a valid sett`);
   }
-
   return settDefinition;
 };
