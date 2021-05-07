@@ -1,17 +1,15 @@
 import { PlatformTest } from '@tsed/common';
-import { S3Service } from '../aws/s3.service';
+import * as s3 from '../aws/s3.utils';
 import { CacheService } from '../cache/cache.service';
 import { RewardsService } from './rewards.service';
 
 describe('RewardsService', () => {
-  let s3: S3Service;
   let service: RewardsService;
   let cache: CacheService;
 
   beforeAll(async () => {
     await PlatformTest.create();
 
-    s3 = PlatformTest.get<S3Service>(S3Service);
     service = PlatformTest.get<RewardsService>(RewardsService);
     cache = PlatformTest.get<CacheService>(CacheService);
   });

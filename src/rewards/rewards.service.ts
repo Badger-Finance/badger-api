@@ -1,7 +1,7 @@
-import { Inject, Service } from '@tsed/common';
+import { Service } from '@tsed/common';
 import { NotFound } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';
-import { S3Service } from '../aws/s3.service';
+import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
 import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { diggAbi } from '../config/abi/abi';
@@ -15,6 +15,7 @@ import { getCachcedSett } from '../setts/setts.utils';
 import { getToken } from '../tokens/tokens.utils';
 import { Boost } from './interfaces/boost.interface';
 import { BoostData } from './interfaces/boost-data.interface';
+import { BoostMultipliers } from './interfaces/boost-multipliers.interface';
 import { Eligibility } from './interfaces/eligibility.interface';
 import {
   AirdropMerkleClaim,
@@ -26,16 +27,13 @@ import { UnlockSchedule } from './interfaces/unlock-schedule.interface';
 
 @Service()
 export class RewardsService {
-  @Inject()
-  s3Service!: S3Service;
-
   /**
    * Get airdrop merkle claim for a user.
    * @param airdrop Airdrop JSON filename.
    * @param address User Ethereum address.
    */
   async getUserAirdrop(airdrop: string, address: string): Promise<AirdropMerkleClaim> {
-    const airdropFile = await this.s3Service.getObject(REWARD_DATA, airdrop);
+    const airdropFile = await getObject(REWARD_DATA, airdrop);
     const fileContents: AirdropMerkleDistribution = JSON.parse(airdropFile.toString('utf-8'));
     const claim = fileContents.claims[address.toLowerCase()];
     if (!claim) {
@@ -50,7 +48,7 @@ export class RewardsService {
    * @param address User Ethereum address.
    */
   async getBouncerProof(address: string): Promise<AirdropMerkleClaim> {
-    const airdropFile = await this.s3Service.getObject(REWARD_DATA, BOUNCER_PROOFS);
+    const airdropFile = await getObject(REWARD_DATA, BOUNCER_PROOFS);
     const fileContents: AirdropMerkleDistribution = JSON.parse(airdropFile.toString('utf-8'));
     const claim = fileContents.claims[ethers.utils.getAddress(address)];
     if (!claim) {
@@ -64,7 +62,7 @@ export class RewardsService {
    * @param address User Ethereum address.
    */
   async getUserRewards(address: string): Promise<RewardMerkleClaim> {
-    const rewardFile = await this.s3Service.getObject(REWARD_DATA, 'badger-tree.json');
+    const rewardFile = await getObject(REWARD_DATA, 'badger-tree.json');
     const fileContents: RewardMerkleDistribution = JSON.parse(rewardFile.toString('utf-8'));
     const claim = fileContents.claims[address];
     if (!claim) {
@@ -90,11 +88,18 @@ export class RewardsService {
   }
 
   async getUserBoost(address: string): Promise<Boost> {
-    const boostFile = await this.s3Service.getObject(REWARD_DATA, 'badger-boosts.json');
+    const boostFile = await getObject(REWARD_DATA, 'badger-boosts.json');
     const fileContents: BoostData = JSON.parse(boostFile.toString('utf-8'));
     const boostData = fileContents.userData[address.toLowerCase()];
     if (!boostData) {
-      throw new NotFound(`${address} does not boost data.`);
+      const defaultMultipliers: BoostMultipliers = {};
+      Object.keys(fileContents.multiplierData).forEach(
+        (key) => (defaultMultipliers[key] = fileContents.multiplierData[key].min),
+      );
+      return {
+        boost: 1,
+        multipliers: defaultMultipliers,
+      };
     }
     return boostData;
   }
@@ -105,6 +110,9 @@ export class RewardsService {
     }
     const { settToken } = settDefinition;
     const sett = await getCachcedSett(settDefinition);
+    const boostFile = await getObject(REWARD_DATA, 'badger-boosts.json');
+    const boostData: BoostData = JSON.parse(boostFile.toString('utf-8'));
+    const boostRange = boostData.multiplierData[sett.vaultToken];
 
     // create relevant contracts
     const rewardsLogger = new ethers.Contract(rewardsLoggerAddress, rewardsLoggerAbi, chain.provider);
@@ -166,7 +174,7 @@ export class RewardsService {
       const durationScalar = ONE_YEAR_SECONDS / schedule.duration.toNumber();
       const yearlyEmission = price.usd * amount * durationScalar;
       const apr = (yearlyEmission / sett.value) * 100;
-      emissionSources.push(createValueSource(`${token.name} Rewards`, uniformPerformance(apr)));
+      emissionSources.push(createValueSource(`${token.name} Rewards`, uniformPerformance(apr), false, boostRange));
     }
     return emissionSources;
   }

@@ -29,7 +29,16 @@ export class CachedValueSource {
   thirtyDay!: number;
 
   @attribute()
+  boostable!: boolean;
+
+  @attribute()
   harvestable!: boolean;
+
+  @attribute()
+  minApr!: number;
+
+  @attribute()
+  maxApr!: number;
 
   @attribute()
   type!: string;
@@ -41,6 +50,7 @@ export class CachedValueSource {
     return {
       name: this.name,
       apr: this.apr,
+      boostable: this.boostable,
       harvestable: this.harvestable,
       performance: {
         oneDay: this.oneDay,
@@ -48,6 +58,8 @@ export class CachedValueSource {
         sevenDay: this.sevenDay,
         thirtyDay: this.thirtyDay,
       },
+      minApr: this.minApr,
+      maxApr: this.maxApr,
     };
   }
 }

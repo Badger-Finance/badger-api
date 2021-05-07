@@ -32,8 +32,9 @@ export const getSett = async (graphUrl: string, contract: string, block?: number
 export const getCachcedSett = async (settDefinition: SettDefinition): Promise<Sett> => {
   const sett: Sett = {
     asset: settDefinition.symbol,
-    apy: 0,
+    apr: 0,
     balance: 0,
+    boostable: false,
     hasBouncer: !!settDefinition.hasBouncer,
     name: settDefinition.name,
     ppfs: 1,
