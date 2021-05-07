@@ -94,6 +94,14 @@ export const ethTokensConfig: TokenConfig = {
     symbol: 'SushiSwap WBTC/ETH LP (SLP)',
     type: TokenType.SushiswapLp,
   },
+  [TOKENS.SUSHI_IBBTC_WBTC]: {
+    address: TOKENS.SUSHI_IBBTC_WBTC,
+    decimals: 18,
+    lpToken: true,
+    name: 'SushiSwap: ibBTC-ETH',
+    symbol: 'SushiSwap ibBTC/ETH LP (SLP)',
+    type: TokenType.SushiswapLp,
+  },
   [TOKENS.UNI_BADGER_WBTC]: {
     address: TOKENS.UNI_BADGER_WBTC,
     decimals: 18,
@@ -169,6 +177,17 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.SUSHI_ETH_WBTC,
+      network: ChainNetwork.Ethereum,
+    },
+  },
+  [TOKENS.BSUSHI_IBBTC_WBTC]: {
+    address: TOKENS.BSUSHI_IBBTC_WBTC,
+    decimals: 18,
+    name: 'bSushiSwap: ibBTC-ETH',
+    symbol: 'bSLP-IBBTC-ETH',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.SUSHI_IBBTC_WBTC,
       network: ChainNetwork.Ethereum,
     },
   },

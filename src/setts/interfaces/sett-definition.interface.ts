@@ -5,7 +5,6 @@ export interface SettDefinition {
   affiliate?: SettAffiliateData;
   createdBlock: number;
   depositToken: string;
-  geyserAddress?: string;
   hasBouncer?: boolean;
   name: string;
   protocol?: Protocol;
