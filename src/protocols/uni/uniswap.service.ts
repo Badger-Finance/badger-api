@@ -14,9 +14,6 @@ export class UniswapService extends SwapService {
   // required abstract method, uniswap is not currently cross chain
   /* eslint-disable @typescript-eslint/no-unused-vars-experimental */
   async getPairPerformance(chain: Chain, sett: SettDefinition): Promise<ValueSource[]> {
-    // Currently WBTC / BADGER | DIGG is not supported by this tracking method,
-    // once we have support for untracked volume, we can re-enable this.
-    // return Promise.all([this.getSwapPerformance(sett.depositToken)]);
-    return [];
+    return Promise.all([this.getSwapPerformance(sett.depositToken)]);
   }
 }
