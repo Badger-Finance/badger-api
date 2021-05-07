@@ -5,4 +5,6 @@ export enum TokenType {
   PancakeswapLp = 'PancakeswapLp',
   Wrapper = 'Wrapper',
   Vault = 'Vault',
+  // DeFi Dollar Index (remove once coingecko suports pricing)
+  Index = 'Index',
 }

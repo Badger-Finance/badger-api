@@ -1,6 +1,6 @@
 import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
-import { getContractPrice, getTokenPrice, getVaultTokenPrice } from '../../prices/prices.utils';
+import { getContractPrice, getTokenPrice, getVaultTokenPrice, ibBTCPrice } from '../../prices/prices.utils';
 import { getSushiswapPrice, getUniswapPrice } from '../../protocols/common/swap.utils';
 import { ethTokensConfig } from '../../tokens/config/eth-tokens.config';
 import { TokenType } from '../../tokens/enums/token-type.enum';
@@ -31,6 +31,8 @@ export class EthStrategy extends ChainStrategy {
         return getUniswapPrice(checksummedAddress);
       case TokenType.Vault:
         return getVaultTokenPrice(checksummedAddress);
+      case TokenType.Index:
+        return ibBTCPrice();
       default:
         throw new UnprocessableEntity('Unsupported TokenType');
     }
