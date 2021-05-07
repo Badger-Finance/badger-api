@@ -255,7 +255,7 @@ functions:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-setts
           description: "index historical data for all setts"
-          rate: rate(10 minutes)
+          rate: rate(15 minutes)
 
   index-apy-snapshots:
     handler: src/indexer/apy-snapshots-indexer.refreshApySnapshots
@@ -287,11 +287,16 @@ functions:
   index-leaderboard:
     handler: src/indexer/boost-indexer.indexBoostLeaderBoard
     timeout: 60
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> feat(health): uncomment scheduled serverless functions
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-leaderboard
           description: "index leaderboard data from latest badger boosts"
           rate: rate(1 hour)
+<<<<<<< HEAD
 
   index-token-balances:
     handler: src/indexer/token-balances-indexer.refreshTokenBalances
@@ -310,3 +315,29 @@ functions:
           name: ${self:service}-${self:custom.stage}-index-accounts
           description: "index accounts information from the graph"
           rate: rate(1 hour)
+=======
+    # events:
+    #   - schedule:
+    #       name: ${self:service}-${self:custom.stage}-index-leaderboard
+    #       description: "index leaderboard data from latest badger boosts"
+    #       rate: rate(1 minute)
+=======
+>>>>>>> feat(health): uncomment scheduled serverless functions
+
+  index-token-balances:
+    handler: src/indexer/token-balances-indexer.refreshTokenBalances
+    timeout: 60
+<<<<<<< HEAD
+    # events:
+    #   - schedule:
+    #       name: ${self:service}-${self:custom.stage}-index-token-balances
+    #       description: "index token balances from the graph"
+    #       rate: rate(1 minute)
+>>>>>>> feat(health): rework subgraph configuration, refactor
+=======
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-token-balances
+          description: "index token balances from the graph"
+          rate: rate(1 minute)
+>>>>>>> feat(health): uncomment scheduled serverless functions
