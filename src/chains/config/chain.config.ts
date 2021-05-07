@@ -17,6 +17,7 @@ export abstract class Chain {
   readonly tokens: TokenConfig;
   readonly setts: SettDefinition[];
   readonly provider: ethers.providers.JsonRpcProvider;
+  readonly batchProvider: ethers.providers.JsonRpcBatchProvider;
   readonly strategy: ChainStrategy;
   readonly graphUrl: string;
   readonly blocksPerYear: number;
@@ -29,6 +30,7 @@ export abstract class Chain {
     tokens: TokenConfig,
     setts: SettDefinition[],
     provider: ethers.providers.JsonRpcProvider,
+    batchProvider: ethers.providers.JsonRpcBatchProvider,
     strategy: ChainStrategy,
     graphUrl: string,
     blocksPerYear: number,
@@ -40,6 +42,7 @@ export abstract class Chain {
     this.tokens = tokens;
     this.setts = setts.filter((sett) => !sett.stage || sett.stage === STAGE);
     this.provider = provider;
+    this.batchProvider = batchProvider;
     this.strategy = strategy;
     this.graphUrl = graphUrl;
     this.blocksPerYear = blocksPerYear;

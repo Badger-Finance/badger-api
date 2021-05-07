@@ -17,6 +17,7 @@ export class BinanceSmartChain extends Chain {
       bscTokensConfig,
       bscSetts,
       new ethers.providers.JsonRpcProvider(Provider.Binance),
+      new ethers.providers.JsonRpcBatchProvider(Provider.Binance),
       new BscStrategy(),
       BADGER_BSC_URL,
       10512000,
