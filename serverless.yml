@@ -68,7 +68,7 @@ provider:
     shouldStartNameWithService: true
     minimumCompressionSize: 1024
   environment:
-    BADGER: "https://bgraph-eth.badger.guru/subgraphs/name/axejintao/badger-dao"
+    BADGER: "https://api.thegraph.com/subgraphs/name/axejintao/badger-dao"
     BADGER_BSC: "https://api.thegraph.com/subgraphs/name/axejintao/badger-dao-bsc"
     BADGER_DAO: "https://api.thegraph.com/subgraphs/name/darruma/badger"
     UNISWAP: "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2"
@@ -163,14 +163,14 @@ functions:
           method: any
           cors: true
 
-  index-setts:
-    handler: src/indexer/sett-indexer.indexAsset
-    timeout: 300
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-setts
-          description: "index historical data for all setts"
-          rate: rate(4 hours)
+  # index-setts:
+  #   handler: src/indexer/sett-indexer.indexAsset
+  #   timeout: 300
+  #   events:
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-setts
+  #         description: "index historical data for all setts"
+  #         rate: rate(4 hours)
 
   index-apy-snapshots:
     handler: src/indexer/apy-snapshots-indexer.refreshApySnapshots
