@@ -125,7 +125,7 @@ export const ethSetts: SettDefinition[] = [
   {
     name: 'Sushiswap Wrapped BTC/ibBTC',
     createdBlock: 12383984,
-    symbol: 'SLP-IBBTC-ETH',
+    symbol: 'SLP-IBBTC-WBTC',
     depositToken: TOKENS.SUSHI_IBBTC_WBTC,
     settToken: TOKENS.BSUSHI_IBBTC_WBTC,
     protocol: Protocol.Sushiswap,

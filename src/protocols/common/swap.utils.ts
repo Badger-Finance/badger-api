@@ -54,7 +54,7 @@ export const getLiquidityPrice = async (graphUrl: string, contract: string): Pro
   if (!pair) {
     throw new NotFound(`No pair found for ${contract}`);
   }
-  if (pair.totalSupply === 0) {
+  if (parseFloat(pair.totalSupply) === 0) {
     const token = getToken(contract);
     return {
       name: token.name,
@@ -96,7 +96,9 @@ const resolveLiquidityPrice = async (liquidityData: LiquidityData): Promise<Toke
   const { contract, token0, token1, reserve0, reserve1, totalSupply } = liquidityData;
   let t0Price = await getTokenPriceData(token0);
   let t1Price = await getTokenPriceData(token1);
-  if (!t0Price && !t1Price) throw new UnprocessableEntity(`Token pair ${contract} cannot be priced`);
+  if (!t0Price && !t1Price) {
+    throw new UnprocessableEntity(`Token pair ${contract} cannot be priced`);
+  }
   if (!t0Price) {
     const t1Scalar = reserve0 / reserve1;
     const t0Info = getToken(token0);

@@ -4,7 +4,9 @@ import fetch from 'node-fetch';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
+import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { ChainStrategy } from '../chains/strategies/chain.strategy';
+import { ibBTCAbi } from '../config/abi/ibbtc.abi';
 import { COINGECKO_URL, TOKENS } from '../config/constants';
 import { getSett } from '../setts/setts.utils';
 import { TokenType } from '../tokens/enums/token-type.enum';
@@ -110,9 +112,7 @@ export const getTokenPriceData = async (contract: string): Promise<TokenPrice> =
 export const getPriceData = async (tokens: TokenConfig): Promise<PriceData> => {
   const priceData: PriceData = {};
   const prices = await Promise.all(Object.keys(tokens).map((key) => getPrice(tokens[key].address)));
-  /* eslint-disable @typescript-eslint/no-non-null-assertion */
   prices.forEach((token) => (priceData[token.address] = token));
-  /* eslint-disable @typescript-eslint/no-non-null-assertion */
   return priceData;
 };
 
@@ -136,13 +136,12 @@ export const getContractPrice = async (contract: string): Promise<TokenPrice> =>
     throw new InternalServerError(`Unable to resolve ${contract} price`);
   }
   const token = getToken(contract);
-  const contractPrice: TokenPrice = {
+  return {
     name: token.name,
     address: token.address,
     usd: json[contractKey].usd,
     eth: json[contractKey].eth,
   };
-  return contractPrice;
 };
 
 /**
@@ -160,13 +159,12 @@ export const getTokenPrice = async (name: string): Promise<TokenPrice> => {
     throw new InternalServerError(`Unable to resolve ${name} price`);
   }
   const token = getTokenByName(name);
-  const tokenPrice: TokenPrice = {
+  return {
     name: token.name,
     address: token.address,
     usd: json[name].usd,
     eth: json[name].eth,
   };
-  return tokenPrice;
 };
 
 /**
@@ -238,18 +236,32 @@ export const getWrapperTokenPrice = async (contract: string): Promise<TokenPrice
   if (!token.vaultToken) {
     throw new UnprocessableEntity(`${token.name} vault token missing`);
   }
-  const vaultToken = token.vaultToken;
+  const { vaultToken } = token;
   const allSetts = [];
   for (const chain of loadChains()) {
     allSetts.push(...chain.setts);
   }
-  const backingVault = allSetts.find((sett) => ethers.utils.getAddress(sett.depositToken) === vaultToken.address);
+  const backingVault = allSetts.find((sett) => ethers.utils.getAddress(sett.settToken) === vaultToken.address);
   if (!backingVault) {
-    throw new UnprocessableEntity(`${token.name} vault token missing`);
+    throw new UnprocessableEntity(`${token.name} backing vault missing`);
   }
   const price = await getPrice(backingVault.settToken);
   if (!price) {
     throw new InternalServerError(`Failed to load ${contract} sett data`);
   }
   return price;
+};
+
+export const ibBTCPrice = async (): Promise<TokenPrice> => {
+  const eth = Chain.getChain(ChainNetwork.Ethereum);
+  const ibBTC = new ethers.Contract(TOKENS.IBBTC, ibBTCAbi, eth.provider);
+  const token = getToken(TOKENS.IBBTC);
+  const ppfs = (await ibBTC.pricePerShare()) / Math.pow(10, token.decimals);
+  const wbtcPrice = await getPrice(TOKENS.WBTC);
+  return {
+    name: token.name,
+    address: token.address,
+    usd: wbtcPrice.usd * ppfs,
+    eth: wbtcPrice.eth * ppfs,
+  };
 };
