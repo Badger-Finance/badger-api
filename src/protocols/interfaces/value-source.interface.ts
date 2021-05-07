@@ -17,7 +17,7 @@ export const createValueSource = (
   harvestable?: boolean,
   boost?: BoostRange,
 ): ValueSource => {
-  const apr = Math.max(...Object.values(performance));
+  const apr = performance.thirtyDay;
   const evaluatedBoost = boost ?? { min: 1, max: 1 };
   return {
     name,
