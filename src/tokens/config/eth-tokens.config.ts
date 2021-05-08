@@ -132,6 +132,13 @@ export const ethTokensConfig: TokenConfig = {
     symbol: 'FARM',
     type: TokenType.Contract,
   },
+  [TOKENS.DEFI_DOLLAR]: {
+    address: TOKENS.DEFI_DOLLAR,
+    decimals: 18,
+    name: 'DeFi Dollar',
+    symbol: 'DFD',
+    type: TokenType.Contract,
+  },
   [TOKENS.BBADGER]: {
     address: TOKENS.BBADGER,
     decimals: 18,
