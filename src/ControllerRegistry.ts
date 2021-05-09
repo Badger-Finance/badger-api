@@ -1,4 +1,5 @@
 import { AccountsController } from './accounts/accounts.controller';
+import { BoostsController } from './boosts/boosts.controller';
 import { ChartsController } from './charts/charts.controller';
 import { ClawController } from './claw/claw.controller';
 import { GeyserController } from './geysers/geysers.controller';
@@ -24,4 +25,5 @@ export const controllers = [
   RewardController,
   SettsController,
   AccountsController,
+  BoostsController,
 ];

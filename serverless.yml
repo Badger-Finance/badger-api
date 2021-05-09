@@ -80,6 +80,7 @@ provider:
     PRICE_DATA: ${self:custom.table.PRICE_DATA.${self:custom.stage}}
     SETT_SNAPSHOTS_DATA: ${self:custom.table.SETT_SNAPSHOTS_DATA.${self:custom.stage}}
     REWARD_DATA: ${self:custom.merkleProofs.${self:custom.stage}}
+    LEADERBOARD_DATA: ${self:custom.stage}-leaderboard
     BOUNCER_PROOFS: badger-bouncer.json
 
 resources:
@@ -149,6 +150,22 @@ resources:
           - AttributeName: "address"
             AttributeType: "S"
 
+    leaderboardTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.stage}-leaderboard
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: "address"
+            KeyType: "HASH"
+          - AttributeName: "rank"
+            KeyType: "RANGE"
+        AttributeDefinitions:
+          - AttributeName: "address"
+            AttributeType: "S"
+          - AttributeName: "rank"
+            AttributeType: "N"
+
 functions:
   request-handler:
     handler: src/LambdaServer.handler
@@ -163,38 +180,47 @@ functions:
           method: any
           cors: true
 
-  index-setts:
-    handler: src/indexer/sett-indexer.indexAsset
-    timeout: 300
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-setts
-          description: "index historical data for all setts"
-          rate: rate(4 hours)
+  # index-setts:
+  #   handler: src/indexer/sett-indexer.indexAsset
+  #   timeout: 300
+  #   events:
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-setts
+  #         description: "index historical data for all setts"
+  #         rate: rate(4 hours)
 
-  index-apy-snapshots:
-    handler: src/indexer/apy-snapshots-indexer.refreshApySnapshots
-    timeout: 30
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-apy-snapshots
-          description: "index data for sett apy"
-          rate: rate(1 minute)
+  # index-apy-snapshots:
+  #   handler: src/indexer/apy-snapshots-indexer.refreshApySnapshots
+  #   timeout: 30
+  #   events:
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-apy-snapshots
+  #         description: "index data for sett apy"
+  #         rate: rate(1 minute)
 
-  index-prices:
-    handler: src/indexer/price-indexer.indexPrices
-    timeout: 30
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-prices
-          description: "index price data for all protocol tokens"
-          rate: rate(1 minute)
+  # index-prices:
+  #   handler: src/indexer/price-indexer.indexPrices
+  #   timeout: 30
+  #   events:
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-prices
+  #         description: "index price data for all protocol tokens"
+  #         rate: rate(1 minute)
 
-  index-sett-snapshots:
-    handler: src/indexer/sett-snapshots-indexer.refreshSettSnapshots
-    timeout: 30
+  # index-sett-snapshots:
+  #   handler: src/indexer/sett-snapshots-indexer.refreshSettSnapshots
+  #   timeout: 30
+  #   events:
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-sett-snapshots
+  #         description: "index data for supported setts"
+  #         rate: rate(1 minute)
+
+  index-leaderboard:
+    handler: src/indexer/boost-indexer.indexBoostLeaderBoard
+    timeout: 60
     events:
       - schedule:
-          name: ${self:service}-${self:custom.stage}-index-sett-snapshots
-          description: "index data for supported setts"
+          name: ${self:service}-${self:custom.stage}-index-leaderboard
+          description: "index leaderboard data from latest badger boosts"
           rate: rate(1 minute)
