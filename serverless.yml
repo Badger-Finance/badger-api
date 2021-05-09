@@ -68,7 +68,7 @@ provider:
     shouldStartNameWithService: true
     minimumCompressionSize: 1024
   environment:
-    BADGER: "https://bgraph-eth.badger.guru/subgraphs/name/axejintao/badger-dao"
+    BADGER: "https://api.thegraph.com/subgraphs/name/axejintao/badger-dao"
     BADGER_BSC: "https://api.thegraph.com/subgraphs/name/axejintao/badger-dao-bsc"
     BADGER_DAO: "https://api.thegraph.com/subgraphs/name/darruma/badger"
     UNISWAP: "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2"
