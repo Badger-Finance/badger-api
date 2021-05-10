@@ -5,8 +5,6 @@ import { LeaderBoardsService } from '../leaderboards/leaderboards.service';
 export const indexBoostLeaderBoard = async (): Promise<void> => {
   const boosts: CachedBoost[] = await LeaderBoardsService.generateBoostsLeaderBoard();
   const mapper = getDataMapper();
-  await mapper.batchPut(boosts);
-  // for await (const item of mapper.batchPut(boosts)) {
-  //   console.log(item);
-  // }
+  for await (const _item of mapper.batchPut(boosts)) {
+  }
 };

@@ -1,33 +1,38 @@
-import { between } from '@aws/dynamodb-expressions';
 import { Service } from '@tsed/common';
-import { getDataMapper } from '../aws/dynamodb.utils';
 import { getObject } from '../aws/s3.utils';
 import { REWARD_DATA } from '../config/constants';
 import { BoostData } from '../rewards/interfaces/boost-data.interface';
 import { LeaderBoardType } from './enums/leaderboard-type.enum';
 import { CachedBoost } from './interface/cached-boost.interface';
+import { LeaderBoardData } from './interface/leaderboard-data.interrface';
 import { UserBoost } from './interface/user-boost.interface';
+import { getLeaderBoardEntryRange, getLeaderBoardSize } from './leaderboards.utils';
 
 @Service()
 export class LeaderBoardsService {
-  async loadLeaderboardEntries(page?: number, size?: number): Promise<CachedBoost[]> {
-    const mapper = getDataMapper();
+  async loadLeaderboardEntries(page?: number, size?: number): Promise<LeaderBoardData> {
     const pageNumber = page || 0;
     const pageSize = size || 20;
-    const start = pageNumber * pageSize;
-    const end = start + pageSize;
+    const offset = page ?? 1;
+    const start = pageNumber * pageSize + offset;
+    const end = start + pageSize - offset;
     try {
-      const boosts = [];
-      for await (const snapshot of mapper.query(CachedBoost, {
-        leaderboard: LeaderBoardType.BadgerBoost,
-        rank: between(start, end),
-      })) {
-        boosts.push(snapshot);
-      }
-      return boosts;
+      const [data, size] = await Promise.all([getLeaderBoardEntryRange(start, end), getLeaderBoardSize()]);
+      const maxPage = parseInt((size / pageSize).toString());
+      return {
+        data,
+        page: pageNumber,
+        size: pageSize,
+        maxPage,
+      };
     } catch (err) {
       console.error(err);
-      return [];
+      return {
+        data: [],
+        page: 0,
+        size: 0,
+        maxPage: 0,
+      };
     }
   }
 

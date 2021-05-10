@@ -165,6 +165,15 @@ resources:
             AttributeType: "S"
           - AttributeName: "rank"
             AttributeType: "N"
+          - AttributeName: "address"
+            AttributeType: "S"
+        GlobalSecondaryIndexes:
+          - IndexName: IndexLeaderBoardRankOnAddress
+            KeySchema:
+              - AttributeName: "address"
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
 
 functions:
   request-handler:
@@ -180,41 +189,41 @@ functions:
           method: any
           cors: true
 
-  # index-setts:
-  #   handler: src/indexer/sett-indexer.indexAsset
-  #   timeout: 300
-  #   events:
-  #     - schedule:
-  #         name: ${self:service}-${self:custom.stage}-index-setts
-  #         description: "index historical data for all setts"
-  #         rate: rate(4 hours)
+  index-setts:
+    handler: src/indexer/sett-indexer.indexAsset
+    timeout: 300
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-setts
+          description: "index historical data for all setts"
+          rate: rate(4 hours)
 
-  # index-apy-snapshots:
-  #   handler: src/indexer/apy-snapshots-indexer.refreshApySnapshots
-  #   timeout: 30
-  #   events:
-  #     - schedule:
-  #         name: ${self:service}-${self:custom.stage}-index-apy-snapshots
-  #         description: "index data for sett apy"
-  #         rate: rate(1 minute)
+  index-apy-snapshots:
+    handler: src/indexer/apy-snapshots-indexer.refreshApySnapshots
+    timeout: 30
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-apy-snapshots
+          description: "index data for sett apy"
+          rate: rate(1 minute)
 
-  # index-prices:
-  #   handler: src/indexer/price-indexer.indexPrices
-  #   timeout: 30
-  #   events:
-  #     - schedule:
-  #         name: ${self:service}-${self:custom.stage}-index-prices
-  #         description: "index price data for all protocol tokens"
-  #         rate: rate(1 minute)
+  index-prices:
+    handler: src/indexer/price-indexer.indexPrices
+    timeout: 30
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-prices
+          description: "index price data for all protocol tokens"
+          rate: rate(1 minute)
 
-  # index-sett-snapshots:
-  #   handler: src/indexer/sett-snapshots-indexer.refreshSettSnapshots
-  #   timeout: 30
-  #   events:
-  #     - schedule:
-  #         name: ${self:service}-${self:custom.stage}-index-sett-snapshots
-  #         description: "index data for supported setts"
-  #         rate: rate(1 minute)
+  index-sett-snapshots:
+    handler: src/indexer/sett-snapshots-indexer.refreshSettSnapshots
+    timeout: 30
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-sett-snapshots
+          description: "index data for supported setts"
+          rate: rate(1 minute)
 
   index-leaderboard:
     handler: src/indexer/boost-indexer.indexBoostLeaderBoard
@@ -223,4 +232,4 @@ functions:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-leaderboard
           description: "index leaderboard data from latest badger boosts"
-          rate: rate(1 minute)
+          rate: rate(4 hours)
