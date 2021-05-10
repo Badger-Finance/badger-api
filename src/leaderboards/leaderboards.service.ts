@@ -13,7 +13,7 @@ export class LeaderBoardsService {
   async loadLeaderboardEntries(page?: number, size?: number): Promise<LeaderBoardData> {
     const pageNumber = page || 0;
     const pageSize = size || 20;
-    const offset = page ?? 1;
+    const offset = pageNumber > 0 ? 1 : 0;
     const start = pageNumber * pageSize + offset;
     const end = start + pageSize - offset;
     try {
