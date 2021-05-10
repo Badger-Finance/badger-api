@@ -20,7 +20,7 @@ export class LeaderBoardsService {
       const boosts = [];
       for await (const snapshot of mapper.query(CachedBoost, {
         leaderboard: LeaderBoardType.BadgerBoost,
-        // rangeKey: between(start, end),
+        rank: between(start, end),
       })) {
         boosts.push(snapshot);
       }
