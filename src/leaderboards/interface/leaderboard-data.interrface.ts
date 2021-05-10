@@ -4,5 +4,6 @@ export interface LeaderBoardData {
   data: CachedBoost[];
   page: number;
   size: number;
+  count: number;
   maxPage: number;
 }

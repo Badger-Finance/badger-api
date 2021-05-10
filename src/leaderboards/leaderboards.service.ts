@@ -23,6 +23,7 @@ export class LeaderBoardsService {
         data,
         page: pageNumber,
         size: pageSize,
+        count: size,
         maxPage,
       };
     } catch (err) {
@@ -31,6 +32,7 @@ export class LeaderBoardsService {
         data: [],
         page: 0,
         size: 0,
+        count: 0,
         maxPage: 0,
       };
     }
