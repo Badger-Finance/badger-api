@@ -10,7 +10,10 @@ export class LeaderBoardsController {
 
   @ContentType('json')
   @Get('')
-  async getLeaderBoard(@QueryParams('page') page?: number, @QueryParams('size') size?: number): Promise<LeaderBoardData> {
+  async getLeaderBoard(
+    @QueryParams('page') page?: number,
+    @QueryParams('size') size?: number,
+  ): Promise<LeaderBoardData> {
     return this.leaderBoardsService.loadLeaderboardEntries(page, size);
   }
 }
