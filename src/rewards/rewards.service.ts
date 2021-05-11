@@ -91,15 +91,38 @@ export class RewardsService {
     const boostFile = await getObject(REWARD_DATA, 'badger-boosts.json');
     const fileContents: BoostData = JSON.parse(boostFile.toString('utf-8'));
     const boostData = fileContents.userData[address.toLowerCase()];
+    const defaultMultipliers: BoostMultipliers = {};
+    Object.keys(fileContents.multiplierData).forEach(
+      (key) => (defaultMultipliers[key] = fileContents.multiplierData[key].min),
+    );
     if (!boostData) {
-      const defaultMultipliers: BoostMultipliers = {};
-      Object.keys(fileContents.multiplierData).forEach(
-        (key) => (defaultMultipliers[key] = fileContents.multiplierData[key].min),
-      );
       return {
         boost: 1,
         multipliers: defaultMultipliers,
       };
+    }
+    const userMulipliers = boostData.multipliers;
+    const missingMultipliers = Object.keys(defaultMultipliers).length !== Object.keys(userMulipliers).length;
+    if (missingMultipliers) {
+      const includedMultipliers = new Set();
+      const totalPercentile = Object.entries(userMulipliers)
+        .map((entry) => {
+          const [key, value] = entry;
+          includedMultipliers.add(key);
+          const min = fileContents.multiplierData[key].min;
+          const max = fileContents.multiplierData[key].max;
+          const range = max - min;
+          return value / range;
+        })
+        .reduce((total, value) => (total += value), 0);
+      const percentile = totalPercentile / Object.entries(boostData).length;
+      Object.entries(fileContents.multiplierData).forEach((entry) => {
+        const [key, value] = entry;
+        if (!includedMultipliers.has(key)) {
+          const range = value.max - value.min;
+          userMulipliers[key] = value.min + percentile * range;
+        }
+      });
     }
     return boostData;
   }
