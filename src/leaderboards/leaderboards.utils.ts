@@ -1,4 +1,5 @@
 import { between } from '@aws/dynamodb-expressions';
+import { ethers } from 'ethers';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { LeaderBoardType } from './enums/leaderboard-type.enum';
 import { CachedBoost } from './interface/cached-boost.interface';
@@ -34,7 +35,7 @@ export const getUserLeaderBoardRank = async (accountId: string): Promise<number>
   const mapper = getDataMapper();
   for await (const entry of mapper.query(
     CachedBoost,
-    { address: accountId },
+    { address: ethers.utils.getAddress(accountId) },
     { limit: 1, indexName: 'IndexLeaderBoardRankOnAddress' },
   )) {
     return entry.rank;

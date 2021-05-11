@@ -1,4 +1,5 @@
 import { Service } from '@tsed/common';
+import { ethers } from 'ethers';
 import { getObject } from '../aws/s3.utils';
 import { REWARD_DATA } from '../config/constants';
 import { BoostData } from '../rewards/interfaces/boost-data.interface';
@@ -44,7 +45,7 @@ export class LeaderBoardsService {
     const boosts: UserBoost[] = Object.entries(boostData.userData).map((entry) => {
       const [address, userBoost] = entry;
       return {
-        address,
+        address: ethers.utils.getAddress(address),
         boost: userBoost.boost,
       };
     });
