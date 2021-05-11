@@ -5,7 +5,7 @@ import { Chain } from '../chains/config/chain.config';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { getIndexedBlock, settToSnapshot } from './indexer.utils';
 
-export const indexAsset = async () => {
+export const indexAsset = async (): Promise<void> => {
   const chains = loadChains();
   await Promise.all(
     chains.flatMap(async (chain) => Promise.all(chain.setts.map(async (sett) => indexSett(chain, sett)))),

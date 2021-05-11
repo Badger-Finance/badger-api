@@ -5,6 +5,7 @@ import { SettBalance } from './sett-balance.interface';
 export interface Account {
   id: string;
   boost: number;
+  boostRank: number;
   multipliers: BoostMultipliers;
   depositLimits: AccountLimits;
   // currently unused below
