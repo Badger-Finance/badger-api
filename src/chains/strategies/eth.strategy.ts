@@ -1,10 +1,12 @@
 import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { getContractPrice, getTokenPrice, getVaultTokenPrice, ibBTCPrice } from '../../prices/prices.utils';
-import { getSushiswapPrice, getUniswapPrice } from '../../protocols/common/swap.utils';
+import { getSushiswapPrice, getUniswapPrice, resolveTokenPrice } from '../../protocols/common/swap.utils';
 import { ethTokensConfig } from '../../tokens/config/eth-tokens.config';
 import { TokenType } from '../../tokens/enums/token-type.enum';
 import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
+import { Chain } from '../config/chain.config';
+import { ChainNetwork } from '../enums/chain-network.enum';
 import { ChainStrategy } from './chain.strategy';
 
 export class EthStrategy extends ChainStrategy {
@@ -15,14 +17,14 @@ export class EthStrategy extends ChainStrategy {
 
   async getPrice(address: string): Promise<TokenPrice> {
     const checksummedAddress = ethers.utils.getAddress(address);
-    const attributes = ethTokensConfig[checksummedAddress];
-    if (!attributes) {
-      throw new BadRequest(`No attributes found for ${checksummedAddress}`);
+    const token = ethTokensConfig[checksummedAddress];
+    if (!token) {
+      throw new BadRequest(`No token found for ${checksummedAddress}`);
     }
-    switch (attributes.type) {
+    switch (token.type) {
       case TokenType.Contract:
-        if (attributes.lookupName) {
-          return getTokenPrice(attributes.lookupName);
+        if (token.lookupName) {
+          return this.resolveLookupName(token.lookupName, token.address);
         }
         return getContractPrice(checksummedAddress);
       case TokenType.SushiswapLp:
@@ -36,5 +38,13 @@ export class EthStrategy extends ChainStrategy {
       default:
         throw new UnprocessableEntity('Unsupported TokenType');
     }
+  }
+
+  async resolveLookupName(lookupName: string, token: string): Promise<TokenPrice> {
+    const isContract = ethers.utils.isAddress(lookupName);
+    if (isContract) {
+      return resolveTokenPrice(Chain.getChain(ChainNetwork.Ethereum), token, lookupName);
+    }
+    return getTokenPrice(lookupName);
   }
 }
