@@ -52,6 +52,7 @@ export const ethTokensConfig: TokenConfig = {
   [TOKENS.DIGG]: {
     address: TOKENS.DIGG,
     decimals: 9,
+    lookupName: TOKENS.SUSHI_DIGG_WBTC,
     name: 'Digg',
     symbol: 'DIGG',
     type: TokenType.Contract,
