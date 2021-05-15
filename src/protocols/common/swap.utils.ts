@@ -1,5 +1,4 @@
 import { NotFound, UnprocessableEntity } from '@tsed/exceptions';
-import { String } from 'aws-sdk/clients/apigateway';
 import { BigNumber, ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
 import { Chain } from '../../chains/config/chain.config';
@@ -131,7 +130,7 @@ const resolveLiquidityPrice = async (liquidityData: LiquidityData): Promise<Toke
   };
 };
 
-export const resolveTokenPrice = async (chain: Chain, token: string, contract: String): Promise<TokenPrice> => {
+export const resolveTokenPrice = async (chain: Chain, token: string, contract: string): Promise<TokenPrice> => {
   const { token0, token1, reserve0, reserve1 } = await getLiquidityData(chain, contract);
   const pricingToken = getToken(token);
   const isToken0 = pricingToken.address === token0;
