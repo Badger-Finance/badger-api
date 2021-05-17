@@ -53,8 +53,8 @@ export const getCachcedSett = async (settDefinition: SettDefinition): Promise<Se
       { limit: 1, scanIndexForward: false },
     )) {
       sett.balance = item.balance;
-      sett.ppfs = item.ratio;
       sett.value = item.settValue;
+      sett.ppfs = item.balance / item.supply;
     }
     return sett;
   } catch (err) {
