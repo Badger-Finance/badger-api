@@ -65,8 +65,8 @@ export const getLiquidityPrice = async (graphUrl: string, contract: string): Pro
   }
   const liquidityData: LiquidityData = {
     contract: contract,
-    token0: pair.token0.id,
-    token1: pair.token1.id,
+    token0: ethers.utils.getAddress(pair.token0.id),
+    token1: ethers.utils.getAddress(pair.token1.id),
     reserve0: pair.reserve0,
     reserve1: pair.reserve1,
     totalSupply: pair.totalSupply,
@@ -125,6 +125,27 @@ const resolveLiquidityPrice = async (liquidityData: LiquidityData): Promise<Toke
   return {
     name: token.name,
     address: token.address,
+    usd: usdPrice,
+    eth: ethPrice,
+  };
+};
+
+export const resolveTokenPrice = async (chain: Chain, token: string, contract: string): Promise<TokenPrice> => {
+  const { token0, token1, reserve0, reserve1 } = await getLiquidityData(chain, contract);
+  const pricingToken = getToken(token);
+  const isToken0 = pricingToken.address === token0;
+  const knownToken = isToken0 ? token1 : token0;
+  const [divisor, dividend] = isToken0 ? [reserve1, reserve0] : [reserve0, reserve1];
+  const knownTokenPrice = await getTokenPriceData(knownToken);
+  if (!knownTokenPrice) {
+    throw new UnprocessableEntity(`Token ${pricingToken.name} cannot be priced`);
+  }
+  const scalar = divisor / dividend;
+  const usdPrice = knownTokenPrice.usd * scalar;
+  const ethPrice = knownTokenPrice.eth * scalar;
+  return {
+    name: pricingToken.name,
+    address: pricingToken.address,
     usd: usdPrice,
     eth: ethPrice,
   };

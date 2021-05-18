@@ -1,4 +1,5 @@
 import fetch from 'node-fetch';
+import { PairDayDataQuery } from '../interfaces/pair-day-data-query.interface';
 import { Performance, uniformPerformance } from '../interfaces/performance.interface';
 import { createValueSource, ValueSource } from '../interfaces/value-source.interface';
 
@@ -6,9 +7,9 @@ export async function getSwapValueSource(graphUrl: string, name: string, poolAdd
   // TODO: Move query to GraphService
   const query = `
     {
-      pairDayDatas(first: 30, orderBy: date, orderDirection: desc, where:{pairAddress: "${poolAddress.toLowerCase()}"}) {
+      pairDayDatas(first: 30, orderBy: date, orderDirection: desc, where:{pair: "${poolAddress.toLowerCase()}"}) {
         reserveUSD
-        dailyVolumeUSD
+        volumeUSD
       }
     }
   `;
@@ -24,7 +25,7 @@ export async function getSwapValueSource(graphUrl: string, name: string, poolAdd
     return unknownValueSource;
   }
 
-  const pairDayResponse = await response.json();
+  const pairDayResponse: PairDayDataQuery = await response.json();
   if (pairDayResponse.errors) {
     return unknownValueSource;
   }
@@ -33,7 +34,7 @@ export async function getSwapValueSource(graphUrl: string, name: string, poolAdd
   let totalApy = 0;
   const performance: Performance = uniformPerformance(0);
   for (let i = 0; i < pairDayData.length; i++) {
-    const volume = parseFloat(pairDayData[i].dailyVolumeUSD);
+    const volume = parseFloat(pairDayData[i].volumeUSD);
     const poolReserve = parseFloat(pairDayData[i].reserveUSD);
     const fees = volume * 0.003;
     totalApy += (fees / poolReserve) * 365 * 100;

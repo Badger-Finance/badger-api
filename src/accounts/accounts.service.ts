@@ -5,6 +5,7 @@ import { Chain } from '../chains/config/chain.config';
 import { guestListAbi } from '../config/abi/guest-list.abi';
 import { yearnAffiliateVaultWrapperAbi } from '../config/abi/yearn-affiliate-vault-wrapper.abi';
 import { Protocol } from '../config/constants';
+import { getUserLeaderBoardRank } from '../leaderboards/leaderboards.utils';
 import { PricesService } from '../prices/prices.service';
 import { RewardsService } from '../rewards/rewards.service';
 import { TokenRequest } from '../tokens/interfaces/token-request.interface';
@@ -28,15 +29,17 @@ export class AccountsService {
       throw new BadRequest('accountId is required');
     }
 
-    const [accountData, boostData] = await Promise.all([
+    const [accountData, boostData, boostRank] = await Promise.all([
       getUserAccount(chain, accountId),
       this.rewardsService.getUserBoost(accountId),
+      getUserLeaderBoardRank(accountId),
     ]);
     const { user } = accountData;
 
     const account: Account = {
       id: accountId,
       boost: boostData.boost,
+      boostRank,
       multipliers: boostData.multipliers,
       value: 0,
       earnedValue: 0,

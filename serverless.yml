@@ -72,7 +72,7 @@ provider:
     BADGER_BSC: "https://api.thegraph.com/subgraphs/name/axejintao/badger-dao-bsc"
     BADGER_DAO: "https://api.thegraph.com/subgraphs/name/darruma/badger"
     UNISWAP: "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2"
-    SUSHISWAP: "https://api.thegraph.com/subgraphs/name/jiro-ono/sushiswap-v1-exchange-staging"
+    SUSHISWAP: "https://api.thegraph.com/subgraphs/name/sushiswap/exchange"
     PANCAKESWAP: "https://api.thegraph.com/subgraphs/name/pancakeswap/exchange"
     MASTERCHEF: "https://api.thegraph.com/subgraphs/name/sushiswap/master-chef"
     APY_SNAPSHOTS_DATA: ${self:custom.table.APY_SNAPSHOTS_DATA.${self:custom.stage}}
@@ -80,6 +80,7 @@ provider:
     PRICE_DATA: ${self:custom.table.PRICE_DATA.${self:custom.stage}}
     SETT_SNAPSHOTS_DATA: ${self:custom.table.SETT_SNAPSHOTS_DATA.${self:custom.stage}}
     REWARD_DATA: ${self:custom.merkleProofs.${self:custom.stage}}
+    LEADERBOARD_DATA: ${self:custom.stage}-leaderboard
     BOUNCER_PROOFS: badger-bouncer.json
 
 resources:
@@ -149,6 +150,31 @@ resources:
           - AttributeName: "address"
             AttributeType: "S"
 
+    leaderboardTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.stage}-leaderboard
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: "leaderboard"
+            KeyType: "HASH"
+          - AttributeName: "rank"
+            KeyType: "RANGE"
+        AttributeDefinitions:
+          - AttributeName: "leaderboard"
+            AttributeType: "S"
+          - AttributeName: "rank"
+            AttributeType: "N"
+          - AttributeName: "address"
+            AttributeType: "S"
+        GlobalSecondaryIndexes:
+          - IndexName: IndexLeaderBoardRankOnAddress
+            KeySchema:
+              - AttributeName: "address"
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+
 functions:
   request-handler:
     handler: src/LambdaServer.handler
@@ -198,3 +224,12 @@ functions:
           name: ${self:service}-${self:custom.stage}-index-sett-snapshots
           description: "index data for supported setts"
           rate: rate(1 minute)
+
+  index-leaderboard:
+    handler: src/indexer/boost-indexer.indexBoostLeaderBoard
+    timeout: 60
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-leaderboard
+          description: "index leaderboard data from latest badger boosts"
+          rate: rate(1 hour)

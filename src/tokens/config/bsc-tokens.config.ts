@@ -36,6 +36,14 @@ export const bscTokensConfig: TokenConfig = {
     symbol: 'Pancakeswap WBNB/BTCB LP (PLP)',
     type: TokenType.PancakeswapLp,
   },
+  [TOKENS.PANCAKE_OLD_BNB_BTCB]: {
+    address: TOKENS.PANCAKE_OLD_BNB_BTCB,
+    decimals: 18,
+    lpToken: true,
+    name: 'Pancakeswap: WBNB-BTCB',
+    symbol: 'Pancakeswap WBNB/BTCB LP (PLP)',
+    type: TokenType.PancakeswapLp,
+  },
   [TOKENS.PANCAKE_BBADGER_BTCB]: {
     address: TOKENS.PANCAKE_BBADGER_BTCB,
     decimals: 18,

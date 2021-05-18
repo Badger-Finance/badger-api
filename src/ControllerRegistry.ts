@@ -3,6 +3,7 @@ import { ChartsController } from './charts/charts.controller';
 import { ClawController } from './claw/claw.controller';
 import { GeyserController } from './geysers/geysers.controller';
 import { HarvestsController } from './harvests/harvests.controller';
+import { LeaderBoardsController } from './leaderboards/leaderboards.controller';
 import { PriceController } from './prices/prices.controller';
 import { ProtocolController } from './protocols/protocols.controller';
 import { RewardController } from './rewards/rewards.controller';
@@ -24,4 +25,5 @@ export const controllers = [
   RewardController,
   SettsController,
   AccountsController,
+  LeaderBoardsController,
 ];
