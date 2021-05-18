@@ -72,7 +72,7 @@ provider:
     BADGER_BSC: "https://api.thegraph.com/subgraphs/name/axejintao/badger-dao-bsc"
     BADGER_DAO: "https://api.thegraph.com/subgraphs/name/darruma/badger"
     UNISWAP: "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2"
-    SUSHISWAP: "https://api.thegraph.com/subgraphs/name/jiro-ono/sushiswap-v1-exchange-staging"
+    SUSHISWAP: "https://api.thegraph.com/subgraphs/name/sushiswap/exchange"
     PANCAKESWAP: "https://api.thegraph.com/subgraphs/name/pancakeswap/exchange"
     MASTERCHEF: "https://api.thegraph.com/subgraphs/name/sushiswap/master-chef"
     APY_SNAPSHOTS_DATA: ${self:custom.table.APY_SNAPSHOTS_DATA.${self:custom.stage}}
