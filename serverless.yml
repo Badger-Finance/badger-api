@@ -65,7 +65,7 @@ provider:
   iam:
     role:
       managedPolicies:
-        - arn:aws:iam::aws:policy/AWSLambdaFullAccess
+        - arn:aws:iam::aws:policy/AWSLambda_FullAccess
   versionFunctions: false
   apiGateway:
     shouldStartNameWithService: true
