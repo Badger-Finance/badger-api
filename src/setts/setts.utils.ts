@@ -35,6 +35,7 @@ export const getCachcedSett = async (settDefinition: SettDefinition): Promise<Se
     apr: 0,
     balance: 0,
     boostable: false,
+    experimental: !!settDefinition.experimental,
     hasBouncer: !!settDefinition.hasBouncer,
     name: settDefinition.name,
     ppfs: 1,
