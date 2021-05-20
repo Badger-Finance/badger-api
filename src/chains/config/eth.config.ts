@@ -130,4 +130,12 @@ export const ethSetts: SettDefinition[] = [
     settToken: TOKENS.BSUSHI_IBBTC_WBTC,
     protocol: Protocol.Sushiswap,
   },
+  {
+    name: 'Digg Stabilization',
+    createdBlock: 12375910,
+    depositToken: TOKENS.DIGG,
+    experimental: true,
+    settToken: TOKENS.BZS_DIGG,
+    symbol: 'ZS-DIGG',
+  },
 ];

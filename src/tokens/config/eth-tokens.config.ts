@@ -162,6 +162,17 @@ export const ethTokensConfig: TokenConfig = {
       network: ChainNetwork.Ethereum,
     },
   },
+  [TOKENS.BZS_DIGG]: {
+    address: TOKENS.BZS_DIGG,
+    decimals: 18,
+    name: 'bzsDigg',
+    symbol: 'bzsDIGG',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.DIGG,
+      network: ChainNetwork.Ethereum,
+    },
+  },
   [TOKENS.BUNI_DIGG_WBTC]: {
     address: TOKENS.BUNI_DIGG_WBTC,
     decimals: 18,

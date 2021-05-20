@@ -5,6 +5,7 @@ export interface SettDefinition {
   affiliate?: SettAffiliateData;
   createdBlock: number;
   depositToken: string;
+  experimental?: boolean;
   hasBouncer?: boolean;
   name: string;
   protocol?: Protocol;
