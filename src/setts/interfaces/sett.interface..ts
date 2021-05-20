@@ -11,16 +11,17 @@ import { SettSummary } from './sett-summary.interface';
  * native underlying value source.
  */
 export interface Sett extends SettSummary {
-  asset: string;
+  affiliate?: SettAffiliateData;
   apr: number;
-  minApr?: number;
-  maxApr?: number;
+  asset: string;
   boostable: boolean;
+  experimental: boolean;
   hasBouncer: boolean;
+  maxApr?: number;
+  minApr?: number;
   ppfs: number;
   sources: ValueSource[];
   tokens: TokenBalance[];
   underlyingToken: string;
   vaultToken: string;
-  affiliate?: SettAffiliateData;
 }
