@@ -54,6 +54,7 @@ export class RewardsService {
     if (!claim) {
       throw new NotFound(`${address} is not on the bouncer list`);
     }
+    claim.proof = [];
     return claim;
   }
 
