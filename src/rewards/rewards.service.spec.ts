@@ -44,7 +44,7 @@ describe('RewardsService', () => {
         jest.spyOn(s3, 'getObject').mockImplementationOnce(async () => Promise.resolve(proofs));
         const eligibility = await service.checkBouncerList(address);
         expect(eligibility).toBeDefined();
-        expect(eligibility.isEligible).toBeFalsy();
+        expect(eligibility.isEligible).toBeTruthy();
       });
     });
   });
