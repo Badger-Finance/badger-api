@@ -41,7 +41,7 @@ export class TokensService {
     const { sett, balance, currency } = request;
     const token = getToken(sett.depositToken);
     if (token.lpToken) {
-      const tokens = await this.getLiquidtyPoolTokenBalances(request);
+      const tokens = await this.getLiquidityPoolTokenBalances(request);
       return tokens;
     }
     const tokens = [
@@ -57,7 +57,7 @@ export class TokensService {
     return tokens;
   }
 
-  async getLiquidtyPoolTokenBalances(request: TokenRequest): Promise<TokenBalance[]> {
+  async getLiquidityPoolTokenBalances(request: TokenRequest): Promise<TokenBalance[]> {
     const { sett, balance, currency } = request;
     const { depositToken, protocol } = sett;
 

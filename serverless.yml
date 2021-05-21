@@ -43,6 +43,9 @@ custom:
     ASSET_DATA:
       staging: "badger-staging-asset"
       prod: "badger-asset"
+    LIQUIDITY_POOL_TOKEN_BALANCES_DATA:
+      staging: "liquidity-pool-token-balances-staging"
+      prod: "liquidity-pool-token-balances"
     PRICE_DATA:
       staging: "badger-staging-prices"
       prod: "badger-prices"
@@ -62,7 +65,7 @@ provider:
   iam:
     role:
       managedPolicies:
-        - arn:aws:iam::aws:policy/AWSLambdaFullAccess
+        - arn:aws:iam::aws:policy/AWSLambda_FullAccess
   versionFunctions: false
   apiGateway:
     shouldStartNameWithService: true
@@ -77,10 +80,11 @@ provider:
     MASTERCHEF: "https://api.thegraph.com/subgraphs/name/sushiswap/master-chef"
     APY_SNAPSHOTS_DATA: ${self:custom.table.APY_SNAPSHOTS_DATA.${self:custom.stage}}
     ASSET_DATA: ${self:custom.table.ASSET_DATA.${self:custom.stage}}
+    LEADERBOARD_DATA: ${self:custom.stage}-leaderboard
+    LIQUIDITY_POOL_TOKEN_BALANCES_DATA: ${self:custom.table.LIQUIDITY_POOL_TOKEN_BALANCES_DATA.${self:custom.stage}}
     PRICE_DATA: ${self:custom.table.PRICE_DATA.${self:custom.stage}}
     SETT_SNAPSHOTS_DATA: ${self:custom.table.SETT_SNAPSHOTS_DATA.${self:custom.stage}}
     REWARD_DATA: ${self:custom.merkleProofs.${self:custom.stage}}
-    LEADERBOARD_DATA: ${self:custom.stage}-leaderboard
     BOUNCER_PROOFS: badger-bouncer.json
 
 resources:
@@ -172,6 +176,31 @@ resources:
             KeySchema:
               - AttributeName: "address"
                 KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+
+    liquidityPoolTokenBalancesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.table.LIQUIDITY_POOL_TOKEN_BALANCES_DATA.${self:custom.stage}}
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: "id"
+            KeyType: "HASH"
+        AttributeDefinitions:
+          - AttributeName: "id"
+            AttributeType: "S"
+          - AttributeName: "pairId"
+            AttributeType: "S"
+          - AttributeName: "protocol"
+            AttributeType: "S"
+        GlobalSecondaryIndexes:
+          - IndexName: IndexLiquidityPoolTokenBalancesOnPairIdAndProtocol
+            KeySchema:
+              - AttributeName: "pairId"
+                KeyType: HASH
+              - AttributeName: "protocol"
+                KeyType: RANGE
             Projection:
               ProjectionType: ALL
 
