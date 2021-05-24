@@ -29,7 +29,7 @@ export const getSett = async (graphUrl: string, contract: string, block?: number
   return badgerGraphqlSdk.Sett(vars);
 };
 
-export const getCachcedSett = async (settDefinition: SettDefinition): Promise<Sett> => {
+export const getCachedSett = async (settDefinition: SettDefinition): Promise<Sett> => {
   const sett: Sett = {
     asset: settDefinition.symbol,
     apr: 0,
