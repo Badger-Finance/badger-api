@@ -2,52 +2,34 @@
 
 [![CI](https://github.com/Badger-Finance/badger-api/actions/workflows/main.yml/badge.svg)](https://github.com/Badger-Finance/badger-api/actions/workflows/main.yml)
 
-Collection of serverless API to enable public access to data surrounding the BADGER protocol.
+Collection of serverless API to enable public access to data surrounding the Badger protocol.
 
 ## Development
 
-Install serverless framework
+To get started, run the environment setup script provided:
 
 ```bash
-npm install -g serverless
+chmod +x setup.sh
+./setup.sh
 ```
 
-Setup local [serverless credentials for AWS](https://www.serverless.com/framework/docs/providers/aws/cli-reference/config-credentials/)
+Or, install the following dependencies yourself:
 
-```bash
-serverless config credentials --provider aws --key something --secret somethingElse
+- Node
+- Serverless
+- Java
+
+Start the API:
+
 ```
-
-Install project dependencies
-
-```bash
-yarn
-```
-
-Install DynamoDB libraries
-
-```bash
-yarn sls dynamodb install
-```
-
-Start the API locally
-
-```bash
 yarn dev
 ```
 
-### Sett Options 
+### Local Testing
 
-Sett path parameters are case sensitive and based on existing sett contracts.
+The API supports local (offline) testing of nearly all endpoints.
+Certain endpoints which require access to AWS resources may not work appropriately without AWS credentials.
+The databased used for local testing DynamoDB - a local version with exact table copies of production.
+These tables are seeded with data located in the [seed folder](./seed).
 
-- badger
-- badger-wbtc
-- renbtccrv
-- tbtccrv
-- sbtccrv
-- hrenbtccrv
-- slp-badger-wbtc
-- slp-wbtc-eth
-- digg
-- slp-digg-wbtc
-- digg-wbtc
+**Note: Running only sls offline will not start or seed dynamo. Run sls offline start, or yarn dev instead.**
