@@ -85,28 +85,23 @@ export class TokensService {
   static async getPoolData(settDefinition: SettDefinition): Promise<UniV2PairQuery | undefined> {
     const { depositToken, protocol } = settDefinition;
     const pairId = depositToken.toLowerCase();
+
+    let graphUrl;
     if (protocol === Protocol.Uniswap) {
-      const uniswapGraphqlClient = new GraphQLClient(UNISWAP_URL);
-      const uniswapGraphqlSdk = getUniV2Sdk(uniswapGraphqlClient);
-      return uniswapGraphqlSdk.UniV2Pair({
-        id: pairId,
-      });
+      graphUrl = UNISWAP_URL;
+    } else if (protocol === Protocol.Sushiswap) {
+      graphUrl = SUSHISWAP_URL;
+    } else if (protocol === Protocol.Pancakeswap) {
+      graphUrl = PANCAKESWAP_URL;
+    } else {
+      return undefined;
     }
-    if (protocol === Protocol.Sushiswap) {
-      const sushiswapGraphqlClient = new GraphQLClient(SUSHISWAP_URL);
-      const sushiswapGraphqlSdk = getUniV2Sdk(sushiswapGraphqlClient);
-      return sushiswapGraphqlSdk.UniV2Pair({
-        id: pairId,
-      });
-    }
-    if (protocol === Protocol.Pancakeswap) {
-      const pancakeswapGraphqlClient = new GraphQLClient(PANCAKESWAP_URL);
-      const pancakeswapGraphqlSdk = getUniV2Sdk(pancakeswapGraphqlClient);
-      return pancakeswapGraphqlSdk.UniV2Pair({
-        id: pairId,
-      });
-    }
-    return undefined;
+
+    const client = new GraphQLClient(graphUrl);
+    const graphqlSdk = getUniV2Sdk(client);
+    return graphqlSdk.UniV2Pair({
+      id: pairId,
+    });
   }
 
   async getOnChainLiquidtyPoolTokenBalances(request: TokenRequest): Promise<TokenBalance[]> {
