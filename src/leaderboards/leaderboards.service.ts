@@ -47,6 +47,7 @@ export class LeaderBoardsService {
       return {
         address: ethers.utils.getAddress(address),
         boost: userBoost.boost,
+        stakeRatio: userBoost.stakeRatio,
       };
     });
     return boosts

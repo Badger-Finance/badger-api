@@ -106,6 +106,7 @@ export class RewardsService {
     if (!boostData) {
       return {
         boost: 1,
+        stakeRatio: 0,
         multipliers: defaultMultipliers,
       };
     }
