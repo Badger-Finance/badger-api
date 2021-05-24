@@ -14,6 +14,8 @@ import { CachedSettSnapshot } from '../setts/interfaces/cached-sett-snapshot.int
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { SettSnapshot } from '../setts/interfaces/sett-snapshot.interface';
 import { getSett } from '../setts/setts.utils';
+import { CachedLiquidityPoolTokenBalance } from '../tokens/interfaces/cached-liquidity-pool-token-balance.interface';
+import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
 import { getToken } from '../tokens/tokens.utils';
 
 export const settToCachedSnapshot = async (
@@ -145,3 +147,16 @@ export const valueSourceToCachedValueSource = (
     boostable: valueSource.boostable,
   });
 };
+
+export function tokenBalancesToCachedLiquidityPoolTokenBalance(
+  pairId: string,
+  protocol: Protocol,
+  tokenBalances: CachedTokenBalance[],
+): CachedLiquidityPoolTokenBalance {
+  return Object.assign(new CachedLiquidityPoolTokenBalance(), {
+    id: `${pairId}_${protocol}`,
+    pairId,
+    protocol,
+    tokenBalances,
+  });
+}
