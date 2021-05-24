@@ -13,5 +13,8 @@ export class CachedBoost {
   boost!: number;
 
   @attribute()
+  stakeRatio!: number;
+
+  @attribute()
   address!: string;
 }
