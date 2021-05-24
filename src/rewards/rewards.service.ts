@@ -11,7 +11,7 @@ import { getPrice } from '../prices/prices.utils';
 import { uniformPerformance } from '../protocols/interfaces/performance.interface';
 import { createValueSource, ValueSource } from '../protocols/interfaces/value-source.interface';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
-import { getCachcedSett } from '../setts/setts.utils';
+import { getCachedSett } from '../setts/setts.utils';
 import { getToken } from '../tokens/tokens.utils';
 import { Boost } from './interfaces/boost.interface';
 import { BoostData } from './interfaces/boost-data.interface';
@@ -140,7 +140,7 @@ export class RewardsService {
       return [];
     }
     const { settToken } = settDefinition;
-    const sett = await getCachcedSett(settDefinition);
+    const sett = await getCachedSett(settDefinition);
     const boostFile = await getObject(REWARD_DATA, 'badger-boosts.json');
     const boostData: BoostData = JSON.parse(boostFile.toString('utf-8'));
     const boostRange = boostData.multiplierData[sett.vaultToken];

@@ -13,7 +13,7 @@ import { getSettTokens, getToken } from '../tokens/tokens.utils';
 import { Sett } from './interfaces/sett.interface.';
 import { SettDefinition } from './interfaces/sett-definition.interface';
 import {
-  getCachcedSett,
+  getCachedSett,
   getPerformance,
   getSettDefinition,
   getSettSnapshots,
@@ -43,7 +43,7 @@ export class SettsService {
 
   async getSett(chain: Chain, contract: string, currency?: string): Promise<Sett> {
     const settDefinition = getSettDefinition(chain, contract);
-    const sett = await getCachcedSett(settDefinition);
+    const sett = await getCachedSett(settDefinition);
     const tokenRequest: TokenRequest = {
       chain: chain,
       sett: settDefinition,
@@ -90,7 +90,7 @@ export class SettsService {
   }
 
   static async getSettTokenPerformance(chain: Chain, settDefinition: SettDefinition): Promise<ValueSource[]> {
-    const sett = await getCachcedSett(settDefinition);
+    const sett = await getCachedSett(settDefinition);
     const tokens = await getSettTokens(chain, settDefinition);
     const vaultToken = getToken(sett.vaultToken);
 
