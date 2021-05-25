@@ -93,10 +93,11 @@ export class AccountsService {
             id: settDefinition.settToken,
             name: settDefinition.name,
             asset: settDefinition.symbol,
+            balance,
             value: balanceUsd,
+            tokens: balanceTokens,
             earnedValue: earnedUsd,
             earnedTokens: earnedTokens,
-            balance: balanceTokens,
           };
         }),
       );

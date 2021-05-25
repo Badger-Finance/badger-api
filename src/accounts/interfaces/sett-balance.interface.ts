@@ -4,8 +4,9 @@ export interface SettBalance {
   id: string;
   name: string;
   asset: string;
-  balance: TokenBalance[];
+  balance: number;
   value: number;
-  earnedTokens: TokenBalance[];
+  tokens: TokenBalance[];
   earnedValue: number;
+  earnedTokens: TokenBalance[];
 }
