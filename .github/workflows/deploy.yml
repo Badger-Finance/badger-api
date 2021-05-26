@@ -1,0 +1,26 @@
+name: Deploy
+
+on:
+  pull_request:
+    types: [ closed ]
+    brances: [ main, staging ]
+
+jobs:
+  deploy:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14.x'
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
+      - run: sls config credentials -p aws -k ${{ secrets.AWS_ACCESS_KEY_ID }} -s ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Deploy Staging
+        run: yarn deploy
+        if: github.ref == 'refs/heads/staging'
+      - name: Deploy Production
+        run: yarn deploy:prod
+        if: github.ref == 'refs/heads/main'
