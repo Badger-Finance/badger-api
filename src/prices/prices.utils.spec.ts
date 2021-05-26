@@ -1,9 +1,9 @@
-import { DataMapper, QueryIterator, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
+import { DataMapper } from '@aws/dynamodb-data-mapper';
 import { BadRequest, NotFound } from '@tsed/exceptions';
-import createMockInstance from 'jest-create-mock-instance';
 import fetchMock from 'jest-fetch-mock';
 import { TestStrategy } from '../chains/strategies/test.strategy';
 import { TOKENS } from '../config/constants';
+import { setupMapper } from '../test/tests.utils';
 import { TokenType } from '../tokens/enums/token-type.enum';
 import { Token } from '../tokens/interfaces/token.interface';
 import { TokenPrice } from '../tokens/interfaces/token-price.interface';
@@ -24,17 +24,6 @@ import {
 
 describe('prices.utils', () => {
   const strategy = new TestStrategy();
-
-  // Father forgive me for I have sinned
-  /* eslint-disable @typescript-eslint/ban-ts-comment */
-  const setupMapper = (items: unknown[]) => {
-    // @ts-ignore
-    const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
-    // @ts-ignore
-    qi[Symbol.iterator] = jest.fn(() => items.values());
-    return jest.spyOn(DataMapper.prototype, 'query').mockImplementation(() => qi);
-  };
-  /* eslint-enable @typescript-eslint/ban-ts-comment */
 
   beforeEach(async () => {
     fetchMock.resetMocks();

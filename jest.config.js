@@ -13,6 +13,6 @@ module.exports = {
   testEnvironment: 'node',
   testRegex: '.spec.ts$',
   testTimeout: 10000,
-  setupFilesAfterEnv: ['./test/jest.setup.ts'],
+  setupFilesAfterEnv: ['./src/test/jest.setup.ts'],
   transform: { '^.+\\.ts$': 'ts-jest' },
 };
