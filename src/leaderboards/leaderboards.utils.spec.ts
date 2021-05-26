@@ -6,10 +6,6 @@ import { getLeaderBoardEntryRange, getLeaderBoardSize, getUserLeaderBoardRank } 
 describe('leaderboards.utils', () => {
   const address = '0x05767d9ef41dc40689678ffca0608878fb3de906';
 
-  beforeEach(async () => {
-    fetchMock.resetMocks();
-  });
-
   const randomLeaderboard = (length: number, start?: number): CachedBoost[] => {
     if (length <= 0) {
       return [];
