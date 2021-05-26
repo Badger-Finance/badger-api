@@ -23,8 +23,7 @@
   },	
   "compileOnSave": true,	
   "include": [	
-    "./src/**/*.ts",	
-    "./test/**/*.ts",	
+    "./src/**/*.ts",
     "./node_modules/ethers-typescript-typings/index.d.ts"	
   ],	
   "exclude": [

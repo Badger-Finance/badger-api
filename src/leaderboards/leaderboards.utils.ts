@@ -1,10 +1,14 @@
 import { between } from '@aws/dynamodb-expressions';
+import { BadRequest } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { LeaderBoardType } from './enums/leaderboard-type.enum';
 import { CachedBoost } from './interface/cached-boost.interface';
 
 export const getLeaderBoardEntryRange = async (start: number, end: number): Promise<CachedBoost[]> => {
+  if (start > end) {
+    throw new BadRequest(`Start entry (${start}) must be less than or equal to end (${end})`);
+  }
   const mapper = getDataMapper();
   const data = [];
   for await (const boost of mapper.query(CachedBoost, {
