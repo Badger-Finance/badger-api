@@ -7,6 +7,7 @@ export interface SettBalance {
   balance: number;
   value: number;
   tokens: TokenBalance[];
+  earnedBalance: number;
   earnedValue: number;
   earnedTokens: TokenBalance[];
 }

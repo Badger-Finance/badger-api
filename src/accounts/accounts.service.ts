@@ -69,21 +69,21 @@ export class AccountsService {
           const grossDeposit = parseInt(settBalance.grossDeposit) * ratio;
           const grossWithdraw = parseInt(settBalance.grossWithdraw) * ratio;
           const settTokens = settPricePerFullShare * netShareDeposit;
-          const earned = (settTokens - grossDeposit + grossWithdraw) / Math.pow(10, sett.token.decimals);
+          const earnedBalance = (settTokens - grossDeposit + grossWithdraw) / Math.pow(10, sett.token.decimals);
           const balance = settTokens / Math.pow(10, sett.token.decimals);
 
           const earnedTokenRequest: TokenRequest = {
             chain: chain,
             sett: settDefinition,
-            balance: earned,
+            balance: earnedBalance,
           };
           const balanceTokenRequest: TokenRequest = {
             chain: chain,
             sett: settDefinition,
             balance: balance,
           };
-          const [earnedUsd, balanceUsd, earnedTokens, balanceTokens] = await Promise.all([
-            this.pricesService.getValue(sett.token.id, earned),
+          const [earnedValue, value, earnedTokens, tokens] = await Promise.all([
+            this.pricesService.getValue(sett.token.id, earnedBalance),
             this.pricesService.getValue(sett.token.id, balance),
             this.tokensService.getSettTokens(earnedTokenRequest),
             this.tokensService.getSettTokens(balanceTokenRequest),
@@ -94,10 +94,11 @@ export class AccountsService {
             name: settDefinition.name,
             asset: settDefinition.symbol,
             balance,
-            value: balanceUsd,
-            tokens: balanceTokens,
-            earnedValue: earnedUsd,
-            earnedTokens: earnedTokens,
+            value,
+            tokens,
+            earnedBalance,
+            earnedValue,
+            earnedTokens,
           };
         }),
       );
