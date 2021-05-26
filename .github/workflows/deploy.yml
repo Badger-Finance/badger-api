@@ -23,4 +23,4 @@ jobs:
         if: github.ref == 'refs/heads/staging'
       - name: Deploy Production
         run: yarn deploy:prod
-        if: github.ref == 'refs/heads/staging'
+        if: github.ref == 'refs/heads/main'
