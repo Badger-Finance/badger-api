@@ -79,6 +79,7 @@ export enum Protocol {
 export const CURRENT = 0;
 export const ONE_DAY = 24 * 2;
 export const ONE_MINUTE_MS = 60 * 1000;
+export const ONE_DAY_MS = ONE_MINUTE_MS * 60 * 24;
 export const THREE_DAYS = ONE_DAY * 3;
 export const SEVEN_DAYS = ONE_DAY * 7;
 export const THIRTY_DAYS = ONE_DAY * 30;

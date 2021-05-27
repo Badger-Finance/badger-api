@@ -1,8 +1,7 @@
 import { Inject, Service } from '@tsed/di';
 import { GraphQLClient } from 'graphql-request';
-import { CacheService } from '../../cache/cache.service';
 import { Chain } from '../../chains/config/chain.config';
-import { MASTERCHEF_URL, SUSHI_CHEF, SUSHISWAP_URL, TOKENS } from '../../config/constants';
+import { MASTERCHEF_URL, SUSHISWAP_URL, TOKENS } from '../../config/constants';
 import { getSdk, MasterChefsAndPoolsQuery, OrderDirection, Pool_OrderBy } from '../../graphql/generated/master-chef';
 import { PricesService } from '../../prices/prices.service';
 import { getPrice } from '../../prices/prices.utils';
@@ -18,8 +17,6 @@ export class SushiswapService extends SwapService {
   tokensService!: TokensService;
   @Inject()
   pricesService!: PricesService;
-  @Inject()
-  cacheService!: CacheService;
 
   constructor() {
     super(SUSHISWAP_URL, 'Sushiswap');
@@ -27,22 +24,11 @@ export class SushiswapService extends SwapService {
 
   async getPairPerformance(chain: Chain, sett: SettDefinition): Promise<ValueSource[]> {
     const { depositToken } = sett;
-    const cacheKey = CacheService.getCacheKey(chain.name, depositToken);
-    const cachedValueSource = this.cacheService.get<ValueSource[]>(cacheKey);
-    if (cachedValueSource) {
-      return cachedValueSource;
-    }
-    const sources = await Promise.all([this.getSwapPerformance(depositToken), this.getPoolApr(chain, sett)]);
-    this.cacheService.set(cacheKey, sources);
-    return sources;
+    return Promise.all([this.getSwapPerformance(depositToken), this.getPoolApr(chain, sett)]);
   }
 
   async getPoolApr(chain: Chain, sett: SettDefinition): Promise<ValueSource> {
-    let masterChefData = this.cacheService.get<MasterChefsAndPoolsQuery>(SUSHI_CHEF);
-    if (!masterChefData) {
-      masterChefData = await SushiswapService.getMasterChef();
-      this.cacheService.set(SUSHI_CHEF, masterChefData);
-    }
+    const masterChefData = await SushiswapService.getMasterChef();
     return SushiswapService.getEmissionSource(chain, sett.depositToken, masterChefData);
   }
 
