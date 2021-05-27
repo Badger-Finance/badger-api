@@ -1,4 +1,5 @@
 import { attribute } from '@aws/dynamodb-data-mapper-annotations';
+import { TokenBalance } from './token-balance.interface';
 
 export class CachedTokenBalance {
   @attribute()
@@ -21,4 +22,16 @@ export class CachedTokenBalance {
 
   @attribute()
   valueUsd!: number;
+
+  toTokenBalance(currency?: 'usd' | 'eth'): TokenBalance {
+    const value = currency && currency === 'eth' ? this.valueEth : this.valueUsd;
+    return {
+      value,
+      address: this.address,
+      name: this.name,
+      symbol: this.symbol,
+      decimals: this.decimals,
+      balance: this.balance,
+    };
+  }
 }
