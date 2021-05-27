@@ -67,14 +67,6 @@ export const TOKENS = Object.fromEntries(
   Object.entries(RAW_TOKENS).map(([key, val]) => [key, ethers.utils.getAddress(val)]),
 );
 
-export enum Protocol {
-  Curve = 'curve',
-  Sushiswap = 'sushiswap',
-  Uniswap = 'uniswap',
-  Pancakeswap = 'pancakeswap',
-  Yearn = 'yearn',
-}
-
 // data point constants - index two times per hour, 48 per day
 export const CURRENT = 0;
 export const ONE_DAY = 24 * 2;
@@ -105,6 +97,9 @@ export const BADGER_URL = process.env.BADGER || 'MISSING REQUIRED ENV VAR';
 export const BADGER_BSC_URL = process.env.BADGER_BSC || 'MISSING REQUIRED ENV VAR';
 export const BADGER_DAO_URL = process.env.BADGER_DAO || 'MISSING REQUIRED ENV VAR';
 export const MASTERCHEF_URL = process.env.MASTERCHEF || 'MISSING REQUIRED ENV VAR';
+
+// general constants
+export const STAGE = process.env.STAGE || 'MISSING REQUIRED ENV VAR';
 export const BOUNCER_PROOFS = process.env.BOUNCER_PROOFS || 'MISSING REQUIRED ENV VAR';
 
 // third party api constants

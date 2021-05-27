@@ -2,7 +2,7 @@ import { BigNumber, ethers } from 'ethers';
 import { Chain } from '../../chains/config/chain.config';
 import { guestListAbi } from '../../config/abi/guest-list.abi';
 import { yearnAffiliateVaultWrapperAbi } from '../../config/abi/yearn-affiliate-vault-wrapper.abi';
-import { Protocol } from '../../config/constants';
+import { Protocol } from '../../config/enums/protocol.enum';
 import { SettAffiliateData } from '../../setts/interfaces/sett-affiliate-data.interface';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { getToken } from '../../tokens/tokens.utils';

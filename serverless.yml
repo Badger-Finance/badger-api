@@ -88,6 +88,7 @@ provider:
     SETT_SNAPSHOTS_DATA: ${self:custom.table.SETT_SNAPSHOTS_DATA.${self:custom.stage}}
     REWARD_DATA: ${self:custom.merkleProofs.${self:custom.stage}}
     BOUNCER_PROOFS: badger-bouncer.json
+    STAGE: ${self.custom.stage}
 
 resources:
   Resources:
@@ -227,7 +228,7 @@ functions:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-setts
           description: "index historical data for all setts"
-          rate: rate(5 minutes)
+          rate: rate(15 minutes)
 
   index-apy-snapshots:
     handler: src/indexer/apy-snapshots-indexer.refreshApySnapshots
@@ -272,4 +273,4 @@ functions:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-liquidity-pool-token-balances
           description: "index liquidity pool token balances from the graph"
-          rate: rate(5 minutes)
+          rate: rate(1 minute)

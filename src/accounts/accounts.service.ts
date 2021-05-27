@@ -4,7 +4,7 @@ import { ethers } from 'ethers';
 import { Chain } from '../chains/config/chain.config';
 import { guestListAbi } from '../config/abi/guest-list.abi';
 import { yearnAffiliateVaultWrapperAbi } from '../config/abi/yearn-affiliate-vault-wrapper.abi';
-import { Protocol } from '../config/constants';
+import { Protocol } from '../config/enums/protocol.enum';
 import { getUserLeaderBoardRank } from '../leaderboards/leaderboards.utils';
 import { PricesService } from '../prices/prices.service';
 import { RewardsService } from '../rewards/rewards.service';
