@@ -33,4 +33,5 @@ Certain endpoints which require access to AWS resources may not work appropriate
 The databased used for local testing DynamoDB - a local version with exact table copies of production.
 These tables are seeded with data located in the [seed folder](./seed).
 
-**Note: Running only sls offline will not start or seed dynamo. Run sls offline start, or yarn dev instead.**
+**Note:
+ Running only sls offline will not start or seed dynamo. Run sls offline start, or yarn dev instead.**
