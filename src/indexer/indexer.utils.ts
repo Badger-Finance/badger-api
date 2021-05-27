@@ -5,7 +5,7 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
 import { settAbi } from '../config/abi/abi';
 import { yearnAffiliateVaultWrapperAbi } from '../config/abi/yearn-affiliate-vault-wrapper.abi';
-import { Protocol } from '../config/constants';
+import { Protocol } from '../config/enums/protocol.enum';
 import { toFloat } from '../config/util';
 import { getPrice } from '../prices/prices.utils';
 import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';

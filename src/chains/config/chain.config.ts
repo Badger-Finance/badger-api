@@ -1,5 +1,6 @@
 import { BadRequest } from '@tsed/exceptions';
 import { ethers } from 'ethers';
+import { STAGE } from '../../config/constants';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { TokenConfig } from '../../tokens/types/token-config.type';
 import { ChainNetwork } from '../enums/chain-network.enum';
@@ -37,7 +38,7 @@ export abstract class Chain {
     this.chainId = chainId;
     this.network = network;
     this.tokens = tokens;
-    this.setts = setts;
+    this.setts = setts.filter((sett) => !sett.stage || sett.stage === STAGE);
     this.provider = provider;
     this.strategy = strategy;
     this.graphUrl = graphUrl;

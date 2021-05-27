@@ -5,7 +5,9 @@ import { getLiquidityData } from '../protocols/common/swap.utils';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { bscTokensConfig } from './config/bsc-tokens.config';
 import { ethTokensConfig } from './config/eth-tokens.config';
+import { CachedTokenBalance } from './interfaces/cached-token-balance.interface';
 import { Token } from './interfaces/token.interface';
+import { TokenBalance } from './interfaces/token-balance.interface';
 
 export const protocolTokens = { ...ethTokensConfig, ...bscTokensConfig };
 
@@ -41,3 +43,18 @@ export const getSettTokens = async (chain: Chain, sett: SettDefinition): Promise
   }
   return [depositToken];
 };
+
+export function cachedTokenBalanceToTokenBalance(
+  cachedTokenBalance: CachedTokenBalance,
+  currency?: string,
+): TokenBalance {
+  const value = currency && currency === 'eth' ? cachedTokenBalance.valueEth : cachedTokenBalance.valueUsd;
+  return {
+    value,
+    address: cachedTokenBalance.address,
+    name: cachedTokenBalance.name,
+    symbol: cachedTokenBalance.symbol,
+    decimals: cachedTokenBalance.decimals,
+    balance: cachedTokenBalance.balance,
+  };
+}

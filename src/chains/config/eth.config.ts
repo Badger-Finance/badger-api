@@ -1,5 +1,7 @@
 import { ethers } from 'ethers';
-import { BADGER_URL, Protocol, Provider, TOKENS } from '../../config/constants';
+import { BADGER_URL, Provider, TOKENS } from '../../config/constants';
+import { Protocol } from '../../config/enums/protocol.enum';
+import { Stage } from '../../config/enums/stage.enum';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { ethTokensConfig } from '../../tokens/config/eth-tokens.config';
 import { ChainNetwork } from '../enums/chain-network.enum';
@@ -130,12 +132,13 @@ export const ethSetts: SettDefinition[] = [
     settToken: TOKENS.BSUSHI_IBBTC_WBTC,
     protocol: Protocol.Sushiswap,
   },
-  // {
-  //   name: 'Digg Stabilization',
-  //   createdBlock: 12375910,
-  //   depositToken: TOKENS.DIGG,
-  //   experimental: true,
-  //   settToken: TOKENS.BZS_DIGG,
-  //   symbol: 'ZS-DIGG',
-  // },
+  {
+    name: 'Digg Stabilization',
+    createdBlock: 12375910,
+    depositToken: TOKENS.DIGG,
+    experimental: true,
+    settToken: TOKENS.BZS_DIGG,
+    stage: Stage.Staging,
+    symbol: 'ZS-DIGG',
+  },
 ];

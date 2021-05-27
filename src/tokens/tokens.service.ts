@@ -1,14 +1,17 @@
 import { Inject, Service } from '@tsed/common';
 import { NotFound } from '@tsed/exceptions';
 import { GraphQLClient } from 'graphql-request';
-import { PANCAKESWAP_URL, Protocol, SUSHISWAP_URL, UNISWAP_URL } from '../config/constants';
+import { getDataMapper } from '../aws/dynamodb.utils';
+import { PANCAKESWAP_URL, SUSHISWAP_URL, UNISWAP_URL } from '../config/constants';
+import { Protocol } from '../config/enums/protocol.enum';
 import { getSdk as getUniV2Sdk, UniV2PairQuery } from '../graphql/generated/uniswap';
 import { PricesService } from '../prices/prices.service';
 import { getLiquidityData } from '../protocols/common/swap.utils';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
+import { CachedLiquidityPoolTokenBalance } from './interfaces/cached-liquidity-pool-token-balance.interface';
 import { TokenBalance } from './interfaces/token-balance.interface';
 import { TokenRequest } from './interfaces/token-request.interface';
-import { getToken } from './tokens.utils';
+import { cachedTokenBalanceToTokenBalance, getToken } from './tokens.utils';
 
 @Service()
 export class TokensService {
@@ -45,10 +48,17 @@ export class TokensService {
   async getLiquidityPoolTokenBalances(request: TokenRequest): Promise<TokenBalance[]> {
     const { sett, balance, currency } = request;
     const { depositToken, protocol } = sett;
+    const pairId = depositToken.toLowerCase();
+
+    if (protocol) {
+      const cachedTokenBalances = await this.getCachedTokenBalances(pairId, protocol, currency);
+      if (cachedTokenBalances) {
+        return cachedTokenBalances;
+      }
+    }
 
     const poolData = await TokensService.getPoolData(sett);
 
-    const pairId = depositToken.toLowerCase();
     if (!poolData) {
       throw new NotFound(`${protocol} pool ${pairId} does not exist`);
     }
@@ -77,6 +87,26 @@ export class TokensService {
       value: (await this.pricesService.getValue(pair.token1.id, pair.reserve1, currency)) * valueScalar,
     };
     return [token0, token1];
+  }
+
+  private async getCachedTokenBalances(
+    pairId: string,
+    protocol: string,
+    currency?: string,
+  ): Promise<TokenBalance[] | undefined> {
+    const mapper = getDataMapper();
+    for await (const record of mapper.query(
+      CachedLiquidityPoolTokenBalance,
+      { pairId, protocol },
+      { indexName: 'IndexLiquidityPoolTokenBalancesOnPairIdAndProtocol', limit: 1 },
+    )) {
+      const tokenBalances = [];
+      for (const cachedTokenBalance of record.tokenBalances) {
+        tokenBalances.push(cachedTokenBalanceToTokenBalance(cachedTokenBalance, currency));
+      }
+      return tokenBalances;
+    }
+    return undefined;
   }
 
   static async getPoolData(settDefinition: SettDefinition): Promise<UniV2PairQuery | undefined> {
