@@ -23,7 +23,7 @@ jobs:
         run: sls config credentials -p aws -k ${{ secrets.AWS_ACCESS_KEY_ID }} -s ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: Deploy Staging
         run: yarn deploy
-        if: github.ref == 'refs/heads/staging'
+        if: contains(github.ref, "staing")
       - name: Deploy Production
         run: yarn deploy:prod
-        if: github.ref == 'refs/heads/main'
+        if: contains(github.ref, "main")
