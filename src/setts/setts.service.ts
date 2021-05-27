@@ -24,7 +24,7 @@ import {
 @Service()
 export class SettsService {
   @Inject()
-  private readonly tokensSerivce!: TokensService;
+  private readonly tokensService!: TokensService;
 
   async getProtocolSummary(chain: Chain, currency?: string): Promise<ProtocolSummary> {
     const setts = await Promise.all(
@@ -50,7 +50,7 @@ export class SettsService {
       balance: sett.balance,
       currency: currency,
     };
-    sett.tokens = await this.tokensSerivce.getSettTokens(tokenRequest);
+    sett.tokens = await this.tokensService.getSettTokens(tokenRequest);
     sett.value = sett.tokens.reduce((total, balance) => (total += balance.value), 0);
 
     let sources = await getVaultValueSources(settDefinition);
