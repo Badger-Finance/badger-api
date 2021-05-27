@@ -1,6 +1,7 @@
 # Badger Serverless API
 
-[![CI](https://github.com/Badger-Finance/badger-api/actions/workflows/main.yml/badge.svg)](https://github.com/Badger-Finance/badger-api/actions/workflows/main.yml)
+[![Service Tests](https://github.com/Badger-Finance/badger-api/actions/workflows/test.yml/badge.svg)](https://github.com/Badger-Finance/badger-api/actions/workflows/test.yml)
+[![Deploy](https://github.com/Badger-Finance/badger-api/actions/workflows/deploy.yml/badge.svg)](https://github.com/Badger-Finance/badger-api/actions/workflows/deploy.yml)
 
 Collection of serverless API to enable public access to data surrounding the Badger protocol.
 

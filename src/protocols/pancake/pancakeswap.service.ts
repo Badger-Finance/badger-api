@@ -1,16 +1,15 @@
 import { formatEther } from '@ethersproject/units';
 import { Inject, Service } from '@tsed/di';
 import { BigNumber, ethers } from 'ethers';
-import { CacheService } from '../../cache/cache.service';
 import { Chain } from '../../chains/config/chain.config';
 import { erc20Abi, pancakeChefAbi } from '../../config/abi/abi';
 import { PANCAKE_CHEF, PANCAKESWAP_URL, TOKENS } from '../../config/constants';
-import { PoolInfo } from '../../interface/master-chef.interface';
 import { PricesService } from '../../prices/prices.service';
 import { getTokenPriceData } from '../../prices/prices.utils';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
 import { SwapService } from '../common/swap.service';
+import { PoolInfo } from '../interfaces/master-chef.interface';
 import { uniformPerformance } from '../interfaces/performance.interface';
 import { createValueSource, ValueSource } from '../interfaces/value-source.interface';
 
@@ -18,8 +17,6 @@ import { createValueSource, ValueSource } from '../interfaces/value-source.inter
 export class PancakeSwapService extends SwapService {
   @Inject()
   pricesService!: PricesService;
-  @Inject()
-  cacheService!: CacheService;
 
   constructor() {
     super(PANCAKESWAP_URL, 'Pancakeswap');
@@ -27,30 +24,19 @@ export class PancakeSwapService extends SwapService {
 
   async getPairPerformance(chain: Chain, sett: SettDefinition): Promise<ValueSource[]> {
     const { depositToken } = sett;
-    const cacheKey = CacheService.getCacheKey(chain.name, depositToken);
-    const cachedValueSource = this.cacheService.get<ValueSource[]>(cacheKey);
-    if (cachedValueSource) {
-      return cachedValueSource;
-    }
     const [tradeFeePerformance, poolApr] = await Promise.all([
       this.getSwapPerformance(depositToken),
-      this.getPoolApr(chain, sett.depositToken, PancakeSwapService.getPoolId(sett.depositToken)),
+      this.getPoolApr(chain, PancakeSwapService.getPoolId(sett.depositToken)),
     ]);
     return [tradeFeePerformance, poolApr];
   }
 
-  async getPoolApr(chain: Chain, contract: string, poolId: number): Promise<ValueSource> {
+  async getPoolApr(chain: Chain, poolId: number): Promise<ValueSource> {
     let emissionSource = createValueSource('Cake Rewards', uniformPerformance(0));
     if (!poolId) {
       return emissionSource;
     }
-    const cacheKey = CacheService.getCacheKey(chain.name, contract, poolId.toString());
-    const cachedValueSource = this.cacheService.get<ValueSource>(cacheKey);
-    if (cachedValueSource) {
-      return cachedValueSource;
-    }
     emissionSource = await PancakeSwapService.getEmissionSource(chain, poolId);
-    this.cacheService.set(cacheKey, emissionSource);
     return emissionSource;
   }
 
