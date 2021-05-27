@@ -13,8 +13,6 @@ jobs:
           node-version: '14.x'
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-      - name: Install serverless
-        run: npm install -g serverless
       - name: Build
         run: yarn build
       - name: Lint
