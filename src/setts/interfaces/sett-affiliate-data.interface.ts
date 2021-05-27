@@ -1,4 +1,4 @@
-import { Protocol } from '../../config/constants';
+import { Protocol } from '../../config/enums/protocol.enum';
 
 export interface SettAffiliateData {
   availableDepositLimit?: number;

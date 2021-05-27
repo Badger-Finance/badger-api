@@ -1,4 +1,5 @@
-import { Protocol } from '../../config/constants';
+import { Protocol } from '../../config/enums/protocol.enum';
+import { Stage } from '../../config/enums/stage.enum';
 import { SettAffiliateData } from './sett-affiliate-data.interface';
 
 export interface SettDefinition {
@@ -10,5 +11,6 @@ export interface SettDefinition {
   name: string;
   protocol?: Protocol;
   settToken: string;
+  stage?: Stage;
   symbol: string;
 }

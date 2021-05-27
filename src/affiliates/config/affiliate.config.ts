@@ -1,6 +1,6 @@
 import { BadRequest } from '@tsed/exceptions';
 import { Chain } from '../../chains/config/chain.config';
-import { Protocol } from '../../config/constants';
+import { Protocol } from '../../config/enums/protocol.enum';
 import { SettAffiliateData } from '../../setts/interfaces/sett-affiliate-data.interface';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 

@@ -1,5 +1,6 @@
 import { ethers } from 'ethers';
-import { BADGER_BSC_URL, Protocol, Provider, TOKENS } from '../../config/constants';
+import { BADGER_BSC_URL, Provider, TOKENS } from '../../config/constants';
+import { Protocol } from '../../config/enums/protocol.enum';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { bscTokensConfig } from '../../tokens/config/bsc-tokens.config';
 import { ChainNetwork } from '../enums/chain-network.enum';
