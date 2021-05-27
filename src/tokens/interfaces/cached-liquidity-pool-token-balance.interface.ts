@@ -8,18 +8,10 @@ export class CachedLiquidityPoolTokenBalance {
   @hashKey()
   id!: string;
 
-  @attribute({
-    indexKeyConfigurations: {
-      IndexLiquidityPoolTokenBalancesOnPairIdAndProtocol: 'HASH',
-    },
-  })
+  @attribute()
   pairId!: string;
 
-  @attribute({
-    indexKeyConfigurations: {
-      IndexLiquidityPoolTokenBalancesOnPairIdAndProtocol: 'RANGE',
-    },
-  })
+  @attribute()
   protocol!: string;
 
   @attribute({ memberType: embed(CachedTokenBalance) })
