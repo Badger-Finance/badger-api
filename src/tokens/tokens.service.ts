@@ -1,7 +1,6 @@
 import { Inject, Service } from '@tsed/common';
 import { NotFound } from '@tsed/exceptions';
 import { GraphQLClient } from 'graphql-request';
-import { CacheService } from '../cache/cache.service';
 import { PANCAKESWAP_URL, Protocol, SUSHISWAP_URL, UNISWAP_URL } from '../config/constants';
 import { getSdk as getUniV2Sdk, UniV2PairQuery } from '../graphql/generated/uniswap';
 import { PricesService } from '../prices/prices.service';
@@ -15,8 +14,6 @@ import { getToken } from './tokens.utils';
 export class TokensService {
   @Inject()
   pricesService!: PricesService;
-  @Inject()
-  cacheService!: CacheService;
 
   /**
    * Get token balances within a sett.
