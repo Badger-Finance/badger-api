@@ -1,6 +1,7 @@
 # Badger Serverless API
 
-[![CI](https://github.com/Badger-Finance/badger-api/actions/workflows/main.yml/badge.svg)](https://github.com/Badger-Finance/badger-api/actions/workflows/main.yml)
+[![Service Tests](https://github.com/Badger-Finance/badger-api/actions/workflows/test.yml/badge.svg)](https://github.com/Badger-Finance/badger-api/actions/workflows/test.yml)
+[![Deploy](https://github.com/Badger-Finance/badger-api/actions/workflows/deploy.yml/badge.svg)](https://github.com/Badger-Finance/badger-api/actions/workflows/deploy.yml)
 
 Collection of serverless API to enable public access to data surrounding the Badger protocol.
 
@@ -32,4 +33,5 @@ Certain endpoints which require access to AWS resources may not work appropriate
 The databased used for local testing DynamoDB - a local version with exact table copies of production.
 These tables are seeded with data located in the [seed folder](./seed).
 
-**Note: Running only sls offline will not start or seed dynamo. Run sls offline start, or yarn dev instead.**
+**Note:
+ Running only sls offline will not start or seed dynamo. Run sls offline start, or yarn dev instead.**
