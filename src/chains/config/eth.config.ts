@@ -134,6 +134,7 @@ export const ethSetts: SettDefinition[] = [
   },
   {
     name: 'Digg Stabilization',
+    balanceDecimals: 18,
     createdBlock: 12375910,
     depositToken: TOKENS.DIGG,
     experimental: true,

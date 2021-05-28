@@ -88,7 +88,7 @@ provider:
     SETT_SNAPSHOTS_DATA: ${self:custom.table.SETT_SNAPSHOTS_DATA.${self:custom.stage}}
     REWARD_DATA: ${self:custom.merkleProofs.${self:custom.stage}}
     BOUNCER_PROOFS: badger-bouncer.json
-    STAGE: ${self.custom.stage}
+    STAGE: ${opt:stage, self:provider.stage}
 
 resources:
   Resources:
