@@ -1,5 +1,6 @@
 import { BadRequest } from '@tsed/exceptions';
 import { randomValue, setupMapper } from '../test/tests.utils';
+import { LeaderBoardType } from './enums/leaderboard-type.enum';
 import { CachedBoost } from './interface/cached-boost.interface';
 import { getLeaderBoardEntryRange, getLeaderBoardSize, getUserLeaderBoardRank } from './leaderboards.utils';
 
@@ -13,14 +14,16 @@ describe('leaderboards.utils', () => {
     const minRank = start || 1;
     const maxBoost = 3;
     const maxRatio = 50;
+    const maxMultiplier = 3;
     const entries: CachedBoost[] = [];
     for (let i = 0; i < length; i++) {
       entries.push(
-        Object.assign(CachedBoost, {
-          leaderboard: '',
+        Object.assign(new CachedBoost, {
+          leaderboard: LeaderBoardType.BadgerBoost,
           rank: i + minRank,
           boost: maxBoost - i * 0.01,
           stakeRatio: maxRatio - i * 0.25,
+          nftMultiplier: maxMultiplier - i * 0.01,
           address,
         }),
       );
@@ -83,9 +86,9 @@ describe('leaderboards.utils', () => {
     });
 
     describe('with saved entries', () => {
-      it('returns size 0', async () => {
-        const entries = randomLeaderboard(randomValue());
-        setupMapper(entries);
+      it('returns the leaderboard size', async () => {
+        const entries = randomLeaderboard(randomValue(2, 5));
+        setupMapper(entries.reverse());
         const size = await getLeaderBoardSize();
         expect(size).toEqual(entries.length);
       });
@@ -103,8 +106,8 @@ describe('leaderboards.utils', () => {
 
     describe('with an unranked user', () => {
       it('returns past the maximum rank', async () => {
-        const entries = randomLeaderboard(randomValue());
-        setupMapper(entries);
+        const entries = randomLeaderboard(randomValue(2, 5));
+        setupMapper(entries.reverse());
         const rank = await getUserLeaderBoardRank(address);
         expect(rank).toEqual(entries.length);
       });
