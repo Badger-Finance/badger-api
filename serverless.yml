@@ -264,7 +264,7 @@ functions:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-leaderboard
           description: "index leaderboard data from latest badger boosts"
-          rate: rate(1 hour)
+          rate: rate(1 minute)
 
   index-liquidity-pool-token-balances:
     handler: src/indexer/liquidity-pool-token-balances-indexer.refreshLpTokenBalances

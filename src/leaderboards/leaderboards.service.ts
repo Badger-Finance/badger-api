@@ -44,10 +44,12 @@ export class LeaderBoardsService {
     const boostData: BoostData = JSON.parse(boostFile.toString('utf-8'));
     const boosts: UserBoost[] = Object.entries(boostData.userData).map((entry) => {
       const [address, userBoost] = entry;
+      const { boost, stakeRatio, nftMultiplier } = userBoost;
       return {
         address: ethers.utils.getAddress(address),
-        boost: userBoost.boost,
-        stakeRatio: userBoost.stakeRatio,
+        boost,
+        stakeRatio,
+        nftMultiplier,
       };
     });
     return boosts

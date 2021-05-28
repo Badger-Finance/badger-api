@@ -10,11 +10,14 @@ export class CachedBoost {
   rank!: number;
 
   @attribute()
+  address!: string;
+
+  @attribute()
   boost!: number;
 
   @attribute()
   stakeRatio!: number;
 
   @attribute()
-  address!: string;
+  nftMultiplier!: number;
 }
