@@ -18,7 +18,7 @@ describe('leaderboards.utils', () => {
     const entries: CachedBoost[] = [];
     for (let i = 0; i < length; i++) {
       entries.push(
-        Object.assign(new CachedBoost, {
+        Object.assign(new CachedBoost(), {
           leaderboard: LeaderBoardType.BadgerBoost,
           rank: i + minRank,
           boost: maxBoost - i * 0.01,
