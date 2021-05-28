@@ -32,8 +32,10 @@ export const settToCachedSnapshot = async (
   }
 
   const { balance, totalSupply, pricePerFullShare } = sett;
-  const tokenBalance = balance / Math.pow(10, depositToken.decimals);
-  const supply = totalSupply / Math.pow(10, settToken.decimals);
+  const balanceDecimals = settDefinition.balanceDecimals || depositToken.decimals;
+  const supplyDecimals = settDefinition.supplyDecimals || settToken.decimals;
+  const tokenBalance = balance / Math.pow(10, balanceDecimals);
+  const supply = totalSupply / Math.pow(10, supplyDecimals);
   const ratio = await getPricePerShare(chain, pricePerFullShare, settDefinition);
   const tokenPriceData = await getPrice(depositToken.address);
   const value = tokenBalance * tokenPriceData.usd;
@@ -63,8 +65,10 @@ export const settToSnapshot = async (
   const { balance, totalSupply, pricePerFullShare } = sett.sett;
   const blockData = await chain.provider.getBlock(block);
   const timestamp = blockData.timestamp * 1000;
-  const tokenBalance = balance / Math.pow(10, depositToken.decimals);
-  const supply = totalSupply / Math.pow(10, settToken.decimals);
+  const balanceDecimals = settDefinition.balanceDecimals || depositToken.decimals;
+  const supplyDecimals = settDefinition.supplyDecimals || settToken.decimals;
+  const tokenBalance = balance / Math.pow(10, balanceDecimals);
+  const supply = totalSupply / Math.pow(10, supplyDecimals);
   const ratio = await getPricePerShare(chain, pricePerFullShare, settDefinition, block);
   const tokenPriceData = await getPrice(depositToken.address);
   const value = tokenBalance * tokenPriceData.usd;
@@ -99,9 +103,9 @@ const getPricePerShare = async (
     } else {
       const contract = new ethers.Contract(sett.settToken, settAbi, chain.provider);
       if (block) {
-        ppfs = await contract.getPricePerFulLShare({ blockTag: block });
+        ppfs = await contract.getPricePerFullShare({ blockTag: block });
       } else {
-        ppfs = await contract.getPricePerFulLShare();
+        ppfs = await contract.getPricePerFullShare();
       }
     }
     return toFloat(ppfs, token.decimals);

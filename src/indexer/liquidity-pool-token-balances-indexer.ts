@@ -76,6 +76,5 @@ async function pairToCachedTokenBalance(pair: UniV2PairFragment, balance: number
     valueEth: await tokenPriceInCurrency(token1Price, token1Balance, 'eth'),
     valueUsd: await tokenPriceInCurrency(token1Price, token1Balance, 'usd'),
   };
-  console.log({ token0, token1 });
   return [token0, token1];
 }
