@@ -28,10 +28,12 @@ export class SettsService {
 
   async getProtocolSummary(chain: Chain, currency?: string): Promise<ProtocolSummary> {
     const setts = await Promise.all(
-      chain.setts.map(async (sett) => {
-        const { name, balance, value } = await this.getSett(chain, sett.settToken, currency);
-        return { name, balance, value };
-      }),
+      chain.setts
+        .filter((sett) => !sett.experimental)
+        .map(async (sett) => {
+          const { name, balance, value } = await this.getSett(chain, sett.settToken, currency);
+          return { name, balance, value };
+        }),
     );
     const totalValue = setts.reduce((total, sett) => (total += sett.value), 0);
     return { totalValue, setts };

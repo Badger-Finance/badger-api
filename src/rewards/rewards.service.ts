@@ -107,6 +107,7 @@ export class RewardsService {
       return {
         boost: 1,
         stakeRatio: 0,
+        nftMultiplier: 1,
         multipliers: defaultMultipliers,
       };
     }
@@ -124,7 +125,7 @@ export class RewardsService {
           return value / range;
         })
         .reduce((total, value) => (total += value), 0);
-      const percentile = totalPercentile / Object.entries(boostData).length;
+      const percentile = totalPercentile / Object.entries(userMulipliers).length;
       Object.entries(fileContents.multiplierData).forEach((entry) => {
         const [key, value] = entry;
         if (!includedMultipliers.has(key)) {
