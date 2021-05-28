@@ -4,6 +4,7 @@ import { SettAffiliateData } from './sett-affiliate-data.interface';
 
 export interface SettDefinition {
   affiliate?: SettAffiliateData;
+  balanceDecimals?: number;
   createdBlock: number;
   depositToken: string;
   experimental?: boolean;
@@ -12,5 +13,6 @@ export interface SettDefinition {
   protocol?: Protocol;
   settToken: string;
   stage?: Stage;
+  supplyDecimals?: number;
   symbol: string;
 }
