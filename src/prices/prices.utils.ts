@@ -11,10 +11,10 @@ import { COINGECKO_URL, TOKENS } from '../config/constants';
 import { getSett } from '../setts/setts.utils';
 import { TokenType } from '../tokens/enums/token-type.enum';
 import { Token } from '../tokens/interfaces/token.interface';
+import { TokenConfig } from '../tokens/interfaces/token-config.interface';
 import { PriceData, TokenPrice } from '../tokens/interfaces/token-price.interface';
 import { TokenPriceSnapshot } from '../tokens/interfaces/token-price-snapshot.interface';
 import { getToken, getTokenByName } from '../tokens/tokens.utils';
-import { TokenConfig } from '../tokens/types/token-config.type';
 
 /**
  * Protoype for a token address pricing function.

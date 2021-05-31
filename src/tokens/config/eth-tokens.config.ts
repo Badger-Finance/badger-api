@@ -1,7 +1,7 @@
 import { ChainNetwork } from '../../chains/enums/chain-network.enum';
 import { TOKENS } from '../../config/constants';
 import { TokenType } from '../enums/token-type.enum';
-import { TokenConfig } from '../types/token-config.type';
+import { TokenConfig } from '../interfaces/token-config.interface';
 
 export const ethTokensConfig: TokenConfig = {
   [TOKENS.BADGER]: {

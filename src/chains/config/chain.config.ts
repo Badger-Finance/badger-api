@@ -2,7 +2,7 @@ import { BadRequest } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { STAGE } from '../../config/constants';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
-import { TokenConfig } from '../../tokens/types/token-config.type';
+import { TokenConfig } from '../../tokens/interfaces/token-config.interface';
 import { ChainNetwork } from '../enums/chain-network.enum';
 import { ChainStrategy } from '../strategies/chain.strategy';
 

@@ -1,6 +1,7 @@
-import { ethers } from 'ethers';
+import { ContractRegistry } from './interfaces/contract-registry.interface';
+import { checksumEntries } from './util';
 
-const RAW_TOKENS = {
+const RAW_TOKENS: ContractRegistry = {
   // eth tokens
   BADGER: '0x3472a5a71965499acd81997a54bba8d852c6e53d',
   DIGG: '0x798d1be841a82a273720ce31c822c61a67a601c3',
@@ -63,9 +64,13 @@ const RAW_TOKENS = {
   BPANCAKE_BDIGG_BTCB: '0xa861Ba302674b08f7F2F24381b705870521DDfed',
 };
 
-export const TOKENS = Object.fromEntries(
-  Object.entries(RAW_TOKENS).map(([key, val]) => [key, ethers.utils.getAddress(val)]),
-);
+export const TOKENS = checksumEntries(RAW_TOKENS);
+
+export const RAW_STRATEGIES = {
+  BZS_DIGG: '0xA6af1B913E205B8E9B95D3B30768c0989e942316',
+};
+
+export const STRATEGIES = checksumEntries(RAW_STRATEGIES);
 
 // data point constants - index two times per hour, 48 per day
 export const CURRENT = 0;

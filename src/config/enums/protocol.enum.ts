@@ -1,4 +1,5 @@
 export enum Protocol {
+  Badger = 'badger',
   Curve = 'curve',
   Sushiswap = 'sushiswap',
   Uniswap = 'uniswap',

@@ -266,11 +266,11 @@ functions:
           description: "index leaderboard data from latest badger boosts"
           rate: rate(1 minute)
 
-  index-liquidity-pool-token-balances:
-    handler: src/indexer/liquidity-pool-token-balances-indexer.refreshLpTokenBalances
+  index-token-balances:
+    handler: src/indexer/token-balances-indexer.refreshTokenBalances
     timeout: 60
     events:
       - schedule:
-          name: ${self:service}-${self:custom.stage}-index-liquidity-pool-token-balances
-          description: "index liquidity pool token balances from the graph"
+          name: ${self:service}-${self:custom.stage}-index-token-balances
+          description: "index token balances from the graph"
           rate: rate(1 minute)

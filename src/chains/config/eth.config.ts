@@ -1,9 +1,10 @@
 import { ethers } from 'ethers';
-import { BADGER_URL, Provider, TOKENS } from '../../config/constants';
+import { BADGER_URL, Provider, STRATEGIES, TOKENS } from '../../config/constants';
 import { Protocol } from '../../config/enums/protocol.enum';
 import { Stage } from '../../config/enums/stage.enum';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { ethTokensConfig } from '../../tokens/config/eth-tokens.config';
+import { getZsDiggTokenBalance } from '../../tokens/custom/zs-digg-balance';
 import { ChainNetwork } from '../enums/chain-network.enum';
 import { EthStrategy } from '../strategies/eth.strategy';
 import { Chain } from './chain.config';
@@ -138,8 +139,11 @@ export const ethSetts: SettDefinition[] = [
     createdBlock: 12375910,
     depositToken: TOKENS.DIGG,
     experimental: true,
+    getTokenBalance: getZsDiggTokenBalance,
+    protocol: Protocol.Badger,
     settToken: TOKENS.BZS_DIGG,
     stage: Stage.Staging,
+    strategy: STRATEGIES.BZS_DIGG,
     symbol: 'ZS-DIGG',
   },
 ];
