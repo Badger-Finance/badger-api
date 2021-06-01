@@ -1,6 +1,7 @@
 import { NotFound } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { Chain } from '../chains/config/chain.config';
+import { getPrice, inCurrency } from '../prices/prices.utils';
 import { getLiquidityData } from '../protocols/common/swap.utils';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { bscTokensConfig } from './config/bsc-tokens.config';
@@ -56,5 +57,30 @@ export function cachedTokenBalanceToTokenBalance(
     symbol: cachedTokenBalance.symbol,
     decimals: cachedTokenBalance.decimals,
     balance: cachedTokenBalance.balance,
+  };
+}
+
+export async function toBalance(token: Token, balance: number, currency?: string): Promise<TokenBalance> {
+  const price = await getPrice(token.address);
+  return {
+    address: token.address,
+    name: token.name,
+    symbol: token.symbol,
+    decimals: token.decimals,
+    balance: balance,
+    value: balance * inCurrency(price, currency),
+  };
+}
+
+export async function toCachedBalance(token: Token, balance: number): Promise<CachedTokenBalance> {
+  const price = await getPrice(token.address);
+  return {
+    address: token.address,
+    name: token.name,
+    symbol: token.symbol,
+    decimals: token.decimals,
+    balance: balance,
+    valueUsd: balance * inCurrency(price, 'usd'),
+    valueEth: balance * inCurrency(price, 'eth'),
   };
 }

@@ -1,5 +1,6 @@
 import { BigNumber, ethers } from 'ethers';
 import { ChainNetwork } from '../chains/enums/chain-network.enum';
+import { ContractRegistry } from './interfaces/contract-registry.interface';
 
 export interface EventInput {
   asset: string;
@@ -23,4 +24,8 @@ export const successfulCapture = <T>(value: T | null | undefined): value is T =>
 
 export const toFloat = (balance: BigNumber, decimals: number): number => {
   return parseFloat(ethers.utils.formatUnits(balance, decimals));
+};
+
+export const checksumEntries = (registry: ContractRegistry): ContractRegistry => {
+  return Object.fromEntries(Object.entries(registry).map(([key, val]) => [key, ethers.utils.getAddress(val)]));
 };
