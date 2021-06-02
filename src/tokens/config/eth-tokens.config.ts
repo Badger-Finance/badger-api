@@ -75,7 +75,7 @@ export const ethTokensConfig: TokenConfig = {
     address: TOKENS.IBBTC,
     decimals: 18,
     name: 'ibBTC',
-    symbol: 'bBTC',
+    symbol: 'ibBTC',
     type: TokenType.Index,
   },
   [TOKENS.SUSHI_BADGER_WBTC]: {
