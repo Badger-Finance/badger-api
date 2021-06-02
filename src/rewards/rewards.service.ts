@@ -122,7 +122,7 @@ export class RewardsService {
           const min = fileContents.multiplierData[key].min;
           const max = fileContents.multiplierData[key].max;
           const range = max - min;
-          return value / range;
+          return (value - min) / range;
         })
         .reduce((total, value) => (total += value), 0);
       const percentile = totalPercentile / Object.entries(userMulipliers).length;
