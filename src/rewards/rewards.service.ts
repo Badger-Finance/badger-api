@@ -103,10 +103,6 @@ export class RewardsService {
     Object.keys(fileContents.multiplierData).forEach(
       (key) => (defaultMultipliers[key] = fileContents.multiplierData[key].min),
     );
-    const maxMultipliers: BoostMultipliers = {};
-    Object.keys(fileContents.multiplierData).forEach(
-      (key) => (maxMultipliers[key] = fileContents.multiplierData[key].max),
-    );
     if (!boostData) {
       return {
         boost: 1,
