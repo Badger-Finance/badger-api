@@ -1,12 +1,13 @@
-import { Controller, Get, Inject, QueryParams } from '@tsed/common';
+import { Controller, Get, Inject, QueryParams, UsePipe } from '@tsed/common';
 import { NotFound } from '@tsed/exceptions';
 import { ContentType } from '@tsed/schema';
 import { ethers } from 'ethers';
 import { Chain } from '../chains/config/chain.config';
-import { ChainNetwork } from '../chains/enums/chain-network.enum';
+import { ValidationPipe } from '../common/validation-pipe';
 import { SettSnapshot } from '../setts/interfaces/sett-snapshot.interface';
 import { SettsService } from '../setts/setts.service';
 import { getSettSnapshots } from '../setts/setts.utils';
+import { ChartsQueryDto } from './dto/charts-query.dto';
 
 @Controller('/charts')
 export class ChartsController {
@@ -15,10 +16,8 @@ export class ChartsController {
 
   @Get()
   @ContentType('json')
-  getChart(
-    @QueryParams('id') settToken: string,
-    // @QueryParams('count') count?: number,
-    @QueryParams('chain') chain?: ChainNetwork,
+  async getChart(
+    @UsePipe(ValidationPipe) @QueryParams() { id: settToken, chain }: ChartsQueryDto,
   ): Promise<SettSnapshot[]> {
     const checksumContract = ethers.utils.getAddress(settToken);
     const sett = Chain.getChain(chain).setts.find((sett) => sett.settToken === checksumContract);
