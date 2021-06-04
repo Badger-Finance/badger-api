@@ -1,11 +1,29 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ChartsController GET /v2/charts with an invalid address returns a 404 1`] = `
+exports[`ChartsController GET /v2/charts with an unsupported address returns a 404 1`] = `
 Object {
   "errors": Array [],
   "message": "0x4206942069420694206942069420694206942069 is not a valid sett",
   "name": "NOT_FOUND",
   "status": 404,
+}
+`;
+
+exports[`ChartsController GET /v2/charts with invalid args with a large time range for DAY granularity returns a 422 1`] = `
+Object {
+  "errors": Array [],
+  "message": "Too many data points to return. Increase the period or shorten the time range.",
+  "name": "UNPROCESSABLE_ENTITY",
+  "status": 422,
+}
+`;
+
+exports[`ChartsController GET /v2/charts with invalid args with a large time range for HOUR granularity returns a 422 1`] = `
+Object {
+  "errors": Array [],
+  "message": "Too many data points to return. Increase the period or shorten the time range.",
+  "name": "UNPROCESSABLE_ENTITY",
+  "status": 422,
 }
 `;
 
@@ -18,7 +36,61 @@ Object {
 }
 `;
 
+exports[`ChartsController GET /v2/charts with invalid args with an invalid address returns a 422 1`] = `
+Object {
+  "errors": Array [],
+  "message": "Validation failed",
+  "name": "UNPROCESSABLE_ENTITY",
+  "status": 422,
+}
+`;
+
 exports[`ChartsController GET /v2/charts with invalid args with an invalid chain returns a 422 1`] = `
+Object {
+  "errors": Array [],
+  "message": "Validation failed",
+  "name": "UNPROCESSABLE_ENTITY",
+  "status": 422,
+}
+`;
+
+exports[`ChartsController GET /v2/charts with invalid args with an invalid granularity returns a 422 1`] = `
+Object {
+  "errors": Array [],
+  "message": "Validation failed",
+  "name": "UNPROCESSABLE_ENTITY",
+  "status": 422,
+}
+`;
+
+exports[`ChartsController GET /v2/charts with invalid args with an invalid period returns a 422 1`] = `
+Object {
+  "errors": Array [],
+  "message": "Validation failed",
+  "name": "UNPROCESSABLE_ENTITY",
+  "status": 422,
+}
+`;
+
+exports[`ChartsController GET /v2/charts with invalid args with an invalid time range returns a 422 1`] = `
+Object {
+  "errors": Array [],
+  "message": "\\"start\\" must be strictly less than \\"end\\"",
+  "name": "UNPROCESSABLE_ENTITY",
+  "status": 422,
+}
+`;
+
+exports[`ChartsController GET /v2/charts with invalid args with end but no start returns a 422 1`] = `
+Object {
+  "errors": Array [],
+  "message": "Validation failed",
+  "name": "UNPROCESSABLE_ENTITY",
+  "status": 422,
+}
+`;
+
+exports[`ChartsController GET /v2/charts with invalid args with start but no end returns a 422 1`] = `
 Object {
   "errors": Array [],
   "message": "Validation failed",
