@@ -2,27 +2,30 @@
 
 exports[`ChartsController GET /v2/charts with an invalid address returns a 404 1`] = `
 Object {
-  "errors": Array [],
   "message": "0x4206942069420694206942069420694206942069 is not a valid sett",
-  "name": "NOT_FOUND",
-  "status": 404,
 }
 `;
 
 exports[`ChartsController GET /v2/charts with invalid args with a missing id returns a 422 1`] = `
 Object {
-  "errors": Array [],
+  "errors": Array [
+    Object {
+      "code": "id must be a string",
+      "field": "id",
+    },
+  ],
   "message": "Validation failed",
-  "name": "UNPROCESSABLE_ENTITY",
-  "status": 422,
 }
 `;
 
 exports[`ChartsController GET /v2/charts with invalid args with an invalid chain returns a 422 1`] = `
 Object {
-  "errors": Array [],
+  "errors": Array [
+    Object {
+      "code": "chain must be a valid enum value",
+      "field": "chain",
+    },
+  ],
   "message": "Validation failed",
-  "name": "UNPROCESSABLE_ENTITY",
-  "status": 422,
 }
 `;

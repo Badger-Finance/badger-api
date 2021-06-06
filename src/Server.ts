@@ -1,4 +1,5 @@
 import '@tsed/platform-express';
+import './common/filters/badger-exception-filter';
 import { Configuration, Inject, PlatformApplication } from '@tsed/common';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
