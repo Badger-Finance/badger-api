@@ -1,0 +1,109 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ChartsController GET /v2/charts with an unsupported address returns a 404 1`] = `
+Object {
+  "message": "0x4206942069420694206942069420694206942069 is not a valid sett",
+}
+`;
+
+exports[`ChartsController GET /v2/charts with invalid args with a large time range for DAY granularity returns a 422 1`] = `
+Object {
+  "message": "Too many data points to return. Increase the period or shorten the time range.",
+}
+`;
+
+exports[`ChartsController GET /v2/charts with invalid args with a large time range for HOUR granularity returns a 422 1`] = `
+Object {
+  "message": "Too many data points to return. Increase the period or shorten the time range.",
+}
+`;
+
+exports[`ChartsController GET /v2/charts with invalid args with a missing id returns a 422 1`] = `
+Object {
+  "errors": Array [
+    Object {
+      "code": "id must be an Ethereum address",
+      "field": "id",
+    },
+  ],
+  "message": "Validation failed",
+}
+`;
+
+exports[`ChartsController GET /v2/charts with invalid args with an invalid address returns a 422 1`] = `
+Object {
+  "errors": Array [
+    Object {
+      "code": "id must be an Ethereum address",
+      "field": "id",
+    },
+  ],
+  "message": "Validation failed",
+}
+`;
+
+exports[`ChartsController GET /v2/charts with invalid args with an invalid chain returns a 422 1`] = `
+Object {
+  "errors": Array [
+    Object {
+      "code": "chain must be a valid enum value",
+      "field": "chain",
+    },
+  ],
+  "message": "Validation failed",
+}
+`;
+
+exports[`ChartsController GET /v2/charts with invalid args with an invalid granularity returns a 422 1`] = `
+Object {
+  "errors": Array [
+    Object {
+      "code": "granularity must be a valid enum value",
+      "field": "granularity",
+    },
+  ],
+  "message": "Validation failed",
+}
+`;
+
+exports[`ChartsController GET /v2/charts with invalid args with an invalid period returns a 422 1`] = `
+Object {
+  "errors": Array [
+    Object {
+      "code": "period must be a positive number",
+      "field": "period",
+    },
+  ],
+  "message": "Validation failed",
+}
+`;
+
+exports[`ChartsController GET /v2/charts with invalid args with an invalid time range returns a 422 1`] = `
+Object {
+  "message": "\\"start\\" must be strictly less than \\"end\\"",
+}
+`;
+
+exports[`ChartsController GET /v2/charts with invalid args with end but no start returns a 422 1`] = `
+Object {
+  "errors": Array [
+    Object {
+      "code": "start must be a valid ISO 8601 date string",
+      "field": "start",
+    },
+  ],
+  "message": "Validation failed",
+}
+`;
+
+exports[`ChartsController GET /v2/charts with invalid args with start but no end returns a 422 1`] = `
+Object {
+  "errors": Array [
+    Object {
+      "code": "end must be a valid ISO 8601 date string",
+      "field": "end",
+    },
+  ],
+  "message": "Validation failed",
+}
+`;
