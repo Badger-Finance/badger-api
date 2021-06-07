@@ -13,7 +13,23 @@ export class ValidationPipe implements PipeMethods {
     const errors = await validate(object as Record<string, unknown>);
 
     if (errors.length > 0) {
-      throw new UnprocessableEntity('Validation failed');
+      const errorConstraints = [];
+      for (const error of errors) {
+        const { constraints } = error;
+        if (constraints) {
+          const keys = Object.keys(constraints);
+          if (keys.length > 0) {
+            errorConstraints.push({
+              field: error.property,
+              code: constraints[keys[0]],
+            });
+          }
+        }
+      }
+
+      throw new UnprocessableEntity('Validation failed', {
+        errors: errorConstraints,
+      });
     }
 
     return value;
