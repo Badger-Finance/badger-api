@@ -4,6 +4,7 @@ import { BinanceSmartChain } from '../chains/config/bsc.config';
 import { Ethereum } from '../chains/config/eth.config';
 import { ONE_DAY_MS, SAMPLE_DAYS } from '../config/constants';
 import { randomValue, setupMapper } from '../test/tests.utils';
+import { getToken } from '../tokens/tokens.utils';
 import { CachedSettSnapshot } from './interfaces/cached-sett-snapshot.interface';
 import { SettDefinition } from './interfaces/sett-definition.interface';
 import { SettSnapshot } from './interfaces/sett-snapshot.interface';
@@ -63,8 +64,9 @@ describe('setts.utils', () => {
   describe('defaultSett', () => {
     it('returns a sett default fields', () => {
       const settDefinition = randomSett();
+      const settToken = getToken(settDefinition.settToken);
       const expected = {
-        asset: settDefinition.symbol,
+        asset: settToken.symbol,
         apr: 0,
         balance: 0,
         boostable: false,

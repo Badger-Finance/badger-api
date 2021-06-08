@@ -17,5 +17,4 @@ export interface SettDefinition {
   stage?: Stage;
   strategy?: string;
   supplyDecimals?: number;
-  symbol: string;
 }

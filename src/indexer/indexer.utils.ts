@@ -74,7 +74,7 @@ export const settToSnapshot = async (
   const value = tokenBalance * tokenPriceData.usd;
 
   return Object.assign(new SettSnapshot(), {
-    asset: settDefinition.symbol.toLowerCase(),
+    asset: settToken.symbol.toLowerCase(),
     height: block,
     timestamp,
     balance: tokenBalance,
@@ -114,12 +114,13 @@ const getPricePerShare = async (
   }
 };
 
-export const getIndexedBlock = async (sett: SettDefinition, startBlock: number): Promise<number> => {
+export const getIndexedBlock = async (settDefinition: SettDefinition, startBlock: number): Promise<number> => {
   try {
     const mapper = getDataMapper();
+    const settToken = getToken(settDefinition.settToken);
     for await (const snapshot of mapper.query(
       SettSnapshot,
-      { asset: sett.symbol.toLowerCase() },
+      { asset: settToken.symbol.toLowerCase() },
       { limit: 1, scanIndexForward: false },
     )) {
       return snapshot.height;

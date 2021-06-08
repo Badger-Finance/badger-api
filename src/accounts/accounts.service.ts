@@ -4,6 +4,7 @@ import { ethers } from 'ethers';
 import { Chain } from '../chains/config/chain.config';
 import { guestListAbi } from '../config/abi/guest-list.abi';
 import { yearnAffiliateVaultWrapperAbi } from '../config/abi/yearn-affiliate-vault-wrapper.abi';
+import { TOKENS } from '../config/constants';
 import { Protocol } from '../config/enums/protocol.enum';
 import { getUserLeaderBoardRank } from '../leaderboards/leaderboards.utils';
 import { PricesService } from '../prices/prices.service';
@@ -58,10 +59,11 @@ export class AccountsService {
           if (!settDefinition) {
             throw new InternalServerError('Unable to fetch user account');
           }
+          const settToken = getToken(settDefinition.settToken);
 
           let ratio = 1;
           let settPricePerFullShare = parseInt(sett.pricePerFullShare) / 1e18;
-          if (settDefinition.symbol.toLowerCase() === 'digg') {
+          if (settDefinition.settToken === TOKENS.DIGG) {
             ratio = sett.balance / sett.totalSupply / settPricePerFullShare;
             settPricePerFullShare = sett.balance / sett.totalSupply;
           }
@@ -92,7 +94,7 @@ export class AccountsService {
           return {
             id: settDefinition.settToken,
             name: settDefinition.name,
-            asset: settDefinition.symbol,
+            asset: settToken.symbol,
             balance,
             value,
             tokens,

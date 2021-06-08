@@ -17,7 +17,6 @@ describe('TokensController', () => {
     describe('with no specified chain', () => {
       it('returns eth token config', async (done: jest.DoneCallback) => {
         const { body } = await request.get('/v2/tokens').expect(200);
-
         expect(body).toMatchSnapshot();
         done();
       });
@@ -26,14 +25,12 @@ describe('TokensController', () => {
     describe('with a specified chain', () => {
       it('returns the specified token config for eth', async (done: jest.DoneCallback) => {
         const { body } = await request.get('/v2/tokens?chain=eth').expect(200);
-
         expect(body).toMatchSnapshot();
         done();
       });
 
       it('returns the specified token config for bsc', async (done: jest.DoneCallback) => {
         const { body } = await request.get('/v2/tokens?chain=bsc').expect(200);
-
         expect(body).toMatchSnapshot();
         done();
       });
@@ -42,7 +39,6 @@ describe('TokensController', () => {
     describe('with an invalid specified chain', () => {
       it('returns a 400', async (done: jest.DoneCallback) => {
         const { body } = await request.get('/v2/tokens?chain=invalid').expect(BadRequest.STATUS);
-
         expect(body).toMatchSnapshot();
         done();
       });
