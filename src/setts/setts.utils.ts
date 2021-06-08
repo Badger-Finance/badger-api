@@ -5,6 +5,7 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
 import { ONE_YEAR_MS, SAMPLE_DAYS } from '../config/constants';
 import { getSdk, SettQuery, SettQueryVariables } from '../graphql/generated/badger';
+import { getToken } from '../tokens/tokens.utils';
 import { CachedSettSnapshot } from './interfaces/cached-sett-snapshot.interface';
 import { Sett } from './interfaces/sett.interface.';
 import { SettDefinition } from './interfaces/sett-definition.interface';
@@ -13,8 +14,9 @@ import { SettSnapshot } from './interfaces/sett-snapshot.interface';
 export const VAULT_SOURCE = 'Vault Compounding';
 
 export const defaultSett = (settDefinition: SettDefinition): Sett => {
+  const assetToken = getToken(settDefinition.settToken);
   return {
-    asset: settDefinition.symbol,
+    asset: assetToken.symbol,
     apr: 0,
     balance: 0,
     boostable: false,
@@ -67,13 +69,14 @@ export const getCachedSett = async (settDefinition: SettDefinition): Promise<Set
   }
 };
 
-export const getSettSnapshots = async (sett: SettDefinition): Promise<SettSnapshot[]> => {
+export const getSettSnapshots = async (settDefinition: SettDefinition): Promise<SettSnapshot[]> => {
   try {
     const snapshots = [];
     const mapper = getDataMapper();
+    const assetToken = getToken(settDefinition.settToken);
     for await (const snapshot of mapper.query(
       SettSnapshot,
-      { asset: sett.symbol.toLowerCase() },
+      { asset: assetToken.symbol.toLowerCase() },
       { limit: SAMPLE_DAYS, scanIndexForward: false },
     )) {
       snapshots.push(snapshot);

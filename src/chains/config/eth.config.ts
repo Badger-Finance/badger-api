@@ -33,13 +33,11 @@ export const ethSetts: SettDefinition[] = [
     createdBlock: 11380877,
     depositToken: TOKENS.CRV_SBTC,
     settToken: TOKENS.BCRV_SBTC,
-    symbol: 'sBTCCRV',
     protocol: Protocol.Curve,
   },
   {
     name: 'Curve.fi crvRenWBTC',
     createdBlock: 11380872,
-    symbol: 'renBTCCRV',
     depositToken: TOKENS.CRV_RENBTC,
     settToken: TOKENS.BCRV_RENBTC,
     protocol: Protocol.Curve,
@@ -47,7 +45,6 @@ export const ethSetts: SettDefinition[] = [
   {
     name: 'Curve.fi tBTC/sBTCCrv LP',
     createdBlock: 11380878,
-    symbol: 'tBTCCRV',
     depositToken: TOKENS.CRV_TBTC,
     settToken: TOKENS.BCRV_TBTC,
     protocol: Protocol.Curve,
@@ -55,7 +52,6 @@ export const ethSetts: SettDefinition[] = [
   {
     name: 'Harvest Curve.fi crvRenWBTC',
     createdBlock: 11380939,
-    symbol: 'hrenBTCCRV',
     depositToken: TOKENS.CRV_RENBTC,
     settToken: TOKENS.BCRV_HRENBTC,
     protocol: Protocol.Curve,
@@ -63,7 +59,6 @@ export const ethSetts: SettDefinition[] = [
   {
     name: 'Uniswap Wrapped BTC/Badger',
     createdBlock: 11380883,
-    symbol: 'BADGER-WBTC',
     depositToken: TOKENS.UNI_BADGER_WBTC,
     settToken: TOKENS.BUNI_BADGER_WBTC,
     protocol: Protocol.Uniswap,
@@ -71,7 +66,6 @@ export const ethSetts: SettDefinition[] = [
   {
     name: 'Uniswap Wrapped BTC/Digg',
     createdBlock: 11680833,
-    symbol: 'DIGG-WBTC',
     depositToken: TOKENS.UNI_DIGG_WBTC,
     settToken: TOKENS.BUNI_DIGG_WBTC,
     protocol: Protocol.Uniswap,
@@ -79,7 +73,6 @@ export const ethSetts: SettDefinition[] = [
   {
     name: 'Sushiswap Wrapped BTC/Wrapped Ether',
     createdBlock: 11539529,
-    symbol: 'SLP-WBTC-ETH',
     depositToken: TOKENS.SUSHI_ETH_WBTC,
     settToken: TOKENS.BSUSHI_ETH_WBTC,
     protocol: Protocol.Sushiswap,
@@ -87,7 +80,6 @@ export const ethSetts: SettDefinition[] = [
   {
     name: 'Sushiswap Wrapped BTC/Badger',
     createdBlock: 11537600,
-    symbol: 'SLP-BADGER-WBTC',
     depositToken: TOKENS.SUSHI_BADGER_WBTC,
     settToken: TOKENS.BSUSHI_BADGER_WBTC,
     protocol: Protocol.Sushiswap,
@@ -95,7 +87,6 @@ export const ethSetts: SettDefinition[] = [
   {
     name: 'Sushiswap Wrapped BTC/Digg',
     createdBlock: 11681030,
-    symbol: 'SLP-DIGG-WBTC',
     depositToken: TOKENS.SUSHI_DIGG_WBTC,
     settToken: TOKENS.BSUSHI_DIGG_WBTC,
     protocol: Protocol.Sushiswap,
@@ -103,14 +94,12 @@ export const ethSetts: SettDefinition[] = [
   {
     name: 'Digg',
     createdBlock: 11680422,
-    symbol: 'DIGG',
     depositToken: TOKENS.DIGG,
     settToken: TOKENS.BDIGG,
   },
   {
     name: 'Badger',
     createdBlock: 11380871,
-    symbol: 'BADGER',
     depositToken: TOKENS.BADGER,
     settToken: TOKENS.BBADGER,
   },
@@ -118,7 +107,6 @@ export const ethSetts: SettDefinition[] = [
     hasBouncer: true,
     createdBlock: 12246710,
     name: 'Yearn WBTC',
-    symbol: 'byvWBTC',
     depositToken: TOKENS.WBTC,
     settToken: TOKENS.BVYWBTC,
     affiliate: {
@@ -128,7 +116,6 @@ export const ethSetts: SettDefinition[] = [
   {
     name: 'Sushiswap Wrapped BTC/ibBTC',
     createdBlock: 12383984,
-    symbol: 'SLP-IBBTC-WBTC',
     depositToken: TOKENS.SUSHI_IBBTC_WBTC,
     settToken: TOKENS.BSUSHI_IBBTC_WBTC,
     protocol: Protocol.Sushiswap,
@@ -144,6 +131,37 @@ export const ethSetts: SettDefinition[] = [
     settToken: TOKENS.BZS_DIGG,
     stage: Stage.Staging,
     strategy: STRATEGIES.BZS_DIGG,
-    symbol: 'ZS-DIGG',
+  },
+  {
+    name: 'Curve.fi hBTC/wBTC',
+    createdBlock: 12589485,
+    depositToken: TOKENS.CRV_HBTC,
+    settToken: TOKENS.BCRV_HBTC,
+    stage: Stage.Staging,
+    protocol: Protocol.Curve,
+  },
+  {
+    name: 'Curve.fi pBTC/wBTC',
+    createdBlock: 12589485,
+    depositToken: TOKENS.CRV_PBTC,
+    settToken: TOKENS.BCRV_PBTC,
+    stage: Stage.Staging,
+    protocol: Protocol.Curve,
+  },
+  {
+    name: 'Curve.fi oBTC/wBTC',
+    createdBlock: 12589485,
+    depositToken: TOKENS.CRV_OBTC,
+    settToken: TOKENS.BCRV_OBTC,
+    stage: Stage.Staging,
+    protocol: Protocol.Curve,
+  },
+  {
+    name: 'Curve.fi bBTC/wBTC',
+    createdBlock: 12589485,
+    depositToken: TOKENS.CRV_BBTC,
+    settToken: TOKENS.BCRV_BBTC,
+    stage: Stage.Staging,
+    protocol: Protocol.Curve,
   },
 ];
