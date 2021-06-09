@@ -36,21 +36,21 @@ export const ethSetts: SettDefinition[] = [
     protocol: Protocol.Curve,
   },
   {
-    name: 'Curve.fi crvRenWBTC',
+    name: 'Curve.fi renBTC/wBTC',
     createdBlock: 11380872,
     depositToken: TOKENS.CRV_RENBTC,
     settToken: TOKENS.BCRV_RENBTC,
     protocol: Protocol.Curve,
   },
   {
-    name: 'Curve.fi tBTC/sBTCCrv LP',
+    name: 'Curve.fi tBTC/sBTC',
     createdBlock: 11380878,
     depositToken: TOKENS.CRV_TBTC,
     settToken: TOKENS.BCRV_TBTC,
     protocol: Protocol.Curve,
   },
   {
-    name: 'Harvest Curve.fi crvRenWBTC',
+    name: 'Harvest-Curve.fi renBTC/wBTC',
     createdBlock: 11380939,
     depositToken: TOKENS.CRV_RENBTC,
     settToken: TOKENS.BCRV_HRENBTC,
@@ -106,7 +106,7 @@ export const ethSetts: SettDefinition[] = [
   {
     hasBouncer: true,
     createdBlock: 12246710,
-    name: 'Yearn WBTC',
+    name: 'Yearn Wrapped BTC',
     depositToken: TOKENS.WBTC,
     settToken: TOKENS.BVYWBTC,
     affiliate: {
@@ -159,7 +159,7 @@ export const ethSetts: SettDefinition[] = [
   {
     name: 'Curve.fi bBTC/wBTC',
     createdBlock: 12589485,
-    depositToken: TOKENS.CRV_BBTC,
+    depositToken: TOKENS.CRV_RENBTC,
     settToken: TOKENS.BCRV_BBTC,
     stage: Stage.Staging,
     protocol: Protocol.Curve,

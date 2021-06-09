@@ -64,7 +64,7 @@ describe('setts.utils', () => {
   describe('defaultSett', () => {
     it('returns a sett default fields', () => {
       const settDefinition = randomSett();
-      const settToken = getToken(settDefinition.settToken);
+      const settToken = getToken(settDefinition.depositToken);
       const expected = {
         asset: settToken.symbol,
         apr: 0,

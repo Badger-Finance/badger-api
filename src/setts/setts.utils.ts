@@ -14,7 +14,7 @@ import { SettSnapshot } from './interfaces/sett-snapshot.interface';
 export const VAULT_SOURCE = 'Vault Compounding';
 
 export const defaultSett = (settDefinition: SettDefinition): Sett => {
-  const assetToken = getToken(settDefinition.settToken);
+  const assetToken = getToken(settDefinition.depositToken);
   return {
     asset: assetToken.symbol,
     apr: 0,
