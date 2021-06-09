@@ -45,7 +45,6 @@ export class SettsService {
 
   async getSett(chain: Chain, contract: string, currency?: string): Promise<Sett> {
     const settDefinition = getSettDefinition(chain, contract);
-    console.log('get chaced sett + value sources');
     const [sett, sources]: [Sett, ValueSource[]] = await Promise.all([
       getCachedSett(settDefinition),
       getVaultValueSources(settDefinition),
