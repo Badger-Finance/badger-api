@@ -30,7 +30,7 @@ export const ethTokensConfig: TokenConfig = {
     decimals: 18,
     lookupName: 'wrapped-bitcoin',
     name: 'Curve.fi: renCrv Token',
-    symbol: 'crvrenBTC',
+    symbol: 'crvrenWBTC',
     type: TokenType.Contract,
   },
   [TOKENS.CRV_SBTC]: {
@@ -102,14 +102,6 @@ export const ethTokensConfig: TokenConfig = {
     symbol: 'crvoBTC',
     type: TokenType.Contract,
   },
-  [TOKENS.CRV_BBTC]: {
-    address: TOKENS.CRV_BBTC,
-    decimals: 18,
-    lookupName: 'binance-wrapped-btc',
-    name: 'Binance Wrapper BTC',
-    symbol: 'crvbBTC',
-    type: TokenType.Contract,
-  },
   [TOKENS.CRV]: {
     address: TOKENS.CRV,
     decimals: 18,
@@ -136,7 +128,7 @@ export const ethTokensConfig: TokenConfig = {
     decimals: 18,
     lpToken: true,
     name: 'SushiSwap: WBTC-BADGER',
-    symbol: 'Badger Sett SushiSwap LP Token (bSLP)',
+    symbol: 'SLP-BADGER-WBTC',
     type: TokenType.SushiswapLp,
   },
   [TOKENS.SUSHI_DIGG_WBTC]: {
@@ -144,7 +136,7 @@ export const ethTokensConfig: TokenConfig = {
     decimals: 18,
     lpToken: true,
     name: 'SushiSwap: WBTC-DIGG',
-    symbol: 'SushiSwap WBTC/DIGG LP (SLP)',
+    symbol: 'SLP-DIGG-WBTC',
     type: TokenType.SushiswapLp,
   },
   [TOKENS.SUSHI_ETH_WBTC]: {
@@ -152,7 +144,7 @@ export const ethTokensConfig: TokenConfig = {
     decimals: 18,
     lpToken: true,
     name: 'SushiSwap: WBTC-ETH',
-    symbol: 'SushiSwap WBTC/ETH LP (SLP)',
+    symbol: 'SLP-WBTC-ETH',
     type: TokenType.SushiswapLp,
   },
   [TOKENS.SUSHI_IBBTC_WBTC]: {
@@ -160,7 +152,7 @@ export const ethTokensConfig: TokenConfig = {
     decimals: 18,
     lpToken: true,
     name: 'SushiSwap: ibBTC-WBTC',
-    symbol: 'SushiSwap ibBTC/WBTC LP (SLP)',
+    symbol: 'SLP-IBBTC-WBTC',
     type: TokenType.SushiswapLp,
   },
   [TOKENS.UNI_BADGER_WBTC]: {
@@ -168,7 +160,7 @@ export const ethTokensConfig: TokenConfig = {
     decimals: 18,
     lpToken: true,
     name: 'Uniswap V2: WBTC-BADGER',
-    symbol: 'Uniswap WBTC/BADGER LP (UNI-V2)',
+    symbol: 'BADGER-WBTC',
     type: TokenType.UniswapLp,
   },
   [TOKENS.UNI_DIGG_WBTC]: {
@@ -176,7 +168,7 @@ export const ethTokensConfig: TokenConfig = {
     decimals: 18,
     lpToken: true,
     name: 'Uniswap V2: WBTC-DIGG',
-    symbol: 'Uniswap WBTC/DIGG LP (UNI-V2)',
+    symbol: 'DIGG-WBTC',
     type: TokenType.UniswapLp,
   },
   [TOKENS.FARM]: {
@@ -387,7 +379,7 @@ export const ethTokensConfig: TokenConfig = {
     symbol: 'bcrvbBTC',
     type: TokenType.Vault,
     vaultToken: {
-      address: TOKENS.CRV_BBTC,
+      address: TOKENS.CRV_RENBTC,
       network: ChainNetwork.Ethereum,
     },
   },

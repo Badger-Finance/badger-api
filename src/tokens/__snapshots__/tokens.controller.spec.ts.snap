@@ -142,7 +142,7 @@ Object {
     "decimals": 18,
     "lpToken": true,
     "name": "SushiSwap: WBTC-BADGER",
-    "symbol": "Badger Sett SushiSwap LP Token (bSLP)",
+    "symbol": "SLP-BADGER-WBTC",
     "type": "SushiswapLp",
   },
   "0x1862A18181346EBd9EdAf800804f89190DeF24a5": Object {
@@ -161,7 +161,7 @@ Object {
     "decimals": 18,
     "lpToken": true,
     "name": "SushiSwap: ibBTC-WBTC",
-    "symbol": "SushiSwap ibBTC/WBTC LP (SLP)",
+    "symbol": "SLP-IBBTC-WBTC",
     "type": "SushiswapLp",
   },
   "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28": Object {
@@ -218,9 +218,9 @@ Object {
   "0x49849C98ae39Fff122806C06791Fa73784FB3675": Object {
     "address": "0x49849C98ae39Fff122806C06791Fa73784FB3675",
     "decimals": 18,
-    "lookupName": "binance-wrapped-btc",
-    "name": "Binance Wrapper BTC",
-    "symbol": "crvbBTC",
+    "lookupName": "wrapped-bitcoin",
+    "name": "Curve.fi: renCrv Token",
+    "symbol": "crvrenWBTC",
     "type": "Contract",
   },
   "0x4b92d19c11435614CD49Af1b589001b7c08cD4D5": Object {
@@ -382,7 +382,7 @@ Object {
     "decimals": 18,
     "lpToken": true,
     "name": "SushiSwap: WBTC-DIGG",
-    "symbol": "SushiSwap WBTC/DIGG LP (SLP)",
+    "symbol": "SLP-DIGG-WBTC",
     "type": "SushiswapLp",
   },
   "0xAf5A1DECfa95BAF63E0084a35c62592B774A2A87": Object {
@@ -419,7 +419,7 @@ Object {
     "decimals": 18,
     "lpToken": true,
     "name": "SushiSwap: WBTC-ETH",
-    "symbol": "SushiSwap WBTC/ETH LP (SLP)",
+    "symbol": "SLP-WBTC-ETH",
     "type": "SushiswapLp",
   },
   "0xD533a949740bb3306d119CC777fa900bA034cd52": Object {
@@ -442,7 +442,7 @@ Object {
     "decimals": 18,
     "lpToken": true,
     "name": "Uniswap V2: WBTC-DIGG",
-    "symbol": "Uniswap WBTC/DIGG LP (UNI-V2)",
+    "symbol": "DIGG-WBTC",
     "type": "UniswapLp",
   },
   "0xa0246c9032bC3A600820415aE600c6388619A14D": Object {
@@ -483,7 +483,7 @@ Object {
     "decimals": 18,
     "lpToken": true,
     "name": "Uniswap V2: WBTC-BADGER",
-    "symbol": "Uniswap WBTC/BADGER LP (UNI-V2)",
+    "symbol": "BADGER-WBTC",
     "type": "UniswapLp",
   },
   "0xd04c48A53c111300aD41190D63681ed3dAd998eC": Object {
@@ -532,7 +532,7 @@ Object {
     "decimals": 18,
     "lpToken": true,
     "name": "SushiSwap: WBTC-BADGER",
-    "symbol": "Badger Sett SushiSwap LP Token (bSLP)",
+    "symbol": "SLP-BADGER-WBTC",
     "type": "SushiswapLp",
   },
   "0x1862A18181346EBd9EdAf800804f89190DeF24a5": Object {
@@ -551,7 +551,7 @@ Object {
     "decimals": 18,
     "lpToken": true,
     "name": "SushiSwap: ibBTC-WBTC",
-    "symbol": "SushiSwap ibBTC/WBTC LP (SLP)",
+    "symbol": "SLP-IBBTC-WBTC",
     "type": "SushiswapLp",
   },
   "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28": Object {
@@ -608,9 +608,9 @@ Object {
   "0x49849C98ae39Fff122806C06791Fa73784FB3675": Object {
     "address": "0x49849C98ae39Fff122806C06791Fa73784FB3675",
     "decimals": 18,
-    "lookupName": "binance-wrapped-btc",
-    "name": "Binance Wrapper BTC",
-    "symbol": "crvbBTC",
+    "lookupName": "wrapped-bitcoin",
+    "name": "Curve.fi: renCrv Token",
+    "symbol": "crvrenWBTC",
     "type": "Contract",
   },
   "0x4b92d19c11435614CD49Af1b589001b7c08cD4D5": Object {
@@ -772,7 +772,7 @@ Object {
     "decimals": 18,
     "lpToken": true,
     "name": "SushiSwap: WBTC-DIGG",
-    "symbol": "SushiSwap WBTC/DIGG LP (SLP)",
+    "symbol": "SLP-DIGG-WBTC",
     "type": "SushiswapLp",
   },
   "0xAf5A1DECfa95BAF63E0084a35c62592B774A2A87": Object {
@@ -809,7 +809,7 @@ Object {
     "decimals": 18,
     "lpToken": true,
     "name": "SushiSwap: WBTC-ETH",
-    "symbol": "SushiSwap WBTC/ETH LP (SLP)",
+    "symbol": "SLP-WBTC-ETH",
     "type": "SushiswapLp",
   },
   "0xD533a949740bb3306d119CC777fa900bA034cd52": Object {
@@ -832,7 +832,7 @@ Object {
     "decimals": 18,
     "lpToken": true,
     "name": "Uniswap V2: WBTC-DIGG",
-    "symbol": "Uniswap WBTC/DIGG LP (UNI-V2)",
+    "symbol": "DIGG-WBTC",
     "type": "UniswapLp",
   },
   "0xa0246c9032bC3A600820415aE600c6388619A14D": Object {
@@ -873,7 +873,7 @@ Object {
     "decimals": 18,
     "lpToken": true,
     "name": "Uniswap V2: WBTC-BADGER",
-    "symbol": "Uniswap WBTC/BADGER LP (UNI-V2)",
+    "symbol": "BADGER-WBTC",
     "type": "UniswapLp",
   },
   "0xd04c48A53c111300aD41190D63681ed3dAd998eC": Object {
