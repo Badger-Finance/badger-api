@@ -7,7 +7,7 @@ import { ONE_YEAR_MS, SAMPLE_DAYS } from '../config/constants';
 import { getSdk, SettQuery, SettQueryVariables } from '../graphql/generated/badger';
 import { getToken } from '../tokens/tokens.utils';
 import { CachedSettSnapshot } from './interfaces/cached-sett-snapshot.interface';
-import { Sett } from './interfaces/sett.interface.';
+import { Sett } from './interfaces/sett.interface';
 import { SettDefinition } from './interfaces/sett-definition.interface';
 import { SettSnapshot } from './interfaces/sett-snapshot.interface';
 

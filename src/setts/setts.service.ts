@@ -10,7 +10,7 @@ import { TokenType } from '../tokens/enums/token-type.enum';
 import { TokenRequest } from '../tokens/interfaces/token-request.interface';
 import { TokensService } from '../tokens/tokens.service';
 import { getSettTokens, getToken } from '../tokens/tokens.utils';
-import { Sett } from './interfaces/sett.interface.';
+import { Sett } from './interfaces/sett.interface';
 import { SettDefinition } from './interfaces/sett-definition.interface';
 import {
   getCachedSett,
@@ -45,7 +45,11 @@ export class SettsService {
 
   async getSett(chain: Chain, contract: string, currency?: string): Promise<Sett> {
     const settDefinition = getSettDefinition(chain, contract);
-    const sett = await getCachedSett(settDefinition);
+    console.log('get chaced sett + value sources');
+    const [sett, sources]: [Sett, ValueSource[]] = await Promise.all([
+      getCachedSett(settDefinition),
+      getVaultValueSources(settDefinition),
+    ]);
     const tokenRequest: TokenRequest = {
       chain: chain,
       sett: settDefinition,
@@ -55,13 +59,12 @@ export class SettsService {
     sett.tokens = await this.tokensService.getSettTokens(tokenRequest);
     sett.value = sett.tokens.reduce((total, balance) => (total += balance.value), 0);
 
-    let sources = await getVaultValueSources(settDefinition);
     if (chain.name === 'BinanceSmartChain') {
-      sources = sources.filter((source) => source.name !== VAULT_SOURCE);
+      sett.sources = sources.filter((source) => source.name !== VAULT_SOURCE);
     } else {
-      sources = sources.filter((source) => !source.harvestable);
+      sett.sources = sources.filter((source) => !source.harvestable);
     }
-    sett.sources = sources.filter((source) => source.apr > 0);
+    sett.sources = sett.sources.filter((source) => source.apr > 0);
     sett.apr = sett.sources.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
 
     const hasBoostedApr = sett.sources.some((source) => source.boostable);
