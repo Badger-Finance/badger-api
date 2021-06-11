@@ -1,6 +1,7 @@
 import { Inject, Service } from '@tsed/di';
-import { BigNumber, ethers } from 'ethers';
+import { ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
+import fetch from 'node-fetch';
 import { Chain } from '../../chains/config/chain.config';
 import { masterChefAbi } from '../../config/abi/sushi-chef.abi';
 import { MASTERCHEF_URL, SUSHI_CHEF, SUSHISWAP_URL, TOKENS } from '../../config/constants';
@@ -11,6 +12,7 @@ import { SettDefinition } from '../../setts/interfaces/sett-definition.interface
 import { TokensService } from '../../tokens/tokens.service';
 import { SwapService } from '../common/swap.service';
 import { uniformPerformance } from '../interfaces/performance.interface';
+import { UserInfo } from '../interfaces/user-info.interface';
 import { createValueSource, ValueSource } from '../interfaces/value-source.interface';
 import { xSushiApr } from '../interfaces/xsushi-apr.interface';
 
@@ -51,15 +53,15 @@ export class SushiswapService extends SwapService {
     const sushiChef = new ethers.Contract(SUSHI_CHEF, masterChefAbi, chain.provider);
     const [depositTokenPrice, sushiPrice] = await Promise.all([getPrice(pool.pair), getPrice(TOKENS.SUSHI)]);
     const totalAllocPoint = masterChef.totalAllocPoint;
-    const strategyBalance: BigNumber = await sushiChef.userInfo(pool, sett.strategy);
+    const strategyInfo: UserInfo = await sushiChef.userInfo(pool.id, sett.strategy);
 
     let sushiApr = 0;
-    if (strategyBalance.gt(0)) {
+    if (strategyInfo.amount.gt(0)) {
       const xSushiResponse = await fetch(SushiswapService.xSushiAprEndpoint);
       let xSushiAprMultiplier = 1;
       if (xSushiResponse.ok) {
         const xSushiApr: xSushiApr = await xSushiResponse.json();
-        xSushiAprMultiplier += parseFloat(xSushiApr.apr) / 100;
+        xSushiAprMultiplier += parseFloat(xSushiApr.APR) / 100;
       }
       const poolValue = pool.balance * depositTokenPrice.usd;
       const emissionScalar = pool.allocPoint / totalAllocPoint;

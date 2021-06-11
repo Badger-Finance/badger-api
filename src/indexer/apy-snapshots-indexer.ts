@@ -24,14 +24,13 @@ export async function refreshApySnapshots() {
 
   const valueSources = rawValueSources
     .filter((rawValueSource) => !isNil(rawValueSource))
-    .flatMap((sources) => sources.filter((source) => !isNaN(source.apr)));
+    .flatMap((sources) => sources.filter((source) => !isNaN(source.apr) || !isFinite(source.apr)));
+
   const mapper = getDataMapper();
-  for (const source of valueSources) {
-    try {
-      await mapper.put(source);
-    } catch (err) {
-      console.log({ message: err.message, source });
-    }
+  try {
+    mapper.batchPut(valueSources);
+  } catch (err) {
+    console.log({ message: err.message, valueSources });
   }
 }
 
@@ -54,7 +53,7 @@ async function getSettValueSources(chain: Chain, settDefinition: SettDefinition)
 
   // delete sources which are no longer valid
   const mapper = getDataMapper();
-  Array.from(Object.values(oldSources)).map((source) => mapper.delete(source));
+  mapper.batchDelete(Object.values(oldSources));
 
   return newSources;
 }
