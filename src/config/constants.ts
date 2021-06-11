@@ -118,6 +118,8 @@ export const MASTERCHEF_URL = process.env.MASTERCHEF || 'MISSING REQUIRED ENV VA
 // general constants
 export const STAGE = process.env.STAGE || 'MISSING REQUIRED ENV VAR';
 export const BOUNCER_PROOFS = process.env.BOUNCER_PROOFS || 'MISSING REQUIRED ENV VAR';
+export const IS_OFFLINE = process.env.IS_OFFLINE || 'MISSING REQUIRED ENV VAR';
+export const DEBUG = false;
 
 // third party api constants
 export const CURVE_API_URL = 'https://stats.curve.fi/raw-stats/apys.json';
