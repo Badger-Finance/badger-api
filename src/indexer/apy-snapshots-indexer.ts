@@ -118,14 +118,13 @@ async function getPancakeswapApySnapshots(chain: Chain, settDefinition: SettDefi
 }
 
 async function getSushiswapApySnapshots(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
-  const { depositToken } = settDefinition;
   return [
     valueSourceToCachedValueSource(
-      await getSwapValueSource(SUSHISWAP_URL, 'Sushiswap', depositToken),
+      await getSwapValueSource(SUSHISWAP_URL, 'Sushiswap', settDefinition.depositToken),
       settDefinition,
       'swap',
     ),
-    valueSourceToCachedValueSource(await getSushiwapPoolApr(chain, depositToken), settDefinition, 'pool_apr'),
+    valueSourceToCachedValueSource(await getSushiwapPoolApr(chain, settDefinition), settDefinition, 'pool_apr'),
   ];
 }
 
@@ -133,6 +132,6 @@ async function getPancakeswapPoolApr(chain: Chain, depositToken: string): Promis
   return PancakeSwapService.getEmissionSource(chain, PancakeSwapService.getPoolId(depositToken));
 }
 
-async function getSushiwapPoolApr(chain: Chain, depositToken: string): Promise<ValueSource> {
-  return SushiswapService.getEmissionSource(chain, depositToken, await SushiswapService.getMasterChef());
+async function getSushiwapPoolApr(chain: Chain, settDefinition: SettDefinition): Promise<ValueSource> {
+  return SushiswapService.getEmissionSource(chain, settDefinition, await SushiswapService.getMasterChef());
 }
