@@ -20,8 +20,7 @@ export class TokensService {
     const { sett, balance, currency } = request;
     const token = getToken(sett.depositToken);
     if (token.lpToken || sett.getTokenBalance) {
-      const tokens = await this.getLiquidityPoolTokenBalances(request);
-      return tokens;
+      return this.getLiquidityPoolTokenBalances(request);
     }
     return Promise.all([toBalance(token, balance, currency)]);
   }

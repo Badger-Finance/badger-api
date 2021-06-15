@@ -296,6 +296,13 @@ Object {
     "symbol": "Sushi",
     "type": "Contract",
   },
+  "0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490": Object {
+    "address": "0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490",
+    "decimals": 18,
+    "name": "Curve.fi DAI/USDC/USDT",
+    "symbol": "3CRV",
+    "type": "Contract",
+  },
   "0x6dEf55d2e18486B9dDfaA075bc4e4EE0B28c1545": Object {
     "address": "0x6dEf55d2e18486B9dDfaA075bc4e4EE0B28c1545",
     "decimals": 18,
@@ -684,6 +691,13 @@ Object {
     "decimals": 18,
     "name": "Sushi",
     "symbol": "Sushi",
+    "type": "Contract",
+  },
+  "0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490": Object {
+    "address": "0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490",
+    "decimals": 18,
+    "name": "Curve.fi DAI/USDC/USDT",
+    "symbol": "3CRV",
     "type": "Contract",
   },
   "0x6dEf55d2e18486B9dDfaA075bc4e4EE0B28c1545": Object {

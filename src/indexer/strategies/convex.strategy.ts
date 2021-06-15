@@ -1,4 +1,5 @@
 import { ethers } from 'ethers';
+import fetch from 'node-fetch';
 import { Chain } from '../../chains/config/chain.config';
 import { cvxRewardsAbi } from '../../config/abi/cvx-rewards.abi';
 import { CURVE_API_URL, ONE_YEAR_SECONDS, TOKENS } from '../../config/constants';
@@ -10,7 +11,6 @@ import { createValueSource } from '../../protocols/interfaces/value-source.inter
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { getCachedSett } from '../../setts/setts.utils';
 import { valueSourceToCachedValueSource } from '../indexer.utils';
-import fetch from 'node-fetch';
 // import { PoolMap } from '../../protocols/interfaces/pool-map.interface';
 
 /* Strategy Definitions */
@@ -20,7 +20,7 @@ export const threeCrvRewards = '0x7091dbb7fcbA54569eF1387Ac89Eb2a5C9F6d2EA';
 export const cvxChef = '0xEF0881eC094552b2e128Cf945EF17a6752B4Ec5d';
 
 /* Protocol Definitions */
-const curvePoolApr: {[address: string]: string} = {
+const curvePoolApr: { [address: string]: string } = {
   [TOKENS.CRV_RENBTC]: 'ren2',
   [TOKENS.CRV_SBTC]: 'rens',
   [TOKENS.CRV_TBTC]: 'tbtc',
@@ -38,10 +38,7 @@ export async function getConvexApySnapshots(
   chain: Chain,
   settDefinition: SettDefinition,
 ): Promise<CachedValueSource[]> {
-  const singleRewards = await Promise.all([
-    getCvxRewards(chain, settDefinition),
-    getCurvePerformance(settDefinition),
-  ]);
+  const singleRewards = await Promise.all([getCvxRewards(chain, settDefinition), getCurvePerformance(settDefinition)]);
   const multiRewards = await getCvxCrvRewards(chain, settDefinition);
   return [...singleRewards, ...multiRewards];
 }
@@ -87,7 +84,10 @@ async function getCvxCrvRewards(chain: Chain, settDefinition: SettDefinition): P
 
   // get prices
   const [cvxPrice, cvxCrvPrice, crvPrice, threeCrvPrice] = await Promise.all([
-    getPrice(TOKENS.CVX), getPrice(TOKENS.CVXCRV), getPrice(TOKENS.CRV), getPrice(TOKENS.THREECRV),
+    getPrice(TOKENS.CVX),
+    getPrice(TOKENS.CVXCRV),
+    getPrice(TOKENS.CRV),
+    getPrice(TOKENS.THREECRV),
   ]);
 
   // get rewards
