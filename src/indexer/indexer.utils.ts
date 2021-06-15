@@ -13,7 +13,6 @@ import { getSwapValueSource } from '../protocols/common/performance.utils';
 import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
 import { ValueSource } from '../protocols/interfaces/value-source.interface';
 import { PancakeSwapService } from '../protocols/pancake/pancakeswap.service';
-import { ProtocolsService } from '../protocols/protocols.service';
 import { getVaultCachedValueSources } from '../protocols/protocols.utils';
 import { SushiswapService } from '../protocols/sushi/sushiswap.service';
 import { RewardsService } from '../rewards/rewards.service';
@@ -25,7 +24,7 @@ import { getSett } from '../setts/setts.utils';
 import { CachedLiquidityPoolTokenBalance } from '../tokens/interfaces/cached-liquidity-pool-token-balance.interface';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
 import { getToken } from '../tokens/tokens.utils';
-import { getConvexApySnapshots } from './strategies/convex.strategy';
+import { getConvexApySnapshots, getCurvePerformance } from './strategies/convex.strategy';
 
 export const settToCachedSnapshot = async (
   chain: Chain,
@@ -198,7 +197,7 @@ export async function getProtocolValueSources(
   try {
     switch (settDefinition.protocol) {
       case Protocol.Curve:
-        return getCurveApySnapshots(settDefinition);
+        return Promise.all([getCurvePerformance(settDefinition)]);
       case Protocol.Pancakeswap:
         return getPancakeswapApySnapshots(chain, settDefinition);
       case Protocol.Sushiswap:
@@ -225,11 +224,6 @@ export async function getEmissionApySnapshots(
   return emissions.map((source) =>
     valueSourceToCachedValueSource(source, settDefinition, source.name.replace(' ', '_').toLowerCase()),
   );
-}
-
-export async function getCurveApySnapshots(settDefinition: SettDefinition): Promise<CachedValueSource[]> {
-  const [valueSource] = await ProtocolsService.getCurvePerformance(settDefinition);
-  return [valueSourceToCachedValueSource(valueSource, settDefinition, 'swap')];
 }
 
 export async function getPancakeswapApySnapshots(

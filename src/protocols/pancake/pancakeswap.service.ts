@@ -10,10 +10,10 @@ import { getTokenPriceData } from '../../prices/prices.utils';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
 import { SwapService } from '../common/swap.service';
-import { PoolInfo } from '../interfaces/pool-info.interface';
 import { uniformPerformance } from '../interfaces/performance.interface';
-import { createValueSource, ValueSource } from '../interfaces/value-source.interface';
+import { PoolInfo } from '../interfaces/pool-info.interface';
 import { PoolMap } from '../interfaces/pool-map.interface';
+import { createValueSource, ValueSource } from '../interfaces/value-source.interface';
 
 @Service()
 export class PancakeSwapService extends SwapService {
