@@ -2,6 +2,7 @@ import { ethers } from 'ethers';
 import fetch from 'node-fetch';
 import { Chain } from '../../chains/config/chain.config';
 import { cvxRewardsAbi } from '../../config/abi/cvx-rewards.abi';
+import { erc20Abi } from '../../config/abi/erc20.abi';
 import { CURVE_API_URL, ONE_YEAR_SECONDS, TOKENS } from '../../config/constants';
 import { getPrice } from '../../prices/prices.utils';
 import { SourceType } from '../../protocols/enums/source-type.enum';
@@ -93,6 +94,7 @@ async function getCvxCrvRewards(chain: Chain, settDefinition: SettDefinition): P
   // get rewards
   const crvReward = parseFloat(ethers.utils.formatEther(await cvxCrv.currentRewards()));
   const threeCrvReward = parseFloat(ethers.utils.formatEther(await threeCrv.currentRewards()));
+  const cvxReward = await getCvxMint(chain, crvReward);
   const cvxCrvLocked = parseFloat(ethers.utils.formatEther(await cvxCrv.totalSupply()));
 
   // get apr params
@@ -115,9 +117,13 @@ async function getCvxCrvRewards(chain: Chain, settDefinition: SettDefinition): P
   const threeCrvValueSource = createValueSource('cvxCRV Rewards', uniformPerformance(threeCrvApr * valueScalar));
   const cachedThreeCrvSource = valueSourceToCachedValueSource(threeCrvValueSource, settDefinition, SourceType.Emission);
 
-  // TODO: Calculate CVX Rewards
+  // calculate CVX rewards
+  const cvxEmission = cvxReward * cvxPrice.usd * scalar;
+  const cvxApr = (cvxEmission / poolValue) * 100;
+  const cvxValueSource = createValueSource('cvxCRV Rewards', uniformPerformance(cvxApr * valueScalar));
+  const cachedCvxSource = valueSourceToCachedValueSource(cvxValueSource, settDefinition, SourceType.Emission);
 
-  return [cachedCvxCrvSource, cachedThreeCrvSource];
+  return [cachedCvxCrvSource, cachedThreeCrvSource, cachedCvxSource];
 }
 
 export async function getCurvePerformance(settDefinition: SettDefinition): Promise<CachedValueSource> {
@@ -131,4 +137,38 @@ export async function getCurvePerformance(settDefinition: SettDefinition): Promi
   };
   const valueSource = createValueSource('Curve LP Fees', tradeFeePerformance);
   return valueSourceToCachedValueSource(valueSource, settDefinition, SourceType.TradeFee);
+}
+
+/* Adapted from https://docs.convexfinance.com/convexfinanceintegration/cvx-minting */
+
+// constants
+const cliffSize = 100000 * 1e18; // new cliff every 100,000 tokens
+const cliffCount = 1000; // 1,000 cliffs
+const maxSupply = 100000000 * 1e18; // 100 mil max supply
+
+async function getCvxMint(chain: Chain, crvEarned: number): Promise<number> {
+  const cvx = new ethers.Contract(TOKENS.CVX, erc20Abi, chain.provider);
+
+  // first get total supply
+  const cvxTotalSupply = await cvx.totalSupply();
+
+  // get current cliff
+  const currentCliff = cvxTotalSupply / cliffSize;
+
+  // if current cliff is under the max
+  if (currentCliff < cliffCount) {
+    // get remaining cliffs
+    const remaining = cliffCount - currentCliff;
+
+    // multiply ratio of remaining cliffs to total cliffs against amount CRV received
+    let cvxEarned = (crvEarned * remaining) / cliffCount;
+
+    // double check we have not gone over the max supply
+    const amountTillMax = maxSupply - cvxTotalSupply;
+    if (cvxEarned > amountTillMax) {
+      cvxEarned = amountTillMax;
+    }
+    return cvxEarned;
+  }
+  return 0;
 }

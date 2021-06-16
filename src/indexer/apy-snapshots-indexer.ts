@@ -6,9 +6,7 @@ import { getSettValueSources } from './indexer.utils';
 export async function refreshApySnapshots() {
   const chains = loadChains();
   const rawValueSources = await Promise.all(
-    chains.flatMap((chain) =>
-      chain.setts.map((sett) => getSettValueSources(chain, sett)),
-    ),
+    chains.flatMap((chain) => chain.setts.map((sett) => getSettValueSources(chain, sett))),
   );
 
   const valueSources = rawValueSources
