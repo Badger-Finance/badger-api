@@ -76,7 +76,7 @@ export const getSettSnapshots = async (settDefinition: SettDefinition): Promise<
     const assetToken = getToken(settDefinition.settToken);
     for await (const snapshot of mapper.query(
       SettSnapshot,
-      { asset: assetToken.symbol.toLowerCase() },
+      { address: assetToken.address },
       { limit: SAMPLE_DAYS, scanIndexForward: false },
     )) {
       snapshots.push(snapshot);

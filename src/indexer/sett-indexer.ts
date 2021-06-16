@@ -12,6 +12,7 @@ import { getIndexedBlock, settToSnapshot } from './indexer.utils';
  * as such will be disabled while running offline.
  */
 export const indexAsset = async (): Promise<void> => {
+  console.log(IS_OFFLINE);
   if (IS_OFFLINE) {
     return;
   }
