@@ -44,11 +44,6 @@ export async function getConvexApySnapshots(
   return [...singleRewards, ...multiRewards];
 }
 
-// async function getLiquidityRewards(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
-//   const chef = new ethers.Contract(cvxChef, cvxChefAbi, chain.provider);
-
-// }
-
 async function getCvxRewards(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource> {
   // setup contracts + sett
   const sett = await getCachedSett(settDefinition);
