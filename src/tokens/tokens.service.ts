@@ -40,7 +40,7 @@ export class TokensService {
     return TokensService.getOnChainLiquidtyPoolTokenBalances(request);
   }
 
-  private async getCachedTokenBalances(
+  async getCachedTokenBalances(
     pairId: string,
     protocol: string,
     currency?: string,

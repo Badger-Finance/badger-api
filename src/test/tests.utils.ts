@@ -1,5 +1,9 @@
 import { DataMapper, QueryIterator, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
 import createMockInstance from 'jest-create-mock-instance';
+import { inCurrency } from '../prices/prices.utils';
+import { Token } from '../tokens/interfaces/token.interface';
+import { TokenBalance } from '../tokens/interfaces/token-balance.interface';
+import { TokenPrice } from '../tokens/interfaces/token-price.interface';
 
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 export const setupMapper = (items: unknown[], filter?: (items: unknown[]) => unknown[]) => {
@@ -20,3 +24,21 @@ export const randomValue = (min?: number, max?: number): number => {
   const maxPrice = max || 50000;
   return minPrice + Math.random() * (maxPrice - minPrice);
 };
+
+export async function toTestBalance(token: Token, balance: number, currency?: string): Promise<TokenBalance> {
+  const price = parseInt(token.address.slice(0, 4), 16);
+  const tokenPrice: TokenPrice = {
+    name: token.name,
+    address: token.address,
+    usd: price,
+    eth: price,
+  };
+  return {
+    address: token.address,
+    name: token.name,
+    symbol: token.symbol,
+    decimals: token.decimals,
+    balance: balance,
+    value: balance * inCurrency(tokenPrice, currency),
+  };
+}

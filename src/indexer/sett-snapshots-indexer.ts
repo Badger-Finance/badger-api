@@ -1,6 +1,7 @@
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
+import { DEBUG } from '../config/constants';
 import { successfulCapture } from '../config/util';
 import { CachedSettSnapshot } from '../setts/interfaces/cached-sett-snapshot.interface';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
@@ -12,7 +13,9 @@ const captureSnapshot = async (chain: Chain, sett: SettDefinition): Promise<Cach
     const result = await settToCachedSnapshot(chain, sett);
     return result;
   } catch (err) {
-    console.error(err);
+    if (DEBUG) {
+      console.error(err);
+    }
     return null;
   }
 };

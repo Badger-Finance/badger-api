@@ -30,7 +30,7 @@ export const ethTokensConfig: TokenConfig = {
     decimals: 18,
     lookupName: 'wrapped-bitcoin',
     name: 'Curve.fi: renCrv Token',
-    symbol: 'Curve.fi renBTC/wBTC (crvRenWBTC)',
+    symbol: 'crvrenWBTC',
     type: TokenType.Contract,
   },
   [TOKENS.CRV_SBTC]: {
@@ -38,7 +38,7 @@ export const ethTokensConfig: TokenConfig = {
     decimals: 18,
     lookupName: 'sbtc',
     name: 'Curve.fi renBTC/wBTC/sBTC',
-    symbol: 'Curve.fi renBTC/wBTC/sBTC',
+    symbol: 'crvsBTC',
     type: TokenType.Contract,
   },
   [TOKENS.CRV_TBTC]: {
@@ -46,7 +46,7 @@ export const ethTokensConfig: TokenConfig = {
     decimals: 18,
     lookupName: 'tbtc',
     name: 'Curve.fi tBTC/sbtcCrv',
-    symbol: 'Curve.fi tBTC/sbtcCrv (tbtc/sbtc)',
+    symbol: 'crvtBTC',
     type: TokenType.Contract,
   },
   [TOKENS.DIGG]: {
@@ -78,12 +78,57 @@ export const ethTokensConfig: TokenConfig = {
     symbol: 'ibBTC',
     type: TokenType.Index,
   },
+  [TOKENS.CRV_HBTC]: {
+    address: TOKENS.CRV_HBTC,
+    decimals: 18,
+    lookupName: 'huobi-btc',
+    name: 'Huobi BTC',
+    symbol: 'crvhBTC',
+    type: TokenType.Contract,
+  },
+  [TOKENS.CRV_PBTC]: {
+    address: TOKENS.CRV_PBTC,
+    decimals: 18,
+    lookupName: 'ptokens-btc',
+    name: 'pTOkens BTC',
+    symbol: 'crvpBTC',
+    type: TokenType.Contract,
+  },
+  [TOKENS.CRV_OBTC]: {
+    address: TOKENS.CRV_OBTC,
+    decimals: 18,
+    lookupName: 'wrapped-bitcoin',
+    name: 'BoringDAO BTC',
+    symbol: 'crvoBTC',
+    type: TokenType.Contract,
+  },
+  [TOKENS.CRV]: {
+    address: TOKENS.CRV,
+    decimals: 18,
+    name: 'Curve DAO Token',
+    symbol: 'CRV',
+    type: TokenType.Contract,
+  },
+  [TOKENS.CVX]: {
+    address: TOKENS.CVX,
+    decimals: 18,
+    name: 'Convex Token',
+    symbol: 'CVX',
+    type: TokenType.Contract,
+  },
+  [TOKENS.CVXCRV]: {
+    address: TOKENS.CVXCRV,
+    decimals: 18,
+    name: 'Convex CRV',
+    symbol: 'cvxCRV',
+    type: TokenType.Contract,
+  },
   [TOKENS.SUSHI_BADGER_WBTC]: {
     address: TOKENS.SUSHI_BADGER_WBTC,
     decimals: 18,
     lpToken: true,
     name: 'SushiSwap: WBTC-BADGER',
-    symbol: 'Badger Sett SushiSwap LP Token (bSLP)',
+    symbol: 'SLP-BADGER-WBTC',
     type: TokenType.SushiswapLp,
   },
   [TOKENS.SUSHI_DIGG_WBTC]: {
@@ -91,7 +136,7 @@ export const ethTokensConfig: TokenConfig = {
     decimals: 18,
     lpToken: true,
     name: 'SushiSwap: WBTC-DIGG',
-    symbol: 'SushiSwap WBTC/DIGG LP (SLP)',
+    symbol: 'SLP-DIGG-WBTC',
     type: TokenType.SushiswapLp,
   },
   [TOKENS.SUSHI_ETH_WBTC]: {
@@ -99,7 +144,7 @@ export const ethTokensConfig: TokenConfig = {
     decimals: 18,
     lpToken: true,
     name: 'SushiSwap: WBTC-ETH',
-    symbol: 'SushiSwap WBTC/ETH LP (SLP)',
+    symbol: 'SLP-WBTC-ETH',
     type: TokenType.SushiswapLp,
   },
   [TOKENS.SUSHI_IBBTC_WBTC]: {
@@ -107,7 +152,7 @@ export const ethTokensConfig: TokenConfig = {
     decimals: 18,
     lpToken: true,
     name: 'SushiSwap: ibBTC-WBTC',
-    symbol: 'SushiSwap ibBTC/WBTC LP (SLP)',
+    symbol: 'SLP-IBBTC-WBTC',
     type: TokenType.SushiswapLp,
   },
   [TOKENS.UNI_BADGER_WBTC]: {
@@ -115,7 +160,7 @@ export const ethTokensConfig: TokenConfig = {
     decimals: 18,
     lpToken: true,
     name: 'Uniswap V2: WBTC-BADGER',
-    symbol: 'Uniswap WBTC/BADGER LP (UNI-V2)',
+    symbol: 'BADGER-WBTC',
     type: TokenType.UniswapLp,
   },
   [TOKENS.UNI_DIGG_WBTC]: {
@@ -123,7 +168,7 @@ export const ethTokensConfig: TokenConfig = {
     decimals: 18,
     lpToken: true,
     name: 'Uniswap V2: WBTC-DIGG',
-    symbol: 'Uniswap WBTC/DIGG LP (UNI-V2)',
+    symbol: 'DIGG-WBTC',
     type: TokenType.UniswapLp,
   },
   [TOKENS.FARM]: {
@@ -243,7 +288,7 @@ export const ethTokensConfig: TokenConfig = {
     address: TOKENS.BCRV_RENBTC,
     decimals: 18,
     name: 'bCurve.fi: renCrv Token',
-    symbol: 'brenBTCCRV',
+    symbol: 'bcrvrenBTC',
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.CRV_RENBTC,
@@ -254,7 +299,7 @@ export const ethTokensConfig: TokenConfig = {
     address: TOKENS.BCRV_SBTC,
     decimals: 18,
     name: 'bCurve.fi renBTC/wBTC/sBTC',
-    symbol: 'bsBTCCRV',
+    symbol: 'bcrvsBTC',
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.CRV_SBTC,
@@ -265,7 +310,7 @@ export const ethTokensConfig: TokenConfig = {
     address: TOKENS.BCRV_TBTC,
     decimals: 18,
     name: 'bCurve.fi tBTC/sbtcCrv',
-    symbol: 'btBTCCRV',
+    symbol: 'bcrvtBTC',
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.CRV_TBTC,
@@ -276,7 +321,7 @@ export const ethTokensConfig: TokenConfig = {
     address: TOKENS.BCRV_HRENBTC,
     decimals: 18,
     name: 'bHarvest Curve.fi crvRenWBTC',
-    symbol: 'bhrenBTCCRV',
+    symbol: 'bcrvhrenBTC',
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.CRV_RENBTC,
@@ -291,6 +336,50 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.WBTC,
+      network: ChainNetwork.Ethereum,
+    },
+  },
+  [TOKENS.BCRV_HBTC]: {
+    address: TOKENS.BCRV_HBTC,
+    decimals: 18,
+    name: 'bCurve.fi hBTC/wBTC',
+    symbol: 'bcrvhBTC',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.CRV_HBTC,
+      network: ChainNetwork.Ethereum,
+    },
+  },
+  [TOKENS.BCRV_PBTC]: {
+    address: TOKENS.BCRV_PBTC,
+    decimals: 18,
+    name: 'bCurve.fi pBTC/wBTC',
+    symbol: 'bcrvpBTC',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.CRV_PBTC,
+      network: ChainNetwork.Ethereum,
+    },
+  },
+  [TOKENS.BCRV_OBTC]: {
+    address: TOKENS.BCRV_OBTC,
+    decimals: 18,
+    name: 'bCurve.fi oBTC/wBTC',
+    symbol: 'bcrvoBTC',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.CRV_OBTC,
+      network: ChainNetwork.Ethereum,
+    },
+  },
+  [TOKENS.BCRV_BBTC]: {
+    address: TOKENS.BCRV_BBTC,
+    decimals: 18,
+    name: 'bCurve.fi bBTC/wBTC',
+    symbol: 'bcrvbBTC',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.CRV_RENBTC,
       network: ChainNetwork.Ethereum,
     },
   },
