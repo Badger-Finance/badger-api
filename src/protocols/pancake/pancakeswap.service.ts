@@ -10,8 +10,9 @@ import { getTokenPriceData } from '../../prices/prices.utils';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
 import { SwapService } from '../common/swap.service';
-import { PoolInfo } from '../interfaces/master-chef.interface';
 import { uniformPerformance } from '../interfaces/performance.interface';
+import { PoolInfo } from '../interfaces/pool-info.interface';
+import { PoolMap } from '../interfaces/pool-map.interface';
 import { createValueSource, ValueSource } from '../interfaces/value-source.interface';
 
 @Service()
@@ -69,7 +70,7 @@ export class PancakeSwapService extends SwapService {
 
   // TODO: Remove this once pancakeswap masterchef subgraph has synced
   static getPoolId(depositToken: string): number {
-    const poolMap: Record<string, number> = {};
+    const poolMap: PoolMap = {};
     poolMap[TOKENS.PANCAKE_BNB_BTCB] = 262;
     poolMap[TOKENS.PANCAKE_BBADGER_BTCB] = 332;
     poolMap[TOKENS.PANCAKE_BDIGG_BTCB] = 331;

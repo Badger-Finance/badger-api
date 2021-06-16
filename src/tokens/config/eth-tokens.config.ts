@@ -123,6 +123,13 @@ export const ethTokensConfig: TokenConfig = {
     symbol: 'cvxCRV',
     type: TokenType.Contract,
   },
+  [TOKENS.THREECRV]: {
+    address: TOKENS.THREECRV,
+    decimals: 18,
+    name: 'Curve.fi DAI/USDC/USDT',
+    symbol: '3CRV',
+    type: TokenType.Contract,
+  },
   [TOKENS.SUSHI_BADGER_WBTC]: {
     address: TOKENS.SUSHI_BADGER_WBTC,
     decimals: 18,

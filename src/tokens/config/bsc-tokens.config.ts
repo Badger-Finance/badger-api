@@ -32,16 +32,16 @@ export const bscTokensConfig: TokenConfig = {
     address: TOKENS.PANCAKE_BNB_BTCB,
     decimals: 18,
     lpToken: true,
-    name: 'Pancakeswap: WBNB-BTCB',
-    symbol: 'Pancakeswap WBNB/BTCB LP (PLP)',
+    name: 'Pancakeswap: BNB-BTCB',
+    symbol: 'PLP-BNB-BTCB',
     type: TokenType.PancakeswapLp,
   },
   [TOKENS.PANCAKE_OLD_BNB_BTCB]: {
     address: TOKENS.PANCAKE_OLD_BNB_BTCB,
     decimals: 18,
     lpToken: true,
-    name: 'Pancakeswap: WBNB-BTCB',
-    symbol: 'Pancakeswap WBNB/BTCB LP (PLP)',
+    name: 'Pancakeswap: BNB-BTCB',
+    symbol: 'PLP-BNB-BTCB',
     type: TokenType.PancakeswapLp,
   },
   [TOKENS.PANCAKE_BBADGER_BTCB]: {
@@ -49,7 +49,7 @@ export const bscTokensConfig: TokenConfig = {
     decimals: 18,
     lpToken: true,
     name: 'Pancakeswap: BBADGER-BTCB',
-    symbol: 'Pancakeswap BBADGER/BTCB LP (PLP)',
+    symbol: 'PLP-BBADGER-BTCB',
     type: TokenType.PancakeswapLp,
   },
   [TOKENS.PANCAKE_BDIGG_BTCB]: {
@@ -57,7 +57,7 @@ export const bscTokensConfig: TokenConfig = {
     decimals: 18,
     lpToken: true,
     name: 'Pancakeswap: BDIGG-BTCB',
-    symbol: 'Pancakeswap BDIGG/BTCB LP (PLP)',
+    symbol: 'PLP-BDIGG-BTCB',
     type: TokenType.PancakeswapLp,
   },
   [TOKENS.BSC_BADGER]: {

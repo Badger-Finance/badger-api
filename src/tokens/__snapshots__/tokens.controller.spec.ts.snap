@@ -37,15 +37,15 @@ Object {
     "decimals": 18,
     "lpToken": true,
     "name": "Pancakeswap: BBADGER-BTCB",
-    "symbol": "Pancakeswap BBADGER/BTCB LP (PLP)",
+    "symbol": "PLP-BBADGER-BTCB",
     "type": "PancakeswapLp",
   },
   "0x61EB789d75A95CAa3fF50ed7E47b96c132fEc082": Object {
     "address": "0x61EB789d75A95CAa3fF50ed7E47b96c132fEc082",
     "decimals": 18,
     "lpToken": true,
-    "name": "Pancakeswap: WBNB-BTCB",
-    "symbol": "Pancakeswap WBNB/BTCB LP (PLP)",
+    "name": "Pancakeswap: BNB-BTCB",
+    "symbol": "PLP-BNB-BTCB",
     "type": "PancakeswapLp",
   },
   "0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c": Object {
@@ -68,8 +68,8 @@ Object {
     "address": "0x7561EEe90e24F3b348E1087A005F78B4c8453524",
     "decimals": 18,
     "lpToken": true,
-    "name": "Pancakeswap: WBNB-BTCB",
-    "symbol": "Pancakeswap WBNB/BTCB LP (PLP)",
+    "name": "Pancakeswap: BNB-BTCB",
+    "symbol": "PLP-BNB-BTCB",
     "type": "PancakeswapLp",
   },
   "0x81d776C90c89B8d51E9497D58338933127e2fA80": Object {
@@ -77,7 +77,7 @@ Object {
     "decimals": 18,
     "lpToken": true,
     "name": "Pancakeswap: BDIGG-BTCB",
-    "symbol": "Pancakeswap BDIGG/BTCB LP (PLP)",
+    "symbol": "PLP-BDIGG-BTCB",
     "type": "PancakeswapLp",
   },
   "0x857F91f735f4B03b19D2b5c6E476C73DB8241F55": Object {
@@ -294,6 +294,13 @@ Object {
     "decimals": 18,
     "name": "Sushi",
     "symbol": "Sushi",
+    "type": "Contract",
+  },
+  "0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490": Object {
+    "address": "0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490",
+    "decimals": 18,
+    "name": "Curve.fi DAI/USDC/USDT",
+    "symbol": "3CRV",
     "type": "Contract",
   },
   "0x6dEf55d2e18486B9dDfaA075bc4e4EE0B28c1545": Object {
@@ -684,6 +691,13 @@ Object {
     "decimals": 18,
     "name": "Sushi",
     "symbol": "Sushi",
+    "type": "Contract",
+  },
+  "0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490": Object {
+    "address": "0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490",
+    "decimals": 18,
+    "name": "Curve.fi DAI/USDC/USDT",
+    "symbol": "3CRV",
     "type": "Contract",
   },
   "0x6dEf55d2e18486B9dDfaA075bc4e4EE0B28c1545": Object {
