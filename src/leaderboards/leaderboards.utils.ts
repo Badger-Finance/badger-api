@@ -5,6 +5,20 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { LeaderBoardType } from './enums/leaderboard-type.enum';
 import { CachedBoost } from './interface/cached-boost.interface';
 
+const shortenAddress = (address: string) => `${address.slice(0, 6)}...${address.slice(address.length - 4)}`;
+
+export const getFullLeaderBoard = async (): Promise<CachedBoost[]> => {
+  const mapper = getDataMapper();
+  const data = [];
+  for await (const boost of mapper.query(CachedBoost, {
+    leaderboard: LeaderBoardType.BadgerBoost,
+  })) {
+    boost.address = shortenAddress(boost.address);
+    data.push(boost);
+  }
+  return data;
+};
+
 export const getLeaderBoardEntryRange = async (start: number, end: number): Promise<CachedBoost[]> => {
   if (start > end) {
     throw new BadRequest(`Start entry (${start}) must be less than or equal to end (${end})`);
@@ -15,7 +29,7 @@ export const getLeaderBoardEntryRange = async (start: number, end: number): Prom
     leaderboard: LeaderBoardType.BadgerBoost,
     rank: between(start, end),
   })) {
-    boost.address = `${boost.address.slice(0, 6)}...${boost.address.slice(boost.address.length - 4)}`;
+    boost.address = shortenAddress(boost.address);
     data.push(boost);
   }
   return data;

@@ -9,6 +9,12 @@ export class LeaderBoardsController {
   leaderBoardsService!: LeaderBoardsService;
 
   @ContentType('json')
+  @Get('/complete')
+  async getFullLeaderBoard(): Promise<Pick<LeaderBoardData, 'data'>> {
+    return this.leaderBoardsService.loadFullLeaderBoard();
+  }
+
+  @ContentType('json')
   @Get('')
   async getLeaderBoard(
     @QueryParams('page') page?: number,
