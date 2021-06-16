@@ -1,10 +1,10 @@
 import { attribute, hashKey, table } from '@aws/dynamodb-data-mapper-annotations';
-import { ASSET_DATA } from '../../config/constants';
+import { SETT_DATA } from '../../config/constants';
 
-@table(ASSET_DATA)
+@table(SETT_DATA)
 export class SettSnapshot {
   @hashKey()
-  asset!: string;
+  address!: string;
 
   @attribute()
   height!: number;

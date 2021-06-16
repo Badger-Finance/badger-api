@@ -99,7 +99,7 @@ export const ONE_YEAR_SECONDS = 365 * 24 * 60 * 60;
 
 // data access constants
 export const APY_SNAPSHOTS_DATA = process.env.APY_SNAPSHOTS_DATA || 'MISSING REQUIRED ENV VAR';
-export const ASSET_DATA = process.env.ASSET_DATA || 'MISSING REQUIRED ENV VAR';
+export const SETT_DATA = process.env.SETT_DATA || 'MISSING REQUIRED ENV VAR';
 export const LIQUIDITY_POOL_TOKEN_BALANCES_DATA =
   process.env.LIQUIDITY_POOL_TOKEN_BALANCES_DATA || 'MISSING REQUIRED ENV VAR';
 export const PRICE_DATA = process.env.PRICE_DATA || 'MISSING REQUIRED ENV VAR';
@@ -119,7 +119,7 @@ export const MASTERCHEF_URL = process.env.MASTERCHEF || 'MISSING REQUIRED ENV VA
 // general constants
 export const STAGE = process.env.STAGE || 'MISSING REQUIRED ENV VAR';
 export const BOUNCER_PROOFS = process.env.BOUNCER_PROOFS || 'MISSING REQUIRED ENV VAR';
-export const IS_OFFLINE = process.env.IS_OFFLINE || 'MISSING REQUIRED ENV VAR';
+export const IS_OFFLINE = process.env.IS_OFFLINE !== undefined && process.env.IS_OFFLINE === 'true';
 export const DEBUG = false;
 
 // third party api constants

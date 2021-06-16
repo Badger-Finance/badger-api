@@ -82,13 +82,13 @@ export const settToSnapshot = async (
   const value = tokenBalance * tokenPriceData.usd;
 
   return Object.assign(new SettSnapshot(), {
-    asset: settToken.symbol.toLowerCase(),
+    address: settToken.address,
     height: block,
     timestamp,
     balance: tokenBalance,
     supply,
     ratio,
-    value: parseFloat(value.toFixed(2)),
+    value: parseFloat(value.toFixed(4)),
   });
 };
 
@@ -128,7 +128,7 @@ export const getIndexedBlock = async (settDefinition: SettDefinition, startBlock
     const settToken = getToken(settDefinition.settToken);
     for await (const snapshot of mapper.query(
       SettSnapshot,
-      { asset: settToken.symbol.toLowerCase() },
+      { asset: settToken.address },
       { limit: 1, scanIndexForward: false },
     )) {
       return snapshot.height;
