@@ -128,7 +128,7 @@ export const getIndexedBlock = async (settDefinition: SettDefinition, startBlock
     const settToken = getToken(settDefinition.settToken);
     for await (const snapshot of mapper.query(
       SettSnapshot,
-      { asset: settToken.address },
+      { address: settToken.address },
       { limit: 1, scanIndexForward: false },
     )) {
       return snapshot.height;
