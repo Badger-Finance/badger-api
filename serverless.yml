@@ -221,12 +221,12 @@ functions:
 
   index-setts:
     handler: src/indexer/sett-indexer.indexAsset
-    timeout: 300
+    timeout: 480
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-setts
           description: "index historical data for all setts"
-          rate: rate(10 minute)
+          rate: rate(10 minutes)
 
   index-apy-snapshots:
     handler: src/indexer/apy-snapshots-indexer.refreshApySnapshots
