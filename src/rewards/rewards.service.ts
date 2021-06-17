@@ -52,16 +52,8 @@ export class RewardsService {
     const fileContents: AirdropMerkleDistribution = JSON.parse(airdropFile.toString('utf-8'));
     let claim = fileContents.claims[ethers.utils.getAddress(address)];
     if (!claim) {
-      claim = {
-        index: 0,
-        amount: BigNumber.from(0),
-        proof: [],
-      };
-      // TODO: re-enable with merkle hash based proof lookup
-      // throw new NotFound(`${address} is not on the bouncer list`);
+      throw new NotFound(`${address} is not on the bouncer list`);
     }
-    // TODO: remove when proofs are not manually set as empty
-    claim.proof = [];
     return claim;
   }
 
