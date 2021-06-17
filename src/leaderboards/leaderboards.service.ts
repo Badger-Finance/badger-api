@@ -7,10 +7,14 @@ import { LeaderBoardType } from './enums/leaderboard-type.enum';
 import { CachedBoost } from './interface/cached-boost.interface';
 import { LeaderBoardData } from './interface/leaderboard-data.interrface';
 import { UserBoost } from './interface/user-boost.interface';
-import { getLeaderBoardEntryRange, getLeaderBoardSize } from './leaderboards.utils';
+import { getFullLeaderBoard, getLeaderBoardEntryRange, getLeaderBoardSize } from './leaderboards.utils';
 
 @Service()
 export class LeaderBoardsService {
+  async loadFullLeaderBoard(): Promise<CachedBoost[]> {
+    return getFullLeaderBoard();
+  }
+
   async loadLeaderboardEntries(page?: number, size?: number): Promise<LeaderBoardData> {
     const pageNumber = page || 0;
     const pageSize = size || 20;
