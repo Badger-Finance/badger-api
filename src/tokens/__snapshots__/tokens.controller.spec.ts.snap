@@ -200,19 +200,19 @@ Object {
       "network": "eth",
     },
   },
+  "0x2fE94ea3d5d4a175184081439753DE15AeF9d614": Object {
+    "address": "0x2fE94ea3d5d4a175184081439753DE15AeF9d614",
+    "decimals": 18,
+    "lookupName": "wrapped-bitcoin",
+    "name": "BoringDAO BTC",
+    "symbol": "crvoBTC",
+    "type": "Contract",
+  },
   "0x3472A5A71965499acd81997a54BBA8D852C6E53d": Object {
     "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
     "decimals": 18,
     "name": "Badger",
     "symbol": "BADGER",
-    "type": "Contract",
-  },
-  "0x410e3E86ef427e30B9235497143881f717d93c2A": Object {
-    "address": "0x410e3E86ef427e30B9235497143881f717d93c2A",
-    "decimals": 18,
-    "lookupName": "wrapped-bitcoin",
-    "name": "BoringDAO BTC",
-    "symbol": "crvoBTC",
     "type": "Contract",
   },
   "0x49849C98ae39Fff122806C06791Fa73784FB3675": Object {
@@ -511,7 +511,7 @@ Object {
     "symbol": "bcrvoBTC",
     "type": "Vault",
     "vaultToken": Object {
-      "address": "0x410e3E86ef427e30B9235497143881f717d93c2A",
+      "address": "0x2fE94ea3d5d4a175184081439753DE15AeF9d614",
       "network": "eth",
     },
   },
@@ -597,19 +597,19 @@ Object {
       "network": "eth",
     },
   },
+  "0x2fE94ea3d5d4a175184081439753DE15AeF9d614": Object {
+    "address": "0x2fE94ea3d5d4a175184081439753DE15AeF9d614",
+    "decimals": 18,
+    "lookupName": "wrapped-bitcoin",
+    "name": "BoringDAO BTC",
+    "symbol": "crvoBTC",
+    "type": "Contract",
+  },
   "0x3472A5A71965499acd81997a54BBA8D852C6E53d": Object {
     "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
     "decimals": 18,
     "name": "Badger",
     "symbol": "BADGER",
-    "type": "Contract",
-  },
-  "0x410e3E86ef427e30B9235497143881f717d93c2A": Object {
-    "address": "0x410e3E86ef427e30B9235497143881f717d93c2A",
-    "decimals": 18,
-    "lookupName": "wrapped-bitcoin",
-    "name": "BoringDAO BTC",
-    "symbol": "crvoBTC",
     "type": "Contract",
   },
   "0x49849C98ae39Fff122806C06791Fa73784FB3675": Object {
@@ -908,7 +908,7 @@ Object {
     "symbol": "bcrvoBTC",
     "type": "Vault",
     "vaultToken": Object {
-      "address": "0x410e3E86ef427e30B9235497143881f717d93c2A",
+      "address": "0x2fE94ea3d5d4a175184081439753DE15AeF9d614",
       "network": "eth",
     },
   },

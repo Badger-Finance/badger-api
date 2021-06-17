@@ -4,7 +4,7 @@ import { BigNumber, ethers } from 'ethers';
 import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
 import { ChainNetwork } from '../chains/enums/chain-network.enum';
-import { diggAbi } from '../config/abi/abi';
+import { diggAbi } from '../config/abi/digg.abi';
 import { rewardsLoggerAbi, rewardsLoggerAddress } from '../config/abi/rewards-logger.abi';
 import { BOUNCER_PROOFS, ONE_YEAR_SECONDS, REWARD_DATA, TOKENS } from '../config/constants';
 import { getPrice } from '../prices/prices.utils';
@@ -50,7 +50,7 @@ export class RewardsService {
   async getBouncerProof(address: string): Promise<AirdropMerkleClaim> {
     const airdropFile = await getObject(REWARD_DATA, BOUNCER_PROOFS);
     const fileContents: AirdropMerkleDistribution = JSON.parse(airdropFile.toString('utf-8'));
-    let claim = fileContents.claims[ethers.utils.getAddress(address)];
+    const claim = fileContents.claims[ethers.utils.getAddress(address)];
     if (!claim) {
       throw new NotFound(`${address} is not on the bouncer list`);
     }

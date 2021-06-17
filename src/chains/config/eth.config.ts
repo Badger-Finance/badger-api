@@ -116,9 +116,6 @@ export const ethSetts: SettDefinition[] = [
     name: 'Yearn Wrapped BTC',
     depositToken: TOKENS.WBTC,
     settToken: TOKENS.BVYWBTC,
-    affiliate: {
-      protocol: Protocol.Yearn,
-    },
   },
   {
     name: 'Sushiswap Wrapped BTC/ibBTC',
@@ -145,9 +142,10 @@ export const ethSetts: SettDefinition[] = [
     createdBlock: 12589485,
     depositToken: TOKENS.CRV_HBTC,
     experimental: true,
+    hasBouncer: true,
     settToken: TOKENS.BCRV_HBTC,
     stage: Stage.Staging,
-    strategy: '0x8b6d0c81dcd20ff6c70263b93a9dcb8af3c0a780',
+    strategy: '0xca4b98ca964713287a36224364dbed15c9b7abc3',
     protocol: Protocol.Convex,
   },
   {
@@ -155,9 +153,10 @@ export const ethSetts: SettDefinition[] = [
     createdBlock: 12589485,
     depositToken: TOKENS.CRV_PBTC,
     experimental: true,
+    hasBouncer: true,
     settToken: TOKENS.BCRV_PBTC,
     stage: Stage.Staging,
-    strategy: '0x6b9436dba38a9d4985a800d72ee3e18f5d8e91b4',
+    strategy: '0xcaed73bcdd45d2469b1287a7c21d7a31b2bb7b35',
     protocol: Protocol.Convex,
   },
   {
@@ -165,9 +164,10 @@ export const ethSetts: SettDefinition[] = [
     createdBlock: 12589485,
     depositToken: TOKENS.CRV_OBTC,
     experimental: true,
+    hasBouncer: true,
     settToken: TOKENS.BCRV_OBTC,
     stage: Stage.Staging,
-    strategy: '0x2656644350862dc28440351de997ef898c9db674',
+    strategy: '0xdbda6fa60c48a7da8e0c7ae25a20fd089c0f6a1f',
     protocol: Protocol.Convex,
   },
   {
@@ -175,9 +175,10 @@ export const ethSetts: SettDefinition[] = [
     createdBlock: 12589485,
     depositToken: TOKENS.CRV_RENBTC,
     experimental: true,
+    hasBouncer: true,
     settToken: TOKENS.BCRV_BBTC,
     stage: Stage.Staging,
-    strategy: '0xfe41a816b023a7160d0d991a7265f93ae84ddff6',
+    strategy: '0x353200ed9f63fa7804816b336d50e9f0d7c88d2c',
     protocol: Protocol.Convex,
   },
 ];

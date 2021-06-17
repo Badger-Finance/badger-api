@@ -3,8 +3,7 @@ import { NotFound } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
-import { settAbi } from '../config/abi/abi';
-import { yearnAffiliateVaultWrapperAbi } from '../config/abi/yearn-affiliate-vault-wrapper.abi';
+import { settAbi } from '../config/abi/sett.abi';
 import { PANCAKESWAP_URL, SUSHISWAP_URL } from '../config/constants';
 import { Protocol } from '../config/enums/protocol.enum';
 import { toFloat } from '../config/util';
@@ -101,20 +100,11 @@ const getPricePerShare = async (
   const token = getToken(sett.settToken);
   try {
     let ppfs: BigNumber;
-    if (sett.affiliate && sett.affiliate.protocol === Protocol.Yearn) {
-      const contract = new ethers.Contract(sett.settToken, yearnAffiliateVaultWrapperAbi, chain.provider);
-      if (block) {
-        ppfs = await contract.pricePerShare({ blockTag: block });
-      } else {
-        ppfs = await contract.pricePerShare();
-      }
+    const contract = new ethers.Contract(sett.settToken, settAbi, chain.provider);
+    if (block) {
+      ppfs = await contract.getPricePerFullShare({ blockTag: block });
     } else {
-      const contract = new ethers.Contract(sett.settToken, settAbi, chain.provider);
-      if (block) {
-        ppfs = await contract.getPricePerFullShare({ blockTag: block });
-      } else {
-        ppfs = await contract.getPricePerFullShare();
-      }
+      ppfs = await contract.getPricePerFullShare();
     }
     return toFloat(ppfs, token.decimals);
   } catch (err) {
