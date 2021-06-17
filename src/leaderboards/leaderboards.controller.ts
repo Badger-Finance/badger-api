@@ -1,8 +1,8 @@
 import { Controller, Get, Inject, QueryParams } from '@tsed/common';
 import { ContentType } from '@tsed/schema';
+import { CachedBoost } from './interface/cached-boost.interface';
 import { LeaderBoardData } from './interface/leaderboard-data.interrface';
 import { LeaderBoardsService } from './leaderboards.service';
-import { CachedBoost } from './interface/cached-boost.interface';
 
 @Controller('/leaderboards')
 export class LeaderBoardsController {
