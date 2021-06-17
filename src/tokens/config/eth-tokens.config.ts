@@ -102,6 +102,14 @@ export const ethTokensConfig: TokenConfig = {
     symbol: 'crvoBTC',
     type: TokenType.Contract,
   },
+  [TOKENS.CRV_BBTC]: {
+    address: TOKENS.CRV_BBTC,
+    decimals: 18,
+    lookupName: 'binance-wrapped-btc',
+    name: 'Binance Wrapped BTC',
+    symbol: 'crvbBTC',
+    type: TokenType.Contract,
+  },
   [TOKENS.CRV]: {
     address: TOKENS.CRV,
     decimals: 18,
@@ -327,7 +335,7 @@ export const ethTokensConfig: TokenConfig = {
   [TOKENS.BCRV_HRENBTC]: {
     address: TOKENS.BCRV_HRENBTC,
     decimals: 18,
-    name: 'bHarvest Curve.fi crvRenWBTC',
+    name: 'bHarvest crvRenWBTC',
     symbol: 'bcrvhrenBTC',
     type: TokenType.Vault,
     vaultToken: {

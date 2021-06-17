@@ -54,7 +54,7 @@ export const ethSetts: SettDefinition[] = [
   },
   // TODO: Remove once fully deprecated
   {
-    name: 'Harvest-Curve.fi renBTC/wBTC',
+    name: 'Harvest renBTC/wBTC',
     createdBlock: 11380939,
     depositToken: TOKENS.CRV_RENBTC,
     settToken: TOKENS.BCRV_HRENBTC,
@@ -111,7 +111,6 @@ export const ethSetts: SettDefinition[] = [
     settToken: TOKENS.BBADGER,
   },
   {
-    hasBouncer: true,
     createdBlock: 12246710,
     name: 'Yearn Wrapped BTC',
     depositToken: TOKENS.WBTC,
@@ -173,7 +172,7 @@ export const ethSetts: SettDefinition[] = [
   {
     name: 'Curve.fi bBTC/wBTC',
     createdBlock: 12589485,
-    depositToken: TOKENS.CRV_RENBTC,
+    depositToken: TOKENS.CRV_BBTC,
     experimental: true,
     hasBouncer: true,
     settToken: TOKENS.BCRV_BBTC,
