@@ -1,10 +1,8 @@
 import { Protocol } from '../../config/enums/protocol.enum';
 import { Stage } from '../../config/enums/stage.enum';
 import { CachedLiquidityPoolTokenBalance } from '../../tokens/interfaces/cached-liquidity-pool-token-balance.interface';
-import { SettAffiliateData } from './sett-affiliate-data.interface';
 
 export interface SettDefinition {
-  affiliate?: SettAffiliateData;
   balanceDecimals?: number;
   createdBlock: number;
   depositToken: string;

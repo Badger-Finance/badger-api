@@ -4,7 +4,7 @@ import { BigNumber, ethers } from 'ethers';
 import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
 import { ChainNetwork } from '../chains/enums/chain-network.enum';
-import { diggAbi } from '../config/abi/abi';
+import { diggAbi } from '../config/abi/digg.abi';
 import { rewardsLoggerAbi, rewardsLoggerAddress } from '../config/abi/rewards-logger.abi';
 import { BOUNCER_PROOFS, ONE_YEAR_SECONDS, REWARD_DATA, TOKENS } from '../config/constants';
 import { getPrice } from '../prices/prices.utils';
@@ -50,18 +50,10 @@ export class RewardsService {
   async getBouncerProof(address: string): Promise<AirdropMerkleClaim> {
     const airdropFile = await getObject(REWARD_DATA, BOUNCER_PROOFS);
     const fileContents: AirdropMerkleDistribution = JSON.parse(airdropFile.toString('utf-8'));
-    let claim = fileContents.claims[ethers.utils.getAddress(address)];
+    const claim = fileContents.claims[ethers.utils.getAddress(address)];
     if (!claim) {
-      claim = {
-        index: 0,
-        amount: BigNumber.from(0),
-        proof: [],
-      };
-      // TODO: re-enable with merkle hash based proof lookup
-      // throw new NotFound(`${address} is not on the bouncer list`);
+      throw new NotFound(`${address} is not on the bouncer list`);
     }
-    // TODO: remove when proofs are not manually set as empty
-    claim.proof = [];
     return claim;
   }
 

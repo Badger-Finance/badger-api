@@ -1,11 +1,7 @@
 import { Inject, Service } from '@tsed/di';
 import { BadRequest, InternalServerError } from '@tsed/exceptions';
-import { ethers } from 'ethers';
 import { Chain } from '../chains/config/chain.config';
-import { guestListAbi } from '../config/abi/guest-list.abi';
-import { yearnAffiliateVaultWrapperAbi } from '../config/abi/yearn-affiliate-vault-wrapper.abi';
 import { TOKENS } from '../config/constants';
-import { Protocol } from '../config/enums/protocol.enum';
 import { getUserLeaderBoardRank } from '../leaderboards/leaderboards.utils';
 import { PricesService } from '../prices/prices.service';
 import { RewardsService } from '../rewards/rewards.service';
@@ -14,7 +10,6 @@ import { TokensService } from '../tokens/tokens.service';
 import { getToken } from '../tokens/tokens.utils';
 import { getUserAccount } from './accounts.utils';
 import { Account } from './interfaces/account.interface';
-import { AccountLimits } from './interfaces/account-limits.interface';
 
 @Service()
 export class AccountsService {
@@ -45,7 +40,6 @@ export class AccountsService {
       value: 0,
       earnedValue: 0,
       balances: [],
-      depositLimits: {},
     };
 
     if (user) {
@@ -108,41 +102,6 @@ export class AccountsService {
 
     account.value = account.balances.map((b) => b.value).reduce((total, value) => (total += value), 0);
     account.earnedValue = account.balances.map((b) => b.earnedValue).reduce((total, value) => (total += value), 0);
-    // TODO: Enable once deposit limits are used again, slows down endpoint
-    // account.depositLimits = await this.getAccountLimits(chain, accountId);
     return account;
-  }
-
-  async getAccountLimits(chain: Chain, accountId: string): Promise<AccountLimits> {
-    const limits: AccountLimits = {};
-    const yearnVaults = chain.setts.filter((s) => s.affiliate && s.affiliate.protocol === Protocol.Yearn);
-
-    await Promise.all(
-      yearnVaults.map(async (vault) => {
-        const vaultToken = getToken(vault.settToken);
-
-        let limit = 0.5;
-        try {
-          const wrapper = new ethers.Contract(vault.settToken, yearnAffiliateVaultWrapperAbi, chain.provider);
-          const guestListContract = await wrapper.guestList();
-          const guestList = new ethers.Contract(guestListContract, guestListAbi, chain.provider);
-
-          const divisor = Math.pow(10, vaultToken.decimals);
-          limit = (await guestList.userDepositCap()) / divisor;
-          const available = (await guestList.remainingUserDepositAllowed(accountId)) / divisor;
-          limits[vault.settToken] = {
-            available: available,
-            limit: limit,
-          };
-        } catch (err) {
-          limits[vault.settToken] = {
-            available: limit,
-            limit: limit,
-          };
-        }
-      }),
-    );
-
-    return limits;
   }
 }
