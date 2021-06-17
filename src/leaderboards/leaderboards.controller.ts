@@ -2,6 +2,7 @@ import { Controller, Get, Inject, QueryParams } from '@tsed/common';
 import { ContentType } from '@tsed/schema';
 import { LeaderBoardData } from './interface/leaderboard-data.interrface';
 import { LeaderBoardsService } from './leaderboards.service';
+import { CachedBoost } from './interface/cached-boost.interface';
 
 @Controller('/leaderboards')
 export class LeaderBoardsController {
@@ -10,7 +11,7 @@ export class LeaderBoardsController {
 
   @ContentType('json')
   @Get('/complete')
-  async getFullLeaderBoard(): Promise<Pick<LeaderBoardData, 'data'>> {
+  async getFullLeaderBoard(): Promise<CachedBoost[]> {
     return this.leaderBoardsService.loadFullLeaderBoard();
   }
 

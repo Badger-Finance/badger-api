@@ -11,14 +11,8 @@ import { getFullLeaderBoard, getLeaderBoardEntryRange, getLeaderBoardSize } from
 
 @Service()
 export class LeaderBoardsService {
-  async loadFullLeaderBoard(): Promise<Pick<LeaderBoardData, 'data'>> {
-    try {
-      const data = await getFullLeaderBoard();
-      return { data };
-    } catch (err) {
-      console.error(err);
-      return { data: [] };
-    }
+  async loadFullLeaderBoard(): Promise<CachedBoost[]> {
+    return getFullLeaderBoard();
   }
 
   async loadLeaderboardEntries(page?: number, size?: number): Promise<LeaderBoardData> {
