@@ -73,11 +73,6 @@ export class SettsService {
       sett.maxApr = sett.sources.map((s) => s.maxApr || s.apr).reduce((total, apr) => (total += apr), 0);
     }
 
-    // TODO: Re-enable this once its better offlined (or used again)
-    // if (settDefinition.affiliate) {
-    //   const affiliate = Affiliate.getAffiliate(settDefinition.affiliate);
-    //   sett.affiliate = await affiliate.getAffiliateVaultData(chain, settDefinition);
-    // }
     return sett;
   }
 

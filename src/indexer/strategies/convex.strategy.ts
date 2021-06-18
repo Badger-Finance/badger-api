@@ -1,24 +1,28 @@
 import { ethers } from 'ethers';
 import fetch from 'node-fetch';
 import { Chain } from '../../chains/config/chain.config';
+import { cvxBoosterAbi } from '../../config/abi/cvx-booster.abi';
 import { cvxRewardsAbi } from '../../config/abi/cvx-rewards.abi';
 import { erc20Abi } from '../../config/abi/erc20.abi';
 import { CURVE_API_URL, ONE_YEAR_SECONDS, TOKENS } from '../../config/constants';
 import { getPrice } from '../../prices/prices.utils';
 import { SourceType } from '../../protocols/enums/source-type.enum';
 import { CachedValueSource } from '../../protocols/interfaces/cached-value-source.interface';
+import { CvxPoolInfo } from '../../protocols/interfaces/cvx-pool-info.interface';
 import { Performance, uniformPerformance } from '../../protocols/interfaces/performance.interface';
-import { createValueSource } from '../../protocols/interfaces/value-source.interface';
+import { PoolMap } from '../../protocols/interfaces/pool-map.interface';
+import { createValueSource, ValueSource } from '../../protocols/interfaces/value-source.interface';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
-import { getCachedSett } from '../../setts/setts.utils';
+import { getCachedSett, VAULT_SOURCE } from '../../setts/setts.utils';
+import { getToken } from '../../tokens/tokens.utils';
 import { valueSourceToCachedValueSource } from '../indexer.utils';
-// import { PoolMap } from '../../protocols/interfaces/pool-map.interface';
 
 /* Strategy Definitions */
 export const cvxRewards = '0xCF50b810E57Ac33B91dCF525C6ddd9881B139332';
 export const cvxCrvRewards = '0x3Fe65692bfCD0e6CF84cB1E7d24108E434A7587e';
 export const threeCrvRewards = '0x7091dbb7fcbA54569eF1387Ac89Eb2a5C9F6d2EA';
 export const cvxChef = '0xEF0881eC094552b2e128Cf945EF17a6752B4Ec5d';
+export const cvxBooster = '0xF403C135812408BFbE8713b5A23a04b3D48AAE31';
 
 /* Protocol Definitions */
 const curvePoolApr: { [address: string]: string } = {
@@ -28,6 +32,14 @@ const curvePoolApr: { [address: string]: string } = {
   [TOKENS.CRV_HBTC]: 'hbtc',
   [TOKENS.CRV_PBTC]: 'pbtc',
   [TOKENS.CRV_OBTC]: 'obtc',
+  [TOKENS.CRV_BBTC]: 'bbtc',
+};
+
+const cvxPoolId: PoolMap = {
+  [TOKENS.CRV_HBTC]: 8,
+  [TOKENS.CRV_PBTC]: 18,
+  [TOKENS.CRV_BBTC]: 19,
+  [TOKENS.CRV_OBTC]: 20,
 };
 
 // const chefPoolId: PoolMap = {
@@ -39,9 +51,69 @@ export async function getConvexApySnapshots(
   chain: Chain,
   settDefinition: SettDefinition,
 ): Promise<CachedValueSource[]> {
-  const singleRewards = await Promise.all([getCvxRewards(chain, settDefinition), getCurvePerformance(settDefinition)]);
-  const multiRewards = await getCvxCrvRewards(chain, settDefinition);
-  return [...singleRewards, ...multiRewards];
+  const singleRewards = await Promise.all([
+    getCvxRewards(chain, settDefinition),
+    getCurvePerformance(settDefinition),
+  ]);
+  const multiRewards = await Promise.all([
+    getHarvestable(chain, settDefinition),
+    getCvxCrvRewards(chain, settDefinition),
+  ]);
+  return [...singleRewards, ...multiRewards.flatMap((reward) => reward)];
+}
+
+async function getHarvestable(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
+  const booster = new ethers.Contract(cvxBooster, cvxBoosterAbi, chain.provider);
+  const poolInfo: CvxPoolInfo = await booster.poolInfo(cvxPoolId[settDefinition.depositToken]);
+  const crv = new ethers.Contract(poolInfo.crvRewards, cvxRewardsAbi, chain.provider);
+
+  // get prices
+  const [cvxPrice, crvPrice, depositPrice] = await Promise.all([
+    getPrice(TOKENS.CVX),
+    getPrice(TOKENS.CRV),
+    getPrice(settDefinition.depositToken),
+  ]);
+
+  // get rewards
+  const crvReward = parseFloat(ethers.utils.formatEther(await crv.currentRewards()));
+  const cvxReward = await getCvxMint(chain, crvReward);
+  const depositLocked = parseFloat(ethers.utils.formatEther(await crv.totalSupply()));
+
+  // get apr params
+  const duration = (await crv.duration()).toNumber();
+  const scalar = ONE_YEAR_SECONDS / duration;
+  const poolValue = depositLocked * depositPrice.usd;
+
+  // calculate CRV rewards
+  const crvEmission = crvReward * crvPrice.usd * scalar;
+  const crvApr = (crvEmission / poolValue) * 100;
+
+  // calculate CVX rewards
+  const cvxEmission = cvxReward * cvxPrice.usd * scalar;
+  const cvxApr = (cvxEmission / poolValue) * 100;
+
+  const compoundValueSource = createValueSource(
+    VAULT_SOURCE,
+    uniformPerformance(crvApr + cvxApr),
+    true,
+  );
+
+  const extraRewardsLength = await crv.extraRewardsLength();
+  const extraSources: ValueSource[] = [];
+  for (let i = 0; i < extraRewardsLength; i++) {
+    const rewards = await crv.extraRewards(i);
+    const virtualRewards = new ethers.Contract(rewards, cvxRewardsAbi, chain.provider);
+    const rewardToken = getToken(await virtualRewards.rewardToken());
+    const rewardTokenPrice = await getPrice(rewardToken.address);
+    const rewardAmount = parseFloat(ethers.utils.formatEther(await virtualRewards.currentRewards()));
+    const rewardEmission = rewardAmount * rewardTokenPrice.usd * scalar;
+    const rewardApr = (rewardEmission / poolValue) * 100;
+    extraSources.push(createValueSource(`${rewardToken.symbol} Rewards`, uniformPerformance(rewardApr)));
+  }
+
+  const cachedCompounding = valueSourceToCachedValueSource(compoundValueSource, settDefinition, SourceType.Compound);
+  const cachedExtras = extraSources.map((source) => valueSourceToCachedValueSource(source, settDefinition, SourceType.Emission));
+  return [cachedCompounding, ...cachedExtras];
 }
 
 async function getCvxRewards(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource> {
@@ -109,13 +181,13 @@ async function getCvxCrvRewards(chain: Chain, settDefinition: SettDefinition): P
   // calculate 3CRV rewards
   const threeCrvEmission = threeCrvReward * threeCrvPrice.usd * scalar;
   const threeCrvApr = (threeCrvEmission / poolValue) * 100;
-  const threeCrvValueSource = createValueSource('cvxCRV Rewards', uniformPerformance(threeCrvApr * valueScalar));
+  const threeCrvValueSource = createValueSource('3CRV Rewards', uniformPerformance(threeCrvApr * valueScalar));
   const cachedThreeCrvSource = valueSourceToCachedValueSource(threeCrvValueSource, settDefinition, SourceType.Emission);
 
   // calculate CVX rewards
   const cvxEmission = cvxReward * cvxPrice.usd * scalar;
   const cvxApr = (cvxEmission / poolValue) * 100;
-  const cvxValueSource = createValueSource('cvxCRV Rewards', uniformPerformance(cvxApr * valueScalar));
+  const cvxValueSource = createValueSource('CVX Rewards', uniformPerformance(cvxApr * valueScalar));
   const cachedCvxSource = valueSourceToCachedValueSource(cvxValueSource, settDefinition, SourceType.Emission);
 
   return [cachedCvxCrvSource, cachedThreeCrvSource, cachedCvxSource];
