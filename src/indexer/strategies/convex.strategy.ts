@@ -12,6 +12,7 @@ import { CvxPoolInfo } from '../../protocols/interfaces/cvx-pool-info.interface'
 import { Performance, uniformPerformance } from '../../protocols/interfaces/performance.interface';
 import { PoolMap } from '../../protocols/interfaces/pool-map.interface';
 import { createValueSource, ValueSource } from '../../protocols/interfaces/value-source.interface';
+import { ValueSourceMap } from '../../protocols/interfaces/value-source-map.interface';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { getCachedSett, VAULT_SOURCE } from '../../setts/setts.utils';
 import { getToken } from '../../tokens/tokens.utils';
@@ -56,7 +57,16 @@ export async function getConvexApySnapshots(
     getHarvestable(chain, settDefinition),
     getCvxCrvRewards(chain, settDefinition),
   ]);
-  return [...singleRewards, ...multiRewards.flatMap((reward) => reward)];
+  const sourceMap: ValueSourceMap = {};
+  const sources = [...singleRewards, ...multiRewards.flatMap((reward) => reward)];
+  sources.forEach((source) => {
+    const mapEntry = sourceMap[source.name];
+    if (!mapEntry) {
+      sourceMap[source.name] = source;
+    } else {
+    }
+  });
+  return sources;
 }
 
 async function getHarvestable(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
@@ -88,8 +98,7 @@ async function getHarvestable(chain: Chain, settDefinition: SettDefinition): Pro
   // calculate CVX rewards
   const cvxEmission = cvxReward * cvxPrice.usd * scalar;
   const cvxApr = (cvxEmission / poolValue) * 100;
-
-  const compoundValueSource = createValueSource(VAULT_SOURCE, uniformPerformance(crvApr + cvxApr), true);
+  let totalApr = crvApr + cvxApr;
 
   const extraRewardsLength = await crv.extraRewardsLength();
   const extraSources: ValueSource[] = [];
@@ -101,8 +110,11 @@ async function getHarvestable(chain: Chain, settDefinition: SettDefinition): Pro
     const rewardAmount = parseFloat(ethers.utils.formatEther(await virtualRewards.currentRewards()));
     const rewardEmission = rewardAmount * rewardTokenPrice.usd * scalar;
     const rewardApr = (rewardEmission / poolValue) * 100;
-    extraSources.push(createValueSource(`${rewardToken.symbol} Rewards`, uniformPerformance(rewardApr)));
+    const claimableApr = rewardApr * 0.6;
+    totalApr += rewardApr * 0.1;
+    extraSources.push(createValueSource(`${rewardToken.symbol} Rewards`, uniformPerformance(claimableApr)));
   }
+  const compoundValueSource = createValueSource(VAULT_SOURCE, uniformPerformance(totalApr), true);
 
   const cachedCompounding = valueSourceToCachedValueSource(compoundValueSource, settDefinition, SourceType.Compound);
   const cachedExtras = extraSources.map((source) =>
@@ -129,6 +141,13 @@ async function getCvxRewards(chain: Chain, settDefinition: SettDefinition): Prom
   const scalar = ONE_YEAR_SECONDS / duration;
   const settBalance = parseFloat(ethers.utils.formatEther(await cvx.balanceOf(settDefinition.strategy)));
   const settBalanceValue = settBalance * cvxPrice.usd;
+  if (sett.value === 0 || settBalance === 0) {
+    return valueSourceToCachedValueSource(
+      createValueSource('CVX Rewards', uniformPerformance(0)),
+      settDefinition,
+      SourceType.Emission,
+    );
+  }
   const valueScalar = settBalanceValue / sett.value;
 
   // calculate CVX rewards
@@ -163,6 +182,9 @@ async function getCvxCrvRewards(chain: Chain, settDefinition: SettDefinition): P
   const duration = (await cvxCrv.duration()).toNumber();
   const scalar = ONE_YEAR_SECONDS / duration;
   const settBalance = parseFloat(ethers.utils.formatEther(await cvxCrv.balanceOf(settDefinition.strategy)));
+  if (settBalance === 0) {
+    return [];
+  }
   const settBalanceValue = settBalance * cvxPrice.usd;
   const valueScalar = settBalanceValue / sett.value;
   const poolValue = cvxCrvLocked * cvxCrvPrice.usd;
