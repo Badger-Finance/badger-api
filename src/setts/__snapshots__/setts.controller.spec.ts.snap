@@ -1421,7 +1421,7 @@ Array [
     "boostable": false,
     "experimental": true,
     "hasBouncer": true,
-    "name": "Curve.fi hBTC/wBTC",
+    "name": "Convex hBTC",
     "ppfs": 1,
     "sources": Array [
       Object {
@@ -1502,7 +1502,7 @@ Array [
     "boostable": false,
     "experimental": true,
     "hasBouncer": true,
-    "name": "Curve.fi pBTC/wBTC",
+    "name": "Convex pBTC",
     "ppfs": 1,
     "sources": Array [
       Object {
@@ -1583,7 +1583,7 @@ Array [
     "boostable": false,
     "experimental": true,
     "hasBouncer": true,
-    "name": "Curve.fi oBTC/wBTC",
+    "name": "Convex oBTC",
     "ppfs": 1,
     "sources": Array [
       Object {
@@ -1664,7 +1664,7 @@ Array [
     "boostable": false,
     "experimental": true,
     "hasBouncer": true,
-    "name": "Curve.fi bBTC/wBTC",
+    "name": "Convex bBTC",
     "ppfs": 1,
     "sources": Array [
       Object {
@@ -2938,7 +2938,7 @@ Array [
     "boostable": false,
     "experimental": true,
     "hasBouncer": true,
-    "name": "Curve.fi hBTC/wBTC",
+    "name": "Convex hBTC",
     "ppfs": 1,
     "sources": Array [
       Object {
@@ -3019,7 +3019,7 @@ Array [
     "boostable": false,
     "experimental": true,
     "hasBouncer": true,
-    "name": "Curve.fi pBTC/wBTC",
+    "name": "Convex pBTC",
     "ppfs": 1,
     "sources": Array [
       Object {
@@ -3100,7 +3100,7 @@ Array [
     "boostable": false,
     "experimental": true,
     "hasBouncer": true,
-    "name": "Curve.fi oBTC/wBTC",
+    "name": "Convex oBTC",
     "ppfs": 1,
     "sources": Array [
       Object {
@@ -3181,7 +3181,7 @@ Array [
     "boostable": false,
     "experimental": true,
     "hasBouncer": true,
-    "name": "Curve.fi bBTC/wBTC",
+    "name": "Convex bBTC",
     "ppfs": 1,
     "sources": Array [
       Object {
