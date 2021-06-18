@@ -215,6 +215,13 @@ Object {
     "symbol": "BADGER",
     "type": "Contract",
   },
+  "0x3c9d6c1C73b31c837832c72E04D3152f051fc1A9": Object {
+    "address": "0x3c9d6c1C73b31c837832c72E04D3152f051fc1A9",
+    "decimals": 18,
+    "name": "BoringDAO Token",
+    "symbol": "BOR",
+    "type": "Contract",
+  },
   "0x410e3E86ef427e30B9235497143881f717d93c2A": Object {
     "address": "0x410e3E86ef427e30B9235497143881f717d93c2A",
     "decimals": 18,
@@ -369,6 +376,13 @@ Object {
       "address": "0x9a13867048e01c663ce8Ce2fE0cDAE69Ff9F35E3",
       "network": "eth",
     },
+  },
+  "0x89Ab32156e46F46D02ade3FEcbe5Fc4243B9AAeD": Object {
+    "address": "0x89Ab32156e46F46D02ade3FEcbe5Fc4243B9AAeD",
+    "decimals": 18,
+    "name": "pNetwork Token",
+    "symbol": "PNT",
+    "type": "Contract",
   },
   "0x8a8FFec8f4A0C8c9585Da95D9D97e8Cd6de273DE": Object {
     "address": "0x8a8FFec8f4A0C8c9585Da95D9D97e8Cd6de273DE",
@@ -620,6 +634,13 @@ Object {
     "symbol": "BADGER",
     "type": "Contract",
   },
+  "0x3c9d6c1C73b31c837832c72E04D3152f051fc1A9": Object {
+    "address": "0x3c9d6c1C73b31c837832c72E04D3152f051fc1A9",
+    "decimals": 18,
+    "name": "BoringDAO Token",
+    "symbol": "BOR",
+    "type": "Contract",
+  },
   "0x410e3E86ef427e30B9235497143881f717d93c2A": Object {
     "address": "0x410e3E86ef427e30B9235497143881f717d93c2A",
     "decimals": 18,
@@ -774,6 +795,13 @@ Object {
       "address": "0x9a13867048e01c663ce8Ce2fE0cDAE69Ff9F35E3",
       "network": "eth",
     },
+  },
+  "0x89Ab32156e46F46D02ade3FEcbe5Fc4243B9AAeD": Object {
+    "address": "0x89Ab32156e46F46D02ade3FEcbe5Fc4243B9AAeD",
+    "decimals": 18,
+    "name": "pNetwork Token",
+    "symbol": "PNT",
+    "type": "Contract",
   },
   "0x8a8FFec8f4A0C8c9585Da95D9D97e8Cd6de273DE": Object {
     "address": "0x8a8FFec8f4A0C8c9585Da95D9D97e8Cd6de273DE",

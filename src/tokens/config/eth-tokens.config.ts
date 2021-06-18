@@ -138,6 +138,20 @@ export const ethTokensConfig: TokenConfig = {
     symbol: '3CRV',
     type: TokenType.Contract,
   },
+  [TOKENS.BOR]: {
+    address: TOKENS.BOR,
+    decimals: 18,
+    name: 'BoringDAO Token',
+    symbol: 'BOR',
+    type: TokenType.Contract,
+  },
+  [TOKENS.PNT]: {
+    address: TOKENS.PNT,
+    decimals: 18,
+    name: 'pNetwork Token',
+    symbol: 'PNT',
+    type: TokenType.Contract,
+  },
   [TOKENS.SUSHI_BADGER_WBTC]: {
     address: TOKENS.SUSHI_BADGER_WBTC,
     decimals: 18,
