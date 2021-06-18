@@ -137,7 +137,7 @@ export const ethSetts: SettDefinition[] = [
     strategy: STRATEGIES.BZS_DIGG,
   },
   {
-    name: 'Curve.fi hBTC/wBTC',
+    name: 'Convex hBTC/wBTC',
     createdBlock: 12589485,
     depositToken: TOKENS.CRV_HBTC,
     experimental: true,
@@ -148,7 +148,7 @@ export const ethSetts: SettDefinition[] = [
     protocol: Protocol.Convex,
   },
   {
-    name: 'Curve.fi pBTC/wBTC',
+    name: 'Convex pBTC/wBTC',
     createdBlock: 12589485,
     depositToken: TOKENS.CRV_PBTC,
     experimental: true,
@@ -159,7 +159,7 @@ export const ethSetts: SettDefinition[] = [
     protocol: Protocol.Convex,
   },
   {
-    name: 'Curve.fi oBTC/wBTC',
+    name: 'Convex oBTC/wBTC',
     createdBlock: 12589485,
     depositToken: TOKENS.CRV_OBTC,
     experimental: true,
@@ -170,7 +170,7 @@ export const ethSetts: SettDefinition[] = [
     protocol: Protocol.Convex,
   },
   {
-    name: 'Curve.fi bBTC/wBTC',
+    name: 'Convex bBTC/wBTC',
     createdBlock: 12589485,
     depositToken: TOKENS.CRV_BBTC,
     experimental: true,
