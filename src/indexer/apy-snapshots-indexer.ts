@@ -18,7 +18,7 @@ export async function refreshApySnapshots() {
     try {
       await mapper.put(source);
     } catch (err) {
-      // console.log({ message: err.message, source });
+      console.log({ message: err.message, source });
     }
   }
 }

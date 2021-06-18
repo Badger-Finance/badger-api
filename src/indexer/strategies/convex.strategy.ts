@@ -51,10 +51,7 @@ export async function getConvexApySnapshots(
   chain: Chain,
   settDefinition: SettDefinition,
 ): Promise<CachedValueSource[]> {
-  const singleRewards = await Promise.all([
-    getCvxRewards(chain, settDefinition),
-    getCurvePerformance(settDefinition),
-  ]);
+  const singleRewards = await Promise.all([getCvxRewards(chain, settDefinition), getCurvePerformance(settDefinition)]);
   const multiRewards = await Promise.all([
     getHarvestable(chain, settDefinition),
     getCvxCrvRewards(chain, settDefinition),
@@ -92,11 +89,7 @@ async function getHarvestable(chain: Chain, settDefinition: SettDefinition): Pro
   const cvxEmission = cvxReward * cvxPrice.usd * scalar;
   const cvxApr = (cvxEmission / poolValue) * 100;
 
-  const compoundValueSource = createValueSource(
-    VAULT_SOURCE,
-    uniformPerformance(crvApr + cvxApr),
-    true,
-  );
+  const compoundValueSource = createValueSource(VAULT_SOURCE, uniformPerformance(crvApr + cvxApr), true);
 
   const extraRewardsLength = await crv.extraRewardsLength();
   const extraSources: ValueSource[] = [];
@@ -112,7 +105,9 @@ async function getHarvestable(chain: Chain, settDefinition: SettDefinition): Pro
   }
 
   const cachedCompounding = valueSourceToCachedValueSource(compoundValueSource, settDefinition, SourceType.Compound);
-  const cachedExtras = extraSources.map((source) => valueSourceToCachedValueSource(source, settDefinition, SourceType.Emission));
+  const cachedExtras = extraSources.map((source) =>
+    valueSourceToCachedValueSource(source, settDefinition, SourceType.Emission),
+  );
   return [cachedCompounding, ...cachedExtras];
 }
 
