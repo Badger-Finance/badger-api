@@ -63,7 +63,7 @@ export class SettsService {
     } else {
       sett.sources = sources.filter((source) => !source.harvestable);
     }
-    sett.sources = sett.sources.filter((source) => source.apr > 0);
+    sett.sources = sett.sources.filter((source) => source.apr >= 0.01);
     sett.apr = sett.sources.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
 
     const hasBoostedApr = sett.sources.some((source) => source.boostable);

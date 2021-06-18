@@ -64,6 +64,9 @@ export async function getConvexApySnapshots(
     if (!mapEntry) {
       sourceMap[source.name] = source;
     } else {
+      mapEntry.apr += source.apr;
+      mapEntry.minApr += source.minApr;
+      mapEntry.maxApr += source.maxApr;
     }
   });
   return sources;
@@ -115,6 +118,7 @@ async function getHarvestable(chain: Chain, settDefinition: SettDefinition): Pro
     extraSources.push(createValueSource(`${rewardToken.symbol} Rewards`, uniformPerformance(claimableApr)));
   }
   const compoundValueSource = createValueSource(VAULT_SOURCE, uniformPerformance(totalApr), true);
+  console.log(compoundValueSource);
 
   const cachedCompounding = valueSourceToCachedValueSource(compoundValueSource, settDefinition, SourceType.Compound);
   const cachedExtras = extraSources.map((source) =>
