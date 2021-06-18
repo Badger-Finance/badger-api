@@ -12,7 +12,6 @@ import { CvxPoolInfo } from '../../protocols/interfaces/cvx-pool-info.interface'
 import { Performance, uniformPerformance } from '../../protocols/interfaces/performance.interface';
 import { PoolMap } from '../../protocols/interfaces/pool-map.interface';
 import { createValueSource, ValueSource } from '../../protocols/interfaces/value-source.interface';
-import { ValueSourceMap } from '../../protocols/interfaces/value-source-map.interface';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { getCachedSett, VAULT_SOURCE } from '../../setts/setts.utils';
 import { getToken } from '../../tokens/tokens.utils';
@@ -57,19 +56,7 @@ export async function getConvexApySnapshots(
     getHarvestable(chain, settDefinition),
     getCvxCrvRewards(chain, settDefinition),
   ]);
-  const sourceMap: ValueSourceMap = {};
-  const sources = [...singleRewards, ...multiRewards.flatMap((reward) => reward)];
-  sources.forEach((source) => {
-    const mapEntry = sourceMap[source.name];
-    if (!mapEntry) {
-      sourceMap[source.name] = source;
-    } else {
-      mapEntry.apr += source.apr;
-      mapEntry.minApr += source.minApr;
-      mapEntry.maxApr += source.maxApr;
-    }
-  });
-  return sources;
+  return [...singleRewards, ...multiRewards.flatMap((reward) => reward)];
 }
 
 async function getHarvestable(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
@@ -118,7 +105,6 @@ async function getHarvestable(chain: Chain, settDefinition: SettDefinition): Pro
     extraSources.push(createValueSource(`${rewardToken.symbol} Rewards`, uniformPerformance(claimableApr)));
   }
   const compoundValueSource = createValueSource(VAULT_SOURCE, uniformPerformance(totalApr), true);
-  console.log(compoundValueSource);
 
   const cachedCompounding = valueSourceToCachedValueSource(compoundValueSource, settDefinition, SourceType.Compound);
   const cachedExtras = extraSources.map((source) =>
