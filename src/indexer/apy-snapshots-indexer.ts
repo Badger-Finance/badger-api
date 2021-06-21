@@ -2,6 +2,7 @@ import { isNil } from '@tsed/core';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { ValueSourceMap } from '../protocols/interfaces/value-source-map.interface';
+import { VAULT_SOURCE } from '../setts/setts.utils';
 import { getSettValueSources } from './indexer.utils';
 
 export async function refreshApySnapshots() {
@@ -13,11 +14,14 @@ export async function refreshApySnapshots() {
   const sourceMap: ValueSourceMap = {};
   rawValueSources
     .filter((rawValueSource) => !isNil(rawValueSource))
-    .flatMap((sources) => sources.filter((source) => !isNaN(source.apr) || !isFinite(source.apr)))
+    .flatMap((sources) => sources.filter((source) => !isNaN(source.apr) || !isFinite(source.apr) || source.apr === 0))
     .forEach((source) => {
       const mapKey = `${source.address}-${source.name}`;
       const mapEntry = sourceMap[mapKey];
-      if (!mapEntry) {
+      // simulated underlying are harvestable, measured underlying is not
+      // directly override any saved simulated strategy performance for measured
+      const override = !mapEntry || (mapEntry.name === VAULT_SOURCE && !mapEntry.harvestable);
+      if (override) {
         sourceMap[mapKey] = source;
       } else {
         mapEntry.apr += source.apr;

@@ -1,5 +1,6 @@
 import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
+import { getCurveTokenPrice } from '../../indexer/strategies/convex.strategy';
 import { getContractPrice, getTokenPrice, getVaultTokenPrice, ibBTCPrice } from '../../prices/prices.utils';
 import { getSushiswapPrice, getUniswapPrice, resolveTokenPrice } from '../../protocols/common/swap.utils';
 import { ethTokensConfig } from '../../tokens/config/eth-tokens.config';
@@ -21,12 +22,15 @@ export class EthStrategy extends ChainStrategy {
     if (!token) {
       throw new BadRequest(`No token found for ${checksummedAddress}`);
     }
+    const eth = Chain.getChain(ChainNetwork.Ethereum);
     switch (token.type) {
       case TokenType.Contract:
         if (token.lookupName) {
           return this.resolveLookupName(token.lookupName, token.address);
         }
         return getContractPrice(checksummedAddress);
+      case TokenType.CurveLP:
+        return getCurveTokenPrice(eth, checksummedAddress);
       case TokenType.SushiswapLp:
         return getSushiswapPrice(checksummedAddress);
       case TokenType.UniswapLp:
