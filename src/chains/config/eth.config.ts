@@ -180,4 +180,15 @@ export const ethSetts: SettDefinition[] = [
     strategy: '0x353200ed9f63fa7804816b336d50e9f0d7c88d2c',
     protocol: Protocol.Convex,
   },
+  {
+    name: 'Convex Tricrypto',
+    createdBlock: 12660316,
+    depositToken: TOKENS.CRV_TRICRYPTO,
+    experimental: true,
+    hasBouncer: true,
+    settToken: TOKENS.BCRV_TRICRYPTO,
+    stage: Stage.Staging,
+    strategy: '0x353200ed9f63fa7804816b336d50e9f0d7c88d2c',
+    protocol: Protocol.Convex,
+  },
 ];

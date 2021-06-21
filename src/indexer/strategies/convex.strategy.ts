@@ -1,6 +1,8 @@
 import { ethers } from 'ethers';
 import fetch from 'node-fetch';
 import { Chain } from '../../chains/config/chain.config';
+import { curvePoolAbi, oldCurvePoolAbi } from '../../config/abi/curve-pool.abi';
+import { curveRegistryAbi } from '../../config/abi/curve-registry.abi';
 import { cvxBoosterAbi } from '../../config/abi/cvx-booster.abi';
 import { cvxRewardsAbi } from '../../config/abi/cvx-rewards.abi';
 import { erc20Abi } from '../../config/abi/erc20.abi';
@@ -15,7 +17,9 @@ import { createValueSource } from '../../protocols/interfaces/value-source.inter
 import { tokenEmission } from '../../protocols/protocols.utils';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { getCachedSett, VAULT_SOURCE } from '../../setts/setts.utils';
-import { getToken } from '../../tokens/tokens.utils';
+import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
+import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
+import { getToken, toCachedBalance } from '../../tokens/tokens.utils';
 import { valueSourceToCachedValueSource } from '../indexer.utils';
 
 /* Strategy Definitions */
@@ -41,6 +45,7 @@ const cvxPoolId: PoolMap = {
   [TOKENS.CRV_PBTC]: 18,
   [TOKENS.CRV_BBTC]: 19,
   [TOKENS.CRV_OBTC]: 20,
+  [TOKENS.CRV_TRICRYPTO]: 37,
 };
 
 // const chefPoolId: PoolMap = {
@@ -213,6 +218,10 @@ async function getCvxCrvRewards(chain: Chain, settDefinition: SettDefinition): P
 export async function getCurvePerformance(settDefinition: SettDefinition): Promise<CachedValueSource> {
   const curveData = await fetch(CURVE_API_URL).then((response) => response.json());
   const assetKey = settDefinition.depositToken;
+  if (!curveData.apy.week[curvePoolApr[assetKey]]) {
+    const valueSource = createValueSource('Curve LP Fees', uniformPerformance(0));
+    return valueSourceToCachedValueSource(valueSource, settDefinition, SourceType.TradeFee);
+  }
   const tradeFeePerformance: Performance = {
     oneDay: curveData.apy.day[curvePoolApr[assetKey]] * 100,
     threeDay: curveData.apy.day[curvePoolApr[assetKey]] * 100,
@@ -255,4 +264,51 @@ async function getCvxMint(chain: Chain, crvEarned: number): Promise<number> {
     return cvxEarned;
   }
   return 0;
+}
+
+export async function getCurveTokenPrice(chain: Chain, depositToken: string): Promise<TokenPrice> {
+  const deposit = getToken(depositToken);
+  const poolBalance = await getCurvePoolBalance(chain, depositToken);
+  const token = new ethers.Contract(depositToken, erc20Abi, chain.provider);
+  const poolValueUsd = poolBalance.reduce((total, balance) => (total += balance.valueUsd), 0);
+  const poolValueEth = poolBalance.reduce((total, balance) => (total += balance.valueEth), 0);
+  const totalSupply = await token.totalSupply();
+  const supply = totalSupply / Math.pow(10, deposit.decimals);
+  const usd = poolValueUsd / supply;
+  const eth = poolValueEth / supply;
+  return {
+    name: deposit.name,
+    address: deposit.address,
+    usd,
+    eth,
+  };
+}
+
+export async function getCurvePoolBalance(chain: Chain, depositToken: string): Promise<CachedTokenBalance[]> {
+  const cachedBalances = [];
+  const registry = new ethers.Contract('0x90E00ACe148ca3b23Ac1bC8C240C2a7Dd9c2d7f5', curveRegistryAbi, chain.provider);
+  const poolAddress = await registry.get_pool_from_lp_token(depositToken);
+  let pool = new ethers.Contract(poolAddress, curvePoolAbi, chain.provider);
+
+  let coin = 0;
+  let hasTokens = true;
+  let updatedAbi = false;
+  while (hasTokens) {
+    try {
+      const tokenAddress = await pool.coins(coin);
+      const token = getToken(ethers.utils.getAddress(tokenAddress));
+      const balance = (await pool.balances(coin)) / Math.pow(10, token.decimals);
+      cachedBalances.push(await toCachedBalance(token, balance));
+      coin++;
+    } catch (err) {
+      if (!updatedAbi) {
+        pool = new ethers.Contract(poolAddress, oldCurvePoolAbi, chain.provider);
+        updatedAbi = true;
+      } else {
+        hasTokens = false;
+      }
+    }
+  }
+
+  return cachedBalances;
 }
