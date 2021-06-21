@@ -191,7 +191,7 @@ export const ethSetts: SettDefinition[] = [
   },
   {
     name: 'Convex Tricrypto',
-    createdBlock: 12660316,
+    createdBlock: 12679976,
     depositToken: TOKENS.CRV_TRICRYPTO,
     experimental: true,
     getTokenBalance: getCurveSettTokenBalance,

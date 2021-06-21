@@ -266,7 +266,7 @@ functions:
 
   index-token-balances:
     handler: src/indexer/token-balances-indexer.refreshTokenBalances
-    timeout: 60
+    timeout: 180
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-token-balances

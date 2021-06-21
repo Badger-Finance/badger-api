@@ -341,5 +341,5 @@ export async function getCurveSettTokenBalance(token: string): Promise<CachedLiq
     cachedToken.valueUsd *= scalar;
     cachedToken.valueEth *= scalar;
   });
-  return tokenBalancesToCachedLiquidityPoolTokenBalance(depositToken.address, definition.protocol, cachedTokens);
+  return tokenBalancesToCachedLiquidityPoolTokenBalance(definition.settToken, definition.protocol, cachedTokens);
 }

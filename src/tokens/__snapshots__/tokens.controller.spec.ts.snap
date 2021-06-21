@@ -474,8 +474,8 @@ Object {
       "network": "eth",
     },
   },
-  "0xBC16BCB59fa93aa0825ab2618d93E9449EB44246": Object {
-    "address": "0xBC16BCB59fa93aa0825ab2618d93E9449EB44246",
+  "0xBE08Ef12e4a553666291E9fFC24fCCFd354F2Dd2": Object {
+    "address": "0xBE08Ef12e4a553666291E9fFC24fCCFd354F2Dd2",
     "decimals": 18,
     "name": "bCurve.fi USD/BTC/ETH",
     "symbol": "bcrvTricrypto",
@@ -981,8 +981,8 @@ Object {
       "network": "eth",
     },
   },
-  "0xBC16BCB59fa93aa0825ab2618d93E9449EB44246": Object {
-    "address": "0xBC16BCB59fa93aa0825ab2618d93E9449EB44246",
+  "0xBE08Ef12e4a553666291E9fFC24fCCFd354F2Dd2": Object {
+    "address": "0xBE08Ef12e4a553666291E9fFC24fCCFd354F2Dd2",
     "decimals": 18,
     "name": "bCurve.fi USD/BTC/ETH",
     "symbol": "bcrvTricrypto",
