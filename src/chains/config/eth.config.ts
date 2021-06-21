@@ -188,7 +188,7 @@ export const ethSetts: SettDefinition[] = [
     hasBouncer: true,
     settToken: TOKENS.BCRV_TRICRYPTO,
     stage: Stage.Staging,
-    strategy: '0x353200ed9f63fa7804816b336d50e9f0d7c88d2c',
+    strategy: '0x05ec4356e1acd89cc2d16adc7415c8c95e736ac1',
     protocol: Protocol.Convex,
   },
 ];

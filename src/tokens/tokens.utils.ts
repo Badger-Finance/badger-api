@@ -9,8 +9,9 @@ import { ethTokensConfig } from './config/eth-tokens.config';
 import { CachedTokenBalance } from './interfaces/cached-token-balance.interface';
 import { Token } from './interfaces/token.interface';
 import { TokenBalance } from './interfaces/token-balance.interface';
+import { TokenConfig } from './interfaces/token-config.interface';
 
-export const protocolTokens = { ...ethTokensConfig, ...bscTokensConfig };
+export const protocolTokens: TokenConfig = { ...ethTokensConfig, ...bscTokensConfig };
 
 export const getToken = (contract: string): Token => {
   const checksummedAddress = ethers.utils.getAddress(contract);

@@ -6,7 +6,7 @@ import { curveRegistryAbi } from '../../config/abi/curve-registry.abi';
 import { cvxBoosterAbi } from '../../config/abi/cvx-booster.abi';
 import { cvxRewardsAbi } from '../../config/abi/cvx-rewards.abi';
 import { erc20Abi } from '../../config/abi/erc20.abi';
-import { CURVE_API_URL, ONE_YEAR_SECONDS, TOKENS } from '../../config/constants';
+import { CURVE_API_URL, CURVE_CRYPTO_API_URL, ONE_YEAR_SECONDS, TOKENS } from '../../config/constants';
 import { getPrice } from '../../prices/prices.utils';
 import { SourceType } from '../../protocols/enums/source-type.enum';
 import { CachedValueSource } from '../../protocols/interfaces/cached-value-source.interface';
@@ -38,6 +38,7 @@ const curvePoolApr: { [address: string]: string } = {
   [TOKENS.CRV_PBTC]: 'pbtc',
   [TOKENS.CRV_OBTC]: 'obtc',
   [TOKENS.CRV_BBTC]: 'bbtc',
+  [TOKENS.CRV_TRICRYPTO]: 'tricrypto',
 };
 
 const cvxPoolId: PoolMap = {
@@ -159,8 +160,8 @@ async function getCvxRewards(chain: Chain, settDefinition: SettDefinition): Prom
   // calculate CVX rewards
   const emission = cvxCrvReward * cvxCrvPrice.usd * scalar;
   const poolValue = cvxLocked * cvxPrice.usd;
-  const poolApr = (emission / poolValue) * 100;
-  const valueSource = createValueSource('CVX Rewards', uniformPerformance(poolApr * valueScalar));
+  const cvxCrvApr = (emission / poolValue) * 100;
+  const valueSource = createValueSource('CVX Rewards', uniformPerformance(cvxCrvApr * valueScalar));
   return valueSourceToCachedValueSource(valueSource, settDefinition, tokenEmission(getToken(TOKENS.CVX)));
 }
 
@@ -216,12 +217,19 @@ async function getCvxCrvRewards(chain: Chain, settDefinition: SettDefinition): P
 }
 
 export async function getCurvePerformance(settDefinition: SettDefinition): Promise<CachedValueSource> {
-  const curveData = await fetch(CURVE_API_URL).then((response) => response.json());
+  let curveData = await fetch(CURVE_API_URL).then((response) => response.json());
   const assetKey = settDefinition.depositToken;
-  if (!curveData.apy.week[curvePoolApr[assetKey]]) {
-    const valueSource = createValueSource('Curve LP Fees', uniformPerformance(0));
-    return valueSourceToCachedValueSource(valueSource, settDefinition, SourceType.TradeFee);
+  const missingEntry = () => !curveData.apy.week[curvePoolApr[assetKey]];
+
+  // try the secondary apy options, if not avilable give up
+  if (missingEntry()) {
+    curveData = await fetch(CURVE_CRYPTO_API_URL).then((response) => response.json());
+    if (missingEntry()) {
+      const valueSource = createValueSource('Curve LP Fees', uniformPerformance(0));
+      return valueSourceToCachedValueSource(valueSource, settDefinition, SourceType.TradeFee);
+    }
   }
+
   const tradeFeePerformance: Performance = {
     oneDay: curveData.apy.day[curvePoolApr[assetKey]] * 100,
     threeDay: curveData.apy.day[curvePoolApr[assetKey]] * 100,
