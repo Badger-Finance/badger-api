@@ -1,5 +1,6 @@
 export enum TokenType {
   Contract = 'Contract',
+  CurveLP = 'CurveLP',
   SushiswapLp = 'SushiswapLp',
   UniswapLp = 'UniswapLp',
   PancakeswapLp = 'PancakeswapLp',
