@@ -1,6 +1,8 @@
+import { UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import fetch from 'node-fetch';
 import { Chain } from '../../chains/config/chain.config';
+import { Ethereum, ethSetts } from '../../chains/config/eth.config';
 import { curvePoolAbi, oldCurvePoolAbi } from '../../config/abi/curve-pool.abi';
 import { curveRegistryAbi } from '../../config/abi/curve-registry.abi';
 import { cvxBoosterAbi } from '../../config/abi/cvx-booster.abi';
@@ -17,10 +19,11 @@ import { createValueSource } from '../../protocols/interfaces/value-source.inter
 import { tokenEmission } from '../../protocols/protocols.utils';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { getCachedSett, VAULT_SOURCE } from '../../setts/setts.utils';
+import { CachedLiquidityPoolTokenBalance } from '../../tokens/interfaces/cached-liquidity-pool-token-balance.interface';
 import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
 import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
 import { getToken, toCachedBalance } from '../../tokens/tokens.utils';
-import { valueSourceToCachedValueSource } from '../indexer.utils';
+import { tokenBalancesToCachedLiquidityPoolTokenBalance, valueSourceToCachedValueSource } from '../indexer.utils';
 
 /* Strategy Definitions */
 export const cvxRewards = '0xCF50b810E57Ac33B91dCF525C6ddd9881B139332';
@@ -319,4 +322,24 @@ export async function getCurvePoolBalance(chain: Chain, depositToken: string): P
   }
 
   return cachedBalances;
+}
+
+export async function getCurveSettTokenBalance(token: string): Promise<CachedLiquidityPoolTokenBalance> {
+  const definition = ethSetts.find((sett) => sett.settToken === token);
+  if (!definition || !definition.protocol) {
+    throw new UnprocessableEntity('Cannot get curve sett token balances, requires a sett definition');
+  }
+  const chain = new Ethereum();
+  const depositToken = getToken(definition.depositToken);
+  const cachedTokens = await getCurvePoolBalance(chain, definition.depositToken);
+  const contract = new ethers.Contract(depositToken.address, erc20Abi, chain.provider);
+  const sett = await getCachedSett(definition);
+  const totalSupply = parseFloat(ethers.utils.formatEther(await contract.totalSupply()));
+  const scalar = sett.balance / totalSupply;
+  cachedTokens.forEach((cachedToken) => {
+    cachedToken.balance *= scalar;
+    cachedToken.valueUsd *= scalar;
+    cachedToken.valueEth *= scalar;
+  });
+  return tokenBalancesToCachedLiquidityPoolTokenBalance(depositToken.address, definition.protocol, cachedTokens);
 }

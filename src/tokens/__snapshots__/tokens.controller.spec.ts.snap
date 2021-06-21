@@ -210,7 +210,6 @@ Object {
   "0x2fE94ea3d5d4a175184081439753DE15AeF9d614": Object {
     "address": "0x2fE94ea3d5d4a175184081439753DE15AeF9d614",
     "decimals": 18,
-    "lookupName": "wrapped-bitcoin",
     "name": "Curve.fi oBTC",
     "symbol": "crvoBTC",
     "type": "CurveLP",
@@ -232,7 +231,6 @@ Object {
   "0x410e3E86ef427e30B9235497143881f717d93c2A": Object {
     "address": "0x410e3E86ef427e30B9235497143881f717d93c2A",
     "decimals": 18,
-    "lookupName": "binance-wrapped-btc",
     "name": "Curve.fi bBTC",
     "symbol": "crvbBTC",
     "type": "CurveLP",
@@ -523,7 +521,6 @@ Object {
   "0xDE5331AC4B3630f94853Ff322B66407e0D6331E8": Object {
     "address": "0xDE5331AC4B3630f94853Ff322B66407e0D6331E8",
     "decimals": 18,
-    "lookupName": "ptokens-btc",
     "name": "Curve.fi pBTC",
     "symbol": "crvpBTC",
     "type": "CurveLP",
@@ -720,7 +717,6 @@ Object {
   "0x2fE94ea3d5d4a175184081439753DE15AeF9d614": Object {
     "address": "0x2fE94ea3d5d4a175184081439753DE15AeF9d614",
     "decimals": 18,
-    "lookupName": "wrapped-bitcoin",
     "name": "Curve.fi oBTC",
     "symbol": "crvoBTC",
     "type": "CurveLP",
@@ -742,7 +738,6 @@ Object {
   "0x410e3E86ef427e30B9235497143881f717d93c2A": Object {
     "address": "0x410e3E86ef427e30B9235497143881f717d93c2A",
     "decimals": 18,
-    "lookupName": "binance-wrapped-btc",
     "name": "Curve.fi bBTC",
     "symbol": "crvbBTC",
     "type": "CurveLP",
@@ -1033,7 +1028,6 @@ Object {
   "0xDE5331AC4B3630f94853Ff322B66407e0D6331E8": Object {
     "address": "0xDE5331AC4B3630f94853Ff322B66407e0D6331E8",
     "decimals": 18,
-    "lookupName": "ptokens-btc",
     "name": "Curve.fi pBTC",
     "symbol": "crvpBTC",
     "type": "CurveLP",

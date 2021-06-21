@@ -125,7 +125,6 @@ export const ethTokensConfig: TokenConfig = {
   [TOKENS.CRV_PBTC]: {
     address: TOKENS.CRV_PBTC,
     decimals: 18,
-    lookupName: 'ptokens-btc',
     name: 'Curve.fi pBTC',
     symbol: 'crvpBTC',
     type: TokenType.CurveLP,
@@ -141,7 +140,6 @@ export const ethTokensConfig: TokenConfig = {
   [TOKENS.CRV_OBTC]: {
     address: TOKENS.CRV_OBTC,
     decimals: 18,
-    lookupName: 'wrapped-bitcoin',
     name: 'Curve.fi oBTC',
     symbol: 'crvoBTC',
     type: TokenType.CurveLP,
@@ -157,7 +155,6 @@ export const ethTokensConfig: TokenConfig = {
   [TOKENS.CRV_BBTC]: {
     address: TOKENS.CRV_BBTC,
     decimals: 18,
-    lookupName: 'binance-wrapped-btc',
     name: 'Curve.fi bBTC',
     symbol: 'crvbBTC',
     type: TokenType.CurveLP,
@@ -204,8 +201,8 @@ export const ethTokensConfig: TokenConfig = {
     symbol: 'cvxCRV',
     type: TokenType.Contract,
   },
-  [TOKENS.THREECRV]: {
-    address: TOKENS.THREECRV,
+  [TOKENS.CRV_THREE]: {
+    address: TOKENS.CRV_THREE,
     decimals: 18,
     name: 'Curve.fi 3crv',
     symbol: '3CRV',
