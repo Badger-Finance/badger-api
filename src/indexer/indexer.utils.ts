@@ -9,6 +9,7 @@ import { Protocol } from '../config/enums/protocol.enum';
 import { toFloat } from '../config/util';
 import { getPrice } from '../prices/prices.utils';
 import { getSwapValueSource } from '../protocols/common/performance.utils';
+import { SourceType } from '../protocols/enums/source-type.enum';
 import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
 import { ValueSource } from '../protocols/interfaces/value-source.interface';
 import { PancakeSwapService } from '../protocols/pancake/pancakeswap.service';
@@ -168,7 +169,7 @@ export async function getUnderlyingPerformance(settDefinition: SettDefinition): 
   return valueSourceToCachedValueSource(
     await SettsService.getSettPerformance(settDefinition),
     settDefinition,
-    'underlying',
+    SourceType.Compound,
   );
 }
 
@@ -225,9 +226,13 @@ export async function getPancakeswapApySnapshots(
     valueSourceToCachedValueSource(
       await getSwapValueSource(PANCAKESWAP_URL, 'Pancakeswap', depositToken),
       settDefinition,
-      'swap',
+      SourceType.TradeFee,
     ),
-    valueSourceToCachedValueSource(await getPancakeswapPoolApr(chain, depositToken), settDefinition, 'pool_apr'),
+    valueSourceToCachedValueSource(
+      await getPancakeswapPoolApr(chain, depositToken),
+      settDefinition,
+      SourceType.Emission,
+    ),
   ];
 }
 
@@ -239,9 +244,13 @@ export async function getSushiswapApySnapshots(
     valueSourceToCachedValueSource(
       await getSwapValueSource(SUSHISWAP_URL, 'Sushiswap', settDefinition.depositToken),
       settDefinition,
-      'swap',
+      SourceType.TradeFee,
     ),
-    valueSourceToCachedValueSource(await getSushiwapPoolApr(chain, settDefinition), settDefinition, 'pool_apr'),
+    valueSourceToCachedValueSource(
+      await getSushiwapPoolApr(chain, settDefinition),
+      settDefinition,
+      SourceType.Emission,
+    ),
   ];
 }
 

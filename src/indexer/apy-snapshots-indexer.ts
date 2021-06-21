@@ -14,16 +14,16 @@ export async function refreshApySnapshots() {
   const sourceMap: ValueSourceMap = {};
   rawValueSources
     .filter((rawValueSource) => !isNil(rawValueSource))
-    .flatMap((sources) => sources.filter((source) => !isNaN(source.apr) || !isFinite(source.apr)))
+    .flatMap((sources) => sources.filter((source) => !isNaN(source.apr) || !isFinite(source.apr) || source.apr === 0))
     .forEach((source) => {
       const mapKey = `${source.address}-${source.name}`;
       const mapEntry = sourceMap[mapKey];
       // simulated underlying are harvestable, measured underlying is not
       // directly override any saved simulated strategy performance for measured
-      const override = mapEntry.name === VAULT_SOURCE && !mapEntry.harvestable;
-      if (!mapEntry || override) {
+      const override = !mapEntry || (mapEntry.name === VAULT_SOURCE && !mapEntry.harvestable);
+      if (override) {
         sourceMap[mapKey] = source;
-      } else if (!override) {
+      } else {
         mapEntry.apr += source.apr;
         mapEntry.minApr += source.minApr;
         mapEntry.maxApr += source.maxApr;

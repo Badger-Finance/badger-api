@@ -139,6 +139,7 @@ export const DEBUG = false;
 
 // third party api constants
 export const CURVE_API_URL = 'https://stats.curve.fi/raw-stats/apys.json';
+export const CURVE_CRYPTO_API_URL = 'https://stats.curve.fi/raw-stats-crypto/apys.json';
 export const COINGECKO_URL = 'https://api.coingecko.com/api/v3/simple';
 
 export enum Provider {
