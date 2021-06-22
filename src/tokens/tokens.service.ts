@@ -1,7 +1,5 @@
 import { Service } from '@tsed/common';
-import { NotFound } from '@tsed/exceptions';
 import { getDataMapper } from '../aws/dynamodb.utils';
-import { getLiquidityData } from '../protocols/common/swap.utils';
 import { CachedLiquidityPoolTokenBalance } from './interfaces/cached-liquidity-pool-token-balance.interface';
 import { TokenBalance } from './interfaces/token-balance.interface';
 import { TokenRequest } from './interfaces/token-request.interface';
@@ -18,25 +16,16 @@ export class TokensService {
    */
   async getSettTokens(request: TokenRequest): Promise<TokenBalance[]> {
     const { sett, balance, currency } = request;
+    const { protocol, depositToken, settToken } = sett;
     const token = getToken(sett.depositToken);
-    if (token.lpToken || sett.getTokenBalance) {
-      return this.getLiquidityPoolTokenBalances(request);
-    }
-    return Promise.all([toBalance(token, balance, currency)]);
-  }
-
-  async getLiquidityPoolTokenBalances(request: TokenRequest): Promise<TokenBalance[]> {
-    const { sett, currency } = request;
-    const { depositToken, protocol } = sett;
-
-    if (protocol) {
-      const cachedTokenBalances = await this.getCachedTokenBalances(depositToken, protocol, currency);
+    if (protocol && (token.lpToken || sett.getTokenBalance)) {
+      const balanceToken = token.lpToken ? depositToken : settToken;
+      const cachedTokenBalances = await this.getCachedTokenBalances(balanceToken, protocol, currency);
       if (cachedTokenBalances) {
         return cachedTokenBalances;
       }
     }
-
-    return TokensService.getOnChainLiquidtyPoolTokenBalances(request);
+    return Promise.all([toBalance(token, balance, currency)]);
   }
 
   async getCachedTokenBalances(
@@ -57,24 +46,5 @@ export class TokensService {
       return tokenBalances;
     }
     return undefined;
-  }
-
-  static async getOnChainLiquidtyPoolTokenBalances(request: TokenRequest): Promise<TokenBalance[]> {
-    const { chain, sett, balance, currency } = request;
-    try {
-      const liquidityData = await getLiquidityData(chain, sett.depositToken);
-
-      const { token0, token1, reserve0, reserve1, totalSupply } = liquidityData;
-      const t0Token = getToken(token0);
-      const t1Token = getToken(token1);
-
-      // poolData returns the full liquidity pool, valueScalar acts to calculate the portion within the sett
-      const valueScalar = totalSupply > 0 ? balance / totalSupply : 0;
-      const t0TokenBalance = reserve0 * valueScalar;
-      const t1TokenBalance = reserve1 * valueScalar;
-      return Promise.all([toBalance(t0Token, t0TokenBalance, currency), toBalance(t1Token, t1TokenBalance, currency)]);
-    } catch (err) {
-      throw new NotFound(`${sett.protocol} pool pair ${sett.depositToken} does not exist`);
-    }
   }
 }

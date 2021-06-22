@@ -2,6 +2,7 @@ import { ethers } from 'ethers';
 import { BADGER_URL, Provider, STRATEGIES, TOKENS } from '../../config/constants';
 import { Protocol } from '../../config/enums/protocol.enum';
 import { Stage } from '../../config/enums/stage.enum';
+import { getCurveSettTokenBalance } from '../../indexer/strategies/convex.strategy';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { ethTokensConfig } from '../../tokens/config/eth-tokens.config';
 import { getZsDiggTokenBalance } from '../../tokens/custom/zs-digg-balance';
@@ -32,6 +33,7 @@ export const ethSetts: SettDefinition[] = [
     name: 'Curve.fi renBTC/wBTC/sBTC',
     createdBlock: 11380877,
     depositToken: TOKENS.CRV_SBTC,
+    getTokenBalance: getCurveSettTokenBalance,
     settToken: TOKENS.BCRV_SBTC,
     strategy: '0x8cbb86a7e0780a6fbefeec108f9b4b0aa8193e24',
     protocol: Protocol.Curve,
@@ -40,6 +42,7 @@ export const ethSetts: SettDefinition[] = [
     name: 'Curve.fi renBTC/wBTC',
     createdBlock: 11380872,
     depositToken: TOKENS.CRV_RENBTC,
+    getTokenBalance: getCurveSettTokenBalance,
     settToken: TOKENS.BCRV_RENBTC,
     strategy: '0xaa9b716ccd717761f40479cd81f8e3a5a7b4cad7',
     protocol: Protocol.Curve,
@@ -48,6 +51,7 @@ export const ethSetts: SettDefinition[] = [
     name: 'Curve.fi tBTC/sBTC',
     createdBlock: 11380878,
     depositToken: TOKENS.CRV_TBTC,
+    getTokenBalance: getCurveSettTokenBalance,
     settToken: TOKENS.BCRV_TBTC,
     strategy: '0x1ac31c470b90e366c70efc1ac28d5d7fa2f1dbe1',
     protocol: Protocol.Curve,
@@ -57,6 +61,7 @@ export const ethSetts: SettDefinition[] = [
     name: 'Harvest renBTC/wBTC',
     createdBlock: 11380939,
     depositToken: TOKENS.CRV_RENBTC,
+    getTokenBalance: getCurveSettTokenBalance,
     settToken: TOKENS.BCRV_HRENBTC,
     protocol: Protocol.Curve,
   },
@@ -141,10 +146,11 @@ export const ethSetts: SettDefinition[] = [
     createdBlock: 12589485,
     depositToken: TOKENS.CRV_HBTC,
     experimental: true,
+    getTokenBalance: getCurveSettTokenBalance,
     hasBouncer: true,
     settToken: TOKENS.BCRV_HBTC,
     stage: Stage.Staging,
-    strategy: '0xca4b98ca964713287a36224364dbed15c9b7abc3',
+    strategy: '0xff26f400e57bf726822eacbb64fa1c52f1f27988',
     protocol: Protocol.Convex,
   },
   {
@@ -152,10 +158,11 @@ export const ethSetts: SettDefinition[] = [
     createdBlock: 12589485,
     depositToken: TOKENS.CRV_PBTC,
     experimental: true,
+    getTokenBalance: getCurveSettTokenBalance,
     hasBouncer: true,
     settToken: TOKENS.BCRV_PBTC,
     stage: Stage.Staging,
-    strategy: '0xcaed73bcdd45d2469b1287a7c21d7a31b2bb7b35',
+    strategy: '0x1c1fd689103bbfd701b3b7d41a3807f12814033d',
     protocol: Protocol.Convex,
   },
   {
@@ -163,10 +170,11 @@ export const ethSetts: SettDefinition[] = [
     createdBlock: 12589485,
     depositToken: TOKENS.CRV_OBTC,
     experimental: true,
+    getTokenBalance: getCurveSettTokenBalance,
     hasBouncer: true,
     settToken: TOKENS.BCRV_OBTC,
     stage: Stage.Staging,
-    strategy: '0xdbda6fa60c48a7da8e0c7ae25a20fd089c0f6a1f',
+    strategy: '0x2bb864cdb4856ab2d148c5ca52dd7ccec126d138',
     protocol: Protocol.Convex,
   },
   {
@@ -174,17 +182,19 @@ export const ethSetts: SettDefinition[] = [
     createdBlock: 12589485,
     depositToken: TOKENS.CRV_BBTC,
     experimental: true,
+    getTokenBalance: getCurveSettTokenBalance,
     hasBouncer: true,
     settToken: TOKENS.BCRV_BBTC,
     stage: Stage.Staging,
-    strategy: '0x353200ed9f63fa7804816b336d50e9f0d7c88d2c',
+    strategy: '0x4f3e7a4566320b2709fd1986f2e9f84053d3e2a0',
     protocol: Protocol.Convex,
   },
   {
     name: 'Convex Tricrypto',
-    createdBlock: 12660316,
+    createdBlock: 12679976,
     depositToken: TOKENS.CRV_TRICRYPTO,
     experimental: true,
+    getTokenBalance: getCurveSettTokenBalance,
     hasBouncer: true,
     settToken: TOKENS.BCRV_TRICRYPTO,
     stage: Stage.Staging,
