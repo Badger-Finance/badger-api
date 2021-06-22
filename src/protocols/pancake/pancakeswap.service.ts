@@ -8,6 +8,7 @@ import { PANCAKE_CHEF, PANCAKESWAP_URL, TOKENS } from '../../config/constants';
 import { PricesService } from '../../prices/prices.service';
 import { getTokenPriceData } from '../../prices/prices.utils';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
+import { VAULT_SOURCE } from '../../setts/setts.utils';
 import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
 import { SwapService } from '../common/swap.service';
 import { uniformPerformance } from '../interfaces/performance.interface';
@@ -38,12 +39,11 @@ export class PancakeSwapService extends SwapService {
     if (!poolId) {
       return emissionSource;
     }
-    emissionSource = await PancakeSwapService.getEmissionSource(chain, poolId);
-    return emissionSource;
+    return PancakeSwapService.getEmissionSource(chain, poolId);
   }
 
   static async getEmissionSource(chain: Chain, poolId: number): Promise<ValueSource> {
-    const emissionSource = createValueSource('Cake Rewards', uniformPerformance(0));
+    const emissionSource = createValueSource(VAULT_SOURCE, uniformPerformance(0));
     const masterChef = new ethers.Contract(PANCAKE_CHEF, pancakeChefAbi, chain.provider);
     const [totalAllocPoint, cakePerBlock, poolInfo, tokenPrice]: [
       BigNumber,
