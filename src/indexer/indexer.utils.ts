@@ -281,7 +281,7 @@ export async function getSettValueSources(chain: Chain, settDefinition: SettDefi
 
   // delete sources which are no longer valid
   const mapper = getDataMapper();
-  Array.from(Object.values(oldSources)).map((source) => mapper.delete(source));
+  await Promise.all(Array.from(Object.values(oldSources)).map((source) => mapper.delete(source)));
 
   return newSources;
 }

@@ -30,7 +30,7 @@ export async function refreshTokenBalances() {
           await saveCachedTokenBalance(mapper, cachedLiquidityPoolTokenBalance);
         }
         if (settDefinition.getTokenBalance) {
-          const cachedTokenBalance = await settDefinition.getTokenBalance();
+          const cachedTokenBalance = await settDefinition.getTokenBalance(settDefinition.settToken);
           await saveCachedTokenBalance(mapper, cachedTokenBalance);
         }
       } catch (err) {

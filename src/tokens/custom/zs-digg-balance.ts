@@ -10,8 +10,8 @@ import { getSett } from '../../setts/setts.utils';
 import { CachedLiquidityPoolTokenBalance } from '../interfaces/cached-liquidity-pool-token-balance.interface';
 import { getToken, toCachedBalance } from '../tokens.utils';
 
-export const getZsDiggTokenBalance = async (): Promise<CachedLiquidityPoolTokenBalance> => {
-  const definition = ethSetts.find((sett) => sett.settToken === TOKENS.BZS_DIGG);
+export const getZsDiggTokenBalance = async (token: string): Promise<CachedLiquidityPoolTokenBalance> => {
+  const definition = ethSetts.find((sett) => sett.settToken === token);
   if (!definition) {
     throw new UnprocessableEntity('Cannot get ZsDiggTokenBalance, requires a sett definition');
   }

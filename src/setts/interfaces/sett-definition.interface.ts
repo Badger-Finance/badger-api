@@ -7,7 +7,7 @@ export interface SettDefinition {
   createdBlock: number;
   depositToken: string;
   experimental?: boolean;
-  getTokenBalance?: () => Promise<CachedLiquidityPoolTokenBalance>;
+  getTokenBalance?: (token: string) => Promise<CachedLiquidityPoolTokenBalance>;
   hasBouncer?: boolean;
   name: string;
   protocol?: Protocol;
