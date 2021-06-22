@@ -150,7 +150,7 @@ export const ethSetts: SettDefinition[] = [
     hasBouncer: true,
     settToken: TOKENS.BCRV_HBTC,
     stage: Stage.Staging,
-    strategy: '0xca4b98ca964713287a36224364dbed15c9b7abc3',
+    strategy: '0xff26f400e57bf726822eacbb64fa1c52f1f27988',
     protocol: Protocol.Convex,
   },
   {
@@ -162,7 +162,7 @@ export const ethSetts: SettDefinition[] = [
     hasBouncer: true,
     settToken: TOKENS.BCRV_PBTC,
     stage: Stage.Staging,
-    strategy: '0xcaed73bcdd45d2469b1287a7c21d7a31b2bb7b35',
+    strategy: '0x1c1fd689103bbfd701b3b7d41a3807f12814033d',
     protocol: Protocol.Convex,
   },
   {
@@ -174,7 +174,7 @@ export const ethSetts: SettDefinition[] = [
     hasBouncer: true,
     settToken: TOKENS.BCRV_OBTC,
     stage: Stage.Staging,
-    strategy: '0xdbda6fa60c48a7da8e0c7ae25a20fd089c0f6a1f',
+    strategy: '0x2bb864cdb4856ab2d148c5ca52dd7ccec126d138',
     protocol: Protocol.Convex,
   },
   {
@@ -186,7 +186,7 @@ export const ethSetts: SettDefinition[] = [
     hasBouncer: true,
     settToken: TOKENS.BCRV_BBTC,
     stage: Stage.Staging,
-    strategy: '0x353200ed9f63fa7804816b336d50e9f0d7c88d2c',
+    strategy: '0x4f3e7a4566320b2709fd1986f2e9f84053d3e2a0',
     protocol: Protocol.Convex,
   },
   {

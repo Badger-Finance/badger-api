@@ -52,21 +52,34 @@ const cvxPoolId: PoolMap = {
   [TOKENS.CRV_TRICRYPTO]: 37,
 };
 
-// const chefPoolId: PoolMap = {
-//   [TOKENS.SUSHI_CVX_ETH]: 1,
-//   [TOKENS.SUSHI_CRV_CVXCRV]: 2,
-// };
-
 export async function getConvexApySnapshots(
   chain: Chain,
   settDefinition: SettDefinition,
 ): Promise<CachedValueSource[]> {
-  const singleRewards = await Promise.all([getCvxRewards(chain, settDefinition), getCurvePerformance(settDefinition)]);
-  const multiRewards = await Promise.all([
-    getHarvestable(chain, settDefinition),
-    getCvxCrvRewards(chain, settDefinition),
-  ]);
-  return [...singleRewards, ...multiRewards.flatMap((reward) => reward)];
+  const sources = [];
+
+  switch (settDefinition.settToken) {
+    case TOKENS.BCVX:
+      sources.push(await getCvxRewards(chain, settDefinition));
+      break;
+    case TOKENS.BCVXCRV:
+      const compounding = await getCvxCrvRewards(chain, settDefinition, true);
+      compounding.forEach((s) => sources.push(s));
+      break;
+    default:
+      const singleRewards = await Promise.all([
+        getCvxRewards(chain, settDefinition),
+        getCurvePerformance(settDefinition),
+      ]);
+      const multiRewards = await Promise.all([
+        getHarvestable(chain, settDefinition),
+        getCvxCrvRewards(chain, settDefinition),
+      ]);
+      singleRewards.forEach((s) => sources.push(s));
+      multiRewards.flatMap((s) => s).forEach((s) => sources.push(s));
+  }
+
+  return sources;
 }
 
 async function getHarvestable(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
@@ -168,20 +181,27 @@ async function getCvxRewards(chain: Chain, settDefinition: SettDefinition): Prom
   return valueSourceToCachedValueSource(valueSource, settDefinition, tokenEmission(getToken(TOKENS.CVX)));
 }
 
-async function getCvxCrvRewards(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
+async function getCvxCrvRewards(
+  chain: Chain,
+  settDefinition: SettDefinition,
+  compound?: boolean,
+): Promise<CachedValueSource[]> {
   // setup contracts + sett
   const sett = await getCachedSett(settDefinition);
   const cvxCrv = new ethers.Contract(cvxCrvRewards, cvxRewardsAbi, chain.provider);
+  const threeCrv = new ethers.Contract(threeCrvRewards, cvxRewardsAbi, chain.provider);
 
   // get prices
-  const [cvxPrice, cvxCrvPrice, crvPrice] = await Promise.all([
+  const [cvxPrice, cvxCrvPrice, crvPrice, threeCrvPrice] = await Promise.all([
     getPrice(TOKENS.CVX),
     getPrice(TOKENS.CVXCRV),
     getPrice(TOKENS.CRV),
+    getPrice(TOKENS.THREECRV),
   ]);
 
   // get rewards
   const crvReward = parseFloat(ethers.utils.formatEther(await cvxCrv.currentRewards()));
+  const threeCrvReward = parseFloat(ethers.utils.formatEther(await threeCrv.currentRewards()));
   const cvxReward = await getCvxMint(chain, crvReward);
   const cvxCrvLocked = parseFloat(ethers.utils.formatEther(await cvxCrv.totalSupply()));
 
@@ -195,28 +215,38 @@ async function getCvxCrvRewards(chain: Chain, settDefinition: SettDefinition): P
   const settBalanceValue = settBalance * cvxPrice.usd;
   const valueScalar = settBalanceValue / sett.value;
   const poolValue = cvxCrvLocked * cvxCrvPrice.usd;
-
-  // calculate cvxCRV rewards
-  const cvxCrvEmission = crvReward * crvPrice.usd * scalar;
-  const cvxCrvApr = (cvxCrvEmission / poolValue) * 100;
-  const cvxCrvValueSource = createValueSource('cvxCRV Rewards', uniformPerformance(cvxCrvApr * valueScalar));
-  const cachedCvxCrvSource = valueSourceToCachedValueSource(
-    cvxCrvValueSource,
-    settDefinition,
-    tokenEmission(getToken(TOKENS.CVXCRV)),
-  );
+  const sources = [];
 
   // calculate CVX rewards
   const cvxEmission = cvxReward * cvxPrice.usd * scalar;
   const cvxApr = (cvxEmission / poolValue) * 100;
-  const cvxValueSource = createValueSource('CVX Rewards', uniformPerformance(cvxApr * valueScalar));
-  const cachedCvxSource = valueSourceToCachedValueSource(
-    cvxValueSource,
-    settDefinition,
-    tokenEmission(getToken(TOKENS.CVX)),
-  );
 
-  return [cachedCvxCrvSource, cachedCvxSource];
+  if (!compound) {
+    const cvxValueSource = createValueSource('CVX Rewards', uniformPerformance(cvxApr * valueScalar));
+    const cachedCvxSource = valueSourceToCachedValueSource(
+      cvxValueSource,
+      settDefinition,
+      tokenEmission(getToken(TOKENS.CVX)),
+    );
+    sources.push(cachedCvxSource);
+  }
+
+  // calculate cvxCRV + 3CRV rewards
+  const cvxCrvEmission = crvReward * crvPrice.usd * scalar;
+  const cvxCrvApr = (cvxCrvEmission / poolValue) * 100;
+  const threeCrvEmission = threeCrvReward * threeCrvPrice.usd * scalar;
+  const threeCrvApr = (threeCrvEmission / poolValue) * 100;
+  const totalApr = compound ? cvxCrvApr + threeCrvApr + cvxApr : cvxCrvApr + threeCrvApr;
+
+  const cvxCrvValueSource = createValueSource('cvxCRV Rewards', uniformPerformance(totalApr * valueScalar));
+  const cachedCvxCrvSource = valueSourceToCachedValueSource(
+    cvxCrvValueSource,
+    settDefinition,
+    tokenEmission(getToken(TOKENS.CRV_THREE)),
+  );
+  sources.push(cachedCvxCrvSource);
+
+  return sources;
 }
 
 export async function getCurvePerformance(settDefinition: SettDefinition): Promise<CachedValueSource> {
