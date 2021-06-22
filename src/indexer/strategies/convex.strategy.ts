@@ -242,7 +242,7 @@ async function getCvxCrvRewards(
   const cachedCvxCrvSource = valueSourceToCachedValueSource(
     cvxCrvValueSource,
     settDefinition,
-    tokenEmission(getToken(TOKENS.CRV_THREE)),
+    tokenEmission(getToken(TOKENS.CVXCRV)),
   );
   sources.push(cachedCvxCrvSource);
 

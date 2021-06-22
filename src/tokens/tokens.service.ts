@@ -19,12 +19,10 @@ export class TokensService {
     const { protocol, depositToken, settToken } = sett;
     const token = getToken(sett.depositToken);
     if (protocol && (token.lpToken || sett.getTokenBalance)) {
-      if (protocol) {
-        const balanceToken = token.lpToken ? depositToken : settToken;
-        const cachedTokenBalances = await this.getCachedTokenBalances(balanceToken, protocol, currency);
-        if (cachedTokenBalances) {
-          return cachedTokenBalances;
-        }
+      const balanceToken = token.lpToken ? depositToken : settToken;
+      const cachedTokenBalances = await this.getCachedTokenBalances(balanceToken, protocol, currency);
+      if (cachedTokenBalances) {
+        return cachedTokenBalances;
       }
     }
     return Promise.all([toBalance(token, balance, currency)]);
