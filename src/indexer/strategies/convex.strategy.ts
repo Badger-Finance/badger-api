@@ -60,7 +60,7 @@ export async function getConvexApySnapshots(
 
   switch (settDefinition.settToken) {
     case TOKENS.BCVX:
-      sources.push(await getCvxRewards(chain, settDefinition));
+      sources.push(await getCvxRewards(chain, settDefinition, true));
       break;
     case TOKENS.BCVXCRV:
       const compounding = await getCvxCrvRewards(chain, settDefinition, true);
@@ -146,7 +146,11 @@ async function getHarvestable(chain: Chain, settDefinition: SettDefinition): Pro
   return [cachedCompounding, cachedCrvEmission, cachedCvxEmission, ...cachedExtraSources];
 }
 
-async function getCvxRewards(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource> {
+async function getCvxRewards(
+  chain: Chain,
+  settDefinition: SettDefinition,
+  compound?: boolean,
+): Promise<CachedValueSource> {
   // setup contracts + sett
   const sett = await getCachedSett(settDefinition);
   const cvx = new ethers.Contract(cvxRewards, cvxRewardsAbi, chain.provider);
@@ -164,21 +168,31 @@ async function getCvxRewards(chain: Chain, settDefinition: SettDefinition): Prom
   const scalar = ONE_YEAR_SECONDS / duration;
   const settBalance = parseFloat(ethers.utils.formatEther(await cvx.balanceOf(settDefinition.strategy)));
   const settBalanceValue = settBalance * cvxPrice.usd;
-  if (sett.value === 0 || settBalance === 0) {
+  const source = compound ? VAULT_SOURCE : 'CVX Rewards';
+  const isEmpty = sett.value === 0 || settBalance === 0;
+
+  if (!compound && isEmpty) {
     return valueSourceToCachedValueSource(
-      createValueSource('CVX Rewards', uniformPerformance(0)),
+      createValueSource(source, uniformPerformance(0)),
       settDefinition,
       SourceType.Emission,
     );
   }
-  const valueScalar = settBalanceValue / sett.value;
 
   // calculate CVX rewards
   const emission = cvxCrvReward * cvxCrvPrice.usd * scalar;
   const poolValue = cvxLocked * cvxPrice.usd;
   const cvxCrvApr = (emission / poolValue) * 100;
-  const valueSource = createValueSource('CVX Rewards', uniformPerformance(cvxCrvApr * valueScalar));
-  return valueSourceToCachedValueSource(valueSource, settDefinition, tokenEmission(getToken(TOKENS.CVX)));
+
+  const valueScalar = !compound || !isEmpty ? settBalanceValue / sett.value : 1;
+  const evaluatedApr = cvxCrvApr * valueScalar;
+  if (compound) {
+    const valueSource = createValueSource(source, uniformPerformance(evaluatedApr));
+    return valueSourceToCachedValueSource(valueSource, settDefinition, SourceType.Compound);
+  } else {
+    const valueSource = createValueSource(source, uniformPerformance(evaluatedApr));
+    return valueSourceToCachedValueSource(valueSource, settDefinition, tokenEmission(getToken(TOKENS.CVX)));
+  }
 }
 
 async function getCvxCrvRewards(
@@ -196,7 +210,7 @@ async function getCvxCrvRewards(
     getPrice(TOKENS.CVX),
     getPrice(TOKENS.CVXCRV),
     getPrice(TOKENS.CRV),
-    getPrice(TOKENS.THREECRV),
+    getPrice(TOKENS.CRV_THREE),
   ]);
 
   // get rewards
@@ -209,11 +223,11 @@ async function getCvxCrvRewards(
   const duration = (await cvxCrv.duration()).toNumber();
   const scalar = ONE_YEAR_SECONDS / duration;
   const settBalance = parseFloat(ethers.utils.formatEther(await cvxCrv.balanceOf(settDefinition.strategy)));
-  if (settBalance === 0) {
+  const isEmpty = sett.value === 0 || settBalance === 0;
+  if (!compound && isEmpty) {
     return [];
   }
   const settBalanceValue = settBalance * cvxPrice.usd;
-  const valueScalar = settBalanceValue / sett.value;
   const poolValue = cvxCrvLocked * cvxCrvPrice.usd;
   const sources = [];
 
@@ -221,7 +235,19 @@ async function getCvxCrvRewards(
   const cvxEmission = cvxReward * cvxPrice.usd * scalar;
   const cvxApr = (cvxEmission / poolValue) * 100;
 
-  if (!compound) {
+  // calculate cvxCRV + 3CRV rewards
+  const cvxCrvEmission = crvReward * crvPrice.usd * scalar;
+  const cvxCrvApr = (cvxCrvEmission / poolValue) * 100;
+  const threeCrvEmission = threeCrvReward * threeCrvPrice.usd * scalar;
+  const threeCrvApr = (threeCrvEmission / poolValue) * 100;
+
+  const valueScalar = !compound || !isEmpty ? settBalanceValue / sett.value : 1;
+  if (compound) {
+    const totalApr = cvxCrvApr + threeCrvApr + cvxApr;
+    const cvxCrvValueSource = createValueSource(VAULT_SOURCE, uniformPerformance(totalApr * valueScalar), true);
+    const cachedCvxCrvSource = valueSourceToCachedValueSource(cvxCrvValueSource, settDefinition, SourceType.Compound);
+    sources.push(cachedCvxCrvSource);
+  } else {
     const cvxValueSource = createValueSource('CVX Rewards', uniformPerformance(cvxApr * valueScalar));
     const cachedCvxSource = valueSourceToCachedValueSource(
       cvxValueSource,
@@ -229,22 +255,16 @@ async function getCvxCrvRewards(
       tokenEmission(getToken(TOKENS.CVX)),
     );
     sources.push(cachedCvxSource);
+
+    const totalApr = cvxCrvApr + threeCrvApr;
+    const cvxCrvValueSource = createValueSource('cvxCRV Rewards', uniformPerformance(totalApr * valueScalar));
+    const cachedCvxCrvSource = valueSourceToCachedValueSource(
+      cvxCrvValueSource,
+      settDefinition,
+      tokenEmission(getToken(TOKENS.CVXCRV)),
+    );
+    sources.push(cachedCvxCrvSource);
   }
-
-  // calculate cvxCRV + 3CRV rewards
-  const cvxCrvEmission = crvReward * crvPrice.usd * scalar;
-  const cvxCrvApr = (cvxCrvEmission / poolValue) * 100;
-  const threeCrvEmission = threeCrvReward * threeCrvPrice.usd * scalar;
-  const threeCrvApr = (threeCrvEmission / poolValue) * 100;
-  const totalApr = compound ? cvxCrvApr + threeCrvApr + cvxApr : cvxCrvApr + threeCrvApr;
-
-  const cvxCrvValueSource = createValueSource('cvxCRV Rewards', uniformPerformance(totalApr * valueScalar));
-  const cachedCvxCrvSource = valueSourceToCachedValueSource(
-    cvxCrvValueSource,
-    settDefinition,
-    tokenEmission(getToken(TOKENS.CVXCRV)),
-  );
-  sources.push(cachedCvxCrvSource);
 
   return sources;
 }
