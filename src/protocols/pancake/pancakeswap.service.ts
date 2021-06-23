@@ -35,7 +35,7 @@ export class PancakeSwapService extends SwapService {
   }
 
   async getPoolApr(chain: Chain, poolId: number): Promise<ValueSource> {
-    let emissionSource = createValueSource('Cake Rewards', uniformPerformance(0));
+    const emissionSource = createValueSource('Cake Rewards', uniformPerformance(0));
     if (!poolId) {
       return emissionSource;
     }

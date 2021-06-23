@@ -146,7 +146,11 @@ async function getHarvestable(chain: Chain, settDefinition: SettDefinition): Pro
   return [cachedCompounding, cachedCrvEmission, cachedCvxEmission, ...cachedExtraSources];
 }
 
-async function getCvxRewards(chain: Chain, settDefinition: SettDefinition, compound?: boolean): Promise<CachedValueSource> {
+async function getCvxRewards(
+  chain: Chain,
+  settDefinition: SettDefinition,
+  compound?: boolean,
+): Promise<CachedValueSource> {
   // setup contracts + sett
   const sett = await getCachedSett(settDefinition);
   const cvx = new ethers.Contract(cvxRewards, cvxRewardsAbi, chain.provider);
@@ -237,11 +241,7 @@ async function getCvxCrvRewards(
   if (compound) {
     const totalApr = cvxCrvApr + threeCrvApr + cvxApr;
     const cvxCrvValueSource = createValueSource(VAULT_SOURCE, uniformPerformance(totalApr), true);
-    const cachedCvxCrvSource = valueSourceToCachedValueSource(
-      cvxCrvValueSource,
-      settDefinition,
-      SourceType.Compound,
-    );
+    const cachedCvxCrvSource = valueSourceToCachedValueSource(cvxCrvValueSource, settDefinition, SourceType.Compound);
     sources.push(cachedCvxCrvSource);
   } else {
     const cvxValueSource = createValueSource('CVX Rewards', uniformPerformance(cvxApr * valueScalar));
@@ -252,7 +252,7 @@ async function getCvxCrvRewards(
     );
     sources.push(cachedCvxSource);
 
-    const totalApr = cvxCrvApr + threeCrvApr
+    const totalApr = cvxCrvApr + threeCrvApr;
     const cvxCrvValueSource = createValueSource('cvxCRV Rewards', uniformPerformance(totalApr * valueScalar));
     const cachedCvxCrvSource = valueSourceToCachedValueSource(
       cvxCrvValueSource,
@@ -261,7 +261,6 @@ async function getCvxCrvRewards(
     );
     sources.push(cachedCvxCrvSource);
   }
-
 
   return sources;
 }
