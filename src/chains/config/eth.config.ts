@@ -203,7 +203,7 @@ export const ethSetts: SettDefinition[] = [
     experimental: true,
     hasBouncer: true,
     settToken: TOKENS.BCVXCRV,
-    strategy: '0x05ec4356e1acd89cc2d16adc7415c8c95e736ac1',
+    strategy: '0x4FE836b28ADc7867290764885b24d3992dAeE819',
     protocol: Protocol.Convex,
   },
   {
@@ -213,7 +213,7 @@ export const ethSetts: SettDefinition[] = [
     experimental: true,
     hasBouncer: true,
     settToken: TOKENS.BCVX,
-    strategy: '0x05ec4356e1acd89cc2d16adc7415c8c95e736ac1',
+    strategy: '0x5e7a939f77E5c441e2Ba1Dc8Be5D42020193376D',
     protocol: Protocol.Convex,
   },
 ];
