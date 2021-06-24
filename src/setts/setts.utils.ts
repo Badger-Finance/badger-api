@@ -60,7 +60,11 @@ export const getCachedSett = async (settDefinition: SettDefinition): Promise<Set
     )) {
       sett.balance = item.balance;
       sett.value = item.settValue;
-      sett.ppfs = item.balance / item.supply;
+      if (item.balance === 0 || item.supply === 0) {
+        sett.ppfs = 1;
+      } else {
+        sett.ppfs = item.balance / item.supply;
+      }
     }
     return sett;
   } catch (err) {
