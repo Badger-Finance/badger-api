@@ -57,13 +57,7 @@ export class SettsService {
     };
     sett.tokens = await this.tokensService.getSettTokens(tokenRequest);
     sett.value = sett.tokens.reduce((total, balance) => (total += balance.value), 0);
-
-    if (chain.name === 'BinanceSmartChain') {
-      sett.sources = sources.filter((source) => source.name !== VAULT_SOURCE);
-    } else {
-      sett.sources = sources.filter((source) => !source.harvestable);
-    }
-    sett.sources = sett.sources.filter((source) => source.apr >= 0.01);
+    sett.sources = sources.filter((source) => source.apr >= 0.01);
     sett.apr = sett.sources.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
 
     const hasBoostedApr = sett.sources.some((source) => source.boostable);

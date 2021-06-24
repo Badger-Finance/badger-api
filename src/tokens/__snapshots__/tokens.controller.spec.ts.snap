@@ -207,6 +207,17 @@ Object {
       "network": "eth",
     },
   },
+  "0x2B5455aac8d64C14786c3a29858E43b5945819C0": Object {
+    "address": "0x2B5455aac8d64C14786c3a29858E43b5945819C0",
+    "decimals": 18,
+    "name": "bCVXCRV",
+    "symbol": "bCVXCRV",
+    "type": "Vault",
+    "vaultToken": Object {
+      "address": "0x62B9c7356A2Dc64a1969e19C23e4f579F9810Aa7",
+      "network": "eth",
+    },
+  },
   "0x2fE94ea3d5d4a175184081439753DE15AeF9d614": Object {
     "address": "0x2fE94ea3d5d4a175184081439753DE15AeF9d614",
     "decimals": 18,
@@ -267,6 +278,17 @@ Object {
     "name": "pTokens BTC",
     "symbol": "PBTC",
     "type": "Contract",
+  },
+  "0x53C8E199eb2Cb7c01543C137078a038937a68E40": Object {
+    "address": "0x53C8E199eb2Cb7c01543C137078a038937a68E40",
+    "decimals": 18,
+    "name": "bCVX",
+    "symbol": "bCVX",
+    "type": "Vault",
+    "vaultToken": Object {
+      "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
+      "network": "eth",
+    },
   },
   "0x55912D0Cf83B75c492E761932ABc4DB4a5CB1b17": Object {
     "address": "0x55912D0Cf83B75c492E761932ABc4DB4a5CB1b17",
@@ -714,6 +736,17 @@ Object {
       "network": "eth",
     },
   },
+  "0x2B5455aac8d64C14786c3a29858E43b5945819C0": Object {
+    "address": "0x2B5455aac8d64C14786c3a29858E43b5945819C0",
+    "decimals": 18,
+    "name": "bCVXCRV",
+    "symbol": "bCVXCRV",
+    "type": "Vault",
+    "vaultToken": Object {
+      "address": "0x62B9c7356A2Dc64a1969e19C23e4f579F9810Aa7",
+      "network": "eth",
+    },
+  },
   "0x2fE94ea3d5d4a175184081439753DE15AeF9d614": Object {
     "address": "0x2fE94ea3d5d4a175184081439753DE15AeF9d614",
     "decimals": 18,
@@ -774,6 +807,17 @@ Object {
     "name": "pTokens BTC",
     "symbol": "PBTC",
     "type": "Contract",
+  },
+  "0x53C8E199eb2Cb7c01543C137078a038937a68E40": Object {
+    "address": "0x53C8E199eb2Cb7c01543C137078a038937a68E40",
+    "decimals": 18,
+    "name": "bCVX",
+    "symbol": "bCVX",
+    "type": "Vault",
+    "vaultToken": Object {
+      "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
+      "network": "eth",
+    },
   },
   "0x55912D0Cf83B75c492E761932ABc4DB4a5CB1b17": Object {
     "address": "0x55912D0Cf83B75c492E761932ABc4DB4a5CB1b17",
