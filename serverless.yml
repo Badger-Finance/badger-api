@@ -238,59 +238,59 @@ functions:
           method: any
           cors: true
 
-  # index-setts:
-  #   handler: src/indexer/sett-indexer.indexAsset
-  #   timeout: 480
-  #   events:
-  #     - schedule:
-  #         name: ${self:service}-${self:custom.stage}-index-setts
-  #         description: "index historical data for all setts"
-  #         rate: rate(10 minutes)
+  index-setts:
+    handler: src/indexer/sett-indexer.indexAsset
+    timeout: 480
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-setts
+          description: "index historical data for all setts"
+          rate: rate(10 minutes)
 
-  # index-apy-snapshots:
-  #   handler: src/indexer/apy-snapshots-indexer.refreshApySnapshots
-  #   timeout: 30
-  #   events:
-  #     - schedule:
-  #         name: ${self:service}-${self:custom.stage}-index-apy-snapshots
-  #         description: "index data for sett apy"
-  #         rate: rate(1 minute)
+  index-apy-snapshots:
+    handler: src/indexer/apy-snapshots-indexer.refreshApySnapshots
+    timeout: 30
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-apy-snapshots
+          description: "index data for sett apy"
+          rate: rate(1 minute)
 
-  # index-prices:
-  #   handler: src/indexer/price-indexer.indexPrices
-  #   timeout: 30
-  #   events:
-  #     - schedule:
-  #         name: ${self:service}-${self:custom.stage}-index-prices
-  #         description: "index price data for all protocol tokens"
-  #         rate: rate(1 minute)
+  index-prices:
+    handler: src/indexer/price-indexer.indexPrices
+    timeout: 30
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-prices
+          description: "index price data for all protocol tokens"
+          rate: rate(1 minute)
 
-  # index-sett-snapshots:
-  #   handler: src/indexer/sett-snapshots-indexer.refreshSettSnapshots
-  #   timeout: 30
-  #   events:
-  #     - schedule:
-  #         name: ${self:service}-${self:custom.stage}-index-sett-snapshots
-  #         description: "index data for supported setts"
-  #         rate: rate(1 minute)
+  index-sett-snapshots:
+    handler: src/indexer/sett-snapshots-indexer.refreshSettSnapshots
+    timeout: 30
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-sett-snapshots
+          description: "index data for supported setts"
+          rate: rate(1 minute)
 
-  # index-leaderboard:
-  #   handler: src/indexer/boost-indexer.indexBoostLeaderBoard
-  #   timeout: 60
-  #   events:
-  #     - schedule:
-  #         name: ${self:service}-${self:custom.stage}-index-leaderboard
-  #         description: "index leaderboard data from latest badger boosts"
-  #         rate: rate(1 hour)
+  index-leaderboard:
+    handler: src/indexer/boost-indexer.indexBoostLeaderBoard
+    timeout: 60
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-leaderboard
+          description: "index leaderboard data from latest badger boosts"
+          rate: rate(1 hour)
 
-  # index-token-balances:
-  #   handler: src/indexer/token-balances-indexer.refreshTokenBalances
-  #   timeout: 180
-  #   events:
-  #     - schedule:
-  #         name: ${self:service}-${self:custom.stage}-index-token-balances
-  #         description: "index token balances from the graph"
-  #         rate: rate(1 minute)
+  index-token-balances:
+    handler: src/indexer/token-balances-indexer.refreshTokenBalances
+    timeout: 180
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-token-balances
+          description: "index token balances from the graph"
+          rate: rate(1 minute)
 
   index-accounts:
     handler: src/indexer/accounts-indexer.refreshAccounts
