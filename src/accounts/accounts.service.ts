@@ -8,7 +8,7 @@ import { RewardsService } from '../rewards/rewards.service';
 import { TokenRequest } from '../tokens/interfaces/token-request.interface';
 import { TokensService } from '../tokens/tokens.service';
 import { getToken } from '../tokens/tokens.utils';
-import { getUserAccount } from './accounts.utils';
+import { getCachedAccount, getUserAccount } from './accounts.utils';
 import { Account } from './interfaces/account.interface';
 
 @Service()
@@ -24,14 +24,14 @@ export class AccountsService {
     if (!accountId) {
       throw new BadRequest('accountId is required');
     }
-
-    const [accountData, boostData, boostRank] = await Promise.all([
+    const [accountData, cachedAccount, boostData, boostRank] = await Promise.all([
       getUserAccount(chain, accountId),
+      getCachedAccount(accountId),
       this.rewardsService.getUserBoost(accountId),
       getUserLeaderBoardRank(accountId),
     ]);
     const { user } = accountData;
-
+    const claimableBalances = cachedAccount ? cachedAccount.claimableBalances : [];
     const account: Account = {
       id: accountId,
       boost: boostData.boost,
@@ -40,6 +40,7 @@ export class AccountsService {
       value: 0,
       earnedValue: 0,
       balances: [],
+      claimableBalances,
     };
 
     if (user) {

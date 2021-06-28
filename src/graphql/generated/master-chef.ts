@@ -895,11 +895,8 @@ export type User = {
   rewardDebt: Scalars['BigInt'];
   entryUSD: Scalars['BigDecimal'];
   exitUSD: Scalars['BigDecimal'];
-  sushiAtLockup: Scalars['BigDecimal'];
   sushiHarvested: Scalars['BigDecimal'];
   sushiHarvestedUSD: Scalars['BigDecimal'];
-  sushiHarvestedSinceLockup: Scalars['BigDecimal'];
-  sushiHarvestedSinceLockupUSD: Scalars['BigDecimal'];
   timestamp: Scalars['BigInt'];
   block: Scalars['BigInt'];
 };
@@ -965,14 +962,6 @@ export type User_Filter = {
   exitUSD_lte?: Maybe<Scalars['BigDecimal']>;
   exitUSD_in?: Maybe<Array<Scalars['BigDecimal']>>;
   exitUSD_not_in?: Maybe<Array<Scalars['BigDecimal']>>;
-  sushiAtLockup?: Maybe<Scalars['BigDecimal']>;
-  sushiAtLockup_not?: Maybe<Scalars['BigDecimal']>;
-  sushiAtLockup_gt?: Maybe<Scalars['BigDecimal']>;
-  sushiAtLockup_lt?: Maybe<Scalars['BigDecimal']>;
-  sushiAtLockup_gte?: Maybe<Scalars['BigDecimal']>;
-  sushiAtLockup_lte?: Maybe<Scalars['BigDecimal']>;
-  sushiAtLockup_in?: Maybe<Array<Scalars['BigDecimal']>>;
-  sushiAtLockup_not_in?: Maybe<Array<Scalars['BigDecimal']>>;
   sushiHarvested?: Maybe<Scalars['BigDecimal']>;
   sushiHarvested_not?: Maybe<Scalars['BigDecimal']>;
   sushiHarvested_gt?: Maybe<Scalars['BigDecimal']>;
@@ -989,22 +978,6 @@ export type User_Filter = {
   sushiHarvestedUSD_lte?: Maybe<Scalars['BigDecimal']>;
   sushiHarvestedUSD_in?: Maybe<Array<Scalars['BigDecimal']>>;
   sushiHarvestedUSD_not_in?: Maybe<Array<Scalars['BigDecimal']>>;
-  sushiHarvestedSinceLockup?: Maybe<Scalars['BigDecimal']>;
-  sushiHarvestedSinceLockup_not?: Maybe<Scalars['BigDecimal']>;
-  sushiHarvestedSinceLockup_gt?: Maybe<Scalars['BigDecimal']>;
-  sushiHarvestedSinceLockup_lt?: Maybe<Scalars['BigDecimal']>;
-  sushiHarvestedSinceLockup_gte?: Maybe<Scalars['BigDecimal']>;
-  sushiHarvestedSinceLockup_lte?: Maybe<Scalars['BigDecimal']>;
-  sushiHarvestedSinceLockup_in?: Maybe<Array<Scalars['BigDecimal']>>;
-  sushiHarvestedSinceLockup_not_in?: Maybe<Array<Scalars['BigDecimal']>>;
-  sushiHarvestedSinceLockupUSD?: Maybe<Scalars['BigDecimal']>;
-  sushiHarvestedSinceLockupUSD_not?: Maybe<Scalars['BigDecimal']>;
-  sushiHarvestedSinceLockupUSD_gt?: Maybe<Scalars['BigDecimal']>;
-  sushiHarvestedSinceLockupUSD_lt?: Maybe<Scalars['BigDecimal']>;
-  sushiHarvestedSinceLockupUSD_gte?: Maybe<Scalars['BigDecimal']>;
-  sushiHarvestedSinceLockupUSD_lte?: Maybe<Scalars['BigDecimal']>;
-  sushiHarvestedSinceLockupUSD_in?: Maybe<Array<Scalars['BigDecimal']>>;
-  sushiHarvestedSinceLockupUSD_not_in?: Maybe<Array<Scalars['BigDecimal']>>;
   timestamp?: Maybe<Scalars['BigInt']>;
   timestamp_not?: Maybe<Scalars['BigInt']>;
   timestamp_gt?: Maybe<Scalars['BigInt']>;
@@ -1031,11 +1004,8 @@ export enum User_OrderBy {
   RewardDebt = 'rewardDebt',
   EntryUsd = 'entryUSD',
   ExitUsd = 'exitUSD',
-  SushiAtLockup = 'sushiAtLockup',
   SushiHarvested = 'sushiHarvested',
   SushiHarvestedUsd = 'sushiHarvestedUSD',
-  SushiHarvestedSinceLockup = 'sushiHarvestedSinceLockup',
-  SushiHarvestedSinceLockupUsd = 'sushiHarvestedSinceLockupUSD',
   Timestamp = 'timestamp',
   Block = 'block',
 }
