@@ -1,0 +1,10 @@
+query Users(
+  $first: Int
+  $where: User_filter
+  $orderBy: User_orderBy
+  $orderDirection: OrderDirection
+) {
+  users(first: $first, where: $where, orderBy: $orderBy, orderDirection: $orderDirection) {
+    ...User
+  }
+}

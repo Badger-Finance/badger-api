@@ -6,12 +6,12 @@ generates:
   src/graphql/generated/badger.ts:
     schema: ${BADGER_SUBGRAPH_URL}
     documents:
-      - src/graphql/fragments/geyser.fragment.graphql
       - src/graphql/fragments/sett.fragment.graphql
       - src/graphql/fragments/user-sett-balance.fragment.graphql
-      - src/graphql/queries/geysers-and-setts.query.graphql
+      - src/graphql/fragments/user.fragment.graphql
       - src/graphql/queries/setts.query.graphql
       - src/graphql/queries/user.query.graphql
+      - src/graphql/queries/users.query.graphql
     plugins:
       - typescript
       - typescript-graphql-request

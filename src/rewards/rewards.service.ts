@@ -21,9 +21,9 @@ import {
   AirdropMerkleClaim,
   AirdropMerkleDistribution,
   RewardMerkleClaim,
-  RewardMerkleDistribution,
 } from './interfaces/merkle-distributor.interface';
 import { UnlockSchedule } from './interfaces/unlock-schedule.interface';
+import { getTreeDistribution } from './rewards.utils';
 
 @Service()
 export class RewardsService {
@@ -62,9 +62,8 @@ export class RewardsService {
    * @param address User Ethereum address.
    */
   async getUserRewards(address: string): Promise<RewardMerkleClaim> {
-    const rewardFile = await getObject(REWARD_DATA, 'badger-tree.json');
-    const fileContents: RewardMerkleDistribution = JSON.parse(rewardFile.toString('utf-8'));
-    const claim = fileContents.claims[address];
+    const treeDistribution = await getTreeDistribution();
+    const claim = treeDistribution.claims[address];
     if (!claim) {
       throw new NotFound(`${address} does not have claimable rewards.`);
     }

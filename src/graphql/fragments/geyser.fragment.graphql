@@ -1,7 +1,0 @@
-fragment Geyser on Geyser {
-  id
-  stakingToken {
-    id
-  }
-  netShareDeposit
-}
