@@ -32,18 +32,17 @@ describe('SettsController', () => {
       .mockImplementation(
         async (settDefinition: SettDefinition): Promise<Sett> => settsUtils.defaultSett(settDefinition),
       );
-    jest
-      .spyOn(protocolsUtils, 'getVaultValueSources')
-      .mockImplementation(async (_settDefinition: SettDefinition): Promise<ValueSource[]> => {
+    jest.spyOn(protocolsUtils, 'getVaultValueSources').mockImplementation(
+      async (_settDefinition: SettDefinition): Promise<ValueSource[]> => {
         const underlying = createValueSource(settsUtils.VAULT_SOURCE, uniformPerformance(13.53321));
         const badger = createValueSource('Badger Rewards', uniformPerformance(6.8775));
         const digg = createValueSource('Digg Rewards', uniformPerformance(1.2));
         const fees = createValueSource('Curve Trading Fees', uniformPerformance(1.33));
         return [underlying, badger, digg, fees];
-      });
-    jest
-      .spyOn(tokensService, 'getSettTokens')
-      .mockImplementation(async (request: TokenRequest): Promise<TokenBalance[]> => {
+      },
+    );
+    jest.spyOn(tokensService, 'getSettTokens').mockImplementation(
+      async (request: TokenRequest): Promise<TokenBalance[]> => {
         const token = getToken(request.sett.depositToken);
         if (token.lpToken) {
           const bal0 = parseInt(token.address.slice(0, 4), 16);
@@ -51,7 +50,8 @@ describe('SettsController', () => {
           return Promise.all([toTestBalance(token, bal0), toTestBalance(token, bal1)]);
         }
         return Promise.all([toTestBalance(token, parseInt(token.address.slice(0, 4), 16))]);
-      });
+      },
+    );
   };
 
   describe('GET /v2/setts', () => {
