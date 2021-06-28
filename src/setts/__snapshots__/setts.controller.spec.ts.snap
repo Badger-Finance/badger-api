@@ -1462,7 +1462,7 @@ Array [
     "balance": 0,
     "boostable": false,
     "experimental": true,
-    "hasBouncer": true,
+    "hasBouncer": false,
     "name": "Convex hBTC",
     "ppfs": 1,
     "sources": Array [
@@ -1543,7 +1543,7 @@ Array [
     "balance": 0,
     "boostable": false,
     "experimental": true,
-    "hasBouncer": true,
+    "hasBouncer": false,
     "name": "Convex pBTC",
     "ppfs": 1,
     "sources": Array [
@@ -1624,7 +1624,7 @@ Array [
     "balance": 0,
     "boostable": false,
     "experimental": true,
-    "hasBouncer": true,
+    "hasBouncer": false,
     "name": "Convex oBTC",
     "ppfs": 1,
     "sources": Array [
@@ -1705,7 +1705,7 @@ Array [
     "balance": 0,
     "boostable": false,
     "experimental": true,
-    "hasBouncer": true,
+    "hasBouncer": false,
     "name": "Convex bBTC",
     "ppfs": 1,
     "sources": Array [
@@ -1786,7 +1786,7 @@ Array [
     "balance": 0,
     "boostable": false,
     "experimental": true,
-    "hasBouncer": true,
+    "hasBouncer": false,
     "name": "Convex Tricrypto",
     "ppfs": 1,
     "sources": Array [
@@ -1867,7 +1867,7 @@ Array [
     "balance": 0,
     "boostable": false,
     "experimental": true,
-    "hasBouncer": true,
+    "hasBouncer": false,
     "name": "Convex cvxCRV Helper",
     "ppfs": 1,
     "sources": Array [
@@ -1948,7 +1948,7 @@ Array [
     "balance": 0,
     "boostable": false,
     "experimental": true,
-    "hasBouncer": true,
+    "hasBouncer": false,
     "name": "Convex CVX Helper",
     "ppfs": 1,
     "sources": Array [
@@ -3222,7 +3222,7 @@ Array [
     "balance": 0,
     "boostable": false,
     "experimental": true,
-    "hasBouncer": true,
+    "hasBouncer": false,
     "name": "Convex hBTC",
     "ppfs": 1,
     "sources": Array [
@@ -3303,7 +3303,7 @@ Array [
     "balance": 0,
     "boostable": false,
     "experimental": true,
-    "hasBouncer": true,
+    "hasBouncer": false,
     "name": "Convex pBTC",
     "ppfs": 1,
     "sources": Array [
@@ -3384,7 +3384,7 @@ Array [
     "balance": 0,
     "boostable": false,
     "experimental": true,
-    "hasBouncer": true,
+    "hasBouncer": false,
     "name": "Convex oBTC",
     "ppfs": 1,
     "sources": Array [
@@ -3465,7 +3465,7 @@ Array [
     "balance": 0,
     "boostable": false,
     "experimental": true,
-    "hasBouncer": true,
+    "hasBouncer": false,
     "name": "Convex bBTC",
     "ppfs": 1,
     "sources": Array [
@@ -3546,7 +3546,7 @@ Array [
     "balance": 0,
     "boostable": false,
     "experimental": true,
-    "hasBouncer": true,
+    "hasBouncer": false,
     "name": "Convex Tricrypto",
     "ppfs": 1,
     "sources": Array [
@@ -3627,7 +3627,7 @@ Array [
     "balance": 0,
     "boostable": false,
     "experimental": true,
-    "hasBouncer": true,
+    "hasBouncer": false,
     "name": "Convex cvxCRV Helper",
     "ppfs": 1,
     "sources": Array [
@@ -3708,7 +3708,7 @@ Array [
     "balance": 0,
     "boostable": false,
     "experimental": true,
-    "hasBouncer": true,
+    "hasBouncer": false,
     "name": "Convex CVX Helper",
     "ppfs": 1,
     "sources": Array [
