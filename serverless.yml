@@ -36,8 +36,8 @@ custom:
 
   table:
     APY_SNAPSHOTS_DATA:
-      staging: "badger-staging-apy-snapshots"
-      prod: "badger-apy-snapshots"
+      staging: "apy-snapshots-staging"
+      prod: "apy-snapshots"
     SETT_DATA:
       staging: "sett-historic-snapshots-staging"
       prod: "sett-historic-snapshots"
@@ -45,11 +45,14 @@ custom:
       staging: "liquidity-pool-token-balances-staging"
       prod: "liquidity-pool-token-balances"
     PRICE_DATA:
-      staging: "badger-staging-prices"
-      prod: "badger-prices"
+      staging: "token-prices-staging"
+      prod: "token-prices"
     SETT_SNAPSHOTS_DATA:
       staging: "sett-snapshots-staging"
       prod: "sett-snapshots"
+    ACCOUNT_DATA:
+      staging: "accounts-staging"
+      prod: "accounts"
 
   merkleProofs:
     staging: "badger-staging-merkle-proofs"
@@ -71,6 +74,7 @@ provider:
     shouldStartNameWithService: true
     minimumCompressionSize: 1024
   environment:
+    # Subgraph Definitions
     BADGER: "https://api.thegraph.com/subgraphs/name/axejintao/badger-dao"
     BADGER_BSC: "https://api.thegraph.com/subgraphs/name/axejintao/badger-dao-bsc"
     BADGER_DAO: "https://api.thegraph.com/subgraphs/name/darruma/badger"
@@ -78,18 +82,33 @@ provider:
     SUSHISWAP: "https://api.thegraph.com/subgraphs/name/sushiswap/exchange"
     PANCAKESWAP: "https://api.thegraph.com/subgraphs/name/pancakeswap/exchange"
     MASTERCHEF: "https://api.thegraph.com/subgraphs/name/sushiswap/master-chef"
+    # Table Defintions
     APY_SNAPSHOTS_DATA: ${self:custom.table.APY_SNAPSHOTS_DATA.${self:custom.stage}}
     SETT_DATA: ${self:custom.table.SETT_DATA.${self:custom.stage}}
     LEADERBOARD_DATA: ${self:custom.stage}-leaderboard
     LIQUIDITY_POOL_TOKEN_BALANCES_DATA: ${self:custom.table.LIQUIDITY_POOL_TOKEN_BALANCES_DATA.${self:custom.stage}}
     PRICE_DATA: ${self:custom.table.PRICE_DATA.${self:custom.stage}}
     SETT_SNAPSHOTS_DATA: ${self:custom.table.SETT_SNAPSHOTS_DATA.${self:custom.stage}}
+    ACCOUNT_DATA: ${self:custom.table.ACCOUNT_DATA.${self:custom.stage}}
+    # General Defintions
     REWARD_DATA: ${self:custom.merkleProofs.${self:custom.stage}}
     BOUNCER_PROOFS: badger-bouncer.json
     STAGE: ${opt:stage, self:provider.stage}
 
 resources:
   Resources:
+    accountTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.table.ACCOUNT_DATA.${self:custom.stage}}
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: "address"
+            KeyType: "HASH"
+        AttributeDefinitions:
+          - AttributeName: "address"
+            AttributeType: "S"
+
     apySnapshotsTable:
       Type: AWS::DynamoDB::Table
       Properties:
