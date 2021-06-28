@@ -10,10 +10,7 @@ import { getTreeDistribution } from '../rewards/rewards.utils';
 
 export async function refreshAccounts(): Promise<void> {
   const eth = new Ethereum();
-  console.time('Get Accounts');
   const accounts = await getAccounts(eth);
-  console.timeEnd('Get Accounts');
-  console.log(`Loaded ${accounts.length} Accounts`);
 
   const badgerTree = new Contract(BADGER_TREE, badgerTreeAbi, eth.provider);
   const treeDistribution = await getTreeDistribution();
@@ -21,7 +18,6 @@ export async function refreshAccounts(): Promise<void> {
 
   const batchSize = 500;
   for (let i = 0; i < accounts.length; i += batchSize) {
-    console.log(`${i} / ${accounts.length}`);
     const batchAccounts = accounts.slice(i, i + batchSize);
     await Promise.all(
       batchAccounts.map(async (acc) => {
