@@ -299,4 +299,4 @@ functions:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-accounts
           description: "index accounts information from the graph"
-          rate: rate(5 minutes)
+          rate: rate(1 hour)

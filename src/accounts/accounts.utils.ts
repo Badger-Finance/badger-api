@@ -2,7 +2,7 @@ import { ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
-import { getSdk, OrderDirection, UserQuery, User_OrderBy } from '../graphql/generated/badger';
+import { getSdk, OrderDirection, User_OrderBy, UserQuery } from '../graphql/generated/badger';
 import { CachedAccount } from './interfaces/cached-account.interface';
 
 export async function getUserAccount(chain: Chain, accountId: string): Promise<UserQuery> {
@@ -47,11 +47,7 @@ export async function getAccounts(chain: Chain): Promise<string[]> {
 export const getCachedAccount = async (address: string): Promise<CachedAccount | undefined> => {
   try {
     const mapper = getDataMapper();
-    for await (const item of mapper.query(
-      CachedAccount,
-      { address },
-      { limit: 1, scanIndexForward: false },
-    )) {
+    for await (const item of mapper.query(CachedAccount, { address }, { limit: 1, scanIndexForward: false })) {
       return item;
     }
     return;
