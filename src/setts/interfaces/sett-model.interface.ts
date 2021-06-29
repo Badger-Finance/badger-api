@@ -1,9 +1,11 @@
 import { Description, Example, Property, Title } from '@tsed/schema';
 import { TOKENS } from '../../config/constants';
-import { ValueSource } from '../../protocols/interfaces/value-source.interface';
+import { uniformPerformance } from '../../protocols/interfaces/performance.interface';
+import { createValueSource, ValueSource } from '../../protocols/interfaces/value-source.interface';
 import { toTestBalance } from '../../test/tests.utils';
 import { TokenBalance } from '../../tokens/interfaces/token-balance.interface';
 import { getToken } from '../../tokens/tokens.utils';
+import { VAULT_SOURCE } from '../setts.utils';
 import { Sett } from './sett.interface';
 
 export class SettModel implements Sett {
@@ -78,6 +80,15 @@ export class SettModel implements Sett {
   @Example(8.03)
   @Property()
   public maxApr?: number;
+
+  @Title('sources')
+  @Description('Sett APR individual yield source breakdown')
+  @Example([
+    createValueSource(VAULT_SOURCE, uniformPerformance(8.32)),
+    createValueSource('Badger Rewards', uniformPerformance(17.34)),
+    createValueSource('LP Trade Fee', uniformPerformance(1.45)),
+  ])
+  @Property()
   public sources: ValueSource[];
 
   @Title('hasBouncer')
