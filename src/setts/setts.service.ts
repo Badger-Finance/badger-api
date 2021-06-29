@@ -1,4 +1,4 @@
-import { Inject, Service } from '@tsed/common';
+import { Service } from '@tsed/common';
 import { ethers } from 'ethers';
 import { Chain } from '../chains/config/chain.config';
 import { CURRENT, ONE_DAY, SEVEN_DAYS, THIRTY_DAYS, THREE_DAYS } from '../config/constants';
@@ -7,9 +7,7 @@ import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interf
 import { createValueSource, ValueSource } from '../protocols/interfaces/value-source.interface';
 import { getVaultValueSources } from '../protocols/protocols.utils';
 import { TokenType } from '../tokens/enums/token-type.enum';
-import { TokenRequest } from '../tokens/interfaces/token-request.interface';
-import { TokensService } from '../tokens/tokens.service';
-import { getSettTokens, getToken } from '../tokens/tokens.utils';
+import { getSettTokens, getSettUnderlyingTokens, getToken } from '../tokens/tokens.utils';
 import { Sett } from './interfaces/sett.interface';
 import { SettDefinition } from './interfaces/sett-definition.interface';
 import {
@@ -23,9 +21,6 @@ import {
 
 @Service()
 export class SettsService {
-  @Inject()
-  private readonly tokensService!: TokensService;
-
   async getProtocolSummary(chain: Chain, currency?: string): Promise<ProtocolSummary> {
     const setts = await Promise.all(
       chain.setts
@@ -49,13 +44,7 @@ export class SettsService {
       getCachedSett(settDefinition),
       getVaultValueSources(settDefinition),
     ]);
-    const tokenRequest: TokenRequest = {
-      chain: chain,
-      sett: settDefinition,
-      balance: sett.balance,
-      currency: currency,
-    };
-    sett.tokens = await this.tokensService.getSettTokens(tokenRequest);
+    sett.tokens = await getSettTokens(settDefinition, sett.balance, currency);
     sett.value = sett.tokens.reduce((total, balance) => (total += balance.value), 0);
     sett.sources = sources.filter((source) => source.apr >= 0.01);
     sett.apr = sett.sources.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
@@ -87,7 +76,7 @@ export class SettsService {
 
   static async getSettTokenPerformance(chain: Chain, settDefinition: SettDefinition): Promise<ValueSource[]> {
     const sett = await getCachedSett(settDefinition);
-    const tokens = await getSettTokens(chain, settDefinition);
+    const tokens = await getSettUnderlyingTokens(chain, settDefinition);
     const vaultToken = getToken(sett.vaultToken);
 
     const sources: ValueSource[] = [];

@@ -45,17 +45,13 @@ export class PancakeSwapService extends SwapService {
   static async getEmissionSource(chain: Chain, poolId: number): Promise<ValueSource> {
     const emissionSource = createValueSource(VAULT_SOURCE, uniformPerformance(0));
     const masterChef = new ethers.Contract(PANCAKE_CHEF, pancakeChefAbi, chain.provider);
-    const [totalAllocPoint, cakePerBlock, poolInfo, tokenPrice]: [
-      BigNumber,
-      BigNumber,
-      PoolInfo,
-      TokenPrice,
-    ] = await Promise.all([
-      masterChef.totalAllocPoint(),
-      masterChef.cakePerBlock(),
-      masterChef.poolInfo(poolId),
-      getTokenPriceData(TOKENS.CAKE),
-    ]);
+    const [totalAllocPoint, cakePerBlock, poolInfo, tokenPrice]: [BigNumber, BigNumber, PoolInfo, TokenPrice] =
+      await Promise.all([
+        masterChef.totalAllocPoint(),
+        masterChef.cakePerBlock(),
+        masterChef.poolInfo(poolId),
+        getTokenPriceData(TOKENS.CAKE),
+      ]);
     const depositToken = new ethers.Contract(poolInfo.lpToken, erc20Abi, chain.provider);
     const poolBalance = (await depositToken.balanceOf(PANCAKE_CHEF)) / 1e18;
     const depositTokenValue = await getTokenPriceData(poolInfo.lpToken);

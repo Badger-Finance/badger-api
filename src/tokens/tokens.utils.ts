@@ -1,15 +1,18 @@
 import { NotFound } from '@tsed/exceptions';
-import { ethers } from 'ethers';
+import { BigNumberish, ethers } from 'ethers';
+import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
 import { getPrice, inCurrency } from '../prices/prices.utils';
 import { getLiquidityData } from '../protocols/common/swap.utils';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { bscTokensConfig } from './config/bsc-tokens.config';
 import { ethTokensConfig } from './config/eth-tokens.config';
+import { CachedLiquidityPoolTokenBalance } from './interfaces/cached-liquidity-pool-token-balance.interface';
 import { CachedTokenBalance } from './interfaces/cached-token-balance.interface';
 import { Token } from './interfaces/token.interface';
 import { TokenBalance } from './interfaces/token-balance.interface';
 import { TokenConfig } from './interfaces/token-config.interface';
+import { TokenPrice } from './interfaces/token-price.interface';
 
 export const protocolTokens: TokenConfig = { ...ethTokensConfig, ...bscTokensConfig };
 
@@ -33,7 +36,7 @@ export const getTokenByName = (name: string): Token => {
   return token;
 };
 
-export const getSettTokens = async (chain: Chain, sett: SettDefinition): Promise<Token[]> => {
+export const getSettUnderlyingTokens = async (chain: Chain, sett: SettDefinition): Promise<Token[]> => {
   const depositToken = getToken(sett.depositToken);
   if (depositToken.lpToken) {
     try {
@@ -83,5 +86,67 @@ export async function toCachedBalance(token: Token, balance: number): Promise<Ca
     balance: balance,
     valueUsd: balance * inCurrency(price, 'usd'),
     valueEth: balance * inCurrency(price, 'eth'),
+  };
+}
+
+/**
+ * Get token balances within a sett.
+ * @param sett Sett requested.
+ * @param balance Balance in wei.
+ * @param currency Optional currency denomination.
+ * @returns Array of token balances from the Sett.
+ */
+export async function getSettTokens(sett: SettDefinition, balance: number, currency?: string): Promise<TokenBalance[]> {
+  const { protocol, depositToken, settToken } = sett;
+  const token = getToken(sett.depositToken);
+  if (protocol && (token.lpToken || sett.getTokenBalance)) {
+    const balanceToken = token.lpToken ? depositToken : settToken;
+    const cachedTokenBalances = await getCachedTokenBalances(balanceToken, protocol, currency);
+    if (cachedTokenBalances) {
+      return cachedTokenBalances;
+    }
+  }
+  return Promise.all([toBalance(token, balance, currency)]);
+}
+
+export async function getCachedTokenBalances(
+  pairId: string,
+  protocol: string,
+  currency?: string,
+): Promise<TokenBalance[] | undefined> {
+  const mapper = getDataMapper();
+  for await (const record of mapper.query(
+    CachedLiquidityPoolTokenBalance,
+    { pairId, protocol },
+    { indexName: 'IndexLiquidityPoolTokenBalancesOnPairIdAndProtocol', limit: 1 },
+  )) {
+    const tokenBalances = [];
+    for (const cachedTokenBalance of record.tokenBalances) {
+      tokenBalances.push(cachedTokenBalanceToTokenBalance(cachedTokenBalance, currency));
+    }
+    return tokenBalances;
+  }
+  return undefined;
+}
+
+export function formatBalance(value: BigNumberish, decimals = 18): number {
+  return Number(ethers.utils.formatUnits(value, decimals));
+}
+
+export function mockBalance(token: Token, balance: number, currency?: string): TokenBalance {
+  const price = parseInt(token.address.slice(0, 4), 16);
+  const tokenPrice: TokenPrice = {
+    name: token.name,
+    address: token.address,
+    usd: price,
+    eth: price,
+  };
+  return {
+    address: token.address,
+    name: token.name,
+    symbol: token.symbol,
+    decimals: token.decimals,
+    balance: balance,
+    value: balance * inCurrency(tokenPrice, currency),
   };
 }

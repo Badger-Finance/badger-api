@@ -23,91 +23,6 @@ export type Block_Height = {
   number?: Maybe<Scalars['Int']>;
 };
 
-export type Geyser = {
-  __typename?: 'Geyser';
-  id: Scalars['ID'];
-  /** Current sett deposit share value */
-  netShareDeposit: Scalars['BigInt'];
-  /** Total sett deposit share value */
-  grossShareDeposit: Scalars['BigInt'];
-  /** Total sett withdraw share value */
-  grossShareWithdraw: Scalars['BigInt'];
-  stakingToken: Token;
-  rewardToken: Token;
-};
-
-export type Geyser_Filter = {
-  id?: Maybe<Scalars['ID']>;
-  id_not?: Maybe<Scalars['ID']>;
-  id_gt?: Maybe<Scalars['ID']>;
-  id_lt?: Maybe<Scalars['ID']>;
-  id_gte?: Maybe<Scalars['ID']>;
-  id_lte?: Maybe<Scalars['ID']>;
-  id_in?: Maybe<Array<Scalars['ID']>>;
-  id_not_in?: Maybe<Array<Scalars['ID']>>;
-  netShareDeposit?: Maybe<Scalars['BigInt']>;
-  netShareDeposit_not?: Maybe<Scalars['BigInt']>;
-  netShareDeposit_gt?: Maybe<Scalars['BigInt']>;
-  netShareDeposit_lt?: Maybe<Scalars['BigInt']>;
-  netShareDeposit_gte?: Maybe<Scalars['BigInt']>;
-  netShareDeposit_lte?: Maybe<Scalars['BigInt']>;
-  netShareDeposit_in?: Maybe<Array<Scalars['BigInt']>>;
-  netShareDeposit_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  grossShareDeposit?: Maybe<Scalars['BigInt']>;
-  grossShareDeposit_not?: Maybe<Scalars['BigInt']>;
-  grossShareDeposit_gt?: Maybe<Scalars['BigInt']>;
-  grossShareDeposit_lt?: Maybe<Scalars['BigInt']>;
-  grossShareDeposit_gte?: Maybe<Scalars['BigInt']>;
-  grossShareDeposit_lte?: Maybe<Scalars['BigInt']>;
-  grossShareDeposit_in?: Maybe<Array<Scalars['BigInt']>>;
-  grossShareDeposit_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  grossShareWithdraw?: Maybe<Scalars['BigInt']>;
-  grossShareWithdraw_not?: Maybe<Scalars['BigInt']>;
-  grossShareWithdraw_gt?: Maybe<Scalars['BigInt']>;
-  grossShareWithdraw_lt?: Maybe<Scalars['BigInt']>;
-  grossShareWithdraw_gte?: Maybe<Scalars['BigInt']>;
-  grossShareWithdraw_lte?: Maybe<Scalars['BigInt']>;
-  grossShareWithdraw_in?: Maybe<Array<Scalars['BigInt']>>;
-  grossShareWithdraw_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  stakingToken?: Maybe<Scalars['String']>;
-  stakingToken_not?: Maybe<Scalars['String']>;
-  stakingToken_gt?: Maybe<Scalars['String']>;
-  stakingToken_lt?: Maybe<Scalars['String']>;
-  stakingToken_gte?: Maybe<Scalars['String']>;
-  stakingToken_lte?: Maybe<Scalars['String']>;
-  stakingToken_in?: Maybe<Array<Scalars['String']>>;
-  stakingToken_not_in?: Maybe<Array<Scalars['String']>>;
-  stakingToken_contains?: Maybe<Scalars['String']>;
-  stakingToken_not_contains?: Maybe<Scalars['String']>;
-  stakingToken_starts_with?: Maybe<Scalars['String']>;
-  stakingToken_not_starts_with?: Maybe<Scalars['String']>;
-  stakingToken_ends_with?: Maybe<Scalars['String']>;
-  stakingToken_not_ends_with?: Maybe<Scalars['String']>;
-  rewardToken?: Maybe<Scalars['String']>;
-  rewardToken_not?: Maybe<Scalars['String']>;
-  rewardToken_gt?: Maybe<Scalars['String']>;
-  rewardToken_lt?: Maybe<Scalars['String']>;
-  rewardToken_gte?: Maybe<Scalars['String']>;
-  rewardToken_lte?: Maybe<Scalars['String']>;
-  rewardToken_in?: Maybe<Array<Scalars['String']>>;
-  rewardToken_not_in?: Maybe<Array<Scalars['String']>>;
-  rewardToken_contains?: Maybe<Scalars['String']>;
-  rewardToken_not_contains?: Maybe<Scalars['String']>;
-  rewardToken_starts_with?: Maybe<Scalars['String']>;
-  rewardToken_not_starts_with?: Maybe<Scalars['String']>;
-  rewardToken_ends_with?: Maybe<Scalars['String']>;
-  rewardToken_not_ends_with?: Maybe<Scalars['String']>;
-};
-
-export enum Geyser_OrderBy {
-  Id = 'id',
-  NetShareDeposit = 'netShareDeposit',
-  GrossShareDeposit = 'grossShareDeposit',
-  GrossShareWithdraw = 'grossShareWithdraw',
-  StakingToken = 'stakingToken',
-  RewardToken = 'rewardToken',
-}
-
 export enum OrderDirection {
   Asc = 'asc',
   Desc = 'desc',
@@ -123,8 +38,6 @@ export type Query = {
   userSettBalances: Array<UserSettBalance>;
   token?: Maybe<Token>;
   tokens: Array<Token>;
-  geyser?: Maybe<Geyser>;
-  geysers: Array<Geyser>;
   /** Access to subgraph metadata */
   _meta?: Maybe<_Meta_>;
 };
@@ -182,20 +95,6 @@ export type QueryTokensArgs = {
   orderBy?: Maybe<Token_OrderBy>;
   orderDirection?: Maybe<OrderDirection>;
   where?: Maybe<Token_Filter>;
-  block?: Maybe<Block_Height>;
-};
-
-export type QueryGeyserArgs = {
-  id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
-};
-
-export type QueryGeysersArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Geyser_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<Geyser_Filter>;
   block?: Maybe<Block_Height>;
 };
 
@@ -383,8 +282,6 @@ export type Subscription = {
   userSettBalances: Array<UserSettBalance>;
   token?: Maybe<Token>;
   tokens: Array<Token>;
-  geyser?: Maybe<Geyser>;
-  geysers: Array<Geyser>;
   /** Access to subgraph metadata */
   _meta?: Maybe<_Meta_>;
 };
@@ -442,20 +339,6 @@ export type SubscriptionTokensArgs = {
   orderBy?: Maybe<Token_OrderBy>;
   orderDirection?: Maybe<OrderDirection>;
   where?: Maybe<Token_Filter>;
-  block?: Maybe<Block_Height>;
-};
-
-export type SubscriptionGeyserArgs = {
-  id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
-};
-
-export type SubscriptionGeysersArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Geyser_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<Geyser_Filter>;
   block?: Maybe<Block_Height>;
 };
 
@@ -714,15 +597,6 @@ export enum _SubgraphErrorPolicy_ {
   Deny = 'deny',
 }
 
-export const GeyserFragmentDoc = gql`
-  fragment Geyser on Geyser {
-    id
-    stakingToken {
-      id
-    }
-    netShareDeposit
-  }
-`;
 export const SettFragmentDoc = gql`
   fragment Sett on Sett {
     id
@@ -760,17 +634,10 @@ export const UserSettBalanceFragmentDoc = gql`
     grossShareWithdraw
   }
 `;
-export const GeysersAndSettsDocument = gql`
-  query GeysersAndSetts($geysersOrderDirection: OrderDirection, $settsOrderDirection: OrderDirection) {
-    geysers(orderDirection: $geysersOrderDirection) {
-      ...Geyser
-    }
-    setts(orderDirection: $settsOrderDirection) {
-      ...Sett
-    }
+export const UserFragmentDoc = gql`
+  fragment User on User {
+    id
   }
-  ${GeyserFragmentDoc}
-  ${SettFragmentDoc}
 `;
 export const SettDocument = gql`
   query Sett($id: ID!, $block: Block_height) {
@@ -790,33 +657,32 @@ export const UserDocument = gql`
   }
   ${UserSettBalanceFragmentDoc}
 `;
+export const UsersDocument = gql`
+  query Users($first: Int, $where: User_filter, $orderBy: User_orderBy, $orderDirection: OrderDirection) {
+    users(first: $first, where: $where, orderBy: $orderBy, orderDirection: $orderDirection) {
+      ...User
+    }
+  }
+  ${UserFragmentDoc}
+`;
 
 export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
 
 const defaultWrapper: SdkFunctionWrapper = (sdkFunction) => sdkFunction();
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    GeysersAndSetts(
-      variables?: GeysersAndSettsQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<GeysersAndSettsQuery> {
-      return withWrapper(() =>
-        client.request<GeysersAndSettsQuery>(print(GeysersAndSettsDocument), variables, requestHeaders),
-      );
-    },
     Sett(variables: SettQueryVariables, requestHeaders?: Dom.RequestInit['headers']): Promise<SettQuery> {
       return withWrapper(() => client.request<SettQuery>(print(SettDocument), variables, requestHeaders));
     },
     User(variables: UserQueryVariables, requestHeaders?: Dom.RequestInit['headers']): Promise<UserQuery> {
       return withWrapper(() => client.request<UserQuery>(print(UserDocument), variables, requestHeaders));
     },
+    Users(variables?: UsersQueryVariables, requestHeaders?: Dom.RequestInit['headers']): Promise<UsersQuery> {
+      return withWrapper(() => client.request<UsersQuery>(print(UsersDocument), variables, requestHeaders));
+    },
   };
 }
 export type Sdk = ReturnType<typeof getSdk>;
-export type GeyserFragment = { __typename?: 'Geyser' } & Pick<Geyser, 'id' | 'netShareDeposit'> & {
-    stakingToken: { __typename?: 'Token' } & Pick<Token, 'id'>;
-  };
-
 export type SettFragment = { __typename?: 'Sett' } & Pick<
   Sett,
   'id' | 'balance' | 'netDeposit' | 'netShareDeposit' | 'pricePerFullShare' | 'totalSupply'
@@ -832,15 +698,7 @@ export type UserSettBalanceFragment = { __typename?: 'UserSettBalance' } & Pick<
     > & { token: { __typename?: 'Token' } & Pick<Token, 'id' | 'decimals'> };
   };
 
-export type GeysersAndSettsQueryVariables = Exact<{
-  geysersOrderDirection?: Maybe<OrderDirection>;
-  settsOrderDirection?: Maybe<OrderDirection>;
-}>;
-
-export type GeysersAndSettsQuery = { __typename?: 'Query' } & {
-  geysers: Array<{ __typename?: 'Geyser' } & GeyserFragment>;
-  setts: Array<{ __typename?: 'Sett' } & SettFragment>;
-};
+export type UserFragment = { __typename?: 'User' } & Pick<User, 'id'>;
 
 export type SettQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -859,3 +717,12 @@ export type UserQuery = { __typename?: 'Query' } & {
     { __typename?: 'User' } & { settBalances: Array<{ __typename?: 'UserSettBalance' } & UserSettBalanceFragment> }
   >;
 };
+
+export type UsersQueryVariables = Exact<{
+  first?: Maybe<Scalars['Int']>;
+  where?: Maybe<User_Filter>;
+  orderBy?: Maybe<User_OrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+}>;
+
+export type UsersQuery = { __typename?: 'Query' } & { users: Array<{ __typename?: 'User' } & UserFragment> };

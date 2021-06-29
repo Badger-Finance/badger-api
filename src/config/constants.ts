@@ -123,6 +123,7 @@ export const PRICE_DATA = process.env.PRICE_DATA || 'MISSING REQUIRED ENV VAR';
 export const SETT_SNAPSHOTS_DATA = process.env.SETT_SNAPSHOTS_DATA || 'MISSING REQUIRED ENV VAR';
 export const REWARD_DATA = process.env.REWARD_DATA || 'MISSING REQUIRED ENV VAR';
 export const LEADERBOARD_DATA = process.env.LEADERBOARD_DATA || 'MISSING REQUIRED ENV VAR';
+export const ACCOUNT_DATA = process.env.ACCOUNT_DATA || 'MISSING REQUIRED ENV VAR';
 
 // thegraph constants
 export const UNISWAP_URL = process.env.UNISWAP || 'MISSING REQUIRED ENV VAR';
@@ -152,3 +153,4 @@ export enum Provider {
 }
 export const SUSHI_CHEF = '0xc2EdaD668740f1aA35E4D8f227fB8E17dcA888Cd';
 export const PANCAKE_CHEF = '0x73feaa1eE314F8c655E354234017bE2193C9E24E';
+export const BADGER_TREE = '0xbe82A3259ce427B8bCb54b938b486dC2aF509Cc3';
