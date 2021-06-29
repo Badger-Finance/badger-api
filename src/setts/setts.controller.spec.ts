@@ -45,9 +45,9 @@ describe('SettsController', () => {
           if (token.lpToken) {
             const bal0 = parseInt(token.address.slice(0, 4), 16);
             const bal1 = parseInt(token.address.slice(0, 6), 16);
-            return Promise.all([toTestBalance(token, bal0), toTestBalance(token, bal1)]);
+            return [toTestBalance(token, bal0), toTestBalance(token, bal1)];
           }
-          return Promise.all([toTestBalance(token, parseInt(token.address.slice(0, 4), 16))]);
+          return [toTestBalance(token, parseInt(token.address.slice(0, 4), 16))];
         },
       );
   };
