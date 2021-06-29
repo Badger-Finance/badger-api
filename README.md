@@ -7,18 +7,20 @@ Collection of serverless API to enable public access to data surrounding the Bad
 
 ## Development
 
-To get started, run the environment setup script provided:
-
-```bash
-chmod +x setup.sh
-./setup.sh
-```
-
-Or, install the following dependencies yourself:
+To get started, install the following dependencies:
 
 - Node
-- Serverless
 - Java
+
+Setup project dependencies:
+
+```bash
+npm install -g serverless
+sls dynamodb install
+sls config credentials --provider aws --key x --secret x
+```
+
+Contact **Tritium | BadgerDAO#4816** for AWS access if required.
 
 Start the API:
 

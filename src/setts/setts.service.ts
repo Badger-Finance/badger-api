@@ -7,7 +7,6 @@ import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interf
 import { createValueSource, ValueSource } from '../protocols/interfaces/value-source.interface';
 import { getVaultValueSources } from '../protocols/protocols.utils';
 import { TokenType } from '../tokens/enums/token-type.enum';
-import { TokenRequest } from '../tokens/interfaces/token-request.interface';
 import { getSettTokens, getSettUnderlyingTokens, getToken } from '../tokens/tokens.utils';
 import { Sett } from './interfaces/sett.interface';
 import { SettDefinition } from './interfaces/sett-definition.interface';
@@ -45,13 +44,7 @@ export class SettsService {
       getCachedSett(settDefinition),
       getVaultValueSources(settDefinition),
     ]);
-    const tokenRequest: TokenRequest = {
-      chain: chain,
-      sett: settDefinition,
-      balance: sett.balance,
-      currency: currency,
-    };
-    sett.tokens = await getSettTokens(tokenRequest);
+    sett.tokens = await getSettTokens(settDefinition, sett.balance, currency);
     sett.value = sett.tokens.reduce((total, balance) => (total += balance.value), 0);
     sett.sources = sources.filter((source) => source.apr >= 0.01);
     sett.apr = sett.sources.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
