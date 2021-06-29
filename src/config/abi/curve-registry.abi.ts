@@ -1,4 +1,4 @@
-export const curveRegistryAbi = [
+export const crvRegistryAbi = [
   {
     name: 'PoolAdded',
     inputs: [

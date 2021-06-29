@@ -69,6 +69,7 @@ Array [
         },
       },
     ],
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0x61EB789d75A95CAa3fF50ed7E47b96c132fEc082",
@@ -158,6 +159,7 @@ Array [
         },
       },
     ],
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0x5A58609dA96469E9dEf3fE344bC39B00d18eb9A5",
@@ -247,6 +249,7 @@ Array [
         },
       },
     ],
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0x81d776C90c89B8d51E9497D58338933127e2fA80",
@@ -341,6 +344,7 @@ Array [
         },
       },
     ],
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0x075b1bb99792c9E1041bA13afEf80C91a1e70fB3",
@@ -422,6 +426,7 @@ Array [
         },
       },
     ],
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0x49849C98ae39Fff122806C06791Fa73784FB3675",
@@ -503,6 +508,7 @@ Array [
         },
       },
     ],
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0x64eda51d3Ad40D56b9dFc5554E06F94e1Dd786Fd",
@@ -584,6 +590,7 @@ Array [
         },
       },
     ],
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0x49849C98ae39Fff122806C06791Fa73784FB3675",
@@ -665,6 +672,7 @@ Array [
         },
       },
     ],
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0xcD7989894bc033581532D2cd88Da5db0A4b12859",
@@ -754,6 +762,7 @@ Array [
         },
       },
     ],
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0xE86204c4eDDd2f70eE00EAd6805f917671F56c52",
@@ -843,6 +852,7 @@ Array [
         },
       },
     ],
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0xCEfF51756c56CeFFCA006cD410B03FFC46dd3a58",
@@ -932,6 +942,7 @@ Array [
         },
       },
     ],
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0x110492b31c59716AC47337E616804E3E3AdC0b4a",
@@ -1021,6 +1032,7 @@ Array [
         },
       },
     ],
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0x9a13867048e01c663ce8Ce2fE0cDAE69Ff9F35E3",
@@ -1110,6 +1122,7 @@ Array [
         },
       },
     ],
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0x798D1bE841a82a273720CE31c822C61a67a601C3",
@@ -1191,6 +1204,7 @@ Array [
         },
       },
     ],
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -1272,6 +1286,7 @@ Array [
         },
       },
     ],
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -1353,6 +1368,7 @@ Array [
         },
       },
     ],
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0x18d98D452072Ac2EB7b74ce3DB723374360539f1",
@@ -1442,6 +1458,7 @@ Array [
         },
       },
     ],
+    "state": "experimental",
     "tokens": Array [
       Object {
         "address": "0x798D1bE841a82a273720CE31c822C61a67a601C3",
@@ -1461,8 +1478,8 @@ Array [
     "asset": "crvhBTC",
     "balance": 0,
     "boostable": false,
-    "experimental": true,
-    "hasBouncer": true,
+    "experimental": false,
+    "hasBouncer": false,
     "name": "Convex hBTC",
     "ppfs": 1,
     "sources": Array [
@@ -1523,6 +1540,7 @@ Array [
         },
       },
     ],
+    "state": "guarded",
     "tokens": Array [
       Object {
         "address": "0xb19059ebb43466C323583928285a49f558E572Fd",
@@ -1542,8 +1560,8 @@ Array [
     "asset": "crvpBTC",
     "balance": 0,
     "boostable": false,
-    "experimental": true,
-    "hasBouncer": true,
+    "experimental": false,
+    "hasBouncer": false,
     "name": "Convex pBTC",
     "ppfs": 1,
     "sources": Array [
@@ -1604,6 +1622,7 @@ Array [
         },
       },
     ],
+    "state": "guarded",
     "tokens": Array [
       Object {
         "address": "0xDE5331AC4B3630f94853Ff322B66407e0D6331E8",
@@ -1623,8 +1642,8 @@ Array [
     "asset": "crvoBTC",
     "balance": 0,
     "boostable": false,
-    "experimental": true,
-    "hasBouncer": true,
+    "experimental": false,
+    "hasBouncer": false,
     "name": "Convex oBTC",
     "ppfs": 1,
     "sources": Array [
@@ -1685,6 +1704,7 @@ Array [
         },
       },
     ],
+    "state": "guarded",
     "tokens": Array [
       Object {
         "address": "0x2fE94ea3d5d4a175184081439753DE15AeF9d614",
@@ -1704,8 +1724,8 @@ Array [
     "asset": "crvbBTC",
     "balance": 0,
     "boostable": false,
-    "experimental": true,
-    "hasBouncer": true,
+    "experimental": false,
+    "hasBouncer": false,
     "name": "Convex bBTC",
     "ppfs": 1,
     "sources": Array [
@@ -1766,6 +1786,7 @@ Array [
         },
       },
     ],
+    "state": "guarded",
     "tokens": Array [
       Object {
         "address": "0x410e3E86ef427e30B9235497143881f717d93c2A",
@@ -1785,8 +1806,8 @@ Array [
     "asset": "crvTricrypto",
     "balance": 0,
     "boostable": false,
-    "experimental": true,
-    "hasBouncer": true,
+    "experimental": false,
+    "hasBouncer": false,
     "name": "Convex Tricrypto",
     "ppfs": 1,
     "sources": Array [
@@ -1847,6 +1868,7 @@ Array [
         },
       },
     ],
+    "state": "guarded",
     "tokens": Array [
       Object {
         "address": "0xcA3d75aC011BF5aD07a98d02f18225F9bD9A6BDF",
@@ -1866,7 +1888,7 @@ Array [
     "asset": "cvxCRV",
     "balance": 0,
     "boostable": false,
-    "experimental": true,
+    "experimental": false,
     "hasBouncer": false,
     "name": "Convex cvxCRV Helper",
     "ppfs": 1,
@@ -1928,6 +1950,7 @@ Array [
         },
       },
     ],
+    "state": "guarded",
     "tokens": Array [
       Object {
         "address": "0x62B9c7356A2Dc64a1969e19C23e4f579F9810Aa7",
@@ -1947,7 +1970,7 @@ Array [
     "asset": "CVX",
     "balance": 0,
     "boostable": false,
-    "experimental": true,
+    "experimental": false,
     "hasBouncer": false,
     "name": "Convex CVX Helper",
     "ppfs": 1,
@@ -2009,6 +2032,7 @@ Array [
         },
       },
     ],
+    "state": "guarded",
     "tokens": Array [
       Object {
         "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
@@ -2101,6 +2125,7 @@ Array [
         },
       },
     ],
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0x075b1bb99792c9E1041bA13afEf80C91a1e70fB3",
@@ -2182,6 +2207,7 @@ Array [
         },
       },
     ],
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0x49849C98ae39Fff122806C06791Fa73784FB3675",
@@ -2263,6 +2289,7 @@ Array [
         },
       },
     ],
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0x64eda51d3Ad40D56b9dFc5554E06F94e1Dd786Fd",
@@ -2344,6 +2371,7 @@ Array [
         },
       },
     ],
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0x49849C98ae39Fff122806C06791Fa73784FB3675",
@@ -2425,6 +2453,7 @@ Array [
         },
       },
     ],
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0xcD7989894bc033581532D2cd88Da5db0A4b12859",
@@ -2514,6 +2543,7 @@ Array [
         },
       },
     ],
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0xE86204c4eDDd2f70eE00EAd6805f917671F56c52",
@@ -2603,6 +2633,7 @@ Array [
         },
       },
     ],
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0xCEfF51756c56CeFFCA006cD410B03FFC46dd3a58",
@@ -2692,6 +2723,7 @@ Array [
         },
       },
     ],
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0x110492b31c59716AC47337E616804E3E3AdC0b4a",
@@ -2781,6 +2813,7 @@ Array [
         },
       },
     ],
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0x9a13867048e01c663ce8Ce2fE0cDAE69Ff9F35E3",
@@ -2870,6 +2903,7 @@ Array [
         },
       },
     ],
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0x798D1bE841a82a273720CE31c822C61a67a601C3",
@@ -2951,6 +2985,7 @@ Array [
         },
       },
     ],
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -3032,6 +3067,7 @@ Array [
         },
       },
     ],
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -3113,6 +3149,7 @@ Array [
         },
       },
     ],
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0x18d98D452072Ac2EB7b74ce3DB723374360539f1",
@@ -3202,6 +3239,7 @@ Array [
         },
       },
     ],
+    "state": "experimental",
     "tokens": Array [
       Object {
         "address": "0x798D1bE841a82a273720CE31c822C61a67a601C3",
@@ -3221,8 +3259,8 @@ Array [
     "asset": "crvhBTC",
     "balance": 0,
     "boostable": false,
-    "experimental": true,
-    "hasBouncer": true,
+    "experimental": false,
+    "hasBouncer": false,
     "name": "Convex hBTC",
     "ppfs": 1,
     "sources": Array [
@@ -3283,6 +3321,7 @@ Array [
         },
       },
     ],
+    "state": "guarded",
     "tokens": Array [
       Object {
         "address": "0xb19059ebb43466C323583928285a49f558E572Fd",
@@ -3302,8 +3341,8 @@ Array [
     "asset": "crvpBTC",
     "balance": 0,
     "boostable": false,
-    "experimental": true,
-    "hasBouncer": true,
+    "experimental": false,
+    "hasBouncer": false,
     "name": "Convex pBTC",
     "ppfs": 1,
     "sources": Array [
@@ -3364,6 +3403,7 @@ Array [
         },
       },
     ],
+    "state": "guarded",
     "tokens": Array [
       Object {
         "address": "0xDE5331AC4B3630f94853Ff322B66407e0D6331E8",
@@ -3383,8 +3423,8 @@ Array [
     "asset": "crvoBTC",
     "balance": 0,
     "boostable": false,
-    "experimental": true,
-    "hasBouncer": true,
+    "experimental": false,
+    "hasBouncer": false,
     "name": "Convex oBTC",
     "ppfs": 1,
     "sources": Array [
@@ -3445,6 +3485,7 @@ Array [
         },
       },
     ],
+    "state": "guarded",
     "tokens": Array [
       Object {
         "address": "0x2fE94ea3d5d4a175184081439753DE15AeF9d614",
@@ -3464,8 +3505,8 @@ Array [
     "asset": "crvbBTC",
     "balance": 0,
     "boostable": false,
-    "experimental": true,
-    "hasBouncer": true,
+    "experimental": false,
+    "hasBouncer": false,
     "name": "Convex bBTC",
     "ppfs": 1,
     "sources": Array [
@@ -3526,6 +3567,7 @@ Array [
         },
       },
     ],
+    "state": "guarded",
     "tokens": Array [
       Object {
         "address": "0x410e3E86ef427e30B9235497143881f717d93c2A",
@@ -3545,8 +3587,8 @@ Array [
     "asset": "crvTricrypto",
     "balance": 0,
     "boostable": false,
-    "experimental": true,
-    "hasBouncer": true,
+    "experimental": false,
+    "hasBouncer": false,
     "name": "Convex Tricrypto",
     "ppfs": 1,
     "sources": Array [
@@ -3607,6 +3649,7 @@ Array [
         },
       },
     ],
+    "state": "guarded",
     "tokens": Array [
       Object {
         "address": "0xcA3d75aC011BF5aD07a98d02f18225F9bD9A6BDF",
@@ -3626,7 +3669,7 @@ Array [
     "asset": "cvxCRV",
     "balance": 0,
     "boostable": false,
-    "experimental": true,
+    "experimental": false,
     "hasBouncer": false,
     "name": "Convex cvxCRV Helper",
     "ppfs": 1,
@@ -3688,6 +3731,7 @@ Array [
         },
       },
     ],
+    "state": "guarded",
     "tokens": Array [
       Object {
         "address": "0x62B9c7356A2Dc64a1969e19C23e4f579F9810Aa7",
@@ -3707,7 +3751,7 @@ Array [
     "asset": "CVX",
     "balance": 0,
     "boostable": false,
-    "experimental": true,
+    "experimental": false,
     "hasBouncer": false,
     "name": "Convex CVX Helper",
     "ppfs": 1,
@@ -3769,6 +3813,7 @@ Array [
         },
       },
     ],
+    "state": "guarded",
     "tokens": Array [
       Object {
         "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
