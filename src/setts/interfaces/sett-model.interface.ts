@@ -2,9 +2,8 @@ import { Description, Example, Property, Title } from '@tsed/schema';
 import { TOKENS } from '../../config/constants';
 import { uniformPerformance } from '../../protocols/interfaces/performance.interface';
 import { createValueSource, ValueSource } from '../../protocols/interfaces/value-source.interface';
-import { toTestBalance } from '../../test/tests.utils';
 import { TokenBalance } from '../../tokens/interfaces/token-balance.interface';
-import { getToken } from '../../tokens/tokens.utils';
+import { getToken, mockBalance } from '../../tokens/tokens.utils';
 import { VAULT_SOURCE } from '../setts.utils';
 import { Sett } from './sett.interface';
 
@@ -53,7 +52,7 @@ export class SettModel implements Sett {
 
   @Title('tokens')
   @Description('Token balances held by the sett')
-  @Example([toTestBalance(getToken(TOKENS.BADGER), 3882.35294118), toTestBalance(getToken(TOKENS.WBTC), 1)])
+  @Example([mockBalance(getToken(TOKENS.BADGER), 3882.35294118), mockBalance(getToken(TOKENS.WBTC), 1)])
   @Property()
   public tokens: TokenBalance[];
 
