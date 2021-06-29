@@ -6,9 +6,9 @@ import { createValueSource, ValueSource } from '../protocols/interfaces/value-so
 import * as protocolsUtils from '../protocols/protocols.utils';
 import { Server } from '../Server';
 import * as settsUtils from '../setts/setts.utils';
-import { toTestBalance } from '../test/tests.utils';
 import { TokenBalance } from '../tokens/interfaces/token-balance.interface';
 import * as tokensUtils from '../tokens/tokens.utils';
+import { mockBalance } from '../tokens/tokens.utils';
 import { Sett } from './interfaces/sett.interface';
 import { SettDefinition } from './interfaces/sett-definition.interface';
 
@@ -46,9 +46,9 @@ describe('SettsController', () => {
           if (token.lpToken) {
             const bal0 = parseInt(token.address.slice(0, 4), 16);
             const bal1 = parseInt(token.address.slice(0, 6), 16);
-            return [toTestBalance(token, bal0), toTestBalance(token, bal1)];
+            return [mockBalance(token, bal0), mockBalance(token, bal1)];
           }
-          return [toTestBalance(token, parseInt(token.address.slice(0, 4), 16))];
+          return [mockBalance(token, parseInt(token.address.slice(0, 4), 16))];
         },
       );
   };

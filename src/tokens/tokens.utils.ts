@@ -12,6 +12,7 @@ import { CachedTokenBalance } from './interfaces/cached-token-balance.interface'
 import { Token } from './interfaces/token.interface';
 import { TokenBalance } from './interfaces/token-balance.interface';
 import { TokenConfig } from './interfaces/token-config.interface';
+import { TokenPrice } from './interfaces/token-price.interface';
 
 export const protocolTokens: TokenConfig = { ...ethTokensConfig, ...bscTokensConfig };
 
@@ -130,4 +131,22 @@ export async function getCachedTokenBalances(
 
 export function formatBalance(value: BigNumberish, decimals = 18): number {
   return Number(ethers.utils.formatUnits(value, decimals));
+}
+
+export function mockBalance(token: Token, balance: number, currency?: string): TokenBalance {
+  const price = parseInt(token.address.slice(0, 4), 16);
+  const tokenPrice: TokenPrice = {
+    name: token.name,
+    address: token.address,
+    usd: price,
+    eth: price,
+  };
+  return {
+    address: token.address,
+    name: token.name,
+    symbol: token.symbol,
+    decimals: token.decimals,
+    balance: balance,
+    value: balance * inCurrency(tokenPrice, currency),
+  };
 }
