@@ -56,7 +56,7 @@ describe('refreshSettSnapshots', () => {
     // Verify each saved object.
     for (const inputs of put.mock.calls) {
       // force convert input as jest overload mock causes issues
-      const snapshot = inputs[0] as unknown as CachedSettSnapshot;
+      const snapshot = (inputs[0] as unknown) as CachedSettSnapshot;
       expect(snapshot).toMatchObject({
         address: expect.any(String),
         balance: expect.any(Number),

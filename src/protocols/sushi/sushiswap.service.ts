@@ -9,7 +9,6 @@ import { getSdk, MasterChefsAndPoolsQuery, OrderDirection, Pool_OrderBy } from '
 import { PricesService } from '../../prices/prices.service';
 import { getPrice } from '../../prices/prices.utils';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
-import { TokensService } from '../../tokens/tokens.service';
 import { SwapService } from '../common/swap.service';
 import { uniformPerformance } from '../interfaces/performance.interface';
 import { UserInfo } from '../interfaces/user-info.interface';
@@ -20,8 +19,6 @@ import { xSushiApr } from '../interfaces/xsushi-apr.interface';
 export class SushiswapService extends SwapService {
   public static xSushiAprEndpoint = 'https://apy.sushiswap.fi/xsushi';
 
-  @Inject()
-  tokensService!: TokensService;
   @Inject()
   pricesService!: PricesService;
 
