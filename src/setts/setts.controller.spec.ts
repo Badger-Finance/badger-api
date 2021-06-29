@@ -30,11 +30,12 @@ describe('SettsController', () => {
       );
     jest
       .spyOn(protocolsUtils, 'getVaultValueSources')
-      .mockImplementation(async (_settDefinition: SettDefinition): Promise<ValueSource[]> => {
-        const underlying = createValueSource(settsUtils.VAULT_SOURCE, uniformPerformance(13.53321));
-        const badger = createValueSource('Badger Rewards', uniformPerformance(6.8775));
-        const digg = createValueSource('Digg Rewards', uniformPerformance(1.2));
-        const fees = createValueSource('Curve Trading Fees', uniformPerformance(1.33));
+      .mockImplementation(async (settDefinition: SettDefinition): Promise<ValueSource[]> => {
+        const performance = parseInt(settDefinition.settToken.slice(0, 5), 16) / 100;
+        const underlying = createValueSource(settsUtils.VAULT_SOURCE, uniformPerformance(performance));
+        const badger = createValueSource('Badger Rewards', uniformPerformance(performance));
+        const digg = createValueSource('Digg Rewards', uniformPerformance(performance));
+        const fees = createValueSource('Curve Trading Fees', uniformPerformance(performance));
         return [underlying, badger, digg, fees];
       });
     jest
@@ -45,9 +46,9 @@ describe('SettsController', () => {
           if (token.lpToken) {
             const bal0 = parseInt(token.address.slice(0, 4), 16);
             const bal1 = parseInt(token.address.slice(0, 6), 16);
-            return Promise.all([toTestBalance(token, bal0), toTestBalance(token, bal1)]);
+            return [toTestBalance(token, bal0), toTestBalance(token, bal1)];
           }
-          return Promise.all([toTestBalance(token, parseInt(token.address.slice(0, 4), 16))]);
+          return [toTestBalance(token, parseInt(token.address.slice(0, 4), 16))];
         },
       );
   };

@@ -25,7 +25,7 @@ export const randomValue = (min?: number, max?: number): number => {
   return minPrice + Math.random() * (maxPrice - minPrice);
 };
 
-export async function toTestBalance(token: Token, balance: number, currency?: string): Promise<TokenBalance> {
+export function toTestBalance(token: Token, balance: number, currency?: string): TokenBalance {
   const price = parseInt(token.address.slice(0, 4), 16);
   const tokenPrice: TokenPrice = {
     name: token.name,

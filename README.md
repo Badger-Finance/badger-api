@@ -22,11 +22,25 @@ sls config credentials --provider aws --key x --secret x
 
 Contact **Tritium | BadgerDAO#4816** for AWS access if required.
 
-Start the API:
+### AWS Lambda Environment
 
 ```
 yarn dev
 ```
+
+**Note: You cannot view Swagger documentation via Serverless**
+
+### Express Environment
+
+```
+npx ts-node src/index.ts
+```
+
+- [Swagger UI](http://localhost:8080/docs)
+- [Swagger JSON](http://localhost:8080/docs/swagger.json)
+
+Express is not the recommended development environment as implmentations will execute in lambda.
+Serverless offline framework is the closest to production execution environment.
 
 ### Local Testing
 
