@@ -1,5 +1,6 @@
 import '@tsed/platform-express';
 import './common/filters/badger-exception-filter';
+import '@tsed/swagger';
 import { Configuration, Inject, PlatformApplication } from '@tsed/common';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
@@ -12,18 +13,15 @@ import { Ethereum } from './chains/config/eth.config';
 import { ChainNetwork } from './chains/enums/chain-network.enum';
 import { controllers } from './ControllerRegistry';
 
-const rootDir = __dirname;
-
 @Configuration({
-  rootDir,
+  rootDir: __dirname,
   acceptMimes: ['application/json'],
   mount: {
     '/v2/': controllers,
   },
   swagger: [
     {
-      path: '/v2/docs',
-      specVersion: '3.0.1',
+      path: '/docs',
     },
   ],
   logger: {
@@ -31,6 +29,7 @@ const rootDir = __dirname;
     disableBootstrapLog: true,
     logRequest: false,
   },
+  exclude: ['**/*.spec.ts'],
 })
 export class Server {
   @Inject()
@@ -44,7 +43,7 @@ export class Server {
    * This method let you configure the express middleware required by your application to work.
    * @returns {Server}
    */
-  public $beforeRoutesInit(): void {
+  $beforeRoutesInit(): void | Promise<void> {
     Chain.register(ChainNetwork.Ethereum, new Ethereum());
     Chain.register(ChainNetwork.BinanceSmartChain, new BinanceSmartChain());
     this.app

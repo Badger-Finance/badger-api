@@ -30,11 +30,12 @@ describe('SettsController', () => {
       );
     jest
       .spyOn(protocolsUtils, 'getVaultValueSources')
-      .mockImplementation(async (_settDefinition: SettDefinition): Promise<ValueSource[]> => {
-        const underlying = createValueSource(settsUtils.VAULT_SOURCE, uniformPerformance(13.53321));
-        const badger = createValueSource('Badger Rewards', uniformPerformance(6.8775));
-        const digg = createValueSource('Digg Rewards', uniformPerformance(1.2));
-        const fees = createValueSource('Curve Trading Fees', uniformPerformance(1.33));
+      .mockImplementation(async (settDefinition: SettDefinition): Promise<ValueSource[]> => {
+        const performance = parseInt(settDefinition.settToken.slice(0, 5), 16) / 100;
+        const underlying = createValueSource(settsUtils.VAULT_SOURCE, uniformPerformance(performance));
+        const badger = createValueSource('Badger Rewards', uniformPerformance(performance));
+        const digg = createValueSource('Digg Rewards', uniformPerformance(performance));
+        const fees = createValueSource('Curve Trading Fees', uniformPerformance(performance));
         return [underlying, badger, digg, fees];
       });
     jest

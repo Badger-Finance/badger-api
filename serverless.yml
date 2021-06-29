@@ -230,11 +230,11 @@ functions:
     timeout: 30
     events:
       - http:
-          path: /v2/{proxy+}
+          path: /{proxy+}
           method: any
           cors: true
       - http:
-          path: /v2/
+          path: /
           method: any
           cors: true
 

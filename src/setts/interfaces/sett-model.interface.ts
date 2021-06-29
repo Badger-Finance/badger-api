@@ -51,10 +51,7 @@ export class SettModel implements Sett {
 
   @Title('tokens')
   @Description('Token balances held by the sett')
-  @Example([
-    toTestBalance(getToken(TOKENS.BADGER), 3882.35294118),
-    toTestBalance(getToken(TOKENS.WBTC), 1),
-  ])
+  @Example([toTestBalance(getToken(TOKENS.BADGER), 3882.35294118), toTestBalance(getToken(TOKENS.WBTC), 1)])
   @Property()
   public tokens: TokenBalance[];
 
