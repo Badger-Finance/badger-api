@@ -2,8 +2,12 @@ import { ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
-import { getSdk, OrderDirection, User_OrderBy, UserQuery } from '../graphql/generated/badger';
+import { getSdk, OrderDirection, User_OrderBy, UserQuery, UserSettBalance } from '../graphql/generated/badger';
+import { getPrice, inCurrency } from '../prices/prices.utils';
+import { getSettDefinition } from '../setts/setts.utils';
+import { formatBalance, getSettTokens, getToken } from '../tokens/tokens.utils';
 import { CachedAccount } from './interfaces/cached-account.interface';
+import { SettBalance } from './interfaces/sett-balance.interface';
 
 export async function getUserAccount(chain: Chain, accountId: string): Promise<UserQuery> {
   const badgerGraphqlClient = new GraphQLClient(chain.graphUrl);
@@ -44,7 +48,7 @@ export async function getAccounts(chain: Chain): Promise<string[]> {
   return accounts;
 }
 
-export const getCachedAccount = async (address: string): Promise<CachedAccount | undefined> => {
+export async function getCachedAccount(address: string): Promise<CachedAccount | undefined> {
   try {
     const mapper = getDataMapper();
     for await (const item of mapper.query(CachedAccount, { address }, { limit: 1, scanIndexForward: false })) {
@@ -55,4 +59,39 @@ export const getCachedAccount = async (address: string): Promise<CachedAccount |
     console.error(err);
     return;
   }
-};
+}
+
+export async function toSettBalance(
+  chain: Chain,
+  settBalance: UserSettBalance,
+  currency?: string,
+): Promise<SettBalance> {
+  const settDefinition = getSettDefinition(chain, settBalance.sett.id);
+  const { netShareDeposit, grossDeposit, grossWithdraw } = settBalance;
+  const sett = settBalance.sett;
+  const { pricePerFullShare } = sett;
+
+  const settToken = getToken(settDefinition.settToken);
+  const ppfs = formatBalance(pricePerFullShare, settToken.decimals);
+  const currentTokens = formatBalance(netShareDeposit, settToken.decimals);
+  const depositedTokens = formatBalance(grossDeposit, settToken.decimals);
+  const withdrawnTokens = formatBalance(grossWithdraw, settToken.decimals);
+  const earnedBalance = currentTokens * ppfs - depositedTokens + withdrawnTokens;
+  const [settTokenPrice, earnedTokens, tokens] = await Promise.all([
+    getPrice(sett.token.id),
+    getSettTokens(settDefinition, earnedBalance, currency),
+    getSettTokens(settDefinition, currentTokens, currency),
+  ]);
+
+  return {
+    id: settDefinition.settToken,
+    name: settDefinition.name,
+    asset: settToken.symbol,
+    balance: currentTokens,
+    value: inCurrency(settTokenPrice, currency) * currentTokens,
+    tokens,
+    earnedBalance,
+    earnedValue: inCurrency(settTokenPrice, currency) * earnedBalance,
+    earnedTokens,
+  };
+}
