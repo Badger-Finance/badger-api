@@ -8,9 +8,9 @@ import { Server } from '../Server';
 import * as settsUtils from '../setts/setts.utils';
 import { TokenBalance } from '../tokens/interfaces/token-balance.interface';
 import * as tokensUtils from '../tokens/tokens.utils';
+import { mockBalance } from '../tokens/tokens.utils';
 import { Sett } from './interfaces/sett.interface';
 import { SettDefinition } from './interfaces/sett-definition.interface';
-import { mockBalance } from '../tokens/tokens.utils';
 
 describe('SettsController', () => {
   let request: SuperTest.SuperTest<SuperTest.Test>;
