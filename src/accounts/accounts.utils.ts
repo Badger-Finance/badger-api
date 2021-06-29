@@ -80,8 +80,7 @@ export async function toSettBalance(
   const [settTokenPrice, earnedTokens, tokens] = await Promise.all([
     getPrice(sett.token.id),
     getSettTokens(settDefinition, earnedBalance, currency),
-    getSettTokens(settDefinition, currentTokens),
-    currency,
+    getSettTokens(settDefinition, currentTokens, currency),
   ]);
 
   return {
