@@ -1,5 +1,5 @@
 import { NotFound } from '@tsed/exceptions';
-import { ethers } from 'ethers';
+import { BigNumberish, ethers } from 'ethers';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
 import { getPrice, inCurrency } from '../prices/prices.utils';
@@ -12,7 +12,6 @@ import { CachedTokenBalance } from './interfaces/cached-token-balance.interface'
 import { Token } from './interfaces/token.interface';
 import { TokenBalance } from './interfaces/token-balance.interface';
 import { TokenConfig } from './interfaces/token-config.interface';
-import { TokenRequest } from './interfaces/token-request.interface';
 
 export const protocolTokens: TokenConfig = { ...ethTokensConfig, ...bscTokensConfig };
 
@@ -96,8 +95,7 @@ export async function toCachedBalance(token: Token, balance: number): Promise<Ca
  * @param currency Optional currency denomination.
  * @returns Array of token balances from the Sett.
  */
-export async function getSettTokens(request: TokenRequest): Promise<TokenBalance[]> {
-  const { sett, balance, currency } = request;
+export async function getSettTokens(sett: SettDefinition, balance: number, currency?: string): Promise<TokenBalance[]> {
   const { protocol, depositToken, settToken } = sett;
   const token = getToken(sett.depositToken);
   if (protocol && (token.lpToken || sett.getTokenBalance)) {
@@ -128,4 +126,8 @@ export async function getCachedTokenBalances(
     return tokenBalances;
   }
   return undefined;
+}
+
+export function formatBalance(value: BigNumberish, decimals = 18): number {
+  return Number(ethers.utils.formatUnits(value, decimals));
 }
