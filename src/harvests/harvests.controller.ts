@@ -1,5 +1,5 @@
 import { Controller, Get, QueryParams } from '@tsed/common';
-import { ContentType } from '@tsed/schema';
+import { ContentType, Hidden } from '@tsed/schema';
 import { HarvestFragment } from '../graphql/generated/badger-dao';
 import { HarvestsQueryDTO } from './dto/harvests-query.dto';
 import { HarvestsService } from './harvests.service';
@@ -8,6 +8,7 @@ import { HarvestsService } from './harvests.service';
 export class HarvestsController {
   constructor(private harvestsService: HarvestsService) {}
 
+  @Hidden()
   @Get()
   @ContentType('json')
   async listHarvests(@QueryParams() query: HarvestsQueryDTO): Promise<HarvestFragment[]> {
