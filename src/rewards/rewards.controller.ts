@@ -1,5 +1,5 @@
 import { Controller, Get, Inject, PathParams } from '@tsed/common';
-import { ContentType } from '@tsed/schema';
+import { ContentType, Hidden } from '@tsed/schema';
 import { Eligibility } from './interfaces/eligibility.interface';
 import { AirdropMerkleClaim, RewardMerkleClaim } from './interfaces/merkle-distributor.interface';
 import { RewardsService } from './rewards.service';
@@ -9,6 +9,7 @@ export class RewardController {
   @Inject()
   rewardsService!: RewardsService;
 
+  @Hidden()
   @ContentType('json')
   @Get('/gitcoin/:address')
   async getGitcoinAirdropClaim(@PathParams('address') address: string): Promise<AirdropMerkleClaim> {
@@ -27,6 +28,7 @@ export class RewardController {
     return this.rewardsService.getUserRewards(address);
   }
 
+  @Hidden()
   @ContentType('json')
   @Get('/shop/:address')
   async checkBouncerList(@PathParams('address') address: string): Promise<Eligibility> {

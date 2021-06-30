@@ -1,5 +1,5 @@
 import { Controller, Get, Inject, PathParams } from '@tsed/common';
-import { ContentType } from '@tsed/schema';
+import { ContentType, Hidden } from '@tsed/schema';
 import { ClawService } from './claw.service';
 import { SponsorData, SyntheticData } from './interface/claw.interface';
 
@@ -21,12 +21,14 @@ export class ClawController {
   @Inject()
   clawService!: ClawService;
 
+  @Hidden()
   @Get('/emp/:empAddress')
   @ContentType('json')
   async getSyntheticData(@PathParams('empAddress') empAddress: string): Promise<SyntheticData> {
     return await this.clawService.getSyntheticData(empAddress);
   }
 
+  @Hidden()
   @Get('/emp/:empAddress/sponsor/:sponsorAddress')
   @ContentType('json')
   async getSponsorData(
