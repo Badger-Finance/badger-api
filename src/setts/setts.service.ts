@@ -23,12 +23,10 @@ import {
 export class SettsService {
   async getProtocolSummary(chain: Chain, currency?: string): Promise<ProtocolSummary> {
     const setts = await Promise.all(
-      chain.setts
-        .filter((sett) => !sett.experimental)
-        .map(async (sett) => {
-          const { name, balance, value } = await this.getSett(chain, sett.settToken, currency);
-          return { name, balance, value };
-        }),
+      chain.setts.map(async (sett) => {
+        const { name, balance, value } = await this.getSett(chain, sett.settToken, currency);
+        return { name, balance, value };
+      }),
     );
     const totalValue = setts.reduce((total, sett) => (total += sett.value), 0);
     return { totalValue, setts };
@@ -61,15 +59,25 @@ export class SettsService {
 
   static async getSettPerformance(settDefinition: SettDefinition): Promise<ValueSource> {
     const snapshots = await getSettSnapshots(settDefinition);
-    if (snapshots.length === 0) {
+    let foundStart = false;
+    const measured = snapshots.filter((snapshot) => {
+      if (foundStart) {
+        return false;
+      }
+      if (snapshot.ratio == 1) {
+        foundStart = true;
+      }
+      return true;
+    });
+    if (measured.length === 0 || measured.length < SEVEN_DAYS) {
       return createValueSource(VAULT_SOURCE, uniformPerformance(0));
     }
-    const current = snapshots[CURRENT];
+    const current = measured[CURRENT];
     const performance = {
-      oneDay: getPerformance(current, getSnapshot(snapshots, ONE_DAY)),
-      threeDay: getPerformance(current, getSnapshot(snapshots, THREE_DAYS)),
-      sevenDay: getPerformance(current, getSnapshot(snapshots, SEVEN_DAYS)),
-      thirtyDay: getPerformance(current, getSnapshot(snapshots, THIRTY_DAYS)),
+      oneDay: getPerformance(current, getSnapshot(measured, ONE_DAY)),
+      threeDay: getPerformance(current, getSnapshot(measured, THREE_DAYS)),
+      sevenDay: getPerformance(current, getSnapshot(measured, SEVEN_DAYS)),
+      thirtyDay: getPerformance(current, getSnapshot(measured, THIRTY_DAYS)),
     };
     return createValueSource(VAULT_SOURCE, performance);
   }

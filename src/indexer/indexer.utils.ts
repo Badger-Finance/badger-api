@@ -6,7 +6,6 @@ import { Chain } from '../chains/config/chain.config';
 import { settAbi } from '../config/abi/sett.abi';
 import { PANCAKESWAP_URL, SUSHISWAP_URL } from '../config/constants';
 import { Protocol } from '../config/enums/protocol.enum';
-import { toFloat } from '../config/util';
 import { getPrice } from '../prices/prices.utils';
 import { getSwapValueSource } from '../protocols/common/performance.utils';
 import { SourceType } from '../protocols/enums/source-type.enum';
@@ -23,7 +22,7 @@ import { SettsService } from '../setts/setts.service';
 import { getSett } from '../setts/setts.utils';
 import { CachedLiquidityPoolTokenBalance } from '../tokens/interfaces/cached-liquidity-pool-token-balance.interface';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
-import { getToken } from '../tokens/tokens.utils';
+import { formatBalance, getToken } from '../tokens/tokens.utils';
 import { getConvexApySnapshots, getCurvePerformance } from './strategies/convex.strategy';
 
 export const settToCachedSnapshot = async (
@@ -107,9 +106,9 @@ const getPricePerShare = async (
     } else {
       ppfs = await contract.getPricePerFullShare();
     }
-    return toFloat(ppfs, token.decimals);
+    return formatBalance(ppfs, token.decimals);
   } catch (err) {
-    return toFloat(pricePerShare, token.decimals);
+    return formatBalance(pricePerShare, token.decimals);
   }
 };
 
@@ -231,7 +230,7 @@ export async function getPancakeswapApySnapshots(
     valueSourceToCachedValueSource(
       await getPancakeswapPoolApr(chain, depositToken),
       settDefinition,
-      SourceType.Emission,
+      SourceType.Compound,
     ),
   ];
 }

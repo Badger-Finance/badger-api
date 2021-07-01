@@ -1,10 +1,11 @@
 import { UnprocessableEntity } from '@tsed/exceptions';
-import { ethers } from 'ethers';
+import { Contract, ethers } from 'ethers';
 import fetch from 'node-fetch';
 import { Chain } from '../../chains/config/chain.config';
 import { Ethereum, ethSetts } from '../../chains/config/eth.config';
+import { crvBaseRegistryAbi } from '../../config/abi/curve-base-registry.abi';
 import { curvePoolAbi, oldCurvePoolAbi } from '../../config/abi/curve-pool.abi';
-import { curveRegistryAbi } from '../../config/abi/curve-registry.abi';
+import { crvRegistryAbi } from '../../config/abi/curve-registry.abi';
 import { cvxBoosterAbi } from '../../config/abi/cvx-booster.abi';
 import { cvxRewardsAbi } from '../../config/abi/cvx-rewards.abi';
 import { erc20Abi } from '../../config/abi/erc20.abi';
@@ -22,7 +23,7 @@ import { getCachedSett, VAULT_SOURCE } from '../../setts/setts.utils';
 import { CachedLiquidityPoolTokenBalance } from '../../tokens/interfaces/cached-liquidity-pool-token-balance.interface';
 import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
 import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
-import { getToken, toCachedBalance } from '../../tokens/tokens.utils';
+import { formatBalance, getToken, toCachedBalance } from '../../tokens/tokens.utils';
 import { tokenBalancesToCachedLiquidityPoolTokenBalance, valueSourceToCachedValueSource } from '../indexer.utils';
 
 /* Strategy Definitions */
@@ -31,6 +32,7 @@ export const cvxCrvRewards = '0x3Fe65692bfCD0e6CF84cB1E7d24108E434A7587e';
 export const threeCrvRewards = '0x7091dbb7fcbA54569eF1387Ac89Eb2a5C9F6d2EA';
 export const cvxChef = '0xEF0881eC094552b2e128Cf945EF17a6752B4Ec5d';
 export const cvxBooster = '0xF403C135812408BFbE8713b5A23a04b3D48AAE31';
+export const crvBaseRegistry = '0x0000000022D53366457F9d5E68Ec105046FC4383';
 
 /* Protocol Definitions */
 const curvePoolApr: { [address: string]: string } = {
@@ -136,8 +138,6 @@ async function getVaultSources(chain: Chain, settDefinition: SettDefinition): Pr
 }
 
 async function getCvxRewards(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
-  // setup contracts + sett
-  const sett = await getCachedSett(settDefinition);
   const cvx = new ethers.Contract(cvxRewards, cvxRewardsAbi, chain.provider);
 
   // get prices
@@ -151,23 +151,17 @@ async function getCvxRewards(chain: Chain, settDefinition: SettDefinition): Prom
   // get apr params
   const duration = (await cvx.duration()).toNumber();
   const scalar = ONE_YEAR_SECONDS / duration;
-  const settBalance = parseFloat(ethers.utils.formatEther(await cvx.balanceOf(settDefinition.strategy)));
-  const settBalanceValue = settBalance * cvxPrice.usd;
-  const isEmpty = sett.value === 0 || settBalance === 0;
 
   // calculate CVX rewards
   const emission = cvxCrvReward * cvxCrvPrice.usd * scalar;
   const poolValue = cvxLocked * cvxPrice.usd;
   const cvxCrvApr = (emission / poolValue) * 100;
-  const valueScalar = isEmpty ? 1 : settBalanceValue / sett.value;
-  const evaluatedApr = cvxCrvApr * valueScalar;
-  const valueSource = createValueSource(VAULT_SOURCE, uniformPerformance(evaluatedApr));
+  const valueSource = createValueSource(VAULT_SOURCE, uniformPerformance(cvxCrvApr), true);
   return [valueSourceToCachedValueSource(valueSource, settDefinition, SourceType.Compound)];
 }
 
 async function getCvxCrvRewards(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
-  // setup contracts + sett
-  const sett = await getCachedSett(settDefinition);
+  // setup contracts
   const cvxCrv = new ethers.Contract(cvxCrvRewards, cvxRewardsAbi, chain.provider);
   const threeCrv = new ethers.Contract(threeCrvRewards, cvxRewardsAbi, chain.provider);
 
@@ -188,9 +182,6 @@ async function getCvxCrvRewards(chain: Chain, settDefinition: SettDefinition): P
   // get apr params
   const duration = (await cvxCrv.duration()).toNumber();
   const scalar = ONE_YEAR_SECONDS / duration;
-  const settBalance = parseFloat(ethers.utils.formatEther(await cvxCrv.balanceOf(settDefinition.strategy)));
-  const isEmpty = sett.value === 0 || settBalance === 0;
-  const settBalanceValue = settBalance * cvxPrice.usd;
   const poolValue = cvxCrvLocked * cvxCrvPrice.usd;
 
   // calculate CVX rewards
@@ -203,9 +194,8 @@ async function getCvxCrvRewards(chain: Chain, settDefinition: SettDefinition): P
   const threeCrvEmission = threeCrvReward * threeCrvPrice.usd * scalar;
   const threeCrvApr = (threeCrvEmission / poolValue) * 100;
 
-  const valueScalar = isEmpty ? 1 : settBalanceValue / sett.value;
   const totalApr = cvxCrvApr + threeCrvApr + cvxApr;
-  const cvxCrvValueSource = createValueSource(VAULT_SOURCE, uniformPerformance(totalApr * valueScalar), true);
+  const cvxCrvValueSource = createValueSource(VAULT_SOURCE, uniformPerformance(totalApr), true);
   return [valueSourceToCachedValueSource(cvxCrvValueSource, settDefinition, SourceType.Compound)];
 }
 
@@ -268,15 +258,22 @@ async function getCvxMint(chain: Chain, crvEarned: number): Promise<number> {
 }
 
 export async function getCurveTokenPrice(chain: Chain, depositToken: string): Promise<TokenPrice> {
+  const baseRegistry = new Contract(crvBaseRegistry, crvBaseRegistryAbi, chain.provider);
+  const registryAddress = await baseRegistry.get_registry();
+  const registry = new Contract(registryAddress, crvRegistryAbi, chain.provider);
   const deposit = getToken(depositToken);
   const poolBalance = await getCurvePoolBalance(chain, depositToken);
   const token = new ethers.Contract(depositToken, erc20Abi, chain.provider);
   const poolValueUsd = poolBalance.reduce((total, balance) => (total += balance.valueUsd), 0);
   const poolValueEth = poolBalance.reduce((total, balance) => (total += balance.valueEth), 0);
-  const totalSupply = await token.totalSupply();
-  const supply = totalSupply / Math.pow(10, deposit.decimals);
-  const usd = poolValueUsd / supply;
-  const eth = poolValueEth / supply;
+  const [totalSupply, virtualPrice] = await Promise.all([
+    token.totalSupply(),
+    registry.get_virtual_price_from_lp_token(depositToken),
+  ]);
+  const supply = formatBalance(totalSupply, deposit.decimals);
+  const virtualScalar = formatBalance(virtualPrice);
+  const usd = (virtualScalar * poolValueUsd) / supply;
+  const eth = (virtualScalar * poolValueEth) / supply;
   return {
     name: deposit.name,
     address: deposit.address,
@@ -287,7 +284,7 @@ export async function getCurveTokenPrice(chain: Chain, depositToken: string): Pr
 
 export async function getCurvePoolBalance(chain: Chain, depositToken: string): Promise<CachedTokenBalance[]> {
   const cachedBalances = [];
-  const registry = new ethers.Contract('0x90E00ACe148ca3b23Ac1bC8C240C2a7Dd9c2d7f5', curveRegistryAbi, chain.provider);
+  const registry = new ethers.Contract('0x90E00ACe148ca3b23Ac1bC8C240C2a7Dd9c2d7f5', crvRegistryAbi, chain.provider);
   const poolAddress = await registry.get_pool_from_lp_token(depositToken);
   let pool = new ethers.Contract(poolAddress, curvePoolAbi, chain.provider);
 
