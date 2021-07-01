@@ -4,6 +4,7 @@ import { GraphQLClient } from 'graphql-request';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
 import { ONE_YEAR_MS, SAMPLE_DAYS } from '../config/constants';
+import { SettState } from '../config/enums/sett-state.enum';
 import { getSdk, SettQuery, SettQueryVariables } from '../graphql/generated/badger';
 import { getToken } from '../tokens/tokens.utils';
 import { CachedSettSnapshot } from './interfaces/cached-sett-snapshot.interface';
@@ -25,6 +26,7 @@ export const defaultSett = (settDefinition: SettDefinition): Sett => {
     name: settDefinition.name,
     ppfs: 1,
     sources: [],
+    state: settDefinition.state ?? SettState.Open,
     tokens: [],
     underlyingToken: settDefinition.depositToken,
     value: 0,

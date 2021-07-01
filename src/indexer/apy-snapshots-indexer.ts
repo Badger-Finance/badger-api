@@ -20,10 +20,12 @@ export async function refreshApySnapshots() {
       const mapEntry = sourceMap[mapKey];
       // simulated underlying are harvestable, measured underlying is not
       // directly override any saved simulated strategy performance for measured
-      const override = !mapEntry || (mapEntry.name === VAULT_SOURCE && !mapEntry.harvestable);
+      const savedVirtualUnderlying = mapEntry && mapEntry.name === VAULT_SOURCE && mapEntry.harvestable;
+      const isVirtualUnderlying = source.name === VAULT_SOURCE && source.harvestable;
+      const override = !mapEntry || savedVirtualUnderlying;
       if (override) {
         sourceMap[mapKey] = source;
-      } else {
+      } else if (!isVirtualUnderlying) {
         mapEntry.apr += source.apr;
         mapEntry.minApr += source.minApr;
         mapEntry.maxApr += source.maxApr;

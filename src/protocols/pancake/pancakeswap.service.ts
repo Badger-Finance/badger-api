@@ -43,7 +43,6 @@ export class PancakeSwapService extends SwapService {
   }
 
   static async getEmissionSource(chain: Chain, poolId: number): Promise<ValueSource> {
-    const emissionSource = createValueSource(VAULT_SOURCE, uniformPerformance(0));
     const masterChef = new ethers.Contract(PANCAKE_CHEF, pancakeChefAbi, chain.provider);
     const [totalAllocPoint, cakePerBlock, poolInfo, tokenPrice]: [BigNumber, BigNumber, PoolInfo, TokenPrice] =
       await Promise.all([
@@ -58,9 +57,7 @@ export class PancakeSwapService extends SwapService {
     const poolValue = poolBalance * depositTokenValue.usd;
     const emissionScalar = poolInfo.allocPoint.toNumber() / totalAllocPoint.toNumber();
     const cakeEmission = parseFloat(formatEther(cakePerBlock)) * emissionScalar * chain.blocksPerYear * tokenPrice.usd;
-    emissionSource.performance = uniformPerformance((cakeEmission / poolValue) * 100);
-    emissionSource.apr = emissionSource.performance.threeDay;
-    emissionSource.harvestable = true;
+    const emissionSource = createValueSource(VAULT_SOURCE, uniformPerformance((cakeEmission / poolValue) * 100), true);
     return emissionSource;
   }
 

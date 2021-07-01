@@ -1,5 +1,6 @@
 import { Description, Example, Property, Title } from '@tsed/schema';
 import { TOKENS } from '../../config/constants';
+import { SettState } from '../../config/enums/sett-state.enum';
 import { uniformPerformance } from '../../protocols/interfaces/performance.interface';
 import { createValueSource, ValueSource } from '../../protocols/interfaces/value-source.interface';
 import { TokenBalance } from '../../tokens/interfaces/token-balance.interface';
@@ -19,6 +20,12 @@ export class SettModel implements Sett {
   @Example('crvTricrypto')
   @Property()
   public asset: string;
+
+  @Title('state')
+  @Description('Launch state of the sett')
+  @Example(SettState.Guarded)
+  @Property()
+  public state: SettState;
 
   @Title('underlyingToken')
   @Description('Contract address for deposit token')
@@ -104,6 +111,7 @@ export class SettModel implements Sett {
 
   constructor(
     name: string,
+    state: SettState,
     asset: string,
     underlyingToken: string,
     vaultToken: string,
@@ -120,6 +128,7 @@ export class SettModel implements Sett {
     maxApr?: number,
   ) {
     this.name = name;
+    this.state = state;
     this.asset = asset;
     this.underlyingToken = underlyingToken;
     this.vaultToken = vaultToken;
