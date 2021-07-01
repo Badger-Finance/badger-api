@@ -69,7 +69,7 @@ export class SettsService {
       }
       return true;
     });
-    if (measured.length === 0) {
+    if (measured.length === 0 || measured.length < SEVEN_DAYS) {
       return createValueSource(VAULT_SOURCE, uniformPerformance(0));
     }
     const current = measured[CURRENT];
