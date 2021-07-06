@@ -40,17 +40,17 @@ describe('SettsController', () => {
       });
     jest
       .spyOn(tokensUtils, 'getSettTokens')
-      .mockImplementation(
-        async (sett: SettDefinition, _balance: number, _currency?: string): Promise<TokenBalance[]> => {
-          const token = tokensUtils.getToken(sett.depositToken);
-          if (token.lpToken) {
-            const bal0 = parseInt(token.address.slice(0, 4), 16);
-            const bal1 = parseInt(token.address.slice(0, 6), 16);
-            return [mockBalance(token, bal0), mockBalance(token, bal1)];
-          }
-          return [mockBalance(token, parseInt(token.address.slice(0, 4), 16))];
-        },
-      );
+      .mockImplementation(async (sett: SettDefinition, _balance: number, _currency?: string): Promise<
+        TokenBalance[]
+      > => {
+        const token = tokensUtils.getToken(sett.depositToken);
+        if (token.lpToken) {
+          const bal0 = parseInt(token.address.slice(0, 4), 16);
+          const bal1 = parseInt(token.address.slice(0, 6), 16);
+          return [mockBalance(token, bal0), mockBalance(token, bal1)];
+        }
+        return [mockBalance(token, parseInt(token.address.slice(0, 4), 16))];
+      });
   };
 
   describe('GET /v2/setts', () => {
