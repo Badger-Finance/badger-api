@@ -95,7 +95,7 @@ async function getVaultSources(chain: Chain, settDefinition: SettDefinition): Pr
   const depositLocked = formatBalance(await crv.totalSupply(), depositToken.decimals);
 
   // get apr params
-  const duration = 604800; // (await crv.duration()).toNumber();
+  const duration = (await crv.duration()).toNumber();
   const scalar = ONE_YEAR_SECONDS / duration;
   const poolValue = depositLocked * depositPrice.usd;
 
