@@ -38,6 +38,8 @@ export class AccountsService {
       earnedValue: 0,
       balances: [],
       claimableBalances,
+      nativeBalance: boostData.nativeBalance,
+      nonNativeBalance: boostData.nonNativeBalance,
     };
 
     if (user) {

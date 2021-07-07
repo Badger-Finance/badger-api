@@ -48,12 +48,14 @@ export class LeaderBoardsService {
     const boostData: BoostData = JSON.parse(boostFile.toString('utf-8'));
     const boosts: UserBoost[] = Object.entries(boostData.userData).map((entry) => {
       const [address, userBoost] = entry;
-      const { boost, stakeRatio, nftMultiplier } = userBoost;
+      const { boost, stakeRatio, nftMultiplier, nativeBalance, nonNativeBalance } = userBoost;
       return {
         address: ethers.utils.getAddress(address),
         boost,
         stakeRatio,
         nftMultiplier,
+        nativeBalance: nativeBalance || 0,
+        nonNativeBalance: nonNativeBalance || 0,
       };
     });
     return boosts
