@@ -36,8 +36,8 @@ export const ethSetts: SettDefinition[] = [
     depositToken: TOKENS.CRV_SBTC,
     getTokenBalance: getCurveSettTokenBalance,
     settToken: TOKENS.BCRV_SBTC,
-    strategy: '0x8cbb86a7e0780a6fbefeec108f9b4b0aa8193e24',
-    protocol: Protocol.Curve,
+    strategy: '0xf1ded284e891943b3e9c657d7fc376b86164ffc2',
+    protocol: Protocol.Convex,
   },
   {
     name: 'Curve.fi renBTC/wBTC',
@@ -45,8 +45,8 @@ export const ethSetts: SettDefinition[] = [
     depositToken: TOKENS.CRV_RENBTC,
     getTokenBalance: getCurveSettTokenBalance,
     settToken: TOKENS.BCRV_RENBTC,
-    strategy: '0xaa9b716ccd717761f40479cd81f8e3a5a7b4cad7',
-    protocol: Protocol.Curve,
+    strategy: '0x6582a5b139fc1c6360846efdc4440d51aad4df7b',
+    protocol: Protocol.Convex,
   },
   {
     name: 'Curve.fi tBTC/sBTC',
@@ -54,8 +54,8 @@ export const ethSetts: SettDefinition[] = [
     depositToken: TOKENS.CRV_TBTC,
     getTokenBalance: getCurveSettTokenBalance,
     settToken: TOKENS.BCRV_TBTC,
-    strategy: '0x1ac31c470b90e366c70efc1ac28d5d7fa2f1dbe1',
-    protocol: Protocol.Curve,
+    strategy: '0x522bb024c339a12be1a47229546f288c40b62d29',
+    protocol: Protocol.Convex,
   },
   // TODO: Remove once fully deprecated
   {
