@@ -146,7 +146,6 @@ export const ethSetts: SettDefinition[] = [
     depositToken: TOKENS.CRV_HBTC,
     getTokenBalance: getCurveSettTokenBalance,
     settToken: TOKENS.BCRV_HBTC,
-    state: SettState.Guarded,
     protocol: Protocol.Convex,
   },
   {
@@ -155,7 +154,6 @@ export const ethSetts: SettDefinition[] = [
     depositToken: TOKENS.CRV_PBTC,
     getTokenBalance: getCurveSettTokenBalance,
     settToken: TOKENS.BCRV_PBTC,
-    state: SettState.Guarded,
     protocol: Protocol.Convex,
   },
   {
@@ -164,7 +162,6 @@ export const ethSetts: SettDefinition[] = [
     depositToken: TOKENS.CRV_OBTC,
     getTokenBalance: getCurveSettTokenBalance,
     settToken: TOKENS.BCRV_OBTC,
-    state: SettState.Guarded,
     protocol: Protocol.Convex,
   },
   {
@@ -173,7 +170,6 @@ export const ethSetts: SettDefinition[] = [
     depositToken: TOKENS.CRV_BBTC,
     getTokenBalance: getCurveSettTokenBalance,
     settToken: TOKENS.BCRV_BBTC,
-    state: SettState.Guarded,
     protocol: Protocol.Convex,
   },
   {
@@ -182,7 +178,6 @@ export const ethSetts: SettDefinition[] = [
     depositToken: TOKENS.CRV_TRICRYPTO,
     getTokenBalance: getCurveSettTokenBalance,
     settToken: TOKENS.BCRV_TRICRYPTO,
-    state: SettState.Guarded,
     protocol: Protocol.Convex,
   },
   {
@@ -190,7 +185,6 @@ export const ethSetts: SettDefinition[] = [
     createdBlock: 12678302,
     depositToken: TOKENS.CVXCRV,
     settToken: TOKENS.BCVXCRV,
-    state: SettState.Guarded,
     protocol: Protocol.Convex,
   },
   {
@@ -198,7 +192,6 @@ export const ethSetts: SettDefinition[] = [
     createdBlock: 12678302,
     depositToken: TOKENS.CVX,
     settToken: TOKENS.BCVX,
-    state: SettState.Guarded,
     protocol: Protocol.Convex,
   },
 ];
