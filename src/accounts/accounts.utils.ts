@@ -4,7 +4,7 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
 import { getSdk, OrderDirection, User_OrderBy, UserQuery, UserSettBalance } from '../graphql/generated/badger';
 import { getPrice, inCurrency } from '../prices/prices.utils';
-import { getSettDefinition } from '../setts/setts.utils';
+import { getCachedSett, getSettDefinition } from '../setts/setts.utils';
 import { formatBalance, getSettTokens, getToken } from '../tokens/tokens.utils';
 import { CachedAccount } from './interfaces/cached-account.interface';
 import { SettBalance } from './interfaces/sett-balance.interface';
@@ -68,30 +68,33 @@ export async function toSettBalance(
 ): Promise<SettBalance> {
   const settDefinition = getSettDefinition(chain, settBalance.sett.id);
   const { netShareDeposit, grossDeposit, grossWithdraw } = settBalance;
-  const sett = settBalance.sett;
-  const { pricePerFullShare } = sett;
+  const { ppfs } = await getCachedSett(settDefinition);
 
+  const depositToken = getToken(settDefinition.depositToken);
   const settToken = getToken(settDefinition.settToken);
-  const ppfs = formatBalance(pricePerFullShare, settToken.decimals);
   const currentTokens = formatBalance(netShareDeposit, settToken.decimals);
-  const depositedTokens = formatBalance(grossDeposit, settToken.decimals);
-  const withdrawnTokens = formatBalance(grossWithdraw, settToken.decimals);
+  const depositedTokens = formatBalance(grossDeposit, depositToken.decimals);
+  const withdrawnTokens = formatBalance(grossWithdraw, depositToken.decimals);
   const earnedBalance = currentTokens * ppfs - depositedTokens + withdrawnTokens;
-  const [settTokenPrice, earnedTokens, tokens] = await Promise.all([
-    getPrice(sett.token.id),
+  const [depositTokenPrice, settTokenPrice, earnedTokens, tokens] = await Promise.all([
+    getPrice(settDefinition.depositToken),
+    getPrice(settDefinition.settToken),
     getSettTokens(settDefinition, earnedBalance, currency),
-    getSettTokens(settDefinition, currentTokens, currency),
+    getSettTokens(settDefinition, currentTokens * ppfs, currency),
   ]);
 
   return {
     id: settDefinition.settToken,
     name: settDefinition.name,
-    asset: settToken.symbol,
-    balance: currentTokens,
+    asset: depositToken.symbol,
+    ppfs,
+    balance: currentTokens * ppfs,
     value: inCurrency(settTokenPrice, currency) * currentTokens,
     tokens,
-    earnedBalance,
-    earnedValue: inCurrency(settTokenPrice, currency) * earnedBalance,
+    earnedBalance: earnedBalance,
+    earnedValue: inCurrency(depositTokenPrice, currency) * earnedBalance,
     earnedTokens,
+    depositedBalance: depositedTokens,
+    withdrawnBalance: withdrawnTokens,
   };
 }
