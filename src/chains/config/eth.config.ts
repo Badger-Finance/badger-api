@@ -31,31 +31,28 @@ export class Ethereum extends Chain {
 
 export const ethSetts: SettDefinition[] = [
   {
-    name: 'Curve.fi renBTC/wBTC/sBTC',
+    name: 'Convex renBTC/wBTC/sBTC',
     createdBlock: 11380877,
     depositToken: TOKENS.CRV_SBTC,
     getTokenBalance: getCurveSettTokenBalance,
     settToken: TOKENS.BCRV_SBTC,
-    strategy: '0x8cbb86a7e0780a6fbefeec108f9b4b0aa8193e24',
-    protocol: Protocol.Curve,
+    protocol: Protocol.Convex,
   },
   {
-    name: 'Curve.fi renBTC/wBTC',
+    name: 'Convex renBTC/wBTC',
     createdBlock: 11380872,
     depositToken: TOKENS.CRV_RENBTC,
     getTokenBalance: getCurveSettTokenBalance,
     settToken: TOKENS.BCRV_RENBTC,
-    strategy: '0xaa9b716ccd717761f40479cd81f8e3a5a7b4cad7',
-    protocol: Protocol.Curve,
+    protocol: Protocol.Convex,
   },
   {
-    name: 'Curve.fi tBTC/sBTC',
+    name: 'Convex tBTC/sBTC',
     createdBlock: 11380878,
     depositToken: TOKENS.CRV_TBTC,
     getTokenBalance: getCurveSettTokenBalance,
     settToken: TOKENS.BCRV_TBTC,
-    strategy: '0x1ac31c470b90e366c70efc1ac28d5d7fa2f1dbe1',
-    protocol: Protocol.Curve,
+    protocol: Protocol.Convex,
   },
   // TODO: Remove once fully deprecated
   {
@@ -150,7 +147,6 @@ export const ethSetts: SettDefinition[] = [
     getTokenBalance: getCurveSettTokenBalance,
     settToken: TOKENS.BCRV_HBTC,
     state: SettState.Guarded,
-    strategy: '0xff26f400e57bf726822eacbb64fa1c52f1f27988',
     protocol: Protocol.Convex,
   },
   {
@@ -160,7 +156,6 @@ export const ethSetts: SettDefinition[] = [
     getTokenBalance: getCurveSettTokenBalance,
     settToken: TOKENS.BCRV_PBTC,
     state: SettState.Guarded,
-    strategy: '0x1c1fd689103bbfd701b3b7d41a3807f12814033d',
     protocol: Protocol.Convex,
   },
   {
@@ -170,7 +165,6 @@ export const ethSetts: SettDefinition[] = [
     getTokenBalance: getCurveSettTokenBalance,
     settToken: TOKENS.BCRV_OBTC,
     state: SettState.Guarded,
-    strategy: '0x2bb864cdb4856ab2d148c5ca52dd7ccec126d138',
     protocol: Protocol.Convex,
   },
   {
@@ -180,7 +174,6 @@ export const ethSetts: SettDefinition[] = [
     getTokenBalance: getCurveSettTokenBalance,
     settToken: TOKENS.BCRV_BBTC,
     state: SettState.Guarded,
-    strategy: '0x4f3e7a4566320b2709fd1986f2e9f84053d3e2a0',
     protocol: Protocol.Convex,
   },
   {
@@ -190,7 +183,6 @@ export const ethSetts: SettDefinition[] = [
     getTokenBalance: getCurveSettTokenBalance,
     settToken: TOKENS.BCRV_TRICRYPTO,
     state: SettState.Guarded,
-    strategy: '0x05ec4356e1acd89cc2d16adc7415c8c95e736ac1',
     protocol: Protocol.Convex,
   },
   {
