@@ -102,12 +102,12 @@ async function getVaultSources(chain: Chain, settDefinition: SettDefinition): Pr
   // calculate CRV rewards
   const crvEmission = crvReward * crvPrice.usd * scalar;
   const crvUnderlyingApr = (crvEmission / poolValue) * 10;
-  const crvEmissionApr = (crvEmission / poolValue) * 60;
+  const crvEmissionApr = (crvEmission / poolValue) * 70;
 
   // calculate CVX rewards
   const cvxEmission = cvxReward * cvxPrice.usd * scalar;
   const cvxUnderlyingApr = (cvxEmission / poolValue) * 10;
-  const cvxEmissionApr = (cvxEmission / poolValue) * 60;
+  const cvxEmissionApr = (cvxEmission / poolValue) * 70;
 
   // emission tokens
   const bcvxCRV = getToken(TOKENS.BCVXCRV);
@@ -138,7 +138,7 @@ async function getVaultSources(chain: Chain, settDefinition: SettDefinition): Pr
     const rewardTokenPrice = await getPrice(rewardToken.address);
     const rewardAmount = formatBalance(await virtualRewards.currentRewards(), rewardToken.decimals);
     const rewardEmission = rewardAmount * rewardTokenPrice.usd * scalar;
-    const rewardApr = (rewardEmission / poolValue) * 70;
+    const rewardApr = (rewardEmission / poolValue) * 80;
     const rewardSource = createValueSource(`${rewardToken.symbol} Rewards`, uniformPerformance(rewardApr));
     cachedExtraSources.push(valueSourceToCachedValueSource(rewardSource, settDefinition, tokenEmission(rewardToken)));
   }
