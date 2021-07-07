@@ -222,6 +222,13 @@ export const ethTokensConfig: TokenConfig = {
     symbol: 'PNT',
     type: TokenType.Contract,
   },
+  [TOKENS.KEEP]: {
+    address: TOKENS.KEEP,
+    decimals: 18,
+    name: 'Keep Network',
+    symbol: 'KEEP',
+    type: TokenType.Contract,
+  },
   [TOKENS.CRV_TRICRYPTO]: {
     address: TOKENS.CRV_TRICRYPTO,
     decimals: 18,
