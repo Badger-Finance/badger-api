@@ -5,4 +5,6 @@ export interface Boost {
   stakeRatio: number;
   nftMultiplier: number;
   multipliers: BoostMultipliers;
+  nativeBalance: number;
+  nonNativeBalance: number;
 }

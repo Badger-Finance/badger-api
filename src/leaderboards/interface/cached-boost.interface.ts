@@ -20,4 +20,10 @@ export class CachedBoost {
 
   @attribute()
   nftMultiplier!: number;
+
+  @attribute()
+  nativeBalance!: number;
+
+  @attribute()
+  nonNativeBalance!: number;
 }

@@ -100,6 +100,8 @@ export class RewardsService {
         stakeRatio: 0,
         nftMultiplier: 1,
         multipliers: defaultMultipliers,
+        nativeBalance: 0,
+        nonNativeBalance: 0,
       };
     }
     const userMulipliers = boostData.multipliers;
