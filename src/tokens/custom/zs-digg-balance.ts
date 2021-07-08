@@ -8,7 +8,7 @@ import { tokenBalancesToCachedLiquidityPoolTokenBalance } from '../../indexer/in
 import { getPrice } from '../../prices/prices.utils';
 import { getSett } from '../../setts/setts.utils';
 import { CachedLiquidityPoolTokenBalance } from '../interfaces/cached-liquidity-pool-token-balance.interface';
-import { getToken, toCachedBalance } from '../tokens.utils';
+import { formatBalance, getToken, toCachedBalance } from '../tokens.utils';
 
 export const getZsDiggTokenBalance = async (token: string): Promise<CachedLiquidityPoolTokenBalance> => {
   const definition = ethSetts.find((sett) => sett.settToken === token);
@@ -31,11 +31,11 @@ export const getZsDiggTokenBalance = async (token: string): Promise<CachedLiquid
   const { balance } = sett;
   const depositToken = getToken(definition.depositToken);
   const decimals = definition.balanceDecimals || depositToken.decimals;
-  const diggBalance = balance / Math.pow(10, decimals);
+  const diggBalance = formatBalance(balance, decimals);
 
   // check wbtc holding of stabilizer strategy
   const strategy = new ethers.Contract(TOKENS.WBTC, erc20Abi, chain.provider);
-  const wbtcBalance = (await strategy.balanceOf(STRATEGIES.BZS_DIGG)) / Math.pow(10, wbtc.decimals);
+  const wbtcBalance = formatBalance(await strategy.balanceOf(STRATEGIES.BZS_DIGG), wbtc.decimals);
 
   // resolve the proper token balances
   const [diggPrice, wbtcPrice] = await Promise.all([getPrice(digg.address), getPrice(wbtc.address)]);

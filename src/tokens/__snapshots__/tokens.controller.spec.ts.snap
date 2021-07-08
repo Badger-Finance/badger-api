@@ -407,6 +407,13 @@ Object {
     "symbol": "OBTC",
     "type": "Contract",
   },
+  "0x85Eee30c52B0b379b046Fb0F85F4f3Dc3009aFEC": Object {
+    "address": "0x85Eee30c52B0b379b046Fb0F85F4f3Dc3009aFEC",
+    "decimals": 18,
+    "name": "Keep Network",
+    "symbol": "KEEP",
+    "type": "Contract",
+  },
   "0x8798249c2E607446EfB7Ad49eC89dD1865Ff4272": Object {
     "address": "0x8798249c2E607446EfB7Ad49eC89dD1865Ff4272",
     "decimals": 18,
@@ -934,6 +941,13 @@ Object {
     "lookupName": "wrapped-bitcoin",
     "name": "Boring DAO BTC",
     "symbol": "OBTC",
+    "type": "Contract",
+  },
+  "0x85Eee30c52B0b379b046Fb0F85F4f3Dc3009aFEC": Object {
+    "address": "0x85Eee30c52B0b379b046Fb0F85F4f3Dc3009aFEC",
+    "decimals": 18,
+    "name": "Keep Network",
+    "symbol": "KEEP",
     "type": "Contract",
   },
   "0x8798249c2E607446EfB7Ad49eC89dD1865Ff4272": Object {

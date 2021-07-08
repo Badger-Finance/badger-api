@@ -35,7 +35,7 @@ export const cvxBooster = '0xF403C135812408BFbE8713b5A23a04b3D48AAE31';
 export const crvBaseRegistry = '0x0000000022D53366457F9d5E68Ec105046FC4383';
 
 /* Protocol Definitions */
-const curvePoolApr: { [address: string]: string } = {
+const curvePoolApr: Record<string, string> = {
   [TOKENS.CRV_RENBTC]: 'ren2',
   [TOKENS.CRV_SBTC]: 'rens',
   [TOKENS.CRV_TBTC]: 'tbtc',
@@ -47,12 +47,17 @@ const curvePoolApr: { [address: string]: string } = {
 };
 
 const cvxPoolId: PoolMap = {
+  [TOKENS.CRV_RENBTC]: 6,
+  [TOKENS.CRV_SBTC]: 7,
+  [TOKENS.CRV_TBTC]: 16,
   [TOKENS.CRV_HBTC]: 8,
   [TOKENS.CRV_PBTC]: 18,
   [TOKENS.CRV_BBTC]: 19,
   [TOKENS.CRV_OBTC]: 20,
   [TOKENS.CRV_TRICRYPTO]: 37,
 };
+
+const discontinuedRewards = ['0x330416C863f2acCE7aF9C9314B422d24c672534a'].map((addr) => ethers.utils.getAddress(addr));
 
 export async function getConvexApySnapshots(
   chain: Chain,
@@ -84,9 +89,10 @@ async function getVaultSources(chain: Chain, settDefinition: SettDefinition): Pr
   ]);
 
   // get rewards
-  const crvReward = parseFloat(ethers.utils.formatEther(await crv.currentRewards()));
+  const depositToken = getToken(settDefinition.depositToken);
+  const crvReward = formatBalance(await crv.currentRewards(), crvToken.decimals);
   const cvxReward = await getCvxMint(chain, crvReward);
-  const depositLocked = parseFloat(ethers.utils.formatEther(await crv.totalSupply()));
+  const depositLocked = formatBalance(await crv.totalSupply(), depositToken.decimals);
 
   // get apr params
   const duration = (await crv.duration()).toNumber();
@@ -95,20 +101,20 @@ async function getVaultSources(chain: Chain, settDefinition: SettDefinition): Pr
 
   // calculate CRV rewards
   const crvEmission = crvReward * crvPrice.usd * scalar;
-  const crvUnerlyingApr = (crvEmission / poolValue) * 10;
-  const crvEmissionApr = (crvEmission / poolValue) * 60;
+  const crvUnderlyingApr = (crvEmission / poolValue) * 10;
+  const crvEmissionApr = (crvEmission / poolValue) * 70;
 
   // calculate CVX rewards
   const cvxEmission = cvxReward * cvxPrice.usd * scalar;
   const cvxUnderlyingApr = (cvxEmission / poolValue) * 10;
-  const cvxEmissionApr = (cvxEmission / poolValue) * 60;
+  const cvxEmissionApr = (cvxEmission / poolValue) * 70;
 
   // emission tokens
   const bcvxCRV = getToken(TOKENS.BCVXCRV);
   const bCVX = getToken(TOKENS.BCVX);
 
   // create value sources
-  const totalUnderlyingApr = crvUnerlyingApr + cvxUnderlyingApr;
+  const totalUnderlyingApr = crvUnderlyingApr + cvxUnderlyingApr;
   const compoundValueSource = createValueSource(VAULT_SOURCE, uniformPerformance(totalUnderlyingApr), true);
   const crvValueSource = createValueSource('bcvxCRV Rewards', uniformPerformance(crvEmissionApr));
   const cvxValueSource = createValueSource('bCVX Rewards', uniformPerformance(cvxEmissionApr));
@@ -124,17 +130,21 @@ async function getVaultSources(chain: Chain, settDefinition: SettDefinition): Pr
   for (let i = 0; i < extraRewardsLength; i++) {
     const rewards = await crv.extraRewards(i);
     const virtualRewards = new ethers.Contract(rewards, cvxRewardsAbi, chain.provider);
-    const rewardToken = getToken(await virtualRewards.rewardToken());
+    const rewardAddress = await virtualRewards.rewardToken();
+    if (discontinuedRewards.includes(rewardAddress)) {
+      continue;
+    }
+    const rewardToken = getToken(rewardAddress);
     const rewardTokenPrice = await getPrice(rewardToken.address);
-    const rewardAmount = parseFloat(ethers.utils.formatEther(await virtualRewards.currentRewards()));
+    const rewardAmount = formatBalance(await virtualRewards.currentRewards(), rewardToken.decimals);
     const rewardEmission = rewardAmount * rewardTokenPrice.usd * scalar;
-    const rewardApr = (rewardEmission / poolValue) * 70;
+    const rewardApr = (rewardEmission / poolValue) * 80;
     const rewardSource = createValueSource(`${rewardToken.symbol} Rewards`, uniformPerformance(rewardApr));
     cachedExtraSources.push(valueSourceToCachedValueSource(rewardSource, settDefinition, tokenEmission(rewardToken)));
   }
 
   const cachedTradeFees = await getCurvePerformance(settDefinition);
-  return [cachedCompounding, cachedCrvEmission, cachedCvxEmission, cachedTradeFees, ...cachedExtraSources];
+  return [cachedCompounding, cachedTradeFees, cachedCrvEmission, cachedCvxEmission, ...cachedExtraSources];
 }
 
 async function getCvxRewards(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
@@ -142,11 +152,13 @@ async function getCvxRewards(chain: Chain, settDefinition: SettDefinition): Prom
 
   // get prices
   const cvxPrice = await getPrice(TOKENS.CVX);
+  const cvxToken = getToken(TOKENS.CVX);
   const cvxCrvPrice = await getPrice(TOKENS.CVXCRV);
+  const cvxCrvToken = getToken(TOKENS.CVXCRV);
 
   // get rewards
-  const cvxCrvReward = parseFloat(ethers.utils.formatEther(await cvx.currentRewards()));
-  const cvxLocked = parseFloat(ethers.utils.formatEther(await cvx.totalSupply()));
+  const cvxCrvReward = formatBalance(await cvx.currentRewards(), cvxCrvToken.decimals);
+  const cvxLocked = formatBalance(await cvx.totalSupply(), cvxToken.decimals);
 
   // get apr params
   const duration = (await cvx.duration()).toNumber();

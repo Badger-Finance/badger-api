@@ -284,7 +284,7 @@ Array [
     "boostable": false,
     "experimental": false,
     "hasBouncer": false,
-    "name": "Curve.fi renBTC/wBTC/sBTC",
+    "name": "Convex renBTC/wBTC/sBTC",
     "ppfs": 1,
     "sources": Array [
       Object {
@@ -366,7 +366,7 @@ Array [
     "boostable": false,
     "experimental": false,
     "hasBouncer": false,
-    "name": "Curve.fi renBTC/wBTC",
+    "name": "Convex renBTC/wBTC",
     "ppfs": 1,
     "sources": Array [
       Object {
@@ -448,7 +448,7 @@ Array [
     "boostable": false,
     "experimental": false,
     "hasBouncer": false,
-    "name": "Curve.fi tBTC/sBTC",
+    "name": "Convex tBTC/sBTC",
     "ppfs": 1,
     "sources": Array [
       Object {
@@ -1540,7 +1540,7 @@ Array [
         },
       },
     ],
-    "state": "guarded",
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0xb19059ebb43466C323583928285a49f558E572Fd",
@@ -1622,7 +1622,7 @@ Array [
         },
       },
     ],
-    "state": "guarded",
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0xDE5331AC4B3630f94853Ff322B66407e0D6331E8",
@@ -1704,7 +1704,7 @@ Array [
         },
       },
     ],
-    "state": "guarded",
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0x2fE94ea3d5d4a175184081439753DE15AeF9d614",
@@ -1786,7 +1786,7 @@ Array [
         },
       },
     ],
-    "state": "guarded",
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0x410e3E86ef427e30B9235497143881f717d93c2A",
@@ -1868,7 +1868,7 @@ Array [
         },
       },
     ],
-    "state": "guarded",
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0xcA3d75aC011BF5aD07a98d02f18225F9bD9A6BDF",
@@ -1950,7 +1950,7 @@ Array [
         },
       },
     ],
-    "state": "guarded",
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0x62B9c7356A2Dc64a1969e19C23e4f579F9810Aa7",
@@ -2032,7 +2032,7 @@ Array [
         },
       },
     ],
-    "state": "guarded",
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
@@ -2065,7 +2065,7 @@ Array [
     "boostable": false,
     "experimental": false,
     "hasBouncer": false,
-    "name": "Curve.fi renBTC/wBTC/sBTC",
+    "name": "Convex renBTC/wBTC/sBTC",
     "ppfs": 1,
     "sources": Array [
       Object {
@@ -2147,7 +2147,7 @@ Array [
     "boostable": false,
     "experimental": false,
     "hasBouncer": false,
-    "name": "Curve.fi renBTC/wBTC",
+    "name": "Convex renBTC/wBTC",
     "ppfs": 1,
     "sources": Array [
       Object {
@@ -2229,7 +2229,7 @@ Array [
     "boostable": false,
     "experimental": false,
     "hasBouncer": false,
-    "name": "Curve.fi tBTC/sBTC",
+    "name": "Convex tBTC/sBTC",
     "ppfs": 1,
     "sources": Array [
       Object {
@@ -3321,7 +3321,7 @@ Array [
         },
       },
     ],
-    "state": "guarded",
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0xb19059ebb43466C323583928285a49f558E572Fd",
@@ -3403,7 +3403,7 @@ Array [
         },
       },
     ],
-    "state": "guarded",
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0xDE5331AC4B3630f94853Ff322B66407e0D6331E8",
@@ -3485,7 +3485,7 @@ Array [
         },
       },
     ],
-    "state": "guarded",
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0x2fE94ea3d5d4a175184081439753DE15AeF9d614",
@@ -3567,7 +3567,7 @@ Array [
         },
       },
     ],
-    "state": "guarded",
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0x410e3E86ef427e30B9235497143881f717d93c2A",
@@ -3649,7 +3649,7 @@ Array [
         },
       },
     ],
-    "state": "guarded",
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0xcA3d75aC011BF5aD07a98d02f18225F9bD9A6BDF",
@@ -3731,7 +3731,7 @@ Array [
         },
       },
     ],
-    "state": "guarded",
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0x62B9c7356A2Dc64a1969e19C23e4f579F9810Aa7",
@@ -3813,7 +3813,7 @@ Array [
         },
       },
     ],
-    "state": "guarded",
+    "state": "open",
     "tokens": Array [
       Object {
         "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
