@@ -1,9 +1,9 @@
 import { Controller, Get, Inject, PathParams, QueryParams } from '@tsed/common';
-import { ContentType } from '@tsed/schema';
+import { ContentType, Description, Returns, Summary } from '@tsed/schema';
 import { Chain } from '../chains/config/chain.config';
 import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { AccountsService } from './accounts.service';
-import { Account } from './interfaces/account.interface';
+import { AccountModel } from './interfaces/account-model.interface';
 
 @Controller('/accounts')
 export class AccountsController {
@@ -12,10 +12,17 @@ export class AccountsController {
 
   @Get('/:accountId')
   @ContentType('json')
+  @Summary('Badger user information')
+  @Description(
+    'Return key user information for a given account. Includes positions, earnings from use, and claimable balances.',
+  )
+  @Returns(200, AccountModel)
+  @(Returns(400).Description('Not a valid chain'))
+  @(Returns(404).Description('Not a valid account'))
   async getAccount(
     @PathParams('accountId') userId: string,
     @QueryParams('chain') chain?: ChainNetwork,
-  ): Promise<Account> {
+  ): Promise<AccountModel> {
     return this.accountsService.getAccount(Chain.getChain(chain), userId);
   }
 }
