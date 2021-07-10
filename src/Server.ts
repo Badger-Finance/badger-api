@@ -12,6 +12,7 @@ import { Chain } from './chains/config/chain.config';
 import { Ethereum } from './chains/config/eth.config';
 import { ChainNetwork } from './chains/enums/chain-network.enum';
 import { controllers } from './ControllerRegistry';
+import { swaggerConfig } from './LambdaServer';
 
 @Configuration({
   rootDir: __dirname,
@@ -19,11 +20,7 @@ import { controllers } from './ControllerRegistry';
   mount: {
     '/v2/': controllers,
   },
-  swagger: [
-    {
-      path: '/docs',
-    },
-  ],
+  swagger: [swaggerConfig],
   logger: {
     disableRoutesSummary: true,
     disableBootstrapLog: true,
