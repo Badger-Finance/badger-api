@@ -12,6 +12,7 @@
     "deploy": "sls deploy",
     "deploy:prod": "sls deploy --stage prod",
     "dev": "sls offline start",
+    "dev:local": "npx ts-node src/index.ts",
     "format": "yarn run lint --fix",
     "lint": "eslint .",
     "test": "jest --runInBand --detectOpenHandles",
