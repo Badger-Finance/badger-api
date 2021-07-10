@@ -11,8 +11,8 @@ import { BinanceSmartChain } from './chains/config/bsc.config';
 import { Chain } from './chains/config/chain.config';
 import { Ethereum } from './chains/config/eth.config';
 import { ChainNetwork } from './chains/enums/chain-network.enum';
+import { swaggerConfig } from './config/constants';
 import { controllers } from './ControllerRegistry';
-import { swaggerConfig } from './LambdaServer';
 
 @Configuration({
   rootDir: __dirname,
