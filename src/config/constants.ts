@@ -1,3 +1,4 @@
+import { SwaggerSettings } from '@tsed/swagger';
 import { ContractRegistry } from './interfaces/contract-registry.interface';
 import { checksumEntries } from './util';
 
@@ -140,6 +141,7 @@ export const STAGE = process.env.STAGE || 'MISSING REQUIRED ENV VAR';
 export const BOUNCER_PROOFS = process.env.BOUNCER_PROOFS || 'MISSING REQUIRED ENV VAR';
 export const IS_OFFLINE = process.env.IS_OFFLINE !== undefined && process.env.IS_OFFLINE === 'true';
 export const DEBUG = false;
+export const API_VERSION = 'v2.0.0';
 
 // third party api constants
 export const CURVE_API_URL = 'https://stats.curve.fi/raw-stats/apys.json';
@@ -155,3 +157,21 @@ export enum Provider {
 export const SUSHI_CHEF = '0xc2EdaD668740f1aA35E4D8f227fB8E17dcA888Cd';
 export const PANCAKE_CHEF = '0x73feaa1eE314F8c655E354234017bE2193C9E24E';
 export const BADGER_TREE = '0xbe82A3259ce427B8bCb54b938b486dC2aF509Cc3';
+
+export const swaggerConfig: SwaggerSettings = {
+  path: '/docs',
+  spec: {
+    info: {
+      title: 'Badger API',
+      description: 'Collection of serverless API to enable public access to data surrounding the Badger protocol.',
+      version: API_VERSION,
+      contact: {
+        name: 'Badger Finance',
+        email: 'jintao@badger.finance',
+        url: 'https://app.badger.finance/',
+      },
+    },
+    host: 'https://api.badger.finance',
+    basePath: '/v2',
+  },
+};
