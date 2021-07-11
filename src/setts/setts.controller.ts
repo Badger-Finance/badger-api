@@ -12,7 +12,7 @@ export class SettsController {
 
   @Get()
   @ContentType('json')
-  @Summary('Get list of protocol setts')
+  @Summary('Get a list of protocol setts')
   @Description('Return a list of protocol setts for the requested chain')
   @Returns(200, SettModel)
   @(Returns(400).Description('Not a valid chain'))
