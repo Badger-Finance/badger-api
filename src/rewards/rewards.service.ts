@@ -17,8 +17,11 @@ import { Boost } from './interfaces/boost.interface';
 import { BoostData } from './interfaces/boost-data.interface';
 import { BoostMultipliers } from './interfaces/boost-multipliers.interface';
 import { Eligibility } from './interfaces/eligibility.interface';
-import { AirdropMerkleClaim, AirdropMerkleDistribution } from './interfaces/merkle-distributor.interface';
-import { RewardMerkleClaim } from './interfaces/reward-merkle-claim.interface';
+import {
+  AirdropMerkleClaim,
+  AirdropMerkleDistribution,
+  RewardMerkleClaim,
+} from './interfaces/merkle-distributor.interface';
 import { UnlockSchedule } from './interfaces/unlock-schedule.interface';
 import { getTreeDistribution } from './rewards.utils';
 
