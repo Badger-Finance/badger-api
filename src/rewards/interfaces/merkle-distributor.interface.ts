@@ -1,5 +1,4 @@
 import { BigNumber } from 'ethers';
-import { RewardMerkleClaim } from './reward-merkle-claim.interface';
 
 export interface AirdropMerkleDistribution {
   merkleRoot: string;
@@ -17,4 +16,15 @@ export interface RewardMerkleDistribution {
   merkleRoot: string;
   tokenTotal: Record<string, BigNumber>;
   claims: Record<string, RewardMerkleClaim>;
+}
+
+export interface RewardMerkleClaim {
+  index: BigNumber;
+  cycle: BigNumber;
+  boost: BigNumber;
+  user: string;
+  tokens: string[];
+  cumulativeAmounts: BigNumber[];
+  proof: string[];
+  node: string;
 }

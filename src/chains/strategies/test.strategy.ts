@@ -1,6 +1,5 @@
 import { ethers } from 'ethers';
-import { PriceData } from '../../tokens/interfaces/price-data.interface';
-import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
+import { PriceData, TokenPrice } from '../../tokens/interfaces/token-price.interface';
 import { getToken, protocolTokens } from '../../tokens/tokens.utils';
 import { ChainStrategy } from './chain.strategy';
 

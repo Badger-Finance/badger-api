@@ -12,7 +12,7 @@ export class AccountsController {
 
   @Get('/:accountId')
   @ContentType('json')
-  @Summary('Get badger user account information')
+  @Summary('Badger user information')
   @Description(
     'Return key user information for a given account. Includes positions, earnings from use, and claimable balances.',
   )
