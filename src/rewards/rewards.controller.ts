@@ -10,13 +10,6 @@ export class RewardController {
   @Inject()
   rewardsService!: RewardsService;
 
-  // @Hidden()
-  // @ContentType('json')
-  // @Get('/gitcoin/:address')
-  // async getGitcoinAirdropClaim(@PathParams('address') address: string): Promise<AirdropMerkleClaim> {
-  //   return this.rewardsService.getUserAirdrop('gitcoin-airdrop.json', address);
-  // }
-
   @Hidden()
   @Get('/bouncer/:address')
   @ContentType('json')
