@@ -1,26 +1,20 @@
 import { Description, Example, Property, Title } from '@tsed/schema';
-import { BigNumber, ethers } from 'ethers';
+import { ethers } from 'ethers';
 import { TOKENS } from '../../config/constants';
 import { RewardMerkleClaim } from './reward-merkle-claim.interface';
 
 export class RewardMerkleClaimModel implements RewardMerkleClaim {
   @Title('index')
   @Description('User reward entry index')
-  @Example(BigNumber.from(0x3))
+  @Example('0x3')
   @Property()
-  public index: BigNumber;
+  public index: string;
 
   @Title('cycle')
   @Description('Proof corresponding reward cycle')
-  @Example(BigNumber.from(0x487))
+  @Example('0x487')
   @Property()
-  public cycle: BigNumber;
-
-  @Title('boost')
-  @Description('User badger boost score')
-  @Example(BigNumber.from(276).div(100))
-  @Property()
-  public boost: BigNumber;
+  public cycle: string;
 
   @Title('user')
   @Description('User account id')
@@ -42,7 +36,7 @@ export class RewardMerkleClaimModel implements RewardMerkleClaim {
     ethers.constants.WeiPerEther.mul(6).div(1000).toString(),
   ])
   @Property()
-  public cumulativeAmounts: BigNumber[];
+  public cumulativeAmounts: string[];
 
   @Title('proof')
   @Description('Reward cycle merkle proof')
@@ -62,7 +56,6 @@ export class RewardMerkleClaimModel implements RewardMerkleClaim {
   constructor(claim: RewardMerkleClaim) {
     this.index = claim.index;
     this.cycle = claim.cycle;
-    this.boost = claim.boost;
     this.user = claim.user;
     this.tokens = claim.tokens;
     this.cumulativeAmounts = claim.cumulativeAmounts;

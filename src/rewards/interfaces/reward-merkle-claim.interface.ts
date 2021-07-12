@@ -1,12 +1,9 @@
-import { BigNumber } from 'ethers';
-
 export interface RewardMerkleClaim {
-  index: BigNumber;
-  cycle: BigNumber;
-  boost: BigNumber;
+  index: string;
+  cycle: string;
   user: string;
   tokens: string[];
-  cumulativeAmounts: BigNumber[];
+  cumulativeAmounts: string[];
   proof: string[];
   node: string;
 }
