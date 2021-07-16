@@ -4,6 +4,8 @@ on:
   pull_request:
     types: [ closed ]
     branches: [ main, staging ]
+  push:
+    branches: [ subgraph-update ]
 
 jobs:
   deploy:
@@ -21,12 +23,12 @@ jobs:
         uses: serverless/github-action@master
         with:
           args: deploy
-        if: contains(github.ref, 'staging')
-      - name: Deploy Production
-        uses: serverless/github-action@master
-        with:
-          args: deploy --stage prod
-        if: contains(github.ref, 'main')
+      #   if: contains(github.ref, 'staging')
+      # - name: Deploy Production
+      #   uses: serverless/github-action@master
+      #   with:
+      #     args: deploy --stage prod
+      #   if: contains(github.ref, 'main')
 
 env:
   GRAPH_API_KEY: ${{ secrets.GRAPH_API_KEY }}
