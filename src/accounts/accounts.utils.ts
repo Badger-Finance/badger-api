@@ -2,7 +2,6 @@ import { ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
-import { TOKENS } from '../config/constants';
 import { getSdk, OrderDirection, User_OrderBy, UserQuery, UserSettBalance } from '../graphql/generated/badger';
 import { getPrice, inCurrency } from '../prices/prices.utils';
 import { getCachedSett, getSettDefinition } from '../setts/setts.utils';
@@ -74,12 +73,8 @@ export async function toSettBalance(
   const depositToken = getToken(settDefinition.depositToken);
   const settToken = getToken(settDefinition.settToken);
   const currentTokens = formatBalance(netShareDeposit, settToken.decimals);
-  let depositTokenDecimals = depositToken.decimals;
-  if (depositToken.address === TOKENS.DIGG) {
-    depositTokenDecimals = settToken.decimals;
-  }
-  const depositedTokens = formatBalance(grossDeposit, depositTokenDecimals);
-  const withdrawnTokens = formatBalance(grossWithdraw, depositTokenDecimals);
+  const depositedTokens = formatBalance(grossDeposit, depositToken.decimals);
+  const withdrawnTokens = formatBalance(grossWithdraw, depositToken.decimals);
   const earnedBalance = currentTokens * ppfs - depositedTokens + withdrawnTokens;
   const [depositTokenPrice, settTokenPrice, earnedTokens, tokens] = await Promise.all([
     getPrice(settDefinition.depositToken),
