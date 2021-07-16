@@ -35,6 +35,7 @@ export const defaultSett = (settDefinition: SettDefinition): Sett => {
 };
 
 export const getSett = async (graphUrl: string, contract: string, block?: number): Promise<SettQuery> => {
+  console.log(graphUrl);
   const badgerGraphqlClient = new GraphQLClient(graphUrl);
   const badgerGraphqlSdk = getSdk(badgerGraphqlClient);
   const settId = contract.toLowerCase();

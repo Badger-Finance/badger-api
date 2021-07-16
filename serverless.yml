@@ -73,6 +73,7 @@ provider:
   apiGateway:
     shouldStartNameWithService: true
     minimumCompressionSize: 1024
+  # TODO: transition to dot env serverless support
   environment:
     # Subgraph Definitions
     BADGER: "https://gateway.thegraph.com/api/${env:GRAPH_API_KEY}/subgraphs/id/0x8d26c9dac7e16738752fa1446b956a97c63e2f39-0"
