@@ -639,9 +639,17 @@ export const UserFragmentDoc = gql`
     id
   }
 `;
-export const SettDocument = gql`
-  query Sett($id: ID!, $block: Block_height) {
+export const SettSnapshotDocument = gql`
+  query SettSnapshot($id: ID!, $block: Block_height) {
     sett(id: $id, block: $block) {
+      ...Sett
+    }
+  }
+  ${SettFragmentDoc}
+`;
+export const SettDocument = gql`
+  query Sett($id: ID!) {
+    sett(id: $id) {
       ...Sett
     }
   }
@@ -671,6 +679,14 @@ export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
 const defaultWrapper: SdkFunctionWrapper = (sdkFunction) => sdkFunction();
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+    SettSnapshot(
+      variables: SettSnapshotQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<SettSnapshotQuery> {
+      return withWrapper(() =>
+        client.request<SettSnapshotQuery>(print(SettSnapshotDocument), variables, requestHeaders),
+      );
+    },
     Sett(variables: SettQueryVariables, requestHeaders?: Dom.RequestInit['headers']): Promise<SettQuery> {
       return withWrapper(() => client.request<SettQuery>(print(SettDocument), variables, requestHeaders));
     },
@@ -700,9 +716,15 @@ export type UserSettBalanceFragment = { __typename?: 'UserSettBalance' } & Pick<
 
 export type UserFragment = { __typename?: 'User' } & Pick<User, 'id'>;
 
-export type SettQueryVariables = Exact<{
+export type SettSnapshotQueryVariables = Exact<{
   id: Scalars['ID'];
   block?: Maybe<Block_Height>;
+}>;
+
+export type SettSnapshotQuery = { __typename?: 'Query' } & { sett?: Maybe<{ __typename?: 'Sett' } & SettFragment> };
+
+export type SettQueryVariables = Exact<{
+  id: Scalars['ID'];
 }>;
 
 export type SettQuery = { __typename?: 'Query' } & { sett?: Maybe<{ __typename?: 'Sett' } & SettFragment> };

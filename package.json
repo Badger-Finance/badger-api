@@ -8,7 +8,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "clean": "rm -rf ./build",
-    "codegen": "graphql-codegen -r dotenv/config -c codegen.yml dotenv_config_path=.env.development",
+    "codegen": "graphql-codegen -r dotenv/config -c codegen.yml",
     "deploy": "sls deploy",
     "deploy:prod": "sls deploy --stage prod",
     "dev": "sls offline start",
