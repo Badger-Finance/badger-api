@@ -7,6 +7,7 @@ build
 .serverless
 .build
 .dynamodb
+.env
 
 secrets/*.yml
 

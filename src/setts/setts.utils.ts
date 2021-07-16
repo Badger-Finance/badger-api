@@ -5,7 +5,7 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
 import { ONE_YEAR_MS, SAMPLE_DAYS } from '../config/constants';
 import { SettState } from '../config/enums/sett-state.enum';
-import { getSdk, SettQuery, SettQueryVariables } from '../graphql/generated/badger';
+import { getSdk, SettQuery } from '../graphql/generated/badger';
 import { getToken } from '../tokens/tokens.utils';
 import { CachedSettSnapshot } from './interfaces/cached-sett-snapshot.interface';
 import { Sett } from './interfaces/sett.interface';
@@ -37,16 +37,10 @@ export const defaultSett = (settDefinition: SettDefinition): Sett => {
 export const getSett = async (graphUrl: string, contract: string, block?: number): Promise<SettQuery> => {
   const badgerGraphqlClient = new GraphQLClient(graphUrl);
   const badgerGraphqlSdk = getSdk(badgerGraphqlClient);
-  let vars: SettQueryVariables = {
-    id: contract.toLowerCase(),
-  };
+  const settId = contract.toLowerCase();
+  const vars = { id: settId };
   if (block) {
-    vars = {
-      ...vars,
-      block: {
-        number: block,
-      },
-    };
+    return badgerGraphqlSdk.SettSnapshot({ ...vars, block: { number: block } });
   }
   return badgerGraphqlSdk.Sett(vars);
 };
