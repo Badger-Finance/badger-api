@@ -14,8 +14,14 @@ import { TokenBalance } from './interfaces/token-balance.interface';
 import { TokenConfig } from './interfaces/token-config.interface';
 import { TokenPrice } from './interfaces/token-price.interface';
 
+// map holding all protocol token information across chains
 export const protocolTokens: TokenConfig = { ...ethTokensConfig, ...bscTokensConfig };
 
+/**
+ * Get token information from address.
+ * @param contract Token address.
+ * @returns Standard ERC20 token information.
+ */
 export const getToken = (contract: string): Token => {
   const checksummedAddress = ethers.utils.getAddress(contract);
   const token = protocolTokens[checksummedAddress];
@@ -25,6 +31,11 @@ export const getToken = (contract: string): Token => {
   return token;
 };
 
+/**
+ * Get token information from name.
+ * @param name Token name.
+ * @returns Standard ERC20 token information.
+ */
 export const getTokenByName = (name: string): Token => {
   const searchName = name.toLowerCase();
   const token = Object.values(protocolTokens).find(
@@ -36,6 +47,12 @@ export const getTokenByName = (name: string): Token => {
   return token;
 };
 
+/**
+ * Retrieve tokens that comprise a sett's underlying asset.
+ * @param chain Token chain.
+ * @param sett Requested sett definition.
+ * @returns Array of token definitions comprising requested sett's underlying asset.
+ */
 export const getSettUnderlyingTokens = async (chain: Chain, sett: SettDefinition): Promise<Token[]> => {
   const depositToken = getToken(sett.depositToken);
   if (depositToken.lpToken) {
@@ -48,6 +65,16 @@ export const getSettUnderlyingTokens = async (chain: Chain, sett: SettDefinition
   }
   return [depositToken];
 };
+
+/**
+ * Convert BigNumber to human readable number.
+ * @param value Ethereum wei based big number.
+ * @param decimals Decimals for parsing value.
+ * @returns Parsed big number from decimals.
+ */
+export function formatBalance(value: BigNumberish, decimals = 18): number {
+  return Number(ethers.utils.formatUnits(value, decimals));
+}
 
 export function cachedTokenBalanceToTokenBalance(
   cachedTokenBalance: CachedTokenBalance,
@@ -127,10 +154,6 @@ export async function getCachedTokenBalances(
     return tokenBalances;
   }
   return undefined;
-}
-
-export function formatBalance(value: BigNumberish, decimals = 18): number {
-  return Number(ethers.utils.formatUnits(value, decimals));
 }
 
 export function mockBalance(token: Token, balance: number, currency?: string): TokenBalance {

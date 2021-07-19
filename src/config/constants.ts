@@ -171,7 +171,8 @@ export const swaggerConfig: SwaggerSettings = {
         url: 'https://app.badger.finance/',
       },
     },
-    host: 'https://api.badger.finance',
-    basePath: '/v2',
+    schemes: ['https'],
+    host: 'api.badger.finance',
+    basePath: '/',
   },
 };
