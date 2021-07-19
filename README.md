@@ -2,8 +2,12 @@
 
 [![Service Tests](https://github.com/Badger-Finance/badger-api/actions/workflows/test.yml/badge.svg)](https://github.com/Badger-Finance/badger-api/actions/workflows/test.yml)
 [![Deploy](https://github.com/Badger-Finance/badger-api/actions/workflows/deploy.yml/badge.svg)](https://github.com/Badger-Finance/badger-api/actions/workflows/deploy.yml)
+[![Test Coverage](https://github.com/Badger-Finance/badger-api/actions/workflows/coverage.yml/badge.svg)](https://github.com/Badger-Finance/badger-api/actions/workflows/coverage.yml)
 
 Collection of serverless API to enable public access to data surrounding the Badger protocol.
+
+Interactive Swagger Documentation  
+https://docs.badger.finance/
 
 ## Development
 
