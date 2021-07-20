@@ -112,7 +112,12 @@ const getPricePerShare = async (
   }
 };
 
-export const getIndexedBlock = async (settDefinition: SettDefinition, startBlock: number): Promise<number> => {
+export const getIndexedBlock = async (
+  settDefinition: SettDefinition,
+  startBlock: number,
+  alignment: number,
+): Promise<number> => {
+  const alignedStartBlock = startBlock - (startBlock % alignment);
   try {
     const mapper = getDataMapper();
     const settToken = getToken(settDefinition.settToken);
@@ -123,9 +128,9 @@ export const getIndexedBlock = async (settDefinition: SettDefinition, startBlock
     )) {
       return snapshot.height;
     }
-    return startBlock;
+    return alignedStartBlock;
   } catch (err) {
-    return startBlock;
+    return alignedStartBlock;
   }
 };
 

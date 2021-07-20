@@ -30,7 +30,7 @@ const indexSett = async (chain: Chain, sett: SettDefinition) => {
   }
 
   const mapper = getDataMapper();
-  let block = await getIndexedBlock(sett, createdBlock);
+  let block = await getIndexedBlock(sett, createdBlock, thirtyMinutesBlocks);
   while (true) {
     try {
       block += thirtyMinutesBlocks;
