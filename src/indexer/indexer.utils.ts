@@ -11,9 +11,12 @@ import { getSwapValueSource } from '../protocols/common/performance.utils';
 import { SourceType } from '../protocols/enums/source-type.enum';
 import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
 import { ValueSource } from '../protocols/interfaces/value-source.interface';
-import { PancakeSwapService } from '../protocols/pancake/pancakeswap.service';
 import { getVaultCachedValueSources } from '../protocols/protocols.utils';
-import { SushiswapService } from '../protocols/sushi/sushiswap.service';
+import { getConvexApySnapshots, getCurvePerformance } from '../protocols/strategies/convex.strategy';
+import { PancakeSwapService } from '../protocols/strategies/pancakeswap.strategy';
+import { QuickswapStrategy } from '../protocols/strategies/quickswap.strategy';
+import { SushiswapService } from '../protocols/strategies/sushiswap.strategy';
+import { UniswapStrategy } from '../protocols/strategies/uniswap.strategy';
 import { RewardsService } from '../rewards/rewards.service';
 import { CachedSettSnapshot } from '../setts/interfaces/cached-sett-snapshot.interface';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
@@ -23,7 +26,6 @@ import { getSett } from '../setts/setts.utils';
 import { CachedLiquidityPoolTokenBalance } from '../tokens/interfaces/cached-liquidity-pool-token-balance.interface';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
 import { formatBalance, getToken } from '../tokens/tokens.utils';
-import { getConvexApySnapshots, getCurvePerformance } from './strategies/convex.strategy';
 
 export const settToCachedSnapshot = async (
   chain: Chain,
@@ -200,6 +202,9 @@ export async function getProtocolValueSources(
       case Protocol.Convex:
         return getConvexApySnapshots(chain, settDefinition);
       case Protocol.Uniswap:
+        return UniswapStrategy.getValueSources(settDefinition);
+      case Protocol.Quickswap:
+        return QuickswapStrategy.getValueSources(settDefinition);
       default: {
         return [];
       }

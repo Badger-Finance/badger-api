@@ -15,6 +15,7 @@ import { uniformPerformance } from '../interfaces/performance.interface';
 import { UserInfo } from '../interfaces/user-info.interface';
 import { createValueSource, ValueSource } from '../interfaces/value-source.interface';
 import { xSushiApr } from '../interfaces/xsushi-apr.interface';
+// import { getSdk as getSushiswapSdk } from '../../graphql/generated/sushiswap';
 
 @Service()
 export class SushiswapService extends SwapService {

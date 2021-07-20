@@ -1,0 +1,4 @@
+fragment PairDayData on PairDayData {
+  reserveUSD
+  volumeUSD
+}

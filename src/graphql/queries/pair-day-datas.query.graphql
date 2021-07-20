@@ -1,0 +1,10 @@
+query PairDayDatas(
+  $first: Int
+  $where: PairDayData_filter
+  $orderBy: PairDayData_orderBy
+  $orderDirection: OrderDirection
+) {
+  pairDayDatas {
+    ...PairDayData
+  }
+}
