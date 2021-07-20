@@ -2,7 +2,7 @@ import { DataMapper } from '@aws/dynamodb-data-mapper';
 import { BadRequest, NotFound } from '@tsed/exceptions';
 import fetchMock from 'jest-fetch-mock';
 import { TestStrategy } from '../chains/strategies/test.strategy';
-import { TOKENS } from '../config/constants';
+import { TOKENS } from '../config/tokens.config';
 import { setupMapper } from '../test/tests.utils';
 import { TokenType } from '../tokens/enums/token-type.enum';
 import { Token } from '../tokens/interfaces/token.interface';

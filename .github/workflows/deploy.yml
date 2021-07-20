@@ -29,6 +29,9 @@ jobs:
         if: contains(github.ref, 'main')
 
 env:
-  GRAPH_API_KEY: ${{ secrets.GRAPH_API_KEY }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  GRAPH_API_KEY: ${{ secrets.GRAPH_API_KEY }}
+  ETH_RPC: ${{ secrets.ETH_RPC }}
+  BSC_RPC: ${{ secrets.BSC_RPC }}
+  MATIC_RPC: ${{ secrets.MATIC_RPC }}

@@ -1,6 +1,6 @@
 import { NotFound } from '@tsed/exceptions';
 import { Ethereum } from '../chains/config/eth.config';
-import { TOKENS } from '../config/constants';
+import { TOKENS } from '../config/tokens.config';
 import * as swapUtils from '../protocols/common/swap.utils';
 import { getSettDefinition } from '../setts/setts.utils';
 import { ethTokensConfig } from './config/eth-tokens.config';

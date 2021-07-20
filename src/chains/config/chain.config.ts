@@ -28,7 +28,7 @@ export abstract class Chain {
     network: ChainNetwork,
     tokens: TokenConfig,
     setts: SettDefinition[],
-    provider: ethers.providers.JsonRpcProvider,
+    rpcUrl: string,
     strategy: ChainStrategy,
     graphUrl: string,
     blocksPerYear: number,
@@ -39,7 +39,7 @@ export abstract class Chain {
     this.network = network;
     this.tokens = tokens;
     this.setts = setts.filter((sett) => !sett.stage || sett.stage === STAGE);
-    this.provider = provider;
+    this.provider = new ethers.providers.JsonRpcProvider(rpcUrl);
     this.strategy = strategy;
     this.graphUrl = graphUrl;
     this.blocksPerYear = blocksPerYear;

@@ -7,6 +7,7 @@ import { getLiquidityData } from '../protocols/common/swap.utils';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { bscTokensConfig } from './config/bsc-tokens.config';
 import { ethTokensConfig } from './config/eth-tokens.config';
+import { maticTokensConfig } from './config/matic-tokens.config';
 import { CachedLiquidityPoolTokenBalance } from './interfaces/cached-liquidity-pool-token-balance.interface';
 import { CachedTokenBalance } from './interfaces/cached-token-balance.interface';
 import { Token } from './interfaces/token.interface';
@@ -15,7 +16,7 @@ import { TokenConfig } from './interfaces/token-config.interface';
 import { TokenPrice } from './interfaces/token-price.interface';
 
 // map holding all protocol token information across chains
-export const protocolTokens: TokenConfig = { ...ethTokensConfig, ...bscTokensConfig };
+export const protocolTokens: TokenConfig = { ...ethTokensConfig, ...bscTokensConfig, ...maticTokensConfig };
 
 /**
  * Get token information from address.

@@ -88,6 +88,7 @@ export const getOnChainLiquidityPrice = async (chain: Chain, contract: string): 
     }
     return resolveLiquidityPrice(liquidityData);
   } catch (err) {
+    console.log(err);
     throw new NotFound(`No pair found for ${contract}`);
   }
 };
@@ -159,6 +160,10 @@ export const getUniswapPrice = async (contract: string): Promise<TokenPrice> => 
   return getLiquidityPrice(UNISWAP_URL, contract);
 };
 
-export const getPancakeswapPrice = async (contract: string): Promise<TokenPrice> => {
+export async function getPancakeswapPrice(contract: string): Promise<TokenPrice> {
   return getOnChainLiquidityPrice(Chain.getChain(ChainNetwork.BinanceSmartChain), contract);
-};
+}
+
+export async function getQuickswapPrice(contract: string): Promise<TokenPrice> {
+  return getOnChainLiquidityPrice(Chain.getChain(ChainNetwork.Matic), contract);
+}

@@ -1,5 +1,5 @@
 import { Description, Example } from '@tsed/schema';
-import { TOKENS } from '../../config/constants';
+import { TOKENS } from '../../config/tokens.config';
 import { PriceSummary } from './price-summary.interface';
 
 /**
