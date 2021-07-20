@@ -18,7 +18,7 @@ export abstract class ChainStrategy {
     const token = getToken(address);
     const strategy = this.strategies[token.address];
     if (!strategy) {
-      throw new BadRequest('Token not supported for pricing');
+      throw new BadRequest(`Token (${token.address}) not supported for pricing`);
     }
     return strategy;
   }

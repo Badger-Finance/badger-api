@@ -1,6 +1,7 @@
 import { DataMapper, PutParameters, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
 import { bscSetts } from '../chains/config/bsc.config';
 import { ethSetts } from '../chains/config/eth.config';
+import { maticSetts } from '../chains/config/matic.config';
 import { BscStrategy } from '../chains/strategies/bsc.strategy';
 import { EthStrategy } from '../chains/strategies/eth.strategy';
 import { SettQuery } from '../graphql/generated/badger';
@@ -10,7 +11,9 @@ import * as settUtils from '../setts/setts.utils';
 import { refreshSettSnapshots } from './sett-snapshots-indexer';
 
 describe('refreshSettSnapshots', () => {
-  const supportedAddresses = [...bscSetts, ...ethSetts].map((settDefinition) => settDefinition.settToken).sort();
+  const supportedAddresses = [...bscSetts, ...ethSetts, ...maticSetts]
+    .map((settDefinition) => settDefinition.settToken)
+    .sort();
 
   let getSettMock: jest.SpyInstance<
     Promise<SettQuery>,

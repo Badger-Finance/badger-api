@@ -1,5 +1,5 @@
 import { Ethereum } from '../chains/config/eth.config';
-import { TOKENS } from '../config/constants';
+import { TOKENS } from '../config/tokens.config';
 import { getSettDefinition } from '../setts/setts.utils';
 import { setupMapper } from '../test/tests.utils';
 import * as tokenUtils from '../tokens/tokens.utils';

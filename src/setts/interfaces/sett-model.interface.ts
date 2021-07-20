@@ -1,6 +1,6 @@
 import { Description, Example, Property, Title } from '@tsed/schema';
-import { TOKENS } from '../../config/constants';
 import { SettState } from '../../config/enums/sett-state.enum';
+import { TOKENS } from '../../config/tokens.config';
 import { uniformPerformance } from '../../protocols/interfaces/performance.interface';
 import { createValueSource, ValueSource } from '../../protocols/interfaces/value-source.interface';
 import { TokenBalance } from '../../tokens/interfaces/token-balance.interface';
