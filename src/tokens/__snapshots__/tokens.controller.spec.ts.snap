@@ -469,6 +469,14 @@ Object {
     "symbol": "TBTC",
     "type": "Contract",
   },
+  "0x952F4Ac36EF204a28800AA1c1586C5261B600894": Object {
+    "address": "0x952F4Ac36EF204a28800AA1c1586C5261B600894",
+    "decimals": 18,
+    "lookupName": "dropt-2",
+    "name": "DIGG Rebase Option 2",
+    "symbol": "DROPT-2",
+    "type": "Contract",
+  },
   "0x9BE89D2a4cd102D8Fecc6BF9dA793be995C22541": Object {
     "address": "0x9BE89D2a4cd102D8Fecc6BF9dA793be995C22541",
     "decimals": 8,
@@ -1003,6 +1011,14 @@ Object {
     "lookupName": "tbtc",
     "name": "Keep Network BTC",
     "symbol": "TBTC",
+    "type": "Contract",
+  },
+  "0x952F4Ac36EF204a28800AA1c1586C5261B600894": Object {
+    "address": "0x952F4Ac36EF204a28800AA1c1586C5261B600894",
+    "decimals": 18,
+    "lookupName": "dropt-2",
+    "name": "DIGG Rebase Option 2",
+    "symbol": "DROPT-2",
     "type": "Contract",
   },
   "0x9BE89D2a4cd102D8Fecc6BF9dA793be995C22541": Object {
