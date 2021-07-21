@@ -40,7 +40,7 @@ async function getEmissionSource(chain: Chain, settDefinition: SettDefinition): 
   const emissionScalar = poolInfo.allocPoint.toNumber() / totalAllocPoint.toNumber();
   const cakeEmission = parseFloat(formatEther(cakePerBlock)) * emissionScalar * chain.blocksPerYear * tokenPrice.usd;
   const emissionSource = createValueSource(VAULT_SOURCE, uniformPerformance((cakeEmission / poolValue) * 100), true);
-  return valueSourceToCachedValueSource(emissionSource, settDefinition, SourceType.Emission);
+  return valueSourceToCachedValueSource(emissionSource, settDefinition, SourceType.Compound);
 }
 
 function getPoolId(depositToken: string): number {
