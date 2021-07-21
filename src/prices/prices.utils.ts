@@ -54,6 +54,9 @@ export const updatePrice = async (token: Token): Promise<TokenPriceSnapshot> => 
   try {
     const mapper = getDataMapper();
     const price = await strategy.getPrice(address);
+    if (price.eth === 0 || price.usd === 0) {
+      throw new Error('Attempting to update with bad price');
+    }
     return mapper.put(
       Object.assign(new TokenPriceSnapshot(), {
         address: address,
