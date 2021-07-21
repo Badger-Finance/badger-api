@@ -107,6 +107,14 @@ export const ethTokensConfig: TokenConfig = {
     symbol: 'HBTC',
     type: TokenType.Contract,
   },
+  [TOKENS.DROPT_2]: {
+    address: TOKENS.DROPT_2,
+    decimals: 18,
+    lookupName: 'dropt-2',
+    name: 'DIGG Rebase Option 2',
+    symbol: 'DROPT-2',
+    type: TokenType.Contract,
+  },
   [TOKENS.CRV_HBTC]: {
     address: TOKENS.CRV_HBTC,
     decimals: 18,
