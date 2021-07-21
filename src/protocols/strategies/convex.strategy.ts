@@ -63,17 +63,16 @@ const cvxPoolId: PoolMap = {
 
 const discontinuedRewards = ['0x330416C863f2acCE7aF9C9314B422d24c672534a'].map((addr) => ethers.utils.getAddress(addr));
 
-export async function getConvexApySnapshots(
-  chain: Chain,
-  settDefinition: SettDefinition,
-): Promise<CachedValueSource[]> {
-  switch (settDefinition.settToken) {
-    case TOKENS.BCVX:
-      return getCvxRewards(chain, settDefinition);
-    case TOKENS.BCVXCRV:
-      return getCvxCrvRewards(chain, settDefinition);
-    default:
-      return getVaultSources(chain, settDefinition);
+export class ConvexStrategy {
+  static async getValueSources(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
+    switch (settDefinition.settToken) {
+      case TOKENS.BCVX:
+        return getCvxRewards(chain, settDefinition);
+      case TOKENS.BCVXCRV:
+        return getCvxCrvRewards(chain, settDefinition);
+      default:
+        return getVaultSources(chain, settDefinition);
+    }
   }
 }
 

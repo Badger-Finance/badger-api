@@ -2885,24 +2885,25 @@ export enum _SubgraphErrorPolicy_ {
   Deny = 'deny',
 }
 
-export const PairDayDataFragmentDoc = gql`
-  fragment PairDayData on PairDayData {
+export const SushiPairDayDataFragmentDoc = gql`
+  fragment SushiPairDayData on PairDayData {
     reserveUSD
     volumeUSD
+    date
   }
 `;
-export const PairDayDatasDocument = gql`
-  query PairDayDatas(
+export const SushiPairDayDatasDocument = gql`
+  query SushiPairDayDatas(
     $first: Int
     $where: PairDayData_filter
     $orderBy: PairDayData_orderBy
     $orderDirection: OrderDirection
   ) {
-    pairDayDatas {
-      ...PairDayData
+    pairDayDatas(first: $first, where: $where, orderBy: $orderBy, orderDirection: $orderDirection) {
+      ...SushiPairDayData
     }
   }
-  ${PairDayDataFragmentDoc}
+  ${SushiPairDayDataFragmentDoc}
 `;
 
 export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
@@ -2910,26 +2911,29 @@ export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
 const defaultWrapper: SdkFunctionWrapper = (sdkFunction) => sdkFunction();
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    PairDayDatas(
-      variables?: PairDayDatasQueryVariables,
+    SushiPairDayDatas(
+      variables?: SushiPairDayDatasQueryVariables,
       requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<PairDayDatasQuery> {
+    ): Promise<SushiPairDayDatasQuery> {
       return withWrapper(() =>
-        client.request<PairDayDatasQuery>(print(PairDayDatasDocument), variables, requestHeaders),
+        client.request<SushiPairDayDatasQuery>(print(SushiPairDayDatasDocument), variables, requestHeaders),
       );
     },
   };
 }
 export type Sdk = ReturnType<typeof getSdk>;
-export type PairDayDataFragment = { __typename?: 'PairDayData' } & Pick<PairDayData, 'reserveUSD' | 'volumeUSD'>;
+export type SushiPairDayDataFragment = { __typename?: 'PairDayData' } & Pick<
+  PairDayData,
+  'reserveUSD' | 'volumeUSD' | 'date'
+>;
 
-export type PairDayDatasQueryVariables = Exact<{
+export type SushiPairDayDatasQueryVariables = Exact<{
   first?: Maybe<Scalars['Int']>;
   where?: Maybe<PairDayData_Filter>;
   orderBy?: Maybe<PairDayData_OrderBy>;
   orderDirection?: Maybe<OrderDirection>;
 }>;
 
-export type PairDayDatasQuery = { __typename?: 'Query' } & {
-  pairDayDatas: Array<{ __typename?: 'PairDayData' } & PairDayDataFragment>;
+export type SushiPairDayDatasQuery = { __typename?: 'Query' } & {
+  pairDayDatas: Array<{ __typename?: 'PairDayData' } & SushiPairDayDataFragment>;
 };

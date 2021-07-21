@@ -2379,10 +2379,11 @@ export enum _SubgraphErrorPolicy_ {
   Deny = 'deny',
 }
 
-export const PairDayDataFragmentDoc = gql`
-  fragment PairDayData on PairDayData {
+export const UniPairDayDataFragmentDoc = gql`
+  fragment UniPairDayData on PairDayData {
     reserveUSD
     dailyVolumeUSD
+    date
   }
 `;
 export const UniV2PairFragmentDoc = gql`
@@ -2405,18 +2406,18 @@ export const UniV2PairFragmentDoc = gql`
     totalSupply
   }
 `;
-export const PairDayDatasDocument = gql`
-  query PairDayDatas(
+export const UniPairDayDatasDocument = gql`
+  query UniPairDayDatas(
     $first: Int
     $where: PairDayData_filter
     $orderBy: PairDayData_orderBy
     $orderDirection: OrderDirection
   ) {
-    pairDayDatas {
-      ...PairDayData
+    pairDayDatas(first: $first, where: $where, orderBy: $orderBy, orderDirection: $orderDirection) {
+      ...UniPairDayData
     }
   }
-  ${PairDayDataFragmentDoc}
+  ${UniPairDayDataFragmentDoc}
 `;
 export const UniV2PairDocument = gql`
   query UniV2Pair($id: ID!, $block: Block_height) {
@@ -2432,12 +2433,12 @@ export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
 const defaultWrapper: SdkFunctionWrapper = (sdkFunction) => sdkFunction();
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    PairDayDatas(
-      variables?: PairDayDatasQueryVariables,
+    UniPairDayDatas(
+      variables?: UniPairDayDatasQueryVariables,
       requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<PairDayDatasQuery> {
+    ): Promise<UniPairDayDatasQuery> {
       return withWrapper(() =>
-        client.request<PairDayDatasQuery>(print(PairDayDatasDocument), variables, requestHeaders),
+        client.request<UniPairDayDatasQuery>(print(UniPairDayDatasDocument), variables, requestHeaders),
       );
     },
     UniV2Pair(
@@ -2449,22 +2450,25 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
   };
 }
 export type Sdk = ReturnType<typeof getSdk>;
-export type PairDayDataFragment = { __typename?: 'PairDayData' } & Pick<PairDayData, 'reserveUSD' | 'dailyVolumeUSD'>;
+export type UniPairDayDataFragment = { __typename?: 'PairDayData' } & Pick<
+  PairDayData,
+  'reserveUSD' | 'dailyVolumeUSD' | 'date'
+>;
 
 export type UniV2PairFragment = { __typename?: 'Pair' } & Pick<Pair, 'id' | 'reserve0' | 'reserve1' | 'totalSupply'> & {
     token0: { __typename?: 'Token' } & Pick<Token, 'id' | 'symbol' | 'name' | 'decimals'>;
     token1: { __typename?: 'Token' } & Pick<Token, 'id' | 'symbol' | 'name' | 'decimals'>;
   };
 
-export type PairDayDatasQueryVariables = Exact<{
+export type UniPairDayDatasQueryVariables = Exact<{
   first?: Maybe<Scalars['Int']>;
   where?: Maybe<PairDayData_Filter>;
   orderBy?: Maybe<PairDayData_OrderBy>;
   orderDirection?: Maybe<OrderDirection>;
 }>;
 
-export type PairDayDatasQuery = { __typename?: 'Query' } & {
-  pairDayDatas: Array<{ __typename?: 'PairDayData' } & PairDayDataFragment>;
+export type UniPairDayDatasQuery = { __typename?: 'Query' } & {
+  pairDayDatas: Array<{ __typename?: 'PairDayData' } & UniPairDayDataFragment>;
 };
 
 export type UniV2PairQueryVariables = Exact<{

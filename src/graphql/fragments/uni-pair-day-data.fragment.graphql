@@ -1,4 +1,5 @@
-fragment PairDayData on PairDayData {
+fragment UniPairDayData on PairDayData {
   reserveUSD
   dailyVolumeUSD
+  date
 }

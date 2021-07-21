@@ -1,0 +1,10 @@
+query SushiPairDayDatas(
+  $first: Int
+  $where: PairDayData_filter
+  $orderBy: PairDayData_orderBy
+  $orderDirection: OrderDirection
+) {
+  pairDayDatas(first: $first, where: $where, orderBy: $orderBy, orderDirection: $orderDirection) {
+    ...SushiPairDayData
+  }
+}
