@@ -77,6 +77,12 @@ export function formatBalance(value: BigNumberish, decimals = 18): number {
   return Number(ethers.utils.formatUnits(value, decimals));
 }
 
+/**
+ * Convert a cached token balance to a token balance.
+ * @param cachedTokenBalance Cached token balance.
+ * @param currency Conversion currency.
+ * @returns Converted token balance from cached balance.
+ */
 export function cachedTokenBalanceToTokenBalance(
   cachedTokenBalance: CachedTokenBalance,
   currency?: string,

@@ -26,6 +26,13 @@ sls config credentials --provider aws --key x --secret x
 
 Contact **Tritium | BadgerDAO#4816** for AWS access if required.
 
+### Environment Variables
+
+Variables are handled by a combination of dot env files, and the serverless manifest.
+An example file is available at [.env.example](./.env.example).
+
+Contact **jintao#0713** for RPC or TheGraph access if required.
+
 ### AWS Lambda Environment
 
 ```

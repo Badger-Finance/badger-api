@@ -1,9 +1,8 @@
 import { UnprocessableEntity } from '@tsed/exceptions';
-import { Contract, ethers } from 'ethers';
+import { ethers } from 'ethers';
 import fetch from 'node-fetch';
 import { Chain } from '../../chains/config/chain.config';
 import { Ethereum, ethSetts } from '../../chains/config/eth.config';
-import { crvBaseRegistryAbi } from '../../config/abi/curve-base-registry.abi';
 import { curvePoolAbi, oldCurvePoolAbi } from '../../config/abi/curve-pool.abi';
 import { crvRegistryAbi } from '../../config/abi/curve-registry.abi';
 import { cvxBoosterAbi } from '../../config/abi/cvx-booster.abi';
@@ -273,22 +272,15 @@ async function getCvxMint(chain: Chain, crvEarned: number): Promise<number> {
 }
 
 export async function getCurveTokenPrice(chain: Chain, depositToken: string): Promise<TokenPrice> {
-  const baseRegistry = new Contract(crvBaseRegistry, crvBaseRegistryAbi, chain.provider);
-  const registryAddress = await baseRegistry.get_registry();
-  const registry = new Contract(registryAddress, crvRegistryAbi, chain.provider);
   const deposit = getToken(depositToken);
   const poolBalance = await getCurvePoolBalance(chain, depositToken);
   const token = new ethers.Contract(depositToken, erc20Abi, chain.provider);
   const poolValueUsd = poolBalance.reduce((total, balance) => (total += balance.valueUsd), 0);
   const poolValueEth = poolBalance.reduce((total, balance) => (total += balance.valueEth), 0);
-  const [totalSupply, virtualPrice] = await Promise.all([
-    token.totalSupply(),
-    registry.get_virtual_price_from_lp_token(depositToken),
-  ]);
+  const totalSupply = await token.totalSupply();
   const supply = formatBalance(totalSupply, deposit.decimals);
-  const virtualScalar = formatBalance(virtualPrice);
-  const usd = (virtualScalar * poolValueUsd) / supply;
-  const eth = (virtualScalar * poolValueEth) / supply;
+  const usd = poolValueUsd / supply;
+  const eth = poolValueEth / supply;
   return {
     name: deposit.name,
     address: deposit.address,
