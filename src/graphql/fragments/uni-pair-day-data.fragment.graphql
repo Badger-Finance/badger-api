@@ -1,0 +1,5 @@
+fragment UniPairDayData on PairDayData {
+  reserveUSD
+  dailyVolumeUSD
+  date
+}

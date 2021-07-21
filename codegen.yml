@@ -41,6 +41,17 @@ generates:
     documents:
       - src/graphql/fragments/univ2-pair.fragment.graphql
       - src/graphql/queries/univ2-pair.query.graphql
+      - src/graphql/fragments/uni-pair-day-data.fragment.graphql
+      - src/graphql/queries/uni-pair-day-datas.query.graphql
+    plugins:
+      - typescript
+      - typescript-graphql-request
+      - typescript-operations
+  src/graphql/generated/sushiswap.ts:
+    schema: ${SUSHISWAP_SUBGRAPH_URL}
+    documents:
+      - src/graphql/fragments/sushi-pair-day-data.fragment.graphql
+      - src/graphql/queries/sushi-pair-day-datas.query.graphql
     plugins:
       - typescript
       - typescript-graphql-request

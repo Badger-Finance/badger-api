@@ -2,7 +2,7 @@ import { ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
-import { TOKENS } from '../config/constants';
+import { TOKENS } from '../config/tokens.config';
 import { getSdk, OrderDirection, User_OrderBy, UserQuery, UserSettBalance } from '../graphql/generated/badger';
 import { getPrice, inCurrency } from '../prices/prices.utils';
 import { getCachedSett, getSettDefinition } from '../setts/setts.utils';

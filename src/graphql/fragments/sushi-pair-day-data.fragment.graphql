@@ -1,0 +1,5 @@
+fragment SushiPairDayData on PairDayData {
+  reserveUSD
+  volumeUSD
+  date
+}

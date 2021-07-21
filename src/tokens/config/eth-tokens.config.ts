@@ -1,5 +1,5 @@
 import { ChainNetwork } from '../../chains/enums/chain-network.enum';
-import { TOKENS } from '../../config/constants';
+import { TOKENS } from '../../config/tokens.config';
 import { TokenType } from '../enums/token-type.enum';
 import { TokenConfig } from '../interfaces/token-config.interface';
 

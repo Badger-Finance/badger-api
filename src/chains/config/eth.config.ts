@@ -1,9 +1,10 @@
-import { ethers } from 'ethers';
-import { BADGER_URL, Provider, STRATEGIES, TOKENS } from '../../config/constants';
+import { BADGER_URL, STRATEGIES } from '../../config/constants';
 import { Protocol } from '../../config/enums/protocol.enum';
 import { SettState } from '../../config/enums/sett-state.enum';
 import { Stage } from '../../config/enums/stage.enum';
-import { getCurveSettTokenBalance } from '../../indexer/strategies/convex.strategy';
+import rpc from '../../config/rpc.config';
+import { TOKENS } from '../../config/tokens.config';
+import { getCurveSettTokenBalance } from '../../protocols/strategies/convex.strategy';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { ethTokensConfig } from '../../tokens/config/eth-tokens.config';
 import { getZsDiggTokenBalance } from '../../tokens/custom/zs-digg-balance';
@@ -20,12 +21,12 @@ export class Ethereum extends Chain {
       ChainNetwork.Ethereum,
       ethTokensConfig,
       ethSetts,
-      new ethers.providers.JsonRpcProvider(Provider.Alchemy),
+      rpc[ChainNetwork.Ethereum],
       new EthStrategy(),
       BADGER_URL,
       2425847,
     );
-    Chain.register(ChainNetwork.Ethereum, this);
+    Chain.register(this.network, this);
   }
 }
 

@@ -9,22 +9,26 @@ import { crvRegistryAbi } from '../../config/abi/curve-registry.abi';
 import { cvxBoosterAbi } from '../../config/abi/cvx-booster.abi';
 import { cvxRewardsAbi } from '../../config/abi/cvx-rewards.abi';
 import { erc20Abi } from '../../config/abi/erc20.abi';
-import { CURVE_API_URL, CURVE_CRYPTO_API_URL, ONE_YEAR_SECONDS, TOKENS } from '../../config/constants';
+import { CURVE_API_URL, CURVE_CRYPTO_API_URL, ONE_YEAR_SECONDS } from '../../config/constants';
+import { TOKENS } from '../../config/tokens.config';
+import {
+  tokenBalancesToCachedLiquidityPoolTokenBalance,
+  valueSourceToCachedValueSource,
+} from '../../indexer/indexer.utils';
 import { getPrice } from '../../prices/prices.utils';
-import { SourceType } from '../../protocols/enums/source-type.enum';
-import { CachedValueSource } from '../../protocols/interfaces/cached-value-source.interface';
-import { CvxPoolInfo } from '../../protocols/interfaces/cvx-pool-info.interface';
-import { Performance, uniformPerformance } from '../../protocols/interfaces/performance.interface';
-import { PoolMap } from '../../protocols/interfaces/pool-map.interface';
-import { createValueSource } from '../../protocols/interfaces/value-source.interface';
-import { tokenEmission } from '../../protocols/protocols.utils';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { getCachedSett, VAULT_SOURCE } from '../../setts/setts.utils';
 import { CachedLiquidityPoolTokenBalance } from '../../tokens/interfaces/cached-liquidity-pool-token-balance.interface';
 import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
 import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
 import { formatBalance, getToken, toCachedBalance } from '../../tokens/tokens.utils';
-import { tokenBalancesToCachedLiquidityPoolTokenBalance, valueSourceToCachedValueSource } from '../indexer.utils';
+import { SourceType } from '../enums/source-type.enum';
+import { CachedValueSource } from '../interfaces/cached-value-source.interface';
+import { CvxPoolInfo } from '../interfaces/cvx-pool-info.interface';
+import { Performance, uniformPerformance } from '../interfaces/performance.interface';
+import { PoolMap } from '../interfaces/pool-map.interface';
+import { createValueSource } from '../interfaces/value-source.interface';
+import { tokenEmission } from '../protocols.utils';
 
 /* Strategy Definitions */
 export const cvxRewards = '0xCF50b810E57Ac33B91dCF525C6ddd9881B139332';
@@ -59,17 +63,16 @@ const cvxPoolId: PoolMap = {
 
 const discontinuedRewards = ['0x330416C863f2acCE7aF9C9314B422d24c672534a'].map((addr) => ethers.utils.getAddress(addr));
 
-export async function getConvexApySnapshots(
-  chain: Chain,
-  settDefinition: SettDefinition,
-): Promise<CachedValueSource[]> {
-  switch (settDefinition.settToken) {
-    case TOKENS.BCVX:
-      return getCvxRewards(chain, settDefinition);
-    case TOKENS.BCVXCRV:
-      return getCvxCrvRewards(chain, settDefinition);
-    default:
-      return getVaultSources(chain, settDefinition);
+export class ConvexStrategy {
+  static async getValueSources(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
+    switch (settDefinition.settToken) {
+      case TOKENS.BCVX:
+        return getCvxRewards(chain, settDefinition);
+      case TOKENS.BCVXCRV:
+        return getCvxCrvRewards(chain, settDefinition);
+      default:
+        return getVaultSources(chain, settDefinition);
+    }
   }
 }
 
@@ -307,7 +310,7 @@ export async function getCurvePoolBalance(chain: Chain, depositToken: string): P
     try {
       const tokenAddress = await pool.coins(coin);
       const token = getToken(ethers.utils.getAddress(tokenAddress));
-      const balance = (await pool.balances(coin)) / Math.pow(10, token.decimals);
+      const balance = formatBalance(await pool.balances(coin), token.decimals);
       cachedBalances.push(await toCachedBalance(token, balance));
       coin++;
     } catch (err) {

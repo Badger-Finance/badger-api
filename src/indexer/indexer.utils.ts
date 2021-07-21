@@ -4,16 +4,17 @@ import { ethers } from 'ethers';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
 import { settAbi } from '../config/abi/sett.abi';
-import { PANCAKESWAP_URL, SUSHISWAP_URL } from '../config/constants';
 import { Protocol } from '../config/enums/protocol.enum';
 import { getPrice } from '../prices/prices.utils';
-import { getSwapValueSource } from '../protocols/common/performance.utils';
 import { SourceType } from '../protocols/enums/source-type.enum';
 import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
 import { ValueSource } from '../protocols/interfaces/value-source.interface';
-import { PancakeSwapService } from '../protocols/pancake/pancakeswap.service';
 import { getVaultCachedValueSources } from '../protocols/protocols.utils';
-import { SushiswapService } from '../protocols/sushi/sushiswap.service';
+import { ConvexStrategy, getCurvePerformance } from '../protocols/strategies/convex.strategy';
+import { PancakeswapStrategy } from '../protocols/strategies/pancakeswap.strategy';
+import { QuickswapStrategy } from '../protocols/strategies/quickswap.strategy';
+import { SushiswapStrategy } from '../protocols/strategies/sushiswap.strategy';
+import { UniswapStrategy } from '../protocols/strategies/uniswap.strategy';
 import { RewardsService } from '../rewards/rewards.service';
 import { CachedSettSnapshot } from '../setts/interfaces/cached-sett-snapshot.interface';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
@@ -23,7 +24,6 @@ import { getSett } from '../setts/setts.utils';
 import { CachedLiquidityPoolTokenBalance } from '../tokens/interfaces/cached-liquidity-pool-token-balance.interface';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
 import { formatBalance, getToken } from '../tokens/tokens.utils';
-import { getConvexApySnapshots, getCurvePerformance } from './strategies/convex.strategy';
 
 export const settToCachedSnapshot = async (
   chain: Chain,
@@ -112,7 +112,12 @@ const getPricePerShare = async (
   }
 };
 
-export const getIndexedBlock = async (settDefinition: SettDefinition, startBlock: number): Promise<number> => {
+export const getIndexedBlock = async (
+  settDefinition: SettDefinition,
+  startBlock: number,
+  alignment: number,
+): Promise<number> => {
+  const alignedStartBlock = startBlock - (startBlock % alignment);
   try {
     const mapper = getDataMapper();
     const settToken = getToken(settDefinition.settToken);
@@ -123,9 +128,9 @@ export const getIndexedBlock = async (settDefinition: SettDefinition, startBlock
     )) {
       return snapshot.height;
     }
-    return startBlock;
+    return alignedStartBlock;
   } catch (err) {
-    return startBlock;
+    return alignedStartBlock;
   }
 };
 
@@ -189,12 +194,15 @@ export async function getProtocolValueSources(
       case Protocol.Curve:
         return Promise.all([getCurvePerformance(settDefinition)]);
       case Protocol.Pancakeswap:
-        return getPancakeswapApySnapshots(chain, settDefinition);
+        return PancakeswapStrategy.getValueSources(chain, settDefinition);
       case Protocol.Sushiswap:
-        return getSushiswapApySnapshots(chain, settDefinition);
+        return SushiswapStrategy.getValueSources(chain, settDefinition);
       case Protocol.Convex:
-        return getConvexApySnapshots(chain, settDefinition);
+        return ConvexStrategy.getValueSources(chain, settDefinition);
       case Protocol.Uniswap:
+        return UniswapStrategy.getValueSources(settDefinition);
+      case Protocol.Quickswap:
+        return QuickswapStrategy.getValueSources(settDefinition);
       default: {
         return [];
       }
@@ -214,51 +222,6 @@ export async function getEmissionApySnapshots(
   return emissions.map((source) =>
     valueSourceToCachedValueSource(source, settDefinition, source.name.replace(' ', '_').toLowerCase()),
   );
-}
-
-export async function getPancakeswapApySnapshots(
-  chain: Chain,
-  settDefinition: SettDefinition,
-): Promise<CachedValueSource[]> {
-  const { depositToken } = settDefinition;
-  return [
-    valueSourceToCachedValueSource(
-      await getSwapValueSource(PANCAKESWAP_URL, 'Pancakeswap', depositToken),
-      settDefinition,
-      SourceType.TradeFee,
-    ),
-    valueSourceToCachedValueSource(
-      await getPancakeswapPoolApr(chain, depositToken),
-      settDefinition,
-      SourceType.Compound,
-    ),
-  ];
-}
-
-export async function getSushiswapApySnapshots(
-  chain: Chain,
-  settDefinition: SettDefinition,
-): Promise<CachedValueSource[]> {
-  return [
-    valueSourceToCachedValueSource(
-      await getSwapValueSource(SUSHISWAP_URL, 'Sushiswap', settDefinition.depositToken),
-      settDefinition,
-      SourceType.TradeFee,
-    ),
-    valueSourceToCachedValueSource(
-      await getSushiwapPoolApr(chain, settDefinition),
-      settDefinition,
-      SourceType.Emission,
-    ),
-  ];
-}
-
-export async function getPancakeswapPoolApr(chain: Chain, depositToken: string): Promise<ValueSource> {
-  return PancakeSwapService.getEmissionSource(chain, PancakeSwapService.getPoolId(depositToken));
-}
-
-export async function getSushiwapPoolApr(chain: Chain, settDefinition: SettDefinition): Promise<ValueSource> {
-  return SushiswapService.getEmissionSource(chain, settDefinition, await SushiswapService.getMasterChef());
 }
 
 export async function getSettValueSources(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {

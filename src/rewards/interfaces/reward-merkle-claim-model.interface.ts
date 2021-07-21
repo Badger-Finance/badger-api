@@ -1,6 +1,6 @@
 import { Description, Example, Property, Title } from '@tsed/schema';
 import { ethers } from 'ethers';
-import { TOKENS } from '../../config/constants';
+import { TOKENS } from '../../config/tokens.config';
 import { RewardMerkleClaim } from './reward-merkle-claim.interface';
 
 export class RewardMerkleClaimModel implements RewardMerkleClaim {
