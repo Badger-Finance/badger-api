@@ -1,10 +1,27 @@
 import { NotFound } from '@tsed/exceptions';
 import { Ethereum } from '../chains/config/eth.config';
+import { Protocol } from '../config/enums/protocol.enum';
 import { TOKENS } from '../config/tokens.config';
+import { tokenBalancesToCachedLiquidityPoolTokenBalance } from '../indexer/indexer.utils';
+import * as priceUtils from '../prices/prices.utils';
 import * as swapUtils from '../protocols/common/swap.utils';
 import { getSettDefinition } from '../setts/setts.utils';
+import { setupMapper } from '../test/tests.utils';
 import { ethTokensConfig } from './config/eth-tokens.config';
-import { formatBalance, getSettUnderlyingTokens, getToken, getTokenByName } from './tokens.utils';
+import { CachedTokenBalance } from './interfaces/cached-token-balance.interface';
+import { TokenBalance } from './interfaces/token-balance.interface';
+import { TokenPriceSnapshot } from './interfaces/token-price-snapshot.interface';
+import {
+  cachedTokenBalanceToTokenBalance,
+  formatBalance,
+  getCachedTokenBalances,
+  getSettUnderlyingTokens,
+  getToken,
+  getTokenByName,
+  mockBalance,
+  toBalance,
+  toCachedBalance,
+} from './tokens.utils';
 
 describe('token.utils', () => {
   const rook = '0xfA5047c9c78B8877af97BDcb85Db743fD7313d4a';
@@ -96,6 +113,266 @@ describe('token.utils', () => {
         ['00000000000000000000', 21, 0],
       ])('Evaluates %s with %i decimals as %f', (input, decimals, result) => {
         expect(result).toEqual(formatBalance(input, decimals));
+      });
+    });
+  });
+
+  describe('cachedTokenBalanceToTokenBalance', () => {
+    describe('no requested currency', () => {
+      it('converts to a usd based token balance', () => {
+        const valueEth = 1;
+        const valueUsd = 2000;
+        const badger = getToken(TOKENS.BADGER);
+        const base = {
+          name: badger.name,
+          address: badger.address,
+          symbol: badger.symbol,
+          decimals: badger.decimals,
+        };
+        const expected: TokenBalance = {
+          ...base,
+          balance: 1,
+          value: valueUsd,
+        };
+        const balance: CachedTokenBalance = {
+          ...base,
+          balance: 1,
+          valueUsd,
+          valueEth,
+        };
+        const actual = cachedTokenBalanceToTokenBalance(balance);
+        expect(actual).toMatchObject(expected);
+      });
+    });
+
+    describe('with a requested currency', () => {
+      it.each(['eth', 'usd'])('converts to an %s based token balance', (currency) => {
+        const valueEth = 1;
+        const valueUsd = 2000;
+        const badger = getToken(TOKENS.BADGER);
+        const base = {
+          name: badger.name,
+          address: badger.address,
+          symbol: badger.symbol,
+          decimals: badger.decimals,
+        };
+        const expected: TokenBalance = {
+          ...base,
+          balance: 1,
+          value: currency === 'eth' ? valueEth : valueUsd,
+        };
+        const balance: CachedTokenBalance = {
+          ...base,
+          balance: 1,
+          valueUsd,
+          valueEth,
+        };
+        const actual = cachedTokenBalanceToTokenBalance(balance, currency);
+        expect(actual).toMatchObject(expected);
+      });
+    });
+  });
+
+  describe('toBalance', () => {
+    describe('no requested currency', () => {
+      it('converts to a usd based token balance', async () => {
+        const badger = getToken(TOKENS.BADGER);
+        const price = {
+          name: badger.name,
+          address: badger.name,
+          usd: 8,
+          eth: 8 / 1800,
+          updatedAt: Date.now(),
+        };
+        jest.spyOn(priceUtils, 'getPrice').mockImplementationOnce(async (_contract) => price);
+        const actual = await toBalance(badger, 10);
+        const expected = {
+          name: badger.name,
+          address: badger.address,
+          symbol: badger.symbol,
+          decimals: badger.decimals,
+          balance: 10,
+          value: 80,
+        };
+        expect(actual).toEqual(expected);
+      });
+    });
+
+    describe('with a requested currency', () => {
+      it.each(['eth', 'usd'])('converts to an %s based token balance', async (currency) => {
+        const badger = getToken(TOKENS.BADGER);
+        const price = {
+          name: badger.name,
+          address: badger.name,
+          usd: 8,
+          eth: 8 / 1800,
+          updatedAt: Date.now(),
+        };
+        jest.spyOn(priceUtils, 'getPrice').mockImplementationOnce(async (_contract) => price);
+        const actual = await toBalance(badger, 10, currency);
+        const expected = {
+          name: badger.name,
+          address: badger.address,
+          symbol: badger.symbol,
+          decimals: badger.decimals,
+          balance: 10,
+          value: currency === 'eth' ? 80 / 1800 : 80,
+        };
+        expect(actual).toEqual(expected);
+      });
+    });
+  });
+
+  describe('toCachedBalance', () => {
+    it('converts token and balance to a cached balance', async () => {
+      const badger = getToken(TOKENS.BADGER);
+      const price = {
+        name: badger.name,
+        address: badger.name,
+        usd: 8,
+        eth: 8 / 1800,
+        updatedAt: Date.now(),
+      };
+      jest.spyOn(priceUtils, 'getPrice').mockImplementationOnce(async (_contract) => price);
+      const actual = await toCachedBalance(badger, 10);
+      const expected = {
+        name: badger.name,
+        address: badger.address,
+        symbol: badger.symbol,
+        decimals: badger.decimals,
+        balance: 10,
+        valueUsd: 80,
+        valueEth: 80 / 1800,
+      };
+      expect(actual).toEqual(expected);
+    });
+  });
+
+  describe('mockBalance', () => {
+    describe('no requested currency', () => {
+      it('converts to a usd based token balance', () => {
+        const badger = getToken(TOKENS.BADGER);
+        const mockPrice = parseInt(badger.address.slice(0, 4), 16);
+        const actual = mockBalance(badger, 1);
+        const expected = {
+          name: badger.name,
+          address: badger.address,
+          symbol: badger.symbol,
+          decimals: badger.decimals,
+          balance: 1,
+          value: mockPrice,
+        };
+        expect(actual).toEqual(expected);
+      });
+    });
+
+    describe('with a requested currency', () => {
+      it.each(['eth', 'usd'])('converts to an %s based token balance', (currency) => {
+        const badger = getToken(TOKENS.BADGER);
+        const mockPrice = parseInt(badger.address.slice(0, 4), 16);
+        const actual = mockBalance(badger, 1, currency);
+        const expected = {
+          name: badger.name,
+          address: badger.address,
+          symbol: badger.symbol,
+          decimals: badger.decimals,
+          balance: 1,
+          value: mockPrice,
+        };
+        expect(actual).toEqual(expected);
+      });
+    });
+  });
+
+  describe('toCachedBalance', () => {
+    it('converts token and balance to a cached balance', async () => {
+      const badger = getToken(TOKENS.BADGER);
+      const price = {
+        name: badger.name,
+        address: badger.name,
+        usd: 8,
+        eth: 8 / 1800,
+        updatedAt: Date.now(),
+      };
+      jest.spyOn(priceUtils, 'getPrice').mockImplementationOnce(async (_contract) => price);
+      const actual = await toCachedBalance(badger, 10);
+      const expected = {
+        name: badger.name,
+        address: badger.address,
+        symbol: badger.symbol,
+        decimals: badger.decimals,
+        balance: 10,
+        valueUsd: 80,
+        valueEth: 80 / 1800,
+      };
+      expect(actual).toEqual(expected);
+    });
+  });
+
+  describe('getCachedTokenBalances', () => {
+    describe('no saved balances', () => {
+      it('returns undefined', async () => {
+        setupMapper([]);
+        const result = await getCachedTokenBalances(TOKENS.SUSHI_WBTC_WETH, Protocol.Sushiswap);
+        expect(result).toBeFalsy();
+      });
+    });
+
+    describe('saved balances', () => {
+      describe('no requested currency', () => {
+        it('converts to a usd based token balance', async () => {
+          const wbtc = getToken(TOKENS.WBTC);
+          const weth = getToken(TOKENS.WETH);
+          jest.spyOn(priceUtils, 'getPrice').mockImplementation(async (contract): Promise<TokenPriceSnapshot> => {
+            const token = getToken(contract);
+            const price = parseInt(token.address.slice(0, 4), 16);
+            return {
+              name: token.name,
+              address: token.address,
+              usd: price,
+              eth: price,
+              updatedAt: Date.now(),
+            };
+          });
+          const balances = await Promise.all([toCachedBalance(wbtc, 1), toCachedBalance(weth, 20)]);
+          const cached = tokenBalancesToCachedLiquidityPoolTokenBalance(
+            TOKENS.SUSHI_ETH_WBTC,
+            Protocol.Sushiswap,
+            balances,
+          );
+          setupMapper([cached]);
+          const expected = await Promise.all([toBalance(wbtc, 1), toBalance(weth, 20)]);
+          const actual = await getCachedTokenBalances(TOKENS.SUSHI_ETH_WBTC, Protocol.Sushiswap);
+          expect(actual).toMatchObject(expected);
+        });
+      });
+
+      describe('with a requested currency', () => {
+        it.each(['eth', 'usd'])('converts to an %s based token balance', async (currency) => {
+          const wbtc = getToken(TOKENS.WBTC);
+          const weth = getToken(TOKENS.WETH);
+          jest.spyOn(priceUtils, 'getPrice').mockImplementation(async (contract): Promise<TokenPriceSnapshot> => {
+            const token = getToken(contract);
+            const price = parseInt(token.address.slice(0, 4), 16);
+            return {
+              name: token.name,
+              address: token.address,
+              usd: price,
+              eth: price,
+              updatedAt: Date.now(),
+            };
+          });
+          const balances = await Promise.all([toCachedBalance(wbtc, 1), toCachedBalance(weth, 20)]);
+          const cached = tokenBalancesToCachedLiquidityPoolTokenBalance(
+            TOKENS.SUSHI_ETH_WBTC,
+            Protocol.Sushiswap,
+            balances,
+          );
+          setupMapper([cached]);
+          const expected = await Promise.all([toBalance(wbtc, 1, currency), toBalance(weth, 20, currency)]);
+          const actual = await getCachedTokenBalances(TOKENS.SUSHI_ETH_WBTC, Protocol.Sushiswap, currency);
+          expect(actual).toMatchObject(expected);
+        });
       });
     });
   });

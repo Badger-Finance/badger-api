@@ -8,6 +8,7 @@ import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { bscTokensConfig } from './config/bsc-tokens.config';
 import { ethTokensConfig } from './config/eth-tokens.config';
 import { maticTokensConfig } from './config/matic-tokens.config';
+import { xDaiTokensConfig } from './config/xdai-tokens.config';
 import { CachedLiquidityPoolTokenBalance } from './interfaces/cached-liquidity-pool-token-balance.interface';
 import { CachedTokenBalance } from './interfaces/cached-token-balance.interface';
 import { Token } from './interfaces/token.interface';
@@ -16,7 +17,12 @@ import { TokenConfig } from './interfaces/token-config.interface';
 import { TokenPrice } from './interfaces/token-price.interface';
 
 // map holding all protocol token information across chains
-export const protocolTokens: TokenConfig = { ...ethTokensConfig, ...bscTokensConfig, ...maticTokensConfig };
+export const protocolTokens: TokenConfig = {
+  ...ethTokensConfig,
+  ...bscTokensConfig,
+  ...maticTokensConfig,
+  ...xDaiTokensConfig,
+};
 
 /**
  * Get token information from address.
@@ -77,6 +83,12 @@ export function formatBalance(value: BigNumberish, decimals = 18): number {
   return Number(ethers.utils.formatUnits(value, decimals));
 }
 
+/**
+ * Convert a cached token balance to a token balance.
+ * @param cachedTokenBalance Cached token balance.
+ * @param currency Conversion currency.
+ * @returns Converted token balance from cached balance.
+ */
 export function cachedTokenBalanceToTokenBalance(
   cachedTokenBalance: CachedTokenBalance,
   currency?: string,

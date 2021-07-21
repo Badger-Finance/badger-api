@@ -1,13 +1,8 @@
 import { NotFound } from '@tsed/exceptions';
-import { loadChains } from '../chains/chain';
 import { BinanceSmartChain } from '../chains/config/bsc.config';
 import { Ethereum } from '../chains/config/eth.config';
-import { ONE_DAY_MS, SAMPLE_DAYS } from '../config/constants';
-import { randomValue, setupMapper } from '../test/tests.utils';
+import { randomPerformance, randomSett, randomSnapshot, randomSnapshots, setupMapper } from '../test/tests.utils';
 import { getToken } from '../tokens/tokens.utils';
-import { CachedSettSnapshot } from './interfaces/cached-sett-snapshot.interface';
-import { SettDefinition } from './interfaces/sett-definition.interface';
-import { SettSnapshot } from './interfaces/sett-snapshot.interface';
 import {
   defaultSett,
   getCachedSett,
@@ -18,49 +13,6 @@ import {
 } from './setts.utils';
 
 describe('setts.utils', () => {
-  const randomSett = (): SettDefinition => {
-    const definitions = loadChains().flatMap((chain) => chain.setts);
-    return definitions[Math.floor(Math.random() * definitions.length)];
-  };
-
-  const randomSnapshot = (settDefinition?: SettDefinition): CachedSettSnapshot => {
-    const sett = settDefinition || randomSett();
-    return Object.assign(new CachedSettSnapshot(), {
-      address: sett.settToken,
-      balance: randomValue(),
-      ratio: 1,
-      settValue: randomValue(),
-      supply: randomValue(),
-      updatedAt: Date.now(),
-    });
-  };
-
-  const randomSnapshots = (settDefinition?: SettDefinition, count?: number): SettSnapshot[] => {
-    const snapshots: SettSnapshot[] = [];
-    const snapshotCount = count || SAMPLE_DAYS;
-    const sett = settDefinition || randomSett();
-    for (let i = 0; i < snapshotCount; i++) {
-      snapshots.push(
-        Object.assign(new SettSnapshot(), {
-          asset: sett.name,
-          height: 0,
-          timestamp: Date.now(),
-          balance: randomValue(),
-          supply: randomValue(),
-          ratio: 1,
-          value: randomValue(),
-        }),
-      );
-    }
-    return snapshots;
-  };
-
-  const randomPerformance = (): [SettSnapshot, SettSnapshot] => {
-    const [current, initial] = randomSnapshots(randomSett(), 2);
-    initial.timestamp = current.timestamp - ONE_DAY_MS;
-    return [current, initial];
-  };
-
   describe('defaultSett', () => {
     it('returns a sett default fields', () => {
       const settDefinition = randomSett();

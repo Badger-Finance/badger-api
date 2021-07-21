@@ -1,13 +1,12 @@
 import { Service } from '@tsed/common';
 import { NotFound } from '@tsed/exceptions';
-import { BigNumber, ethers } from 'ethers';
+import { ethers } from 'ethers';
 import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
 import { ChainNetwork } from '../chains/enums/chain-network.enum';
-import { diggAbi } from '../config/abi/digg.abi';
-import { rewardsLoggerAbi, rewardsLoggerAddress } from '../config/abi/rewards-logger.abi';
-import { BOUNCER_PROOFS, ONE_YEAR_SECONDS, REWARD_DATA } from '../config/constants';
+import { BOUNCER_PROOFS, ONE_YEAR_SECONDS, REWARD_DATA, REWARDS_LOGGER } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
+import { Digg__factory, RewardsLogger__factory } from '../contracts';
 import { getPrice } from '../prices/prices.utils';
 import { uniformPerformance } from '../protocols/interfaces/performance.interface';
 import { createValueSource, ValueSource } from '../protocols/interfaces/value-source.interface';
@@ -20,7 +19,6 @@ import { BoostMultipliers } from './interfaces/boost-multipliers.interface';
 import { Eligibility } from './interfaces/eligibility.interface';
 import { AirdropMerkleClaim, AirdropMerkleDistribution } from './interfaces/merkle-distributor.interface';
 import { RewardMerkleClaim } from './interfaces/reward-merkle-claim.interface';
-import { UnlockSchedule } from './interfaces/unlock-schedule.interface';
 import { getTreeDistribution } from './rewards.utils';
 
 @Service()
@@ -136,15 +134,18 @@ export class RewardsService {
     const sett = await getCachedSett(settDefinition);
     const boostFile = await getObject(REWARD_DATA, 'badger-boosts.json');
     const boostData: BoostData = JSON.parse(boostFile.toString('utf-8'));
-    const boostRange = boostData.multiplierData[sett.vaultToken];
+    let boostRange = { min: 1, max: 1 };
+    if (boostData.multiplierData) {
+      boostRange = boostData.multiplierData[sett.vaultToken];
+    }
 
     // create relevant contracts
-    const rewardsLogger = new ethers.Contract(rewardsLoggerAddress, rewardsLoggerAbi, chain.provider);
-    const diggContract = new ethers.Contract(TOKENS.DIGG, diggAbi, chain.provider);
-    const sharesPerFragment: BigNumber = await diggContract._sharesPerFragment();
+    const rewardsLogger = RewardsLogger__factory.connect(REWARDS_LOGGER, chain.provider);
+    const diggContract = Digg__factory.connect(TOKENS.DIGG, chain.provider);
+    const sharesPerFragment = await diggContract._sharesPerFragment();
 
     // filter active unlock schedules
-    const unlockSchedules: UnlockSchedule[] = await rewardsLogger.getAllUnlockSchedulesFor(settToken);
+    const unlockSchedules = await rewardsLogger.getAllUnlockSchedulesFor(settToken);
 
     if (unlockSchedules.length === 0) {
       return [];

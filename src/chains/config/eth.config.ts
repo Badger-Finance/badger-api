@@ -195,4 +195,21 @@ export const ethSetts: SettDefinition[] = [
     settToken: TOKENS.BCVX,
     protocol: Protocol.Convex,
   },
+  {
+    name: 'renBTC',
+    createdBlock: 12870265,
+    depositToken: TOKENS.RENBTC,
+    experimental: true,
+    settToken: TOKENS.BRENBTC,
+    stage: Stage.Staging,
+    state: SettState.Experimental,
+  },
+  {
+    name: 'Convex Tricrypto2',
+    createdBlock: 12966048,
+    depositToken: TOKENS.CRV_TRICRYPTO2,
+    getTokenBalance: getCurveSettTokenBalance,
+    settToken: TOKENS.BCRV_TRICRYPTO2,
+    protocol: Protocol.Convex,
+  },
 ];

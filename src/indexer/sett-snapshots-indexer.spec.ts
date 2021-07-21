@@ -1,7 +1,5 @@
 import { DataMapper, PutParameters, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
-import { bscSetts } from '../chains/config/bsc.config';
-import { ethSetts } from '../chains/config/eth.config';
-import { maticSetts } from '../chains/config/matic.config';
+import { loadChains } from '../chains/chain';
 import { BscStrategy } from '../chains/strategies/bsc.strategy';
 import { EthStrategy } from '../chains/strategies/eth.strategy';
 import { SettQuery } from '../graphql/generated/badger';
@@ -11,7 +9,8 @@ import * as settUtils from '../setts/setts.utils';
 import { refreshSettSnapshots } from './sett-snapshots-indexer';
 
 describe('refreshSettSnapshots', () => {
-  const supportedAddresses = [...bscSetts, ...ethSetts, ...maticSetts]
+  const supportedAddresses = loadChains()
+    .flatMap((s) => s.setts)
     .map((settDefinition) => settDefinition.settToken)
     .sort();
 
@@ -49,7 +48,7 @@ describe('refreshSettSnapshots', () => {
     await refreshSettSnapshots();
   });
 
-  it('fetches Setts for ETH and BSC tokens', async () => {
+  it('fetches Setts for all chains', async () => {
     const requestedAddresses = getSettMock.mock.calls.map((calls) => calls[1]);
     expect(requestedAddresses.sort()).toEqual(supportedAddresses);
   });
