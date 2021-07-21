@@ -31,6 +31,14 @@ Contact **Tritium | BadgerDAO#4816** for AWS access if required.
 Variables are handled by a combination of dot env files, and the serverless manifest.
 An example file is available at [.env.example](./.env.example).
 
+Before running the API, make sure to create a local `.env` file:
+
+```
+cp .env.example .env
+```
+
+Update the RPC values and Graph API key with data from the DevOps team or your own endpoints.
+
 Contact **jintao#0713** for RPC or TheGraph access if required.
 
 ### AWS Lambda Environment
