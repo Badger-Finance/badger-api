@@ -27,10 +27,16 @@ export async function refreshTokenBalances() {
       try {
         if (depositToken.lpToken) {
           const cachedLiquidityPoolTokenBalance = await getLpTokenBalances(chain, settDefinition);
+          if (cachedLiquidityPoolTokenBalance.tokenBalances.length === 0) {
+            continue;
+          }
           await saveCachedTokenBalance(mapper, cachedLiquidityPoolTokenBalance);
         }
         if (settDefinition.getTokenBalance) {
           const cachedTokenBalance = await settDefinition.getTokenBalance(settDefinition.settToken);
+          if (cachedTokenBalance.tokenBalances.length === 0) {
+            continue;
+          }
           await saveCachedTokenBalance(mapper, cachedTokenBalance);
         }
       } catch (err) {
