@@ -34,6 +34,7 @@ export const ACCOUNT_DATA = process.env.ACCOUNT_DATA || 'MISSING REQUIRED ENV VA
 export const UNISWAP_URL = process.env.UNISWAP || 'MISSING REQUIRED ENV VAR';
 export const SUSHISWAP_URL = process.env.SUSHISWAP || 'MISSING REQUIRED ENV VAR';
 export const PANCAKESWAP_URL = process.env.PANCAKESWAP || 'MISSING REQUIRED ENV VAR';
+export const QUICKSWAP_URL = process.env.QUICKSWAP || 'MISSING REQUIRED ENV VAR';
 export const BADGER_URL = process.env.BADGER || 'MISSING REQUIRED ENV VAR';
 export const BADGER_BSC_URL = process.env.BADGER_BSC || 'MISSING REQUIRED ENV VAR';
 export const BADGER_MATIC_URL = process.env.BADGER_MATIC || 'MISSING REQUIRED ENV VAR';

@@ -1,4 +1,5 @@
 import { BADGER_MATIC_URL } from '../../config/constants';
+import { Protocol } from '../../config/enums/protocol.enum';
 import { Stage } from '../../config/enums/stage.enum';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
@@ -33,6 +34,7 @@ export const maticSetts: SettDefinition[] = [
     depositToken: TOKENS.QUICK_WBTC_USDC,
     createdBlock: 17034232,
     experimental: true,
+    protocol: Protocol.Quickswap,
     stage: Stage.Staging,
   },
 ];

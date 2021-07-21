@@ -1,8 +1,8 @@
 import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
-import { getCurveTokenPrice } from '../../indexer/strategies/convex.strategy';
 import { getContractPrice, getTokenPrice, getVaultTokenPrice, ibBTCPrice } from '../../prices/prices.utils';
 import { getSushiswapPrice, getUniswapPrice, resolveTokenPrice } from '../../protocols/common/swap.utils';
+import { getCurveTokenPrice } from '../../protocols/strategies/convex.strategy';
 import { ethTokensConfig } from '../../tokens/config/eth-tokens.config';
 import { TokenType } from '../../tokens/enums/token-type.enum';
 import { TokenPrice } from '../../tokens/interfaces/token-price.interface';

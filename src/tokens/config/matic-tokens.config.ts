@@ -6,7 +6,7 @@ import { TokenConfig } from '../interfaces/token-config.interface';
 export const maticTokensConfig: TokenConfig = {
   [TOKENS.MATIC_WBTC]: {
     address: TOKENS.MATIC_WBTC,
-    decimals: 18,
+    decimals: 8,
     lookupName: 'wrapped-bitcoin',
     name: 'Wrapped Bitcoin',
     symbol: 'WBTC',
