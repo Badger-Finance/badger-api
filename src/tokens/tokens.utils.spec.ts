@@ -347,33 +347,33 @@ describe('token.utils', () => {
         });
       });
 
-        describe('with a requested currency', () => {
-          it.each(['eth', 'usd'])('converts to an %s based token balance', async (currency) => {
-            const wbtc = getToken(TOKENS.WBTC);
-            const weth = getToken(TOKENS.WETH);
-            jest.spyOn(priceUtils, 'getPrice').mockImplementation(async (contract): Promise<TokenPriceSnapshot> => {
-              const token = getToken(contract);
-              const price = parseInt(token.address.slice(0, 4), 16);
-              return {
-                name: token.name,
-                address: token.address,
-                usd: price,
-                eth: price,
-                updatedAt: Date.now(),
-              };
-            });
-            const balances = await Promise.all([toCachedBalance(wbtc, 1), toCachedBalance(weth, 20)]);
-            const cached = tokenBalancesToCachedLiquidityPoolTokenBalance(
-              TOKENS.SUSHI_ETH_WBTC,
-              Protocol.Sushiswap,
-              balances,
-            );
-            setupMapper([cached]);
-            const expected = await Promise.all([toBalance(wbtc, 1, currency), toBalance(weth, 20, currency)]);
-            const actual = await getCachedTokenBalances(TOKENS.SUSHI_ETH_WBTC, Protocol.Sushiswap, currency);
-            expect(actual).toMatchObject(expected);
+      describe('with a requested currency', () => {
+        it.each(['eth', 'usd'])('converts to an %s based token balance', async (currency) => {
+          const wbtc = getToken(TOKENS.WBTC);
+          const weth = getToken(TOKENS.WETH);
+          jest.spyOn(priceUtils, 'getPrice').mockImplementation(async (contract): Promise<TokenPriceSnapshot> => {
+            const token = getToken(contract);
+            const price = parseInt(token.address.slice(0, 4), 16);
+            return {
+              name: token.name,
+              address: token.address,
+              usd: price,
+              eth: price,
+              updatedAt: Date.now(),
+            };
           });
+          const balances = await Promise.all([toCachedBalance(wbtc, 1), toCachedBalance(weth, 20)]);
+          const cached = tokenBalancesToCachedLiquidityPoolTokenBalance(
+            TOKENS.SUSHI_ETH_WBTC,
+            Protocol.Sushiswap,
+            balances,
+          );
+          setupMapper([cached]);
+          const expected = await Promise.all([toBalance(wbtc, 1, currency), toBalance(weth, 20, currency)]);
+          const actual = await getCachedTokenBalances(TOKENS.SUSHI_ETH_WBTC, Protocol.Sushiswap, currency);
+          expect(actual).toMatchObject(expected);
         });
+      });
     });
   });
 });
