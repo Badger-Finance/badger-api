@@ -9,7 +9,8 @@ import * as settUtils from '../setts/setts.utils';
 import { refreshSettSnapshots } from './sett-snapshots-indexer';
 
 describe('refreshSettSnapshots', () => {
-  const supportedAddresses = loadChains().flatMap((s) => s.setts)
+  const supportedAddresses = loadChains()
+    .flatMap((s) => s.setts)
     .map((settDefinition) => settDefinition.settToken)
     .sort();
 
