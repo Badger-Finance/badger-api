@@ -2,8 +2,9 @@ import { ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
 // import fetch from 'node-fetch';
 import { Chain } from '../../chains/config/chain.config';
+import { ChainNetwork } from '../../chains/enums/chain-network.enum';
 import { masterChefAbi } from '../../config/abi/sushi-chef.abi';
-import { MASTERCHEF_URL, SUSHI_CHEF, SUSHISWAP_URL } from '../../config/constants';
+import { MASTERCHEF_URL, SUSHI_CHEF, SUSHISWAP_URL, SUSHISWAP_XDAI_URL } from '../../config/constants';
 import { TOKENS } from '../../config/tokens.config';
 import { getSdk, OrderDirection, Pool_OrderBy } from '../../graphql/generated/master-chef';
 import { getSdk as getSushiswapSdk, PairDayData_OrderBy } from '../../graphql/generated/sushiswap';
@@ -22,12 +23,21 @@ import { getSwapValue } from './strategy.utils';
 
 export class SushiswapStrategy {
   static async getValueSources(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
-    return Promise.all([getSushiSwapValue(settDefinition), getEmissionSource(chain, settDefinition)]);
+    return Promise.all([getSushiSwapValue(chain, settDefinition), getEmissionSource(chain, settDefinition)]);
   }
 }
 
-async function getSushiSwapValue(settDefinition: SettDefinition): Promise<CachedValueSource> {
-  const client = new GraphQLClient(SUSHISWAP_URL);
+async function getSushiSwapValue(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource> {
+  let graphUrl;
+  switch (chain.network) {
+    case ChainNetwork.xDai:
+      graphUrl = SUSHISWAP_XDAI_URL;
+      break;
+    default:
+      graphUrl = SUSHISWAP_URL;
+  }
+
+  const client = new GraphQLClient(graphUrl);
   const sdk = getSushiswapSdk(client);
   const { pairDayDatas } = await sdk.SushiPairDayDatas({
     first: 30,
