@@ -81,6 +81,7 @@ provider:
     BADGER_BSC: "https://api.thegraph.com/subgraphs/name/axejintao/badger-dao-bsc"
     BADGER_DAO: "https://api.thegraph.com/subgraphs/name/darruma/badger"
     BADGER_MATIC: "https://api.thegraph.com/subgraphs/name/axejintao/badger-dao-polygon"
+    BADGER_XDAI: "https://api.thegraph.com/subgraphs/name/axejintao/badger-dao-xdai"
     UNISWAP: "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2"
     SUSHISWAP: "https://api.thegraph.com/subgraphs/name/sushiswap/exchange"
     PANCAKESWAP: "https://api.thegraph.com/subgraphs/name/pancakeswap/exchange"

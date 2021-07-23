@@ -1,7 +1,7 @@
 import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { getContractPrice, getTokenPrice, getVaultTokenPrice } from '../../prices/prices.utils';
-import { getQuickswapPrice, resolveTokenPrice } from '../../protocols/common/swap.utils';
+import { getOnChainLiquidityPrice, resolveTokenPrice } from '../../protocols/common/swap.utils';
 import { maticTokensConfig } from '../../tokens/config/matic-tokens.config';
 import { TokenType } from '../../tokens/enums/token-type.enum';
 import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
@@ -9,7 +9,7 @@ import { Chain } from '../config/chain.config';
 import { ChainNetwork } from '../enums/chain-network.enum';
 import { ChainStrategy } from './chain.strategy';
 
-export class MaticStrategy extends ChainStrategy {
+export class xDaiStrategy extends ChainStrategy {
   constructor() {
     super();
     ChainStrategy.register(Object.keys(maticTokensConfig), this);
@@ -27,8 +27,8 @@ export class MaticStrategy extends ChainStrategy {
           return this.resolveLookupName(token.lookupName, token.address);
         }
         return getContractPrice(checksummedAddress);
-      case TokenType.QuickswapLp:
-        return getQuickswapPrice(checksummedAddress);
+      case TokenType.SushiswapLp:
+        return getOnChainLiquidityPrice(Chain.getChain(ChainNetwork.xDai), checksummedAddress);
       case TokenType.Vault:
         return getVaultTokenPrice(checksummedAddress);
       default:
@@ -39,7 +39,7 @@ export class MaticStrategy extends ChainStrategy {
   async resolveLookupName(lookupName: string, token: string): Promise<TokenPrice> {
     const isContract = ethers.utils.isAddress(lookupName);
     if (isContract) {
-      return resolveTokenPrice(Chain.getChain(ChainNetwork.Matic), token, lookupName);
+      return resolveTokenPrice(Chain.getChain(ChainNetwork.xDai), token, lookupName);
     }
     return getTokenPrice(lookupName);
   }
