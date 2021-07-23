@@ -4,39 +4,38 @@ import { TokenType } from '../enums/token-type.enum';
 import { TokenConfig } from '../interfaces/token-config.interface';
 
 export const maticTokensConfig: TokenConfig = {
-  [TOKENS.MATIC_WBTC]: {
-    address: TOKENS.MATIC_WBTC,
+  [TOKENS.XDAI_WBTC]: {
+    address: TOKENS.XDAI_WBTC,
     decimals: 8,
     lookupName: 'wrapped-bitcoin',
     name: 'Wrapped Bitcoin',
     symbol: 'WBTC',
     type: TokenType.Contract,
   },
-  [TOKENS.MATIC_USDC]: {
-    address: TOKENS.MATIC_USDC,
-    decimals: 6,
-    lookupName: 'usd-coin',
-    name: 'US Dollar Coin',
-    symbol: 'USDC',
+  [TOKENS.XDAI_WETH]: {
+    address: TOKENS.XDAI_WETH,
+    decimals: 18,
+    name: 'Wrapped Ethereum',
+    symbol: 'WETH',
     type: TokenType.Contract,
   },
-  [TOKENS.QUICK_WBTC_USDC]: {
-    address: TOKENS.QUICK_WBTC_USDC,
+  [TOKENS.XDAI_SLP_WBTC_WETH]: {
+    address: TOKENS.XDAI_SLP_WBTC_WETH,
     decimals: 18,
     lpToken: true,
-    name: 'Quickswap: Wrapped BTC-USDC',
-    symbol: 'QLP-WBTC-USDC',
+    name: 'Sushiswap: Wrapped BTC-Wrapped Ethereum',
+    symbol: 'XDAI-SLP-WBTC-WETH',
     type: TokenType.QuickswapLp,
   },
-  [TOKENS.BQUICK_WBTC_USDC]: {
-    address: TOKENS.BQUICK_WBTC_USDC,
+  [TOKENS.BXDAI_SLP_WBTC_WETH]: {
+    address: TOKENS.BXDAI_SLP_WBTC_WETH,
     decimals: 18,
-    name: 'bQuickswap: Wrapped BTC-USDC',
-    symbol: 'bQLP-WBTC-USDC',
+    name: 'bSushiswap: Wrapped BTC-Wrapped Ethereum',
+    symbol: 'bXDAI-SLP-WBTC-WETH',
     type: TokenType.Vault,
     vaultToken: {
-      address: TOKENS.QUICK_WBTC_USDC,
-      network: ChainNetwork.Matic,
+      address: TOKENS.XDAI_SLP_WBTC_WETH,
+      network: ChainNetwork.xDai,
     },
   },
 };

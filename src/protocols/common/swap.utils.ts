@@ -4,7 +4,7 @@ import { GraphQLClient } from 'graphql-request';
 import { Chain } from '../../chains/config/chain.config';
 import { ChainNetwork } from '../../chains/enums/chain-network.enum';
 import { uniV2LPAbi } from '../../config/abi/uni-v2.abi';
-import { SUSHISWAP_URL, UNISWAP_URL } from '../../config/constants';
+import { UNISWAP_URL } from '../../config/constants';
 import { getSdk as getUniswapSdk } from '../../graphql/generated/uniswap';
 import { getTokenPriceData } from '../../prices/prices.utils';
 import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
@@ -150,10 +150,6 @@ export const resolveTokenPrice = async (chain: Chain, token: string, contract: s
     usd: usdPrice,
     eth: ethPrice,
   };
-};
-
-export const getSushiswapPrice = async (contract: string): Promise<TokenPrice> => {
-  return getLiquidityPrice(SUSHISWAP_URL, contract);
 };
 
 export const getUniswapPrice = async (contract: string): Promise<TokenPrice> => {

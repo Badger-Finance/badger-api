@@ -6,7 +6,7 @@ import { getToken } from '../../tokens/tokens.utils';
 type Strategies = Record<string, ChainStrategy>;
 
 export abstract class ChainStrategy {
-  private static strategies: Strategies = {} as Strategies;
+  private static strategies: Strategies = {};
 
   static register(addresses: string[], strategy: ChainStrategy): void {
     for (const address of addresses) {
