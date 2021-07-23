@@ -2,7 +2,7 @@ import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { getContractPrice, getTokenPrice, getVaultTokenPrice } from '../../prices/prices.utils';
 import { getOnChainLiquidityPrice, resolveTokenPrice } from '../../protocols/common/swap.utils';
-import { maticTokensConfig } from '../../tokens/config/matic-tokens.config';
+import { xDaiTokensConfig } from '../../tokens/config/xdai-tokens.config';
 import { TokenType } from '../../tokens/enums/token-type.enum';
 import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
 import { Chain } from '../config/chain.config';
@@ -12,12 +12,12 @@ import { ChainStrategy } from './chain.strategy';
 export class xDaiStrategy extends ChainStrategy {
   constructor() {
     super();
-    ChainStrategy.register(Object.keys(maticTokensConfig), this);
+    ChainStrategy.register(Object.keys(xDaiTokensConfig), this);
   }
 
   async getPrice(address: string): Promise<TokenPrice> {
     const checksummedAddress = ethers.utils.getAddress(address);
-    const token = maticTokensConfig[checksummedAddress];
+    const token = xDaiTokensConfig[checksummedAddress];
     if (!token) {
       throw new BadRequest(`No token found for ${checksummedAddress}`);
     }
