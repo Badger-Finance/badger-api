@@ -282,7 +282,6 @@ export async function getCurveTokenPrice(chain: Chain, depositToken: string): Pr
   const supply = formatBalance(totalSupply, deposit.decimals);
   const usd = poolValueUsd / supply;
   const eth = poolValueEth / supply;
-  console.log({ depositToken, usd, eth, tokens: poolBalance.length, rpc: rpc[chain.network] });
   return {
     name: deposit.name,
     address: deposit.address,
