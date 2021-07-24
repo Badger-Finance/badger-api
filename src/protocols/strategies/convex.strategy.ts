@@ -9,6 +9,7 @@ import { cvxBoosterAbi } from '../../config/abi/cvx-booster.abi';
 import { cvxRewardsAbi } from '../../config/abi/cvx-rewards.abi';
 import { erc20Abi } from '../../config/abi/erc20.abi';
 import { CURVE_API_URL, CURVE_CRYPTO_API_URL, ONE_YEAR_SECONDS } from '../../config/constants';
+import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
 import {
   tokenBalancesToCachedLiquidityPoolTokenBalance,
@@ -281,6 +282,7 @@ export async function getCurveTokenPrice(chain: Chain, depositToken: string): Pr
   const supply = formatBalance(totalSupply, deposit.decimals);
   const usd = poolValueUsd / supply;
   const eth = poolValueEth / supply;
+  console.log({ depositToken, usd, eth, tokens: poolBalance.length, rpc: rpc[chain.network] });
   return {
     name: deposit.name,
     address: deposit.address,
