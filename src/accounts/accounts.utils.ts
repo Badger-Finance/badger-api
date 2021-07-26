@@ -57,7 +57,6 @@ export async function getCachedAccount(address: string): Promise<CachedAccount |
     }
     return;
   } catch (err) {
-    console.error(err);
     return;
   }
 }
