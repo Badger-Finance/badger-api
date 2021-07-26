@@ -14,3 +14,5 @@ secrets/*.yml
 yarn-error.log
 
 *.swp
+
+coverage
