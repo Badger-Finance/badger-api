@@ -17,7 +17,8 @@ export const createValueSource = (
   harvestable?: boolean,
   boost?: BoostRange,
 ): ValueSource => {
-  const apr = performance.thirtyDay || performance.sevenDay || performance.threeDay || performance.oneDay;
+  const recentApr = performance.sevenDay || performance.threeDay || performance.oneDay;
+  const apr = !recentApr ? 0 : performance.thirtyDay || recentApr;
   const evaluatedBoost = boost ?? { min: 1, max: 1 };
   return {
     name,
