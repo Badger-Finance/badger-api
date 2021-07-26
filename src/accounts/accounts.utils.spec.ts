@@ -1,3 +1,4 @@
+import { DataMapper } from '@aws/dynamodb-data-mapper';
 import { GraphQLClient } from 'graphql-request';
 import { Ethereum } from '../chains/config/eth.config';
 import { TestStrategy } from '../chains/strategies/test.strategy';
@@ -59,6 +60,16 @@ describe('accounts.utils', () => {
     describe('no saved account', () => {
       it('returns undefined', async () => {
         setupMapper([]);
+        const actual = await getCachedAccount(TEST_ADDR);
+        expect(actual).toBeFalsy();
+      });
+    });
+
+    describe('encounters an errors', () => {
+      it('returns undefined', async () => {
+        jest.spyOn(DataMapper.prototype, 'query').mockImplementation(() => {
+          throw new Error();
+        });
         const actual = await getCachedAccount(TEST_ADDR);
         expect(actual).toBeFalsy();
       });
@@ -132,27 +143,37 @@ describe('accounts.utils', () => {
     const chain = new Ethereum();
     const strategy = new TestStrategy();
 
-    it.each([
-      [undefined, 'usd'],
-      ['eth', 'eth'],
-      ['usd', 'usd'],
-    ])('returns sett balance request in %s currency with %s denominated value', async (currency, _res) => {
-      jest.spyOn(priceUtils, 'getPrice').mockImplementation(async (contract) => ({
-        ...(await strategy.getPrice(contract)),
-        updatedAt: Date.now(),
-      }));
-      const sett = getSettDefinition(chain, TOKENS.BBADGER);
-      const snapshot = randomSnapshot(sett);
-      setupMapper([snapshot]);
-      const depositToken = getToken(sett.depositToken);
-      const mockBalance = testSettBalance(sett);
-      const actual = await toSettBalance(chain, mockBalance, currency);
-      expect(actual).toBeTruthy();
-      expect(actual.name).toEqual(depositToken.name);
-      expect(actual.asset).toEqual(depositToken.symbol);
-      expect(actual.ppfs).toEqual(snapshot.balance / snapshot.supply);
-      const price = await strategy.getPrice(depositToken.address);
-      expect(actual.value).toEqual(inCurrency(price, currency) * actual.balance);
+    const testToSettBalance = (settAddress: string) => {
+      it.each([
+        [undefined, 'usd'],
+        ['eth', 'eth'],
+        ['usd', 'usd'],
+      ])('returns sett balance request in %s currency with %s denominated value', async (currency, _res) => {
+        jest.spyOn(priceUtils, 'getPrice').mockImplementation(async (contract) => ({
+          ...(await strategy.getPrice(contract)),
+          updatedAt: Date.now(),
+        }));
+        const sett = getSettDefinition(chain, settAddress);
+        const snapshot = randomSnapshot(sett);
+        setupMapper([snapshot]);
+        const depositToken = getToken(sett.depositToken);
+        const mockBalance = testSettBalance(sett);
+        const actual = await toSettBalance(chain, mockBalance, currency);
+        expect(actual).toBeTruthy();
+        expect(actual.name).toEqual(depositToken.name);
+        expect(actual.asset).toEqual(depositToken.symbol);
+        expect(actual.ppfs).toEqual(snapshot.balance / snapshot.supply);
+        const price = await strategy.getPrice(depositToken.address);
+        expect(actual.value).toEqual(inCurrency(price, currency) * actual.balance);
+      });
+    };
+
+    describe('non-digg token conversion', () => {
+      testToSettBalance(TOKENS.BBADGER);
+    });
+
+    describe('digg token conversion', () => {
+      testToSettBalance(TOKENS.BDIGG);
     });
   });
 });
