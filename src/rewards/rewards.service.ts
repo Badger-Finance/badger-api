@@ -19,7 +19,6 @@ import { BoostMultipliers } from './interfaces/boost-multipliers.interface';
 import { Eligibility } from './interfaces/eligibility.interface';
 import { AirdropMerkleClaim, AirdropMerkleDistribution } from './interfaces/merkle-distributor.interface';
 import { RewardMerkleClaim } from './interfaces/reward-merkle-claim.interface';
-import { UnlockSchedule } from './interfaces/unlock-schedule.interface';
 import { getTreeDistribution } from './rewards.utils';
 
 @Service()
@@ -135,7 +134,10 @@ export class RewardsService {
     const sett = await getCachedSett(settDefinition);
     const boostFile = await getObject(REWARD_DATA, 'badger-boosts.json');
     const boostData: BoostData = JSON.parse(boostFile.toString('utf-8'));
-    const boostRange = boostData.multiplierData[sett.vaultToken];
+    let boostRange = { min: 1, max: 1 };
+    if (boostData.multiplierData) {
+      boostRange = boostData.multiplierData[sett.vaultToken];
+    }
 
     // create relevant contracts
     const rewardsLogger = RewardsLogger__factory.connect(REWARDS_LOGGER, chain.provider);
@@ -143,7 +145,7 @@ export class RewardsService {
     const sharesPerFragment = await diggContract._sharesPerFragment();
 
     // filter active unlock schedules
-    const unlockSchedules: UnlockSchedule[] = await rewardsLogger.getAllUnlockSchedulesFor(settToken);
+    const unlockSchedules = await rewardsLogger.getAllUnlockSchedulesFor(settToken);
 
     if (unlockSchedules.length === 0) {
       return [];
