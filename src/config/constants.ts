@@ -47,7 +47,7 @@ export const MASTERCHEF_URL = process.env.MASTERCHEF || 'MISSING REQUIRED ENV VA
 export const STAGE = process.env.STAGE || 'MISSING REQUIRED ENV VAR';
 export const BOUNCER_PROOFS = process.env.BOUNCER_PROOFS || 'MISSING REQUIRED ENV VAR';
 export const IS_OFFLINE = process.env.IS_OFFLINE !== undefined && process.env.IS_OFFLINE === 'true';
-export const DEBUG = false;
+export const DEBUG = IS_OFFLINE;
 export const API_VERSION = 'v2.0.0';
 
 // third party api constants
