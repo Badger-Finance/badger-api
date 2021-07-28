@@ -3,7 +3,7 @@ import { getAccounts } from '../accounts/accounts.utils';
 import { CachedAccount } from '../accounts/interfaces/cached-account.interface';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Ethereum } from '../chains/config/eth.config';
-import { badgerTreeAbi } from '../config/abi/badger-tree.abi';
+import { badgerTreeAbi } from '../../abi/badger-tree.abi';
 import { BADGER_TREE } from '../config/constants';
 import { RewardAmounts } from '../rewards/interfaces/reward-amounts.interface';
 import { getTreeDistribution } from '../rewards/rewards.utils';

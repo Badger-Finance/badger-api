@@ -2,7 +2,7 @@ import { Service } from '@tsed/common';
 import { BigNumber, ethers, utils } from 'ethers';
 import { Chain } from '../chains/config/chain.config';
 import { ChainNetwork } from '../chains/enums/chain-network.enum';
-import { empAbi } from '../config/abi/emp.abi';
+import { empAbi } from '../../abi/emp.abi';
 import { FixedPointUnsigned, Liquidation, Position, SponsorData, SyntheticData } from './interface/claw.interface';
 
 type LiqudationUnformatted = [

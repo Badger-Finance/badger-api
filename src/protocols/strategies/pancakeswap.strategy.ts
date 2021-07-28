@@ -1,8 +1,8 @@
 import { formatEther } from '@ethersproject/units';
 import { BigNumber, ethers } from 'ethers';
 import { Chain } from '../../chains/config/chain.config';
-import { erc20Abi } from '../../config/abi/erc20.abi';
-import { pancakeChefAbi } from '../../config/abi/pancake-chec.abi';
+import { erc20Abi } from '../../../abi/erc20.abi';
+import { pancakeChefAbi } from '../../../abi/pancake-chec.abi';
 import { PANCAKE_CHEF } from '../../config/constants';
 import { TOKENS } from '../../config/tokens.config';
 import { valueSourceToCachedValueSource } from '../../indexer/indexer.utils';

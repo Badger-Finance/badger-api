@@ -3,7 +3,7 @@ import { BigNumber, ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
 import { Chain } from '../../chains/config/chain.config';
 import { ChainNetwork } from '../../chains/enums/chain-network.enum';
-import { uniV2LPAbi } from '../../config/abi/uni-v2.abi';
+import { uniV2LPAbi } from '../../../abi/uni-v2.abi';
 import { UNISWAP_URL } from '../../config/constants';
 import { getSdk as getUniswapSdk } from '../../graphql/generated/uniswap';
 import { getTokenPriceData } from '../../prices/prices.utils';
