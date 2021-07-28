@@ -118,7 +118,14 @@ describe('accounts.utils', () => {
         const result: UsersQuery = {
           users: Object.values(TOKENS).map((token) => ({ id: token })),
         };
-        jest.spyOn(GraphQLClient.prototype, 'request').mockImplementationOnce(async () => Promise.resolve(result));
+        let responded = false;
+        jest.spyOn(GraphQLClient.prototype, 'request').mockImplementation(async () => {
+          if (responded) {
+            return { users: [] };
+          }
+          responded = true;
+          return Promise.resolve(result);
+        });
         const users = await getAccounts(new Ethereum());
         expect(users).toMatchObject(Object.values(TOKENS));
       });
