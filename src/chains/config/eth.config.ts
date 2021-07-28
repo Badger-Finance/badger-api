@@ -202,5 +202,6 @@ export const ethSetts: SettDefinition[] = [
     experimental: true,
     settToken: TOKENS.BRENBTC,
     stage: Stage.Staging,
+    state: SettState.Experimental,
   },
 ];
