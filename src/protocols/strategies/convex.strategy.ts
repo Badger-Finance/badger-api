@@ -3,11 +3,11 @@ import { ethers } from 'ethers';
 import fetch from 'node-fetch';
 import { Chain } from '../../chains/config/chain.config';
 import { Ethereum, ethSetts } from '../../chains/config/eth.config';
-import { curvePoolAbi, oldCurvePoolAbi } from '../../config/abi/curve-pool.abi';
-import { crvRegistryAbi } from '../../config/abi/curve-registry.abi';
-import { cvxBoosterAbi } from '../../config/abi/cvx-booster.abi';
-import { cvxRewardsAbi } from '../../config/abi/cvx-rewards.abi';
-import { erc20Abi } from '../../config/abi/erc20.abi';
+import { curvePoolAbi, oldCurvePoolAbi } from '../../../abi/curve-pool.abi';
+import { crvRegistryAbi } from '../../../abi/curve-registry.abi';
+import { cvxBoosterAbi } from '../../../abi/cvx-booster.abi';
+import { cvxRewardsAbi } from '../../../abi/cvx-rewards.abi';
+import { erc20Abi } from '../../../abi/erc20.abi';
 import { CURVE_API_URL, CURVE_CRYPTO_API_URL, ONE_YEAR_SECONDS } from '../../config/constants';
 import { TOKENS } from '../../config/tokens.config';
 import {
@@ -143,6 +143,7 @@ async function getVaultSources(chain: Chain, settDefinition: SettDefinition): Pr
     const rewardApr = (rewardEmission / poolValue) * 80;
     const rewardSource = createValueSource(`${rewardToken.symbol} Rewards`, uniformPerformance(rewardApr));
     cachedExtraSources.push(valueSourceToCachedValueSource(rewardSource, settDefinition, tokenEmission(rewardToken)));
+    console.log(`Added value source of ${rewardApr}% APR for ${rewardToken.name} emission`);
   }
 
   const cachedTradeFees = await getCurvePerformance(settDefinition);

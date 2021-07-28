@@ -57,6 +57,8 @@ export const COINGECKO_URL = 'https://api.coingecko.com/api/v3/simple';
 export const SUSHI_CHEF = '0xc2EdaD668740f1aA35E4D8f227fB8E17dcA888Cd';
 export const PANCAKE_CHEF = '0x73feaa1eE314F8c655E354234017bE2193C9E24E';
 export const BADGER_TREE = '0xbe82A3259ce427B8bCb54b938b486dC2aF509Cc3';
+export const REWARDS_LOGGER = '0x0A4F4e92C3334821EbB523324D09E321a6B0d8ec';
+export const DISTRIBUTOR = '0x660802Fc641b154aBA66a62137e71f331B6d787A';
 
 export const swaggerConfig: SwaggerSettings = {
   path: '/docs',

@@ -1,7 +1,7 @@
 import { NotFound, UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { Ethereum, ethSetts } from '../../chains/config/eth.config';
-import { erc20Abi } from '../../config/abi/erc20.abi';
+import { erc20Abi } from '../../../abi/erc20.abi';
 import { STRATEGIES } from '../../config/constants';
 import { Protocol } from '../../config/enums/protocol.enum';
 import { TOKENS } from '../../config/tokens.config';
