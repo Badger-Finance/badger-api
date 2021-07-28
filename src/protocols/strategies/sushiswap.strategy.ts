@@ -1,11 +1,10 @@
-import { ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
 // import fetch from 'node-fetch';
 import { Chain } from '../../chains/config/chain.config';
 import { ChainNetwork } from '../../chains/enums/chain-network.enum';
-import { masterChefAbi } from '../../../abi/sushi-chef.abi';
 import { MASTERCHEF_URL, SUSHI_CHEF, SUSHISWAP_URL, SUSHISWAP_XDAI_URL } from '../../config/constants';
 import { TOKENS } from '../../config/tokens.config';
+import { SushiChef__factory } from '../../contracts';
 import { getSdk, OrderDirection, Pool_OrderBy } from '../../graphql/generated/master-chef';
 import { getSdk as getSushiswapSdk, PairDayData_OrderBy } from '../../graphql/generated/sushiswap';
 import { valueSourceToCachedValueSource } from '../../indexer/indexer.utils';
@@ -70,7 +69,7 @@ async function getEmissionSource(chain: Chain, settDefinition: SettDefinition): 
       SourceType.Emission,
     );
   }
-  const sushiChef = new ethers.Contract(SUSHI_CHEF, masterChefAbi, chain.provider);
+  const sushiChef = SushiChef__factory.connect(SUSHI_CHEF, chain.provider);
   const [depositTokenPrice, sushiPrice] = await Promise.all([getPrice(pool.pair), getPrice(TOKENS.SUSHI)]);
   const totalAllocPoint = masterChef.totalAllocPoint;
   const strategyInfo: UserInfo = await sushiChef.userInfo(pool.id, settDefinition.strategy);

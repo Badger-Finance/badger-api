@@ -2,7 +2,7 @@ import { Service } from '@tsed/common';
 import { BigNumber, ethers, utils } from 'ethers';
 import { Chain } from '../chains/config/chain.config';
 import { ChainNetwork } from '../chains/enums/chain-network.enum';
-import { empAbi } from '../../abi/emp.abi';
+import { Emp__factory } from '../contracts';
 import { FixedPointUnsigned, Liquidation, Position, SponsorData, SyntheticData } from './interface/claw.interface';
 
 type LiqudationUnformatted = [
@@ -19,27 +19,11 @@ type LiqudationUnformatted = [
   FixedPointUnsigned,
 ];
 
-type SyntheticDataPayload = [
-  BigNumber,
-  BigNumber,
-  BigNumber,
-  FixedPointUnsigned,
-  BigNumber,
-  BigNumber,
-  BigNumber,
-  BigNumber,
-  BigNumber,
-  BigNumber,
-  string,
-  string,
-  string,
-];
-
 @Service()
 export class ClawService {
   async getSyntheticData(empAddress: string): Promise<SyntheticData> {
     const provider = Chain.getChain(ChainNetwork.Ethereum).provider;
-    const empContract = new ethers.Contract(empAddress, empAbi, provider);
+    const empContract = Emp__factory.connect(empAddress, provider);
     const [
       cumulativeFeeMultiplier,
       rawTotalPositionCollateral,
@@ -51,10 +35,7 @@ export class ClawService {
       minSponsorTokens,
       withdrawalLiveness,
       liquidationLiveness,
-      priceIdentifier,
-      collateralCurrency,
-      tokenCurrency,
-    ]: SyntheticDataPayload = (await Promise.all([
+    ] = await Promise.all([
       empContract.cumulativeFeeMultiplier(),
       empContract.rawTotalPositionCollateral(),
       empContract.totalTokensOutstanding(),
@@ -65,10 +46,7 @@ export class ClawService {
       empContract.minSponsorTokens(),
       empContract.withdrawalLiveness(),
       empContract.liquidationLiveness(),
-      empContract.priceIdentifier(),
-      empContract.collateralCurrency(),
-      empContract.tokenCurrency(),
-    ])) as SyntheticDataPayload;
+    ]);
     let globalCollateralizationRatio = BigNumber.from(0);
     if (totalTokensOutstanding.gt(BigNumber.from(0))) {
       globalCollateralizationRatio = cumulativeFeeMultiplier
@@ -76,6 +54,11 @@ export class ClawService {
         .div(totalTokensOutstanding);
     }
 
+    const [priceIdentifier, collateralCurrency, tokenCurrency] = await Promise.all([
+      empContract.priceIdentifier(),
+      empContract.collateralCurrency(),
+      empContract.tokenCurrency(),
+    ]);
     const priceIdentifierReadable = utils.toUtf8String(priceIdentifier).replace(/\0/g, '');
     const expirationDate = new Date(expirationTimestamp.toNumber() * 1000);
     return {
@@ -97,7 +80,7 @@ export class ClawService {
 
   async getSponsorData(empAddress: string, sponsorAddress: string): Promise<SponsorData> {
     const provider = Chain.getChain(ChainNetwork.Ethereum).provider;
-    const empContract = new ethers.Contract(empAddress, empAbi, provider);
+    const empContract = Emp__factory.connect(empAddress, provider);
     const liquidations = await getLiquidations(empContract, sponsorAddress);
     const position = await getPosition(empContract, sponsorAddress);
     return {
