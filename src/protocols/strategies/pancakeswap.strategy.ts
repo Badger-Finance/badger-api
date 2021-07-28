@@ -1,19 +1,16 @@
 import { formatEther } from '@ethersproject/units';
-import { BigNumber, ethers } from 'ethers';
 import { Chain } from '../../chains/config/chain.config';
-import { erc20Abi } from '../../../abi/erc20.abi';
-import { pancakeChefAbi } from '../../../abi/pancake-chec.abi';
 import { PANCAKE_CHEF } from '../../config/constants';
 import { TOKENS } from '../../config/tokens.config';
+import { Erc20__factory, PancakeChef__factory } from '../../contracts';
 import { valueSourceToCachedValueSource } from '../../indexer/indexer.utils';
 import { getTokenPriceData } from '../../prices/prices.utils';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { VAULT_SOURCE } from '../../setts/setts.utils';
-import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
+import { formatBalance } from '../../tokens/tokens.utils';
 import { SourceType } from '../enums/source-type.enum';
 import { CachedValueSource } from '../interfaces/cached-value-source.interface';
 import { uniformPerformance } from '../interfaces/performance.interface';
-import { PoolInfo } from '../interfaces/pool-info.interface';
 import { PoolMap } from '../interfaces/pool-map.interface';
 import { createValueSource } from '../interfaces/value-source.interface';
 
@@ -25,16 +22,15 @@ export class PancakeswapStrategy {
 
 async function getEmissionSource(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource> {
   const poolId = getPoolId(settDefinition.depositToken);
-  const masterChef = new ethers.Contract(PANCAKE_CHEF, pancakeChefAbi, chain.provider);
-  const [totalAllocPoint, cakePerBlock, poolInfo, tokenPrice]: [BigNumber, BigNumber, PoolInfo, TokenPrice] =
-    await Promise.all([
-      masterChef.totalAllocPoint(),
-      masterChef.cakePerBlock(),
-      masterChef.poolInfo(poolId),
-      getTokenPriceData(TOKENS.CAKE),
-    ]);
-  const depositToken = new ethers.Contract(poolInfo.lpToken, erc20Abi, chain.provider);
-  const poolBalance = (await depositToken.balanceOf(PANCAKE_CHEF)) / 1e18;
+  const masterChef = PancakeChef__factory.connect(PANCAKE_CHEF, chain.provider);
+  const [totalAllocPoint, cakePerBlock, poolInfo, tokenPrice] = await Promise.all([
+    masterChef.totalAllocPoint(),
+    masterChef.cakePerBlock(),
+    masterChef.poolInfo(poolId),
+    getTokenPriceData(TOKENS.CAKE),
+  ]);
+  const depositToken = Erc20__factory.connect(poolInfo.lpToken, chain.provider);
+  const poolBalance = formatBalance(await depositToken.balanceOf(PANCAKE_CHEF));
   const depositTokenValue = await getTokenPriceData(poolInfo.lpToken);
   const poolValue = poolBalance * depositTokenValue.usd;
   const emissionScalar = poolInfo.allocPoint.toNumber() / totalAllocPoint.toNumber();

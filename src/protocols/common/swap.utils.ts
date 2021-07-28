@@ -3,12 +3,12 @@ import { BigNumber, ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
 import { Chain } from '../../chains/config/chain.config';
 import { ChainNetwork } from '../../chains/enums/chain-network.enum';
-import { uniV2LPAbi } from '../../../abi/uni-v2.abi';
 import { UNISWAP_URL } from '../../config/constants';
+import { UniV2__factory } from '../../contracts';
 import { getSdk as getUniswapSdk } from '../../graphql/generated/uniswap';
 import { getTokenPriceData } from '../../prices/prices.utils';
 import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
-import { getToken } from '../../tokens/tokens.utils';
+import { formatBalance, getToken } from '../../tokens/tokens.utils';
 
 interface LiquidityData {
   contract: string;
@@ -26,15 +26,15 @@ interface GetReservesResponse {
 }
 
 export const getLiquidityData = async (chain: Chain, contract: string): Promise<LiquidityData> => {
-  const pairContract = new ethers.Contract(contract, uniV2LPAbi, chain.provider);
-  const totalSupply = parseFloat(ethers.utils.formatEther(await pairContract.totalSupply()));
+  const pairContract = UniV2__factory.connect(contract, chain.provider);
+  const totalSupply = formatBalance(await pairContract.totalSupply());
   const token0 = await pairContract.token0();
   const token1 = await pairContract.token1();
   const token0Decimals = getToken(token0).decimals;
   const token1Decimals = getToken(token1).decimals;
   const reserves: GetReservesResponse = await pairContract.getReserves();
-  const reserve0 = parseFloat(ethers.utils.formatUnits(reserves._reserve0, token0Decimals));
-  const reserve1 = parseFloat(ethers.utils.formatUnits(reserves._reserve1, token1Decimals));
+  const reserve0 = formatBalance(reserves._reserve0, token0Decimals);
+  const reserve1 = formatBalance(reserves._reserve1, token1Decimals);
   return {
     contract: contract,
     token0: token0,
