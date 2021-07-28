@@ -3,7 +3,7 @@ import { GraphQLClient } from 'graphql-request';
 // import fetch from 'node-fetch';
 import { Chain } from '../../chains/config/chain.config';
 import { ChainNetwork } from '../../chains/enums/chain-network.enum';
-import { masterChefAbi } from '../../config/abi/sushi-chef.abi';
+import { masterChefAbi } from '../../../abi/sushi-chef.abi';
 import { MASTERCHEF_URL, SUSHI_CHEF, SUSHISWAP_URL, SUSHISWAP_XDAI_URL } from '../../config/constants';
 import { TOKENS } from '../../config/tokens.config';
 import { getSdk, OrderDirection, Pool_OrderBy } from '../../graphql/generated/master-chef';

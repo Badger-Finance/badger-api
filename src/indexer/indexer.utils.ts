@@ -3,7 +3,7 @@ import { NotFound } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
-import { settAbi } from '../config/abi/sett.abi';
+import { settAbi } from '../../abi/sett.abi';
 import { Protocol } from '../config/enums/protocol.enum';
 import { getPrice } from '../prices/prices.utils';
 import { SourceType } from '../protocols/enums/source-type.enum';

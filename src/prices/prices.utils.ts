@@ -6,7 +6,7 @@ import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { ChainStrategy } from '../chains/strategies/chain.strategy';
-import { ibBTCAbi } from '../config/abi/ibbtc.abi';
+import { ibBTCAbi } from '../../abi/ibbtc.abi';
 import { COINGECKO_URL } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
 import { getSett } from '../setts/setts.utils';
