@@ -1,4 +1,5 @@
 import { gql } from 'graphql-request';
+import { Provider } from '../chains/enums/provider.enum';
 import {
   BADGER_BSC_URL,
   BADGER_DAO_URL,
@@ -7,7 +8,6 @@ import {
   CURVE_API_URL,
   MASTERCHEF_URL,
   PANCAKESWAP_URL,
-  Provider,
   SUSHISWAP_URL,
   UNISWAP_URL,
 } from '../config/constants';
@@ -21,10 +21,10 @@ export const apis: Endpoint[] = [
 ];
 
 export const providers: Endpoint[] = [
-  { name: 'Alchemy', url: new URL(Provider.Alchemy) },
+  { name: 'Quicknode', url: new URL(Provider.Quicknode) },
   { name: 'Binance', url: new URL(Provider.Binance) },
   { name: 'Cloudflare', url: new URL(Provider.Cloudflare) },
-  { name: 'MyEtherWallet', url: new URL(Provider.MyEtherWallet) },
+  { name: 'xDai', url: new URL(Provider.xDai) },
 ];
 
 // CONTRACTS:
