@@ -134,8 +134,12 @@ async function getVaultSources(chain: Chain, settDefinition: SettDefinition): Pr
   for (let i = 0; i < extraRewardsLength; i++) {
     const rewards = await crv.extraRewards(i);
     const virtualRewards = CvxRewards__factory.connect(rewards, chain.provider);
-    const rewardAddress = await virtualRewards.rewardToken();
-    if (discontinuedRewards.includes(rewardAddress)) {
+    const [cutoffTime, rewardAddress] = await Promise.all([
+      virtualRewards.periodFinish(),
+      virtualRewards.rewardToken(),
+    ]);
+    const expired = cutoffTime.toNumber() < Date.now() / 1000;
+    if (expired || discontinuedRewards.includes(rewardAddress)) {
       continue;
     }
     const rewardToken = getToken(rewardAddress);
@@ -145,7 +149,6 @@ async function getVaultSources(chain: Chain, settDefinition: SettDefinition): Pr
     const rewardApr = (rewardEmission / poolValue) * 80;
     const rewardSource = createValueSource(`${rewardToken.symbol} Rewards`, uniformPerformance(rewardApr));
     cachedExtraSources.push(valueSourceToCachedValueSource(rewardSource, settDefinition, tokenEmission(rewardToken)));
-    console.log(`Added value source of ${rewardApr}% APR for ${rewardToken.name} emission`);
   }
 
   const cachedTradeFees = await getCurvePerformance(settDefinition);
@@ -243,15 +246,15 @@ export async function getCurvePerformance(settDefinition: SettDefinition): Promi
 /* Adapted from https://docs.convexfinance.com/convexfinanceintegration/cvx-minting */
 
 // constants
-const cliffSize = 100000 * 1e18; // new cliff every 100,000 tokens
+const cliffSize = 100000; // new cliff every 100,000 tokens
 const cliffCount = 1000; // 1,000 cliffs
-const maxSupply = 100000000 * 1e18; // 100 mil max supply
+const maxSupply = 100000000; // 100 mil max supply
 
 async function getCvxMint(chain: Chain, crvEarned: number): Promise<number> {
   const cvx = Erc20__factory.connect(TOKENS.CVX, chain.provider);
 
   // first get total supply
-  const cvxTotalSupply = (await cvx.totalSupply()).toNumber();
+  const cvxTotalSupply = formatBalance(await cvx.totalSupply());
 
   // get current cliff
   const currentCliff = cvxTotalSupply / cliffSize;
