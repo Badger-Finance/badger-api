@@ -89,7 +89,7 @@ provider:
     UNISWAP: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2'
     SUSHISWAP: 'https://api.thegraph.com/subgraphs/name/sushiswap/exchange'
     SUSHISWAP_XDAI: 'https://api.thegraph.com/subgraphs/name/sushiswap/xdai-exchange'
-    SUSHISWAP_POLYGON: 'https://api.thegraph.com/subgraphs/name/sushiswap/matic-exchange'
+    SUSHISWAP_MATIC: 'https://api.thegraph.com/subgraphs/name/sushiswap/matic-exchange'
     PANCAKESWAP: 'https://api.thegraph.com/subgraphs/name/pancakeswap/exchange'
     MASTERCHEF: 'https://api.thegraph.com/subgraphs/name/sushiswap/master-chef'
     QUICKSWAP: 'https://api.thegraph.com/subgraphs/name/sameepsi/quickswap06'
