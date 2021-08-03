@@ -23,23 +23,22 @@ export const maticTokensConfig: TokenConfig = {
   [TOKENS.MATIC_IBBTC]: {
     address: TOKENS.MATIC_IBBTC,
     decimals: 18,
-    lookupName: 'ibBTC',
-    name: 'Interest-Bearing BTC',
-    symbol: 'IBBTC',
-    type: TokenType.Contract,
+    name: 'ibBTC',
+    symbol: 'ibBTC',
+    type: TokenType.Index,
   },
   [TOKENS.MATIC_SUSHI_IBBTC_WBTC]: {
     address: TOKENS.MATIC_SUSHI_IBBTC_WBTC,
     decimals: 18,
     lpToken: true,
-    name: 'Sushi: IBBTC-WBTC',
+    name: 'Sushiswap: ibBTC-WBTC',
     symbol: 'SLP-IBBTC-WBTC',
     type: TokenType.SushiswapLp,
   },
   [TOKENS.MATIC_BSUSHI_IBBTC_WBTC]: {
     address: TOKENS.MATIC_BSUSHI_IBBTC_WBTC,
     decimals: 18,
-    name: 'bSushi: IBBTC-WBTC',
+    name: 'bSushiSwap: ibBTC-WBTC',
     symbol: 'bSLP-IBBTC-WBTC',
     type: TokenType.Vault,
     vaultToken: {
