@@ -1,6 +1,6 @@
 import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
-import { getContractPrice, getTokenPrice, getVaultTokenPrice } from '../../prices/prices.utils';
+import { getContractPrice, getTokenPrice, getVaultTokenPrice, ibBTCPrice } from '../../prices/prices.utils';
 import { getOnChainLiquidityPrice, getQuickswapPrice, resolveTokenPrice } from '../../protocols/common/swap.utils';
 import { maticTokensConfig } from '../../tokens/config/matic-tokens.config';
 import { TokenType } from '../../tokens/enums/token-type.enum';
@@ -33,6 +33,8 @@ export class MaticStrategy extends ChainStrategy {
         return getOnChainLiquidityPrice(Chain.getChain(ChainNetwork.Matic), checksummedAddress);
       case TokenType.Vault:
         return getVaultTokenPrice(checksummedAddress);
+      case TokenType.Index:
+        return ibBTCPrice();
       default:
         throw new UnprocessableEntity('Unsupported TokenType');
     }
