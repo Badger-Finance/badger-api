@@ -1,7 +1,7 @@
 import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { getContractPrice, getTokenPrice, getVaultTokenPrice, ibBTCPrice } from '../../prices/prices.utils';
-import { getSushiswapPrice, getUniswapPrice, resolveTokenPrice } from '../../protocols/common/swap.utils';
+import { getOnChainLiquidityPrice, getUniswapPrice, resolveTokenPrice } from '../../protocols/common/swap.utils';
 import { getCurveTokenPrice } from '../../protocols/strategies/convex.strategy';
 import { ethTokensConfig } from '../../tokens/config/eth-tokens.config';
 import { TokenType } from '../../tokens/enums/token-type.enum';
@@ -32,7 +32,7 @@ export class EthStrategy extends ChainStrategy {
       case TokenType.CurveLP:
         return getCurveTokenPrice(eth, checksummedAddress);
       case TokenType.SushiswapLp:
-        return getSushiswapPrice(checksummedAddress);
+        return getOnChainLiquidityPrice(Chain.getChain(ChainNetwork.Ethereum), checksummedAddress);
       case TokenType.UniswapLp:
         return getUniswapPrice(checksummedAddress);
       case TokenType.Vault:

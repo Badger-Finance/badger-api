@@ -1,10 +1,9 @@
 import { NotFound, UnprocessableEntity } from '@tsed/exceptions';
-import { ethers } from 'ethers';
 import { Ethereum, ethSetts } from '../../chains/config/eth.config';
-import { erc20Abi } from '../../config/abi/erc20.abi';
 import { STRATEGIES } from '../../config/constants';
 import { Protocol } from '../../config/enums/protocol.enum';
 import { TOKENS } from '../../config/tokens.config';
+import { Erc20__factory } from '../../contracts';
 import { tokenBalancesToCachedLiquidityPoolTokenBalance } from '../../indexer/indexer.utils';
 import { getPrice } from '../../prices/prices.utils';
 import { getSett } from '../../setts/setts.utils';
@@ -35,7 +34,7 @@ export const getZsDiggTokenBalance = async (token: string): Promise<CachedLiquid
   const diggBalance = formatBalance(balance, decimals);
 
   // check wbtc holding of stabilizer strategy
-  const strategy = new ethers.Contract(TOKENS.WBTC, erc20Abi, chain.provider);
+  const strategy = Erc20__factory.connect(TOKENS.WBTC, chain.provider);
   const wbtcBalance = formatBalance(await strategy.balanceOf(STRATEGIES.BZS_DIGG), wbtc.decimals);
 
   // resolve the proper token balances

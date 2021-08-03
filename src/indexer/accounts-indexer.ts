@@ -1,10 +1,10 @@
-import { BigNumber, Contract } from 'ethers';
+import { BigNumber } from 'ethers';
 import { getAccounts } from '../accounts/accounts.utils';
 import { CachedAccount } from '../accounts/interfaces/cached-account.interface';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Ethereum } from '../chains/config/eth.config';
-import { badgerTreeAbi } from '../config/abi/badger-tree.abi';
 import { BADGER_TREE } from '../config/constants';
+import { BadgerTree__factory } from '../contracts';
 import { RewardAmounts } from '../rewards/interfaces/reward-amounts.interface';
 import { getTreeDistribution } from '../rewards/rewards.utils';
 
@@ -12,7 +12,7 @@ export async function refreshAccounts(): Promise<void> {
   const eth = new Ethereum();
   const accounts = await getAccounts(eth);
 
-  const badgerTree = new Contract(BADGER_TREE, badgerTreeAbi, eth.provider);
+  const badgerTree = BadgerTree__factory.connect(BADGER_TREE, eth.provider);
   const treeDistribution = await getTreeDistribution();
   const accountData: CachedAccount[] = [];
 

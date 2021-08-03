@@ -301,6 +301,17 @@ Object {
       "network": "eth",
     },
   },
+  "0x58CAc1409F1ffbdcBA6a58d54c94CAC3fb4C6F8B": Object {
+    "address": "0x58CAc1409F1ffbdcBA6a58d54c94CAC3fb4C6F8B",
+    "decimals": 18,
+    "name": "brenBTC",
+    "symbol": "brenBTC",
+    "type": "Vault",
+    "vaultToken": Object {
+      "address": "0xEB4C2781e4ebA804CE9a9803C67d0893436bB27D",
+      "network": "eth",
+    },
+  },
   "0x5Dce29e92b1b939F8E8C60DcF15BDE82A85be4a9": Object {
     "address": "0x5Dce29e92b1b939F8E8C60DcF15BDE82A85be4a9",
     "decimals": 18,
@@ -842,6 +853,17 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0xDE5331AC4B3630f94853Ff322B66407e0D6331E8",
+      "network": "eth",
+    },
+  },
+  "0x58CAc1409F1ffbdcBA6a58d54c94CAC3fb4C6F8B": Object {
+    "address": "0x58CAc1409F1ffbdcBA6a58d54c94CAC3fb4C6F8B",
+    "decimals": 18,
+    "name": "brenBTC",
+    "symbol": "brenBTC",
+    "type": "Vault",
+    "vaultToken": Object {
+      "address": "0xEB4C2781e4ebA804CE9a9803C67d0893436bB27D",
       "network": "eth",
     },
   },

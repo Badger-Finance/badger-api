@@ -1,10 +1,9 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import { NotFound } from '@tsed/exceptions';
-import { ethers } from 'ethers';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
-import { settAbi } from '../config/abi/sett.abi';
 import { Protocol } from '../config/enums/protocol.enum';
+import { Sett__factory } from '../contracts';
 import { getPrice } from '../prices/prices.utils';
 import { SourceType } from '../protocols/enums/source-type.enum';
 import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
@@ -100,7 +99,7 @@ const getPricePerShare = async (
   const token = getToken(sett.settToken);
   try {
     let ppfs: BigNumber;
-    const contract = new ethers.Contract(sett.settToken, settAbi, chain.provider);
+    const contract = Sett__factory.connect(sett.settToken, chain.provider);
     if (block) {
       ppfs = await contract.getPricePerFullShare({ blockTag: block });
     } else {
@@ -233,11 +232,11 @@ export async function getSettValueSources(chain: Chain, settDefinition: SettDefi
   ]);
 
   // check for any emission removal
-  const oldSources: { [index: string]: CachedValueSource } = {};
+  const oldSources: Record<string, CachedValueSource> = {};
   const oldEmission = await getVaultCachedValueSources(settDefinition);
   oldEmission.forEach((source) => (oldSources[source.addressValueSourceType] = source));
 
-  // remove updates sources from old source list
+  // remove updated sources from old source list
   const newSources = [underlying, ...emission, ...protocol, ...derivative];
   newSources.forEach((source) => delete oldSources[source.addressValueSourceType]);
 

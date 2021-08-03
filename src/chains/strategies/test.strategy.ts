@@ -17,8 +17,8 @@ export class TestStrategy extends ChainStrategy {
     const price = this.priceData[checksummedAddress];
     if (!price) {
       const token = getToken(checksummedAddress);
-      const ethPrice = this.randomPrice(1500, 3000);
-      const usdPrice = this.randomPrice();
+      const usdPrice = parseInt(address.slice(0, 6), 16);
+      const ethPrice = 2400;
       const tokenPrice = {
         name: token.name,
         address: token.address,

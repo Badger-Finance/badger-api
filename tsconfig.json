@@ -25,7 +25,7 @@
   "include": [	
     "./src/**/*.ts",
     "./node_modules/ethers-typescript-typings/index.d.ts"	
-  ],	
+, "src/config/abi/badger-tree.abi"  ],	
   "exclude": [
     "build",
     "node_modules",

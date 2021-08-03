@@ -33,11 +33,13 @@ export const ACCOUNT_DATA = process.env.ACCOUNT_DATA || 'MISSING REQUIRED ENV VA
 // thegraph constants
 export const UNISWAP_URL = process.env.UNISWAP || 'MISSING REQUIRED ENV VAR';
 export const SUSHISWAP_URL = process.env.SUSHISWAP || 'MISSING REQUIRED ENV VAR';
+export const SUSHISWAP_XDAI_URL = process.env.SUSHISWAP_XDAI || 'MISSING REQUIRED ENV VAR';
 export const PANCAKESWAP_URL = process.env.PANCAKESWAP || 'MISSING REQUIRED ENV VAR';
 export const QUICKSWAP_URL = process.env.QUICKSWAP || 'MISSING REQUIRED ENV VAR';
 export const BADGER_URL = process.env.BADGER || 'MISSING REQUIRED ENV VAR';
 export const BADGER_BSC_URL = process.env.BADGER_BSC || 'MISSING REQUIRED ENV VAR';
 export const BADGER_MATIC_URL = process.env.BADGER_MATIC || 'MISSING REQUIRED ENV VAR';
+export const BADGER_XDAI_URL = process.env.BADGER_XDAI || 'MISSING REQUIRED ENV VAR';
 export const BADGER_DAO_URL = process.env.BADGER_DAO || 'MISSING REQUIRED ENV VAR';
 export const MASTERCHEF_URL = process.env.MASTERCHEF || 'MISSING REQUIRED ENV VAR';
 
@@ -45,7 +47,7 @@ export const MASTERCHEF_URL = process.env.MASTERCHEF || 'MISSING REQUIRED ENV VA
 export const STAGE = process.env.STAGE || 'MISSING REQUIRED ENV VAR';
 export const BOUNCER_PROOFS = process.env.BOUNCER_PROOFS || 'MISSING REQUIRED ENV VAR';
 export const IS_OFFLINE = process.env.IS_OFFLINE !== undefined && process.env.IS_OFFLINE === 'true';
-export const DEBUG = false;
+export const DEBUG = IS_OFFLINE;
 export const API_VERSION = 'v2.0.0';
 
 // third party api constants
@@ -55,6 +57,8 @@ export const COINGECKO_URL = 'https://api.coingecko.com/api/v3/simple';
 export const SUSHI_CHEF = '0xc2EdaD668740f1aA35E4D8f227fB8E17dcA888Cd';
 export const PANCAKE_CHEF = '0x73feaa1eE314F8c655E354234017bE2193C9E24E';
 export const BADGER_TREE = '0xbe82A3259ce427B8bCb54b938b486dC2aF509Cc3';
+export const REWARDS_LOGGER = '0x0A4F4e92C3334821EbB523324D09E321a6B0d8ec';
+export const DISTRIBUTOR = '0x660802Fc641b154aBA66a62137e71f331B6d787A';
 
 export const swaggerConfig: SwaggerSettings = {
   path: '/docs',

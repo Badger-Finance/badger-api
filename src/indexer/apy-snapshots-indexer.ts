@@ -1,8 +1,8 @@
 import { isNil } from '@tsed/core';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
+import { SourceType } from '../protocols/enums/source-type.enum';
 import { ValueSourceMap } from '../protocols/interfaces/value-source-map.interface';
-import { VAULT_SOURCE } from '../setts/setts.utils';
 import { getSettValueSources } from './indexer.utils';
 
 export async function refreshApySnapshots() {
@@ -14,14 +14,17 @@ export async function refreshApySnapshots() {
   const sourceMap: ValueSourceMap = {};
   rawValueSources
     .filter((rawValueSource) => !isNil(rawValueSource))
-    .flatMap((sources) => sources.filter((source) => !isNaN(source.apr) && isFinite(source.apr) && source.apr > 0))
+    .flatMap((sources) => sources.filter((source) => !isNaN(source.apr) && isFinite(source.apr)))
     .forEach((source) => {
+      if (source.apr === 0 && source.type !== SourceType.Compound) {
+        return;
+      }
       const mapKey = `${source.address}-${source.name}`;
       const mapEntry = sourceMap[mapKey];
       // simulated underlying are harvestable, measured underlying is not
       // directly override any saved simulated strategy performance for measured
-      const savedVirtualUnderlying = mapEntry && mapEntry.name === VAULT_SOURCE && mapEntry.harvestable;
-      const isVirtualUnderlying = source.name === VAULT_SOURCE && source.harvestable;
+      const savedVirtualUnderlying = mapEntry && mapEntry.type === SourceType.Compound && mapEntry.harvestable;
+      const isVirtualUnderlying = source.type === SourceType.Compound && source.harvestable;
       const override = !mapEntry || savedVirtualUnderlying;
       if (override) {
         sourceMap[mapKey] = source;

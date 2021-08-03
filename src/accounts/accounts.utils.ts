@@ -57,7 +57,6 @@ export async function getCachedAccount(address: string): Promise<CachedAccount |
     }
     return;
   } catch (err) {
-    console.error(err);
     return;
   }
 }
@@ -80,12 +79,12 @@ export async function toSettBalance(
   }
   const depositedTokens = formatBalance(grossDeposit, depositTokenDecimals);
   const withdrawnTokens = formatBalance(grossWithdraw, depositTokenDecimals);
-  const earnedBalance = currentTokens * ppfs - depositedTokens + withdrawnTokens;
-  const [depositTokenPrice, settTokenPrice, earnedTokens, tokens] = await Promise.all([
+  const balanceTokens = currentTokens * ppfs;
+  const earnedBalance = balanceTokens - depositedTokens + withdrawnTokens;
+  const [depositTokenPrice, earnedTokens, tokens] = await Promise.all([
     getPrice(settDefinition.depositToken),
-    getPrice(settDefinition.settToken),
     getSettTokens(settDefinition, earnedBalance, currency),
-    getSettTokens(settDefinition, currentTokens * ppfs, currency),
+    getSettTokens(settDefinition, balanceTokens, currency),
   ]);
 
   return {
@@ -93,8 +92,8 @@ export async function toSettBalance(
     name: settDefinition.name,
     asset: depositToken.symbol,
     ppfs,
-    balance: currentTokens * ppfs,
-    value: inCurrency(settTokenPrice, currency) * currentTokens,
+    balance: balanceTokens,
+    value: inCurrency(depositTokenPrice, currency) * balanceTokens,
     tokens,
     earnedBalance: earnedBalance,
     earnedValue: inCurrency(depositTokenPrice, currency) * earnedBalance,

@@ -39,7 +39,7 @@ export class MaticStrategy extends ChainStrategy {
   async resolveLookupName(lookupName: string, token: string): Promise<TokenPrice> {
     const isContract = ethers.utils.isAddress(lookupName);
     if (isContract) {
-      return resolveTokenPrice(Chain.getChain(ChainNetwork.Ethereum), token, lookupName);
+      return resolveTokenPrice(Chain.getChain(ChainNetwork.Matic), token, lookupName);
     }
     return getTokenPrice(lookupName);
   }

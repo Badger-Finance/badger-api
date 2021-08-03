@@ -24,6 +24,14 @@ module.exports = {
 		'plugin:prettier/recommended',
 		'prettier',
 	],
+	overrides: [
+		{
+			files: ['*.ts', '*.tsx'], // Your TypeScript files extension
+			parserOptions: {
+				project: ['./tsconfig.json'], // Specify it only for TypeScript files
+			},
+		}
+	],
 	rules: {
 		'@typescript-eslint/await-thenable': 'off',
 		'@typescript-eslint/explicit-function-return-type': 'off',
