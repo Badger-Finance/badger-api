@@ -20,40 +20,30 @@ export const maticTokensConfig: TokenConfig = {
     symbol: 'USDC',
     type: TokenType.Contract,
   },
-  [TOKENS.QUICK_WBTC_USDC]: {
-    address: TOKENS.QUICK_WBTC_USDC,
+  [TOKENS.MATIC_IBBTC]: {
+    address: TOKENS.MATIC_IBBTC,
+    decimals: 18,
+    lookupName: 'ibBTC',
+    name: 'Interest-Bearing BTC',
+    symbol: 'IBBTC',
+    type: TokenType.Contract,
+  },
+  [TOKENS.MATIC_SUSHI_IBBTC_WBTC]: {
+    address: TOKENS.MATIC_SUSHI_IBBTC_WBTC,
     decimals: 18,
     lpToken: true,
-    name: 'Quickswap: Wrapped BTC-USDC',
-    symbol: 'QLP-WBTC-USDC',
-    type: TokenType.QuickswapLp,
-  },
-  [TOKENS.BQUICK_WBTC_USDC]: {
-    address: TOKENS.BQUICK_WBTC_USDC,
-    decimals: 18,
-    name: 'bQuickswap: Wrapped BTC-USDC',
-    symbol: 'bQLP-WBTC-USDC',
-    type: TokenType.Vault,
-    vaultToken: {
-      address: TOKENS.QUICK_WBTC_USDC,
-      network: ChainNetwork.Matic,
-    },
-  },
-  [TOKENS.POLY_SUSHI_IBBTC_WBTC]: {
-    address: TOKENS.POLY_SUSHI_IBBTC_WBTC,
-    decimals: 18,
     name: 'Sushi: IBBTC-WBTC',
     symbol: 'SLP-IBBTC-WBTC',
     type: TokenType.SushiswapLp,
   },
-  [TOKENS.POLY_BSUSHI_IBBTC_WBTC]: {
-    address: TOKENS.POLY_BSUSHI_IBBTC_WBTC,
+  [TOKENS.MATIC_BSUSHI_IBBTC_WBTC]: {
+    address: TOKENS.MATIC_BSUSHI_IBBTC_WBTC,
     decimals: 18,
     name: 'bSushi: IBBTC-WBTC',
     symbol: 'bSLP-IBBTC-WBTC',
     type: TokenType.Vault,
     vaultToken: {
-      address: TOKENS.POLY_SUSHI_IBBTC_WBTC,
+      address: TOKENS.MATIC_SUSHI_IBBTC_WBTC,
       network: ChainNetwork.Matic,
     },
   },
