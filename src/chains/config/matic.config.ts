@@ -37,4 +37,13 @@ export const maticSetts: SettDefinition[] = [
     protocol: Protocol.Quickswap,
     stage: Stage.Staging,
   },
+  {
+    name: 'Sushi ibBTC/WBTC',
+    settToken: TOKENS.BQUICK_WBTC_USDC,
+    depositToken: TOKENS.QUICK_WBTC_USDC,
+    createdBlock: 17034232,
+    experimental: true,
+    protocol: Protocol.Quickswap,
+    stage: Stage.Staging,
+  },
 ];

@@ -39,4 +39,22 @@ export const maticTokensConfig: TokenConfig = {
       network: ChainNetwork.Matic,
     },
   },
+  [TOKENS.POLY_SUSHI_IBBTC_WBTC]: {
+    address: TOKENS.POLY_SUSHI_IBBTC_WBTC,
+    decimals: 18,
+    name: 'Sushi: IBBTC-WBTC',
+    symbol: 'SLP-IBBTC-WBTC',
+    type: TokenType.SushiswapLp,
+  },
+  [TOKENS.POLY_BSUSHI_IBBTC_WBTC]: {
+    address: TOKENS.POLY_BSUSHI_IBBTC_WBTC,
+    decimals: 18,
+    name: 'bSushi: IBBTC-WBTC',
+    symbol: 'bSLP-IBBTC-WBTC',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.POLY_SUSHI_IBBTC_WBTC,
+      network: ChainNetwork.Matic,
+    },
+  },
 };
