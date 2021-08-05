@@ -182,14 +182,6 @@ export const ethSetts: SettDefinition[] = [
     protocol: Protocol.Convex,
   },
   {
-    name: 'Convex Tricrypto2',
-    createdBlock: 12965932,
-    depositToken: TOKENS.CRV_TRICRYPTO2,
-    getTokenBalance: getCurveSettTokenBalance,
-    settToken: TOKENS.BCRV_TRICRYPTO2,
-    protocol: Protocol.Convex,
-  },
-  {
     name: 'Convex cvxCRV Helper',
     createdBlock: 12678302,
     depositToken: TOKENS.CVXCRV,
