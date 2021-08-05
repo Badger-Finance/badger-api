@@ -204,4 +204,12 @@ export const ethSetts: SettDefinition[] = [
     stage: Stage.Staging,
     state: SettState.Experimental,
   },
+  {
+    name: 'Convex Tricrypto2',
+    createdBlock: 12966048,
+    depositToken: TOKENS.CRV_TRICRYPTO2,
+    getTokenBalance: getCurveSettTokenBalance,
+    settToken: TOKENS.BCRV_TRICRYPTO2,
+    protocol: Protocol.Convex,
+  },
 ];
