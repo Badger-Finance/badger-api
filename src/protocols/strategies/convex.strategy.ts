@@ -7,6 +7,7 @@ import { CURVE_API_URL, CURVE_CRYPTO_API_URL, ONE_YEAR_SECONDS } from '../../con
 import { TOKENS } from '../../config/tokens.config';
 import {
   CurvePool__factory,
+  CurvePool3__factory,
   CurvePoolOld__factory,
   CurveRegistry__factory,
   CvxBooster__factory,
@@ -300,24 +301,29 @@ export async function getCurvePoolBalance(chain: Chain, depositToken: string): P
   const cachedBalances = [];
   const registry = CurveRegistry__factory.connect('0x90E00ACe148ca3b23Ac1bC8C240C2a7Dd9c2d7f5', chain.provider);
   const poolAddress = await registry.get_pool_from_lp_token(depositToken);
-  let pool = CurvePool__factory.connect(poolAddress, chain.provider);
+  const poolContracts = [
+    CurvePool3__factory.connect(poolAddress, chain.provider),
+    CurvePool__factory.connect(poolAddress, chain.provider),
+    CurvePoolOld__factory.connect(poolAddress, chain.provider),
+  ];
 
+  let option = 0;
   let coin = 0;
-  let hasTokens = true;
-  let updatedAbi = false;
-  while (hasTokens) {
+  while (true) {
     try {
+      const pool = poolContracts[option];
       const tokenAddress = await pool.coins(coin);
       const token = getToken(ethers.utils.getAddress(tokenAddress));
       const balance = formatBalance(await pool.balances(coin), token.decimals);
       cachedBalances.push(await toCachedBalance(token, balance));
       coin++;
     } catch (err) {
-      if (!updatedAbi) {
-        pool = CurvePoolOld__factory.connect(poolAddress, chain.provider);
-        updatedAbi = true;
-      } else {
-        hasTokens = false;
+      if (coin > 0) {
+        break;
+      }
+      option++;
+      if (option >= poolContracts.length) {
+        break;
       }
     }
   }

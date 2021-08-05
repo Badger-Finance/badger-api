@@ -3,6 +3,7 @@
 /* eslint-disable */
 export type { BadgerTree } from "./BadgerTree";
 export type { CurveBaseRegistry } from "./CurveBaseRegistry";
+export type { CurvePool3 } from "./CurvePool3";
 export type { CurvePoolOld } from "./CurvePoolOld";
 export type { CurvePool } from "./CurvePool";
 export type { CurveRegistry } from "./CurveRegistry";
@@ -22,6 +23,7 @@ export type { UniV2 } from "./UniV2";
 
 export { BadgerTree__factory } from "./factories/BadgerTree__factory";
 export { CurveBaseRegistry__factory } from "./factories/CurveBaseRegistry__factory";
+export { CurvePool3__factory } from "./factories/CurvePool3__factory";
 export { CurvePoolOld__factory } from "./factories/CurvePoolOld__factory";
 export { CurvePool__factory } from "./factories/CurvePool__factory";
 export { CurveRegistry__factory } from "./factories/CurveRegistry__factory";
