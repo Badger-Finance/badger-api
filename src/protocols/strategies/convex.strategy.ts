@@ -60,6 +60,7 @@ const cvxPoolId: PoolMap = {
   [TOKENS.CRV_BBTC]: 19,
   [TOKENS.CRV_OBTC]: 20,
   [TOKENS.CRV_TRICRYPTO]: 37,
+  [TOKENS.CRV_TRICRYPTO2]: 38,
 };
 
 const discontinuedRewards = ['0x330416C863f2acCE7aF9C9314B422d24c672534a'].map((addr) => ethers.utils.getAddress(addr));

@@ -232,11 +232,11 @@ export async function getSettValueSources(chain: Chain, settDefinition: SettDefi
   ]);
 
   // check for any emission removal
-  const oldSources: { [index: string]: CachedValueSource } = {};
+  const oldSources: Record<string, CachedValueSource> = {};
   const oldEmission = await getVaultCachedValueSources(settDefinition);
   oldEmission.forEach((source) => (oldSources[source.addressValueSourceType] = source));
 
-  // remove updates sources from old source list
+  // remove updated sources from old source list
   const newSources = [underlying, ...emission, ...protocol, ...derivative];
   newSources.forEach((source) => delete oldSources[source.addressValueSourceType]);
 

@@ -2,7 +2,13 @@ import { GraphQLClient } from 'graphql-request';
 // import fetch from 'node-fetch';
 import { Chain } from '../../chains/config/chain.config';
 import { ChainNetwork } from '../../chains/enums/chain-network.enum';
-import { MASTERCHEF_URL, SUSHI_CHEF, SUSHISWAP_URL, SUSHISWAP_XDAI_URL } from '../../config/constants';
+import {
+  MASTERCHEF_URL,
+  SUSHI_CHEF,
+  SUSHISWAP_MATIC_URL,
+  SUSHISWAP_URL,
+  SUSHISWAP_XDAI_URL,
+} from '../../config/constants';
 import { TOKENS } from '../../config/tokens.config';
 import { SushiChef__factory } from '../../contracts';
 import { getSdk, OrderDirection, Pool_OrderBy } from '../../graphql/generated/master-chef';
@@ -31,6 +37,9 @@ async function getSushiSwapValue(chain: Chain, settDefinition: SettDefinition): 
   switch (chain.network) {
     case ChainNetwork.xDai:
       graphUrl = SUSHISWAP_XDAI_URL;
+      break;
+    case ChainNetwork.Matic:
+      graphUrl = SUSHISWAP_MATIC_URL;
       break;
     default:
       graphUrl = SUSHISWAP_URL;

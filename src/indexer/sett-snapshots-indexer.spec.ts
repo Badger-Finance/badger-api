@@ -48,7 +48,7 @@ describe('refreshSettSnapshots', () => {
     await refreshSettSnapshots();
   });
 
-  it('fetches Setts for ETH and BSC tokens', async () => {
+  it('fetches Setts for all chains', async () => {
     const requestedAddresses = getSettMock.mock.calls.map((calls) => calls[1]);
     expect(requestedAddresses.sort()).toEqual(supportedAddresses);
   });
