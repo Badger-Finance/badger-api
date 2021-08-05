@@ -210,8 +210,13 @@ Object {
   "0x27E98fC7d05f54E544d16F58C194C2D7ba71e3B5": Object {
     "address": "0x27E98fC7d05f54E544d16F58C194C2D7ba71e3B5",
     "decimals": 18,
+<<<<<<< HEAD
     "name": "bCurve.fi USD-BTC-ETH (crv3crypto)",
     "symbol": "bcrvTricrypto2",
+=======
+    "name": "bCurve.fi USD/BTC/ETH",
+    "symbol": "bcrvTricrypto",
+>>>>>>> chore: add tricrypto2
     "type": "Vault",
     "vaultToken": Object {
       "address": "0xc4AD29ba4B3c580e6D59105FFf484999997675Ff",
@@ -628,8 +633,13 @@ Object {
   "0xc4AD29ba4B3c580e6D59105FFf484999997675Ff": Object {
     "address": "0xc4AD29ba4B3c580e6D59105FFf484999997675Ff",
     "decimals": 18,
+<<<<<<< HEAD
     "name": "Curve.fi Tricrypto2",
     "symbol": "crvTricrypto2",
+=======
+    "name": "Curve.fi Tricrypto",
+    "symbol": "crvTricrypto",
+>>>>>>> chore: add tricrypto2
     "type": "CurveLP",
   },
   "0xc4E15973E6fF2A35cC804c2CF9D2a1b817a8b40F": Object {
@@ -783,8 +793,13 @@ Object {
   "0x27E98fC7d05f54E544d16F58C194C2D7ba71e3B5": Object {
     "address": "0x27E98fC7d05f54E544d16F58C194C2D7ba71e3B5",
     "decimals": 18,
+<<<<<<< HEAD
     "name": "bCurve.fi USD-BTC-ETH (crv3crypto)",
     "symbol": "bcrvTricrypto2",
+=======
+    "name": "bCurve.fi USD/BTC/ETH",
+    "symbol": "bcrvTricrypto",
+>>>>>>> chore: add tricrypto2
     "type": "Vault",
     "vaultToken": Object {
       "address": "0xc4AD29ba4B3c580e6D59105FFf484999997675Ff",
@@ -1201,8 +1216,13 @@ Object {
   "0xc4AD29ba4B3c580e6D59105FFf484999997675Ff": Object {
     "address": "0xc4AD29ba4B3c580e6D59105FFf484999997675Ff",
     "decimals": 18,
+<<<<<<< HEAD
     "name": "Curve.fi Tricrypto2",
     "symbol": "crvTricrypto2",
+=======
+    "name": "Curve.fi Tricrypto",
+    "symbol": "crvTricrypto",
+>>>>>>> chore: add tricrypto2
     "type": "CurveLP",
   },
   "0xc4E15973E6fF2A35cC804c2CF9D2a1b817a8b40F": Object {

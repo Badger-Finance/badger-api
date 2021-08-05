@@ -525,7 +525,7 @@ export const ethTokensConfig: TokenConfig = {
   [TOKENS.BCRV_TRICRYPTO2]: {
     address: TOKENS.BCRV_TRICRYPTO2,
     decimals: 18,
-    name: 'bCurve.fi USD-BTC-ETH (crv3crypto)',
+    name: 'bCurve.fi USD/BTC/ETH',
     symbol: 'bcrvTricrypto2',
     type: TokenType.Vault,
     vaultToken: {
