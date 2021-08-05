@@ -244,6 +244,13 @@ export const ethTokensConfig: TokenConfig = {
     symbol: 'crvTricrypto',
     type: TokenType.CurveLP,
   },
+  [TOKENS.CRV_TRICRYPTO2]: {
+    address: TOKENS.CRV_TRICRYPTO2,
+    decimals: 18,
+    name: 'Curve.fi Tricrypto2',
+    symbol: 'crvTricrypto2',
+    type: TokenType.CurveLP,
+  },
   [TOKENS.SUSHI_BADGER_WBTC]: {
     address: TOKENS.SUSHI_BADGER_WBTC,
     decimals: 18,
@@ -512,6 +519,17 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.CRV_TRICRYPTO,
+      network: ChainNetwork.Ethereum,
+    },
+  },
+  [TOKENS.BCRV_TRICRYPTO2]: {
+    address: TOKENS.BCRV_TRICRYPTO2,
+    decimals: 18,
+    name: 'bCurve.fi USD/BTC/ETH2',
+    symbol: 'bcrvTricrypto2',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.CRV_TRICRYPTO2,
       network: ChainNetwork.Ethereum,
     },
   },
