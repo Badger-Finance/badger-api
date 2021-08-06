@@ -109,6 +109,12 @@ export class SettModel implements Sett {
   @Property()
   public experimental: boolean;
 
+  @Title('deprecated')
+  @Description('Flag indicating if sett is deprecated')
+  @Example(false)
+  @Property()
+  public deprecated: boolean;
+
   constructor(
     name: string,
     state: SettState,
@@ -124,6 +130,7 @@ export class SettModel implements Sett {
     sources: ValueSource[],
     experimental: boolean,
     hasBouncer: boolean,
+    deprecated: boolean,
     minApr?: number,
     maxApr?: number,
   ) {
@@ -143,5 +150,6 @@ export class SettModel implements Sett {
     this.sources = sources;
     this.hasBouncer = hasBouncer;
     this.experimental = experimental;
+    this.deprecated = deprecated;
   }
 }
