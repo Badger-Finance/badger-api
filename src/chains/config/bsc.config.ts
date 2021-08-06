@@ -31,6 +31,7 @@ export const bscSetts: SettDefinition[] = [
     name: 'Pancakeswap BNB/BTCB',
     createdBlock: 5516404,
     depositToken: TOKENS.PANCAKE_BNB_BTCB,
+    deprecated: true,
     settToken: TOKENS.BPANCAKE_BNB_BTCB,
     protocol: Protocol.Pancakeswap,
   },
