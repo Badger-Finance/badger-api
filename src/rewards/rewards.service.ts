@@ -152,7 +152,7 @@ export class RewardsService {
     }
 
     const cutoff = new Date();
-    cutoff.setDate(cutoff.getDate() - 1);
+    cutoff.setMinutes(-20);
     const cutOffTimestamp = parseInt((cutoff.getTime() / 1000).toString());
     const includedTokens = new Set();
     const activeSchedules = unlockSchedules
@@ -183,7 +183,7 @@ export class RewardsService {
      * APR = (P * A * (S / D)) / L * 100
      *
      * This vaule is calculated for all tokens emitted for any given sett
-     * and persisted against that sett. There is a one day grace period for
+     * and persisted against that sett. There is a 20 minute grace period for
      * emission that have since ended, and only the latest active emission
      * will be used for yield calcuation.
      */
