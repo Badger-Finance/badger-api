@@ -7,6 +7,7 @@ export interface Sett extends SettSummary {
   apr: number;
   asset: string;
   boostable: boolean;
+  deprecated: boolean;
   experimental: boolean;
   hasBouncer: boolean;
   maxApr?: number;
