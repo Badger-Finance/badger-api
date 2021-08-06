@@ -181,6 +181,7 @@ export const ethSetts: SettDefinition[] = [
     getTokenBalance: getCurveSettTokenBalance,
     settToken: TOKENS.BCRV_TRICRYPTO,
     protocol: Protocol.Convex,
+    deprecated: true,
   },
   {
     name: 'Convex cvxCRV Helper',
