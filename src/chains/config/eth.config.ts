@@ -75,6 +75,7 @@ export const ethSetts: SettDefinition[] = [
     name: 'Uniswap Wrapped BTC/Digg',
     createdBlock: 11680833,
     depositToken: TOKENS.UNI_DIGG_WBTC,
+    deprecated: true,
     settToken: TOKENS.BUNI_DIGG_WBTC,
     protocol: Protocol.Uniswap,
   },
