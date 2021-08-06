@@ -21,6 +21,7 @@ export const defaultSett = (settDefinition: SettDefinition): Sett => {
     apr: 0,
     balance: 0,
     boostable: false,
+    deprecated: !!settDefinition.deprecated,
     experimental: !!settDefinition.experimental,
     hasBouncer: !!settDefinition.hasBouncer,
     name: settDefinition.name,
