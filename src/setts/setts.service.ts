@@ -44,7 +44,7 @@ export class SettsService {
     ]);
     sett.tokens = await getSettTokens(settDefinition, sett.balance, currency);
     sett.value = sett.tokens.reduce((total, balance) => (total += balance.value), 0);
-    sett.sources = sources.filter((source) => source.apr >= 0.01);
+    sett.sources = !settDefinition.deprecated ? sources.filter((source) => source.apr >= 0.01) : [];
     sett.apr = sett.sources.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
 
     const hasBoostedApr = sett.sources.some((source) => source.boostable);

@@ -7,6 +7,7 @@ export interface SettDefinition {
   balanceDecimals?: number;
   createdBlock: number;
   depositToken: string;
+  deprecated?: boolean;
   experimental?: boolean;
   getTokenBalance?: (token: string) => Promise<CachedLiquidityPoolTokenBalance>;
   hasBouncer?: boolean;
