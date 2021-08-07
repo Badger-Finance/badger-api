@@ -156,7 +156,7 @@ Object {
     "address": "0x1862A18181346EBd9EdAf800804f89190DeF24a5",
     "decimals": 18,
     "name": "bSushiSwap: WBTC-BADGER",
-    "symbol": "bSLP-BADGER-ETH",
+    "symbol": "bSLP-BADGER-WBTC",
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x110492b31c59716AC47337E616804E3E3AdC0b4a",
@@ -729,7 +729,7 @@ Object {
     "address": "0x1862A18181346EBd9EdAf800804f89190DeF24a5",
     "decimals": 18,
     "name": "bSushiSwap: WBTC-BADGER",
-    "symbol": "bSLP-BADGER-ETH",
+    "symbol": "bSLP-BADGER-WBTC",
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x110492b31c59716AC47337E616804E3E3AdC0b4a",

@@ -394,7 +394,7 @@ export const ethTokensConfig: TokenConfig = {
     address: TOKENS.BSUSHI_BADGER_WBTC,
     decimals: 18,
     name: 'bSushiSwap: WBTC-BADGER',
-    symbol: 'bSLP-BADGER-ETH',
+    symbol: 'bSLP-BADGER-WBTC',
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.SUSHI_BADGER_WBTC,
