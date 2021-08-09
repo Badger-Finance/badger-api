@@ -30,8 +30,8 @@ export class xDai extends Chain {
 export const xDaiSetts: SettDefinition[] = [
   {
     name: 'Sushiswap Wrapped BTC/Wrapped Ether',
-    settToken: TOKENS.BXDAI_SLP_WBTC_WETH,
-    depositToken: TOKENS.XDAI_SLP_WBTC_WETH,
+    settToken: TOKENS.BXDAI_SUSHI_WBTC_WETH,
+    depositToken: TOKENS.XDAI_SUSHI_WBTC_WETH,
     createdBlock: 17199093,
     experimental: true,
     protocol: Protocol.Sushiswap,

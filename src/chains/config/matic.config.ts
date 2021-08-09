@@ -29,13 +29,23 @@ export class Polygon extends Chain {
 
 export const maticSetts: SettDefinition[] = [
   {
-    name: 'Sushi ibBTC/WBTC',
-    settToken: TOKENS.MATIC_BSUSHI_IBBTC_WBTC,
+    name: 'Sushiswap Wrapped BTC/ibBTC',
+    settToken: TOKENS.BMATIC_SUSHI_IBBTC_WBTC,
     depositToken: TOKENS.MATIC_SUSHI_IBBTC_WBTC,
     createdBlock: 17580716,
     experimental: true,
     protocol: Protocol.Sushiswap,
     stage: Stage.Staging,
     strategy: '0x3811448236d4274705b81C6ab99d617bfab617Cd',
+  },
+  {
+    name: 'Quickswap Wrapped BTC/USDC',
+    settToken: TOKENS.BMATIC_QUICK_USDC_WBTC,
+    depositToken: TOKENS.BMATIC_QUICK_USDC_WBTC,
+    createdBlock: 17687004,
+    experimental: true,
+    protocol: Protocol.Quickswap,
+    stage: Stage.Staging,
+    strategy: '0x809990849D53a5109e0cb9C446137793B9f6f1Eb',
   },
 ];
