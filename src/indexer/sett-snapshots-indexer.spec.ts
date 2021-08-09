@@ -2,6 +2,8 @@ import { DataMapper, PutParameters, StringToAnyObjectMap } from '@aws/dynamodb-d
 import { loadChains } from '../chains/chain';
 import { BscStrategy } from '../chains/strategies/bsc.strategy';
 import { EthStrategy } from '../chains/strategies/eth.strategy';
+import { MaticStrategy } from '../chains/strategies/matic.strategy';
+import { xDaiStrategy } from '../chains/strategies/xdai.strategy';
 import { SettQuery } from '../graphql/generated/badger';
 import * as priceUtils from '../prices/prices.utils';
 import { CachedSettSnapshot } from '../setts/interfaces/cached-sett-snapshot.interface';
@@ -41,6 +43,8 @@ describe('refreshSettSnapshots', () => {
     const mockTokenPrice = { name: 'mock', usd: 10, eth: 0, address: '0xbeef' };
     jest.spyOn(BscStrategy.prototype, 'getPrice').mockImplementation(async (_address: string) => mockTokenPrice);
     jest.spyOn(EthStrategy.prototype, 'getPrice').mockImplementation(async (_address: string) => mockTokenPrice);
+    jest.spyOn(MaticStrategy.prototype, 'getPrice').mockImplementation(async (_address: string) => mockTokenPrice);
+    jest.spyOn(xDaiStrategy.prototype, 'getPrice').mockImplementation(async (_address: string) => mockTokenPrice);
 
     const mockTokenPriceSnapshot = { name: 'mock', usd: 10, eth: 0, address: '0xbeef', updatedAt: Date.now() };
     jest.spyOn(priceUtils, 'getPrice').mockImplementation(async (_address: string) => mockTokenPriceSnapshot);
