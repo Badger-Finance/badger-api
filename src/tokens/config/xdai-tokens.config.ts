@@ -20,22 +20,22 @@ export const xDaiTokensConfig: TokenConfig = {
     symbol: 'WETH',
     type: TokenType.Contract,
   },
-  [TOKENS.XDAI_SLP_WBTC_WETH]: {
-    address: TOKENS.XDAI_SLP_WBTC_WETH,
+  [TOKENS.XDAI_SUSHI_WBTC_WETH]: {
+    address: TOKENS.XDAI_SUSHI_WBTC_WETH,
     decimals: 18,
     lpToken: true,
     name: 'SushiSwap: WBTC-ETH',
     symbol: 'SLP-WBTC-ETH',
     type: TokenType.SushiswapLp,
   },
-  [TOKENS.BXDAI_SLP_WBTC_WETH]: {
-    address: TOKENS.BXDAI_SLP_WBTC_WETH,
+  [TOKENS.BXDAI_SUSHI_WBTC_WETH]: {
+    address: TOKENS.BXDAI_SUSHI_WBTC_WETH,
     decimals: 18,
     name: 'bSushiSwap: WBTC-ETH',
     symbol: 'bSLP-WBTC-ETH',
     type: TokenType.Vault,
     vaultToken: {
-      address: TOKENS.XDAI_SLP_WBTC_WETH,
+      address: TOKENS.XDAI_SUSHI_WBTC_WETH,
       network: ChainNetwork.xDai,
     },
   },

@@ -35,14 +35,33 @@ export const maticTokensConfig: TokenConfig = {
     symbol: 'SLP-IBBTC-WBTC',
     type: TokenType.SushiswapLp,
   },
-  [TOKENS.MATIC_BSUSHI_IBBTC_WBTC]: {
-    address: TOKENS.MATIC_BSUSHI_IBBTC_WBTC,
+  [TOKENS.MATIC_QUICK_USDC_WBTC]: {
+    address: TOKENS.MATIC_QUICK_USDC_WBTC,
+    decimals: 18,
+    lpToken: true,
+    name: 'Quickswap: USDC-WBTC',
+    symbol: 'QLP-USDC-WBTC',
+    type: TokenType.SushiswapLp,
+  },
+  [TOKENS.BMATIC_SUSHI_IBBTC_WBTC]: {
+    address: TOKENS.BMATIC_SUSHI_IBBTC_WBTC,
     decimals: 18,
     name: 'bSushiSwap: ibBTC-WBTC',
     symbol: 'bSLP-IBBTC-WBTC',
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.MATIC_SUSHI_IBBTC_WBTC,
+      network: ChainNetwork.Matic,
+    },
+  },
+  [TOKENS.BMATIC_QUICK_USDC_WBTC]: {
+    address: TOKENS.BMATIC_QUICK_USDC_WBTC,
+    decimals: 18,
+    name: 'bQuickswap: USDC-WBTC',
+    symbol: 'bQLP-USDC-WBTC',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.MATIC_QUICK_USDC_WBTC,
       network: ChainNetwork.Matic,
     },
   },
