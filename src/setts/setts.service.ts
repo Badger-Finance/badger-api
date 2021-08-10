@@ -2,7 +2,7 @@ import { Service } from '@tsed/common';
 import { ethers } from 'ethers';
 import { Chain } from '../chains/config/chain.config';
 import { CURRENT, ONE_DAY, SEVEN_DAYS, THIRTY_DAYS, THREE_DAYS } from '../config/constants';
-import { scalePerformance, uniformPerformance } from '../protocols/interfaces/performance.interface';
+import { scalePerformance } from '../protocols/interfaces/performance.interface';
 import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interface';
 import { createValueSource, ValueSource } from '../protocols/interfaces/value-source.interface';
 import { getVaultValueSources } from '../protocols/protocols.utils';
@@ -59,25 +59,12 @@ export class SettsService {
 
   static async getSettPerformance(settDefinition: SettDefinition): Promise<ValueSource> {
     const snapshots = await getSettSnapshots(settDefinition);
-    let foundStart = false;
-    const measured = snapshots.filter((snapshot) => {
-      if (foundStart) {
-        return false;
-      }
-      if (snapshot.ratio == 1) {
-        foundStart = true;
-      }
-      return true;
-    });
-    if (measured.length === 0 || measured.length < SEVEN_DAYS) {
-      return createValueSource(VAULT_SOURCE, uniformPerformance(0));
-    }
-    const current = measured[CURRENT];
+    const current = snapshots[CURRENT];
     const performance = {
-      oneDay: getPerformance(current, getSnapshot(measured, ONE_DAY)),
-      threeDay: getPerformance(current, getSnapshot(measured, THREE_DAYS)),
-      sevenDay: getPerformance(current, getSnapshot(measured, SEVEN_DAYS)),
-      thirtyDay: getPerformance(current, getSnapshot(measured, THIRTY_DAYS)),
+      oneDay: getPerformance(current, getSnapshot(snapshots, ONE_DAY)),
+      threeDay: getPerformance(current, getSnapshot(snapshots, THREE_DAYS)),
+      sevenDay: getPerformance(current, getSnapshot(snapshots, SEVEN_DAYS)),
+      thirtyDay: getPerformance(current, getSnapshot(snapshots, THIRTY_DAYS)),
     };
     return createValueSource(VAULT_SOURCE, performance);
   }
