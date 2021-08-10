@@ -23,7 +23,7 @@ export class PancakeswapStrategy {
 async function getEmissionSource(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource> {
   const poolId = getPoolId(settDefinition.depositToken);
   const masterChef = PancakeChef__factory.connect(PANCAKE_CHEF, chain.provider);
-  const [totalAllocPoint, cakePerBlock, poolInfo, tokenPrice] = await Promise.all([
+  const [_totalAllocPoint, cakePerBlock, poolInfo, tokenPrice] = await Promise.all([
     masterChef.totalAllocPoint(),
     masterChef.cakePerBlock(),
     masterChef.poolInfo(poolId),
@@ -33,7 +33,8 @@ async function getEmissionSource(chain: Chain, settDefinition: SettDefinition): 
   const poolBalance = formatBalance(await depositToken.balanceOf(PANCAKE_CHEF));
   const depositTokenValue = await getTokenPriceData(poolInfo.lpToken);
   const poolValue = poolBalance * depositTokenValue.usd;
-  const emissionScalar = poolInfo.allocPoint.toNumber() / totalAllocPoint.toNumber();
+  // const emissionScalar = poolInfo.allocPoint.toNumber() / totalAllocPoint.toNumber();
+  const emissionScalar = 1;
   const cakeEmission = parseFloat(formatEther(cakePerBlock)) * emissionScalar * chain.blocksPerYear * tokenPrice.usd;
   const emissionSource = createValueSource(VAULT_SOURCE, uniformPerformance((cakeEmission / poolValue) * 100), true);
   return valueSourceToCachedValueSource(emissionSource, settDefinition, SourceType.Compound);

@@ -1,5 +1,6 @@
 import { NotFound, UnprocessableEntity } from '@tsed/exceptions';
-import { Ethereum, ethSetts } from '../../chains/config/eth.config';
+import { Chain } from '../../chains/config/chain.config';
+import { ethSetts } from '../../chains/config/eth.config';
 import { STRATEGIES } from '../../config/constants';
 import { Protocol } from '../../config/enums/protocol.enum';
 import { TOKENS } from '../../config/tokens.config';
@@ -10,13 +11,12 @@ import { getSett } from '../../setts/setts.utils';
 import { CachedLiquidityPoolTokenBalance } from '../interfaces/cached-liquidity-pool-token-balance.interface';
 import { formatBalance, getToken, toCachedBalance } from '../tokens.utils';
 
-export const getZsDiggTokenBalance = async (token: string): Promise<CachedLiquidityPoolTokenBalance> => {
+export const getZsDiggTokenBalance = async (chain: Chain, token: string): Promise<CachedLiquidityPoolTokenBalance> => {
   const definition = ethSetts.find((sett) => sett.settToken === token);
   if (!definition) {
     throw new UnprocessableEntity('Cannot get ZsDiggTokenBalance, requires a sett definition');
   }
 
-  const chain = new Ethereum();
   const { sett } = await getSett(chain.graphUrl, definition.settToken);
   if (!sett) {
     // sett has not been indexed yet, or encountered a graph error
