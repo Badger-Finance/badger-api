@@ -6,7 +6,7 @@ import { Chain } from '../chains/config/chain.config';
 import { ValidationPipe } from '../common/decorators/validation-pipe';
 import { SettSnapshot } from '../setts/interfaces/sett-snapshot.interface';
 import { SettsService } from '../setts/setts.service';
-import { getSettSnapshots } from '../setts/setts.utils';
+import { getSettSnapshotsInRange } from '../setts/setts.utils';
 import { ChartsQueryDto } from './dto/charts-query.dto';
 import { ChartGranularity } from './enums/chart-granularity.enum';
 
@@ -30,23 +30,29 @@ export class ChartsController {
     const {
       id: settToken,
       chain,
-      start = yesterday,
-      end = now,
+      start: queryStart,
+      end: queryEnd,
       period = 1,
       granularity = ChartGranularity.HOUR,
     } = query;
 
+    const start = queryStart ? new Date(queryStart) : yesterday;
+    const end = queryEnd ? new Date(queryEnd) : now;
+
     const { isValid, error } = this.isValidGranularityPeriod(granularity, period, start, end);
+
     if (!isValid && error) {
       throw new UnprocessableEntity(error);
     }
 
     const checksumContract = ethers.utils.getAddress(settToken);
     const sett = Chain.getChain(chain).setts.find((sett) => sett.settToken === checksumContract);
+
     if (!sett) {
       throw new NotFound(`${checksumContract} is not a valid sett`);
     }
-    return getSettSnapshots(sett);
+
+    return getSettSnapshotsInRange(sett, start, end);
   }
 
   private isValidGranularityPeriod(

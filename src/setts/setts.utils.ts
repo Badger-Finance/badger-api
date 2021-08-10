@@ -1,3 +1,4 @@
+import { between } from '@aws/dynamodb-expressions';
 import { NotFound } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
@@ -79,6 +80,30 @@ export const getSettSnapshots = async (settDefinition: SettDefinition): Promise<
       SettSnapshot,
       { address: assetToken.address },
       { limit: SAMPLE_DAYS, scanIndexForward: false },
+    )) {
+      snapshots.push(snapshot);
+    }
+    return snapshots;
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
+};
+
+export const getSettSnapshotsInRange = async (
+  settDefinition: SettDefinition,
+  start: Date,
+  end: Date,
+): Promise<SettSnapshot[]> => {
+  try {
+    const snapshots = [];
+    const mapper = getDataMapper();
+    const assetToken = getToken(settDefinition.settToken);
+
+    for await (const snapshot of mapper.query(
+      SettSnapshot,
+      { address: assetToken.address, timestamp: between(start.getTime(), end.getTime()) },
+      { scanIndexForward: false },
     )) {
       snapshots.push(snapshot);
     }
