@@ -13,6 +13,9 @@ export async function refreshTokenBalances() {
   const chains = loadChains();
 
   for (const chain of chains) {
+    if (chain.name !== 'Polygon') {
+      continue;
+    }
     const settDefinitions = chain.setts;
     for (const settDefinition of settDefinitions) {
       const depositToken = getToken(settDefinition.depositToken);
@@ -33,7 +36,7 @@ export async function refreshTokenBalances() {
           await saveCachedTokenBalance(mapper, cachedLiquidityPoolTokenBalance);
         }
         if (settDefinition.getTokenBalance) {
-          const cachedTokenBalance = await settDefinition.getTokenBalance(settDefinition.settToken);
+          const cachedTokenBalance = await settDefinition.getTokenBalance(chain, settDefinition.settToken);
           if (cachedTokenBalance.tokenBalances.length === 0) {
             continue;
           }

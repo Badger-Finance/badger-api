@@ -3,6 +3,7 @@ import { Protocol } from '../../config/enums/protocol.enum';
 import { Stage } from '../../config/enums/stage.enum';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
+import { getCurveSettTokenBalance } from '../../protocols/strategies/convex.strategy';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { maticTokensConfig } from '../../tokens/config/matic-tokens.config';
 import { ChainNetwork } from '../enums/chain-network.enum';
@@ -41,11 +42,22 @@ export const maticSetts: SettDefinition[] = [
   {
     name: 'Quickswap Wrapped BTC/USDC',
     settToken: TOKENS.BMATIC_QUICK_USDC_WBTC,
-    depositToken: TOKENS.BMATIC_QUICK_USDC_WBTC,
+    depositToken: TOKENS.MATIC_QUICK_USDC_WBTC,
     createdBlock: 17687004,
     experimental: true,
     protocol: Protocol.Quickswap,
     stage: Stage.Staging,
     strategy: '0x809990849D53a5109e0cb9C446137793B9f6f1Eb',
+  },
+  {
+    name: 'Curve aTricrypto',
+    settToken: TOKENS.BMATIC_CRV_TRICRYPTO,
+    depositToken: TOKENS.MATIC_CRV_TRICRYPTO,
+    getTokenBalance: getCurveSettTokenBalance,
+    createdBlock: 17615233,
+    experimental: true,
+    protocol: Protocol.Curve,
+    stage: Stage.Staging,
+    strategy: '0xDb0C3118ef1acA6125200139BEaCc5D675F37c9C',
   },
 ];

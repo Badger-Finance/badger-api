@@ -12,7 +12,7 @@ import { uniformPerformance } from '../protocols/interfaces/performance.interfac
 import { createValueSource, ValueSource } from '../protocols/interfaces/value-source.interface';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { getCachedSett } from '../setts/setts.utils';
-import { getToken } from '../tokens/tokens.utils';
+import { formatBalance, getToken } from '../tokens/tokens.utils';
 import { Boost } from './interfaces/boost.interface';
 import { BoostData } from './interfaces/boost-data.interface';
 import { BoostMultipliers } from './interfaces/boost-multipliers.interface';
@@ -169,6 +169,10 @@ export class RewardsService {
         return isActive;
       });
 
+    if (settDefinition.depositToken === TOKENS.SUSHI_DIGG_WBTC) {
+      console.log(activeSchedules);
+    }
+
     /**
      * Calculate rewards emission percentages:
      *   - P: Price of Token
@@ -195,11 +199,17 @@ export class RewardsService {
       if (token.address === TOKENS.DIGG) {
         emission = emission.div(sharesPerFragment);
       }
-      const amount = parseFloat(ethers.utils.formatUnits(emission, token.decimals));
+      const amount = formatBalance(emission, token.decimals);
+      if (settDefinition.depositToken === TOKENS.SUSHI_DIGG_WBTC) {
+        console.log({ amount, token, start: new Date(schedule.start.toNumber() * 1000).toISOString(), end: new Date(schedule.end.toNumber() * 1000).toISOString() });
+      }
       const durationScalar = ONE_YEAR_SECONDS / schedule.duration.toNumber();
       const yearlyEmission = price.usd * amount * durationScalar;
       const apr = (yearlyEmission / sett.value) * 100;
       emissionSources.push(createValueSource(`${token.name} Rewards`, uniformPerformance(apr), false, boostRange));
+    }
+    if (settDefinition.depositToken === TOKENS.SUSHI_DIGG_WBTC) {
+      console.log(emissionSources);
     }
     return emissionSources;
   }

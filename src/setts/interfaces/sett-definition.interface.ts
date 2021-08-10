@@ -1,3 +1,4 @@
+import { Chain } from '../../chains/config/chain.config';
 import { Protocol } from '../../config/enums/protocol.enum';
 import { SettState } from '../../config/enums/sett-state.enum';
 import { Stage } from '../../config/enums/stage.enum';
@@ -9,7 +10,7 @@ export interface SettDefinition {
   depositToken: string;
   deprecated?: boolean;
   experimental?: boolean;
-  getTokenBalance?: (token: string) => Promise<CachedLiquidityPoolTokenBalance>;
+  getTokenBalance?: (chain: Chain, token: string) => Promise<CachedLiquidityPoolTokenBalance>;
   hasBouncer?: boolean;
   name: string;
   protocol?: Protocol;

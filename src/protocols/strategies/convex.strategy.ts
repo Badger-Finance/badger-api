@@ -2,10 +2,11 @@ import { UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import fetch from 'node-fetch';
 import { Chain } from '../../chains/config/chain.config';
-import { Ethereum, ethSetts } from '../../chains/config/eth.config';
 import { CURVE_API_URL, CURVE_CRYPTO_API_URL, ONE_YEAR_SECONDS } from '../../config/constants';
+import { ContractRegistry } from '../../config/interfaces/contract-registry.interface';
 import { TOKENS } from '../../config/tokens.config';
 import {
+  CurveBaseRegistry__factory,
   CurvePool__factory,
   CurvePool3__factory,
   CurvePoolOld__factory,
@@ -50,6 +51,8 @@ const curvePoolApr: Record<string, string> = {
   [TOKENS.CRV_OBTC]: 'obtc',
   [TOKENS.CRV_BBTC]: 'bbtc',
   [TOKENS.CRV_TRICRYPTO]: 'tricrypto',
+  [TOKENS.CRV_TRICRYPTO2]: 'tricrypto2',
+  [TOKENS.MATIC_CRV_TRICRYPTO]: 'atricrypto',
 };
 
 const cvxPoolId: PoolMap = {
@@ -62,6 +65,10 @@ const cvxPoolId: PoolMap = {
   [TOKENS.CRV_OBTC]: 20,
   [TOKENS.CRV_TRICRYPTO]: 37,
   [TOKENS.CRV_TRICRYPTO2]: 38,
+};
+
+const nonRegistryPools: ContractRegistry = {
+  [TOKENS.MATIC_CRV_TRICRYPTO]: '0x751B1e21756bDbc307CBcC5085c042a0e9AaEf36',
 };
 
 const discontinuedRewards = ['0x330416C863f2acCE7aF9C9314B422d24c672534a'].map((addr) => ethers.utils.getAddress(addr));
@@ -298,9 +305,15 @@ export async function getCurveTokenPrice(chain: Chain, depositToken: string): Pr
 }
 
 export async function getCurvePoolBalance(chain: Chain, depositToken: string): Promise<CachedTokenBalance[]> {
+  const baseRegistry = CurveBaseRegistry__factory.connect('0x0000000022D53366457F9d5E68Ec105046FC4383', chain.provider);
   const cachedBalances = [];
-  const registry = CurveRegistry__factory.connect('0x90E00ACe148ca3b23Ac1bC8C240C2a7Dd9c2d7f5', chain.provider);
-  const poolAddress = await registry.get_pool_from_lp_token(depositToken);
+  const registryAddr = await baseRegistry.get_registry();
+  const registry = CurveRegistry__factory.connect(registryAddr, chain.provider);
+  let poolAddress = await registry.get_pool_from_lp_token(depositToken);
+  // meta pools not in registry and no linkage - use a manually defined lookup
+  if (poolAddress === ethers.constants.AddressZero) {
+    poolAddress = nonRegistryPools[depositToken];
+  }
   const poolContracts = [
     CurvePool3__factory.connect(poolAddress, chain.provider),
     CurvePool__factory.connect(poolAddress, chain.provider),
@@ -328,15 +341,17 @@ export async function getCurvePoolBalance(chain: Chain, depositToken: string): P
     }
   }
 
+  if (depositToken === TOKENS.MATIC_CRV_TRICRYPTO) {
+    console.log(cachedBalances);
+  }
   return cachedBalances;
 }
 
-export async function getCurveSettTokenBalance(token: string): Promise<CachedLiquidityPoolTokenBalance> {
-  const definition = ethSetts.find((sett) => sett.settToken === token);
+export async function getCurveSettTokenBalance(chain: Chain, token: string): Promise<CachedLiquidityPoolTokenBalance> {
+  const definition = chain.setts.find((sett) => sett.settToken === token);
   if (!definition || !definition.protocol) {
     throw new UnprocessableEntity('Cannot get curve sett token balances, requires a sett definition');
   }
-  const chain = new Ethereum();
   const depositToken = getToken(definition.depositToken);
   const cachedTokens = await getCurvePoolBalance(chain, definition.depositToken);
   const contract = Erc20__factory.connect(depositToken.address, chain.provider);

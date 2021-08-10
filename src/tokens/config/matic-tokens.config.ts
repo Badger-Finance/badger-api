@@ -20,6 +20,22 @@ export const maticTokensConfig: TokenConfig = {
     symbol: 'USDC',
     type: TokenType.Contract,
   },
+  [TOKENS.MATIC_USDT]: {
+    address: TOKENS.MATIC_USDT,
+    decimals: 6,
+    lookupName: 'tether',
+    name: 'Tether',
+    symbol: 'USDT',
+    type: TokenType.Contract,
+  },
+  [TOKENS.MATIC_DAI]: {
+    address: TOKENS.MATIC_DAI,
+    decimals: 18,
+    lookupName: 'dai',
+    name: 'Dai',
+    symbol: 'DAI',
+    type: TokenType.Contract,
+  },
   [TOKENS.MATIC_IBBTC]: {
     address: TOKENS.MATIC_IBBTC,
     decimals: 18,
@@ -43,6 +59,13 @@ export const maticTokensConfig: TokenConfig = {
     symbol: 'QLP-USDC-WBTC',
     type: TokenType.SushiswapLp,
   },
+  [TOKENS.MATIC_CRV_TRICRYPTO]: {
+    address: TOKENS.MATIC_CRV_TRICRYPTO,
+    decimals: 18,
+    name: 'Curve.fi aTricrypto',
+    symbol: 'crvaTricrypto',
+    type: TokenType.CurveLP,
+  },
   [TOKENS.BMATIC_SUSHI_IBBTC_WBTC]: {
     address: TOKENS.BMATIC_SUSHI_IBBTC_WBTC,
     decimals: 18,
@@ -63,6 +86,17 @@ export const maticTokensConfig: TokenConfig = {
     vaultToken: {
       address: TOKENS.MATIC_QUICK_USDC_WBTC,
       network: ChainNetwork.Matic,
+    },
+  },
+  [TOKENS.BMATIC_CRV_TRICRYPTO]: {
+    address: TOKENS.BMATIC_CRV_TRICRYPTO,
+    decimals: 18,
+    name: 'bCurve.fi USD/BTC/ETH',
+    symbol: 'bcrvTricrypto',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.MATIC_CRV_TRICRYPTO,
+      network: ChainNetwork.Ethereum,
     },
   },
 };
