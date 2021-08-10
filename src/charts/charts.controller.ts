@@ -24,8 +24,8 @@ export class ChartsController {
     query: ChartsQueryDto,
   ): Promise<SettSnapshot[]> {
     const now = new Date();
-    const yesterday = new Date();
-    yesterday.setHours(now.getHours() - 24);
+    const twoWeeksAgo = new Date();
+    twoWeeksAgo.setDate(now.getDate() - 14);
 
     const {
       id: settToken,
@@ -36,7 +36,7 @@ export class ChartsController {
       granularity = ChartGranularity.HOUR,
     } = query;
 
-    const start = queryStart ? new Date(queryStart) : yesterday;
+    const start = queryStart ? new Date(queryStart) : twoWeeksAgo;
     const end = queryEnd ? new Date(queryEnd) : now;
 
     const { isValid, error } = this.isValidGranularityPeriod(granularity, period, start, end);
