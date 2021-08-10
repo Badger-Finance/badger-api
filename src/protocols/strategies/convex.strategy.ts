@@ -2,7 +2,8 @@ import { UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import fetch from 'node-fetch';
 import { Chain } from '../../chains/config/chain.config';
-import { CURVE_API_URL, CURVE_CRYPTO_API_URL, ONE_YEAR_SECONDS } from '../../config/constants';
+import { ChainNetwork } from '../../chains/enums/chain-network.enum';
+import { CURVE_API_URL, CURVE_CRYPTO_API_URL, CURVE_MATIC_API_URL, ONE_YEAR_SECONDS } from '../../config/constants';
 import { ContractRegistry } from '../../config/interfaces/contract-registry.interface';
 import { TOKENS } from '../../config/tokens.config';
 import {
@@ -10,6 +11,7 @@ import {
   CurvePool__factory,
   CurvePool3__factory,
   CurvePoolOld__factory,
+  CurvePoolPolygon__factory,
   CurveRegistry__factory,
   CvxBooster__factory,
   CvxRewards__factory,
@@ -53,6 +55,7 @@ const curvePoolApr: Record<string, string> = {
   [TOKENS.CRV_TRICRYPTO]: 'tricrypto',
   [TOKENS.CRV_TRICRYPTO2]: 'tricrypto2',
   [TOKENS.MATIC_CRV_TRICRYPTO]: 'atricrypto',
+  [TOKENS.MATIC_CRV_AMWBTC]: 'ren',
 };
 
 const cvxPoolId: PoolMap = {
@@ -160,7 +163,7 @@ async function getVaultSources(chain: Chain, settDefinition: SettDefinition): Pr
     cachedExtraSources.push(valueSourceToCachedValueSource(rewardSource, settDefinition, tokenEmission(rewardToken)));
   }
 
-  const cachedTradeFees = await getCurvePerformance(settDefinition);
+  const cachedTradeFees = await getCurvePerformance(chain, settDefinition);
   return [cachedCompounding, cachedTradeFees, cachedCrvEmission, cachedCvxEmission, ...cachedExtraSources];
 }
 
@@ -228,8 +231,16 @@ async function getCvxCrvRewards(chain: Chain, settDefinition: SettDefinition): P
   return [valueSourceToCachedValueSource(cvxCrvValueSource, settDefinition, SourceType.Compound)];
 }
 
-export async function getCurvePerformance(settDefinition: SettDefinition): Promise<CachedValueSource> {
-  let curveData = await fetch(CURVE_API_URL).then((response) => response.json());
+export async function getCurvePerformance(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource> {
+  let defaultUrl;
+  switch (chain.network) {
+    case ChainNetwork.Matic:
+      defaultUrl = CURVE_MATIC_API_URL;
+      break;
+    default:
+      defaultUrl = CURVE_API_URL;
+  }
+  let curveData = await fetch(defaultUrl).then((response) => response.json());
   const assetKey = settDefinition.depositToken;
   const missingEntry = () => !curveData.apy.week[curvePoolApr[assetKey]];
 
@@ -316,6 +327,7 @@ export async function getCurvePoolBalance(chain: Chain, depositToken: string): P
   }
   const poolContracts = [
     CurvePool3__factory.connect(poolAddress, chain.provider),
+    CurvePoolPolygon__factory.connect(poolAddress, chain.provider),
     CurvePool__factory.connect(poolAddress, chain.provider),
     CurvePoolOld__factory.connect(poolAddress, chain.provider),
   ];
@@ -341,9 +353,6 @@ export async function getCurvePoolBalance(chain: Chain, depositToken: string): P
     }
   }
 
-  if (depositToken === TOKENS.MATIC_CRV_TRICRYPTO) {
-    console.log(cachedBalances);
-  }
   return cachedBalances;
 }
 

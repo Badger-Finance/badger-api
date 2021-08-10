@@ -191,7 +191,7 @@ export async function getProtocolValueSources(
   try {
     switch (settDefinition.protocol) {
       case Protocol.Curve:
-        return Promise.all([getCurvePerformance(settDefinition)]);
+        return Promise.all([getCurvePerformance(chain, settDefinition)]);
       case Protocol.Pancakeswap:
         return PancakeswapStrategy.getValueSources(chain, settDefinition);
       case Protocol.Sushiswap:

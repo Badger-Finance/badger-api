@@ -60,4 +60,15 @@ export const maticSetts: SettDefinition[] = [
     stage: Stage.Staging,
     strategy: '0xDb0C3118ef1acA6125200139BEaCc5D675F37c9C',
   },
+  {
+    name: 'Curve Ren',
+    settToken: TOKENS.BMATIC_CRV_AMWBTC,
+    depositToken: TOKENS.MATIC_CRV_AMWBTC,
+    getTokenBalance: getCurveSettTokenBalance,
+    createdBlock: 17616741,
+    experimental: true,
+    protocol: Protocol.Curve,
+    stage: Stage.Staging,
+    strategy: '0xF8F02D0d41C79a1973f65A440C98acAc7eAA8Dc1',
+  },
 ];
