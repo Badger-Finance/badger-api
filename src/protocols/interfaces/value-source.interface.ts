@@ -18,7 +18,7 @@ export const createValueSource = (
   boost?: BoostRange,
 ): ValueSource => {
   const recentApr = performance.sevenDay || performance.threeDay || performance.oneDay;
-  const apr = !recentApr ? 0 : performance.thirtyDay || recentApr;
+  const apr = !recentApr ? 0 : performance.sevenDay || performance.thirtyDay || recentApr;
   const evaluatedBoost = boost ?? { min: 1, max: 1 };
   return {
     name,
