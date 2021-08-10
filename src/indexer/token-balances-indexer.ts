@@ -13,9 +13,6 @@ export async function refreshTokenBalances() {
   const chains = loadChains();
 
   for (const chain of chains) {
-    if (chain.name !== 'Polygon') {
-      continue;
-    }
     const settDefinitions = chain.setts;
     for (const settDefinition of settDefinitions) {
       const depositToken = getToken(settDefinition.depositToken);
