@@ -150,12 +150,12 @@ resources:
         KeySchema:
           - AttributeName: 'address'
             KeyType: 'HASH'
-          - AttributeName: 'height'
+          - AttributeName: 'timestamp'
             KeyType: 'RANGE'
         AttributeDefinitions:
           - AttributeName: 'address'
             AttributeType: 'S'
-          - AttributeName: 'height'
+          - AttributeName: 'timestamp'
             AttributeType: 'N'
 
     priceTable:
