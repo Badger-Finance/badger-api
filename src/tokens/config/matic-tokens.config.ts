@@ -4,6 +4,14 @@ import { TokenType } from '../enums/token-type.enum';
 import { TokenConfig } from '../interfaces/token-config.interface';
 
 export const maticTokensConfig: TokenConfig = {
+  [TOKENS.MATIC_RENBTC]: {
+    address: TOKENS.MATIC_RENBTC,
+    decimals: 8,
+    lookupName: 'renbtc',
+    name: 'Ren Protocol BTC',
+    symbol: 'renBTC',
+    type: TokenType.Contract,
+  },
   [TOKENS.MATIC_WBTC]: {
     address: TOKENS.MATIC_WBTC,
     decimals: 8,
@@ -43,6 +51,46 @@ export const maticTokensConfig: TokenConfig = {
     symbol: 'ibBTC',
     type: TokenType.Index,
   },
+  [TOKENS.MATIC_AMWBTC]: {
+    address: TOKENS.MATIC_AMWBTC,
+    decimals: 8,
+    lookupName: 'aave-polygon-wbtc',
+    name: 'Aave WBTC',
+    symbol: 'amWBTC',
+    type: TokenType.Contract,
+  },
+  [TOKENS.MATIC_AMWETH]: {
+    address: TOKENS.MATIC_AMWETH,
+    decimals: 18,
+    lookupName: 'aave-polygon-weth',
+    name: 'Aave WETH',
+    symbol: 'amWETH',
+    type: TokenType.Contract,
+  },
+  [TOKENS.MATIC_AMDAI]: {
+    address: TOKENS.MATIC_AMDAI,
+    decimals: 18,
+    lookupName: 'aave-polygon-dai',
+    name: 'Aave DAI',
+    symbol: 'amDAI',
+    type: TokenType.Contract,
+  },
+  [TOKENS.MATIC_AMUSDC]: {
+    address: TOKENS.MATIC_AMUSDC,
+    decimals: 6,
+    lookupName: 'aave-polygon-usdc',
+    name: 'Aave USDC',
+    symbol: 'amUSDC',
+    type: TokenType.Contract,
+  },
+  [TOKENS.MATIC_AMUSDT]: {
+    address: TOKENS.MATIC_AMUSDT,
+    decimals: 6,
+    lookupName: 'aave-polygon-usdt',
+    name: 'Aave USDT',
+    symbol: 'amUSDT',
+    type: TokenType.Contract,
+  },
   [TOKENS.MATIC_SUSHI_IBBTC_WBTC]: {
     address: TOKENS.MATIC_SUSHI_IBBTC_WBTC,
     decimals: 18,
@@ -64,6 +112,20 @@ export const maticTokensConfig: TokenConfig = {
     decimals: 18,
     name: 'Curve.fi aTricrypto',
     symbol: 'crvaTricrypto',
+    type: TokenType.CurveLP,
+  },
+  [TOKENS.MATIC_CRV_AM3CRV]: {
+    address: TOKENS.MATIC_CRV_AM3CRV,
+    decimals: 18,
+    name: 'Curve.fi amDAI/amUSDC/amUSDT',
+    symbol: 'crvAM3',
+    type: TokenType.CurveLP,
+  },
+  [TOKENS.MATIC_CRV_AMWBTC]: {
+    address: TOKENS.MATIC_CRV_AMWBTC,
+    decimals: 18,
+    name: 'Curve.fi amWBTC/renBTC',
+    symbol: 'btcCRV',
     type: TokenType.CurveLP,
   },
   [TOKENS.BMATIC_SUSHI_IBBTC_WBTC]: {
@@ -96,6 +158,17 @@ export const maticTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.MATIC_CRV_TRICRYPTO,
+      network: ChainNetwork.Ethereum,
+    },
+  },
+  [TOKENS.BMATIC_CRV_AMWBTC]: {
+    address: TOKENS.BMATIC_CRV_AMWBTC,
+    decimals: 18,
+    name: 'bCurve.fi amWBTC/renBTC',
+    symbol: 'bbtcCRV',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.MATIC_CRV_AMWBTC,
       network: ChainNetwork.Ethereum,
     },
   },

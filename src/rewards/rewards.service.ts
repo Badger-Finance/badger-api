@@ -169,10 +169,6 @@ export class RewardsService {
         return isActive;
       });
 
-    if (settDefinition.depositToken === TOKENS.SUSHI_DIGG_WBTC) {
-      console.log(activeSchedules);
-    }
-
     /**
      * Calculate rewards emission percentages:
      *   - P: Price of Token
@@ -200,16 +196,10 @@ export class RewardsService {
         emission = emission.div(sharesPerFragment);
       }
       const amount = formatBalance(emission, token.decimals);
-      if (settDefinition.depositToken === TOKENS.SUSHI_DIGG_WBTC) {
-        console.log({ amount, token, start: new Date(schedule.start.toNumber() * 1000).toISOString(), end: new Date(schedule.end.toNumber() * 1000).toISOString() });
-      }
       const durationScalar = ONE_YEAR_SECONDS / schedule.duration.toNumber();
       const yearlyEmission = price.usd * amount * durationScalar;
       const apr = (yearlyEmission / sett.value) * 100;
       emissionSources.push(createValueSource(`${token.name} Rewards`, uniformPerformance(apr), false, boostRange));
-    }
-    if (settDefinition.depositToken === TOKENS.SUSHI_DIGG_WBTC) {
-      console.log(emissionSources);
     }
     return emissionSources;
   }
