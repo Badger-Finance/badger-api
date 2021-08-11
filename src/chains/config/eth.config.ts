@@ -214,4 +214,22 @@ export const ethSetts: SettDefinition[] = [
     settToken: TOKENS.BCRV_TRICRYPTO2,
     protocol: Protocol.Convex,
   },
+  {
+    name: 'mStable imBTC',
+    createdBlock: 12834526,
+    depositToken: TOKENS.IMBTC,
+    settToken: TOKENS.BIMBTC,
+    protocol: Protocol.mStable,
+    stage: Stage.Staging,
+    state: SettState.Experimental,
+  },
+  {
+    name: 'mStable mhBTC',
+    createdBlock: 12834526,
+    depositToken: TOKENS.MHBTC,
+    settToken: TOKENS.BMHBTC,
+    protocol: Protocol.mStable,
+    stage: Stage.Staging,
+    state: SettState.Experimental,
+  },
 ];

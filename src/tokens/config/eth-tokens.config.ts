@@ -48,6 +48,24 @@ export const ethTokensConfig: TokenConfig = {
     symbol: 'sBTC',
     type: TokenType.Contract,
   },
+  [TOKENS.IMBTC]: {
+    address: TOKENS.IMBTC,
+    decimals: 18,
+    // TODO: PLACEHOLDER FIX ME
+    lookupName: 'sbtc',
+    name: 'imBTC',
+    symbol: 'imBTC',
+    type: TokenType.Contract,
+  },
+  [TOKENS.MHBTC]: {
+    address: TOKENS.MHBTC,
+    decimals: 18,
+    // TODO: PLACEHOLDER FIX ME
+    lookupName: 'sbtc',
+    name: 'mhBTC',
+    symbol: 'mhBTC',
+    type: TokenType.Contract,
+  },
   [TOKENS.CRV_SBTC]: {
     address: TOKENS.CRV_SBTC,
     decimals: 18,
@@ -218,6 +236,13 @@ export const ethTokensConfig: TokenConfig = {
   },
   [TOKENS.BOR]: {
     address: TOKENS.BOR,
+    decimals: 18,
+    name: 'BoringDAO Token',
+    symbol: 'BOR',
+    type: TokenType.Contract,
+  },
+  [TOKENS.BOR_OLD]: {
+    address: TOKENS.BOR_OLD,
     decimals: 18,
     name: 'BoringDAO Token',
     symbol: 'BOR',
@@ -563,6 +588,28 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.RENBTC,
+      network: ChainNetwork.Ethereum,
+    },
+  },
+  [TOKENS.BIMBTC]: {
+    address: TOKENS.BIMBTC,
+    decimals: 18,
+    name: 'bimBTC',
+    symbol: 'bimBTC',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.IMBTC,
+      network: ChainNetwork.Ethereum,
+    },
+  },
+  [TOKENS.BMHBTC]: {
+    address: TOKENS.BMHBTC,
+    decimals: 18,
+    name: 'bmhBTC',
+    symbol: 'bmhBTC',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.MHBTC,
       network: ChainNetwork.Ethereum,
     },
   },

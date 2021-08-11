@@ -152,6 +152,14 @@ Object {
     "symbol": "SLP-BADGER-WBTC",
     "type": "SushiswapLp",
   },
+  "0x17d8CBB6Bce8cEE970a4027d1198F6700A7a6c24": Object {
+    "address": "0x17d8CBB6Bce8cEE970a4027d1198F6700A7a6c24",
+    "decimals": 18,
+    "lookupName": "sbtc",
+    "name": "imBTC",
+    "symbol": "imBTC",
+    "type": "Contract",
+  },
   "0x1862A18181346EBd9EdAf800804f89190DeF24a5": Object {
     "address": "0x1862A18181346EBd9EdAf800804f89190DeF24a5",
     "decimals": 18,
@@ -207,6 +215,17 @@ Object {
       "network": "eth",
     },
   },
+  "0x26B8efa69603537AC8ab55768b6740b67664D518": Object {
+    "address": "0x26B8efa69603537AC8ab55768b6740b67664D518",
+    "decimals": 18,
+    "name": "bmhBTC",
+    "symbol": "bmhBTC",
+    "type": "Vault",
+    "vaultToken": Object {
+      "address": "0x48c59199Da51B7E30Ea200a74Ea07974e62C4bA7",
+      "network": "eth",
+    },
+  },
   "0x27E98fC7d05f54E544d16F58C194C2D7ba71e3B5": Object {
     "address": "0x27E98fC7d05f54E544d16F58C194C2D7ba71e3B5",
     "decimals": 18,
@@ -256,6 +275,14 @@ Object {
     "name": "Curve.fi bBTC",
     "symbol": "crvbBTC",
     "type": "CurveLP",
+  },
+  "0x48c59199Da51B7E30Ea200a74Ea07974e62C4bA7": Object {
+    "address": "0x48c59199Da51B7E30Ea200a74Ea07974e62C4bA7",
+    "decimals": 18,
+    "lookupName": "sbtc",
+    "name": "mhBTC",
+    "symbol": "mhBTC",
+    "type": "Contract",
   },
   "0x49849C98ae39Fff122806C06791Fa73784FB3675": Object {
     "address": "0x49849C98ae39Fff122806C06791Fa73784FB3675",
@@ -320,6 +347,17 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0xEB4C2781e4ebA804CE9a9803C67d0893436bB27D",
+      "network": "eth",
+    },
+  },
+  "0x599D92B453C010b1050d31C364f6ee17E819f193": Object {
+    "address": "0x599D92B453C010b1050d31C364f6ee17E819f193",
+    "decimals": 18,
+    "name": "bimBTC",
+    "symbol": "bimBTC",
+    "type": "Vault",
+    "vaultToken": Object {
+      "address": "0x17d8CBB6Bce8cEE970a4027d1198F6700A7a6c24",
       "network": "eth",
     },
   },
@@ -532,6 +570,13 @@ Object {
       "address": "0x49849C98ae39Fff122806C06791Fa73784FB3675",
       "network": "eth",
     },
+  },
+  "0xBC19712FEB3a26080eBf6f2F7849b417FdD792CA": Object {
+    "address": "0xBC19712FEB3a26080eBf6f2F7849b417FdD792CA",
+    "decimals": 18,
+    "name": "BoringDAO Token",
+    "symbol": "BOR",
+    "type": "Contract",
   },
   "0xBE08Ef12e4a553666291E9fFC24fCCFd354F2Dd2": Object {
     "address": "0xBE08Ef12e4a553666291E9fFC24fCCFd354F2Dd2",
@@ -725,6 +770,14 @@ Object {
     "symbol": "SLP-BADGER-WBTC",
     "type": "SushiswapLp",
   },
+  "0x17d8CBB6Bce8cEE970a4027d1198F6700A7a6c24": Object {
+    "address": "0x17d8CBB6Bce8cEE970a4027d1198F6700A7a6c24",
+    "decimals": 18,
+    "lookupName": "sbtc",
+    "name": "imBTC",
+    "symbol": "imBTC",
+    "type": "Contract",
+  },
   "0x1862A18181346EBd9EdAf800804f89190DeF24a5": Object {
     "address": "0x1862A18181346EBd9EdAf800804f89190DeF24a5",
     "decimals": 18,
@@ -780,6 +833,17 @@ Object {
       "network": "eth",
     },
   },
+  "0x26B8efa69603537AC8ab55768b6740b67664D518": Object {
+    "address": "0x26B8efa69603537AC8ab55768b6740b67664D518",
+    "decimals": 18,
+    "name": "bmhBTC",
+    "symbol": "bmhBTC",
+    "type": "Vault",
+    "vaultToken": Object {
+      "address": "0x48c59199Da51B7E30Ea200a74Ea07974e62C4bA7",
+      "network": "eth",
+    },
+  },
   "0x27E98fC7d05f54E544d16F58C194C2D7ba71e3B5": Object {
     "address": "0x27E98fC7d05f54E544d16F58C194C2D7ba71e3B5",
     "decimals": 18,
@@ -829,6 +893,14 @@ Object {
     "name": "Curve.fi bBTC",
     "symbol": "crvbBTC",
     "type": "CurveLP",
+  },
+  "0x48c59199Da51B7E30Ea200a74Ea07974e62C4bA7": Object {
+    "address": "0x48c59199Da51B7E30Ea200a74Ea07974e62C4bA7",
+    "decimals": 18,
+    "lookupName": "sbtc",
+    "name": "mhBTC",
+    "symbol": "mhBTC",
+    "type": "Contract",
   },
   "0x49849C98ae39Fff122806C06791Fa73784FB3675": Object {
     "address": "0x49849C98ae39Fff122806C06791Fa73784FB3675",
@@ -893,6 +965,17 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0xEB4C2781e4ebA804CE9a9803C67d0893436bB27D",
+      "network": "eth",
+    },
+  },
+  "0x599D92B453C010b1050d31C364f6ee17E819f193": Object {
+    "address": "0x599D92B453C010b1050d31C364f6ee17E819f193",
+    "decimals": 18,
+    "name": "bimBTC",
+    "symbol": "bimBTC",
+    "type": "Vault",
+    "vaultToken": Object {
+      "address": "0x17d8CBB6Bce8cEE970a4027d1198F6700A7a6c24",
       "network": "eth",
     },
   },
@@ -1105,6 +1188,13 @@ Object {
       "address": "0x49849C98ae39Fff122806C06791Fa73784FB3675",
       "network": "eth",
     },
+  },
+  "0xBC19712FEB3a26080eBf6f2F7849b417FdD792CA": Object {
+    "address": "0xBC19712FEB3a26080eBf6f2F7849b417FdD792CA",
+    "decimals": 18,
+    "name": "BoringDAO Token",
+    "symbol": "BOR",
+    "type": "Contract",
   },
   "0xBE08Ef12e4a553666291E9fFC24fCCFd354F2Dd2": Object {
     "address": "0xBE08Ef12e4a553666291E9fFC24fCCFd354F2Dd2",
