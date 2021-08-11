@@ -4,7 +4,6 @@ import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { IS_OFFLINE } from '../config/constants';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
-import { SettSnapshot2 } from '../setts/interfaces/sett-snapshot2.interface';
 import { getIndexedBlock, settToSnapshot } from './indexer.utils';
 
 /**
@@ -18,11 +17,14 @@ export const indexAsset = async (): Promise<void> => {
   }
   const chains = loadChains();
   await Promise.all(
-    chains.flatMap(async (chain) => Promise.all(chain.setts.map(async (sett) => indexSett(chain, sett)))),
+    chains.flatMap(async (chain) => Promise.all(chain.setts.map(async (sett) => indexSett(chain, sett, true)))),
+  );
+  await Promise.all(
+    chains.flatMap(async (chain) => Promise.all(chain.setts.map(async (sett) => indexSett(chain, sett, false)))),
   );
 };
 
-const indexSett = async (chain: Chain, sett: SettDefinition) => {
+const indexSett = async (chain: Chain, sett: SettDefinition, migrate: boolean) => {
   const { settToken, createdBlock } = sett;
   const thirtyMinutesBlocks = parseInt((chain.blocksPerYear / 365 / 24 / 2).toString());
 
@@ -31,11 +33,11 @@ const indexSett = async (chain: Chain, sett: SettDefinition) => {
   }
 
   const mapper = getDataMapper();
-  let block = await getIndexedBlock(sett, createdBlock, thirtyMinutesBlocks);
+  let block = await getIndexedBlock(sett, createdBlock, thirtyMinutesBlocks, migrate);
   while (true) {
     try {
       block += thirtyMinutesBlocks;
-      const snapshot = await settToSnapshot(chain, sett, block);
+      const snapshot = await settToSnapshot(chain, sett, block, migrate);
 
       if (snapshot == null) {
         block += thirtyMinutesBlocks;
@@ -43,12 +45,6 @@ const indexSett = async (chain: Chain, sett: SettDefinition) => {
       }
 
       await mapper.put(snapshot);
-
-      // start new table migration
-      const snapshot2 = Object.assign(new SettSnapshot2(), {
-        ...snapshot,
-      });
-      await mapper.put(snapshot2);
     } catch (err) {
       // request block is not indexed
       break;
