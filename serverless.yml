@@ -261,7 +261,7 @@ functions:
 
   index-apy-snapshots:
     handler: src/indexer/apy-snapshots-indexer.refreshApySnapshots
-    timeout: 30
+    timeout: 120
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-apy-snapshots
@@ -270,7 +270,7 @@ functions:
 
   index-prices:
     handler: src/indexer/price-indexer.indexPrices
-    timeout: 30
+    timeout: 120
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-prices
