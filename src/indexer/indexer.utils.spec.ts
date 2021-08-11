@@ -16,7 +16,7 @@ describe('indexer.utils', () => {
         jest.spyOn(tokenUtils, 'getToken').mockImplementationOnce((_addr) => {
           throw new Error();
         });
-        const block = await getIndexedBlock(testDefinition, 15, 10);
+        const block = await getIndexedBlock(testDefinition, 15, 10, false);
         expect(block).toEqual(10);
       });
     });
@@ -30,7 +30,7 @@ describe('indexer.utils', () => {
         [0, 16, 0],
       ])('returns %i start block with %i alignment as %i', async (start, alignment, result) => {
         setupMapper([]);
-        const block = await getIndexedBlock(testDefinition, start, alignment);
+        const block = await getIndexedBlock(testDefinition, start, alignment, false);
         expect(block).toEqual(result);
       });
     });
@@ -44,7 +44,7 @@ describe('indexer.utils', () => {
         [0, 16, 32, 32],
       ])('returns %i start block with %i alignment as %i', async (start, alignment, result, stored) => {
         setupMapper([{ height: stored }]);
-        const block = await getIndexedBlock(testDefinition, start, alignment);
+        const block = await getIndexedBlock(testDefinition, start, alignment, false);
         expect(block).toEqual(result);
       });
     });
