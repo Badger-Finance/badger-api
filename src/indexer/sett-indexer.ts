@@ -4,6 +4,7 @@ import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { IS_OFFLINE } from '../config/constants';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
+import { SettSnapshot2 } from '../setts/interfaces/sett-snapshot2.interface';
 import { getIndexedBlock, settToSnapshot } from './indexer.utils';
 
 /**
@@ -42,6 +43,12 @@ const indexSett = async (chain: Chain, sett: SettDefinition) => {
       }
 
       await mapper.put(snapshot);
+
+      // start new table migration
+      const snapshot2 = Object.assign(new SettSnapshot2(), {
+        ...snapshot,
+      });
+      await mapper.put(snapshot2);
     } catch (err) {
       // request block is not indexed
       break;

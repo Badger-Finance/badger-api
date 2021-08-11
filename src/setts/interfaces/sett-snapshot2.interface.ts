@@ -1,15 +1,15 @@
 import { attribute, hashKey, rangeKey, table } from '@aws/dynamodb-data-mapper-annotations';
-import { SETT_DATA } from '../../config/constants';
+import { SETT_DATA2 } from '../../config/constants';
 
-@table(SETT_DATA)
-export class SettSnapshot {
+@table(SETT_DATA2)
+export class SettSnapshot2 {
   @hashKey()
   address!: string;
 
-  @rangeKey()
+  @attribute()
   height!: number;
 
-  @attribute()
+  @rangeKey()
   timestamp!: number;
 
   @attribute()
