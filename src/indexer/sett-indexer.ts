@@ -19,9 +19,6 @@ export const indexAsset = async (): Promise<void> => {
   await Promise.all(
     chains.flatMap(async (chain) => Promise.all(chain.setts.map(async (sett) => indexSett(chain, sett, true)))),
   );
-  await Promise.all(
-    chains.flatMap(async (chain) => Promise.all(chain.setts.map(async (sett) => indexSett(chain, sett, false)))),
-  );
 };
 
 const indexSett = async (chain: Chain, sett: SettDefinition, migrate: boolean) => {
