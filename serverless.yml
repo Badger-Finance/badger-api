@@ -148,7 +148,7 @@ resources:
     settHistoricSnapshots:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:custom.table.SETT_DATA.${self:custom.stage}}
+        TableName: ${self:custom.table.SETT_DATA2.${self:custom.stage}}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
           - AttributeName: 'address'
