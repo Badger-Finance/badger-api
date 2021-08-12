@@ -43,7 +43,6 @@ export const BADGER_BSC_URL = process.env.BADGER_BSC || 'MISSING REQUIRED ENV VA
 export const BADGER_MATIC_URL = process.env.BADGER_MATIC || 'MISSING REQUIRED ENV VAR';
 export const BADGER_XDAI_URL = process.env.BADGER_XDAI || 'MISSING REQUIRED ENV VAR';
 export const BADGER_DAO_URL = process.env.BADGER_DAO || 'MISSING REQUIRED ENV VAR';
-export const MASTERCHEF_URL = process.env.MASTERCHEF || 'MISSING REQUIRED ENV VAR';
 
 // general constants
 export const STAGE = process.env.STAGE || 'MISSING REQUIRED ENV VAR';
@@ -57,7 +56,6 @@ export const CURVE_API_URL = 'https://stats.curve.fi/raw-stats/apys.json';
 export const CURVE_CRYPTO_API_URL = 'https://stats.curve.fi/raw-stats-crypto/apys.json';
 export const CURVE_MATIC_API_URL = 'https://stats.curve.fi/raw-stats-polygon/apys.json';
 export const COINGECKO_URL = 'https://api.coingecko.com/api/v3/simple';
-export const SUSHI_CHEF = '0xc2EdaD668740f1aA35E4D8f227fB8E17dcA888Cd';
 export const PANCAKE_CHEF = '0x73feaa1eE314F8c655E354234017bE2193C9E24E';
 export const BADGER_TREE = '0xbe82A3259ce427B8bCb54b938b486dC2aF509Cc3';
 export const REWARDS_LOGGER = '0x0A4F4e92C3334821EbB523324D09E321a6B0d8ec';

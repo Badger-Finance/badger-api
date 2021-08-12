@@ -6,7 +6,6 @@ import {
   BADGER_URL,
   COINGECKO_URL,
   CURVE_API_URL,
-  MASTERCHEF_URL,
   PANCAKESWAP_URL,
   SUSHISWAP_URL,
   UNISWAP_URL,
@@ -98,17 +97,6 @@ export const subgraphs: Subgraph[] = [
           withdrawals {
             id
           }
-        }
-      }
-    `,
-  },
-  {
-    name: 'MASTERCHEF',
-    url: new URL(MASTERCHEF_URL),
-    query: gql`
-      {
-        pairs {
-          id
         }
       }
     `,

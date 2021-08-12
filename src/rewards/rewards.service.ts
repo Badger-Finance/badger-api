@@ -127,7 +127,7 @@ export class RewardsService {
   }
 
   static async getRewardEmission(chain: Chain, settDefinition: SettDefinition): Promise<ValueSource[]> {
-    if (chain.network !== ChainNetwork.Ethereum) {
+    if (chain.network !== ChainNetwork.Ethereum || settDefinition.depositToken === TOKENS.DIGG) {
       return [];
     }
     const { settToken } = settDefinition;

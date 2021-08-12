@@ -20,6 +20,7 @@ export type { PancakeChef } from "./PancakeChef";
 export type { RewardsLogger } from "./RewardsLogger";
 export type { Sett } from "./Sett";
 export type { SushiChef } from "./SushiChef";
+export type { SushiMiniChef } from "./SushiMiniChef";
 export type { UniV2 } from "./UniV2";
 
 export { BadgerTree__factory } from "./factories/BadgerTree__factory";
@@ -41,4 +42,5 @@ export { PancakeChef__factory } from "./factories/PancakeChef__factory";
 export { RewardsLogger__factory } from "./factories/RewardsLogger__factory";
 export { Sett__factory } from "./factories/Sett__factory";
 export { SushiChef__factory } from "./factories/SushiChef__factory";
+export { SushiMiniChef__factory } from "./factories/SushiMiniChef__factory";
 export { UniV2__factory } from "./factories/UniV2__factory";

@@ -95,7 +95,6 @@ provider:
     SUSHISWAP_XDAI: 'https://api.thegraph.com/subgraphs/name/sushiswap/xdai-exchange'
     SUSHISWAP_MATIC: 'https://api.thegraph.com/subgraphs/name/sushiswap/matic-exchange'
     PANCAKESWAP: 'https://api.thegraph.com/subgraphs/name/pancakeswap/exchange'
-    MASTERCHEF: 'https://api.thegraph.com/subgraphs/name/sushiswap/master-chef'
     QUICKSWAP: 'https://api.thegraph.com/subgraphs/name/sameepsi/quickswap06'
     # Table Defintions
     APY_SNAPSHOTS_DATA: ${self:custom.table.APY_SNAPSHOTS_DATA.${self:custom.stage}}
