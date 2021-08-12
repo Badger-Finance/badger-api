@@ -25,7 +25,7 @@ const sushiPoolId: PoolMap = {
   [TOKENS.SUSHI_ETH_WBTC]: 21,
   [TOKENS.SUSHI_BADGER_WBTC]: 73,
   [TOKENS.SUSHI_DIGG_WBTC]: 103,
-  [TOKENS.MATIC_SUSHI_IBBTC_WBTC]: 1,
+  [TOKENS.MATIC_SUSHI_IBBTC_WBTC]: 24,
 };
 
 export class SushiswapStrategy {
