@@ -158,7 +158,7 @@ export const maticTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.MATIC_CRV_TRICRYPTO,
-      network: ChainNetwork.Ethereum,
+      network: ChainNetwork.Matic,
     },
   },
   [TOKENS.BMATIC_CRV_AMWBTC]: {
@@ -169,7 +169,7 @@ export const maticTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.MATIC_CRV_AMWBTC,
-      network: ChainNetwork.Ethereum,
+      network: ChainNetwork.Matic,
     },
   },
 };

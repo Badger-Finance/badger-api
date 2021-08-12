@@ -26,16 +26,6 @@ generates:
       - typescript
       - typescript-graphql-request
       - typescript-operations
-  src/graphql/generated/master-chef.ts:
-    schema: ${MASTERCHEF_SUBGRAPH_URL}
-    documents:
-      - src/graphql/fragments/master-chef.fragment.graphql
-      - src/graphql/fragments/pool.fragment.graphql
-      - src/graphql/queries/master-chefs-and-pools.query.graphql
-    plugins:
-      - typescript
-      - typescript-graphql-request
-      - typescript-operations
   src/graphql/generated/uniswap.ts:
     schema: ${UNISWAP_SUBGRAPH_URL}
     documents:

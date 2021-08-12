@@ -37,7 +37,7 @@ export const maticSetts: SettDefinition[] = [
     experimental: true,
     protocol: Protocol.Sushiswap,
     stage: Stage.Staging,
-    strategy: '0x3811448236d4274705b81C6ab99d617bfab617Cd',
+    strategy: '0xDed61Bd8a8c90596D8A6Cf0e678dA04036146963',
   },
   {
     name: 'Quickswap Wrapped BTC/USDC',
