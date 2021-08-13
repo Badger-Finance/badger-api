@@ -18,7 +18,6 @@ import { RewardsService } from '../rewards/rewards.service';
 import { CachedSettSnapshot } from '../setts/interfaces/cached-sett-snapshot.interface';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { SettSnapshot } from '../setts/interfaces/sett-snapshot.interface';
-import { SettSnapshot2 } from '../setts/interfaces/sett-snapshot2.interface';
 import { SettsService } from '../setts/setts.service';
 import { getSett } from '../setts/setts.utils';
 import { CachedLiquidityPoolTokenBalance } from '../tokens/interfaces/cached-liquidity-pool-token-balance.interface';
@@ -60,7 +59,6 @@ export const settToSnapshot = async (
   chain: Chain,
   settDefinition: SettDefinition,
   block: number,
-  migrate: boolean,
 ): Promise<SettSnapshot | null> => {
   const sett = await getSett(chain.graphUrl, settDefinition.settToken, block);
   const settToken = getToken(settDefinition.settToken);
@@ -81,7 +79,7 @@ export const settToSnapshot = async (
   const tokenPriceData = await getPrice(depositToken.address);
   const value = tokenBalance * tokenPriceData.usd;
 
-  return Object.assign(migrate ? new SettSnapshot2() : new SettSnapshot(), {
+  return Object.assign(new SettSnapshot(), {
     address: settToken.address,
     height: block,
     timestamp,
@@ -117,14 +115,13 @@ export const getIndexedBlock = async (
   settDefinition: SettDefinition,
   startBlock: number,
   alignment: number,
-  migrate: boolean,
 ): Promise<number> => {
   const alignedStartBlock = startBlock - (startBlock % alignment);
   try {
     const mapper = getDataMapper();
     const settToken = getToken(settDefinition.settToken);
     for await (const snapshot of mapper.query(
-      migrate ? SettSnapshot2 : SettSnapshot,
+      SettSnapshot,
       { address: settToken.address },
       { limit: 1, scanIndexForward: false },
     )) {

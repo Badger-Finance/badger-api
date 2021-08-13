@@ -42,9 +42,6 @@ custom:
     SETT_DATA:
       staging: 'sett-historic-snapshots-staging'
       prod: 'sett-historic-snapshots'
-    SETT_DATA2:
-      staging: 'sett-historic-snapshots2-staging'
-      prod: 'sett-historic-snapshots2'
     LIQUIDITY_POOL_TOKEN_BALANCES_DATA:
       staging: 'liquidity-pool-token-balances-staging'
       prod: 'liquidity-pool-token-balances'
@@ -99,7 +96,6 @@ provider:
     # Table Defintions
     APY_SNAPSHOTS_DATA: ${self:custom.table.APY_SNAPSHOTS_DATA.${self:custom.stage}}
     SETT_DATA: ${self:custom.table.SETT_DATA.${self:custom.stage}}
-    SETT_DATA2: ${self:custom.table.SETT_DATA2.${self:custom.stage}}
     LEADERBOARD_DATA: ${self:custom.stage}-leaderboard
     LIQUIDITY_POOL_TOKEN_BALANCES_DATA: ${self:custom.table.LIQUIDITY_POOL_TOKEN_BALANCES_DATA.${self:custom.stage}}
     PRICE_DATA: ${self:custom.table.PRICE_DATA.${self:custom.stage}}
@@ -149,22 +145,6 @@ resources:
       Type: AWS::DynamoDB::Table
       Properties:
         TableName: ${self:custom.table.SETT_DATA.${self:custom.stage}}
-        BillingMode: PAY_PER_REQUEST
-        KeySchema:
-          - AttributeName: 'address'
-            KeyType: 'HASH'
-          - AttributeName: 'timestamp'
-            KeyType: 'RANGE'
-        AttributeDefinitions:
-          - AttributeName: 'address'
-            AttributeType: 'S'
-          - AttributeName: 'timestamp'
-            AttributeType: 'N'
-
-    settHistoricSnapshots2:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: ${self:custom.table.SETT_DATA2.${self:custom.stage}}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
           - AttributeName: 'address'
