@@ -22,7 +22,6 @@ export const ONE_YEAR_SECONDS = 365 * 24 * 60 * 60;
 // data access constants
 export const APY_SNAPSHOTS_DATA = process.env.APY_SNAPSHOTS_DATA || 'MISSING REQUIRED ENV VAR';
 export const SETT_DATA = process.env.SETT_DATA || 'MISSING REQUIRED ENV VAR';
-export const SETT_DATA2 = process.env.SETT_DATA2 || 'MISSING REQUIRED ENV VAR';
 export const LIQUIDITY_POOL_TOKEN_BALANCES_DATA =
   process.env.LIQUIDITY_POOL_TOKEN_BALANCES_DATA || 'MISSING REQUIRED ENV VAR';
 export const PRICE_DATA = process.env.PRICE_DATA || 'MISSING REQUIRED ENV VAR';
