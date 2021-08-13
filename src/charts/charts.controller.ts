@@ -54,7 +54,7 @@ export class ChartsController {
       throw new NotFound(`${checksumContract} is not a valid sett`);
     }
 
-    return this.chartsService.getChartData(Chain.getChain(chain), sett, start, end, granularity, period);
+    return this.chartsService.getChartData(sett, start, end, granularity, period);
   }
 
   private isValidGranularityPeriod(
