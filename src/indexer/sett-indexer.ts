@@ -17,14 +17,11 @@ export const indexAsset = async (): Promise<void> => {
   }
   const chains = loadChains();
   await Promise.all(
-    chains.flatMap(async (chain) => Promise.all(chain.setts.map(async (sett) => indexSett(chain, sett, true)))),
-  );
-  await Promise.all(
-    chains.flatMap(async (chain) => Promise.all(chain.setts.map(async (sett) => indexSett(chain, sett, false)))),
+    chains.flatMap(async (chain) => Promise.all(chain.setts.map(async (sett) => indexSett(chain, sett)))),
   );
 };
 
-const indexSett = async (chain: Chain, sett: SettDefinition, migrate: boolean) => {
+const indexSett = async (chain: Chain, sett: SettDefinition) => {
   const { settToken, createdBlock } = sett;
   const thirtyMinutesBlocks = parseInt((chain.blocksPerYear / 365 / 24 / 2).toString());
 
@@ -33,11 +30,11 @@ const indexSett = async (chain: Chain, sett: SettDefinition, migrate: boolean) =
   }
 
   const mapper = getDataMapper();
-  let block = await getIndexedBlock(sett, createdBlock, thirtyMinutesBlocks, migrate);
+  let block = await getIndexedBlock(sett, createdBlock, thirtyMinutesBlocks);
   while (true) {
     try {
       block += thirtyMinutesBlocks;
-      const snapshot = await settToSnapshot(chain, sett, block, migrate);
+      const snapshot = await settToSnapshot(chain, sett, block);
 
       if (snapshot == null) {
         block += thirtyMinutesBlocks;

@@ -12,7 +12,6 @@ import { CachedSettSnapshot } from './interfaces/cached-sett-snapshot.interface'
 import { Sett } from './interfaces/sett.interface';
 import { SettDefinition } from './interfaces/sett-definition.interface';
 import { SettSnapshot } from './interfaces/sett-snapshot.interface';
-import { SettSnapshot2 } from './interfaces/sett-snapshot2.interface';
 
 export const VAULT_SOURCE = 'Vault Compounding';
 
@@ -78,7 +77,7 @@ export const getSettSnapshots = async (settDefinition: SettDefinition): Promise<
     const mapper = getDataMapper();
     const assetToken = getToken(settDefinition.settToken);
     for await (const snapshot of mapper.query(
-      SettSnapshot2,
+      SettSnapshot,
       { address: assetToken.address },
       { limit: SAMPLE_DAYS, scanIndexForward: false },
     )) {
@@ -102,7 +101,7 @@ export const getSettSnapshotsInRange = async (
     const assetToken = getToken(settDefinition.settToken);
 
     for await (const snapshot of mapper.query(
-      SettSnapshot2,
+      SettSnapshot,
       { address: assetToken.address, timestamp: between(new Date(start).getTime(), new Date(end).getTime()) },
       { scanIndexForward: false },
     )) {
