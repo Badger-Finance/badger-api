@@ -103,7 +103,7 @@ export const getSettSnapshotsInRange = async (
 
     for await (const snapshot of mapper.query(
       SettSnapshot2,
-      { address: assetToken.address, timestamp: between(start.getTime(), end.getTime()) },
+      { address: assetToken.address, timestamp: between(new Date(start).getTime(), new Date(end).getTime()) },
       { scanIndexForward: false },
     )) {
       snapshots.push(snapshot);
