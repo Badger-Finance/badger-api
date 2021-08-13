@@ -1,5 +1,6 @@
 import { ChainNetwork } from '../../chains/enums/chain-network.enum';
 import { TOKENS } from '../../config/tokens.config';
+import { getImBtcPrice, getMhBtcPrice } from '../../protocols/strategies/mstable.strategy';
 import { TokenType } from '../enums/token-type.enum';
 import { TokenConfig } from '../interfaces/token-config.interface';
 
@@ -48,23 +49,28 @@ export const ethTokensConfig: TokenConfig = {
     symbol: 'sBTC',
     type: TokenType.Contract,
   },
+  [TOKENS.MBTC]: {
+    address: TOKENS.MBTC,
+    decimals: 18,
+    name: 'mBTC',
+    symbol: 'mBTC',
+    type: TokenType.Contract,
+  },
   [TOKENS.IMBTC]: {
     address: TOKENS.IMBTC,
     decimals: 18,
-    // TODO: PLACEHOLDER FIX ME
-    lookupName: 'sbtc',
+    getPrice: getImBtcPrice,
     name: 'imBTC',
     symbol: 'imBTC',
-    type: TokenType.Contract,
+    type: TokenType.Custom,
   },
   [TOKENS.MHBTC]: {
     address: TOKENS.MHBTC,
     decimals: 18,
-    // TODO: PLACEHOLDER FIX ME
-    lookupName: 'sbtc',
+    getPrice: getMhBtcPrice,
     name: 'mhBTC',
     symbol: 'mhBTC',
-    type: TokenType.Contract,
+    type: TokenType.Custom,
   },
   [TOKENS.CRV_SBTC]: {
     address: TOKENS.CRV_SBTC,
@@ -115,7 +121,7 @@ export const ethTokensConfig: TokenConfig = {
     decimals: 18,
     name: 'ibBTC',
     symbol: 'ibBTC',
-    type: TokenType.Index,
+    type: TokenType.Contract,
   },
   [TOKENS.HBTC]: {
     address: TOKENS.HBTC,

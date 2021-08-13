@@ -47,9 +47,10 @@ export const maticTokensConfig: TokenConfig = {
   [TOKENS.MATIC_IBBTC]: {
     address: TOKENS.MATIC_IBBTC,
     decimals: 18,
+    lookupName: 'interest-bearing-bitcoin',
     name: 'ibBTC',
     symbol: 'ibBTC',
-    type: TokenType.Index,
+    type: TokenType.Contract,
   },
   [TOKENS.MATIC_AMWBTC]: {
     address: TOKENS.MATIC_AMWBTC,

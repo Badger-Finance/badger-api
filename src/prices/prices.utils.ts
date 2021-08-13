@@ -4,11 +4,9 @@ import fetch from 'node-fetch';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
-import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { ChainStrategy } from '../chains/strategies/chain.strategy';
 import { COINGECKO_URL } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
-import { Ibbtc__factory } from '../contracts';
 import { getSett } from '../setts/setts.utils';
 import { TokenType } from '../tokens/enums/token-type.enum';
 import { PriceData } from '../tokens/interfaces/price-data.interface';
@@ -16,7 +14,7 @@ import { Token } from '../tokens/interfaces/token.interface';
 import { TokenConfig } from '../tokens/interfaces/token-config.interface';
 import { TokenPrice } from '../tokens/interfaces/token-price.interface';
 import { TokenPriceSnapshot } from '../tokens/interfaces/token-price-snapshot.interface';
-import { formatBalance, getToken, getTokenByName } from '../tokens/tokens.utils';
+import { getToken, getTokenByName } from '../tokens/tokens.utils';
 
 /**
  * Protoype for a token address pricing function.
@@ -255,18 +253,4 @@ export const getWrapperTokenPrice = async (contract: string): Promise<TokenPrice
     throw new InternalServerError(`Failed to load ${contract} sett data`);
   }
   return price;
-};
-
-export const ibBTCPrice = async (): Promise<TokenPrice> => {
-  const eth = Chain.getChain(ChainNetwork.Ethereum);
-  const ibBTC = Ibbtc__factory.connect(TOKENS.IBBTC, eth.provider);
-  const token = getToken(TOKENS.IBBTC);
-  const ppfs = formatBalance(await ibBTC.pricePerShare());
-  const wbtcPrice = await getPrice(TOKENS.WBTC);
-  return {
-    name: token.name,
-    address: token.address,
-    usd: wbtcPrice.usd * ppfs,
-    eth: wbtcPrice.eth * ppfs,
-  };
 };
