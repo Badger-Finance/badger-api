@@ -49,6 +49,13 @@ export const ethTokensConfig: TokenConfig = {
     symbol: 'sBTC',
     type: TokenType.Contract,
   },
+  [TOKENS.MTA]: {
+    address: TOKENS.MTA,
+    decimals: 18,
+    name: 'Meta',
+    symbol: 'MTA',
+    type: TokenType.Contract,
+  },
   [TOKENS.MBTC]: {
     address: TOKENS.MBTC,
     decimals: 18,
