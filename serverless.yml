@@ -287,12 +287,12 @@ functions:
 
   index-leaderboard:
     handler: src/indexer/boost-indexer.indexBoostLeaderBoard
-    timeout: 60
+    timeout: 120
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-leaderboard
           description: 'index leaderboard data from latest badger boosts'
-          rate: rate(1 hour)
+          rate: rate(5 minutes)
 
   index-token-balances:
     handler: src/indexer/token-balances-indexer.refreshTokenBalances
