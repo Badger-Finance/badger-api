@@ -10,6 +10,7 @@ import { CachedValueSource } from '../protocols/interfaces/cached-value-source.i
 import { ValueSource } from '../protocols/interfaces/value-source.interface';
 import { getVaultCachedValueSources } from '../protocols/protocols.utils';
 import { ConvexStrategy, getCurvePerformance } from '../protocols/strategies/convex.strategy';
+import { mStableStrategy } from '../protocols/strategies/mstable.strategy';
 import { PancakeswapStrategy } from '../protocols/strategies/pancakeswap.strategy';
 import { QuickswapStrategy } from '../protocols/strategies/quickswap.strategy';
 import { SushiswapStrategy } from '../protocols/strategies/sushiswap.strategy';
@@ -202,6 +203,8 @@ export async function getProtocolValueSources(
         return UniswapStrategy.getValueSources(settDefinition);
       case Protocol.Quickswap:
         return QuickswapStrategy.getValueSources(settDefinition);
+      case Protocol.mStable:
+        return mStableStrategy.getValueSources(chain, settDefinition);
       default: {
         return [];
       }

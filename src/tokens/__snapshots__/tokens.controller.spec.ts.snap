@@ -155,10 +155,9 @@ Object {
   "0x17d8CBB6Bce8cEE970a4027d1198F6700A7a6c24": Object {
     "address": "0x17d8CBB6Bce8cEE970a4027d1198F6700A7a6c24",
     "decimals": 18,
-    "lookupName": "sbtc",
     "name": "imBTC",
     "symbol": "imBTC",
-    "type": "Contract",
+    "type": "Custom",
   },
   "0x1862A18181346EBd9EdAf800804f89190DeF24a5": Object {
     "address": "0x1862A18181346EBd9EdAf800804f89190DeF24a5",
@@ -279,10 +278,9 @@ Object {
   "0x48c59199Da51B7E30Ea200a74Ea07974e62C4bA7": Object {
     "address": "0x48c59199Da51B7E30Ea200a74Ea07974e62C4bA7",
     "decimals": 18,
-    "lookupName": "sbtc",
     "name": "mhBTC",
     "symbol": "mhBTC",
-    "type": "Contract",
+    "type": "Custom",
   },
   "0x49849C98ae39Fff122806C06791Fa73784FB3675": Object {
     "address": "0x49849C98ae39Fff122806C06791Fa73784FB3675",
@@ -529,6 +527,13 @@ Object {
     "symbol": "TBTC",
     "type": "Contract",
   },
+  "0x945Facb997494CC2570096c74b5F66A3507330a1": Object {
+    "address": "0x945Facb997494CC2570096c74b5F66A3507330a1",
+    "decimals": 18,
+    "name": "mBTC",
+    "symbol": "mBTC",
+    "type": "Contract",
+  },
   "0x952F4Ac36EF204a28800AA1c1586C5261B600894": Object {
     "address": "0x952F4Ac36EF204a28800AA1c1586C5261B600894",
     "decimals": 18,
@@ -652,6 +657,13 @@ Object {
     "symbol": "FARM",
     "type": "Contract",
   },
+  "0xa3BeD4E1c75D00fa6f4E5E6922DB7261B5E9AcD2": Object {
+    "address": "0xa3BeD4E1c75D00fa6f4E5E6922DB7261B5E9AcD2",
+    "decimals": 18,
+    "name": "Meta",
+    "symbol": "MTA",
+    "type": "Contract",
+  },
   "0xb19059ebb43466C323583928285a49f558E572Fd": Object {
     "address": "0xb19059ebb43466C323583928285a49f558E572Fd",
     "decimals": 18,
@@ -682,7 +694,7 @@ Object {
     "decimals": 18,
     "name": "ibBTC",
     "symbol": "ibBTC",
-    "type": "Index",
+    "type": "Contract",
   },
   "0xcA3d75aC011BF5aD07a98d02f18225F9bD9A6BDF": Object {
     "address": "0xcA3d75aC011BF5aD07a98d02f18225F9bD9A6BDF",
@@ -773,10 +785,9 @@ Object {
   "0x17d8CBB6Bce8cEE970a4027d1198F6700A7a6c24": Object {
     "address": "0x17d8CBB6Bce8cEE970a4027d1198F6700A7a6c24",
     "decimals": 18,
-    "lookupName": "sbtc",
     "name": "imBTC",
     "symbol": "imBTC",
-    "type": "Contract",
+    "type": "Custom",
   },
   "0x1862A18181346EBd9EdAf800804f89190DeF24a5": Object {
     "address": "0x1862A18181346EBd9EdAf800804f89190DeF24a5",
@@ -897,10 +908,9 @@ Object {
   "0x48c59199Da51B7E30Ea200a74Ea07974e62C4bA7": Object {
     "address": "0x48c59199Da51B7E30Ea200a74Ea07974e62C4bA7",
     "decimals": 18,
-    "lookupName": "sbtc",
     "name": "mhBTC",
     "symbol": "mhBTC",
-    "type": "Contract",
+    "type": "Custom",
   },
   "0x49849C98ae39Fff122806C06791Fa73784FB3675": Object {
     "address": "0x49849C98ae39Fff122806C06791Fa73784FB3675",
@@ -1147,6 +1157,13 @@ Object {
     "symbol": "TBTC",
     "type": "Contract",
   },
+  "0x945Facb997494CC2570096c74b5F66A3507330a1": Object {
+    "address": "0x945Facb997494CC2570096c74b5F66A3507330a1",
+    "decimals": 18,
+    "name": "mBTC",
+    "symbol": "mBTC",
+    "type": "Contract",
+  },
   "0x952F4Ac36EF204a28800AA1c1586C5261B600894": Object {
     "address": "0x952F4Ac36EF204a28800AA1c1586C5261B600894",
     "decimals": 18,
@@ -1270,6 +1287,13 @@ Object {
     "symbol": "FARM",
     "type": "Contract",
   },
+  "0xa3BeD4E1c75D00fa6f4E5E6922DB7261B5E9AcD2": Object {
+    "address": "0xa3BeD4E1c75D00fa6f4E5E6922DB7261B5E9AcD2",
+    "decimals": 18,
+    "name": "Meta",
+    "symbol": "MTA",
+    "type": "Contract",
+  },
   "0xb19059ebb43466C323583928285a49f558E572Fd": Object {
     "address": "0xb19059ebb43466C323583928285a49f558E572Fd",
     "decimals": 18,
@@ -1300,7 +1324,7 @@ Object {
     "decimals": 18,
     "name": "ibBTC",
     "symbol": "ibBTC",
-    "type": "Index",
+    "type": "Contract",
   },
   "0xcA3d75aC011BF5aD07a98d02f18225F9bD9A6BDF": Object {
     "address": "0xcA3d75aC011BF5aD07a98d02f18225F9bD9A6BDF",
