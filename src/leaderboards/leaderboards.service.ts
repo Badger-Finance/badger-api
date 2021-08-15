@@ -59,7 +59,12 @@ export class LeaderBoardsService {
       };
     });
     return boosts
-      .sort((a, b) => b.boost - a.boost)
+      .sort((a, b) => {
+        if (a.boost === b.boost) {
+          return b.nativeBalance - a.nativeBalance;
+        }
+        return b.boost - a.boost;
+      })
       .map((boost, i) => {
         return Object.assign(new CachedBoost(), {
           leaderboard: LeaderBoardType.BadgerBoost,
