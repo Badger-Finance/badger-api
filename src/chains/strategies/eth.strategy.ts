@@ -1,6 +1,6 @@
 import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
-import { getContractPrice, getTokenPrice, getVaultTokenPrice, ibBTCPrice } from '../../prices/prices.utils';
+import { getContractPrice, getTokenPrice, getVaultTokenPrice } from '../../prices/prices.utils';
 import { getOnChainLiquidityPrice, getUniswapPrice, resolveTokenPrice } from '../../protocols/common/swap.utils';
 import { getCurveTokenPrice } from '../../protocols/strategies/convex.strategy';
 import { ethTokensConfig } from '../../tokens/config/eth-tokens.config';
@@ -24,6 +24,11 @@ export class EthStrategy extends ChainStrategy {
     }
     const eth = Chain.getChain(ChainNetwork.Ethereum);
     switch (token.type) {
+      case TokenType.Custom:
+        if (!token.getPrice) {
+          throw new UnprocessableEntity(`${token.name} requires custom price implementation`);
+        }
+        return token.getPrice(eth, token);
       case TokenType.Contract:
         if (token.lookupName) {
           return this.resolveLookupName(token.lookupName, token.address);
@@ -37,8 +42,6 @@ export class EthStrategy extends ChainStrategy {
         return getUniswapPrice(checksummedAddress);
       case TokenType.Vault:
         return getVaultTokenPrice(checksummedAddress);
-      case TokenType.Index:
-        return ibBTCPrice();
       default:
         throw new UnprocessableEntity('Unsupported TokenType');
     }
