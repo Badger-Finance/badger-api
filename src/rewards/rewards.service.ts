@@ -127,7 +127,7 @@ export class RewardsService {
   }
 
   static async getRewardEmission(chain: Chain, settDefinition: SettDefinition): Promise<ValueSource[]> {
-    if (!chain.rewardsLogger|| settDefinition.depositToken === TOKENS.DIGG) {
+    if (!chain.rewardsLogger || settDefinition.depositToken === TOKENS.DIGG) {
       return [];
     }
     const { settToken } = settDefinition;
@@ -141,7 +141,7 @@ export class RewardsService {
 
     // create relevant contracts
     const rewardsLogger = RewardsLogger__factory.connect(chain.rewardsLogger, chain.provider);
-    
+
     let sharesPerFragment = BigNumber.from(1);
     if (chain.network === ChainNetwork.Ethereum) {
       const diggContract = Digg__factory.connect(TOKENS.DIGG, chain.provider);
