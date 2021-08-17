@@ -12,11 +12,12 @@ import { SettDefinition } from '../../setts/interfaces/sett-definition.interface
 import { mStableApiResponse } from '../../tokens/interfaces/mbstable-api-response.interface';
 import { Token } from '../../tokens/interfaces/token.interface';
 import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
-import { formatBalance } from '../../tokens/tokens.utils';
+import { formatBalance, getToken } from '../../tokens/tokens.utils';
 import { SourceType } from '../enums/source-type.enum';
 import { CachedValueSource } from '../interfaces/cached-value-source.interface';
 import { uniformPerformance } from '../interfaces/performance.interface';
 import { createValueSource } from '../interfaces/value-source.interface';
+import { tokenEmission } from '../protocols.utils';
 
 const MSTABLE_API_URL = 'https://api.mstable.org/';
 const MSTABLE_BTC_APR = `${MSTABLE_API_URL}/massets/mbtc`;
@@ -26,9 +27,9 @@ const MSTABLE_HMBTC_VAULT = '0xF65D53AA6e2E4A5f4F026e73cb3e22C22D75E35C';
 export class mStableStrategy {
   static async getValueSources(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
     switch (settDefinition.depositToken) {
-      case MSTABLE_HMBTC_VAULT:
-        return Promise.all([getVaultSource(chain, settDefinition, MSTABLE_MBTC_VAULT)]);
-      case MSTABLE_MBTC_VAULT:
+      case TOKENS.MHBTC:
+        return Promise.all([getVaultSource(chain, settDefinition, MSTABLE_HMBTC_VAULT)]);
+      case TOKENS.IMBTC:
       default:
         return getImBtcValuceSource(chain, settDefinition);
     }
@@ -101,7 +102,7 @@ async function getVaultSource(
     const apr = baseApr * vestingMultiplier;
     valueSource = createValueSource('Vested MTA Rewards', uniformPerformance(apr));
   }
-  return valueSourceToCachedValueSource(valueSource, settDefinition, SourceType.Emission);
+  return valueSourceToCachedValueSource(valueSource, settDefinition, tokenEmission(getToken(TOKENS.MTA)));
 }
 
 async function getMAssetValueSource(settDefinition: SettDefinition): Promise<CachedValueSource> {
