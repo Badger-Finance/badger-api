@@ -1,10 +1,10 @@
 import { Service } from '@tsed/common';
 import { NotFound } from '@tsed/exceptions';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
 import { ChainNetwork } from '../chains/enums/chain-network.enum';
-import { BOUNCER_PROOFS, ONE_YEAR_SECONDS, REWARD_DATA, REWARDS_LOGGER } from '../config/constants';
+import { BOUNCER_PROOFS, ONE_YEAR_SECONDS, REWARD_DATA } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
 import { Digg__factory, RewardsLogger__factory } from '../contracts';
 import { getPrice } from '../prices/prices.utils';
@@ -127,7 +127,7 @@ export class RewardsService {
   }
 
   static async getRewardEmission(chain: Chain, settDefinition: SettDefinition): Promise<ValueSource[]> {
-    if (chain.network !== ChainNetwork.Ethereum || settDefinition.depositToken === TOKENS.DIGG) {
+    if (!chain.rewardsLogger|| settDefinition.depositToken === TOKENS.DIGG) {
       return [];
     }
     const { settToken } = settDefinition;
@@ -140,9 +140,13 @@ export class RewardsService {
     }
 
     // create relevant contracts
-    const rewardsLogger = RewardsLogger__factory.connect(REWARDS_LOGGER, chain.provider);
-    const diggContract = Digg__factory.connect(TOKENS.DIGG, chain.provider);
-    const sharesPerFragment = await diggContract._sharesPerFragment();
+    const rewardsLogger = RewardsLogger__factory.connect(chain.rewardsLogger, chain.provider);
+    
+    let sharesPerFragment = BigNumber.from(1);
+    if (chain.network === ChainNetwork.Ethereum) {
+      const diggContract = Digg__factory.connect(TOKENS.DIGG, chain.provider);
+      sharesPerFragment = await diggContract._sharesPerFragment();
+    }
 
     // filter active unlock schedules
     const unlockSchedules = await rewardsLogger.getAllUnlockSchedulesFor(settToken);

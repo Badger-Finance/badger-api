@@ -23,6 +23,7 @@ export class Polygon extends Chain {
       new MaticStrategy(),
       BADGER_MATIC_URL,
       15768000,
+      '0xd0ee2a5108b8800d688abc834445fd03b3b2738e',
     );
     Chain.register(this.network, this);
   }
