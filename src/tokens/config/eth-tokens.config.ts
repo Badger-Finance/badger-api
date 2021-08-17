@@ -59,6 +59,7 @@ export const ethTokensConfig: TokenConfig = {
   [TOKENS.MBTC]: {
     address: TOKENS.MBTC,
     decimals: 18,
+    lookupName: 'renbtc',
     name: 'mBTC',
     symbol: 'mBTC',
     type: TokenType.Contract,
