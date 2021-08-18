@@ -1,6 +1,5 @@
 import { GraphQLClient } from 'graphql-request';
 import * as Dom from 'graphql-request/dist/types.dom';
-import { print } from 'graphql';
 import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -2428,24 +2427,37 @@ export const UniV2PairDocument = gql`
   ${UniV2PairFragmentDoc}
 `;
 
-export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
+export type SdkFunctionWrapper = <T>(
+  action: (requestHeaders?: Record<string, string>) => Promise<T>,
+  operationName: string,
+) => Promise<T>;
 
-const defaultWrapper: SdkFunctionWrapper = (sdkFunction) => sdkFunction();
+const defaultWrapper: SdkFunctionWrapper = (action, _operationName) => action();
+
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     UniPairDayDatas(
       variables?: UniPairDayDatasQueryVariables,
       requestHeaders?: Dom.RequestInit['headers'],
     ): Promise<UniPairDayDatasQuery> {
-      return withWrapper(() =>
-        client.request<UniPairDayDatasQuery>(print(UniPairDayDatasDocument), variables, requestHeaders),
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<UniPairDayDatasQuery>(UniPairDayDatasDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'UniPairDayDatas',
       );
     },
     UniV2Pair(
       variables: UniV2PairQueryVariables,
       requestHeaders?: Dom.RequestInit['headers'],
     ): Promise<UniV2PairQuery> {
-      return withWrapper(() => client.request<UniV2PairQuery>(print(UniV2PairDocument), variables, requestHeaders));
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<UniV2PairQuery>(UniV2PairDocument, variables, { ...requestHeaders, ...wrappedRequestHeaders }),
+        'UniV2Pair',
+      );
     },
   };
 }

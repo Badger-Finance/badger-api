@@ -45,6 +45,7 @@ describe('accounts.utils', () => {
         grossShareDeposit: toWei(9),
         grossWithdraw: 5,
         grossShareWithdraw: toWei(5),
+        decimals: 18,
         token: {
           id: depositToken.address,
           name: depositToken.name,
@@ -116,7 +117,7 @@ describe('accounts.utils', () => {
     describe('users exist', () => {
       it('returns a list of user accounts', async () => {
         const result: UsersQuery = {
-          users: Object.values(TOKENS).map((token) => ({ id: token })),
+          users: Object.values(TOKENS).map((token) => ({ id: token, settBalances: [] })),
         };
         let responded = false;
         jest.spyOn(GraphQLClient.prototype, 'request').mockImplementation(async () => {

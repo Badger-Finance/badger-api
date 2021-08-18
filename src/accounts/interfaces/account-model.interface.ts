@@ -12,7 +12,7 @@ export class AccountModel implements Account {
   @Description('Account Address')
   @Example('0xb89b8702deac50254d002225b61286bc622d741e')
   @Property()
-  public id: string;
+  public address: string;
 
   @Title('boost')
   @Description('Badger Boost')
@@ -89,7 +89,7 @@ export class AccountModel implements Account {
   public nonNativeBalance: number;
 
   constructor(account: Account) {
-    this.id = account.id;
+    this.address = account.address;
     this.boost = account.boost;
     this.boostRank = account.boostRank;
     this.multipliers = account.multipliers;
