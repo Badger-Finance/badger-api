@@ -21,6 +21,7 @@ export abstract class Chain {
   readonly strategy: ChainStrategy;
   readonly graphUrl: string;
   readonly blocksPerYear: number;
+  readonly badgerTree?: string;
   readonly rewardsLogger?: string;
 
   constructor(
@@ -34,6 +35,7 @@ export abstract class Chain {
     strategy: ChainStrategy,
     graphUrl: string,
     blocksPerYear: number,
+    badgerTree?: string,
     rewardsLogger?: string,
   ) {
     this.name = name;
@@ -47,6 +49,7 @@ export abstract class Chain {
     this.strategy = strategy;
     this.graphUrl = graphUrl;
     this.blocksPerYear = blocksPerYear;
+    this.badgerTree = badgerTree;
     this.rewardsLogger = rewardsLogger;
   }
 

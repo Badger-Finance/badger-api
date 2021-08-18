@@ -3,12 +3,19 @@ import { GraphQLClient } from 'graphql-request';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
-import { getSdk, OrderDirection, User_OrderBy, UserQuery, UserSettBalance } from '../graphql/generated/badger';
+import {
+  getSdk,
+  OrderDirection,
+  User_OrderBy,
+  UserQuery,
+  UserSettBalance,
+  UsersQuery,
+} from '../graphql/generated/badger';
 import { getPrice, inCurrency } from '../prices/prices.utils';
 import { getCachedSett, getSettDefinition } from '../setts/setts.utils';
 import { formatBalance, getSettTokens, getToken } from '../tokens/tokens.utils';
 import { CachedAccount } from './interfaces/cached-account.interface';
-import { SettBalance } from './interfaces/sett-balance.interface';
+import { CachedSettBalance } from './interfaces/cached-sett-balance.interface';
 
 export async function getUserAccount(chain: Chain, accountId: string): Promise<UserQuery> {
   const badgerGraphqlClient = new GraphQLClient(chain.graphUrl);
@@ -16,6 +23,16 @@ export async function getUserAccount(chain: Chain, accountId: string): Promise<U
   return badgerGraphqlSdk.User({
     id: accountId.toLowerCase(),
     orderDirection: OrderDirection.Asc,
+  });
+}
+
+export async function getUserAccounts(chain: Chain, accounts: string[]): Promise<UsersQuery> {
+  const badgerGraphqlClient = new GraphQLClient(chain.graphUrl);
+  const badgerGraphqlSdk = getSdk(badgerGraphqlClient);
+  return badgerGraphqlSdk.Users({
+    where: {
+      id_in: accounts.map((acc) => acc.toLowerCase()),
+    },
   });
 }
 
@@ -35,7 +52,7 @@ export async function getAccounts(chain: Chain): Promise<string[]> {
         orderBy: User_OrderBy.Id,
         orderDirection: OrderDirection.Asc,
       });
-      if (!userPage || !userPage.users) {
+      if (!userPage || !userPage.users || userPage.users.length === 0) {
         break;
       }
       const { users } = userPage;
@@ -65,7 +82,7 @@ export async function toSettBalance(
   chain: Chain,
   settBalance: UserSettBalance,
   currency?: string,
-): Promise<SettBalance> {
+): Promise<CachedSettBalance> {
   const settDefinition = getSettDefinition(chain, settBalance.sett.id);
   const { netShareDeposit, grossDeposit, grossWithdraw } = settBalance;
   const { ppfs } = await getCachedSett(settDefinition);
@@ -87,7 +104,7 @@ export async function toSettBalance(
     getSettTokens(settDefinition, balanceTokens, currency),
   ]);
 
-  return {
+  return Object.assign(new CachedSettBalance(), {
     id: settDefinition.settToken,
     name: settDefinition.name,
     asset: depositToken.symbol,
@@ -100,5 +117,5 @@ export async function toSettBalance(
     earnedTokens,
     depositedBalance: depositedTokens,
     withdrawnBalance: withdrawnTokens,
-  };
+  });
 }

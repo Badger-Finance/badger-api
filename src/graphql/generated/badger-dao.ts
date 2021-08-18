@@ -1,6 +1,5 @@
 import { GraphQLClient } from 'graphql-request';
 import * as Dom from 'graphql-request/dist/types.dom';
-import { print } from 'graphql';
 import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -3060,13 +3059,21 @@ export const HarvestsDocument = gql`
   ${HarvestFragmentDoc}
 `;
 
-export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
+export type SdkFunctionWrapper = <T>(
+  action: (requestHeaders?: Record<string, string>) => Promise<T>,
+  operationName: string,
+) => Promise<T>;
 
-const defaultWrapper: SdkFunctionWrapper = (sdkFunction) => sdkFunction();
+const defaultWrapper: SdkFunctionWrapper = (action, _operationName) => action();
+
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     Harvests(variables?: HarvestsQueryVariables, requestHeaders?: Dom.RequestInit['headers']): Promise<HarvestsQuery> {
-      return withWrapper(() => client.request<HarvestsQuery>(print(HarvestsDocument), variables, requestHeaders));
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<HarvestsQuery>(HarvestsDocument, variables, { ...requestHeaders, ...wrappedRequestHeaders }),
+        'Harvests',
+      );
     },
   };
 }

@@ -3,7 +3,7 @@ import { CachedBalance } from './cached-claimable-balance.interface';
 import { SettBalance } from './sett-balance.interface';
 
 export interface Account {
-  id: string;
+  address: string;
   boost: number;
   boostRank: number;
   multipliers: BoostMultipliers;

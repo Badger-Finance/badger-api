@@ -82,7 +82,7 @@ export class RewardsService {
     };
   }
 
-  async getUserBoost(address: string): Promise<Boost> {
+  static async getUserBoost(address: string): Promise<Boost> {
     const boostFile = await getObject(REWARD_DATA, 'badger-boosts.json');
     const fileContents: BoostData = JSON.parse(boostFile.toString('utf-8'));
     const boostData = fileContents.userData[address.toLowerCase()];
