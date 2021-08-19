@@ -102,7 +102,10 @@ export async function getCachedAccount(address: string): Promise<CachedAccount> 
   try {
     const mapper = getDataMapper();
     for await (const item of mapper.query(CachedAccount, { address }, { limit: 1, scanIndexForward: false })) {
-      return item;
+      return {
+        ...defaultAccount,
+        ...item,
+      };
     }
     return defaultAccount;
   } catch (err) {
