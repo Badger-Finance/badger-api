@@ -1,6 +1,7 @@
 import { Service } from '@tsed/di';
 import { BadRequest, NotFound } from '@tsed/exceptions';
 import { Chain } from '../chains/config/chain.config';
+import { refreshAccountSettBalances } from '../indexer/accounts-indexer';
 import { cachedAccountToAccount, getCachedAccount } from './accounts.utils';
 import { Account } from './interfaces/account.interface';
 
@@ -10,12 +11,13 @@ export class AccountsService {
     if (!accountId) {
       throw new BadRequest('accountId is required');
     }
-    const cachedAccount = await getCachedAccount(accountId);
+    let cachedAccount = await getCachedAccount(accountId);
+    await refreshAccountSettBalances([chain], [accountId], {[accountId]: cachedAccount});
+    cachedAccount = await getCachedAccount(accountId);
     const account = cachedAccountToAccount(cachedAccount, chain.network);
     if (!account) {
       throw new NotFound(`Account ${accountId} does not exist.`);
     }
-    account.claimableBalances = account.claimableBalances.filter((balance) => balance.network === chain.network);
     return account;
   }
 }

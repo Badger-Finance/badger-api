@@ -13,6 +13,20 @@ import { getToken } from '../tokens/tokens.utils';
 import { getAccounts, getCachedAccount, getUserAccount, toSettBalance } from './accounts.utils';
 
 describe('accounts.utils', () => {
+
+  const defaultAccount = (address: string) => ({
+    address,
+    boost: 0,
+    boostRank: 0,
+    multipliers: [],
+    value: 0,
+    earnedValue: 0,
+    balances: [],
+    claimableBalances: [],
+    nativeBalance: 0,
+    nonNativeBalance: 0,
+  });
+
   const testSettBalance = (sett: SettDefinition): UserSettBalance => {
     const settToken = getToken(sett.settToken);
     const depositToken = getToken(sett.depositToken);
@@ -62,7 +76,7 @@ describe('accounts.utils', () => {
       it('returns undefined', async () => {
         setupMapper([]);
         const actual = await getCachedAccount(TEST_ADDR);
-        expect(actual).toBeFalsy();
+        expect(actual).toMatchObject(defaultAccount(TEST_ADDR));
       });
     });
 
@@ -72,7 +86,7 @@ describe('accounts.utils', () => {
           throw new Error();
         });
         const actual = await getCachedAccount(TEST_ADDR);
-        expect(actual).toBeFalsy();
+        expect(actual).toMatchObject(defaultAccount(TEST_ADDR));
       });
     });
 
