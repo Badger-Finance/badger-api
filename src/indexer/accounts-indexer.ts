@@ -21,12 +21,23 @@ import { RewardsService } from '../rewards/rewards.service';
 import { getTreeDistribution } from '../rewards/rewards.utils';
 import { getSettDefinition } from '../setts/setts.utils';
 
-async function getAccountMap(addresses: string[]): Promise<AccountMap> {
-  const accounts = await Promise.all(addresses.map(async (addr) => getCachedAccount(addr)));
-  return Object.fromEntries(accounts.map((acc) => [acc.address, acc]));
+export enum IndexMode {
+  ClaimableBalanceData = 'ClaimableBalanceData',
+  BoostData = 'BoostData',
+  BalanceData = 'BalanceData',
 }
 
-async function refreshAccountClaimableBalances(chains: Chain[], addresses: string[], batchAccounts: AccountMap) {
+interface AccountIndexEvent {
+  mode: IndexMode;
+}
+
+async function getAccountMap(addresses: string[]): Promise<AccountMap> {
+  const accounts = await Promise.all(addresses.map(async (addr) => getCachedAccount(addr)));
+  return Object.fromEntries(accounts.map((acc) => [ethers.utils.getAddress(acc.address), acc]));
+}
+
+async function refreshAccountClaimableBalances(chains: Chain[], batchAccounts: AccountMap) {
+  const addresses = Object.keys(batchAccounts);
   const treeDistribution = await getTreeDistribution();
   const calls: { user: string; chain: Chain; claim: Promise<[string[], BigNumber[]]> }[] = [];
   await Promise.all(
@@ -71,7 +82,8 @@ async function refreshAccountClaimableBalances(chains: Chain[], addresses: strin
   });
 }
 
-export async function refreshAccountSettBalances(chains: Chain[], addresses: string[], batchAccounts: AccountMap) {
+export async function refreshAccountSettBalances(chains: Chain[], batchAccounts: AccountMap) {
+  const addresses = Object.keys(batchAccounts);
   await Promise.all(
     chains.map(async (chain) => {
       const response = await getUserAccounts(chain, addresses);
@@ -101,7 +113,8 @@ export async function refreshAccountSettBalances(chains: Chain[], addresses: str
   );
 }
 
-async function refreshAccountBoostInfo(_chains: Chain[], addresses: string[], batchAccounts: AccountMap) {
+async function refreshAccountBoostInfo(_chains: Chain[], batchAccounts: AccountMap) {
+  const addresses = Object.keys(batchAccounts);
   const [userBoosts, maxRank] = await Promise.all([RewardsService.getUserBoosts(addresses), getLeaderBoardSize()]);
 
   await Promise.all(
@@ -125,9 +138,9 @@ async function refreshAccountBoostInfo(_chains: Chain[], addresses: string[], ba
   );
 }
 
-async function refreshAccounts(
+async function batchRefreshAccounts(
   accounts: string[],
-  refreshFns: (addresses: string[], batchAccounts: AccountMap) => Promise<void>[],
+  refreshFns: (batchAccounts: AccountMap) => Promise<void>[],
   customBatch?: number,
 ): Promise<void> {
   const batchSize = customBatch ?? 500;
@@ -135,31 +148,51 @@ async function refreshAccounts(
   for (let i = 0; i < accounts.length; i += batchSize) {
     const addresses = accounts.slice(i, i + batchSize);
     const batchAccounts = await getAccountMap(addresses);
-    await Promise.all(refreshFns(addresses, batchAccounts));
+    await Promise.all(refreshFns(batchAccounts));
     const cachedAccounts = Object.values(batchAccounts).map((account) => Object.assign(new CachedAccount(), account));
     for await (const _item of mapper.batchPut(cachedAccounts)) {
     }
   }
 }
 
-export async function refreshUserAccounts() {
+export async function refreshAccounts(chains: Chain[], mode: IndexMode, accounts: string[]) {
+  let refreshFns: Promise<void>[] = [];
+  switch (mode) {
+    case IndexMode.BoostData:
+    case IndexMode.ClaimableBalanceData:
+      refreshFns = [
+        batchRefreshAccounts(accounts, (batchAccounts) => [
+          refreshAccountClaimableBalances(chains, batchAccounts),
+          refreshAccountBoostInfo(chains, batchAccounts),
+        ]),
+      ];
+      break;
+    case IndexMode.BalanceData:
+    default:
+      refreshFns = chunkArray(accounts, 10).flatMap((chunk) =>
+      batchRefreshAccounts(chunk, (batchAccounts) => [refreshAccountSettBalances(chains, batchAccounts)], 100),
+      );
+      break;
+  }
+  await Promise.all(refreshFns);
+}
+
+export async function refreshUserAccounts(event: AccountIndexEvent) {
+  const { mode } = event;
+  console.log(`refreshUserAccounts mode: ${mode}`);
+  console.time(`refreshUserAccounts mode: ${mode}`);
   const chains = loadChains();
   const allAccounts = await Promise.all(chains.map((chain) => getAccounts(chain)));
   const accounts = [...new Set(...allAccounts)];
-  await Promise.all([
-    refreshAccounts(accounts, (addresses, batchAccounts) => [
-      refreshAccountClaimableBalances(chains, addresses, batchAccounts),
-      refreshAccountBoostInfo(chains, addresses, batchAccounts),
-    ]),
-    refreshAccounts(
-      accounts.slice(0, accounts.length / 2),
-      (addresses, batchAccounts) => [refreshAccountSettBalances(chains, addresses, batchAccounts)],
-      100,
-    ),
-    refreshAccounts(
-      accounts.slice(accounts.length / 2),
-      (addresses, batchAccounts) => [refreshAccountSettBalances(chains, addresses, batchAccounts)],
-      100,
-    ),
-  ]);
+  await refreshAccounts(chains, mode, accounts);
+  console.timeEnd(`refreshUserAccounts mode: ${mode}`);
+}
+
+function chunkArray(addresses: string[], count: number): string[][] {
+  const chunks: string[][] = [];
+  const chunkSize = addresses.length / count;
+  for (let i = 0; i < addresses.length; i += chunkSize) {
+    chunks.push(addresses.slice(i, i + chunkSize));
+  }
+  return chunks;
 }
