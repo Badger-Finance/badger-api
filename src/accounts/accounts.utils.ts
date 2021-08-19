@@ -12,6 +12,8 @@ import {
   UserSettBalance,
   UsersQuery,
 } from '../graphql/generated/badger';
+import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
+import { CachedBoost } from '../leaderboards/interface/cached-boost.interface';
 import { getPrice, inCurrency } from '../prices/prices.utils';
 import { getCachedSett, getSettDefinition } from '../setts/setts.utils';
 import { cachedTokenBalanceToTokenBalance, formatBalance, getSettTokens, getToken } from '../tokens/tokens.utils';
@@ -148,4 +150,26 @@ export async function toSettBalance(
     depositedBalance: depositedTokens,
     withdrawnBalance: withdrawnTokens,
   });
+}
+
+export async function getCachedBoost(address: string): Promise<CachedBoost> {
+  const defaultBoost: CachedBoost = {
+    leaderboard: LeaderBoardType.BadgerBoost,
+    rank: 0,
+    address,
+    boost: 0,
+    stakeRatio: 0,
+    nftMultiplier: 0,
+    nativeBalance: 0,
+    nonNativeBalance: 0,
+  };
+  const mapper = getDataMapper();
+  for await (const entry of mapper.query(
+    CachedBoost,
+    { address: ethers.utils.getAddress(address) },
+    { limit: 1, indexName: 'IndexLeaderBoardRankOnAddress' },
+  )) {
+    return entry;
+  }
+  return defaultBoost;
 }

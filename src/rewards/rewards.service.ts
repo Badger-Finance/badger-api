@@ -82,48 +82,54 @@ export class RewardsService {
     };
   }
 
-  static async getUserBoost(address: string): Promise<Boost> {
+  static async getUserBoosts(addresses: string[]): Promise<Record<string, Boost>> {
     const boostFile = await getObject(REWARD_DATA, 'badger-boosts.json');
     const fileContents: BoostData = JSON.parse(boostFile.toString('utf-8'));
-    const boostData = fileContents.userData[address.toLowerCase()];
     const defaultMultipliers: BoostMultipliers = {};
     Object.keys(fileContents.multiplierData).forEach(
       (key) => (defaultMultipliers[key] = fileContents.multiplierData[key].min),
     );
-    if (!boostData) {
-      return {
-        boost: 1,
-        stakeRatio: 0,
-        nftMultiplier: 1,
-        multipliers: defaultMultipliers,
-        nativeBalance: 0,
-        nonNativeBalance: 0,
-      };
-    }
-    const userMulipliers = boostData.multipliers;
-    const missingMultipliers = Object.keys(defaultMultipliers).length !== Object.keys(userMulipliers).length;
-    if (missingMultipliers) {
-      const includedMultipliers = new Set();
-      const totalPercentile = Object.entries(userMulipliers)
-        .map((entry) => {
-          const [key, value] = entry;
-          includedMultipliers.add(key);
-          const min = fileContents.multiplierData[key].min;
-          const max = fileContents.multiplierData[key].max;
-          const range = max - min;
-          return (value - min) / range;
-        })
-        .reduce((total, value) => (total += value), 0);
-      const percentile = totalPercentile / Object.entries(userMulipliers).length;
-      Object.entries(fileContents.multiplierData).forEach((entry) => {
-        const [key, value] = entry;
-        if (!includedMultipliers.has(key)) {
-          const range = value.max - value.min;
-          userMulipliers[key] = value.min + percentile * range;
+    const userBoosts: Record<string, Boost> = {};
+    for (const address of addresses) {
+      let boostData = fileContents.userData[address.toLowerCase()];
+      if (!boostData) {
+        boostData = {
+          boost: 1,
+          stakeRatio: 0,
+          nftMultiplier: 1,
+          multipliers: defaultMultipliers,
+          nativeBalance: 0,
+          nonNativeBalance: 0,
+        };
+      } else {
+        const userMulipliers = boostData.multipliers;
+        const missingMultipliers = Object.keys(defaultMultipliers).length !== Object.keys(userMulipliers).length;
+        if (missingMultipliers) {
+          const includedMultipliers = new Set();
+          const totalPercentile = Object.entries(userMulipliers)
+            .map((entry) => {
+              const [key, value] = entry;
+              includedMultipliers.add(key);
+              const min = fileContents.multiplierData[key].min;
+              const max = fileContents.multiplierData[key].max;
+              const range = max - min;
+              return (value - min) / range;
+            })
+            .reduce((total, value) => (total += value), 0);
+          const percentile = totalPercentile / Object.entries(userMulipliers).length;
+          Object.entries(fileContents.multiplierData).forEach((entry) => {
+            const [key, value] = entry;
+            if (!includedMultipliers.has(key)) {
+              const range = value.max - value.min;
+              userMulipliers[key] = value.min + percentile * range;
+            }
+          });
         }
-      });
+        boostData.multipliers = userMulipliers;
+      }
+      userBoosts[address] = boostData;
     }
-    return boostData;
+    return userBoosts;
   }
 
   static async getRewardEmission(chain: Chain, settDefinition: SettDefinition): Promise<ValueSource[]> {
