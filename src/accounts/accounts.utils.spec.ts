@@ -13,7 +13,6 @@ import { getToken } from '../tokens/tokens.utils';
 import { getAccounts, getCachedAccount, getUserAccount, toSettBalance } from './accounts.utils';
 
 describe('accounts.utils', () => {
-
   const defaultAccount = (address: string) => ({
     address,
     boost: 0,
