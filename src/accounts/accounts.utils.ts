@@ -81,7 +81,7 @@ export function cachedAccountToAccount(cachedAccount: CachedAccount, network?: C
         tokens: bal.tokens.map((token) => cachedTokenBalanceToTokenBalance(token)),
         earnedTokens: bal.earnedTokens.map((token) => cachedTokenBalanceToTokenBalance(token)),
       })),
-      claimableBalances: cachedAccount.claimableBalances.filter((bal) => !network || bal.network === network)
+    claimableBalances: cachedAccount.claimableBalances.filter((bal) => !network || bal.network === network),
   };
   return account;
 }

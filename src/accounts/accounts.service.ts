@@ -12,7 +12,7 @@ export class AccountsService {
       throw new BadRequest('accountId is required');
     }
     let cachedAccount = await getCachedAccount(accountId);
-    await refreshAccountSettBalances([chain], [accountId], {[accountId]: cachedAccount});
+    await refreshAccountSettBalances([chain], [accountId], { [accountId]: cachedAccount });
     cachedAccount = await getCachedAccount(accountId);
     const account = cachedAccountToAccount(cachedAccount, chain.network);
     if (!account) {

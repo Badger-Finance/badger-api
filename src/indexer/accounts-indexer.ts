@@ -1,5 +1,11 @@
 import { BigNumber, ethers } from 'ethers';
-import { getAccounts, getCachedAccount, getCachedBoost, getUserAccounts, toSettBalance } from '../accounts/accounts.utils';
+import {
+  getAccounts,
+  getCachedAccount,
+  getCachedBoost,
+  getUserAccounts,
+  toSettBalance,
+} from '../accounts/accounts.utils';
 import { AccountMap } from '../accounts/interfaces/account-map.interface';
 import { CachedAccount } from '../accounts/interfaces/cached-account.interface';
 import { CachedBalance } from '../accounts/interfaces/cached-claimable-balance.interface';
@@ -96,10 +102,8 @@ export async function refreshAccountSettBalances(chains: Chain[], addresses: str
 }
 
 async function refreshAccountBoostInfo(_chains: Chain[], addresses: string[], batchAccounts: AccountMap) {
-  const [userBoosts, maxRank] = await Promise.all([
-    RewardsService.getUserBoosts(addresses), getLeaderBoardSize()
-  ]);
-  
+  const [userBoosts, maxRank] = await Promise.all([RewardsService.getUserBoosts(addresses), getLeaderBoardSize()]);
+
   await Promise.all(
     addresses.map(async (acc) => {
       const userBoost = userBoosts[acc];
@@ -121,7 +125,11 @@ async function refreshAccountBoostInfo(_chains: Chain[], addresses: string[], ba
   );
 }
 
-async function refreshAccounts(accounts: string [], refreshFns: (addresses: string[], batchAccounts: AccountMap) => Promise<void>[], customBatch?: number): Promise<void> {
+async function refreshAccounts(
+  accounts: string[],
+  refreshFns: (addresses: string[], batchAccounts: AccountMap) => Promise<void>[],
+  customBatch?: number,
+): Promise<void> {
   const batchSize = customBatch ?? 500;
   const mapper = getDataMapper();
   for (let i = 0; i < accounts.length; i += batchSize) {
@@ -145,12 +153,16 @@ export async function refreshUserAccounts() {
       refreshAccountClaimableBalances(chains, addresses, batchAccounts),
       refreshAccountBoostInfo(chains, addresses, batchAccounts),
     ]),
-    refreshAccounts(accounts.slice(0, accounts.length / 2), (addresses, batchAccounts) => [
-      refreshAccountSettBalances(chains, addresses, batchAccounts)
-    ], 100),
-    refreshAccounts(accounts.slice(accounts.length / 2), (addresses, batchAccounts) => [
-      refreshAccountSettBalances(chains, addresses, batchAccounts)
-    ], 100),
+    refreshAccounts(
+      accounts.slice(0, accounts.length / 2),
+      (addresses, batchAccounts) => [refreshAccountSettBalances(chains, addresses, batchAccounts)],
+      100,
+    ),
+    refreshAccounts(
+      accounts.slice(accounts.length / 2),
+      (addresses, batchAccounts) => [refreshAccountSettBalances(chains, addresses, batchAccounts)],
+      100,
+    ),
   ]);
   console.timeEnd('refreshUserAccounts');
 }
