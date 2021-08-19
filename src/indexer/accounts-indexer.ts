@@ -156,12 +156,13 @@ async function batchRefreshAccounts(
 }
 
 export async function refreshAccounts(chains: Chain[], mode: IndexMode, accounts: string[]) {
+  const checksummedAccounts = accounts.map((acc) => ethers.utils.getAddress(acc));
   let refreshFns: Promise<void>[] = [];
   switch (mode) {
     case IndexMode.BoostData:
     case IndexMode.ClaimableBalanceData:
       refreshFns = [
-        batchRefreshAccounts(accounts, (batchAccounts) => [
+        batchRefreshAccounts(checksummedAccounts, (batchAccounts) => [
           refreshAccountClaimableBalances(chains, batchAccounts),
           refreshAccountBoostInfo(chains, batchAccounts),
         ]),
@@ -169,7 +170,7 @@ export async function refreshAccounts(chains: Chain[], mode: IndexMode, accounts
       break;
     case IndexMode.BalanceData:
     default:
-      refreshFns = chunkArray(accounts, 10).flatMap((chunk) =>
+      refreshFns = chunkArray(checksummedAccounts, 10).flatMap((chunk) =>
         batchRefreshAccounts(chunk, (batchAccounts) => [refreshAccountSettBalances(chains, batchAccounts)], 100),
       );
       break;

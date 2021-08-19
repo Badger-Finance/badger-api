@@ -87,8 +87,9 @@ export function cachedAccountToAccount(cachedAccount: CachedAccount, network?: C
 }
 
 export async function getCachedAccount(address: string): Promise<CachedAccount> {
+  const checksummedAccount = ethers.utils.getAddress(address);
   const defaultAccount = {
-    address,
+    address: checksummedAccount,
     boost: 0,
     boostRank: 0,
     multipliers: [],
@@ -101,7 +102,11 @@ export async function getCachedAccount(address: string): Promise<CachedAccount> 
   };
   try {
     const mapper = getDataMapper();
-    for await (const item of mapper.query(CachedAccount, { address }, { limit: 1, scanIndexForward: false })) {
+    for await (const item of mapper.query(
+      CachedAccount,
+      { address: checksummedAccount },
+      { limit: 1, scanIndexForward: false },
+    )) {
       return {
         ...defaultAccount,
         ...item,
