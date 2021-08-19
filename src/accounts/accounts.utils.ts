@@ -2,6 +2,7 @@ import { ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
+import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { TOKENS } from '../config/tokens.config';
 import {
   getSdk,
@@ -13,7 +14,8 @@ import {
 } from '../graphql/generated/badger';
 import { getPrice, inCurrency } from '../prices/prices.utils';
 import { getCachedSett, getSettDefinition } from '../setts/setts.utils';
-import { formatBalance, getSettTokens, getToken } from '../tokens/tokens.utils';
+import { cachedTokenBalanceToTokenBalance, formatBalance, getSettTokens, getToken } from '../tokens/tokens.utils';
+import { Account } from './interfaces/account.interface';
 import { CachedAccount } from './interfaces/cached-account.interface';
 import { CachedSettBalance } from './interfaces/cached-sett-balance.interface';
 
@@ -66,15 +68,42 @@ export async function getAccounts(chain: Chain): Promise<string[]> {
   return accounts;
 }
 
-export async function getCachedAccount(address: string): Promise<CachedAccount | undefined> {
+export function cachedAccountToAccount(cachedAccount: CachedAccount, network?: ChainNetwork): Account {
+  const account: Account = {
+    ...cachedAccount,
+    multipliers: Object.fromEntries(cachedAccount.multipliers.map((entry) => [entry.address, entry.multiplier])),
+    balances: cachedAccount.balances
+      .filter((bal) => !network || bal.network === network)
+      .map((bal) => ({
+        ...bal,
+        tokens: bal.tokens.map((token) => cachedTokenBalanceToTokenBalance(token)),
+        earnedTokens: bal.earnedTokens.map((token) => cachedTokenBalanceToTokenBalance(token)),
+      })),
+  };
+  return account;
+}
+
+export async function getCachedAccount(address: string): Promise<CachedAccount> {
+  const defaultAccount = {
+    address,
+    boost: 0,
+    boostRank: 0,
+    multipliers: [],
+    value: 0,
+    earnedValue: 0,
+    balances: [],
+    claimableBalances: [],
+    nativeBalance: 0,
+    nonNativeBalance: 0,
+  };
   try {
     const mapper = getDataMapper();
     for await (const item of mapper.query(CachedAccount, { address }, { limit: 1, scanIndexForward: false })) {
       return item;
     }
-    return;
+    return defaultAccount;
   } catch (err) {
-    return;
+    return defaultAccount;
   }
 }
 
@@ -105,6 +134,7 @@ export async function toSettBalance(
   ]);
 
   return Object.assign(new CachedSettBalance(), {
+    network: chain.network,
     id: settDefinition.settToken,
     name: settDefinition.name,
     asset: depositToken.symbol,

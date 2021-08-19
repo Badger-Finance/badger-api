@@ -4,6 +4,7 @@ fragment User on User {
     id
     sett { 
       id
+      name
     }
     netDeposit
     netShareDeposit

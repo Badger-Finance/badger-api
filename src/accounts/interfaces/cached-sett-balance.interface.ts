@@ -4,6 +4,9 @@ import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance
 
 export class CachedSettBalance {
   @attribute()
+  network!: string;
+
+  @attribute()
   id!: string;
 
   @attribute()
