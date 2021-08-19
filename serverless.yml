@@ -304,10 +304,10 @@ functions:
           rate: rate(1 minute)
 
   index-accounts:
-    handler: src/indexer/accounts-indexer.refreshAccounts
-    timeout: 180
+    handler: src/indexer/accounts-indexer.refreshUserAccounts
+    timeout: 720
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-accounts
           description: 'index accounts information from the graph'
-          rate: rate(1 hour)
+          rate: rate(7 minutes)

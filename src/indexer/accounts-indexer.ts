@@ -118,7 +118,6 @@ async function refreshAccountBoostInfo(_chains: Chain[], addresses: string[], ba
 }
 
 async function refreshAccounts(refreshFns: (chains: Chain[], addresses: string[], batchAccounts: AccountMap) => Promise<void>[], customBatch?: number): Promise<void> {
-  console.time(`refreshSettBalances (${customBatch ?? 500})`);
   const chains = loadChains();
   const allAccounts = await Promise.all(chains.map((chain) => getAccounts(chain)));
   const accounts = [...new Set(...allAccounts)];
@@ -126,27 +125,31 @@ async function refreshAccounts(refreshFns: (chains: Chain[], addresses: string[]
   const batchSize = customBatch ?? 500;
   const mapper = getDataMapper();
   for (let i = 0; i < accounts.length; i += batchSize) {
-    console.log(`Index (${batchSize}) ${i} - ${i + batchSize}`);
     const addresses = accounts.slice(i, i + batchSize);
     const batchAccounts = await getAccountMap(addresses);
-    console.time(`Batch (${batchSize}) ${i / batchSize}`);
     await Promise.all(refreshFns(chains, addresses, batchAccounts));
-    console.timeEnd(`Batch (${batchSize}) ${i / batchSize}`);
     const cachedAccounts = Object.values(batchAccounts).map((account) => Object.assign(new CachedAccount(), account));
     for await (const _item of mapper.batchPut(cachedAccounts)) {
     }
   }
-  console.timeEnd(`refreshSettBalances (${customBatch ?? 500})`);
 }
 
-export async function refreshSettBalances() {
+export async function refreshUserAccounts() {
+  console.time('refreshUserAccounts');
   await Promise.all([
     refreshAccounts((chains, addresses, batchAccounts) => [
       refreshAccountClaimableBalances(chains, addresses, batchAccounts),
       refreshAccountBoostInfo(chains, addresses, batchAccounts),
     ]),
-    refreshAccounts((chains, addresses, batchAccounts) => [
-      refreshAccountSettBalances(chains, addresses, batchAccounts),
-    ], 200),
+    refreshAccounts((chains, addresses, batchAccounts) => {
+      const tasks: Promise<void>[] = [];
+      const taskSize = addresses.length / 2;
+      for (let i = 0; i < addresses.length; i += taskSize) {
+        const taskAddresses = addresses.slice(i, i + taskSize);
+        tasks.push(refreshAccountSettBalances(chains, taskAddresses, batchAccounts))
+      }
+      return tasks;
+    }, 100),
   ]);
+  console.timeEnd('refreshUserAccounts');
 }
