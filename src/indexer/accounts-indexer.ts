@@ -170,7 +170,7 @@ export async function refreshAccounts(chains: Chain[], mode: IndexMode, accounts
     case IndexMode.BalanceData:
     default:
       refreshFns = chunkArray(accounts, 10).flatMap((chunk) =>
-      batchRefreshAccounts(chunk, (batchAccounts) => [refreshAccountSettBalances(chains, batchAccounts)], 100),
+        batchRefreshAccounts(chunk, (batchAccounts) => [refreshAccountSettBalances(chains, batchAccounts)], 100),
       );
       break;
   }
