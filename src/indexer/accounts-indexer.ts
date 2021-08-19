@@ -143,8 +143,6 @@ async function refreshAccounts(
 }
 
 export async function refreshUserAccounts() {
-  console.log('refreshUserAccounts');
-  console.time('refreshUserAccounts');
   const chains = loadChains();
   const allAccounts = await Promise.all(chains.map((chain) => getAccounts(chain)));
   const accounts = [...new Set(...allAccounts)];
@@ -164,5 +162,4 @@ export async function refreshUserAccounts() {
       100,
     ),
   ]);
-  console.timeEnd('refreshUserAccounts');
 }
