@@ -14,7 +14,10 @@ import { RewardsService } from '../rewards/rewards.service';
 import { getTreeDistribution } from '../rewards/rewards.utils';
 import { getSettDefinition } from '../setts/setts.utils';
 
+// Benchmark: 21k accounts
+// refreshClaimableBalances: 2:59.002 (m:ss.mmm)
 export async function refreshClaimableBalances(): Promise<void> {
+  console.time('refreshClaimableBalances');
   const chains = loadChains();
   const allAccounts = await Promise.all(chains.map((chain) => getAccounts(chain)));
   const accounts = [...new Set(...allAccounts)];
@@ -24,26 +27,8 @@ export async function refreshClaimableBalances(): Promise<void> {
   const batchSize = 500;
   for (let i = 0; i < accounts.length; i += batchSize) {
     const addresses = accounts.slice(i, i + batchSize);
-    const batchAccounts: Record<string, CachedAccount> = {};
-    await Promise.all(
-      addresses.map(async (addr) => {
-        let cachedAccount = await getCachedAccount(addr);
-        if (!cachedAccount) {
-          cachedAccount = {
-            address: addr,
-            boost: 0,
-            boostRank: 0,
-            multipliers: [],
-            value: 0,
-            earnedValue: 0,
-            balances: [],
-            claimableBalances: [],
-            nativeBalance: 0,
-            nonNativeBalance: 0,
-          };
-        }
-        batchAccounts[addr] = cachedAccount;
-      }),
+    const batchAccounts: Record<string, CachedAccount> = Object.fromEntries(
+      await Promise.all(addresses.map(async (addr) => [addr, await getCachedAccount(addr)])),
     );
 
     const calls: { user: string; chain: Chain; claim: Promise<[string[], BigNumber[]]> }[] = [];
@@ -95,37 +80,23 @@ export async function refreshClaimableBalances(): Promise<void> {
   const mapper = getDataMapper();
   for await (const _item of mapper.batchPut(accountData)) {
   }
+  console.timeEnd('refreshClaimableBalances');
 }
 
+// Benchmark: 21k accounts
+// refreshSettBalances: 1:15.857 (m:ss.mmm)
 export async function refreshSettBalances(): Promise<void> {
+  console.time('refreshSettBalances');
   const chains = loadChains();
   const allAccounts = await Promise.all(chains.map((chain) => getAccounts(chain)));
   const accounts = [...new Set(...allAccounts)];
   const accountData: CachedAccount[] = [];
 
-  const batchSize = 500;
+  const batchSize = 100;
   for (let i = 0; i < accounts.length; i += batchSize) {
     const addresses = accounts.slice(i, i + batchSize);
-    const batchAccounts: Record<string, CachedAccount> = {};
-    await Promise.all(
-      addresses.map(async (addr) => {
-        let cachedAccount = await getCachedAccount(addr);
-        if (!cachedAccount) {
-          cachedAccount = {
-            address: addr,
-            boost: 0,
-            boostRank: 0,
-            multipliers: [],
-            value: 0,
-            earnedValue: 0,
-            balances: [],
-            claimableBalances: [],
-            nativeBalance: 0,
-            nonNativeBalance: 0,
-          };
-        }
-        batchAccounts[addr] = cachedAccount;
-      }),
+    const batchAccounts: Record<string, CachedAccount> = Object.fromEntries(
+      await Promise.all(addresses.map(async (addr) => [addr, await getCachedAccount(addr)])),
     );
 
     await Promise.all(
@@ -137,7 +108,7 @@ export async function refreshSettBalances(): Promise<void> {
           if (user) {
             const userBalances = user.settBalances as UserSettBalance[];
             if (userBalances) {
-              const protocolSettBalances = userBalances.filter((balance) => {
+              const balances = userBalances.filter((balance) => {
                 try {
                   getSettDefinition(chain, balance.sett.id);
                   return true;
@@ -145,10 +116,8 @@ export async function refreshSettBalances(): Promise<void> {
                   return false;
                 }
               });
-              const settBalances = await Promise.all(
-                protocolSettBalances.map(async (settBalance) => toSettBalance(chain, settBalance)),
-              );
-              account.balances = account.balances.concat(settBalances);
+              const settBalances = await Promise.all(balances.map(async (bal) => toSettBalance(chain, bal)));
+              account.balances = account.balances.filter((bal) => bal.network !== chain.network).concat(settBalances);
             }
           }
           account.value = account.balances.map((b) => b.value).reduce((total, value) => (total += value), 0);
@@ -166,41 +135,25 @@ export async function refreshSettBalances(): Promise<void> {
   const mapper = getDataMapper();
   for await (const _item of mapper.batchPut(accountData)) {
   }
+  console.timeEnd('refreshSettBalances');
 }
 
+// Benchmark: 21k accounts
+// refreshBoostInfo: 50.228s
 export async function refreshBoostInfo() {
+  console.time('refreshBoostInfo');
   const chains = loadChains();
   const allAccounts = await Promise.all(chains.map((chain) => getAccounts(chain)));
   const accounts = [...new Set(...allAccounts)];
   const accountData: CachedAccount[] = [];
 
   const batchSize = 500;
-  for (let i = 0; i < 500; i += batchSize) {
+  for (let i = 0; i < accounts.length; i += batchSize) {
     const addresses = accounts.slice(i, i + batchSize);
-
-    const batchAccounts: Record<string, CachedAccount> = {};
-    await Promise.all(
-      addresses.map(async (addr) => {
-        let cachedAccount = await getCachedAccount(addr);
-        if (!cachedAccount) {
-          cachedAccount = {
-            address: addr,
-            boost: 0,
-            boostRank: 0,
-            multipliers: [],
-            value: 0,
-            earnedValue: 0,
-            balances: [],
-            claimableBalances: [],
-            nativeBalance: 0,
-            nonNativeBalance: 0,
-          };
-        }
-        batchAccounts[addr] = cachedAccount;
-      }),
+    const batchAccounts: Record<string, CachedAccount> = Object.fromEntries(
+      await Promise.all(addresses.map(async (addr) => [addr, await getCachedAccount(addr)])),
     );
 
-    console.time(`Round ${i / batchSize} Boost + Leaderboard Calls`);
     await Promise.all(
       addresses.map(async (acc) => {
         const account = batchAccounts[acc];
@@ -223,9 +176,10 @@ export async function refreshBoostInfo() {
         accountData.push(Object.assign(new CachedAccount(), account));
       }),
     );
-
-    const mapper = getDataMapper();
-    for await (const _item of mapper.batchPut(accountData)) {
-    }
   }
+
+  const mapper = getDataMapper();
+  for await (const _item of mapper.batchPut(accountData)) {
+  }
+  console.timeEnd('refreshBoostInfo');
 }
