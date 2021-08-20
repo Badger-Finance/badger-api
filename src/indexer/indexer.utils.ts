@@ -227,25 +227,29 @@ export async function getEmissionApySnapshots(
 }
 
 export async function getSettValueSources(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
-  const [underlying, emission, protocol, derivative] = await Promise.all([
-    getUnderlyingPerformance(settDefinition),
-    getEmissionApySnapshots(chain, settDefinition),
-    getProtocolValueSources(chain, settDefinition),
-    getSettTokenPerformances(chain, settDefinition),
-  ]);
+  try {
+    const [underlying, emission, protocol, derivative] = await Promise.all([
+      getUnderlyingPerformance(settDefinition),
+      getEmissionApySnapshots(chain, settDefinition),
+      getProtocolValueSources(chain, settDefinition),
+      getSettTokenPerformances(chain, settDefinition),
+    ]);
 
-  // check for any emission removal
-  const oldSources: Record<string, CachedValueSource> = {};
-  const oldEmission = await getVaultCachedValueSources(settDefinition);
-  oldEmission.forEach((source) => (oldSources[source.addressValueSourceType] = source));
+    // check for any emission removal
+    const oldSources: Record<string, CachedValueSource> = {};
+    const oldEmission = await getVaultCachedValueSources(settDefinition);
+    oldEmission.forEach((source) => (oldSources[source.addressValueSourceType] = source));
 
-  // remove updated sources from old source list
-  const newSources = [underlying, ...emission, ...protocol, ...derivative];
-  newSources.forEach((source) => delete oldSources[source.addressValueSourceType]);
+    // remove updated sources from old source list
+    const newSources = [underlying, ...emission, ...protocol, ...derivative];
+    newSources.forEach((source) => delete oldSources[source.addressValueSourceType]);
 
-  // delete sources which are no longer valid
-  const mapper = getDataMapper();
-  await Promise.all(Array.from(Object.values(oldSources)).map((source) => mapper.delete(source)));
+    // delete sources which are no longer valid
+    const mapper = getDataMapper();
+    await Promise.all(Array.from(Object.values(oldSources)).map((source) => mapper.delete(source)));
 
-  return newSources;
+    return newSources;
+  } catch {
+    return [];
+  }
 }
