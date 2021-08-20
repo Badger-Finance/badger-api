@@ -224,7 +224,7 @@ export const ethSetts: SettDefinition[] = [
     protocol: Protocol.mStable,
     stage: Stage.Staging,
     state: SettState.Experimental,
-    strategy: '0xd409C506742b7f76f164909025Ab29A47e06d30A',
+    strategy: '0x10D96b1Fd46Ce7cE092aA905274B8eD9d4585A6E',
   },
   {
     name: 'mStable mhBTC',
@@ -234,6 +234,6 @@ export const ethSetts: SettDefinition[] = [
     protocol: Protocol.mStable,
     stage: Stage.Staging,
     state: SettState.Experimental,
-    strategy: '0x54D06A0E1cE55a7a60Ee175AbCeaC7e363f603f3',
+    strategy: '0x10D96b1Fd46Ce7cE092aA905274B8eD9d4585A6E',
   },
 ];
