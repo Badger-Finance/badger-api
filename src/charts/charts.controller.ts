@@ -72,7 +72,7 @@ export class ChartsController {
       };
     }
 
-    const returnedDataPoints = this.chartsService.getRequestedDataPoints(start, end, granularity, period);
+    const returnedDataPoints = ChartsService.getRequestedDataPoints(start, end, granularity, period);
     if (returnedDataPoints > maxDataPointsToReturn) {
       return {
         isValid: false,

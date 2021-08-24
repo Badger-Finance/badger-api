@@ -1,7 +1,7 @@
 import { DataMapper, QueryIterator, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
 import createMockInstance from 'jest-create-mock-instance';
 import { loadChains } from '../chains/chain';
-import { ONE_DAY_MS, SAMPLE_DAYS } from '../config/constants';
+import { ONE_DAY_MS, ONE_MINUTE_MS, SAMPLE_DAYS } from '../config/constants';
 import { CachedSettSnapshot } from '../setts/interfaces/cached-sett-snapshot.interface';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { SettSnapshot } from '../setts/interfaces/sett-snapshot.interface';
@@ -54,7 +54,7 @@ export function randomSnapshots(settDefinition?: SettDefinition, count?: number)
       Object.assign(new SettSnapshot(), {
         asset: sett.name,
         height: 0,
-        timestamp: Date.now(),
+        timestamp: Date.now() - 1 - i * ONE_MINUTE_MS * 30,
         balance: randomValue(),
         supply: randomValue(),
         ratio: 1,
