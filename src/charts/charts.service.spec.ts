@@ -43,7 +43,7 @@ describe('charts.service', () => {
       'returns %d data points for granularity %d %s from %s to %s',
       (count: number, size: number, granularity: ChartGranularity, start: Date, end: Date) => {
         const actual = ChartsService.getRequestedDataPoints(new Date(start), new Date(end), granularity, size);
-        expect(actual).toEqual(count);
+        expect(actual).toBe(count);
       },
     );
   });
@@ -78,13 +78,13 @@ describe('charts.service', () => {
         // snapshot granularity @ 30 min intervals, 2 per hour, 48 per day
         const interval = granularity === ChartGranularity.HOUR ? 2 : 48 * size;
         const seed = randomSnapshots(settDefinition, count * interval);
-        if (start != end) {
+        if (start !== end) {
           setupMapper(seed);
         } else {
           setupMapper([]);
         }
         const result = await service.getChartData(settDefinition, new Date(start), new Date(end), granularity, size);
-        expect(result.length).toEqual(expected);
+        expect(result.length).toBe(expected);
         for (const point of result) {
           expect(seed.includes(point)).toBeTruthy();
         }
