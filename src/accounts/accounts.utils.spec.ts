@@ -13,6 +13,19 @@ import { getToken } from '../tokens/tokens.utils';
 import { getAccounts, getCachedAccount, getUserAccount, toSettBalance } from './accounts.utils';
 
 describe('accounts.utils', () => {
+  const defaultAccount = (address: string) => ({
+    address,
+    boost: 0,
+    boostRank: 0,
+    multipliers: [],
+    value: 0,
+    earnedValue: 0,
+    balances: [],
+    claimableBalances: [],
+    nativeBalance: 0,
+    nonNativeBalance: 0,
+  });
+
   const testSettBalance = (sett: SettDefinition): UserSettBalance => {
     const settToken = getToken(sett.settToken);
     const depositToken = getToken(sett.depositToken);
@@ -45,6 +58,7 @@ describe('accounts.utils', () => {
         grossShareDeposit: toWei(9),
         grossWithdraw: 5,
         grossShareWithdraw: toWei(5),
+        decimals: 18,
         token: {
           id: depositToken.address,
           name: depositToken.name,
@@ -61,7 +75,7 @@ describe('accounts.utils', () => {
       it('returns undefined', async () => {
         setupMapper([]);
         const actual = await getCachedAccount(TEST_ADDR);
-        expect(actual).toBeFalsy();
+        expect(actual).toMatchObject(defaultAccount(TEST_ADDR));
       });
     });
 
@@ -71,7 +85,7 @@ describe('accounts.utils', () => {
           throw new Error();
         });
         const actual = await getCachedAccount(TEST_ADDR);
-        expect(actual).toBeFalsy();
+        expect(actual).toMatchObject(defaultAccount(TEST_ADDR));
       });
     });
 
@@ -116,7 +130,7 @@ describe('accounts.utils', () => {
     describe('users exist', () => {
       it('returns a list of user accounts', async () => {
         const result: UsersQuery = {
-          users: Object.values(TOKENS).map((token) => ({ id: token })),
+          users: Object.values(TOKENS).map((token) => ({ id: token, settBalances: [] })),
         };
         let responded = false;
         jest.spyOn(GraphQLClient.prototype, 'request').mockImplementation(async () => {

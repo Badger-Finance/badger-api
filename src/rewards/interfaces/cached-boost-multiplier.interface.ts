@@ -1,12 +1,9 @@
 import { attribute } from '@aws/dynamodb-data-mapper-annotations';
 
-export class CachedBalance {
-  @attribute()
-  network!: string;
-
+export class CachedBoostMultiplier {
   @attribute()
   address!: string;
 
   @attribute()
-  balance!: string;
+  multiplier!: number;
 }

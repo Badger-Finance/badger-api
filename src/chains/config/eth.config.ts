@@ -25,6 +25,7 @@ export class Ethereum extends Chain {
       new EthStrategy(),
       BADGER_URL,
       2425847,
+      '0xbe82A3259ce427B8bCb54b938b486dC2aF509Cc3',
       '0x0A4F4e92C3334821EbB523324D09E321a6B0d8ec',
     );
     Chain.register(this.network, this);
@@ -223,7 +224,7 @@ export const ethSetts: SettDefinition[] = [
     protocol: Protocol.mStable,
     stage: Stage.Staging,
     state: SettState.Experimental,
-    strategy: '0xd409C506742b7f76f164909025Ab29A47e06d30A',
+    strategy: '0x10D96b1Fd46Ce7cE092aA905274B8eD9d4585A6E',
   },
   {
     name: 'mStable mhBTC',
@@ -233,6 +234,6 @@ export const ethSetts: SettDefinition[] = [
     protocol: Protocol.mStable,
     stage: Stage.Staging,
     state: SettState.Experimental,
-    strategy: '0x54D06A0E1cE55a7a60Ee175AbCeaC7e363f603f3',
+    strategy: '0x10D96b1Fd46Ce7cE092aA905274B8eD9d4585A6E',
   },
 ];

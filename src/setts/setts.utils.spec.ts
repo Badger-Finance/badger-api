@@ -1,6 +1,7 @@
 import { NotFound } from '@tsed/exceptions';
 import { BinanceSmartChain } from '../chains/config/bsc.config';
 import { Ethereum } from '../chains/config/eth.config';
+import { SettState } from '../config/enums/sett-state.enum';
 import { randomPerformance, randomSett, randomSnapshot, randomSnapshots, setupMapper } from '../test/tests.utils';
 import { getToken } from '../tokens/tokens.utils';
 import {
@@ -22,7 +23,7 @@ describe('setts.utils', () => {
         apr: 0,
         balance: 0,
         boostable: false,
-        experimental: !!settDefinition.experimental,
+        experimental: settDefinition.state === SettState.Experimental,
         hasBouncer: !!settDefinition.hasBouncer,
         name: settDefinition.name,
         ppfs: 1,

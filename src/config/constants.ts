@@ -56,7 +56,6 @@ export const CURVE_CRYPTO_API_URL = 'https://stats.curve.fi/raw-stats-crypto/apy
 export const CURVE_MATIC_API_URL = 'https://stats.curve.fi/raw-stats-polygon/apys.json';
 export const COINGECKO_URL = 'https://api.coingecko.com/api/v3/simple';
 export const PANCAKE_CHEF = '0x73feaa1eE314F8c655E354234017bE2193C9E24E';
-export const BADGER_TREE = '0xbe82A3259ce427B8bCb54b938b486dC2aF509Cc3';
 export const DISTRIBUTOR = '0x660802Fc641b154aBA66a62137e71f331B6d787A';
 
 export const swaggerConfig: SwaggerSettings = {
