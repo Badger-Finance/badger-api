@@ -38,12 +38,12 @@ async function getAccountMap(addresses: string[]): Promise<AccountMap> {
 
 async function refreshAccountClaimableBalances(chains: Chain[], batchAccounts: AccountMap) {
   const addresses = Object.keys(batchAccounts);
-  const treeDistribution = await getTreeDistribution();
   const calls: { user: string; chain: Chain; claim: Promise<[string[], BigNumber[]]> }[] = [];
   await Promise.all(
     addresses.map(async (acc) => {
       await Promise.all(
         chains.map(async (chain) => {
+          const treeDistribution = await getTreeDistribution(chain);
           const claim = treeDistribution.claims[acc];
           if (!claim || !chain.badgerTree) {
             return;

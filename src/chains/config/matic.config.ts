@@ -23,9 +23,8 @@ export class Polygon extends Chain {
       new MaticStrategy(),
       BADGER_MATIC_URL,
       15768000,
-      // TODO: Enable once matic rewards are properly configured
-      // '0x2C798FaFd37C7DCdcAc2498e19432898Bc51376b',
-      // '0xd0ee2a5108b8800d688abc834445fd03b3b2738e',
+      '0x2C798FaFd37C7DCdcAc2498e19432898Bc51376b',
+      '0xd0ee2a5108b8800d688abc834445fd03b3b2738e',
     );
     Chain.register(this.network, this);
   }

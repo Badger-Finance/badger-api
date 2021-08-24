@@ -1,8 +1,12 @@
 import { getObject } from '../aws/s3.utils';
+import { Chain } from '../chains/config/chain.config';
+import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { REWARD_DATA } from '../config/constants';
 import { RewardMerkleDistribution } from './interfaces/merkle-distributor.interface';
 
-export async function getTreeDistribution(): Promise<RewardMerkleDistribution> {
-  const rewardFile = await getObject(REWARD_DATA, 'badger-tree.json');
+export async function getTreeDistribution(chain: Chain): Promise<RewardMerkleDistribution> {
+  const appendChainId = chain.network != ChainNetwork.Ethereum;
+  const fileName = `badger-tree${appendChainId ? `-${chain.chainId}` : ''}.json`;
+  const rewardFile = await getObject(REWARD_DATA, fileName);
   return JSON.parse(rewardFile.toString('utf-8'));
 }

@@ -57,8 +57,8 @@ export class RewardsService {
    * Get badger tree reward merkle claim for a user.
    * @param address User Ethereum address.
    */
-  async getUserRewards(address: string): Promise<RewardMerkleClaim> {
-    const treeDistribution = await getTreeDistribution();
+  async getUserRewards(chain: Chain, address: string): Promise<RewardMerkleClaim> {
+    const treeDistribution = await getTreeDistribution(chain);
     const claim = treeDistribution.claims[address];
     if (!claim) {
       throw new NotFound(`${address} does not have claimable rewards.`);
