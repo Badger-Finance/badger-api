@@ -452,7 +452,7 @@ export const ethTokensConfig: TokenConfig = {
     address: TOKENS.BSUSHI_DIGG_WBTC,
     decimals: 18,
     name: 'bSushiSwap: WBTC-DIGG',
-    symbol: 'bSLP-DIGG-ETH',
+    symbol: 'bSLP-DIGG-WBTC',
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.SUSHI_DIGG_WBTC,
