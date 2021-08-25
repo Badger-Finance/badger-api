@@ -395,6 +395,14 @@ Object {
     "symbol": "crvtBTC",
     "type": "CurveLP",
   },
+  "0x68c269B60c58c4ed50c63B217BA0EC7f8a371920": Object {
+    "address": "0x68c269B60c58c4ed50c63B217BA0EC7f8a371920",
+    "decimals": 18,
+    "lookupName": "dropt-3",
+    "name": "DIGG Rebase Option 3",
+    "symbol": "DROPT-3",
+    "type": "Contract",
+  },
   "0x6B175474E89094C44Da98b954EedeAC495271d0F": Object {
     "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
     "decimals": 18,
@@ -483,7 +491,7 @@ Object {
     "address": "0x88128580ACdD9c04Ce47AFcE196875747bF2A9f6",
     "decimals": 18,
     "name": "bSushiSwap: WBTC-DIGG",
-    "symbol": "bSLP-DIGG-ETH",
+    "symbol": "bSLP-DIGG-WBTC",
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x9a13867048e01c663ce8Ce2fE0cDAE69Ff9F35E3",
@@ -1026,6 +1034,14 @@ Object {
     "symbol": "crvtBTC",
     "type": "CurveLP",
   },
+  "0x68c269B60c58c4ed50c63B217BA0EC7f8a371920": Object {
+    "address": "0x68c269B60c58c4ed50c63B217BA0EC7f8a371920",
+    "decimals": 18,
+    "lookupName": "dropt-3",
+    "name": "DIGG Rebase Option 3",
+    "symbol": "DROPT-3",
+    "type": "Contract",
+  },
   "0x6B175474E89094C44Da98b954EedeAC495271d0F": Object {
     "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
     "decimals": 18,
@@ -1114,7 +1130,7 @@ Object {
     "address": "0x88128580ACdD9c04Ce47AFcE196875747bF2A9f6",
     "decimals": 18,
     "name": "bSushiSwap: WBTC-DIGG",
-    "symbol": "bSLP-DIGG-ETH",
+    "symbol": "bSLP-DIGG-WBTC",
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x9a13867048e01c663ce8Ce2fE0cDAE69Ff9F35E3",

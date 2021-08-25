@@ -147,6 +147,14 @@ export const ethTokensConfig: TokenConfig = {
     symbol: 'DROPT-2',
     type: TokenType.Contract,
   },
+  [TOKENS.DROPT_3]: {
+    address: TOKENS.DROPT_3,
+    decimals: 18,
+    lookupName: 'dropt-3',
+    name: 'DIGG Rebase Option 3',
+    symbol: 'DROPT-3',
+    type: TokenType.Contract,
+  },
   [TOKENS.CRV_HBTC]: {
     address: TOKENS.CRV_HBTC,
     decimals: 18,
@@ -444,7 +452,7 @@ export const ethTokensConfig: TokenConfig = {
     address: TOKENS.BSUSHI_DIGG_WBTC,
     decimals: 18,
     name: 'bSushiSwap: WBTC-DIGG',
-    symbol: 'bSLP-DIGG-ETH',
+    symbol: 'bSLP-DIGG-WBTC',
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.SUSHI_DIGG_WBTC,

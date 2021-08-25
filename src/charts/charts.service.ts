@@ -23,7 +23,7 @@ export class ChartsService {
     return snapshots;
   }
 
-  getRequestedDataPoints(start: Date, end: Date, granularity: ChartGranularity, period: number): number {
+  static getRequestedDataPoints(start: Date, end: Date, granularity: ChartGranularity, period: number): number {
     let returnedDataPoints: number;
     const diffInMs = new Date(end).getTime() - new Date(start).getTime();
     if (granularity === ChartGranularity.DAY) {
