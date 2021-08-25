@@ -491,7 +491,7 @@ Object {
     "address": "0x88128580ACdD9c04Ce47AFcE196875747bF2A9f6",
     "decimals": 18,
     "name": "bSushiSwap: WBTC-DIGG",
-    "symbol": "bSLP-DIGG-ETH",
+    "symbol": "bSLP-DIGG-WBTC",
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x9a13867048e01c663ce8Ce2fE0cDAE69Ff9F35E3",
@@ -1130,7 +1130,7 @@ Object {
     "address": "0x88128580ACdD9c04Ce47AFcE196875747bF2A9f6",
     "decimals": 18,
     "name": "bSushiSwap: WBTC-DIGG",
-    "symbol": "bSLP-DIGG-ETH",
+    "symbol": "bSLP-DIGG-WBTC",
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x9a13867048e01c663ce8Ce2fE0cDAE69Ff9F35E3",
