@@ -26,7 +26,7 @@ export function defaultBoost(address: string): CachedBoost {
     leaderboard: LeaderBoardType.BadgerBoost,
     rank: 0,
     address,
-    boost: 0,
+    boost: 1,
     stakeRatio: 0,
     nftMultiplier: 0,
     nativeBalance: 0,

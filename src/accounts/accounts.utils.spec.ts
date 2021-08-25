@@ -212,7 +212,7 @@ describe('accounts.utils', () => {
         leaderboard: LeaderBoardType.BadgerBoost,
         rank: 0,
         address: TEST_ADDR,
-        boost: 0,
+        boost: 1,
         stakeRatio: 0,
         nftMultiplier: 0,
         nativeBalance: 0,
