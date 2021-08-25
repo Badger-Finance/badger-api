@@ -21,6 +21,19 @@ import { Account } from './interfaces/account.interface';
 import { CachedAccount } from './interfaces/cached-account.interface';
 import { CachedSettBalance } from './interfaces/cached-sett-balance.interface';
 
+export function defaultBoost(address: string): CachedBoost {
+  return {
+    leaderboard: LeaderBoardType.BadgerBoost,
+    rank: 0,
+    address,
+    boost: 0,
+    stakeRatio: 0,
+    nftMultiplier: 0,
+    nativeBalance: 0,
+    nonNativeBalance: 0,
+  };
+}
+
 export async function getUserAccount(chain: Chain, accountId: string): Promise<UserQuery> {
   const badgerGraphqlClient = new GraphQLClient(chain.graphUrl);
   const badgerGraphqlSdk = getSdk(badgerGraphqlClient);
@@ -162,16 +175,6 @@ export async function toSettBalance(
 }
 
 export async function getCachedBoost(address: string): Promise<CachedBoost> {
-  const defaultBoost: CachedBoost = {
-    leaderboard: LeaderBoardType.BadgerBoost,
-    rank: 0,
-    address,
-    boost: 0,
-    stakeRatio: 0,
-    nftMultiplier: 0,
-    nativeBalance: 0,
-    nonNativeBalance: 0,
-  };
   const mapper = getDataMapper();
   for await (const entry of mapper.query(
     CachedBoost,
@@ -180,5 +183,5 @@ export async function getCachedBoost(address: string): Promise<CachedBoost> {
   )) {
     return entry;
   }
-  return defaultBoost;
+  return defaultBoost(address);
 }

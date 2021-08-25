@@ -4,13 +4,21 @@ import { Ethereum } from '../chains/config/eth.config';
 import { TestStrategy } from '../chains/strategies/test.strategy';
 import { TOKENS } from '../config/tokens.config';
 import { UserQuery, UserSettBalance, UsersQuery } from '../graphql/generated/badger';
+import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import * as priceUtils from '../prices/prices.utils';
 import { inCurrency } from '../prices/prices.utils';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { getSettDefinition } from '../setts/setts.utils';
 import { randomSnapshot, setupMapper, TEST_ADDR } from '../test/tests.utils';
 import { getToken } from '../tokens/tokens.utils';
-import { getAccounts, getCachedAccount, getUserAccount, toSettBalance } from './accounts.utils';
+import {
+  defaultBoost,
+  getAccounts,
+  getCachedAccount,
+  getCachedBoost,
+  getUserAccount,
+  toSettBalance,
+} from './accounts.utils';
 
 describe('accounts.utils', () => {
   const defaultAccount = (address: string) => ({
@@ -195,6 +203,44 @@ describe('accounts.utils', () => {
 
     describe('digg token conversion', () => {
       testToSettBalance(TOKENS.BDIGG);
+    });
+  });
+
+  describe('defaultBoost', () => {
+    it('returns a boost with all fields as the default values', () => {
+      const expected = {
+        leaderboard: LeaderBoardType.BadgerBoost,
+        rank: 0,
+        address: TEST_ADDR,
+        boost: 0,
+        stakeRatio: 0,
+        nftMultiplier: 0,
+        nativeBalance: 0,
+        nonNativeBalance: 0,
+      };
+      expect(defaultBoost(TEST_ADDR)).toMatchObject(expected);
+    });
+  });
+
+  describe('getCachedBoost', () => {
+    describe('no cached boost', () => {
+      it('returns the default boost', async () => {
+        setupMapper([]);
+        const result = await getCachedBoost(TEST_ADDR);
+        expect(result).toMatchObject(defaultBoost(TEST_ADDR));
+      });
+    });
+    describe('a previously cached boost', () => {
+      it('returns the default boost', async () => {
+        const boost = defaultBoost(TEST_ADDR);
+        boost.rank = 42;
+        boost.stakeRatio = 1;
+        boost.nativeBalance = 32021;
+        boost.nonNativeBalance = 32021;
+        setupMapper([boost]);
+        const result = await getCachedBoost(TEST_ADDR);
+        expect(result).toMatchObject(boost);
+      });
     });
   });
 });
