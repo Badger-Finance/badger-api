@@ -28,7 +28,7 @@ export class LeaderBoardsService {
         data,
         page: pageNumber,
         size: pageSize,
-        count: size,
+        count: data.length,
         maxPage,
       };
     } catch (err) {
