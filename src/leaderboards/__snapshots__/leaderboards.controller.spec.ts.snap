@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AccountsController GET /v2/accounts with a non participant account returns a default account response 1`] = `
+Object {
+  "address": "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484",
+  "balances": Array [],
+  "boost": 0,
+  "boostRank": 0,
+  "claimableBalances": Array [],
+  "earnedValue": 0,
+  "multipliers": Object {},
+  "nativeBalance": 0,
+  "nonNativeBalance": 0,
+  "value": 0,
+}
+`;
+
+exports[`AccountsController GET /v2/accounts with a participant account returns a cached account response 1`] = `
+Object {
+  "address": "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484",
+  "balances": Array [],
+  "boost": 2000,
+  "boostRank": 3,
+  "claimableBalances": Array [],
+  "earnedValue": 2312,
+  "multipliers": Object {},
+  "nativeBalance": 2033222,
+  "nonNativeBalance": 23129,
+  "value": 320232,
+}
+`;
+
+exports[`AccountsController GET /v2/accounts with an invalid account input returns a bad request response 1`] = `
+Object {
+  "message": "0xjintao is not a valid account",
+}
+`;
+
+exports[`AccountsController GET /v2/accounts with no specified account returns a not found response 1`] = `
+Object {
+  "message": "Resource \\"/v2/accounts\\" not found",
+}
+`;
