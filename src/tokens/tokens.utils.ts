@@ -5,6 +5,7 @@ import { Chain } from '../chains/config/chain.config';
 import { getPrice, inCurrency } from '../prices/prices.utils';
 import { getLiquidityData } from '../protocols/common/swap.utils';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
+import { getCachedSett } from '../setts/setts.utils';
 import { bscTokensConfig } from './config/bsc-tokens.config';
 import { ethTokensConfig } from './config/eth-tokens.config';
 import { maticTokensConfig } from './config/matic-tokens.config';
@@ -141,9 +142,17 @@ export async function getSettTokens(sett: SettDefinition, balance: number, curre
   const token = getToken(sett.depositToken);
   if (protocol && (token.lpToken || sett.getTokenBalance)) {
     const balanceToken = token.lpToken ? depositToken : settToken;
-    const cachedTokenBalances = await getCachedTokenBalances(balanceToken, protocol, currency);
+    const [cachedSett, cachedTokenBalances] = await Promise.all([
+      getCachedSett(sett),
+      getCachedTokenBalances(balanceToken, protocol, currency),
+    ]);
     if (cachedTokenBalances) {
-      return cachedTokenBalances;
+      const balanceScalar = balance / cachedSett.balance;
+      return cachedTokenBalances.map((bal) => {
+        bal.balance *= balanceScalar;
+        bal.value *= balanceScalar;
+        return bal;
+      });
     }
   }
   return Promise.all([toBalance(token, balance, currency)]);
