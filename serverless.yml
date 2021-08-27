@@ -315,13 +315,13 @@ functions:
           input:
             mode: BoostData
       - schedule:
-          name: ${self:service}-${self:custom.stage}-index-accounts-claimable
+          name: ${self:service}-${self:custom.stage}-index-claimable
           description: 'index accounts information from the graph'
           rate: rate(7 minutes)
           input:
             mode: ClaimableBalanceData
       - schedule:
-          name: ${self:service}-${self:custom.stage}-index-accounts-balance
+          name: ${self:service}-${self:custom.stage}-index-balance
           description: 'index accounts information from the graph'
           rate: rate(25 minutes)
           input:
