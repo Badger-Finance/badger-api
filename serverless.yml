@@ -317,7 +317,7 @@ functions:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-accounts-claimable
           description: 'index accounts information from the graph'
-          rate: rate(2 minutes)
+          rate: rate(7 minutes)
           input:
             mode: ClaimableBalanceData
       - schedule:
