@@ -1,5 +1,5 @@
 import { Service } from '@tsed/common';
-import { NotFound } from '@tsed/exceptions';
+import { BadRequest, NotFound } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';
 import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
@@ -59,6 +59,9 @@ export class RewardsService {
    */
   async getUserRewards(chain: Chain, address: string): Promise<RewardMerkleClaim> {
     const treeDistribution = await getTreeDistribution(chain);
+    if (!treeDistribution) {
+      throw new BadRequest(`${chain.name} does not support claimable rewards.`);
+    }
     const claim = treeDistribution.claims[address];
     if (!claim) {
       throw new NotFound(`${address} does not have claimable rewards.`);
