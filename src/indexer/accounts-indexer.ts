@@ -16,6 +16,7 @@ import { BadgerTree__factory } from '../contracts';
 import { UserSettBalance } from '../graphql/generated/badger';
 import { getLeaderBoardSize } from '../leaderboards/leaderboards.utils';
 import { CachedBoostMultiplier } from '../rewards/interfaces/cached-boost-multiplier.interface';
+import { RewardMerkleDistribution } from '../rewards/interfaces/merkle-distributor.interface';
 import { RewardAmounts } from '../rewards/interfaces/reward-amounts.interface';
 import { RewardsService } from '../rewards/rewards.service';
 import { getTreeDistribution } from '../rewards/rewards.utils';
@@ -31,6 +32,8 @@ interface AccountIndexEvent {
   mode: IndexMode;
 }
 
+const distributionCache: Record<string, RewardMerkleDistribution | null> = {};
+
 async function getAccountMap(addresses: string[]): Promise<AccountMap> {
   const accounts = await Promise.all(addresses.map(async (addr) => getCachedAccount(addr)));
   return Object.fromEntries(accounts.map((acc) => [ethers.utils.getAddress(acc.address), acc]));
@@ -39,21 +42,33 @@ async function getAccountMap(addresses: string[]): Promise<AccountMap> {
 async function refreshAccountClaimableBalances(chains: Chain[], batchAccounts: AccountMap) {
   const addresses = Object.keys(batchAccounts);
   const calls: { user: string; chain: Chain; claim: Promise<[string[], BigNumber[]]> }[] = [];
+
+  for (const chain of chains) {
+    if (chain.badgerTree && distributionCache[chain.network] === undefined) {
+      distributionCache[chain.network] = await getTreeDistribution(chain);
+    }
+  }
+
   await Promise.all(
     addresses.map(async (acc) => {
       await Promise.all(
         chains.map(async (chain) => {
-          const treeDistribution = await getTreeDistribution(chain);
-          const claim = treeDistribution.claims[acc];
-          if (!claim || !chain.badgerTree) {
-            return;
-          }
-          const badgerTree = BadgerTree__factory.connect(chain.badgerTree, chain.batchProvider);
-          calls.push({
-            user: acc,
-            chain,
-            claim: badgerTree.getClaimableFor(acc, claim.tokens, claim.cumulativeAmounts),
-          });
+          try {
+            const treeDistribution = distributionCache[chain.network];
+            if (!treeDistribution) {
+              return;
+            }
+            const claim = treeDistribution.claims[acc];
+            if (!claim || !chain.badgerTree) {
+              return;
+            }
+            const badgerTree = BadgerTree__factory.connect(chain.badgerTree, chain.batchProvider);
+            calls.push({
+              user: acc,
+              chain,
+              claim: badgerTree.getClaimableFor(acc, claim.tokens, claim.cumulativeAmounts),
+            });
+          } catch {} // ignore errors, tree distribution does not exist
         }),
       );
     }),
@@ -160,11 +175,14 @@ export async function refreshAccounts(chains: Chain[], mode: IndexMode, accounts
   let refreshFns: Promise<void>[] = [];
   switch (mode) {
     case IndexMode.BoostData:
+      refreshFns = [
+        batchRefreshAccounts(checksummedAccounts, (batchAccounts) => [refreshAccountBoostInfo(chains, batchAccounts)]),
+      ];
+      break;
     case IndexMode.ClaimableBalanceData:
       refreshFns = [
         batchRefreshAccounts(checksummedAccounts, (batchAccounts) => [
           refreshAccountClaimableBalances(chains, batchAccounts),
-          refreshAccountBoostInfo(chains, batchAccounts),
         ]),
       ];
       break;
