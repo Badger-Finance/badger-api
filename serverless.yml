@@ -62,7 +62,7 @@ custom:
 provider:
   name: aws
   runtime: nodejs12.x
-  memorySize: 2048
+  memorySize: 1024
   stage: staging
   region: us-west-1
   iam:
@@ -306,12 +306,18 @@ functions:
 
   index-accounts:
     handler: src/indexer/accounts-indexer.refreshUserAccounts
-    timeout: 500
+    timeout: 600
     events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-boost
+          description: 'index accounts information from the graph'
+          rate: rate(7 minutes)
+          input:
+            mode: BoostData
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-accounts-claimable
           description: 'index accounts information from the graph'
-          rate: rate(7 minutes)
+          rate: rate(2 minutes)
           input:
             mode: ClaimableBalanceData
       - schedule:
