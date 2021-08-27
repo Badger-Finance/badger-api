@@ -73,7 +73,6 @@ async function refreshAccountClaimableBalances(chains: Chain[], batchAccounts: A
       );
     }),
   );
-  console.log(`Resolve ${calls.length} requests`);
   const userClaims = await Promise.all(calls.map((call) => call.claim));
   userClaims.forEach((claim, i) => {
     const { chain, user } = calls[i];
