@@ -92,8 +92,8 @@ export const maticTokensConfig: TokenConfig = {
     symbol: 'amUSDT',
     type: TokenType.Contract,
   },
-  [TOKENS.MATIC_CURVE]: {
-    address: TOKENS.MATIC_CURVE,
+  [TOKENS.MATIC_CRV]: {
+    address: TOKENS.MATIC_CRV,
     decimals: 18,
     lookupName: 'curve-dao-token',
     name: 'Curve DAO Token',
