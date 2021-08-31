@@ -92,6 +92,14 @@ export const maticTokensConfig: TokenConfig = {
     symbol: 'amUSDT',
     type: TokenType.Contract,
   },
+  [TOKENS.MATIC_CRV]: {
+    address: TOKENS.MATIC_CRV,
+    decimals: 18,
+    lookupName: 'curve-dao-token',
+    name: 'Curve DAO Token',
+    symbol: 'CRV',
+    type: TokenType.Contract,
+  },
   [TOKENS.MATIC_SUSHI_IBBTC_WBTC]: {
     address: TOKENS.MATIC_SUSHI_IBBTC_WBTC,
     decimals: 18,
