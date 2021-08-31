@@ -52,17 +52,6 @@ export const maticSetts: SettDefinition[] = [
     strategy: '0x809990849D53a5109e0cb9C446137793B9f6f1Eb',
   },
   {
-    name: 'Curve aTricrypto',
-    settToken: TOKENS.BMATIC_CRV_TRICRYPTO,
-    depositToken: TOKENS.MATIC_CRV_TRICRYPTO,
-    getTokenBalance: getCurveSettTokenBalance,
-    createdBlock: 17615233,
-    experimental: true,
-    protocol: Protocol.Curve,
-    stage: Stage.Staging,
-    strategy: '0xDb0C3118ef1acA6125200139BEaCc5D675F37c9C',
-  },
-  {
     name: 'Curve Ren',
     settToken: TOKENS.BMATIC_CRV_AMWBTC,
     depositToken: TOKENS.MATIC_CRV_AMWBTC,
