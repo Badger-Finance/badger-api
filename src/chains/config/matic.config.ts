@@ -1,5 +1,6 @@
 import { BADGER_MATIC_URL } from '../../config/constants';
 import { Protocol } from '../../config/enums/protocol.enum';
+import { SettState } from '../../config/enums/sett-state.enum';
 import { Stage } from '../../config/enums/stage.enum';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
@@ -39,6 +40,7 @@ export const maticSetts: SettDefinition[] = [
     experimental: true,
     protocol: Protocol.Sushiswap,
     stage: Stage.Staging,
+    state: SettState.Experimental,
     strategy: '0xDed61Bd8a8c90596D8A6Cf0e678dA04036146963',
   },
   {
@@ -49,6 +51,7 @@ export const maticSetts: SettDefinition[] = [
     experimental: true,
     protocol: Protocol.Quickswap,
     stage: Stage.Staging,
+    state: SettState.Experimental,
     strategy: '0x809990849D53a5109e0cb9C446137793B9f6f1Eb',
   },
   {
@@ -60,6 +63,7 @@ export const maticSetts: SettDefinition[] = [
     experimental: true,
     protocol: Protocol.Curve,
     stage: Stage.Staging,
+    state: SettState.Experimental,
     strategy: '0xF8F02D0d41C79a1973f65A440C98acAc7eAA8Dc1',
   },
 ];
