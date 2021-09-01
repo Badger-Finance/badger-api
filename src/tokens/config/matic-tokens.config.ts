@@ -103,7 +103,7 @@ export const maticTokensConfig: TokenConfig = {
   [TOKENS.MATIC_BADGER]: {
     address: TOKENS.MATIC_BADGER,
     decimals: 18,
-    lookupName: 'Badger',
+    lookupName: 'badger-dao',
     name: 'Badger',
     symbol: 'BADGER',
     type: TokenType.Contract,
