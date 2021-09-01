@@ -108,6 +108,14 @@ export const maticTokensConfig: TokenConfig = {
     symbol: 'BADGER',
     type: TokenType.Contract,
   },
+  [TOKENS.MATIC_SUSHI]: {
+    address: TOKENS.MATIC_SUSHI,
+    decimals: 18,
+    lookupName: 'sushi',
+    name: 'Sushi',
+    symbol: 'Sushi',
+    type: TokenType.Contract,
+  },
   [TOKENS.MATIC_SUSHI_IBBTC_WBTC]: {
     address: TOKENS.MATIC_SUSHI_IBBTC_WBTC,
     decimals: 18,
