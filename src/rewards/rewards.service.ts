@@ -1,6 +1,6 @@
 import { Service } from '@tsed/common';
 import { BadRequest, NotFound } from '@tsed/exceptions';
-import { BigNumber, ethers } from 'ethers';
+import { BigNumber } from 'ethers';
 import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
 import { ChainNetwork } from '../chains/enums/chain-network.enum';
@@ -46,7 +46,7 @@ export class RewardsService {
   async getBouncerProof(address: string): Promise<AirdropMerkleClaim> {
     const airdropFile = await getObject(REWARD_DATA, BOUNCER_PROOFS);
     const fileContents: AirdropMerkleDistribution = JSON.parse(airdropFile.toString('utf-8'));
-    const claim = fileContents.claims[ethers.utils.getAddress(address)];
+    const claim = fileContents.claims[address.toLowerCase()];
     if (!claim) {
       throw new NotFound(`${address} is not on the bouncer list`);
     }

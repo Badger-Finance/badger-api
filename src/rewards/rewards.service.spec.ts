@@ -1,5 +1,6 @@
 import { PlatformTest } from '@tsed/common';
 import * as s3 from '../aws/s3.utils';
+import { TEST_ADDR } from '../test/tests.utils';
 import { RewardsService } from './rewards.service';
 
 describe('RewardsService', () => {
@@ -18,7 +19,7 @@ describe('RewardsService', () => {
   describe('checkBouncerList', () => {
     describe('check an eligible user', () => {
       it('returns user is eligible', async () => {
-        const address = '0xC257274276a4E539741Ca11b590B9447B26A8051';
+        const address = TEST_ADDR.toLowerCase();
         const proofs = JSON.stringify({
           claims: {
             [address]: {},
@@ -33,12 +34,11 @@ describe('RewardsService', () => {
 
     describe('check an ineligible user', () => {
       it('returns user is not eligible', async () => {
-        const address = '0xC257274276a4E539741Ca11b590B9447B26A8051';
         const proofs = JSON.stringify({
           claims: {},
         });
         jest.spyOn(s3, 'getObject').mockImplementationOnce(async () => Promise.resolve(proofs));
-        const eligibility = await service.checkBouncerList(address);
+        const eligibility = await service.checkBouncerList(TEST_ADDR);
         expect(eligibility).toBeDefined();
         expect(eligibility.isEligible).toBeFalsy();
       });
