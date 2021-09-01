@@ -100,6 +100,14 @@ export const maticTokensConfig: TokenConfig = {
     symbol: 'CRV',
     type: TokenType.Contract,
   },
+  [TOKENS.MATIC_BADGER]: {
+    address: TOKENS.MATIC_BADGER,
+    decimals: 18,
+    lookupName: 'Badger',
+    name: 'Badger',
+    symbol: 'BADGER',
+    type: TokenType.Contract,
+  },
   [TOKENS.MATIC_SUSHI_IBBTC_WBTC]: {
     address: TOKENS.MATIC_SUSHI_IBBTC_WBTC,
     decimals: 18,
