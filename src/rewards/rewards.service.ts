@@ -175,7 +175,7 @@ export class RewardsService {
         if (includedTokens.has(schedule.token)) {
           return false;
         }
-        const isActive = schedule.end.gte(cutOffTimestamp);
+        const isActive = schedule.start.lte(Date.now() * 1000) && schedule.end.gte(cutOffTimestamp);
         if (isActive) {
           includedTokens.add(schedule.token);
         }
