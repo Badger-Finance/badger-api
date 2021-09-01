@@ -147,7 +147,7 @@ export async function getSettTokens(sett: SettDefinition, balance: number, curre
       getCachedTokenBalances(balanceToken, protocol, currency),
     ]);
     if (cachedTokenBalances) {
-      const balanceScalar = balance / cachedSett.balance;
+      const balanceScalar = cachedSett.balance > 0 ? balance / cachedSett.balance : 0;
       return cachedTokenBalances.map((bal) => {
         bal.balance *= balanceScalar;
         bal.value *= balanceScalar;
