@@ -54,6 +54,9 @@ custom:
     ACCOUNT_DATA:
       staging: 'accounts-staging'
       prod: 'accounts'
+    PROTOCOL_METRICS_SNAPSHOTS_DATA:
+      staging: 'protocol-metrics-snapshots-staging'
+      prod: 'protocol-metrics-snapshots'
 
   merkleProofs:
     staging: 'badger-staging-merkle-proofs'
@@ -102,6 +105,7 @@ provider:
     PRICE_DATA: ${self:custom.table.PRICE_DATA.${self:custom.stage}}
     SETT_SNAPSHOTS_DATA: ${self:custom.table.SETT_SNAPSHOTS_DATA.${self:custom.stage}}
     ACCOUNT_DATA: ${self:custom.table.ACCOUNT_DATA.${self:custom.stage}}
+    PROTOCOL_METRICS_SNAPSHOTS_DATA: ${self:custom.table.PROTOCOL_METRICS_SNAPSHOTS_DATA.${self:custom.stage}}
     # General Defintions
     REWARD_DATA: ${self:custom.merkleProofs.${self:custom.stage}}
     BOUNCER_PROOFS: badger-bouncer.json
@@ -172,6 +176,22 @@ resources:
           - AttributeName: 'address'
             AttributeType: 'S'
           - AttributeName: 'updatedAt'
+            AttributeType: 'N'
+
+    protocolMetricsSnapshotsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.table.PROTOCOL_METRICS_SNAPSHOTS_DATA.${self:custom.stage}}
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: 'id'
+            KeyType: 'HASH'
+          - AttributeName: 'timestamp'
+            KeyType: 'RANGE'
+        AttributeDefinitions:
+          - AttributeName: 'id'
+            AttributeType: 'S'
+          - AttributeName: 'timestamp'
             AttributeType: 'N'
 
     settsSnapshotsTable:
@@ -326,3 +346,12 @@ functions:
           rate: rate(25 minutes)
           input:
             mode: BalanceData
+
+  index-protocol-metrics-snapshots:
+    handler: src/indexer/protocol-metric-indexer.indexProtocolMetrics
+    timeout: 240
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-protocol-metrics-snapshots
+          description: 'index protocol metrics'
+          rate: rate(1 day)
