@@ -14,8 +14,6 @@ export const getSettsMetrics = async (): Promise<ProtocolSettsMetrics> => {
   const settsService = new SettsService();
   const multichainsSummary = await Promise.all(chains.map((chain) => settsService.getProtocolSummary(chain)));
 
-  console.log({ multichainsSummary });
-
   let totalValueLocked = 0;
   let totalVaults = 0;
 
