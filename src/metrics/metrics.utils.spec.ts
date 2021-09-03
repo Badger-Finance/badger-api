@@ -1,7 +1,7 @@
 import * as AccountUtils from '../accounts/accounts.utils';
 import { SettState } from '../config/enums/sett-state.enum';
 import * as SettUtils from '../setts/setts.utils';
-import { getProtocolMetrics, getProtocolSettMetrics, getTotalUsers } from './metric.utils';
+import { getProtocolMetrics, getProtocolSettMetrics, getProtocolTotalUsers } from './metric.utils';
 
 describe('metrics.utils', () => {
   beforeEach(() => {
@@ -40,9 +40,9 @@ describe('metrics.utils', () => {
     );
   });
 
-  describe('getTotalUsers', () => {
+  describe('getProtocolUsersMetric', () => {
     it('returns total users', async () => {
-      const totalUsers = await getTotalUsers();
+      const totalUsers = await getProtocolTotalUsers();
       expect(totalUsers).toMatchSnapshot();
     });
   });

@@ -5,12 +5,16 @@ import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interf
 import { getCachedSett } from '../setts/setts.utils';
 import { ProtocolMetrics, ProtocolSettsMetrics } from './interfaces/metrics.interface';
 
-const chains = loadChains();
-
 export const getProtocolMetrics = async (): Promise<ProtocolMetrics> => {
-  const [totalUsers, settMetrics] = await Promise.all([getTotalUsers(), getProtocolSettMetrics()]);
+  const [totalUsers, settMetrics] = await Promise.all([getProtocolTotalUsers(), getProtocolSettMetrics()]);
   return { ...settMetrics, totalUsers };
 };
+
+export async function getProtocolTotalUsers(): Promise<number> {
+  const chains = loadChains();
+  const usersAcrossChains = await Promise.all(chains.map((chain) => getAccounts(chain)));
+  return new Set([...usersAcrossChains.flat()]).size;
+}
 
 export async function getProtocolSettMetrics(): Promise<ProtocolSettsMetrics> {
   const chains = loadChains();
@@ -32,9 +36,4 @@ export async function getChainMetrics(chain: Chain): Promise<ProtocolSummary> {
   const totalValue = setts.reduce((total, sett) => total + sett.value, 0);
 
   return { totalValue, setts: setts.map(({ name, balance, value }) => ({ name, balance, value })) };
-}
-
-export async function getTotalUsers(): Promise<number> {
-  const usersAcrossChains = await Promise.all(chains.map((chain) => getAccounts(chain)));
-  return new Set([...usersAcrossChains.flat()]).size;
 }
