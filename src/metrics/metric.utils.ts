@@ -1,9 +1,9 @@
 import { getAccounts } from '../accounts/accounts.utils';
 import { loadChains } from '../chains/chain';
-import { ProtocolMetrics, ProtocolSettsMetrics } from './interfaces/metrics.interface';
 import { Chain } from '../chains/config/chain.config';
 import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interface';
 import { getCachedSett } from '../setts/setts.utils';
+import { ProtocolMetrics, ProtocolSettsMetrics } from './interfaces/metrics.interface';
 
 const chains = loadChains();
 

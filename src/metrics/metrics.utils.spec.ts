@@ -1,7 +1,7 @@
 import * as AccountUtils from '../accounts/accounts.utils';
+import { SettState } from '../config/enums/sett-state.enum';
 import * as SettUtils from '../setts/setts.utils';
 import { getProtocolMetrics, getProtocolSettMetrics, getTotalUsers } from './metric.utils';
-import { SettState } from '../config/enums/sett-state.enum';
 
 describe('metrics.utils', () => {
   beforeEach(() => {
