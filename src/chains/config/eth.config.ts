@@ -22,7 +22,7 @@ export class Ethereum extends Chain {
       ethTokensConfig,
       ethSetts,
       rpc[ChainNetwork.Ethereum],
-      new EthStrategy(),
+      new EthStrategy(Object.keys(ethTokensConfig)),
       BADGER_URL,
       2425847,
       '0xbe82A3259ce427B8bCb54b938b486dC2aF509Cc3',

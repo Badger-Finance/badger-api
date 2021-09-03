@@ -19,7 +19,7 @@ export class xDai extends Chain {
       xDaiTokensConfig,
       xDaiSetts,
       rpc[ChainNetwork.xDai],
-      new xDaiStrategy(),
+      new xDaiStrategy(Object.keys(xDaiTokensConfig)),
       BADGER_XDAI_URL,
       6307200,
     );

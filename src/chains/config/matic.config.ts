@@ -20,7 +20,7 @@ export class Polygon extends Chain {
       maticTokensConfig,
       maticSetts,
       rpc[ChainNetwork.Matic],
-      new MaticStrategy(),
+      new MaticStrategy(Object.keys(maticTokensConfig)),
       BADGER_MATIC_URL,
       15768000,
       '0x2C798FaFd37C7DCdcAc2498e19432898Bc51376b',
