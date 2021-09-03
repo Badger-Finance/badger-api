@@ -18,7 +18,7 @@ export class BinanceSmartChain extends Chain {
       bscTokensConfig,
       bscSetts,
       rpc[ChainNetwork.BinanceSmartChain],
-      new BscStrategy(),
+      new BscStrategy(Object.keys(bscTokensConfig)),
       BADGER_BSC_URL,
       10512000,
     );

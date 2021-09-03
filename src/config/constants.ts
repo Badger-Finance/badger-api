@@ -42,6 +42,7 @@ export const BADGER_URL = process.env.BADGER || 'MISSING REQUIRED ENV VAR';
 export const BADGER_BSC_URL = process.env.BADGER_BSC || 'MISSING REQUIRED ENV VAR';
 export const BADGER_MATIC_URL = process.env.BADGER_MATIC || 'MISSING REQUIRED ENV VAR';
 export const BADGER_XDAI_URL = process.env.BADGER_XDAI || 'MISSING REQUIRED ENV VAR';
+export const BADGER_ARBITRUM_URL = process.env.BADGER_ARBITRUM || 'MISSING REQUIRED ENV VAR';
 export const BADGER_DAO_URL = process.env.BADGER_DAO || 'MISSING REQUIRED ENV VAR';
 
 // general constants
