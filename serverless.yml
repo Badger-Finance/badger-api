@@ -186,12 +186,12 @@ resources:
         TableName: ${self:custom.table.PROTOCOL_METRICS_SNAPSHOTS_DATA.${self:custom.stage}}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
-          - AttributeName: 'id'
+          - AttributeName: 'type'
             KeyType: 'HASH'
           - AttributeName: 'timestamp'
             KeyType: 'RANGE'
         AttributeDefinitions:
-          - AttributeName: 'id'
+          - AttributeName: 'type'
             AttributeType: 'S'
           - AttributeName: 'timestamp'
             AttributeType: 'N'
