@@ -32,14 +32,14 @@ export const arbitrumTokensConfig: TokenConfig = {
     address: TOKENS.ARB_SUSHI_WETH_SUSHI,
     decimals: 18,
     lpToken: true,
-    name: 'Sushiswap: WBTC-DIGG',
+    name: 'Sushiswap: WETH-SUSHI',
     symbol: 'SLP-WETH-SUSHI',
     type: TokenType.SushiswapLp,
   },
   [TOKENS.BARB_SUSHI_WETH_SUSHI]: {
     address: TOKENS.BARB_SUSHI_WETH_SUSHI,
     decimals: 18,
-    name: 'bSushiswap: WBTC-DIGG',
+    name: 'bSushiswap: WETH-SUSHI',
     symbol: 'bSLP-WETH-SUSHI',
     type: TokenType.Vault,
     vaultToken: {
