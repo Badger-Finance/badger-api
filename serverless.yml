@@ -95,6 +95,7 @@ provider:
     SUSHISWAP: 'https://api.thegraph.com/subgraphs/name/sushiswap/exchange'
     SUSHISWAP_XDAI: 'https://api.thegraph.com/subgraphs/name/sushiswap/xdai-exchange'
     SUSHISWAP_MATIC: 'https://api.thegraph.com/subgraphs/name/sushiswap/matic-exchange'
+    SUSHISWAP_ARBITRUM: 'https://thegraph.com/legacy-explorer/subgraph/sushiswap/arbitrum-exchange',
     PANCAKESWAP: 'https://api.thegraph.com/subgraphs/name/pancakeswap/exchange'
     QUICKSWAP: 'https://api.thegraph.com/subgraphs/name/sameepsi/quickswap06'
     # Table Defintions

@@ -74,6 +74,8 @@ const RAW_TOKENS: ContractRegistry = {
 
   // arbitrum tokens
   ARB_BADGER: '0xBfa641051Ba0a0Ad1b0AcF549a89536A0D76472E',
+  ARB_SUSHI: '0xd4d42F0b6DEF4CE0383636770eF773390d85c61A',
+  ARB_WETH: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
 
   // matic curve tokens
   MATIC_CRV_AM3CRV: '0xE7a24EF0C5e95Ffb0f6684b813A78F2a3AD7D171',
@@ -100,6 +102,9 @@ const RAW_TOKENS: ContractRegistry = {
 
   // sushiswap xdai tokens
   XDAI_SUSHI_WBTC_WETH: '0xe21F631f47bFB2bC53ED134E83B8cff00e0EC054',
+
+  // sushiswap arbitrum tokens
+  ARB_SUSHI_WETH_SUSHI: '0x3221022e37029923aCe4235D812273C5A42C322d',
 
   // pancakeswap tokens
   PANCAKE_BNB_BTCB: '0x61eb789d75a95caa3ff50ed7e47b96c132fec082',
@@ -151,6 +156,7 @@ const RAW_TOKENS: ContractRegistry = {
   BXDAI_SUSHI_WBTC_WETH: '0x30bCE7386e016D6038201F57D1bA52CbA7AEFeCf',
 
   // arbitrum vault tokens
+  BARB_SUSHI_WETH_SUSHI: '0xe774d1fb3133b037aa17d39165b8f45f444f632d',
 };
 
 export const TOKENS = checksumEntries(RAW_TOKENS);

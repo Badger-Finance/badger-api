@@ -1,5 +1,6 @@
 import { DataMapper, PutParameters, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
 import { loadChains } from '../chains/chain';
+import { ArbitrumStrategy } from '../chains/strategies/arbitrum.strategy';
 import { BscStrategy } from '../chains/strategies/bsc.strategy';
 import { EthStrategy } from '../chains/strategies/eth.strategy';
 import { MaticStrategy } from '../chains/strategies/matic.strategy';
@@ -45,6 +46,7 @@ describe('refreshSettSnapshots', () => {
     jest.spyOn(EthStrategy.prototype, 'getPrice').mockImplementation(async (_address: string) => mockTokenPrice);
     jest.spyOn(MaticStrategy.prototype, 'getPrice').mockImplementation(async (_address: string) => mockTokenPrice);
     jest.spyOn(xDaiStrategy.prototype, 'getPrice').mockImplementation(async (_address: string) => mockTokenPrice);
+    jest.spyOn(ArbitrumStrategy.prototype, 'getPrice').mockImplementation(async (_address: string) => mockTokenPrice);
 
     const mockTokenPriceSnapshot = { name: 'mock', usd: 10, eth: 0, address: '0xbeef', updatedAt: Date.now() };
     jest.spyOn(priceUtils, 'getPrice').mockImplementation(async (_address: string) => mockTokenPriceSnapshot);
