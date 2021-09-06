@@ -1,3 +1,4 @@
+import { UnprocessableEntity } from '@tsed/exceptions';
 import { GraphQLClient } from 'graphql-request';
 import { Chain } from '../../chains/config/chain.config';
 import { ChainNetwork } from '../../chains/enums/chain-network.enum';
@@ -17,7 +18,8 @@ import { PoolMap } from '../interfaces/pool-map.interface';
 import { createValueSource } from '../interfaces/value-source.interface';
 import { getSwapValue } from './strategy.utils';
 
-const SUSHI_MINI_CHEF = '0x0769fd68dFb93167989C6f7254cd0D766Fb2841F';
+const SUSHI_MATIC_CHEF = '0x0769fd68dFb93167989C6f7254cd0D766Fb2841F';
+const SUSHI_ARB_CHEF = '0xF4d73326C13a4Fc5FD7A064217e12780e9Bd62c3';
 const SUSHI_CHEF = '0xc2EdaD668740f1aA35E4D8f227fB8E17dcA888Cd';
 
 const sushiPoolId: PoolMap = {
@@ -71,7 +73,8 @@ async function getEmissionSource(chain: Chain, settDefinition: SettDefinition): 
 
   switch (chain.network) {
     case ChainNetwork.Matic:
-      emissionSource = await getMaticSource(chain, settDefinition);
+    case ChainNetwork.Arbitrum:
+      emissionSource = await getPerSecond(chain, settDefinition);
       break;
     case ChainNetwork.Ethereum:
     default:
@@ -118,7 +121,7 @@ async function getEthereumSource(chain: Chain, settDefinition: SettDefinition): 
   );
 }
 
-async function getMaticSource(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource> {
+async function getPerSecond(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource> {
   const poolId = sushiPoolId[settDefinition.depositToken];
   if (!poolId || !settDefinition.strategy) {
     return valueSourceToCachedValueSource(
@@ -127,8 +130,19 @@ async function getMaticSource(chain: Chain, settDefinition: SettDefinition): Pro
       SourceType.Emission,
     );
   }
+  let chef;
+  switch (chain.network) {
+    case ChainNetwork.Matic:
+      chef = SUSHI_MATIC_CHEF;
+      break;
+    case ChainNetwork.Arbitrum:
+      chef = SUSHI_ARB_CHEF;
+      break;
+    default:
+      throw new UnprocessableEntity(`Sushiswap does not support ${chain.network}`);
+  }
   const depositToken = Erc20__factory.connect(settDefinition.depositToken, chain.provider);
-  const miniChef = SushiMiniChef__factory.connect(SUSHI_MINI_CHEF, chain.provider);
+  const miniChef = SushiMiniChef__factory.connect(chef, chain.provider);
   const [depositTokenPrice, sushiPrice, sushiPerSecond, totalAllocPoint, poolInfo, userInfo, poolBalance] =
     await Promise.all([
       getPrice(settDefinition.depositToken),
@@ -137,7 +151,7 @@ async function getMaticSource(chain: Chain, settDefinition: SettDefinition): Pro
       miniChef.totalAllocPoint(),
       miniChef.poolInfo(poolId),
       miniChef.userInfo(poolId, settDefinition.strategy),
-      depositToken.balanceOf(SUSHI_MINI_CHEF),
+      depositToken.balanceOf(chef),
     ]);
 
   let sushiApr = 0;
