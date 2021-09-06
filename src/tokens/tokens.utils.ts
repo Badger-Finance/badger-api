@@ -6,6 +6,7 @@ import { getPrice, inCurrency } from '../prices/prices.utils';
 import { getLiquidityData } from '../protocols/common/swap.utils';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { getCachedSett } from '../setts/setts.utils';
+import { arbitrumTokensConfig } from './config/arbitrum-tokens.config';
 import { bscTokensConfig } from './config/bsc-tokens.config';
 import { ethTokensConfig } from './config/eth-tokens.config';
 import { maticTokensConfig } from './config/matic-tokens.config';
@@ -23,6 +24,7 @@ export const protocolTokens: TokenConfig = {
   ...bscTokensConfig,
   ...maticTokensConfig,
   ...xDaiTokensConfig,
+  ...arbitrumTokensConfig,
 };
 
 /**
