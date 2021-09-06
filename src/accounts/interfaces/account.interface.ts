@@ -11,6 +11,7 @@ export interface Account {
   earnedValue: number;
   balances: SettBalance[];
   claimableBalances: CachedBalance[];
+  claimableBalancesMap: Record<string, string>;
   nativeBalance: number;
   nonNativeBalance: number;
 }

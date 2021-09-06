@@ -1,5 +1,6 @@
 import { Description, Example, Property, Title } from '@tsed/schema';
 import { ethers } from 'ethers';
+import { ChainNetwork } from '../../chains/enums/chain-network.enum';
 import { TOKENS } from '../../config/tokens.config';
 import { BoostMultipliers } from '../../rewards/interfaces/boost-multipliers.interface';
 import { getToken, mockBalance } from '../../tokens/tokens.utils';
@@ -68,13 +69,31 @@ export class AccountModel implements Account {
 
   @Title('claimableBalances')
   @Description('Claimable amounts of tokens currently available for an account in the Badger Tree')
+  @Example([
+    {
+      address: TOKENS.BADGER,
+      balance: ethers.constants.WeiPerEther.mul(88).toString(),
+      network: ChainNetwork.Ethereum,
+    },
+    { address: TOKENS.XSUSHI, balance: ethers.constants.WeiPerEther.mul(4).toString(), network: ChainNetwork.Ethereum },
+    {
+      address: TOKENS.DIGG,
+      balance: ethers.constants.WeiPerEther.mul(128834885688).toString(),
+      network: ChainNetwork.Ethereum,
+    },
+  ])
+  @Property()
+  public claimableBalances: CachedBalance[];
+
+  @Title('claimableBalancesMap')
+  @Description('Claimable amounts of tokens currently available for an account in the Badger Tree')
   @Example({
     [TOKENS.BADGER]: ethers.constants.WeiPerEther.mul(4).toString(),
     [TOKENS.XSUSHI]: ethers.constants.WeiPerEther.mul(88).toString(),
     [TOKENS.DIGG]: ethers.constants.WeiPerEther.mul(128834885688).toString(),
   })
   @Property()
-  public claimableBalances: CachedBalance[];
+  public claimableBalancesMap: Record<string, string>;
 
   @Title('nativeBalance')
   @Description("Currency value of an account's current native hodlings")
@@ -97,6 +116,7 @@ export class AccountModel implements Account {
     this.earnedValue = account.earnedValue;
     this.balances = account.balances;
     this.claimableBalances = account.claimableBalances;
+    this.claimableBalancesMap = account.claimableBalancesMap;
     this.nativeBalance = account.nativeBalance;
     this.nonNativeBalance = account.nonNativeBalance;
   }

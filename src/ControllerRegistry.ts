@@ -4,6 +4,7 @@ import { ClawController } from './claw/claw.controller';
 import { HarvestsController } from './harvests/harvests.controller';
 import { HealthController } from './health/health.controller';
 import { LeaderBoardsController } from './leaderboards/leaderboards.controller';
+import { MetricsController } from './metrics/metrics.controller';
 import { PriceController } from './prices/prices.controller';
 import { ProtocolController } from './protocols/protocols.controller';
 import { RewardController } from './rewards/rewards.controller';
@@ -28,4 +29,5 @@ export const controllers = [
   LeaderBoardsController,
   TokensController,
   HealthController,
+  MetricsController,
 ];

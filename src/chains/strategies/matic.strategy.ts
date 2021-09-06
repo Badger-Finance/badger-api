@@ -1,52 +1,21 @@
-import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
-import { ethers } from 'ethers';
-import { getContractPrice, getTokenPrice, getVaultTokenPrice } from '../../prices/prices.utils';
-import { getOnChainLiquidityPrice, getQuickswapPrice, resolveTokenPrice } from '../../protocols/common/swap.utils';
-import { getCurveTokenPrice } from '../../protocols/strategies/convex.strategy';
-import { maticTokensConfig } from '../../tokens/config/matic-tokens.config';
+import { getQuickswapPrice } from '../../protocols/common/swap.utils';
 import { TokenType } from '../../tokens/enums/token-type.enum';
 import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
-import { Chain } from '../config/chain.config';
 import { ChainNetwork } from '../enums/chain-network.enum';
-import { ChainStrategy } from './chain.strategy';
+import { BaseStrategy } from './base.strategy';
 
-export class MaticStrategy extends ChainStrategy {
-  constructor() {
-    super();
-    ChainStrategy.register(Object.keys(maticTokensConfig), this);
+export class MaticStrategy extends BaseStrategy {
+  constructor(tokens: string[]) {
+    super(ChainNetwork.Matic, tokens);
   }
 
   async getPrice(address: string): Promise<TokenPrice> {
-    const checksummedAddress = ethers.utils.getAddress(address);
-    const token = maticTokensConfig[checksummedAddress];
-    if (!token) {
-      throw new BadRequest(`No token found for ${checksummedAddress}`);
-    }
-    const matic = Chain.getChain(ChainNetwork.Matic);
+    const token = this.getToken(address);
     switch (token.type) {
-      case TokenType.Contract:
-        if (token.lookupName) {
-          return this.resolveLookupName(token.lookupName, token.address);
-        }
-        return getContractPrice(checksummedAddress);
-      case TokenType.CurveLP:
-        return getCurveTokenPrice(matic, checksummedAddress);
       case TokenType.QuickswapLp:
-        return getQuickswapPrice(checksummedAddress);
-      case TokenType.SushiswapLp:
-        return getOnChainLiquidityPrice(Chain.getChain(ChainNetwork.Matic), checksummedAddress);
-      case TokenType.Vault:
-        return getVaultTokenPrice(checksummedAddress);
+        return getQuickswapPrice(token.address);
       default:
-        throw new UnprocessableEntity('Unsupported TokenType');
+        return super.getPrice(address);
     }
-  }
-
-  async resolveLookupName(lookupName: string, token: string): Promise<TokenPrice> {
-    const isContract = ethers.utils.isAddress(lookupName);
-    if (isContract) {
-      return resolveTokenPrice(Chain.getChain(ChainNetwork.Matic), token, lookupName);
-    }
-    return getTokenPrice(lookupName);
   }
 }

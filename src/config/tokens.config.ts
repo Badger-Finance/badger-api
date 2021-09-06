@@ -72,6 +72,9 @@ const RAW_TOKENS: ContractRegistry = {
   MATIC_BADGER: '0x1FcbE5937B0cc2adf69772D228fA4205aCF4D9b2',
   MATIC_SUSHI: '0x0b3F868E0BE5597D5DB7fEB59E1CADBb0fdDa50a',
 
+  // arbitrum tokens
+  ARB_BADGER: '0xBfa641051Ba0a0Ad1b0AcF549a89536A0D76472E',
+
   // matic curve tokens
   MATIC_CRV_AM3CRV: '0xE7a24EF0C5e95Ffb0f6684b813A78F2a3AD7D171',
   MATIC_CRV_AMWBTC: '0xf8a57c1d3b9629b77b6726a042ca48990A84Fb49',
@@ -146,6 +149,8 @@ const RAW_TOKENS: ContractRegistry = {
 
   // xdai vault tokens
   BXDAI_SUSHI_WBTC_WETH: '0x30bCE7386e016D6038201F57D1bA52CbA7AEFeCf',
+
+  // arbitrum vault tokens
 };
 
 export const TOKENS = checksumEntries(RAW_TOKENS);

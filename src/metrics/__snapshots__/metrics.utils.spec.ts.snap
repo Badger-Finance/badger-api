@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`metrics.utils getProtocolMetrics returns protocolMetrics 1`] = `
+Object {
+  "totalUsers": 7,
+  "totalValueLocked": 32000,
+  "totalVaults": 32,
+}
+`;
+
+exports[`metrics.utils getProtocolUsersMetric returns total users 1`] = `7`;
+
+exports[`metrics.utils getSettsMetrics returns setts metrics 1`] = `
+Object {
+  "totalValueLocked": 32000,
+  "totalVaults": 32,
+}
+`;

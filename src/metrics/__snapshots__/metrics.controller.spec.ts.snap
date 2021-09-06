@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MetricsController GET /v2/metrics returns metric 1`] = `
+Object {
+  "totalUsers": 30000,
+  "totalValueLocked": 100000000000,
+  "totalVaults": 30,
+}
+`;

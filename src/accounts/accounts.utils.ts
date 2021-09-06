@@ -84,17 +84,22 @@ export async function getAccounts(chain: Chain): Promise<string[]> {
 }
 
 export function cachedAccountToAccount(cachedAccount: CachedAccount, network?: ChainNetwork): Account {
+  const balances = cachedAccount.balances
+    .filter((bal) => !network || bal.network === network)
+    .map((bal) => ({
+      ...bal,
+      tokens: bal.tokens.map((token) => cachedTokenBalanceToTokenBalance(token)),
+      earnedTokens: bal.earnedTokens.map((token) => cachedTokenBalanceToTokenBalance(token)),
+    }));
+  const multipliers = Object.fromEntries(cachedAccount.multipliers.map((entry) => [entry.address, entry.multiplier]));
+  const claimableBalances = cachedAccount.claimableBalances.filter((bal) => !network || bal.network === network);
+  const claimableBalancesMap = Object.fromEntries(claimableBalances.map((bal) => [bal.address, bal.balance]));
   const account: Account = {
     ...cachedAccount,
-    multipliers: Object.fromEntries(cachedAccount.multipliers.map((entry) => [entry.address, entry.multiplier])),
-    balances: cachedAccount.balances
-      .filter((bal) => !network || bal.network === network)
-      .map((bal) => ({
-        ...bal,
-        tokens: bal.tokens.map((token) => cachedTokenBalanceToTokenBalance(token)),
-        earnedTokens: bal.earnedTokens.map((token) => cachedTokenBalanceToTokenBalance(token)),
-      })),
-    claimableBalances: cachedAccount.claimableBalances.filter((bal) => !network || bal.network === network),
+    multipliers,
+    balances,
+    claimableBalances,
+    claimableBalancesMap,
   };
   return account;
 }

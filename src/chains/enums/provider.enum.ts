@@ -4,4 +4,5 @@ export enum Provider {
   Binance = 'https://bsc-dataseed.binance.org',
   Quicknode = 'https://rpc-mainnet.matic.quiknode.pro',
   xDai = 'https://rpc.xdaichain.com',
+  Arbitrum = '',
 }
