@@ -11,6 +11,6 @@ export const indexProtocolMetrics = async (): Promise<void> => {
   try {
     await mapper.put(metricSnapshot);
   } catch (err) {
-    console.log({ message: err.message, metricSnapshot });
+    console.error({ message: err.message, metricSnapshot });
   }
 };
