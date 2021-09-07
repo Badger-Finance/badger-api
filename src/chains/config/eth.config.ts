@@ -82,7 +82,7 @@ export const ethSetts: SettDefinition[] = [
     protocol: Protocol.Uniswap,
   },
   {
-    name: 'Sushiswap Wrapped BTC/Wrapped Ether',
+    name: 'Sushiswap Wrapped BTC/Wrapped ETH',
     createdBlock: 11539529,
     depositToken: TOKENS.SUSHI_ETH_WBTC,
     strategy: '0x7A56d65254705B4Def63c68488C0182968C452ce',

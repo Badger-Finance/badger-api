@@ -67,7 +67,7 @@ export const arbitrumTokensConfig: TokenConfig = {
     address: TOKENS.BARB_SUSHI_WETH_WBTC,
     decimals: 18,
     name: 'bSushiswap: WETH-WBTC',
-    symbol: 'SLP-WETH-WBTC',
+    symbol: 'bSLP-WETH-WBTC',
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.ARB_SUSHI_WETH_WBTC,

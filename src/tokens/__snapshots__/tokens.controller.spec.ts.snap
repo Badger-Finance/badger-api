@@ -621,17 +621,6 @@ Object {
       "network": "eth",
     },
   },
-  "0xC43bD293353295035370Ef6E6B44f578b9265340": Object {
-    "address": "0xC43bD293353295035370Ef6E6B44f578b9265340",
-    "decimals": 18,
-    "name": "bICVX",
-    "symbol": "bICVX",
-    "type": "Vault",
-    "vaultToken": Object {
-      "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
-      "network": "eth",
-    },
-  },
   "0xCEfF51756c56CeFFCA006cD410B03FFC46dd3a58": Object {
     "address": "0xCEfF51756c56CeFFCA006cD410B03FFC46dd3a58",
     "decimals": 18,
@@ -653,6 +642,17 @@ Object {
     "name": "Curve.fi pBTC",
     "symbol": "crvpBTC",
     "type": "CurveLP",
+  },
+  "0xE143aA25Eec81B4Fc952b38b6Bca8D2395481377": Object {
+    "address": "0xE143aA25Eec81B4Fc952b38b6Bca8D2395481377",
+    "decimals": 18,
+    "name": "bICVX",
+    "symbol": "bICVX",
+    "type": "Vault",
+    "vaultToken": Object {
+      "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
+      "network": "eth",
+    },
   },
   "0xE86204c4eDDd2f70eE00EAd6805f917671F56c52": Object {
     "address": "0xE86204c4eDDd2f70eE00EAd6805f917671F56c52",
@@ -1271,17 +1271,6 @@ Object {
       "network": "eth",
     },
   },
-  "0xC43bD293353295035370Ef6E6B44f578b9265340": Object {
-    "address": "0xC43bD293353295035370Ef6E6B44f578b9265340",
-    "decimals": 18,
-    "name": "bICVX",
-    "symbol": "bICVX",
-    "type": "Vault",
-    "vaultToken": Object {
-      "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
-      "network": "eth",
-    },
-  },
   "0xCEfF51756c56CeFFCA006cD410B03FFC46dd3a58": Object {
     "address": "0xCEfF51756c56CeFFCA006cD410B03FFC46dd3a58",
     "decimals": 18,
@@ -1303,6 +1292,17 @@ Object {
     "name": "Curve.fi pBTC",
     "symbol": "crvpBTC",
     "type": "CurveLP",
+  },
+  "0xE143aA25Eec81B4Fc952b38b6Bca8D2395481377": Object {
+    "address": "0xE143aA25Eec81B4Fc952b38b6Bca8D2395481377",
+    "decimals": 18,
+    "name": "bICVX",
+    "symbol": "bICVX",
+    "type": "Vault",
+    "vaultToken": Object {
+      "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
+      "network": "eth",
+    },
   },
   "0xE86204c4eDDd2f70eE00EAd6805f917671F56c52": Object {
     "address": "0xE86204c4eDDd2f70eE00EAd6805f917671F56c52",

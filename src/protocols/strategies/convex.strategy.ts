@@ -98,7 +98,9 @@ async function getLockedSources(chain: Chain, settDefinition: SettDefinition): P
   if (!settDefinition.strategy) {
     return [];
   }
-  const cachedSett = await getCachedSett(settDefinition);
+  const cvxPrice = await getPrice(TOKENS.CVX);
+  const cvxLocked = formatBalance(await locker.lockedSupply());
+  const cvxValue = cvxPrice.usd * cvxLocked;
 
   let token = 0;
   const sources = [];
@@ -106,13 +108,13 @@ async function getLockedSources(chain: Chain, settDefinition: SettDefinition): P
     try {
       const reward = await locker.rewardTokens(token);
       const rewardToken = getToken(reward);
-      const rewardRate = await locker.userRewardPerTokenPaid(settDefinition.strategy, reward);
+      const rewardAmount = await locker.getRewardForDuration(reward);
       const duration = await locker.rewardsDuration();
       const rewardTokenPrice = await getPrice(reward);
       const rewardScalar = ONE_YEAR_SECONDS / duration.toNumber();
-      const rewardsValue = rewardTokenPrice.usd * formatBalance(rewardRate) * rewardScalar;
-      const rewardApr = (rewardsValue / cachedSett.value) * 100;
-      const cvxValueSource = createValueSource(`b${rewardToken.name} Rewards`, uniformPerformance(rewardApr));
+      const rewardsValue = rewardTokenPrice.usd * formatBalance(rewardAmount) * rewardScalar;
+      const rewardApr = (rewardsValue / cvxValue) * 100;
+      const cvxValueSource = createValueSource(`b${rewardToken.symbol} Rewards`, uniformPerformance(rewardApr));
       const cachedEmission = valueSourceToCachedValueSource(cvxValueSource, settDefinition, tokenEmission(rewardToken));
       sources.push(cachedEmission);
       token++;
