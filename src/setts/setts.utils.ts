@@ -17,6 +17,7 @@ export const VAULT_SOURCE = 'Vault Compounding';
 
 export const defaultSett = (settDefinition: SettDefinition): Sett => {
   const assetToken = getToken(settDefinition.depositToken);
+  const vaultToken = getToken(settDefinition.settToken);
   return {
     asset: assetToken.symbol,
     apr: 0,
@@ -32,6 +33,7 @@ export const defaultSett = (settDefinition: SettDefinition): Sett => {
     tokens: [],
     underlyingToken: settDefinition.depositToken,
     value: 0,
+    vaultAsset: vaultToken.symbol,
     vaultToken: settDefinition.settToken,
   };
 };
