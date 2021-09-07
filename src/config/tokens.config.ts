@@ -159,7 +159,7 @@ const RAW_TOKENS: ContractRegistry = {
 
   // arbitrum vault tokens
   BARB_SUSHI_WETH_SUSHI: '0xe774d1fb3133b037aa17d39165b8f45f444f632d',
-  BARB_SUSHI_WETH_WBTC: '0x3221022e37029923aCe4235D812273C5A42C322d',
+  BARB_SUSHI_WETH_WBTC: '0xFc13209cAfE8fb3bb5fbD929eC9F11a39e8Ac041',
 };
 
 export const TOKENS = checksumEntries(RAW_TOKENS);
