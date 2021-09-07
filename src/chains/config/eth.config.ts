@@ -236,4 +236,14 @@ export const ethSetts: SettDefinition[] = [
     state: SettState.Experimental,
     strategy: '0x10D96b1Fd46Ce7cE092aA905274B8eD9d4585A6E',
   },
+  {
+    name: 'Convex Vote Locked CVX',
+    createdBlock: 13153663,
+    depositToken: TOKENS.CVX,
+    settToken: TOKENS.BICVX,
+    stage: Stage.Staging,
+    state: SettState.Experimental,
+    protocol: Protocol.Convex,
+    strategy: '0xE096ccEc4a1D36F191189Fe61E803d8B2044DFC3',
+  },
 ];

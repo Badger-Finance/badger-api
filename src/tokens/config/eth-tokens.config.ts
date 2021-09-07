@@ -591,6 +591,17 @@ export const ethTokensConfig: TokenConfig = {
       network: ChainNetwork.Ethereum,
     },
   },
+  [TOKENS.BICVX]: {
+    address: TOKENS.BICVX,
+    decimals: 18,
+    name: 'bICVX',
+    symbol: 'bICVX',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.CVX,
+      network: ChainNetwork.Ethereum,
+    },
+  },
   [TOKENS.BCVXCRV]: {
     address: TOKENS.BCVXCRV,
     decimals: 18,

@@ -14,6 +14,7 @@ import {
   CurvePoolPolygon__factory,
   CurveRegistry__factory,
   CvxBooster__factory,
+  CvxLocker__factory,
   CvxRewards__factory,
   Erc20__factory,
 } from '../../contracts';
@@ -42,6 +43,7 @@ export const threeCrvRewards = '0x7091dbb7fcbA54569eF1387Ac89Eb2a5C9F6d2EA';
 export const cvxChef = '0xEF0881eC094552b2e128Cf945EF17a6752B4Ec5d';
 export const cvxBooster = '0xF403C135812408BFbE8713b5A23a04b3D48AAE31';
 export const crvBaseRegistry = '0x0000000022D53366457F9d5E68Ec105046FC4383';
+export const cvxLocker = '0xd18140b4b819b895a3dba5442f959fa44994af50';
 
 /* Protocol Definitions */
 const curvePoolApr: Record<string, string> = {
@@ -83,10 +85,43 @@ export class ConvexStrategy {
         return getCvxRewards(chain, settDefinition);
       case TOKENS.BCVXCRV:
         return getCvxCrvRewards(chain, settDefinition);
+      case TOKENS.BICVX:
+        return getLockedSources(chain, settDefinition);
       default:
         return getVaultSources(chain, settDefinition);
     }
   }
+}
+
+async function getLockedSources(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
+  const locker = CvxLocker__factory.connect(cvxLocker, chain.provider);
+  if (!settDefinition.strategy) {
+    return [];
+  }
+  const cachedSett = await getCachedSett(settDefinition);
+
+  let token = 0;
+  const sources = [];
+  while (true) {
+    try {
+      const reward = await locker.rewardTokens(token);
+      const rewardToken = getToken(reward);
+      const rewardRate = await locker.userRewardPerTokenPaid(settDefinition.strategy, reward);
+      const duration = await locker.rewardsDuration();
+      const rewardTokenPrice = await getPrice(reward);
+      const rewardScalar = ONE_YEAR_SECONDS / duration.toNumber();
+      const rewardsValue = rewardTokenPrice.usd * formatBalance(rewardRate) * rewardScalar;
+      const rewardApr = (rewardsValue / cachedSett.value) * 100;
+      const cvxValueSource = createValueSource(`b${rewardToken.name} Rewards`, uniformPerformance(rewardApr));
+      const cachedEmission = valueSourceToCachedValueSource(cvxValueSource, settDefinition, tokenEmission(rewardToken));
+      sources.push(cachedEmission);
+      token++;
+    } catch {
+      break;
+    }
+  }
+
+  return sources;
 }
 
 async function getVaultSources(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
