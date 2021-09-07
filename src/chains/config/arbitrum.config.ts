@@ -31,7 +31,7 @@ export class Arbitrum extends Chain {
 
 export const arbitrumSetts: SettDefinition[] = [
   {
-    name: 'Sushiswap Wrapped Bitcoin/Sushi',
+    name: 'Sushiswap Wrapped Ether/Sushi',
     settToken: TOKENS.BARB_SUSHI_WETH_SUSHI,
     depositToken: TOKENS.ARB_SUSHI_WETH_SUSHI,
     createdBlock: 17580716,
@@ -42,16 +42,16 @@ export const arbitrumSetts: SettDefinition[] = [
     state: SettState.Experimental,
     strategy: '0x86f772C82914f5bFD168f99e208d0FC2C371e9C2',
   },
-  // {
-  //   name: 'Sushiswap Wrapped Bitcoin/Wrapped Ether',
-  //   settToken: TOKENS.BARB_SUSHI_WETH_WBTC,
-  //   depositToken: TOKENS.ARB_SUSHI_WETH_WBTC,
-  //   createdBlock: 17580716,
-  //   experimental: true,
-  //   // testing purposes
-  //   hasBouncer: false,
-  //   protocol: Protocol.Sushiswap,
-  //   state: SettState.Experimental,
-  //   strategy: '0x86f772C82914f5bFD168f99e208d0FC2C371e9C2',
-  // },
+  {
+    name: 'Sushiswap Wrapped Ether/Wrapped Bitcoin',
+    settToken: TOKENS.BARB_SUSHI_WETH_WBTC,
+    depositToken: TOKENS.ARB_SUSHI_WETH_WBTC,
+    createdBlock: 17580716,
+    experimental: true,
+    // testing purposes
+    hasBouncer: false,
+    protocol: Protocol.Sushiswap,
+    state: SettState.Experimental,
+    strategy: '0xA6827f0f14D0B83dB925B616d820434697328c22',
+  },
 ];

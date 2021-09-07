@@ -54,7 +54,7 @@ export const maticSetts: SettDefinition[] = [
     strategy: '0x809990849D53a5109e0cb9C446137793B9f6f1Eb',
   },
   {
-    name: 'Curve Ren',
+    name: 'Curve amWBTC/renBTC',
     settToken: TOKENS.BMATIC_CRV_AMWBTC,
     depositToken: TOKENS.MATIC_CRV_AMWBTC,
     getTokenBalance: getCurveSettTokenBalance,

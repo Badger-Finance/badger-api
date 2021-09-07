@@ -20,6 +20,14 @@ export const arbitrumTokensConfig: TokenConfig = {
     symbol: 'WETH',
     type: TokenType.Contract,
   },
+  [TOKENS.ARB_WBTC]: {
+    address: TOKENS.ARB_WBTC,
+    decimals: 18,
+    lookupName: 'bitcoin',
+    name: 'Wrapped Bitcoin',
+    symbol: 'WBTC',
+    type: TokenType.Contract,
+  },
   [TOKENS.ARB_SUSHI]: {
     address: TOKENS.ARB_SUSHI,
     decimals: 18,
@@ -36,6 +44,14 @@ export const arbitrumTokensConfig: TokenConfig = {
     symbol: 'SLP-WETH-SUSHI',
     type: TokenType.SushiswapLp,
   },
+  [TOKENS.ARB_SUSHI_WETH_WBTC]: {
+    address: TOKENS.ARB_SUSHI_WETH_WBTC,
+    decimals: 18,
+    lpToken: true,
+    name: 'Sushiswap: WETH-WBTC',
+    symbol: 'SLP-WETH-WBTC',
+    type: TokenType.SushiswapLp,
+  },
   [TOKENS.BARB_SUSHI_WETH_SUSHI]: {
     address: TOKENS.BARB_SUSHI_WETH_SUSHI,
     decimals: 18,
@@ -44,6 +60,17 @@ export const arbitrumTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.ARB_SUSHI_WETH_SUSHI,
+      network: ChainNetwork.Arbitrum,
+    },
+  },
+  [TOKENS.BARB_SUSHI_WETH_WBTC]: {
+    address: TOKENS.BARB_SUSHI_WETH_WBTC,
+    decimals: 18,
+    name: 'bSushiswap: WETH-WBTC',
+    symbol: 'SLP-WETH-WBTC',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.ARB_SUSHI_WETH_WBTC,
       network: ChainNetwork.Arbitrum,
     },
   },
