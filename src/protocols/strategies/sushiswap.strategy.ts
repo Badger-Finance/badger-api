@@ -14,14 +14,16 @@ import { Erc20__factory, SushiChef__factory, SushiMiniChef__factory } from '../.
 import { getSdk as getSushiswapSdk, OrderDirection, PairDayData_OrderBy } from '../../graphql/generated/sushiswap';
 import { valueSourceToCachedValueSource } from '../../indexer/indexer.utils';
 import { getPrice } from '../../prices/prices.utils';
+import { noRewards } from '../../rewards/rewards.utils';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
-import { formatBalance } from '../../tokens/tokens.utils';
+import { formatBalance, getToken } from '../../tokens/tokens.utils';
 import { SourceType } from '../enums/source-type.enum';
 import { CachedValueSource } from '../interfaces/cached-value-source.interface';
 import { PairDayData } from '../interfaces/pair-day-data.interface';
 import { uniformPerformance } from '../interfaces/performance.interface';
 import { PoolMap } from '../interfaces/pool-map.interface';
 import { createValueSource } from '../interfaces/value-source.interface';
+import { tokenEmission } from '../protocols.utils';
 import { getSwapValue } from './strategy.utils';
 
 const SUSHI_MATIC_CHEF = '0x0769fd68dFb93167989C6f7254cd0D766Fb2841F';
@@ -91,8 +93,10 @@ async function getEmissionSource(chain: Chain, settDefinition: SettDefinition): 
 
   switch (chain.network) {
     case ChainNetwork.Matic:
-    case ChainNetwork.Arbitrum:
       emissionSource = await getPerSecondSource(chain, settDefinition);
+      break;
+    case ChainNetwork.Arbitrum:
+      emissionSource = await getArbitrumSource(chain, settDefinition);
       break;
     case ChainNetwork.Ethereum:
     default:
@@ -187,4 +191,21 @@ async function getPerSecondSource(chain: Chain, settDefinition: SettDefinition):
     settDefinition,
     SourceType.Emission,
   );
+}
+
+async function getArbitrumSource(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource> {
+  const sushi = getToken(TOKENS.SUSHI);
+  if (settDefinition.depositToken === TOKENS.ARB_SUSHI_WETH_SUSHI) {
+    return noRewards(settDefinition, sushi);
+  }
+  let source = await getPerSecondSource(chain, settDefinition);
+  if (settDefinition.depositToken === TOKENS.ARB_SUSHI_WETH_WBTC) {
+    const helperVault = getToken(TOKENS.BARB_SUSHI_WETH_SUSHI);
+    source = valueSourceToCachedValueSource(
+      createValueSource(`${helperVault.symbol} Rewards`, uniformPerformance(source.apr * 0.5)),
+      settDefinition,
+      tokenEmission(helperVault),
+    );
+  }
+  return source;
 }
