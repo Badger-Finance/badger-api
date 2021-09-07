@@ -6,6 +6,7 @@ import { SettSummary } from './sett-summary.interface';
 export interface Sett extends SettSummary {
   apr: number;
   asset: string;
+  vaultAsset: string;
   boostable: boolean;
   deprecated: boolean;
   experimental: boolean;
