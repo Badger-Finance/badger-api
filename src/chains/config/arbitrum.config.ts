@@ -31,7 +31,7 @@ export class Arbitrum extends Chain {
 
 export const arbitrumSetts: SettDefinition[] = [
   {
-    name: 'Sushiswap Wrapped Ether/Sushi',
+    name: 'Sushiswap Wrapped Ether/Sushi Helper',
     settToken: TOKENS.BARB_SUSHI_WETH_SUSHI,
     depositToken: TOKENS.ARB_SUSHI_WETH_SUSHI,
     createdBlock: 13163959,
