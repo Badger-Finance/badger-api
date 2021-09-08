@@ -16,10 +16,16 @@ export class SettModel implements Sett {
   public name: string;
 
   @Title('asset')
-  @Description('Sett asset name')
+  @Description('Sett underlying asset name')
   @Example('crvTricrypto')
   @Property()
   public asset: string;
+
+  @Title('vaultAsset')
+  @Description('Sett asset name')
+  @Example('bcrvTricrypto')
+  @Property()
+  public vaultAsset: string;
 
   @Title('state')
   @Description('Launch state of the sett')
@@ -119,6 +125,7 @@ export class SettModel implements Sett {
     name: string,
     state: SettState,
     asset: string,
+    vaultAsset: string,
     underlyingToken: string,
     vaultToken: string,
     value: number,
@@ -137,6 +144,7 @@ export class SettModel implements Sett {
     this.name = name;
     this.state = state;
     this.asset = asset;
+    this.vaultAsset = vaultAsset;
     this.underlyingToken = underlyingToken;
     this.vaultToken = vaultToken;
     this.value = value;

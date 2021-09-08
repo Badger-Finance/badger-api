@@ -15,5 +15,5 @@ module.exports = {
   testTimeout: 10000,
   setupFilesAfterEnv: ['./src/test/jest.setup.ts'],
   transform: { '^.+\\.ts$': 'ts-jest' },
-  coveragePathIgnorePatterns: ['interfaces', 'enums', 'generated', 'claw', 'chains', 'abi', 'contracts'],
+  coveragePathIgnorePatterns: ['interfaces', 'enums', 'generated', 'chains', 'abi', 'contracts'],
 };

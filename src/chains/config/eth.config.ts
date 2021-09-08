@@ -82,7 +82,7 @@ export const ethSetts: SettDefinition[] = [
     protocol: Protocol.Uniswap,
   },
   {
-    name: 'Sushiswap Wrapped BTC/Wrapped Ether',
+    name: 'Sushiswap Wrapped BTC/Wrapped ETH',
     createdBlock: 11539529,
     depositToken: TOKENS.SUSHI_ETH_WBTC,
     strategy: '0x7A56d65254705B4Def63c68488C0182968C452ce',
@@ -235,5 +235,15 @@ export const ethSetts: SettDefinition[] = [
     stage: Stage.Staging,
     state: SettState.Experimental,
     strategy: '0x10D96b1Fd46Ce7cE092aA905274B8eD9d4585A6E',
+  },
+  {
+    name: 'Convex Vote Locked CVX',
+    createdBlock: 13153663,
+    depositToken: TOKENS.BCVX,
+    settToken: TOKENS.BICVX,
+    stage: Stage.Staging,
+    state: SettState.Experimental,
+    protocol: Protocol.Convex,
+    strategy: '0xE096ccEc4a1D36F191189Fe61E803d8B2044DFC3',
   },
 ];

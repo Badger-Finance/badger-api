@@ -22,6 +22,7 @@ describe('metrics.utils', () => {
     jest.spyOn(SettUtils, 'getCachedSett').mockReturnValue(
       Promise.resolve({
         asset: 'mockSymbol',
+        vaultAsset: 'bmockSymbol',
         apr: 0,
         balance: 100,
         boostable: false,

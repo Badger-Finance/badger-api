@@ -143,7 +143,7 @@ export const maticTokensConfig: TokenConfig = {
     address: TOKENS.MATIC_CRV_AMWBTC,
     decimals: 18,
     name: 'Curve.fi amWBTC/renBTC',
-    symbol: 'btcCRV',
+    symbol: 'crvrenBTC',
     type: TokenType.CurveLP,
   },
   [TOKENS.BMATIC_SUSHI_IBBTC_WBTC]: {
@@ -172,7 +172,7 @@ export const maticTokensConfig: TokenConfig = {
     address: TOKENS.BMATIC_CRV_AMWBTC,
     decimals: 18,
     name: 'bCurve.fi amWBTC/renBTC',
-    symbol: 'bbtcCRV',
+    symbol: 'bcrvrenBTC',
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.MATIC_CRV_AMWBTC,

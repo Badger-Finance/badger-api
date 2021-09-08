@@ -2,20 +2,28 @@ import { UnprocessableEntity } from '@tsed/exceptions';
 import { GraphQLClient } from 'graphql-request';
 import { Chain } from '../../chains/config/chain.config';
 import { ChainNetwork } from '../../chains/enums/chain-network.enum';
-import { ONE_YEAR_SECONDS, SUSHISWAP_MATIC_URL, SUSHISWAP_URL, SUSHISWAP_XDAI_URL } from '../../config/constants';
+import {
+  ONE_YEAR_SECONDS,
+  SUSHISWAP_ARBITRUM_URL,
+  SUSHISWAP_MATIC_URL,
+  SUSHISWAP_URL,
+  SUSHISWAP_XDAI_URL,
+} from '../../config/constants';
 import { TOKENS } from '../../config/tokens.config';
 import { Erc20__factory, SushiChef__factory, SushiMiniChef__factory } from '../../contracts';
 import { getSdk as getSushiswapSdk, OrderDirection, PairDayData_OrderBy } from '../../graphql/generated/sushiswap';
 import { valueSourceToCachedValueSource } from '../../indexer/indexer.utils';
 import { getPrice } from '../../prices/prices.utils';
+import { noRewards } from '../../rewards/rewards.utils';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
-import { formatBalance } from '../../tokens/tokens.utils';
+import { formatBalance, getToken } from '../../tokens/tokens.utils';
 import { SourceType } from '../enums/source-type.enum';
 import { CachedValueSource } from '../interfaces/cached-value-source.interface';
 import { PairDayData } from '../interfaces/pair-day-data.interface';
 import { uniformPerformance } from '../interfaces/performance.interface';
 import { PoolMap } from '../interfaces/pool-map.interface';
 import { createValueSource } from '../interfaces/value-source.interface';
+import { tokenEmission } from '../protocols.utils';
 import { getSwapValue } from './strategy.utils';
 
 const SUSHI_MATIC_CHEF = '0x0769fd68dFb93167989C6f7254cd0D766Fb2841F';
@@ -28,6 +36,14 @@ const sushiPoolId: PoolMap = {
   [TOKENS.SUSHI_BADGER_WBTC]: 73,
   [TOKENS.SUSHI_DIGG_WBTC]: 103,
   [TOKENS.MATIC_SUSHI_IBBTC_WBTC]: 24,
+  [TOKENS.ARB_SUSHI_WETH_SUSHI]: 2,
+  [TOKENS.ARB_SUSHI_WETH_WBTC]: 3,
+};
+
+const sushiSellRate: Record<string, number> = {
+  [ChainNetwork.Ethereum]: 0,
+  [ChainNetwork.Matic]: 0,
+  [ChainNetwork.Arbitrum]: 0.5,
 };
 
 export class SushiswapStrategy {
@@ -45,9 +61,13 @@ async function getSushiSwapValue(chain: Chain, settDefinition: SettDefinition): 
     case ChainNetwork.Matic:
       graphUrl = SUSHISWAP_MATIC_URL;
       break;
+    case ChainNetwork.Arbitrum:
+      graphUrl = SUSHISWAP_ARBITRUM_URL;
+      break;
     default:
       graphUrl = SUSHISWAP_URL;
   }
+
   const client = new GraphQLClient(graphUrl);
   const sdk = getSushiswapSdk(client);
   const { pairDayDatas } = await sdk.SushiPairDayDatas({
@@ -73,8 +93,10 @@ async function getEmissionSource(chain: Chain, settDefinition: SettDefinition): 
 
   switch (chain.network) {
     case ChainNetwork.Matic:
+      emissionSource = await getPerSecondSource(chain, settDefinition);
+      break;
     case ChainNetwork.Arbitrum:
-      emissionSource = await getPerSecond(chain, settDefinition);
+      emissionSource = await getArbitrumSource(chain, settDefinition);
       break;
     case ChainNetwork.Ethereum:
     default:
@@ -93,6 +115,7 @@ async function getEthereumSource(chain: Chain, settDefinition: SettDefinition): 
       SourceType.Emission,
     );
   }
+  const sellRate = 1 - sushiSellRate[chain.network];
   const depositToken = Erc20__factory.connect(settDefinition.depositToken, chain.provider);
   const sushiChef = SushiChef__factory.connect(SUSHI_CHEF, chain.provider);
   const [depositTokenPrice, sushiPrice, sushiPerBlock, totalAllocPoint, poolInfo, userInfo, poolBalance] =
@@ -111,7 +134,7 @@ async function getEthereumSource(chain: Chain, settDefinition: SettDefinition): 
     const poolValue = formatBalance(poolBalance) * depositTokenPrice.usd;
     const emissionScalar = poolInfo.allocPoint.toNumber() / totalAllocPoint.toNumber();
     const sushiEmission = formatBalance(sushiPerBlock) * emissionScalar * chain.blocksPerYear * sushiPrice.usd;
-    sushiApr = (sushiEmission / poolValue) * 100;
+    sushiApr = (sushiEmission / poolValue) * 100 * sellRate;
   }
 
   return valueSourceToCachedValueSource(
@@ -121,7 +144,7 @@ async function getEthereumSource(chain: Chain, settDefinition: SettDefinition): 
   );
 }
 
-async function getPerSecond(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource> {
+async function getPerSecondSource(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource> {
   const poolId = sushiPoolId[settDefinition.depositToken];
   if (!poolId || !settDefinition.strategy) {
     return valueSourceToCachedValueSource(
@@ -141,6 +164,7 @@ async function getPerSecond(chain: Chain, settDefinition: SettDefinition): Promi
     default:
       throw new UnprocessableEntity(`Sushiswap does not support ${chain.network}`);
   }
+  const sellRate = 1 - sushiSellRate[chain.network];
   const depositToken = Erc20__factory.connect(settDefinition.depositToken, chain.provider);
   const miniChef = SushiMiniChef__factory.connect(chef, chain.provider);
   const [depositTokenPrice, sushiPrice, sushiPerSecond, totalAllocPoint, poolInfo, userInfo, poolBalance] =
@@ -159,7 +183,7 @@ async function getPerSecond(chain: Chain, settDefinition: SettDefinition): Promi
     const poolValue = formatBalance(poolBalance) * depositTokenPrice.usd;
     const emissionScalar = poolInfo.allocPoint.toNumber() / totalAllocPoint.toNumber();
     const sushiEmission = formatBalance(sushiPerSecond) * emissionScalar * ONE_YEAR_SECONDS * sushiPrice.usd;
-    sushiApr = (sushiEmission / poolValue) * 100;
+    sushiApr = (sushiEmission / poolValue) * 100 * sellRate;
   }
 
   return valueSourceToCachedValueSource(
@@ -167,4 +191,21 @@ async function getPerSecond(chain: Chain, settDefinition: SettDefinition): Promi
     settDefinition,
     SourceType.Emission,
   );
+}
+
+async function getArbitrumSource(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource> {
+  const sushi = getToken(TOKENS.SUSHI);
+  if (settDefinition.depositToken === TOKENS.ARB_SUSHI_WETH_SUSHI) {
+    return noRewards(settDefinition, sushi);
+  }
+  let source = await getPerSecondSource(chain, settDefinition);
+  if (settDefinition.depositToken === TOKENS.ARB_SUSHI_WETH_WBTC) {
+    const helperVault = getToken(TOKENS.BARB_SUSHI_WETH_SUSHI);
+    source = valueSourceToCachedValueSource(
+      createValueSource(`${helperVault.symbol} Rewards`, uniformPerformance(source.apr * 0.5)),
+      settDefinition,
+      tokenEmission(helperVault),
+    );
+  }
+  return source;
 }
