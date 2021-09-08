@@ -22,8 +22,8 @@ export class Arbitrum extends Chain {
       new ArbitrumStrategy(Object.keys(arbitrumTokensConfig)),
       BADGER_ARBITRUM_URL,
       2425847,
-      '0x663EfC293ca8d8DD6355AE6E99b71352BED9E895',
-      '0x599D92B453C010b1050d31C364f6ee17E819f193',
+      '0x635EB2C39C75954bb53Ebc011BDC6AfAAcE115A6',
+      '0x85E1cACAe9a63429394d68Db59E14af74143c61c',
     );
     Chain.register(this.network, this);
   }
@@ -31,7 +31,7 @@ export class Arbitrum extends Chain {
 
 export const arbitrumSetts: SettDefinition[] = [
   {
-    name: 'Sushiswap Wrapped Ether/Sushi',
+    name: 'Sushiswap Wrapped Ether/Sushi Helper',
     settToken: TOKENS.BARB_SUSHI_WETH_SUSHI,
     depositToken: TOKENS.ARB_SUSHI_WETH_SUSHI,
     createdBlock: 13163959,
