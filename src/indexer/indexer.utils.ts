@@ -2,8 +2,10 @@ import { BigNumber } from '@ethersproject/bignumber';
 import { NotFound } from '@tsed/exceptions';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
+import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { Protocol } from '../config/enums/protocol.enum';
 import { Sett__factory } from '../contracts';
+import { getArbitrumBlock } from '../etherscan/etherscan.utils';
 import { getPrice } from '../prices/prices.utils';
 import { SourceType } from '../protocols/enums/source-type.enum';
 import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
@@ -61,7 +63,13 @@ export const settToSnapshot = async (
   settDefinition: SettDefinition,
   block: number,
 ): Promise<SettSnapshot | null> => {
-  const sett = await getSett(chain.graphUrl, settDefinition.settToken, block);
+  let queryBlock = block;
+  if (chain.network === ChainNetwork.Arbitrum) {
+    const refChain = Chain.getChain(ChainNetwork.Ethereum);
+    const refBlock = await refChain.provider.getBlock(block);
+    queryBlock = await getArbitrumBlock(refBlock.timestamp);
+  }
+  const sett = await getSett(chain.graphUrl, settDefinition.settToken, queryBlock);
   const settToken = getToken(settDefinition.settToken);
   const depositToken = getToken(settDefinition.depositToken);
 
@@ -70,13 +78,13 @@ export const settToSnapshot = async (
   }
 
   const { balance, totalSupply, pricePerFullShare } = sett.sett;
-  const blockData = await chain.provider.getBlock(block);
+  const blockData = await chain.provider.getBlock(queryBlock);
   const timestamp = blockData.timestamp * 1000;
   const balanceDecimals = settDefinition.balanceDecimals || depositToken.decimals;
   const supplyDecimals = settDefinition.supplyDecimals || settToken.decimals;
   const tokenBalance = balance / Math.pow(10, balanceDecimals);
   const supply = totalSupply / Math.pow(10, supplyDecimals);
-  const ratio = await getPricePerShare(chain, pricePerFullShare, settDefinition, block);
+  const ratio = await getPricePerShare(chain, pricePerFullShare, settDefinition, queryBlock);
   const tokenPriceData = await getPrice(depositToken.address);
   const value = tokenBalance * tokenPriceData.usd;
 
