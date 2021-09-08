@@ -100,6 +100,8 @@ export enum OrderDirection {
 
 export type Query = {
   __typename?: 'Query';
+  registry?: Maybe<Registry>;
+  registries: Array<Registry>;
   token?: Maybe<Token>;
   tokens: Array<Token>;
   sett?: Maybe<Sett>;
@@ -122,6 +124,20 @@ export type Query = {
   snapshots: Array<Snapshot>;
   /** Access to subgraph metadata */
   _meta?: Maybe<_Meta_>;
+};
+
+export type QueryRegistryArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<Block_Height>;
+};
+
+export type QueryRegistriesArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Registry_OrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<Registry_Filter>;
+  block?: Maybe<Block_Height>;
 };
 
 export type QueryTokenArgs = {
@@ -267,6 +283,26 @@ export type QuerySnapshotsArgs = {
 export type Query_MetaArgs = {
   block?: Maybe<Block_Height>;
 };
+
+export type Registry = {
+  __typename?: 'Registry';
+  id: Scalars['ID'];
+};
+
+export type Registry_Filter = {
+  id?: Maybe<Scalars['ID']>;
+  id_not?: Maybe<Scalars['ID']>;
+  id_gt?: Maybe<Scalars['ID']>;
+  id_lt?: Maybe<Scalars['ID']>;
+  id_gte?: Maybe<Scalars['ID']>;
+  id_lte?: Maybe<Scalars['ID']>;
+  id_in?: Maybe<Array<Scalars['ID']>>;
+  id_not_in?: Maybe<Array<Scalars['ID']>>;
+};
+
+export enum Registry_OrderBy {
+  Id = 'id',
+}
 
 export type Sett = Erc20 &
   Vault &
@@ -650,6 +686,8 @@ export enum Snapshot_OrderBy {
 
 export type Subscription = {
   __typename?: 'Subscription';
+  registry?: Maybe<Registry>;
+  registries: Array<Registry>;
   token?: Maybe<Token>;
   tokens: Array<Token>;
   sett?: Maybe<Sett>;
@@ -672,6 +710,20 @@ export type Subscription = {
   snapshots: Array<Snapshot>;
   /** Access to subgraph metadata */
   _meta?: Maybe<_Meta_>;
+};
+
+export type SubscriptionRegistryArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<Block_Height>;
+};
+
+export type SubscriptionRegistriesArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Registry_OrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<Registry_Filter>;
+  block?: Maybe<Block_Height>;
 };
 
 export type SubscriptionTokenArgs = {
@@ -1313,6 +1365,7 @@ export const UserFragmentDoc = gql`
       id
       sett {
         id
+        name
       }
       netDeposit
       netShareDeposit
@@ -1430,7 +1483,7 @@ export type UserFragment = { __typename?: 'User' } & Pick<User, 'id'> & {
         | 'grossShareDeposit'
         | 'grossWithdraw'
         | 'grossShareWithdraw'
-      > & { sett: { __typename?: 'Sett' } & Pick<Sett, 'id'> }
+      > & { sett: { __typename?: 'Sett' } & Pick<Sett, 'id' | 'name'> }
     >;
   };
 
