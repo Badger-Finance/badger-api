@@ -21,7 +21,7 @@ export class Arbitrum extends Chain {
       rpc[ChainNetwork.Arbitrum],
       new ArbitrumStrategy(Object.keys(arbitrumTokensConfig)),
       BADGER_ARBITRUM_URL,
-      15768000,
+      2425847,
       '0x663EfC293ca8d8DD6355AE6E99b71352BED9E895',
       '0x599D92B453C010b1050d31C364f6ee17E819f193',
     );
@@ -34,9 +34,8 @@ export const arbitrumSetts: SettDefinition[] = [
     name: 'Sushiswap Wrapped Ether/Sushi',
     settToken: TOKENS.BARB_SUSHI_WETH_SUSHI,
     depositToken: TOKENS.ARB_SUSHI_WETH_SUSHI,
-    createdBlock: 17580716,
+    createdBlock: 13163959,
     experimental: true,
-    // testing purposes
     hasBouncer: false,
     protocol: Protocol.Sushiswap,
     state: SettState.Experimental,
@@ -46,9 +45,8 @@ export const arbitrumSetts: SettDefinition[] = [
     name: 'Sushiswap Wrapped BTC/Wrapped ETH',
     settToken: TOKENS.BARB_SUSHI_WETH_WBTC,
     depositToken: TOKENS.ARB_SUSHI_WETH_WBTC,
-    createdBlock: 17580716,
+    createdBlock: 13163959,
     experimental: true,
-    // testing purposes
     hasBouncer: false,
     protocol: Protocol.Sushiswap,
     state: SettState.Experimental,
