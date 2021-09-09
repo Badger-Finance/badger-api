@@ -57,6 +57,9 @@ custom:
     PROTOCOL_METRICS_SNAPSHOTS_DATA:
       staging: 'protocol-metrics-snapshots-staging'
       prod: 'protocol-metrics-snapshots'
+    SETT_BOOST_DATA:
+      staging: 'sett-boosts-staging'
+      prod: 'sett-boosts'
 
   merkleProofs:
     staging: 'badger-staging-merkle-proofs'
@@ -212,6 +215,22 @@ resources:
           - AttributeName: 'address'
             AttributeType: 'S'
 
+    boostTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.table.SETT_BOOST_DATA.${self:custom.stage}}
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: 'address'
+            KeyType: 'HASH'
+          - AttributeName: 'boost'
+            KeyType: 'RANGE'
+        AttributeDefinitions:
+          - AttributeName: 'address'
+            AttributeType: 'S'
+          - AttributeName: 'boost'
+            AttributeType: 'N'
+
     leaderboardTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -320,6 +339,15 @@ functions:
           name: ${self:service}-${self:custom.stage}-index-leaderboard
           description: 'index leaderboard data from latest badger boosts'
           rate: rate(5 minutes)
+
+  index-sett-boosts:
+    handler: src/indexer/boost-indexer.indexSettBoosts
+    timeout: 120
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-leaderboard
+          description: 'index leaderboard data from latest badger boosts'
+          rate: rate(10 minutes)
 
   index-token-balances:
     handler: src/indexer/token-balances-indexer.refreshTokenBalances

@@ -10,6 +10,12 @@ Array [
     "deprecated": true,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Pancakeswap BNB/BTCB",
     "ppfs": 1,
     "sources": Array [],
@@ -45,6 +51,12 @@ Array [
     "deprecated": true,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Pancakeswap bBADGER/BTCB",
     "ppfs": 1,
     "sources": Array [],
@@ -80,6 +92,12 @@ Array [
     "deprecated": true,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Pancakeswap bDIGG/BTCB",
     "ppfs": 1,
     "sources": Array [],
@@ -120,6 +138,12 @@ Array [
     "deprecated": false,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Convex renBTC/wBTC/sBTC",
     "ppfs": 1,
     "sources": Array [
@@ -204,6 +228,12 @@ Array [
     "deprecated": false,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Convex renBTC/wBTC",
     "ppfs": 1,
     "sources": Array [
@@ -288,6 +318,12 @@ Array [
     "deprecated": false,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Convex tBTC/sBTC",
     "ppfs": 1,
     "sources": Array [
@@ -372,6 +408,12 @@ Array [
     "deprecated": false,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Harvest renBTC/wBTC",
     "ppfs": 1,
     "sources": Array [
@@ -456,6 +498,12 @@ Array [
     "deprecated": false,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Uniswap Wrapped BTC/Badger",
     "ppfs": 1,
     "sources": Array [
@@ -548,6 +596,12 @@ Array [
     "deprecated": true,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Uniswap Wrapped BTC/Digg",
     "ppfs": 1,
     "sources": Array [],
@@ -583,6 +637,12 @@ Array [
     "deprecated": false,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Sushiswap Wrapped BTC/Wrapped ETH",
     "ppfs": 1,
     "sources": Array [
@@ -675,6 +735,12 @@ Array [
     "deprecated": false,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Sushiswap Wrapped BTC/Badger",
     "ppfs": 1,
     "sources": Array [
@@ -767,6 +833,12 @@ Array [
     "deprecated": false,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Sushiswap Wrapped BTC/Digg",
     "ppfs": 1,
     "sources": Array [
@@ -859,6 +931,12 @@ Array [
     "deprecated": false,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Digg",
     "ppfs": 1,
     "sources": Array [
@@ -943,6 +1021,12 @@ Array [
     "deprecated": false,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Badger",
     "ppfs": 1,
     "sources": Array [
@@ -1027,6 +1111,12 @@ Array [
     "deprecated": false,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Yearn Wrapped BTC",
     "ppfs": 1,
     "sources": Array [
@@ -1111,6 +1201,12 @@ Array [
     "deprecated": false,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Sushiswap Wrapped BTC/ibBTC",
     "ppfs": 1,
     "sources": Array [
@@ -1203,6 +1299,12 @@ Array [
     "deprecated": false,
     "experimental": true,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Digg Stabilization",
     "ppfs": 1,
     "sources": Array [
@@ -1287,6 +1389,12 @@ Array [
     "deprecated": false,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Convex hBTC",
     "ppfs": 1,
     "sources": Array [
@@ -1371,6 +1479,12 @@ Array [
     "deprecated": false,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Convex pBTC",
     "ppfs": 1,
     "sources": Array [
@@ -1455,6 +1569,12 @@ Array [
     "deprecated": false,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Convex oBTC",
     "ppfs": 1,
     "sources": Array [
@@ -1539,6 +1659,12 @@ Array [
     "deprecated": false,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Convex bBTC",
     "ppfs": 1,
     "sources": Array [
@@ -1623,6 +1749,12 @@ Array [
     "deprecated": true,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Convex Tricrypto",
     "ppfs": 1,
     "sources": Array [],
@@ -1650,6 +1782,12 @@ Array [
     "deprecated": false,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Convex cvxCRV Helper",
     "ppfs": 1,
     "sources": Array [
@@ -1734,6 +1872,12 @@ Array [
     "deprecated": false,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Convex CVX Helper",
     "ppfs": 1,
     "sources": Array [
@@ -1818,6 +1962,12 @@ Array [
     "deprecated": false,
     "experimental": true,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "renBTC",
     "ppfs": 1,
     "sources": Array [
@@ -1902,6 +2052,12 @@ Array [
     "deprecated": false,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Convex Tricrypto2",
     "ppfs": 1,
     "sources": Array [
@@ -1986,6 +2142,12 @@ Array [
     "deprecated": false,
     "experimental": true,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "mStable imBTC",
     "ppfs": 1,
     "sources": Array [
@@ -2070,6 +2232,12 @@ Array [
     "deprecated": false,
     "experimental": true,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "mStable mhBTC",
     "ppfs": 1,
     "sources": Array [
@@ -2154,6 +2322,12 @@ Array [
     "deprecated": false,
     "experimental": true,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Convex Vote Locked CVX",
     "ppfs": 1,
     "sources": Array [
@@ -2249,6 +2423,12 @@ Array [
     "deprecated": false,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Convex renBTC/wBTC/sBTC",
     "ppfs": 1,
     "sources": Array [
@@ -2333,6 +2513,12 @@ Array [
     "deprecated": false,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Convex renBTC/wBTC",
     "ppfs": 1,
     "sources": Array [
@@ -2417,6 +2603,12 @@ Array [
     "deprecated": false,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Convex tBTC/sBTC",
     "ppfs": 1,
     "sources": Array [
@@ -2501,6 +2693,12 @@ Array [
     "deprecated": false,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Harvest renBTC/wBTC",
     "ppfs": 1,
     "sources": Array [
@@ -2585,6 +2783,12 @@ Array [
     "deprecated": false,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Uniswap Wrapped BTC/Badger",
     "ppfs": 1,
     "sources": Array [
@@ -2677,6 +2881,12 @@ Array [
     "deprecated": true,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Uniswap Wrapped BTC/Digg",
     "ppfs": 1,
     "sources": Array [],
@@ -2712,6 +2922,12 @@ Array [
     "deprecated": false,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Sushiswap Wrapped BTC/Wrapped ETH",
     "ppfs": 1,
     "sources": Array [
@@ -2804,6 +3020,12 @@ Array [
     "deprecated": false,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Sushiswap Wrapped BTC/Badger",
     "ppfs": 1,
     "sources": Array [
@@ -2896,6 +3118,12 @@ Array [
     "deprecated": false,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Sushiswap Wrapped BTC/Digg",
     "ppfs": 1,
     "sources": Array [
@@ -2988,6 +3216,12 @@ Array [
     "deprecated": false,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Digg",
     "ppfs": 1,
     "sources": Array [
@@ -3072,6 +3306,12 @@ Array [
     "deprecated": false,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Badger",
     "ppfs": 1,
     "sources": Array [
@@ -3156,6 +3396,12 @@ Array [
     "deprecated": false,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Yearn Wrapped BTC",
     "ppfs": 1,
     "sources": Array [
@@ -3240,6 +3486,12 @@ Array [
     "deprecated": false,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Sushiswap Wrapped BTC/ibBTC",
     "ppfs": 1,
     "sources": Array [
@@ -3332,6 +3584,12 @@ Array [
     "deprecated": false,
     "experimental": true,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Digg Stabilization",
     "ppfs": 1,
     "sources": Array [
@@ -3416,6 +3674,12 @@ Array [
     "deprecated": false,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Convex hBTC",
     "ppfs": 1,
     "sources": Array [
@@ -3500,6 +3764,12 @@ Array [
     "deprecated": false,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Convex pBTC",
     "ppfs": 1,
     "sources": Array [
@@ -3584,6 +3854,12 @@ Array [
     "deprecated": false,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Convex oBTC",
     "ppfs": 1,
     "sources": Array [
@@ -3668,6 +3944,12 @@ Array [
     "deprecated": false,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Convex bBTC",
     "ppfs": 1,
     "sources": Array [
@@ -3752,6 +4034,12 @@ Array [
     "deprecated": true,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Convex Tricrypto",
     "ppfs": 1,
     "sources": Array [],
@@ -3779,6 +4067,12 @@ Array [
     "deprecated": false,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Convex cvxCRV Helper",
     "ppfs": 1,
     "sources": Array [
@@ -3863,6 +4157,12 @@ Array [
     "deprecated": false,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Convex CVX Helper",
     "ppfs": 1,
     "sources": Array [
@@ -3947,6 +4247,12 @@ Array [
     "deprecated": false,
     "experimental": true,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "renBTC",
     "ppfs": 1,
     "sources": Array [
@@ -4031,6 +4337,12 @@ Array [
     "deprecated": false,
     "experimental": false,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Convex Tricrypto2",
     "ppfs": 1,
     "sources": Array [
@@ -4115,6 +4427,12 @@ Array [
     "deprecated": false,
     "experimental": true,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "mStable imBTC",
     "ppfs": 1,
     "sources": Array [
@@ -4199,6 +4517,12 @@ Array [
     "deprecated": false,
     "experimental": true,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "mStable mhBTC",
     "ppfs": 1,
     "sources": Array [
@@ -4283,6 +4607,12 @@ Array [
     "deprecated": false,
     "experimental": true,
     "hasBouncer": false,
+    "multipliers": Array [
+      Object {
+        "boost": 100,
+        "multiplier": 100,
+      },
+    ],
     "name": "Convex Vote Locked CVX",
     "ppfs": 1,
     "sources": Array [

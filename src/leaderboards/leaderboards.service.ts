@@ -3,11 +3,14 @@ import { ethers } from 'ethers';
 import { getObject } from '../aws/s3.utils';
 import { REWARD_DATA } from '../config/constants';
 import { BoostData } from '../rewards/interfaces/boost-data.interface';
+import { CachedSettBoost } from '../setts/interfaces/cached-sett-boost.interface';
 import { LeaderBoardType } from './enums/leaderboard-type.enum';
 import { CachedBoost } from './interface/cached-boost.interface';
 import { LeaderBoardData } from './interface/leaderboard-data.interrface';
 import { UserBoost } from './interface/user-boost.interface';
 import { getFullLeaderBoard, getLeaderBoardEntryRange, getLeaderBoardSize } from './leaderboards.utils';
+
+type MultiplierMetrics = Record<string, Record<string, number>>;
 
 @Service()
 export class LeaderBoardsService {
@@ -41,6 +44,33 @@ export class LeaderBoardsService {
         maxPage: 0,
       };
     }
+  }
+
+  static async generateSettBoostData(): Promise<CachedSettBoost[]> {
+    const boostFile = await getObject(REWARD_DATA, 'badger-boosts.json');
+    const boostData: BoostData = JSON.parse(boostFile.toString('utf-8'));
+    const multiplierMetrics: MultiplierMetrics = {};
+    Object.values(boostData.userData).map((entry) => {
+      const { boost, multipliers } = entry;
+      Object.entries(multipliers).forEach((e) => {
+        if (!multiplierMetrics[e[0]]) {
+          multiplierMetrics[e[0]] = {};
+        }
+        multiplierMetrics[e[0]][boost] = e[1];
+      });
+    });
+    return Object.entries(multiplierMetrics).flatMap((e) => {
+      const [address, metrics] = e;
+      return Object.entries(metrics).map((metric) => {
+        const [boost, multiplier] = metric;
+
+        return Object.assign(new CachedSettBoost(), {
+          address,
+          boost,
+          multiplier,
+        });
+      });
+    });
   }
 
   static async generateBoostsLeaderBoard(): Promise<CachedBoost[]> {
