@@ -3,6 +3,7 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { IS_OFFLINE } from '../config/constants';
+import { TOKENS } from '../config/tokens.config';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { getIndexedBlock, settToSnapshot } from './indexer.utils';
 
@@ -43,6 +44,9 @@ const indexSett = async (chain: Chain, sett: SettDefinition) => {
 
       await mapper.put(snapshot);
     } catch (err) {
+      if (sett.depositToken === TOKENS.BCVX) {
+        console.log(err);
+      }
       // request block is not indexed
       break;
     }
