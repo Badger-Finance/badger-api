@@ -36,7 +36,6 @@ export const settToCachedSnapshot = async (
   const { sett } = await getSett(chain.graphUrl, settToken.address);
 
   if (!sett) {
-    console.log({ graph: chain.graphUrl });
     // sett has not been indexed yet, or encountered a graph error
     throw new NotFound(`${settToken.name} sett not found`);
   }
@@ -243,10 +242,6 @@ export async function getSettValueSources(chain: Chain, settDefinition: SettDefi
       getProtocolValueSources(chain, settDefinition),
       getSettTokenPerformances(chain, settDefinition),
     ]);
-
-    if (chain.network === ChainNetwork.Arbitrum) {
-      console.log({ underlying, emission, protocol, derivative });
-    }
 
     // check for any emission removal
     const oldSources: Record<string, CachedValueSource> = {};
