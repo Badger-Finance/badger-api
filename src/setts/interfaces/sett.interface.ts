@@ -1,6 +1,7 @@
 import { SettState } from '../../config/enums/sett-state.enum';
 import { ValueSource } from '../../protocols/interfaces/value-source.interface';
 import { TokenBalance } from '../../tokens/interfaces/token-balance.interface';
+import { SettBoost } from './sett-boost.interface';
 import { SettSummary } from './sett-summary.interface';
 
 export interface Sett extends SettSummary {
@@ -19,4 +20,5 @@ export interface Sett extends SettSummary {
   tokens: TokenBalance[];
   underlyingToken: string;
   vaultToken: string;
+  multipliers: SettBoost[];
 }

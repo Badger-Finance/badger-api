@@ -8,6 +8,7 @@ import { ONE_YEAR_MS, SAMPLE_DAYS } from '../config/constants';
 import { SettState } from '../config/enums/sett-state.enum';
 import { getSdk, SettQuery } from '../graphql/generated/badger';
 import { getToken } from '../tokens/tokens.utils';
+import { CachedSettBoost } from './interfaces/cached-sett-boost.interface';
 import { CachedSettSnapshot } from './interfaces/cached-sett-snapshot.interface';
 import { Sett } from './interfaces/sett.interface';
 import { SettDefinition } from './interfaces/sett-definition.interface';
@@ -35,6 +36,7 @@ export const defaultSett = (settDefinition: SettDefinition): Sett => {
     value: 0,
     vaultAsset: vaultToken.symbol,
     vaultToken: settDefinition.settToken,
+    multipliers: [],
   };
 };
 
@@ -138,4 +140,19 @@ export const getSettDefinition = (chain: Chain, contract: string): SettDefinitio
     throw new NotFound(`${contract} is not a valid sett`);
   }
   return settDefinition;
+};
+
+export const getSettBoosts = async (settDefinition: SettDefinition): Promise<CachedSettBoost[]> => {
+  try {
+    const boosts = [];
+    const mapper = getDataMapper();
+    const assetToken = getToken(settDefinition.settToken);
+    for await (const boost of mapper.query(CachedSettBoost, { address: assetToken.address })) {
+      boosts.push(boost);
+    }
+    return boosts;
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
 };

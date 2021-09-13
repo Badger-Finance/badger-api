@@ -22,7 +22,7 @@ export const arbitrumTokensConfig: TokenConfig = {
   },
   [TOKENS.ARB_WBTC]: {
     address: TOKENS.ARB_WBTC,
-    decimals: 18,
+    decimals: 8,
     lookupName: 'bitcoin',
     name: 'Wrapped Bitcoin',
     symbol: 'WBTC',
