@@ -4,7 +4,7 @@ import { BigNumber, ethers } from 'ethers';
 import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
 import { ChainNetwork } from '../chains/enums/chain-network.enum';
-import { BOUNCER_PROOFS, ONE_YEAR_SECONDS, REWARD_DATA } from '../config/constants';
+import { ONE_YEAR_SECONDS, REWARD_DATA } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
 import { Digg__factory, RewardsLogger__factory } from '../contracts';
 import { getPrice } from '../prices/prices.utils';
@@ -16,7 +16,6 @@ import { formatBalance, getToken } from '../tokens/tokens.utils';
 import { Boost } from './interfaces/boost.interface';
 import { BoostData } from './interfaces/boost-data.interface';
 import { BoostMultipliers } from './interfaces/boost-multipliers.interface';
-import { Eligibility } from './interfaces/eligibility.interface';
 import { AirdropMerkleClaim, AirdropMerkleDistribution } from './interfaces/merkle-distributor.interface';
 import { RewardMerkleClaim } from './interfaces/reward-merkle-claim.interface';
 import { getTreeDistribution } from './rewards.utils';
@@ -43,8 +42,9 @@ export class RewardsService {
    * @param airdrop Airdrop JSON filename.
    * @param address User Ethereum address.
    */
-  async getBouncerProof(address: string): Promise<AirdropMerkleClaim> {
-    const airdropFile = await getObject(REWARD_DATA, BOUNCER_PROOFS);
+  async getBouncerProof(chain: Chain, address: string): Promise<AirdropMerkleClaim> {
+    const fileName = `badger-bouncer-${parseInt(chain.chainId)}.json`;
+    const airdropFile = await getObject(REWARD_DATA, fileName);
     const fileContents: AirdropMerkleDistribution = JSON.parse(airdropFile.toString('utf-8'));
     const claim = fileContents.claims[address.toLowerCase()] || fileContents.claims[ethers.utils.getAddress(address)];
     if (!claim) {
@@ -67,22 +67,6 @@ export class RewardsService {
       throw new NotFound(`${address} does not have claimable rewards.`);
     }
     return claim;
-  }
-
-  /**
-   * Get badger shop eligibility for a user.
-   * Returns 200 on eligible, 403 on not eligible.
-   * @param address User Ethereum address.
-   */
-  async checkBouncerList(address: string): Promise<Eligibility> {
-    let eligible = false;
-    try {
-      await this.getBouncerProof(address);
-      eligible = true;
-    } catch (err) {} // not found, not eligible
-    return {
-      isEligible: eligible,
-    };
   }
 
   static async getUserBoosts(addresses: string[]): Promise<Record<string, Boost>> {

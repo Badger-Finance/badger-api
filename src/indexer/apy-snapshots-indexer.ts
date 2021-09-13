@@ -1,8 +1,8 @@
 import { isNil } from '@tsed/core';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
-import { SourceType } from '../protocols/enums/source-type.enum';
 import { ValueSourceMap } from '../protocols/interfaces/value-source-map.interface';
+import { SourceType } from '../rewards/enums/source-type.enum';
 import { getSettValueSources } from './indexer.utils';
 
 export async function refreshApySnapshots() {

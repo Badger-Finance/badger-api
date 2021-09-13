@@ -7,7 +7,6 @@ import { Protocol } from '../config/enums/protocol.enum';
 import { Sett__factory } from '../contracts';
 import { getArbitrumBlock } from '../etherscan/etherscan.utils';
 import { getPrice } from '../prices/prices.utils';
-import { SourceType } from '../protocols/enums/source-type.enum';
 import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
 import { ValueSource } from '../protocols/interfaces/value-source.interface';
 import { getVaultCachedValueSources } from '../protocols/protocols.utils';
@@ -17,6 +16,7 @@ import { PancakeswapStrategy } from '../protocols/strategies/pancakeswap.strateg
 import { QuickswapStrategy } from '../protocols/strategies/quickswap.strategy';
 import { SushiswapStrategy } from '../protocols/strategies/sushiswap.strategy';
 import { UniswapStrategy } from '../protocols/strategies/uniswap.strategy';
+import { SourceType } from '../rewards/enums/source-type.enum';
 import { RewardsService } from '../rewards/rewards.service';
 import { CachedSettSnapshot } from '../setts/interfaces/cached-sett-snapshot.interface';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
@@ -36,6 +36,7 @@ export const settToCachedSnapshot = async (
   const { sett } = await getSett(chain.graphUrl, settToken.address);
 
   if (!sett) {
+    console.log({ graph: chain.graphUrl });
     // sett has not been indexed yet, or encountered a graph error
     throw new NotFound(`${settToken.name} sett not found`);
   }
@@ -242,6 +243,10 @@ export async function getSettValueSources(chain: Chain, settDefinition: SettDefi
       getProtocolValueSources(chain, settDefinition),
       getSettTokenPerformances(chain, settDefinition),
     ]);
+
+    if (chain.network === ChainNetwork.Arbitrum) {
+      console.log({ underlying, emission, protocol, derivative });
+    }
 
     // check for any emission removal
     const oldSources: Record<string, CachedValueSource> = {};

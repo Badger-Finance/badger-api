@@ -118,7 +118,6 @@ provider:
     PROTOCOL_METRICS_SNAPSHOTS_DATA: ${self:custom.table.PROTOCOL_METRICS_SNAPSHOTS_DATA.${self:custom.stage}}
     # General Defintions
     REWARD_DATA: ${self:custom.merkleProofs.${self:custom.stage}}
-    BOUNCER_PROOFS: badger-bouncer.json
     STAGE: ${opt:stage, self:provider.stage}
 
 resources:

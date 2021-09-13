@@ -56,7 +56,7 @@ export class LeaderBoardsService {
         if (!multiplierMetrics[e[0]]) {
           multiplierMetrics[e[0]] = {};
         }
-        multiplierMetrics[e[0]][boost] = e[1];
+        multiplierMetrics[e[0]][boost] = Math.min(e[1], multiplierMetrics[e[0]][boost]);
       });
     });
     return Object.entries(multiplierMetrics).flatMap((e) => {

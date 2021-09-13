@@ -23,13 +23,13 @@ import {
   valueSourceToCachedValueSource,
 } from '../../indexer/indexer.utils';
 import { getPrice } from '../../prices/prices.utils';
+import { SourceType } from '../../rewards/enums/source-type.enum';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { getCachedSett, VAULT_SOURCE } from '../../setts/setts.utils';
 import { CachedLiquidityPoolTokenBalance } from '../../tokens/interfaces/cached-liquidity-pool-token-balance.interface';
 import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
 import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
 import { formatBalance, getToken, toCachedBalance } from '../../tokens/tokens.utils';
-import { SourceType } from '../enums/source-type.enum';
 import { CachedValueSource } from '../interfaces/cached-value-source.interface';
 import { Performance, uniformPerformance } from '../interfaces/performance.interface';
 import { PoolMap } from '../interfaces/pool-map.interface';
