@@ -37,6 +37,7 @@ describe('metrics.utils', () => {
         underlyingToken: '0x0000000000000000000000000000000000000000',
         value: 1000,
         vaultToken: '0x0000000000000000000000000000000000000000',
+        multipliers: [{ boost: 100, multiplier: 1.2 }],
       }),
     );
   });

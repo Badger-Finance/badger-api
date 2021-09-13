@@ -7,6 +7,7 @@ import { TokenBalance } from '../../tokens/interfaces/token-balance.interface';
 import { getToken, mockBalance } from '../../tokens/tokens.utils';
 import { VAULT_SOURCE } from '../setts.utils';
 import { Sett } from './sett.interface';
+import { SettBoost } from './sett-boost.interface';
 
 export class SettModel implements Sett {
   @Title('name')
@@ -121,6 +122,15 @@ export class SettModel implements Sett {
   @Property()
   public deprecated: boolean;
 
+  @Title('multipliers')
+  @Description('Mapping of boost score to apr multiplier')
+  @Example([
+    { boost: 100, multipler: 1.3 },
+    { boost: 200, multipler: 1.5 },
+  ])
+  @Property()
+  public multipliers: SettBoost[];
+
   constructor(
     name: string,
     state: SettState,
@@ -138,6 +148,7 @@ export class SettModel implements Sett {
     experimental: boolean,
     hasBouncer: boolean,
     deprecated: boolean,
+    multipliers: SettBoost[],
     minApr?: number,
     maxApr?: number,
   ) {
@@ -159,5 +170,6 @@ export class SettModel implements Sett {
     this.hasBouncer = hasBouncer;
     this.experimental = experimental;
     this.deprecated = deprecated;
+    this.multipliers = multipliers;
   }
 }

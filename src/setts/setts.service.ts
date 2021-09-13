@@ -13,6 +13,7 @@ import { SettDefinition } from './interfaces/sett-definition.interface';
 import {
   getCachedSett,
   getPerformance,
+  getSettBoosts,
   getSettDefinition,
   getSettSnapshots,
   getSnapshot,
@@ -38,14 +39,16 @@ export class SettsService {
 
   async getSett(chain: Chain, contract: string, currency?: string): Promise<Sett> {
     const settDefinition = getSettDefinition(chain, contract);
-    const [sett, sources]: [Sett, ValueSource[]] = await Promise.all([
+    const [sett, sources, boosts] = await Promise.all([
       getCachedSett(settDefinition),
       getVaultValueSources(settDefinition),
+      getSettBoosts(settDefinition),
     ]);
     sett.tokens = await getSettTokens(settDefinition, sett.balance, currency);
     sett.value = sett.tokens.reduce((total, balance) => (total += balance.value), 0);
     sett.sources = !settDefinition.deprecated ? sources.filter((source) => source.apr >= 0.01) : [];
     sett.apr = sett.sources.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
+    sett.multipliers = boosts.map((b) => ({ boost: b.boost, multiplier: b.multiplier }));
 
     const hasBoostedApr = sett.sources.some((source) => source.boostable);
     if (hasBoostedApr) {
