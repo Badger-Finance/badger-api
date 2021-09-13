@@ -244,6 +244,6 @@ export const ethSetts: SettDefinition[] = [
     stage: Stage.Staging,
     state: SettState.Experimental,
     protocol: Protocol.Convex,
-    strategy: '0xE096ccEc4a1D36F191189Fe61E803d8B2044DFC3',
+    strategy: '0x3406402caE1f745714a9aFFc45939854e7Fbe12B',
   },
 ];

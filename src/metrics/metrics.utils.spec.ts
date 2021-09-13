@@ -1,5 +1,6 @@
 import * as AccountUtils from '../accounts/accounts.utils';
 import { SettState } from '../config/enums/sett-state.enum';
+import { BouncerType } from '../rewards/enums/bouncer-type.enum';
 import * as SettUtils from '../setts/setts.utils';
 import { getProtocolMetrics, getProtocolSettMetrics, getProtocolTotalUsers } from './metric.utils';
 
@@ -28,7 +29,7 @@ describe('metrics.utils', () => {
         boostable: false,
         deprecated: false,
         experimental: false,
-        hasBouncer: false,
+        bouncer: BouncerType.Badger,
         name: 'mockSett',
         ppfs: 1,
         sources: [],

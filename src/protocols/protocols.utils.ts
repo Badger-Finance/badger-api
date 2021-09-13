@@ -1,7 +1,7 @@
 import { getDataMapper } from '../aws/dynamodb.utils';
+import { SourceType } from '../rewards/enums/source-type.enum';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { Token } from '../tokens/interfaces/token.interface';
-import { SourceType } from './enums/source-type.enum';
 import { CachedValueSource } from './interfaces/cached-value-source.interface';
 import { ValueSource } from './interfaces/value-source.interface';
 

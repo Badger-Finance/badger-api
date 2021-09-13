@@ -7,6 +7,7 @@ import { Chain } from '../chains/config/chain.config';
 import { ONE_YEAR_MS, SAMPLE_DAYS } from '../config/constants';
 import { SettState } from '../config/enums/sett-state.enum';
 import { getSdk, SettQuery } from '../graphql/generated/badger';
+import { BouncerType } from '../rewards/enums/bouncer-type.enum';
 import { getToken } from '../tokens/tokens.utils';
 import { CachedSettBoost } from './interfaces/cached-sett-boost.interface';
 import { CachedSettSnapshot } from './interfaces/cached-sett-snapshot.interface';
@@ -26,7 +27,7 @@ export const defaultSett = (settDefinition: SettDefinition): Sett => {
     boostable: false,
     deprecated: !!settDefinition.deprecated,
     experimental: settDefinition.state === SettState.Experimental,
-    hasBouncer: !!settDefinition.hasBouncer,
+    bouncer: settDefinition.bouncer ?? BouncerType.None,
     name: settDefinition.name,
     ppfs: 1,
     sources: [],

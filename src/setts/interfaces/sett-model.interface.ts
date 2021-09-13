@@ -3,6 +3,7 @@ import { SettState } from '../../config/enums/sett-state.enum';
 import { TOKENS } from '../../config/tokens.config';
 import { uniformPerformance } from '../../protocols/interfaces/performance.interface';
 import { createValueSource, ValueSource } from '../../protocols/interfaces/value-source.interface';
+import { BouncerType } from '../../rewards/enums/bouncer-type.enum';
 import { TokenBalance } from '../../tokens/interfaces/token-balance.interface';
 import { getToken, mockBalance } from '../../tokens/tokens.utils';
 import { VAULT_SOURCE } from '../setts.utils';
@@ -104,11 +105,11 @@ export class SettModel implements Sett {
   @Property()
   public sources: ValueSource[];
 
-  @Title('hasBouncer')
-  @Description('Flag indicating if sett is protected by a guest list')
-  @Example(false)
+  @Title('bouncer')
+  @Description('Enumeration displaying the badger bouncer type associated with the sett')
+  @Example(BouncerType.Badger)
   @Property()
-  public hasBouncer: boolean;
+  public bouncer: BouncerType;
 
   @Title('experimental')
   @Description('Flag indicating if sett is an experimental strategy')
@@ -146,7 +147,7 @@ export class SettModel implements Sett {
     boostable: boolean,
     sources: ValueSource[],
     experimental: boolean,
-    hasBouncer: boolean,
+    bouncer: BouncerType,
     deprecated: boolean,
     multipliers: SettBoost[],
     minApr?: number,
@@ -167,7 +168,7 @@ export class SettModel implements Sett {
     this.minApr = minApr;
     this.maxApr = maxApr;
     this.sources = sources;
-    this.hasBouncer = hasBouncer;
+    this.bouncer = bouncer;
     this.experimental = experimental;
     this.deprecated = deprecated;
     this.multipliers = multipliers;
