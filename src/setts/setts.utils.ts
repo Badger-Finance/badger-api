@@ -147,8 +147,8 @@ export const getSettBoosts = async (settDefinition: SettDefinition): Promise<Cac
     const boosts = [];
     const mapper = getDataMapper();
     const assetToken = getToken(settDefinition.settToken);
-    for await (const snapshot of mapper.query(CachedSettBoost, { address: assetToken.address })) {
-      boosts.push(snapshot);
+    for await (const boost of mapper.query(CachedSettBoost, { address: assetToken.address })) {
+      boosts.push(boost);
     }
     return boosts;
   } catch (err) {

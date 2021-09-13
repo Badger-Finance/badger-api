@@ -109,6 +109,7 @@ provider:
     # Table Defintions
     APY_SNAPSHOTS_DATA: ${self:custom.table.APY_SNAPSHOTS_DATA.${self:custom.stage}}
     SETT_DATA: ${self:custom.table.SETT_DATA.${self:custom.stage}}
+    SETT_BOOST_DATA: ${self:custom.table.SETT_BOOST_DATA.${self:custom.stage}}
     LEADERBOARD_DATA: ${self:custom.stage}-leaderboard
     LIQUIDITY_POOL_TOKEN_BALANCES_DATA: ${self:custom.table.LIQUIDITY_POOL_TOKEN_BALANCES_DATA.${self:custom.stage}}
     PRICE_DATA: ${self:custom.table.PRICE_DATA.${self:custom.stage}}
@@ -345,8 +346,8 @@ functions:
     timeout: 120
     events:
       - schedule:
-          name: ${self:service}-${self:custom.stage}-index-leaderboard
-          description: 'index leaderboard data from latest badger boosts'
+          name: ${self:service}-${self:custom.stage}-index-sett-boosts
+          description: 'index sett specific badger boost mutlipliers'
           rate: rate(10 minutes)
 
   index-token-balances:
