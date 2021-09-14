@@ -53,10 +53,14 @@ export class LeaderBoardsService {
     Object.values(boostData.userData).map((entry) => {
       const { boost, multipliers } = entry;
       Object.entries(multipliers).forEach((e) => {
-        if (!multiplierMetrics[e[0]]) {
-          multiplierMetrics[e[0]] = {};
+        const [sett, multiplier] = e;
+        if (!multiplierMetrics[sett]) {
+          multiplierMetrics[sett] = {};
         }
-        multiplierMetrics[e[0]][boost] = Math.min(e[1], multiplierMetrics[e[0]][boost]);
+        if (!multiplierMetrics[sett][boost]) {
+          multiplierMetrics[sett][boost] = multiplier;
+        }
+        multiplierMetrics[sett][boost] = Math.min(multiplier, multiplierMetrics[sett][boost]);
       });
     });
     return Object.entries(multiplierMetrics).flatMap((e) => {
