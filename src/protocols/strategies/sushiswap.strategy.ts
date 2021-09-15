@@ -14,10 +14,10 @@ import { Erc20__factory, SushiChef__factory, SushiMiniChef__factory } from '../.
 import { getSdk as getSushiswapSdk, OrderDirection, PairDayData_OrderBy } from '../../graphql/generated/sushiswap';
 import { valueSourceToCachedValueSource } from '../../indexer/indexer.utils';
 import { getPrice } from '../../prices/prices.utils';
+import { SourceType } from '../../rewards/enums/source-type.enum';
 import { noRewards } from '../../rewards/rewards.utils';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { formatBalance, getToken } from '../../tokens/tokens.utils';
-import { SourceType } from '../enums/source-type.enum';
 import { CachedValueSource } from '../interfaces/cached-value-source.interface';
 import { PairDayData } from '../interfaces/pair-day-data.interface';
 import { uniformPerformance } from '../interfaces/performance.interface';

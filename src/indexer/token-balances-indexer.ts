@@ -11,6 +11,7 @@ import { settToCachedSnapshot, tokenBalancesToCachedLiquidityPoolTokenBalance } 
 
 export async function refreshTokenBalances() {
   const chains = loadChains();
+  const mapper = getDataMapper();
 
   for (const chain of chains) {
     const settDefinitions = chain.setts;
@@ -23,7 +24,6 @@ export async function refreshTokenBalances() {
         throw new UnprocessableEntity(`${settDefinition.name} cannot specify multiple token caching strategies!`);
       }
 
-      const mapper = getDataMapper();
       try {
         if (depositToken.lpToken) {
           const cachedLiquidityPoolTokenBalance = await getLpTokenBalances(chain, settDefinition);

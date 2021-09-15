@@ -7,9 +7,9 @@ Array [
     "asset": "PLP-BNB-BTCB",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": true,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -48,9 +48,9 @@ Array [
     "asset": "PLP-BBADGER-BTCB",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": true,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -89,9 +89,9 @@ Array [
     "asset": "PLP-BDIGG-BTCB",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": true,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -135,9 +135,9 @@ Array [
     "asset": "crvsBTC",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -225,9 +225,9 @@ Array [
     "asset": "crvrenWBTC",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -315,9 +315,9 @@ Array [
     "asset": "crvtBTC",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -405,9 +405,9 @@ Array [
     "asset": "crvrenWBTC",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -495,9 +495,9 @@ Array [
     "asset": "BADGER-WBTC",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -593,9 +593,9 @@ Array [
     "asset": "DIGG-WBTC",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": true,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -634,9 +634,9 @@ Array [
     "asset": "SLP-WBTC-ETH",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -732,9 +732,9 @@ Array [
     "asset": "SLP-BADGER-WBTC",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -830,9 +830,9 @@ Array [
     "asset": "SLP-DIGG-WBTC",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -928,9 +928,9 @@ Array [
     "asset": "DIGG",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -1018,9 +1018,9 @@ Array [
     "asset": "BADGER",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -1108,9 +1108,9 @@ Array [
     "asset": "WBTC",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -1198,9 +1198,9 @@ Array [
     "asset": "SLP-IBBTC-WBTC",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -1296,9 +1296,9 @@ Array [
     "asset": "DIGG",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": true,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -1386,9 +1386,9 @@ Array [
     "asset": "crvhBTC",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -1476,9 +1476,9 @@ Array [
     "asset": "crvpBTC",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -1566,9 +1566,9 @@ Array [
     "asset": "crvoBTC",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -1656,9 +1656,9 @@ Array [
     "asset": "crvbBTC",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -1746,9 +1746,9 @@ Array [
     "asset": "crvTricrypto",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": true,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -1779,9 +1779,9 @@ Array [
     "asset": "cvxCRV",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -1869,9 +1869,9 @@ Array [
     "asset": "CVX",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -1959,9 +1959,9 @@ Array [
     "asset": "renBTC",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": true,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -2049,9 +2049,9 @@ Array [
     "asset": "crvTricrypto2",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -2139,9 +2139,9 @@ Array [
     "asset": "imBTC",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": true,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -2229,9 +2229,9 @@ Array [
     "asset": "mhBTC",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": true,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -2319,9 +2319,9 @@ Array [
     "asset": "bCVX",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": true,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -2420,9 +2420,9 @@ Array [
     "asset": "crvsBTC",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -2510,9 +2510,9 @@ Array [
     "asset": "crvrenWBTC",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -2600,9 +2600,9 @@ Array [
     "asset": "crvtBTC",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -2690,9 +2690,9 @@ Array [
     "asset": "crvrenWBTC",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -2780,9 +2780,9 @@ Array [
     "asset": "BADGER-WBTC",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -2878,9 +2878,9 @@ Array [
     "asset": "DIGG-WBTC",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": true,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -2919,9 +2919,9 @@ Array [
     "asset": "SLP-WBTC-ETH",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -3017,9 +3017,9 @@ Array [
     "asset": "SLP-BADGER-WBTC",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -3115,9 +3115,9 @@ Array [
     "asset": "SLP-DIGG-WBTC",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -3213,9 +3213,9 @@ Array [
     "asset": "DIGG",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -3303,9 +3303,9 @@ Array [
     "asset": "BADGER",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -3393,9 +3393,9 @@ Array [
     "asset": "WBTC",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -3483,9 +3483,9 @@ Array [
     "asset": "SLP-IBBTC-WBTC",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -3581,9 +3581,9 @@ Array [
     "asset": "DIGG",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": true,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -3671,9 +3671,9 @@ Array [
     "asset": "crvhBTC",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -3761,9 +3761,9 @@ Array [
     "asset": "crvpBTC",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -3851,9 +3851,9 @@ Array [
     "asset": "crvoBTC",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -3941,9 +3941,9 @@ Array [
     "asset": "crvbBTC",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -4031,9 +4031,9 @@ Array [
     "asset": "crvTricrypto",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": true,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -4064,9 +4064,9 @@ Array [
     "asset": "cvxCRV",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -4154,9 +4154,9 @@ Array [
     "asset": "CVX",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -4244,9 +4244,9 @@ Array [
     "asset": "renBTC",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": true,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -4334,9 +4334,9 @@ Array [
     "asset": "crvTricrypto2",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -4424,9 +4424,9 @@ Array [
     "asset": "imBTC",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": true,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -4514,9 +4514,9 @@ Array [
     "asset": "mhBTC",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": true,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -4604,9 +4604,9 @@ Array [
     "asset": "bCVX",
     "balance": 0,
     "boostable": false,
+    "bouncer": "none",
     "deprecated": false,
     "experimental": true,
-    "hasBouncer": false,
     "multipliers": Array [
       Object {
         "boost": 100,
