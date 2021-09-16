@@ -602,6 +602,17 @@ export const ethTokensConfig: TokenConfig = {
       network: ChainNetwork.Ethereum,
     },
   },
+  [TOKENS.BICVX_OLD]: {
+    address: TOKENS.BICVX_OLD,
+    decimals: 18,
+    name: 'Badger Vote Escrowed CVX',
+    symbol: 'bveCVX',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.BCVX,
+      network: ChainNetwork.Ethereum,
+    },
+  },
   [TOKENS.BCVXCRV]: {
     address: TOKENS.BCVXCRV,
     decimals: 18,
