@@ -643,6 +643,17 @@ Object {
     "symbol": "crvpBTC",
     "type": "CurveLP",
   },
+  "0xE143aA25Eec81B4Fc952b38b6Bca8D2395481377": Object {
+    "address": "0xE143aA25Eec81B4Fc952b38b6Bca8D2395481377",
+    "decimals": 18,
+    "name": "Badger Vote Escrowed CVX",
+    "symbol": "bveCVX",
+    "type": "Vault",
+    "vaultToken": Object {
+      "address": "0x53C8E199eb2Cb7c01543C137078a038937a68E40",
+      "network": "eth",
+    },
+  },
   "0xE86204c4eDDd2f70eE00EAd6805f917671F56c52": Object {
     "address": "0xE86204c4eDDd2f70eE00EAd6805f917671F56c52",
     "decimals": 18,
@@ -1292,6 +1303,17 @@ Object {
     "name": "Curve.fi pBTC",
     "symbol": "crvpBTC",
     "type": "CurveLP",
+  },
+  "0xE143aA25Eec81B4Fc952b38b6Bca8D2395481377": Object {
+    "address": "0xE143aA25Eec81B4Fc952b38b6Bca8D2395481377",
+    "decimals": 18,
+    "name": "Badger Vote Escrowed CVX",
+    "symbol": "bveCVX",
+    "type": "Vault",
+    "vaultToken": Object {
+      "address": "0x53C8E199eb2Cb7c01543C137078a038937a68E40",
+      "network": "eth",
+    },
   },
   "0xE86204c4eDDd2f70eE00EAd6805f917671F56c52": Object {
     "address": "0xE86204c4eDDd2f70eE00EAd6805f917671F56c52",

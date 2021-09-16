@@ -4,7 +4,7 @@ import { ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
-import { ONE_YEAR_MS, SAMPLE_DAYS } from '../config/constants';
+import { ONE_DAY_MS, ONE_YEAR_MS, SAMPLE_DAYS } from '../config/constants';
 import { SettState } from '../config/enums/sett-state.enum';
 import { getSdk, SettQuery } from '../graphql/generated/badger';
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
@@ -77,22 +77,9 @@ export const getCachedSett = async (settDefinition: SettDefinition): Promise<Set
 };
 
 export const getSettSnapshots = async (settDefinition: SettDefinition): Promise<SettSnapshot[]> => {
-  try {
-    const snapshots = [];
-    const mapper = getDataMapper();
-    const assetToken = getToken(settDefinition.settToken);
-    for await (const snapshot of mapper.query(
-      SettSnapshot,
-      { address: assetToken.address },
-      { limit: SAMPLE_DAYS, scanIndexForward: false },
-    )) {
-      snapshots.push(snapshot);
-    }
-    return snapshots;
-  } catch (err) {
-    console.error(err);
-    return [];
-  }
+  const end = Date.now();
+  const start = end - ONE_DAY_MS * SAMPLE_DAYS;
+  return getSettSnapshotsInRange(settDefinition, new Date(start), new Date(end));
 };
 
 export const getSettSnapshotsInRange = async (
@@ -117,13 +104,6 @@ export const getSettSnapshotsInRange = async (
     console.error(err);
     return [];
   }
-};
-
-export const getSnapshot = (snapshots: SettSnapshot[], index: number): SettSnapshot => {
-  if (snapshots.length <= index) {
-    return snapshots[snapshots.length - 1];
-  }
-  return snapshots[index];
 };
 
 export const getPerformance = (current: SettSnapshot, initial: SettSnapshot): number => {

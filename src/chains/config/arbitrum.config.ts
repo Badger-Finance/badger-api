@@ -1,10 +1,8 @@
 import { BADGER_ARBITRUM_URL } from '../../config/constants';
 import { Protocol } from '../../config/enums/protocol.enum';
-import { SettState } from '../../config/enums/sett-state.enum';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
 import { getCurveSettTokenBalance } from '../../protocols/strategies/convex.strategy';
-import { BouncerType } from '../../rewards/enums/bouncer-type.enum';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { arbitrumTokensConfig } from '../../tokens/config/arbitrum-tokens.config';
 import { ChainNetwork } from '../enums/chain-network.enum';
@@ -38,9 +36,7 @@ export const arbitrumSetts: SettDefinition[] = [
     depositToken: TOKENS.ARB_SUSHI_WETH_SUSHI,
     createdBlock: 13163959,
     experimental: true,
-    bouncer: BouncerType.Internal,
     protocol: Protocol.Sushiswap,
-    state: SettState.Experimental,
     strategy: '0x86f772C82914f5bFD168f99e208d0FC2C371e9C2',
   },
   {
@@ -49,9 +45,7 @@ export const arbitrumSetts: SettDefinition[] = [
     depositToken: TOKENS.ARB_SUSHI_WETH_WBTC,
     createdBlock: 13163959,
     experimental: true,
-    bouncer: BouncerType.Badger,
     protocol: Protocol.Sushiswap,
-    state: SettState.Experimental,
     strategy: '0xA6827f0f14D0B83dB925B616d820434697328c22',
   },
   {
@@ -61,9 +55,7 @@ export const arbitrumSetts: SettDefinition[] = [
     getTokenBalance: getCurveSettTokenBalance,
     createdBlock: 13237551,
     experimental: true,
-    bouncer: BouncerType.Badger,
     protocol: Protocol.Curve,
-    state: SettState.Experimental,
   },
   {
     name: 'Curve Tricrypto',
@@ -72,8 +64,6 @@ export const arbitrumSetts: SettDefinition[] = [
     getTokenBalance: getCurveSettTokenBalance,
     createdBlock: 13237551,
     experimental: true,
-    bouncer: BouncerType.Badger,
     protocol: Protocol.Curve,
-    state: SettState.Experimental,
   },
 ];
