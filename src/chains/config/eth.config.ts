@@ -238,7 +238,7 @@ export const ethSetts: SettDefinition[] = [
   },
   {
     name: 'Convex Vote Locked CVX',
-    createdBlock: 13153663,
+    createdBlock: 13239091,
     depositToken: TOKENS.CVX,
     settToken: TOKENS.BICVX,
     stage: Stage.Staging,
