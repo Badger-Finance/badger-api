@@ -4,6 +4,7 @@ import { SettState } from '../../config/enums/sett-state.enum';
 import { Stage } from '../../config/enums/stage.enum';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
+import { getCurveSettTokenBalance } from '../../protocols/strategies/convex.strategy';
 import { BouncerType } from '../../rewards/enums/bouncer-type.enum';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { arbitrumTokensConfig } from '../../tokens/config/arbitrum-tokens.config';
@@ -58,6 +59,7 @@ export const arbitrumSetts: SettDefinition[] = [
     name: 'Curve renBTC/wBTC',
     settToken: TOKENS.BARB_CRV_RENBTC,
     depositToken: TOKENS.ARB_CRV_RENBTC,
+    getTokenBalance: getCurveSettTokenBalance,
     createdBlock: 13237551,
     experimental: true,
     bouncer: BouncerType.Badger,
@@ -69,6 +71,7 @@ export const arbitrumSetts: SettDefinition[] = [
     name: 'Curve Tricrypto',
     settToken: TOKENS.BARB_CRV_TRICRYPTO,
     depositToken: TOKENS.ARB_CRV_TRICRYPTO,
+    getTokenBalance: getCurveSettTokenBalance,
     createdBlock: 13237551,
     experimental: true,
     bouncer: BouncerType.Badger,

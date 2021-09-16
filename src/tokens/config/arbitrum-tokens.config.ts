@@ -4,6 +4,14 @@ import { TokenType } from '../enums/token-type.enum';
 import { TokenConfig } from '../interfaces/token-config.interface';
 
 export const arbitrumTokensConfig: TokenConfig = {
+  [TOKENS.ARB_USDT]: {
+    address: TOKENS.ARB_USDT,
+    decimals: 6,
+    lookupName: 'tether',
+    name: 'Tether',
+    symbol: 'USDT',
+    type: TokenType.Contract,
+  },
   [TOKENS.ARB_BADGER]: {
     address: TOKENS.ARB_BADGER,
     decimals: 18,
@@ -104,7 +112,7 @@ export const arbitrumTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.ARB_CRV_RENBTC,
-      network: ChainNetwork.Matic,
+      network: ChainNetwork.Arbitrum,
     },
   },
   [TOKENS.BARB_CRV_TRICRYPTO]: {
@@ -114,8 +122,8 @@ export const arbitrumTokensConfig: TokenConfig = {
     symbol: 'bcrvTricrypto',
     type: TokenType.Vault,
     vaultToken: {
-      address: TOKENS.ARB_CRV_RENBTC,
-      network: ChainNetwork.Matic,
+      address: TOKENS.ARB_CRV_TRICRYPTO,
+      network: ChainNetwork.Arbitrum,
     },
   },
 };
