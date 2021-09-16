@@ -2401,7 +2401,7 @@ Array [
     ],
     "underlyingToken": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
     "value": 6084,
-    "vaultAsset": "bICVX",
+    "vaultAsset": "bveCVX",
     "vaultToken": "0xfd05D3C7fe2924020620A8bE4961bBaA747e6305",
   },
 ]
@@ -4686,7 +4686,7 @@ Array [
     ],
     "underlyingToken": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
     "value": 6084,
-    "vaultAsset": "bICVX",
+    "vaultAsset": "bveCVX",
     "vaultToken": "0xfd05D3C7fe2924020620A8bE4961bBaA747e6305",
   },
 ]
