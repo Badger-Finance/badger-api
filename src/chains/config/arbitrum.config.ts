@@ -1,7 +1,6 @@
 import { BADGER_ARBITRUM_URL } from '../../config/constants';
 import { Protocol } from '../../config/enums/protocol.enum';
 import { SettState } from '../../config/enums/sett-state.enum';
-import { Stage } from '../../config/enums/stage.enum';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
 import { BouncerType } from '../../rewards/enums/bouncer-type.enum';
@@ -41,7 +40,6 @@ export const arbitrumSetts: SettDefinition[] = [
     bouncer: BouncerType.Internal,
     protocol: Protocol.Sushiswap,
     state: SettState.Experimental,
-    stage: Stage.Staging,
     strategy: '0x86f772C82914f5bFD168f99e208d0FC2C371e9C2',
   },
   {
@@ -53,7 +51,6 @@ export const arbitrumSetts: SettDefinition[] = [
     bouncer: BouncerType.Badger,
     protocol: Protocol.Sushiswap,
     state: SettState.Experimental,
-    stage: Stage.Staging,
     strategy: '0xA6827f0f14D0B83dB925B616d820434697328c22',
   },
 ];
