@@ -5,15 +5,17 @@ import { MetricsService } from './metrics.service';
 
 describe('MetricsController', () => {
   let request: SuperTest.SuperTest<SuperTest.Test>;
+  let metricsService: MetricsService;
 
   beforeEach(PlatformTest.bootstrap(Server));
   beforeEach(async () => {
     request = SuperTest(PlatformTest.callback());
+    metricsService = PlatformTest.get<MetricsService>(MetricsService);
   });
 
   describe('GET /v2/metrics', () => {
     it('returns metric', async () => {
-      jest.spyOn(MetricsService.prototype, 'getProtocolMetrics').mockReturnValue(
+      jest.spyOn(metricsService, 'getProtocolMetrics').mockReturnValue(
         Promise.resolve({
           totalUsers: 30_000,
           totalValueLocked: 100_000_000_000,
