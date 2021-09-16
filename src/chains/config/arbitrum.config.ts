@@ -1,8 +1,10 @@
 import { BADGER_ARBITRUM_URL } from '../../config/constants';
 import { Protocol } from '../../config/enums/protocol.enum';
 import { SettState } from '../../config/enums/sett-state.enum';
+import { Stage } from '../../config/enums/stage.enum';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
+import { getCurveSettTokenBalance } from '../../protocols/strategies/convex.strategy';
 import { BouncerType } from '../../rewards/enums/bouncer-type.enum';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { arbitrumTokensConfig } from '../../tokens/config/arbitrum-tokens.config';
@@ -52,5 +54,29 @@ export const arbitrumSetts: SettDefinition[] = [
     protocol: Protocol.Sushiswap,
     state: SettState.Experimental,
     strategy: '0xA6827f0f14D0B83dB925B616d820434697328c22',
+  },
+  {
+    name: 'Curve renBTC/wBTC',
+    settToken: TOKENS.BARB_CRV_RENBTC,
+    depositToken: TOKENS.ARB_CRV_RENBTC,
+    getTokenBalance: getCurveSettTokenBalance,
+    createdBlock: 13237551,
+    experimental: true,
+    bouncer: BouncerType.Badger,
+    protocol: Protocol.Curve,
+    stage: Stage.Staging,
+    state: SettState.Experimental,
+  },
+  {
+    name: 'Curve Tricrypto',
+    settToken: TOKENS.BARB_CRV_TRICRYPTO,
+    depositToken: TOKENS.ARB_CRV_TRICRYPTO,
+    getTokenBalance: getCurveSettTokenBalance,
+    createdBlock: 13237551,
+    experimental: true,
+    bouncer: BouncerType.Badger,
+    protocol: Protocol.Curve,
+    stage: Stage.Staging,
+    state: SettState.Experimental,
   },
 ];

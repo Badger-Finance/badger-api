@@ -25,7 +25,7 @@ interface GetReservesResponse {
   _blockTimestampLast: number;
 }
 
-export const getLiquidityData = async (chain: Chain, contract: string): Promise<LiquidityData> => {
+export async function getLiquidityData(chain: Chain, contract: string): Promise<LiquidityData> {
   const pairContract = UniV2__factory.connect(contract, chain.provider);
   const totalSupply = formatBalance(await pairContract.totalSupply());
   const token0 = await pairContract.token0();
@@ -43,7 +43,7 @@ export const getLiquidityData = async (chain: Chain, contract: string): Promise<
     reserve1: reserve1,
     totalSupply: totalSupply,
   };
-};
+}
 
 export const getLiquidityPrice = async (graphUrl: string, contract: string): Promise<TokenPrice> => {
   const graphqlClient = new GraphQLClient(graphUrl);

@@ -11,38 +11,35 @@ import { settToCachedSnapshot, tokenBalancesToCachedLiquidityPoolTokenBalance } 
 
 export async function refreshTokenBalances() {
   const chains = loadChains();
-  const mapper = getDataMapper();
+  await Promise.all(chains.flatMap((c) => c.setts.flatMap(async (s) => updateTokenBalance(c, s))));
+}
 
-  for (const chain of chains) {
-    const settDefinitions = chain.setts;
-    for (const settDefinition of settDefinitions) {
-      const depositToken = getToken(settDefinition.depositToken);
-      if (!depositToken.lpToken && !settDefinition.getTokenBalance) {
-        continue;
-      }
-      if (depositToken.lpToken && settDefinition.getTokenBalance) {
-        throw new UnprocessableEntity(`${settDefinition.name} cannot specify multiple token caching strategies!`);
-      }
-
-      try {
-        if (depositToken.lpToken) {
-          const cachedLiquidityPoolTokenBalance = await getLpTokenBalances(chain, settDefinition);
-          if (cachedLiquidityPoolTokenBalance.tokenBalances.length === 0) {
-            continue;
-          }
-          await saveCachedTokenBalance(mapper, cachedLiquidityPoolTokenBalance);
-        }
-        if (settDefinition.getTokenBalance) {
-          const cachedTokenBalance = await settDefinition.getTokenBalance(chain, settDefinition.settToken);
-          if (cachedTokenBalance.tokenBalances.length === 0) {
-            continue;
-          }
-          await saveCachedTokenBalance(mapper, cachedTokenBalance);
-        }
-      } catch (err) {
-        console.log({ message: `Failed to index ${settDefinition.name} token balances`, err });
-      }
+async function updateTokenBalance(chain: Chain, settDefinition: SettDefinition): Promise<void> {
+  try {
+    const mapper = getDataMapper();
+    const depositToken = getToken(settDefinition.depositToken);
+    if (!depositToken.lpToken && !settDefinition.getTokenBalance) {
+      return;
     }
+    if (depositToken.lpToken && settDefinition.getTokenBalance) {
+      throw new UnprocessableEntity(`${settDefinition.name} cannot specify multiple token caching strategies!`);
+    }
+    if (depositToken.lpToken) {
+      const cachedLiquidityPoolTokenBalance = await getLpTokenBalances(chain, settDefinition);
+      if (cachedLiquidityPoolTokenBalance.tokenBalances.length === 0) {
+        return;
+      }
+      await saveCachedTokenBalance(mapper, cachedLiquidityPoolTokenBalance);
+    }
+    if (settDefinition.getTokenBalance) {
+      const cachedTokenBalance = await settDefinition.getTokenBalance(chain, settDefinition.settToken);
+      if (cachedTokenBalance.tokenBalances.length === 0) {
+        return;
+      }
+      await saveCachedTokenBalance(mapper, cachedTokenBalance);
+    }
+  } catch (err) {
+    console.error({ message: `Failed to index ${settDefinition.name} token balances`, err });
   }
 }
 
@@ -51,9 +48,9 @@ async function saveCachedTokenBalance(
   cachedTokenBalance: CachedLiquidityPoolTokenBalance,
 ): Promise<void> {
   try {
-    mapper.put(cachedTokenBalance);
+    await mapper.put(cachedTokenBalance);
   } catch (err) {
-    console.log({ message: err.message, cachedTokenBalance });
+    console.error({ message: err.message, cachedTokenBalance });
   }
 }
 
@@ -63,7 +60,6 @@ async function getLpTokenBalances(chain: Chain, sett: SettDefinition): Promise<C
       throw new BadRequest('LP balance look up requires a defined protocol');
     }
     const liquidityData = await getLiquidityData(chain, sett.depositToken);
-
     const { token0, token1, reserve0, reserve1, totalSupply } = liquidityData;
     const t0Token = getToken(token0);
     const t1Token = getToken(token1);
