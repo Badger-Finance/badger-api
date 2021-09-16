@@ -3,7 +3,7 @@ import { ethers } from 'ethers';
 import fetch from 'node-fetch';
 import { Chain } from '../../chains/config/chain.config';
 import { ChainNetwork } from '../../chains/enums/chain-network.enum';
-import { CURVE_API_URL, CURVE_CRYPTO_API_URL, CURVE_MATIC_API_URL, ONE_YEAR_SECONDS } from '../../config/constants';
+import { ONE_YEAR_SECONDS } from '../../config/constants';
 import { ContractRegistry } from '../../config/interfaces/contract-registry.interface';
 import { TOKENS } from '../../config/tokens.config';
 import {
@@ -45,6 +45,12 @@ export const cvxBooster = '0xF403C135812408BFbE8713b5A23a04b3D48AAE31';
 export const crvBaseRegistry = '0x0000000022D53366457F9d5E68Ec105046FC4383';
 export const cvxLocker = '0xd18140b4b819b895a3dba5442f959fa44994af50';
 
+/* Protocol Constants */
+export const CURVE_API_URL = 'https://stats.curve.fi/raw-stats/apys.json';
+export const CURVE_CRYPTO_API_URL = 'https://stats.curve.fi/raw-stats-crypto/apys.json';
+export const CURVE_MATIC_API_URL = 'https://stats.curve.fi/raw-stats-polygon/apys.json';
+export const CURVE_ARBITRUM_API_URL = 'https://stats.curve.fi/raw-stats-arbitrum/apys.json';
+
 /* Protocol Definitions */
 const curvePoolApr: Record<string, string> = {
   [TOKENS.CRV_RENBTC]: 'ren2',
@@ -58,6 +64,8 @@ const curvePoolApr: Record<string, string> = {
   [TOKENS.CRV_TRICRYPTO2]: 'tricrypto2',
   [TOKENS.MATIC_CRV_TRICRYPTO]: 'atricrypto',
   [TOKENS.MATIC_CRV_AMWBTC]: 'ren',
+  [TOKENS.ARB_CRV_TRICRYPTO]: 'tricrypto',
+  [TOKENS.ARB_CRV_RENBTC]: 'ren',
 };
 
 const cvxPoolId: PoolMap = {
@@ -74,6 +82,7 @@ const cvxPoolId: PoolMap = {
 
 const nonRegistryPools: ContractRegistry = {
   [TOKENS.MATIC_CRV_TRICRYPTO]: '0x751B1e21756bDbc307CBcC5085c042a0e9AaEf36',
+  [TOKENS.ARB_CRV_TRICRYPTO]: '0x960ea3e3C7FB317332d990873d354E18d7645590',
 };
 
 const discontinuedRewards = ['0x330416C863f2acCE7aF9C9314B422d24c672534a'].map((addr) => ethers.utils.getAddress(addr));
@@ -274,6 +283,9 @@ export async function getCurvePerformance(chain: Chain, settDefinition: SettDefi
     case ChainNetwork.Matic:
       defaultUrl = CURVE_MATIC_API_URL;
       break;
+    case ChainNetwork.Arbitrum:
+      defaultUrl = CURVE_ARBITRUM_API_URL;
+      break;
     default:
       defaultUrl = CURVE_API_URL;
   }
@@ -356,11 +368,17 @@ export async function getCurvePoolBalance(chain: Chain, depositToken: string): P
   const baseRegistry = CurveBaseRegistry__factory.connect('0x0000000022D53366457F9d5E68Ec105046FC4383', chain.provider);
   const cachedBalances = [];
   const registryAddr = await baseRegistry.get_registry();
-  const registry = CurveRegistry__factory.connect(registryAddr, chain.provider);
-  let poolAddress = await registry.get_pool_from_lp_token(depositToken);
+  let poolAddress;
+  if (registryAddr !== ethers.constants.AddressZero) {
+    const registry = CurveRegistry__factory.connect(registryAddr, chain.provider);
+    poolAddress = await registry.get_pool_from_lp_token(depositToken);
+  }
   // meta pools not in registry and no linkage - use a manually defined lookup
-  if (poolAddress === ethers.constants.AddressZero) {
-    poolAddress = nonRegistryPools[depositToken];
+  if (!poolAddress || poolAddress === ethers.constants.AddressZero) {
+    poolAddress = nonRegistryPools[depositToken] ?? depositToken;
+  }
+  if (!poolAddress) {
+    throw new Error(`No pool found for ${depositToken} on ${chain.network}`);
   }
   const poolContracts = [
     CurvePool3__factory.connect(poolAddress, chain.provider),

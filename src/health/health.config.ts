@@ -5,11 +5,11 @@ import {
   BADGER_DAO_URL,
   BADGER_URL,
   COINGECKO_URL,
-  CURVE_API_URL,
   PANCAKESWAP_URL,
   SUSHISWAP_URL,
   UNISWAP_URL,
 } from '../config/constants';
+import { CURVE_API_URL } from '../protocols/strategies/convex.strategy';
 import { Endpoint, Subgraph } from './health.types';
 
 export const apis: Endpoint[] = [

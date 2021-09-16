@@ -4,8 +4,8 @@ import { TokenType } from '../enums/token-type.enum';
 import { TokenConfig } from '../interfaces/token-config.interface';
 
 export const maticTokensConfig: TokenConfig = {
-  [TOKENS.MATIC_RENBTC]: {
-    address: TOKENS.MATIC_RENBTC,
+  [TOKENS.MULTI_RENBTC]: {
+    address: TOKENS.MULTI_RENBTC,
     decimals: 8,
     lookupName: 'renbtc',
     name: 'Ren Protocol BTC',

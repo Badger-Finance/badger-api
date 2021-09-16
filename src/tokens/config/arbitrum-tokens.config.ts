@@ -4,12 +4,28 @@ import { TokenType } from '../enums/token-type.enum';
 import { TokenConfig } from '../interfaces/token-config.interface';
 
 export const arbitrumTokensConfig: TokenConfig = {
+  [TOKENS.ARB_USDT]: {
+    address: TOKENS.ARB_USDT,
+    decimals: 6,
+    lookupName: 'tether',
+    name: 'Tether',
+    symbol: 'USDT',
+    type: TokenType.Contract,
+  },
   [TOKENS.ARB_BADGER]: {
     address: TOKENS.ARB_BADGER,
     decimals: 18,
     lookupName: 'badger-dao',
     name: 'Badger',
     symbol: 'BADGER',
+    type: TokenType.Contract,
+  },
+  [TOKENS.MULTI_RENBTC]: {
+    address: TOKENS.MULTI_RENBTC,
+    decimals: 8,
+    lookupName: 'renbtc',
+    name: 'Ren Protocol BTC',
+    symbol: 'renBTC',
     type: TokenType.Contract,
   },
   [TOKENS.ARB_WETH]: {
@@ -52,6 +68,20 @@ export const arbitrumTokensConfig: TokenConfig = {
     symbol: 'SLP-WETH-WBTC',
     type: TokenType.SushiswapLp,
   },
+  [TOKENS.ARB_CRV_RENBTC]: {
+    address: TOKENS.ARB_CRV_RENBTC,
+    decimals: 18,
+    name: 'Curve.fi: renBTC/wBTC',
+    symbol: 'crvrenWBTC',
+    type: TokenType.CurveLP,
+  },
+  [TOKENS.ARB_CRV_TRICRYPTO]: {
+    address: TOKENS.ARB_CRV_TRICRYPTO,
+    decimals: 18,
+    name: 'Curve.fi Tricrypto',
+    symbol: 'crvTricrypto',
+    type: TokenType.CurveLP,
+  },
   [TOKENS.BARB_SUSHI_WETH_SUSHI]: {
     address: TOKENS.BARB_SUSHI_WETH_SUSHI,
     decimals: 18,
@@ -71,6 +101,28 @@ export const arbitrumTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.ARB_SUSHI_WETH_WBTC,
+      network: ChainNetwork.Arbitrum,
+    },
+  },
+  [TOKENS.BARB_CRV_RENBTC]: {
+    address: TOKENS.BARB_CRV_RENBTC,
+    decimals: 18,
+    name: 'bCurve.fi wBTC/renBTC',
+    symbol: 'bcrvrenBTC',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.ARB_CRV_RENBTC,
+      network: ChainNetwork.Arbitrum,
+    },
+  },
+  [TOKENS.BARB_CRV_TRICRYPTO]: {
+    address: TOKENS.BARB_CRV_TRICRYPTO,
+    decimals: 18,
+    name: 'bCurve.fi Tricrypto',
+    symbol: 'bcrvTricrypto',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.ARB_CRV_TRICRYPTO,
       network: ChainNetwork.Arbitrum,
     },
   },
