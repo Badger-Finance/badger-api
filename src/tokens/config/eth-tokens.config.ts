@@ -594,8 +594,8 @@ export const ethTokensConfig: TokenConfig = {
   [TOKENS.BICVX]: {
     address: TOKENS.BICVX,
     decimals: 18,
-    name: 'bICVX',
-    symbol: 'bICVX',
+    name: 'Badger Vote Escrowed CVX',
+    symbol: 'bveCVX',
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.CVX,
