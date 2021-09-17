@@ -1,6 +1,5 @@
 import { BADGER_ARBITRUM_URL } from '../../config/constants';
 import { Protocol } from '../../config/enums/protocol.enum';
-import { SettState } from '../../config/enums/sett-state.enum';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
 import { getCurveSettTokenBalance } from '../../protocols/strategies/convex.strategy';
