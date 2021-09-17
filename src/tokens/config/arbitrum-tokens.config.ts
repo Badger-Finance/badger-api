@@ -20,6 +20,14 @@ export const arbitrumTokensConfig: TokenConfig = {
     symbol: 'BADGER',
     type: TokenType.Contract,
   },
+  [TOKENS.ARB_CRV]: {
+    address: TOKENS.ARB_CRV,
+    decimals: 18,
+    lookupName: 'curve-dao-token',
+    name: 'Curve DAO Token',
+    symbol: 'CRV',
+    type: TokenType.Contract,
+  },
   [TOKENS.MULTI_RENBTC]: {
     address: TOKENS.MULTI_RENBTC,
     decimals: 8,
