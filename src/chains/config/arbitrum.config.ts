@@ -40,7 +40,6 @@ export const arbitrumSetts: SettDefinition[] = [
     experimental: true,
     bouncer: BouncerType.Internal,
     protocol: Protocol.Sushiswap,
-    state: SettState.Experimental,
     strategy: '0x86f772C82914f5bFD168f99e208d0FC2C371e9C2',
   },
   {
@@ -49,9 +48,7 @@ export const arbitrumSetts: SettDefinition[] = [
     depositToken: TOKENS.ARB_SUSHI_WETH_WBTC,
     createdBlock: 13163959,
     experimental: true,
-    bouncer: BouncerType.Badger,
     protocol: Protocol.Sushiswap,
-    state: SettState.Experimental,
     strategy: '0xA6827f0f14D0B83dB925B616d820434697328c22',
   },
   {
@@ -61,9 +58,7 @@ export const arbitrumSetts: SettDefinition[] = [
     getTokenBalance: getCurveSettTokenBalance,
     createdBlock: 13237551,
     experimental: true,
-    bouncer: BouncerType.Badger,
     protocol: Protocol.Curve,
-    state: SettState.Guarded,
   },
   {
     name: 'Curve Tricrypto',
@@ -72,8 +67,6 @@ export const arbitrumSetts: SettDefinition[] = [
     getTokenBalance: getCurveSettTokenBalance,
     createdBlock: 13237551,
     experimental: true,
-    bouncer: BouncerType.Badger,
     protocol: Protocol.Curve,
-    state: SettState.Guarded,
   },
 ];
