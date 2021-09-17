@@ -3,7 +3,6 @@ import { Protocol } from '../../config/enums/protocol.enum';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
 import { getCurveSettTokenBalance } from '../../protocols/strategies/convex.strategy';
-import { BouncerType } from '../../rewards/enums/bouncer-type.enum';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { arbitrumTokensConfig } from '../../tokens/config/arbitrum-tokens.config';
 import { ChainNetwork } from '../enums/chain-network.enum';
