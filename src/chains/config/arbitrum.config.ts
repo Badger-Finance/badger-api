@@ -63,7 +63,7 @@ export const arbitrumSetts: SettDefinition[] = [
     experimental: true,
     bouncer: BouncerType.Badger,
     protocol: Protocol.Curve,
-    state: SettState.Experimental,
+    state: SettState.Guarded,
   },
   {
     name: 'Curve Tricrypto',
@@ -74,6 +74,6 @@ export const arbitrumSetts: SettDefinition[] = [
     experimental: true,
     bouncer: BouncerType.Badger,
     protocol: Protocol.Curve,
-    state: SettState.Experimental,
+    state: SettState.Guarded,
   },
 ];
