@@ -37,7 +37,6 @@ export const arbitrumSetts: SettDefinition[] = [
     depositToken: TOKENS.ARB_SUSHI_WETH_SUSHI,
     createdBlock: 13163959,
     experimental: true,
-    bouncer: BouncerType.Internal,
     protocol: Protocol.Sushiswap,
     strategy: '0x86f772C82914f5bFD168f99e208d0FC2C371e9C2',
   },
