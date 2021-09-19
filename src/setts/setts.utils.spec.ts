@@ -5,14 +5,7 @@ import { SettState } from '../config/enums/sett-state.enum';
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
 import { randomPerformance, randomSett, randomSnapshot, randomSnapshots, setupMapper } from '../test/tests.utils';
 import { getToken } from '../tokens/tokens.utils';
-import {
-  defaultSett,
-  getCachedSett,
-  getPerformance,
-  getSettDefinition,
-  getSettSnapshots,
-  getSnapshot,
-} from './setts.utils';
+import { defaultSett, getCachedSett, getPerformance, getSettDefinition, getSettSnapshots } from './setts.utils';
 
 describe('setts.utils', () => {
   describe('defaultSett', () => {
@@ -81,29 +74,6 @@ describe('setts.utils', () => {
         setupMapper(snapshots);
         const cached = await getSettSnapshots(sett);
         expect(cached).toMatchObject(snapshots);
-      });
-    });
-  });
-
-  describe('getSnapshot', () => {
-    describe('request a valid index', () => {
-      it('returns the requested index', () => {
-        const sett = randomSett();
-        const snapshots = randomSnapshots(sett);
-        const index = Math.floor(Math.random() * snapshots.length);
-        const expected = snapshots[index];
-        const actual = getSnapshot(snapshots, index);
-        expect(actual).toMatchObject(expected);
-      });
-    });
-
-    describe('request an out of range index', () => {
-      it('returns the final index', () => {
-        const sett = randomSett();
-        const snapshots = randomSnapshots(sett);
-        const expected = snapshots[snapshots.length - 1];
-        const actual = getSnapshot(snapshots, snapshots.length);
-        expect(actual).toMatchObject(expected);
       });
     });
   });
