@@ -4,7 +4,7 @@ import { ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
-import { ONE_YEAR_MS, SAMPLE_DAYS } from '../config/constants';
+import { ONE_DAY_MS, ONE_YEAR_MS, SAMPLE_DAYS } from '../config/constants';
 import { SettState } from '../config/enums/sett-state.enum';
 import { getSdk, SettQuery } from '../graphql/generated/badger';
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
@@ -81,10 +81,12 @@ export const getSettSnapshots = async (settDefinition: SettDefinition): Promise<
     const snapshots = [];
     const mapper = getDataMapper();
     const assetToken = getToken(settDefinition.settToken);
+    const end = Date.now();
+    const start = end - ONE_DAY_MS * SAMPLE_DAYS;
     for await (const snapshot of mapper.query(
       SettSnapshot,
-      { address: assetToken.address },
-      { limit: SAMPLE_DAYS, scanIndexForward: false },
+      { address: assetToken.address, timestamp: between(start, end) },
+      { scanIndexForward: false },
     )) {
       snapshots.push(snapshot);
     }
@@ -117,13 +119,6 @@ export const getSettSnapshotsInRange = async (
     console.error(err);
     return [];
   }
-};
-
-export const getSnapshot = (snapshots: SettSnapshot[], index: number): SettSnapshot => {
-  if (snapshots.length <= index) {
-    return snapshots[snapshots.length - 1];
-  }
-  return snapshots[index];
 };
 
 export const getPerformance = (current: SettSnapshot, initial: SettSnapshot): number => {

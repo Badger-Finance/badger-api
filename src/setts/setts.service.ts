@@ -1,11 +1,12 @@
 import { Service } from '@tsed/common';
 import { ethers } from 'ethers';
 import { Chain } from '../chains/config/chain.config';
-import { CURRENT, ONE_DAY, SEVEN_DAYS, THIRTY_DAYS, THREE_DAYS } from '../config/constants';
+import { CURRENT, ONE_DAY_MS } from '../config/constants';
 import { scalePerformance, uniformPerformance } from '../protocols/interfaces/performance.interface';
 import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interface';
 import { createValueSource, ValueSource } from '../protocols/interfaces/value-source.interface';
 import { getVaultValueSources } from '../protocols/protocols.utils';
+import { SOURCE_TIME_FRAMES, updatePerformance } from '../rewards/enums/source-timeframe.enum';
 import { TokenType } from '../tokens/enums/token-type.enum';
 import { getSettTokens, getSettUnderlyingTokens, getToken } from '../tokens/tokens.utils';
 import { Sett } from './interfaces/sett.interface';
@@ -16,7 +17,6 @@ import {
   getSettBoosts,
   getSettDefinition,
   getSettSnapshots,
-  getSnapshot,
   VAULT_SOURCE,
 } from './setts.utils';
 
@@ -46,7 +46,7 @@ export class SettsService {
     ]);
     sett.tokens = await getSettTokens(settDefinition, sett.balance, currency);
     sett.value = sett.tokens.reduce((total, balance) => (total += balance.value), 0);
-    sett.sources = !settDefinition.deprecated ? sources.filter((source) => source.apr >= 0.01) : [];
+    sett.sources = !settDefinition.deprecated ? sources.filter((source) => source.apr >= 0.001) : [];
     sett.apr = sett.sources.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
     sett.multipliers = boosts.map((b) => ({ boost: b.boost, multiplier: b.multiplier }));
 
@@ -63,15 +63,24 @@ export class SettsService {
   static async getSettPerformance(settDefinition: SettDefinition): Promise<ValueSource> {
     const snapshots = await getSettSnapshots(settDefinition);
     const current = snapshots[CURRENT];
+    console.log(`Current snapshot (${settDefinition.name}): ${new Date(current.timestamp).toLocaleString()}`);
     if (current === undefined) {
       return createValueSource(VAULT_SOURCE, uniformPerformance(0));
     }
-    const performance = {
-      oneDay: getPerformance(current, getSnapshot(snapshots, ONE_DAY)),
-      threeDay: getPerformance(current, getSnapshot(snapshots, THREE_DAYS)),
-      sevenDay: getPerformance(current, getSnapshot(snapshots, SEVEN_DAYS)),
-      thirtyDay: getPerformance(current, getSnapshot(snapshots, THIRTY_DAYS)),
-    };
+    const start = Date.now();
+    const performance = uniformPerformance(0);
+
+    let timeframeIndex = 0;
+    for (let i = 0; i < snapshots.length; i++) {
+      const currentTimeFrame = SOURCE_TIME_FRAMES[timeframeIndex];
+      const currentCutoff = start - currentTimeFrame * ONE_DAY_MS;
+      const currentSnapshot = snapshots[i];
+      if (currentSnapshot.timestamp <= currentCutoff) {
+        updatePerformance(performance, currentTimeFrame, getPerformance(current, currentSnapshot));
+        timeframeIndex += 1;
+      }
+    }
+
     return createValueSource(VAULT_SOURCE, performance);
   }
 

@@ -9,13 +9,9 @@ export const STRATEGIES = checksumEntries(RAW_STRATEGIES);
 
 // data point constants - index two times per hour, 48 per day
 export const CURRENT = 0;
-export const ONE_DAY = 24 * 2;
 export const ONE_MINUTE_MS = 60 * 1000;
 export const ONE_DAY_MS = ONE_MINUTE_MS * 60 * 24;
-export const THREE_DAYS = ONE_DAY * 3;
-export const SEVEN_DAYS = ONE_DAY * 7;
-export const THIRTY_DAYS = ONE_DAY * 30;
-export const SAMPLE_DAYS = THIRTY_DAYS + 1;
+export const SAMPLE_DAYS = 31;
 export const ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000;
 export const ONE_YEAR_SECONDS = 365 * 24 * 60 * 60;
 

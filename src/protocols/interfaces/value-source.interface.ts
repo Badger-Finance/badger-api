@@ -11,13 +11,13 @@ export interface ValueSource {
   maxApr: number;
 }
 
-export const createValueSource = (
+export function createValueSource(
   name: string,
   performance: Performance,
   harvestable?: boolean,
   boost?: BoostRange,
-): ValueSource => {
-  const apr = performance.sevenDay || performance.thirtyDay || performance.threeDay || performance.oneDay;
+): ValueSource {
+  const apr = selectPerformanceApr(performance);
   const evaluatedBoost = boost ?? { min: 1, max: 1 };
   return {
     name,
@@ -28,4 +28,17 @@ export const createValueSource = (
     minApr: apr * evaluatedBoost.min,
     maxApr: apr * evaluatedBoost.max,
   };
-};
+}
+
+function selectPerformanceApr(performance: Performance): number {
+  if (performance.sevenDay > 0) {
+    return performance.sevenDay;
+  }
+  if (performance.thirtyDay > 0) {
+    return performance.thirtyDay;
+  }
+  if (performance.sevenDay > 0) {
+    return performance.sevenDay;
+  }
+  return performance.oneDay;
+}
