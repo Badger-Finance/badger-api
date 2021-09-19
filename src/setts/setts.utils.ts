@@ -81,8 +81,8 @@ export const getSettSnapshots = async (settDefinition: SettDefinition): Promise<
     const snapshots = [];
     const mapper = getDataMapper();
     const assetToken = getToken(settDefinition.settToken);
-    const start = Date.now();
-    const end = start - ONE_DAY_MS * SAMPLE_DAYS;
+    const end = Date.now();
+    const start = end - ONE_DAY_MS * SAMPLE_DAYS;
     for await (const snapshot of mapper.query(
       SettSnapshot,
       { address: assetToken.address, timestamp: between(start, end) },
