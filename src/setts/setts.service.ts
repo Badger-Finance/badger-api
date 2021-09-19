@@ -63,7 +63,7 @@ export class SettsService {
   static async getSettPerformance(settDefinition: SettDefinition): Promise<ValueSource> {
     const snapshots = await getSettSnapshots(settDefinition);
     const current = snapshots[CURRENT];
-    console.log(`Current snapshot: ${new Date(current.timestamp).toLocaleString()}`);
+    console.log(`Current snapshot (${settDefinition.name}): ${new Date(current.timestamp).toLocaleString()}`);
     if (current === undefined) {
       return createValueSource(VAULT_SOURCE, uniformPerformance(0));
     }
