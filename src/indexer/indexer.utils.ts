@@ -4,12 +4,14 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
 import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { Protocol } from '../config/enums/protocol.enum';
+import { TOKENS } from '../config/tokens.config';
 import { Sett__factory } from '../contracts';
 import { getArbitrumBlock } from '../etherscan/etherscan.utils';
 import { getPrice } from '../prices/prices.utils';
 import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
-import { ValueSource } from '../protocols/interfaces/value-source.interface';
-import { getVaultCachedValueSources } from '../protocols/protocols.utils';
+import { uniformPerformance } from '../protocols/interfaces/performance.interface';
+import { createValueSource, ValueSource } from '../protocols/interfaces/value-source.interface';
+import { getVaultCachedValueSources, tokenEmission } from '../protocols/protocols.utils';
 import { ConvexStrategy, getCurvePerformance } from '../protocols/strategies/convex.strategy';
 import { mStableStrategy } from '../protocols/strategies/mstable.strategy';
 import { PancakeswapStrategy } from '../protocols/strategies/pancakeswap.strategy';
@@ -250,6 +252,13 @@ export async function getSettValueSources(chain: Chain, settDefinition: SettDefi
 
     // remove updated sources from old source list
     const newSources = [underlying, ...emission, ...protocol, ...derivative];
+    if (settDefinition.settToken === TOKENS.BARB_CRV_RENBTC || settDefinition.settToken === TOKENS.BARB_CRV_TRICRYPTO) {
+      const crvEmissionApr = underlying.apr / 2;
+      const crvSource = createValueSource('CRV Rewards', uniformPerformance(crvEmissionApr));
+      newSources.push(
+        valueSourceToCachedValueSource(crvSource, settDefinition, tokenEmission(getToken(TOKENS.ARB_CRV))),
+      );
+    }
     newSources.forEach((source) => delete oldSources[source.addressValueSourceType]);
 
     // delete sources which are no longer valid
