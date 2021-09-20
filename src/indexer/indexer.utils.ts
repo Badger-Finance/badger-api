@@ -253,8 +253,7 @@ export async function getSettValueSources(chain: Chain, settDefinition: SettDefi
     // remove updated sources from old source list
     const newSources = [underlying, ...emission, ...protocol, ...derivative];
     if (settDefinition.settToken === TOKENS.BARB_CRV_RENBTC || settDefinition.settToken === TOKENS.BARB_CRV_TRICRYPTO) {
-      const crvEmissionApr = underlying.apr / 2;
-      const crvSource = createValueSource('CRV Rewards', uniformPerformance(crvEmissionApr));
+      const crvSource = createValueSource('CRV Rewards', uniformPerformance(underlying.apr));
       newSources.push(
         valueSourceToCachedValueSource(crvSource, settDefinition, tokenEmission(getToken(TOKENS.ARB_CRV))),
       );
