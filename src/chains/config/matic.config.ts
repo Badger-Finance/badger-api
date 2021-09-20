@@ -1,8 +1,10 @@
+import fetch from 'node-fetch';
 import { BADGER_MATIC_URL } from '../../config/constants';
 import { Protocol } from '../../config/enums/protocol.enum';
 import { SettState } from '../../config/enums/sett-state.enum';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
+import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { getCurveSettTokenBalance } from '../../protocols/strategies/convex.strategy';
 import { BouncerType } from '../../rewards/enums/bouncer-type.enum';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
@@ -28,6 +30,17 @@ export class Polygon extends Chain {
       '0xd0ee2a5108b8800d688abc834445fd03b3b2738e',
     );
     Chain.register(this.network, this);
+  }
+
+  async getGasPrices(): Promise<GasPrices> {
+    const prices = await fetch('https://gasstation-mainnet.matic.network/');
+    const result = await prices.json();
+    return {
+      rapid: result['fastest'],
+      fast: result['fast'],
+      standard: result['standard'],
+      slow: result['safeLow'],
+    };
   }
 }
 

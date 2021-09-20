@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GasController GET /v2/gas returns a list of gas prices 1`] = `
+Object {
+  "fast": 99,
+  "rapid": 100,
+  "slow": 90,
+  "standard": 95,
+}
+`;

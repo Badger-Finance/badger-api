@@ -1,6 +1,7 @@
 import { BadRequest } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { STAGE } from '../../config/constants';
+import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { TokenConfig } from '../../tokens/interfaces/token-config.interface';
 import { ChainNetwork } from '../enums/chain-network.enum';
@@ -67,4 +68,6 @@ export abstract class Chain {
     }
     return chain;
   }
+
+  abstract getGasPrices(): Promise<GasPrices>;
 }
