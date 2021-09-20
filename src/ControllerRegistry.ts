@@ -1,5 +1,6 @@
 import { AccountsController } from './accounts/accounts.controller';
 import { ChartsController } from './charts/charts.controller';
+import { GasController } from './gas/gas.controller';
 import { HarvestsController } from './harvests/harvests.controller';
 import { HealthController } from './health/health.controller';
 import { LeaderBoardsController } from './leaderboards/leaderboards.controller';
@@ -28,4 +29,5 @@ export const controllers = [
   TokensController,
   HealthController,
   MetricsController,
+  GasController,
 ];
