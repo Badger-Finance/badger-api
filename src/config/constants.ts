@@ -54,7 +54,7 @@ export const API_VERSION = 'v2.0.0';
 export const COINGECKO_URL = 'https://api.coingecko.com/api/v3/simple';
 export const PANCAKE_CHEF = '0x73feaa1eE314F8c655E354234017bE2193C9E24E';
 export const DISTRIBUTOR = '0x660802Fc641b154aBA66a62137e71f331B6d787A';
-export const BLOCKNATIVE_API_KEY = process.env.BLOCKNATIVE_API_KEY;
+export const BLOCKNATIVE_API_KEY = process.env.BLOCKNATIVE_API_KEY || 'MISSING REQUIRED ENV VAR';
 
 export const swaggerConfig: SwaggerSettings = {
   path: '/docs',
