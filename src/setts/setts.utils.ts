@@ -77,24 +77,9 @@ export const getCachedSett = async (settDefinition: SettDefinition): Promise<Set
 };
 
 export const getSettSnapshots = async (settDefinition: SettDefinition): Promise<SettSnapshot[]> => {
-  try {
-    const snapshots = [];
-    const mapper = getDataMapper();
-    const assetToken = getToken(settDefinition.settToken);
-    const end = Date.now();
-    const start = end - ONE_DAY_MS * SAMPLE_DAYS;
-    for await (const snapshot of mapper.query(
-      SettSnapshot,
-      { address: assetToken.address, timestamp: between(start, end) },
-      { scanIndexForward: false },
-    )) {
-      snapshots.push(snapshot);
-    }
-    return snapshots;
-  } catch (err) {
-    console.error(err);
-    return [];
-  }
+  const end = Date.now();
+  const start = end - ONE_DAY_MS * SAMPLE_DAYS;
+  return getSettSnapshotsInRange(settDefinition, new Date(start), new Date(end));
 };
 
 export const getSettSnapshotsInRange = async (
