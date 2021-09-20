@@ -1,4 +1,3 @@
-import fetch from 'node-fetch';
 import { BADGER_BSC_URL } from '../../config/constants';
 import { Protocol } from '../../config/enums/protocol.enum';
 import rpc from '../../config/rpc.config';
@@ -28,13 +27,12 @@ export class BinanceSmartChain extends Chain {
   }
 
   async getGasPrices(): Promise<GasPrices> {
-    const prices = await fetch('https://bscgas.info/gas');
-    const result = await prices.json();
+    const gasPrice = 5;
     return {
-      rapid: result['instant'],
-      fast: result['fast'],
-      standard: result['standard'],
-      slow: result['slow'],
+      rapid: gasPrice,
+      fast: gasPrice,
+      standard: gasPrice,
+      slow: gasPrice,
     };
   }
 }
