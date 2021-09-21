@@ -26,7 +26,7 @@ export class AccountsService {
     return cachedAccountToAccount(cachedAccount, chain.network);
   }
 
-  async getAllUnclaimed(chain: Chain, page: number): Promise<UnclaimedRewards> {
+  async getAllUnclaimed(page: number): Promise<UnclaimedRewards> {
     const pageSize = 500;
     const startIndex = (page - 1) * pageSize;
     const boostFile = await getObject(REWARD_DATA, 'badger-boosts.json');
@@ -34,7 +34,7 @@ export class AccountsService {
     const accounts = Object.keys(fileContents.userData);
     const totalPages = Math.ceil(accounts.length / pageSize);
     if (page > totalPages) {
-      throw new BadRequest(`Page ${page} requested, ${chain.name} only has ${totalPages} pages`);
+      throw new BadRequest(`Page ${page} requested, there are only ${totalPages} pages`);
     }
 
     const endIndex = accounts.length - startIndex < pageSize ? accounts.length - 1 : startIndex + pageSize;

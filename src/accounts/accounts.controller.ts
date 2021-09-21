@@ -14,11 +14,8 @@ export class AccountsController {
   @Hidden()
   @Get('/allClaimable')
   @ContentType('json')
-  async getAllBadgerTreeRewards(
-    @QueryParams('page') page?: number,
-    @QueryParams('chain') chain?: ChainNetwork,
-  ): Promise<UnclaimedRewards> {
-    return this.accountsService.getAllUnclaimed(Chain.getChain(chain), page ?? 1);
+  async getAllBadgerTreeRewards(@QueryParams('page') page?: number): Promise<UnclaimedRewards> {
+    return this.accountsService.getAllUnclaimed(page ?? 1);
   }
 
   @Get('/:accountId')
