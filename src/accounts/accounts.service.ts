@@ -50,8 +50,6 @@ export class AccountsService {
       cachedRewards[result.address] = result.claimableBalances;
     });
 
-    console.log('got cached accounts info', cachedRewards);
-
     const returnValue = {
       page: page,
       rewards: cachedRewards,
