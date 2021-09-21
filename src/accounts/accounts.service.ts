@@ -1,10 +1,16 @@
 import { Service } from '@tsed/di';
 import { BadRequest } from '@tsed/exceptions';
 import { ethers } from 'ethers';
+import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
+import { REWARD_DATA } from '../config/constants';
 import { IndexMode, refreshAccounts } from '../indexer/accounts-indexer';
+import { BoostData } from '../rewards/interfaces/boost-data.interface';
 import { cachedAccountToAccount, getCachedAccount } from './accounts.utils';
 import { Account } from './interfaces/account.interface';
+import { CachedAccount } from './interfaces/cached-account.interface';
+import { UnclaimedRewards } from './interfaces/unclaimed-rewards.interface';
+import { UserRewardsUnclaimed } from './interfaces/user-rewards-unclaimed.interface';
 
 @Service()
 export class AccountsService {
@@ -18,5 +24,36 @@ export class AccountsService {
     await refreshAccounts([chain], IndexMode.BalanceData, [checksumAddress]);
     const cachedAccount = await getCachedAccount(checksumAddress);
     return cachedAccountToAccount(cachedAccount, chain.network);
+  }
+
+  async getAllUnclaimed(page: number): Promise<UnclaimedRewards> {
+    const pageSize = 500;
+    const startIndex = (page - 1) * pageSize;
+    const boostFile = await getObject(REWARD_DATA, 'badger-boosts.json');
+    const fileContents: BoostData = JSON.parse(boostFile.toString('utf-8'));
+    const accounts = Object.keys(fileContents.userData);
+    const totalPages = Math.ceil(accounts.length / pageSize);
+    if (page > totalPages) {
+      throw new BadRequest(`Page ${page} requested, there are only ${totalPages} pages`);
+    }
+
+    const endIndex = accounts.length - startIndex < pageSize ? accounts.length - 1 : startIndex + pageSize;
+
+    const cachedRewards: UserRewardsUnclaimed = {};
+    const cachePromises: Promise<CachedAccount>[] = [];
+    accounts.slice(startIndex, endIndex).forEach(async (address: string) => {
+      cachePromises.push(getCachedAccount(address));
+    });
+
+    const results = await Promise.all(cachePromises);
+    results.forEach((result) => {
+      cachedRewards[result.address] = result.claimableBalances;
+    });
+
+    const returnValue = {
+      page: page,
+      rewards: cachedRewards,
+    };
+    return returnValue;
   }
 }
