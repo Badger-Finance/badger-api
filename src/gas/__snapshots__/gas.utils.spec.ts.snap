@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`gas.utils getGasPrices returns gas prices for all networks 1`] = `
+Object {
+  "arbitrum": Object {
+    "fast": 2,
+    "rapid": 2,
+    "slow": 2,
+    "standard": 2,
+  },
+  "bsc": Object {
+    "fast": 5,
+    "rapid": 5,
+    "slow": 5,
+    "standard": 5,
+  },
+  "eth": Object {
+    "fast": Object {
+      "maxFeePerGas": 221.96,
+      "maxPriorityFeePerGas": 1.94,
+    },
+    "rapid": Object {
+      "maxFeePerGas": 223.06,
+      "maxPriorityFeePerGas": 3.04,
+    },
+    "slow": Object {
+      "maxFeePerGas": 221.81,
+      "maxPriorityFeePerGas": 1.79,
+    },
+    "standard": Object {
+      "maxFeePerGas": 221.91,
+      "maxPriorityFeePerGas": 1.89,
+    },
+  },
+  "matic": Object {
+    "fast": 33,
+    "rapid": 38,
+    "slow": 33,
+    "standard": 33,
+  },
+}
+`;

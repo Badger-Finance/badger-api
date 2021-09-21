@@ -2,6 +2,7 @@ import { BADGER_ARBITRUM_URL } from '../../config/constants';
 import { Protocol } from '../../config/enums/protocol.enum';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
+import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { getCurveSettTokenBalance } from '../../protocols/strategies/convex.strategy';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { arbitrumTokensConfig } from '../../tokens/config/arbitrum-tokens.config';
@@ -26,6 +27,16 @@ export class Arbitrum extends Chain {
       '0x85E1cACAe9a63429394d68Db59E14af74143c61c',
     );
     Chain.register(this.network, this);
+  }
+
+  async getGasPrices(): Promise<GasPrices> {
+    const gasPrice = 2;
+    return {
+      rapid: gasPrice,
+      fast: gasPrice,
+      standard: gasPrice,
+      slow: gasPrice,
+    };
   }
 }
 

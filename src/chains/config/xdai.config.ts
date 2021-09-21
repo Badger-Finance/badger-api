@@ -1,8 +1,10 @@
+import fetch from 'node-fetch';
 import { BADGER_XDAI_URL } from '../../config/constants';
 import { Protocol } from '../../config/enums/protocol.enum';
 import { Stage } from '../../config/enums/stage.enum';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
+import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { xDaiTokensConfig } from '../../tokens/config/xdai-tokens.config';
 import { ChainNetwork } from '../enums/chain-network.enum';
@@ -24,6 +26,16 @@ export class xDai extends Chain {
       6307200,
     );
     Chain.register(this.network, this);
+  }
+
+  async getGasPrices(): Promise<GasPrices> {
+    const prices = await fetch('https://blockscout.com/xdai/mainnet/api/v1/gas-price-oracle');
+    const result = await prices.json();
+    return {
+      fast: result['fast'],
+      average: result['average'],
+      slow: result['slow'],
+    };
   }
 }
 

@@ -1,9 +1,11 @@
-import { BADGER_URL, STRATEGIES } from '../../config/constants';
+import fetch from 'node-fetch';
+import { BADGER_URL, BLOCKNATIVE_API_KEY, STRATEGIES } from '../../config/constants';
 import { Protocol } from '../../config/enums/protocol.enum';
 import { SettState } from '../../config/enums/sett-state.enum';
 import { Stage } from '../../config/enums/stage.enum';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
+import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { getCurveSettTokenBalance } from '../../protocols/strategies/convex.strategy';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { ethTokensConfig } from '../../tokens/config/eth-tokens.config';
@@ -29,6 +31,32 @@ export class Ethereum extends Chain {
       '0x0A4F4e92C3334821EbB523324D09E321a6B0d8ec',
     );
     Chain.register(this.network, this);
+  }
+
+  async getGasPrices(): Promise<GasPrices> {
+    const prices = await fetch('https://api.blocknative.com/gasprices/blockprices', {
+      headers: { Authorization: BLOCKNATIVE_API_KEY },
+    });
+    const result = await prices.json();
+    const blockPrices = result.blockPrices[0];
+    return {
+      rapid: {
+        maxFeePerGas: blockPrices.estimatedPrices[0].maxFeePerGas,
+        maxPriorityFeePerGas: blockPrices.estimatedPrices[0].maxPriorityFeePerGas,
+      },
+      fast: {
+        maxFeePerGas: blockPrices.estimatedPrices[1].maxFeePerGas,
+        maxPriorityFeePerGas: blockPrices.estimatedPrices[1].maxPriorityFeePerGas,
+      },
+      standard: {
+        maxFeePerGas: blockPrices.estimatedPrices[2].maxFeePerGas,
+        maxPriorityFeePerGas: blockPrices.estimatedPrices[2].maxPriorityFeePerGas,
+      },
+      slow: {
+        maxFeePerGas: blockPrices.estimatedPrices[3].maxFeePerGas,
+        maxPriorityFeePerGas: blockPrices.estimatedPrices[3].maxPriorityFeePerGas,
+      },
+    };
   }
 }
 

@@ -91,6 +91,8 @@ provider:
     # etherscan secrets
     ETHERSCAN_API_KEY: ${env:ETHERSCAN_API_KEY}
     ARBISCAN_API_KEY: ${env:ARBISCAN_API_KEY}
+    # 3rd party API keys
+    BLOCKNATIVE_API_KEY: ${env:BLOCKNATIVE_API_KEY}
     # Subgraph Definitions
     # BADGER: 'https://gateway.thegraph.com/api/${env:GRAPH_API_KEY}/subgraphs/id/0x8d26c9dac7e16738752fa1446b956a97c63e2f39-0'
     BADGER: 'https://api.thegraph.com/subgraphs/name/axejintao/badger-dao'

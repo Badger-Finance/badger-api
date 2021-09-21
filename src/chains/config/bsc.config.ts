@@ -2,6 +2,7 @@ import { BADGER_BSC_URL } from '../../config/constants';
 import { Protocol } from '../../config/enums/protocol.enum';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
+import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { bscTokensConfig } from '../../tokens/config/bsc-tokens.config';
 import { ChainNetwork } from '../enums/chain-network.enum';
@@ -23,6 +24,16 @@ export class BinanceSmartChain extends Chain {
       10512000,
     );
     Chain.register(this.network, this);
+  }
+
+  async getGasPrices(): Promise<GasPrices> {
+    const gasPrice = 5;
+    return {
+      rapid: gasPrice,
+      fast: gasPrice,
+      standard: gasPrice,
+      slow: gasPrice,
+    };
   }
 }
 
