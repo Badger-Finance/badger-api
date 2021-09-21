@@ -8,6 +8,7 @@ import { IndexMode, refreshAccounts } from '../indexer/accounts-indexer';
 import { BoostData } from '../rewards/interfaces/boost-data.interface';
 import { cachedAccountToAccount, getCachedAccount } from './accounts.utils';
 import { Account } from './interfaces/account.interface';
+import { CachedAccount } from './interfaces/cached-account.interface';
 import { UnclaimedRewards } from './interfaces/unclaimed-rewards.interface';
 import { UserRewardsUnclaimed } from './interfaces/user-rewards-unclaimed.interface';
 
@@ -39,9 +40,14 @@ export class AccountsService {
     const endIndex = accounts.length - startIndex < pageSize ? accounts.length - 1 : startIndex + pageSize;
 
     const cachedRewards: UserRewardsUnclaimed = {};
+    const cachePromises: Promise<CachedAccount>[] = [];
     accounts.slice(startIndex, endIndex).forEach(async (address: string) => {
-      const cachedAccount = await getCachedAccount(address);
-      cachedRewards[address] = cachedAccount.claimableBalances;
+      cachePromises.push(getCachedAccount(address));
+    });
+
+    const results = await Promise.all(cachePromises);
+    results.forEach((result) => {
+      cachedRewards[result.address] = result.claimableBalances;
     });
 
     console.log('got cached accounts info', cachedRewards);
