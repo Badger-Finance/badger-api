@@ -1,14 +1,25 @@
 import { Controller, Get, Inject, PathParams, QueryParams } from '@tsed/common';
-import { ContentType, Description, Returns, Summary } from '@tsed/schema';
+import { ContentType, Description, Hidden, Returns, Summary } from '@tsed/schema';
 import { Chain } from '../chains/config/chain.config';
 import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { AccountsService } from './accounts.service';
 import { AccountModel } from './interfaces/account-model.interface';
+import { UnclaimedRewards } from './interfaces/unclaimed-rewards.interface';
 
 @Controller('/accounts')
 export class AccountsController {
   @Inject()
   accountsService!: AccountsService;
+
+  @Hidden()
+  @Get('/allClaimable')
+  @ContentType('json')
+  async getAllBadgerTreeRewards(
+    @QueryParams('page') page?: number,
+    @QueryParams('chain') chain?: ChainNetwork,
+  ): Promise<UnclaimedRewards> {
+    return this.accountsService.getAllUnclaimed(Chain.getChain(chain), page ?? 1);
+  }
 
   @Get('/:accountId')
   @ContentType('json')
