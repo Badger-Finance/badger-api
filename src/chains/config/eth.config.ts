@@ -27,7 +27,7 @@ export class Ethereum extends Chain {
       new EthStrategy(Object.keys(ethTokensConfig)),
       BADGER_URL,
       2425847,
-      '0xbe82A3259ce427B8bCb54b938b486dC2aF509Cc3',
+      '0x660802Fc641b154aBA66a62137e71f331B6d787A',
       '0x0A4F4e92C3334821EbB523324D09E321a6B0d8ec',
     );
     Chain.register(this.network, this);
