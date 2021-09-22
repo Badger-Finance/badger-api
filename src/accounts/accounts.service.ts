@@ -9,11 +9,14 @@ import { BoostData } from '../rewards/interfaces/boost-data.interface';
 import { cachedAccountToAccount, getCachedAccount } from './accounts.utils';
 import { Account } from './interfaces/account.interface';
 import { CachedAccount } from './interfaces/cached-account.interface';
+import { UnclaimedPages } from './interfaces/unclaimed-pages.interface';
 import { UnclaimedRewards } from './interfaces/unclaimed-rewards.interface';
 import { UserRewardsUnclaimed } from './interfaces/user-rewards-unclaimed.interface';
 
 @Service()
 export class AccountsService {
+  private readonly pageSize = 500;
+
   async getAccount(chain: Chain, accountId: string): Promise<Account> {
     let checksumAddress = accountId;
     try {
@@ -27,17 +30,16 @@ export class AccountsService {
   }
 
   async getAllUnclaimed(page: number): Promise<UnclaimedRewards> {
-    const pageSize = 500;
-    const startIndex = (page - 1) * pageSize;
+    const startIndex = (page - 1) * this.pageSize;
     const boostFile = await getObject(REWARD_DATA, 'badger-boosts.json');
     const fileContents: BoostData = JSON.parse(boostFile.toString('utf-8'));
     const accounts = Object.keys(fileContents.userData);
-    const totalPages = Math.ceil(accounts.length / pageSize);
+    const totalPages = Math.ceil(accounts.length / this.pageSize);
     if (page > totalPages) {
       throw new BadRequest(`Page ${page} requested, there are only ${totalPages} pages`);
     }
 
-    const endIndex = accounts.length - startIndex < pageSize ? accounts.length - 1 : startIndex + pageSize;
+    const endIndex = accounts.length - startIndex < this.pageSize ? accounts.length - 1 : startIndex + this.pageSize;
 
     const cachedRewards: UserRewardsUnclaimed = {};
     const cachePromises: Promise<CachedAccount>[] = [];
@@ -55,5 +57,12 @@ export class AccountsService {
       rewards: cachedRewards,
     };
     return returnValue;
+  }
+
+  async getUnclaimedPageAmount(): Promise<UnclaimedPages> {
+    const boostFile = await getObject(REWARD_DATA, 'badger-boosts.json');
+    const fileContents: BoostData = JSON.parse(boostFile.toString('utf-8'));
+    const accounts = Object.keys(fileContents.userData);
+    return { totalPages: Math.ceil(accounts.length / this.pageSize) };
   }
 }

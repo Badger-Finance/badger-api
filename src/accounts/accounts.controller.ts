@@ -4,12 +4,20 @@ import { Chain } from '../chains/config/chain.config';
 import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { AccountsService } from './accounts.service';
 import { AccountModel } from './interfaces/account-model.interface';
+import { UnclaimedPages } from './interfaces/unclaimed-pages.interface';
 import { UnclaimedRewards } from './interfaces/unclaimed-rewards.interface';
 
 @Controller('/accounts')
 export class AccountsController {
   @Inject()
   accountsService!: AccountsService;
+
+  @Hidden()
+  @Get('/pages')
+  @ContentType('json')
+  async getUnclaimedPages(): Promise<UnclaimedPages> {
+    return this.accountsService.getUnclaimedPageAmount();
+  }
 
   @Hidden()
   @Get('/allClaimable')
