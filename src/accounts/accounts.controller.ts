@@ -13,16 +13,15 @@ export class AccountsController {
   accountsService!: AccountsService;
 
   @Hidden()
-  @Get('/pages')
-  @ContentType('json')
-  async getUnclaimedPages(): Promise<UnclaimedPages> {
-    return this.accountsService.getUnclaimedPageAmount();
-  }
-
-  @Hidden()
   @Get('/allClaimable')
   @ContentType('json')
-  async getAllBadgerTreeRewards(@QueryParams('page') page?: number): Promise<UnclaimedRewards> {
+  async getAllBadgerTreeRewards(
+    @QueryParams('page') page?: number,
+    @QueryParams('count') count?: boolean,
+  ): Promise<UnclaimedRewards | UnclaimedPages> {
+    if (!!count) {
+      return this.accountsService.getUnclaimedPageAmount();
+    }
     return this.accountsService.getAllUnclaimed(page ?? 1);
   }
 
