@@ -4,7 +4,6 @@ import { Chain } from '../chains/config/chain.config';
 import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { AccountsService } from './accounts.service';
 import { AccountModel } from './interfaces/account-model.interface';
-import { UnclaimedPages } from './interfaces/unclaimed-pages.interface';
 import { UnclaimedRewards } from './interfaces/unclaimed-rewards.interface';
 
 @Controller('/accounts')
@@ -15,13 +14,7 @@ export class AccountsController {
   @Hidden()
   @Get('/allClaimable')
   @ContentType('json')
-  async getAllBadgerTreeRewards(
-    @QueryParams('page') page?: number,
-    @QueryParams('count') count?: boolean,
-  ): Promise<UnclaimedRewards | UnclaimedPages> {
-    if (!!count) {
-      return this.accountsService.getUnclaimedPageAmount();
-    }
+  async getAllBadgerTreeRewards(@QueryParams('page') page?: number): Promise<UnclaimedRewards> {
     return this.accountsService.getAllUnclaimed(page ?? 1);
   }
 

@@ -9,7 +9,6 @@ import { BoostData } from '../rewards/interfaces/boost-data.interface';
 import { cachedAccountToAccount, getCachedAccount } from './accounts.utils';
 import { Account } from './interfaces/account.interface';
 import { CachedAccount } from './interfaces/cached-account.interface';
-import { UnclaimedPages } from './interfaces/unclaimed-pages.interface';
 import { UnclaimedRewards } from './interfaces/unclaimed-rewards.interface';
 import { UserRewardsUnclaimed } from './interfaces/user-rewards-unclaimed.interface';
 
@@ -54,15 +53,9 @@ export class AccountsService {
 
     const returnValue = {
       page: page,
+      maxPage: totalPages,
       rewards: cachedRewards,
     };
     return returnValue;
-  }
-
-  async getUnclaimedPageAmount(): Promise<UnclaimedPages> {
-    const boostFile = await getObject(REWARD_DATA, 'badger-boosts.json');
-    const fileContents: BoostData = JSON.parse(boostFile.toString('utf-8'));
-    const accounts = Object.keys(fileContents.userData);
-    return { totalPages: Math.ceil(accounts.length / this.pageSize) };
   }
 }
