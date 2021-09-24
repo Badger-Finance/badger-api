@@ -298,7 +298,7 @@ functions:
           cors: true
 
   index-setts:
-    handler: src/indexer/sett-indexer.indexAsset
+    handler: src/indexer/sett-indexer.indexProtocolSetts
     timeout: 480
     events:
       - schedule:
@@ -308,7 +308,7 @@ functions:
 
   index-apy-snapshots:
     handler: src/indexer/apy-snapshots-indexer.refreshApySnapshots
-    timeout: 120
+    timeout: 45
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-apy-snapshots
@@ -317,7 +317,7 @@ functions:
 
   index-prices:
     handler: src/indexer/price-indexer.indexPrices
-    timeout: 120
+    timeout: 45
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-prices
@@ -326,7 +326,7 @@ functions:
 
   index-sett-snapshots:
     handler: src/indexer/sett-snapshots-indexer.refreshSettSnapshots
-    timeout: 30
+    timeout: 45
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-sett-snapshots
