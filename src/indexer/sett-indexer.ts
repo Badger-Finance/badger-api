@@ -11,17 +11,19 @@ import { getIndexedBlock, settToSnapshot } from './indexer.utils';
  * This is an expensive process to do so locally always and
  * as such will be disabled while running offline.
  */
-export const indexAsset = async (): Promise<void> => {
+export async function indexProtocolSetts() {
   if (IS_OFFLINE) {
     return;
   }
   const chains = loadChains();
-  await Promise.all(
-    chains.flatMap(async (chain) => Promise.all(chain.setts.map(async (sett) => indexSett(chain, sett)))),
-  );
-};
+  await Promise.all(chains.map((chain) => indexChainSetts(chain)));
+}
 
-const indexSett = async (chain: Chain, sett: SettDefinition) => {
+async function indexChainSetts(chain: Chain) {
+  await Promise.all(chain.setts.map((sett) => indexSett(chain, sett)));
+}
+
+async function indexSett(chain: Chain, sett: SettDefinition) {
   const { settToken, createdBlock } = sett;
   const thirtyMinutesBlocks = parseInt((chain.blocksPerYear / 365 / 24 / 2).toString());
 
@@ -47,4 +49,4 @@ const indexSett = async (chain: Chain, sett: SettDefinition) => {
       break;
     }
   }
-};
+}

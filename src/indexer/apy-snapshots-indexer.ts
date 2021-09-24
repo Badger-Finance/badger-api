@@ -1,16 +1,18 @@
 import { isNil } from '@tsed/core';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
+import { Chain } from '../chains/config/chain.config';
 import { ValueSourceMap } from '../protocols/interfaces/value-source-map.interface';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { getSettValueSources } from './indexer.utils';
 
 export async function refreshApySnapshots() {
   const chains = loadChains();
-  const rawValueSources = await Promise.all(
-    chains.flatMap((chain) => chain.setts.map((sett) => getSettValueSources(chain, sett))),
-  );
+  await Promise.all(chains.map((chain) => refreshChainApySnapshots(chain)));
+}
 
+async function refreshChainApySnapshots(chain: Chain) {
+  const rawValueSources = await Promise.all(chain.setts.map((sett) => getSettValueSources(chain, sett)));
   const sourceMap: ValueSourceMap = {};
   rawValueSources
     .filter((rawValueSource) => !isNil(rawValueSource))
@@ -38,13 +40,7 @@ export async function refreshApySnapshots() {
         mapEntry.thirtyDay += source.thirtyDay;
       }
     });
-
   const mapper = getDataMapper();
-  for (const source of Object.values(sourceMap)) {
-    try {
-      await mapper.put(source);
-    } catch (err) {
-      console.log({ message: err.message, source });
-    }
+  for await (const _item of mapper.batchPut(Object.values(sourceMap))) {
   }
 }
