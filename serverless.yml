@@ -298,7 +298,7 @@ functions:
           cors: true
 
   index-setts:
-    handler: src/indexer/sett-indexer.indexAsset
+    handler: src/indexer/sett-indexer.indexProtocolSetts
     timeout: 480
     events:
       - schedule:
