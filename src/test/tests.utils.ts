@@ -1,4 +1,5 @@
 import { DataMapper, QueryIterator, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
+import { ethers } from 'ethers';
 import createMockInstance from 'jest-create-mock-instance';
 import { loadChains } from '../chains/chain';
 import { ONE_DAY_MS, ONE_MINUTE_MS, SAMPLE_DAYS } from '../config/constants';
@@ -37,6 +38,12 @@ export function randomSnapshot(settDefinition?: SettDefinition): CachedSettSnaps
     settValue: randomValue(),
     supply: randomValue(),
     updatedAt: Date.now(),
+    strategy: {
+      address: ethers.constants.AddressZero,
+      withdrawFee: 50,
+      performanceFee: 20,
+      strategistFee: 10,
+    },
   });
 }
 

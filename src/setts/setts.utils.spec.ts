@@ -1,4 +1,5 @@
 import { NotFound } from '@tsed/exceptions';
+import { ethers } from 'ethers';
 import { BinanceSmartChain } from '../chains/config/bsc.config';
 import { Ethereum } from '../chains/config/eth.config';
 import { SettState } from '../config/enums/sett-state.enum';
@@ -26,6 +27,12 @@ describe('setts.utils', () => {
         underlyingToken: settDefinition.depositToken,
         value: 0,
         vaultToken: settDefinition.settToken,
+        strategy: {
+          address: ethers.constants.AddressZero,
+          withdrawFee: 50,
+          performanceFee: 20,
+          strategistFee: 10,
+        },
       };
       const actual = defaultSett(settDefinition);
       expect(actual).toMatchObject(expected);

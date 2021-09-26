@@ -3,6 +3,7 @@ import { ValueSource } from '../../protocols/interfaces/value-source.interface';
 import { BouncerType } from '../../rewards/enums/bouncer-type.enum';
 import { TokenBalance } from '../../tokens/interfaces/token-balance.interface';
 import { SettBoost } from './sett-boost.interface';
+import { SettStrategy } from './sett-strategy.interface';
 import { SettSummary } from './sett-summary.interface';
 
 export interface Sett extends SettSummary {
@@ -22,4 +23,5 @@ export interface Sett extends SettSummary {
   underlyingToken: string;
   vaultToken: string;
   multipliers: SettBoost[];
+  strategy: SettStrategy;
 }

@@ -1,6 +1,6 @@
 import * as AccountUtils from '../accounts/accounts.utils';
-import { SettState } from '../config/enums/sett-state.enum';
-import { BouncerType } from '../rewards/enums/bouncer-type.enum';
+import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
+import { Sett } from '../setts/interfaces/sett.interface';
 import * as SettUtils from '../setts/setts.utils';
 import { getProtocolMetrics, getProtocolSettMetrics, getProtocolTotalUsers } from './metric.utils';
 
@@ -20,27 +20,11 @@ describe('metrics.utils', () => {
         ]),
       );
 
-    jest.spyOn(SettUtils, 'getCachedSett').mockReturnValue(
-      Promise.resolve({
-        asset: 'mockSymbol',
-        vaultAsset: 'bmockSymbol',
-        apr: 0,
-        balance: 100,
-        boostable: false,
-        deprecated: false,
-        experimental: false,
-        bouncer: BouncerType.Badger,
-        name: 'mockSett',
-        ppfs: 1,
-        sources: [],
-        state: SettState.Open,
-        tokens: [],
-        underlyingToken: '0x0000000000000000000000000000000000000000',
-        value: 1000,
-        vaultToken: '0x0000000000000000000000000000000000000000',
-        multipliers: [{ boost: 100, multiplier: 1.2 }],
-      }),
-    );
+    jest
+      .spyOn(SettUtils, 'getCachedSett')
+      .mockImplementation(
+        async (settDefinition: SettDefinition): Promise<Sett> => SettUtils.defaultSett(settDefinition),
+      );
   });
 
   describe('getProtocolUsersMetric', () => {
