@@ -14,6 +14,8 @@ import { CachedSettSnapshot } from './interfaces/cached-sett-snapshot.interface'
 import { Sett } from './interfaces/sett.interface';
 import { SettDefinition } from './interfaces/sett-definition.interface';
 import { SettSnapshot } from './interfaces/sett-snapshot.interface';
+import { Sett__factory, Controller__factory, Strategy__factory } from '../contracts';
+import { SettStrategy } from './interfaces/sett-strategy.interface';
 
 export const VAULT_SOURCE = 'Vault Compounding';
 
@@ -38,6 +40,12 @@ export const defaultSett = (settDefinition: SettDefinition): Sett => {
     vaultAsset: vaultToken.symbol,
     vaultToken: settDefinition.settToken,
     multipliers: [],
+    strategy: {
+      address: ethers.constants.AddressZero,
+      withdrawFee: 50,
+      performanceFee: 20,
+      strategistFee: 10,
+    },
   };
 };
 
@@ -68,6 +76,7 @@ export const getCachedSett = async (settDefinition: SettDefinition): Promise<Set
       } else {
         sett.ppfs = item.balance / item.supply;
       }
+      sett.strategy = item.strategy;
     }
     return sett;
   } catch (err) {
@@ -137,3 +146,20 @@ export const getSettBoosts = async (settDefinition: SettDefinition): Promise<Cac
     return [];
   }
 };
+
+export async function getStrategyInfo(chain: Chain, sett: SettDefinition): Promise<SettStrategy> {
+  const contract = Sett__factory.connect(sett.settToken, chain.provider);
+  const controller = Controller__factory.connect(await contract.controller(), chain.provider);
+  const strategy = Strategy__factory.connect(await controller.strategies(sett.depositToken), chain.provider);
+  const [withdrawFee, performanceFee, strategistFee] = await Promise.all([
+    strategy.withdrawalFee(),
+    strategy.performanceFeeGovernance(),
+    strategy.performanceFeeStrategist(),
+  ]);
+  return {
+    address: strategy.address,
+    withdrawFee: withdrawFee.toNumber(),
+    performanceFee: performanceFee.toNumber(),
+    strategistFee: strategistFee.toNumber(),
+  };
+}

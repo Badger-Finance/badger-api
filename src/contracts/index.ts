@@ -2,6 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { BadgerTree } from './BadgerTree';
+export type { Controller } from './Controller';
 export type { CurveBaseRegistry } from './CurveBaseRegistry';
 export type { CurvePool3 } from './CurvePool3';
 export type { CurvePoolOld } from './CurvePoolOld';
@@ -23,11 +24,13 @@ export type { MstableVault } from './MstableVault';
 export type { PancakeChef } from './PancakeChef';
 export type { RewardsLogger } from './RewardsLogger';
 export type { Sett } from './Sett';
+export type { Strategy } from './Strategy';
 export type { SushiChef } from './SushiChef';
 export type { SushiMiniChef } from './SushiMiniChef';
 export type { UniV2 } from './UniV2';
 
 export { BadgerTree__factory } from './factories/BadgerTree__factory';
+export { Controller__factory } from './factories/Controller__factory';
 export { CurveBaseRegistry__factory } from './factories/CurveBaseRegistry__factory';
 export { CurvePool3__factory } from './factories/CurvePool3__factory';
 export { CurvePoolOld__factory } from './factories/CurvePoolOld__factory';
@@ -49,6 +52,7 @@ export { MstableVault__factory } from './factories/MstableVault__factory';
 export { PancakeChef__factory } from './factories/PancakeChef__factory';
 export { RewardsLogger__factory } from './factories/RewardsLogger__factory';
 export { Sett__factory } from './factories/Sett__factory';
+export { Strategy__factory } from './factories/Strategy__factory';
 export { SushiChef__factory } from './factories/SushiChef__factory';
 export { SushiMiniChef__factory } from './factories/SushiMiniChef__factory';
 export { UniV2__factory } from './factories/UniV2__factory';
