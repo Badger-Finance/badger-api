@@ -13,418 +13,196 @@ import {
   ContractTransaction,
   Overrides,
   CallOverrides,
-} from "ethers";
-import { BytesLike } from "@ethersproject/bytes";
-import { Listener, Provider } from "@ethersproject/providers";
-import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
+} from 'ethers';
+import { BytesLike } from '@ethersproject/bytes';
+import { Listener, Provider } from '@ethersproject/providers';
+import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
+import { TypedEventFilter, TypedEvent, TypedListener } from './commons';
 
 interface CvxBoosterInterface extends ethers.utils.Interface {
   functions: {
-    "FEE_DENOMINATOR()": FunctionFragment;
-    "MaxFees()": FunctionFragment;
-    "addPool(address,address,uint256)": FunctionFragment;
-    "claimRewards(uint256,address)": FunctionFragment;
-    "crv()": FunctionFragment;
-    "deposit(uint256,uint256,bool)": FunctionFragment;
-    "depositAll(uint256,bool)": FunctionFragment;
-    "distributionAddressId()": FunctionFragment;
-    "earmarkFees()": FunctionFragment;
-    "earmarkIncentive()": FunctionFragment;
-    "earmarkRewards(uint256)": FunctionFragment;
-    "feeDistro()": FunctionFragment;
-    "feeManager()": FunctionFragment;
-    "feeToken()": FunctionFragment;
-    "gaugeMap(address)": FunctionFragment;
-    "isShutdown()": FunctionFragment;
-    "lockFees()": FunctionFragment;
-    "lockIncentive()": FunctionFragment;
-    "lockRewards()": FunctionFragment;
-    "minter()": FunctionFragment;
-    "owner()": FunctionFragment;
-    "platformFee()": FunctionFragment;
-    "poolInfo(uint256)": FunctionFragment;
-    "poolLength()": FunctionFragment;
-    "poolManager()": FunctionFragment;
-    "registry()": FunctionFragment;
-    "rewardArbitrator()": FunctionFragment;
-    "rewardClaimed(uint256,address,uint256)": FunctionFragment;
-    "rewardFactory()": FunctionFragment;
-    "setArbitrator(address)": FunctionFragment;
-    "setFactories(address,address,address)": FunctionFragment;
-    "setFeeInfo()": FunctionFragment;
-    "setFeeManager(address)": FunctionFragment;
-    "setFees(uint256,uint256,uint256,uint256)": FunctionFragment;
-    "setGaugeRedirect(uint256)": FunctionFragment;
-    "setOwner(address)": FunctionFragment;
-    "setPoolManager(address)": FunctionFragment;
-    "setRewardContracts(address,address)": FunctionFragment;
-    "setTreasury(address)": FunctionFragment;
-    "setVoteDelegate(address)": FunctionFragment;
-    "shutdownPool(uint256)": FunctionFragment;
-    "shutdownSystem()": FunctionFragment;
-    "staker()": FunctionFragment;
-    "stakerIncentive()": FunctionFragment;
-    "stakerRewards()": FunctionFragment;
-    "stashFactory()": FunctionFragment;
-    "tokenFactory()": FunctionFragment;
-    "treasury()": FunctionFragment;
-    "vote(uint256,address,bool)": FunctionFragment;
-    "voteDelegate()": FunctionFragment;
-    "voteGaugeWeight(address[],uint256[])": FunctionFragment;
-    "voteOwnership()": FunctionFragment;
-    "voteParameter()": FunctionFragment;
-    "withdraw(uint256,uint256)": FunctionFragment;
-    "withdrawAll(uint256)": FunctionFragment;
-    "withdrawTo(uint256,uint256,address)": FunctionFragment;
+    'FEE_DENOMINATOR()': FunctionFragment;
+    'MaxFees()': FunctionFragment;
+    'addPool(address,address,uint256)': FunctionFragment;
+    'claimRewards(uint256,address)': FunctionFragment;
+    'crv()': FunctionFragment;
+    'deposit(uint256,uint256,bool)': FunctionFragment;
+    'depositAll(uint256,bool)': FunctionFragment;
+    'distributionAddressId()': FunctionFragment;
+    'earmarkFees()': FunctionFragment;
+    'earmarkIncentive()': FunctionFragment;
+    'earmarkRewards(uint256)': FunctionFragment;
+    'feeDistro()': FunctionFragment;
+    'feeManager()': FunctionFragment;
+    'feeToken()': FunctionFragment;
+    'gaugeMap(address)': FunctionFragment;
+    'isShutdown()': FunctionFragment;
+    'lockFees()': FunctionFragment;
+    'lockIncentive()': FunctionFragment;
+    'lockRewards()': FunctionFragment;
+    'minter()': FunctionFragment;
+    'owner()': FunctionFragment;
+    'platformFee()': FunctionFragment;
+    'poolInfo(uint256)': FunctionFragment;
+    'poolLength()': FunctionFragment;
+    'poolManager()': FunctionFragment;
+    'registry()': FunctionFragment;
+    'rewardArbitrator()': FunctionFragment;
+    'rewardClaimed(uint256,address,uint256)': FunctionFragment;
+    'rewardFactory()': FunctionFragment;
+    'setArbitrator(address)': FunctionFragment;
+    'setFactories(address,address,address)': FunctionFragment;
+    'setFeeInfo()': FunctionFragment;
+    'setFeeManager(address)': FunctionFragment;
+    'setFees(uint256,uint256,uint256,uint256)': FunctionFragment;
+    'setGaugeRedirect(uint256)': FunctionFragment;
+    'setOwner(address)': FunctionFragment;
+    'setPoolManager(address)': FunctionFragment;
+    'setRewardContracts(address,address)': FunctionFragment;
+    'setTreasury(address)': FunctionFragment;
+    'setVoteDelegate(address)': FunctionFragment;
+    'shutdownPool(uint256)': FunctionFragment;
+    'shutdownSystem()': FunctionFragment;
+    'staker()': FunctionFragment;
+    'stakerIncentive()': FunctionFragment;
+    'stakerRewards()': FunctionFragment;
+    'stashFactory()': FunctionFragment;
+    'tokenFactory()': FunctionFragment;
+    'treasury()': FunctionFragment;
+    'vote(uint256,address,bool)': FunctionFragment;
+    'voteDelegate()': FunctionFragment;
+    'voteGaugeWeight(address[],uint256[])': FunctionFragment;
+    'voteOwnership()': FunctionFragment;
+    'voteParameter()': FunctionFragment;
+    'withdraw(uint256,uint256)': FunctionFragment;
+    'withdrawAll(uint256)': FunctionFragment;
+    'withdrawTo(uint256,uint256,address)': FunctionFragment;
   };
 
+  encodeFunctionData(functionFragment: 'FEE_DENOMINATOR', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'MaxFees', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'addPool', values: [string, string, BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'claimRewards', values: [BigNumberish, string]): string;
+  encodeFunctionData(functionFragment: 'crv', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'deposit', values: [BigNumberish, BigNumberish, boolean]): string;
+  encodeFunctionData(functionFragment: 'depositAll', values: [BigNumberish, boolean]): string;
+  encodeFunctionData(functionFragment: 'distributionAddressId', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'earmarkFees', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'earmarkIncentive', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'earmarkRewards', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'feeDistro', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'feeManager', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'feeToken', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'gaugeMap', values: [string]): string;
+  encodeFunctionData(functionFragment: 'isShutdown', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'lockFees', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'lockIncentive', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'lockRewards', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'minter', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'owner', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'platformFee', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'poolInfo', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'poolLength', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'poolManager', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'registry', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'rewardArbitrator', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'rewardClaimed', values: [BigNumberish, string, BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'rewardFactory', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'setArbitrator', values: [string]): string;
+  encodeFunctionData(functionFragment: 'setFactories', values: [string, string, string]): string;
+  encodeFunctionData(functionFragment: 'setFeeInfo', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'setFeeManager', values: [string]): string;
   encodeFunctionData(
-    functionFragment: "FEE_DENOMINATOR",
-    values?: undefined
+    functionFragment: 'setFees',
+    values: [BigNumberish, BigNumberish, BigNumberish, BigNumberish],
   ): string;
-  encodeFunctionData(functionFragment: "MaxFees", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "addPool",
-    values: [string, string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "claimRewards",
-    values: [BigNumberish, string]
-  ): string;
-  encodeFunctionData(functionFragment: "crv", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "deposit",
-    values: [BigNumberish, BigNumberish, boolean]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "depositAll",
-    values: [BigNumberish, boolean]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "distributionAddressId",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "earmarkFees",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "earmarkIncentive",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "earmarkRewards",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(functionFragment: "feeDistro", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "feeManager",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "feeToken", values?: undefined): string;
-  encodeFunctionData(functionFragment: "gaugeMap", values: [string]): string;
-  encodeFunctionData(
-    functionFragment: "isShutdown",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "lockFees", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "lockIncentive",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "lockRewards",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "minter", values?: undefined): string;
-  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "platformFee",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "poolInfo",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "poolLength",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "poolManager",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "registry", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "rewardArbitrator",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "rewardClaimed",
-    values: [BigNumberish, string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "rewardFactory",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setArbitrator",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setFactories",
-    values: [string, string, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setFeeInfo",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setFeeManager",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setFees",
-    values: [BigNumberish, BigNumberish, BigNumberish, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setGaugeRedirect",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(functionFragment: "setOwner", values: [string]): string;
-  encodeFunctionData(
-    functionFragment: "setPoolManager",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setRewardContracts",
-    values: [string, string]
-  ): string;
-  encodeFunctionData(functionFragment: "setTreasury", values: [string]): string;
-  encodeFunctionData(
-    functionFragment: "setVoteDelegate",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "shutdownPool",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "shutdownSystem",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "staker", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "stakerIncentive",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "stakerRewards",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "stashFactory",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "tokenFactory",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "treasury", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "vote",
-    values: [BigNumberish, string, boolean]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "voteDelegate",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "voteGaugeWeight",
-    values: [string[], BigNumberish[]]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "voteOwnership",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "voteParameter",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "withdraw",
-    values: [BigNumberish, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "withdrawAll",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "withdrawTo",
-    values: [BigNumberish, BigNumberish, string]
-  ): string;
+  encodeFunctionData(functionFragment: 'setGaugeRedirect', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'setOwner', values: [string]): string;
+  encodeFunctionData(functionFragment: 'setPoolManager', values: [string]): string;
+  encodeFunctionData(functionFragment: 'setRewardContracts', values: [string, string]): string;
+  encodeFunctionData(functionFragment: 'setTreasury', values: [string]): string;
+  encodeFunctionData(functionFragment: 'setVoteDelegate', values: [string]): string;
+  encodeFunctionData(functionFragment: 'shutdownPool', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'shutdownSystem', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'staker', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'stakerIncentive', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'stakerRewards', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'stashFactory', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'tokenFactory', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'treasury', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'vote', values: [BigNumberish, string, boolean]): string;
+  encodeFunctionData(functionFragment: 'voteDelegate', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'voteGaugeWeight', values: [string[], BigNumberish[]]): string;
+  encodeFunctionData(functionFragment: 'voteOwnership', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'voteParameter', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'withdraw', values: [BigNumberish, BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'withdrawAll', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'withdrawTo', values: [BigNumberish, BigNumberish, string]): string;
 
-  decodeFunctionResult(
-    functionFragment: "FEE_DENOMINATOR",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "MaxFees", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "addPool", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "claimRewards",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "crv", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "depositAll", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "distributionAddressId",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "earmarkFees",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "earmarkIncentive",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "earmarkRewards",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "feeDistro", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "feeManager", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "feeToken", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "gaugeMap", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "isShutdown", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "lockFees", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "lockIncentive",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "lockRewards",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "minter", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "platformFee",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "poolInfo", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "poolLength", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "poolManager",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "registry", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "rewardArbitrator",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "rewardClaimed",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "rewardFactory",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setArbitrator",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setFactories",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "setFeeInfo", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "setFeeManager",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "setFees", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "setGaugeRedirect",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "setOwner", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "setPoolManager",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setRewardContracts",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setTreasury",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setVoteDelegate",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "shutdownPool",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "shutdownSystem",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "staker", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "stakerIncentive",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "stakerRewards",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "stashFactory",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "tokenFactory",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "treasury", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "vote", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "voteDelegate",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "voteGaugeWeight",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "voteOwnership",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "voteParameter",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "withdrawAll",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "withdrawTo", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'FEE_DENOMINATOR', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'MaxFees', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'addPool', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'claimRewards', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'crv', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'deposit', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'depositAll', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'distributionAddressId', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'earmarkFees', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'earmarkIncentive', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'earmarkRewards', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'feeDistro', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'feeManager', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'feeToken', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'gaugeMap', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'isShutdown', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'lockFees', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'lockIncentive', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'lockRewards', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'minter', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'owner', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'platformFee', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'poolInfo', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'poolLength', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'poolManager', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'registry', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'rewardArbitrator', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'rewardClaimed', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'rewardFactory', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setArbitrator', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setFactories', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setFeeInfo', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setFeeManager', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setFees', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setGaugeRedirect', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setOwner', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setPoolManager', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setRewardContracts', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setTreasury', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setVoteDelegate', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'shutdownPool', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'shutdownSystem', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'staker', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'stakerIncentive', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'stakerRewards', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'stashFactory', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'tokenFactory', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'treasury', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'vote', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'voteDelegate', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'voteGaugeWeight', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'voteOwnership', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'voteParameter', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'withdraw', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'withdrawAll', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'withdrawTo', data: BytesLike): Result;
 
   events: {
-    "Deposited(address,uint256,uint256)": EventFragment;
-    "Withdrawn(address,uint256,uint256)": EventFragment;
+    'Deposited(address,uint256,uint256)': EventFragment;
+    'Withdrawn(address,uint256,uint256)': EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "Deposited"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Withdrawn"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'Deposited'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'Withdrawn'): EventFragment;
 }
 
 export class CvxBooster extends BaseContract {
@@ -433,26 +211,26 @@ export class CvxBooster extends BaseContract {
   deployed(): Promise<this>;
 
   listeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
+    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>,
   ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
   off<EventArgsArray extends Array<any>, EventArgsObject>(
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
+    listener: TypedListener<EventArgsArray, EventArgsObject>,
   ): this;
   on<EventArgsArray extends Array<any>, EventArgsObject>(
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
+    listener: TypedListener<EventArgsArray, EventArgsObject>,
   ): this;
   once<EventArgsArray extends Array<any>, EventArgsObject>(
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
+    listener: TypedListener<EventArgsArray, EventArgsObject>,
   ): this;
   removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
+    listener: TypedListener<EventArgsArray, EventArgsObject>,
   ): this;
   removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
   ): this;
 
   listeners(eventName?: string): Array<Listener>;
@@ -465,7 +243,7 @@ export class CvxBooster extends BaseContract {
   queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
     event: TypedEventFilter<EventArgsArray, EventArgsObject>,
     fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
+    toBlock?: string | number | undefined,
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
   interface: CvxBoosterInterface;
@@ -479,13 +257,13 @@ export class CvxBooster extends BaseContract {
       _lptoken: string,
       _gauge: string,
       _stashVersion: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     claimRewards(
       _pid: BigNumberish,
       _gauge: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     crv(overrides?: CallOverrides): Promise<[string]>;
@@ -494,26 +272,24 @@ export class CvxBooster extends BaseContract {
       _pid: BigNumberish,
       _amount: BigNumberish,
       _stake: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     depositAll(
       _pid: BigNumberish,
       _stake: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     distributionAddressId(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    earmarkFees(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    earmarkFees(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
     earmarkIncentive(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     earmarkRewards(
       _pid: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     feeDistro(overrides?: CallOverrides): Promise<[string]>;
@@ -540,7 +316,7 @@ export class CvxBooster extends BaseContract {
 
     poolInfo(
       arg0: BigNumberish,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<
       [string, string, string, string, string, boolean] & {
         lptoken: string;
@@ -564,30 +340,28 @@ export class CvxBooster extends BaseContract {
       _pid: BigNumberish,
       _address: string,
       _amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     rewardFactory(overrides?: CallOverrides): Promise<[string]>;
 
     setArbitrator(
       _arb: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     setFactories(
       _rfactory: string,
       _sfactory: string,
       _tfactory: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
-    setFeeInfo(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    setFeeInfo(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
     setFeeManager(
       _feeM: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     setFees(
@@ -595,48 +369,43 @@ export class CvxBooster extends BaseContract {
       _stakerFees: BigNumberish,
       _callerFees: BigNumberish,
       _platform: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     setGaugeRedirect(
       _pid: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
-    setOwner(
-      _owner: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    setOwner(_owner: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
     setPoolManager(
       _poolM: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     setRewardContracts(
       _rewards: string,
       _stakerRewards: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     setTreasury(
       _treasury: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     setVoteDelegate(
       _voteDelegate: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     shutdownPool(
       _pid: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
-    shutdownSystem(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    shutdownSystem(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
     staker(overrides?: CallOverrides): Promise<[string]>;
 
@@ -654,7 +423,7 @@ export class CvxBooster extends BaseContract {
       _voteId: BigNumberish,
       _votingAddress: string,
       _support: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     voteDelegate(overrides?: CallOverrides): Promise<[string]>;
@@ -662,7 +431,7 @@ export class CvxBooster extends BaseContract {
     voteGaugeWeight(
       _gauge: string[],
       _weight: BigNumberish[],
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     voteOwnership(overrides?: CallOverrides): Promise<[string]>;
@@ -672,19 +441,19 @@ export class CvxBooster extends BaseContract {
     withdraw(
       _pid: BigNumberish,
       _amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     withdrawAll(
       _pid: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     withdrawTo(
       _pid: BigNumberish,
       _amount: BigNumberish,
       _to: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
   };
 
@@ -696,13 +465,13 @@ export class CvxBooster extends BaseContract {
     _lptoken: string,
     _gauge: string,
     _stashVersion: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   claimRewards(
     _pid: BigNumberish,
     _gauge: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   crv(overrides?: CallOverrides): Promise<string>;
@@ -711,26 +480,24 @@ export class CvxBooster extends BaseContract {
     _pid: BigNumberish,
     _amount: BigNumberish,
     _stake: boolean,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   depositAll(
     _pid: BigNumberish,
     _stake: boolean,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   distributionAddressId(overrides?: CallOverrides): Promise<BigNumber>;
 
-  earmarkFees(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  earmarkFees(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
   earmarkIncentive(overrides?: CallOverrides): Promise<BigNumber>;
 
   earmarkRewards(
     _pid: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   feeDistro(overrides?: CallOverrides): Promise<string>;
@@ -757,7 +524,7 @@ export class CvxBooster extends BaseContract {
 
   poolInfo(
     arg0: BigNumberish,
-    overrides?: CallOverrides
+    overrides?: CallOverrides,
   ): Promise<
     [string, string, string, string, string, boolean] & {
       lptoken: string;
@@ -781,30 +548,28 @@ export class CvxBooster extends BaseContract {
     _pid: BigNumberish,
     _address: string,
     _amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   rewardFactory(overrides?: CallOverrides): Promise<string>;
 
   setArbitrator(
     _arb: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   setFactories(
     _rfactory: string,
     _sfactory: string,
     _tfactory: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
-  setFeeInfo(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  setFeeInfo(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
   setFeeManager(
     _feeM: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   setFees(
@@ -812,48 +577,43 @@ export class CvxBooster extends BaseContract {
     _stakerFees: BigNumberish,
     _callerFees: BigNumberish,
     _platform: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   setGaugeRedirect(
     _pid: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
-  setOwner(
-    _owner: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  setOwner(_owner: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
   setPoolManager(
     _poolM: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   setRewardContracts(
     _rewards: string,
     _stakerRewards: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   setTreasury(
     _treasury: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   setVoteDelegate(
     _voteDelegate: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   shutdownPool(
     _pid: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
-  shutdownSystem(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  shutdownSystem(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
   staker(overrides?: CallOverrides): Promise<string>;
 
@@ -871,7 +631,7 @@ export class CvxBooster extends BaseContract {
     _voteId: BigNumberish,
     _votingAddress: string,
     _support: boolean,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   voteDelegate(overrides?: CallOverrides): Promise<string>;
@@ -879,7 +639,7 @@ export class CvxBooster extends BaseContract {
   voteGaugeWeight(
     _gauge: string[],
     _weight: BigNumberish[],
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   voteOwnership(overrides?: CallOverrides): Promise<string>;
@@ -889,19 +649,19 @@ export class CvxBooster extends BaseContract {
   withdraw(
     _pid: BigNumberish,
     _amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   withdrawAll(
     _pid: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   withdrawTo(
     _pid: BigNumberish,
     _amount: BigNumberish,
     _to: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   callStatic: {
@@ -909,33 +669,15 @@ export class CvxBooster extends BaseContract {
 
     MaxFees(overrides?: CallOverrides): Promise<BigNumber>;
 
-    addPool(
-      _lptoken: string,
-      _gauge: string,
-      _stashVersion: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    addPool(_lptoken: string, _gauge: string, _stashVersion: BigNumberish, overrides?: CallOverrides): Promise<boolean>;
 
-    claimRewards(
-      _pid: BigNumberish,
-      _gauge: string,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    claimRewards(_pid: BigNumberish, _gauge: string, overrides?: CallOverrides): Promise<boolean>;
 
     crv(overrides?: CallOverrides): Promise<string>;
 
-    deposit(
-      _pid: BigNumberish,
-      _amount: BigNumberish,
-      _stake: boolean,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    deposit(_pid: BigNumberish, _amount: BigNumberish, _stake: boolean, overrides?: CallOverrides): Promise<boolean>;
 
-    depositAll(
-      _pid: BigNumberish,
-      _stake: boolean,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    depositAll(_pid: BigNumberish, _stake: boolean, overrides?: CallOverrides): Promise<boolean>;
 
     distributionAddressId(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -943,10 +685,7 @@ export class CvxBooster extends BaseContract {
 
     earmarkIncentive(overrides?: CallOverrides): Promise<BigNumber>;
 
-    earmarkRewards(
-      _pid: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    earmarkRewards(_pid: BigNumberish, overrides?: CallOverrides): Promise<boolean>;
 
     feeDistro(overrides?: CallOverrides): Promise<string>;
 
@@ -972,7 +711,7 @@ export class CvxBooster extends BaseContract {
 
     poolInfo(
       arg0: BigNumberish,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<
       [string, string, string, string, string, boolean] & {
         lptoken: string;
@@ -996,19 +735,14 @@ export class CvxBooster extends BaseContract {
       _pid: BigNumberish,
       _address: string,
       _amount: BigNumberish,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<boolean>;
 
     rewardFactory(overrides?: CallOverrides): Promise<string>;
 
     setArbitrator(_arb: string, overrides?: CallOverrides): Promise<void>;
 
-    setFactories(
-      _rfactory: string,
-      _sfactory: string,
-      _tfactory: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    setFactories(_rfactory: string, _sfactory: string, _tfactory: string, overrides?: CallOverrides): Promise<void>;
 
     setFeeInfo(overrides?: CallOverrides): Promise<void>;
 
@@ -1019,35 +753,22 @@ export class CvxBooster extends BaseContract {
       _stakerFees: BigNumberish,
       _callerFees: BigNumberish,
       _platform: BigNumberish,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<void>;
 
-    setGaugeRedirect(
-      _pid: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    setGaugeRedirect(_pid: BigNumberish, overrides?: CallOverrides): Promise<boolean>;
 
     setOwner(_owner: string, overrides?: CallOverrides): Promise<void>;
 
     setPoolManager(_poolM: string, overrides?: CallOverrides): Promise<void>;
 
-    setRewardContracts(
-      _rewards: string,
-      _stakerRewards: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    setRewardContracts(_rewards: string, _stakerRewards: string, overrides?: CallOverrides): Promise<void>;
 
     setTreasury(_treasury: string, overrides?: CallOverrides): Promise<void>;
 
-    setVoteDelegate(
-      _voteDelegate: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    setVoteDelegate(_voteDelegate: string, overrides?: CallOverrides): Promise<void>;
 
-    shutdownPool(
-      _pid: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    shutdownPool(_pid: BigNumberish, overrides?: CallOverrides): Promise<boolean>;
 
     shutdownSystem(overrides?: CallOverrides): Promise<void>;
 
@@ -1063,62 +784,35 @@ export class CvxBooster extends BaseContract {
 
     treasury(overrides?: CallOverrides): Promise<string>;
 
-    vote(
-      _voteId: BigNumberish,
-      _votingAddress: string,
-      _support: boolean,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    vote(_voteId: BigNumberish, _votingAddress: string, _support: boolean, overrides?: CallOverrides): Promise<boolean>;
 
     voteDelegate(overrides?: CallOverrides): Promise<string>;
 
-    voteGaugeWeight(
-      _gauge: string[],
-      _weight: BigNumberish[],
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    voteGaugeWeight(_gauge: string[], _weight: BigNumberish[], overrides?: CallOverrides): Promise<boolean>;
 
     voteOwnership(overrides?: CallOverrides): Promise<string>;
 
     voteParameter(overrides?: CallOverrides): Promise<string>;
 
-    withdraw(
-      _pid: BigNumberish,
-      _amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    withdraw(_pid: BigNumberish, _amount: BigNumberish, overrides?: CallOverrides): Promise<boolean>;
 
-    withdrawAll(
-      _pid: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    withdrawAll(_pid: BigNumberish, overrides?: CallOverrides): Promise<boolean>;
 
-    withdrawTo(
-      _pid: BigNumberish,
-      _amount: BigNumberish,
-      _to: string,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    withdrawTo(_pid: BigNumberish, _amount: BigNumberish, _to: string, overrides?: CallOverrides): Promise<boolean>;
   };
 
   filters: {
     Deposited(
       user?: string | null,
       poolid?: BigNumberish | null,
-      amount?: null
-    ): TypedEventFilter<
-      [string, BigNumber, BigNumber],
-      { user: string; poolid: BigNumber; amount: BigNumber }
-    >;
+      amount?: null,
+    ): TypedEventFilter<[string, BigNumber, BigNumber], { user: string; poolid: BigNumber; amount: BigNumber }>;
 
     Withdrawn(
       user?: string | null,
       poolid?: BigNumberish | null,
-      amount?: null
-    ): TypedEventFilter<
-      [string, BigNumber, BigNumber],
-      { user: string; poolid: BigNumber; amount: BigNumber }
-    >;
+      amount?: null,
+    ): TypedEventFilter<[string, BigNumber, BigNumber], { user: string; poolid: BigNumber; amount: BigNumber }>;
   };
 
   estimateGas: {
@@ -1130,13 +824,13 @@ export class CvxBooster extends BaseContract {
       _lptoken: string,
       _gauge: string,
       _stashVersion: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     claimRewards(
       _pid: BigNumberish,
       _gauge: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     crv(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1145,27 +839,22 @@ export class CvxBooster extends BaseContract {
       _pid: BigNumberish,
       _amount: BigNumberish,
       _stake: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     depositAll(
       _pid: BigNumberish,
       _stake: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     distributionAddressId(overrides?: CallOverrides): Promise<BigNumber>;
 
-    earmarkFees(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    earmarkFees(overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
     earmarkIncentive(overrides?: CallOverrides): Promise<BigNumber>;
 
-    earmarkRewards(
-      _pid: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    earmarkRewards(_pid: BigNumberish, overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
     feeDistro(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1203,79 +892,57 @@ export class CvxBooster extends BaseContract {
       _pid: BigNumberish,
       _address: string,
       _amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     rewardFactory(overrides?: CallOverrides): Promise<BigNumber>;
 
-    setArbitrator(
-      _arb: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    setArbitrator(_arb: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
     setFactories(
       _rfactory: string,
       _sfactory: string,
       _tfactory: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
-    setFeeInfo(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    setFeeInfo(overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
-    setFeeManager(
-      _feeM: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    setFeeManager(_feeM: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
     setFees(
       _lockFees: BigNumberish,
       _stakerFees: BigNumberish,
       _callerFees: BigNumberish,
       _platform: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     setGaugeRedirect(
       _pid: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
-    setOwner(
-      _owner: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    setOwner(_owner: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
-    setPoolManager(
-      _poolM: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    setPoolManager(_poolM: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
     setRewardContracts(
       _rewards: string,
       _stakerRewards: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
-    setTreasury(
-      _treasury: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    setTreasury(_treasury: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
     setVoteDelegate(
       _voteDelegate: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
-    shutdownPool(
-      _pid: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    shutdownPool(_pid: BigNumberish, overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
-    shutdownSystem(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    shutdownSystem(overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
     staker(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1293,7 +960,7 @@ export class CvxBooster extends BaseContract {
       _voteId: BigNumberish,
       _votingAddress: string,
       _support: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     voteDelegate(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1301,7 +968,7 @@ export class CvxBooster extends BaseContract {
     voteGaugeWeight(
       _gauge: string[],
       _weight: BigNumberish[],
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     voteOwnership(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1311,19 +978,16 @@ export class CvxBooster extends BaseContract {
     withdraw(
       _pid: BigNumberish,
       _amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
-    withdrawAll(
-      _pid: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    withdrawAll(_pid: BigNumberish, overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
     withdrawTo(
       _pid: BigNumberish,
       _amount: BigNumberish,
       _to: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
   };
 
@@ -1336,13 +1000,13 @@ export class CvxBooster extends BaseContract {
       _lptoken: string,
       _gauge: string,
       _stashVersion: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     claimRewards(
       _pid: BigNumberish,
       _gauge: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     crv(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -1351,28 +1015,24 @@ export class CvxBooster extends BaseContract {
       _pid: BigNumberish,
       _amount: BigNumberish,
       _stake: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     depositAll(
       _pid: BigNumberish,
       _stake: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
-    distributionAddressId(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    distributionAddressId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    earmarkFees(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    earmarkFees(overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
 
     earmarkIncentive(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     earmarkRewards(
       _pid: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     feeDistro(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -1381,10 +1041,7 @@ export class CvxBooster extends BaseContract {
 
     feeToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    gaugeMap(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    gaugeMap(arg0: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     isShutdown(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1400,10 +1057,7 @@ export class CvxBooster extends BaseContract {
 
     platformFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    poolInfo(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    poolInfo(arg0: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     poolLength(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1417,30 +1071,28 @@ export class CvxBooster extends BaseContract {
       _pid: BigNumberish,
       _address: string,
       _amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     rewardFactory(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     setArbitrator(
       _arb: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     setFactories(
       _rfactory: string,
       _sfactory: string,
       _tfactory: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
-    setFeeInfo(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    setFeeInfo(overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
 
     setFeeManager(
       _feeM: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     setFees(
@@ -1448,48 +1100,46 @@ export class CvxBooster extends BaseContract {
       _stakerFees: BigNumberish,
       _callerFees: BigNumberish,
       _platform: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     setGaugeRedirect(
       _pid: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     setOwner(
       _owner: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     setPoolManager(
       _poolM: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     setRewardContracts(
       _rewards: string,
       _stakerRewards: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     setTreasury(
       _treasury: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     setVoteDelegate(
       _voteDelegate: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     shutdownPool(
       _pid: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
-    shutdownSystem(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    shutdownSystem(overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
 
     staker(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1507,7 +1157,7 @@ export class CvxBooster extends BaseContract {
       _voteId: BigNumberish,
       _votingAddress: string,
       _support: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     voteDelegate(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -1515,7 +1165,7 @@ export class CvxBooster extends BaseContract {
     voteGaugeWeight(
       _gauge: string[],
       _weight: BigNumberish[],
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     voteOwnership(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -1525,19 +1175,19 @@ export class CvxBooster extends BaseContract {
     withdraw(
       _pid: BigNumberish,
       _amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     withdrawAll(
       _pid: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     withdrawTo(
       _pid: BigNumberish,
       _amount: BigNumberish,
       _to: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
   };
 }

@@ -13,439 +13,207 @@ import {
   ContractTransaction,
   Overrides,
   CallOverrides,
-} from "ethers";
-import { BytesLike } from "@ethersproject/bytes";
-import { Listener, Provider } from "@ethersproject/providers";
-import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
+} from 'ethers';
+import { BytesLike } from '@ethersproject/bytes';
+import { Listener, Provider } from '@ethersproject/providers';
+import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
+import { TypedEventFilter, TypedEvent, TypedListener } from './commons';
 
 interface EmpInterface extends ethers.utils.Interface {
   functions: {
-    "cancelTransferPosition()": FunctionFragment;
-    "cancelWithdrawal()": FunctionFragment;
-    "collateralCurrency()": FunctionFragment;
-    "collateralRequirement()": FunctionFragment;
-    "contractState()": FunctionFragment;
-    "create(tuple,tuple)": FunctionFragment;
-    "createLiquidation(address,tuple,tuple,tuple,uint256)": FunctionFragment;
-    "cumulativeFeeMultiplier()": FunctionFragment;
-    "deposit(tuple)": FunctionFragment;
-    "depositTo(address,tuple)": FunctionFragment;
-    "dispute(uint256,address)": FunctionFragment;
-    "disputeBondPct()": FunctionFragment;
-    "disputerDisputeRewardPct()": FunctionFragment;
-    "emergencyShutdown()": FunctionFragment;
-    "expirationTimestamp()": FunctionFragment;
-    "expire()": FunctionFragment;
-    "expiryPrice()": FunctionFragment;
-    "finder()": FunctionFragment;
-    "getCollateral(address)": FunctionFragment;
-    "getCurrentTime()": FunctionFragment;
-    "getLiquidations(address)": FunctionFragment;
-    "liquidationLiveness()": FunctionFragment;
-    "liquidations(address,uint256)": FunctionFragment;
-    "minSponsorTokens()": FunctionFragment;
-    "payRegularFees()": FunctionFragment;
-    "pfc()": FunctionFragment;
-    "positions(address)": FunctionFragment;
-    "priceIdentifier()": FunctionFragment;
-    "rawLiquidationCollateral()": FunctionFragment;
-    "rawTotalPositionCollateral()": FunctionFragment;
-    "redeem(tuple)": FunctionFragment;
-    "remargin()": FunctionFragment;
-    "requestTransferPosition()": FunctionFragment;
-    "requestWithdrawal(tuple)": FunctionFragment;
-    "setCurrentTime(uint256)": FunctionFragment;
-    "settleExpired()": FunctionFragment;
-    "sponsorDisputeRewardPct()": FunctionFragment;
-    "timerAddress()": FunctionFragment;
-    "tokenCurrency()": FunctionFragment;
-    "totalPositionCollateral()": FunctionFragment;
-    "totalTokensOutstanding()": FunctionFragment;
-    "transferPositionPassedRequest(address)": FunctionFragment;
-    "withdraw(tuple)": FunctionFragment;
-    "withdrawLiquidation(uint256,address)": FunctionFragment;
-    "withdrawPassedRequest()": FunctionFragment;
-    "withdrawalLiveness()": FunctionFragment;
+    'cancelTransferPosition()': FunctionFragment;
+    'cancelWithdrawal()': FunctionFragment;
+    'collateralCurrency()': FunctionFragment;
+    'collateralRequirement()': FunctionFragment;
+    'contractState()': FunctionFragment;
+    'create(tuple,tuple)': FunctionFragment;
+    'createLiquidation(address,tuple,tuple,tuple,uint256)': FunctionFragment;
+    'cumulativeFeeMultiplier()': FunctionFragment;
+    'deposit(tuple)': FunctionFragment;
+    'depositTo(address,tuple)': FunctionFragment;
+    'dispute(uint256,address)': FunctionFragment;
+    'disputeBondPct()': FunctionFragment;
+    'disputerDisputeRewardPct()': FunctionFragment;
+    'emergencyShutdown()': FunctionFragment;
+    'expirationTimestamp()': FunctionFragment;
+    'expire()': FunctionFragment;
+    'expiryPrice()': FunctionFragment;
+    'finder()': FunctionFragment;
+    'getCollateral(address)': FunctionFragment;
+    'getCurrentTime()': FunctionFragment;
+    'getLiquidations(address)': FunctionFragment;
+    'liquidationLiveness()': FunctionFragment;
+    'liquidations(address,uint256)': FunctionFragment;
+    'minSponsorTokens()': FunctionFragment;
+    'payRegularFees()': FunctionFragment;
+    'pfc()': FunctionFragment;
+    'positions(address)': FunctionFragment;
+    'priceIdentifier()': FunctionFragment;
+    'rawLiquidationCollateral()': FunctionFragment;
+    'rawTotalPositionCollateral()': FunctionFragment;
+    'redeem(tuple)': FunctionFragment;
+    'remargin()': FunctionFragment;
+    'requestTransferPosition()': FunctionFragment;
+    'requestWithdrawal(tuple)': FunctionFragment;
+    'setCurrentTime(uint256)': FunctionFragment;
+    'settleExpired()': FunctionFragment;
+    'sponsorDisputeRewardPct()': FunctionFragment;
+    'timerAddress()': FunctionFragment;
+    'tokenCurrency()': FunctionFragment;
+    'totalPositionCollateral()': FunctionFragment;
+    'totalTokensOutstanding()': FunctionFragment;
+    'transferPositionPassedRequest(address)': FunctionFragment;
+    'withdraw(tuple)': FunctionFragment;
+    'withdrawLiquidation(uint256,address)': FunctionFragment;
+    'withdrawPassedRequest()': FunctionFragment;
+    'withdrawalLiveness()': FunctionFragment;
   };
 
+  encodeFunctionData(functionFragment: 'cancelTransferPosition', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'cancelWithdrawal', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'collateralCurrency', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'collateralRequirement', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'contractState', values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "cancelTransferPosition",
-    values?: undefined
+    functionFragment: 'create',
+    values: [{ rawValue: BigNumberish }, { rawValue: BigNumberish }],
   ): string;
   encodeFunctionData(
-    functionFragment: "cancelWithdrawal",
-    values?: undefined
+    functionFragment: 'createLiquidation',
+    values: [string, { rawValue: BigNumberish }, { rawValue: BigNumberish }, { rawValue: BigNumberish }, BigNumberish],
   ): string;
-  encodeFunctionData(
-    functionFragment: "collateralCurrency",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "collateralRequirement",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "contractState",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "create",
-    values: [{ rawValue: BigNumberish }, { rawValue: BigNumberish }]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "createLiquidation",
-    values: [
-      string,
-      { rawValue: BigNumberish },
-      { rawValue: BigNumberish },
-      { rawValue: BigNumberish },
-      BigNumberish
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "cumulativeFeeMultiplier",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "deposit",
-    values: [{ rawValue: BigNumberish }]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "depositTo",
-    values: [string, { rawValue: BigNumberish }]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "dispute",
-    values: [BigNumberish, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "disputeBondPct",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "disputerDisputeRewardPct",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "emergencyShutdown",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "expirationTimestamp",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "expire", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "expiryPrice",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "finder", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "getCollateral",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getCurrentTime",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getLiquidations",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "liquidationLiveness",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "liquidations",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "minSponsorTokens",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "payRegularFees",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "pfc", values?: undefined): string;
-  encodeFunctionData(functionFragment: "positions", values: [string]): string;
-  encodeFunctionData(
-    functionFragment: "priceIdentifier",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "rawLiquidationCollateral",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "rawTotalPositionCollateral",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "redeem",
-    values: [{ rawValue: BigNumberish }]
-  ): string;
-  encodeFunctionData(functionFragment: "remargin", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "requestTransferPosition",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "requestWithdrawal",
-    values: [{ rawValue: BigNumberish }]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setCurrentTime",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "settleExpired",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "sponsorDisputeRewardPct",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "timerAddress",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "tokenCurrency",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "totalPositionCollateral",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "totalTokensOutstanding",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "transferPositionPassedRequest",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "withdraw",
-    values: [{ rawValue: BigNumberish }]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "withdrawLiquidation",
-    values: [BigNumberish, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "withdrawPassedRequest",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "withdrawalLiveness",
-    values?: undefined
-  ): string;
+  encodeFunctionData(functionFragment: 'cumulativeFeeMultiplier', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'deposit', values: [{ rawValue: BigNumberish }]): string;
+  encodeFunctionData(functionFragment: 'depositTo', values: [string, { rawValue: BigNumberish }]): string;
+  encodeFunctionData(functionFragment: 'dispute', values: [BigNumberish, string]): string;
+  encodeFunctionData(functionFragment: 'disputeBondPct', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'disputerDisputeRewardPct', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'emergencyShutdown', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'expirationTimestamp', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'expire', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'expiryPrice', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'finder', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'getCollateral', values: [string]): string;
+  encodeFunctionData(functionFragment: 'getCurrentTime', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'getLiquidations', values: [string]): string;
+  encodeFunctionData(functionFragment: 'liquidationLiveness', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'liquidations', values: [string, BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'minSponsorTokens', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'payRegularFees', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'pfc', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'positions', values: [string]): string;
+  encodeFunctionData(functionFragment: 'priceIdentifier', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'rawLiquidationCollateral', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'rawTotalPositionCollateral', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'redeem', values: [{ rawValue: BigNumberish }]): string;
+  encodeFunctionData(functionFragment: 'remargin', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'requestTransferPosition', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'requestWithdrawal', values: [{ rawValue: BigNumberish }]): string;
+  encodeFunctionData(functionFragment: 'setCurrentTime', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'settleExpired', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'sponsorDisputeRewardPct', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'timerAddress', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'tokenCurrency', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'totalPositionCollateral', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'totalTokensOutstanding', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'transferPositionPassedRequest', values: [string]): string;
+  encodeFunctionData(functionFragment: 'withdraw', values: [{ rawValue: BigNumberish }]): string;
+  encodeFunctionData(functionFragment: 'withdrawLiquidation', values: [BigNumberish, string]): string;
+  encodeFunctionData(functionFragment: 'withdrawPassedRequest', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'withdrawalLiveness', values?: undefined): string;
 
-  decodeFunctionResult(
-    functionFragment: "cancelTransferPosition",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "cancelWithdrawal",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "collateralCurrency",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "collateralRequirement",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "contractState",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "create", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "createLiquidation",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "cumulativeFeeMultiplier",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "depositTo", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "dispute", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "disputeBondPct",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "disputerDisputeRewardPct",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "emergencyShutdown",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "expirationTimestamp",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "expire", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "expiryPrice",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "finder", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "getCollateral",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getCurrentTime",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getLiquidations",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "liquidationLiveness",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "liquidations",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "minSponsorTokens",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "payRegularFees",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "pfc", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "positions", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "priceIdentifier",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "rawLiquidationCollateral",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "rawTotalPositionCollateral",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "redeem", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "remargin", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "requestTransferPosition",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "requestWithdrawal",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setCurrentTime",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "settleExpired",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "sponsorDisputeRewardPct",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "timerAddress",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "tokenCurrency",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "totalPositionCollateral",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "totalTokensOutstanding",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "transferPositionPassedRequest",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "withdrawLiquidation",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "withdrawPassedRequest",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "withdrawalLiveness",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: 'cancelTransferPosition', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'cancelWithdrawal', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'collateralCurrency', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'collateralRequirement', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'contractState', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'create', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'createLiquidation', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'cumulativeFeeMultiplier', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'deposit', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'depositTo', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'dispute', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'disputeBondPct', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'disputerDisputeRewardPct', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'emergencyShutdown', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'expirationTimestamp', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'expire', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'expiryPrice', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'finder', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getCollateral', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getCurrentTime', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getLiquidations', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'liquidationLiveness', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'liquidations', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'minSponsorTokens', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'payRegularFees', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'pfc', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'positions', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'priceIdentifier', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'rawLiquidationCollateral', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'rawTotalPositionCollateral', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'redeem', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'remargin', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'requestTransferPosition', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'requestWithdrawal', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setCurrentTime', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'settleExpired', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'sponsorDisputeRewardPct', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'timerAddress', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'tokenCurrency', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'totalPositionCollateral', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'totalTokensOutstanding', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'transferPositionPassedRequest', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'withdraw', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'withdrawLiquidation', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'withdrawPassedRequest', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'withdrawalLiveness', data: BytesLike): Result;
 
   events: {
-    "ContractExpired(address)": EventFragment;
-    "Deposit(address,uint256)": EventFragment;
-    "DisputeSettled(address,address,address,address,uint256,bool)": EventFragment;
-    "EmergencyShutdown(address,uint256,uint256)": EventFragment;
-    "EndedSponsorPosition(address)": EventFragment;
-    "FinalFeesPaid(uint256)": EventFragment;
-    "LiquidationCreated(address,address,uint256,uint256,uint256,uint256)": EventFragment;
-    "LiquidationDisputed(address,address,address,uint256,uint256)": EventFragment;
-    "LiquidationWithdrawn(address,uint256,uint8)": EventFragment;
-    "NewSponsor(address)": EventFragment;
-    "PositionCreated(address,uint256,uint256)": EventFragment;
-    "Redeem(address,uint256,uint256)": EventFragment;
-    "RegularFeesPaid(uint256,uint256)": EventFragment;
-    "RequestTransferPosition(address)": EventFragment;
-    "RequestTransferPositionCanceled(address)": EventFragment;
-    "RequestTransferPositionExecuted(address,address)": EventFragment;
-    "RequestWithdrawal(address,uint256)": EventFragment;
-    "RequestWithdrawalCanceled(address,uint256)": EventFragment;
-    "RequestWithdrawalExecuted(address,uint256)": EventFragment;
-    "SettleExpiredPosition(address,uint256,uint256)": EventFragment;
-    "Withdrawal(address,uint256)": EventFragment;
+    'ContractExpired(address)': EventFragment;
+    'Deposit(address,uint256)': EventFragment;
+    'DisputeSettled(address,address,address,address,uint256,bool)': EventFragment;
+    'EmergencyShutdown(address,uint256,uint256)': EventFragment;
+    'EndedSponsorPosition(address)': EventFragment;
+    'FinalFeesPaid(uint256)': EventFragment;
+    'LiquidationCreated(address,address,uint256,uint256,uint256,uint256)': EventFragment;
+    'LiquidationDisputed(address,address,address,uint256,uint256)': EventFragment;
+    'LiquidationWithdrawn(address,uint256,uint8)': EventFragment;
+    'NewSponsor(address)': EventFragment;
+    'PositionCreated(address,uint256,uint256)': EventFragment;
+    'Redeem(address,uint256,uint256)': EventFragment;
+    'RegularFeesPaid(uint256,uint256)': EventFragment;
+    'RequestTransferPosition(address)': EventFragment;
+    'RequestTransferPositionCanceled(address)': EventFragment;
+    'RequestTransferPositionExecuted(address,address)': EventFragment;
+    'RequestWithdrawal(address,uint256)': EventFragment;
+    'RequestWithdrawalCanceled(address,uint256)': EventFragment;
+    'RequestWithdrawalExecuted(address,uint256)': EventFragment;
+    'SettleExpiredPosition(address,uint256,uint256)': EventFragment;
+    'Withdrawal(address,uint256)': EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "ContractExpired"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Deposit"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "DisputeSettled"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "EmergencyShutdown"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "EndedSponsorPosition"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "FinalFeesPaid"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "LiquidationCreated"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "LiquidationDisputed"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "LiquidationWithdrawn"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "NewSponsor"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "PositionCreated"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Redeem"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "RegularFeesPaid"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "RequestTransferPosition"): EventFragment;
-  getEvent(
-    nameOrSignatureOrTopic: "RequestTransferPositionCanceled"
-  ): EventFragment;
-  getEvent(
-    nameOrSignatureOrTopic: "RequestTransferPositionExecuted"
-  ): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "RequestWithdrawal"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "RequestWithdrawalCanceled"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "RequestWithdrawalExecuted"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "SettleExpiredPosition"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Withdrawal"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'ContractExpired'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'Deposit'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'DisputeSettled'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'EmergencyShutdown'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'EndedSponsorPosition'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'FinalFeesPaid'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'LiquidationCreated'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'LiquidationDisputed'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'LiquidationWithdrawn'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'NewSponsor'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'PositionCreated'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'Redeem'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'RegularFeesPaid'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'RequestTransferPosition'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'RequestTransferPositionCanceled'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'RequestTransferPositionExecuted'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'RequestWithdrawal'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'RequestWithdrawalCanceled'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'RequestWithdrawalExecuted'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'SettleExpiredPosition'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'Withdrawal'): EventFragment;
 }
 
 export class Emp extends BaseContract {
@@ -454,26 +222,26 @@ export class Emp extends BaseContract {
   deployed(): Promise<this>;
 
   listeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
+    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>,
   ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
   off<EventArgsArray extends Array<any>, EventArgsObject>(
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
+    listener: TypedListener<EventArgsArray, EventArgsObject>,
   ): this;
   on<EventArgsArray extends Array<any>, EventArgsObject>(
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
+    listener: TypedListener<EventArgsArray, EventArgsObject>,
   ): this;
   once<EventArgsArray extends Array<any>, EventArgsObject>(
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
+    listener: TypedListener<EventArgsArray, EventArgsObject>,
   ): this;
   removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
+    listener: TypedListener<EventArgsArray, EventArgsObject>,
   ): this;
   removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
   ): this;
 
   listeners(eventName?: string): Array<Listener>;
@@ -486,32 +254,26 @@ export class Emp extends BaseContract {
   queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
     event: TypedEventFilter<EventArgsArray, EventArgsObject>,
     fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
+    toBlock?: string | number | undefined,
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
   interface: EmpInterface;
 
   functions: {
-    cancelTransferPosition(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    cancelTransferPosition(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
-    cancelWithdrawal(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    cancelWithdrawal(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
     collateralCurrency(overrides?: CallOverrides): Promise<[string]>;
 
-    collateralRequirement(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { rawValue: BigNumber }>;
+    collateralRequirement(overrides?: CallOverrides): Promise<[BigNumber] & { rawValue: BigNumber }>;
 
     contractState(overrides?: CallOverrides): Promise<[number]>;
 
     create(
       collateralAmount: { rawValue: BigNumberish },
       numTokens: { rawValue: BigNumberish },
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     createLiquidation(
@@ -520,57 +282,45 @@ export class Emp extends BaseContract {
       maxCollateralPerToken: { rawValue: BigNumberish },
       maxTokensToLiquidate: { rawValue: BigNumberish },
       deadline: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
-    cumulativeFeeMultiplier(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { rawValue: BigNumber }>;
+    cumulativeFeeMultiplier(overrides?: CallOverrides): Promise<[BigNumber] & { rawValue: BigNumber }>;
 
     deposit(
       collateralAmount: { rawValue: BigNumberish },
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     depositTo(
       sponsor: string,
       collateralAmount: { rawValue: BigNumberish },
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     dispute(
       liquidationId: BigNumberish,
       sponsor: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
-    disputeBondPct(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { rawValue: BigNumber }>;
+    disputeBondPct(overrides?: CallOverrides): Promise<[BigNumber] & { rawValue: BigNumber }>;
 
-    disputerDisputeRewardPct(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { rawValue: BigNumber }>;
+    disputerDisputeRewardPct(overrides?: CallOverrides): Promise<[BigNumber] & { rawValue: BigNumber }>;
 
-    emergencyShutdown(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    emergencyShutdown(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
     expirationTimestamp(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    expire(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    expire(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
-    expiryPrice(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { rawValue: BigNumber }>;
+    expiryPrice(overrides?: CallOverrides): Promise<[BigNumber] & { rawValue: BigNumber }>;
 
     finder(overrides?: CallOverrides): Promise<[string]>;
 
     getCollateral(
       sponsor: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<
       [[BigNumber] & { rawValue: BigNumber }] & {
         collateralAmount: [BigNumber] & { rawValue: BigNumber };
@@ -581,7 +331,7 @@ export class Emp extends BaseContract {
 
     getLiquidations(
       sponsor: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<
       [
         ([
@@ -595,7 +345,7 @@ export class Emp extends BaseContract {
           [BigNumber] & { rawValue: BigNumber },
           string,
           [BigNumber] & { rawValue: BigNumber },
-          [BigNumber] & { rawValue: BigNumber }
+          [BigNumber] & { rawValue: BigNumber },
         ] & {
           sponsor: string;
           liquidator: string;
@@ -608,7 +358,7 @@ export class Emp extends BaseContract {
           disputer: string;
           settlementPrice: [BigNumber] & { rawValue: BigNumber };
           finalFee: [BigNumber] & { rawValue: BigNumber };
-        })[]
+        })[],
       ] & {
         liquidationData: ([
           string,
@@ -621,7 +371,7 @@ export class Emp extends BaseContract {
           [BigNumber] & { rawValue: BigNumber },
           string,
           [BigNumber] & { rawValue: BigNumber },
-          [BigNumber] & { rawValue: BigNumber }
+          [BigNumber] & { rawValue: BigNumber },
         ] & {
           sponsor: string;
           liquidator: string;
@@ -643,7 +393,7 @@ export class Emp extends BaseContract {
     liquidations(
       arg0: string,
       arg1: BigNumberish,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<
       [
         string,
@@ -656,7 +406,7 @@ export class Emp extends BaseContract {
         [BigNumber] & { rawValue: BigNumber },
         string,
         [BigNumber] & { rawValue: BigNumber },
-        [BigNumber] & { rawValue: BigNumber }
+        [BigNumber] & { rawValue: BigNumber },
       ] & {
         sponsor: string;
         liquidator: string;
@@ -672,28 +422,22 @@ export class Emp extends BaseContract {
       }
     >;
 
-    minSponsorTokens(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { rawValue: BigNumber }>;
+    minSponsorTokens(overrides?: CallOverrides): Promise<[BigNumber] & { rawValue: BigNumber }>;
 
-    payRegularFees(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    payRegularFees(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
-    pfc(
-      overrides?: CallOverrides
-    ): Promise<[[BigNumber] & { rawValue: BigNumber }]>;
+    pfc(overrides?: CallOverrides): Promise<[[BigNumber] & { rawValue: BigNumber }]>;
 
     positions(
       arg0: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<
       [
         [BigNumber] & { rawValue: BigNumber },
         BigNumber,
         [BigNumber] & { rawValue: BigNumber },
         [BigNumber] & { rawValue: BigNumber },
-        BigNumber
+        BigNumber,
       ] & {
         tokensOutstanding: [BigNumber] & { rawValue: BigNumber };
         withdrawalRequestPassTimestamp: BigNumber;
@@ -705,91 +449,69 @@ export class Emp extends BaseContract {
 
     priceIdentifier(overrides?: CallOverrides): Promise<[string]>;
 
-    rawLiquidationCollateral(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { rawValue: BigNumber }>;
+    rawLiquidationCollateral(overrides?: CallOverrides): Promise<[BigNumber] & { rawValue: BigNumber }>;
 
-    rawTotalPositionCollateral(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { rawValue: BigNumber }>;
+    rawTotalPositionCollateral(overrides?: CallOverrides): Promise<[BigNumber] & { rawValue: BigNumber }>;
 
     redeem(
       numTokens: { rawValue: BigNumberish },
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
-    remargin(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    remargin(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
-    requestTransferPosition(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    requestTransferPosition(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
     requestWithdrawal(
       collateralAmount: { rawValue: BigNumberish },
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     setCurrentTime(
       time: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
-    settleExpired(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    settleExpired(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
-    sponsorDisputeRewardPct(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { rawValue: BigNumber }>;
+    sponsorDisputeRewardPct(overrides?: CallOverrides): Promise<[BigNumber] & { rawValue: BigNumber }>;
 
     timerAddress(overrides?: CallOverrides): Promise<[string]>;
 
     tokenCurrency(overrides?: CallOverrides): Promise<[string]>;
 
-    totalPositionCollateral(
-      overrides?: CallOverrides
-    ): Promise<
+    totalPositionCollateral(overrides?: CallOverrides): Promise<
       [[BigNumber] & { rawValue: BigNumber }] & {
         totalCollateral: [BigNumber] & { rawValue: BigNumber };
       }
     >;
 
-    totalTokensOutstanding(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { rawValue: BigNumber }>;
+    totalTokensOutstanding(overrides?: CallOverrides): Promise<[BigNumber] & { rawValue: BigNumber }>;
 
     transferPositionPassedRequest(
       newSponsorAddress: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     withdraw(
       collateralAmount: { rawValue: BigNumberish },
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     withdrawLiquidation(
       liquidationId: BigNumberish,
       sponsor: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
-    withdrawPassedRequest(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    withdrawPassedRequest(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
     withdrawalLiveness(overrides?: CallOverrides): Promise<[BigNumber]>;
   };
 
-  cancelTransferPosition(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  cancelTransferPosition(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
-  cancelWithdrawal(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  cancelWithdrawal(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
   collateralCurrency(overrides?: CallOverrides): Promise<string>;
 
@@ -800,7 +522,7 @@ export class Emp extends BaseContract {
   create(
     collateralAmount: { rawValue: BigNumberish },
     numTokens: { rawValue: BigNumberish },
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   createLiquidation(
@@ -809,56 +531,49 @@ export class Emp extends BaseContract {
     maxCollateralPerToken: { rawValue: BigNumberish },
     maxTokensToLiquidate: { rawValue: BigNumberish },
     deadline: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   cumulativeFeeMultiplier(overrides?: CallOverrides): Promise<BigNumber>;
 
   deposit(
     collateralAmount: { rawValue: BigNumberish },
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   depositTo(
     sponsor: string,
     collateralAmount: { rawValue: BigNumberish },
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   dispute(
     liquidationId: BigNumberish,
     sponsor: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   disputeBondPct(overrides?: CallOverrides): Promise<BigNumber>;
 
   disputerDisputeRewardPct(overrides?: CallOverrides): Promise<BigNumber>;
 
-  emergencyShutdown(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  emergencyShutdown(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
   expirationTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
 
-  expire(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  expire(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
   expiryPrice(overrides?: CallOverrides): Promise<BigNumber>;
 
   finder(overrides?: CallOverrides): Promise<string>;
 
-  getCollateral(
-    sponsor: string,
-    overrides?: CallOverrides
-  ): Promise<[BigNumber] & { rawValue: BigNumber }>;
+  getCollateral(sponsor: string, overrides?: CallOverrides): Promise<[BigNumber] & { rawValue: BigNumber }>;
 
   getCurrentTime(overrides?: CallOverrides): Promise<BigNumber>;
 
   getLiquidations(
     sponsor: string,
-    overrides?: CallOverrides
+    overrides?: CallOverrides,
   ): Promise<
     ([
       string,
@@ -871,7 +586,7 @@ export class Emp extends BaseContract {
       [BigNumber] & { rawValue: BigNumber },
       string,
       [BigNumber] & { rawValue: BigNumber },
-      [BigNumber] & { rawValue: BigNumber }
+      [BigNumber] & { rawValue: BigNumber },
     ] & {
       sponsor: string;
       liquidator: string;
@@ -892,7 +607,7 @@ export class Emp extends BaseContract {
   liquidations(
     arg0: string,
     arg1: BigNumberish,
-    overrides?: CallOverrides
+    overrides?: CallOverrides,
   ): Promise<
     [
       string,
@@ -905,7 +620,7 @@ export class Emp extends BaseContract {
       [BigNumber] & { rawValue: BigNumber },
       string,
       [BigNumber] & { rawValue: BigNumber },
-      [BigNumber] & { rawValue: BigNumber }
+      [BigNumber] & { rawValue: BigNumber },
     ] & {
       sponsor: string;
       liquidator: string;
@@ -923,24 +638,20 @@ export class Emp extends BaseContract {
 
   minSponsorTokens(overrides?: CallOverrides): Promise<BigNumber>;
 
-  payRegularFees(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  payRegularFees(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
-  pfc(
-    overrides?: CallOverrides
-  ): Promise<[BigNumber] & { rawValue: BigNumber }>;
+  pfc(overrides?: CallOverrides): Promise<[BigNumber] & { rawValue: BigNumber }>;
 
   positions(
     arg0: string,
-    overrides?: CallOverrides
+    overrides?: CallOverrides,
   ): Promise<
     [
       [BigNumber] & { rawValue: BigNumber },
       BigNumber,
       [BigNumber] & { rawValue: BigNumber },
       [BigNumber] & { rawValue: BigNumber },
-      BigNumber
+      BigNumber,
     ] & {
       tokensOutstanding: [BigNumber] & { rawValue: BigNumber };
       withdrawalRequestPassTimestamp: BigNumber;
@@ -958,30 +669,24 @@ export class Emp extends BaseContract {
 
   redeem(
     numTokens: { rawValue: BigNumberish },
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
-  remargin(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  remargin(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
-  requestTransferPosition(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  requestTransferPosition(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
   requestWithdrawal(
     collateralAmount: { rawValue: BigNumberish },
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   setCurrentTime(
     time: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
-  settleExpired(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  settleExpired(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
   sponsorDisputeRewardPct(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -989,31 +694,27 @@ export class Emp extends BaseContract {
 
   tokenCurrency(overrides?: CallOverrides): Promise<string>;
 
-  totalPositionCollateral(
-    overrides?: CallOverrides
-  ): Promise<[BigNumber] & { rawValue: BigNumber }>;
+  totalPositionCollateral(overrides?: CallOverrides): Promise<[BigNumber] & { rawValue: BigNumber }>;
 
   totalTokensOutstanding(overrides?: CallOverrides): Promise<BigNumber>;
 
   transferPositionPassedRequest(
     newSponsorAddress: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   withdraw(
     collateralAmount: { rawValue: BigNumberish },
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   withdrawLiquidation(
     liquidationId: BigNumberish,
     sponsor: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
-  withdrawPassedRequest(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  withdrawPassedRequest(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
   withdrawalLiveness(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1031,7 +732,7 @@ export class Emp extends BaseContract {
     create(
       collateralAmount: { rawValue: BigNumberish },
       numTokens: { rawValue: BigNumberish },
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<void>;
 
     createLiquidation(
@@ -1040,13 +741,9 @@ export class Emp extends BaseContract {
       maxCollateralPerToken: { rawValue: BigNumberish },
       maxTokensToLiquidate: { rawValue: BigNumberish },
       deadline: BigNumberish,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<
-      [
-        BigNumber,
-        [BigNumber] & { rawValue: BigNumber },
-        [BigNumber] & { rawValue: BigNumber }
-      ] & {
+      [BigNumber, [BigNumber] & { rawValue: BigNumber }, [BigNumber] & { rawValue: BigNumber }] & {
         liquidationId: BigNumber;
         tokensLiquidated: [BigNumber] & { rawValue: BigNumber };
         finalFeeBond: [BigNumber] & { rawValue: BigNumber };
@@ -1055,21 +752,14 @@ export class Emp extends BaseContract {
 
     cumulativeFeeMultiplier(overrides?: CallOverrides): Promise<BigNumber>;
 
-    deposit(
-      collateralAmount: { rawValue: BigNumberish },
-      overrides?: CallOverrides
-    ): Promise<void>;
+    deposit(collateralAmount: { rawValue: BigNumberish }, overrides?: CallOverrides): Promise<void>;
 
-    depositTo(
-      sponsor: string,
-      collateralAmount: { rawValue: BigNumberish },
-      overrides?: CallOverrides
-    ): Promise<void>;
+    depositTo(sponsor: string, collateralAmount: { rawValue: BigNumberish }, overrides?: CallOverrides): Promise<void>;
 
     dispute(
       liquidationId: BigNumberish,
       sponsor: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<[BigNumber] & { rawValue: BigNumber }>;
 
     disputeBondPct(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1086,16 +776,13 @@ export class Emp extends BaseContract {
 
     finder(overrides?: CallOverrides): Promise<string>;
 
-    getCollateral(
-      sponsor: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { rawValue: BigNumber }>;
+    getCollateral(sponsor: string, overrides?: CallOverrides): Promise<[BigNumber] & { rawValue: BigNumber }>;
 
     getCurrentTime(overrides?: CallOverrides): Promise<BigNumber>;
 
     getLiquidations(
       sponsor: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<
       ([
         string,
@@ -1108,7 +795,7 @@ export class Emp extends BaseContract {
         [BigNumber] & { rawValue: BigNumber },
         string,
         [BigNumber] & { rawValue: BigNumber },
-        [BigNumber] & { rawValue: BigNumber }
+        [BigNumber] & { rawValue: BigNumber },
       ] & {
         sponsor: string;
         liquidator: string;
@@ -1129,7 +816,7 @@ export class Emp extends BaseContract {
     liquidations(
       arg0: string,
       arg1: BigNumberish,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<
       [
         string,
@@ -1142,7 +829,7 @@ export class Emp extends BaseContract {
         [BigNumber] & { rawValue: BigNumber },
         string,
         [BigNumber] & { rawValue: BigNumber },
-        [BigNumber] & { rawValue: BigNumber }
+        [BigNumber] & { rawValue: BigNumber },
       ] & {
         sponsor: string;
         liquidator: string;
@@ -1160,24 +847,20 @@ export class Emp extends BaseContract {
 
     minSponsorTokens(overrides?: CallOverrides): Promise<BigNumber>;
 
-    payRegularFees(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { rawValue: BigNumber }>;
+    payRegularFees(overrides?: CallOverrides): Promise<[BigNumber] & { rawValue: BigNumber }>;
 
-    pfc(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { rawValue: BigNumber }>;
+    pfc(overrides?: CallOverrides): Promise<[BigNumber] & { rawValue: BigNumber }>;
 
     positions(
       arg0: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<
       [
         [BigNumber] & { rawValue: BigNumber },
         BigNumber,
         [BigNumber] & { rawValue: BigNumber },
         [BigNumber] & { rawValue: BigNumber },
-        BigNumber
+        BigNumber,
       ] & {
         tokensOutstanding: [BigNumber] & { rawValue: BigNumber };
         withdrawalRequestPassTimestamp: BigNumber;
@@ -1195,26 +878,18 @@ export class Emp extends BaseContract {
 
     redeem(
       numTokens: { rawValue: BigNumberish },
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<[BigNumber] & { rawValue: BigNumber }>;
 
     remargin(overrides?: CallOverrides): Promise<void>;
 
     requestTransferPosition(overrides?: CallOverrides): Promise<void>;
 
-    requestWithdrawal(
-      collateralAmount: { rawValue: BigNumberish },
-      overrides?: CallOverrides
-    ): Promise<void>;
+    requestWithdrawal(collateralAmount: { rawValue: BigNumberish }, overrides?: CallOverrides): Promise<void>;
 
-    setCurrentTime(
-      time: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    setCurrentTime(time: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
-    settleExpired(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { rawValue: BigNumber }>;
+    settleExpired(overrides?: CallOverrides): Promise<[BigNumber] & { rawValue: BigNumber }>;
 
     sponsorDisputeRewardPct(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1222,47 +897,35 @@ export class Emp extends BaseContract {
 
     tokenCurrency(overrides?: CallOverrides): Promise<string>;
 
-    totalPositionCollateral(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { rawValue: BigNumber }>;
+    totalPositionCollateral(overrides?: CallOverrides): Promise<[BigNumber] & { rawValue: BigNumber }>;
 
     totalTokensOutstanding(overrides?: CallOverrides): Promise<BigNumber>;
 
-    transferPositionPassedRequest(
-      newSponsorAddress: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    transferPositionPassedRequest(newSponsorAddress: string, overrides?: CallOverrides): Promise<void>;
 
     withdraw(
       collateralAmount: { rawValue: BigNumberish },
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<[BigNumber] & { rawValue: BigNumber }>;
 
     withdrawLiquidation(
       liquidationId: BigNumberish,
       sponsor: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<[BigNumber] & { rawValue: BigNumber }>;
 
-    withdrawPassedRequest(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { rawValue: BigNumber }>;
+    withdrawPassedRequest(overrides?: CallOverrides): Promise<[BigNumber] & { rawValue: BigNumber }>;
 
     withdrawalLiveness(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   filters: {
-    ContractExpired(
-      caller?: string | null
-    ): TypedEventFilter<[string], { caller: string }>;
+    ContractExpired(caller?: string | null): TypedEventFilter<[string], { caller: string }>;
 
     Deposit(
       sponsor?: string | null,
-      collateralAmount?: BigNumberish | null
-    ): TypedEventFilter<
-      [string, BigNumber],
-      { sponsor: string; collateralAmount: BigNumber }
-    >;
+      collateralAmount?: BigNumberish | null,
+    ): TypedEventFilter<[string, BigNumber], { sponsor: string; collateralAmount: BigNumber }>;
 
     DisputeSettled(
       caller?: string | null,
@@ -1270,7 +933,7 @@ export class Emp extends BaseContract {
       liquidator?: string | null,
       disputer?: null,
       liquidationId?: null,
-      disputeSucceeded?: null
+      disputeSucceeded?: null,
     ): TypedEventFilter<
       [string, string, string, string, BigNumber, boolean],
       {
@@ -1286,7 +949,7 @@ export class Emp extends BaseContract {
     EmergencyShutdown(
       caller?: string | null,
       originalExpirationTimestamp?: null,
-      shutdownTimestamp?: null
+      shutdownTimestamp?: null,
     ): TypedEventFilter<
       [string, BigNumber, BigNumber],
       {
@@ -1296,13 +959,9 @@ export class Emp extends BaseContract {
       }
     >;
 
-    EndedSponsorPosition(
-      sponsor?: string | null
-    ): TypedEventFilter<[string], { sponsor: string }>;
+    EndedSponsorPosition(sponsor?: string | null): TypedEventFilter<[string], { sponsor: string }>;
 
-    FinalFeesPaid(
-      amount?: BigNumberish | null
-    ): TypedEventFilter<[BigNumber], { amount: BigNumber }>;
+    FinalFeesPaid(amount?: BigNumberish | null): TypedEventFilter<[BigNumber], { amount: BigNumber }>;
 
     LiquidationCreated(
       sponsor?: string | null,
@@ -1310,7 +969,7 @@ export class Emp extends BaseContract {
       liquidationId?: BigNumberish | null,
       tokensOutstanding?: null,
       lockedCollateral?: null,
-      liquidatedCollateral?: null
+      liquidatedCollateral?: null,
     ): TypedEventFilter<
       [string, string, BigNumber, BigNumber, BigNumber, BigNumber],
       {
@@ -1328,7 +987,7 @@ export class Emp extends BaseContract {
       liquidator?: string | null,
       disputer?: string | null,
       liquidationId?: null,
-      disputeBondAmount?: null
+      disputeBondAmount?: null,
     ): TypedEventFilter<
       [string, string, string, BigNumber, BigNumber],
       {
@@ -1343,20 +1002,18 @@ export class Emp extends BaseContract {
     LiquidationWithdrawn(
       caller?: string | null,
       withdrawalAmount?: null,
-      liquidationStatus?: BigNumberish | null
+      liquidationStatus?: BigNumberish | null,
     ): TypedEventFilter<
       [string, BigNumber, number],
       { caller: string; withdrawalAmount: BigNumber; liquidationStatus: number }
     >;
 
-    NewSponsor(
-      sponsor?: string | null
-    ): TypedEventFilter<[string], { sponsor: string }>;
+    NewSponsor(sponsor?: string | null): TypedEventFilter<[string], { sponsor: string }>;
 
     PositionCreated(
       sponsor?: string | null,
       collateralAmount?: BigNumberish | null,
-      tokenAmount?: BigNumberish | null
+      tokenAmount?: BigNumberish | null,
     ): TypedEventFilter<
       [string, BigNumber, BigNumber],
       { sponsor: string; collateralAmount: BigNumber; tokenAmount: BigNumber }
@@ -1365,7 +1022,7 @@ export class Emp extends BaseContract {
     Redeem(
       sponsor?: string | null,
       collateralAmount?: BigNumberish | null,
-      tokenAmount?: BigNumberish | null
+      tokenAmount?: BigNumberish | null,
     ): TypedEventFilter<
       [string, BigNumber, BigNumber],
       { sponsor: string; collateralAmount: BigNumber; tokenAmount: BigNumber }
@@ -1373,56 +1030,37 @@ export class Emp extends BaseContract {
 
     RegularFeesPaid(
       regularFee?: BigNumberish | null,
-      lateFee?: BigNumberish | null
-    ): TypedEventFilter<
-      [BigNumber, BigNumber],
-      { regularFee: BigNumber; lateFee: BigNumber }
-    >;
+      lateFee?: BigNumberish | null,
+    ): TypedEventFilter<[BigNumber, BigNumber], { regularFee: BigNumber; lateFee: BigNumber }>;
 
-    RequestTransferPosition(
-      oldSponsor?: string | null
-    ): TypedEventFilter<[string], { oldSponsor: string }>;
+    RequestTransferPosition(oldSponsor?: string | null): TypedEventFilter<[string], { oldSponsor: string }>;
 
-    RequestTransferPositionCanceled(
-      oldSponsor?: string | null
-    ): TypedEventFilter<[string], { oldSponsor: string }>;
+    RequestTransferPositionCanceled(oldSponsor?: string | null): TypedEventFilter<[string], { oldSponsor: string }>;
 
     RequestTransferPositionExecuted(
       oldSponsor?: string | null,
-      newSponsor?: string | null
-    ): TypedEventFilter<
-      [string, string],
-      { oldSponsor: string; newSponsor: string }
-    >;
+      newSponsor?: string | null,
+    ): TypedEventFilter<[string, string], { oldSponsor: string; newSponsor: string }>;
 
     RequestWithdrawal(
       sponsor?: string | null,
-      collateralAmount?: BigNumberish | null
-    ): TypedEventFilter<
-      [string, BigNumber],
-      { sponsor: string; collateralAmount: BigNumber }
-    >;
+      collateralAmount?: BigNumberish | null,
+    ): TypedEventFilter<[string, BigNumber], { sponsor: string; collateralAmount: BigNumber }>;
 
     RequestWithdrawalCanceled(
       sponsor?: string | null,
-      collateralAmount?: BigNumberish | null
-    ): TypedEventFilter<
-      [string, BigNumber],
-      { sponsor: string; collateralAmount: BigNumber }
-    >;
+      collateralAmount?: BigNumberish | null,
+    ): TypedEventFilter<[string, BigNumber], { sponsor: string; collateralAmount: BigNumber }>;
 
     RequestWithdrawalExecuted(
       sponsor?: string | null,
-      collateralAmount?: BigNumberish | null
-    ): TypedEventFilter<
-      [string, BigNumber],
-      { sponsor: string; collateralAmount: BigNumber }
-    >;
+      collateralAmount?: BigNumberish | null,
+    ): TypedEventFilter<[string, BigNumber], { sponsor: string; collateralAmount: BigNumber }>;
 
     SettleExpiredPosition(
       caller?: string | null,
       collateralReturned?: BigNumberish | null,
-      tokensBurned?: BigNumberish | null
+      tokensBurned?: BigNumberish | null,
     ): TypedEventFilter<
       [string, BigNumber, BigNumber],
       { caller: string; collateralReturned: BigNumber; tokensBurned: BigNumber }
@@ -1430,21 +1068,14 @@ export class Emp extends BaseContract {
 
     Withdrawal(
       sponsor?: string | null,
-      collateralAmount?: BigNumberish | null
-    ): TypedEventFilter<
-      [string, BigNumber],
-      { sponsor: string; collateralAmount: BigNumber }
-    >;
+      collateralAmount?: BigNumberish | null,
+    ): TypedEventFilter<[string, BigNumber], { sponsor: string; collateralAmount: BigNumber }>;
   };
 
   estimateGas: {
-    cancelTransferPosition(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    cancelTransferPosition(overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
-    cancelWithdrawal(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    cancelWithdrawal(overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
     collateralCurrency(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1455,7 +1086,7 @@ export class Emp extends BaseContract {
     create(
       collateralAmount: { rawValue: BigNumberish },
       numTokens: { rawValue: BigNumberish },
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     createLiquidation(
@@ -1464,71 +1095,55 @@ export class Emp extends BaseContract {
       maxCollateralPerToken: { rawValue: BigNumberish },
       maxTokensToLiquidate: { rawValue: BigNumberish },
       deadline: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     cumulativeFeeMultiplier(overrides?: CallOverrides): Promise<BigNumber>;
 
     deposit(
       collateralAmount: { rawValue: BigNumberish },
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     depositTo(
       sponsor: string,
       collateralAmount: { rawValue: BigNumberish },
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     dispute(
       liquidationId: BigNumberish,
       sponsor: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     disputeBondPct(overrides?: CallOverrides): Promise<BigNumber>;
 
     disputerDisputeRewardPct(overrides?: CallOverrides): Promise<BigNumber>;
 
-    emergencyShutdown(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    emergencyShutdown(overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
     expirationTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
 
-    expire(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    expire(overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
     expiryPrice(overrides?: CallOverrides): Promise<BigNumber>;
 
     finder(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getCollateral(
-      sponsor: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getCollateral(sponsor: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     getCurrentTime(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getLiquidations(
-      sponsor: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getLiquidations(sponsor: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     liquidationLiveness(overrides?: CallOverrides): Promise<BigNumber>;
 
-    liquidations(
-      arg0: string,
-      arg1: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    liquidations(arg0: string, arg1: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     minSponsorTokens(overrides?: CallOverrides): Promise<BigNumber>;
 
-    payRegularFees(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    payRegularFees(overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
     pfc(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1542,30 +1157,21 @@ export class Emp extends BaseContract {
 
     redeem(
       numTokens: { rawValue: BigNumberish },
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
-    remargin(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    remargin(overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
-    requestTransferPosition(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    requestTransferPosition(overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
     requestWithdrawal(
       collateralAmount: { rawValue: BigNumberish },
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
-    setCurrentTime(
-      time: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    setCurrentTime(time: BigNumberish, overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
-    settleExpired(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    settleExpired(overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
     sponsorDisputeRewardPct(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1579,50 +1185,40 @@ export class Emp extends BaseContract {
 
     transferPositionPassedRequest(
       newSponsorAddress: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     withdraw(
       collateralAmount: { rawValue: BigNumberish },
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     withdrawLiquidation(
       liquidationId: BigNumberish,
       sponsor: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
-    withdrawPassedRequest(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    withdrawPassedRequest(overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
     withdrawalLiveness(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    cancelTransferPosition(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    cancelTransferPosition(overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
 
-    cancelWithdrawal(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    cancelWithdrawal(overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
 
-    collateralCurrency(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    collateralCurrency(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    collateralRequirement(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    collateralRequirement(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     contractState(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     create(
       collateralAmount: { rawValue: BigNumberish },
       numTokens: { rawValue: BigNumberish },
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     createLiquidation(
@@ -1631,162 +1227,115 @@ export class Emp extends BaseContract {
       maxCollateralPerToken: { rawValue: BigNumberish },
       maxTokensToLiquidate: { rawValue: BigNumberish },
       deadline: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
-    cumulativeFeeMultiplier(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    cumulativeFeeMultiplier(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     deposit(
       collateralAmount: { rawValue: BigNumberish },
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     depositTo(
       sponsor: string,
       collateralAmount: { rawValue: BigNumberish },
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     dispute(
       liquidationId: BigNumberish,
       sponsor: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     disputeBondPct(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    disputerDisputeRewardPct(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    disputerDisputeRewardPct(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    emergencyShutdown(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    emergencyShutdown(overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
 
-    expirationTimestamp(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    expirationTimestamp(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    expire(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    expire(overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
 
     expiryPrice(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     finder(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    getCollateral(
-      sponsor: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    getCollateral(sponsor: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getCurrentTime(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    getLiquidations(
-      sponsor: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    getLiquidations(sponsor: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    liquidationLiveness(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    liquidationLiveness(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    liquidations(
-      arg0: string,
-      arg1: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    liquidations(arg0: string, arg1: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     minSponsorTokens(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    payRegularFees(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    payRegularFees(overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
 
     pfc(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    positions(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    positions(arg0: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     priceIdentifier(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    rawLiquidationCollateral(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    rawLiquidationCollateral(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    rawTotalPositionCollateral(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    rawTotalPositionCollateral(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     redeem(
       numTokens: { rawValue: BigNumberish },
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
-    remargin(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    remargin(overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
 
-    requestTransferPosition(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    requestTransferPosition(overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
 
     requestWithdrawal(
       collateralAmount: { rawValue: BigNumberish },
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     setCurrentTime(
       time: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
-    settleExpired(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    settleExpired(overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
 
-    sponsorDisputeRewardPct(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    sponsorDisputeRewardPct(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     timerAddress(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     tokenCurrency(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    totalPositionCollateral(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    totalPositionCollateral(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    totalTokensOutstanding(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    totalTokensOutstanding(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     transferPositionPassedRequest(
       newSponsorAddress: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     withdraw(
       collateralAmount: { rawValue: BigNumberish },
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     withdrawLiquidation(
       liquidationId: BigNumberish,
       sponsor: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
-    withdrawPassedRequest(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    withdrawPassedRequest(overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
 
-    withdrawalLiveness(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    withdrawalLiveness(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

@@ -13,159 +13,94 @@ import {
   ContractTransaction,
   Overrides,
   CallOverrides,
-} from "ethers";
-import { BytesLike } from "@ethersproject/bytes";
-import { Listener, Provider } from "@ethersproject/providers";
-import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
+} from 'ethers';
+import { BytesLike } from '@ethersproject/bytes';
+import { Listener, Provider } from '@ethersproject/providers';
+import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
+import { TypedEventFilter, TypedEvent, TypedListener } from './commons';
 
 interface CurveRegistryInterface extends ethers.utils.Interface {
   functions: {
-    "find_pool_for_coins(address,address)": FunctionFragment;
-    "get_n_coins(address)": FunctionFragment;
-    "get_coins(address)": FunctionFragment;
-    "get_underlying_coins(address)": FunctionFragment;
-    "get_decimals(address)": FunctionFragment;
-    "get_underlying_decimals(address)": FunctionFragment;
-    "get_rates(address)": FunctionFragment;
-    "get_gauges(address)": FunctionFragment;
-    "get_balances(address)": FunctionFragment;
-    "get_underlying_balances(address)": FunctionFragment;
-    "get_virtual_price_from_lp_token(address)": FunctionFragment;
-    "get_A(address)": FunctionFragment;
-    "get_parameters(address)": FunctionFragment;
-    "get_fees(address)": FunctionFragment;
-    "get_admin_balances(address)": FunctionFragment;
-    "get_coin_indices(address,address,address)": FunctionFragment;
-    "estimate_gas_used(address,address,address)": FunctionFragment;
-    "is_meta(address)": FunctionFragment;
-    "get_pool_name(address)": FunctionFragment;
-    "get_coin_swap_count(address)": FunctionFragment;
-    "get_coin_swap_complement(address,uint256)": FunctionFragment;
-    "get_pool_asset_type(address)": FunctionFragment;
-    "add_pool(address,uint256,address,bytes32,uint256,uint256,bool,bool,string)": FunctionFragment;
-    "add_pool_without_underlying(address,uint256,address,bytes32,uint256,uint256,bool,bool,string)": FunctionFragment;
-    "add_metapool(address,uint256,address,uint256,string)": FunctionFragment;
-    "remove_pool(address)": FunctionFragment;
-    "set_pool_gas_estimates(address[5],uint256[2][5])": FunctionFragment;
-    "set_coin_gas_estimates(address[10],uint256[10])": FunctionFragment;
-    "set_gas_estimate_contract(address,address)": FunctionFragment;
-    "set_liquidity_gauges(address,address[10])": FunctionFragment;
-    "set_pool_asset_type(address,uint256)": FunctionFragment;
-    "batch_set_pool_asset_type(address[32],uint256[32])": FunctionFragment;
-    "address_provider()": FunctionFragment;
-    "gauge_controller()": FunctionFragment;
-    "pool_list(uint256)": FunctionFragment;
-    "pool_count()": FunctionFragment;
-    "coin_count()": FunctionFragment;
-    "get_coin(uint256)": FunctionFragment;
-    "get_pool_from_lp_token(address)": FunctionFragment;
-    "get_lp_token(address)": FunctionFragment;
-    "last_updated()": FunctionFragment;
+    'find_pool_for_coins(address,address)': FunctionFragment;
+    'get_n_coins(address)': FunctionFragment;
+    'get_coins(address)': FunctionFragment;
+    'get_underlying_coins(address)': FunctionFragment;
+    'get_decimals(address)': FunctionFragment;
+    'get_underlying_decimals(address)': FunctionFragment;
+    'get_rates(address)': FunctionFragment;
+    'get_gauges(address)': FunctionFragment;
+    'get_balances(address)': FunctionFragment;
+    'get_underlying_balances(address)': FunctionFragment;
+    'get_virtual_price_from_lp_token(address)': FunctionFragment;
+    'get_A(address)': FunctionFragment;
+    'get_parameters(address)': FunctionFragment;
+    'get_fees(address)': FunctionFragment;
+    'get_admin_balances(address)': FunctionFragment;
+    'get_coin_indices(address,address,address)': FunctionFragment;
+    'estimate_gas_used(address,address,address)': FunctionFragment;
+    'is_meta(address)': FunctionFragment;
+    'get_pool_name(address)': FunctionFragment;
+    'get_coin_swap_count(address)': FunctionFragment;
+    'get_coin_swap_complement(address,uint256)': FunctionFragment;
+    'get_pool_asset_type(address)': FunctionFragment;
+    'add_pool(address,uint256,address,bytes32,uint256,uint256,bool,bool,string)': FunctionFragment;
+    'add_pool_without_underlying(address,uint256,address,bytes32,uint256,uint256,bool,bool,string)': FunctionFragment;
+    'add_metapool(address,uint256,address,uint256,string)': FunctionFragment;
+    'remove_pool(address)': FunctionFragment;
+    'set_pool_gas_estimates(address[5],uint256[2][5])': FunctionFragment;
+    'set_coin_gas_estimates(address[10],uint256[10])': FunctionFragment;
+    'set_gas_estimate_contract(address,address)': FunctionFragment;
+    'set_liquidity_gauges(address,address[10])': FunctionFragment;
+    'set_pool_asset_type(address,uint256)': FunctionFragment;
+    'batch_set_pool_asset_type(address[32],uint256[32])': FunctionFragment;
+    'address_provider()': FunctionFragment;
+    'gauge_controller()': FunctionFragment;
+    'pool_list(uint256)': FunctionFragment;
+    'pool_count()': FunctionFragment;
+    'coin_count()': FunctionFragment;
+    'get_coin(uint256)': FunctionFragment;
+    'get_pool_from_lp_token(address)': FunctionFragment;
+    'get_lp_token(address)': FunctionFragment;
+    'last_updated()': FunctionFragment;
   };
 
+  encodeFunctionData(functionFragment: 'find_pool_for_coins', values: [string, string]): string;
+  encodeFunctionData(functionFragment: 'get_n_coins', values: [string]): string;
+  encodeFunctionData(functionFragment: 'get_coins', values: [string]): string;
+  encodeFunctionData(functionFragment: 'get_underlying_coins', values: [string]): string;
+  encodeFunctionData(functionFragment: 'get_decimals', values: [string]): string;
+  encodeFunctionData(functionFragment: 'get_underlying_decimals', values: [string]): string;
+  encodeFunctionData(functionFragment: 'get_rates', values: [string]): string;
+  encodeFunctionData(functionFragment: 'get_gauges', values: [string]): string;
+  encodeFunctionData(functionFragment: 'get_balances', values: [string]): string;
+  encodeFunctionData(functionFragment: 'get_underlying_balances', values: [string]): string;
+  encodeFunctionData(functionFragment: 'get_virtual_price_from_lp_token', values: [string]): string;
+  encodeFunctionData(functionFragment: 'get_A', values: [string]): string;
+  encodeFunctionData(functionFragment: 'get_parameters', values: [string]): string;
+  encodeFunctionData(functionFragment: 'get_fees', values: [string]): string;
+  encodeFunctionData(functionFragment: 'get_admin_balances', values: [string]): string;
+  encodeFunctionData(functionFragment: 'get_coin_indices', values: [string, string, string]): string;
+  encodeFunctionData(functionFragment: 'estimate_gas_used', values: [string, string, string]): string;
+  encodeFunctionData(functionFragment: 'is_meta', values: [string]): string;
+  encodeFunctionData(functionFragment: 'get_pool_name', values: [string]): string;
+  encodeFunctionData(functionFragment: 'get_coin_swap_count', values: [string]): string;
+  encodeFunctionData(functionFragment: 'get_coin_swap_complement', values: [string, BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'get_pool_asset_type', values: [string]): string;
   encodeFunctionData(
-    functionFragment: "find_pool_for_coins",
-    values: [string, string]
-  ): string;
-  encodeFunctionData(functionFragment: "get_n_coins", values: [string]): string;
-  encodeFunctionData(functionFragment: "get_coins", values: [string]): string;
-  encodeFunctionData(
-    functionFragment: "get_underlying_coins",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "get_decimals",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "get_underlying_decimals",
-    values: [string]
-  ): string;
-  encodeFunctionData(functionFragment: "get_rates", values: [string]): string;
-  encodeFunctionData(functionFragment: "get_gauges", values: [string]): string;
-  encodeFunctionData(
-    functionFragment: "get_balances",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "get_underlying_balances",
-    values: [string]
+    functionFragment: 'add_pool',
+    values: [string, BigNumberish, string, BytesLike, BigNumberish, BigNumberish, boolean, boolean, string],
   ): string;
   encodeFunctionData(
-    functionFragment: "get_virtual_price_from_lp_token",
-    values: [string]
-  ): string;
-  encodeFunctionData(functionFragment: "get_A", values: [string]): string;
-  encodeFunctionData(
-    functionFragment: "get_parameters",
-    values: [string]
-  ): string;
-  encodeFunctionData(functionFragment: "get_fees", values: [string]): string;
-  encodeFunctionData(
-    functionFragment: "get_admin_balances",
-    values: [string]
+    functionFragment: 'add_pool_without_underlying',
+    values: [string, BigNumberish, string, BytesLike, BigNumberish, BigNumberish, boolean, boolean, string],
   ): string;
   encodeFunctionData(
-    functionFragment: "get_coin_indices",
-    values: [string, string, string]
+    functionFragment: 'add_metapool',
+    values: [string, BigNumberish, string, BigNumberish, string],
   ): string;
+  encodeFunctionData(functionFragment: 'remove_pool', values: [string]): string;
   encodeFunctionData(
-    functionFragment: "estimate_gas_used",
-    values: [string, string, string]
-  ): string;
-  encodeFunctionData(functionFragment: "is_meta", values: [string]): string;
-  encodeFunctionData(
-    functionFragment: "get_pool_name",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "get_coin_swap_count",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "get_coin_swap_complement",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "get_pool_asset_type",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "add_pool",
-    values: [
-      string,
-      BigNumberish,
-      string,
-      BytesLike,
-      BigNumberish,
-      BigNumberish,
-      boolean,
-      boolean,
-      string
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "add_pool_without_underlying",
-    values: [
-      string,
-      BigNumberish,
-      string,
-      BytesLike,
-      BigNumberish,
-      BigNumberish,
-      boolean,
-      boolean,
-      string
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "add_metapool",
-    values: [string, BigNumberish, string, BigNumberish, string]
-  ): string;
-  encodeFunctionData(functionFragment: "remove_pool", values: [string]): string;
-  encodeFunctionData(
-    functionFragment: "set_pool_gas_estimates",
+    functionFragment: 'set_pool_gas_estimates',
     values: [
       [string, string, string, string, string],
       [
@@ -173,67 +108,36 @@ interface CurveRegistryInterface extends ethers.utils.Interface {
         [BigNumberish, BigNumberish],
         [BigNumberish, BigNumberish],
         [BigNumberish, BigNumberish],
-        [BigNumberish, BigNumberish]
-      ]
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "set_coin_gas_estimates",
-    values: [
-      [
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string
+        [BigNumberish, BigNumberish],
       ],
-      [
-        BigNumberish,
-        BigNumberish,
-        BigNumberish,
-        BigNumberish,
-        BigNumberish,
-        BigNumberish,
-        BigNumberish,
-        BigNumberish,
-        BigNumberish,
-        BigNumberish
-      ]
-    ]
+    ],
   ): string;
   encodeFunctionData(
-    functionFragment: "set_gas_estimate_contract",
-    values: [string, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "set_liquidity_gauges",
+    functionFragment: 'set_coin_gas_estimates',
     values: [
-      string,
+      [string, string, string, string, string, string, string, string, string, string],
       [
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string
-      ]
-    ]
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+      ],
+    ],
   ): string;
+  encodeFunctionData(functionFragment: 'set_gas_estimate_contract', values: [string, string]): string;
   encodeFunctionData(
-    functionFragment: "set_pool_asset_type",
-    values: [string, BigNumberish]
+    functionFragment: 'set_liquidity_gauges',
+    values: [string, [string, string, string, string, string, string, string, string, string, string]],
   ): string;
+  encodeFunctionData(functionFragment: 'set_pool_asset_type', values: [string, BigNumberish]): string;
   encodeFunctionData(
-    functionFragment: "batch_set_pool_asset_type",
+    functionFragment: 'batch_set_pool_asset_type',
     values: [
       [
         string,
@@ -267,7 +171,7 @@ interface CurveRegistryInterface extends ethers.utils.Interface {
         string,
         string,
         string,
-        string
+        string,
       ],
       [
         BigNumberish,
@@ -301,186 +205,69 @@ interface CurveRegistryInterface extends ethers.utils.Interface {
         BigNumberish,
         BigNumberish,
         BigNumberish,
-        BigNumberish
-      ]
-    ]
+        BigNumberish,
+      ],
+    ],
   ): string;
-  encodeFunctionData(
-    functionFragment: "address_provider",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "gauge_controller",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "pool_list",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "pool_count",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "coin_count",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "get_coin",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "get_pool_from_lp_token",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "get_lp_token",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "last_updated",
-    values?: undefined
-  ): string;
+  encodeFunctionData(functionFragment: 'address_provider', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'gauge_controller', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'pool_list', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'pool_count', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'coin_count', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'get_coin', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'get_pool_from_lp_token', values: [string]): string;
+  encodeFunctionData(functionFragment: 'get_lp_token', values: [string]): string;
+  encodeFunctionData(functionFragment: 'last_updated', values?: undefined): string;
 
-  decodeFunctionResult(
-    functionFragment: "find_pool_for_coins",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "get_n_coins",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "get_coins", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "get_underlying_coins",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "get_decimals",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "get_underlying_decimals",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "get_rates", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "get_gauges", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "get_balances",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "get_underlying_balances",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "get_virtual_price_from_lp_token",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "get_A", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "get_parameters",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "get_fees", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "get_admin_balances",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "get_coin_indices",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "estimate_gas_used",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "is_meta", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "get_pool_name",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "get_coin_swap_count",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "get_coin_swap_complement",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "get_pool_asset_type",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "add_pool", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "add_pool_without_underlying",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "add_metapool",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "remove_pool",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "set_pool_gas_estimates",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "set_coin_gas_estimates",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "set_gas_estimate_contract",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "set_liquidity_gauges",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "set_pool_asset_type",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "batch_set_pool_asset_type",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "address_provider",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "gauge_controller",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "pool_list", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "pool_count", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "coin_count", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "get_coin", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "get_pool_from_lp_token",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "get_lp_token",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "last_updated",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: 'find_pool_for_coins', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'get_n_coins', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'get_coins', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'get_underlying_coins', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'get_decimals', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'get_underlying_decimals', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'get_rates', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'get_gauges', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'get_balances', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'get_underlying_balances', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'get_virtual_price_from_lp_token', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'get_A', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'get_parameters', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'get_fees', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'get_admin_balances', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'get_coin_indices', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'estimate_gas_used', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'is_meta', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'get_pool_name', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'get_coin_swap_count', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'get_coin_swap_complement', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'get_pool_asset_type', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'add_pool', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'add_pool_without_underlying', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'add_metapool', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'remove_pool', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'set_pool_gas_estimates', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'set_coin_gas_estimates', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'set_gas_estimate_contract', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'set_liquidity_gauges', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'set_pool_asset_type', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'batch_set_pool_asset_type', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'address_provider', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'gauge_controller', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'pool_list', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'pool_count', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'coin_count', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'get_coin', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'get_pool_from_lp_token', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'get_lp_token', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'last_updated', data: BytesLike): Result;
 
   events: {
-    "PoolAdded(address,bytes)": EventFragment;
-    "PoolRemoved(address)": EventFragment;
+    'PoolAdded(address,bytes)': EventFragment;
+    'PoolRemoved(address)': EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "PoolAdded"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "PoolRemoved"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'PoolAdded'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'PoolRemoved'): EventFragment;
 }
 
 export class CurveRegistry extends BaseContract {
@@ -489,26 +276,26 @@ export class CurveRegistry extends BaseContract {
   deployed(): Promise<this>;
 
   listeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
+    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>,
   ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
   off<EventArgsArray extends Array<any>, EventArgsObject>(
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
+    listener: TypedListener<EventArgsArray, EventArgsObject>,
   ): this;
   on<EventArgsArray extends Array<any>, EventArgsObject>(
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
+    listener: TypedListener<EventArgsArray, EventArgsObject>,
   ): this;
   once<EventArgsArray extends Array<any>, EventArgsObject>(
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
+    listener: TypedListener<EventArgsArray, EventArgsObject>,
   ): this;
   removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
+    listener: TypedListener<EventArgsArray, EventArgsObject>,
   ): this;
   removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
   ): this;
 
   listeners(eventName?: string): Array<Listener>;
@@ -521,189 +308,77 @@ export class CurveRegistry extends BaseContract {
   queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
     event: TypedEventFilter<EventArgsArray, EventArgsObject>,
     fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
+    toBlock?: string | number | undefined,
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
   interface: CurveRegistryInterface;
 
   functions: {
-    "find_pool_for_coins(address,address)"(
-      _from: string,
-      _to: string,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
+    'find_pool_for_coins(address,address)'(_from: string, _to: string, overrides?: CallOverrides): Promise<[string]>;
 
-    "find_pool_for_coins(address,address,uint256)"(
+    'find_pool_for_coins(address,address,uint256)'(
       _from: string,
       _to: string,
       i: BigNumberish,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<[string]>;
 
-    get_n_coins(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<[[BigNumber, BigNumber]]>;
+    get_n_coins(_pool: string, overrides?: CallOverrides): Promise<[[BigNumber, BigNumber]]>;
 
     get_coins(
       _pool: string,
-      overrides?: CallOverrides
-    ): Promise<
-      [[string, string, string, string, string, string, string, string]]
-    >;
+      overrides?: CallOverrides,
+    ): Promise<[[string, string, string, string, string, string, string, string]]>;
 
     get_underlying_coins(
       _pool: string,
-      overrides?: CallOverrides
-    ): Promise<
-      [[string, string, string, string, string, string, string, string]]
-    >;
+      overrides?: CallOverrides,
+    ): Promise<[[string, string, string, string, string, string, string, string]]>;
 
     get_decimals(
       _pool: string,
-      overrides?: CallOverrides
-    ): Promise<
-      [
-        [
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber
-        ]
-      ]
-    >;
+      overrides?: CallOverrides,
+    ): Promise<[[BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber]]>;
 
     get_underlying_decimals(
       _pool: string,
-      overrides?: CallOverrides
-    ): Promise<
-      [
-        [
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber
-        ]
-      ]
-    >;
+      overrides?: CallOverrides,
+    ): Promise<[[BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber]]>;
 
     get_rates(
       _pool: string,
-      overrides?: CallOverrides
-    ): Promise<
-      [
-        [
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber
-        ]
-      ]
-    >;
+      overrides?: CallOverrides,
+    ): Promise<[[BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber]]>;
 
     get_gauges(
       _pool: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<
       [
-        [
-          string,
-          string,
-          string,
-          string,
-          string,
-          string,
-          string,
-          string,
-          string,
-          string
-        ],
-        [
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber
-        ]
+        [string, string, string, string, string, string, string, string, string, string],
+        [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber],
       ]
     >;
 
     get_balances(
       _pool: string,
-      overrides?: CallOverrides
-    ): Promise<
-      [
-        [
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber
-        ]
-      ]
-    >;
+      overrides?: CallOverrides,
+    ): Promise<[[BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber]]>;
 
     get_underlying_balances(
       _pool: string,
-      overrides?: CallOverrides
-    ): Promise<
-      [
-        [
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber
-        ]
-      ]
-    >;
+      overrides?: CallOverrides,
+    ): Promise<[[BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber]]>;
 
-    get_virtual_price_from_lp_token(
-      _token: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    get_virtual_price_from_lp_token(_token: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     get_A(_pool: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     get_parameters(
       _pool: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<
-      [
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        string,
-        BigNumber,
-        BigNumber,
-        BigNumber
-      ] & {
+      [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, string, BigNumber, BigNumber, BigNumber] & {
         A: BigNumber;
         future_A: BigNumber;
         fee: BigNumber;
@@ -717,62 +392,31 @@ export class CurveRegistry extends BaseContract {
       }
     >;
 
-    get_fees(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<[[BigNumber, BigNumber]]>;
+    get_fees(_pool: string, overrides?: CallOverrides): Promise<[[BigNumber, BigNumber]]>;
 
     get_admin_balances(
       _pool: string,
-      overrides?: CallOverrides
-    ): Promise<
-      [
-        [
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber
-        ]
-      ]
-    >;
+      overrides?: CallOverrides,
+    ): Promise<[[BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber]]>;
 
     get_coin_indices(
       _pool: string,
       _from: string,
       _to: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<[BigNumber, BigNumber, boolean]>;
 
-    estimate_gas_used(
-      _pool: string,
-      _from: string,
-      _to: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    estimate_gas_used(_pool: string, _from: string, _to: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     is_meta(_pool: string, overrides?: CallOverrides): Promise<[boolean]>;
 
     get_pool_name(_pool: string, overrides?: CallOverrides): Promise<[string]>;
 
-    get_coin_swap_count(
-      _coin: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    get_coin_swap_count(_coin: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    get_coin_swap_complement(
-      _coin: string,
-      _index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
+    get_coin_swap_complement(_coin: string, _index: BigNumberish, overrides?: CallOverrides): Promise<[string]>;
 
-    get_pool_asset_type(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    get_pool_asset_type(_pool: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     add_pool(
       _pool: string,
@@ -784,7 +428,7 @@ export class CurveRegistry extends BaseContract {
       _has_initial_A: boolean,
       _is_v1: boolean,
       _name: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     add_pool_without_underlying(
@@ -797,31 +441,31 @@ export class CurveRegistry extends BaseContract {
       _has_initial_A: boolean,
       _is_v1: boolean,
       _name: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
-    "add_metapool(address,uint256,address,uint256,string)"(
+    'add_metapool(address,uint256,address,uint256,string)'(
       _pool: string,
       _n_coins: BigNumberish,
       _lp_token: string,
       _decimals: BigNumberish,
       _name: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
-    "add_metapool(address,uint256,address,uint256,string,address)"(
+    'add_metapool(address,uint256,address,uint256,string,address)'(
       _pool: string,
       _n_coins: BigNumberish,
       _lp_token: string,
       _decimals: BigNumberish,
       _name: string,
       _base_pool: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     remove_pool(
       _pool: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     set_pool_gas_estimates(
@@ -831,24 +475,13 @@ export class CurveRegistry extends BaseContract {
         [BigNumberish, BigNumberish],
         [BigNumberish, BigNumberish],
         [BigNumberish, BigNumberish],
-        [BigNumberish, BigNumberish]
+        [BigNumberish, BigNumberish],
       ],
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     set_coin_gas_estimates(
-      _addr: [
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string
-      ],
+      _addr: [string, string, string, string, string, string, string, string, string, string],
       _amount: [
         BigNumberish,
         BigNumberish,
@@ -859,38 +492,27 @@ export class CurveRegistry extends BaseContract {
         BigNumberish,
         BigNumberish,
         BigNumberish,
-        BigNumberish
+        BigNumberish,
       ],
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     set_gas_estimate_contract(
       _pool: string,
       _estimator: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     set_liquidity_gauges(
       _pool: string,
-      _liquidity_gauges: [
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string
-      ],
-      overrides?: Overrides & { from?: string | Promise<string> }
+      _liquidity_gauges: [string, string, string, string, string, string, string, string, string, string],
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     set_pool_asset_type(
       _pool: string,
       _asset_type: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     batch_set_pool_asset_type(
@@ -926,7 +548,7 @@ export class CurveRegistry extends BaseContract {
         string,
         string,
         string,
-        string
+        string,
       ],
       _asset_types: [
         BigNumberish,
@@ -960,9 +582,9 @@ export class CurveRegistry extends BaseContract {
         BigNumberish,
         BigNumberish,
         BigNumberish,
-        BigNumberish
+        BigNumberish,
       ],
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     address_provider(overrides?: CallOverrides): Promise<[string]>;
@@ -977,179 +599,78 @@ export class CurveRegistry extends BaseContract {
 
     get_coin(arg0: BigNumberish, overrides?: CallOverrides): Promise<[string]>;
 
-    get_pool_from_lp_token(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
+    get_pool_from_lp_token(arg0: string, overrides?: CallOverrides): Promise<[string]>;
 
     get_lp_token(arg0: string, overrides?: CallOverrides): Promise<[string]>;
 
     last_updated(overrides?: CallOverrides): Promise<[BigNumber]>;
   };
 
-  "find_pool_for_coins(address,address)"(
-    _from: string,
-    _to: string,
-    overrides?: CallOverrides
-  ): Promise<string>;
+  'find_pool_for_coins(address,address)'(_from: string, _to: string, overrides?: CallOverrides): Promise<string>;
 
-  "find_pool_for_coins(address,address,uint256)"(
+  'find_pool_for_coins(address,address,uint256)'(
     _from: string,
     _to: string,
     i: BigNumberish,
-    overrides?: CallOverrides
+    overrides?: CallOverrides,
   ): Promise<string>;
 
-  get_n_coins(
-    _pool: string,
-    overrides?: CallOverrides
-  ): Promise<[BigNumber, BigNumber]>;
+  get_n_coins(_pool: string, overrides?: CallOverrides): Promise<[BigNumber, BigNumber]>;
 
   get_coins(
     _pool: string,
-    overrides?: CallOverrides
+    overrides?: CallOverrides,
   ): Promise<[string, string, string, string, string, string, string, string]>;
 
   get_underlying_coins(
     _pool: string,
-    overrides?: CallOverrides
+    overrides?: CallOverrides,
   ): Promise<[string, string, string, string, string, string, string, string]>;
 
   get_decimals(
     _pool: string,
-    overrides?: CallOverrides
-  ): Promise<
-    [
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber
-    ]
-  >;
+    overrides?: CallOverrides,
+  ): Promise<[BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber]>;
 
   get_underlying_decimals(
     _pool: string,
-    overrides?: CallOverrides
-  ): Promise<
-    [
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber
-    ]
-  >;
+    overrides?: CallOverrides,
+  ): Promise<[BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber]>;
 
   get_rates(
     _pool: string,
-    overrides?: CallOverrides
-  ): Promise<
-    [
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber
-    ]
-  >;
+    overrides?: CallOverrides,
+  ): Promise<[BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber]>;
 
   get_gauges(
     _pool: string,
-    overrides?: CallOverrides
+    overrides?: CallOverrides,
   ): Promise<
     [
-      [
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string
-      ],
-      [
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber
-      ]
+      [string, string, string, string, string, string, string, string, string, string],
+      [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber],
     ]
   >;
 
   get_balances(
     _pool: string,
-    overrides?: CallOverrides
-  ): Promise<
-    [
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber
-    ]
-  >;
+    overrides?: CallOverrides,
+  ): Promise<[BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber]>;
 
   get_underlying_balances(
     _pool: string,
-    overrides?: CallOverrides
-  ): Promise<
-    [
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber
-    ]
-  >;
+    overrides?: CallOverrides,
+  ): Promise<[BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber]>;
 
-  get_virtual_price_from_lp_token(
-    _token: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  get_virtual_price_from_lp_token(_token: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   get_A(_pool: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   get_parameters(
     _pool: string,
-    overrides?: CallOverrides
+    overrides?: CallOverrides,
   ): Promise<
-    [
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      string,
-      BigNumber,
-      BigNumber,
-      BigNumber
-    ] & {
+    [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, string, BigNumber, BigNumber, BigNumber] & {
       A: BigNumber;
       future_A: BigNumber;
       fee: BigNumber;
@@ -1163,60 +684,31 @@ export class CurveRegistry extends BaseContract {
     }
   >;
 
-  get_fees(
-    _pool: string,
-    overrides?: CallOverrides
-  ): Promise<[BigNumber, BigNumber]>;
+  get_fees(_pool: string, overrides?: CallOverrides): Promise<[BigNumber, BigNumber]>;
 
   get_admin_balances(
     _pool: string,
-    overrides?: CallOverrides
-  ): Promise<
-    [
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber
-    ]
-  >;
+    overrides?: CallOverrides,
+  ): Promise<[BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber]>;
 
   get_coin_indices(
     _pool: string,
     _from: string,
     _to: string,
-    overrides?: CallOverrides
+    overrides?: CallOverrides,
   ): Promise<[BigNumber, BigNumber, boolean]>;
 
-  estimate_gas_used(
-    _pool: string,
-    _from: string,
-    _to: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  estimate_gas_used(_pool: string, _from: string, _to: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   is_meta(_pool: string, overrides?: CallOverrides): Promise<boolean>;
 
   get_pool_name(_pool: string, overrides?: CallOverrides): Promise<string>;
 
-  get_coin_swap_count(
-    _coin: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  get_coin_swap_count(_coin: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-  get_coin_swap_complement(
-    _coin: string,
-    _index: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<string>;
+  get_coin_swap_complement(_coin: string, _index: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
-  get_pool_asset_type(
-    _pool: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  get_pool_asset_type(_pool: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   add_pool(
     _pool: string,
@@ -1228,7 +720,7 @@ export class CurveRegistry extends BaseContract {
     _has_initial_A: boolean,
     _is_v1: boolean,
     _name: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   add_pool_without_underlying(
@@ -1241,32 +733,29 @@ export class CurveRegistry extends BaseContract {
     _has_initial_A: boolean,
     _is_v1: boolean,
     _name: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
-  "add_metapool(address,uint256,address,uint256,string)"(
+  'add_metapool(address,uint256,address,uint256,string)'(
     _pool: string,
     _n_coins: BigNumberish,
     _lp_token: string,
     _decimals: BigNumberish,
     _name: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
-  "add_metapool(address,uint256,address,uint256,string,address)"(
+  'add_metapool(address,uint256,address,uint256,string,address)'(
     _pool: string,
     _n_coins: BigNumberish,
     _lp_token: string,
     _decimals: BigNumberish,
     _name: string,
     _base_pool: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
-  remove_pool(
-    _pool: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  remove_pool(_pool: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
   set_pool_gas_estimates(
     _addr: [string, string, string, string, string],
@@ -1275,24 +764,13 @@ export class CurveRegistry extends BaseContract {
       [BigNumberish, BigNumberish],
       [BigNumberish, BigNumberish],
       [BigNumberish, BigNumberish],
-      [BigNumberish, BigNumberish]
+      [BigNumberish, BigNumberish],
     ],
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   set_coin_gas_estimates(
-    _addr: [
-      string,
-      string,
-      string,
-      string,
-      string,
-      string,
-      string,
-      string,
-      string,
-      string
-    ],
+    _addr: [string, string, string, string, string, string, string, string, string, string],
     _amount: [
       BigNumberish,
       BigNumberish,
@@ -1303,38 +781,27 @@ export class CurveRegistry extends BaseContract {
       BigNumberish,
       BigNumberish,
       BigNumberish,
-      BigNumberish
+      BigNumberish,
     ],
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   set_gas_estimate_contract(
     _pool: string,
     _estimator: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   set_liquidity_gauges(
     _pool: string,
-    _liquidity_gauges: [
-      string,
-      string,
-      string,
-      string,
-      string,
-      string,
-      string,
-      string,
-      string,
-      string
-    ],
-    overrides?: Overrides & { from?: string | Promise<string> }
+    _liquidity_gauges: [string, string, string, string, string, string, string, string, string, string],
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   set_pool_asset_type(
     _pool: string,
     _asset_type: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   batch_set_pool_asset_type(
@@ -1370,7 +837,7 @@ export class CurveRegistry extends BaseContract {
       string,
       string,
       string,
-      string
+      string,
     ],
     _asset_types: [
       BigNumberish,
@@ -1404,9 +871,9 @@ export class CurveRegistry extends BaseContract {
       BigNumberish,
       BigNumberish,
       BigNumberish,
-      BigNumberish
+      BigNumberish,
     ],
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   address_provider(overrides?: CallOverrides): Promise<string>;
@@ -1421,183 +888,78 @@ export class CurveRegistry extends BaseContract {
 
   get_coin(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
-  get_pool_from_lp_token(
-    arg0: string,
-    overrides?: CallOverrides
-  ): Promise<string>;
+  get_pool_from_lp_token(arg0: string, overrides?: CallOverrides): Promise<string>;
 
   get_lp_token(arg0: string, overrides?: CallOverrides): Promise<string>;
 
   last_updated(overrides?: CallOverrides): Promise<BigNumber>;
 
   callStatic: {
-    "find_pool_for_coins(address,address)"(
-      _from: string,
-      _to: string,
-      overrides?: CallOverrides
-    ): Promise<string>;
+    'find_pool_for_coins(address,address)'(_from: string, _to: string, overrides?: CallOverrides): Promise<string>;
 
-    "find_pool_for_coins(address,address,uint256)"(
+    'find_pool_for_coins(address,address,uint256)'(
       _from: string,
       _to: string,
       i: BigNumberish,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<string>;
 
-    get_n_coins(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber, BigNumber]>;
+    get_n_coins(_pool: string, overrides?: CallOverrides): Promise<[BigNumber, BigNumber]>;
 
     get_coins(
       _pool: string,
-      overrides?: CallOverrides
-    ): Promise<
-      [string, string, string, string, string, string, string, string]
-    >;
+      overrides?: CallOverrides,
+    ): Promise<[string, string, string, string, string, string, string, string]>;
 
     get_underlying_coins(
       _pool: string,
-      overrides?: CallOverrides
-    ): Promise<
-      [string, string, string, string, string, string, string, string]
-    >;
+      overrides?: CallOverrides,
+    ): Promise<[string, string, string, string, string, string, string, string]>;
 
     get_decimals(
       _pool: string,
-      overrides?: CallOverrides
-    ): Promise<
-      [
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber
-      ]
-    >;
+      overrides?: CallOverrides,
+    ): Promise<[BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber]>;
 
     get_underlying_decimals(
       _pool: string,
-      overrides?: CallOverrides
-    ): Promise<
-      [
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber
-      ]
-    >;
+      overrides?: CallOverrides,
+    ): Promise<[BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber]>;
 
     get_rates(
       _pool: string,
-      overrides?: CallOverrides
-    ): Promise<
-      [
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber
-      ]
-    >;
+      overrides?: CallOverrides,
+    ): Promise<[BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber]>;
 
     get_gauges(
       _pool: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<
       [
-        [
-          string,
-          string,
-          string,
-          string,
-          string,
-          string,
-          string,
-          string,
-          string,
-          string
-        ],
-        [
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber,
-          BigNumber
-        ]
+        [string, string, string, string, string, string, string, string, string, string],
+        [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber],
       ]
     >;
 
     get_balances(
       _pool: string,
-      overrides?: CallOverrides
-    ): Promise<
-      [
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber
-      ]
-    >;
+      overrides?: CallOverrides,
+    ): Promise<[BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber]>;
 
     get_underlying_balances(
       _pool: string,
-      overrides?: CallOverrides
-    ): Promise<
-      [
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber
-      ]
-    >;
+      overrides?: CallOverrides,
+    ): Promise<[BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber]>;
 
-    get_virtual_price_from_lp_token(
-      _token: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    get_virtual_price_from_lp_token(_token: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     get_A(_pool: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     get_parameters(
       _pool: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<
-      [
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        string,
-        BigNumber,
-        BigNumber,
-        BigNumber
-      ] & {
+      [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, string, BigNumber, BigNumber, BigNumber] & {
         A: BigNumber;
         future_A: BigNumber;
         fee: BigNumber;
@@ -1611,60 +973,31 @@ export class CurveRegistry extends BaseContract {
       }
     >;
 
-    get_fees(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber, BigNumber]>;
+    get_fees(_pool: string, overrides?: CallOverrides): Promise<[BigNumber, BigNumber]>;
 
     get_admin_balances(
       _pool: string,
-      overrides?: CallOverrides
-    ): Promise<
-      [
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber
-      ]
-    >;
+      overrides?: CallOverrides,
+    ): Promise<[BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber]>;
 
     get_coin_indices(
       _pool: string,
       _from: string,
       _to: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<[BigNumber, BigNumber, boolean]>;
 
-    estimate_gas_used(
-      _pool: string,
-      _from: string,
-      _to: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    estimate_gas_used(_pool: string, _from: string, _to: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     is_meta(_pool: string, overrides?: CallOverrides): Promise<boolean>;
 
     get_pool_name(_pool: string, overrides?: CallOverrides): Promise<string>;
 
-    get_coin_swap_count(
-      _coin: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    get_coin_swap_count(_coin: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    get_coin_swap_complement(
-      _coin: string,
-      _index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<string>;
+    get_coin_swap_complement(_coin: string, _index: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
-    get_pool_asset_type(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    get_pool_asset_type(_pool: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     add_pool(
       _pool: string,
@@ -1676,7 +1009,7 @@ export class CurveRegistry extends BaseContract {
       _has_initial_A: boolean,
       _is_v1: boolean,
       _name: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<void>;
 
     add_pool_without_underlying(
@@ -1689,26 +1022,26 @@ export class CurveRegistry extends BaseContract {
       _has_initial_A: boolean,
       _is_v1: boolean,
       _name: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<void>;
 
-    "add_metapool(address,uint256,address,uint256,string)"(
+    'add_metapool(address,uint256,address,uint256,string)'(
       _pool: string,
       _n_coins: BigNumberish,
       _lp_token: string,
       _decimals: BigNumberish,
       _name: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<void>;
 
-    "add_metapool(address,uint256,address,uint256,string,address)"(
+    'add_metapool(address,uint256,address,uint256,string,address)'(
       _pool: string,
       _n_coins: BigNumberish,
       _lp_token: string,
       _decimals: BigNumberish,
       _name: string,
       _base_pool: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<void>;
 
     remove_pool(_pool: string, overrides?: CallOverrides): Promise<void>;
@@ -1720,24 +1053,13 @@ export class CurveRegistry extends BaseContract {
         [BigNumberish, BigNumberish],
         [BigNumberish, BigNumberish],
         [BigNumberish, BigNumberish],
-        [BigNumberish, BigNumberish]
+        [BigNumberish, BigNumberish],
       ],
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<void>;
 
     set_coin_gas_estimates(
-      _addr: [
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string
-      ],
+      _addr: [string, string, string, string, string, string, string, string, string, string],
       _amount: [
         BigNumberish,
         BigNumberish,
@@ -1748,39 +1070,20 @@ export class CurveRegistry extends BaseContract {
         BigNumberish,
         BigNumberish,
         BigNumberish,
-        BigNumberish
+        BigNumberish,
       ],
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<void>;
 
-    set_gas_estimate_contract(
-      _pool: string,
-      _estimator: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    set_gas_estimate_contract(_pool: string, _estimator: string, overrides?: CallOverrides): Promise<void>;
 
     set_liquidity_gauges(
       _pool: string,
-      _liquidity_gauges: [
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string
-      ],
-      overrides?: CallOverrides
+      _liquidity_gauges: [string, string, string, string, string, string, string, string, string, string],
+      overrides?: CallOverrides,
     ): Promise<void>;
 
-    set_pool_asset_type(
-      _pool: string,
-      _asset_type: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    set_pool_asset_type(_pool: string, _asset_type: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
     batch_set_pool_asset_type(
       _pools: [
@@ -1815,7 +1118,7 @@ export class CurveRegistry extends BaseContract {
         string,
         string,
         string,
-        string
+        string,
       ],
       _asset_types: [
         BigNumberish,
@@ -1849,9 +1152,9 @@ export class CurveRegistry extends BaseContract {
         BigNumberish,
         BigNumberish,
         BigNumberish,
-        BigNumberish
+        BigNumberish,
       ],
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<void>;
 
     address_provider(overrides?: CallOverrides): Promise<string>;
@@ -1866,10 +1169,7 @@ export class CurveRegistry extends BaseContract {
 
     get_coin(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
-    get_pool_from_lp_token(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<string>;
+    get_pool_from_lp_token(arg0: string, overrides?: CallOverrides): Promise<string>;
 
     get_lp_token(arg0: string, overrides?: CallOverrides): Promise<string>;
 
@@ -1879,46 +1179,31 @@ export class CurveRegistry extends BaseContract {
   filters: {
     PoolAdded(
       pool?: string | null,
-      rate_method_id?: null
-    ): TypedEventFilter<
-      [string, string],
-      { pool: string; rate_method_id: string }
-    >;
+      rate_method_id?: null,
+    ): TypedEventFilter<[string, string], { pool: string; rate_method_id: string }>;
 
-    PoolRemoved(
-      pool?: string | null
-    ): TypedEventFilter<[string], { pool: string }>;
+    PoolRemoved(pool?: string | null): TypedEventFilter<[string], { pool: string }>;
   };
 
   estimateGas: {
-    "find_pool_for_coins(address,address)"(
-      _from: string,
-      _to: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    'find_pool_for_coins(address,address)'(_from: string, _to: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    "find_pool_for_coins(address,address,uint256)"(
+    'find_pool_for_coins(address,address,uint256)'(
       _from: string,
       _to: string,
       i: BigNumberish,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
     get_n_coins(_pool: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     get_coins(_pool: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    get_underlying_coins(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    get_underlying_coins(_pool: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     get_decimals(_pool: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    get_underlying_decimals(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    get_underlying_decimals(_pool: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     get_rates(_pool: string, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1926,63 +1211,31 @@ export class CurveRegistry extends BaseContract {
 
     get_balances(_pool: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    get_underlying_balances(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    get_underlying_balances(_pool: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    get_virtual_price_from_lp_token(
-      _token: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    get_virtual_price_from_lp_token(_token: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     get_A(_pool: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    get_parameters(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    get_parameters(_pool: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     get_fees(_pool: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    get_admin_balances(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    get_admin_balances(_pool: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    get_coin_indices(
-      _pool: string,
-      _from: string,
-      _to: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    get_coin_indices(_pool: string, _from: string, _to: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    estimate_gas_used(
-      _pool: string,
-      _from: string,
-      _to: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    estimate_gas_used(_pool: string, _from: string, _to: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     is_meta(_pool: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     get_pool_name(_pool: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    get_coin_swap_count(
-      _coin: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    get_coin_swap_count(_coin: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    get_coin_swap_complement(
-      _coin: string,
-      _index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    get_coin_swap_complement(_coin: string, _index: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    get_pool_asset_type(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    get_pool_asset_type(_pool: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     add_pool(
       _pool: string,
@@ -1994,7 +1247,7 @@ export class CurveRegistry extends BaseContract {
       _has_initial_A: boolean,
       _is_v1: boolean,
       _name: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     add_pool_without_underlying(
@@ -2007,32 +1260,29 @@ export class CurveRegistry extends BaseContract {
       _has_initial_A: boolean,
       _is_v1: boolean,
       _name: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
-    "add_metapool(address,uint256,address,uint256,string)"(
+    'add_metapool(address,uint256,address,uint256,string)'(
       _pool: string,
       _n_coins: BigNumberish,
       _lp_token: string,
       _decimals: BigNumberish,
       _name: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
-    "add_metapool(address,uint256,address,uint256,string,address)"(
+    'add_metapool(address,uint256,address,uint256,string,address)'(
       _pool: string,
       _n_coins: BigNumberish,
       _lp_token: string,
       _decimals: BigNumberish,
       _name: string,
       _base_pool: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
-    remove_pool(
-      _pool: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    remove_pool(_pool: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
     set_pool_gas_estimates(
       _addr: [string, string, string, string, string],
@@ -2041,24 +1291,13 @@ export class CurveRegistry extends BaseContract {
         [BigNumberish, BigNumberish],
         [BigNumberish, BigNumberish],
         [BigNumberish, BigNumberish],
-        [BigNumberish, BigNumberish]
+        [BigNumberish, BigNumberish],
       ],
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     set_coin_gas_estimates(
-      _addr: [
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string
-      ],
+      _addr: [string, string, string, string, string, string, string, string, string, string],
       _amount: [
         BigNumberish,
         BigNumberish,
@@ -2069,38 +1308,27 @@ export class CurveRegistry extends BaseContract {
         BigNumberish,
         BigNumberish,
         BigNumberish,
-        BigNumberish
+        BigNumberish,
       ],
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     set_gas_estimate_contract(
       _pool: string,
       _estimator: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     set_liquidity_gauges(
       _pool: string,
-      _liquidity_gauges: [
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string
-      ],
-      overrides?: Overrides & { from?: string | Promise<string> }
+      _liquidity_gauges: [string, string, string, string, string, string, string, string, string, string],
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     set_pool_asset_type(
       _pool: string,
       _asset_type: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     batch_set_pool_asset_type(
@@ -2136,7 +1364,7 @@ export class CurveRegistry extends BaseContract {
         string,
         string,
         string,
-        string
+        string,
       ],
       _asset_types: [
         BigNumberish,
@@ -2170,19 +1398,16 @@ export class CurveRegistry extends BaseContract {
         BigNumberish,
         BigNumberish,
         BigNumberish,
-        BigNumberish
+        BigNumberish,
       ],
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     address_provider(overrides?: CallOverrides): Promise<BigNumber>;
 
     gauge_controller(overrides?: CallOverrides): Promise<BigNumber>;
 
-    pool_list(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    pool_list(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     pool_count(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -2190,10 +1415,7 @@ export class CurveRegistry extends BaseContract {
 
     get_coin(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    get_pool_from_lp_token(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    get_pool_from_lp_token(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     get_lp_token(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -2201,128 +1423,74 @@ export class CurveRegistry extends BaseContract {
   };
 
   populateTransaction: {
-    "find_pool_for_coins(address,address)"(
+    'find_pool_for_coins(address,address)'(
       _from: string,
       _to: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
-    "find_pool_for_coins(address,address,uint256)"(
+    'find_pool_for_coins(address,address,uint256)'(
       _from: string,
       _to: string,
       i: BigNumberish,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
-    get_n_coins(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    get_n_coins(_pool: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    get_coins(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    get_coins(_pool: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    get_underlying_coins(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    get_underlying_coins(_pool: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    get_decimals(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    get_decimals(_pool: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    get_underlying_decimals(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    get_underlying_decimals(_pool: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    get_rates(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    get_rates(_pool: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    get_gauges(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    get_gauges(_pool: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    get_balances(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    get_balances(_pool: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    get_underlying_balances(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    get_underlying_balances(_pool: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    get_virtual_price_from_lp_token(
-      _token: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    get_virtual_price_from_lp_token(_token: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    get_A(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    get_A(_pool: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    get_parameters(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    get_parameters(_pool: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    get_fees(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    get_fees(_pool: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    get_admin_balances(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    get_admin_balances(_pool: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     get_coin_indices(
       _pool: string,
       _from: string,
       _to: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
     estimate_gas_used(
       _pool: string,
       _from: string,
       _to: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
-    is_meta(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    is_meta(_pool: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    get_pool_name(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    get_pool_name(_pool: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    get_coin_swap_count(
-      _coin: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    get_coin_swap_count(_coin: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     get_coin_swap_complement(
       _coin: string,
       _index: BigNumberish,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
-    get_pool_asset_type(
-      _pool: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    get_pool_asset_type(_pool: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     add_pool(
       _pool: string,
@@ -2334,7 +1502,7 @@ export class CurveRegistry extends BaseContract {
       _has_initial_A: boolean,
       _is_v1: boolean,
       _name: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     add_pool_without_underlying(
@@ -2347,31 +1515,31 @@ export class CurveRegistry extends BaseContract {
       _has_initial_A: boolean,
       _is_v1: boolean,
       _name: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
-    "add_metapool(address,uint256,address,uint256,string)"(
+    'add_metapool(address,uint256,address,uint256,string)'(
       _pool: string,
       _n_coins: BigNumberish,
       _lp_token: string,
       _decimals: BigNumberish,
       _name: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
-    "add_metapool(address,uint256,address,uint256,string,address)"(
+    'add_metapool(address,uint256,address,uint256,string,address)'(
       _pool: string,
       _n_coins: BigNumberish,
       _lp_token: string,
       _decimals: BigNumberish,
       _name: string,
       _base_pool: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     remove_pool(
       _pool: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     set_pool_gas_estimates(
@@ -2381,24 +1549,13 @@ export class CurveRegistry extends BaseContract {
         [BigNumberish, BigNumberish],
         [BigNumberish, BigNumberish],
         [BigNumberish, BigNumberish],
-        [BigNumberish, BigNumberish]
+        [BigNumberish, BigNumberish],
       ],
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     set_coin_gas_estimates(
-      _addr: [
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string
-      ],
+      _addr: [string, string, string, string, string, string, string, string, string, string],
       _amount: [
         BigNumberish,
         BigNumberish,
@@ -2409,38 +1566,27 @@ export class CurveRegistry extends BaseContract {
         BigNumberish,
         BigNumberish,
         BigNumberish,
-        BigNumberish
+        BigNumberish,
       ],
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     set_gas_estimate_contract(
       _pool: string,
       _estimator: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     set_liquidity_gauges(
       _pool: string,
-      _liquidity_gauges: [
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string
-      ],
-      overrides?: Overrides & { from?: string | Promise<string> }
+      _liquidity_gauges: [string, string, string, string, string, string, string, string, string, string],
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     set_pool_asset_type(
       _pool: string,
       _asset_type: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     batch_set_pool_asset_type(
@@ -2476,7 +1622,7 @@ export class CurveRegistry extends BaseContract {
         string,
         string,
         string,
-        string
+        string,
       ],
       _asset_types: [
         BigNumberish,
@@ -2510,38 +1656,26 @@ export class CurveRegistry extends BaseContract {
         BigNumberish,
         BigNumberish,
         BigNumberish,
-        BigNumberish
+        BigNumberish,
       ],
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     address_provider(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     gauge_controller(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    pool_list(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    pool_list(arg0: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     pool_count(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     coin_count(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    get_coin(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    get_coin(arg0: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    get_pool_from_lp_token(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    get_pool_from_lp_token(arg0: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    get_lp_token(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    get_lp_token(arg0: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     last_updated(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };

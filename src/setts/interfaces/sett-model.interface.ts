@@ -9,6 +9,8 @@ import { getToken, mockBalance } from '../../tokens/tokens.utils';
 import { VAULT_SOURCE } from '../setts.utils';
 import { Sett } from './sett.interface';
 import { SettBoost } from './sett-boost.interface';
+import { SettStrategy } from './sett-strategy.interface';
+import { ethers } from 'ethers';
 
 export class SettModel implements Sett {
   @Title('name')
@@ -132,6 +134,17 @@ export class SettModel implements Sett {
   @Property()
   public multipliers: SettBoost[];
 
+  @Title('strategy')
+  @Description('Sett strategy information')
+  @Example({
+    address: ethers.constants.AddressZero,
+    withdrawFee: 50,
+    performanceFee: 20,
+    strategistFee: 10,
+  })
+  @Property()
+  public strategy: SettStrategy;
+
   constructor(
     name: string,
     state: SettState,
@@ -150,6 +163,7 @@ export class SettModel implements Sett {
     bouncer: BouncerType,
     deprecated: boolean,
     multipliers: SettBoost[],
+    strategy: SettStrategy,
     minApr?: number,
     maxApr?: number,
   ) {
@@ -172,5 +186,6 @@ export class SettModel implements Sett {
     this.experimental = experimental;
     this.deprecated = deprecated;
     this.multipliers = multipliers;
+    this.strategy = strategy;
   }
 }
