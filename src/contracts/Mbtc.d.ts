@@ -13,284 +13,153 @@ import {
   ContractTransaction,
   Overrides,
   CallOverrides,
-} from "ethers";
-import { BytesLike } from "@ethersproject/bytes";
-import { Listener, Provider } from "@ethersproject/providers";
-import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
+} from 'ethers';
+import { BytesLike } from '@ethersproject/bytes';
+import { Listener, Provider } from '@ethersproject/providers';
+import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
+import { TypedEventFilter, TypedEvent, TypedListener } from './commons';
 
 interface MbtcInterface extends ethers.utils.Interface {
   functions: {
-    "allowance(address,address)": FunctionFragment;
-    "approve(address,uint256)": FunctionFragment;
-    "automateInterestCollectionFlag(bool)": FunctionFragment;
-    "balanceOf(address)": FunctionFragment;
-    "balanceOfUnderlying(address)": FunctionFragment;
-    "connector()": FunctionFragment;
-    "creditBalances(address)": FunctionFragment;
-    "creditsToUnderlying(uint256)": FunctionFragment;
-    "decimals()": FunctionFragment;
-    "decreaseAllowance(address,uint256)": FunctionFragment;
-    "depositInterest(uint256)": FunctionFragment;
-    "depositSavings(uint256,address)": FunctionFragment;
-    "emergencyWithdraw(uint256)": FunctionFragment;
-    "exchangeRate()": FunctionFragment;
-    "fraction()": FunctionFragment;
-    "increaseAllowance(address,uint256)": FunctionFragment;
-    "initialize(address,string,string)": FunctionFragment;
-    "lastBalance()": FunctionFragment;
-    "lastPoke()": FunctionFragment;
-    "name()": FunctionFragment;
-    "nexus()": FunctionFragment;
-    "poke()": FunctionFragment;
-    "poker()": FunctionFragment;
-    "preDeposit(uint256,address)": FunctionFragment;
-    "redeem(uint256)": FunctionFragment;
-    "redeemCredits(uint256)": FunctionFragment;
-    "redeemUnderlying(uint256)": FunctionFragment;
-    "setConnector(address)": FunctionFragment;
-    "setFraction(uint256)": FunctionFragment;
-    "setPoker(address)": FunctionFragment;
-    "symbol()": FunctionFragment;
-    "totalSupply()": FunctionFragment;
-    "transfer(address,uint256)": FunctionFragment;
-    "transferFrom(address,address,uint256)": FunctionFragment;
-    "underlying()": FunctionFragment;
-    "underlyingToCredits(uint256)": FunctionFragment;
+    'allowance(address,address)': FunctionFragment;
+    'approve(address,uint256)': FunctionFragment;
+    'automateInterestCollectionFlag(bool)': FunctionFragment;
+    'balanceOf(address)': FunctionFragment;
+    'balanceOfUnderlying(address)': FunctionFragment;
+    'connector()': FunctionFragment;
+    'creditBalances(address)': FunctionFragment;
+    'creditsToUnderlying(uint256)': FunctionFragment;
+    'decimals()': FunctionFragment;
+    'decreaseAllowance(address,uint256)': FunctionFragment;
+    'depositInterest(uint256)': FunctionFragment;
+    'depositSavings(uint256,address)': FunctionFragment;
+    'emergencyWithdraw(uint256)': FunctionFragment;
+    'exchangeRate()': FunctionFragment;
+    'fraction()': FunctionFragment;
+    'increaseAllowance(address,uint256)': FunctionFragment;
+    'initialize(address,string,string)': FunctionFragment;
+    'lastBalance()': FunctionFragment;
+    'lastPoke()': FunctionFragment;
+    'name()': FunctionFragment;
+    'nexus()': FunctionFragment;
+    'poke()': FunctionFragment;
+    'poker()': FunctionFragment;
+    'preDeposit(uint256,address)': FunctionFragment;
+    'redeem(uint256)': FunctionFragment;
+    'redeemCredits(uint256)': FunctionFragment;
+    'redeemUnderlying(uint256)': FunctionFragment;
+    'setConnector(address)': FunctionFragment;
+    'setFraction(uint256)': FunctionFragment;
+    'setPoker(address)': FunctionFragment;
+    'symbol()': FunctionFragment;
+    'totalSupply()': FunctionFragment;
+    'transfer(address,uint256)': FunctionFragment;
+    'transferFrom(address,address,uint256)': FunctionFragment;
+    'underlying()': FunctionFragment;
+    'underlyingToCredits(uint256)': FunctionFragment;
   };
 
-  encodeFunctionData(
-    functionFragment: "allowance",
-    values: [string, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "approve",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "automateInterestCollectionFlag",
-    values: [boolean]
-  ): string;
-  encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
-  encodeFunctionData(
-    functionFragment: "balanceOfUnderlying",
-    values: [string]
-  ): string;
-  encodeFunctionData(functionFragment: "connector", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "creditBalances",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "creditsToUnderlying",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "decreaseAllowance",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "depositInterest",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "depositSavings",
-    values: [BigNumberish, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "emergencyWithdraw",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "exchangeRate",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "fraction", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "increaseAllowance",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "initialize",
-    values: [string, string, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "lastBalance",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "lastPoke", values?: undefined): string;
-  encodeFunctionData(functionFragment: "name", values?: undefined): string;
-  encodeFunctionData(functionFragment: "nexus", values?: undefined): string;
-  encodeFunctionData(functionFragment: "poke", values?: undefined): string;
-  encodeFunctionData(functionFragment: "poker", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "preDeposit",
-    values: [BigNumberish, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "redeem",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "redeemCredits",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "redeemUnderlying",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setConnector",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setFraction",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(functionFragment: "setPoker", values: [string]): string;
-  encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "totalSupply",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "transfer",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "transferFrom",
-    values: [string, string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "underlying",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "underlyingToCredits",
-    values: [BigNumberish]
-  ): string;
+  encodeFunctionData(functionFragment: 'allowance', values: [string, string]): string;
+  encodeFunctionData(functionFragment: 'approve', values: [string, BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'automateInterestCollectionFlag', values: [boolean]): string;
+  encodeFunctionData(functionFragment: 'balanceOf', values: [string]): string;
+  encodeFunctionData(functionFragment: 'balanceOfUnderlying', values: [string]): string;
+  encodeFunctionData(functionFragment: 'connector', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'creditBalances', values: [string]): string;
+  encodeFunctionData(functionFragment: 'creditsToUnderlying', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'decimals', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'decreaseAllowance', values: [string, BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'depositInterest', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'depositSavings', values: [BigNumberish, string]): string;
+  encodeFunctionData(functionFragment: 'emergencyWithdraw', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'exchangeRate', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'fraction', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'increaseAllowance', values: [string, BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'initialize', values: [string, string, string]): string;
+  encodeFunctionData(functionFragment: 'lastBalance', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'lastPoke', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'name', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'nexus', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'poke', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'poker', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'preDeposit', values: [BigNumberish, string]): string;
+  encodeFunctionData(functionFragment: 'redeem', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'redeemCredits', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'redeemUnderlying', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'setConnector', values: [string]): string;
+  encodeFunctionData(functionFragment: 'setFraction', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'setPoker', values: [string]): string;
+  encodeFunctionData(functionFragment: 'symbol', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'totalSupply', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'transfer', values: [string, BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'transferFrom', values: [string, string, BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'underlying', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'underlyingToCredits', values: [BigNumberish]): string;
 
-  decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "automateInterestCollectionFlag",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "balanceOfUnderlying",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "connector", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "creditBalances",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "creditsToUnderlying",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "decreaseAllowance",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "depositInterest",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "depositSavings",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "emergencyWithdraw",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "exchangeRate",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "fraction", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "increaseAllowance",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "lastBalance",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "lastPoke", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "nexus", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "poke", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "poker", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "preDeposit", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "redeem", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "redeemCredits",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "redeemUnderlying",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setConnector",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setFraction",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "setPoker", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "totalSupply",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "transfer", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "transferFrom",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "underlying", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "underlyingToCredits",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: 'allowance', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'approve', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'automateInterestCollectionFlag', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'balanceOf', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'balanceOfUnderlying', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'connector', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'creditBalances', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'creditsToUnderlying', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'decimals', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'decreaseAllowance', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'depositInterest', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'depositSavings', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'emergencyWithdraw', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'exchangeRate', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'fraction', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'increaseAllowance', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'initialize', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'lastBalance', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'lastPoke', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'name', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'nexus', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'poke', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'poker', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'preDeposit', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'redeem', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'redeemCredits', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'redeemUnderlying', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setConnector', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setFraction', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setPoker', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'symbol', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'totalSupply', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'transfer', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'transferFrom', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'underlying', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'underlyingToCredits', data: BytesLike): Result;
 
   events: {
-    "Approval(address,address,uint256)": EventFragment;
-    "AutomaticInterestCollectionSwitched(bool)": EventFragment;
-    "ConnectorUpdated(address)": EventFragment;
-    "CreditsRedeemed(address,uint256,uint256)": EventFragment;
-    "EmergencyUpdate()": EventFragment;
-    "ExchangeRateUpdated(uint256,uint256)": EventFragment;
-    "FractionUpdated(uint256)": EventFragment;
-    "Poked(uint256,uint256,uint256)": EventFragment;
-    "PokedRaw()": EventFragment;
-    "PokerUpdated(address)": EventFragment;
-    "SavingsDeposited(address,uint256,uint256)": EventFragment;
-    "Transfer(address,address,uint256)": EventFragment;
+    'Approval(address,address,uint256)': EventFragment;
+    'AutomaticInterestCollectionSwitched(bool)': EventFragment;
+    'ConnectorUpdated(address)': EventFragment;
+    'CreditsRedeemed(address,uint256,uint256)': EventFragment;
+    'EmergencyUpdate()': EventFragment;
+    'ExchangeRateUpdated(uint256,uint256)': EventFragment;
+    'FractionUpdated(uint256)': EventFragment;
+    'Poked(uint256,uint256,uint256)': EventFragment;
+    'PokedRaw()': EventFragment;
+    'PokerUpdated(address)': EventFragment;
+    'SavingsDeposited(address,uint256,uint256)': EventFragment;
+    'Transfer(address,address,uint256)': EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
-  getEvent(
-    nameOrSignatureOrTopic: "AutomaticInterestCollectionSwitched"
-  ): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "ConnectorUpdated"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "CreditsRedeemed"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "EmergencyUpdate"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "ExchangeRateUpdated"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "FractionUpdated"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Poked"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "PokedRaw"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "PokerUpdated"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "SavingsDeposited"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'Approval'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'AutomaticInterestCollectionSwitched'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'ConnectorUpdated'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'CreditsRedeemed'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'EmergencyUpdate'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'ExchangeRateUpdated'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'FractionUpdated'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'Poked'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'PokedRaw'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'PokerUpdated'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'SavingsDeposited'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'Transfer'): EventFragment;
 }
 
 export class Mbtc extends BaseContract {
@@ -299,26 +168,26 @@ export class Mbtc extends BaseContract {
   deployed(): Promise<this>;
 
   listeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
+    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>,
   ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
   off<EventArgsArray extends Array<any>, EventArgsObject>(
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
+    listener: TypedListener<EventArgsArray, EventArgsObject>,
   ): this;
   on<EventArgsArray extends Array<any>, EventArgsObject>(
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
+    listener: TypedListener<EventArgsArray, EventArgsObject>,
   ): this;
   once<EventArgsArray extends Array<any>, EventArgsObject>(
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
+    listener: TypedListener<EventArgsArray, EventArgsObject>,
   ): this;
   removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
+    listener: TypedListener<EventArgsArray, EventArgsObject>,
   ): this;
   removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
   ): this;
 
   listeners(eventName?: string): Array<Listener>;
@@ -331,46 +200,36 @@ export class Mbtc extends BaseContract {
   queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
     event: TypedEventFilter<EventArgsArray, EventArgsObject>,
     fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
+    toBlock?: string | number | undefined,
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
   interface: MbtcInterface;
 
   functions: {
-    allowance(
-      owner: string,
-      spender: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    allowance(owner: string, spender: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     approve(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     automateInterestCollectionFlag(
       _enabled: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     balanceOf(account: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    balanceOfUnderlying(
-      _user: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { balance: BigNumber }>;
+    balanceOfUnderlying(_user: string, overrides?: CallOverrides): Promise<[BigNumber] & { balance: BigNumber }>;
 
     connector(overrides?: CallOverrides): Promise<[string]>;
 
-    creditBalances(
-      _user: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    creditBalances(_user: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     creditsToUnderlying(
       _credits: BigNumberish,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<[BigNumber] & { amount: BigNumber }>;
 
     decimals(overrides?: CallOverrides): Promise<[number]>;
@@ -378,28 +237,28 @@ export class Mbtc extends BaseContract {
     decreaseAllowance(
       spender: string,
       subtractedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     depositInterest(
       _amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
-    "depositSavings(uint256,address)"(
+    'depositSavings(uint256,address)'(
       _underlying: BigNumberish,
       _beneficiary: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
-    "depositSavings(uint256)"(
+    'depositSavings(uint256)'(
       _underlying: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     emergencyWithdraw(
       _withdrawAmount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     exchangeRate(overrides?: CallOverrides): Promise<[BigNumber]>;
@@ -409,14 +268,14 @@ export class Mbtc extends BaseContract {
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     initialize(
       _poker: string,
       _nameArg: string,
       _symbolArg: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     lastBalance(overrides?: CallOverrides): Promise<[BigNumber]>;
@@ -427,46 +286,44 @@ export class Mbtc extends BaseContract {
 
     nexus(overrides?: CallOverrides): Promise<[string]>;
 
-    poke(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    poke(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
     poker(overrides?: CallOverrides): Promise<[string]>;
 
     preDeposit(
       _underlying: BigNumberish,
       _beneficiary: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     redeem(
       _credits: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     redeemCredits(
       _credits: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     redeemUnderlying(
       _underlying: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     setConnector(
       _newConnector: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     setFraction(
       _fraction: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     setPoker(
       _newPoker: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<[string]>;
@@ -476,84 +333,74 @@ export class Mbtc extends BaseContract {
     transfer(
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     transferFrom(
       sender: string,
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     underlying(overrides?: CallOverrides): Promise<[string]>;
 
     underlyingToCredits(
       _underlying: BigNumberish,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<[BigNumber] & { credits: BigNumber }>;
   };
 
-  allowance(
-    owner: string,
-    spender: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  allowance(owner: string, spender: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   approve(
     spender: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   automateInterestCollectionFlag(
     _enabled: boolean,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-  balanceOfUnderlying(
-    _user: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  balanceOfUnderlying(_user: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   connector(overrides?: CallOverrides): Promise<string>;
 
   creditBalances(_user: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-  creditsToUnderlying(
-    _credits: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  creditsToUnderlying(_credits: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
   decimals(overrides?: CallOverrides): Promise<number>;
 
   decreaseAllowance(
     spender: string,
     subtractedValue: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   depositInterest(
     _amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
-  "depositSavings(uint256,address)"(
+  'depositSavings(uint256,address)'(
     _underlying: BigNumberish,
     _beneficiary: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
-  "depositSavings(uint256)"(
+  'depositSavings(uint256)'(
     _underlying: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   emergencyWithdraw(
     _withdrawAmount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   exchangeRate(overrides?: CallOverrides): Promise<BigNumber>;
@@ -563,14 +410,14 @@ export class Mbtc extends BaseContract {
   increaseAllowance(
     spender: string,
     addedValue: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   initialize(
     _poker: string,
     _nameArg: string,
     _symbolArg: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   lastBalance(overrides?: CallOverrides): Promise<BigNumber>;
@@ -581,46 +428,44 @@ export class Mbtc extends BaseContract {
 
   nexus(overrides?: CallOverrides): Promise<string>;
 
-  poke(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  poke(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
   poker(overrides?: CallOverrides): Promise<string>;
 
   preDeposit(
     _underlying: BigNumberish,
     _beneficiary: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   redeem(
     _credits: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   redeemCredits(
     _credits: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   redeemUnderlying(
     _underlying: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   setConnector(
     _newConnector: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   setFraction(
     _fraction: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   setPoker(
     _newPoker: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   symbol(overrides?: CallOverrides): Promise<string>;
@@ -630,105 +475,60 @@ export class Mbtc extends BaseContract {
   transfer(
     recipient: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   transferFrom(
     sender: string,
     recipient: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   underlying(overrides?: CallOverrides): Promise<string>;
 
-  underlyingToCredits(
-    _underlying: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  underlyingToCredits(_underlying: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
   callStatic: {
-    allowance(
-      owner: string,
-      spender: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    allowance(owner: string, spender: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    approve(
-      spender: string,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    approve(spender: string, amount: BigNumberish, overrides?: CallOverrides): Promise<boolean>;
 
-    automateInterestCollectionFlag(
-      _enabled: boolean,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    automateInterestCollectionFlag(_enabled: boolean, overrides?: CallOverrides): Promise<void>;
 
     balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    balanceOfUnderlying(
-      _user: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    balanceOfUnderlying(_user: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     connector(overrides?: CallOverrides): Promise<string>;
 
-    creditBalances(
-      _user: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    creditBalances(_user: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    creditsToUnderlying(
-      _credits: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    creditsToUnderlying(_credits: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     decimals(overrides?: CallOverrides): Promise<number>;
 
-    decreaseAllowance(
-      spender: string,
-      subtractedValue: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    decreaseAllowance(spender: string, subtractedValue: BigNumberish, overrides?: CallOverrides): Promise<boolean>;
 
-    depositInterest(
-      _amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    depositInterest(_amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
-    "depositSavings(uint256,address)"(
+    'depositSavings(uint256,address)'(
       _underlying: BigNumberish,
       _beneficiary: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
-    "depositSavings(uint256)"(
-      _underlying: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    'depositSavings(uint256)'(_underlying: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    emergencyWithdraw(
-      _withdrawAmount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    emergencyWithdraw(_withdrawAmount: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
     exchangeRate(overrides?: CallOverrides): Promise<BigNumber>;
 
     fraction(overrides?: CallOverrides): Promise<BigNumber>;
 
-    increaseAllowance(
-      spender: string,
-      addedValue: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    increaseAllowance(spender: string, addedValue: BigNumberish, overrides?: CallOverrides): Promise<boolean>;
 
-    initialize(
-      _poker: string,
-      _nameArg: string,
-      _symbolArg: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    initialize(_poker: string, _nameArg: string, _symbolArg: string, overrides?: CallOverrides): Promise<void>;
 
     lastBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -742,36 +542,17 @@ export class Mbtc extends BaseContract {
 
     poker(overrides?: CallOverrides): Promise<string>;
 
-    preDeposit(
-      _underlying: BigNumberish,
-      _beneficiary: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    preDeposit(_underlying: BigNumberish, _beneficiary: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    redeem(
-      _credits: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    redeem(_credits: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    redeemCredits(
-      _credits: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    redeemCredits(_credits: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    redeemUnderlying(
-      _underlying: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    redeemUnderlying(_underlying: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    setConnector(
-      _newConnector: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    setConnector(_newConnector: string, overrides?: CallOverrides): Promise<void>;
 
-    setFraction(
-      _fraction: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    setFraction(_fraction: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
     setPoker(_newPoker: string, overrides?: CallOverrides): Promise<void>;
 
@@ -779,49 +560,32 @@ export class Mbtc extends BaseContract {
 
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
-    transfer(
-      recipient: string,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    transfer(recipient: string, amount: BigNumberish, overrides?: CallOverrides): Promise<boolean>;
 
-    transferFrom(
-      sender: string,
-      recipient: string,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    transferFrom(sender: string, recipient: string, amount: BigNumberish, overrides?: CallOverrides): Promise<boolean>;
 
     underlying(overrides?: CallOverrides): Promise<string>;
 
-    underlyingToCredits(
-      _underlying: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    underlyingToCredits(_underlying: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   filters: {
     Approval(
       owner?: string | null,
       spender?: string | null,
-      value?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber],
-      { owner: string; spender: string; value: BigNumber }
-    >;
+      value?: null,
+    ): TypedEventFilter<[string, string, BigNumber], { owner: string; spender: string; value: BigNumber }>;
 
     AutomaticInterestCollectionSwitched(
-      automationEnabled?: null
+      automationEnabled?: null,
     ): TypedEventFilter<[boolean], { automationEnabled: boolean }>;
 
-    ConnectorUpdated(
-      connector?: null
-    ): TypedEventFilter<[string], { connector: string }>;
+    ConnectorUpdated(connector?: null): TypedEventFilter<[string], { connector: string }>;
 
     CreditsRedeemed(
       redeemer?: string | null,
       creditsRedeemed?: null,
-      savingsCredited?: null
+      savingsCredited?: null,
     ): TypedEventFilter<
       [string, BigNumber, BigNumber],
       {
@@ -835,20 +599,15 @@ export class Mbtc extends BaseContract {
 
     ExchangeRateUpdated(
       newExchangeRate?: null,
-      interestCollected?: null
-    ): TypedEventFilter<
-      [BigNumber, BigNumber],
-      { newExchangeRate: BigNumber; interestCollected: BigNumber }
-    >;
+      interestCollected?: null,
+    ): TypedEventFilter<[BigNumber, BigNumber], { newExchangeRate: BigNumber; interestCollected: BigNumber }>;
 
-    FractionUpdated(
-      fraction?: null
-    ): TypedEventFilter<[BigNumber], { fraction: BigNumber }>;
+    FractionUpdated(fraction?: null): TypedEventFilter<[BigNumber], { fraction: BigNumber }>;
 
     Poked(
       oldBalance?: null,
       newBalance?: null,
-      interestDetected?: null
+      interestDetected?: null,
     ): TypedEventFilter<
       [BigNumber, BigNumber, BigNumber],
       {
@@ -865,7 +624,7 @@ export class Mbtc extends BaseContract {
     SavingsDeposited(
       saver?: string | null,
       savingsDeposited?: null,
-      creditsIssued?: null
+      creditsIssued?: null,
     ): TypedEventFilter<
       [string, BigNumber, BigNumber],
       { saver: string; savingsDeposited: BigNumber; creditsIssued: BigNumber }
@@ -874,77 +633,61 @@ export class Mbtc extends BaseContract {
     Transfer(
       from?: string | null,
       to?: string | null,
-      value?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber],
-      { from: string; to: string; value: BigNumber }
-    >;
+      value?: null,
+    ): TypedEventFilter<[string, string, BigNumber], { from: string; to: string; value: BigNumber }>;
   };
 
   estimateGas: {
-    allowance(
-      owner: string,
-      spender: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    allowance(owner: string, spender: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     approve(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     automateInterestCollectionFlag(
       _enabled: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    balanceOfUnderlying(
-      _user: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    balanceOfUnderlying(_user: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     connector(overrides?: CallOverrides): Promise<BigNumber>;
 
-    creditBalances(
-      _user: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    creditBalances(_user: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    creditsToUnderlying(
-      _credits: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    creditsToUnderlying(_credits: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     decimals(overrides?: CallOverrides): Promise<BigNumber>;
 
     decreaseAllowance(
       spender: string,
       subtractedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     depositInterest(
       _amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
-    "depositSavings(uint256,address)"(
+    'depositSavings(uint256,address)'(
       _underlying: BigNumberish,
       _beneficiary: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
-    "depositSavings(uint256)"(
+    'depositSavings(uint256)'(
       _underlying: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     emergencyWithdraw(
       _withdrawAmount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     exchangeRate(overrides?: CallOverrides): Promise<BigNumber>;
@@ -954,14 +697,14 @@ export class Mbtc extends BaseContract {
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     initialize(
       _poker: string,
       _nameArg: string,
       _symbolArg: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     lastBalance(overrides?: CallOverrides): Promise<BigNumber>;
@@ -972,47 +715,39 @@ export class Mbtc extends BaseContract {
 
     nexus(overrides?: CallOverrides): Promise<BigNumber>;
 
-    poke(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    poke(overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
     poker(overrides?: CallOverrides): Promise<BigNumber>;
 
     preDeposit(
       _underlying: BigNumberish,
       _beneficiary: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
-    redeem(
-      _credits: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    redeem(_credits: BigNumberish, overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
     redeemCredits(
       _credits: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     redeemUnderlying(
       _underlying: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     setConnector(
       _newConnector: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     setFraction(
       _fraction: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
-    setPoker(
-      _newPoker: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    setPoker(_newPoker: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1021,91 +756,72 @@ export class Mbtc extends BaseContract {
     transfer(
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     transferFrom(
       sender: string,
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     underlying(overrides?: CallOverrides): Promise<BigNumber>;
 
-    underlyingToCredits(
-      _underlying: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    underlyingToCredits(_underlying: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    allowance(
-      owner: string,
-      spender: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    allowance(owner: string, spender: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     approve(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     automateInterestCollectionFlag(
       _enabled: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
-    balanceOf(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    balanceOf(account: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    balanceOfUnderlying(
-      _user: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    balanceOfUnderlying(_user: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     connector(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    creditBalances(
-      _user: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    creditBalances(_user: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    creditsToUnderlying(
-      _credits: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    creditsToUnderlying(_credits: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     decreaseAllowance(
       spender: string,
       subtractedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     depositInterest(
       _amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
-    "depositSavings(uint256,address)"(
+    'depositSavings(uint256,address)'(
       _underlying: BigNumberish,
       _beneficiary: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
-    "depositSavings(uint256)"(
+    'depositSavings(uint256)'(
       _underlying: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     emergencyWithdraw(
       _withdrawAmount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     exchangeRate(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -1115,14 +831,14 @@ export class Mbtc extends BaseContract {
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     initialize(
       _poker: string,
       _nameArg: string,
       _symbolArg: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     lastBalance(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -1133,46 +849,44 @@ export class Mbtc extends BaseContract {
 
     nexus(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    poke(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    poke(overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
 
     poker(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     preDeposit(
       _underlying: BigNumberish,
       _beneficiary: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     redeem(
       _credits: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     redeemCredits(
       _credits: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     redeemUnderlying(
       _underlying: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     setConnector(
       _newConnector: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     setFraction(
       _fraction: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     setPoker(
       _newPoker: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -1182,21 +896,18 @@ export class Mbtc extends BaseContract {
     transfer(
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     transferFrom(
       sender: string,
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     underlying(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    underlyingToCredits(
-      _underlying: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    underlyingToCredits(_underlying: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }
