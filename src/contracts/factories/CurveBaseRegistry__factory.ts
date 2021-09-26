@@ -2,307 +2,304 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Contract, Signer, utils } from "ethers";
-import { Provider } from "@ethersproject/providers";
-import type {
-  CurveBaseRegistry,
-  CurveBaseRegistryInterface,
-} from "../CurveBaseRegistry";
+import { Contract, Signer, utils } from 'ethers';
+import { Provider } from '@ethersproject/providers';
+import type { CurveBaseRegistry, CurveBaseRegistryInterface } from '../CurveBaseRegistry';
 
 const _abi = [
   {
-    name: "NewAddressIdentifier",
+    name: 'NewAddressIdentifier',
     inputs: [
       {
-        type: "uint256",
-        name: "id",
+        type: 'uint256',
+        name: 'id',
         indexed: true,
       },
       {
-        type: "address",
-        name: "addr",
+        type: 'address',
+        name: 'addr',
         indexed: false,
       },
       {
-        type: "string",
-        name: "description",
+        type: 'string',
+        name: 'description',
         indexed: false,
       },
     ],
     anonymous: false,
-    type: "event",
+    type: 'event',
   },
   {
-    name: "AddressModified",
+    name: 'AddressModified',
     inputs: [
       {
-        type: "uint256",
-        name: "id",
+        type: 'uint256',
+        name: 'id',
         indexed: true,
       },
       {
-        type: "address",
-        name: "new_address",
+        type: 'address',
+        name: 'new_address',
         indexed: false,
       },
       {
-        type: "uint256",
-        name: "version",
+        type: 'uint256',
+        name: 'version',
         indexed: false,
       },
     ],
     anonymous: false,
-    type: "event",
+    type: 'event',
   },
   {
-    name: "CommitNewAdmin",
+    name: 'CommitNewAdmin',
     inputs: [
       {
-        type: "uint256",
-        name: "deadline",
+        type: 'uint256',
+        name: 'deadline',
         indexed: true,
       },
       {
-        type: "address",
-        name: "admin",
+        type: 'address',
+        name: 'admin',
         indexed: true,
       },
     ],
     anonymous: false,
-    type: "event",
+    type: 'event',
   },
   {
-    name: "NewAdmin",
+    name: 'NewAdmin',
     inputs: [
       {
-        type: "address",
-        name: "admin",
+        type: 'address',
+        name: 'admin',
         indexed: true,
       },
     ],
     anonymous: false,
-    type: "event",
+    type: 'event',
   },
   {
     outputs: [],
     inputs: [
       {
-        type: "address",
-        name: "_admin",
+        type: 'address',
+        name: '_admin',
       },
     ],
-    stateMutability: "nonpayable",
-    type: "constructor",
+    stateMutability: 'nonpayable',
+    type: 'constructor',
   },
   {
-    name: "get_registry",
+    name: 'get_registry',
     outputs: [
       {
-        type: "address",
-        name: "",
-      },
-    ],
-    inputs: [],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    name: "max_id",
-    outputs: [
-      {
-        type: "uint256",
-        name: "",
+        type: 'address',
+        name: '',
       },
     ],
     inputs: [],
-    stateMutability: "view",
-    type: "function",
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    name: "get_address",
+    name: 'max_id',
     outputs: [
       {
-        type: "address",
-        name: "",
+        type: 'uint256',
+        name: '',
+      },
+    ],
+    inputs: [],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    name: 'get_address',
+    outputs: [
+      {
+        type: 'address',
+        name: '',
       },
     ],
     inputs: [
       {
-        type: "uint256",
-        name: "_id",
+        type: 'uint256',
+        name: '_id',
       },
     ],
-    stateMutability: "view",
-    type: "function",
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    name: "add_new_id",
+    name: 'add_new_id',
     outputs: [
       {
-        type: "uint256",
-        name: "",
+        type: 'uint256',
+        name: '',
       },
     ],
     inputs: [
       {
-        type: "address",
-        name: "_address",
+        type: 'address',
+        name: '_address',
       },
       {
-        type: "string",
-        name: "_description",
+        type: 'string',
+        name: '_description',
       },
     ],
-    stateMutability: "nonpayable",
-    type: "function",
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    name: "set_address",
+    name: 'set_address',
     outputs: [
       {
-        type: "bool",
-        name: "",
+        type: 'bool',
+        name: '',
       },
     ],
     inputs: [
       {
-        type: "uint256",
-        name: "_id",
+        type: 'uint256',
+        name: '_id',
       },
       {
-        type: "address",
-        name: "_address",
+        type: 'address',
+        name: '_address',
       },
     ],
-    stateMutability: "nonpayable",
-    type: "function",
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    name: "unset_address",
+    name: 'unset_address',
     outputs: [
       {
-        type: "bool",
-        name: "",
+        type: 'bool',
+        name: '',
       },
     ],
     inputs: [
       {
-        type: "uint256",
-        name: "_id",
+        type: 'uint256',
+        name: '_id',
       },
     ],
-    stateMutability: "nonpayable",
-    type: "function",
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    name: "commit_transfer_ownership",
+    name: 'commit_transfer_ownership',
     outputs: [
       {
-        type: "bool",
-        name: "",
+        type: 'bool',
+        name: '',
       },
     ],
     inputs: [
       {
-        type: "address",
-        name: "_new_admin",
+        type: 'address',
+        name: '_new_admin',
       },
     ],
-    stateMutability: "nonpayable",
-    type: "function",
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    name: "apply_transfer_ownership",
+    name: 'apply_transfer_ownership',
     outputs: [
       {
-        type: "bool",
-        name: "",
-      },
-    ],
-    inputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    name: "revert_transfer_ownership",
-    outputs: [
-      {
-        type: "bool",
-        name: "",
+        type: 'bool',
+        name: '',
       },
     ],
     inputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    name: "admin",
+    name: 'revert_transfer_ownership',
     outputs: [
       {
-        type: "address",
-        name: "",
+        type: 'bool',
+        name: '',
       },
     ],
     inputs: [],
-    stateMutability: "view",
-    type: "function",
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    name: "transfer_ownership_deadline",
+    name: 'admin',
     outputs: [
       {
-        type: "uint256",
-        name: "",
+        type: 'address',
+        name: '',
       },
     ],
     inputs: [],
-    stateMutability: "view",
-    type: "function",
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    name: "future_admin",
+    name: 'transfer_ownership_deadline',
     outputs: [
       {
-        type: "address",
-        name: "",
+        type: 'uint256',
+        name: '',
       },
     ],
     inputs: [],
-    stateMutability: "view",
-    type: "function",
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    name: "get_id_info",
+    name: 'future_admin',
     outputs: [
       {
-        type: "address",
-        name: "addr",
+        type: 'address',
+        name: '',
+      },
+    ],
+    inputs: [],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    name: 'get_id_info',
+    outputs: [
+      {
+        type: 'address',
+        name: 'addr',
       },
       {
-        type: "bool",
-        name: "is_active",
+        type: 'bool',
+        name: 'is_active',
       },
       {
-        type: "uint256",
-        name: "version",
+        type: 'uint256',
+        name: 'version',
       },
       {
-        type: "uint256",
-        name: "last_modified",
+        type: 'uint256',
+        name: 'last_modified',
       },
       {
-        type: "string",
-        name: "description",
+        type: 'string',
+        name: 'description',
       },
     ],
     inputs: [
       {
-        type: "uint256",
-        name: "arg0",
+        type: 'uint256',
+        name: 'arg0',
       },
     ],
-    stateMutability: "view",
-    type: "function",
+    stateMutability: 'view',
+    type: 'function',
   },
 ];
 
@@ -311,10 +308,7 @@ export class CurveBaseRegistry__factory {
   static createInterface(): CurveBaseRegistryInterface {
     return new utils.Interface(_abi) as CurveBaseRegistryInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): CurveBaseRegistry {
+  static connect(address: string, signerOrProvider: Signer | Provider): CurveBaseRegistry {
     return new Contract(address, _abi, signerOrProvider) as CurveBaseRegistry;
   }
 }

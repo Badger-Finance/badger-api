@@ -13,400 +13,183 @@ import {
   ContractTransaction,
   Overrides,
   CallOverrides,
-} from "ethers";
-import { BytesLike } from "@ethersproject/bytes";
-import { Listener, Provider } from "@ethersproject/providers";
-import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
+} from 'ethers';
+import { BytesLike } from '@ethersproject/bytes';
+import { Listener, Provider } from '@ethersproject/providers';
+import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
+import { TypedEventFilter, TypedEvent, TypedListener } from './commons';
 
 interface BadgerTreeInterface extends ethers.utils.Interface {
   functions: {
-    "DEFAULT_ADMIN_ROLE()": FunctionFragment;
-    "PAUSER_ROLE()": FunctionFragment;
-    "ROOT_PROPOSER_ROLE()": FunctionFragment;
-    "ROOT_VALIDATOR_ROLE()": FunctionFragment;
-    "UNPAUSER_ROLE()": FunctionFragment;
-    "approveRoot(bytes32,bytes32,uint256,uint256,uint256)": FunctionFragment;
-    "claim(address[],uint256[],uint256,uint256,bytes32[],uint256[])": FunctionFragment;
-    "claimed(address,address)": FunctionFragment;
-    "currentCycle()": FunctionFragment;
-    "encodeClaim(address[],uint256[],address,uint256,uint256)": FunctionFragment;
-    "getClaimableFor(address,address[],uint256[])": FunctionFragment;
-    "getClaimedFor(address,address[])": FunctionFragment;
-    "getCurrentMerkleData()": FunctionFragment;
-    "getMerkleRootFor(uint256)": FunctionFragment;
-    "getPendingMerkleData()": FunctionFragment;
-    "getRoleAdmin(bytes32)": FunctionFragment;
-    "getRoleMember(bytes32,uint256)": FunctionFragment;
-    "getRoleMemberCount(bytes32)": FunctionFragment;
-    "grantRole(bytes32,address)": FunctionFragment;
-    "hasPendingRoot()": FunctionFragment;
-    "hasRole(bytes32,address)": FunctionFragment;
-    "initialize(address,address,address)": FunctionFragment;
-    "isClaimAvailableFor(address,address[],uint256[])": FunctionFragment;
-    "lastProposeBlockNumber()": FunctionFragment;
-    "lastProposeEndBlock()": FunctionFragment;
-    "lastProposeStartBlock()": FunctionFragment;
-    "lastProposeTimestamp()": FunctionFragment;
-    "lastPublishBlockNumber()": FunctionFragment;
-    "lastPublishEndBlock()": FunctionFragment;
-    "lastPublishStartBlock()": FunctionFragment;
-    "lastPublishTimestamp()": FunctionFragment;
-    "merkleContentHash()": FunctionFragment;
-    "merkleRoot()": FunctionFragment;
-    "pause()": FunctionFragment;
-    "paused()": FunctionFragment;
-    "pendingCycle()": FunctionFragment;
-    "pendingMerkleContentHash()": FunctionFragment;
-    "pendingMerkleRoot()": FunctionFragment;
-    "proposeRoot(bytes32,bytes32,uint256,uint256,uint256)": FunctionFragment;
-    "renounceRole(bytes32,address)": FunctionFragment;
-    "revokeRole(bytes32,address)": FunctionFragment;
-    "setCycle(uint256)": FunctionFragment;
-    "totalClaimed(address)": FunctionFragment;
-    "unpause()": FunctionFragment;
+    'DEFAULT_ADMIN_ROLE()': FunctionFragment;
+    'PAUSER_ROLE()': FunctionFragment;
+    'ROOT_PROPOSER_ROLE()': FunctionFragment;
+    'ROOT_VALIDATOR_ROLE()': FunctionFragment;
+    'UNPAUSER_ROLE()': FunctionFragment;
+    'approveRoot(bytes32,bytes32,uint256,uint256,uint256)': FunctionFragment;
+    'claim(address[],uint256[],uint256,uint256,bytes32[],uint256[])': FunctionFragment;
+    'claimed(address,address)': FunctionFragment;
+    'currentCycle()': FunctionFragment;
+    'encodeClaim(address[],uint256[],address,uint256,uint256)': FunctionFragment;
+    'getClaimableFor(address,address[],uint256[])': FunctionFragment;
+    'getClaimedFor(address,address[])': FunctionFragment;
+    'getCurrentMerkleData()': FunctionFragment;
+    'getMerkleRootFor(uint256)': FunctionFragment;
+    'getPendingMerkleData()': FunctionFragment;
+    'getRoleAdmin(bytes32)': FunctionFragment;
+    'getRoleMember(bytes32,uint256)': FunctionFragment;
+    'getRoleMemberCount(bytes32)': FunctionFragment;
+    'grantRole(bytes32,address)': FunctionFragment;
+    'hasPendingRoot()': FunctionFragment;
+    'hasRole(bytes32,address)': FunctionFragment;
+    'initialize(address,address,address)': FunctionFragment;
+    'isClaimAvailableFor(address,address[],uint256[])': FunctionFragment;
+    'lastProposeBlockNumber()': FunctionFragment;
+    'lastProposeEndBlock()': FunctionFragment;
+    'lastProposeStartBlock()': FunctionFragment;
+    'lastProposeTimestamp()': FunctionFragment;
+    'lastPublishBlockNumber()': FunctionFragment;
+    'lastPublishEndBlock()': FunctionFragment;
+    'lastPublishStartBlock()': FunctionFragment;
+    'lastPublishTimestamp()': FunctionFragment;
+    'merkleContentHash()': FunctionFragment;
+    'merkleRoot()': FunctionFragment;
+    'pause()': FunctionFragment;
+    'paused()': FunctionFragment;
+    'pendingCycle()': FunctionFragment;
+    'pendingMerkleContentHash()': FunctionFragment;
+    'pendingMerkleRoot()': FunctionFragment;
+    'proposeRoot(bytes32,bytes32,uint256,uint256,uint256)': FunctionFragment;
+    'renounceRole(bytes32,address)': FunctionFragment;
+    'revokeRole(bytes32,address)': FunctionFragment;
+    'setCycle(uint256)': FunctionFragment;
+    'totalClaimed(address)': FunctionFragment;
+    'unpause()': FunctionFragment;
   };
 
+  encodeFunctionData(functionFragment: 'DEFAULT_ADMIN_ROLE', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'PAUSER_ROLE', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'ROOT_PROPOSER_ROLE', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'ROOT_VALIDATOR_ROLE', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'UNPAUSER_ROLE', values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "DEFAULT_ADMIN_ROLE",
-    values?: undefined
+    functionFragment: 'approveRoot',
+    values: [BytesLike, BytesLike, BigNumberish, BigNumberish, BigNumberish],
   ): string;
   encodeFunctionData(
-    functionFragment: "PAUSER_ROLE",
-    values?: undefined
+    functionFragment: 'claim',
+    values: [string[], BigNumberish[], BigNumberish, BigNumberish, BytesLike[], BigNumberish[]],
   ): string;
+  encodeFunctionData(functionFragment: 'claimed', values: [string, string]): string;
+  encodeFunctionData(functionFragment: 'currentCycle', values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "ROOT_PROPOSER_ROLE",
-    values?: undefined
+    functionFragment: 'encodeClaim',
+    values: [string[], BigNumberish[], string, BigNumberish, BigNumberish],
   ): string;
+  encodeFunctionData(functionFragment: 'getClaimableFor', values: [string, string[], BigNumberish[]]): string;
+  encodeFunctionData(functionFragment: 'getClaimedFor', values: [string, string[]]): string;
+  encodeFunctionData(functionFragment: 'getCurrentMerkleData', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'getMerkleRootFor', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'getPendingMerkleData', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'getRoleAdmin', values: [BytesLike]): string;
+  encodeFunctionData(functionFragment: 'getRoleMember', values: [BytesLike, BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'getRoleMemberCount', values: [BytesLike]): string;
+  encodeFunctionData(functionFragment: 'grantRole', values: [BytesLike, string]): string;
+  encodeFunctionData(functionFragment: 'hasPendingRoot', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'hasRole', values: [BytesLike, string]): string;
+  encodeFunctionData(functionFragment: 'initialize', values: [string, string, string]): string;
+  encodeFunctionData(functionFragment: 'isClaimAvailableFor', values: [string, string[], BigNumberish[]]): string;
+  encodeFunctionData(functionFragment: 'lastProposeBlockNumber', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'lastProposeEndBlock', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'lastProposeStartBlock', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'lastProposeTimestamp', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'lastPublishBlockNumber', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'lastPublishEndBlock', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'lastPublishStartBlock', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'lastPublishTimestamp', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'merkleContentHash', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'merkleRoot', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'pause', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'paused', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'pendingCycle', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'pendingMerkleContentHash', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'pendingMerkleRoot', values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "ROOT_VALIDATOR_ROLE",
-    values?: undefined
+    functionFragment: 'proposeRoot',
+    values: [BytesLike, BytesLike, BigNumberish, BigNumberish, BigNumberish],
   ): string;
-  encodeFunctionData(
-    functionFragment: "UNPAUSER_ROLE",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "approveRoot",
-    values: [BytesLike, BytesLike, BigNumberish, BigNumberish, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "claim",
-    values: [
-      string[],
-      BigNumberish[],
-      BigNumberish,
-      BigNumberish,
-      BytesLike[],
-      BigNumberish[]
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "claimed",
-    values: [string, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "currentCycle",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "encodeClaim",
-    values: [string[], BigNumberish[], string, BigNumberish, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getClaimableFor",
-    values: [string, string[], BigNumberish[]]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getClaimedFor",
-    values: [string, string[]]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getCurrentMerkleData",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getMerkleRootFor",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getPendingMerkleData",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getRoleAdmin",
-    values: [BytesLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getRoleMember",
-    values: [BytesLike, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getRoleMemberCount",
-    values: [BytesLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "grantRole",
-    values: [BytesLike, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "hasPendingRoot",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "hasRole",
-    values: [BytesLike, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "initialize",
-    values: [string, string, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "isClaimAvailableFor",
-    values: [string, string[], BigNumberish[]]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "lastProposeBlockNumber",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "lastProposeEndBlock",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "lastProposeStartBlock",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "lastProposeTimestamp",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "lastPublishBlockNumber",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "lastPublishEndBlock",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "lastPublishStartBlock",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "lastPublishTimestamp",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "merkleContentHash",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "merkleRoot",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "pause", values?: undefined): string;
-  encodeFunctionData(functionFragment: "paused", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "pendingCycle",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "pendingMerkleContentHash",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "pendingMerkleRoot",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "proposeRoot",
-    values: [BytesLike, BytesLike, BigNumberish, BigNumberish, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "renounceRole",
-    values: [BytesLike, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "revokeRole",
-    values: [BytesLike, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setCycle",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "totalClaimed",
-    values: [string]
-  ): string;
-  encodeFunctionData(functionFragment: "unpause", values?: undefined): string;
+  encodeFunctionData(functionFragment: 'renounceRole', values: [BytesLike, string]): string;
+  encodeFunctionData(functionFragment: 'revokeRole', values: [BytesLike, string]): string;
+  encodeFunctionData(functionFragment: 'setCycle', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'totalClaimed', values: [string]): string;
+  encodeFunctionData(functionFragment: 'unpause', values?: undefined): string;
 
-  decodeFunctionResult(
-    functionFragment: "DEFAULT_ADMIN_ROLE",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "PAUSER_ROLE",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "ROOT_PROPOSER_ROLE",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "ROOT_VALIDATOR_ROLE",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "UNPAUSER_ROLE",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "approveRoot",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "claim", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "claimed", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "currentCycle",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "encodeClaim",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getClaimableFor",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getClaimedFor",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getCurrentMerkleData",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getMerkleRootFor",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getPendingMerkleData",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getRoleAdmin",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getRoleMember",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getRoleMemberCount",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "grantRole", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "hasPendingRoot",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "hasRole", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "isClaimAvailableFor",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "lastProposeBlockNumber",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "lastProposeEndBlock",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "lastProposeStartBlock",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "lastProposeTimestamp",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "lastPublishBlockNumber",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "lastPublishEndBlock",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "lastPublishStartBlock",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "lastPublishTimestamp",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "merkleContentHash",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "merkleRoot", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "pendingCycle",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "pendingMerkleContentHash",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "pendingMerkleRoot",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "proposeRoot",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "renounceRole",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "revokeRole", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "setCycle", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "totalClaimed",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "unpause", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'DEFAULT_ADMIN_ROLE', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'PAUSER_ROLE', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'ROOT_PROPOSER_ROLE', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'ROOT_VALIDATOR_ROLE', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'UNPAUSER_ROLE', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'approveRoot', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'claim', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'claimed', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'currentCycle', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'encodeClaim', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getClaimableFor', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getClaimedFor', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getCurrentMerkleData', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getMerkleRootFor', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getPendingMerkleData', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getRoleAdmin', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getRoleMember', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getRoleMemberCount', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'grantRole', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'hasPendingRoot', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'hasRole', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'initialize', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'isClaimAvailableFor', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'lastProposeBlockNumber', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'lastProposeEndBlock', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'lastProposeStartBlock', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'lastProposeTimestamp', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'lastPublishBlockNumber', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'lastPublishEndBlock', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'lastPublishStartBlock', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'lastPublishTimestamp', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'merkleContentHash', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'merkleRoot', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'pause', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'paused', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'pendingCycle', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'pendingMerkleContentHash', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'pendingMerkleRoot', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'proposeRoot', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'renounceRole', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'revokeRole', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setCycle', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'totalClaimed', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'unpause', data: BytesLike): Result;
 
   events: {
-    "Claimed(address,address,uint256,uint256,uint256,uint256)": EventFragment;
-    "InsufficientFundsForRoot(bytes32)": EventFragment;
-    "Paused(address)": EventFragment;
-    "RoleAdminChanged(bytes32,bytes32,bytes32)": EventFragment;
-    "RoleGranted(bytes32,address,address)": EventFragment;
-    "RoleRevoked(bytes32,address,address)": EventFragment;
-    "RootProposed(uint256,bytes32,bytes32,uint256,uint256,uint256,uint256)": EventFragment;
-    "RootUpdated(uint256,bytes32,bytes32,uint256,uint256,uint256,uint256)": EventFragment;
-    "Unpaused(address)": EventFragment;
+    'Claimed(address,address,uint256,uint256,uint256,uint256)': EventFragment;
+    'InsufficientFundsForRoot(bytes32)': EventFragment;
+    'Paused(address)': EventFragment;
+    'RoleAdminChanged(bytes32,bytes32,bytes32)': EventFragment;
+    'RoleGranted(bytes32,address,address)': EventFragment;
+    'RoleRevoked(bytes32,address,address)': EventFragment;
+    'RootProposed(uint256,bytes32,bytes32,uint256,uint256,uint256,uint256)': EventFragment;
+    'RootUpdated(uint256,bytes32,bytes32,uint256,uint256,uint256,uint256)': EventFragment;
+    'Unpaused(address)': EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "Claimed"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "InsufficientFundsForRoot"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "RoleAdminChanged"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "RoleGranted"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "RoleRevoked"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "RootProposed"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "RootUpdated"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Unpaused"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'Claimed'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'InsufficientFundsForRoot'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'Paused'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'RoleAdminChanged'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'RoleGranted'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'RoleRevoked'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'RootProposed'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'RootUpdated'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'Unpaused'): EventFragment;
 }
 
 export class BadgerTree extends BaseContract {
@@ -415,26 +198,26 @@ export class BadgerTree extends BaseContract {
   deployed(): Promise<this>;
 
   listeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
+    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>,
   ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
   off<EventArgsArray extends Array<any>, EventArgsObject>(
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
+    listener: TypedListener<EventArgsArray, EventArgsObject>,
   ): this;
   on<EventArgsArray extends Array<any>, EventArgsObject>(
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
+    listener: TypedListener<EventArgsArray, EventArgsObject>,
   ): this;
   once<EventArgsArray extends Array<any>, EventArgsObject>(
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
+    listener: TypedListener<EventArgsArray, EventArgsObject>,
   ): this;
   removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
+    listener: TypedListener<EventArgsArray, EventArgsObject>,
   ): this;
   removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
   ): this;
 
   listeners(eventName?: string): Array<Listener>;
@@ -447,7 +230,7 @@ export class BadgerTree extends BaseContract {
   queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
     event: TypedEventFilter<EventArgsArray, EventArgsObject>,
     fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
+    toBlock?: string | number | undefined,
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
   interface: BadgerTreeInterface;
@@ -469,7 +252,7 @@ export class BadgerTree extends BaseContract {
       cycle: BigNumberish,
       startBlock: BigNumberish,
       endBlock: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     claim(
@@ -479,14 +262,10 @@ export class BadgerTree extends BaseContract {
       cycle: BigNumberish,
       merkleProof: BytesLike[],
       amountsToClaim: BigNumberish[],
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
-    claimed(
-      arg0: string,
-      arg1: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    claimed(arg0: string, arg1: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     currentCycle(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -496,25 +275,19 @@ export class BadgerTree extends BaseContract {
       account: string,
       index: BigNumberish,
       cycle: BigNumberish,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<[string, string] & { encoded: string; hash: string }>;
 
     getClaimableFor(
       user: string,
       tokens: string[],
       cumulativeAmounts: BigNumberish[],
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<[string[], BigNumber[]]>;
 
-    getClaimedFor(
-      user: string,
-      tokens: string[],
-      overrides?: CallOverrides
-    ): Promise<[string[], BigNumber[]]>;
+    getClaimedFor(user: string, tokens: string[], overrides?: CallOverrides): Promise<[string[], BigNumber[]]>;
 
-    getCurrentMerkleData(
-      overrides?: CallOverrides
-    ): Promise<
+    getCurrentMerkleData(overrides?: CallOverrides): Promise<
       [
         [string, string, BigNumber, BigNumber, BigNumber, BigNumber] & {
           root: string;
@@ -523,18 +296,13 @@ export class BadgerTree extends BaseContract {
           publishBlock: BigNumber;
           startBlock: BigNumber;
           endBlock: BigNumber;
-        }
+        },
       ]
     >;
 
-    getMerkleRootFor(
-      cycle: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
+    getMerkleRootFor(cycle: BigNumberish, overrides?: CallOverrides): Promise<[string]>;
 
-    getPendingMerkleData(
-      overrides?: CallOverrides
-    ): Promise<
+    getPendingMerkleData(overrides?: CallOverrides): Promise<
       [
         [string, string, BigNumber, BigNumber, BigNumber, BigNumber] & {
           root: string;
@@ -543,49 +311,38 @@ export class BadgerTree extends BaseContract {
           publishBlock: BigNumber;
           startBlock: BigNumber;
           endBlock: BigNumber;
-        }
+        },
       ]
     >;
 
     getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<[string]>;
 
-    getRoleMember(
-      role: BytesLike,
-      index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
+    getRoleMember(role: BytesLike, index: BigNumberish, overrides?: CallOverrides): Promise<[string]>;
 
-    getRoleMemberCount(
-      role: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    getRoleMemberCount(role: BytesLike, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     grantRole(
       role: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     hasPendingRoot(overrides?: CallOverrides): Promise<[boolean]>;
 
-    hasRole(
-      role: BytesLike,
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
+    hasRole(role: BytesLike, account: string, overrides?: CallOverrides): Promise<[boolean]>;
 
     initialize(
       admin: string,
       initialProposer: string,
       initialValidator: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     isClaimAvailableFor(
       user: string,
       tokens: string[],
       cumulativeAmounts: BigNumberish[],
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<[boolean]>;
 
     lastProposeBlockNumber(overrides?: CallOverrides): Promise<[BigNumber]>;
@@ -608,9 +365,7 @@ export class BadgerTree extends BaseContract {
 
     merkleRoot(overrides?: CallOverrides): Promise<[string]>;
 
-    pause(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    pause(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
     paused(overrides?: CallOverrides): Promise<[boolean]>;
 
@@ -626,31 +381,29 @@ export class BadgerTree extends BaseContract {
       cycle: BigNumberish,
       startBlock: BigNumberish,
       endBlock: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     renounceRole(
       role: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     revokeRole(
       role: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     setCycle(
       x: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     totalClaimed(arg0: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    unpause(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    unpause(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
   };
 
   DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
@@ -669,7 +422,7 @@ export class BadgerTree extends BaseContract {
     cycle: BigNumberish,
     startBlock: BigNumberish,
     endBlock: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   claim(
@@ -679,14 +432,10 @@ export class BadgerTree extends BaseContract {
     cycle: BigNumberish,
     merkleProof: BytesLike[],
     amountsToClaim: BigNumberish[],
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
-  claimed(
-    arg0: string,
-    arg1: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  claimed(arg0: string, arg1: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   currentCycle(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -696,25 +445,19 @@ export class BadgerTree extends BaseContract {
     account: string,
     index: BigNumberish,
     cycle: BigNumberish,
-    overrides?: CallOverrides
+    overrides?: CallOverrides,
   ): Promise<[string, string] & { encoded: string; hash: string }>;
 
   getClaimableFor(
     user: string,
     tokens: string[],
     cumulativeAmounts: BigNumberish[],
-    overrides?: CallOverrides
+    overrides?: CallOverrides,
   ): Promise<[string[], BigNumber[]]>;
 
-  getClaimedFor(
-    user: string,
-    tokens: string[],
-    overrides?: CallOverrides
-  ): Promise<[string[], BigNumber[]]>;
+  getClaimedFor(user: string, tokens: string[], overrides?: CallOverrides): Promise<[string[], BigNumber[]]>;
 
-  getCurrentMerkleData(
-    overrides?: CallOverrides
-  ): Promise<
+  getCurrentMerkleData(overrides?: CallOverrides): Promise<
     [string, string, BigNumber, BigNumber, BigNumber, BigNumber] & {
       root: string;
       contentHash: string;
@@ -725,14 +468,9 @@ export class BadgerTree extends BaseContract {
     }
   >;
 
-  getMerkleRootFor(
-    cycle: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<string>;
+  getMerkleRootFor(cycle: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
-  getPendingMerkleData(
-    overrides?: CallOverrides
-  ): Promise<
+  getPendingMerkleData(overrides?: CallOverrides): Promise<
     [string, string, BigNumber, BigNumber, BigNumber, BigNumber] & {
       root: string;
       contentHash: string;
@@ -745,43 +483,32 @@ export class BadgerTree extends BaseContract {
 
   getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<string>;
 
-  getRoleMember(
-    role: BytesLike,
-    index: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<string>;
+  getRoleMember(role: BytesLike, index: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
-  getRoleMemberCount(
-    role: BytesLike,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  getRoleMemberCount(role: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
   grantRole(
     role: BytesLike,
     account: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   hasPendingRoot(overrides?: CallOverrides): Promise<boolean>;
 
-  hasRole(
-    role: BytesLike,
-    account: string,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
+  hasRole(role: BytesLike, account: string, overrides?: CallOverrides): Promise<boolean>;
 
   initialize(
     admin: string,
     initialProposer: string,
     initialValidator: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   isClaimAvailableFor(
     user: string,
     tokens: string[],
     cumulativeAmounts: BigNumberish[],
-    overrides?: CallOverrides
+    overrides?: CallOverrides,
   ): Promise<boolean>;
 
   lastProposeBlockNumber(overrides?: CallOverrides): Promise<BigNumber>;
@@ -804,9 +531,7 @@ export class BadgerTree extends BaseContract {
 
   merkleRoot(overrides?: CallOverrides): Promise<string>;
 
-  pause(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  pause(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
   paused(overrides?: CallOverrides): Promise<boolean>;
 
@@ -822,31 +547,26 @@ export class BadgerTree extends BaseContract {
     cycle: BigNumberish,
     startBlock: BigNumberish,
     endBlock: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   renounceRole(
     role: BytesLike,
     account: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   revokeRole(
     role: BytesLike,
     account: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
-  setCycle(
-    x: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  setCycle(x: BigNumberish, overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
   totalClaimed(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-  unpause(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  unpause(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
   callStatic: {
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
@@ -865,7 +585,7 @@ export class BadgerTree extends BaseContract {
       cycle: BigNumberish,
       startBlock: BigNumberish,
       endBlock: BigNumberish,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<void>;
 
     claim(
@@ -875,14 +595,10 @@ export class BadgerTree extends BaseContract {
       cycle: BigNumberish,
       merkleProof: BytesLike[],
       amountsToClaim: BigNumberish[],
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<void>;
 
-    claimed(
-      arg0: string,
-      arg1: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    claimed(arg0: string, arg1: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     currentCycle(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -892,25 +608,19 @@ export class BadgerTree extends BaseContract {
       account: string,
       index: BigNumberish,
       cycle: BigNumberish,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<[string, string] & { encoded: string; hash: string }>;
 
     getClaimableFor(
       user: string,
       tokens: string[],
       cumulativeAmounts: BigNumberish[],
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<[string[], BigNumber[]]>;
 
-    getClaimedFor(
-      user: string,
-      tokens: string[],
-      overrides?: CallOverrides
-    ): Promise<[string[], BigNumber[]]>;
+    getClaimedFor(user: string, tokens: string[], overrides?: CallOverrides): Promise<[string[], BigNumber[]]>;
 
-    getCurrentMerkleData(
-      overrides?: CallOverrides
-    ): Promise<
+    getCurrentMerkleData(overrides?: CallOverrides): Promise<
       [string, string, BigNumber, BigNumber, BigNumber, BigNumber] & {
         root: string;
         contentHash: string;
@@ -921,14 +631,9 @@ export class BadgerTree extends BaseContract {
       }
     >;
 
-    getMerkleRootFor(
-      cycle: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<string>;
+    getMerkleRootFor(cycle: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
-    getPendingMerkleData(
-      overrides?: CallOverrides
-    ): Promise<
+    getPendingMerkleData(overrides?: CallOverrides): Promise<
       [string, string, BigNumber, BigNumber, BigNumber, BigNumber] & {
         root: string;
         contentHash: string;
@@ -941,43 +646,28 @@ export class BadgerTree extends BaseContract {
 
     getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<string>;
 
-    getRoleMember(
-      role: BytesLike,
-      index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<string>;
+    getRoleMember(role: BytesLike, index: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
-    getRoleMemberCount(
-      role: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getRoleMemberCount(role: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
-    grantRole(
-      role: BytesLike,
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    grantRole(role: BytesLike, account: string, overrides?: CallOverrides): Promise<void>;
 
     hasPendingRoot(overrides?: CallOverrides): Promise<boolean>;
 
-    hasRole(
-      role: BytesLike,
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    hasRole(role: BytesLike, account: string, overrides?: CallOverrides): Promise<boolean>;
 
     initialize(
       admin: string,
       initialProposer: string,
       initialValidator: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<void>;
 
     isClaimAvailableFor(
       user: string,
       tokens: string[],
       cumulativeAmounts: BigNumberish[],
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<boolean>;
 
     lastProposeBlockNumber(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1016,20 +706,12 @@ export class BadgerTree extends BaseContract {
       cycle: BigNumberish,
       startBlock: BigNumberish,
       endBlock: BigNumberish,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<void>;
 
-    renounceRole(
-      role: BytesLike,
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    renounceRole(role: BytesLike, account: string, overrides?: CallOverrides): Promise<void>;
 
-    revokeRole(
-      role: BytesLike,
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    revokeRole(role: BytesLike, account: string, overrides?: CallOverrides): Promise<void>;
 
     setCycle(x: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
@@ -1045,7 +727,7 @@ export class BadgerTree extends BaseContract {
       amount?: null,
       cycle?: BigNumberish | null,
       timestamp?: null,
-      blockNumber?: null
+      blockNumber?: null,
     ): TypedEventFilter<
       [string, string, BigNumber, BigNumber, BigNumber, BigNumber],
       {
@@ -1058,38 +740,27 @@ export class BadgerTree extends BaseContract {
       }
     >;
 
-    InsufficientFundsForRoot(
-      root?: BytesLike | null
-    ): TypedEventFilter<[string], { root: string }>;
+    InsufficientFundsForRoot(root?: BytesLike | null): TypedEventFilter<[string], { root: string }>;
 
     Paused(account?: null): TypedEventFilter<[string], { account: string }>;
 
     RoleAdminChanged(
       role?: BytesLike | null,
       previousAdminRole?: BytesLike | null,
-      newAdminRole?: BytesLike | null
-    ): TypedEventFilter<
-      [string, string, string],
-      { role: string; previousAdminRole: string; newAdminRole: string }
-    >;
+      newAdminRole?: BytesLike | null,
+    ): TypedEventFilter<[string, string, string], { role: string; previousAdminRole: string; newAdminRole: string }>;
 
     RoleGranted(
       role?: BytesLike | null,
       account?: string | null,
-      sender?: string | null
-    ): TypedEventFilter<
-      [string, string, string],
-      { role: string; account: string; sender: string }
-    >;
+      sender?: string | null,
+    ): TypedEventFilter<[string, string, string], { role: string; account: string; sender: string }>;
 
     RoleRevoked(
       role?: BytesLike | null,
       account?: string | null,
-      sender?: string | null
-    ): TypedEventFilter<
-      [string, string, string],
-      { role: string; account: string; sender: string }
-    >;
+      sender?: string | null,
+    ): TypedEventFilter<[string, string, string], { role: string; account: string; sender: string }>;
 
     RootProposed(
       cycle?: BigNumberish | null,
@@ -1098,7 +769,7 @@ export class BadgerTree extends BaseContract {
       startBlock?: null,
       endBlock?: null,
       timestamp?: null,
-      blockNumber?: null
+      blockNumber?: null,
     ): TypedEventFilter<
       [BigNumber, string, string, BigNumber, BigNumber, BigNumber, BigNumber],
       {
@@ -1119,7 +790,7 @@ export class BadgerTree extends BaseContract {
       startBlock?: null,
       endBlock?: null,
       timestamp?: null,
-      blockNumber?: null
+      blockNumber?: null,
     ): TypedEventFilter<
       [BigNumber, string, string, BigNumber, BigNumber, BigNumber, BigNumber],
       {
@@ -1153,7 +824,7 @@ export class BadgerTree extends BaseContract {
       cycle: BigNumberish,
       startBlock: BigNumberish,
       endBlock: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     claim(
@@ -1163,14 +834,10 @@ export class BadgerTree extends BaseContract {
       cycle: BigNumberish,
       merkleProof: BytesLike[],
       amountsToClaim: BigNumberish[],
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
-    claimed(
-      arg0: string,
-      arg1: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    claimed(arg0: string, arg1: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     currentCycle(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1180,73 +847,52 @@ export class BadgerTree extends BaseContract {
       account: string,
       index: BigNumberish,
       cycle: BigNumberish,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
     getClaimableFor(
       user: string,
       tokens: string[],
       cumulativeAmounts: BigNumberish[],
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
-    getClaimedFor(
-      user: string,
-      tokens: string[],
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getClaimedFor(user: string, tokens: string[], overrides?: CallOverrides): Promise<BigNumber>;
 
     getCurrentMerkleData(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getMerkleRootFor(
-      cycle: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getMerkleRootFor(cycle: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     getPendingMerkleData(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getRoleAdmin(
-      role: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
-    getRoleMember(
-      role: BytesLike,
-      index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getRoleMember(role: BytesLike, index: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    getRoleMemberCount(
-      role: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getRoleMemberCount(role: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
     grantRole(
       role: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     hasPendingRoot(overrides?: CallOverrides): Promise<BigNumber>;
 
-    hasRole(
-      role: BytesLike,
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    hasRole(role: BytesLike, account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     initialize(
       admin: string,
       initialProposer: string,
       initialValidator: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     isClaimAvailableFor(
       user: string,
       tokens: string[],
       cumulativeAmounts: BigNumberish[],
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
     lastProposeBlockNumber(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1269,9 +915,7 @@ export class BadgerTree extends BaseContract {
 
     merkleRoot(overrides?: CallOverrides): Promise<BigNumber>;
 
-    pause(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    pause(overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
     paused(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1287,47 +931,36 @@ export class BadgerTree extends BaseContract {
       cycle: BigNumberish,
       startBlock: BigNumberish,
       endBlock: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     renounceRole(
       role: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     revokeRole(
       role: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
-    setCycle(
-      x: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    setCycle(x: BigNumberish, overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
     totalClaimed(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    unpause(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    unpause(overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    DEFAULT_ADMIN_ROLE(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     PAUSER_ROLE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    ROOT_PROPOSER_ROLE(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    ROOT_PROPOSER_ROLE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    ROOT_VALIDATOR_ROLE(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    ROOT_VALIDATOR_ROLE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     UNPAUSER_ROLE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1337,7 +970,7 @@ export class BadgerTree extends BaseContract {
       cycle: BigNumberish,
       startBlock: BigNumberish,
       endBlock: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     claim(
@@ -1347,14 +980,10 @@ export class BadgerTree extends BaseContract {
       cycle: BigNumberish,
       merkleProof: BytesLike[],
       amountsToClaim: BigNumberish[],
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
-    claimed(
-      arg0: string,
-      arg1: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    claimed(arg0: string, arg1: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     currentCycle(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1364,126 +993,81 @@ export class BadgerTree extends BaseContract {
       account: string,
       index: BigNumberish,
       cycle: BigNumberish,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
     getClaimableFor(
       user: string,
       tokens: string[],
       cumulativeAmounts: BigNumberish[],
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
-    getClaimedFor(
-      user: string,
-      tokens: string[],
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    getClaimedFor(user: string, tokens: string[], overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    getCurrentMerkleData(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    getCurrentMerkleData(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    getMerkleRootFor(
-      cycle: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    getMerkleRootFor(cycle: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    getPendingMerkleData(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    getPendingMerkleData(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    getRoleAdmin(
-      role: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    getRoleMember(
-      role: BytesLike,
-      index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    getRoleMember(role: BytesLike, index: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    getRoleMemberCount(
-      role: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    getRoleMemberCount(role: BytesLike, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     grantRole(
       role: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     hasPendingRoot(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    hasRole(
-      role: BytesLike,
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    hasRole(role: BytesLike, account: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     initialize(
       admin: string,
       initialProposer: string,
       initialValidator: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     isClaimAvailableFor(
       user: string,
       tokens: string[],
       cumulativeAmounts: BigNumberish[],
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
-    lastProposeBlockNumber(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    lastProposeBlockNumber(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    lastProposeEndBlock(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    lastProposeEndBlock(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    lastProposeStartBlock(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    lastProposeStartBlock(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    lastProposeTimestamp(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    lastProposeTimestamp(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    lastPublishBlockNumber(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    lastPublishBlockNumber(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    lastPublishEndBlock(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    lastPublishEndBlock(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    lastPublishStartBlock(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    lastPublishStartBlock(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    lastPublishTimestamp(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    lastPublishTimestamp(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     merkleContentHash(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     merkleRoot(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    pause(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    pause(overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
 
     paused(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     pendingCycle(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    pendingMerkleContentHash(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    pendingMerkleContentHash(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     pendingMerkleRoot(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1493,33 +1077,28 @@ export class BadgerTree extends BaseContract {
       cycle: BigNumberish,
       startBlock: BigNumberish,
       endBlock: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     renounceRole(
       role: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     revokeRole(
       role: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     setCycle(
       x: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
-    totalClaimed(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    totalClaimed(arg0: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    unpause(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    unpause(overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
   };
 }

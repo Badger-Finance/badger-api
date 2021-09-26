@@ -13,113 +13,77 @@ import {
   ContractTransaction,
   Overrides,
   CallOverrides,
-} from "ethers";
-import { BytesLike } from "@ethersproject/bytes";
-import { Listener, Provider } from "@ethersproject/providers";
-import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
+} from 'ethers';
+import { BytesLike } from '@ethersproject/bytes';
+import { Listener, Provider } from '@ethersproject/providers';
+import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
+import { TypedEventFilter, TypedEvent, TypedListener } from './commons';
 
 interface MhbtcInterface extends ethers.utils.Interface {
   functions: {
-    "allowance(address,address)": FunctionFragment;
-    "approve(address,uint256)": FunctionFragment;
-    "balanceOf(address)": FunctionFragment;
-    "collectPendingFees()": FunctionFragment;
-    "collectPlatformInterest()": FunctionFragment;
-    "data()": FunctionFragment;
-    "decimals()": FunctionFragment;
-    "decreaseAllowance(address,uint256)": FunctionFragment;
-    "getBasset(address)": FunctionFragment;
-    "getBassets()": FunctionFragment;
-    "getConfig()": FunctionFragment;
-    "getMintMultiOutput(address[],uint256[])": FunctionFragment;
-    "getMintOutput(address,uint256)": FunctionFragment;
-    "getPrice()": FunctionFragment;
-    "getRedeemExactBassetsOutput(address[],uint256[])": FunctionFragment;
-    "getRedeemOutput(address,uint256)": FunctionFragment;
-    "getSwapOutput(address,address,uint256)": FunctionFragment;
-    "increaseAllowance(address,uint256)": FunctionFragment;
-    "initialize(string,string,tuple,tuple,address[],tuple)": FunctionFragment;
-    "mAsset()": FunctionFragment;
-    "migrateBassets(address[],address)": FunctionFragment;
-    "mint(address,uint256,uint256,address)": FunctionFragment;
-    "mintMulti(address[],uint256[],uint256,address)": FunctionFragment;
-    "name()": FunctionFragment;
-    "nexus()": FunctionFragment;
-    "pause()": FunctionFragment;
-    "paused()": FunctionFragment;
-    "redeem(address,uint256,uint256,address)": FunctionFragment;
-    "redeemExactBassets(address[],uint256[],uint256,address)": FunctionFragment;
-    "redeemProportionately(uint256,uint256[],address)": FunctionFragment;
-    "setCacheSize(uint256)": FunctionFragment;
-    "setFees(uint256,uint256,uint256)": FunctionFragment;
-    "setWeightLimits(uint128,uint128)": FunctionFragment;
-    "startRampA(uint256,uint256)": FunctionFragment;
-    "stopRampA()": FunctionFragment;
-    "swap(address,address,uint256,uint256,address)": FunctionFragment;
-    "symbol()": FunctionFragment;
-    "totalSupply()": FunctionFragment;
-    "transfer(address,uint256)": FunctionFragment;
-    "transferFrom(address,address,uint256)": FunctionFragment;
-    "unpause()": FunctionFragment;
+    'allowance(address,address)': FunctionFragment;
+    'approve(address,uint256)': FunctionFragment;
+    'balanceOf(address)': FunctionFragment;
+    'collectPendingFees()': FunctionFragment;
+    'collectPlatformInterest()': FunctionFragment;
+    'data()': FunctionFragment;
+    'decimals()': FunctionFragment;
+    'decreaseAllowance(address,uint256)': FunctionFragment;
+    'getBasset(address)': FunctionFragment;
+    'getBassets()': FunctionFragment;
+    'getConfig()': FunctionFragment;
+    'getMintMultiOutput(address[],uint256[])': FunctionFragment;
+    'getMintOutput(address,uint256)': FunctionFragment;
+    'getPrice()': FunctionFragment;
+    'getRedeemExactBassetsOutput(address[],uint256[])': FunctionFragment;
+    'getRedeemOutput(address,uint256)': FunctionFragment;
+    'getSwapOutput(address,address,uint256)': FunctionFragment;
+    'increaseAllowance(address,uint256)': FunctionFragment;
+    'initialize(string,string,tuple,tuple,address[],tuple)': FunctionFragment;
+    'mAsset()': FunctionFragment;
+    'migrateBassets(address[],address)': FunctionFragment;
+    'mint(address,uint256,uint256,address)': FunctionFragment;
+    'mintMulti(address[],uint256[],uint256,address)': FunctionFragment;
+    'name()': FunctionFragment;
+    'nexus()': FunctionFragment;
+    'pause()': FunctionFragment;
+    'paused()': FunctionFragment;
+    'redeem(address,uint256,uint256,address)': FunctionFragment;
+    'redeemExactBassets(address[],uint256[],uint256,address)': FunctionFragment;
+    'redeemProportionately(uint256,uint256[],address)': FunctionFragment;
+    'setCacheSize(uint256)': FunctionFragment;
+    'setFees(uint256,uint256,uint256)': FunctionFragment;
+    'setWeightLimits(uint128,uint128)': FunctionFragment;
+    'startRampA(uint256,uint256)': FunctionFragment;
+    'stopRampA()': FunctionFragment;
+    'swap(address,address,uint256,uint256,address)': FunctionFragment;
+    'symbol()': FunctionFragment;
+    'totalSupply()': FunctionFragment;
+    'transfer(address,uint256)': FunctionFragment;
+    'transferFrom(address,address,uint256)': FunctionFragment;
+    'unpause()': FunctionFragment;
   };
 
+  encodeFunctionData(functionFragment: 'allowance', values: [string, string]): string;
+  encodeFunctionData(functionFragment: 'approve', values: [string, BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'balanceOf', values: [string]): string;
+  encodeFunctionData(functionFragment: 'collectPendingFees', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'collectPlatformInterest', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'data', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'decimals', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'decreaseAllowance', values: [string, BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'getBasset', values: [string]): string;
+  encodeFunctionData(functionFragment: 'getBassets', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'getConfig', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'getMintMultiOutput', values: [string[], BigNumberish[]]): string;
+  encodeFunctionData(functionFragment: 'getMintOutput', values: [string, BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'getPrice', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'getRedeemExactBassetsOutput', values: [string[], BigNumberish[]]): string;
+  encodeFunctionData(functionFragment: 'getRedeemOutput', values: [string, BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'getSwapOutput', values: [string, string, BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'increaseAllowance', values: [string, BigNumberish]): string;
   encodeFunctionData(
-    functionFragment: "allowance",
-    values: [string, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "approve",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
-  encodeFunctionData(
-    functionFragment: "collectPendingFees",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "collectPlatformInterest",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "data", values?: undefined): string;
-  encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "decreaseAllowance",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(functionFragment: "getBasset", values: [string]): string;
-  encodeFunctionData(
-    functionFragment: "getBassets",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "getConfig", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "getMintMultiOutput",
-    values: [string[], BigNumberish[]]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getMintOutput",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(functionFragment: "getPrice", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "getRedeemExactBassetsOutput",
-    values: [string[], BigNumberish[]]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getRedeemOutput",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getSwapOutput",
-    values: [string, string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "increaseAllowance",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "initialize",
+    functionFragment: 'initialize',
     values: [
       string,
       string,
@@ -136,197 +100,110 @@ interface MhbtcInterface extends ethers.utils.Interface {
         status: BigNumberish;
       },
       string[],
-      { a: BigNumberish; limits: { min: BigNumberish; max: BigNumberish } }
-    ]
+      { a: BigNumberish; limits: { min: BigNumberish; max: BigNumberish } },
+    ],
   ): string;
-  encodeFunctionData(functionFragment: "mAsset", values?: undefined): string;
+  encodeFunctionData(functionFragment: 'mAsset', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'migrateBassets', values: [string[], string]): string;
+  encodeFunctionData(functionFragment: 'mint', values: [string, BigNumberish, BigNumberish, string]): string;
+  encodeFunctionData(functionFragment: 'mintMulti', values: [string[], BigNumberish[], BigNumberish, string]): string;
+  encodeFunctionData(functionFragment: 'name', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'nexus', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'pause', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'paused', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'redeem', values: [string, BigNumberish, BigNumberish, string]): string;
   encodeFunctionData(
-    functionFragment: "migrateBassets",
-    values: [string[], string]
+    functionFragment: 'redeemExactBassets',
+    values: [string[], BigNumberish[], BigNumberish, string],
   ): string;
-  encodeFunctionData(
-    functionFragment: "mint",
-    values: [string, BigNumberish, BigNumberish, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "mintMulti",
-    values: [string[], BigNumberish[], BigNumberish, string]
-  ): string;
-  encodeFunctionData(functionFragment: "name", values?: undefined): string;
-  encodeFunctionData(functionFragment: "nexus", values?: undefined): string;
-  encodeFunctionData(functionFragment: "pause", values?: undefined): string;
-  encodeFunctionData(functionFragment: "paused", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "redeem",
-    values: [string, BigNumberish, BigNumberish, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "redeemExactBassets",
-    values: [string[], BigNumberish[], BigNumberish, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "redeemProportionately",
-    values: [BigNumberish, BigNumberish[], string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setCacheSize",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setFees",
-    values: [BigNumberish, BigNumberish, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setWeightLimits",
-    values: [BigNumberish, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "startRampA",
-    values: [BigNumberish, BigNumberish]
-  ): string;
-  encodeFunctionData(functionFragment: "stopRampA", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "swap",
-    values: [string, string, BigNumberish, BigNumberish, string]
-  ): string;
-  encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "totalSupply",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "transfer",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "transferFrom",
-    values: [string, string, BigNumberish]
-  ): string;
-  encodeFunctionData(functionFragment: "unpause", values?: undefined): string;
+  encodeFunctionData(functionFragment: 'redeemProportionately', values: [BigNumberish, BigNumberish[], string]): string;
+  encodeFunctionData(functionFragment: 'setCacheSize', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'setFees', values: [BigNumberish, BigNumberish, BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'setWeightLimits', values: [BigNumberish, BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'startRampA', values: [BigNumberish, BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'stopRampA', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'swap', values: [string, string, BigNumberish, BigNumberish, string]): string;
+  encodeFunctionData(functionFragment: 'symbol', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'totalSupply', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'transfer', values: [string, BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'transferFrom', values: [string, string, BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'unpause', values?: undefined): string;
 
-  decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "collectPendingFees",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "collectPlatformInterest",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "data", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "decreaseAllowance",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "getBasset", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "getBassets", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "getConfig", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "getMintMultiOutput",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getMintOutput",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "getPrice", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "getRedeemExactBassetsOutput",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getRedeemOutput",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getSwapOutput",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "increaseAllowance",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "mAsset", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "migrateBassets",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "mintMulti", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "nexus", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "redeem", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "redeemExactBassets",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "redeemProportionately",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setCacheSize",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "setFees", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "setWeightLimits",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "startRampA", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "stopRampA", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "swap", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "totalSupply",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "transfer", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "transferFrom",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "unpause", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'allowance', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'approve', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'balanceOf', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'collectPendingFees', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'collectPlatformInterest', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'data', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'decimals', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'decreaseAllowance', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getBasset', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getBassets', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getConfig', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getMintMultiOutput', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getMintOutput', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getPrice', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getRedeemExactBassetsOutput', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getRedeemOutput', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getSwapOutput', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'increaseAllowance', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'initialize', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'mAsset', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'migrateBassets', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'mint', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'mintMulti', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'name', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'nexus', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'pause', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'paused', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'redeem', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'redeemExactBassets', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'redeemProportionately', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setCacheSize', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setFees', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setWeightLimits', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'startRampA', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'stopRampA', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'swap', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'symbol', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'totalSupply', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'transfer', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'transferFrom', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'unpause', data: BytesLike): Result;
 
   events: {
-    "Approval(address,address,uint256)": EventFragment;
-    "BassetsMigrated(address[],address)": EventFragment;
-    "CacheSizeChanged(uint256)": EventFragment;
-    "FeesChanged(uint256,uint256,uint256)": EventFragment;
-    "Minted(address,address,uint256,address,uint256)": EventFragment;
-    "MintedMulti(address,address,uint256,address[],uint256[])": EventFragment;
-    "Paused(address)": EventFragment;
-    "Redeemed(address,address,uint256,address,uint256,uint256)": EventFragment;
-    "RedeemedMulti(address,address,uint256,address[],uint256[],uint256)": EventFragment;
-    "StartRampA(uint256,uint256,uint256,uint256)": EventFragment;
-    "StopRampA(uint256,uint256)": EventFragment;
-    "Swapped(address,address,address,uint256,uint256,address)": EventFragment;
-    "Transfer(address,address,uint256)": EventFragment;
-    "Unpaused(address)": EventFragment;
-    "WeightLimitsChanged(uint128,uint128)": EventFragment;
+    'Approval(address,address,uint256)': EventFragment;
+    'BassetsMigrated(address[],address)': EventFragment;
+    'CacheSizeChanged(uint256)': EventFragment;
+    'FeesChanged(uint256,uint256,uint256)': EventFragment;
+    'Minted(address,address,uint256,address,uint256)': EventFragment;
+    'MintedMulti(address,address,uint256,address[],uint256[])': EventFragment;
+    'Paused(address)': EventFragment;
+    'Redeemed(address,address,uint256,address,uint256,uint256)': EventFragment;
+    'RedeemedMulti(address,address,uint256,address[],uint256[],uint256)': EventFragment;
+    'StartRampA(uint256,uint256,uint256,uint256)': EventFragment;
+    'StopRampA(uint256,uint256)': EventFragment;
+    'Swapped(address,address,address,uint256,uint256,address)': EventFragment;
+    'Transfer(address,address,uint256)': EventFragment;
+    'Unpaused(address)': EventFragment;
+    'WeightLimitsChanged(uint128,uint128)': EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "BassetsMigrated"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "CacheSizeChanged"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "FeesChanged"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Minted"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "MintedMulti"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Redeemed"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "RedeemedMulti"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "StartRampA"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "StopRampA"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Swapped"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Unpaused"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "WeightLimitsChanged"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'Approval'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'BassetsMigrated'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'CacheSizeChanged'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'FeesChanged'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'Minted'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'MintedMulti'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'Paused'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'Redeemed'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'RedeemedMulti'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'StartRampA'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'StopRampA'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'Swapped'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'Transfer'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'Unpaused'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'WeightLimitsChanged'): EventFragment;
 }
 
 export class Mhbtc extends BaseContract {
@@ -335,26 +212,26 @@ export class Mhbtc extends BaseContract {
   deployed(): Promise<this>;
 
   listeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
+    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>,
   ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
   off<EventArgsArray extends Array<any>, EventArgsObject>(
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
+    listener: TypedListener<EventArgsArray, EventArgsObject>,
   ): this;
   on<EventArgsArray extends Array<any>, EventArgsObject>(
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
+    listener: TypedListener<EventArgsArray, EventArgsObject>,
   ): this;
   once<EventArgsArray extends Array<any>, EventArgsObject>(
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
+    listener: TypedListener<EventArgsArray, EventArgsObject>,
   ): this;
   removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
+    listener: TypedListener<EventArgsArray, EventArgsObject>,
   ): this;
   removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
   ): this;
 
   listeners(eventName?: string): Array<Listener>;
@@ -367,37 +244,27 @@ export class Mhbtc extends BaseContract {
   queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
     event: TypedEventFilter<EventArgsArray, EventArgsObject>,
     fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
+    toBlock?: string | number | undefined,
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
   interface: MhbtcInterface;
 
   functions: {
-    allowance(
-      owner: string,
-      spender: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    allowance(owner: string, spender: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     approve(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     balanceOf(account: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    collectPendingFees(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    collectPendingFees(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
-    collectPlatformInterest(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    collectPlatformInterest(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
-    data(
-      overrides?: CallOverrides
-    ): Promise<
+    data(overrides?: CallOverrides): Promise<
       [
         BigNumber,
         BigNumber,
@@ -410,7 +277,7 @@ export class Mhbtc extends BaseContract {
           rampStartTime: BigNumber;
           rampEndTime: BigNumber;
         },
-        [BigNumber, BigNumber] & { min: BigNumber; max: BigNumber }
+        [BigNumber, BigNumber] & { min: BigNumber; max: BigNumber },
       ] & {
         swapFee: BigNumber;
         redemptionFee: BigNumber;
@@ -435,12 +302,12 @@ export class Mhbtc extends BaseContract {
     decreaseAllowance(
       spender: string,
       subtractedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     getBasset(
       _bAsset: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<
       [
         [string, string, boolean, number] & {
@@ -449,7 +316,7 @@ export class Mhbtc extends BaseContract {
           hasTxFee: boolean;
           status: number;
         },
-        [BigNumber, BigNumber] & { ratio: BigNumber; vaultBalance: BigNumber }
+        [BigNumber, BigNumber] & { ratio: BigNumber; vaultBalance: BigNumber },
       ] & {
         personal: [string, string, boolean, number] & {
           addr: string;
@@ -464,9 +331,7 @@ export class Mhbtc extends BaseContract {
       }
     >;
 
-    getBassets(
-      overrides?: CallOverrides
-    ): Promise<
+    getBassets(overrides?: CallOverrides): Promise<
       [
         ([string, string, boolean, number] & {
           addr: string;
@@ -477,7 +342,7 @@ export class Mhbtc extends BaseContract {
         ([BigNumber, BigNumber] & {
           ratio: BigNumber;
           vaultBalance: BigNumber;
-        })[]
+        })[],
       ] & {
         vaultData: ([BigNumber, BigNumber] & {
           ratio: BigNumber;
@@ -486,25 +351,15 @@ export class Mhbtc extends BaseContract {
       }
     >;
 
-    getConfig(
-      overrides?: CallOverrides
-    ): Promise<
+    getConfig(overrides?: CallOverrides): Promise<
       [
-        [
-          BigNumber,
-          BigNumber,
-          [BigNumber, BigNumber] & { min: BigNumber; max: BigNumber }
-        ] & {
+        [BigNumber, BigNumber, [BigNumber, BigNumber] & { min: BigNumber; max: BigNumber }] & {
           supply: BigNumber;
           a: BigNumber;
           limits: [BigNumber, BigNumber] & { min: BigNumber; max: BigNumber };
-        }
+        },
       ] & {
-        config: [
-          BigNumber,
-          BigNumber,
-          [BigNumber, BigNumber] & { min: BigNumber; max: BigNumber }
-        ] & {
+        config: [BigNumber, BigNumber, [BigNumber, BigNumber] & { min: BigNumber; max: BigNumber }] & {
           supply: BigNumber;
           a: BigNumber;
           limits: [BigNumber, BigNumber] & { min: BigNumber; max: BigNumber };
@@ -515,42 +370,40 @@ export class Mhbtc extends BaseContract {
     getMintMultiOutput(
       _inputs: string[],
       _inputQuantities: BigNumberish[],
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<[BigNumber] & { mintOutput: BigNumber }>;
 
     getMintOutput(
       _input: string,
       _inputQuantity: BigNumberish,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<[BigNumber] & { mintOutput: BigNumber }>;
 
-    getPrice(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber, BigNumber] & { price: BigNumber; k: BigNumber }>;
+    getPrice(overrides?: CallOverrides): Promise<[BigNumber, BigNumber] & { price: BigNumber; k: BigNumber }>;
 
     getRedeemExactBassetsOutput(
       _outputs: string[],
       _outputQuantities: BigNumberish[],
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<[BigNumber] & { fpTokenQuantity: BigNumber }>;
 
     getRedeemOutput(
       _output: string,
       _fpTokenQuantity: BigNumberish,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<[BigNumber] & { bAssetOutput: BigNumber }>;
 
     getSwapOutput(
       _input: string,
       _output: string,
       _inputQuantity: BigNumberish,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<[BigNumber] & { swapOutput: BigNumber }>;
 
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     initialize(
@@ -573,7 +426,7 @@ export class Mhbtc extends BaseContract {
         a: BigNumberish;
         limits: { min: BigNumberish; max: BigNumberish };
       },
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     mAsset(overrides?: CallOverrides): Promise<[string]>;
@@ -581,7 +434,7 @@ export class Mhbtc extends BaseContract {
     migrateBassets(
       _bAssets: string[],
       _newIntegration: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     mint(
@@ -589,7 +442,7 @@ export class Mhbtc extends BaseContract {
       _inputQuantity: BigNumberish,
       _minOutputQuantity: BigNumberish,
       _recipient: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     mintMulti(
@@ -597,16 +450,14 @@ export class Mhbtc extends BaseContract {
       _inputQuantities: BigNumberish[],
       _minOutputQuantity: BigNumberish,
       _recipient: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     name(overrides?: CallOverrides): Promise<[string]>;
 
     nexus(overrides?: CallOverrides): Promise<[string]>;
 
-    pause(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    pause(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
     paused(overrides?: CallOverrides): Promise<[boolean]>;
 
@@ -615,7 +466,7 @@ export class Mhbtc extends BaseContract {
       _fpTokenQuantity: BigNumberish,
       _minOutputQuantity: BigNumberish,
       _recipient: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     redeemExactBassets(
@@ -623,43 +474,41 @@ export class Mhbtc extends BaseContract {
       _outputQuantities: BigNumberish[],
       _maxInputQuantity: BigNumberish,
       _recipient: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     redeemProportionately(
       _inputQuantity: BigNumberish,
       _minOutputQuantities: BigNumberish[],
       _recipient: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     setCacheSize(
       _cacheSize: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     setFees(
       _swapFee: BigNumberish,
       _redemptionFee: BigNumberish,
       _govFee: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     setWeightLimits(
       _min: BigNumberish,
       _max: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     startRampA(
       _targetA: BigNumberish,
       _rampEndTime: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
-    stopRampA(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    stopRampA(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
     swap(
       _input: string,
@@ -667,7 +516,7 @@ export class Mhbtc extends BaseContract {
       _inputQuantity: BigNumberish,
       _minOutputQuantity: BigNumberish,
       _recipient: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<[string]>;
@@ -677,46 +526,34 @@ export class Mhbtc extends BaseContract {
     transfer(
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     transferFrom(
       sender: string,
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
-    unpause(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    unpause(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
   };
 
-  allowance(
-    owner: string,
-    spender: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  allowance(owner: string, spender: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   approve(
     spender: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-  collectPendingFees(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  collectPendingFees(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
-  collectPlatformInterest(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  collectPlatformInterest(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
-  data(
-    overrides?: CallOverrides
-  ): Promise<
+  data(overrides?: CallOverrides): Promise<
     [
       BigNumber,
       BigNumber,
@@ -729,7 +566,7 @@ export class Mhbtc extends BaseContract {
         rampStartTime: BigNumber;
         rampEndTime: BigNumber;
       },
-      [BigNumber, BigNumber] & { min: BigNumber; max: BigNumber }
+      [BigNumber, BigNumber] & { min: BigNumber; max: BigNumber },
     ] & {
       swapFee: BigNumber;
       redemptionFee: BigNumber;
@@ -751,12 +588,12 @@ export class Mhbtc extends BaseContract {
   decreaseAllowance(
     spender: string,
     subtractedValue: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   getBasset(
     _bAsset: string,
-    overrides?: CallOverrides
+    overrides?: CallOverrides,
   ): Promise<
     [
       [string, string, boolean, number] & {
@@ -765,7 +602,7 @@ export class Mhbtc extends BaseContract {
         hasTxFee: boolean;
         status: number;
       },
-      [BigNumber, BigNumber] & { ratio: BigNumber; vaultBalance: BigNumber }
+      [BigNumber, BigNumber] & { ratio: BigNumber; vaultBalance: BigNumber },
     ] & {
       personal: [string, string, boolean, number] & {
         addr: string;
@@ -780,9 +617,7 @@ export class Mhbtc extends BaseContract {
     }
   >;
 
-  getBassets(
-    overrides?: CallOverrides
-  ): Promise<
+  getBassets(overrides?: CallOverrides): Promise<
     [
       ([string, string, boolean, number] & {
         addr: string;
@@ -790,7 +625,7 @@ export class Mhbtc extends BaseContract {
         hasTxFee: boolean;
         status: number;
       })[],
-      ([BigNumber, BigNumber] & { ratio: BigNumber; vaultBalance: BigNumber })[]
+      ([BigNumber, BigNumber] & { ratio: BigNumber; vaultBalance: BigNumber })[],
     ] & {
       vaultData: ([BigNumber, BigNumber] & {
         ratio: BigNumber;
@@ -799,14 +634,8 @@ export class Mhbtc extends BaseContract {
     }
   >;
 
-  getConfig(
-    overrides?: CallOverrides
-  ): Promise<
-    [
-      BigNumber,
-      BigNumber,
-      [BigNumber, BigNumber] & { min: BigNumber; max: BigNumber }
-    ] & {
+  getConfig(overrides?: CallOverrides): Promise<
+    [BigNumber, BigNumber, [BigNumber, BigNumber] & { min: BigNumber; max: BigNumber }] & {
       supply: BigNumber;
       a: BigNumber;
       limits: [BigNumber, BigNumber] & { min: BigNumber; max: BigNumber };
@@ -816,42 +645,32 @@ export class Mhbtc extends BaseContract {
   getMintMultiOutput(
     _inputs: string[],
     _inputQuantities: BigNumberish[],
-    overrides?: CallOverrides
+    overrides?: CallOverrides,
   ): Promise<BigNumber>;
 
-  getMintOutput(
-    _input: string,
-    _inputQuantity: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  getMintOutput(_input: string, _inputQuantity: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-  getPrice(
-    overrides?: CallOverrides
-  ): Promise<[BigNumber, BigNumber] & { price: BigNumber; k: BigNumber }>;
+  getPrice(overrides?: CallOverrides): Promise<[BigNumber, BigNumber] & { price: BigNumber; k: BigNumber }>;
 
   getRedeemExactBassetsOutput(
     _outputs: string[],
     _outputQuantities: BigNumberish[],
-    overrides?: CallOverrides
+    overrides?: CallOverrides,
   ): Promise<BigNumber>;
 
-  getRedeemOutput(
-    _output: string,
-    _fpTokenQuantity: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  getRedeemOutput(_output: string, _fpTokenQuantity: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
   getSwapOutput(
     _input: string,
     _output: string,
     _inputQuantity: BigNumberish,
-    overrides?: CallOverrides
+    overrides?: CallOverrides,
   ): Promise<BigNumber>;
 
   increaseAllowance(
     spender: string,
     addedValue: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   initialize(
@@ -874,7 +693,7 @@ export class Mhbtc extends BaseContract {
       a: BigNumberish;
       limits: { min: BigNumberish; max: BigNumberish };
     },
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   mAsset(overrides?: CallOverrides): Promise<string>;
@@ -882,7 +701,7 @@ export class Mhbtc extends BaseContract {
   migrateBassets(
     _bAssets: string[],
     _newIntegration: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   mint(
@@ -890,7 +709,7 @@ export class Mhbtc extends BaseContract {
     _inputQuantity: BigNumberish,
     _minOutputQuantity: BigNumberish,
     _recipient: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   mintMulti(
@@ -898,16 +717,14 @@ export class Mhbtc extends BaseContract {
     _inputQuantities: BigNumberish[],
     _minOutputQuantity: BigNumberish,
     _recipient: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   name(overrides?: CallOverrides): Promise<string>;
 
   nexus(overrides?: CallOverrides): Promise<string>;
 
-  pause(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  pause(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
   paused(overrides?: CallOverrides): Promise<boolean>;
 
@@ -916,7 +733,7 @@ export class Mhbtc extends BaseContract {
     _fpTokenQuantity: BigNumberish,
     _minOutputQuantity: BigNumberish,
     _recipient: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   redeemExactBassets(
@@ -924,43 +741,41 @@ export class Mhbtc extends BaseContract {
     _outputQuantities: BigNumberish[],
     _maxInputQuantity: BigNumberish,
     _recipient: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   redeemProportionately(
     _inputQuantity: BigNumberish,
     _minOutputQuantities: BigNumberish[],
     _recipient: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   setCacheSize(
     _cacheSize: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   setFees(
     _swapFee: BigNumberish,
     _redemptionFee: BigNumberish,
     _govFee: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   setWeightLimits(
     _min: BigNumberish,
     _max: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   startRampA(
     _targetA: BigNumberish,
     _rampEndTime: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
-  stopRampA(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  stopRampA(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
   swap(
     _input: string,
@@ -968,7 +783,7 @@ export class Mhbtc extends BaseContract {
     _inputQuantity: BigNumberish,
     _minOutputQuantity: BigNumberish,
     _recipient: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   symbol(overrides?: CallOverrides): Promise<string>;
@@ -978,46 +793,32 @@ export class Mhbtc extends BaseContract {
   transfer(
     recipient: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   transferFrom(
     sender: string,
     recipient: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
-  unpause(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  unpause(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
   callStatic: {
-    allowance(
-      owner: string,
-      spender: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    allowance(owner: string, spender: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    approve(
-      spender: string,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    approve(spender: string, amount: BigNumberish, overrides?: CallOverrides): Promise<boolean>;
 
     balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     collectPendingFees(overrides?: CallOverrides): Promise<void>;
 
     collectPlatformInterest(
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber] & { mintAmount: BigNumber; newSupply: BigNumber }
-    >;
+      overrides?: CallOverrides,
+    ): Promise<[BigNumber, BigNumber] & { mintAmount: BigNumber; newSupply: BigNumber }>;
 
-    data(
-      overrides?: CallOverrides
-    ): Promise<
+    data(overrides?: CallOverrides): Promise<
       [
         BigNumber,
         BigNumber,
@@ -1030,7 +831,7 @@ export class Mhbtc extends BaseContract {
           rampStartTime: BigNumber;
           rampEndTime: BigNumber;
         },
-        [BigNumber, BigNumber] & { min: BigNumber; max: BigNumber }
+        [BigNumber, BigNumber] & { min: BigNumber; max: BigNumber },
       ] & {
         swapFee: BigNumber;
         redemptionFee: BigNumber;
@@ -1052,15 +853,11 @@ export class Mhbtc extends BaseContract {
 
     decimals(overrides?: CallOverrides): Promise<number>;
 
-    decreaseAllowance(
-      spender: string,
-      subtractedValue: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    decreaseAllowance(spender: string, subtractedValue: BigNumberish, overrides?: CallOverrides): Promise<boolean>;
 
     getBasset(
       _bAsset: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<
       [
         [string, string, boolean, number] & {
@@ -1069,7 +866,7 @@ export class Mhbtc extends BaseContract {
           hasTxFee: boolean;
           status: number;
         },
-        [BigNumber, BigNumber] & { ratio: BigNumber; vaultBalance: BigNumber }
+        [BigNumber, BigNumber] & { ratio: BigNumber; vaultBalance: BigNumber },
       ] & {
         personal: [string, string, boolean, number] & {
           addr: string;
@@ -1084,9 +881,7 @@ export class Mhbtc extends BaseContract {
       }
     >;
 
-    getBassets(
-      overrides?: CallOverrides
-    ): Promise<
+    getBassets(overrides?: CallOverrides): Promise<
       [
         ([string, string, boolean, number] & {
           addr: string;
@@ -1097,7 +892,7 @@ export class Mhbtc extends BaseContract {
         ([BigNumber, BigNumber] & {
           ratio: BigNumber;
           vaultBalance: BigNumber;
-        })[]
+        })[],
       ] & {
         vaultData: ([BigNumber, BigNumber] & {
           ratio: BigNumber;
@@ -1106,14 +901,8 @@ export class Mhbtc extends BaseContract {
       }
     >;
 
-    getConfig(
-      overrides?: CallOverrides
-    ): Promise<
-      [
-        BigNumber,
-        BigNumber,
-        [BigNumber, BigNumber] & { min: BigNumber; max: BigNumber }
-      ] & {
+    getConfig(overrides?: CallOverrides): Promise<
+      [BigNumber, BigNumber, [BigNumber, BigNumber] & { min: BigNumber; max: BigNumber }] & {
         supply: BigNumber;
         a: BigNumber;
         limits: [BigNumber, BigNumber] & { min: BigNumber; max: BigNumber };
@@ -1123,43 +912,29 @@ export class Mhbtc extends BaseContract {
     getMintMultiOutput(
       _inputs: string[],
       _inputQuantities: BigNumberish[],
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
-    getMintOutput(
-      _input: string,
-      _inputQuantity: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getMintOutput(_input: string, _inputQuantity: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    getPrice(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber, BigNumber] & { price: BigNumber; k: BigNumber }>;
+    getPrice(overrides?: CallOverrides): Promise<[BigNumber, BigNumber] & { price: BigNumber; k: BigNumber }>;
 
     getRedeemExactBassetsOutput(
       _outputs: string[],
       _outputQuantities: BigNumberish[],
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
-    getRedeemOutput(
-      _output: string,
-      _fpTokenQuantity: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getRedeemOutput(_output: string, _fpTokenQuantity: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     getSwapOutput(
       _input: string,
       _output: string,
       _inputQuantity: BigNumberish,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
-    increaseAllowance(
-      spender: string,
-      addedValue: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    increaseAllowance(spender: string, addedValue: BigNumberish, overrides?: CallOverrides): Promise<boolean>;
 
     initialize(
       _nameArg: string,
@@ -1181,23 +956,19 @@ export class Mhbtc extends BaseContract {
         a: BigNumberish;
         limits: { min: BigNumberish; max: BigNumberish };
       },
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<void>;
 
     mAsset(overrides?: CallOverrides): Promise<string>;
 
-    migrateBassets(
-      _bAssets: string[],
-      _newIntegration: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    migrateBassets(_bAssets: string[], _newIntegration: string, overrides?: CallOverrides): Promise<void>;
 
     mint(
       _input: string,
       _inputQuantity: BigNumberish,
       _minOutputQuantity: BigNumberish,
       _recipient: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
     mintMulti(
@@ -1205,7 +976,7 @@ export class Mhbtc extends BaseContract {
       _inputQuantities: BigNumberish[],
       _minOutputQuantity: BigNumberish,
       _recipient: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<string>;
@@ -1221,7 +992,7 @@ export class Mhbtc extends BaseContract {
       _fpTokenQuantity: BigNumberish,
       _minOutputQuantity: BigNumberish,
       _recipient: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
     redeemExactBassets(
@@ -1229,39 +1000,28 @@ export class Mhbtc extends BaseContract {
       _outputQuantities: BigNumberish[],
       _maxInputQuantity: BigNumberish,
       _recipient: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
     redeemProportionately(
       _inputQuantity: BigNumberish,
       _minOutputQuantities: BigNumberish[],
       _recipient: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<BigNumber[]>;
 
-    setCacheSize(
-      _cacheSize: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    setCacheSize(_cacheSize: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
     setFees(
       _swapFee: BigNumberish,
       _redemptionFee: BigNumberish,
       _govFee: BigNumberish,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<void>;
 
-    setWeightLimits(
-      _min: BigNumberish,
-      _max: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    setWeightLimits(_min: BigNumberish, _max: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
-    startRampA(
-      _targetA: BigNumberish,
-      _rampEndTime: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    startRampA(_targetA: BigNumberish, _rampEndTime: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
     stopRampA(overrides?: CallOverrides): Promise<void>;
 
@@ -1271,25 +1031,16 @@ export class Mhbtc extends BaseContract {
       _inputQuantity: BigNumberish,
       _minOutputQuantity: BigNumberish,
       _recipient: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
     symbol(overrides?: CallOverrides): Promise<string>;
 
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
-    transfer(
-      recipient: string,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    transfer(recipient: string, amount: BigNumberish, overrides?: CallOverrides): Promise<boolean>;
 
-    transferFrom(
-      sender: string,
-      recipient: string,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    transferFrom(sender: string, recipient: string, amount: BigNumberish, overrides?: CallOverrides): Promise<boolean>;
 
     unpause(overrides?: CallOverrides): Promise<void>;
   };
@@ -1298,28 +1049,20 @@ export class Mhbtc extends BaseContract {
     Approval(
       owner?: string | null,
       spender?: string | null,
-      value?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber],
-      { owner: string; spender: string; value: BigNumber }
-    >;
+      value?: null,
+    ): TypedEventFilter<[string, string, BigNumber], { owner: string; spender: string; value: BigNumber }>;
 
     BassetsMigrated(
       bAssets?: null,
-      newIntegrator?: null
-    ): TypedEventFilter<
-      [string[], string],
-      { bAssets: string[]; newIntegrator: string }
-    >;
+      newIntegrator?: null,
+    ): TypedEventFilter<[string[], string], { bAssets: string[]; newIntegrator: string }>;
 
-    CacheSizeChanged(
-      cacheSize?: null
-    ): TypedEventFilter<[BigNumber], { cacheSize: BigNumber }>;
+    CacheSizeChanged(cacheSize?: null): TypedEventFilter<[BigNumber], { cacheSize: BigNumber }>;
 
     FeesChanged(
       swapFee?: null,
       redemptionFee?: null,
-      govFee?: null
+      govFee?: null,
     ): TypedEventFilter<
       [BigNumber, BigNumber, BigNumber],
       { swapFee: BigNumber; redemptionFee: BigNumber; govFee: BigNumber }
@@ -1330,7 +1073,7 @@ export class Mhbtc extends BaseContract {
       recipient?: null,
       output?: null,
       input?: null,
-      inputQuantity?: null
+      inputQuantity?: null,
     ): TypedEventFilter<
       [string, string, BigNumber, string, BigNumber],
       {
@@ -1347,7 +1090,7 @@ export class Mhbtc extends BaseContract {
       recipient?: null,
       output?: null,
       inputs?: null,
-      inputQuantities?: null
+      inputQuantities?: null,
     ): TypedEventFilter<
       [string, string, BigNumber, string[], BigNumber[]],
       {
@@ -1367,7 +1110,7 @@ export class Mhbtc extends BaseContract {
       mAssetQuantity?: null,
       output?: null,
       outputQuantity?: null,
-      scaledFee?: null
+      scaledFee?: null,
     ): TypedEventFilter<
       [string, string, BigNumber, string, BigNumber, BigNumber],
       {
@@ -1386,7 +1129,7 @@ export class Mhbtc extends BaseContract {
       mAssetQuantity?: null,
       outputs?: null,
       outputQuantity?: null,
-      scaledFee?: null
+      scaledFee?: null,
     ): TypedEventFilter<
       [string, string, BigNumber, string[], BigNumber[], BigNumber],
       {
@@ -1403,7 +1146,7 @@ export class Mhbtc extends BaseContract {
       currentA?: null,
       targetA?: null,
       startTime?: null,
-      rampEndTime?: null
+      rampEndTime?: null,
     ): TypedEventFilter<
       [BigNumber, BigNumber, BigNumber, BigNumber],
       {
@@ -1416,11 +1159,8 @@ export class Mhbtc extends BaseContract {
 
     StopRampA(
       currentA?: null,
-      time?: null
-    ): TypedEventFilter<
-      [BigNumber, BigNumber],
-      { currentA: BigNumber; time: BigNumber }
-    >;
+      time?: null,
+    ): TypedEventFilter<[BigNumber, BigNumber], { currentA: BigNumber; time: BigNumber }>;
 
     Swapped(
       swapper?: string | null,
@@ -1428,7 +1168,7 @@ export class Mhbtc extends BaseContract {
       output?: null,
       outputAmount?: null,
       fee?: null,
-      recipient?: null
+      recipient?: null,
     ): TypedEventFilter<
       [string, string, string, BigNumber, BigNumber, string],
       {
@@ -1444,45 +1184,31 @@ export class Mhbtc extends BaseContract {
     Transfer(
       from?: string | null,
       to?: string | null,
-      value?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber],
-      { from: string; to: string; value: BigNumber }
-    >;
+      value?: null,
+    ): TypedEventFilter<[string, string, BigNumber], { from: string; to: string; value: BigNumber }>;
 
     Unpaused(account?: null): TypedEventFilter<[string], { account: string }>;
 
     WeightLimitsChanged(
       min?: null,
-      max?: null
-    ): TypedEventFilter<
-      [BigNumber, BigNumber],
-      { min: BigNumber; max: BigNumber }
-    >;
+      max?: null,
+    ): TypedEventFilter<[BigNumber, BigNumber], { min: BigNumber; max: BigNumber }>;
   };
 
   estimateGas: {
-    allowance(
-      owner: string,
-      spender: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    allowance(owner: string, spender: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     approve(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    collectPendingFees(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    collectPendingFees(overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
-    collectPlatformInterest(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    collectPlatformInterest(overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
     data(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1491,7 +1217,7 @@ export class Mhbtc extends BaseContract {
     decreaseAllowance(
       spender: string,
       subtractedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     getBasset(_bAsset: string, overrides?: CallOverrides): Promise<BigNumber>;
@@ -1503,40 +1229,32 @@ export class Mhbtc extends BaseContract {
     getMintMultiOutput(
       _inputs: string[],
       _inputQuantities: BigNumberish[],
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
-    getMintOutput(
-      _input: string,
-      _inputQuantity: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getMintOutput(_input: string, _inputQuantity: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     getPrice(overrides?: CallOverrides): Promise<BigNumber>;
 
     getRedeemExactBassetsOutput(
       _outputs: string[],
       _outputQuantities: BigNumberish[],
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
-    getRedeemOutput(
-      _output: string,
-      _fpTokenQuantity: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getRedeemOutput(_output: string, _fpTokenQuantity: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     getSwapOutput(
       _input: string,
       _output: string,
       _inputQuantity: BigNumberish,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     initialize(
@@ -1559,7 +1277,7 @@ export class Mhbtc extends BaseContract {
         a: BigNumberish;
         limits: { min: BigNumberish; max: BigNumberish };
       },
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     mAsset(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1567,7 +1285,7 @@ export class Mhbtc extends BaseContract {
     migrateBassets(
       _bAssets: string[],
       _newIntegration: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     mint(
@@ -1575,7 +1293,7 @@ export class Mhbtc extends BaseContract {
       _inputQuantity: BigNumberish,
       _minOutputQuantity: BigNumberish,
       _recipient: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     mintMulti(
@@ -1583,16 +1301,14 @@ export class Mhbtc extends BaseContract {
       _inputQuantities: BigNumberish[],
       _minOutputQuantity: BigNumberish,
       _recipient: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
     nexus(overrides?: CallOverrides): Promise<BigNumber>;
 
-    pause(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    pause(overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
     paused(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1601,7 +1317,7 @@ export class Mhbtc extends BaseContract {
       _fpTokenQuantity: BigNumberish,
       _minOutputQuantity: BigNumberish,
       _recipient: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     redeemExactBassets(
@@ -1609,43 +1325,41 @@ export class Mhbtc extends BaseContract {
       _outputQuantities: BigNumberish[],
       _maxInputQuantity: BigNumberish,
       _recipient: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     redeemProportionately(
       _inputQuantity: BigNumberish,
       _minOutputQuantities: BigNumberish[],
       _recipient: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     setCacheSize(
       _cacheSize: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     setFees(
       _swapFee: BigNumberish,
       _redemptionFee: BigNumberish,
       _govFee: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     setWeightLimits(
       _min: BigNumberish,
       _max: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     startRampA(
       _targetA: BigNumberish,
       _rampEndTime: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
-    stopRampA(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    stopRampA(overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
     swap(
       _input: string,
@@ -1653,7 +1367,7 @@ export class Mhbtc extends BaseContract {
       _inputQuantity: BigNumberish,
       _minOutputQuantity: BigNumberish,
       _recipient: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1663,46 +1377,33 @@ export class Mhbtc extends BaseContract {
     transfer(
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     transferFrom(
       sender: string,
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
-    unpause(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    unpause(overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    allowance(
-      owner: string,
-      spender: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    allowance(owner: string, spender: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     approve(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
-    balanceOf(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    balanceOf(account: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    collectPendingFees(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    collectPendingFees(overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
 
-    collectPlatformInterest(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    collectPlatformInterest(overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
 
     data(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1711,13 +1412,10 @@ export class Mhbtc extends BaseContract {
     decreaseAllowance(
       spender: string,
       subtractedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
-    getBasset(
-      _bAsset: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    getBasset(_bAsset: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getBassets(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1726,13 +1424,13 @@ export class Mhbtc extends BaseContract {
     getMintMultiOutput(
       _inputs: string[],
       _inputQuantities: BigNumberish[],
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
     getMintOutput(
       _input: string,
       _inputQuantity: BigNumberish,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
     getPrice(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -1740,26 +1438,26 @@ export class Mhbtc extends BaseContract {
     getRedeemExactBassetsOutput(
       _outputs: string[],
       _outputQuantities: BigNumberish[],
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
     getRedeemOutput(
       _output: string,
       _fpTokenQuantity: BigNumberish,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
     getSwapOutput(
       _input: string,
       _output: string,
       _inputQuantity: BigNumberish,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     initialize(
@@ -1782,7 +1480,7 @@ export class Mhbtc extends BaseContract {
         a: BigNumberish;
         limits: { min: BigNumberish; max: BigNumberish };
       },
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     mAsset(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -1790,7 +1488,7 @@ export class Mhbtc extends BaseContract {
     migrateBassets(
       _bAssets: string[],
       _newIntegration: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     mint(
@@ -1798,7 +1496,7 @@ export class Mhbtc extends BaseContract {
       _inputQuantity: BigNumberish,
       _minOutputQuantity: BigNumberish,
       _recipient: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     mintMulti(
@@ -1806,16 +1504,14 @@ export class Mhbtc extends BaseContract {
       _inputQuantities: BigNumberish[],
       _minOutputQuantity: BigNumberish,
       _recipient: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     nexus(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    pause(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    pause(overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
 
     paused(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1824,7 +1520,7 @@ export class Mhbtc extends BaseContract {
       _fpTokenQuantity: BigNumberish,
       _minOutputQuantity: BigNumberish,
       _recipient: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     redeemExactBassets(
@@ -1832,43 +1528,41 @@ export class Mhbtc extends BaseContract {
       _outputQuantities: BigNumberish[],
       _maxInputQuantity: BigNumberish,
       _recipient: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     redeemProportionately(
       _inputQuantity: BigNumberish,
       _minOutputQuantities: BigNumberish[],
       _recipient: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     setCacheSize(
       _cacheSize: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     setFees(
       _swapFee: BigNumberish,
       _redemptionFee: BigNumberish,
       _govFee: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     setWeightLimits(
       _min: BigNumberish,
       _max: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     startRampA(
       _targetA: BigNumberish,
       _rampEndTime: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
-    stopRampA(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    stopRampA(overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
 
     swap(
       _input: string,
@@ -1876,7 +1570,7 @@ export class Mhbtc extends BaseContract {
       _inputQuantity: BigNumberish,
       _minOutputQuantity: BigNumberish,
       _recipient: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -1886,18 +1580,16 @@ export class Mhbtc extends BaseContract {
     transfer(
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     transferFrom(
       sender: string,
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
-    unpause(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    unpause(overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
   };
 }

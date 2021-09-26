@@ -13,506 +13,221 @@ import {
   ContractTransaction,
   Overrides,
   CallOverrides,
-} from "ethers";
-import { BytesLike } from "@ethersproject/bytes";
-import { Listener, Provider } from "@ethersproject/providers";
-import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
+} from 'ethers';
+import { BytesLike } from '@ethersproject/bytes';
+import { Listener, Provider } from '@ethersproject/providers';
+import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
+import { TypedEventFilter, TypedEvent, TypedListener } from './commons';
 
 interface CvxLockerInterface extends ethers.utils.Interface {
   functions: {
-    "addReward(address,address,bool)": FunctionFragment;
-    "approveRewardDistributor(address,address,bool)": FunctionFragment;
-    "balanceAtEpochOf(uint256,address)": FunctionFragment;
-    "balanceOf(address)": FunctionFragment;
-    "balances(address)": FunctionFragment;
-    "boostPayment()": FunctionFragment;
-    "boostRate()": FunctionFragment;
-    "boostedSupply()": FunctionFragment;
-    "checkpointEpoch()": FunctionFragment;
-    "claimableRewards(address)": FunctionFragment;
-    "cvxCrv()": FunctionFragment;
-    "cvxcrvStaking()": FunctionFragment;
-    "decimals()": FunctionFragment;
-    "denominator()": FunctionFragment;
-    "epochCount()": FunctionFragment;
-    "epochs(uint256)": FunctionFragment;
-    "findEpochId(uint256)": FunctionFragment;
-    "getReward(address,bool)": FunctionFragment;
-    "getRewardForDuration(address)": FunctionFragment;
-    "isShutdown()": FunctionFragment;
-    "kickExpiredLocks(address)": FunctionFragment;
-    "kickRewardEpochDelay()": FunctionFragment;
-    "kickRewardPerEpoch()": FunctionFragment;
-    "lastTimeRewardApplicable(address)": FunctionFragment;
-    "lock(address,uint256,uint256)": FunctionFragment;
-    "lockDuration()": FunctionFragment;
-    "lockedBalanceOf(address)": FunctionFragment;
-    "lockedBalances(address)": FunctionFragment;
-    "lockedSupply()": FunctionFragment;
-    "maximumBoostPayment()": FunctionFragment;
-    "maximumStake()": FunctionFragment;
-    "minimumStake()": FunctionFragment;
-    "name()": FunctionFragment;
-    "nextBoostRate()": FunctionFragment;
-    "nextMaximumBoostPayment()": FunctionFragment;
-    "notifyRewardAmount(address,uint256)": FunctionFragment;
-    "owner()": FunctionFragment;
-    "processExpiredLocks(bool)": FunctionFragment;
-    "recoverERC20(address,uint256)": FunctionFragment;
-    "renounceOwnership()": FunctionFragment;
-    "rewardData(address)": FunctionFragment;
-    "rewardDistributors(address,address)": FunctionFragment;
-    "rewardPerToken(address)": FunctionFragment;
-    "rewardTokens(uint256)": FunctionFragment;
-    "rewardWeightOf(address)": FunctionFragment;
-    "rewards(address,address)": FunctionFragment;
-    "rewardsDuration()": FunctionFragment;
-    "setApprovals()": FunctionFragment;
-    "setBoost(uint256,uint256,address)": FunctionFragment;
-    "setKickIncentive(uint256,uint256)": FunctionFragment;
-    "setStakeLimits(uint256,uint256)": FunctionFragment;
-    "setStakingContract(address)": FunctionFragment;
-    "shutdown()": FunctionFragment;
-    "stakeOffsetOnLock()": FunctionFragment;
-    "stakingProxy()": FunctionFragment;
-    "stakingToken()": FunctionFragment;
-    "symbol()": FunctionFragment;
-    "totalSupply()": FunctionFragment;
-    "totalSupplyAtEpoch(uint256)": FunctionFragment;
-    "transferOwnership(address)": FunctionFragment;
-    "userLocks(address,uint256)": FunctionFragment;
-    "userRewardPerTokenPaid(address,address)": FunctionFragment;
+    'addReward(address,address,bool)': FunctionFragment;
+    'approveRewardDistributor(address,address,bool)': FunctionFragment;
+    'balanceAtEpochOf(uint256,address)': FunctionFragment;
+    'balanceOf(address)': FunctionFragment;
+    'balances(address)': FunctionFragment;
+    'boostPayment()': FunctionFragment;
+    'boostRate()': FunctionFragment;
+    'boostedSupply()': FunctionFragment;
+    'checkpointEpoch()': FunctionFragment;
+    'claimableRewards(address)': FunctionFragment;
+    'cvxCrv()': FunctionFragment;
+    'cvxcrvStaking()': FunctionFragment;
+    'decimals()': FunctionFragment;
+    'denominator()': FunctionFragment;
+    'epochCount()': FunctionFragment;
+    'epochs(uint256)': FunctionFragment;
+    'findEpochId(uint256)': FunctionFragment;
+    'getReward(address,bool)': FunctionFragment;
+    'getRewardForDuration(address)': FunctionFragment;
+    'isShutdown()': FunctionFragment;
+    'kickExpiredLocks(address)': FunctionFragment;
+    'kickRewardEpochDelay()': FunctionFragment;
+    'kickRewardPerEpoch()': FunctionFragment;
+    'lastTimeRewardApplicable(address)': FunctionFragment;
+    'lock(address,uint256,uint256)': FunctionFragment;
+    'lockDuration()': FunctionFragment;
+    'lockedBalanceOf(address)': FunctionFragment;
+    'lockedBalances(address)': FunctionFragment;
+    'lockedSupply()': FunctionFragment;
+    'maximumBoostPayment()': FunctionFragment;
+    'maximumStake()': FunctionFragment;
+    'minimumStake()': FunctionFragment;
+    'name()': FunctionFragment;
+    'nextBoostRate()': FunctionFragment;
+    'nextMaximumBoostPayment()': FunctionFragment;
+    'notifyRewardAmount(address,uint256)': FunctionFragment;
+    'owner()': FunctionFragment;
+    'processExpiredLocks(bool)': FunctionFragment;
+    'recoverERC20(address,uint256)': FunctionFragment;
+    'renounceOwnership()': FunctionFragment;
+    'rewardData(address)': FunctionFragment;
+    'rewardDistributors(address,address)': FunctionFragment;
+    'rewardPerToken(address)': FunctionFragment;
+    'rewardTokens(uint256)': FunctionFragment;
+    'rewardWeightOf(address)': FunctionFragment;
+    'rewards(address,address)': FunctionFragment;
+    'rewardsDuration()': FunctionFragment;
+    'setApprovals()': FunctionFragment;
+    'setBoost(uint256,uint256,address)': FunctionFragment;
+    'setKickIncentive(uint256,uint256)': FunctionFragment;
+    'setStakeLimits(uint256,uint256)': FunctionFragment;
+    'setStakingContract(address)': FunctionFragment;
+    'shutdown()': FunctionFragment;
+    'stakeOffsetOnLock()': FunctionFragment;
+    'stakingProxy()': FunctionFragment;
+    'stakingToken()': FunctionFragment;
+    'symbol()': FunctionFragment;
+    'totalSupply()': FunctionFragment;
+    'totalSupplyAtEpoch(uint256)': FunctionFragment;
+    'transferOwnership(address)': FunctionFragment;
+    'userLocks(address,uint256)': FunctionFragment;
+    'userRewardPerTokenPaid(address,address)': FunctionFragment;
   };
 
-  encodeFunctionData(
-    functionFragment: "addReward",
-    values: [string, string, boolean]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "approveRewardDistributor",
-    values: [string, string, boolean]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "balanceAtEpochOf",
-    values: [BigNumberish, string]
-  ): string;
-  encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
-  encodeFunctionData(functionFragment: "balances", values: [string]): string;
-  encodeFunctionData(
-    functionFragment: "boostPayment",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "boostRate", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "boostedSupply",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "checkpointEpoch",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "claimableRewards",
-    values: [string]
-  ): string;
-  encodeFunctionData(functionFragment: "cvxCrv", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "cvxcrvStaking",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "denominator",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "epochCount",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "epochs",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "findEpochId",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getReward",
-    values: [string, boolean]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getRewardForDuration",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "isShutdown",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "kickExpiredLocks",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "kickRewardEpochDelay",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "kickRewardPerEpoch",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "lastTimeRewardApplicable",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "lock",
-    values: [string, BigNumberish, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "lockDuration",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "lockedBalanceOf",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "lockedBalances",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "lockedSupply",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "maximumBoostPayment",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "maximumStake",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "minimumStake",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "name", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "nextBoostRate",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "nextMaximumBoostPayment",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "notifyRewardAmount",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "processExpiredLocks",
-    values: [boolean]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "recoverERC20",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "renounceOwnership",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "rewardData", values: [string]): string;
-  encodeFunctionData(
-    functionFragment: "rewardDistributors",
-    values: [string, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "rewardPerToken",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "rewardTokens",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "rewardWeightOf",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "rewards",
-    values: [string, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "rewardsDuration",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setApprovals",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setBoost",
-    values: [BigNumberish, BigNumberish, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setKickIncentive",
-    values: [BigNumberish, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setStakeLimits",
-    values: [BigNumberish, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setStakingContract",
-    values: [string]
-  ): string;
-  encodeFunctionData(functionFragment: "shutdown", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "stakeOffsetOnLock",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "stakingProxy",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "stakingToken",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "totalSupply",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "totalSupplyAtEpoch",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "transferOwnership",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "userLocks",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "userRewardPerTokenPaid",
-    values: [string, string]
-  ): string;
+  encodeFunctionData(functionFragment: 'addReward', values: [string, string, boolean]): string;
+  encodeFunctionData(functionFragment: 'approveRewardDistributor', values: [string, string, boolean]): string;
+  encodeFunctionData(functionFragment: 'balanceAtEpochOf', values: [BigNumberish, string]): string;
+  encodeFunctionData(functionFragment: 'balanceOf', values: [string]): string;
+  encodeFunctionData(functionFragment: 'balances', values: [string]): string;
+  encodeFunctionData(functionFragment: 'boostPayment', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'boostRate', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'boostedSupply', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'checkpointEpoch', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'claimableRewards', values: [string]): string;
+  encodeFunctionData(functionFragment: 'cvxCrv', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'cvxcrvStaking', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'decimals', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'denominator', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'epochCount', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'epochs', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'findEpochId', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'getReward', values: [string, boolean]): string;
+  encodeFunctionData(functionFragment: 'getRewardForDuration', values: [string]): string;
+  encodeFunctionData(functionFragment: 'isShutdown', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'kickExpiredLocks', values: [string]): string;
+  encodeFunctionData(functionFragment: 'kickRewardEpochDelay', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'kickRewardPerEpoch', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'lastTimeRewardApplicable', values: [string]): string;
+  encodeFunctionData(functionFragment: 'lock', values: [string, BigNumberish, BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'lockDuration', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'lockedBalanceOf', values: [string]): string;
+  encodeFunctionData(functionFragment: 'lockedBalances', values: [string]): string;
+  encodeFunctionData(functionFragment: 'lockedSupply', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'maximumBoostPayment', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'maximumStake', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'minimumStake', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'name', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'nextBoostRate', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'nextMaximumBoostPayment', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'notifyRewardAmount', values: [string, BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'owner', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'processExpiredLocks', values: [boolean]): string;
+  encodeFunctionData(functionFragment: 'recoverERC20', values: [string, BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'renounceOwnership', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'rewardData', values: [string]): string;
+  encodeFunctionData(functionFragment: 'rewardDistributors', values: [string, string]): string;
+  encodeFunctionData(functionFragment: 'rewardPerToken', values: [string]): string;
+  encodeFunctionData(functionFragment: 'rewardTokens', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'rewardWeightOf', values: [string]): string;
+  encodeFunctionData(functionFragment: 'rewards', values: [string, string]): string;
+  encodeFunctionData(functionFragment: 'rewardsDuration', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'setApprovals', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'setBoost', values: [BigNumberish, BigNumberish, string]): string;
+  encodeFunctionData(functionFragment: 'setKickIncentive', values: [BigNumberish, BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'setStakeLimits', values: [BigNumberish, BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'setStakingContract', values: [string]): string;
+  encodeFunctionData(functionFragment: 'shutdown', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'stakeOffsetOnLock', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'stakingProxy', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'stakingToken', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'symbol', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'totalSupply', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'totalSupplyAtEpoch', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'transferOwnership', values: [string]): string;
+  encodeFunctionData(functionFragment: 'userLocks', values: [string, BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'userRewardPerTokenPaid', values: [string, string]): string;
 
-  decodeFunctionResult(functionFragment: "addReward", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "approveRewardDistributor",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "balanceAtEpochOf",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "balances", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "boostPayment",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "boostRate", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "boostedSupply",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "checkpointEpoch",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "claimableRewards",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "cvxCrv", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "cvxcrvStaking",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "denominator",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "epochCount", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "epochs", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "findEpochId",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "getReward", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "getRewardForDuration",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "isShutdown", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "kickExpiredLocks",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "kickRewardEpochDelay",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "kickRewardPerEpoch",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "lastTimeRewardApplicable",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "lock", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "lockDuration",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "lockedBalanceOf",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "lockedBalances",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "lockedSupply",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "maximumBoostPayment",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "maximumStake",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "minimumStake",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "nextBoostRate",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "nextMaximumBoostPayment",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "notifyRewardAmount",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "processExpiredLocks",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "recoverERC20",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "renounceOwnership",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "rewardData", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "rewardDistributors",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "rewardPerToken",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "rewardTokens",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "rewardWeightOf",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "rewards", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "rewardsDuration",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setApprovals",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "setBoost", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "setKickIncentive",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setStakeLimits",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setStakingContract",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "shutdown", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "stakeOffsetOnLock",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "stakingProxy",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "stakingToken",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "totalSupply",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "totalSupplyAtEpoch",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "transferOwnership",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "userLocks", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "userRewardPerTokenPaid",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: 'addReward', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'approveRewardDistributor', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'balanceAtEpochOf', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'balanceOf', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'balances', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'boostPayment', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'boostRate', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'boostedSupply', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'checkpointEpoch', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'claimableRewards', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'cvxCrv', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'cvxcrvStaking', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'decimals', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'denominator', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'epochCount', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'epochs', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'findEpochId', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getReward', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getRewardForDuration', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'isShutdown', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'kickExpiredLocks', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'kickRewardEpochDelay', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'kickRewardPerEpoch', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'lastTimeRewardApplicable', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'lock', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'lockDuration', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'lockedBalanceOf', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'lockedBalances', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'lockedSupply', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'maximumBoostPayment', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'maximumStake', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'minimumStake', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'name', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'nextBoostRate', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'nextMaximumBoostPayment', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'notifyRewardAmount', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'owner', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'processExpiredLocks', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'recoverERC20', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'renounceOwnership', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'rewardData', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'rewardDistributors', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'rewardPerToken', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'rewardTokens', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'rewardWeightOf', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'rewards', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'rewardsDuration', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setApprovals', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setBoost', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setKickIncentive', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setStakeLimits', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setStakingContract', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'shutdown', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'stakeOffsetOnLock', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'stakingProxy', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'stakingToken', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'symbol', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'totalSupply', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'totalSupplyAtEpoch', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'transferOwnership', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'userLocks', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'userRewardPerTokenPaid', data: BytesLike): Result;
 
   events: {
-    "KickReward(address,address,uint256)": EventFragment;
-    "OwnershipTransferred(address,address)": EventFragment;
-    "Recovered(address,uint256)": EventFragment;
-    "RewardAdded(address,uint256)": EventFragment;
-    "RewardPaid(address,address,uint256)": EventFragment;
-    "Staked(address,uint256,uint256,uint256)": EventFragment;
-    "Withdrawn(address,uint256,bool)": EventFragment;
+    'KickReward(address,address,uint256)': EventFragment;
+    'OwnershipTransferred(address,address)': EventFragment;
+    'Recovered(address,uint256)': EventFragment;
+    'RewardAdded(address,uint256)': EventFragment;
+    'RewardPaid(address,address,uint256)': EventFragment;
+    'Staked(address,uint256,uint256,uint256)': EventFragment;
+    'Withdrawn(address,uint256,bool)': EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "KickReward"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Recovered"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "RewardAdded"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "RewardPaid"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Staked"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Withdrawn"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'KickReward'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'OwnershipTransferred'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'Recovered'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'RewardAdded'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'RewardPaid'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'Staked'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'Withdrawn'): EventFragment;
 }
 
 export class CvxLocker extends BaseContract {
@@ -521,26 +236,26 @@ export class CvxLocker extends BaseContract {
   deployed(): Promise<this>;
 
   listeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
+    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>,
   ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
   off<EventArgsArray extends Array<any>, EventArgsObject>(
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
+    listener: TypedListener<EventArgsArray, EventArgsObject>,
   ): this;
   on<EventArgsArray extends Array<any>, EventArgsObject>(
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
+    listener: TypedListener<EventArgsArray, EventArgsObject>,
   ): this;
   once<EventArgsArray extends Array<any>, EventArgsObject>(
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
+    listener: TypedListener<EventArgsArray, EventArgsObject>,
   ): this;
   removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
+    listener: TypedListener<EventArgsArray, EventArgsObject>,
   ): this;
   removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
   ): this;
 
   listeners(eventName?: string): Array<Listener>;
@@ -553,7 +268,7 @@ export class CvxLocker extends BaseContract {
   queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
     event: TypedEventFilter<EventArgsArray, EventArgsObject>,
     fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
+    toBlock?: string | number | undefined,
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
   interface: CvxLockerInterface;
@@ -563,30 +278,27 @@ export class CvxLocker extends BaseContract {
       _rewardsToken: string,
       _distributor: string,
       _useBoost: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     approveRewardDistributor(
       _rewardsToken: string,
       _distributor: string,
       _approved: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     balanceAtEpochOf(
       _epoch: BigNumberish,
       _user: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<[BigNumber] & { amount: BigNumber }>;
 
-    balanceOf(
-      _user: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { amount: BigNumber }>;
+    balanceOf(_user: string, overrides?: CallOverrides): Promise<[BigNumber] & { amount: BigNumber }>;
 
     balances(
       arg0: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<
       [BigNumber, BigNumber, number] & {
         locked: BigNumber;
@@ -601,13 +313,11 @@ export class CvxLocker extends BaseContract {
 
     boostedSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    checkpointEpoch(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    checkpointEpoch(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
     claimableRewards(
       _account: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<
       [([string, BigNumber] & { token: string; amount: BigNumber })[]] & {
         userRewards: ([string, BigNumber] & {
@@ -629,63 +339,51 @@ export class CvxLocker extends BaseContract {
 
     epochs(
       arg0: BigNumberish,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<[BigNumber, number] & { supply: BigNumber; date: number }>;
 
-    findEpochId(
-      _time: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { epoch: BigNumber }>;
+    findEpochId(_time: BigNumberish, overrides?: CallOverrides): Promise<[BigNumber] & { epoch: BigNumber }>;
 
-    "getReward(address,bool)"(
+    'getReward(address,bool)'(
       _account: string,
       _stake: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
-    "getReward(address)"(
+    'getReward(address)'(
       _account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
-    getRewardForDuration(
-      _rewardsToken: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    getRewardForDuration(_rewardsToken: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     isShutdown(overrides?: CallOverrides): Promise<[boolean]>;
 
     kickExpiredLocks(
       _account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     kickRewardEpochDelay(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     kickRewardPerEpoch(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    lastTimeRewardApplicable(
-      _rewardsToken: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    lastTimeRewardApplicable(_rewardsToken: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     lock(
       _account: string,
       _amount: BigNumberish,
       _spendRatio: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     lockDuration(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    lockedBalanceOf(
-      _user: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { amount: BigNumber }>;
+    lockedBalanceOf(_user: string, overrides?: CallOverrides): Promise<[BigNumber] & { amount: BigNumber }>;
 
     lockedBalances(
       _user: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<
       [
         BigNumber,
@@ -695,7 +393,7 @@ export class CvxLocker extends BaseContract {
           amount: BigNumber;
           boosted: BigNumber;
           unlockTime: number;
-        })[]
+        })[],
       ] & {
         total: BigNumber;
         unlockable: BigNumber;
@@ -725,36 +423,34 @@ export class CvxLocker extends BaseContract {
     notifyRewardAmount(
       _rewardsToken: string,
       _reward: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
-    "processExpiredLocks(bool)"(
+    'processExpiredLocks(bool)'(
       _relock: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
-    "processExpiredLocks(bool,uint256,address)"(
+    'processExpiredLocks(bool,uint256,address)'(
       _relock: boolean,
       _spendRatio: BigNumberish,
       _withdrawTo: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     recoverERC20(
       _tokenAddress: string,
       _tokenAmount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
-    renounceOwnership(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    renounceOwnership(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
     rewardData(
       arg0: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<
       [boolean, number, BigNumber, number, BigNumber] & {
         useBoost: boolean;
@@ -765,66 +461,45 @@ export class CvxLocker extends BaseContract {
       }
     >;
 
-    rewardDistributors(
-      arg0: string,
-      arg1: string,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
+    rewardDistributors(arg0: string, arg1: string, overrides?: CallOverrides): Promise<[boolean]>;
 
-    rewardPerToken(
-      _rewardsToken: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    rewardPerToken(_rewardsToken: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    rewardTokens(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
+    rewardTokens(arg0: BigNumberish, overrides?: CallOverrides): Promise<[string]>;
 
-    rewardWeightOf(
-      _user: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { amount: BigNumber }>;
+    rewardWeightOf(_user: string, overrides?: CallOverrides): Promise<[BigNumber] & { amount: BigNumber }>;
 
-    rewards(
-      arg0: string,
-      arg1: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    rewards(arg0: string, arg1: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     rewardsDuration(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    setApprovals(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    setApprovals(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
     setBoost(
       _max: BigNumberish,
       _rate: BigNumberish,
       _receivingAddress: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     setKickIncentive(
       _rate: BigNumberish,
       _delay: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     setStakeLimits(
       _minimum: BigNumberish,
       _maximum: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     setStakingContract(
       _staking: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
-    shutdown(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    shutdown(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
     stakeOffsetOnLock(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -834,24 +509,19 @@ export class CvxLocker extends BaseContract {
 
     symbol(overrides?: CallOverrides): Promise<[string]>;
 
-    totalSupply(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { supply: BigNumber }>;
+    totalSupply(overrides?: CallOverrides): Promise<[BigNumber] & { supply: BigNumber }>;
 
-    totalSupplyAtEpoch(
-      _epoch: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { supply: BigNumber }>;
+    totalSupplyAtEpoch(_epoch: BigNumberish, overrides?: CallOverrides): Promise<[BigNumber] & { supply: BigNumber }>;
 
     transferOwnership(
       newOwner: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
     userLocks(
       arg0: string,
       arg1: BigNumberish,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<
       [BigNumber, BigNumber, number] & {
         amount: BigNumber;
@@ -860,38 +530,30 @@ export class CvxLocker extends BaseContract {
       }
     >;
 
-    userRewardPerTokenPaid(
-      arg0: string,
-      arg1: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    userRewardPerTokenPaid(arg0: string, arg1: string, overrides?: CallOverrides): Promise<[BigNumber]>;
   };
 
   addReward(
     _rewardsToken: string,
     _distributor: string,
     _useBoost: boolean,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   approveRewardDistributor(
     _rewardsToken: string,
     _distributor: string,
     _approved: boolean,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
-  balanceAtEpochOf(
-    _epoch: BigNumberish,
-    _user: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  balanceAtEpochOf(_epoch: BigNumberish, _user: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   balanceOf(_user: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   balances(
     arg0: string,
-    overrides?: CallOverrides
+    overrides?: CallOverrides,
   ): Promise<
     [BigNumber, BigNumber, number] & {
       locked: BigNumber;
@@ -906,13 +568,11 @@ export class CvxLocker extends BaseContract {
 
   boostedSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
-  checkpointEpoch(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  checkpointEpoch(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
   claimableRewards(
     _account: string,
-    overrides?: CallOverrides
+    overrides?: CallOverrides,
   ): Promise<([string, BigNumber] & { token: string; amount: BigNumber })[]>;
 
   cvxCrv(overrides?: CallOverrides): Promise<string>;
@@ -927,51 +587,42 @@ export class CvxLocker extends BaseContract {
 
   epochs(
     arg0: BigNumberish,
-    overrides?: CallOverrides
+    overrides?: CallOverrides,
   ): Promise<[BigNumber, number] & { supply: BigNumber; date: number }>;
 
-  findEpochId(
-    _time: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  findEpochId(_time: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-  "getReward(address,bool)"(
+  'getReward(address,bool)'(
     _account: string,
     _stake: boolean,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
-  "getReward(address)"(
+  'getReward(address)'(
     _account: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
-  getRewardForDuration(
-    _rewardsToken: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  getRewardForDuration(_rewardsToken: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   isShutdown(overrides?: CallOverrides): Promise<boolean>;
 
   kickExpiredLocks(
     _account: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   kickRewardEpochDelay(overrides?: CallOverrides): Promise<BigNumber>;
 
   kickRewardPerEpoch(overrides?: CallOverrides): Promise<BigNumber>;
 
-  lastTimeRewardApplicable(
-    _rewardsToken: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  lastTimeRewardApplicable(_rewardsToken: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   lock(
     _account: string,
     _amount: BigNumberish,
     _spendRatio: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   lockDuration(overrides?: CallOverrides): Promise<BigNumber>;
@@ -980,7 +631,7 @@ export class CvxLocker extends BaseContract {
 
   lockedBalances(
     _user: string,
-    overrides?: CallOverrides
+    overrides?: CallOverrides,
   ): Promise<
     [
       BigNumber,
@@ -990,7 +641,7 @@ export class CvxLocker extends BaseContract {
         amount: BigNumber;
         boosted: BigNumber;
         unlockTime: number;
-      })[]
+      })[],
     ] & {
       total: BigNumber;
       unlockable: BigNumber;
@@ -1020,36 +671,34 @@ export class CvxLocker extends BaseContract {
   notifyRewardAmount(
     _rewardsToken: string,
     _reward: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
-  "processExpiredLocks(bool)"(
+  'processExpiredLocks(bool)'(
     _relock: boolean,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
-  "processExpiredLocks(bool,uint256,address)"(
+  'processExpiredLocks(bool,uint256,address)'(
     _relock: boolean,
     _spendRatio: BigNumberish,
     _withdrawTo: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   recoverERC20(
     _tokenAddress: string,
     _tokenAmount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
-  renounceOwnership(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  renounceOwnership(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
   rewardData(
     arg0: string,
-    overrides?: CallOverrides
+    overrides?: CallOverrides,
   ): Promise<
     [boolean, number, BigNumber, number, BigNumber] & {
       useBoost: boolean;
@@ -1060,60 +709,45 @@ export class CvxLocker extends BaseContract {
     }
   >;
 
-  rewardDistributors(
-    arg0: string,
-    arg1: string,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
+  rewardDistributors(arg0: string, arg1: string, overrides?: CallOverrides): Promise<boolean>;
 
-  rewardPerToken(
-    _rewardsToken: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  rewardPerToken(_rewardsToken: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   rewardTokens(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
   rewardWeightOf(_user: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-  rewards(
-    arg0: string,
-    arg1: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  rewards(arg0: string, arg1: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   rewardsDuration(overrides?: CallOverrides): Promise<BigNumber>;
 
-  setApprovals(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  setApprovals(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
   setBoost(
     _max: BigNumberish,
     _rate: BigNumberish,
     _receivingAddress: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   setKickIncentive(
     _rate: BigNumberish,
     _delay: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   setStakeLimits(
     _minimum: BigNumberish,
     _maximum: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   setStakingContract(
     _staking: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
-  shutdown(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  shutdown(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
   stakeOffsetOnLock(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1125,20 +759,17 @@ export class CvxLocker extends BaseContract {
 
   totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
-  totalSupplyAtEpoch(
-    _epoch: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  totalSupplyAtEpoch(_epoch: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
   transferOwnership(
     newOwner: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
   userLocks(
     arg0: string,
     arg1: BigNumberish,
-    overrides?: CallOverrides
+    overrides?: CallOverrides,
   ): Promise<
     [BigNumber, BigNumber, number] & {
       amount: BigNumber;
@@ -1147,38 +778,30 @@ export class CvxLocker extends BaseContract {
     }
   >;
 
-  userRewardPerTokenPaid(
-    arg0: string,
-    arg1: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  userRewardPerTokenPaid(arg0: string, arg1: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   callStatic: {
     addReward(
       _rewardsToken: string,
       _distributor: string,
       _useBoost: boolean,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<void>;
 
     approveRewardDistributor(
       _rewardsToken: string,
       _distributor: string,
       _approved: boolean,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<void>;
 
-    balanceAtEpochOf(
-      _epoch: BigNumberish,
-      _user: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    balanceAtEpochOf(_epoch: BigNumberish, _user: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     balanceOf(_user: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     balances(
       arg0: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<
       [BigNumber, BigNumber, number] & {
         locked: BigNumber;
@@ -1197,7 +820,7 @@ export class CvxLocker extends BaseContract {
 
     claimableRewards(
       _account: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<([string, BigNumber] & { token: string; amount: BigNumber })[]>;
 
     cvxCrv(overrides?: CallOverrides): Promise<string>;
@@ -1212,63 +835,36 @@ export class CvxLocker extends BaseContract {
 
     epochs(
       arg0: BigNumberish,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<[BigNumber, number] & { supply: BigNumber; date: number }>;
 
-    findEpochId(
-      _time: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    findEpochId(_time: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    "getReward(address,bool)"(
-      _account: string,
-      _stake: boolean,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    'getReward(address,bool)'(_account: string, _stake: boolean, overrides?: CallOverrides): Promise<void>;
 
-    "getReward(address)"(
-      _account: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    'getReward(address)'(_account: string, overrides?: CallOverrides): Promise<void>;
 
-    getRewardForDuration(
-      _rewardsToken: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getRewardForDuration(_rewardsToken: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     isShutdown(overrides?: CallOverrides): Promise<boolean>;
 
-    kickExpiredLocks(
-      _account: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    kickExpiredLocks(_account: string, overrides?: CallOverrides): Promise<void>;
 
     kickRewardEpochDelay(overrides?: CallOverrides): Promise<BigNumber>;
 
     kickRewardPerEpoch(overrides?: CallOverrides): Promise<BigNumber>;
 
-    lastTimeRewardApplicable(
-      _rewardsToken: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    lastTimeRewardApplicable(_rewardsToken: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    lock(
-      _account: string,
-      _amount: BigNumberish,
-      _spendRatio: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    lock(_account: string, _amount: BigNumberish, _spendRatio: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
     lockDuration(overrides?: CallOverrides): Promise<BigNumber>;
 
-    lockedBalanceOf(
-      _user: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    lockedBalanceOf(_user: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     lockedBalances(
       _user: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<
       [
         BigNumber,
@@ -1278,7 +874,7 @@ export class CvxLocker extends BaseContract {
           amount: BigNumber;
           boosted: BigNumber;
           unlockTime: number;
-        })[]
+        })[],
       ] & {
         total: BigNumber;
         unlockable: BigNumber;
@@ -1305,37 +901,26 @@ export class CvxLocker extends BaseContract {
 
     nextMaximumBoostPayment(overrides?: CallOverrides): Promise<BigNumber>;
 
-    notifyRewardAmount(
-      _rewardsToken: string,
-      _reward: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    notifyRewardAmount(_rewardsToken: string, _reward: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
-    "processExpiredLocks(bool)"(
-      _relock: boolean,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    'processExpiredLocks(bool)'(_relock: boolean, overrides?: CallOverrides): Promise<void>;
 
-    "processExpiredLocks(bool,uint256,address)"(
+    'processExpiredLocks(bool,uint256,address)'(
       _relock: boolean,
       _spendRatio: BigNumberish,
       _withdrawTo: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<void>;
 
-    recoverERC20(
-      _tokenAddress: string,
-      _tokenAmount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    recoverERC20(_tokenAddress: string, _tokenAmount: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
     rewardData(
       arg0: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<
       [boolean, number, BigNumber, number, BigNumber] & {
         useBoost: boolean;
@@ -1346,32 +931,15 @@ export class CvxLocker extends BaseContract {
       }
     >;
 
-    rewardDistributors(
-      arg0: string,
-      arg1: string,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    rewardDistributors(arg0: string, arg1: string, overrides?: CallOverrides): Promise<boolean>;
 
-    rewardPerToken(
-      _rewardsToken: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    rewardPerToken(_rewardsToken: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    rewardTokens(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<string>;
+    rewardTokens(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
-    rewardWeightOf(
-      _user: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    rewardWeightOf(_user: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    rewards(
-      arg0: string,
-      arg1: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    rewards(arg0: string, arg1: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     rewardsDuration(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1381,25 +949,14 @@ export class CvxLocker extends BaseContract {
       _max: BigNumberish,
       _rate: BigNumberish,
       _receivingAddress: string,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<void>;
 
-    setKickIncentive(
-      _rate: BigNumberish,
-      _delay: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    setKickIncentive(_rate: BigNumberish, _delay: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
-    setStakeLimits(
-      _minimum: BigNumberish,
-      _maximum: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    setStakeLimits(_minimum: BigNumberish, _maximum: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
-    setStakingContract(
-      _staking: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    setStakingContract(_staking: string, overrides?: CallOverrides): Promise<void>;
 
     shutdown(overrides?: CallOverrides): Promise<void>;
 
@@ -1413,20 +970,14 @@ export class CvxLocker extends BaseContract {
 
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
-    totalSupplyAtEpoch(
-      _epoch: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    totalSupplyAtEpoch(_epoch: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    transferOwnership(
-      newOwner: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    transferOwnership(newOwner: string, overrides?: CallOverrides): Promise<void>;
 
     userLocks(
       arg0: string,
       arg1: BigNumberish,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<
       [BigNumber, BigNumber, number] & {
         amount: BigNumber;
@@ -1435,61 +986,42 @@ export class CvxLocker extends BaseContract {
       }
     >;
 
-    userRewardPerTokenPaid(
-      arg0: string,
-      arg1: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    userRewardPerTokenPaid(arg0: string, arg1: string, overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   filters: {
     KickReward(
       _user?: string | null,
       _kicked?: string | null,
-      _reward?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber],
-      { _user: string; _kicked: string; _reward: BigNumber }
-    >;
+      _reward?: null,
+    ): TypedEventFilter<[string, string, BigNumber], { _user: string; _kicked: string; _reward: BigNumber }>;
 
     OwnershipTransferred(
       previousOwner?: string | null,
-      newOwner?: string | null
-    ): TypedEventFilter<
-      [string, string],
-      { previousOwner: string; newOwner: string }
-    >;
+      newOwner?: string | null,
+    ): TypedEventFilter<[string, string], { previousOwner: string; newOwner: string }>;
 
     Recovered(
       _token?: null,
-      _amount?: null
-    ): TypedEventFilter<
-      [string, BigNumber],
-      { _token: string; _amount: BigNumber }
-    >;
+      _amount?: null,
+    ): TypedEventFilter<[string, BigNumber], { _token: string; _amount: BigNumber }>;
 
     RewardAdded(
       _token?: string | null,
-      _reward?: null
-    ): TypedEventFilter<
-      [string, BigNumber],
-      { _token: string; _reward: BigNumber }
-    >;
+      _reward?: null,
+    ): TypedEventFilter<[string, BigNumber], { _token: string; _reward: BigNumber }>;
 
     RewardPaid(
       _user?: string | null,
       _rewardsToken?: string | null,
-      _reward?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber],
-      { _user: string; _rewardsToken: string; _reward: BigNumber }
-    >;
+      _reward?: null,
+    ): TypedEventFilter<[string, string, BigNumber], { _user: string; _rewardsToken: string; _reward: BigNumber }>;
 
     Staked(
       _user?: string | null,
       _paidAmount?: null,
       _lockedAmount?: null,
-      _boostedAmount?: null
+      _boostedAmount?: null,
     ): TypedEventFilter<
       [string, BigNumber, BigNumber, BigNumber],
       {
@@ -1503,11 +1035,8 @@ export class CvxLocker extends BaseContract {
     Withdrawn(
       _user?: string | null,
       _amount?: null,
-      _relocked?: null
-    ): TypedEventFilter<
-      [string, BigNumber, boolean],
-      { _user: string; _amount: BigNumber; _relocked: boolean }
-    >;
+      _relocked?: null,
+    ): TypedEventFilter<[string, BigNumber, boolean], { _user: string; _amount: BigNumber; _relocked: boolean }>;
   };
 
   estimateGas: {
@@ -1515,21 +1044,17 @@ export class CvxLocker extends BaseContract {
       _rewardsToken: string,
       _distributor: string,
       _useBoost: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     approveRewardDistributor(
       _rewardsToken: string,
       _distributor: string,
       _approved: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
-    balanceAtEpochOf(
-      _epoch: BigNumberish,
-      _user: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    balanceAtEpochOf(_epoch: BigNumberish, _user: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     balanceOf(_user: string, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1541,14 +1066,9 @@ export class CvxLocker extends BaseContract {
 
     boostedSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
-    checkpointEpoch(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    checkpointEpoch(overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
-    claimableRewards(
-      _account: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    claimableRewards(_account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     cvxCrv(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1562,61 +1082,43 @@ export class CvxLocker extends BaseContract {
 
     epochs(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    findEpochId(
-      _time: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    findEpochId(_time: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    "getReward(address,bool)"(
+    'getReward(address,bool)'(
       _account: string,
       _stake: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
-    "getReward(address)"(
+    'getReward(address)'(
       _account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
-    getRewardForDuration(
-      _rewardsToken: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getRewardForDuration(_rewardsToken: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     isShutdown(overrides?: CallOverrides): Promise<BigNumber>;
 
-    kickExpiredLocks(
-      _account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    kickExpiredLocks(_account: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
     kickRewardEpochDelay(overrides?: CallOverrides): Promise<BigNumber>;
 
     kickRewardPerEpoch(overrides?: CallOverrides): Promise<BigNumber>;
 
-    lastTimeRewardApplicable(
-      _rewardsToken: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    lastTimeRewardApplicable(_rewardsToken: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     lock(
       _account: string,
       _amount: BigNumberish,
       _spendRatio: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     lockDuration(overrides?: CallOverrides): Promise<BigNumber>;
 
-    lockedBalanceOf(
-      _user: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    lockedBalanceOf(_user: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    lockedBalances(
-      _user: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    lockedBalances(_user: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     lockedSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1635,95 +1137,72 @@ export class CvxLocker extends BaseContract {
     notifyRewardAmount(
       _rewardsToken: string,
       _reward: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "processExpiredLocks(bool)"(
+    'processExpiredLocks(bool)'(
       _relock: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
-    "processExpiredLocks(bool,uint256,address)"(
+    'processExpiredLocks(bool,uint256,address)'(
       _relock: boolean,
       _spendRatio: BigNumberish,
       _withdrawTo: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     recoverERC20(
       _tokenAddress: string,
       _tokenAmount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
-    renounceOwnership(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    renounceOwnership(overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
     rewardData(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    rewardDistributors(
-      arg0: string,
-      arg1: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    rewardDistributors(arg0: string, arg1: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    rewardPerToken(
-      _rewardsToken: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    rewardPerToken(_rewardsToken: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    rewardTokens(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    rewardTokens(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    rewardWeightOf(
-      _user: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    rewardWeightOf(_user: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    rewards(
-      arg0: string,
-      arg1: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    rewards(arg0: string, arg1: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     rewardsDuration(overrides?: CallOverrides): Promise<BigNumber>;
 
-    setApprovals(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    setApprovals(overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
     setBoost(
       _max: BigNumberish,
       _rate: BigNumberish,
       _receivingAddress: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     setKickIncentive(
       _rate: BigNumberish,
       _delay: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     setStakeLimits(
       _minimum: BigNumberish,
       _maximum: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
     setStakingContract(
       _staking: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
-    shutdown(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    shutdown(overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
     stakeOffsetOnLock(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1735,27 +1214,16 @@ export class CvxLocker extends BaseContract {
 
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
-    totalSupplyAtEpoch(
-      _epoch: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    totalSupplyAtEpoch(_epoch: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     transferOwnership(
       newOwner: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
-    userLocks(
-      arg0: string,
-      arg1: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    userLocks(arg0: string, arg1: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    userRewardPerTokenPaid(
-      arg0: string,
-      arg1: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    userRewardPerTokenPaid(arg0: string, arg1: string, overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -1763,31 +1231,21 @@ export class CvxLocker extends BaseContract {
       _rewardsToken: string,
       _distributor: string,
       _useBoost: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     approveRewardDistributor(
       _rewardsToken: string,
       _distributor: string,
       _approved: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
-    balanceAtEpochOf(
-      _epoch: BigNumberish,
-      _user: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    balanceAtEpochOf(_epoch: BigNumberish, _user: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    balanceOf(
-      _user: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    balanceOf(_user: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    balances(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    balances(arg0: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     boostPayment(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1795,14 +1253,9 @@ export class CvxLocker extends BaseContract {
 
     boostedSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    checkpointEpoch(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    checkpointEpoch(overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
 
-    claimableRewards(
-      _account: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    claimableRewards(_account: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     cvxCrv(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1814,76 +1267,52 @@ export class CvxLocker extends BaseContract {
 
     epochCount(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    epochs(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    epochs(arg0: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    findEpochId(
-      _time: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    findEpochId(_time: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "getReward(address,bool)"(
+    'getReward(address,bool)'(
       _account: string,
       _stake: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
-    "getReward(address)"(
+    'getReward(address)'(
       _account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
-    getRewardForDuration(
-      _rewardsToken: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    getRewardForDuration(_rewardsToken: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     isShutdown(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     kickExpiredLocks(
       _account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
-    kickRewardEpochDelay(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    kickRewardEpochDelay(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    kickRewardPerEpoch(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    kickRewardPerEpoch(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    lastTimeRewardApplicable(
-      _rewardsToken: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    lastTimeRewardApplicable(_rewardsToken: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     lock(
       _account: string,
       _amount: BigNumberish,
       _spendRatio: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     lockDuration(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    lockedBalanceOf(
-      _user: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    lockedBalanceOf(_user: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    lockedBalances(
-      _user: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    lockedBalances(_user: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     lockedSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    maximumBoostPayment(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    maximumBoostPayment(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     maximumStake(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1893,105 +1322,77 @@ export class CvxLocker extends BaseContract {
 
     nextBoostRate(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    nextMaximumBoostPayment(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    nextMaximumBoostPayment(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     notifyRewardAmount(
       _rewardsToken: string,
       _reward: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "processExpiredLocks(bool)"(
+    'processExpiredLocks(bool)'(
       _relock: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
-    "processExpiredLocks(bool,uint256,address)"(
+    'processExpiredLocks(bool,uint256,address)'(
       _relock: boolean,
       _spendRatio: BigNumberish,
       _withdrawTo: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     recoverERC20(
       _tokenAddress: string,
       _tokenAmount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
-    renounceOwnership(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    renounceOwnership(overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
 
-    rewardData(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    rewardData(arg0: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    rewardDistributors(
-      arg0: string,
-      arg1: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    rewardDistributors(arg0: string, arg1: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    rewardPerToken(
-      _rewardsToken: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    rewardPerToken(_rewardsToken: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    rewardTokens(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    rewardTokens(arg0: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    rewardWeightOf(
-      _user: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    rewardWeightOf(_user: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    rewards(
-      arg0: string,
-      arg1: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    rewards(arg0: string, arg1: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     rewardsDuration(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    setApprovals(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    setApprovals(overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
 
     setBoost(
       _max: BigNumberish,
       _rate: BigNumberish,
       _receivingAddress: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     setKickIncentive(
       _rate: BigNumberish,
       _delay: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     setStakeLimits(
       _minimum: BigNumberish,
       _maximum: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
     setStakingContract(
       _staking: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
-    shutdown(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    shutdown(overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
 
     stakeOffsetOnLock(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -2003,26 +1404,15 @@ export class CvxLocker extends BaseContract {
 
     totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    totalSupplyAtEpoch(
-      _epoch: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    totalSupplyAtEpoch(_epoch: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     transferOwnership(
       newOwner: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
-    userLocks(
-      arg0: string,
-      arg1: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    userLocks(arg0: string, arg1: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    userRewardPerTokenPaid(
-      arg0: string,
-      arg1: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    userRewardPerTokenPaid(arg0: string, arg1: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }
