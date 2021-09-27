@@ -43,17 +43,12 @@ describe('refreshSettSnapshots', () => {
       },
     }));
     jest.spyOn(settUtils, 'getCachedSett').mockImplementation(async (sett) => settUtils.defaultSett(sett));
-    jest
-      .spyOn(settUtils, 'getStrategyInfo')
-      .mockImplementation(async (_chain, _sett) => {
-        console.log('called mock getStrategyInfo');
-        return {
-          address: ethers.constants.AddressZero,
-          withdrawFee: 50,
-          performanceFee: 20,
-          strategistFee: 10,
-        };
-      });
+    jest.spyOn(settUtils, 'getStrategyInfo').mockImplementation(async (_chain, _sett) => ({
+      address: ethers.constants.AddressZero,
+      withdrawFee: 50,
+      performanceFee: 20,
+      strategistFee: 10,
+    }));
 
     batchPut = jest.spyOn(DataMapper.prototype, 'batchPut').mockImplementation();
 
