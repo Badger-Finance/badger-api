@@ -20,7 +20,7 @@ async function captureChainSnapshots(chain: Chain) {
     for await (const _item of mapper.batchPut(toSave)) {
     }
   } catch (err) {
-    // console.error(err);
+    console.error(err);
   }
 }
 
@@ -31,7 +31,7 @@ async function captureSnapshot(chain: Chain, sett: SettDefinition): Promise<Cach
     return result;
   } catch (err) {
     if (DEBUG) {
-      // console.error(err);
+      console.error(err);
     }
     return null;
   }
