@@ -62,17 +62,22 @@ export const settToCachedSnapshot = async (
   });
 };
 
-export const settToSnapshot = async (
-  chain: Chain,
-  settDefinition: SettDefinition,
-  block: number,
-): Promise<SettSnapshot | null> => {
+export async function getQueryBlock(chain: Chain, block: number): Promise<number> {
   let queryBlock = block;
   if (chain.network === ChainNetwork.Arbitrum) {
     const refChain = Chain.getChain(ChainNetwork.Ethereum);
     const refBlock = await refChain.provider.getBlock(block);
     queryBlock = await getArbitrumBlock(refBlock.timestamp);
   }
+  return queryBlock;
+}
+
+export const settToSnapshot = async (
+  chain: Chain,
+  settDefinition: SettDefinition,
+  block: number,
+): Promise<SettSnapshot | null> => {
+  const queryBlock = await getQueryBlock(chain, block);
   const sett = await getSett(chain.graphUrl, settDefinition.settToken, queryBlock);
   const settToken = getToken(settDefinition.settToken);
   const depositToken = getToken(settDefinition.depositToken);
