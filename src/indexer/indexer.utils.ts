@@ -17,6 +17,7 @@ import { mStableStrategy } from '../protocols/strategies/mstable.strategy';
 import { PancakeswapStrategy } from '../protocols/strategies/pancakeswap.strategy';
 import { QuickswapStrategy } from '../protocols/strategies/quickswap.strategy';
 import { SushiswapStrategy } from '../protocols/strategies/sushiswap.strategy';
+import { SwaprStrategy } from '../protocols/strategies/swapr.strategy';
 import { UniswapStrategy } from '../protocols/strategies/uniswap.strategy';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { RewardsService } from '../rewards/rewards.service';
@@ -222,6 +223,8 @@ export async function getProtocolValueSources(
         return QuickswapStrategy.getValueSources(settDefinition);
       case Protocol.mStable:
         return mStableStrategy.getValueSources(chain, settDefinition);
+      case Protocol.Swapr:
+        return SwaprStrategy.getValueSources(chain, settDefinition);
       default: {
         return [];
       }

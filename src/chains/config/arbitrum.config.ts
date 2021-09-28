@@ -1,5 +1,6 @@
 import { BADGER_ARBITRUM_URL } from '../../config/constants';
 import { Protocol } from '../../config/enums/protocol.enum';
+import { Stage } from '../../config/enums/stage.enum';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
@@ -76,5 +77,14 @@ export const arbitrumSetts: SettDefinition[] = [
     createdBlock: 13237551,
     experimental: true,
     protocol: Protocol.Curve,
+  },
+  {
+    name: 'Swapr Swapr/Wrapped ETH',
+    settToken: TOKENS.BARB_SWP_SWAPR_WETH,
+    depositToken: TOKENS.ARB_SWP_SWAPR_WETH,
+    createdBlock: 13315350,
+    experimental: true,
+    stage: Stage.Staging,
+    protocol: Protocol.Swapr,
   },
 ];

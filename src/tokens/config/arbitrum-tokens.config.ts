@@ -60,6 +60,14 @@ export const arbitrumTokensConfig: TokenConfig = {
     symbol: 'SUSHI',
     type: TokenType.Contract,
   },
+  [TOKENS.ARB_SWAPR]: {
+    address: TOKENS.ARB_SWAPR,
+    decimals: 18,
+    lookupName: TOKENS.ARB_SWP_SWAPR_WETH,
+    name: 'Swapr',
+    symbol: 'SWAPR',
+    type: TokenType.Contract,
+  },
   [TOKENS.ARB_SUSHI_WETH_SUSHI]: {
     address: TOKENS.ARB_SUSHI_WETH_SUSHI,
     decimals: 18,
@@ -89,6 +97,14 @@ export const arbitrumTokensConfig: TokenConfig = {
     name: 'Curve.fi Tricrypto',
     symbol: 'crvTricrypto',
     type: TokenType.CurveLP,
+  },
+  [TOKENS.ARB_SWP_SWAPR_WETH]: {
+    address: TOKENS.ARB_SWP_SWAPR_WETH,
+    decimals: 18,
+    lpToken: true,
+    name: 'Swapr SWAPR-WETH',
+    symbol: 'SWLP-SWAPR-WETH',
+    type: TokenType.SwaprLp,
   },
   [TOKENS.BARB_SUSHI_WETH_SUSHI]: {
     address: TOKENS.BARB_SUSHI_WETH_SUSHI,
@@ -131,6 +147,17 @@ export const arbitrumTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.ARB_CRV_TRICRYPTO,
+      network: ChainNetwork.Arbitrum,
+    },
+  },
+  [TOKENS.BARB_SWP_SWAPR_WETH]: {
+    address: TOKENS.BARB_SWP_SWAPR_WETH,
+    decimals: 18,
+    name: 'bSwapr SWAPR-WETH',
+    symbol: 'bSWLP-SWAPR-WETH',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.ARB_SWP_SWAPR_WETH,
       network: ChainNetwork.Arbitrum,
     },
   },

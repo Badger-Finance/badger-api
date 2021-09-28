@@ -163,3 +163,7 @@ export async function getPancakeswapPrice(contract: string): Promise<TokenPrice>
 export async function getQuickswapPrice(contract: string): Promise<TokenPrice> {
   return getOnChainLiquidityPrice(Chain.getChain(ChainNetwork.Matic), contract);
 }
+
+export async function getArbitriumLiquidityPrice(contract: string): Promise<TokenPrice> {
+  return getOnChainLiquidityPrice(Chain.getChain(ChainNetwork.Arbitrum), contract);
+}
