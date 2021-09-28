@@ -14,7 +14,7 @@ import { getUniV2SwapValue } from './strategy.utils';
 
 const SWAPR_STAKING = {
   [TOKENS.BARB_SWP_SWAPR_WETH]: '0xe2A7CF0DEB83F2BC2FD15133a02A24B9981f2c17',
-}
+};
 
 export class SwaprStrategy {
   static async getValueSources(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
