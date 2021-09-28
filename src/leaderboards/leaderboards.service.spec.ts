@@ -2,6 +2,7 @@ import { PlatformTest } from '@tsed/common';
 import * as s3Utils from '../aws/s3.utils';
 import { TOKENS } from '../config/tokens.config';
 import { BoostData } from '../rewards/interfaces/boost-data.interface';
+import { CachedSettBoost } from '../setts/interfaces/cached-sett-boost.interface';
 import { setupMapper, TEST_ADDR } from '../test/tests.utils';
 import { LeaderBoardType } from './enums/leaderboard-type.enum';
 import { CachedBoost } from './interface/cached-boost.interface';
@@ -27,7 +28,7 @@ describe('leaderboards.service', () => {
           leaderboard: LeaderBoardType.BadgerBoost,
           rank: i + 1,
           address: TEST_ADDR,
-          boost: 2000 - Math.floor(1 / 2) * 10,
+          boost: 2000 - i * 10,
           nftMultiplier: 1,
           stakeRatio: 1 - i * 0.01,
           nativeBalance: 100000 / (i + 1),
@@ -164,6 +165,38 @@ describe('leaderboards.service', () => {
         }
         last = boost.stakeRatio;
       }
+    });
+  });
+
+  describe('generateSettBoostData', () => {
+    const seeded = randomCachedBoosts(5);
+    const addresses = Object.values(TOKENS);
+    const boostData: BoostData = {
+      userData: Object.fromEntries(
+        seeded.map((cachedBoost, i) => {
+          cachedBoost.address = addresses[i];
+          const boost = {
+            ...cachedBoost,
+            multipliers: {
+              [TOKENS.BCVX]: cachedBoost.nativeBalance,
+            },
+          };
+          return [cachedBoost.address, boost];
+        }),
+      ),
+      multiplierData: {},
+    };
+
+    let response: CachedSettBoost[];
+    it('indexes all user accounts', async () => {
+      jest
+        .spyOn(s3Utils, 'getObject')
+        .mockImplementation(() => Promise.resolve(Buffer.from(JSON.stringify(boostData), 'utf-8')));
+      response = await LeaderBoardsService.generateSettBoostData();
+      const cachedBoosts = seeded
+        .map((entry) => ({ address: TOKENS.BCVX, boost: entry.boost.toString(), multiplier: entry.nativeBalance }))
+        .reverse();
+      expect(response).toMatchObject(cachedBoosts);
     });
   });
 });

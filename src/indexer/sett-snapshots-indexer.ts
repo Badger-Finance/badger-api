@@ -14,10 +14,10 @@ export async function refreshSettSnapshots() {
 
 async function captureChainSnapshots(chain: Chain) {
   const snapshots = await Promise.all(chain.setts.map((sett) => captureSnapshot(chain, sett)));
-  const toSave = snapshots.filter(successfulCapture);
   const mapper = getDataMapper();
   try {
-    for await (const _item of mapper.batchPut(toSave)) {
+    for (const item of snapshots.filter(successfulCapture)) {
+      await mapper.put(item);
     }
   } catch (err) {
     console.error(err);
