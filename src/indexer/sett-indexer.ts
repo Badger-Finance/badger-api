@@ -53,7 +53,7 @@ async function indexSett(chain: Chain, sett: SettDefinition) {
         const response: GraphError = JSON.parse(err.body);
         if (response.error.message.includes(NO_HISTORIC)) {
           // back index block to allow for loop addition
-          block = await getCurrentBlock(chain) - thirtyMinutesBlocks;
+          block = (await getCurrentBlock(chain)) - thirtyMinutesBlocks;
           console.log(`Fast forwarding ${chain.name} skipping to current block ${block}`);
           continue;
         }
