@@ -102,8 +102,8 @@ export const arbitrumTokensConfig: TokenConfig = {
     address: TOKENS.ARB_SWP_SWAPR_WETH,
     decimals: 18,
     lpToken: true,
-    name: 'Swapr SWAPR-WETH',
-    symbol: 'SWLP-SWAPR-WETH',
+    name: 'Swapr SWPR-WETH',
+    symbol: 'SWLP-SWPR-WETH',
     type: TokenType.SwaprLp,
   },
   [TOKENS.BARB_SUSHI_WETH_SUSHI]: {
@@ -153,8 +153,8 @@ export const arbitrumTokensConfig: TokenConfig = {
   [TOKENS.BARB_SWP_SWAPR_WETH]: {
     address: TOKENS.BARB_SWP_SWAPR_WETH,
     decimals: 18,
-    name: 'bSwapr SWAPR-WETH',
-    symbol: 'bSWLP-SWAPR-WETH',
+    name: 'bSwapr SWPR-WETH',
+    symbol: 'bSWLP-SWPR-WETH',
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.ARB_SWP_SWAPR_WETH,
