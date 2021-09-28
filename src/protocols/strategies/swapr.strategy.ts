@@ -5,6 +5,7 @@ import { SwaprStaking__factory } from '../../contracts';
 import { valueSourceToCachedValueSource } from '../../indexer/indexer.utils';
 import { getPrice } from '../../prices/prices.utils';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
+import { getCachedSett } from '../../setts/setts.utils';
 import { formatBalance, getToken } from '../../tokens/tokens.utils';
 import { CachedValueSource } from '../interfaces/cached-value-source.interface';
 import { uniformPerformance } from '../interfaces/performance.interface';
@@ -28,12 +29,14 @@ export class SwaprStrategy {
 async function getSwaprEmission(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
   const stakingContract = SwaprStaking__factory.connect(SWAPR_STAKING[settDefinition.settToken], chain.provider);
 
-  const [duration, totalSupply, lpTokenPrice] = await Promise.all([
+  const [duration, totalSupply, lpTokenPrice, sett] = await Promise.all([
     stakingContract.secondsDuration(),
     stakingContract.totalStakedTokensAmount(),
     getPrice(settDefinition.depositToken),
+    getCachedSett(settDefinition),
   ]);
   const stakedAmount = formatBalance(totalSupply) * lpTokenPrice.usd;
+  const strategyFeeMultiplier = 1 - (sett.strategy.performanceFee + sett.strategy.strategistFee) / 1000;
 
   let sources = [];
   let tokenIndex = 0;
@@ -45,7 +48,10 @@ async function getSwaprEmission(chain: Chain, settDefinition: SettDefinition): P
       const rewardTokenPrice = await getPrice(token);
       const rewardEmission = formatBalance(amount) * rewardTokenPrice.usd;
       const apr = (((ONE_YEAR_SECONDS / duration.toNumber()) * rewardEmission) / stakedAmount) * 100;
-      const swaprEmission = createValueSource(`${rewardToken.name} Rewards`, uniformPerformance((apr * 0.8) / 2));
+      const swaprEmission = createValueSource(
+        `${rewardToken.name} Rewards`,
+        uniformPerformance(apr * strategyFeeMultiplier),
+      );
       sources.push(valueSourceToCachedValueSource(swaprEmission, settDefinition, tokenEmission(rewardToken)));
       tokenIndex++;
     } catch {
