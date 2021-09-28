@@ -27,6 +27,7 @@ export type { Sett } from './Sett';
 export type { Strategy } from './Strategy';
 export type { SushiChef } from './SushiChef';
 export type { SushiMiniChef } from './SushiMiniChef';
+export type { SwaprStaking } from './SwaprStaking';
 export type { UniV2 } from './UniV2';
 
 export { BadgerTree__factory } from './factories/BadgerTree__factory';
@@ -55,4 +56,5 @@ export { Sett__factory } from './factories/Sett__factory';
 export { Strategy__factory } from './factories/Strategy__factory';
 export { SushiChef__factory } from './factories/SushiChef__factory';
 export { SushiMiniChef__factory } from './factories/SushiMiniChef__factory';
+export { SwaprStaking__factory } from './factories/SwaprStaking__factory';
 export { UniV2__factory } from './factories/UniV2__factory';
