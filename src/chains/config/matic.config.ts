@@ -1,12 +1,10 @@
 import fetch from 'node-fetch';
 import { BADGER_MATIC_URL } from '../../config/constants';
 import { Protocol } from '../../config/enums/protocol.enum';
-import { SettState } from '../../config/enums/sett-state.enum';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { getCurveSettTokenBalance } from '../../protocols/strategies/convex.strategy';
-import { BouncerType } from '../../rewards/enums/bouncer-type.enum';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { maticTokensConfig } from '../../tokens/config/matic-tokens.config';
 import { ChainNetwork } from '../enums/chain-network.enum';
@@ -50,10 +48,7 @@ export const maticSetts: SettDefinition[] = [
     settToken: TOKENS.BMATIC_SUSHI_IBBTC_WBTC,
     depositToken: TOKENS.MATIC_SUSHI_IBBTC_WBTC,
     createdBlock: 17580716,
-    experimental: true,
-    bouncer: BouncerType.Badger,
     protocol: Protocol.Sushiswap,
-    state: SettState.Experimental,
     strategy: '0xDed61Bd8a8c90596D8A6Cf0e678dA04036146963',
   },
   {
@@ -61,10 +56,7 @@ export const maticSetts: SettDefinition[] = [
     settToken: TOKENS.BMATIC_QUICK_USDC_WBTC,
     depositToken: TOKENS.MATIC_QUICK_USDC_WBTC,
     createdBlock: 17687004,
-    experimental: true,
-    bouncer: BouncerType.Badger,
     protocol: Protocol.Quickswap,
-    state: SettState.Experimental,
     strategy: '0x809990849D53a5109e0cb9C446137793B9f6f1Eb',
   },
   {
@@ -73,10 +65,7 @@ export const maticSetts: SettDefinition[] = [
     depositToken: TOKENS.MATIC_CRV_AMWBTC,
     getTokenBalance: getCurveSettTokenBalance,
     createdBlock: 17616741,
-    experimental: true,
-    bouncer: BouncerType.Badger,
     protocol: Protocol.Curve,
-    state: SettState.Experimental,
     strategy: '0xF8F02D0d41C79a1973f65A440C98acAc7eAA8Dc1',
   },
 ];
