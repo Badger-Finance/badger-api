@@ -6,6 +6,7 @@ export enum Protocol {
   Pancakeswap = 'Pancakeswap',
   Quickswap = 'Quickswap',
   Sushiswap = 'Sushiswap',
+  Swapr = 'Swapr',
   Uniswap = 'Uniswap',
   Yearn = 'Yearn',
 }
