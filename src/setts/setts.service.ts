@@ -46,7 +46,9 @@ export class SettsService {
     ]);
     sett.tokens = await getSettTokens(settDefinition, sett.balance, currency);
     sett.value = sett.tokens.reduce((total, balance) => (total += balance.value), 0);
-    sett.sources = !settDefinition.deprecated ? sources.filter((source) => source.apr >= 0.001) : [];
+    sett.sources = sources
+      .filter((source) => source.apr >= 0.001)
+      .filter((source) => source.name !== VAULT_SOURCE || !sett.deprecated);
     sett.apr = sett.sources.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
     sett.multipliers = boosts.map((b) => ({ boost: b.boost, multiplier: b.multiplier }));
 
