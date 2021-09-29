@@ -150,6 +150,17 @@ export const arbitrumTokensConfig: TokenConfig = {
       network: ChainNetwork.Arbitrum,
     },
   },
+  [TOKENS.BARB_CRV_TRICRYPTO_LITE]: {
+    address: TOKENS.BARB_CRV_TRICRYPTO_LITE,
+    decimals: 18,
+    name: 'bCurve.fi Tricrypto Light',
+    symbol: 'bcrvTricryptoLight',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.ARB_CRV_TRICRYPTO,
+      network: ChainNetwork.Arbitrum,
+    },
+  },
   [TOKENS.BARB_SWP_SWAPR_WETH]: {
     address: TOKENS.BARB_SWP_SWAPR_WETH,
     decimals: 18,
