@@ -76,15 +76,6 @@ export const arbitrumSetts: SettDefinition[] = [
     protocol: Protocol.Curve,
   },
   {
-    name: 'Swapr Swapr/Wrapped ETH',
-    settToken: TOKENS.BARB_SWP_SWAPR_WETH,
-    depositToken: TOKENS.ARB_SWP_SWAPR_WETH,
-    createdBlock: 13315350,
-    state: SettState.Experimental,
-    stage: Stage.Staging,
-    protocol: Protocol.Swapr,
-  },
-  {
     name: 'Curve Tricrypto Light',
     settToken: TOKENS.BARB_CRV_TRICRYPTO_LITE,
     depositToken: TOKENS.ARB_CRV_TRICRYPTO,
@@ -93,5 +84,14 @@ export const arbitrumSetts: SettDefinition[] = [
     state: SettState.Experimental,
     stage: Stage.Staging,
     protocol: Protocol.Curve,
+  },
+  {
+    name: 'Swapr Swapr/Wrapped ETH',
+    settToken: TOKENS.BARB_SWP_SWPR_WETH,
+    depositToken: TOKENS.ARB_SWP_SWPR_WETH,
+    createdBlock: 13315350,
+    state: SettState.Experimental,
+    stage: Stage.Staging,
+    protocol: Protocol.Swapr,
   },
 ];
