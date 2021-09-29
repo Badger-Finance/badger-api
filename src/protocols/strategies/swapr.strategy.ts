@@ -17,6 +17,10 @@ const SWAPR_STAKING = {
   [TOKENS.BARB_SWP_SWAPR_WETH]: '0xe2A7CF0DEB83F2BC2FD15133a02A24B9981f2c17',
 };
 
+const COMPOUND_SCALARS = {
+  [TOKENS.BARB_SWP_WBTC_WETH]: 0.5,
+};
+
 export class SwaprStrategy {
   static async getValueSources(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
     return Promise.all([
@@ -30,7 +34,7 @@ async function getSwaprEmission(chain: Chain, settDefinition: SettDefinition): P
   if (settDefinition.settToken === TOKENS.BARB_SWP_SWAPR_WETH) {
     return [];
   }
-  let compoundScalar = 1;
+  const compoundScalar = COMPOUND_SCALARS[settDefinition.settToken] ?? 1;
   const helperToken = getToken(TOKENS.BARB_SWP_SWAPR_WETH);
 
   const stakingContract = SwaprStaking__factory.connect(SWAPR_STAKING[settDefinition.settToken], chain.provider);

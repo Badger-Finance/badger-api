@@ -94,4 +94,13 @@ export const arbitrumSetts: SettDefinition[] = [
     stage: Stage.Staging,
     protocol: Protocol.Swapr,
   },
+  {
+    name: 'Swapr Wrapped BTC/Wrapped ETH',
+    settToken: TOKENS.BARB_SWP_WBTC_WETH,
+    depositToken: TOKENS.ARB_SWP_WBTC_WETH,
+    createdBlock: 13315350,
+    state: SettState.Experimental,
+    stage: Stage.Staging,
+    protocol: Protocol.Swapr,
+  },
 ];
