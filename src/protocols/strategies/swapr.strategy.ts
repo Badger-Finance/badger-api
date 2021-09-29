@@ -27,6 +27,12 @@ export class SwaprStrategy {
 }
 
 async function getSwaprEmission(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
+  if (settDefinition.settToken === TOKENS.BARB_SWP_SWAPR_WETH) {
+    return [];
+  }
+  let compoundScalar = 1;
+  const helperToken = getToken(TOKENS.BARB_SWP_SWAPR_WETH);
+
   const stakingContract = SwaprStaking__factory.connect(SWAPR_STAKING[settDefinition.settToken], chain.provider);
 
   const [duration, totalSupply, lpTokenPrice, sett] = await Promise.all([
@@ -49,8 +55,8 @@ async function getSwaprEmission(chain: Chain, settDefinition: SettDefinition): P
       const rewardEmission = formatBalance(amount) * rewardTokenPrice.usd;
       const apr = (((ONE_YEAR_SECONDS / duration.toNumber()) * rewardEmission) / stakedAmount) * 100;
       const swaprEmission = createValueSource(
-        `${rewardToken.name} Rewards`,
-        uniformPerformance(apr * strategyFeeMultiplier),
+        `${helperToken.name} Rewards`,
+        uniformPerformance(apr * strategyFeeMultiplier * compoundScalar),
       );
       sources.push(valueSourceToCachedValueSource(swaprEmission, settDefinition, tokenEmission(rewardToken)));
       tokenIndex++;
