@@ -48,7 +48,6 @@ export const arbitrumSetts: SettDefinition[] = [
     settToken: TOKENS.BARB_SUSHI_WETH_SUSHI,
     depositToken: TOKENS.ARB_SUSHI_WETH_SUSHI,
     createdBlock: 13163959,
-    state: SettState.Experimental,
     protocol: Protocol.Sushiswap,
     strategy: '0x86f772C82914f5bFD168f99e208d0FC2C371e9C2',
   },
@@ -57,7 +56,6 @@ export const arbitrumSetts: SettDefinition[] = [
     settToken: TOKENS.BARB_SUSHI_WETH_WBTC,
     depositToken: TOKENS.ARB_SUSHI_WETH_WBTC,
     createdBlock: 13163959,
-    state: SettState.Experimental,
     protocol: Protocol.Sushiswap,
     strategy: '0xA6827f0f14D0B83dB925B616d820434697328c22',
   },
@@ -67,7 +65,6 @@ export const arbitrumSetts: SettDefinition[] = [
     depositToken: TOKENS.ARB_CRV_RENBTC,
     getTokenBalance: getCurveSettTokenBalance,
     createdBlock: 13237551,
-    state: SettState.Experimental,
     protocol: Protocol.Curve,
   },
   {
@@ -76,7 +73,6 @@ export const arbitrumSetts: SettDefinition[] = [
     depositToken: TOKENS.ARB_CRV_TRICRYPTO,
     getTokenBalance: getCurveSettTokenBalance,
     createdBlock: 13237551,
-    state: SettState.Experimental,
     protocol: Protocol.Curve,
   },
   {
