@@ -14,7 +14,8 @@ import { tokenEmission } from '../protocols.utils';
 import { getUniV2SwapValue } from './strategy.utils';
 
 const SWAPR_STAKING = {
-  [TOKENS.BARB_SWP_SWAPR_WETH]: '0xe2A7CF0DEB83F2BC2FD15133a02A24B9981f2c17',
+  [TOKENS.BARB_SWP_SWAPR_WETH]: '0x2E6413ec518990bAa72dff2AD0e64dfDF28E88c7',
+  [TOKENS.BARB_SWP_WBTC_WETH]: '0x418A639F01FAee054D3A823c227c7dC179C209Fa',
 };
 
 const COMPOUND_SCALARS = {
