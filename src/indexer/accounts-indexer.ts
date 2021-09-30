@@ -128,9 +128,9 @@ export async function refreshAccountSettBalances(chains: Chain[], batchAccounts:
   );
 }
 
-async function refreshAccountBoostInfo(_chains: Chain[], batchAccounts: AccountMap) {
+async function refreshAccountBoostInfo(chains: Chain[], batchAccounts: AccountMap) {
   const addresses = Object.keys(batchAccounts);
-  const [userBoosts, maxRank] = await Promise.all([RewardsService.getUserBoosts(addresses), getLeaderBoardSize()]);
+  const [userBoosts, maxRank] = await Promise.all([RewardsService.getUserBoosts(chains, addresses), getLeaderBoardSize()]);
 
   await Promise.all(
     addresses.map(async (acc) => {

@@ -69,8 +69,12 @@ export class RewardsService {
     return claim;
   }
 
-  static async getUserBoosts(addresses: string[]): Promise<Record<string, Boost>> {
-    const boostFile = await getObject(REWARD_DATA, 'badger-boosts.json');
+  static async getUserBoosts(chains: Chain[], addresses: string[]): Promise<Record<string, Boost>> {
+    const result = await Promise.all(chains.map(async (chain) => this.getChainUserBoosts(chain, addresses)));
+  }
+
+  static async getChainUserBoosts(chain: Chain, addresses: string[]): Promise<Record<string, Boost>> {
+    const boostFile = await getObject(REWARD_DATA, `badger-boosts-${parseInt(chain.chainId, 16)}.json`);
     const fileContents: BoostData = JSON.parse(boostFile.toString('utf-8'));
     const defaultMultipliers: BoostMultipliers = {};
     Object.keys(fileContents.multiplierData).forEach(
@@ -125,7 +129,7 @@ export class RewardsService {
     }
     const { settToken } = settDefinition;
     const sett = await getCachedSett(settDefinition);
-    const boostFile = await getObject(REWARD_DATA, 'badger-boosts.json');
+    const boostFile = await getObject(REWARD_DATA, `badger-boosts-${parseInt(chain.chainId, 16)}.json`);
     const boostData: BoostData = JSON.parse(boostFile.toString('utf-8'));
     if (sett.vaultToken === TOKENS.BICVX) {
       delete boostData.multiplierData[sett.vaultToken];
