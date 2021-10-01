@@ -14,7 +14,8 @@ import { tokenEmission } from '../protocols.utils';
 import { getUniV2SwapValue } from './strategy.utils';
 
 const SWAPR_STAKING = {
-  [TOKENS.BARB_SWP_SWAPR_WETH]: '0xe2A7CF0DEB83F2BC2FD15133a02A24B9981f2c17',
+  [TOKENS.BARB_SWP_SWPR_WETH]: '0x2E6413ec518990bAa72dff2AD0e64dfDF28E88c7',
+  [TOKENS.BARB_SWP_WBTC_WETH]: '0x418A639F01FAee054D3A823c227c7dC179C209Fa',
 };
 
 const COMPOUND_SCALARS = {
@@ -31,11 +32,11 @@ export class SwaprStrategy {
 }
 
 async function getSwaprEmission(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
-  if (settDefinition.settToken === TOKENS.BARB_SWP_SWAPR_WETH) {
+  if (settDefinition.settToken === TOKENS.BARB_SWP_SWPR_WETH) {
     return [];
   }
   const compoundScalar = COMPOUND_SCALARS[settDefinition.settToken] ?? 1;
-  const helperToken = getToken(TOKENS.BARB_SWP_SWAPR_WETH);
+  const helperToken = getToken(TOKENS.BARB_SWP_SWPR_WETH);
 
   const stakingContract = SwaprStaking__factory.connect(SWAPR_STAKING[settDefinition.settToken], chain.provider);
 
