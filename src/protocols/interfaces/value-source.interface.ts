@@ -34,11 +34,11 @@ function selectPerformanceApr(performance: Performance): number {
   if (performance.sevenDay > 0) {
     return performance.sevenDay;
   }
+  if (performance.threeDay > 0) {
+    return performance.threeDay;
+  }
   if (performance.thirtyDay > 0) {
     return performance.thirtyDay;
-  }
-  if (performance.sevenDay > 0) {
-    return performance.sevenDay;
   }
   return performance.oneDay;
 }
