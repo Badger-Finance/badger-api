@@ -68,7 +68,7 @@ custom:
 provider:
   name: aws
   runtime: nodejs12.x
-  memorySize: 1024
+  memorySize: 4096
   stage: staging
   region: us-west-1
   iam:
@@ -309,12 +309,12 @@ functions:
 
   index-apy-snapshots:
     handler: src/indexer/apy-snapshots-indexer.refreshApySnapshots
-    timeout: 45
+    timeout: 120
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-apy-snapshots
           description: 'index data for sett apy'
-          rate: rate(1 minute)
+          rate: rate(5 minutes)
 
   index-prices:
     handler: src/indexer/price-indexer.indexPrices
