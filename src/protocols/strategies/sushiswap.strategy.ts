@@ -48,11 +48,11 @@ const sushiSellRate: Record<string, number> = {
 
 export class SushiswapStrategy {
   static async getValueSources(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
-    return Promise.all([getSushiSwapValue(chain, settDefinition), getEmissionSource(chain, settDefinition)]);
+    return Promise.all([getSushiswapSwapValue(chain, settDefinition), getEmissionSource(chain, settDefinition)]);
   }
 }
 
-async function getSushiSwapValue(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource> {
+async function getSushiswapSwapValue(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource> {
   let graphUrl;
   switch (chain.network) {
     case ChainNetwork.xDai:
@@ -67,7 +67,10 @@ async function getSushiSwapValue(chain: Chain, settDefinition: SettDefinition): 
     default:
       graphUrl = SUSHISWAP_URL;
   }
+  return getSushiSwapValue(settDefinition, graphUrl);
+}
 
+export async function getSushiSwapValue(settDefinition: SettDefinition, graphUrl: string): Promise<CachedValueSource> {
   const client = new GraphQLClient(graphUrl);
   const sdk = getSushiswapSdk(client);
   const { pairDayDatas } = await sdk.SushiPairDayDatas({

@@ -60,6 +60,14 @@ export const arbitrumTokensConfig: TokenConfig = {
     symbol: 'SUSHI',
     type: TokenType.Contract,
   },
+  [TOKENS.ARB_SWAPR]: {
+    address: TOKENS.ARB_SWAPR,
+    decimals: 18,
+    lookupName: TOKENS.ARB_SWP_SWAPR_WETH,
+    name: 'Swapr',
+    symbol: 'SWAPR',
+    type: TokenType.Contract,
+  },
   [TOKENS.ARB_SUSHI_WETH_SUSHI]: {
     address: TOKENS.ARB_SUSHI_WETH_SUSHI,
     decimals: 18,
@@ -89,6 +97,22 @@ export const arbitrumTokensConfig: TokenConfig = {
     name: 'Curve.fi Tricrypto',
     symbol: 'crvTricrypto',
     type: TokenType.CurveLP,
+  },
+  [TOKENS.ARB_SWP_SWPR_WETH]: {
+    address: TOKENS.ARB_SWP_SWPR_WETH,
+    decimals: 18,
+    lpToken: true,
+    name: 'Swapr SWPR-WETH',
+    symbol: 'SWLP-SWPR-WETH',
+    type: TokenType.SwaprLp,
+  },
+  [TOKENS.ARB_SWP_WBTC_WETH]: {
+    address: TOKENS.ARB_SWP_WBTC_WETH,
+    decimals: 18,
+    lpToken: true,
+    name: 'Swapr WBTC-WETH',
+    symbol: 'SWLP-WBTC-WETH',
+    type: TokenType.SwaprLp,
   },
   [TOKENS.BARB_SUSHI_WETH_SUSHI]: {
     address: TOKENS.BARB_SUSHI_WETH_SUSHI,
@@ -131,6 +155,39 @@ export const arbitrumTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.ARB_CRV_TRICRYPTO,
+      network: ChainNetwork.Arbitrum,
+    },
+  },
+  [TOKENS.BARB_CRV_TRICRYPTO_LITE]: {
+    address: TOKENS.BARB_CRV_TRICRYPTO_LITE,
+    decimals: 18,
+    name: 'bCurve.fi Tricrypto Light',
+    symbol: 'bcrvTricryptoLight',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.ARB_CRV_TRICRYPTO,
+      network: ChainNetwork.Arbitrum,
+    },
+  },
+  [TOKENS.BARB_SWP_SWPR_WETH]: {
+    address: TOKENS.BARB_SWP_SWPR_WETH,
+    decimals: 18,
+    name: 'bSwapr SWPR-WETH',
+    symbol: 'bSWLP-SWPR-WETH',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.ARB_SWP_SWAPR_WETH,
+      network: ChainNetwork.Arbitrum,
+    },
+  },
+  [TOKENS.BARB_SWP_WBTC_WETH]: {
+    address: TOKENS.BARB_SWP_WBTC_WETH,
+    decimals: 18,
+    name: 'bSwapr WBTC-WETH',
+    symbol: 'bSWLP-WBTC-WETH',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.ARB_SWP_WBTC_WETH,
       network: ChainNetwork.Arbitrum,
     },
   },

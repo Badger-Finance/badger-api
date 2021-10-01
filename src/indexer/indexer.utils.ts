@@ -17,6 +17,7 @@ import { mStableStrategy } from '../protocols/strategies/mstable.strategy';
 import { PancakeswapStrategy } from '../protocols/strategies/pancakeswap.strategy';
 import { QuickswapStrategy } from '../protocols/strategies/quickswap.strategy';
 import { SushiswapStrategy } from '../protocols/strategies/sushiswap.strategy';
+import { SwaprStrategy } from '../protocols/strategies/swapr.strategy';
 import { UniswapStrategy } from '../protocols/strategies/uniswap.strategy';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { RewardsService } from '../rewards/rewards.service';
@@ -222,6 +223,8 @@ export async function getProtocolValueSources(
         return QuickswapStrategy.getValueSources(settDefinition);
       case Protocol.mStable:
         return mStableStrategy.getValueSources(chain, settDefinition);
+      case Protocol.Swapr:
+        return SwaprStrategy.getValueSources(chain, settDefinition);
       default: {
         return [];
       }
@@ -243,6 +246,8 @@ export async function getEmissionApySnapshots(
   );
 }
 
+const ARB_CRV_SETTS = [TOKENS.BARB_CRV_RENBTC, TOKENS.BARB_CRV_TRICRYPTO, TOKENS.BARB_CRV_TRICRYPTO_LITE];
+
 export async function getSettValueSources(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
   try {
     const [underlying, emission, protocol, derivative] = await Promise.all([
@@ -261,7 +266,7 @@ export async function getSettValueSources(chain: Chain, settDefinition: SettDefi
     const newSources = [underlying, ...emission, ...protocol, ...derivative];
 
     // TODO: remove once badger tree tracking events supported
-    if (settDefinition.settToken === TOKENS.BARB_CRV_RENBTC || settDefinition.settToken === TOKENS.BARB_CRV_TRICRYPTO) {
+    if (ARB_CRV_SETTS.includes(settDefinition.settToken)) {
       const crvSource = createValueSource('CRV Rewards', uniformPerformance(underlying.apr));
       newSources.push(
         valueSourceToCachedValueSource(crvSource, settDefinition, tokenEmission(getToken(TOKENS.ARB_CRV))),
