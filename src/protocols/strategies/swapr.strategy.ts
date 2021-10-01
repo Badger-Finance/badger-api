@@ -70,6 +70,5 @@ async function getSwaprEmission(chain: Chain, settDefinition: SettDefinition): P
     }
   }
 
-  console.log(sources);
   return sources;
 }
