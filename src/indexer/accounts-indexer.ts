@@ -15,7 +15,6 @@ import { Chain } from '../chains/config/chain.config';
 import { BadgerTree__factory } from '../contracts';
 import { UserSettBalance } from '../graphql/generated/badger';
 import { getLeaderBoardSize } from '../leaderboards/leaderboards.utils';
-import { CachedBoostMultiplier } from '../rewards/interfaces/cached-boost-multiplier.interface';
 import { RewardMerkleDistribution } from '../rewards/interfaces/merkle-distributor.interface';
 import { RewardAmounts } from '../rewards/interfaces/reward-amounts.interface';
 import { RewardsService } from '../rewards/rewards.service';
@@ -130,24 +129,20 @@ export async function refreshAccountSettBalances(chains: Chain[], batchAccounts:
 
 async function refreshAccountBoostInfo(chains: Chain[], batchAccounts: AccountMap) {
   const addresses = Object.keys(batchAccounts);
-  const [userBoosts, maxRank] = await Promise.all([RewardsService.getUserBoosts(chains, addresses), getLeaderBoardSize()]);
+  const [userBoostMultipliers, maxRank] = await Promise.all([
+    RewardsService.getUserBoostMultipliers(chains, addresses),
+    getLeaderBoardSize(),
+  ]);
 
   await Promise.all(
     addresses.map(async (acc) => {
-      const userBoost = userBoosts[acc];
       const account = batchAccounts[acc];
       const cachedBoost = await getCachedBoost(acc);
       account.nativeBalance = cachedBoost.nativeBalance;
       account.nonNativeBalance = cachedBoost.nonNativeBalance;
       account.boost = cachedBoost.boost;
       account.boostRank = cachedBoost.rank ?? maxRank + 1;
-      account.multipliers = Object.entries(userBoost.multipliers).map((e) => {
-        const [key, value] = e;
-        return Object.assign(new CachedBoostMultiplier(), {
-          address: key,
-          multiplier: isNaN(value) ? 0 : value,
-        });
-      });
+      account.multipliers = userBoostMultipliers[acc];
       batchAccounts[acc] = account;
     }),
   );

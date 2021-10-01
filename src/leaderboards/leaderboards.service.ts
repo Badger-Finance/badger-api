@@ -115,7 +115,7 @@ export class LeaderBoardsService {
       })
       .map((boost, i) => {
         return Object.assign(new CachedBoost(), {
-          leaderboard: LeaderBoardType.BadgerBoost,
+          leaderboard: `${chain.network}_${LeaderBoardType.BadgerBoost}`,
           rank: i + 1,
           ...boost,
         });
