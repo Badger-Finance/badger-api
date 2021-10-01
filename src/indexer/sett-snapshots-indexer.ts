@@ -13,7 +13,7 @@ export async function refreshSettSnapshots() {
 }
 
 async function captureChainSnapshots(chain: Chain) {
-  const snapshots = await Promise.all(chain.setts.map((sett) => captureSnapshot(chain, sett)));
+  const snapshots = await Promise.all(chain.setts.map(async (sett) => captureSnapshot(chain, sett)));
   const mapper = getDataMapper();
   try {
     for (const item of snapshots.filter(successfulCapture)) {
