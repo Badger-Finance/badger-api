@@ -16,6 +16,7 @@ import { SettDefinition } from './interfaces/sett-definition.interface';
 import { SettSnapshot } from './interfaces/sett-snapshot.interface';
 import { Sett__factory, Controller__factory, Strategy__factory } from '../contracts';
 import { SettStrategy } from './interfaces/sett-strategy.interface';
+import { TOKENS } from '../config/tokens.config';
 
 export const VAULT_SOURCE = 'Vault Compounding';
 
@@ -73,8 +74,10 @@ export const getCachedSett = async (settDefinition: SettDefinition): Promise<Set
       sett.value = item.settValue;
       if (item.balance === 0 || item.supply === 0) {
         sett.ppfs = 1;
-      } else {
+      } else if (settDefinition.settToken === TOKENS.BDIGG) {
         sett.ppfs = item.balance / item.supply;
+      } else {
+        sett.ppfs = item.ratio;
       }
       sett.strategy = item.strategy;
     }

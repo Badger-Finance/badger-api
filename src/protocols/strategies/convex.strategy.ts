@@ -87,6 +87,10 @@ const nonRegistryPools: ContractRegistry = {
 
 const discontinuedRewards = ['0x330416C863f2acCE7aF9C9314B422d24c672534a'].map((addr) => ethers.utils.getAddress(addr));
 
+const convexWrap: Record<string, string> = {
+  [TOKENS.CVXCRV]: TOKENS.BCVXCRV,
+};
+
 export class ConvexStrategy {
   static async getValueSources(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
     switch (settDefinition.settToken) {
@@ -116,14 +120,18 @@ async function getLockedSources(chain: Chain, settDefinition: SettDefinition): P
   while (true) {
     try {
       const reward = await locker.rewardTokens(token);
-      const rewardToken = getToken(reward);
+      let rewardToken = getToken(reward);
+      const wrappedTokenAddress = convexWrap[rewardToken.address];
+      if (wrappedTokenAddress) {
+        rewardToken = getToken(wrappedTokenAddress);
+      }
       const rewardAmount = await locker.getRewardForDuration(reward);
       const duration = await locker.rewardsDuration();
       const rewardTokenPrice = await getPrice(reward);
       const rewardScalar = ONE_YEAR_SECONDS / duration.toNumber();
       const rewardsValue = rewardTokenPrice.usd * formatBalance(rewardAmount) * rewardScalar;
       const rewardApr = (rewardsValue / cvxValue) * 100;
-      const cvxValueSource = createValueSource(`b${rewardToken.symbol} Rewards`, uniformPerformance(rewardApr));
+      const cvxValueSource = createValueSource(`${rewardToken.name} Rewards`, uniformPerformance(rewardApr));
       const cachedEmission = valueSourceToCachedValueSource(cvxValueSource, settDefinition, tokenEmission(rewardToken));
       sources.push(cachedEmission);
       token++;

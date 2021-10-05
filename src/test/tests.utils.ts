@@ -31,12 +31,15 @@ export const randomValue = (min?: number, max?: number): number => {
 
 export function randomSnapshot(settDefinition?: SettDefinition): CachedSettSnapshot {
   const sett = settDefinition || randomSett();
+  const balance = randomValue();
+  const supply = randomValue();
+  const ratio = balance / supply;
   return Object.assign(new CachedSettSnapshot(), {
     address: sett.settToken,
-    balance: randomValue(),
-    ratio: 1,
+    balance,
+    ratio,
     settValue: randomValue(),
-    supply: randomValue(),
+    supply,
     updatedAt: Date.now(),
     strategy: {
       address: ethers.constants.AddressZero,

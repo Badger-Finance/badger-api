@@ -19,11 +19,12 @@ export function createValueSource(
 ): ValueSource {
   const apr = selectPerformanceApr(performance);
   const evaluatedBoost = boost ?? { min: 1, max: 1 };
+  const isBoostable = evaluatedBoost.min != evaluatedBoost.max;
   return {
     name,
     apr,
     performance,
-    boostable: !!boost,
+    boostable: isBoostable,
     harvestable: !!harvestable,
     minApr: apr * evaluatedBoost.min,
     maxApr: apr * evaluatedBoost.max,
