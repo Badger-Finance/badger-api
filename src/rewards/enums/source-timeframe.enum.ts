@@ -9,7 +9,7 @@ export enum SourceTimeFrame {
 
 export const SOURCE_TIME_FRAMES = [
   SourceTimeFrame.OneDay,
-  SourceTimeFrame.ThirtyDays,
+  SourceTimeFrame.ThreeDays,
   SourceTimeFrame.SevenDays,
   SourceTimeFrame.ThirtyDays,
 ];

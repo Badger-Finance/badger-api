@@ -79,7 +79,19 @@ export class SettsService {
       if (currentSnapshot.timestamp <= currentCutoff) {
         updatePerformance(performance, currentTimeFrame, getPerformance(current, currentSnapshot));
         timeframeIndex += 1;
+        if (timeframeIndex >= SOURCE_TIME_FRAMES.length) {
+          break;
+        }
       }
+    }
+
+    // handle no valid measurements, measure available data
+    if (timeframeIndex < SOURCE_TIME_FRAMES.length) {
+      updatePerformance(
+        performance,
+        SOURCE_TIME_FRAMES[timeframeIndex],
+        getPerformance(current, snapshots[snapshots.length - 1]),
+      );
     }
 
     return createValueSource(VAULT_SOURCE, performance);

@@ -148,18 +148,37 @@ export const getSettBoosts = async (settDefinition: SettDefinition): Promise<Cac
 };
 
 export async function getStrategyInfo(chain: Chain, sett: SettDefinition): Promise<SettStrategy> {
-  const contract = Sett__factory.connect(sett.settToken, chain.provider);
-  const controller = Controller__factory.connect(await contract.controller(), chain.provider);
-  const strategy = Strategy__factory.connect(await controller.strategies(sett.depositToken), chain.provider);
-  const [withdrawFee, performanceFee, strategistFee] = await Promise.all([
-    strategy.withdrawalFee(),
-    strategy.performanceFeeGovernance(),
-    strategy.performanceFeeStrategist(),
-  ]);
-  return {
-    address: strategy.address,
-    withdrawFee: withdrawFee.toNumber(),
-    performanceFee: performanceFee.toNumber(),
-    strategistFee: strategistFee.toNumber(),
+  const defaultStrategyInfo = {
+    address: ethers.constants.AddressZero,
+    withdrawFee: 50,
+    performanceFee: 1000,
+    strategistFee: 1000,
   };
+  try {
+    const contract = Sett__factory.connect(sett.settToken, chain.provider);
+    const controllerAddr = await contract.controller();
+    if (controllerAddr === ethers.constants.AddressZero) {
+      return defaultStrategyInfo;
+    }
+    const controller = Controller__factory.connect(controllerAddr, chain.provider);
+    const strategyAddr = await controller.strategies(sett.depositToken);
+    if (strategyAddr === ethers.constants.AddressZero) {
+      return defaultStrategyInfo;
+    }
+    const strategy = Strategy__factory.connect(strategyAddr, chain.provider);
+    const [withdrawFee, performanceFee, strategistFee] = await Promise.all([
+      strategy.withdrawalFee(),
+      strategy.performanceFeeGovernance(),
+      strategy.performanceFeeStrategist(),
+    ]);
+    return {
+      address: strategy.address,
+      withdrawFee: withdrawFee.toNumber(),
+      performanceFee: performanceFee.toNumber(),
+      strategistFee: strategistFee.toNumber(),
+    };
+  } catch (err) {
+    console.error(err);
+    return defaultStrategyInfo;
+  }
 }
