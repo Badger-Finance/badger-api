@@ -269,7 +269,6 @@ export const ethSetts: SettDefinition[] = [
     createdBlock: 13239091,
     depositToken: TOKENS.CVX,
     settToken: TOKENS.BICVX,
-    state: SettState.Guarded,
     protocol: Protocol.Convex,
     strategy: '0x3406402caE1f745714a9aFFc45939854e7Fbe12B',
   },
