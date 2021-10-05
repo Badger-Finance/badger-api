@@ -50,7 +50,7 @@ async function getSwaprEmission(chain: Chain, settDefinition: SettDefinition): P
     getCachedSett(settDefinition),
   ]);
   const stakedAmount = formatBalance(totalSupply) * lpTokenPrice.usd;
-  const strategyFeeMultiplier = 1 - (sett.strategy.performanceFee + sett.strategy.strategistFee) / 1000;
+  const strategyFeeMultiplier = 1 - (sett.strategy.performanceFee + sett.strategy.strategistFee) / 10000;
 
   let sources = [];
   let tokenIndex = 0;
