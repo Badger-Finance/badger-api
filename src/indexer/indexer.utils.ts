@@ -46,13 +46,21 @@ export const settToCachedSnapshot = async (
   const { balance, totalSupply, pricePerFullShare } = sett;
   const balanceDecimals = settDefinition.balanceDecimals || depositToken.decimals;
   const supplyDecimals = settDefinition.supplyDecimals || settToken.decimals;
-  const tokenBalance = balance / Math.pow(10, balanceDecimals);
-  const supply = totalSupply / Math.pow(10, supplyDecimals);
+  const tokenBalance = formatBalance(balance, balanceDecimals);
+  const supply = formatBalance(totalSupply, supplyDecimals);
   const ratio = await getPricePerShare(chain, pricePerFullShare, settDefinition);
   const tokenPriceData = await getPrice(depositToken.address);
   const value = tokenBalance * tokenPriceData.usd;
   const strategyInfo = await getStrategyInfo(chain, settDefinition);
 
+  console.log({
+    address: settToken.address,
+    balance: tokenBalance,
+    ratio,
+    settValue: parseFloat(value.toFixed(2)),
+    supply,
+    strategy: strategyInfo,
+  });
   return Object.assign(new CachedSettSnapshot(), {
     address: settToken.address,
     balance: tokenBalance,
@@ -92,8 +100,8 @@ export const settToSnapshot = async (
   const timestamp = blockData.timestamp * 1000;
   const balanceDecimals = settDefinition.balanceDecimals || depositToken.decimals;
   const supplyDecimals = settDefinition.supplyDecimals || settToken.decimals;
-  const tokenBalance = balance / Math.pow(10, balanceDecimals);
-  const supply = totalSupply / Math.pow(10, supplyDecimals);
+  const tokenBalance = formatBalance(balance, balanceDecimals);
+  const supply = formatBalance(totalSupply, supplyDecimals);
   const ratio = await getPricePerShare(chain, pricePerFullShare, settDefinition, queryBlock);
   const tokenPriceData = await getPrice(depositToken.address);
   const value = tokenBalance * tokenPriceData.usd;
