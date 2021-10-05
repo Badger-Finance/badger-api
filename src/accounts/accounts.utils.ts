@@ -101,6 +101,7 @@ export function cachedAccountToAccount(cachedAccount: CachedAccount, network?: C
     claimableBalances,
     claimableBalancesMap,
   };
+  delete account.multipliers[TOKENS.BICVX];
   return account;
 }
 

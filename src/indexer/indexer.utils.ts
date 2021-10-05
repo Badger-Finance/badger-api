@@ -53,14 +53,6 @@ export const settToCachedSnapshot = async (
   const value = tokenBalance * tokenPriceData.usd;
   const strategyInfo = await getStrategyInfo(chain, settDefinition);
 
-  console.log({
-    address: settToken.address,
-    balance: tokenBalance,
-    ratio,
-    settValue: parseFloat(value.toFixed(2)),
-    supply,
-    strategy: strategyInfo,
-  });
   return Object.assign(new CachedSettSnapshot(), {
     address: settToken.address,
     balance: tokenBalance,

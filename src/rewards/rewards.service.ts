@@ -127,6 +127,9 @@ export class RewardsService {
     const sett = await getCachedSett(settDefinition);
     const boostFile = await getObject(REWARD_DATA, 'badger-boosts.json');
     const boostData: BoostData = JSON.parse(boostFile.toString('utf-8'));
+    if (sett.vaultToken === TOKENS.BICVX) {
+      delete boostData.multiplierData[sett.vaultToken];
+    }
     const boostRange = boostData.multiplierData[sett.vaultToken] ?? { min: 1, max: 1 };
 
     // create relevant contracts
