@@ -90,8 +90,7 @@ export const arbitrumSetts: SettDefinition[] = [
     settToken: TOKENS.BARB_SWP_SWPR_WETH,
     depositToken: TOKENS.ARB_SWP_SWPR_WETH,
     createdBlock: 13315350,
-    stage: Stage.Staging,
-    state: SettState.Experimental,
+    state: SettState.Guarded,
     protocol: Protocol.Swapr,
   },
   {
@@ -99,8 +98,7 @@ export const arbitrumSetts: SettDefinition[] = [
     settToken: TOKENS.BARB_SWP_WBTC_WETH,
     depositToken: TOKENS.ARB_SWP_WBTC_WETH,
     createdBlock: 13315350,
-    stage: Stage.Staging,
-    state: SettState.Experimental,
+    state: SettState.Guarded,
     protocol: Protocol.Swapr,
   },
 ];
