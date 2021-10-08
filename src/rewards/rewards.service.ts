@@ -13,12 +13,12 @@ import { createValueSource, ValueSource } from '../protocols/interfaces/value-so
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { getCachedSett } from '../setts/setts.utils';
 import { formatBalance, getToken } from '../tokens/tokens.utils';
-import { Boost } from './interfaces/boost.interface';
 import { BoostData } from './interfaces/boost-data.interface';
 import { BoostMultipliers } from './interfaces/boost-multipliers.interface';
 import { AirdropMerkleClaim, AirdropMerkleDistribution } from './interfaces/merkle-distributor.interface';
 import { RewardMerkleClaim } from './interfaces/reward-merkle-claim.interface';
 import { getTreeDistribution } from './rewards.utils';
+import { CachedBoostMultiplier } from './interfaces/cached-boost-multiplier.interface';
 
 @Service()
 export class RewardsService {
@@ -69,14 +69,32 @@ export class RewardsService {
     return claim;
   }
 
-  static async getUserBoosts(addresses: string[]): Promise<Record<string, Boost>> {
-    const boostFile = await getObject(REWARD_DATA, 'badger-boosts.json');
+  static async getUserBoostMultipliers(
+    chains: Chain[],
+    addresses: string[],
+  ): Promise<Record<string, CachedBoostMultiplier[]>> {
+    const results = await Promise.all(chains.flatMap(async (chain) => this.getChainUserBoosts(chain, addresses)));
+    const crossChainBoosts: Record<string, CachedBoostMultiplier[]> = {};
+    for (const result of results) {
+      for (const [key, value] of Object.entries(result)) {
+        if (crossChainBoosts[key]) {
+          crossChainBoosts[key] = crossChainBoosts[key].concat(value);
+        } else {
+          crossChainBoosts[key] = value;
+        }
+      }
+    }
+    return crossChainBoosts;
+  }
+
+  static async getChainUserBoosts(chain: Chain, addresses: string[]): Promise<Record<string, CachedBoostMultiplier[]>> {
+    const boostFile = await getObject(REWARD_DATA, `badger-boosts-${parseInt(chain.chainId, 16)}.json`);
     const fileContents: BoostData = JSON.parse(boostFile.toString('utf-8'));
     const defaultMultipliers: BoostMultipliers = {};
     Object.keys(fileContents.multiplierData).forEach(
       (key) => (defaultMultipliers[key] = fileContents.multiplierData[key].min),
     );
-    const userBoosts: Record<string, Boost> = {};
+    const boostMultipliers: Record<string, CachedBoostMultiplier[]> = {};
     for (const address of addresses) {
       let boostData = fileContents.userData[address.toLowerCase()];
       if (!boostData) {
@@ -114,9 +132,20 @@ export class RewardsService {
         }
         boostData.multipliers = userMulipliers;
       }
-      userBoosts[address] = boostData;
+      boostMultipliers[address] = Object.entries(boostData.multipliers)
+        .filter((e) => isNaN(e[1]))
+        .map(
+          (entry) => (
+            new CachedBoostMultiplier(),
+            {
+              network: chain.network,
+              address: entry[0],
+              multiplier: entry[1],
+            }
+          ),
+        );
     }
-    return userBoosts;
+    return boostMultipliers;
   }
 
   static async getRewardEmission(chain: Chain, settDefinition: SettDefinition): Promise<ValueSource[]> {
@@ -125,7 +154,7 @@ export class RewardsService {
     }
     const { settToken } = settDefinition;
     const sett = await getCachedSett(settDefinition);
-    const boostFile = await getObject(REWARD_DATA, 'badger-boosts.json');
+    const boostFile = await getObject(REWARD_DATA, `badger-boosts-${parseInt(chain.chainId, 16)}.json`);
     const boostData: BoostData = JSON.parse(boostFile.toString('utf-8'));
     if (sett.vaultToken === TOKENS.BICVX) {
       delete boostData.multiplierData[sett.vaultToken];

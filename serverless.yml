@@ -367,13 +367,13 @@ functions:
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-boost
-          description: 'index accounts information from the graph'
+          description: 'index accounts boost information'
           rate: rate(7 minutes)
           input:
             mode: BoostData
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-claimable
-          description: 'index accounts information from the graph'
+          description: 'index accounts claimable from badger tree'
           rate: rate(7 minutes)
           input:
             mode: ClaimableBalanceData
