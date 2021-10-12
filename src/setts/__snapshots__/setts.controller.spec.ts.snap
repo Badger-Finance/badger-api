@@ -2498,7 +2498,7 @@ Array [
     "boostable": false,
     "bouncer": "none",
     "deprecated": false,
-    "experimental": true,
+    "experimental": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -2565,7 +2565,7 @@ Array [
         },
       },
     ],
-    "state": "experimental",
+    "state": "guarded",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
@@ -2594,7 +2594,7 @@ Array [
     "boostable": false,
     "bouncer": "none",
     "deprecated": false,
-    "experimental": true,
+    "experimental": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -2661,7 +2661,7 @@ Array [
         },
       },
     ],
-    "state": "experimental",
+    "state": "guarded",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
@@ -5011,7 +5011,7 @@ Array [
     "boostable": false,
     "bouncer": "none",
     "deprecated": false,
-    "experimental": true,
+    "experimental": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -5078,7 +5078,7 @@ Array [
         },
       },
     ],
-    "state": "experimental",
+    "state": "guarded",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
@@ -5107,7 +5107,7 @@ Array [
     "boostable": false,
     "bouncer": "none",
     "deprecated": false,
-    "experimental": true,
+    "experimental": false,
     "multipliers": Array [
       Object {
         "boost": 100,
@@ -5174,7 +5174,7 @@ Array [
         },
       },
     ],
-    "state": "experimental",
+    "state": "guarded",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
