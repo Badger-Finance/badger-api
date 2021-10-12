@@ -1,6 +1,10 @@
 import { PlatformTest } from '@tsed/common';
 import { GraphQLClient } from 'graphql-request';
-import { HarvestFragment, HarvestsQuery } from '../graphql/generated/badger-dao';
+import { Ethereum } from '../chains/config/eth.config';
+import { TOKENS } from '../config/tokens.config';
+import { HarvestFragment, HarvestsQuery } from '../graphql/generated/badger';
+import { getSettDefinition } from '../setts/setts.utils';
+import { getToken } from '../tokens/tokens.utils';
 import { HarvestsService } from './harvests.service';
 
 describe('HarvestsService', () => {
@@ -16,55 +20,53 @@ describe('HarvestsService', () => {
 
   describe('listHarvests', () => {
     it('returns a list of Harvest objects', async () => {
+      const sett = getSettDefinition(new Ethereum(), TOKENS.BBADGER);
+      const token = getToken(sett.depositToken);
       const mockHarvests: HarvestFragment[] = [
         {
-          id: 'harvest_123',
-          earnings: 0,
-          pricePerFullShareBefore: 0,
-          pricePerFullShareAfter: 0,
-          pricePerFullShareBeforeRaw: 0,
-          pricePerFullShareAfterRaw: 0,
-          vaultBalanceBeforeRaw: 0,
-          vaultBalanceAfterRaw: 0,
-          strategyBalanceBeforeRaw: 0,
-          strategyBalanceAfterRaw: 0,
-          earningsRaw: 0,
-          transaction: {
-            id: 'transaction_123',
-            timestamp: 0,
-            blockNumber: 0,
-            transactionHash: 0,
+          id: '0xfakeTXhash',
+          timestamp: Date.now(),
+          token: {
+            id: token.address,
+            name: token.name,
+            decimals: token.decimals,
+            symbol: token.symbol,
           },
-          vault: {
-            id: 'vault_123',
-            pricePerFullShare: 0,
-            totalSupply: 0,
-            vaultBalance: 0,
-            strategyBalance: 0,
-            available: 0,
+          amount: 0,
+          blockNumber: 0,
+          strategy: {
+            id: '0xstrategyID',
+          },
+          sett: {
+            id: sett.settToken,
           },
         },
       ];
       const mockResponse: HarvestsQuery = {
-        harvests: mockHarvests,
+        settHarvests: mockHarvests,
       };
 
       jest.spyOn(GraphQLClient.prototype, 'request').mockImplementationOnce(async () => Promise.resolve(mockResponse));
 
-      const { harvests } = await service.listHarvests({});
-      for (const record of harvests) {
+      const { settHarvests } = await service.listHarvests(new Ethereum(), {});
+      for (const record of settHarvests) {
         expect(record).toMatchObject({
           id: expect.any(String),
-          earnings: expect.any(Number),
-          pricePerFullShareBefore: expect.any(Number),
-          pricePerFullShareAfter: expect.any(Number),
-          pricePerFullShareBeforeRaw: expect.any(Number),
-          pricePerFullShareAfterRaw: expect.any(Number),
-          vaultBalanceBeforeRaw: expect.any(Number),
-          vaultBalanceAfterRaw: expect.any(Number),
-          strategyBalanceBeforeRaw: expect.any(Number),
-          strategyBalanceAfterRaw: expect.any(Number),
-          earningsRaw: expect.any(Number),
+          timestamp: expect.any(Number),
+          token: {
+            id: expect.any(String),
+            name: expect.any(String),
+            symbol: expect.any(String),
+            decimals: expect.any(Number),
+          },
+          amount: expect.any(Number),
+          blockNumber: expect.any(Number),
+          strategy: {
+            id: expect.any(String),
+          },
+          sett: {
+            id: expect.any(String),
+          },
         });
       }
     });

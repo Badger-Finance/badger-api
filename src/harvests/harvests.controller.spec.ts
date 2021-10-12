@@ -17,7 +17,7 @@ describe('HarvestsController', () => {
 
   describe('GET /v2/harvests', () => {
     it('returns a list of harvests', async (done) => {
-      jest.spyOn(harvestsService, 'listHarvests').mockImplementationOnce(() => Promise.resolve({ harvests: [] }));
+      jest.spyOn(harvestsService, 'listHarvests').mockImplementationOnce(() => Promise.resolve({ settHarvests: [] }));
 
       request
         .get('/v2/harvests')

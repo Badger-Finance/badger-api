@@ -1,4 +1,3 @@
-import { BADGER_ARBITRUM_URL } from '../../config/constants';
 import { Protocol } from '../../config/enums/protocol.enum';
 import { SettState } from '../../config/enums/sett-state.enum';
 import { Stage } from '../../config/enums/stage.enum';
@@ -23,7 +22,6 @@ export class Arbitrum extends Chain {
       arbitrumSetts,
       rpc[ChainNetwork.Arbitrum],
       new ArbitrumStrategy(Object.keys(arbitrumTokensConfig)),
-      BADGER_ARBITRUM_URL,
       2425847,
       '0x635EB2C39C75954bb53Ebc011BDC6AfAAcE115A6',
       '0x85E1cACAe9a63429394d68Db59E14af74143c61c',

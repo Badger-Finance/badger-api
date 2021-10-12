@@ -13,13 +13,6 @@ generates:
       - src/graphql/queries/sett-snapshots.query.graphql
       - src/graphql/queries/user.query.graphql
       - src/graphql/queries/users.query.graphql
-    plugins:
-      - typescript
-      - typescript-graphql-request
-      - typescript-operations
-  src/graphql/generated/badger-dao.ts:
-    schema: ${BADGER_DAO_SUBGRAPH_URL}
-    documents:
       - src/graphql/fragments/harvest.fragment.graphql
       - src/graphql/queries/harvests.query.graphql
     plugins:

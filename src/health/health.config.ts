@@ -1,14 +1,6 @@
 import { gql } from 'graphql-request';
 import { Provider } from '../chains/enums/provider.enum';
-import {
-  BADGER_BSC_URL,
-  BADGER_DAO_URL,
-  BADGER_URL,
-  COINGECKO_URL,
-  PANCAKESWAP_URL,
-  SUSHISWAP_URL,
-  UNISWAP_URL,
-} from '../config/constants';
+import { COINGECKO_URL, PANCAKESWAP_URL, SUSHISWAP_URL, UNISWAP_URL } from '../config/constants';
 import { CURVE_API_URL } from '../protocols/strategies/convex.strategy';
 import { Endpoint, Subgraph } from './health.types';
 
@@ -31,76 +23,6 @@ export const providers: Endpoint[] = [
 // See /src/config/abi/health-eth-abis.ts for ETH
 
 export const subgraphs: Subgraph[] = [
-  {
-    name: 'BADGER',
-    url: new URL(BADGER_URL),
-    query: gql`
-      {
-        users(first: 5) {
-          id
-          settBalances {
-            id
-          }
-        }
-        setts(first: 5) {
-          id
-          name
-          symbol
-          token {
-            id
-          }
-        }
-      }
-    `,
-  },
-  {
-    name: 'BADGER_BSC',
-    url: new URL(BADGER_BSC_URL),
-    query: gql`
-      {
-        users(first: 5) {
-          id
-          settBalances {
-            id
-          }
-        }
-        setts(first: 5) {
-          id
-          name
-          symbol
-          token {
-            id
-          }
-        }
-      }
-    `,
-  },
-  {
-    name: 'BADGER_DAO',
-    url: new URL(BADGER_DAO_URL),
-    query: gql`
-      {
-        vaults(first: 5) {
-          id
-          pricePerFullShare
-          totalSupply
-          vaultBalance
-        }
-        accounts(first: 5) {
-          id
-          vaultBalances {
-            id
-          }
-          deposits {
-            id
-          }
-          withdrawals {
-            id
-          }
-        }
-      }
-    `,
-  },
   {
     name: 'PANCAKESWAP',
     url: new URL(PANCAKESWAP_URL),

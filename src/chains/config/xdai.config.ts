@@ -1,5 +1,4 @@
 import fetch from 'node-fetch';
-import { BADGER_XDAI_URL } from '../../config/constants';
 import { Protocol } from '../../config/enums/protocol.enum';
 import { Stage } from '../../config/enums/stage.enum';
 import rpc from '../../config/rpc.config';
@@ -22,7 +21,6 @@ export class xDai extends Chain {
       xDaiSetts,
       rpc[ChainNetwork.xDai],
       new xDaiStrategy(Object.keys(xDaiTokensConfig)),
-      BADGER_XDAI_URL,
       6307200,
     );
     Chain.register(this.network, this);

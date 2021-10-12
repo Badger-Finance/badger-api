@@ -34,7 +34,6 @@ export abstract class Chain {
     setts: SettDefinition[],
     rpcUrl: string,
     strategy: ChainStrategy,
-    graphUrl: string,
     blocksPerYear: number,
     badgerTree?: string,
     rewardsLogger?: string,
@@ -48,7 +47,9 @@ export abstract class Chain {
     this.provider = new ethers.providers.JsonRpcProvider(rpcUrl);
     this.batchProvider = new ethers.providers.JsonRpcBatchProvider(rpcUrl);
     this.strategy = strategy;
-    this.graphUrl = graphUrl;
+    this.graphUrl = `https://api.thegraph.com/subgraphs/name/badger-finance/badger-dao-setts${
+      network !== ChainNetwork.Ethereum ? `-${symbol.toLowerCase()}` : ''
+    }`;
     this.blocksPerYear = blocksPerYear;
     this.badgerTree = badgerTree;
     this.rewardsLogger = rewardsLogger;
