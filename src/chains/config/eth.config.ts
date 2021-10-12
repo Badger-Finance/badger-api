@@ -138,6 +138,7 @@ export const ethSetts: SettDefinition[] = [
   {
     name: 'Badger',
     createdBlock: 11380871,
+    deprecated: true,
     depositToken: TOKENS.BADGER,
     settToken: TOKENS.BBADGER,
   },
