@@ -28,7 +28,7 @@ export class AccountsService {
     return cachedAccountToAccount(cachedAccount, chain.network);
   }
 
-  async getAllUnclaimed(chain: Chain, page: number = 1): Promise<UnclaimedRewards> {
+  async getAllUnclaimed(chain: Chain, page = 1): Promise<UnclaimedRewards> {
     const startIndex = (page - 1) * this.pageSize;
     const boostFile = await getObject(REWARD_DATA, `badger-boosts-${parseInt(chain.chainId, 16)}.json`);
     const fileContents: BoostData = JSON.parse(boostFile.toString('utf-8'));

@@ -52,7 +52,7 @@ async function getSwaprEmission(chain: Chain, settDefinition: SettDefinition): P
   const stakedAmount = formatBalance(totalSupply) * lpTokenPrice.usd;
   const strategyFeeMultiplier = 1 - (sett.strategy.performanceFee + sett.strategy.strategistFee) / 10000;
 
-  let sources = [];
+  const sources = [];
   let tokenIndex = 0;
   while (true) {
     try {
