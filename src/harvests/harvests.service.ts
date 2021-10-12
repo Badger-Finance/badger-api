@@ -1,23 +1,13 @@
 import { Service } from '@tsed/common';
 import { GraphQLClient } from 'graphql-request';
-import { BADGER_DAO_URL } from '../config/constants';
-import {
-  getSdk,
-  HarvestsQuery,
-  HarvestsQueryVariables,
-  Sdk as BadgerDaoGraphqlSdk,
-} from '../graphql/generated/badger-dao';
+import { Chain } from '../chains/config/chain.config';
+import { getSdk, HarvestsQuery, HarvestsQueryVariables } from '../graphql/generated/badger';
 
 @Service()
 export class HarvestsService {
-  private badgerDaoGraphqlSdk: BadgerDaoGraphqlSdk;
-
-  constructor() {
-    const badgerDaoGraphqlClient = new GraphQLClient(BADGER_DAO_URL);
-    this.badgerDaoGraphqlSdk = getSdk(badgerDaoGraphqlClient);
-  }
-
-  async listHarvests(options: HarvestsQueryVariables): Promise<HarvestsQuery> {
-    return this.badgerDaoGraphqlSdk.Harvests(options);
+  async listHarvests(chain: Chain, options: HarvestsQueryVariables): Promise<HarvestsQuery> {
+    const badgerDaoGraphqlClient = new GraphQLClient(chain.graphUrl);
+    const badgerDaoGraphqlSdk = getSdk(badgerDaoGraphqlClient);
+    return badgerDaoGraphqlSdk.Harvests(options);
   }
 }

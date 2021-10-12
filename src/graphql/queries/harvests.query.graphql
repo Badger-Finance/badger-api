@@ -1,10 +1,10 @@
 query Harvests(
   $first: Int
   $skip: Int
-  $orderBy: Harvest_orderBy
+  $orderBy: SettHarvest_orderBy
   $orderDirection: OrderDirection
 ) {
-  harvests {
+  settHarvests {
     ...Harvest
   }
 }

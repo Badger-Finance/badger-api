@@ -1,4 +1,3 @@
-import { BADGER_BSC_URL } from '../../config/constants';
 import { Protocol } from '../../config/enums/protocol.enum';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
@@ -20,7 +19,6 @@ export class BinanceSmartChain extends Chain {
       bscSetts,
       rpc[ChainNetwork.BinanceSmartChain],
       new BscStrategy(Object.keys(bscTokensConfig)),
-      BADGER_BSC_URL,
       10512000,
     );
     Chain.register(this.network, this);

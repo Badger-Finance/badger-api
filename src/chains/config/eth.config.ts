@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import { BADGER_URL, BLOCKNATIVE_API_KEY, STRATEGIES } from '../../config/constants';
+import { BLOCKNATIVE_API_KEY, STRATEGIES } from '../../config/constants';
 import { Protocol } from '../../config/enums/protocol.enum';
 import { SettState } from '../../config/enums/sett-state.enum';
 import { Stage } from '../../config/enums/stage.enum';
@@ -25,7 +25,6 @@ export class Ethereum extends Chain {
       ethSetts,
       rpc[ChainNetwork.Ethereum],
       new EthStrategy(Object.keys(ethTokensConfig)),
-      BADGER_URL,
       2425847,
       '0x660802Fc641b154aBA66a62137e71f331B6d787A',
       '0x0A4F4e92C3334821EbB523324D09E321a6B0d8ec',

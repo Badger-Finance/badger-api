@@ -74,6 +74,8 @@ describe('accounts.utils', () => {
           decimals: depositToken.decimals,
           totalSupply: 21000000,
         },
+        treeDistributions: [],
+        harvests: [],
       },
     };
   };
