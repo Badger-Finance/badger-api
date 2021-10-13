@@ -2496,7 +2496,7 @@ Array [
     "asset": "imBTC",
     "balance": 0,
     "boostable": false,
-    "bouncer": "badger",
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
     "multipliers": Array [
@@ -2592,7 +2592,7 @@ Array [
     "asset": "mhBTC",
     "balance": 0,
     "boostable": false,
-    "bouncer": "badger",
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
     "multipliers": Array [
@@ -5009,7 +5009,7 @@ Array [
     "asset": "imBTC",
     "balance": 0,
     "boostable": false,
-    "bouncer": "badger",
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
     "multipliers": Array [
@@ -5105,7 +5105,7 @@ Array [
     "asset": "mhBTC",
     "balance": 0,
     "boostable": false,
-    "bouncer": "badger",
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
     "multipliers": Array [
