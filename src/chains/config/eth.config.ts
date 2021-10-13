@@ -7,6 +7,7 @@ import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { getCurveSettTokenBalance } from '../../protocols/strategies/convex.strategy';
+import { BouncerType } from '../../rewards/enums/bouncer-type.enum';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { ethTokensConfig } from '../../tokens/config/eth-tokens.config';
 import { getZsDiggTokenBalance } from '../../tokens/custom/zs-digg-balance';

@@ -17,6 +17,7 @@ import { getUniV2SwapValue } from './strategy.utils';
 
 const COMPOUND_SCALARS = {
   [TOKENS.BARB_SWP_WBTC_WETH]: 0.5,
+  [TOKENS.BARB_SWP_BADGER_WETH]: 0.5,
 };
 
 export class SwaprStrategy {
