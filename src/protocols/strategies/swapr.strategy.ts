@@ -17,6 +17,7 @@ import { getUniV2SwapValue } from './strategy.utils';
 
 const COMPOUND_SCALARS = {
   [TOKENS.BARB_SWP_WBTC_WETH]: 0.5,
+  [TOKENS.BARB_SWP_BADGER_WETH]: 0.5,
 };
 
 export class SwaprStrategy {
@@ -52,7 +53,7 @@ async function getSwaprEmission(chain: Chain, settDefinition: SettDefinition): P
   const stakedAmount = formatBalance(totalSupply) * lpTokenPrice.usd;
   const strategyFeeMultiplier = 1 - (sett.strategy.performanceFee + sett.strategy.strategistFee) / 10000;
 
-  let sources = [];
+  const sources = [];
   let tokenIndex = 0;
   while (true) {
     try {

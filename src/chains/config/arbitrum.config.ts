@@ -6,6 +6,7 @@ import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { getCurveSettTokenBalance } from '../../protocols/strategies/convex.strategy';
+import { BouncerType } from '../../rewards/enums/bouncer-type.enum';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { arbitrumTokensConfig } from '../../tokens/config/arbitrum-tokens.config';
 import { ChainNetwork } from '../enums/chain-network.enum';
@@ -98,6 +99,15 @@ export const arbitrumSetts: SettDefinition[] = [
     settToken: TOKENS.BARB_SWP_WBTC_WETH,
     depositToken: TOKENS.ARB_SWP_WBTC_WETH,
     createdBlock: 13315350,
+    state: SettState.Guarded,
+    protocol: Protocol.Swapr,
+  },
+  {
+    name: 'Swapr Badger/Wrapped ETH',
+    bouncer: BouncerType.Badger,
+    settToken: TOKENS.BARB_SWP_BADGER_WETH,
+    depositToken: TOKENS.ARB_SWP_BADGER_WETH,
+    createdBlock: 2188169,
     state: SettState.Guarded,
     protocol: Protocol.Swapr,
   },

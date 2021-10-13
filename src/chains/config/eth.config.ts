@@ -7,6 +7,7 @@ import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { getCurveSettTokenBalance } from '../../protocols/strategies/convex.strategy';
+import { BouncerType } from '../../rewards/enums/bouncer-type.enum';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { ethTokensConfig } from '../../tokens/config/eth-tokens.config';
 import { getZsDiggTokenBalance } from '../../tokens/custom/zs-digg-balance';
@@ -248,6 +249,7 @@ export const ethSetts: SettDefinition[] = [
   {
     name: 'mStable imBTC',
     createdBlock: 12834526,
+    bouncer: BouncerType.Badger,
     depositToken: TOKENS.IMBTC,
     settToken: TOKENS.BIMBTC,
     protocol: Protocol.mStable,
@@ -258,6 +260,7 @@ export const ethSetts: SettDefinition[] = [
   {
     name: 'mStable mhBTC',
     createdBlock: 12834526,
+    bouncer: BouncerType.Badger,
     depositToken: TOKENS.MHBTC,
     settToken: TOKENS.BMHBTC,
     protocol: Protocol.mStable,
