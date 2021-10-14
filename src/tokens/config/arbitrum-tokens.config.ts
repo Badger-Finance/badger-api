@@ -12,6 +12,14 @@ export const arbitrumTokensConfig: TokenConfig = {
     symbol: 'USDT',
     type: TokenType.Contract,
   },
+  [TOKENS.ARB_IBBTC]: {
+    address: TOKENS.ARB_IBBTC,
+    decimals: 18,
+    lookupName: 'interest-bearing-bitcoin',
+    name: 'ibBTC',
+    symbol: 'ibBTC',
+    type: TokenType.Contract,
+  },
   [TOKENS.ARB_BADGER]: {
     address: TOKENS.ARB_BADGER,
     decimals: 18,
@@ -122,6 +130,14 @@ export const arbitrumTokensConfig: TokenConfig = {
     symbol: 'SWLP-BADGER-WETH',
     type: TokenType.SwaprLp,
   },
+  [TOKENS.ARB_SWP_IBBTC_WETH]: {
+    address: TOKENS.ARB_SWP_IBBTC_WETH,
+    decimals: 18,
+    lpToken: true,
+    name: 'Swapr ibBTC-WETH',
+    symbol: 'SWLP-IBBTC-WETH',
+    type: TokenType.SwaprLp,
+  },
   [TOKENS.BARB_SUSHI_WETH_SUSHI]: {
     address: TOKENS.BARB_SUSHI_WETH_SUSHI,
     decimals: 18,
@@ -207,6 +223,17 @@ export const arbitrumTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.ARB_SWP_BADGER_WETH,
+      network: ChainNetwork.Arbitrum,
+    },
+  },
+  [TOKENS.BARB_SWP_IBBTC_WETH]: {
+    address: TOKENS.BARB_SWP_IBBTC_WETH,
+    decimals: 18,
+    name: 'bSwapr ibBTC-WETH',
+    symbol: 'bSWLP-IBBTC-WETH',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.ARB_SWP_IBBTC_WETH,
       network: ChainNetwork.Arbitrum,
     },
   },

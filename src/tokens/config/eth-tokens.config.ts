@@ -127,6 +127,7 @@ export const ethTokensConfig: TokenConfig = {
   [TOKENS.IBBTC]: {
     address: TOKENS.IBBTC,
     decimals: 18,
+    lookupName: 'interest-bearing-bitcoin',
     name: 'ibBTC',
     symbol: 'ibBTC',
     type: TokenType.Contract,
