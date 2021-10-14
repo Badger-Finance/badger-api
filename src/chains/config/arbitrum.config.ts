@@ -109,4 +109,13 @@ export const arbitrumSetts: SettDefinition[] = [
     state: SettState.Guarded,
     protocol: Protocol.Swapr,
   },
+  {
+    name: 'Swapr ibBTC/Wrapped ETH',
+    bouncer: BouncerType.Badger,
+    settToken: TOKENS.BARB_SWP_IBBTC_WETH,
+    depositToken: TOKENS.ARB_SWP_IBBTC_WETH,
+    createdBlock: 2188169,
+    state: SettState.Guarded,
+    protocol: Protocol.Swapr,
+  },
 ];
