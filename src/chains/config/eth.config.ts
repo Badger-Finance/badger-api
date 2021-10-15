@@ -248,7 +248,7 @@ export const ethSetts: SettDefinition[] = [
     depositToken: TOKENS.IMBTC,
     settToken: TOKENS.BIMBTC,
     protocol: Protocol.mStable,
-    stage: Stage.Staging,
+    // stage: Stage.Staging,
     state: SettState.Guarded,
   },
   {
@@ -257,7 +257,7 @@ export const ethSetts: SettDefinition[] = [
     depositToken: TOKENS.MHBTC,
     settToken: TOKENS.BMHBTC,
     protocol: Protocol.mStable,
-    stage: Stage.Staging,
+    // stage: Stage.Staging,
     state: SettState.Guarded,
   },
   {
