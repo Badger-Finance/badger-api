@@ -18,7 +18,6 @@ import { CachedValueSource } from '../interfaces/cached-value-source.interface';
 import { uniformPerformance } from '../interfaces/performance.interface';
 import { createValueSource } from '../interfaces/value-source.interface';
 import { tokenEmission } from '../protocols.utils';
-import { getCachedSett } from '../../setts/setts.utils';
 
 const MSTABLE_API_URL = 'https://api.mstable.org/';
 const MSTABLE_BTC_APR = `${MSTABLE_API_URL}/massets/mbtc`;
@@ -77,16 +76,14 @@ async function getVaultSource(
   vaultAddress: string,
 ): Promise<CachedValueSource> {
   const vault = MstableVault__factory.connect(vaultAddress, chain.provider);
-  const sett = await getCachedSett(settDefinition);
-  if (!sett.strategy) {
+  if (!settDefinition.strategy) {
     throw new UnprocessableEntity(`${settDefinition.name} requires strategy`);
   }
-  const { address } = sett.strategy;
   const [unlocked, balance, unclaimedRewards, claimData, depositTokenPrice, mtaPrice] = await Promise.all([
     vault.UNLOCK(),
-    vault.balanceOf(address),
-    vault.unclaimedRewards(address),
-    vault.userData(address),
+    vault.balanceOf(settDefinition.strategy),
+    vault.unclaimedRewards(settDefinition.strategy),
+    vault.userData(settDefinition.strategy),
     getPrice(settDefinition.depositToken),
     getPrice(TOKENS.MTA),
   ]);
