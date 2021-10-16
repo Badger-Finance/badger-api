@@ -244,6 +244,7 @@ export const ethSetts: SettDefinition[] = [
   },
   {
     name: 'mStable imBTC',
+    bouncer: BouncerType.Badger,
     createdBlock: 13418026,
     depositToken: TOKENS.IMBTC,
     settToken: TOKENS.BIMBTC,
@@ -253,6 +254,7 @@ export const ethSetts: SettDefinition[] = [
   },
   {
     name: 'mStable mhBTC',
+    bouncer: BouncerType.Badger,
     createdBlock: 13418026,
     depositToken: TOKENS.MHBTC,
     settToken: TOKENS.BMHBTC,
