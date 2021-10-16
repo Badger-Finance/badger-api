@@ -248,6 +248,7 @@ export const ethSetts: SettDefinition[] = [
     depositToken: TOKENS.IMBTC,
     settToken: TOKENS.BIMBTC,
     protocol: Protocol.mStable,
+    strategy: '0x10D96b1Fd46Ce7cE092aA905274B8eD9d4585A6E',
     state: SettState.Guarded,
   },
   {
@@ -256,6 +257,7 @@ export const ethSetts: SettDefinition[] = [
     depositToken: TOKENS.MHBTC,
     settToken: TOKENS.BMHBTC,
     protocol: Protocol.mStable,
+    strategy: '0x10D96b1Fd46Ce7cE092aA905274B8eD9d4585A6E',
     state: SettState.Guarded,
   },
   {
