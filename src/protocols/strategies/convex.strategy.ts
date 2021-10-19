@@ -108,9 +108,6 @@ export class ConvexStrategy {
 
 async function getLockedSources(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
   const locker = CvxLocker__factory.connect(cvxLocker, chain.provider);
-  if (!settDefinition.strategy) {
-    return [];
-  }
   const cvxPrice = await getPrice(TOKENS.CVX);
   const cvxLocked = formatBalance(await locker.lockedSupply());
   const cvxValue = cvxPrice.usd * cvxLocked;
