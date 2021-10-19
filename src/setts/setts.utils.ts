@@ -153,9 +153,9 @@ export const getSettBoosts = async (settDefinition: SettDefinition): Promise<Cac
 export async function getStrategyInfo(chain: Chain, sett: SettDefinition): Promise<SettStrategy> {
   const defaultStrategyInfo = {
     address: ethers.constants.AddressZero,
-    withdrawFee: 50,
-    performanceFee: 1000,
-    strategistFee: 1000,
+    withdrawFee: 0,
+    performanceFee: 0,
+    strategistFee: 0,
   };
   try {
     const contract = Sett__factory.connect(sett.settToken, chain.provider);

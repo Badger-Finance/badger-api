@@ -6,6 +6,7 @@ import { SettDefinition } from '../../setts/interfaces/sett-definition.interface
 import { TokenConfig } from '../../tokens/interfaces/token-config.interface';
 import { ChainNetwork } from '../enums/chain-network.enum';
 import { ChainStrategy } from '../strategies/chain.strategy';
+import { BadgerSDK } from '@badger-dao/sdk';
 
 type Chains = Record<string, Chain>;
 
@@ -22,6 +23,7 @@ export abstract class Chain {
   readonly strategy: ChainStrategy;
   readonly graphUrl: string;
   readonly blocksPerYear: number;
+  readonly sdk: BadgerSDK;
   readonly badgerTree?: string;
   readonly rewardsLogger?: string;
 
@@ -53,6 +55,7 @@ export abstract class Chain {
     this.blocksPerYear = blocksPerYear;
     this.badgerTree = badgerTree;
     this.rewardsLogger = rewardsLogger;
+    this.sdk = new BadgerSDK(parseInt(chainId, 16), this.batchProvider);
   }
 
   static register(network: ChainNetwork, chain: Chain): void {

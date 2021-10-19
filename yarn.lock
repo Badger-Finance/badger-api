@@ -628,6 +628,11 @@
     "@babel/helper-validator-identifier" "^7.14.5"
     to-fast-properties "^2.0.0"
 
+"@badger-dao/sdk@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@badger-dao/sdk/-/sdk-1.0.1.tgz#9165cd9dec8b35d607bd7e98323f8cdab5b75a60"
+  integrity sha512-q81vTg6DOAnGKNznvi0dfHbbGj3MKjJfXicmzraySqs/d5jXiZSpmzVvsfMRT0QkZbz48tyBSs8d6hNOL54ktA==
+
 "@bcoe/v8-coverage@^0.2.3":
   version "0.2.3"
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
