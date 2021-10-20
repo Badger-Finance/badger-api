@@ -1,8 +1,8 @@
+import { Network } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
-import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { TOKENS } from '../config/tokens.config';
 import {
   getSdk,
@@ -83,7 +83,7 @@ export async function getAccounts(chain: Chain): Promise<string[]> {
   return accounts;
 }
 
-export function cachedAccountToAccount(cachedAccount: CachedAccount, network?: ChainNetwork): Account {
+export function cachedAccountToAccount(cachedAccount: CachedAccount, network?: Network): Account {
   const balances = cachedAccount.balances
     .filter((bal) => !network || bal.network === network)
     .map((bal) => ({

@@ -1,3 +1,4 @@
+import { Network } from '@badger-dao/sdk';
 import fetch from 'node-fetch';
 import { BLOCKNATIVE_API_KEY, STRATEGIES } from '../../config/constants';
 import { Protocol } from '../../config/enums/protocol.enum';
@@ -10,7 +11,6 @@ import { getCurveSettTokenBalance } from '../../protocols/strategies/convex.stra
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { ethTokensConfig } from '../../tokens/config/eth-tokens.config';
 import { getZsDiggTokenBalance } from '../../tokens/custom/zs-digg-balance';
-import { ChainNetwork } from '../enums/chain-network.enum';
 import { EthStrategy } from '../strategies/eth.strategy';
 import { Chain } from './chain.config';
 
@@ -20,10 +20,10 @@ export class Ethereum extends Chain {
       'Ethereum',
       'eth',
       '0x01',
-      ChainNetwork.Ethereum,
+      Network.Ethereum,
       ethTokensConfig,
       ethSetts,
-      rpc[ChainNetwork.Ethereum],
+      rpc[Network.Ethereum],
       new EthStrategy(Object.keys(ethTokensConfig)),
       2425847,
       '0x660802Fc641b154aBA66a62137e71f331B6d787A',

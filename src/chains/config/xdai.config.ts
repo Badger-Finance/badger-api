@@ -1,3 +1,4 @@
+import { Network } from '@badger-dao/sdk';
 import fetch from 'node-fetch';
 import { Protocol } from '../../config/enums/protocol.enum';
 import { Stage } from '../../config/enums/stage.enum';
@@ -6,7 +7,6 @@ import { TOKENS } from '../../config/tokens.config';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { xDaiTokensConfig } from '../../tokens/config/xdai-tokens.config';
-import { ChainNetwork } from '../enums/chain-network.enum';
 import { xDaiStrategy } from '../strategies/xdai.strategy';
 import { Chain } from './chain.config';
 
@@ -16,10 +16,10 @@ export class xDai extends Chain {
       'xDai',
       'xdai',
       '0x64',
-      ChainNetwork.xDai,
+      Network.xDai,
       xDaiTokensConfig,
       xDaiSetts,
-      rpc[ChainNetwork.xDai],
+      rpc[Network.xDai],
       new xDaiStrategy(Object.keys(xDaiTokensConfig)),
       6307200,
     );

@@ -1,15 +1,15 @@
+import { Network } from '@badger-dao/sdk';
 import { Transform } from 'class-transformer';
 import { IsEnum, IsEthereumAddress, IsInt, IsISO8601, IsOptional, IsPositive, ValidateIf } from 'class-validator';
-import { ChainNetwork } from '../../chains/enums/chain-network.enum';
 import { ChartGranularity } from '../enums/chart-granularity.enum';
 
 export class ChartsQueryDto {
   @IsEthereumAddress()
   readonly id!: string;
 
-  @IsEnum(ChainNetwork)
+  @IsEnum(Network)
   @IsOptional()
-  readonly chain?: ChainNetwork;
+  readonly chain?: Network;
 
   @ValidateIf((o: ChartsQueryDto) => Boolean(o.end))
   @IsISO8601()

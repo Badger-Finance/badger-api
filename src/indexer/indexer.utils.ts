@@ -1,8 +1,8 @@
+import { Network } from '@badger-dao/sdk';
 import { BigNumber } from '@ethersproject/bignumber';
 import { NotFound } from '@tsed/exceptions';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
-import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { Protocol } from '../config/enums/protocol.enum';
 import { TOKENS } from '../config/tokens.config';
 import { Sett__factory } from '../contracts';
@@ -65,8 +65,8 @@ export const settToCachedSnapshot = async (
 
 export async function getQueryBlock(chain: Chain, block: number): Promise<number> {
   let queryBlock = block;
-  if (chain.network === ChainNetwork.Arbitrum) {
-    const refChain = Chain.getChain(ChainNetwork.Ethereum);
+  if (chain.network === Network.Arbitrum) {
+    const refChain = Chain.getChain(Network.Ethereum);
     const refBlock = await refChain.provider.getBlock(block);
     queryBlock = await getArbitrumBlock(refBlock.timestamp);
   }

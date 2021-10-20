@@ -1,4 +1,4 @@
-import { ChainNetwork } from '../../chains/enums/chain-network.enum';
+import { Network } from '@badger-dao/sdk';
 import { TOKENS } from '../../config/tokens.config';
 import { getImBtcPrice, getMhBtcPrice } from '../../protocols/strategies/mstable.strategy';
 import { TokenType } from '../enums/token-type.enum';
@@ -368,7 +368,7 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.BADGER,
-      network: ChainNetwork.Ethereum,
+      network: Network.Ethereum,
     },
   },
   [TOKENS.BDIGG]: {
@@ -379,7 +379,7 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.DIGG,
-      network: ChainNetwork.Ethereum,
+      network: Network.Ethereum,
     },
   },
   [TOKENS.BZS_DIGG]: {
@@ -390,7 +390,7 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.DIGG,
-      network: ChainNetwork.Ethereum,
+      network: Network.Ethereum,
     },
   },
   [TOKENS.BUNI_DIGG_WBTC]: {
@@ -401,7 +401,7 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.UNI_DIGG_WBTC,
-      network: ChainNetwork.Ethereum,
+      network: Network.Ethereum,
     },
   },
   [TOKENS.BUNI_BADGER_WBTC]: {
@@ -412,7 +412,7 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.UNI_BADGER_WBTC,
-      network: ChainNetwork.Ethereum,
+      network: Network.Ethereum,
     },
   },
   [TOKENS.BSUSHI_ETH_WBTC]: {
@@ -423,7 +423,7 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.SUSHI_ETH_WBTC,
-      network: ChainNetwork.Ethereum,
+      network: Network.Ethereum,
     },
   },
   [TOKENS.BSUSHI_IBBTC_WBTC]: {
@@ -434,7 +434,7 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.SUSHI_IBBTC_WBTC,
-      network: ChainNetwork.Ethereum,
+      network: Network.Ethereum,
     },
   },
   [TOKENS.BSUSHI_BADGER_WBTC]: {
@@ -445,7 +445,7 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.SUSHI_BADGER_WBTC,
-      network: ChainNetwork.Ethereum,
+      network: Network.Ethereum,
     },
   },
   [TOKENS.BSUSHI_DIGG_WBTC]: {
@@ -456,7 +456,7 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.SUSHI_DIGG_WBTC,
-      network: ChainNetwork.Ethereum,
+      network: Network.Ethereum,
     },
   },
   [TOKENS.BCRV_RENBTC]: {
@@ -467,7 +467,7 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.CRV_RENBTC,
-      network: ChainNetwork.Ethereum,
+      network: Network.Ethereum,
     },
   },
   [TOKENS.BCRV_SBTC]: {
@@ -478,7 +478,7 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.CRV_SBTC,
-      network: ChainNetwork.Ethereum,
+      network: Network.Ethereum,
     },
   },
   [TOKENS.BCRV_TBTC]: {
@@ -489,7 +489,7 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.CRV_TBTC,
-      network: ChainNetwork.Ethereum,
+      network: Network.Ethereum,
     },
   },
   [TOKENS.BCRV_HRENBTC]: {
@@ -500,7 +500,7 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.CRV_RENBTC,
-      network: ChainNetwork.Ethereum,
+      network: Network.Ethereum,
     },
   },
   [TOKENS.BVYWBTC]: {
@@ -511,7 +511,7 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.WBTC,
-      network: ChainNetwork.Ethereum,
+      network: Network.Ethereum,
     },
   },
   [TOKENS.BCRV_HBTC]: {
@@ -522,7 +522,7 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.CRV_HBTC,
-      network: ChainNetwork.Ethereum,
+      network: Network.Ethereum,
     },
   },
   [TOKENS.BCRV_PBTC]: {
@@ -533,7 +533,7 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.CRV_PBTC,
-      network: ChainNetwork.Ethereum,
+      network: Network.Ethereum,
     },
   },
   [TOKENS.BCRV_OBTC]: {
@@ -544,7 +544,7 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.CRV_OBTC,
-      network: ChainNetwork.Ethereum,
+      network: Network.Ethereum,
     },
   },
   [TOKENS.BCRV_BBTC]: {
@@ -555,7 +555,7 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.CRV_RENBTC,
-      network: ChainNetwork.Ethereum,
+      network: Network.Ethereum,
     },
   },
   [TOKENS.BCRV_TRICRYPTO]: {
@@ -566,7 +566,7 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.CRV_TRICRYPTO,
-      network: ChainNetwork.Ethereum,
+      network: Network.Ethereum,
     },
   },
   [TOKENS.BCRV_TRICRYPTO2]: {
@@ -577,7 +577,7 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.CRV_TRICRYPTO2,
-      network: ChainNetwork.Ethereum,
+      network: Network.Ethereum,
     },
   },
   [TOKENS.BCVX]: {
@@ -588,7 +588,7 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.CVX,
-      network: ChainNetwork.Ethereum,
+      network: Network.Ethereum,
     },
   },
   [TOKENS.BICVX]: {
@@ -599,7 +599,7 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.CVX,
-      network: ChainNetwork.Ethereum,
+      network: Network.Ethereum,
     },
   },
   [TOKENS.BICVX_OLD]: {
@@ -610,7 +610,7 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.BCVX,
-      network: ChainNetwork.Ethereum,
+      network: Network.Ethereum,
     },
   },
   [TOKENS.BCVXCRV]: {
@@ -621,7 +621,7 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.CVXCRV,
-      network: ChainNetwork.Ethereum,
+      network: Network.Ethereum,
     },
   },
   [TOKENS.BRENBTC]: {
@@ -632,7 +632,7 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.RENBTC,
-      network: ChainNetwork.Ethereum,
+      network: Network.Ethereum,
     },
   },
   [TOKENS.BIMBTC]: {
@@ -643,7 +643,7 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.IMBTC,
-      network: ChainNetwork.Ethereum,
+      network: Network.Ethereum,
     },
   },
   [TOKENS.BMHBTC]: {
@@ -654,7 +654,7 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.MHBTC,
-      network: ChainNetwork.Ethereum,
+      network: Network.Ethereum,
     },
   },
 };

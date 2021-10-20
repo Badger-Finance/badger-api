@@ -1,6 +1,6 @@
+import { Network } from '@badger-dao/sdk';
 import { PlatformTest } from '@tsed/common';
 import * as s3Utils from '../aws/s3.utils';
-import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { TOKENS } from '../config/tokens.config';
 import { BoostData } from '../rewards/interfaces/boost-data.interface';
 import { CachedSettBoost } from '../setts/interfaces/cached-sett-boost.interface';
@@ -26,7 +26,7 @@ describe('leaderboards.service', () => {
     for (let i = 0; i < count; i += 1) {
       boosts.push(
         Object.assign(new CachedBoost(), {
-          leaderboard: `${ChainNetwork.Ethereum}_${LeaderBoardType.BadgerBoost}`,
+          leaderboard: `${Network.Ethereum}_${LeaderBoardType.BadgerBoost}`,
           rank: i + 1,
           address: TEST_ADDR,
           boost: 2000 - i * 10,

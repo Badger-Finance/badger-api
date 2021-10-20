@@ -74,14 +74,14 @@ describe('SettsController', () => {
     describe('with a specified chain', () => {
       it('returns the setts for eth', async (done: jest.DoneCallback) => {
         setupTest();
-        const { body } = await request.get('/v2/setts?chain=eth').expect(200);
+        const { body } = await request.get('/v2/setts?chain=ethereum').expect(200);
         expect(body).toMatchSnapshot();
         done();
       });
 
       it('returns the setts for bsc', async (done: jest.DoneCallback) => {
         setupTest();
-        const { body } = await request.get('/v2/setts?chain=bsc').expect(200);
+        const { body } = await request.get('/v2/setts?chain=binancesmartchain').expect(200);
         expect(body).toMatchSnapshot();
         done();
       });

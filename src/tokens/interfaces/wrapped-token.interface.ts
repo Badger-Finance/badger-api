@@ -1,6 +1,6 @@
-import { ChainNetwork } from '../../chains/enums/chain-network.enum';
+import { Network } from '@badger-dao/sdk';
 
 export interface WrappedToken {
   address: string;
-  network: ChainNetwork;
+  network: Network;
 }

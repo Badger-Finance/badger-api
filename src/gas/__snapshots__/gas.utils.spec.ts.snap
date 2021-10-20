@@ -8,13 +8,13 @@ Object {
     "slow": 2,
     "standard": 2,
   },
-  "bsc": Object {
+  "binancesmartchain": Object {
     "fast": 5,
     "rapid": 5,
     "slow": 5,
     "standard": 5,
   },
-  "eth": Object {
+  "ethereum": Object {
     "fast": Object {
       "maxFeePerGas": 221.96,
       "maxPriorityFeePerGas": 1.94,
@@ -32,7 +32,7 @@ Object {
       "maxPriorityFeePerGas": 1.89,
     },
   },
-  "matic": Object {
+  "polygon": Object {
     "fast": 33,
     "rapid": 38,
     "slow": 33,

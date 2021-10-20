@@ -1,8 +1,8 @@
+import { Network } from '@badger-dao/sdk';
 import { UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import fetch from 'node-fetch';
 import { Chain } from '../../chains/config/chain.config';
-import { ChainNetwork } from '../../chains/enums/chain-network.enum';
 import { ONE_YEAR_SECONDS } from '../../config/constants';
 import { ContractRegistry } from '../../config/interfaces/contract-registry.interface';
 import { TOKENS } from '../../config/tokens.config';
@@ -285,10 +285,10 @@ async function getCvxCrvRewards(chain: Chain, settDefinition: SettDefinition): P
 export async function getCurvePerformance(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource> {
   let defaultUrl;
   switch (chain.network) {
-    case ChainNetwork.Matic:
+    case Network.Polygon:
       defaultUrl = CURVE_MATIC_API_URL;
       break;
-    case ChainNetwork.Arbitrum:
+    case Network.Arbitrum:
       defaultUrl = CURVE_ARBITRUM_API_URL;
       break;
     default:

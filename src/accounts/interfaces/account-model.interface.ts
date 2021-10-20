@@ -1,6 +1,6 @@
+import { Network } from '@badger-dao/sdk';
 import { Description, Example, Property, Title } from '@tsed/schema';
 import { ethers } from 'ethers';
-import { ChainNetwork } from '../../chains/enums/chain-network.enum';
 import { TOKENS } from '../../config/tokens.config';
 import { BoostMultipliers } from '../../rewards/interfaces/boost-multipliers.interface';
 import { getToken, mockBalance } from '../../tokens/tokens.utils';
@@ -73,13 +73,13 @@ export class AccountModel implements Account {
     {
       address: TOKENS.BADGER,
       balance: ethers.constants.WeiPerEther.mul(88).toString(),
-      network: ChainNetwork.Ethereum,
+      network: Network.Ethereum,
     },
-    { address: TOKENS.XSUSHI, balance: ethers.constants.WeiPerEther.mul(4).toString(), network: ChainNetwork.Ethereum },
+    { address: TOKENS.XSUSHI, balance: ethers.constants.WeiPerEther.mul(4).toString(), network: Network.Ethereum },
     {
       address: TOKENS.DIGG,
       balance: ethers.constants.WeiPerEther.mul(128834885688).toString(),
-      network: ChainNetwork.Ethereum,
+      network: Network.Ethereum,
     },
   ])
   @Property()

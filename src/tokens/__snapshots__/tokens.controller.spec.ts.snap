@@ -18,7 +18,7 @@ Object {
     "type": "Wrapper",
     "vaultToken": Object {
       "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x5986D5c77c65e5801a5cAa4fAE80089f870A71dA": Object {
@@ -29,7 +29,7 @@ Object {
     "type": "Wrapper",
     "vaultToken": Object {
       "address": "0x7e7E112A68d8D2E221E11047a72fFC1065c38e1a",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x5A58609dA96469E9dEf3fE344bC39B00d18eb9A5": Object {
@@ -89,7 +89,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x5A58609dA96469E9dEf3fE344bC39B00d18eb9A5",
-      "network": "bsc",
+      "network": "binancesmartchain",
     },
   },
   "0xa861Ba302674b08f7F2F24381b705870521DDfed": Object {
@@ -101,7 +101,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x81d776C90c89B8d51E9497D58338933127e2fA80",
-      "network": "bsc",
+      "network": "binancesmartchain",
     },
   },
   "0xaf4B9C4b545D5324904bAa15e29796D2E2f90813": Object {
@@ -113,7 +113,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x61EB789d75A95CAa3fF50ed7E47b96c132fEc082",
-      "network": "bsc",
+      "network": "binancesmartchain",
     },
   },
   "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c": Object {
@@ -167,7 +167,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x110492b31c59716AC47337E616804E3E3AdC0b4a",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x18d98D452072Ac2EB7b74ce3DB723374360539f1": Object {
@@ -186,7 +186,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x20c36f062a31865bED8a5B1e512D9a1A20AA333A": Object {
@@ -211,7 +211,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0xcD7989894bc033581532D2cd88Da5db0A4b12859",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x26B8efa69603537AC8ab55768b6740b67664D518": Object {
@@ -222,7 +222,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x48c59199Da51B7E30Ea200a74Ea07974e62C4bA7",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x27E98fC7d05f54E544d16F58C194C2D7ba71e3B5": Object {
@@ -233,7 +233,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0xc4AD29ba4B3c580e6D59105FFf484999997675Ff",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x2B5455aac8d64C14786c3a29858E43b5945819C0": Object {
@@ -244,7 +244,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x62B9c7356A2Dc64a1969e19C23e4f579F9810Aa7",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x2fE94ea3d5d4a175184081439753DE15AeF9d614": Object {
@@ -297,7 +297,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B": Object {
@@ -323,7 +323,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x55912D0Cf83B75c492E761932ABc4DB4a5CB1b17": Object {
@@ -334,7 +334,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0xDE5331AC4B3630f94853Ff322B66407e0D6331E8",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x58CAc1409F1ffbdcBA6a58d54c94CAC3fb4C6F8B": Object {
@@ -345,7 +345,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0xEB4C2781e4ebA804CE9a9803C67d0893436bB27D",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x599D92B453C010b1050d31C364f6ee17E819f193": Object {
@@ -356,7 +356,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x17d8CBB6Bce8cEE970a4027d1198F6700A7a6c24",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x5Dce29e92b1b939F8E8C60DcF15BDE82A85be4a9": Object {
@@ -367,7 +367,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x49849C98ae39Fff122806C06791Fa73784FB3675",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x608b6D82eb121F3e5C0baeeD32d81007B916E83C": Object {
@@ -378,7 +378,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x798D1bE841a82a273720CE31c822C61a67a601C3",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x62B9c7356A2Dc64a1969e19C23e4f579F9810Aa7": Object {
@@ -432,7 +432,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x49849C98ae39Fff122806C06791Fa73784FB3675",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x758A43EE2BFf8230eeb784879CdcFF4828F2544D": Object {
@@ -443,7 +443,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0xCEfF51756c56CeFFCA006cD410B03FFC46dd3a58",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x798D1bE841a82a273720CE31c822C61a67a601C3": Object {
@@ -462,7 +462,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x798D1bE841a82a273720CE31c822C61a67a601C3",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x8064d9Ae6cDf087b1bcd5BDf3531bD5d8C537a68": Object {
@@ -495,7 +495,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x9a13867048e01c663ce8Ce2fE0cDAE69Ff9F35E3",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x89Ab32156e46F46D02ade3FEcbe5Fc4243B9AAeD": Object {
@@ -513,7 +513,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x18d98D452072Ac2EB7b74ce3DB723374360539f1",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x8c76970747afd5398e958bDfadA4cf0B9FcA16c4": Object {
@@ -524,7 +524,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0xb19059ebb43466C323583928285a49f558E572Fd",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x8dAEBADE922dF735c38C80C7eBD708Af50815fAa": Object {
@@ -582,7 +582,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x49849C98ae39Fff122806C06791Fa73784FB3675",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0xBC19712FEB3a26080eBf6f2F7849b417FdD792CA": Object {
@@ -600,7 +600,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0xcA3d75aC011BF5aD07a98d02f18225F9bD9A6BDF",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2": Object {
@@ -618,7 +618,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0xE86204c4eDDd2f70eE00EAd6805f917671F56c52",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0xCEfF51756c56CeFFCA006cD410B03FFC46dd3a58": Object {
@@ -651,7 +651,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x53C8E199eb2Cb7c01543C137078a038937a68E40",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0xE86204c4eDDd2f70eE00EAd6805f917671F56c52": Object {
@@ -699,7 +699,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x64eda51d3Ad40D56b9dFc5554E06F94e1Dd786Fd",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0xc4AD29ba4B3c580e6D59105FFf484999997675Ff": Object {
@@ -739,7 +739,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x075b1bb99792c9E1041bA13afEf80C91a1e70fB3",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0xdAC17F958D2ee523a2206206994597C13D831ec7": Object {
@@ -757,7 +757,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x2fE94ea3d5d4a175184081439753DE15AeF9d614",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0xfE18be6b3Bd88A2D2A7f928d00292E7a9963CfC6": Object {
@@ -776,7 +776,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
 }
@@ -828,7 +828,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x110492b31c59716AC47337E616804E3E3AdC0b4a",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x18d98D452072Ac2EB7b74ce3DB723374360539f1": Object {
@@ -847,7 +847,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x20c36f062a31865bED8a5B1e512D9a1A20AA333A": Object {
@@ -872,7 +872,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0xcD7989894bc033581532D2cd88Da5db0A4b12859",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x26B8efa69603537AC8ab55768b6740b67664D518": Object {
@@ -883,7 +883,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x48c59199Da51B7E30Ea200a74Ea07974e62C4bA7",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x27E98fC7d05f54E544d16F58C194C2D7ba71e3B5": Object {
@@ -894,7 +894,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0xc4AD29ba4B3c580e6D59105FFf484999997675Ff",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x2B5455aac8d64C14786c3a29858E43b5945819C0": Object {
@@ -905,7 +905,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x62B9c7356A2Dc64a1969e19C23e4f579F9810Aa7",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x2fE94ea3d5d4a175184081439753DE15AeF9d614": Object {
@@ -958,7 +958,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B": Object {
@@ -984,7 +984,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x55912D0Cf83B75c492E761932ABc4DB4a5CB1b17": Object {
@@ -995,7 +995,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0xDE5331AC4B3630f94853Ff322B66407e0D6331E8",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x58CAc1409F1ffbdcBA6a58d54c94CAC3fb4C6F8B": Object {
@@ -1006,7 +1006,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0xEB4C2781e4ebA804CE9a9803C67d0893436bB27D",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x599D92B453C010b1050d31C364f6ee17E819f193": Object {
@@ -1017,7 +1017,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x17d8CBB6Bce8cEE970a4027d1198F6700A7a6c24",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x5Dce29e92b1b939F8E8C60DcF15BDE82A85be4a9": Object {
@@ -1028,7 +1028,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x49849C98ae39Fff122806C06791Fa73784FB3675",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x608b6D82eb121F3e5C0baeeD32d81007B916E83C": Object {
@@ -1039,7 +1039,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x798D1bE841a82a273720CE31c822C61a67a601C3",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x62B9c7356A2Dc64a1969e19C23e4f579F9810Aa7": Object {
@@ -1093,7 +1093,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x49849C98ae39Fff122806C06791Fa73784FB3675",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x758A43EE2BFf8230eeb784879CdcFF4828F2544D": Object {
@@ -1104,7 +1104,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0xCEfF51756c56CeFFCA006cD410B03FFC46dd3a58",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x798D1bE841a82a273720CE31c822C61a67a601C3": Object {
@@ -1123,7 +1123,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x798D1bE841a82a273720CE31c822C61a67a601C3",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x8064d9Ae6cDf087b1bcd5BDf3531bD5d8C537a68": Object {
@@ -1156,7 +1156,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x9a13867048e01c663ce8Ce2fE0cDAE69Ff9F35E3",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x89Ab32156e46F46D02ade3FEcbe5Fc4243B9AAeD": Object {
@@ -1174,7 +1174,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x18d98D452072Ac2EB7b74ce3DB723374360539f1",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x8c76970747afd5398e958bDfadA4cf0B9FcA16c4": Object {
@@ -1185,7 +1185,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0xb19059ebb43466C323583928285a49f558E572Fd",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0x8dAEBADE922dF735c38C80C7eBD708Af50815fAa": Object {
@@ -1243,7 +1243,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x49849C98ae39Fff122806C06791Fa73784FB3675",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0xBC19712FEB3a26080eBf6f2F7849b417FdD792CA": Object {
@@ -1261,7 +1261,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0xcA3d75aC011BF5aD07a98d02f18225F9bD9A6BDF",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2": Object {
@@ -1279,7 +1279,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0xE86204c4eDDd2f70eE00EAd6805f917671F56c52",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0xCEfF51756c56CeFFCA006cD410B03FFC46dd3a58": Object {
@@ -1312,7 +1312,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x53C8E199eb2Cb7c01543C137078a038937a68E40",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0xE86204c4eDDd2f70eE00EAd6805f917671F56c52": Object {
@@ -1360,7 +1360,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x64eda51d3Ad40D56b9dFc5554E06F94e1Dd786Fd",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0xc4AD29ba4B3c580e6D59105FFf484999997675Ff": Object {
@@ -1400,7 +1400,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x075b1bb99792c9E1041bA13afEf80C91a1e70fB3",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0xdAC17F958D2ee523a2206206994597C13D831ec7": Object {
@@ -1418,7 +1418,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x2fE94ea3d5d4a175184081439753DE15AeF9d614",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
   "0xfE18be6b3Bd88A2D2A7f928d00292E7a9963CfC6": Object {
@@ -1437,7 +1437,7 @@ Object {
     "type": "Vault",
     "vaultToken": Object {
       "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
-      "network": "eth",
+      "network": "ethereum",
     },
   },
 }

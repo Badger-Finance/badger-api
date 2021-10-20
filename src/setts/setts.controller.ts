@@ -1,7 +1,7 @@
+import { Network } from '@badger-dao/sdk';
 import { Controller, Get, Inject, PathParams, QueryParams } from '@tsed/common';
 import { ContentType, Description, Returns, Summary } from '@tsed/schema';
 import { Chain } from '../chains/config/chain.config';
-import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { SettModel } from './interfaces/sett-model.interface';
 import { SettsService } from './setts.service';
 
@@ -18,7 +18,7 @@ export class SettsController {
   @(Returns(400).Description('Not a valid chain'))
   @(Returns(404).Description('Not a valid sett'))
   async listSetts(
-    @QueryParams('chain') chain?: ChainNetwork,
+    @QueryParams('chain') chain?: Network,
     @QueryParams('currency') currency?: string,
   ): Promise<SettModel[]> {
     return this.settsService.listSetts(Chain.getChain(chain), currency);
@@ -33,7 +33,7 @@ export class SettsController {
   @(Returns(404).Description('Not a valid sett'))
   async getSett(
     @PathParams('contract') contract: string,
-    @QueryParams('chain') chain?: ChainNetwork,
+    @QueryParams('chain') chain?: Network,
     @QueryParams('currency') currency?: string,
   ): Promise<SettModel> {
     return this.settsService.getSett(Chain.getChain(chain), contract, currency);

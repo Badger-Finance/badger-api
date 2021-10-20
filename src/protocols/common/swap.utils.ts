@@ -1,8 +1,8 @@
+import { Network } from '@badger-dao/sdk';
 import { NotFound, UnprocessableEntity } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
 import { Chain } from '../../chains/config/chain.config';
-import { ChainNetwork } from '../../chains/enums/chain-network.enum';
 import { UNISWAP_URL } from '../../config/constants';
 import { UniV2__factory } from '../../contracts';
 import { getSdk as getUniswapSdk } from '../../graphql/generated/uniswap';
@@ -157,13 +157,13 @@ export const getUniswapPrice = async (contract: string): Promise<TokenPrice> => 
 };
 
 export async function getPancakeswapPrice(contract: string): Promise<TokenPrice> {
-  return getOnChainLiquidityPrice(Chain.getChain(ChainNetwork.BinanceSmartChain), contract);
+  return getOnChainLiquidityPrice(Chain.getChain(Network.BinanceSmartChain), contract);
 }
 
 export async function getQuickswapPrice(contract: string): Promise<TokenPrice> {
-  return getOnChainLiquidityPrice(Chain.getChain(ChainNetwork.Matic), contract);
+  return getOnChainLiquidityPrice(Chain.getChain(Network.Polygon), contract);
 }
 
 export async function getArbitriumLiquidityPrice(contract: string): Promise<TokenPrice> {
-  return getOnChainLiquidityPrice(Chain.getChain(ChainNetwork.Arbitrum), contract);
+  return getOnChainLiquidityPrice(Chain.getChain(Network.Arbitrum), contract);
 }

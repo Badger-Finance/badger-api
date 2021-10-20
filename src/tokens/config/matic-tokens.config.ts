@@ -1,4 +1,4 @@
-import { ChainNetwork } from '../../chains/enums/chain-network.enum';
+import { Network } from '@badger-dao/sdk';
 import { TOKENS } from '../../config/tokens.config';
 import { TokenType } from '../enums/token-type.enum';
 import { TokenConfig } from '../interfaces/token-config.interface';
@@ -154,7 +154,7 @@ export const maticTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.MATIC_SUSHI_IBBTC_WBTC,
-      network: ChainNetwork.Matic,
+      network: Network.Polygon,
     },
   },
   [TOKENS.BMATIC_QUICK_USDC_WBTC]: {
@@ -165,7 +165,7 @@ export const maticTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.MATIC_QUICK_USDC_WBTC,
-      network: ChainNetwork.Matic,
+      network: Network.Polygon,
     },
   },
   [TOKENS.BMATIC_CRV_AMWBTC]: {
@@ -176,7 +176,7 @@ export const maticTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.MATIC_CRV_AMWBTC,
-      network: ChainNetwork.Matic,
+      network: Network.Polygon,
     },
   },
 };

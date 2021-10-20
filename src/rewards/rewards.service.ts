@@ -17,6 +17,7 @@ import { AirdropMerkleClaim, AirdropMerkleDistribution } from './interfaces/merk
 import { RewardMerkleClaim } from './interfaces/reward-merkle-claim.interface';
 import { getTreeDistribution } from './rewards.utils';
 import { CachedBoostMultiplier } from './interfaces/cached-boost-multiplier.interface';
+import BadgerSDK from '@badger-dao/sdk';
 
 @Service()
 export class RewardsService {
@@ -158,7 +159,9 @@ export class RewardsService {
       delete boostData.multiplierData[sett.vaultToken];
     }
     const boostRange = boostData.multiplierData[sett.vaultToken] ?? { min: 1, max: 1 };
-    const activeSchedules = await chain.sdk.rewards.loadActiveSchedules(settToken);
+    const sdk = new BadgerSDK(parseInt(chain.chainId, 16), chain.batchProvider);
+    await sdk.ready();
+    const activeSchedules = await sdk.rewards.loadActiveSchedules(settToken);
 
     /**
      * Calculate rewards emission percentages:
@@ -180,7 +183,7 @@ export class RewardsService {
      */
     const emissionSources: ValueSource[] = [];
     for (const schedule of activeSchedules) {
-      const [price, token] = await Promise.all([getPrice(schedule.token), chain.sdk.tokens.loadToken(schedule.token)]);
+      const [price, token] = await Promise.all([getPrice(schedule.token), sdk.tokens.loadToken(schedule.token)]);
       const amount = formatBalance(schedule.amount, token.decimals);
       const durationScalar = ONE_YEAR_SECONDS / (schedule.end - schedule.start);
       const yearlyEmission = price.usd * amount * durationScalar;
