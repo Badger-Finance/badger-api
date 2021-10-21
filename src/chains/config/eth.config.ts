@@ -1,6 +1,6 @@
 import { Network } from '@badger-dao/sdk';
 import fetch from 'node-fetch';
-import { BLOCKNATIVE_API_KEY, STRATEGIES } from '../../config/constants';
+import { BLOCKNATIVE_API_KEY } from '../../config/constants';
 import { Protocol } from '../../config/enums/protocol.enum';
 import { SettState } from '../../config/enums/sett-state.enum';
 import { Stage } from '../../config/enums/stage.enum';
@@ -167,7 +167,6 @@ export const ethSetts: SettDefinition[] = [
     settToken: TOKENS.BZS_DIGG,
     stage: Stage.Staging,
     state: SettState.Experimental,
-    strategy: STRATEGIES.BZS_DIGG,
   },
   {
     name: 'Convex hBTC',

@@ -14,9 +14,9 @@ import { xDaiTokensConfig } from './config/xdai-tokens.config';
 import { CachedLiquidityPoolTokenBalance } from './interfaces/cached-liquidity-pool-token-balance.interface';
 import { CachedTokenBalance } from './interfaces/cached-token-balance.interface';
 import { Token } from './interfaces/token.interface';
-import { TokenBalance } from './interfaces/token-balance.interface';
 import { TokenConfig } from './interfaces/token-config.interface';
 import { TokenPrice } from './interfaces/token-price.interface';
+import { TokenBalance } from '@badger-dao/sdk';
 
 // map holding all protocol token information across chains
 export const protocolTokens: TokenConfig = {

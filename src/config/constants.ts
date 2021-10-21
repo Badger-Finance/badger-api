@@ -1,11 +1,4 @@
 import { SwaggerSettings } from '@tsed/swagger';
-import { checksumEntries } from './util';
-
-export const RAW_STRATEGIES = {
-  BZS_DIGG: '0xA6af1B913E205B8E9B95D3B30768c0989e942316',
-};
-
-export const STRATEGIES = checksumEntries(RAW_STRATEGIES);
 
 // data point constants - index two times per hour, 48 per day
 export const CURRENT = 0;
@@ -27,7 +20,6 @@ export const LEADERBOARD_DATA = process.env.LEADERBOARD_DATA || 'MISSING REQUIRE
 export const ACCOUNT_DATA = process.env.ACCOUNT_DATA || 'MISSING REQUIRED ENV VAR';
 export const PROTOCOL_METRICS_SNAPSHOTS_DATA =
   process.env.PROTOCOL_METRICS_SNAPSHOTS_DATA || 'MISSING REQUIRED ENV VAR';
-export const SETT_BOOST_DATA = process.env.SETT_BOOST_DATA || 'MISSING REQUIRED ENV VAR';
 
 // thegraph constants
 export const UNISWAP_URL = process.env.UNISWAP || 'MISSING REQUIRED ENV VAR';

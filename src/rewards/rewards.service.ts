@@ -155,10 +155,10 @@ export class RewardsService {
     const sett = await getCachedSett(settDefinition);
     const boostFile = await getObject(REWARD_DATA, `badger-boosts-${parseInt(chain.chainId, 16)}.json`);
     const boostData: BoostData = JSON.parse(boostFile.toString('utf-8'));
-    if (sett.vaultToken === TOKENS.BICVX) {
-      delete boostData.multiplierData[sett.vaultToken];
+    if (sett.settToken === TOKENS.BICVX) {
+      delete boostData.multiplierData[sett.settToken];
     }
-    const boostRange = boostData.multiplierData[sett.vaultToken] ?? { min: 1, max: 1 };
+    const boostRange = boostData.multiplierData[sett.settToken] ?? { min: 1, max: 1 };
     const sdk = new BadgerSDK(parseInt(chain.chainId, 16), chain.batchProvider);
     await sdk.ready();
     const activeSchedules = await sdk.rewards.loadActiveSchedules(settToken);

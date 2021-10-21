@@ -4,13 +4,11 @@ import { TOKENS } from '../../config/tokens.config';
 import { uniformPerformance } from '../../protocols/interfaces/performance.interface';
 import { createValueSource, ValueSource } from '../../protocols/interfaces/value-source.interface';
 import { BouncerType } from '../../rewards/enums/bouncer-type.enum';
-import { TokenBalance } from '../../tokens/interfaces/token-balance.interface';
 import { getToken, mockBalance } from '../../tokens/tokens.utils';
 import { VAULT_SOURCE } from '../setts.utils';
-import { Sett } from './sett.interface';
-import { SettBoost } from './sett-boost.interface';
 import { SettStrategy } from './sett-strategy.interface';
 import { ethers } from 'ethers';
+import { Sett, TokenBalance } from '@badger-dao/sdk';
 
 export class SettModel implements Sett {
   @Title('name')
@@ -25,11 +23,11 @@ export class SettModel implements Sett {
   @Property()
   public asset: string;
 
-  @Title('vaultAsset')
+  @Title('settAsset')
   @Description('Sett asset name')
   @Example('bcrvTricrypto')
   @Property()
-  public vaultAsset: string;
+  public settAsset: string;
 
   @Title('state')
   @Description('Launch state of the sett')
@@ -43,11 +41,11 @@ export class SettModel implements Sett {
   @Property()
   public underlyingToken: string;
 
-  @Title('vaultToken')
+  @Title('settToken')
   @Description('Contract address for sett token')
   @Example('0x2260fac5e5542a773aa44fbcfedf7c193bc2c599')
   @Property()
-  public vaultToken: string;
+  public settToken: string;
 
   @Title('value')
   @Description('Currency denominated sett value')
@@ -61,11 +59,11 @@ export class SettModel implements Sett {
   @Property()
   public balance: number;
 
-  @Title('ppfs')
+  @Title('pricePerFullShare')
   @Description('Price per full share, conversion from sett tokens to underlying tokens')
   @Example(1.00032103)
   @Property()
-  public ppfs: number;
+  public pricePerFullShare: number;
 
   @Title('tokens')
   @Description('Token balances held by the sett')
@@ -125,15 +123,6 @@ export class SettModel implements Sett {
   @Property()
   public deprecated: boolean;
 
-  @Title('multipliers')
-  @Description('Mapping of boost score to apr multiplier')
-  @Example([
-    { boost: 100, multipler: 1.3 },
-    { boost: 200, multipler: 1.5 },
-  ])
-  @Property()
-  public multipliers: SettBoost[];
-
   @Title('strategy')
   @Description('Sett strategy information')
   @Example({
@@ -149,12 +138,12 @@ export class SettModel implements Sett {
     name: string,
     state: SettState,
     asset: string,
-    vaultAsset: string,
+    settAsset: string,
     underlyingToken: string,
-    vaultToken: string,
+    settToken: string,
     value: number,
     balance: number,
-    ppfs: number,
+    pricePerFullShare: number,
     tokens: TokenBalance[],
     apr: number,
     boostable: boolean,
@@ -162,7 +151,6 @@ export class SettModel implements Sett {
     experimental: boolean,
     bouncer: BouncerType,
     deprecated: boolean,
-    multipliers: SettBoost[],
     strategy: SettStrategy,
     minApr?: number,
     maxApr?: number,
@@ -170,12 +158,12 @@ export class SettModel implements Sett {
     this.name = name;
     this.state = state;
     this.asset = asset;
-    this.vaultAsset = vaultAsset;
+    this.settAsset = settAsset;
     this.underlyingToken = underlyingToken;
-    this.vaultToken = vaultToken;
+    this.settToken = settToken;
     this.value = value;
     this.balance = balance;
-    this.ppfs = ppfs;
+    this.pricePerFullShare = pricePerFullShare;
     this.tokens = tokens;
     this.apr = apr;
     this.boostable = boostable;
@@ -185,7 +173,6 @@ export class SettModel implements Sett {
     this.bouncer = bouncer;
     this.experimental = experimental;
     this.deprecated = deprecated;
-    this.multipliers = multipliers;
     this.strategy = strategy;
   }
 }

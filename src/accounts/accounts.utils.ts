@@ -144,7 +144,7 @@ export async function toSettBalance(
 ): Promise<CachedSettBalance> {
   const settDefinition = getSettDefinition(chain, settBalance.sett.id);
   const { netShareDeposit, grossDeposit, grossWithdraw } = settBalance;
-  const { ppfs } = await getCachedSett(settDefinition);
+  const { pricePerFullShare } = await getCachedSett(settDefinition);
 
   const depositToken = getToken(settDefinition.depositToken);
   const settToken = getToken(settDefinition.settToken);
@@ -155,7 +155,7 @@ export async function toSettBalance(
   }
   const depositedTokens = formatBalance(grossDeposit, depositTokenDecimals);
   const withdrawnTokens = formatBalance(grossWithdraw, depositTokenDecimals);
-  const balanceTokens = currentTokens * ppfs;
+  const balanceTokens = currentTokens * pricePerFullShare;
   const earnedBalance = balanceTokens - depositedTokens + withdrawnTokens;
   const [depositTokenPrice, earnedTokens, tokens] = await Promise.all([
     getPrice(settDefinition.depositToken),
@@ -168,7 +168,7 @@ export async function toSettBalance(
     id: settDefinition.settToken,
     name: settDefinition.name,
     asset: depositToken.symbol,
-    ppfs,
+    ppfs: pricePerFullShare,
     balance: balanceTokens,
     value: inCurrency(depositTokenPrice, currency) * balanceTokens,
     tokens,

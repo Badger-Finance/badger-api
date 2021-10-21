@@ -1,6 +1,6 @@
+import { Sett } from '@badger-dao/sdk';
 import * as AccountUtils from '../accounts/accounts.utils';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
-import { Sett } from '../setts/interfaces/sett.interface';
 import * as SettUtils from '../setts/setts.utils';
 import { getProtocolMetrics, getProtocolSettMetrics, getProtocolTotalUsers } from './metric.utils';
 
