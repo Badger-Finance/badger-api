@@ -148,24 +148,11 @@ export class RewardsService {
       return [];
     }
 
-    const cutoff = new Date();
-    cutoff.setMinutes(-20);
     const now = parseInt((Date.now() / 1000).toString());
-    const cutOffTimestamp = parseInt((cutoff.getTime() / 1000).toString());
-    const includedTokens = new Set();
     const activeSchedules = unlockSchedules
       .slice()
       .sort((a, b) => b.end.sub(a.end).toNumber())
-      .filter((schedule) => {
-        if (includedTokens.has(schedule.token)) {
-          return false;
-        }
-        const isActive = schedule.start.lte(now) && schedule.end.gte(cutOffTimestamp);
-        if (isActive) {
-          includedTokens.add(schedule.token);
-        }
-        return isActive;
-      });
+      .filter((schedule) => schedule.start.lte(now) && schedule.end.gte(now));
 
     /**
      * Calculate rewards emission percentages:
