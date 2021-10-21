@@ -11,13 +11,7 @@ import { SOURCE_TIME_FRAMES, updatePerformance } from '../rewards/enums/source-t
 import { TokenType } from '../tokens/enums/token-type.enum';
 import { getSettTokens, getSettUnderlyingTokens, getToken } from '../tokens/tokens.utils';
 import { SettDefinition } from './interfaces/sett-definition.interface';
-import {
-  getCachedSett,
-  getPerformance,
-  getSettDefinition,
-  getSettSnapshots,
-  VAULT_SOURCE,
-} from './setts.utils';
+import { getCachedSett, getPerformance, getSettDefinition, getSettSnapshots, VAULT_SOURCE } from './setts.utils';
 
 @Service()
 export class SettsService {
@@ -38,10 +32,7 @@ export class SettsService {
 
   async getSett(chain: Chain, contract: string, currency?: string): Promise<Sett> {
     const settDefinition = getSettDefinition(chain, contract);
-    const [sett, sources] = await Promise.all([
-      getCachedSett(settDefinition),
-      getVaultValueSources(settDefinition),
-    ]);
+    const [sett, sources] = await Promise.all([getCachedSett(settDefinition), getVaultValueSources(settDefinition)]);
     sett.tokens = await getSettTokens(settDefinition, sett.balance, currency);
     sett.value = sett.tokens.reduce((total, balance) => (total += balance.value), 0);
     sett.sources = sources
