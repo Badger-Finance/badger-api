@@ -2496,7 +2496,7 @@ Array [
     "asset": "imBTC",
     "balance": 0,
     "boostable": false,
-    "bouncer": "badger",
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
     "multipliers": Array [
@@ -2565,7 +2565,7 @@ Array [
         },
       },
     ],
-    "state": "guarded",
+    "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
@@ -2592,7 +2592,7 @@ Array [
     "asset": "mhBTC",
     "balance": 0,
     "boostable": false,
-    "bouncer": "badger",
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
     "multipliers": Array [
@@ -2661,7 +2661,7 @@ Array [
         },
       },
     ],
-    "state": "guarded",
+    "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
@@ -5009,7 +5009,7 @@ Array [
     "asset": "imBTC",
     "balance": 0,
     "boostable": false,
-    "bouncer": "badger",
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
     "multipliers": Array [
@@ -5078,7 +5078,7 @@ Array [
         },
       },
     ],
-    "state": "guarded",
+    "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
@@ -5105,7 +5105,7 @@ Array [
     "asset": "mhBTC",
     "balance": 0,
     "boostable": false,
-    "bouncer": "badger",
+    "bouncer": "none",
     "deprecated": false,
     "experimental": false,
     "multipliers": Array [
@@ -5174,7 +5174,7 @@ Array [
         },
       },
     ],
-    "state": "guarded",
+    "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
