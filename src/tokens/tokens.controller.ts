@@ -12,6 +12,20 @@ export class TokensController {
   @Returns(200, TokenConfigModel)
   @Description('Return a map of checksum contract address to token information.')
   async listSetts(@QueryParams('chain') chain?: Network): Promise<TokenConfigModel> {
-    return Chain.getChain(chain).tokens;
+    return Object.fromEntries(
+      Object.entries(Chain.getChain(chain).tokens).map((entry) => {
+        const [key, value] = entry;
+        const { name, symbol, decimals, address } = value;
+        return [
+          key,
+          {
+            name,
+            symbol,
+            decimals,
+            address,
+          },
+        ];
+      }),
+    );
   }
 }
