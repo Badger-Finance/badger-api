@@ -103,7 +103,6 @@ async function getVaultSource(
     const baseApr = ((unclaimedAssets * rewardScalar) / vaultAssets) * 100;
     const apr = baseApr * vestingMultiplier;
     valueSource = createValueSource('Vested MTA Rewards', uniformPerformance(apr));
-    console.log({ baseApr, apr });
   }
   return valueSourceToCachedValueSource(valueSource, settDefinition, tokenEmission(getToken(TOKENS.MTA)));
 }
