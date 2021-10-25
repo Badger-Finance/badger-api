@@ -1,7 +1,7 @@
 import { UnprocessableEntity } from '@tsed/exceptions';
 // import fetch from 'node-fetch';
 import { Chain } from '../../chains/config/chain.config';
-import { ONE_YEAR_MS } from '../../config/constants';
+import { ONE_YEAR_MS, ONE_YEAR_SECONDS } from '../../config/constants';
 import { TOKENS } from '../../config/tokens.config';
 import { Mhbtc__factory } from '../../contracts';
 import { Imbtc__factory } from '../../contracts/factories/Imbtc__factory';
@@ -18,6 +18,7 @@ import { CachedValueSource } from '../interfaces/cached-value-source.interface';
 import { uniformPerformance } from '../interfaces/performance.interface';
 import { createValueSource } from '../interfaces/value-source.interface';
 import { tokenEmission } from '../protocols.utils';
+import { BigNumber } from '@ethersproject/bignumber';
 
 // const MSTABLE_API_URL = 'https://api.mstable.org/';
 // const MSTABLE_BTC_APR = `${MSTABLE_API_URL}/massets/mbtc`;
@@ -80,30 +81,38 @@ async function getVaultSource(
   if (!settDefinition.strategy) {
     throw new UnprocessableEntity(`${settDefinition.name} requires strategy`);
   }
-  const address = settDefinition.strategy;
-  const [unlocked, balance, unclaimedRewards, claimData, depositTokenPrice, mtaPrice] = await Promise.all([
-    vault.UNLOCK(),
-    vault.balanceOf(address),
-    vault.unclaimedRewards(address),
-    vault.userData(address),
+  const {strategy} = settDefinition;
+  const [balance, userData, depositTokenPrice, mtaPrice] = await Promise.all([
+    vault.rawBalanceOf(strategy),
+    vault.userData(strategy),
     getPrice(settDefinition.depositToken),
     getPrice(TOKENS.MTA),
   ]);
-  const unlockedMultiplier = formatBalance(unlocked);
   const vaultBalance = formatBalance(balance);
   const now = Date.now();
-  const lastClaim = new Date(claimData.lastAction.toNumber() * 1000).getTime();
   let valueSource = createValueSource('Vested MTA Rewards', uniformPerformance(0));
-  if (lastClaim > 0) {
-    const unclaimedAmount = formatBalance(unclaimedRewards.amount);
-    const vaultAssets = vaultBalance * depositTokenPrice.usd;
-    const unclaimedAssets = unclaimedAmount * mtaPrice.usd;
-    const rewardScalar = ONE_YEAR_MS / (now - lastClaim);
-    const vestingMultiplier = 1 - unlockedMultiplier;
-    const baseApr = ((unclaimedAssets * rewardScalar) / vaultAssets) * 100;
-    const apr = baseApr * vestingMultiplier;
-    valueSource = createValueSource('Vested MTA Rewards', uniformPerformance(apr));
+  const {rewardCount} = userData;
+  const requests = [];
+  for (let i = 0; i < rewardCount.toNumber(); i++) {
+    requests.push(vault.userRewards(strategy, i));
   }
+  const rewards = await Promise.all(requests);
+  if (rewards.length > 0) {
+    const cutoff = Number(((now / 1000) - (ONE_YEAR_SECONDS/2)).toFixed());
+    const activeRewards = rewards.filter((r) => r.start.gte(cutoff)).sort((a, b) => b.start.toNumber() - a.start.toNumber());
+    if (activeRewards.length > 0) {
+      const totalRewards = activeRewards.map((r) => r.rate).reduce((total, value) => total.add(value), BigNumber.from(0));
+      const finalUnlock = activeRewards[0].start.toNumber() * 1000;
+      const firstUnlock = activeRewards[activeRewards.length - 1].start.toNumber() * 1000;
+      const scalar = ONE_YEAR_MS / (finalUnlock - firstUnlock);
+      const rewardsValue = mtaPrice.usd * formatBalance(totalRewards);
+      const vaultAssets = vaultBalance * depositTokenPrice.usd;
+      const apr = ((rewardsValue * scalar) / vaultAssets) * 100;
+      console.log({ token: settDefinition.depositToken, price: depositTokenPrice.usd, vaultBalance, totalRewards: formatBalance(totalRewards), finalUnlock, scalar, rewardsValue, vaultAssets, apr });
+      valueSource = createValueSource('Vested MTA Rewards', uniformPerformance(apr));
+    }
+  }
+  console.log(valueSource);
   return valueSourceToCachedValueSource(valueSource, settDefinition, tokenEmission(getToken(TOKENS.MTA)));
 }
 
