@@ -12,35 +12,37 @@ export async function refreshApySnapshots() {
 }
 
 async function refreshChainApySnapshots(chain: Chain) {
-  const rawValueSources = await Promise.all(chain.setts.map((sett) => getSettValueSources(chain, sett)));
-  const sourceMap: ValueSourceMap = {};
-  rawValueSources
-    .filter((rawValueSource) => !isNil(rawValueSource))
-    .flatMap((sources) => sources.filter((source) => !isNaN(source.apr) && isFinite(source.apr)))
-    .forEach((source) => {
-      if (source.apr === 0 && source.type !== SourceType.Compound) {
-        return;
-      }
-      const mapKey = `${source.address}-${source.name}`;
-      const mapEntry = sourceMap[mapKey];
-      // simulated underlying are harvestable, measured underlying is not
-      // directly override any saved simulated strategy performance for measured
-      const savedVirtualUnderlying = mapEntry && mapEntry.type === SourceType.Compound && mapEntry.harvestable;
-      const isVirtualUnderlying = source.type === SourceType.Compound && source.harvestable;
-      const override = !mapEntry || savedVirtualUnderlying;
-      if (override) {
-        sourceMap[mapKey] = source;
-      } else if (!isVirtualUnderlying) {
-        mapEntry.apr += source.apr;
-        mapEntry.minApr += source.minApr;
-        mapEntry.maxApr += source.maxApr;
-        mapEntry.oneDay += source.oneDay;
-        mapEntry.threeDay += source.threeDay;
-        mapEntry.sevenDay += source.sevenDay;
-        mapEntry.thirtyDay += source.thirtyDay;
-      }
-    });
-  const mapper = getDataMapper();
-  for await (const _item of mapper.batchPut(Object.values(sourceMap))) {
-  }
+  await Promise.all(chain.setts.map(async (sett) => {
+    const results = await getSettValueSources(chain, sett);
+    const sourceMap: ValueSourceMap = {};
+    results
+      .filter((rawValueSource) => !isNil(rawValueSource))
+      .filter((source) => !isNaN(source.apr) && isFinite(source.apr))
+      .forEach((source) => {
+        if (source.apr === 0 && source.type !== SourceType.Compound) {
+          return;
+        }
+        const mapKey = `${source.address}-${source.name}`;
+        const mapEntry = sourceMap[mapKey];
+        // simulated underlying are harvestable, measured underlying is not
+        // directly override any saved simulated strategy performance for measured
+        const savedVirtualUnderlying = mapEntry && mapEntry.type === SourceType.Compound && mapEntry.harvestable;
+        const isVirtualUnderlying = source.type === SourceType.Compound && source.harvestable;
+        const override = !mapEntry || savedVirtualUnderlying;
+        if (override) {
+          sourceMap[mapKey] = source;
+        } else if (!isVirtualUnderlying) {
+          mapEntry.apr += source.apr;
+          mapEntry.minApr += source.minApr;
+          mapEntry.maxApr += source.maxApr;
+          mapEntry.oneDay += source.oneDay;
+          mapEntry.threeDay += source.threeDay;
+          mapEntry.sevenDay += source.sevenDay;
+          mapEntry.thirtyDay += source.thirtyDay;
+        }
+      });
+    const mapper = getDataMapper();
+    for await (const _item of mapper.batchPut(Object.values(sourceMap))) {
+    }
+  }));
 }

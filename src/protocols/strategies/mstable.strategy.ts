@@ -18,7 +18,6 @@ import { CachedValueSource } from '../interfaces/cached-value-source.interface';
 import { uniformPerformance } from '../interfaces/performance.interface';
 import { createValueSource } from '../interfaces/value-source.interface';
 import { tokenEmission } from '../protocols.utils';
-import { getCachedSett } from '../../setts/setts.utils';
 
 const MSTABLE_API_URL = 'https://api.mstable.org/';
 const MSTABLE_BTC_APR = `${MSTABLE_API_URL}/massets/mbtc`;
@@ -68,7 +67,8 @@ export async function getMhBtcPrice(chain: Chain, token: Token): Promise<TokenPr
 }
 
 async function getImBtcValuceSource(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
-  return Promise.all([getMAssetValueSource(settDefinition), getVaultSource(chain, settDefinition, MSTABLE_MBTC_VAULT)]);
+  // getMAssetValueSource(settDefinition), 
+  return Promise.all([getVaultSource(chain, settDefinition, MSTABLE_MBTC_VAULT)]);
 }
 
 async function getVaultSource(
@@ -77,11 +77,10 @@ async function getVaultSource(
   vaultAddress: string,
 ): Promise<CachedValueSource> {
   const vault = MstableVault__factory.connect(vaultAddress, chain.provider);
-  const sett = await getCachedSett(settDefinition);
-  if (!sett.strategy) {
+  if (!settDefinition.strategy) {
     throw new UnprocessableEntity(`${settDefinition.name} requires strategy`);
   }
-  const { address } = sett.strategy;
+  const address = settDefinition.strategy;
   const [unlocked, balance, unclaimedRewards, claimData, depositTokenPrice, mtaPrice] = await Promise.all([
     vault.UNLOCK(),
     vault.balanceOf(address),
@@ -100,7 +99,7 @@ async function getVaultSource(
     const vaultAssets = vaultBalance * depositTokenPrice.usd;
     const unclaimedAssets = unclaimedAmount * mtaPrice.usd;
     const rewardScalar = ONE_YEAR_MS / (now - lastClaim);
-    const vestingMultiplier = (1 / unlockedMultiplier) * (1 - unlockedMultiplier);
+    const vestingMultiplier = 1 - unlockedMultiplier;
     const baseApr = ((unclaimedAssets * rewardScalar) / vaultAssets) * 100;
     const apr = baseApr * vestingMultiplier;
     valueSource = createValueSource('Vested MTA Rewards', uniformPerformance(apr));
@@ -108,6 +107,7 @@ async function getVaultSource(
   return valueSourceToCachedValueSource(valueSource, settDefinition, tokenEmission(getToken(TOKENS.MTA)));
 }
 
+// TODO: re-enable mstable api at some point
 async function getMAssetValueSource(settDefinition: SettDefinition): Promise<CachedValueSource> {
   const sourceName = 'mBTC Native Yield';
   const response = await fetch(MSTABLE_BTC_APR);
