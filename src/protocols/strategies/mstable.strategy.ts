@@ -83,7 +83,7 @@ async function getVaultSource(
   const address = settDefinition.strategy;
   const [unlocked, balance, unclaimedRewards, claimData, depositTokenPrice, mtaPrice] = await Promise.all([
     vault.UNLOCK(),
-    vault.balanceOf(address),
+    vault.rawBalanceOf(address),
     vault.unclaimedRewards(address),
     vault.userData(address),
     getPrice(settDefinition.depositToken),
@@ -99,7 +99,7 @@ async function getVaultSource(
     const vaultAssets = vaultBalance * depositTokenPrice.usd;
     const unclaimedAssets = unclaimedAmount * mtaPrice.usd;
     const rewardScalar = ONE_YEAR_MS / (now - lastClaim);
-    const vestingMultiplier = 1 - unlockedMultiplier;
+    const vestingMultiplier = (1 - unlockedMultiplier) / unlockedMultiplier;
     const baseApr = ((unclaimedAssets * rewardScalar) / vaultAssets) * 100;
     const apr = baseApr * vestingMultiplier;
     valueSource = createValueSource('Vested MTA Rewards', uniformPerformance(apr));
