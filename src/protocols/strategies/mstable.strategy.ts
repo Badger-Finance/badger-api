@@ -81,16 +81,18 @@ async function getVaultSource(
     throw new UnprocessableEntity(`${settDefinition.name} requires strategy`);
   }
   const address = settDefinition.strategy;
-  const [unlocked, balance, unclaimedRewards, claimData, depositTokenPrice, mtaPrice] = await Promise.all([
+  const [unlocked, balance, unclaimedRewards, claimData, boost, depositTokenPrice, mtaPrice] = await Promise.all([
     vault.UNLOCK(),
-    vault.balanceOf(address),
+    vault.rawBalanceOf(address),
     vault.unclaimedRewards(address),
     vault.userData(address),
+    vault.getBoost(address),
     getPrice(settDefinition.depositToken),
     getPrice(TOKENS.MTA),
   ]);
   const unlockedMultiplier = formatBalance(unlocked);
   const vaultBalance = formatBalance(balance);
+  const strategyBoost = formatBalance(boost);
   const now = Date.now();
   const lastClaim = new Date(claimData.lastAction.toNumber() * 1000).getTime();
   let valueSource = createValueSource('Vested MTA Rewards', uniformPerformance(0));
@@ -99,9 +101,9 @@ async function getVaultSource(
     const vaultAssets = vaultBalance * depositTokenPrice.usd;
     const unclaimedAssets = unclaimedAmount * mtaPrice.usd;
     const rewardScalar = ONE_YEAR_MS / (now - lastClaim);
-    const vestingMultiplier = 1 - unlockedMultiplier;
+    const vestingMultiplier = (1 - unlockedMultiplier) / unlockedMultiplier;
     const baseApr = ((unclaimedAssets * rewardScalar) / vaultAssets) * 100;
-    const apr = baseApr * vestingMultiplier;
+    const apr = baseApr * vestingMultiplier * strategyBoost;
     valueSource = createValueSource('Vested MTA Rewards', uniformPerformance(apr));
   }
   return valueSourceToCachedValueSource(valueSource, settDefinition, tokenEmission(getToken(TOKENS.MTA)));
