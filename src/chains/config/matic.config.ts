@@ -14,7 +14,7 @@ export class Polygon extends Chain {
   constructor() {
     super(
       'Polygon',
-      'polygon',
+      'matic',
       '0x89',
       Network.Polygon,
       maticTokensConfig,

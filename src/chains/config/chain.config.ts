@@ -60,6 +60,7 @@ export abstract class Chain {
 
   static register(network: Network, chain: Chain): void {
     Chain.chains[network] = chain;
+    Chain.chains[chain.symbol] = chain;
   }
 
   static getChain(network?: Network): Chain {
