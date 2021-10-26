@@ -192,8 +192,8 @@ describe('accounts.utils', () => {
         const actual = await toSettBalance(chain, mockBalance, currency);
         expect(actual).toBeTruthy();
         expect(actual.name).toEqual(depositToken.name);
-        expect(actual.asset).toEqual(depositToken.symbol);
-        expect(actual.ppfs).toEqual(snapshot.balance / snapshot.supply);
+        expect(actual.symbol).toEqual(depositToken.symbol);
+        expect(actual.pricePerFullShare).toEqual(snapshot.balance / snapshot.supply);
         const price = await strategy.getPrice(depositToken.address);
         expect(actual.value).toEqual(inCurrency(price, currency) * actual.balance);
       });

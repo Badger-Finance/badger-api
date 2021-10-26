@@ -1,3 +1,4 @@
+import { Account } from '@badger-dao/sdk';
 import { Service } from '@tsed/di';
 import { BadRequest } from '@tsed/exceptions';
 import { ethers } from 'ethers';
@@ -7,7 +8,6 @@ import { REWARD_DATA } from '../config/constants';
 import { IndexMode, refreshAccounts } from '../indexer/accounts-indexer';
 import { BoostData } from '../rewards/interfaces/boost-data.interface';
 import { cachedAccountToAccount, getCachedAccount } from './accounts.utils';
-import { Account } from './interfaces/account.interface';
 import { CachedAccount } from './interfaces/cached-account.interface';
 import { UnclaimedRewards } from './interfaces/unclaimed-rewards.interface';
 import { UserRewardsUnclaimed } from './interfaces/user-rewards-unclaimed.interface';

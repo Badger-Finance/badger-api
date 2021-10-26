@@ -1,12 +1,9 @@
-import { Network } from '@badger-dao/sdk';
+import { Account, SettData } from '@badger-dao/sdk';
 import { Description, Example, Property, Title } from '@tsed/schema';
 import { ethers } from 'ethers';
 import { TOKENS } from '../../config/tokens.config';
 import { BoostMultipliers } from '../../rewards/interfaces/boost-multipliers.interface';
 import { getToken, mockBalance } from '../../tokens/tokens.utils';
-import { Account } from './account.interface';
-import { CachedBalance } from './cached-claimable-balance.interface';
-import { SettBalance } from './sett-balance.interface';
 
 export class AccountModel implements Account {
   @Title('id')
@@ -49,13 +46,13 @@ export class AccountModel implements Account {
   @Property()
   public earnedValue: number;
 
-  @Title('balances')
-  @Description('Account sett balance information, positions, earnings, and tokens per sett')
-  @Example([
-    {
-      id: TOKENS.BBADER,
+  @Title('data')
+  @Description('Account sett balance information, positions, earnings, and tokens keyed by vault address')
+  @Example({
+    [TOKENS.BADGER]: {
+      address: TOKENS.BBADER,
       name: getToken(TOKENS.BADGER).name,
-      asset: getToken(TOKENS.BADGER).symbol,
+      symbol: getToken(TOKENS.BADGER).symbol,
       balance: 3.4,
       value: mockBalance(getToken(TOKENS.BADGER), 3.4).value,
       tokens: [mockBalance(getToken(TOKENS.BADGER), 3.4)],
@@ -63,27 +60,20 @@ export class AccountModel implements Account {
       earnedValue: mockBalance(getToken(TOKENS.BADGER), 0.4).value,
       earnedTokens: [mockBalance(getToken(TOKENS.BADGER), 0.4)],
     },
-  ])
-  @Property()
-  public balances: SettBalance[];
-
-  @Title('claimableBalances')
-  @Description('Claimable amounts of tokens currently available for an account in the Badger Tree')
-  @Example([
-    {
-      address: TOKENS.BADGER,
-      balance: ethers.constants.WeiPerEther.mul(88).toString(),
-      network: Network.Ethereum,
-    },
-    { address: TOKENS.XSUSHI, balance: ethers.constants.WeiPerEther.mul(4).toString(), network: Network.Ethereum },
-    {
+    [TOKENS.DIGG]: {
       address: TOKENS.DIGG,
-      balance: ethers.constants.WeiPerEther.mul(128834885688).toString(),
-      network: Network.Ethereum,
+      name: getToken(TOKENS.DIGG).name,
+      symbol: getToken(TOKENS.DIGG).symbol,
+      balance: 3.4,
+      value: mockBalance(getToken(TOKENS.DIGG), 3.4).value,
+      tokens: [mockBalance(getToken(TOKENS.DIGG), 3.4)],
+      earnedBalance: 0.4,
+      earnedValue: mockBalance(getToken(TOKENS.DIGG), 0.4).value,
+      earnedTokens: [mockBalance(getToken(TOKENS.DIGG), 0.4)],
     },
-  ])
+  })
   @Property()
-  public claimableBalances: CachedBalance[];
+  public data: Record<string, SettData>;
 
   @Title('claimableBalancesMap')
   @Description('Claimable amounts of tokens currently available for an account in the Badger Tree')
@@ -93,7 +83,7 @@ export class AccountModel implements Account {
     [TOKENS.DIGG]: ethers.constants.WeiPerEther.mul(128834885688).toString(),
   })
   @Property()
-  public claimableBalancesMap: Record<string, string>;
+  public claimableBalances: Record<string, string>;
 
   @Title('nativeBalance')
   @Description("Currency value of an account's current native hodlings")
@@ -114,9 +104,8 @@ export class AccountModel implements Account {
     this.multipliers = account.multipliers;
     this.value = account.value;
     this.earnedValue = account.earnedValue;
-    this.balances = account.balances;
+    this.data = account.data;
     this.claimableBalances = account.claimableBalances;
-    this.claimableBalancesMap = account.claimableBalancesMap;
     this.nativeBalance = account.nativeBalance;
     this.nonNativeBalance = account.nonNativeBalance;
   }
