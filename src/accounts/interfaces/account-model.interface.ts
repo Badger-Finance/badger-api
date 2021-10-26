@@ -85,6 +85,12 @@ export class AccountModel implements Account {
   @Property()
   public claimableBalances: Record<string, string>;
 
+  @Title('stakeRatio')
+  @Description('Ratio of native to non native holdings')
+  @Example(1.2)
+  @Property()
+  public stakeRatio: number;
+
   @Title('nativeBalance')
   @Description("Currency value of an account's current native hodlings")
   @Example(1313.13)
@@ -106,6 +112,7 @@ export class AccountModel implements Account {
     this.earnedValue = account.earnedValue;
     this.data = account.data;
     this.claimableBalances = account.claimableBalances;
+    this.stakeRatio = account.stakeRatio;
     this.nativeBalance = account.nativeBalance;
     this.nonNativeBalance = account.nonNativeBalance;
   }

@@ -11,6 +11,7 @@ Object {
   "multipliers": Object {},
   "nativeBalance": 0,
   "nonNativeBalance": 0,
+  "stakeRatio": 1,
   "value": 0,
 }
 `;
@@ -26,6 +27,7 @@ Object {
   "multipliers": Object {},
   "nativeBalance": 2033222,
   "nonNativeBalance": 23129,
+  "stakeRatio": 1,
   "value": 320232,
 }
 `;
