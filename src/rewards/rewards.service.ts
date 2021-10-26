@@ -1,24 +1,23 @@
 import { Service } from '@tsed/common';
 import { BadRequest, NotFound } from '@tsed/exceptions';
-import { BigNumber, ethers } from 'ethers';
+import { ethers } from 'ethers';
 import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
-import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { ONE_YEAR_SECONDS, REWARD_DATA } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
-import { Digg__factory, RewardsLogger__factory } from '../contracts';
 import { getPrice } from '../prices/prices.utils';
 import { uniformPerformance } from '../protocols/interfaces/performance.interface';
 import { createValueSource, ValueSource } from '../protocols/interfaces/value-source.interface';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { getCachedSett } from '../setts/setts.utils';
-import { formatBalance, getToken } from '../tokens/tokens.utils';
+import { formatBalance } from '../tokens/tokens.utils';
 import { BoostData } from './interfaces/boost-data.interface';
 import { BoostMultipliers } from './interfaces/boost-multipliers.interface';
 import { AirdropMerkleClaim, AirdropMerkleDistribution } from './interfaces/merkle-distributor.interface';
 import { RewardMerkleClaim } from './interfaces/reward-merkle-claim.interface';
 import { getTreeDistribution } from './rewards.utils';
 import { CachedBoostMultiplier } from './interfaces/cached-boost-multiplier.interface';
+import BadgerSDK from '@badger-dao/sdk';
 
 @Service()
 export class RewardsService {
@@ -156,32 +155,13 @@ export class RewardsService {
     const sett = await getCachedSett(settDefinition);
     const boostFile = await getObject(REWARD_DATA, `badger-boosts-${parseInt(chain.chainId, 16)}.json`);
     const boostData: BoostData = JSON.parse(boostFile.toString('utf-8'));
-    if (sett.vaultToken === TOKENS.BICVX) {
-      delete boostData.multiplierData[sett.vaultToken];
+    if (sett.settToken === TOKENS.BICVX) {
+      delete boostData.multiplierData[sett.settToken];
     }
-    const boostRange = boostData.multiplierData[sett.vaultToken] ?? { min: 1, max: 1 };
-
-    // create relevant contracts
-    const rewardsLogger = RewardsLogger__factory.connect(chain.rewardsLogger, chain.provider);
-
-    let sharesPerFragment = BigNumber.from(1);
-    if (chain.network === ChainNetwork.Ethereum) {
-      const diggContract = Digg__factory.connect(TOKENS.DIGG, chain.provider);
-      sharesPerFragment = await diggContract._sharesPerFragment();
-    }
-
-    // filter active unlock schedules
-    const unlockSchedules = await rewardsLogger.getAllUnlockSchedulesFor(settToken);
-
-    if (unlockSchedules.length === 0) {
-      return [];
-    }
-
-    const now = parseInt((Date.now() / 1000).toString());
-    const activeSchedules = unlockSchedules
-      .slice()
-      .sort((a, b) => b.end.sub(a.end).toNumber())
-      .filter((schedule) => schedule.start.lte(now) && schedule.end.gte(now));
+    const boostRange = boostData.multiplierData[sett.settToken] ?? { min: 1, max: 1 };
+    const sdk = new BadgerSDK(parseInt(chain.chainId, 16), chain.batchProvider);
+    await sdk.ready();
+    const activeSchedules = await sdk.rewards.loadActiveSchedules(settToken);
 
     /**
      * Calculate rewards emission percentages:
@@ -203,14 +183,9 @@ export class RewardsService {
      */
     const emissionSources: ValueSource[] = [];
     for (const schedule of activeSchedules) {
-      const price = await getPrice(schedule.token);
-      const token = getToken(schedule.token);
-      let emission = schedule.totalAmount;
-      if (token.address === TOKENS.DIGG) {
-        emission = emission.div(sharesPerFragment);
-      }
-      const amount = formatBalance(emission, token.decimals);
-      const durationScalar = ONE_YEAR_SECONDS / schedule.duration.toNumber();
+      const [price, token] = await Promise.all([getPrice(schedule.token), sdk.tokens.loadToken(schedule.token)]);
+      const amount = formatBalance(schedule.amount, token.decimals);
+      const durationScalar = ONE_YEAR_SECONDS / (schedule.end - schedule.start);
       const yearlyEmission = price.usd * amount * durationScalar;
       const apr = (yearlyEmission / sett.value) * 100;
       emissionSources.push(createValueSource(`${token.name} Rewards`, uniformPerformance(apr), false, boostRange));

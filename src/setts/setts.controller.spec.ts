@@ -1,3 +1,4 @@
+import { Sett } from '@badger-dao/sdk';
 import { PlatformTest } from '@tsed/common';
 import { BadRequest } from '@tsed/exceptions';
 import SuperTest from 'supertest';
@@ -9,8 +10,6 @@ import * as settsUtils from '../setts/setts.utils';
 import { TokenBalance } from '../tokens/interfaces/token-balance.interface';
 import * as tokensUtils from '../tokens/tokens.utils';
 import { mockBalance } from '../tokens/tokens.utils';
-import { CachedSettBoost } from './interfaces/cached-sett-boost.interface';
-import { Sett } from './interfaces/sett.interface';
 import { SettDefinition } from './interfaces/sett-definition.interface';
 
 describe('SettsController', () => {
@@ -28,13 +27,6 @@ describe('SettsController', () => {
       .spyOn(settsUtils, 'getCachedSett')
       .mockImplementation(
         async (settDefinition: SettDefinition): Promise<Sett> => settsUtils.defaultSett(settDefinition),
-      );
-    jest
-      .spyOn(settsUtils, 'getSettBoosts')
-      .mockImplementation(
-        async (settDefinition: SettDefinition): Promise<CachedSettBoost[]> => [
-          Object.assign(new CachedSettBoost(), { address: settDefinition.settToken, multiplier: 100, boost: 100 }),
-        ],
       );
     jest
       .spyOn(protocolsUtils, 'getVaultValueSources')
@@ -74,14 +66,14 @@ describe('SettsController', () => {
     describe('with a specified chain', () => {
       it('returns the setts for eth', async (done: jest.DoneCallback) => {
         setupTest();
-        const { body } = await request.get('/v2/setts?chain=eth').expect(200);
+        const { body } = await request.get('/v2/setts?chain=ethereum').expect(200);
         expect(body).toMatchSnapshot();
         done();
       });
 
       it('returns the setts for bsc', async (done: jest.DoneCallback) => {
         setupTest();
-        const { body } = await request.get('/v2/setts?chain=bsc').expect(200);
+        const { body } = await request.get('/v2/setts?chain=binancesmartchain').expect(200);
         expect(body).toMatchSnapshot();
         done();
       });

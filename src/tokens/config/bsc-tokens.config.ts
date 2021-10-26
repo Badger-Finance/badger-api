@@ -1,4 +1,4 @@
-import { ChainNetwork } from '../../chains/enums/chain-network.enum';
+import { Network } from '@badger-dao/sdk';
 import { TOKENS } from '../../config/tokens.config';
 import { TokenType } from '../enums/token-type.enum';
 import { TokenConfig } from '../interfaces/token-config.interface';
@@ -76,7 +76,7 @@ export const bscTokensConfig: TokenConfig = {
     type: TokenType.Wrapper,
     vaultToken: {
       address: TOKENS.BBADGER,
-      network: ChainNetwork.Ethereum,
+      network: Network.Ethereum,
     },
   },
   [TOKENS.BSC_BDIGG]: {
@@ -87,7 +87,7 @@ export const bscTokensConfig: TokenConfig = {
     type: TokenType.Wrapper,
     vaultToken: {
       address: TOKENS.BDIGG,
-      network: ChainNetwork.Ethereum,
+      network: Network.Ethereum,
     },
   },
   [TOKENS.BPANCAKE_BNB_BTCB]: {
@@ -99,7 +99,7 @@ export const bscTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.PANCAKE_BNB_BTCB,
-      network: ChainNetwork.BinanceSmartChain,
+      network: Network.BinanceSmartChain,
     },
   },
   [TOKENS.BPANCAKE_BBADGER_BTCB]: {
@@ -111,7 +111,7 @@ export const bscTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.PANCAKE_BBADGER_BTCB,
-      network: ChainNetwork.BinanceSmartChain,
+      network: Network.BinanceSmartChain,
     },
   },
   [TOKENS.BPANCAKE_BDIGG_BTCB]: {
@@ -123,7 +123,7 @@ export const bscTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.PANCAKE_BDIGG_BTCB,
-      network: ChainNetwork.BinanceSmartChain,
+      network: Network.BinanceSmartChain,
     },
   },
 };

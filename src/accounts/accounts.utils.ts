@@ -1,8 +1,8 @@
+import { Account, Network } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
-import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { TOKENS } from '../config/tokens.config';
 import {
   getSdk,
@@ -17,7 +17,6 @@ import { CachedBoost } from '../leaderboards/interface/cached-boost.interface';
 import { getPrice, inCurrency } from '../prices/prices.utils';
 import { getCachedSett, getSettDefinition } from '../setts/setts.utils';
 import { cachedTokenBalanceToTokenBalance, formatBalance, getSettTokens, getToken } from '../tokens/tokens.utils';
-import { Account } from './interfaces/account.interface';
 import { CachedAccount } from './interfaces/cached-account.interface';
 import { CachedSettBalance } from './interfaces/cached-sett-balance.interface';
 
@@ -83,7 +82,7 @@ export async function getAccounts(chain: Chain): Promise<string[]> {
   return accounts;
 }
 
-export function cachedAccountToAccount(cachedAccount: CachedAccount, network?: ChainNetwork): Account {
+export function cachedAccountToAccount(cachedAccount: CachedAccount, network?: Network): Account {
   const balances = cachedAccount.balances
     .filter((bal) => !network || bal.network === network)
     .map((bal) => ({
@@ -92,14 +91,22 @@ export function cachedAccountToAccount(cachedAccount: CachedAccount, network?: C
       earnedTokens: bal.earnedTokens.map((token) => cachedTokenBalanceToTokenBalance(token)),
     }));
   const multipliers = Object.fromEntries(cachedAccount.multipliers.map((entry) => [entry.address, entry.multiplier]));
-  const claimableBalances = cachedAccount.claimableBalances.filter((bal) => !network || bal.network === network);
-  const claimableBalancesMap = Object.fromEntries(claimableBalances.map((bal) => [bal.address, bal.balance]));
+  const data = Object.fromEntries(balances.map((bal) => [bal.address, bal]));
+  const claimableBalances = Object.fromEntries(
+    cachedAccount.claimableBalances.map((bal) => [bal.address, bal.balance]),
+  );
+  const { address, value, earnedValue, boost, boostRank, nativeBalance, nonNativeBalance } = cachedAccount;
   const account: Account = {
-    ...cachedAccount,
+    address,
+    value,
+    earnedValue,
+    boost,
+    boostRank,
     multipliers,
-    balances,
+    data,
     claimableBalances,
-    claimableBalancesMap,
+    nativeBalance,
+    nonNativeBalance,
   };
   delete account.multipliers[TOKENS.BICVX];
   return account;
@@ -144,7 +151,7 @@ export async function toSettBalance(
 ): Promise<CachedSettBalance> {
   const settDefinition = getSettDefinition(chain, settBalance.sett.id);
   const { netShareDeposit, grossDeposit, grossWithdraw } = settBalance;
-  const { ppfs } = await getCachedSett(settDefinition);
+  const { pricePerFullShare } = await getCachedSett(settDefinition);
 
   const depositToken = getToken(settDefinition.depositToken);
   const settToken = getToken(settDefinition.settToken);
@@ -155,7 +162,7 @@ export async function toSettBalance(
   }
   const depositedTokens = formatBalance(grossDeposit, depositTokenDecimals);
   const withdrawnTokens = formatBalance(grossWithdraw, depositTokenDecimals);
-  const balanceTokens = currentTokens * ppfs;
+  const balanceTokens = currentTokens * pricePerFullShare;
   const earnedBalance = balanceTokens - depositedTokens + withdrawnTokens;
   const [depositTokenPrice, earnedTokens, tokens] = await Promise.all([
     getPrice(settDefinition.depositToken),
@@ -165,10 +172,10 @@ export async function toSettBalance(
 
   return Object.assign(new CachedSettBalance(), {
     network: chain.network,
-    id: settDefinition.settToken,
+    address: settDefinition.settToken,
     name: settDefinition.name,
-    asset: depositToken.symbol,
-    ppfs,
+    symbol: depositToken.symbol,
+    pricePerFullShare: pricePerFullShare,
     balance: balanceTokens,
     value: inCurrency(depositTokenPrice, currency) * balanceTokens,
     tokens,

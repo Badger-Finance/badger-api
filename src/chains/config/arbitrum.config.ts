@@ -1,14 +1,14 @@
+import { Network } from '@badger-dao/sdk';
 import { Protocol } from '../../config/enums/protocol.enum';
 import { SettState } from '../../config/enums/sett-state.enum';
 import { Stage } from '../../config/enums/stage.enum';
-import rpc from '../../config/rpc.config';
+import RPC from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { getCurveSettTokenBalance } from '../../protocols/strategies/convex.strategy';
 import { BouncerType } from '../../rewards/enums/bouncer-type.enum';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { arbitrumTokensConfig } from '../../tokens/config/arbitrum-tokens.config';
-import { ChainNetwork } from '../enums/chain-network.enum';
 import { ArbitrumStrategy } from '../strategies/arbitrum.strategy';
 import { Chain } from './chain.config';
 
@@ -18,10 +18,10 @@ export class Arbitrum extends Chain {
       'Arbitrum',
       'arbitrum',
       '0xa4b1',
-      ChainNetwork.Arbitrum,
+      Network.Arbitrum,
       arbitrumTokensConfig,
       arbitrumSetts,
-      rpc[ChainNetwork.Arbitrum],
+      RPC[Network.Arbitrum],
       new ArbitrumStrategy(Object.keys(arbitrumTokensConfig)),
       2425847,
       '0x635EB2C39C75954bb53Ebc011BDC6AfAAcE115A6',

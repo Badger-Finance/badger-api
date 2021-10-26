@@ -9,14 +9,13 @@ import { SettState } from '../config/enums/sett-state.enum';
 import { getSdk, SettQuery } from '../graphql/generated/badger';
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
 import { getToken } from '../tokens/tokens.utils';
-import { CachedSettBoost } from './interfaces/cached-sett-boost.interface';
 import { CachedSettSnapshot } from './interfaces/cached-sett-snapshot.interface';
-import { Sett } from './interfaces/sett.interface';
 import { SettDefinition } from './interfaces/sett-definition.interface';
 import { SettSnapshot } from './interfaces/sett-snapshot.interface';
 import { Sett__factory, Controller__factory, Strategy__factory } from '../contracts';
 import { SettStrategy } from './interfaces/sett-strategy.interface';
 import { TOKENS } from '../config/tokens.config';
+import { Sett } from '@badger-dao/sdk';
 
 export const VAULT_SOURCE = 'Vault Compounding';
 
@@ -32,15 +31,14 @@ export const defaultSett = (settDefinition: SettDefinition): Sett => {
     experimental: settDefinition.state === SettState.Experimental,
     bouncer: settDefinition.bouncer ?? BouncerType.None,
     name: settDefinition.name,
-    ppfs: 1,
+    pricePerFullShare: 1,
     sources: [],
     state: settDefinition.state ?? SettState.Open,
     tokens: [],
     underlyingToken: settDefinition.depositToken,
     value: 0,
-    vaultAsset: vaultToken.symbol,
-    vaultToken: settDefinition.settToken,
-    multipliers: [],
+    settAsset: vaultToken.symbol,
+    settToken: settDefinition.settToken,
     strategy: {
       address: ethers.constants.AddressZero,
       withdrawFee: 50,
@@ -73,11 +71,11 @@ export const getCachedSett = async (settDefinition: SettDefinition): Promise<Set
       sett.balance = item.balance;
       sett.value = item.settValue;
       if (item.balance === 0 || item.supply === 0) {
-        sett.ppfs = 1;
+        sett.pricePerFullShare = 1;
       } else if (settDefinition.settToken === TOKENS.BDIGG) {
-        sett.ppfs = item.balance / item.supply;
+        sett.pricePerFullShare = item.balance / item.supply;
       } else {
-        sett.ppfs = item.ratio;
+        sett.pricePerFullShare = item.ratio;
       }
       sett.strategy = item.strategy;
     }
@@ -135,27 +133,12 @@ export const getSettDefinition = (chain: Chain, contract: string): SettDefinitio
   return settDefinition;
 };
 
-export const getSettBoosts = async (settDefinition: SettDefinition): Promise<CachedSettBoost[]> => {
-  try {
-    const boosts = [];
-    const mapper = getDataMapper();
-    const assetToken = getToken(settDefinition.settToken);
-    for await (const boost of mapper.query(CachedSettBoost, { address: assetToken.address })) {
-      boosts.push(boost);
-    }
-    return boosts;
-  } catch (err) {
-    console.error(err);
-    return [];
-  }
-};
-
 export async function getStrategyInfo(chain: Chain, sett: SettDefinition): Promise<SettStrategy> {
   const defaultStrategyInfo = {
     address: ethers.constants.AddressZero,
-    withdrawFee: 50,
-    performanceFee: 1000,
-    strategistFee: 1000,
+    withdrawFee: 0,
+    performanceFee: 0,
+    strategistFee: 0,
   };
   try {
     const contract = Sett__factory.connect(sett.settToken, chain.provider);

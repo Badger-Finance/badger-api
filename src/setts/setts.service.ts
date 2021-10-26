@@ -1,3 +1,4 @@
+import { Sett } from '@badger-dao/sdk';
 import { Service } from '@tsed/common';
 import { ethers } from 'ethers';
 import { Chain } from '../chains/config/chain.config';
@@ -9,16 +10,8 @@ import { getVaultValueSources } from '../protocols/protocols.utils';
 import { SOURCE_TIME_FRAMES, updatePerformance } from '../rewards/enums/source-timeframe.enum';
 import { TokenType } from '../tokens/enums/token-type.enum';
 import { getSettTokens, getSettUnderlyingTokens, getToken } from '../tokens/tokens.utils';
-import { Sett } from './interfaces/sett.interface';
 import { SettDefinition } from './interfaces/sett-definition.interface';
-import {
-  getCachedSett,
-  getPerformance,
-  getSettBoosts,
-  getSettDefinition,
-  getSettSnapshots,
-  VAULT_SOURCE,
-} from './setts.utils';
+import { getCachedSett, getPerformance, getSettDefinition, getSettSnapshots, VAULT_SOURCE } from './setts.utils';
 
 @Service()
 export class SettsService {
@@ -39,18 +32,13 @@ export class SettsService {
 
   async getSett(chain: Chain, contract: string, currency?: string): Promise<Sett> {
     const settDefinition = getSettDefinition(chain, contract);
-    const [sett, sources, boosts] = await Promise.all([
-      getCachedSett(settDefinition),
-      getVaultValueSources(settDefinition),
-      getSettBoosts(settDefinition),
-    ]);
+    const [sett, sources] = await Promise.all([getCachedSett(settDefinition), getVaultValueSources(settDefinition)]);
     sett.tokens = await getSettTokens(settDefinition, sett.balance, currency);
     sett.value = sett.tokens.reduce((total, balance) => (total += balance.value), 0);
     sett.sources = sources
       .filter((source) => source.apr >= 0.001)
       .filter((source) => source.name !== VAULT_SOURCE || !sett.deprecated);
     sett.apr = sett.sources.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
-    sett.multipliers = boosts.map((b) => ({ boost: b.boost, multiplier: b.multiplier }));
 
     const hasBoostedApr = sett.sources.some((source) => source.boostable);
     if (hasBoostedApr) {
@@ -100,7 +88,7 @@ export class SettsService {
   static async getSettTokenPerformance(chain: Chain, settDefinition: SettDefinition): Promise<ValueSource[]> {
     const sett = await getCachedSett(settDefinition);
     const tokens = await getSettUnderlyingTokens(chain, settDefinition);
-    const vaultToken = getToken(sett.vaultToken);
+    const vaultToken = getToken(sett.settToken);
 
     const sources: ValueSource[] = [];
     await Promise.all(

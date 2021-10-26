@@ -24,13 +24,13 @@ describe('TokensController', () => {
 
     describe('with a specified chain', () => {
       it('returns the specified token config for eth', async (done: jest.DoneCallback) => {
-        const { body } = await request.get('/v2/tokens?chain=eth').expect(200);
+        const { body } = await request.get('/v2/tokens?chain=ethereum').expect(200);
         expect(body).toMatchSnapshot();
         done();
       });
 
       it('returns the specified token config for bsc', async (done: jest.DoneCallback) => {
-        const { body } = await request.get('/v2/tokens?chain=bsc').expect(200);
+        const { body } = await request.get('/v2/tokens?chain=binancesmartchain').expect(200);
         expect(body).toMatchSnapshot();
         done();
       });

@@ -35,7 +35,7 @@ describe('PricesController', () => {
       it('returns the specified token config for eth', async (done: jest.DoneCallback) => {
         const result = Object.fromEntries(Object.keys(ethTokensConfig).map((token) => [token, getPrice(token)]));
         jest.spyOn(pricesService, 'getPriceSummary').mockImplementationOnce(() => Promise.resolve(result));
-        const { body } = await request.get('/v2/prices?chain=eth').expect(200);
+        const { body } = await request.get('/v2/prices?chain=ethereum').expect(200);
         expect(body).toMatchSnapshot();
         done();
       });
@@ -43,7 +43,7 @@ describe('PricesController', () => {
       it('returns the specified token config for bsc', async (done: jest.DoneCallback) => {
         const result = Object.fromEntries(Object.keys(bscTokensConfig).map((token) => [token, getPrice(token)]));
         jest.spyOn(pricesService, 'getPriceSummary').mockImplementationOnce(() => Promise.resolve(result));
-        const { body } = await request.get('/v2/prices?chain=bsc').expect(200);
+        const { body } = await request.get('/v2/prices?chain=binancesmartchain').expect(200);
         expect(body).toMatchSnapshot();
         done();
       });

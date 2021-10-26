@@ -7,13 +7,11 @@ import { TokenType } from '../../tokens/enums/token-type.enum';
 import { Token } from '../../tokens/interfaces/token.interface';
 import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
 import { Chain } from '../config/chain.config';
-import { ChainNetwork } from '../enums/chain-network.enum';
 import { ChainStrategy } from './chain.strategy';
+import { Network } from '@badger-dao/sdk';
 
 export class BaseStrategy extends ChainStrategy {
-  private network: ChainNetwork;
-
-  constructor(network: ChainNetwork, tokens: string[]) {
+  constructor(private network: Network, tokens: string[]) {
     super();
     this.network = network;
     ChainStrategy.register(tokens, this);

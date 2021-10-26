@@ -1,3 +1,4 @@
+import { Sett } from '@badger-dao/sdk';
 import { NotFound } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { BinanceSmartChain } from '../chains/config/bsc.config';
@@ -12,21 +13,25 @@ describe('setts.utils', () => {
   describe('defaultSett', () => {
     it('returns a sett default fields', () => {
       const settDefinition = randomSett();
-      const settToken = getToken(settDefinition.depositToken);
-      const expected = {
-        asset: settToken.symbol,
+      const depositToken = getToken(settDefinition.depositToken);
+      const settToken = getToken(settDefinition.settToken);
+      const expected: Sett = {
+        asset: depositToken.symbol,
+        settAsset: settToken.symbol,
+        deprecated: settDefinition.deprecated ?? false,
+        state: settDefinition.state ?? SettState.Open,
         apr: 0,
         balance: 0,
         boostable: false,
         experimental: settDefinition.state === SettState.Experimental,
         bouncer: settDefinition.bouncer ?? BouncerType.None,
         name: settDefinition.name,
-        ppfs: 1,
+        pricePerFullShare: 1,
         sources: [],
         tokens: [],
         underlyingToken: settDefinition.depositToken,
         value: 0,
-        vaultToken: settDefinition.settToken,
+        settToken: settDefinition.settToken,
         strategy: {
           address: ethers.constants.AddressZero,
           withdrawFee: 50,
@@ -56,7 +61,7 @@ describe('setts.utils', () => {
         setupMapper([snapshot]);
         const cached = await getCachedSett(sett);
         const expected = defaultSett(sett);
-        expected.ppfs = snapshot.balance / snapshot.supply;
+        expected.pricePerFullShare = snapshot.balance / snapshot.supply;
         expected.balance = snapshot.balance;
         expected.value = snapshot.settValue;
         expect(cached).toMatchObject(expected);

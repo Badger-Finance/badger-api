@@ -5,14 +5,11 @@ import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { REWARD_DATA } from '../config/constants';
 import { BoostData } from '../rewards/interfaces/boost-data.interface';
-import { CachedSettBoost } from '../setts/interfaces/cached-sett-boost.interface';
 import { LeaderBoardType } from './enums/leaderboard-type.enum';
 import { CachedBoost } from './interface/cached-boost.interface';
 import { LeaderBoardData } from './interface/leaderboard-data.interrface';
 import { UserBoost } from './interface/user-boost.interface';
 import { getFullLeaderBoard, getLeaderBoardEntryRange, getLeaderBoardSize } from './leaderboards.utils';
-
-type MultiplierMetrics = Record<string, Record<string, number>>;
 
 @Service()
 export class LeaderBoardsService {
@@ -46,43 +43,6 @@ export class LeaderBoardsService {
         maxPage: 0,
       };
     }
-  }
-
-  static async generateSettBoostData(): Promise<CachedSettBoost[]> {
-    const chains = loadChains();
-    const results = await Promise.all(chains.map((chain) => this.generateChainSettBoostData(chain)));
-    return results.flatMap((item) => item);
-  }
-
-  static async generateChainSettBoostData(chain: Chain): Promise<CachedSettBoost[]> {
-    const boostFile = await getObject(REWARD_DATA, `badger-boosts-${parseInt(chain.chainId, 16)}.json`);
-    const boostData: BoostData = JSON.parse(boostFile.toString('utf-8'));
-    const multiplierMetrics: MultiplierMetrics = {};
-    Object.values(boostData.userData).map((entry) => {
-      const { boost, multipliers } = entry;
-      Object.entries(multipliers).forEach((e) => {
-        const [sett, multiplier] = e;
-        if (!multiplierMetrics[sett]) {
-          multiplierMetrics[sett] = {};
-        }
-        if (!multiplierMetrics[sett][boost]) {
-          multiplierMetrics[sett][boost] = multiplier;
-        }
-        multiplierMetrics[sett][boost] = Math.min(multiplier, multiplierMetrics[sett][boost]);
-      });
-    });
-    return Object.entries(multiplierMetrics).flatMap((e) => {
-      const [address, metrics] = e;
-      return Object.entries(metrics).map((metric) => {
-        const [boost, multiplier] = metric;
-
-        return Object.assign(new CachedSettBoost(), {
-          address,
-          boost,
-          multiplier,
-        });
-      });
-    });
   }
 
   static async generateBoostsLeaderBoard(): Promise<CachedBoost[]> {
