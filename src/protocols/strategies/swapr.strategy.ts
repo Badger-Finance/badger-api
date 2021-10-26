@@ -15,11 +15,11 @@ import { createValueSource } from '../interfaces/value-source.interface';
 import { tokenEmission } from '../protocols.utils';
 import { getUniV2SwapValue } from './strategy.utils';
 
-// TODO: update compound scalars for ibbtc/weth
 // scalars are the "emitted" proportion
 const COMPOUND_SCALARS = {
   [TOKENS.BARB_SWP_WBTC_WETH]: 0.5,
-  [TOKENS.BARB_SWP_BADGER_WETH]: 0.5,
+  [TOKENS.BARB_SWP_BADGER_WETH]: 1,
+  [TOKENS.BARB_SWP_IBBTC_WETH]: 1,
 };
 
 export class SwaprStrategy {
