@@ -95,7 +95,7 @@ export function cachedAccountToAccount(cachedAccount: CachedAccount, network?: N
   const claimableBalances = Object.fromEntries(
     cachedAccount.claimableBalances.map((bal) => [bal.address, bal.balance]),
   );
-  const { address, value, earnedValue, boost, boostRank, stakeRatio, nativeBalance, nonNativeBalance } = cachedAccount;
+  const { address, value, earnedValue, boost, stakeRatio, boostRank, nativeBalance, nonNativeBalance } = cachedAccount;
   const account: Account = {
     address,
     value,
@@ -104,6 +104,7 @@ export function cachedAccountToAccount(cachedAccount: CachedAccount, network?: N
     boostRank,
     multipliers,
     data,
+    stakeRatio,
     claimableBalances,
     stakeRatio,
     nativeBalance,
