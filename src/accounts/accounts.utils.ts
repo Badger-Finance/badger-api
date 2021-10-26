@@ -95,7 +95,7 @@ export function cachedAccountToAccount(cachedAccount: CachedAccount, network?: N
   const claimableBalances = Object.fromEntries(
     cachedAccount.claimableBalances.map((bal) => [bal.address, bal.balance]),
   );
-  const { address, value, earnedValue, boost, boostRank, nativeBalance, nonNativeBalance } = cachedAccount;
+  const { address, value, earnedValue, boost, boostRank, stakeRatio, nativeBalance, nonNativeBalance } = cachedAccount;
   const account: Account = {
     address,
     value,
@@ -105,6 +105,7 @@ export function cachedAccountToAccount(cachedAccount: CachedAccount, network?: N
     multipliers,
     data,
     claimableBalances,
+    stakeRatio,
     nativeBalance,
     nonNativeBalance,
   };
@@ -114,7 +115,7 @@ export function cachedAccountToAccount(cachedAccount: CachedAccount, network?: N
 
 export async function getCachedAccount(address: string): Promise<CachedAccount> {
   const checksummedAccount = ethers.utils.getAddress(address);
-  const defaultAccount = {
+  const defaultAccount: CachedAccount = {
     address: checksummedAccount,
     boost: 0,
     boostRank: 0,
@@ -123,6 +124,7 @@ export async function getCachedAccount(address: string): Promise<CachedAccount> 
     earnedValue: 0,
     balances: [],
     claimableBalances: [],
+    stakeRatio: 1,
     nativeBalance: 0,
     nonNativeBalance: 0,
   };

@@ -138,6 +138,7 @@ async function refreshAccountBoostInfo(chains: Chain[], batchAccounts: AccountMa
     addresses.map(async (acc) => {
       const account = batchAccounts[acc];
       const cachedBoost = await getCachedBoost(acc);
+      account.stakeRatio = cachedBoost.stakeRatio;
       account.nativeBalance = cachedBoost.nativeBalance;
       account.nonNativeBalance = cachedBoost.nonNativeBalance;
       account.boost = cachedBoost.boost;

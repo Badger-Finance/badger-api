@@ -29,6 +29,9 @@ export class CachedAccount {
   balances!: Array<CachedSettBalance>;
 
   @attribute()
+  stakeRatio!: number;
+
+  @attribute()
   nativeBalance!: number;
 
   @attribute()
