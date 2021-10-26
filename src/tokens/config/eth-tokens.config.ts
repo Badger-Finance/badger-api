@@ -80,6 +80,13 @@ export const ethTokensConfig: TokenConfig = {
     symbol: 'mhBTC',
     type: TokenType.Custom,
   },
+  [TOKENS.CRV_CVXBVECVX]: {
+    address: TOKENS.CRV_CVXBVECVX,
+    decimals: 18,
+    name: 'Curve.fi CVX/bveCVX',
+    symbol: 'crvCVXbveCVX',
+    type: TokenType.CurveLP,
+  },
   [TOKENS.CRV_SBTC]: {
     address: TOKENS.CRV_SBTC,
     decimals: 18,

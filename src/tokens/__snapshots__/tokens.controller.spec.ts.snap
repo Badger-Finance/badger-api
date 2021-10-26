@@ -91,6 +91,12 @@ Object {
     "name": "Huobi BTC",
     "symbol": "HBTC",
   },
+  "0x04c90C198b2eFF55716079bc06d7CCc4aa4d7512": Object {
+    "address": "0x04c90C198b2eFF55716079bc06d7CCc4aa4d7512",
+    "decimals": 18,
+    "name": "Curve.fi CVX/bveCVX",
+    "symbol": "crvCVXbveCVX",
+  },
   "0x075b1bb99792c9E1041bA13afEf80C91a1e70fB3": Object {
     "address": "0x075b1bb99792c9E1041bA13afEf80C91a1e70fB3",
     "decimals": 18,
@@ -551,6 +557,12 @@ Object {
     "decimals": 18,
     "name": "Huobi BTC",
     "symbol": "HBTC",
+  },
+  "0x04c90C198b2eFF55716079bc06d7CCc4aa4d7512": Object {
+    "address": "0x04c90C198b2eFF55716079bc06d7CCc4aa4d7512",
+    "decimals": 18,
+    "name": "Curve.fi CVX/bveCVX",
+    "symbol": "crvCVXbveCVX",
   },
   "0x075b1bb99792c9E1041bA13afEf80C91a1e70fB3": Object {
     "address": "0x075b1bb99792c9E1041bA13afEf80C91a1e70fB3",
