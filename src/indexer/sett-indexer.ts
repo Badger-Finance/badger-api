@@ -8,7 +8,7 @@ import { IS_OFFLINE } from '../config/constants';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { getIndexedBlock, settToSnapshot } from './indexer.utils';
 
-const NO_HISTORIC = 'Queries more than 20 blocks behind `latest` are currently not supported';
+const NO_HISTORIC = 'Queries more than';
 
 /**
  * Index a sett's historic data via the graph + web3.
