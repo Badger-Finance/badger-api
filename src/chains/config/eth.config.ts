@@ -263,4 +263,11 @@ export const ethSetts: SettDefinition[] = [
     settToken: TOKENS.BICVX,
     protocol: Protocol.Convex,
   },
+  {
+    name: 'Convex Vote Locked CVX',
+    createdBlock: 13239091,
+    depositToken: TOKENS.CVX,
+    settToken: TOKENS.BICVX,
+    protocol: Protocol.Convex,
+  },
 ];

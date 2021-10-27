@@ -52,6 +52,7 @@ async function getSwaprEmission(chain: Chain, settDefinition: SettDefinition): P
   const stakedAmount = formatBalance(totalSupply) * lpTokenPrice.usd;
   const strategyFeeMultiplier = 1 - (sett.strategy.performanceFee + sett.strategy.strategistFee) / 10000;
 
+  console.log({ strategy, stakingContractAddr, duration, totalSupply, lpTokenPrice: lpTokenPrice.usd, sett });
   const sources = [];
   let tokenIndex = 0;
   while (true) {
@@ -68,7 +69,8 @@ async function getSwaprEmission(chain: Chain, settDefinition: SettDefinition): P
       );
       sources.push(valueSourceToCachedValueSource(swaprEmission, settDefinition, tokenEmission(rewardToken)));
       tokenIndex++;
-    } catch {
+    } catch (err) {
+      console.log(err);
       break;
     }
   }
