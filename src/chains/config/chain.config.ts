@@ -58,6 +58,9 @@ export abstract class Chain {
   static register(network: Network, chain: Chain): void {
     Chain.chains[network] = chain;
     Chain.chains[chain.symbol] = chain;
+    if (network === Network.Polygon) {
+      Chain.chains['matic'] = chain;
+    }
   }
 
   static getChain(network?: Network): Chain {
