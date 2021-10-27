@@ -268,6 +268,7 @@ export const ethSetts: SettDefinition[] = [
     createdBlock: 13006329,
     depositToken: TOKENS.CRV_CVXBVECVX,
     getTokenBalance: getCurveSettTokenBalance,
+    stage: Stage.Staging,
     settToken: TOKENS.BCRV_CVXBVECVX,
     protocol: Protocol.Curve,
   },

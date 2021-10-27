@@ -15,12 +15,11 @@ import { SettDefinition } from './interfaces/sett-definition.interface';
 describe('SettsController', () => {
   let request: SuperTest.SuperTest<SuperTest.Test>;
 
-  beforeEach(PlatformTest.bootstrap(Server));
-  beforeEach(async () => {
+  beforeAll(PlatformTest.bootstrap(Server));
+  beforeAll(async () => {
     request = SuperTest(PlatformTest.callback());
   });
-
-  afterEach(PlatformTest.reset);
+  afterAll(PlatformTest.reset);
 
   const setupTest = (): void => {
     jest

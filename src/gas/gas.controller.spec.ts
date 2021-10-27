@@ -8,27 +8,47 @@ describe('GasController', () => {
   let gasService: GasService;
 
   beforeAll(PlatformTest.bootstrap(Server));
-  beforeAll(async () => {
+  beforeAll(() => {
     request = SuperTest(PlatformTest.callback());
     gasService = PlatformTest.get<GasService>(GasService);
   });
-
-  afterEach(PlatformTest.reset);
+  beforeEach(jest.resetAllMocks);
+  afterAll(PlatformTest.reset);
 
   describe('GET /v2/gas', () => {
-    it('returns a list of gas prices', async (done) => {
-      jest
-        .spyOn(gasService, 'getGasPrices')
-        .mockImplementationOnce(() => Promise.resolve({ rapid: 100, fast: 99, standard: 95, slow: 90 }));
-
-      request
-        .get('/v2/gas')
-        .expect(200)
-        .end((err, response) => {
-          expect(err).toBeNull();
-          expect(response.body).toMatchSnapshot();
-          done();
-        });
+    it('returns a list of gas prices in eip-1559 format', async (done: jest.DoneCallback) => {
+      jest.spyOn(gasService, 'getGasPrices').mockImplementation(() =>
+        Promise.resolve({
+          rapid: {
+            maxFeePerGas: 130,
+            maxPriorityFeePerGas: 2,
+          },
+          fast: {
+            maxFeePerGas: 115,
+            maxPriorityFeePerGas: 2,
+          },
+          standard: {
+            maxFeePerGas: 100,
+            maxPriorityFeePerGas: 2,
+          },
+          slow: {
+            maxFeePerGas: 85,
+            maxPriorityFeePerGas: 2,
+          },
+        }),
+      );
+      const { body } = await request.get('/v2/gas').expect(200);
+      expect(body).toMatchSnapshot();
+      done();
     });
+  });
+
+  it('returns a list of gas prices in legacy format', async (done: jest.DoneCallback) => {
+    jest
+      .spyOn(gasService, 'getGasPrices')
+      .mockImplementation(() => Promise.resolve({ rapid: 130, fast: 115, standard: 100, slow: 85 }));
+    const { body } = await request.get('/v2/gas').expect(200);
+    expect(body).toMatchSnapshot();
+    done();
   });
 });

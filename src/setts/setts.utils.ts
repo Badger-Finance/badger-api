@@ -1,6 +1,6 @@
 import { between } from '@aws/dynamodb-expressions';
 import { NotFound } from '@tsed/exceptions';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
@@ -8,7 +8,7 @@ import { ONE_DAY_MS, ONE_YEAR_MS, SAMPLE_DAYS } from '../config/constants';
 import { SettState } from '../config/enums/sett-state.enum';
 import { getSdk, SettQuery } from '../graphql/generated/badger';
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
-import { getToken } from '../tokens/tokens.utils';
+import { formatBalance, getToken } from '../tokens/tokens.utils';
 import { CachedSettSnapshot } from './interfaces/cached-sett-snapshot.interface';
 import { SettDefinition } from './interfaces/sett-definition.interface';
 import { SettSnapshot } from './interfaces/sett-snapshot.interface';
@@ -173,3 +173,24 @@ export async function getStrategyInfo(chain: Chain, sett: SettDefinition): Promi
     return defaultStrategyInfo;
   }
 }
+
+export const getPricePerShare = async (
+  chain: Chain,
+  pricePerShare: BigNumber,
+  sett: SettDefinition,
+  block?: number,
+): Promise<number> => {
+  const token = getToken(sett.settToken);
+  try {
+    let ppfs: BigNumber;
+    const contract = Sett__factory.connect(sett.settToken, chain.provider);
+    if (block) {
+      ppfs = await contract.getPricePerFullShare({ blockTag: block });
+    } else {
+      ppfs = await contract.getPricePerFullShare();
+    }
+    return formatBalance(ppfs, token.decimals);
+  } catch (err) {
+    return formatBalance(pricePerShare, token.decimals);
+  }
+};
