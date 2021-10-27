@@ -219,10 +219,7 @@ export async function getEmissionApySnapshots(
   chain: Chain,
   settDefinition: SettDefinition,
 ): Promise<CachedValueSource[]> {
-  const emissions = await RewardsService.getRewardEmission(chain, settDefinition);
-  return emissions.map((source) =>
-    valueSourceToCachedValueSource(source, settDefinition, source.name.replace(' ', '_').toLowerCase()),
-  );
+  return RewardsService.getRewardEmission(chain, settDefinition);
 }
 
 const ARB_CRV_SETTS = [TOKENS.BARB_CRV_RENBTC, TOKENS.BARB_CRV_TRICRYPTO, TOKENS.BARB_CRV_TRICRYPTO_LITE];

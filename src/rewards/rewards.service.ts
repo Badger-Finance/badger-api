@@ -7,7 +7,7 @@ import { ONE_YEAR_SECONDS, REWARD_DATA, STAGE } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
 import { getPrice } from '../prices/prices.utils';
 import { uniformPerformance } from '../protocols/interfaces/performance.interface';
-import { createValueSource, ValueSource } from '../protocols/interfaces/value-source.interface';
+import { createValueSource } from '../protocols/interfaces/value-source.interface';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { getCachedSett } from '../setts/setts.utils';
 import { BoostData } from './interfaces/boost-data.interface';
@@ -19,6 +19,9 @@ import { CachedBoostMultiplier } from './interfaces/cached-boost-multiplier.inte
 import BadgerSDK from '@badger-dao/sdk';
 import { Stage } from '../config/enums/stage.enum';
 import { getToken } from '../tokens/tokens.utils';
+import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
+import { valueSourceToCachedValueSource } from '../indexer/indexer.utils';
+import { tokenEmission } from '../protocols/protocols.utils';
 
 @Service()
 export class RewardsService {
@@ -148,7 +151,7 @@ export class RewardsService {
     return boostMultipliers;
   }
 
-  static async getRewardEmission(chain: Chain, settDefinition: SettDefinition): Promise<ValueSource[]> {
+  static async getRewardEmission(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
     if (!chain.rewardsLogger || settDefinition.depositToken === TOKENS.DIGG) {
       return [];
     }
@@ -190,13 +193,14 @@ export class RewardsService {
      * emission that have since ended, and only the latest active emission
      * will be used for yield calcuation.
      */
-    const emissionSources: ValueSource[] = [];
+    const emissionSources = [];
     for (const schedule of activeSchedules) {
       const [price, token] = await Promise.all([getPrice(schedule.token), getToken(schedule.token)]);
       const durationScalar = ONE_YEAR_SECONDS / (schedule.end - schedule.start);
       const yearlyEmission = price.usd * schedule.amount * durationScalar;
       const apr = (yearlyEmission / sett.value) * 100;
-      emissionSources.push(createValueSource(`${token.name} Rewards`, uniformPerformance(apr), false, boostRange));
+      const source = createValueSource(`${token.name} Rewards`, uniformPerformance(apr), false, boostRange);
+      emissionSources.push(valueSourceToCachedValueSource(source, settDefinition, tokenEmission(token)));
     }
     return emissionSources;
   }

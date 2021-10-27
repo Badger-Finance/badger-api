@@ -183,8 +183,8 @@ async function getVaultSources(chain: Chain, settDefinition: SettDefinition): Pr
   // create value sources
   const totalUnderlyingApr = crvUnderlyingApr + cvxUnderlyingApr;
   const compoundValueSource = createValueSource(VAULT_SOURCE, uniformPerformance(totalUnderlyingApr), true);
-  const crvValueSource = createValueSource('bcvxCRV Rewards', uniformPerformance(crvEmissionApr));
-  const cvxValueSource = createValueSource('bCVX Rewards', uniformPerformance(cvxEmissionApr));
+  const crvValueSource = createValueSource(`${bcvxCRV.name} Rewards`, uniformPerformance(crvEmissionApr));
+  const cvxValueSource = createValueSource(`${bCVX.name} Rewards`, uniformPerformance(cvxEmissionApr));
 
   // create cached value sources
   const cachedCompounding = valueSourceToCachedValueSource(compoundValueSource, settDefinition, SourceType.Compound);
