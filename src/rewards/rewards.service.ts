@@ -188,7 +188,6 @@ export class RewardsService {
       const apr = (yearlyEmission / sett.value) * 100;
       emissionSources.push(createValueSource(`${token.name} Rewards`, uniformPerformance(apr), false, boostRange));
     }
-    console.log(emissionSources);
     return emissionSources;
   }
 }
