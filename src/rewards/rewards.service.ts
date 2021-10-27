@@ -18,6 +18,7 @@ import { getTreeDistribution } from './rewards.utils';
 import { CachedBoostMultiplier } from './interfaces/cached-boost-multiplier.interface';
 import BadgerSDK from '@badger-dao/sdk';
 import { Stage } from '../config/enums/stage.enum';
+import { getToken } from '../tokens/tokens.utils';
 
 @Service()
 export class RewardsService {
@@ -191,7 +192,7 @@ export class RewardsService {
      */
     const emissionSources: ValueSource[] = [];
     for (const schedule of activeSchedules) {
-      const [price, token] = await Promise.all([getPrice(schedule.token), sdk.tokens.loadToken(schedule.token)]);
+      const [price, token] = await Promise.all([getPrice(schedule.token), getToken(schedule.token)]);
       const durationScalar = ONE_YEAR_SECONDS / (schedule.end - schedule.start);
       const yearlyEmission = price.usd * schedule.amount * durationScalar;
       const apr = (yearlyEmission / sett.value) * 100;
