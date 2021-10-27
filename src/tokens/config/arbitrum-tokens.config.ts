@@ -71,7 +71,7 @@ export const arbitrumTokensConfig: TokenConfig = {
   [TOKENS.ARB_SWAPR]: {
     address: TOKENS.ARB_SWAPR,
     decimals: 18,
-    lookupName: TOKENS.ARB_SWP_SWAPR_WETH,
+    lookupName: 'swapr',
     name: 'Swapr',
     symbol: 'SWAPR',
     type: TokenType.Contract,

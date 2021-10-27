@@ -263,4 +263,12 @@ export const ethSetts: SettDefinition[] = [
     settToken: TOKENS.BICVX,
     protocol: Protocol.Convex,
   },
+  {
+    name: 'Curve.fi Convex / bveConvex',
+    createdBlock: 13006329,
+    depositToken: TOKENS.CRV_CVXBVECVX,
+    getTokenBalance: getCurveSettTokenBalance,
+    settToken: TOKENS.BCRV_CVXBVECVX,
+    protocol: Protocol.Curve,
+  },
 ];

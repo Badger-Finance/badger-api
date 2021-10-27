@@ -628,10 +628,10 @@
     "@babel/helper-validator-identifier" "^7.14.5"
     to-fast-properties "^2.0.0"
 
-"@badger-dao/sdk@^1.0.31":
-  version "1.0.31"
-  resolved "https://registry.yarnpkg.com/@badger-dao/sdk/-/sdk-1.0.31.tgz#bb897a99ba457a8b5f1f85f3d750d0728dbb2860"
-  integrity sha512-kAOPgQzvJvnO70WuKyHLB92jwtyuMJp9BYX823WYdJnausWSuAFiLyHoRd0DR3jSkAgupkSGARf2ApfJOgceUg==
+"@badger-dao/sdk@^1.0.33":
+  version "1.0.33"
+  resolved "https://registry.yarnpkg.com/@badger-dao/sdk/-/sdk-1.0.33.tgz#46ec30e22866616eb77678a13d36ed93d1d0bcce"
+  integrity sha512-ulc0xiqUW5XyP9mUWW54wExlXZsXQfuSgRGNk6QJ5i49ZHiIbipApkzysTKNC7ug3RvcXK2AxcDid1khTL8rxA==
   dependencies:
     axios "^0.23.0"
     graphql "^15.6.1"

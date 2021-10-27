@@ -22,7 +22,6 @@ export abstract class Chain {
   readonly strategy: ChainStrategy;
   readonly graphUrl: string;
   readonly blocksPerYear: number;
-  // readonly sdk: BadgerSDK;
   readonly badgerTree?: string;
   readonly rewardsLogger?: string;
 
@@ -54,8 +53,6 @@ export abstract class Chain {
     this.blocksPerYear = blocksPerYear;
     this.badgerTree = badgerTree;
     this.rewardsLogger = rewardsLogger;
-    // console.log({ id: parseInt(chainId, 16), provider: this.batchProvider });
-    // this.sdk = new BadgerSDK(parseInt(chainId, 16), this.batchProvider);
   }
 
   static register(network: Network, chain: Chain): void {

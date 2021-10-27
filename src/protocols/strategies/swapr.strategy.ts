@@ -68,7 +68,7 @@ async function getSwaprEmission(chain: Chain, settDefinition: SettDefinition): P
       );
       sources.push(valueSourceToCachedValueSource(swaprEmission, settDefinition, tokenEmission(rewardToken)));
       tokenIndex++;
-    } catch {
+    } catch (err) {
       break;
     }
   }

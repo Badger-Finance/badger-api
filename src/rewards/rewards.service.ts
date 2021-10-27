@@ -10,7 +10,6 @@ import { uniformPerformance } from '../protocols/interfaces/performance.interfac
 import { createValueSource, ValueSource } from '../protocols/interfaces/value-source.interface';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { getCachedSett } from '../setts/setts.utils';
-import { formatBalance } from '../tokens/tokens.utils';
 import { BoostData } from './interfaces/boost-data.interface';
 import { BoostMultipliers } from './interfaces/boost-multipliers.interface';
 import { AirdropMerkleClaim, AirdropMerkleDistribution } from './interfaces/merkle-distributor.interface';
@@ -184,9 +183,8 @@ export class RewardsService {
     const emissionSources: ValueSource[] = [];
     for (const schedule of activeSchedules) {
       const [price, token] = await Promise.all([getPrice(schedule.token), sdk.tokens.loadToken(schedule.token)]);
-      const amount = formatBalance(schedule.amount, token.decimals);
       const durationScalar = ONE_YEAR_SECONDS / (schedule.end - schedule.start);
-      const yearlyEmission = price.usd * amount * durationScalar;
+      const yearlyEmission = price.usd * schedule.amount * durationScalar;
       const apr = (yearlyEmission / sett.value) * 100;
       emissionSources.push(createValueSource(`${token.name} Rewards`, uniformPerformance(apr), false, boostRange));
     }
