@@ -16,6 +16,7 @@ import { Sett__factory, Controller__factory, Strategy__factory } from '../contra
 import { SettStrategy } from './interfaces/sett-strategy.interface';
 import { TOKENS } from '../config/tokens.config';
 import { Sett } from '@badger-dao/sdk';
+import { Protocol } from '../config/enums/protocol.enum';
 
 export const VAULT_SOURCE = 'Vault Compounding';
 
@@ -160,10 +161,12 @@ export async function getStrategyInfo(chain: Chain, sett: SettDefinition): Promi
       strategy.performanceFeeGovernance(),
       strategy.performanceFeeStrategist(),
     ]);
+    const settPerformanceFee =
+      sett.protocol === Protocol.Convex ? performanceFee.toNumber() * 2 : performanceFee.toNumber();
     return {
       address: strategy.address,
       withdrawFee: withdrawFee.toNumber(),
-      performanceFee: performanceFee.toNumber(),
+      performanceFee: settPerformanceFee,
       strategistFee: strategistFee.toNumber(),
     };
   } catch (err) {
