@@ -2,6 +2,11 @@ import { DataMapper, QueryIterator, StringToAnyObjectMap } from '@aws/dynamodb-d
 import { ethers } from 'ethers';
 import createMockInstance from 'jest-create-mock-instance';
 import { loadChains } from '../chains/chain';
+import { Arbitrum } from '../chains/config/arbitrum.config';
+import { BinanceSmartChain } from '../chains/config/bsc.config';
+import { Ethereum } from '../chains/config/eth.config';
+import { Polygon } from '../chains/config/matic.config';
+import { xDai } from '../chains/config/xdai.config';
 import { ONE_DAY_MS, ONE_MINUTE_MS, SAMPLE_DAYS } from '../config/constants';
 import { CachedSettSnapshot } from '../setts/interfaces/cached-sett-snapshot.interface';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
@@ -79,4 +84,25 @@ export function randomPerformance(): [SettSnapshot, SettSnapshot] {
   const [current, initial] = randomSnapshots(randomSett(), 2);
   initial.timestamp = current.timestamp - ONE_DAY_MS;
   return [current, initial];
+}
+
+export function setupChainGasPrices() {
+  jest.spyOn(Ethereum.prototype, 'getGasPrices').mockImplementation(async () => ({
+    rapid: { maxFeePerGas: 223.06, maxPriorityFeePerGas: 3.04 },
+    fast: { maxFeePerGas: 221.96, maxPriorityFeePerGas: 1.94 },
+    standard: { maxFeePerGas: 221.91, maxPriorityFeePerGas: 1.89 },
+    slow: { maxFeePerGas: 221.81, maxPriorityFeePerGas: 1.79 },
+  }));
+  jest
+    .spyOn(BinanceSmartChain.prototype, 'getGasPrices')
+    .mockImplementation(async () => ({ rapid: 38, fast: 33, standard: 33, slow: 33 }));
+  jest
+    .spyOn(Arbitrum.prototype, 'getGasPrices')
+    .mockImplementation(async () => ({ rapid: 38, fast: 33, standard: 33, slow: 33 }));
+  jest
+    .spyOn(xDai.prototype, 'getGasPrices')
+    .mockImplementation(async () => ({ rapid: 38, fast: 33, standard: 33, slow: 33 }));
+  jest
+    .spyOn(Polygon.prototype, 'getGasPrices')
+    .mockImplementation(async () => ({ rapid: 38, fast: 33, standard: 33, slow: 33 }));
 }

@@ -11,6 +11,8 @@ import { CachedSettSnapshot } from '../setts/interfaces/cached-sett-snapshot.int
 import * as settUtils from '../setts/setts.utils';
 import { refreshSettSnapshots } from './sett-snapshots-indexer';
 import { ethers } from 'ethers';
+import { BaseStrategy } from '../chains/strategies/base.strategy';
+import { TOKENS } from '../config/tokens.config';
 
 describe('refreshSettSnapshots', () => {
   const supportedAddresses = loadChains()
@@ -27,10 +29,10 @@ describe('refreshSettSnapshots', () => {
   beforeEach(async () => {
     getSettMock = jest.spyOn(settUtils, 'getSett').mockImplementation(async (_graphUrl: string, _contract: string) => ({
       sett: {
-        id: 'sett_123',
+        id: TOKENS.BBADGER,
         balance: 0,
         token: {
-          id: '0xdead',
+          id: TOKENS.BADGER,
           decimals: 18,
         },
         netDeposit: 0,
@@ -46,17 +48,21 @@ describe('refreshSettSnapshots', () => {
       performanceFee: 20,
       strategistFee: 10,
     }));
+    jest
+      .spyOn(settUtils, 'getPricePerShare')
+      .mockImplementation(async (_chain, ppfs, _sett, _block) => Number(ethers.utils.formatEther(ppfs)));
 
     put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
 
     const mockTokenPrice = { name: 'mock', usd: 10, eth: 0, address: '0xbeef' };
+    jest.spyOn(BaseStrategy.prototype, 'getPrice').mockImplementation(async (_address: string) => mockTokenPrice);
+    jest.spyOn(ArbitrumStrategy.prototype, 'getPrice').mockImplementation(async (_address: string) => mockTokenPrice);
     jest.spyOn(BscStrategy.prototype, 'getPrice').mockImplementation(async (_address: string) => mockTokenPrice);
     jest.spyOn(EthStrategy.prototype, 'getPrice').mockImplementation(async (_address: string) => mockTokenPrice);
     jest.spyOn(MaticStrategy.prototype, 'getPrice').mockImplementation(async (_address: string) => mockTokenPrice);
     jest.spyOn(xDaiStrategy.prototype, 'getPrice').mockImplementation(async (_address: string) => mockTokenPrice);
-    jest.spyOn(ArbitrumStrategy.prototype, 'getPrice').mockImplementation(async (_address: string) => mockTokenPrice);
 
-    const mockTokenPriceSnapshot = { name: 'mock', usd: 10, eth: 0, address: '0xbeef', updatedAt: Date.now() };
+    const mockTokenPriceSnapshot = { name: 'mock', usd: 10, eth: 0.0001, address: '0xbeef', updatedAt: Date.now() };
     jest.spyOn(priceUtils, 'getPrice').mockImplementation(async (_address: string) => mockTokenPriceSnapshot);
 
     await refreshSettSnapshots();
@@ -70,7 +76,6 @@ describe('refreshSettSnapshots', () => {
   it('saves Setts in Dynamo', () => {
     const requestedAddresses = [];
     // Verify each saved object.
-    // console.log(put.mock.calls[0]);
     for (const input of put.mock.calls) {
       // force convert input as jest overload mock causes issues
       const snapshot = input[0] as unknown as CachedSettSnapshot;

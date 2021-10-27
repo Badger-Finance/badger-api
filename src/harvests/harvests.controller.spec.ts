@@ -12,23 +12,14 @@ describe('HarvestsController', () => {
     request = SuperTest(PlatformTest.callback());
     harvestsService = PlatformTest.get<HarvestsService>(HarvestsService);
   });
-
-  afterEach(PlatformTest.reset);
+  afterAll(PlatformTest.reset);
 
   describe('GET /v2/harvests', () => {
-    it('returns a list of harvests', async (done) => {
+    it('returns a list of harvests', async (done: jest.DoneCallback) => {
       jest.spyOn(harvestsService, 'listHarvests').mockImplementationOnce(() => Promise.resolve({ settHarvests: [] }));
-
-      request
-        .get('/v2/harvests')
-        .expect(200)
-        .end((err, response) => {
-          expect(err).toBeNull();
-          expect(response).toMatchObject({
-            body: expect.any(Array),
-          });
-          done();
-        });
+      const { body } = await request.get('/v2/harvests').expect(200);
+      expect(body).toMatchObject(expect.any(Array));
+      done();
     });
   });
 });
