@@ -17,6 +17,7 @@ import { SettSnapshot } from './interfaces/sett-snapshot.interface';
 import { Sett__factory, Controller__factory, Strategy__factory } from '../contracts';
 import { SettStrategy } from './interfaces/sett-strategy.interface';
 import { TOKENS } from '../config/tokens.config';
+import { Protocol } from '../config/enums/protocol.enum';
 
 export const VAULT_SOURCE = 'Vault Compounding';
 
@@ -156,9 +157,9 @@ export const getSettBoosts = async (settDefinition: SettDefinition): Promise<Cac
 export async function getStrategyInfo(chain: Chain, sett: SettDefinition): Promise<SettStrategy> {
   const defaultStrategyInfo = {
     address: ethers.constants.AddressZero,
-    withdrawFee: 50,
-    performanceFee: 1000,
-    strategistFee: 1000,
+    withdrawFee: 0,
+    performanceFee: 0,
+    strategistFee: 0,
   };
   try {
     const contract = Sett__factory.connect(sett.settToken, chain.provider);
@@ -177,14 +178,15 @@ export async function getStrategyInfo(chain: Chain, sett: SettDefinition): Promi
       strategy.performanceFeeGovernance(),
       strategy.performanceFeeStrategist(),
     ]);
+    const settPerformanceFee =
+      sett.protocol === Protocol.Convex ? performanceFee.toNumber() * 2 : performanceFee.toNumber();
     return {
       address: strategy.address,
       withdrawFee: withdrawFee.toNumber(),
-      performanceFee: performanceFee.toNumber(),
+      performanceFee: settPerformanceFee,
       strategistFee: strategistFee.toNumber(),
     };
   } catch (err) {
-    console.error(err);
     return defaultStrategyInfo;
   }
 }
