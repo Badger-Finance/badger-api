@@ -3,7 +3,7 @@ import { BadRequest, NotFound } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
-import { ONE_YEAR_SECONDS, REWARD_DATA } from '../config/constants';
+import { ONE_YEAR_SECONDS, REWARD_DATA, STAGE } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
 import { getPrice } from '../prices/prices.utils';
 import { uniformPerformance } from '../protocols/interfaces/performance.interface';
@@ -17,6 +17,7 @@ import { RewardMerkleClaim } from './interfaces/reward-merkle-claim.interface';
 import { getTreeDistribution } from './rewards.utils';
 import { CachedBoostMultiplier } from './interfaces/cached-boost-multiplier.interface';
 import BadgerSDK from '@badger-dao/sdk';
+import { Stage } from '../config/enums/stage.enum';
 
 @Service()
 export class RewardsService {
@@ -152,7 +153,15 @@ export class RewardsService {
     }
     const { settToken } = settDefinition;
     const sett = await getCachedSett(settDefinition);
-    const boostFile = await getObject(REWARD_DATA, `badger-boosts-${parseInt(chain.chainId, 16)}.json`);
+
+    let boostFileName;
+    if (STAGE === Stage.Production) {
+      boostFileName = 'badger-boosts.json';
+    } else {
+      boostFileName = `badger-boosts-${parseInt(chain.chainId, 16)}.json`;
+    }
+
+    const boostFile = await getObject(REWARD_DATA, boostFileName);
     const boostData: BoostData = JSON.parse(boostFile.toString('utf-8'));
     if (sett.settToken === TOKENS.BICVX) {
       delete boostData.multiplierData[sett.settToken];
