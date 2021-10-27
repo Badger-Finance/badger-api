@@ -121,6 +121,9 @@ export const getSettSnapshotsInRange = async (
 export const getPerformance = (current: SettSnapshot, initial: SettSnapshot): number => {
   const ratioDiff = current.ratio - initial.ratio;
   const timestampDiff = current.timestamp - initial.timestamp;
+  if (timestampDiff === 0 || ratioDiff === 0) {
+    return 0;
+  }
   const scalar = ONE_YEAR_MS / timestampDiff;
   const finalRatio = initial.ratio + scalar * ratioDiff;
   return ((finalRatio - initial.ratio) / initial.ratio) * 100;

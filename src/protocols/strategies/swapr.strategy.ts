@@ -15,8 +15,11 @@ import { createValueSource } from '../interfaces/value-source.interface';
 import { tokenEmission } from '../protocols.utils';
 import { getUniV2SwapValue } from './strategy.utils';
 
+// scalars are the "emitted" proportion
 const COMPOUND_SCALARS = {
   [TOKENS.BARB_SWP_WBTC_WETH]: 0.5,
+  [TOKENS.BARB_SWP_BADGER_WETH]: 1,
+  [TOKENS.BARB_SWP_IBBTC_WETH]: 1,
 };
 
 export class SwaprStrategy {
@@ -29,10 +32,7 @@ export class SwaprStrategy {
 }
 
 async function getSwaprEmission(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
-  if (settDefinition.settToken === TOKENS.BARB_SWP_SWPR_WETH) {
-    return [];
-  }
-  const compoundScalar = COMPOUND_SCALARS[settDefinition.settToken] ?? 1;
+  const compoundScalar = COMPOUND_SCALARS[settDefinition.settToken] ?? 0;
   const helperToken = getToken(TOKENS.BARB_SWP_SWPR_WETH);
   const cachedSett = await getCachedSett(settDefinition);
   const { strategy } = cachedSett;
