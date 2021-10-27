@@ -14,9 +14,9 @@ export class GasController {
   @Get('')
   @ContentType('json')
   @Summary('Get the current gas price')
-  @Description('Returns the total amount of users, total amount of vaults and total value locked across all chains')
+  @Description('Returns the current gas price on the requested chain')
   @Returns(200, GasPricesModel)
-  @(Returns(404).Description('Protocol metrics not available'))
+  @(Returns(404).Description('Chain gas prices not available'))
   async getGasPrices(@QueryParams('chain') chain?: Network): Promise<GasPrices> {
     return this.gasService.getGasPrices(Chain.getChain(chain));
   }
