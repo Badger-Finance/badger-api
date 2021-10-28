@@ -264,7 +264,7 @@ export const ethSetts: SettDefinition[] = [
     protocol: Protocol.Convex,
   },
   {
-    name: 'Curve.fi Convex / bveConvex',
+    name: 'Curve.fi CVX / Vote Locked CVX',
     createdBlock: 13006329,
     depositToken: TOKENS.CRV_CVXBVECVX,
     getTokenBalance: getCurveSettTokenBalance,
