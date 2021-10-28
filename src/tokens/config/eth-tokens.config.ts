@@ -80,6 +80,13 @@ export const ethTokensConfig: TokenConfig = {
     symbol: 'mhBTC',
     type: TokenType.Custom,
   },
+  [TOKENS.CRV_CVXBVECVX]: {
+    address: TOKENS.CRV_CVXBVECVX,
+    decimals: 18,
+    name: 'Curve.fi CVX/bveCVX',
+    symbol: 'crvCVXbveCVX',
+    type: TokenType.CurveLP,
+  },
   [TOKENS.CRV_SBTC]: {
     address: TOKENS.CRV_SBTC,
     decimals: 18,
@@ -127,6 +134,7 @@ export const ethTokensConfig: TokenConfig = {
   [TOKENS.IBBTC]: {
     address: TOKENS.IBBTC,
     decimals: 18,
+    lookupName: 'interest-bearing-bitcoin',
     name: 'ibBTC',
     symbol: 'ibBTC',
     type: TokenType.Contract,
@@ -654,6 +662,17 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.MHBTC,
+      network: ChainNetwork.Ethereum,
+    },
+  },
+  [TOKENS.BCRV_CVXBVECVX]: {
+    address: TOKENS.BCRV_CVXBVECVX,
+    decimals: 18,
+    name: 'bcrvCVXbveCVX',
+    symbol: 'bcrvCVXbveCVX',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.CRV_CVXBVECVX,
       network: ChainNetwork.Ethereum,
     },
   },
