@@ -9,7 +9,7 @@ import { TOKENS } from '../config/tokens.config';
 import { Digg__factory, RewardsLogger__factory } from '../contracts';
 import { getPrice } from '../prices/prices.utils';
 import { uniformPerformance } from '../protocols/interfaces/performance.interface';
-import { createValueSource, ValueSource } from '../protocols/interfaces/value-source.interface';
+import { createValueSource } from '../protocols/interfaces/value-source.interface';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { getCachedSett } from '../setts/setts.utils';
 import { formatBalance, getToken } from '../tokens/tokens.utils';
@@ -19,6 +19,9 @@ import { BoostMultipliers } from './interfaces/boost-multipliers.interface';
 import { AirdropMerkleClaim, AirdropMerkleDistribution } from './interfaces/merkle-distributor.interface';
 import { RewardMerkleClaim } from './interfaces/reward-merkle-claim.interface';
 import { getTreeDistribution } from './rewards.utils';
+import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
+import { tokenEmission } from '../protocols/protocols.utils';
+import { valueSourceToCachedValueSource } from '../indexer/indexer.utils';
 
 @Service()
 export class RewardsService {
@@ -119,7 +122,7 @@ export class RewardsService {
     return userBoosts;
   }
 
-  static async getRewardEmission(chain: Chain, settDefinition: SettDefinition): Promise<ValueSource[]> {
+  static async getRewardEmission(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
     if (!chain.rewardsLogger || settDefinition.depositToken === TOKENS.DIGG) {
       return [];
     }
@@ -172,7 +175,7 @@ export class RewardsService {
      * emission that have since ended, and only the latest active emission
      * will be used for yield calcuation.
      */
-    const emissionSources: ValueSource[] = [];
+    const emissionSources = [];
     for (const schedule of activeSchedules) {
       const price = await getPrice(schedule.token);
       const token = getToken(schedule.token);
@@ -184,7 +187,8 @@ export class RewardsService {
       const durationScalar = ONE_YEAR_SECONDS / schedule.duration.toNumber();
       const yearlyEmission = price.usd * amount * durationScalar;
       const apr = (yearlyEmission / sett.value) * 100;
-      emissionSources.push(createValueSource(`${token.name} Rewards`, uniformPerformance(apr), false, boostRange));
+      const source = createValueSource(`${token.name} Rewards`, uniformPerformance(apr), false, boostRange);
+      emissionSources.push(valueSourceToCachedValueSource(source, settDefinition, tokenEmission(token)));
     }
     return emissionSources;
   }
