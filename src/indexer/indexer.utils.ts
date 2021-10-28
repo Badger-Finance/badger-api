@@ -1,11 +1,9 @@
-import { BigNumber } from '@ethersproject/bignumber';
+import { Network } from '@badger-dao/sdk';
 import { NotFound } from '@tsed/exceptions';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
-import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { Protocol } from '../config/enums/protocol.enum';
 import { TOKENS } from '../config/tokens.config';
-import { Sett__factory } from '../contracts';
 import { getArbitrumBlock } from '../etherscan/etherscan.utils';
 import { getPrice } from '../prices/prices.utils';
 import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
@@ -25,7 +23,7 @@ import { CachedSettSnapshot } from '../setts/interfaces/cached-sett-snapshot.int
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { SettSnapshot } from '../setts/interfaces/sett-snapshot.interface';
 import { SettsService } from '../setts/setts.service';
-import { getSett, getStrategyInfo } from '../setts/setts.utils';
+import { getPricePerShare, getSett, getStrategyInfo } from '../setts/setts.utils';
 import { CachedLiquidityPoolTokenBalance } from '../tokens/interfaces/cached-liquidity-pool-token-balance.interface';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
 import { formatBalance, getToken } from '../tokens/tokens.utils';
@@ -48,10 +46,12 @@ export const settToCachedSnapshot = async (
   const supplyDecimals = settDefinition.supplyDecimals || settToken.decimals;
   const tokenBalance = formatBalance(balance, balanceDecimals);
   const supply = formatBalance(totalSupply, supplyDecimals);
-  const ratio = await getPricePerShare(chain, pricePerFullShare, settDefinition);
-  const tokenPriceData = await getPrice(depositToken.address);
+  const [ratio, tokenPriceData, strategyInfo] = await Promise.all([
+    getPricePerShare(chain, pricePerFullShare, settDefinition),
+    getPrice(depositToken.address),
+    getStrategyInfo(chain, settDefinition),
+  ]);
   const value = tokenBalance * tokenPriceData.usd;
-  const strategyInfo = await getStrategyInfo(chain, settDefinition);
 
   return Object.assign(new CachedSettSnapshot(), {
     address: settToken.address,
@@ -65,8 +65,8 @@ export const settToCachedSnapshot = async (
 
 export async function getQueryBlock(chain: Chain, block: number): Promise<number> {
   let queryBlock = block;
-  if (chain.network === ChainNetwork.Arbitrum) {
-    const refChain = Chain.getChain(ChainNetwork.Ethereum);
+  if (chain.network === Network.Arbitrum) {
+    const refChain = Chain.getChain(Network.Ethereum);
     const refBlock = await refChain.provider.getBlock(block);
     queryBlock = await getArbitrumBlock(refBlock.timestamp);
   }
@@ -107,27 +107,6 @@ export const settToSnapshot = async (
     ratio,
     value: parseFloat(value.toFixed(4)),
   });
-};
-
-const getPricePerShare = async (
-  chain: Chain,
-  pricePerShare: BigNumber,
-  sett: SettDefinition,
-  block?: number,
-): Promise<number> => {
-  const token = getToken(sett.settToken);
-  try {
-    let ppfs: BigNumber;
-    const contract = Sett__factory.connect(sett.settToken, chain.provider);
-    if (block) {
-      ppfs = await contract.getPricePerFullShare({ blockTag: block });
-    } else {
-      ppfs = await contract.getPricePerFullShare();
-    }
-    return formatBalance(ppfs, token.decimals);
-  } catch (err) {
-    return formatBalance(pricePerShare, token.decimals);
-  }
 };
 
 export const getIndexedBlock = async (

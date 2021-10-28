@@ -17,10 +17,148 @@ export type Scalars = {
   Bytes: any;
 };
 
+export type BadgerTreeDistribution = TokenDistribution & {
+  __typename?: 'BadgerTreeDistribution';
+  id: Scalars['ID'];
+  timestamp: Scalars['Int'];
+  token: Token;
+  amount: Scalars['BigInt'];
+  blockNumber: Scalars['BigInt'];
+  strategy?: Maybe<Strategy>;
+  sett?: Maybe<Sett>;
+};
+
+export type BadgerTreeDistribution_Filter = {
+  id?: Maybe<Scalars['ID']>;
+  id_not?: Maybe<Scalars['ID']>;
+  id_gt?: Maybe<Scalars['ID']>;
+  id_lt?: Maybe<Scalars['ID']>;
+  id_gte?: Maybe<Scalars['ID']>;
+  id_lte?: Maybe<Scalars['ID']>;
+  id_in?: Maybe<Array<Scalars['ID']>>;
+  id_not_in?: Maybe<Array<Scalars['ID']>>;
+  timestamp?: Maybe<Scalars['Int']>;
+  timestamp_not?: Maybe<Scalars['Int']>;
+  timestamp_gt?: Maybe<Scalars['Int']>;
+  timestamp_lt?: Maybe<Scalars['Int']>;
+  timestamp_gte?: Maybe<Scalars['Int']>;
+  timestamp_lte?: Maybe<Scalars['Int']>;
+  timestamp_in?: Maybe<Array<Scalars['Int']>>;
+  timestamp_not_in?: Maybe<Array<Scalars['Int']>>;
+  token?: Maybe<Scalars['String']>;
+  token_not?: Maybe<Scalars['String']>;
+  token_gt?: Maybe<Scalars['String']>;
+  token_lt?: Maybe<Scalars['String']>;
+  token_gte?: Maybe<Scalars['String']>;
+  token_lte?: Maybe<Scalars['String']>;
+  token_in?: Maybe<Array<Scalars['String']>>;
+  token_not_in?: Maybe<Array<Scalars['String']>>;
+  token_contains?: Maybe<Scalars['String']>;
+  token_not_contains?: Maybe<Scalars['String']>;
+  token_starts_with?: Maybe<Scalars['String']>;
+  token_not_starts_with?: Maybe<Scalars['String']>;
+  token_ends_with?: Maybe<Scalars['String']>;
+  token_not_ends_with?: Maybe<Scalars['String']>;
+  amount?: Maybe<Scalars['BigInt']>;
+  amount_not?: Maybe<Scalars['BigInt']>;
+  amount_gt?: Maybe<Scalars['BigInt']>;
+  amount_lt?: Maybe<Scalars['BigInt']>;
+  amount_gte?: Maybe<Scalars['BigInt']>;
+  amount_lte?: Maybe<Scalars['BigInt']>;
+  amount_in?: Maybe<Array<Scalars['BigInt']>>;
+  amount_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber?: Maybe<Scalars['BigInt']>;
+  blockNumber_not?: Maybe<Scalars['BigInt']>;
+  blockNumber_gt?: Maybe<Scalars['BigInt']>;
+  blockNumber_lt?: Maybe<Scalars['BigInt']>;
+  blockNumber_gte?: Maybe<Scalars['BigInt']>;
+  blockNumber_lte?: Maybe<Scalars['BigInt']>;
+  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  strategy?: Maybe<Scalars['String']>;
+  strategy_not?: Maybe<Scalars['String']>;
+  strategy_gt?: Maybe<Scalars['String']>;
+  strategy_lt?: Maybe<Scalars['String']>;
+  strategy_gte?: Maybe<Scalars['String']>;
+  strategy_lte?: Maybe<Scalars['String']>;
+  strategy_in?: Maybe<Array<Scalars['String']>>;
+  strategy_not_in?: Maybe<Array<Scalars['String']>>;
+  strategy_contains?: Maybe<Scalars['String']>;
+  strategy_not_contains?: Maybe<Scalars['String']>;
+  strategy_starts_with?: Maybe<Scalars['String']>;
+  strategy_not_starts_with?: Maybe<Scalars['String']>;
+  strategy_ends_with?: Maybe<Scalars['String']>;
+  strategy_not_ends_with?: Maybe<Scalars['String']>;
+  sett?: Maybe<Scalars['String']>;
+  sett_not?: Maybe<Scalars['String']>;
+  sett_gt?: Maybe<Scalars['String']>;
+  sett_lt?: Maybe<Scalars['String']>;
+  sett_gte?: Maybe<Scalars['String']>;
+  sett_lte?: Maybe<Scalars['String']>;
+  sett_in?: Maybe<Array<Scalars['String']>>;
+  sett_not_in?: Maybe<Array<Scalars['String']>>;
+  sett_contains?: Maybe<Scalars['String']>;
+  sett_not_contains?: Maybe<Scalars['String']>;
+  sett_starts_with?: Maybe<Scalars['String']>;
+  sett_not_starts_with?: Maybe<Scalars['String']>;
+  sett_ends_with?: Maybe<Scalars['String']>;
+  sett_not_ends_with?: Maybe<Scalars['String']>;
+};
+
+export enum BadgerTreeDistribution_OrderBy {
+  Id = 'id',
+  Timestamp = 'timestamp',
+  Token = 'token',
+  Amount = 'amount',
+  BlockNumber = 'blockNumber',
+  Strategy = 'strategy',
+  Sett = 'sett',
+}
+
 export type Block_Height = {
   hash?: Maybe<Scalars['Bytes']>;
   number?: Maybe<Scalars['Int']>;
 };
+
+export type Controller = {
+  __typename?: 'Controller';
+  id: Scalars['ID'];
+  strategies: Array<Strategy>;
+  setts: Array<Sett>;
+};
+
+export type ControllerStrategiesArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Strategy_OrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<Strategy_Filter>;
+};
+
+export type ControllerSettsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Sett_OrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<Sett_Filter>;
+};
+
+export type Controller_Filter = {
+  id?: Maybe<Scalars['ID']>;
+  id_not?: Maybe<Scalars['ID']>;
+  id_gt?: Maybe<Scalars['ID']>;
+  id_lt?: Maybe<Scalars['ID']>;
+  id_gte?: Maybe<Scalars['ID']>;
+  id_lte?: Maybe<Scalars['ID']>;
+  id_in?: Maybe<Array<Scalars['ID']>>;
+  id_not_in?: Maybe<Array<Scalars['ID']>>;
+};
+
+export enum Controller_OrderBy {
+  Id = 'id',
+  Strategies = 'strategies',
+  Setts = 'setts',
+}
 
 export type Erc20 = {
   id: Scalars['ID'];
@@ -114,6 +252,14 @@ export type Query = {
   transfers: Array<Transfer>;
   user?: Maybe<User>;
   users: Array<User>;
+  badgerTreeDistribution?: Maybe<BadgerTreeDistribution>;
+  badgerTreeDistributions: Array<BadgerTreeDistribution>;
+  settHarvest?: Maybe<SettHarvest>;
+  settHarvests: Array<SettHarvest>;
+  strategy?: Maybe<Strategy>;
+  strategies: Array<Strategy>;
+  controller?: Maybe<Controller>;
+  controllers: Array<Controller>;
   erc20?: Maybe<Erc20>;
   erc20S: Array<Erc20>;
   vault?: Maybe<Vault>;
@@ -122,6 +268,8 @@ export type Query = {
   vaultBalances: Array<VaultBalance>;
   snapshot?: Maybe<Snapshot>;
   snapshots: Array<Snapshot>;
+  tokenDistribution?: Maybe<TokenDistribution>;
+  tokenDistributions: Array<TokenDistribution>;
   /** Access to subgraph metadata */
   _meta?: Maybe<_Meta_>;
 };
@@ -224,6 +372,62 @@ export type QueryUsersArgs = {
   block?: Maybe<Block_Height>;
 };
 
+export type QueryBadgerTreeDistributionArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<Block_Height>;
+};
+
+export type QueryBadgerTreeDistributionsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<BadgerTreeDistribution_OrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<BadgerTreeDistribution_Filter>;
+  block?: Maybe<Block_Height>;
+};
+
+export type QuerySettHarvestArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<Block_Height>;
+};
+
+export type QuerySettHarvestsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<SettHarvest_OrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<SettHarvest_Filter>;
+  block?: Maybe<Block_Height>;
+};
+
+export type QueryStrategyArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<Block_Height>;
+};
+
+export type QueryStrategiesArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Strategy_OrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<Strategy_Filter>;
+  block?: Maybe<Block_Height>;
+};
+
+export type QueryControllerArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<Block_Height>;
+};
+
+export type QueryControllersArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Controller_OrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<Controller_Filter>;
+  block?: Maybe<Block_Height>;
+};
+
 export type QueryErc20Args = {
   id: Scalars['ID'];
   block?: Maybe<Block_Height>;
@@ -280,6 +484,20 @@ export type QuerySnapshotsArgs = {
   block?: Maybe<Block_Height>;
 };
 
+export type QueryTokenDistributionArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<Block_Height>;
+};
+
+export type QueryTokenDistributionsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<TokenDistribution_OrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<TokenDistribution_Filter>;
+  block?: Maybe<Block_Height>;
+};
+
 export type Query_MetaArgs = {
   block?: Maybe<Block_Height>;
 };
@@ -322,7 +540,125 @@ export type Sett = Erc20 &
     grossShareDeposit: Scalars['BigInt'];
     grossWithdraw: Scalars['BigInt'];
     grossShareWithdraw: Scalars['BigInt'];
+    controller?: Maybe<Controller>;
+    strategy?: Maybe<Strategy>;
+    treeDistributions: Array<BadgerTreeDistribution>;
+    harvests: Array<SettHarvest>;
   };
+
+export type SettTreeDistributionsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<BadgerTreeDistribution_OrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<BadgerTreeDistribution_Filter>;
+};
+
+export type SettHarvestsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<SettHarvest_OrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<SettHarvest_Filter>;
+};
+
+export type SettHarvest = TokenDistribution & {
+  __typename?: 'SettHarvest';
+  id: Scalars['ID'];
+  timestamp: Scalars['Int'];
+  token: Token;
+  amount: Scalars['BigInt'];
+  blockNumber: Scalars['BigInt'];
+  strategy?: Maybe<Strategy>;
+  sett?: Maybe<Sett>;
+};
+
+export type SettHarvest_Filter = {
+  id?: Maybe<Scalars['ID']>;
+  id_not?: Maybe<Scalars['ID']>;
+  id_gt?: Maybe<Scalars['ID']>;
+  id_lt?: Maybe<Scalars['ID']>;
+  id_gte?: Maybe<Scalars['ID']>;
+  id_lte?: Maybe<Scalars['ID']>;
+  id_in?: Maybe<Array<Scalars['ID']>>;
+  id_not_in?: Maybe<Array<Scalars['ID']>>;
+  timestamp?: Maybe<Scalars['Int']>;
+  timestamp_not?: Maybe<Scalars['Int']>;
+  timestamp_gt?: Maybe<Scalars['Int']>;
+  timestamp_lt?: Maybe<Scalars['Int']>;
+  timestamp_gte?: Maybe<Scalars['Int']>;
+  timestamp_lte?: Maybe<Scalars['Int']>;
+  timestamp_in?: Maybe<Array<Scalars['Int']>>;
+  timestamp_not_in?: Maybe<Array<Scalars['Int']>>;
+  token?: Maybe<Scalars['String']>;
+  token_not?: Maybe<Scalars['String']>;
+  token_gt?: Maybe<Scalars['String']>;
+  token_lt?: Maybe<Scalars['String']>;
+  token_gte?: Maybe<Scalars['String']>;
+  token_lte?: Maybe<Scalars['String']>;
+  token_in?: Maybe<Array<Scalars['String']>>;
+  token_not_in?: Maybe<Array<Scalars['String']>>;
+  token_contains?: Maybe<Scalars['String']>;
+  token_not_contains?: Maybe<Scalars['String']>;
+  token_starts_with?: Maybe<Scalars['String']>;
+  token_not_starts_with?: Maybe<Scalars['String']>;
+  token_ends_with?: Maybe<Scalars['String']>;
+  token_not_ends_with?: Maybe<Scalars['String']>;
+  amount?: Maybe<Scalars['BigInt']>;
+  amount_not?: Maybe<Scalars['BigInt']>;
+  amount_gt?: Maybe<Scalars['BigInt']>;
+  amount_lt?: Maybe<Scalars['BigInt']>;
+  amount_gte?: Maybe<Scalars['BigInt']>;
+  amount_lte?: Maybe<Scalars['BigInt']>;
+  amount_in?: Maybe<Array<Scalars['BigInt']>>;
+  amount_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber?: Maybe<Scalars['BigInt']>;
+  blockNumber_not?: Maybe<Scalars['BigInt']>;
+  blockNumber_gt?: Maybe<Scalars['BigInt']>;
+  blockNumber_lt?: Maybe<Scalars['BigInt']>;
+  blockNumber_gte?: Maybe<Scalars['BigInt']>;
+  blockNumber_lte?: Maybe<Scalars['BigInt']>;
+  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  strategy?: Maybe<Scalars['String']>;
+  strategy_not?: Maybe<Scalars['String']>;
+  strategy_gt?: Maybe<Scalars['String']>;
+  strategy_lt?: Maybe<Scalars['String']>;
+  strategy_gte?: Maybe<Scalars['String']>;
+  strategy_lte?: Maybe<Scalars['String']>;
+  strategy_in?: Maybe<Array<Scalars['String']>>;
+  strategy_not_in?: Maybe<Array<Scalars['String']>>;
+  strategy_contains?: Maybe<Scalars['String']>;
+  strategy_not_contains?: Maybe<Scalars['String']>;
+  strategy_starts_with?: Maybe<Scalars['String']>;
+  strategy_not_starts_with?: Maybe<Scalars['String']>;
+  strategy_ends_with?: Maybe<Scalars['String']>;
+  strategy_not_ends_with?: Maybe<Scalars['String']>;
+  sett?: Maybe<Scalars['String']>;
+  sett_not?: Maybe<Scalars['String']>;
+  sett_gt?: Maybe<Scalars['String']>;
+  sett_lt?: Maybe<Scalars['String']>;
+  sett_gte?: Maybe<Scalars['String']>;
+  sett_lte?: Maybe<Scalars['String']>;
+  sett_in?: Maybe<Array<Scalars['String']>>;
+  sett_not_in?: Maybe<Array<Scalars['String']>>;
+  sett_contains?: Maybe<Scalars['String']>;
+  sett_not_contains?: Maybe<Scalars['String']>;
+  sett_starts_with?: Maybe<Scalars['String']>;
+  sett_not_starts_with?: Maybe<Scalars['String']>;
+  sett_ends_with?: Maybe<Scalars['String']>;
+  sett_not_ends_with?: Maybe<Scalars['String']>;
+};
+
+export enum SettHarvest_OrderBy {
+  Id = 'id',
+  Timestamp = 'timestamp',
+  Token = 'token',
+  Amount = 'amount',
+  BlockNumber = 'blockNumber',
+  Strategy = 'strategy',
+  Sett = 'sett',
+}
 
 export type SettSnapshot = Erc20 &
   Vault &
@@ -636,6 +972,34 @@ export type Sett_Filter = {
   grossShareWithdraw_lte?: Maybe<Scalars['BigInt']>;
   grossShareWithdraw_in?: Maybe<Array<Scalars['BigInt']>>;
   grossShareWithdraw_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  controller?: Maybe<Scalars['String']>;
+  controller_not?: Maybe<Scalars['String']>;
+  controller_gt?: Maybe<Scalars['String']>;
+  controller_lt?: Maybe<Scalars['String']>;
+  controller_gte?: Maybe<Scalars['String']>;
+  controller_lte?: Maybe<Scalars['String']>;
+  controller_in?: Maybe<Array<Scalars['String']>>;
+  controller_not_in?: Maybe<Array<Scalars['String']>>;
+  controller_contains?: Maybe<Scalars['String']>;
+  controller_not_contains?: Maybe<Scalars['String']>;
+  controller_starts_with?: Maybe<Scalars['String']>;
+  controller_not_starts_with?: Maybe<Scalars['String']>;
+  controller_ends_with?: Maybe<Scalars['String']>;
+  controller_not_ends_with?: Maybe<Scalars['String']>;
+  strategy?: Maybe<Scalars['String']>;
+  strategy_not?: Maybe<Scalars['String']>;
+  strategy_gt?: Maybe<Scalars['String']>;
+  strategy_lt?: Maybe<Scalars['String']>;
+  strategy_gte?: Maybe<Scalars['String']>;
+  strategy_lte?: Maybe<Scalars['String']>;
+  strategy_in?: Maybe<Array<Scalars['String']>>;
+  strategy_not_in?: Maybe<Array<Scalars['String']>>;
+  strategy_contains?: Maybe<Scalars['String']>;
+  strategy_not_contains?: Maybe<Scalars['String']>;
+  strategy_starts_with?: Maybe<Scalars['String']>;
+  strategy_not_starts_with?: Maybe<Scalars['String']>;
+  strategy_ends_with?: Maybe<Scalars['String']>;
+  strategy_not_ends_with?: Maybe<Scalars['String']>;
 };
 
 export enum Sett_OrderBy {
@@ -653,6 +1017,10 @@ export enum Sett_OrderBy {
   GrossShareDeposit = 'grossShareDeposit',
   GrossWithdraw = 'grossWithdraw',
   GrossShareWithdraw = 'grossShareWithdraw',
+  Controller = 'controller',
+  Strategy = 'strategy',
+  TreeDistributions = 'treeDistributions',
+  Harvests = 'harvests',
 }
 
 export type Snapshot = {
@@ -684,6 +1052,78 @@ export enum Snapshot_OrderBy {
   Timestamp = 'timestamp',
 }
 
+export type Strategy = {
+  __typename?: 'Strategy';
+  id: Scalars['ID'];
+  controller?: Maybe<Controller>;
+  sett?: Maybe<Sett>;
+  treeDistributions: Array<BadgerTreeDistribution>;
+  harvests: Array<SettHarvest>;
+};
+
+export type StrategyTreeDistributionsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<BadgerTreeDistribution_OrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<BadgerTreeDistribution_Filter>;
+};
+
+export type StrategyHarvestsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<SettHarvest_OrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<SettHarvest_Filter>;
+};
+
+export type Strategy_Filter = {
+  id?: Maybe<Scalars['ID']>;
+  id_not?: Maybe<Scalars['ID']>;
+  id_gt?: Maybe<Scalars['ID']>;
+  id_lt?: Maybe<Scalars['ID']>;
+  id_gte?: Maybe<Scalars['ID']>;
+  id_lte?: Maybe<Scalars['ID']>;
+  id_in?: Maybe<Array<Scalars['ID']>>;
+  id_not_in?: Maybe<Array<Scalars['ID']>>;
+  controller?: Maybe<Scalars['String']>;
+  controller_not?: Maybe<Scalars['String']>;
+  controller_gt?: Maybe<Scalars['String']>;
+  controller_lt?: Maybe<Scalars['String']>;
+  controller_gte?: Maybe<Scalars['String']>;
+  controller_lte?: Maybe<Scalars['String']>;
+  controller_in?: Maybe<Array<Scalars['String']>>;
+  controller_not_in?: Maybe<Array<Scalars['String']>>;
+  controller_contains?: Maybe<Scalars['String']>;
+  controller_not_contains?: Maybe<Scalars['String']>;
+  controller_starts_with?: Maybe<Scalars['String']>;
+  controller_not_starts_with?: Maybe<Scalars['String']>;
+  controller_ends_with?: Maybe<Scalars['String']>;
+  controller_not_ends_with?: Maybe<Scalars['String']>;
+  sett?: Maybe<Scalars['String']>;
+  sett_not?: Maybe<Scalars['String']>;
+  sett_gt?: Maybe<Scalars['String']>;
+  sett_lt?: Maybe<Scalars['String']>;
+  sett_gte?: Maybe<Scalars['String']>;
+  sett_lte?: Maybe<Scalars['String']>;
+  sett_in?: Maybe<Array<Scalars['String']>>;
+  sett_not_in?: Maybe<Array<Scalars['String']>>;
+  sett_contains?: Maybe<Scalars['String']>;
+  sett_not_contains?: Maybe<Scalars['String']>;
+  sett_starts_with?: Maybe<Scalars['String']>;
+  sett_not_starts_with?: Maybe<Scalars['String']>;
+  sett_ends_with?: Maybe<Scalars['String']>;
+  sett_not_ends_with?: Maybe<Scalars['String']>;
+};
+
+export enum Strategy_OrderBy {
+  Id = 'id',
+  Controller = 'controller',
+  Sett = 'sett',
+  TreeDistributions = 'treeDistributions',
+  Harvests = 'harvests',
+}
+
 export type Subscription = {
   __typename?: 'Subscription';
   registry?: Maybe<Registry>;
@@ -700,6 +1140,14 @@ export type Subscription = {
   transfers: Array<Transfer>;
   user?: Maybe<User>;
   users: Array<User>;
+  badgerTreeDistribution?: Maybe<BadgerTreeDistribution>;
+  badgerTreeDistributions: Array<BadgerTreeDistribution>;
+  settHarvest?: Maybe<SettHarvest>;
+  settHarvests: Array<SettHarvest>;
+  strategy?: Maybe<Strategy>;
+  strategies: Array<Strategy>;
+  controller?: Maybe<Controller>;
+  controllers: Array<Controller>;
   erc20?: Maybe<Erc20>;
   erc20S: Array<Erc20>;
   vault?: Maybe<Vault>;
@@ -708,6 +1156,8 @@ export type Subscription = {
   vaultBalances: Array<VaultBalance>;
   snapshot?: Maybe<Snapshot>;
   snapshots: Array<Snapshot>;
+  tokenDistribution?: Maybe<TokenDistribution>;
+  tokenDistributions: Array<TokenDistribution>;
   /** Access to subgraph metadata */
   _meta?: Maybe<_Meta_>;
 };
@@ -810,6 +1260,62 @@ export type SubscriptionUsersArgs = {
   block?: Maybe<Block_Height>;
 };
 
+export type SubscriptionBadgerTreeDistributionArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<Block_Height>;
+};
+
+export type SubscriptionBadgerTreeDistributionsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<BadgerTreeDistribution_OrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<BadgerTreeDistribution_Filter>;
+  block?: Maybe<Block_Height>;
+};
+
+export type SubscriptionSettHarvestArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<Block_Height>;
+};
+
+export type SubscriptionSettHarvestsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<SettHarvest_OrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<SettHarvest_Filter>;
+  block?: Maybe<Block_Height>;
+};
+
+export type SubscriptionStrategyArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<Block_Height>;
+};
+
+export type SubscriptionStrategiesArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Strategy_OrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<Strategy_Filter>;
+  block?: Maybe<Block_Height>;
+};
+
+export type SubscriptionControllerArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<Block_Height>;
+};
+
+export type SubscriptionControllersArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Controller_OrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<Controller_Filter>;
+  block?: Maybe<Block_Height>;
+};
+
 export type SubscriptionErc20Args = {
   id: Scalars['ID'];
   block?: Maybe<Block_Height>;
@@ -866,6 +1372,20 @@ export type SubscriptionSnapshotsArgs = {
   block?: Maybe<Block_Height>;
 };
 
+export type SubscriptionTokenDistributionArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<Block_Height>;
+};
+
+export type SubscriptionTokenDistributionsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<TokenDistribution_OrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<TokenDistribution_Filter>;
+  block?: Maybe<Block_Height>;
+};
+
 export type Subscription_MetaArgs = {
   block?: Maybe<Block_Height>;
 };
@@ -878,6 +1398,103 @@ export type Token = Erc20 & {
   decimals: Scalars['BigInt'];
   totalSupply: Scalars['BigInt'];
 };
+
+export type TokenDistribution = {
+  id: Scalars['ID'];
+  timestamp: Scalars['Int'];
+  token: Token;
+  amount: Scalars['BigInt'];
+  blockNumber: Scalars['BigInt'];
+  strategy?: Maybe<Strategy>;
+  sett?: Maybe<Sett>;
+};
+
+export type TokenDistribution_Filter = {
+  id?: Maybe<Scalars['ID']>;
+  id_not?: Maybe<Scalars['ID']>;
+  id_gt?: Maybe<Scalars['ID']>;
+  id_lt?: Maybe<Scalars['ID']>;
+  id_gte?: Maybe<Scalars['ID']>;
+  id_lte?: Maybe<Scalars['ID']>;
+  id_in?: Maybe<Array<Scalars['ID']>>;
+  id_not_in?: Maybe<Array<Scalars['ID']>>;
+  timestamp?: Maybe<Scalars['Int']>;
+  timestamp_not?: Maybe<Scalars['Int']>;
+  timestamp_gt?: Maybe<Scalars['Int']>;
+  timestamp_lt?: Maybe<Scalars['Int']>;
+  timestamp_gte?: Maybe<Scalars['Int']>;
+  timestamp_lte?: Maybe<Scalars['Int']>;
+  timestamp_in?: Maybe<Array<Scalars['Int']>>;
+  timestamp_not_in?: Maybe<Array<Scalars['Int']>>;
+  token?: Maybe<Scalars['String']>;
+  token_not?: Maybe<Scalars['String']>;
+  token_gt?: Maybe<Scalars['String']>;
+  token_lt?: Maybe<Scalars['String']>;
+  token_gte?: Maybe<Scalars['String']>;
+  token_lte?: Maybe<Scalars['String']>;
+  token_in?: Maybe<Array<Scalars['String']>>;
+  token_not_in?: Maybe<Array<Scalars['String']>>;
+  token_contains?: Maybe<Scalars['String']>;
+  token_not_contains?: Maybe<Scalars['String']>;
+  token_starts_with?: Maybe<Scalars['String']>;
+  token_not_starts_with?: Maybe<Scalars['String']>;
+  token_ends_with?: Maybe<Scalars['String']>;
+  token_not_ends_with?: Maybe<Scalars['String']>;
+  amount?: Maybe<Scalars['BigInt']>;
+  amount_not?: Maybe<Scalars['BigInt']>;
+  amount_gt?: Maybe<Scalars['BigInt']>;
+  amount_lt?: Maybe<Scalars['BigInt']>;
+  amount_gte?: Maybe<Scalars['BigInt']>;
+  amount_lte?: Maybe<Scalars['BigInt']>;
+  amount_in?: Maybe<Array<Scalars['BigInt']>>;
+  amount_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber?: Maybe<Scalars['BigInt']>;
+  blockNumber_not?: Maybe<Scalars['BigInt']>;
+  blockNumber_gt?: Maybe<Scalars['BigInt']>;
+  blockNumber_lt?: Maybe<Scalars['BigInt']>;
+  blockNumber_gte?: Maybe<Scalars['BigInt']>;
+  blockNumber_lte?: Maybe<Scalars['BigInt']>;
+  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  strategy?: Maybe<Scalars['String']>;
+  strategy_not?: Maybe<Scalars['String']>;
+  strategy_gt?: Maybe<Scalars['String']>;
+  strategy_lt?: Maybe<Scalars['String']>;
+  strategy_gte?: Maybe<Scalars['String']>;
+  strategy_lte?: Maybe<Scalars['String']>;
+  strategy_in?: Maybe<Array<Scalars['String']>>;
+  strategy_not_in?: Maybe<Array<Scalars['String']>>;
+  strategy_contains?: Maybe<Scalars['String']>;
+  strategy_not_contains?: Maybe<Scalars['String']>;
+  strategy_starts_with?: Maybe<Scalars['String']>;
+  strategy_not_starts_with?: Maybe<Scalars['String']>;
+  strategy_ends_with?: Maybe<Scalars['String']>;
+  strategy_not_ends_with?: Maybe<Scalars['String']>;
+  sett?: Maybe<Scalars['String']>;
+  sett_not?: Maybe<Scalars['String']>;
+  sett_gt?: Maybe<Scalars['String']>;
+  sett_lt?: Maybe<Scalars['String']>;
+  sett_gte?: Maybe<Scalars['String']>;
+  sett_lte?: Maybe<Scalars['String']>;
+  sett_in?: Maybe<Array<Scalars['String']>>;
+  sett_not_in?: Maybe<Array<Scalars['String']>>;
+  sett_contains?: Maybe<Scalars['String']>;
+  sett_not_contains?: Maybe<Scalars['String']>;
+  sett_starts_with?: Maybe<Scalars['String']>;
+  sett_not_starts_with?: Maybe<Scalars['String']>;
+  sett_ends_with?: Maybe<Scalars['String']>;
+  sett_not_ends_with?: Maybe<Scalars['String']>;
+};
+
+export enum TokenDistribution_OrderBy {
+  Id = 'id',
+  Timestamp = 'timestamp',
+  Token = 'token',
+  Amount = 'amount',
+  BlockNumber = 'blockNumber',
+  Strategy = 'strategy',
+  Sett = 'sett',
+}
 
 export type Token_Filter = {
   id?: Maybe<Scalars['ID']>;
@@ -946,8 +1563,9 @@ export type Transfer = Snapshot & {
   __typename?: 'Transfer';
   id: Scalars['ID'];
   timestamp: Scalars['Int'];
-  from: Scalars['String'];
-  to: Scalars['String'];
+  sett: Sett;
+  from: User;
+  to: User;
   amount: Scalars['BigInt'];
 };
 
@@ -968,6 +1586,20 @@ export type Transfer_Filter = {
   timestamp_lte?: Maybe<Scalars['Int']>;
   timestamp_in?: Maybe<Array<Scalars['Int']>>;
   timestamp_not_in?: Maybe<Array<Scalars['Int']>>;
+  sett?: Maybe<Scalars['String']>;
+  sett_not?: Maybe<Scalars['String']>;
+  sett_gt?: Maybe<Scalars['String']>;
+  sett_lt?: Maybe<Scalars['String']>;
+  sett_gte?: Maybe<Scalars['String']>;
+  sett_lte?: Maybe<Scalars['String']>;
+  sett_in?: Maybe<Array<Scalars['String']>>;
+  sett_not_in?: Maybe<Array<Scalars['String']>>;
+  sett_contains?: Maybe<Scalars['String']>;
+  sett_not_contains?: Maybe<Scalars['String']>;
+  sett_starts_with?: Maybe<Scalars['String']>;
+  sett_not_starts_with?: Maybe<Scalars['String']>;
+  sett_ends_with?: Maybe<Scalars['String']>;
+  sett_not_ends_with?: Maybe<Scalars['String']>;
   from?: Maybe<Scalars['String']>;
   from_not?: Maybe<Scalars['String']>;
   from_gt?: Maybe<Scalars['String']>;
@@ -1009,6 +1641,7 @@ export type Transfer_Filter = {
 export enum Transfer_OrderBy {
   Id = 'id',
   Timestamp = 'timestamp',
+  Sett = 'sett',
   From = 'from',
   To = 'to',
   Amount = 'amount',
@@ -1321,6 +1954,26 @@ export enum _SubgraphErrorPolicy_ {
   Deny = 'deny',
 }
 
+export const HarvestFragmentDoc = gql`
+  fragment Harvest on SettHarvest {
+    id
+    timestamp
+    token {
+      id
+      name
+      symbol
+      decimals
+    }
+    amount
+    blockNumber
+    strategy {
+      id
+    }
+    sett {
+      id
+    }
+  }
+`;
 export const SettFragmentDoc = gql`
   fragment Sett on Sett {
     id
@@ -1376,6 +2029,14 @@ export const UserFragmentDoc = gql`
     }
   }
 `;
+export const HarvestsDocument = gql`
+  query Harvests($first: Int, $skip: Int, $orderBy: SettHarvest_orderBy, $orderDirection: OrderDirection) {
+    settHarvests {
+      ...Harvest
+    }
+  }
+  ${HarvestFragmentDoc}
+`;
 export const SettSnapshotDocument = gql`
   query SettSnapshot($id: ID!, $block: Block_height) {
     sett(id: $id, block: $block) {
@@ -1420,6 +2081,13 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName) => action();
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+    Harvests(variables?: HarvestsQueryVariables, requestHeaders?: Dom.RequestInit['headers']): Promise<HarvestsQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<HarvestsQuery>(HarvestsDocument, variables, { ...requestHeaders, ...wrappedRequestHeaders }),
+        'Harvests',
+      );
+    },
     SettSnapshot(
       variables: SettSnapshotQueryVariables,
       requestHeaders?: Dom.RequestInit['headers'],
@@ -1457,6 +2125,15 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
   };
 }
 export type Sdk = ReturnType<typeof getSdk>;
+export type HarvestFragment = { __typename?: 'SettHarvest' } & Pick<
+  SettHarvest,
+  'id' | 'timestamp' | 'amount' | 'blockNumber'
+> & {
+    token: { __typename?: 'Token' } & Pick<Token, 'id' | 'name' | 'symbol' | 'decimals'>;
+    strategy?: Maybe<{ __typename?: 'Strategy' } & Pick<Strategy, 'id'>>;
+    sett?: Maybe<{ __typename?: 'Sett' } & Pick<Sett, 'id'>>;
+  };
+
 export type SettFragment = { __typename?: 'Sett' } & Pick<
   Sett,
   'id' | 'balance' | 'netDeposit' | 'netShareDeposit' | 'pricePerFullShare' | 'totalSupply'
@@ -1486,6 +2163,17 @@ export type UserFragment = { __typename?: 'User' } & Pick<User, 'id'> & {
       > & { sett: { __typename?: 'Sett' } & Pick<Sett, 'id' | 'name'> }
     >;
   };
+
+export type HarvestsQueryVariables = Exact<{
+  first?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<SettHarvest_OrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+}>;
+
+export type HarvestsQuery = { __typename?: 'Query' } & {
+  settHarvests: Array<{ __typename?: 'SettHarvest' } & HarvestFragment>;
+};
 
 export type SettSnapshotQueryVariables = Exact<{
   id: Scalars['ID'];

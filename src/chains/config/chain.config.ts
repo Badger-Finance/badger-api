@@ -4,8 +4,8 @@ import { STAGE } from '../../config/constants';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { TokenConfig } from '../../tokens/interfaces/token-config.interface';
-import { ChainNetwork } from '../enums/chain-network.enum';
 import { ChainStrategy } from '../strategies/chain.strategy';
+import { Network } from '@badger-dao/sdk';
 
 type Chains = Record<string, Chain>;
 
@@ -14,7 +14,7 @@ export abstract class Chain {
   readonly name: string;
   readonly symbol: string;
   readonly chainId: string;
-  readonly network: ChainNetwork;
+  readonly network: Network;
   readonly tokens: TokenConfig;
   readonly setts: SettDefinition[];
   readonly provider: ethers.providers.JsonRpcProvider;
@@ -29,12 +29,11 @@ export abstract class Chain {
     name: string,
     symbol: string,
     chainId: string,
-    network: ChainNetwork,
+    network: Network,
     tokens: TokenConfig,
     setts: SettDefinition[],
     rpcUrl: string,
     strategy: ChainStrategy,
-    graphUrl: string,
     blocksPerYear: number,
     badgerTree?: string,
     rewardsLogger?: string,
@@ -48,19 +47,25 @@ export abstract class Chain {
     this.provider = new ethers.providers.JsonRpcProvider(rpcUrl);
     this.batchProvider = new ethers.providers.JsonRpcBatchProvider(rpcUrl);
     this.strategy = strategy;
-    this.graphUrl = graphUrl;
+    this.graphUrl = `https://api.thegraph.com/subgraphs/name/badger-finance/badger-dao-setts${
+      network !== Network.Ethereum ? `-${symbol.toLowerCase()}` : ''
+    }`;
     this.blocksPerYear = blocksPerYear;
     this.badgerTree = badgerTree;
     this.rewardsLogger = rewardsLogger;
   }
 
-  static register(network: ChainNetwork, chain: Chain): void {
+  static register(network: Network, chain: Chain): void {
     Chain.chains[network] = chain;
+    Chain.chains[chain.symbol] = chain;
+    if (network === Network.Polygon) {
+      Chain.chains['matic'] = chain;
+    }
   }
 
-  static getChain(network?: ChainNetwork): Chain {
+  static getChain(network?: Network): Chain {
     if (!network) {
-      network = ChainNetwork.Ethereum;
+      network = Network.Ethereum;
     }
     const chain = this.chains[network];
     if (!chain) {

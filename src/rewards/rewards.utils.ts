@@ -1,6 +1,6 @@
+import { Network } from '@badger-dao/sdk';
 import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
-import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { REWARD_DATA } from '../config/constants';
 import { valueSourceToCachedValueSource } from '../indexer/indexer.utils';
 import { uniformPerformance } from '../protocols/interfaces/performance.interface';
@@ -14,7 +14,7 @@ export async function getTreeDistribution(chain: Chain): Promise<RewardMerkleDis
   if (!chain.badgerTree) {
     return null;
   }
-  const appendChainId = chain.network != ChainNetwork.Ethereum;
+  const appendChainId = chain.network != Network.Ethereum;
   const fileName = `badger-tree${appendChainId ? `-${parseInt(chain.chainId, 16)}` : ''}.json`;
   const rewardFile = await getObject(REWARD_DATA, fileName);
   return JSON.parse(rewardFile.toString('utf-8'));

@@ -1,4 +1,4 @@
-import { ChainNetwork } from '../../chains/enums/chain-network.enum';
+import { Network } from '@badger-dao/sdk';
 import { TOKENS } from '../../config/tokens.config';
 import { TokenType } from '../enums/token-type.enum';
 import { TokenConfig } from '../interfaces/token-config.interface';
@@ -146,7 +146,7 @@ export const arbitrumTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.ARB_SUSHI_WETH_SUSHI,
-      network: ChainNetwork.Arbitrum,
+      network: Network.Arbitrum,
     },
   },
   [TOKENS.BARB_SUSHI_WETH_WBTC]: {
@@ -157,7 +157,7 @@ export const arbitrumTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.ARB_SUSHI_WETH_WBTC,
-      network: ChainNetwork.Arbitrum,
+      network: Network.Arbitrum,
     },
   },
   [TOKENS.BARB_CRV_RENBTC]: {
@@ -168,7 +168,7 @@ export const arbitrumTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.ARB_CRV_RENBTC,
-      network: ChainNetwork.Arbitrum,
+      network: Network.Arbitrum,
     },
   },
   [TOKENS.BARB_CRV_TRICRYPTO]: {
@@ -179,7 +179,7 @@ export const arbitrumTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.ARB_CRV_TRICRYPTO,
-      network: ChainNetwork.Arbitrum,
+      network: Network.Arbitrum,
     },
   },
   [TOKENS.BARB_CRV_TRICRYPTO_LITE]: {
@@ -190,7 +190,7 @@ export const arbitrumTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.ARB_CRV_TRICRYPTO,
-      network: ChainNetwork.Arbitrum,
+      network: Network.Arbitrum,
     },
   },
   [TOKENS.BARB_SWP_SWPR_WETH]: {
@@ -201,7 +201,7 @@ export const arbitrumTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.ARB_SWP_SWAPR_WETH,
-      network: ChainNetwork.Arbitrum,
+      network: Network.Arbitrum,
     },
   },
   [TOKENS.BARB_SWP_WBTC_WETH]: {
@@ -212,7 +212,7 @@ export const arbitrumTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.ARB_SWP_WBTC_WETH,
-      network: ChainNetwork.Arbitrum,
+      network: Network.Arbitrum,
     },
   },
   [TOKENS.BARB_SWP_BADGER_WETH]: {
@@ -223,7 +223,7 @@ export const arbitrumTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.ARB_SWP_BADGER_WETH,
-      network: ChainNetwork.Arbitrum,
+      network: Network.Arbitrum,
     },
   },
   [TOKENS.BARB_SWP_IBBTC_WETH]: {
@@ -234,7 +234,29 @@ export const arbitrumTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.ARB_SWP_IBBTC_WETH,
-      network: ChainNetwork.Arbitrum,
+      network: Network.Arbitrum,
+    },
+  },
+  [TOKENS.BARB_SWP_BADGER_WETH]: {
+    address: TOKENS.BARB_SWP_BADGER_WETH,
+    decimals: 18,
+    name: 'bSwapr BADGER-WETH',
+    symbol: 'bSWLP-BADGER-WETH',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.ARB_SWP_BADGER_WETH,
+      network: Network.Arbitrum,
+    },
+  },
+  [TOKENS.BARB_SWP_IBBTC_WETH]: {
+    address: TOKENS.BARB_SWP_IBBTC_WETH,
+    decimals: 18,
+    name: 'bSwapr ibBTC-WETH',
+    symbol: 'bSWLP-IBBTC-WETH',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.ARB_SWP_IBBTC_WETH,
+      network: Network.Arbitrum,
     },
   },
 };

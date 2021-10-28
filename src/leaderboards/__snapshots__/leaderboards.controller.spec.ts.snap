@@ -3,15 +3,15 @@
 exports[`AccountsController GET /v2/accounts with a non participant account returns a default account response 1`] = `
 Object {
   "address": "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484",
-  "balances": Array [],
   "boost": 0,
   "boostRank": 0,
-  "claimableBalances": Array [],
-  "claimableBalancesMap": Object {},
+  "claimableBalances": Object {},
+  "data": Object {},
   "earnedValue": 0,
   "multipliers": Object {},
   "nativeBalance": 0,
   "nonNativeBalance": 0,
+  "stakeRatio": 1,
   "value": 0,
 }
 `;
@@ -19,15 +19,15 @@ Object {
 exports[`AccountsController GET /v2/accounts with a participant account returns a cached account response 1`] = `
 Object {
   "address": "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484",
-  "balances": Array [],
   "boost": 2000,
   "boostRank": 3,
-  "claimableBalances": Array [],
-  "claimableBalancesMap": Object {},
+  "claimableBalances": Object {},
+  "data": Object {},
   "earnedValue": 2312,
   "multipliers": Object {},
   "nativeBalance": 2033222,
   "nonNativeBalance": 23129,
+  "stakeRatio": 1,
   "value": 320232,
 }
 `;

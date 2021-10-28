@@ -1,12 +1,12 @@
+import { Network } from '@badger-dao/sdk';
 import { getPancakeswapPrice } from '../../protocols/common/swap.utils';
 import { TokenType } from '../../tokens/enums/token-type.enum';
 import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
-import { ChainNetwork } from '../enums/chain-network.enum';
 import { BaseStrategy } from './base.strategy';
 
 export class BscStrategy extends BaseStrategy {
   constructor(tokens: string[]) {
-    super(ChainNetwork.BinanceSmartChain, tokens);
+    super(Network.BinanceSmartChain, tokens);
   }
 
   async getPrice(address: string): Promise<TokenPrice> {

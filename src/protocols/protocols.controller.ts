@@ -1,7 +1,7 @@
+import { Network } from '@badger-dao/sdk';
 import { Controller, Get, Inject, QueryParams } from '@tsed/common';
 import { ContentType, Description, Returns, Summary } from '@tsed/schema';
 import { Chain } from '../chains/config/chain.config';
-import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import { SettsService } from '../setts/setts.service';
 import { ProtocolSummaryModel } from './interfaces/protocol-summary-model.interface';
 
@@ -17,7 +17,7 @@ export class ProtocolController {
   @Returns(200, ProtocolSummaryModel)
   @(Returns(400).Description('Not a valid chain'))
   async getAssetsUnderManagement(
-    @QueryParams('chain') chain?: ChainNetwork,
+    @QueryParams('chain') chain?: Network,
     @QueryParams('currency') currency?: string,
   ): Promise<ProtocolSummaryModel> {
     return this.settsService.getProtocolSummary(Chain.getChain(chain), currency);

@@ -1,8 +1,8 @@
+import { Network } from '@badger-dao/sdk';
 import { Service } from '@tsed/common';
 import { BadRequest, InternalServerError } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { Chain } from '../chains/config/chain.config';
-import { ChainNetwork } from '../chains/enums/chain-network.enum';
 import * as bscContracts from '../config/abi/health-bsc-abis';
 import * as ethContracts from '../config/abi/health-eth-abis';
 import { HealthService } from './health.interface';
@@ -12,7 +12,7 @@ import { camelCaseToSentenceCase, convertToSnapshot } from './health.utils';
 @Service()
 export class ContractsHealthService implements HealthService {
   private contractToAbis: ContractToAbis = {};
-  private chains: ChainNetwork[] = [ChainNetwork.BinanceSmartChain, ChainNetwork.Ethereum];
+  private chains: Network[] = [Network.BinanceSmartChain, Network.Ethereum];
   private gasLimit = 9000000;
 
   public async getHealth(): Promise<HealthSnapshot> {
@@ -41,11 +41,11 @@ export class ContractsHealthService implements HealthService {
         const chainString: string = chain.toString();
         this.contractToAbis[chainString] = [];
         switch (chain) {
-          case ChainNetwork.Ethereum: {
+          case Network.Ethereum: {
             contracts = ethContracts;
             break;
           }
-          case ChainNetwork.BinanceSmartChain: {
+          case Network.BinanceSmartChain: {
             contracts = bscContracts;
             break;
           }
@@ -71,9 +71,9 @@ export class ContractsHealthService implements HealthService {
   public async getResults(): Promise<ChainResult[]> {
     let contractResults: ContractResult[] = [];
     const results: ChainResult[] = [];
-    for (const chainNetwork of this.chains) {
-      const chain = Chain.getChain(chainNetwork);
-      for (const contract of this.contractToAbis[chainNetwork.toString()]) {
+    for (const Network of this.chains) {
+      const chain = Chain.getChain(Network);
+      for (const contract of this.contractToAbis[Network.toString()]) {
         const result = await this.callViewMethods(contract, chain);
         contractResults.push(result);
       }

@@ -1,27 +1,18 @@
-fragment Harvest on Harvest {
+fragment Harvest on SettHarvest {
   id
-  vault {
+  timestamp
+  token {
     id
-    pricePerFullShare
-    totalSupply
-    vaultBalance
-    strategyBalance
-    available
+    name
+    symbol
+    decimals
   }
-  transaction {
+  amount
+  blockNumber
+  strategy {
     id
-    timestamp
-    blockNumber
-    transactionHash
   }
-  earnings
-  pricePerFullShareBefore
-  pricePerFullShareAfter
-  pricePerFullShareBeforeRaw
-  pricePerFullShareAfterRaw
-  vaultBalanceBeforeRaw
-  vaultBalanceAfterRaw
-  strategyBalanceBeforeRaw
-  strategyBalanceAfterRaw
-  earningsRaw
+  sett {
+    id
+  }
 }

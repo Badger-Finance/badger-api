@@ -1,4 +1,4 @@
-import { ChainNetwork } from '../../chains/enums/chain-network.enum';
+import { Network } from '@badger-dao/sdk';
 import { TOKENS } from '../../config/tokens.config';
 import { TokenType } from '../enums/token-type.enum';
 import { TokenConfig } from '../interfaces/token-config.interface';
@@ -36,7 +36,7 @@ export const xDaiTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.XDAI_SUSHI_WBTC_WETH,
-      network: ChainNetwork.xDai,
+      network: Network.xDai,
     },
   },
 };

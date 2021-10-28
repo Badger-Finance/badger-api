@@ -7,16 +7,16 @@ export class CachedSettBalance {
   network!: string;
 
   @attribute()
-  id!: string;
+  address!: string;
 
   @attribute()
   name!: string;
 
   @attribute()
-  asset!: string;
+  symbol!: string;
 
   @attribute()
-  ppfs!: number;
+  pricePerFullShare!: number;
 
   @attribute()
   balance!: number;

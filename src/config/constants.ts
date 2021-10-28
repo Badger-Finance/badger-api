@@ -1,11 +1,4 @@
 import { SwaggerSettings } from '@tsed/swagger';
-import { checksumEntries } from './util';
-
-export const RAW_STRATEGIES = {
-  BZS_DIGG: '0xA6af1B913E205B8E9B95D3B30768c0989e942316',
-};
-
-export const STRATEGIES = checksumEntries(RAW_STRATEGIES);
 
 // data point constants - index two times per hour, 48 per day
 export const CURRENT = 0;
@@ -27,7 +20,6 @@ export const LEADERBOARD_DATA = process.env.LEADERBOARD_DATA || 'MISSING REQUIRE
 export const ACCOUNT_DATA = process.env.ACCOUNT_DATA || 'MISSING REQUIRED ENV VAR';
 export const PROTOCOL_METRICS_SNAPSHOTS_DATA =
   process.env.PROTOCOL_METRICS_SNAPSHOTS_DATA || 'MISSING REQUIRED ENV VAR';
-export const SETT_BOOST_DATA = process.env.SETT_BOOST_DATA || 'MISSING REQUIRED ENV VAR';
 
 // thegraph constants
 export const UNISWAP_URL = process.env.UNISWAP || 'MISSING REQUIRED ENV VAR';
@@ -37,12 +29,6 @@ export const SUSHISWAP_MATIC_URL = process.env.SUSHISWAP_MATIC || 'MISSING REQUI
 export const SUSHISWAP_ARBITRUM_URL = process.env.SUSHISWAP_ARBITRUM || 'MISSING REQUIRED ENV VAR';
 export const PANCAKESWAP_URL = process.env.PANCAKESWAP || 'MISSING REQUIRED ENV VAR';
 export const QUICKSWAP_URL = process.env.QUICKSWAP || 'MISSING REQUIRED ENV VAR';
-export const BADGER_URL = process.env.BADGER || 'MISSING REQUIRED ENV VAR';
-export const BADGER_BSC_URL = process.env.BADGER_BSC || 'MISSING REQUIRED ENV VAR';
-export const BADGER_MATIC_URL = process.env.BADGER_MATIC || 'MISSING REQUIRED ENV VAR';
-export const BADGER_XDAI_URL = process.env.BADGER_XDAI || 'MISSING REQUIRED ENV VAR';
-export const BADGER_ARBITRUM_URL = process.env.BADGER_ARBITRUM || 'MISSING REQUIRED ENV VAR';
-export const BADGER_DAO_URL = process.env.BADGER_DAO || 'MISSING REQUIRED ENV VAR';
 export const SWAPR_SUBGRAPH_URL = process.env.SWAPR || 'MISSING REQUIRED ENV VAR';
 
 // general constants

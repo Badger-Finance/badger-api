@@ -22,7 +22,11 @@ export async function getGasCache(): Promise<ChainGasPrices> {
 
 export async function loadGasPrices(): Promise<ChainGasPrices> {
   const chains = loadChains();
-  const gasReturn: ChainGasPrices = {};
-  await Promise.all(chains.flatMap(async (c) => (gasReturn[c.network] = await c.getGasPrices())));
-  return gasReturn;
+  const entries = await Promise.all(
+    chains.map(async (c) => {
+      const prices = await c.getGasPrices();
+      return [c.network, prices];
+    }),
+  );
+  return Object.fromEntries(entries);
 }

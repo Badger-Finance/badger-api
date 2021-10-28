@@ -1,11 +1,10 @@
-import { BADGER_BSC_URL } from '../../config/constants';
+import { Network } from '@badger-dao/sdk';
 import { Protocol } from '../../config/enums/protocol.enum';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { bscTokensConfig } from '../../tokens/config/bsc-tokens.config';
-import { ChainNetwork } from '../enums/chain-network.enum';
 import { BscStrategy } from '../strategies/bsc.strategy';
 import { Chain } from './chain.config';
 
@@ -15,12 +14,11 @@ export class BinanceSmartChain extends Chain {
       'BinanceSmartChain',
       'bsc',
       '0x38',
-      ChainNetwork.BinanceSmartChain,
+      Network.BinanceSmartChain,
       bscTokensConfig,
       bscSetts,
-      rpc[ChainNetwork.BinanceSmartChain],
+      rpc[Network.BinanceSmartChain],
       new BscStrategy(Object.keys(bscTokensConfig)),
-      BADGER_BSC_URL,
       10512000,
     );
     Chain.register(this.network, this);

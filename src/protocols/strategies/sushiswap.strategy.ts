@@ -1,7 +1,7 @@
+import { Network } from '@badger-dao/sdk';
 import { UnprocessableEntity } from '@tsed/exceptions';
 import { GraphQLClient } from 'graphql-request';
 import { Chain } from '../../chains/config/chain.config';
-import { ChainNetwork } from '../../chains/enums/chain-network.enum';
 import {
   ONE_YEAR_SECONDS,
   SUSHISWAP_ARBITRUM_URL,
@@ -41,9 +41,9 @@ const sushiPoolId: PoolMap = {
 };
 
 const sushiSellRate: Record<string, number> = {
-  [ChainNetwork.Ethereum]: 0,
-  [ChainNetwork.Matic]: 0,
-  [ChainNetwork.Arbitrum]: 0.5,
+  [Network.Ethereum]: 0,
+  [Network.Polygon]: 0,
+  [Network.Arbitrum]: 0.5,
 };
 
 export class SushiswapStrategy {
@@ -55,13 +55,13 @@ export class SushiswapStrategy {
 async function getSushiswapSwapValue(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource> {
   let graphUrl;
   switch (chain.network) {
-    case ChainNetwork.xDai:
+    case Network.xDai:
       graphUrl = SUSHISWAP_XDAI_URL;
       break;
-    case ChainNetwork.Matic:
+    case Network.Polygon:
       graphUrl = SUSHISWAP_MATIC_URL;
       break;
-    case ChainNetwork.Arbitrum:
+    case Network.Arbitrum:
       graphUrl = SUSHISWAP_ARBITRUM_URL;
       break;
     default:
@@ -86,7 +86,7 @@ export async function getSushiSwapValue(settDefinition: SettDefinition, graphUrl
 }
 
 async function getEmissionSource(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource> {
-  const rewardType = chain.network === ChainNetwork.Ethereum ? 'xSushi' : 'Sushi';
+  const rewardType = chain.network === Network.Ethereum ? 'xSushi' : 'Sushi';
   const sourceName = `${rewardType} Rewards`;
   let emissionSource = valueSourceToCachedValueSource(
     createValueSource(sourceName, uniformPerformance(0)),
@@ -95,13 +95,13 @@ async function getEmissionSource(chain: Chain, settDefinition: SettDefinition): 
   );
 
   switch (chain.network) {
-    case ChainNetwork.Matic:
+    case Network.Polygon:
       emissionSource = await getPerSecondSource(chain, settDefinition);
       break;
-    case ChainNetwork.Arbitrum:
+    case Network.Arbitrum:
       emissionSource = await getArbitrumSource(chain, settDefinition);
       break;
-    case ChainNetwork.Ethereum:
+    case Network.Ethereum:
     default:
       emissionSource = await getEthereumSource(chain, settDefinition);
   }
@@ -158,10 +158,10 @@ async function getPerSecondSource(chain: Chain, settDefinition: SettDefinition):
   }
   let chef;
   switch (chain.network) {
-    case ChainNetwork.Matic:
+    case Network.Polygon:
       chef = SUSHI_MATIC_CHEF;
       break;
-    case ChainNetwork.Arbitrum:
+    case Network.Arbitrum:
       chef = SUSHI_ARB_CHEF;
       break;
     default:

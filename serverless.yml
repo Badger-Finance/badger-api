@@ -57,9 +57,6 @@ custom:
     PROTOCOL_METRICS_SNAPSHOTS_DATA:
       staging: 'protocol-metrics-snapshots-staging'
       prod: 'protocol-metrics-snapshots'
-    SETT_BOOST_DATA:
-      staging: 'sett-boosts-staging'
-      prod: 'sett-boosts'
 
   merkleProofs:
     staging: 'badger-staging-merkle-proofs'
@@ -93,14 +90,6 @@ provider:
     ARBISCAN_API_KEY: ${env:ARBISCAN_API_KEY}
     # 3rd party API keys
     BLOCKNATIVE_API_KEY: ${env:BLOCKNATIVE_API_KEY}
-    # Subgraph Definitions
-    # BADGER: 'https://gateway.thegraph.com/api/${env:GRAPH_API_KEY}/subgraphs/id/0x8d26c9dac7e16738752fa1446b956a97c63e2f39-0'
-    BADGER: 'https://api.thegraph.com/subgraphs/name/axejintao/badger-dao'
-    BADGER_BSC: 'https://api.thegraph.com/subgraphs/name/axejintao/badger-dao-bsc'
-    BADGER_DAO: 'https://api.thegraph.com/subgraphs/name/darruma/badger'
-    BADGER_MATIC: 'https://api.thegraph.com/subgraphs/name/axejintao/badger-dao-polygon'
-    BADGER_XDAI: 'https://api.thegraph.com/subgraphs/name/axejintao/badger-dao-xdai'
-    BADGER_ARBITRUM: 'https://api.thegraph.com/subgraphs/name/axejintao/badger-dao-arbitrum'
     UNISWAP: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2'
     SUSHISWAP: 'https://api.thegraph.com/subgraphs/name/sushiswap/exchange'
     SUSHISWAP_XDAI: 'https://api.thegraph.com/subgraphs/name/sushiswap/xdai-exchange'
@@ -112,7 +101,6 @@ provider:
     # Table Defintions
     APY_SNAPSHOTS_DATA: ${self:custom.table.APY_SNAPSHOTS_DATA.${self:custom.stage}}
     SETT_DATA: ${self:custom.table.SETT_DATA.${self:custom.stage}}
-    SETT_BOOST_DATA: ${self:custom.table.SETT_BOOST_DATA.${self:custom.stage}}
     LEADERBOARD_DATA: ${self:custom.stage}-leaderboard
     LIQUIDITY_POOL_TOKEN_BALANCES_DATA: ${self:custom.table.LIQUIDITY_POOL_TOKEN_BALANCES_DATA.${self:custom.stage}}
     PRICE_DATA: ${self:custom.table.PRICE_DATA.${self:custom.stage}}
@@ -217,22 +205,6 @@ resources:
         AttributeDefinitions:
           - AttributeName: 'address'
             AttributeType: 'S'
-
-    boostTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: ${self:custom.table.SETT_BOOST_DATA.${self:custom.stage}}
-        BillingMode: PAY_PER_REQUEST
-        KeySchema:
-          - AttributeName: 'address'
-            KeyType: 'HASH'
-          - AttributeName: 'boost'
-            KeyType: 'RANGE'
-        AttributeDefinitions:
-          - AttributeName: 'address'
-            AttributeType: 'S'
-          - AttributeName: 'boost'
-            AttributeType: 'N'
 
     leaderboardTable:
       Type: AWS::DynamoDB::Table
@@ -343,15 +315,6 @@ functions:
           description: 'index leaderboard data from latest badger boosts'
           rate: rate(5 minutes)
 
-  index-sett-boosts:
-    handler: src/indexer/boost-indexer.indexSettBoosts
-    timeout: 120
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-sett-boosts
-          description: 'index sett specific badger boost mutlipliers'
-          rate: rate(10 minutes)
-
   index-token-balances:
     handler: src/indexer/token-balances-indexer.refreshTokenBalances
     timeout: 180
@@ -367,13 +330,13 @@ functions:
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-boost
-          description: 'index accounts information from the graph'
+          description: 'index accounts boost information'
           rate: rate(7 minutes)
           input:
             mode: BoostData
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-claimable
-          description: 'index accounts information from the graph'
+          description: 'index accounts claimable from badger tree'
           rate: rate(7 minutes)
           input:
             mode: ClaimableBalanceData

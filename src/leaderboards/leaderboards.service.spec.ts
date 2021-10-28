@@ -1,8 +1,8 @@
+import { Network } from '@badger-dao/sdk';
 import { PlatformTest } from '@tsed/common';
 import * as s3Utils from '../aws/s3.utils';
 import { TOKENS } from '../config/tokens.config';
 import { BoostData } from '../rewards/interfaces/boost-data.interface';
-import { CachedSettBoost } from '../setts/interfaces/cached-sett-boost.interface';
 import { setupMapper, TEST_ADDR } from '../test/tests.utils';
 import { LeaderBoardType } from './enums/leaderboard-type.enum';
 import { CachedBoost } from './interface/cached-boost.interface';
@@ -25,7 +25,7 @@ describe('leaderboards.service', () => {
     for (let i = 0; i < count; i += 1) {
       boosts.push(
         Object.assign(new CachedBoost(), {
-          leaderboard: LeaderBoardType.BadgerBoost,
+          leaderboard: `${Network.Ethereum}_${LeaderBoardType.BadgerBoost}`,
           rank: i + 1,
           address: TEST_ADDR,
           boost: 2000 - i * 10,
@@ -121,7 +121,7 @@ describe('leaderboards.service', () => {
   });
 
   describe('generateBoostsLeaderBoard', () => {
-    const seeded = randomCachedBoosts(50);
+    const seeded = randomCachedBoosts(2);
     const addresses = Object.values(TOKENS);
     const boostData: BoostData = {
       userData: Object.fromEntries(
@@ -137,66 +137,51 @@ describe('leaderboards.service', () => {
       multiplierData: {},
     };
 
-    let response: CachedBoost[];
-    it('indexes all user accounts', async () => {
+    async function getPerChainBoosts() {
       jest
         .spyOn(s3Utils, 'getObject')
         .mockImplementation(() => Promise.resolve(Buffer.from(JSON.stringify(boostData), 'utf-8')));
-      response = await LeaderBoardsService.generateBoostsLeaderBoard();
-      expect(response).toMatchObject(seeded);
+      const response = await LeaderBoardsService.generateBoostsLeaderBoard();
+      const perChainBoosts: Record<string, CachedBoost[]> = {};
+      response.forEach((res) => {
+        if (!perChainBoosts[res.leaderboard]) {
+          perChainBoosts[res.leaderboard] = [];
+        }
+        perChainBoosts[res.leaderboard] = perChainBoosts[res.leaderboard].concat(res);
+      });
+      return perChainBoosts;
+    }
+
+    it('indexes all user accounts', async () => {
+      const perChainBoosts = await getPerChainBoosts();
+      expect(perChainBoosts[seeded[0].leaderboard]).toMatchObject(seeded);
     });
 
-    it('sorts ranks by boosts', () => {
-      let last: number | undefined;
-      for (const boost of response) {
-        if (last) {
-          expect(last).toBeLessThan(boost.rank);
+    it('sorts ranks by boosts', async () => {
+      const perChainBoosts = await getPerChainBoosts();
+      for (const boosts of Object.values(perChainBoosts)) {
+        let last: number | undefined;
+        for (const boost of boosts) {
+          if (last) {
+            expect(last).toBeLessThan(boost.rank);
+          }
+          last = boost.rank;
         }
-        last = boost.rank;
       }
     });
 
     // seeded data has 2 of each boost rank
-    it('resovles boost rank ties with stake ratio score', () => {
-      let last: number | undefined;
-      for (const boost of response) {
-        if (last) {
-          expect(last).toBeGreaterThanOrEqual(boost.stakeRatio);
+    it('resovles boost rank ties with stake ratio score', async () => {
+      const perChainBoosts = await getPerChainBoosts();
+      for (const boosts of Object.values(perChainBoosts)) {
+        let last: number | undefined;
+        for (const boost of boosts) {
+          if (last) {
+            expect(last).toBeGreaterThanOrEqual(boost.stakeRatio);
+          }
+          last = boost.stakeRatio;
         }
-        last = boost.stakeRatio;
       }
-    });
-  });
-
-  describe('generateSettBoostData', () => {
-    const seeded = randomCachedBoosts(5);
-    const addresses = Object.values(TOKENS);
-    const boostData: BoostData = {
-      userData: Object.fromEntries(
-        seeded.map((cachedBoost, i) => {
-          cachedBoost.address = addresses[i];
-          const boost = {
-            ...cachedBoost,
-            multipliers: {
-              [TOKENS.BCVX]: cachedBoost.nativeBalance,
-            },
-          };
-          return [cachedBoost.address, boost];
-        }),
-      ),
-      multiplierData: {},
-    };
-
-    let response: CachedSettBoost[];
-    it('indexes all user accounts', async () => {
-      jest
-        .spyOn(s3Utils, 'getObject')
-        .mockImplementation(() => Promise.resolve(Buffer.from(JSON.stringify(boostData), 'utf-8')));
-      response = await LeaderBoardsService.generateSettBoostData();
-      const cachedBoosts = seeded
-        .map((entry) => ({ address: TOKENS.BCVX, boost: entry.boost.toString(), multiplier: entry.nativeBalance }))
-        .reverse();
-      expect(response).toMatchObject(cachedBoosts);
     });
   });
 });

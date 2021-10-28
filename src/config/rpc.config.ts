@@ -1,12 +1,12 @@
-import { ChainNetwork } from '../chains/enums/chain-network.enum';
+import { Network } from '@badger-dao/sdk';
 import { Provider } from '../chains/enums/provider.enum';
 
 const rpc = {
-  [ChainNetwork.Ethereum]: process.env.ETH_RPC || Provider.Cloudflare,
-  [ChainNetwork.BinanceSmartChain]: process.env.BSC_RPC || Provider.Binance,
-  [ChainNetwork.Matic]: process.env.MATIC_RPC || Provider.Quicknode,
-  [ChainNetwork.xDai]: process.env.XDAI_RPC || Provider.xDai,
-  [ChainNetwork.Arbitrum]: process.env.ARBITRUM_RPC || Provider.Arbitrum,
+  [Network.Ethereum]: process.env.ETH_RPC || Provider.Cloudflare,
+  [Network.BinanceSmartChain]: process.env.BSC_RPC || Provider.Binance,
+  [Network.Polygon]: process.env.MATIC_RPC || Provider.Quicknode,
+  [Network.xDai]: process.env.XDAI_RPC || Provider.xDai,
+  [Network.Arbitrum]: process.env.ARBITRUM_RPC || Provider.Arbitrum,
 };
 
 export default rpc;

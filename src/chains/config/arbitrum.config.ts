@@ -1,14 +1,13 @@
-import { BADGER_ARBITRUM_URL } from '../../config/constants';
+import { Network } from '@badger-dao/sdk';
 import { Protocol } from '../../config/enums/protocol.enum';
 import { SettState } from '../../config/enums/sett-state.enum';
 import { Stage } from '../../config/enums/stage.enum';
-import rpc from '../../config/rpc.config';
+import RPC from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { getCurveSettTokenBalance } from '../../protocols/strategies/convex.strategy';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { arbitrumTokensConfig } from '../../tokens/config/arbitrum-tokens.config';
-import { ChainNetwork } from '../enums/chain-network.enum';
 import { ArbitrumStrategy } from '../strategies/arbitrum.strategy';
 import { Chain } from './chain.config';
 
@@ -18,12 +17,11 @@ export class Arbitrum extends Chain {
       'Arbitrum',
       'arbitrum',
       '0xa4b1',
-      ChainNetwork.Arbitrum,
+      Network.Arbitrum,
       arbitrumTokensConfig,
       arbitrumSetts,
-      rpc[ChainNetwork.Arbitrum],
+      RPC[Network.Arbitrum],
       new ArbitrumStrategy(Object.keys(arbitrumTokensConfig)),
-      BADGER_ARBITRUM_URL,
       2425847,
       '0x635EB2C39C75954bb53Ebc011BDC6AfAAcE115A6',
       '0x85E1cACAe9a63429394d68Db59E14af74143c61c',
@@ -90,7 +88,6 @@ export const arbitrumSetts: SettDefinition[] = [
     settToken: TOKENS.BARB_SWP_SWPR_WETH,
     depositToken: TOKENS.ARB_SWP_SWPR_WETH,
     createdBlock: 13315350,
-    state: SettState.Guarded,
     protocol: Protocol.Swapr,
   },
   {
@@ -98,6 +95,23 @@ export const arbitrumSetts: SettDefinition[] = [
     settToken: TOKENS.BARB_SWP_WBTC_WETH,
     depositToken: TOKENS.ARB_SWP_WBTC_WETH,
     createdBlock: 13315350,
+    protocol: Protocol.Swapr,
+  },
+  {
+    name: 'Swapr Badger/Wrapped ETH',
+    settToken: TOKENS.BARB_SWP_BADGER_WETH,
+    depositToken: TOKENS.ARB_SWP_BADGER_WETH,
+    createdBlock: 2188169,
+    stage: Stage.Staging,
+    state: SettState.Guarded,
+    protocol: Protocol.Swapr,
+  },
+  {
+    name: 'Swapr ibBTC/Wrapped ETH',
+    settToken: TOKENS.BARB_SWP_IBBTC_WETH,
+    depositToken: TOKENS.ARB_SWP_IBBTC_WETH,
+    createdBlock: 2188169,
+    stage: Stage.Staging,
     state: SettState.Guarded,
     protocol: Protocol.Swapr,
   },

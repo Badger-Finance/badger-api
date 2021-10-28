@@ -1,3 +1,4 @@
+import { Account } from '@badger-dao/sdk';
 import { PlatformTest } from '@tsed/common';
 import { Chain } from '../chains/config/chain.config';
 import { Ethereum } from '../chains/config/eth.config';
@@ -5,7 +6,6 @@ import * as accountIndexer from '../indexer/accounts-indexer';
 import { IndexMode } from '../indexer/accounts-indexer';
 import { setupMapper, TEST_ADDR } from '../test/tests.utils';
 import { AccountsService } from './accounts.service';
-import { Account } from './interfaces/account.interface';
 
 describe('charts.service', () => {
   const chain = new Ethereum();
@@ -20,7 +20,7 @@ describe('charts.service', () => {
     multipliers: [],
     value: 320232,
     earnedValue: 2312,
-    balances: [],
+    data: [],
     claimableBalances: [],
     nativeBalance: 2033222,
     nonNativeBalance: 23129,
@@ -48,6 +48,8 @@ describe('charts.service', () => {
       const expectedAccount = {
         ...defaultAccount,
         multipliers: {},
+        claimableBalances: {},
+        data: {},
       };
       expect(result).toMatchObject(expectedAccount);
     });
