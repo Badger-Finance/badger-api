@@ -97,6 +97,13 @@ Object {
     "name": "Curve.fi CVX/bveCVX",
     "symbol": "crvCVXbveCVX",
   },
+  "0x04c90C198b2eFF55716079bc06d7CCc4aa4d7512": Object {
+    "address": "0x04c90C198b2eFF55716079bc06d7CCc4aa4d7512",
+    "decimals": 18,
+    "name": "Curve.fi CVX/bveCVX",
+    "symbol": "crvCVXbveCVX",
+    "type": "CurveLP",
+  },
   "0x075b1bb99792c9E1041bA13afEf80C91a1e70fB3": Object {
     "address": "0x075b1bb99792c9E1041bA13afEf80C91a1e70fB3",
     "decimals": 18,
@@ -373,6 +380,17 @@ Object {
     "name": "bcrvCVXbveCVX",
     "symbol": "bcrvCVXbveCVX",
   },
+  "0x937B8E917d0F36eDEBBA8E459C5FB16F3b315551": Object {
+    "address": "0x937B8E917d0F36eDEBBA8E459C5FB16F3b315551",
+    "decimals": 18,
+    "name": "bcrvCVXbveCVX",
+    "symbol": "bcrvCVXbveCVX",
+    "type": "Vault",
+    "vaultToken": Object {
+      "address": "0x04c90C198b2eFF55716079bc06d7CCc4aa4d7512",
+      "network": "eth",
+    },
+  },
   "0x945Facb997494CC2570096c74b5F66A3507330a1": Object {
     "address": "0x945Facb997494CC2570096c74b5F66A3507330a1",
     "decimals": 18,
@@ -502,6 +520,7 @@ Object {
   "0xc4E15973E6fF2A35cC804c2CF9D2a1b817a8b40F": Object {
     "address": "0xc4E15973E6fF2A35cC804c2CF9D2a1b817a8b40F",
     "decimals": 18,
+    "lookupName": "interest-bearing-bitcoin",
     "name": "ibBTC",
     "symbol": "ibBTC",
   },
@@ -570,6 +589,13 @@ Object {
     "name": "Curve.fi CVX/bveCVX",
     "symbol": "crvCVXbveCVX",
   },
+  "0x04c90C198b2eFF55716079bc06d7CCc4aa4d7512": Object {
+    "address": "0x04c90C198b2eFF55716079bc06d7CCc4aa4d7512",
+    "decimals": 18,
+    "name": "Curve.fi CVX/bveCVX",
+    "symbol": "crvCVXbveCVX",
+    "type": "CurveLP",
+  },
   "0x075b1bb99792c9E1041bA13afEf80C91a1e70fB3": Object {
     "address": "0x075b1bb99792c9E1041bA13afEf80C91a1e70fB3",
     "decimals": 18,
@@ -846,6 +872,17 @@ Object {
     "name": "bcrvCVXbveCVX",
     "symbol": "bcrvCVXbveCVX",
   },
+  "0x937B8E917d0F36eDEBBA8E459C5FB16F3b315551": Object {
+    "address": "0x937B8E917d0F36eDEBBA8E459C5FB16F3b315551",
+    "decimals": 18,
+    "name": "bcrvCVXbveCVX",
+    "symbol": "bcrvCVXbveCVX",
+    "type": "Vault",
+    "vaultToken": Object {
+      "address": "0x04c90C198b2eFF55716079bc06d7CCc4aa4d7512",
+      "network": "eth",
+    },
+  },
   "0x945Facb997494CC2570096c74b5F66A3507330a1": Object {
     "address": "0x945Facb997494CC2570096c74b5F66A3507330a1",
     "decimals": 18,
@@ -975,6 +1012,7 @@ Object {
   "0xc4E15973E6fF2A35cC804c2CF9D2a1b817a8b40F": Object {
     "address": "0xc4E15973E6fF2A35cC804c2CF9D2a1b817a8b40F",
     "decimals": 18,
+    "lookupName": "interest-bearing-bitcoin",
     "name": "ibBTC",
     "symbol": "ibBTC",
   },
