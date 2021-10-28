@@ -684,7 +684,7 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.CRV_CVXBVECVX,
-      network: ChainNetwork.Ethereum,
+      network: Network.Ethereum,
     },
   },
 };

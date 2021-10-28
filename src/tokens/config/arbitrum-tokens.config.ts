@@ -245,7 +245,7 @@ export const arbitrumTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.ARB_SWP_BADGER_WETH,
-      network: ChainNetwork.Arbitrum,
+      network: Network.Arbitrum,
     },
   },
   [TOKENS.BARB_SWP_IBBTC_WETH]: {
@@ -256,7 +256,7 @@ export const arbitrumTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.ARB_SWP_IBBTC_WETH,
-      network: ChainNetwork.Arbitrum,
+      network: Network.Arbitrum,
     },
   },
 };
