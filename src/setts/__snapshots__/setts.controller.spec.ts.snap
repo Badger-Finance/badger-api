@@ -1271,7 +1271,7 @@ Array [
     "experimental": false,
     "name": "Yearn Wrapped BTC",
     "pricePerFullShare": 1,
-    "settAsset": "bvyWBTC",
+    "settAsset": "byvWBTC",
     "settToken": "0x4b92d19c11435614CD49Af1b589001b7c08cD4D5",
     "sources": Array [
       Object {
@@ -3718,7 +3718,7 @@ Array [
     "experimental": false,
     "name": "Yearn Wrapped BTC",
     "pricePerFullShare": 1,
-    "settAsset": "bvyWBTC",
+    "settAsset": "byvWBTC",
     "settToken": "0x4b92d19c11435614CD49Af1b589001b7c08cD4D5",
     "sources": Array [
       Object {
