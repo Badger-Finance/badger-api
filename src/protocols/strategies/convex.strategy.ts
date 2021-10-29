@@ -31,7 +31,7 @@ import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance
 import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
 import { formatBalance, getToken, toCachedBalance } from '../../tokens/tokens.utils';
 import { CachedValueSource } from '../interfaces/cached-value-source.interface';
-import { Performance, uniformPerformance } from '../interfaces/performance.interface';
+import { uniformPerformance } from '../interfaces/performance.interface';
 import { PoolMap } from '../interfaces/pool-map.interface';
 import { createValueSource } from '../interfaces/value-source.interface';
 import { tokenEmission } from '../protocols.utils';
@@ -50,6 +50,7 @@ export const CURVE_API_URL = 'https://stats.curve.fi/raw-stats/apys.json';
 export const CURVE_CRYPTO_API_URL = 'https://stats.curve.fi/raw-stats-crypto/apys.json';
 export const CURVE_MATIC_API_URL = 'https://stats.curve.fi/raw-stats-polygon/apys.json';
 export const CURVE_ARBITRUM_API_URL = 'https://stats.curve.fi/raw-stats-arbitrum/apys.json';
+export const CURVE_FACTORY_APY = 'https://api.curve.fi/api/getFactoryAPYs?version=2';
 
 /* Protocol Definitions */
 const curvePoolApr: Record<string, string> = {
@@ -90,6 +91,15 @@ const discontinuedRewards = ['0x330416C863f2acCE7aF9C9314B422d24c672534a'].map((
 const convexWrap: Record<string, string> = {
   [TOKENS.CVXCRV]: TOKENS.BCVXCRV,
 };
+
+interface FactoryAPYResonse {
+  data: {
+    poolDetails: {
+      apy: number;
+      poolAddress: string;
+    }[];
+  };
+}
 
 export class ConvexStrategy {
   static async getValueSources(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
@@ -307,12 +317,28 @@ export async function getCurvePerformance(chain: Chain, settDefinition: SettDefi
     }
   }
 
-  const tradeFeePerformance: Performance = {
-    oneDay: curveData.apy.day[curvePoolApr[assetKey]] * 100,
-    threeDay: curveData.apy.day[curvePoolApr[assetKey]] * 100,
-    sevenDay: curveData.apy.week[curvePoolApr[assetKey]] * 100,
-    thirtyDay: curveData.apy.month[curvePoolApr[assetKey]] * 100,
-  };
+  let tradeFeePerformance = uniformPerformance(0);
+  if (!missingEntry()) {
+    tradeFeePerformance = {
+      oneDay: curveData.apy.day[curvePoolApr[assetKey]] * 100,
+      threeDay: curveData.apy.day[curvePoolApr[assetKey]] * 100,
+      sevenDay: curveData.apy.week[curvePoolApr[assetKey]] * 100,
+      thirtyDay: curveData.apy.month[curvePoolApr[assetKey]] * 100,
+    };
+  } else {
+    const res = await fetch(CURVE_FACTORY_APY);
+    if (res.ok) {
+      const factoryAPY = (await res.json()) as FactoryAPYResonse;
+      const poolDetails = factoryAPY.data.poolDetails.find(
+        (pool) => ethers.utils.getAddress(pool.poolAddress) === settDefinition.depositToken,
+      );
+      console.log({ factoryAPY, poolDetails });
+      if (poolDetails) {
+        tradeFeePerformance = uniformPerformance(poolDetails.apy);
+      }
+    }
+  }
+
   const valueSource = createValueSource('Curve LP Fees', tradeFeePerformance);
   return valueSourceToCachedValueSource(valueSource, settDefinition, SourceType.TradeFee);
 }

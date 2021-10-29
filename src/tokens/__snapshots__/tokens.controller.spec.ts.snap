@@ -209,7 +209,7 @@ Object {
     "address": "0x4b92d19c11435614CD49Af1b589001b7c08cD4D5",
     "decimals": 8,
     "name": "Yearn WBTC",
-    "symbol": "bvyWBTC",
+    "symbol": "byvWBTC",
   },
   "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B": Object {
     "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
@@ -682,7 +682,7 @@ Object {
     "address": "0x4b92d19c11435614CD49Af1b589001b7c08cD4D5",
     "decimals": 8,
     "name": "Yearn WBTC",
-    "symbol": "bvyWBTC",
+    "symbol": "byvWBTC",
   },
   "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B": Object {
     "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",

@@ -515,7 +515,7 @@ export const ethTokensConfig: TokenConfig = {
     address: TOKENS.BVYWBTC,
     decimals: 8,
     name: 'Yearn WBTC',
-    symbol: 'bvyWBTC',
+    symbol: 'byvWBTC',
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.WBTC,
