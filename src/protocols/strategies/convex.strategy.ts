@@ -311,10 +311,6 @@ export async function getCurvePerformance(chain: Chain, settDefinition: SettDefi
   // try the secondary apy options, if not avilable give up
   if (missingEntry()) {
     curveData = await fetch(CURVE_CRYPTO_API_URL).then((response) => response.json());
-    if (missingEntry()) {
-      const valueSource = createValueSource('Curve LP Fees', uniformPerformance(0));
-      return valueSourceToCachedValueSource(valueSource, settDefinition, SourceType.TradeFee);
-    }
   }
 
   let tradeFeePerformance = uniformPerformance(0);
@@ -332,7 +328,6 @@ export async function getCurvePerformance(chain: Chain, settDefinition: SettDefi
       const poolDetails = factoryAPY.data.poolDetails.find(
         (pool) => ethers.utils.getAddress(pool.poolAddress) === settDefinition.depositToken,
       );
-      console.log({ factoryAPY, poolDetails });
       if (poolDetails) {
         tradeFeePerformance = uniformPerformance(poolDetails.apy);
       }
