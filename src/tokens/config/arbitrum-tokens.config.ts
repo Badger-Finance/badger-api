@@ -200,7 +200,7 @@ export const arbitrumTokensConfig: TokenConfig = {
     symbol: 'bSWLP-SWPR-WETH',
     type: TokenType.Vault,
     vaultToken: {
-      address: TOKENS.ARB_SWP_SWAPR_WETH,
+      address: TOKENS.ARB_SWP_SWPR_WETH,
       network: Network.Arbitrum,
     },
   },
@@ -212,28 +212,6 @@ export const arbitrumTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.ARB_SWP_WBTC_WETH,
-      network: Network.Arbitrum,
-    },
-  },
-  [TOKENS.BARB_SWP_BADGER_WETH]: {
-    address: TOKENS.BARB_SWP_BADGER_WETH,
-    decimals: 18,
-    name: 'bSwapr BADGER-WETH',
-    symbol: 'bSWLP-BADGER-WETH',
-    type: TokenType.Vault,
-    vaultToken: {
-      address: TOKENS.ARB_SWP_BADGER_WETH,
-      network: Network.Arbitrum,
-    },
-  },
-  [TOKENS.BARB_SWP_IBBTC_WETH]: {
-    address: TOKENS.BARB_SWP_IBBTC_WETH,
-    decimals: 18,
-    name: 'bSwapr ibBTC-WETH',
-    symbol: 'bSWLP-IBBTC-WETH',
-    type: TokenType.Vault,
-    vaultToken: {
-      address: TOKENS.ARB_SWP_IBBTC_WETH,
       network: Network.Arbitrum,
     },
   },
