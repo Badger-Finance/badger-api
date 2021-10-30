@@ -322,7 +322,7 @@ functions:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-token-balances
           description: 'index token balances from the graph'
-          rate: rate(1 minute)
+          rate: rate(5 minutes)
 
   index-accounts:
     handler: src/indexer/accounts-indexer.refreshUserAccounts
