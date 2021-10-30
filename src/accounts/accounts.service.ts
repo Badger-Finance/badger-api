@@ -2,13 +2,9 @@ import { Account } from '@badger-dao/sdk';
 import { Service } from '@tsed/di';
 import { BadRequest } from '@tsed/exceptions';
 import { ethers } from 'ethers';
-import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
-import { REWARD_DATA, STAGE } from '../config/constants';
-import { Stage } from '../config/enums/stage.enum';
 import { IndexMode, refreshAccounts } from '../indexer/accounts-indexer';
-import { BoostData } from '../rewards/interfaces/boost-data.interface';
-import { cachedAccountToAccount, getCachedAccount } from './accounts.utils';
+import { cachedAccountToAccount, getAccounts, getCachedAccount } from './accounts.utils';
 import { CachedAccount } from './interfaces/cached-account.interface';
 import { UnclaimedRewards } from './interfaces/unclaimed-rewards.interface';
 import { UserRewardsUnclaimed } from './interfaces/user-rewards-unclaimed.interface';
@@ -31,17 +27,7 @@ export class AccountsService {
 
   async getAllUnclaimed(chain: Chain, page = 1): Promise<UnclaimedRewards> {
     const startIndex = (page - 1) * this.pageSize;
-
-    let boostFileName;
-    if (STAGE === Stage.Production) {
-      boostFileName = 'badger-boosts.json';
-    } else {
-      boostFileName = `badger-boosts-${parseInt(chain.chainId, 16)}.json`;
-    }
-
-    const boostFile = await getObject(REWARD_DATA, boostFileName);
-    const fileContents: BoostData = JSON.parse(boostFile.toString('utf-8'));
-    const accounts = Object.keys(fileContents.userData);
+    const accounts = await getAccounts(chain);
     const totalPages = Math.ceil(accounts.length / this.pageSize);
     if (page > totalPages) {
       throw new BadRequest(`Page ${page} requested, there are only ${totalPages} pages`);

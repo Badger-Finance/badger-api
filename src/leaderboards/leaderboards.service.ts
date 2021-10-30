@@ -1,10 +1,11 @@
 import { Service } from '@tsed/common';
 import { ethers } from 'ethers';
-import { getObject } from '../aws/s3.utils';
+import { getBoostFile } from '../accounts/accounts.utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
-import { REWARD_DATA } from '../config/constants';
-import { BoostData } from '../rewards/interfaces/boost-data.interface';
+import { Ethereum } from '../chains/config/eth.config';
+import { STAGE } from '../config/constants';
+import { Stage } from '../config/enums/stage.enum';
 import { LeaderBoardType } from './enums/leaderboard-type.enum';
 import { CachedBoost } from './interface/cached-boost.interface';
 import { LeaderBoardData } from './interface/leaderboard-data.interrface';
@@ -46,39 +47,43 @@ export class LeaderBoardsService {
   }
 
   static async generateBoostsLeaderBoard(): Promise<CachedBoost[]> {
-    const chains = loadChains();
+    const chains = STAGE === Stage.Production ? [new Ethereum()] : loadChains();
     const results = await Promise.all(chains.map((chain) => this.generateChainBoostsLeaderBoard(chain)));
     return results.flatMap((item) => item);
   }
 
   static async generateChainBoostsLeaderBoard(chain: Chain): Promise<CachedBoost[]> {
-    const boostFile = await getObject(REWARD_DATA, `badger-boosts-${parseInt(chain.chainId, 16)}.json`);
-    const boostData: BoostData = JSON.parse(boostFile.toString('utf-8'));
-    const boosts: UserBoost[] = Object.entries(boostData.userData).map((entry) => {
-      const [address, userBoost] = entry;
-      const { boost, stakeRatio, nftMultiplier, nativeBalance, nonNativeBalance } = userBoost;
-      return {
-        address: ethers.utils.getAddress(address),
-        boost,
-        stakeRatio,
-        nftMultiplier,
-        nativeBalance: nativeBalance || 0,
-        nonNativeBalance: nonNativeBalance || 0,
-      };
-    });
-    return boosts
-      .sort((a, b) => {
-        if (a.boost === b.boost) {
-          return b.nativeBalance - a.nativeBalance;
-        }
-        return b.boost - a.boost;
-      })
-      .map((boost, i) => {
-        return Object.assign(new CachedBoost(), {
-          leaderboard: `${chain.network}_${LeaderBoardType.BadgerBoost}`,
-          rank: i + 1,
-          ...boost,
-        });
+    try {
+      const boostFile = await getBoostFile(chain);
+      const boosts: UserBoost[] = Object.entries(boostFile.userData).map((entry) => {
+        const [address, userBoost] = entry;
+        const { boost, stakeRatio, nftMultiplier, nativeBalance, nonNativeBalance } = userBoost;
+        return {
+          address: ethers.utils.getAddress(address),
+          boost,
+          stakeRatio,
+          nftMultiplier,
+          nativeBalance: nativeBalance || 0,
+          nonNativeBalance: nonNativeBalance || 0,
+        };
       });
+      return boosts
+        .sort((a, b) => {
+          if (a.boost === b.boost) {
+            return b.nativeBalance - a.nativeBalance;
+          }
+          return b.boost - a.boost;
+        })
+        .map((boost, i) => {
+          return Object.assign(new CachedBoost(), {
+            leaderboard: `${chain.network}_${LeaderBoardType.BadgerBoost}`,
+            rank: i + 1,
+            ...boost,
+          });
+        });
+    } catch (err) {
+      console.log(err);
+      return [];
+    }
   }
 }

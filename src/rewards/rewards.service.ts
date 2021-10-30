@@ -3,25 +3,24 @@ import { BadRequest, NotFound } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
-import { ONE_YEAR_SECONDS, REWARD_DATA, STAGE } from '../config/constants';
+import { ONE_YEAR_SECONDS, REWARD_DATA } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
 import { getPrice } from '../prices/prices.utils';
 import { uniformPerformance } from '../protocols/interfaces/performance.interface';
 import { createValueSource } from '../protocols/interfaces/value-source.interface';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { getCachedSett } from '../setts/setts.utils';
-import { BoostData } from './interfaces/boost-data.interface';
 import { BoostMultipliers } from './interfaces/boost-multipliers.interface';
 import { AirdropMerkleClaim, AirdropMerkleDistribution } from './interfaces/merkle-distributor.interface';
 import { RewardMerkleClaim } from './interfaces/reward-merkle-claim.interface';
 import { getTreeDistribution } from './rewards.utils';
 import { CachedBoostMultiplier } from './interfaces/cached-boost-multiplier.interface';
 import BadgerSDK from '@badger-dao/sdk';
-import { Stage } from '../config/enums/stage.enum';
 import { getToken } from '../tokens/tokens.utils';
 import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
 import { valueSourceToCachedValueSource } from '../indexer/indexer.utils';
 import { tokenEmission } from '../protocols/protocols.utils';
+import { getBoostFile } from '../accounts/accounts.utils';
 
 @Service()
 export class RewardsService {
@@ -91,24 +90,17 @@ export class RewardsService {
   }
 
   static async getChainUserBoosts(chain: Chain, addresses: string[]): Promise<Record<string, CachedBoostMultiplier[]>> {
-    let boostFileName;
-    if (STAGE === Stage.Production) {
-      boostFileName = 'badger-boosts.json';
-    } else {
-      boostFileName = `badger-boosts-${parseInt(chain.chainId, 16)}.json`;
-    }
-    const boostFile = await getObject(REWARD_DATA, boostFileName);
-    const fileContents: BoostData = JSON.parse(boostFile.toString('utf-8'));
+    const boostFile = await getBoostFile(chain);
     const defaultMultipliers: BoostMultipliers = {};
-    Object.keys(fileContents.multiplierData).forEach(
-      (key) => (defaultMultipliers[key] = fileContents.multiplierData[key].min),
+    Object.keys(boostFile.multiplierData).forEach(
+      (key) => (defaultMultipliers[key] = boostFile.multiplierData[key].min),
     );
     const boostMultipliers: Record<string, CachedBoostMultiplier[]> = {};
     for (const address of addresses) {
-      let boostData = fileContents.userData[address.toLowerCase()];
+      let boostData = boostFile.userData[address.toLowerCase()];
       if (!boostData) {
         boostData = {
-          boost: 0,
+          boost: 1,
           stakeRatio: 1,
           nftMultiplier: 1,
           multipliers: defaultMultipliers,
@@ -124,14 +116,14 @@ export class RewardsService {
             .map((entry) => {
               const [key, value] = entry;
               includedMultipliers.add(key);
-              const min = fileContents.multiplierData[key].min;
-              const max = fileContents.multiplierData[key].max;
+              const min = boostFile.multiplierData[key].min;
+              const max = boostFile.multiplierData[key].max;
               const range = max - min;
               return (value - min) / range;
             })
             .reduce((total, value) => (total += value), 0);
           const percentile = totalPercentile / Object.entries(userMulipliers).length;
-          Object.entries(fileContents.multiplierData).forEach((entry) => {
+          Object.entries(boostFile.multiplierData).forEach((entry) => {
             const [key, value] = entry;
             if (!includedMultipliers.has(key)) {
               const range = value.max - value.min;
@@ -163,20 +155,11 @@ export class RewardsService {
     }
     const { settToken } = settDefinition;
     const sett = await getCachedSett(settDefinition);
-
-    let boostFileName;
-    if (STAGE === Stage.Production) {
-      boostFileName = 'badger-boosts.json';
-    } else {
-      boostFileName = `badger-boosts-${parseInt(chain.chainId, 16)}.json`;
-    }
-
-    const boostFile = await getObject(REWARD_DATA, boostFileName);
-    const boostData: BoostData = JSON.parse(boostFile.toString('utf-8'));
+    const boostFile = await getBoostFile(chain);
     if (sett.settToken === TOKENS.BICVX) {
-      delete boostData.multiplierData[sett.settToken];
+      delete boostFile.multiplierData[sett.settToken];
     }
-    const boostRange = boostData.multiplierData[sett.settToken] ?? { min: 1, max: 1 };
+    const boostRange = boostFile.multiplierData[sett.settToken] ?? { min: 1, max: 1 };
     const sdk = new BadgerSDK(parseInt(chain.chainId, 16), chain.batchProvider);
     await sdk.ready();
     const activeSchedules = await sdk.rewards.loadActiveSchedules(settToken);
