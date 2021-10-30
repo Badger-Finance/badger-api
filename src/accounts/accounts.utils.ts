@@ -2,19 +2,16 @@ import { Account, Network } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
 import { getDataMapper } from '../aws/dynamodb.utils';
+import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
+import { REWARD_DATA, STAGE } from '../config/constants';
+import { Stage } from '../config/enums/stage.enum';
 import { TOKENS } from '../config/tokens.config';
-import {
-  getSdk,
-  OrderDirection,
-  User_OrderBy,
-  UserQuery,
-  UserSettBalance,
-  UsersQuery,
-} from '../graphql/generated/badger';
+import { getSdk, OrderDirection, UserQuery, UserSettBalance, UsersQuery } from '../graphql/generated/badger';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import { CachedBoost } from '../leaderboards/interface/cached-boost.interface';
 import { getPrice, inCurrency } from '../prices/prices.utils';
+import { BoostData } from '../rewards/interfaces/boost-data.interface';
 import { getCachedSett, getSettDefinition } from '../setts/setts.utils';
 import { cachedTokenBalanceToTokenBalance, formatBalance, getSettTokens, getToken } from '../tokens/tokens.utils';
 import { CachedAccount } from './interfaces/cached-account.interface';
@@ -52,34 +49,20 @@ export async function getUserAccounts(chain: Chain, accounts: string[]): Promise
   });
 }
 
-export async function getAccounts(chain: Chain): Promise<string[]> {
-  const badgerGraphqlClient = new GraphQLClient(chain.graphUrl);
-  const badgerGraphqlSdk = getSdk(badgerGraphqlClient);
-
-  const accounts: string[] = [];
-
-  let lastAddress: string | undefined;
-  const pageSize = 1000;
-  while (true) {
-    try {
-      const userPage = await badgerGraphqlSdk.Users({
-        first: pageSize,
-        where: { id_gt: lastAddress },
-        orderBy: User_OrderBy.Id,
-        orderDirection: OrderDirection.Asc,
-      });
-      if (!userPage || !userPage.users || userPage.users.length === 0) {
-        break;
-      }
-      const { users } = userPage;
-      lastAddress = users[users.length - 1].id;
-      users.forEach((user) => accounts.push(ethers.utils.getAddress(user.id)));
-    } catch (err) {
-      break;
-    }
+export async function getBoostFile(chain: Chain): Promise<BoostData> {
+  let boostFileName;
+  if (STAGE === Stage.Production) {
+    boostFileName = 'badger-boosts.json';
+  } else {
+    boostFileName = `badger-boosts-${parseInt(chain.chainId, 16)}.json`;
   }
+  const boostFile = await getObject(REWARD_DATA, boostFileName);
+  return JSON.parse(boostFile.toString('utf-8'));
+}
 
-  return accounts;
+export async function getAccounts(chain: Chain): Promise<string[]> {
+  const boostFile = await getBoostFile(chain);
+  return Object.keys(boostFile.userData).map((acc) => ethers.utils.getAddress(acc));
 }
 
 export function cachedAccountToAccount(cachedAccount: CachedAccount, network?: Network): Account {

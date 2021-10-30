@@ -11,5 +11,6 @@ process.env.UNISWAP = 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v
 process.env.SUSHISWAP = 'https://api.thegraph.com/subgraphs/name/sushiswap/exchange';
 process.env.PANCAKESWAP = 'https://api.thegraph.com/subgraphs/name/pancakeswap/exchange';
 process.env.MASTERCHEF = 'https://api.thegraph.com/subgraphs/name/sushiswap/master-chef';
+process.env.REWARD_DATA = 'badger-merkle-proofs-staging';
 
 fetchMock.enableMocks();

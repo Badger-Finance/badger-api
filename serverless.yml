@@ -326,24 +326,24 @@ functions:
 
   index-accounts:
     handler: src/indexer/accounts-indexer.refreshUserAccounts
-    timeout: 600
+    timeout: 750
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-boost
           description: 'index accounts boost information'
-          rate: rate(7 minutes)
+          rate: rate(10 minutes)
           input:
             mode: BoostData
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-claimable
           description: 'index accounts claimable from badger tree'
-          rate: rate(7 minutes)
+          rate: rate(15 minutes)
           input:
             mode: ClaimableBalanceData
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-balance
           description: 'index accounts information from the graph'
-          rate: rate(25 minutes)
+          rate: rate(15 minutes)
           input:
             mode: BalanceData
 
