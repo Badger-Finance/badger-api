@@ -148,7 +148,6 @@ async function refreshAccountBoostInfo(chains: Chain[], batchAccounts: AccountMa
       account.boostRank = cachedBoost.rank ?? maxRank + 1;
       account.multipliers = userBoostMultipliers[acc];
       batchAccounts[acc] = account;
-      console.log({ account, cachedBoost });
     }),
   );
 }
