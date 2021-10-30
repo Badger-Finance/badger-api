@@ -91,7 +91,13 @@ export class RewardsService {
   }
 
   static async getChainUserBoosts(chain: Chain, addresses: string[]): Promise<Record<string, CachedBoostMultiplier[]>> {
-    const boostFile = await getObject(REWARD_DATA, `badger-boosts-${parseInt(chain.chainId, 16)}.json`);
+    let boostFileName;
+    if (STAGE === Stage.Production) {
+      boostFileName = 'badger-boosts.json';
+    } else {
+      boostFileName = `badger-boosts-${parseInt(chain.chainId, 16)}.json`;
+    }
+    const boostFile = await getObject(REWARD_DATA, boostFileName);
     const fileContents: BoostData = JSON.parse(boostFile.toString('utf-8'));
     const defaultMultipliers: BoostMultipliers = {};
     Object.keys(fileContents.multiplierData).forEach(
@@ -102,8 +108,8 @@ export class RewardsService {
       let boostData = fileContents.userData[address.toLowerCase()];
       if (!boostData) {
         boostData = {
-          boost: 1,
-          stakeRatio: 0,
+          boost: 0,
+          stakeRatio: 1,
           nftMultiplier: 1,
           multipliers: defaultMultipliers,
           nativeBalance: 0,
@@ -136,7 +142,7 @@ export class RewardsService {
         boostData.multipliers = userMulipliers;
       }
       boostMultipliers[address] = Object.entries(boostData.multipliers)
-        .filter((e) => isNaN(e[1]))
+        .filter((e) => !isNaN(e[1]))
         .map(
           (entry) => (
             new CachedBoostMultiplier(),
