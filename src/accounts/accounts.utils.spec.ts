@@ -3,7 +3,7 @@ import { GraphQLClient } from 'graphql-request';
 import { Ethereum } from '../chains/config/eth.config';
 import { TestStrategy } from '../chains/strategies/test.strategy';
 import { TOKENS } from '../config/tokens.config';
-import { UserQuery, UserSettBalance, UsersQuery } from '../graphql/generated/badger';
+import { UserQuery, UserSettBalance } from '../graphql/generated/badger';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import * as priceUtils from '../prices/prices.utils';
 import { inCurrency } from '../prices/prices.utils';
@@ -11,14 +11,7 @@ import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { getSettDefinition } from '../setts/setts.utils';
 import { randomSnapshot, setupMapper, TEST_ADDR } from '../test/tests.utils';
 import { getToken } from '../tokens/tokens.utils';
-import {
-  defaultBoost,
-  getAccounts,
-  getCachedAccount,
-  getCachedBoost,
-  getUserAccount,
-  toSettBalance,
-} from './accounts.utils';
+import { defaultBoost, getCachedAccount, getCachedBoost, getUserAccount, toSettBalance } from './accounts.utils';
 
 describe('accounts.utils', () => {
   const defaultAccount = (address: string) => ({
@@ -136,39 +129,39 @@ describe('accounts.utils', () => {
     });
   });
 
-  describe('getAccounts', () => {
-    describe('users exist', () => {
-      it('returns a list of user accounts', async () => {
-        const result: UsersQuery = {
-          users: Object.values(TOKENS).map((token) => ({ id: token, settBalances: [] })),
-        };
-        let responded = false;
-        jest.spyOn(GraphQLClient.prototype, 'request').mockImplementation(async () => {
-          if (responded) {
-            return { users: [] };
-          }
-          responded = true;
-          return Promise.resolve(result);
-        });
-        const users = await getAccounts(new Ethereum());
-        expect(users).toMatchObject(Object.values(TOKENS));
-      });
-    });
+  // describe('getAccounts', () => {
+  //   describe('users exist', () => {
+  //     it('returns a list of user accounts', async () => {
+  //       const result: UsersQuery = {
+  //         users: Object.values(TOKENS).map((token) => ({ id: token, settBalances: [] })),
+  //       };
+  //       let responded = false;
+  //       jest.spyOn(GraphQLClient.prototype, 'request').mockImplementation(async () => {
+  //         if (responded) {
+  //           return { users: [] };
+  //         }
+  //         responded = true;
+  //         return Promise.resolve(result);
+  //       });
+  //       const users = await getAccounts(new Ethereum());
+  //       expect(users).toMatchObject(Object.values(TOKENS));
+  //     });
+  //   });
 
-    describe('users do not exist', () => {
-      it('returns an empty list', async () => {
-        jest.spyOn(GraphQLClient.prototype, 'request').mockImplementationOnce(async () => Promise.resolve(null));
-        const nullReturn = await getAccounts(new Ethereum());
-        expect(nullReturn).toMatchObject([]);
+  //   describe('users do not exist', () => {
+  //     it('returns an empty list', async () => {
+  //       jest.spyOn(GraphQLClient.prototype, 'request').mockImplementationOnce(async () => Promise.resolve(null));
+  //       const nullReturn = await getAccounts(new Ethereum());
+  //       expect(nullReturn).toMatchObject([]);
 
-        jest
-          .spyOn(GraphQLClient.prototype, 'request')
-          .mockImplementationOnce(async () => Promise.resolve({ users: null }));
-        const nullUsers = await getAccounts(new Ethereum());
-        expect(nullUsers).toMatchObject([]);
-      });
-    });
-  });
+  //       jest
+  //         .spyOn(GraphQLClient.prototype, 'request')
+  //         .mockImplementationOnce(async () => Promise.resolve({ users: null }));
+  //       const nullUsers = await getAccounts(new Ethereum());
+  //       expect(nullUsers).toMatchObject([]);
+  //     });
+  //   });
+  // });
 
   describe('toSettBalance', () => {
     const chain = new Ethereum();

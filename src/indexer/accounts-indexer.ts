@@ -148,6 +148,7 @@ async function refreshAccountBoostInfo(chains: Chain[], batchAccounts: AccountMa
       account.boostRank = cachedBoost.rank ?? maxRank + 1;
       account.multipliers = userBoostMultipliers[acc];
       batchAccounts[acc] = account;
+      console.log({ account, cachedBoost });
     }),
   );
 }
@@ -170,24 +171,21 @@ async function batchRefreshAccounts(
 }
 
 export async function refreshAccounts(chains: Chain[], mode: IndexMode, accounts: string[]) {
-  const checksummedAccounts = accounts.map((acc) => ethers.utils.getAddress(acc));
   let refreshFns: Promise<void>[] = [];
   switch (mode) {
     case IndexMode.BoostData:
       refreshFns = [
-        batchRefreshAccounts(checksummedAccounts, (batchAccounts) => [refreshAccountBoostInfo(chains, batchAccounts)]),
+        batchRefreshAccounts(accounts, (batchAccounts) => [refreshAccountBoostInfo(chains, batchAccounts)]),
       ];
       break;
     case IndexMode.ClaimableBalanceData:
       refreshFns = [
-        batchRefreshAccounts(checksummedAccounts, (batchAccounts) => [
-          refreshAccountClaimableBalances(chains, batchAccounts),
-        ]),
+        batchRefreshAccounts(accounts, (batchAccounts) => [refreshAccountClaimableBalances(chains, batchAccounts)]),
       ];
       break;
     case IndexMode.BalanceData:
     default:
-      refreshFns = chunkArray(checksummedAccounts, 10).flatMap((chunk) =>
+      refreshFns = chunkArray(accounts, 10).flatMap((chunk) =>
         batchRefreshAccounts(chunk, (batchAccounts) => [refreshAccountSettBalances(chains, batchAccounts)], 100),
       );
       break;
