@@ -12,6 +12,8 @@ import { CachedBalance } from '../accounts/interfaces/cached-claimable-balance.i
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
+import { Ethereum } from '../chains/config/eth.config';
+import { Stage } from '../config/enums/stage.enum';
 import { BadgerTree__factory } from '../contracts';
 import { UserSettBalance } from '../graphql/generated/badger';
 import { getLeaderBoardSize } from '../leaderboards/leaderboards.utils';
@@ -129,8 +131,9 @@ export async function refreshAccountSettBalances(chains: Chain[], batchAccounts:
 
 async function refreshAccountBoostInfo(chains: Chain[], batchAccounts: AccountMap) {
   const addresses = Object.keys(batchAccounts);
+  const queryChains = Stage.Production ? [new Ethereum()] : chains;
   const [userBoostMultipliers, maxRank] = await Promise.all([
-    RewardsService.getUserBoostMultipliers(chains, addresses),
+    RewardsService.getUserBoostMultipliers(queryChains, addresses),
     getLeaderBoardSize(),
   ]);
 
@@ -154,7 +157,7 @@ async function batchRefreshAccounts(
   refreshFns: (batchAccounts: AccountMap) => Promise<void>[],
   customBatch?: number,
 ): Promise<void> {
-  const batchSize = customBatch ?? 500;
+  const batchSize = customBatch ?? 10;
   const mapper = getDataMapper();
   for (let i = 0; i < accounts.length; i += batchSize) {
     const addresses = accounts.slice(i, i + batchSize);
