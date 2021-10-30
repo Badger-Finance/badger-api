@@ -157,7 +157,7 @@ async function batchRefreshAccounts(
   refreshFns: (batchAccounts: AccountMap) => Promise<void>[],
   customBatch?: number,
 ): Promise<void> {
-  const batchSize = customBatch ?? 10;
+  const batchSize = customBatch ?? 500;
   const mapper = getDataMapper();
   for (let i = 0; i < accounts.length; i += batchSize) {
     const addresses = accounts.slice(i, i + batchSize);
