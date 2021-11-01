@@ -1,6 +1,7 @@
 import { Network } from '@badger-dao/sdk';
 import { PlatformTest } from '@tsed/common';
 import * as s3Utils from '../aws/s3.utils';
+import { Ethereum } from '../chains/config/eth.config';
 import { TOKENS } from '../config/tokens.config';
 import { BoostData } from '../rewards/interfaces/boost-data.interface';
 import { setupMapper, TEST_ADDR } from '../test/tests.utils';
@@ -11,6 +12,7 @@ import { LeaderBoardsService } from './leaderboards.service';
 import * as leaderboardUtils from './leaderboards.utils';
 
 describe('leaderboards.service', () => {
+  const chain = new Ethereum();
   let service: LeaderBoardsService;
 
   beforeAll(async () => {
@@ -56,7 +58,7 @@ describe('leaderboards.service', () => {
     describe('no saved leaderboard entries', () => {
       it('returns an empty array', async () => {
         setupMapper([]);
-        const result = await service.loadFullLeaderBoard();
+        const result = await service.loadFullLeaderBoard(chain);
         expect(result).toMatchObject([]);
       });
     });
@@ -64,7 +66,7 @@ describe('leaderboards.service', () => {
       it('returns all saved leaderboard entries', async () => {
         const expected = randomCachedBoosts(50);
         setupMapper(expected);
-        const result = await service.loadFullLeaderBoard();
+        const result = await service.loadFullLeaderBoard(chain);
         expect(result).toMatchObject(expected);
       });
     });
@@ -74,7 +76,7 @@ describe('leaderboards.service', () => {
     describe('no saved leaderboard entries', () => {
       it('returns an empty array', async () => {
         setupMapper([]);
-        const result = await service.loadLeaderboardEntries();
+        const result = await service.loadLeaderboardEntries(chain);
         expect(result).toMatchObject(expectedData([], 0));
       });
     });
@@ -85,7 +87,7 @@ describe('leaderboards.service', () => {
           const returned = saved.slice(0, 20);
           setupMapper(returned);
           jest.spyOn(leaderboardUtils, 'getLeaderBoardSize').mockImplementation(() => Promise.resolve(saved.length));
-          const result = await service.loadLeaderboardEntries();
+          const result = await service.loadLeaderboardEntries(chain);
           expect(result).toMatchObject(expectedData(returned, saved.length));
         });
       });
@@ -98,7 +100,7 @@ describe('leaderboards.service', () => {
           const returned = saved.slice(start === 0 ? start : start - 1, end);
           setupMapper(returned);
           jest.spyOn(leaderboardUtils, 'getLeaderBoardSize').mockImplementation(() => Promise.resolve(saved.length));
-          const result = await service.loadLeaderboardEntries(page);
+          const result = await service.loadLeaderboardEntries(chain, page);
           expect(result).toMatchObject(expectedData(returned, saved.length, page));
         });
       });
@@ -113,7 +115,7 @@ describe('leaderboards.service', () => {
           const returned = saved.slice(start === 0 ? start : start - 1, end);
           setupMapper(returned);
           jest.spyOn(leaderboardUtils, 'getLeaderBoardSize').mockImplementation(() => Promise.resolve(saved.length));
-          const result = await service.loadLeaderboardEntries(page, size);
+          const result = await service.loadLeaderboardEntries(chain, page, size);
           expect(result).toMatchObject(expectedData(returned, saved.length, page, size));
         });
       });
