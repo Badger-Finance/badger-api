@@ -1,10 +1,12 @@
 import { BadRequest } from '@tsed/exceptions';
+import { Ethereum } from '../chains/config/eth.config';
 import { randomValue, setupMapper } from '../test/tests.utils';
 import { LeaderBoardType } from './enums/leaderboard-type.enum';
 import { CachedBoost } from './interface/cached-boost.interface';
 import { getLeaderBoardEntryRange, getLeaderBoardSize, getUserLeaderBoardRank } from './leaderboards.utils';
 
 describe('leaderboards.utils', () => {
+  const chain = new Ethereum();
   const address = '0x05767d9ef41dc40689678ffca0608878fb3de906';
 
   const randomLeaderboard = (length: number, start?: number): CachedBoost[] => {
@@ -37,7 +39,7 @@ describe('leaderboards.utils', () => {
         setupMapper(randomLeaderboard(0));
         const start = randomValue();
         const end = start + 20;
-        const boosts = await getLeaderBoardEntryRange(start, end);
+        const boosts = await getLeaderBoardEntryRange(chain, start, end);
         expect(boosts).toMatchObject([]);
       });
     });
@@ -46,7 +48,7 @@ describe('leaderboards.utils', () => {
       it('throws a bad request expection', async () => {
         const start = randomValue();
         const end = start - 20;
-        await expect(getLeaderBoardEntryRange(start, end)).rejects.toThrow(BadRequest);
+        await expect(getLeaderBoardEntryRange(chain, start, end)).rejects.toThrow(BadRequest);
       });
     });
 
@@ -57,7 +59,7 @@ describe('leaderboards.utils', () => {
           const end = start + 20;
           const seed = randomLeaderboard(end - start, start);
           setupMapper(seed);
-          const boosts = await getLeaderBoardEntryRange(start, end);
+          const boosts = await getLeaderBoardEntryRange(chain, start, end);
           expect(boosts).toMatchObject(seed);
         });
       });
@@ -69,7 +71,7 @@ describe('leaderboards.utils', () => {
           const seedEntries = (end - start) / 2;
           const seed = randomLeaderboard(seedEntries, start);
           setupMapper(seed);
-          const boosts = await getLeaderBoardEntryRange(start, end);
+          const boosts = await getLeaderBoardEntryRange(chain, start, end);
           expect(boosts).toMatchObject(seed);
         });
       });
@@ -80,7 +82,7 @@ describe('leaderboards.utils', () => {
     describe('with no saved leaderboard entries', () => {
       it('returns size 0', async () => {
         setupMapper(randomLeaderboard(0));
-        const size = await getLeaderBoardSize();
+        const size = await getLeaderBoardSize(chain);
         expect(size).toEqual(0);
       });
     });
@@ -89,7 +91,7 @@ describe('leaderboards.utils', () => {
       it('returns the leaderboard size', async () => {
         const entries = randomLeaderboard(randomValue(2, 5));
         setupMapper(entries.reverse());
-        const size = await getLeaderBoardSize();
+        const size = await getLeaderBoardSize(chain);
         expect(size).toEqual(entries.length);
       });
     });
@@ -99,7 +101,7 @@ describe('leaderboards.utils', () => {
     describe('with no saved leaderboard entries', () => {
       it('returns rank 0', async () => {
         setupMapper(randomLeaderboard(0));
-        const rank = await getUserLeaderBoardRank(address);
+        const rank = await getUserLeaderBoardRank(chain, address);
         expect(rank).toEqual(1);
       });
     });
@@ -108,7 +110,7 @@ describe('leaderboards.utils', () => {
       it('returns past the maximum rank', async () => {
         const entries = randomLeaderboard(randomValue(2, 5));
         setupMapper(entries.reverse());
-        const rank = await getUserLeaderBoardRank(address);
+        const rank = await getUserLeaderBoardRank(chain, address);
         expect(rank).toEqual(entries.length);
       });
     });
@@ -118,7 +120,7 @@ describe('leaderboards.utils', () => {
         const randomRank = randomValue();
         const entries = randomLeaderboard(1, randomRank);
         setupMapper(entries);
-        const rank = await getUserLeaderBoardRank(entries[0].address);
+        const rank = await getUserLeaderBoardRank(chain, entries[0].address);
         expect(rank).toEqual(randomRank);
       });
     });

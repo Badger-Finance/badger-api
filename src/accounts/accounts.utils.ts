@@ -4,8 +4,7 @@ import { GraphQLClient } from 'graphql-request';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
-import { REWARD_DATA, STAGE } from '../config/constants';
-import { Stage } from '../config/enums/stage.enum';
+import { REWARD_DATA } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
 import { getSdk, OrderDirection, UserQuery, UserSettBalance, UsersQuery } from '../graphql/generated/badger';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
@@ -50,13 +49,7 @@ export async function getUserAccounts(chain: Chain, accounts: string[]): Promise
 }
 
 export async function getBoostFile(chain: Chain): Promise<BoostData> {
-  let boostFileName;
-  if (STAGE === Stage.Production) {
-    boostFileName = 'badger-boosts.json';
-  } else {
-    boostFileName = `badger-boosts-${parseInt(chain.chainId, 16)}.json`;
-  }
-  const boostFile = await getObject(REWARD_DATA, boostFileName);
+  const boostFile = await getObject(REWARD_DATA, `badger-boosts-${parseInt(chain.chainId, 16)}.json`);
   return JSON.parse(boostFile.toString('utf-8'));
 }
 

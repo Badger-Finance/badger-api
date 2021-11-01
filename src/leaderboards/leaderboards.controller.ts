@@ -1,5 +1,7 @@
+import { Network } from '@badger-dao/sdk';
 import { Controller, Get, Inject, QueryParams } from '@tsed/common';
 import { ContentType, Description, Hidden, Returns, Summary } from '@tsed/schema';
+import { Chain } from '../chains/config/chain.config';
 import { CachedBoost } from './interface/cached-boost.interface';
 import { LeaderBoardDataModel } from './interface/leaderboard-data-model.interrface';
 import { LeaderBoardsService } from './leaderboards.service';
@@ -12,8 +14,8 @@ export class LeaderBoardsController {
   @Hidden()
   @ContentType('json')
   @Get('/complete')
-  async getFullLeaderBoard(): Promise<CachedBoost[]> {
-    return this.leaderBoardsService.loadFullLeaderBoard();
+  async getFullLeaderBoard(@QueryParams('chain') chain?: Network): Promise<CachedBoost[]> {
+    return this.leaderBoardsService.loadFullLeaderBoard(Chain.getChain(chain));
   }
 
   @Get('')
@@ -24,7 +26,8 @@ export class LeaderBoardsController {
   async getLeaderBoard(
     @QueryParams('page') page?: number,
     @QueryParams('size') size?: number,
+    @QueryParams('chain') chain?: Network,
   ): Promise<LeaderBoardDataModel> {
-    return this.leaderBoardsService.loadLeaderboardEntries(page, size);
+    return this.leaderBoardsService.loadLeaderboardEntries(Chain.getChain(chain), page, size);
   }
 }

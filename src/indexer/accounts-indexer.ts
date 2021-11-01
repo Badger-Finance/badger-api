@@ -12,11 +12,8 @@ import { CachedBalance } from '../accounts/interfaces/cached-claimable-balance.i
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
-import { Ethereum } from '../chains/config/eth.config';
-import { Stage } from '../config/enums/stage.enum';
 import { BadgerTree__factory } from '../contracts';
 import { UserSettBalance } from '../graphql/generated/badger';
-import { getLeaderBoardSize } from '../leaderboards/leaderboards.utils';
 import { RewardMerkleDistribution } from '../rewards/interfaces/merkle-distributor.interface';
 import { RewardAmounts } from '../rewards/interfaces/reward-amounts.interface';
 import { RewardsService } from '../rewards/rewards.service';
@@ -131,12 +128,7 @@ export async function refreshAccountSettBalances(chains: Chain[], batchAccounts:
 
 async function refreshAccountBoostInfo(chains: Chain[], batchAccounts: AccountMap) {
   const addresses = Object.keys(batchAccounts);
-  const queryChains = Stage.Production ? [new Ethereum()] : chains;
-  const [userBoostMultipliers, maxRank] = await Promise.all([
-    RewardsService.getUserBoostMultipliers(queryChains, addresses),
-    getLeaderBoardSize(),
-  ]);
-
+  const userBoostMultipliers = await RewardsService.getUserBoostMultipliers(chains, addresses);
   await Promise.all(
     addresses.map(async (acc) => {
       const account = batchAccounts[acc];
@@ -145,7 +137,7 @@ async function refreshAccountBoostInfo(chains: Chain[], batchAccounts: AccountMa
       account.nativeBalance = cachedBoost.nativeBalance;
       account.nonNativeBalance = cachedBoost.nonNativeBalance;
       account.boost = cachedBoost.boost;
-      account.boostRank = cachedBoost.rank ?? maxRank + 1;
+      account.boostRank = cachedBoost.rank;
       account.multipliers = userBoostMultipliers[acc];
       batchAccounts[acc] = account;
     }),
