@@ -3,9 +3,6 @@ import { ethers } from 'ethers';
 import { getBoostFile } from '../accounts/accounts.utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
-import { Ethereum } from '../chains/config/eth.config';
-import { STAGE } from '../config/constants';
-import { Stage } from '../config/enums/stage.enum';
 import { LeaderBoardType } from './enums/leaderboard-type.enum';
 import { CachedBoost } from './interface/cached-boost.interface';
 import { LeaderBoardData } from './interface/leaderboard-data.interrface';
@@ -14,18 +11,18 @@ import { getFullLeaderBoard, getLeaderBoardEntryRange, getLeaderBoardSize } from
 
 @Service()
 export class LeaderBoardsService {
-  async loadFullLeaderBoard(): Promise<CachedBoost[]> {
-    return getFullLeaderBoard();
+  async loadFullLeaderBoard(chain: Chain): Promise<CachedBoost[]> {
+    return getFullLeaderBoard(chain);
   }
 
-  async loadLeaderboardEntries(page?: number, size?: number): Promise<LeaderBoardData> {
+  async loadLeaderboardEntries(chain: Chain, page?: number, size?: number): Promise<LeaderBoardData> {
     const pageNumber = page || 0;
     const pageSize = size || 20;
     const offset = pageNumber > 0 ? 1 : 0;
     const start = pageNumber * pageSize + offset;
     const end = start + pageSize - offset;
     try {
-      const [data, size] = await Promise.all([getLeaderBoardEntryRange(start, end), getLeaderBoardSize()]);
+      const [data, size] = await Promise.all([getLeaderBoardEntryRange(chain, start, end), getLeaderBoardSize(chain)]);
       const maxPage = parseInt((size / pageSize).toString());
       return {
         data,
@@ -47,7 +44,7 @@ export class LeaderBoardsService {
   }
 
   static async generateBoostsLeaderBoard(): Promise<CachedBoost[]> {
-    const chains = STAGE === Stage.Production ? [new Ethereum()] : loadChains();
+    const chains = loadChains();
     const results = await Promise.all(chains.map((chain) => this.generateChainBoostsLeaderBoard(chain)));
     return results.flatMap((item) => item);
   }
