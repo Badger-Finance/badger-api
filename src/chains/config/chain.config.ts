@@ -47,7 +47,7 @@ export abstract class Chain {
     this.provider = new ethers.providers.JsonRpcProvider(rpcUrl);
     this.batchProvider = new ethers.providers.JsonRpcBatchProvider(rpcUrl);
     this.strategy = strategy;
-    this.graphUrl = `https://api.thegraph.com/subgraphs/name/badger-finance/badger-dao-setts${
+    this.graphUrl = `https://api.thegraph.com/subgraphs/name/axejintao/badger-dao${
       network !== Network.Ethereum ? `-${symbol.toLowerCase()}` : ''
     }`;
     this.blocksPerYear = blocksPerYear;
