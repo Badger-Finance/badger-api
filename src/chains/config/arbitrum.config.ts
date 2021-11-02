@@ -102,7 +102,6 @@ export const arbitrumSetts: SettDefinition[] = [
     settToken: TOKENS.BARB_SWP_BADGER_WETH,
     depositToken: TOKENS.ARB_SWP_BADGER_WETH,
     createdBlock: 2188169,
-    state: SettState.Guarded,
     protocol: Protocol.Swapr,
   },
   {
@@ -110,7 +109,6 @@ export const arbitrumSetts: SettDefinition[] = [
     settToken: TOKENS.BARB_SWP_IBBTC_WETH,
     depositToken: TOKENS.ARB_SWP_IBBTC_WETH,
     createdBlock: 2188169,
-    state: SettState.Guarded,
     protocol: Protocol.Swapr,
   },
 ];
