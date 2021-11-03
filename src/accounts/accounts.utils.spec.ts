@@ -14,6 +14,8 @@ import { getToken } from '../tokens/tokens.utils';
 import { defaultBoost, getCachedAccount, getCachedBoost, getUserAccount, toSettBalance } from './accounts.utils';
 
 describe('accounts.utils', () => {
+  const chain = new Ethereum();
+
   const defaultAccount = (address: string) => ({
     address,
     boost: 0,
@@ -221,7 +223,7 @@ describe('accounts.utils', () => {
     describe('no cached boost', () => {
       it('returns the default boost', async () => {
         setupMapper([]);
-        const result = await getCachedBoost(TEST_ADDR);
+        const result = await getCachedBoost(chain, TEST_ADDR);
         expect(result).toMatchObject(defaultBoost(TEST_ADDR));
       });
     });
@@ -233,7 +235,7 @@ describe('accounts.utils', () => {
         boost.nativeBalance = 32021;
         boost.nonNativeBalance = 32021;
         setupMapper([boost]);
-        const result = await getCachedBoost(TEST_ADDR);
+        const result = await getCachedBoost(chain, TEST_ADDR);
         expect(result).toMatchObject(boost);
       });
     });

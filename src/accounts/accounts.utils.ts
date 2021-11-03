@@ -171,7 +171,7 @@ export async function toSettBalance(
   });
 }
 
-export async function getCachedBoost(address: string): Promise<CachedBoost> {
+export async function getCachedBoost(chain: Chain, address: string): Promise<CachedBoost> {
   const mapper = getDataMapper();
   for await (const entry of mapper.query(
     CachedBoost,

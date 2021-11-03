@@ -4,7 +4,7 @@ import { BadRequest } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { Chain } from '../chains/config/chain.config';
 import { IndexMode, refreshAccounts } from '../indexer/accounts-indexer';
-import { cachedAccountToAccount, getAccounts, getCachedAccount } from './accounts.utils';
+import { cachedAccountToAccount, getAccounts, getCachedAccount, getCachedBoost } from './accounts.utils';
 import { CachedAccount } from './interfaces/cached-account.interface';
 import { UnclaimedRewards } from './interfaces/unclaimed-rewards.interface';
 import { UserRewardsUnclaimed } from './interfaces/user-rewards-unclaimed.interface';
@@ -22,6 +22,12 @@ export class AccountsService {
     }
     await refreshAccounts([chain], IndexMode.BalanceData, [checksumAddress]);
     const cachedAccount = await getCachedAccount(checksumAddress);
+    const cachedBoost = await getCachedBoost(chain, checksumAddress);
+    cachedAccount.stakeRatio = cachedBoost.stakeRatio;
+    cachedAccount.nativeBalance = cachedBoost.nativeBalance;
+    cachedAccount.nonNativeBalance = cachedBoost.nonNativeBalance;
+    cachedAccount.boost = cachedBoost.boost;
+    cachedAccount.boostRank = cachedBoost.rank;
     return cachedAccountToAccount(cachedAccount, chain.network);
   }
 
