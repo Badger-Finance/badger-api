@@ -224,10 +224,12 @@ resources:
           - AttributeName: 'address'
             AttributeType: 'S'
         GlobalSecondaryIndexes:
-          - IndexName: IndexLeaderBoardRankOnAddress
+          - IndexName: IndexLeaderBoardRankOnAddressAndLeaderboard
             KeySchema:
               - AttributeName: 'address'
                 KeyType: HASH
+              - AttributeName: 'leaderboard'
+                KeyType: RANGE
             Projection:
               ProjectionType: ALL
 
