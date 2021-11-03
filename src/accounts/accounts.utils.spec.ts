@@ -206,7 +206,7 @@ describe('accounts.utils', () => {
   describe('defaultBoost', () => {
     it('returns a boost with all fields as the default values', () => {
       const expected = {
-        leaderboard: LeaderBoardType.BadgerBoost,
+        leaderboard: `${chain.network}_${LeaderBoardType.BadgerBoost}`,
         rank: 0,
         address: TEST_ADDR,
         boost: 1,
@@ -215,7 +215,7 @@ describe('accounts.utils', () => {
         nativeBalance: 0,
         nonNativeBalance: 0,
       };
-      expect(defaultBoost(TEST_ADDR)).toMatchObject(expected);
+      expect(defaultBoost(chain, TEST_ADDR)).toMatchObject(expected);
     });
   });
 
@@ -224,12 +224,12 @@ describe('accounts.utils', () => {
       it('returns the default boost', async () => {
         setupMapper([]);
         const result = await getCachedBoost(chain, TEST_ADDR);
-        expect(result).toMatchObject(defaultBoost(TEST_ADDR));
+        expect(result).toMatchObject(defaultBoost(chain, TEST_ADDR));
       });
     });
     describe('a previously cached boost', () => {
       it('returns the default boost', async () => {
-        const boost = defaultBoost(TEST_ADDR);
+        const boost = defaultBoost(chain, TEST_ADDR);
         boost.rank = 42;
         boost.stakeRatio = 1;
         boost.nativeBalance = 32021;

@@ -1,4 +1,3 @@
-import { Account, Network } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
 import { getDataMapper } from '../aws/dynamodb.utils';
@@ -12,13 +11,13 @@ import { CachedBoost } from '../leaderboards/interface/cached-boost.interface';
 import { getPrice, inCurrency } from '../prices/prices.utils';
 import { BoostData } from '../rewards/interfaces/boost-data.interface';
 import { getCachedSett, getSettDefinition } from '../setts/setts.utils';
-import { cachedTokenBalanceToTokenBalance, formatBalance, getSettTokens, getToken } from '../tokens/tokens.utils';
+import { formatBalance, getSettTokens, getToken } from '../tokens/tokens.utils';
 import { CachedAccount } from './interfaces/cached-account.interface';
 import { CachedSettBalance } from './interfaces/cached-sett-balance.interface';
 
-export function defaultBoost(address: string): CachedBoost {
+export function defaultBoost(chain: Chain, address: string): CachedBoost {
   return {
-    leaderboard: LeaderBoardType.BadgerBoost,
+    leaderboard: `${chain.network}_${LeaderBoardType.BadgerBoost}`,
     rank: 0,
     address,
     boost: 1,
@@ -62,37 +61,6 @@ export async function getAccounts(chain: Chain): Promise<string[]> {
     return [];
   }
   return Object.keys(boostFile.userData).map((acc) => ethers.utils.getAddress(acc));
-}
-
-export function cachedAccountToAccount(cachedAccount: CachedAccount, network?: Network): Account {
-  const balances = cachedAccount.balances
-    .filter((bal) => !network || bal.network === network)
-    .map((bal) => ({
-      ...bal,
-      tokens: bal.tokens.map((token) => cachedTokenBalanceToTokenBalance(token)),
-      earnedTokens: bal.earnedTokens.map((token) => cachedTokenBalanceToTokenBalance(token)),
-    }));
-  const multipliers = Object.fromEntries(cachedAccount.multipliers.map((entry) => [entry.address, entry.multiplier]));
-  const data = Object.fromEntries(balances.map((bal) => [bal.address, bal]));
-  const claimableBalances = Object.fromEntries(
-    cachedAccount.claimableBalances.map((bal) => [bal.address, bal.balance]),
-  );
-  const { address, value, earnedValue, boost, boostRank, stakeRatio, nativeBalance, nonNativeBalance } = cachedAccount;
-  const account: Account = {
-    address,
-    value,
-    earnedValue,
-    boost,
-    boostRank,
-    multipliers,
-    data,
-    claimableBalances,
-    stakeRatio,
-    nativeBalance,
-    nonNativeBalance,
-  };
-  delete account.multipliers[TOKENS.BICVX];
-  return account;
 }
 
 export async function getCachedAccount(address: string): Promise<CachedAccount> {
@@ -175,10 +143,10 @@ export async function getCachedBoost(chain: Chain, address: string): Promise<Cac
   const mapper = getDataMapper();
   for await (const entry of mapper.query(
     CachedBoost,
-    { address: ethers.utils.getAddress(address) },
+    { leaderboard: `${chain.network}_${LeaderBoardType.BadgerBoost}`, address: ethers.utils.getAddress(address) },
     { limit: 1, indexName: 'IndexLeaderBoardRankOnAddress' },
   )) {
     return entry;
   }
-  return defaultBoost(address);
+  return defaultBoost(chain, address);
 }

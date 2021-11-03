@@ -16,7 +16,7 @@
     "dev:local": "npx ts-node src/index.ts",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint \"src/**/*.ts\" --fix",
-    "test": "jest --runInBand --detectOpenHandles",
+    "test": "jest --runInBand --detectOpenHandles --forceExit",
     "tsc:build": "tsc -p ."
   },
   "dependencies": {

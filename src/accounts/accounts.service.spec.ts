@@ -4,8 +4,10 @@ import { Chain } from '../chains/config/chain.config';
 import { Ethereum } from '../chains/config/eth.config';
 import * as accountIndexer from '../indexer/accounts-indexer';
 import { IndexMode } from '../indexer/accounts-indexer';
+import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import { setupMapper, TEST_ADDR } from '../test/tests.utils';
 import { AccountsService } from './accounts.service';
+import * as accountsUtils from './accounts.utils';
 
 describe('charts.service', () => {
   const chain = new Ethereum();
@@ -34,6 +36,16 @@ describe('charts.service', () => {
   beforeEach(async () => {
     refreshAccounts = jest.spyOn(accountIndexer, 'refreshAccounts').mockImplementation(() => Promise.resolve());
     setupMapper([defaultAccount]);
+    jest.spyOn(accountsUtils, 'getCachedBoost').mockImplementation(async () => ({
+      leaderboard: `${chain.network}_${LeaderBoardType.BadgerBoost}`,
+      address: TEST_ADDR,
+      rank: 3,
+      boost: 2000,
+      stakeRatio: 1,
+      nftMultiplier: 1,
+      nativeBalance: 2033222,
+      nonNativeBalance: 23129,
+    }));
     result = await service.getAccount(chain, TEST_ADDR);
   });
 

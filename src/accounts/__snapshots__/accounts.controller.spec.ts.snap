@@ -3,7 +3,7 @@
 exports[`AccountsController GET /v2/accounts with a non participant account returns a default account response 1`] = `
 Object {
   "address": "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484",
-  "boost": 0,
+  "boost": 1,
   "boostRank": 0,
   "claimableBalances": Object {},
   "data": Object {},
@@ -11,7 +11,7 @@ Object {
   "multipliers": Object {},
   "nativeBalance": 0,
   "nonNativeBalance": 0,
-  "stakeRatio": 1,
+  "stakeRatio": 0,
   "value": 0,
 }
 `;
@@ -23,12 +23,12 @@ Object {
   "boostRank": 3,
   "claimableBalances": Object {},
   "data": Object {},
-  "earnedValue": 2312,
+  "earnedValue": 0,
   "multipliers": Object {},
   "nativeBalance": 2033222,
   "nonNativeBalance": 23129,
   "stakeRatio": 1,
-  "value": 320232,
+  "value": 0,
 }
 `;
 
