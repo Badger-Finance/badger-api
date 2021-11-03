@@ -1,10 +1,5 @@
 import { BigNumber, ethers } from 'ethers';
-import {
-  getAccounts,
-  getCachedAccount,
-  getUserAccounts,
-  toSettBalance,
-} from '../accounts/accounts.utils';
+import { getAccounts, getCachedAccount, getUserAccounts, toSettBalance } from '../accounts/accounts.utils';
 import { AccountMap } from '../accounts/interfaces/account-map.interface';
 import { CachedAccount } from '../accounts/interfaces/cached-account.interface';
 import { CachedBalance } from '../accounts/interfaces/cached-claimable-balance.interface';
