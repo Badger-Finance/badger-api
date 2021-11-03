@@ -144,7 +144,7 @@ export async function getCachedBoost(chain: Chain, address: string): Promise<Cac
   for await (const entry of mapper.query(
     CachedBoost,
     { leaderboard: `${chain.network}_${LeaderBoardType.BadgerBoost}`, address: ethers.utils.getAddress(address) },
-    { limit: 1, indexName: 'IndexLeaderBoardRankOnAddress' },
+    { limit: 1, indexName: 'IndexLeaderBoardRankOnAddressAndLeaderboard' },
   )) {
     return entry;
   }
