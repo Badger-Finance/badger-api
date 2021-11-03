@@ -52,6 +52,9 @@ export class LeaderBoardsService {
   static async generateChainBoostsLeaderBoard(chain: Chain): Promise<CachedBoost[]> {
     try {
       const boostFile = await getBoostFile(chain);
+      if (!boostFile) {
+        return [];
+      }
       const boosts: UserBoost[] = Object.entries(boostFile.userData).map((entry) => {
         const [address, userBoost] = entry;
         const { boost, stakeRatio, nftMultiplier, nativeBalance, nonNativeBalance } = userBoost;

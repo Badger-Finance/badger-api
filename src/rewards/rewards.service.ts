@@ -92,6 +92,9 @@ export class RewardsService {
   static async getChainUserBoosts(chain: Chain, addresses: string[]): Promise<Record<string, CachedBoostMultiplier[]>> {
     try {
       const boostFile = await getBoostFile(chain);
+      if (!boostFile) {
+        return {};
+      }
       const defaultMultipliers: BoostMultipliers = {};
       Object.keys(boostFile.multiplierData).forEach(
         (key) => (defaultMultipliers[key] = boostFile.multiplierData[key].min),
@@ -154,12 +157,12 @@ export class RewardsService {
   }
 
   static async getRewardEmission(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
-    if (!chain.rewardsLogger || settDefinition.depositToken === TOKENS.DIGG) {
+    const boostFile = await getBoostFile(chain);
+    if (!chain.rewardsLogger || settDefinition.depositToken === TOKENS.DIGG || !boostFile) {
       return [];
     }
     const { settToken } = settDefinition;
     const sett = await getCachedSett(settDefinition);
-    const boostFile = await getBoostFile(chain);
     if (sett.settToken === TOKENS.BICVX) {
       delete boostFile.multiplierData[sett.settToken];
     }

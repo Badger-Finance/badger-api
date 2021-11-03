@@ -48,13 +48,19 @@ export async function getUserAccounts(chain: Chain, accounts: string[]): Promise
   });
 }
 
-export async function getBoostFile(chain: Chain): Promise<BoostData> {
+export async function getBoostFile(chain: Chain): Promise<BoostData | null> {
+  if (!chain.rewardsLogger || !chain.badgerTree) {
+    return null;
+  }
   const boostFile = await getObject(REWARD_DATA, `badger-boosts-${parseInt(chain.chainId, 16)}.json`);
   return JSON.parse(boostFile.toString('utf-8'));
 }
 
 export async function getAccounts(chain: Chain): Promise<string[]> {
   const boostFile = await getBoostFile(chain);
+  if (!boostFile) {
+    return [];
+  }
   return Object.keys(boostFile.userData).map((acc) => ethers.utils.getAddress(acc));
 }
 
