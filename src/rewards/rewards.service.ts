@@ -101,10 +101,7 @@ export class RewardsService {
       );
       const boostMultipliers: Record<string, CachedBoostMultiplier[]> = {};
       for (const address of addresses) {
-        let boostData = boostFile.userData[address.toLowerCase()];
-        if (address === '0xDacae5274d83dc1cB98A2692929D04B71a31320d') {
-          console.log(boostData);
-        }
+        let boostData = boostFile.userData[address] || boostFile.userData[address.toLowerCase()];
         if (!boostData) {
           boostData = {
             boost: 1,
