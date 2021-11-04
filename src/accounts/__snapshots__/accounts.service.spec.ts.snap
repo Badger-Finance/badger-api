@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`charts.service getAccount returns the expected account 1`] = `
+Object {
+  "address": "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484",
+  "boost": 2000,
+  "boostRank": 3,
+  "claimableBalances": Object {},
+  "data": Object {},
+  "earnedValue": 2312,
+  "multipliers": Object {},
+  "nativeBalance": 2033222,
+  "nonNativeBalance": 23129,
+  "stakeRatio": 1,
+  "value": 320232,
+}
+`;
