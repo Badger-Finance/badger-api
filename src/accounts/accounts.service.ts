@@ -3,7 +3,6 @@ import { Service } from '@tsed/di';
 import { BadRequest } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { Chain } from '../chains/config/chain.config';
-import { TOKENS } from '../config/tokens.config';
 import { IndexMode, refreshAccounts } from '../indexer/accounts-indexer';
 import { cachedTokenBalanceToTokenBalance } from '../tokens/tokens.utils';
 import { getAccounts, getCachedAccount, getCachedBoost } from './accounts.utils';
@@ -88,7 +87,6 @@ export class AccountsService {
       nativeBalance,
       nonNativeBalance,
     };
-    delete account.multipliers[TOKENS.BICVX];
     return account;
   }
 }
