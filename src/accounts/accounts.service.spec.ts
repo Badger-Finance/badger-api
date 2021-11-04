@@ -26,7 +26,7 @@ describe('charts.service', () => {
     earnedValue: 2312,
     balances: [
       {
-        network: Network.Arbitrum,
+        network: Network.Ethereum,
         address: TEST_ADDR,
         name: 'Example Sett Balance',
         symbol: 'bESB',
