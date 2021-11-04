@@ -73,8 +73,8 @@ export class AccountsService {
     const cachedBoost = await getCachedBoost(chain, cachedAccount.address);
     const { boost, rank, stakeRatio, nativeBalance, nonNativeBalance } = cachedBoost;
     const { address } = cachedAccount;
-    const value = cachedAccount.balances.map((b) => b.value).reduce((total, value) => (total += value), 0);
-    const earnedValue = cachedAccount.balances.map((b) => b.earnedValue).reduce((total, value) => (total += value), 0);
+    const value = balances.map((b) => b.value).reduce((total, value) => (total += value), 0);
+    const earnedValue = balances.map((b) => b.earnedValue).reduce((total, value) => (total += value), 0);
     const account: Account = {
       address,
       value,
