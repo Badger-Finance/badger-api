@@ -20,7 +20,7 @@ import { getToken } from '../tokens/tokens.utils';
 import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
 import { valueSourceToCachedValueSource } from '../indexer/indexer.utils';
 import { tokenEmission } from '../protocols/protocols.utils';
-import { getBoostFile } from '../accounts/accounts.utils';
+import { getBoostFile, getCachedBoost } from '../accounts/accounts.utils';
 
 @Service()
 export class RewardsService {
@@ -102,6 +102,9 @@ export class RewardsService {
       const boostMultipliers: Record<string, CachedBoostMultiplier[]> = {};
       for (const address of addresses) {
         let boostData = boostFile.userData[address.toLowerCase()];
+        if (address === '0xDacae5274d83dc1cB98A2692929D04B71a31320d') {
+          console.log(boostData);
+        }
         if (!boostData) {
           boostData = {
             boost: 1,
@@ -115,18 +118,10 @@ export class RewardsService {
           const userMulipliers = boostData.multipliers;
           const missingMultipliers = Object.keys(defaultMultipliers).length !== Object.keys(userMulipliers).length;
           if (missingMultipliers) {
+            const boost = await getCachedBoost(chain, address);
+            const percentile = boost.boost / 2000;
             const includedMultipliers = new Set();
-            const totalPercentile = Object.entries(userMulipliers)
-              .map((entry) => {
-                const [key, value] = entry;
-                includedMultipliers.add(key);
-                const min = boostFile.multiplierData[key].min;
-                const max = boostFile.multiplierData[key].max;
-                const range = max - min;
-                return (value - min) / range;
-              })
-              .reduce((total, value) => (total += value), 0);
-            const percentile = totalPercentile / Object.entries(userMulipliers).length;
+            Object.entries(userMulipliers).forEach(includedMultipliers.add);
             Object.entries(boostFile.multiplierData).forEach((entry) => {
               const [key, value] = entry;
               if (!includedMultipliers.has(key)) {
