@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`charts.service getAccount returns the expected account 1`] = `
+Object {
+  "address": "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484",
+  "boost": 2000,
+  "boostRank": 3,
+  "claimableBalances": Object {},
+  "data": Object {
+    "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484": Object {
+      "address": "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484",
+      "balance": 1,
+      "depositedBalance": 5,
+      "earnedBalance": 1,
+      "earnedTokens": Array [],
+      "earnedValue": 2312,
+      "name": "Example Sett Balance",
+      "network": "ethereum",
+      "pricePerFullShare": 1.002,
+      "symbol": "bESB",
+      "tokens": Array [],
+      "value": 320232,
+      "withdrawnBalance": 0,
+    },
+  },
+  "earnedValue": 2312,
+  "multipliers": Object {},
+  "nativeBalance": 2033222,
+  "nonNativeBalance": 23129,
+  "stakeRatio": 1,
+  "value": 320232,
+}
+`;

@@ -3,13 +3,21 @@ import { LEADERBOARD_DATA } from '../../config/constants';
 
 @table(LEADERBOARD_DATA)
 export class CachedBoost {
-  @hashKey()
+  @hashKey({
+    indexKeyConfigurations: {
+      IndexLeaderBoardRankOnAddressAndLeaderboard: 'RANGE',
+    },
+  })
   leaderboard!: string;
 
   @rangeKey()
   rank!: number;
 
-  @attribute()
+  @attribute({
+    indexKeyConfigurations: {
+      IndexLeaderBoardRankOnAddressAndLeaderboard: 'HASH',
+    },
+  })
   address!: string;
 
   @attribute()

@@ -1,11 +1,5 @@
 import { BigNumber, ethers } from 'ethers';
-import {
-  getAccounts,
-  getCachedAccount,
-  getCachedBoost,
-  getUserAccounts,
-  toSettBalance,
-} from '../accounts/accounts.utils';
+import { getAccounts, getCachedAccount, getUserAccounts, toSettBalance } from '../accounts/accounts.utils';
 import { AccountMap } from '../accounts/interfaces/account-map.interface';
 import { CachedAccount } from '../accounts/interfaces/cached-account.interface';
 import { CachedBalance } from '../accounts/interfaces/cached-claimable-balance.interface';
@@ -118,8 +112,6 @@ export async function refreshAccountSettBalances(chains: Chain[], batchAccounts:
             account.balances = account.balances.filter((bal) => bal.network !== chain.network).concat(settBalances);
           }
         }
-        account.value = account.balances.map((b) => b.value).reduce((total, value) => (total += value), 0);
-        account.earnedValue = account.balances.map((b) => b.earnedValue).reduce((total, value) => (total += value), 0);
         batchAccounts[address] = account;
       }
     }),
@@ -132,12 +124,6 @@ async function refreshAccountBoostInfo(chains: Chain[], batchAccounts: AccountMa
   await Promise.all(
     addresses.map(async (acc) => {
       const account = batchAccounts[acc];
-      const cachedBoost = await getCachedBoost(acc);
-      account.stakeRatio = cachedBoost.stakeRatio;
-      account.nativeBalance = cachedBoost.nativeBalance;
-      account.nonNativeBalance = cachedBoost.nonNativeBalance;
-      account.boost = cachedBoost.boost;
-      account.boostRank = cachedBoost.rank;
       account.multipliers = userBoostMultipliers[acc];
       batchAccounts[acc] = account;
     }),
