@@ -112,8 +112,6 @@ export async function refreshAccountSettBalances(chains: Chain[], batchAccounts:
             account.balances = account.balances.filter((bal) => bal.network !== chain.network).concat(settBalances);
           }
         }
-        account.value = account.balances.map((b) => b.value).reduce((total, value) => (total += value), 0);
-        account.earnedValue = account.balances.map((b) => b.earnedValue).reduce((total, value) => (total += value), 0);
         batchAccounts[address] = account;
       }
     }),

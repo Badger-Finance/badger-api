@@ -85,10 +85,7 @@ export async function getCachedAccount(address: string): Promise<CachedAccount> 
       { address: checksummedAccount },
       { limit: 1, scanIndexForward: false },
     )) {
-      return {
-        ...defaultAccount,
-        ...item,
-      };
+      return item;
     }
     return defaultAccount;
   } catch (err) {

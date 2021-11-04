@@ -22,11 +22,11 @@ Object {
   "boost": 2000,
   "claimableBalances": Object {},
   "data": Object {},
-  "earnedValue": 2312,
+  "earnedValue": 0,
   "multipliers": Object {},
   "nativeBalance": 2033222,
   "nonNativeBalance": 23129,
-  "value": 320232,
+  "value": 0,
 }
 `;
 
