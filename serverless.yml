@@ -206,32 +206,32 @@ resources:
           - AttributeName: 'address'
             AttributeType: 'S'
 
-    # leaderboardTable:
-    #   Type: AWS::DynamoDB::Table
-    #   Properties:
-    #     TableName: ${self:custom.stage}-leaderboard
-    #     BillingMode: PAY_PER_REQUEST
-    #     KeySchema:
-    #       - AttributeName: 'leaderboard'
-    #         KeyType: 'HASH'
-    #       - AttributeName: 'rank'
-    #         KeyType: 'RANGE'
-    #     AttributeDefinitions:
-    #       - AttributeName: 'leaderboard'
-    #         AttributeType: 'S'
-    #       - AttributeName: 'rank'
-    #         AttributeType: 'N'
-    #       - AttributeName: 'address'
-    #         AttributeType: 'S'
-    #     GlobalSecondaryIndexes:
-    #       - IndexName: IndexLeaderBoardRankOnAddressAndLeaderboard
-    #         KeySchema:
-    #           - AttributeName: 'address'
-    #             KeyType: HASH
-    #           - AttributeName: 'leaderboard'
-    #             KeyType: RANGE
-    #         Projection:
-    #           ProjectionType: ALL
+    leaderboardTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.stage}-leaderboard
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: 'leaderboard'
+            KeyType: 'HASH'
+          - AttributeName: 'rank'
+            KeyType: 'RANGE'
+        AttributeDefinitions:
+          - AttributeName: 'leaderboard'
+            AttributeType: 'S'
+          - AttributeName: 'rank'
+            AttributeType: 'N'
+          - AttributeName: 'address'
+            AttributeType: 'S'
+        GlobalSecondaryIndexes:
+          - IndexName: IndexLeaderBoardRankOnAddressAndLeaderboard
+            KeySchema:
+              - AttributeName: 'address'
+                KeyType: HASH
+              - AttributeName: 'leaderboard'
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
 
     liquidityPoolTokenBalancesTable:
       Type: AWS::DynamoDB::Table
