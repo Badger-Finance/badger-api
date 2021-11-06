@@ -22,7 +22,7 @@
   "dependencies": {
     "@aws/dynamodb-data-mapper": "^0.7.3",
     "@aws/dynamodb-data-mapper-annotations": "^0.7.3",
-    "@badger-dao/sdk": "^1.0.33",
+    "@badger-dao/sdk": "^1.0.39",
     "@tsed/common": "6.53.0",
     "@tsed/core": "6.53.0",
     "@tsed/di": "6.53.0",
@@ -34,6 +34,7 @@
     "@tsed/swagger": "6.53.0",
     "@types/cors": "^2.8.10",
     "aws-sdk": "^2.913.0",
+    "axios": "^0.24.0",
     "body-parser": "^1.19.0",
     "class-transformer": "0.4.0",
     "class-validator": "0.13.1",

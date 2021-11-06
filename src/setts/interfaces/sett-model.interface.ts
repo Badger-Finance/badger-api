@@ -8,7 +8,7 @@ import { getToken, mockBalance } from '../../tokens/tokens.utils';
 import { VAULT_SOURCE } from '../setts.utils';
 import { SettStrategy } from './sett-strategy.interface';
 import { ethers } from 'ethers';
-import { Sett, TokenBalance } from '@badger-dao/sdk';
+import { Protocol, Sett, TokenBalance } from '@badger-dao/sdk';
 
 export class SettModel implements Sett {
   @Title('name')
@@ -58,6 +58,12 @@ export class SettModel implements Sett {
   @Example(4053.3221)
   @Property()
   public balance: number;
+
+  @Title('protocol')
+  @Description('Sett underlying protocol')
+  @Example(Protocol.Convex)
+  @Property()
+  public protocol: Protocol;
 
   @Title('pricePerFullShare')
   @Description('Price per full share, conversion from sett tokens to underlying tokens')
@@ -143,6 +149,7 @@ export class SettModel implements Sett {
     settToken: string,
     value: number,
     balance: number,
+    protocol: Protocol,
     pricePerFullShare: number,
     tokens: TokenBalance[],
     apr: number,
@@ -163,6 +170,7 @@ export class SettModel implements Sett {
     this.settToken = settToken;
     this.value = value;
     this.balance = balance;
+    this.protocol = protocol;
     this.pricePerFullShare = pricePerFullShare;
     this.tokens = tokens;
     this.apr = apr;

@@ -1,5 +1,5 @@
+import { Protocol } from '@badger-dao/sdk';
 import { Chain } from '../../chains/config/chain.config';
-import { Protocol } from '../../config/enums/protocol.enum';
 import { SettState } from '../../config/enums/sett-state.enum';
 import { Stage } from '../../config/enums/stage.enum';
 import { BouncerType } from '../../rewards/enums/bouncer-type.enum';
