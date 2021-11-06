@@ -1,8 +1,7 @@
-import { Network } from '@badger-dao/sdk';
+import { Network, Protocol } from '@badger-dao/sdk';
 import { NotFound } from '@tsed/exceptions';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
-import { Protocol } from '../config/enums/protocol.enum';
 import { TOKENS } from '../config/tokens.config';
 import { getArbitrumBlock } from '../etherscan/etherscan.utils';
 import { getPrice } from '../prices/prices.utils';

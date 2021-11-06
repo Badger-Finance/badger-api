@@ -1,6 +1,5 @@
-import { Network } from '@badger-dao/sdk';
+import { Network, Protocol } from '@badger-dao/sdk';
 import fetch from 'node-fetch';
-import { Protocol } from '../../config/enums/protocol.enum';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';

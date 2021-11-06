@@ -1,4 +1,4 @@
-import { Sett } from '@badger-dao/sdk';
+import { Protocol, Sett } from '@badger-dao/sdk';
 import { NotFound } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { BinanceSmartChain } from '../chains/config/bsc.config';
@@ -26,6 +26,7 @@ describe('setts.utils', () => {
         experimental: settDefinition.state === SettState.Experimental,
         bouncer: settDefinition.bouncer ?? BouncerType.None,
         name: settDefinition.name,
+        protocol: Protocol.Badger,
         pricePerFullShare: 1,
         sources: [],
         tokens: [],

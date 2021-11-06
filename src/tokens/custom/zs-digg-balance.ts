@@ -1,7 +1,7 @@
+import { Protocol } from '@badger-dao/sdk';
 import { UnprocessableEntity } from '@tsed/exceptions';
 import { Chain } from '../../chains/config/chain.config';
 import { ethSetts } from '../../chains/config/eth.config';
-import { Protocol } from '../../config/enums/protocol.enum';
 import { TOKENS } from '../../config/tokens.config';
 import { Erc20__factory } from '../../contracts';
 import { tokenBalancesToCachedLiquidityPoolTokenBalance } from '../../indexer/indexer.utils';
