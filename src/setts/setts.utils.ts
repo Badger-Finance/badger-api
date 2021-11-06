@@ -15,8 +15,7 @@ import { SettSnapshot } from './interfaces/sett-snapshot.interface';
 import { Sett__factory, Controller__factory, Strategy__factory } from '../contracts';
 import { SettStrategy } from './interfaces/sett-strategy.interface';
 import { TOKENS } from '../config/tokens.config';
-import { Sett } from '@badger-dao/sdk';
-import { Protocol } from '../config/enums/protocol.enum';
+import { Protocol, Sett } from '@badger-dao/sdk';
 
 export const VAULT_SOURCE = 'Vault Compounding';
 
@@ -32,6 +31,7 @@ export const defaultSett = (settDefinition: SettDefinition): Sett => {
     experimental: settDefinition.state === SettState.Experimental,
     bouncer: settDefinition.bouncer ?? BouncerType.None,
     name: settDefinition.name,
+    protocol: Protocol.Badger,
     pricePerFullShare: 1,
     sources: [],
     state: settDefinition.state ?? SettState.Open,

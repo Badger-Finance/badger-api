@@ -1,6 +1,6 @@
+import { Protocol } from '@badger-dao/sdk';
 import { NotFound } from '@tsed/exceptions';
 import { Ethereum } from '../chains/config/eth.config';
-import { Protocol } from '../config/enums/protocol.enum';
 import { TOKENS } from '../config/tokens.config';
 import { tokenBalancesToCachedLiquidityPoolTokenBalance } from '../indexer/indexer.utils';
 import * as priceUtils from '../prices/prices.utils';

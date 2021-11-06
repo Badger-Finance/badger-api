@@ -1,6 +1,5 @@
-import { Network } from '@badger-dao/sdk';
+import { Network, Protocol } from '@badger-dao/sdk';
 import fetch from 'node-fetch';
-import { Protocol } from '../../config/enums/protocol.enum';
 import { Stage } from '../../config/enums/stage.enum';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';

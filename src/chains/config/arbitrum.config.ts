@@ -1,5 +1,4 @@
-import { Network } from '@badger-dao/sdk';
-import { Protocol } from '../../config/enums/protocol.enum';
+import { Network, Protocol } from '@badger-dao/sdk';
 import { SettState } from '../../config/enums/sett-state.enum';
 import { Stage } from '../../config/enums/stage.enum';
 import RPC from '../../config/rpc.config';

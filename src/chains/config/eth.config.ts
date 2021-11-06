@@ -1,7 +1,6 @@
-import { Network } from '@badger-dao/sdk';
+import { Network, Protocol } from '@badger-dao/sdk';
 import fetch from 'node-fetch';
 import { BLOCKNATIVE_API_KEY } from '../../config/constants';
-import { Protocol } from '../../config/enums/protocol.enum';
 import { SettState } from '../../config/enums/sett-state.enum';
 import { Stage } from '../../config/enums/stage.enum';
 import rpc from '../../config/rpc.config';

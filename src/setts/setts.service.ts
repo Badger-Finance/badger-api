@@ -1,4 +1,4 @@
-import { Sett } from '@badger-dao/sdk';
+import { Protocol, Sett } from '@badger-dao/sdk';
 import { Service } from '@tsed/common';
 import { ethers } from 'ethers';
 import { Chain } from '../chains/config/chain.config';
@@ -39,6 +39,7 @@ export class SettsService {
       .filter((source) => source.apr >= 0.001)
       .filter((source) => source.name !== VAULT_SOURCE || !sett.deprecated);
     sett.apr = sett.sources.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
+    sett.protocol = settDefinition.protocol ?? Protocol.Badger;
 
     const hasBoostedApr = sett.sources.some((source) => source.boostable);
     if (hasBoostedApr) {

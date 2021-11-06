@@ -12,6 +12,7 @@ Array [
     "experimental": false,
     "name": "Pancakeswap BNB/BTCB",
     "pricePerFullShare": 1,
+    "protocol": "Pancakeswap",
     "settAsset": "bPLP-BNB-BTCB",
     "settToken": "0xaf4B9C4b545D5324904bAa15e29796D2E2f90813",
     "sources": Array [
@@ -96,6 +97,7 @@ Array [
     "experimental": false,
     "name": "Pancakeswap bBADGER/BTCB",
     "pricePerFullShare": 1,
+    "protocol": "Pancakeswap",
     "settAsset": "bPLP-BBADGER-BTCB",
     "settToken": "0x857F91f735f4B03b19D2b5c6E476C73DB8241F55",
     "sources": Array [
@@ -180,6 +182,7 @@ Array [
     "experimental": false,
     "name": "Pancakeswap bDIGG/BTCB",
     "pricePerFullShare": 1,
+    "protocol": "Pancakeswap",
     "settAsset": "bPLP-BDIGG-BTCB",
     "settToken": "0xa861Ba302674b08f7F2F24381b705870521DDfed",
     "sources": Array [
@@ -269,6 +272,7 @@ Array [
     "experimental": false,
     "name": "Convex renBTC/wBTC/sBTC",
     "pricePerFullShare": 1,
+    "protocol": "Convex",
     "settAsset": "bcrvsBTC",
     "settToken": "0xd04c48A53c111300aD41190D63681ed3dAd998eC",
     "sources": Array [
@@ -359,6 +363,7 @@ Array [
     "experimental": false,
     "name": "Convex renBTC/wBTC",
     "pricePerFullShare": 1,
+    "protocol": "Convex",
     "settAsset": "bcrvrenBTC",
     "settToken": "0x6dEf55d2e18486B9dDfaA075bc4e4EE0B28c1545",
     "sources": Array [
@@ -449,6 +454,7 @@ Array [
     "experimental": false,
     "name": "Convex tBTC/sBTC",
     "pricePerFullShare": 1,
+    "protocol": "Convex",
     "settAsset": "bcrvtBTC",
     "settToken": "0xb9D076fDe463dbc9f915E5392F807315Bf940334",
     "sources": Array [
@@ -539,6 +545,7 @@ Array [
     "experimental": false,
     "name": "Harvest renBTC/wBTC",
     "pricePerFullShare": 1,
+    "protocol": "Curve",
     "settAsset": "bcrvhrenBTC",
     "settToken": "0xAf5A1DECfa95BAF63E0084a35c62592B774A2A87",
     "sources": Array [
@@ -629,6 +636,7 @@ Array [
     "experimental": false,
     "name": "Uniswap Wrapped BTC/Badger",
     "pricePerFullShare": 1,
+    "protocol": "Uniswap",
     "settAsset": "bBADGER-WBTC",
     "settToken": "0x235c9e24D3FB2FAFd58a2E49D454Fdcd2DBf7FF1",
     "sources": Array [
@@ -727,6 +735,7 @@ Array [
     "experimental": false,
     "name": "Uniswap Wrapped BTC/Digg",
     "pricePerFullShare": 1,
+    "protocol": "Uniswap",
     "settAsset": "bDIGG-WBTC",
     "settToken": "0xC17078FDd324CC473F8175Dc5290fae5f2E84714",
     "sources": Array [
@@ -811,6 +820,7 @@ Array [
     "experimental": false,
     "name": "Sushiswap Wrapped BTC/Wrapped ETH",
     "pricePerFullShare": 1,
+    "protocol": "Sushiswap",
     "settAsset": "bSLP-WBTC-ETH",
     "settToken": "0x758A43EE2BFf8230eeb784879CdcFF4828F2544D",
     "sources": Array [
@@ -909,6 +919,7 @@ Array [
     "experimental": false,
     "name": "Sushiswap Wrapped BTC/Badger",
     "pricePerFullShare": 1,
+    "protocol": "Sushiswap",
     "settAsset": "bSLP-BADGER-WBTC",
     "settToken": "0x1862A18181346EBd9EdAf800804f89190DeF24a5",
     "sources": Array [
@@ -1007,6 +1018,7 @@ Array [
     "experimental": false,
     "name": "Sushiswap Wrapped BTC/Digg",
     "pricePerFullShare": 1,
+    "protocol": "Sushiswap",
     "settAsset": "bSLP-DIGG-WBTC",
     "settToken": "0x88128580ACdD9c04Ce47AFcE196875747bF2A9f6",
     "sources": Array [
@@ -1105,6 +1117,7 @@ Array [
     "experimental": false,
     "name": "Digg",
     "pricePerFullShare": 1,
+    "protocol": "Badger",
     "settAsset": "bDIGG",
     "settToken": "0x7e7E112A68d8D2E221E11047a72fFC1065c38e1a",
     "sources": Array [
@@ -1195,6 +1208,7 @@ Array [
     "experimental": false,
     "name": "Badger",
     "pricePerFullShare": 1,
+    "protocol": "Badger",
     "settAsset": "bBADGER",
     "settToken": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
     "sources": Array [
@@ -1271,6 +1285,7 @@ Array [
     "experimental": false,
     "name": "Yearn Wrapped BTC",
     "pricePerFullShare": 1,
+    "protocol": "Badger",
     "settAsset": "byvWBTC",
     "settToken": "0x4b92d19c11435614CD49Af1b589001b7c08cD4D5",
     "sources": Array [
@@ -1361,6 +1376,7 @@ Array [
     "experimental": false,
     "name": "Sushiswap Wrapped BTC/ibBTC",
     "pricePerFullShare": 1,
+    "protocol": "Sushiswap",
     "settAsset": "bSLP-IBBTC-WBTC",
     "settToken": "0x8a8FFec8f4A0C8c9585Da95D9D97e8Cd6de273DE",
     "sources": Array [
@@ -1459,6 +1475,7 @@ Array [
     "experimental": true,
     "name": "Digg Stabilization",
     "pricePerFullShare": 1,
+    "protocol": "Badger",
     "settAsset": "bzsDIGG",
     "settToken": "0x608b6D82eb121F3e5C0baeeD32d81007B916E83C",
     "sources": Array [
@@ -1549,6 +1566,7 @@ Array [
     "experimental": false,
     "name": "Convex hBTC",
     "pricePerFullShare": 1,
+    "protocol": "Convex",
     "settAsset": "bcrvhBTC",
     "settToken": "0x8c76970747afd5398e958bDfadA4cf0B9FcA16c4",
     "sources": Array [
@@ -1639,6 +1657,7 @@ Array [
     "experimental": false,
     "name": "Convex pBTC",
     "pricePerFullShare": 1,
+    "protocol": "Convex",
     "settAsset": "bcrvpBTC",
     "settToken": "0x55912D0Cf83B75c492E761932ABc4DB4a5CB1b17",
     "sources": Array [
@@ -1729,6 +1748,7 @@ Array [
     "experimental": false,
     "name": "Convex oBTC",
     "pricePerFullShare": 1,
+    "protocol": "Convex",
     "settAsset": "bcrvoBTC",
     "settToken": "0xf349c0faA80fC1870306Ac093f75934078e28991",
     "sources": Array [
@@ -1819,6 +1839,7 @@ Array [
     "experimental": false,
     "name": "Convex bBTC",
     "pricePerFullShare": 1,
+    "protocol": "Convex",
     "settAsset": "bcrvbBTC",
     "settToken": "0x5Dce29e92b1b939F8E8C60DcF15BDE82A85be4a9",
     "sources": Array [
@@ -1909,6 +1930,7 @@ Array [
     "experimental": false,
     "name": "Convex Tricrypto",
     "pricePerFullShare": 1,
+    "protocol": "Convex",
     "settAsset": "bcrvTricrypto",
     "settToken": "0xBE08Ef12e4a553666291E9fFC24fCCFd354F2Dd2",
     "sources": Array [
@@ -1985,6 +2007,7 @@ Array [
     "experimental": false,
     "name": "Convex cvxCRV Helper",
     "pricePerFullShare": 1,
+    "protocol": "Convex",
     "settAsset": "bCVXCRV",
     "settToken": "0x2B5455aac8d64C14786c3a29858E43b5945819C0",
     "sources": Array [
@@ -2075,6 +2098,7 @@ Array [
     "experimental": false,
     "name": "Convex CVX Helper",
     "pricePerFullShare": 1,
+    "protocol": "Convex",
     "settAsset": "bCVX",
     "settToken": "0x53C8E199eb2Cb7c01543C137078a038937a68E40",
     "sources": Array [
@@ -2165,6 +2189,7 @@ Array [
     "experimental": true,
     "name": "renBTC",
     "pricePerFullShare": 1,
+    "protocol": "Badger",
     "settAsset": "brenBTC",
     "settToken": "0x58CAc1409F1ffbdcBA6a58d54c94CAC3fb4C6F8B",
     "sources": Array [
@@ -2255,6 +2280,7 @@ Array [
     "experimental": false,
     "name": "Convex Tricrypto2",
     "pricePerFullShare": 1,
+    "protocol": "Convex",
     "settAsset": "bcrvTricrypto2",
     "settToken": "0x27E98fC7d05f54E544d16F58C194C2D7ba71e3B5",
     "sources": Array [
@@ -2345,6 +2371,7 @@ Array [
     "experimental": false,
     "name": "mStable imBTC",
     "pricePerFullShare": 1,
+    "protocol": "mStable",
     "settAsset": "bimBTC",
     "settToken": "0x599D92B453C010b1050d31C364f6ee17E819f193",
     "sources": Array [
@@ -2435,6 +2462,7 @@ Array [
     "experimental": false,
     "name": "mStable mhBTC",
     "pricePerFullShare": 1,
+    "protocol": "mStable",
     "settAsset": "bmhBTC",
     "settToken": "0x26B8efa69603537AC8ab55768b6740b67664D518",
     "sources": Array [
@@ -2525,6 +2553,7 @@ Array [
     "experimental": false,
     "name": "Convex Vote Locked CVX",
     "pricePerFullShare": 1,
+    "protocol": "Convex",
     "settAsset": "bveCVX",
     "settToken": "0xfd05D3C7fe2924020620A8bE4961bBaA747e6305",
     "sources": Array [
@@ -2615,6 +2644,7 @@ Array [
     "experimental": false,
     "name": "Curve.fi CVX / Vote Locked CVX",
     "pricePerFullShare": 1,
+    "protocol": "Curve",
     "settAsset": "bcrvCVXbveCVX",
     "settToken": "0x937B8E917d0F36eDEBBA8E459C5FB16F3b315551",
     "sources": Array [
@@ -2716,6 +2746,7 @@ Array [
     "experimental": false,
     "name": "Convex renBTC/wBTC/sBTC",
     "pricePerFullShare": 1,
+    "protocol": "Convex",
     "settAsset": "bcrvsBTC",
     "settToken": "0xd04c48A53c111300aD41190D63681ed3dAd998eC",
     "sources": Array [
@@ -2806,6 +2837,7 @@ Array [
     "experimental": false,
     "name": "Convex renBTC/wBTC",
     "pricePerFullShare": 1,
+    "protocol": "Convex",
     "settAsset": "bcrvrenBTC",
     "settToken": "0x6dEf55d2e18486B9dDfaA075bc4e4EE0B28c1545",
     "sources": Array [
@@ -2896,6 +2928,7 @@ Array [
     "experimental": false,
     "name": "Convex tBTC/sBTC",
     "pricePerFullShare": 1,
+    "protocol": "Convex",
     "settAsset": "bcrvtBTC",
     "settToken": "0xb9D076fDe463dbc9f915E5392F807315Bf940334",
     "sources": Array [
@@ -2986,6 +3019,7 @@ Array [
     "experimental": false,
     "name": "Harvest renBTC/wBTC",
     "pricePerFullShare": 1,
+    "protocol": "Curve",
     "settAsset": "bcrvhrenBTC",
     "settToken": "0xAf5A1DECfa95BAF63E0084a35c62592B774A2A87",
     "sources": Array [
@@ -3076,6 +3110,7 @@ Array [
     "experimental": false,
     "name": "Uniswap Wrapped BTC/Badger",
     "pricePerFullShare": 1,
+    "protocol": "Uniswap",
     "settAsset": "bBADGER-WBTC",
     "settToken": "0x235c9e24D3FB2FAFd58a2E49D454Fdcd2DBf7FF1",
     "sources": Array [
@@ -3174,6 +3209,7 @@ Array [
     "experimental": false,
     "name": "Uniswap Wrapped BTC/Digg",
     "pricePerFullShare": 1,
+    "protocol": "Uniswap",
     "settAsset": "bDIGG-WBTC",
     "settToken": "0xC17078FDd324CC473F8175Dc5290fae5f2E84714",
     "sources": Array [
@@ -3258,6 +3294,7 @@ Array [
     "experimental": false,
     "name": "Sushiswap Wrapped BTC/Wrapped ETH",
     "pricePerFullShare": 1,
+    "protocol": "Sushiswap",
     "settAsset": "bSLP-WBTC-ETH",
     "settToken": "0x758A43EE2BFf8230eeb784879CdcFF4828F2544D",
     "sources": Array [
@@ -3356,6 +3393,7 @@ Array [
     "experimental": false,
     "name": "Sushiswap Wrapped BTC/Badger",
     "pricePerFullShare": 1,
+    "protocol": "Sushiswap",
     "settAsset": "bSLP-BADGER-WBTC",
     "settToken": "0x1862A18181346EBd9EdAf800804f89190DeF24a5",
     "sources": Array [
@@ -3454,6 +3492,7 @@ Array [
     "experimental": false,
     "name": "Sushiswap Wrapped BTC/Digg",
     "pricePerFullShare": 1,
+    "protocol": "Sushiswap",
     "settAsset": "bSLP-DIGG-WBTC",
     "settToken": "0x88128580ACdD9c04Ce47AFcE196875747bF2A9f6",
     "sources": Array [
@@ -3552,6 +3591,7 @@ Array [
     "experimental": false,
     "name": "Digg",
     "pricePerFullShare": 1,
+    "protocol": "Badger",
     "settAsset": "bDIGG",
     "settToken": "0x7e7E112A68d8D2E221E11047a72fFC1065c38e1a",
     "sources": Array [
@@ -3642,6 +3682,7 @@ Array [
     "experimental": false,
     "name": "Badger",
     "pricePerFullShare": 1,
+    "protocol": "Badger",
     "settAsset": "bBADGER",
     "settToken": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
     "sources": Array [
@@ -3718,6 +3759,7 @@ Array [
     "experimental": false,
     "name": "Yearn Wrapped BTC",
     "pricePerFullShare": 1,
+    "protocol": "Badger",
     "settAsset": "byvWBTC",
     "settToken": "0x4b92d19c11435614CD49Af1b589001b7c08cD4D5",
     "sources": Array [
@@ -3808,6 +3850,7 @@ Array [
     "experimental": false,
     "name": "Sushiswap Wrapped BTC/ibBTC",
     "pricePerFullShare": 1,
+    "protocol": "Sushiswap",
     "settAsset": "bSLP-IBBTC-WBTC",
     "settToken": "0x8a8FFec8f4A0C8c9585Da95D9D97e8Cd6de273DE",
     "sources": Array [
@@ -3906,6 +3949,7 @@ Array [
     "experimental": true,
     "name": "Digg Stabilization",
     "pricePerFullShare": 1,
+    "protocol": "Badger",
     "settAsset": "bzsDIGG",
     "settToken": "0x608b6D82eb121F3e5C0baeeD32d81007B916E83C",
     "sources": Array [
@@ -3996,6 +4040,7 @@ Array [
     "experimental": false,
     "name": "Convex hBTC",
     "pricePerFullShare": 1,
+    "protocol": "Convex",
     "settAsset": "bcrvhBTC",
     "settToken": "0x8c76970747afd5398e958bDfadA4cf0B9FcA16c4",
     "sources": Array [
@@ -4086,6 +4131,7 @@ Array [
     "experimental": false,
     "name": "Convex pBTC",
     "pricePerFullShare": 1,
+    "protocol": "Convex",
     "settAsset": "bcrvpBTC",
     "settToken": "0x55912D0Cf83B75c492E761932ABc4DB4a5CB1b17",
     "sources": Array [
@@ -4176,6 +4222,7 @@ Array [
     "experimental": false,
     "name": "Convex oBTC",
     "pricePerFullShare": 1,
+    "protocol": "Convex",
     "settAsset": "bcrvoBTC",
     "settToken": "0xf349c0faA80fC1870306Ac093f75934078e28991",
     "sources": Array [
@@ -4266,6 +4313,7 @@ Array [
     "experimental": false,
     "name": "Convex bBTC",
     "pricePerFullShare": 1,
+    "protocol": "Convex",
     "settAsset": "bcrvbBTC",
     "settToken": "0x5Dce29e92b1b939F8E8C60DcF15BDE82A85be4a9",
     "sources": Array [
@@ -4356,6 +4404,7 @@ Array [
     "experimental": false,
     "name": "Convex Tricrypto",
     "pricePerFullShare": 1,
+    "protocol": "Convex",
     "settAsset": "bcrvTricrypto",
     "settToken": "0xBE08Ef12e4a553666291E9fFC24fCCFd354F2Dd2",
     "sources": Array [
@@ -4432,6 +4481,7 @@ Array [
     "experimental": false,
     "name": "Convex cvxCRV Helper",
     "pricePerFullShare": 1,
+    "protocol": "Convex",
     "settAsset": "bCVXCRV",
     "settToken": "0x2B5455aac8d64C14786c3a29858E43b5945819C0",
     "sources": Array [
@@ -4522,6 +4572,7 @@ Array [
     "experimental": false,
     "name": "Convex CVX Helper",
     "pricePerFullShare": 1,
+    "protocol": "Convex",
     "settAsset": "bCVX",
     "settToken": "0x53C8E199eb2Cb7c01543C137078a038937a68E40",
     "sources": Array [
@@ -4612,6 +4663,7 @@ Array [
     "experimental": true,
     "name": "renBTC",
     "pricePerFullShare": 1,
+    "protocol": "Badger",
     "settAsset": "brenBTC",
     "settToken": "0x58CAc1409F1ffbdcBA6a58d54c94CAC3fb4C6F8B",
     "sources": Array [
@@ -4702,6 +4754,7 @@ Array [
     "experimental": false,
     "name": "Convex Tricrypto2",
     "pricePerFullShare": 1,
+    "protocol": "Convex",
     "settAsset": "bcrvTricrypto2",
     "settToken": "0x27E98fC7d05f54E544d16F58C194C2D7ba71e3B5",
     "sources": Array [
@@ -4792,6 +4845,7 @@ Array [
     "experimental": false,
     "name": "mStable imBTC",
     "pricePerFullShare": 1,
+    "protocol": "mStable",
     "settAsset": "bimBTC",
     "settToken": "0x599D92B453C010b1050d31C364f6ee17E819f193",
     "sources": Array [
@@ -4882,6 +4936,7 @@ Array [
     "experimental": false,
     "name": "mStable mhBTC",
     "pricePerFullShare": 1,
+    "protocol": "mStable",
     "settAsset": "bmhBTC",
     "settToken": "0x26B8efa69603537AC8ab55768b6740b67664D518",
     "sources": Array [
@@ -4972,6 +5027,7 @@ Array [
     "experimental": false,
     "name": "Convex Vote Locked CVX",
     "pricePerFullShare": 1,
+    "protocol": "Convex",
     "settAsset": "bveCVX",
     "settToken": "0xfd05D3C7fe2924020620A8bE4961bBaA747e6305",
     "sources": Array [
@@ -5062,6 +5118,7 @@ Array [
     "experimental": false,
     "name": "Curve.fi CVX / Vote Locked CVX",
     "pricePerFullShare": 1,
+    "protocol": "Curve",
     "settAsset": "bcrvCVXbveCVX",
     "settToken": "0x937B8E917d0F36eDEBBA8E459C5FB16F3b315551",
     "sources": Array [
