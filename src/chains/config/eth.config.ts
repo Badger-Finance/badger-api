@@ -27,6 +27,7 @@ export class Ethereum extends Chain {
       2425847,
       '0x660802Fc641b154aBA66a62137e71f331B6d787A',
       '0x0A4F4e92C3334821EbB523324D09E321a6B0d8ec',
+      '0x31825c0a6278b89338970e3eb979b05b27faa263',
     );
     Chain.register(this.network, this);
   }
