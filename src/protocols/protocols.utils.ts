@@ -31,6 +31,6 @@ export const getVaultCachedValueSources = async (sett: SettDefinition): Promise<
   return valueSources;
 };
 
-export function tokenEmission(token: Token): string {
-  return `${token.symbol}_${SourceType.Emission}`;
+export function tokenEmission(token: Token, boosted = false): string {
+  return `${boosted ? 'boosted_' : ''}${token.symbol}_${SourceType.Emission}`;
 }

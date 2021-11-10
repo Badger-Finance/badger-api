@@ -24,6 +24,7 @@ export abstract class Chain {
   readonly blocksPerYear: number;
   readonly badgerTree?: string;
   readonly rewardsLogger?: string;
+  readonly emissionControl?: string;
 
   constructor(
     name: string,
@@ -37,6 +38,7 @@ export abstract class Chain {
     blocksPerYear: number,
     badgerTree?: string,
     rewardsLogger?: string,
+    emissionControl?: string,
   ) {
     this.name = name;
     this.symbol = symbol;
@@ -53,6 +55,7 @@ export abstract class Chain {
     this.blocksPerYear = blocksPerYear;
     this.badgerTree = badgerTree;
     this.rewardsLogger = rewardsLogger;
+    this.emissionControl = emissionControl;
   }
 
   static register(network: Network, chain: Chain): void {

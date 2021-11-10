@@ -17,7 +17,7 @@ import { SushiswapStrategy } from '../protocols/strategies/sushiswap.strategy';
 import { SwaprStrategy } from '../protocols/strategies/swapr.strategy';
 import { UniswapStrategy } from '../protocols/strategies/uniswap.strategy';
 import { SourceType } from '../rewards/enums/source-type.enum';
-import { RewardsService } from '../rewards/rewards.service';
+import { getRewardEmission } from '../rewards/rewards.utils';
 import { CachedSettSnapshot } from '../setts/interfaces/cached-sett-snapshot.interface';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { SettSnapshot } from '../setts/interfaces/sett-snapshot.interface';
@@ -214,20 +214,13 @@ export async function getProtocolValueSources(
   }
 }
 
-export async function getEmissionApySnapshots(
-  chain: Chain,
-  settDefinition: SettDefinition,
-): Promise<CachedValueSource[]> {
-  return RewardsService.getRewardEmission(chain, settDefinition);
-}
-
 const ARB_CRV_SETTS = [TOKENS.BARB_CRV_RENBTC, TOKENS.BARB_CRV_TRICRYPTO, TOKENS.BARB_CRV_TRICRYPTO_LITE];
 
 export async function getSettValueSources(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
   try {
     const [underlying, emission, protocol, derivative] = await Promise.all([
       getUnderlyingPerformance(settDefinition),
-      getEmissionApySnapshots(chain, settDefinition),
+      getRewardEmission(chain, settDefinition),
       getProtocolValueSources(chain, settDefinition),
       getSettTokenPerformances(chain, settDefinition),
     ]);
