@@ -161,12 +161,10 @@ export async function getStrategyInfo(chain: Chain, sett: SettDefinition): Promi
       strategy.performanceFeeGovernance(),
       strategy.performanceFeeStrategist(),
     ]);
-    const settPerformanceFee =
-      sett.protocol === Protocol.Convex ? performanceFee.toNumber() * 2 : performanceFee.toNumber();
     return {
       address: strategy.address,
       withdrawFee: withdrawFee.toNumber(),
-      performanceFee: settPerformanceFee,
+      performanceFee: performanceFee.toNumber(),
       strategistFee: strategistFee.toNumber(),
     };
   } catch (err) {
