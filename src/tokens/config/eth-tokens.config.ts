@@ -215,6 +215,13 @@ export const ethTokensConfig: TokenConfig = {
     symbol: 'crvbBTC',
     type: TokenType.CurveLP,
   },
+  [TOKENS.CRV_IBBTC]: {
+    address: TOKENS.CRV_IBBTC,
+    decimals: 18,
+    name: 'Curve.fi ibBTC',
+    symbol: 'crvibBTC',
+    type: TokenType.CurveLP,
+  },
   [TOKENS.CRV]: {
     address: TOKENS.CRV,
     decimals: 18,
@@ -508,6 +515,17 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.CRV_RENBTC,
+      network: Network.Ethereum,
+    },
+  },
+  [TOKENS.BCRV_IBBTC]: {
+    address: TOKENS.BCRV_IBBTC,
+    decimals: 18,
+    name: 'bCurve.fi crvibBTC',
+    symbol: 'bcrvibBTC',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.CRV_IBBTC,
       network: Network.Ethereum,
     },
   },

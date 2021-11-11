@@ -271,4 +271,13 @@ export const ethSetts: SettDefinition[] = [
     settToken: TOKENS.BCRV_CVXBVECVX,
     protocol: Protocol.Curve,
   },
+  {
+    name: 'Curve.fi ibBTC / crvsBTC LP',
+    createdBlock: 13590998,
+    depositToken: TOKENS.CRV_IBBTC,
+    getTokenBalance: getCurveSettTokenBalance,
+    stage: Stage.Staging,
+    settToken: TOKENS.BCRV_IBBTC,
+    protocol: Protocol.Curve,
+  },
 ];

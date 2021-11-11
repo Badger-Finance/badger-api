@@ -158,21 +158,22 @@ export async function getRewardEmission(chain: Chain, settDefinition: SettDefini
     const durationScalar = ONE_YEAR_SECONDS / (schedule.end - schedule.start);
     const yearlyEmission = price.usd * schedule.amount * durationScalar;
     const apr = (yearlyEmission / sett.value) * 100;
-    const boostedAPR = apr;
+    let proRataAPR = apr;
     // todo: atm, only native badger on eth has a pro rata split for ibbtc vault - will need a flexible native badger token per chain
-    if (emissionControl && token.address === TOKENS.BADGER) {
-      const proRataRate = await emissionControl.proRataEmissionRate(sett.settToken);
-      const proRataAPR = (proRataRate.toNumber() / 10_000) * apr;
-      const proRataSource = createValueSource(`${token.symbol} Rewards`, uniformPerformance(proRataAPR));
-      emissionSources.push(valueSourceToCachedValueSource(proRataSource, settDefinition, tokenEmission(token)));
+    if (emissionControl && sett.settToken === TOKENS.BADGER) {
+      const boostedRate = await emissionControl.boostedEmissionRate(sett.settToken);
+      const boostedAPR = (boostedRate.toNumber() / 10_000) * proRataAPR;
+      proRataAPR = proRataAPR - boostedAPR;
+      const boostedSource = createValueSource(
+        `Boosted ${token.name} Rewards`,
+        uniformPerformance(boostedAPR),
+        false,
+        boostRange,
+      );
+      emissionSources.push(valueSourceToCachedValueSource(boostedSource, settDefinition, tokenEmission(token, true)));
     }
-    const boostedSource = createValueSource(
-      `Boosted ${token.symbol} Rewards`,
-      uniformPerformance(boostedAPR),
-      false,
-      boostRange,
-    );
-    emissionSources.push(valueSourceToCachedValueSource(boostedSource, settDefinition, tokenEmission(token, true)));
+    const proRataSource = createValueSource(`${token.name} Rewards`, uniformPerformance(proRataAPR));
+    emissionSources.push(valueSourceToCachedValueSource(proRataSource, settDefinition, tokenEmission(token)));
   }
   return emissionSources;
 }
