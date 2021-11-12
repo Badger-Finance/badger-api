@@ -720,7 +720,7 @@ Array [
     "value": 10825230,
   },
   Object {
-    "apr": 123.8,
+    "apr": 92.85,
     "asset": "DIGG-WBTC",
     "balance": 0,
     "boost": Object {
@@ -734,20 +734,6 @@ Array [
     "settAsset": "bDIGG-WBTC",
     "settToken": "0xC17078FDd324CC473F8175Dc5290fae5f2E84714",
     "sources": Array [
-      Object {
-        "apr": 30.95,
-        "boostable": false,
-        "harvestable": false,
-        "maxApr": 30.95,
-        "minApr": 30.95,
-        "name": "Vault Compounding",
-        "performance": Object {
-          "oneDay": 30.95,
-          "sevenDay": 30.95,
-          "thirtyDay": 30.95,
-          "threeDay": 30.95,
-        },
-      },
       Object {
         "apr": 30.95,
         "boostable": false,
@@ -791,7 +777,7 @@ Array [
         },
       },
     ],
-    "state": "open",
+    "state": "deprecated",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
@@ -1212,7 +1198,7 @@ Array [
     "value": 14641,
   },
   Object {
-    "apr": 16.52,
+    "apr": 12.39,
     "asset": "BADGER",
     "balance": 0,
     "boost": Object {
@@ -1226,20 +1212,6 @@ Array [
     "settAsset": "bBADGER",
     "settToken": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
     "sources": Array [
-      Object {
-        "apr": 4.13,
-        "boostable": false,
-        "harvestable": false,
-        "maxApr": 4.13,
-        "minApr": 4.13,
-        "name": "Vault Compounding",
-        "performance": Object {
-          "oneDay": 4.13,
-          "sevenDay": 4.13,
-          "thirtyDay": 4.13,
-          "threeDay": 4.13,
-        },
-      },
       Object {
         "apr": 4.13,
         "boostable": false,
@@ -1283,7 +1255,7 @@ Array [
         },
       },
     ],
-    "state": "open",
+    "state": "deprecated",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
@@ -1956,7 +1928,7 @@ Array [
     "value": 4225,
   },
   Object {
-    "apr": 121.6,
+    "apr": 91.19999999999999,
     "asset": "crvTricrypto",
     "balance": 0,
     "boost": Object {
@@ -1970,20 +1942,6 @@ Array [
     "settAsset": "bcrvTricrypto",
     "settToken": "0xBE08Ef12e4a553666291E9fFC24fCCFd354F2Dd2",
     "sources": Array [
-      Object {
-        "apr": 30.4,
-        "boostable": false,
-        "harvestable": false,
-        "maxApr": 30.4,
-        "minApr": 30.4,
-        "name": "Vault Compounding",
-        "performance": Object {
-          "oneDay": 30.4,
-          "sevenDay": 30.4,
-          "thirtyDay": 30.4,
-          "threeDay": 30.4,
-        },
-      },
       Object {
         "apr": 30.4,
         "boostable": false,
@@ -2027,7 +1985,7 @@ Array [
         },
       },
     ],
-    "state": "open",
+    "state": "deprecated",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
@@ -3341,7 +3299,7 @@ Array [
     "value": 10825230,
   },
   Object {
-    "apr": 123.8,
+    "apr": 92.85,
     "asset": "DIGG-WBTC",
     "balance": 0,
     "boost": Object {
@@ -3355,20 +3313,6 @@ Array [
     "settAsset": "bDIGG-WBTC",
     "settToken": "0xC17078FDd324CC473F8175Dc5290fae5f2E84714",
     "sources": Array [
-      Object {
-        "apr": 30.95,
-        "boostable": false,
-        "harvestable": false,
-        "maxApr": 30.95,
-        "minApr": 30.95,
-        "name": "Vault Compounding",
-        "performance": Object {
-          "oneDay": 30.95,
-          "sevenDay": 30.95,
-          "thirtyDay": 30.95,
-          "threeDay": 30.95,
-        },
-      },
       Object {
         "apr": 30.95,
         "boostable": false,
@@ -3412,7 +3356,7 @@ Array [
         },
       },
     ],
-    "state": "open",
+    "state": "deprecated",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
@@ -3833,7 +3777,7 @@ Array [
     "value": 14641,
   },
   Object {
-    "apr": 16.52,
+    "apr": 12.39,
     "asset": "BADGER",
     "balance": 0,
     "boost": Object {
@@ -3847,20 +3791,6 @@ Array [
     "settAsset": "bBADGER",
     "settToken": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
     "sources": Array [
-      Object {
-        "apr": 4.13,
-        "boostable": false,
-        "harvestable": false,
-        "maxApr": 4.13,
-        "minApr": 4.13,
-        "name": "Vault Compounding",
-        "performance": Object {
-          "oneDay": 4.13,
-          "sevenDay": 4.13,
-          "thirtyDay": 4.13,
-          "threeDay": 4.13,
-        },
-      },
       Object {
         "apr": 4.13,
         "boostable": false,
@@ -3904,7 +3834,7 @@ Array [
         },
       },
     ],
-    "state": "open",
+    "state": "deprecated",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
@@ -4577,7 +4507,7 @@ Array [
     "value": 4225,
   },
   Object {
-    "apr": 121.6,
+    "apr": 91.19999999999999,
     "asset": "crvTricrypto",
     "balance": 0,
     "boost": Object {
@@ -4591,20 +4521,6 @@ Array [
     "settAsset": "bcrvTricrypto",
     "settToken": "0xBE08Ef12e4a553666291E9fFC24fCCFd354F2Dd2",
     "sources": Array [
-      Object {
-        "apr": 30.4,
-        "boostable": false,
-        "harvestable": false,
-        "maxApr": 30.4,
-        "minApr": 30.4,
-        "name": "Vault Compounding",
-        "performance": Object {
-          "oneDay": 30.4,
-          "sevenDay": 30.4,
-          "thirtyDay": 30.4,
-          "threeDay": 30.4,
-        },
-      },
       Object {
         "apr": 30.4,
         "boostable": false,
@@ -4648,7 +4564,7 @@ Array [
         },
       },
     ],
-    "state": "open",
+    "state": "deprecated",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,

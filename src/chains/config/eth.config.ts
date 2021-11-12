@@ -104,6 +104,7 @@ export const ethSetts: SettDefinition[] = [
     createdBlock: 11680833,
     depositToken: TOKENS.UNI_DIGG_WBTC,
     deprecated: true,
+    state: SettState.Deprecated,
     settToken: TOKENS.BUNI_DIGG_WBTC,
     protocol: Protocol.Uniswap,
   },
@@ -140,6 +141,7 @@ export const ethSetts: SettDefinition[] = [
     deprecated: true,
     depositToken: TOKENS.BADGER,
     settToken: TOKENS.BBADGER,
+    state: SettState.Deprecated,
   },
   {
     createdBlock: 12246710,
@@ -206,6 +208,7 @@ export const ethSetts: SettDefinition[] = [
     deprecated: true,
     getTokenBalance: getCurveSettTokenBalance,
     settToken: TOKENS.BCRV_TRICRYPTO,
+    state: SettState.Deprecated,
     protocol: Protocol.Convex,
   },
   {
