@@ -1,5 +1,4 @@
 import { Description, Example, Property, Title } from '@tsed/schema';
-import { SettState } from '../../config/enums/sett-state.enum';
 import { TOKENS } from '../../config/tokens.config';
 import { uniformPerformance } from '../../protocols/interfaces/performance.interface';
 import { createValueSource, ValueSource } from '../../protocols/interfaces/value-source.interface';
@@ -8,7 +7,7 @@ import { getToken, mockBalance } from '../../tokens/tokens.utils';
 import { VAULT_SOURCE } from '../setts.utils';
 import { SettStrategy } from './sett-strategy.interface';
 import { ethers } from 'ethers';
-import { Protocol, Sett, TokenBalance } from '@badger-dao/sdk';
+import { BoostConfig, Protocol, Sett, SettState, TokenBalance } from '@badger-dao/sdk';
 
 export class SettModel implements Sett {
   @Title('name')
@@ -83,11 +82,11 @@ export class SettModel implements Sett {
   @Property()
   public apr: number;
 
-  @Title('boostable')
-  @Description('Flag indicating if sett APR is modifiable by badger boost')
+  @Title('boost')
+  @Description('Boost configuration indicating if the vault is boostable, and how much weight it contributes')
   @Example(true)
   @Property()
-  public boostable: boolean;
+  public boost: BoostConfig;
 
   @Title('minApr')
   @Description('Minimum sett APR as modifid by badger boost')
@@ -117,18 +116,6 @@ export class SettModel implements Sett {
   @Property()
   public bouncer: BouncerType;
 
-  @Title('experimental')
-  @Description('Flag indicating if sett is an experimental strategy')
-  @Example(false)
-  @Property()
-  public experimental: boolean;
-
-  @Title('deprecated')
-  @Description('Flag indicating if sett is deprecated')
-  @Example(false)
-  @Property()
-  public deprecated: boolean;
-
   @Title('strategy')
   @Description('Sett strategy information')
   @Example({
@@ -153,11 +140,9 @@ export class SettModel implements Sett {
     pricePerFullShare: number,
     tokens: TokenBalance[],
     apr: number,
-    boostable: boolean,
+    boost: BoostConfig,
     sources: ValueSource[],
-    experimental: boolean,
     bouncer: BouncerType,
-    deprecated: boolean,
     strategy: SettStrategy,
     minApr?: number,
     maxApr?: number,
@@ -174,13 +159,11 @@ export class SettModel implements Sett {
     this.pricePerFullShare = pricePerFullShare;
     this.tokens = tokens;
     this.apr = apr;
-    this.boostable = boostable;
+    this.boost = boost;
     this.minApr = minApr;
     this.maxApr = maxApr;
     this.sources = sources;
     this.bouncer = bouncer;
-    this.experimental = experimental;
-    this.deprecated = deprecated;
     this.strategy = strategy;
   }
 }
