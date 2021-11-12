@@ -1,7 +1,6 @@
-import { Network, Protocol } from '@badger-dao/sdk';
+import { Network, Protocol, SettState } from '@badger-dao/sdk';
 import fetch from 'node-fetch';
 import { BLOCKNATIVE_API_KEY } from '../../config/constants';
-import { SettState } from '../../config/enums/sett-state.enum';
 import { Stage } from '../../config/enums/stage.enum';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
@@ -84,13 +83,13 @@ export const ethSetts: SettDefinition[] = [
     settToken: TOKENS.BCRV_TBTC,
     protocol: Protocol.Convex,
   },
-  // TODO: Remove once fully deprecated
   {
-    name: 'Harvest renBTC/wBTC',
+    name: 'Curve.fi Harvest renBTC/wBTC',
     createdBlock: 11380939,
     depositToken: TOKENS.CRV_RENBTC,
     getTokenBalance: getCurveSettTokenBalance,
     settToken: TOKENS.BCRV_HRENBTC,
+    state: SettState.Deprecated,
     protocol: Protocol.Curve,
   },
   {

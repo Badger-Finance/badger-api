@@ -5,7 +5,6 @@ import { GraphQLClient } from 'graphql-request';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
 import { ONE_DAY_MS, ONE_YEAR_MS, SAMPLE_DAYS } from '../config/constants';
-import { SettState } from '../config/enums/sett-state.enum';
 import { getSdk, SettQuery } from '../graphql/generated/badger';
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
 import { formatBalance, getToken } from '../tokens/tokens.utils';
@@ -15,7 +14,7 @@ import { SettSnapshot } from './interfaces/sett-snapshot.interface';
 import { Sett__factory, Controller__factory, Strategy__factory } from '../contracts';
 import { SettStrategy } from './interfaces/sett-strategy.interface';
 import { TOKENS } from '../config/tokens.config';
-import { Protocol, Sett } from '@badger-dao/sdk';
+import { Protocol, Sett, SettState } from '@badger-dao/sdk';
 
 export const VAULT_SOURCE = 'Vault Compounding';
 
@@ -26,9 +25,10 @@ export const defaultSett = (settDefinition: SettDefinition): Sett => {
     asset: assetToken.symbol,
     apr: 0,
     balance: 0,
-    boostable: false,
-    deprecated: !!settDefinition.deprecated,
-    experimental: settDefinition.state === SettState.Experimental,
+    boost: {
+      enabled: false,
+      weight: 0,
+    },
     bouncer: settDefinition.bouncer ?? BouncerType.None,
     name: settDefinition.name,
     protocol: Protocol.Badger,
