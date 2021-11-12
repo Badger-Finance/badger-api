@@ -83,13 +83,13 @@ export const ethSetts: SettDefinition[] = [
     settToken: TOKENS.BCRV_TBTC,
     protocol: Protocol.Convex,
   },
-  // TODO: Remove once fully deprecated
   {
-    name: 'Harvest renBTC/wBTC',
+    name: 'Curve.fi Harvest renBTC/wBTC',
     createdBlock: 11380939,
     depositToken: TOKENS.CRV_RENBTC,
     getTokenBalance: getCurveSettTokenBalance,
     settToken: TOKENS.BCRV_HRENBTC,
+    state: SettState.Deprecated,
     protocol: Protocol.Curve,
   },
   {

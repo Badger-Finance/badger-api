@@ -1,4 +1,4 @@
-import { Network, Protocol } from '@badger-dao/sdk';
+import { Network, Protocol, SettState } from '@badger-dao/sdk';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
@@ -41,6 +41,7 @@ export const bscSetts: SettDefinition[] = [
     depositToken: TOKENS.PANCAKE_BNB_BTCB,
     deprecated: true,
     settToken: TOKENS.BPANCAKE_BNB_BTCB,
+    state: SettState.Deprecated,
     protocol: Protocol.Pancakeswap,
   },
   {
@@ -49,6 +50,7 @@ export const bscSetts: SettDefinition[] = [
     depositToken: TOKENS.PANCAKE_BBADGER_BTCB,
     deprecated: true,
     settToken: TOKENS.BPANCAKE_BBADGER_BTCB,
+    state: SettState.Deprecated,
     protocol: Protocol.Pancakeswap,
   },
   {
@@ -57,6 +59,7 @@ export const bscSetts: SettDefinition[] = [
     depositToken: TOKENS.PANCAKE_BDIGG_BTCB,
     deprecated: true,
     settToken: TOKENS.BPANCAKE_BDIGG_BTCB,
+    state: SettState.Deprecated,
     protocol: Protocol.Pancakeswap,
   },
 ];

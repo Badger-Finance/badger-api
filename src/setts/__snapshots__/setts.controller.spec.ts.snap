@@ -3,7 +3,7 @@
 exports[`SettsController GET /v2/setts with a specified chain returns the setts for bsc 1`] = `
 Array [
   Object {
-    "apr": 112.16,
+    "apr": 84.12,
     "asset": "PLP-BNB-BTCB",
     "balance": 0,
     "boost": Object {
@@ -17,20 +17,6 @@ Array [
     "settAsset": "bPLP-BNB-BTCB",
     "settToken": "0xaf4B9C4b545D5324904bAa15e29796D2E2f90813",
     "sources": Array [
-      Object {
-        "apr": 28.04,
-        "boostable": false,
-        "harvestable": false,
-        "maxApr": 28.04,
-        "minApr": 28.04,
-        "name": "Vault Compounding",
-        "performance": Object {
-          "oneDay": 28.04,
-          "sevenDay": 28.04,
-          "thirtyDay": 28.04,
-          "threeDay": 28.04,
-        },
-      },
       Object {
         "apr": 28.04,
         "boostable": false,
@@ -74,7 +60,7 @@ Array [
         },
       },
     ],
-    "state": "open",
+    "state": "deprecated",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
@@ -103,7 +89,7 @@ Array [
     "value": 2440908,
   },
   Object {
-    "apr": 85.4,
+    "apr": 64.05000000000001,
     "asset": "PLP-BBADGER-BTCB",
     "balance": 0,
     "boost": Object {
@@ -117,20 +103,6 @@ Array [
     "settAsset": "bPLP-BBADGER-BTCB",
     "settToken": "0x857F91f735f4B03b19D2b5c6E476C73DB8241F55",
     "sources": Array [
-      Object {
-        "apr": 21.35,
-        "boostable": false,
-        "harvestable": false,
-        "maxApr": 21.35,
-        "minApr": 21.35,
-        "name": "Vault Compounding",
-        "performance": Object {
-          "oneDay": 21.35,
-          "sevenDay": 21.35,
-          "thirtyDay": 21.35,
-          "threeDay": 21.35,
-        },
-      },
       Object {
         "apr": 21.35,
         "boostable": false,
@@ -174,7 +146,7 @@ Array [
         },
       },
     ],
-    "state": "open",
+    "state": "deprecated",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
@@ -203,7 +175,7 @@ Array [
     "value": 2089620,
   },
   Object {
-    "apr": 107.76,
+    "apr": 80.82000000000001,
     "asset": "PLP-BDIGG-BTCB",
     "balance": 0,
     "boost": Object {
@@ -217,20 +189,6 @@ Array [
     "settAsset": "bPLP-BDIGG-BTCB",
     "settToken": "0xa861Ba302674b08f7F2F24381b705870521DDfed",
     "sources": Array [
-      Object {
-        "apr": 26.94,
-        "boostable": false,
-        "harvestable": false,
-        "maxApr": 26.94,
-        "minApr": 26.94,
-        "name": "Vault Compounding",
-        "performance": Object {
-          "oneDay": 26.94,
-          "sevenDay": 26.94,
-          "thirtyDay": 26.94,
-          "threeDay": 26.94,
-        },
-      },
       Object {
         "apr": 26.94,
         "boostable": false,
@@ -274,7 +232,7 @@ Array [
         },
       },
     ],
-    "state": "open",
+    "state": "deprecated",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
@@ -584,7 +542,7 @@ Array [
     "value": 10000,
   },
   Object {
-    "apr": 112.2,
+    "apr": 84.15,
     "asset": "crvrenWBTC",
     "balance": 0,
     "boost": Object {
@@ -592,26 +550,12 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "Harvest renBTC/wBTC",
+    "name": "Curve.fi Harvest renBTC/wBTC",
     "pricePerFullShare": 1,
     "protocol": "Curve",
     "settAsset": "bcrvhrenBTC",
     "settToken": "0xAf5A1DECfa95BAF63E0084a35c62592B774A2A87",
     "sources": Array [
-      Object {
-        "apr": 28.05,
-        "boostable": false,
-        "harvestable": false,
-        "maxApr": 28.05,
-        "minApr": 28.05,
-        "name": "Vault Compounding",
-        "performance": Object {
-          "oneDay": 28.05,
-          "sevenDay": 28.05,
-          "thirtyDay": 28.05,
-          "threeDay": 28.05,
-        },
-      },
       Object {
         "apr": 28.05,
         "boostable": false,
@@ -655,7 +599,7 @@ Array [
         },
       },
     ],
-    "state": "open",
+    "state": "deprecated",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
@@ -3219,7 +3163,7 @@ Array [
     "value": 10000,
   },
   Object {
-    "apr": 112.2,
+    "apr": 84.15,
     "asset": "crvrenWBTC",
     "balance": 0,
     "boost": Object {
@@ -3227,26 +3171,12 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "Harvest renBTC/wBTC",
+    "name": "Curve.fi Harvest renBTC/wBTC",
     "pricePerFullShare": 1,
     "protocol": "Curve",
     "settAsset": "bcrvhrenBTC",
     "settToken": "0xAf5A1DECfa95BAF63E0084a35c62592B774A2A87",
     "sources": Array [
-      Object {
-        "apr": 28.05,
-        "boostable": false,
-        "harvestable": false,
-        "maxApr": 28.05,
-        "minApr": 28.05,
-        "name": "Vault Compounding",
-        "performance": Object {
-          "oneDay": 28.05,
-          "sevenDay": 28.05,
-          "thirtyDay": 28.05,
-          "threeDay": 28.05,
-        },
-      },
       Object {
         "apr": 28.05,
         "boostable": false,
@@ -3290,7 +3220,7 @@ Array [
         },
       },
     ],
-    "state": "open",
+    "state": "deprecated",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
