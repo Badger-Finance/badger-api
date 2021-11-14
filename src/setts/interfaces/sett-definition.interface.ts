@@ -13,6 +13,7 @@ export interface SettDefinition {
   getTokenBalance?: (chain: Chain, token: string) => Promise<CachedLiquidityPoolTokenBalance>;
   bouncer?: BouncerType;
   name: string;
+  newVault?: boolean;
   protocol?: Protocol;
   settToken: string;
   stage?: Stage;
