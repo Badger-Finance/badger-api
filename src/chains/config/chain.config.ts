@@ -6,6 +6,7 @@ import { SettDefinition } from '../../setts/interfaces/sett-definition.interface
 import { TokenConfig } from '../../tokens/interfaces/token-config.interface';
 import { ChainStrategy } from '../strategies/chain.strategy';
 import { Network } from '@badger-dao/sdk';
+import { TOKENS } from '../../config/tokens.config';
 
 type Chains = Record<string, Chain>;
 
@@ -75,6 +76,10 @@ export abstract class Chain {
       throw new BadRequest(`${network} is not a supported chain`);
     }
     return chain;
+  }
+
+  getBadgerTokenAddress(): string {
+    return TOKENS.BADGER;
   }
 
   abstract getGasPrices(): Promise<GasPrices>;
