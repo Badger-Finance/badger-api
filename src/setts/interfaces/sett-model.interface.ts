@@ -16,6 +16,12 @@ export class SettModel implements Sett {
   @Property()
   public name: string;
 
+  @Title('newVault')
+  @Description('Indicator if the vault is a new product offering')
+  @Example(true)
+  @Property()
+  public newVault: boolean;
+
   @Title('asset')
   @Description('Sett underlying asset name')
   @Example('crvTricrypto')
@@ -144,6 +150,7 @@ export class SettModel implements Sett {
     sources: ValueSource[],
     bouncer: BouncerType,
     strategy: SettStrategy,
+    newVault: boolean,
     minApr?: number,
     maxApr?: number,
   ) {
@@ -165,5 +172,6 @@ export class SettModel implements Sett {
     this.sources = sources;
     this.bouncer = bouncer;
     this.strategy = strategy;
+    this.newVault = newVault;
   }
 }

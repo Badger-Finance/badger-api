@@ -38,6 +38,7 @@ export const defaultSett = (settDefinition: SettDefinition): Sett => {
     tokens: [],
     underlyingToken: settDefinition.depositToken,
     value: 0,
+    newVault: !!settDefinition.newVault,
     settAsset: vaultToken.symbol,
     settToken: settDefinition.settToken,
     strategy: {

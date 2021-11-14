@@ -17,6 +17,7 @@ describe('setts.utils', () => {
       const expected: Sett = {
         asset: depositToken.symbol,
         settAsset: settToken.symbol,
+        newVault: settDefinition.newVault ?? false,
         state: settDefinition.state ?? SettState.Open,
         apr: 0,
         balance: 0,
