@@ -174,9 +174,6 @@ export async function getRewardEmission(chain: Chain, settDefinition: SettDefini
     }
     const proRataSource = createValueSource(`${token.name} Rewards`, uniformPerformance(proRataAPR));
     emissionSources.push(valueSourceToCachedValueSource(proRataSource, settDefinition, tokenEmission(token)));
-    if (chain.network === Network.Arbitrum) {
-      console.log({ sett: sett.name, emissionSources });
-    }
   }
   return emissionSources;
 }
