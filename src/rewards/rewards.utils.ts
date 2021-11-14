@@ -160,7 +160,7 @@ export async function getRewardEmission(chain: Chain, settDefinition: SettDefini
     const apr = (yearlyEmission / sett.value) * 100;
     let proRataAPR = apr;
     // todo: atm, only native badger on eth has a pro rata split for ibbtc vault - will need a flexible native badger token per chain
-    if (emissionControl && token.address === TOKENS.BADGER) {
+    if (emissionControl && token.address === chain.getBadgerTokenAddress()) {
       const boostedRate = await emissionControl.boostedEmissionRate(sett.settToken);
       const boostedAPR = (boostedRate.toNumber() / 10_000) * proRataAPR;
       proRataAPR = proRataAPR - boostedAPR;
@@ -174,6 +174,9 @@ export async function getRewardEmission(chain: Chain, settDefinition: SettDefini
     }
     const proRataSource = createValueSource(`${token.name} Rewards`, uniformPerformance(proRataAPR));
     emissionSources.push(valueSourceToCachedValueSource(proRataSource, settDefinition, tokenEmission(token)));
+    if (chain.network === Network.Arbitrum) {
+      console.log({ sett: sett.name, emissionSources });
+    }
   }
   return emissionSources;
 }

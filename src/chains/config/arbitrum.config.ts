@@ -37,6 +37,10 @@ export class Arbitrum extends Chain {
       slow: gasPrice,
     };
   }
+
+  getBadgerTokenAddress(): string {
+    return TOKENS.ARB_BADGER;
+  }
 }
 
 export const arbitrumSetts: SettDefinition[] = [

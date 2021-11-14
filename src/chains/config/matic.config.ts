@@ -37,6 +37,10 @@ export class Polygon extends Chain {
       slow: result['safeLow'],
     };
   }
+
+  getBadgerTokenAddress(): string {
+    return TOKENS.MATIC_BADGER;
+  }
 }
 
 export const maticSetts: SettDefinition[] = [
