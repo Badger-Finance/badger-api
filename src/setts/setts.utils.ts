@@ -11,7 +11,7 @@ import { formatBalance, getToken } from '../tokens/tokens.utils';
 import { CachedSettSnapshot } from './interfaces/cached-sett-snapshot.interface';
 import { SettDefinition } from './interfaces/sett-definition.interface';
 import { SettSnapshot } from './interfaces/sett-snapshot.interface';
-import { Sett__factory, Controller__factory, Strategy__factory } from '../contracts';
+import { Sett__factory, Controller__factory, Strategy__factory, EmissionControl__factory } from '../contracts';
 import { SettStrategy } from './interfaces/sett-strategy.interface';
 import { TOKENS } from '../config/tokens.config';
 import { Protocol, Sett, SettState } from '@badger-dao/sdk';
@@ -80,6 +80,10 @@ export const getCachedSett = async (settDefinition: SettDefinition): Promise<Set
         sett.pricePerFullShare = item.ratio;
       }
       sett.strategy = item.strategy;
+      sett.boost = {
+        enabled: item.boostWeight > 0,
+        weight: item.boostWeight,
+      };
     }
     return sett;
   } catch (err) {
@@ -193,3 +197,11 @@ export const getPricePerShare = async (
     return formatBalance(pricePerShare, token.decimals);
   }
 };
+
+export async function getBoostWeight(chain: Chain, settDefinition: SettDefinition): Promise<BigNumber> {
+  if (!chain.emissionControl) {
+    return ethers.constants.Zero;
+  }
+  const emissionControl = EmissionControl__factory.connect(chain.emissionControl, chain.provider);
+  return emissionControl.boostedEmissionRate(settDefinition.settToken);
+}

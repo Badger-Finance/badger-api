@@ -20,5 +20,4 @@ export interface SettDefinition {
   state?: SettState;
   strategy?: string;
   supplyDecimals?: number;
-  weight?: number;
 }

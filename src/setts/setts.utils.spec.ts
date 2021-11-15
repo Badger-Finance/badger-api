@@ -66,6 +66,10 @@ describe('setts.utils', () => {
         expected.pricePerFullShare = snapshot.balance / snapshot.supply;
         expected.balance = snapshot.balance;
         expected.value = snapshot.settValue;
+        expected.boost = {
+          enabled: snapshot.boostWeight > 0,
+          weight: snapshot.boostWeight,
+        };
         expect(cached).toMatchObject(expected);
       });
     });
