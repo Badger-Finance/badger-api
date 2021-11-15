@@ -148,6 +148,7 @@ export const ethSetts: SettDefinition[] = [
     name: 'Yearn Wrapped BTC',
     depositToken: TOKENS.WBTC,
     settToken: TOKENS.BVYWBTC,
+    protocol: Protocol.Yearn,
   },
   {
     name: 'Sushiswap Wrapped BTC/ibBTC',
