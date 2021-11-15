@@ -10,7 +10,7 @@ import * as priceUtils from '../prices/prices.utils';
 import { CachedSettSnapshot } from '../setts/interfaces/cached-sett-snapshot.interface';
 import * as settUtils from '../setts/setts.utils';
 import { refreshSettSnapshots } from './sett-snapshots-indexer';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { BaseStrategy } from '../chains/strategies/base.strategy';
 import { TOKENS } from '../config/tokens.config';
 
@@ -48,6 +48,7 @@ describe('refreshSettSnapshots', () => {
       performanceFee: 20,
       strategistFee: 10,
     }));
+    jest.spyOn(settUtils, 'getBoostWeight').mockImplementation(async (_chain, _sett) => BigNumber.from(5100));
     jest
       .spyOn(settUtils, 'getPricePerShare')
       .mockImplementation(async (_chain, ppfs, _sett, _block) => Number(ethers.utils.formatEther(ppfs)));
