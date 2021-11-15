@@ -52,6 +52,7 @@ export function randomSnapshot(settDefinition?: SettDefinition): CachedSettSnaps
       performanceFee: 20,
       strategistFee: 10,
     },
+    boostWeight: 5100,
   });
 }
 

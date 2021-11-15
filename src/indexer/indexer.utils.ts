@@ -22,7 +22,7 @@ import { CachedSettSnapshot } from '../setts/interfaces/cached-sett-snapshot.int
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { SettSnapshot } from '../setts/interfaces/sett-snapshot.interface';
 import { SettsService } from '../setts/setts.service';
-import { getPricePerShare, getSett, getStrategyInfo } from '../setts/setts.utils';
+import { getBoostWeight, getPricePerShare, getSett, getStrategyInfo } from '../setts/setts.utils';
 import { CachedLiquidityPoolTokenBalance } from '../tokens/interfaces/cached-liquidity-pool-token-balance.interface';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
 import { formatBalance, getToken } from '../tokens/tokens.utils';
@@ -45,10 +45,11 @@ export const settToCachedSnapshot = async (
   const supplyDecimals = settDefinition.supplyDecimals || settToken.decimals;
   const tokenBalance = formatBalance(balance, balanceDecimals);
   const supply = formatBalance(totalSupply, supplyDecimals);
-  const [ratio, tokenPriceData, strategyInfo] = await Promise.all([
+  const [ratio, tokenPriceData, strategyInfo, boostWeight] = await Promise.all([
     getPricePerShare(chain, pricePerFullShare, settDefinition),
     getPrice(depositToken.address),
     getStrategyInfo(chain, settDefinition),
+    getBoostWeight(chain, settDefinition),
   ]);
   const value = tokenBalance * tokenPriceData.usd;
 
@@ -59,6 +60,7 @@ export const settToCachedSnapshot = async (
     settValue: parseFloat(value.toFixed(2)),
     supply,
     strategy: strategyInfo,
+    boostWeight,
   });
 };
 

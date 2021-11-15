@@ -135,8 +135,8 @@ export const ethTokensConfig: TokenConfig = {
     address: TOKENS.WIBBTC,
     decimals: 18,
     lookupName: 'interest-bearing-bitcoin',
-    name: 'ibBTC',
-    symbol: 'ibBTC',
+    name: 'wibBTC',
+    symbol: 'wibBTC',
     type: TokenType.Contract,
   },
   [TOKENS.IBBTC]: {

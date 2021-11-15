@@ -4,7 +4,6 @@ import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
 import { ONE_YEAR_SECONDS, REWARD_DATA } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
-import { EmissionControl__factory } from '../contracts';
 import { valueSourceToCachedValueSource } from '../indexer/indexer.utils';
 import { getPrice } from '../prices/prices.utils';
 import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
@@ -129,11 +128,6 @@ export async function getRewardEmission(chain: Chain, settDefinition: SettDefini
   await sdk.ready();
   const activeSchedules = await sdk.rewards.loadActiveSchedules(settToken);
 
-  let emissionControl;
-  if (chain.emissionControl) {
-    emissionControl = EmissionControl__factory.connect(chain.emissionControl, chain.batchProvider);
-  }
-
   /**
    * Calculate rewards emission percentages:
    *   - P: Price of Token
@@ -160,9 +154,8 @@ export async function getRewardEmission(chain: Chain, settDefinition: SettDefini
     const apr = (yearlyEmission / sett.value) * 100;
     let proRataAPR = apr;
     // todo: atm, only native badger on eth has a pro rata split for ibbtc vault - will need a flexible native badger token per chain
-    if (emissionControl && token.address === chain.getBadgerTokenAddress()) {
-      const boostedRate = await emissionControl.boostedEmissionRate(sett.settToken);
-      const boostedAPR = (boostedRate.toNumber() / 10_000) * proRataAPR;
+    if (sett.boost.enabled && token.address === chain.getBadgerTokenAddress()) {
+      const boostedAPR = (sett.boost.weight / 10_000) * proRataAPR;
       proRataAPR = proRataAPR - boostedAPR;
       const boostedSource = createValueSource(
         `Boosted ${token.name} Rewards`,

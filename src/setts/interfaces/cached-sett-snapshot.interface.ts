@@ -20,6 +20,9 @@ export class CachedSettSnapshot {
   @attribute()
   supply!: number;
 
+  @attribute()
+  boostWeight!: number;
+
   @attribute({ memberType: embed(SettStrategy) })
   strategy!: SettStrategy;
 

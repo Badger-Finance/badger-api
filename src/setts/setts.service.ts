@@ -41,19 +41,14 @@ export class SettsService {
     sett.apr = sett.sources.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
     sett.protocol = settDefinition.protocol ?? Protocol.Badger;
 
-    const hasBoostedApr = sett.sources.some((source) => source.boostable);
-    if (hasBoostedApr) {
-      sett.boost = {
-        enabled: true,
-        weight: settDefinition.weight ?? 100,
-      };
-      sett.minApr = sett.sources.map((s) => s.minApr || s.apr).reduce((total, apr) => (total += apr), 0);
-      sett.maxApr = sett.sources.map((s) => s.maxApr || s.apr).reduce((total, apr) => (total += apr), 0);
-    } else {
-      sett.boost = {
-        enabled: false,
-        weight: 0,
-      };
+    if (sett.boost.enabled) {
+      const hasBoostedApr = sett.sources.some((source) => source.boostable);
+      if (hasBoostedApr) {
+        sett.minApr = sett.sources.map((s) => s.minApr || s.apr).reduce((total, apr) => (total += apr), 0);
+        sett.maxApr = sett.sources.map((s) => s.maxApr || s.apr).reduce((total, apr) => (total += apr), 0);
+      } else {
+        sett.boost.enabled = false;
+      }
     }
 
     return sett;
