@@ -1301,7 +1301,7 @@ Array [
     "name": "Yearn Wrapped BTC",
     "newVault": false,
     "pricePerFullShare": 1,
-    "protocol": "Badger",
+    "protocol": "Yearn",
     "settAsset": "byvWBTC",
     "settToken": "0x4b92d19c11435614CD49Af1b589001b7c08cD4D5",
     "sources": Array [
@@ -3908,7 +3908,7 @@ Array [
     "name": "Yearn Wrapped BTC",
     "newVault": false,
     "pricePerFullShare": 1,
-    "protocol": "Badger",
+    "protocol": "Yearn",
     "settAsset": "byvWBTC",
     "settToken": "0x4b92d19c11435614CD49Af1b589001b7c08cD4D5",
     "sources": Array [
