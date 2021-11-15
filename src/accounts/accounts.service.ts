@@ -64,7 +64,6 @@ export class AccountsService {
         tokens: bal.tokens.map((token) => cachedTokenBalanceToTokenBalance(token)),
         earnedTokens: bal.earnedTokens.map((token) => cachedTokenBalanceToTokenBalance(token)),
       }));
-    console.log(cachedAccount.multipliers);
     const multipliers = Object.fromEntries(
       cachedAccount.multipliers
         .filter((mult) => mult.network === network)
