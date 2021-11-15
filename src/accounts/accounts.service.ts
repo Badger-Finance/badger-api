@@ -64,7 +64,11 @@ export class AccountsService {
         tokens: bal.tokens.map((token) => cachedTokenBalanceToTokenBalance(token)),
         earnedTokens: bal.earnedTokens.map((token) => cachedTokenBalanceToTokenBalance(token)),
       }));
-    const multipliers = Object.fromEntries(cachedAccount.multipliers.map((entry) => [entry.address, entry.multiplier]));
+    const multipliers = Object.fromEntries(
+      cachedAccount.multipliers
+        .filter((mult) => mult.network === network)
+        .map((entry) => [entry.address, entry.multiplier]),
+    );
     const data = Object.fromEntries(balances.map((bal) => [bal.address, bal]));
     const claimableBalances = Object.fromEntries(
       cachedAccount.claimableBalances.map((bal) => [bal.address, bal.balance]),
