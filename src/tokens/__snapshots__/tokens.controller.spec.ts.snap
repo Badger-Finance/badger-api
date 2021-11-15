@@ -334,8 +334,8 @@ Object {
   "0x8751D4196027d4e6DA63716fA7786B5174F04C15": Object {
     "address": "0x8751D4196027d4e6DA63716fA7786B5174F04C15",
     "decimals": 18,
-    "name": "ibBTC",
-    "symbol": "ibBTC",
+    "name": "wibBTC",
+    "symbol": "wibBTC",
   },
   "0x8798249c2E607446EfB7Ad49eC89dD1865Ff4272": Object {
     "address": "0x8798249c2E607446EfB7Ad49eC89dD1865Ff4272",
@@ -825,8 +825,8 @@ Object {
   "0x8751D4196027d4e6DA63716fA7786B5174F04C15": Object {
     "address": "0x8751D4196027d4e6DA63716fA7786B5174F04C15",
     "decimals": 18,
-    "name": "ibBTC",
-    "symbol": "ibBTC",
+    "name": "wibBTC",
+    "symbol": "wibBTC",
   },
   "0x8798249c2E607446EfB7Ad49eC89dD1865Ff4272": Object {
     "address": "0x8798249c2E607446EfB7Ad49eC89dD1865Ff4272",
