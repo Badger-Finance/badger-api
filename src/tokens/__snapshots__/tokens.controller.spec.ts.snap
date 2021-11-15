@@ -331,6 +331,12 @@ Object {
     "name": "Keep Network",
     "symbol": "KEEP",
   },
+  "0x8751D4196027d4e6DA63716fA7786B5174F04C15": Object {
+    "address": "0x8751D4196027d4e6DA63716fA7786B5174F04C15",
+    "decimals": 18,
+    "name": "ibBTC",
+    "symbol": "ibBTC",
+  },
   "0x8798249c2E607446EfB7Ad49eC89dD1865Ff4272": Object {
     "address": "0x8798249c2E607446EfB7Ad49eC89dD1865Ff4272",
     "decimals": 18,
@@ -815,6 +821,12 @@ Object {
     "decimals": 18,
     "name": "Keep Network",
     "symbol": "KEEP",
+  },
+  "0x8751D4196027d4e6DA63716fA7786B5174F04C15": Object {
+    "address": "0x8751D4196027d4e6DA63716fA7786B5174F04C15",
+    "decimals": 18,
+    "name": "ibBTC",
+    "symbol": "ibBTC",
   },
   "0x8798249c2E607446EfB7Ad49eC89dD1865Ff4272": Object {
     "address": "0x8798249c2E607446EfB7Ad49eC89dD1865Ff4272",

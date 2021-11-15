@@ -131,6 +131,14 @@ export const ethTokensConfig: TokenConfig = {
     symbol: 'xSUSHI',
     type: TokenType.Contract,
   },
+  [TOKENS.WIBBTC]: {
+    address: TOKENS.WIBBTC,
+    decimals: 18,
+    lookupName: 'interest-bearing-bitcoin',
+    name: 'ibBTC',
+    symbol: 'ibBTC',
+    type: TokenType.Contract,
+  },
   [TOKENS.IBBTC]: {
     address: TOKENS.IBBTC,
     decimals: 18,
@@ -680,17 +688,6 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.MHBTC,
-      network: Network.Ethereum,
-    },
-  },
-  [TOKENS.BCRV_CVXBVECVX]: {
-    address: TOKENS.BCRV_CVXBVECVX,
-    decimals: 18,
-    name: 'bcrvCVXbveCVX',
-    symbol: 'bcrvCVXbveCVX',
-    type: TokenType.Vault,
-    vaultToken: {
-      address: TOKENS.CRV_CVXBVECVX,
       network: Network.Ethereum,
     },
   },
