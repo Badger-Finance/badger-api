@@ -6,6 +6,7 @@ import { SettDefinition } from '../../setts/interfaces/sett-definition.interface
 import { TokenConfig } from '../../tokens/interfaces/token-config.interface';
 import { ChainStrategy } from '../strategies/chain.strategy';
 import { Network } from '@badger-dao/sdk';
+import { TOKENS } from '../../config/tokens.config';
 
 type Chains = Record<string, Chain>;
 
@@ -24,6 +25,7 @@ export abstract class Chain {
   readonly blocksPerYear: number;
   readonly badgerTree?: string;
   readonly rewardsLogger?: string;
+  readonly emissionControl?: string;
 
   constructor(
     name: string,
@@ -37,6 +39,7 @@ export abstract class Chain {
     blocksPerYear: number,
     badgerTree?: string,
     rewardsLogger?: string,
+    emissionControl?: string,
   ) {
     this.name = name;
     this.symbol = symbol;
@@ -53,6 +56,7 @@ export abstract class Chain {
     this.blocksPerYear = blocksPerYear;
     this.badgerTree = badgerTree;
     this.rewardsLogger = rewardsLogger;
+    this.emissionControl = emissionControl;
   }
 
   static register(network: Network, chain: Chain): void {
@@ -72,6 +76,10 @@ export abstract class Chain {
       throw new BadRequest(`${network} is not a supported chain`);
     }
     return chain;
+  }
+
+  getBadgerTokenAddress(): string {
+    return TOKENS.BADGER;
   }
 
   abstract getGasPrices(): Promise<GasPrices>;

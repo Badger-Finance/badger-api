@@ -331,6 +331,12 @@ Object {
     "name": "Keep Network",
     "symbol": "KEEP",
   },
+  "0x8751D4196027d4e6DA63716fA7786B5174F04C15": Object {
+    "address": "0x8751D4196027d4e6DA63716fA7786B5174F04C15",
+    "decimals": 18,
+    "name": "wibBTC",
+    "symbol": "wibBTC",
+  },
   "0x8798249c2E607446EfB7Ad49eC89dD1865Ff4272": Object {
     "address": "0x8798249c2E607446EfB7Ad49eC89dD1865Ff4272",
     "decimals": 18,
@@ -469,6 +475,12 @@ Object {
     "name": "Ren Protocol BTC",
     "symbol": "renBTC",
   },
+  "0xFbdCA68601f835b27790D98bbb8eC7f05FDEaA9B": Object {
+    "address": "0xFbdCA68601f835b27790D98bbb8eC7f05FDEaA9B",
+    "decimals": 18,
+    "name": "Curve.fi ibBTC",
+    "symbol": "crvibBTC",
+  },
   "0xa0246c9032bC3A600820415aE600c6388619A14D": Object {
     "address": "0xa0246c9032bC3A600820415aE600c6388619A14D",
     "decimals": 18,
@@ -480,6 +492,12 @@ Object {
     "decimals": 18,
     "name": "Meta",
     "symbol": "MTA",
+  },
+  "0xaE96fF08771a109dc6650a1BdCa62F2d558E40af": Object {
+    "address": "0xaE96fF08771a109dc6650a1BdCa62F2d558E40af",
+    "decimals": 18,
+    "name": "bCurve.fi crvibBTC",
+    "symbol": "bcrvibBTC",
   },
   "0xb19059ebb43466C323583928285a49f558E572Fd": Object {
     "address": "0xb19059ebb43466C323583928285a49f558E572Fd",
@@ -804,6 +822,12 @@ Object {
     "name": "Keep Network",
     "symbol": "KEEP",
   },
+  "0x8751D4196027d4e6DA63716fA7786B5174F04C15": Object {
+    "address": "0x8751D4196027d4e6DA63716fA7786B5174F04C15",
+    "decimals": 18,
+    "name": "wibBTC",
+    "symbol": "wibBTC",
+  },
   "0x8798249c2E607446EfB7Ad49eC89dD1865Ff4272": Object {
     "address": "0x8798249c2E607446EfB7Ad49eC89dD1865Ff4272",
     "decimals": 18,
@@ -942,6 +966,12 @@ Object {
     "name": "Ren Protocol BTC",
     "symbol": "renBTC",
   },
+  "0xFbdCA68601f835b27790D98bbb8eC7f05FDEaA9B": Object {
+    "address": "0xFbdCA68601f835b27790D98bbb8eC7f05FDEaA9B",
+    "decimals": 18,
+    "name": "Curve.fi ibBTC",
+    "symbol": "crvibBTC",
+  },
   "0xa0246c9032bC3A600820415aE600c6388619A14D": Object {
     "address": "0xa0246c9032bC3A600820415aE600c6388619A14D",
     "decimals": 18,
@@ -953,6 +983,12 @@ Object {
     "decimals": 18,
     "name": "Meta",
     "symbol": "MTA",
+  },
+  "0xaE96fF08771a109dc6650a1BdCa62F2d558E40af": Object {
+    "address": "0xaE96fF08771a109dc6650a1BdCa62F2d558E40af",
+    "decimals": 18,
+    "name": "bCurve.fi crvibBTC",
+    "symbol": "bcrvibBTC",
   },
   "0xb19059ebb43466C323583928285a49f558E572Fd": Object {
     "address": "0xb19059ebb43466C323583928285a49f558E572Fd",

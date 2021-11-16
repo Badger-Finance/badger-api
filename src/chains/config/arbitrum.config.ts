@@ -1,5 +1,4 @@
-import { Network, Protocol } from '@badger-dao/sdk';
-import { SettState } from '../../config/enums/sett-state.enum';
+import { Network, Protocol, SettState } from '@badger-dao/sdk';
 import { Stage } from '../../config/enums/stage.enum';
 import RPC from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
@@ -24,6 +23,7 @@ export class Arbitrum extends Chain {
       2425847,
       '0x635EB2C39C75954bb53Ebc011BDC6AfAAcE115A6',
       '0x85E1cACAe9a63429394d68Db59E14af74143c61c',
+      '0x78418681f9ed228d627f785fb9607ed5175518fd',
     );
     Chain.register(this.network, this);
   }
@@ -36,6 +36,10 @@ export class Arbitrum extends Chain {
       standard: gasPrice,
       slow: gasPrice,
     };
+  }
+
+  getBadgerTokenAddress(): string {
+    return TOKENS.ARB_BADGER;
   }
 }
 

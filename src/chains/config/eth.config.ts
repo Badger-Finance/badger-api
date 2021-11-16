@@ -1,7 +1,6 @@
-import { Network, Protocol } from '@badger-dao/sdk';
+import { Network, Protocol, SettState } from '@badger-dao/sdk';
 import fetch from 'node-fetch';
 import { BLOCKNATIVE_API_KEY } from '../../config/constants';
-import { SettState } from '../../config/enums/sett-state.enum';
 import { Stage } from '../../config/enums/stage.enum';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
@@ -27,6 +26,7 @@ export class Ethereum extends Chain {
       2425847,
       '0x660802Fc641b154aBA66a62137e71f331B6d787A',
       '0x0A4F4e92C3334821EbB523324D09E321a6B0d8ec',
+      '0x31825c0a6278b89338970e3eb979b05b27faa263',
     );
     Chain.register(this.network, this);
   }
@@ -83,13 +83,13 @@ export const ethSetts: SettDefinition[] = [
     settToken: TOKENS.BCRV_TBTC,
     protocol: Protocol.Convex,
   },
-  // TODO: Remove once fully deprecated
   {
-    name: 'Harvest renBTC/wBTC',
+    name: 'Curve.fi Harvest renBTC/wBTC',
     createdBlock: 11380939,
     depositToken: TOKENS.CRV_RENBTC,
     getTokenBalance: getCurveSettTokenBalance,
     settToken: TOKENS.BCRV_HRENBTC,
+    state: SettState.Deprecated,
     protocol: Protocol.Curve,
   },
   {
@@ -104,6 +104,7 @@ export const ethSetts: SettDefinition[] = [
     createdBlock: 11680833,
     depositToken: TOKENS.UNI_DIGG_WBTC,
     deprecated: true,
+    state: SettState.Deprecated,
     settToken: TOKENS.BUNI_DIGG_WBTC,
     protocol: Protocol.Uniswap,
   },
@@ -140,12 +141,14 @@ export const ethSetts: SettDefinition[] = [
     deprecated: true,
     depositToken: TOKENS.BADGER,
     settToken: TOKENS.BBADGER,
+    state: SettState.Deprecated,
   },
   {
     createdBlock: 12246710,
     name: 'Yearn Wrapped BTC',
     depositToken: TOKENS.WBTC,
     settToken: TOKENS.BVYWBTC,
+    protocol: Protocol.Yearn,
   },
   {
     name: 'Sushiswap Wrapped BTC/ibBTC',
@@ -206,6 +209,7 @@ export const ethSetts: SettDefinition[] = [
     deprecated: true,
     getTokenBalance: getCurveSettTokenBalance,
     settToken: TOKENS.BCRV_TRICRYPTO,
+    state: SettState.Deprecated,
     protocol: Protocol.Convex,
   },
   {
@@ -268,6 +272,15 @@ export const ethSetts: SettDefinition[] = [
     depositToken: TOKENS.CRV_CVXBVECVX,
     getTokenBalance: getCurveSettTokenBalance,
     settToken: TOKENS.BCRV_CVXBVECVX,
+    protocol: Protocol.Curve,
+  },
+  {
+    name: 'Curve.fi ibBTC / crvsBTC LP',
+    createdBlock: 13590998,
+    depositToken: TOKENS.CRV_IBBTC,
+    getTokenBalance: getCurveSettTokenBalance,
+    newVault: true,
+    settToken: TOKENS.BCRV_IBBTC,
     protocol: Protocol.Curve,
   },
 ];

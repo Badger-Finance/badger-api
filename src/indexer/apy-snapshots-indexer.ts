@@ -20,10 +20,7 @@ async function refreshChainApySnapshots(chain: Chain) {
         .filter((rawValueSource) => !isNil(rawValueSource))
         .filter((source) => !isNaN(source.apr) && isFinite(source.apr))
         .forEach((source) => {
-          if (source.apr === 0 && source.type !== SourceType.Compound) {
-            return;
-          }
-          const mapKey = `${source.address}-${source.type}`;
+          const mapKey = [source.address, source.name, source.type].join('-');
           const mapEntry = sourceMap[mapKey];
           // simulated underlying are harvestable, measured underlying is not
           // directly override any saved simulated strategy performance for measured

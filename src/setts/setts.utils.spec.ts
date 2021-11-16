@@ -1,9 +1,8 @@
-import { Protocol, Sett } from '@badger-dao/sdk';
+import { Protocol, Sett, SettState } from '@badger-dao/sdk';
 import { NotFound } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { BinanceSmartChain } from '../chains/config/bsc.config';
 import { Ethereum } from '../chains/config/eth.config';
-import { SettState } from '../config/enums/sett-state.enum';
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
 import { randomPerformance, randomSett, randomSnapshot, randomSnapshots, setupMapper } from '../test/tests.utils';
 import { getToken } from '../tokens/tokens.utils';
@@ -18,12 +17,14 @@ describe('setts.utils', () => {
       const expected: Sett = {
         asset: depositToken.symbol,
         settAsset: settToken.symbol,
-        deprecated: settDefinition.deprecated ?? false,
+        newVault: settDefinition.newVault ?? false,
         state: settDefinition.state ?? SettState.Open,
         apr: 0,
         balance: 0,
-        boostable: false,
-        experimental: settDefinition.state === SettState.Experimental,
+        boost: {
+          enabled: false,
+          weight: 0,
+        },
         bouncer: settDefinition.bouncer ?? BouncerType.None,
         name: settDefinition.name,
         protocol: Protocol.Badger,
@@ -65,6 +66,10 @@ describe('setts.utils', () => {
         expected.pricePerFullShare = snapshot.balance / snapshot.supply;
         expected.balance = snapshot.balance;
         expected.value = snapshot.settValue;
+        expected.boost = {
+          enabled: snapshot.boostWeight > 0,
+          weight: snapshot.boostWeight,
+        };
         expect(cached).toMatchObject(expected);
       });
     });

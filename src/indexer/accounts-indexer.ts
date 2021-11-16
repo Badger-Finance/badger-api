@@ -10,8 +10,7 @@ import { BadgerTree__factory } from '../contracts';
 import { UserSettBalance } from '../graphql/generated/badger';
 import { RewardMerkleDistribution } from '../rewards/interfaces/merkle-distributor.interface';
 import { RewardAmounts } from '../rewards/interfaces/reward-amounts.interface';
-import { RewardsService } from '../rewards/rewards.service';
-import { getTreeDistribution } from '../rewards/rewards.utils';
+import { getTreeDistribution, getUserBoostMultipliers } from '../rewards/rewards.utils';
 import { getSettDefinition } from '../setts/setts.utils';
 
 export enum IndexMode {
@@ -120,7 +119,7 @@ export async function refreshAccountSettBalances(chains: Chain[], batchAccounts:
 
 async function refreshAccountBoostInfo(chains: Chain[], batchAccounts: AccountMap) {
   const addresses = Object.keys(batchAccounts);
-  const userBoostMultipliers = await RewardsService.getUserBoostMultipliers(chains, addresses);
+  const userBoostMultipliers = await getUserBoostMultipliers(chains, addresses);
   await Promise.all(
     addresses.map(async (acc) => {
       const account = batchAccounts[acc];

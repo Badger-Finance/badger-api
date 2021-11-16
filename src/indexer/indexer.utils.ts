@@ -17,12 +17,12 @@ import { SushiswapStrategy } from '../protocols/strategies/sushiswap.strategy';
 import { SwaprStrategy } from '../protocols/strategies/swapr.strategy';
 import { UniswapStrategy } from '../protocols/strategies/uniswap.strategy';
 import { SourceType } from '../rewards/enums/source-type.enum';
-import { RewardsService } from '../rewards/rewards.service';
+import { getRewardEmission } from '../rewards/rewards.utils';
 import { CachedSettSnapshot } from '../setts/interfaces/cached-sett-snapshot.interface';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { SettSnapshot } from '../setts/interfaces/sett-snapshot.interface';
 import { SettsService } from '../setts/setts.service';
-import { getPricePerShare, getSett, getStrategyInfo } from '../setts/setts.utils';
+import { getBoostWeight, getPricePerShare, getSett, getStrategyInfo } from '../setts/setts.utils';
 import { CachedLiquidityPoolTokenBalance } from '../tokens/interfaces/cached-liquidity-pool-token-balance.interface';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
 import { formatBalance, getToken } from '../tokens/tokens.utils';
@@ -45,10 +45,11 @@ export const settToCachedSnapshot = async (
   const supplyDecimals = settDefinition.supplyDecimals || settToken.decimals;
   const tokenBalance = formatBalance(balance, balanceDecimals);
   const supply = formatBalance(totalSupply, supplyDecimals);
-  const [ratio, tokenPriceData, strategyInfo] = await Promise.all([
+  const [ratio, tokenPriceData, strategyInfo, boostWeight] = await Promise.all([
     getPricePerShare(chain, pricePerFullShare, settDefinition),
     getPrice(depositToken.address),
     getStrategyInfo(chain, settDefinition),
+    getBoostWeight(chain, settDefinition),
   ]);
   const value = tokenBalance * tokenPriceData.usd;
 
@@ -59,6 +60,7 @@ export const settToCachedSnapshot = async (
     settValue: parseFloat(value.toFixed(2)),
     supply,
     strategy: strategyInfo,
+    boostWeight,
   });
 };
 
@@ -214,20 +216,13 @@ export async function getProtocolValueSources(
   }
 }
 
-export async function getEmissionApySnapshots(
-  chain: Chain,
-  settDefinition: SettDefinition,
-): Promise<CachedValueSource[]> {
-  return RewardsService.getRewardEmission(chain, settDefinition);
-}
-
 const ARB_CRV_SETTS = [TOKENS.BARB_CRV_RENBTC, TOKENS.BARB_CRV_TRICRYPTO, TOKENS.BARB_CRV_TRICRYPTO_LITE];
 
 export async function getSettValueSources(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
   try {
     const [underlying, emission, protocol, derivative] = await Promise.all([
       getUnderlyingPerformance(settDefinition),
-      getEmissionApySnapshots(chain, settDefinition),
+      getRewardEmission(chain, settDefinition),
       getProtocolValueSources(chain, settDefinition),
       getSettTokenPerformances(chain, settDefinition),
     ]);

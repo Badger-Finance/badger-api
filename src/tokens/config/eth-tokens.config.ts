@@ -131,6 +131,14 @@ export const ethTokensConfig: TokenConfig = {
     symbol: 'xSUSHI',
     type: TokenType.Contract,
   },
+  [TOKENS.WIBBTC]: {
+    address: TOKENS.WIBBTC,
+    decimals: 18,
+    lookupName: 'interest-bearing-bitcoin',
+    name: 'wibBTC',
+    symbol: 'wibBTC',
+    type: TokenType.Contract,
+  },
   [TOKENS.IBBTC]: {
     address: TOKENS.IBBTC,
     decimals: 18,
@@ -213,6 +221,13 @@ export const ethTokensConfig: TokenConfig = {
     decimals: 18,
     name: 'Curve.fi bBTC',
     symbol: 'crvbBTC',
+    type: TokenType.CurveLP,
+  },
+  [TOKENS.CRV_IBBTC]: {
+    address: TOKENS.CRV_IBBTC,
+    decimals: 18,
+    name: 'Curve.fi ibBTC',
+    symbol: 'crvibBTC',
     type: TokenType.CurveLP,
   },
   [TOKENS.CRV]: {
@@ -511,6 +526,17 @@ export const ethTokensConfig: TokenConfig = {
       network: Network.Ethereum,
     },
   },
+  [TOKENS.BCRV_IBBTC]: {
+    address: TOKENS.BCRV_IBBTC,
+    decimals: 18,
+    name: 'bCurve.fi crvibBTC',
+    symbol: 'bcrvibBTC',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.CRV_IBBTC,
+      network: Network.Ethereum,
+    },
+  },
   [TOKENS.BVYWBTC]: {
     address: TOKENS.BVYWBTC,
     decimals: 8,
@@ -662,17 +688,6 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.MHBTC,
-      network: Network.Ethereum,
-    },
-  },
-  [TOKENS.BCRV_CVXBVECVX]: {
-    address: TOKENS.BCRV_CVXBVECVX,
-    decimals: 18,
-    name: 'bcrvCVXbveCVX',
-    symbol: 'bcrvCVXbveCVX',
-    type: TokenType.Vault,
-    vaultToken: {
-      address: TOKENS.CRV_CVXBVECVX,
       network: Network.Ethereum,
     },
   },
