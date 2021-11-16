@@ -280,7 +280,6 @@ export const ethSetts: SettDefinition[] = [
     depositToken: TOKENS.CRV_IBBTC,
     getTokenBalance: getCurveSettTokenBalance,
     newVault: true,
-    stage: Stage.Staging,
     settToken: TOKENS.BCRV_IBBTC,
     protocol: Protocol.Curve,
   },
