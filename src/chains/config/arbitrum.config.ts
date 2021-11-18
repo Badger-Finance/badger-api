@@ -29,13 +29,7 @@ export class Arbitrum extends Chain {
   }
 
   async getGasPrices(): Promise<GasPrices> {
-    const gasPrice = 2;
-    return {
-      rapid: gasPrice,
-      fast: gasPrice,
-      standard: gasPrice,
-      slow: gasPrice,
-    };
+    return this.defaultGasPrice();
   }
 
   getBadgerTokenAddress(): string {

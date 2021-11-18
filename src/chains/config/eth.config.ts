@@ -4,7 +4,6 @@ import { BLOCKNATIVE_API_KEY } from '../../config/constants';
 import { Stage } from '../../config/enums/stage.enum';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
-import { defaultGasPrice } from '../../gas/gas.utils';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { getCurveSettTokenBalance } from '../../protocols/strategies/convex.strategy';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
@@ -37,7 +36,7 @@ export class Ethereum extends Chain {
       headers: { Authorization: BLOCKNATIVE_API_KEY },
     });
     if (!response.ok) {
-      return defaultGasPrice(this);
+      return this.defaultGasPrice();
     }
     const defaultPriorityFee = 2;
     const result = await response.json();

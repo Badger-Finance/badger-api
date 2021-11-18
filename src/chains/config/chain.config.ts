@@ -85,7 +85,7 @@ export abstract class Chain {
   abstract getGasPrices(): Promise<GasPrices>;
 
   async defaultGasPrice(): Promise<GasPrices> {
-    const gasPrice = (await this.provider.getGasPrice()).toNumber();
+    const gasPrice = Number(ethers.utils.formatUnits(await this.provider.getGasPrice(), 9));
     if (this.network === Network.Ethereum) {
       const defaultPriorityFee = 2;
       return {
