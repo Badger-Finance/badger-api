@@ -24,13 +24,7 @@ export class BinanceSmartChain extends Chain {
   }
 
   async getGasPrices(): Promise<GasPrices> {
-    const gasPrice = 5;
-    return {
-      rapid: gasPrice,
-      fast: gasPrice,
-      standard: gasPrice,
-      slow: gasPrice,
-    };
+    return this.defaultGasPrice();
   }
 }
 

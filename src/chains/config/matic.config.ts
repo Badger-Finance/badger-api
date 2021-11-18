@@ -27,12 +27,7 @@ export class Polygon extends Chain {
   }
 
   async getGasPrices(): Promise<GasPrices> {
-    return {
-      rapid: 60,
-      fast: 50,
-      standard: 40,
-      slow: 30,
-    };
+    return this.defaultGasPrice();
   }
 
   getBadgerTokenAddress(): string {
