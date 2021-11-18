@@ -1,5 +1,4 @@
 import { Service } from '@tsed/common';
-import { NotFound } from '@tsed/exceptions';
 import { Chain } from '../chains/config/chain.config';
 import { getGasCache } from './gas.utils';
 import { GasPrices } from './interfaces/gas-prices.interface';
@@ -13,12 +12,7 @@ export class GasService {
    * @returns object of gas speeds and prices
    */
   async getGasPrices(chain: Chain): Promise<GasPrices> {
-    try {
-      const gasCache = await getGasCache();
-      return gasCache[chain.network];
-    } catch (error) {
-      console.error(error);
-      throw new NotFound(`Gas price for ${chain.name} not available`);
-    }
+    const gasCache = await getGasCache();
+    return gasCache[chain.network];
   }
 }

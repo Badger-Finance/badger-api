@@ -1,5 +1,4 @@
 import { Network, Protocol } from '@badger-dao/sdk';
-import fetch from 'node-fetch';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
@@ -28,14 +27,7 @@ export class Polygon extends Chain {
   }
 
   async getGasPrices(): Promise<GasPrices> {
-    const prices = await fetch('https://gasstation-mainnet.matic.network/');
-    const result = await prices.json();
-    return {
-      rapid: result['fastest'],
-      fast: result['fast'],
-      standard: result['standard'],
-      slow: result['safeLow'],
-    };
+    return this.defaultGasPrice();
   }
 
   getBadgerTokenAddress(): string {

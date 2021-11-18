@@ -83,4 +83,35 @@ export abstract class Chain {
   }
 
   abstract getGasPrices(): Promise<GasPrices>;
+
+  async defaultGasPrice(): Promise<GasPrices> {
+    const gasPrice = Number(ethers.utils.formatUnits(await this.provider.getGasPrice(), 9));
+    if (this.network === Network.Ethereum) {
+      const defaultPriorityFee = 2;
+      return {
+        rapid: {
+          maxFeePerGas: defaultPriorityFee,
+          maxPriorityFeePerGas: gasPrice * 2,
+        },
+        fast: {
+          maxFeePerGas: defaultPriorityFee,
+          maxPriorityFeePerGas: gasPrice * 1.9,
+        },
+        standard: {
+          maxFeePerGas: defaultPriorityFee,
+          maxPriorityFeePerGas: gasPrice * 1.8,
+        },
+        slow: {
+          maxFeePerGas: defaultPriorityFee,
+          maxPriorityFeePerGas: gasPrice * 1.7,
+        },
+      };
+    }
+    return {
+      rapid: gasPrice,
+      fast: gasPrice,
+      standard: gasPrice,
+      slow: gasPrice,
+    };
+  }
 }
