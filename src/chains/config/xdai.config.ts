@@ -1,5 +1,4 @@
 import { Network, Protocol } from '@badger-dao/sdk';
-import fetch from 'node-fetch';
 import { Stage } from '../../config/enums/stage.enum';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
@@ -26,13 +25,7 @@ export class xDai extends Chain {
   }
 
   async getGasPrices(): Promise<GasPrices> {
-    const prices = await fetch('https://blockscout.com/xdai/mainnet/api/v1/gas-price-oracle');
-    const result = await prices.json();
-    return {
-      fast: result['fast'],
-      average: result['average'],
-      slow: result['slow'],
-    };
+    return this.defaultGasPrice();
   }
 }
 
