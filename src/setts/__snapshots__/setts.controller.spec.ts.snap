@@ -2783,7 +2783,7 @@ Array [
     "name": "Curve.fi ibBTC / crvsBTC LP",
     "newVault": true,
     "pricePerFullShare": 1,
-    "protocol": "Curve",
+    "protocol": "Convex",
     "settAsset": "bcrvibBTC",
     "settToken": "0xaE96fF08771a109dc6650a1BdCa62F2d558E40af",
     "sources": Array [
@@ -5390,7 +5390,7 @@ Array [
     "name": "Curve.fi ibBTC / crvsBTC LP",
     "newVault": true,
     "pricePerFullShare": 1,
-    "protocol": "Curve",
+    "protocol": "Convex",
     "settAsset": "bcrvibBTC",
     "settToken": "0xaE96fF08771a109dc6650a1BdCa62F2d558E40af",
     "sources": Array [
