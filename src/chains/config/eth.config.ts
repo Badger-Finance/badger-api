@@ -281,6 +281,6 @@ export const ethSetts: SettDefinition[] = [
     getTokenBalance: getCurveSettTokenBalance,
     newVault: true,
     settToken: TOKENS.BCRV_IBBTC,
-    protocol: Protocol.Curve,
+    protocol: Protocol.Convex,
   },
 ];
