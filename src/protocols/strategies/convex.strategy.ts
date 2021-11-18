@@ -192,18 +192,18 @@ async function getVaultSources(chain: Chain, settDefinition: SettDefinition): Pr
 
   // emission tokens
   const bcvxCRV = getToken(TOKENS.BCVXCRV);
-  const bCVX = getToken(TOKENS.BICVX);
+  const bveCVX = getToken(TOKENS.BICVX);
 
   // create value sources
   const totalUnderlyingApr = crvUnderlyingApr + cvxUnderlyingApr;
   const compoundValueSource = createValueSource(VAULT_SOURCE, uniformPerformance(totalUnderlyingApr), true);
   const crvValueSource = createValueSource(`${bcvxCRV.name} Rewards`, uniformPerformance(crvEmissionApr));
-  const cvxValueSource = createValueSource(`${bCVX.name} Rewards`, uniformPerformance(cvxEmissionApr));
+  const cvxValueSource = createValueSource(`${bveCVX.name} Rewards`, uniformPerformance(cvxEmissionApr));
 
   // create cached value sources
   const cachedCompounding = valueSourceToCachedValueSource(compoundValueSource, settDefinition, SourceType.Compound);
   const cachedCrvEmission = valueSourceToCachedValueSource(crvValueSource, settDefinition, tokenEmission(bcvxCRV));
-  const cachedCvxEmission = valueSourceToCachedValueSource(cvxValueSource, settDefinition, tokenEmission(bCVX));
+  const cachedCvxEmission = valueSourceToCachedValueSource(cvxValueSource, settDefinition, tokenEmission(bveCVX));
 
   // calculate extra rewards value sources
   const extraRewardsLength = (await crv.extraRewardsLength()).toNumber();
@@ -219,12 +219,15 @@ async function getVaultSources(chain: Chain, settDefinition: SettDefinition): Pr
     if (expired || discontinuedRewards.includes(rewardAddress)) {
       continue;
     }
-    const rewardToken = getToken(rewardAddress);
+    let rewardToken = getToken(rewardAddress);
+    if (rewardToken.address === TOKENS.CVX) {
+      rewardToken = bveCVX;
+    }
     const rewardTokenPrice = await getPrice(rewardToken.address);
     const rewardAmount = formatBalance(await virtualRewards.currentRewards(), rewardToken.decimals);
     const rewardEmission = rewardAmount * rewardTokenPrice.usd * scalar;
     const rewardApr = (rewardEmission / poolValue) * fees;
-    const rewardSource = createValueSource(`Extra ${rewardToken.symbol} Rewards`, uniformPerformance(rewardApr));
+    const rewardSource = createValueSource(`${rewardToken.name} Rewards`, uniformPerformance(rewardApr));
     cachedExtraSources.push(valueSourceToCachedValueSource(rewardSource, settDefinition, tokenEmission(rewardToken)));
   }
 
