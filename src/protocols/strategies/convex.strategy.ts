@@ -176,20 +176,23 @@ async function getVaultSources(chain: Chain, settDefinition: SettDefinition): Pr
   const duration = (await crv.duration()).toNumber();
   const scalar = ONE_YEAR_SECONDS / duration;
   const poolValue = depositLocked * depositPrice.usd;
+  const sett = await getCachedSett(settDefinition);
+  // bps to percentage
+  const fees = 100 - (sett.strategy.performanceFee + sett.strategy.strategistFee) / 100;
 
   // calculate CRV rewards
   const crvEmission = crvReward * crvPrice.usd * scalar;
-  const crvUnderlyingApr = (crvEmission / poolValue) * 10;
-  const crvEmissionApr = (crvEmission / poolValue) * 70;
+  const crvUnderlyingApr = crvEmission / poolValue;
+  const crvEmissionApr = (crvEmission / poolValue) * fees;
 
   // calculate CVX rewards
   const cvxEmission = cvxReward * cvxPrice.usd * scalar;
-  const cvxUnderlyingApr = (cvxEmission / poolValue) * 10;
-  const cvxEmissionApr = (cvxEmission / poolValue) * 70;
+  const cvxUnderlyingApr = cvxEmission / poolValue;
+  const cvxEmissionApr = (cvxEmission / poolValue) * fees;
 
   // emission tokens
   const bcvxCRV = getToken(TOKENS.BCVXCRV);
-  const bCVX = getToken(TOKENS.BCVX);
+  const bCVX = getToken(TOKENS.BICVX);
 
   // create value sources
   const totalUnderlyingApr = crvUnderlyingApr + cvxUnderlyingApr;
@@ -220,8 +223,8 @@ async function getVaultSources(chain: Chain, settDefinition: SettDefinition): Pr
     const rewardTokenPrice = await getPrice(rewardToken.address);
     const rewardAmount = formatBalance(await virtualRewards.currentRewards(), rewardToken.decimals);
     const rewardEmission = rewardAmount * rewardTokenPrice.usd * scalar;
-    const rewardApr = (rewardEmission / poolValue) * 80;
-    const rewardSource = createValueSource(`${rewardToken.symbol} Rewards`, uniformPerformance(rewardApr));
+    const rewardApr = (rewardEmission / poolValue) * fees;
+    const rewardSource = createValueSource(`Extra ${rewardToken.symbol} Rewards`, uniformPerformance(rewardApr));
     cachedExtraSources.push(valueSourceToCachedValueSource(rewardSource, settDefinition, tokenEmission(rewardToken)));
   }
 
