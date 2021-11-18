@@ -4,6 +4,7 @@ import { BLOCKNATIVE_API_KEY } from '../../config/constants';
 import { Stage } from '../../config/enums/stage.enum';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
+import { defaultGasPrice } from '../../gas/gas.utils';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { getCurveSettTokenBalance } from '../../protocols/strategies/convex.strategy';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
@@ -32,26 +33,30 @@ export class Ethereum extends Chain {
   }
 
   async getGasPrices(): Promise<GasPrices> {
-    const prices = await fetch('https://api.blocknative.com/gasprices/blockprices', {
+    const response = await fetch('https://api.blocknative.com/gasprices/blockprices', {
       headers: { Authorization: BLOCKNATIVE_API_KEY },
     });
-    const result = await prices.json();
+    if (!response.ok) {
+      return defaultGasPrice(this);
+    }
+    const defaultPriorityFee = 2;
+    const result = await response.json();
     const blockPrices = result.blockPrices[0];
     return {
       rapid: {
-        maxFeePerGas: blockPrices.estimatedPrices[0].maxFeePerGas,
+        maxFeePerGas: defaultPriorityFee,
         maxPriorityFeePerGas: blockPrices.estimatedPrices[0].maxPriorityFeePerGas,
       },
       fast: {
-        maxFeePerGas: blockPrices.estimatedPrices[1].maxFeePerGas,
+        maxFeePerGas: defaultPriorityFee,
         maxPriorityFeePerGas: blockPrices.estimatedPrices[1].maxPriorityFeePerGas,
       },
       standard: {
-        maxFeePerGas: blockPrices.estimatedPrices[2].maxFeePerGas,
+        maxFeePerGas: defaultPriorityFee,
         maxPriorityFeePerGas: blockPrices.estimatedPrices[2].maxPriorityFeePerGas,
       },
       slow: {
-        maxFeePerGas: blockPrices.estimatedPrices[3].maxFeePerGas,
+        maxFeePerGas: defaultPriorityFee,
         maxPriorityFeePerGas: blockPrices.estimatedPrices[3].maxPriorityFeePerGas,
       },
     };
