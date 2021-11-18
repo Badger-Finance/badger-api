@@ -79,6 +79,7 @@ const cvxPoolId: PoolMap = {
   [TOKENS.CRV_OBTC]: 20,
   [TOKENS.CRV_TRICRYPTO]: 37,
   [TOKENS.CRV_TRICRYPTO2]: 38,
+  [TOKENS.CRV_IBBTC]: 53,
 };
 
 const nonRegistryPools: ContractRegistry = {
