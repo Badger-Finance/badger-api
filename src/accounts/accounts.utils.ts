@@ -49,6 +49,7 @@ export async function getUserAccounts(chain: Chain, accounts: string[]): Promise
 
 export async function getBoostFile(chain: Chain): Promise<BoostData | null> {
   if (!chain.rewardsLogger || !chain.badgerTree) {
+    console.log(`Cannot find boost file for ${chain.network}`);
     return null;
   }
   const boostFile = await getObject(REWARD_DATA, `badger-boosts-${parseInt(chain.chainId, 16)}.json`);
