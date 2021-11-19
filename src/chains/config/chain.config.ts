@@ -90,20 +90,20 @@ export abstract class Chain {
       const defaultPriorityFee = 2;
       return {
         rapid: {
-          maxFeePerGas: defaultPriorityFee,
-          maxPriorityFeePerGas: gasPrice * 2,
+          maxPriorityFeePerGas: defaultPriorityFee,
+          maxFeePerGas: gasPrice * 2,
         },
         fast: {
-          maxFeePerGas: defaultPriorityFee,
-          maxPriorityFeePerGas: gasPrice * 1.9,
+          maxPriorityFeePerGas: defaultPriorityFee,
+          maxFeePerGas: gasPrice * 1.8,
         },
         standard: {
-          maxFeePerGas: defaultPriorityFee,
-          maxPriorityFeePerGas: gasPrice * 1.8,
+          maxPriorityFeePerGas: defaultPriorityFee,
+          maxFeePerGas: gasPrice * 1.6,
         },
         slow: {
-          maxFeePerGas: defaultPriorityFee,
-          maxPriorityFeePerGas: gasPrice * 1.7,
+          maxPriorityFeePerGas: defaultPriorityFee,
+          maxFeePerGas: gasPrice * 1.4,
         },
       };
     }

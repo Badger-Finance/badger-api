@@ -36,10 +36,12 @@ export class Ethereum extends Chain {
       headers: { Authorization: BLOCKNATIVE_API_KEY },
     });
     if (!response.ok) {
+      console.log(await response.text());
       return this.defaultGasPrice();
     }
     const defaultPriorityFee = 2;
     const result = await response.json();
+    console.log(result);
     const blockPrices = result.blockPrices[0];
     return {
       rapid: {
