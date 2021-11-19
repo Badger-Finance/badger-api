@@ -52,9 +52,6 @@ export async function getUserBoostMultipliers(
       }
     }
   }
-  if (crossChainBoosts['0x44fc4B69Bd1c1287c15d2914A6d81b91A5a31041']) {
-    console.log(crossChainBoosts);
-  }
   return crossChainBoosts;
 }
 
@@ -71,11 +68,6 @@ async function getChainUserBoosts(chain: Chain, addresses: string[]): Promise<Re
     const boostMultipliers: Record<string, CachedBoostMultiplier[]> = {};
     for (const address of addresses) {
       let boostData = boostFile.userData[address] || boostFile.userData[address.toLowerCase()];
-      if (address === '0x44fc4B69Bd1c1287c15d2914A6d81b91A5a31041') {
-        console.log(boostFile.userData[address]);
-        console.log(boostFile.userData[address.toLowerCase()]);
-        console.log(boostData);
-      }
       if (!boostData) {
         boostData = {
           boost: 1,

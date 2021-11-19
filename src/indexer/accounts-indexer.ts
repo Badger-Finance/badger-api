@@ -119,9 +119,6 @@ export async function refreshAccountSettBalances(chains: Chain[], batchAccounts:
 
 async function refreshAccountBoostInfo(chains: Chain[], batchAccounts: AccountMap) {
   const addresses = Object.keys(batchAccounts);
-  if (batchAccounts['0x44fc4B69Bd1c1287c15d2914A6d81b91A5a31041']) {
-    console.log(batchAccounts['0x44fc4B69Bd1c1287c15d2914A6d81b91A5a31041']);
-  }
   const userBoostMultipliers = await getUserBoostMultipliers(chains, addresses);
   Object.entries(userBoostMultipliers).forEach((e) => {
     const [key, value] = e;
@@ -174,8 +171,8 @@ export async function refreshUserAccounts(event: AccountIndexEvent) {
   console.log(`refreshUserAccounts mode: ${mode}`);
   console.time(`refreshUserAccounts mode: ${mode}`);
   const chains = loadChains();
-  const allAccounts = await Promise.all(chains.map((chain) => getAccounts(chain)));
-  const accounts = [...new Set(...allAccounts)];
+  const allAccounts = await Promise.all(chains.map(async (chain) => getAccounts(chain)));
+  const accounts = [...new Set(allAccounts.flatMap((a) => a))];
   await refreshAccounts(chains, mode, accounts);
   console.timeEnd(`refreshUserAccounts mode: ${mode}`);
 }
