@@ -171,8 +171,8 @@ export async function refreshUserAccounts(event: AccountIndexEvent) {
   console.log(`refreshUserAccounts mode: ${mode}`);
   console.time(`refreshUserAccounts mode: ${mode}`);
   const chains = loadChains();
-  const allAccounts = await Promise.all(chains.map((chain) => getAccounts(chain)));
-  const accounts = [...new Set(...allAccounts)];
+  const allAccounts = await Promise.all(chains.map(async (chain) => getAccounts(chain)));
+  const accounts = [...new Set(allAccounts.flatMap((a) => a))];
   await refreshAccounts(chains, mode, accounts);
   console.timeEnd(`refreshUserAccounts mode: ${mode}`);
 }
