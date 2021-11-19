@@ -43,20 +43,20 @@ export class Ethereum extends Chain {
     const blockPrices = result.blockPrices[0];
     return {
       rapid: {
-        maxFeePerGas: defaultPriorityFee,
-        maxPriorityFeePerGas: blockPrices.estimatedPrices[0].maxPriorityFeePerGas,
+        maxPriorityFeePerGas: defaultPriorityFee,
+        maxFeePerGas: blockPrices.estimatedPrices[0].maxFeePerGas,
       },
       fast: {
-        maxFeePerGas: defaultPriorityFee,
-        maxPriorityFeePerGas: blockPrices.estimatedPrices[1].maxPriorityFeePerGas,
+        maxPriorityFeePerGas: defaultPriorityFee,
+        maxFeePerGas: blockPrices.estimatedPrices[1].maxFeePerGas,
       },
       standard: {
-        maxFeePerGas: defaultPriorityFee,
-        maxPriorityFeePerGas: blockPrices.estimatedPrices[2].maxPriorityFeePerGas,
+        maxPriorityFeePerGas: defaultPriorityFee,
+        maxFeePerGas: blockPrices.estimatedPrices[2].maxFeePerGas,
       },
       slow: {
-        maxFeePerGas: defaultPriorityFee,
-        maxPriorityFeePerGas: blockPrices.estimatedPrices[3].maxPriorityFeePerGas,
+        maxPriorityFeePerGas: defaultPriorityFee,
+        maxFeePerGas: blockPrices.estimatedPrices[3].maxFeePerGas,
       },
     };
   }
