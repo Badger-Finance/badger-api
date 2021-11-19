@@ -120,13 +120,10 @@ export async function refreshAccountSettBalances(chains: Chain[], batchAccounts:
 async function refreshAccountBoostInfo(chains: Chain[], batchAccounts: AccountMap) {
   const addresses = Object.keys(batchAccounts);
   const userBoostMultipliers = await getUserBoostMultipliers(chains, addresses);
-  await Promise.all(
-    addresses.map(async (acc) => {
-      const account = batchAccounts[acc];
-      account.multipliers = userBoostMultipliers[acc];
-      batchAccounts[acc] = account;
-    }),
-  );
+  Object.entries(userBoostMultipliers).forEach((e) => {
+    const [key, value] = e;
+    batchAccounts[key].multipliers = value;
+  });
 }
 
 async function batchRefreshAccounts(

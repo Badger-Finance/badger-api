@@ -2,7 +2,7 @@ import NodeCache from 'node-cache';
 import { loadChains } from '../chains/chain';
 import { ChainGasPrices } from './interfaces/gas-prices.interface';
 
-const gasCache = new NodeCache({ stdTTL: 15, checkperiod: 17 });
+const gasCache = new NodeCache({ stdTTL: 25, checkperiod: 27 });
 
 export async function getGasCache(): Promise<ChainGasPrices> {
   const cachedGasPrices = gasCache.get<ChainGasPrices>('gasPrices');
