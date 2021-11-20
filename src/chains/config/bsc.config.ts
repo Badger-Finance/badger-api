@@ -30,7 +30,7 @@ export class BinanceSmartChain extends Chain {
 
 export const bscSetts: SettDefinition[] = [
   {
-    name: 'Pancakeswap BNB/BTCB',
+    name: 'BNB/BTCB',
     createdBlock: 5516404,
     depositToken: TOKENS.PANCAKE_BNB_BTCB,
     deprecated: true,
@@ -39,7 +39,7 @@ export const bscSetts: SettDefinition[] = [
     protocol: Protocol.Pancakeswap,
   },
   {
-    name: 'Pancakeswap bBADGER/BTCB',
+    name: 'bBADGER/BTCB',
     createdBlock: 5712803,
     depositToken: TOKENS.PANCAKE_BBADGER_BTCB,
     deprecated: true,
@@ -48,7 +48,7 @@ export const bscSetts: SettDefinition[] = [
     protocol: Protocol.Pancakeswap,
   },
   {
-    name: 'Pancakeswap bDIGG/BTCB',
+    name: 'bDIGG/BTCB',
     createdBlock: 5712807,
     depositToken: TOKENS.PANCAKE_BDIGG_BTCB,
     deprecated: true,

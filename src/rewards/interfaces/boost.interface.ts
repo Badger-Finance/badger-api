@@ -1,10 +1,8 @@
-import { BoostMultipliers } from './boost-multipliers.interface';
-
 export interface Boost {
   boost: number;
   stakeRatio: number;
   nftMultiplier: number;
-  multipliers: BoostMultipliers;
+  multipliers: Record<string, number>;
   nativeBalance: number;
   nonNativeBalance: number;
 }
