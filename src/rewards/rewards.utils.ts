@@ -14,7 +14,6 @@ import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { getCachedSett } from '../setts/setts.utils';
 import { Token } from '../tokens/interfaces/token.interface';
 import { getToken } from '../tokens/tokens.utils';
-import { BoostMultipliers } from './interfaces/boost-multipliers.interface';
 import { CachedBoostMultiplier } from './interfaces/cached-boost-multiplier.interface';
 import { RewardMerkleDistribution } from './interfaces/merkle-distributor.interface';
 import { AccountsService } from '../accounts/accounts.service';
@@ -61,13 +60,13 @@ async function getChainUserBoosts(chain: Chain, addresses: string[]): Promise<Re
     if (!boostFile) {
       return {};
     }
-    const defaultMultipliers: BoostMultipliers = {};
+    const defaultMultipliers: Record<string, number> = {};
     Object.keys(boostFile.multiplierData).forEach(
       (key) => (defaultMultipliers[key] = boostFile.multiplierData[key].min),
     );
     const boostMultipliers: Record<string, CachedBoostMultiplier[]> = {};
     for (const address of addresses) {
-      let boostData = boostFile.userData[address] || boostFile.userData[address.toLowerCase()];
+      let boostData = boostFile.userData[address];
       if (!boostData) {
         boostData = {
           boost: 1,
@@ -97,15 +96,12 @@ async function getChainUserBoosts(chain: Chain, addresses: string[]): Promise<Re
       }
       boostMultipliers[address] = Object.entries(boostData.multipliers)
         .filter((e) => !isNaN(e[1]))
-        .map(
-          (entry) => (
-            new CachedBoostMultiplier(),
-            {
-              network: chain.network,
-              address: entry[0],
-              multiplier: entry[1],
-            }
-          ),
+        .map((entry) =>
+          Object.assign(new CachedBoostMultiplier(), {
+            network: chain.network,
+            address: entry[0],
+            multiplier: entry[1],
+          }),
         );
     }
     return boostMultipliers;
