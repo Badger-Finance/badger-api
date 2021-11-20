@@ -50,9 +50,6 @@ export async function getUserBoostMultipliers(
       }
     }
   }
-  if (crossChainBoosts['0x44fc4B69Bd1c1287c15d2914A6d81b91A5a31041']) {
-    console.log(crossChainBoosts['0x44fc4B69Bd1c1287c15d2914A6d81b91A5a31041']);
-  }
   return crossChainBoosts;
 }
 
