@@ -1,5 +1,6 @@
 import BadgerSDK, { Network } from '@badger-dao/sdk';
-import { cachedAccountToAccount, getBoostFile, getCachedAccount, getCachedBoost } from '../accounts/accounts.utils';
+import { AccountsService } from '../accounts/accounts.service';
+import { getBoostFile, getCachedAccount, getCachedBoost } from '../accounts/accounts.utils';
 import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
 import { ONE_YEAR_SECONDS, REWARD_DATA } from '../config/constants';
@@ -138,7 +139,7 @@ export async function getRewardEmission(chain: Chain, settDefinition: SettDefini
       getCachedAccount('0xD0A7A8B98957b9CD3cFB9c0425AbE44551158e9e'), // treasury vault
     ]);
     const transformedAccounts = await Promise.all(
-      blacklistedAccounts.map(async (a) => cachedAccountToAccount(chain, a)),
+      blacklistedAccounts.map(async (a) => AccountsService.cachedAccountToAccount(chain, a)),
     );
     ignoredTVL = transformedAccounts
       .map((a) => a.data[sett.settToken])
