@@ -19,15 +19,13 @@ Object {
 exports[`AccountsController GET /v2/accounts with a participant account returns a cached account response 1`] = `
 Object {
   "address": "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484",
-  "boost": 2000,
-  "boostRank": 3,
+  "boost": 0,
   "claimableBalances": Object {},
   "data": Object {},
   "earnedValue": 0,
   "multipliers": Object {},
-  "nativeBalance": 2033222,
-  "nonNativeBalance": 23129,
-  "stakeRatio": 1,
+  "nativeBalance": 0,
+  "nonNativeBalance": 0,
   "value": 0,
 }
 `;

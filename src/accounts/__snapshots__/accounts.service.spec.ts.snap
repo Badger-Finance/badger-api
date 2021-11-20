@@ -4,7 +4,7 @@ exports[`charts.service getAccount returns the expected account 1`] = `
 Object {
   "address": "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484",
   "boost": 2000,
-  "boostRank": 3,
+  "boostRank": undefined,
   "claimableBalances": Object {},
   "data": Object {
     "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484": Object {

@@ -37,7 +37,7 @@ export class Polygon extends Chain {
 
 export const maticSetts: SettDefinition[] = [
   {
-    name: 'Sushiswap Wrapped BTC/ibBTC',
+    name: 'Wrapped BTC/ibBTC',
     settToken: TOKENS.BMATIC_SUSHI_IBBTC_WBTC,
     depositToken: TOKENS.MATIC_SUSHI_IBBTC_WBTC,
     createdBlock: 17580716,
@@ -45,7 +45,7 @@ export const maticSetts: SettDefinition[] = [
     strategy: '0xDed61Bd8a8c90596D8A6Cf0e678dA04036146963',
   },
   {
-    name: 'Quickswap Wrapped BTC/USDC',
+    name: 'Wrapped BTC/USDC',
     settToken: TOKENS.BMATIC_QUICK_USDC_WBTC,
     depositToken: TOKENS.MATIC_QUICK_USDC_WBTC,
     createdBlock: 17687004,
@@ -53,7 +53,7 @@ export const maticSetts: SettDefinition[] = [
     strategy: '0x809990849D53a5109e0cb9C446137793B9f6f1Eb',
   },
   {
-    name: 'Curve amWBTC/renBTC',
+    name: 'amWBTC/renBTC',
     settToken: TOKENS.BMATIC_CRV_AMWBTC,
     depositToken: TOKENS.MATIC_CRV_AMWBTC,
     getTokenBalance: getCurveSettTokenBalance,
