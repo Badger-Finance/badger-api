@@ -23,7 +23,7 @@ export class AccountsService {
     }
     await refreshAccounts([chain], IndexMode.BalanceData, [checksumAddress]);
     const cachedAccount = await getCachedAccount(checksumAddress);
-    return this.cachedAccountToAccount(chain, cachedAccount);
+    return AccountsService.cachedAccountToAccount(chain, cachedAccount);
   }
 
   async getAllUnclaimed(chain: Chain, page = 1): Promise<UnclaimedRewards> {
@@ -54,8 +54,7 @@ export class AccountsService {
     };
     return returnValue;
   }
-
-  private async cachedAccountToAccount(chain: Chain, cachedAccount: CachedAccount): Promise<Account> {
+  static async cachedAccountToAccount(chain: Chain, cachedAccount: CachedAccount): Promise<Account> {
     const { network } = chain;
     const balances = cachedAccount.balances
       .filter((bal) => !network || bal.network === network)

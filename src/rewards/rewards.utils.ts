@@ -1,5 +1,6 @@
 import BadgerSDK, { Network } from '@badger-dao/sdk';
-import { getBoostFile, getCachedBoost } from '../accounts/accounts.utils';
+import { AccountsService } from '../accounts/accounts.service';
+import { getBoostFile, getCachedAccount, getCachedBoost } from '../accounts/accounts.utils';
 import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
 import { ONE_YEAR_SECONDS, REWARD_DATA } from '../config/constants';
@@ -17,7 +18,6 @@ import { getToken } from '../tokens/tokens.utils';
 import { BoostMultipliers } from './interfaces/boost-multipliers.interface';
 import { CachedBoostMultiplier } from './interfaces/cached-boost-multiplier.interface';
 import { RewardMerkleDistribution } from './interfaces/merkle-distributor.interface';
-import { AccountsService } from '../accounts/accounts.service';
 
 export async function getTreeDistribution(chain: Chain): Promise<RewardMerkleDistribution | null> {
   if (!chain.badgerTree) {
@@ -129,6 +129,24 @@ export async function getRewardEmission(chain: Chain, settDefinition: SettDefini
   await sdk.ready();
   const activeSchedules = await sdk.rewards.loadActiveSchedules(settToken);
 
+  // Badger controlled addresses are blacklisted from receiving rewards. We only dogfood on ETH
+  let ignoredTVL = 0;
+  if (chain.network === Network.Ethereum) {
+    const blacklistedAccounts = await Promise.all([
+      getCachedAccount('0xB65cef03b9B89f99517643226d76e286ee999e77'), // dev multisig
+      getCachedAccount('0x86cbD0ce0c087b482782c181dA8d191De18C8275'), // tech ops multisig
+      getCachedAccount('0x042B32Ac6b453485e357938bdC38e0340d4b9276'), // treasury ops multisig
+      getCachedAccount('0xD0A7A8B98957b9CD3cFB9c0425AbE44551158e9e'), // treasury vault
+    ]);
+    const transformedAccounts = await Promise.all(
+      blacklistedAccounts.map(async (a) => AccountsService.cachedAccountToAccount(chain, a)),
+    );
+    ignoredTVL = transformedAccounts
+      .map((a) => a.data[sett.settToken])
+      .map((s) => (s ? s.value : 0))
+      .reduce((total, value) => total + value, 0);
+  }
+
   /**
    * Calculate rewards emission percentages:
    *   - P: Price of Token
@@ -149,31 +167,13 @@ export async function getRewardEmission(chain: Chain, settDefinition: SettDefini
    *
    */
 
-  // Badger controlled addresses are blacklisted from receiving rewards. We only dogfood on ETH
-  let BLACKLISTED_TVL = 0;
-  if (chain.chainId === '1') {
-    const accountService = new AccountsService();
-    const blacklistedAccounts = await Promise.all([
-      accountService.getAccount(chain, '0xB65cef03b9B89f99517643226d76e286ee999e77'), // dev multisig
-      accountService.getAccount(chain, '0x86cbD0ce0c087b482782c181dA8d191De18C8275'), // tech ops multisig
-      accountService.getAccount(chain, '0x042B32Ac6b453485e357938bdC38e0340d4b9276'), // treasury ops multisig
-      accountService.getAccount(chain, '0xD0A7A8B98957b9CD3cFB9c0425AbE44551158e9e'), // treasury vault
-    ]);
-
-    const initial = 0;
-    BLACKLISTED_TVL = blacklistedAccounts.reduce((pv, cv) => {
-      return pv + cv.data[settToken].balance;
-    }, initial);
-  }
-
   const emissionSources = [];
   for (const schedule of activeSchedules) {
     const [price, token] = await Promise.all([getPrice(schedule.token), getToken(schedule.token)]);
     const durationScalar = ONE_YEAR_SECONDS / (schedule.end - schedule.start);
     const yearlyEmission = price.usd * schedule.amount * durationScalar;
-    const apr = (yearlyEmission / (sett.value - BLACKLISTED_TVL)) * 100;
+    const apr = (yearlyEmission / (sett.value - ignoredTVL)) * 100;
     let proRataAPR = apr;
-    // todo: atm, only native badger on eth has a pro rata split for ibbtc vault - will need a flexible native badger token per chain
     if (sett.boost.enabled && token.address === chain.getBadgerTokenAddress()) {
       const boostedAPR = (sett.boost.weight / 10_000) * proRataAPR;
       proRataAPR = proRataAPR - boostedAPR;

@@ -39,7 +39,7 @@ export class Arbitrum extends Chain {
 
 export const arbitrumSetts: SettDefinition[] = [
   {
-    name: 'Sushiswap Wrapped Ether/Sushi Helper',
+    name: 'Wrapped Ether/Sushi Helper',
     settToken: TOKENS.BARB_SUSHI_WETH_SUSHI,
     depositToken: TOKENS.ARB_SUSHI_WETH_SUSHI,
     createdBlock: 13163959,
@@ -47,7 +47,7 @@ export const arbitrumSetts: SettDefinition[] = [
     strategy: '0x86f772C82914f5bFD168f99e208d0FC2C371e9C2',
   },
   {
-    name: 'Sushiswap Wrapped BTC/Wrapped ETH',
+    name: 'Wrapped BTC/Wrapped ETH',
     settToken: TOKENS.BARB_SUSHI_WETH_WBTC,
     depositToken: TOKENS.ARB_SUSHI_WETH_WBTC,
     createdBlock: 13163959,
@@ -55,7 +55,7 @@ export const arbitrumSetts: SettDefinition[] = [
     strategy: '0xA6827f0f14D0B83dB925B616d820434697328c22',
   },
   {
-    name: 'Curve renBTC/wBTC',
+    name: 'renBTC/wBTC',
     settToken: TOKENS.BARB_CRV_RENBTC,
     depositToken: TOKENS.ARB_CRV_RENBTC,
     getTokenBalance: getCurveSettTokenBalance,
@@ -63,7 +63,7 @@ export const arbitrumSetts: SettDefinition[] = [
     protocol: Protocol.Curve,
   },
   {
-    name: 'Curve Tricrypto',
+    name: 'Tricrypto',
     settToken: TOKENS.BARB_CRV_TRICRYPTO,
     depositToken: TOKENS.ARB_CRV_TRICRYPTO,
     getTokenBalance: getCurveSettTokenBalance,
@@ -71,7 +71,7 @@ export const arbitrumSetts: SettDefinition[] = [
     protocol: Protocol.Curve,
   },
   {
-    name: 'Curve Tricrypto Light',
+    name: 'Tricrypto Light',
     settToken: TOKENS.BARB_CRV_TRICRYPTO_LITE,
     depositToken: TOKENS.ARB_CRV_TRICRYPTO,
     getTokenBalance: getCurveSettTokenBalance,
@@ -81,28 +81,28 @@ export const arbitrumSetts: SettDefinition[] = [
     protocol: Protocol.Curve,
   },
   {
-    name: 'Swapr Swapr/Wrapped ETH',
+    name: 'Swapr/Wrapped ETH',
     settToken: TOKENS.BARB_SWP_SWPR_WETH,
     depositToken: TOKENS.ARB_SWP_SWPR_WETH,
     createdBlock: 13315350,
     protocol: Protocol.Swapr,
   },
   {
-    name: 'Swapr Wrapped BTC/Wrapped ETH',
+    name: 'Wrapped BTC/Wrapped ETH',
     settToken: TOKENS.BARB_SWP_WBTC_WETH,
     depositToken: TOKENS.ARB_SWP_WBTC_WETH,
     createdBlock: 13315350,
     protocol: Protocol.Swapr,
   },
   {
-    name: 'Swapr Badger/Wrapped ETH',
+    name: 'Badger/Wrapped ETH',
     settToken: TOKENS.BARB_SWP_BADGER_WETH,
     depositToken: TOKENS.ARB_SWP_BADGER_WETH,
     createdBlock: 2188169,
     protocol: Protocol.Swapr,
   },
   {
-    name: 'Swapr ibBTC/Wrapped ETH',
+    name: 'ibBTC/Wrapped ETH',
     settToken: TOKENS.BARB_SWP_IBBTC_WETH,
     depositToken: TOKENS.ARB_SWP_IBBTC_WETH,
     createdBlock: 2188169,
