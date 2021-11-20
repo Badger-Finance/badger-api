@@ -143,7 +143,7 @@ export async function getRewardEmission(chain: Chain, settDefinition: SettDefini
     );
     ignoredTVL = transformedAccounts
       .map((a) => a.data[sett.settToken])
-      .map((s) => s.value)
+      .map((s) => (s ? s.value : 0))
       .reduce((total, value) => total + value, 0);
   }
 
