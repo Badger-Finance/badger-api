@@ -37,7 +37,9 @@ export class SettsService {
     sett.value = sett.tokens.reduce((total, balance) => (total += balance.value), 0);
     sett.sources = sources
       .filter((source) => source.apr >= 0.001)
-      .filter((source) => source.name !== VAULT_SOURCE || sett.state !== SettState.Deprecated);
+      .filter(
+        (source) => source.name !== VAULT_SOURCE || (sett.state !== SettState.Deprecated && !settDefinition.deprecated),
+      );
     sett.apr = sett.sources.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
     sett.protocol = settDefinition.protocol ?? Protocol.Badger;
 

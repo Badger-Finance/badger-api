@@ -101,12 +101,13 @@ export const ethSetts: SettDefinition[] = [
     depositToken: TOKENS.UNI_BADGER_WBTC,
     settToken: TOKENS.BUNI_BADGER_WBTC,
     protocol: Protocol.Uniswap,
+    deprecated: true,
   },
   {
     name: 'Wrapped BTC/Digg',
     createdBlock: 11680833,
     depositToken: TOKENS.UNI_DIGG_WBTC,
-    deprecated: true,
+
     state: SettState.Deprecated,
     settToken: TOKENS.BUNI_DIGG_WBTC,
     protocol: Protocol.Uniswap,
@@ -141,7 +142,6 @@ export const ethSetts: SettDefinition[] = [
   {
     name: 'Badger',
     createdBlock: 11380871,
-    deprecated: true,
     depositToken: TOKENS.BADGER,
     settToken: TOKENS.BBADGER,
     state: SettState.Deprecated,
@@ -209,7 +209,7 @@ export const ethSetts: SettDefinition[] = [
     name: 'Tricrypto',
     createdBlock: 12679976,
     depositToken: TOKENS.CRV_TRICRYPTO,
-    deprecated: true,
+
     getTokenBalance: getCurveSettTokenBalance,
     settToken: TOKENS.BCRV_TRICRYPTO,
     state: SettState.Deprecated,
