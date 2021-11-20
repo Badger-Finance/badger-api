@@ -1,4 +1,5 @@
 import BadgerSDK, { Network } from '@badger-dao/sdk';
+import { AccountsService } from '../accounts/accounts.service';
 import { getBoostFile, getCachedAccount, getCachedBoost } from '../accounts/accounts.utils';
 import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
@@ -14,6 +15,7 @@ import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { getCachedSett } from '../setts/setts.utils';
 import { Token } from '../tokens/interfaces/token.interface';
 import { getToken } from '../tokens/tokens.utils';
+import { BoostMultipliers } from './interfaces/boost-multipliers.interface';
 import { CachedBoostMultiplier } from './interfaces/cached-boost-multiplier.interface';
 import { RewardMerkleDistribution } from './interfaces/merkle-distributor.interface';
 
@@ -59,13 +61,13 @@ async function getChainUserBoosts(chain: Chain, addresses: string[]): Promise<Re
     if (!boostFile) {
       return {};
     }
-    const defaultMultipliers: Record<string, number> = {};
+    const defaultMultipliers: BoostMultipliers = {};
     Object.keys(boostFile.multiplierData).forEach(
       (key) => (defaultMultipliers[key] = boostFile.multiplierData[key].min),
     );
     const boostMultipliers: Record<string, CachedBoostMultiplier[]> = {};
     for (const address of addresses) {
-      let boostData = boostFile.userData[address];
+      let boostData = boostFile.userData[address] || boostFile.userData[address.toLowerCase()];
       if (!boostData) {
         boostData = {
           boost: 1,
@@ -95,12 +97,15 @@ async function getChainUserBoosts(chain: Chain, addresses: string[]): Promise<Re
       }
       boostMultipliers[address] = Object.entries(boostData.multipliers)
         .filter((e) => !isNaN(e[1]))
-        .map((entry) =>
-          Object.assign(new CachedBoostMultiplier(), {
-            network: chain.network,
-            address: entry[0],
-            multiplier: entry[1],
-          }),
+        .map(
+          (entry) => (
+            new CachedBoostMultiplier(),
+            {
+              network: chain.network,
+              address: entry[0],
+              multiplier: entry[1],
+            }
+          ),
         );
     }
     return boostMultipliers;
@@ -133,7 +138,13 @@ export async function getRewardEmission(chain: Chain, settDefinition: SettDefini
       getCachedAccount('0x042B32Ac6b453485e357938bdC38e0340d4b9276'), // treasury ops multisig
       getCachedAccount('0xD0A7A8B98957b9CD3cFB9c0425AbE44551158e9e'), // treasury vault
     ]);
-    ignoredTVL = blacklistedAccounts.map((a) => a.value).reduce((total, value) => total + value, 0);
+    const transformedAccounts = await Promise.all(
+      blacklistedAccounts.map(async (a) => AccountsService.cachedAccountToAccount(chain, a)),
+    );
+    ignoredTVL = transformedAccounts
+      .map((a) => a.data[sett.settToken])
+      .map((s) => s.value)
+      .reduce((total, value) => total + value, 0);
   }
 
   /**
@@ -155,6 +166,7 @@ export async function getRewardEmission(chain: Chain, settDefinition: SettDefini
    * will be used for yield calcuation.
    *
    */
+
   const emissionSources = [];
   for (const schedule of activeSchedules) {
     const [price, token] = await Promise.all([getPrice(schedule.token), getToken(schedule.token)]);

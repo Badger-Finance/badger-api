@@ -101,11 +101,13 @@ export const ethSetts: SettDefinition[] = [
     depositToken: TOKENS.UNI_BADGER_WBTC,
     settToken: TOKENS.BUNI_BADGER_WBTC,
     protocol: Protocol.Uniswap,
+    deprecated: true,
   },
   {
     name: 'Wrapped BTC/Digg',
     createdBlock: 11680833,
     depositToken: TOKENS.UNI_DIGG_WBTC,
+
     state: SettState.Deprecated,
     settToken: TOKENS.BUNI_DIGG_WBTC,
     protocol: Protocol.Uniswap,
@@ -207,6 +209,7 @@ export const ethSetts: SettDefinition[] = [
     name: 'Tricrypto',
     createdBlock: 12679976,
     depositToken: TOKENS.CRV_TRICRYPTO,
+
     getTokenBalance: getCurveSettTokenBalance,
     settToken: TOKENS.BCRV_TRICRYPTO,
     state: SettState.Deprecated,
@@ -244,7 +247,7 @@ export const ethSetts: SettDefinition[] = [
     protocol: Protocol.Convex,
   },
   {
-    name: 'mStable imBTC',
+    name: 'imBTC',
     createdBlock: 13418026,
     depositToken: TOKENS.IMBTC,
     settToken: TOKENS.BIMBTC,
@@ -252,7 +255,7 @@ export const ethSetts: SettDefinition[] = [
     strategy: '0x10D96b1Fd46Ce7cE092aA905274B8eD9d4585A6E',
   },
   {
-    name: 'mStable mhBTC',
+    name: 'mhBTC',
     createdBlock: 13418026,
     depositToken: TOKENS.MHBTC,
     settToken: TOKENS.BMHBTC,

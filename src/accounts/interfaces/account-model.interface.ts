@@ -2,6 +2,7 @@ import { Account, SettData } from '@badger-dao/sdk';
 import { Description, Example, Property, Title } from '@tsed/schema';
 import { ethers } from 'ethers';
 import { TOKENS } from '../../config/tokens.config';
+import { BoostMultipliers } from '../../rewards/interfaces/boost-multipliers.interface';
 import { getToken, mockBalance } from '../../tokens/tokens.utils';
 
 export class AccountModel implements Account {
@@ -31,7 +32,7 @@ export class AccountModel implements Account {
     [TOKENS.CVXCRV]: 0.88,
   })
   @Property()
-  public multipliers: Record<string, number>;
+  public multipliers: BoostMultipliers;
 
   @Title('value')
   @Description("Currency value of an account's current holdings")
