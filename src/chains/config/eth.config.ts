@@ -36,25 +36,28 @@ export class Ethereum extends Chain {
       headers: { Authorization: BLOCKNATIVE_API_KEY },
     });
     if (!response.ok) {
+      console.log(await response.text());
       return this.defaultGasPrice();
     }
+    const defaultPriorityFee = 2;
     const result = await response.json();
+    console.log(result);
     const blockPrices = result.blockPrices[0];
     return {
       rapid: {
-        maxPriorityFeePerGas: blockPrices.estimatedPrices[0].maxPriorityFeePerGas,
+        maxPriorityFeePerGas: defaultPriorityFee,
         maxFeePerGas: blockPrices.estimatedPrices[0].maxFeePerGas,
       },
       fast: {
-        maxPriorityFeePerGas: blockPrices.estimatedPrices[1].maxPriorityFeePerGas,
+        maxPriorityFeePerGas: defaultPriorityFee,
         maxFeePerGas: blockPrices.estimatedPrices[1].maxFeePerGas,
       },
       standard: {
-        maxPriorityFeePerGas: blockPrices.estimatedPrices[2].maxPriorityFeePerGas,
+        maxPriorityFeePerGas: defaultPriorityFee,
         maxFeePerGas: blockPrices.estimatedPrices[2].maxFeePerGas,
       },
       slow: {
-        maxPriorityFeePerGas: blockPrices.estimatedPrices[3].maxPriorityFeePerGas,
+        maxPriorityFeePerGas: defaultPriorityFee,
         maxFeePerGas: blockPrices.estimatedPrices[3].maxFeePerGas,
       },
     };
@@ -63,7 +66,7 @@ export class Ethereum extends Chain {
 
 export const ethSetts: SettDefinition[] = [
   {
-    name: 'renBTC/wBTC/sBTC',
+    name: 'Convex renBTC/wBTC/sBTC',
     createdBlock: 11380877,
     depositToken: TOKENS.CRV_SBTC,
     getTokenBalance: getCurveSettTokenBalance,
@@ -71,7 +74,7 @@ export const ethSetts: SettDefinition[] = [
     protocol: Protocol.Convex,
   },
   {
-    name: 'renBTC/wBTC',
+    name: 'Convex renBTC/wBTC',
     createdBlock: 11380872,
     depositToken: TOKENS.CRV_RENBTC,
     getTokenBalance: getCurveSettTokenBalance,
@@ -79,7 +82,7 @@ export const ethSetts: SettDefinition[] = [
     protocol: Protocol.Convex,
   },
   {
-    name: 'tBTC/sBTC',
+    name: 'Convex tBTC/sBTC',
     createdBlock: 11380878,
     depositToken: TOKENS.CRV_TBTC,
     getTokenBalance: getCurveSettTokenBalance,
@@ -87,7 +90,7 @@ export const ethSetts: SettDefinition[] = [
     protocol: Protocol.Convex,
   },
   {
-    name: 'Harvest renBTC/wBTC',
+    name: 'Curve.fi Harvest renBTC/wBTC',
     createdBlock: 11380939,
     depositToken: TOKENS.CRV_RENBTC,
     getTokenBalance: getCurveSettTokenBalance,
@@ -96,36 +99,37 @@ export const ethSetts: SettDefinition[] = [
     protocol: Protocol.Curve,
   },
   {
-    name: 'Wrapped BTC/Badger',
+    name: 'Uniswap Wrapped BTC/Badger',
     createdBlock: 11380883,
     depositToken: TOKENS.UNI_BADGER_WBTC,
     settToken: TOKENS.BUNI_BADGER_WBTC,
     protocol: Protocol.Uniswap,
   },
   {
-    name: 'Wrapped BTC/Digg',
+    name: 'Uniswap Wrapped BTC/Digg',
     createdBlock: 11680833,
     depositToken: TOKENS.UNI_DIGG_WBTC,
+    deprecated: true,
     state: SettState.Deprecated,
     settToken: TOKENS.BUNI_DIGG_WBTC,
     protocol: Protocol.Uniswap,
   },
   {
-    name: 'Wrapped BTC/Wrapped ETH',
+    name: 'Sushiswap Wrapped BTC/Wrapped ETH',
     createdBlock: 11539529,
     depositToken: TOKENS.SUSHI_ETH_WBTC,
     settToken: TOKENS.BSUSHI_ETH_WBTC,
     protocol: Protocol.Sushiswap,
   },
   {
-    name: 'Wrapped BTC/Badger',
+    name: 'Sushiswap Wrapped BTC/Badger',
     createdBlock: 11537600,
     depositToken: TOKENS.SUSHI_BADGER_WBTC,
     settToken: TOKENS.BSUSHI_BADGER_WBTC,
     protocol: Protocol.Sushiswap,
   },
   {
-    name: 'Wrapped BTC/Digg',
+    name: 'Sushiswap Wrapped BTC/Digg',
     createdBlock: 11681030,
     depositToken: TOKENS.SUSHI_DIGG_WBTC,
     settToken: TOKENS.BSUSHI_DIGG_WBTC,
@@ -140,6 +144,7 @@ export const ethSetts: SettDefinition[] = [
   {
     name: 'Badger',
     createdBlock: 11380871,
+    deprecated: true,
     depositToken: TOKENS.BADGER,
     settToken: TOKENS.BBADGER,
     state: SettState.Deprecated,
@@ -152,7 +157,7 @@ export const ethSetts: SettDefinition[] = [
     protocol: Protocol.Yearn,
   },
   {
-    name: 'Wrapped BTC/ibBTC',
+    name: 'Sushiswap Wrapped BTC/ibBTC',
     createdBlock: 12383984,
     depositToken: TOKENS.SUSHI_IBBTC_WBTC,
     settToken: TOKENS.BSUSHI_IBBTC_WBTC,
@@ -172,7 +177,7 @@ export const ethSetts: SettDefinition[] = [
     state: SettState.Experimental,
   },
   {
-    name: 'hBTC',
+    name: 'Convex hBTC',
     createdBlock: 12589485,
     depositToken: TOKENS.CRV_HBTC,
     getTokenBalance: getCurveSettTokenBalance,
@@ -180,7 +185,7 @@ export const ethSetts: SettDefinition[] = [
     protocol: Protocol.Convex,
   },
   {
-    name: 'pBTC',
+    name: 'Convex pBTC',
     createdBlock: 12589485,
     depositToken: TOKENS.CRV_PBTC,
     getTokenBalance: getCurveSettTokenBalance,
@@ -188,7 +193,7 @@ export const ethSetts: SettDefinition[] = [
     protocol: Protocol.Convex,
   },
   {
-    name: 'oBTC',
+    name: 'Convex oBTC',
     createdBlock: 12589485,
     depositToken: TOKENS.CRV_OBTC,
     getTokenBalance: getCurveSettTokenBalance,
@@ -196,7 +201,7 @@ export const ethSetts: SettDefinition[] = [
     protocol: Protocol.Convex,
   },
   {
-    name: 'bBTC',
+    name: 'Convex bBTC',
     createdBlock: 12589485,
     depositToken: TOKENS.CRV_BBTC,
     getTokenBalance: getCurveSettTokenBalance,
@@ -204,23 +209,24 @@ export const ethSetts: SettDefinition[] = [
     protocol: Protocol.Convex,
   },
   {
-    name: 'Tricrypto',
+    name: 'Convex Tricrypto',
     createdBlock: 12679976,
     depositToken: TOKENS.CRV_TRICRYPTO,
+    deprecated: true,
     getTokenBalance: getCurveSettTokenBalance,
     settToken: TOKENS.BCRV_TRICRYPTO,
     state: SettState.Deprecated,
     protocol: Protocol.Convex,
   },
   {
-    name: 'cvxCRV Helper',
+    name: 'Convex cvxCRV Helper',
     createdBlock: 12678302,
     depositToken: TOKENS.CVXCRV,
     settToken: TOKENS.BCVXCRV,
     protocol: Protocol.Convex,
   },
   {
-    name: 'CVX Helper',
+    name: 'Convex CVX Helper',
     createdBlock: 12678302,
     depositToken: TOKENS.CVX,
     settToken: TOKENS.BCVX,
@@ -236,7 +242,7 @@ export const ethSetts: SettDefinition[] = [
     state: SettState.Experimental,
   },
   {
-    name: 'Tricrypto2',
+    name: 'Convex Tricrypto2',
     createdBlock: 12966048,
     depositToken: TOKENS.CRV_TRICRYPTO2,
     getTokenBalance: getCurveSettTokenBalance,
@@ -260,14 +266,14 @@ export const ethSetts: SettDefinition[] = [
     strategy: '0x10D96b1Fd46Ce7cE092aA905274B8eD9d4585A6E',
   },
   {
-    name: 'Vote Locked CVX',
+    name: 'Convex Vote Locked CVX',
     createdBlock: 13239091,
     depositToken: TOKENS.CVX,
     settToken: TOKENS.BICVX,
     protocol: Protocol.Convex,
   },
   {
-    name: 'CVX / Vote Locked CVX',
+    name: 'Curve.fi CVX / Vote Locked CVX',
     createdBlock: 13006329,
     depositToken: TOKENS.CRV_CVXBVECVX,
     getTokenBalance: getCurveSettTokenBalance,
@@ -275,7 +281,7 @@ export const ethSetts: SettDefinition[] = [
     protocol: Protocol.Curve,
   },
   {
-    name: 'ibBTC / crvsBTC LP',
+    name: 'Curve.fi ibBTC / crvsBTC LP',
     createdBlock: 13590998,
     depositToken: TOKENS.CRV_IBBTC,
     getTokenBalance: getCurveSettTokenBalance,

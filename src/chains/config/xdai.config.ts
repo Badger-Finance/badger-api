@@ -31,7 +31,7 @@ export class xDai extends Chain {
 
 export const xDaiSetts: SettDefinition[] = [
   {
-    name: 'Wrapped BTC/Wrapped Ether',
+    name: 'Sushiswap Wrapped BTC/Wrapped Ether',
     settToken: TOKENS.BXDAI_SUSHI_WBTC_WETH,
     depositToken: TOKENS.XDAI_SUSHI_WBTC_WETH,
     createdBlock: 17199093,
