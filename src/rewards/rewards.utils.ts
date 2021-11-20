@@ -1,5 +1,5 @@
 import BadgerSDK, { Network } from '@badger-dao/sdk';
-import { getBoostFile, getCachedBoost } from '../accounts/accounts.utils';
+import { cachedAccountToAccount, getBoostFile, getCachedAccount, getCachedBoost } from '../accounts/accounts.utils';
 import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
 import { ONE_YEAR_SECONDS, REWARD_DATA } from '../config/constants';
@@ -128,6 +128,24 @@ export async function getRewardEmission(chain: Chain, settDefinition: SettDefini
   const sdk = new BadgerSDK(parseInt(chain.chainId, 16), chain.batchProvider);
   await sdk.ready();
   const activeSchedules = await sdk.rewards.loadActiveSchedules(settToken);
+
+  // Badger controlled addresses are blacklisted from receiving rewards. We only dogfood on ETH
+  let ignoredTVL = 0;
+  if (chain.network === Network.Ethereum) {
+    const blacklistedAccounts = await Promise.all([
+      getCachedAccount('0xB65cef03b9B89f99517643226d76e286ee999e77'), // dev multisig
+      getCachedAccount('0x86cbD0ce0c087b482782c181dA8d191De18C8275'), // tech ops multisig
+      getCachedAccount('0x042B32Ac6b453485e357938bdC38e0340d4b9276'), // treasury ops multisig
+      getCachedAccount('0xD0A7A8B98957b9CD3cFB9c0425AbE44551158e9e'), // treasury vault
+    ]);
+    const transformedAccounts = await Promise.all(
+      blacklistedAccounts.map(async (a) => cachedAccountToAccount(chain, a)),
+    );
+    ignoredTVL = transformedAccounts
+      .map((a) => a.data[sett.settToken])
+      .map((s) => s.value)
+      .reduce((total, value) => total + value, 0);
+  }
 
   /**
    * Calculate rewards emission percentages:
