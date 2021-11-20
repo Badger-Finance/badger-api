@@ -122,7 +122,9 @@ async function refreshAccountBoostInfo(chains: Chain[], batchAccounts: AccountMa
   const userBoostMultipliers = await getUserBoostMultipliers(chains, addresses);
   Object.entries(userBoostMultipliers).forEach((e) => {
     const [key, value] = e;
-    batchAccounts[key].multipliers = value;
+    const account = batchAccounts[key];
+    account.multipliers = value;
+    batchAccounts[key] = account;
   });
 }
 
