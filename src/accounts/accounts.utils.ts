@@ -1,4 +1,3 @@
-import { Network } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
 import { getDataMapper } from '../aws/dynamodb.utils';
