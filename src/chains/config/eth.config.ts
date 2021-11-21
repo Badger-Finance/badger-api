@@ -96,7 +96,7 @@ export const ethSetts: SettDefinition[] = [
     protocol: Protocol.Curve,
   },
   {
-    name: 'Wrapped BTC/Badger',
+    name: 'Uniswap Wrapped BTC/Badger',
     createdBlock: 11380883,
     depositToken: TOKENS.UNI_BADGER_WBTC,
     settToken: TOKENS.BUNI_BADGER_WBTC,
@@ -120,7 +120,7 @@ export const ethSetts: SettDefinition[] = [
     protocol: Protocol.Sushiswap,
   },
   {
-    name: 'Wrapped BTC/Badger',
+    name: 'Sushiswap Wrapped BTC/Badger',
     createdBlock: 11537600,
     depositToken: TOKENS.SUSHI_BADGER_WBTC,
     settToken: TOKENS.BSUSHI_BADGER_WBTC,
