@@ -104,10 +104,9 @@ export const ethSetts: SettDefinition[] = [
     deprecated: true,
   },
   {
-    name: 'Wrapped BTC/Digg',
+    name: 'Uniswap Wrapped BTC/Digg',
     createdBlock: 11680833,
     depositToken: TOKENS.UNI_DIGG_WBTC,
-
     state: SettState.Deprecated,
     settToken: TOKENS.BUNI_DIGG_WBTC,
     protocol: Protocol.Uniswap,
@@ -127,7 +126,7 @@ export const ethSetts: SettDefinition[] = [
     protocol: Protocol.Sushiswap,
   },
   {
-    name: 'Wrapped BTC/Digg',
+    name: 'Sushiswap Wrapped BTC/Digg',
     createdBlock: 11681030,
     depositToken: TOKENS.SUSHI_DIGG_WBTC,
     settToken: TOKENS.BSUSHI_DIGG_WBTC,
@@ -209,7 +208,6 @@ export const ethSetts: SettDefinition[] = [
     name: 'Tricrypto',
     createdBlock: 12679976,
     depositToken: TOKENS.CRV_TRICRYPTO,
-
     getTokenBalance: getCurveSettTokenBalance,
     settToken: TOKENS.BCRV_TRICRYPTO,
     state: SettState.Deprecated,
