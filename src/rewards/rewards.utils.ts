@@ -23,8 +23,7 @@ export async function getTreeDistribution(chain: Chain): Promise<RewardMerkleDis
   if (!chain.badgerTree) {
     return null;
   }
-  const appendChainId = chain.network != Network.Ethereum;
-  const fileName = `badger-tree${appendChainId ? `-${parseInt(chain.chainId, 16)}` : ''}.json`;
+  const fileName = `badger-tree-${parseInt(chain.chainId, 16)}.json`;
   const rewardFile = await getObject(REWARD_DATA, fileName);
   return JSON.parse(rewardFile.toString('utf-8'));
 }
