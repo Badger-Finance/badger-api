@@ -1,6 +1,6 @@
 import { Network } from '@badger-dao/sdk';
 import { NotFound, UnprocessableEntity } from '@tsed/exceptions';
-import { BigNumber, ethers } from 'ethers';
+import { ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
 import { Chain } from '../../chains/config/chain.config';
 import { UNISWAP_URL } from '../../config/constants';
@@ -19,12 +19,6 @@ interface LiquidityData {
   totalSupply: number;
 }
 
-interface GetReservesResponse {
-  _reserve0: BigNumber;
-  _reserve1: BigNumber;
-  _blockTimestampLast: number;
-}
-
 export async function getLiquidityData(chain: Chain, contract: string): Promise<LiquidityData> {
   const pairContract = UniV2__factory.connect(contract, chain.provider);
   const totalSupply = formatBalance(await pairContract.totalSupply());
@@ -32,7 +26,7 @@ export async function getLiquidityData(chain: Chain, contract: string): Promise<
   const token1 = await pairContract.token1();
   const token0Decimals = getToken(token0).decimals;
   const token1Decimals = getToken(token1).decimals;
-  const reserves: GetReservesResponse = await pairContract.getReserves();
+  const reserves = await pairContract.getReserves();
   const reserve0 = formatBalance(reserves._reserve0, token0Decimals);
   const reserve1 = formatBalance(reserves._reserve1, token1Decimals);
   return {
