@@ -1,4 +1,5 @@
 import { DataMapper, QueryIterator, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
+import { Network } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 import createMockInstance from 'jest-create-mock-instance';
 import { loadChains } from '../chains/chain';
@@ -8,6 +9,8 @@ import { Ethereum } from '../chains/config/eth.config';
 import { Polygon } from '../chains/config/matic.config';
 import { xDai } from '../chains/config/xdai.config';
 import { ONE_DAY_MS, ONE_MINUTE_MS, SAMPLE_DAYS } from '../config/constants';
+import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
+import { CachedBoost } from '../leaderboards/interface/cached-boost.interface';
 import { CachedSettSnapshot } from '../setts/interfaces/cached-sett-snapshot.interface';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { SettSnapshot } from '../setts/interfaces/sett-snapshot.interface';
@@ -106,4 +109,23 @@ export function setupChainGasPrices() {
   jest
     .spyOn(Polygon.prototype, 'getGasPrices')
     .mockImplementation(async () => ({ rapid: 38, fast: 33, standard: 33, slow: 33 }));
+}
+
+export function randomCachedBoosts(count: number): CachedBoost[] {
+  const boosts = [];
+  for (let i = 0; i < count; i += 1) {
+    boosts.push(
+      Object.assign(new CachedBoost(), {
+        leaderboard: `${Network.Ethereum}_${LeaderBoardType.BadgerBoost}`,
+        rank: i + 1,
+        address: TEST_ADDR,
+        boost: 2000 - i * 10,
+        nftMultiplier: 1,
+        stakeRatio: 1 - i * 0.01,
+        nativeBalance: 100000 / (i + 1),
+        nonNativeBalance: 250000 / (i + 1),
+      }),
+    );
+  }
+  return boosts;
 }
