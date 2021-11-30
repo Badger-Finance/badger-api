@@ -1,11 +1,6 @@
-import { Network } from '@badger-dao/sdk';
 import { PlatformTest } from '@tsed/common';
-import * as s3Utils from '../aws/s3.utils';
 import { Ethereum } from '../chains/config/eth.config';
-import { TOKENS } from '../config/tokens.config';
-import { BoostData } from '../rewards/interfaces/boost-data.interface';
-import { setupMapper, TEST_ADDR } from '../test/tests.utils';
-import { LeaderBoardType } from './enums/leaderboard-type.enum';
+import { randomCachedBoosts, setupMapper } from '../test/tests.utils';
 import { CachedBoost } from './interface/cached-boost.interface';
 import { LeaderBoardData } from './interface/leaderboard-data.interrface';
 import { LeaderBoardsService } from './leaderboards.service';
@@ -21,25 +16,6 @@ describe('leaderboards.service', () => {
   });
 
   afterEach(PlatformTest.reset);
-
-  function randomCachedBoosts(count: number): CachedBoost[] {
-    const boosts = [];
-    for (let i = 0; i < count; i += 1) {
-      boosts.push(
-        Object.assign(new CachedBoost(), {
-          leaderboard: `${Network.Ethereum}_${LeaderBoardType.BadgerBoost}`,
-          rank: i + 1,
-          address: TEST_ADDR,
-          boost: 2000 - i * 10,
-          nftMultiplier: 1,
-          stakeRatio: 1 - i * 0.01,
-          nativeBalance: 100000 / (i + 1),
-          nonNativeBalance: 250000 / (i + 1),
-        }),
-      );
-    }
-    return boosts;
-  }
 
   function expectedData(expected: CachedBoost[], total: number, page?: number, size?: number): LeaderBoardData {
     const pageNumber = page || 0;
@@ -119,71 +95,6 @@ describe('leaderboards.service', () => {
           expect(result).toMatchObject(expectedData(returned, saved.length, page, size));
         });
       });
-    });
-  });
-
-  describe('generateBoostsLeaderBoard', () => {
-    const seeded = randomCachedBoosts(2);
-    const addresses = Object.values(TOKENS);
-    const boostData: BoostData = {
-      userData: Object.fromEntries(
-        seeded.map((cachedBoost, i) => {
-          cachedBoost.address = addresses[i];
-          const boost = {
-            ...cachedBoost,
-            multipliers: {},
-          };
-          return [cachedBoost.address, boost];
-        }),
-      ),
-      multiplierData: {},
-    };
-
-    async function getPerChainBoosts() {
-      jest
-        .spyOn(s3Utils, 'getObject')
-        .mockImplementation(() => Promise.resolve(Buffer.from(JSON.stringify(boostData), 'utf-8')));
-      const response = await LeaderBoardsService.generateBoostsLeaderBoard();
-      const perChainBoosts: Record<string, CachedBoost[]> = {};
-      response.forEach((res) => {
-        if (!perChainBoosts[res.leaderboard]) {
-          perChainBoosts[res.leaderboard] = [];
-        }
-        perChainBoosts[res.leaderboard] = perChainBoosts[res.leaderboard].concat(res);
-      });
-      return perChainBoosts;
-    }
-
-    it('indexes all user accounts', async () => {
-      const perChainBoosts = await getPerChainBoosts();
-      expect(perChainBoosts[seeded[0].leaderboard]).toMatchObject(seeded);
-    });
-
-    it('sorts ranks by boosts', async () => {
-      const perChainBoosts = await getPerChainBoosts();
-      for (const boosts of Object.values(perChainBoosts)) {
-        let last: number | undefined;
-        for (const boost of boosts) {
-          if (last) {
-            expect(last).toBeLessThan(boost.rank);
-          }
-          last = boost.rank;
-        }
-      }
-    });
-
-    // seeded data has 2 of each boost rank
-    it('resovles boost rank ties with stake ratio score', async () => {
-      const perChainBoosts = await getPerChainBoosts();
-      for (const boosts of Object.values(perChainBoosts)) {
-        let last: number | undefined;
-        for (const boost of boosts) {
-          if (last) {
-            expect(last).toBeGreaterThanOrEqual(boost.stakeRatio);
-          }
-          last = boost.stakeRatio;
-        }
-      }
     });
   });
 });
