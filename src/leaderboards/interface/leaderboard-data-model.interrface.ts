@@ -1,6 +1,5 @@
+import { LeaderBoardData, UserBoostData } from '@badger-dao/sdk';
 import { Description, Example, Property, Title } from '@tsed/schema';
-import { CachedBoost } from './cached-boost.interface';
-import { LeaderBoardData } from './leaderboard-data.interrface';
 
 export class LeaderBoardDataModel implements LeaderBoardData {
   @Title('data')
@@ -18,7 +17,7 @@ export class LeaderBoardDataModel implements LeaderBoardData {
     },
   ])
   @Property()
-  public data: CachedBoost[];
+  public data: UserBoostData[];
 
   @Title('page')
   @Description('Leaderboard page')

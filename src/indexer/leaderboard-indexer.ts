@@ -1,15 +1,13 @@
+import { BadgerType, BadgerTypeMap } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 import { getBoostFile } from '../accounts/accounts.utils';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
-import { BadgerType } from '../leaderboards/enums/badger-type.enum';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import { CachedBoost } from '../leaderboards/interface/cached-boost.interface';
 import { CachedLeaderboardSummary } from '../leaderboards/interface/cached-leaderboard-summary.interface';
-import { UserBoost } from '../leaderboards/interface/user-boost.interface';
 import { getBadgerType } from '../leaderboards/leaderboards.config';
-import { BadgerTypeMap } from '../leaderboards/types/badger-type-map';
 
 export const indexBoostLeaderBoard = async (): Promise<void> => {
   const chains = loadChains();
@@ -54,30 +52,27 @@ async function generateChainBoostsLeaderBoard(chain: Chain): Promise<CachedBoost
     if (!boostFile) {
       return [];
     }
-    const boosts: UserBoost[] = Object.entries(boostFile.userData).map((entry) => {
-      const [address, userBoost] = entry;
-      const { boost, stakeRatio, nftMultiplier, nativeBalance, nonNativeBalance } = userBoost;
-      return {
-        address: ethers.utils.getAddress(address),
-        boost,
-        stakeRatio,
-        nftMultiplier,
-        nativeBalance: nativeBalance || 0,
-        nonNativeBalance: nonNativeBalance || 0,
-      };
-    });
-    return boosts
+    return Object.entries(boostFile.userData)
       .sort((a, b) => {
-        if (a.boost === b.boost) {
-          return b.nativeBalance - a.nativeBalance;
+        const [_a, aData] = a;
+        const [_b, bData] = b;
+        if (aData.boost === bData.boost) {
+          return bData.nativeBalance - aData.nativeBalance;
         }
-        return b.boost - a.boost;
+        return bData.boost - aData.boost;
       })
-      .map((boost, i) => {
+      .map((entry, i) => {
+        const [address, userBoost] = entry;
+        const { boost, stakeRatio, nftMultiplier, nativeBalance, nonNativeBalance } = userBoost;
         return Object.assign(new CachedBoost(), {
           leaderboard: getLeaderboardKey(chain),
           rank: i + 1,
-          ...boost,
+          address: ethers.utils.getAddress(address),
+          boost,
+          stakeRatio,
+          nftMultiplier,
+          nativeBalance: nativeBalance || 0,
+          nonNativeBalance: nonNativeBalance || 0,
         });
       });
   } catch (err) {
