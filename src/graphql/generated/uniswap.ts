@@ -20,6 +20,7 @@ export type Scalars = {
 export type Block_Height = {
   hash?: Maybe<Scalars['Bytes']>;
   number?: Maybe<Scalars['Int']>;
+  number_gte?: Maybe<Scalars['Int']>;
 };
 
 export type Bundle = {
@@ -2440,9 +2441,17 @@ export enum _SubgraphErrorPolicy_ {
 
 export const UniPairDayDataFragmentDoc = gql`
   fragment UniPairDayData on PairDayData {
+    token0 {
+      id
+    }
+    token1 {
+      id
+    }
+    reserve0
+    reserve1
     reserveUSD
-    dailyVolumeUSD
-    date
+    dailyVolumeToken0
+    dailyVolumeToken1
   }
 `;
 export const UniV2PairFragmentDoc = gql`
@@ -2524,8 +2533,8 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
 export type Sdk = ReturnType<typeof getSdk>;
 export type UniPairDayDataFragment = { __typename?: 'PairDayData' } & Pick<
   PairDayData,
-  'reserveUSD' | 'dailyVolumeUSD' | 'date'
->;
+  'reserve0' | 'reserve1' | 'reserveUSD' | 'dailyVolumeToken0' | 'dailyVolumeToken1'
+> & { token0: { __typename?: 'Token' } & Pick<Token, 'id'>; token1: { __typename?: 'Token' } & Pick<Token, 'id'> };
 
 export type UniV2PairFragment = { __typename?: 'Pair' } & Pick<Pair, 'id' | 'reserve0' | 'reserve1' | 'totalSupply'> & {
     token0: { __typename?: 'Token' } & Pick<Token, 'id' | 'symbol' | 'name' | 'decimals'>;

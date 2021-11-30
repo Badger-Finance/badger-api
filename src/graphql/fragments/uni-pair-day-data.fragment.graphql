@@ -1,5 +1,13 @@
 fragment UniPairDayData on PairDayData {
+  token0 {
+    id
+  }
+  token1 {
+    id
+  }
+  reserve0
+  reserve1
   reserveUSD
-  dailyVolumeUSD
-  date
+  dailyVolumeToken0
+  dailyVolumeToken1
 }
