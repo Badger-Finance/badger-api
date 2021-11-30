@@ -1,15 +1,13 @@
+import { BadgerTypeMap, LeaderBoardData, LeaderboardSummary } from '@badger-dao/sdk';
 import { Service } from '@tsed/common';
 import { Chain } from '../chains/config/chain.config';
 import { CachedBoost } from './interface/cached-boost.interface';
-import { LeaderBoardData } from './interface/leaderboard-data.interrface';
-import { LeaderboardSummary } from './interface/leaderboard-summary.interface';
 import {
   getFullLeaderBoard,
   getLeaderBoardEntryRange,
   getLeaderBoardSize,
   queryLeaderboardSummary,
 } from './leaderboards.utils';
-import { BadgerTypeMap } from './types/badger-type-map';
 
 @Service()
 export class LeaderBoardsService {
