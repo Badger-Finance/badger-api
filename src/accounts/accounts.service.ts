@@ -54,6 +54,7 @@ export class AccountsService {
     };
     return returnValue;
   }
+
   static async cachedAccountToAccount(chain: Chain, cachedAccount: CachedAccount): Promise<Account> {
     const { network } = chain;
     const balances = cachedAccount.balances
