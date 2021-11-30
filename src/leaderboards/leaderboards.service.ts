@@ -1,14 +1,15 @@
 import { Service } from '@tsed/common';
 import { Chain } from '../chains/config/chain.config';
 import { CachedBoost } from './interface/cached-boost.interface';
-import { CachedLeaderboardSummary } from './interface/cached-leaderboard-summary.interface';
 import { LeaderBoardData } from './interface/leaderboard-data.interrface';
+import { LeaderboardSummary } from './interface/leaderboard-summary.interface';
 import {
   getFullLeaderBoard,
   getLeaderBoardEntryRange,
   getLeaderBoardSize,
   queryLeaderboardSummary,
 } from './leaderboards.utils';
+import { BadgerTypeMap } from './types/badger-type-map';
 
 @Service()
 export class LeaderBoardsService {
@@ -16,8 +17,15 @@ export class LeaderBoardsService {
     return getFullLeaderBoard(chain);
   }
 
-  async fetchLeaderboardSummary(chain: Chain): Promise<CachedLeaderboardSummary> {
-    return queryLeaderboardSummary(chain);
+  async fetchLeaderboardSummary(chain: Chain): Promise<LeaderboardSummary> {
+    const cachedSummary = await queryLeaderboardSummary(chain);
+    const summary = Object.fromEntries(
+      cachedSummary.rankSummaries.map((s) => [s.badgerType, s.amount]),
+    ) as BadgerTypeMap;
+    return {
+      summary,
+      updatedAt: cachedSummary.updatedAt,
+    };
   }
 
   async loadLeaderboardEntries(chain: Chain, page?: number, size?: number): Promise<LeaderBoardData> {
