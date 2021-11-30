@@ -3,7 +3,7 @@ import { Controller, Get, Inject, QueryParams } from '@tsed/common';
 import { ContentType, Hidden } from '@tsed/schema';
 import { Chain } from '../chains/config/chain.config';
 import { CachedBoost } from './interface/cached-boost.interface';
-import { CachedLeaderboardSummary } from './interface/cached-leaderboard-summary.interface';
+import { LeaderboardSummary } from './interface/leaderboard-summary.interface';
 import { LeaderBoardsService } from './leaderboards.service';
 
 @Controller('/leaderboards')
@@ -21,7 +21,7 @@ export class LeaderBoardsController {
   @Get('')
   @Hidden()
   @ContentType('json')
-  async getLeaderBoardSummary(@QueryParams('chain') chain?: Network): Promise<CachedLeaderboardSummary> {
+  async getLeaderBoardSummary(@QueryParams('chain') chain?: Network): Promise<LeaderboardSummary> {
     return this.leaderBoardsService.fetchLeaderboardSummary(Chain.getChain(chain));
   }
 
