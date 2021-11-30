@@ -1,8 +1,8 @@
+import { LeaderBoardData } from '@badger-dao/sdk';
 import { PlatformTest } from '@tsed/common';
 import { Ethereum } from '../chains/config/eth.config';
 import { randomCachedBoosts, setupMapper } from '../test/tests.utils';
 import { CachedBoost } from './interface/cached-boost.interface';
-import { LeaderBoardData } from './interface/leaderboard-data.interrface';
 import { LeaderBoardsService } from './leaderboards.service';
 import * as leaderboardUtils from './leaderboards.utils';
 

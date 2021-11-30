@@ -1,9 +1,8 @@
-import { Network } from '@badger-dao/sdk';
+import { LeaderboardSummary, Network } from '@badger-dao/sdk';
 import { Controller, Get, Inject, QueryParams } from '@tsed/common';
 import { ContentType, Hidden } from '@tsed/schema';
 import { Chain } from '../chains/config/chain.config';
 import { CachedBoost } from './interface/cached-boost.interface';
-import { LeaderboardSummary } from './interface/leaderboard-summary.interface';
 import { LeaderBoardsService } from './leaderboards.service';
 
 @Controller('/leaderboards')

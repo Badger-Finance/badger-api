@@ -1,5 +1,4 @@
-import { BadgerType } from './enums/badger-type.enum';
-import { BadgerTypeMap } from './types/badger-type-map';
+import { BadgerTypeMap, BadgerType } from '@badger-dao/sdk';
 
 export const BADGER_RANKS: BadgerTypeMap = {
   [BadgerType.Basic]: 1,
