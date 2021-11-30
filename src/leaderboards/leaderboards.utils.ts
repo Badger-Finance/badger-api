@@ -3,8 +3,9 @@ import { BadRequest } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
-import { LeaderBoardType } from './enums/leaderboard-type.enum';
+import { getLeaderboardKey } from '../indexer/leaderboard-indexer';
 import { CachedBoost } from './interface/cached-boost.interface';
+import { CachedLeaderboardSummary } from './interface/cached-leaderboard-summary.interface';
 
 const shortenAddress = (address: string) => `${address.slice(0, 6)}...${address.slice(address.length - 4)}`;
 
@@ -12,7 +13,7 @@ export async function getFullLeaderBoard(chain: Chain): Promise<CachedBoost[]> {
   const mapper = getDataMapper();
   const data = [];
   for await (const boost of mapper.query(CachedBoost, {
-    leaderboard: `${chain.network}_${LeaderBoardType.BadgerBoost}`,
+    leaderboard: getLeaderboardKey(chain),
   })) {
     boost.address = shortenAddress(boost.address);
     data.push(boost);
@@ -27,7 +28,7 @@ export async function getLeaderBoardEntryRange(chain: Chain, start: number, end:
   const mapper = getDataMapper();
   const data = [];
   for await (const boost of mapper.query(CachedBoost, {
-    leaderboard: `${chain.network}_${LeaderBoardType.BadgerBoost}`,
+    leaderboard: getLeaderboardKey(chain),
     rank: between(start, end),
   })) {
     boost.address = shortenAddress(boost.address);
@@ -36,12 +37,30 @@ export async function getLeaderBoardEntryRange(chain: Chain, start: number, end:
   return data;
 }
 
+export async function queryLeaderboardSummary(chain: Chain): Promise<CachedLeaderboardSummary> {
+  const mapper = getDataMapper();
+  for await (const entry of mapper.query(
+    CachedLeaderboardSummary,
+    {
+      leaderboard: getLeaderboardKey(chain),
+    },
+    { limit: 1 },
+  )) {
+    return entry;
+  }
+  return {
+    leaderboard: getLeaderboardKey(chain),
+    rankSummaries: [],
+    updatedAt: Date.now(),
+  };
+}
+
 export async function getLeaderBoardSize(chain: Chain): Promise<number> {
   const mapper = getDataMapper();
   for await (const entry of mapper.query(
     CachedBoost,
     {
-      leaderboard: `${chain.network}_${LeaderBoardType.BadgerBoost}`,
+      leaderboard: getLeaderboardKey(chain),
     },
     { limit: 1, scanIndexForward: false },
   )) {
@@ -54,7 +73,7 @@ export const getUserLeaderBoardRank = async (chain: Chain, accountId: string): P
   const mapper = getDataMapper();
   for await (const entry of mapper.query(
     CachedBoost,
-    { leaderboard: `${chain.network}_${LeaderBoardType.BadgerBoost}`, address: ethers.utils.getAddress(accountId) },
+    { leaderboard: getLeaderboardKey(chain), address: ethers.utils.getAddress(accountId) },
     { limit: 1, indexName: 'IndexLeaderBoardRankOnAddress' },
   )) {
     return entry.rank;

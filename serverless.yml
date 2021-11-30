@@ -57,6 +57,7 @@ custom:
     PROTOCOL_METRICS_SNAPSHOTS_DATA:
       staging: 'protocol-metrics-snapshots-staging'
       prod: 'protocol-metrics-snapshots'
+    leaderboardSummary: leaderboard-summary-${self:custom.stage}
 
   merkleProofs:
     staging: 'badger-staging-merkle-proofs'
@@ -107,6 +108,7 @@ provider:
     SETT_SNAPSHOTS_DATA: ${self:custom.table.SETT_SNAPSHOTS_DATA.${self:custom.stage}}
     ACCOUNT_DATA: ${self:custom.table.ACCOUNT_DATA.${self:custom.stage}}
     PROTOCOL_METRICS_SNAPSHOTS_DATA: ${self:custom.table.PROTOCOL_METRICS_SNAPSHOTS_DATA.${self:custom.stage}}
+    LEADERBOARD_SUMMARY_DATA: ${self:custom.table.leaderboardSummary}
     # General Defintions
     REWARD_DATA: ${self:custom.merkleProofs.${self:custom.stage}}
     STAGE: ${opt:stage, self:provider.stage}
@@ -233,6 +235,18 @@ resources:
             Projection:
               ProjectionType: ALL
 
+    leaderboardSummaryTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.table.leaderboardSummary}
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: 'leaderboard'
+            KeyType: 'HASH'
+        AttributeDefinitions:
+          - AttributeName: 'leaderboard'
+            AttributeType: 'S'
+
     liquidityPoolTokenBalancesTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -309,7 +323,7 @@ functions:
           rate: rate(1 minute)
 
   index-leaderboard:
-    handler: src/indexer/boost-indexer.indexBoostLeaderBoard
+    handler: src/indexer/leaderboard-indexer.indexBoostLeaderBoard
     timeout: 120
     events:
       - schedule:
