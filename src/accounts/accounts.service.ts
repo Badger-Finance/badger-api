@@ -3,7 +3,7 @@ import { Service } from '@tsed/di';
 import { BadRequest } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { Chain } from '../chains/config/chain.config';
-import { IndexMode, refreshAccounts } from '../indexer/accounts-indexer';
+import { IndexMode, refreshAccounts } from '../indexers/accounts-indexer';
 import { cachedTokenBalanceToTokenBalance } from '../tokens/tokens.utils';
 import { getAccounts, getCachedAccount, getCachedBoost } from './accounts.utils';
 import { CachedAccount } from './interfaces/cached-account.interface';

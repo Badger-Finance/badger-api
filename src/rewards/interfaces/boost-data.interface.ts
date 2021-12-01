@@ -1,7 +1,7 @@
 import { BoostMultiplierData } from './boost-multiplier-data.interface';
-import { UserBoostData } from './user-boost-data.interface';
+import { UserBoosts } from './user-boosts.interface';
 
 export interface BoostData {
   multiplierData: BoostMultiplierData;
-  userData: UserBoostData;
+  userData: UserBoosts;
 }

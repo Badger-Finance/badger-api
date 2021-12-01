@@ -1,6 +1,6 @@
 import { GraphQLClient } from 'graphql-request';
 import { getSdk as getUniswapSdk, OrderDirection, PairDayData_OrderBy } from '../../graphql/generated/uniswap';
-import { valueSourceToCachedValueSource } from '../../indexer/indexer.utils';
+import { valueSourceToCachedValueSource } from '../../indexers/indexer.utils';
 import { getPrice } from '../../prices/prices.utils';
 import { SourceType } from '../../rewards/enums/source-type.enum';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';

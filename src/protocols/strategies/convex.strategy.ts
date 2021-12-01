@@ -21,7 +21,7 @@ import {
 import {
   tokenBalancesToCachedLiquidityPoolTokenBalance,
   valueSourceToCachedValueSource,
-} from '../../indexer/indexer.utils';
+} from '../../indexers/indexer.utils';
 import { getPrice } from '../../prices/prices.utils';
 import { SourceType } from '../../rewards/enums/source-type.enum';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';

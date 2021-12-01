@@ -10,12 +10,11 @@ import { BadgerTree__factory } from '../contracts';
 import { UserSettBalance } from '../graphql/generated/badger';
 import { RewardMerkleDistribution } from '../rewards/interfaces/merkle-distributor.interface';
 import { RewardAmounts } from '../rewards/interfaces/reward-amounts.interface';
-import { getTreeDistribution, getUserBoostMultipliers } from '../rewards/rewards.utils';
+import { getTreeDistribution } from '../rewards/rewards.utils';
 import { getSettDefinition } from '../setts/setts.utils';
 
 export enum IndexMode {
   ClaimableBalanceData = 'ClaimableBalanceData',
-  BoostData = 'BoostData',
   BalanceData = 'BalanceData',
 }
 
@@ -117,18 +116,6 @@ export async function refreshAccountSettBalances(chains: Chain[], batchAccounts:
   );
 }
 
-async function refreshAccountBoostInfo(chains: Chain[], batchAccounts: AccountMap) {
-  const addresses = Object.keys(batchAccounts);
-  const userBoostMultipliers = await getUserBoostMultipliers(chains, addresses);
-  await Promise.all(
-    addresses.map(async (acc) => {
-      const account = batchAccounts[acc];
-      account.multipliers = userBoostMultipliers[acc];
-      batchAccounts[acc] = account;
-    }),
-  );
-}
-
 async function batchRefreshAccounts(
   accounts: string[],
   refreshFns: (batchAccounts: AccountMap) => Promise<void>[],
@@ -149,11 +136,6 @@ async function batchRefreshAccounts(
 export async function refreshAccounts(chains: Chain[], mode: IndexMode, accounts: string[]) {
   let refreshFns: Promise<void>[] = [];
   switch (mode) {
-    case IndexMode.BoostData:
-      refreshFns = [
-        batchRefreshAccounts(accounts, (batchAccounts) => [refreshAccountBoostInfo(chains, batchAccounts)]),
-      ];
-      break;
     case IndexMode.ClaimableBalanceData:
       refreshFns = [
         batchRefreshAccounts(accounts, (batchAccounts) => [refreshAccountClaimableBalances(chains, batchAccounts)]),

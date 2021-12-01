@@ -4,7 +4,7 @@ import { ONE_YEAR_SECONDS, SWAPR_SUBGRAPH_URL } from '../../config/constants';
 import { TOKENS } from '../../config/tokens.config';
 import { SwaprStaking__factory } from '../../contracts';
 import { SwaprStrategy__factory } from '../../contracts/factories/SwaprStrategy__factory';
-import { valueSourceToCachedValueSource } from '../../indexer/indexer.utils';
+import { valueSourceToCachedValueSource } from '../../indexers/indexer.utils';
 import { getPrice } from '../../prices/prices.utils';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { getCachedSett } from '../../setts/setts.utils';

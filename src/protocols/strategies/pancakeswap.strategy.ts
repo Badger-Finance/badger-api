@@ -3,7 +3,7 @@ import { Chain } from '../../chains/config/chain.config';
 import { PANCAKE_CHEF } from '../../config/constants';
 import { TOKENS } from '../../config/tokens.config';
 import { Erc20__factory, PancakeChef__factory } from '../../contracts';
-import { valueSourceToCachedValueSource } from '../../indexer/indexer.utils';
+import { valueSourceToCachedValueSource } from '../../indexers/indexer.utils';
 import { getTokenPriceData } from '../../prices/prices.utils';
 import { SourceType } from '../../rewards/enums/source-type.enum';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';

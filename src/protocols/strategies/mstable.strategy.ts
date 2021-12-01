@@ -6,7 +6,7 @@ import { TOKENS } from '../../config/tokens.config';
 import { Mhbtc__factory } from '../../contracts';
 import { Imbtc__factory } from '../../contracts/factories/Imbtc__factory';
 import { MstableVault__factory } from '../../contracts/factories/MstableVault__factory';
-import { valueSourceToCachedValueSource } from '../../indexer/indexer.utils';
+import { valueSourceToCachedValueSource } from '../../indexers/indexer.utils';
 import { getPrice } from '../../prices/prices.utils';
 // import { SourceType } from '../../rewards/enums/source-type.enum';
 import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';

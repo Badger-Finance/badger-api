@@ -1,7 +1,7 @@
 import { PlatformTest } from '@tsed/common';
 import { BadRequest, NotFound } from '@tsed/exceptions';
 import SuperTest from 'supertest';
-import * as accountIndexer from '../indexer/accounts-indexer';
+import * as accountIndexer from '../indexers/accounts-indexer';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import { Server } from '../Server';
 import { setupMapper, TEST_ADDR } from '../test/tests.utils';
