@@ -2,7 +2,7 @@ import { Protocol } from '@badger-dao/sdk';
 import { NotFound } from '@tsed/exceptions';
 import { Ethereum } from '../chains/config/eth.config';
 import { TOKENS } from '../config/tokens.config';
-import { tokenBalancesToCachedLiquidityPoolTokenBalance } from '../indexer/indexer.utils';
+import { tokenBalancesToCachedLiquidityPoolTokenBalance } from '../indexers/indexer.utils';
 import * as priceUtils from '../prices/prices.utils';
 import * as swapUtils from '../protocols/common/swap.utils';
 import { getSettDefinition } from '../setts/setts.utils';

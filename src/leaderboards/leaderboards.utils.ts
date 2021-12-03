@@ -3,7 +3,7 @@ import { BadRequest } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
-import { getLeaderboardKey } from '../indexer/leaderboard-indexer';
+import { getLeaderboardKey } from '../indexers/leaderboard-indexer';
 import { CachedBoost } from './interface/cached-boost.interface';
 import { CachedLeaderboardSummary } from './interface/cached-leaderboard-summary.interface';
 

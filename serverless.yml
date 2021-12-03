@@ -287,7 +287,7 @@ functions:
           cors: true
 
   index-setts:
-    handler: src/indexer/sett-indexer.indexProtocolSetts
+    handler: src/indexers/sett-indexer.indexProtocolSetts
     timeout: 480
     events:
       - schedule:
@@ -296,7 +296,7 @@ functions:
           rate: rate(10 minutes)
 
   index-apy-snapshots:
-    handler: src/indexer/apy-snapshots-indexer.refreshApySnapshots
+    handler: src/indexers/apy-snapshots-indexer.refreshApySnapshots
     timeout: 120
     events:
       - schedule:
@@ -305,7 +305,7 @@ functions:
           rate: rate(5 minutes)
 
   index-prices:
-    handler: src/indexer/price-indexer.indexPrices
+    handler: src/indexers/price-indexer.indexPrices
     timeout: 45
     events:
       - schedule:
@@ -314,7 +314,7 @@ functions:
           rate: rate(1 minute)
 
   index-sett-snapshots:
-    handler: src/indexer/sett-snapshots-indexer.refreshSettSnapshots
+    handler: src/indexers/sett-snapshots-indexer.refreshSettSnapshots
     timeout: 45
     events:
       - schedule:
@@ -323,7 +323,7 @@ functions:
           rate: rate(1 minute)
 
   index-leaderboard:
-    handler: src/indexer/leaderboard-indexer.indexBoostLeaderBoard
+    handler: src/indexers/leaderboard-indexer.indexBoostLeaderBoard
     timeout: 120
     events:
       - schedule:
@@ -332,7 +332,7 @@ functions:
           rate: rate(5 minutes)
 
   index-token-balances:
-    handler: src/indexer/token-balances-indexer.refreshTokenBalances
+    handler: src/indexers/token-balances-indexer.refreshTokenBalances
     timeout: 180
     events:
       - schedule:
@@ -340,31 +340,34 @@ functions:
           description: 'index token balances from the graph'
           rate: rate(5 minutes)
 
+  index-boosts:
+    handler: src/indexers/boosts-indexer.refreshUserBoosts
+    timeout: 360
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-boosts
+          description: 'index accounts boost information'
+          rate: rate(20 minutes)
+
   index-accounts:
-    handler: src/indexer/accounts-indexer.refreshUserAccounts
+    handler: src/indexers/accounts-indexer.refreshUserAccounts
     timeout: 750
     events:
       - schedule:
-          name: ${self:service}-${self:custom.stage}-index-boost
-          description: 'index accounts boost information'
-          rate: rate(10 minutes)
-          input:
-            mode: BoostData
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-claimable
+          name: ${self:service}-${self:custom.stage}-index-claimables
           description: 'index accounts claimable from badger tree'
-          rate: rate(15 minutes)
+          rate: rate(2 hours)
           input:
             mode: ClaimableBalanceData
       - schedule:
-          name: ${self:service}-${self:custom.stage}-index-balance
+          name: ${self:service}-${self:custom.stage}-index-balances
           description: 'index accounts information from the graph'
           rate: rate(15 minutes)
           input:
             mode: BalanceData
 
   index-protocol-metrics-snapshots:
-    handler: src/indexer/protocol-metric-indexer.indexProtocolMetrics
+    handler: src/indexers/protocol-metric-indexer.indexProtocolMetrics
     timeout: 240
     events:
       - schedule:

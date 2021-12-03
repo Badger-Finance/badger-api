@@ -4,7 +4,7 @@ import { Chain } from '../../chains/config/chain.config';
 import { ethSetts } from '../../chains/config/eth.config';
 import { TOKENS } from '../../config/tokens.config';
 import { Erc20__factory } from '../../contracts';
-import { tokenBalancesToCachedLiquidityPoolTokenBalance } from '../../indexer/indexer.utils';
+import { tokenBalancesToCachedLiquidityPoolTokenBalance } from '../../indexers/indexer.utils';
 import { getPrice } from '../../prices/prices.utils';
 import { getCachedSett } from '../../setts/setts.utils';
 import { CachedLiquidityPoolTokenBalance } from '../interfaces/cached-liquidity-pool-token-balance.interface';
