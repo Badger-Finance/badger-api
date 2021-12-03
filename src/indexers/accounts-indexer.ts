@@ -151,7 +151,7 @@ export async function refreshUserAccounts(event: AccountIndexEvent) {
   const chains = loadChains();
   const allAccounts = await Promise.all(chains.map((chain) => getAccounts(chain)));
   const accounts = [...new Set(...allAccounts)];
-  await Promise.all(chains.map((chain) => refreshAccounts(chain, mode, accounts)));
+  await Promise.all(chains.map((chain) => exported.refreshAccounts(chain, mode, accounts)));
   console.timeEnd(`refreshUserAccounts mode: ${mode}`);
 }
 
@@ -163,3 +163,10 @@ function chunkArray(addresses: string[], count: number): string[][] {
   }
   return chunks;
 }
+
+const exported = {
+  chunkArray,
+  refreshAccounts,
+  refreshUserAccounts,
+};
+export default exported;
