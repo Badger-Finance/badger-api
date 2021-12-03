@@ -115,10 +115,12 @@ async function batchRefreshAccounts(
   const mapper = getDataMapper();
   for (let i = 0; i < accounts.length; i += batchSize) {
     const addresses = accounts.slice(i, i + batchSize);
-    const batchAccounts = await getAccountMap(addresses);
+    const batchAccounts = await exported.getAccountMap(addresses);
     await Promise.all(refreshFns(batchAccounts));
     const cachedAccounts = Object.values(batchAccounts).map((account) => Object.assign(new CachedAccount(), account));
-    for await (const _item of mapper.batchPut(cachedAccounts)) {
+    if (mapper != null) {
+      for await (const _item of mapper.batchPut(cachedAccounts)) {
+      }
     }
   }
 }
@@ -128,13 +130,19 @@ export async function refreshAccounts(chain: Chain, mode: IndexMode, accounts: s
   switch (mode) {
     case IndexMode.ClaimableBalanceData:
       refreshFns = [
-        batchRefreshAccounts(accounts, (batchAccounts) => [refreshAccountClaimableBalances(chain, batchAccounts)]),
+        exported.batchRefreshAccounts(accounts, (batchAccounts) => [
+          exported.refreshAccountClaimableBalances(chain, batchAccounts),
+        ]),
       ];
       break;
     case IndexMode.BalanceData:
     default:
       refreshFns = chunkArray(accounts, 10).flatMap((chunk) =>
-        batchRefreshAccounts(chunk, (batchAccounts) => [refreshAccountSettBalances(chain, batchAccounts)], 100),
+        exported.batchRefreshAccounts(
+          chunk,
+          (batchAccounts) => [exported.refreshAccountSettBalances(chain, batchAccounts)],
+          100,
+        ),
       );
       break;
   }
@@ -168,5 +176,9 @@ const exported = {
   chunkArray,
   refreshAccounts,
   refreshUserAccounts,
+  refreshAccountClaimableBalances,
+  batchRefreshAccounts,
+  getAccountMap,
+  refreshAccountSettBalances,
 };
 export default exported;
