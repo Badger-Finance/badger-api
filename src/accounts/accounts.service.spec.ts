@@ -14,7 +14,7 @@ describe('charts.service', () => {
   const chain = new Ethereum();
   let service: AccountsService;
   let result: Account;
-  let refreshAccounts: jest.SpyInstance<Promise<void>, [chain: Chain[], mode: IndexMode, accounts: string[]]>;
+  let refreshAccounts: jest.SpyInstance<Promise<void>, [chain: Chain, mode: IndexMode, accounts: string[]]>;
 
   const defaultAccount: CachedAccount = {
     address: TEST_ADDR,

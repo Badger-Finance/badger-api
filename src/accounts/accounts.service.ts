@@ -21,7 +21,7 @@ export class AccountsService {
     } catch {
       throw new BadRequest(`${accountId} is not a valid account`);
     }
-    await refreshAccounts([chain], IndexMode.BalanceData, [checksumAddress]);
+    await refreshAccounts(chain, IndexMode.BalanceData, [checksumAddress]);
     const cachedAccount = await getCachedAccount(checksumAddress);
     return AccountsService.cachedAccountToAccount(chain, cachedAccount);
   }
