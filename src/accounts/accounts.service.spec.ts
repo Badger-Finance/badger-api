@@ -7,7 +7,7 @@ import { AccountsService } from './accounts.service';
 import { CachedAccount } from './interfaces/cached-account.interface';
 import * as accountsUtils from './accounts.utils';
 
-describe('accoutns.service', () => {
+describe('accounts.service', () => {
   const chain = new Ethereum();
   let service: AccountsService;
   let result: Account;

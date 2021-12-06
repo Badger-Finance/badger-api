@@ -99,28 +99,24 @@ export async function refreshAccountSettBalances(chain: Chain, batchAccounts: Ac
 export async function refreshUserAccounts(event: AccountIndexEvent) {
   const { mode } = event;
   const chains = loadChains();
-  await Promise.all(chains.map(async (chain) => {
-    const accounts = await getAccounts(chain);
-    let refreshFns: Promise<void>[] = [];
-    switch (mode) {
-      case AccountIndexMode.ClaimableBalanceData:
-        refreshFns = [
-          batchRefreshAccounts(accounts, (batchAccounts) => [
-            refreshAccountClaimableBalances(chain, batchAccounts),
-          ]),
-        ];
-        break;
-      case AccountIndexMode.BalanceData:
-      default:
-        refreshFns = chunkArray(accounts, 10).flatMap((chunk) =>
-          batchRefreshAccounts(
-            chunk,
-            (batchAccounts) => [refreshAccountSettBalances(chain, batchAccounts)],
-            100,
-          ),
-        );
-        break;
-    }
-    await Promise.all(refreshFns);
-  }));
+  await Promise.all(
+    chains.map(async (chain) => {
+      const accounts = await getAccounts(chain);
+      let refreshFns: Promise<void>[] = [];
+      switch (mode) {
+        case AccountIndexMode.ClaimableBalanceData:
+          refreshFns = [
+            batchRefreshAccounts(accounts, (batchAccounts) => [refreshAccountClaimableBalances(chain, batchAccounts)]),
+          ];
+          break;
+        case AccountIndexMode.BalanceData:
+        default:
+          refreshFns = chunkArray(accounts, 10).flatMap((chunk) =>
+            batchRefreshAccounts(chunk, (batchAccounts) => [refreshAccountSettBalances(chain, batchAccounts)], 100),
+          );
+          break;
+      }
+      await Promise.all(refreshFns);
+    }),
+  );
 }

@@ -66,10 +66,7 @@ export async function batchRefreshAccounts(
 
 // TODO: Figure out what to do with accounts indexer stuff
 
-export async function settToCachedSnapshot(
-  chain: Chain,
-  settDefinition: SettDefinition,
-): Promise<CachedSettSnapshot> {
+export async function settToCachedSnapshot(chain: Chain, settDefinition: SettDefinition): Promise<CachedSettSnapshot> {
   const settToken = getToken(settDefinition.settToken);
   const depositToken = getToken(settDefinition.depositToken);
   const { sett } = await getSett(chain.graphUrl, settToken.address);
@@ -101,7 +98,7 @@ export async function settToCachedSnapshot(
     strategy: strategyInfo,
     boostWeight,
   });
-};
+}
 
 export async function getQueryBlock(chain: Chain, block: number): Promise<number> {
   let queryBlock = block;
