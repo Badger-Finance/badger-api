@@ -1,7 +1,6 @@
 import { Network, Protocol } from '@badger-dao/sdk';
 import { NotFound } from '@tsed/exceptions';
-import { ethers } from 'ethers';
-import { getCachedAccount } from '../accounts/accounts.utils';
+import { getAccountMap } from '../accounts/accounts.utils';
 import { AccountMap } from '../accounts/interfaces/account-map.interface';
 import { CachedAccount } from '../accounts/interfaces/cached-account.interface';
 import { getDataMapper } from '../aws/dynamodb.utils';
@@ -40,11 +39,6 @@ export function chunkArray(addresses: string[], count: number): string[][] {
     chunks.push(addresses.slice(i, i + chunkSize));
   }
   return chunks;
-}
-
-export async function getAccountMap(addresses: string[]): Promise<AccountMap> {
-  const accounts = await Promise.all(addresses.map(async (addr) => getCachedAccount(addr)));
-  return Object.fromEntries(accounts.map((acc) => [ethers.utils.getAddress(acc.address), acc]));
 }
 
 export async function batchRefreshAccounts(

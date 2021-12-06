@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`accoutns.service getAccount returns the expected account 1`] = `
+exports[`accounts.service getAccount returns the expected account 1`] = `
 Object {
   "address": "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484",
   "boost": 2000,
