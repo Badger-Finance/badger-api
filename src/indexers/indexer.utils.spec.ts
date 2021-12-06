@@ -1,9 +1,9 @@
 import { Ethereum } from '../chains/config/eth.config';
 import { TOKENS } from '../config/tokens.config';
 import { getSettDefinition } from '../setts/setts.utils';
-import { setupMapper } from '../test/tests.utils';
+import { setupMapper, TEST_ADDR } from '../test/tests.utils';
 import * as tokenUtils from '../tokens/tokens.utils';
-import { getIndexedBlock } from './indexer.utils';
+import { chunkArray, getIndexedBlock } from './indexer.utils';
 
 describe('indexer.utils', () => {
   const chain = new Ethereum();
@@ -46,6 +46,22 @@ describe('indexer.utils', () => {
         setupMapper([{ height: stored }]);
         const block = await getIndexedBlock(testDefinition, start, alignment);
         expect(block).toEqual(result);
+      });
+    });
+  });
+
+  describe('chunkArray', () => {
+    it('should split into equal chunks', async () => {
+      const data = [];
+      const arrayLen = 1000;
+      const chunkSize = 10;
+      for (let i = 0; i < arrayLen; i++) {
+        data.push(TEST_ADDR);
+      }
+      const chunked = chunkArray(data, chunkSize);
+      expect(chunked.length).toEqual(10);
+      chunked.forEach((chunk) => {
+        expect(chunk.length).toEqual(arrayLen / chunkSize);
       });
     });
   });
