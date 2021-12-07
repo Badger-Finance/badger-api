@@ -32,7 +32,7 @@ describe('AccountsController', () => {
     });
     describe('with a non participant account', () => {
       it('returns a default account response', async (done: jest.DoneCallback) => {
-        jest.spyOn(accountIndexer, 'refreshAccounts').mockImplementation(() => Promise.resolve());
+        jest.spyOn(accountIndexer, 'refreshUserAccounts').mockImplementation(() => Promise.resolve());
         setupMapper([]);
         const { body } = await request.get('/v2/accounts/' + TEST_ADDR).expect(200);
         expect(body).toMatchSnapshot();
@@ -41,7 +41,7 @@ describe('AccountsController', () => {
     });
     describe('with a participant account', () => {
       it('returns a cached account response', async (done: jest.DoneCallback) => {
-        jest.spyOn(accountIndexer, 'refreshAccounts').mockImplementation(() => Promise.resolve());
+        jest.spyOn(accountIndexer, 'refreshUserAccounts').mockImplementation(() => Promise.resolve());
         const defaultAccount = {
           address: TEST_ADDR,
           boost: 2000,

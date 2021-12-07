@@ -9,25 +9,19 @@ import * as priceUtils from '../prices/prices.utils';
 import { inCurrency } from '../prices/prices.utils';
 import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
 import { getSettDefinition } from '../setts/setts.utils';
-import { randomSnapshot, setupMapper, TEST_ADDR } from '../test/tests.utils';
+import { defaultAccount, randomSnapshot, setupMapper, TEST_ADDR } from '../test/tests.utils';
 import { getToken } from '../tokens/tokens.utils';
-import { defaultBoost, getCachedAccount, getCachedBoost, getUserAccount, toSettBalance } from './accounts.utils';
+import {
+  defaultBoost,
+  getAccountMap,
+  getCachedAccount,
+  getCachedBoost,
+  getUserAccount,
+  toSettBalance,
+} from './accounts.utils';
 
 describe('accounts.utils', () => {
   const chain = new Ethereum();
-
-  const defaultAccount = (address: string) => ({
-    address,
-    boost: 0,
-    boostRank: 0,
-    multipliers: [],
-    value: 0,
-    earnedValue: 0,
-    balances: [],
-    claimableBalances: [],
-    nativeBalance: 0,
-    nonNativeBalance: 0,
-  });
 
   const testSettBalance = (sett: SettDefinition): UserSettBalance => {
     const settToken = getToken(sett.settToken);
@@ -74,6 +68,24 @@ describe('accounts.utils', () => {
       },
     };
   };
+
+  describe('getAccountMap', () => {
+    describe('no saved account', () => {
+      it('returns the account with the default account mapping', async () => {
+        setupMapper([]);
+        const actual = await getAccountMap([TEST_ADDR]);
+        expect(actual).toMatchSnapshot();
+      });
+    });
+
+    describe('a saved account', () => {
+      it('returns the stored account', async () => {
+        setupMapper([defaultAccount(TEST_ADDR), defaultAccount(TOKENS.BADGER), defaultAccount(TOKENS.DIGG)]);
+        const actual = await getAccountMap([TEST_ADDR]);
+        expect(actual).toMatchSnapshot();
+      });
+    });
+  });
 
   describe('getCachedAccount', () => {
     describe('no saved account', () => {
@@ -130,40 +142,6 @@ describe('accounts.utils', () => {
       });
     });
   });
-
-  // describe('getAccounts', () => {
-  //   describe('users exist', () => {
-  //     it('returns a list of user accounts', async () => {
-  //       const result: UsersQuery = {
-  //         users: Object.values(TOKENS).map((token) => ({ id: token, settBalances: [] })),
-  //       };
-  //       let responded = false;
-  //       jest.spyOn(GraphQLClient.prototype, 'request').mockImplementation(async () => {
-  //         if (responded) {
-  //           return { users: [] };
-  //         }
-  //         responded = true;
-  //         return Promise.resolve(result);
-  //       });
-  //       const users = await getAccounts(new Ethereum());
-  //       expect(users).toMatchObject(Object.values(TOKENS));
-  //     });
-  //   });
-
-  //   describe('users do not exist', () => {
-  //     it('returns an empty list', async () => {
-  //       jest.spyOn(GraphQLClient.prototype, 'request').mockImplementationOnce(async () => Promise.resolve(null));
-  //       const nullReturn = await getAccounts(new Ethereum());
-  //       expect(nullReturn).toMatchObject([]);
-
-  //       jest
-  //         .spyOn(GraphQLClient.prototype, 'request')
-  //         .mockImplementationOnce(async () => Promise.resolve({ users: null }));
-  //       const nullUsers = await getAccounts(new Ethereum());
-  //       expect(nullUsers).toMatchObject([]);
-  //     });
-  //   });
-  // });
 
   describe('toSettBalance', () => {
     const chain = new Ethereum();

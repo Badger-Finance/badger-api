@@ -3,7 +3,6 @@ import { Service } from '@tsed/di';
 import { BadRequest } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { Chain } from '../chains/config/chain.config';
-import { IndexMode, refreshAccounts } from '../indexers/accounts-indexer';
 import { cachedTokenBalanceToTokenBalance } from '../tokens/tokens.utils';
 import { getAccounts, getCachedAccount, getCachedBoost } from './accounts.utils';
 import { CachedAccount } from './interfaces/cached-account.interface';
@@ -21,7 +20,6 @@ export class AccountsService {
     } catch {
       throw new BadRequest(`${accountId} is not a valid account`);
     }
-    await refreshAccounts(chain, IndexMode.BalanceData, [checksumAddress]);
     const cachedAccount = await getCachedAccount(checksumAddress);
     return AccountsService.cachedAccountToAccount(chain, cachedAccount);
   }

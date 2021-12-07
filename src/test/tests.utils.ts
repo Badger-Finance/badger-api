@@ -2,6 +2,7 @@ import { DataMapper, QueryIterator, StringToAnyObjectMap } from '@aws/dynamodb-d
 import { Network } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 import createMockInstance from 'jest-create-mock-instance';
+import { CachedAccount } from '../accounts/interfaces/cached-account.interface';
 import { loadChains } from '../chains/chain';
 import { Arbitrum } from '../chains/config/arbitrum.config';
 import { BinanceSmartChain } from '../chains/config/bsc.config';
@@ -30,6 +31,41 @@ export const setupMapper = (items: unknown[], filter?: (items: unknown[]) => unk
   return jest.spyOn(DataMapper.prototype, 'query').mockImplementation(() => qi);
 };
 /* eslint-enable @typescript-eslint/ban-ts-comment */
+
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+export const mockBatchPut = (items: unknown[]) => {
+  // @ts-ignore
+  const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
+  // @ts-ignore
+  qi[Symbol.iterator] = jest.fn(() => items.values());
+  return jest.spyOn(DataMapper.prototype, 'batchPut').mockImplementation(() => qi);
+};
+/* eslint-enable @typescript-eslint/ban-ts-comment */
+
+export function defaultAccount(address: string): CachedAccount {
+  return {
+    address,
+    boost: 0,
+    boostRank: 0,
+    multipliers: [],
+    value: 0,
+    earnedValue: 0,
+    balances: [],
+    claimableBalances: [],
+    nativeBalance: 0,
+    nonNativeBalance: 0,
+    stakeRatio: 0,
+  };
+}
+
+export function randomAccount(address: string): CachedAccount {
+  const account = defaultAccount(address);
+  account.value = randomValue();
+  account.earnedValue = randomValue();
+  account.boost = randomValue();
+  account.boostRank = randomValue();
+  return account;
+}
 
 export const randomValue = (min?: number, max?: number): number => {
   const minPrice = min || 10;
