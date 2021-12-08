@@ -15,7 +15,7 @@ export class ProtocolController {
   @Summary('Get a summary of protocol metrics')
   @Description('Return a summary of protocol metrics in currency value')
   @Returns(200, ProtocolSummaryModel)
-  @(Returns(400).Description('Not a valid chain'))
+  @Returns(400).Description('Not a valid chain')
   async getAssetsUnderManagement(
     @QueryParams('chain') chain?: Network,
     @QueryParams('currency') currency?: string,

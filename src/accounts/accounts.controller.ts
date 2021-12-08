@@ -28,8 +28,8 @@ export class AccountsController {
     'Return key user information for a given account. Includes positions, earnings from use, and claimable balances.',
   )
   @Returns(200, AccountModel)
-  @(Returns(400).Description('Not a valid chain'))
-  @(Returns(404).Description('Not a valid account'))
+  @Returns(400).Description('Not a valid chain')
+  @Returns(404).Description('Not a valid account')
   async getAccount(
     @PathParams('accountId') userId: string,
     @QueryParams('chain') chain?: Network,
