@@ -7,8 +7,8 @@ import { UserQuery, UserSettBalance } from '../graphql/generated/badger';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import * as priceUtils from '../prices/prices.utils';
 import { inCurrency } from '../prices/prices.utils';
-import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
-import { getSettDefinition } from '../setts/setts.utils';
+import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
+import { getVaultDefinition } from '../vaults/vaults.utils';
 import { defaultAccount, randomSnapshot, setupMapper, TEST_ADDR } from '../test/tests.utils';
 import { getToken } from '../tokens/tokens.utils';
 import {
@@ -23,7 +23,7 @@ import {
 describe('accounts.utils', () => {
   const chain = new Ethereum();
 
-  const testSettBalance = (sett: SettDefinition): UserSettBalance => {
+  const testSettBalance = (sett: VaultDefinition): UserSettBalance => {
     const settToken = getToken(sett.settToken);
     const depositToken = getToken(sett.depositToken);
     const toWei = (amt: number) => {
@@ -119,7 +119,7 @@ describe('accounts.utils', () => {
   describe('getUserAccount', () => {
     describe('user exists', () => {
       it('returns the user account', async () => {
-        const sett = getSettDefinition(new Ethereum(), TOKENS.BBADGER);
+        const sett = getVaultDefinition(new Ethereum(), TOKENS.BBADGER);
         const result: UserQuery = {
           user: {
             settBalances: [testSettBalance(sett)],
@@ -157,7 +157,7 @@ describe('accounts.utils', () => {
           ...(await strategy.getPrice(contract)),
           updatedAt: Date.now(),
         }));
-        const sett = getSettDefinition(chain, settAddress);
+        const sett = getVaultDefinition(chain, settAddress);
         const snapshot = randomSnapshot(sett);
         setupMapper([snapshot]);
         const depositToken = getToken(sett.depositToken);

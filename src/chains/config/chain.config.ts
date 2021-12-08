@@ -2,7 +2,7 @@ import { BadRequest } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { STAGE } from '../../config/constants';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
-import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
+import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { TokenConfig } from '../../tokens/interfaces/token-config.interface';
 import { ChainStrategy } from '../strategies/chain.strategy';
 import { Network } from '@badger-dao/sdk';
@@ -17,7 +17,7 @@ export abstract class Chain {
   readonly chainId: string;
   readonly network: Network;
   readonly tokens: TokenConfig;
-  readonly setts: SettDefinition[];
+  readonly setts: VaultDefinition[];
   readonly provider: ethers.providers.JsonRpcProvider;
   readonly batchProvider: ethers.providers.JsonRpcBatchProvider;
   readonly strategy: ChainStrategy;
@@ -33,7 +33,7 @@ export abstract class Chain {
     chainId: string,
     network: Network,
     tokens: TokenConfig,
-    setts: SettDefinition[],
+    setts: VaultDefinition[],
     rpcUrl: string,
     strategy: ChainStrategy,
     blocksPerYear: number,

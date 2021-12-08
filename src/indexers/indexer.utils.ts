@@ -21,11 +21,11 @@ import { SwaprStrategy } from '../protocols/strategies/swapr.strategy';
 import { UniswapStrategy } from '../protocols/strategies/uniswap.strategy';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { getRewardEmission } from '../rewards/rewards.utils';
-import { CachedSettSnapshot } from '../setts/interfaces/cached-sett-snapshot.interface';
-import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
-import { SettSnapshot } from '../setts/interfaces/sett-snapshot.interface';
-import { SettsService } from '../setts/setts.service';
-import { getBoostWeight, getPricePerShare, getSett, getStrategyInfo } from '../setts/setts.utils';
+import { CachedSettSnapshot } from '../vaults/interfaces/cached-sett-snapshot.interface';
+import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
+import { VaultSnapshot } from '../vaults/interfaces/vault-snapshot.interface';
+import { SettsService } from '../vaults/vaults.service';
+import { getBoostWeight, getPricePerShare, getSett, getStrategyInfo } from '../vaults/vaults.utils';
 import { CachedLiquidityPoolTokenBalance } from '../tokens/interfaces/cached-liquidity-pool-token-balance.interface';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
 import { formatBalance, getToken } from '../tokens/tokens.utils';
@@ -60,9 +60,12 @@ export async function batchRefreshAccounts(
 
 // TODO: Figure out what to do with accounts indexer stuff
 
-export async function settToCachedSnapshot(chain: Chain, settDefinition: SettDefinition): Promise<CachedSettSnapshot> {
-  const settToken = getToken(settDefinition.settToken);
-  const depositToken = getToken(settDefinition.depositToken);
+export async function settToCachedSnapshot(
+  chain: Chain,
+  VaultDefinition: VaultDefinition,
+): Promise<CachedSettSnapshot> {
+  const settToken = getToken(VaultDefinition.settToken);
+  const depositToken = getToken(VaultDefinition.depositToken);
   const { sett } = await getSett(chain.graphUrl, settToken.address);
 
   if (!sett) {
@@ -71,15 +74,15 @@ export async function settToCachedSnapshot(chain: Chain, settDefinition: SettDef
   }
 
   const { balance, totalSupply, pricePerFullShare } = sett;
-  const balanceDecimals = settDefinition.balanceDecimals || depositToken.decimals;
-  const supplyDecimals = settDefinition.supplyDecimals || settToken.decimals;
+  const balanceDecimals = VaultDefinition.balanceDecimals || depositToken.decimals;
+  const supplyDecimals = VaultDefinition.supplyDecimals || settToken.decimals;
   const tokenBalance = formatBalance(balance, balanceDecimals);
   const supply = formatBalance(totalSupply, supplyDecimals);
   const [ratio, tokenPriceData, strategyInfo, boostWeight] = await Promise.all([
-    getPricePerShare(chain, pricePerFullShare, settDefinition),
+    getPricePerShare(chain, pricePerFullShare, VaultDefinition),
     getPrice(depositToken.address),
-    getStrategyInfo(chain, settDefinition),
-    getBoostWeight(chain, settDefinition),
+    getStrategyInfo(chain, VaultDefinition),
+    getBoostWeight(chain, VaultDefinition),
   ]);
   const value = tokenBalance * tokenPriceData.usd;
 
@@ -106,13 +109,13 @@ export async function getQueryBlock(chain: Chain, block: number): Promise<number
 
 export const settToSnapshot = async (
   chain: Chain,
-  settDefinition: SettDefinition,
+  VaultDefinition: VaultDefinition,
   block: number,
-): Promise<SettSnapshot | null> => {
+): Promise<VaultSnapshot | null> => {
   const queryBlock = await getQueryBlock(chain, block);
-  const sett = await getSett(chain.graphUrl, settDefinition.settToken, queryBlock);
-  const settToken = getToken(settDefinition.settToken);
-  const depositToken = getToken(settDefinition.depositToken);
+  const sett = await getSett(chain.graphUrl, VaultDefinition.settToken, queryBlock);
+  const settToken = getToken(VaultDefinition.settToken);
+  const depositToken = getToken(VaultDefinition.depositToken);
 
   if (sett.sett == null) {
     return null;
@@ -121,15 +124,15 @@ export const settToSnapshot = async (
   const { balance, totalSupply, pricePerFullShare } = sett.sett;
   const blockData = await chain.provider.getBlock(queryBlock);
   const timestamp = blockData.timestamp * 1000;
-  const balanceDecimals = settDefinition.balanceDecimals || depositToken.decimals;
-  const supplyDecimals = settDefinition.supplyDecimals || settToken.decimals;
+  const balanceDecimals = VaultDefinition.balanceDecimals || depositToken.decimals;
+  const supplyDecimals = VaultDefinition.supplyDecimals || settToken.decimals;
   const tokenBalance = formatBalance(balance, balanceDecimals);
   const supply = formatBalance(totalSupply, supplyDecimals);
-  const ratio = await getPricePerShare(chain, pricePerFullShare, settDefinition, queryBlock);
+  const ratio = await getPricePerShare(chain, pricePerFullShare, VaultDefinition, queryBlock);
   const tokenPriceData = await getPrice(depositToken.address);
   const value = tokenBalance * tokenPriceData.usd;
 
-  return Object.assign(new SettSnapshot(), {
+  return Object.assign(new VaultSnapshot(), {
     address: settToken.address,
     height: block,
     timestamp,
@@ -141,16 +144,16 @@ export const settToSnapshot = async (
 };
 
 export const getIndexedBlock = async (
-  settDefinition: SettDefinition,
+  VaultDefinition: VaultDefinition,
   startBlock: number,
   alignment: number,
 ): Promise<number> => {
   const alignedStartBlock = startBlock - (startBlock % alignment);
   try {
     const mapper = getDataMapper();
-    const settToken = getToken(settDefinition.settToken);
+    const settToken = getToken(VaultDefinition.settToken);
     for await (const snapshot of mapper.query(
-      SettSnapshot,
+      VaultSnapshot,
       { address: settToken.address },
       { limit: 1, scanIndexForward: false },
     )) {
@@ -164,12 +167,12 @@ export const getIndexedBlock = async (
 
 export const valueSourceToCachedValueSource = (
   valueSource: ValueSource,
-  settDefinition: SettDefinition,
+  VaultDefinition: VaultDefinition,
   type: string,
 ): CachedValueSource => {
   return Object.assign(new CachedValueSource(), {
-    addressValueSourceType: `${settDefinition.settToken}_${type}`,
-    address: settDefinition.settToken,
+    addressValueSourceType: `${VaultDefinition.settToken}_${type}`,
+    address: VaultDefinition.settToken,
     type,
     apr: valueSource.apr,
     name: valueSource.name,
@@ -197,44 +200,44 @@ export function tokenBalancesToCachedLiquidityPoolTokenBalance(
   });
 }
 
-export async function getUnderlyingPerformance(settDefinition: SettDefinition): Promise<CachedValueSource> {
+export async function getUnderlyingPerformance(VaultDefinition: VaultDefinition): Promise<CachedValueSource> {
   return valueSourceToCachedValueSource(
-    await SettsService.getSettPerformance(settDefinition),
-    settDefinition,
+    await SettsService.getSettPerformance(VaultDefinition),
+    VaultDefinition,
     SourceType.Compound,
   );
 }
 
 export async function getSettTokenPerformances(
   chain: Chain,
-  settDefinition: SettDefinition,
+  VaultDefinition: VaultDefinition,
 ): Promise<CachedValueSource[]> {
-  const performances = await SettsService.getSettTokenPerformance(chain, settDefinition);
-  return performances.map((perf) => valueSourceToCachedValueSource(perf, settDefinition, 'derivative'));
+  const performances = await SettsService.getSettTokenPerformance(chain, VaultDefinition);
+  return performances.map((perf) => valueSourceToCachedValueSource(perf, VaultDefinition, 'derivative'));
 }
 
 export async function getProtocolValueSources(
   chain: Chain,
-  settDefinition: SettDefinition,
+  VaultDefinition: VaultDefinition,
 ): Promise<CachedValueSource[]> {
   try {
-    switch (settDefinition.protocol) {
+    switch (VaultDefinition.protocol) {
       case Protocol.Curve:
-        return Promise.all([getCurvePerformance(chain, settDefinition)]);
+        return Promise.all([getCurvePerformance(chain, VaultDefinition)]);
       case Protocol.Pancakeswap:
-        return PancakeswapStrategy.getValueSources(chain, settDefinition);
+        return PancakeswapStrategy.getValueSources(chain, VaultDefinition);
       case Protocol.Sushiswap:
-        return SushiswapStrategy.getValueSources(chain, settDefinition);
+        return SushiswapStrategy.getValueSources(chain, VaultDefinition);
       case Protocol.Convex:
-        return ConvexStrategy.getValueSources(chain, settDefinition);
+        return ConvexStrategy.getValueSources(chain, VaultDefinition);
       case Protocol.Uniswap:
-        return UniswapStrategy.getValueSources(settDefinition);
+        return UniswapStrategy.getValueSources(VaultDefinition);
       case Protocol.Quickswap:
-        return QuickswapStrategy.getValueSources(settDefinition);
+        return QuickswapStrategy.getValueSources(VaultDefinition);
       case Protocol.mStable:
-        return mStableStrategy.getValueSources(chain, settDefinition);
+        return mStableStrategy.getValueSources(chain, VaultDefinition);
       case Protocol.Swapr:
-        return SwaprStrategy.getValueSources(chain, settDefinition);
+        return SwaprStrategy.getValueSources(chain, VaultDefinition);
       default: {
         return [];
       }
@@ -248,28 +251,31 @@ export async function getProtocolValueSources(
 
 const ARB_CRV_SETTS = [TOKENS.BARB_CRV_RENBTC, TOKENS.BARB_CRV_TRICRYPTO, TOKENS.BARB_CRV_TRICRYPTO_LITE];
 
-export async function getSettValueSources(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
+export async function getSettValueSources(
+  chain: Chain,
+  VaultDefinition: VaultDefinition,
+): Promise<CachedValueSource[]> {
   try {
     const [underlying, emission, protocol, derivative] = await Promise.all([
-      getUnderlyingPerformance(settDefinition),
-      getRewardEmission(chain, settDefinition),
-      getProtocolValueSources(chain, settDefinition),
-      getSettTokenPerformances(chain, settDefinition),
+      getUnderlyingPerformance(VaultDefinition),
+      getRewardEmission(chain, VaultDefinition),
+      getProtocolValueSources(chain, VaultDefinition),
+      getSettTokenPerformances(chain, VaultDefinition),
     ]);
 
     // check for any emission removal
     const oldSources: Record<string, CachedValueSource> = {};
-    const oldEmission = await getVaultCachedValueSources(settDefinition);
+    const oldEmission = await getVaultCachedValueSources(VaultDefinition);
     oldEmission.forEach((source) => (oldSources[source.addressValueSourceType] = source));
 
     // remove updated sources from old source list
     const newSources = [underlying, ...emission, ...protocol, ...derivative];
 
     // TODO: remove once badger tree tracking events supported
-    if (ARB_CRV_SETTS.includes(settDefinition.settToken)) {
+    if (ARB_CRV_SETTS.includes(VaultDefinition.settToken)) {
       const crvSource = createValueSource('CRV Rewards', uniformPerformance(underlying.apr));
       newSources.push(
-        valueSourceToCachedValueSource(crvSource, settDefinition, tokenEmission(getToken(TOKENS.ARB_CRV))),
+        valueSourceToCachedValueSource(crvSource, VaultDefinition, tokenEmission(getToken(TOKENS.ARB_CRV))),
       );
     }
     newSources.forEach((source) => delete oldSources[source.addressValueSourceType]);

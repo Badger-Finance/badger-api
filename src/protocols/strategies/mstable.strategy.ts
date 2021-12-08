@@ -9,7 +9,7 @@ import { MstableVault__factory } from '../../contracts/factories/MstableVault__f
 import { valueSourceToCachedValueSource } from '../../indexers/indexer.utils';
 import { getPrice } from '../../prices/prices.utils';
 // import { SourceType } from '../../rewards/enums/source-type.enum';
-import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
+import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 // import { mStableApiResponse } from '../../tokens/interfaces/mbstable-api-response.interface';
 import { Token } from '../../tokens/interfaces/token.interface';
 import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
@@ -26,13 +26,13 @@ const MSTABLE_MBTC_VAULT = '0xF38522f63f40f9Dd81aBAfD2B8EFc2EC958a3016';
 const MSTABLE_HMBTC_VAULT = '0xF65D53AA6e2E4A5f4F026e73cb3e22C22D75E35C';
 
 export class mStableStrategy {
-  static async getValueSources(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
-    switch (settDefinition.depositToken) {
+  static async getValueSources(chain: Chain, VaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
+    switch (VaultDefinition.depositToken) {
       case TOKENS.MHBTC:
-        return Promise.all([getVaultSource(chain, settDefinition, MSTABLE_HMBTC_VAULT)]);
+        return Promise.all([getVaultSource(chain, VaultDefinition, MSTABLE_HMBTC_VAULT)]);
       case TOKENS.IMBTC:
       default:
-        return getImBtcValuceSource(chain, settDefinition);
+        return getImBtcValuceSource(chain, VaultDefinition);
     }
   }
 }
@@ -67,25 +67,25 @@ export async function getMhBtcPrice(chain: Chain, token: Token): Promise<TokenPr
   };
 }
 
-async function getImBtcValuceSource(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
-  // getMAssetValueSource(settDefinition),
-  return Promise.all([getVaultSource(chain, settDefinition, MSTABLE_MBTC_VAULT)]);
+async function getImBtcValuceSource(chain: Chain, VaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
+  // getMAssetValueSource(VaultDefinition),
+  return Promise.all([getVaultSource(chain, VaultDefinition, MSTABLE_MBTC_VAULT)]);
 }
 
 async function getVaultSource(
   chain: Chain,
-  settDefinition: SettDefinition,
+  VaultDefinition: VaultDefinition,
   vaultAddress: string,
 ): Promise<CachedValueSource> {
   const vault = MstableVault__factory.connect(vaultAddress, chain.provider);
-  if (!settDefinition.strategy) {
-    throw new UnprocessableEntity(`${settDefinition.name} requires strategy`);
+  if (!VaultDefinition.strategy) {
+    throw new UnprocessableEntity(`${VaultDefinition.name} requires strategy`);
   }
-  const { strategy } = settDefinition;
+  const { strategy } = VaultDefinition;
   const [balance, userData, depositTokenPrice, mtaPrice] = await Promise.all([
     vault.rawBalanceOf(strategy),
     vault.userData(strategy),
-    getPrice(settDefinition.depositToken),
+    getPrice(VaultDefinition.depositToken),
     getPrice(TOKENS.MTA),
   ]);
   const vaultBalance = formatBalance(balance);
@@ -115,18 +115,18 @@ async function getVaultSource(
       valueSource = createValueSource('Vested MTA Rewards', uniformPerformance(apr));
     }
   }
-  return valueSourceToCachedValueSource(valueSource, settDefinition, tokenEmission(getToken(TOKENS.MTA)));
+  return valueSourceToCachedValueSource(valueSource, VaultDefinition, tokenEmission(getToken(TOKENS.MTA)));
 }
 
 // TODO: re-enable mstable api at some point
-// async function getMAssetValueSource(settDefinition: SettDefinition): Promise<CachedValueSource> {
+// async function getMAssetValueSource(VaultDefinition: VaultDefinition): Promise<CachedValueSource> {
 //   const sourceName = 'mBTC Native Yield';
 //   const response = await fetch(MSTABLE_BTC_APR);
 //   const performance = uniformPerformance(0);
 //   if (!response.ok) {
 //     return valueSourceToCachedValueSource(
 //       createValueSource(sourceName, performance),
-//       settDefinition,
+//       VaultDefinition,
 //       SourceType.Emission,
 //     );
 //   }
@@ -142,5 +142,5 @@ async function getVaultSource(
 //     if (i === 29) performance.thirtyDay = currentApy;
 //   }
 //   const valueSource = createValueSource(sourceName, performance);
-//   return valueSourceToCachedValueSource(valueSource, settDefinition, SourceType.Emission);
+//   return valueSourceToCachedValueSource(valueSource, VaultDefinition, SourceType.Emission);
 // }

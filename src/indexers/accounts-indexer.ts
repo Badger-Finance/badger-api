@@ -9,7 +9,7 @@ import { UserSettBalance } from '../graphql/generated/badger';
 import { RewardMerkleDistribution } from '../rewards/interfaces/merkle-distributor.interface';
 import { RewardAmounts } from '../rewards/interfaces/reward-amounts.interface';
 import { getTreeDistribution } from '../rewards/rewards.utils';
-import { getSettDefinition } from '../setts/setts.utils';
+import { getVaultDefinition } from '../vaults/vaults.utils';
 import { AccountIndexMode } from './enums/account-index-mode.enum';
 import { batchRefreshAccounts, chunkArray } from './indexer.utils';
 import { AccountIndexEvent } from './interfaces/account-index-event.interface';
@@ -79,7 +79,7 @@ export async function refreshAccountSettBalances(chain: Chain, batchAccounts: Ac
       if (userBalances) {
         const balances = userBalances.filter((balance) => {
           try {
-            getSettDefinition(chain, balance.sett.id);
+            getVaultDefinition(chain, balance.sett.id);
             return true;
           } catch (err) {
             return false;

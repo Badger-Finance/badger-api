@@ -5,7 +5,7 @@ import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { Ethereum } from '../chains/config/eth.config';
 import { IS_OFFLINE } from '../config/constants';
-import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
+import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { getIndexedBlock, settToSnapshot } from './indexer.utils';
 
 const NO_HISTORIC = 'Queries more than';
@@ -27,7 +27,7 @@ async function indexChainSetts(chain: Chain) {
   await Promise.all(chain.setts.map((sett) => indexSett(chain, sett)));
 }
 
-async function indexSett(chain: Chain, sett: SettDefinition) {
+async function indexSett(chain: Chain, sett: VaultDefinition) {
   const { settToken, createdBlock } = sett;
   const thirtyMinutesBlocks = parseInt((chain.blocksPerYear / 365 / 24 / 2).toString());
 

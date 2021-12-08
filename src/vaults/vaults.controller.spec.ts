@@ -1,4 +1,4 @@
-import { Sett } from '@badger-dao/sdk';
+import { Vault } from '@badger-dao/sdk';
 import { PlatformTest } from '@tsed/common';
 import { BadRequest } from '@tsed/exceptions';
 import SuperTest from 'supertest';
@@ -6,11 +6,11 @@ import { uniformPerformance } from '../protocols/interfaces/performance.interfac
 import { createValueSource, ValueSource } from '../protocols/interfaces/value-source.interface';
 import * as protocolsUtils from '../protocols/protocols.utils';
 import { Server } from '../Server';
-import * as settsUtils from '../setts/setts.utils';
+import * as settsUtils from './vaults.utils';
 import { TokenBalance } from '../tokens/interfaces/token-balance.interface';
 import * as tokensUtils from '../tokens/tokens.utils';
 import { mockBalance } from '../tokens/tokens.utils';
-import { SettDefinition } from './interfaces/sett-definition.interface';
+import { VaultDefinition } from './interfaces/vault-definition.interface';
 
 describe('SettsController', () => {
   let request: SuperTest.SuperTest<SuperTest.Test>;
@@ -25,12 +25,12 @@ describe('SettsController', () => {
     jest
       .spyOn(settsUtils, 'getCachedSett')
       .mockImplementation(
-        async (settDefinition: SettDefinition): Promise<Sett> => settsUtils.defaultSett(settDefinition),
+        async (VaultDefinition: VaultDefinition): Promise<Vault> => settsUtils.defaultVault(VaultDefinition),
       );
     jest
       .spyOn(protocolsUtils, 'getVaultValueSources')
-      .mockImplementation(async (settDefinition: SettDefinition): Promise<ValueSource[]> => {
-        const performance = parseInt(settDefinition.settToken.slice(0, 5), 16) / 100;
+      .mockImplementation(async (VaultDefinition: VaultDefinition): Promise<ValueSource[]> => {
+        const performance = parseInt(VaultDefinition.settToken.slice(0, 5), 16) / 100;
         const underlying = createValueSource(settsUtils.VAULT_SOURCE, uniformPerformance(performance));
         const badger = createValueSource('Badger Rewards', uniformPerformance(performance));
         const digg = createValueSource('Digg Rewards', uniformPerformance(performance));
@@ -39,7 +39,7 @@ describe('SettsController', () => {
       });
     jest
       .spyOn(tokensUtils, 'getSettTokens')
-      .mockImplementation(async (sett: SettDefinition, _balance: number, _currency?: string): Promise<
+      .mockImplementation(async (sett: VaultDefinition, _balance: number, _currency?: string): Promise<
         TokenBalance[]
       > => {
         const token = tokensUtils.getToken(sett.depositToken);

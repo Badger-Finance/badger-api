@@ -1,7 +1,7 @@
-import { Sett } from '@badger-dao/sdk';
+import { Vault } from '@badger-dao/sdk';
 import * as AccountUtils from '../accounts/accounts.utils';
-import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
-import * as SettUtils from '../setts/setts.utils';
+import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
+import * as SettUtils from '../vaults/vaults.utils';
 import { getProtocolMetrics, getProtocolSettMetrics, getProtocolTotalUsers } from './metric.utils';
 
 describe('metrics.utils', () => {
@@ -23,7 +23,7 @@ describe('metrics.utils', () => {
     jest
       .spyOn(SettUtils, 'getCachedSett')
       .mockImplementation(
-        async (settDefinition: SettDefinition): Promise<Sett> => SettUtils.defaultSett(settDefinition),
+        async (VaultDefinition: VaultDefinition): Promise<Vault> => SettUtils.defaultVault(VaultDefinition),
       );
   });
 

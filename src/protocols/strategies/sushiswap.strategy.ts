@@ -16,8 +16,8 @@ import { valueSourceToCachedValueSource } from '../../indexers/indexer.utils';
 import { getPrice } from '../../prices/prices.utils';
 import { SourceType } from '../../rewards/enums/source-type.enum';
 import { noRewards } from '../../rewards/rewards.utils';
-import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
 import { formatBalance, getToken } from '../../tokens/tokens.utils';
+import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { CachedValueSource } from '../interfaces/cached-value-source.interface';
 import { PairDayData } from '../interfaces/pair-day-data.interface';
 import { uniformPerformance } from '../interfaces/performance.interface';
@@ -47,12 +47,12 @@ const sushiSellRate: Record<string, number> = {
 };
 
 export class SushiswapStrategy {
-  static async getValueSources(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
-    return Promise.all([getSushiswapSwapValue(chain, settDefinition), getEmissionSource(chain, settDefinition)]);
+  static async getValueSources(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
+    return Promise.all([getSushiswapSwapValue(chain, vaultDefinition), getEmissionSource(chain, vaultDefinition)]);
   }
 }
 
-async function getSushiswapSwapValue(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource> {
+async function getSushiswapSwapValue(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource> {
   let graphUrl;
   switch (chain.network) {
     case Network.xDai:
@@ -67,10 +67,13 @@ async function getSushiswapSwapValue(chain: Chain, settDefinition: SettDefinitio
     default:
       graphUrl = SUSHISWAP_URL;
   }
-  return getSushiSwapValue(settDefinition, graphUrl);
+  return getSushiSwapValue(vaultDefinition, graphUrl);
 }
 
-export async function getSushiSwapValue(settDefinition: SettDefinition, graphUrl: string): Promise<CachedValueSource> {
+export async function getSushiSwapValue(
+  vaultDefinition: VaultDefinition,
+  graphUrl: string,
+): Promise<CachedValueSource> {
   const client = new GraphQLClient(graphUrl);
   const sdk = getSushiswapSdk(client);
   const { pairDayDatas } = await sdk.SushiPairDayDatas({
@@ -78,57 +81,57 @@ export async function getSushiSwapValue(settDefinition: SettDefinition, graphUrl
     orderBy: PairDayData_OrderBy.Date,
     orderDirection: OrderDirection.Desc,
     where: {
-      pair: settDefinition.depositToken.toLowerCase(),
+      pair: vaultDefinition.depositToken.toLowerCase(),
     },
   });
   const converted = pairDayDatas.map((d): PairDayData => ({ reserveUSD: d.reserveUSD, dailyVolumeUSD: d.volumeUSD }));
-  return getSwapValue(settDefinition, converted);
+  return getSwapValue(vaultDefinition, converted);
 }
 
-async function getEmissionSource(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource> {
+async function getEmissionSource(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource> {
   const rewardType = chain.network === Network.Ethereum ? 'xSushi' : 'Sushi';
   const sourceName = `${rewardType} Rewards`;
   let emissionSource = valueSourceToCachedValueSource(
     createValueSource(sourceName, uniformPerformance(0)),
-    settDefinition,
+    vaultDefinition,
     SourceType.Emission,
   );
 
   switch (chain.network) {
     case Network.Polygon:
-      emissionSource = await getPerSecondSource(chain, settDefinition);
+      emissionSource = await getPerSecondSource(chain, vaultDefinition);
       break;
     case Network.Arbitrum:
-      emissionSource = await getArbitrumSource(chain, settDefinition);
+      emissionSource = await getArbitrumSource(chain, vaultDefinition);
       break;
     case Network.Ethereum:
     default:
-      emissionSource = await getEthereumSource(chain, settDefinition);
+      emissionSource = await getEthereumSource(chain, vaultDefinition);
   }
 
   return emissionSource;
 }
 
-async function getEthereumSource(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource> {
-  const poolId = sushiPoolId[settDefinition.depositToken];
-  if (!poolId || !settDefinition.strategy) {
+async function getEthereumSource(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource> {
+  const poolId = sushiPoolId[vaultDefinition.depositToken];
+  if (!poolId || !vaultDefinition.strategy) {
     return valueSourceToCachedValueSource(
       createValueSource('xSushi Rewards', uniformPerformance(0)),
-      settDefinition,
+      vaultDefinition,
       SourceType.Emission,
     );
   }
   const sellRate = 1 - sushiSellRate[chain.network];
-  const depositToken = Erc20__factory.connect(settDefinition.depositToken, chain.provider);
+  const depositToken = Erc20__factory.connect(vaultDefinition.depositToken, chain.provider);
   const sushiChef = SushiChef__factory.connect(SUSHI_CHEF, chain.provider);
   const [depositTokenPrice, sushiPrice, sushiPerBlock, totalAllocPoint, poolInfo, userInfo, poolBalance] =
     await Promise.all([
-      getPrice(settDefinition.depositToken),
+      getPrice(vaultDefinition.depositToken),
       getPrice(TOKENS.SUSHI),
       sushiChef.sushiPerBlock(),
       sushiChef.totalAllocPoint(),
       sushiChef.poolInfo(poolId),
-      sushiChef.userInfo(poolId, settDefinition.strategy),
+      sushiChef.userInfo(poolId, vaultDefinition.strategy),
       depositToken.balanceOf(SUSHI_CHEF),
     ]);
 
@@ -142,17 +145,17 @@ async function getEthereumSource(chain: Chain, settDefinition: SettDefinition): 
 
   return valueSourceToCachedValueSource(
     createValueSource('xSushi Rewards', uniformPerformance(sushiApr)),
-    settDefinition,
+    vaultDefinition,
     SourceType.Emission,
   );
 }
 
-async function getPerSecondSource(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource> {
-  const poolId = sushiPoolId[settDefinition.depositToken];
-  if (!poolId || !settDefinition.strategy) {
+async function getPerSecondSource(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource> {
+  const poolId = sushiPoolId[vaultDefinition.depositToken];
+  if (!poolId || !vaultDefinition.strategy) {
     return valueSourceToCachedValueSource(
       createValueSource('Sushi Rewards', uniformPerformance(0)),
-      settDefinition,
+      vaultDefinition,
       SourceType.Emission,
     );
   }
@@ -168,16 +171,16 @@ async function getPerSecondSource(chain: Chain, settDefinition: SettDefinition):
       throw new UnprocessableEntity(`Sushiswap does not support ${chain.network}`);
   }
   const sellRate = 1 - sushiSellRate[chain.network];
-  const depositToken = Erc20__factory.connect(settDefinition.depositToken, chain.provider);
+  const depositToken = Erc20__factory.connect(vaultDefinition.depositToken, chain.provider);
   const miniChef = SushiMiniChef__factory.connect(chef, chain.provider);
   const [depositTokenPrice, sushiPrice, sushiPerSecond, totalAllocPoint, poolInfo, userInfo, poolBalance] =
     await Promise.all([
-      getPrice(settDefinition.depositToken),
+      getPrice(vaultDefinition.depositToken),
       getPrice(TOKENS.SUSHI),
       miniChef.sushiPerSecond(),
       miniChef.totalAllocPoint(),
       miniChef.poolInfo(poolId),
-      miniChef.userInfo(poolId, settDefinition.strategy),
+      miniChef.userInfo(poolId, vaultDefinition.strategy),
       depositToken.balanceOf(chef),
     ]);
 
@@ -191,22 +194,22 @@ async function getPerSecondSource(chain: Chain, settDefinition: SettDefinition):
 
   return valueSourceToCachedValueSource(
     createValueSource('Sushi Rewards', uniformPerformance(sushiApr)),
-    settDefinition,
+    vaultDefinition,
     SourceType.Emission,
   );
 }
 
-async function getArbitrumSource(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource> {
+async function getArbitrumSource(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource> {
   const sushi = getToken(TOKENS.SUSHI);
-  if (settDefinition.depositToken === TOKENS.ARB_SUSHI_WETH_SUSHI) {
-    return noRewards(settDefinition, sushi);
+  if (vaultDefinition.depositToken === TOKENS.ARB_SUSHI_WETH_SUSHI) {
+    return noRewards(vaultDefinition, sushi);
   }
-  let source = await getPerSecondSource(chain, settDefinition);
-  if (settDefinition.depositToken === TOKENS.ARB_SUSHI_WETH_WBTC) {
+  let source = await getPerSecondSource(chain, vaultDefinition);
+  if (vaultDefinition.depositToken === TOKENS.ARB_SUSHI_WETH_WBTC) {
     const helperVault = getToken(TOKENS.BARB_SUSHI_WETH_SUSHI);
     source = valueSourceToCachedValueSource(
       createValueSource(`${helperVault.symbol} Rewards`, uniformPerformance(source.apr * 0.5)),
-      settDefinition,
+      vaultDefinition,
       tokenEmission(helperVault),
     );
   }

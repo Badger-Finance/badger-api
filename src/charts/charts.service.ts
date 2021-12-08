@@ -1,18 +1,18 @@
 import { Service } from '@tsed/di';
-import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
-import { SettSnapshot } from '../setts/interfaces/sett-snapshot.interface';
-import { getSettSnapshotsInRange } from '../setts/setts.utils';
+import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
+import { VaultSnapshot } from '../vaults/interfaces/vault-snapshot.interface';
+import { getSettSnapshotsInRange } from '../vaults/vaults.utils';
 import { ChartGranularity } from './enums/chart-granularity.enum';
 
 @Service()
 export class ChartsService {
   async getChartData(
-    sett: SettDefinition,
+    sett: VaultDefinition,
     start: Date,
     end: Date,
     granularity: ChartGranularity,
     period: number,
-  ): Promise<SettSnapshot[]> {
+  ): Promise<VaultSnapshot[]> {
     let snapshots = await getSettSnapshotsInRange(sett, start, end);
 
     // snapshot granularity @ 30 min intervals, 2 per hour, 48 per day

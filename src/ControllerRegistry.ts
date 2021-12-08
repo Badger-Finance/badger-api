@@ -7,7 +7,8 @@ import { MetricsController } from './metrics/metrics.controller';
 import { PriceController } from './prices/prices.controller';
 import { ProtocolController } from './protocols/protocols.controller';
 import { RewardController } from './rewards/rewards.controller';
-import { SettsController } from './setts/setts.controller';
+import { VaultsController } from './vaults/vaults.controller';
+import { SettsController } from './vaults/setts.controller';
 import { TokensController } from './tokens/tokens.controller';
 
 /**
@@ -21,6 +22,7 @@ export const controllers = [
   PriceController,
   ProtocolController,
   RewardController,
+  VaultsController,
   SettsController,
   AccountsController,
   LeaderBoardsController,

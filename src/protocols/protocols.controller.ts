@@ -2,7 +2,7 @@ import { Network } from '@badger-dao/sdk';
 import { Controller, Get, Inject, QueryParams } from '@tsed/common';
 import { ContentType, Description, Returns, Summary } from '@tsed/schema';
 import { Chain } from '../chains/config/chain.config';
-import { SettsService } from '../setts/setts.service';
+import { SettsService } from '../vaults/vaults.service';
 import { ProtocolSummaryModel } from './interfaces/protocol-summary-model.interface';
 
 @Controller('/')

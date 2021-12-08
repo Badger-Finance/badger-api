@@ -1,4 +1,4 @@
-import { Network, Protocol, SettState } from '@badger-dao/sdk';
+import { Network, Protocol, VaultState } from '@badger-dao/sdk';
 import fetch from 'node-fetch';
 import { BLOCKNATIVE_API_KEY } from '../../config/constants';
 import { Stage } from '../../config/enums/stage.enum';
@@ -6,7 +6,7 @@ import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { getCurveSettTokenBalance } from '../../protocols/strategies/convex.strategy';
-import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
+import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { ethTokensConfig } from '../../tokens/config/eth-tokens.config';
 import { getZsDiggTokenBalance } from '../../tokens/custom/zs-digg-balance';
 import { EthStrategy } from '../strategies/eth.strategy';
@@ -61,7 +61,7 @@ export class Ethereum extends Chain {
   }
 }
 
-export const ethSetts: SettDefinition[] = [
+export const ethSetts: VaultDefinition[] = [
   {
     name: 'renBTC/wBTC/sBTC',
     createdBlock: 11380877,
@@ -92,7 +92,7 @@ export const ethSetts: SettDefinition[] = [
     depositToken: TOKENS.CRV_RENBTC,
     getTokenBalance: getCurveSettTokenBalance,
     settToken: TOKENS.BCRV_HRENBTC,
-    state: SettState.Deprecated,
+    state: VaultState.Deprecated,
     protocol: Protocol.Curve,
   },
   {
@@ -107,7 +107,7 @@ export const ethSetts: SettDefinition[] = [
     name: 'Uniswap Wrapped BTC/Digg',
     createdBlock: 11680833,
     depositToken: TOKENS.UNI_DIGG_WBTC,
-    state: SettState.Deprecated,
+    state: VaultState.Deprecated,
     settToken: TOKENS.BUNI_DIGG_WBTC,
     protocol: Protocol.Uniswap,
   },
@@ -143,7 +143,7 @@ export const ethSetts: SettDefinition[] = [
     createdBlock: 11380871,
     depositToken: TOKENS.BADGER,
     settToken: TOKENS.BBADGER,
-    state: SettState.Deprecated,
+    state: VaultState.Deprecated,
   },
   {
     createdBlock: 12246710,
@@ -170,7 +170,7 @@ export const ethSetts: SettDefinition[] = [
     protocol: Protocol.Badger,
     settToken: TOKENS.BZS_DIGG,
     stage: Stage.Staging,
-    state: SettState.Experimental,
+    state: VaultState.Experimental,
   },
   {
     name: 'hBTC',
@@ -210,7 +210,7 @@ export const ethSetts: SettDefinition[] = [
     depositToken: TOKENS.CRV_TRICRYPTO,
     getTokenBalance: getCurveSettTokenBalance,
     settToken: TOKENS.BCRV_TRICRYPTO,
-    state: SettState.Deprecated,
+    state: VaultState.Deprecated,
     protocol: Protocol.Convex,
   },
   {
@@ -234,7 +234,7 @@ export const ethSetts: SettDefinition[] = [
     experimental: true,
     settToken: TOKENS.BRENBTC,
     stage: Stage.Staging,
-    state: SettState.Experimental,
+    state: VaultState.Experimental,
   },
   {
     name: 'Tricrypto2',

@@ -1,6 +1,6 @@
 import { attribute } from '@aws/dynamodb-data-mapper-annotations';
 
-export class SettStrategy {
+export class VaultStrategy {
   @attribute()
   address!: string;
 

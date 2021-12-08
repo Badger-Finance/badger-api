@@ -1,8 +1,8 @@
-import { Network, Protocol, SettState } from '@badger-dao/sdk';
+import { Network, Protocol, VaultState } from '@badger-dao/sdk';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
-import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
+import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { bscTokensConfig } from '../../tokens/config/bsc-tokens.config';
 import { BscStrategy } from '../strategies/bsc.strategy';
 import { Chain } from './chain.config';
@@ -28,13 +28,13 @@ export class BinanceSmartChain extends Chain {
   }
 }
 
-export const bscSetts: SettDefinition[] = [
+export const bscSetts: VaultDefinition[] = [
   {
     name: 'BNB/BTCB',
     createdBlock: 5516404,
     depositToken: TOKENS.PANCAKE_BNB_BTCB,
     settToken: TOKENS.BPANCAKE_BNB_BTCB,
-    state: SettState.Deprecated,
+    state: VaultState.Deprecated,
     protocol: Protocol.Pancakeswap,
   },
   {
@@ -42,7 +42,7 @@ export const bscSetts: SettDefinition[] = [
     createdBlock: 5712803,
     depositToken: TOKENS.PANCAKE_BBADGER_BTCB,
     settToken: TOKENS.BPANCAKE_BBADGER_BTCB,
-    state: SettState.Deprecated,
+    state: VaultState.Deprecated,
     protocol: Protocol.Pancakeswap,
   },
   {
@@ -50,7 +50,7 @@ export const bscSetts: SettDefinition[] = [
     createdBlock: 5712807,
     depositToken: TOKENS.PANCAKE_BDIGG_BTCB,
     settToken: TOKENS.BPANCAKE_BDIGG_BTCB,
-    state: SettState.Deprecated,
+    state: VaultState.Deprecated,
     protocol: Protocol.Pancakeswap,
   },
 ];
