@@ -12,6 +12,7 @@ import { getPrice, inCurrency } from '../prices/prices.utils';
 import { BoostData } from '../rewards/interfaces/boost-data.interface';
 import { getCachedSett, getSettDefinition } from '../setts/setts.utils';
 import { formatBalance, getSettTokens, getToken } from '../tokens/tokens.utils';
+import { AccountMap } from './interfaces/account-map.interface';
 import { CachedAccount } from './interfaces/cached-account.interface';
 import { CachedSettBalance } from './interfaces/cached-sett-balance.interface';
 
@@ -63,6 +64,11 @@ export async function getAccounts(chain: Chain): Promise<string[]> {
   return Object.keys(boostFile.userData).map((acc) => ethers.utils.getAddress(acc));
 }
 
+export async function getAccountMap(addresses: string[]): Promise<AccountMap> {
+  const accounts = await Promise.all(addresses.map(async (addr) => getCachedAccount(addr)));
+  return Object.fromEntries(accounts.map((acc) => [ethers.utils.getAddress(acc.address), acc]));
+}
+
 export async function getCachedAccount(address: string): Promise<CachedAccount> {
   const checksummedAccount = ethers.utils.getAddress(address);
   const defaultAccount: CachedAccount = {
@@ -74,7 +80,7 @@ export async function getCachedAccount(address: string): Promise<CachedAccount> 
     earnedValue: 0,
     balances: [],
     claimableBalances: [],
-    stakeRatio: 1,
+    stakeRatio: 0,
     nativeBalance: 0,
     nonNativeBalance: 0,
   };

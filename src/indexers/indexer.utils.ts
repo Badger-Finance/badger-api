@@ -1,5 +1,8 @@
 import { Network, Protocol } from '@badger-dao/sdk';
 import { NotFound } from '@tsed/exceptions';
+import { getAccountMap } from '../accounts/accounts.utils';
+import { AccountMap } from '../accounts/interfaces/account-map.interface';
+import { CachedAccount } from '../accounts/interfaces/cached-account.interface';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
@@ -27,10 +30,37 @@ import { CachedLiquidityPoolTokenBalance } from '../tokens/interfaces/cached-liq
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
 import { formatBalance, getToken } from '../tokens/tokens.utils';
 
-export const settToCachedSnapshot = async (
-  chain: Chain,
-  settDefinition: SettDefinition,
-): Promise<CachedSettSnapshot> => {
+// TODO: Figure out what to do with accounts indexer stuff
+
+export function chunkArray(addresses: string[], count: number): string[][] {
+  const chunks: string[][] = [];
+  const chunkSize = addresses.length / count;
+  for (let i = 0; i < addresses.length; i += chunkSize) {
+    chunks.push(addresses.slice(i, i + chunkSize));
+  }
+  return chunks;
+}
+
+export async function batchRefreshAccounts(
+  accounts: string[],
+  refreshFns: (batchAccounts: AccountMap) => Promise<void>[],
+  customBatch?: number,
+): Promise<void> {
+  const batchSize = customBatch ?? 500;
+  const mapper = getDataMapper();
+  for (let i = 0; i < accounts.length; i += batchSize) {
+    const addresses = accounts.slice(i, i + batchSize);
+    const batchAccounts = await getAccountMap(addresses);
+    await Promise.all(refreshFns(batchAccounts));
+    const cachedAccounts = Object.values(batchAccounts).map((account) => Object.assign(new CachedAccount(), account));
+    for await (const _item of mapper.batchPut(cachedAccounts)) {
+    }
+  }
+}
+
+// TODO: Figure out what to do with accounts indexer stuff
+
+export async function settToCachedSnapshot(chain: Chain, settDefinition: SettDefinition): Promise<CachedSettSnapshot> {
   const settToken = getToken(settDefinition.settToken);
   const depositToken = getToken(settDefinition.depositToken);
   const { sett } = await getSett(chain.graphUrl, settToken.address);
@@ -62,7 +92,7 @@ export const settToCachedSnapshot = async (
     strategy: strategyInfo,
     boostWeight,
   });
-};
+}
 
 export async function getQueryBlock(chain: Chain, block: number): Promise<number> {
   let queryBlock = block;

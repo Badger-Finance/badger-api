@@ -1,20 +1,16 @@
 import { Account, Network } from '@badger-dao/sdk';
 import { PlatformTest } from '@tsed/common';
-import { Chain } from '../chains/config/chain.config';
 import { Ethereum } from '../chains/config/eth.config';
-import * as accountIndexer from '../indexers/accounts-indexer';
-import { IndexMode } from '../indexers/accounts-indexer';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import { setupMapper, TEST_ADDR } from '../test/tests.utils';
 import { AccountsService } from './accounts.service';
-import * as accountsUtils from './accounts.utils';
 import { CachedAccount } from './interfaces/cached-account.interface';
+import * as accountsUtils from './accounts.utils';
 
-describe('charts.service', () => {
+describe('accounts.service', () => {
   const chain = new Ethereum();
   let service: AccountsService;
   let result: Account;
-  let refreshAccounts: jest.SpyInstance<Promise<void>, [chain: Chain[], mode: IndexMode, accounts: string[]]>;
 
   const defaultAccount: CachedAccount = {
     address: TEST_ADDR,
@@ -67,7 +63,6 @@ describe('charts.service', () => {
   });
 
   beforeEach(async () => {
-    refreshAccounts = jest.spyOn(accountIndexer, 'refreshAccounts').mockImplementation(() => Promise.resolve());
     setupMapper([defaultAccount]);
     jest.spyOn(accountsUtils, 'getCachedBoost').mockImplementation(async () => ({
       leaderboard: `${chain.network}_${LeaderBoardType.BadgerBoost}`,
@@ -85,10 +80,6 @@ describe('charts.service', () => {
   afterEach(PlatformTest.reset);
 
   describe('getAccount', () => {
-    it('calls refresh account on requested address', () => {
-      const requestedAddresses = refreshAccounts.mock.calls.flatMap((calls) => calls[2]);
-      expect(requestedAddresses).toEqual([TEST_ADDR]);
-    });
     it('returns the expected account', () => {
       expect(result).toMatchSnapshot();
     });
