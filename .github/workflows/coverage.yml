@@ -13,5 +13,5 @@ jobs:
       - uses: artiomtr/jest-coverage-report-action@v2.0-rc.1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          threshold: 80
+          threshold: 50
           package-manager: yarn
