@@ -1,10 +1,10 @@
-import { Protocol, SettState } from '@badger-dao/sdk';
+import { Protocol, VaultState } from '@badger-dao/sdk';
 import { Chain } from '../../chains/config/chain.config';
 import { Stage } from '../../config/enums/stage.enum';
 import { BouncerType } from '../../rewards/enums/bouncer-type.enum';
 import { CachedLiquidityPoolTokenBalance } from '../../tokens/interfaces/cached-liquidity-pool-token-balance.interface';
 
-export interface SettDefinition {
+export interface VaultDefinition {
   balanceDecimals?: number;
   createdBlock: number;
   depositToken: string;
@@ -17,7 +17,7 @@ export interface SettDefinition {
   protocol?: Protocol;
   settToken: string;
   stage?: Stage;
-  state?: SettState;
+  state?: VaultState;
   strategy?: string;
   supplyDecimals?: number;
 }

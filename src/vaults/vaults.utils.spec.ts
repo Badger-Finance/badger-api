@@ -1,4 +1,4 @@
-import { Protocol, Sett, SettState } from '@badger-dao/sdk';
+import { Protocol, Vault, VaultState, VaultType } from '@badger-dao/sdk';
 import { NotFound } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { BinanceSmartChain } from '../chains/config/bsc.config';
@@ -6,19 +6,19 @@ import { Ethereum } from '../chains/config/eth.config';
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
 import { randomPerformance, randomSett, randomSnapshot, randomSnapshots, setupMapper } from '../test/tests.utils';
 import { getToken } from '../tokens/tokens.utils';
-import { defaultSett, getCachedSett, getPerformance, getSettDefinition, getSettSnapshots } from './setts.utils';
+import { defaultVault, getCachedSett, getPerformance, getVaultDefinition, getSettSnapshots } from './vaults.utils';
 
 describe('setts.utils', () => {
-  describe('defaultSett', () => {
+  describe('VaultState', () => {
     it('returns a sett default fields', () => {
       const settDefinition = randomSett();
       const depositToken = getToken(settDefinition.depositToken);
       const settToken = getToken(settDefinition.settToken);
-      const expected: Sett = {
+      const expected: Vault = {
         asset: depositToken.symbol,
         settAsset: settToken.symbol,
         newVault: settDefinition.newVault ?? false,
-        state: settDefinition.state ?? SettState.Open,
+        state: settDefinition.state ?? VaultState.Open,
         apr: 0,
         balance: 0,
         boost: {
@@ -40,8 +40,9 @@ describe('setts.utils', () => {
           performanceFee: 20,
           strategistFee: 10,
         },
+        type: VaultType.Standard,
       };
-      const actual = defaultSett(settDefinition);
+      const actual = defaultVault(settDefinition);
       expect(actual).toMatchObject(expected);
     });
   });
@@ -52,7 +53,7 @@ describe('setts.utils', () => {
         setupMapper([]);
         const settDefinition = randomSett();
         const cached = await getCachedSett(settDefinition);
-        expect(cached).toMatchObject(defaultSett(settDefinition));
+        expect(cached).toMatchObject(defaultVault(settDefinition));
       });
     });
 
@@ -62,7 +63,7 @@ describe('setts.utils', () => {
         const snapshot = randomSnapshot(sett);
         setupMapper([snapshot]);
         const cached = await getCachedSett(sett);
-        const expected = defaultSett(sett);
+        const expected = defaultVault(sett);
         expected.pricePerFullShare = snapshot.balance / snapshot.supply;
         expected.balance = snapshot.balance;
         expected.value = snapshot.settValue;
@@ -120,12 +121,12 @@ describe('setts.utils', () => {
     });
   });
 
-  describe('getSettDefinition', () => {
+  describe('getVaultDefinition', () => {
     describe('for an existing sett', () => {
       it('returns the expected sett definition', () => {
         const eth = new Ethereum();
         const expected = eth.setts[Math.floor(Math.random() * eth.setts.length)];
-        const actual = getSettDefinition(eth, expected.settToken);
+        const actual = getVaultDefinition(eth, expected.settToken);
         expect(actual).toMatchObject(expected);
       });
     });
@@ -134,7 +135,7 @@ describe('setts.utils', () => {
       it('throws a not found error', () => {
         const eth = new Ethereum();
         const expected = eth.setts[Math.floor(Math.random() * eth.setts.length)];
-        expect(() => getSettDefinition(new BinanceSmartChain(), expected.settToken)).toThrow(NotFound);
+        expect(() => getVaultDefinition(new BinanceSmartChain(), expected.settToken)).toThrow(NotFound);
       });
     });
 
@@ -142,7 +143,7 @@ describe('setts.utils', () => {
       it('throws a not found error', () => {
         const eth = new Ethereum();
         const expected = eth.setts[Math.floor(Math.random() * eth.setts.length)];
-        expect(() => getSettDefinition(eth, expected.depositToken)).toThrow(NotFound);
+        expect(() => getVaultDefinition(eth, expected.depositToken)).toThrow(NotFound);
       });
     });
   });

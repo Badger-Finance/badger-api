@@ -6,7 +6,7 @@ import { TOKENS } from '../../config/tokens.config';
 import { Erc20__factory } from '../../contracts';
 import { tokenBalancesToCachedLiquidityPoolTokenBalance } from '../../indexers/indexer.utils';
 import { getPrice } from '../../prices/prices.utils';
-import { getCachedSett } from '../../setts/setts.utils';
+import { getCachedSett } from '../../vaults/vaults.utils';
 import { CachedLiquidityPoolTokenBalance } from '../interfaces/cached-liquidity-pool-token-balance.interface';
 import { formatBalance, getToken, toCachedBalance } from '../tokens.utils';
 

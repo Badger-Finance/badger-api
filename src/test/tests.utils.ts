@@ -12,9 +12,9 @@ import { xDai } from '../chains/config/xdai.config';
 import { ONE_DAY_MS, ONE_MINUTE_MS, SAMPLE_DAYS } from '../config/constants';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import { CachedBoost } from '../leaderboards/interface/cached-boost.interface';
-import { CachedSettSnapshot } from '../setts/interfaces/cached-sett-snapshot.interface';
-import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
-import { SettSnapshot } from '../setts/interfaces/sett-snapshot.interface';
+import { CachedSettSnapshot } from '../vaults/interfaces/cached-sett-snapshot.interface';
+import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
+import { VaultSnapshot } from '../vaults/interfaces/vault-snapshot.interface';
 
 export const TEST_ADDR = '0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484';
 
@@ -73,8 +73,8 @@ export const randomValue = (min?: number, max?: number): number => {
   return minPrice + Math.random() * (maxPrice - minPrice);
 };
 
-export function randomSnapshot(settDefinition?: SettDefinition): CachedSettSnapshot {
-  const sett = settDefinition || randomSett();
+export function randomSnapshot(VaultDefinition?: VaultDefinition): CachedSettSnapshot {
+  const sett = VaultDefinition || randomSett();
   const balance = randomValue();
   const supply = randomValue();
   const ratio = balance / supply;
@@ -95,18 +95,18 @@ export function randomSnapshot(settDefinition?: SettDefinition): CachedSettSnaps
   });
 }
 
-export function randomSett(): SettDefinition {
+export function randomSett(): VaultDefinition {
   const definitions = loadChains().flatMap((chain) => chain.setts);
   return definitions[Math.floor(Math.random() * definitions.length)];
 }
 
-export function randomSnapshots(settDefinition?: SettDefinition, count?: number): SettSnapshot[] {
-  const snapshots: SettSnapshot[] = [];
+export function randomSnapshots(VaultDefinition?: VaultDefinition, count?: number): VaultSnapshot[] {
+  const snapshots: VaultSnapshot[] = [];
   const snapshotCount = count || SAMPLE_DAYS;
-  const sett = settDefinition || randomSett();
+  const sett = VaultDefinition || randomSett();
   for (let i = 0; i < snapshotCount; i++) {
     snapshots.push(
-      Object.assign(new SettSnapshot(), {
+      Object.assign(new VaultSnapshot(), {
         asset: sett.name,
         height: 0,
         timestamp: Date.now() - 1 - i * ONE_MINUTE_MS * 30,
@@ -120,7 +120,7 @@ export function randomSnapshots(settDefinition?: SettDefinition, count?: number)
   return snapshots;
 }
 
-export function randomPerformance(): [SettSnapshot, SettSnapshot] {
+export function randomPerformance(): [VaultSnapshot, VaultSnapshot] {
   const [current, initial] = randomSnapshots(randomSett(), 2);
   initial.timestamp = current.timestamp - ONE_DAY_MS;
   return [current, initial];

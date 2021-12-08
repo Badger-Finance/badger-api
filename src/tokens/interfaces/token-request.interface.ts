@@ -1,9 +1,9 @@
 import { Chain } from '../../chains/config/chain.config';
-import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
+import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 
 export interface TokenRequest {
   chain: Chain;
-  sett: SettDefinition;
+  sett: VaultDefinition;
   balance: number;
   currency?: string;
 }

@@ -3,7 +3,7 @@ import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { getCurveSettTokenBalance } from '../../protocols/strategies/convex.strategy';
-import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
+import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { maticTokensConfig } from '../../tokens/config/matic-tokens.config';
 import { MaticStrategy } from '../strategies/matic.strategy';
 import { Chain } from './chain.config';
@@ -35,7 +35,7 @@ export class Polygon extends Chain {
   }
 }
 
-export const maticSetts: SettDefinition[] = [
+export const maticSetts: VaultDefinition[] = [
   {
     name: 'Wrapped BTC/ibBTC',
     settToken: TOKENS.BMATIC_SUSHI_IBBTC_WBTC,

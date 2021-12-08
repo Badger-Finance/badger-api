@@ -1,6 +1,6 @@
 import { Description, Example, Property, Title } from '@tsed/schema';
 import { ethSetts } from '../../chains/config/eth.config';
-import { SettSummary } from '../../setts/interfaces/sett-summary.interface';
+import { VaultSummary } from '../../vaults/interfaces/vault-summary.interface';
 import { ProtocolSummary } from './protocol-summary.interface';
 
 export class ProtocolSummaryModel implements ProtocolSummary {
@@ -17,7 +17,7 @@ export class ProtocolSummaryModel implements ProtocolSummary {
     { name: ethSetts[1], balance: 12.32, value: 91345 },
   ])
   @Property()
-  public setts?: SettSummary[];
+  public setts?: VaultSummary[];
 
   constructor(protocolSummary: ProtocolSummary) {
     this.totalValue = protocolSummary.totalValue;

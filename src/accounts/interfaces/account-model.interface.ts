@@ -1,4 +1,4 @@
-import { Account, SettData } from '@badger-dao/sdk';
+import { Account, VaultData } from '@badger-dao/sdk';
 import { Description, Example, Property, Title } from '@tsed/schema';
 import { ethers } from 'ethers';
 import { TOKENS } from '../../config/tokens.config';
@@ -72,7 +72,7 @@ export class AccountModel implements Account {
     },
   })
   @Property()
-  public data: Record<string, SettData>;
+  public data: Record<string, VaultData>;
 
   @Title('claimableBalancesMap')
   @Description('Claimable amounts of tokens currently available for an account in the Badger Tree')

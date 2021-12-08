@@ -2,13 +2,13 @@ import { Network } from '@badger-dao/sdk';
 import { Controller, Get, Inject, QueryParams } from '@tsed/common';
 import { ContentType, Description, Returns, Summary } from '@tsed/schema';
 import { Chain } from '../chains/config/chain.config';
-import { SettsService } from '../setts/setts.service';
+import { VaultsService } from '../vaults/vaults.service';
 import { ProtocolSummaryModel } from './interfaces/protocol-summary-model.interface';
 
 @Controller('/')
 export class ProtocolController {
   @Inject()
-  settsService!: SettsService;
+  vaultsService!: VaultsService;
 
   @Get('/value')
   @ContentType('json')
@@ -20,6 +20,6 @@ export class ProtocolController {
     @QueryParams('chain') chain?: Network,
     @QueryParams('currency') currency?: string,
   ): Promise<ProtocolSummaryModel> {
-    return this.settsService.getProtocolSummary(Chain.getChain(chain), currency);
+    return this.vaultsService.getProtocolSummary(Chain.getChain(chain), currency);
   }
 }

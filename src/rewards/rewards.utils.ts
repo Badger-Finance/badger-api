@@ -11,8 +11,8 @@ import { CachedValueSource } from '../protocols/interfaces/cached-value-source.i
 import { uniformPerformance } from '../protocols/interfaces/performance.interface';
 import { createValueSource } from '../protocols/interfaces/value-source.interface';
 import { tokenEmission } from '../protocols/protocols.utils';
-import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
-import { getCachedSett } from '../setts/setts.utils';
+import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
+import { getCachedSett } from '../vaults/vaults.utils';
 import { Token } from '../tokens/interfaces/token.interface';
 import { getToken } from '../tokens/tokens.utils';
 import { RewardMerkleDistribution } from './interfaces/merkle-distributor.interface';
@@ -26,21 +26,21 @@ export async function getTreeDistribution(chain: Chain): Promise<RewardMerkleDis
   return JSON.parse(rewardFile.toString('utf-8'));
 }
 
-export function noRewards(settDefinition: SettDefinition, token: Token) {
+export function noRewards(VaultDefinition: VaultDefinition, token: Token) {
   return valueSourceToCachedValueSource(
     createValueSource(`${token.symbol} Rewards`, uniformPerformance(0)),
-    settDefinition,
+    VaultDefinition,
     tokenEmission(token),
   );
 }
 
-export async function getRewardEmission(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
+export async function getRewardEmission(chain: Chain, VaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
   const boostFile = await getBoostFile(chain);
-  if (!chain.rewardsLogger || settDefinition.depositToken === TOKENS.DIGG || !boostFile) {
+  if (!chain.rewardsLogger || VaultDefinition.depositToken === TOKENS.DIGG || !boostFile) {
     return [];
   }
-  const { settToken } = settDefinition;
-  const sett = await getCachedSett(settDefinition);
+  const { settToken } = VaultDefinition;
+  const sett = await getCachedSett(VaultDefinition);
   if (sett.settToken === TOKENS.BICVX) {
     delete boostFile.multiplierData[sett.settToken];
   }
@@ -103,10 +103,10 @@ export async function getRewardEmission(chain: Chain, settDefinition: SettDefini
         false,
         boostRange,
       );
-      emissionSources.push(valueSourceToCachedValueSource(boostedSource, settDefinition, tokenEmission(token, true)));
+      emissionSources.push(valueSourceToCachedValueSource(boostedSource, VaultDefinition, tokenEmission(token, true)));
     }
     const proRataSource = createValueSource(`${token.name} Rewards`, uniformPerformance(proRataAPR));
-    emissionSources.push(valueSourceToCachedValueSource(proRataSource, settDefinition, tokenEmission(token)));
+    emissionSources.push(valueSourceToCachedValueSource(proRataSource, VaultDefinition, tokenEmission(token)));
   }
   return emissionSources;
 }

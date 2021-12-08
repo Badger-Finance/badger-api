@@ -1,7 +1,7 @@
 import { embed } from '@aws/dynamodb-data-mapper';
 import { attribute, hashKey, table } from '@aws/dynamodb-data-mapper-annotations';
 import { SETT_SNAPSHOTS_DATA } from '../../config/constants';
-import { SettStrategy } from './sett-strategy.interface';
+import { VaultStrategy } from './vault-strategy.interface';
 
 @table(SETT_SNAPSHOTS_DATA)
 export class CachedSettSnapshot {
@@ -23,8 +23,8 @@ export class CachedSettSnapshot {
   @attribute()
   boostWeight!: number;
 
-  @attribute({ memberType: embed(SettStrategy) })
-  strategy!: SettStrategy;
+  @attribute({ memberType: embed(VaultStrategy) })
+  strategy!: VaultStrategy;
 
   @attribute({ defaultProvider: () => Date.now() })
   updatedAt!: number;

@@ -1,7 +1,7 @@
 import { PlatformTest } from '@tsed/common';
 import { Ethereum } from '../chains/config/eth.config';
 import { TOKENS } from '../config/tokens.config';
-import { getSettDefinition } from '../setts/setts.utils';
+import { getVaultDefinition } from '../vaults/vaults.utils';
 import { randomSnapshots, setupMapper } from '../test/tests.utils';
 import { ChartsService } from './charts.service';
 import { ChartGranularity } from './enums/chart-granularity.enum';
@@ -74,7 +74,7 @@ describe('charts.service', () => {
       'returns %d data points for granularity %d %s from %s to %s',
       async (count: number, size: number, granularity: ChartGranularity, start: Date, end: Date) => {
         const expected = ChartsService.getRequestedDataPoints(new Date(start), new Date(end), granularity, size);
-        const settDefinition = getSettDefinition(new Ethereum(), TOKENS.BBADGER);
+        const settDefinition = getVaultDefinition(new Ethereum(), TOKENS.BBADGER);
         // snapshot granularity @ 30 min intervals, 2 per hour, 48 per day
         const interval = granularity === ChartGranularity.HOUR ? 2 : 48 * size;
         const seed = randomSnapshots(settDefinition, count * interval);

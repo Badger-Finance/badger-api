@@ -6,8 +6,8 @@ import { SwaprStaking__factory } from '../../contracts';
 import { SwaprStrategy__factory } from '../../contracts/factories/SwaprStrategy__factory';
 import { valueSourceToCachedValueSource } from '../../indexers/indexer.utils';
 import { getPrice } from '../../prices/prices.utils';
-import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
-import { getCachedSett } from '../../setts/setts.utils';
+import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
+import { getCachedSett } from '../../vaults/vaults.utils';
 import { formatBalance, getToken } from '../../tokens/tokens.utils';
 import { CachedValueSource } from '../interfaces/cached-value-source.interface';
 import { uniformPerformance } from '../interfaces/performance.interface';
@@ -23,18 +23,18 @@ const COMPOUND_SCALARS = {
 };
 
 export class SwaprStrategy {
-  static async getValueSources(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
+  static async getValueSources(chain: Chain, VaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
     return Promise.all([
-      getUniV2SwapValue(SWAPR_SUBGRAPH_URL, settDefinition),
-      ...(await getSwaprEmission(chain, settDefinition)),
+      getUniV2SwapValue(SWAPR_SUBGRAPH_URL, VaultDefinition),
+      ...(await getSwaprEmission(chain, VaultDefinition)),
     ]);
   }
 }
 
-async function getSwaprEmission(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
-  const compoundScalar = COMPOUND_SCALARS[settDefinition.settToken] ?? 0;
+async function getSwaprEmission(chain: Chain, VaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
+  const compoundScalar = COMPOUND_SCALARS[VaultDefinition.settToken] ?? 0;
   const helperToken = getToken(TOKENS.BARB_SWP_SWPR_WETH);
-  const cachedSett = await getCachedSett(settDefinition);
+  const cachedSett = await getCachedSett(VaultDefinition);
   const { strategy } = cachedSett;
   if (strategy.address === ethers.constants.AddressZero) {
     return [];
@@ -46,8 +46,8 @@ async function getSwaprEmission(chain: Chain, settDefinition: SettDefinition): P
   const [duration, totalSupply, lpTokenPrice, sett] = await Promise.all([
     stakingContract.secondsDuration(),
     stakingContract.totalStakedTokensAmount(),
-    getPrice(settDefinition.depositToken),
-    getCachedSett(settDefinition),
+    getPrice(VaultDefinition.depositToken),
+    getCachedSett(VaultDefinition),
   ]);
   const stakedAmount = formatBalance(totalSupply) * lpTokenPrice.usd;
   const strategyFeeMultiplier = 1 - (sett.strategy.performanceFee + sett.strategy.strategistFee) / 10000;
@@ -66,7 +66,7 @@ async function getSwaprEmission(chain: Chain, settDefinition: SettDefinition): P
         `${helperToken.name} Rewards`,
         uniformPerformance(apr * strategyFeeMultiplier * compoundScalar),
       );
-      sources.push(valueSourceToCachedValueSource(swaprEmission, settDefinition, tokenEmission(rewardToken)));
+      sources.push(valueSourceToCachedValueSource(swaprEmission, VaultDefinition, tokenEmission(rewardToken)));
       tokenIndex++;
     } catch (err) {
       break;

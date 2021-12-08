@@ -2,8 +2,8 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { DEBUG } from '../config/constants';
-import { CachedSettSnapshot } from '../setts/interfaces/cached-sett-snapshot.interface';
-import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
+import { CachedSettSnapshot } from '../vaults/interfaces/cached-sett-snapshot.interface';
+import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { settToCachedSnapshot } from './indexer.utils';
 
 export async function refreshSettSnapshots() {
@@ -15,7 +15,7 @@ async function captureChainSnapshots(chain: Chain) {
   return Promise.all(chain.setts.map(async (sett) => captureSnapshot(chain, sett)));
 }
 
-async function captureSnapshot(chain: Chain, sett: SettDefinition): Promise<CachedSettSnapshot | null> {
+async function captureSnapshot(chain: Chain, sett: VaultDefinition): Promise<CachedSettSnapshot | null> {
   try {
     // purposefully await to leverage try / catch
     const snapshot = await settToCachedSnapshot(chain, sett);
