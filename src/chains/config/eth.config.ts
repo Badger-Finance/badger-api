@@ -8,7 +8,6 @@ import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { getCurveSettTokenBalance } from '../../protocols/strategies/convex.strategy';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { ethTokensConfig } from '../../tokens/config/eth-tokens.config';
-import { getZsDiggTokenBalance } from '../../tokens/custom/zs-digg-balance';
 import { EthStrategy } from '../strategies/eth.strategy';
 import { Chain } from './chain.config';
 
@@ -159,18 +158,6 @@ export const ethSetts: VaultDefinition[] = [
     settToken: TOKENS.BSUSHI_IBBTC_WBTC,
     strategy: '0xf4146A176b09C664978e03d28d07Db4431525dAd',
     protocol: Protocol.Sushiswap,
-  },
-  {
-    name: 'Digg Stabilization',
-    balanceDecimals: 18,
-    createdBlock: 12375910,
-    depositToken: TOKENS.DIGG,
-    experimental: true,
-    getTokenBalance: getZsDiggTokenBalance,
-    protocol: Protocol.Badger,
-    settToken: TOKENS.BZS_DIGG,
-    stage: Stage.Staging,
-    state: VaultState.Experimental,
   },
   {
     name: 'hBTC',
