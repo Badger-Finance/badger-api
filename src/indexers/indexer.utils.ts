@@ -24,7 +24,7 @@ import { getRewardEmission } from '../rewards/rewards.utils';
 import { CachedSettSnapshot } from '../vaults/interfaces/cached-sett-snapshot.interface';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { VaultSnapshot } from '../vaults/interfaces/vault-snapshot.interface';
-import { SettsService } from '../vaults/vaults.service';
+import { VaultsService } from '../vaults/vaults.service';
 import { getBoostWeight, getPricePerShare, getSett, getStrategyInfo } from '../vaults/vaults.utils';
 import { CachedLiquidityPoolTokenBalance } from '../tokens/interfaces/cached-liquidity-pool-token-balance.interface';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
@@ -202,7 +202,7 @@ export function tokenBalancesToCachedLiquidityPoolTokenBalance(
 
 export async function getUnderlyingPerformance(VaultDefinition: VaultDefinition): Promise<CachedValueSource> {
   return valueSourceToCachedValueSource(
-    await SettsService.getSettPerformance(VaultDefinition),
+    await VaultsService.getSettPerformance(VaultDefinition),
     VaultDefinition,
     SourceType.Compound,
   );
@@ -212,7 +212,7 @@ export async function getSettTokenPerformances(
   chain: Chain,
   VaultDefinition: VaultDefinition,
 ): Promise<CachedValueSource[]> {
-  const performances = await SettsService.getSettTokenPerformance(chain, VaultDefinition);
+  const performances = await VaultsService.getSettTokenPerformance(chain, VaultDefinition);
   return performances.map((perf) => valueSourceToCachedValueSource(perf, VaultDefinition, 'derivative'));
 }
 
