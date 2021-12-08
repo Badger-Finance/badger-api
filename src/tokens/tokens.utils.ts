@@ -4,8 +4,8 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
 import { getPrice, inCurrency } from '../prices/prices.utils';
 import { getLiquidityData } from '../protocols/common/swap.utils';
-import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
-import { getCachedSett } from '../setts/setts.utils';
+import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
+import { getCachedSett } from '../vaults/vaults.utils';
 import { arbitrumTokensConfig } from './config/arbitrum-tokens.config';
 import { bscTokensConfig } from './config/bsc-tokens.config';
 import { ethTokensConfig } from './config/eth-tokens.config';
@@ -63,7 +63,7 @@ export const getTokenByName = (name: string): Token => {
  * @param sett Requested sett definition.
  * @returns Array of token definitions comprising requested sett's underlying asset.
  */
-export const getSettUnderlyingTokens = async (chain: Chain, sett: SettDefinition): Promise<Token[]> => {
+export const getSettUnderlyingTokens = async (chain: Chain, sett: VaultDefinition): Promise<Token[]> => {
   const depositToken = getToken(sett.depositToken);
   if (depositToken.lpToken) {
     try {
@@ -139,7 +139,11 @@ export async function toCachedBalance(token: Token, balance: number): Promise<Ca
  * @param currency Optional currency denomination.
  * @returns Array of token balances from the Sett.
  */
-export async function getSettTokens(sett: SettDefinition, balance: number, currency?: string): Promise<TokenBalance[]> {
+export async function getSettTokens(
+  sett: VaultDefinition,
+  balance: number,
+  currency?: string,
+): Promise<TokenBalance[]> {
   const { protocol, depositToken, settToken } = sett;
   const token = getToken(sett.depositToken);
   if (protocol && (token.lpToken || sett.getTokenBalance)) {

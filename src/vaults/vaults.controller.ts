@@ -2,40 +2,40 @@ import { Network } from '@badger-dao/sdk';
 import { Controller, Get, Inject, PathParams, QueryParams } from '@tsed/common';
 import { ContentType, Description, Returns, Summary } from '@tsed/schema';
 import { Chain } from '../chains/config/chain.config';
-import { SettModel } from './interfaces/sett-model.interface';
-import { SettsService } from './setts.service';
+import { VaultModel } from './interfaces/vault-model.interface';
+import { VaultsService } from './vaults.service';
 
-@Controller('/setts')
-export class SettsController {
+@Controller('/vaults')
+export class VaultsController {
   @Inject()
-  settsService!: SettsService;
+  vaultService!: VaultsService;
 
   @Get()
   @ContentType('json')
   @Summary('Get a list of protocol setts')
   @Description('Return a list of protocol setts for the requested chain')
-  @Returns(200, SettModel)
+  @Returns(200, VaultModel)
   @(Returns(400).Description('Not a valid chain'))
   @(Returns(404).Description('Not a valid sett'))
   async listSetts(
     @QueryParams('chain') chain?: Network,
     @QueryParams('currency') currency?: string,
-  ): Promise<SettModel[]> {
-    return this.settsService.listSetts(Chain.getChain(chain), currency);
+  ): Promise<VaultModel[]> {
+    return this.vaultService.listSetts(Chain.getChain(chain), currency);
   }
 
   @Get('/:contract')
   @ContentType('json')
   @Summary('Get a specific sett')
   @Description('Return a specific sett for the requested chain')
-  @Returns(200, SettModel)
+  @Returns(200, VaultModel)
   @(Returns(400).Description('Not a valid chain'))
   @(Returns(404).Description('Not a valid sett'))
   async getSett(
     @PathParams('contract') contract: string,
     @QueryParams('chain') chain?: Network,
     @QueryParams('currency') currency?: string,
-  ): Promise<SettModel> {
-    return this.settsService.getSett(Chain.getChain(chain), contract, currency);
+  ): Promise<VaultModel> {
+    return this.vaultService.getSett(Chain.getChain(chain), contract, currency);
   }
 }

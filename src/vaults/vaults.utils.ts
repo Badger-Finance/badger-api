@@ -9,18 +9,18 @@ import { getSdk, SettQuery } from '../graphql/generated/badger';
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
 import { formatBalance, getToken } from '../tokens/tokens.utils';
 import { CachedSettSnapshot } from './interfaces/cached-sett-snapshot.interface';
-import { SettDefinition } from './interfaces/sett-definition.interface';
-import { SettSnapshot } from './interfaces/sett-snapshot.interface';
+import { VaultDefinition } from './interfaces/vault-definition.interface';
+import { VaultSnapshot } from './interfaces/vault-snapshot.interface';
 import { Sett__factory, Controller__factory, Strategy__factory, EmissionControl__factory } from '../contracts';
-import { SettStrategy } from './interfaces/sett-strategy.interface';
+import { VaultStrategy } from './interfaces/vault-strategy.interface';
 import { TOKENS } from '../config/tokens.config';
-import { Protocol, Sett, SettState } from '@badger-dao/sdk';
+import { Protocol, Vault, VaultState, VaultType } from '@badger-dao/sdk';
 
 export const VAULT_SOURCE = 'Vault Compounding';
 
-export const defaultSett = (settDefinition: SettDefinition): Sett => {
-  const assetToken = getToken(settDefinition.depositToken);
-  const vaultToken = getToken(settDefinition.settToken);
+export function defaultVault(VaultDefinition: VaultDefinition): Vault {
+  const assetToken = getToken(VaultDefinition.depositToken);
+  const vaultToken = getToken(VaultDefinition.settToken);
   return {
     asset: assetToken.symbol,
     apr: 0,
@@ -29,26 +29,27 @@ export const defaultSett = (settDefinition: SettDefinition): Sett => {
       enabled: false,
       weight: 0,
     },
-    bouncer: settDefinition.bouncer ?? BouncerType.None,
-    name: settDefinition.name,
+    bouncer: VaultDefinition.bouncer ?? BouncerType.None,
+    name: VaultDefinition.name,
     protocol: Protocol.Badger,
     pricePerFullShare: 1,
     sources: [],
-    state: settDefinition.state ?? SettState.Open,
+    state: VaultDefinition.state ?? VaultState.Open,
     tokens: [],
-    underlyingToken: settDefinition.depositToken,
+    underlyingToken: VaultDefinition.depositToken,
     value: 0,
-    newVault: !!settDefinition.newVault,
+    newVault: !!VaultDefinition.newVault,
     settAsset: vaultToken.symbol,
-    settToken: settDefinition.settToken,
+    settToken: VaultDefinition.settToken,
     strategy: {
       address: ethers.constants.AddressZero,
       withdrawFee: 50,
       performanceFee: 20,
       strategistFee: 10,
     },
+    type: VaultType.Standard,
   };
-};
+}
 
 export const getSett = async (graphUrl: string, contract: string, block?: number): Promise<SettQuery> => {
   const badgerGraphqlClient = new GraphQLClient(graphUrl);
@@ -61,20 +62,20 @@ export const getSett = async (graphUrl: string, contract: string, block?: number
   return badgerGraphqlSdk.Sett(vars);
 };
 
-export const getCachedSett = async (settDefinition: SettDefinition): Promise<Sett> => {
-  const sett = defaultSett(settDefinition);
+export const getCachedSett = async (VaultDefinition: VaultDefinition): Promise<Vault> => {
+  const sett = defaultVault(VaultDefinition);
   try {
     const mapper = getDataMapper();
     for await (const item of mapper.query(
       CachedSettSnapshot,
-      { address: settDefinition.settToken },
+      { address: VaultDefinition.settToken },
       { limit: 1, scanIndexForward: false },
     )) {
       sett.balance = item.balance;
       sett.value = item.settValue;
       if (item.balance === 0 || item.supply === 0) {
         sett.pricePerFullShare = 1;
-      } else if (settDefinition.settToken === TOKENS.BDIGG) {
+      } else if (VaultDefinition.settToken === TOKENS.BDIGG) {
         sett.pricePerFullShare = item.balance / item.supply;
       } else {
         sett.pricePerFullShare = item.ratio;
@@ -92,24 +93,24 @@ export const getCachedSett = async (settDefinition: SettDefinition): Promise<Set
   }
 };
 
-export const getSettSnapshots = async (settDefinition: SettDefinition): Promise<SettSnapshot[]> => {
+export const getSettSnapshots = async (VaultDefinition: VaultDefinition): Promise<VaultSnapshot[]> => {
   const end = Date.now();
   const start = end - ONE_DAY_MS * SAMPLE_DAYS;
-  return getSettSnapshotsInRange(settDefinition, new Date(start), new Date(end));
+  return getSettSnapshotsInRange(VaultDefinition, new Date(start), new Date(end));
 };
 
 export const getSettSnapshotsInRange = async (
-  settDefinition: SettDefinition,
+  VaultDefinition: VaultDefinition,
   start: Date,
   end: Date,
-): Promise<SettSnapshot[]> => {
+): Promise<VaultSnapshot[]> => {
   try {
     const snapshots = [];
     const mapper = getDataMapper();
-    const assetToken = getToken(settDefinition.settToken);
+    const assetToken = getToken(VaultDefinition.settToken);
 
     for await (const snapshot of mapper.query(
-      SettSnapshot,
+      VaultSnapshot,
       { address: assetToken.address, timestamp: between(new Date(start).getTime(), new Date(end).getTime()) },
       { scanIndexForward: false },
     )) {
@@ -122,7 +123,7 @@ export const getSettSnapshotsInRange = async (
   }
 };
 
-export const getPerformance = (current: SettSnapshot, initial: SettSnapshot): number => {
+export const getPerformance = (current: VaultSnapshot, initial: VaultSnapshot): number => {
   const ratioDiff = current.ratio - initial.ratio;
   const timestampDiff = current.timestamp - initial.timestamp;
   if (timestampDiff === 0 || ratioDiff === 0) {
@@ -133,16 +134,16 @@ export const getPerformance = (current: SettSnapshot, initial: SettSnapshot): nu
   return ((finalRatio - initial.ratio) / initial.ratio) * 100;
 };
 
-export const getSettDefinition = (chain: Chain, contract: string): SettDefinition => {
+export const getVaultDefinition = (chain: Chain, contract: string): VaultDefinition => {
   const contractAddress = ethers.utils.getAddress(contract);
-  const settDefinition = chain.setts.find((s) => s.settToken === contractAddress);
-  if (!settDefinition) {
+  const VaultDefinition = chain.setts.find((s) => s.settToken === contractAddress);
+  if (!VaultDefinition) {
     throw new NotFound(`${contract} is not a valid sett`);
   }
-  return settDefinition;
+  return VaultDefinition;
 };
 
-export async function getStrategyInfo(chain: Chain, sett: SettDefinition): Promise<SettStrategy> {
+export async function getStrategyInfo(chain: Chain, sett: VaultDefinition): Promise<VaultStrategy> {
   const defaultStrategyInfo = {
     address: ethers.constants.AddressZero,
     withdrawFee: 0,
@@ -180,7 +181,7 @@ export async function getStrategyInfo(chain: Chain, sett: SettDefinition): Promi
 export const getPricePerShare = async (
   chain: Chain,
   pricePerShare: BigNumber,
-  sett: SettDefinition,
+  sett: VaultDefinition,
   block?: number,
 ): Promise<number> => {
   const token = getToken(sett.settToken);
@@ -198,10 +199,10 @@ export const getPricePerShare = async (
   }
 };
 
-export async function getBoostWeight(chain: Chain, settDefinition: SettDefinition): Promise<BigNumber> {
+export async function getBoostWeight(chain: Chain, VaultDefinition: VaultDefinition): Promise<BigNumber> {
   if (!chain.emissionControl) {
     return ethers.constants.Zero;
   }
   const emissionControl = EmissionControl__factory.connect(chain.emissionControl, chain.provider);
-  return emissionControl.boostedEmissionRate(settDefinition.settToken);
+  return emissionControl.boostedEmissionRate(VaultDefinition.settToken);
 }

@@ -1,6 +1,6 @@
-import { SettSummary } from '../../setts/interfaces/sett-summary.interface';
+import { VaultSummary } from '../../vaults/interfaces/vault-summary.interface';
 
 export interface ProtocolSummary {
   totalValue: number;
-  setts?: SettSummary[];
+  setts?: VaultSummary[];
 }

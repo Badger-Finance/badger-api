@@ -7,8 +7,8 @@ import { MaticStrategy } from '../chains/strategies/matic.strategy';
 import { xDaiStrategy } from '../chains/strategies/xdai.strategy';
 import { SettQuery } from '../graphql/generated/badger';
 import * as priceUtils from '../prices/prices.utils';
-import { CachedSettSnapshot } from '../setts/interfaces/cached-sett-snapshot.interface';
-import * as settUtils from '../setts/setts.utils';
+import { CachedSettSnapshot } from '../vaults/interfaces/cached-sett-snapshot.interface';
+import * as settUtils from '../vaults/vaults.utils';
 import { refreshSettSnapshots } from './sett-snapshots-indexer';
 import { BigNumber, ethers } from 'ethers';
 import { BaseStrategy } from '../chains/strategies/base.strategy';
@@ -41,7 +41,7 @@ describe('refreshSettSnapshots', () => {
         totalSupply: 10,
       },
     }));
-    jest.spyOn(settUtils, 'getCachedSett').mockImplementation(async (sett) => settUtils.defaultSett(sett));
+    jest.spyOn(settUtils, 'getCachedSett').mockImplementation(async (sett) => settUtils.defaultVault(sett));
     jest.spyOn(settUtils, 'getStrategyInfo').mockImplementation(async (_chain, _sett) => ({
       address: ethers.constants.AddressZero,
       withdrawFee: 50,

@@ -5,7 +5,7 @@ import { TOKENS } from '../config/tokens.config';
 import { tokenBalancesToCachedLiquidityPoolTokenBalance } from '../indexers/indexer.utils';
 import * as priceUtils from '../prices/prices.utils';
 import * as swapUtils from '../protocols/common/swap.utils';
-import { getSettDefinition } from '../setts/setts.utils';
+import { getVaultDefinition } from '../vaults/vaults.utils';
 import { setupMapper } from '../test/tests.utils';
 import { ethTokensConfig } from './config/eth-tokens.config';
 import { CachedTokenBalance } from './interfaces/cached-token-balance.interface';
@@ -64,7 +64,7 @@ describe('token.utils', () => {
 
     describe('lookup invalid lp token sett definition', () => {
       it('throws a not found error', async () => {
-        const definition = getSettDefinition(chain, TOKENS.BSUSHI_ETH_WBTC);
+        const definition = getVaultDefinition(chain, TOKENS.BSUSHI_ETH_WBTC);
         // simulate an error looking up token liquidity
         jest.spyOn(swapUtils, 'getLiquidityData').mockImplementation((_chain, _contract) => {
           throw new Error();
@@ -74,7 +74,7 @@ describe('token.utils', () => {
     });
     describe('lookup single asset sett', () => {
       it('returns 1 underlying token', async () => {
-        const definition = getSettDefinition(chain, TOKENS.BBADGER);
+        const definition = getVaultDefinition(chain, TOKENS.BBADGER);
         const tokens = await getSettUnderlyingTokens(chain, definition);
         expect(tokens.length).toEqual(1);
         expect(tokens[0]).toMatchObject(ethTokensConfig[TOKENS.BADGER]);
@@ -82,7 +82,7 @@ describe('token.utils', () => {
     });
     describe('lookup mutli asset sett', () => {
       it('returns multiple underlying tokens', async () => {
-        const definition = getSettDefinition(chain, TOKENS.BSUSHI_ETH_WBTC);
+        const definition = getVaultDefinition(chain, TOKENS.BSUSHI_ETH_WBTC);
         // simulate looking up token liquidity
         jest.spyOn(swapUtils, 'getLiquidityData').mockImplementation(async (_chain, contract) => ({
           contract,

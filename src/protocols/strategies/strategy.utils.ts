@@ -3,14 +3,17 @@ import { getSdk as getUniswapSdk, OrderDirection, PairDayData_OrderBy } from '..
 import { valueSourceToCachedValueSource } from '../../indexers/indexer.utils';
 import { getPrice } from '../../prices/prices.utils';
 import { SourceType } from '../../rewards/enums/source-type.enum';
-import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
+import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { CachedValueSource } from '../interfaces/cached-value-source.interface';
 import { PairDayData } from '../interfaces/pair-day-data.interface';
 import { uniformPerformance } from '../interfaces/performance.interface';
 import { UniPairDayData } from '../interfaces/uni-pair-day-data.interface';
 import { createValueSource } from '../interfaces/value-source.interface';
 
-export async function getUniV2SwapValue(graphUrl: string, settDefinition: SettDefinition): Promise<CachedValueSource> {
+export async function getUniV2SwapValue(
+  graphUrl: string,
+  VaultDefinition: VaultDefinition,
+): Promise<CachedValueSource> {
   const client = new GraphQLClient(graphUrl);
   const sdk = getUniswapSdk(client);
   const { pairDayDatas } = await sdk.UniPairDayDatas({
@@ -18,21 +21,21 @@ export async function getUniV2SwapValue(graphUrl: string, settDefinition: SettDe
     orderBy: PairDayData_OrderBy.Date,
     orderDirection: OrderDirection.Desc,
     where: {
-      pairAddress: settDefinition.depositToken.toLowerCase(),
+      pairAddress: VaultDefinition.depositToken.toLowerCase(),
     },
   });
-  console.log(await getUniSwapValue(settDefinition, pairDayDatas));
-  return getUniSwapValue(settDefinition, pairDayDatas);
+  console.log(await getUniSwapValue(VaultDefinition, pairDayDatas));
+  return getUniSwapValue(VaultDefinition, pairDayDatas);
 }
 
 async function getUniSwapValue(
-  settDefinition: SettDefinition,
+  VaultDefinition: VaultDefinition,
   tradeData: UniPairDayData[],
 ): Promise<CachedValueSource> {
-  const name = `${settDefinition.protocol} LP Fees`;
+  const name = `${VaultDefinition.protocol} LP Fees`;
   const performance = uniformPerformance(0);
   if (!tradeData || tradeData.length === 0) {
-    return valueSourceToCachedValueSource(createValueSource(name, performance), settDefinition, SourceType.TradeFee);
+    return valueSourceToCachedValueSource(createValueSource(name, performance), VaultDefinition, SourceType.TradeFee);
   }
   const [token0Price, token1Price] = await Promise.all([
     getPrice(tradeData[0].token0.id),
@@ -51,14 +54,14 @@ async function getUniSwapValue(
     if (i === 6) performance.sevenDay = currentApy;
     if (i === 29) performance.thirtyDay = currentApy;
   }
-  return valueSourceToCachedValueSource(createValueSource(name, performance), settDefinition, SourceType.TradeFee);
+  return valueSourceToCachedValueSource(createValueSource(name, performance), VaultDefinition, SourceType.TradeFee);
 }
 
-export function getSwapValue(settDefinition: SettDefinition, tradeData: PairDayData[]): CachedValueSource {
-  const name = `${settDefinition.protocol} LP Fees`;
+export function getSwapValue(VaultDefinition: VaultDefinition, tradeData: PairDayData[]): CachedValueSource {
+  const name = `${VaultDefinition.protocol} LP Fees`;
   const performance = uniformPerformance(0);
   if (!tradeData || tradeData.length === 0) {
-    return valueSourceToCachedValueSource(createValueSource(name, performance), settDefinition, SourceType.TradeFee);
+    return valueSourceToCachedValueSource(createValueSource(name, performance), VaultDefinition, SourceType.TradeFee);
   }
   let totalApy = 0;
   for (let i = 0; i < tradeData.length; i++) {
@@ -72,5 +75,5 @@ export function getSwapValue(settDefinition: SettDefinition, tradeData: PairDayD
     if (i === 6) performance.sevenDay = currentApy;
     if (i === 29) performance.thirtyDay = currentApy;
   }
-  return valueSourceToCachedValueSource(createValueSource(name, performance), settDefinition, SourceType.TradeFee);
+  return valueSourceToCachedValueSource(createValueSource(name, performance), VaultDefinition, SourceType.TradeFee);
 }

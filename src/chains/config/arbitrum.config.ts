@@ -1,10 +1,10 @@
-import { Network, Protocol, SettState } from '@badger-dao/sdk';
+import { Network, Protocol, VaultState } from '@badger-dao/sdk';
 import { Stage } from '../../config/enums/stage.enum';
 import RPC from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { getCurveSettTokenBalance } from '../../protocols/strategies/convex.strategy';
-import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
+import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { arbitrumTokensConfig } from '../../tokens/config/arbitrum-tokens.config';
 import { ArbitrumStrategy } from '../strategies/arbitrum.strategy';
 import { Chain } from './chain.config';
@@ -37,7 +37,7 @@ export class Arbitrum extends Chain {
   }
 }
 
-export const arbitrumSetts: SettDefinition[] = [
+export const arbitrumSetts: VaultDefinition[] = [
   {
     name: 'Wrapped Ether/Sushi Helper',
     settToken: TOKENS.BARB_SUSHI_WETH_SUSHI,
@@ -77,7 +77,7 @@ export const arbitrumSetts: SettDefinition[] = [
     getTokenBalance: getCurveSettTokenBalance,
     createdBlock: 13321375,
     stage: Stage.Staging,
-    state: SettState.Experimental,
+    state: VaultState.Experimental,
     protocol: Protocol.Curve,
   },
   {

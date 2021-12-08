@@ -7,7 +7,7 @@ import { Chain } from '../chains/config/chain.config';
 import { ChainStrategy } from '../chains/strategies/chain.strategy';
 import { COINGECKO_URL } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
-import { getSett } from '../setts/setts.utils';
+import { getSett } from '../vaults/vaults.utils';
 import { TokenType } from '../tokens/enums/token-type.enum';
 import { PriceData } from '../tokens/interfaces/price-data.interface';
 import { Token } from '../tokens/interfaces/token.interface';

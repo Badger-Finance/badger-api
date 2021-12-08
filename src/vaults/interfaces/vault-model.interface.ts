@@ -4,12 +4,12 @@ import { uniformPerformance } from '../../protocols/interfaces/performance.inter
 import { createValueSource, ValueSource } from '../../protocols/interfaces/value-source.interface';
 import { BouncerType } from '../../rewards/enums/bouncer-type.enum';
 import { getToken, mockBalance } from '../../tokens/tokens.utils';
-import { VAULT_SOURCE } from '../setts.utils';
-import { SettStrategy } from './sett-strategy.interface';
+import { VAULT_SOURCE } from '../vaults.utils';
+import { VaultStrategy } from './vault-strategy.interface';
 import { ethers } from 'ethers';
-import { BoostConfig, Protocol, Sett, SettState, TokenBalance } from '@badger-dao/sdk';
+import { BoostConfig, Protocol, Vault, VaultState, TokenBalance, VaultType } from '@badger-dao/sdk';
 
-export class SettModel implements Sett {
+export class VaultModel implements Vault {
   @Title('name')
   @Description('Sett display name')
   @Example('Convex Tricrypto')
@@ -36,9 +36,9 @@ export class SettModel implements Sett {
 
   @Title('state')
   @Description('Launch state of the sett')
-  @Example(SettState.Guarded)
+  @Example(VaultState.Guarded)
   @Property()
-  public state: SettState;
+  public state: VaultState;
 
   @Title('underlyingToken')
   @Description('Contract address for deposit token')
@@ -131,11 +131,17 @@ export class SettModel implements Sett {
     strategistFee: 10,
   })
   @Property()
-  public strategy: SettStrategy;
+  public strategy: VaultStrategy;
+
+  @Title('type')
+  @Description('Enumeration displaying the vault type')
+  @Example(VaultType.Standard)
+  @Property()
+  public type: VaultType;
 
   constructor(
     name: string,
-    state: SettState,
+    state: VaultState,
     asset: string,
     settAsset: string,
     underlyingToken: string,
@@ -149,8 +155,9 @@ export class SettModel implements Sett {
     boost: BoostConfig,
     sources: ValueSource[],
     bouncer: BouncerType,
-    strategy: SettStrategy,
+    strategy: VaultStrategy,
     newVault: boolean,
+    type: VaultType,
     minApr?: number,
     maxApr?: number,
   ) {
@@ -173,5 +180,6 @@ export class SettModel implements Sett {
     this.bouncer = bouncer;
     this.strategy = strategy;
     this.newVault = newVault;
+    this.type = type;
   }
 }

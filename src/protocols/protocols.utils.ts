@@ -1,11 +1,11 @@
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { SourceType } from '../rewards/enums/source-type.enum';
-import { SettDefinition } from '../setts/interfaces/sett-definition.interface';
+import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { Token } from '../tokens/interfaces/token.interface';
 import { CachedValueSource } from './interfaces/cached-value-source.interface';
 import { ValueSource } from './interfaces/value-source.interface';
 
-export const getVaultValueSources = async (sett: SettDefinition): Promise<ValueSource[]> => {
+export const getVaultValueSources = async (sett: VaultDefinition): Promise<ValueSource[]> => {
   const valueSources = [];
   const mapper = getDataMapper();
   for await (const source of mapper.query(
@@ -18,7 +18,7 @@ export const getVaultValueSources = async (sett: SettDefinition): Promise<ValueS
   return valueSources;
 };
 
-export const getVaultCachedValueSources = async (sett: SettDefinition): Promise<CachedValueSource[]> => {
+export const getVaultCachedValueSources = async (sett: VaultDefinition): Promise<CachedValueSource[]> => {
   const valueSources = [];
   const mapper = getDataMapper();
   for await (const source of mapper.query(

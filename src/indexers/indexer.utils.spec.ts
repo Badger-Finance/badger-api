@@ -1,6 +1,6 @@
 import { Ethereum } from '../chains/config/eth.config';
 import { TOKENS } from '../config/tokens.config';
-import { getSettDefinition } from '../setts/setts.utils';
+import { getVaultDefinition } from '../vaults/vaults.utils';
 import { mockBatchPut, randomAccount, setupMapper, TEST_ADDR } from '../test/tests.utils';
 import { batchRefreshAccounts, chunkArray, getIndexedBlock } from './indexer.utils';
 import * as tokenUtils from '../tokens/tokens.utils';
@@ -8,7 +8,7 @@ import * as accountsUtils from '../accounts/accounts.utils';
 
 describe('indexer.utils', () => {
   const chain = new Ethereum();
-  const testDefinition = getSettDefinition(chain, TOKENS.BBADGER);
+  const testDefinition = getVaultDefinition(chain, TOKENS.BBADGER);
 
   describe('getIndexedBlock', () => {
     describe('encounters an error', () => {

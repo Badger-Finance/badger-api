@@ -4,7 +4,7 @@ import { ContentType, Hidden } from '@tsed/schema';
 import { ethers } from 'ethers';
 import { Chain } from '../chains/config/chain.config';
 import { ValidationPipe } from '../common/decorators/validation-pipe';
-import { SettSnapshot } from '../setts/interfaces/sett-snapshot.interface';
+import { VaultSnapshot } from '../vaults/interfaces/vault-snapshot.interface';
 import { ChartsService } from './charts.service';
 import { ChartsQueryDto } from './dto/charts-query.dto';
 import { ChartGranularity } from './enums/chart-granularity.enum';
@@ -21,7 +21,7 @@ export class ChartsController {
     @UsePipe(ValidationPipe)
     @QueryParams()
     query: ChartsQueryDto,
-  ): Promise<SettSnapshot[]> {
+  ): Promise<VaultSnapshot[]> {
     const now = new Date();
     const yesterday = new Date();
     yesterday.setHours(now.getHours() - 24);

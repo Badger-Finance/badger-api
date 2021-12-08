@@ -1,4 +1,4 @@
-import { Protocol, Sett, SettState } from '@badger-dao/sdk';
+import { Protocol, Vault, VaultState } from '@badger-dao/sdk';
 import { Service } from '@tsed/common';
 import { ethers } from 'ethers';
 import { Chain } from '../chains/config/chain.config';
@@ -10,11 +10,11 @@ import { getVaultValueSources } from '../protocols/protocols.utils';
 import { SOURCE_TIME_FRAMES, updatePerformance } from '../rewards/enums/source-timeframe.enum';
 import { TokenType } from '../tokens/enums/token-type.enum';
 import { getSettTokens, getSettUnderlyingTokens, getToken } from '../tokens/tokens.utils';
-import { SettDefinition } from './interfaces/sett-definition.interface';
-import { getCachedSett, getPerformance, getSettDefinition, getSettSnapshots, VAULT_SOURCE } from './setts.utils';
+import { VaultDefinition } from './interfaces/vault-definition.interface';
+import { getCachedSett, getPerformance, getVaultDefinition, getSettSnapshots, VAULT_SOURCE } from './vaults.utils';
 
 @Service()
-export class SettsService {
+export class VaultsService {
   async getProtocolSummary(chain: Chain, currency?: string): Promise<ProtocolSummary> {
     const setts = await Promise.all(
       chain.setts.map(async (sett) => {
@@ -26,38 +26,39 @@ export class SettsService {
     return { totalValue, setts };
   }
 
-  async listSetts(chain: Chain, currency?: string): Promise<Sett[]> {
+  async listSetts(chain: Chain, currency?: string): Promise<Vault[]> {
     return Promise.all(chain.setts.map((sett) => this.getSett(chain, sett.settToken, currency)));
   }
 
-  async getSett(chain: Chain, contract: string, currency?: string): Promise<Sett> {
-    const settDefinition = getSettDefinition(chain, contract);
-    const [sett, sources] = await Promise.all([getCachedSett(settDefinition), getVaultValueSources(settDefinition)]);
-    sett.tokens = await getSettTokens(settDefinition, sett.balance, currency);
-    sett.value = sett.tokens.reduce((total, balance) => (total += balance.value), 0);
-    sett.sources = sources
+  async getSett(chain: Chain, contract: string, currency?: string): Promise<Vault> {
+    const VaultDefinition = getVaultDefinition(chain, contract);
+    const [vault, sources] = await Promise.all([getCachedSett(VaultDefinition), getVaultValueSources(VaultDefinition)]);
+    vault.tokens = await getSettTokens(VaultDefinition, vault.balance, currency);
+    vault.value = vault.tokens.reduce((total, balance) => (total += balance.value), 0);
+    vault.sources = sources
       .filter((source) => source.apr >= 0.001)
       .filter(
-        (source) => source.name !== VAULT_SOURCE || (sett.state !== SettState.Deprecated && !settDefinition.deprecated),
+        (source) =>
+          source.name !== VAULT_SOURCE || (vault.state !== VaultState.Deprecated && !VaultDefinition.deprecated),
       );
-    sett.apr = sett.sources.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
-    sett.protocol = settDefinition.protocol ?? Protocol.Badger;
+    vault.apr = vault.sources.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
+    vault.protocol = VaultDefinition.protocol ?? Protocol.Badger;
 
-    if (sett.boost.enabled) {
-      const hasBoostedApr = sett.sources.some((source) => source.boostable);
+    if (vault.boost.enabled) {
+      const hasBoostedApr = vault.sources.some((source) => source.boostable);
       if (hasBoostedApr) {
-        sett.minApr = sett.sources.map((s) => s.minApr || s.apr).reduce((total, apr) => (total += apr), 0);
-        sett.maxApr = sett.sources.map((s) => s.maxApr || s.apr).reduce((total, apr) => (total += apr), 0);
+        vault.minApr = vault.sources.map((s) => s.minApr || s.apr).reduce((total, apr) => (total += apr), 0);
+        vault.maxApr = vault.sources.map((s) => s.maxApr || s.apr).reduce((total, apr) => (total += apr), 0);
       } else {
-        sett.boost.enabled = false;
+        vault.boost.enabled = false;
       }
     }
 
-    return sett;
+    return vault;
   }
 
-  static async getSettPerformance(settDefinition: SettDefinition): Promise<ValueSource> {
-    const snapshots = await getSettSnapshots(settDefinition);
+  static async getSettPerformance(VaultDefinition: VaultDefinition): Promise<ValueSource> {
+    const snapshots = await getSettSnapshots(VaultDefinition);
     const current = snapshots[CURRENT];
     if (current === undefined) {
       return createValueSource(VAULT_SOURCE, uniformPerformance(0));
@@ -91,9 +92,9 @@ export class SettsService {
     return createValueSource(VAULT_SOURCE, performance);
   }
 
-  static async getSettTokenPerformance(chain: Chain, settDefinition: SettDefinition): Promise<ValueSource[]> {
-    const sett = await getCachedSett(settDefinition);
-    const tokens = await getSettUnderlyingTokens(chain, settDefinition);
+  static async getSettTokenPerformance(chain: Chain, VaultDefinition: VaultDefinition): Promise<ValueSource[]> {
+    const sett = await getCachedSett(VaultDefinition);
+    const tokens = await getSettUnderlyingTokens(chain, VaultDefinition);
     const vaultToken = getToken(sett.settToken);
 
     const sources: ValueSource[] = [];
@@ -102,8 +103,8 @@ export class SettsService {
         if (token.type === TokenType.Wrapper && token.vaultToken) {
           const { network, address } = token.vaultToken;
           const chain = Chain.getChain(network);
-          const settDefinition = getSettDefinition(chain, address);
-          const vaultSources = await getVaultValueSources(settDefinition);
+          const VaultDefinition = getVaultDefinition(chain, address);
+          const vaultSources = await getVaultValueSources(VaultDefinition);
           vaultSources.forEach((source) => {
             if (source.name === VAULT_SOURCE) {
               const backingVault = chain.setts.find((sett) => ethers.utils.getAddress(sett.settToken) === address);

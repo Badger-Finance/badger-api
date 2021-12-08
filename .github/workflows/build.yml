@@ -1,9 +1,9 @@
-name: Service Tests
+name: Build
 
-on: [push]
+on: [ push ]
 
 jobs:
-  test:
+  build_and_lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -17,5 +17,3 @@ jobs:
         run: yarn build
       - name: Lint
         run: yarn lint
-      - name: Run Tests
-        run: yarn test

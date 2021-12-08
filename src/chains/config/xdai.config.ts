@@ -3,7 +3,7 @@ import { Stage } from '../../config/enums/stage.enum';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
-import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
+import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { xDaiTokensConfig } from '../../tokens/config/xdai-tokens.config';
 import { xDaiStrategy } from '../strategies/xdai.strategy';
 import { Chain } from './chain.config';
@@ -29,7 +29,7 @@ export class xDai extends Chain {
   }
 }
 
-export const xDaiSetts: SettDefinition[] = [
+export const xDaiSetts: VaultDefinition[] = [
   {
     name: 'Wrapped BTC/Wrapped Ether',
     settToken: TOKENS.BXDAI_SUSHI_WBTC_WETH,

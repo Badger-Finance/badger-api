@@ -6,8 +6,8 @@ import { Erc20__factory, PancakeChef__factory } from '../../contracts';
 import { valueSourceToCachedValueSource } from '../../indexers/indexer.utils';
 import { getTokenPriceData } from '../../prices/prices.utils';
 import { SourceType } from '../../rewards/enums/source-type.enum';
-import { SettDefinition } from '../../setts/interfaces/sett-definition.interface';
-import { VAULT_SOURCE } from '../../setts/setts.utils';
+import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
+import { VAULT_SOURCE } from '../../vaults/vaults.utils';
 import { formatBalance } from '../../tokens/tokens.utils';
 import { CachedValueSource } from '../interfaces/cached-value-source.interface';
 import { uniformPerformance } from '../interfaces/performance.interface';
@@ -15,13 +15,13 @@ import { PoolMap } from '../interfaces/pool-map.interface';
 import { createValueSource } from '../interfaces/value-source.interface';
 
 export class PancakeswapStrategy {
-  static async getValueSources(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource[]> {
-    return Promise.all([getEmissionSource(chain, settDefinition)]);
+  static async getValueSources(chain: Chain, VaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
+    return Promise.all([getEmissionSource(chain, VaultDefinition)]);
   }
 }
 
-async function getEmissionSource(chain: Chain, settDefinition: SettDefinition): Promise<CachedValueSource> {
-  const poolId = getPoolId(settDefinition.depositToken);
+async function getEmissionSource(chain: Chain, VaultDefinition: VaultDefinition): Promise<CachedValueSource> {
+  const poolId = getPoolId(VaultDefinition.depositToken);
   const masterChef = PancakeChef__factory.connect(PANCAKE_CHEF, chain.provider);
   const [totalAllocPoint, cakePerBlock, poolInfo, tokenPrice] = await Promise.all([
     masterChef.totalAllocPoint(),
@@ -36,7 +36,7 @@ async function getEmissionSource(chain: Chain, settDefinition: SettDefinition): 
   const emissionScalar = poolInfo.allocPoint.toNumber() / totalAllocPoint.toNumber();
   const cakeEmission = parseFloat(formatEther(cakePerBlock)) * emissionScalar * chain.blocksPerYear * tokenPrice.usd;
   const emissionSource = createValueSource(VAULT_SOURCE, uniformPerformance((cakeEmission / poolValue) * 100), true);
-  return valueSourceToCachedValueSource(emissionSource, settDefinition, SourceType.Compound);
+  return valueSourceToCachedValueSource(emissionSource, VaultDefinition, SourceType.Compound);
 }
 
 function getPoolId(depositToken: string): number {
