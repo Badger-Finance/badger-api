@@ -19,3 +19,15 @@ export const MOCK_DISTRIBUTION_FILE = {
     },
   },
 };
+
+export const MOCK_BOUNCER_FILE = {
+  merkleRoot: TEST_ADDR,
+  tokenTotal: 5,
+  claims: {
+    [TEST_ADDR]: {
+      index: '0x01',
+      amount: 1,
+      proof: [TEST_ADDR, TEST_ADDR, TEST_ADDR],
+    },
+  },
+};

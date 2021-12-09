@@ -16,7 +16,7 @@ import { CachedSettSnapshot } from '../vaults/interfaces/cached-sett-snapshot.in
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { VaultSnapshot } from '../vaults/interfaces/vault-snapshot.interface';
 
-export const TEST_ADDR = '0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484';
+export const TEST_ADDR = ethers.utils.getAddress('0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484');
 
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 export const setupMapper = (items: unknown[], filter?: (items: unknown[]) => unknown[]) => {
