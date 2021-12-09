@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`leaderboards.utils queryLeaderboardSummary no saved leaderboard summary data returns a map of all badger ranks with zero entries 1`] = `
+Object {
+  "leaderboard": "ethereum_boost",
+  "rankSummaries": Array [
+    Object {
+      "amount": 0,
+      "badgerType": "basic",
+    },
+    Object {
+      "amount": 0,
+      "badgerType": "neo",
+    },
+    Object {
+      "amount": 0,
+      "badgerType": "hero",
+    },
+    Object {
+      "amount": 0,
+      "badgerType": "hyper",
+    },
+    Object {
+      "amount": 0,
+      "badgerType": "frenzy",
+    },
+  ],
+  "updatedAt": 133742069,
+}
+`;
+
+exports[`leaderboards.utils queryLeaderboardSummary saved leaderboard summary data returns the appropriate chain summary data 1`] = `
+Object {
+  "leaderboard": "ethereum_boost",
+  "rankSummaries": Array [
+    Object {
+      "amount": 1000,
+      "badgerType": "basic",
+    },
+    Object {
+      "amount": 20,
+      "badgerType": "neo",
+    },
+    Object {
+      "amount": 35,
+      "badgerType": "hero",
+    },
+    Object {
+      "amount": 25,
+      "badgerType": "hyper",
+    },
+    Object {
+      "amount": 40,
+      "badgerType": "frenzy",
+    },
+  ],
+  "updatedAt": 133742069,
+}
+`;

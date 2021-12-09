@@ -1,6 +1,7 @@
 import { BadgerType } from '@badger-dao/sdk';
 import { PlatformTest } from '@tsed/common';
 import { Ethereum } from '../chains/config/eth.config';
+import { getLeaderboardKey } from '../indexers/leaderboard-indexer';
 import { setupMapper } from '../test/tests.utils';
 import { LeaderBoardsService } from './leaderboards.service';
 
@@ -19,7 +20,7 @@ describe('leaderboards.service', () => {
     it('returns the current leaderboard summary for the requested chain', async () => {
       setupMapper([
         {
-          leaderboard: 'Test',
+          leaderboard: getLeaderboardKey(chain),
           rankSummaries: [
             {
               badgerType: BadgerType.Basic,
