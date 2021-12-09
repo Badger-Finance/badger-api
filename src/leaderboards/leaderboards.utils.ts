@@ -1,29 +1,10 @@
-import { between } from '@aws/dynamodb-expressions';
-import { BadRequest } from '@tsed/exceptions';
+import { BadgerType } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
 import { getLeaderboardKey } from '../indexers/leaderboard-indexer';
 import { CachedBoost } from './interface/cached-boost.interface';
 import { CachedLeaderboardSummary } from './interface/cached-leaderboard-summary.interface';
-
-const shortenAddress = (address: string) => `${address.slice(0, 6)}...${address.slice(address.length - 4)}`;
-
-export async function getLeaderBoardEntryRange(chain: Chain, start: number, end: number): Promise<CachedBoost[]> {
-  if (start > end) {
-    throw new BadRequest(`Start entry (${start}) must be less than or equal to end (${end})`);
-  }
-  const mapper = getDataMapper();
-  const data = [];
-  for await (const boost of mapper.query(CachedBoost, {
-    leaderboard: getLeaderboardKey(chain),
-    rank: between(start, end),
-  })) {
-    boost.address = shortenAddress(boost.address);
-    data.push(boost);
-  }
-  return data;
-}
 
 export async function queryLeaderboardSummary(chain: Chain): Promise<CachedLeaderboardSummary> {
   const mapper = getDataMapper();
@@ -38,7 +19,28 @@ export async function queryLeaderboardSummary(chain: Chain): Promise<CachedLeade
   }
   return {
     leaderboard: getLeaderboardKey(chain),
-    rankSummaries: [],
+    rankSummaries: [
+      {
+        badgerType: BadgerType.Basic,
+        amount: 0,
+      },
+      {
+        badgerType: BadgerType.Neo,
+        amount: 0,
+      },
+      {
+        badgerType: BadgerType.Hero,
+        amount: 0,
+      },
+      {
+        badgerType: BadgerType.Hyper,
+        amount: 0,
+      },
+      {
+        badgerType: BadgerType.Frenzy,
+        amount: 0,
+      },
+    ],
     updatedAt: Date.now(),
   };
 }
@@ -57,7 +59,7 @@ export async function getLeaderBoardSize(chain: Chain): Promise<number> {
   return 0;
 }
 
-export const getUserLeaderBoardRank = async (chain: Chain, accountId: string): Promise<number> => {
+export async function getUserLeaderBoardRank(chain: Chain, accountId: string): Promise<number> {
   const mapper = getDataMapper();
   for await (const entry of mapper.query(
     CachedBoost,
@@ -66,5 +68,6 @@ export const getUserLeaderBoardRank = async (chain: Chain, accountId: string): P
   )) {
     return entry.rank;
   }
-  return (await getLeaderBoardSize(chain)) + 1;
-};
+  const leaderboardSize = await getLeaderBoardSize(chain);
+  return leaderboardSize + 1;
+}
