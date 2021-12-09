@@ -26,7 +26,7 @@ export class RewardController {
   @Summary("Get an account's reward proof")
   @Description('Return user badger tree reward proof')
   @Returns(200, RewardMerkleClaimModel)
-  @(Returns(404).Description('User has no rewards proof available'))
+  @Returns(404).Description('User has no rewards proof available')
   async getBadgerTreeReward(
     @PathParams('address') address: string,
     @QueryParams('chain') chain?: Network,

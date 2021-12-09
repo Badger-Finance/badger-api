@@ -1,9 +1,10 @@
-import { BadRequest } from '@tsed/exceptions';
+import { BadgerType } from '@badger-dao/sdk';
 import { Ethereum } from '../chains/config/eth.config';
+import { getLeaderboardKey } from '../indexers/leaderboard-indexer';
 import { randomValue, setupMapper } from '../test/tests.utils';
 import { LeaderBoardType } from './enums/leaderboard-type.enum';
 import { CachedBoost } from './interface/cached-boost.interface';
-import { getLeaderBoardEntryRange, getLeaderBoardSize, getUserLeaderBoardRank } from './leaderboards.utils';
+import { getLeaderBoardSize, getUserLeaderBoardRank, queryLeaderboardSummary } from './leaderboards.utils';
 
 describe('leaderboards.utils', () => {
   const chain = new Ethereum();
@@ -33,47 +34,49 @@ describe('leaderboards.utils', () => {
     return entries;
   };
 
-  describe('getLeaderBoardEntryRange', () => {
-    describe('with no saved leaderboard entries', () => {
-      it('returns no entries', async () => {
-        setupMapper(randomLeaderboard(0));
-        const start = randomValue();
-        const end = start + 20;
-        const boosts = await getLeaderBoardEntryRange(chain, start, end);
-        expect(boosts).toMatchObject([]);
+  describe('queryLeaderboardSummary', () => {
+    describe('no saved leaderboard summary data', () => {
+      it('returns a map of all badger ranks with zero entries', async () => {
+        setupMapper([]);
+        const result = await queryLeaderboardSummary(chain);
+        // result date will always update due to nature of function
+        result.updatedAt = 133742069;
+        expect(result).toMatchSnapshot();
       });
     });
 
-    describe('called with invalid range parameters', () => {
-      it('throws a bad request expection', async () => {
-        const start = randomValue();
-        const end = start - 20;
-        await expect(getLeaderBoardEntryRange(chain, start, end)).rejects.toThrow(BadRequest);
-      });
-    });
-
-    describe('with saved entries', () => {
-      describe('querying a range with entries', () => {
-        it('returns queried range', async () => {
-          const start = randomValue();
-          const end = start + 20;
-          const seed = randomLeaderboard(end - start, start);
-          setupMapper(seed);
-          const boosts = await getLeaderBoardEntryRange(chain, start, end);
-          expect(boosts).toMatchObject(seed);
-        });
-      });
-
-      describe('querying a range with partial entries', () => {
-        it('returns queried range for available entries', async () => {
-          const start = randomValue();
-          const end = start + 20;
-          const seedEntries = (end - start) / 2;
-          const seed = randomLeaderboard(seedEntries, start);
-          setupMapper(seed);
-          const boosts = await getLeaderBoardEntryRange(chain, start, end);
-          expect(boosts).toMatchObject(seed);
-        });
+    describe('saved leaderboard summary data', () => {
+      it('returns the appropriate chain summary data', async () => {
+        setupMapper([
+          {
+            leaderboard: getLeaderboardKey(chain),
+            rankSummaries: [
+              {
+                badgerType: BadgerType.Basic,
+                amount: 1000,
+              },
+              {
+                badgerType: BadgerType.Neo,
+                amount: 20,
+              },
+              {
+                badgerType: BadgerType.Hero,
+                amount: 35,
+              },
+              {
+                badgerType: BadgerType.Hyper,
+                amount: 25,
+              },
+              {
+                badgerType: BadgerType.Frenzy,
+                amount: 40,
+              },
+            ],
+            updatedAt: 133742069,
+          },
+        ]);
+        const result = await queryLeaderboardSummary(chain);
+        expect(result).toMatchSnapshot();
       });
     });
   });

@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ProofsController GET /v2/proofs returns 200 and the merkle proof for a user on the bouncer list 1`] = `
+Array [
+  "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484",
+  "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484",
+  "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484",
+]
+`;
+
+exports[`ProofsController GET /v2/proofs returns 404 for a chain with no bouncer file 1`] = `
+Object {
+  "message": "Ethereum does not have a bouncer list",
+}
+`;
+
+exports[`ProofsController GET /v2/proofs returns 404 for users not on the bouncer list 1`] = `
+Object {
+  "message": "0x3472A5A71965499acd81997a54BBA8D852C6E53d is not on the bouncer list",
+}
+`;

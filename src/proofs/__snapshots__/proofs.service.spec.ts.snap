@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`proofs.service getBouncerProof returns the user proof for a user on the bouncer list 1`] = `
+Array [
+  "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484",
+  "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484",
+  "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484",
+]
+`;
