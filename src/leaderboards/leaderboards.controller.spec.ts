@@ -1,61 +1,47 @@
+import { BadgerType } from '@badger-dao/sdk';
 import { PlatformTest } from '@tsed/common';
-import { BadRequest, NotFound } from '@tsed/exceptions';
 import SuperTest from 'supertest';
-import * as accountIndexer from '../indexers/accounts-indexer';
+import { Chain } from '../chains/config/chain.config';
 import { Server } from '../Server';
-import { setupMapper, TEST_ADDR } from '../test/tests.utils';
+import { LeaderBoardsService } from './leaderboards.service';
 
-describe('AccountsController', () => {
+describe('LeaderBoardsController', () => {
   let request: SuperTest.SuperTest<SuperTest.Test>;
+  let service: LeaderBoardsService;
 
   beforeEach(PlatformTest.bootstrap(Server));
   beforeEach(async () => {
     request = SuperTest(PlatformTest.callback());
+    service = PlatformTest.get<LeaderBoardsService>(LeaderBoardsService);
+    jest.spyOn(service, 'fetchLeaderboardSummary').mockImplementation(async (chain: Chain) => {
+      const multiplier = Number(chain.chainId);
+      return {
+        summary: {
+          [BadgerType.Basic]: multiplier * 1000,
+          [BadgerType.Neo]: multiplier * 20,
+          [BadgerType.Hero]: multiplier * 35,
+          [BadgerType.Hyper]: multiplier * 25,
+          [BadgerType.Frenzy]: multiplier * 40,
+        },
+        updatedAt: 133742069,
+      };
+    });
   });
 
   afterEach(PlatformTest.reset);
 
-  describe('GET /v2/accounts', () => {
-    describe('with no specified account', () => {
-      it('returns a not found response', async (done: jest.DoneCallback) => {
-        const { body } = await request.get('/v2/accounts').expect(NotFound.STATUS);
+  describe('GET /v2/leaderboards', () => {
+    describe('with no specified chain', () => {
+      it('returns the ethereum leaderboard', async (done: jest.DoneCallback) => {
+        const { body } = await request.get('/v2/leaderboards').expect(200);
         expect(body).toMatchSnapshot();
         done();
       });
     });
-    describe('with an invalid account input', () => {
-      it('returns a bad request response', async (done: jest.DoneCallback) => {
-        const { body } = await request.get('/v2/accounts/0xjintao').expect(BadRequest.STATUS);
-        expect(body).toMatchSnapshot();
-        done();
-      });
-    });
-    describe('with a non participant account', () => {
-      it('returns a default account response', async (done: jest.DoneCallback) => {
-        jest.spyOn(accountIndexer, 'refreshUserAccounts').mockImplementation(() => Promise.resolve());
-        setupMapper([]);
-        const { body } = await request.get('/v2/accounts/' + TEST_ADDR).expect(200);
-        expect(body).toMatchSnapshot();
-        done();
-      });
-    });
-    describe('with a participant account', () => {
-      it('returns a cached account response', async (done: jest.DoneCallback) => {
-        jest.spyOn(accountIndexer, 'refreshUserAccounts').mockImplementation(() => Promise.resolve());
-        const defaultAccount = {
-          address: TEST_ADDR,
-          boost: 2000,
-          boostRank: 3,
-          multipliers: [],
-          value: 320232,
-          earnedValue: 2312,
-          balances: [],
-          claimableBalances: [],
-          nativeBalance: 2033222,
-          nonNativeBalance: 23129,
-        };
-        setupMapper([defaultAccount]);
-        const { body } = await request.get('/v2/accounts/' + TEST_ADDR).expect(200);
+
+    describe('with a specified chain', () => {
+      it('returns the specified chain leaderboard', async (done: jest.DoneCallback) => {
+        const { body } = await request.get('/v2/leaderboards?chain=arbitrum').expect(200);
         expect(body).toMatchSnapshot();
         done();
       });

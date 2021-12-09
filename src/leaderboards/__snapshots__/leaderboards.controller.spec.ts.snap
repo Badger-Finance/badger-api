@@ -1,43 +1,27 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`AccountsController GET /v2/accounts with a non participant account returns a default account response 1`] = `
+exports[`LeaderBoardsController GET /v2/leaderboards with a specified chain returns the specified chain leaderboard 1`] = `
 Object {
-  "address": "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484",
-  "boost": 1,
-  "boostRank": 0,
-  "claimableBalances": Object {},
-  "data": Object {},
-  "earnedValue": 0,
-  "multipliers": Object {},
-  "nativeBalance": 0,
-  "nonNativeBalance": 0,
-  "stakeRatio": 0,
-  "value": 0,
+  "summary": Object {
+    "basic": 42161000,
+    "frenzy": 1686440,
+    "hero": 1475635,
+    "hyper": 1054025,
+    "neo": 843220,
+  },
+  "updatedAt": 133742069,
 }
 `;
 
-exports[`AccountsController GET /v2/accounts with a participant account returns a cached account response 1`] = `
+exports[`LeaderBoardsController GET /v2/leaderboards with no specified chain returns the ethereum leaderboard 1`] = `
 Object {
-  "address": "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484",
-  "boost": 2000,
-  "claimableBalances": Object {},
-  "data": Object {},
-  "earnedValue": 0,
-  "multipliers": Object {},
-  "nativeBalance": 2033222,
-  "nonNativeBalance": 23129,
-  "value": 0,
-}
-`;
-
-exports[`AccountsController GET /v2/accounts with an invalid account input returns a bad request response 1`] = `
-Object {
-  "message": "0xjintao is not a valid account",
-}
-`;
-
-exports[`AccountsController GET /v2/accounts with no specified account returns a not found response 1`] = `
-Object {
-  "message": "Resource \\"/v2/accounts\\" not found",
+  "summary": Object {
+    "basic": 1000,
+    "frenzy": 40,
+    "hero": 35,
+    "hyper": 25,
+    "neo": 20,
+  },
+  "updatedAt": 133742069,
 }
 `;

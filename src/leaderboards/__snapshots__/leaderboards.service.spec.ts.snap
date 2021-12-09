@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`leaderboards.service fetchLeaderboardSummary returns the current leaderboard summary for the requested chain 1`] = `
+Object {
+  "summary": Object {
+    "basic": 1000,
+    "frenzy": 40,
+    "hero": 35,
+    "hyper": 25,
+    "neo": 20,
+  },
+  "updatedAt": 133742069,
+}
+`;

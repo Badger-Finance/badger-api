@@ -9,18 +9,6 @@ import { CachedLeaderboardSummary } from './interface/cached-leaderboard-summary
 
 const shortenAddress = (address: string) => `${address.slice(0, 6)}...${address.slice(address.length - 4)}`;
 
-export async function getFullLeaderBoard(chain: Chain): Promise<CachedBoost[]> {
-  const mapper = getDataMapper();
-  const data = [];
-  for await (const boost of mapper.query(CachedBoost, {
-    leaderboard: getLeaderboardKey(chain),
-  })) {
-    boost.address = shortenAddress(boost.address);
-    data.push(boost);
-  }
-  return data;
-}
-
 export async function getLeaderBoardEntryRange(chain: Chain, start: number, end: number): Promise<CachedBoost[]> {
   if (start > end) {
     throw new BadRequest(`Start entry (${start}) must be less than or equal to end (${end})`);
