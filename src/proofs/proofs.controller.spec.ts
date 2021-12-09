@@ -45,10 +45,9 @@ describe('ProofsController', () => {
     });
 
     it('returns 200 and the merkle proof for a user on the bouncer list', async (done: jest.DoneCallback) => {
-      jest.spyOn(proofsService, 'getBouncerProof').mockImplementation(async (_chain: Chain, _address: string) => {
-        console.log('CALLED MOCKED FN');
-        return MOCK_BOUNCER_FILE.claims[TEST_ADDR].proof;
-      });
+      jest
+        .spyOn(proofsService, 'getBouncerProof')
+        .mockImplementation(async (_chain: Chain, _address: string) => MOCK_BOUNCER_FILE.claims[TEST_ADDR].proof);
       const { body } = await request.get(`/v2/proofs/${TEST_ADDR}`).expect(200);
       expect(body).toMatchSnapshot();
       done();
