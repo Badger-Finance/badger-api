@@ -10,14 +10,17 @@ import { AirdropMerkleDistribution } from '../rewards/interfaces/merkle-distribu
 @Service()
 export class ProofsService {
   /**
-   * Load user bouncer proof.
+   * Load user bouncer proof. These proofs are used for vault guest lists.
    * @param address User Ethereum address.
    */
   async getBouncerProof(chain: Chain, address: string): Promise<MerkleProof> {
     const fileName = `badger-bouncer-${parseInt(chain.chainId)}.json`;
-    const airdropFile = await getObject(REWARD_DATA, fileName);
-    const fileContents: AirdropMerkleDistribution = JSON.parse(airdropFile.toString('utf-8'));
-    const claim = fileContents.claims[address.toLowerCase()] || fileContents.claims[ethers.utils.getAddress(address)];
+    const bouncerFile = await getObject(REWARD_DATA, fileName);
+    if (!bouncerFile) {
+      throw new NotFound(`${chain.name} does not have a bouncer list`);
+    }
+    const fileContents: AirdropMerkleDistribution = JSON.parse(bouncerFile.toString('utf-8'));
+    const claim = fileContents.claims[ethers.utils.getAddress(address)];
     if (!claim) {
       throw new NotFound(`${address} is not on the bouncer list`);
     }

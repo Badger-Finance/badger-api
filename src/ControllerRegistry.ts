@@ -10,6 +10,7 @@ import { RewardController } from './rewards/rewards.controller';
 import { VaultsController } from './vaults/vaults.controller';
 import { SettsController } from './vaults/setts.controller';
 import { TokensController } from './tokens/tokens.controller';
+import { ProofsController } from './proofs/proofs.controller';
 
 /**
  * Controller registry forces serverless offline to load
@@ -30,4 +31,5 @@ export const controllers = [
   HealthController,
   MetricsController,
   GasController,
+  ProofsController,
 ];
