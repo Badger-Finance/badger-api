@@ -25,39 +25,26 @@ custom:
     seed:
       default:
         sources:
-          - table: ${self:custom.table.PRICE_DATA.${self:custom.stage}}
+          - table: ${self:custom.table.PRICE_DATA}
             sources: [./seed/prices.json]
-          - table: ${self:custom.table.APY_SNAPSHOTS_DATA.${self:custom.stage}}
+          - table: ${self:custom.table.APY_SNAPSHOTS_DATA}
             sources: [./seed/value-sources.json]
-          - table: ${self:custom.table.SETT_SNAPSHOTS_DATA.${self:custom.stage}}
+          - table: ${self:custom.table.SETT_SNAPSHOTS_DATA}
             sources: [./seed/cached-sett-snapshots.json]
 
   serverless-offline:
     noPrependStageInUrl: true
 
   table:
-    APY_SNAPSHOTS_DATA:
-      staging: 'apy-snapshots-staging'
-      prod: 'apy-snapshots'
-    SETT_DATA:
-      staging: 'sett-historic-snapshots-staging'
-      prod: 'sett-historic-snapshots'
-    LIQUIDITY_POOL_TOKEN_BALANCES_DATA:
-      staging: 'liquidity-pool-token-balances-staging'
-      prod: 'liquidity-pool-token-balances'
-    PRICE_DATA:
-      staging: 'token-prices-staging'
-      prod: 'token-prices'
-    SETT_SNAPSHOTS_DATA:
-      staging: 'sett-snapshots-staging'
-      prod: 'sett-snapshots'
-    ACCOUNT_DATA:
-      staging: 'accounts-staging'
-      prod: 'accounts'
-    PROTOCOL_METRICS_SNAPSHOTS_DATA:
-      staging: 'protocol-metrics-snapshots-staging'
-      prod: 'protocol-metrics-snapshots'
-    leaderboardSummary: leaderboard-summary-${self:custom.stage}
+    APY_SNAPSHOTS_DATA: apy-snapshots-${self:custom.stage}
+    SETT_DATA: sett-historic-snapshots-${self:custom.stage}
+    TOKEN_BALANCES_DATA: token-balances-${self:custom.stage}
+    PRICE_DATA: token-prices-${self:custom.stage}
+    SETT_SNAPSHOTS_DATA: sett-snapshots-${self:custom.stage}
+    ACCOUNT_DATA: accounts-${self:custom.stage}
+    METRICS_SNAPSHOTS_DATA: metrics-snapshots-${self:custom.stage}
+    LEADERBOARD_DATA: leaderboards-${self:custom.stage}
+    LEADERBOARD_SUMMARY_DATA: leaderboards-summary-${self:custom.stage}
 
   merkleProofs:
     staging: 'badger-staging-merkle-proofs'
@@ -108,15 +95,15 @@ provider:
     QUICKSWAP: 'https://api.thegraph.com/subgraphs/name/sameepsi/quickswap06'
     SWAPR: 'https://api.thegraph.com/subgraphs/name/luzzif/swapr-arbitrum-one-v2'
     # Table Defintions
-    APY_SNAPSHOTS_DATA: ${self:custom.table.APY_SNAPSHOTS_DATA.${self:custom.stage}}
-    SETT_DATA: ${self:custom.table.SETT_DATA.${self:custom.stage}}
-    LEADERBOARD_DATA: ${self:custom.stage}-leaderboard
-    LIQUIDITY_POOL_TOKEN_BALANCES_DATA: ${self:custom.table.LIQUIDITY_POOL_TOKEN_BALANCES_DATA.${self:custom.stage}}
-    PRICE_DATA: ${self:custom.table.PRICE_DATA.${self:custom.stage}}
-    SETT_SNAPSHOTS_DATA: ${self:custom.table.SETT_SNAPSHOTS_DATA.${self:custom.stage}}
-    ACCOUNT_DATA: ${self:custom.table.ACCOUNT_DATA.${self:custom.stage}}
-    PROTOCOL_METRICS_SNAPSHOTS_DATA: ${self:custom.table.PROTOCOL_METRICS_SNAPSHOTS_DATA.${self:custom.stage}}
-    LEADERBOARD_SUMMARY_DATA: ${self:custom.table.leaderboardSummary}
+    APY_SNAPSHOTS_DATA: ${self:custom.table.APY_SNAPSHOTS_DATA}
+    SETT_DATA: ${self:custom.table.SETT_DATA}
+    TOKEN_BALANCES_DATA: ${self:custom.table.TOKEN_BALANCES_DATA}
+    PRICE_DATA: ${self:custom.table.PRICE_DATA}
+    SETT_SNAPSHOTS_DATA: ${self:custom.table.SETT_SNAPSHOTS_DATA}
+    ACCOUNT_DATA: ${self:custom.table.ACCOUNT_DATA}
+    METRICS_SNAPSHOTS_DATA: ${self:custom.table.METRICS_SNAPSHOTS_DATA}
+    LEADERBOARD_DATA: ${self:custom.table.LEADERBOARD_DATA}
+    LEADERBOARD_SUMMARY_DATA: ${self:custom.table.LEADERBOARD_SUMMARY_DATA}
     # General Defintions
     REWARD_DATA: ${self:custom.merkleProofs.${self:custom.stage}}
     STAGE: ${opt:stage, self:provider.stage}
@@ -126,7 +113,7 @@ resources:
     accountTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:custom.table.ACCOUNT_DATA.${self:custom.stage}}
+        TableName: ${self:custom.table.ACCOUNT_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
           - AttributeName: 'address'
@@ -138,7 +125,7 @@ resources:
     apySnapshotsTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:custom.table.APY_SNAPSHOTS_DATA.${self:custom.stage}}
+        TableName: ${self:custom.table.APY_SNAPSHOTS_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
           - AttributeName: 'addressValueSourceType'
@@ -159,7 +146,7 @@ resources:
     settHistoricSnapshots:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:custom.table.SETT_DATA.${self:custom.stage}}
+        TableName: ${self:custom.table.SETT_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
           - AttributeName: 'address'
@@ -175,7 +162,7 @@ resources:
     priceTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:custom.table.PRICE_DATA.${self:custom.stage}}
+        TableName: ${self:custom.table.PRICE_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
           - AttributeName: 'address'
@@ -191,7 +178,7 @@ resources:
     protocolMetricsSnapshotsTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:custom.table.PROTOCOL_METRICS_SNAPSHOTS_DATA.${self:custom.stage}}
+        TableName: ${self:custom.table.METRICS_SNAPSHOTS_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
           - AttributeName: 'type'
@@ -207,7 +194,7 @@ resources:
     settsSnapshotsTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:custom.table.SETT_SNAPSHOTS_DATA.${self:custom.stage}}
+        TableName: ${self:custom.table.SETT_SNAPSHOTS_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
           - AttributeName: 'address'
@@ -216,10 +203,10 @@ resources:
           - AttributeName: 'address'
             AttributeType: 'S'
 
-    leaderboardTable:
+    leaderboardsTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:custom.stage}-leaderboard
+        TableName: ${self:custom.table.LEADERBOARD_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
           - AttributeName: 'leaderboard'
@@ -243,10 +230,10 @@ resources:
             Projection:
               ProjectionType: ALL
 
-    leaderboardSummaryTable:
+    leaderboardsSummaryTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:custom.table.leaderboardSummary}
+        TableName: ${self:custom.table.LEADERBOARD_SUMMARY_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
           - AttributeName: 'leaderboard'
@@ -255,10 +242,10 @@ resources:
           - AttributeName: 'leaderboard'
             AttributeType: 'S'
 
-    liquidityPoolTokenBalancesTable:
+    tokenBalancesTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:custom.table.LIQUIDITY_POOL_TOKEN_BALANCES_DATA.${self:custom.stage}}
+        TableName: ${self:custom.table.TOKEN_BALANCES_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
           - AttributeName: 'id'
