@@ -63,14 +63,6 @@ custom:
     staging: 'badger-staging-merkle-proofs'
     prod: 'badger-merkle-proofs'
 
-package:
-  exclude:
-    - node_modules/eslint*/**
-    - node_modules/prettier/**
-    - node_modules/serverless*/**
-    - node_modules/@graphql-codegen/**
-    - node_modules/@types*/**
-
 provider:
   name: aws
   runtime: nodejs12.x
