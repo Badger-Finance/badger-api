@@ -29,6 +29,7 @@
     "@tsed/exceptions": "6.53.0",
     "@tsed/json-mapper": "6.53.0",
     "@tsed/platform-aws": "6.53.0",
+    "@tsed/platform-express": "6.53.0",
     "@tsed/schema": "6.53.0",
     "@tsed/swagger": "6.53.0",
     "@types/cors": "^2.8.10",
@@ -51,7 +52,6 @@
     "tslib": "^2.2.0"
   },
   "devDependencies": {
-    "@tsed/platform-express": "6.53.0",
     "@graphql-codegen/cli": "1.21.4",
     "@graphql-codegen/typescript": "1.22.0",
     "@graphql-codegen/typescript-graphql-request": "3.2.0",
