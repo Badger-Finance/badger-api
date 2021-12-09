@@ -16,12 +16,8 @@
     "dev:local": "npx ts-node src/index.ts",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint \"src/**/*.ts\" --fix",
-    "test": "jest --runInBand --detectOpenHandles --forceExit"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --staged"
-    }
+    "test": "jest --runInBand --detectOpenHandles --forceExit",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@aws/dynamodb-data-mapper": "^0.7.3",
@@ -82,7 +78,7 @@
     "eslint-plugin-simple-import-sort": "7.0.0",
     "ethers-typescript-typings": "^0.0.4",
     "express": "4",
-    "husky": "^7.0.4",
+    "husky": "^7.0.0",
     "jest": "^26.6.3",
     "jest-create-mock-instance": "1.1.0",
     "jest-fetch-mock": "^3.0.3",
