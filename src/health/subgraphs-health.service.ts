@@ -19,7 +19,7 @@ export class SubgraphsHealthService implements HealthService {
         return convertToSnapshot('subgraphs', results);
       } catch (e) {
         const message = `Error running queries`;
-        console.error(`${message}: ${e.toString()}`);
+        console.error(`${message}: ${e}`);
         const error = new InternalServerError(message);
         throw error;
       }
@@ -38,7 +38,7 @@ export class SubgraphsHealthService implements HealthService {
       }
       return true;
     } catch (e) {
-      console.error(`Failed to generate client: ${e.toString()}`);
+      console.error(`Failed to generate client: ${e}`);
       return false;
     }
   }

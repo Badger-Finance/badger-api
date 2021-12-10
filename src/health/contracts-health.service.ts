@@ -23,7 +23,7 @@ export class ContractsHealthService implements HealthService {
         return convertToSnapshot('contracts', results);
       } catch (e) {
         const message = 'Error calling view methods';
-        console.error(`${message}: ${e.toString()}`);
+        console.error(`${message}: ${e}`);
         const error = new InternalServerError(message);
         throw error;
       }
@@ -62,7 +62,7 @@ export class ContractsHealthService implements HealthService {
         }
       }
     } catch (e) {
-      console.error(`Failed to add abi: ${e.toString()}`);
+      console.error(`Failed to add abi: ${e}`);
       return false;
     }
     return true;
@@ -103,11 +103,14 @@ export class ContractsHealthService implements HealthService {
           })
           .catch((e: Error) => {
             console.error(
-              `Error calling view method ${viewMethod.name} on contract ${contract.name} with address ${
-                contract.address
-              }:  ${e.toString()}`,
+              `Error calling view method ${viewMethod.name} on contract ${contract.name} with address ${contract.address}:  ${e}`,
             );
-            viewMethodResults.push({ error: e.toString(), isError: true, name: viewMethod.name, result: e.toString() });
+            viewMethodResults.push({
+              error: `Unable to invoke ${viewMethod.name}`,
+              isError: true,
+              name: viewMethod.name,
+              result: `Unable to call ${viewMethod.name}`,
+            });
           }),
       );
     }
@@ -115,11 +118,12 @@ export class ContractsHealthService implements HealthService {
       console.log(`Calling methods on contract ${contract.address}`);
       await Promise.all(promises);
     } catch (e) {
-      console.error(`Error calling contract ${contract.address}: ${e.toString()}`);
+      const message = `Error calling contract ${contract.address}: ${e}`;
+      console.error(message);
       return {
         address: contract.address,
         error: {
-          error: e.toString(),
+          error: message,
           isError: true,
         },
         name: contract.name,

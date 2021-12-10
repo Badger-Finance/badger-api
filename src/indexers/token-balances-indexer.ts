@@ -50,7 +50,7 @@ async function saveCachedTokenBalance(
   try {
     await mapper.put(cachedTokenBalance);
   } catch (err) {
-    console.error({ message: err.message, cachedTokenBalance });
+    console.error({ err, cachedTokenBalance });
   }
 }
 
