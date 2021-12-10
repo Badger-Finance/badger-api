@@ -53,7 +53,6 @@ export function defaultAccount(address: string): CachedAccount {
     value: 0,
     earnedValue: 0,
     balances: [],
-    claimableBalances: [],
     nativeBalance: 0,
     nonNativeBalance: 0,
     stakeRatio: 0,

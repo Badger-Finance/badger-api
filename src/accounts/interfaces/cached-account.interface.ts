@@ -2,7 +2,6 @@ import { embed } from '@aws/dynamodb-data-mapper';
 import { attribute, hashKey, table } from '@aws/dynamodb-data-mapper-annotations';
 import { ACCOUNT_DATA } from '../../config/constants';
 import { CachedBoostMultiplier } from '../../rewards/interfaces/cached-boost-multiplier.interface';
-import { CachedBalance } from './cached-claimable-balance.interface';
 import { CachedSettBalance } from './cached-sett-balance.interface';
 
 @table(ACCOUNT_DATA)
