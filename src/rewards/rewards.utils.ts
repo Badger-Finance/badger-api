@@ -17,6 +17,11 @@ import { Token } from '../tokens/interfaces/token.interface';
 import { getToken } from '../tokens/tokens.utils';
 import { RewardMerkleDistribution } from './interfaces/merkle-distributor.interface';
 
+/**
+ *
+ * @param chain
+ * @returns
+ */
 export async function getTreeDistribution(chain: Chain): Promise<RewardMerkleDistribution | null> {
   if (!chain.badgerTree) {
     return null;
@@ -26,6 +31,12 @@ export async function getTreeDistribution(chain: Chain): Promise<RewardMerkleDis
   return JSON.parse(rewardFile.toString('utf-8'));
 }
 
+/**
+ *
+ * @param VaultDefinition
+ * @param token
+ * @returns
+ */
 export function noRewards(VaultDefinition: VaultDefinition, token: Token) {
   return valueSourceToCachedValueSource(
     createValueSource(`${token.symbol} Rewards`, uniformPerformance(0)),
