@@ -53,7 +53,6 @@ describe('accounts.service', () => {
         depositedBalance: 5,
       },
     ],
-    claimableBalances: [],
     nativeBalance: 2033222,
     nonNativeBalance: 23129,
   };

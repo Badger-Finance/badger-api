@@ -123,7 +123,6 @@ export async function getCachedAccount(address: string): Promise<CachedAccount> 
     value: 0,
     earnedValue: 0,
     balances: [],
-    claimableBalances: [],
     stakeRatio: 0,
     nativeBalance: 0,
     nonNativeBalance: 0,
