@@ -275,6 +275,7 @@ resources:
       Type: AWS::DynamoDB::Table
       Properties:
         TableName: ${self:custom.table.METADATA_DATA}
+        BillingMode: PAY_PER_REQUEST
         KeySchema:
           - AttributeName: 'chainStartBlock'
             KeyType: 'HASH'
@@ -294,8 +295,6 @@ resources:
                 KeyType: 'RANGE'
             Projection:
               ProjectionType: ALL
-          - AttributeName: 'address'
-            KeyType: 'RANGE'
 
     unclaimedSnapshotsTable:
       Type: AWS::DynamoDB::Table
@@ -330,7 +329,7 @@ functions:
     handler: src/LambdaServer.handler
     timeout: 30
     events:
-      - http:RANGE
+      - http:
           path: /{proxy+}
           method: any
           cors: true
