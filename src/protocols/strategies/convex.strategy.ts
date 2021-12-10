@@ -1,7 +1,6 @@
 import { Network } from '@badger-dao/sdk';
 import { UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
-import fetch from 'node-fetch';
 import { Chain } from '../../chains/config/chain.config';
 import { ONE_YEAR_SECONDS } from '../../config/constants';
 import { ContractRegistry } from '../../config/interfaces/contract-registry.interface';
@@ -35,6 +34,8 @@ import { uniformPerformance } from '../interfaces/performance.interface';
 import { PoolMap } from '../interfaces/pool-map.interface';
 import { createValueSource } from '../interfaces/value-source.interface';
 import { tokenEmission } from '../protocols.utils';
+import { request } from '../../etherscan/etherscan.utils';
+import { CurveAPIResponse } from '../interfaces/curve-api-response.interrface';
 
 /* Strategy Definitions */
 export const cvxRewards = '0xCF50b810E57Ac33B91dCF525C6ddd9881B139332';
@@ -315,7 +316,7 @@ export async function getCurvePerformance(chain: Chain, VaultDefinition: VaultDe
     default:
       defaultUrl = CURVE_API_URL;
   }
-  let curveData = await fetch(defaultUrl).then((response) => response.json());
+  let curveData = await request<CurveAPIResponse>(defaultUrl);
   const assetKey = VaultDefinition.depositToken;
   const missingEntry = () => !curveData.apy.week[curvePoolApr[assetKey]];
 
@@ -333,15 +334,12 @@ export async function getCurvePerformance(chain: Chain, VaultDefinition: VaultDe
       thirtyDay: curveData.apy.month[curvePoolApr[assetKey]] * 100,
     };
   } else {
-    const res = await fetch(CURVE_FACTORY_APY);
-    if (res.ok) {
-      const factoryAPY = (await res.json()) as FactoryAPYResonse;
-      const poolDetails = factoryAPY.data.poolDetails.find(
-        (pool) => ethers.utils.getAddress(pool.poolAddress) === VaultDefinition.depositToken,
-      );
-      if (poolDetails) {
-        tradeFeePerformance = uniformPerformance(poolDetails.apy);
-      }
+    const factoryAPY = await request<FactoryAPYResonse>(CURVE_FACTORY_APY);
+    const poolDetails = factoryAPY.data.poolDetails.find(
+      (pool) => ethers.utils.getAddress(pool.poolAddress) === VaultDefinition.depositToken,
+    );
+    if (poolDetails) {
+      tradeFeePerformance = uniformPerformance(poolDetails.apy);
     }
   }
 
