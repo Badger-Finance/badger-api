@@ -45,6 +45,7 @@ custom:
     METRICS_SNAPSHOTS_DATA: metrics-snapshots-${self:custom.stage}
     LEADERBOARD_DATA: leaderboards-${self:custom.stage}
     LEADERBOARD_SUMMARY_DATA: leaderboards-summary-${self:custom.stage}
+    METADATA_DATA: metadata-${self:custom.stage}
 
   merkleProofs:
     staging: 'badger-staging-merkle-proofs'
@@ -104,6 +105,7 @@ provider:
     METRICS_SNAPSHOTS_DATA: ${self:custom.table.METRICS_SNAPSHOTS_DATA}
     LEADERBOARD_DATA: ${self:custom.table.LEADERBOARD_DATA}
     LEADERBOARD_SUMMARY_DATA: ${self:custom.table.LEADERBOARD_SUMMARY_DATA}
+    METADATA_DATA: ${self:custom.table.METADATA_DATA}
     # General Defintions
     REWARD_DATA: ${self:custom.merkleProofs.${self:custom.stage}}
     STAGE: ${opt:stage, self:provider.stage}
@@ -263,6 +265,31 @@ resources:
               - AttributeName: 'pairId'
                 KeyType: HASH
               - AttributeName: 'protocol'
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+
+    metadataTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.table.METADATA_DATA}
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: 'chainStartBlock'
+            KeyType: 'HASH'
+        AttributeDefinitions:
+          - AttributeName: 'chainStartBlock'
+            AttributeType: 'S'
+          - AttributeName: 'chain'
+            AttributeType: 'S'
+          - AttributeName: 'startBlock'
+            AttributeType: 'N'
+        GlobalSecondaryIndexes:
+          - IndexName: IndexMetadataChainAndStartBlock
+            KeySchema:
+              - AttributeName: 'chain'
+                KeyType: HASH
+              - AttributeName: 'startBlock'
                 KeyType: RANGE
             Projection:
               ProjectionType: ALL
