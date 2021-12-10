@@ -29,7 +29,7 @@ export class ApisHealthService implements HealthService {
       }
       return true;
     } catch (e) {
-      console.error(`Error intializing providers: ${e.toString()}`);
+      console.error(`Error intializing providers: ${e}`);
       return false;
     }
   }
@@ -42,8 +42,8 @@ export class ApisHealthService implements HealthService {
         name: key,
         result: '',
       };
+      const endpoint = this.endpoints[key];
       try {
-        const endpoint = this.endpoints[key];
         const res = await fetch(endpoint.toString());
         if (!res.ok) {
           result.isError = true;
@@ -53,7 +53,7 @@ export class ApisHealthService implements HealthService {
         results.push(result);
       } catch (e) {
         result.isError = true;
-        result.error = e.toString();
+        result.error = `Unable to get results for ${endpoint}`;
         results.push(result);
       }
     }

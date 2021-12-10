@@ -30,7 +30,7 @@ export class ProvidersHealthService implements HealthService {
       }
       return true;
     } catch (e) {
-      console.error(`Error intializing providers: ${e.toString()}`);
+      console.error(`Error intializing providers: ${e}`);
       return false;
     }
   }
@@ -50,7 +50,7 @@ export class ProvidersHealthService implements HealthService {
         result.result = JSON.stringify(blockNumber);
         providerResults.push(result);
       } catch (e) {
-        const message = `Error getting block number for provider ${key}: ${e.toString()}`;
+        const message = `Error getting block number for provider ${key}: ${e}`;
         console.error(message);
         result.error = message;
         result.isError = true;

@@ -5,6 +5,7 @@ import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { Ethereum } from '../chains/config/eth.config';
 import { IS_OFFLINE } from '../config/constants';
+import { GraphErrorResponse } from '../graphql/interafeces/graph-error-response.interface';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { getIndexedBlock, settToSnapshot } from './indexer.utils';
 
@@ -50,8 +51,8 @@ async function indexSett(chain: Chain, sett: VaultDefinition) {
       await mapper.put(snapshot);
     } catch (err) {
       try {
-        const response: GraphError = JSON.parse(err.body);
-        if (response.error.message.includes(NO_HISTORIC)) {
+        const { body } = err as GraphErrorResponse;
+        if (body.error.message.includes(NO_HISTORIC)) {
           // back index block to allow for loop addition
           block = (await getCurrentBlock(chain)) - thirtyMinutesBlocks;
           console.log(`Fast forwarding ${chain.name} skipping to current block ${block}`);
@@ -62,13 +63,6 @@ async function indexSett(chain: Chain, sett: VaultDefinition) {
       break;
     }
   }
-}
-
-interface GraphError {
-  error: {
-    code: number;
-    message: string;
-  };
 }
 
 async function getCurrentBlock(chain: Chain): Promise<number> {
