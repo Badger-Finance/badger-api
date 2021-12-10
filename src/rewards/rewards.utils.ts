@@ -16,6 +16,9 @@ import { getCachedSett } from '../vaults/vaults.utils';
 import { Token } from '../tokens/interfaces/token.interface';
 import { getToken } from '../tokens/tokens.utils';
 import { RewardMerkleDistribution } from './interfaces/merkle-distributor.interface';
+import { BadgerTree__factory } from '../contracts';
+import { BigNumber } from '@ethersproject/bignumber';
+import { UnprocessableEntity } from '@tsed/exceptions';
 
 /**
  *
@@ -43,6 +46,30 @@ export function noRewards(VaultDefinition: VaultDefinition, token: Token) {
     VaultDefinition,
     tokenEmission(token),
   );
+}
+
+export function getClaimableRewards(
+  chain: Chain,
+  chainUsers: string[],
+  distribution: RewardMerkleDistribution,
+): Promise<[string, [string[], BigNumber[]]][]> {
+  if (!chain.badgerTree) {
+    throw new UnprocessableEntity(`No BadgerTree is available from ${chain.name}`);
+  }
+  const tree = BadgerTree__factory.connect(chain.badgerTree, chain.batchProvider);
+  console.log(`Loaded BadgerTree at ${chain.badgerTree}`);
+  let completed = 0;
+  const requests = chainUsers.map(async (user): Promise<[string, [string[], BigNumber[]]]> => {
+    const proof = distribution.claims[user];
+    if (!proof) {
+      return [user, [[], []]];
+    }
+    const result = await tree.getClaimableFor(user, proof.tokens, proof.cumulativeAmounts);
+    completed++;
+    console.log(`${((completed / chainUsers.length) * 100).toFixed(2)}% Completed`);
+    return [user, result];
+  });
+  return Promise.all(requests);
 }
 
 export async function getRewardEmission(chain: Chain, VaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {

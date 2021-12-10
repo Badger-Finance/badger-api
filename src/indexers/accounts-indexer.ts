@@ -1,14 +1,13 @@
-import { BigNumber, ethers } from 'ethers';
+import { ethers } from 'ethers';
 import { getAccounts, getUserAccounts, toSettBalance } from '../accounts/accounts.utils';
 import { AccountMap } from '../accounts/interfaces/account-map.interface';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
-import { BadgerTree__factory } from '../contracts';
 import { UserSettBalance } from '../graphql/generated/badger';
 import { ClaimableBalance } from '../rewards/entities/claimable-balance';
 import { UserClaimSnapshot } from '../rewards/entities/user-claim-snapshot';
-import { getTreeDistribution } from '../rewards/rewards.utils';
+import { getClaimableRewards, getTreeDistribution } from '../rewards/rewards.utils';
 import { getVaultDefinition } from '../vaults/vaults.utils';
 import { AccountIndexMode } from './enums/account-index-mode.enum';
 import { batchRefreshAccounts, chunkArray } from './indexer.utils';
@@ -21,17 +20,7 @@ export async function refreshClaimableBalances(chain: Chain) {
   }
   const chainUsers = await getAccounts(chain);
 
-  const tree = BadgerTree__factory.connect(chain.badgerTree, chain.batchProvider);
-  const requests = chainUsers.map(async (user): Promise<[string, [string[], BigNumber[]]]> => {
-    const proof = distribution.claims[user];
-    if (!proof) {
-      return [user, [[], []]];
-    }
-    const result = await tree.getClaimableFor(user, proof.tokens, proof.cumulativeAmounts);
-    return [user, result];
-  });
-  const results = await Promise.all(requests);
-
+  const results = await getClaimableRewards(chain, chainUsers, distribution);
   const userClaimSnapshots = results.map((res) => {
     const [user, result] = res;
     const [tokens, amounts] = result;
