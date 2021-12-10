@@ -9,7 +9,7 @@ import { createValueSource, ValueSource } from '../protocols/interfaces/value-so
 import { getVaultValueSources } from '../protocols/protocols.utils';
 import { SOURCE_TIME_FRAMES, updatePerformance } from '../rewards/enums/source-timeframe.enum';
 import { TokenType } from '../tokens/enums/token-type.enum';
-import { getSettTokens, getSettUnderlyingTokens, getToken } from '../tokens/tokens.utils';
+import { getVaultTokens, getSettUnderlyingTokens, getToken } from '../tokens/tokens.utils';
 import { VaultDefinition } from './interfaces/vault-definition.interface';
 import { getCachedSett, getPerformance, getVaultDefinition, getSettSnapshots, VAULT_SOURCE } from './vaults.utils';
 
@@ -33,7 +33,7 @@ export class VaultsService {
   async getSett(chain: Chain, contract: string, currency?: string): Promise<Vault> {
     const VaultDefinition = getVaultDefinition(chain, contract);
     const [vault, sources] = await Promise.all([getCachedSett(VaultDefinition), getVaultValueSources(VaultDefinition)]);
-    vault.tokens = await getSettTokens(VaultDefinition, vault.balance, currency);
+    vault.tokens = await getVaultTokens(VaultDefinition, vault.balance, currency);
     vault.value = vault.tokens.reduce((total, balance) => (total += balance.value), 0);
     vault.sources = sources
       .filter((source) => source.apr >= 0.001)

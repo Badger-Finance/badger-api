@@ -5,6 +5,7 @@ import { TOKENS } from '../config/tokens.config';
 import { tokenBalancesToCachedLiquidityPoolTokenBalance } from '../indexers/indexer.utils';
 import * as priceUtils from '../prices/prices.utils';
 import * as swapUtils from '../protocols/common/swap.utils';
+import * as vaultUtils from '../vaults/vaults.utils';
 import { getVaultDefinition } from '../vaults/vaults.utils';
 import { setupMapper } from '../test/tests.utils';
 import { ethTokensConfig } from './config/eth-tokens.config';
@@ -18,13 +19,34 @@ import {
   getSettUnderlyingTokens,
   getToken,
   getTokenByName,
+  getVaultTokens,
   mockBalance,
   toBalance,
   toCachedBalance,
 } from './tokens.utils';
+import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 
 describe('token.utils', () => {
   const rook = '0xfA5047c9c78B8877af97BDcb85Db743fD7313d4a';
+
+  beforeEach(() => {
+    jest.spyOn(vaultUtils, 'getCachedSett').mockImplementation(async (vault: VaultDefinition) => {
+      const defaultVault = vaultUtils.defaultVault(vault);
+      defaultVault.balance = 10;
+      return defaultVault;
+    });
+    jest.spyOn(priceUtils, 'getPrice').mockImplementation(async (contract): Promise<TokenPriceSnapshot> => {
+      const token = getToken(contract);
+      const price = parseInt(token.address.slice(0, 4), 16);
+      return {
+        name: token.name,
+        address: token.address,
+        usd: price,
+        eth: price,
+        updatedAt: Date.now(),
+      };
+    });
+  });
 
   describe('getToken', () => {
     describe('lookup invalid token address', () => {
@@ -374,6 +396,29 @@ describe('token.utils', () => {
           expect(actual).toMatchObject(expected);
         });
       });
+    });
+  });
+
+  describe('getVaultTokens', () => {
+    it('returns the single underlying token for a non liquidity token underlying token', async () => {
+      const liquidity = getVaultDefinition(new Ethereum(), TOKENS.BBADGER);
+      const tokens = await getVaultTokens(liquidity, 10);
+      expect(tokens).toMatchSnapshot();
+    });
+
+    it('returns all deposit token for a liquidity token underlying token', async () => {
+      const wbtc = getToken(TOKENS.WBTC);
+      const weth = getToken(TOKENS.WETH);
+      const balances = await Promise.all([toCachedBalance(wbtc, 1), toCachedBalance(weth, 20)]);
+      const cached = tokenBalancesToCachedLiquidityPoolTokenBalance(
+        TOKENS.SUSHI_ETH_WBTC,
+        Protocol.Sushiswap,
+        balances,
+      );
+      setupMapper([cached]);
+      const liquidity = getVaultDefinition(new Ethereum(), TOKENS.BSUSHI_ETH_WBTC);
+      const tokens = await getVaultTokens(liquidity, 10);
+      expect(tokens).toMatchSnapshot();
     });
   });
 });
