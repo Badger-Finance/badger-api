@@ -133,23 +133,23 @@ export async function toCachedBalance(token: Token, balance: number): Promise<Ca
 }
 
 /**
- * Get token balances within a sett.
- * @param sett Sett requested.
+ * Get token balances within a vault.
+ * @param vaultDefinition Vault requested.
  * @param balance Balance in wei.
  * @param currency Optional currency denomination.
  * @returns Array of token balances from the Sett.
  */
-export async function getSettTokens(
-  sett: VaultDefinition,
+export async function getVaultTokens(
+  vaultDefinition: VaultDefinition,
   balance: number,
   currency?: string,
 ): Promise<TokenBalance[]> {
-  const { protocol, depositToken, settToken } = sett;
-  const token = getToken(sett.depositToken);
-  if (protocol && (token.lpToken || sett.getTokenBalance)) {
+  const { protocol, depositToken, settToken } = vaultDefinition;
+  const token = getToken(vaultDefinition.depositToken);
+  if (protocol && (token.lpToken || vaultDefinition.getTokenBalance)) {
     const balanceToken = token.lpToken ? depositToken : settToken;
     const [cachedSett, cachedTokenBalances] = await Promise.all([
-      getCachedSett(sett),
+      getCachedSett(vaultDefinition),
       getCachedTokenBalances(balanceToken, protocol, currency),
     ]);
     if (cachedTokenBalances) {

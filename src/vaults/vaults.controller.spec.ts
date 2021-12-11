@@ -38,7 +38,7 @@ describe('SettsController', () => {
         return [underlying, badger, digg, fees];
       });
     jest
-      .spyOn(tokensUtils, 'getSettTokens')
+      .spyOn(tokensUtils, 'getVaultTokens')
       .mockImplementation(
         async (sett: VaultDefinition, _balance: number, _currency?: string): Promise<TokenBalance[]> => {
           const token = tokensUtils.getToken(sett.depositToken);

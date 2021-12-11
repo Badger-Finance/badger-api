@@ -11,7 +11,7 @@ import { CachedBoost } from '../leaderboards/interface/cached-boost.interface';
 import { getPrice, inCurrency } from '../prices/prices.utils';
 import { BoostData } from '../rewards/interfaces/boost-data.interface';
 import { getCachedSett, getVaultDefinition } from '../vaults/vaults.utils';
-import { formatBalance, getSettTokens, getToken } from '../tokens/tokens.utils';
+import { formatBalance, getVaultTokens, getToken } from '../tokens/tokens.utils';
 import { AccountMap } from './interfaces/account-map.interface';
 import { CachedAccount } from './interfaces/cached-account.interface';
 import { CachedSettBalance } from './interfaces/cached-sett-balance.interface';
@@ -121,8 +121,8 @@ export async function toSettBalance(
   const earnedBalance = balanceTokens - depositedTokens + withdrawnTokens;
   const [depositTokenPrice, earnedTokens, tokens] = await Promise.all([
     getPrice(settDefinition.depositToken),
-    getSettTokens(settDefinition, earnedBalance, currency),
-    getSettTokens(settDefinition, balanceTokens, currency),
+    getVaultTokens(settDefinition, earnedBalance, currency),
+    getVaultTokens(settDefinition, balanceTokens, currency),
   ]);
 
   return Object.assign(new CachedSettBalance(), {

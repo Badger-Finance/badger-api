@@ -62,20 +62,20 @@ export const getSett = async (graphUrl: string, contract: string, block?: number
   return badgerGraphqlSdk.Sett(vars);
 };
 
-export const getCachedSett = async (VaultDefinition: VaultDefinition): Promise<Vault> => {
-  const sett = defaultVault(VaultDefinition);
+export const getCachedSett = async (vaultDefinition: VaultDefinition): Promise<Vault> => {
+  const sett = defaultVault(vaultDefinition);
   try {
     const mapper = getDataMapper();
     for await (const item of mapper.query(
       CachedSettSnapshot,
-      { address: VaultDefinition.settToken },
+      { address: vaultDefinition.settToken },
       { limit: 1, scanIndexForward: false },
     )) {
       sett.balance = item.balance;
       sett.value = item.settValue;
       if (item.balance === 0 || item.supply === 0) {
         sett.pricePerFullShare = 1;
-      } else if (VaultDefinition.settToken === TOKENS.BDIGG) {
+      } else if (vaultDefinition.settToken === TOKENS.BDIGG) {
         sett.pricePerFullShare = item.balance / item.supply;
       } else {
         sett.pricePerFullShare = item.ratio;
