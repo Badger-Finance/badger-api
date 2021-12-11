@@ -16,7 +16,7 @@
     "dev:local": "npx ts-node src/index.ts",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint \"src/**/*.ts\" --fix",
-    "test": "jest --runInBand --detectOpenHandles --forceExit",
+    "test": "jest --detectOpenHandles --forceExit",
     "prepare": "husky install"
   },
   "dependencies": {
@@ -47,7 +47,6 @@
     "graphql-tag": "^2.12.4",
     "method-override": "^3.0.0",
     "node-cache": "^5.1.2",
-    "node-fetch": "^2.6.1",
     "serverless-dynamodb-client": "^0.0.2",
     "tslib": "^2.2.0"
   },
@@ -64,7 +63,6 @@
     "@types/method-override": "^0.0.31",
     "@types/multer": "^1.4.5",
     "@types/node": "^15.6.1",
-    "@types/node-fetch": "^2.5.10",
     "@types/supertest": "2.0.11",
     "@types/web3": "^1.2.2",
     "@typescript-eslint/eslint-plugin": "^4.25.0",
@@ -80,7 +78,6 @@
     "husky": "^7.0.0",
     "jest": "^26.6.3",
     "jest-create-mock-instance": "1.1.0",
-    "jest-fetch-mock": "^3.0.3",
     "jsonfile": "^6.1.0",
     "prettier": "^2.5.1",
     "pretty-quick": "^3.1.2",

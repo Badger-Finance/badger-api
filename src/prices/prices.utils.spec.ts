@@ -1,6 +1,5 @@
 import { DataMapper } from '@aws/dynamodb-data-mapper';
 import { BadRequest, NotFound } from '@tsed/exceptions';
-import fetchMock from 'jest-fetch-mock';
 import { TestStrategy } from '../chains/strategies/test.strategy';
 import { TOKENS } from '../config/tokens.config';
 import { setupMapper } from '../test/tests.utils';
@@ -21,13 +20,10 @@ import {
   updatePrice,
   updatePrices,
 } from './prices.utils';
+import * as requestUtils from '../etherscan/etherscan.utils';
 
 describe('prices.utils', () => {
   const strategy = new TestStrategy();
-
-  beforeEach(async () => {
-    fetchMock.resetMocks();
-  });
 
   describe('getPrice', () => {
     describe('when price is not available', () => {
@@ -189,11 +185,9 @@ describe('prices.utils', () => {
           eth: etherPrice,
         },
       };
-      fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
+      jest.spyOn(requestUtils, 'request').mockImplementation(async () => mockResponse);
 
       const response = await getContractPrice(contract);
-
-      expect(fetchMock).toHaveBeenCalled();
       expect(response).toBeDefined();
       expect(response).toMatchObject({
         address: contract,
@@ -214,11 +208,9 @@ describe('prices.utils', () => {
           eth: etherPrice,
         },
       };
-      fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
+      jest.spyOn(requestUtils, 'request').mockImplementation(async () => mockResponse);
 
       const response = await getTokenPrice(token);
-
-      expect(fetchMock).toHaveBeenCalled();
       expect(response).toBeDefined();
       expect(response).toMatchObject({
         name: token,

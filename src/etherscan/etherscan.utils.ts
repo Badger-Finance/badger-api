@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+import axios from 'axios';
 import { EtherscanAction } from './enums/etherscan-action.enum';
 import { EtherscanModule } from './enums/etherscan-module.enum';
 import { EtherscanBlockResponse } from './interfaces/etherscan-block-response.interface';
@@ -9,15 +9,13 @@ const ARBISCAN_API = 'https://api.arbiscan.io/api';
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || 'MISSING REQUIRED ENV VAR';
 const ARBISCAN_API_KEY = process.env.ARBISCAN_API_KEY || 'MISSING REQUIRED ENV VAR';
 
-async function request<T>(baseUrl: string, params?: Record<string, string>): Promise<T> {
-  const url = new URL(baseUrl);
-  url.search = new URLSearchParams(params).toString();
-  const res = await fetch(url);
-  if (!res.ok) {
-    throw new Error(await res.text());
+export async function request<T>(baseURL: string, params?: Record<string, string>): Promise<T> {
+  const client = axios.create({ baseURL });
+  try {
+    return client.get('/', { params });
+  } catch (error) {
+    throw error;
   }
-  const obj = (await res.json()) as T;
-  return obj;
 }
 
 async function getBlock(api: string, apiKey: string, timestamp: number): Promise<number> {

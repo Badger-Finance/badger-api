@@ -1,6 +1,5 @@
 import { BadRequest, InternalServerError, NotFound, UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
-import fetch from 'node-fetch';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
@@ -15,6 +14,7 @@ import { TokenConfig } from '../tokens/interfaces/token-config.interface';
 import { TokenPrice } from '../tokens/interfaces/token-price.interface';
 import { TokenPriceSnapshot } from '../tokens/interfaces/token-price-snapshot.interface';
 import { getToken, getTokenByName } from '../tokens/tokens.utils';
+import { request } from '../etherscan/etherscan.utils';
 
 /**
  * Protoype for a token address pricing function.
@@ -127,23 +127,24 @@ export const getPriceData = async (tokens: TokenConfig): Promise<PriceData> => {
  * @throws {InternalServerError} Failed price lookup.
  */
 export const getContractPrice = async (contract: string): Promise<TokenPrice> => {
-  const response = await fetch(
-    `${COINGECKO_URL}/token_price/ethereum?contract_addresses=${contract}&vs_currencies=usd,eth`,
+  const params = {
+    contract_addresses: contract,
+    vs_currencies: 'usd,eth',
+  };
+  const result = await request<Record<string, { eth: number; usd: number }>>(
+    `${COINGECKO_URL}/token_price/ethereum`,
+    params,
   );
-  if (!response.ok) {
-    throw new InternalServerError(`Unable to query ${contract} price`);
-  }
-  const json = await response.json();
   const contractKey = contract.toLowerCase(); // coingecko return key in lower case
-  if (!json[contractKey] || !json[contractKey].usd || !json[contractKey].eth) {
+  if (!result[contractKey] || !result[contractKey].usd || !result[contractKey].eth) {
     throw new InternalServerError(`Unable to resolve ${contract} price`);
   }
   const token = getToken(contract);
   return {
     name: token.name,
     address: token.address,
-    usd: json[contractKey].usd,
-    eth: json[contractKey].eth,
+    usd: result[contractKey].usd,
+    eth: result[contractKey].eth,
   };
 };
 
@@ -153,20 +154,23 @@ export const getContractPrice = async (contract: string): Promise<TokenPrice> =>
  * @throws {InternalServerError} Failed price lookup.
  */
 export const getTokenPrice = async (name: string): Promise<TokenPrice> => {
-  const response = await fetch(`${COINGECKO_URL}/price?ids=${name}&vs_currencies=usd,eth`);
-  if (!response.ok) {
-    throw new InternalServerError(`Unable to query ${name} price`);
-  }
-  const json = await response.json();
-  if (!json[name] || !json[name].usd || !json[name].eth) {
+  const params = {
+    ids: name,
+    vs_currencies: 'usd,eth',
+  };
+  const result = await request<Record<string, { eth: number; usd: number }>>(
+    `${COINGECKO_URL}/token_price/ethereum`,
+    params,
+  );
+  if (!result[name] || !result[name].usd || !result[name].eth) {
     throw new InternalServerError(`Unable to resolve ${name} price`);
   }
   const token = getTokenByName(name);
   return {
     name: token.name,
     address: token.address,
-    usd: json[name].usd,
-    eth: json[name].eth,
+    usd: result[name].usd,
+    eth: result[name].eth,
   };
 };
 
