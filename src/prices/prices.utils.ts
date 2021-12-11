@@ -1,12 +1,9 @@
-import { BadRequest, InternalServerError, NotFound, UnprocessableEntity } from '@tsed/exceptions';
-import { ethers } from 'ethers';
+import { BadRequest, InternalServerError, UnprocessableEntity } from '@tsed/exceptions';
 import { getDataMapper } from '../aws/dynamodb.utils';
-import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { ChainStrategy } from '../chains/strategies/chain.strategy';
 import { COINGECKO_URL } from '../config/constants';
-import { TOKENS } from '../config/tokens.config';
-import { getSett } from '../vaults/vaults.utils';
+import { getCachedSett, getVaultDefinition } from '../vaults/vaults.utils';
 import { TokenType } from '../tokens/enums/token-type.enum';
 import { PriceData } from '../tokens/interfaces/price-data.interface';
 import { Token } from '../tokens/interfaces/token.interface';
@@ -15,21 +12,6 @@ import { TokenPrice } from '../tokens/interfaces/token-price.interface';
 import { TokenPriceSnapshot } from '../tokens/interfaces/token-price-snapshot.interface';
 import { getToken, getTokenByName } from '../tokens/tokens.utils';
 import { request } from '../etherscan/etherscan.utils';
-
-/**
- * Protoype for a token address pricing function.
- * @param address Target for price retrieval.
- */
-export type PricingFunction = (address: string) => Promise<TokenPrice>;
-
-/**
- * Mass price update request object.
- * Mapping of token address to respective pricing function.
- * @see {PricingFunction}
- */
-export interface PriceUpdateRequest {
-  [token: string]: PricingFunction;
-}
 
 export const noPrice = (token: Token): TokenPriceSnapshot => {
   return {
@@ -69,19 +51,11 @@ export const updatePrice = async (token: Token): Promise<TokenPriceSnapshot> => 
 };
 
 /**
- * Mass update token pricing db entries.
- * @param tokenConfig Target for price updates.
- */
-export const updatePrices = async (tokenConfig: TokenConfig): Promise<TokenPriceSnapshot[]> => {
-  return Promise.all(Object.keys(tokenConfig).map(async (token) => updatePrice(tokenConfig[token])));
-};
-
-/**
  * Load token price fromt he pricing database.
  * @param contract Address for the token price being requested.
  * @returns Most recent price data for the requested contract.
  */
-export const getPrice = async (contract: string): Promise<TokenPriceSnapshot> => {
+export const getPrice = async (contract: string): Promise<TokenPrice> => {
   const token = getToken(contract);
   try {
     const mapper = getDataMapper();
@@ -97,15 +71,6 @@ export const getPrice = async (contract: string): Promise<TokenPriceSnapshot> =>
     console.error(err);
     return noPrice(token);
   }
-};
-
-/**
- * Retrieve the price data for a given token in USD and ETH.
- * @param contract Token contract address.
- * @returns Most recently updated token pricing data.
- */
-export const getTokenPriceData = async (contract: string): Promise<TokenPrice> => {
-  return getPrice(contract);
 };
 
 /**
@@ -200,61 +165,20 @@ export const getVaultTokenPrice = async (contract: string): Promise<TokenPrice> 
   if (token.type !== TokenType.Vault) {
     throw new BadRequest(`${token.name} is not a vault token`);
   }
-  if (!token.vaultToken) {
+  const { vaultToken } = token;
+  if (!vaultToken) {
     throw new UnprocessableEntity(`${token.name} vault token missing`);
   }
-  const vaultToken = token.vaultToken;
   const targetChain = Chain.getChain(vaultToken.network);
+  const vaultDefintion =
+    getVaultDefinition(targetChain, token.address) ?? getVaultDefinition(targetChain, vaultToken.address);
   const [vaultTokenPrice, vaultTokenSnapshot] = await Promise.all([
     getPrice(vaultToken.address),
-    getSett(targetChain.graphUrl, token.address),
+    getCachedSett(vaultDefintion),
   ]);
-  if (!vaultTokenSnapshot.sett) {
-    throw new NotFound(`Failed to load ${contract} sett data`);
-  }
   vaultTokenPrice.name = token.name;
   vaultTokenPrice.address = token.address;
-  const sett = vaultTokenSnapshot.sett;
-
-  let multiplier;
-  if (token.address === TOKENS.BDIGG) {
-    multiplier = (sett.balance / sett.totalSupply) * 1e9;
-  } else {
-    multiplier = sett.pricePerFullShare / Math.pow(10, token.decimals);
-  }
-  vaultTokenPrice.usd *= multiplier;
-  vaultTokenPrice.eth *= multiplier;
-
+  vaultTokenPrice.usd *= vaultTokenSnapshot.pricePerFullShare;
+  vaultTokenPrice.eth *= vaultTokenSnapshot.pricePerFullShare;
   return vaultTokenPrice;
-};
-
-/**
- * Get pricing information for a wrapper token.
- * Wrapper tokens are tokens on their non-native chain that represent another token
- * in the system. i.e. bDigg on Binance Smart Chain.
- * @param contract Address for wrapper token.
- * @returns Pricing data for the given wrapper token.
- */
-export const getWrapperTokenPrice = async (contract: string): Promise<TokenPrice> => {
-  const token = getToken(contract);
-  if (token.type !== TokenType.Wrapper) {
-    throw new BadRequest(`${token.name} is not a wrapper token`);
-  }
-  if (!token.vaultToken) {
-    throw new UnprocessableEntity(`${token.name} vault token missing`);
-  }
-  const { vaultToken } = token;
-  const allSetts = [];
-  for (const chain of loadChains()) {
-    allSetts.push(...chain.setts);
-  }
-  const backingVault = allSetts.find((sett) => ethers.utils.getAddress(sett.settToken) === vaultToken.address);
-  if (!backingVault) {
-    throw new UnprocessableEntity(`${token.name} backing vault missing`);
-  }
-  const price = await getPrice(backingVault.settToken);
-  if (!price) {
-    throw new InternalServerError(`Failed to load ${contract} sett data`);
-  }
-  return price;
 };

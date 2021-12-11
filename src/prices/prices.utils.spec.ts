@@ -6,19 +6,16 @@ import { setupMapper } from '../test/tests.utils';
 import { TokenType } from '../tokens/enums/token-type.enum';
 import { Token } from '../tokens/interfaces/token.interface';
 import { TokenPrice } from '../tokens/interfaces/token-price.interface';
-import { TokenPriceSnapshot } from '../tokens/interfaces/token-price-snapshot.interface';
 import { getToken, protocolTokens } from '../tokens/tokens.utils';
 import {
   getContractPrice,
   getPrice,
   getPriceData,
   getTokenPrice,
-  getTokenPriceData,
   getVaultTokenPrice,
   inCurrency,
   noPrice,
   updatePrice,
-  updatePrices,
 } from './prices.utils';
 import * as requestUtils from '../etherscan/etherscan.utils';
 
@@ -33,8 +30,10 @@ describe('prices.utils', () => {
         const cakePrice = await getPrice(cake.address);
         expect(cakePrice).toBeDefined();
         const expected = noPrice(cake);
-        expected.updatedAt = cakePrice.updatedAt;
-        expect(cakePrice).toMatchObject(expected);
+        expect(cakePrice).toMatchObject({
+          ...expected,
+          updatedAt: expect.any(Number),
+        });
       });
     });
 
@@ -72,86 +71,6 @@ describe('prices.utils', () => {
         const put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
         await updatePrice(badger);
         expect(put.mock.calls.length).toEqual(1);
-      });
-    });
-  });
-
-  describe('updatePrices', () => {
-    describe('update unsupported token', () => {
-      it('throws an bad request error', async () => {
-        const unsupportedToken: Token = {
-          name: 'Fake Token',
-          symbol: 'FTK',
-          address: '0xfA5047c9c78B8877af97BDcb85Db743fD7313d4a',
-          decimals: 18,
-          type: TokenType.Contract,
-        };
-        await expect(updatePrices({ [unsupportedToken.address]: unsupportedToken })).rejects.toThrow(NotFound);
-      });
-    });
-
-    describe('update a mix of unsupported and supported tokens', () => {
-      it('throws a bad request error', async () => {
-        const unsupportedToken: Token = {
-          name: 'Fake Token',
-          symbol: 'FTK',
-          address: '0xfA5047c9c78B8877af97BDcb85Db743fD7313d4a',
-          decimals: 18,
-          type: TokenType.Contract,
-        };
-        const badgerToken = getToken(TOKENS.BADGER);
-        const tokenConfig = {
-          [unsupportedToken.address]: unsupportedToken,
-          [TOKENS.BADGER]: badgerToken,
-        };
-        await expect(updatePrices(tokenConfig)).rejects.toThrow(NotFound);
-      });
-    });
-
-    describe('update supported tokens', () => {
-      it('updates prices for all tokens requested', async () => {
-        const digg = getToken(TOKENS.DIGG);
-        const badger = getToken(TOKENS.BADGER);
-        const tokenConfig = {
-          [digg.address]: digg,
-          [badger.address]: badger,
-        };
-        const put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
-        await updatePrices(tokenConfig);
-        expect(put.mock.calls.length).toEqual(Object.keys(tokenConfig).length);
-        for (const call of put.mock.calls[0] as Iterable<TokenPriceSnapshot>) {
-          expect(call.address).toBeDefined();
-          const price = await strategy.getPrice(call.address);
-          expect(call).toMatchObject(price);
-        }
-      });
-    });
-  });
-
-  describe('getTokenPriceData', () => {
-    describe('get unsupported token price', () => {
-      it('throws a not found error', async () => {
-        const unsupportedToken: Token = {
-          name: 'Fake Token',
-          symbol: 'FTK',
-          address: '0xfA5047c9c78B8877af97BDcb85Db743fD7313d4a',
-          decimals: 18,
-          type: TokenType.Contract,
-        };
-        await expect(getTokenPriceData(unsupportedToken.address)).rejects.toThrow(NotFound);
-      });
-    });
-
-    describe('get supported token price', () => {
-      it('gets the latest price snapshot the from the db', async () => {
-        const badger = getToken(TOKENS.BADGER);
-        const mockPrice = {
-          ...(await strategy.getPrice(badger.address)),
-          updatedAt: Date.now(),
-        };
-        setupMapper([mockPrice]);
-        const price = await getTokenPriceData(badger.address);
-        expect(price).toMatchObject(mockPrice);
       });
     });
   });
