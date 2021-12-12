@@ -1,6 +1,6 @@
 import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
-import { getContractPrice, getTokenPrice, getVaultTokenPrice, getWrapperTokenPrice } from '../../prices/prices.utils';
+import { getContractPrice, getTokenPrice, getVaultTokenPrice } from '../../prices/prices.utils';
 import { getOnChainLiquidityPrice, resolveTokenPrice } from '../../protocols/common/swap.utils';
 import { getCurveTokenPrice } from '../../protocols/strategies/convex.strategy';
 import { TokenType } from '../../tokens/enums/token-type.enum';
@@ -37,8 +37,6 @@ export class BaseStrategy extends ChainStrategy {
         return getOnChainLiquidityPrice(chain, token.address);
       case TokenType.Vault:
         return getVaultTokenPrice(token.address);
-      case TokenType.Wrapper:
-        return getWrapperTokenPrice(token.address);
       default:
         throw new UnprocessableEntity('Unsupported TokenType');
     }

@@ -1,7 +1,7 @@
 import { loadChains } from '../chains/chain';
-import { updatePrices } from '../prices/prices.utils';
+import { updatePrice } from '../prices/prices.utils';
 
 export const indexPrices = async (): Promise<void> => {
-  const tokens = Object.fromEntries(loadChains().flatMap((c) => Object.entries(c.tokens)));
-  await updatePrices(tokens);
+  const tokens = loadChains().flatMap((c) => Object.values(c.tokens));
+  await Promise.all(tokens.map(async (token) => updatePrice(token)));
 };
