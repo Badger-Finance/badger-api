@@ -1,9 +1,12 @@
-import { attribute, hashKey, rangeKey, table } from '@aws/dynamodb-data-mapper-annotations';
+import { attribute, hashKey, table } from '@aws/dynamodb-data-mapper-annotations';
 import { USER_CLAIMED_METADATA } from '../../config/constants';
 
 @table(USER_CLAIMED_METADATA)
 export class UserClaimMetadata {
-  @rangeKey({
+  @hashKey()
+  chainStartBlock!: string;
+
+  @attribute({
     indexKeyConfigurations: {
       IndexMetadataChainAndStartBlock: 'RANGE',
     },
@@ -16,9 +19,6 @@ export class UserClaimMetadata {
     },
   })
   chain!: string;
-
-  @attribute()
-  chainStartBlock!: string;
 
   @attribute()
   endBlock!: number;

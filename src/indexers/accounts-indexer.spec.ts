@@ -5,6 +5,7 @@ import * as rewardsUtils from '../rewards/rewards.utils';
 import { Network } from '@badger-dao/sdk';
 import { AccountIndexMode } from './enums/account-index-mode.enum';
 import { Chain } from '../chains/config/chain.config';
+import { ethers } from 'ethers';
 import { MOCK_DISTRIBUTION_FILE } from '../test/constants';
 import { Ethereum } from '../chains/config/eth.config';
 import { BinanceSmartChain } from '../chains/config/bsc.config';
@@ -21,6 +22,7 @@ describe('accounts-indexer', () => {
   const rewardsChain = new Ethereum();
   const noRewardsChain = new BinanceSmartChain();
   const networks = [Network.Ethereum, Network.BinanceSmartChain, Network.Polygon, Network.Arbitrum];
+  const mockedBlockNumber = 100;
   let getAccounts: jest.SpyInstance<Promise<string[]>, [chain: Chain]>;
   let getLatestMetadata: jest.SpyInstance<Promise<UserClaimMetadata>, [chain: Chain]>;
   let getTreeDistribution: jest.SpyInstance<Promise<RewardMerkleDistribution | null>, [chain: Chain]>;
@@ -44,6 +46,9 @@ describe('accounts-indexer', () => {
         chain: chain.network,
       });
     });
+    jest
+      .spyOn(ethers.providers.JsonRpcProvider.prototype, 'getBlockNumber')
+      .mockImplementation(() => Promise.resolve(mockedBlockNumber));
   });
 
   describe('refreshUserAccounts', () => {
@@ -99,6 +104,7 @@ describe('accounts-indexer', () => {
           claimableBalances,
         }),
       );
+      const put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
       const expectedMetadata = Object.assign(new UserClaimMetadata(), {
         // startBlock for next stored metaData obj should be endBlock value of the previous metaData entity
         startBlock: 124,
@@ -106,7 +112,6 @@ describe('accounts-indexer', () => {
         endBlock: (await rewardsChain.provider.getBlockNumber()) + 1,
         chain: rewardsChain.network,
       });
-      const put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
       const batchPut = mockBatchPut(expected);
       await accountsIndexer.refreshClaimableBalances(rewardsChain);
       // verify tree distribution was loaded, and the proper chain was called

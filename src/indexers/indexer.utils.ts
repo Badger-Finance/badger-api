@@ -294,7 +294,11 @@ export async function getSettValueSources(
 export async function getLatestMetadata(chain: Chain): Promise<UserClaimMetadata> {
   const mapper = getDataMapper();
   let result: UserClaimMetadata | null = null;
-  for await (const metric of mapper.query(UserClaimMetadata, {}, { scanIndexForward: false, limit: 1 })) {
+  for await (const metric of mapper.query(
+    UserClaimMetadata,
+    { chain: chain.network },
+    { scanIndexForward: false, limit: 1 },
+  )) {
     result = metric;
   }
   // In case there UserClaimMetadata wasn't created yet, create it with default values
