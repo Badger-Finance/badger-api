@@ -9,9 +9,7 @@ import { ClaimableBalance } from '../rewards/entities/claimable-balance';
 import { UserClaimSnapshot } from '../rewards/entities/user-claim-snapshot';
 import { getChainStartBlockKey, getClaimableRewards, getTreeDistribution } from '../rewards/rewards.utils';
 import { getVaultDefinition } from '../vaults/vaults.utils';
-import { AccountIndexMode } from './enums/account-index-mode.enum';
 import { batchRefreshAccounts, chunkArray, getLatestMetadata } from './indexer.utils';
-import { AccountIndexEvent } from './interfaces/account-index-event.interface';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 
 export async function refreshClaimableBalances(chain: Chain) {
@@ -84,24 +82,14 @@ export async function refreshAccountSettBalances(chain: Chain, batchAccounts: Ac
   }
 }
 
-/**
- * Top level refresh call to separate chain updates.
- */
-export async function refreshUserAccounts(event: AccountIndexEvent) {
-  const { mode } = event;
+export async function refreshUserAccounts() {
   const chains = loadChains();
   await Promise.all(
     chains.map(async (chain) => {
       const accounts = await getAccounts(chain);
-      let refreshFns: Promise<void>[] = [];
-      switch (mode) {
-        case AccountIndexMode.BalanceData:
-        default:
-          refreshFns = chunkArray(accounts, 10).flatMap((chunk) =>
-            batchRefreshAccounts(chunk, (batchAccounts) => [refreshAccountSettBalances(chain, batchAccounts)], 100),
-          );
-          break;
-      }
+      const refreshFns = chunkArray(accounts, 10).flatMap((chunk) =>
+        batchRefreshAccounts(chunk, (batchAccounts) => [refreshAccountSettBalances(chain, batchAccounts)], 100),
+      );
       await Promise.all(refreshFns);
     }),
   );

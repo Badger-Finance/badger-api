@@ -3,7 +3,6 @@ import * as accountsUtils from '../accounts/accounts.utils';
 import * as indexerUtils from './indexer.utils';
 import * as rewardsUtils from '../rewards/rewards.utils';
 import { Network } from '@badger-dao/sdk';
-import { AccountIndexMode } from './enums/account-index-mode.enum';
 import { Chain } from '../chains/config/chain.config';
 import { ethers } from 'ethers';
 import { MOCK_DISTRIBUTION_FILE } from '../test/constants';
@@ -54,15 +53,10 @@ describe('accounts-indexer', () => {
   });
 
   describe('refreshUserAccounts', () => {
-    it('calls refreshAccountClaimableBalances for each chain separately', async () => {
-      const batchRefresh = jest.spyOn(indexerUtils, 'batchRefreshAccounts').mockImplementation(() => Promise.resolve());
-      await accountsIndexer.refreshUserAccounts({ mode: AccountIndexMode.ClaimableBalanceData });
-      const chainCallData = batchRefresh.mock.calls.flatMap((calls) => calls[0]);
-      expect(chainCallData).toEqual(networks);
-    });
     it('calls refreshAccountSettBalances for each chain separately', async () => {
+      jest.spyOn(accountsIndexer, 'refreshClaimableBalances').mockImplementation(() => Promise.resolve());
       const batchRefresh = jest.spyOn(indexerUtils, 'batchRefreshAccounts').mockImplementation(() => Promise.resolve());
-      await accountsIndexer.refreshUserAccounts({ mode: AccountIndexMode.BalanceData });
+      await accountsIndexer.refreshUserAccounts();
       const chainCallData = batchRefresh.mock.calls.flatMap((calls) => calls[0]);
       expect(chainCallData).toEqual(networks);
     });

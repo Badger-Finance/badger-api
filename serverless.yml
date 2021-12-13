@@ -401,22 +401,23 @@ functions:
           description: 'index accounts boost information'
           rate: rate(20 minutes)
 
-  index-accounts:
+  index-accounts-balances:
     handler: src/indexers/accounts-indexer.refreshUserAccounts
+    timeout: 750
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-balances
+          description: 'index accounts information from the graph'
+          rate: rate(15 minutes)
+
+  index-accounts-claimable-balances:
+    handler: src/indexers/accounts-indexer.refreshClaimableBalances
     timeout: 750
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-claimables
           description: 'index accounts claimable from badger tree'
           rate: rate(2 hours)
-          input:
-            mode: ClaimableBalanceData
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-balances
-          description: 'index accounts information from the graph'
-          rate: rate(15 minutes)
-          input:
-            mode: BalanceData
 
   index-protocol-metrics-snapshots:
     handler: src/indexers/protocol-metric-indexer.indexProtocolMetrics
