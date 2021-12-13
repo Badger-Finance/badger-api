@@ -37,10 +37,15 @@ export function noRewards(VaultDefinition: VaultDefinition, token: Token) {
   );
 }
 
+export function getChainStartBlockKey(chain: Chain, block: number): string {
+  return `${chain.network}_${block}`;
+}
+
 export function getClaimableRewards(
   chain: Chain,
   chainUsers: string[],
   distribution: RewardMerkleDistribution,
+  blockNumber: number,
 ): Promise<[string, [string[], BigNumber[]]][]> {
   if (!chain.badgerTree) {
     throw new UnprocessableEntity(`No BadgerTree is available from ${chain.name}`);
@@ -51,7 +56,7 @@ export function getClaimableRewards(
     if (!proof) {
       return [user, [[], []]];
     }
-    const result = await tree.getClaimableFor(user, proof.tokens, proof.cumulativeAmounts);
+    const result = await tree.getClaimableFor(user, proof.tokens, proof.cumulativeAmounts, { blockTag: blockNumber });
     return [user, result];
   });
   return Promise.all(requests);

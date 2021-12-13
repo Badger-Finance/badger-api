@@ -1,5 +1,5 @@
 import { BinanceSmartChain } from '../chains/config/bsc.config';
-import { getTreeDistribution, noRewards } from './rewards.utils';
+import { getChainStartBlockKey, getTreeDistribution, noRewards } from './rewards.utils';
 import * as s3Utils from '../aws/s3.utils';
 import { TOKENS } from '../config/tokens.config';
 import { Ethereum } from '../chains/config/eth.config';
@@ -41,6 +41,12 @@ describe('rewards.utils', () => {
         maxApr: 0,
         boostable: false,
       });
+    });
+  });
+
+  describe('getChainStartBlockKey', () => {
+    it('returns underscore delimited string comprised of chain network and requested block', () => {
+      expect(getChainStartBlockKey(new Ethereum(), 13500000)).toEqual(`ethereum_13500000`);
     });
   });
 });

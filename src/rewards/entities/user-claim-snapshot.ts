@@ -20,7 +20,7 @@ export class UserClaimSnapshot {
   address!: string;
 
   @attribute()
-  network!: string;
+  chain!: string;
 
   @attribute({ memberType: embed(ClaimableBalance) })
   claimableBalances!: Array<ClaimableBalance>;

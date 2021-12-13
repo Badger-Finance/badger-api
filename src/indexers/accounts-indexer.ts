@@ -7,7 +7,7 @@ import { Chain } from '../chains/config/chain.config';
 import { UserSettBalance } from '../graphql/generated/badger';
 import { ClaimableBalance } from '../rewards/entities/claimable-balance';
 import { UserClaimSnapshot } from '../rewards/entities/user-claim-snapshot';
-import { getClaimableRewards, getTreeDistribution } from '../rewards/rewards.utils';
+import { getChainStartBlockKey, getClaimableRewards, getTreeDistribution } from '../rewards/rewards.utils';
 import { getVaultDefinition } from '../vaults/vaults.utils';
 import { AccountIndexMode } from './enums/account-index-mode.enum';
 import { batchRefreshAccounts, chunkArray, getLatestMetadata } from './indexer.utils';
@@ -17,13 +17,17 @@ import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 export async function refreshClaimableBalances(chain: Chain) {
   const mapper = getDataMapper();
   const distribution = await getTreeDistribution(chain);
+
   if (!distribution || !chain.badgerTree) {
     return;
   }
-  const chainUsers = await getAccounts(chain);
 
-  const results = await getClaimableRewards(chain, chainUsers, distribution);
-  const latestMetadata = await getLatestMetadata(chain);
+  const { endBlock } = await getLatestMetadata(chain);
+  const snapshotStartBlock = endBlock + 1;
+  const snapshotEndBlock = await chain.provider.getBlockNumber();
+
+  const chainUsers = await getAccounts(chain);
+  const results = await getClaimableRewards(chain, chainUsers, distribution, endBlock);
   const userClaimSnapshots = results.map((res) => {
     const [user, result] = res;
     const [tokens, amounts] = result;
@@ -35,22 +39,22 @@ export async function refreshClaimableBalances(chain: Chain) {
       });
     });
     return Object.assign(new UserClaimSnapshot(), {
-      chainStartBlock: latestMetadata.chainStartBlock,
+      chainStartBlock: getChainStartBlockKey(chain, snapshotStartBlock),
+      chain: chain.network,
       address: user,
-      network: chain.network,
       claimableBalances,
     });
   });
 
   for await (const _item of mapper.batchPut(userClaimSnapshots)) {
   }
-  const blockNumber = await chain.provider.getBlockNumber();
+
   // Create new metadata entry after user claim snapshots are calculated
   const metaData = Object.assign(new UserClaimMetadata(), {
-    startBlock: latestMetadata?.endBlock,
-    endBlock: blockNumber + 1,
-    chainStartBlock: `${chain.network}_${blockNumber}`,
+    chainStartBlock: getChainStartBlockKey(chain, snapshotStartBlock),
     chain: chain.network,
+    startBlock: snapshotStartBlock,
+    endBlock: snapshotEndBlock,
   });
   await mapper.put(metaData);
 }

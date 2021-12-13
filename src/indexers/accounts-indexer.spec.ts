@@ -22,6 +22,7 @@ describe('accounts-indexer', () => {
   const rewardsChain = new Ethereum();
   const noRewardsChain = new BinanceSmartChain();
   const networks = [Network.Ethereum, Network.BinanceSmartChain, Network.Polygon, Network.Arbitrum];
+  const previousMockedBlockNumber = 90;
   const startMockedBlockNumber = 100;
   const endMockedBlockNumber = 110;
   let getAccounts: jest.SpyInstance<Promise<string[]>, [chain: Chain]>;
@@ -41,10 +42,10 @@ describe('accounts-indexer', () => {
     });
     getLatestMetadata = jest.spyOn(indexerUtils, 'getLatestMetadata').mockImplementation(async (chain: Chain) => {
       return Object.assign(new UserClaimMetadata(), {
-        startBlock: startMockedBlockNumber,
-        endBlock: endMockedBlockNumber,
-        chainStartBlock: `${chain.network}_123123`,
+        chainStartBlock: rewardsUtils.getChainStartBlockKey(rewardsChain, previousMockedBlockNumber),
         chain: chain.network,
+        startBlock: previousMockedBlockNumber,
+        endBlock: startMockedBlockNumber - 1,
       });
     });
     jest
@@ -99,19 +100,19 @@ describe('accounts-indexer', () => {
       });
       const expected = testAccounts.map((acc) =>
         Object.assign(new UserClaimSnapshot(), {
-          chainStartBlock: `${rewardsChain.network}_123123`,
+          chainStartBlock: rewardsUtils.getChainStartBlockKey(rewardsChain, startMockedBlockNumber),
+          chain: rewardsChain.network,
           address: acc,
-          network: rewardsChain.network,
           claimableBalances,
         }),
       );
       const put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
       const expectedMetadata = Object.assign(new UserClaimMetadata(), {
-        // startBlock for next stored metaData obj should be endBlock value of the previous metaData entity
-        startBlock: endMockedBlockNumber,
-        endBlock: (await rewardsChain.provider.getBlockNumber()) + 1,
-        chainStartBlock: `${rewardsChain.network}_${await rewardsChain.provider.getBlockNumber()}`,
+        // startBlock for next stored metaData obj should be endBlock + 1 value of the previous metaData entity
+        chainStartBlock: rewardsUtils.getChainStartBlockKey(rewardsChain, startMockedBlockNumber),
         chain: rewardsChain.network,
+        startBlock: startMockedBlockNumber,
+        endBlock: endMockedBlockNumber,
       });
       const batchPut = mockBatchPut(expected);
       await accountsIndexer.refreshClaimableBalances(rewardsChain);
