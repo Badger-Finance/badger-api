@@ -303,10 +303,11 @@ export async function getLatestMetadata(chain: Chain): Promise<UserClaimMetadata
   }
   // In case there UserClaimMetadata wasn't created yet, create it with default values
   if (!result) {
+    const blockNumber = await chain.provider.getBlockNumber();
     const metaData = Object.assign(new UserClaimMetadata(), {
-      startBlock: await chain.provider.getBlockNumber(),
-      chainStartBlock: await chain.provider.getBlockNumber(),
-      endBlock: (await chain.provider.getBlockNumber()) + 1,
+      startBlock: blockNumber,
+      endBlock: blockNumber + 1,
+      chainStartBlock: `${chain.network}_${blockNumber}`,
       chain: chain.network,
     });
     result = await mapper.put(metaData);

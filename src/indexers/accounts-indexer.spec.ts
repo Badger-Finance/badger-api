@@ -22,7 +22,8 @@ describe('accounts-indexer', () => {
   const rewardsChain = new Ethereum();
   const noRewardsChain = new BinanceSmartChain();
   const networks = [Network.Ethereum, Network.BinanceSmartChain, Network.Polygon, Network.Arbitrum];
-  const mockedBlockNumber = 100;
+  const startMockedBlockNumber = 100;
+  const endMockedBlockNumber = 110;
   let getAccounts: jest.SpyInstance<Promise<string[]>, [chain: Chain]>;
   let getLatestMetadata: jest.SpyInstance<Promise<UserClaimMetadata>, [chain: Chain]>;
   let getTreeDistribution: jest.SpyInstance<Promise<RewardMerkleDistribution | null>, [chain: Chain]>;
@@ -40,15 +41,15 @@ describe('accounts-indexer', () => {
     });
     getLatestMetadata = jest.spyOn(indexerUtils, 'getLatestMetadata').mockImplementation(async (chain: Chain) => {
       return Object.assign(new UserClaimMetadata(), {
-        startBlock: 123,
+        startBlock: startMockedBlockNumber,
+        endBlock: endMockedBlockNumber,
         chainStartBlock: `${chain.network}_123123`,
-        endBlock: 124,
         chain: chain.network,
       });
     });
     jest
       .spyOn(ethers.providers.JsonRpcProvider.prototype, 'getBlockNumber')
-      .mockImplementation(() => Promise.resolve(mockedBlockNumber));
+      .mockImplementation(() => Promise.resolve(endMockedBlockNumber));
   });
 
   describe('refreshUserAccounts', () => {
@@ -107,9 +108,9 @@ describe('accounts-indexer', () => {
       const put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
       const expectedMetadata = Object.assign(new UserClaimMetadata(), {
         // startBlock for next stored metaData obj should be endBlock value of the previous metaData entity
-        startBlock: 124,
-        chainStartBlock: `${rewardsChain.network}_${await rewardsChain.provider.getBlockNumber()}`,
+        startBlock: endMockedBlockNumber,
         endBlock: (await rewardsChain.provider.getBlockNumber()) + 1,
+        chainStartBlock: `${rewardsChain.network}_${await rewardsChain.provider.getBlockNumber()}`,
         chain: rewardsChain.network,
       });
       const batchPut = mockBatchPut(expected);
