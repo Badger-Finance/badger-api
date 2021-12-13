@@ -1,71 +1,60 @@
-import { BigNumber, ethers } from 'ethers';
+import { ethers } from 'ethers';
 import { getAccounts, getUserAccounts, toSettBalance } from '../accounts/accounts.utils';
 import { AccountMap } from '../accounts/interfaces/account-map.interface';
-import { CachedBalance } from '../accounts/interfaces/cached-claimable-balance.interface';
+import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
-import { BadgerTree__factory } from '../contracts';
 import { UserSettBalance } from '../graphql/generated/badger';
-import { RewardMerkleDistribution } from '../rewards/interfaces/merkle-distributor.interface';
-import { RewardAmounts } from '../rewards/interfaces/reward-amounts.interface';
-import { getTreeDistribution } from '../rewards/rewards.utils';
+import { ClaimableBalance } from '../rewards/entities/claimable-balance';
+import { UserClaimSnapshot } from '../rewards/entities/user-claim-snapshot';
+import { getChainStartBlockKey, getClaimableRewards, getTreeDistribution } from '../rewards/rewards.utils';
 import { getVaultDefinition } from '../vaults/vaults.utils';
-import { AccountIndexMode } from './enums/account-index-mode.enum';
-import { batchRefreshAccounts, chunkArray } from './indexer.utils';
-import { AccountIndexEvent } from './interfaces/account-index-event.interface';
+import { batchRefreshAccounts, chunkArray, getLatestMetadata } from './indexer.utils';
+import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 
-const distributionCache: Record<string, RewardMerkleDistribution | null> = {};
+export async function refreshClaimableBalances(chain: Chain) {
+  const mapper = getDataMapper();
+  const distribution = await getTreeDistribution(chain);
 
-export async function refreshAccountClaimableBalances(chain: Chain, batchAccounts: AccountMap) {
-  const addresses = Object.keys(batchAccounts);
-  const calls: { user: string; chain: Chain; claim: Promise<[string[], BigNumber[]]> }[] = [];
-
-  if (chain.badgerTree && distributionCache[chain.network] === undefined) {
-    distributionCache[chain.network] = await getTreeDistribution(chain);
+  if (!distribution || !chain.badgerTree) {
+    return;
   }
 
-  await Promise.all(
-    addresses.map(async (acc) => {
-      try {
-        const treeDistribution = distributionCache[chain.network];
-        if (!treeDistribution) {
-          return;
-        }
-        const claim = treeDistribution.claims[acc];
-        if (!claim || !chain.badgerTree) {
-          return;
-        }
-        const badgerTree = BadgerTree__factory.connect(chain.badgerTree, chain.batchProvider);
-        calls.push({
-          user: acc,
-          chain,
-          claim: badgerTree.getClaimableFor(acc, claim.tokens, claim.cumulativeAmounts),
-        });
-      } catch {} // ignore errors, tree distribution does not exist
-    }),
-  );
-  const userClaims = await Promise.all(calls.map((call) => call.claim));
-  userClaims.forEach((claim, i) => {
-    const { chain, user } = calls[i];
-    if (!user) {
-      return;
-    }
-    const account = batchAccounts[user];
-    const [tokens, amounts] = claim;
-    const rewardAmounts: RewardAmounts = { tokens, amounts };
-    const claimableBalances = rewardAmounts.tokens.map((token, i) => {
-      const balance = rewardAmounts.amounts[i];
-      return Object.assign(new CachedBalance(), {
-        network: chain.network,
+  const { endBlock } = await getLatestMetadata(chain);
+  const snapshotStartBlock = endBlock + 1;
+  const snapshotEndBlock = await chain.provider.getBlockNumber();
+
+  const chainUsers = await getAccounts(chain);
+  const results = await getClaimableRewards(chain, chainUsers, distribution, endBlock);
+  const userClaimSnapshots = results.map((res) => {
+    const [user, result] = res;
+    const [tokens, amounts] = result;
+    const claimableBalances = tokens.map((token, i) => {
+      const amount = amounts[i];
+      return Object.assign(new ClaimableBalance(), {
         address: token,
-        balance: balance.toString(),
+        balance: amount.toString(),
       });
     });
-    account.claimableBalances = account.claimableBalances
-      .filter((bal) => bal.network !== chain.network)
-      .concat(claimableBalances);
-    batchAccounts[user] = account;
+    return Object.assign(new UserClaimSnapshot(), {
+      chainStartBlock: getChainStartBlockKey(chain, snapshotStartBlock),
+      chain: chain.network,
+      address: user,
+      claimableBalances,
+    });
   });
+
+  for await (const _item of mapper.batchPut(userClaimSnapshots)) {
+  }
+
+  // Create new metadata entry after user claim snapshots are calculated
+  const metaData = Object.assign(new UserClaimMetadata(), {
+    chainStartBlock: getChainStartBlockKey(chain, snapshotStartBlock),
+    chain: chain.network,
+    startBlock: snapshotStartBlock,
+    endBlock: snapshotEndBlock,
+  });
+  await mapper.put(metaData);
 }
 
 export async function refreshAccountSettBalances(chain: Chain, batchAccounts: AccountMap) {
@@ -93,29 +82,14 @@ export async function refreshAccountSettBalances(chain: Chain, batchAccounts: Ac
   }
 }
 
-/**
- * Top level refresh call to separate chain updates.
- */
-export async function refreshUserAccounts(event: AccountIndexEvent) {
-  const { mode } = event;
+export async function refreshUserAccounts() {
   const chains = loadChains();
   await Promise.all(
     chains.map(async (chain) => {
       const accounts = await getAccounts(chain);
-      let refreshFns: Promise<void>[] = [];
-      switch (mode) {
-        case AccountIndexMode.ClaimableBalanceData:
-          refreshFns = [
-            batchRefreshAccounts(accounts, (batchAccounts) => [refreshAccountClaimableBalances(chain, batchAccounts)]),
-          ];
-          break;
-        case AccountIndexMode.BalanceData:
-        default:
-          refreshFns = chunkArray(accounts, 10).flatMap((chunk) =>
-            batchRefreshAccounts(chunk, (batchAccounts) => [refreshAccountSettBalances(chain, batchAccounts)], 100),
-          );
-          break;
-      }
+      const refreshFns = chunkArray(accounts, 10).flatMap((chunk) =>
+        batchRefreshAccounts(chunk, (batchAccounts) => [refreshAccountSettBalances(chain, batchAccounts)], 100),
+      );
       await Promise.all(refreshFns);
     }),
   );

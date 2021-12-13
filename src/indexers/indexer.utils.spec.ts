@@ -2,9 +2,12 @@ import { Ethereum } from '../chains/config/eth.config';
 import { TOKENS } from '../config/tokens.config';
 import { getVaultDefinition } from '../vaults/vaults.utils';
 import { mockBatchPut, randomAccount, setupMapper, TEST_ADDR } from '../test/tests.utils';
-import { batchRefreshAccounts, chunkArray, getIndexedBlock } from './indexer.utils';
+import { batchRefreshAccounts, chunkArray, getIndexedBlock, getLatestMetadata } from './indexer.utils';
 import * as tokenUtils from '../tokens/tokens.utils';
 import * as accountsUtils from '../accounts/accounts.utils';
+import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
+import { DataMapper } from '@aws/dynamodb-data-mapper';
+import { ethers } from 'ethers';
 
 describe('indexer.utils', () => {
   const chain = new Ethereum();
@@ -86,6 +89,37 @@ describe('indexer.utils', () => {
       const queriedAccounts = getAccounts.mock.calls.flatMap((c) => c[0]);
       expect(accounts).toMatchObject(queriedAccounts.sort());
       expect(accounts).toMatchObject(operatedAccounts.sort());
+    });
+  });
+  describe('getLatestMetadata', () => {
+    it('should not create new meta obj if exists', async () => {
+      const put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
+      const meta = Object.assign(new UserClaimMetadata(), {
+        startBlock: 100,
+        endBlock: 101,
+        chainStartBlock: `${chain.network}_123123`,
+        chain: chain.network,
+      });
+      setupMapper([meta]);
+      const latest_meta = await getLatestMetadata(chain);
+      expect(latest_meta).toEqual(meta);
+      expect(put.mock.calls).toEqual([]);
+    });
+    it('should create new meta if no meta obj found', async () => {
+      const put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
+      const mockedBlockNumber = 100;
+      jest
+        .spyOn(ethers.providers.JsonRpcProvider.prototype, 'getBlockNumber')
+        .mockImplementation(() => Promise.resolve(mockedBlockNumber));
+      const expected = Object.assign(new UserClaimMetadata(), {
+        startBlock: 100,
+        endBlock: 101,
+        chainStartBlock: `${chain.network}_${mockedBlockNumber}`,
+        chain: chain.network,
+      });
+      setupMapper([]);
+      await getLatestMetadata(chain);
+      expect(put.mock.calls[0][0]).toEqual(expected);
     });
   });
 });

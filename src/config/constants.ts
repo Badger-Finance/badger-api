@@ -1,12 +1,15 @@
 import { SwaggerSettings } from '@tsed/swagger';
+import { Stage } from './enums/stage.enum';
 
 // data point constants - index two times per hour, 48 per day
 export const CURRENT = 0;
-export const ONE_MINUTE_MS = 60 * 1000;
-export const ONE_DAY_MS = ONE_MINUTE_MS * 60 * 24;
 export const SAMPLE_DAYS = 31;
-export const ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000;
-export const ONE_YEAR_SECONDS = 365 * 24 * 60 * 60;
+export const ONE_MINUTE_SECONDS = 60;
+export const ONE_MINUTE_MS = ONE_MINUTE_SECONDS * 1000;
+export const ONE_DAY_SECONDS = ONE_MINUTE_SECONDS * 60 * 24;
+export const ONE_DAY_MS = ONE_DAY_SECONDS * 1000;
+export const ONE_YEAR_SECONDS = ONE_DAY_SECONDS * 365;
+export const ONE_YEAR_MS = ONE_YEAR_SECONDS * 1000;
 
 // data access constants
 export const APY_SNAPSHOTS_DATA = process.env.APY_SNAPSHOTS_DATA || 'MISSING REQUIRED ENV VAR';
@@ -19,6 +22,8 @@ export const LEADERBOARD_DATA = process.env.LEADERBOARD_DATA || 'MISSING REQUIRE
 export const ACCOUNT_DATA = process.env.ACCOUNT_DATA || 'MISSING REQUIRED ENV VAR';
 export const METRICS_SNAPSHOTS_DATA = process.env.METRICS_SNAPSHOTS_DATA || 'MISSING REQUIRED ENV VAR';
 export const LEADERBOARD_SUMMARY_DATA = process.env.LEADERBOARD_SUMMARY_DATA || 'MISSING REQUIRED ENV VAR';
+export const UNCLAIMED_SNAPSHOTS_DATA = process.env.UNCLAIMED_SNAPSHOTS_DATA || 'MISSING REQUIRED ENV VAR';
+export const USER_CLAIMED_METADATA = process.env.METADATA_DATA || 'MISSING REQUIRED ENV VAR';
 
 // thegraph constants
 export const UNISWAP_URL = process.env.UNISWAP || 'MISSING REQUIRED ENV VAR';
@@ -35,6 +40,7 @@ export const STAGE = process.env.STAGE || 'MISSING REQUIRED ENV VAR';
 export const IS_OFFLINE = process.env.IS_OFFLINE !== undefined && process.env.IS_OFFLINE === 'true';
 export const DEBUG = IS_OFFLINE;
 export const API_VERSION = 'v2.0.0';
+export const PRODUCTION = STAGE === Stage.Production;
 
 // third party api constants
 export const COINGECKO_URL = 'https://api.coingecko.com/api/v3/simple';
