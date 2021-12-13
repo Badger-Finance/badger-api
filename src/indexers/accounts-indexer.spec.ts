@@ -5,6 +5,7 @@ import * as rewardsUtils from '../rewards/rewards.utils';
 import { Network } from '@badger-dao/sdk';
 import { AccountIndexMode } from './enums/account-index-mode.enum';
 import { Chain } from '../chains/config/chain.config';
+import { ethers } from 'ethers';
 import { MOCK_DISTRIBUTION_FILE } from '../test/constants';
 import { Ethereum } from '../chains/config/eth.config';
 import { BinanceSmartChain } from '../chains/config/bsc.config';
@@ -14,12 +15,17 @@ import { TOKENS } from '../config/tokens.config';
 import { mockBatchPut } from '../test/tests.utils';
 import { UserClaimSnapshot } from '../rewards/entities/user-claim-snapshot';
 import { ClaimableBalance } from '../rewards/entities/claimable-balance';
+import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
+import { DataMapper } from '@aws/dynamodb-data-mapper';
 
 describe('accounts-indexer', () => {
   const rewardsChain = new Ethereum();
   const noRewardsChain = new BinanceSmartChain();
   const networks = [Network.Ethereum, Network.BinanceSmartChain, Network.Polygon, Network.Arbitrum];
+  const startMockedBlockNumber = 100;
+  const endMockedBlockNumber = 110;
   let getAccounts: jest.SpyInstance<Promise<string[]>, [chain: Chain]>;
+  let getLatestMetadata: jest.SpyInstance<Promise<UserClaimMetadata>, [chain: Chain]>;
   let getTreeDistribution: jest.SpyInstance<Promise<RewardMerkleDistribution | null>, [chain: Chain]>;
 
   beforeEach(() => {
@@ -33,6 +39,17 @@ describe('accounts-indexer', () => {
       }
       return MOCK_DISTRIBUTION_FILE;
     });
+    getLatestMetadata = jest.spyOn(indexerUtils, 'getLatestMetadata').mockImplementation(async (chain: Chain) => {
+      return Object.assign(new UserClaimMetadata(), {
+        startBlock: startMockedBlockNumber,
+        endBlock: endMockedBlockNumber,
+        chainStartBlock: `${chain.network}_123123`,
+        chain: chain.network,
+      });
+    });
+    jest
+      .spyOn(ethers.providers.JsonRpcProvider.prototype, 'getBlockNumber')
+      .mockImplementation(() => Promise.resolve(endMockedBlockNumber));
   });
 
   describe('refreshUserAccounts', () => {
@@ -82,13 +99,20 @@ describe('accounts-indexer', () => {
       });
       const expected = testAccounts.map((acc) =>
         Object.assign(new UserClaimSnapshot(), {
-          // TODO: integrate with claimable balance metadata table for lookup
-          chainStartBlock: 0,
+          chainStartBlock: `${rewardsChain.network}_123123`,
           address: acc,
           network: rewardsChain.network,
           claimableBalances,
         }),
       );
+      const put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
+      const expectedMetadata = Object.assign(new UserClaimMetadata(), {
+        // startBlock for next stored metaData obj should be endBlock value of the previous metaData entity
+        startBlock: endMockedBlockNumber,
+        endBlock: (await rewardsChain.provider.getBlockNumber()) + 1,
+        chainStartBlock: `${rewardsChain.network}_${await rewardsChain.provider.getBlockNumber()}`,
+        chain: rewardsChain.network,
+      });
       const batchPut = mockBatchPut(expected);
       await accountsIndexer.refreshClaimableBalances(rewardsChain);
       // verify tree distribution was loaded, and the proper chain was called
@@ -97,6 +121,8 @@ describe('accounts-indexer', () => {
       // verify get accounts was called, and the proper expected accounts were returned
       expect(getAccounts.mock.calls.length).toEqual(1);
       expect(getAccounts.mock.calls[0][0]).toMatchObject(rewardsChain);
+      expect(getLatestMetadata.mock.calls.length).toEqual(1);
+      expect(put.mock.calls[0][0]).toEqual(expectedMetadata);
       // verify the function calls the update on all expected accounts
       expect(usersChecked).toMatchObject(testAccounts);
       // verify the function saved the expected data on all expected accounts

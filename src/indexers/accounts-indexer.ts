@@ -10,10 +10,12 @@ import { UserClaimSnapshot } from '../rewards/entities/user-claim-snapshot';
 import { getClaimableRewards, getTreeDistribution } from '../rewards/rewards.utils';
 import { getVaultDefinition } from '../vaults/vaults.utils';
 import { AccountIndexMode } from './enums/account-index-mode.enum';
-import { batchRefreshAccounts, chunkArray } from './indexer.utils';
+import { batchRefreshAccounts, chunkArray, getLatestMetadata } from './indexer.utils';
 import { AccountIndexEvent } from './interfaces/account-index-event.interface';
+import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 
 export async function refreshClaimableBalances(chain: Chain) {
+  const mapper = getDataMapper();
   const distribution = await getTreeDistribution(chain);
   if (!distribution || !chain.badgerTree) {
     return;
@@ -21,6 +23,7 @@ export async function refreshClaimableBalances(chain: Chain) {
   const chainUsers = await getAccounts(chain);
 
   const results = await getClaimableRewards(chain, chainUsers, distribution);
+  const latestMetadata = await getLatestMetadata(chain);
   const userClaimSnapshots = results.map((res) => {
     const [user, result] = res;
     const [tokens, amounts] = result;
@@ -32,17 +35,24 @@ export async function refreshClaimableBalances(chain: Chain) {
       });
     });
     return Object.assign(new UserClaimSnapshot(), {
-      // TODO: integrate with claimable balance metadata table for lookup
-      chainStartBlock: 0,
+      chainStartBlock: latestMetadata.chainStartBlock,
       address: user,
       network: chain.network,
       claimableBalances,
     });
   });
 
-  const mapper = getDataMapper();
   for await (const _item of mapper.batchPut(userClaimSnapshots)) {
   }
+  const blockNumber = await chain.provider.getBlockNumber();
+  // Create new metadata entry after user claim snapshots are calculated
+  const metaData = Object.assign(new UserClaimMetadata(), {
+    startBlock: latestMetadata?.endBlock,
+    endBlock: blockNumber + 1,
+    chainStartBlock: `${chain.network}_${blockNumber}`,
+    chain: chain.network,
+  });
+  await mapper.put(metaData);
 }
 
 export async function refreshAccountSettBalances(chain: Chain, batchAccounts: AccountMap) {
