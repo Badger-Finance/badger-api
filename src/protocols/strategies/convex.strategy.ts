@@ -322,7 +322,7 @@ export async function getCurvePerformance(chain: Chain, VaultDefinition: VaultDe
 
   // try the secondary apy options, if not avilable give up
   if (missingEntry()) {
-    curveData = await fetch(CURVE_CRYPTO_API_URL).then((response) => response.json());
+    curveData = await request<CurveAPIResponse>(CURVE_CRYPTO_API_URL);
   }
 
   let tradeFeePerformance = uniformPerformance(0);
