@@ -1,6 +1,6 @@
 import { Service } from '@tsed/common';
 import { BadRequest } from '@tsed/exceptions';
-import { request } from '../etherscan/etherscan.utils';
+import axios from 'axios';
 import { apis } from './health.config';
 import { HealthService } from './health.interface';
 import { HealthSnapshot, Links, Result } from './health.types';
@@ -44,7 +44,7 @@ export class ApisHealthService implements HealthService {
       };
       const endpoint = this.endpoints[key];
       try {
-        const { status } = await request(endpoint.toString());
+        const { status } = await axios.get(endpoint.toString());
         result.result = status.toString();
         results.push(result);
       } catch (e) {
