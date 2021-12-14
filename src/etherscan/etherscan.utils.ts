@@ -10,9 +10,8 @@ const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || 'MISSING REQUIRED ENV
 const ARBISCAN_API_KEY = process.env.ARBISCAN_API_KEY || 'MISSING REQUIRED ENV VAR';
 
 export async function request<T>(baseURL: string, params?: Record<string, string>): Promise<T> {
-  const client = axios.create({ baseURL });
   try {
-    return client.get('/', { params });
+    return axios.get(baseURL, { params });
   } catch (error) {
     throw error;
   }
