@@ -406,7 +406,7 @@ functions:
     timeout: 750
     events:
       - schedule:
-          name: ${self:service}-${self:custom.stage}-index-balances
+          name: ${self:service}-${self:custom.stage}-index-accounts-balances
           description: 'index accounts information from the graph'
           rate: rate(15 minutes)
 
@@ -415,7 +415,7 @@ functions:
     timeout: 750
     events:
       - schedule:
-          name: ${self:service}-${self:custom.stage}-index-claimables
+          name: ${self:service}-${self:custom.stage}-index-accounts-claimable-balances
           description: 'index accounts claimable from badger tree'
           rate: rate(2 hours)
 
