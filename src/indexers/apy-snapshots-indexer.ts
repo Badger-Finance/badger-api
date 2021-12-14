@@ -1,4 +1,4 @@
-import { isNil } from '@tsed/core';
+import { isEmpty, isNil } from '@tsed/core';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
@@ -11,7 +11,7 @@ export async function refreshApySnapshots() {
   await Promise.all(chains.map((chain) => refreshChainApySnapshots(chain)));
 }
 
-async function refreshChainApySnapshots(chain: Chain) {
+export async function refreshChainApySnapshots(chain: Chain) {
   await Promise.all(
     chain.setts.map(async (sett) => {
       const results = await getSettValueSources(chain, sett);
@@ -40,7 +40,9 @@ async function refreshChainApySnapshots(chain: Chain) {
           }
         });
       const mapper = getDataMapper();
-      for await (const _item of mapper.batchPut(Object.values(sourceMap))) {
+      if (isEmpty(sourceMap)) {
+        for await (const _item of mapper.batchPut(Object.values(sourceMap))) {
+        }
       }
     }),
   );
