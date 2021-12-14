@@ -50,8 +50,9 @@ export async function updateChainBoosts(chain: Chain): Promise<void> {
     // update the stored account multipliers, removing old chain multipliers
     for (const account of cachedAccounts) {
       const userChainMultipliers = boostMultipliers[account.address];
-      account.multipliers = account.multipliers.filter((m) => m.network === chain.network).concat(userChainMultipliers);
+      account.multipliers = account.multipliers.filter((m) => m.network !== chain.network).concat(userChainMultipliers);
     }
+
     for await (const _saved of mapper.batchPut(cachedAccounts));
   } catch (err) {
     console.error(err);
