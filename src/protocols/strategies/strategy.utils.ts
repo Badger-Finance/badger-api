@@ -24,7 +24,6 @@ export async function getUniV2SwapValue(
       pairAddress: VaultDefinition.depositToken.toLowerCase(),
     },
   });
-  console.log(await getUniSwapValue(VaultDefinition, pairDayDatas));
   return getUniSwapValue(VaultDefinition, pairDayDatas);
 }
 

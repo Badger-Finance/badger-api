@@ -40,8 +40,9 @@ export async function refreshChainApySnapshots(chain: Chain) {
           }
         });
       const mapper = getDataMapper();
-      if (Object.keys(sourceMap).length !== 0) {
-        for await (const _item of mapper.batchPut(Object.values(sourceMap))) {
+      const valueSources = Object.values(sourceMap);
+      if (valueSources.length > 0) {
+        for await (const _item of mapper.batchPut(Object.values(valueSources))) {
         }
       }
     }),
