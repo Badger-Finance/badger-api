@@ -11,7 +11,7 @@ export async function refreshApySnapshots() {
   await Promise.all(chains.map((chain) => refreshChainApySnapshots(chain)));
 }
 
-async function refreshChainApySnapshots(chain: Chain) {
+export async function refreshChainApySnapshots(chain: Chain) {
   await Promise.all(
     chain.setts.map(async (sett) => {
       const results = await getSettValueSources(chain, sett);
@@ -40,7 +40,9 @@ async function refreshChainApySnapshots(chain: Chain) {
           }
         });
       const mapper = getDataMapper();
-      for await (const _item of mapper.batchPut(Object.values(sourceMap))) {
+      if (Object.keys(sourceMap).length !== 0) {
+        for await (const _item of mapper.batchPut(Object.values(sourceMap))) {
+        }
       }
     }),
   );
