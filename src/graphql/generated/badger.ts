@@ -249,6 +249,8 @@ export type Query = {
   settSnapshots: Array<SettSnapshot>;
   userSettBalance?: Maybe<UserSettBalance>;
   userSettBalances: Array<UserSettBalance>;
+  transaction?: Maybe<Transaction>;
+  transactions: Array<Transaction>;
   transfer?: Maybe<Transfer>;
   transfers: Array<Transfer>;
   user?: Maybe<User>;
@@ -351,6 +353,22 @@ export type QueryUserSettBalancesArgs = {
   orderBy?: Maybe<UserSettBalance_OrderBy>;
   orderDirection?: Maybe<OrderDirection>;
   where?: Maybe<UserSettBalance_Filter>;
+  block?: Maybe<Block_Height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+export type QueryTransactionArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<Block_Height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+export type QueryTransactionsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Transaction_OrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<Transaction_Filter>;
   block?: Maybe<Block_Height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
@@ -1169,6 +1187,8 @@ export type Subscription = {
   settSnapshots: Array<SettSnapshot>;
   userSettBalance?: Maybe<UserSettBalance>;
   userSettBalances: Array<UserSettBalance>;
+  transaction?: Maybe<Transaction>;
+  transactions: Array<Transaction>;
   transfer?: Maybe<Transfer>;
   transfers: Array<Transfer>;
   user?: Maybe<User>;
@@ -1271,6 +1291,22 @@ export type SubscriptionUserSettBalancesArgs = {
   orderBy?: Maybe<UserSettBalance_OrderBy>;
   orderDirection?: Maybe<OrderDirection>;
   where?: Maybe<UserSettBalance_Filter>;
+  block?: Maybe<Block_Height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+export type SubscriptionTransactionArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<Block_Height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+export type SubscriptionTransactionsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Transaction_OrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<Transaction_Filter>;
   block?: Maybe<Block_Height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
@@ -1624,6 +1660,36 @@ export enum Token_OrderBy {
   TotalSupply = 'totalSupply',
 }
 
+export type Transaction = {
+  __typename?: 'Transaction';
+  id: Scalars['ID'];
+  transfers: Array<Transfer>;
+};
+
+export type TransactionTransfersArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Transfer_OrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<Transfer_Filter>;
+};
+
+export type Transaction_Filter = {
+  id?: Maybe<Scalars['ID']>;
+  id_not?: Maybe<Scalars['ID']>;
+  id_gt?: Maybe<Scalars['ID']>;
+  id_lt?: Maybe<Scalars['ID']>;
+  id_gte?: Maybe<Scalars['ID']>;
+  id_lte?: Maybe<Scalars['ID']>;
+  id_in?: Maybe<Array<Scalars['ID']>>;
+  id_not_in?: Maybe<Array<Scalars['ID']>>;
+};
+
+export enum Transaction_OrderBy {
+  Id = 'id',
+  Transfers = 'transfers',
+}
+
 export type Transfer = Snapshot & {
   __typename?: 'Transfer';
   id: Scalars['ID'];
@@ -1632,6 +1698,7 @@ export type Transfer = Snapshot & {
   from: User;
   to: User;
   amount: Scalars['BigInt'];
+  transaction: Transaction;
 };
 
 export type Transfer_Filter = {
@@ -1701,6 +1768,20 @@ export type Transfer_Filter = {
   amount_lte?: Maybe<Scalars['BigInt']>;
   amount_in?: Maybe<Array<Scalars['BigInt']>>;
   amount_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  transaction?: Maybe<Scalars['String']>;
+  transaction_not?: Maybe<Scalars['String']>;
+  transaction_gt?: Maybe<Scalars['String']>;
+  transaction_lt?: Maybe<Scalars['String']>;
+  transaction_gte?: Maybe<Scalars['String']>;
+  transaction_lte?: Maybe<Scalars['String']>;
+  transaction_in?: Maybe<Array<Scalars['String']>>;
+  transaction_not_in?: Maybe<Array<Scalars['String']>>;
+  transaction_contains?: Maybe<Scalars['String']>;
+  transaction_not_contains?: Maybe<Scalars['String']>;
+  transaction_starts_with?: Maybe<Scalars['String']>;
+  transaction_not_starts_with?: Maybe<Scalars['String']>;
+  transaction_ends_with?: Maybe<Scalars['String']>;
+  transaction_not_ends_with?: Maybe<Scalars['String']>;
 };
 
 export enum Transfer_OrderBy {
@@ -1710,6 +1791,7 @@ export enum Transfer_OrderBy {
   From = 'from',
   To = 'to',
   Amount = 'amount',
+  Transaction = 'transaction',
 }
 
 export type User = {
@@ -2237,7 +2319,13 @@ export type HarvestsQueryVariables = Exact<{
 }>;
 
 export type HarvestsQuery = { __typename?: 'Query' } & {
-  settHarvests: Array<{ __typename?: 'SettHarvest' } & HarvestFragment>;
+  settHarvests: Array<
+    { __typename?: 'SettHarvest' } & Pick<SettHarvest, 'id' | 'timestamp' | 'amount' | 'blockNumber'> & {
+        token: { __typename?: 'Token' } & Pick<Token, 'id' | 'name' | 'symbol' | 'decimals'>;
+        strategy?: Maybe<{ __typename?: 'Strategy' } & Pick<Strategy, 'id'>>;
+        sett?: Maybe<{ __typename?: 'Sett' } & Pick<Sett, 'id'>>;
+      }
+  >;
 };
 
 export type SettSnapshotQueryVariables = Exact<{
@@ -2245,13 +2333,27 @@ export type SettSnapshotQueryVariables = Exact<{
   block?: Maybe<Block_Height>;
 }>;
 
-export type SettSnapshotQuery = { __typename?: 'Query' } & { sett?: Maybe<{ __typename?: 'Sett' } & SettFragment> };
+export type SettSnapshotQuery = { __typename?: 'Query' } & {
+  sett?: Maybe<
+    { __typename?: 'Sett' } & Pick<
+      Sett,
+      'id' | 'balance' | 'netDeposit' | 'netShareDeposit' | 'pricePerFullShare' | 'totalSupply'
+    > & { token: { __typename?: 'Token' } & Pick<Token, 'id' | 'decimals'> }
+  >;
+};
 
 export type SettQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
-export type SettQuery = { __typename?: 'Query' } & { sett?: Maybe<{ __typename?: 'Sett' } & SettFragment> };
+export type SettQuery = { __typename?: 'Query' } & {
+  sett?: Maybe<
+    { __typename?: 'Sett' } & Pick<
+      Sett,
+      'id' | 'balance' | 'netDeposit' | 'netShareDeposit' | 'pricePerFullShare' | 'totalSupply'
+    > & { token: { __typename?: 'Token' } & Pick<Token, 'id' | 'decimals'> }
+  >;
+};
 
 export type UserQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -2260,7 +2362,24 @@ export type UserQueryVariables = Exact<{
 
 export type UserQuery = { __typename?: 'Query' } & {
   user?: Maybe<
-    { __typename?: 'User' } & { settBalances: Array<{ __typename?: 'UserSettBalance' } & UserSettBalanceFragment> }
+    { __typename?: 'User' } & {
+      settBalances: Array<
+        { __typename?: 'UserSettBalance' } & Pick<
+          UserSettBalance,
+          | 'netDeposit'
+          | 'grossDeposit'
+          | 'grossWithdraw'
+          | 'netShareDeposit'
+          | 'grossShareDeposit'
+          | 'grossShareWithdraw'
+        > & {
+            sett: { __typename?: 'Sett' } & Pick<
+              Sett,
+              'id' | 'name' | 'balance' | 'totalSupply' | 'netShareDeposit' | 'pricePerFullShare' | 'symbol'
+            > & { token: { __typename?: 'Token' } & Pick<Token, 'id' | 'decimals'> };
+          }
+      >;
+    }
   >;
 };
 
@@ -2271,4 +2390,21 @@ export type UsersQueryVariables = Exact<{
   orderDirection?: Maybe<OrderDirection>;
 }>;
 
-export type UsersQuery = { __typename?: 'Query' } & { users: Array<{ __typename?: 'User' } & UserFragment> };
+export type UsersQuery = { __typename?: 'Query' } & {
+  users: Array<
+    { __typename?: 'User' } & Pick<User, 'id'> & {
+        settBalances: Array<
+          { __typename?: 'UserSettBalance' } & Pick<
+            UserSettBalance,
+            | 'id'
+            | 'netDeposit'
+            | 'netShareDeposit'
+            | 'grossDeposit'
+            | 'grossShareDeposit'
+            | 'grossWithdraw'
+            | 'grossShareWithdraw'
+          > & { sett: { __typename?: 'Sett' } & Pick<Sett, 'id' | 'name'> }
+        >;
+      }
+  >;
+};

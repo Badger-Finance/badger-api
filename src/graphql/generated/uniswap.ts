@@ -2549,7 +2549,12 @@ export type UniPairDayDatasQueryVariables = Exact<{
 }>;
 
 export type UniPairDayDatasQuery = { __typename?: 'Query' } & {
-  pairDayDatas: Array<{ __typename?: 'PairDayData' } & UniPairDayDataFragment>;
+  pairDayDatas: Array<
+    { __typename?: 'PairDayData' } & Pick<
+      PairDayData,
+      'reserve0' | 'reserve1' | 'reserveUSD' | 'dailyVolumeToken0' | 'dailyVolumeToken1'
+    > & { token0: { __typename?: 'Token' } & Pick<Token, 'id'>; token1: { __typename?: 'Token' } & Pick<Token, 'id'> }
+  >;
 };
 
 export type UniV2PairQueryVariables = Exact<{
@@ -2557,4 +2562,11 @@ export type UniV2PairQueryVariables = Exact<{
   block?: Maybe<Block_Height>;
 }>;
 
-export type UniV2PairQuery = { __typename?: 'Query' } & { pair?: Maybe<{ __typename?: 'Pair' } & UniV2PairFragment> };
+export type UniV2PairQuery = { __typename?: 'Query' } & {
+  pair?: Maybe<
+    { __typename?: 'Pair' } & Pick<Pair, 'id' | 'reserve0' | 'reserve1' | 'totalSupply'> & {
+        token0: { __typename?: 'Token' } & Pick<Token, 'id' | 'symbol' | 'name' | 'decimals'>;
+        token1: { __typename?: 'Token' } & Pick<Token, 'id' | 'symbol' | 'name' | 'decimals'>;
+      }
+  >;
+};
