@@ -8,8 +8,7 @@ import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interf
 import { createValueSource, ValueSource } from '../protocols/interfaces/value-source.interface';
 import { getVaultValueSources } from '../protocols/protocols.utils';
 import { SOURCE_TIME_FRAMES, updatePerformance } from '../rewards/enums/source-timeframe.enum';
-import { TokenType } from '../tokens/enums/token-type.enum';
-import { getSettTokens, getSettUnderlyingTokens, getToken } from '../tokens/tokens.utils';
+import { getVaultTokens, getSettUnderlyingTokens, getToken } from '../tokens/tokens.utils';
 import { VaultDefinition } from './interfaces/vault-definition.interface';
 import { getCachedSett, getPerformance, getVaultDefinition, getSettSnapshots, VAULT_SOURCE } from './vaults.utils';
 
@@ -33,7 +32,7 @@ export class VaultsService {
   async getSett(chain: Chain, contract: string, currency?: string): Promise<Vault> {
     const VaultDefinition = getVaultDefinition(chain, contract);
     const [vault, sources] = await Promise.all([getCachedSett(VaultDefinition), getVaultValueSources(VaultDefinition)]);
-    vault.tokens = await getSettTokens(VaultDefinition, vault.balance, currency);
+    vault.tokens = await getVaultTokens(VaultDefinition, vault.balance, currency);
     vault.value = vault.tokens.reduce((total, balance) => (total += balance.value), 0);
     vault.sources = sources
       .filter((source) => source.apr >= 0.001)
@@ -100,7 +99,7 @@ export class VaultsService {
     const sources: ValueSource[] = [];
     await Promise.all(
       tokens.map(async (token) => {
-        if (token.type === TokenType.Wrapper && token.vaultToken) {
+        if (token.vaultToken && chain.network !== token.vaultToken.network) {
           const { network, address } = token.vaultToken;
           const chain = Chain.getChain(network);
           const VaultDefinition = getVaultDefinition(chain, address);

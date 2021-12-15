@@ -29,6 +29,7 @@ import { getBoostWeight, getPricePerShare, getSett, getStrategyInfo } from '../v
 import { CachedLiquidityPoolTokenBalance } from '../tokens/interfaces/cached-liquidity-pool-token-balance.interface';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
 import { formatBalance, getToken } from '../tokens/tokens.utils';
+import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 
 // TODO: Figure out what to do with accounts indexer stuff
 
@@ -288,4 +289,28 @@ export async function getSettValueSources(
     console.log(err);
     return [];
   }
+}
+
+export async function getLatestMetadata(chain: Chain): Promise<UserClaimMetadata> {
+  const mapper = getDataMapper();
+  let result: UserClaimMetadata | null = null;
+  for await (const metric of mapper.query(
+    UserClaimMetadata,
+    { chain: chain.network },
+    { scanIndexForward: false, limit: 1 },
+  )) {
+    result = metric;
+  }
+  // In case there UserClaimMetadata wasn't created yet, create it with default values
+  if (!result) {
+    const blockNumber = await chain.provider.getBlockNumber();
+    const metaData = Object.assign(new UserClaimMetadata(), {
+      startBlock: blockNumber,
+      endBlock: blockNumber + 1,
+      chainStartBlock: `${chain.network}_${blockNumber}`,
+      chain: chain.network,
+    });
+    result = await mapper.put(metaData);
+  }
+  return result;
 }

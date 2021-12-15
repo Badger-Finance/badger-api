@@ -4,7 +4,6 @@ import { PANCAKE_CHEF } from '../../config/constants';
 import { TOKENS } from '../../config/tokens.config';
 import { Erc20__factory, PancakeChef__factory } from '../../contracts';
 import { valueSourceToCachedValueSource } from '../../indexers/indexer.utils';
-import { getTokenPriceData } from '../../prices/prices.utils';
 import { SourceType } from '../../rewards/enums/source-type.enum';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { VAULT_SOURCE } from '../../vaults/vaults.utils';
@@ -13,6 +12,7 @@ import { CachedValueSource } from '../interfaces/cached-value-source.interface';
 import { uniformPerformance } from '../interfaces/performance.interface';
 import { PoolMap } from '../interfaces/pool-map.interface';
 import { createValueSource } from '../interfaces/value-source.interface';
+import { getPrice } from '../../prices/prices.utils';
 
 export class PancakeswapStrategy {
   static async getValueSources(chain: Chain, VaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
@@ -27,11 +27,11 @@ async function getEmissionSource(chain: Chain, VaultDefinition: VaultDefinition)
     masterChef.totalAllocPoint(),
     masterChef.cakePerBlock(),
     masterChef.poolInfo(poolId),
-    getTokenPriceData(TOKENS.CAKE),
+    getPrice(TOKENS.CAKE),
   ]);
   const depositToken = Erc20__factory.connect(poolInfo.lpToken, chain.provider);
   const poolBalance = formatBalance(await depositToken.balanceOf(PANCAKE_CHEF));
-  const depositTokenValue = await getTokenPriceData(poolInfo.lpToken);
+  const depositTokenValue = await getPrice(poolInfo.lpToken);
   const poolValue = poolBalance * depositTokenValue.usd;
   const emissionScalar = poolInfo.allocPoint.toNumber() / totalAllocPoint.toNumber();
   const cakeEmission = parseFloat(formatEther(cakePerBlock)) * emissionScalar * chain.blocksPerYear * tokenPrice.usd;

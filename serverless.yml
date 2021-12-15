@@ -45,6 +45,8 @@ custom:
     METRICS_SNAPSHOTS_DATA: metrics-snapshots-${self:custom.stage}
     LEADERBOARD_DATA: leaderboards-${self:custom.stage}
     LEADERBOARD_SUMMARY_DATA: leaderboards-summary-${self:custom.stage}
+    METADATA_DATA: metadata-${self:custom.stage}
+    UNCLAIMED_SNAPSHOTS_DATA: unclaimed-snapshots-${self:custom.stage}
 
   merkleProofs:
     staging: 'badger-staging-merkle-proofs'
@@ -104,13 +106,15 @@ provider:
     METRICS_SNAPSHOTS_DATA: ${self:custom.table.METRICS_SNAPSHOTS_DATA}
     LEADERBOARD_DATA: ${self:custom.table.LEADERBOARD_DATA}
     LEADERBOARD_SUMMARY_DATA: ${self:custom.table.LEADERBOARD_SUMMARY_DATA}
+    METADATA_DATA: ${self:custom.table.METADATA_DATA}
+    UNCLAIMED_SNAPSHOTS_DATA: ${self:custom.table.UNCLAIMED_SNAPSHOTS_DATA}
     # General Defintions
     REWARD_DATA: ${self:custom.merkleProofs.${self:custom.stage}}
     STAGE: ${opt:stage, self:provider.stage}
 
 resources:
   Resources:
-    accountTable:
+    accountsTable:
       Type: AWS::DynamoDB::Table
       Properties:
         TableName: ${self:custom.table.ACCOUNT_DATA}
@@ -139,7 +143,7 @@ resources:
           - IndexName: IndexApySnapshotsOnAddress
             KeySchema:
               - AttributeName: address
-                KeyType: HASH
+                KeyType: 'HASH'
             Projection:
               ProjectionType: ALL
 
@@ -224,9 +228,9 @@ resources:
           - IndexName: IndexLeaderBoardRankOnAddressAndLeaderboard
             KeySchema:
               - AttributeName: 'address'
-                KeyType: HASH
+                KeyType: 'HASH'
               - AttributeName: 'leaderboard'
-                KeyType: RANGE
+                KeyType: 'RANGE'
             Projection:
               ProjectionType: ALL
 
@@ -261,11 +265,64 @@ resources:
           - IndexName: IndexLiquidityPoolTokenBalancesOnPairIdAndProtocol
             KeySchema:
               - AttributeName: 'pairId'
-                KeyType: HASH
+                KeyType: 'HASH'
               - AttributeName: 'protocol'
-                KeyType: RANGE
+                KeyType: 'RANGE'
             Projection:
               ProjectionType: ALL
+
+    metadataTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.table.METADATA_DATA}
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: 'chainStartBlock'
+            KeyType: 'HASH'
+        AttributeDefinitions:
+          - AttributeName: 'chainStartBlock'
+            AttributeType: 'S'
+          - AttributeName: 'chain'
+            AttributeType: 'S'
+          - AttributeName: 'startBlock'
+            AttributeType: 'N'
+        GlobalSecondaryIndexes:
+          - IndexName: IndexMetadataChainAndStartBlock
+            KeySchema:
+              - AttributeName: 'chain'
+                KeyType: 'HASH'
+              - AttributeName: 'startBlock'
+                KeyType: 'RANGE'
+            Projection:
+              ProjectionType: ALL
+
+    unclaimedSnapshotsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.table.UNCLAIMED_SNAPSHOTS_DATA}
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: 'chainStartBlock'
+            KeyType: 'HASH'
+          - AttributeName: 'address'
+            KeyType: 'RANGE'
+        AttributeDefinitions:
+          - AttributeName: 'chainStartBlock'
+            AttributeType: 'S'
+          - AttributeName: 'address'
+            AttributeType: 'S'
+        GlobalSecondaryIndexes:
+          - IndexName: IndexUnclaimedSnapshotsOnAddressAndChainStartBlock
+            KeySchema:
+              - AttributeName: 'address'
+                KeyType: 'HASH'
+              - AttributeName: 'chainStartBlock'
+                KeyType: 'RANGE'
+            Projection:
+              ProjectionType: ALL
+        TimeToLiveSpecification:
+          AttributeName: 'expiresAt'
+          Enabled: true
 
 functions:
   request-handler:
@@ -344,22 +401,23 @@ functions:
           description: 'index accounts boost information'
           rate: rate(20 minutes)
 
-  index-accounts:
+  index-accounts-balances:
     handler: src/indexers/accounts-indexer.refreshUserAccounts
     timeout: 750
     events:
       - schedule:
-          name: ${self:service}-${self:custom.stage}-index-claimables
-          description: 'index accounts claimable from badger tree'
-          rate: rate(2 hours)
-          input:
-            mode: ClaimableBalanceData
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-balances
+          name: ${self:service}-${self:custom.stage}-index-accounts-balances
           description: 'index accounts information from the graph'
           rate: rate(15 minutes)
-          input:
-            mode: BalanceData
+
+  index-accounts-claimable-balances:
+    handler: src/indexers/accounts-indexer.refreshClaimableBalances
+    timeout: 750
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-accounts-claimable-balances
+          description: 'index accounts claimable from badger tree'
+          rate: rate(2 hours)
 
   index-protocol-metrics-snapshots:
     handler: src/indexers/protocol-metric-indexer.indexProtocolMetrics

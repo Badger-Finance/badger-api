@@ -73,7 +73,7 @@ export const bscTokensConfig: TokenConfig = {
     decimals: 18,
     name: 'bBadger',
     symbol: 'bBADGER',
-    type: TokenType.Wrapper,
+    type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.BBADGER,
       network: Network.Ethereum,
@@ -84,7 +84,7 @@ export const bscTokensConfig: TokenConfig = {
     decimals: 18,
     name: 'bDigg',
     symbol: 'bDIGG',
-    type: TokenType.Wrapper,
+    type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.BDIGG,
       network: Network.Ethereum,

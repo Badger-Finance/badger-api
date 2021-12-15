@@ -1,5 +1,3 @@
-import fetchMock from 'jest-fetch-mock';
-
 // setup aws offline required test infrastructure
 process.env.IS_OFFLINE = 'true';
 process.env.STAGE = 'staging';
@@ -12,5 +10,3 @@ process.env.SUSHISWAP = 'https://api.thegraph.com/subgraphs/name/sushiswap/excha
 process.env.PANCAKESWAP = 'https://api.thegraph.com/subgraphs/name/pancakeswap/exchange';
 process.env.MASTERCHEF = 'https://api.thegraph.com/subgraphs/name/sushiswap/master-chef';
 process.env.REWARD_DATA = 'badger-merkle-proofs-staging';
-
-fetchMock.enableMocks();

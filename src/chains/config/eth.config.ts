@@ -1,5 +1,4 @@
 import { Network, Protocol, VaultState } from '@badger-dao/sdk';
-import fetch from 'node-fetch';
 import { BLOCKNATIVE_API_KEY } from '../../config/constants';
 import { Stage } from '../../config/enums/stage.enum';
 import rpc from '../../config/rpc.config';
@@ -10,8 +9,15 @@ import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interf
 import { ethTokensConfig } from '../../tokens/config/eth-tokens.config';
 import { EthStrategy } from '../strategies/eth.strategy';
 import { Chain } from './chain.config';
+import axios from 'axios';
+import { BlocknativeGasResponse } from '../../gas/interfaces/blocknative-gas-response.interface';
 
 export class Ethereum extends Chain {
+  private readonly client = axios.create({
+    baseURL: 'https://api.blocknative.com/gasprices/blockprices',
+    headers: { Authorization: BLOCKNATIVE_API_KEY },
+  });
+
   constructor() {
     super(
       'Ethereum',
@@ -31,32 +37,31 @@ export class Ethereum extends Chain {
   }
 
   async getGasPrices(): Promise<GasPrices> {
-    const response = await fetch('https://api.blocknative.com/gasprices/blockprices', {
-      headers: { Authorization: BLOCKNATIVE_API_KEY },
-    });
-    if (!response.ok) {
+    try {
+      const { data } = await this.client.get('/');
+      const result = data as BlocknativeGasResponse;
+      const blockPrices = result.blockPrices[0];
+      return {
+        rapid: {
+          maxPriorityFeePerGas: blockPrices.estimatedPrices[0].maxPriorityFeePerGas,
+          maxFeePerGas: blockPrices.estimatedPrices[0].maxFeePerGas,
+        },
+        fast: {
+          maxPriorityFeePerGas: blockPrices.estimatedPrices[1].maxPriorityFeePerGas,
+          maxFeePerGas: blockPrices.estimatedPrices[1].maxFeePerGas,
+        },
+        standard: {
+          maxPriorityFeePerGas: blockPrices.estimatedPrices[2].maxPriorityFeePerGas,
+          maxFeePerGas: blockPrices.estimatedPrices[2].maxFeePerGas,
+        },
+        slow: {
+          maxPriorityFeePerGas: blockPrices.estimatedPrices[3].maxPriorityFeePerGas,
+          maxFeePerGas: blockPrices.estimatedPrices[3].maxFeePerGas,
+        },
+      };
+    } catch (err) {
       return this.defaultGasPrice();
     }
-    const result = await response.json();
-    const blockPrices = result.blockPrices[0];
-    return {
-      rapid: {
-        maxPriorityFeePerGas: blockPrices.estimatedPrices[0].maxPriorityFeePerGas,
-        maxFeePerGas: blockPrices.estimatedPrices[0].maxFeePerGas,
-      },
-      fast: {
-        maxPriorityFeePerGas: blockPrices.estimatedPrices[1].maxPriorityFeePerGas,
-        maxFeePerGas: blockPrices.estimatedPrices[1].maxFeePerGas,
-      },
-      standard: {
-        maxPriorityFeePerGas: blockPrices.estimatedPrices[2].maxPriorityFeePerGas,
-        maxFeePerGas: blockPrices.estimatedPrices[2].maxFeePerGas,
-      },
-      slow: {
-        maxPriorityFeePerGas: blockPrices.estimatedPrices[3].maxPriorityFeePerGas,
-        maxFeePerGas: blockPrices.estimatedPrices[3].maxFeePerGas,
-      },
-    };
   }
 }
 
