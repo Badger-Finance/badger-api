@@ -3015,5 +3015,5 @@ export type SushiPairDayDatasQueryVariables = Exact<{
 }>;
 
 export type SushiPairDayDatasQuery = { __typename?: 'Query' } & {
-  pairDayDatas: Array<{ __typename?: 'PairDayData' } & SushiPairDayDataFragment>;
+  pairDayDatas: Array<{ __typename?: 'PairDayData' } & Pick<PairDayData, 'reserveUSD' | 'volumeUSD' | 'date'>>;
 };
