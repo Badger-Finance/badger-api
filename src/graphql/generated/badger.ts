@@ -2,6 +2,7 @@ import { GraphQLClient } from 'graphql-request';
 import * as Dom from 'graphql-request/dist/types.dom';
 import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -19,216 +20,216 @@ export type Scalars = {
 
 export type BadgerTreeDistribution = TokenDistribution & {
   __typename?: 'BadgerTreeDistribution';
-  id: Scalars['ID'];
-  timestamp: Scalars['Int'];
-  token: Token;
   amount: Scalars['BigInt'];
   blockNumber: Scalars['BigInt'];
-  strategy?: Maybe<Strategy>;
+  id: Scalars['ID'];
   sett?: Maybe<Sett>;
+  strategy?: Maybe<Strategy>;
+  timestamp: Scalars['Int'];
+  token: Token;
 };
 
 export type BadgerTreeDistribution_Filter = {
-  id?: Maybe<Scalars['ID']>;
-  id_not?: Maybe<Scalars['ID']>;
-  id_gt?: Maybe<Scalars['ID']>;
-  id_lt?: Maybe<Scalars['ID']>;
-  id_gte?: Maybe<Scalars['ID']>;
-  id_lte?: Maybe<Scalars['ID']>;
-  id_in?: Maybe<Array<Scalars['ID']>>;
-  id_not_in?: Maybe<Array<Scalars['ID']>>;
-  timestamp?: Maybe<Scalars['Int']>;
-  timestamp_not?: Maybe<Scalars['Int']>;
-  timestamp_gt?: Maybe<Scalars['Int']>;
-  timestamp_lt?: Maybe<Scalars['Int']>;
-  timestamp_gte?: Maybe<Scalars['Int']>;
-  timestamp_lte?: Maybe<Scalars['Int']>;
-  timestamp_in?: Maybe<Array<Scalars['Int']>>;
-  timestamp_not_in?: Maybe<Array<Scalars['Int']>>;
-  token?: Maybe<Scalars['String']>;
-  token_not?: Maybe<Scalars['String']>;
-  token_gt?: Maybe<Scalars['String']>;
-  token_lt?: Maybe<Scalars['String']>;
-  token_gte?: Maybe<Scalars['String']>;
-  token_lte?: Maybe<Scalars['String']>;
-  token_in?: Maybe<Array<Scalars['String']>>;
-  token_not_in?: Maybe<Array<Scalars['String']>>;
-  token_contains?: Maybe<Scalars['String']>;
-  token_not_contains?: Maybe<Scalars['String']>;
-  token_starts_with?: Maybe<Scalars['String']>;
-  token_not_starts_with?: Maybe<Scalars['String']>;
-  token_ends_with?: Maybe<Scalars['String']>;
-  token_not_ends_with?: Maybe<Scalars['String']>;
-  amount?: Maybe<Scalars['BigInt']>;
-  amount_not?: Maybe<Scalars['BigInt']>;
-  amount_gt?: Maybe<Scalars['BigInt']>;
-  amount_lt?: Maybe<Scalars['BigInt']>;
-  amount_gte?: Maybe<Scalars['BigInt']>;
-  amount_lte?: Maybe<Scalars['BigInt']>;
-  amount_in?: Maybe<Array<Scalars['BigInt']>>;
-  amount_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  blockNumber?: Maybe<Scalars['BigInt']>;
-  blockNumber_not?: Maybe<Scalars['BigInt']>;
-  blockNumber_gt?: Maybe<Scalars['BigInt']>;
-  blockNumber_lt?: Maybe<Scalars['BigInt']>;
-  blockNumber_gte?: Maybe<Scalars['BigInt']>;
-  blockNumber_lte?: Maybe<Scalars['BigInt']>;
-  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
-  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  strategy?: Maybe<Scalars['String']>;
-  strategy_not?: Maybe<Scalars['String']>;
-  strategy_gt?: Maybe<Scalars['String']>;
-  strategy_lt?: Maybe<Scalars['String']>;
-  strategy_gte?: Maybe<Scalars['String']>;
-  strategy_lte?: Maybe<Scalars['String']>;
-  strategy_in?: Maybe<Array<Scalars['String']>>;
-  strategy_not_in?: Maybe<Array<Scalars['String']>>;
-  strategy_contains?: Maybe<Scalars['String']>;
-  strategy_not_contains?: Maybe<Scalars['String']>;
-  strategy_starts_with?: Maybe<Scalars['String']>;
-  strategy_not_starts_with?: Maybe<Scalars['String']>;
-  strategy_ends_with?: Maybe<Scalars['String']>;
-  strategy_not_ends_with?: Maybe<Scalars['String']>;
-  sett?: Maybe<Scalars['String']>;
-  sett_not?: Maybe<Scalars['String']>;
-  sett_gt?: Maybe<Scalars['String']>;
-  sett_lt?: Maybe<Scalars['String']>;
-  sett_gte?: Maybe<Scalars['String']>;
-  sett_lte?: Maybe<Scalars['String']>;
-  sett_in?: Maybe<Array<Scalars['String']>>;
-  sett_not_in?: Maybe<Array<Scalars['String']>>;
-  sett_contains?: Maybe<Scalars['String']>;
-  sett_not_contains?: Maybe<Scalars['String']>;
-  sett_starts_with?: Maybe<Scalars['String']>;
-  sett_not_starts_with?: Maybe<Scalars['String']>;
-  sett_ends_with?: Maybe<Scalars['String']>;
-  sett_not_ends_with?: Maybe<Scalars['String']>;
+  amount?: InputMaybe<Scalars['BigInt']>;
+  amount_gt?: InputMaybe<Scalars['BigInt']>;
+  amount_gte?: InputMaybe<Scalars['BigInt']>;
+  amount_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  amount_lt?: InputMaybe<Scalars['BigInt']>;
+  amount_lte?: InputMaybe<Scalars['BigInt']>;
+  amount_not?: InputMaybe<Scalars['BigInt']>;
+  amount_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  blockNumber?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_gt?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_gte?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  blockNumber_lt?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_lte?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_not?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  id?: InputMaybe<Scalars['ID']>;
+  id_gt?: InputMaybe<Scalars['ID']>;
+  id_gte?: InputMaybe<Scalars['ID']>;
+  id_in?: InputMaybe<Array<Scalars['ID']>>;
+  id_lt?: InputMaybe<Scalars['ID']>;
+  id_lte?: InputMaybe<Scalars['ID']>;
+  id_not?: InputMaybe<Scalars['ID']>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']>>;
+  sett?: InputMaybe<Scalars['String']>;
+  sett_contains?: InputMaybe<Scalars['String']>;
+  sett_ends_with?: InputMaybe<Scalars['String']>;
+  sett_gt?: InputMaybe<Scalars['String']>;
+  sett_gte?: InputMaybe<Scalars['String']>;
+  sett_in?: InputMaybe<Array<Scalars['String']>>;
+  sett_lt?: InputMaybe<Scalars['String']>;
+  sett_lte?: InputMaybe<Scalars['String']>;
+  sett_not?: InputMaybe<Scalars['String']>;
+  sett_not_contains?: InputMaybe<Scalars['String']>;
+  sett_not_ends_with?: InputMaybe<Scalars['String']>;
+  sett_not_in?: InputMaybe<Array<Scalars['String']>>;
+  sett_not_starts_with?: InputMaybe<Scalars['String']>;
+  sett_starts_with?: InputMaybe<Scalars['String']>;
+  strategy?: InputMaybe<Scalars['String']>;
+  strategy_contains?: InputMaybe<Scalars['String']>;
+  strategy_ends_with?: InputMaybe<Scalars['String']>;
+  strategy_gt?: InputMaybe<Scalars['String']>;
+  strategy_gte?: InputMaybe<Scalars['String']>;
+  strategy_in?: InputMaybe<Array<Scalars['String']>>;
+  strategy_lt?: InputMaybe<Scalars['String']>;
+  strategy_lte?: InputMaybe<Scalars['String']>;
+  strategy_not?: InputMaybe<Scalars['String']>;
+  strategy_not_contains?: InputMaybe<Scalars['String']>;
+  strategy_not_ends_with?: InputMaybe<Scalars['String']>;
+  strategy_not_in?: InputMaybe<Array<Scalars['String']>>;
+  strategy_not_starts_with?: InputMaybe<Scalars['String']>;
+  strategy_starts_with?: InputMaybe<Scalars['String']>;
+  timestamp?: InputMaybe<Scalars['Int']>;
+  timestamp_gt?: InputMaybe<Scalars['Int']>;
+  timestamp_gte?: InputMaybe<Scalars['Int']>;
+  timestamp_in?: InputMaybe<Array<Scalars['Int']>>;
+  timestamp_lt?: InputMaybe<Scalars['Int']>;
+  timestamp_lte?: InputMaybe<Scalars['Int']>;
+  timestamp_not?: InputMaybe<Scalars['Int']>;
+  timestamp_not_in?: InputMaybe<Array<Scalars['Int']>>;
+  token?: InputMaybe<Scalars['String']>;
+  token_contains?: InputMaybe<Scalars['String']>;
+  token_ends_with?: InputMaybe<Scalars['String']>;
+  token_gt?: InputMaybe<Scalars['String']>;
+  token_gte?: InputMaybe<Scalars['String']>;
+  token_in?: InputMaybe<Array<Scalars['String']>>;
+  token_lt?: InputMaybe<Scalars['String']>;
+  token_lte?: InputMaybe<Scalars['String']>;
+  token_not?: InputMaybe<Scalars['String']>;
+  token_not_contains?: InputMaybe<Scalars['String']>;
+  token_not_ends_with?: InputMaybe<Scalars['String']>;
+  token_not_in?: InputMaybe<Array<Scalars['String']>>;
+  token_not_starts_with?: InputMaybe<Scalars['String']>;
+  token_starts_with?: InputMaybe<Scalars['String']>;
 };
 
 export enum BadgerTreeDistribution_OrderBy {
-  Id = 'id',
-  Timestamp = 'timestamp',
-  Token = 'token',
   Amount = 'amount',
   BlockNumber = 'blockNumber',
-  Strategy = 'strategy',
+  Id = 'id',
   Sett = 'sett',
+  Strategy = 'strategy',
+  Timestamp = 'timestamp',
+  Token = 'token',
 }
 
 export type Block_Height = {
-  hash?: Maybe<Scalars['Bytes']>;
-  number?: Maybe<Scalars['Int']>;
-  number_gte?: Maybe<Scalars['Int']>;
+  hash?: InputMaybe<Scalars['Bytes']>;
+  number?: InputMaybe<Scalars['Int']>;
+  number_gte?: InputMaybe<Scalars['Int']>;
 };
 
 export type Controller = {
   __typename?: 'Controller';
   id: Scalars['ID'];
-  strategies: Array<Strategy>;
   setts: Array<Sett>;
-};
-
-export type ControllerStrategiesArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Strategy_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<Strategy_Filter>;
+  strategies: Array<Strategy>;
 };
 
 export type ControllerSettsArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Sett_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<Sett_Filter>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Sett_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Sett_Filter>;
+};
+
+export type ControllerStrategiesArgs = {
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Strategy_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Strategy_Filter>;
 };
 
 export type Controller_Filter = {
-  id?: Maybe<Scalars['ID']>;
-  id_not?: Maybe<Scalars['ID']>;
-  id_gt?: Maybe<Scalars['ID']>;
-  id_lt?: Maybe<Scalars['ID']>;
-  id_gte?: Maybe<Scalars['ID']>;
-  id_lte?: Maybe<Scalars['ID']>;
-  id_in?: Maybe<Array<Scalars['ID']>>;
-  id_not_in?: Maybe<Array<Scalars['ID']>>;
+  id?: InputMaybe<Scalars['ID']>;
+  id_gt?: InputMaybe<Scalars['ID']>;
+  id_gte?: InputMaybe<Scalars['ID']>;
+  id_in?: InputMaybe<Array<Scalars['ID']>>;
+  id_lt?: InputMaybe<Scalars['ID']>;
+  id_lte?: InputMaybe<Scalars['ID']>;
+  id_not?: InputMaybe<Scalars['ID']>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']>>;
 };
 
 export enum Controller_OrderBy {
   Id = 'id',
-  Strategies = 'strategies',
   Setts = 'setts',
+  Strategies = 'strategies',
 }
 
 export type Erc20 = {
+  decimals: Scalars['BigInt'];
   id: Scalars['ID'];
   name: Scalars['String'];
   symbol: Scalars['String'];
-  decimals: Scalars['BigInt'];
   totalSupply: Scalars['BigInt'];
 };
 
 export type Erc20_Filter = {
-  id?: Maybe<Scalars['ID']>;
-  id_not?: Maybe<Scalars['ID']>;
-  id_gt?: Maybe<Scalars['ID']>;
-  id_lt?: Maybe<Scalars['ID']>;
-  id_gte?: Maybe<Scalars['ID']>;
-  id_lte?: Maybe<Scalars['ID']>;
-  id_in?: Maybe<Array<Scalars['ID']>>;
-  id_not_in?: Maybe<Array<Scalars['ID']>>;
-  name?: Maybe<Scalars['String']>;
-  name_not?: Maybe<Scalars['String']>;
-  name_gt?: Maybe<Scalars['String']>;
-  name_lt?: Maybe<Scalars['String']>;
-  name_gte?: Maybe<Scalars['String']>;
-  name_lte?: Maybe<Scalars['String']>;
-  name_in?: Maybe<Array<Scalars['String']>>;
-  name_not_in?: Maybe<Array<Scalars['String']>>;
-  name_contains?: Maybe<Scalars['String']>;
-  name_not_contains?: Maybe<Scalars['String']>;
-  name_starts_with?: Maybe<Scalars['String']>;
-  name_not_starts_with?: Maybe<Scalars['String']>;
-  name_ends_with?: Maybe<Scalars['String']>;
-  name_not_ends_with?: Maybe<Scalars['String']>;
-  symbol?: Maybe<Scalars['String']>;
-  symbol_not?: Maybe<Scalars['String']>;
-  symbol_gt?: Maybe<Scalars['String']>;
-  symbol_lt?: Maybe<Scalars['String']>;
-  symbol_gte?: Maybe<Scalars['String']>;
-  symbol_lte?: Maybe<Scalars['String']>;
-  symbol_in?: Maybe<Array<Scalars['String']>>;
-  symbol_not_in?: Maybe<Array<Scalars['String']>>;
-  symbol_contains?: Maybe<Scalars['String']>;
-  symbol_not_contains?: Maybe<Scalars['String']>;
-  symbol_starts_with?: Maybe<Scalars['String']>;
-  symbol_not_starts_with?: Maybe<Scalars['String']>;
-  symbol_ends_with?: Maybe<Scalars['String']>;
-  symbol_not_ends_with?: Maybe<Scalars['String']>;
-  decimals?: Maybe<Scalars['BigInt']>;
-  decimals_not?: Maybe<Scalars['BigInt']>;
-  decimals_gt?: Maybe<Scalars['BigInt']>;
-  decimals_lt?: Maybe<Scalars['BigInt']>;
-  decimals_gte?: Maybe<Scalars['BigInt']>;
-  decimals_lte?: Maybe<Scalars['BigInt']>;
-  decimals_in?: Maybe<Array<Scalars['BigInt']>>;
-  decimals_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  totalSupply?: Maybe<Scalars['BigInt']>;
-  totalSupply_not?: Maybe<Scalars['BigInt']>;
-  totalSupply_gt?: Maybe<Scalars['BigInt']>;
-  totalSupply_lt?: Maybe<Scalars['BigInt']>;
-  totalSupply_gte?: Maybe<Scalars['BigInt']>;
-  totalSupply_lte?: Maybe<Scalars['BigInt']>;
-  totalSupply_in?: Maybe<Array<Scalars['BigInt']>>;
-  totalSupply_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  decimals?: InputMaybe<Scalars['BigInt']>;
+  decimals_gt?: InputMaybe<Scalars['BigInt']>;
+  decimals_gte?: InputMaybe<Scalars['BigInt']>;
+  decimals_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  decimals_lt?: InputMaybe<Scalars['BigInt']>;
+  decimals_lte?: InputMaybe<Scalars['BigInt']>;
+  decimals_not?: InputMaybe<Scalars['BigInt']>;
+  decimals_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  id?: InputMaybe<Scalars['ID']>;
+  id_gt?: InputMaybe<Scalars['ID']>;
+  id_gte?: InputMaybe<Scalars['ID']>;
+  id_in?: InputMaybe<Array<Scalars['ID']>>;
+  id_lt?: InputMaybe<Scalars['ID']>;
+  id_lte?: InputMaybe<Scalars['ID']>;
+  id_not?: InputMaybe<Scalars['ID']>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']>>;
+  name?: InputMaybe<Scalars['String']>;
+  name_contains?: InputMaybe<Scalars['String']>;
+  name_ends_with?: InputMaybe<Scalars['String']>;
+  name_gt?: InputMaybe<Scalars['String']>;
+  name_gte?: InputMaybe<Scalars['String']>;
+  name_in?: InputMaybe<Array<Scalars['String']>>;
+  name_lt?: InputMaybe<Scalars['String']>;
+  name_lte?: InputMaybe<Scalars['String']>;
+  name_not?: InputMaybe<Scalars['String']>;
+  name_not_contains?: InputMaybe<Scalars['String']>;
+  name_not_ends_with?: InputMaybe<Scalars['String']>;
+  name_not_in?: InputMaybe<Array<Scalars['String']>>;
+  name_not_starts_with?: InputMaybe<Scalars['String']>;
+  name_starts_with?: InputMaybe<Scalars['String']>;
+  symbol?: InputMaybe<Scalars['String']>;
+  symbol_contains?: InputMaybe<Scalars['String']>;
+  symbol_ends_with?: InputMaybe<Scalars['String']>;
+  symbol_gt?: InputMaybe<Scalars['String']>;
+  symbol_gte?: InputMaybe<Scalars['String']>;
+  symbol_in?: InputMaybe<Array<Scalars['String']>>;
+  symbol_lt?: InputMaybe<Scalars['String']>;
+  symbol_lte?: InputMaybe<Scalars['String']>;
+  symbol_not?: InputMaybe<Scalars['String']>;
+  symbol_not_contains?: InputMaybe<Scalars['String']>;
+  symbol_not_ends_with?: InputMaybe<Scalars['String']>;
+  symbol_not_in?: InputMaybe<Array<Scalars['String']>>;
+  symbol_not_starts_with?: InputMaybe<Scalars['String']>;
+  symbol_starts_with?: InputMaybe<Scalars['String']>;
+  totalSupply?: InputMaybe<Scalars['BigInt']>;
+  totalSupply_gt?: InputMaybe<Scalars['BigInt']>;
+  totalSupply_gte?: InputMaybe<Scalars['BigInt']>;
+  totalSupply_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  totalSupply_lt?: InputMaybe<Scalars['BigInt']>;
+  totalSupply_lte?: InputMaybe<Scalars['BigInt']>;
+  totalSupply_not?: InputMaybe<Scalars['BigInt']>;
+  totalSupply_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
 };
 
 export enum Erc20_OrderBy {
+  Decimals = 'decimals',
   Id = 'id',
   Name = 'name',
   Symbol = 'symbol',
-  Decimals = 'decimals',
   TotalSupply = 'totalSupply',
 }
 
@@ -239,318 +240,318 @@ export enum OrderDirection {
 
 export type Query = {
   __typename?: 'Query';
-  registry?: Maybe<Registry>;
+  /** Access to subgraph metadata */
+  _meta?: Maybe<_Meta_>;
+  badgerTreeDistribution?: Maybe<BadgerTreeDistribution>;
+  badgerTreeDistributions: Array<BadgerTreeDistribution>;
+  controller?: Maybe<Controller>;
+  controllers: Array<Controller>;
+  erc20?: Maybe<Erc20>;
+  erc20S: Array<Erc20>;
   registries: Array<Registry>;
-  token?: Maybe<Token>;
-  tokens: Array<Token>;
+  registry?: Maybe<Registry>;
   sett?: Maybe<Sett>;
-  setts: Array<Sett>;
+  settHarvest?: Maybe<SettHarvest>;
+  settHarvests: Array<SettHarvest>;
   settSnapshot?: Maybe<SettSnapshot>;
   settSnapshots: Array<SettSnapshot>;
-  userSettBalance?: Maybe<UserSettBalance>;
-  userSettBalances: Array<UserSettBalance>;
+  setts: Array<Sett>;
+  snapshot?: Maybe<Snapshot>;
+  snapshots: Array<Snapshot>;
+  strategies: Array<Strategy>;
+  strategy?: Maybe<Strategy>;
+  token?: Maybe<Token>;
+  tokenDistribution?: Maybe<TokenDistribution>;
+  tokenDistributions: Array<TokenDistribution>;
+  tokens: Array<Token>;
   transaction?: Maybe<Transaction>;
   transactions: Array<Transaction>;
   transfer?: Maybe<Transfer>;
   transfers: Array<Transfer>;
   user?: Maybe<User>;
+  userSettBalance?: Maybe<UserSettBalance>;
+  userSettBalances: Array<UserSettBalance>;
   users: Array<User>;
-  badgerTreeDistribution?: Maybe<BadgerTreeDistribution>;
-  badgerTreeDistributions: Array<BadgerTreeDistribution>;
-  settHarvest?: Maybe<SettHarvest>;
-  settHarvests: Array<SettHarvest>;
-  strategy?: Maybe<Strategy>;
-  strategies: Array<Strategy>;
-  controller?: Maybe<Controller>;
-  controllers: Array<Controller>;
-  erc20?: Maybe<Erc20>;
-  erc20S: Array<Erc20>;
   vault?: Maybe<Vault>;
-  vaults: Array<Vault>;
   vaultBalance?: Maybe<VaultBalance>;
   vaultBalances: Array<VaultBalance>;
-  snapshot?: Maybe<Snapshot>;
-  snapshots: Array<Snapshot>;
-  tokenDistribution?: Maybe<TokenDistribution>;
-  tokenDistributions: Array<TokenDistribution>;
-  /** Access to subgraph metadata */
-  _meta?: Maybe<_Meta_>;
+  vaults: Array<Vault>;
 };
 
-export type QueryRegistryArgs = {
-  id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type QueryRegistriesArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Registry_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<Registry_Filter>;
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type QueryTokenArgs = {
-  id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type QueryTokensArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Token_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<Token_Filter>;
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type QuerySettArgs = {
-  id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type QuerySettsArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Sett_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<Sett_Filter>;
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type QuerySettSnapshotArgs = {
-  id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type QuerySettSnapshotsArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<SettSnapshot_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<SettSnapshot_Filter>;
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type QueryUserSettBalanceArgs = {
-  id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type QueryUserSettBalancesArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<UserSettBalance_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<UserSettBalance_Filter>;
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type QueryTransactionArgs = {
-  id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type QueryTransactionsArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Transaction_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<Transaction_Filter>;
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type QueryTransferArgs = {
-  id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type QueryTransfersArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Transfer_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<Transfer_Filter>;
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type QueryUserArgs = {
-  id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type QueryUsersArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<User_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<User_Filter>;
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
+export type Query_MetaArgs = {
+  block?: InputMaybe<Block_Height>;
 };
 
 export type QueryBadgerTreeDistributionArgs = {
+  block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
 export type QueryBadgerTreeDistributionsArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<BadgerTreeDistribution_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<BadgerTreeDistribution_Filter>;
-  block?: Maybe<Block_Height>;
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<BadgerTreeDistribution_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
   subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type QuerySettHarvestArgs = {
-  id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type QuerySettHarvestsArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<SettHarvest_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<SettHarvest_Filter>;
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type QueryStrategyArgs = {
-  id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type QueryStrategiesArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Strategy_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<Strategy_Filter>;
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<BadgerTreeDistribution_Filter>;
 };
 
 export type QueryControllerArgs = {
+  block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
 export type QueryControllersArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Controller_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<Controller_Filter>;
-  block?: Maybe<Block_Height>;
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Controller_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
   subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<Controller_Filter>;
 };
 
 export type QueryErc20Args = {
+  block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
 export type QueryErc20SArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Erc20_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<Erc20_Filter>;
-  block?: Maybe<Block_Height>;
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Erc20_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
   subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<Erc20_Filter>;
 };
 
-export type QueryVaultArgs = {
+export type QueryRegistriesArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Registry_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<Registry_Filter>;
+};
+
+export type QueryRegistryArgs = {
+  block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
-export type QueryVaultsArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Vault_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<Vault_Filter>;
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type QueryVaultBalanceArgs = {
+export type QuerySettArgs = {
+  block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
-export type QueryVaultBalancesArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<VaultBalance_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<VaultBalance_Filter>;
-  block?: Maybe<Block_Height>;
+export type QuerySettHarvestArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
+};
+
+export type QuerySettHarvestsArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<SettHarvest_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<SettHarvest_Filter>;
+};
+
+export type QuerySettSnapshotArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+export type QuerySettSnapshotsArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<SettSnapshot_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<SettSnapshot_Filter>;
+};
+
+export type QuerySettsArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Sett_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<Sett_Filter>;
 };
 
 export type QuerySnapshotArgs = {
+  block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
 export type QuerySnapshotsArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Snapshot_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<Snapshot_Filter>;
-  block?: Maybe<Block_Height>;
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Snapshot_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<Snapshot_Filter>;
+};
+
+export type QueryStrategiesArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Strategy_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<Strategy_Filter>;
+};
+
+export type QueryStrategyArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+export type QueryTokenArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
 export type QueryTokenDistributionArgs = {
+  block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
 export type QueryTokenDistributionsArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<TokenDistribution_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<TokenDistribution_Filter>;
-  block?: Maybe<Block_Height>;
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<TokenDistribution_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<TokenDistribution_Filter>;
+};
+
+export type QueryTokensArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Token_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<Token_Filter>;
+};
+
+export type QueryTransactionArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
-export type Query_MetaArgs = {
-  block?: Maybe<Block_Height>;
+export type QueryTransactionsArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Transaction_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<Transaction_Filter>;
+};
+
+export type QueryTransferArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+export type QueryTransfersArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Transfer_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<Transfer_Filter>;
+};
+
+export type QueryUserArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+export type QueryUserSettBalanceArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+export type QueryUserSettBalancesArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<UserSettBalance_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<UserSettBalance_Filter>;
+};
+
+export type QueryUsersArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<User_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<User_Filter>;
+};
+
+export type QueryVaultArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+export type QueryVaultBalanceArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+export type QueryVaultBalancesArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<VaultBalance_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<VaultBalance_Filter>;
+};
+
+export type QueryVaultsArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Vault_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<Vault_Filter>;
 };
 
 export type Registry = {
@@ -559,14 +560,14 @@ export type Registry = {
 };
 
 export type Registry_Filter = {
-  id?: Maybe<Scalars['ID']>;
-  id_not?: Maybe<Scalars['ID']>;
-  id_gt?: Maybe<Scalars['ID']>;
-  id_lt?: Maybe<Scalars['ID']>;
-  id_gte?: Maybe<Scalars['ID']>;
-  id_lte?: Maybe<Scalars['ID']>;
-  id_in?: Maybe<Array<Scalars['ID']>>;
-  id_not_in?: Maybe<Array<Scalars['ID']>>;
+  id?: InputMaybe<Scalars['ID']>;
+  id_gt?: InputMaybe<Scalars['ID']>;
+  id_gte?: InputMaybe<Scalars['ID']>;
+  id_in?: InputMaybe<Array<Scalars['ID']>>;
+  id_lt?: InputMaybe<Scalars['ID']>;
+  id_lte?: InputMaybe<Scalars['ID']>;
+  id_not?: InputMaybe<Scalars['ID']>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']>>;
 };
 
 export enum Registry_OrderBy {
@@ -577,501 +578,501 @@ export type Sett = Erc20 &
   Vault &
   VaultBalance & {
     __typename?: 'Sett';
-    id: Scalars['ID'];
-    name: Scalars['String'];
-    symbol: Scalars['String'];
-    decimals: Scalars['BigInt'];
-    totalSupply: Scalars['BigInt'];
-    token: Token;
     balance: Scalars['BigInt'];
-    pricePerFullShare: Scalars['BigInt'];
-    netDeposit: Scalars['BigInt'];
-    netShareDeposit: Scalars['BigInt'];
+    controller?: Maybe<Controller>;
+    decimals: Scalars['BigInt'];
     grossDeposit: Scalars['BigInt'];
     grossShareDeposit: Scalars['BigInt'];
-    grossWithdraw: Scalars['BigInt'];
     grossShareWithdraw: Scalars['BigInt'];
-    controller?: Maybe<Controller>;
-    strategy?: Maybe<Strategy>;
-    treeDistributions: Array<BadgerTreeDistribution>;
+    grossWithdraw: Scalars['BigInt'];
     harvests: Array<SettHarvest>;
+    id: Scalars['ID'];
+    name: Scalars['String'];
+    netDeposit: Scalars['BigInt'];
+    netShareDeposit: Scalars['BigInt'];
+    pricePerFullShare: Scalars['BigInt'];
+    strategy?: Maybe<Strategy>;
+    symbol: Scalars['String'];
+    token: Token;
+    totalSupply: Scalars['BigInt'];
+    treeDistributions: Array<BadgerTreeDistribution>;
   };
 
-export type SettTreeDistributionsArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<BadgerTreeDistribution_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<BadgerTreeDistribution_Filter>;
+export type SettHarvestsArgs = {
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<SettHarvest_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<SettHarvest_Filter>;
 };
 
-export type SettHarvestsArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<SettHarvest_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<SettHarvest_Filter>;
+export type SettTreeDistributionsArgs = {
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<BadgerTreeDistribution_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<BadgerTreeDistribution_Filter>;
 };
 
 export type SettHarvest = TokenDistribution & {
   __typename?: 'SettHarvest';
-  id: Scalars['ID'];
-  timestamp: Scalars['Int'];
-  token: Token;
   amount: Scalars['BigInt'];
   blockNumber: Scalars['BigInt'];
-  strategy?: Maybe<Strategy>;
+  id: Scalars['ID'];
   sett?: Maybe<Sett>;
+  strategy?: Maybe<Strategy>;
+  timestamp: Scalars['Int'];
+  token: Token;
 };
 
 export type SettHarvest_Filter = {
-  id?: Maybe<Scalars['ID']>;
-  id_not?: Maybe<Scalars['ID']>;
-  id_gt?: Maybe<Scalars['ID']>;
-  id_lt?: Maybe<Scalars['ID']>;
-  id_gte?: Maybe<Scalars['ID']>;
-  id_lte?: Maybe<Scalars['ID']>;
-  id_in?: Maybe<Array<Scalars['ID']>>;
-  id_not_in?: Maybe<Array<Scalars['ID']>>;
-  timestamp?: Maybe<Scalars['Int']>;
-  timestamp_not?: Maybe<Scalars['Int']>;
-  timestamp_gt?: Maybe<Scalars['Int']>;
-  timestamp_lt?: Maybe<Scalars['Int']>;
-  timestamp_gte?: Maybe<Scalars['Int']>;
-  timestamp_lte?: Maybe<Scalars['Int']>;
-  timestamp_in?: Maybe<Array<Scalars['Int']>>;
-  timestamp_not_in?: Maybe<Array<Scalars['Int']>>;
-  token?: Maybe<Scalars['String']>;
-  token_not?: Maybe<Scalars['String']>;
-  token_gt?: Maybe<Scalars['String']>;
-  token_lt?: Maybe<Scalars['String']>;
-  token_gte?: Maybe<Scalars['String']>;
-  token_lte?: Maybe<Scalars['String']>;
-  token_in?: Maybe<Array<Scalars['String']>>;
-  token_not_in?: Maybe<Array<Scalars['String']>>;
-  token_contains?: Maybe<Scalars['String']>;
-  token_not_contains?: Maybe<Scalars['String']>;
-  token_starts_with?: Maybe<Scalars['String']>;
-  token_not_starts_with?: Maybe<Scalars['String']>;
-  token_ends_with?: Maybe<Scalars['String']>;
-  token_not_ends_with?: Maybe<Scalars['String']>;
-  amount?: Maybe<Scalars['BigInt']>;
-  amount_not?: Maybe<Scalars['BigInt']>;
-  amount_gt?: Maybe<Scalars['BigInt']>;
-  amount_lt?: Maybe<Scalars['BigInt']>;
-  amount_gte?: Maybe<Scalars['BigInt']>;
-  amount_lte?: Maybe<Scalars['BigInt']>;
-  amount_in?: Maybe<Array<Scalars['BigInt']>>;
-  amount_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  blockNumber?: Maybe<Scalars['BigInt']>;
-  blockNumber_not?: Maybe<Scalars['BigInt']>;
-  blockNumber_gt?: Maybe<Scalars['BigInt']>;
-  blockNumber_lt?: Maybe<Scalars['BigInt']>;
-  blockNumber_gte?: Maybe<Scalars['BigInt']>;
-  blockNumber_lte?: Maybe<Scalars['BigInt']>;
-  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
-  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  strategy?: Maybe<Scalars['String']>;
-  strategy_not?: Maybe<Scalars['String']>;
-  strategy_gt?: Maybe<Scalars['String']>;
-  strategy_lt?: Maybe<Scalars['String']>;
-  strategy_gte?: Maybe<Scalars['String']>;
-  strategy_lte?: Maybe<Scalars['String']>;
-  strategy_in?: Maybe<Array<Scalars['String']>>;
-  strategy_not_in?: Maybe<Array<Scalars['String']>>;
-  strategy_contains?: Maybe<Scalars['String']>;
-  strategy_not_contains?: Maybe<Scalars['String']>;
-  strategy_starts_with?: Maybe<Scalars['String']>;
-  strategy_not_starts_with?: Maybe<Scalars['String']>;
-  strategy_ends_with?: Maybe<Scalars['String']>;
-  strategy_not_ends_with?: Maybe<Scalars['String']>;
-  sett?: Maybe<Scalars['String']>;
-  sett_not?: Maybe<Scalars['String']>;
-  sett_gt?: Maybe<Scalars['String']>;
-  sett_lt?: Maybe<Scalars['String']>;
-  sett_gte?: Maybe<Scalars['String']>;
-  sett_lte?: Maybe<Scalars['String']>;
-  sett_in?: Maybe<Array<Scalars['String']>>;
-  sett_not_in?: Maybe<Array<Scalars['String']>>;
-  sett_contains?: Maybe<Scalars['String']>;
-  sett_not_contains?: Maybe<Scalars['String']>;
-  sett_starts_with?: Maybe<Scalars['String']>;
-  sett_not_starts_with?: Maybe<Scalars['String']>;
-  sett_ends_with?: Maybe<Scalars['String']>;
-  sett_not_ends_with?: Maybe<Scalars['String']>;
+  amount?: InputMaybe<Scalars['BigInt']>;
+  amount_gt?: InputMaybe<Scalars['BigInt']>;
+  amount_gte?: InputMaybe<Scalars['BigInt']>;
+  amount_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  amount_lt?: InputMaybe<Scalars['BigInt']>;
+  amount_lte?: InputMaybe<Scalars['BigInt']>;
+  amount_not?: InputMaybe<Scalars['BigInt']>;
+  amount_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  blockNumber?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_gt?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_gte?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  blockNumber_lt?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_lte?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_not?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  id?: InputMaybe<Scalars['ID']>;
+  id_gt?: InputMaybe<Scalars['ID']>;
+  id_gte?: InputMaybe<Scalars['ID']>;
+  id_in?: InputMaybe<Array<Scalars['ID']>>;
+  id_lt?: InputMaybe<Scalars['ID']>;
+  id_lte?: InputMaybe<Scalars['ID']>;
+  id_not?: InputMaybe<Scalars['ID']>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']>>;
+  sett?: InputMaybe<Scalars['String']>;
+  sett_contains?: InputMaybe<Scalars['String']>;
+  sett_ends_with?: InputMaybe<Scalars['String']>;
+  sett_gt?: InputMaybe<Scalars['String']>;
+  sett_gte?: InputMaybe<Scalars['String']>;
+  sett_in?: InputMaybe<Array<Scalars['String']>>;
+  sett_lt?: InputMaybe<Scalars['String']>;
+  sett_lte?: InputMaybe<Scalars['String']>;
+  sett_not?: InputMaybe<Scalars['String']>;
+  sett_not_contains?: InputMaybe<Scalars['String']>;
+  sett_not_ends_with?: InputMaybe<Scalars['String']>;
+  sett_not_in?: InputMaybe<Array<Scalars['String']>>;
+  sett_not_starts_with?: InputMaybe<Scalars['String']>;
+  sett_starts_with?: InputMaybe<Scalars['String']>;
+  strategy?: InputMaybe<Scalars['String']>;
+  strategy_contains?: InputMaybe<Scalars['String']>;
+  strategy_ends_with?: InputMaybe<Scalars['String']>;
+  strategy_gt?: InputMaybe<Scalars['String']>;
+  strategy_gte?: InputMaybe<Scalars['String']>;
+  strategy_in?: InputMaybe<Array<Scalars['String']>>;
+  strategy_lt?: InputMaybe<Scalars['String']>;
+  strategy_lte?: InputMaybe<Scalars['String']>;
+  strategy_not?: InputMaybe<Scalars['String']>;
+  strategy_not_contains?: InputMaybe<Scalars['String']>;
+  strategy_not_ends_with?: InputMaybe<Scalars['String']>;
+  strategy_not_in?: InputMaybe<Array<Scalars['String']>>;
+  strategy_not_starts_with?: InputMaybe<Scalars['String']>;
+  strategy_starts_with?: InputMaybe<Scalars['String']>;
+  timestamp?: InputMaybe<Scalars['Int']>;
+  timestamp_gt?: InputMaybe<Scalars['Int']>;
+  timestamp_gte?: InputMaybe<Scalars['Int']>;
+  timestamp_in?: InputMaybe<Array<Scalars['Int']>>;
+  timestamp_lt?: InputMaybe<Scalars['Int']>;
+  timestamp_lte?: InputMaybe<Scalars['Int']>;
+  timestamp_not?: InputMaybe<Scalars['Int']>;
+  timestamp_not_in?: InputMaybe<Array<Scalars['Int']>>;
+  token?: InputMaybe<Scalars['String']>;
+  token_contains?: InputMaybe<Scalars['String']>;
+  token_ends_with?: InputMaybe<Scalars['String']>;
+  token_gt?: InputMaybe<Scalars['String']>;
+  token_gte?: InputMaybe<Scalars['String']>;
+  token_in?: InputMaybe<Array<Scalars['String']>>;
+  token_lt?: InputMaybe<Scalars['String']>;
+  token_lte?: InputMaybe<Scalars['String']>;
+  token_not?: InputMaybe<Scalars['String']>;
+  token_not_contains?: InputMaybe<Scalars['String']>;
+  token_not_ends_with?: InputMaybe<Scalars['String']>;
+  token_not_in?: InputMaybe<Array<Scalars['String']>>;
+  token_not_starts_with?: InputMaybe<Scalars['String']>;
+  token_starts_with?: InputMaybe<Scalars['String']>;
 };
 
 export enum SettHarvest_OrderBy {
-  Id = 'id',
-  Timestamp = 'timestamp',
-  Token = 'token',
   Amount = 'amount',
   BlockNumber = 'blockNumber',
-  Strategy = 'strategy',
+  Id = 'id',
   Sett = 'sett',
+  Strategy = 'strategy',
+  Timestamp = 'timestamp',
+  Token = 'token',
 }
 
 export type SettSnapshot = Erc20 &
+  Snapshot &
   Vault &
-  VaultBalance &
-  Snapshot & {
+  VaultBalance & {
     __typename?: 'SettSnapshot';
-    id: Scalars['ID'];
-    timestamp: Scalars['Int'];
-    name: Scalars['String'];
-    symbol: Scalars['String'];
-    decimals: Scalars['BigInt'];
-    totalSupply: Scalars['BigInt'];
-    token: Token;
     balance: Scalars['BigInt'];
-    pricePerFullShare: Scalars['BigInt'];
-    netDeposit: Scalars['BigInt'];
-    netShareDeposit: Scalars['BigInt'];
+    decimals: Scalars['BigInt'];
     grossDeposit: Scalars['BigInt'];
     grossShareDeposit: Scalars['BigInt'];
-    grossWithdraw: Scalars['BigInt'];
     grossShareWithdraw: Scalars['BigInt'];
+    grossWithdraw: Scalars['BigInt'];
+    id: Scalars['ID'];
+    name: Scalars['String'];
+    netDeposit: Scalars['BigInt'];
+    netShareDeposit: Scalars['BigInt'];
+    pricePerFullShare: Scalars['BigInt'];
+    symbol: Scalars['String'];
+    timestamp: Scalars['Int'];
+    token: Token;
+    totalSupply: Scalars['BigInt'];
   };
 
 export type SettSnapshot_Filter = {
-  id?: Maybe<Scalars['ID']>;
-  id_not?: Maybe<Scalars['ID']>;
-  id_gt?: Maybe<Scalars['ID']>;
-  id_lt?: Maybe<Scalars['ID']>;
-  id_gte?: Maybe<Scalars['ID']>;
-  id_lte?: Maybe<Scalars['ID']>;
-  id_in?: Maybe<Array<Scalars['ID']>>;
-  id_not_in?: Maybe<Array<Scalars['ID']>>;
-  timestamp?: Maybe<Scalars['Int']>;
-  timestamp_not?: Maybe<Scalars['Int']>;
-  timestamp_gt?: Maybe<Scalars['Int']>;
-  timestamp_lt?: Maybe<Scalars['Int']>;
-  timestamp_gte?: Maybe<Scalars['Int']>;
-  timestamp_lte?: Maybe<Scalars['Int']>;
-  timestamp_in?: Maybe<Array<Scalars['Int']>>;
-  timestamp_not_in?: Maybe<Array<Scalars['Int']>>;
-  name?: Maybe<Scalars['String']>;
-  name_not?: Maybe<Scalars['String']>;
-  name_gt?: Maybe<Scalars['String']>;
-  name_lt?: Maybe<Scalars['String']>;
-  name_gte?: Maybe<Scalars['String']>;
-  name_lte?: Maybe<Scalars['String']>;
-  name_in?: Maybe<Array<Scalars['String']>>;
-  name_not_in?: Maybe<Array<Scalars['String']>>;
-  name_contains?: Maybe<Scalars['String']>;
-  name_not_contains?: Maybe<Scalars['String']>;
-  name_starts_with?: Maybe<Scalars['String']>;
-  name_not_starts_with?: Maybe<Scalars['String']>;
-  name_ends_with?: Maybe<Scalars['String']>;
-  name_not_ends_with?: Maybe<Scalars['String']>;
-  symbol?: Maybe<Scalars['String']>;
-  symbol_not?: Maybe<Scalars['String']>;
-  symbol_gt?: Maybe<Scalars['String']>;
-  symbol_lt?: Maybe<Scalars['String']>;
-  symbol_gte?: Maybe<Scalars['String']>;
-  symbol_lte?: Maybe<Scalars['String']>;
-  symbol_in?: Maybe<Array<Scalars['String']>>;
-  symbol_not_in?: Maybe<Array<Scalars['String']>>;
-  symbol_contains?: Maybe<Scalars['String']>;
-  symbol_not_contains?: Maybe<Scalars['String']>;
-  symbol_starts_with?: Maybe<Scalars['String']>;
-  symbol_not_starts_with?: Maybe<Scalars['String']>;
-  symbol_ends_with?: Maybe<Scalars['String']>;
-  symbol_not_ends_with?: Maybe<Scalars['String']>;
-  decimals?: Maybe<Scalars['BigInt']>;
-  decimals_not?: Maybe<Scalars['BigInt']>;
-  decimals_gt?: Maybe<Scalars['BigInt']>;
-  decimals_lt?: Maybe<Scalars['BigInt']>;
-  decimals_gte?: Maybe<Scalars['BigInt']>;
-  decimals_lte?: Maybe<Scalars['BigInt']>;
-  decimals_in?: Maybe<Array<Scalars['BigInt']>>;
-  decimals_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  totalSupply?: Maybe<Scalars['BigInt']>;
-  totalSupply_not?: Maybe<Scalars['BigInt']>;
-  totalSupply_gt?: Maybe<Scalars['BigInt']>;
-  totalSupply_lt?: Maybe<Scalars['BigInt']>;
-  totalSupply_gte?: Maybe<Scalars['BigInt']>;
-  totalSupply_lte?: Maybe<Scalars['BigInt']>;
-  totalSupply_in?: Maybe<Array<Scalars['BigInt']>>;
-  totalSupply_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  token?: Maybe<Scalars['String']>;
-  token_not?: Maybe<Scalars['String']>;
-  token_gt?: Maybe<Scalars['String']>;
-  token_lt?: Maybe<Scalars['String']>;
-  token_gte?: Maybe<Scalars['String']>;
-  token_lte?: Maybe<Scalars['String']>;
-  token_in?: Maybe<Array<Scalars['String']>>;
-  token_not_in?: Maybe<Array<Scalars['String']>>;
-  token_contains?: Maybe<Scalars['String']>;
-  token_not_contains?: Maybe<Scalars['String']>;
-  token_starts_with?: Maybe<Scalars['String']>;
-  token_not_starts_with?: Maybe<Scalars['String']>;
-  token_ends_with?: Maybe<Scalars['String']>;
-  token_not_ends_with?: Maybe<Scalars['String']>;
-  balance?: Maybe<Scalars['BigInt']>;
-  balance_not?: Maybe<Scalars['BigInt']>;
-  balance_gt?: Maybe<Scalars['BigInt']>;
-  balance_lt?: Maybe<Scalars['BigInt']>;
-  balance_gte?: Maybe<Scalars['BigInt']>;
-  balance_lte?: Maybe<Scalars['BigInt']>;
-  balance_in?: Maybe<Array<Scalars['BigInt']>>;
-  balance_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  pricePerFullShare?: Maybe<Scalars['BigInt']>;
-  pricePerFullShare_not?: Maybe<Scalars['BigInt']>;
-  pricePerFullShare_gt?: Maybe<Scalars['BigInt']>;
-  pricePerFullShare_lt?: Maybe<Scalars['BigInt']>;
-  pricePerFullShare_gte?: Maybe<Scalars['BigInt']>;
-  pricePerFullShare_lte?: Maybe<Scalars['BigInt']>;
-  pricePerFullShare_in?: Maybe<Array<Scalars['BigInt']>>;
-  pricePerFullShare_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  netDeposit?: Maybe<Scalars['BigInt']>;
-  netDeposit_not?: Maybe<Scalars['BigInt']>;
-  netDeposit_gt?: Maybe<Scalars['BigInt']>;
-  netDeposit_lt?: Maybe<Scalars['BigInt']>;
-  netDeposit_gte?: Maybe<Scalars['BigInt']>;
-  netDeposit_lte?: Maybe<Scalars['BigInt']>;
-  netDeposit_in?: Maybe<Array<Scalars['BigInt']>>;
-  netDeposit_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  netShareDeposit?: Maybe<Scalars['BigInt']>;
-  netShareDeposit_not?: Maybe<Scalars['BigInt']>;
-  netShareDeposit_gt?: Maybe<Scalars['BigInt']>;
-  netShareDeposit_lt?: Maybe<Scalars['BigInt']>;
-  netShareDeposit_gte?: Maybe<Scalars['BigInt']>;
-  netShareDeposit_lte?: Maybe<Scalars['BigInt']>;
-  netShareDeposit_in?: Maybe<Array<Scalars['BigInt']>>;
-  netShareDeposit_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  grossDeposit?: Maybe<Scalars['BigInt']>;
-  grossDeposit_not?: Maybe<Scalars['BigInt']>;
-  grossDeposit_gt?: Maybe<Scalars['BigInt']>;
-  grossDeposit_lt?: Maybe<Scalars['BigInt']>;
-  grossDeposit_gte?: Maybe<Scalars['BigInt']>;
-  grossDeposit_lte?: Maybe<Scalars['BigInt']>;
-  grossDeposit_in?: Maybe<Array<Scalars['BigInt']>>;
-  grossDeposit_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  grossShareDeposit?: Maybe<Scalars['BigInt']>;
-  grossShareDeposit_not?: Maybe<Scalars['BigInt']>;
-  grossShareDeposit_gt?: Maybe<Scalars['BigInt']>;
-  grossShareDeposit_lt?: Maybe<Scalars['BigInt']>;
-  grossShareDeposit_gte?: Maybe<Scalars['BigInt']>;
-  grossShareDeposit_lte?: Maybe<Scalars['BigInt']>;
-  grossShareDeposit_in?: Maybe<Array<Scalars['BigInt']>>;
-  grossShareDeposit_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  grossWithdraw?: Maybe<Scalars['BigInt']>;
-  grossWithdraw_not?: Maybe<Scalars['BigInt']>;
-  grossWithdraw_gt?: Maybe<Scalars['BigInt']>;
-  grossWithdraw_lt?: Maybe<Scalars['BigInt']>;
-  grossWithdraw_gte?: Maybe<Scalars['BigInt']>;
-  grossWithdraw_lte?: Maybe<Scalars['BigInt']>;
-  grossWithdraw_in?: Maybe<Array<Scalars['BigInt']>>;
-  grossWithdraw_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  grossShareWithdraw?: Maybe<Scalars['BigInt']>;
-  grossShareWithdraw_not?: Maybe<Scalars['BigInt']>;
-  grossShareWithdraw_gt?: Maybe<Scalars['BigInt']>;
-  grossShareWithdraw_lt?: Maybe<Scalars['BigInt']>;
-  grossShareWithdraw_gte?: Maybe<Scalars['BigInt']>;
-  grossShareWithdraw_lte?: Maybe<Scalars['BigInt']>;
-  grossShareWithdraw_in?: Maybe<Array<Scalars['BigInt']>>;
-  grossShareWithdraw_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  balance?: InputMaybe<Scalars['BigInt']>;
+  balance_gt?: InputMaybe<Scalars['BigInt']>;
+  balance_gte?: InputMaybe<Scalars['BigInt']>;
+  balance_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  balance_lt?: InputMaybe<Scalars['BigInt']>;
+  balance_lte?: InputMaybe<Scalars['BigInt']>;
+  balance_not?: InputMaybe<Scalars['BigInt']>;
+  balance_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  decimals?: InputMaybe<Scalars['BigInt']>;
+  decimals_gt?: InputMaybe<Scalars['BigInt']>;
+  decimals_gte?: InputMaybe<Scalars['BigInt']>;
+  decimals_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  decimals_lt?: InputMaybe<Scalars['BigInt']>;
+  decimals_lte?: InputMaybe<Scalars['BigInt']>;
+  decimals_not?: InputMaybe<Scalars['BigInt']>;
+  decimals_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  grossDeposit?: InputMaybe<Scalars['BigInt']>;
+  grossDeposit_gt?: InputMaybe<Scalars['BigInt']>;
+  grossDeposit_gte?: InputMaybe<Scalars['BigInt']>;
+  grossDeposit_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  grossDeposit_lt?: InputMaybe<Scalars['BigInt']>;
+  grossDeposit_lte?: InputMaybe<Scalars['BigInt']>;
+  grossDeposit_not?: InputMaybe<Scalars['BigInt']>;
+  grossDeposit_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  grossShareDeposit?: InputMaybe<Scalars['BigInt']>;
+  grossShareDeposit_gt?: InputMaybe<Scalars['BigInt']>;
+  grossShareDeposit_gte?: InputMaybe<Scalars['BigInt']>;
+  grossShareDeposit_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  grossShareDeposit_lt?: InputMaybe<Scalars['BigInt']>;
+  grossShareDeposit_lte?: InputMaybe<Scalars['BigInt']>;
+  grossShareDeposit_not?: InputMaybe<Scalars['BigInt']>;
+  grossShareDeposit_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  grossShareWithdraw?: InputMaybe<Scalars['BigInt']>;
+  grossShareWithdraw_gt?: InputMaybe<Scalars['BigInt']>;
+  grossShareWithdraw_gte?: InputMaybe<Scalars['BigInt']>;
+  grossShareWithdraw_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  grossShareWithdraw_lt?: InputMaybe<Scalars['BigInt']>;
+  grossShareWithdraw_lte?: InputMaybe<Scalars['BigInt']>;
+  grossShareWithdraw_not?: InputMaybe<Scalars['BigInt']>;
+  grossShareWithdraw_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  grossWithdraw?: InputMaybe<Scalars['BigInt']>;
+  grossWithdraw_gt?: InputMaybe<Scalars['BigInt']>;
+  grossWithdraw_gte?: InputMaybe<Scalars['BigInt']>;
+  grossWithdraw_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  grossWithdraw_lt?: InputMaybe<Scalars['BigInt']>;
+  grossWithdraw_lte?: InputMaybe<Scalars['BigInt']>;
+  grossWithdraw_not?: InputMaybe<Scalars['BigInt']>;
+  grossWithdraw_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  id?: InputMaybe<Scalars['ID']>;
+  id_gt?: InputMaybe<Scalars['ID']>;
+  id_gte?: InputMaybe<Scalars['ID']>;
+  id_in?: InputMaybe<Array<Scalars['ID']>>;
+  id_lt?: InputMaybe<Scalars['ID']>;
+  id_lte?: InputMaybe<Scalars['ID']>;
+  id_not?: InputMaybe<Scalars['ID']>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']>>;
+  name?: InputMaybe<Scalars['String']>;
+  name_contains?: InputMaybe<Scalars['String']>;
+  name_ends_with?: InputMaybe<Scalars['String']>;
+  name_gt?: InputMaybe<Scalars['String']>;
+  name_gte?: InputMaybe<Scalars['String']>;
+  name_in?: InputMaybe<Array<Scalars['String']>>;
+  name_lt?: InputMaybe<Scalars['String']>;
+  name_lte?: InputMaybe<Scalars['String']>;
+  name_not?: InputMaybe<Scalars['String']>;
+  name_not_contains?: InputMaybe<Scalars['String']>;
+  name_not_ends_with?: InputMaybe<Scalars['String']>;
+  name_not_in?: InputMaybe<Array<Scalars['String']>>;
+  name_not_starts_with?: InputMaybe<Scalars['String']>;
+  name_starts_with?: InputMaybe<Scalars['String']>;
+  netDeposit?: InputMaybe<Scalars['BigInt']>;
+  netDeposit_gt?: InputMaybe<Scalars['BigInt']>;
+  netDeposit_gte?: InputMaybe<Scalars['BigInt']>;
+  netDeposit_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  netDeposit_lt?: InputMaybe<Scalars['BigInt']>;
+  netDeposit_lte?: InputMaybe<Scalars['BigInt']>;
+  netDeposit_not?: InputMaybe<Scalars['BigInt']>;
+  netDeposit_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  netShareDeposit?: InputMaybe<Scalars['BigInt']>;
+  netShareDeposit_gt?: InputMaybe<Scalars['BigInt']>;
+  netShareDeposit_gte?: InputMaybe<Scalars['BigInt']>;
+  netShareDeposit_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  netShareDeposit_lt?: InputMaybe<Scalars['BigInt']>;
+  netShareDeposit_lte?: InputMaybe<Scalars['BigInt']>;
+  netShareDeposit_not?: InputMaybe<Scalars['BigInt']>;
+  netShareDeposit_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  pricePerFullShare?: InputMaybe<Scalars['BigInt']>;
+  pricePerFullShare_gt?: InputMaybe<Scalars['BigInt']>;
+  pricePerFullShare_gte?: InputMaybe<Scalars['BigInt']>;
+  pricePerFullShare_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  pricePerFullShare_lt?: InputMaybe<Scalars['BigInt']>;
+  pricePerFullShare_lte?: InputMaybe<Scalars['BigInt']>;
+  pricePerFullShare_not?: InputMaybe<Scalars['BigInt']>;
+  pricePerFullShare_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  symbol?: InputMaybe<Scalars['String']>;
+  symbol_contains?: InputMaybe<Scalars['String']>;
+  symbol_ends_with?: InputMaybe<Scalars['String']>;
+  symbol_gt?: InputMaybe<Scalars['String']>;
+  symbol_gte?: InputMaybe<Scalars['String']>;
+  symbol_in?: InputMaybe<Array<Scalars['String']>>;
+  symbol_lt?: InputMaybe<Scalars['String']>;
+  symbol_lte?: InputMaybe<Scalars['String']>;
+  symbol_not?: InputMaybe<Scalars['String']>;
+  symbol_not_contains?: InputMaybe<Scalars['String']>;
+  symbol_not_ends_with?: InputMaybe<Scalars['String']>;
+  symbol_not_in?: InputMaybe<Array<Scalars['String']>>;
+  symbol_not_starts_with?: InputMaybe<Scalars['String']>;
+  symbol_starts_with?: InputMaybe<Scalars['String']>;
+  timestamp?: InputMaybe<Scalars['Int']>;
+  timestamp_gt?: InputMaybe<Scalars['Int']>;
+  timestamp_gte?: InputMaybe<Scalars['Int']>;
+  timestamp_in?: InputMaybe<Array<Scalars['Int']>>;
+  timestamp_lt?: InputMaybe<Scalars['Int']>;
+  timestamp_lte?: InputMaybe<Scalars['Int']>;
+  timestamp_not?: InputMaybe<Scalars['Int']>;
+  timestamp_not_in?: InputMaybe<Array<Scalars['Int']>>;
+  token?: InputMaybe<Scalars['String']>;
+  token_contains?: InputMaybe<Scalars['String']>;
+  token_ends_with?: InputMaybe<Scalars['String']>;
+  token_gt?: InputMaybe<Scalars['String']>;
+  token_gte?: InputMaybe<Scalars['String']>;
+  token_in?: InputMaybe<Array<Scalars['String']>>;
+  token_lt?: InputMaybe<Scalars['String']>;
+  token_lte?: InputMaybe<Scalars['String']>;
+  token_not?: InputMaybe<Scalars['String']>;
+  token_not_contains?: InputMaybe<Scalars['String']>;
+  token_not_ends_with?: InputMaybe<Scalars['String']>;
+  token_not_in?: InputMaybe<Array<Scalars['String']>>;
+  token_not_starts_with?: InputMaybe<Scalars['String']>;
+  token_starts_with?: InputMaybe<Scalars['String']>;
+  totalSupply?: InputMaybe<Scalars['BigInt']>;
+  totalSupply_gt?: InputMaybe<Scalars['BigInt']>;
+  totalSupply_gte?: InputMaybe<Scalars['BigInt']>;
+  totalSupply_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  totalSupply_lt?: InputMaybe<Scalars['BigInt']>;
+  totalSupply_lte?: InputMaybe<Scalars['BigInt']>;
+  totalSupply_not?: InputMaybe<Scalars['BigInt']>;
+  totalSupply_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
 };
 
 export enum SettSnapshot_OrderBy {
-  Id = 'id',
-  Timestamp = 'timestamp',
-  Name = 'name',
-  Symbol = 'symbol',
-  Decimals = 'decimals',
-  TotalSupply = 'totalSupply',
-  Token = 'token',
   Balance = 'balance',
-  PricePerFullShare = 'pricePerFullShare',
-  NetDeposit = 'netDeposit',
-  NetShareDeposit = 'netShareDeposit',
+  Decimals = 'decimals',
   GrossDeposit = 'grossDeposit',
   GrossShareDeposit = 'grossShareDeposit',
-  GrossWithdraw = 'grossWithdraw',
   GrossShareWithdraw = 'grossShareWithdraw',
+  GrossWithdraw = 'grossWithdraw',
+  Id = 'id',
+  Name = 'name',
+  NetDeposit = 'netDeposit',
+  NetShareDeposit = 'netShareDeposit',
+  PricePerFullShare = 'pricePerFullShare',
+  Symbol = 'symbol',
+  Timestamp = 'timestamp',
+  Token = 'token',
+  TotalSupply = 'totalSupply',
 }
 
 export type Sett_Filter = {
-  id?: Maybe<Scalars['ID']>;
-  id_not?: Maybe<Scalars['ID']>;
-  id_gt?: Maybe<Scalars['ID']>;
-  id_lt?: Maybe<Scalars['ID']>;
-  id_gte?: Maybe<Scalars['ID']>;
-  id_lte?: Maybe<Scalars['ID']>;
-  id_in?: Maybe<Array<Scalars['ID']>>;
-  id_not_in?: Maybe<Array<Scalars['ID']>>;
-  name?: Maybe<Scalars['String']>;
-  name_not?: Maybe<Scalars['String']>;
-  name_gt?: Maybe<Scalars['String']>;
-  name_lt?: Maybe<Scalars['String']>;
-  name_gte?: Maybe<Scalars['String']>;
-  name_lte?: Maybe<Scalars['String']>;
-  name_in?: Maybe<Array<Scalars['String']>>;
-  name_not_in?: Maybe<Array<Scalars['String']>>;
-  name_contains?: Maybe<Scalars['String']>;
-  name_not_contains?: Maybe<Scalars['String']>;
-  name_starts_with?: Maybe<Scalars['String']>;
-  name_not_starts_with?: Maybe<Scalars['String']>;
-  name_ends_with?: Maybe<Scalars['String']>;
-  name_not_ends_with?: Maybe<Scalars['String']>;
-  symbol?: Maybe<Scalars['String']>;
-  symbol_not?: Maybe<Scalars['String']>;
-  symbol_gt?: Maybe<Scalars['String']>;
-  symbol_lt?: Maybe<Scalars['String']>;
-  symbol_gte?: Maybe<Scalars['String']>;
-  symbol_lte?: Maybe<Scalars['String']>;
-  symbol_in?: Maybe<Array<Scalars['String']>>;
-  symbol_not_in?: Maybe<Array<Scalars['String']>>;
-  symbol_contains?: Maybe<Scalars['String']>;
-  symbol_not_contains?: Maybe<Scalars['String']>;
-  symbol_starts_with?: Maybe<Scalars['String']>;
-  symbol_not_starts_with?: Maybe<Scalars['String']>;
-  symbol_ends_with?: Maybe<Scalars['String']>;
-  symbol_not_ends_with?: Maybe<Scalars['String']>;
-  decimals?: Maybe<Scalars['BigInt']>;
-  decimals_not?: Maybe<Scalars['BigInt']>;
-  decimals_gt?: Maybe<Scalars['BigInt']>;
-  decimals_lt?: Maybe<Scalars['BigInt']>;
-  decimals_gte?: Maybe<Scalars['BigInt']>;
-  decimals_lte?: Maybe<Scalars['BigInt']>;
-  decimals_in?: Maybe<Array<Scalars['BigInt']>>;
-  decimals_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  totalSupply?: Maybe<Scalars['BigInt']>;
-  totalSupply_not?: Maybe<Scalars['BigInt']>;
-  totalSupply_gt?: Maybe<Scalars['BigInt']>;
-  totalSupply_lt?: Maybe<Scalars['BigInt']>;
-  totalSupply_gte?: Maybe<Scalars['BigInt']>;
-  totalSupply_lte?: Maybe<Scalars['BigInt']>;
-  totalSupply_in?: Maybe<Array<Scalars['BigInt']>>;
-  totalSupply_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  token?: Maybe<Scalars['String']>;
-  token_not?: Maybe<Scalars['String']>;
-  token_gt?: Maybe<Scalars['String']>;
-  token_lt?: Maybe<Scalars['String']>;
-  token_gte?: Maybe<Scalars['String']>;
-  token_lte?: Maybe<Scalars['String']>;
-  token_in?: Maybe<Array<Scalars['String']>>;
-  token_not_in?: Maybe<Array<Scalars['String']>>;
-  token_contains?: Maybe<Scalars['String']>;
-  token_not_contains?: Maybe<Scalars['String']>;
-  token_starts_with?: Maybe<Scalars['String']>;
-  token_not_starts_with?: Maybe<Scalars['String']>;
-  token_ends_with?: Maybe<Scalars['String']>;
-  token_not_ends_with?: Maybe<Scalars['String']>;
-  balance?: Maybe<Scalars['BigInt']>;
-  balance_not?: Maybe<Scalars['BigInt']>;
-  balance_gt?: Maybe<Scalars['BigInt']>;
-  balance_lt?: Maybe<Scalars['BigInt']>;
-  balance_gte?: Maybe<Scalars['BigInt']>;
-  balance_lte?: Maybe<Scalars['BigInt']>;
-  balance_in?: Maybe<Array<Scalars['BigInt']>>;
-  balance_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  pricePerFullShare?: Maybe<Scalars['BigInt']>;
-  pricePerFullShare_not?: Maybe<Scalars['BigInt']>;
-  pricePerFullShare_gt?: Maybe<Scalars['BigInt']>;
-  pricePerFullShare_lt?: Maybe<Scalars['BigInt']>;
-  pricePerFullShare_gte?: Maybe<Scalars['BigInt']>;
-  pricePerFullShare_lte?: Maybe<Scalars['BigInt']>;
-  pricePerFullShare_in?: Maybe<Array<Scalars['BigInt']>>;
-  pricePerFullShare_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  netDeposit?: Maybe<Scalars['BigInt']>;
-  netDeposit_not?: Maybe<Scalars['BigInt']>;
-  netDeposit_gt?: Maybe<Scalars['BigInt']>;
-  netDeposit_lt?: Maybe<Scalars['BigInt']>;
-  netDeposit_gte?: Maybe<Scalars['BigInt']>;
-  netDeposit_lte?: Maybe<Scalars['BigInt']>;
-  netDeposit_in?: Maybe<Array<Scalars['BigInt']>>;
-  netDeposit_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  netShareDeposit?: Maybe<Scalars['BigInt']>;
-  netShareDeposit_not?: Maybe<Scalars['BigInt']>;
-  netShareDeposit_gt?: Maybe<Scalars['BigInt']>;
-  netShareDeposit_lt?: Maybe<Scalars['BigInt']>;
-  netShareDeposit_gte?: Maybe<Scalars['BigInt']>;
-  netShareDeposit_lte?: Maybe<Scalars['BigInt']>;
-  netShareDeposit_in?: Maybe<Array<Scalars['BigInt']>>;
-  netShareDeposit_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  grossDeposit?: Maybe<Scalars['BigInt']>;
-  grossDeposit_not?: Maybe<Scalars['BigInt']>;
-  grossDeposit_gt?: Maybe<Scalars['BigInt']>;
-  grossDeposit_lt?: Maybe<Scalars['BigInt']>;
-  grossDeposit_gte?: Maybe<Scalars['BigInt']>;
-  grossDeposit_lte?: Maybe<Scalars['BigInt']>;
-  grossDeposit_in?: Maybe<Array<Scalars['BigInt']>>;
-  grossDeposit_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  grossShareDeposit?: Maybe<Scalars['BigInt']>;
-  grossShareDeposit_not?: Maybe<Scalars['BigInt']>;
-  grossShareDeposit_gt?: Maybe<Scalars['BigInt']>;
-  grossShareDeposit_lt?: Maybe<Scalars['BigInt']>;
-  grossShareDeposit_gte?: Maybe<Scalars['BigInt']>;
-  grossShareDeposit_lte?: Maybe<Scalars['BigInt']>;
-  grossShareDeposit_in?: Maybe<Array<Scalars['BigInt']>>;
-  grossShareDeposit_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  grossWithdraw?: Maybe<Scalars['BigInt']>;
-  grossWithdraw_not?: Maybe<Scalars['BigInt']>;
-  grossWithdraw_gt?: Maybe<Scalars['BigInt']>;
-  grossWithdraw_lt?: Maybe<Scalars['BigInt']>;
-  grossWithdraw_gte?: Maybe<Scalars['BigInt']>;
-  grossWithdraw_lte?: Maybe<Scalars['BigInt']>;
-  grossWithdraw_in?: Maybe<Array<Scalars['BigInt']>>;
-  grossWithdraw_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  grossShareWithdraw?: Maybe<Scalars['BigInt']>;
-  grossShareWithdraw_not?: Maybe<Scalars['BigInt']>;
-  grossShareWithdraw_gt?: Maybe<Scalars['BigInt']>;
-  grossShareWithdraw_lt?: Maybe<Scalars['BigInt']>;
-  grossShareWithdraw_gte?: Maybe<Scalars['BigInt']>;
-  grossShareWithdraw_lte?: Maybe<Scalars['BigInt']>;
-  grossShareWithdraw_in?: Maybe<Array<Scalars['BigInt']>>;
-  grossShareWithdraw_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  controller?: Maybe<Scalars['String']>;
-  controller_not?: Maybe<Scalars['String']>;
-  controller_gt?: Maybe<Scalars['String']>;
-  controller_lt?: Maybe<Scalars['String']>;
-  controller_gte?: Maybe<Scalars['String']>;
-  controller_lte?: Maybe<Scalars['String']>;
-  controller_in?: Maybe<Array<Scalars['String']>>;
-  controller_not_in?: Maybe<Array<Scalars['String']>>;
-  controller_contains?: Maybe<Scalars['String']>;
-  controller_not_contains?: Maybe<Scalars['String']>;
-  controller_starts_with?: Maybe<Scalars['String']>;
-  controller_not_starts_with?: Maybe<Scalars['String']>;
-  controller_ends_with?: Maybe<Scalars['String']>;
-  controller_not_ends_with?: Maybe<Scalars['String']>;
-  strategy?: Maybe<Scalars['String']>;
-  strategy_not?: Maybe<Scalars['String']>;
-  strategy_gt?: Maybe<Scalars['String']>;
-  strategy_lt?: Maybe<Scalars['String']>;
-  strategy_gte?: Maybe<Scalars['String']>;
-  strategy_lte?: Maybe<Scalars['String']>;
-  strategy_in?: Maybe<Array<Scalars['String']>>;
-  strategy_not_in?: Maybe<Array<Scalars['String']>>;
-  strategy_contains?: Maybe<Scalars['String']>;
-  strategy_not_contains?: Maybe<Scalars['String']>;
-  strategy_starts_with?: Maybe<Scalars['String']>;
-  strategy_not_starts_with?: Maybe<Scalars['String']>;
-  strategy_ends_with?: Maybe<Scalars['String']>;
-  strategy_not_ends_with?: Maybe<Scalars['String']>;
+  balance?: InputMaybe<Scalars['BigInt']>;
+  balance_gt?: InputMaybe<Scalars['BigInt']>;
+  balance_gte?: InputMaybe<Scalars['BigInt']>;
+  balance_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  balance_lt?: InputMaybe<Scalars['BigInt']>;
+  balance_lte?: InputMaybe<Scalars['BigInt']>;
+  balance_not?: InputMaybe<Scalars['BigInt']>;
+  balance_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  controller?: InputMaybe<Scalars['String']>;
+  controller_contains?: InputMaybe<Scalars['String']>;
+  controller_ends_with?: InputMaybe<Scalars['String']>;
+  controller_gt?: InputMaybe<Scalars['String']>;
+  controller_gte?: InputMaybe<Scalars['String']>;
+  controller_in?: InputMaybe<Array<Scalars['String']>>;
+  controller_lt?: InputMaybe<Scalars['String']>;
+  controller_lte?: InputMaybe<Scalars['String']>;
+  controller_not?: InputMaybe<Scalars['String']>;
+  controller_not_contains?: InputMaybe<Scalars['String']>;
+  controller_not_ends_with?: InputMaybe<Scalars['String']>;
+  controller_not_in?: InputMaybe<Array<Scalars['String']>>;
+  controller_not_starts_with?: InputMaybe<Scalars['String']>;
+  controller_starts_with?: InputMaybe<Scalars['String']>;
+  decimals?: InputMaybe<Scalars['BigInt']>;
+  decimals_gt?: InputMaybe<Scalars['BigInt']>;
+  decimals_gte?: InputMaybe<Scalars['BigInt']>;
+  decimals_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  decimals_lt?: InputMaybe<Scalars['BigInt']>;
+  decimals_lte?: InputMaybe<Scalars['BigInt']>;
+  decimals_not?: InputMaybe<Scalars['BigInt']>;
+  decimals_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  grossDeposit?: InputMaybe<Scalars['BigInt']>;
+  grossDeposit_gt?: InputMaybe<Scalars['BigInt']>;
+  grossDeposit_gte?: InputMaybe<Scalars['BigInt']>;
+  grossDeposit_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  grossDeposit_lt?: InputMaybe<Scalars['BigInt']>;
+  grossDeposit_lte?: InputMaybe<Scalars['BigInt']>;
+  grossDeposit_not?: InputMaybe<Scalars['BigInt']>;
+  grossDeposit_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  grossShareDeposit?: InputMaybe<Scalars['BigInt']>;
+  grossShareDeposit_gt?: InputMaybe<Scalars['BigInt']>;
+  grossShareDeposit_gte?: InputMaybe<Scalars['BigInt']>;
+  grossShareDeposit_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  grossShareDeposit_lt?: InputMaybe<Scalars['BigInt']>;
+  grossShareDeposit_lte?: InputMaybe<Scalars['BigInt']>;
+  grossShareDeposit_not?: InputMaybe<Scalars['BigInt']>;
+  grossShareDeposit_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  grossShareWithdraw?: InputMaybe<Scalars['BigInt']>;
+  grossShareWithdraw_gt?: InputMaybe<Scalars['BigInt']>;
+  grossShareWithdraw_gte?: InputMaybe<Scalars['BigInt']>;
+  grossShareWithdraw_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  grossShareWithdraw_lt?: InputMaybe<Scalars['BigInt']>;
+  grossShareWithdraw_lte?: InputMaybe<Scalars['BigInt']>;
+  grossShareWithdraw_not?: InputMaybe<Scalars['BigInt']>;
+  grossShareWithdraw_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  grossWithdraw?: InputMaybe<Scalars['BigInt']>;
+  grossWithdraw_gt?: InputMaybe<Scalars['BigInt']>;
+  grossWithdraw_gte?: InputMaybe<Scalars['BigInt']>;
+  grossWithdraw_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  grossWithdraw_lt?: InputMaybe<Scalars['BigInt']>;
+  grossWithdraw_lte?: InputMaybe<Scalars['BigInt']>;
+  grossWithdraw_not?: InputMaybe<Scalars['BigInt']>;
+  grossWithdraw_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  id?: InputMaybe<Scalars['ID']>;
+  id_gt?: InputMaybe<Scalars['ID']>;
+  id_gte?: InputMaybe<Scalars['ID']>;
+  id_in?: InputMaybe<Array<Scalars['ID']>>;
+  id_lt?: InputMaybe<Scalars['ID']>;
+  id_lte?: InputMaybe<Scalars['ID']>;
+  id_not?: InputMaybe<Scalars['ID']>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']>>;
+  name?: InputMaybe<Scalars['String']>;
+  name_contains?: InputMaybe<Scalars['String']>;
+  name_ends_with?: InputMaybe<Scalars['String']>;
+  name_gt?: InputMaybe<Scalars['String']>;
+  name_gte?: InputMaybe<Scalars['String']>;
+  name_in?: InputMaybe<Array<Scalars['String']>>;
+  name_lt?: InputMaybe<Scalars['String']>;
+  name_lte?: InputMaybe<Scalars['String']>;
+  name_not?: InputMaybe<Scalars['String']>;
+  name_not_contains?: InputMaybe<Scalars['String']>;
+  name_not_ends_with?: InputMaybe<Scalars['String']>;
+  name_not_in?: InputMaybe<Array<Scalars['String']>>;
+  name_not_starts_with?: InputMaybe<Scalars['String']>;
+  name_starts_with?: InputMaybe<Scalars['String']>;
+  netDeposit?: InputMaybe<Scalars['BigInt']>;
+  netDeposit_gt?: InputMaybe<Scalars['BigInt']>;
+  netDeposit_gte?: InputMaybe<Scalars['BigInt']>;
+  netDeposit_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  netDeposit_lt?: InputMaybe<Scalars['BigInt']>;
+  netDeposit_lte?: InputMaybe<Scalars['BigInt']>;
+  netDeposit_not?: InputMaybe<Scalars['BigInt']>;
+  netDeposit_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  netShareDeposit?: InputMaybe<Scalars['BigInt']>;
+  netShareDeposit_gt?: InputMaybe<Scalars['BigInt']>;
+  netShareDeposit_gte?: InputMaybe<Scalars['BigInt']>;
+  netShareDeposit_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  netShareDeposit_lt?: InputMaybe<Scalars['BigInt']>;
+  netShareDeposit_lte?: InputMaybe<Scalars['BigInt']>;
+  netShareDeposit_not?: InputMaybe<Scalars['BigInt']>;
+  netShareDeposit_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  pricePerFullShare?: InputMaybe<Scalars['BigInt']>;
+  pricePerFullShare_gt?: InputMaybe<Scalars['BigInt']>;
+  pricePerFullShare_gte?: InputMaybe<Scalars['BigInt']>;
+  pricePerFullShare_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  pricePerFullShare_lt?: InputMaybe<Scalars['BigInt']>;
+  pricePerFullShare_lte?: InputMaybe<Scalars['BigInt']>;
+  pricePerFullShare_not?: InputMaybe<Scalars['BigInt']>;
+  pricePerFullShare_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  strategy?: InputMaybe<Scalars['String']>;
+  strategy_contains?: InputMaybe<Scalars['String']>;
+  strategy_ends_with?: InputMaybe<Scalars['String']>;
+  strategy_gt?: InputMaybe<Scalars['String']>;
+  strategy_gte?: InputMaybe<Scalars['String']>;
+  strategy_in?: InputMaybe<Array<Scalars['String']>>;
+  strategy_lt?: InputMaybe<Scalars['String']>;
+  strategy_lte?: InputMaybe<Scalars['String']>;
+  strategy_not?: InputMaybe<Scalars['String']>;
+  strategy_not_contains?: InputMaybe<Scalars['String']>;
+  strategy_not_ends_with?: InputMaybe<Scalars['String']>;
+  strategy_not_in?: InputMaybe<Array<Scalars['String']>>;
+  strategy_not_starts_with?: InputMaybe<Scalars['String']>;
+  strategy_starts_with?: InputMaybe<Scalars['String']>;
+  symbol?: InputMaybe<Scalars['String']>;
+  symbol_contains?: InputMaybe<Scalars['String']>;
+  symbol_ends_with?: InputMaybe<Scalars['String']>;
+  symbol_gt?: InputMaybe<Scalars['String']>;
+  symbol_gte?: InputMaybe<Scalars['String']>;
+  symbol_in?: InputMaybe<Array<Scalars['String']>>;
+  symbol_lt?: InputMaybe<Scalars['String']>;
+  symbol_lte?: InputMaybe<Scalars['String']>;
+  symbol_not?: InputMaybe<Scalars['String']>;
+  symbol_not_contains?: InputMaybe<Scalars['String']>;
+  symbol_not_ends_with?: InputMaybe<Scalars['String']>;
+  symbol_not_in?: InputMaybe<Array<Scalars['String']>>;
+  symbol_not_starts_with?: InputMaybe<Scalars['String']>;
+  symbol_starts_with?: InputMaybe<Scalars['String']>;
+  token?: InputMaybe<Scalars['String']>;
+  token_contains?: InputMaybe<Scalars['String']>;
+  token_ends_with?: InputMaybe<Scalars['String']>;
+  token_gt?: InputMaybe<Scalars['String']>;
+  token_gte?: InputMaybe<Scalars['String']>;
+  token_in?: InputMaybe<Array<Scalars['String']>>;
+  token_lt?: InputMaybe<Scalars['String']>;
+  token_lte?: InputMaybe<Scalars['String']>;
+  token_not?: InputMaybe<Scalars['String']>;
+  token_not_contains?: InputMaybe<Scalars['String']>;
+  token_not_ends_with?: InputMaybe<Scalars['String']>;
+  token_not_in?: InputMaybe<Array<Scalars['String']>>;
+  token_not_starts_with?: InputMaybe<Scalars['String']>;
+  token_starts_with?: InputMaybe<Scalars['String']>;
+  totalSupply?: InputMaybe<Scalars['BigInt']>;
+  totalSupply_gt?: InputMaybe<Scalars['BigInt']>;
+  totalSupply_gte?: InputMaybe<Scalars['BigInt']>;
+  totalSupply_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  totalSupply_lt?: InputMaybe<Scalars['BigInt']>;
+  totalSupply_lte?: InputMaybe<Scalars['BigInt']>;
+  totalSupply_not?: InputMaybe<Scalars['BigInt']>;
+  totalSupply_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
 };
 
 export enum Sett_OrderBy {
-  Id = 'id',
-  Name = 'name',
-  Symbol = 'symbol',
-  Decimals = 'decimals',
-  TotalSupply = 'totalSupply',
-  Token = 'token',
   Balance = 'balance',
-  PricePerFullShare = 'pricePerFullShare',
-  NetDeposit = 'netDeposit',
-  NetShareDeposit = 'netShareDeposit',
+  Controller = 'controller',
+  Decimals = 'decimals',
   GrossDeposit = 'grossDeposit',
   GrossShareDeposit = 'grossShareDeposit',
-  GrossWithdraw = 'grossWithdraw',
   GrossShareWithdraw = 'grossShareWithdraw',
-  Controller = 'controller',
-  Strategy = 'strategy',
-  TreeDistributions = 'treeDistributions',
+  GrossWithdraw = 'grossWithdraw',
   Harvests = 'harvests',
+  Id = 'id',
+  Name = 'name',
+  NetDeposit = 'netDeposit',
+  NetShareDeposit = 'netShareDeposit',
+  PricePerFullShare = 'pricePerFullShare',
+  Strategy = 'strategy',
+  Symbol = 'symbol',
+  Token = 'token',
+  TotalSupply = 'totalSupply',
+  TreeDistributions = 'treeDistributions',
 }
 
 export type Snapshot = {
@@ -1080,22 +1081,22 @@ export type Snapshot = {
 };
 
 export type Snapshot_Filter = {
-  id?: Maybe<Scalars['ID']>;
-  id_not?: Maybe<Scalars['ID']>;
-  id_gt?: Maybe<Scalars['ID']>;
-  id_lt?: Maybe<Scalars['ID']>;
-  id_gte?: Maybe<Scalars['ID']>;
-  id_lte?: Maybe<Scalars['ID']>;
-  id_in?: Maybe<Array<Scalars['ID']>>;
-  id_not_in?: Maybe<Array<Scalars['ID']>>;
-  timestamp?: Maybe<Scalars['Int']>;
-  timestamp_not?: Maybe<Scalars['Int']>;
-  timestamp_gt?: Maybe<Scalars['Int']>;
-  timestamp_lt?: Maybe<Scalars['Int']>;
-  timestamp_gte?: Maybe<Scalars['Int']>;
-  timestamp_lte?: Maybe<Scalars['Int']>;
-  timestamp_in?: Maybe<Array<Scalars['Int']>>;
-  timestamp_not_in?: Maybe<Array<Scalars['Int']>>;
+  id?: InputMaybe<Scalars['ID']>;
+  id_gt?: InputMaybe<Scalars['ID']>;
+  id_gte?: InputMaybe<Scalars['ID']>;
+  id_in?: InputMaybe<Array<Scalars['ID']>>;
+  id_lt?: InputMaybe<Scalars['ID']>;
+  id_lte?: InputMaybe<Scalars['ID']>;
+  id_not?: InputMaybe<Scalars['ID']>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']>>;
+  timestamp?: InputMaybe<Scalars['Int']>;
+  timestamp_gt?: InputMaybe<Scalars['Int']>;
+  timestamp_gte?: InputMaybe<Scalars['Int']>;
+  timestamp_in?: InputMaybe<Array<Scalars['Int']>>;
+  timestamp_lt?: InputMaybe<Scalars['Int']>;
+  timestamp_lte?: InputMaybe<Scalars['Int']>;
+  timestamp_not?: InputMaybe<Scalars['Int']>;
+  timestamp_not_in?: InputMaybe<Array<Scalars['Int']>>;
 };
 
 export enum Snapshot_OrderBy {
@@ -1105,558 +1106,558 @@ export enum Snapshot_OrderBy {
 
 export type Strategy = {
   __typename?: 'Strategy';
-  id: Scalars['ID'];
   controller?: Maybe<Controller>;
+  harvests: Array<SettHarvest>;
+  id: Scalars['ID'];
   sett?: Maybe<Sett>;
   treeDistributions: Array<BadgerTreeDistribution>;
-  harvests: Array<SettHarvest>;
-};
-
-export type StrategyTreeDistributionsArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<BadgerTreeDistribution_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<BadgerTreeDistribution_Filter>;
 };
 
 export type StrategyHarvestsArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<SettHarvest_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<SettHarvest_Filter>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<SettHarvest_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<SettHarvest_Filter>;
+};
+
+export type StrategyTreeDistributionsArgs = {
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<BadgerTreeDistribution_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<BadgerTreeDistribution_Filter>;
 };
 
 export type Strategy_Filter = {
-  id?: Maybe<Scalars['ID']>;
-  id_not?: Maybe<Scalars['ID']>;
-  id_gt?: Maybe<Scalars['ID']>;
-  id_lt?: Maybe<Scalars['ID']>;
-  id_gte?: Maybe<Scalars['ID']>;
-  id_lte?: Maybe<Scalars['ID']>;
-  id_in?: Maybe<Array<Scalars['ID']>>;
-  id_not_in?: Maybe<Array<Scalars['ID']>>;
-  controller?: Maybe<Scalars['String']>;
-  controller_not?: Maybe<Scalars['String']>;
-  controller_gt?: Maybe<Scalars['String']>;
-  controller_lt?: Maybe<Scalars['String']>;
-  controller_gte?: Maybe<Scalars['String']>;
-  controller_lte?: Maybe<Scalars['String']>;
-  controller_in?: Maybe<Array<Scalars['String']>>;
-  controller_not_in?: Maybe<Array<Scalars['String']>>;
-  controller_contains?: Maybe<Scalars['String']>;
-  controller_not_contains?: Maybe<Scalars['String']>;
-  controller_starts_with?: Maybe<Scalars['String']>;
-  controller_not_starts_with?: Maybe<Scalars['String']>;
-  controller_ends_with?: Maybe<Scalars['String']>;
-  controller_not_ends_with?: Maybe<Scalars['String']>;
-  sett?: Maybe<Scalars['String']>;
-  sett_not?: Maybe<Scalars['String']>;
-  sett_gt?: Maybe<Scalars['String']>;
-  sett_lt?: Maybe<Scalars['String']>;
-  sett_gte?: Maybe<Scalars['String']>;
-  sett_lte?: Maybe<Scalars['String']>;
-  sett_in?: Maybe<Array<Scalars['String']>>;
-  sett_not_in?: Maybe<Array<Scalars['String']>>;
-  sett_contains?: Maybe<Scalars['String']>;
-  sett_not_contains?: Maybe<Scalars['String']>;
-  sett_starts_with?: Maybe<Scalars['String']>;
-  sett_not_starts_with?: Maybe<Scalars['String']>;
-  sett_ends_with?: Maybe<Scalars['String']>;
-  sett_not_ends_with?: Maybe<Scalars['String']>;
+  controller?: InputMaybe<Scalars['String']>;
+  controller_contains?: InputMaybe<Scalars['String']>;
+  controller_ends_with?: InputMaybe<Scalars['String']>;
+  controller_gt?: InputMaybe<Scalars['String']>;
+  controller_gte?: InputMaybe<Scalars['String']>;
+  controller_in?: InputMaybe<Array<Scalars['String']>>;
+  controller_lt?: InputMaybe<Scalars['String']>;
+  controller_lte?: InputMaybe<Scalars['String']>;
+  controller_not?: InputMaybe<Scalars['String']>;
+  controller_not_contains?: InputMaybe<Scalars['String']>;
+  controller_not_ends_with?: InputMaybe<Scalars['String']>;
+  controller_not_in?: InputMaybe<Array<Scalars['String']>>;
+  controller_not_starts_with?: InputMaybe<Scalars['String']>;
+  controller_starts_with?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']>;
+  id_gt?: InputMaybe<Scalars['ID']>;
+  id_gte?: InputMaybe<Scalars['ID']>;
+  id_in?: InputMaybe<Array<Scalars['ID']>>;
+  id_lt?: InputMaybe<Scalars['ID']>;
+  id_lte?: InputMaybe<Scalars['ID']>;
+  id_not?: InputMaybe<Scalars['ID']>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']>>;
+  sett?: InputMaybe<Scalars['String']>;
+  sett_contains?: InputMaybe<Scalars['String']>;
+  sett_ends_with?: InputMaybe<Scalars['String']>;
+  sett_gt?: InputMaybe<Scalars['String']>;
+  sett_gte?: InputMaybe<Scalars['String']>;
+  sett_in?: InputMaybe<Array<Scalars['String']>>;
+  sett_lt?: InputMaybe<Scalars['String']>;
+  sett_lte?: InputMaybe<Scalars['String']>;
+  sett_not?: InputMaybe<Scalars['String']>;
+  sett_not_contains?: InputMaybe<Scalars['String']>;
+  sett_not_ends_with?: InputMaybe<Scalars['String']>;
+  sett_not_in?: InputMaybe<Array<Scalars['String']>>;
+  sett_not_starts_with?: InputMaybe<Scalars['String']>;
+  sett_starts_with?: InputMaybe<Scalars['String']>;
 };
 
 export enum Strategy_OrderBy {
-  Id = 'id',
   Controller = 'controller',
+  Harvests = 'harvests',
+  Id = 'id',
   Sett = 'sett',
   TreeDistributions = 'treeDistributions',
-  Harvests = 'harvests',
 }
 
 export type Subscription = {
   __typename?: 'Subscription';
-  registry?: Maybe<Registry>;
+  /** Access to subgraph metadata */
+  _meta?: Maybe<_Meta_>;
+  badgerTreeDistribution?: Maybe<BadgerTreeDistribution>;
+  badgerTreeDistributions: Array<BadgerTreeDistribution>;
+  controller?: Maybe<Controller>;
+  controllers: Array<Controller>;
+  erc20?: Maybe<Erc20>;
+  erc20S: Array<Erc20>;
   registries: Array<Registry>;
-  token?: Maybe<Token>;
-  tokens: Array<Token>;
+  registry?: Maybe<Registry>;
   sett?: Maybe<Sett>;
-  setts: Array<Sett>;
+  settHarvest?: Maybe<SettHarvest>;
+  settHarvests: Array<SettHarvest>;
   settSnapshot?: Maybe<SettSnapshot>;
   settSnapshots: Array<SettSnapshot>;
-  userSettBalance?: Maybe<UserSettBalance>;
-  userSettBalances: Array<UserSettBalance>;
+  setts: Array<Sett>;
+  snapshot?: Maybe<Snapshot>;
+  snapshots: Array<Snapshot>;
+  strategies: Array<Strategy>;
+  strategy?: Maybe<Strategy>;
+  token?: Maybe<Token>;
+  tokenDistribution?: Maybe<TokenDistribution>;
+  tokenDistributions: Array<TokenDistribution>;
+  tokens: Array<Token>;
   transaction?: Maybe<Transaction>;
   transactions: Array<Transaction>;
   transfer?: Maybe<Transfer>;
   transfers: Array<Transfer>;
   user?: Maybe<User>;
+  userSettBalance?: Maybe<UserSettBalance>;
+  userSettBalances: Array<UserSettBalance>;
   users: Array<User>;
-  badgerTreeDistribution?: Maybe<BadgerTreeDistribution>;
-  badgerTreeDistributions: Array<BadgerTreeDistribution>;
-  settHarvest?: Maybe<SettHarvest>;
-  settHarvests: Array<SettHarvest>;
-  strategy?: Maybe<Strategy>;
-  strategies: Array<Strategy>;
-  controller?: Maybe<Controller>;
-  controllers: Array<Controller>;
-  erc20?: Maybe<Erc20>;
-  erc20S: Array<Erc20>;
   vault?: Maybe<Vault>;
-  vaults: Array<Vault>;
   vaultBalance?: Maybe<VaultBalance>;
   vaultBalances: Array<VaultBalance>;
-  snapshot?: Maybe<Snapshot>;
-  snapshots: Array<Snapshot>;
-  tokenDistribution?: Maybe<TokenDistribution>;
-  tokenDistributions: Array<TokenDistribution>;
-  /** Access to subgraph metadata */
-  _meta?: Maybe<_Meta_>;
+  vaults: Array<Vault>;
 };
 
-export type SubscriptionRegistryArgs = {
-  id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type SubscriptionRegistriesArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Registry_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<Registry_Filter>;
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type SubscriptionTokenArgs = {
-  id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type SubscriptionTokensArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Token_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<Token_Filter>;
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type SubscriptionSettArgs = {
-  id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type SubscriptionSettsArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Sett_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<Sett_Filter>;
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type SubscriptionSettSnapshotArgs = {
-  id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type SubscriptionSettSnapshotsArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<SettSnapshot_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<SettSnapshot_Filter>;
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type SubscriptionUserSettBalanceArgs = {
-  id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type SubscriptionUserSettBalancesArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<UserSettBalance_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<UserSettBalance_Filter>;
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type SubscriptionTransactionArgs = {
-  id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type SubscriptionTransactionsArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Transaction_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<Transaction_Filter>;
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type SubscriptionTransferArgs = {
-  id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type SubscriptionTransfersArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Transfer_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<Transfer_Filter>;
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type SubscriptionUserArgs = {
-  id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type SubscriptionUsersArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<User_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<User_Filter>;
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
+export type Subscription_MetaArgs = {
+  block?: InputMaybe<Block_Height>;
 };
 
 export type SubscriptionBadgerTreeDistributionArgs = {
+  block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
 export type SubscriptionBadgerTreeDistributionsArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<BadgerTreeDistribution_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<BadgerTreeDistribution_Filter>;
-  block?: Maybe<Block_Height>;
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<BadgerTreeDistribution_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
   subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type SubscriptionSettHarvestArgs = {
-  id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type SubscriptionSettHarvestsArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<SettHarvest_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<SettHarvest_Filter>;
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type SubscriptionStrategyArgs = {
-  id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type SubscriptionStrategiesArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Strategy_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<Strategy_Filter>;
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<BadgerTreeDistribution_Filter>;
 };
 
 export type SubscriptionControllerArgs = {
+  block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
 export type SubscriptionControllersArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Controller_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<Controller_Filter>;
-  block?: Maybe<Block_Height>;
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Controller_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
   subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<Controller_Filter>;
 };
 
 export type SubscriptionErc20Args = {
+  block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
 export type SubscriptionErc20SArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Erc20_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<Erc20_Filter>;
-  block?: Maybe<Block_Height>;
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Erc20_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
   subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<Erc20_Filter>;
 };
 
-export type SubscriptionVaultArgs = {
+export type SubscriptionRegistriesArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Registry_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<Registry_Filter>;
+};
+
+export type SubscriptionRegistryArgs = {
+  block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
-export type SubscriptionVaultsArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Vault_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<Vault_Filter>;
-  block?: Maybe<Block_Height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-export type SubscriptionVaultBalanceArgs = {
+export type SubscriptionSettArgs = {
+  block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
-export type SubscriptionVaultBalancesArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<VaultBalance_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<VaultBalance_Filter>;
-  block?: Maybe<Block_Height>;
+export type SubscriptionSettHarvestArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
+};
+
+export type SubscriptionSettHarvestsArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<SettHarvest_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<SettHarvest_Filter>;
+};
+
+export type SubscriptionSettSnapshotArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+export type SubscriptionSettSnapshotsArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<SettSnapshot_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<SettSnapshot_Filter>;
+};
+
+export type SubscriptionSettsArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Sett_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<Sett_Filter>;
 };
 
 export type SubscriptionSnapshotArgs = {
+  block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
 export type SubscriptionSnapshotsArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Snapshot_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<Snapshot_Filter>;
-  block?: Maybe<Block_Height>;
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Snapshot_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<Snapshot_Filter>;
+};
+
+export type SubscriptionStrategiesArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Strategy_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<Strategy_Filter>;
+};
+
+export type SubscriptionStrategyArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+export type SubscriptionTokenArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
 export type SubscriptionTokenDistributionArgs = {
+  block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
 export type SubscriptionTokenDistributionsArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<TokenDistribution_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<TokenDistribution_Filter>;
-  block?: Maybe<Block_Height>;
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<TokenDistribution_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<TokenDistribution_Filter>;
+};
+
+export type SubscriptionTokensArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Token_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<Token_Filter>;
+};
+
+export type SubscriptionTransactionArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
-export type Subscription_MetaArgs = {
-  block?: Maybe<Block_Height>;
+export type SubscriptionTransactionsArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Transaction_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<Transaction_Filter>;
+};
+
+export type SubscriptionTransferArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+export type SubscriptionTransfersArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Transfer_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<Transfer_Filter>;
+};
+
+export type SubscriptionUserArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+export type SubscriptionUserSettBalanceArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+export type SubscriptionUserSettBalancesArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<UserSettBalance_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<UserSettBalance_Filter>;
+};
+
+export type SubscriptionUsersArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<User_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<User_Filter>;
+};
+
+export type SubscriptionVaultArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+export type SubscriptionVaultBalanceArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+export type SubscriptionVaultBalancesArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<VaultBalance_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<VaultBalance_Filter>;
+};
+
+export type SubscriptionVaultsArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Vault_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<Vault_Filter>;
 };
 
 export type Token = Erc20 & {
   __typename?: 'Token';
+  decimals: Scalars['BigInt'];
   id: Scalars['ID'];
   name: Scalars['String'];
   symbol: Scalars['String'];
-  decimals: Scalars['BigInt'];
   totalSupply: Scalars['BigInt'];
 };
 
 export type TokenDistribution = {
-  id: Scalars['ID'];
-  timestamp: Scalars['Int'];
-  token: Token;
   amount: Scalars['BigInt'];
   blockNumber: Scalars['BigInt'];
-  strategy?: Maybe<Strategy>;
+  id: Scalars['ID'];
   sett?: Maybe<Sett>;
+  strategy?: Maybe<Strategy>;
+  timestamp: Scalars['Int'];
+  token: Token;
 };
 
 export type TokenDistribution_Filter = {
-  id?: Maybe<Scalars['ID']>;
-  id_not?: Maybe<Scalars['ID']>;
-  id_gt?: Maybe<Scalars['ID']>;
-  id_lt?: Maybe<Scalars['ID']>;
-  id_gte?: Maybe<Scalars['ID']>;
-  id_lte?: Maybe<Scalars['ID']>;
-  id_in?: Maybe<Array<Scalars['ID']>>;
-  id_not_in?: Maybe<Array<Scalars['ID']>>;
-  timestamp?: Maybe<Scalars['Int']>;
-  timestamp_not?: Maybe<Scalars['Int']>;
-  timestamp_gt?: Maybe<Scalars['Int']>;
-  timestamp_lt?: Maybe<Scalars['Int']>;
-  timestamp_gte?: Maybe<Scalars['Int']>;
-  timestamp_lte?: Maybe<Scalars['Int']>;
-  timestamp_in?: Maybe<Array<Scalars['Int']>>;
-  timestamp_not_in?: Maybe<Array<Scalars['Int']>>;
-  token?: Maybe<Scalars['String']>;
-  token_not?: Maybe<Scalars['String']>;
-  token_gt?: Maybe<Scalars['String']>;
-  token_lt?: Maybe<Scalars['String']>;
-  token_gte?: Maybe<Scalars['String']>;
-  token_lte?: Maybe<Scalars['String']>;
-  token_in?: Maybe<Array<Scalars['String']>>;
-  token_not_in?: Maybe<Array<Scalars['String']>>;
-  token_contains?: Maybe<Scalars['String']>;
-  token_not_contains?: Maybe<Scalars['String']>;
-  token_starts_with?: Maybe<Scalars['String']>;
-  token_not_starts_with?: Maybe<Scalars['String']>;
-  token_ends_with?: Maybe<Scalars['String']>;
-  token_not_ends_with?: Maybe<Scalars['String']>;
-  amount?: Maybe<Scalars['BigInt']>;
-  amount_not?: Maybe<Scalars['BigInt']>;
-  amount_gt?: Maybe<Scalars['BigInt']>;
-  amount_lt?: Maybe<Scalars['BigInt']>;
-  amount_gte?: Maybe<Scalars['BigInt']>;
-  amount_lte?: Maybe<Scalars['BigInt']>;
-  amount_in?: Maybe<Array<Scalars['BigInt']>>;
-  amount_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  blockNumber?: Maybe<Scalars['BigInt']>;
-  blockNumber_not?: Maybe<Scalars['BigInt']>;
-  blockNumber_gt?: Maybe<Scalars['BigInt']>;
-  blockNumber_lt?: Maybe<Scalars['BigInt']>;
-  blockNumber_gte?: Maybe<Scalars['BigInt']>;
-  blockNumber_lte?: Maybe<Scalars['BigInt']>;
-  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
-  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  strategy?: Maybe<Scalars['String']>;
-  strategy_not?: Maybe<Scalars['String']>;
-  strategy_gt?: Maybe<Scalars['String']>;
-  strategy_lt?: Maybe<Scalars['String']>;
-  strategy_gte?: Maybe<Scalars['String']>;
-  strategy_lte?: Maybe<Scalars['String']>;
-  strategy_in?: Maybe<Array<Scalars['String']>>;
-  strategy_not_in?: Maybe<Array<Scalars['String']>>;
-  strategy_contains?: Maybe<Scalars['String']>;
-  strategy_not_contains?: Maybe<Scalars['String']>;
-  strategy_starts_with?: Maybe<Scalars['String']>;
-  strategy_not_starts_with?: Maybe<Scalars['String']>;
-  strategy_ends_with?: Maybe<Scalars['String']>;
-  strategy_not_ends_with?: Maybe<Scalars['String']>;
-  sett?: Maybe<Scalars['String']>;
-  sett_not?: Maybe<Scalars['String']>;
-  sett_gt?: Maybe<Scalars['String']>;
-  sett_lt?: Maybe<Scalars['String']>;
-  sett_gte?: Maybe<Scalars['String']>;
-  sett_lte?: Maybe<Scalars['String']>;
-  sett_in?: Maybe<Array<Scalars['String']>>;
-  sett_not_in?: Maybe<Array<Scalars['String']>>;
-  sett_contains?: Maybe<Scalars['String']>;
-  sett_not_contains?: Maybe<Scalars['String']>;
-  sett_starts_with?: Maybe<Scalars['String']>;
-  sett_not_starts_with?: Maybe<Scalars['String']>;
-  sett_ends_with?: Maybe<Scalars['String']>;
-  sett_not_ends_with?: Maybe<Scalars['String']>;
+  amount?: InputMaybe<Scalars['BigInt']>;
+  amount_gt?: InputMaybe<Scalars['BigInt']>;
+  amount_gte?: InputMaybe<Scalars['BigInt']>;
+  amount_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  amount_lt?: InputMaybe<Scalars['BigInt']>;
+  amount_lte?: InputMaybe<Scalars['BigInt']>;
+  amount_not?: InputMaybe<Scalars['BigInt']>;
+  amount_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  blockNumber?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_gt?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_gte?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  blockNumber_lt?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_lte?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_not?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  id?: InputMaybe<Scalars['ID']>;
+  id_gt?: InputMaybe<Scalars['ID']>;
+  id_gte?: InputMaybe<Scalars['ID']>;
+  id_in?: InputMaybe<Array<Scalars['ID']>>;
+  id_lt?: InputMaybe<Scalars['ID']>;
+  id_lte?: InputMaybe<Scalars['ID']>;
+  id_not?: InputMaybe<Scalars['ID']>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']>>;
+  sett?: InputMaybe<Scalars['String']>;
+  sett_contains?: InputMaybe<Scalars['String']>;
+  sett_ends_with?: InputMaybe<Scalars['String']>;
+  sett_gt?: InputMaybe<Scalars['String']>;
+  sett_gte?: InputMaybe<Scalars['String']>;
+  sett_in?: InputMaybe<Array<Scalars['String']>>;
+  sett_lt?: InputMaybe<Scalars['String']>;
+  sett_lte?: InputMaybe<Scalars['String']>;
+  sett_not?: InputMaybe<Scalars['String']>;
+  sett_not_contains?: InputMaybe<Scalars['String']>;
+  sett_not_ends_with?: InputMaybe<Scalars['String']>;
+  sett_not_in?: InputMaybe<Array<Scalars['String']>>;
+  sett_not_starts_with?: InputMaybe<Scalars['String']>;
+  sett_starts_with?: InputMaybe<Scalars['String']>;
+  strategy?: InputMaybe<Scalars['String']>;
+  strategy_contains?: InputMaybe<Scalars['String']>;
+  strategy_ends_with?: InputMaybe<Scalars['String']>;
+  strategy_gt?: InputMaybe<Scalars['String']>;
+  strategy_gte?: InputMaybe<Scalars['String']>;
+  strategy_in?: InputMaybe<Array<Scalars['String']>>;
+  strategy_lt?: InputMaybe<Scalars['String']>;
+  strategy_lte?: InputMaybe<Scalars['String']>;
+  strategy_not?: InputMaybe<Scalars['String']>;
+  strategy_not_contains?: InputMaybe<Scalars['String']>;
+  strategy_not_ends_with?: InputMaybe<Scalars['String']>;
+  strategy_not_in?: InputMaybe<Array<Scalars['String']>>;
+  strategy_not_starts_with?: InputMaybe<Scalars['String']>;
+  strategy_starts_with?: InputMaybe<Scalars['String']>;
+  timestamp?: InputMaybe<Scalars['Int']>;
+  timestamp_gt?: InputMaybe<Scalars['Int']>;
+  timestamp_gte?: InputMaybe<Scalars['Int']>;
+  timestamp_in?: InputMaybe<Array<Scalars['Int']>>;
+  timestamp_lt?: InputMaybe<Scalars['Int']>;
+  timestamp_lte?: InputMaybe<Scalars['Int']>;
+  timestamp_not?: InputMaybe<Scalars['Int']>;
+  timestamp_not_in?: InputMaybe<Array<Scalars['Int']>>;
+  token?: InputMaybe<Scalars['String']>;
+  token_contains?: InputMaybe<Scalars['String']>;
+  token_ends_with?: InputMaybe<Scalars['String']>;
+  token_gt?: InputMaybe<Scalars['String']>;
+  token_gte?: InputMaybe<Scalars['String']>;
+  token_in?: InputMaybe<Array<Scalars['String']>>;
+  token_lt?: InputMaybe<Scalars['String']>;
+  token_lte?: InputMaybe<Scalars['String']>;
+  token_not?: InputMaybe<Scalars['String']>;
+  token_not_contains?: InputMaybe<Scalars['String']>;
+  token_not_ends_with?: InputMaybe<Scalars['String']>;
+  token_not_in?: InputMaybe<Array<Scalars['String']>>;
+  token_not_starts_with?: InputMaybe<Scalars['String']>;
+  token_starts_with?: InputMaybe<Scalars['String']>;
 };
 
 export enum TokenDistribution_OrderBy {
-  Id = 'id',
-  Timestamp = 'timestamp',
-  Token = 'token',
   Amount = 'amount',
   BlockNumber = 'blockNumber',
-  Strategy = 'strategy',
+  Id = 'id',
   Sett = 'sett',
+  Strategy = 'strategy',
+  Timestamp = 'timestamp',
+  Token = 'token',
 }
 
 export type Token_Filter = {
-  id?: Maybe<Scalars['ID']>;
-  id_not?: Maybe<Scalars['ID']>;
-  id_gt?: Maybe<Scalars['ID']>;
-  id_lt?: Maybe<Scalars['ID']>;
-  id_gte?: Maybe<Scalars['ID']>;
-  id_lte?: Maybe<Scalars['ID']>;
-  id_in?: Maybe<Array<Scalars['ID']>>;
-  id_not_in?: Maybe<Array<Scalars['ID']>>;
-  name?: Maybe<Scalars['String']>;
-  name_not?: Maybe<Scalars['String']>;
-  name_gt?: Maybe<Scalars['String']>;
-  name_lt?: Maybe<Scalars['String']>;
-  name_gte?: Maybe<Scalars['String']>;
-  name_lte?: Maybe<Scalars['String']>;
-  name_in?: Maybe<Array<Scalars['String']>>;
-  name_not_in?: Maybe<Array<Scalars['String']>>;
-  name_contains?: Maybe<Scalars['String']>;
-  name_not_contains?: Maybe<Scalars['String']>;
-  name_starts_with?: Maybe<Scalars['String']>;
-  name_not_starts_with?: Maybe<Scalars['String']>;
-  name_ends_with?: Maybe<Scalars['String']>;
-  name_not_ends_with?: Maybe<Scalars['String']>;
-  symbol?: Maybe<Scalars['String']>;
-  symbol_not?: Maybe<Scalars['String']>;
-  symbol_gt?: Maybe<Scalars['String']>;
-  symbol_lt?: Maybe<Scalars['String']>;
-  symbol_gte?: Maybe<Scalars['String']>;
-  symbol_lte?: Maybe<Scalars['String']>;
-  symbol_in?: Maybe<Array<Scalars['String']>>;
-  symbol_not_in?: Maybe<Array<Scalars['String']>>;
-  symbol_contains?: Maybe<Scalars['String']>;
-  symbol_not_contains?: Maybe<Scalars['String']>;
-  symbol_starts_with?: Maybe<Scalars['String']>;
-  symbol_not_starts_with?: Maybe<Scalars['String']>;
-  symbol_ends_with?: Maybe<Scalars['String']>;
-  symbol_not_ends_with?: Maybe<Scalars['String']>;
-  decimals?: Maybe<Scalars['BigInt']>;
-  decimals_not?: Maybe<Scalars['BigInt']>;
-  decimals_gt?: Maybe<Scalars['BigInt']>;
-  decimals_lt?: Maybe<Scalars['BigInt']>;
-  decimals_gte?: Maybe<Scalars['BigInt']>;
-  decimals_lte?: Maybe<Scalars['BigInt']>;
-  decimals_in?: Maybe<Array<Scalars['BigInt']>>;
-  decimals_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  totalSupply?: Maybe<Scalars['BigInt']>;
-  totalSupply_not?: Maybe<Scalars['BigInt']>;
-  totalSupply_gt?: Maybe<Scalars['BigInt']>;
-  totalSupply_lt?: Maybe<Scalars['BigInt']>;
-  totalSupply_gte?: Maybe<Scalars['BigInt']>;
-  totalSupply_lte?: Maybe<Scalars['BigInt']>;
-  totalSupply_in?: Maybe<Array<Scalars['BigInt']>>;
-  totalSupply_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  decimals?: InputMaybe<Scalars['BigInt']>;
+  decimals_gt?: InputMaybe<Scalars['BigInt']>;
+  decimals_gte?: InputMaybe<Scalars['BigInt']>;
+  decimals_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  decimals_lt?: InputMaybe<Scalars['BigInt']>;
+  decimals_lte?: InputMaybe<Scalars['BigInt']>;
+  decimals_not?: InputMaybe<Scalars['BigInt']>;
+  decimals_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  id?: InputMaybe<Scalars['ID']>;
+  id_gt?: InputMaybe<Scalars['ID']>;
+  id_gte?: InputMaybe<Scalars['ID']>;
+  id_in?: InputMaybe<Array<Scalars['ID']>>;
+  id_lt?: InputMaybe<Scalars['ID']>;
+  id_lte?: InputMaybe<Scalars['ID']>;
+  id_not?: InputMaybe<Scalars['ID']>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']>>;
+  name?: InputMaybe<Scalars['String']>;
+  name_contains?: InputMaybe<Scalars['String']>;
+  name_ends_with?: InputMaybe<Scalars['String']>;
+  name_gt?: InputMaybe<Scalars['String']>;
+  name_gte?: InputMaybe<Scalars['String']>;
+  name_in?: InputMaybe<Array<Scalars['String']>>;
+  name_lt?: InputMaybe<Scalars['String']>;
+  name_lte?: InputMaybe<Scalars['String']>;
+  name_not?: InputMaybe<Scalars['String']>;
+  name_not_contains?: InputMaybe<Scalars['String']>;
+  name_not_ends_with?: InputMaybe<Scalars['String']>;
+  name_not_in?: InputMaybe<Array<Scalars['String']>>;
+  name_not_starts_with?: InputMaybe<Scalars['String']>;
+  name_starts_with?: InputMaybe<Scalars['String']>;
+  symbol?: InputMaybe<Scalars['String']>;
+  symbol_contains?: InputMaybe<Scalars['String']>;
+  symbol_ends_with?: InputMaybe<Scalars['String']>;
+  symbol_gt?: InputMaybe<Scalars['String']>;
+  symbol_gte?: InputMaybe<Scalars['String']>;
+  symbol_in?: InputMaybe<Array<Scalars['String']>>;
+  symbol_lt?: InputMaybe<Scalars['String']>;
+  symbol_lte?: InputMaybe<Scalars['String']>;
+  symbol_not?: InputMaybe<Scalars['String']>;
+  symbol_not_contains?: InputMaybe<Scalars['String']>;
+  symbol_not_ends_with?: InputMaybe<Scalars['String']>;
+  symbol_not_in?: InputMaybe<Array<Scalars['String']>>;
+  symbol_not_starts_with?: InputMaybe<Scalars['String']>;
+  symbol_starts_with?: InputMaybe<Scalars['String']>;
+  totalSupply?: InputMaybe<Scalars['BigInt']>;
+  totalSupply_gt?: InputMaybe<Scalars['BigInt']>;
+  totalSupply_gte?: InputMaybe<Scalars['BigInt']>;
+  totalSupply_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  totalSupply_lt?: InputMaybe<Scalars['BigInt']>;
+  totalSupply_lte?: InputMaybe<Scalars['BigInt']>;
+  totalSupply_not?: InputMaybe<Scalars['BigInt']>;
+  totalSupply_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
 };
 
 export enum Token_OrderBy {
+  Decimals = 'decimals',
   Id = 'id',
   Name = 'name',
   Symbol = 'symbol',
-  Decimals = 'decimals',
   TotalSupply = 'totalSupply',
 }
 
@@ -1667,22 +1668,22 @@ export type Transaction = {
 };
 
 export type TransactionTransfersArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Transfer_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<Transfer_Filter>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Transfer_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Transfer_Filter>;
 };
 
 export type Transaction_Filter = {
-  id?: Maybe<Scalars['ID']>;
-  id_not?: Maybe<Scalars['ID']>;
-  id_gt?: Maybe<Scalars['ID']>;
-  id_lt?: Maybe<Scalars['ID']>;
-  id_gte?: Maybe<Scalars['ID']>;
-  id_lte?: Maybe<Scalars['ID']>;
-  id_in?: Maybe<Array<Scalars['ID']>>;
-  id_not_in?: Maybe<Array<Scalars['ID']>>;
+  id?: InputMaybe<Scalars['ID']>;
+  id_gt?: InputMaybe<Scalars['ID']>;
+  id_gte?: InputMaybe<Scalars['ID']>;
+  id_in?: InputMaybe<Array<Scalars['ID']>>;
+  id_lt?: InputMaybe<Scalars['ID']>;
+  id_lte?: InputMaybe<Scalars['ID']>;
+  id_not?: InputMaybe<Scalars['ID']>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']>>;
 };
 
 export enum Transaction_OrderBy {
@@ -1692,105 +1693,105 @@ export enum Transaction_OrderBy {
 
 export type Transfer = Snapshot & {
   __typename?: 'Transfer';
-  id: Scalars['ID'];
-  timestamp: Scalars['Int'];
-  sett: Sett;
-  from: User;
-  to: User;
   amount: Scalars['BigInt'];
+  from: User;
+  id: Scalars['ID'];
+  sett: Sett;
+  timestamp: Scalars['Int'];
+  to: User;
   transaction: Transaction;
 };
 
 export type Transfer_Filter = {
-  id?: Maybe<Scalars['ID']>;
-  id_not?: Maybe<Scalars['ID']>;
-  id_gt?: Maybe<Scalars['ID']>;
-  id_lt?: Maybe<Scalars['ID']>;
-  id_gte?: Maybe<Scalars['ID']>;
-  id_lte?: Maybe<Scalars['ID']>;
-  id_in?: Maybe<Array<Scalars['ID']>>;
-  id_not_in?: Maybe<Array<Scalars['ID']>>;
-  timestamp?: Maybe<Scalars['Int']>;
-  timestamp_not?: Maybe<Scalars['Int']>;
-  timestamp_gt?: Maybe<Scalars['Int']>;
-  timestamp_lt?: Maybe<Scalars['Int']>;
-  timestamp_gte?: Maybe<Scalars['Int']>;
-  timestamp_lte?: Maybe<Scalars['Int']>;
-  timestamp_in?: Maybe<Array<Scalars['Int']>>;
-  timestamp_not_in?: Maybe<Array<Scalars['Int']>>;
-  sett?: Maybe<Scalars['String']>;
-  sett_not?: Maybe<Scalars['String']>;
-  sett_gt?: Maybe<Scalars['String']>;
-  sett_lt?: Maybe<Scalars['String']>;
-  sett_gte?: Maybe<Scalars['String']>;
-  sett_lte?: Maybe<Scalars['String']>;
-  sett_in?: Maybe<Array<Scalars['String']>>;
-  sett_not_in?: Maybe<Array<Scalars['String']>>;
-  sett_contains?: Maybe<Scalars['String']>;
-  sett_not_contains?: Maybe<Scalars['String']>;
-  sett_starts_with?: Maybe<Scalars['String']>;
-  sett_not_starts_with?: Maybe<Scalars['String']>;
-  sett_ends_with?: Maybe<Scalars['String']>;
-  sett_not_ends_with?: Maybe<Scalars['String']>;
-  from?: Maybe<Scalars['String']>;
-  from_not?: Maybe<Scalars['String']>;
-  from_gt?: Maybe<Scalars['String']>;
-  from_lt?: Maybe<Scalars['String']>;
-  from_gte?: Maybe<Scalars['String']>;
-  from_lte?: Maybe<Scalars['String']>;
-  from_in?: Maybe<Array<Scalars['String']>>;
-  from_not_in?: Maybe<Array<Scalars['String']>>;
-  from_contains?: Maybe<Scalars['String']>;
-  from_not_contains?: Maybe<Scalars['String']>;
-  from_starts_with?: Maybe<Scalars['String']>;
-  from_not_starts_with?: Maybe<Scalars['String']>;
-  from_ends_with?: Maybe<Scalars['String']>;
-  from_not_ends_with?: Maybe<Scalars['String']>;
-  to?: Maybe<Scalars['String']>;
-  to_not?: Maybe<Scalars['String']>;
-  to_gt?: Maybe<Scalars['String']>;
-  to_lt?: Maybe<Scalars['String']>;
-  to_gte?: Maybe<Scalars['String']>;
-  to_lte?: Maybe<Scalars['String']>;
-  to_in?: Maybe<Array<Scalars['String']>>;
-  to_not_in?: Maybe<Array<Scalars['String']>>;
-  to_contains?: Maybe<Scalars['String']>;
-  to_not_contains?: Maybe<Scalars['String']>;
-  to_starts_with?: Maybe<Scalars['String']>;
-  to_not_starts_with?: Maybe<Scalars['String']>;
-  to_ends_with?: Maybe<Scalars['String']>;
-  to_not_ends_with?: Maybe<Scalars['String']>;
-  amount?: Maybe<Scalars['BigInt']>;
-  amount_not?: Maybe<Scalars['BigInt']>;
-  amount_gt?: Maybe<Scalars['BigInt']>;
-  amount_lt?: Maybe<Scalars['BigInt']>;
-  amount_gte?: Maybe<Scalars['BigInt']>;
-  amount_lte?: Maybe<Scalars['BigInt']>;
-  amount_in?: Maybe<Array<Scalars['BigInt']>>;
-  amount_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  transaction?: Maybe<Scalars['String']>;
-  transaction_not?: Maybe<Scalars['String']>;
-  transaction_gt?: Maybe<Scalars['String']>;
-  transaction_lt?: Maybe<Scalars['String']>;
-  transaction_gte?: Maybe<Scalars['String']>;
-  transaction_lte?: Maybe<Scalars['String']>;
-  transaction_in?: Maybe<Array<Scalars['String']>>;
-  transaction_not_in?: Maybe<Array<Scalars['String']>>;
-  transaction_contains?: Maybe<Scalars['String']>;
-  transaction_not_contains?: Maybe<Scalars['String']>;
-  transaction_starts_with?: Maybe<Scalars['String']>;
-  transaction_not_starts_with?: Maybe<Scalars['String']>;
-  transaction_ends_with?: Maybe<Scalars['String']>;
-  transaction_not_ends_with?: Maybe<Scalars['String']>;
+  amount?: InputMaybe<Scalars['BigInt']>;
+  amount_gt?: InputMaybe<Scalars['BigInt']>;
+  amount_gte?: InputMaybe<Scalars['BigInt']>;
+  amount_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  amount_lt?: InputMaybe<Scalars['BigInt']>;
+  amount_lte?: InputMaybe<Scalars['BigInt']>;
+  amount_not?: InputMaybe<Scalars['BigInt']>;
+  amount_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  from?: InputMaybe<Scalars['String']>;
+  from_contains?: InputMaybe<Scalars['String']>;
+  from_ends_with?: InputMaybe<Scalars['String']>;
+  from_gt?: InputMaybe<Scalars['String']>;
+  from_gte?: InputMaybe<Scalars['String']>;
+  from_in?: InputMaybe<Array<Scalars['String']>>;
+  from_lt?: InputMaybe<Scalars['String']>;
+  from_lte?: InputMaybe<Scalars['String']>;
+  from_not?: InputMaybe<Scalars['String']>;
+  from_not_contains?: InputMaybe<Scalars['String']>;
+  from_not_ends_with?: InputMaybe<Scalars['String']>;
+  from_not_in?: InputMaybe<Array<Scalars['String']>>;
+  from_not_starts_with?: InputMaybe<Scalars['String']>;
+  from_starts_with?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']>;
+  id_gt?: InputMaybe<Scalars['ID']>;
+  id_gte?: InputMaybe<Scalars['ID']>;
+  id_in?: InputMaybe<Array<Scalars['ID']>>;
+  id_lt?: InputMaybe<Scalars['ID']>;
+  id_lte?: InputMaybe<Scalars['ID']>;
+  id_not?: InputMaybe<Scalars['ID']>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']>>;
+  sett?: InputMaybe<Scalars['String']>;
+  sett_contains?: InputMaybe<Scalars['String']>;
+  sett_ends_with?: InputMaybe<Scalars['String']>;
+  sett_gt?: InputMaybe<Scalars['String']>;
+  sett_gte?: InputMaybe<Scalars['String']>;
+  sett_in?: InputMaybe<Array<Scalars['String']>>;
+  sett_lt?: InputMaybe<Scalars['String']>;
+  sett_lte?: InputMaybe<Scalars['String']>;
+  sett_not?: InputMaybe<Scalars['String']>;
+  sett_not_contains?: InputMaybe<Scalars['String']>;
+  sett_not_ends_with?: InputMaybe<Scalars['String']>;
+  sett_not_in?: InputMaybe<Array<Scalars['String']>>;
+  sett_not_starts_with?: InputMaybe<Scalars['String']>;
+  sett_starts_with?: InputMaybe<Scalars['String']>;
+  timestamp?: InputMaybe<Scalars['Int']>;
+  timestamp_gt?: InputMaybe<Scalars['Int']>;
+  timestamp_gte?: InputMaybe<Scalars['Int']>;
+  timestamp_in?: InputMaybe<Array<Scalars['Int']>>;
+  timestamp_lt?: InputMaybe<Scalars['Int']>;
+  timestamp_lte?: InputMaybe<Scalars['Int']>;
+  timestamp_not?: InputMaybe<Scalars['Int']>;
+  timestamp_not_in?: InputMaybe<Array<Scalars['Int']>>;
+  to?: InputMaybe<Scalars['String']>;
+  to_contains?: InputMaybe<Scalars['String']>;
+  to_ends_with?: InputMaybe<Scalars['String']>;
+  to_gt?: InputMaybe<Scalars['String']>;
+  to_gte?: InputMaybe<Scalars['String']>;
+  to_in?: InputMaybe<Array<Scalars['String']>>;
+  to_lt?: InputMaybe<Scalars['String']>;
+  to_lte?: InputMaybe<Scalars['String']>;
+  to_not?: InputMaybe<Scalars['String']>;
+  to_not_contains?: InputMaybe<Scalars['String']>;
+  to_not_ends_with?: InputMaybe<Scalars['String']>;
+  to_not_in?: InputMaybe<Array<Scalars['String']>>;
+  to_not_starts_with?: InputMaybe<Scalars['String']>;
+  to_starts_with?: InputMaybe<Scalars['String']>;
+  transaction?: InputMaybe<Scalars['String']>;
+  transaction_contains?: InputMaybe<Scalars['String']>;
+  transaction_ends_with?: InputMaybe<Scalars['String']>;
+  transaction_gt?: InputMaybe<Scalars['String']>;
+  transaction_gte?: InputMaybe<Scalars['String']>;
+  transaction_in?: InputMaybe<Array<Scalars['String']>>;
+  transaction_lt?: InputMaybe<Scalars['String']>;
+  transaction_lte?: InputMaybe<Scalars['String']>;
+  transaction_not?: InputMaybe<Scalars['String']>;
+  transaction_not_contains?: InputMaybe<Scalars['String']>;
+  transaction_not_ends_with?: InputMaybe<Scalars['String']>;
+  transaction_not_in?: InputMaybe<Array<Scalars['String']>>;
+  transaction_not_starts_with?: InputMaybe<Scalars['String']>;
+  transaction_starts_with?: InputMaybe<Scalars['String']>;
 };
 
 export enum Transfer_OrderBy {
-  Id = 'id',
-  Timestamp = 'timestamp',
-  Sett = 'sett',
-  From = 'from',
-  To = 'to',
   Amount = 'amount',
+  From = 'from',
+  Id = 'id',
+  Sett = 'sett',
+  Timestamp = 'timestamp',
+  To = 'to',
   Transaction = 'transaction',
 }
 
@@ -1801,134 +1802,134 @@ export type User = {
 };
 
 export type UserSettBalancesArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<UserSettBalance_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<UserSettBalance_Filter>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<UserSettBalance_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<UserSettBalance_Filter>;
 };
 
 export type UserSettBalance = VaultBalance & {
   __typename?: 'UserSettBalance';
-  id: Scalars['ID'];
-  user: User;
-  sett: Sett;
-  netDeposit: Scalars['BigInt'];
-  netShareDeposit: Scalars['BigInt'];
   grossDeposit: Scalars['BigInt'];
   grossShareDeposit: Scalars['BigInt'];
-  grossWithdraw: Scalars['BigInt'];
   grossShareWithdraw: Scalars['BigInt'];
+  grossWithdraw: Scalars['BigInt'];
+  id: Scalars['ID'];
+  netDeposit: Scalars['BigInt'];
+  netShareDeposit: Scalars['BigInt'];
+  sett: Sett;
+  user: User;
 };
 
 export type UserSettBalance_Filter = {
-  id?: Maybe<Scalars['ID']>;
-  id_not?: Maybe<Scalars['ID']>;
-  id_gt?: Maybe<Scalars['ID']>;
-  id_lt?: Maybe<Scalars['ID']>;
-  id_gte?: Maybe<Scalars['ID']>;
-  id_lte?: Maybe<Scalars['ID']>;
-  id_in?: Maybe<Array<Scalars['ID']>>;
-  id_not_in?: Maybe<Array<Scalars['ID']>>;
-  user?: Maybe<Scalars['String']>;
-  user_not?: Maybe<Scalars['String']>;
-  user_gt?: Maybe<Scalars['String']>;
-  user_lt?: Maybe<Scalars['String']>;
-  user_gte?: Maybe<Scalars['String']>;
-  user_lte?: Maybe<Scalars['String']>;
-  user_in?: Maybe<Array<Scalars['String']>>;
-  user_not_in?: Maybe<Array<Scalars['String']>>;
-  user_contains?: Maybe<Scalars['String']>;
-  user_not_contains?: Maybe<Scalars['String']>;
-  user_starts_with?: Maybe<Scalars['String']>;
-  user_not_starts_with?: Maybe<Scalars['String']>;
-  user_ends_with?: Maybe<Scalars['String']>;
-  user_not_ends_with?: Maybe<Scalars['String']>;
-  sett?: Maybe<Scalars['String']>;
-  sett_not?: Maybe<Scalars['String']>;
-  sett_gt?: Maybe<Scalars['String']>;
-  sett_lt?: Maybe<Scalars['String']>;
-  sett_gte?: Maybe<Scalars['String']>;
-  sett_lte?: Maybe<Scalars['String']>;
-  sett_in?: Maybe<Array<Scalars['String']>>;
-  sett_not_in?: Maybe<Array<Scalars['String']>>;
-  sett_contains?: Maybe<Scalars['String']>;
-  sett_not_contains?: Maybe<Scalars['String']>;
-  sett_starts_with?: Maybe<Scalars['String']>;
-  sett_not_starts_with?: Maybe<Scalars['String']>;
-  sett_ends_with?: Maybe<Scalars['String']>;
-  sett_not_ends_with?: Maybe<Scalars['String']>;
-  netDeposit?: Maybe<Scalars['BigInt']>;
-  netDeposit_not?: Maybe<Scalars['BigInt']>;
-  netDeposit_gt?: Maybe<Scalars['BigInt']>;
-  netDeposit_lt?: Maybe<Scalars['BigInt']>;
-  netDeposit_gte?: Maybe<Scalars['BigInt']>;
-  netDeposit_lte?: Maybe<Scalars['BigInt']>;
-  netDeposit_in?: Maybe<Array<Scalars['BigInt']>>;
-  netDeposit_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  netShareDeposit?: Maybe<Scalars['BigInt']>;
-  netShareDeposit_not?: Maybe<Scalars['BigInt']>;
-  netShareDeposit_gt?: Maybe<Scalars['BigInt']>;
-  netShareDeposit_lt?: Maybe<Scalars['BigInt']>;
-  netShareDeposit_gte?: Maybe<Scalars['BigInt']>;
-  netShareDeposit_lte?: Maybe<Scalars['BigInt']>;
-  netShareDeposit_in?: Maybe<Array<Scalars['BigInt']>>;
-  netShareDeposit_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  grossDeposit?: Maybe<Scalars['BigInt']>;
-  grossDeposit_not?: Maybe<Scalars['BigInt']>;
-  grossDeposit_gt?: Maybe<Scalars['BigInt']>;
-  grossDeposit_lt?: Maybe<Scalars['BigInt']>;
-  grossDeposit_gte?: Maybe<Scalars['BigInt']>;
-  grossDeposit_lte?: Maybe<Scalars['BigInt']>;
-  grossDeposit_in?: Maybe<Array<Scalars['BigInt']>>;
-  grossDeposit_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  grossShareDeposit?: Maybe<Scalars['BigInt']>;
-  grossShareDeposit_not?: Maybe<Scalars['BigInt']>;
-  grossShareDeposit_gt?: Maybe<Scalars['BigInt']>;
-  grossShareDeposit_lt?: Maybe<Scalars['BigInt']>;
-  grossShareDeposit_gte?: Maybe<Scalars['BigInt']>;
-  grossShareDeposit_lte?: Maybe<Scalars['BigInt']>;
-  grossShareDeposit_in?: Maybe<Array<Scalars['BigInt']>>;
-  grossShareDeposit_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  grossWithdraw?: Maybe<Scalars['BigInt']>;
-  grossWithdraw_not?: Maybe<Scalars['BigInt']>;
-  grossWithdraw_gt?: Maybe<Scalars['BigInt']>;
-  grossWithdraw_lt?: Maybe<Scalars['BigInt']>;
-  grossWithdraw_gte?: Maybe<Scalars['BigInt']>;
-  grossWithdraw_lte?: Maybe<Scalars['BigInt']>;
-  grossWithdraw_in?: Maybe<Array<Scalars['BigInt']>>;
-  grossWithdraw_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  grossShareWithdraw?: Maybe<Scalars['BigInt']>;
-  grossShareWithdraw_not?: Maybe<Scalars['BigInt']>;
-  grossShareWithdraw_gt?: Maybe<Scalars['BigInt']>;
-  grossShareWithdraw_lt?: Maybe<Scalars['BigInt']>;
-  grossShareWithdraw_gte?: Maybe<Scalars['BigInt']>;
-  grossShareWithdraw_lte?: Maybe<Scalars['BigInt']>;
-  grossShareWithdraw_in?: Maybe<Array<Scalars['BigInt']>>;
-  grossShareWithdraw_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  grossDeposit?: InputMaybe<Scalars['BigInt']>;
+  grossDeposit_gt?: InputMaybe<Scalars['BigInt']>;
+  grossDeposit_gte?: InputMaybe<Scalars['BigInt']>;
+  grossDeposit_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  grossDeposit_lt?: InputMaybe<Scalars['BigInt']>;
+  grossDeposit_lte?: InputMaybe<Scalars['BigInt']>;
+  grossDeposit_not?: InputMaybe<Scalars['BigInt']>;
+  grossDeposit_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  grossShareDeposit?: InputMaybe<Scalars['BigInt']>;
+  grossShareDeposit_gt?: InputMaybe<Scalars['BigInt']>;
+  grossShareDeposit_gte?: InputMaybe<Scalars['BigInt']>;
+  grossShareDeposit_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  grossShareDeposit_lt?: InputMaybe<Scalars['BigInt']>;
+  grossShareDeposit_lte?: InputMaybe<Scalars['BigInt']>;
+  grossShareDeposit_not?: InputMaybe<Scalars['BigInt']>;
+  grossShareDeposit_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  grossShareWithdraw?: InputMaybe<Scalars['BigInt']>;
+  grossShareWithdraw_gt?: InputMaybe<Scalars['BigInt']>;
+  grossShareWithdraw_gte?: InputMaybe<Scalars['BigInt']>;
+  grossShareWithdraw_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  grossShareWithdraw_lt?: InputMaybe<Scalars['BigInt']>;
+  grossShareWithdraw_lte?: InputMaybe<Scalars['BigInt']>;
+  grossShareWithdraw_not?: InputMaybe<Scalars['BigInt']>;
+  grossShareWithdraw_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  grossWithdraw?: InputMaybe<Scalars['BigInt']>;
+  grossWithdraw_gt?: InputMaybe<Scalars['BigInt']>;
+  grossWithdraw_gte?: InputMaybe<Scalars['BigInt']>;
+  grossWithdraw_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  grossWithdraw_lt?: InputMaybe<Scalars['BigInt']>;
+  grossWithdraw_lte?: InputMaybe<Scalars['BigInt']>;
+  grossWithdraw_not?: InputMaybe<Scalars['BigInt']>;
+  grossWithdraw_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  id?: InputMaybe<Scalars['ID']>;
+  id_gt?: InputMaybe<Scalars['ID']>;
+  id_gte?: InputMaybe<Scalars['ID']>;
+  id_in?: InputMaybe<Array<Scalars['ID']>>;
+  id_lt?: InputMaybe<Scalars['ID']>;
+  id_lte?: InputMaybe<Scalars['ID']>;
+  id_not?: InputMaybe<Scalars['ID']>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']>>;
+  netDeposit?: InputMaybe<Scalars['BigInt']>;
+  netDeposit_gt?: InputMaybe<Scalars['BigInt']>;
+  netDeposit_gte?: InputMaybe<Scalars['BigInt']>;
+  netDeposit_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  netDeposit_lt?: InputMaybe<Scalars['BigInt']>;
+  netDeposit_lte?: InputMaybe<Scalars['BigInt']>;
+  netDeposit_not?: InputMaybe<Scalars['BigInt']>;
+  netDeposit_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  netShareDeposit?: InputMaybe<Scalars['BigInt']>;
+  netShareDeposit_gt?: InputMaybe<Scalars['BigInt']>;
+  netShareDeposit_gte?: InputMaybe<Scalars['BigInt']>;
+  netShareDeposit_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  netShareDeposit_lt?: InputMaybe<Scalars['BigInt']>;
+  netShareDeposit_lte?: InputMaybe<Scalars['BigInt']>;
+  netShareDeposit_not?: InputMaybe<Scalars['BigInt']>;
+  netShareDeposit_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  sett?: InputMaybe<Scalars['String']>;
+  sett_contains?: InputMaybe<Scalars['String']>;
+  sett_ends_with?: InputMaybe<Scalars['String']>;
+  sett_gt?: InputMaybe<Scalars['String']>;
+  sett_gte?: InputMaybe<Scalars['String']>;
+  sett_in?: InputMaybe<Array<Scalars['String']>>;
+  sett_lt?: InputMaybe<Scalars['String']>;
+  sett_lte?: InputMaybe<Scalars['String']>;
+  sett_not?: InputMaybe<Scalars['String']>;
+  sett_not_contains?: InputMaybe<Scalars['String']>;
+  sett_not_ends_with?: InputMaybe<Scalars['String']>;
+  sett_not_in?: InputMaybe<Array<Scalars['String']>>;
+  sett_not_starts_with?: InputMaybe<Scalars['String']>;
+  sett_starts_with?: InputMaybe<Scalars['String']>;
+  user?: InputMaybe<Scalars['String']>;
+  user_contains?: InputMaybe<Scalars['String']>;
+  user_ends_with?: InputMaybe<Scalars['String']>;
+  user_gt?: InputMaybe<Scalars['String']>;
+  user_gte?: InputMaybe<Scalars['String']>;
+  user_in?: InputMaybe<Array<Scalars['String']>>;
+  user_lt?: InputMaybe<Scalars['String']>;
+  user_lte?: InputMaybe<Scalars['String']>;
+  user_not?: InputMaybe<Scalars['String']>;
+  user_not_contains?: InputMaybe<Scalars['String']>;
+  user_not_ends_with?: InputMaybe<Scalars['String']>;
+  user_not_in?: InputMaybe<Array<Scalars['String']>>;
+  user_not_starts_with?: InputMaybe<Scalars['String']>;
+  user_starts_with?: InputMaybe<Scalars['String']>;
 };
 
 export enum UserSettBalance_OrderBy {
-  Id = 'id',
-  User = 'user',
-  Sett = 'sett',
-  NetDeposit = 'netDeposit',
-  NetShareDeposit = 'netShareDeposit',
   GrossDeposit = 'grossDeposit',
   GrossShareDeposit = 'grossShareDeposit',
-  GrossWithdraw = 'grossWithdraw',
   GrossShareWithdraw = 'grossShareWithdraw',
+  GrossWithdraw = 'grossWithdraw',
+  Id = 'id',
+  NetDeposit = 'netDeposit',
+  NetShareDeposit = 'netShareDeposit',
+  Sett = 'sett',
+  User = 'user',
 }
 
 export type User_Filter = {
-  id?: Maybe<Scalars['ID']>;
-  id_not?: Maybe<Scalars['ID']>;
-  id_gt?: Maybe<Scalars['ID']>;
-  id_lt?: Maybe<Scalars['ID']>;
-  id_gte?: Maybe<Scalars['ID']>;
-  id_lte?: Maybe<Scalars['ID']>;
-  id_in?: Maybe<Array<Scalars['ID']>>;
-  id_not_in?: Maybe<Array<Scalars['ID']>>;
+  id?: InputMaybe<Scalars['ID']>;
+  id_gt?: InputMaybe<Scalars['ID']>;
+  id_gte?: InputMaybe<Scalars['ID']>;
+  id_in?: InputMaybe<Array<Scalars['ID']>>;
+  id_lt?: InputMaybe<Scalars['ID']>;
+  id_lte?: InputMaybe<Scalars['ID']>;
+  id_not?: InputMaybe<Scalars['ID']>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']>>;
 };
 
 export enum User_OrderBy {
@@ -1937,137 +1938,137 @@ export enum User_OrderBy {
 }
 
 export type Vault = {
-  id: Scalars['ID'];
-  token: Token;
   balance: Scalars['BigInt'];
+  id: Scalars['ID'];
   pricePerFullShare: Scalars['BigInt'];
+  token: Token;
 };
 
 export type VaultBalance = {
+  grossDeposit: Scalars['BigInt'];
+  grossShareDeposit: Scalars['BigInt'];
+  grossShareWithdraw: Scalars['BigInt'];
+  grossWithdraw: Scalars['BigInt'];
   id: Scalars['ID'];
   netDeposit: Scalars['BigInt'];
   netShareDeposit: Scalars['BigInt'];
-  grossDeposit: Scalars['BigInt'];
-  grossShareDeposit: Scalars['BigInt'];
-  grossWithdraw: Scalars['BigInt'];
-  grossShareWithdraw: Scalars['BigInt'];
 };
 
 export type VaultBalance_Filter = {
-  id?: Maybe<Scalars['ID']>;
-  id_not?: Maybe<Scalars['ID']>;
-  id_gt?: Maybe<Scalars['ID']>;
-  id_lt?: Maybe<Scalars['ID']>;
-  id_gte?: Maybe<Scalars['ID']>;
-  id_lte?: Maybe<Scalars['ID']>;
-  id_in?: Maybe<Array<Scalars['ID']>>;
-  id_not_in?: Maybe<Array<Scalars['ID']>>;
-  netDeposit?: Maybe<Scalars['BigInt']>;
-  netDeposit_not?: Maybe<Scalars['BigInt']>;
-  netDeposit_gt?: Maybe<Scalars['BigInt']>;
-  netDeposit_lt?: Maybe<Scalars['BigInt']>;
-  netDeposit_gte?: Maybe<Scalars['BigInt']>;
-  netDeposit_lte?: Maybe<Scalars['BigInt']>;
-  netDeposit_in?: Maybe<Array<Scalars['BigInt']>>;
-  netDeposit_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  netShareDeposit?: Maybe<Scalars['BigInt']>;
-  netShareDeposit_not?: Maybe<Scalars['BigInt']>;
-  netShareDeposit_gt?: Maybe<Scalars['BigInt']>;
-  netShareDeposit_lt?: Maybe<Scalars['BigInt']>;
-  netShareDeposit_gte?: Maybe<Scalars['BigInt']>;
-  netShareDeposit_lte?: Maybe<Scalars['BigInt']>;
-  netShareDeposit_in?: Maybe<Array<Scalars['BigInt']>>;
-  netShareDeposit_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  grossDeposit?: Maybe<Scalars['BigInt']>;
-  grossDeposit_not?: Maybe<Scalars['BigInt']>;
-  grossDeposit_gt?: Maybe<Scalars['BigInt']>;
-  grossDeposit_lt?: Maybe<Scalars['BigInt']>;
-  grossDeposit_gte?: Maybe<Scalars['BigInt']>;
-  grossDeposit_lte?: Maybe<Scalars['BigInt']>;
-  grossDeposit_in?: Maybe<Array<Scalars['BigInt']>>;
-  grossDeposit_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  grossShareDeposit?: Maybe<Scalars['BigInt']>;
-  grossShareDeposit_not?: Maybe<Scalars['BigInt']>;
-  grossShareDeposit_gt?: Maybe<Scalars['BigInt']>;
-  grossShareDeposit_lt?: Maybe<Scalars['BigInt']>;
-  grossShareDeposit_gte?: Maybe<Scalars['BigInt']>;
-  grossShareDeposit_lte?: Maybe<Scalars['BigInt']>;
-  grossShareDeposit_in?: Maybe<Array<Scalars['BigInt']>>;
-  grossShareDeposit_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  grossWithdraw?: Maybe<Scalars['BigInt']>;
-  grossWithdraw_not?: Maybe<Scalars['BigInt']>;
-  grossWithdraw_gt?: Maybe<Scalars['BigInt']>;
-  grossWithdraw_lt?: Maybe<Scalars['BigInt']>;
-  grossWithdraw_gte?: Maybe<Scalars['BigInt']>;
-  grossWithdraw_lte?: Maybe<Scalars['BigInt']>;
-  grossWithdraw_in?: Maybe<Array<Scalars['BigInt']>>;
-  grossWithdraw_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  grossShareWithdraw?: Maybe<Scalars['BigInt']>;
-  grossShareWithdraw_not?: Maybe<Scalars['BigInt']>;
-  grossShareWithdraw_gt?: Maybe<Scalars['BigInt']>;
-  grossShareWithdraw_lt?: Maybe<Scalars['BigInt']>;
-  grossShareWithdraw_gte?: Maybe<Scalars['BigInt']>;
-  grossShareWithdraw_lte?: Maybe<Scalars['BigInt']>;
-  grossShareWithdraw_in?: Maybe<Array<Scalars['BigInt']>>;
-  grossShareWithdraw_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  grossDeposit?: InputMaybe<Scalars['BigInt']>;
+  grossDeposit_gt?: InputMaybe<Scalars['BigInt']>;
+  grossDeposit_gte?: InputMaybe<Scalars['BigInt']>;
+  grossDeposit_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  grossDeposit_lt?: InputMaybe<Scalars['BigInt']>;
+  grossDeposit_lte?: InputMaybe<Scalars['BigInt']>;
+  grossDeposit_not?: InputMaybe<Scalars['BigInt']>;
+  grossDeposit_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  grossShareDeposit?: InputMaybe<Scalars['BigInt']>;
+  grossShareDeposit_gt?: InputMaybe<Scalars['BigInt']>;
+  grossShareDeposit_gte?: InputMaybe<Scalars['BigInt']>;
+  grossShareDeposit_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  grossShareDeposit_lt?: InputMaybe<Scalars['BigInt']>;
+  grossShareDeposit_lte?: InputMaybe<Scalars['BigInt']>;
+  grossShareDeposit_not?: InputMaybe<Scalars['BigInt']>;
+  grossShareDeposit_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  grossShareWithdraw?: InputMaybe<Scalars['BigInt']>;
+  grossShareWithdraw_gt?: InputMaybe<Scalars['BigInt']>;
+  grossShareWithdraw_gte?: InputMaybe<Scalars['BigInt']>;
+  grossShareWithdraw_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  grossShareWithdraw_lt?: InputMaybe<Scalars['BigInt']>;
+  grossShareWithdraw_lte?: InputMaybe<Scalars['BigInt']>;
+  grossShareWithdraw_not?: InputMaybe<Scalars['BigInt']>;
+  grossShareWithdraw_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  grossWithdraw?: InputMaybe<Scalars['BigInt']>;
+  grossWithdraw_gt?: InputMaybe<Scalars['BigInt']>;
+  grossWithdraw_gte?: InputMaybe<Scalars['BigInt']>;
+  grossWithdraw_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  grossWithdraw_lt?: InputMaybe<Scalars['BigInt']>;
+  grossWithdraw_lte?: InputMaybe<Scalars['BigInt']>;
+  grossWithdraw_not?: InputMaybe<Scalars['BigInt']>;
+  grossWithdraw_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  id?: InputMaybe<Scalars['ID']>;
+  id_gt?: InputMaybe<Scalars['ID']>;
+  id_gte?: InputMaybe<Scalars['ID']>;
+  id_in?: InputMaybe<Array<Scalars['ID']>>;
+  id_lt?: InputMaybe<Scalars['ID']>;
+  id_lte?: InputMaybe<Scalars['ID']>;
+  id_not?: InputMaybe<Scalars['ID']>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']>>;
+  netDeposit?: InputMaybe<Scalars['BigInt']>;
+  netDeposit_gt?: InputMaybe<Scalars['BigInt']>;
+  netDeposit_gte?: InputMaybe<Scalars['BigInt']>;
+  netDeposit_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  netDeposit_lt?: InputMaybe<Scalars['BigInt']>;
+  netDeposit_lte?: InputMaybe<Scalars['BigInt']>;
+  netDeposit_not?: InputMaybe<Scalars['BigInt']>;
+  netDeposit_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  netShareDeposit?: InputMaybe<Scalars['BigInt']>;
+  netShareDeposit_gt?: InputMaybe<Scalars['BigInt']>;
+  netShareDeposit_gte?: InputMaybe<Scalars['BigInt']>;
+  netShareDeposit_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  netShareDeposit_lt?: InputMaybe<Scalars['BigInt']>;
+  netShareDeposit_lte?: InputMaybe<Scalars['BigInt']>;
+  netShareDeposit_not?: InputMaybe<Scalars['BigInt']>;
+  netShareDeposit_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
 };
 
 export enum VaultBalance_OrderBy {
+  GrossDeposit = 'grossDeposit',
+  GrossShareDeposit = 'grossShareDeposit',
+  GrossShareWithdraw = 'grossShareWithdraw',
+  GrossWithdraw = 'grossWithdraw',
   Id = 'id',
   NetDeposit = 'netDeposit',
   NetShareDeposit = 'netShareDeposit',
-  GrossDeposit = 'grossDeposit',
-  GrossShareDeposit = 'grossShareDeposit',
-  GrossWithdraw = 'grossWithdraw',
-  GrossShareWithdraw = 'grossShareWithdraw',
 }
 
 export type Vault_Filter = {
-  id?: Maybe<Scalars['ID']>;
-  id_not?: Maybe<Scalars['ID']>;
-  id_gt?: Maybe<Scalars['ID']>;
-  id_lt?: Maybe<Scalars['ID']>;
-  id_gte?: Maybe<Scalars['ID']>;
-  id_lte?: Maybe<Scalars['ID']>;
-  id_in?: Maybe<Array<Scalars['ID']>>;
-  id_not_in?: Maybe<Array<Scalars['ID']>>;
-  token?: Maybe<Scalars['String']>;
-  token_not?: Maybe<Scalars['String']>;
-  token_gt?: Maybe<Scalars['String']>;
-  token_lt?: Maybe<Scalars['String']>;
-  token_gte?: Maybe<Scalars['String']>;
-  token_lte?: Maybe<Scalars['String']>;
-  token_in?: Maybe<Array<Scalars['String']>>;
-  token_not_in?: Maybe<Array<Scalars['String']>>;
-  token_contains?: Maybe<Scalars['String']>;
-  token_not_contains?: Maybe<Scalars['String']>;
-  token_starts_with?: Maybe<Scalars['String']>;
-  token_not_starts_with?: Maybe<Scalars['String']>;
-  token_ends_with?: Maybe<Scalars['String']>;
-  token_not_ends_with?: Maybe<Scalars['String']>;
-  balance?: Maybe<Scalars['BigInt']>;
-  balance_not?: Maybe<Scalars['BigInt']>;
-  balance_gt?: Maybe<Scalars['BigInt']>;
-  balance_lt?: Maybe<Scalars['BigInt']>;
-  balance_gte?: Maybe<Scalars['BigInt']>;
-  balance_lte?: Maybe<Scalars['BigInt']>;
-  balance_in?: Maybe<Array<Scalars['BigInt']>>;
-  balance_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  pricePerFullShare?: Maybe<Scalars['BigInt']>;
-  pricePerFullShare_not?: Maybe<Scalars['BigInt']>;
-  pricePerFullShare_gt?: Maybe<Scalars['BigInt']>;
-  pricePerFullShare_lt?: Maybe<Scalars['BigInt']>;
-  pricePerFullShare_gte?: Maybe<Scalars['BigInt']>;
-  pricePerFullShare_lte?: Maybe<Scalars['BigInt']>;
-  pricePerFullShare_in?: Maybe<Array<Scalars['BigInt']>>;
-  pricePerFullShare_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  balance?: InputMaybe<Scalars['BigInt']>;
+  balance_gt?: InputMaybe<Scalars['BigInt']>;
+  balance_gte?: InputMaybe<Scalars['BigInt']>;
+  balance_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  balance_lt?: InputMaybe<Scalars['BigInt']>;
+  balance_lte?: InputMaybe<Scalars['BigInt']>;
+  balance_not?: InputMaybe<Scalars['BigInt']>;
+  balance_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  id?: InputMaybe<Scalars['ID']>;
+  id_gt?: InputMaybe<Scalars['ID']>;
+  id_gte?: InputMaybe<Scalars['ID']>;
+  id_in?: InputMaybe<Array<Scalars['ID']>>;
+  id_lt?: InputMaybe<Scalars['ID']>;
+  id_lte?: InputMaybe<Scalars['ID']>;
+  id_not?: InputMaybe<Scalars['ID']>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']>>;
+  pricePerFullShare?: InputMaybe<Scalars['BigInt']>;
+  pricePerFullShare_gt?: InputMaybe<Scalars['BigInt']>;
+  pricePerFullShare_gte?: InputMaybe<Scalars['BigInt']>;
+  pricePerFullShare_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  pricePerFullShare_lt?: InputMaybe<Scalars['BigInt']>;
+  pricePerFullShare_lte?: InputMaybe<Scalars['BigInt']>;
+  pricePerFullShare_not?: InputMaybe<Scalars['BigInt']>;
+  pricePerFullShare_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  token?: InputMaybe<Scalars['String']>;
+  token_contains?: InputMaybe<Scalars['String']>;
+  token_ends_with?: InputMaybe<Scalars['String']>;
+  token_gt?: InputMaybe<Scalars['String']>;
+  token_gte?: InputMaybe<Scalars['String']>;
+  token_in?: InputMaybe<Array<Scalars['String']>>;
+  token_lt?: InputMaybe<Scalars['String']>;
+  token_lte?: InputMaybe<Scalars['String']>;
+  token_not?: InputMaybe<Scalars['String']>;
+  token_not_contains?: InputMaybe<Scalars['String']>;
+  token_not_ends_with?: InputMaybe<Scalars['String']>;
+  token_not_in?: InputMaybe<Array<Scalars['String']>>;
+  token_not_starts_with?: InputMaybe<Scalars['String']>;
+  token_starts_with?: InputMaybe<Scalars['String']>;
 };
 
 export enum Vault_OrderBy {
-  Id = 'id',
-  Token = 'token',
   Balance = 'balance',
+  Id = 'id',
   PricePerFullShare = 'pricePerFullShare',
+  Token = 'token',
 }
 
 export type _Block_ = {
@@ -2086,6 +2087,7 @@ export type _Meta_ = {
    * will be null if the _meta field has a block constraint that asks for
    * a block number. It will be filled if the _meta field has no block constraint
    * and therefore asks for the latest  block
+   *
    */
   block: _Block_;
   /** The deployment ID */
@@ -2272,87 +2274,127 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
   };
 }
 export type Sdk = ReturnType<typeof getSdk>;
-export type HarvestFragment = { __typename?: 'SettHarvest' } & Pick<
-  SettHarvest,
-  'id' | 'timestamp' | 'amount' | 'blockNumber'
-> & {
-    token: { __typename?: 'Token' } & Pick<Token, 'id' | 'name' | 'symbol' | 'decimals'>;
-    strategy?: Maybe<{ __typename?: 'Strategy' } & Pick<Strategy, 'id'>>;
-    sett?: Maybe<{ __typename?: 'Sett' } & Pick<Sett, 'id'>>;
-  };
+export type HarvestFragment = {
+  __typename?: 'SettHarvest';
+  id: string;
+  timestamp: number;
+  amount: any;
+  blockNumber: any;
+  token: { __typename?: 'Token'; id: string; name: string; symbol: string; decimals: any };
+  strategy?: { __typename?: 'Strategy'; id: string } | null | undefined;
+  sett?: { __typename?: 'Sett'; id: string } | null | undefined;
+};
 
-export type SettFragment = { __typename?: 'Sett' } & Pick<
-  Sett,
-  'id' | 'balance' | 'netDeposit' | 'netShareDeposit' | 'pricePerFullShare' | 'totalSupply'
-> & { token: { __typename?: 'Token' } & Pick<Token, 'id' | 'decimals'> };
+export type SettFragment = {
+  __typename?: 'Sett';
+  id: string;
+  balance: any;
+  netDeposit: any;
+  netShareDeposit: any;
+  pricePerFullShare: any;
+  totalSupply: any;
+  token: { __typename?: 'Token'; id: string; decimals: any };
+};
 
-export type UserSettBalanceFragment = { __typename?: 'UserSettBalance' } & Pick<
-  UserSettBalance,
-  'netDeposit' | 'grossDeposit' | 'grossWithdraw' | 'netShareDeposit' | 'grossShareDeposit' | 'grossShareWithdraw'
-> & {
-    sett: { __typename?: 'Sett' } & Pick<
-      Sett,
-      'id' | 'name' | 'balance' | 'totalSupply' | 'netShareDeposit' | 'pricePerFullShare' | 'symbol'
-    > & { token: { __typename?: 'Token' } & Pick<Token, 'id' | 'decimals'> };
+export type UserSettBalanceFragment = {
+  __typename?: 'UserSettBalance';
+  netDeposit: any;
+  grossDeposit: any;
+  grossWithdraw: any;
+  netShareDeposit: any;
+  grossShareDeposit: any;
+  grossShareWithdraw: any;
+  sett: {
+    __typename?: 'Sett';
+    id: string;
+    name: string;
+    balance: any;
+    totalSupply: any;
+    netShareDeposit: any;
+    pricePerFullShare: any;
+    symbol: string;
+    token: { __typename?: 'Token'; id: string; decimals: any };
   };
+};
 
-export type UserFragment = { __typename?: 'User' } & Pick<User, 'id'> & {
-    settBalances: Array<
-      { __typename?: 'UserSettBalance' } & Pick<
-        UserSettBalance,
-        | 'id'
-        | 'netDeposit'
-        | 'netShareDeposit'
-        | 'grossDeposit'
-        | 'grossShareDeposit'
-        | 'grossWithdraw'
-        | 'grossShareWithdraw'
-      > & { sett: { __typename?: 'Sett' } & Pick<Sett, 'id' | 'name'> }
-    >;
-  };
+export type UserFragment = {
+  __typename?: 'User';
+  id: string;
+  settBalances: Array<{
+    __typename?: 'UserSettBalance';
+    id: string;
+    netDeposit: any;
+    netShareDeposit: any;
+    grossDeposit: any;
+    grossShareDeposit: any;
+    grossWithdraw: any;
+    grossShareWithdraw: any;
+    sett: { __typename?: 'Sett'; id: string; name: string };
+  }>;
+};
 
 export type HarvestsQueryVariables = Exact<{
-  first?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<SettHarvest_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
+  first?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<SettHarvest_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
 }>;
 
-export type HarvestsQuery = { __typename?: 'Query' } & {
-  settHarvests: Array<
-    { __typename?: 'SettHarvest' } & Pick<SettHarvest, 'id' | 'timestamp' | 'amount' | 'blockNumber'> & {
-        token: { __typename?: 'Token' } & Pick<Token, 'id' | 'name' | 'symbol' | 'decimals'>;
-        strategy?: Maybe<{ __typename?: 'Strategy' } & Pick<Strategy, 'id'>>;
-        sett?: Maybe<{ __typename?: 'Sett' } & Pick<Sett, 'id'>>;
-      }
-  >;
+export type HarvestsQuery = {
+  __typename?: 'Query';
+  settHarvests: Array<{
+    __typename?: 'SettHarvest';
+    id: string;
+    timestamp: number;
+    amount: any;
+    blockNumber: any;
+    token: { __typename?: 'Token'; id: string; name: string; symbol: string; decimals: any };
+    strategy?: { __typename?: 'Strategy'; id: string } | null | undefined;
+    sett?: { __typename?: 'Sett'; id: string } | null | undefined;
+  }>;
 };
 
 export type SettSnapshotQueryVariables = Exact<{
   id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
+  block?: InputMaybe<Block_Height>;
 }>;
 
-export type SettSnapshotQuery = { __typename?: 'Query' } & {
-  sett?: Maybe<
-    { __typename?: 'Sett' } & Pick<
-      Sett,
-      'id' | 'balance' | 'netDeposit' | 'netShareDeposit' | 'pricePerFullShare' | 'totalSupply'
-    > & { token: { __typename?: 'Token' } & Pick<Token, 'id' | 'decimals'> }
-  >;
+export type SettSnapshotQuery = {
+  __typename?: 'Query';
+  sett?:
+    | {
+        __typename?: 'Sett';
+        id: string;
+        balance: any;
+        netDeposit: any;
+        netShareDeposit: any;
+        pricePerFullShare: any;
+        totalSupply: any;
+        token: { __typename?: 'Token'; id: string; decimals: any };
+      }
+    | null
+    | undefined;
 };
 
 export type SettQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
-export type SettQuery = { __typename?: 'Query' } & {
-  sett?: Maybe<
-    { __typename?: 'Sett' } & Pick<
-      Sett,
-      'id' | 'balance' | 'netDeposit' | 'netShareDeposit' | 'pricePerFullShare' | 'totalSupply'
-    > & { token: { __typename?: 'Token' } & Pick<Token, 'id' | 'decimals'> }
-  >;
+export type SettQuery = {
+  __typename?: 'Query';
+  sett?:
+    | {
+        __typename?: 'Sett';
+        id: string;
+        balance: any;
+        netDeposit: any;
+        netShareDeposit: any;
+        pricePerFullShare: any;
+        totalSupply: any;
+        token: { __typename?: 'Token'; id: string; decimals: any };
+      }
+    | null
+    | undefined;
 };
 
 export type UserQueryVariables = Exact<{
@@ -2360,51 +2402,58 @@ export type UserQueryVariables = Exact<{
   orderDirection: OrderDirection;
 }>;
 
-export type UserQuery = { __typename?: 'Query' } & {
-  user?: Maybe<
-    { __typename?: 'User' } & {
-      settBalances: Array<
-        { __typename?: 'UserSettBalance' } & Pick<
-          UserSettBalance,
-          | 'netDeposit'
-          | 'grossDeposit'
-          | 'grossWithdraw'
-          | 'netShareDeposit'
-          | 'grossShareDeposit'
-          | 'grossShareWithdraw'
-        > & {
-            sett: { __typename?: 'Sett' } & Pick<
-              Sett,
-              'id' | 'name' | 'balance' | 'totalSupply' | 'netShareDeposit' | 'pricePerFullShare' | 'symbol'
-            > & { token: { __typename?: 'Token' } & Pick<Token, 'id' | 'decimals'> };
-          }
-      >;
-    }
-  >;
+export type UserQuery = {
+  __typename?: 'Query';
+  user?:
+    | {
+        __typename?: 'User';
+        settBalances: Array<{
+          __typename?: 'UserSettBalance';
+          netDeposit: any;
+          grossDeposit: any;
+          grossWithdraw: any;
+          netShareDeposit: any;
+          grossShareDeposit: any;
+          grossShareWithdraw: any;
+          sett: {
+            __typename?: 'Sett';
+            id: string;
+            name: string;
+            balance: any;
+            totalSupply: any;
+            netShareDeposit: any;
+            pricePerFullShare: any;
+            symbol: string;
+            token: { __typename?: 'Token'; id: string; decimals: any };
+          };
+        }>;
+      }
+    | null
+    | undefined;
 };
 
 export type UsersQueryVariables = Exact<{
-  first?: Maybe<Scalars['Int']>;
-  where?: Maybe<User_Filter>;
-  orderBy?: Maybe<User_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
+  first?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<User_Filter>;
+  orderBy?: InputMaybe<User_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
 }>;
 
-export type UsersQuery = { __typename?: 'Query' } & {
-  users: Array<
-    { __typename?: 'User' } & Pick<User, 'id'> & {
-        settBalances: Array<
-          { __typename?: 'UserSettBalance' } & Pick<
-            UserSettBalance,
-            | 'id'
-            | 'netDeposit'
-            | 'netShareDeposit'
-            | 'grossDeposit'
-            | 'grossShareDeposit'
-            | 'grossWithdraw'
-            | 'grossShareWithdraw'
-          > & { sett: { __typename?: 'Sett' } & Pick<Sett, 'id' | 'name'> }
-        >;
-      }
-  >;
+export type UsersQuery = {
+  __typename?: 'Query';
+  users: Array<{
+    __typename?: 'User';
+    id: string;
+    settBalances: Array<{
+      __typename?: 'UserSettBalance';
+      id: string;
+      netDeposit: any;
+      netShareDeposit: any;
+      grossDeposit: any;
+      grossShareDeposit: any;
+      grossWithdraw: any;
+      grossShareWithdraw: any;
+      sett: { __typename?: 'Sett'; id: string; name: string };
+    }>;
+  }>;
 };
