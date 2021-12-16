@@ -14,7 +14,7 @@ export async function refreshTokenBalances() {
   await Promise.all(chains.flatMap((c) => c.setts.flatMap(async (s) => updateTokenBalance(c, s))));
 }
 
-async function updateTokenBalance(chain: Chain, VaultDefinition: VaultDefinition): Promise<void> {
+export async function updateTokenBalance(chain: Chain, VaultDefinition: VaultDefinition): Promise<void> {
   try {
     const mapper = getDataMapper();
     const depositToken = getToken(VaultDefinition.depositToken);
