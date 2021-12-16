@@ -7,7 +7,6 @@ import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 
 describe('sett-indexer', () => {
-  const originalEnv = process.env;
   const chains = loadChains();
   let indexedBlock: jest.SpyInstance<
     Promise<number>,
@@ -18,11 +17,6 @@ describe('sett-indexer', () => {
     [chain: Chain, VaultDefinition: VaultDefinition, block: number]
   >;
   beforeEach(() => {
-    jest.resetModules();
-    process.env = {
-      ...originalEnv,
-      IS_OFFLINE: 'false',
-    };
     indexedBlock = jest.spyOn(indexerUtils, 'getIndexedBlock').mockImplementation(async () => Promise.resolve(100));
     settToSnapshot = jest.spyOn(indexerUtils, 'settToSnapshot').mockImplementation(async () =>
       Promise.resolve(
@@ -43,9 +37,6 @@ describe('sett-indexer', () => {
     });
   });
 
-  afterEach(() => {
-    process.env = originalEnv;
-  });
   describe('indexProtocolSetts', () => {
     it('should call update price for all tokens', async () => {
       await indexProtocolSetts();
