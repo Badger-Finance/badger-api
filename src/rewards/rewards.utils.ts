@@ -56,8 +56,18 @@ export function getClaimableRewards(
     if (!proof) {
       return [user, [[], []]];
     }
-    const result = await tree.getClaimableFor(user, proof.tokens, proof.cumulativeAmounts, { blockTag: blockNumber });
-    return [user, result];
+    let attempt = 0;
+    while (attempt < 3) {
+      try {
+        const result = await tree.getClaimableFor(user, proof.tokens, proof.cumulativeAmounts, {
+          blockTag: blockNumber,
+        });
+        return [user, result];
+      } catch {
+        attempt++;
+      }
+    }
+    return [user, [[], []]];
   });
   return Promise.all(requests);
 }
