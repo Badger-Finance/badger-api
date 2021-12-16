@@ -1,13 +1,11 @@
-import { Network } from '@badger-dao/sdk';
 import { NotFound } from '@tsed/exceptions';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
-import { Ethereum } from '../chains/config/eth.config';
 import { IS_OFFLINE } from '../config/constants';
 import { GraphErrorResponse } from '../graphql/interafeces/graph-error-response.interface';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
-import { getIndexedBlock, settToSnapshot } from './indexer.utils';
+import { getCurrentBlock, getIndexedBlock, settToSnapshot } from './indexer.utils';
 
 const NO_HISTORIC = 'Queries more than';
 
@@ -63,9 +61,4 @@ async function indexSett(chain: Chain, sett: VaultDefinition) {
       break;
     }
   }
-}
-
-async function getCurrentBlock(chain: Chain): Promise<number> {
-  const queryChain = chain.network === Network.Arbitrum ? new Ethereum() : chain;
-  return queryChain.provider.getBlockNumber();
 }
