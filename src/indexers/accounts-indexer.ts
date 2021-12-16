@@ -11,6 +11,8 @@ import { getChainStartBlockKey, getClaimableRewards, getTreeDistribution } from 
 import { getVaultDefinition } from '../vaults/vaults.utils';
 import { batchRefreshAccounts, chunkArray, getLatestMetadata } from './indexer.utils';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
+import { AccountIndexMode } from './enums/account-index-mode.enum';
+import { AccountIndexEvent } from './interfaces/account-index-event.interface';
 
 export async function refreshClaimableBalances(chain: Chain) {
   const mapper = getDataMapper();
@@ -82,15 +84,20 @@ export async function refreshAccountSettBalances(chain: Chain, batchAccounts: Ac
   }
 }
 
-export async function refreshUserAccounts() {
+export async function refreshUserAccounts(event: AccountIndexEvent) {
+  const { mode } = event;
   const chains = loadChains();
   await Promise.all(
     chains.map(async (chain) => {
-      const accounts = await getAccounts(chain);
-      const refreshFns = chunkArray(accounts, 10).flatMap((chunk) =>
-        batchRefreshAccounts(chunk, (batchAccounts) => [refreshAccountSettBalances(chain, batchAccounts)], 100),
-      );
-      await Promise.all(refreshFns);
+      if (mode === AccountIndexMode.BalanceData) {
+        const accounts = await getAccounts(chain);
+        const refreshFns = chunkArray(accounts, 10).flatMap((chunk) =>
+          batchRefreshAccounts(chunk, (batchAccounts) => [refreshAccountSettBalances(chain, batchAccounts)], 100),
+        );
+        await Promise.all(refreshFns);
+      } else {
+        await refreshClaimableBalances(chain);
+      }
     }),
   );
 }
