@@ -30,7 +30,6 @@ import { CachedLiquidityPoolTokenBalance } from '../tokens/interfaces/cached-liq
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
 import { formatBalance, getToken } from '../tokens/tokens.utils';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
-import { Ethereum } from '../chains/config/eth.config';
 
 // TODO: Figure out what to do with accounts indexer stuff
 
@@ -314,9 +313,4 @@ export async function getLatestMetadata(chain: Chain): Promise<UserClaimMetadata
     result = await mapper.put(metaData);
   }
   return result;
-}
-
-export async function getCurrentBlock(chain: Chain): Promise<number> {
-  const queryChain = chain.network === Network.Arbitrum ? new Ethereum() : chain;
-  return queryChain.provider.getBlockNumber();
 }
