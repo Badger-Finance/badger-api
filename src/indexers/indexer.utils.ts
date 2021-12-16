@@ -297,7 +297,7 @@ export async function getLatestMetadata(chain: Chain): Promise<UserClaimMetadata
   for await (const metric of mapper.query(
     UserClaimMetadata,
     { chain: chain.network },
-    { scanIndexForward: false, limit: 1 },
+    { indexName: 'IndexMetadataChainAndStartBlock', scanIndexForward: false, limit: 1 },
   )) {
     result = metric;
   }
