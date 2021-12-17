@@ -5,6 +5,9 @@ import { getVaultDefinition } from '../vaults/vaults.utils';
 import { TOKENS } from '../config/tokens.config';
 import { CachedLiquidityPoolTokenBalance } from '../tokens/interfaces/cached-liquidity-pool-token-balance.interface';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
+import * as indexerUtils from './indexer.utils';
+import { Chain } from '../chains/config/chain.config';
+import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 
 describe('token-balances-indexer', () => {
   const chain = new Ethereum();
@@ -70,6 +73,58 @@ describe('token-balances-indexer', () => {
         }),
       );
       expect(put.mock.calls.length).toEqual(1);
+    });
+    it('should update lptoken', async () => {
+      const lpBalance = jest
+        .spyOn(indexerUtils, 'getLpTokenBalances')
+        .mockImplementation(async (chain: Chain, sett: VaultDefinition) => {
+          return Object.assign(new CachedLiquidityPoolTokenBalance(), {
+            id: '123',
+            pairId: '123',
+            protocol: 'some protocol',
+            tokenBalances: [
+              Object.assign(new CachedTokenBalance(), {
+                address: TOKENS.BCRV_HTBC,
+                name: 'SUSHI_BADGER_WBTC',
+                symbol: 'SUSHI_BADGER_WBTC',
+                decimals: 18,
+                balance: 100000000,
+                valueEth: 1,
+                valueUsd: 10101010,
+              }),
+            ],
+          });
+        });
+      await updateTokenBalance(
+        chain,
+        Object.assign({
+          name: 'something',
+          depositToken: TOKENS.SUSHI_BADGER_WBTC,
+        }),
+      );
+      expect(put.mock.calls.length).toEqual(1);
+      expect(lpBalance.mock.calls.length).toEqual(1);
+    });
+    it('should not update lptoken no balance', async () => {
+      const lpBalance = jest
+        .spyOn(indexerUtils, 'getLpTokenBalances')
+        .mockImplementation(async (chain: Chain, sett: VaultDefinition) => {
+          return Object.assign(new CachedLiquidityPoolTokenBalance(), {
+            id: '123',
+            pairId: '123',
+            protocol: 'some protocol',
+            tokenBalances: [],
+          });
+        });
+      await updateTokenBalance(
+        chain,
+        Object.assign({
+          name: 'something',
+          depositToken: TOKENS.SUSHI_BADGER_WBTC,
+        }),
+      );
+      expect(put.mock.calls.length).toEqual(0);
+      expect(lpBalance.mock.calls.length).toEqual(1);
     });
   });
 });
