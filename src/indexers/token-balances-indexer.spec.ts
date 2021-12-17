@@ -18,7 +18,13 @@ describe('token-balances-indexer', () => {
       expect(put.mock.calls.length).toEqual(0);
     });
     it('should not update for lp token wihtout balance', async () => {
-      await updateTokenBalance(chain, getVaultDefinition(chain, TOKENS.BDIGG));
+      await updateTokenBalance(
+        chain,
+        Object.assign({
+          name: 'something',
+          depositToken: TOKENS.CRV_HBTC,
+        }),
+      );
       expect(put.mock.calls.length).toEqual(0);
     });
     it('should update token with balance', async () => {
