@@ -27,6 +27,23 @@ describe('token-balances-indexer', () => {
       );
       expect(put.mock.calls.length).toEqual(0);
     });
+    it('should throw if lptoken and token balance', async () => {
+      console.error = jest.fn();
+      await updateTokenBalance(
+        chain,
+        Object.assign({
+          name: 'something',
+          depositToken: TOKENS.SUSHI_BADGER_WBTC,
+          getTokenBalance: async () => {
+            return 1;
+          },
+        }),
+      );
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      expect(console.error.mock.calls[0][0].err.name).toEqual('UNPROCESSABLE_ENTITY');
+      expect(put.mock.calls.length).toEqual(0);
+    });
     it('should update token with balance', async () => {
       await updateTokenBalance(
         chain,
