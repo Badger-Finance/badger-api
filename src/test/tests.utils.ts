@@ -48,6 +48,7 @@ export function defaultAccount(address: string): CachedAccount {
     boost: 0,
     boostRank: 0,
     multipliers: [],
+    nftMultiplier: 1,
     value: 0,
     earnedValue: 0,
     balances: [],

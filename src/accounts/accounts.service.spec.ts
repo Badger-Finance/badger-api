@@ -18,6 +18,7 @@ describe('accounts.service', () => {
     boost: 2000,
     boostRank: 3,
     multipliers: [],
+    nftMultiplier: 1,
     value: 320232,
     earnedValue: 2312,
     balances: [

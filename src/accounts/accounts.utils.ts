@@ -75,6 +75,7 @@ export async function getCachedAccount(address: string): Promise<CachedAccount> 
     address: checksummedAccount,
     boost: 0,
     boostRank: 0,
+    nftMultiplier: 1,
     multipliers: [],
     value: 0,
     earnedValue: 0,
