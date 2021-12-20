@@ -1,5 +1,5 @@
 import { Network, Protocol } from '@badger-dao/sdk';
-import { NotFound } from '@tsed/exceptions';
+import { BadRequest, NotFound } from '@tsed/exceptions';
 import { getAccountMap } from '../accounts/accounts.utils';
 import { AccountMap } from '../accounts/interfaces/account-map.interface';
 import { CachedAccount } from '../accounts/interfaces/cached-account.interface';
@@ -28,8 +28,9 @@ import { VaultsService } from '../vaults/vaults.service';
 import { getBoostWeight, getPricePerShare, getSett, getStrategyInfo } from '../vaults/vaults.utils';
 import { CachedLiquidityPoolTokenBalance } from '../tokens/interfaces/cached-liquidity-pool-token-balance.interface';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
-import { formatBalance, getToken } from '../tokens/tokens.utils';
+import { formatBalance, getToken, toCachedBalance } from '../tokens/tokens.utils';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
+import { getLiquidityData } from '../protocols/common/swap.utils';
 
 // TODO: Figure out what to do with accounts indexer stuff
 
@@ -297,7 +298,7 @@ export async function getLatestMetadata(chain: Chain): Promise<UserClaimMetadata
   for await (const metric of mapper.query(
     UserClaimMetadata,
     { chain: chain.network },
-    { scanIndexForward: false, limit: 1 },
+    { indexName: 'IndexMetadataChainAndStartBlock', scanIndexForward: false, limit: 1 },
   )) {
     result = metric;
   }
@@ -313,4 +314,33 @@ export async function getLatestMetadata(chain: Chain): Promise<UserClaimMetadata
     result = await mapper.put(metaData);
   }
   return result;
+}
+
+export async function getLpTokenBalances(
+  chain: Chain,
+  sett: VaultDefinition,
+): Promise<CachedLiquidityPoolTokenBalance> {
+  try {
+    if (!sett.protocol) {
+      throw new BadRequest('LP balance look up requires a defined protocol');
+    }
+    const liquidityData = await getLiquidityData(chain, sett.depositToken);
+    const { token0, token1, reserve0, reserve1, totalSupply } = liquidityData;
+    const t0Token = getToken(token0);
+    const t1Token = getToken(token1);
+
+    // poolData returns the full liquidity pool, valueScalar acts to calculate the portion within the sett
+    const settSnapshot = await settToCachedSnapshot(chain, sett);
+    const valueScalar = totalSupply > 0 ? settSnapshot.balance / totalSupply : 0;
+    const t0TokenBalance = reserve0 * valueScalar;
+    const t1TokenBalance = reserve1 * valueScalar;
+    const tokenBalances = await Promise.all([
+      toCachedBalance(t0Token, t0TokenBalance),
+      toCachedBalance(t1Token, t1TokenBalance),
+    ]);
+
+    return tokenBalancesToCachedLiquidityPoolTokenBalance(sett.depositToken, sett.protocol, tokenBalances);
+  } catch (err) {
+    throw new NotFound(`${sett.protocol} pool pair ${sett.depositToken} does not exist`);
+  }
 }

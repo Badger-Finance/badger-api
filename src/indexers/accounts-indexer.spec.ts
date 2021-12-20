@@ -16,6 +16,7 @@ import { UserClaimSnapshot } from '../rewards/entities/user-claim-snapshot';
 import { ClaimableBalance } from '../rewards/entities/claimable-balance';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 import { DataMapper } from '@aws/dynamodb-data-mapper';
+import { AccountIndexMode } from './enums/account-index-mode.enum';
 
 describe('accounts-indexer', () => {
   const rewardsChain = new Ethereum();
@@ -56,7 +57,7 @@ describe('accounts-indexer', () => {
     it('calls refreshAccountSettBalances for each chain separately', async () => {
       jest.spyOn(accountsIndexer, 'refreshClaimableBalances').mockImplementation(() => Promise.resolve());
       const batchRefresh = jest.spyOn(indexerUtils, 'batchRefreshAccounts').mockImplementation(() => Promise.resolve());
-      await accountsIndexer.refreshUserAccounts();
+      await accountsIndexer.refreshUserAccounts({ mode: AccountIndexMode.BalanceData });
       const chainCallData = batchRefresh.mock.calls.flatMap((calls) => calls[0]);
       expect(chainCallData).toEqual(networks);
     });
