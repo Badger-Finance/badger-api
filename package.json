@@ -25,7 +25,7 @@
     "@badger-dao/sdk": "^1.0.45",
     "@tsed/common": "6.53.0",
     "@tsed/core": "6.53.0",
-    "@tsed/di": "6.53.0",
+    "@tsed/di": "6.55.2",
     "@tsed/exceptions": "6.53.0",
     "@tsed/json-mapper": "6.53.0",
     "@tsed/platform-aws": "6.53.0",

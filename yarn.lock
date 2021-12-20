@@ -2484,12 +2484,32 @@
     source-map-support "0.5.19"
     tslib "2.1.0"
 
+"@tsed/core@6.55.2":
+  version "6.55.2"
+  resolved "https://registry.yarnpkg.com/@tsed/core/-/core-6.55.2.tgz#3c1e593d486607ff729016df51473ceb30a5c211"
+  integrity sha512-it7s6nTBu2tByXen9i5UDcPF3ToQ4YQyY8tse/zP4FLOnhtwEvessh8a/9qTuKAkn4IzXa2bgjSTuEED/KBuug==
+  dependencies:
+    normalize-path "3.0.0"
+    reflect-metadata "^0.1.13"
+    source-map-support "0.5.19"
+    tslib "2.1.0"
+
 "@tsed/di@6.53.0":
   version "6.53.0"
   resolved "https://registry.yarnpkg.com/@tsed/di/-/di-6.53.0.tgz#299ee19bbc8b3cbf93d20fae3f9600ca161f1d2e"
   integrity sha512-Irp4Ek/RiaAX/qb8ZnPy6/xQfegbjNeHqzXtUxtKxDdjuHykJvuDZCLjsW60p5w6LcS8qmyUuUAR0Zpvny70IA==
   dependencies:
     "@tsed/core" "6.53.0"
+    chalk "4.1.0"
+    globby "11.0.3"
+    tslib "2.1.0"
+
+"@tsed/di@6.55.2":
+  version "6.55.2"
+  resolved "https://registry.yarnpkg.com/@tsed/di/-/di-6.55.2.tgz#8dbc1c0a1be3504117cc359f77ea853fcb96e989"
+  integrity sha512-bzOE32v6+VYkK2IlOXgkhVxDvJ2CHtj+pQB6SIvFuKGPOJ1dtJAXE22bp/NMH3r/NsdE34xBqfbbNQsQ6AvLyQ==
+  dependencies:
+    "@tsed/core" "6.55.2"
     chalk "4.1.0"
     globby "11.0.3"
     tslib "2.1.0"
@@ -12832,15 +12852,10 @@ tslib@^1.8.1, tslib@^1.9.0:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
 
-tslib@^2, tslib@^2.0.3, tslib@^2.1.0, tslib@^2.3.0, tslib@~2.3.0:
+tslib@^2, tslib@^2.0.3, tslib@^2.1.0, tslib@^2.2.0, tslib@^2.3.0, tslib@~2.3.0:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.1.tgz#e8a335add5ceae51aa261d32a490158ef042ef01"
   integrity sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==
-
-tslib@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.2.0.tgz#fb2c475977e35e241311ede2693cee1ec6698f5c"
-  integrity sha512-gS9GVHRU+RGn5KQM2rllAlR3dU6m7AcpJKdtH8gFvQiC4Otgk98XnmMU+nZenHt/+VhnBPWwgrJsyrdcw6i23w==
 
 tsutils@^3.17.1, tsutils@^3.21.0:
   version "3.21.0"
