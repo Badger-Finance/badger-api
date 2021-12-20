@@ -37,6 +37,9 @@ export class CachedAccount {
   @attribute()
   nonNativeBalance!: number;
 
+  @attribute()
+  nftMultiplier!: number;
+
   @attribute({ memberType: embed(CachedBalance) })
   claimableBalances!: Array<CachedBalance>;
 }

@@ -49,7 +49,14 @@ export async function updateChainBoosts(chain: Chain): Promise<void> {
 
     // update the stored account multipliers, removing old chain multipliers
     for (const account of cachedAccounts) {
+      const userBoostData = file.userData[account.address];
       const userChainMultipliers = boostMultipliers[account.address];
+      account.nativeBalance = userBoostData.nativeBalance;
+      account.nonNativeBalance = userBoostData.nonNativeBalance;
+      account.boost = userBoostData.boost;
+      account.boostRank = userBoostData.rank;
+      account.stakeRatio = userBoostData.stakeRatio;
+      account.nftMultiplier = userBoostData.nftMultiplier;
       account.multipliers = account.multipliers.filter((m) => m.network !== chain.network).concat(userChainMultipliers);
     }
 
