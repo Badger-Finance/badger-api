@@ -2554,10 +2554,10 @@
     micromatch "4.0.2"
     tslib "2.1.0"
 
-"@tsed/swagger@6.53.0":
-  version "6.53.0"
-  resolved "https://registry.yarnpkg.com/@tsed/swagger/-/swagger-6.53.0.tgz#991ce65d9553f436e17f66d930930f3c5963112a"
-  integrity sha512-MwyI9yFPXTtfMJZZwuRlY+KXFvKiHv3I0Sq0z1CI6xKhcyVYm4kSIVsN5M/feF8aEOa6+ttYsGFzfj8c723uKw==
+"@tsed/swagger@6.55.2":
+  version "6.55.2"
+  resolved "https://registry.yarnpkg.com/@tsed/swagger/-/swagger-6.55.2.tgz#2508291c0d36a810d602bf66c20d1ccaf08dc881"
+  integrity sha512-M2jOLw3pjgmh/y+HFeCduvmgcRqlNg/WPxCQwdj3A/WEiZzu02FqkiA1sLLFIeah7RQ07ViIi/HAhL3v8IHvcQ==
   dependencies:
     swagger-ui-dist "^3.46.0"
     tslib "2.1.0"
@@ -12832,15 +12832,10 @@ tslib@^1.8.1, tslib@^1.9.0:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
 
-tslib@^2, tslib@^2.0.3, tslib@^2.1.0, tslib@^2.3.0, tslib@~2.3.0:
+tslib@^2, tslib@^2.0.3, tslib@^2.1.0, tslib@^2.2.0, tslib@^2.3.0, tslib@~2.3.0:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.1.tgz#e8a335add5ceae51aa261d32a490158ef042ef01"
   integrity sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==
-
-tslib@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.2.0.tgz#fb2c475977e35e241311ede2693cee1ec6698f5c"
-  integrity sha512-gS9GVHRU+RGn5KQM2rllAlR3dU6m7AcpJKdtH8gFvQiC4Otgk98XnmMU+nZenHt/+VhnBPWwgrJsyrdcw6i23w==
 
 tsutils@^3.17.1, tsutils@^3.21.0:
   version "3.21.0"
