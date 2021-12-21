@@ -30,7 +30,7 @@
     "@tsed/json-mapper": "6.53.0",
     "@tsed/platform-aws": "6.53.0",
     "@tsed/platform-express": "6.53.0",
-    "@tsed/schema": "6.53.0",
+    "@tsed/schema": "6.60.2",
     "@tsed/swagger": "6.53.0",
     "@types/cors": "^2.8.12",
     "aws-sdk": "^2.1045.0",
