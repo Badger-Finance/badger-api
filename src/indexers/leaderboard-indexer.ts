@@ -57,7 +57,9 @@ async function generateChainBoostsLeaderBoard(chain: Chain): Promise<CachedBoost
         const [_a, aData] = a;
         const [_b, bData] = b;
         if (aData.boost === bData.boost) {
-          return bData.nativeBalance - aData.nativeBalance;
+          const aRatioBalance = aData.stakeRatio * aData.nativeBalance;
+          const bRatioBalance = bData.stakeRatio * bData.nativeBalance;
+          return bRatioBalance - aRatioBalance;
         }
         return bData.boost - aData.boost;
       })
