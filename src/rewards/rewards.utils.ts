@@ -12,7 +12,7 @@ import { uniformPerformance } from '../protocols/interfaces/performance.interfac
 import { createValueSource } from '../protocols/interfaces/value-source.interface';
 import { tokenEmission } from '../protocols/protocols.utils';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
-import { getCachedSett } from '../vaults/vaults.utils';
+import { getCachedVault } from '../vaults/vaults.utils';
 import { Token } from '../tokens/interfaces/token.interface';
 import { getToken } from '../tokens/tokens.utils';
 import { RewardMerkleDistribution } from './interfaces/merkle-distributor.interface';
@@ -78,7 +78,7 @@ export async function getRewardEmission(chain: Chain, VaultDefinition: VaultDefi
     return [];
   }
   const { settToken } = VaultDefinition;
-  const sett = await getCachedSett(VaultDefinition);
+  const sett = await getCachedVault(VaultDefinition);
   if (sett.settToken === TOKENS.BICVX) {
     delete boostFile.multiplierData[sett.settToken];
   }

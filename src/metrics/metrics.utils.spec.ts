@@ -1,13 +1,13 @@
 import { Vault } from '@badger-dao/sdk';
-import * as AccountUtils from '../accounts/accounts.utils';
+import * as accountsUtils from '../accounts/accounts.utils';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
-import * as SettUtils from '../vaults/vaults.utils';
+import * as vaultUtils from '../vaults/vaults.utils';
 import { getProtocolMetrics, getProtocolSettMetrics, getProtocolTotalUsers } from './metric.utils';
 
 describe('metrics.utils', () => {
   beforeEach(() => {
     jest
-      .spyOn(AccountUtils, 'getAccounts')
+      .spyOn(accountsUtils, 'getAccounts')
       .mockReturnValue(
         Promise.resolve([
           '0x0000000000000000000000000000000000000000',
@@ -21,9 +21,9 @@ describe('metrics.utils', () => {
       );
 
     jest
-      .spyOn(SettUtils, 'getCachedSett')
+      .spyOn(vaultUtils, 'getCachedVault')
       .mockImplementation(
-        async (VaultDefinition: VaultDefinition): Promise<Vault> => SettUtils.defaultVault(VaultDefinition),
+        async (VaultDefinition: VaultDefinition): Promise<Vault> => vaultUtils.defaultVault(VaultDefinition),
       );
   });
 

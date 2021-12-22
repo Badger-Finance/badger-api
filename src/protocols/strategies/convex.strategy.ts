@@ -24,7 +24,7 @@ import {
 import { getPrice } from '../../prices/prices.utils';
 import { SourceType } from '../../rewards/enums/source-type.enum';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
-import { getCachedSett, VAULT_SOURCE } from '../../vaults/vaults.utils';
+import { getCachedVault, VAULT_SOURCE } from '../../vaults/vaults.utils';
 import { CachedLiquidityPoolTokenBalance } from '../../tokens/interfaces/cached-liquidity-pool-token-balance.interface';
 import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
 import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
@@ -181,7 +181,7 @@ async function getVaultSources(chain: Chain, VaultDefinition: VaultDefinition): 
   const duration = (await crv.duration()).toNumber();
   const scalar = ONE_YEAR_SECONDS / duration;
   const poolValue = depositLocked * depositPrice.usd;
-  const sett = await getCachedSett(VaultDefinition);
+  const sett = await getCachedVault(VaultDefinition);
   // bps to percentage
   const fees = 100 - (sett.strategy.performanceFee + sett.strategy.strategistFee) / 100;
 
@@ -454,7 +454,7 @@ export async function getCurveSettTokenBalance(chain: Chain, token: string): Pro
   const depositToken = getToken(definition.depositToken);
   const cachedTokens = await getCurvePoolBalance(chain, definition.depositToken);
   const contract = Erc20__factory.connect(depositToken.address, chain.provider);
-  const sett = await getCachedSett(definition);
+  const sett = await getCachedVault(definition);
   const totalSupply = parseFloat(ethers.utils.formatEther(await contract.totalSupply()));
   const scalar = sett.balance / totalSupply;
   cachedTokens.forEach((cachedToken) => {

@@ -6,7 +6,7 @@ import { uniformPerformance } from '../protocols/interfaces/performance.interfac
 import { createValueSource, ValueSource } from '../protocols/interfaces/value-source.interface';
 import * as protocolsUtils from '../protocols/protocols.utils';
 import { Server } from '../Server';
-import * as settsUtils from './vaults.utils';
+import * as vaultsUtils from './vaults.utils';
 import { TokenBalance } from '../tokens/interfaces/token-balance.interface';
 import * as tokensUtils from '../tokens/tokens.utils';
 import { mockBalance } from '../tokens/tokens.utils';
@@ -23,15 +23,15 @@ describe('SettsController', () => {
 
   const setupTest = (): void => {
     jest
-      .spyOn(settsUtils, 'getCachedSett')
+      .spyOn(vaultsUtils, 'getCachedVault')
       .mockImplementation(
-        async (VaultDefinition: VaultDefinition): Promise<Vault> => settsUtils.defaultVault(VaultDefinition),
+        async (VaultDefinition: VaultDefinition): Promise<Vault> => vaultsUtils.defaultVault(VaultDefinition),
       );
     jest
       .spyOn(protocolsUtils, 'getVaultValueSources')
       .mockImplementation(async (VaultDefinition: VaultDefinition): Promise<ValueSource[]> => {
         const performance = parseInt(VaultDefinition.settToken.slice(0, 5), 16) / 100;
-        const underlying = createValueSource(settsUtils.VAULT_SOURCE, uniformPerformance(performance));
+        const underlying = createValueSource(vaultsUtils.VAULT_SOURCE, uniformPerformance(performance));
         const badger = createValueSource('Badger Rewards', uniformPerformance(performance));
         const digg = createValueSource('Digg Rewards', uniformPerformance(performance));
         const fees = createValueSource('Curve Trading Fees', uniformPerformance(performance));
