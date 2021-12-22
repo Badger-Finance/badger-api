@@ -25,14 +25,12 @@ import { CachedSettSnapshot } from '../vaults/interfaces/cached-sett-snapshot.in
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { VaultSnapshot } from '../vaults/interfaces/vault-snapshot.interface';
 import { VaultsService } from '../vaults/vaults.service';
-import { getBoostWeight, getPricePerShare, getSett, getStrategyInfo } from '../vaults/vaults.utils';
+import { getBoostWeight, getPricePerShare, getVault, getStrategyInfo } from '../vaults/vaults.utils';
 import { CachedLiquidityPoolTokenBalance } from '../tokens/interfaces/cached-liquidity-pool-token-balance.interface';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
 import { formatBalance, getToken, toCachedBalance } from '../tokens/tokens.utils';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 import { getLiquidityData } from '../protocols/common/swap.utils';
-
-// TODO: Figure out what to do with accounts indexer stuff
 
 export function chunkArray(addresses: string[], count: number): string[][] {
   const chunks: string[][] = [];
@@ -60,15 +58,13 @@ export async function batchRefreshAccounts(
   }
 }
 
-// TODO: Figure out what to do with accounts indexer stuff
-
 export async function settToCachedSnapshot(
   chain: Chain,
   VaultDefinition: VaultDefinition,
 ): Promise<CachedSettSnapshot> {
   const settToken = getToken(VaultDefinition.settToken);
   const depositToken = getToken(VaultDefinition.depositToken);
-  const { sett } = await getSett(chain.graphUrl, settToken.address);
+  const { sett } = await getVault(chain.graphUrl, settToken.address);
 
   if (!sett) {
     // sett has not been indexed yet, or encountered a graph error
@@ -115,7 +111,7 @@ export const settToSnapshot = async (
   block: number,
 ): Promise<VaultSnapshot | null> => {
   const queryBlock = await getQueryBlock(chain, block);
-  const sett = await getSett(chain.graphUrl, VaultDefinition.settToken, queryBlock);
+  const sett = await getVault(chain.graphUrl, VaultDefinition.settToken, queryBlock);
   const settToken = getToken(VaultDefinition.settToken);
   const depositToken = getToken(VaultDefinition.depositToken);
 
@@ -145,11 +141,11 @@ export const settToSnapshot = async (
   });
 };
 
-export const getIndexedBlock = async (
+export async function getIndexedBlock(
   VaultDefinition: VaultDefinition,
   startBlock: number,
   alignment: number,
-): Promise<number> => {
+): Promise<number> {
   const alignedStartBlock = startBlock - (startBlock % alignment);
   try {
     const mapper = getDataMapper();
@@ -165,7 +161,7 @@ export const getIndexedBlock = async (
   } catch (err) {
     return alignedStartBlock;
   }
-};
+}
 
 export const valueSourceToCachedValueSource = (
   valueSource: ValueSource,
@@ -210,14 +206,6 @@ export async function getUnderlyingPerformance(VaultDefinition: VaultDefinition)
   );
 }
 
-export async function getSettTokenPerformances(
-  chain: Chain,
-  VaultDefinition: VaultDefinition,
-): Promise<CachedValueSource[]> {
-  const performances = await VaultsService.getSettTokenPerformance(chain, VaultDefinition);
-  return performances.map((perf) => valueSourceToCachedValueSource(perf, VaultDefinition, 'derivative'));
-}
-
 export async function getProtocolValueSources(
   chain: Chain,
   VaultDefinition: VaultDefinition,
@@ -253,16 +241,15 @@ export async function getProtocolValueSources(
 
 const ARB_CRV_SETTS = [TOKENS.BARB_CRV_RENBTC, TOKENS.BARB_CRV_TRICRYPTO, TOKENS.BARB_CRV_TRICRYPTO_LITE];
 
-export async function getSettValueSources(
+export async function getVaultValueSources(
   chain: Chain,
   VaultDefinition: VaultDefinition,
 ): Promise<CachedValueSource[]> {
   try {
-    const [underlying, emission, protocol, derivative] = await Promise.all([
+    const [underlying, emission, protocol] = await Promise.all([
       getUnderlyingPerformance(VaultDefinition),
       getRewardEmission(chain, VaultDefinition),
       getProtocolValueSources(chain, VaultDefinition),
-      getSettTokenPerformances(chain, VaultDefinition),
     ]);
 
     // check for any emission removal
@@ -271,7 +258,7 @@ export async function getSettValueSources(
     oldEmission.forEach((source) => (oldSources[source.addressValueSourceType] = source));
 
     // remove updated sources from old source list
-    const newSources = [underlying, ...emission, ...protocol, ...derivative];
+    const newSources = [underlying, ...emission, ...protocol];
 
     // TODO: remove once badger tree tracking events supported
     if (ARB_CRV_SETTS.includes(VaultDefinition.settToken)) {

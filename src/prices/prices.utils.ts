@@ -3,7 +3,7 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
 import { ChainStrategy } from '../chains/strategies/chain.strategy';
 import { COINGECKO_URL } from '../config/constants';
-import { getCachedSett, getVaultDefinition } from '../vaults/vaults.utils';
+import { getCachedVault, getVaultDefinition } from '../vaults/vaults.utils';
 import { TokenType } from '../tokens/enums/token-type.enum';
 import { PriceData } from '../tokens/interfaces/price-data.interface';
 import { Token } from '../tokens/interfaces/token.interface';
@@ -174,7 +174,7 @@ export const getVaultTokenPrice = async (contract: string): Promise<TokenPrice> 
     getVaultDefinition(targetChain, token.address) ?? getVaultDefinition(targetChain, vaultToken.address);
   const [vaultTokenPrice, vaultTokenSnapshot] = await Promise.all([
     getPrice(vaultToken.address),
-    getCachedSett(vaultDefintion),
+    getCachedVault(vaultDefintion),
   ]);
   vaultTokenPrice.name = token.name;
   vaultTokenPrice.address = token.address;

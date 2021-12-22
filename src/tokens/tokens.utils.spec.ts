@@ -30,7 +30,7 @@ describe('token.utils', () => {
   const rook = '0xfA5047c9c78B8877af97BDcb85Db743fD7313d4a';
 
   beforeEach(() => {
-    jest.spyOn(vaultUtils, 'getCachedSett').mockImplementation(async (vault: VaultDefinition) => {
+    jest.spyOn(vaultUtils, 'getCachedVault').mockImplementation(async (vault: VaultDefinition) => {
       const defaultVault = vaultUtils.defaultVault(vault);
       defaultVault.balance = 10;
       return defaultVault;

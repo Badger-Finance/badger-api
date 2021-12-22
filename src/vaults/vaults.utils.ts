@@ -18,9 +18,9 @@ import { Protocol, Vault, VaultState, VaultType } from '@badger-dao/sdk';
 
 export const VAULT_SOURCE = 'Vault Compounding';
 
-export function defaultVault(VaultDefinition: VaultDefinition): Vault {
-  const assetToken = getToken(VaultDefinition.depositToken);
-  const vaultToken = getToken(VaultDefinition.settToken);
+export function defaultVault(vaultDefinition: VaultDefinition): Vault {
+  const assetToken = getToken(vaultDefinition.depositToken);
+  const vaultToken = getToken(vaultDefinition.settToken);
   return {
     asset: assetToken.symbol,
     apr: 0,
@@ -29,29 +29,29 @@ export function defaultVault(VaultDefinition: VaultDefinition): Vault {
       enabled: false,
       weight: 0,
     },
-    bouncer: VaultDefinition.bouncer ?? BouncerType.None,
-    name: VaultDefinition.name,
+    bouncer: vaultDefinition.bouncer ?? BouncerType.None,
+    name: vaultDefinition.name,
     protocol: Protocol.Badger,
     pricePerFullShare: 1,
     sources: [],
-    state: VaultDefinition.state ?? VaultState.Open,
+    state: vaultDefinition.state ?? VaultState.Open,
     tokens: [],
-    underlyingToken: VaultDefinition.depositToken,
+    underlyingToken: vaultDefinition.depositToken,
     value: 0,
-    newVault: !!VaultDefinition.newVault,
+    newVault: vaultDefinition.newVault ?? false,
     settAsset: vaultToken.symbol,
-    settToken: VaultDefinition.settToken,
+    settToken: vaultDefinition.settToken,
     strategy: {
       address: ethers.constants.AddressZero,
       withdrawFee: 50,
       performanceFee: 20,
       strategistFee: 10,
     },
-    type: VaultType.Standard,
+    type: vaultDefinition.protocol === Protocol.Badger ? VaultType.Native : VaultType.Standard,
   };
 }
 
-export const getSett = async (graphUrl: string, contract: string, block?: number): Promise<SettQuery> => {
+export async function getVault(graphUrl: string, contract: string, block?: number): Promise<SettQuery> {
   const badgerGraphqlClient = new GraphQLClient(graphUrl);
   const badgerGraphqlSdk = getSdk(badgerGraphqlClient);
   const settId = contract.toLowerCase();
@@ -60,9 +60,9 @@ export const getSett = async (graphUrl: string, contract: string, block?: number
     return badgerGraphqlSdk.SettSnapshot({ ...vars, block: { number: block } });
   }
   return badgerGraphqlSdk.Sett(vars);
-};
+}
 
-export const getCachedSett = async (vaultDefinition: VaultDefinition): Promise<Vault> => {
+export async function getCachedVault(vaultDefinition: VaultDefinition): Promise<Vault> {
   const sett = defaultVault(vaultDefinition);
   try {
     const mapper = getDataMapper();
@@ -91,7 +91,7 @@ export const getCachedSett = async (vaultDefinition: VaultDefinition): Promise<V
     console.error(err);
     return sett;
   }
-};
+}
 
 export const getSettSnapshots = async (VaultDefinition: VaultDefinition): Promise<VaultSnapshot[]> => {
   const end = Date.now();
