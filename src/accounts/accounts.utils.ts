@@ -10,7 +10,7 @@ import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import { CachedBoost } from '../leaderboards/interface/cached-boost.interface';
 import { getPrice, inCurrency } from '../prices/prices.utils';
 import { BoostData } from '../rewards/interfaces/boost-data.interface';
-import { getCachedSett, getVaultDefinition } from '../vaults/vaults.utils';
+import { getCachedVault, getVaultDefinition } from '../vaults/vaults.utils';
 import { formatBalance, getVaultTokens, getToken } from '../tokens/tokens.utils';
 import { AccountMap } from './interfaces/account-map.interface';
 import { CachedAccount } from './interfaces/cached-account.interface';
@@ -107,7 +107,7 @@ export async function toSettBalance(
 ): Promise<CachedSettBalance> {
   const settDefinition = getVaultDefinition(chain, settBalance.sett.id);
   const { netShareDeposit, grossDeposit, grossWithdraw } = settBalance;
-  const { pricePerFullShare } = await getCachedSett(settDefinition);
+  const { pricePerFullShare } = await getCachedVault(settDefinition);
 
   const depositToken = getToken(settDefinition.depositToken);
   const settToken = getToken(settDefinition.settToken);

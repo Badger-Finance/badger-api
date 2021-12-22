@@ -8,7 +8,7 @@ import { xDaiStrategy } from '../chains/strategies/xdai.strategy';
 import { SettQuery } from '../graphql/generated/badger';
 import * as priceUtils from '../prices/prices.utils';
 import { CachedSettSnapshot } from '../vaults/interfaces/cached-sett-snapshot.interface';
-import * as settUtils from '../vaults/vaults.utils';
+import * as vaultUtils from '../vaults/vaults.utils';
 import { refreshSettSnapshots } from './sett-snapshots-indexer';
 import { BigNumber, ethers } from 'ethers';
 import { BaseStrategy } from '../chains/strategies/base.strategy';
@@ -27,30 +27,32 @@ describe('refreshSettSnapshots', () => {
   let put: jest.SpyInstance<Promise<StringToAnyObjectMap>, [items: PutParameters<StringToAnyObjectMap>]>;
 
   beforeEach(async () => {
-    getSettMock = jest.spyOn(settUtils, 'getSett').mockImplementation(async (_graphUrl: string, _contract: string) => ({
-      sett: {
-        id: TOKENS.BBADGER,
-        balance: 0,
-        token: {
-          id: TOKENS.BADGER,
-          decimals: 18,
+    getSettMock = jest
+      .spyOn(vaultUtils, 'getVault')
+      .mockImplementation(async (_graphUrl: string, _contract: string) => ({
+        sett: {
+          id: TOKENS.BBADGER,
+          balance: 0,
+          token: {
+            id: TOKENS.BADGER,
+            decimals: 18,
+          },
+          netDeposit: 0,
+          netShareDeposit: 0,
+          pricePerFullShare: 1,
+          totalSupply: 10,
         },
-        netDeposit: 0,
-        netShareDeposit: 0,
-        pricePerFullShare: 1,
-        totalSupply: 10,
-      },
-    }));
-    jest.spyOn(settUtils, 'getCachedSett').mockImplementation(async (sett) => settUtils.defaultVault(sett));
-    jest.spyOn(settUtils, 'getStrategyInfo').mockImplementation(async (_chain, _sett) => ({
+      }));
+    jest.spyOn(vaultUtils, 'getCachedVault').mockImplementation(async (sett) => vaultUtils.defaultVault(sett));
+    jest.spyOn(vaultUtils, 'getStrategyInfo').mockImplementation(async (_chain, _sett) => ({
       address: ethers.constants.AddressZero,
       withdrawFee: 50,
       performanceFee: 20,
       strategistFee: 10,
     }));
-    jest.spyOn(settUtils, 'getBoostWeight').mockImplementation(async (_chain, _sett) => BigNumber.from(5100));
+    jest.spyOn(vaultUtils, 'getBoostWeight').mockImplementation(async (_chain, _sett) => BigNumber.from(5100));
     jest
-      .spyOn(settUtils, 'getPricePerShare')
+      .spyOn(vaultUtils, 'getPricePerShare')
       .mockImplementation(async (_chain, ppfs, _sett, _block) => Number(ethers.utils.formatEther(ppfs)));
 
     put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();

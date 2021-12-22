@@ -7,7 +7,7 @@ import { SwaprStrategy__factory } from '../../contracts/factories/SwaprStrategy_
 import { valueSourceToCachedValueSource } from '../../indexers/indexer.utils';
 import { getPrice } from '../../prices/prices.utils';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
-import { getCachedSett } from '../../vaults/vaults.utils';
+import { getCachedVault } from '../../vaults/vaults.utils';
 import { formatBalance, getToken } from '../../tokens/tokens.utils';
 import { CachedValueSource } from '../interfaces/cached-value-source.interface';
 import { uniformPerformance } from '../interfaces/performance.interface';
@@ -34,7 +34,7 @@ export class SwaprStrategy {
 async function getSwaprEmission(chain: Chain, VaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
   const compoundScalar = COMPOUND_SCALARS[VaultDefinition.settToken] ?? 0;
   const helperToken = getToken(TOKENS.BARB_SWP_SWPR_WETH);
-  const cachedSett = await getCachedSett(VaultDefinition);
+  const cachedSett = await getCachedVault(VaultDefinition);
   const { strategy } = cachedSett;
   if (strategy.address === ethers.constants.AddressZero) {
     return [];
@@ -47,7 +47,7 @@ async function getSwaprEmission(chain: Chain, VaultDefinition: VaultDefinition):
     stakingContract.secondsDuration(),
     stakingContract.totalStakedTokensAmount(),
     getPrice(VaultDefinition.depositToken),
-    getCachedSett(VaultDefinition),
+    getCachedVault(VaultDefinition),
   ]);
   const stakedAmount = formatBalance(totalSupply) * lpTokenPrice.usd;
   const strategyFeeMultiplier = 1 - (sett.strategy.performanceFee + sett.strategy.strategistFee) / 10000;

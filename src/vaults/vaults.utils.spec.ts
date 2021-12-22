@@ -6,10 +6,10 @@ import { Ethereum } from '../chains/config/eth.config';
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
 import { randomPerformance, randomSett, randomSnapshot, randomSnapshots, setupMapper } from '../test/tests.utils';
 import { getToken } from '../tokens/tokens.utils';
-import { defaultVault, getCachedSett, getPerformance, getVaultDefinition, getSettSnapshots } from './vaults.utils';
+import { defaultVault, getCachedVault, getPerformance, getVaultDefinition, getSettSnapshots } from './vaults.utils';
 
-describe('setts.utils', () => {
-  describe('VaultState', () => {
+describe('vaults.utils', () => {
+  describe('defaultVault', () => {
     it('returns a sett default fields', () => {
       const settDefinition = randomSett();
       const depositToken = getToken(settDefinition.depositToken);
@@ -47,22 +47,22 @@ describe('setts.utils', () => {
     });
   });
 
-  describe('getCachedSett', () => {
-    describe('no cached sett exists', () => {
+  describe('getCachedVault', () => {
+    describe('no cached vault exists', () => {
       it('returns the default sett', async () => {
         setupMapper([]);
         const settDefinition = randomSett();
-        const cached = await getCachedSett(settDefinition);
+        const cached = await getCachedVault(settDefinition);
         expect(cached).toMatchObject(defaultVault(settDefinition));
       });
     });
 
-    describe('a cached sett exists', () => {
-      it('returns the cached sett', async () => {
+    describe('a cached vault exists', () => {
+      it('returns the vault sett', async () => {
         const sett = randomSett();
         const snapshot = randomSnapshot(sett);
         setupMapper([snapshot]);
-        const cached = await getCachedSett(sett);
+        const cached = await getCachedVault(sett);
         const expected = defaultVault(sett);
         expected.pricePerFullShare = snapshot.balance / snapshot.supply;
         expected.balance = snapshot.balance;

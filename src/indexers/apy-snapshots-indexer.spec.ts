@@ -39,7 +39,7 @@ describe('apy-snapshots-indexer', () => {
   describe('refreshChainApySnapshots', () => {
     it('calls batchPut for valid value source', async () => {
       const batchPut = mockBatchPut([mockSett]);
-      jest.spyOn(indexerUtils, 'getSettValueSources').mockReturnValue(Promise.resolve([mockSett]));
+      jest.spyOn(indexerUtils, 'getVaultValueSources').mockReturnValue(Promise.resolve([mockSett]));
       await refreshChainApySnapshots(chain);
       expect(batchPut.mock.calls[0][0]).toEqual([mockSett]);
       // Make sure was called for each sett in the chain
@@ -47,7 +47,7 @@ describe('apy-snapshots-indexer', () => {
     });
     it('doesnt call batch put if value source invalid', async () => {
       const batchPut = mockBatchPut([mockInvalidSett]);
-      jest.spyOn(indexerUtils, 'getSettValueSources').mockReturnValue(Promise.resolve([mockInvalidSett]));
+      jest.spyOn(indexerUtils, 'getVaultValueSources').mockReturnValue(Promise.resolve([mockInvalidSett]));
       await refreshChainApySnapshots(chain);
       expect(batchPut.mock.calls).toEqual([]);
     });

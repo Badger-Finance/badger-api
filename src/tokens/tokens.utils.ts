@@ -5,7 +5,7 @@ import { Chain } from '../chains/config/chain.config';
 import { getPrice, inCurrency } from '../prices/prices.utils';
 import { getLiquidityData } from '../protocols/common/swap.utils';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
-import { getCachedSett } from '../vaults/vaults.utils';
+import { getCachedVault } from '../vaults/vaults.utils';
 import { arbitrumTokensConfig } from './config/arbitrum-tokens.config';
 import { bscTokensConfig } from './config/bsc-tokens.config';
 import { ethTokensConfig } from './config/eth-tokens.config';
@@ -149,7 +149,7 @@ export async function getVaultTokens(
   if (protocol && (token.lpToken || vaultDefinition.getTokenBalance)) {
     const balanceToken = token.lpToken ? depositToken : settToken;
     const [cachedSett, cachedTokenBalances] = await Promise.all([
-      getCachedSett(vaultDefinition),
+      getCachedVault(vaultDefinition),
       getCachedTokenBalances(balanceToken, protocol, currency),
     ]);
     if (cachedTokenBalances) {

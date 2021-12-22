@@ -4,7 +4,7 @@ import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { ValueSourceMap } from '../protocols/interfaces/value-source-map.interface';
 import { SourceType } from '../rewards/enums/source-type.enum';
-import { getSettValueSources } from './indexer.utils';
+import { getVaultValueSources } from './indexer.utils';
 
 export async function refreshApySnapshots() {
   const chains = loadChains();
@@ -14,7 +14,7 @@ export async function refreshApySnapshots() {
 export async function refreshChainApySnapshots(chain: Chain) {
   await Promise.all(
     chain.setts.map(async (sett) => {
-      const results = await getSettValueSources(chain, sett);
+      const results = await getVaultValueSources(chain, sett);
       const sourceMap: ValueSourceMap = {};
       results
         .filter((rawValueSource) => !isNil(rawValueSource))
