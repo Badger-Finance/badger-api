@@ -56,7 +56,7 @@ export async function updateChainBoosts(chain: Chain): Promise<void> {
       account.boost = userBoostData.boost;
       account.boostRank = userBoostData.rank;
       account.stakeRatio = userBoostData.stakeRatio;
-      account.nftMultiplier = userBoostData.nftMultiplier;
+      account.nftBalance = userBoostData.nftBalance;
       account.multipliers = account.multipliers.filter((m) => m.network !== chain.network).concat(userChainMultipliers);
     }
 

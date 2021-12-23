@@ -104,16 +104,16 @@ interface FactoryAPYResonse {
 }
 
 export class ConvexStrategy {
-  static async getValueSources(chain: Chain, VaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
-    switch (VaultDefinition.settToken) {
+  static async getValueSources(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
+    switch (vaultDefinition.vaultToken) {
       case TOKENS.BCVX:
-        return getCvxRewards(chain, VaultDefinition);
+        return getCvxRewards(chain, vaultDefinition);
       case TOKENS.BCVXCRV:
-        return getCvxCrvRewards(chain, VaultDefinition);
+        return getCvxCrvRewards(chain, vaultDefinition);
       case TOKENS.BICVX:
-        return getLockedSources(chain, VaultDefinition);
+        return getLockedSources(chain, vaultDefinition);
       default:
-        return getVaultSources(chain, VaultDefinition);
+        return getVaultSources(chain, vaultDefinition);
     }
   }
 }
@@ -446,8 +446,8 @@ export async function getCurvePoolBalance(chain: Chain, depositToken: string): P
   return cachedBalances;
 }
 
-export async function getCurveSettTokenBalance(chain: Chain, token: string): Promise<CachedLiquidityPoolTokenBalance> {
-  const definition = chain.setts.find((sett) => sett.settToken === token);
+export async function getCurveVaultTokenBalance(chain: Chain, token: string): Promise<CachedLiquidityPoolTokenBalance> {
+  const definition = chain.setts.find((sett) => sett.vaultToken === token);
   if (!definition || !definition.protocol) {
     throw new UnprocessableEntity('Cannot get curve sett token balances, requires a sett definition');
   }
@@ -462,5 +462,5 @@ export async function getCurveSettTokenBalance(chain: Chain, token: string): Pro
     cachedToken.valueUsd *= scalar;
     cachedToken.valueEth *= scalar;
   });
-  return tokenBalancesToCachedLiquidityPoolTokenBalance(definition.settToken, definition.protocol, cachedTokens);
+  return tokenBalancesToCachedLiquidityPoolTokenBalance(definition.vaultToken, definition.protocol, cachedTokens);
 }

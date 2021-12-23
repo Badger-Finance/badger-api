@@ -17,7 +17,7 @@ import { TOKENS } from '../config/tokens.config';
 describe('refreshSettSnapshots', () => {
   const supportedAddresses = loadChains()
     .flatMap((s) => s.setts)
-    .map((settDefinition) => settDefinition.settToken)
+    .map((settDefinition) => settDefinition.vaultToken)
     .sort();
 
   let getSettMock: jest.SpyInstance<

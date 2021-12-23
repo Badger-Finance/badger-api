@@ -12,30 +12,29 @@ export class VaultsController {
 
   @Get()
   @ContentType('json')
-  @Summary('Get a list of protocol setts')
-  @Description('Return a list of protocol setts for the requested chain')
+  @Summary('Get a list of protocol vaults')
+  @Description('Return a list of protocol vaults for the requested chain')
   @Returns(200, VaultModel)
   @Returns(400).Description('Not a valid chain')
-  @Returns(404).Description('Not a valid sett')
-  async listSetts(
+  async listVaults(
     @QueryParams('chain') chain?: Network,
     @QueryParams('currency') currency?: string,
   ): Promise<VaultModel[]> {
-    return this.vaultService.listSetts(Chain.getChain(chain), currency);
+    return this.vaultService.listVaults(Chain.getChain(chain), currency);
   }
 
   @Get('/:contract')
   @ContentType('json')
-  @Summary('Get a specific sett')
-  @Description('Return a specific sett for the requested chain')
+  @Summary('Get a specific vault')
+  @Description('Return a specific vault for the requested chain')
   @Returns(200, VaultModel)
   @Returns(400).Description('Not a valid chain')
-  @Returns(404).Description('Not a valid sett')
-  async getSett(
+  @Returns(404).Description('Not a valid vault')
+  async getVault(
     @PathParams('contract') contract: string,
     @QueryParams('chain') chain?: Network,
     @QueryParams('currency') currency?: string,
   ): Promise<VaultModel> {
-    return this.vaultService.getSett(Chain.getChain(chain), contract, currency);
+    return this.vaultService.getVault(Chain.getChain(chain), contract, currency);
   }
 }
