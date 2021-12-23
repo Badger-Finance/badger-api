@@ -37,6 +37,8 @@ export const updatePrice = async (token: Token): Promise<TokenPriceSnapshot> => 
     if (price.eth === 0 || price.usd === 0) {
       throw new Error('Attempting to update with bad price');
     }
+    // TODO: remove once badger arb price investigation is finished
+    console.log(`${token.name}: ${price.usd.toFixed(2)}`);
     return mapper.put(
       Object.assign(new TokenPriceSnapshot(), {
         address: address,
@@ -170,15 +172,15 @@ export const getVaultTokenPrice = async (contract: string): Promise<TokenPrice> 
     throw new UnprocessableEntity(`${token.name} vault token missing`);
   }
   const targetChain = Chain.getChain(vaultToken.network);
-  const vaultDefintion =
-    getVaultDefinition(targetChain, token.address) ?? getVaultDefinition(targetChain, vaultToken.address);
-  const [vaultTokenPrice, vaultTokenSnapshot] = await Promise.all([
+  const vaultDefintion = getVaultDefinition(targetChain, token.address);
+  const [underlyingTokenPrice, vaultTokenSnapshot] = await Promise.all([
     getPrice(vaultToken.address),
     getCachedVault(vaultDefintion),
   ]);
-  vaultTokenPrice.name = token.name;
-  vaultTokenPrice.address = token.address;
-  vaultTokenPrice.usd *= vaultTokenSnapshot.pricePerFullShare;
-  vaultTokenPrice.eth *= vaultTokenSnapshot.pricePerFullShare;
-  return vaultTokenPrice;
+  return {
+    name: token.name,
+    address: token.address,
+    usd: underlyingTokenPrice.usd * vaultTokenSnapshot.pricePerFullShare,
+    eth: underlyingTokenPrice.eth * vaultTokenSnapshot.pricePerFullShare,
+  };
 };
