@@ -2,7 +2,7 @@ import { Network, Protocol } from '@badger-dao/sdk';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
-import { getCurveVaultTokenBalance } from '../../protocols/strategies/convex.strategy';
+import { getCurveSettTokenBalance } from '../../protocols/strategies/convex.strategy';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { maticTokensConfig } from '../../tokens/config/matic-tokens.config';
 import { MaticStrategy } from '../strategies/matic.strategy';
@@ -38,7 +38,7 @@ export class Polygon extends Chain {
 export const maticSetts: VaultDefinition[] = [
   {
     name: 'Wrapped BTC/ibBTC',
-    vaultToken: TOKENS.BMATIC_SUSHI_IBBTC_WBTC,
+    settToken: TOKENS.BMATIC_SUSHI_IBBTC_WBTC,
     depositToken: TOKENS.MATIC_SUSHI_IBBTC_WBTC,
     createdBlock: 17580716,
     protocol: Protocol.Sushiswap,
@@ -46,7 +46,7 @@ export const maticSetts: VaultDefinition[] = [
   },
   {
     name: 'Wrapped BTC/USDC',
-    vaultToken: TOKENS.BMATIC_QUICK_USDC_WBTC,
+    settToken: TOKENS.BMATIC_QUICK_USDC_WBTC,
     depositToken: TOKENS.MATIC_QUICK_USDC_WBTC,
     createdBlock: 17687004,
     protocol: Protocol.Quickswap,
@@ -54,9 +54,9 @@ export const maticSetts: VaultDefinition[] = [
   },
   {
     name: 'amWBTC/renBTC',
-    vaultToken: TOKENS.BMATIC_CRV_AMWBTC,
+    settToken: TOKENS.BMATIC_CRV_AMWBTC,
     depositToken: TOKENS.MATIC_CRV_AMWBTC,
-    getTokenBalance: getCurveVaultTokenBalance,
+    getTokenBalance: getCurveSettTokenBalance,
     createdBlock: 17616741,
     protocol: Protocol.Curve,
     strategy: '0xF8F02D0d41C79a1973f65A440C98acAc7eAA8Dc1',

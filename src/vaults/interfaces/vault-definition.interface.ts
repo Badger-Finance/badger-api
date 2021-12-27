@@ -15,7 +15,7 @@ export interface VaultDefinition {
   name: string;
   newVault?: boolean;
   protocol?: Protocol;
-  vaultToken: string;
+  settToken: string;
   stage?: Stage;
   state?: VaultState;
   strategy?: string;

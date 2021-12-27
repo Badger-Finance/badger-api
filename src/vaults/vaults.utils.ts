@@ -20,7 +20,7 @@ export const VAULT_SOURCE = 'Vault Compounding';
 
 export function defaultVault(vaultDefinition: VaultDefinition): Vault {
   const assetToken = getToken(vaultDefinition.depositToken);
-  const vaultToken = getToken(vaultDefinition.vaultToken);
+  const vaultToken = getToken(vaultDefinition.settToken);
   return {
     asset: assetToken.symbol,
     apr: 0,
@@ -39,8 +39,8 @@ export function defaultVault(vaultDefinition: VaultDefinition): Vault {
     underlyingToken: vaultDefinition.depositToken,
     value: 0,
     newVault: vaultDefinition.newVault ?? false,
-    vaultAsset: vaultToken.symbol,
-    vaultToken: vaultDefinition.vaultToken,
+    settAsset: vaultToken.symbol,
+    settToken: vaultDefinition.settToken,
     strategy: {
       address: ethers.constants.AddressZero,
       withdrawFee: 50,
@@ -68,14 +68,14 @@ export async function getCachedVault(vaultDefinition: VaultDefinition): Promise<
     const mapper = getDataMapper();
     for await (const item of mapper.query(
       CachedSettSnapshot,
-      { address: vaultDefinition.vaultToken },
+      { address: vaultDefinition.settToken },
       { limit: 1, scanIndexForward: false },
     )) {
       sett.balance = item.balance;
       sett.value = item.settValue;
       if (item.balance === 0 || item.supply === 0) {
         sett.pricePerFullShare = 1;
-      } else if (vaultDefinition.vaultToken === TOKENS.BDIGG) {
+      } else if (vaultDefinition.settToken === TOKENS.BDIGG) {
         sett.pricePerFullShare = item.balance / item.supply;
       } else {
         sett.pricePerFullShare = item.ratio;
@@ -93,21 +93,21 @@ export async function getCachedVault(vaultDefinition: VaultDefinition): Promise<
   }
 }
 
-export async function getSettSnapshots(vaultDefinition: VaultDefinition): Promise<VaultSnapshot[]> {
+export const getSettSnapshots = async (VaultDefinition: VaultDefinition): Promise<VaultSnapshot[]> => {
   const end = Date.now();
   const start = end - ONE_DAY_MS * SAMPLE_DAYS;
-  return getSettSnapshotsInRange(vaultDefinition, new Date(start), new Date(end));
-}
+  return getSettSnapshotsInRange(VaultDefinition, new Date(start), new Date(end));
+};
 
 export const getSettSnapshotsInRange = async (
-  vaultDefinition: VaultDefinition,
+  VaultDefinition: VaultDefinition,
   start: Date,
   end: Date,
 ): Promise<VaultSnapshot[]> => {
   try {
     const snapshots = [];
     const mapper = getDataMapper();
-    const assetToken = getToken(vaultDefinition.vaultToken);
+    const assetToken = getToken(VaultDefinition.settToken);
 
     for await (const snapshot of mapper.query(
       VaultSnapshot,
@@ -136,14 +136,14 @@ export const getPerformance = (current: VaultSnapshot, initial: VaultSnapshot): 
 
 export const getVaultDefinition = (chain: Chain, contract: string): VaultDefinition => {
   const contractAddress = ethers.utils.getAddress(contract);
-  const VaultDefinition = chain.setts.find((s) => s.vaultToken === contractAddress);
+  const VaultDefinition = chain.setts.find((s) => s.settToken === contractAddress);
   if (!VaultDefinition) {
     throw new NotFound(`${contract} is not a valid sett`);
   }
   return VaultDefinition;
 };
 
-export async function getStrategyInfo(chain: Chain, vaultDefinition: VaultDefinition): Promise<VaultStrategy> {
+export async function getStrategyInfo(chain: Chain, sett: VaultDefinition): Promise<VaultStrategy> {
   const defaultStrategyInfo = {
     address: ethers.constants.AddressZero,
     withdrawFee: 0,
@@ -151,13 +151,13 @@ export async function getStrategyInfo(chain: Chain, vaultDefinition: VaultDefini
     strategistFee: 0,
   };
   try {
-    const contract = Sett__factory.connect(vaultDefinition.vaultToken, chain.provider);
+    const contract = Sett__factory.connect(sett.settToken, chain.provider);
     const controllerAddr = await contract.controller();
     if (controllerAddr === ethers.constants.AddressZero) {
       return defaultStrategyInfo;
     }
     const controller = Controller__factory.connect(controllerAddr, chain.provider);
-    const strategyAddr = await controller.strategies(vaultDefinition.depositToken);
+    const strategyAddr = await controller.strategies(sett.depositToken);
     if (strategyAddr === ethers.constants.AddressZero) {
       return defaultStrategyInfo;
     }
@@ -181,13 +181,13 @@ export async function getStrategyInfo(chain: Chain, vaultDefinition: VaultDefini
 export const getPricePerShare = async (
   chain: Chain,
   pricePerShare: BigNumber,
-  vaultDefinition: VaultDefinition,
+  sett: VaultDefinition,
   block?: number,
 ): Promise<number> => {
-  const token = getToken(vaultDefinition.vaultToken);
+  const token = getToken(sett.settToken);
   try {
     let ppfs: BigNumber;
-    const contract = Sett__factory.connect(vaultDefinition.vaultToken, chain.provider);
+    const contract = Sett__factory.connect(sett.settToken, chain.provider);
     if (block) {
       ppfs = await contract.getPricePerFullShare({ blockTag: block });
     } else {
@@ -199,10 +199,10 @@ export const getPricePerShare = async (
   }
 };
 
-export async function getBoostWeight(chain: Chain, vaultDefinition: VaultDefinition): Promise<BigNumber> {
+export async function getBoostWeight(chain: Chain, VaultDefinition: VaultDefinition): Promise<BigNumber> {
   if (!chain.emissionControl) {
     return ethers.constants.Zero;
   }
   const emissionControl = EmissionControl__factory.connect(chain.emissionControl, chain.provider);
-  return emissionControl.boostedEmissionRate(vaultDefinition.vaultToken);
+  return emissionControl.boostedEmissionRate(VaultDefinition.settToken);
 }

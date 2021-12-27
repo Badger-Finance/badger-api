@@ -28,11 +28,11 @@ export class VaultModel implements Vault {
   @Property()
   public asset: string;
 
-  @Title('vaultAsset')
-  @Description('Vault asset name')
+  @Title('settAsset')
+  @Description('Sett asset name')
   @Example('bcrvTricrypto')
   @Property()
-  public vaultAsset: string;
+  public settAsset: string;
 
   @Title('state')
   @Description('Launch state of the sett')
@@ -46,11 +46,11 @@ export class VaultModel implements Vault {
   @Property()
   public underlyingToken: string;
 
-  @Title('vaultToken')
+  @Title('settToken')
   @Description('Contract address for sett token')
   @Example('0x2260fac5e5542a773aa44fbcfedf7c193bc2c599')
   @Property()
-  public vaultToken: string;
+  public settToken: string;
 
   @Title('value')
   @Description('Currency denominated sett value')
@@ -143,9 +143,9 @@ export class VaultModel implements Vault {
     name: string,
     state: VaultState,
     asset: string,
-    vaultAsset: string,
+    settAsset: string,
     underlyingToken: string,
-    vaultToken: string,
+    settToken: string,
     value: number,
     balance: number,
     protocol: Protocol,
@@ -164,9 +164,9 @@ export class VaultModel implements Vault {
     this.name = name;
     this.state = state;
     this.asset = asset;
-    this.vaultAsset = vaultAsset;
+    this.settAsset = settAsset;
     this.underlyingToken = underlyingToken;
-    this.vaultToken = vaultToken;
+    this.settToken = settToken;
     this.value = value;
     this.balance = balance;
     this.protocol = protocol;

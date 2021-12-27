@@ -72,20 +72,20 @@ export function getClaimableRewards(
   return Promise.all(requests);
 }
 
-export async function getRewardEmission(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
+export async function getRewardEmission(chain: Chain, VaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
   const boostFile = await getBoostFile(chain);
-  if (!chain.rewardsLogger || vaultDefinition.depositToken === TOKENS.DIGG || !boostFile) {
+  if (!chain.rewardsLogger || VaultDefinition.depositToken === TOKENS.DIGG || !boostFile) {
     return [];
   }
-  const { vaultToken } = vaultDefinition;
-  const vault = await getCachedVault(vaultDefinition);
-  if (vault.vaultToken === TOKENS.BICVX) {
-    delete boostFile.multiplierData[vault.vaultToken];
+  const { settToken } = VaultDefinition;
+  const sett = await getCachedVault(VaultDefinition);
+  if (sett.settToken === TOKENS.BICVX) {
+    delete boostFile.multiplierData[sett.settToken];
   }
-  const boostRange = boostFile.multiplierData[vault.vaultToken] ?? { min: 1, max: 1 };
+  const boostRange = boostFile.multiplierData[sett.settToken] ?? { min: 1, max: 1 };
   const sdk = new BadgerSDK(parseInt(chain.chainId, 16), chain.batchProvider);
   await sdk.ready();
-  const activeSchedules = await sdk.rewards.loadActiveSchedules(vaultToken);
+  const activeSchedules = await sdk.rewards.loadActiveSchedules(settToken);
 
   // Badger controlled addresses are blacklisted from receiving rewards. We only dogfood on ETH
   let ignoredTVL = 0;
@@ -100,7 +100,7 @@ export async function getRewardEmission(chain: Chain, vaultDefinition: VaultDefi
       blacklistedAccounts.map(async (a) => AccountsService.cachedAccountToAccount(chain, a)),
     );
     ignoredTVL = transformedAccounts
-      .map((a) => a.data[vault.vaultToken])
+      .map((a) => a.data[sett.settToken])
       .map((s) => (s ? s.value : 0))
       .reduce((total, value) => total + value, 0);
   }
@@ -130,10 +130,10 @@ export async function getRewardEmission(chain: Chain, vaultDefinition: VaultDefi
     const [price, token] = await Promise.all([getPrice(schedule.token), getToken(schedule.token)]);
     const durationScalar = ONE_YEAR_SECONDS / (schedule.end - schedule.start);
     const yearlyEmission = price.usd * schedule.amount * durationScalar;
-    const apr = (yearlyEmission / (vault.value - ignoredTVL)) * 100;
+    const apr = (yearlyEmission / (sett.value - ignoredTVL)) * 100;
     let proRataAPR = apr;
-    if (vault.boost.enabled && token.address === chain.getBadgerTokenAddress()) {
-      const boostedAPR = (vault.boost.weight / 10_000) * proRataAPR;
+    if (sett.boost.enabled && token.address === chain.getBadgerTokenAddress()) {
+      const boostedAPR = (sett.boost.weight / 10_000) * proRataAPR;
       proRataAPR = proRataAPR - boostedAPR;
       const boostedSource = createValueSource(
         `Boosted ${token.name} Rewards`,
@@ -141,10 +141,10 @@ export async function getRewardEmission(chain: Chain, vaultDefinition: VaultDefi
         false,
         boostRange,
       );
-      emissionSources.push(valueSourceToCachedValueSource(boostedSource, vaultDefinition, tokenEmission(token, true)));
+      emissionSources.push(valueSourceToCachedValueSource(boostedSource, VaultDefinition, tokenEmission(token, true)));
     }
     const proRataSource = createValueSource(`${token.name} Rewards`, uniformPerformance(proRataAPR));
-    emissionSources.push(valueSourceToCachedValueSource(proRataSource, vaultDefinition, tokenEmission(token)));
+    emissionSources.push(valueSourceToCachedValueSource(proRataSource, VaultDefinition, tokenEmission(token)));
   }
   return emissionSources;
 }

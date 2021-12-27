@@ -90,12 +90,6 @@ export class AccountModel implements Account {
   @Property()
   public stakeRatio: number;
 
-  @Title('nftBalance')
-  @Description("Currency value of an account's current nft hodlings")
-  @Example(1313.13)
-  @Property()
-  public nftBalance: number;
-
   @Title('nativeBalance')
   @Description("Currency value of an account's current native hodlings")
   @Example(1313.13)
@@ -120,6 +114,5 @@ export class AccountModel implements Account {
     this.stakeRatio = account.stakeRatio;
     this.nativeBalance = account.nativeBalance;
     this.nonNativeBalance = account.nonNativeBalance;
-    this.nftBalance = account.nftBalance;
   }
 }
