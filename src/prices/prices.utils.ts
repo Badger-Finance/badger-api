@@ -30,15 +30,12 @@ export const noPrice = (token: Token): TokenPriceSnapshot => {
 export const updatePrice = async (token: Token): Promise<TokenPriceSnapshot> => {
   const { address, name } = token;
   const strategy = ChainStrategy.getStrategy(address);
-
   try {
     const mapper = getDataMapper();
     const price = await strategy.getPrice(address);
     if (price.eth === 0 || price.usd === 0) {
       throw new Error('Attempting to update with bad price');
     }
-    // TODO: remove once badger arb price investigation is finished
-    console.log(`${token.name}: ${price.usd.toFixed(2)}`);
     return mapper.put(
       Object.assign(new TokenPriceSnapshot(), {
         address: address,
@@ -48,6 +45,7 @@ export const updatePrice = async (token: Token): Promise<TokenPriceSnapshot> => 
       }),
     );
   } catch (err) {
+    console.log(err);
     return noPrice(token);
   } // ignore issues to allow for price updates of other coins
 };
@@ -104,7 +102,8 @@ export const getContractPrice = async (contract: string): Promise<TokenPrice> =>
   );
   const contractKey = contract.toLowerCase(); // coingecko return key in lower case
   if (!result[contractKey] || !result[contractKey].usd || !result[contractKey].eth) {
-    throw new InternalServerError(`Unable to resolve ${contract} price`);
+    console.log(result);
+    throw new InternalServerError(`Unable to resolve ${contract} price by contract, ${result}`);
   }
   const token = getToken(contract);
   return {
@@ -125,12 +124,9 @@ export const getTokenPrice = async (name: string): Promise<TokenPrice> => {
     ids: name,
     vs_currencies: 'usd,eth',
   };
-  const result = await request<Record<string, { eth: number; usd: number }>>(
-    `${COINGECKO_URL}/token_price/ethereum`,
-    params,
-  );
+  const result = await request<Record<string, { eth: number; usd: number }>>(`${COINGECKO_URL}/price`, params);
   if (!result[name] || !result[name].usd || !result[name].eth) {
-    throw new InternalServerError(`Unable to resolve ${name} price`);
+    throw new InternalServerError(`Unable to resolve ${name} price by name`);
   }
   const token = getTokenByName(name);
   return {
