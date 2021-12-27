@@ -28,7 +28,7 @@ export class CachedBoost implements UserBoostData {
   stakeRatio!: number;
 
   @attribute()
-  nftBalance!: number;
+  nftMultiplier!: number;
 
   @attribute()
   nativeBalance!: number;

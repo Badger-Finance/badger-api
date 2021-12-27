@@ -60,10 +60,10 @@ export async function batchRefreshAccounts(
 
 export async function settToCachedSnapshot(
   chain: Chain,
-  vaultDefinition: VaultDefinition,
+  VaultDefinition: VaultDefinition,
 ): Promise<CachedSettSnapshot> {
-  const settToken = getToken(vaultDefinition.vaultToken);
-  const depositToken = getToken(vaultDefinition.depositToken);
+  const settToken = getToken(VaultDefinition.settToken);
+  const depositToken = getToken(VaultDefinition.depositToken);
   const { sett } = await getVault(chain.graphUrl, settToken.address);
 
   if (!sett) {
@@ -72,15 +72,15 @@ export async function settToCachedSnapshot(
   }
 
   const { balance, totalSupply, pricePerFullShare } = sett;
-  const balanceDecimals = vaultDefinition.balanceDecimals || depositToken.decimals;
-  const supplyDecimals = vaultDefinition.supplyDecimals || settToken.decimals;
+  const balanceDecimals = VaultDefinition.balanceDecimals || depositToken.decimals;
+  const supplyDecimals = VaultDefinition.supplyDecimals || settToken.decimals;
   const tokenBalance = formatBalance(balance, balanceDecimals);
   const supply = formatBalance(totalSupply, supplyDecimals);
   const [ratio, tokenPriceData, strategyInfo, boostWeight] = await Promise.all([
-    getPricePerShare(chain, pricePerFullShare, vaultDefinition),
+    getPricePerShare(chain, pricePerFullShare, VaultDefinition),
     getPrice(depositToken.address),
-    getStrategyInfo(chain, vaultDefinition),
-    getBoostWeight(chain, vaultDefinition),
+    getStrategyInfo(chain, VaultDefinition),
+    getBoostWeight(chain, VaultDefinition),
   ]);
   const value = tokenBalance * tokenPriceData.usd;
 
@@ -107,13 +107,13 @@ export async function getQueryBlock(chain: Chain, block: number): Promise<number
 
 export const settToSnapshot = async (
   chain: Chain,
-  vaultDefinition: VaultDefinition,
+  VaultDefinition: VaultDefinition,
   block: number,
 ): Promise<VaultSnapshot | null> => {
   const queryBlock = await getQueryBlock(chain, block);
-  const sett = await getVault(chain.graphUrl, vaultDefinition.vaultToken, queryBlock);
-  const settToken = getToken(vaultDefinition.vaultToken);
-  const depositToken = getToken(vaultDefinition.depositToken);
+  const sett = await getVault(chain.graphUrl, VaultDefinition.settToken, queryBlock);
+  const settToken = getToken(VaultDefinition.settToken);
+  const depositToken = getToken(VaultDefinition.depositToken);
 
   if (sett.sett == null) {
     return null;
@@ -122,11 +122,11 @@ export const settToSnapshot = async (
   const { balance, totalSupply, pricePerFullShare } = sett.sett;
   const blockData = await chain.provider.getBlock(queryBlock);
   const timestamp = blockData.timestamp * 1000;
-  const balanceDecimals = vaultDefinition.balanceDecimals || depositToken.decimals;
-  const supplyDecimals = vaultDefinition.supplyDecimals || settToken.decimals;
+  const balanceDecimals = VaultDefinition.balanceDecimals || depositToken.decimals;
+  const supplyDecimals = VaultDefinition.supplyDecimals || settToken.decimals;
   const tokenBalance = formatBalance(balance, balanceDecimals);
   const supply = formatBalance(totalSupply, supplyDecimals);
-  const ratio = await getPricePerShare(chain, pricePerFullShare, vaultDefinition, queryBlock);
+  const ratio = await getPricePerShare(chain, pricePerFullShare, VaultDefinition, queryBlock);
   const tokenPriceData = await getPrice(depositToken.address);
   const value = tokenBalance * tokenPriceData.usd;
 
@@ -142,14 +142,14 @@ export const settToSnapshot = async (
 };
 
 export async function getIndexedBlock(
-  vaultDefinition: VaultDefinition,
+  VaultDefinition: VaultDefinition,
   startBlock: number,
   alignment: number,
 ): Promise<number> {
   const alignedStartBlock = startBlock - (startBlock % alignment);
   try {
     const mapper = getDataMapper();
-    const settToken = getToken(vaultDefinition.vaultToken);
+    const settToken = getToken(VaultDefinition.settToken);
     for await (const snapshot of mapper.query(
       VaultSnapshot,
       { address: settToken.address },
@@ -165,12 +165,12 @@ export async function getIndexedBlock(
 
 export const valueSourceToCachedValueSource = (
   valueSource: ValueSource,
-  vaultDefinition: VaultDefinition,
+  VaultDefinition: VaultDefinition,
   type: string,
 ): CachedValueSource => {
   return Object.assign(new CachedValueSource(), {
-    addressValueSourceType: `${vaultDefinition.vaultToken}_${type}`,
-    address: vaultDefinition.vaultToken,
+    addressValueSourceType: `${VaultDefinition.settToken}_${type}`,
+    address: VaultDefinition.settToken,
     type,
     apr: valueSource.apr,
     name: valueSource.name,
@@ -243,28 +243,28 @@ const ARB_CRV_SETTS = [TOKENS.BARB_CRV_RENBTC, TOKENS.BARB_CRV_TRICRYPTO, TOKENS
 
 export async function getVaultValueSources(
   chain: Chain,
-  vaultDefinition: VaultDefinition,
+  VaultDefinition: VaultDefinition,
 ): Promise<CachedValueSource[]> {
   try {
     const [underlying, emission, protocol] = await Promise.all([
-      getUnderlyingPerformance(vaultDefinition),
-      getRewardEmission(chain, vaultDefinition),
-      getProtocolValueSources(chain, vaultDefinition),
+      getUnderlyingPerformance(VaultDefinition),
+      getRewardEmission(chain, VaultDefinition),
+      getProtocolValueSources(chain, VaultDefinition),
     ]);
 
     // check for any emission removal
     const oldSources: Record<string, CachedValueSource> = {};
-    const oldEmission = await getVaultCachedValueSources(vaultDefinition);
+    const oldEmission = await getVaultCachedValueSources(VaultDefinition);
     oldEmission.forEach((source) => (oldSources[source.addressValueSourceType] = source));
 
     // remove updated sources from old source list
     const newSources = [underlying, ...emission, ...protocol];
 
     // TODO: remove once badger tree tracking events supported
-    if (ARB_CRV_SETTS.includes(vaultDefinition.vaultToken)) {
+    if (ARB_CRV_SETTS.includes(VaultDefinition.settToken)) {
       const crvSource = createValueSource('CRV Rewards', uniformPerformance(underlying.apr));
       newSources.push(
-        valueSourceToCachedValueSource(crvSource, vaultDefinition, tokenEmission(getToken(TOKENS.ARB_CRV))),
+        valueSourceToCachedValueSource(crvSource, VaultDefinition, tokenEmission(getToken(TOKENS.ARB_CRV))),
       );
     }
     newSources.forEach((source) => delete oldSources[source.addressValueSourceType]);
