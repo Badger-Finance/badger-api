@@ -15,7 +15,6 @@ export const ethTokensConfig: TokenConfig = {
   [TOKENS.WBTC]: {
     address: TOKENS.WBTC,
     decimals: 8,
-    lookupName: 'wrapped-bitcoin',
     name: 'Wrapped Bitcoin',
     symbol: 'WBTC',
     type: TokenType.Contract,
