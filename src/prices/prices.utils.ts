@@ -102,8 +102,7 @@ export const getContractPrice = async (contract: string): Promise<TokenPrice> =>
   );
   const contractKey = contract.toLowerCase(); // coingecko return key in lower case
   if (!result[contractKey] || !result[contractKey].usd || !result[contractKey].eth) {
-    console.log(result);
-    throw new InternalServerError(`Unable to resolve ${contract} price by contract, ${result}`);
+    throw new InternalServerError(`Unable to resolve ${contract} price by contract`);
   }
   const token = getToken(contract);
   return {
