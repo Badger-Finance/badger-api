@@ -6,7 +6,7 @@ import { Chain } from '../../chains/config/chain.config';
 import { UNISWAP_URL } from '../../config/constants';
 import { UniV2__factory } from '../../contracts';
 import { getSdk as getUniswapSdk } from '../../graphql/generated/uniswap';
-import { getPrice, getTokenPrice } from '../../prices/prices.utils';
+import { getPrice } from '../../prices/prices.utils';
 import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
 import { formatBalance, getToken } from '../../tokens/tokens.utils';
 
@@ -131,7 +131,7 @@ export const resolveTokenPrice = async (chain: Chain, token: string, contract: s
   const isToken0 = pricingToken.address === token0;
   const knownToken = isToken0 ? token1 : token0;
   const [divisor, dividend] = isToken0 ? [reserve1, reserve0] : [reserve0, reserve1];
-  const knownTokenPrice = await getTokenPrice(knownToken);
+  const knownTokenPrice = await getPrice(knownToken);
   if (!knownTokenPrice) {
     throw new UnprocessableEntity(`Token ${pricingToken.name} cannot be priced`);
   }
