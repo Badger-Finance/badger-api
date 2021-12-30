@@ -358,12 +358,12 @@ functions:
 
   index-prices:
     handler: src/indexers/price-indexer.indexPrices
-    timeout: 45
+    timeout: 150
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-prices
           description: 'index price data for all protocol tokens'
-          rate: rate(1 minute)
+          rate: rate(3 minutes)
 
   index-sett-snapshots:
     handler: src/indexers/sett-snapshots-indexer.refreshSettSnapshots
