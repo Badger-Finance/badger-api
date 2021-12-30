@@ -6,7 +6,7 @@ import { Chain } from '../../chains/config/chain.config';
 import { UNISWAP_URL } from '../../config/constants';
 import { UniV2__factory } from '../../contracts';
 import { getSdk as getUniswapSdk } from '../../graphql/generated/uniswap';
-import { getTokenPrice } from '../../prices/prices.utils';
+import { getPrice } from '../../prices/prices.utils';
 import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
 import { formatBalance, getToken } from '../../tokens/tokens.utils';
 
@@ -89,8 +89,8 @@ export const getOnChainLiquidityPrice = async (chain: Chain, contract: string): 
 
 const resolveLiquidityPrice = async (liquidityData: LiquidityData): Promise<TokenPrice> => {
   const { contract, token0, token1, reserve0, reserve1, totalSupply } = liquidityData;
-  let t0Price = await getTokenPrice(token0);
-  let t1Price = await getTokenPrice(token1);
+  let t0Price = await getPrice(token0);
+  let t1Price = await getPrice(token1);
   if (!t0Price && !t1Price) {
     throw new UnprocessableEntity(`Token pair ${contract} cannot be priced`);
   }
@@ -131,7 +131,7 @@ export const resolveTokenPrice = async (chain: Chain, token: string, contract: s
   const isToken0 = pricingToken.address === token0;
   const knownToken = isToken0 ? token1 : token0;
   const [divisor, dividend] = isToken0 ? [reserve1, reserve0] : [reserve0, reserve1];
-  const knownTokenPrice = await getTokenPrice(knownToken);
+  const knownTokenPrice = await getPrice(knownToken);
   if (!knownTokenPrice) {
     throw new UnprocessableEntity(`Token ${pricingToken.name} cannot be priced`);
   }
