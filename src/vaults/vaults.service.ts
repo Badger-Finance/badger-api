@@ -80,13 +80,6 @@ export class VaultsService {
       const currentSnapshot = snapshots[i];
       if (currentSnapshot.timestamp <= currentCutoff) {
         updatePerformance(performance, currentTimeFrame, getPerformance(current, currentSnapshot));
-        if (vaultDefinition.depositToken === TOKENS.DIGG) {
-          console.log({ performance, timeframeIndex: SOURCE_TIME_FRAMES[timeframeIndex], current, currentSnapshot });
-          console.log({
-            start: new Date(current.timestamp).toLocaleString(),
-            end: new Date(currentSnapshot.timestamp).toLocaleString(),
-          });
-        }
         timeframeIndex += 1;
         if (timeframeIndex >= SOURCE_TIME_FRAMES.length) {
           break;
