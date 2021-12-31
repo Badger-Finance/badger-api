@@ -2,6 +2,7 @@ import { Protocol, Vault, VaultState, VaultType } from '@badger-dao/sdk';
 import { Service } from '@tsed/common';
 import { Chain } from '../chains/config/chain.config';
 import { CURRENT, ONE_DAY_MS } from '../config/constants';
+import { TOKENS } from '../config/tokens.config';
 import { uniformPerformance } from '../protocols/interfaces/performance.interface';
 import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interface';
 import { createValueSource, ValueSource } from '../protocols/interfaces/value-source.interface';
@@ -63,8 +64,8 @@ export class VaultsService {
     return vault;
   }
 
-  static async getSettPerformance(VaultDefinition: VaultDefinition): Promise<ValueSource> {
-    const snapshots = await getSettSnapshots(VaultDefinition);
+  static async getSettPerformance(vaultDefinition: VaultDefinition): Promise<ValueSource> {
+    const snapshots = await getSettSnapshots(vaultDefinition);
     const current = snapshots[CURRENT];
     if (current === undefined) {
       return createValueSource(VAULT_SOURCE, uniformPerformance(0));
@@ -79,6 +80,13 @@ export class VaultsService {
       const currentSnapshot = snapshots[i];
       if (currentSnapshot.timestamp <= currentCutoff) {
         updatePerformance(performance, currentTimeFrame, getPerformance(current, currentSnapshot));
+        if (vaultDefinition.depositToken === TOKENS.DIGG) {
+          console.log({ performance, timeframeIndex: SOURCE_TIME_FRAMES[timeframeIndex], current, currentSnapshot });
+          console.log({
+            start: new Date(current.timestamp * 1000).toLocaleString(),
+            end: new Date(currentSnapshot.timestamp * 1000).toLocaleString(),
+          });
+        }
         timeframeIndex += 1;
         if (timeframeIndex >= SOURCE_TIME_FRAMES.length) {
           break;
