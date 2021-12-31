@@ -711,13 +711,10 @@
     "@babel/helper-validator-identifier" "^7.14.5"
     to-fast-properties "^2.0.0"
 
-"@badger-dao/sdk@^1.0.45":
-  version "1.0.45"
-  resolved "https://registry.yarnpkg.com/@badger-dao/sdk/-/sdk-1.0.45.tgz#29e5a7ae1677f4c3aa037650e2d276d4ed31a8ab"
-  integrity sha512-TIwgI6Ydh2TFkjsGGjk1XwpPRTBerlBegCuCyvORxitRuvtLRVE7MNFgScVJwPjOIOq4PiJ/Abs+3FCCBiwLkg==
-  dependencies:
-    axios "^0.23.0"
-    ethers "^5.5.1"
+"@badger-dao/sdk@^1.0.53":
+  version "1.0.53"
+  resolved "https://registry.yarnpkg.com/@badger-dao/sdk/-/sdk-1.0.53.tgz#1d391c6c15e8cb44a7d9b517950234eb764ab286"
+  integrity sha512-vQCS2rKku6SHMYLrdwHpmbdkIBnHNusJ0L6fRRsUsqyH95ui6fii//NwVrl8aw0i5jjhOYgCUwAiOyQwxGO0aw==
 
 "@bcoe/v8-coverage@^0.2.3":
   version "0.2.3"
@@ -3739,13 +3736,6 @@ axios@^0.21.1:
   dependencies:
     follow-redirects "^1.10.0"
 
-axios@^0.23.0:
-  version "0.23.0"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-0.23.0.tgz#b0fa5d0948a8d1d75e3d5635238b6c4625b05149"
-  integrity sha512-NmvAE4i0YAv5cKq8zlDoPd1VLKAqX5oLuZKs8xkJa4qi6RGn0uhCYFjWtHHC9EM/MwOwYWOs53W+V0aqEXq1sg==
-  dependencies:
-    follow-redirects "^1.14.4"
-
 axios@^0.24.0:
   version "0.24.0"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.24.0.tgz#804e6fa1e4b9c5288501dd9dff56a7a0940d20d6"
@@ -6216,7 +6206,7 @@ ethereumjs-util@^6.0.0:
     ethjs-util "0.1.6"
     rlp "^2.2.3"
 
-ethers@^5.5.1, ethers@^5.5.2:
+ethers@^5.5.2:
   version "5.5.2"
   resolved "https://registry.yarnpkg.com/ethers/-/ethers-5.5.2.tgz#cd2e508c7342c44fa70392f722e8de8f2416489f"
   integrity sha512-EF5W+6Wwcu6BqVwpgmyR5U2+L4c1FQzlM/02dkZOugN3KF0cG9bzHZP+TDJglmPm2/IzCEJDT7KBxzayk7SAHw==
