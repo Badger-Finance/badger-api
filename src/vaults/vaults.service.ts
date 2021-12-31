@@ -83,8 +83,8 @@ export class VaultsService {
         if (vaultDefinition.depositToken === TOKENS.DIGG) {
           console.log({ performance, timeframeIndex: SOURCE_TIME_FRAMES[timeframeIndex], current, currentSnapshot });
           console.log({
-            start: new Date(current.timestamp * 1000).toLocaleString(),
-            end: new Date(currentSnapshot.timestamp * 1000).toLocaleString(),
+            start: new Date(current.timestamp).toLocaleString(),
+            end: new Date(currentSnapshot.timestamp).toLocaleString(),
           });
         }
         timeframeIndex += 1;
