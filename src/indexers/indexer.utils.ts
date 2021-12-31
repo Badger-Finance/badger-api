@@ -252,6 +252,10 @@ export async function getVaultValueSources(
       getProtocolValueSources(chain, VaultDefinition),
     ]);
 
+    if (vaultDefinition.depositToken === TOKENS.DIGG) {
+      console.log({ underlying, emission, protocol });
+    }
+
     // check for any emission removal
     const oldSources: Record<string, CachedValueSource> = {};
     const oldEmission = await getVaultCachedValueSources(VaultDefinition);
