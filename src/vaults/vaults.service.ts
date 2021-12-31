@@ -2,7 +2,6 @@ import { Protocol, Vault, VaultState, VaultType } from '@badger-dao/sdk';
 import { Service } from '@tsed/common';
 import { Chain } from '../chains/config/chain.config';
 import { CURRENT, ONE_DAY_MS } from '../config/constants';
-import { TOKENS } from '../config/tokens.config';
 import { uniformPerformance } from '../protocols/interfaces/performance.interface';
 import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interface';
 import { createValueSource, ValueSource } from '../protocols/interfaces/value-source.interface';
