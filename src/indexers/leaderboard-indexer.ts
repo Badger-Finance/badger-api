@@ -65,14 +65,14 @@ async function generateChainBoostsLeaderBoard(chain: Chain): Promise<CachedBoost
       })
       .map((entry, i) => {
         const [address, userBoost] = entry;
-        const { boost, stakeRatio, nftMultiplier, nativeBalance, nonNativeBalance } = userBoost;
+        const { boost, stakeRatio, nftBalance, nativeBalance, nonNativeBalance } = userBoost;
         return Object.assign(new CachedBoost(), {
           leaderboard: getLeaderboardKey(chain),
           rank: i + 1,
           address: ethers.utils.getAddress(address),
           boost,
           stakeRatio,
-          nftMultiplier,
+          nftBalance,
           nativeBalance: nativeBalance || 0,
           nonNativeBalance: nonNativeBalance || 0,
         });

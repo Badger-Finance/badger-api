@@ -18,7 +18,7 @@ describe('accounts.service', () => {
     boost: 2000,
     boostRank: 3,
     multipliers: [],
-    nftMultiplier: 1,
+    nftBalance: 1023,
     value: 320232,
     earnedValue: 2312,
     balances: [
@@ -71,7 +71,7 @@ describe('accounts.service', () => {
       rank: 3,
       boost: 2000,
       stakeRatio: 1,
-      nftMultiplier: 1,
+      nftBalance: 123213,
       nativeBalance: 2033222,
       nonNativeBalance: 23129,
     }));

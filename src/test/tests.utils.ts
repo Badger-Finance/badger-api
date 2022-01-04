@@ -48,7 +48,7 @@ export function defaultAccount(address: string): CachedAccount {
     boost: 0,
     boostRank: 0,
     multipliers: [],
-    nftMultiplier: 1,
+    nftBalance: 0,
     value: 0,
     earnedValue: 0,
     balances: [],
@@ -74,13 +74,13 @@ export const randomValue = (min?: number, max?: number): number => {
   return minPrice + Math.random() * (maxPrice - minPrice);
 };
 
-export function randomSnapshot(VaultDefinition?: VaultDefinition): CachedSettSnapshot {
-  const sett = VaultDefinition || randomSett();
+export function randomSnapshot(vaultDefinition?: VaultDefinition): CachedSettSnapshot {
+  const vault = vaultDefinition || randomVault();
   const balance = randomValue();
   const supply = randomValue();
   const ratio = balance / supply;
   return Object.assign(new CachedSettSnapshot(), {
-    address: sett.settToken,
+    address: vault.vaultToken,
     balance,
     ratio,
     settValue: randomValue(),
@@ -96,15 +96,15 @@ export function randomSnapshot(VaultDefinition?: VaultDefinition): CachedSettSna
   });
 }
 
-export function randomSett(): VaultDefinition {
+export function randomVault(): VaultDefinition {
   const definitions = loadChains().flatMap((chain) => chain.setts);
   return definitions[Math.floor(Math.random() * definitions.length)];
 }
 
-export function randomSnapshots(VaultDefinition?: VaultDefinition, count?: number): VaultSnapshot[] {
+export function randomSnapshots(vaultDefinition?: VaultDefinition, count?: number): VaultSnapshot[] {
   const snapshots: VaultSnapshot[] = [];
   const snapshotCount = count || SAMPLE_DAYS;
-  const sett = VaultDefinition || randomSett();
+  const sett = vaultDefinition || randomVault();
   for (let i = 0; i < snapshotCount; i++) {
     snapshots.push(
       Object.assign(new VaultSnapshot(), {
@@ -122,7 +122,7 @@ export function randomSnapshots(VaultDefinition?: VaultDefinition, count?: numbe
 }
 
 export function randomPerformance(): [VaultSnapshot, VaultSnapshot] {
-  const [current, initial] = randomSnapshots(randomSett(), 2);
+  const [current, initial] = randomSnapshots(randomVault(), 2);
   initial.timestamp = current.timestamp - ONE_DAY_MS;
   return [current, initial];
 }
@@ -157,7 +157,7 @@ export function randomCachedBoosts(count: number): CachedBoost[] {
         rank: i + 1,
         address: TEST_ADDR,
         boost: 2000 - i * 10,
-        nftMultiplier: 1,
+        nftBalance: 1,
         stakeRatio: 1 - i * 0.01,
         nativeBalance: 100000 / (i + 1),
         nonNativeBalance: 250000 / (i + 1),
