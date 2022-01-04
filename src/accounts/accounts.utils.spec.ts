@@ -23,9 +23,9 @@ import {
 describe('accounts.utils', () => {
   const chain = new Ethereum();
 
-  const testSettBalance = (sett: VaultDefinition): UserSettBalance => {
-    const settToken = getToken(sett.settToken);
-    const depositToken = getToken(sett.depositToken);
+  const testSettBalance = (vaultDefinition: VaultDefinition): UserSettBalance => {
+    const settToken = getToken(vaultDefinition.vaultToken);
+    const depositToken = getToken(vaultDefinition.depositToken);
     const toWei = (amt: number) => {
       const values = amt * Math.pow(10, settToken.decimals);
       return values.toString();
@@ -189,7 +189,7 @@ describe('accounts.utils', () => {
         address: TEST_ADDR,
         boost: 1,
         stakeRatio: 0,
-        nftMultiplier: 0,
+        nftBalance: 0,
         nativeBalance: 0,
         nonNativeBalance: 0,
       };

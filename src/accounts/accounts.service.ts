@@ -72,7 +72,7 @@ export class AccountsService {
       cachedAccount.claimableBalances.map((bal) => [bal.address, bal.balance]),
     );
     const cachedBoost = await getCachedBoost(chain, cachedAccount.address);
-    const { boost, rank, stakeRatio, nativeBalance, nonNativeBalance } = cachedBoost;
+    const { boost, rank, stakeRatio, nftBalance, nativeBalance, nonNativeBalance } = cachedBoost;
     const { address } = cachedAccount;
     const value = balances.map((b) => b.value).reduce((total, value) => (total += value), 0);
     const earnedValue = balances.map((b) => b.earnedValue).reduce((total, value) => (total += value), 0);
@@ -86,6 +86,7 @@ export class AccountsService {
       data,
       claimableBalances,
       stakeRatio,
+      nftBalance,
       nativeBalance,
       nonNativeBalance,
     };

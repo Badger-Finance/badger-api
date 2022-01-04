@@ -28,20 +28,20 @@ async function indexChainSetts(chain: Chain) {
   await Promise.all(chain.setts.map((sett) => indexSett(chain, sett)));
 }
 
-async function indexSett(chain: Chain, sett: VaultDefinition) {
-  const { settToken, createdBlock } = sett;
+async function indexSett(chain: Chain, vaultDefinition: VaultDefinition) {
+  const { vaultToken, createdBlock } = vaultDefinition;
   const thirtyMinutesBlocks = parseInt((chain.blocksPerYear / 365 / 24 / 2).toString());
 
-  if (!sett) {
-    throw new NotFound(`${settToken} is not a valid sett token`);
+  if (!vaultDefinition) {
+    throw new NotFound(`${vaultToken} is not a valid sett token`);
   }
 
   const mapper = getDataMapper();
-  let block = await getIndexedBlock(sett, createdBlock, thirtyMinutesBlocks);
+  let block = await getIndexedBlock(vaultDefinition, createdBlock, thirtyMinutesBlocks);
   while (true) {
     try {
       block += thirtyMinutesBlocks;
-      const snapshot = await settToSnapshot(chain, sett, block);
+      const snapshot = await settToSnapshot(chain, vaultDefinition, block);
 
       if (snapshot == null) {
         block += thirtyMinutesBlocks;
