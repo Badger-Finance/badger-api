@@ -21,7 +21,7 @@ export class SettsController {
     @QueryParams('chain') chain?: Network,
     @QueryParams('currency') currency?: string,
   ): Promise<VaultModel[]> {
-    return this.settsService.listVaults(Chain.getChain(chain), currency);
+    return this.settsService.listSetts(Chain.getChain(chain), currency);
   }
 
   @Get('/:contract')
@@ -36,6 +36,6 @@ export class SettsController {
     @QueryParams('chain') chain?: Network,
     @QueryParams('currency') currency?: string,
   ): Promise<VaultModel> {
-    return this.settsService.getVault(Chain.getChain(chain), contract, currency);
+    return this.settsService.getSett(Chain.getChain(chain), contract, currency);
   }
 }

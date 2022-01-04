@@ -144,10 +144,10 @@ export async function getVaultTokens(
   balance: number,
   currency?: string,
 ): Promise<TokenBalance[]> {
-  const { protocol, depositToken, vaultToken } = vaultDefinition;
+  const { protocol, depositToken, settToken } = vaultDefinition;
   const token = getToken(vaultDefinition.depositToken);
   if (protocol && (token.lpToken || vaultDefinition.getTokenBalance)) {
-    const balanceToken = token.lpToken ? depositToken : vaultToken;
+    const balanceToken = token.lpToken ? depositToken : settToken;
     const [cachedSett, cachedTokenBalances] = await Promise.all([
       getCachedVault(vaultDefinition),
       getCachedTokenBalances(balanceToken, protocol, currency),

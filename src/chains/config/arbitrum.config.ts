@@ -3,7 +3,7 @@ import { Stage } from '../../config/enums/stage.enum';
 import RPC from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
-import { getCurveVaultTokenBalance } from '../../protocols/strategies/convex.strategy';
+import { getCurveSettTokenBalance } from '../../protocols/strategies/convex.strategy';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { arbitrumTokensConfig } from '../../tokens/config/arbitrum-tokens.config';
 import { ArbitrumStrategy } from '../strategies/arbitrum.strategy';
@@ -40,7 +40,7 @@ export class Arbitrum extends Chain {
 export const arbitrumSetts: VaultDefinition[] = [
   {
     name: 'Wrapped Ether/Sushi Helper',
-    vaultToken: TOKENS.BARB_SUSHI_WETH_SUSHI,
+    settToken: TOKENS.BARB_SUSHI_WETH_SUSHI,
     depositToken: TOKENS.ARB_SUSHI_WETH_SUSHI,
     createdBlock: 13163959,
     protocol: Protocol.Sushiswap,
@@ -48,7 +48,7 @@ export const arbitrumSetts: VaultDefinition[] = [
   },
   {
     name: 'Sushiswap Wrapped BTC/Wrapped ETH',
-    vaultToken: TOKENS.BARB_SUSHI_WETH_WBTC,
+    settToken: TOKENS.BARB_SUSHI_WETH_WBTC,
     depositToken: TOKENS.ARB_SUSHI_WETH_WBTC,
     createdBlock: 13163959,
     protocol: Protocol.Sushiswap,
@@ -56,25 +56,25 @@ export const arbitrumSetts: VaultDefinition[] = [
   },
   {
     name: 'renBTC/wBTC',
-    vaultToken: TOKENS.BARB_CRV_RENBTC,
+    settToken: TOKENS.BARB_CRV_RENBTC,
     depositToken: TOKENS.ARB_CRV_RENBTC,
-    getTokenBalance: getCurveVaultTokenBalance,
+    getTokenBalance: getCurveSettTokenBalance,
     createdBlock: 13237551,
     protocol: Protocol.Curve,
   },
   {
     name: 'Tricrypto',
-    vaultToken: TOKENS.BARB_CRV_TRICRYPTO,
+    settToken: TOKENS.BARB_CRV_TRICRYPTO,
     depositToken: TOKENS.ARB_CRV_TRICRYPTO,
-    getTokenBalance: getCurveVaultTokenBalance,
+    getTokenBalance: getCurveSettTokenBalance,
     createdBlock: 13237551,
     protocol: Protocol.Curve,
   },
   {
     name: 'Tricrypto Light',
-    vaultToken: TOKENS.BARB_CRV_TRICRYPTO_LITE,
+    settToken: TOKENS.BARB_CRV_TRICRYPTO_LITE,
     depositToken: TOKENS.ARB_CRV_TRICRYPTO,
-    getTokenBalance: getCurveVaultTokenBalance,
+    getTokenBalance: getCurveSettTokenBalance,
     createdBlock: 13321375,
     stage: Stage.Staging,
     state: VaultState.Experimental,
@@ -82,28 +82,28 @@ export const arbitrumSetts: VaultDefinition[] = [
   },
   {
     name: 'Swapr/Wrapped ETH',
-    vaultToken: TOKENS.BARB_SWP_SWPR_WETH,
+    settToken: TOKENS.BARB_SWP_SWPR_WETH,
     depositToken: TOKENS.ARB_SWP_SWPR_WETH,
     createdBlock: 13315350,
     protocol: Protocol.Swapr,
   },
   {
     name: 'Swapr Wrapped BTC/Wrapped ETH',
-    vaultToken: TOKENS.BARB_SWP_WBTC_WETH,
+    settToken: TOKENS.BARB_SWP_WBTC_WETH,
     depositToken: TOKENS.ARB_SWP_WBTC_WETH,
     createdBlock: 13315350,
     protocol: Protocol.Swapr,
   },
   {
     name: 'Badger/Wrapped ETH',
-    vaultToken: TOKENS.BARB_SWP_BADGER_WETH,
+    settToken: TOKENS.BARB_SWP_BADGER_WETH,
     depositToken: TOKENS.ARB_SWP_BADGER_WETH,
     createdBlock: 2188169,
     protocol: Protocol.Swapr,
   },
   {
     name: 'ibBTC/Wrapped ETH',
-    vaultToken: TOKENS.BARB_SWP_IBBTC_WETH,
+    settToken: TOKENS.BARB_SWP_IBBTC_WETH,
     depositToken: TOKENS.ARB_SWP_IBBTC_WETH,
     createdBlock: 2188169,
     protocol: Protocol.Swapr,

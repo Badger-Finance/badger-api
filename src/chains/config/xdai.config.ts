@@ -32,7 +32,7 @@ export class xDai extends Chain {
 export const xDaiSetts: VaultDefinition[] = [
   {
     name: 'Wrapped BTC/Wrapped Ether',
-    vaultToken: TOKENS.BXDAI_SUSHI_WBTC_WETH,
+    settToken: TOKENS.BXDAI_SUSHI_WBTC_WETH,
     depositToken: TOKENS.XDAI_SUSHI_WBTC_WETH,
     createdBlock: 17199093,
     experimental: true,

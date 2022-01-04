@@ -63,7 +63,7 @@ describe('AccountsController', () => {
           rank: 3,
           boost: 2000,
           stakeRatio: 1,
-          nftBalance: 2033,
+          nftMultiplier: 1,
           nativeBalance: 2033222,
           nonNativeBalance: 23129,
         }));
