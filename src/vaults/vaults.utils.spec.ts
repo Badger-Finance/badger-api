@@ -4,36 +4,36 @@ import { ethers } from 'ethers';
 import { BinanceSmartChain } from '../chains/config/bsc.config';
 import { Ethereum } from '../chains/config/eth.config';
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
-import { randomPerformance, randomVault, randomSnapshot, randomSnapshots, setupMapper } from '../test/tests.utils';
+import { randomPerformance, randomSett, randomSnapshot, randomSnapshots, setupMapper } from '../test/tests.utils';
 import { getToken } from '../tokens/tokens.utils';
 import { defaultVault, getCachedVault, getPerformance, getVaultDefinition, getSettSnapshots } from './vaults.utils';
 
 describe('vaults.utils', () => {
   describe('defaultVault', () => {
     it('returns a sett default fields', () => {
-      const vaultDefinition = randomVault();
-      const depositToken = getToken(vaultDefinition.depositToken);
-      const settToken = getToken(vaultDefinition.vaultToken);
+      const settDefinition = randomSett();
+      const depositToken = getToken(settDefinition.depositToken);
+      const settToken = getToken(settDefinition.settToken);
       const expected: Vault = {
         asset: depositToken.symbol,
-        vaultAsset: settToken.symbol,
-        newVault: vaultDefinition.newVault ?? false,
-        state: vaultDefinition.state ?? VaultState.Open,
+        settAsset: settToken.symbol,
+        newVault: settDefinition.newVault ?? false,
+        state: settDefinition.state ?? VaultState.Open,
         apr: 0,
         balance: 0,
         boost: {
           enabled: false,
           weight: 0,
         },
-        bouncer: vaultDefinition.bouncer ?? BouncerType.None,
-        name: vaultDefinition.name,
+        bouncer: settDefinition.bouncer ?? BouncerType.None,
+        name: settDefinition.name,
         protocol: Protocol.Badger,
         pricePerFullShare: 1,
         sources: [],
         tokens: [],
-        underlyingToken: vaultDefinition.depositToken,
+        underlyingToken: settDefinition.depositToken,
         value: 0,
-        vaultToken: vaultDefinition.vaultToken,
+        settToken: settDefinition.settToken,
         strategy: {
           address: ethers.constants.AddressZero,
           withdrawFee: 50,
@@ -42,7 +42,7 @@ describe('vaults.utils', () => {
         },
         type: VaultType.Standard,
       };
-      const actual = defaultVault(vaultDefinition);
+      const actual = defaultVault(settDefinition);
       expect(actual).toMatchObject(expected);
     });
   });
@@ -51,7 +51,7 @@ describe('vaults.utils', () => {
     describe('no cached vault exists', () => {
       it('returns the default sett', async () => {
         setupMapper([]);
-        const settDefinition = randomVault();
+        const settDefinition = randomSett();
         const cached = await getCachedVault(settDefinition);
         expect(cached).toMatchObject(defaultVault(settDefinition));
       });
@@ -59,7 +59,7 @@ describe('vaults.utils', () => {
 
     describe('a cached vault exists', () => {
       it('returns the vault sett', async () => {
-        const sett = randomVault();
+        const sett = randomSett();
         const snapshot = randomSnapshot(sett);
         setupMapper([snapshot]);
         const cached = await getCachedVault(sett);
@@ -80,7 +80,7 @@ describe('vaults.utils', () => {
     describe('no sett snapshots exists', () => {
       it('returns the default sett', async () => {
         setupMapper([]);
-        const sett = randomVault();
+        const sett = randomSett();
         const cached = await getSettSnapshots(sett);
         expect(cached).toMatchObject([]);
       });
@@ -88,7 +88,7 @@ describe('vaults.utils', () => {
 
     describe('many sett snapshots exists', () => {
       it('returns the sett snaphots', async () => {
-        const sett = randomVault();
+        const sett = randomSett();
         const snapshots = randomSnapshots(sett);
         setupMapper(snapshots);
         const cached = await getSettSnapshots(sett);
@@ -126,7 +126,7 @@ describe('vaults.utils', () => {
       it('returns the expected sett definition', () => {
         const eth = new Ethereum();
         const expected = eth.setts[Math.floor(Math.random() * eth.setts.length)];
-        const actual = getVaultDefinition(eth, expected.vaultToken);
+        const actual = getVaultDefinition(eth, expected.settToken);
         expect(actual).toMatchObject(expected);
       });
     });
@@ -135,7 +135,7 @@ describe('vaults.utils', () => {
       it('throws a not found error', () => {
         const eth = new Ethereum();
         const expected = eth.setts[Math.floor(Math.random() * eth.setts.length)];
-        expect(() => getVaultDefinition(new BinanceSmartChain(), expected.vaultToken)).toThrow(NotFound);
+        expect(() => getVaultDefinition(new BinanceSmartChain(), expected.settToken)).toThrow(NotFound);
       });
     });
 

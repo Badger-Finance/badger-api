@@ -23,18 +23,18 @@ const COMPOUND_SCALARS = {
 };
 
 export class SwaprStrategy {
-  static async getValueSources(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
+  static async getValueSources(chain: Chain, VaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
     return Promise.all([
-      getUniV2SwapValue(SWAPR_SUBGRAPH_URL, vaultDefinition),
-      ...(await getSwaprEmission(chain, vaultDefinition)),
+      getUniV2SwapValue(SWAPR_SUBGRAPH_URL, VaultDefinition),
+      ...(await getSwaprEmission(chain, VaultDefinition)),
     ]);
   }
 }
 
-async function getSwaprEmission(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
-  const compoundScalar = COMPOUND_SCALARS[vaultDefinition.vaultToken] ?? 0;
+async function getSwaprEmission(chain: Chain, VaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
+  const compoundScalar = COMPOUND_SCALARS[VaultDefinition.settToken] ?? 0;
   const helperToken = getToken(TOKENS.BARB_SWP_SWPR_WETH);
-  const cachedSett = await getCachedVault(vaultDefinition);
+  const cachedSett = await getCachedVault(VaultDefinition);
   const { strategy } = cachedSett;
   if (strategy.address === ethers.constants.AddressZero) {
     return [];
@@ -46,8 +46,8 @@ async function getSwaprEmission(chain: Chain, vaultDefinition: VaultDefinition):
   const [duration, totalSupply, lpTokenPrice, sett] = await Promise.all([
     stakingContract.secondsDuration(),
     stakingContract.totalStakedTokensAmount(),
-    getPrice(vaultDefinition.depositToken),
-    getCachedVault(vaultDefinition),
+    getPrice(VaultDefinition.depositToken),
+    getCachedVault(VaultDefinition),
   ]);
   const stakedAmount = formatBalance(totalSupply) * lpTokenPrice.usd;
   const strategyFeeMultiplier = 1 - (sett.strategy.performanceFee + sett.strategy.strategistFee) / 10000;
@@ -66,7 +66,7 @@ async function getSwaprEmission(chain: Chain, vaultDefinition: VaultDefinition):
         `${helperToken.name} Rewards`,
         uniformPerformance(apr * strategyFeeMultiplier * compoundScalar),
       );
-      sources.push(valueSourceToCachedValueSource(swaprEmission, vaultDefinition, tokenEmission(rewardToken)));
+      sources.push(valueSourceToCachedValueSource(swaprEmission, VaultDefinition, tokenEmission(rewardToken)));
       tokenIndex++;
     } catch (err) {
       break;

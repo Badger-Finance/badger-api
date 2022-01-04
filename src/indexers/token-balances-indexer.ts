@@ -13,32 +13,32 @@ export async function refreshTokenBalances() {
   await Promise.all(chains.flatMap((c) => c.setts.flatMap(async (s) => updateTokenBalance(c, s))));
 }
 
-export async function updateTokenBalance(chain: Chain, vaultDefinition: VaultDefinition): Promise<void> {
+export async function updateTokenBalance(chain: Chain, VaultDefinition: VaultDefinition): Promise<void> {
   try {
     const mapper = getDataMapper();
-    const depositToken = getToken(vaultDefinition.depositToken);
-    if (!depositToken.lpToken && !vaultDefinition.getTokenBalance) {
+    const depositToken = getToken(VaultDefinition.depositToken);
+    if (!depositToken.lpToken && !VaultDefinition.getTokenBalance) {
       return;
     }
-    if (depositToken.lpToken && vaultDefinition.getTokenBalance) {
-      throw new UnprocessableEntity(`${vaultDefinition.name} cannot specify multiple token caching strategies!`);
+    if (depositToken.lpToken && VaultDefinition.getTokenBalance) {
+      throw new UnprocessableEntity(`${VaultDefinition.name} cannot specify multiple token caching strategies!`);
     }
     if (depositToken.lpToken) {
-      const cachedLiquidityPoolTokenBalance = await getLpTokenBalances(chain, vaultDefinition);
+      const cachedLiquidityPoolTokenBalance = await getLpTokenBalances(chain, VaultDefinition);
       if (cachedLiquidityPoolTokenBalance.tokenBalances.length === 0) {
         return;
       }
       await saveCachedTokenBalance(mapper, cachedLiquidityPoolTokenBalance);
     }
-    if (vaultDefinition.getTokenBalance) {
-      const cachedTokenBalance = await vaultDefinition.getTokenBalance(chain, vaultDefinition.vaultToken);
+    if (VaultDefinition.getTokenBalance) {
+      const cachedTokenBalance = await VaultDefinition.getTokenBalance(chain, VaultDefinition.settToken);
       if (cachedTokenBalance.tokenBalances.length === 0) {
         return;
       }
       await saveCachedTokenBalance(mapper, cachedTokenBalance);
     }
   } catch (err) {
-    console.error({ message: `Failed to index ${vaultDefinition.name} token balances`, err });
+    console.error({ message: `Failed to index ${VaultDefinition.name} token balances`, err });
   }
 }
 

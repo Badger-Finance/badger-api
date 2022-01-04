@@ -23,7 +23,7 @@ export function defaultBoost(chain: Chain, address: string): CachedBoost {
     address,
     boost: 1,
     stakeRatio: 0,
-    nftBalance: 0,
+    nftMultiplier: 0,
     nativeBalance: 0,
     nonNativeBalance: 0,
   };
@@ -75,7 +75,7 @@ export async function getCachedAccount(address: string): Promise<CachedAccount> 
     address: checksummedAccount,
     boost: 0,
     boostRank: 0,
-    nftBalance: 0,
+    nftMultiplier: 1,
     multipliers: [],
     value: 0,
     earnedValue: 0,
@@ -105,12 +105,12 @@ export async function toSettBalance(
   settBalance: UserSettBalance,
   currency?: string,
 ): Promise<CachedSettBalance> {
-  const vaultDefinition = getVaultDefinition(chain, settBalance.sett.id);
+  const settDefinition = getVaultDefinition(chain, settBalance.sett.id);
   const { netShareDeposit, grossDeposit, grossWithdraw } = settBalance;
-  const { pricePerFullShare } = await getCachedVault(vaultDefinition);
+  const { pricePerFullShare } = await getCachedVault(settDefinition);
 
-  const depositToken = getToken(vaultDefinition.depositToken);
-  const settToken = getToken(vaultDefinition.vaultToken);
+  const depositToken = getToken(settDefinition.depositToken);
+  const settToken = getToken(settDefinition.settToken);
   const currentTokens = formatBalance(netShareDeposit, settToken.decimals);
   let depositTokenDecimals = depositToken.decimals;
   if (depositToken.address === TOKENS.DIGG) {
@@ -121,15 +121,15 @@ export async function toSettBalance(
   const balanceTokens = currentTokens * pricePerFullShare;
   const earnedBalance = balanceTokens - depositedTokens + withdrawnTokens;
   const [depositTokenPrice, earnedTokens, tokens] = await Promise.all([
-    getPrice(vaultDefinition.depositToken),
-    getVaultTokens(vaultDefinition, earnedBalance, currency),
-    getVaultTokens(vaultDefinition, balanceTokens, currency),
+    getPrice(settDefinition.depositToken),
+    getVaultTokens(settDefinition, earnedBalance, currency),
+    getVaultTokens(settDefinition, balanceTokens, currency),
   ]);
 
   return Object.assign(new CachedSettBalance(), {
     network: chain.network,
-    address: vaultDefinition.vaultToken,
-    name: vaultDefinition.name,
+    address: settDefinition.settToken,
+    name: settDefinition.name,
     symbol: depositToken.symbol,
     pricePerFullShare: pricePerFullShare,
     balance: balanceTokens,

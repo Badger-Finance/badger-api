@@ -48,7 +48,7 @@ export class ChartsController {
       throw new UnprocessableEntity('Invalid contract address');
     }
 
-    const sett = Chain.getChain(chain).setts.find((sett) => sett.vaultToken === checksumContract);
+    const sett = Chain.getChain(chain).setts.find((sett) => sett.settToken === checksumContract);
 
     if (!sett) {
       throw new NotFound(`${checksumContract} is not a valid sett`);
