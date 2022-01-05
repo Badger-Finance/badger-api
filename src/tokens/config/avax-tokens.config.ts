@@ -16,7 +16,7 @@ export const avalancheTokensConfig: TokenConfig = {
     address: TOKENS.BAVAX_WBTC,
     decimals: 18,
     name: 'bWBTC',
-    symbol: 'bWTBC',
+    symbol: 'bWBTC',
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.AVAX_WBTC,
