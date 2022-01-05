@@ -3,7 +3,6 @@ import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
-import { maticTokensConfig } from '../../tokens/config/matic-tokens.config';
 import { Chain } from './chain.config';
 import { BaseStrategy } from '../strategies/base.strategy';
 import { avalancheTokensConfig } from '../../tokens/config/avax-tokens.config';
@@ -19,7 +18,7 @@ export class Avalanche extends Chain {
       avalancheTokensConfig,
       avalancheSetts,
       rpc[Network.Avalanche],
-      new BaseStrategy(Network.Avalanche, Object.keys(maticTokensConfig)),
+      new BaseStrategy(Network.Avalanche, Object.keys(avalancheTokensConfig)),
       10512000,
     );
     Chain.register(this.network, this);
@@ -29,8 +28,9 @@ export class Avalanche extends Chain {
     return this.defaultGasPrice();
   }
 
+  // TODO: Update if badger is ever updated
   getBadgerTokenAddress(): string {
-    return TOKENS.MATIC_BADGER;
+    return TOKENS.BADGER;
   }
 }
 
