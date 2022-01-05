@@ -22,7 +22,7 @@
   "dependencies": {
     "@aws/dynamodb-data-mapper": "^0.7.3",
     "@aws/dynamodb-data-mapper-annotations": "^0.7.3",
-    "@badger-dao/sdk": "^1.0.53",
+    "@badger-dao/sdk": "^1.0.55",
     "@tsed/common": "6.95.9",
     "@tsed/core": "6.95.9",
     "@tsed/di": "6.95.9",
