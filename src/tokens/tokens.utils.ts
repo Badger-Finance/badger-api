@@ -17,6 +17,7 @@ import { Token } from './interfaces/token.interface';
 import { TokenConfig } from './interfaces/token-config.interface';
 import { TokenPrice } from './interfaces/token-price.interface';
 import { TokenBalance } from '@badger-dao/sdk';
+import { avalancheTokensConfig } from './config/avax-tokens.config';
 
 // map holding all protocol token information across chains
 export const protocolTokens: TokenConfig = {
@@ -25,6 +26,7 @@ export const protocolTokens: TokenConfig = {
   ...maticTokensConfig,
   ...xDaiTokensConfig,
   ...arbitrumTokensConfig,
+  ...avalancheTokensConfig,
 };
 
 /**

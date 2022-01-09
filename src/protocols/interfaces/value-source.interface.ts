@@ -33,14 +33,14 @@ export function createValueSource(
 
 function selectPerformanceApr(performance: Performance): number {
   const minApr = 0.01;
-  if (performance.thirtyDay > minApr) {
-    return performance.thirtyDay;
-  }
   if (performance.sevenDay > minApr) {
     return performance.sevenDay;
   }
   if (performance.threeDay > minApr) {
     return performance.threeDay;
+  }
+  if (performance.thirtyDay > minApr) {
+    return performance.thirtyDay;
   }
   return performance.oneDay;
 }

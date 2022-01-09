@@ -7,6 +7,7 @@ const rpc = {
   [Network.Polygon]: process.env.MATIC_RPC || Provider.Quicknode,
   [Network.xDai]: process.env.XDAI_RPC || Provider.xDai,
   [Network.Arbitrum]: process.env.ARBITRUM_RPC || Provider.Arbitrum,
+  [Network.Avalanche]: process.env.AVALANCHE_RPC || Provider.Avalanche,
 };
 
 export default rpc;

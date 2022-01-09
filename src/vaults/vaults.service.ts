@@ -63,8 +63,8 @@ export class VaultsService {
     return vault;
   }
 
-  static async getSettPerformance(VaultDefinition: VaultDefinition): Promise<ValueSource> {
-    const snapshots = await getSettSnapshots(VaultDefinition);
+  static async getSettPerformance(vaultDefinition: VaultDefinition): Promise<ValueSource> {
+    const snapshots = await getSettSnapshots(vaultDefinition);
     const current = snapshots[CURRENT];
     if (current === undefined) {
       return createValueSource(VAULT_SOURCE, uniformPerformance(0));
