@@ -278,7 +278,7 @@ export const ethSetts: VaultDefinition[] = [
   {
     name: 'MIM / 3CRV',
     createdBlock: 13998331,
-    depositToken: TOKENS.CRV_IBBTC,
+    depositToken: TOKENS.CRV_MIM_3CRV,
     getTokenBalance: getCurveVaultTokenBalance,
     newVault: true,
     vaultToken: TOKENS.BCRV_MIM_3CRV,
@@ -289,7 +289,7 @@ export const ethSetts: VaultDefinition[] = [
   {
     name: 'FRAX / 3CRV',
     createdBlock: 13998331,
-    depositToken: TOKENS.CRV_IBBTC,
+    depositToken: TOKENS.CRV_FRAX_3CRV,
     getTokenBalance: getCurveVaultTokenBalance,
     newVault: true,
     vaultToken: TOKENS.BCRV_FRAX_3CRV,
