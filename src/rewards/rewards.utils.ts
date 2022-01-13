@@ -90,6 +90,10 @@ export async function getRewardEmission(chain: Chain, vaultDefinition: VaultDefi
   if (!schedulesCache[chain.network]) {
     const sdk = await chain.getSdk();
     schedulesCache[chain.network] = await sdk.rewards.loadActiveSchedules(vaultToken);
+    if (vaultDefinition.vaultToken === TOKENS.BCRV_IBBTC) {
+      console.log(`${vaultDefinition.name} Active Schedules`);
+      console.log(schedulesCache[chain.network]);
+    }
   }
   const activeSchedules = schedulesCache[chain.network];
 
