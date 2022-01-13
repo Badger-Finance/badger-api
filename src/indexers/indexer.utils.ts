@@ -25,7 +25,7 @@ import { CachedSettSnapshot } from '../vaults/interfaces/cached-sett-snapshot.in
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { VaultSnapshot } from '../vaults/interfaces/vault-snapshot.interface';
 import { VaultsService } from '../vaults/vaults.service';
-import { getBoostWeight, getPricePerShare, getVault, getStrategyInfo } from '../vaults/vaults.utils';
+import { getBoostWeight, getPricePerShare, getVault, getStrategyInfo, getCachedVault } from '../vaults/vaults.utils';
 import { CachedLiquidityPoolTokenBalance } from '../tokens/interfaces/cached-liquidity-pool-token-balance.interface';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
 import { formatBalance, getToken, toCachedBalance } from '../tokens/tokens.utils';
@@ -91,7 +91,7 @@ export async function settToCachedSnapshot(
     settValue: parseFloat(value.toFixed(2)),
     supply,
     strategy: strategyInfo,
-    boostWeight,
+    boostWeight: boostWeight.toNumber(),
   });
 }
 
@@ -252,7 +252,7 @@ export async function getVaultValueSources(
       getProtocolValueSources(chain, vaultDefinition),
     ]);
 
-    if (vaultDefinition.depositToken === TOKENS.DIGG) {
+    if (vaultDefinition.vaultToken === TOKENS.BCRV_IBBTC) {
       console.log({ underlying, emission, protocol });
     }
 
@@ -309,19 +309,19 @@ export async function getLatestMetadata(chain: Chain): Promise<UserClaimMetadata
 
 export async function getLpTokenBalances(
   chain: Chain,
-  sett: VaultDefinition,
+  vault: VaultDefinition,
 ): Promise<CachedLiquidityPoolTokenBalance> {
   try {
-    if (!sett.protocol) {
+    if (!vault.protocol) {
       throw new BadRequest('LP balance look up requires a defined protocol');
     }
-    const liquidityData = await getLiquidityData(chain, sett.depositToken);
+    const liquidityData = await getLiquidityData(chain, vault.depositToken);
     const { token0, token1, reserve0, reserve1, totalSupply } = liquidityData;
     const t0Token = getToken(token0);
     const t1Token = getToken(token1);
 
     // poolData returns the full liquidity pool, valueScalar acts to calculate the portion within the sett
-    const settSnapshot = await settToCachedSnapshot(chain, sett);
+    const settSnapshot = await getCachedVault(vault);
     const valueScalar = totalSupply > 0 ? settSnapshot.balance / totalSupply : 0;
     const t0TokenBalance = reserve0 * valueScalar;
     const t1TokenBalance = reserve1 * valueScalar;
@@ -330,8 +330,8 @@ export async function getLpTokenBalances(
       toCachedBalance(t1Token, t1TokenBalance),
     ]);
 
-    return tokenBalancesToCachedLiquidityPoolTokenBalance(sett.depositToken, sett.protocol, tokenBalances);
+    return tokenBalancesToCachedLiquidityPoolTokenBalance(vault.depositToken, vault.protocol, tokenBalances);
   } catch (err) {
-    throw new NotFound(`${sett.protocol} pool pair ${sett.depositToken} does not exist`);
+    throw new NotFound(`${vault.protocol} pool pair ${vault.depositToken} does not exist`);
   }
 }
