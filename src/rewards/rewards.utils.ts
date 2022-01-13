@@ -88,8 +88,7 @@ export async function getRewardEmission(chain: Chain, vaultDefinition: VaultDefi
   const boostRange = boostFile.multiplierData[vault.vaultToken] ?? { min: 1, max: 1 };
 
   if (!schedulesCache[chain.network]) {
-    const sdk = chain.getSdk();
-    await sdk.ready();
+    const sdk = await chain.getSdk();
     schedulesCache[chain.network] = await sdk.rewards.loadActiveSchedules(vaultToken);
   }
   const activeSchedules = schedulesCache[chain.network];
