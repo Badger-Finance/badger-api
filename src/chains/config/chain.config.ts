@@ -86,7 +86,7 @@ export abstract class Chain {
   async getSdk(): Promise<BadgerSDK> {
     let sdk = Chain.sdks[this.network];
     if (!sdk) {
-      sdk = new BadgerSDK(parseInt(this.chainId, 16), this.provider);
+      sdk = new BadgerSDK(parseInt(this.chainId, 16), this.batchProvider);
       Chain.sdks[this.network] = sdk;
       Chain.sdks[this.symbol] = sdk;
       if (this.network === Network.Polygon) {
