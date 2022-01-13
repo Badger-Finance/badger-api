@@ -252,6 +252,20 @@ export const ethTokensConfig: TokenConfig = {
     symbol: 'USDC',
     type: TokenType.Contract,
   },
+  [TOKENS.FRAX]: {
+    address: TOKENS.FRAX,
+    decimals: 18,
+    name: 'Frax',
+    symbol: 'FRAX',
+    type: TokenType.Contract,
+  },
+  [TOKENS.MIM]: {
+    address: TOKENS.MIM,
+    decimals: 18,
+    name: 'Magic Internet Money',
+    symbol: 'MIM',
+    type: TokenType.Contract,
+  },
   [TOKENS.USDT]: {
     address: TOKENS.USDT,
     decimals: 6,
@@ -278,6 +292,20 @@ export const ethTokensConfig: TokenConfig = {
     decimals: 18,
     name: 'Curve.fi 3crv',
     symbol: '3CRV',
+    type: TokenType.CurveLP,
+  },
+  [TOKENS.CRV_MIM_3CRV]: {
+    address: TOKENS.CRV_MIM_3CRV,
+    decimals: 18,
+    name: 'MIM / 3CRV',
+    symbol: 'crvMim3Crv',
+    type: TokenType.CurveLP,
+  },
+  [TOKENS.CRV_FRAX_3CRV]: {
+    address: TOKENS.CRV_FRAX_3CRV,
+    decimals: 18,
+    name: 'FRAX / 3CRV',
+    symbol: 'crvFrax3Crv',
     type: TokenType.CurveLP,
   },
   [TOKENS.BOR]: {
@@ -590,6 +618,28 @@ export const ethTokensConfig: TokenConfig = {
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.CRV_RENBTC,
+      network: Network.Ethereum,
+    },
+  },
+  [TOKENS.BCRV_MIM_3CRV]: {
+    address: TOKENS.BCRV_MIM_3CRV,
+    decimals: 18,
+    name: 'bMIM / 3CRV',
+    symbol: 'bcrvMim3Crv',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.CRV_MIM_3CRV,
+      network: Network.Ethereum,
+    },
+  },
+  [TOKENS.BCRV_FRAX_3CRV]: {
+    address: TOKENS.BCRV_FRAX_3CRV,
+    decimals: 18,
+    name: 'bFRAX / 3CRV',
+    symbol: 'bcrvFrax3Crv',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.CRV_FRAX_3CRV,
       network: Network.Ethereum,
     },
   },
