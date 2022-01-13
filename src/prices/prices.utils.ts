@@ -45,7 +45,6 @@ export const updatePrice = async (token: Token): Promise<TokenPriceSnapshot> => 
       }),
     );
   } catch (err) {
-    console.log(err);
     return noPrice(token);
   } // ignore issues to allow for price updates of other coins
 };
