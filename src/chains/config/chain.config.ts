@@ -67,12 +67,8 @@ export abstract class Chain {
     }
     Chain.chains[network] = chain;
     Chain.chains[chain.symbol] = chain;
-    const sdk = new BadgerSDK(parseInt(chain.chainId, 16), chain.provider);
-    Chain.sdks[network] = sdk;
-    Chain.sdks[chain.symbol] = sdk;
     if (network === Network.Polygon) {
       Chain.chains['matic'] = chain;
-      Chain.sdks['matic'] = sdk;
     }
   }
 
@@ -87,8 +83,18 @@ export abstract class Chain {
     return chain;
   }
 
-  getSdk(): BadgerSDK {
-    return Chain.sdks[this.network];
+  async getSdk(): Promise<BadgerSDK> {
+    let sdk = Chain.sdks[this.network];
+    if (!sdk) {
+      sdk = new BadgerSDK(parseInt(this.chainId, 16), this.provider);
+      Chain.sdks[this.network] = sdk;
+      Chain.sdks[this.symbol] = sdk;
+      if (this.network === Network.Polygon) {
+        Chain.sdks['matic'] = sdk;
+      }
+    }
+    await sdk.ready();
+    return sdk;
   }
 
   getBadgerTokenAddress(): string {
