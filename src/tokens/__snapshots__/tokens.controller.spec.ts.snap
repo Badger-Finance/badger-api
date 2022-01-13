@@ -109,6 +109,12 @@ Object {
     "name": "Sushiswap: WBTC-BADGER",
     "symbol": "SLP-BADGER-WBTC",
   },
+  "0x15cBC4ac1e81c97667780fE6DAdeDd04a6EEB47B": Object {
+    "address": "0x15cBC4ac1e81c97667780fE6DAdeDd04a6EEB47B",
+    "decimals": 18,
+    "name": "bFRAX / 3CRV",
+    "symbol": "bcrvFrax3Crv",
+  },
   "0x17d8CBB6Bce8cEE970a4027d1198F6700A7a6c24": Object {
     "address": "0x17d8CBB6Bce8cEE970a4027d1198F6700A7a6c24",
     "decimals": 18,
@@ -132,6 +138,12 @@ Object {
     "decimals": 18,
     "name": "bBadger",
     "symbol": "bBADGER",
+  },
+  "0x19E4d89e0cB807ea21B8CEF02df5eAA99A110dA5": Object {
+    "address": "0x19E4d89e0cB807ea21B8CEF02df5eAA99A110dA5",
+    "decimals": 18,
+    "name": "bMIM / 3CRV",
+    "symbol": "bcrvMim3Crv",
   },
   "0x20c36f062a31865bED8a5B1e512D9a1A20AA333A": Object {
     "address": "0x20c36f062a31865bED8a5B1e512D9a1A20AA333A",
@@ -253,6 +265,12 @@ Object {
     "name": "bCurve.fi bBTC/wBTC",
     "symbol": "bcrvbBTC",
   },
+  "0x5a6A4D54456819380173272A5E8E9B9904BdF41B": Object {
+    "address": "0x5a6A4D54456819380173272A5E8E9B9904BdF41B",
+    "decimals": 18,
+    "name": "MIM / 3CRV",
+    "symbol": "crvMim3Crv",
+  },
   "0x608b6D82eb121F3e5C0baeeD32d81007B916E83C": Object {
     "address": "0x608b6D82eb121F3e5C0baeeD32d81007B916E83C",
     "decimals": 18,
@@ -325,6 +343,12 @@ Object {
     "name": "Boring DAO BTC",
     "symbol": "OBTC",
   },
+  "0x853d955aCEf822Db058eb8505911ED77F175b99e": Object {
+    "address": "0x853d955aCEf822Db058eb8505911ED77F175b99e",
+    "decimals": 18,
+    "name": "Frax",
+    "symbol": "FRAX",
+  },
   "0x85Eee30c52B0b379b046Fb0F85F4f3Dc3009aFEC": Object {
     "address": "0x85Eee30c52B0b379b046Fb0F85F4f3Dc3009aFEC",
     "decimals": 18,
@@ -390,6 +414,12 @@ Object {
     "decimals": 18,
     "name": "DIGG Rebase Option 2",
     "symbol": "DROPT-2",
+  },
+  "0x99D8a9C45b2ecA8864373A26D1459e3Dff1e17F3": Object {
+    "address": "0x99D8a9C45b2ecA8864373A26D1459e3Dff1e17F3",
+    "decimals": 18,
+    "name": "Magic Internet Money",
+    "symbol": "MIM",
   },
   "0x9BE89D2a4cd102D8Fecc6BF9dA793be995C22541": Object {
     "address": "0x9BE89D2a4cd102D8Fecc6BF9dA793be995C22541",
@@ -540,6 +570,12 @@ Object {
     "decimals": 18,
     "name": "bCurve.fi renBTC/wBTC/sBTC",
     "symbol": "bcrvsBTC",
+  },
+  "0xd632f22692FaC7611d2AA1C0D552930D43CAEd3B": Object {
+    "address": "0xd632f22692FaC7611d2AA1C0D552930D43CAEd3B",
+    "decimals": 18,
+    "name": "FRAX / 3CRV",
+    "symbol": "crvFrax3Crv",
   },
   "0xdAC17F958D2ee523a2206206994597C13D831ec7": Object {
     "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
@@ -600,6 +636,12 @@ Object {
     "name": "Sushiswap: WBTC-BADGER",
     "symbol": "SLP-BADGER-WBTC",
   },
+  "0x15cBC4ac1e81c97667780fE6DAdeDd04a6EEB47B": Object {
+    "address": "0x15cBC4ac1e81c97667780fE6DAdeDd04a6EEB47B",
+    "decimals": 18,
+    "name": "bFRAX / 3CRV",
+    "symbol": "bcrvFrax3Crv",
+  },
   "0x17d8CBB6Bce8cEE970a4027d1198F6700A7a6c24": Object {
     "address": "0x17d8CBB6Bce8cEE970a4027d1198F6700A7a6c24",
     "decimals": 18,
@@ -623,6 +665,12 @@ Object {
     "decimals": 18,
     "name": "bBadger",
     "symbol": "bBADGER",
+  },
+  "0x19E4d89e0cB807ea21B8CEF02df5eAA99A110dA5": Object {
+    "address": "0x19E4d89e0cB807ea21B8CEF02df5eAA99A110dA5",
+    "decimals": 18,
+    "name": "bMIM / 3CRV",
+    "symbol": "bcrvMim3Crv",
   },
   "0x20c36f062a31865bED8a5B1e512D9a1A20AA333A": Object {
     "address": "0x20c36f062a31865bED8a5B1e512D9a1A20AA333A",
@@ -744,6 +792,12 @@ Object {
     "name": "bCurve.fi bBTC/wBTC",
     "symbol": "bcrvbBTC",
   },
+  "0x5a6A4D54456819380173272A5E8E9B9904BdF41B": Object {
+    "address": "0x5a6A4D54456819380173272A5E8E9B9904BdF41B",
+    "decimals": 18,
+    "name": "MIM / 3CRV",
+    "symbol": "crvMim3Crv",
+  },
   "0x608b6D82eb121F3e5C0baeeD32d81007B916E83C": Object {
     "address": "0x608b6D82eb121F3e5C0baeeD32d81007B916E83C",
     "decimals": 18,
@@ -816,6 +870,12 @@ Object {
     "name": "Boring DAO BTC",
     "symbol": "OBTC",
   },
+  "0x853d955aCEf822Db058eb8505911ED77F175b99e": Object {
+    "address": "0x853d955aCEf822Db058eb8505911ED77F175b99e",
+    "decimals": 18,
+    "name": "Frax",
+    "symbol": "FRAX",
+  },
   "0x85Eee30c52B0b379b046Fb0F85F4f3Dc3009aFEC": Object {
     "address": "0x85Eee30c52B0b379b046Fb0F85F4f3Dc3009aFEC",
     "decimals": 18,
@@ -881,6 +941,12 @@ Object {
     "decimals": 18,
     "name": "DIGG Rebase Option 2",
     "symbol": "DROPT-2",
+  },
+  "0x99D8a9C45b2ecA8864373A26D1459e3Dff1e17F3": Object {
+    "address": "0x99D8a9C45b2ecA8864373A26D1459e3Dff1e17F3",
+    "decimals": 18,
+    "name": "Magic Internet Money",
+    "symbol": "MIM",
   },
   "0x9BE89D2a4cd102D8Fecc6BF9dA793be995C22541": Object {
     "address": "0x9BE89D2a4cd102D8Fecc6BF9dA793be995C22541",
@@ -1031,6 +1097,12 @@ Object {
     "decimals": 18,
     "name": "bCurve.fi renBTC/wBTC/sBTC",
     "symbol": "bcrvsBTC",
+  },
+  "0xd632f22692FaC7611d2AA1C0D552930D43CAEd3B": Object {
+    "address": "0xd632f22692FaC7611d2AA1C0D552930D43CAEd3B",
+    "decimals": 18,
+    "name": "FRAX / 3CRV",
+    "symbol": "crvFrax3Crv",
   },
   "0xdAC17F958D2ee523a2206206994597C13D831ec7": Object {
     "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
