@@ -7,7 +7,6 @@ import { GraphErrorResponse } from '../graphql/interafeces/graph-error-response.
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { getIndexedBlock, settToSnapshot } from './indexer.utils';
 import { Network } from '@badger-dao/sdk';
-import { Ethereum } from '../chains/config/eth.config';
 
 const NO_HISTORIC = 'Queries more than';
 
@@ -66,6 +65,6 @@ async function indexSett(chain: Chain, vaultDefinition: VaultDefinition) {
 }
 
 export async function getCurrentBlock(chain: Chain): Promise<number> {
-  const queryChain = chain.network === Network.Arbitrum ? new Ethereum() : chain;
+  const queryChain = chain.network === Network.Arbitrum ? Chain.getChain(Network.Ethereum) : chain;
   return queryChain.provider.getBlockNumber();
 }

@@ -1,4 +1,4 @@
-import BadgerSDK, { Network } from '@badger-dao/sdk';
+import { Network } from '@badger-dao/sdk';
 import { AccountsService } from '../accounts/accounts.service';
 import { getBoostFile, getCachedAccount } from '../accounts/accounts.utils';
 import { getObject } from '../aws/s3.utils';
@@ -19,6 +19,7 @@ import { RewardMerkleDistribution } from './interfaces/merkle-distributor.interf
 import { BadgerTree__factory } from '../contracts';
 import { BigNumber } from '@ethersproject/bignumber';
 import { UnprocessableEntity } from '@tsed/exceptions';
+import { EmissionSchedule } from '@badger-dao/sdk/lib/rewards/interfaces/emission-schedule.interface';
 
 export async function getTreeDistribution(chain: Chain): Promise<RewardMerkleDistribution | null> {
   if (!chain.badgerTree) {
@@ -72,6 +73,8 @@ export function getClaimableRewards(
   return Promise.all(requests);
 }
 
+const schedulesCache: Record<string, EmissionSchedule[]> = {};
+
 export async function getRewardEmission(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
   const boostFile = await getBoostFile(chain);
   if (!chain.rewardsLogger || vaultDefinition.depositToken === TOKENS.DIGG || !boostFile) {
@@ -83,9 +86,13 @@ export async function getRewardEmission(chain: Chain, vaultDefinition: VaultDefi
     delete boostFile.multiplierData[vault.vaultToken];
   }
   const boostRange = boostFile.multiplierData[vault.vaultToken] ?? { min: 1, max: 1 };
-  const sdk = new BadgerSDK(parseInt(chain.chainId, 16), chain.batchProvider);
-  await sdk.ready();
-  const activeSchedules = await sdk.rewards.loadActiveSchedules(vaultToken);
+
+  if (!schedulesCache[chain.network]) {
+    const sdk = chain.getSdk();
+    await sdk.ready();
+    schedulesCache[chain.network] = await sdk.rewards.loadActiveSchedules(vaultToken);
+  }
+  const activeSchedules = schedulesCache[chain.network];
 
   // Badger controlled addresses are blacklisted from receiving rewards. We only dogfood on ETH
   let ignoredTVL = 0;
