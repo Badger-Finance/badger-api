@@ -87,15 +87,17 @@ export async function getRewardEmission(chain: Chain, vaultDefinition: VaultDefi
   }
   const boostRange = boostFile.multiplierData[vault.vaultToken] ?? { min: 1, max: 1 };
 
-  if (!schedulesCache[chain.network]) {
+  if (!schedulesCache[vaultDefinition.vaultToken]) {
     const sdk = await chain.getSdk();
-    schedulesCache[chain.network] = await sdk.rewards.loadActiveSchedules(vaultToken);
+    schedulesCache[vaultDefinition.vaultToken] = await sdk.rewards.loadActiveSchedules(vaultToken);
     if (vaultDefinition.vaultToken === TOKENS.BCRV_IBBTC) {
-      console.log(`${vaultDefinition.name} Active Schedules`);
-      console.log(schedulesCache[chain.network]);
+      console.log(`Updated ${vaultDefinition.name} Active Schedules`);
     }
   }
-  const activeSchedules = schedulesCache[chain.network];
+  if (vaultDefinition.vaultToken === TOKENS.BCRV_IBBTC) {
+    console.log(schedulesCache[vaultDefinition.vaultToken]);
+  }
+  const activeSchedules = schedulesCache[vaultDefinition.vaultToken];
 
   // Badger controlled addresses are blacklisted from receiving rewards. We only dogfood on ETH
   let ignoredTVL = 0;
