@@ -253,7 +253,7 @@ export async function getVaultValueSources(
     ]);
 
     if (vaultDefinition.vaultToken === TOKENS.BCRV_IBBTC) {
-      console.log({ underlying, emission, protocol });
+      console.log({ emission });
     }
 
     // check for any emission removal
