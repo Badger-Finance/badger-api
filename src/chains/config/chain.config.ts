@@ -5,13 +5,15 @@ import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { TokenConfig } from '../../tokens/interfaces/token-config.interface';
 import { ChainStrategy } from '../strategies/chain.strategy';
-import { Network } from '@badger-dao/sdk';
+import BadgerSDK, { Network } from '@badger-dao/sdk';
 import { TOKENS } from '../../config/tokens.config';
 
 type Chains = Record<string, Chain>;
+type Sdks = Record<string, BadgerSDK>;
 
 export abstract class Chain {
   private static chains: Chains = {};
+  private static sdks: Sdks = {};
   readonly name: string;
   readonly symbol: string;
   readonly chainId: string;
@@ -60,6 +62,9 @@ export abstract class Chain {
   }
 
   static register(network: Network, chain: Chain): void {
+    if (Chain.chains[network]) {
+      return;
+    }
     Chain.chains[network] = chain;
     Chain.chains[chain.symbol] = chain;
     if (network === Network.Polygon) {
@@ -76,6 +81,20 @@ export abstract class Chain {
       throw new BadRequest(`${network} is not a supported chain`);
     }
     return chain;
+  }
+
+  async getSdk(): Promise<BadgerSDK> {
+    let sdk = Chain.sdks[this.network];
+    if (!sdk) {
+      sdk = new BadgerSDK(parseInt(this.chainId, 16), this.batchProvider);
+      Chain.sdks[this.network] = sdk;
+      Chain.sdks[this.symbol] = sdk;
+      if (this.network === Network.Polygon) {
+        Chain.sdks['matic'] = sdk;
+      }
+    }
+    await sdk.ready();
+    return sdk;
   }
 
   getBadgerTokenAddress(): string {

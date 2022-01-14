@@ -47,7 +47,7 @@ export const arbitrumSetts: VaultDefinition[] = [
     strategy: '0x86f772C82914f5bFD168f99e208d0FC2C371e9C2',
   },
   {
-    name: 'Sushiswap Wrapped BTC/Wrapped ETH',
+    name: 'Wrapped BTC/Wrapped ETH',
     vaultToken: TOKENS.BARB_SUSHI_WETH_WBTC,
     depositToken: TOKENS.ARB_SUSHI_WETH_WBTC,
     createdBlock: 13163959,
@@ -88,7 +88,7 @@ export const arbitrumSetts: VaultDefinition[] = [
     protocol: Protocol.Swapr,
   },
   {
-    name: 'Swapr Wrapped BTC/Wrapped ETH',
+    name: 'Wrapped BTC/Wrapped ETH',
     vaultToken: TOKENS.BARB_SWP_WBTC_WETH,
     depositToken: TOKENS.ARB_SWP_WBTC_WETH,
     createdBlock: 13315350,
