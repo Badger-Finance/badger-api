@@ -22,9 +22,16 @@ export async function refreshClaimableBalances(chain: Chain) {
     return;
   }
 
-  const { endBlock } = await getLatestMetadata(chain);
+  const latestMetadata = await getLatestMetadata(chain);
+  console.log(`Updating Claimable Balances for ${chain.network}`);
+  console.log(latestMetadata);
+  const { endBlock } = latestMetadata;
   const snapshotStartBlock = endBlock + 1;
   const snapshotEndBlock = await chain.provider.getBlockNumber();
+
+  if (snapshotEndBlock <= snapshotStartBlock) {
+    throw new Error(`${chain} invalid snapshot period (${snapshotStartBlock} - ${snapshotEndBlock})`);
+  }
 
   const chainUsers = await getAccounts(chain);
   const results = await getClaimableRewards(chain, chainUsers, distribution, endBlock);
@@ -46,17 +53,21 @@ export async function refreshClaimableBalances(chain: Chain) {
     });
   });
 
+  console.log(`Updated ${userClaimSnapshots.length} claimable balances for ${chain.network}`);
   for await (const _item of mapper.batchPut(userClaimSnapshots)) {
   }
 
   // Create new metadata entry after user claim snapshots are calculated
-  const metaData = Object.assign(new UserClaimMetadata(), {
+  const metadata = Object.assign(new UserClaimMetadata(), {
     chainStartBlock: getChainStartBlockKey(chain, snapshotStartBlock),
     chain: chain.network,
     startBlock: snapshotStartBlock,
     endBlock: snapshotEndBlock,
   });
-  await mapper.put(metaData);
+
+  const saved = await mapper.put(metadata);
+  console.log(`Completed balance snapshot for ${chain.network} up to ${snapshotEndBlock}`);
+  console.log(saved);
 }
 
 export async function refreshAccountSettBalances(chain: Chain, batchAccounts: AccountMap) {
@@ -96,7 +107,11 @@ export async function refreshUserAccounts(event: AccountIndexEvent) {
         );
         await Promise.all(refreshFns);
       } else {
-        await refreshClaimableBalances(chain);
+        try {
+          await refreshClaimableBalances(chain);
+        } catch (err) {
+          console.error(err);
+        }
       }
     }),
   );

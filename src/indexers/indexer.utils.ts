@@ -252,10 +252,6 @@ export async function getVaultValueSources(
       getProtocolValueSources(chain, vaultDefinition),
     ]);
 
-    if (vaultDefinition.vaultToken === TOKENS.BCRV_IBBTC) {
-      console.log({ emission });
-    }
-
     // check for any emission removal
     const oldSources: Record<string, CachedValueSource> = {};
     const oldEmission = await getVaultCachedValueSources(vaultDefinition);
