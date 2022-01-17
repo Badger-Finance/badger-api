@@ -42,7 +42,7 @@ export function getChainStartBlockKey(chain: Chain, block: number): string {
   return `${chain.network}_${block}`;
 }
 
-export function getClaimableRewards(
+export async function getClaimableRewards(
   chain: Chain,
   chainUsers: string[],
   distribution: RewardMerkleDistribution,

@@ -7,6 +7,7 @@ import { TokenConfig } from '../../tokens/interfaces/token-config.interface';
 import { ChainStrategy } from '../strategies/chain.strategy';
 import BadgerSDK, { Network } from '@badger-dao/sdk';
 import { TOKENS } from '../../config/tokens.config';
+import { providers } from '@0xsequence/multicall';
 
 type Chains = Record<string, Chain>;
 type Sdks = Record<string, BadgerSDK>;
@@ -21,7 +22,7 @@ export abstract class Chain {
   readonly tokens: TokenConfig;
   readonly setts: VaultDefinition[];
   readonly provider: ethers.providers.JsonRpcProvider;
-  readonly batchProvider: ethers.providers.JsonRpcBatchProvider;
+  readonly batchProvider: providers.MulticallProvider;
   readonly strategy: ChainStrategy;
   readonly graphUrl: string;
   readonly blocksPerYear: number;
@@ -50,7 +51,7 @@ export abstract class Chain {
     this.tokens = tokens;
     this.setts = setts.filter((sett) => !sett.stage || sett.stage === STAGE);
     this.provider = new ethers.providers.JsonRpcProvider(rpcUrl);
-    this.batchProvider = new ethers.providers.JsonRpcBatchProvider(rpcUrl);
+    this.batchProvider = new providers.MulticallProvider(this.provider);
     this.strategy = strategy;
     this.graphUrl = `https://api.thegraph.com/subgraphs/name/axejintao/badger-dao${
       network !== Network.Ethereum ? `-${symbol.toLowerCase()}` : ''
@@ -86,7 +87,7 @@ export abstract class Chain {
   async getSdk(): Promise<BadgerSDK> {
     let sdk = Chain.sdks[this.network];
     if (!sdk) {
-      sdk = new BadgerSDK(parseInt(this.chainId, 16), this.batchProvider);
+      sdk = new BadgerSDK(parseInt(this.chainId, 16), this.provider);
       Chain.sdks[this.network] = sdk;
       Chain.sdks[this.symbol] = sdk;
       if (this.network === Network.Polygon) {

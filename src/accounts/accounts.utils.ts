@@ -90,12 +90,12 @@ export async function getAccounts(chain: Chain): Promise<string[]> {
           accounts.add(address);
         }
       });
-      console.log(`Found ${accounts.size} accounts on ${chain.name}`);
     } catch (err) {
       break;
     }
   }
 
+  console.log(`Retrieved ${accounts.size} accounts on ${chain.name}`);
   return [...accounts];
 }
 
