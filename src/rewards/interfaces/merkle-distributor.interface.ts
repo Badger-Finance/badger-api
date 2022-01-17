@@ -15,6 +15,7 @@ export interface AirdropMerkleClaim {
 
 export interface RewardMerkleDistribution {
   merkleRoot: string;
+  cycle: number;
   tokenTotal: Record<string, BigNumberish>;
   claims: Record<string, RewardMerkleClaim>;
 }

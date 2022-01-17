@@ -22,4 +22,7 @@ export class UserClaimMetadata {
 
   @attribute()
   endBlock!: number;
+
+  @attribute()
+  cycle!: number;
 }
