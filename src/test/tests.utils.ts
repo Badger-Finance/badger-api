@@ -5,6 +5,7 @@ import createMockInstance from 'jest-create-mock-instance';
 import { CachedAccount } from '../accounts/interfaces/cached-account.interface';
 import { loadChains } from '../chains/chain';
 import { Arbitrum } from '../chains/config/arbitrum.config';
+import { Avalanche } from '../chains/config/avax.config';
 import { BinanceSmartChain } from '../chains/config/bsc.config';
 import { Ethereum } from '../chains/config/eth.config';
 import { Polygon } from '../chains/config/matic.config';
@@ -145,6 +146,9 @@ export function setupChainGasPrices() {
     .mockImplementation(async () => ({ rapid: 38, fast: 33, standard: 33, slow: 33 }));
   jest
     .spyOn(Polygon.prototype, 'getGasPrices')
+    .mockImplementation(async () => ({ rapid: 38, fast: 33, standard: 33, slow: 33 }));
+  jest
+    .spyOn(Avalanche.prototype, 'getGasPrices')
     .mockImplementation(async () => ({ rapid: 38, fast: 33, standard: 33, slow: 33 }));
 }
 

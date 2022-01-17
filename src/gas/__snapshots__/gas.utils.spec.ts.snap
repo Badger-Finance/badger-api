@@ -9,10 +9,10 @@ Object {
     "standard": 33,
   },
   "avalanche": Object {
-    "fast": 25,
-    "rapid": 25,
-    "slow": 25,
-    "standard": 25,
+    "fast": 33,
+    "rapid": 38,
+    "slow": 33,
+    "standard": 33,
   },
   "binancesmartchain": Object {
     "fast": 33,
