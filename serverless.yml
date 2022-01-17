@@ -63,7 +63,7 @@ package:
 provider:
   name: aws
   runtime: nodejs12.x
-  memorySize: 4096
+  memorySize: 1024
   stage: staging
   region: us-west-1
   iam:
@@ -328,6 +328,7 @@ functions:
   request-handler:
     handler: src/LambdaServer.handler
     timeout: 30
+    memorySize: 4096
     events:
       - http:
           path: /{proxy+}
@@ -403,7 +404,7 @@ functions:
 
   index-accounts:
     handler: src/indexers/accounts-indexer.refreshUserAccounts
-    timeout: 750
+    timeout: 900
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-claimables
