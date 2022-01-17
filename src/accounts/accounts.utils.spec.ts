@@ -3,7 +3,7 @@ import { GraphQLClient } from 'graphql-request';
 import { Ethereum } from '../chains/config/eth.config';
 import { TestStrategy } from '../chains/strategies/test.strategy';
 import { TOKENS } from '../config/tokens.config';
-import { UserQuery, UserSettBalance } from '../graphql/generated/badger';
+import { UserQuery, UserSettBalance, UsersQuery } from '../graphql/generated/badger';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import * as priceUtils from '../prices/prices.utils';
 import { inCurrency } from '../prices/prices.utils';
@@ -14,6 +14,7 @@ import { getToken } from '../tokens/tokens.utils';
 import {
   defaultBoost,
   getAccountMap,
+  getAccounts,
   getCachedAccount,
   getCachedBoost,
   getUserAccount,
@@ -139,6 +140,40 @@ describe('accounts.utils', () => {
         jest.spyOn(GraphQLClient.prototype, 'request').mockImplementationOnce(async () => Promise.resolve(result));
         const user = await getUserAccount(new Ethereum(), TEST_ADDR);
         expect(user).toMatchObject(result);
+      });
+    });
+  });
+
+  describe('getAccounts', () => {
+    describe('users exist', () => {
+      it('returns a list of user accounts', async () => {
+        const result: UsersQuery = {
+          users: Object.values(TOKENS).map((token) => ({ id: token, settBalances: [] })),
+        };
+        let responded = false;
+        jest.spyOn(GraphQLClient.prototype, 'request').mockImplementation(async () => {
+          if (responded) {
+            return { users: [] };
+          }
+          responded = true;
+          return Promise.resolve(result);
+        });
+        const users = await getAccounts(new Ethereum());
+        expect(users).toMatchObject(Object.values(TOKENS));
+      });
+    });
+
+    describe('users do not exist', () => {
+      it('returns an empty list', async () => {
+        jest.spyOn(GraphQLClient.prototype, 'request').mockImplementationOnce(async () => Promise.resolve(null));
+        const nullReturn = await getAccounts(new Ethereum());
+        expect(nullReturn).toMatchObject([]);
+
+        jest
+          .spyOn(GraphQLClient.prototype, 'request')
+          .mockImplementationOnce(async () => Promise.resolve({ users: null }));
+        const nullUsers = await getAccounts(new Ethereum());
+        expect(nullUsers).toMatchObject([]);
       });
     });
   });
