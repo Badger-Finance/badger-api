@@ -3,6 +3,7 @@ import { TEST_ADDR } from './tests.utils';
 
 export const MOCK_DISTRIBUTION_FILE = {
   merkleRoot: TEST_ADDR,
+  cycle: 4034,
   tokenTotal: {
     [TOKENS.BADGER]: 10,
     [TOKENS.DIGG]: 3,
