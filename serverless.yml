@@ -63,7 +63,7 @@ package:
 provider:
   name: aws
   runtime: nodejs12.x
-  memorySize: 1024
+  memorySize: 2048
   stage: staging
   region: us-west-1
   iam:
