@@ -108,6 +108,7 @@ describe('accounts-indexer', () => {
         chain: rewardsChain.network,
         startBlock: startMockedBlockNumber,
         endBlock: endMockedBlockNumber,
+        cycle: MOCK_DISTRIBUTION_FILE.cycle,
       });
       const batchPut = mockBatchPut(expected);
       await accountsIndexer.refreshClaimableBalances(rewardsChain);
