@@ -5,7 +5,14 @@ import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
 import { REWARD_DATA } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
-import { getSdk, OrderDirection, UserQuery, UserSettBalance, UsersQuery } from '../graphql/generated/badger';
+import {
+  getSdk,
+  OrderDirection,
+  UserQuery,
+  UserSettBalance,
+  UsersQuery,
+  User_OrderBy,
+} from '../graphql/generated/badger';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import { CachedBoost } from '../leaderboards/interface/cached-boost.interface';
 import { getPrice, inCurrency } from '../prices/prices.utils';
@@ -57,6 +64,42 @@ export async function getBoostFile(chain: Chain): Promise<BoostData | null> {
 }
 
 export async function getAccounts(chain: Chain): Promise<string[]> {
+  const badgerGraphqlClient = new GraphQLClient(chain.graphUrl);
+  const badgerGraphqlSdk = getSdk(badgerGraphqlClient);
+
+  const accounts = new Set<string>();
+
+  let lastAddress: string | undefined;
+  const pageSize = 1000;
+  while (true) {
+    try {
+      const userPage = await badgerGraphqlSdk.Users({
+        first: pageSize,
+        where: { id_gt: lastAddress },
+        orderBy: User_OrderBy.Id,
+        orderDirection: OrderDirection.Asc,
+      });
+      if (!userPage || !userPage.users || userPage.users.length === 0) {
+        break;
+      }
+      const { users } = userPage;
+      lastAddress = users[users.length - 1].id;
+      users.forEach((user) => {
+        const address = ethers.utils.getAddress(user.id);
+        if (!accounts.has(address)) {
+          accounts.add(address);
+        }
+      });
+    } catch (err) {
+      break;
+    }
+  }
+
+  console.log(`Retrieved ${accounts.size} accounts on ${chain.name}`);
+  return [...accounts];
+}
+
+export async function getAccountsFomBoostFile(chain: Chain): Promise<string[]> {
   const boostFile = await getBoostFile(chain);
   if (!boostFile) {
     return [];
