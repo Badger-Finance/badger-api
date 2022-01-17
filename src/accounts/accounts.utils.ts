@@ -67,7 +67,7 @@ export async function getAccounts(chain: Chain): Promise<string[]> {
   const badgerGraphqlClient = new GraphQLClient(chain.graphUrl);
   const badgerGraphqlSdk = getSdk(badgerGraphqlClient);
 
-  const accounts: string[] = [];
+  const accounts = new Set<string>();
 
   let lastAddress: string | undefined;
   const pageSize = 1000;
@@ -84,13 +84,19 @@ export async function getAccounts(chain: Chain): Promise<string[]> {
       }
       const { users } = userPage;
       lastAddress = users[users.length - 1].id;
-      users.forEach((user) => accounts.push(ethers.utils.getAddress(user.id)));
+      users.forEach((user) => {
+        const address = ethers.utils.getAddress(user.id);
+        if (!accounts.has(address)) {
+          accounts.add(address);
+        }
+      });
+      console.log(`Found ${accounts.size} accounts on ${chain.name}`);
     } catch (err) {
       break;
     }
   }
 
-  return accounts;
+  return [...accounts];
 }
 
 export async function getAccountsFomBoostFile(chain: Chain): Promise<string[]> {
