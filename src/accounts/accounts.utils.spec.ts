@@ -47,6 +47,7 @@ describe('accounts.utils', () => {
         id: settToken.address,
         name: settToken.name,
         symbol: settToken.symbol,
+        available: 1,
         pricePerFullShare: 1034039284374221,
         balance: 3,
         totalSupply: 5,
