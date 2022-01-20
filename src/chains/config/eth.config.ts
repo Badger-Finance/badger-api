@@ -206,14 +206,14 @@ export const ethSetts: VaultDefinition[] = [
     protocol: Protocol.Convex,
   },
   {
-    name: 'cvxCRV Helper',
+    name: 'cvxCRV',
     createdBlock: 12678302,
     depositToken: TOKENS.CVXCRV,
     vaultToken: TOKENS.BCVXCRV,
     protocol: Protocol.Convex,
   },
   {
-    name: 'CVX Helper',
+    name: 'CVX',
     createdBlock: 12678302,
     depositToken: TOKENS.CVX,
     vaultToken: TOKENS.BCVX,
