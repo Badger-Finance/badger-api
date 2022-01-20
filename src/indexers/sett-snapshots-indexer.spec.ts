@@ -32,6 +32,7 @@ describe('refreshSettSnapshots', () => {
       .mockImplementation(async (_graphUrl: string, _contract: string) => ({
         sett: {
           id: TOKENS.BBADGER,
+          available: 1,
           balance: 0,
           token: {
             id: TOKENS.BADGER,

@@ -21,6 +21,9 @@ export class CachedSettSnapshot {
   supply!: number;
 
   @attribute()
+  available!: number;
+
+  @attribute()
   boostWeight!: number;
 
   @attribute({ memberType: embed(VaultStrategy) })

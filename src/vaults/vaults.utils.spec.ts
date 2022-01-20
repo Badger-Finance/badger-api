@@ -17,10 +17,14 @@ describe('vaults.utils', () => {
       const expected: Vault = {
         asset: depositToken.symbol,
         vaultAsset: settToken.symbol,
-        newVault: vaultDefinition.newVault ?? false,
-        state: vaultDefinition.state ?? VaultState.Open,
+        state: vaultDefinition.state
+          ? vaultDefinition.state
+          : vaultDefinition.newVault
+          ? VaultState.New
+          : VaultState.Open,
         apr: 0,
         balance: 0,
+        available: 0,
         boost: {
           enabled: false,
           weight: 0,

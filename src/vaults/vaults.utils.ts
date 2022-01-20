@@ -24,6 +24,7 @@ export function defaultVault(vaultDefinition: VaultDefinition): Vault {
   return {
     asset: assetToken.symbol,
     apr: 0,
+    available: 0,
     balance: 0,
     boost: {
       enabled: false,
@@ -34,11 +35,10 @@ export function defaultVault(vaultDefinition: VaultDefinition): Vault {
     protocol: Protocol.Badger,
     pricePerFullShare: 1,
     sources: [],
-    state: vaultDefinition.state ?? VaultState.Open,
+    state: vaultDefinition.state ? vaultDefinition.state : vaultDefinition.newVault ? VaultState.New : VaultState.Open,
     tokens: [],
     underlyingToken: vaultDefinition.depositToken,
     value: 0,
-    newVault: vaultDefinition.newVault ?? false,
     vaultAsset: vaultToken.symbol,
     vaultToken: vaultDefinition.vaultToken,
     strategy: {
