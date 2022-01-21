@@ -5,31 +5,15 @@ import { AccountMap } from '../accounts/interfaces/account-map.interface';
 import { CachedAccount } from '../accounts/interfaces/cached-account.interface';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
-import { TOKENS } from '../config/tokens.config';
 import { getArbitrumBlock } from '../etherscan/etherscan.utils';
 import { getPrice } from '../prices/prices.utils';
-import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
-import { uniformPerformance } from '../protocols/interfaces/performance.interface';
-import { createValueSource, ValueSource } from '../protocols/interfaces/value-source.interface';
-import { getVaultCachedValueSources, tokenEmission } from '../protocols/protocols.utils';
-import { ConvexStrategy, getCurvePerformance } from '../protocols/strategies/convex.strategy';
-import { mStableStrategy } from '../protocols/strategies/mstable.strategy';
-import { PancakeswapStrategy } from '../protocols/strategies/pancakeswap.strategy';
-import { QuickswapStrategy } from '../protocols/strategies/quickswap.strategy';
-import { SushiswapStrategy } from '../protocols/strategies/sushiswap.strategy';
-import { SwaprStrategy } from '../protocols/strategies/swapr.strategy';
-import { UniswapStrategy } from '../protocols/strategies/uniswap.strategy';
-import { SourceType } from '../rewards/enums/source-type.enum';
-import { getRewardEmission } from '../rewards/rewards.utils';
 import { CachedSettSnapshot } from '../vaults/interfaces/cached-sett-snapshot.interface';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { VaultSnapshot } from '../vaults/interfaces/vault-snapshot.interface';
-import { VaultsService } from '../vaults/vaults.service';
 import { getBoostWeight, getPricePerShare, getVault, getStrategyInfo, getCachedVault } from '../vaults/vaults.utils';
 import { CachedLiquidityPoolTokenBalance } from '../tokens/interfaces/cached-liquidity-pool-token-balance.interface';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
 import { formatBalance, getToken, toCachedBalance } from '../tokens/tokens.utils';
-import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 import { getLiquidityData } from '../protocols/common/swap.utils';
 
 export function chunkArray(addresses: string[], count: number): string[][] {
@@ -163,28 +147,6 @@ export async function getIndexedBlock(
   }
 }
 
-export const valueSourceToCachedValueSource = (
-  valueSource: ValueSource,
-  vaultDefinition: VaultDefinition,
-  type: string,
-): CachedValueSource => {
-  return Object.assign(new CachedValueSource(), {
-    addressValueSourceType: `${vaultDefinition.vaultToken}_${type}`,
-    address: vaultDefinition.vaultToken,
-    type,
-    apr: valueSource.apr,
-    name: valueSource.name,
-    oneDay: valueSource.performance.oneDay,
-    threeDay: valueSource.performance.threeDay,
-    sevenDay: valueSource.performance.sevenDay,
-    thirtyDay: valueSource.performance.thirtyDay,
-    harvestable: Boolean(valueSource.harvestable),
-    minApr: valueSource.minApr,
-    maxApr: valueSource.maxApr,
-    boostable: valueSource.boostable,
-  });
-};
-
 export function tokenBalancesToCachedLiquidityPoolTokenBalance(
   pairId: string,
   protocol: Protocol,
@@ -196,111 +158,6 @@ export function tokenBalancesToCachedLiquidityPoolTokenBalance(
     protocol,
     tokenBalances,
   });
-}
-
-export async function getUnderlyingPerformance(VaultDefinition: VaultDefinition): Promise<CachedValueSource> {
-  return valueSourceToCachedValueSource(
-    await VaultsService.getSettPerformance(VaultDefinition),
-    VaultDefinition,
-    SourceType.Compound,
-  );
-}
-
-export async function getProtocolValueSources(
-  chain: Chain,
-  VaultDefinition: VaultDefinition,
-): Promise<CachedValueSource[]> {
-  try {
-    switch (VaultDefinition.protocol) {
-      case Protocol.Curve:
-        return Promise.all([getCurvePerformance(chain, VaultDefinition)]);
-      case Protocol.Pancakeswap:
-        return PancakeswapStrategy.getValueSources(chain, VaultDefinition);
-      case Protocol.Sushiswap:
-        return SushiswapStrategy.getValueSources(chain, VaultDefinition);
-      case Protocol.Convex:
-        return ConvexStrategy.getValueSources(chain, VaultDefinition);
-      case Protocol.Uniswap:
-        return UniswapStrategy.getValueSources(VaultDefinition);
-      case Protocol.Quickswap:
-        return QuickswapStrategy.getValueSources(VaultDefinition);
-      case Protocol.mStable:
-        return mStableStrategy.getValueSources(chain, VaultDefinition);
-      case Protocol.Swapr:
-        return SwaprStrategy.getValueSources(chain, VaultDefinition);
-      default: {
-        return [];
-      }
-    }
-  } catch (error) {
-    console.log(error);
-    // Silently return no value sources
-    return [];
-  }
-}
-
-const ARB_CRV_SETTS = [TOKENS.BARB_CRV_RENBTC, TOKENS.BARB_CRV_TRICRYPTO, TOKENS.BARB_CRV_TRICRYPTO_LITE];
-
-export async function getVaultValueSources(
-  chain: Chain,
-  vaultDefinition: VaultDefinition,
-): Promise<CachedValueSource[]> {
-  try {
-    const [underlying, emission, protocol] = await Promise.all([
-      getUnderlyingPerformance(vaultDefinition),
-      getRewardEmission(chain, vaultDefinition),
-      getProtocolValueSources(chain, vaultDefinition),
-    ]);
-
-    // check for any emission removal
-    const oldSources: Record<string, CachedValueSource> = {};
-    const oldEmission = await getVaultCachedValueSources(vaultDefinition);
-    oldEmission.forEach((source) => (oldSources[source.addressValueSourceType] = source));
-
-    // remove updated sources from old source list
-    const newSources = [underlying, ...emission, ...protocol];
-
-    // TODO: remove once badger tree tracking events supported
-    if (ARB_CRV_SETTS.includes(vaultDefinition.vaultToken)) {
-      const crvSource = createValueSource('CRV Rewards', uniformPerformance(underlying.apr));
-      newSources.push(
-        valueSourceToCachedValueSource(crvSource, vaultDefinition, tokenEmission(getToken(TOKENS.ARB_CRV))),
-      );
-    }
-    newSources.forEach((source) => delete oldSources[source.addressValueSourceType]);
-
-    // delete sources which are no longer valid
-    const mapper = getDataMapper();
-    await Promise.all(Array.from(Object.values(oldSources)).map((source) => mapper.delete(source)));
-    return newSources;
-  } catch (err) {
-    console.log(err);
-    return [];
-  }
-}
-
-export async function getLatestMetadata(chain: Chain): Promise<UserClaimMetadata> {
-  const mapper = getDataMapper();
-  let result: UserClaimMetadata | null = null;
-  for await (const metric of mapper.query(
-    UserClaimMetadata,
-    { chain: chain.network },
-    { indexName: 'IndexMetadataChainAndStartBlock', scanIndexForward: false, limit: 1 },
-  )) {
-    result = metric;
-  }
-  // In case there UserClaimMetadata wasn't created yet, create it with default values
-  if (!result) {
-    const blockNumber = await chain.provider.getBlockNumber();
-    const metaData = Object.assign(new UserClaimMetadata(), {
-      startBlock: blockNumber,
-      endBlock: blockNumber + 1,
-      chainStartBlock: `${chain.network}_${blockNumber}`,
-      chain: chain.network,
-    });
-    result = await mapper.put(metaData);
-  }
-  return result;
 }
 
 export async function getLpTokenBalances(

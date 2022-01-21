@@ -5,7 +5,6 @@ import { TOKENS } from '../../config/tokens.config';
 import { Mhbtc__factory } from '../../contracts';
 import { Imbtc__factory } from '../../contracts/factories/Imbtc__factory';
 import { MstableVault__factory } from '../../contracts/factories/MstableVault__factory';
-import { valueSourceToCachedValueSource } from '../../indexers/indexer.utils';
 import { getPrice } from '../../prices/prices.utils';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { Token } from '../../tokens/interfaces/token.interface';
@@ -16,6 +15,7 @@ import { uniformPerformance } from '../interfaces/performance.interface';
 import { createValueSource } from '../interfaces/value-source.interface';
 import { tokenEmission } from '../protocols.utils';
 import { BigNumber } from 'ethers';
+import { valueSourceToCachedValueSource } from '../../rewards/rewards.utils';
 
 const MSTABLE_MBTC_VAULT = '0xF38522f63f40f9Dd81aBAfD2B8EFc2EC958a3016';
 const MSTABLE_HMBTC_VAULT = '0xF65D53AA6e2E4A5f4F026e73cb3e22C22D75E35C';

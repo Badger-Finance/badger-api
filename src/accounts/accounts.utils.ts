@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
-import { getDataMapper } from '../aws/dynamodb.utils';
+import { getChainStartBlockKey, getDataMapper, getLeaderboardKey } from '../aws/dynamodb.utils';
 import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
 import { REWARD_DATA } from '../config/constants';
@@ -18,10 +18,13 @@ import { CachedBoost } from '../leaderboards/interface/cached-boost.interface';
 import { getPrice, inCurrency } from '../prices/prices.utils';
 import { BoostData } from '../rewards/interfaces/boost-data.interface';
 import { getCachedVault, getVaultDefinition } from '../vaults/vaults.utils';
-import { formatBalance, getVaultTokens, getToken } from '../tokens/tokens.utils';
+import { formatBalance, getVaultTokens, getToken, cachedTokenBalanceToTokenBalance } from '../tokens/tokens.utils';
 import { AccountMap } from './interfaces/account-map.interface';
 import { CachedAccount } from './interfaces/cached-account.interface';
 import { CachedSettBalance } from './interfaces/cached-sett-balance.interface';
+import { Account } from '@badger-dao/sdk';
+import { UserClaimSnapshot } from '../rewards/entities/user-claim-snapshot';
+import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 
 export function defaultBoost(chain: Chain, address: string): CachedBoost {
   return {
@@ -108,11 +111,11 @@ export async function getAccountsFomBoostFile(chain: Chain): Promise<string[]> {
 }
 
 export async function getAccountMap(addresses: string[]): Promise<AccountMap> {
-  const accounts = await Promise.all(addresses.map(async (addr) => getCachedAccount(addr)));
+  const accounts = await Promise.all(addresses.map(async (addr) => queryCachedAccount(addr)));
   return Object.fromEntries(accounts.map((acc) => [ethers.utils.getAddress(acc.address), acc]));
 }
 
-export async function getCachedAccount(address: string): Promise<CachedAccount> {
+export async function queryCachedAccount(address: string): Promise<CachedAccount> {
   const checksummedAccount = ethers.utils.getAddress(address);
   const defaultAccount: CachedAccount = {
     address: checksummedAccount,
@@ -189,10 +192,99 @@ export async function getCachedBoost(chain: Chain, address: string): Promise<Cac
   const mapper = getDataMapper();
   for await (const entry of mapper.query(
     CachedBoost,
-    { leaderboard: `${chain.network}_${LeaderBoardType.BadgerBoost}`, address: ethers.utils.getAddress(address) },
+    { leaderboard: getLeaderboardKey(chain), address: ethers.utils.getAddress(address) },
     { limit: 1, indexName: 'IndexLeaderBoardRankOnAddressAndLeaderboard' },
   )) {
     return entry;
   }
   return defaultBoost(chain, address);
+}
+
+export async function getCachedAccount(chain: Chain, address: string): Promise<Account> {
+  const [cachedAccount, metadata] = await Promise.all([queryCachedAccount(address), getLatestMetadata(chain)]);
+  console.log(cachedAccount, metadata);
+  const claimableBalanceSnapshot = await getClaimableBalanceSnapshot(chain, address, metadata.startBlock);
+  const { network } = chain;
+  const balances = cachedAccount.balances
+    .filter((bal) => !network || bal.network === network)
+    .map((bal) => ({
+      ...bal,
+      tokens: bal.tokens.map((token) => cachedTokenBalanceToTokenBalance(token)),
+      earnedTokens: bal.earnedTokens.map((token) => cachedTokenBalanceToTokenBalance(token)),
+    }));
+  const multipliers = Object.fromEntries(
+    cachedAccount.multipliers
+      .filter((mult) => mult.network === network)
+      .map((entry) => [entry.address, entry.multiplier]),
+  );
+  const data = Object.fromEntries(balances.map((bal) => [bal.address, bal]));
+  const claimableBalances = Object.fromEntries(
+    claimableBalanceSnapshot.claimableBalances.map((bal) => [bal.address, bal.balance]),
+  );
+  const cachedBoost = await getCachedBoost(chain, cachedAccount.address);
+  const { boost, rank, stakeRatio, nftBalance, nativeBalance, nonNativeBalance } = cachedBoost;
+  // const { address } = cachedAccount;
+  const value = balances.map((b) => b.value).reduce((total, value) => (total += value), 0);
+  const earnedValue = balances.map((b) => b.earnedValue).reduce((total, value) => (total += value), 0);
+  const account: Account = {
+    address,
+    value,
+    earnedValue,
+    boost,
+    boostRank: rank,
+    multipliers,
+    data,
+    claimableBalances,
+    stakeRatio,
+    nftBalance,
+    nativeBalance,
+    nonNativeBalance,
+  };
+  return account;
+}
+
+export async function getClaimableBalanceSnapshot(
+  chain: Chain,
+  address: string,
+  startBlock: number,
+): Promise<UserClaimSnapshot> {
+  const mapper = getDataMapper();
+  for await (const entry of mapper.query(
+    UserClaimSnapshot,
+    { chainStartBlock: getChainStartBlockKey(chain, startBlock), address: ethers.utils.getAddress(address) },
+    { limit: 1, indexName: 'IndexUnclaimedSnapshotsOnAddressAndChainStartBlock' },
+  )) {
+    return entry;
+  }
+  return {
+    chainStartBlock: getChainStartBlockKey(chain, startBlock),
+    address,
+    chain: chain.network,
+    claimableBalances: [],
+    expiresAt: Date.now(),
+  };
+}
+
+export async function getLatestMetadata(chain: Chain): Promise<UserClaimMetadata> {
+  const mapper = getDataMapper();
+  let result: UserClaimMetadata | null = null;
+  for await (const metric of mapper.query(
+    UserClaimMetadata,
+    { chain: chain.network },
+    { indexName: 'IndexMetadataChainAndStartBlock', scanIndexForward: false, limit: 1 },
+  )) {
+    result = metric;
+  }
+  // In case there UserClaimMetadata wasn't created yet, create it with default values
+  if (!result) {
+    const blockNumber = await chain.provider.getBlockNumber();
+    const metaData = Object.assign(new UserClaimMetadata(), {
+      startBlock: blockNumber,
+      endBlock: blockNumber + 1,
+      chainStartBlock: getChainStartBlockKey(chain, blockNumber),
+      chain: chain.network,
+    });
+    result = await mapper.put(metaData);
+  }
+  return result;
 }

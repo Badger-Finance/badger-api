@@ -12,10 +12,9 @@ import {
 import { TOKENS } from '../../config/tokens.config';
 import { Erc20__factory, SushiChef__factory, SushiMiniChef__factory } from '../../contracts';
 import { getSdk as getSushiswapSdk, OrderDirection, PairDayData_OrderBy } from '../../graphql/generated/sushiswap';
-import { valueSourceToCachedValueSource } from '../../indexers/indexer.utils';
 import { getPrice } from '../../prices/prices.utils';
 import { SourceType } from '../../rewards/enums/source-type.enum';
-import { noRewards } from '../../rewards/rewards.utils';
+import { noRewards, valueSourceToCachedValueSource } from '../../rewards/rewards.utils';
 import { formatBalance, getToken } from '../../tokens/tokens.utils';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { CachedValueSource } from '../interfaces/cached-value-source.interface';

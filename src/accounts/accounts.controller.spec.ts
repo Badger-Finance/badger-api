@@ -1,10 +1,8 @@
 import { PlatformTest } from '@tsed/common';
 import { BadRequest, NotFound } from '@tsed/exceptions';
 import SuperTest from 'supertest';
-import * as accountIndexer from '../indexers/accounts-indexer';
-import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import { Server } from '../Server';
-import { setupMapper, TEST_ADDR } from '../test/tests.utils';
+import { setupMockAccounts, TEST_ADDR } from '../test/tests.utils';
 import * as accountsUtils from './accounts.utils';
 
 describe('AccountsController', () => {
@@ -14,6 +12,7 @@ describe('AccountsController', () => {
   beforeEach(async () => {
     request = SuperTest(PlatformTest.callback());
     jest.resetAllMocks();
+    setupMockAccounts();
   });
 
   afterEach(PlatformTest.reset);
@@ -35,8 +34,20 @@ describe('AccountsController', () => {
     });
     describe('with a non participant account', () => {
       it('returns a default account response', async (done: jest.DoneCallback) => {
-        jest.spyOn(accountIndexer, 'refreshUserAccounts').mockImplementation(() => Promise.resolve());
-        setupMapper([]);
+        jest.spyOn(accountsUtils, 'getCachedAccount').mockImplementation(async (_chain, address) => ({
+          address,
+          value: 0,
+          earnedValue: 0,
+          boost: 1,
+          boostRank: 1035,
+          multipliers: {},
+          data: {},
+          claimableBalances: {},
+          stakeRatio: 0,
+          nftBalance: 0,
+          nativeBalance: 0,
+          nonNativeBalance: 0,
+        }));
         const { body } = await request.get('/v2/accounts/' + TEST_ADDR).expect(200);
         expect(body).toMatchSnapshot();
         done();
@@ -44,30 +55,20 @@ describe('AccountsController', () => {
     });
     describe('with a participant account', () => {
       it('returns a cached account response', async (done: jest.DoneCallback) => {
-        jest.spyOn(accountIndexer, 'refreshUserAccounts').mockImplementation(() => Promise.resolve());
-        const defaultAccount = {
-          address: TEST_ADDR,
-          boost: 0,
-          boostRank: 1,
-          multipliers: [],
-          value: 0,
-          earnedValue: 0,
-          balances: [],
-          claimableBalances: [],
-          nativeBalance: 0,
-          nonNativeBalance: 0,
-        };
-        jest.spyOn(accountsUtils, 'getCachedBoost').mockImplementation(async () => ({
-          leaderboard: LeaderBoardType.BadgerBoost,
-          address: TEST_ADDR,
-          rank: 3,
+        jest.spyOn(accountsUtils, 'getCachedAccount').mockImplementation(async (_chain, address) => ({
+          address,
+          value: 10,
+          earnedValue: 1,
           boost: 2000,
+          boostRank: 1,
+          multipliers: {},
+          data: {},
+          claimableBalances: {},
           stakeRatio: 1,
-          nftBalance: 2033,
-          nativeBalance: 2033222,
-          nonNativeBalance: 23129,
+          nftBalance: 3,
+          nativeBalance: 2,
+          nonNativeBalance: 5,
         }));
-        setupMapper([defaultAccount]);
         const { body } = await request.get('/v2/accounts/' + TEST_ADDR).expect(200);
         expect(body).toMatchSnapshot();
         done();
