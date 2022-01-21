@@ -202,7 +202,6 @@ export async function getCachedBoost(chain: Chain, address: string): Promise<Cac
 
 export async function getCachedAccount(chain: Chain, address: string): Promise<Account> {
   const [cachedAccount, metadata] = await Promise.all([queryCachedAccount(address), getLatestMetadata(chain)]);
-  console.log(cachedAccount, metadata);
   const claimableBalanceSnapshot = await getClaimableBalanceSnapshot(chain, address, metadata.startBlock);
   const { network } = chain;
   const balances = cachedAccount.balances
