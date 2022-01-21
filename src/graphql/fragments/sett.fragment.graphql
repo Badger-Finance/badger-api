@@ -4,6 +4,7 @@ fragment Sett on Sett {
     id
     decimals
   }
+  available
   balance
   netDeposit
   netShareDeposit

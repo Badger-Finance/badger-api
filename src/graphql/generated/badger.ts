@@ -578,6 +578,7 @@ export type Sett = Erc20 &
   Vault &
   VaultBalance & {
     __typename?: 'Sett';
+    available: Scalars['BigInt'];
     balance: Scalars['BigInt'];
     controller?: Maybe<Controller>;
     decimals: Scalars['BigInt'];
@@ -894,6 +895,14 @@ export enum SettSnapshot_OrderBy {
 }
 
 export type Sett_Filter = {
+  available?: InputMaybe<Scalars['BigInt']>;
+  available_gt?: InputMaybe<Scalars['BigInt']>;
+  available_gte?: InputMaybe<Scalars['BigInt']>;
+  available_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  available_lt?: InputMaybe<Scalars['BigInt']>;
+  available_lte?: InputMaybe<Scalars['BigInt']>;
+  available_not?: InputMaybe<Scalars['BigInt']>;
+  available_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   balance?: InputMaybe<Scalars['BigInt']>;
   balance_gt?: InputMaybe<Scalars['BigInt']>;
   balance_gte?: InputMaybe<Scalars['BigInt']>;
@@ -1055,6 +1064,7 @@ export type Sett_Filter = {
 };
 
 export enum Sett_OrderBy {
+  Available = 'available',
   Balance = 'balance',
   Controller = 'controller',
   Decimals = 'decimals',
@@ -2130,6 +2140,7 @@ export const SettFragmentDoc = gql`
       id
       decimals
     }
+    available
     balance
     netDeposit
     netShareDeposit
@@ -2288,6 +2299,7 @@ export type HarvestFragment = {
 export type SettFragment = {
   __typename?: 'Sett';
   id: string;
+  available: any;
   balance: any;
   netDeposit: any;
   netShareDeposit: any;
@@ -2365,6 +2377,7 @@ export type SettSnapshotQuery = {
     | {
         __typename?: 'Sett';
         id: string;
+        available: any;
         balance: any;
         netDeposit: any;
         netShareDeposit: any;
@@ -2386,6 +2399,7 @@ export type SettQuery = {
     | {
         __typename?: 'Sett';
         id: string;
+        available: any;
         balance: any;
         netDeposit: any;
         netShareDeposit: any;

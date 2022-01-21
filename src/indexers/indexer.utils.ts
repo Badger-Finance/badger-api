@@ -55,7 +55,7 @@ export async function settToCachedSnapshot(
     throw new NotFound(`${settToken.name} sett not found`);
   }
 
-  const { balance, totalSupply, pricePerFullShare } = sett;
+  const { balance, totalSupply, pricePerFullShare, available } = sett;
   const balanceDecimals = vaultDefinition.balanceDecimals || depositToken.decimals;
   const supplyDecimals = vaultDefinition.supplyDecimals || settToken.decimals;
   const tokenBalance = formatBalance(balance, balanceDecimals);
@@ -74,6 +74,7 @@ export async function settToCachedSnapshot(
     ratio,
     settValue: parseFloat(value.toFixed(2)),
     supply,
+    available: formatBalance(available, balanceDecimals),
     strategy: strategyInfo,
     boostWeight: boostWeight.toNumber(),
   });
@@ -103,7 +104,7 @@ export const settToSnapshot = async (
     return null;
   }
 
-  const { balance, totalSupply, pricePerFullShare } = sett.sett;
+  const { balance, totalSupply, pricePerFullShare, available } = sett.sett;
   const blockData = await chain.provider.getBlock(queryBlock);
   const timestamp = blockData.timestamp * 1000;
   const balanceDecimals = vaultDefinition.balanceDecimals || depositToken.decimals;
@@ -120,6 +121,7 @@ export const settToSnapshot = async (
     timestamp,
     balance: tokenBalance,
     supply,
+    available: formatBalance(available, balanceDecimals),
     ratio,
     value: parseFloat(value.toFixed(4)),
   });
