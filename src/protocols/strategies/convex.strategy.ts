@@ -17,10 +17,7 @@ import {
   CvxRewards__factory,
   Erc20__factory,
 } from '../../contracts';
-import {
-  tokenBalancesToCachedLiquidityPoolTokenBalance,
-  valueSourceToCachedValueSource,
-} from '../../indexers/indexer.utils';
+import { tokenBalancesToCachedLiquidityPoolTokenBalance } from '../../indexers/indexer.utils';
 import { getPrice } from '../../prices/prices.utils';
 import { SourceType } from '../../rewards/enums/source-type.enum';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
@@ -36,6 +33,7 @@ import { createValueSource } from '../interfaces/value-source.interface';
 import { tokenEmission } from '../protocols.utils';
 import { request } from '../../etherscan/etherscan.utils';
 import { CurveAPIResponse } from '../interfaces/curve-api-response.interrface';
+import { valueSourceToCachedValueSource } from '../../rewards/rewards.utils';
 
 /* Strategy Definitions */
 export const cvxRewards = '0xCF50b810E57Ac33B91dCF525C6ddd9881B139332';

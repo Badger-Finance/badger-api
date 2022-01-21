@@ -4,7 +4,7 @@ import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { ValueSourceMap } from '../protocols/interfaces/value-source-map.interface';
 import { SourceType } from '../rewards/enums/source-type.enum';
-import { getVaultValueSources } from './indexer.utils';
+import { getVaultValueSources } from '../rewards/rewards.utils';
 
 export async function refreshApySnapshots() {
   const chains = loadChains();

@@ -1,8 +1,8 @@
 import { GraphQLClient } from 'graphql-request';
 import { getSdk as getUniswapSdk, OrderDirection, PairDayData_OrderBy } from '../../graphql/generated/uniswap';
-import { valueSourceToCachedValueSource } from '../../indexers/indexer.utils';
 import { getPrice } from '../../prices/prices.utils';
 import { SourceType } from '../../rewards/enums/source-type.enum';
+import { valueSourceToCachedValueSource } from '../../rewards/rewards.utils';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { CachedValueSource } from '../interfaces/cached-value-source.interface';
 import { PairDayData } from '../interfaces/pair-day-data.interface';

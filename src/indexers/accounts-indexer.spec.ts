@@ -2,6 +2,7 @@ import * as accountsIndexer from './accounts-indexer';
 import * as accountsUtils from '../accounts/accounts.utils';
 import * as indexerUtils from './indexer.utils';
 import * as rewardsUtils from '../rewards/rewards.utils';
+import * as dynamodbUtils from '../aws/dynamodb.utils';
 import { Network } from '@badger-dao/sdk';
 import { Chain } from '../chains/config/chain.config';
 import { ethers } from 'ethers';
@@ -40,9 +41,9 @@ describe('accounts-indexer', () => {
       }
       return MOCK_DISTRIBUTION_FILE;
     });
-    getLatestMetadata = jest.spyOn(indexerUtils, 'getLatestMetadata').mockImplementation(async (chain: Chain) => {
+    getLatestMetadata = jest.spyOn(accountsUtils, 'getLatestMetadata').mockImplementation(async (chain: Chain) => {
       return Object.assign(new UserClaimMetadata(), {
-        chainStartBlock: rewardsUtils.getChainStartBlockKey(rewardsChain, previousMockedBlockNumber),
+        chainStartBlock: dynamodbUtils.getChainStartBlockKey(rewardsChain, previousMockedBlockNumber),
         chain: chain.network,
         startBlock: previousMockedBlockNumber,
         endBlock: startMockedBlockNumber - 1,
@@ -95,7 +96,7 @@ describe('accounts-indexer', () => {
       });
       const expected = testAccounts.map((acc) =>
         Object.assign(new UserClaimSnapshot(), {
-          chainStartBlock: rewardsUtils.getChainStartBlockKey(rewardsChain, startMockedBlockNumber),
+          chainStartBlock: dynamodbUtils.getChainStartBlockKey(rewardsChain, startMockedBlockNumber),
           chain: rewardsChain.network,
           address: acc,
           claimableBalances,
@@ -104,7 +105,7 @@ describe('accounts-indexer', () => {
       const put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
       const expectedMetadata = Object.assign(new UserClaimMetadata(), {
         // startBlock for next stored metaData obj should be endBlock + 1 value of the previous metaData entity
-        chainStartBlock: rewardsUtils.getChainStartBlockKey(rewardsChain, startMockedBlockNumber),
+        chainStartBlock: dynamodbUtils.getChainStartBlockKey(rewardsChain, startMockedBlockNumber),
         chain: rewardsChain.network,
         startBlock: startMockedBlockNumber,
         endBlock: endMockedBlockNumber,

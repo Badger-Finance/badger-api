@@ -15,11 +15,14 @@ import {
   defaultBoost,
   getAccountMap,
   getAccounts,
-  getCachedAccount,
   getCachedBoost,
+  getLatestMetadata,
   getUserAccount,
+  queryCachedAccount,
   toSettBalance,
 } from './accounts.utils';
+import { ethers } from 'ethers';
+import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 
 describe('accounts.utils', () => {
   const chain = new Ethereum();
@@ -88,11 +91,11 @@ describe('accounts.utils', () => {
     });
   });
 
-  describe('getCachedAccount', () => {
+  describe('queryCachedAccount', () => {
     describe('no saved account', () => {
       it('returns undefined', async () => {
         setupMapper([]);
-        const actual = await getCachedAccount(TEST_ADDR);
+        const actual = await queryCachedAccount(TEST_ADDR);
         expect(actual).toMatchObject(defaultAccount(TEST_ADDR));
       });
     });
@@ -102,7 +105,7 @@ describe('accounts.utils', () => {
         jest.spyOn(DataMapper.prototype, 'query').mockImplementation(() => {
           throw new Error();
         });
-        const actual = await getCachedAccount(TEST_ADDR);
+        const actual = await queryCachedAccount(TEST_ADDR);
         expect(actual).toMatchObject(defaultAccount(TEST_ADDR));
       });
     });
@@ -111,7 +114,7 @@ describe('accounts.utils', () => {
       it('returns the stored account', async () => {
         const expected = { address: TEST_ADDR, claimableBalances: [] };
         setupMapper([expected]);
-        const actual = await getCachedAccount(TEST_ADDR);
+        const actual = await queryCachedAccount(TEST_ADDR);
         expect(actual).toMatchObject(expected);
       });
     });
@@ -251,6 +254,38 @@ describe('accounts.utils', () => {
         const result = await getCachedBoost(chain, TEST_ADDR);
         expect(result).toMatchObject(boost);
       });
+    });
+  });
+
+  describe('getLatestMetadata', () => {
+    it('should not create new meta obj if exists', async () => {
+      const put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
+      const meta = Object.assign(new UserClaimMetadata(), {
+        startBlock: 100,
+        endBlock: 101,
+        chainStartBlock: `${chain.network}_123123`,
+        chain: chain.network,
+      });
+      setupMapper([meta]);
+      const latest_meta = await getLatestMetadata(chain);
+      expect(latest_meta).toEqual(meta);
+      expect(put.mock.calls).toEqual([]);
+    });
+    it('should create new meta if no meta obj found', async () => {
+      const put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
+      const mockedBlockNumber = 100;
+      jest
+        .spyOn(ethers.providers.JsonRpcProvider.prototype, 'getBlockNumber')
+        .mockImplementation(() => Promise.resolve(mockedBlockNumber));
+      const expected = Object.assign(new UserClaimMetadata(), {
+        startBlock: 100,
+        endBlock: 101,
+        chainStartBlock: `${chain.network}_${mockedBlockNumber}`,
+        chain: chain.network,
+      });
+      setupMapper([]);
+      await getLatestMetadata(chain);
+      expect(put.mock.calls[0][0]).toEqual(expected);
     });
   });
 });

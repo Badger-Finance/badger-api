@@ -16,7 +16,10 @@ import { CachedBoost } from '../leaderboards/interface/cached-boost.interface';
 import { CachedSettSnapshot } from '../vaults/interfaces/cached-sett-snapshot.interface';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { VaultSnapshot } from '../vaults/interfaces/vault-snapshot.interface';
+import * as accountsUtils from '../accounts/accounts.utils';
+import * as dynamodbUtils from '../aws/dynamodb.utils';
 
+export const TEST_CHAIN = loadChains()[0];
 export const TEST_ADDR = ethers.utils.getAddress('0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484');
 
 /* eslint-disable @typescript-eslint/ban-ts-comment */
@@ -168,4 +171,21 @@ export function randomCachedBoosts(count: number): CachedBoost[] {
     );
   }
   return boosts;
+}
+
+export function setupMockAccounts() {
+  jest.spyOn(accountsUtils, 'getClaimableBalanceSnapshot').mockImplementation(async () => ({
+    chainStartBlock: dynamodbUtils.getChainStartBlockKey(TEST_CHAIN, 10),
+    address: TEST_ADDR,
+    chain: TEST_CHAIN.network,
+    claimableBalances: [],
+    expiresAt: Date.now(),
+  }));
+  jest.spyOn(accountsUtils, 'getLatestMetadata').mockImplementation(async (chain) => ({
+    startBlock: 10,
+    endBlock: 15,
+    chainStartBlock: dynamodbUtils.getChainStartBlockKey(chain, 10),
+    chain: chain.network,
+    cycle: 10,
+  }));
 }

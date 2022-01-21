@@ -1,6 +1,6 @@
 import { refreshChainApySnapshots } from './apy-snapshots-indexer';
 import { Ethereum } from '../chains/config/eth.config';
-import * as indexerUtils from './indexer.utils';
+import * as rewardsUtils from '../rewards/rewards.utils';
 import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
 import { mockBatchPut } from '../test/tests.utils';
 
@@ -39,7 +39,7 @@ describe('apy-snapshots-indexer', () => {
   describe('refreshChainApySnapshots', () => {
     it('calls batchPut for valid value source', async () => {
       const batchPut = mockBatchPut([mockSett]);
-      jest.spyOn(indexerUtils, 'getVaultValueSources').mockReturnValue(Promise.resolve([mockSett]));
+      jest.spyOn(rewardsUtils, 'getVaultValueSources').mockReturnValue(Promise.resolve([mockSett]));
       await refreshChainApySnapshots(chain);
       expect(batchPut.mock.calls[0][0]).toEqual([mockSett]);
       // Make sure was called for each sett in the chain
@@ -47,7 +47,7 @@ describe('apy-snapshots-indexer', () => {
     });
     it('doesnt call batch put if value source invalid', async () => {
       const batchPut = mockBatchPut([mockInvalidSett]);
-      jest.spyOn(indexerUtils, 'getVaultValueSources').mockReturnValue(Promise.resolve([mockInvalidSett]));
+      jest.spyOn(rewardsUtils, 'getVaultValueSources').mockReturnValue(Promise.resolve([mockInvalidSett]));
       await refreshChainApySnapshots(chain);
       expect(batchPut.mock.calls).toEqual([]);
     });
