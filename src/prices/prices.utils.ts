@@ -1,5 +1,4 @@
 import { BadRequest, InternalServerError, UnprocessableEntity } from '@tsed/exceptions';
-import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
 import { ChainStrategy } from '../chains/strategies/chain.strategy';
 import { COINGECKO_URL } from '../config/constants';
@@ -12,6 +11,7 @@ import { TokenPrice } from '../tokens/interfaces/token-price.interface';
 import { TokenPriceSnapshot } from '../tokens/interfaces/token-price-snapshot.interface';
 import { getToken, getTokenByName } from '../tokens/tokens.utils';
 import { request } from '../etherscan/etherscan.utils';
+import { getDataMapper } from '../aws/dynamodb.utils';
 
 export const noPrice = (token: Token): TokenPriceSnapshot => {
   return {
@@ -31,11 +31,11 @@ export const updatePrice = async (token: Token): Promise<TokenPriceSnapshot> => 
   const { address, name } = token;
   const strategy = ChainStrategy.getStrategy(address);
   try {
-    const mapper = getDataMapper();
     const price = await strategy.getPrice(address);
     if (price.eth === 0 || price.usd === 0) {
       throw new Error('Attempting to update with bad price');
     }
+    const mapper = getDataMapper();
     return mapper.put(
       Object.assign(new TokenPriceSnapshot(), {
         address: address,
