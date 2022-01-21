@@ -2233,7 +2233,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "Tricrypto Boosted",
+    "name": "Tricrypto2",
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [
@@ -4948,7 +4948,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "Tricrypto Boosted",
+    "name": "Tricrypto2",
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [

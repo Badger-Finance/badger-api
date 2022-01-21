@@ -229,7 +229,7 @@ export const ethSetts: VaultDefinition[] = [
     state: VaultState.Experimental,
   },
   {
-    name: 'Tricrypto Boosted',
+    name: 'Tricrypto2',
     createdBlock: 12966048,
     depositToken: TOKENS.CRV_TRICRYPTO2,
     getTokenBalance: getCurveVaultTokenBalance,
