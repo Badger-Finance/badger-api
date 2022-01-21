@@ -1951,7 +1951,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "cvxCRV Helper",
+    "name": "cvxCRV",
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [
@@ -2045,7 +2045,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "CVX Helper",
+    "name": "CVX",
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [
@@ -2070,7 +2070,7 @@ Array [
         "maxApr": 13.4,
         "minApr": 13.4,
         "name": "Badger Rewards",
-        "performance": Object {vaults.contr
+        "performance": Object {
           "oneDay": 13.4,
           "sevenDay": 13.4,
           "thirtyDay": 13.4,
@@ -4666,7 +4666,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "cvxCRV Helper",
+    "name": "cvxCRV",
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [
@@ -4760,7 +4760,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "CVX Helper",
+    "name": "CVX",
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [
