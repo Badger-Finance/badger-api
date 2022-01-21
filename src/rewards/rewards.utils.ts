@@ -190,6 +190,7 @@ export async function getVaultValueSources(
   chain: Chain,
   vaultDefinition: VaultDefinition,
 ): Promise<CachedValueSource[]> {
+  // TODO: remove this once we have vaults 1.5, and token emission (tree events) added
   const ARB_CRV_SETTS = [TOKENS.BARB_CRV_RENBTC, TOKENS.BARB_CRV_TRICRYPTO, TOKENS.BARB_CRV_TRICRYPTO_LITE];
 
   try {
@@ -198,6 +199,10 @@ export async function getVaultValueSources(
       getRewardEmission(chain, vaultDefinition),
       getProtocolValueSources(chain, vaultDefinition),
     ]);
+
+    if (vaultDefinition.vaultToken === TOKENS.BCRV_MIM_3CRV || vaultDefinition.vaultToken === TOKENS.BCRV_FRAX_3CRV) {
+      console.log({ underlying, emission, protocol });
+    }
 
     // check for any emission removal
     const oldSources: Record<string, CachedValueSource> = {};
