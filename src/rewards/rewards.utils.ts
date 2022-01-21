@@ -226,7 +226,7 @@ export async function getVaultValueSources(
     await Promise.all(Array.from(Object.values(oldSources)).map((source) => mapper.delete(source)));
     return newSources;
   } catch (err) {
-    console.log(err);
+    console.log({ vaultDefinition, err });
     return [];
   }
 }
