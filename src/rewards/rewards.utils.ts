@@ -200,10 +200,6 @@ export async function getVaultValueSources(
       getProtocolValueSources(chain, vaultDefinition),
     ]);
 
-    if (vaultDefinition.vaultToken === TOKENS.BCRV_MIM_3CRV || vaultDefinition.vaultToken === TOKENS.BCRV_FRAX_3CRV) {
-      console.log({ underlying, emission, protocol });
-    }
-
     // check for any emission removal
     const oldSources: Record<string, CachedValueSource> = {};
     const oldEmission = await getVaultCachedValueSources(vaultDefinition);

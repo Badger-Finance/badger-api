@@ -79,6 +79,8 @@ const cvxPoolId: PoolMap = {
   [TOKENS.CRV_TRICRYPTO]: 37,
   [TOKENS.CRV_TRICRYPTO2]: 38,
   [TOKENS.CRV_IBBTC]: 53,
+  [TOKENS.CRV_MIM_3CRV]: 40,
+  [TOKENS.CRV_FRAX_3CRV]: 32,
 };
 
 const nonRegistryPools: ContractRegistry = {
@@ -154,9 +156,9 @@ async function getLockedSources(chain: Chain, VaultDefinition: VaultDefinition):
   return sources;
 }
 
-async function getVaultSources(chain: Chain, VaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
+async function getVaultSources(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
   const booster = CvxBooster__factory.connect(cvxBooster, chain.provider);
-  const poolInfo = await booster.poolInfo(cvxPoolId[VaultDefinition.depositToken]);
+  const poolInfo = await booster.poolInfo(cvxPoolId[vaultDefinition.depositToken]);
   const crv = CvxRewards__factory.connect(poolInfo.crvRewards, chain.provider);
 
   const crvToken = getToken(TOKENS.CRV);
@@ -166,11 +168,11 @@ async function getVaultSources(chain: Chain, VaultDefinition: VaultDefinition): 
   const [cvxPrice, crvPrice, depositPrice] = await Promise.all([
     getPrice(cvxToken.address),
     getPrice(crvToken.address),
-    getPrice(VaultDefinition.depositToken),
+    getPrice(vaultDefinition.depositToken),
   ]);
 
   // get rewards
-  const depositToken = getToken(VaultDefinition.depositToken);
+  const depositToken = getToken(vaultDefinition.depositToken);
   const crvReward = formatBalance(await crv.currentRewards(), crvToken.decimals);
   const cvxReward = await getCvxMint(chain, crvReward);
   const depositLocked = formatBalance(await crv.totalSupply(), depositToken.decimals);
@@ -179,7 +181,7 @@ async function getVaultSources(chain: Chain, VaultDefinition: VaultDefinition): 
   const duration = (await crv.duration()).toNumber();
   const scalar = ONE_YEAR_SECONDS / duration;
   const poolValue = depositLocked * depositPrice.usd;
-  const sett = await getCachedVault(VaultDefinition);
+  const sett = await getCachedVault(vaultDefinition);
   // bps to percentage
   const fees = 100 - (sett.strategy.performanceFee + sett.strategy.strategistFee) / 100;
 
@@ -204,9 +206,9 @@ async function getVaultSources(chain: Chain, VaultDefinition: VaultDefinition): 
   const cvxValueSource = createValueSource(`${bveCVX.name} Rewards`, uniformPerformance(cvxEmissionApr));
 
   // create cached value sources
-  const cachedCompounding = valueSourceToCachedValueSource(compoundValueSource, VaultDefinition, SourceType.Compound);
-  const cachedCrvEmission = valueSourceToCachedValueSource(crvValueSource, VaultDefinition, tokenEmission(bcvxCRV));
-  const cachedCvxEmission = valueSourceToCachedValueSource(cvxValueSource, VaultDefinition, tokenEmission(bveCVX));
+  const cachedCompounding = valueSourceToCachedValueSource(compoundValueSource, vaultDefinition, SourceType.Compound);
+  const cachedCrvEmission = valueSourceToCachedValueSource(crvValueSource, vaultDefinition, tokenEmission(bcvxCRV));
+  const cachedCvxEmission = valueSourceToCachedValueSource(cvxValueSource, vaultDefinition, tokenEmission(bveCVX));
 
   // calculate extra rewards value sources
   const extraRewardsLength = (await crv.extraRewardsLength()).toNumber();
@@ -231,10 +233,10 @@ async function getVaultSources(chain: Chain, VaultDefinition: VaultDefinition): 
     const rewardEmission = rewardAmount * rewardTokenPrice.usd * scalar;
     const rewardApr = (rewardEmission / poolValue) * fees;
     const rewardSource = createValueSource(`${rewardToken.name} Rewards`, uniformPerformance(rewardApr));
-    cachedExtraSources.push(valueSourceToCachedValueSource(rewardSource, VaultDefinition, tokenEmission(rewardToken)));
+    cachedExtraSources.push(valueSourceToCachedValueSource(rewardSource, vaultDefinition, tokenEmission(rewardToken)));
   }
 
-  const cachedTradeFees = await getCurvePerformance(chain, VaultDefinition);
+  const cachedTradeFees = await getCurvePerformance(chain, vaultDefinition);
   return [cachedCompounding, cachedTradeFees, cachedCrvEmission, cachedCvxEmission, ...cachedExtraSources];
 }
 
