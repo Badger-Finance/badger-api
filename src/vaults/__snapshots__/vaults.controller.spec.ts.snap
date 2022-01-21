@@ -563,7 +563,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "Harvest renBTC/wBTC",
+    "name": "renBTC/wBTC",
     "pricePerFullShare": 1,
     "protocol": "Curve",
     "sources": Array [
@@ -643,7 +643,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "Wrapped BTC/Badger",
+    "name": "wBTC/Badger",
     "pricePerFullShare": 1,
     "protocol": "Uniswap",
     "sources": Array [
@@ -731,7 +731,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "Wrapped BTC/Digg",
+    "name": "wBTC/Digg",
     "pricePerFullShare": 1,
     "protocol": "Uniswap",
     "sources": Array [
@@ -819,7 +819,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "Wrapped BTC/Wrapped ETH",
+    "name": "wBTC/wETH",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
     "sources": Array [
@@ -921,7 +921,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "Wrapped BTC/Badger",
+    "name": "wBTC/Badger",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
     "sources": Array [
@@ -1023,7 +1023,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "Wrapped BTC/Digg",
+    "name": "wBTC/Digg",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
     "sources": Array [
@@ -1299,7 +1299,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "Wrapped BTC",
+    "name": "wBTC",
     "pricePerFullShare": 1,
     "protocol": "Yearn",
     "sources": Array [
@@ -1393,7 +1393,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "Wrapped BTC/ibBTC",
+    "name": "wBTC/ibBTC",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
     "sources": Array [
@@ -3278,7 +3278,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "Harvest renBTC/wBTC",
+    "name": "renBTC/wBTC",
     "pricePerFullShare": 1,
     "protocol": "Curve",
     "sources": Array [
@@ -3358,7 +3358,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "Wrapped BTC/Badger",
+    "name": "wBTC/Badger",
     "pricePerFullShare": 1,
     "protocol": "Uniswap",
     "sources": Array [
@@ -3446,7 +3446,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "Wrapped BTC/Digg",
+    "name": "wBTC/Digg",
     "pricePerFullShare": 1,
     "protocol": "Uniswap",
     "sources": Array [
@@ -3534,7 +3534,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "Wrapped BTC/Wrapped ETH",
+    "name": "wBTC/wETH",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
     "sources": Array [
@@ -3636,7 +3636,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "Wrapped BTC/Badger",
+    "name": "wBTC/Badger",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
     "sources": Array [
@@ -3738,7 +3738,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "Wrapped BTC/Digg",
+    "name": "wBTC/Digg",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
     "sources": Array [
@@ -4014,7 +4014,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "Wrapped BTC",
+    "name": "wBTC",
     "pricePerFullShare": 1,
     "protocol": "Yearn",
     "sources": Array [
@@ -4108,7 +4108,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "Wrapped BTC/ibBTC",
+    "name": "wBTC/ibBTC",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
     "sources": Array [

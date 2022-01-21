@@ -39,7 +39,7 @@ export class Arbitrum extends Chain {
 
 export const arbitrumSetts: VaultDefinition[] = [
   {
-    name: 'Wrapped Ether/Sushi Helper',
+    name: 'wETH/Sushi',
     vaultToken: TOKENS.BARB_SUSHI_WETH_SUSHI,
     depositToken: TOKENS.ARB_SUSHI_WETH_SUSHI,
     createdBlock: 13163959,
@@ -47,7 +47,7 @@ export const arbitrumSetts: VaultDefinition[] = [
     strategy: '0x86f772C82914f5bFD168f99e208d0FC2C371e9C2',
   },
   {
-    name: 'Wrapped BTC/Wrapped ETH',
+    name: 'wBTC/wETH',
     vaultToken: TOKENS.BARB_SUSHI_WETH_WBTC,
     depositToken: TOKENS.ARB_SUSHI_WETH_WBTC,
     createdBlock: 13163959,
@@ -81,28 +81,28 @@ export const arbitrumSetts: VaultDefinition[] = [
     protocol: Protocol.Curve,
   },
   {
-    name: 'Swapr/Wrapped ETH',
+    name: 'Swapr/wETH',
     vaultToken: TOKENS.BARB_SWP_SWPR_WETH,
     depositToken: TOKENS.ARB_SWP_SWPR_WETH,
     createdBlock: 13315350,
     protocol: Protocol.Swapr,
   },
   {
-    name: 'Wrapped BTC/Wrapped ETH',
+    name: 'wBTC/wETH',
     vaultToken: TOKENS.BARB_SWP_WBTC_WETH,
     depositToken: TOKENS.ARB_SWP_WBTC_WETH,
     createdBlock: 13315350,
     protocol: Protocol.Swapr,
   },
   {
-    name: 'Badger/Wrapped ETH',
+    name: 'Badger/wETH',
     vaultToken: TOKENS.BARB_SWP_BADGER_WETH,
     depositToken: TOKENS.ARB_SWP_BADGER_WETH,
     createdBlock: 2188169,
     protocol: Protocol.Swapr,
   },
   {
-    name: 'ibBTC/Wrapped ETH',
+    name: 'ibBTC/wETH',
     vaultToken: TOKENS.BARB_SWP_IBBTC_WETH,
     depositToken: TOKENS.ARB_SWP_IBBTC_WETH,
     createdBlock: 2188169,

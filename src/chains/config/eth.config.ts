@@ -91,7 +91,7 @@ export const ethSetts: VaultDefinition[] = [
     protocol: Protocol.Convex,
   },
   {
-    name: 'Harvest renBTC/wBTC',
+    name: 'renBTC/wBTC',
     createdBlock: 11380939,
     depositToken: TOKENS.CRV_RENBTC,
     getTokenBalance: getCurveVaultTokenBalance,
@@ -100,7 +100,7 @@ export const ethSetts: VaultDefinition[] = [
     protocol: Protocol.Curve,
   },
   {
-    name: 'Wrapped BTC/Badger',
+    name: 'wBTC/Badger',
     createdBlock: 11380883,
     depositToken: TOKENS.UNI_BADGER_WBTC,
     vaultToken: TOKENS.BUNI_BADGER_WBTC,
@@ -108,7 +108,7 @@ export const ethSetts: VaultDefinition[] = [
     deprecated: true,
   },
   {
-    name: 'Wrapped BTC/Digg',
+    name: 'wBTC/Digg',
     createdBlock: 11680833,
     depositToken: TOKENS.UNI_DIGG_WBTC,
     state: VaultState.Deprecated,
@@ -116,21 +116,21 @@ export const ethSetts: VaultDefinition[] = [
     protocol: Protocol.Uniswap,
   },
   {
-    name: 'Wrapped BTC/Wrapped ETH',
+    name: 'wBTC/wETH',
     createdBlock: 11539529,
     depositToken: TOKENS.SUSHI_ETH_WBTC,
     vaultToken: TOKENS.BSUSHI_ETH_WBTC,
     protocol: Protocol.Sushiswap,
   },
   {
-    name: 'Wrapped BTC/Badger',
+    name: 'wBTC/Badger',
     createdBlock: 11537600,
     depositToken: TOKENS.SUSHI_BADGER_WBTC,
     vaultToken: TOKENS.BSUSHI_BADGER_WBTC,
     protocol: Protocol.Sushiswap,
   },
   {
-    name: 'Wrapped BTC/Digg',
+    name: 'wBTC/Digg',
     createdBlock: 11681030,
     depositToken: TOKENS.SUSHI_DIGG_WBTC,
     vaultToken: TOKENS.BSUSHI_DIGG_WBTC,
@@ -151,13 +151,13 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     createdBlock: 12246710,
-    name: 'Wrapped BTC',
+    name: 'wBTC',
     depositToken: TOKENS.WBTC,
     vaultToken: TOKENS.BVYWBTC,
     protocol: Protocol.Yearn,
   },
   {
-    name: 'Wrapped BTC/ibBTC',
+    name: 'wBTC/ibBTC',
     createdBlock: 12383984,
     depositToken: TOKENS.SUSHI_IBBTC_WBTC,
     vaultToken: TOKENS.BSUSHI_IBBTC_WBTC,
