@@ -73,7 +73,7 @@ export async function getAccounts(chain: Chain): Promise<string[]> {
   const accounts = new Set<string>();
 
   let lastAddress: string | undefined;
-  const pageSize = 1000;
+  const pageSize = 100;
   while (true) {
     try {
       const userPage = await badgerGraphqlSdk.Users({
