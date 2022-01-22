@@ -1,6 +1,5 @@
 import { NotFound } from '@tsed/exceptions';
 import { BigNumberish, ethers } from 'ethers';
-import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
 import { getPrice, inCurrency } from '../prices/prices.utils';
 import { getLiquidityData } from '../protocols/common/swap.utils';
@@ -18,6 +17,7 @@ import { TokenConfig } from './interfaces/token-config.interface';
 import { TokenPrice } from './interfaces/token-price.interface';
 import { TokenBalance } from '@badger-dao/sdk';
 import { avalancheTokensConfig } from './config/avax-tokens.config';
+import { getDataMapper } from '../aws/dynamodb.utils';
 
 // map holding all protocol token information across chains
 export const protocolTokens: TokenConfig = {

@@ -37,7 +37,7 @@ export class Polygon extends Chain {
 
 export const maticSetts: VaultDefinition[] = [
   {
-    name: 'Wrapped BTC/ibBTC',
+    name: 'wBTC/ibBTC',
     vaultToken: TOKENS.BMATIC_SUSHI_IBBTC_WBTC,
     depositToken: TOKENS.MATIC_SUSHI_IBBTC_WBTC,
     createdBlock: 17580716,
@@ -45,7 +45,7 @@ export const maticSetts: VaultDefinition[] = [
     strategy: '0xDed61Bd8a8c90596D8A6Cf0e678dA04036146963',
   },
   {
-    name: 'Wrapped BTC/USDC',
+    name: 'wBTC/USDC',
     vaultToken: TOKENS.BMATIC_QUICK_USDC_WBTC,
     depositToken: TOKENS.MATIC_QUICK_USDC_WBTC,
     createdBlock: 17687004,

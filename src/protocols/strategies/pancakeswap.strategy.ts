@@ -3,7 +3,6 @@ import { Chain } from '../../chains/config/chain.config';
 import { PANCAKE_CHEF } from '../../config/constants';
 import { TOKENS } from '../../config/tokens.config';
 import { Erc20__factory, PancakeChef__factory } from '../../contracts';
-import { valueSourceToCachedValueSource } from '../../indexers/indexer.utils';
 import { SourceType } from '../../rewards/enums/source-type.enum';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { VAULT_SOURCE } from '../../vaults/vaults.utils';
@@ -13,6 +12,7 @@ import { uniformPerformance } from '../interfaces/performance.interface';
 import { PoolMap } from '../interfaces/pool-map.interface';
 import { createValueSource } from '../interfaces/value-source.interface';
 import { getPrice } from '../../prices/prices.utils';
+import { valueSourceToCachedValueSource } from '../../rewards/rewards.utils';
 
 export class PancakeswapStrategy {
   static async getValueSources(chain: Chain, VaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {

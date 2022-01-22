@@ -16,12 +16,6 @@ export class VaultModel implements Vault {
   @Property()
   public name: string;
 
-  @Title('newVault')
-  @Description('Indicator if the vault is a new product offering')
-  @Example(true)
-  @Property()
-  public newVault: boolean;
-
   @Title('asset')
   @Description('Sett underlying asset name')
   @Example('crvTricrypto')
@@ -58,14 +52,20 @@ export class VaultModel implements Vault {
   @Property()
   public value: number;
 
+  @Title('available')
+  @Description('Vault available token balance')
+  @Example(4053.3221)
+  @Property()
+  public available: number;
+
   @Title('balance')
-  @Description('Sett underlying token balance')
+  @Description('Vault underlying token balance')
   @Example(4053.3221)
   @Property()
   public balance: number;
 
   @Title('protocol')
-  @Description('Sett underlying protocol')
+  @Description('Vault underlying protocol')
   @Example(Protocol.Convex)
   @Property()
   public protocol: Protocol;
@@ -107,7 +107,7 @@ export class VaultModel implements Vault {
   public maxApr?: number;
 
   @Title('sources')
-  @Description('Sett APR individual yield source breakdown')
+  @Description('Vault APR individual yield source breakdown')
   @Example([
     createValueSource(VAULT_SOURCE, uniformPerformance(8.32)),
     createValueSource('Badger Rewards', uniformPerformance(17.34)),
@@ -123,7 +123,7 @@ export class VaultModel implements Vault {
   public bouncer: BouncerType;
 
   @Title('strategy')
-  @Description('Sett strategy information')
+  @Description('Vault strategy information')
   @Example({
     address: ethers.constants.AddressZero,
     withdrawFee: 50,
@@ -147,6 +147,7 @@ export class VaultModel implements Vault {
     underlyingToken: string,
     vaultToken: string,
     value: number,
+    available: number,
     balance: number,
     protocol: Protocol,
     pricePerFullShare: number,
@@ -156,7 +157,6 @@ export class VaultModel implements Vault {
     sources: ValueSource[],
     bouncer: BouncerType,
     strategy: VaultStrategy,
-    newVault: boolean,
     type: VaultType,
     minApr?: number,
     maxApr?: number,
@@ -168,6 +168,7 @@ export class VaultModel implements Vault {
     this.underlyingToken = underlyingToken;
     this.vaultToken = vaultToken;
     this.value = value;
+    this.available = available;
     this.balance = balance;
     this.protocol = protocol;
     this.pricePerFullShare = pricePerFullShare;
@@ -179,7 +180,6 @@ export class VaultModel implements Vault {
     this.sources = sources;
     this.bouncer = bouncer;
     this.strategy = strategy;
-    this.newVault = newVault;
     this.type = type;
   }
 }

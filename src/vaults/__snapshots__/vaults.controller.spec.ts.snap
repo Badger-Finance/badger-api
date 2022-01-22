@@ -5,6 +5,7 @@ Array [
   Object {
     "apr": 84.12,
     "asset": "PLP-BNB-BTCB",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -12,7 +13,6 @@ Array [
     },
     "bouncer": "none",
     "name": "BNB/BTCB",
-    "newVault": false,
     "pricePerFullShare": 1,
     "protocol": "Pancakeswap",
     "sources": Array [
@@ -93,6 +93,7 @@ Array [
   Object {
     "apr": 64.05000000000001,
     "asset": "PLP-BBADGER-BTCB",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -100,7 +101,6 @@ Array [
     },
     "bouncer": "none",
     "name": "bBADGER/BTCB",
-    "newVault": false,
     "pricePerFullShare": 1,
     "protocol": "Pancakeswap",
     "sources": Array [
@@ -181,6 +181,7 @@ Array [
   Object {
     "apr": 80.82000000000001,
     "asset": "PLP-BDIGG-BTCB",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -188,7 +189,6 @@ Array [
     },
     "bouncer": "none",
     "name": "bDIGG/BTCB",
-    "newVault": false,
     "pricePerFullShare": 1,
     "protocol": "Pancakeswap",
     "sources": Array [
@@ -274,6 +274,7 @@ Array [
   Object {
     "apr": 133.28,
     "asset": "crvsBTC",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -281,7 +282,6 @@ Array [
     },
     "bouncer": "none",
     "name": "renBTC/wBTC/sBTC",
-    "newVault": false,
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [
@@ -368,6 +368,7 @@ Array [
   Object {
     "apr": 70.32,
     "asset": "crvrenWBTC",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -375,7 +376,6 @@ Array [
     },
     "bouncer": "none",
     "name": "renBTC/wBTC",
-    "newVault": false,
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [
@@ -462,6 +462,7 @@ Array [
   Object {
     "apr": 118.92,
     "asset": "crvtBTC",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -469,7 +470,6 @@ Array [
     },
     "bouncer": "none",
     "name": "tBTC/sBTC",
-    "newVault": false,
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [
@@ -556,14 +556,14 @@ Array [
   Object {
     "apr": 84.15,
     "asset": "crvrenWBTC",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "Harvest renBTC/wBTC",
-    "newVault": false,
+    "name": "renBTC/wBTC",
     "pricePerFullShare": 1,
     "protocol": "Curve",
     "sources": Array [
@@ -636,14 +636,14 @@ Array [
   Object {
     "apr": 16.950000000000003,
     "asset": "BADGER-WBTC",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "Wrapped BTC/Badger",
-    "newVault": false,
+    "name": "wBTC/Badger",
     "pricePerFullShare": 1,
     "protocol": "Uniswap",
     "sources": Array [
@@ -724,14 +724,14 @@ Array [
   Object {
     "apr": 92.85,
     "asset": "DIGG-WBTC",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "Wrapped BTC/Digg",
-    "newVault": false,
+    "name": "wBTC/Digg",
     "pricePerFullShare": 1,
     "protocol": "Uniswap",
     "sources": Array [
@@ -812,14 +812,14 @@ Array [
   Object {
     "apr": 75.2,
     "asset": "SLP-WBTC-ETH",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "Wrapped BTC/Wrapped ETH",
-    "newVault": false,
+    "name": "wBTC/wETH",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
     "sources": Array [
@@ -914,14 +914,14 @@ Array [
   Object {
     "apr": 15.6,
     "asset": "SLP-BADGER-WBTC",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "Wrapped BTC/Badger",
-    "newVault": false,
+    "name": "wBTC/Badger",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
     "sources": Array [
@@ -1016,14 +1016,14 @@ Array [
   Object {
     "apr": 87.08,
     "asset": "SLP-DIGG-WBTC",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "Wrapped BTC/Digg",
-    "newVault": false,
+    "name": "wBTC/Digg",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
     "sources": Array [
@@ -1118,6 +1118,7 @@ Array [
   Object {
     "apr": 80.92,
     "asset": "DIGG",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -1125,7 +1126,6 @@ Array [
     },
     "bouncer": "none",
     "name": "Digg",
-    "newVault": false,
     "pricePerFullShare": 1,
     "protocol": "Badger",
     "sources": Array [
@@ -1212,6 +1212,7 @@ Array [
   Object {
     "apr": 12.39,
     "asset": "BADGER",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -1219,7 +1220,6 @@ Array [
     },
     "bouncer": "none",
     "name": "Badger",
-    "newVault": false,
     "pricePerFullShare": 1,
     "protocol": "Badger",
     "sources": Array [
@@ -1292,14 +1292,14 @@ Array [
   Object {
     "apr": 48.36,
     "asset": "WBTC",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "Wrapped BTC",
-    "newVault": false,
+    "name": "wBTC",
     "pricePerFullShare": 1,
     "protocol": "Yearn",
     "sources": Array [
@@ -1386,14 +1386,14 @@ Array [
   Object {
     "apr": 88.64,
     "asset": "SLP-IBBTC-WBTC",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "Wrapped BTC/ibBTC",
-    "newVault": false,
+    "name": "wBTC/ibBTC",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
     "sources": Array [
@@ -1488,6 +1488,7 @@ Array [
   Object {
     "apr": 89.88,
     "asset": "crvhBTC",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -1495,7 +1496,6 @@ Array [
     },
     "bouncer": "none",
     "name": "hBTC",
-    "newVault": false,
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [
@@ -1582,6 +1582,7 @@ Array [
   Object {
     "apr": 54.76,
     "asset": "crvpBTC",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -1589,7 +1590,6 @@ Array [
     },
     "bouncer": "none",
     "name": "pBTC",
-    "newVault": false,
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [
@@ -1676,6 +1676,7 @@ Array [
   Object {
     "apr": 155.68,
     "asset": "crvoBTC",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -1683,7 +1684,6 @@ Array [
     },
     "bouncer": "none",
     "name": "oBTC",
-    "newVault": false,
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [
@@ -1770,6 +1770,7 @@ Array [
   Object {
     "apr": 60,
     "asset": "crvbBTC",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -1777,7 +1778,6 @@ Array [
     },
     "bouncer": "none",
     "name": "bBTC",
-    "newVault": false,
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [
@@ -1864,6 +1864,7 @@ Array [
   Object {
     "apr": 91.19999999999999,
     "asset": "crvTricrypto",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -1871,7 +1872,6 @@ Array [
     },
     "bouncer": "none",
     "name": "Tricrypto",
-    "newVault": false,
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [
@@ -1944,14 +1944,14 @@ Array [
   Object {
     "apr": 27.72,
     "asset": "cvxCRV",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "cvxCRV Helper",
-    "newVault": false,
+    "name": "cvxCRV",
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [
@@ -2038,14 +2038,14 @@ Array [
   Object {
     "apr": 53.6,
     "asset": "CVX",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "CVX Helper",
-    "newVault": false,
+    "name": "CVX",
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [
@@ -2132,6 +2132,7 @@ Array [
   Object {
     "apr": 56.8,
     "asset": "renBTC",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -2139,7 +2140,6 @@ Array [
     },
     "bouncer": "none",
     "name": "renBTC",
-    "newVault": false,
     "pricePerFullShare": 1,
     "protocol": "Badger",
     "sources": Array [
@@ -2226,6 +2226,7 @@ Array [
   Object {
     "apr": 25.52,
     "asset": "crvTricrypto2",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -2233,7 +2234,6 @@ Array [
     },
     "bouncer": "none",
     "name": "Tricrypto2",
-    "newVault": false,
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [
@@ -2320,6 +2320,7 @@ Array [
   Object {
     "apr": 57.32,
     "asset": "imBTC",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -2327,7 +2328,6 @@ Array [
     },
     "bouncer": "none",
     "name": "imBTC",
-    "newVault": false,
     "pricePerFullShare": 1,
     "protocol": "mStable",
     "sources": Array [
@@ -2414,6 +2414,7 @@ Array [
   Object {
     "apr": 24.76,
     "asset": "mhBTC",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -2421,7 +2422,6 @@ Array [
     },
     "bouncer": "none",
     "name": "mhBTC",
-    "newVault": false,
     "pricePerFullShare": 1,
     "protocol": "mStable",
     "sources": Array [
@@ -2508,6 +2508,7 @@ Array [
   Object {
     "apr": 161.92,
     "asset": "CVX",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -2515,7 +2516,6 @@ Array [
     },
     "bouncer": "none",
     "name": "Vote Locked CVX",
-    "newVault": false,
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [
@@ -2602,6 +2602,7 @@ Array [
   Object {
     "apr": 94.36,
     "asset": "crvCVXbveCVX",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -2609,7 +2610,6 @@ Array [
     },
     "bouncer": "none",
     "name": "CVX / Vote Locked CVX",
-    "newVault": false,
     "pricePerFullShare": 1,
     "protocol": "Curve",
     "sources": Array [
@@ -2696,6 +2696,7 @@ Array [
   Object {
     "apr": 111.72,
     "asset": "crvibBTC",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -2703,7 +2704,6 @@ Array [
     },
     "bouncer": "none",
     "name": "ibBTC / crvsBTC LP",
-    "newVault": false,
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [
@@ -2790,6 +2790,7 @@ Array [
   Object {
     "apr": 16.56,
     "asset": "crvMim3Crv",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -2797,7 +2798,6 @@ Array [
     },
     "bouncer": "none",
     "name": "MIM / 3CRV",
-    "newVault": true,
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [
@@ -2884,6 +2884,7 @@ Array [
   Object {
     "apr": 13.92,
     "asset": "crvFrax3Crv",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -2891,7 +2892,6 @@ Array [
     },
     "bouncer": "none",
     "name": "FRAX / 3CRV",
-    "newVault": true,
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [
@@ -2989,6 +2989,7 @@ Array [
   Object {
     "apr": 133.28,
     "asset": "crvsBTC",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -2996,7 +2997,6 @@ Array [
     },
     "bouncer": "none",
     "name": "renBTC/wBTC/sBTC",
-    "newVault": false,
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [
@@ -3083,6 +3083,7 @@ Array [
   Object {
     "apr": 70.32,
     "asset": "crvrenWBTC",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -3090,7 +3091,6 @@ Array [
     },
     "bouncer": "none",
     "name": "renBTC/wBTC",
-    "newVault": false,
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [
@@ -3177,6 +3177,7 @@ Array [
   Object {
     "apr": 118.92,
     "asset": "crvtBTC",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -3184,7 +3185,6 @@ Array [
     },
     "bouncer": "none",
     "name": "tBTC/sBTC",
-    "newVault": false,
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [
@@ -3271,14 +3271,14 @@ Array [
   Object {
     "apr": 84.15,
     "asset": "crvrenWBTC",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "Harvest renBTC/wBTC",
-    "newVault": false,
+    "name": "renBTC/wBTC",
     "pricePerFullShare": 1,
     "protocol": "Curve",
     "sources": Array [
@@ -3351,14 +3351,14 @@ Array [
   Object {
     "apr": 16.950000000000003,
     "asset": "BADGER-WBTC",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "Wrapped BTC/Badger",
-    "newVault": false,
+    "name": "wBTC/Badger",
     "pricePerFullShare": 1,
     "protocol": "Uniswap",
     "sources": Array [
@@ -3439,14 +3439,14 @@ Array [
   Object {
     "apr": 92.85,
     "asset": "DIGG-WBTC",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "Wrapped BTC/Digg",
-    "newVault": false,
+    "name": "wBTC/Digg",
     "pricePerFullShare": 1,
     "protocol": "Uniswap",
     "sources": Array [
@@ -3527,14 +3527,14 @@ Array [
   Object {
     "apr": 75.2,
     "asset": "SLP-WBTC-ETH",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "Wrapped BTC/Wrapped ETH",
-    "newVault": false,
+    "name": "wBTC/wETH",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
     "sources": Array [
@@ -3629,14 +3629,14 @@ Array [
   Object {
     "apr": 15.6,
     "asset": "SLP-BADGER-WBTC",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "Wrapped BTC/Badger",
-    "newVault": false,
+    "name": "wBTC/Badger",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
     "sources": Array [
@@ -3731,14 +3731,14 @@ Array [
   Object {
     "apr": 87.08,
     "asset": "SLP-DIGG-WBTC",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "Wrapped BTC/Digg",
-    "newVault": false,
+    "name": "wBTC/Digg",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
     "sources": Array [
@@ -3833,6 +3833,7 @@ Array [
   Object {
     "apr": 80.92,
     "asset": "DIGG",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -3840,7 +3841,6 @@ Array [
     },
     "bouncer": "none",
     "name": "Digg",
-    "newVault": false,
     "pricePerFullShare": 1,
     "protocol": "Badger",
     "sources": Array [
@@ -3927,6 +3927,7 @@ Array [
   Object {
     "apr": 12.39,
     "asset": "BADGER",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -3934,7 +3935,6 @@ Array [
     },
     "bouncer": "none",
     "name": "Badger",
-    "newVault": false,
     "pricePerFullShare": 1,
     "protocol": "Badger",
     "sources": Array [
@@ -4007,14 +4007,14 @@ Array [
   Object {
     "apr": 48.36,
     "asset": "WBTC",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "Wrapped BTC",
-    "newVault": false,
+    "name": "wBTC",
     "pricePerFullShare": 1,
     "protocol": "Yearn",
     "sources": Array [
@@ -4101,14 +4101,14 @@ Array [
   Object {
     "apr": 88.64,
     "asset": "SLP-IBBTC-WBTC",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "Wrapped BTC/ibBTC",
-    "newVault": false,
+    "name": "wBTC/ibBTC",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
     "sources": Array [
@@ -4203,6 +4203,7 @@ Array [
   Object {
     "apr": 89.88,
     "asset": "crvhBTC",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -4210,7 +4211,6 @@ Array [
     },
     "bouncer": "none",
     "name": "hBTC",
-    "newVault": false,
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [
@@ -4297,6 +4297,7 @@ Array [
   Object {
     "apr": 54.76,
     "asset": "crvpBTC",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -4304,7 +4305,6 @@ Array [
     },
     "bouncer": "none",
     "name": "pBTC",
-    "newVault": false,
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [
@@ -4391,6 +4391,7 @@ Array [
   Object {
     "apr": 155.68,
     "asset": "crvoBTC",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -4398,7 +4399,6 @@ Array [
     },
     "bouncer": "none",
     "name": "oBTC",
-    "newVault": false,
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [
@@ -4485,6 +4485,7 @@ Array [
   Object {
     "apr": 60,
     "asset": "crvbBTC",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -4492,7 +4493,6 @@ Array [
     },
     "bouncer": "none",
     "name": "bBTC",
-    "newVault": false,
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [
@@ -4579,6 +4579,7 @@ Array [
   Object {
     "apr": 91.19999999999999,
     "asset": "crvTricrypto",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -4586,7 +4587,6 @@ Array [
     },
     "bouncer": "none",
     "name": "Tricrypto",
-    "newVault": false,
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [
@@ -4659,14 +4659,14 @@ Array [
   Object {
     "apr": 27.72,
     "asset": "cvxCRV",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "cvxCRV Helper",
-    "newVault": false,
+    "name": "cvxCRV",
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [
@@ -4753,14 +4753,14 @@ Array [
   Object {
     "apr": 53.6,
     "asset": "CVX",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "CVX Helper",
-    "newVault": false,
+    "name": "CVX",
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [
@@ -4847,6 +4847,7 @@ Array [
   Object {
     "apr": 56.8,
     "asset": "renBTC",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -4854,7 +4855,6 @@ Array [
     },
     "bouncer": "none",
     "name": "renBTC",
-    "newVault": false,
     "pricePerFullShare": 1,
     "protocol": "Badger",
     "sources": Array [
@@ -4941,6 +4941,7 @@ Array [
   Object {
     "apr": 25.52,
     "asset": "crvTricrypto2",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -4948,7 +4949,6 @@ Array [
     },
     "bouncer": "none",
     "name": "Tricrypto2",
-    "newVault": false,
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [
@@ -5035,6 +5035,7 @@ Array [
   Object {
     "apr": 57.32,
     "asset": "imBTC",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -5042,7 +5043,6 @@ Array [
     },
     "bouncer": "none",
     "name": "imBTC",
-    "newVault": false,
     "pricePerFullShare": 1,
     "protocol": "mStable",
     "sources": Array [
@@ -5129,6 +5129,7 @@ Array [
   Object {
     "apr": 24.76,
     "asset": "mhBTC",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -5136,7 +5137,6 @@ Array [
     },
     "bouncer": "none",
     "name": "mhBTC",
-    "newVault": false,
     "pricePerFullShare": 1,
     "protocol": "mStable",
     "sources": Array [
@@ -5223,6 +5223,7 @@ Array [
   Object {
     "apr": 161.92,
     "asset": "CVX",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -5230,7 +5231,6 @@ Array [
     },
     "bouncer": "none",
     "name": "Vote Locked CVX",
-    "newVault": false,
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [
@@ -5317,6 +5317,7 @@ Array [
   Object {
     "apr": 94.36,
     "asset": "crvCVXbveCVX",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -5324,7 +5325,6 @@ Array [
     },
     "bouncer": "none",
     "name": "CVX / Vote Locked CVX",
-    "newVault": false,
     "pricePerFullShare": 1,
     "protocol": "Curve",
     "sources": Array [
@@ -5411,6 +5411,7 @@ Array [
   Object {
     "apr": 111.72,
     "asset": "crvibBTC",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -5418,7 +5419,6 @@ Array [
     },
     "bouncer": "none",
     "name": "ibBTC / crvsBTC LP",
-    "newVault": false,
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [
@@ -5505,6 +5505,7 @@ Array [
   Object {
     "apr": 16.56,
     "asset": "crvMim3Crv",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -5512,7 +5513,6 @@ Array [
     },
     "bouncer": "none",
     "name": "MIM / 3CRV",
-    "newVault": true,
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [
@@ -5599,6 +5599,7 @@ Array [
   Object {
     "apr": 13.92,
     "asset": "crvFrax3Crv",
+    "available": 0,
     "balance": 0,
     "boost": Object {
       "enabled": false,
@@ -5606,7 +5607,6 @@ Array [
     },
     "bouncer": "none",
     "name": "FRAX / 3CRV",
-    "newVault": true,
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [

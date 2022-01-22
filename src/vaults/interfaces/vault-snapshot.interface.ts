@@ -19,6 +19,9 @@ export class VaultSnapshot {
   supply!: number;
 
   @attribute()
+  available!: number;
+
+  @attribute()
   ratio!: number;
 
   @attribute()

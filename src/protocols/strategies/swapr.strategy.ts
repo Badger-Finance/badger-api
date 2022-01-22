@@ -4,7 +4,6 @@ import { ONE_YEAR_SECONDS, SWAPR_SUBGRAPH_URL } from '../../config/constants';
 import { TOKENS } from '../../config/tokens.config';
 import { SwaprStaking__factory } from '../../contracts';
 import { SwaprStrategy__factory } from '../../contracts/factories/SwaprStrategy__factory';
-import { valueSourceToCachedValueSource } from '../../indexers/indexer.utils';
 import { getPrice } from '../../prices/prices.utils';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { getCachedVault } from '../../vaults/vaults.utils';
@@ -14,6 +13,7 @@ import { uniformPerformance } from '../interfaces/performance.interface';
 import { createValueSource } from '../interfaces/value-source.interface';
 import { tokenEmission } from '../protocols.utils';
 import { getUniV2SwapValue } from './strategy.utils';
+import { valueSourceToCachedValueSource } from '../../rewards/rewards.utils';
 
 // scalars are the "emitted" proportion
 const COMPOUND_SCALARS = {

@@ -1,16 +1,14 @@
-import { Network } from '@badger-dao/sdk';
-import { AccountsService } from '../accounts/accounts.service';
+import { Network, Protocol, ValueSource } from '@badger-dao/sdk';
 import { getBoostFile, getCachedAccount } from '../accounts/accounts.utils';
 import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
 import { ONE_YEAR_SECONDS, REWARD_DATA } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
-import { valueSourceToCachedValueSource } from '../indexers/indexer.utils';
 import { getPrice } from '../prices/prices.utils';
 import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
 import { uniformPerformance } from '../protocols/interfaces/performance.interface';
 import { createValueSource } from '../protocols/interfaces/value-source.interface';
-import { tokenEmission } from '../protocols/protocols.utils';
+import { getVaultCachedValueSources, tokenEmission } from '../protocols/protocols.utils';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { getCachedVault } from '../vaults/vaults.utils';
 import { Token } from '../tokens/interfaces/token.interface';
@@ -20,6 +18,16 @@ import { BadgerTree__factory } from '../contracts';
 import { BigNumber } from '@ethersproject/bignumber';
 import { UnprocessableEntity } from '@tsed/exceptions';
 import { EmissionSchedule } from '@badger-dao/sdk/lib/rewards/interfaces/emission-schedule.interface';
+import { VaultsService } from '../vaults/vaults.service';
+import { SourceType } from './enums/source-type.enum';
+import { getCurvePerformance, ConvexStrategy } from '../protocols/strategies/convex.strategy';
+import { mStableStrategy } from '../protocols/strategies/mstable.strategy';
+import { PancakeswapStrategy } from '../protocols/strategies/pancakeswap.strategy';
+import { QuickswapStrategy } from '../protocols/strategies/quickswap.strategy';
+import { SushiswapStrategy } from '../protocols/strategies/sushiswap.strategy';
+import { UniswapStrategy } from '../protocols/strategies/uniswap.strategy';
+import { SwaprStrategy } from '../protocols/strategies/swapr.strategy';
+import { getDataMapper } from '../aws/dynamodb.utils';
 
 export async function getTreeDistribution(chain: Chain): Promise<RewardMerkleDistribution | null> {
   if (!chain.badgerTree) {
@@ -36,10 +44,6 @@ export function noRewards(VaultDefinition: VaultDefinition, token: Token) {
     VaultDefinition,
     tokenEmission(token),
   );
-}
-
-export function getChainStartBlockKey(chain: Chain, block: number): string {
-  return `${chain.network}_${block}`;
 }
 
 export async function getClaimableRewards(
@@ -97,15 +101,12 @@ export async function getRewardEmission(chain: Chain, vaultDefinition: VaultDefi
   let ignoredTVL = 0;
   if (chain.network === Network.Ethereum) {
     const blacklistedAccounts = await Promise.all([
-      getCachedAccount('0xB65cef03b9B89f99517643226d76e286ee999e77'), // dev multisig
-      getCachedAccount('0x86cbD0ce0c087b482782c181dA8d191De18C8275'), // tech ops multisig
-      getCachedAccount('0x042B32Ac6b453485e357938bdC38e0340d4b9276'), // treasury ops multisig
-      getCachedAccount('0xD0A7A8B98957b9CD3cFB9c0425AbE44551158e9e'), // treasury vault
+      getCachedAccount(chain, '0xB65cef03b9B89f99517643226d76e286ee999e77'), // dev multisig
+      getCachedAccount(chain, '0x86cbD0ce0c087b482782c181dA8d191De18C8275'), // tech ops multisig
+      getCachedAccount(chain, '0x042B32Ac6b453485e357938bdC38e0340d4b9276'), // treasury ops multisig
+      getCachedAccount(chain, '0xD0A7A8B98957b9CD3cFB9c0425AbE44551158e9e'), // treasury vault
     ]);
-    const transformedAccounts = await Promise.all(
-      blacklistedAccounts.map(async (a) => AccountsService.cachedAccountToAccount(chain, a)),
-    );
-    ignoredTVL = transformedAccounts
+    ignoredTVL = blacklistedAccounts
       .map((a) => a.data[vault.vaultToken])
       .map((s) => (s ? s.value : 0))
       .reduce((total, value) => total + value, 0);
@@ -153,4 +154,108 @@ export async function getRewardEmission(chain: Chain, vaultDefinition: VaultDefi
     emissionSources.push(valueSourceToCachedValueSource(proRataSource, vaultDefinition, tokenEmission(token)));
   }
   return emissionSources;
+}
+
+export const valueSourceToCachedValueSource = (
+  valueSource: ValueSource,
+  vaultDefinition: VaultDefinition,
+  type: string,
+): CachedValueSource => {
+  return Object.assign(new CachedValueSource(), {
+    addressValueSourceType: `${vaultDefinition.vaultToken}_${type}`,
+    address: vaultDefinition.vaultToken,
+    type,
+    apr: valueSource.apr,
+    name: valueSource.name,
+    oneDay: valueSource.performance.oneDay,
+    threeDay: valueSource.performance.threeDay,
+    sevenDay: valueSource.performance.sevenDay,
+    thirtyDay: valueSource.performance.thirtyDay,
+    harvestable: Boolean(valueSource.harvestable),
+    minApr: valueSource.minApr,
+    maxApr: valueSource.maxApr,
+    boostable: valueSource.boostable,
+  });
+};
+
+export async function getUnderlyingPerformance(VaultDefinition: VaultDefinition): Promise<CachedValueSource> {
+  return valueSourceToCachedValueSource(
+    await VaultsService.getSettPerformance(VaultDefinition),
+    VaultDefinition,
+    SourceType.Compound,
+  );
+}
+
+export async function getVaultValueSources(
+  chain: Chain,
+  vaultDefinition: VaultDefinition,
+): Promise<CachedValueSource[]> {
+  // TODO: remove this once we have vaults 1.5, and token emission (tree events) added
+  const ARB_CRV_SETTS = [TOKENS.BARB_CRV_RENBTC, TOKENS.BARB_CRV_TRICRYPTO, TOKENS.BARB_CRV_TRICRYPTO_LITE];
+
+  try {
+    const [underlying, emission, protocol] = await Promise.all([
+      getUnderlyingPerformance(vaultDefinition),
+      getRewardEmission(chain, vaultDefinition),
+      getProtocolValueSources(chain, vaultDefinition),
+    ]);
+
+    // check for any emission removal
+    const oldSources: Record<string, CachedValueSource> = {};
+    const oldEmission = await getVaultCachedValueSources(vaultDefinition);
+    oldEmission.forEach((source) => (oldSources[source.addressValueSourceType] = source));
+
+    // remove updated sources from old source list
+    const newSources = [underlying, ...emission, ...protocol];
+
+    // TODO: remove once badger tree tracking events supported
+    if (ARB_CRV_SETTS.includes(vaultDefinition.vaultToken)) {
+      const crvSource = createValueSource('CRV Rewards', uniformPerformance(underlying.apr));
+      newSources.push(
+        valueSourceToCachedValueSource(crvSource, vaultDefinition, tokenEmission(getToken(TOKENS.ARB_CRV))),
+      );
+    }
+    newSources.forEach((source) => delete oldSources[source.addressValueSourceType]);
+
+    // delete sources which are no longer valid
+    const mapper = getDataMapper();
+    await Promise.all(Array.from(Object.values(oldSources)).map((source) => mapper.delete(source)));
+    return newSources;
+  } catch (err) {
+    console.log({ vaultDefinition, err });
+    return [];
+  }
+}
+
+export async function getProtocolValueSources(
+  chain: Chain,
+  VaultDefinition: VaultDefinition,
+): Promise<CachedValueSource[]> {
+  try {
+    switch (VaultDefinition.protocol) {
+      case Protocol.Curve:
+        return Promise.all([getCurvePerformance(chain, VaultDefinition)]);
+      case Protocol.Pancakeswap:
+        return PancakeswapStrategy.getValueSources(chain, VaultDefinition);
+      case Protocol.Sushiswap:
+        return SushiswapStrategy.getValueSources(chain, VaultDefinition);
+      case Protocol.Convex:
+        return ConvexStrategy.getValueSources(chain, VaultDefinition);
+      case Protocol.Uniswap:
+        return UniswapStrategy.getValueSources(VaultDefinition);
+      case Protocol.Quickswap:
+        return QuickswapStrategy.getValueSources(VaultDefinition);
+      case Protocol.mStable:
+        return mStableStrategy.getValueSources(chain, VaultDefinition);
+      case Protocol.Swapr:
+        return SwaprStrategy.getValueSources(chain, VaultDefinition);
+      default: {
+        return [];
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    // Silently return no value sources
+    return [];
+  }
 }
