@@ -30,7 +30,7 @@ export class Fantom extends Chain {
 
   // TODO: Update if badger is ever updated
   getBadgerTokenAddress(): string {
-    return TOKENS.BADGER;
+    return TOKENS.FTM_BADGER;
   }
 }
 
