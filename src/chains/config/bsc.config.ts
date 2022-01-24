@@ -26,6 +26,10 @@ export class BinanceSmartChain extends Chain {
   async getGasPrices(): Promise<GasPrices> {
     return this.defaultGasPrice();
   }
+
+  getBadgerTokenAddress(): string {
+    return TOKENS.MULTI_BADGER;
+  }
 }
 
 export const bscSetts: VaultDefinition[] = [

@@ -60,8 +60,8 @@ export const bscTokensConfig: TokenConfig = {
     symbol: 'PLP-BDIGG-BTCB',
     type: TokenType.PancakeswapLp,
   },
-  [TOKENS.BSC_BADGER]: {
-    address: TOKENS.BSC_BADGER,
+  [TOKENS.MULTI_BADGER]: {
+    address: TOKENS.MULTI_BADGER,
     decimals: 18,
     lookupName: 'badger-dao',
     name: 'Badger',
