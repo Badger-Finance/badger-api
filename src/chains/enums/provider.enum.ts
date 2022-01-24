@@ -6,4 +6,5 @@ export enum Provider {
   xDai = 'https://rpc.xdaichain.com',
   Arbitrum = 'https://arb1.arbitrum.io/rpc',
   Avalanche = 'https://api.avax.network/ext/bc/C/rpc',
+  Fantom = 'https://rpc.ftm.tools/',
 }
