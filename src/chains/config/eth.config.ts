@@ -297,4 +297,14 @@ export const ethSetts: VaultDefinition[] = [
     stage: Stage.Staging,
     protocol: Protocol.Convex,
   },
+  {
+    name: 'remBadger',
+    createdBlock: 14036178,
+    depositToken: TOKENS.BADGER,
+    newVault: true,
+    vaultToken: TOKENS.BREMBADGER,
+    state: VaultState.Guarded,
+    stage: Stage.Staging,
+    protocol: Protocol.Badger,
+  },
 ];
