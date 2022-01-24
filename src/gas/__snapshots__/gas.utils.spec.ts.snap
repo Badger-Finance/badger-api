@@ -39,10 +39,10 @@ Object {
     },
   },
   "fantom": Object {
-    "fast": 536.4688,
-    "rapid": 536.4688,
-    "slow": 536.4688,
-    "standard": 536.4688,
+    "fast": 33,
+    "rapid": 38,
+    "slow": 33,
+    "standard": 33,
   },
   "polygon": Object {
     "fast": 33,
