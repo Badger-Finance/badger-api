@@ -38,6 +38,12 @@ Object {
       "maxPriorityFeePerGas": 1.89,
     },
   },
+  "fantom": Object {
+    "fast": 536.4688,
+    "rapid": 536.4688,
+    "slow": 536.4688,
+    "standard": 536.4688,
+  },
   "polygon": Object {
     "fast": 33,
     "rapid": 38,
