@@ -283,7 +283,6 @@ export const ethSetts: VaultDefinition[] = [
     newVault: true,
     vaultToken: TOKENS.BCRV_MIM_3CRV,
     state: VaultState.Guarded,
-    stage: Stage.Staging,
     protocol: Protocol.Convex,
   },
   {
@@ -294,7 +293,6 @@ export const ethSetts: VaultDefinition[] = [
     newVault: true,
     vaultToken: TOKENS.BCRV_FRAX_3CRV,
     state: VaultState.Guarded,
-    stage: Stage.Staging,
     protocol: Protocol.Convex,
   },
   {
