@@ -86,7 +86,7 @@ export async function getRewardEmission(chain: Chain, vaultDefinition: VaultDefi
   }
   const { vaultToken } = vaultDefinition;
   const vault = await getCachedVault(vaultDefinition);
-  if (vault.vaultToken === TOKENS.BICVX) {
+  if (vault.vaultToken === TOKENS.BVECVX) {
     delete boostFile.multiplierData[vault.vaultToken];
   }
   const boostRange = boostFile.multiplierData[vault.vaultToken] ?? { min: 1, max: 1 };
@@ -190,8 +190,10 @@ export async function getVaultValueSources(
   chain: Chain,
   vaultDefinition: VaultDefinition,
 ): Promise<CachedValueSource[]> {
+  // manual over ride for removed compounding of vaults - this can be empty
+  const NO_COMPOUND_VAULTS = new Set([TOKENS.BCVXCRV]);
   // TODO: remove this once we have vaults 1.5, and token emission (tree events) added
-  const ARB_CRV_SETTS = [TOKENS.BARB_CRV_RENBTC, TOKENS.BARB_CRV_TRICRYPTO, TOKENS.BARB_CRV_TRICRYPTO_LITE];
+  const ARB_CRV_SETTS = new Set([TOKENS.BARB_CRV_RENBTC, TOKENS.BARB_CRV_TRICRYPTO, TOKENS.BARB_CRV_TRICRYPTO_LITE]);
 
   try {
     const [underlying, emission, protocol] = await Promise.all([
@@ -205,11 +207,15 @@ export async function getVaultValueSources(
     const oldEmission = await getVaultCachedValueSources(vaultDefinition);
     oldEmission.forEach((source) => (oldSources[source.addressValueSourceType] = source));
 
+    const newSources = [...emission, ...protocol];
     // remove updated sources from old source list
-    const newSources = [underlying, ...emission, ...protocol];
+    const hasUnderlying = NO_COMPOUND_VAULTS.has(vaultDefinition.vaultToken);
+    if (hasUnderlying) {
+      newSources.push(underlying);
+    }
 
     // TODO: remove once badger tree tracking events supported
-    if (ARB_CRV_SETTS.includes(vaultDefinition.vaultToken)) {
+    if (ARB_CRV_SETTS.has(vaultDefinition.vaultToken)) {
       const crvSource = createValueSource('CRV Rewards', uniformPerformance(underlying.apr));
       newSources.push(
         valueSourceToCachedValueSource(crvSource, vaultDefinition, tokenEmission(getToken(TOKENS.ARB_CRV))),

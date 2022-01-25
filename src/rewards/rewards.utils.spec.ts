@@ -24,7 +24,7 @@ describe('rewards.utils', () => {
   describe('noRewards', () => {
     it('returns a cached value source for a flat emission, zero apr token rewards', async () => {
       const token = getToken(TOKENS.CVX);
-      const vault = getVaultDefinition(new Ethereum(), TOKENS.BICVX);
+      const vault = getVaultDefinition(new Ethereum(), TOKENS.BVECVX);
       const cachedValueSource = await noRewards(vault, token);
       expect(cachedValueSource).toMatchObject({
         addressValueSourceType: '0xfd05D3C7fe2924020620A8bE4961bBaA747e6305_flat_CVX_emission',

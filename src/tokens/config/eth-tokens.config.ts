@@ -687,8 +687,8 @@ export const ethTokensConfig: TokenConfig = {
       network: Network.Ethereum,
     },
   },
-  [TOKENS.BICVX]: {
-    address: TOKENS.BICVX,
+  [TOKENS.BVECVX]: {
+    address: TOKENS.BVECVX,
     decimals: 18,
     name: 'bveCVX',
     symbol: 'bveCVX',
@@ -698,8 +698,8 @@ export const ethTokensConfig: TokenConfig = {
       network: Network.Ethereum,
     },
   },
-  [TOKENS.BICVX_OLD]: {
-    address: TOKENS.BICVX_OLD,
+  [TOKENS.BVECVX_OLD]: {
+    address: TOKENS.BVECVX_OLD,
     decimals: 18,
     name: 'bveCVX',
     symbol: 'bveCVX',
