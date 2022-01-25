@@ -253,14 +253,14 @@ export const ethSetts: VaultDefinition[] = [
     strategy: '0x10D96b1Fd46Ce7cE092aA905274B8eD9d4585A6E',
   },
   {
-    name: 'Vote Locked CVX',
+    name: 'veCVX',
     createdBlock: 13239091,
     depositToken: TOKENS.CVX,
-    vaultToken: TOKENS.BICVX,
+    vaultToken: TOKENS.BVECVX,
     protocol: Protocol.Convex,
   },
   {
-    name: 'CVX / Vote Locked CVX',
+    name: 'CVX / veCVX',
     createdBlock: 13006329,
     depositToken: TOKENS.CRV_CVXBVECVX,
     getTokenBalance: getCurveVaultTokenBalance,
@@ -283,7 +283,6 @@ export const ethSetts: VaultDefinition[] = [
     newVault: true,
     vaultToken: TOKENS.BCRV_MIM_3CRV,
     state: VaultState.Guarded,
-    stage: Stage.Staging,
     protocol: Protocol.Convex,
   },
   {
@@ -294,7 +293,6 @@ export const ethSetts: VaultDefinition[] = [
     newVault: true,
     vaultToken: TOKENS.BCRV_FRAX_3CRV,
     state: VaultState.Guarded,
-    stage: Stage.Staging,
     protocol: Protocol.Convex,
   },
   {
