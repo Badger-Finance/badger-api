@@ -209,7 +209,7 @@ export async function getVaultValueSources(
 
     const newSources = [...emission, ...protocol];
     // remove updated sources from old source list
-    const hasUnderlying = NO_COMPOUND_VAULTS.has(vaultDefinition.vaultToken);
+    const hasUnderlying = !NO_COMPOUND_VAULTS.has(vaultDefinition.vaultToken);
     if (hasUnderlying) {
       newSources.push(underlying);
     }
