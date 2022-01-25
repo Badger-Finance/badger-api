@@ -110,7 +110,7 @@ export class ConvexStrategy {
         return getCvxRewards(chain, vaultDefinition);
       case TOKENS.BCVXCRV:
         return getCvxCrvRewards(chain, vaultDefinition);
-      case TOKENS.BICVX:
+      case TOKENS.BVECVX:
         return getLockedSources(chain, vaultDefinition);
       default:
         return getVaultSources(chain, vaultDefinition);
@@ -197,7 +197,7 @@ async function getVaultSources(chain: Chain, vaultDefinition: VaultDefinition): 
 
   // emission tokens
   const bcvxCRV = getToken(TOKENS.BCVXCRV);
-  const bveCVX = getToken(TOKENS.BICVX);
+  const bveCVX = getToken(TOKENS.BVECVX);
 
   // create value sources
   const totalUnderlyingApr = crvUnderlyingApr + cvxUnderlyingApr;
@@ -240,7 +240,7 @@ async function getVaultSources(chain: Chain, vaultDefinition: VaultDefinition): 
   return [cachedCompounding, cachedTradeFees, cachedCrvEmission, cachedCvxEmission, ...cachedExtraSources];
 }
 
-async function getCvxRewards(chain: Chain, VaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
+async function getCvxRewards(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
   const cvx = CvxRewards__factory.connect(cvxRewards, chain.provider);
 
   // get prices
@@ -262,10 +262,11 @@ async function getCvxRewards(chain: Chain, VaultDefinition: VaultDefinition): Pr
   const poolValue = cvxLocked * cvxPrice.usd;
   const cvxCrvApr = (emission / poolValue) * 100;
   const valueSource = createValueSource(VAULT_SOURCE, uniformPerformance(cvxCrvApr), true);
-  return [valueSourceToCachedValueSource(valueSource, VaultDefinition, SourceType.Compound)];
+  return [valueSourceToCachedValueSource(valueSource, vaultDefinition, SourceType.Compound)];
 }
 
-async function getCvxCrvRewards(chain: Chain, VaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
+async function getCvxCrvRewards(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
+  const vault = await getCachedVault(vaultDefinition);
   // setup contracts
   const cvxCrv = CvxRewards__factory.connect(cvxCrvRewards, chain.provider);
   const threeCrv = CvxRewards__factory.connect(threeCrvRewards, chain.provider);
@@ -288,20 +289,28 @@ async function getCvxCrvRewards(chain: Chain, VaultDefinition: VaultDefinition):
   const duration = (await cvxCrv.duration()).toNumber();
   const scalar = ONE_YEAR_SECONDS / duration;
   const poolValue = cvxCrvLocked * cvxCrvPrice.usd;
+  const fees = 100 - (vault.strategy.performanceFee + vault.strategy.strategistFee) / 100;
 
   // calculate CVX rewards
   const cvxEmission = cvxReward * cvxPrice.usd * scalar;
-  const cvxApr = (cvxEmission / poolValue) * 100;
+  const cvxApr = (cvxEmission / poolValue) * fees;
 
   // calculate cvxCRV + 3CRV rewards
   const cvxCrvEmission = crvReward * crvPrice.usd * scalar;
-  const cvxCrvApr = (cvxCrvEmission / poolValue) * 100;
+  const cvxCrvApr = (cvxCrvEmission / poolValue) * fees;
   const threeCrvEmission = threeCrvReward * threeCrvPrice.usd * scalar;
-  const threeCrvApr = (threeCrvEmission / poolValue) * 100;
+  const threeCrvApr = (threeCrvEmission / poolValue) * fees;
 
-  const totalApr = cvxCrvApr + threeCrvApr + cvxApr;
-  const cvxCrvValueSource = createValueSource(VAULT_SOURCE, uniformPerformance(totalApr), true);
-  return [valueSourceToCachedValueSource(cvxCrvValueSource, VaultDefinition, SourceType.Compound)];
+  const bveCVX = getToken(TOKENS.BVECVX);
+  const cvxValueSource = createValueSource(`${bveCVX.name} Rewards`, uniformPerformance(cvxApr), true);
+
+  const bcvxCrv = getToken(TOKENS.BCVXCRV);
+  const totalCvxCrvApr = cvxCrvApr + threeCrvApr;
+  const cvxCrvValueSource = createValueSource(`${bcvxCrv.name} Rewards`, uniformPerformance(totalCvxCrvApr), true);
+  return [
+    valueSourceToCachedValueSource(cvxValueSource, vaultDefinition, tokenEmission(bveCVX)),
+    valueSourceToCachedValueSource(cvxCrvValueSource, vaultDefinition, tokenEmission(bcvxCrv)),
+  ];
 }
 
 export async function getCurvePerformance(chain: Chain, VaultDefinition: VaultDefinition): Promise<CachedValueSource> {

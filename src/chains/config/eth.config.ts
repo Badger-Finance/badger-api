@@ -256,7 +256,7 @@ export const ethSetts: VaultDefinition[] = [
     name: 'Vote Locked CVX',
     createdBlock: 13239091,
     depositToken: TOKENS.CVX,
-    vaultToken: TOKENS.BICVX,
+    vaultToken: TOKENS.BVECVX,
     protocol: Protocol.Convex,
   },
   {
