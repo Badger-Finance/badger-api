@@ -1,6 +1,5 @@
 import { DataMapper } from '@aws/dynamodb-data-mapper';
 import { GraphQLClient } from 'graphql-request';
-import { Ethereum } from '../chains/config/eth.config';
 import { TestStrategy } from '../chains/strategies/test.strategy';
 import { TOKENS } from '../config/tokens.config';
 import { UserQuery, UserSettBalance, UsersQuery } from '../graphql/generated/badger';
@@ -9,7 +8,7 @@ import * as priceUtils from '../prices/prices.utils';
 import { inCurrency } from '../prices/prices.utils';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { getVaultDefinition } from '../vaults/vaults.utils';
-import { defaultAccount, randomSnapshot, setupMapper, TEST_ADDR } from '../test/tests.utils';
+import { defaultAccount, randomSnapshot, setupMapper, TEST_ADDR, TEST_CHAIN } from '../test/tests.utils';
 import { getToken } from '../tokens/tokens.utils';
 import {
   defaultBoost,
@@ -25,8 +24,6 @@ import { ethers } from 'ethers';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 
 describe('accounts.utils', () => {
-  const chain = new Ethereum();
-
   const testSettBalance = (vaultDefinition: VaultDefinition): UserSettBalance => {
     const settToken = getToken(vaultDefinition.vaultToken);
     const depositToken = getToken(vaultDefinition.depositToken);
@@ -124,14 +121,14 @@ describe('accounts.utils', () => {
   describe('getUserAccount', () => {
     describe('user exists', () => {
       it('returns the user account', async () => {
-        const sett = getVaultDefinition(new Ethereum(), TOKENS.BBADGER);
+        const sett = getVaultDefinition(TEST_CHAIN, TOKENS.BBADGER);
         const result: UserQuery = {
           user: {
             settBalances: [testSettBalance(sett)],
           },
         };
         jest.spyOn(GraphQLClient.prototype, 'request').mockImplementationOnce(async () => Promise.resolve(result));
-        const user = await getUserAccount(new Ethereum(), TEST_ADDR);
+        const user = await getUserAccount(TEST_CHAIN, TEST_ADDR);
         expect(user).toMatchObject(result);
       });
     });
@@ -142,7 +139,7 @@ describe('accounts.utils', () => {
           user: null,
         };
         jest.spyOn(GraphQLClient.prototype, 'request').mockImplementationOnce(async () => Promise.resolve(result));
-        const user = await getUserAccount(new Ethereum(), TEST_ADDR);
+        const user = await getUserAccount(TEST_CHAIN, TEST_ADDR);
         expect(user).toMatchObject(result);
       });
     });
@@ -151,8 +148,9 @@ describe('accounts.utils', () => {
   describe('getAccounts', () => {
     describe('users exist', () => {
       it('returns a list of user accounts', async () => {
+        const mockAccounts = Object.values(TOKENS);
         const result: UsersQuery = {
-          users: Object.values(TOKENS).map((token) => ({ id: token, settBalances: [] })),
+          users: mockAccounts.map((token) => ({ id: token, settBalances: [] })),
         };
         let responded = false;
         jest.spyOn(GraphQLClient.prototype, 'request').mockImplementation(async () => {
@@ -162,28 +160,28 @@ describe('accounts.utils', () => {
           responded = true;
           return Promise.resolve(result);
         });
-        const users = await getAccounts(new Ethereum());
-        expect(users).toMatchObject(Object.values(TOKENS));
+        const users = await getAccounts(TEST_CHAIN);
+        expect(users).toMatchObject(mockAccounts);
       });
     });
 
     describe('users do not exist', () => {
       it('returns an empty list', async () => {
         jest.spyOn(GraphQLClient.prototype, 'request').mockImplementationOnce(async () => Promise.resolve(null));
-        const nullReturn = await getAccounts(new Ethereum());
+        const nullReturn = await getAccounts(TEST_CHAIN);
         expect(nullReturn).toMatchObject([]);
 
         jest
           .spyOn(GraphQLClient.prototype, 'request')
           .mockImplementationOnce(async () => Promise.resolve({ users: null }));
-        const nullUsers = await getAccounts(new Ethereum());
+        const nullUsers = await getAccounts(TEST_CHAIN);
         expect(nullUsers).toMatchObject([]);
       });
     });
   });
 
   describe('toSettBalance', () => {
-    const chain = new Ethereum();
+    const chain = TEST_CHAIN;
     const strategy = new TestStrategy();
 
     const testToSettBalance = (settAddress: string) => {
@@ -223,7 +221,7 @@ describe('accounts.utils', () => {
   describe('defaultBoost', () => {
     it('returns a boost with all fields as the default values', () => {
       const expected = {
-        leaderboard: `${chain.network}_${LeaderBoardType.BadgerBoost}`,
+        leaderboard: `${TEST_CHAIN.network}_${LeaderBoardType.BadgerBoost}`,
         rank: 0,
         address: TEST_ADDR,
         boost: 1,
@@ -232,7 +230,7 @@ describe('accounts.utils', () => {
         nativeBalance: 0,
         nonNativeBalance: 0,
       };
-      expect(defaultBoost(chain, TEST_ADDR)).toMatchObject(expected);
+      expect(defaultBoost(TEST_CHAIN, TEST_ADDR)).toMatchObject(expected);
     });
   });
 
@@ -240,19 +238,19 @@ describe('accounts.utils', () => {
     describe('no cached boost', () => {
       it('returns the default boost', async () => {
         setupMapper([]);
-        const result = await getCachedBoost(chain, TEST_ADDR);
-        expect(result).toMatchObject(defaultBoost(chain, TEST_ADDR));
+        const result = await getCachedBoost(TEST_CHAIN, TEST_ADDR);
+        expect(result).toMatchObject(defaultBoost(TEST_CHAIN, TEST_ADDR));
       });
     });
     describe('a previously cached boost', () => {
       it('returns the default boost', async () => {
-        const boost = defaultBoost(chain, TEST_ADDR);
+        const boost = defaultBoost(TEST_CHAIN, TEST_ADDR);
         boost.rank = 42;
         boost.stakeRatio = 1;
         boost.nativeBalance = 32021;
         boost.nonNativeBalance = 32021;
         setupMapper([boost]);
-        const result = await getCachedBoost(chain, TEST_ADDR);
+        const result = await getCachedBoost(TEST_CHAIN, TEST_ADDR);
         expect(result).toMatchObject(boost);
       });
     });
@@ -264,11 +262,11 @@ describe('accounts.utils', () => {
       const meta = Object.assign(new UserClaimMetadata(), {
         startBlock: 100,
         endBlock: 101,
-        chainStartBlock: `${chain.network}_123123`,
-        chain: chain.network,
+        chainStartBlock: `${TEST_CHAIN.network}_123123`,
+        chain: TEST_CHAIN.network,
       });
       setupMapper([meta]);
-      const latest_meta = await getLatestMetadata(chain);
+      const latest_meta = await getLatestMetadata(TEST_CHAIN);
       expect(latest_meta).toEqual(meta);
       expect(put.mock.calls).toEqual([]);
     });
@@ -281,11 +279,11 @@ describe('accounts.utils', () => {
       const expected = Object.assign(new UserClaimMetadata(), {
         startBlock: 100,
         endBlock: 101,
-        chainStartBlock: `${chain.network}_${mockedBlockNumber}`,
-        chain: chain.network,
+        chainStartBlock: `${TEST_CHAIN.network}_${mockedBlockNumber}`,
+        chain: TEST_CHAIN.network,
       });
       setupMapper([]);
-      await getLatestMetadata(chain);
+      await getLatestMetadata(TEST_CHAIN);
       expect(put.mock.calls[0][0]).toEqual(expected);
     });
   });

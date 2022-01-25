@@ -423,6 +423,17 @@ export const ethTokensConfig: TokenConfig = {
       network: Network.Ethereum,
     },
   },
+  [TOKENS.BREMBADGER]: {
+    address: TOKENS.BREMBADGER,
+    decimals: 18,
+    name: 'remBadger',
+    symbol: 'remBadger',
+    type: TokenType.Vault,
+    vaultToken: {
+      address: TOKENS.BADGER,
+      network: Network.Ethereum,
+    },
+  },
   [TOKENS.BDIGG]: {
     address: TOKENS.BDIGG,
     decimals: 18,

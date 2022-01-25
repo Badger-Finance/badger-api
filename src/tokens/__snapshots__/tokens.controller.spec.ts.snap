@@ -307,6 +307,12 @@ Object {
     "name": "Sushi",
     "symbol": "Sushi",
   },
+  "0x6aF7377b5009d7d154F36FE9e235aE1DA27Aea22": Object {
+    "address": "0x6aF7377b5009d7d154F36FE9e235aE1DA27Aea22",
+    "decimals": 18,
+    "name": "remBadger",
+    "symbol": "remBadger",
+  },
   "0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490": Object {
     "address": "0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490",
     "decimals": 18,
@@ -833,6 +839,12 @@ Object {
     "decimals": 18,
     "name": "Sushi",
     "symbol": "Sushi",
+  },
+  "0x6aF7377b5009d7d154F36FE9e235aE1DA27Aea22": Object {
+    "address": "0x6aF7377b5009d7d154F36FE9e235aE1DA27Aea22",
+    "decimals": 18,
+    "name": "remBadger",
+    "symbol": "remBadger",
   },
   "0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490": Object {
     "address": "0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490",

@@ -8,6 +8,7 @@ const rpc = {
   [Network.xDai]: process.env.XDAI_RPC || Provider.xDai,
   [Network.Arbitrum]: process.env.ARBITRUM_RPC || Provider.Arbitrum,
   [Network.Avalanche]: process.env.AVALANCHE_RPC || Provider.Avalanche,
+  [Network.Fantom]: process.env.FANTOM_RPC || Provider.Fantom,
 };
 
 export default rpc;
