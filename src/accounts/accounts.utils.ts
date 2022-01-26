@@ -222,7 +222,6 @@ export async function getCachedAccount(chain: Chain, address: string): Promise<A
   );
   const cachedBoost = await getCachedBoost(chain, cachedAccount.address);
   const { boost, rank, stakeRatio, nftBalance, nativeBalance, nonNativeBalance } = cachedBoost;
-  // const { address } = cachedAccount;
   const value = balances.map((b) => b.value).reduce((total, value) => (total += value), 0);
   const earnedValue = balances.map((b) => b.earnedValue).reduce((total, value) => (total += value), 0);
   const account: Account = {
@@ -259,6 +258,7 @@ export async function getClaimableBalanceSnapshot(
     chainStartBlock: getChainStartBlockKey(chain, startBlock),
     address,
     chain: chain.network,
+    startBlock,
     claimableBalances: [],
     expiresAt: Date.now(),
   };

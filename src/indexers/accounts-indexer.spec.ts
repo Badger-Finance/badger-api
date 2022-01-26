@@ -105,6 +105,7 @@ describe('accounts-indexer', () => {
         Object.assign(new UserClaimSnapshot(), {
           chainStartBlock: dynamodbUtils.getChainStartBlockKey(rewardsChain, startMockedBlockNumber),
           chain: rewardsChain.network,
+          startBlock: startMockedBlockNumber,
           address: acc,
           claimableBalances,
         }),

@@ -182,6 +182,7 @@ export function setupMockAccounts() {
     chainStartBlock: dynamodbUtils.getChainStartBlockKey(TEST_CHAIN, 10),
     address: TEST_ADDR,
     chain: TEST_CHAIN.network,
+    startBlock: 100,
     claimableBalances: [],
     expiresAt: Date.now(),
   }));
