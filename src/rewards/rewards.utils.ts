@@ -69,6 +69,10 @@ export async function getClaimableRewards(
         });
         return [user, result];
       } catch {
+        if (proof.tokens.includes(TOKENS.DIGG)) {
+          const index = proof.tokens.indexOf(TOKENS.DIGG);
+          proof.cumulativeAmounts[index] = (await tree.claimed(user, TOKENS.DIGG)).toString();
+        }
         attempt++;
       }
     }
