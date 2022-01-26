@@ -22,6 +22,9 @@ export class UserClaimSnapshot {
   @attribute()
   chain!: string;
 
+  @attribute()
+  startBlock!: number;
+
   @attribute({ memberType: embed(ClaimableBalance) })
   claimableBalances!: Array<ClaimableBalance>;
 

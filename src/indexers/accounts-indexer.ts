@@ -48,6 +48,7 @@ export async function refreshClaimableBalances(chain: Chain) {
     return Object.assign(new UserClaimSnapshot(), {
       chainStartBlock: getChainStartBlockKey(chain, snapshotStartBlock),
       chain: chain.network,
+      startBlock: snapshotStartBlock,
       address: user,
       claimableBalances,
     });
