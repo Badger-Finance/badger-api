@@ -45,14 +45,13 @@ export async function refreshClaimableBalances(chain: Chain) {
         balance: amount.toString(),
       });
     });
-    const userSnapshot = Object.assign(new UserClaimSnapshot(), {
+    return Object.assign(new UserClaimSnapshot(), {
       chainStartBlock: getChainStartBlockKey(chain, snapshotStartBlock),
       chain: chain.network,
       startBlock: snapshotStartBlock,
       address: user,
       claimableBalances,
     });
-    return userSnapshot;
   });
 
   console.log(`Updated ${userClaimSnapshots.length} claimable balances for ${chain.network}`);
