@@ -260,7 +260,7 @@ export const ethSetts: VaultDefinition[] = [
     protocol: Protocol.Convex,
   },
   {
-    name: 'CVX / veCVX',
+    name: 'CVX / bveCVX',
     createdBlock: 13006329,
     depositToken: TOKENS.CRV_CVXBVECVX,
     getTokenBalance: getCurveVaultTokenBalance,
