@@ -28,6 +28,7 @@ import { SushiswapStrategy } from '../protocols/strategies/sushiswap.strategy';
 import { UniswapStrategy } from '../protocols/strategies/uniswap.strategy';
 import { SwaprStrategy } from '../protocols/strategies/swapr.strategy';
 import { getDataMapper } from '../aws/dynamodb.utils';
+import { getVaultPerformance } from '../vaults/vaults_v2.utils';
 
 export async function getTreeDistribution(chain: Chain): Promise<RewardMerkleDistribution | null> {
   if (!chain.badgerTree) {
@@ -199,6 +200,13 @@ export async function getVaultValueSources(
   const NO_COMPOUND_VAULTS = new Set([TOKENS.BCVXCRV]);
   // TODO: remove this once we have vaults 1.5, and token emission (tree events) added
   const ARB_CRV_SETTS = new Set([TOKENS.BARB_CRV_RENBTC, TOKENS.BARB_CRV_TRICRYPTO, TOKENS.BARB_CRV_TRICRYPTO_LITE]);
+
+  if (vaultDefinition.vaultToken === TOKENS.BAVAX_WBTC) {
+    await getVaultPerformance(chain, vaultDefinition);
+    return [];
+  } else {
+    return [];
+  }
 
   try {
     const [underlying, emission, protocol] = await Promise.all([

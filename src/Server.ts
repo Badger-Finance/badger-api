@@ -23,6 +23,10 @@ import { controllers } from './ControllerRegistry';
     logRequest: false,
   },
   exclude: ['**/*.spec.ts'],
+  cache: {
+    ttl: 60,
+    store: 'memory',
+  },
 })
 export class Server {
   @Inject()

@@ -79,6 +79,7 @@ const RAW_TOKENS: ContractRegistry = {
 
   // avalanche tokens
   AVAX_WBTC: '0x50b7545627a5162f82a992c33b87adc75187b218',
+  AVAX_AWBTC: '0x686bEF2417b6Dc32C50a3cBfbCC3bb60E1e9a15D',
   AVAX_WAVAX: '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7',
 
   // arbitrum tokens

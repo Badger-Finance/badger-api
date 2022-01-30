@@ -12,6 +12,14 @@ export const avalancheTokensConfig: TokenConfig = {
     symbol: 'WBTC',
     type: TokenType.Contract,
   },
+  [TOKENS.AVAX_AWBTC]: {
+    address: TOKENS.AVAX_AWBTC,
+    decimals: 8,
+    lookupName: 'wrapped-bitcoin',
+    name: 'Aave Wrapped Bitcoin',
+    symbol: 'avWBTC',
+    type: TokenType.Contract,
+  },
   [TOKENS.AVAX_WAVAX]: {
     address: TOKENS.AVAX_WAVAX,
     decimals: 18,

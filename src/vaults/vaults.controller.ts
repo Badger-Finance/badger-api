@@ -1,5 +1,5 @@
 import { Network } from '@badger-dao/sdk';
-import { Controller, Get, Inject, PathParams, QueryParams } from '@tsed/common';
+import { Controller, Get, Inject, PathParams, QueryParams, UseCache } from '@tsed/common';
 import { ContentType, Description, Returns, Summary } from '@tsed/schema';
 import { Chain } from '../chains/config/chain.config';
 import { VaultModel } from './interfaces/vault-model.interface';
@@ -11,6 +11,7 @@ export class VaultsController {
   vaultService!: VaultsService;
 
   @Get()
+  @UseCache()
   @ContentType('json')
   @Summary('Get a list of protocol vaults')
   @Description('Return a list of protocol vaults for the requested chain')
@@ -24,6 +25,7 @@ export class VaultsController {
   }
 
   @Get('/:contract')
+  @UseCache()
   @ContentType('json')
   @Summary('Get a specific vault')
   @Description('Return a specific vault for the requested chain')
