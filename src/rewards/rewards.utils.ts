@@ -34,7 +34,6 @@ export async function getTreeDistribution(chain: Chain): Promise<RewardMerkleDis
     return null;
   }
   const fileName = `badger-tree-${parseInt(chain.chainId, 16)}.json`;
-  console.log(`Using ${fileName}`);
   const rewardFile = await getObject(REWARD_DATA, fileName);
   return JSON.parse(rewardFile.toString('utf-8'));
 }
