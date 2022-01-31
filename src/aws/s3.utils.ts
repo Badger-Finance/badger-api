@@ -19,7 +19,6 @@ export const getObject = async (bucket: string, key: string): Promise<AWS.S3.Bod
       Bucket: bucket,
       Key: key,
     };
-    console.log(`getObject(${s3Path})`);
     const objectMetadata = await s3.headObject(params).promise();
     const cacheKey = objectMetadata.ETag ?? s3Path;
     const cachedObject = s3Cache.get(cacheKey) as AWS.S3.GetObjectOutput;
