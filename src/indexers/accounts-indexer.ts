@@ -117,6 +117,7 @@ export async function refreshUserAccounts(event: AccountIndexEvent) {
         try {
           await refreshClaimableBalances(chain);
         } catch (err) {
+          console.log(`Failred to refresh claimable balances for ${chain}`);
           console.error(err);
         }
       }
