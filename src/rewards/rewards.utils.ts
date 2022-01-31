@@ -59,13 +59,7 @@ export async function getClaimableRewards(
   const requests = chainUsers.map(async (user): Promise<[string, [string[], BigNumber[]]]> => {
     const proof = distribution.claims[user];
     if (!proof) {
-      if (user === '0xdE0AEf70a7ae324045B7722C903aaaec2ac175F5' && chain.network === Network.Ethereum) {
-        console.log('User had no proof and thus no claimable');
-      }
       return [user, [[], []]];
-    }
-    if (user === '0xdE0AEf70a7ae324045B7722C903aaaec2ac175F5' && chain.network === Network.Ethereum) {
-      console.log('0xdE0AEf70a7ae324045B7722C903aaaec2ac175F5 has valid proof, attempting to check claimable balances');
     }
     let attempt = 0;
     while (attempt < 3) {
@@ -73,20 +67,12 @@ export async function getClaimableRewards(
         const result = await tree.getClaimableFor(user, proof.tokens, proof.cumulativeAmounts, {
           blockTag: blockNumber,
         });
-        if (user === '0xdE0AEf70a7ae324045B7722C903aaaec2ac175F5' && chain.network === Network.Ethereum) {
-          const tokens = result[0];
-          const amounts = result[1];
-          console.log({ user, result: tokens.map((t, i) => [t, amounts[i].toString()]) });
-        }
         return [user, result];
       } catch (err) {
         for (let i = 0; i < proof.tokens.length; i++) {
           const token = proof.tokens[i];
           const amount = await tree.claimed(user, token);
           if (BigNumber.from(proof.cumulativeAmounts[i]).lt(amount)) proof.cumulativeAmounts[i] = amount.toString();
-        }
-        if (user === '0xdE0AEf70a7ae324045B7722C903aaaec2ac175F5' && chain.network === Network.Ethereum) {
-          console.log(err);
         }
         attempt++;
       }
