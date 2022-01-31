@@ -39,6 +39,17 @@ export async function refreshClaimableBalances(chain: Chain) {
     console.log('Found 0xdE0AEf70a7ae324045B7722C903aaaec2ac175F5 in chain users, expect a snapshot');
   }
   const results = await getClaimableRewards(chain, chainUsers, distribution, endBlock);
+
+  const resultAddresses = new Set(results.map((r) => r[0]));
+  if (resultAddresses.size !== chainUsers.length) {
+    console.log(`Missing ${chainUsers.length - resultAddresses.size} user results`);
+  }
+  chainUsers.forEach((u) => {
+    if (!resultAddresses.has(u)) {
+      console.log(`Missing result: ${u}`);
+    }
+  });
+
   const userClaimSnapshots = results.map((res) => {
     const [user, result] = res;
     const [tokens, amounts] = result;
