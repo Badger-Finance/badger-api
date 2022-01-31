@@ -13,6 +13,7 @@ import { batchRefreshAccounts, chunkArray } from './indexer.utils';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 import { AccountIndexMode } from './enums/account-index-mode.enum';
 import { AccountIndexEvent } from './interfaces/account-index-event.interface';
+import { Network } from '@badger-dao/sdk';
 
 export async function refreshClaimableBalances(chain: Chain) {
   const mapper = getDataMapper();
@@ -56,6 +57,9 @@ export async function refreshClaimableBalances(chain: Chain) {
 
   console.log(`Updated ${userClaimSnapshots.length} claimable balances for ${chain.network}`);
   for await (const _item of mapper.batchPut(userClaimSnapshots)) {
+    if (_item.address === '0xdE0AEf70a7ae324045B7722C903aaaec2ac175F5' && chain.network === Network.Ethereum) {
+      console.log(_item);
+    }
   }
 
   // Create new metadata entry after user claim snapshots are calculated
@@ -99,6 +103,7 @@ export async function refreshAccountSettBalances(chain: Chain, batchAccounts: Ac
 
 export async function refreshUserAccounts(event: AccountIndexEvent) {
   const { mode } = event;
+  console.log(`Invoked refreshUserAccounts in ${mode} mode`);
   const chains = loadChains();
   await Promise.all(
     chains.map(async (chain) => {
