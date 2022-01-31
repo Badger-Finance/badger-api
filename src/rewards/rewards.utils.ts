@@ -68,10 +68,11 @@ export async function getClaimableRewards(
           blockTag: blockNumber,
         });
         return [user, result];
-      } catch {
-        if (proof.tokens.includes(TOKENS.DIGG)) {
-          const index = proof.tokens.indexOf(TOKENS.DIGG);
-          proof.cumulativeAmounts[index] = (await tree.claimed(user, TOKENS.DIGG)).toString();
+      } catch (err) {
+        for (let i = 0; i < proof.tokens.length; i++) {
+          const token = proof.tokens[i];
+          const amount = await tree.claimed(user, token);
+          if (BigNumber.from(proof.cumulativeAmounts[i]).lt(amount)) proof.cumulativeAmounts[i] = amount.toString();
         }
         attempt++;
       }

@@ -99,6 +99,7 @@ export async function refreshAccountSettBalances(chain: Chain, batchAccounts: Ac
 
 export async function refreshUserAccounts(event: AccountIndexEvent) {
   const { mode } = event;
+  console.log(`Invoked refreshUserAccounts in ${mode} mode`);
   const chains = loadChains();
   await Promise.all(
     chains.map(async (chain) => {
@@ -112,6 +113,7 @@ export async function refreshUserAccounts(event: AccountIndexEvent) {
         try {
           await refreshClaimableBalances(chain);
         } catch (err) {
+          console.log(`Failred to refresh claimable balances for ${chain.network}`);
           console.error(err);
         }
       }
