@@ -64,6 +64,9 @@ export async function getClaimableRewards(
       }
       return [user, [[], []]];
     }
+    if (user === '0xdE0AEf70a7ae324045B7722C903aaaec2ac175F5' && chain.network === Network.Ethereum) {
+      console.log('0xdE0AEf70a7ae324045B7722C903aaaec2ac175F5 has valid proof, attempting to check claimable balances');
+    }
     let attempt = 0;
     while (attempt < 3) {
       try {
@@ -77,13 +80,13 @@ export async function getClaimableRewards(
         }
         return [user, result];
       } catch (err) {
-        if (proof.tokens.includes(TOKENS.DIGG)) {
-          const index = proof.tokens.indexOf(TOKENS.DIGG);
-          proof.cumulativeAmounts[index] = (await tree.claimed(user, TOKENS.DIGG)).toString();
-        } else {
-          if (user === '0xdE0AEf70a7ae324045B7722C903aaaec2ac175F5' && chain.network === Network.Ethereum) {
-            console.log(err);
-          }
+        for (let i = 0; i < proof.tokens.length; i++) {
+          const token = proof.tokens[i];
+          const amount = await tree.claimed(user, token);
+          proof.cumulativeAmounts[i] = amount.toString();
+        }
+        if (user === '0xdE0AEf70a7ae324045B7722C903aaaec2ac175F5' && chain.network === Network.Ethereum) {
+          console.log(err);
         }
         attempt++;
       }
