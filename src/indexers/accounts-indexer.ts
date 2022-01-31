@@ -35,6 +35,9 @@ export async function refreshClaimableBalances(chain: Chain) {
   }
 
   const chainUsers = await getAccounts(chain);
+  if (chainUsers.includes('0xdE0AEf70a7ae324045B7722C903aaaec2ac175F5') && chain.network === Network.Ethereum) {
+    console.log('Found 0xdE0AEf70a7ae324045B7722C903aaaec2ac175F5 in chain users, expect a snapshot');
+  }
   const results = await getClaimableRewards(chain, chainUsers, distribution, endBlock);
   const userClaimSnapshots = results.map((res) => {
     const [user, result] = res;

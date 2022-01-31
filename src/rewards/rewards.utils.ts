@@ -80,6 +80,10 @@ export async function getClaimableRewards(
         if (proof.tokens.includes(TOKENS.DIGG)) {
           const index = proof.tokens.indexOf(TOKENS.DIGG);
           proof.cumulativeAmounts[index] = (await tree.claimed(user, TOKENS.DIGG)).toString();
+        } else {
+          if (user === '0xdE0AEf70a7ae324045B7722C903aaaec2ac175F5' && chain.network === Network.Ethereum) {
+            console.log(err);
+          }
         }
         attempt++;
       }
