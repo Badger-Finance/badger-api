@@ -83,7 +83,7 @@ export async function getClaimableRewards(
         for (let i = 0; i < proof.tokens.length; i++) {
           const token = proof.tokens[i];
           const amount = await tree.claimed(user, token);
-          proof.cumulativeAmounts[i] = amount.toString();
+          if (BigNumber.from(proof.cumulativeAmounts[i]).lt(amount)) proof.cumulativeAmounts[i] = amount.toString();
         }
         if (user === '0xdE0AEf70a7ae324045B7722C903aaaec2ac175F5' && chain.network === Network.Ethereum) {
           console.log(err);
