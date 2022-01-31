@@ -34,6 +34,7 @@ export async function getTreeDistribution(chain: Chain): Promise<RewardMerkleDis
     return null;
   }
   const fileName = `badger-tree-${parseInt(chain.chainId, 16)}.json`;
+  console.log(`Using ${fileName}`);
   const rewardFile = await getObject(REWARD_DATA, fileName);
   return JSON.parse(rewardFile.toString('utf-8'));
 }
@@ -59,6 +60,9 @@ export async function getClaimableRewards(
   const requests = chainUsers.map(async (user): Promise<[string, [string[], BigNumber[]]]> => {
     const proof = distribution.claims[user];
     if (!proof) {
+      if (user === '0xdE0AEf70a7ae324045B7722C903aaaec2ac175F5' && chain.network === Network.Ethereum) {
+        console.log('User had no proof and thus no claimable');
+      }
       return [user, [[], []]];
     }
     let attempt = 0;
@@ -67,8 +71,14 @@ export async function getClaimableRewards(
         const result = await tree.getClaimableFor(user, proof.tokens, proof.cumulativeAmounts, {
           blockTag: blockNumber,
         });
+        if (user === '0xdE0AEf70a7ae324045B7722C903aaaec2ac175F5' && chain.network === Network.Ethereum) {
+          console.log({ user, result });
+        }
         return [user, result];
-      } catch {
+      } catch (err) {
+        if (user === '0xdE0AEf70a7ae324045B7722C903aaaec2ac175F5' && chain.network === Network.Ethereum) {
+          console.log(err);
+        }
         if (proof.tokens.includes(TOKENS.DIGG)) {
           const index = proof.tokens.indexOf(TOKENS.DIGG);
           proof.cumulativeAmounts[index] = (await tree.claimed(user, TOKENS.DIGG)).toString();
