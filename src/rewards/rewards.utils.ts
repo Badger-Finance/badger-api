@@ -71,13 +71,12 @@ export async function getClaimableRewards(
           blockTag: blockNumber,
         });
         if (user === '0xdE0AEf70a7ae324045B7722C903aaaec2ac175F5' && chain.network === Network.Ethereum) {
-          console.log({ user, result });
+          const tokens = result[0];
+          const amounts = result[1];
+          console.log({ user, result: tokens.map((t, i) => [t, amounts[i].toString()]) });
         }
         return [user, result];
       } catch (err) {
-        if (user === '0xdE0AEf70a7ae324045B7722C903aaaec2ac175F5' && chain.network === Network.Ethereum) {
-          console.log(err);
-        }
         if (proof.tokens.includes(TOKENS.DIGG)) {
           const index = proof.tokens.indexOf(TOKENS.DIGG);
           proof.cumulativeAmounts[index] = (await tree.claimed(user, TOKENS.DIGG)).toString();
