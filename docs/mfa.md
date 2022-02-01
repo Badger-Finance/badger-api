@@ -19,7 +19,7 @@ export MFA_ARN=<my_device_arn>
 or configure this in your `.zshrc` or whatever shell configuration you use.
 
 ```
-➜  badger-api git:(mfa-usage) ✗ ./setup-mfa.sh $MFA_ARN 106264
+➜  badger-api git:(mfa-usage) ✗ ./setup-mfa.sh $MFA_ARN <TOKEN>
 {
     "Credentials": {
         "AccessKeyId": "",
