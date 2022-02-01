@@ -366,14 +366,14 @@ functions:
           description: 'index price data for all protocol tokens'
           rate: rate(2 minutes)
 
-  # index-sett-snapshots:
-  #   handler: src/indexers/sett-snapshots-indexer.refreshSettSnapshots
-  #   timeout: 45
-  #   events:
-  #     - schedule:
-  #         name: ${self:service}-${self:custom.stage}-index-sett-snapshots
-  #         description: 'index data for supported setts'
-  #         rate: rate(1 minute)
+  index-sett-snapshots:
+    handler: src/indexers/sett-snapshots-indexer.refreshSettSnapshots
+    timeout: 45
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-sett-snapshots
+          description: 'index data for supported setts'
+          rate: rate(1 minute)
 
   # index-leaderboard:
   #   handler: src/indexers/leaderboard-indexer.indexBoostLeaderBoard

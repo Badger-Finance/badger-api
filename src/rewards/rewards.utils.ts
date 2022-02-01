@@ -201,13 +201,6 @@ export async function getVaultValueSources(
   // TODO: remove this once we have vaults 1.5, and token emission (tree events) added
   const ARB_CRV_SETTS = new Set([TOKENS.BARB_CRV_RENBTC, TOKENS.BARB_CRV_TRICRYPTO, TOKENS.BARB_CRV_TRICRYPTO_LITE]);
 
-  if (vaultDefinition.vaultToken === TOKENS.BAVAX_WBTC) {
-    await getVaultPerformance(chain, vaultDefinition);
-    return [];
-  } else {
-    return [];
-  }
-
   try {
     const [underlying, emission, protocol] = await Promise.all([
       getUnderlyingPerformance(vaultDefinition),
