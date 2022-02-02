@@ -1,5 +1,6 @@
 import { Network } from '@badger-dao/sdk';
 import { TOKENS } from '../../config/tokens.config';
+import { getRemDiggPrice } from '../../prices/custom/remdigg-price';
 import { getImBtcPrice, getMhBtcPrice } from '../../protocols/strategies/mstable.strategy';
 import { TokenType } from '../enums/token-type.enum';
 import { TokenConfig } from '../interfaces/token-config.interface';
@@ -117,6 +118,14 @@ export const ethTokensConfig: TokenConfig = {
     name: 'Digg',
     symbol: 'DIGG',
     type: TokenType.Contract,
+  },
+  [TOKENS.BREMDIGG]: {
+    address: TOKENS.BREMDIGG,
+    decimals: 18,
+    getPrice: getRemDiggPrice,
+    name: 'remDigg',
+    symbol: 'bremDIGG',
+    type: TokenType.Custom,
   },
   [TOKENS.SUSHI]: {
     address: TOKENS.SUSHI,
@@ -439,17 +448,6 @@ export const ethTokensConfig: TokenConfig = {
     decimals: 18,
     name: 'bDigg',
     symbol: 'bDIGG',
-    type: TokenType.Vault,
-    vaultToken: {
-      address: TOKENS.DIGG,
-      network: Network.Ethereum,
-    },
-  },
-  [TOKENS.BZS_DIGG]: {
-    address: TOKENS.BZS_DIGG,
-    decimals: 18,
-    name: 'bzsDigg',
-    symbol: 'bzsDIGG',
     type: TokenType.Vault,
     vaultToken: {
       address: TOKENS.DIGG,
