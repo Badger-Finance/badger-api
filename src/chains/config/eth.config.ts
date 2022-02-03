@@ -301,8 +301,6 @@ export const ethSetts: VaultDefinition[] = [
     depositToken: TOKENS.BADGER,
     newVault: true,
     vaultToken: TOKENS.BREMBADGER,
-    state: VaultState.Guarded,
-    stage: Stage.Staging,
     protocol: Protocol.Badger,
   },
 ];
