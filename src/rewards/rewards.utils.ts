@@ -196,7 +196,7 @@ export async function getVaultValueSources(
   vaultDefinition: VaultDefinition,
 ): Promise<CachedValueSource[]> {
   // manual over ride for removed compounding of vaults - this can be empty
-  const NO_COMPOUND_VAULTS = new Set([TOKENS.BCVXCRV]);
+  const NO_COMPOUND_VAULTS = new Set([TOKENS.BCVXCRV, TOKENS.BREMBADGER]);
   // TODO: remove this once we have vaults 1.5, and token emission (tree events) added
   const ARB_CRV_SETTS = new Set([TOKENS.BARB_CRV_RENBTC, TOKENS.BARB_CRV_TRICRYPTO, TOKENS.BARB_CRV_TRICRYPTO_LITE]);
 
