@@ -10,6 +10,7 @@ import { TEST_ADDR } from '../test/tests.utils';
 import { VaultsService } from '@badger-dao/sdk/lib/vaults/vaults.service';
 import { getToken } from '../tokens/tokens.utils';
 import { VaultToken } from '@badger-dao/sdk/lib/vaults/interfaces';
+import BadgerSDK from '@badger-dao/sdk';
 
 describe('refreshSettSnapshots', () => {
   const supportedAddresses = loadChains()
@@ -42,6 +43,7 @@ describe('refreshSettSnapshots', () => {
 
     put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
 
+    jest.spyOn(BadgerSDK.prototype, 'ready').mockImplementation();
     jest.spyOn(priceUtils, 'getPrice').mockImplementation(async (address: string) => {
       const token = getToken(address);
       return {
