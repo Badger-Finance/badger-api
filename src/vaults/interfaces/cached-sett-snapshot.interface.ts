@@ -11,6 +11,7 @@ export class CachedSettSnapshot {
   @attribute()
   balance!: number;
 
+  // TODO: update this value to ppfs - this is a remnant from old implementations
   @attribute()
   ratio!: number;
 

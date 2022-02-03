@@ -16,7 +16,7 @@
     "dev:local": "npx ts-node src/index.ts",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint \"src/**/*.ts\" --fix",
-    "test": "jest --detectOpenHandles --forceExit",
+    "test": "jest --detectOpenHandles",
     "prepare": "husky install"
   },
   "dependencies": {
@@ -72,7 +72,7 @@
     "@types/web3": "^1.2.2",
     "@typescript-eslint/eslint-plugin": "^4.25.0",
     "@typescript-eslint/parser": "^4.33.0",
-    "dotenv": "10.0.0",
+    "dotenv": "^16.0.0",
     "eslint": "^7.27.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "2.23.3",
