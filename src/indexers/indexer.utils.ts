@@ -46,35 +46,25 @@ export async function settToCachedSnapshot(
   chain: Chain,
   vaultDefinition: VaultDefinition,
 ): Promise<CachedSettSnapshot> {
-  const settToken = getToken(vaultDefinition.vaultToken);
-  const depositToken = getToken(vaultDefinition.depositToken);
-  const { sett } = await getVault(chain.graphUrl, settToken.address);
+  const sdk = await chain.getSdk();
+  const { address, totalSupply, balance, pricePerFullShare, available } = await sdk.vaults.loadVault(
+    vaultDefinition.vaultToken,
+  );
 
-  if (!sett) {
-    // sett has not been indexed yet, or encountered a graph error
-    throw new NotFound(`${settToken.name} sett not found`);
-  }
-
-  const { balance, totalSupply, pricePerFullShare, available } = sett;
-  const balanceDecimals = vaultDefinition.balanceDecimals || depositToken.decimals;
-  const supplyDecimals = vaultDefinition.supplyDecimals || settToken.decimals;
-  const tokenBalance = formatBalance(balance, balanceDecimals);
-  const supply = formatBalance(totalSupply, supplyDecimals);
-  const [ratio, tokenPriceData, strategyInfo, boostWeight] = await Promise.all([
-    getPricePerShare(chain, pricePerFullShare, vaultDefinition),
-    getPrice(depositToken.address),
+  const [tokenPriceData, strategyInfo, boostWeight] = await Promise.all([
+    getPrice(vaultDefinition.depositToken),
     getStrategyInfo(chain, vaultDefinition),
     getBoostWeight(chain, vaultDefinition),
   ]);
-  const value = tokenBalance * tokenPriceData.usd;
+  const value = balance * tokenPriceData.usd;
 
   return Object.assign(new CachedSettSnapshot(), {
-    address: settToken.address,
-    balance: tokenBalance,
-    ratio,
+    address,
+    balance,
+    ratio: pricePerFullShare,
     settValue: parseFloat(value.toFixed(2)),
-    supply,
-    available: formatBalance(available, balanceDecimals),
+    supply: totalSupply,
+    available,
     strategy: strategyInfo,
     boostWeight: boostWeight.toNumber(),
   });

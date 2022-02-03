@@ -1,5 +1,4 @@
-// setup aws offline required test infrastructure
-process.env.STAGE = 'staging';
+// overwrite aws credentials
 process.env.AWS_SECRET_ACCESS_KEY = 'X';
 process.env.AWS_ACCESS_KEY_ID = 'X';
 
@@ -8,4 +7,4 @@ process.env.UNISWAP = 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v
 process.env.SUSHISWAP = 'https://api.thegraph.com/subgraphs/name/sushiswap/exchange';
 process.env.PANCAKESWAP = 'https://api.thegraph.com/subgraphs/name/pancakeswap/exchange';
 process.env.MASTERCHEF = 'https://api.thegraph.com/subgraphs/name/sushiswap/master-chef';
-process.env.REWARD_DATA = 'badger-merkle-proofs-staging';
+process.env.REWARD_DATA = 'badger-merkle-proofs-testing';

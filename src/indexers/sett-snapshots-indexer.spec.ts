@@ -1,18 +1,16 @@
 import { DataMapper, PutParameters, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
 import { loadChains } from '../chains/chain';
-import { ArbitrumStrategy } from '../chains/strategies/arbitrum.strategy';
-import { BscStrategy } from '../chains/strategies/bsc.strategy';
-import { EthStrategy } from '../chains/strategies/eth.strategy';
-import { MaticStrategy } from '../chains/strategies/matic.strategy';
-import { xDaiStrategy } from '../chains/strategies/xdai.strategy';
-import { SettQuery } from '../graphql/generated/badger';
 import * as priceUtils from '../prices/prices.utils';
 import { CachedSettSnapshot } from '../vaults/interfaces/cached-sett-snapshot.interface';
 import * as vaultUtils from '../vaults/vaults.utils';
 import { refreshSettSnapshots } from './sett-snapshots-indexer';
 import { BigNumber, ethers } from 'ethers';
-import { BaseStrategy } from '../chains/strategies/base.strategy';
-import { TOKENS } from '../config/tokens.config';
+import { TEST_ADDR } from '../test/tests.utils';
+// TODO: better export this from the sdk
+import { VaultsService } from '@badger-dao/sdk/lib/vaults/vaults.service';
+import { getToken } from '../tokens/tokens.utils';
+import { VaultToken } from '@badger-dao/sdk/lib/vaults/interfaces';
+import BadgerSDK from '@badger-dao/sdk';
 
 describe('refreshSettSnapshots', () => {
   const supportedAddresses = loadChains()
@@ -20,60 +18,47 @@ describe('refreshSettSnapshots', () => {
     .map((settDefinition) => settDefinition.vaultToken)
     .sort();
 
-  let getSettMock: jest.SpyInstance<
-    Promise<SettQuery>,
-    [graphUrl: string, contract: string, block?: number | undefined]
-  >;
+  let vaultsMock: jest.SpyInstance<Promise<VaultToken>, [address: string, update?: boolean]>;
   let put: jest.SpyInstance<Promise<StringToAnyObjectMap>, [items: PutParameters<StringToAnyObjectMap>]>;
 
   beforeEach(async () => {
-    getSettMock = jest
-      .spyOn(vaultUtils, 'getVault')
-      .mockImplementation(async (_graphUrl: string, _contract: string) => ({
-        sett: {
-          id: TOKENS.BBADGER,
-          available: 1,
-          balance: 0,
-          token: {
-            id: TOKENS.BADGER,
-            decimals: 18,
-          },
-          netDeposit: 0,
-          netShareDeposit: 0,
-          pricePerFullShare: 1,
-          totalSupply: 10,
-        },
-      }));
-    jest.spyOn(vaultUtils, 'getCachedVault').mockImplementation(async (sett) => vaultUtils.defaultVault(sett));
     jest.spyOn(vaultUtils, 'getStrategyInfo').mockImplementation(async (_chain, _sett) => ({
       address: ethers.constants.AddressZero,
       withdrawFee: 50,
       performanceFee: 20,
       strategistFee: 10,
     }));
+    vaultsMock = jest.spyOn(VaultsService.prototype, 'loadVault').mockImplementation(async (address) => ({
+      name: 'Test Vault',
+      address,
+      symbol: 'TEST',
+      decimals: 18,
+      balance: 1,
+      totalSupply: 2,
+      available: 0.5,
+      pricePerFullShare: 1.003,
+      token: TEST_ADDR,
+    }));
     jest.spyOn(vaultUtils, 'getBoostWeight').mockImplementation(async (_chain, _sett) => BigNumber.from(5100));
-    jest
-      .spyOn(vaultUtils, 'getPricePerShare')
-      .mockImplementation(async (_chain, ppfs, _sett, _block) => Number(ethers.utils.formatEther(ppfs)));
 
     put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
 
-    const mockTokenPrice = { name: 'mock', usd: 10, eth: 0, address: '0xbeef' };
-    jest.spyOn(BaseStrategy.prototype, 'getPrice').mockImplementation(async (_address: string) => mockTokenPrice);
-    jest.spyOn(ArbitrumStrategy.prototype, 'getPrice').mockImplementation(async (_address: string) => mockTokenPrice);
-    jest.spyOn(BscStrategy.prototype, 'getPrice').mockImplementation(async (_address: string) => mockTokenPrice);
-    jest.spyOn(EthStrategy.prototype, 'getPrice').mockImplementation(async (_address: string) => mockTokenPrice);
-    jest.spyOn(MaticStrategy.prototype, 'getPrice').mockImplementation(async (_address: string) => mockTokenPrice);
-    jest.spyOn(xDaiStrategy.prototype, 'getPrice').mockImplementation(async (_address: string) => mockTokenPrice);
-
-    const mockTokenPriceSnapshot = { name: 'mock', usd: 10, eth: 0.0001, address: '0xbeef', updatedAt: Date.now() };
-    jest.spyOn(priceUtils, 'getPrice').mockImplementation(async (_address: string) => mockTokenPriceSnapshot);
+    jest.spyOn(BadgerSDK.prototype, 'ready').mockImplementation();
+    jest.spyOn(priceUtils, 'getPrice').mockImplementation(async (address: string) => {
+      const token = getToken(address);
+      return {
+        name: token.name,
+        address,
+        usd: 10,
+        eth: 0.0005,
+      };
+    });
 
     await refreshSettSnapshots();
   });
 
   it('fetches Setts for all chains', async () => {
-    const requestedAddresses = getSettMock.mock.calls.map((calls) => calls[1]);
+    const requestedAddresses = vaultsMock.mock.calls.map((calls) => calls[0]);
     expect(requestedAddresses.sort()).toEqual(supportedAddresses);
   });
 
