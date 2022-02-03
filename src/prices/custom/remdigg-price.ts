@@ -11,7 +11,7 @@ const REMDIGG_SHARE_PER_FRAGMENT = '22225630882376533102787863580536583092230744
 export async function getRemDiggPrice(chain: Chain, token: Token): Promise<TokenPrice> {
   const digg = Digg__factory.connect(TOKENS.DIGG, chain.batchProvider);
   const [diggPrice, sharePerFragment] = await Promise.all([getPrice(TOKENS.DIGG), digg._sharesPerFragment()]);
-  const scalar = sharePerFragment.mul(REMDIGG_PER_DIGG).div(REMDIGG_SHARE_PER_FRAGMENT).toNumber();
+  const scalar = sharePerFragment.mul(REMDIGG_PER_DIGG).div(REMDIGG_SHARE_PER_FRAGMENT).toNumber() / REMDIGG_PER_DIGG;
   return {
     name: token.name,
     address: token.address,
