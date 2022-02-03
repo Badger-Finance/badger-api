@@ -299,7 +299,6 @@ export const ethSetts: VaultDefinition[] = [
     name: 'remBadger',
     createdBlock: 14036178,
     depositToken: TOKENS.BADGER,
-    newVault: true,
     vaultToken: TOKENS.BREMBADGER,
     protocol: Protocol.Badger,
   },

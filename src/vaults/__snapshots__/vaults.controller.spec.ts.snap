@@ -3046,7 +3046,7 @@ Array [
         },
       },
     ],
-    "state": "new",
+    "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
@@ -5855,7 +5855,7 @@ Array [
         },
       },
     ],
-    "state": "new",
+    "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
