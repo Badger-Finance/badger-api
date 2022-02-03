@@ -6,7 +6,7 @@ import * as vaultUtils from '../vaults/vaults.utils';
 import { refreshSettSnapshots } from './sett-snapshots-indexer';
 import { BigNumber, ethers } from 'ethers';
 import { TEST_ADDR } from '../test/tests.utils';
-// TODO: better export this from the sdk
+// TODO: better export this from the sdk, and deal with testing this
 import { VaultsService } from '@badger-dao/sdk/lib/vaults/vaults.service';
 import { getToken } from '../tokens/tokens.utils';
 import { VaultToken } from '@badger-dao/sdk/lib/vaults/interfaces';
