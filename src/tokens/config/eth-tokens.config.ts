@@ -119,12 +119,12 @@ export const ethTokensConfig: TokenConfig = {
     symbol: 'DIGG',
     type: TokenType.Contract,
   },
-  [TOKENS.BREMDIGG]: {
-    address: TOKENS.BREMDIGG,
+  [TOKENS.REMDIGG]: {
+    address: TOKENS.REMDIGG,
     decimals: 18,
     getPrice: getRemDiggPrice,
     name: 'remDigg',
-    symbol: 'bremDIGG',
+    symbol: 'remDIGG',
     type: TokenType.Custom,
   },
   [TOKENS.SUSHI]: {
