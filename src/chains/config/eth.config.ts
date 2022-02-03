@@ -1,6 +1,5 @@
 import { Network, Protocol, VaultState } from '@badger-dao/sdk';
 import { BLOCKNATIVE_API_KEY } from '../../config/constants';
-import { Stage } from '../../config/enums/stage.enum';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
@@ -220,15 +219,6 @@ export const ethSetts: VaultDefinition[] = [
     protocol: Protocol.Convex,
   },
   {
-    name: 'renBTC',
-    createdBlock: 12870265,
-    depositToken: TOKENS.RENBTC,
-    experimental: true,
-    vaultToken: TOKENS.BRENBTC,
-    stage: Stage.Staging,
-    state: VaultState.Experimental,
-  },
-  {
     name: 'Tricrypto2',
     createdBlock: 12966048,
     depositToken: TOKENS.CRV_TRICRYPTO2,
@@ -299,10 +289,7 @@ export const ethSetts: VaultDefinition[] = [
     name: 'remBadger',
     createdBlock: 14036178,
     depositToken: TOKENS.BADGER,
-    newVault: true,
     vaultToken: TOKENS.BREMBADGER,
-    state: VaultState.Guarded,
-    stage: Stage.Staging,
     protocol: Protocol.Badger,
   },
 ];
