@@ -75,8 +75,6 @@ export async function getCachedVault(vaultDefinition: VaultDefinition): Promise<
       sett.value = item.settValue;
       if (item.balance === 0 || item.supply === 0) {
         sett.pricePerFullShare = 1;
-      } else if (vaultDefinition.vaultToken === TOKENS.BDIGG) {
-        sett.pricePerFullShare = item.balance / item.supply;
       } else {
         sett.pricePerFullShare = item.ratio;
       }
