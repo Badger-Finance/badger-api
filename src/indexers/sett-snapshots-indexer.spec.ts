@@ -9,8 +9,8 @@ import { TEST_ADDR } from '../test/tests.utils';
 // TODO: better export this from the sdk, and deal with testing this
 import { VaultsService } from '@badger-dao/sdk/lib/vaults/vaults.service';
 import { getToken } from '../tokens/tokens.utils';
-import { VaultToken } from '@badger-dao/sdk/lib/vaults/interfaces';
-import BadgerSDK from '@badger-dao/sdk';
+import { RegistryVault } from '@badger-dao/sdk/lib/vaults/interfaces';
+import BadgerSDK, { VaultState, VaultVersion } from '@badger-dao/sdk';
 
 describe('refreshSettSnapshots', () => {
   const supportedAddresses = loadChains()
@@ -18,7 +18,7 @@ describe('refreshSettSnapshots', () => {
     .map((settDefinition) => settDefinition.vaultToken)
     .sort();
 
-  let vaultsMock: jest.SpyInstance<Promise<VaultToken>, [address: string, update?: boolean]>;
+  let vaultsMock: jest.SpyInstance<Promise<RegistryVault>, [address: string, update?: boolean]>;
   let put: jest.SpyInstance<Promise<StringToAnyObjectMap>, [items: PutParameters<StringToAnyObjectMap>]>;
 
   beforeEach(async () => {
@@ -37,7 +37,14 @@ describe('refreshSettSnapshots', () => {
       totalSupply: 2,
       available: 0.5,
       pricePerFullShare: 1.003,
-      token: TEST_ADDR,
+      token: {
+        address: TEST_ADDR,
+        decimals: 18,
+        symbol: 'TEST',
+        name: 'TEST Token',
+      },
+      state: VaultState.Open,
+      version: VaultVersion.v1,
     }));
     jest.spyOn(vaultUtils, 'getBoostWeight').mockImplementation(async (_chain, _sett) => BigNumber.from(5100));
 
