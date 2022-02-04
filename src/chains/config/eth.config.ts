@@ -243,7 +243,7 @@ export const ethSetts: VaultDefinition[] = [
     strategy: '0x10D96b1Fd46Ce7cE092aA905274B8eD9d4585A6E',
   },
   {
-    name: 'veCVX',
+    name: 'CVX',
     createdBlock: 13239091,
     depositToken: TOKENS.CVX,
     vaultToken: TOKENS.BVECVX,
@@ -258,7 +258,7 @@ export const ethSetts: VaultDefinition[] = [
     protocol: Protocol.Curve,
   },
   {
-    name: 'ibBTC / crvsBTC LP',
+    name: 'ibBTC / crvsBTC',
     createdBlock: 13590998,
     depositToken: TOKENS.CRV_IBBTC,
     getTokenBalance: getCurveVaultTokenBalance,
