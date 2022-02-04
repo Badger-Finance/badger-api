@@ -55,7 +55,8 @@ export async function getClaimableRewards(
   if (!chain.badgerTree) {
     throw new UnprocessableEntity(`No BadgerTree is available from ${chain.name}`);
   }
-  const tree = BadgerTree__factory.connect(chain.badgerTree, chain.batchProvider);
+  const sdk = await chain.getSdk();
+  const tree = BadgerTree__factory.connect(chain.badgerTree, sdk.multicall);
   const requests = chainUsers.map(async (user): Promise<[string, [string[], BigNumber[]]]> => {
     const proof = distribution.claims[user];
     if (!proof) {
