@@ -75,6 +75,10 @@ export async function getClaimableRewards(
           if (BigNumber.from(proof.cumulativeAmounts[i]).lt(amount)) proof.cumulativeAmounts[i] = amount.toString();
         }
         attempt++;
+        // report a recurring issue for claimable
+        if (attempt === 3) {
+          console.error(err);
+        }
       }
     }
     return [user, [[], []]];
