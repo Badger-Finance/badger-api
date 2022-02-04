@@ -13,6 +13,7 @@ import { VaultDefinition } from './interfaces/vault-definition.interface';
 import { VaultSnapshot } from './interfaces/vault-snapshot.interface';
 import { Sett__factory, Controller__factory, Strategy__factory, EmissionControl__factory } from '../contracts';
 import { VaultStrategy } from './interfaces/vault-strategy.interface';
+import { TOKENS } from '../config/tokens.config';
 import { Protocol, Vault, VaultState, VaultType } from '@badger-dao/sdk';
 
 export const VAULT_SOURCE = 'Vault Compounding';
@@ -74,6 +75,8 @@ export async function getCachedVault(vaultDefinition: VaultDefinition): Promise<
       sett.value = item.settValue;
       if (item.balance === 0 || item.supply === 0) {
         sett.pricePerFullShare = 1;
+      } else if (vaultDefinition.vaultToken === TOKENS.BDIGG) {
+        sett.pricePerFullShare = item.balance / item.supply;
       } else {
         sett.pricePerFullShare = item.ratio;
       }
