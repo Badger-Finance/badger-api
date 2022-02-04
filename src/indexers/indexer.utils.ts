@@ -15,7 +15,6 @@ import { CachedLiquidityPoolTokenBalance } from '../tokens/interfaces/cached-liq
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
 import { formatBalance, getToken, toCachedBalance } from '../tokens/tokens.utils';
 import { getLiquidityData } from '../protocols/common/swap.utils';
-import { TOKENS } from '../config/tokens.config';
 
 export function chunkArray(addresses: string[], count: number): string[][] {
   const chunks: string[][] = [];
@@ -62,7 +61,7 @@ export async function settToCachedSnapshot(
   return Object.assign(new CachedSettSnapshot(), {
     address,
     balance,
-    ratio: vaultDefinition.depositToken === TOKENS.DIGG ? balance / totalSupply : pricePerFullShare,
+    ratio: pricePerFullShare,
     settValue: parseFloat(value.toFixed(2)),
     supply: totalSupply,
     available,

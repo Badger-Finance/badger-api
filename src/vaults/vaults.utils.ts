@@ -13,7 +13,6 @@ import { VaultDefinition } from './interfaces/vault-definition.interface';
 import { VaultSnapshot } from './interfaces/vault-snapshot.interface';
 import { Sett__factory, Controller__factory, Strategy__factory, EmissionControl__factory } from '../contracts';
 import { VaultStrategy } from './interfaces/vault-strategy.interface';
-import { TOKENS } from '../config/tokens.config';
 import { Protocol, Vault, VaultState, VaultType } from '@badger-dao/sdk';
 
 export const VAULT_SOURCE = 'Vault Compounding';
