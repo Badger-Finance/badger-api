@@ -2045,7 +2045,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "CVX (Staked)",
+    "name": "CVX",
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [
@@ -2421,7 +2421,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "CVX",
+    "name": "bveCVX",
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [
@@ -4760,7 +4760,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "CVX (Staked)",
+    "name": "CVX",
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [
@@ -5136,7 +5136,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "name": "CVX",
+    "name": "bveCVX",
     "pricePerFullShare": 1,
     "protocol": "Convex",
     "sources": Array [
