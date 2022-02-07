@@ -243,7 +243,7 @@ export const ethSetts: VaultDefinition[] = [
     strategy: '0x10D96b1Fd46Ce7cE092aA905274B8eD9d4585A6E',
   },
   {
-    name: 'CVX',
+    name: 'bveCVX',
     createdBlock: 13239091,
     depositToken: TOKENS.CVX,
     vaultToken: TOKENS.BVECVX,
