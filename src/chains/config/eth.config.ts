@@ -212,7 +212,7 @@ export const ethSetts: VaultDefinition[] = [
     protocol: Protocol.Convex,
   },
   {
-    name: 'CVX',
+    name: 'CVX (Staked)',
     createdBlock: 12678302,
     depositToken: TOKENS.CVX,
     vaultToken: TOKENS.BCVX,
