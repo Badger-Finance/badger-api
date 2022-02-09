@@ -343,7 +343,7 @@ resources:
           - AttributeName: 'endBlock'
             AttributeType: 'N'
         GlobalSecondaryIndexes:
-          - IndexName: IndexRewardsChainAndEndBlock
+          - IndexName: IndexRewardsOnChainAndEndBlock
             KeySchema:
               - AttributeName: 'chain'
                 KeyType: 'HASH'
