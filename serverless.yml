@@ -331,23 +331,23 @@ resources:
         TableName: ${self:custom.table.CYCLE_ANALYTICS_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
-          - AttributeName: 'network-cycle'
+          - AttributeName: 'networkCycle'
             KeyType: 'HASH'
           - AttributeName: 'cycle'
             KeyType: 'RANGE'
         AttributeDefinitions:
-          - AttributeName: 'network-cycle'
+          - AttributeName: 'networkCycle'
             AttributeType: 'S'
           - AttributeName: 'cycle'
             AttributeType: 'N'
-          - AttributeName: 'end_block'
+          - AttributeName: 'endBlock'
             AttributeType: 'N'
         GlobalSecondaryIndexes:
           - IndexName: IndexRewardsChainAndEndBlock
             KeySchema:
               - AttributeName: 'chain'
                 KeyType: 'HASH'
-              - AttributeName: 'end_block'
+              - AttributeName: 'endBlock'
                 KeyType: 'RANGE'
             Projection:
               ProjectionType: ALL
