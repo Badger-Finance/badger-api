@@ -47,6 +47,7 @@ custom:
     LEADERBOARD_SUMMARY_DATA: leaderboards-summary-${self:custom.stage}
     METADATA_DATA: metadata-${self:custom.stage}
     UNCLAIMED_SNAPSHOTS_DATA: unclaimed-snapshots-${self:custom.stage}
+    CYCLE_ANALYTICS_DATA: rewards-${self:custom.stage}
 
   merkleProofs:
     staging: 'badger-staging-merkle-proofs'
@@ -323,6 +324,35 @@ resources:
         TimeToLiveSpecification:
           AttributeName: 'expiresAt'
           Enabled: true
+
+    cycleAnalyticsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.table.CYCLE_ANALYTICS_DATA}
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: 'networkCycle'
+            KeyType: 'HASH'
+          - AttributeName: 'cycle'
+            KeyType: 'RANGE'
+        AttributeDefinitions:
+          - AttributeName: 'networkCycle'
+            AttributeType: 'S'
+          - AttributeName: 'cycle'
+            AttributeType: 'N'
+          - AttributeName: 'network'
+            AttributeType: 'S'
+          - AttributeName: 'endBlock'
+            AttributeType: 'N'
+        GlobalSecondaryIndexes:
+          - IndexName: IndexRewardsOnNetworkAndEndBlock
+            KeySchema:
+              - AttributeName: 'network'
+                KeyType: 'HASH'
+              - AttributeName: 'endBlock'
+                KeyType: 'RANGE'
+            Projection:
+              ProjectionType: ALL
 
 functions:
   request-handler:
