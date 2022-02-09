@@ -340,12 +340,14 @@ resources:
             AttributeType: 'S'
           - AttributeName: 'cycle'
             AttributeType: 'N'
+          - AttributeName: 'network'
+            AttributeType: 'S'
           - AttributeName: 'endBlock'
             AttributeType: 'N'
         GlobalSecondaryIndexes:
-          - IndexName: IndexRewardsOnChainAndEndBlock
+          - IndexName: IndexRewardsOnNetworkAndEndBlock
             KeySchema:
-              - AttributeName: 'chain'
+              - AttributeName: 'network'
                 KeyType: 'HASH'
               - AttributeName: 'endBlock'
                 KeyType: 'RANGE'
