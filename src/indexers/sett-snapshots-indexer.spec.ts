@@ -9,8 +9,7 @@ import { TEST_ADDR } from '../test/tests.utils';
 // TODO: better export this from the sdk, and deal with testing this
 import { VaultsService } from '@badger-dao/sdk/lib/vaults/vaults.service';
 import { getToken } from '../tokens/tokens.utils';
-import { RegistryVault } from '@badger-dao/sdk/lib/vaults/interfaces';
-import BadgerSDK, { VaultState, VaultVersion } from '@badger-dao/sdk';
+import BadgerSDK, { VaultState, VaultVersion, VaultOptions, RegistryVault } from '@badger-dao/sdk';
 
 describe('refreshSettSnapshots', () => {
   const supportedAddresses = loadChains()
@@ -18,7 +17,7 @@ describe('refreshSettSnapshots', () => {
     .map((settDefinition) => settDefinition.vaultToken)
     .sort();
 
-  let vaultsMock: jest.SpyInstance<Promise<RegistryVault>, [address: string, update?: boolean]>;
+  let vaultsMock: jest.SpyInstance<Promise<RegistryVault>, [address: string, opts?: VaultOptions]>;
   let put: jest.SpyInstance<Promise<StringToAnyObjectMap>, [items: PutParameters<StringToAnyObjectMap>]>;
 
   beforeEach(async () => {

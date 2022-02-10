@@ -49,6 +49,11 @@ export async function settToCachedSnapshot(
   const sdk = await chain.getSdk();
   const { address, totalSupply, balance, pricePerFullShare, available } = await sdk.vaults.loadVault(
     vaultDefinition.vaultToken,
+    {
+      requireRegistry: false,
+      status: 2,
+      version: 'v1',
+    },
   );
 
   const [tokenPriceData, strategyInfo, boostWeight] = await Promise.all([
