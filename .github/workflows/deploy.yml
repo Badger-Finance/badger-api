@@ -18,12 +18,12 @@ jobs:
       - name: Install Dependencies
         run: yarn install --frozen-lockfile
       - name: Deploy Staging
-        uses: serverless/github-action@master
+        uses: serverless/github-action@v3.0.0
         with:
           args: deploy
         if: contains(github.ref, 'staging')
       - name: Deploy Production
-        uses: serverless/github-action@master
+        uses: serverless/github-action@v3.0.0
         with:
           args: deploy --stage prod
         if: contains(github.ref, 'main')
