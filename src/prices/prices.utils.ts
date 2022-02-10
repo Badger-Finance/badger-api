@@ -12,6 +12,8 @@ import { TokenPriceSnapshot } from '../tokens/interfaces/token-price-snapshot.in
 import { getToken, getTokenByName } from '../tokens/tokens.utils';
 import { request } from '../etherscan/etherscan.utils';
 import { getDataMapper } from '../aws/dynamodb.utils';
+import { Currency } from '@badger-dao/sdk';
+import { TOKENS } from '../config/tokens.config';
 
 export const noPrice = (token: Token): TokenPriceSnapshot => {
   return {
@@ -178,3 +180,17 @@ export const getVaultTokenPrice = async (contract: string): Promise<TokenPrice> 
     eth: underlyingTokenPrice.eth * vaultTokenSnapshot.pricePerFullShare,
   };
 };
+
+export async function convert(value: number, currency?: Currency): Promise<number> {
+  if (!currency) {
+    return value;
+  }
+  switch (currency) {
+    case Currency.ETH:
+      const wethPrice = await getPrice(TOKENS.WETH);
+      return value / wethPrice.usd;
+    case Currency.USD:
+    default:
+      return value;
+  }
+}
