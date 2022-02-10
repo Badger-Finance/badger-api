@@ -15,6 +15,7 @@ import { CachedLiquidityPoolTokenBalance } from '../tokens/interfaces/cached-liq
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
 import { formatBalance, getToken, toCachedBalance } from '../tokens/tokens.utils';
 import { getLiquidityData } from '../protocols/common/swap.utils';
+import { TOKENS } from '../config/tokens.config';
 
 export function chunkArray(addresses: string[], count: number): string[][] {
   const chunks: string[][] = [];
@@ -49,6 +50,11 @@ export async function settToCachedSnapshot(
   const sdk = await chain.getSdk();
   const { address, totalSupply, balance, pricePerFullShare, available } = await sdk.vaults.loadVault(
     vaultDefinition.vaultToken,
+    {
+      requireRegistry: false,
+      status: 2,
+      version: 'v1',
+    },
   );
 
   const [tokenPriceData, strategyInfo, boostWeight] = await Promise.all([
