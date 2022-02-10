@@ -35,7 +35,6 @@ export class VaultsService {
       getVaultValueSources(vaultDefinition),
     ]);
     vault.tokens = await getVaultTokens(vaultDefinition, vault.balance, currency);
-    vault.value = vault.tokens.reduce((total, balance) => (total += balance.value), 0);
     vault.sources = sources
       .filter((source) => source.apr >= 0.001)
       .filter((source) => {
