@@ -24,9 +24,11 @@ describe('SettsController', () => {
   const setupTest = (): void => {
     jest
       .spyOn(vaultsUtils, 'getCachedVault')
-      .mockImplementation(
-        async (VaultDefinition: VaultDefinition): Promise<Vault> => vaultsUtils.defaultVault(VaultDefinition),
-      );
+      .mockImplementation(async (vaultDefinition: VaultDefinition): Promise<Vault> => {
+        const vault = vaultsUtils.defaultVault(vaultDefinition);
+        vault.value = parseInt(vaultDefinition.vaultToken.slice(0, 7), 16);
+        return vault;
+      });
     jest
       .spyOn(protocolsUtils, 'getVaultValueSources')
       .mockImplementation(async (vaultDefinition: VaultDefinition): Promise<ValueSource[]> => {
@@ -52,27 +54,27 @@ describe('SettsController', () => {
       );
   };
 
-  describe('GET /v2/setts', () => {
+  describe('GET /v2/vaults', () => {
     describe('with no specified chain', () => {
-      it('returns eth setts', async (done: jest.DoneCallback) => {
+      it('returns eth vaults', async (done: jest.DoneCallback) => {
         setupTest();
-        const { body } = await request.get('/v2/setts').expect(200);
+        const { body } = await request.get('/v2/vaults').expect(200);
         expect(body).toMatchSnapshot();
         done();
       });
     });
 
     describe('with a specified chain', () => {
-      it('returns the setts for eth', async (done: jest.DoneCallback) => {
+      it('returns the vaults for eth', async (done: jest.DoneCallback) => {
         setupTest();
-        const { body } = await request.get('/v2/setts?chain=ethereum').expect(200);
+        const { body } = await request.get('/v2/vaults?chain=ethereum').expect(200);
         expect(body).toMatchSnapshot();
         done();
       });
 
-      it('returns the setts for bsc', async (done: jest.DoneCallback) => {
+      it('returns the vaults for bsc', async (done: jest.DoneCallback) => {
         setupTest();
-        const { body } = await request.get('/v2/setts?chain=binancesmartchain').expect(200);
+        const { body } = await request.get('/v2/vaults?chain=binancesmartchain').expect(200);
         expect(body).toMatchSnapshot();
         done();
       });
@@ -80,7 +82,7 @@ describe('SettsController', () => {
 
     describe('with an invalid specified chain', () => {
       it('returns a 400', async (done: jest.DoneCallback) => {
-        const { body } = await request.get('/v2/setts?chain=invalid').expect(BadRequest.STATUS);
+        const { body } = await request.get('/v2/vaults?chain=invalid').expect(BadRequest.STATUS);
         expect(body).toMatchSnapshot();
         done();
       });
