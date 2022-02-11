@@ -1,7 +1,8 @@
-import { Protocol, Vault, VaultState, VaultType } from '@badger-dao/sdk';
+import { Currency, Protocol, Vault, VaultState, VaultType } from '@badger-dao/sdk';
 import { Service } from '@tsed/common';
 import { Chain } from '../chains/config/chain.config';
 import { CURRENT, ONE_DAY_MS } from '../config/constants';
+import { convert } from '../prices/prices.utils';
 import { uniformPerformance } from '../protocols/interfaces/performance.interface';
 import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interface';
 import { createValueSource, ValueSource } from '../protocols/interfaces/value-source.interface';
@@ -13,7 +14,7 @@ import { getCachedVault, getPerformance, getVaultDefinition, getSettSnapshots, V
 
 @Service()
 export class VaultsService {
-  async getProtocolSummary(chain: Chain, currency?: string): Promise<ProtocolSummary> {
+  async getProtocolSummary(chain: Chain, currency?: Currency): Promise<ProtocolSummary> {
     const setts = await Promise.all(
       chain.setts.map(async (sett) => {
         const { name, balance, value } = await this.getVault(chain, sett.vaultToken, currency);
@@ -24,18 +25,18 @@ export class VaultsService {
     return { totalValue, setts };
   }
 
-  async listVaults(chain: Chain, currency?: string): Promise<Vault[]> {
+  async listVaults(chain: Chain, currency?: Currency): Promise<Vault[]> {
     return Promise.all(chain.setts.map((sett) => this.getVault(chain, sett.vaultToken, currency)));
   }
 
-  async getVault(chain: Chain, contract: string, currency?: string): Promise<Vault> {
+  async getVault(chain: Chain, contract: string, currency?: Currency): Promise<Vault> {
     const vaultDefinition = getVaultDefinition(chain, contract);
     const [vault, sources] = await Promise.all([
       getCachedVault(vaultDefinition),
       getVaultValueSources(vaultDefinition),
     ]);
     vault.tokens = await getVaultTokens(vaultDefinition, vault.balance, currency);
-    vault.value = vault.tokens.reduce((total, balance) => (total += balance.value), 0);
+    vault.value = await convert(vault.value, currency);
     vault.sources = sources
       .filter((source) => source.apr >= 0.001)
       .filter((source) => {

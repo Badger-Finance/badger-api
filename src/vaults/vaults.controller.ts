@@ -1,4 +1,4 @@
-import { Network } from '@badger-dao/sdk';
+import { Currency, Network } from '@badger-dao/sdk';
 import { Controller, Get, Inject, PathParams, QueryParams } from '@tsed/common';
 import { ContentType, Description, Returns, Summary } from '@tsed/schema';
 import { Chain } from '../chains/config/chain.config';
@@ -18,7 +18,7 @@ export class VaultsController {
   @Returns(400).Description('Not a valid chain')
   async listVaults(
     @QueryParams('chain') chain?: Network,
-    @QueryParams('currency') currency?: string,
+    @QueryParams('currency') currency?: Currency,
   ): Promise<VaultModel[]> {
     return this.vaultService.listVaults(Chain.getChain(chain), currency);
   }
@@ -33,7 +33,7 @@ export class VaultsController {
   async getVault(
     @PathParams('contract') contract: string,
     @QueryParams('chain') chain?: Network,
-    @QueryParams('currency') currency?: string,
+    @QueryParams('currency') currency?: Currency,
   ): Promise<VaultModel> {
     return this.vaultService.getVault(Chain.getChain(chain), contract, currency);
   }
