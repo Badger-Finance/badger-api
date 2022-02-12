@@ -1,4 +1,4 @@
-import { Network, Protocol } from '@badger-dao/sdk';
+import { Network, Protocol, VaultState } from '@badger-dao/sdk';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
@@ -7,6 +7,7 @@ import { Chain } from './chain.config';
 import { ONE_YEAR_SECONDS } from '../../config/constants';
 import { fantomTokensConfig } from '../../tokens/config/fantom-tokens.config';
 import { FantomStrategy } from '../strategies/fantom.strategy';
+import { Stage } from '../../config/enums/stage.enum';
 
 export class Fantom extends Chain {
   constructor() {
@@ -39,6 +40,8 @@ export const fantomSetts: VaultDefinition[] = [
     createdBlock: 30679386,
     depositToken: TOKENS.SMM_USDC_DAI,
     vaultToken: TOKENS.BSMM_USDC_DAI,
+    stage: Stage.Staging,
+    state: VaultState.Guarded,
     protocol: Protocol.Convex,
   },
 ];
