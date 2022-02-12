@@ -18,7 +18,7 @@ import { TokenPrice } from './interfaces/token-price.interface';
 import { TokenBalance } from '@badger-dao/sdk';
 import { avalancheTokensConfig } from './config/avax-tokens.config';
 import { getDataMapper } from '../aws/dynamodb.utils';
-import { fantomTokensConfig } from './config/ftm-tokens.config';
+import { fantomTokensConfig } from './config/fantom-tokens.config';
 
 // map holding all protocol token information across chains
 export const protocolTokens: TokenConfig = {

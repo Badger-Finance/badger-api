@@ -150,6 +150,7 @@ export const getUniswapPrice = async (contract: string): Promise<TokenPrice> => 
   return getLiquidityPrice(UNISWAP_URL, contract);
 };
 
+// TODO: rethink how to generalize these fuctions, revisit strategy <> chain relations
 export async function getPancakeswapPrice(contract: string): Promise<TokenPrice> {
   return getOnChainLiquidityPrice(Chain.getChain(Network.BinanceSmartChain), contract);
 }
@@ -160,4 +161,8 @@ export async function getQuickswapPrice(contract: string): Promise<TokenPrice> {
 
 export async function getArbitriumLiquidityPrice(contract: string): Promise<TokenPrice> {
   return getOnChainLiquidityPrice(Chain.getChain(Network.Arbitrum), contract);
+}
+
+export async function getFantomLiquidityPrice(contract: string): Promise<TokenPrice> {
+  return getOnChainLiquidityPrice(Chain.getChain(Network.Fantom), contract);
 }
