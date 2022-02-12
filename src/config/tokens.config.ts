@@ -110,6 +110,12 @@ const RAW_TOKENS: ContractRegistry = {
   XDAI_WBTC: '0x8e5bbbb09ed1ebde8674cda39a0c169401db4252',
   XDAI_WETH: '0x6a023ccd1ff6f2045c3309768ead9e68f978f6e1',
 
+  // ftm tokens
+  FTM_DAI: '0x8d11ec38a3eb5e956b052f67da8bdc9bef8abf3e',
+  FTM_USDC: '0x04068da6c83afcfa0e13ba15a6696662335d5b75',
+  // solidly market maker - avoid sushi liquidity pool collision
+  SMM_USDC_DAI: '0xC0240Ee4405f11EFb87A00B432A8be7b7Afc97CC',
+
   // uniswap tokens
   UNI_BADGER_WBTC: '0xcd7989894bc033581532d2cd88da5db0a4b12859',
   UNI_DIGG_WBTC: '0xe86204c4eddd2f70ee00ead6805f917671f56c52',
@@ -200,6 +206,9 @@ const RAW_TOKENS: ContractRegistry = {
 
   // avalanche vault tokens
   BAVAX_WBTC: '0x711555f2b421da9a86a18dc163d04699310fe297',
+
+  // fantom vault tokens
+  BSMM_USDC_DAI: '0x5deab57a0af330f268d4d2d029a1ce6549f11dad',
 };
 
 export const TOKENS = checksumEntries(RAW_TOKENS);

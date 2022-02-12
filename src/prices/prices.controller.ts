@@ -1,4 +1,4 @@
-import { Controller, Get, Inject, QueryParams } from '@tsed/common';
+import { Controller, Get, Inject, QueryParams, UseCache } from '@tsed/common';
 import { ContentType, Description, Returns, Summary } from '@tsed/schema';
 import { Chain } from '../chains/config/chain.config';
 import { PriceSummary } from '../tokens/interfaces/price-summary.interface';
@@ -12,6 +12,7 @@ export class PriceController {
   pricesService!: PricesService;
 
   @Get('')
+  @UseCache()
   @ContentType('json')
   @Summary('Get a summary of token prices related to the Badger Protocol')
   @Description('Return a map of checksum contract address to the currency value of the token')

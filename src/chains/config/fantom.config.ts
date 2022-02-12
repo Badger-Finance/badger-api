@@ -1,12 +1,12 @@
-import { Network } from '@badger-dao/sdk';
+import { Network, Protocol } from '@badger-dao/sdk';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { Chain } from './chain.config';
-import { BaseStrategy } from '../strategies/base.strategy';
 import { ONE_YEAR_SECONDS } from '../../config/constants';
-import { fantomTokensConfig } from '../../tokens/config/ftm-tokens.config';
+import { fantomTokensConfig } from '../../tokens/config/fantom-tokens.config';
+import { FantomStrategy } from '../strategies/fantom.strategy';
 
 export class Fantom extends Chain {
   constructor() {
@@ -18,7 +18,7 @@ export class Fantom extends Chain {
       fantomTokensConfig,
       fantomSetts,
       rpc[Network.Fantom],
-      new BaseStrategy(Network.Fantom, Object.keys(fantomTokensConfig)),
+      new FantomStrategy(Object.keys(fantomTokensConfig)),
       ONE_YEAR_SECONDS,
     );
     Chain.register(this.network, this);
@@ -28,10 +28,17 @@ export class Fantom extends Chain {
     return this.defaultGasPrice();
   }
 
-  // TODO: Update if badger is ever updated
   getBadgerTokenAddress(): string {
     return TOKENS.MULTI_BADGER;
   }
 }
 
-export const fantomSetts: VaultDefinition[] = [];
+export const fantomSetts: VaultDefinition[] = [
+  {
+    name: 'USDC/DAI',
+    createdBlock: 30679386,
+    depositToken: TOKENS.SMM_USDC_DAI,
+    vaultToken: TOKENS.BSMM_USDC_DAI,
+    protocol: Protocol.Convex,
+  },
+];
