@@ -9,8 +9,6 @@ import {
   CurveBaseRegistry__factory,
   CurvePool__factory,
   CurvePool3__factory,
-  CurvePoolOld__factory,
-  CurvePoolPolygon__factory,
   CurveRegistry__factory,
   CvxBooster__factory,
   CvxLocker__factory,
@@ -86,6 +84,7 @@ const cvxPoolId: PoolMap = {
 const nonRegistryPools: ContractRegistry = {
   [TOKENS.MATIC_CRV_TRICRYPTO]: '0x751B1e21756bDbc307CBcC5085c042a0e9AaEf36',
   [TOKENS.ARB_CRV_TRICRYPTO]: '0x960ea3e3C7FB317332d990873d354E18d7645590',
+  [TOKENS.CRV_TRICRYPTO2]: '0xD51a44d3FaE010294C616388b506AcdA1bfAAE46',
 };
 
 const discontinuedRewards = ['0x330416C863f2acCE7aF9C9314B422d24c672534a'].map((addr) => ethers.utils.getAddress(addr));
@@ -421,9 +420,7 @@ export async function getCurvePoolBalance(chain: Chain, depositToken: string): P
   }
   const poolContracts = [
     CurvePool3__factory.connect(poolAddress, chain.provider),
-    CurvePoolPolygon__factory.connect(poolAddress, chain.provider),
     CurvePool__factory.connect(poolAddress, chain.provider),
-    CurvePoolOld__factory.connect(poolAddress, chain.provider),
   ];
 
   let option = 0;
@@ -437,6 +434,9 @@ export async function getCurvePoolBalance(chain: Chain, depositToken: string): P
       cachedBalances.push(await toBalance(token, balance));
       coin++;
     } catch (err) {
+      if (depositToken === TOKENS.CRV_TRICRYPTO2) {
+        console.log({ err, depositToken, poolAddress });
+      }
       if (coin > 0) {
         break;
       }
