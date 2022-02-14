@@ -112,14 +112,7 @@ export async function fetchPrices(chain: Chain, inputs: string[], lookupName = f
       return [address, { address, price: value.usd }];
     }),
   );
-  const missingTokens: string[] = [];
-  expectedTokens.forEach((input) => {
-    if (!priceData[input]) {
-      missingTokens.push(input);
-    }
-  });
-  if (missingTokens.length > 0) {
-    console.error(`Missing prices for:\n${missingTokens.join('\n')}`);
-  }
+  // TODO: validate any missing tokens and appropriately report them
+  // discord notification system tickets incoming @jintao
   return priceData;
 }

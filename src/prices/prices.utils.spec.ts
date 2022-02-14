@@ -96,13 +96,32 @@ describe('prices.utils', () => {
       it('requests contracts endpoint', async () => {
         const mockResponse = { [TOKENS.BADGER]: { usd: 10 }, [TOKENS.WBTC]: { usd: 43500 } };
         const request = jest.spyOn(requestUtils, 'request').mockImplementation(async () => mockResponse);
-        const results = await fetchPrices(TEST_CHAIN, [TOKENS.BADGER, TOKENS.WBTC]);
-        expect(request.mock.calls[0][0]).toContain('token_price');
+        await fetchPrices(TEST_CHAIN, [TOKENS.BADGER, TOKENS.WBTC]);
+        expect(request.mock.calls[0][0]).toContain('/token_price');
+      });
+
+      it('returns a price map of requested token prices in usd', async () => {
+        const mockResponse = { [TOKENS.BADGER]: { usd: 10 }, [TOKENS.WBTC]: { usd: 43500 } };
+        jest.spyOn(requestUtils, 'request').mockImplementation(async () => mockResponse);
+        const result = await fetchPrices(TEST_CHAIN, [TOKENS.BADGER, TOKENS.WBTC]);
+        expect(result).toMatchSnapshot();
       });
     });
 
-    // describe('request prices for look up names', () => {
+    describe('request prices for look up names', () => {
+      it('requests contracts endpoint', async () => {
+        const mockResponse = { ['badger']: { usd: 10 }, ['wrapped-bitcoin']: { usd: 43500 } };
+        const request = jest.spyOn(requestUtils, 'request').mockImplementation(async () => mockResponse);
+        await fetchPrices(TEST_CHAIN, ['badger', 'wrapped-bitcoin'], true);
+        expect(request.mock.calls[0][0]).toContain('/price');
+      });
 
-    // });
+      it('returns a price map of requested token prices in usd', async () => {
+        const mockResponse = { ['badger']: { usd: 10 }, ['wrapped-bitcoin']: { usd: 43500 } };
+        jest.spyOn(requestUtils, 'request').mockImplementation(async () => mockResponse);
+        const result = await fetchPrices(TEST_CHAIN, ['badger', 'wrapped-bitcoin'], true);
+        expect(result).toMatchSnapshot();
+      });
+    });
   });
 });

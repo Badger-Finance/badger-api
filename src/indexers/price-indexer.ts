@@ -1,7 +1,6 @@
 import { loadChains } from '../chains/chain';
-import { fetchPrices } from '../prices/coingecko.utils';
 import { PricingType } from '../prices/enums/pricing-type.enum';
-import { updatePrice } from '../prices/prices.utils';
+import { updatePrice, fetchPrices } from '../prices/prices.utils';
 
 export async function indexPrices() {
   const chains = loadChains();
