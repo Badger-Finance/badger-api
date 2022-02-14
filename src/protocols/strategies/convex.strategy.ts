@@ -304,13 +304,10 @@ async function getCvxCrvRewards(chain: Chain, vaultDefinition: VaultDefinition):
   const bveCVX = getToken(TOKENS.BVECVX);
   const cvxValueSource = createValueSource(`${bveCVX.name} Rewards`, uniformPerformance(cvxApr), true);
 
-  const bcvxCrv = getToken(TOKENS.BCVXCRV);
-  const cvxCrvValueSource = createValueSource(`${bcvxCrv.name} Rewards`, uniformPerformance(cvxCrvApr), true);
-
-  const compoundingSource = createValueSource(VAULT_SOURCE, uniformPerformance(threeCrvApr), true);
+  const compoundingApr = threeCrvApr + cvxCrvApr;
+  const compoundingSource = createValueSource(VAULT_SOURCE, uniformPerformance(compoundingApr), true);
   return [
     valueSourceToCachedValueSource(cvxValueSource, vaultDefinition, tokenEmission(bveCVX)),
-    valueSourceToCachedValueSource(cvxCrvValueSource, vaultDefinition, tokenEmission(bcvxCrv)),
     valueSourceToCachedValueSource(compoundingSource, vaultDefinition, SourceType.Compound),
   ];
 }
