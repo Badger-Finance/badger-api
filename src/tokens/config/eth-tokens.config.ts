@@ -718,17 +718,6 @@ export const ethTokensConfig: TokenConfig = {
       network: Network.Ethereum,
     },
   },
-  [TOKENS.BRENBTC]: {
-    address: TOKENS.BRENBTC,
-    decimals: 18,
-    name: 'brenBTC',
-    symbol: 'brenBTC',
-    type: TokenType.Vault,
-    vaultToken: {
-      address: TOKENS.RENBTC,
-      network: Network.Ethereum,
-    },
-  },
   [TOKENS.BIMBTC]: {
     address: TOKENS.BIMBTC,
     decimals: 18,

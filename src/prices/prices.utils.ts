@@ -1,13 +1,16 @@
 import { InternalServerError } from '@tsed/exceptions';
 import { ChainStrategy } from '../chains/strategies/chain.strategy';
 import { COINGECKO_URL } from '../config/constants';
-import { TokenPrice } from '../tokens/interfaces/token-price.interface';
-import { TokenPriceSnapshot } from '../tokens/interfaces/token-price-snapshot.interface';
+import { TokenPriceSnapshot } from './interface/token-price-snapshot.interface';
 import { getToken, getTokenByName } from '../tokens/tokens.utils';
 import { request } from '../etherscan/etherscan.utils';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Currency } from '@badger-dao/sdk';
 import { TOKENS } from '../config/tokens.config';
+import { TokenPrice } from './interface/token-price.interface';
+import { PriceData } from '../tokens/interfaces/price-data.interface';
+import { Chain } from '../chains/config/chain.config';
+import { CoinGeckoPriceResponse } from './interface/coingecko-price-response.interface';
 
 /**
  * Update pricing db entry using chain strategy.
@@ -17,7 +20,7 @@ export async function updatePrice(address: string): Promise<TokenPrice> {
   const strategy = ChainStrategy.getStrategy(address);
   try {
     const { price } = await strategy.getPrice(address);
-    if (price === 0) {
+    if (Number.isNaN(price) || price === 0) {
       // TODO: add discord warning logs for errors on pricing
       throw new Error(`Attempting to update ${address} with bad price`);
     }
@@ -29,6 +32,7 @@ export async function updatePrice(address: string): Promise<TokenPrice> {
       }),
     );
   } catch (err) {
+    console.error(err);
     return { address, price: 0 };
   } // ignore issues to allow for price updates of other coins
 }
@@ -50,6 +54,31 @@ export async function getPrice(address: string, currency?: Currency): Promise<To
     console.error(err);
     return { address, price: 0 };
   }
+}
+
+export async function fetchPrices(chain: Chain, addresses: string[]): Promise<PriceData> {
+  const baseURL = `${COINGECKO_URL}/token_price/${chain.network}`;
+  const params = {
+    contract_addresses: addresses.join(','),
+    vs_currencies: 'usd',
+  };
+  const result = await request<CoinGeckoPriceResponse>(baseURL, params);
+  const priceData = Object.fromEntries(
+    Object.entries(result).map((entry) => {
+      const [key, value] = entry;
+      return [key, { address: key, price: value.usd }];
+    }),
+  );
+  const missingTokens: string[] = [];
+  addresses.forEach((a) => {
+    if (!priceData[a]) {
+      missingTokens.push(a);
+    }
+  });
+  if (missingTokens.length > 0) {
+    console.error(`Missing prices for:\n${missingTokens.join('\n')}`);
+  }
+  return priceData;
 }
 
 /**

@@ -5,8 +5,8 @@ import { TOKENS } from '../../config/tokens.config';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { xDaiTokensConfig } from '../../tokens/config/xdai-tokens.config';
-import { xDaiStrategy } from '../strategies/xdai.strategy';
 import { Chain } from './chain.config';
+import { BaseStrategy } from '../strategies/base.strategy';
 
 export class xDai extends Chain {
   constructor() {
@@ -18,7 +18,7 @@ export class xDai extends Chain {
       xDaiTokensConfig,
       xDaiSetts,
       rpc[Network.xDai],
-      new xDaiStrategy(Object.keys(xDaiTokensConfig)),
+      new BaseStrategy(Network.xDai, Object.keys(xDaiTokensConfig)),
       6307200,
     );
     Chain.register(this.network, this);

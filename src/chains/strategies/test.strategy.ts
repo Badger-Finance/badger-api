@@ -1,4 +1,4 @@
-import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
+import { TokenPrice } from '../../prices/interface/token-price.interface';
 import { protocolTokens } from '../../tokens/tokens.utils';
 import { ChainStrategy } from './chain.strategy';
 

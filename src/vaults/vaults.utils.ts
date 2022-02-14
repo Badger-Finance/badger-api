@@ -17,7 +17,7 @@ import { TOKENS } from '../config/tokens.config';
 import { Protocol, Vault, VaultState, VaultType } from '@badger-dao/sdk';
 import { getPrice } from '../prices/prices.utils';
 import { TokenType } from '../tokens/enums/token-type.enum';
-import { TokenPrice } from '../tokens/interfaces/token-price.interface';
+import { TokenPrice } from '../prices/interface/token-price.interface';
 
 export const VAULT_SOURCE = 'Vault Compounding';
 

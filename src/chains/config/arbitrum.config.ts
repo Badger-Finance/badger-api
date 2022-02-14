@@ -6,8 +6,8 @@ import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { getCurveVaultTokenBalance } from '../../protocols/strategies/convex.strategy';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { arbitrumTokensConfig } from '../../tokens/config/arbitrum-tokens.config';
-import { ArbitrumStrategy } from '../strategies/arbitrum.strategy';
 import { Chain } from './chain.config';
+import { BaseStrategy } from '../strategies/base.strategy';
 
 export class Arbitrum extends Chain {
   constructor() {
@@ -19,7 +19,7 @@ export class Arbitrum extends Chain {
       arbitrumTokensConfig,
       arbitrumSetts,
       RPC[Network.Arbitrum],
-      new ArbitrumStrategy(Object.keys(arbitrumTokensConfig)),
+      new BaseStrategy(Network.Arbitrum, Object.keys(arbitrumTokensConfig)),
       2425847,
       '0x635EB2C39C75954bb53Ebc011BDC6AfAAcE115A6',
       '0x85E1cACAe9a63429394d68Db59E14af74143c61c',

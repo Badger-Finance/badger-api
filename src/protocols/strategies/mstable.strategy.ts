@@ -8,7 +8,6 @@ import { MstableVault__factory } from '../../contracts/factories/MstableVault__f
 import { getPrice } from '../../prices/prices.utils';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { Token } from '../../tokens/interfaces/token.interface';
-import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
 import { formatBalance, getToken } from '../../tokens/tokens.utils';
 import { CachedValueSource } from '../interfaces/cached-value-source.interface';
 import { uniformPerformance } from '../interfaces/performance.interface';
@@ -16,6 +15,7 @@ import { createValueSource } from '../interfaces/value-source.interface';
 import { tokenEmission } from '../protocols.utils';
 import { BigNumber } from 'ethers';
 import { valueSourceToCachedValueSource } from '../../rewards/rewards.utils';
+import { TokenPrice } from '../../prices/interface/token-price.interface';
 
 const MSTABLE_MBTC_VAULT = '0xF38522f63f40f9Dd81aBAfD2B8EFc2EC958a3016';
 const MSTABLE_HMBTC_VAULT = '0xF65D53AA6e2E4A5f4F026e73cb3e22C22D75E35C';
