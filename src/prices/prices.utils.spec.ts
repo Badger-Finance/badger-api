@@ -2,8 +2,9 @@ import { DataMapper } from '@aws/dynamodb-data-mapper';
 import { NotFound } from '@tsed/exceptions';
 import { TestStrategy } from '../chains/strategies/test.strategy';
 import { TOKENS } from '../config/tokens.config';
-import { setupMapper, TEST_ADDR } from '../test/tests.utils';
-import { convert, getPrice, updatePrice } from './prices.utils';
+import { setupMapper, TEST_ADDR, TEST_CHAIN } from '../test/tests.utils';
+import { convert, fetchPrices, getPrice, updatePrice } from './prices.utils';
+import * as requestUtils from '../etherscan/etherscan.utils';
 import { Currency } from '@badger-dao/sdk';
 
 describe('prices.utils', () => {
@@ -88,5 +89,20 @@ describe('prices.utils', () => {
       const result = await convert(price, currency);
       expect(result).toEqual(conversion);
     });
+  });
+
+  describe('fetchPrices', () => {
+    describe('request prices for contracts', () => {
+      it('requests contracts endpoint', async () => {
+        const mockResponse = { [TOKENS.BADGER]: { usd: 10 }, [TOKENS.WBTC]: { usd: 43500 } };
+        const request = jest.spyOn(requestUtils, 'request').mockImplementation(async () => mockResponse);
+        const results = await fetchPrices(TEST_CHAIN, [TOKENS.BADGER, TOKENS.WBTC]);
+        expect(request.mock.calls[0][0]).toContain('token_price');
+      });
+    });
+
+    // describe('request prices for look up names', () => {
+
+    // });
   });
 });

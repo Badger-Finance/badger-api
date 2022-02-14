@@ -695,17 +695,6 @@ export const ethTokensConfig: TokenConfig = {
       network: Network.Ethereum,
     },
   },
-  [TOKENS.BVECVX_OLD]: {
-    address: TOKENS.BVECVX_OLD,
-    decimals: 18,
-    name: 'bveCVX',
-    symbol: 'bveCVX',
-    type: PricingType.Vault,
-    vaultToken: {
-      address: TOKENS.BCVX,
-      network: Network.Ethereum,
-    },
-  },
   [TOKENS.BCVXCRV]: {
     address: TOKENS.BCVXCRV,
     decimals: 18,

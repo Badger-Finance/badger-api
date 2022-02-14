@@ -3,7 +3,13 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { Currency } from '@badger-dao/sdk';
 import { TOKENS } from '../config/tokens.config';
 import { TokenPrice } from './interface/token-price.interface';
-import { getToken } from '../tokens/tokens.utils';
+import { getToken, getTokenByName } from '../tokens/tokens.utils';
+import { Chain } from '../chains/config/chain.config';
+import { COINGECKO_URL } from '../config/constants';
+import { PriceData } from '../tokens/interfaces/price-data.interface';
+import { CoinGeckoPriceResponse } from './interface/coingecko-price-response.interface';
+// TODO: generalize and add some axios utilities
+import { request } from '../etherscan/etherscan.utils';
 
 /**
  * Update pricing db entry using chain strategy.
@@ -69,4 +75,51 @@ export async function convert(value: number, currency?: Currency): Promise<numbe
     default:
       return value;
   }
+}
+
+export async function fetchPrices(chain: Chain, inputs: string[], lookupName = false): Promise<PriceData> {
+  let baseURL;
+  let params: Record<string, string>;
+
+  // utilize coingecko name look up api
+  if (lookupName) {
+    baseURL = `${COINGECKO_URL}/price`;
+    params = {
+      ids: inputs.join(','),
+      vs_currencies: 'usd',
+    };
+  } else {
+    baseURL = `${COINGECKO_URL}/token_price/${chain.network}`;
+    params = {
+      contract_addresses: inputs.join(','),
+      vs_currencies: 'usd',
+    };
+  }
+
+  const expectedTokens: string[] = [];
+  const result = await request<CoinGeckoPriceResponse>(baseURL, params);
+  const priceData = Object.fromEntries(
+    Object.entries(result).map((entry) => {
+      const [key, value] = entry;
+      let token;
+      try {
+        token = getToken(key);
+      } catch {
+        token = getTokenByName(key);
+      }
+      const { address } = token;
+      expectedTokens.push(address);
+      return [address, { address, price: value.usd }];
+    }),
+  );
+  const missingTokens: string[] = [];
+  expectedTokens.forEach((input) => {
+    if (!priceData[input]) {
+      missingTokens.push(input);
+    }
+  });
+  if (missingTokens.length > 0) {
+    console.error(`Missing prices for:\n${missingTokens.join('\n')}`);
+  }
+  return priceData;
 }
