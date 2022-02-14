@@ -370,22 +370,22 @@ functions:
           cors: true
 
   index-setts:
-    handler: src/indexers/sett-indexer.indexProtocolSetts
-    timeout: 480
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-setts
-          description: 'index historical data for all setts'
-          rate: rate(10 minutes)
+  #   handler: src/indexers/sett-indexer.indexProtocolSetts
+  #   timeout: 480
+  #   events:
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-setts
+  #         description: 'index historical data for all setts'
+  #         rate: rate(10 minutes)
 
-  index-apy-snapshots:
-    handler: src/indexers/apy-snapshots-indexer.refreshApySnapshots
-    timeout: 120
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-apy-snapshots
-          description: 'index data for sett apy'
-          rate: rate(5 minutes)
+  # index-apy-snapshots:
+  #   handler: src/indexers/apy-snapshots-indexer.refreshApySnapshots
+  #   timeout: 120
+  #   events:
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-apy-snapshots
+  #         description: 'index data for sett apy'
+  #         rate: rate(5 minutes)
 
   index-prices:
     handler: src/indexers/price-indexer.indexPrices
@@ -394,66 +394,66 @@ functions:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-prices
           description: 'index price data for all protocol tokens'
-          rate: rate(3 minutes)
-
-  index-sett-snapshots:
-    handler: src/indexers/sett-snapshots-indexer.refreshSettSnapshots
-    timeout: 45
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-sett-snapshots
-          description: 'index data for supported setts'
           rate: rate(1 minute)
 
-  index-leaderboard:
-    handler: src/indexers/leaderboard-indexer.indexBoostLeaderBoard
-    timeout: 120
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-leaderboard
-          description: 'index leaderboard data from latest badger boosts'
-          rate: rate(5 minutes)
+  # index-sett-snapshots:
+  #   handler: src/indexers/sett-snapshots-indexer.refreshSettSnapshots
+  #   timeout: 45
+  #   events:
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-sett-snapshots
+  #         description: 'index data for supported setts'
+  #         rate: rate(1 minute)
 
-  index-token-balances:
-    handler: src/indexers/token-balances-indexer.refreshTokenBalances
-    timeout: 180
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-token-balances
-          description: 'index token balances from the graph'
-          rate: rate(5 minutes)
+  # index-leaderboard:
+  #   handler: src/indexers/leaderboard-indexer.indexBoostLeaderBoard
+  #   timeout: 120
+  #   events:
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-leaderboard
+  #         description: 'index leaderboard data from latest badger boosts'
+  #         rate: rate(5 minutes)
 
-  index-boosts:
-    handler: src/indexers/boosts-indexer.refreshUserBoosts
-    timeout: 360
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-boosts
-          description: 'index accounts boost information'
-          rate: rate(20 minutes)
+  # index-token-balances:
+  #   handler: src/indexers/token-balances-indexer.refreshTokenBalances
+  #   timeout: 180
+  #   events:
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-token-balances
+  #         description: 'index token balances from the graph'
+  #         rate: rate(5 minutes)
 
-  index-accounts:
-    handler: src/indexers/accounts-indexer.refreshUserAccounts
-    timeout: 900
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-claimables
-          description: 'index accounts claimable from badger tree'
-          rate: rate(2 hours)
-          input:
-            mode: ClaimableBalanceData
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-balances
-          description: 'index accounts information from the graph'
-          rate: rate(15 minutes)
-          input:
-            mode: BalanceData
+  # index-boosts:
+  #   handler: src/indexers/boosts-indexer.refreshUserBoosts
+  #   timeout: 360
+  #   events:
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-boosts
+  #         description: 'index accounts boost information'
+  #         rate: rate(20 minutes)
 
-  index-protocol-metrics-snapshots:
-    handler: src/indexers/protocol-metric-indexer.indexProtocolMetrics
-    timeout: 240
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-protocol-metrics-snapshots
-          description: 'index protocol metrics'
-          rate: rate(1 day)
+  # index-accounts:
+  #   handler: src/indexers/accounts-indexer.refreshUserAccounts
+  #   timeout: 900
+  #   events:
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-claimables
+  #         description: 'index accounts claimable from badger tree'
+  #         rate: rate(2 hours)
+  #         input:
+  #           mode: ClaimableBalanceData
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-balances
+  #         description: 'index accounts information from the graph'
+  #         rate: rate(15 minutes)
+  #         input:
+  #           mode: BalanceData
+
+  # index-protocol-metrics-snapshots:
+  #   handler: src/indexers/protocol-metric-indexer.indexProtocolMetrics
+  #   timeout: 240
+  #   events:
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-protocol-metrics-snapshots
+  #         description: 'index protocol metrics'
+  #         rate: rate(1 day)

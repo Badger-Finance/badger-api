@@ -66,6 +66,19 @@ describe('prices.utils', () => {
       });
     });
 
+    describe('encounters an error from a price of 0', () => {
+      it('returns the price of NaN, but does not save the record', async () => {
+        const put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
+        jest.spyOn(TestStrategy.prototype, 'getPrice').mockImplementation(async (token) => ({
+          address: token,
+          price: NaN,
+        }));
+        const result = await updatePrice(TOKENS.BADGER);
+        expect(put.mock.calls.length).toEqual(0);
+        expect(result).toMatchObject({ address: TOKENS.BADGER, price: 0 });
+      });
+    });
+
     describe('update supported token', () => {
       it('creates an price db entry', async () => {
         const put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();

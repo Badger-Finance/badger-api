@@ -8,7 +8,7 @@ import * as vaultUtils from '../vaults/vaults.utils';
 import { getVaultDefinition } from '../vaults/vaults.utils';
 import { setupMapper } from '../test/tests.utils';
 import { ethTokensConfig } from './config/eth-tokens.config';
-import { TokenPriceSnapshot } from './interfaces/token-price-snapshot.interface';
+import { TokenPriceSnapshot } from '../prices/interface/token-price-snapshot.interface';
 import {
   formatBalance,
   getCachedTokenBalances,

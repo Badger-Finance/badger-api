@@ -5,11 +5,11 @@ import { getOnChainLiquidityPrice, resolveTokenPrice } from '../../protocols/com
 import { getCurveTokenPrice } from '../../protocols/strategies/convex.strategy';
 import { TokenType } from '../../tokens/enums/token-type.enum';
 import { Token } from '../../tokens/interfaces/token.interface';
-import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
 import { Chain } from '../config/chain.config';
 import { ChainStrategy } from './chain.strategy';
 import { Network } from '@badger-dao/sdk';
 import { getVaultTokenPrice } from '../../vaults/vaults.utils';
+import { TokenPrice } from '../../prices/interface/token-price.interface';
 
 export class BaseStrategy extends ChainStrategy {
   constructor(private network: Network, tokens: string[]) {
@@ -35,6 +35,11 @@ export class BaseStrategy extends ChainStrategy {
       case TokenType.CurveLP:
         return getCurveTokenPrice(chain, token.address);
       case TokenType.SushiswapLp:
+      case TokenType.QuickswapLp:
+      case TokenType.SwaprLp:
+      case TokenType.PancakeswapLp:
+      case TokenType.SolidlyLp:
+      case TokenType.UniswapLp:
         return getOnChainLiquidityPrice(chain, token.address);
       case TokenType.Vault:
         return getVaultTokenPrice(token.address);

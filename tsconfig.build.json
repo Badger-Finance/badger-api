@@ -3,9 +3,6 @@
     "resolveJsonModule": true
   },
   "extends": "./tsconfig.json",
-  "exclude": [ "node_modules" ],
-  "include": [
-    "src/**/*.ts",
-    "./node_modules/ethers-typescript-typings/index.d.ts"	
-  ]
+  "exclude": ["node_modules"],
+  "include": ["src/**/*.ts"]
 }

@@ -24,7 +24,6 @@ import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interf
 import { getCachedVault, VAULT_SOURCE } from '../../vaults/vaults.utils';
 import { CachedLiquidityPoolTokenBalance } from '../../tokens/interfaces/cached-liquidity-pool-token-balance.interface';
 import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
-import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
 import { formatBalance, getToken, toBalance } from '../../tokens/tokens.utils';
 import { CachedValueSource } from '../interfaces/cached-value-source.interface';
 import { uniformPerformance } from '../interfaces/performance.interface';
@@ -34,6 +33,7 @@ import { tokenEmission } from '../protocols.utils';
 import { request } from '../../etherscan/etherscan.utils';
 import { CurveAPIResponse } from '../interfaces/curve-api-response.interrface';
 import { valueSourceToCachedValueSource } from '../../rewards/rewards.utils';
+import { TokenPrice } from '../../prices/interface/token-price.interface';
 
 /* Strategy Definitions */
 export const cvxRewards = '0xCF50b810E57Ac33B91dCF525C6ddd9881B139332';

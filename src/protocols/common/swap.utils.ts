@@ -1,4 +1,3 @@
-import { Network } from '@badger-dao/sdk';
 import { NotFound, UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
@@ -6,8 +5,8 @@ import { Chain } from '../../chains/config/chain.config';
 import { UNISWAP_URL } from '../../config/constants';
 import { UniV2__factory } from '../../contracts';
 import { getSdk as getUniswapSdk } from '../../graphql/generated/uniswap';
+import { TokenPrice } from '../../prices/interface/token-price.interface';
 import { getPrice } from '../../prices/prices.utils';
-import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
 import { formatBalance, getToken } from '../../tokens/tokens.utils';
 
 interface LiquidityData {
@@ -135,20 +134,3 @@ export const resolveTokenPrice = async (chain: Chain, token: string, contract: s
 export const getUniswapPrice = async (contract: string): Promise<TokenPrice> => {
   return getLiquidityPrice(UNISWAP_URL, contract);
 };
-
-// TODO: rethink how to generalize these fuctions, revisit strategy <> chain relations
-export async function getPancakeswapPrice(contract: string): Promise<TokenPrice> {
-  return getOnChainLiquidityPrice(Chain.getChain(Network.BinanceSmartChain), contract);
-}
-
-export async function getQuickswapPrice(contract: string): Promise<TokenPrice> {
-  return getOnChainLiquidityPrice(Chain.getChain(Network.Polygon), contract);
-}
-
-export async function getArbitriumLiquidityPrice(contract: string): Promise<TokenPrice> {
-  return getOnChainLiquidityPrice(Chain.getChain(Network.Arbitrum), contract);
-}
-
-export async function getFantomLiquidityPrice(contract: string): Promise<TokenPrice> {
-  return getOnChainLiquidityPrice(Chain.getChain(Network.Fantom), contract);
-}

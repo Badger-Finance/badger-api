@@ -1,6 +1,6 @@
 import { Chain } from '../../chains/config/chain.config';
+import { TokenPrice } from '../../prices/interface/token-price.interface';
 import { TokenType } from '../enums/token-type.enum';
-import { TokenPrice } from './token-price.interface';
 import { WrappedToken } from './wrapped-token.interface';
 
 export interface Token {

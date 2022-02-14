@@ -1,6 +1,6 @@
 import { BadRequest } from '@tsed/exceptions';
 import { ethers } from 'ethers';
-import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
+import { TokenPrice } from '../../prices/interface/token-price.interface';
 import { getToken } from '../../tokens/tokens.utils';
 
 type Strategies = Record<string, ChainStrategy>;

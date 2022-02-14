@@ -16,6 +16,6 @@
     "lib": ["es2019", "dom"]
   },
   "compileOnSave": true,
-  "include": ["./src/**/*.ts"],
+  "include": ["./src/**/*.ts", "./seed/scripts/*.ts"],
   "exclude": ["build", "node_modules"]
 }

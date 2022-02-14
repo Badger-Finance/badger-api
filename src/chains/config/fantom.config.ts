@@ -6,8 +6,8 @@ import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interf
 import { Chain } from './chain.config';
 import { ONE_YEAR_SECONDS } from '../../config/constants';
 import { fantomTokensConfig } from '../../tokens/config/fantom-tokens.config';
-import { FantomStrategy } from '../strategies/fantom.strategy';
 import { Stage } from '../../config/enums/stage.enum';
+import { BaseStrategy } from '../strategies/base.strategy';
 
 export class Fantom extends Chain {
   constructor() {
@@ -19,7 +19,7 @@ export class Fantom extends Chain {
       fantomTokensConfig,
       fantomSetts,
       rpc[Network.Fantom],
-      new FantomStrategy(Object.keys(fantomTokensConfig)),
+      new BaseStrategy(Network.Fantom, Object.keys(fantomTokensConfig)),
       ONE_YEAR_SECONDS,
     );
     Chain.register(this.network, this);
