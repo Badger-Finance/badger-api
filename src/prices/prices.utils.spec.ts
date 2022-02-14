@@ -47,7 +47,7 @@ describe('prices.utils', () => {
     describe('update unsupported token', () => {
       it('throws an bad request error', async () => {
         const put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
-        await expect(updatePrice(TEST_ADDR)).rejects.toThrow(NotFound);
+        await expect(updatePrice({ address: TEST_ADDR, price: 10 })).rejects.toThrow(NotFound);
         expect(put.mock.calls.length).toEqual(0);
       });
     });
@@ -55,11 +55,7 @@ describe('prices.utils', () => {
     describe('encounters an error from a price of 0', () => {
       it('returns the price of 0, but does not save the record', async () => {
         const put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
-        jest.spyOn(TestStrategy.prototype, 'getPrice').mockImplementation(async (token) => ({
-          address: token,
-          price: 0,
-        }));
-        const result = await updatePrice(TOKENS.BADGER);
+        const result = await updatePrice({ address: TOKENS.BADGER, price: 0 });
         expect(put.mock.calls.length).toEqual(0);
         expect(result).toMatchObject({ address: TOKENS.BADGER, price: 0 });
       });
@@ -68,11 +64,7 @@ describe('prices.utils', () => {
     describe('encounters an error from a price of 0', () => {
       it('returns the price of NaN, but does not save the record', async () => {
         const put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
-        jest.spyOn(TestStrategy.prototype, 'getPrice').mockImplementation(async (token) => ({
-          address: token,
-          price: NaN,
-        }));
-        const result = await updatePrice(TOKENS.BADGER);
+        const result = await updatePrice({ address: TOKENS.BADGER, price: NaN });
         expect(put.mock.calls.length).toEqual(0);
         expect(result).toMatchObject({ address: TOKENS.BADGER, price: 0 });
       });
@@ -81,7 +73,7 @@ describe('prices.utils', () => {
     describe('update supported token', () => {
       it('creates an price db entry', async () => {
         const put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
-        await updatePrice(TOKENS.BADGER);
+        await updatePrice({ address: TOKENS.BADGER, price: 10 });
         expect(put.mock.calls.length).toEqual(1);
       });
     });

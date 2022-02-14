@@ -1,4 +1,3 @@
-import { ethers } from '@badger-dao/sdk/node_modules/ethers';
 import { InternalServerError } from '@tsed/exceptions';
 import { Chain } from '../chains/config/chain.config';
 import { COINGECKO_URL } from '../config/constants';

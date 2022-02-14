@@ -3,12 +3,14 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { Currency } from '@badger-dao/sdk';
 import { TOKENS } from '../config/tokens.config';
 import { TokenPrice } from './interface/token-price.interface';
+import { getToken } from '../tokens/tokens.utils';
 
 /**
  * Update pricing db entry using chain strategy.
  * @param token Target for price update.
  */
 export async function updatePrice({ address, price }: TokenPrice): Promise<TokenPrice> {
+  const token = getToken(address);
   try {
     if (Number.isNaN(price) || price === 0) {
       // TODO: add discord warning logs for errors on pricing
@@ -17,7 +19,7 @@ export async function updatePrice({ address, price }: TokenPrice): Promise<Token
     const mapper = getDataMapper();
     return mapper.put(
       Object.assign(new TokenPriceSnapshot(), {
-        address,
+        address: token.address,
         price,
       }),
     );

@@ -5,7 +5,7 @@ import { ChainStrategy } from './chain.strategy';
 export class TestStrategy extends ChainStrategy {
   constructor() {
     super();
-    ChainStrategy.register(Object.keys(protocolTokens), this);
+    ChainStrategy.register(this, Object.keys(protocolTokens));
   }
 
   async getPrice(address: string): Promise<TokenPrice> {
