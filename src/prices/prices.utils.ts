@@ -1,11 +1,6 @@
-import { BadRequest, InternalServerError, UnprocessableEntity } from '@tsed/exceptions';
-import { Chain } from '../chains/config/chain.config';
+import { InternalServerError } from '@tsed/exceptions';
 import { ChainStrategy } from '../chains/strategies/chain.strategy';
 import { COINGECKO_URL } from '../config/constants';
-import { getCachedVault, getVaultDefinition } from '../vaults/vaults.utils';
-import { TokenType } from '../tokens/enums/token-type.enum';
-import { PriceData } from '../tokens/interfaces/price-data.interface';
-import { TokenConfig } from '../tokens/interfaces/token-config.interface';
 import { TokenPrice } from '../tokens/interfaces/token-price.interface';
 import { TokenPriceSnapshot } from '../tokens/interfaces/token-price-snapshot.interface';
 import { getToken, getTokenByName } from '../tokens/tokens.utils';
@@ -14,21 +9,17 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { Currency } from '@badger-dao/sdk';
 import { TOKENS } from '../config/tokens.config';
 
-export function noPrice(address: string): TokenPrice {
-  return { address, price: 0 };
-}
-
 /**
  * Update pricing db entry using chain strategy.
  * @param token Target for price update.
  */
-export const updatePrice = async (address: string): Promise<TokenPrice> => {
+export async function updatePrice(address: string): Promise<TokenPrice> {
   const strategy = ChainStrategy.getStrategy(address);
   try {
     const { price } = await strategy.getPrice(address);
     if (price === 0) {
       // TODO: add discord warning logs for errors on pricing
-      throw new Error('Attempting to update with bad price');
+      throw new Error(`Attempting to update ${address} with bad price`);
     }
     const mapper = getDataMapper();
     return mapper.put(
@@ -38,43 +29,28 @@ export const updatePrice = async (address: string): Promise<TokenPrice> => {
       }),
     );
   } catch (err) {
-    return noPrice(address);
+    return { address, price: 0 };
   } // ignore issues to allow for price updates of other coins
-};
+}
 
 /**
  * Load token price fromt he pricing database.
  * @param contract Address for the token price being requested.
  * @returns Most recent price data for the requested contract.
  */
-export async function getPrice(token: string, currency?: Currency): Promise<TokenPrice> {
+export async function getPrice(address: string, currency?: Currency): Promise<TokenPrice> {
   try {
     const mapper = getDataMapper();
-    for await (const item of mapper.query(
-      TokenPriceSnapshot,
-      { address: token },
-      { limit: 1, scanIndexForward: false },
-    )) {
+    for await (const item of mapper.query(TokenPriceSnapshot, { address }, { limit: 1, scanIndexForward: false })) {
       item.price = await convert(item.price, currency);
       return item;
     }
-    return noPrice(token);
+    return { address, price: 0 };
   } catch (err) {
     console.error(err);
-    return noPrice(token);
+    return { address, price: 0 };
   }
 }
-
-/**
- * Retrieve all chain token prices in both USD and ETH.
- * @returns Most recently updated token pricing data for all tokens.
- */
-export const getPriceData = async (tokens: TokenConfig): Promise<PriceData> => {
-  const priceData: PriceData = {};
-  const prices = await Promise.all(Object.keys(tokens).map((key) => getPrice(tokens[key].address)));
-  prices.forEach((token) => (priceData[token.address] = token));
-  return priceData;
-};
 
 /**
  * Retrieve the price data for a given token in USD and ETH.
@@ -83,7 +59,7 @@ export const getPriceData = async (tokens: TokenConfig): Promise<PriceData> => {
  * @param contract Token contract address.
  * @throws {InternalServerError} Failed price lookup.
  */
-export const getContractPrice = async (contract: string): Promise<TokenPrice> => {
+export async function getContractPrice(contract: string): Promise<TokenPrice> {
   const params = {
     contract_addresses: contract,
     vs_currencies: 'usd',
@@ -98,14 +74,14 @@ export const getContractPrice = async (contract: string): Promise<TokenPrice> =>
     address: token.address,
     price: result[contractKey].usd,
   };
-};
+}
 
 /**
  * Retrieve the price data for a given token in USD and ETH.
  * @param token CoinGecko token name.
  * @throws {InternalServerError} Failed price lookup.
  */
-export const getTokenPrice = async (name: string): Promise<TokenPrice> => {
+export async function getTokenPrice(name: string): Promise<TokenPrice> {
   const params = {
     ids: name,
     vs_currencies: 'usd,eth',
@@ -119,34 +95,14 @@ export const getTokenPrice = async (name: string): Promise<TokenPrice> => {
     address: token.address,
     price: result[name].usd,
   };
-};
+}
 
 /**
- * Get pricing information for a vault token.
- * @param contract Address for vault token.
- * @returns Pricing data for the given vault token based on the pricePerFullShare.
+ * Convert USD value to supported currencies.
+ * @param value USD value
+ * @param currency Target currency
+ * @returns Converted value in target currency
  */
-export const getVaultTokenPrice = async (contract: string): Promise<TokenPrice> => {
-  const token = getToken(contract);
-  if (token.type !== TokenType.Vault) {
-    throw new BadRequest(`${token.name} is not a vault token`);
-  }
-  const { vaultToken } = token;
-  if (!vaultToken) {
-    throw new UnprocessableEntity(`${token.name} vault token missing`);
-  }
-  const targetChain = Chain.getChain(vaultToken.network);
-  const vaultDefintion = getVaultDefinition(targetChain, token.address);
-  const [underlyingTokenPrice, vaultTokenSnapshot] = await Promise.all([
-    getPrice(vaultToken.address),
-    getCachedVault(vaultDefintion),
-  ]);
-  return {
-    address: token.address,
-    price: underlyingTokenPrice.price * vaultTokenSnapshot.pricePerFullShare,
-  };
-};
-
 export async function convert(value: number, currency?: Currency): Promise<number> {
   if (!currency) {
     return value;

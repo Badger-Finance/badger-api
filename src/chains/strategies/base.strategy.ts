@@ -1,6 +1,6 @@
 import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
-import { getContractPrice, getTokenPrice, getVaultTokenPrice } from '../../prices/prices.utils';
+import { getContractPrice, getTokenPrice } from '../../prices/prices.utils';
 import { getOnChainLiquidityPrice, resolveTokenPrice } from '../../protocols/common/swap.utils';
 import { getCurveTokenPrice } from '../../protocols/strategies/convex.strategy';
 import { TokenType } from '../../tokens/enums/token-type.enum';
@@ -9,6 +9,7 @@ import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
 import { Chain } from '../config/chain.config';
 import { ChainStrategy } from './chain.strategy';
 import { Network } from '@badger-dao/sdk';
+import { getVaultTokenPrice } from '../../vaults/vaults.utils';
 
 export class BaseStrategy extends ChainStrategy {
   constructor(private network: Network, tokens: string[]) {
