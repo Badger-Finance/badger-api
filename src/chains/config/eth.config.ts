@@ -272,7 +272,6 @@ export const ethSetts: VaultDefinition[] = [
     getTokenBalance: getCurveVaultTokenBalance,
     newVault: true,
     vaultToken: TOKENS.BCRV_MIM_3CRV,
-    state: VaultState.Guarded,
     protocol: Protocol.Convex,
   },
   {
@@ -282,7 +281,6 @@ export const ethSetts: VaultDefinition[] = [
     getTokenBalance: getCurveVaultTokenBalance,
     newVault: true,
     vaultToken: TOKENS.BCRV_FRAX_3CRV,
-    state: VaultState.Guarded,
     protocol: Protocol.Convex,
   },
   {
