@@ -1,12 +1,20 @@
 import { Protocol, Vault, VaultState, VaultType } from '@badger-dao/sdk';
-import { NotFound } from '@tsed/exceptions';
+import { BadRequest, NotFound } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { BinanceSmartChain } from '../chains/config/bsc.config';
 import { Ethereum } from '../chains/config/eth.config';
+import { TOKENS } from '../config/tokens.config';
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
 import { randomPerformance, randomVault, randomSnapshot, randomSnapshots, setupMapper } from '../test/tests.utils';
 import { getToken } from '../tokens/tokens.utils';
-import { defaultVault, getCachedVault, getPerformance, getVaultDefinition, getSettSnapshots } from './vaults.utils';
+import {
+  defaultVault,
+  getCachedVault,
+  getPerformance,
+  getVaultDefinition,
+  getSettSnapshots,
+  getVaultTokenPrice,
+} from './vaults.utils';
 
 describe('vaults.utils', () => {
   describe('defaultVault', () => {
@@ -148,6 +156,14 @@ describe('vaults.utils', () => {
         const eth = new Ethereum();
         const expected = eth.setts[Math.floor(Math.random() * eth.setts.length)];
         expect(() => getVaultDefinition(eth, expected.depositToken)).toThrow(NotFound);
+      });
+    });
+  });
+
+  describe('getVaultTokenPrice', () => {
+    describe('look up non vault token price', () => {
+      it('throws a bad request error', async () => {
+        await expect(getVaultTokenPrice(TOKENS.BADGER)).rejects.toThrow(BadRequest);
       });
     });
   });

@@ -1,5 +1,5 @@
 import { between } from '@aws/dynamodb-expressions';
-import { NotFound } from '@tsed/exceptions';
+import { BadRequest, NotFound, UnprocessableEntity } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
 import { getDataMapper } from '../aws/dynamodb.utils';
@@ -15,6 +15,9 @@ import { Sett__factory, Controller__factory, Strategy__factory, EmissionControl_
 import { VaultStrategy } from './interfaces/vault-strategy.interface';
 import { TOKENS } from '../config/tokens.config';
 import { Protocol, Vault, VaultState, VaultType } from '@badger-dao/sdk';
+import { getPrice } from '../prices/prices.utils';
+import { TokenType } from '../tokens/enums/token-type.enum';
+import { TokenPrice } from '../tokens/interfaces/token-price.interface';
 
 export const VAULT_SOURCE = 'Vault Compounding';
 
@@ -206,3 +209,29 @@ export async function getBoostWeight(chain: Chain, vaultDefinition: VaultDefinit
   const emissionControl = EmissionControl__factory.connect(chain.emissionControl, chain.provider);
   return emissionControl.boostedEmissionRate(vaultDefinition.vaultToken);
 }
+
+/**
+ * Get pricing information for a vault token.
+ * @param contract Address for vault token.
+ * @returns Pricing data for the given vault token based on the pricePerFullShare.
+ */
+export const getVaultTokenPrice = async (contract: string): Promise<TokenPrice> => {
+  const token = getToken(contract);
+  if (token.type !== TokenType.Vault) {
+    throw new BadRequest(`${token.name} is not a vault token`);
+  }
+  const { vaultToken } = token;
+  if (!vaultToken) {
+    throw new UnprocessableEntity(`${token.name} vault token missing`);
+  }
+  const targetChain = Chain.getChain(vaultToken.network);
+  const vaultDefintion = getVaultDefinition(targetChain, token.address);
+  const [underlyingTokenPrice, vaultTokenSnapshot] = await Promise.all([
+    getPrice(vaultToken.address),
+    getCachedVault(vaultDefintion),
+  ]);
+  return {
+    address: token.address,
+    price: underlyingTokenPrice.price * vaultTokenSnapshot.pricePerFullShare,
+  };
+};
