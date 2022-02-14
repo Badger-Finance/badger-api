@@ -247,12 +247,6 @@ Object {
     "name": "bCurve.fi pBTC/wBTC",
     "symbol": "bcrvpBTC",
   },
-  "0x58CAc1409F1ffbdcBA6a58d54c94CAC3fb4C6F8B": Object {
-    "address": "0x58CAc1409F1ffbdcBA6a58d54c94CAC3fb4C6F8B",
-    "decimals": 18,
-    "name": "brenBTC",
-    "symbol": "brenBTC",
-  },
   "0x599D92B453C010b1050d31C364f6ee17E819f193": Object {
     "address": "0x599D92B453C010b1050d31C364f6ee17E819f193",
     "decimals": 18,
@@ -779,12 +773,6 @@ Object {
     "decimals": 18,
     "name": "bCurve.fi pBTC/wBTC",
     "symbol": "bcrvpBTC",
-  },
-  "0x58CAc1409F1ffbdcBA6a58d54c94CAC3fb4C6F8B": Object {
-    "address": "0x58CAc1409F1ffbdcBA6a58d54c94CAC3fb4C6F8B",
-    "decimals": 18,
-    "name": "brenBTC",
-    "symbol": "brenBTC",
   },
   "0x599D92B453C010b1050d31C364f6ee17E819f193": Object {
     "address": "0x599D92B453C010b1050d31C364f6ee17E819f193",
