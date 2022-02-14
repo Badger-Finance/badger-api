@@ -14,15 +14,15 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { Currency } from '@badger-dao/sdk';
 import { TOKENS } from '../config/tokens.config';
 
-export function noPrice(address: string): TokenPriceSnapshot {
-  return { address, price: 0, updatedAt: Date.now() };
+export function noPrice(address: string): TokenPrice {
+  return { address, price: 0 };
 }
 
 /**
  * Update pricing db entry using chain strategy.
  * @param token Target for price update.
  */
-export const updatePrice = async (address: string): Promise<TokenPriceSnapshot> => {
+export const updatePrice = async (address: string): Promise<TokenPrice> => {
   const strategy = ChainStrategy.getStrategy(address);
   try {
     const { price } = await strategy.getPrice(address);
@@ -47,7 +47,7 @@ export const updatePrice = async (address: string): Promise<TokenPriceSnapshot> 
  * @param contract Address for the token price being requested.
  * @returns Most recent price data for the requested contract.
  */
-export async function getPrice(token: string, currency?: Currency): Promise<TokenPriceSnapshot> {
+export async function getPrice(token: string, currency?: Currency): Promise<TokenPrice> {
   try {
     const mapper = getDataMapper();
     for await (const item of mapper.query(

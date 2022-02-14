@@ -26,19 +26,13 @@ describe('prices.utils', () => {
         const cakePrice = await getPrice(cake.address);
         expect(cakePrice).toBeDefined();
         const expected = noPrice(TOKENS.CAKE);
-        expect(cakePrice).toMatchObject({
-          ...expected,
-          updatedAt: expect.any(Number),
-        });
+        expect(cakePrice).toMatchObject(expected);
       });
     });
 
     describe('when price is available', () => {
       it('returns a token snapshot with the latest price data', async () => {
-        const price = {
-          ...(await strategy.getPrice(TOKENS.BADGER)),
-          updatedAt: Date.now(),
-        };
+        const price = await strategy.getPrice(TOKENS.BADGER);
         setupMapper([price]);
         const fetchedBadgerPrice = await getPrice(TOKENS.BADGER);
         expect(fetchedBadgerPrice).toBeDefined();
