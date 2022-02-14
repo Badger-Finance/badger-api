@@ -32,9 +32,9 @@ async function getEmissionSource(chain: Chain, VaultDefinition: VaultDefinition)
   const depositToken = Erc20__factory.connect(poolInfo.lpToken, chain.provider);
   const poolBalance = formatBalance(await depositToken.balanceOf(PANCAKE_CHEF));
   const depositTokenValue = await getPrice(poolInfo.lpToken);
-  const poolValue = poolBalance * depositTokenValue.usd;
+  const poolValue = poolBalance * depositTokenValue.price;
   const emissionScalar = poolInfo.allocPoint.toNumber() / totalAllocPoint.toNumber();
-  const cakeEmission = parseFloat(formatEther(cakePerBlock)) * emissionScalar * chain.blocksPerYear * tokenPrice.usd;
+  const cakeEmission = parseFloat(formatEther(cakePerBlock)) * emissionScalar * chain.blocksPerYear * tokenPrice.price;
   const emissionSource = createValueSource(VAULT_SOURCE, uniformPerformance((cakeEmission / poolValue) * 100), true);
   return valueSourceToCachedValueSource(emissionSource, VaultDefinition, SourceType.Compound);
 }

@@ -49,7 +49,7 @@ async function getSwaprEmission(chain: Chain, vaultDefinition: VaultDefinition):
     getPrice(vaultDefinition.depositToken),
     getCachedVault(vaultDefinition),
   ]);
-  const stakedAmount = formatBalance(totalSupply) * lpTokenPrice.usd;
+  const stakedAmount = formatBalance(totalSupply) * lpTokenPrice.price;
   const strategyFeeMultiplier = 1 - (sett.strategy.performanceFee + sett.strategy.strategistFee) / 10000;
 
   const sources = [];
@@ -60,7 +60,7 @@ async function getSwaprEmission(chain: Chain, vaultDefinition: VaultDefinition):
       const { token, amount } = rewardInfo;
       const rewardToken = getToken(token);
       const rewardTokenPrice = await getPrice(token);
-      const rewardEmission = formatBalance(amount) * rewardTokenPrice.usd;
+      const rewardEmission = formatBalance(amount) * rewardTokenPrice.price;
       const apr = (((ONE_YEAR_SECONDS / duration.toNumber()) * rewardEmission) / stakedAmount) * 100;
       const swaprEmission = createValueSource(
         `${helperToken.name} Rewards`,

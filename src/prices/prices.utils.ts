@@ -5,7 +5,6 @@ import { COINGECKO_URL } from '../config/constants';
 import { getCachedVault, getVaultDefinition } from '../vaults/vaults.utils';
 import { TokenType } from '../tokens/enums/token-type.enum';
 import { PriceData } from '../tokens/interfaces/price-data.interface';
-import { Token } from '../tokens/interfaces/token.interface';
 import { TokenConfig } from '../tokens/interfaces/token-config.interface';
 import { TokenPrice } from '../tokens/interfaces/token-price.interface';
 import { TokenPriceSnapshot } from '../tokens/interfaces/token-price-snapshot.interface';
@@ -15,39 +14,31 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { Currency } from '@badger-dao/sdk';
 import { TOKENS } from '../config/tokens.config';
 
-export const noPrice = (token: Token): TokenPriceSnapshot => {
-  return {
-    name: token.name,
-    address: token.address,
-    usd: 0,
-    eth: 0,
-    updatedAt: Date.now(),
-  };
-};
+export function noPrice(address: string): TokenPrice {
+  return { address, price: 0 };
+}
 
 /**
  * Update pricing db entry using chain strategy.
  * @param token Target for price update.
  */
-export const updatePrice = async (token: Token): Promise<TokenPriceSnapshot> => {
-  const { address, name } = token;
+export const updatePrice = async (address: string): Promise<TokenPrice> => {
   const strategy = ChainStrategy.getStrategy(address);
   try {
-    const price = await strategy.getPrice(address);
-    if (price.eth === 0 || price.usd === 0) {
+    const { price } = await strategy.getPrice(address);
+    if (price === 0) {
+      // TODO: add discord warning logs for errors on pricing
       throw new Error('Attempting to update with bad price');
     }
     const mapper = getDataMapper();
     return mapper.put(
       Object.assign(new TokenPriceSnapshot(), {
-        address: address,
-        name: name,
-        eth: price.eth,
-        usd: price.usd,
+        address,
+        price,
       }),
     );
   } catch (err) {
-    return noPrice(token);
+    return noPrice(address);
   } // ignore issues to allow for price updates of other coins
 };
 
@@ -56,15 +47,15 @@ export const updatePrice = async (token: Token): Promise<TokenPriceSnapshot> => 
  * @param contract Address for the token price being requested.
  * @returns Most recent price data for the requested contract.
  */
-export const getPrice = async (contract: string): Promise<TokenPrice> => {
-  const token = getToken(contract);
+export async function getPrice(token: string, currency?: Currency): Promise<TokenPrice> {
   try {
     const mapper = getDataMapper();
     for await (const item of mapper.query(
       TokenPriceSnapshot,
-      { address: token.address },
+      { address: token },
       { limit: 1, scanIndexForward: false },
     )) {
+      item.price = await convert(item.price, currency);
       return item;
     }
     return noPrice(token);
@@ -72,7 +63,7 @@ export const getPrice = async (contract: string): Promise<TokenPrice> => {
     console.error(err);
     return noPrice(token);
   }
-};
+}
 
 /**
  * Retrieve all chain token prices in both USD and ETH.
@@ -95,22 +86,17 @@ export const getPriceData = async (tokens: TokenConfig): Promise<PriceData> => {
 export const getContractPrice = async (contract: string): Promise<TokenPrice> => {
   const params = {
     contract_addresses: contract,
-    vs_currencies: 'usd,eth',
+    vs_currencies: 'usd',
   };
-  const result = await request<Record<string, { eth: number; usd: number }>>(
-    `${COINGECKO_URL}/token_price/ethereum`,
-    params,
-  );
+  const result = await request<Record<string, { usd: number }>>(`${COINGECKO_URL}/token_price/ethereum`, params);
   const contractKey = contract.toLowerCase(); // coingecko return key in lower case
-  if (!result[contractKey] || !result[contractKey].usd || !result[contractKey].eth) {
+  if (!result[contractKey] || !result[contractKey].usd) {
     throw new InternalServerError(`Unable to resolve ${contract} price by contract`);
   }
   const token = getToken(contract);
   return {
-    name: token.name,
     address: token.address,
-    usd: result[contractKey].usd,
-    eth: result[contractKey].eth,
+    price: result[contractKey].usd,
   };
 };
 
@@ -124,33 +110,15 @@ export const getTokenPrice = async (name: string): Promise<TokenPrice> => {
     ids: name,
     vs_currencies: 'usd,eth',
   };
-  const result = await request<Record<string, { eth: number; usd: number }>>(`${COINGECKO_URL}/price`, params);
-  if (!result[name] || !result[name].usd || !result[name].eth) {
+  const result = await request<Record<string, { usd: number }>>(`${COINGECKO_URL}/price`, params);
+  if (!result[name] || !result[name].usd) {
     throw new InternalServerError(`Unable to resolve ${name} price by name`);
   }
   const token = getTokenByName(name);
   return {
-    name: token.name,
     address: token.address,
-    usd: result[name].usd,
-    eth: result[name].eth,
+    price: result[name].usd,
   };
-};
-
-/**
- * Convert a given token price to a defined currency option.
- * @param tokenPrice Pricing data for the given token.
- * @param currency Currency requested from the pricing data.
- * @returns Price value in currency if exists, default to usd if not.
- */
-export const inCurrency = (tokenPrice: TokenPrice, currency?: string): number => {
-  switch (currency) {
-    case 'eth':
-      return tokenPrice.eth;
-    case 'usd':
-    default:
-      return tokenPrice.usd;
-  }
 };
 
 /**
@@ -174,10 +142,8 @@ export const getVaultTokenPrice = async (contract: string): Promise<TokenPrice> 
     getCachedVault(vaultDefintion),
   ]);
   return {
-    name: token.name,
     address: token.address,
-    usd: underlyingTokenPrice.usd * vaultTokenSnapshot.pricePerFullShare,
-    eth: underlyingTokenPrice.eth * vaultTokenSnapshot.pricePerFullShare,
+    price: underlyingTokenPrice.price * vaultTokenSnapshot.pricePerFullShare,
   };
 };
 
@@ -188,7 +154,7 @@ export async function convert(value: number, currency?: Currency): Promise<numbe
   switch (currency) {
     case Currency.ETH:
       const wethPrice = await getPrice(TOKENS.WETH);
-      return value / wethPrice.usd;
+      return value / wethPrice.price;
     case Currency.USD:
     default:
       return value;

@@ -51,10 +51,8 @@ export const getLiquidityPrice = async (graphUrl: string, contract: string): Pro
   if (parseFloat(pair.totalSupply) === 0) {
     const token = getToken(contract);
     return {
-      name: token.name,
       address: token.address,
-      usd: 0,
-      eth: 0,
+      price: 0,
     };
   }
   const liquidityData: LiquidityData = {
@@ -74,10 +72,8 @@ export const getOnChainLiquidityPrice = async (chain: Chain, contract: string): 
     if (liquidityData.totalSupply === 0) {
       const token = getToken(contract);
       return {
-        name: token.name,
         address: token.address,
-        usd: 0,
-        eth: 0,
+        price: 0,
       };
     }
     return resolveLiquidityPrice(liquidityData);
@@ -98,30 +94,23 @@ const resolveLiquidityPrice = async (liquidityData: LiquidityData): Promise<Toke
     const t1Scalar = reserve0 / reserve1;
     const t0Info = getToken(token0);
     t0Price = {
-      name: t0Info.name,
       address: t0Info.address,
-      usd: t1Price.usd * t1Scalar,
-      eth: t1Price.eth * t1Scalar,
+      price: t1Price.price * t1Scalar,
     };
   }
   if (!t1Price) {
     const t0Scalar = reserve1 / reserve0;
     const t1Info = getToken(token1);
     t1Price = {
-      name: t1Info.name,
       address: t1Info.address,
-      usd: t0Price.usd * t0Scalar,
-      eth: t0Price.eth * t0Scalar,
+      price: t0Price.price * t0Scalar,
     };
   }
   const token = getToken(contract);
-  const usdPrice = (t0Price.usd * reserve0 + t1Price.usd * reserve1) / totalSupply;
-  const ethPrice = (t0Price.eth * reserve0 + t1Price.eth * reserve1) / totalSupply;
+  const price = (t0Price.price * reserve0 + t1Price.price * reserve1) / totalSupply;
   return {
-    name: token.name,
     address: token.address,
-    usd: usdPrice,
-    eth: ethPrice,
+    price,
   };
 };
 
@@ -136,13 +125,10 @@ export const resolveTokenPrice = async (chain: Chain, token: string, contract: s
     throw new UnprocessableEntity(`Token ${pricingToken.name} cannot be priced`);
   }
   const scalar = divisor / dividend;
-  const usdPrice = knownTokenPrice.usd * scalar;
-  const ethPrice = knownTokenPrice.eth * scalar;
+  const price = knownTokenPrice.price * scalar;
   return {
-    name: pricingToken.name,
     address: pricingToken.address,
-    usd: usdPrice,
-    eth: ethPrice,
+    price,
   };
 };
 
