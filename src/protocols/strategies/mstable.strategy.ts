@@ -37,10 +37,8 @@ export async function getImBtcPrice(chain: Chain, token: Token): Promise<TokenPr
   const [exchangeRate, mbtcPrice] = await Promise.all([imbtc.exchangeRate(), getPrice(TOKENS.MBTC)]);
   const exchangeRateScalar = formatBalance(exchangeRate);
   return {
-    name: token.name,
     address: token.address,
-    usd: mbtcPrice.usd * exchangeRateScalar,
-    eth: mbtcPrice.eth * exchangeRateScalar,
+    price: mbtcPrice.price * exchangeRateScalar,
   };
 }
 
@@ -55,10 +53,8 @@ export async function getMhBtcPrice(chain: Chain, token: Token): Promise<TokenPr
   const mhbtcBalance = formatBalance(totalSupply);
   const exchangeRateScalar = mbtcBalance / mhbtcBalance;
   return {
-    name: token.name,
     address: token.address,
-    usd: mbtcPrice.usd * exchangeRateScalar,
-    eth: mbtcPrice.eth * exchangeRateScalar,
+    price: mbtcPrice.price * exchangeRateScalar,
   };
 }
 
@@ -104,8 +100,8 @@ async function getVaultSource(
       const finalUnlock = activeRewards[0].start.toNumber() * 1000;
       const firstUnlock = activeRewards[activeRewards.length - 1].start.toNumber() * 1000;
       const scalar = ONE_YEAR_MS / (finalUnlock - firstUnlock);
-      const rewardsValue = mtaPrice.usd * formatBalance(totalRewards);
-      const vaultAssets = vaultBalance * depositTokenPrice.usd;
+      const rewardsValue = mtaPrice.price * formatBalance(totalRewards);
+      const vaultAssets = vaultBalance * depositTokenPrice.price;
       const apr = ((rewardsValue * scalar) / vaultAssets) * 100;
       valueSource = createValueSource('Vested MTA Rewards', uniformPerformance(apr));
     }

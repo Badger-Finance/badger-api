@@ -144,9 +144,9 @@ export async function getRewardEmission(chain: Chain, vaultDefinition: VaultDefi
 
   const emissionSources = [];
   for (const schedule of activeSchedules) {
-    const [price, token] = await Promise.all([getPrice(schedule.token), getToken(schedule.token)]);
+    const [tokenPrice, token] = await Promise.all([getPrice(schedule.token), getToken(schedule.token)]);
     const durationScalar = ONE_YEAR_SECONDS / (schedule.end - schedule.start);
-    const yearlyEmission = price.usd * schedule.amount * durationScalar;
+    const yearlyEmission = tokenPrice.price * schedule.amount * durationScalar;
     const apr = (yearlyEmission / (vault.value - ignoredTVL)) * 100;
     let proRataAPR = apr;
     if (vault.boost.enabled && token.address === chain.getBadgerTokenAddress()) {

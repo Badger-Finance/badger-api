@@ -5,7 +5,6 @@ import { TOKENS } from '../config/tokens.config';
 import { UserQuery, UserSettBalance, UsersQuery } from '../graphql/generated/badger';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import * as priceUtils from '../prices/prices.utils';
-import { inCurrency } from '../prices/prices.utils';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { getVaultDefinition } from '../vaults/vaults.utils';
 import { defaultAccount, randomSnapshot, setupMapper, TEST_ADDR, TEST_CHAIN } from '../test/tests.utils';
@@ -22,6 +21,7 @@ import {
 } from './accounts.utils';
 import { ethers } from 'ethers';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
+import { Currency } from '@badger-dao/sdk';
 
 describe('accounts.utils', () => {
   const testSettBalance = (vaultDefinition: VaultDefinition): UserSettBalance => {
@@ -186,26 +186,33 @@ describe('accounts.utils', () => {
 
     const testToSettBalance = (settAddress: string) => {
       it.each([
-        [undefined, 'usd'],
-        ['eth', 'eth'],
-        ['usd', 'usd'],
-      ])('returns sett balance request in %s currency with %s denominated value', async (currency, _res) => {
-        jest.spyOn(priceUtils, 'getPrice').mockImplementation(async (contract) => ({
-          ...(await strategy.getPrice(contract)),
-          updatedAt: Date.now(),
-        }));
+        [undefined, Currency.USD],
+        [Currency.USD, Currency.USD],
+        [Currency.ETH, Currency.ETH],
+      ])('returns sett balance request in %s currency with %s denominated value', async (currency, toCurrency) => {
         const sett = getVaultDefinition(chain, settAddress);
         const snapshot = randomSnapshot(sett);
         setupMapper([snapshot]);
         const depositToken = getToken(sett.depositToken);
+        const depositTokenPrice = await strategy.getPrice(depositToken.address);
+        jest.spyOn(priceUtils, 'getPrice').mockImplementation(async (contract) => ({
+          ...depositTokenPrice,
+          updatedAt: Date.now(),
+        }));
+        jest.spyOn(priceUtils, 'convert').mockImplementation(async (price: number, currency?: Currency) => {
+          if (!currency || currency === Currency.USD) {
+            return price;
+          }
+          return price / 1670;
+        });
         const mockBalance = testSettBalance(sett);
-        const actual = await toSettBalance(chain, mockBalance, currency);
+        const actual = await toSettBalance(chain, mockBalance, currency as Currency);
         expect(actual).toBeTruthy();
         expect(actual.name).toEqual(depositToken.name);
         expect(actual.symbol).toEqual(depositToken.symbol);
         expect(actual.pricePerFullShare).toEqual(snapshot.balance / snapshot.supply);
-        const price = await strategy.getPrice(depositToken.address);
-        expect(actual.value).toEqual(inCurrency(price, currency) * actual.balance);
+        const convertedPrice = await priceUtils.convert(depositTokenPrice.price, toCurrency);
+        expect(actual.value).toEqual(convertedPrice * actual.balance);
       });
     };
 

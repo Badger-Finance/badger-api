@@ -1,4 +1,4 @@
-import { Network, Protocol } from '@badger-dao/sdk';
+import { formatBalance, Network, Protocol } from '@badger-dao/sdk';
 import { BadRequest, NotFound } from '@tsed/exceptions';
 import { getAccountMap } from '../accounts/accounts.utils';
 import { AccountMap } from '../accounts/interfaces/account-map.interface';
@@ -13,7 +13,7 @@ import { VaultSnapshot } from '../vaults/interfaces/vault-snapshot.interface';
 import { getBoostWeight, getPricePerShare, getVault, getStrategyInfo, getCachedVault } from '../vaults/vaults.utils';
 import { CachedLiquidityPoolTokenBalance } from '../tokens/interfaces/cached-liquidity-pool-token-balance.interface';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
-import { formatBalance, getToken, toCachedBalance } from '../tokens/tokens.utils';
+import { getToken, toBalance } from '../tokens/tokens.utils';
 import { getLiquidityData } from '../protocols/common/swap.utils';
 
 export function chunkArray(addresses: string[], count: number): string[][] {
@@ -61,7 +61,7 @@ export async function settToCachedSnapshot(
     getStrategyInfo(chain, vaultDefinition),
     getBoostWeight(chain, vaultDefinition),
   ]);
-  const value = balance * tokenPriceData.usd;
+  const value = balance * tokenPriceData.price;
 
   return Object.assign(new CachedSettSnapshot(), {
     address,
@@ -108,7 +108,7 @@ export const settToSnapshot = async (
   const supply = formatBalance(totalSupply, supplyDecimals);
   const ratio = await getPricePerShare(chain, pricePerFullShare, vaultDefinition, queryBlock);
   const tokenPriceData = await getPrice(depositToken.address);
-  const value = tokenBalance * tokenPriceData.usd;
+  const value = tokenBalance * tokenPriceData.price;
 
   return Object.assign(new VaultSnapshot(), {
     address: settToken.address,
@@ -175,10 +175,7 @@ export async function getLpTokenBalances(
     const valueScalar = totalSupply > 0 ? settSnapshot.balance / totalSupply : 0;
     const t0TokenBalance = reserve0 * valueScalar;
     const t1TokenBalance = reserve1 * valueScalar;
-    const tokenBalances = await Promise.all([
-      toCachedBalance(t0Token, t0TokenBalance),
-      toCachedBalance(t1Token, t1TokenBalance),
-    ]);
+    const tokenBalances = await Promise.all([toBalance(t0Token, t0TokenBalance), toBalance(t1Token, t1TokenBalance)]);
 
     return tokenBalancesToCachedLiquidityPoolTokenBalance(vault.depositToken, vault.protocol, tokenBalances);
   } catch (err) {

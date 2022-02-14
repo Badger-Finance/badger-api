@@ -15,14 +15,14 @@ import {
 } from '../graphql/generated/badger';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import { CachedBoost } from '../leaderboards/interface/cached-boost.interface';
-import { getPrice, inCurrency } from '../prices/prices.utils';
+import { convert, getPrice } from '../prices/prices.utils';
 import { BoostData } from '../rewards/interfaces/boost-data.interface';
 import { getCachedVault, getVaultDefinition } from '../vaults/vaults.utils';
-import { formatBalance, getVaultTokens, getToken, cachedTokenBalanceToTokenBalance } from '../tokens/tokens.utils';
+import { getVaultTokens, getToken } from '../tokens/tokens.utils';
 import { AccountMap } from './interfaces/account-map.interface';
 import { CachedAccount } from './interfaces/cached-account.interface';
 import { CachedSettBalance } from './interfaces/cached-sett-balance.interface';
-import { Account } from '@badger-dao/sdk';
+import { Account, Currency, formatBalance } from '@badger-dao/sdk';
 import { UserClaimSnapshot } from '../rewards/entities/user-claim-snapshot';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 
@@ -148,7 +148,7 @@ export async function queryCachedAccount(address: string): Promise<CachedAccount
 export async function toSettBalance(
   chain: Chain,
   settBalance: UserSettBalance,
-  currency?: string,
+  currency?: Currency,
 ): Promise<CachedSettBalance> {
   const vaultDefinition = getVaultDefinition(chain, settBalance.sett.id);
   const { netShareDeposit, grossDeposit, grossWithdraw } = settBalance;
@@ -171,6 +171,8 @@ export async function toSettBalance(
     getVaultTokens(vaultDefinition, balanceTokens, currency),
   ]);
 
+  const depositTokenConvertedPrice = await convert(depositTokenPrice.price, currency);
+
   return Object.assign(new CachedSettBalance(), {
     network: chain.network,
     address: vaultDefinition.vaultToken,
@@ -178,10 +180,10 @@ export async function toSettBalance(
     symbol: depositToken.symbol,
     pricePerFullShare: pricePerFullShare,
     balance: balanceTokens,
-    value: inCurrency(depositTokenPrice, currency) * balanceTokens,
+    value: depositTokenConvertedPrice * balanceTokens,
     tokens,
     earnedBalance: earnedBalance,
-    earnedValue: inCurrency(depositTokenPrice, currency) * earnedBalance,
+    earnedValue: depositTokenConvertedPrice * earnedBalance,
     earnedTokens,
     depositedBalance: depositedTokens,
     withdrawnBalance: withdrawnTokens,
@@ -208,8 +210,8 @@ export async function getCachedAccount(chain: Chain, address: string): Promise<A
     .filter((bal) => !network || bal.network === network)
     .map((bal) => ({
       ...bal,
-      tokens: bal.tokens.map((token) => cachedTokenBalanceToTokenBalance(token)),
-      earnedTokens: bal.earnedTokens.map((token) => cachedTokenBalanceToTokenBalance(token)),
+      tokens: bal.tokens,
+      earnedTokens: bal.earnedTokens,
     }));
   const multipliers = Object.fromEntries(
     cachedAccount.multipliers
