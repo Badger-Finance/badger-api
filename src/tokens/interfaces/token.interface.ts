@@ -1,6 +1,6 @@
 import { Chain } from '../../chains/config/chain.config';
+import { PricingType } from '../../prices/enums/pricing-type.enum';
 import { TokenPrice } from '../../prices/interface/token-price.interface';
-import { TokenType } from '../enums/token-type.enum';
 import { WrappedToken } from './wrapped-token.interface';
 
 export interface Token {
@@ -11,6 +11,6 @@ export interface Token {
   lpToken?: boolean;
   name: string;
   symbol: string;
-  type: TokenType;
+  type: PricingType;
   vaultToken?: WrappedToken;
 }

@@ -1,15 +1,15 @@
 import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
-import { getContractPrice, getTokenPrice } from '../../prices/prices.utils';
-import { getOnChainLiquidityPrice, resolveTokenPrice } from '../../protocols/common/swap.utils';
+import { getOnChainLiquidityPrice } from '../../protocols/common/swap.utils';
 import { getCurveTokenPrice } from '../../protocols/strategies/convex.strategy';
-import { TokenType } from '../../tokens/enums/token-type.enum';
+import { PricingType } from '../../prices/enums/pricing-type.enum';
 import { Token } from '../../tokens/interfaces/token.interface';
 import { Chain } from '../config/chain.config';
 import { ChainStrategy } from './chain.strategy';
 import { Network } from '@badger-dao/sdk';
 import { getVaultTokenPrice } from '../../vaults/vaults.utils';
 import { TokenPrice } from '../../prices/interface/token-price.interface';
+import { getContractPrice } from '../../prices/coingecko.utils';
 
 export class BaseStrategy extends ChainStrategy {
   constructor(private network: Network, tokens: string[]) {
@@ -22,29 +22,21 @@ export class BaseStrategy extends ChainStrategy {
     const chain = Chain.getChain(this.network);
     const token = this.getToken(address);
     switch (token.type) {
-      case TokenType.Custom:
+      case PricingType.Custom:
         if (!token.getPrice) {
           throw new UnprocessableEntity(`${token.name} requires custom price implementation`);
         }
         return token.getPrice(chain, token);
-      case TokenType.Contract:
-        if (token.lookupName) {
-          return this.resolveLookupName(token.lookupName, token.address);
-        }
+      case PricingType.Contract:
         return getContractPrice(token.address);
-      case TokenType.CurveLP:
+      case PricingType.CurveLP:
         return getCurveTokenPrice(chain, token.address);
-      case TokenType.SushiswapLp:
-      case TokenType.QuickswapLp:
-      case TokenType.SwaprLp:
-      case TokenType.PancakeswapLp:
-      case TokenType.SolidlyLp:
-      case TokenType.UniswapLp:
+      case PricingType.UniV2LP:
         return getOnChainLiquidityPrice(chain, token.address);
-      case TokenType.Vault:
+      case PricingType.Vault:
         return getVaultTokenPrice(token.address);
       default:
-        throw new UnprocessableEntity('Unsupported TokenType');
+        throw new UnprocessableEntity('Unsupported PricingType');
     }
   }
 
@@ -56,14 +48,5 @@ export class BaseStrategy extends ChainStrategy {
       throw new BadRequest(`No token found for ${checksummedAddress}`);
     }
     return token;
-  }
-
-  private async resolveLookupName(lookupName: string, token: string): Promise<TokenPrice> {
-    const chain = Chain.getChain(this.network);
-    const isContract = ethers.utils.isAddress(lookupName);
-    if (isContract) {
-      return resolveTokenPrice(chain, token, lookupName);
-    }
-    return getTokenPrice(lookupName);
   }
 }

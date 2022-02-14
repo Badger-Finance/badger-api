@@ -16,8 +16,8 @@ import { VaultStrategy } from './interfaces/vault-strategy.interface';
 import { TOKENS } from '../config/tokens.config';
 import { Protocol, Vault, VaultState, VaultType } from '@badger-dao/sdk';
 import { getPrice } from '../prices/prices.utils';
-import { TokenType } from '../tokens/enums/token-type.enum';
 import { TokenPrice } from '../prices/interface/token-price.interface';
+import { PricingType } from '../prices/enums/pricing-type.enum';
 
 export const VAULT_SOURCE = 'Vault Compounding';
 
@@ -217,7 +217,7 @@ export async function getBoostWeight(chain: Chain, vaultDefinition: VaultDefinit
  */
 export const getVaultTokenPrice = async (contract: string): Promise<TokenPrice> => {
   const token = getToken(contract);
-  if (token.type !== TokenType.Vault) {
+  if (token.type !== PricingType.Vault) {
     throw new BadRequest(`${token.name} is not a vault token`);
   }
   const { vaultToken } = token;

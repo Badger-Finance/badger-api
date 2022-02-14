@@ -1,6 +1,6 @@
 import { Network } from '@badger-dao/sdk';
 import { TOKENS } from '../../config/tokens.config';
-import { TokenType } from '../enums/token-type.enum';
+import { PricingType } from '../../prices/enums/pricing-type.enum';
 import { TokenConfig } from '../interfaces/token-config.interface';
 
 export const avalancheTokensConfig: TokenConfig = {
@@ -10,7 +10,7 @@ export const avalancheTokensConfig: TokenConfig = {
     lookupName: 'wrapped-bitcoin',
     name: 'Wrapped Bitcoin',
     symbol: 'WBTC',
-    type: TokenType.Contract,
+    type: PricingType.Contract,
   },
   [TOKENS.AVAX_WAVAX]: {
     address: TOKENS.AVAX_WAVAX,
@@ -18,14 +18,14 @@ export const avalancheTokensConfig: TokenConfig = {
     lookupName: 'wrapped-avax',
     name: 'Wrapped Avalanche',
     symbol: 'WAVAX',
-    type: TokenType.Contract,
+    type: PricingType.Contract,
   },
   [TOKENS.BAVAX_WBTC]: {
     address: TOKENS.BAVAX_WBTC,
     decimals: 18,
     name: 'bWBTC',
     symbol: 'bWBTC',
-    type: TokenType.Vault,
+    type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.AVAX_WBTC,
       network: Network.Avalanche,

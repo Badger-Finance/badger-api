@@ -1,6 +1,6 @@
 import { Network } from '@badger-dao/sdk';
 import { TOKENS } from '../../config/tokens.config';
-import { TokenType } from '../enums/token-type.enum';
+import { PricingType } from '../../prices/enums/pricing-type.enum';
 import { TokenConfig } from '../interfaces/token-config.interface';
 
 export const bscTokensConfig: TokenConfig = {
@@ -10,7 +10,7 @@ export const bscTokensConfig: TokenConfig = {
     lookupName: 'pancakeswap-token',
     name: 'Cake',
     symbol: 'CAKE',
-    type: TokenType.Contract,
+    type: PricingType.Contract,
   },
   [TOKENS.WBNB]: {
     address: TOKENS.WBNB,
@@ -18,7 +18,7 @@ export const bscTokensConfig: TokenConfig = {
     lookupName: 'binancecoin',
     name: 'Wrapped Binance Coin',
     symbol: 'WBNB',
-    type: TokenType.Contract,
+    type: PricingType.Contract,
   },
   [TOKENS.BTCB]: {
     address: TOKENS.BTCB,
@@ -26,7 +26,7 @@ export const bscTokensConfig: TokenConfig = {
     lookupName: 'binance-bitcoin',
     name: 'Binance Pegged Bitcoin',
     symbol: 'BTCB',
-    type: TokenType.Contract,
+    type: PricingType.Contract,
   },
   [TOKENS.PANCAKE_BNB_BTCB]: {
     address: TOKENS.PANCAKE_BNB_BTCB,
@@ -34,7 +34,7 @@ export const bscTokensConfig: TokenConfig = {
     lpToken: true,
     name: 'Pancakeswap: BNB-BTCB',
     symbol: 'PLP-BNB-BTCB',
-    type: TokenType.PancakeswapLp,
+    type: PricingType.UniV2LP,
   },
   [TOKENS.PANCAKE_OLD_BNB_BTCB]: {
     address: TOKENS.PANCAKE_OLD_BNB_BTCB,
@@ -42,7 +42,7 @@ export const bscTokensConfig: TokenConfig = {
     lpToken: true,
     name: 'Pancakeswap: BNB-BTCB',
     symbol: 'PLP-BNB-BTCB',
-    type: TokenType.PancakeswapLp,
+    type: PricingType.UniV2LP,
   },
   [TOKENS.PANCAKE_BBADGER_BTCB]: {
     address: TOKENS.PANCAKE_BBADGER_BTCB,
@@ -50,7 +50,7 @@ export const bscTokensConfig: TokenConfig = {
     lpToken: true,
     name: 'Pancakeswap: BBADGER-BTCB',
     symbol: 'PLP-BBADGER-BTCB',
-    type: TokenType.PancakeswapLp,
+    type: PricingType.UniV2LP,
   },
   [TOKENS.PANCAKE_BDIGG_BTCB]: {
     address: TOKENS.PANCAKE_BDIGG_BTCB,
@@ -58,7 +58,7 @@ export const bscTokensConfig: TokenConfig = {
     lpToken: true,
     name: 'Pancakeswap: BDIGG-BTCB',
     symbol: 'PLP-BDIGG-BTCB',
-    type: TokenType.PancakeswapLp,
+    type: PricingType.UniV2LP,
   },
   [TOKENS.MULTI_BADGER]: {
     address: TOKENS.MULTI_BADGER,
@@ -66,14 +66,14 @@ export const bscTokensConfig: TokenConfig = {
     lookupName: 'badger-dao',
     name: 'Badger',
     symbol: 'BADGER',
-    type: TokenType.Contract,
+    type: PricingType.Contract,
   },
   [TOKENS.BSC_BBADGER]: {
     address: TOKENS.BSC_BBADGER,
     decimals: 18,
     name: 'bBadger',
     symbol: 'bBADGER',
-    type: TokenType.Vault,
+    type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.BBADGER,
       network: Network.Ethereum,
@@ -84,7 +84,7 @@ export const bscTokensConfig: TokenConfig = {
     decimals: 18,
     name: 'bDigg',
     symbol: 'bDIGG',
-    type: TokenType.Vault,
+    type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.BDIGG,
       network: Network.Ethereum,
@@ -96,7 +96,7 @@ export const bscTokensConfig: TokenConfig = {
     lpToken: true,
     name: 'bPancakeswap: WBNB-BTCB',
     symbol: 'bPLP-BNB-BTCB',
-    type: TokenType.Vault,
+    type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.PANCAKE_BNB_BTCB,
       network: Network.BinanceSmartChain,
@@ -108,7 +108,7 @@ export const bscTokensConfig: TokenConfig = {
     lpToken: true,
     name: 'bPancakeswap: BBADGER-BTCB',
     symbol: 'bPLP-BBADGER-BTCB',
-    type: TokenType.Vault,
+    type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.PANCAKE_BBADGER_BTCB,
       network: Network.BinanceSmartChain,
@@ -120,7 +120,7 @@ export const bscTokensConfig: TokenConfig = {
     lpToken: true,
     name: 'Pancakeswap: BDIGG-BTCB',
     symbol: 'bPLP-BDIGG-BTCB',
-    type: TokenType.Vault,
+    type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.PANCAKE_BDIGG_BTCB,
       network: Network.BinanceSmartChain,
