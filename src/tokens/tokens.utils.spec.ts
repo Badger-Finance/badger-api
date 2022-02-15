@@ -6,7 +6,7 @@ import { tokenBalancesToCachedLiquidityPoolTokenBalance } from '../indexers/inde
 import * as priceUtils from '../prices/prices.utils';
 import * as vaultUtils from '../vaults/vaults.utils';
 import { getVaultDefinition } from '../vaults/vaults.utils';
-import { setupMapper } from '../test/tests.utils';
+import { setupMapper, TEST_CHAIN } from '../test/tests.utils';
 import { ethTokensConfig } from './config/eth-tokens.config';
 import { TokenPriceSnapshot } from '../prices/interface/token-price-snapshot.interface';
 import {
@@ -60,14 +60,14 @@ describe('token.utils', () => {
     describe('lookup invalid token name', () => {
       it('throws a not found error', () => {
         const token = 'invalid-token';
-        expect(() => getTokenByName(token)).toThrow(NotFound);
-        expect(() => getTokenByName(token)).toThrow(`${token} not supported`);
+        expect(() => getTokenByName(TEST_CHAIN, token)).toThrow(NotFound);
+        expect(() => getTokenByName(TEST_CHAIN, token)).toThrow(`${token} not supported`);
       });
     });
     describe('lookup supported token name', () => {
       it('returns the requested token information', () => {
         const expected = getToken(TOKENS.BADGER);
-        const actual = getTokenByName(expected.name);
+        const actual = getTokenByName(TEST_CHAIN, expected.name);
         expect(actual).toMatchObject(expected);
       });
     });

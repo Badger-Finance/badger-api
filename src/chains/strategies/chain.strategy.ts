@@ -8,7 +8,7 @@ type Strategies = Record<string, ChainStrategy>;
 export abstract class ChainStrategy {
   private static strategies: Strategies = {};
 
-  static register(addresses: string[], strategy: ChainStrategy): void {
+  static register(strategy: ChainStrategy, addresses: string[]): void {
     for (const address of addresses) {
       ChainStrategy.strategies[ethers.utils.getAddress(address)] = strategy;
     }

@@ -1,25 +1,23 @@
-import { InternalServerError } from '@tsed/exceptions';
-import { ChainStrategy } from '../chains/strategies/chain.strategy';
-import { COINGECKO_URL } from '../config/constants';
 import { TokenPriceSnapshot } from './interface/token-price-snapshot.interface';
-import { getToken, getTokenByName } from '../tokens/tokens.utils';
-import { request } from '../etherscan/etherscan.utils';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Currency } from '@badger-dao/sdk';
 import { TOKENS } from '../config/tokens.config';
 import { TokenPrice } from './interface/token-price.interface';
-import { PriceData } from '../tokens/interfaces/price-data.interface';
+import { getToken, getTokenByName } from '../tokens/tokens.utils';
 import { Chain } from '../chains/config/chain.config';
+import { COINGECKO_URL } from '../config/constants';
+import { PriceData } from '../tokens/interfaces/price-data.interface';
 import { CoinGeckoPriceResponse } from './interface/coingecko-price-response.interface';
+// TODO: generalize and add some axios utilities
+import { request } from '../etherscan/etherscan.utils';
 
 /**
  * Update pricing db entry using chain strategy.
  * @param token Target for price update.
  */
-export async function updatePrice(address: string): Promise<TokenPrice> {
-  const strategy = ChainStrategy.getStrategy(address);
+export async function updatePrice({ address, price }: TokenPrice): Promise<TokenPrice> {
+  const token = getToken(address);
   try {
-    const { price } = await strategy.getPrice(address);
     if (Number.isNaN(price) || price === 0) {
       // TODO: add discord warning logs for errors on pricing
       throw new Error(`Attempting to update ${address} with bad price`);
@@ -27,7 +25,7 @@ export async function updatePrice(address: string): Promise<TokenPrice> {
     const mapper = getDataMapper();
     return mapper.put(
       Object.assign(new TokenPriceSnapshot(), {
-        address,
+        address: token.address,
         price,
       }),
     );
@@ -56,76 +54,6 @@ export async function getPrice(address: string, currency?: Currency): Promise<To
   }
 }
 
-export async function fetchPrices(chain: Chain, addresses: string[]): Promise<PriceData> {
-  const baseURL = `${COINGECKO_URL}/token_price/${chain.network}`;
-  const params = {
-    contract_addresses: addresses.join(','),
-    vs_currencies: 'usd',
-  };
-  const result = await request<CoinGeckoPriceResponse>(baseURL, params);
-  const priceData = Object.fromEntries(
-    Object.entries(result).map((entry) => {
-      const [key, value] = entry;
-      return [key, { address: key, price: value.usd }];
-    }),
-  );
-  const missingTokens: string[] = [];
-  addresses.forEach((a) => {
-    if (!priceData[a]) {
-      missingTokens.push(a);
-    }
-  });
-  if (missingTokens.length > 0) {
-    console.error(`Missing prices for:\n${missingTokens.join('\n')}`);
-  }
-  return priceData;
-}
-
-/**
- * Retrieve the price data for a given token in USD and ETH.
- * Warning: Not all contracts are supported.
- * If a token is not supported, but available on CoinGecko, use getTokenPrice.
- * @param contract Token contract address.
- * @throws {InternalServerError} Failed price lookup.
- */
-export async function getContractPrice(contract: string): Promise<TokenPrice> {
-  const params = {
-    contract_addresses: contract,
-    vs_currencies: 'usd',
-  };
-  const result = await request<Record<string, { usd: number }>>(`${COINGECKO_URL}/token_price/ethereum`, params);
-  const contractKey = contract.toLowerCase(); // coingecko return key in lower case
-  if (!result[contractKey] || !result[contractKey].usd) {
-    throw new InternalServerError(`Unable to resolve ${contract} price by contract`);
-  }
-  const token = getToken(contract);
-  return {
-    address: token.address,
-    price: result[contractKey].usd,
-  };
-}
-
-/**
- * Retrieve the price data for a given token in USD and ETH.
- * @param token CoinGecko token name.
- * @throws {InternalServerError} Failed price lookup.
- */
-export async function getTokenPrice(name: string): Promise<TokenPrice> {
-  const params = {
-    ids: name,
-    vs_currencies: 'usd,eth',
-  };
-  const result = await request<Record<string, { usd: number }>>(`${COINGECKO_URL}/price`, params);
-  if (!result[name] || !result[name].usd) {
-    throw new InternalServerError(`Unable to resolve ${name} price by name`);
-  }
-  const token = getTokenByName(name);
-  return {
-    address: token.address,
-    price: result[name].usd,
-  };
-}
-
 /**
  * Convert USD value to supported currencies.
  * @param value USD value
@@ -140,8 +68,55 @@ export async function convert(value: number, currency?: Currency): Promise<numbe
     case Currency.ETH:
       const wethPrice = await getPrice(TOKENS.WETH);
       return value / wethPrice.price;
+    case Currency.AVAX:
+      const wavaxPrice = await getPrice(TOKENS.AVAX_WAVAX);
+      return value / wavaxPrice.price;
     case Currency.USD:
     default:
       return value;
   }
+}
+
+export async function fetchPrices(chain: Chain, inputs: string[], lookupName = false): Promise<PriceData> {
+  if (inputs.length === 0) {
+    return {};
+  }
+
+  let baseURL;
+  let params: Record<string, string>;
+
+  // utilize coingecko name look up api
+  if (lookupName) {
+    baseURL = `${COINGECKO_URL}/price`;
+    params = {
+      ids: inputs.join(','),
+      vs_currencies: 'usd',
+    };
+  } else {
+    baseURL = `${COINGECKO_URL}/token_price/${chain.network}`;
+    params = {
+      contract_addresses: inputs.join(','),
+      vs_currencies: 'usd',
+    };
+  }
+
+  const expectedTokens: string[] = [];
+  const result = await request<CoinGeckoPriceResponse>(baseURL, params);
+  const priceData = Object.fromEntries(
+    Object.entries(result).map((entry) => {
+      const [key, value] = entry;
+      let token;
+      try {
+        token = getToken(key);
+      } catch {
+        token = getTokenByName(chain, key);
+      }
+      const { address } = token;
+      expectedTokens.push(address);
+      return [address, { address, price: value.usd }];
+    }),
+  );
+  // TODO: validate any missing tokens and appropriately report them
+  // discord notification system tickets incoming @jintao
+  return priceData;
 }

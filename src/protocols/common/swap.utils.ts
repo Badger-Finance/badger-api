@@ -1,10 +1,6 @@
 import { NotFound, UnprocessableEntity } from '@tsed/exceptions';
-import { ethers } from 'ethers';
-import { GraphQLClient } from 'graphql-request';
 import { Chain } from '../../chains/config/chain.config';
-import { UNISWAP_URL } from '../../config/constants';
 import { UniV2__factory } from '../../contracts';
-import { getSdk as getUniswapSdk } from '../../graphql/generated/uniswap';
 import { TokenPrice } from '../../prices/interface/token-price.interface';
 import { getPrice } from '../../prices/prices.utils';
 import { formatBalance, getToken } from '../../tokens/tokens.utils';
@@ -37,33 +33,6 @@ export async function getLiquidityData(chain: Chain, contract: string): Promise<
     totalSupply: totalSupply,
   };
 }
-
-export const getLiquidityPrice = async (graphUrl: string, contract: string): Promise<TokenPrice> => {
-  const graphqlClient = new GraphQLClient(graphUrl);
-  const graphqlSdk = getUniswapSdk(graphqlClient);
-  const { pair } = await graphqlSdk.UniV2Pair({
-    id: contract.toLowerCase(),
-  });
-  if (!pair) {
-    throw new NotFound(`No pair found for ${contract}`);
-  }
-  if (parseFloat(pair.totalSupply) === 0) {
-    const token = getToken(contract);
-    return {
-      address: token.address,
-      price: 0,
-    };
-  }
-  const liquidityData: LiquidityData = {
-    contract: contract,
-    token0: ethers.utils.getAddress(pair.token0.id),
-    token1: ethers.utils.getAddress(pair.token1.id),
-    reserve0: pair.reserve0,
-    reserve1: pair.reserve1,
-    totalSupply: pair.totalSupply,
-  };
-  return resolveLiquidityPrice(liquidityData);
-};
 
 export const getOnChainLiquidityPrice = async (chain: Chain, contract: string): Promise<TokenPrice> => {
   try {
@@ -129,8 +98,4 @@ export const resolveTokenPrice = async (chain: Chain, token: string, contract: s
     address: pricingToken.address,
     price,
   };
-};
-
-export const getUniswapPrice = async (contract: string): Promise<TokenPrice> => {
-  return getLiquidityPrice(UNISWAP_URL, contract);
 };

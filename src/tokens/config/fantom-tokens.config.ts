@@ -1,6 +1,6 @@
 import { Network } from '@badger-dao/sdk';
 import { TOKENS } from '../../config/tokens.config';
-import { TokenType } from '../enums/token-type.enum';
+import { PricingType } from '../../prices/enums/pricing-type.enum';
 import { TokenConfig } from '../interfaces/token-config.interface';
 
 export const fantomTokensConfig: TokenConfig = {
@@ -10,7 +10,7 @@ export const fantomTokensConfig: TokenConfig = {
     lookupName: 'badger-dao',
     name: 'Badger',
     symbol: 'BADGER',
-    type: TokenType.Contract,
+    type: PricingType.LookupName,
   },
   [TOKENS.FTM_DAI]: {
     address: TOKENS.FTM_DAI,
@@ -18,7 +18,7 @@ export const fantomTokensConfig: TokenConfig = {
     name: 'Dai',
     lookupName: 'dai',
     symbol: 'DAI',
-    type: TokenType.Contract,
+    type: PricingType.LookupName,
   },
   [TOKENS.FTM_USDC]: {
     address: TOKENS.FTM_USDC,
@@ -26,7 +26,7 @@ export const fantomTokensConfig: TokenConfig = {
     name: 'US Dollar Coin',
     lookupName: 'usd-coin',
     symbol: 'USDC',
-    type: TokenType.Contract,
+    type: PricingType.LookupName,
   },
   [TOKENS.SMM_USDC_DAI]: {
     address: TOKENS.SMM_USDC_DAI,
@@ -34,14 +34,14 @@ export const fantomTokensConfig: TokenConfig = {
     lpToken: true,
     name: 'Solidly: USDC-DAI',
     symbol: 'SMM-USDC-DAI',
-    type: TokenType.SolidlyLp,
+    type: PricingType.UniV2LP,
   },
   [TOKENS.BSMM_USDC_DAI]: {
     address: TOKENS.BSMM_USDC_DAI,
     decimals: 18,
     name: 'bSolidly: USDC-DAI',
     symbol: 'bSMM-USDC-DAI',
-    type: TokenType.Vault,
+    type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.SMM_USDC_DAI,
       network: Network.Fantom,

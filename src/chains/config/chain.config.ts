@@ -20,7 +20,7 @@ export abstract class Chain {
   readonly chainId: string;
   readonly network: Network;
   readonly tokens: TokenConfig;
-  readonly setts: VaultDefinition[];
+  readonly vaults: VaultDefinition[];
   readonly provider: ethers.providers.JsonRpcProvider;
   readonly batchProvider: providers.MulticallProvider;
   readonly strategy: ChainStrategy;
@@ -36,7 +36,7 @@ export abstract class Chain {
     chainId: string,
     network: Network,
     tokens: TokenConfig,
-    setts: VaultDefinition[],
+    vaults: VaultDefinition[],
     rpcUrl: string,
     strategy: ChainStrategy,
     blocksPerYear: number,
@@ -49,7 +49,7 @@ export abstract class Chain {
     this.chainId = chainId;
     this.network = network;
     this.tokens = tokens;
-    this.setts = setts.filter((sett) => !sett.stage || sett.stage === STAGE);
+    this.vaults = vaults.filter((vault) => !vault.stage || vault.stage === STAGE);
     this.provider = new ethers.providers.JsonRpcProvider(rpcUrl);
     this.batchProvider = new providers.MulticallProvider(this.provider);
     this.strategy = strategy;
@@ -70,6 +70,9 @@ export abstract class Chain {
     Chain.chains[chain.symbol] = chain;
     if (network === Network.Polygon) {
       Chain.chains['matic'] = chain;
+    }
+    if (network === Network.BinanceSmartChain) {
+      Chain.chains['binancesmartchain'] = chain;
     }
   }
 
@@ -92,6 +95,9 @@ export abstract class Chain {
       Chain.sdks[this.symbol] = sdk;
       if (this.network === Network.Polygon) {
         Chain.sdks['matic'] = sdk;
+      }
+      if (this.network === Network.BinanceSmartChain) {
+        Chain.sdks['binancesmartchain'] = sdk;
       }
     }
     await sdk.ready();

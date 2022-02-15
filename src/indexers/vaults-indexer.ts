@@ -15,19 +15,19 @@ const NO_HISTORIC = 'Queries more than';
  * This is an expensive process to do so locally always and
  * as such will be disabled while running offline.
  */
-export async function indexProtocolSetts() {
+export async function indexProtocolVaults() {
   if (IS_OFFLINE) {
     return;
   }
   const chains = loadChains();
-  await Promise.all(chains.map((chain) => indexChainSetts(chain)));
+  await Promise.all(chains.map((chain) => indexChainVaults(chain)));
 }
 
-async function indexChainSetts(chain: Chain) {
-  await Promise.all(chain.setts.map((sett) => indexSett(chain, sett)));
+async function indexChainVaults(chain: Chain) {
+  await Promise.all(chain.vaults.map((vault) => indexVault(chain, vault)));
 }
 
-async function indexSett(chain: Chain, vaultDefinition: VaultDefinition) {
+async function indexVault(chain: Chain, vaultDefinition: VaultDefinition) {
   const { vaultToken, createdBlock } = vaultDefinition;
   const thirtyMinutesBlocks = parseInt((chain.blocksPerYear / 365 / 24 / 2).toString());
 

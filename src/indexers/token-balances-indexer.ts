@@ -10,7 +10,7 @@ import { getLpTokenBalances } from './indexer.utils';
 
 export async function refreshTokenBalances() {
   const chains = loadChains();
-  await Promise.all(chains.flatMap((c) => c.setts.flatMap(async (s) => updateTokenBalance(c, s))));
+  await Promise.all(chains.flatMap((c) => c.vaults.flatMap(async (v) => updateTokenBalance(c, v))));
 }
 
 export async function updateTokenBalance(chain: Chain, vaultDefinition: VaultDefinition): Promise<void> {

@@ -8,7 +8,7 @@ import { Arbitrum } from '../chains/config/arbitrum.config';
 import { Avalanche } from '../chains/config/avax.config';
 import { BinanceSmartChain } from '../chains/config/bsc.config';
 import { Ethereum } from '../chains/config/eth.config';
-import { Polygon } from '../chains/config/matic.config';
+import { Polygon } from '../chains/config/polygon.config';
 import { xDai } from '../chains/config/xdai.config';
 import { ONE_DAY_MS, ONE_MINUTE_MS, SAMPLE_DAYS } from '../config/constants';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
@@ -101,7 +101,7 @@ export function randomSnapshot(vaultDefinition?: VaultDefinition): CachedSettSna
 }
 
 export function randomVault(): VaultDefinition {
-  const definitions = loadChains().flatMap((chain) => chain.setts);
+  const definitions = loadChains().flatMap((chain) => chain.vaults);
   return definitions[Math.floor(Math.random() * definitions.length)];
 }
 

@@ -12,13 +12,13 @@ export async function refreshSettSnapshots() {
 }
 
 async function captureChainSnapshots(chain: Chain) {
-  return Promise.all(chain.setts.map(async (sett) => captureSnapshot(chain, sett)));
+  return Promise.all(chain.vaults.map(async (vault) => captureSnapshot(chain, vault)));
 }
 
-async function captureSnapshot(chain: Chain, sett: VaultDefinition): Promise<CachedSettSnapshot | null> {
+async function captureSnapshot(chain: Chain, vault: VaultDefinition): Promise<CachedSettSnapshot | null> {
   try {
     // purposefully await to leverage try / catch
-    const snapshot = await settToCachedSnapshot(chain, sett);
+    const snapshot = await settToCachedSnapshot(chain, vault);
     if (snapshot) {
       const mapper = getDataMapper();
       await mapper.put(snapshot);

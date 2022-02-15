@@ -370,7 +370,7 @@ functions:
           cors: true
 
   index-setts:
-    handler: src/indexers/sett-indexer.indexProtocolSetts
+    handler: src/indexers/sett-indexer.indexProtocolVaults
     timeout: 480
     events:
       - schedule:
@@ -394,7 +394,7 @@ functions:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-prices
           description: 'index price data for all protocol tokens'
-          rate: rate(3 minutes)
+          rate: rate(1 minute)
 
   index-sett-snapshots:
     handler: src/indexers/sett-snapshots-indexer.refreshSettSnapshots

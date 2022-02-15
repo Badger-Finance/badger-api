@@ -42,6 +42,6 @@ export const fantomSetts: VaultDefinition[] = [
     vaultToken: TOKENS.BSMM_USDC_DAI,
     stage: Stage.Staging,
     state: VaultState.Guarded,
-    protocol: Protocol.Convex,
+    protocol: Protocol.Solidly,
   },
 ];

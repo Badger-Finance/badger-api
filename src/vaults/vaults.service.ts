@@ -15,18 +15,18 @@ import { getCachedVault, getPerformance, getVaultDefinition, getSettSnapshots, V
 @Service()
 export class VaultsService {
   async getProtocolSummary(chain: Chain, currency?: Currency): Promise<ProtocolSummary> {
-    const setts = await Promise.all(
-      chain.setts.map(async (sett) => {
-        const { name, balance, value } = await this.getVault(chain, sett.vaultToken, currency);
+    const vaults = await Promise.all(
+      chain.vaults.map(async (vault) => {
+        const { name, balance, value } = await this.getVault(chain, vault.vaultToken, currency);
         return { name, balance, value };
       }),
     );
-    const totalValue = setts.reduce((total, sett) => (total += sett.value), 0);
-    return { totalValue, setts };
+    const totalValue = vaults.reduce((total, vault) => (total += vault.value), 0);
+    return { totalValue, vaults, setts: vaults };
   }
 
   async listVaults(chain: Chain, currency?: Currency): Promise<Vault[]> {
-    return Promise.all(chain.setts.map((sett) => this.getVault(chain, sett.vaultToken, currency)));
+    return Promise.all(chain.vaults.map((vault) => this.getVault(chain, vault.vaultToken, currency)));
   }
 
   async getVault(chain: Chain, contract: string, currency?: Currency): Promise<Vault> {

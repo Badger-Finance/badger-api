@@ -1,6 +1,6 @@
 import { Network } from '@badger-dao/sdk';
 import { TOKENS } from '../../config/tokens.config';
-import { TokenType } from '../enums/token-type.enum';
+import { PricingType } from '../../prices/enums/pricing-type.enum';
 import { TokenConfig } from '../interfaces/token-config.interface';
 
 export const maticTokensConfig: TokenConfig = {
@@ -10,7 +10,7 @@ export const maticTokensConfig: TokenConfig = {
     lookupName: 'renbtc',
     name: 'Ren Protocol BTC',
     symbol: 'renBTC',
-    type: TokenType.Contract,
+    type: PricingType.LookupName,
   },
   [TOKENS.MATIC_WBTC]: {
     address: TOKENS.MATIC_WBTC,
@@ -18,7 +18,7 @@ export const maticTokensConfig: TokenConfig = {
     lookupName: 'wrapped-bitcoin',
     name: 'Wrapped Bitcoin',
     symbol: 'WBTC',
-    type: TokenType.Contract,
+    type: PricingType.LookupName,
   },
   [TOKENS.MATIC_USDC]: {
     address: TOKENS.MATIC_USDC,
@@ -26,7 +26,7 @@ export const maticTokensConfig: TokenConfig = {
     lookupName: 'usd-coin',
     name: 'US Dollar Coin',
     symbol: 'USDC',
-    type: TokenType.Contract,
+    type: PricingType.LookupName,
   },
   [TOKENS.MATIC_USDT]: {
     address: TOKENS.MATIC_USDT,
@@ -34,7 +34,7 @@ export const maticTokensConfig: TokenConfig = {
     lookupName: 'tether',
     name: 'Tether',
     symbol: 'USDT',
-    type: TokenType.Contract,
+    type: PricingType.LookupName,
   },
   [TOKENS.MATIC_DAI]: {
     address: TOKENS.MATIC_DAI,
@@ -42,7 +42,7 @@ export const maticTokensConfig: TokenConfig = {
     lookupName: 'dai',
     name: 'Dai',
     symbol: 'DAI',
-    type: TokenType.Contract,
+    type: PricingType.LookupName,
   },
   [TOKENS.MATIC_IBBTC]: {
     address: TOKENS.MATIC_IBBTC,
@@ -50,7 +50,7 @@ export const maticTokensConfig: TokenConfig = {
     lookupName: 'interest-bearing-bitcoin',
     name: 'ibBTC',
     symbol: 'ibBTC',
-    type: TokenType.Contract,
+    type: PricingType.LookupName,
   },
   [TOKENS.MATIC_AMWBTC]: {
     address: TOKENS.MATIC_AMWBTC,
@@ -58,7 +58,7 @@ export const maticTokensConfig: TokenConfig = {
     lookupName: 'aave-polygon-wbtc',
     name: 'Aave WBTC',
     symbol: 'amWBTC',
-    type: TokenType.Contract,
+    type: PricingType.LookupName,
   },
   [TOKENS.MATIC_AMWETH]: {
     address: TOKENS.MATIC_AMWETH,
@@ -66,7 +66,7 @@ export const maticTokensConfig: TokenConfig = {
     lookupName: 'aave-polygon-weth',
     name: 'Aave WETH',
     symbol: 'amWETH',
-    type: TokenType.Contract,
+    type: PricingType.LookupName,
   },
   [TOKENS.MATIC_AMDAI]: {
     address: TOKENS.MATIC_AMDAI,
@@ -74,7 +74,7 @@ export const maticTokensConfig: TokenConfig = {
     lookupName: 'aave-polygon-dai',
     name: 'Aave DAI',
     symbol: 'amDAI',
-    type: TokenType.Contract,
+    type: PricingType.LookupName,
   },
   [TOKENS.MATIC_AMUSDC]: {
     address: TOKENS.MATIC_AMUSDC,
@@ -82,7 +82,7 @@ export const maticTokensConfig: TokenConfig = {
     lookupName: 'aave-polygon-usdc',
     name: 'Aave USDC',
     symbol: 'amUSDC',
-    type: TokenType.Contract,
+    type: PricingType.LookupName,
   },
   [TOKENS.MATIC_AMUSDT]: {
     address: TOKENS.MATIC_AMUSDT,
@@ -90,7 +90,7 @@ export const maticTokensConfig: TokenConfig = {
     lookupName: 'aave-polygon-usdt',
     name: 'Aave USDT',
     symbol: 'amUSDT',
-    type: TokenType.Contract,
+    type: PricingType.LookupName,
   },
   [TOKENS.MATIC_CRV]: {
     address: TOKENS.MATIC_CRV,
@@ -98,7 +98,7 @@ export const maticTokensConfig: TokenConfig = {
     lookupName: 'curve-dao-token',
     name: 'Curve DAO Token',
     symbol: 'CRV',
-    type: TokenType.Contract,
+    type: PricingType.LookupName,
   },
   [TOKENS.MATIC_BADGER]: {
     address: TOKENS.MATIC_BADGER,
@@ -106,7 +106,7 @@ export const maticTokensConfig: TokenConfig = {
     lookupName: 'badger-dao',
     name: 'Badger',
     symbol: 'BADGER',
-    type: TokenType.Contract,
+    type: PricingType.LookupName,
   },
   [TOKENS.MATIC_SUSHI]: {
     address: TOKENS.MATIC_SUSHI,
@@ -114,7 +114,7 @@ export const maticTokensConfig: TokenConfig = {
     lookupName: 'sushi',
     name: 'Sushi',
     symbol: 'Sushi',
-    type: TokenType.Contract,
+    type: PricingType.LookupName,
   },
   [TOKENS.MATIC_SUSHI_IBBTC_WBTC]: {
     address: TOKENS.MATIC_SUSHI_IBBTC_WBTC,
@@ -122,7 +122,7 @@ export const maticTokensConfig: TokenConfig = {
     lpToken: true,
     name: 'Sushiswap: ibBTC-WBTC',
     symbol: 'SLP-IBBTC-WBTC',
-    type: TokenType.SushiswapLp,
+    type: PricingType.UniV2LP,
   },
   [TOKENS.MATIC_QUICK_USDC_WBTC]: {
     address: TOKENS.MATIC_QUICK_USDC_WBTC,
@@ -130,28 +130,28 @@ export const maticTokensConfig: TokenConfig = {
     lpToken: true,
     name: 'Quickswap: USDC-WBTC',
     symbol: 'QLP-USDC-WBTC',
-    type: TokenType.SushiswapLp,
+    type: PricingType.UniV2LP,
   },
   [TOKENS.MATIC_CRV_AM3CRV]: {
     address: TOKENS.MATIC_CRV_AM3CRV,
     decimals: 18,
     name: 'Curve.fi amDAI/amUSDC/amUSDT',
     symbol: 'crvAM3',
-    type: TokenType.CurveLP,
+    type: PricingType.CurveLP,
   },
   [TOKENS.MATIC_CRV_AMWBTC]: {
     address: TOKENS.MATIC_CRV_AMWBTC,
     decimals: 18,
     name: 'Curve.fi amWBTC/renBTC',
     symbol: 'crvrenBTC',
-    type: TokenType.CurveLP,
+    type: PricingType.CurveLP,
   },
   [TOKENS.BMATIC_SUSHI_IBBTC_WBTC]: {
     address: TOKENS.BMATIC_SUSHI_IBBTC_WBTC,
     decimals: 18,
     name: 'bSushiSwap: ibBTC-WBTC',
     symbol: 'bSLP-IBBTC-WBTC',
-    type: TokenType.Vault,
+    type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.MATIC_SUSHI_IBBTC_WBTC,
       network: Network.Polygon,
@@ -162,7 +162,7 @@ export const maticTokensConfig: TokenConfig = {
     decimals: 18,
     name: 'bQuickswap: USDC-WBTC',
     symbol: 'bQLP-USDC-WBTC',
-    type: TokenType.Vault,
+    type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.MATIC_QUICK_USDC_WBTC,
       network: Network.Polygon,
@@ -173,7 +173,7 @@ export const maticTokensConfig: TokenConfig = {
     decimals: 18,
     name: 'bCurve.fi amWBTC/renBTC',
     symbol: 'bcrvrenBTC',
-    type: TokenType.Vault,
+    type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.MATIC_CRV_AMWBTC,
       network: Network.Polygon,
