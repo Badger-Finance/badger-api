@@ -64,6 +64,7 @@ const RAW_TOKENS: ContractRegistry = {
   BSC_BDIGG: '0x5986D5c77c65e5801a5cAa4fAE80089f870A71dA',
 
   // matic tokens
+  MATIC_WMATIC: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
   MATIC_WBTC: '0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6',
   MATIC_USDC: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
   MATIC_DAI: '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063',
@@ -111,6 +112,7 @@ const RAW_TOKENS: ContractRegistry = {
   XDAI_WETH: '0x6a023ccd1ff6f2045c3309768ead9e68f978f6e1',
 
   // ftm tokens
+  FTM_WFTM: '0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83',
   FTM_DAI: '0x8d11ec38a3eb5e956b052f67da8bdc9bef8abf3e',
   FTM_USDC: '0x04068da6c83afcfa0e13ba15a6696662335d5b75',
   // solidly market maker - avoid sushi liquidity pool collision

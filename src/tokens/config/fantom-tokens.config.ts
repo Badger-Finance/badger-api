@@ -12,6 +12,14 @@ export const fantomTokensConfig: TokenConfig = {
     symbol: 'BADGER',
     type: PricingType.LookupName,
   },
+  [TOKENS.FTM_WFTM]: {
+    address: TOKENS.FTM_WFTM,
+    decimals: 18,
+    name: 'Wrapped Fantom',
+    lookupName: 'fantom',
+    symbol: 'WFTM',
+    type: PricingType.LookupName,
+  },
   [TOKENS.FTM_DAI]: {
     address: TOKENS.FTM_DAI,
     decimals: 18,

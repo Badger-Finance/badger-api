@@ -71,6 +71,12 @@ export async function convert(value: number, currency?: Currency): Promise<numbe
     case Currency.AVAX:
       const wavaxPrice = await getPrice(TOKENS.AVAX_WAVAX);
       return value / wavaxPrice.price;
+    case Currency.FTM:
+      const wftmPrice = await getPrice(TOKENS.FTM_WFTM);
+      return value / wftmPrice.price;
+    case Currency.MATIC:
+      const wmaticPrice = await getPrice(TOKENS.MATIC_WMATIC);
+      return value / wmaticPrice.price;
     case Currency.USD:
     default:
       return value;
