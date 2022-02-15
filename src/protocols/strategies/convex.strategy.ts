@@ -448,7 +448,7 @@ export async function getCurvePoolBalance(chain: Chain, depositToken: string): P
 }
 
 export async function getCurveVaultTokenBalance(chain: Chain, token: string): Promise<CachedLiquidityPoolTokenBalance> {
-  const definition = chain.setts.find((sett) => sett.vaultToken === token);
+  const definition = chain.vaults.find((vault) => vault.vaultToken === token);
   if (!definition || !definition.protocol) {
     throw new UnprocessableEntity('Cannot get curve sett token balances, requires a sett definition');
   }

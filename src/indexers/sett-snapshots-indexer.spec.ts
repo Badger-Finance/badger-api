@@ -12,7 +12,7 @@ import BadgerSDK, { VaultState, VaultVersion, VaultOptions, RegistryVault } from
 
 describe('refreshSettSnapshots', () => {
   const supportedAddresses = loadChains()
-    .flatMap((s) => s.setts)
+    .flatMap((s) => s.vaults)
     .map((settDefinition) => settDefinition.vaultToken)
     .sort();
 

@@ -1,5 +1,5 @@
 import { DataMapper } from '@aws/dynamodb-data-mapper';
-import { indexProtocolSetts } from './sett-indexer';
+import { indexProtocolVaults } from './vaults-indexer';
 import * as indexerUtils from './indexer.utils';
 import { VaultSnapshot } from '../vaults/interfaces/vault-snapshot.interface';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
@@ -37,17 +37,17 @@ describe('sett-indexer', () => {
     });
   });
 
-  describe('indexProtocolSetts', () => {
+  describe('indexProtocolVaults', () => {
     it('should call update price for all tokens', async () => {
-      await indexProtocolSetts();
-      let settCount = 0;
+      await indexProtocolVaults();
+      let vaultCount = 0;
       chains.forEach((chain) => {
-        chain.setts.forEach((sett) => {
-          settCount++;
+        chain.vaults.forEach((vault) => {
+          vaultCount++;
         });
       });
-      expect(indexedBlock.mock.calls.length).toEqual(settCount);
-      expect(settToSnapshot.mock.calls.length).toEqual(settCount);
+      expect(indexedBlock.mock.calls.length).toEqual(vaultCount);
+      expect(settToSnapshot.mock.calls.length).toEqual(vaultCount);
     });
   });
 });

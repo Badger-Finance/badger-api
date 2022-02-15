@@ -43,7 +43,7 @@ describe('apy-snapshots-indexer', () => {
       await refreshChainApySnapshots(chain);
       expect(batchPut.mock.calls[0][0]).toEqual([mockSett]);
       // Make sure was called for each sett in the chain
-      expect(batchPut.mock.calls.length).toEqual(chain.setts.length);
+      expect(batchPut.mock.calls.length).toEqual(chain.vaults.length);
     });
     it('doesnt call batch put if value source invalid', async () => {
       const batchPut = mockBatchPut([mockInvalidSett]);

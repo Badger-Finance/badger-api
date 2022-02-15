@@ -2,10 +2,16 @@ import { Protocol, Vault, VaultState, VaultType } from '@badger-dao/sdk';
 import { BadRequest, NotFound } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { BinanceSmartChain } from '../chains/config/bsc.config';
-import { Ethereum } from '../chains/config/eth.config';
 import { TOKENS } from '../config/tokens.config';
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
-import { randomPerformance, randomVault, randomSnapshot, randomSnapshots, setupMapper } from '../test/tests.utils';
+import {
+  randomPerformance,
+  randomVault,
+  randomSnapshot,
+  randomSnapshots,
+  setupMapper,
+  TEST_CHAIN,
+} from '../test/tests.utils';
 import { getToken } from '../tokens/tokens.utils';
 import {
   defaultVault,
@@ -136,26 +142,23 @@ describe('vaults.utils', () => {
   describe('getVaultDefinition', () => {
     describe('for an existing sett', () => {
       it('returns the expected sett definition', () => {
-        const eth = new Ethereum();
-        const expected = eth.setts[Math.floor(Math.random() * eth.setts.length)];
-        const actual = getVaultDefinition(eth, expected.vaultToken);
+        const expected = TEST_CHAIN.vaults[Math.floor(Math.random() * TEST_CHAIN.vaults.length)];
+        const actual = getVaultDefinition(TEST_CHAIN, expected.vaultToken);
         expect(actual).toMatchObject(expected);
       });
     });
 
     describe('for an existing sett on a different chain', () => {
       it('throws a not found error', () => {
-        const eth = new Ethereum();
-        const expected = eth.setts[Math.floor(Math.random() * eth.setts.length)];
+        const expected = TEST_CHAIN.vaults[Math.floor(Math.random() * TEST_CHAIN.vaults.length)];
         expect(() => getVaultDefinition(new BinanceSmartChain(), expected.vaultToken)).toThrow(NotFound);
       });
     });
 
     describe('for an non existing sett', () => {
       it('throws a not found error', () => {
-        const eth = new Ethereum();
-        const expected = eth.setts[Math.floor(Math.random() * eth.setts.length)];
-        expect(() => getVaultDefinition(eth, expected.depositToken)).toThrow(NotFound);
+        const expected = TEST_CHAIN.vaults[Math.floor(Math.random() * TEST_CHAIN.vaults.length)];
+        expect(() => getVaultDefinition(TEST_CHAIN, expected.depositToken)).toThrow(NotFound);
       });
     });
   });
@@ -163,7 +166,7 @@ describe('vaults.utils', () => {
   describe('getVaultTokenPrice', () => {
     describe('look up non vault token price', () => {
       it('throws a bad request error', async () => {
-        await expect(getVaultTokenPrice(TOKENS.BADGER)).rejects.toThrow(BadRequest);
+        await expect(getVaultTokenPrice(TEST_CHAIN, TOKENS.BADGER)).rejects.toThrow(BadRequest);
       });
     });
   });

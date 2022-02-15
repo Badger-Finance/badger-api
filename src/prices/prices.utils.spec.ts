@@ -93,6 +93,11 @@ describe('prices.utils', () => {
 
   describe('fetchPrices', () => {
     describe('request prices for contracts', () => {
+      it('results in no prices with no requested addresses', async () => {
+        const result = await fetchPrices(TEST_CHAIN, []);
+        expect(result).toMatchObject({});
+      });
+
       it('requests contracts endpoint', async () => {
         const mockResponse = { [TOKENS.BADGER]: { usd: 10 }, [TOKENS.WBTC]: { usd: 43500 } };
         const request = jest.spyOn(requestUtils, 'request').mockImplementation(async () => mockResponse);
@@ -109,6 +114,11 @@ describe('prices.utils', () => {
     });
 
     describe('request prices for look up names', () => {
+      it('results in no prices with no requested addresses', async () => {
+        const result = await fetchPrices(TEST_CHAIN, [], true);
+        expect(result).toMatchObject({});
+      });
+
       it('requests contracts endpoint', async () => {
         const mockResponse = { ['badger']: { usd: 10 }, ['wrapped-bitcoin']: { usd: 43500 } };
         const request = jest.spyOn(requestUtils, 'request').mockImplementation(async () => mockResponse);

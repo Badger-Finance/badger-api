@@ -2,7 +2,7 @@ import { Vault } from '@badger-dao/sdk';
 import * as accountsUtils from '../accounts/accounts.utils';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import * as vaultUtils from '../vaults/vaults.utils';
-import { getProtocolMetrics, getProtocolSettMetrics, getProtocolTotalUsers } from './metric.utils';
+import { getProtocolMetrics, getProtocolSettMetrics, getProtocolTotalUsers } from './metrics.utils';
 
 describe('metrics.utils', () => {
   beforeEach(() => {

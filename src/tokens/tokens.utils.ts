@@ -15,6 +15,7 @@ import { Currency, TokenBalance } from '@badger-dao/sdk';
 import { avalancheTokensConfig } from './config/avax-tokens.config';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { fantomTokensConfig } from './config/fantom-tokens.config';
+import { Chain } from '../chains/config/chain.config';
 
 // map holding all protocol token information across chains
 export const protocolTokens: TokenConfig = {
@@ -46,16 +47,16 @@ export const getToken = (contract: string): Token => {
  * @param name Token name.
  * @returns Standard ERC20 token information.
  */
-export const getTokenByName = (name: string): Token => {
+export function getTokenByName(chain: Chain, name: string): Token {
   const searchName = name.toLowerCase();
-  const token = Object.values(protocolTokens).find(
+  const token = Object.values(chain.tokens).find(
     (token) => token.name.toLowerCase() === searchName || token.lookupName?.toLowerCase() === searchName,
   );
   if (!token) {
     throw new NotFound(`${name} not supported`);
   }
   return token;
-};
+}
 
 /**
  * Convert BigNumber to human readable number.

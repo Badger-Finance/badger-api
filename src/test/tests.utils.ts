@@ -101,7 +101,7 @@ export function randomSnapshot(vaultDefinition?: VaultDefinition): CachedSettSna
 }
 
 export function randomVault(): VaultDefinition {
-  const definitions = loadChains().flatMap((chain) => chain.setts);
+  const definitions = loadChains().flatMap((chain) => chain.vaults);
   return definitions[Math.floor(Math.random() * definitions.length)];
 }
 

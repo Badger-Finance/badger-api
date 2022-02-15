@@ -13,8 +13,8 @@ export async function refreshApySnapshots() {
 
 export async function refreshChainApySnapshots(chain: Chain) {
   await Promise.all(
-    chain.setts.map(async (sett) => {
-      const results = await getVaultValueSources(chain, sett);
+    chain.vaults.map(async (vault) => {
+      const results = await getVaultValueSources(chain, vault);
       const sourceMap: ValueSourceMap = {};
       results
         .filter((rawValueSource) => !isNil(rawValueSource))

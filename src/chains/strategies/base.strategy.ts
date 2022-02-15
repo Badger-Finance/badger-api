@@ -29,7 +29,7 @@ export class BaseStrategy extends ChainStrategy {
       case PricingType.UniV2LP:
         return getOnChainLiquidityPrice(chain, token.address);
       case PricingType.Vault:
-        return getVaultTokenPrice(token.address);
+        return getVaultTokenPrice(chain, token.address);
       case PricingType.Contract:
       case PricingType.LookupName:
         throw new UnprocessableEntity('CoinGecko pricing should utilize fetchPrices via utilities');

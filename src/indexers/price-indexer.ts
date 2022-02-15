@@ -25,10 +25,27 @@ export async function indexPrices() {
         fetchPrices(chain, contractTokenAddresses),
         fetchPrices(chain, lookupNames, true),
       ]);
-      const onChainPrices = await Promise.all(onChainTokens.map(async (t) => strategy.getPrice(t.address)));
+      const onChainPrices = await Promise.all(
+        onChainTokens.map(async (t) => {
+          try {
+            return strategy.getPrice(t.address);
+          } catch {
+            // ignore pricing error, pass erroneous price downsteam
+            return { address: t.address, price: 0 };
+          }
+        }),
+      );
 
       const priceUpdates = [...Object.values(contractPrices), ...Object.values(lookupNamePrices), ...onChainPrices];
-      await Promise.all(priceUpdates.map(async (p) => updatePrice(p)));
+      await Promise.all(
+        priceUpdates.map(async (p) => {
+          try {
+            await updatePrice(p);
+          } catch (err) {
+            console.error(err);
+          }
+        }),
+      );
     } catch (err) {
       console.error(err);
     }

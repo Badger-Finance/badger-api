@@ -109,7 +109,7 @@ export async function fetchPrices(chain: Chain, inputs: string[], lookupName = f
       try {
         token = getToken(key);
       } catch {
-        token = getTokenByName(key);
+        token = getTokenByName(chain, key);
       }
       const { address } = token;
       expectedTokens.push(address);

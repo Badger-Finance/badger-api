@@ -137,14 +137,14 @@ export const getPerformance = (current: VaultSnapshot, initial: VaultSnapshot): 
   return ((finalRatio - initial.ratio) / initial.ratio) * 100;
 };
 
-export const getVaultDefinition = (chain: Chain, contract: string): VaultDefinition => {
+export function getVaultDefinition(chain: Chain, contract: string): VaultDefinition {
   const contractAddress = ethers.utils.getAddress(contract);
-  const VaultDefinition = chain.setts.find((s) => s.vaultToken === contractAddress);
-  if (!VaultDefinition) {
+  const vaultDefinition = chain.vaults.find((v) => v.vaultToken === contractAddress);
+  if (!vaultDefinition) {
     throw new NotFound(`${contract} is not a valid sett`);
   }
-  return VaultDefinition;
-};
+  return vaultDefinition;
+}
 
 export async function getStrategyInfo(chain: Chain, vaultDefinition: VaultDefinition): Promise<VaultStrategy> {
   const defaultStrategyInfo = {
@@ -212,11 +212,11 @@ export async function getBoostWeight(chain: Chain, vaultDefinition: VaultDefinit
 
 /**
  * Get pricing information for a vault token.
- * @param contract Address for vault token.
+ * @param address Address for vault token.
  * @returns Pricing data for the given vault token based on the pricePerFullShare.
  */
-export const getVaultTokenPrice = async (contract: string): Promise<TokenPrice> => {
-  const token = getToken(contract);
+export async function getVaultTokenPrice(chain: Chain, address: string): Promise<TokenPrice> {
+  const token = getToken(address);
   if (token.type !== PricingType.Vault) {
     throw new BadRequest(`${token.name} is not a vault token`);
   }
@@ -225,7 +225,9 @@ export const getVaultTokenPrice = async (contract: string): Promise<TokenPrice> 
     throw new UnprocessableEntity(`${token.name} vault token missing`);
   }
   const targetChain = Chain.getChain(vaultToken.network);
-  const vaultDefintion = getVaultDefinition(targetChain, token.address);
+  const isCrossChainVault = vaultToken.network !== chain.network;
+  const targetVault = isCrossChainVault ? vaultToken.address : token.address;
+  const vaultDefintion = getVaultDefinition(targetChain, targetVault);
   const [underlyingTokenPrice, vaultTokenSnapshot] = await Promise.all([
     getPrice(vaultToken.address),
     getCachedVault(vaultDefintion),
@@ -234,4 +236,4 @@ export const getVaultTokenPrice = async (contract: string): Promise<TokenPrice> 
     address: token.address,
     price: underlyingTokenPrice.price * vaultTokenSnapshot.pricePerFullShare,
   };
-};
+}
