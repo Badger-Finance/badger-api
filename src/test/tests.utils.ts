@@ -8,7 +8,7 @@ import { Arbitrum } from '../chains/config/arbitrum.config';
 import { Avalanche } from '../chains/config/avax.config';
 import { BinanceSmartChain } from '../chains/config/bsc.config';
 import { Ethereum } from '../chains/config/eth.config';
-import { Polygon } from '../chains/config/matic.config';
+import { Polygon } from '../chains/config/polygon.config';
 import { xDai } from '../chains/config/xdai.config';
 import { ONE_DAY_MS, ONE_MINUTE_MS, SAMPLE_DAYS } from '../config/constants';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
@@ -18,7 +18,7 @@ import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface
 import { VaultSnapshot } from '../vaults/interfaces/vault-snapshot.interface';
 import * as accountsUtils from '../accounts/accounts.utils';
 import * as dynamodbUtils from '../aws/dynamodb.utils';
-import { Fantom } from '../chains/config/ftm.config';
+import { Fantom } from '../chains/config/fantom.config';
 
 export const TEST_CHAIN = loadChains()[0];
 export const TEST_ADDR = ethers.utils.getAddress('0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484');
@@ -101,7 +101,7 @@ export function randomSnapshot(vaultDefinition?: VaultDefinition): CachedSettSna
 }
 
 export function randomVault(): VaultDefinition {
-  const definitions = loadChains().flatMap((chain) => chain.setts);
+  const definitions = loadChains().flatMap((chain) => chain.vaults);
   return definitions[Math.floor(Math.random() * definitions.length)];
 }
 

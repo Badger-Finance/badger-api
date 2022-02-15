@@ -1,5 +1,5 @@
 import { between } from '@aws/dynamodb-expressions';
-import { NotFound } from '@tsed/exceptions';
+import { BadRequest, NotFound, UnprocessableEntity } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
 import { getDataMapper } from '../aws/dynamodb.utils';
@@ -15,6 +15,9 @@ import { Sett__factory, Controller__factory, Strategy__factory, EmissionControl_
 import { VaultStrategy } from './interfaces/vault-strategy.interface';
 import { TOKENS } from '../config/tokens.config';
 import { Protocol, Vault, VaultState, VaultType } from '@badger-dao/sdk';
+import { getPrice } from '../prices/prices.utils';
+import { TokenPrice } from '../prices/interface/token-price.interface';
+import { PricingType } from '../prices/enums/pricing-type.enum';
 
 export const VAULT_SOURCE = 'Vault Compounding';
 
@@ -134,14 +137,14 @@ export const getPerformance = (current: VaultSnapshot, initial: VaultSnapshot): 
   return ((finalRatio - initial.ratio) / initial.ratio) * 100;
 };
 
-export const getVaultDefinition = (chain: Chain, contract: string): VaultDefinition => {
+export function getVaultDefinition(chain: Chain, contract: string): VaultDefinition {
   const contractAddress = ethers.utils.getAddress(contract);
-  const VaultDefinition = chain.setts.find((s) => s.vaultToken === contractAddress);
-  if (!VaultDefinition) {
+  const vaultDefinition = chain.vaults.find((v) => v.vaultToken === contractAddress);
+  if (!vaultDefinition) {
     throw new NotFound(`${contract} is not a valid sett`);
   }
-  return VaultDefinition;
-};
+  return vaultDefinition;
+}
 
 export async function getStrategyInfo(chain: Chain, vaultDefinition: VaultDefinition): Promise<VaultStrategy> {
   const defaultStrategyInfo = {
@@ -205,4 +208,32 @@ export async function getBoostWeight(chain: Chain, vaultDefinition: VaultDefinit
   }
   const emissionControl = EmissionControl__factory.connect(chain.emissionControl, chain.provider);
   return emissionControl.boostedEmissionRate(vaultDefinition.vaultToken);
+}
+
+/**
+ * Get pricing information for a vault token.
+ * @param address Address for vault token.
+ * @returns Pricing data for the given vault token based on the pricePerFullShare.
+ */
+export async function getVaultTokenPrice(chain: Chain, address: string): Promise<TokenPrice> {
+  const token = getToken(address);
+  if (token.type !== PricingType.Vault) {
+    throw new BadRequest(`${token.name} is not a vault token`);
+  }
+  const { vaultToken } = token;
+  if (!vaultToken) {
+    throw new UnprocessableEntity(`${token.name} vault token missing`);
+  }
+  const targetChain = Chain.getChain(vaultToken.network);
+  const isCrossChainVault = vaultToken.network !== chain.network;
+  const targetVault = isCrossChainVault ? vaultToken.address : token.address;
+  const vaultDefintion = getVaultDefinition(targetChain, targetVault);
+  const [underlyingTokenPrice, vaultTokenSnapshot] = await Promise.all([
+    getPrice(vaultToken.address),
+    getCachedVault(vaultDefintion),
+  ]);
+  return {
+    address: token.address,
+    price: underlyingTokenPrice.price * vaultTokenSnapshot.pricePerFullShare,
+  };
 }

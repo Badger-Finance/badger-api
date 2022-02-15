@@ -9,8 +9,6 @@ import {
   CurveBaseRegistry__factory,
   CurvePool__factory,
   CurvePool3__factory,
-  CurvePoolOld__factory,
-  CurvePoolPolygon__factory,
   CurveRegistry__factory,
   CvxBooster__factory,
   CvxLocker__factory,
@@ -24,8 +22,7 @@ import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interf
 import { getCachedVault, VAULT_SOURCE } from '../../vaults/vaults.utils';
 import { CachedLiquidityPoolTokenBalance } from '../../tokens/interfaces/cached-liquidity-pool-token-balance.interface';
 import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
-import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
-import { formatBalance, getToken, toCachedBalance } from '../../tokens/tokens.utils';
+import { formatBalance, getToken, toBalance } from '../../tokens/tokens.utils';
 import { CachedValueSource } from '../interfaces/cached-value-source.interface';
 import { uniformPerformance } from '../interfaces/performance.interface';
 import { PoolMap } from '../interfaces/pool-map.interface';
@@ -34,6 +31,7 @@ import { tokenEmission } from '../protocols.utils';
 import { request } from '../../etherscan/etherscan.utils';
 import { CurveAPIResponse } from '../interfaces/curve-api-response.interrface';
 import { valueSourceToCachedValueSource } from '../../rewards/rewards.utils';
+import { TokenPrice } from '../../prices/interface/token-price.interface';
 
 /* Strategy Definitions */
 export const cvxRewards = '0xCF50b810E57Ac33B91dCF525C6ddd9881B139332';
@@ -86,6 +84,7 @@ const cvxPoolId: PoolMap = {
 const nonRegistryPools: ContractRegistry = {
   [TOKENS.MATIC_CRV_TRICRYPTO]: '0x751B1e21756bDbc307CBcC5085c042a0e9AaEf36',
   [TOKENS.ARB_CRV_TRICRYPTO]: '0x960ea3e3C7FB317332d990873d354E18d7645590',
+  [TOKENS.CRV_TRICRYPTO2]: '0xD51a44d3FaE010294C616388b506AcdA1bfAAE46',
 };
 
 const discontinuedRewards = ['0x330416C863f2acCE7aF9C9314B422d24c672534a'].map((addr) => ethers.utils.getAddress(addr));
@@ -122,7 +121,7 @@ async function getLockedSources(chain: Chain, VaultDefinition: VaultDefinition):
   const locker = CvxLocker__factory.connect(cvxLocker, chain.provider);
   const cvxPrice = await getPrice(TOKENS.CVX);
   const cvxLocked = formatBalance(await locker.lockedSupply());
-  const cvxValue = cvxPrice.usd * cvxLocked;
+  const cvxValue = cvxPrice.price * cvxLocked;
 
   let token = 0;
   const sources = [];
@@ -138,7 +137,7 @@ async function getLockedSources(chain: Chain, VaultDefinition: VaultDefinition):
       const duration = await locker.rewardsDuration();
       const rewardTokenPrice = await getPrice(reward);
       const rewardScalar = ONE_YEAR_SECONDS / duration.toNumber();
-      const rewardsValue = rewardTokenPrice.usd * formatBalance(rewardAmount) * rewardScalar;
+      const rewardsValue = rewardTokenPrice.price * formatBalance(rewardAmount) * rewardScalar;
       const rewardApr = (rewardsValue / cvxValue) * 100;
       const cvxValueSource = createValueSource(`${rewardToken.name} Rewards`, uniformPerformance(rewardApr));
       const cachedEmission = valueSourceToCachedValueSource(
@@ -180,18 +179,18 @@ async function getVaultSources(chain: Chain, vaultDefinition: VaultDefinition): 
   // get apr params
   const duration = (await crv.duration()).toNumber();
   const scalar = ONE_YEAR_SECONDS / duration;
-  const poolValue = depositLocked * depositPrice.usd;
+  const poolValue = depositLocked * depositPrice.price;
   const sett = await getCachedVault(vaultDefinition);
   // bps to percentage
   const fees = 100 - (sett.strategy.performanceFee + sett.strategy.strategistFee) / 100;
 
   // calculate CRV rewards
-  const crvEmission = crvReward * crvPrice.usd * scalar;
+  const crvEmission = crvReward * crvPrice.price * scalar;
   const crvUnderlyingApr = crvEmission / poolValue;
   const crvEmissionApr = (crvEmission / poolValue) * fees;
 
   // calculate CVX rewards
-  const cvxEmission = cvxReward * cvxPrice.usd * scalar;
+  const cvxEmission = cvxReward * cvxPrice.price * scalar;
   const cvxUnderlyingApr = cvxEmission / poolValue;
   const cvxEmissionApr = (cvxEmission / poolValue) * fees;
 
@@ -230,7 +229,7 @@ async function getVaultSources(chain: Chain, vaultDefinition: VaultDefinition): 
     }
     const rewardTokenPrice = await getPrice(rewardToken.address);
     const rewardAmount = formatBalance(await virtualRewards.currentRewards(), rewardToken.decimals);
-    const rewardEmission = rewardAmount * rewardTokenPrice.usd * scalar;
+    const rewardEmission = rewardAmount * rewardTokenPrice.price * scalar;
     const rewardApr = (rewardEmission / poolValue) * fees;
     const rewardSource = createValueSource(`${rewardToken.name} Rewards`, uniformPerformance(rewardApr));
     cachedExtraSources.push(valueSourceToCachedValueSource(rewardSource, vaultDefinition, tokenEmission(rewardToken)));
@@ -258,8 +257,8 @@ async function getCvxRewards(chain: Chain, vaultDefinition: VaultDefinition): Pr
   const scalar = ONE_YEAR_SECONDS / duration;
 
   // calculate CVX rewards
-  const emission = cvxCrvReward * cvxCrvPrice.usd * scalar;
-  const poolValue = cvxLocked * cvxPrice.usd;
+  const emission = cvxCrvReward * cvxCrvPrice.price * scalar;
+  const poolValue = cvxLocked * cvxPrice.price;
   const cvxCrvApr = (emission / poolValue) * 100;
   const valueSource = createValueSource(VAULT_SOURCE, uniformPerformance(cvxCrvApr), true);
   return [valueSourceToCachedValueSource(valueSource, vaultDefinition, SourceType.Compound)];
@@ -288,28 +287,27 @@ async function getCvxCrvRewards(chain: Chain, vaultDefinition: VaultDefinition):
   // get apr params
   const duration = (await cvxCrv.duration()).toNumber();
   const scalar = ONE_YEAR_SECONDS / duration;
-  const poolValue = cvxCrvLocked * cvxCrvPrice.usd;
+  const poolValue = cvxCrvLocked * cvxCrvPrice.price;
   const fees = 100 - (vault.strategy.performanceFee + vault.strategy.strategistFee) / 100;
 
   // calculate CVX rewards
-  const cvxEmission = cvxReward * cvxPrice.usd * scalar;
+  const cvxEmission = cvxReward * cvxPrice.price * scalar;
   const cvxApr = (cvxEmission / poolValue) * fees;
 
   // calculate cvxCRV + 3CRV rewards
-  const cvxCrvEmission = crvReward * crvPrice.usd * scalar;
+  const cvxCrvEmission = crvReward * crvPrice.price * scalar;
   const cvxCrvApr = (cvxCrvEmission / poolValue) * fees;
-  const threeCrvEmission = threeCrvReward * threeCrvPrice.usd * scalar;
+  const threeCrvEmission = threeCrvReward * threeCrvPrice.price * scalar;
   const threeCrvApr = (threeCrvEmission / poolValue) * fees;
 
   const bveCVX = getToken(TOKENS.BVECVX);
   const cvxValueSource = createValueSource(`${bveCVX.name} Rewards`, uniformPerformance(cvxApr), true);
 
-  const bcvxCrv = getToken(TOKENS.BCVXCRV);
-  const totalCvxCrvApr = cvxCrvApr + threeCrvApr;
-  const cvxCrvValueSource = createValueSource(`${bcvxCrv.name} Rewards`, uniformPerformance(totalCvxCrvApr), true);
+  const compoundingApr = threeCrvApr + cvxCrvApr;
+  const compoundingSource = createValueSource(VAULT_SOURCE, uniformPerformance(compoundingApr), true);
   return [
     valueSourceToCachedValueSource(cvxValueSource, vaultDefinition, tokenEmission(bveCVX)),
-    valueSourceToCachedValueSource(cvxCrvValueSource, vaultDefinition, tokenEmission(bcvxCrv)),
+    valueSourceToCachedValueSource(compoundingSource, vaultDefinition, SourceType.Compound),
   ];
 }
 
@@ -394,17 +392,13 @@ export async function getCurveTokenPrice(chain: Chain, depositToken: string): Pr
   const deposit = getToken(depositToken);
   const poolBalance = await getCurvePoolBalance(chain, depositToken);
   const token = Erc20__factory.connect(depositToken, chain.provider);
-  const poolValueUsd = poolBalance.reduce((total, balance) => (total += balance.valueUsd), 0);
-  const poolValueEth = poolBalance.reduce((total, balance) => (total += balance.valueEth), 0);
+  const value = poolBalance.reduce((total, balance) => (total += balance.value), 0);
   const totalSupply = await token.totalSupply();
   const supply = formatBalance(totalSupply, deposit.decimals);
-  const usd = poolValueUsd / supply;
-  const eth = poolValueEth / supply;
+  const price = value / supply;
   return {
-    name: deposit.name,
     address: deposit.address,
-    usd,
-    eth,
+    price,
   };
 }
 
@@ -426,9 +420,7 @@ export async function getCurvePoolBalance(chain: Chain, depositToken: string): P
   }
   const poolContracts = [
     CurvePool3__factory.connect(poolAddress, chain.provider),
-    CurvePoolPolygon__factory.connect(poolAddress, chain.provider),
     CurvePool__factory.connect(poolAddress, chain.provider),
-    CurvePoolOld__factory.connect(poolAddress, chain.provider),
   ];
 
   let option = 0;
@@ -439,7 +431,7 @@ export async function getCurvePoolBalance(chain: Chain, depositToken: string): P
       const tokenAddress = await pool.coins(coin);
       const token = getToken(ethers.utils.getAddress(tokenAddress));
       const balance = formatBalance(await pool.balances(coin), token.decimals);
-      cachedBalances.push(await toCachedBalance(token, balance));
+      cachedBalances.push(await toBalance(token, balance));
       coin++;
     } catch (err) {
       if (coin > 0) {
@@ -456,7 +448,7 @@ export async function getCurvePoolBalance(chain: Chain, depositToken: string): P
 }
 
 export async function getCurveVaultTokenBalance(chain: Chain, token: string): Promise<CachedLiquidityPoolTokenBalance> {
-  const definition = chain.setts.find((sett) => sett.vaultToken === token);
+  const definition = chain.vaults.find((vault) => vault.vaultToken === token);
   if (!definition || !definition.protocol) {
     throw new UnprocessableEntity('Cannot get curve sett token balances, requires a sett definition');
   }
@@ -468,8 +460,7 @@ export async function getCurveVaultTokenBalance(chain: Chain, token: string): Pr
   const scalar = sett.balance / totalSupply;
   cachedTokens.forEach((cachedToken) => {
     cachedToken.balance *= scalar;
-    cachedToken.valueUsd *= scalar;
-    cachedToken.valueEth *= scalar;
+    cachedToken.value *= scalar;
   });
   return tokenBalancesToCachedLiquidityPoolTokenBalance(definition.vaultToken, definition.protocol, cachedTokens);
 }

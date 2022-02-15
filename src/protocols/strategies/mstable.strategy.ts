@@ -8,7 +8,6 @@ import { MstableVault__factory } from '../../contracts/factories/MstableVault__f
 import { getPrice } from '../../prices/prices.utils';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { Token } from '../../tokens/interfaces/token.interface';
-import { TokenPrice } from '../../tokens/interfaces/token-price.interface';
 import { formatBalance, getToken } from '../../tokens/tokens.utils';
 import { CachedValueSource } from '../interfaces/cached-value-source.interface';
 import { uniformPerformance } from '../interfaces/performance.interface';
@@ -16,6 +15,7 @@ import { createValueSource } from '../interfaces/value-source.interface';
 import { tokenEmission } from '../protocols.utils';
 import { BigNumber } from 'ethers';
 import { valueSourceToCachedValueSource } from '../../rewards/rewards.utils';
+import { TokenPrice } from '../../prices/interface/token-price.interface';
 
 const MSTABLE_MBTC_VAULT = '0xF38522f63f40f9Dd81aBAfD2B8EFc2EC958a3016';
 const MSTABLE_HMBTC_VAULT = '0xF65D53AA6e2E4A5f4F026e73cb3e22C22D75E35C';
@@ -37,10 +37,8 @@ export async function getImBtcPrice(chain: Chain, token: Token): Promise<TokenPr
   const [exchangeRate, mbtcPrice] = await Promise.all([imbtc.exchangeRate(), getPrice(TOKENS.MBTC)]);
   const exchangeRateScalar = formatBalance(exchangeRate);
   return {
-    name: token.name,
     address: token.address,
-    usd: mbtcPrice.usd * exchangeRateScalar,
-    eth: mbtcPrice.eth * exchangeRateScalar,
+    price: mbtcPrice.price * exchangeRateScalar,
   };
 }
 
@@ -55,10 +53,8 @@ export async function getMhBtcPrice(chain: Chain, token: Token): Promise<TokenPr
   const mhbtcBalance = formatBalance(totalSupply);
   const exchangeRateScalar = mbtcBalance / mhbtcBalance;
   return {
-    name: token.name,
     address: token.address,
-    usd: mbtcPrice.usd * exchangeRateScalar,
-    eth: mbtcPrice.eth * exchangeRateScalar,
+    price: mbtcPrice.price * exchangeRateScalar,
   };
 }
 
@@ -104,8 +100,8 @@ async function getVaultSource(
       const finalUnlock = activeRewards[0].start.toNumber() * 1000;
       const firstUnlock = activeRewards[activeRewards.length - 1].start.toNumber() * 1000;
       const scalar = ONE_YEAR_MS / (finalUnlock - firstUnlock);
-      const rewardsValue = mtaPrice.usd * formatBalance(totalRewards);
-      const vaultAssets = vaultBalance * depositTokenPrice.usd;
+      const rewardsValue = mtaPrice.price * formatBalance(totalRewards);
+      const vaultAssets = vaultBalance * depositTokenPrice.price;
       const apr = ((rewardsValue * scalar) / vaultAssets) * 100;
       valueSource = createValueSource('Vested MTA Rewards', uniformPerformance(apr));
     }

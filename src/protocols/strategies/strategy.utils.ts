@@ -42,8 +42,8 @@ async function getUniSwapValue(
   ]);
   let totalApy = 0;
   for (let i = 0; i < tradeData.length; i++) {
-    const token0Volume = Number(tradeData[i].dailyVolumeToken0) * token0Price.usd;
-    const token1Volume = Number(tradeData[i].dailyVolumeToken1) * token1Price.usd;
+    const token0Volume = Number(tradeData[i].dailyVolumeToken0) * token0Price.price;
+    const token1Volume = Number(tradeData[i].dailyVolumeToken1) * token1Price.price;
     const poolReserve = Number(tradeData[i].reserveUSD);
     const fees = (token0Volume + token1Volume) * 0.003;
     totalApy += (fees / poolReserve) * 365 * 100;

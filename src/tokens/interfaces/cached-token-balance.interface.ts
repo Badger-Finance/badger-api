@@ -1,6 +1,7 @@
 import { attribute } from '@aws/dynamodb-data-mapper-annotations';
+import { TokenBalance } from '@badger-dao/sdk';
 
-export class CachedTokenBalance {
+export class CachedTokenBalance implements TokenBalance {
   @attribute()
   address!: string;
 
@@ -17,8 +18,5 @@ export class CachedTokenBalance {
   balance!: number;
 
   @attribute()
-  valueEth!: number;
-
-  @attribute()
-  valueUsd!: number;
+  value!: number;
 }

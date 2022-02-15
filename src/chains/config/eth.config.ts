@@ -6,10 +6,10 @@ import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { getCurveVaultTokenBalance } from '../../protocols/strategies/convex.strategy';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { ethTokensConfig } from '../../tokens/config/eth-tokens.config';
-import { EthStrategy } from '../strategies/eth.strategy';
 import { Chain } from './chain.config';
 import axios from 'axios';
 import { BlocknativeGasResponse } from '../../gas/interfaces/blocknative-gas-response.interface';
+import { BaseStrategy } from '../strategies/base.strategy';
 
 export class Ethereum extends Chain {
   private readonly client = axios.create({
@@ -26,7 +26,7 @@ export class Ethereum extends Chain {
       ethTokensConfig,
       ethSetts,
       rpc[Network.Ethereum],
-      new EthStrategy(Object.keys(ethTokensConfig)),
+      new BaseStrategy(Network.Ethereum, Object.keys(ethTokensConfig)),
       2425847,
       '0x660802Fc641b154aBA66a62137e71f331B6d787A',
       '0x0A4F4e92C3334821EbB523324D09E321a6B0d8ec',
@@ -270,9 +270,7 @@ export const ethSetts: VaultDefinition[] = [
     createdBlock: 13998331,
     depositToken: TOKENS.CRV_MIM_3CRV,
     getTokenBalance: getCurveVaultTokenBalance,
-    newVault: true,
     vaultToken: TOKENS.BCRV_MIM_3CRV,
-    state: VaultState.Guarded,
     protocol: Protocol.Convex,
   },
   {
@@ -280,9 +278,7 @@ export const ethSetts: VaultDefinition[] = [
     createdBlock: 13998331,
     depositToken: TOKENS.CRV_FRAX_3CRV,
     getTokenBalance: getCurveVaultTokenBalance,
-    newVault: true,
     vaultToken: TOKENS.BCRV_FRAX_3CRV,
-    state: VaultState.Guarded,
     protocol: Protocol.Convex,
   },
   {

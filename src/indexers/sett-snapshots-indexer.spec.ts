@@ -8,12 +8,11 @@ import { BigNumber, ethers } from 'ethers';
 import { TEST_ADDR } from '../test/tests.utils';
 // TODO: better export this from the sdk, and deal with testing this
 import { VaultsService } from '@badger-dao/sdk/lib/vaults/vaults.service';
-import { getToken } from '../tokens/tokens.utils';
 import BadgerSDK, { VaultState, VaultVersion, VaultOptions, RegistryVault } from '@badger-dao/sdk';
 
 describe('refreshSettSnapshots', () => {
   const supportedAddresses = loadChains()
-    .flatMap((s) => s.setts)
+    .flatMap((s) => s.vaults)
     .map((settDefinition) => settDefinition.vaultToken)
     .sort();
 
@@ -51,12 +50,9 @@ describe('refreshSettSnapshots', () => {
 
     jest.spyOn(BadgerSDK.prototype, 'ready').mockImplementation();
     jest.spyOn(priceUtils, 'getPrice').mockImplementation(async (address: string) => {
-      const token = getToken(address);
       return {
-        name: token.name,
         address,
-        usd: 10,
-        eth: 0.0005,
+        price: 10,
       };
     });
 

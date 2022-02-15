@@ -136,9 +136,9 @@ async function getEthereumSource(chain: Chain, vaultDefinition: VaultDefinition)
 
   let sushiApr = 0;
   if (userInfo.amount.gt(0)) {
-    const poolValue = formatBalance(poolBalance) * depositTokenPrice.usd;
+    const poolValue = formatBalance(poolBalance) * depositTokenPrice.price;
     const emissionScalar = poolInfo.allocPoint.toNumber() / totalAllocPoint.toNumber();
-    const sushiEmission = formatBalance(sushiPerBlock) * emissionScalar * chain.blocksPerYear * sushiPrice.usd;
+    const sushiEmission = formatBalance(sushiPerBlock) * emissionScalar * chain.blocksPerYear * sushiPrice.price;
     sushiApr = (sushiEmission / poolValue) * 100 * sellRate;
   }
 
@@ -185,9 +185,9 @@ async function getPerSecondSource(chain: Chain, vaultDefinition: VaultDefinition
 
   let sushiApr = 0;
   if (userInfo.amount.gt(0)) {
-    const poolValue = formatBalance(poolBalance) * depositTokenPrice.usd;
+    const poolValue = formatBalance(poolBalance) * depositTokenPrice.price;
     const emissionScalar = poolInfo.allocPoint.toNumber() / totalAllocPoint.toNumber();
-    const sushiEmission = formatBalance(sushiPerSecond) * emissionScalar * ONE_YEAR_SECONDS * sushiPrice.usd;
+    const sushiEmission = formatBalance(sushiPerSecond) * emissionScalar * ONE_YEAR_SECONDS * sushiPrice.price;
     sushiApr = (sushiEmission / poolValue) * 100 * sellRate;
   }
 

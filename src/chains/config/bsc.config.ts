@@ -4,8 +4,8 @@ import { TOKENS } from '../../config/tokens.config';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { bscTokensConfig } from '../../tokens/config/bsc-tokens.config';
-import { BscStrategy } from '../strategies/bsc.strategy';
 import { Chain } from './chain.config';
+import { BaseStrategy } from '../strategies/base.strategy';
 
 export class BinanceSmartChain extends Chain {
   constructor() {
@@ -17,7 +17,7 @@ export class BinanceSmartChain extends Chain {
       bscTokensConfig,
       bscSetts,
       rpc[Network.BinanceSmartChain],
-      new BscStrategy(Object.keys(bscTokensConfig)),
+      new BaseStrategy(Network.BinanceSmartChain, Object.keys(bscTokensConfig)),
       10512000,
     );
     Chain.register(this.network, this);
