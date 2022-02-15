@@ -85,11 +85,15 @@ describe('prices.utils', () => {
       [3600, 3600, Currency.USD],
       [3600, 2, Currency.ETH],
       [3600, 1800, Currency.FTM],
+      [3600, 2400, Currency.MATIC],
     ])('converts %d USD to %s %s', async (price, conversion, currency) => {
       let cachedPrice;
       switch (currency) {
+        case Currency.MATIC:
+          cachedPrice = { address: TOKENS.MATIC_WMATIC, price: 1.5 };
+          break;
         case Currency.FTM:
-          cachedPrice = { address: TOKENS.WFTM, price: 2 };
+          cachedPrice = { address: TOKENS.FTM_WFTM, price: 2 };
           break;
         default:
           cachedPrice = { address: TOKENS.WETH, price: 1800 };
