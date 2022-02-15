@@ -4,6 +4,14 @@ import { PricingType } from '../../prices/enums/pricing-type.enum';
 import { TokenConfig } from '../interfaces/token-config.interface';
 
 export const maticTokensConfig: TokenConfig = {
+  [TOKENS.MATIC_WMATIC]: {
+    address: TOKENS.MATIC_WMATIC,
+    decimals: 18,
+    name: 'Wrapped Matic',
+    lookupName: 'matic-network',
+    symbol: 'WMATIC',
+    type: PricingType.LookupName,
+  },
   [TOKENS.MULTI_RENBTC]: {
     address: TOKENS.MULTI_RENBTC,
     decimals: 8,

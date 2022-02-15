@@ -6,7 +6,7 @@ import { getCachedVault } from '../vaults/vaults.utils';
 import { arbitrumTokensConfig } from './config/arbitrum-tokens.config';
 import { bscTokensConfig } from './config/bsc-tokens.config';
 import { ethTokensConfig } from './config/eth-tokens.config';
-import { maticTokensConfig } from './config/matic-tokens.config';
+import { maticTokensConfig } from './config/polygon-tokens.config';
 import { xDaiTokensConfig } from './config/xdai-tokens.config';
 import { CachedLiquidityPoolTokenBalance } from './interfaces/cached-liquidity-pool-token-balance.interface';
 import { Token } from './interfaces/token.interface';

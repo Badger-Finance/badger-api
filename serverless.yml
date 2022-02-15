@@ -370,13 +370,13 @@ functions:
           cors: true
 
   index-setts:
-    handler: src/indexers/sett-indexer.indexProtocolVaults
+    handler: src/indexers/vaults-indexer.indexProtocolVaults
     timeout: 480
     events:
       - schedule:
-          name: ${self:service}-${self:custom.stage}-index-setts
-          description: 'index historical data for all setts'
-          rate: rate(10 minutes)
+          name: ${self:service}-${self:custom.stage}-index-vaults
+          description: 'index historical data for all vaults'
+          rate: rate(20 minutes)
 
   index-apy-snapshots:
     handler: src/indexers/apy-snapshots-indexer.refreshApySnapshots
@@ -398,7 +398,7 @@ functions:
 
   index-sett-snapshots:
     handler: src/indexers/sett-snapshots-indexer.refreshSettSnapshots
-    timeout: 45
+    timeout: 150
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-sett-snapshots
