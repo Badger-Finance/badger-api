@@ -10,7 +10,7 @@ export const arbitrumTokensConfig: TokenConfig = {
     lookupName: 'tether',
     name: 'Tether',
     symbol: 'USDT',
-    type: PricingType.Contract,
+    type: PricingType.LookupName,
   },
   [TOKENS.ARB_IBBTC]: {
     address: TOKENS.ARB_IBBTC,
@@ -18,7 +18,7 @@ export const arbitrumTokensConfig: TokenConfig = {
     lookupName: 'interest-bearing-bitcoin',
     name: 'ibBTC',
     symbol: 'ibBTC',
-    type: PricingType.Contract,
+    type: PricingType.LookupName,
   },
   [TOKENS.ARB_BADGER]: {
     address: TOKENS.ARB_BADGER,
@@ -26,7 +26,7 @@ export const arbitrumTokensConfig: TokenConfig = {
     lookupName: 'badger-dao',
     name: 'Badger',
     symbol: 'BADGER',
-    type: PricingType.Contract,
+    type: PricingType.LookupName,
   },
   [TOKENS.ARB_CRV]: {
     address: TOKENS.ARB_CRV,
@@ -34,7 +34,7 @@ export const arbitrumTokensConfig: TokenConfig = {
     lookupName: 'curve-dao-token',
     name: 'Curve DAO Token',
     symbol: 'CRV',
-    type: PricingType.Contract,
+    type: PricingType.LookupName,
   },
   [TOKENS.MULTI_RENBTC]: {
     address: TOKENS.MULTI_RENBTC,
@@ -42,7 +42,7 @@ export const arbitrumTokensConfig: TokenConfig = {
     lookupName: 'renbtc',
     name: 'Ren Protocol BTC',
     symbol: 'renBTC',
-    type: PricingType.Contract,
+    type: PricingType.LookupName,
   },
   [TOKENS.ARB_WETH]: {
     address: TOKENS.ARB_WETH,
@@ -50,7 +50,7 @@ export const arbitrumTokensConfig: TokenConfig = {
     lookupName: 'ethereum',
     name: 'Wrapped Ethereum',
     symbol: 'WETH',
-    type: PricingType.Contract,
+    type: PricingType.LookupName,
   },
   [TOKENS.ARB_WBTC]: {
     address: TOKENS.ARB_WBTC,
@@ -58,7 +58,7 @@ export const arbitrumTokensConfig: TokenConfig = {
     lookupName: 'bitcoin',
     name: 'Wrapped Bitcoin',
     symbol: 'WBTC',
-    type: PricingType.Contract,
+    type: PricingType.LookupName,
   },
   [TOKENS.ARB_SUSHI]: {
     address: TOKENS.ARB_SUSHI,
@@ -66,7 +66,7 @@ export const arbitrumTokensConfig: TokenConfig = {
     lookupName: 'sushi',
     name: 'Sushi',
     symbol: 'SUSHI',
-    type: PricingType.Contract,
+    type: PricingType.LookupName,
   },
   [TOKENS.ARB_SWAPR]: {
     address: TOKENS.ARB_SWAPR,
@@ -74,7 +74,7 @@ export const arbitrumTokensConfig: TokenConfig = {
     lookupName: 'swapr',
     name: 'Swapr',
     symbol: 'SWAPR',
-    type: PricingType.Contract,
+    type: PricingType.LookupName,
   },
   [TOKENS.ARB_SUSHI_WETH_SUSHI]: {
     address: TOKENS.ARB_SUSHI_WETH_SUSHI,

@@ -10,7 +10,7 @@ export const bscTokensConfig: TokenConfig = {
     lookupName: 'pancakeswap-token',
     name: 'Cake',
     symbol: 'CAKE',
-    type: PricingType.Contract,
+    type: PricingType.LookupName,
   },
   [TOKENS.WBNB]: {
     address: TOKENS.WBNB,
@@ -18,7 +18,7 @@ export const bscTokensConfig: TokenConfig = {
     lookupName: 'binancecoin',
     name: 'Wrapped Binance Coin',
     symbol: 'WBNB',
-    type: PricingType.Contract,
+    type: PricingType.LookupName,
   },
   [TOKENS.BTCB]: {
     address: TOKENS.BTCB,
@@ -26,7 +26,7 @@ export const bscTokensConfig: TokenConfig = {
     lookupName: 'binance-bitcoin',
     name: 'Binance Pegged Bitcoin',
     symbol: 'BTCB',
-    type: PricingType.Contract,
+    type: PricingType.LookupName,
   },
   [TOKENS.PANCAKE_BNB_BTCB]: {
     address: TOKENS.PANCAKE_BNB_BTCB,

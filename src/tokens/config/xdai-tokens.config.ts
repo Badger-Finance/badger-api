@@ -10,7 +10,7 @@ export const xDaiTokensConfig: TokenConfig = {
     lookupName: 'wrapped-bitcoin',
     name: 'Wrapped Bitcoin',
     symbol: 'WBTC',
-    type: PricingType.Contract,
+    type: PricingType.LookupName,
   },
   [TOKENS.XDAI_WETH]: {
     address: TOKENS.XDAI_WETH,
@@ -18,7 +18,7 @@ export const xDaiTokensConfig: TokenConfig = {
     lookupName: 'ethereum',
     name: 'Wrapped Ethereum',
     symbol: 'WETH',
-    type: PricingType.Contract,
+    type: PricingType.LookupName,
   },
   [TOKENS.XDAI_SUSHI_WBTC_WETH]: {
     address: TOKENS.XDAI_SUSHI_WBTC_WETH,

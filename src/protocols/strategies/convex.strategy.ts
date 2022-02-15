@@ -434,9 +434,6 @@ export async function getCurvePoolBalance(chain: Chain, depositToken: string): P
       cachedBalances.push(await toBalance(token, balance));
       coin++;
     } catch (err) {
-      if (depositToken === TOKENS.CRV_TRICRYPTO2) {
-        console.log({ err, depositToken, poolAddress });
-      }
       if (coin > 0) {
         break;
       }

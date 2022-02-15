@@ -78,6 +78,10 @@ export async function convert(value: number, currency?: Currency): Promise<numbe
 }
 
 export async function fetchPrices(chain: Chain, inputs: string[], lookupName = false): Promise<PriceData> {
+  if (inputs.length === 0) {
+    return {};
+  }
+
   let baseURL;
   let params: Record<string, string>;
 

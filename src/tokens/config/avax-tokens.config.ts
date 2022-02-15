@@ -10,7 +10,7 @@ export const avalancheTokensConfig: TokenConfig = {
     lookupName: 'wrapped-bitcoin',
     name: 'Wrapped Bitcoin',
     symbol: 'WBTC',
-    type: PricingType.Contract,
+    type: PricingType.LookupName,
   },
   [TOKENS.AVAX_WAVAX]: {
     address: TOKENS.AVAX_WAVAX,
@@ -18,7 +18,7 @@ export const avalancheTokensConfig: TokenConfig = {
     lookupName: 'wrapped-avax',
     name: 'Wrapped Avalanche',
     symbol: 'WAVAX',
-    type: PricingType.Contract,
+    type: PricingType.LookupName,
   },
   [TOKENS.BAVAX_WBTC]: {
     address: TOKENS.BAVAX_WBTC,
