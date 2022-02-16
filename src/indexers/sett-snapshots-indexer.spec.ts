@@ -75,7 +75,7 @@ describe('refreshSettSnapshots', () => {
         balance: expect.any(Number),
         supply: expect.any(Number),
         ratio: expect.any(Number),
-        settValue: expect.any(Number),
+        value: expect.any(Number),
         strategy: {
           address: expect.any(String),
           withdrawFee: expect.any(Number),

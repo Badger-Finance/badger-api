@@ -1,7 +1,7 @@
 import { Service } from '@tsed/di';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { VaultSnapshot } from '../vaults/interfaces/vault-snapshot.interface';
-import { getSettSnapshotsInRange } from '../vaults/vaults.utils';
+import { getVaultSnapshotsInRange } from '../vaults/vaults.utils';
 import { ChartGranularity } from './enums/chart-granularity.enum';
 
 @Service()
@@ -13,7 +13,7 @@ export class ChartsService {
     granularity: ChartGranularity,
     period: number,
   ): Promise<VaultSnapshot[]> {
-    let snapshots = await getSettSnapshotsInRange(sett, start, end);
+    let snapshots = await getVaultSnapshotsInRange(sett, start, end);
 
     // snapshot granularity @ 30 min intervals, 2 per hour, 48 per day
     const interval = granularity === ChartGranularity.HOUR ? 2 : 48 * period;
