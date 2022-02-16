@@ -67,7 +67,7 @@ export async function settToCachedSnapshot(
     address,
     balance,
     ratio: pricePerFullShare,
-    settValue: parseFloat(value.toFixed(2)),
+    value: parseFloat(value.toFixed(2)),
     supply: totalSupply,
     available,
     strategy: strategyInfo,

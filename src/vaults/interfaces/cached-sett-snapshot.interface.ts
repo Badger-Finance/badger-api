@@ -16,7 +16,7 @@ export class CachedSettSnapshot {
   ratio!: number;
 
   @attribute()
-  settValue!: number;
+  value!: number;
 
   @attribute()
   supply!: number;
