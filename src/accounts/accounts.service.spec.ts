@@ -22,13 +22,15 @@ describe('accounts.service', () => {
         value: 10,
         earnedValue: 1,
         boost: 2000,
+        rank: 1,
         boostRank: 1,
         multipliers: {},
         data: {},
         claimableBalances: {},
         stakeRatio: 1,
         nftBalance: 3,
-        nativeBalance: 2,
+        bveCvxBalance: 1,
+        nativeBalance: 5,
         nonNativeBalance: 5,
       }));
       const result = await service.getAccount(chain, TEST_ADDR);

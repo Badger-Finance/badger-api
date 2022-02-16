@@ -235,6 +235,7 @@ describe('accounts.utils', () => {
         stakeRatio: 0,
         nftBalance: 0,
         nativeBalance: 0,
+        bveCvxBalance: 0,
         nonNativeBalance: 0,
       };
       expect(defaultBoost(TEST_CHAIN, TEST_ADDR)).toMatchObject(expected);
