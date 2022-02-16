@@ -29,6 +29,7 @@ describe('boosts-indexer', () => {
         nonNativeBalance: 20,
         stakeRatio: 0.5,
         nftBalance: 10,
+        bveCvxBalance: 5,
         multipliers: {
           [TEST_ADDR]: 5.5,
         },

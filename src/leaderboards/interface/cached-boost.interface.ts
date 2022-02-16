@@ -31,6 +31,9 @@ export class CachedBoost implements UserBoostData {
   nftBalance!: number;
 
   @attribute()
+  bveCvxBalance!: number;
+
+  @attribute()
   nativeBalance!: number;
 
   @attribute()

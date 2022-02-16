@@ -17,6 +17,12 @@ export class AccountModel implements Account {
   @Property()
   public boost: number;
 
+  @Title('rank')
+  @Description('Badger Boost Rank')
+  @Example('6')
+  @Property()
+  public rank: number;
+
   @Title('boostRank')
   @Description('Badger Boost Rank')
   @Example('6')
@@ -96,6 +102,12 @@ export class AccountModel implements Account {
   @Property()
   public nftBalance: number;
 
+  @Title('bveCvxBalance')
+  @Description("Currency value of an account's current bveCVX hodlings")
+  @Example(1313.13)
+  @Property()
+  public bveCvxBalance: number;
+
   @Title('nativeBalance')
   @Description("Currency value of an account's current native hodlings")
   @Example(1313.13)
@@ -111,6 +123,7 @@ export class AccountModel implements Account {
   constructor(account: Account) {
     this.address = account.address;
     this.boost = account.boost;
+    this.rank = account.rank;
     this.boostRank = account.boostRank;
     this.multipliers = account.multipliers;
     this.value = account.value;
@@ -121,5 +134,6 @@ export class AccountModel implements Account {
     this.nativeBalance = account.nativeBalance;
     this.nonNativeBalance = account.nonNativeBalance;
     this.nftBalance = account.nftBalance;
+    this.bveCvxBalance = account.bveCvxBalance;
   }
 }
