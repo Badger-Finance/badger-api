@@ -75,7 +75,7 @@ export async function getCachedVault(vaultDefinition: VaultDefinition): Promise<
       { limit: 1, scanIndexForward: false },
     )) {
       sett.balance = item.balance;
-      sett.value = item.settValue;
+      sett.value = item.value;
       if (item.balance === 0 || item.supply === 0) {
         sett.pricePerFullShare = 1;
       } else if (vaultDefinition.vaultToken === TOKENS.BDIGG) {
@@ -96,13 +96,13 @@ export async function getCachedVault(vaultDefinition: VaultDefinition): Promise<
   }
 }
 
-export async function getSettSnapshots(vaultDefinition: VaultDefinition): Promise<VaultSnapshot[]> {
+export async function getVaultSnapshots(vaultDefinition: VaultDefinition): Promise<VaultSnapshot[]> {
   const end = Date.now();
   const start = end - ONE_DAY_MS * SAMPLE_DAYS;
-  return getSettSnapshotsInRange(vaultDefinition, new Date(start), new Date(end));
+  return getVaultSnapshotsInRange(vaultDefinition, new Date(start), new Date(end));
 }
 
-export const getSettSnapshotsInRange = async (
+export const getVaultSnapshotsInRange = async (
   vaultDefinition: VaultDefinition,
   start: Date,
   end: Date,
@@ -224,10 +224,7 @@ export async function getVaultTokenPrice(chain: Chain, address: string): Promise
   if (!vaultToken) {
     throw new UnprocessableEntity(`${token.name} vault token missing`);
   }
-  const targetChain = Chain.getChain(vaultToken.network);
-  const isCrossChainVault = vaultToken.network !== chain.network;
-  const targetVault = isCrossChainVault ? vaultToken.address : token.address;
-  const vaultDefintion = getVaultDefinition(targetChain, targetVault);
+  const vaultDefintion = getVaultDefinition(chain, token.address);
   const [underlyingTokenPrice, vaultTokenSnapshot] = await Promise.all([
     getPrice(vaultToken.address),
     getCachedVault(vaultDefintion),

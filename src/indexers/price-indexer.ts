@@ -28,8 +28,11 @@ export async function indexPrices() {
       const onChainPrices = await Promise.all(
         onChainTokens.map(async (t) => {
           try {
-            return strategy.getPrice(t.address);
-          } catch {
+            const result = await strategy.getPrice(t.address);
+            // allow catch to handle any issues
+            return result;
+          } catch (err) {
+            console.error(err);
             // ignore pricing error, pass erroneous price downsteam
             return { address: t.address, price: 0 };
           }

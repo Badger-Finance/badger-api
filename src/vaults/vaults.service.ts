@@ -1,16 +1,11 @@
 import { Currency, Protocol, Vault, VaultState, VaultType } from '@badger-dao/sdk';
 import { Service } from '@tsed/common';
 import { Chain } from '../chains/config/chain.config';
-import { CURRENT, ONE_DAY_MS } from '../config/constants';
 import { convert } from '../prices/prices.utils';
-import { uniformPerformance } from '../protocols/interfaces/performance.interface';
 import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interface';
-import { createValueSource, ValueSource } from '../protocols/interfaces/value-source.interface';
 import { getVaultValueSources } from '../protocols/protocols.utils';
-import { SOURCE_TIME_FRAMES, updatePerformance } from '../rewards/enums/source-timeframe.enum';
 import { getVaultTokens } from '../tokens/tokens.utils';
-import { VaultDefinition } from './interfaces/vault-definition.interface';
-import { getCachedVault, getPerformance, getVaultDefinition, getSettSnapshots, VAULT_SOURCE } from './vaults.utils';
+import { getCachedVault, getVaultDefinition, VAULT_SOURCE } from './vaults.utils';
 
 @Service()
 export class VaultsService {
@@ -62,40 +57,5 @@ export class VaultsService {
     }
 
     return vault;
-  }
-
-  static async getSettPerformance(vaultDefinition: VaultDefinition): Promise<ValueSource> {
-    const snapshots = await getSettSnapshots(vaultDefinition);
-    const current = snapshots[CURRENT];
-    if (current === undefined) {
-      return createValueSource(VAULT_SOURCE, uniformPerformance(0));
-    }
-    const start = Date.now();
-    const performance = uniformPerformance(0);
-
-    let timeframeIndex = 0;
-    for (let i = 0; i < snapshots.length; i++) {
-      const currentTimeFrame = SOURCE_TIME_FRAMES[timeframeIndex];
-      const currentCutoff = start - currentTimeFrame * ONE_DAY_MS;
-      const currentSnapshot = snapshots[i];
-      if (currentSnapshot.timestamp <= currentCutoff) {
-        updatePerformance(performance, currentTimeFrame, getPerformance(current, currentSnapshot));
-        timeframeIndex += 1;
-        if (timeframeIndex >= SOURCE_TIME_FRAMES.length) {
-          break;
-        }
-      }
-    }
-
-    // handle no valid measurements, measure available data
-    if (timeframeIndex < SOURCE_TIME_FRAMES.length) {
-      updatePerformance(
-        performance,
-        SOURCE_TIME_FRAMES[timeframeIndex],
-        getPerformance(current, snapshots[snapshots.length - 1]),
-      );
-    }
-
-    return createValueSource(VAULT_SOURCE, performance);
   }
 }

@@ -1,5 +1,5 @@
 import { Protocol, Vault, VaultState, VaultType } from '@badger-dao/sdk';
-import { BadRequest, NotFound } from '@tsed/exceptions';
+import { BadRequest, NotFound, UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { BinanceSmartChain } from '../chains/config/bsc.config';
 import { TOKENS } from '../config/tokens.config';
@@ -11,16 +11,20 @@ import {
   randomSnapshots,
   setupMapper,
   TEST_CHAIN,
+  TEST_ADDR,
 } from '../test/tests.utils';
 import { getToken } from '../tokens/tokens.utils';
+import * as tokensUtils from '../tokens/tokens.utils';
 import {
   defaultVault,
   getCachedVault,
   getPerformance,
   getVaultDefinition,
-  getSettSnapshots,
+  getVaultSnapshots,
   getVaultTokenPrice,
 } from './vaults.utils';
+import { PricingType } from '../prices/enums/pricing-type.enum';
+import * as pricesUtils from '../prices/prices.utils';
 
 describe('vaults.utils', () => {
   describe('defaultVault', () => {
@@ -69,22 +73,22 @@ describe('vaults.utils', () => {
     describe('no cached vault exists', () => {
       it('returns the default sett', async () => {
         setupMapper([]);
-        const settDefinition = randomVault();
-        const cached = await getCachedVault(settDefinition);
-        expect(cached).toMatchObject(defaultVault(settDefinition));
+        const vaultDefinition = randomVault();
+        const cached = await getCachedVault(vaultDefinition);
+        expect(cached).toMatchObject(defaultVault(vaultDefinition));
       });
     });
 
     describe('a cached vault exists', () => {
       it('returns the vault sett', async () => {
-        const sett = randomVault();
-        const snapshot = randomSnapshot(sett);
+        const vault = randomVault();
+        const snapshot = randomSnapshot(vault);
         setupMapper([snapshot]);
-        const cached = await getCachedVault(sett);
-        const expected = defaultVault(sett);
+        const cached = await getCachedVault(vault);
+        const expected = defaultVault(vault);
         expected.pricePerFullShare = snapshot.balance / snapshot.supply;
         expected.balance = snapshot.balance;
-        expected.value = snapshot.settValue;
+        expected.value = snapshot.value;
         expected.boost = {
           enabled: snapshot.boostWeight > 0,
           weight: snapshot.boostWeight,
@@ -94,22 +98,22 @@ describe('vaults.utils', () => {
     });
   });
 
-  describe('getSettSnapshots', () => {
-    describe('no sett snapshots exists', () => {
-      it('returns the default sett', async () => {
+  describe('getVaultSnapshots', () => {
+    describe('no vault snapshots exists', () => {
+      it('returns the default vault', async () => {
         setupMapper([]);
-        const sett = randomVault();
-        const cached = await getSettSnapshots(sett);
+        const vault = randomVault();
+        const cached = await getVaultSnapshots(vault);
         expect(cached).toMatchObject([]);
       });
     });
 
-    describe('many sett snapshots exists', () => {
-      it('returns the sett snaphots', async () => {
-        const sett = randomVault();
-        const snapshots = randomSnapshots(sett);
+    describe('many vault snapshots exists', () => {
+      it('returns the vault snaphots', async () => {
+        const vault = randomVault();
+        const snapshots = randomSnapshots(vault);
         setupMapper(snapshots);
-        const cached = await getSettSnapshots(sett);
+        const cached = await getVaultSnapshots(vault);
         expect(cached).toMatchObject(snapshots);
       });
     });
@@ -167,6 +171,33 @@ describe('vaults.utils', () => {
     describe('look up non vault token price', () => {
       it('throws a bad request error', async () => {
         await expect(getVaultTokenPrice(TEST_CHAIN, TOKENS.BADGER)).rejects.toThrow(BadRequest);
+      });
+    });
+
+    describe('look up malformed token configuration', () => {
+      it('throws an unprocessable entity error', async () => {
+        jest.spyOn(tokensUtils, 'getToken').mockImplementation(() => ({
+          name: 'TEST_TOKEN',
+          address: TEST_ADDR,
+          decimals: 18,
+          symbol: 'TEST',
+          type: PricingType.Vault,
+        }));
+        await expect(getVaultTokenPrice(TEST_CHAIN, TEST_ADDR)).rejects.toThrow(UnprocessableEntity);
+      });
+    });
+
+    describe('look up valid, properly configured vault', () => {
+      it('returns a valid token price for the vault base on price per full share', async () => {
+        const vault = randomVault(TEST_CHAIN);
+        const snapshot = randomSnapshot(vault);
+        setupMapper([snapshot]);
+        jest.spyOn(pricesUtils, 'getPrice').mockImplementation(async (address) => ({ address, price: 10 }));
+        const vaultPrice = await getVaultTokenPrice(TEST_CHAIN, vault.vaultToken);
+        expect(vaultPrice).toMatchObject({
+          address: vault.vaultToken,
+          price: 10 * snapshot.ratio,
+        });
       });
     });
   });
