@@ -122,7 +122,10 @@ export async function fetchPrices(chain: Chain, inputs: string[], lookupName = f
       return [address, { address, price: value.usd }];
     }),
   );
-  // TODO: validate any missing tokens and appropriately report them
-  // discord notification system tickets incoming @jintao
+
+  // TODO: identify and send discord notifications for failed or missing prices
+  // issue is doing proper linkages here when request names my be in name form
+  // this may be easier to evaluate post facto
+
   return priceData;
 }

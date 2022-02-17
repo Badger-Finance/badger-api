@@ -1,6 +1,7 @@
 import { loadChains } from '../chains/chain';
 import { PricingType } from '../prices/enums/pricing-type.enum';
 import { updatePrice, fetchPrices } from '../prices/prices.utils';
+import { getTokenByName } from '../tokens/tokens.utils';
 
 export async function indexPrices() {
   const chains = loadChains();
@@ -39,9 +40,35 @@ export async function indexPrices() {
         }),
       );
 
-      const priceUpdates = [...Object.values(contractPrices), ...Object.values(lookupNamePrices), ...onChainPrices];
+      const priceUpdates = {
+        ...contractPrices,
+        ...lookupNamePrices,
+        ...Object.fromEntries(onChainPrices.map((p) => [p.address, p])),
+      };
+
+      // map back unsupported (cross priced) tokens - no cg support or good on chain LP
+      Object.values(chain.tokens).forEach((t) => {
+        try {
+          // token mapping price is gone - lost in name associated lookup
+          if (!priceUpdates[t.address] && t.type === PricingType.LookupName) {
+            if (!t.lookupName) {
+              throw new Error('Invalid token definition, LookUpName pricing required lookup name');
+            }
+            const referenceToken = getTokenByName(chain, t.lookupName);
+            const referencePrice = priceUpdates[referenceToken.address];
+            priceUpdates[t.address] = {
+              address: t.address,
+              price: referencePrice.price,
+            };
+            console.log(`Mapped look up name ${t.lookupName} price to ${t.name}`);
+          }
+        } catch (err) {
+          console.log({ message: `Unable to remap ${t.address} to expected look up name ${t.lookupName}`, err });
+        }
+      });
+
       await Promise.all(
-        priceUpdates.map(async (p) => {
+        Object.values(priceUpdates).map(async (p) => {
           try {
             await updatePrice(p);
           } catch (err) {
