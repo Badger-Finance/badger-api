@@ -224,7 +224,10 @@ export async function getVaultTokenPrice(chain: Chain, address: string): Promise
   if (!vaultToken) {
     throw new UnprocessableEntity(`${token.name} vault token missing`);
   }
-  const vaultDefintion = getVaultDefinition(chain, token.address);
+  const isCrossChainVault = chain.network !== vaultToken.network;
+  const targetChain = isCrossChainVault ? Chain.getChain(vaultToken.network) : chain;
+  const targetVault = isCrossChainVault ? vaultToken.address : token.address;
+  const vaultDefintion = getVaultDefinition(targetChain, targetVault);
   const [underlyingTokenPrice, vaultTokenSnapshot] = await Promise.all([
     getPrice(vaultToken.address),
     getCachedVault(vaultDefintion),
