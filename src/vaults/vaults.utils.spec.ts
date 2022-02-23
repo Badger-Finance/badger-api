@@ -8,10 +8,11 @@ import {
   randomPerformance,
   randomVault,
   randomSnapshot,
-  randomSnapshots,
+  // randomSnapshots,
   setupMapper,
   TEST_CHAIN,
   TEST_ADDR,
+  randomSnapshots,
 } from '../test/tests.utils';
 import { getToken } from '../tokens/tokens.utils';
 import * as tokensUtils from '../tokens/tokens.utils';
@@ -20,8 +21,8 @@ import {
   getCachedVault,
   getPerformance,
   getVaultDefinition,
-  getVaultSnapshots,
   getVaultTokenPrice,
+  getVaultUnderlying,
 } from './vaults.utils';
 import { PricingType } from '../prices/enums/pricing-type.enum';
 import * as pricesUtils from '../prices/prices.utils';
@@ -98,30 +99,11 @@ describe('vaults.utils', () => {
     });
   });
 
-  describe('getVaultSnapshots', () => {
-    describe('no vault snapshots exists', () => {
-      it('returns the default vault', async () => {
-        setupMapper([]);
-        const vault = randomVault();
-        const cached = await getVaultSnapshots(vault);
-        expect(cached).toMatchObject([]);
-      });
-    });
-
-    describe('many vault snapshots exists', () => {
-      it('returns the vault snaphots', async () => {
-        const vault = randomVault();
-        const snapshots = randomSnapshots(vault);
-        setupMapper(snapshots);
-        const cached = await getVaultSnapshots(vault);
-        expect(cached).toMatchObject(snapshots);
-      });
-    });
-  });
-
   describe('getPerformance', () => {
     it('correctly evaluate no change', () => {
       const [current, initial] = randomPerformance();
+      current.ratio = 0;
+      initial.ratio = 0;
       const performance = getPerformance(current, initial);
       expect(performance).toEqual(0);
     });
@@ -129,6 +111,7 @@ describe('vaults.utils', () => {
     it('correctly evaluate increase', () => {
       const [current, initial] = randomPerformance();
       current.ratio = 1.01;
+      initial.ratio = 1;
       const performance = getPerformance(current, initial);
       const expected = 365;
       expect(performance.toFixed(3)).toEqual(expected.toFixed(3));
@@ -137,6 +120,7 @@ describe('vaults.utils', () => {
     it('correctly evaluate decrease', () => {
       const [current, initial] = randomPerformance();
       current.ratio = 1 - 0.03 / 365;
+      initial.ratio = 1;
       const performance = getPerformance(current, initial);
       const expected = -3;
       expect(performance.toFixed(3)).toEqual(expected.toFixed(3));
@@ -198,6 +182,45 @@ describe('vaults.utils', () => {
           address: vault.vaultToken,
           price: 10 * snapshot.ratio,
         });
+      });
+    });
+  });
+
+  describe('getVaultUnderlying', () => {
+    describe('no snapshots are available', () => {
+      it('returns zero apr', async () => {
+        setupMapper([]);
+        const vault = randomVault();
+        const result = await getVaultUnderlying(vault);
+        expect(result.apr).toEqual(0);
+        expect(result.maxApr).toBeFalsy();
+        expect(result.minApr).toBeFalsy();
+      });
+    });
+
+    describe('full sample period snapshots available', () => {
+      it('returns performances for each sample period', async () => {
+        const vault = randomVault();
+        const snapshots = randomSnapshots(vault);
+        setupMapper(snapshots);
+        const result = await getVaultUnderlying(vault);
+        expect(result.oneDay).toEqual(getPerformance(snapshots[0], snapshots[1]));
+        expect(result.threeDay).toEqual(getPerformance(snapshots[0], snapshots[3]));
+        expect(result.sevenDay).toEqual(getPerformance(snapshots[0], snapshots[7]));
+        expect(result.thirtyDay).toEqual(getPerformance(snapshots[0], snapshots[30]));
+      });
+    });
+
+    describe('partial sample period snapshots available', () => {
+      it('return performances for valid sample periods, and estimates for unavailable data', async () => {
+        const vault = randomVault();
+        const snapshots = randomSnapshots(vault, 5);
+        setupMapper(snapshots);
+        const result = await getVaultUnderlying(vault);
+        expect(result.oneDay).toEqual(getPerformance(snapshots[0], snapshots[1]));
+        expect(result.threeDay).toEqual(getPerformance(snapshots[0], snapshots[3]));
+        expect(result.sevenDay).toEqual(getPerformance(snapshots[0], snapshots[4]));
+        expect(result.thirtyDay).toEqual(getPerformance(snapshots[0], snapshots[4]));
       });
     });
   });

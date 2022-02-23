@@ -1,4 +1,3 @@
-import { Network } from '@badger-dao/sdk';
 import { isNil } from '@tsed/core';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
@@ -13,9 +12,6 @@ export async function refreshApySnapshots() {
 }
 
 export async function refreshChainApySnapshots(chain: Chain) {
-  if (chain.network !== Network.Ethereum) {
-    return;
-  }
   await Promise.all(
     chain.vaults.map(async (vault) => {
       const results = await getVaultValueSources(chain, vault);

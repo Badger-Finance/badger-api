@@ -61,6 +61,7 @@ export function defaultVault(vaultDefinition: VaultDefinition): Vault {
   };
 }
 
+// TODO: kill this function
 export async function getVault(graphUrl: string, contract: string, block?: number): Promise<SettQuery> {
   const badgerGraphqlClient = new GraphQLClient(graphUrl);
   const badgerGraphqlSdk = getSdk(badgerGraphqlClient);
@@ -103,17 +104,11 @@ export async function getCachedVault(vaultDefinition: VaultDefinition): Promise<
   }
 }
 
-export async function getVaultSnapshots(vaultDefinition: VaultDefinition): Promise<VaultSnapshot[]> {
-  const end = Date.now();
-  const start = end - ONE_DAY_MS * SAMPLE_DAYS;
-  return getVaultSnapshotsInRange(vaultDefinition, new Date(start), new Date(end));
-}
-
-export const getVaultSnapshotsInRange = async (
+export async function getVaultSnapshotsInRange(
   vaultDefinition: VaultDefinition,
   start: Date,
   end: Date,
-): Promise<VaultSnapshot[]> => {
+): Promise<VaultSnapshot[]> {
   try {
     const snapshots = [];
     const mapper = getDataMapper();
@@ -131,7 +126,7 @@ export const getVaultSnapshotsInRange = async (
     console.error(err);
     return [];
   }
-};
+}
 
 export const getPerformance = (current: VaultSnapshot, initial: VaultSnapshot): number => {
   const ratioDiff = current.ratio - initial.ratio;
@@ -153,6 +148,7 @@ export function getVaultDefinition(chain: Chain, contract: string): VaultDefinit
   return vaultDefinition;
 }
 
+// TODO: migration to SDK is probably the best option here
 export async function getStrategyInfo(chain: Chain, vaultDefinition: VaultDefinition): Promise<VaultStrategy> {
   const defaultStrategyInfo = {
     address: ethers.constants.AddressZero,
@@ -188,6 +184,8 @@ export async function getStrategyInfo(chain: Chain, vaultDefinition: VaultDefini
   }
 }
 
+// TODO: align this weird piece (result of non-updating ppfs for updates from graph)
+// either remove or consolidate this kind of functionality
 export const getPricePerShare = async (
   chain: Chain,
   pricePerShare: BigNumber,
@@ -310,20 +308,20 @@ export async function getVaultPerformance(
       valueSources.push(cachedEmissionSource);
     }
 
-    console.log(`[${vaultDefinition.name}]: updated apr using sdk via strategy events`);
     return [...valueSources, ...rewardEmissions];
   } catch (err) {
     const [underlying, protocol] = await Promise.all([
       getVaultUnderlying(vaultDefinition),
       getProtocolValueSources(chain, vaultDefinition),
     ]);
-    console.log(`[${vaultDefinition.name}]: updated apr via protocol emission estimation`);
     return [underlying, ...protocol, ...rewardEmissions];
   }
 }
 
 export async function getVaultUnderlying(vaultDefinition: VaultDefinition): Promise<CachedValueSource> {
-  const snapshots = await getVaultSnapshots(vaultDefinition);
+  const rangeEnd = Date.now();
+  const rangeStart = rangeEnd - ONE_DAY_MS * SAMPLE_DAYS;
+  const snapshots = await getVaultSnapshotsInRange(vaultDefinition, new Date(rangeStart), new Date(rangeEnd));
   const current = snapshots[CURRENT];
   if (current === undefined) {
     return valueSourceToCachedValueSource(
@@ -350,12 +348,13 @@ export async function getVaultUnderlying(vaultDefinition: VaultDefinition): Prom
   }
 
   // handle no valid measurements, measure available data
-  if (timeframeIndex < SOURCE_TIME_FRAMES.length) {
+  while (timeframeIndex < SOURCE_TIME_FRAMES.length) {
     updatePerformance(
       performance,
       SOURCE_TIME_FRAMES[timeframeIndex],
       getPerformance(current, snapshots[snapshots.length - 1]),
     );
+    timeframeIndex += 1;
   }
 
   const vaultSource = createValueSource(VAULT_SOURCE, performance);
