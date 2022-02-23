@@ -8,7 +8,7 @@ import { BigNumber, ethers } from 'ethers';
 import { TEST_ADDR } from '../test/tests.utils';
 // TODO: better export this from the sdk, and deal with testing this
 import { VaultsService } from '@badger-dao/sdk/lib/vaults/vaults.service';
-import BadgerSDK, { VaultState, VaultVersion, VaultOptions, RegistryVault } from '@badger-dao/sdk';
+import BadgerSDK, { VaultState, VaultVersion, RegistryVault, LoadVaultOptions } from '@badger-dao/sdk';
 
 describe('refreshSettSnapshots', () => {
   const supportedAddresses = loadChains()
@@ -16,7 +16,7 @@ describe('refreshSettSnapshots', () => {
     .map((settDefinition) => settDefinition.vaultToken)
     .sort();
 
-  let vaultsMock: jest.SpyInstance<Promise<RegistryVault>, [address: string, opts?: VaultOptions]>;
+  let vaultsMock: jest.SpyInstance<Promise<RegistryVault>, [opts: LoadVaultOptions]>;
   let put: jest.SpyInstance<Promise<StringToAnyObjectMap>, [items: PutParameters<StringToAnyObjectMap>]>;
 
   beforeEach(async () => {
@@ -26,7 +26,7 @@ describe('refreshSettSnapshots', () => {
       performanceFee: 20,
       strategistFee: 10,
     }));
-    vaultsMock = jest.spyOn(VaultsService.prototype, 'loadVault').mockImplementation(async (address) => ({
+    vaultsMock = jest.spyOn(VaultsService.prototype, 'loadVault').mockImplementation(async ({ address }) => ({
       name: 'Test Vault',
       address,
       symbol: 'TEST',
@@ -60,7 +60,7 @@ describe('refreshSettSnapshots', () => {
   });
 
   it('fetches Setts for all chains', async () => {
-    const requestedAddresses = vaultsMock.mock.calls.map((calls) => calls[0]);
+    const requestedAddresses = vaultsMock.mock.calls.map((calls) => calls[0].address);
     expect(requestedAddresses.sort()).toEqual(supportedAddresses);
   });
 

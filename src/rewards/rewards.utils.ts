@@ -193,8 +193,6 @@ export async function getVaultValueSources(
 ): Promise<CachedValueSource[]> {
   // manual over ride for removed compounding of vaults - this can be empty
   const NO_COMPOUND_VAULTS = new Set([TOKENS.BREMBADGER]);
-  // TODO: remove this once we have vaults 1.5, and token emission (tree events) added
-  // const ARB_CRV_SETTS = new Set([TOKENS.BARB_CRV_RENBTC, TOKENS.BARB_CRV_TRICRYPTO, TOKENS.BARB_CRV_TRICRYPTO_LITE]);
 
   try {
     const sources = await getVaultPerformance(chain, vaultDefinition);
@@ -210,16 +208,7 @@ export async function getVaultValueSources(
       newSources = sources.filter((s) => s.type === SourceType.Compound);
     }
 
-    // const newSources = [...emission, ...protocol];
     // remove updated sources from old source list
-
-    // TODO: remove once badger tree tracking events supported
-    // if (ARB_CRV_SETTS.has(vaultDefinition.vaultToken)) {
-    //   const crvSource = createValueSource('CRV Rewards', uniformPerformance(underlying.apr));
-    //   newSources.push(
-    //     valueSourceToCachedValueSource(crvSource, vaultDefinition, tokenEmission(getToken(TOKENS.ARB_CRV))),
-    //   );
-    // }
     newSources.forEach((source) => delete oldSources[source.addressValueSourceType]);
 
     // delete sources which are no longer valid
