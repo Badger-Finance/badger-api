@@ -21,6 +21,7 @@ export class Fantom extends Chain {
       rpc[Network.Fantom],
       new BaseStrategy(Network.Fantom, Object.keys(fantomTokensConfig)),
       ONE_YEAR_SECONDS,
+      '0x89122c767A5F543e663DB536b603123225bc3823',
     );
     Chain.register(this.network, this);
   }
