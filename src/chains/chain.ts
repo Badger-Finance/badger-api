@@ -10,5 +10,6 @@ import { Fantom } from './config/fantom.config';
  * Instantiate objects for registration.
  */
 export const loadChains = (): Chain[] => {
-  return [new Ethereum(), new BinanceSmartChain(), new Polygon(), new Arbitrum(), new Avalanche(), new Fantom()];
+  // return [new Ethereum(), new BinanceSmartChain(), new Polygon(), new Arbitrum(), new Avalanche(), new Fantom()];
+  return [new Ethereum()];
 };

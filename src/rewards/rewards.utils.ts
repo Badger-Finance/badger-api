@@ -2,7 +2,7 @@ import { Network, Protocol, ValueSource } from '@badger-dao/sdk';
 import { getBoostFile, getCachedAccount } from '../accounts/accounts.utils';
 import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
-import { CURRENT, ONE_DAY_MS, ONE_YEAR_SECONDS, REWARD_DATA } from '../config/constants';
+import { ONE_YEAR_SECONDS, REWARD_DATA } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
 import { getPrice } from '../prices/prices.utils';
 import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
@@ -10,7 +10,6 @@ import { uniformPerformance } from '../protocols/interfaces/performance.interfac
 import { createValueSource } from '../protocols/interfaces/value-source.interface';
 import { getVaultCachedValueSources, tokenEmission } from '../protocols/protocols.utils';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
-import { getCachedVault, getPerformance, getVaultSnapshots, VAULT_SOURCE } from '../vaults/vaults.utils';
 import { Token } from '../tokens/interfaces/token.interface';
 import { getToken } from '../tokens/tokens.utils';
 import { RewardMerkleDistribution } from './interfaces/merkle-distributor.interface';
@@ -18,7 +17,6 @@ import { BadgerTree__factory } from '../contracts';
 import { BigNumber } from '@ethersproject/bignumber';
 import { UnprocessableEntity } from '@tsed/exceptions';
 import { EmissionSchedule } from '@badger-dao/sdk/lib/rewards/interfaces/emission-schedule.interface';
-import { SourceType } from './enums/source-type.enum';
 import { getCurvePerformance, ConvexStrategy } from '../protocols/strategies/convex.strategy';
 import { mStableStrategy } from '../protocols/strategies/mstable.strategy';
 import { PancakeswapStrategy } from '../protocols/strategies/pancakeswap.strategy';
@@ -27,7 +25,8 @@ import { SushiswapStrategy } from '../protocols/strategies/sushiswap.strategy';
 import { UniswapStrategy } from '../protocols/strategies/uniswap.strategy';
 import { SwaprStrategy } from '../protocols/strategies/swapr.strategy';
 import { getDataMapper } from '../aws/dynamodb.utils';
-import { SOURCE_TIME_FRAMES, updatePerformance } from './enums/source-timeframe.enum';
+import { getCachedVault, getVaultPerformance } from '../vaults/vaults.utils';
+import { SourceType } from './enums/source-type.enum';
 
 export async function getTreeDistribution(chain: Chain): Promise<RewardMerkleDistribution | null> {
   if (!chain.badgerTree) {
@@ -166,11 +165,11 @@ export async function getRewardEmission(chain: Chain, vaultDefinition: VaultDefi
   return emissionSources;
 }
 
-export const valueSourceToCachedValueSource = (
+export function valueSourceToCachedValueSource(
   valueSource: ValueSource,
   vaultDefinition: VaultDefinition,
   type: string,
-): CachedValueSource => {
+): CachedValueSource {
   return Object.assign(new CachedValueSource(), {
     addressValueSourceType: `${vaultDefinition.vaultToken}_${type}`,
     address: vaultDefinition.vaultToken,
@@ -186,7 +185,7 @@ export const valueSourceToCachedValueSource = (
     maxApr: valueSource.maxApr,
     boostable: valueSource.boostable,
   });
-};
+}
 
 export async function getVaultValueSources(
   chain: Chain,
@@ -195,34 +194,32 @@ export async function getVaultValueSources(
   // manual over ride for removed compounding of vaults - this can be empty
   const NO_COMPOUND_VAULTS = new Set([TOKENS.BREMBADGER]);
   // TODO: remove this once we have vaults 1.5, and token emission (tree events) added
-  const ARB_CRV_SETTS = new Set([TOKENS.BARB_CRV_RENBTC, TOKENS.BARB_CRV_TRICRYPTO, TOKENS.BARB_CRV_TRICRYPTO_LITE]);
+  // const ARB_CRV_SETTS = new Set([TOKENS.BARB_CRV_RENBTC, TOKENS.BARB_CRV_TRICRYPTO, TOKENS.BARB_CRV_TRICRYPTO_LITE]);
 
   try {
-    const [underlying, emission, protocol] = await Promise.all([
-      getVaultPerformance(vaultDefinition),
-      getRewardEmission(chain, vaultDefinition),
-      getProtocolValueSources(chain, vaultDefinition),
-    ]);
+    const sources = await getVaultPerformance(chain, vaultDefinition);
 
     // check for any emission removal
     const oldSources: Record<string, CachedValueSource> = {};
     const oldEmission = await getVaultCachedValueSources(vaultDefinition);
     oldEmission.forEach((source) => (oldSources[source.addressValueSourceType] = source));
 
-    const newSources = [...emission, ...protocol];
-    // remove updated sources from old source list
-    const hasUnderlying = !NO_COMPOUND_VAULTS.has(vaultDefinition.vaultToken);
-    if (hasUnderlying) {
-      newSources.push(underlying);
+    let newSources = sources;
+    const hasNoUnderlying = NO_COMPOUND_VAULTS.has(vaultDefinition.vaultToken);
+    if (hasNoUnderlying) {
+      newSources = sources.filter((s) => s.type === SourceType.Compound);
     }
 
+    // const newSources = [...emission, ...protocol];
+    // remove updated sources from old source list
+
     // TODO: remove once badger tree tracking events supported
-    if (ARB_CRV_SETTS.has(vaultDefinition.vaultToken)) {
-      const crvSource = createValueSource('CRV Rewards', uniformPerformance(underlying.apr));
-      newSources.push(
-        valueSourceToCachedValueSource(crvSource, vaultDefinition, tokenEmission(getToken(TOKENS.ARB_CRV))),
-      );
-    }
+    // if (ARB_CRV_SETTS.has(vaultDefinition.vaultToken)) {
+    //   const crvSource = createValueSource('CRV Rewards', uniformPerformance(underlying.apr));
+    //   newSources.push(
+    //     valueSourceToCachedValueSource(crvSource, vaultDefinition, tokenEmission(getToken(TOKENS.ARB_CRV))),
+    //   );
+    // }
     newSources.forEach((source) => delete oldSources[source.addressValueSourceType]);
 
     // delete sources which are no longer valid
@@ -266,44 +263,4 @@ export async function getProtocolValueSources(
     // Silently return no value sources
     return [];
   }
-}
-
-export async function getVaultPerformance(vaultDefinition: VaultDefinition): Promise<CachedValueSource> {
-  const snapshots = await getVaultSnapshots(vaultDefinition);
-  const current = snapshots[CURRENT];
-  if (current === undefined) {
-    return valueSourceToCachedValueSource(
-      createValueSource(VAULT_SOURCE, uniformPerformance(0)),
-      vaultDefinition,
-      SourceType.Compound,
-    );
-  }
-  const start = Date.now();
-  const performance = uniformPerformance(0);
-
-  let timeframeIndex = 0;
-  for (let i = 0; i < snapshots.length; i++) {
-    const currentTimeFrame = SOURCE_TIME_FRAMES[timeframeIndex];
-    const currentCutoff = start - currentTimeFrame * ONE_DAY_MS;
-    const currentSnapshot = snapshots[i];
-    if (currentSnapshot.timestamp <= currentCutoff) {
-      updatePerformance(performance, currentTimeFrame, getPerformance(current, currentSnapshot));
-      timeframeIndex += 1;
-      if (timeframeIndex >= SOURCE_TIME_FRAMES.length) {
-        break;
-      }
-    }
-  }
-
-  // handle no valid measurements, measure available data
-  if (timeframeIndex < SOURCE_TIME_FRAMES.length) {
-    updatePerformance(
-      performance,
-      SOURCE_TIME_FRAMES[timeframeIndex],
-      getPerformance(current, snapshots[snapshots.length - 1]),
-    );
-  }
-
-  const vaultSource = createValueSource(VAULT_SOURCE, performance);
-  return valueSourceToCachedValueSource(vaultSource, vaultDefinition, SourceType.Compound);
 }

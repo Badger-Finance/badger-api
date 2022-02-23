@@ -1,9 +1,9 @@
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
-import { Token } from '../tokens/interfaces/token.interface';
 import { CachedValueSource } from './interfaces/cached-value-source.interface';
 import { ValueSource } from './interfaces/value-source.interface';
 import { getDataMapper } from '../aws/dynamodb.utils';
+import { Token } from '@badger-dao/sdk';
 
 export const getVaultValueSources = async (vaultDefinition: VaultDefinition): Promise<ValueSource[]> => {
   const valueSources = [];

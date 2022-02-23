@@ -1,10 +1,12 @@
+import { Network } from '@badger-dao/sdk';
 import { isNil } from '@tsed/core';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { ValueSourceMap } from '../protocols/interfaces/value-source-map.interface';
 import { SourceType } from '../rewards/enums/source-type.enum';
-import { getVaultValueSources } from '../rewards/rewards.utils';
+// import { getVaultValueSources } from '../rewards/rewards.utils';
+import { getVaultPerformance } from '../vaults/vaults.utils';
 
 export async function refreshApySnapshots() {
   const chains = loadChains();
@@ -12,9 +14,13 @@ export async function refreshApySnapshots() {
 }
 
 export async function refreshChainApySnapshots(chain: Chain) {
+  if (chain.network !== Network.Ethereum) {
+    return;
+  }
   await Promise.all(
     chain.vaults.map(async (vault) => {
-      const results = await getVaultValueSources(chain, vault);
+      // const results = await getVaultValueSources(chain, vault);
+      const results = await getVaultPerformance(chain, vault);
       const sourceMap: ValueSourceMap = {};
       results
         .filter((rawValueSource) => !isNil(rawValueSource))
