@@ -196,9 +196,6 @@ export async function getVaultValueSources(
 
   try {
     const sources = await getVaultPerformance(chain, vaultDefinition);
-    if (vaultDefinition.vaultToken === TOKENS.BCRV_CVXBVECVX) {
-      console.log(sources);
-    }
 
     // check for any emission removal
     const oldSources: Record<string, CachedValueSource> = {};
