@@ -44,6 +44,22 @@ export const fantomTokensConfig: TokenConfig = {
     symbol: 'SMM-USDC-DAI',
     type: PricingType.UniV2LP,
   },
+  [TOKENS.SMM_BOO_XBOO]: {
+    address: TOKENS.SMM_BOO_XBOO,
+    decimals: 18,
+    lpToken: true,
+    name: 'Solidly: BOO-xBOO',
+    symbol: 'SMM-BOO-XBOO',
+    type: PricingType.UniV2LP,
+  },
+  [TOKENS.SMM_WBTC_RENBTC]: {
+    address: TOKENS.SMM_WBTC_RENBTC,
+    decimals: 18,
+    lpToken: true,
+    name: 'Solidly: WBTC-renBTC',
+    symbol: 'SMM-WBTC-RENBTC',
+    type: PricingType.UniV2LP,
+  },
   [TOKENS.BSMM_USDC_DAI]: {
     address: TOKENS.BSMM_USDC_DAI,
     decimals: 18,
@@ -52,6 +68,28 @@ export const fantomTokensConfig: TokenConfig = {
     type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.SMM_USDC_DAI,
+      network: Network.Fantom,
+    },
+  },
+  [TOKENS.BSMM_BOO_XBOO]: {
+    address: TOKENS.BSMM_BOO_XBOO,
+    decimals: 18,
+    name: 'bSolidly: BOO-xBOO',
+    symbol: 'bSMM-BOO-XBOO',
+    type: PricingType.Vault,
+    vaultToken: {
+      address: TOKENS.SMM_BOO_XBOO,
+      network: Network.Fantom,
+    },
+  },
+  [TOKENS.BSMM_WBTC_RENBTC]: {
+    address: TOKENS.BSMM_WBTC_RENBTC,
+    decimals: 18,
+    name: 'bSolidly: WBTC-renBTC',
+    symbol: 'bSMM-WBTC-RENBTC',
+    type: PricingType.Vault,
+    vaultToken: {
+      address: TOKENS.SMM_WBTC_RENBTC,
       network: Network.Fantom,
     },
   },

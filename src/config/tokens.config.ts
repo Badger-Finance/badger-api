@@ -117,6 +117,8 @@ const RAW_TOKENS: ContractRegistry = {
   FTM_USDC: '0x04068da6c83afcfa0e13ba15a6696662335d5b75',
   // solidly market maker - avoid sushi liquidity pool collision
   SMM_USDC_DAI: '0xC0240Ee4405f11EFb87A00B432A8be7b7Afc97CC',
+  SMM_BOO_XBOO: '0x5804f6c40f44cf7593f73cf3aa16f7037213a623',
+  SMM_WBTC_RENBTC: '0x6058345a4d8b89ddac7042be08091f91a404b80b',
 
   // uniswap tokens
   UNI_BADGER_WBTC: '0xcd7989894bc033581532d2cd88da5db0a4b12859',
@@ -209,6 +211,8 @@ const RAW_TOKENS: ContractRegistry = {
 
   // fantom vault tokens
   BSMM_USDC_DAI: '0x5deab57a0af330f268d4d2d029a1ce6549f11dad',
+  BSMM_BOO_XBOO: '0x7dD26f47e1C8a060EDC1999D8781dDE90A4C33A9',
+  BSMM_WBTC_RENBTC: '0x7637eFAa11d29a5b34e717ab447833bF143f2383',
 };
 
 export const TOKENS = checksumEntries(RAW_TOKENS);
