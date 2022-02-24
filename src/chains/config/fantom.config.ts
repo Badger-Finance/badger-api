@@ -45,4 +45,22 @@ export const fantomSetts: VaultDefinition[] = [
     state: VaultState.Guarded,
     protocol: Protocol.Solidly,
   },
+  {
+    name: 'BOO/xBOO',
+    createdBlock: 31817699,
+    depositToken: TOKENS.SMM_BOO_XBOO,
+    vaultToken: TOKENS.BSMM_BOO_XBOO,
+    stage: Stage.Staging,
+    state: VaultState.Guarded,
+    protocol: Protocol.Solidly,
+  },
+  {
+    name: 'WBTC/renBTC',
+    createdBlock: 31817121,
+    depositToken: TOKENS.SMM_WBTC_RENBTC,
+    vaultToken: TOKENS.BSMM_WBTC_RENBTC,
+    stage: Stage.Staging,
+    state: VaultState.Guarded,
+    protocol: Protocol.Solidly,
+  },
 ];
