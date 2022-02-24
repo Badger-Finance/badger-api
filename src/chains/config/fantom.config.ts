@@ -55,7 +55,7 @@ export const fantomSetts: VaultDefinition[] = [
     protocol: Protocol.Solidly,
   },
   {
-    name: 'BOO/xBOO',
+    name: 'WBTC/renBTC',
     createdBlock: 31817121,
     depositToken: TOKENS.SMM_WBTC_RENBTC,
     vaultToken: TOKENS.BSMM_WBTC_RENBTC,
