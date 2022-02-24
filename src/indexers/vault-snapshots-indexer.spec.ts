@@ -3,7 +3,7 @@ import { loadChains } from '../chains/chain';
 import * as priceUtils from '../prices/prices.utils';
 import { CachedSettSnapshot } from '../vaults/interfaces/cached-sett-snapshot.interface';
 import * as vaultUtils from '../vaults/vaults.utils';
-import { refreshSettSnapshots } from './sett-snapshots-indexer';
+import { refreshVaultSnapshots } from './vault-snapshots-indexer';
 import { BigNumber, ethers } from 'ethers';
 import { TEST_ADDR } from '../test/tests.utils';
 // TODO: better export this from the sdk, and deal with testing this
@@ -56,7 +56,7 @@ describe('refreshSettSnapshots', () => {
       };
     });
 
-    await refreshSettSnapshots();
+    await refreshVaultSnapshots();
   });
 
   it('fetches Setts for all chains', async () => {

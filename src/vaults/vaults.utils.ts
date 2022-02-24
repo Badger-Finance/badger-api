@@ -4,7 +4,7 @@ import { BigNumber, ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
-import { CURRENT, ONE_DAY_MS, ONE_YEAR_MS, ONE_YEAR_SECONDS, SAMPLE_DAYS } from '../config/constants';
+import { CURRENT, DEBUG, ONE_DAY_MS, ONE_YEAR_MS, ONE_YEAR_SECONDS, SAMPLE_DAYS } from '../config/constants';
 import { getSdk, SettQuery } from '../graphql/generated/badger';
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
 import { formatBalance, getToken } from '../tokens/tokens.utils';
@@ -14,7 +14,7 @@ import { VaultSnapshot } from './interfaces/vault-snapshot.interface';
 import { Sett__factory, Controller__factory, Strategy__factory, EmissionControl__factory } from '../contracts';
 import { VaultStrategy } from './interfaces/vault-strategy.interface';
 import { TOKENS } from '../config/tokens.config';
-import { Protocol, Vault, VaultState, VaultType } from '@badger-dao/sdk';
+import { Network, Protocol, Vault, VaultState, VaultType } from '@badger-dao/sdk';
 import { getPrice } from '../prices/prices.utils';
 import { TokenPrice } from '../prices/interface/token-price.interface';
 import { PricingType } from '../prices/enums/pricing-type.enum';
@@ -250,6 +250,11 @@ export async function getVaultPerformance(
 ): Promise<CachedValueSource[]> {
   const rewardEmissions = await getRewardEmission(chain, vaultDefinition);
   try {
+    const incompatibleNetworks = new Set<Network>([Network.BinanceSmartChain, Network.Polygon, Network.Arbitrum]);
+    if (incompatibleNetworks.has(chain.network)) {
+      throw new Error('Network does not have standardized vaults!');
+    }
+
     const sdk = await chain.getSdk();
     const cutoff = (Date.now() - ONE_DAY_MS * 21) / 1000;
     const { data } = await sdk.vaults.listHarvests({ address: vaultDefinition.vaultToken, timestamp_gte: cutoff });
@@ -257,8 +262,7 @@ export async function getVaultPerformance(
     const recentHarvests = data.sort((a, b) => b.timestamp - a.timestamp);
 
     if (recentHarvests.length <= 1) {
-      console.log(`[${vaultDefinition.name}]: skipping performances, not enough harvests`);
-      return [];
+      return rewardEmissions;
     }
 
     const duration = recentHarvests[0].timestamp - recentHarvests[recentHarvests.length - 1].timestamp;
@@ -293,13 +297,12 @@ export async function getVaultPerformance(
     for (const [token, amount] of tokensEmitted.entries()) {
       const [tokenEmitted, tokenPrice] = await Promise.all([sdk.tokens.loadToken(token), getPrice(token)]);
       if (tokenPrice.price === 0) {
-        console.error(`[${vault.vaultToken}] Ignoring ${tokenEmitted.name} emission as no price is available`);
         continue;
       }
       const tokensEmitted = formatBalance(amount, tokenEmitted.decimals);
       const valueEmitted = tokensEmitted * tokenPrice.price;
       const emissionApr = (((valueEmitted / vault.value) * ONE_YEAR_SECONDS) / duration) * 100;
-      const emissionSource = createValueSource(`${tokenEmitted.name} Rewards`, uniformPerformance(emissionApr));
+      const emissionSource = createValueSource(`${tokenEmitted.symbol} Rewards`, uniformPerformance(emissionApr));
       const cachedEmissionSource = valueSourceToCachedValueSource(
         emissionSource,
         vaultDefinition,
@@ -310,7 +313,9 @@ export async function getVaultPerformance(
 
     return [...valueSources, ...rewardEmissions];
   } catch (err) {
-    console.log(err);
+    if (DEBUG) {
+      console.log(err);
+    }
     const [underlying, protocol] = await Promise.all([
       getVaultUnderlying(vaultDefinition),
       getProtocolValueSources(chain, vaultDefinition),

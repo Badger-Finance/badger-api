@@ -249,7 +249,6 @@ export async function getProtocolValueSources(
     }
   } catch (error) {
     console.log(error);
-    // Silently return no value sources
     return [];
   }
 }
