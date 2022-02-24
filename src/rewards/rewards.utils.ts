@@ -205,7 +205,7 @@ export async function getVaultValueSources(
     let newSources = sources;
     const hasNoUnderlying = NO_COMPOUND_VAULTS.has(vaultDefinition.vaultToken);
     if (hasNoUnderlying) {
-      newSources = sources.filter((s) => s.type === SourceType.Compound);
+      newSources = sources.filter((s) => s.type !== SourceType.Compound);
     }
 
     const ARB_CRV_SETTS = new Set([TOKENS.BARB_CRV_RENBTC, TOKENS.BARB_CRV_TRICRYPTO, TOKENS.BARB_CRV_TRICRYPTO_LITE]);

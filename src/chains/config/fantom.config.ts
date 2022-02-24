@@ -37,15 +37,6 @@ export class Fantom extends Chain {
 
 export const fantomSetts: VaultDefinition[] = [
   {
-    name: 'USDC/DAI',
-    createdBlock: 30679386,
-    depositToken: TOKENS.SMM_USDC_DAI,
-    vaultToken: TOKENS.BSMM_USDC_DAI,
-    stage: Stage.Staging,
-    state: VaultState.Guarded,
-    protocol: Protocol.Solidly,
-  },
-  {
     name: 'BOO/xBOO',
     createdBlock: 31817699,
     depositToken: TOKENS.SMM_BOO_XBOO,
