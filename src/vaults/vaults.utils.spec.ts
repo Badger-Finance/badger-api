@@ -275,8 +275,9 @@ describe('vaults.utils', () => {
     });
 
     describe('requests standard vault performance', () => {
-      it('returns value sources from standard methods', async () => {
-        const vault = getVaultDefinition(TEST_CHAIN, TOKENS.BBADGER);
+      const vault = getVaultDefinition(TEST_CHAIN, TOKENS.BBADGER);
+
+      function setupSdk() {
         jest.spyOn(VaultsService.prototype, 'listHarvests').mockImplementation(async (opts) => {
           if (!opts.timestamp_gte) {
             throw new Error('Invalid request!');
@@ -297,13 +298,28 @@ describe('vaults.utils', () => {
           return { data };
         });
         jest.spyOn(TokensService.prototype, 'loadToken').mockImplementation(async (token) => getToken(token));
+        const snapshot = randomSnapshot(vault);
+        snapshot.value = 1000;
+        snapshot.balance = 10000;
+        setupMapper([snapshot]);
+      }
+
+      it('returns value sources from standard methods', async () => {
+        setupSdk();
         jest.spyOn(pricesUtils, 'getPrice').mockImplementation(async (token) => ({
           address: token,
           price: Number(token.slice(0, 6)),
         }));
-        const snapshot = randomSnapshot(vault);
-        snapshot.value = 1000;
-        setupMapper([snapshot]);
+        const result = await getVaultPerformance(TEST_CHAIN, vault);
+        expect(result).toMatchSnapshot();
+      });
+
+      it('skips all emitted tokens with no price', async () => {
+        setupSdk();
+        jest.spyOn(pricesUtils, 'getPrice').mockImplementation(async (token) => ({
+          address: token,
+          price: 0,
+        }));
         const result = await getVaultPerformance(TEST_CHAIN, vault);
         expect(result).toMatchSnapshot();
       });
