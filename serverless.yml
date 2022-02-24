@@ -396,13 +396,13 @@ functions:
           description: 'index price data for all protocol tokens'
           rate: rate(1 minute)
 
-  index-sett-snapshots:
-    handler: src/indexers/sett-snapshots-indexer.refreshSettSnapshots
+  index-vault-snapshots:
+    handler: src/indexers/vault-snapshots-indexer.refreshVaultSnapshots
     timeout: 150
     events:
       - schedule:
-          name: ${self:service}-${self:custom.stage}-index-sett-snapshots
-          description: 'index data for supported setts'
+          name: ${self:service}-${self:custom.stage}-index-vault-snapshots
+          description: 'index data for supported vaults'
           rate: rate(1 minute)
 
   index-leaderboard:
