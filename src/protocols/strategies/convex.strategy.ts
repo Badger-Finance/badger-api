@@ -10,10 +10,10 @@ import {
   CurvePool__factory,
   CurvePool3__factory,
   CurveRegistry__factory,
-  CvxBooster__factory,
   CvxLocker__factory,
   CvxRewards__factory,
   Erc20__factory,
+  CvxBooster__factory,
 } from '../../contracts';
 import { tokenBalancesToCachedLiquidityPoolTokenBalance } from '../../indexers/indexer.utils';
 import { getPrice } from '../../prices/prices.utils';
@@ -25,13 +25,13 @@ import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance
 import { formatBalance, getToken, toBalance } from '../../tokens/tokens.utils';
 import { CachedValueSource } from '../interfaces/cached-value-source.interface';
 import { uniformPerformance } from '../interfaces/performance.interface';
-import { PoolMap } from '../interfaces/pool-map.interface';
 import { createValueSource } from '../interfaces/value-source.interface';
 import { tokenEmission } from '../protocols.utils';
 import { request } from '../../etherscan/etherscan.utils';
 import { CurveAPIResponse } from '../interfaces/curve-api-response.interrface';
 import { valueSourceToCachedValueSource } from '../../rewards/rewards.utils';
 import { TokenPrice } from '../../prices/interface/token-price.interface';
+import { PoolMap } from '../interfaces/pool-map.interface';
 
 /* Strategy Definitions */
 export const cvxRewards = '0xCF50b810E57Ac33B91dCF525C6ddd9881B139332';
@@ -103,21 +103,24 @@ interface FactoryAPYResonse {
 }
 
 export class ConvexStrategy {
-  static async getValueSources(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
+  static async getValueSources(
+    chain: Chain,
+    vaultDefinition: VaultDefinition,
+    includeBaseEmission: boolean,
+  ): Promise<CachedValueSource[]> {
     switch (vaultDefinition.vaultToken) {
       case TOKENS.BCVX:
-        return getCvxRewards(chain, vaultDefinition);
       case TOKENS.BCVXCRV:
-        return getCvxCrvRewards(chain, vaultDefinition);
       case TOKENS.BVECVX:
-        return getLockedSources(chain, vaultDefinition);
+        return [];
       default:
-        return getVaultSources(chain, vaultDefinition);
+        return getVaultSources(chain, vaultDefinition, includeBaseEmission);
     }
   }
 }
 
-async function getLockedSources(chain: Chain, VaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
+// TODO: potentially deprecate / remove this function
+export async function getLockedSources(chain: Chain, VaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
   const locker = CvxLocker__factory.connect(cvxLocker, chain.provider);
   const cvxPrice = await getPrice(TOKENS.CVX);
   const cvxLocked = formatBalance(await locker.lockedSupply());
@@ -155,7 +158,17 @@ async function getLockedSources(chain: Chain, VaultDefinition: VaultDefinition):
   return sources;
 }
 
-async function getVaultSources(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
+async function getVaultSources(
+  chain: Chain,
+  vaultDefinition: VaultDefinition,
+  includeBaseEmission: boolean,
+): Promise<CachedValueSource[]> {
+  const cachedTradeFees = await getCurvePerformance(chain, vaultDefinition);
+
+  if (!includeBaseEmission) {
+    return [cachedTradeFees];
+  }
+
   const booster = CvxBooster__factory.connect(cvxBooster, chain.provider);
   const poolInfo = await booster.poolInfo(cvxPoolId[vaultDefinition.depositToken]);
   const crv = CvxRewards__factory.connect(poolInfo.crvRewards, chain.provider);
@@ -235,11 +248,11 @@ async function getVaultSources(chain: Chain, vaultDefinition: VaultDefinition): 
     cachedExtraSources.push(valueSourceToCachedValueSource(rewardSource, vaultDefinition, tokenEmission(rewardToken)));
   }
 
-  const cachedTradeFees = await getCurvePerformance(chain, vaultDefinition);
   return [cachedCompounding, cachedTradeFees, cachedCrvEmission, cachedCvxEmission, ...cachedExtraSources];
 }
 
-async function getCvxRewards(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
+// TODO: potentially deprecate / remove this function
+export async function getCvxRewards(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
   const cvx = CvxRewards__factory.connect(cvxRewards, chain.provider);
 
   // get prices
@@ -264,7 +277,8 @@ async function getCvxRewards(chain: Chain, vaultDefinition: VaultDefinition): Pr
   return [valueSourceToCachedValueSource(valueSource, vaultDefinition, SourceType.Compound)];
 }
 
-async function getCvxCrvRewards(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
+// TODO: potentially deprecate / remove this function
+export async function getCvxCrvRewards(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
   const vault = await getCachedVault(vaultDefinition);
   // setup contracts
   const cvxCrv = CvxRewards__factory.connect(cvxCrvRewards, chain.provider);
