@@ -1,5 +1,55 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`vaults.utils getVaultPerformance requests non compatible network vault performances returns value sources from fallback methods 1`] = `
+Array [
+  CachedValueSource {
+    "address": "0x6B2d4c4bb50274c5D4986Ff678cC971c0260E967",
+    "addressValueSourceType": "0x6B2d4c4bb50274c5D4986Ff678cC971c0260E967_compound",
+    "apr": 189.11917098445593,
+    "boostable": false,
+    "harvestable": false,
+    "maxApr": 189.11917098445593,
+    "minApr": 189.11917098445593,
+    "name": "Vault Compounding",
+    "oneDay": 183.4170854271372,
+    "sevenDay": 189.11917098445593,
+    "thirtyDay": 214.7058823529413,
+    "threeDay": 185.27918781725862,
+    "type": "compound",
+  },
+  CachedValueSource {
+    "address": "0x6B2d4c4bb50274c5D4986Ff678cC971c0260E967",
+    "addressValueSourceType": "0x6B2d4c4bb50274c5D4986Ff678cC971c0260E967_flat_Sushi_emission",
+    "apr": 8.888,
+    "boostable": false,
+    "harvestable": false,
+    "maxApr": 8.888,
+    "minApr": 8.888,
+    "name": "Sushi Rewards",
+    "oneDay": 8.888,
+    "sevenDay": 8.888,
+    "thirtyDay": 8.888,
+    "threeDay": 8.888,
+    "type": "flat_Sushi_emission",
+  },
+  CachedValueSource {
+    "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "addressValueSourceType": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_boosted_bBADGER_emission",
+    "apr": 6.969,
+    "boostable": false,
+    "harvestable": false,
+    "maxApr": 6.969,
+    "minApr": 6.969,
+    "name": "Badger Rewards",
+    "oneDay": 6.969,
+    "sevenDay": 6.969,
+    "thirtyDay": 6.969,
+    "threeDay": 6.969,
+    "type": "boosted_bBADGER_emission",
+  },
+]
+`;
+
 exports[`vaults.utils getVaultPerformance requests non standard vault performance returns value sources from fallback methods 1`] = `
 Array [
   CachedValueSource {
@@ -90,7 +140,7 @@ Array [
     "harvestable": false,
     "maxApr": 28.571981817603227,
     "minApr": 28.571981817603227,
-    "name": "Farm Rewards",
+    "name": "FARM Rewards",
     "oneDay": 28.571981817603227,
     "sevenDay": 28.571981817603227,
     "thirtyDay": 28.571981817603227,

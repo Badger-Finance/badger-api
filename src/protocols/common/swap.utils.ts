@@ -15,13 +15,17 @@ interface LiquidityData {
 }
 
 export async function getLiquidityData(chain: Chain, contract: string): Promise<LiquidityData> {
-  const pairContract = UniV2__factory.connect(contract, chain.provider);
-  const totalSupply = formatBalance(await pairContract.totalSupply());
-  const token0 = await pairContract.token0();
-  const token1 = await pairContract.token1();
+  const sdk = await chain.getSdk();
+  const pairContract = UniV2__factory.connect(contract, sdk.multicall);
+  const [totalPairSupply, token0, token1, reserves] = await Promise.all([
+    pairContract.totalSupply(),
+    pairContract.token0(),
+    pairContract.token1(),
+    pairContract.getReserves(),
+  ]);
+  const totalSupply = formatBalance(totalPairSupply);
   const token0Decimals = getToken(token0).decimals;
   const token1Decimals = getToken(token1).decimals;
-  const reserves = await pairContract.getReserves();
   const reserve0 = formatBalance(reserves._reserve0, token0Decimals);
   const reserve1 = formatBalance(reserves._reserve1, token1Decimals);
   return {
@@ -53,8 +57,7 @@ export const getOnChainLiquidityPrice = async (chain: Chain, contract: string): 
 
 const resolveLiquidityPrice = async (liquidityData: LiquidityData): Promise<TokenPrice> => {
   const { contract, token0, token1, reserve0, reserve1, totalSupply } = liquidityData;
-  let t0Price = await getPrice(token0);
-  let t1Price = await getPrice(token1);
+  let [t0Price, t1Price] = await Promise.all([getPrice(token0), getPrice(token1)]);
   if (!t0Price && !t1Price) {
     throw new UnprocessableEntity(`Token pair ${contract} cannot be priced`);
   }

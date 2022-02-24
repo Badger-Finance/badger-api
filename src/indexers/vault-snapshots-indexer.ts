@@ -6,7 +6,7 @@ import { CachedSettSnapshot } from '../vaults/interfaces/cached-sett-snapshot.in
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { settToCachedSnapshot } from './indexer.utils';
 
-export async function refreshSettSnapshots() {
+export async function refreshVaultSnapshots() {
   const chains = loadChains();
   await Promise.all(chains.flatMap(async (chain) => captureChainSnapshots(chain)));
 }

@@ -33,6 +33,7 @@ import { createValueSource } from '../protocols/interfaces/value-source.interfac
 import { uniformPerformance } from '../protocols/interfaces/performance.interface';
 import { tokenEmission } from '../protocols/protocols.utils';
 import { TokensService } from '@badger-dao/sdk/lib/tokens/tokens.service';
+import { Polygon } from '../chains/config/polygon.config';
 
 describe('vaults.utils', () => {
   beforeEach(() => {
@@ -271,6 +272,27 @@ describe('vaults.utils', () => {
         const result = await getVaultPerformance(TEST_CHAIN, vault);
         expect(result).toMatchSnapshot();
         expect(protocolFallback.mock.calls[0]).toMatchObject([TEST_CHAIN, vault]);
+      });
+    });
+
+    describe('requests non compatible network vault performances', () => {
+      it('returns value sources from fallback methods', async () => {
+        const alternateChain = new Polygon();
+        const vault = getVaultDefinition(alternateChain, TOKENS.BMATIC_QUICK_USDC_WBTC);
+        jest.spyOn(VaultsService.prototype, 'listHarvests').mockImplementation(async (_opts) => {
+          throw new Error('Incompatible vault!');
+        });
+        setupMapper(randomSnapshots(vault));
+        const protocolFallback = jest
+          .spyOn(rewardsUtils, 'getProtocolValueSources')
+          .mockImplementation(async (_chain, _vault) => {
+            const emissionToken = getToken(TOKENS.SUSHI);
+            const rewardSource = createValueSource('Sushi Rewards', uniformPerformance(8.888));
+            return [rewardsUtils.valueSourceToCachedValueSource(rewardSource, vault, tokenEmission(emissionToken))];
+          });
+        const result = await getVaultPerformance(alternateChain, vault);
+        expect(result).toMatchSnapshot();
+        expect(protocolFallback.mock.calls[0]).toMatchObject([alternateChain, vault]);
       });
     });
 

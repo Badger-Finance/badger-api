@@ -21,7 +21,7 @@ import * as dynamodbUtils from '../aws/dynamodb.utils';
 import { Fantom } from '../chains/config/fantom.config';
 import { Chain } from '../chains/config/chain.config';
 
-export const TEST_CHAIN = loadChains()[0];
+export const TEST_CHAIN = new Ethereum();
 export const TEST_ADDR = ethers.utils.getAddress('0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484');
 
 /* eslint-disable @typescript-eslint/ban-ts-comment */
