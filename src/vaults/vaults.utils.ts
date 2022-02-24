@@ -262,7 +262,7 @@ export async function getVaultPerformance(
     const recentHarvests = data.sort((a, b) => b.timestamp - a.timestamp);
 
     if (recentHarvests.length <= 1) {
-      return rewardEmissions;
+      throw new Error('Vault does not have adequate harvest history!');
     }
 
     const duration = recentHarvests[0].timestamp - recentHarvests[recentHarvests.length - 1].timestamp;
@@ -295,7 +295,7 @@ export async function getVaultPerformance(
     }
 
     for (const [token, amount] of tokensEmitted.entries()) {
-      const [tokenEmitted, tokenPrice] = await Promise.all([sdk.tokens.loadToken(token), getPrice(token)]);
+      const [tokenEmitted, tokenPrice] = await Promise.all([getToken(token), getPrice(token)]);
       if (tokenPrice.price === 0) {
         continue;
       }
@@ -311,14 +311,15 @@ export async function getVaultPerformance(
       valueSources.push(cachedEmissionSource);
     }
 
-    return [...valueSources, ...rewardEmissions];
+    const protocol = await getProtocolValueSources(chain, vaultDefinition);
+    return [...valueSources, ...protocol, ...rewardEmissions];
   } catch (err) {
     if (DEBUG) {
       console.log(err);
     }
     const [underlying, protocol] = await Promise.all([
       getVaultUnderlying(vaultDefinition),
-      getProtocolValueSources(chain, vaultDefinition),
+      getProtocolValueSources(chain, vaultDefinition, true),
     ]);
     return [underlying, ...protocol, ...rewardEmissions];
   }

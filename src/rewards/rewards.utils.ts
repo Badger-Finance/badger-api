@@ -192,7 +192,7 @@ export async function getVaultValueSources(
   vaultDefinition: VaultDefinition,
 ): Promise<CachedValueSource[]> {
   // manual over ride for removed compounding of vaults - this can be empty
-  const NO_COMPOUND_VAULTS = new Set([TOKENS.BREMBADGER]);
+  const NO_COMPOUND_VAULTS = new Set([TOKENS.BREMBADGER, TOKENS.BVECVX]);
 
   try {
     const sources = await getVaultPerformance(chain, vaultDefinition);
@@ -208,6 +208,16 @@ export async function getVaultValueSources(
       newSources = sources.filter((s) => s.type === SourceType.Compound);
     }
 
+    const ARB_CRV_SETTS = new Set([TOKENS.BARB_CRV_RENBTC, TOKENS.BARB_CRV_TRICRYPTO, TOKENS.BARB_CRV_TRICRYPTO_LITE]);
+    if (ARB_CRV_SETTS.has(vaultDefinition.vaultToken)) {
+      const compounding = sources.find((s) => s.type === SourceType.Compound);
+      if (compounding) {
+        const crvSource = createValueSource('CRV Rewards', uniformPerformance(compounding.apr));
+        newSources.push(
+          valueSourceToCachedValueSource(crvSource, vaultDefinition, tokenEmission(getToken(TOKENS.ARB_CRV))),
+        );
+      }
+    }
     // remove updated sources from old source list
     newSources.forEach((source) => delete oldSources[source.addressValueSourceType]);
 
@@ -223,26 +233,27 @@ export async function getVaultValueSources(
 
 export async function getProtocolValueSources(
   chain: Chain,
-  VaultDefinition: VaultDefinition,
+  vaultDefinition: VaultDefinition,
+  includeBaseEmission = false,
 ): Promise<CachedValueSource[]> {
   try {
-    switch (VaultDefinition.protocol) {
+    switch (vaultDefinition.protocol) {
       case Protocol.Curve:
-        return Promise.all([getCurvePerformance(chain, VaultDefinition)]);
+        return Promise.all([getCurvePerformance(chain, vaultDefinition)]);
       case Protocol.Pancakeswap:
-        return PancakeswapStrategy.getValueSources(chain, VaultDefinition);
+        return PancakeswapStrategy.getValueSources(chain, vaultDefinition);
       case Protocol.Sushiswap:
-        return SushiswapStrategy.getValueSources(chain, VaultDefinition);
+        return SushiswapStrategy.getValueSources(chain, vaultDefinition);
       case Protocol.Convex:
-        return ConvexStrategy.getValueSources(chain, VaultDefinition);
+        return ConvexStrategy.getValueSources(chain, vaultDefinition, includeBaseEmission);
       case Protocol.Uniswap:
-        return UniswapStrategy.getValueSources(VaultDefinition);
+        return UniswapStrategy.getValueSources(vaultDefinition);
       case Protocol.Quickswap:
-        return QuickswapStrategy.getValueSources(VaultDefinition);
+        return QuickswapStrategy.getValueSources(vaultDefinition);
       case Protocol.mStable:
-        return mStableStrategy.getValueSources(chain, VaultDefinition);
+        return mStableStrategy.getValueSources(chain, vaultDefinition);
       case Protocol.Swapr:
-        return SwaprStrategy.getValueSources(chain, VaultDefinition);
+        return SwaprStrategy.getValueSources(chain, vaultDefinition);
       default: {
         return [];
       }
