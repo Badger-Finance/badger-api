@@ -310,6 +310,7 @@ export async function getVaultPerformance(
 
     return [...valueSources, ...rewardEmissions];
   } catch (err) {
+    console.log(err);
     const [underlying, protocol] = await Promise.all([
       getVaultUnderlying(vaultDefinition),
       getProtocolValueSources(chain, vaultDefinition),

@@ -80,7 +80,7 @@ export const randomValue = (min?: number, max?: number): number => {
 };
 
 export function randomSnapshot(vaultDefinition?: VaultDefinition): CachedSettSnapshot {
-  const vault = vaultDefinition || randomVault();
+  const vault = vaultDefinition ?? randomVault();
   const balance = randomValue();
   const supply = randomValue();
   const ratio = balance / supply;
@@ -88,7 +88,7 @@ export function randomSnapshot(vaultDefinition?: VaultDefinition): CachedSettSna
     address: vault.vaultToken,
     balance,
     ratio,
-    settValue: randomValue(),
+    value: randomValue(),
     supply,
     updatedAt: Date.now(),
     strategy: {

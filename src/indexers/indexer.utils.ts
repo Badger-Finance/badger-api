@@ -83,11 +83,11 @@ export async function getQueryBlock(chain: Chain, block: number): Promise<number
   return queryBlock;
 }
 
-export const settToSnapshot = async (
+export async function settToSnapshot(
   chain: Chain,
   vaultDefinition: VaultDefinition,
   block: number,
-): Promise<VaultSnapshot | null> => {
+): Promise<VaultSnapshot | null> {
   const queryBlock = await getQueryBlock(chain, block);
   const sett = await getVault(chain.graphUrl, vaultDefinition.vaultToken, queryBlock);
   const settToken = getToken(vaultDefinition.vaultToken);
@@ -118,7 +118,7 @@ export const settToSnapshot = async (
     ratio,
     value: parseFloat(value.toFixed(4)),
   });
-};
+}
 
 export async function getIndexedBlock(
   vaultDefinition: VaultDefinition,
