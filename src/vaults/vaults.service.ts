@@ -12,8 +12,9 @@ export class VaultsService {
   async getProtocolSummary(chain: Chain, currency?: Currency): Promise<ProtocolSummary> {
     const vaults = await Promise.all(
       chain.vaults.map(async (vault) => {
-        const { name, balance, value } = await this.getVault(chain, vault.vaultToken, currency);
-        return { name, balance, value };
+        const { name, balance, value } = await getCachedVault(vault);
+        const convertedValue = await convert(value, currency);
+        return { name, balance, value: convertedValue };
       }),
     );
     const totalValue = vaults.reduce((total, vault) => (total += vault.value), 0);

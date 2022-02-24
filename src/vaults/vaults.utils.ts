@@ -4,7 +4,7 @@ import { BigNumber, ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
-import { ONE_DAY_MS, ONE_YEAR_MS, SAMPLE_DAYS } from '../config/constants';
+import { CURRENT, ONE_DAY_MS, ONE_YEAR_MS, ONE_YEAR_SECONDS, SAMPLE_DAYS } from '../config/constants';
 import { getSdk, SettQuery } from '../graphql/generated/badger';
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
 import { formatBalance, getToken } from '../tokens/tokens.utils';
@@ -18,6 +18,13 @@ import { Protocol, Vault, VaultState, VaultType } from '@badger-dao/sdk';
 import { getPrice } from '../prices/prices.utils';
 import { TokenPrice } from '../prices/interface/token-price.interface';
 import { PricingType } from '../prices/enums/pricing-type.enum';
+import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
+import { createValueSource } from '../protocols/interfaces/value-source.interface';
+import { uniformPerformance } from '../protocols/interfaces/performance.interface';
+import { getProtocolValueSources, getRewardEmission, valueSourceToCachedValueSource } from '../rewards/rewards.utils';
+import { SourceType } from '../rewards/enums/source-type.enum';
+import { tokenEmission } from '../protocols/protocols.utils';
+import { SOURCE_TIME_FRAMES, updatePerformance } from '../rewards/enums/source-timeframe.enum';
 
 export const VAULT_SOURCE = 'Vault Compounding';
 
@@ -54,6 +61,7 @@ export function defaultVault(vaultDefinition: VaultDefinition): Vault {
   };
 }
 
+// TODO: kill this function
 export async function getVault(graphUrl: string, contract: string, block?: number): Promise<SettQuery> {
   const badgerGraphqlClient = new GraphQLClient(graphUrl);
   const badgerGraphqlSdk = getSdk(badgerGraphqlClient);
@@ -96,17 +104,11 @@ export async function getCachedVault(vaultDefinition: VaultDefinition): Promise<
   }
 }
 
-export async function getVaultSnapshots(vaultDefinition: VaultDefinition): Promise<VaultSnapshot[]> {
-  const end = Date.now();
-  const start = end - ONE_DAY_MS * SAMPLE_DAYS;
-  return getVaultSnapshotsInRange(vaultDefinition, new Date(start), new Date(end));
-}
-
-export const getVaultSnapshotsInRange = async (
+export async function getVaultSnapshotsInRange(
   vaultDefinition: VaultDefinition,
   start: Date,
   end: Date,
-): Promise<VaultSnapshot[]> => {
+): Promise<VaultSnapshot[]> {
   try {
     const snapshots = [];
     const mapper = getDataMapper();
@@ -124,7 +126,7 @@ export const getVaultSnapshotsInRange = async (
     console.error(err);
     return [];
   }
-};
+}
 
 export const getPerformance = (current: VaultSnapshot, initial: VaultSnapshot): number => {
   const ratioDiff = current.ratio - initial.ratio;
@@ -146,6 +148,7 @@ export function getVaultDefinition(chain: Chain, contract: string): VaultDefinit
   return vaultDefinition;
 }
 
+// TODO: migration to SDK is probably the best option here
 export async function getStrategyInfo(chain: Chain, vaultDefinition: VaultDefinition): Promise<VaultStrategy> {
   const defaultStrategyInfo = {
     address: ethers.constants.AddressZero,
@@ -181,6 +184,8 @@ export async function getStrategyInfo(chain: Chain, vaultDefinition: VaultDefini
   }
 }
 
+// TODO: align this weird piece (result of non-updating ppfs for updates from graph)
+// either remove or consolidate this kind of functionality
 export const getPricePerShare = async (
   chain: Chain,
   pricePerShare: BigNumber,
@@ -236,4 +241,123 @@ export async function getVaultTokenPrice(chain: Chain, address: string): Promise
     address: token.address,
     price: underlyingTokenPrice.price * vaultTokenSnapshot.pricePerFullShare,
   };
+}
+
+// TODO: probably break this up
+export async function getVaultPerformance(
+  chain: Chain,
+  vaultDefinition: VaultDefinition,
+): Promise<CachedValueSource[]> {
+  const rewardEmissions = await getRewardEmission(chain, vaultDefinition);
+  try {
+    const sdk = await chain.getSdk();
+    const cutoff = (Date.now() - ONE_DAY_MS * 21) / 1000;
+    const { data } = await sdk.vaults.listHarvests({ address: vaultDefinition.vaultToken, timestamp_gte: cutoff });
+
+    const recentHarvests = data.sort((a, b) => b.timestamp - a.timestamp);
+
+    if (recentHarvests.length <= 1) {
+      console.log(`[${vaultDefinition.name}]: skipping performances, not enough harvests`);
+      return [];
+    }
+
+    const duration = recentHarvests[0].timestamp - recentHarvests[recentHarvests.length - 1].timestamp;
+    const measuredHarvests = recentHarvests.slice(1);
+    const valueSources = [];
+
+    const totalHarvested = measuredHarvests
+      .flatMap((h) => h.harvests)
+      .map((h) => h.harvested)
+      .reduce((total, harvested) => total.add(harvested), BigNumber.from(0));
+
+    const vault = await getCachedVault(vaultDefinition);
+    const depositToken = getToken(vaultDefinition.depositToken);
+    const totalHarvestedTokens = formatBalance(totalHarvested, depositToken.decimals);
+    const compoundApr = (((totalHarvestedTokens / vault.balance) * ONE_YEAR_SECONDS) / duration) * 100;
+    const compoundSource = createValueSource(VAULT_SOURCE, uniformPerformance(compoundApr));
+    const cachedCompoundSource = valueSourceToCachedValueSource(compoundSource, vaultDefinition, SourceType.Compound);
+    valueSources.push(cachedCompoundSource);
+
+    const treeDistributions = measuredHarvests.flatMap((h) => h.treeDistributions);
+    const tokensEmitted = new Map<string, BigNumber>();
+    for (const distribution of treeDistributions) {
+      const { token, amount } = distribution;
+      let entry = tokensEmitted.get(token);
+      if (!entry) {
+        entry = BigNumber.from(0);
+        tokensEmitted.set(token, entry);
+      }
+      tokensEmitted.set(token, entry.add(amount));
+    }
+
+    for (const [token, amount] of tokensEmitted.entries()) {
+      const [tokenEmitted, tokenPrice] = await Promise.all([sdk.tokens.loadToken(token), getPrice(token)]);
+      if (tokenPrice.price === 0) {
+        console.error(`[${vault.vaultToken}] Ignoring ${tokenEmitted.name} emission as no price is available`);
+        continue;
+      }
+      const tokensEmitted = formatBalance(amount, tokenEmitted.decimals);
+      const valueEmitted = tokensEmitted * tokenPrice.price;
+      const emissionApr = (((valueEmitted / vault.value) * ONE_YEAR_SECONDS) / duration) * 100;
+      const emissionSource = createValueSource(`${tokenEmitted.name} Rewards`, uniformPerformance(emissionApr));
+      const cachedEmissionSource = valueSourceToCachedValueSource(
+        emissionSource,
+        vaultDefinition,
+        tokenEmission(tokenEmitted),
+      );
+      valueSources.push(cachedEmissionSource);
+    }
+
+    return [...valueSources, ...rewardEmissions];
+  } catch (err) {
+    console.log(err);
+    const [underlying, protocol] = await Promise.all([
+      getVaultUnderlying(vaultDefinition),
+      getProtocolValueSources(chain, vaultDefinition),
+    ]);
+    return [underlying, ...protocol, ...rewardEmissions];
+  }
+}
+
+export async function getVaultUnderlying(vaultDefinition: VaultDefinition): Promise<CachedValueSource> {
+  const rangeEnd = Date.now();
+  const rangeStart = rangeEnd - ONE_DAY_MS * SAMPLE_DAYS;
+  const snapshots = await getVaultSnapshotsInRange(vaultDefinition, new Date(rangeStart), new Date(rangeEnd));
+  const current = snapshots[CURRENT];
+  if (current === undefined) {
+    return valueSourceToCachedValueSource(
+      createValueSource(VAULT_SOURCE, uniformPerformance(0)),
+      vaultDefinition,
+      SourceType.Compound,
+    );
+  }
+  const start = Date.now();
+  const performance = uniformPerformance(0);
+
+  let timeframeIndex = 0;
+  for (let i = 0; i < snapshots.length; i++) {
+    const currentTimeFrame = SOURCE_TIME_FRAMES[timeframeIndex];
+    const currentCutoff = start - currentTimeFrame * ONE_DAY_MS;
+    const currentSnapshot = snapshots[i];
+    if (currentSnapshot.timestamp <= currentCutoff) {
+      updatePerformance(performance, currentTimeFrame, getPerformance(current, currentSnapshot));
+      timeframeIndex += 1;
+      if (timeframeIndex >= SOURCE_TIME_FRAMES.length) {
+        break;
+      }
+    }
+  }
+
+  // handle no valid measurements, measure available data
+  while (timeframeIndex < SOURCE_TIME_FRAMES.length) {
+    updatePerformance(
+      performance,
+      SOURCE_TIME_FRAMES[timeframeIndex],
+      getPerformance(current, snapshots[snapshots.length - 1]),
+    );
+    timeframeIndex += 1;
+  }
+
+  const vaultSource = createValueSource(VAULT_SOURCE, performance);
+  return valueSourceToCachedValueSource(vaultSource, vaultDefinition, SourceType.Compound);
 }

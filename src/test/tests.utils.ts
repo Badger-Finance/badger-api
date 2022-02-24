@@ -10,7 +10,7 @@ import { BinanceSmartChain } from '../chains/config/bsc.config';
 import { Ethereum } from '../chains/config/eth.config';
 import { Polygon } from '../chains/config/polygon.config';
 import { xDai } from '../chains/config/xdai.config';
-import { ONE_DAY_MS, ONE_MINUTE_MS, SAMPLE_DAYS } from '../config/constants';
+import { ONE_DAY_MS, SAMPLE_DAYS } from '../config/constants';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import { CachedBoost } from '../leaderboards/interface/cached-boost.interface';
 import { CachedSettSnapshot } from '../vaults/interfaces/cached-sett-snapshot.interface';
@@ -80,7 +80,7 @@ export const randomValue = (min?: number, max?: number): number => {
 };
 
 export function randomSnapshot(vaultDefinition?: VaultDefinition): CachedSettSnapshot {
-  const vault = vaultDefinition || randomVault();
+  const vault = vaultDefinition ?? randomVault();
   const balance = randomValue();
   const supply = randomValue();
   const ratio = balance / supply;
@@ -88,7 +88,7 @@ export function randomSnapshot(vaultDefinition?: VaultDefinition): CachedSettSna
     address: vault.vaultToken,
     balance,
     ratio,
-    settValue: randomValue(),
+    value: randomValue(),
     supply,
     updatedAt: Date.now(),
     strategy: {
@@ -108,17 +108,17 @@ export function randomVault(chain?: Chain): VaultDefinition {
 
 export function randomSnapshots(vaultDefinition?: VaultDefinition, count?: number): VaultSnapshot[] {
   const snapshots: VaultSnapshot[] = [];
-  const snapshotCount = count || SAMPLE_DAYS;
-  const sett = vaultDefinition || randomVault();
+  const snapshotCount = count ?? SAMPLE_DAYS;
+  const sett = vaultDefinition ?? randomVault();
   for (let i = 0; i < snapshotCount; i++) {
     snapshots.push(
       Object.assign(new VaultSnapshot(), {
         asset: sett.name,
         height: 0,
-        timestamp: Date.now() - 1 - i * ONE_MINUTE_MS * 30,
+        timestamp: Date.now() - 1 - i * ONE_DAY_MS,
         balance: randomValue(),
         supply: randomValue(),
-        ratio: 1,
+        ratio: 3 - i * 0.015,
         value: randomValue(),
       }),
     );

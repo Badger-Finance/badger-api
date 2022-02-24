@@ -1,6 +1,6 @@
-import { Protocol, Vault, VaultState, VaultType } from '@badger-dao/sdk';
+import BadgerSDK, { Protocol, Vault, VaultState, VaultType } from '@badger-dao/sdk';
 import { BadRequest, NotFound, UnprocessableEntity } from '@tsed/exceptions';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { BinanceSmartChain } from '../chains/config/bsc.config';
 import { TOKENS } from '../config/tokens.config';
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
@@ -8,25 +8,44 @@ import {
   randomPerformance,
   randomVault,
   randomSnapshot,
-  randomSnapshots,
   setupMapper,
   TEST_CHAIN,
   TEST_ADDR,
+  randomSnapshots,
 } from '../test/tests.utils';
 import { getToken } from '../tokens/tokens.utils';
-import * as tokensUtils from '../tokens/tokens.utils';
 import {
   defaultVault,
   getCachedVault,
   getPerformance,
   getVaultDefinition,
-  getVaultSnapshots,
+  getVaultPerformance,
   getVaultTokenPrice,
+  getVaultUnderlying,
 } from './vaults.utils';
 import { PricingType } from '../prices/enums/pricing-type.enum';
 import * as pricesUtils from '../prices/prices.utils';
+import * as rewardsUtils from '../rewards/rewards.utils';
+import * as tokensUtils from '../tokens/tokens.utils';
+// TODO: better export this from the sdk, and deal with testing this
+import { VaultsService } from '@badger-dao/sdk/lib/vaults/vaults.service';
+import { createValueSource } from '../protocols/interfaces/value-source.interface';
+import { uniformPerformance } from '../protocols/interfaces/performance.interface';
+import { tokenEmission } from '../protocols/protocols.utils';
+import { TokensService } from '@badger-dao/sdk/lib/tokens/tokens.service';
 
 describe('vaults.utils', () => {
+  beforeEach(() => {
+    jest.spyOn(BadgerSDK.prototype, 'ready').mockImplementation();
+    const vault = getVaultDefinition(TEST_CHAIN, TOKENS.BBADGER);
+    jest.spyOn(rewardsUtils, 'getRewardEmission').mockImplementation(async (_chain, _vault) => {
+      const rewardSource = createValueSource('Badger Rewards', uniformPerformance(6.969));
+      return [
+        rewardsUtils.valueSourceToCachedValueSource(rewardSource, vault, tokenEmission(getToken(TOKENS.BBADGER), true)),
+      ];
+    });
+  });
+
   describe('defaultVault', () => {
     it('returns a sett default fields', () => {
       const vaultDefinition = randomVault();
@@ -98,30 +117,11 @@ describe('vaults.utils', () => {
     });
   });
 
-  describe('getVaultSnapshots', () => {
-    describe('no vault snapshots exists', () => {
-      it('returns the default vault', async () => {
-        setupMapper([]);
-        const vault = randomVault();
-        const cached = await getVaultSnapshots(vault);
-        expect(cached).toMatchObject([]);
-      });
-    });
-
-    describe('many vault snapshots exists', () => {
-      it('returns the vault snaphots', async () => {
-        const vault = randomVault();
-        const snapshots = randomSnapshots(vault);
-        setupMapper(snapshots);
-        const cached = await getVaultSnapshots(vault);
-        expect(cached).toMatchObject(snapshots);
-      });
-    });
-  });
-
   describe('getPerformance', () => {
     it('correctly evaluate no change', () => {
       const [current, initial] = randomPerformance();
+      current.ratio = 0;
+      initial.ratio = 0;
       const performance = getPerformance(current, initial);
       expect(performance).toEqual(0);
     });
@@ -129,6 +129,7 @@ describe('vaults.utils', () => {
     it('correctly evaluate increase', () => {
       const [current, initial] = randomPerformance();
       current.ratio = 1.01;
+      initial.ratio = 1;
       const performance = getPerformance(current, initial);
       const expected = 365;
       expect(performance.toFixed(3)).toEqual(expected.toFixed(3));
@@ -137,6 +138,7 @@ describe('vaults.utils', () => {
     it('correctly evaluate decrease', () => {
       const [current, initial] = randomPerformance();
       current.ratio = 1 - 0.03 / 365;
+      initial.ratio = 1;
       const performance = getPerformance(current, initial);
       const expected = -3;
       expect(performance.toFixed(3)).toEqual(expected.toFixed(3));
@@ -198,6 +200,128 @@ describe('vaults.utils', () => {
           address: vault.vaultToken,
           price: 10 * snapshot.ratio,
         });
+      });
+    });
+  });
+
+  describe('getVaultUnderlying', () => {
+    describe('no snapshots are available', () => {
+      it('returns zero apr', async () => {
+        setupMapper([]);
+        const vault = randomVault();
+        const result = await getVaultUnderlying(vault);
+        expect(result.apr).toEqual(0);
+        expect(result.maxApr).toBeFalsy();
+        expect(result.minApr).toBeFalsy();
+      });
+    });
+
+    describe('full sample period snapshots available', () => {
+      it('returns performances for each sample period', async () => {
+        const vault = randomVault();
+        const snapshots = randomSnapshots(vault);
+        setupMapper(snapshots);
+        const result = await getVaultUnderlying(vault);
+        expect(result.oneDay).toEqual(getPerformance(snapshots[0], snapshots[1]));
+        expect(result.threeDay).toEqual(getPerformance(snapshots[0], snapshots[3]));
+        expect(result.sevenDay).toEqual(getPerformance(snapshots[0], snapshots[7]));
+        expect(result.thirtyDay).toEqual(getPerformance(snapshots[0], snapshots[30]));
+      });
+    });
+
+    describe('partial sample period snapshots available', () => {
+      it('return performances for valid sample periods, and estimates for unavailable data', async () => {
+        const vault = randomVault();
+        const snapshots = randomSnapshots(vault, 5);
+        setupMapper(snapshots);
+        const result = await getVaultUnderlying(vault);
+        expect(result.oneDay).toEqual(getPerformance(snapshots[0], snapshots[1]));
+        expect(result.threeDay).toEqual(getPerformance(snapshots[0], snapshots[3]));
+        expect(result.sevenDay).toEqual(getPerformance(snapshots[0], snapshots[4]));
+        expect(result.thirtyDay).toEqual(getPerformance(snapshots[0], snapshots[4]));
+      });
+    });
+  });
+
+  describe('getVaultPerformance', () => {
+    describe('no rewards or harvests', () => {
+      it('returns no value sources', async () => {
+        jest.spyOn(rewardsUtils, 'getRewardEmission').mockImplementation(async (_chain, _vault) => []);
+        jest.spyOn(VaultsService.prototype, 'listHarvests').mockImplementation(async (_opts) => ({ data: [] }));
+        const vault = randomVault();
+        const result = await getVaultPerformance(TEST_CHAIN, vault);
+        expect(result).toMatchObject([]);
+      });
+    });
+
+    describe('requests non standard vault performance', () => {
+      it('returns value sources from fallback methods', async () => {
+        const vault = getVaultDefinition(TEST_CHAIN, TOKENS.BBADGER);
+        jest.spyOn(VaultsService.prototype, 'listHarvests').mockImplementation(async (_opts) => {
+          throw new Error('Incompatible vault!');
+        });
+        setupMapper(randomSnapshots(vault));
+        const protocolFallback = jest
+          .spyOn(rewardsUtils, 'getProtocolValueSources')
+          .mockImplementation(async (_chain, _vault) => {
+            const emissionToken = getToken(TOKENS.SUSHI);
+            const rewardSource = createValueSource('Sushi Rewards', uniformPerformance(8.888));
+            return [rewardsUtils.valueSourceToCachedValueSource(rewardSource, vault, tokenEmission(emissionToken))];
+          });
+        const result = await getVaultPerformance(TEST_CHAIN, vault);
+        expect(result).toMatchSnapshot();
+        expect(protocolFallback.mock.calls[0]).toMatchObject([TEST_CHAIN, vault]);
+      });
+    });
+
+    describe('requests standard vault performance', () => {
+      const vault = getVaultDefinition(TEST_CHAIN, TOKENS.BBADGER);
+
+      function setupSdk() {
+        jest.spyOn(VaultsService.prototype, 'listHarvests').mockImplementation(async (opts) => {
+          if (!opts.timestamp_gte) {
+            throw new Error('Invalid request!');
+          }
+          const startTime = opts.timestamp_gte;
+          const data = [0, 1, 2].map((int) => {
+            const timestamp = Number((startTime + int * 20000).toFixed());
+            const block = Number((timestamp / 10000).toFixed());
+            return {
+              timestamp,
+              harvests: [{ timestamp, block, harvested: BigNumber.from((int + 1 * 1.88e18).toString()) }],
+              treeDistributions: [
+                { timestamp, block, token: TOKENS.SUSHI, amount: BigNumber.from((int + 1 * 5.77e12).toString()) },
+                { timestamp, block, token: TOKENS.FARM, amount: BigNumber.from((int + 1 * 4.42e12).toString()) },
+              ],
+            };
+          });
+          return { data };
+        });
+        jest.spyOn(TokensService.prototype, 'loadToken').mockImplementation(async (token) => getToken(token));
+        const snapshot = randomSnapshot(vault);
+        snapshot.value = 1000;
+        snapshot.balance = 10000;
+        setupMapper([snapshot]);
+      }
+
+      it('returns value sources from standard methods', async () => {
+        setupSdk();
+        jest.spyOn(pricesUtils, 'getPrice').mockImplementation(async (token) => ({
+          address: token,
+          price: Number(token.slice(0, 6)),
+        }));
+        const result = await getVaultPerformance(TEST_CHAIN, vault);
+        expect(result).toMatchSnapshot();
+      });
+
+      it('skips all emitted tokens with no price', async () => {
+        setupSdk();
+        jest.spyOn(pricesUtils, 'getPrice').mockImplementation(async (token) => ({
+          address: token,
+          price: 0,
+        }));
+        const result = await getVaultPerformance(TEST_CHAIN, vault);
+        expect(result).toMatchSnapshot();
       });
     });
   });

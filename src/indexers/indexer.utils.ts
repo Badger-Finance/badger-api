@@ -47,14 +47,12 @@ export async function settToCachedSnapshot(
   vaultDefinition: VaultDefinition,
 ): Promise<CachedSettSnapshot> {
   const sdk = await chain.getSdk();
-  const { address, totalSupply, balance, pricePerFullShare, available } = await sdk.vaults.loadVault(
-    vaultDefinition.vaultToken,
-    {
-      requireRegistry: false,
-      status: 2,
-      version: 'v1',
-    },
-  );
+  const { address, totalSupply, balance, pricePerFullShare, available } = await sdk.vaults.loadVault({
+    address: vaultDefinition.vaultToken,
+    requireRegistry: false,
+    status: 2,
+    version: 'v1',
+  });
 
   const [tokenPriceData, strategyInfo, boostWeight] = await Promise.all([
     getPrice(vaultDefinition.depositToken),
@@ -85,11 +83,11 @@ export async function getQueryBlock(chain: Chain, block: number): Promise<number
   return queryBlock;
 }
 
-export const settToSnapshot = async (
+export async function settToSnapshot(
   chain: Chain,
   vaultDefinition: VaultDefinition,
   block: number,
-): Promise<VaultSnapshot | null> => {
+): Promise<VaultSnapshot | null> {
   const queryBlock = await getQueryBlock(chain, block);
   const sett = await getVault(chain.graphUrl, vaultDefinition.vaultToken, queryBlock);
   const settToken = getToken(vaultDefinition.vaultToken);
@@ -120,7 +118,7 @@ export const settToSnapshot = async (
     ratio,
     value: parseFloat(value.toFixed(4)),
   });
-};
+}
 
 export async function getIndexedBlock(
   vaultDefinition: VaultDefinition,
