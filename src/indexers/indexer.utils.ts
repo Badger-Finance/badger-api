@@ -42,7 +42,7 @@ export async function batchRefreshAccounts(
   }
 }
 
-export async function settToCachedSnapshot(
+export async function vaultToCachedSnapshot(
   chain: Chain,
   vaultDefinition: VaultDefinition,
 ): Promise<CachedSettSnapshot> {

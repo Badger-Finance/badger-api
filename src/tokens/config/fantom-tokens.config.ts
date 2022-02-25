@@ -44,6 +44,14 @@ export const fantomTokensConfig: TokenConfig = {
     symbol: 'BOO',
     type: PricingType.LookupName,
   },
+  [TOKENS.FTM_XBOO]: {
+    address: TOKENS.FTM_XBOO,
+    decimals: 18,
+    name: 'Boo MirrorWorld',
+    lookupName: 'boo-mirrorworld',
+    symbol: 'XBOO',
+    type: PricingType.LookupName,
+  },
   [TOKENS.MULTI_RENBTC]: {
     address: TOKENS.MULTI_RENBTC,
     decimals: 8,
@@ -60,14 +68,6 @@ export const fantomTokensConfig: TokenConfig = {
     symbol: 'USDC',
     type: PricingType.LookupName,
   },
-  [TOKENS.SMM_USDC_DAI]: {
-    address: TOKENS.SMM_USDC_DAI,
-    decimals: 18,
-    lpToken: true,
-    name: 'Solidly: USDC-DAI',
-    symbol: 'SMM-USDC-DAI',
-    type: PricingType.UniV2LP,
-  },
   [TOKENS.SMM_BOO_XBOO]: {
     address: TOKENS.SMM_BOO_XBOO,
     decimals: 18,
@@ -83,17 +83,6 @@ export const fantomTokensConfig: TokenConfig = {
     name: 'Solidly: WBTC-renBTC',
     symbol: 'SMM-WBTC-RENBTC',
     type: PricingType.UniV2LP,
-  },
-  [TOKENS.BSMM_USDC_DAI]: {
-    address: TOKENS.BSMM_USDC_DAI,
-    decimals: 18,
-    name: 'bSolidly: USDC-DAI',
-    symbol: 'bSMM-USDC-DAI',
-    type: PricingType.Vault,
-    vaultToken: {
-      address: TOKENS.SMM_USDC_DAI,
-      network: Network.Fantom,
-    },
   },
   [TOKENS.BSMM_BOO_XBOO]: {
     address: TOKENS.BSMM_BOO_XBOO,

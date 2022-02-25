@@ -66,7 +66,7 @@ export async function indexPrices() {
             }
           }
         } catch (err) {
-          console.log({ message: `Unable to remap ${t.address} to expected look up name ${t.lookupName}`, err });
+          console.error(`Unable to remap ${t.address} to expected look up name ${t.lookupName}`);
         }
       });
 
