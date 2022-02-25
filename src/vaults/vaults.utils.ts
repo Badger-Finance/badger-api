@@ -318,9 +318,6 @@ export async function getVaultPerformance(
       getVaultUnderlying(vaultDefinition),
       getProtocolValueSources(chain, vaultDefinition, true),
     ]);
-    if (vaultDefinition.vaultToken === TOKENS.BCRV_MIM_3CRV) {
-      console.log({ underlying, protocol, rewardEmissions });
-    }
     return [underlying, ...protocol, ...rewardEmissions];
   }
 }
