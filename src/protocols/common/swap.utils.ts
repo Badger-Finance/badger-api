@@ -84,9 +84,10 @@ const resolveLiquidityPrice = async (liquidityData: LiquidityData): Promise<Toke
   };
 };
 
-export const resolveTokenPrice = async (chain: Chain, token: string, contract: string): Promise<TokenPrice> => {
+export async function resolveTokenPrice(chain: Chain, token: string, contract: string): Promise<TokenPrice> {
   const { token0, token1, reserve0, reserve1 } = await getLiquidityData(chain, contract);
-  const pricingToken = getToken(token);
+  const sdk = await chain.getSdk();
+  const pricingToken = await sdk.tokens.loadToken(token);
   const isToken0 = pricingToken.address === token0;
   const knownToken = isToken0 ? token1 : token0;
   const [divisor, dividend] = isToken0 ? [reserve1, reserve0] : [reserve0, reserve1];
@@ -100,4 +101,4 @@ export const resolveTokenPrice = async (chain: Chain, token: string, contract: s
     address: pricingToken.address,
     price,
   };
-};
+}

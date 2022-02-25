@@ -28,6 +28,22 @@ export const fantomTokensConfig: TokenConfig = {
     symbol: 'WBTC',
     type: PricingType.LookupName,
   },
+  [TOKENS.FTM_SOLID]: {
+    address: TOKENS.FTM_SOLID,
+    decimals: 18,
+    lookupName: '0xe4bc39fdD4618a76f6472079C329bdfa820afA75',
+    name: 'Solidly',
+    symbol: 'SOLID',
+    type: PricingType.OnChainUniV2LP,
+  },
+  [TOKENS.FTM_SEX]: {
+    address: TOKENS.FTM_SEX,
+    decimals: 18,
+    lookupName: 'solidex',
+    name: 'Solidex',
+    symbol: 'SEX',
+    type: PricingType.LookupName,
+  },
   [TOKENS.FTM_DAI]: {
     address: TOKENS.FTM_DAI,
     decimals: 18,
