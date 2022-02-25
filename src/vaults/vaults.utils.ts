@@ -4,7 +4,7 @@ import { BigNumber, ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
-import { CURRENT, DEBUG, ONE_DAY_MS, ONE_YEAR_MS, ONE_YEAR_SECONDS, SAMPLE_DAYS } from '../config/constants';
+import { CURRENT, ONE_DAY_MS, ONE_YEAR_MS, ONE_YEAR_SECONDS, SAMPLE_DAYS } from '../config/constants';
 import { getSdk, SettQuery } from '../graphql/generated/badger';
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
 import { formatBalance, getToken } from '../tokens/tokens.utils';
@@ -314,9 +314,6 @@ export async function getVaultPerformance(
     const protocol = await getProtocolValueSources(chain, vaultDefinition);
     return [...valueSources, ...protocol, ...rewardEmissions];
   } catch (err) {
-    if (DEBUG) {
-      console.log(err);
-    }
     const [underlying, protocol] = await Promise.all([
       getVaultUnderlying(vaultDefinition),
       getProtocolValueSources(chain, vaultDefinition, true),
