@@ -163,10 +163,12 @@ export async function getLpTokenBalances(
     if (!vault.protocol) {
       throw new BadRequest('LP balance look up requires a defined protocol');
     }
+    const sdk = await chain.getSdk();
     const liquidityData = await getLiquidityData(chain, vault.depositToken);
     const { token0, token1, reserve0, reserve1, totalSupply } = liquidityData;
-    const t0Token = getToken(token0);
-    const t1Token = getToken(token1);
+    const tokenData = await sdk.tokens.loadTokens([token0, token1]);
+    const t0Token = tokenData[token0];
+    const t1Token = tokenData[token1];
 
     // poolData returns the full liquidity pool, valueScalar acts to calculate the portion within the sett
     const settSnapshot = await getCachedVault(vault);
