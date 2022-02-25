@@ -24,10 +24,9 @@ export async function getLiquidityData(chain: Chain, contract: string): Promise<
     pairContract.getReserves(),
   ]);
   const totalSupply = formatBalance(totalPairSupply);
-  const token0Decimals = getToken(token0).decimals;
-  const token1Decimals = getToken(token1).decimals;
-  const reserve0 = formatBalance(reserves._reserve0, token0Decimals);
-  const reserve1 = formatBalance(reserves._reserve1, token1Decimals);
+  const tokenData = await sdk.tokens.loadTokens([token0, token1]);
+  const reserve0 = formatBalance(reserves._reserve0, tokenData[token0].decimals);
+  const reserve1 = formatBalance(reserves._reserve1, tokenData[token1].decimals);
   return {
     contract: contract,
     token0: token0,

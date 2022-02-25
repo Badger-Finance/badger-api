@@ -116,6 +116,7 @@ const RAW_TOKENS: ContractRegistry = {
   FTM_DAI: '0x8d11ec38a3eb5e956b052f67da8bdc9bef8abf3e',
   FTM_USDC: '0x04068da6c83afcfa0e13ba15a6696662335d5b75',
   FTM_BOO: '0x841fad6eae12c286d1fd18d1d525dffa75c7effe',
+  FTM_XBOO: '0xa48d959ae2e88f1daa7d5f611e01908106de7598',
   FTM_WBTC: '0x321162Cd933E2Be498Cd2267a90534A804051b11',
   // solidly market maker - avoid sushi liquidity pool collision
   SMM_USDC_DAI: '0xC0240Ee4405f11EFb87A00B432A8be7b7Afc97CC',
@@ -212,7 +213,6 @@ const RAW_TOKENS: ContractRegistry = {
   BAVAX_WBTC: '0x711555f2b421da9a86a18dc163d04699310fe297',
 
   // fantom vault tokens
-  BSMM_USDC_DAI: '0x5deab57a0af330f268d4d2d029a1ce6549f11dad',
   BSMM_BOO_XBOO: '0x7dD26f47e1C8a060EDC1999D8781dDE90A4C33A9',
   BSMM_WBTC_RENBTC: '0x7637eFAa11d29a5b34e717ab447833bF143f2383',
 };
