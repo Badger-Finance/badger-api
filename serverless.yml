@@ -381,6 +381,7 @@ functions:
   index-apy-snapshots:
     handler: src/indexers/apy-snapshots-indexer.refreshApySnapshots
     timeout: 120
+    memorySize: 4096
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-apy-snapshots
