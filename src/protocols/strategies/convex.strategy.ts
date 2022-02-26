@@ -237,6 +237,10 @@ async function getVaultSources(
       continue;
     }
     let rewardToken = getToken(rewardAddress);
+    // spell is not currently handled in the strat, ignore it for now
+    if (rewardToken.address === TOKENS.SPELL) {
+      continue;
+    }
     if (rewardToken.address === TOKENS.CVX) {
       rewardToken = bveCVX;
     }
