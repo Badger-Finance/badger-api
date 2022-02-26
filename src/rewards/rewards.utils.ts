@@ -223,7 +223,8 @@ export async function getVaultValueSources(
 
     // delete sources which are no longer valid
     const mapper = getDataMapper();
-    await Promise.all(Array.from(Object.values(oldSources)).map((source) => mapper.delete(source)));
+    for await (const _item of mapper.batchDelete(sources)) {
+    }
     return newSources;
   } catch (err) {
     console.log({ vaultDefinition, err });
