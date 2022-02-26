@@ -96,7 +96,7 @@ provider:
     SUSHISWAP_ARBITRUM: 'https://api.thegraph.com/subgraphs/name/sushiswap/arbitrum-exchange'
     PANCAKESWAP: 'https://api.thegraph.com/subgraphs/name/pancakeswap/exchange'
     QUICKSWAP: 'https://api.thegraph.com/subgraphs/name/sameepsi/quickswap06'
-    SWAPR: 'https://api.thegraph.com/subgraphs/name/luzzif/swapr-arbitrum-one-v2'
+    SWAPR: 'https://api.thegraph.com/subgraphs/name/dxgraphs/swapr-arbitrum-one-v3'
     # Table Defintions
     APY_SNAPSHOTS_DATA: ${self:custom.table.APY_SNAPSHOTS_DATA}
     SETT_DATA: ${self:custom.table.SETT_DATA}

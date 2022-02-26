@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 import { Chain } from '../../chains/config/chain.config';
-import { ONE_YEAR_SECONDS, SWAPR_SUBGRAPH_URL } from '../../config/constants';
+import { ONE_YEAR_SECONDS, SWAPR_URL } from '../../config/constants';
 import { TOKENS } from '../../config/tokens.config';
 import { SwaprStaking__factory } from '../../contracts';
 import { SwaprStrategy__factory } from '../../contracts/factories/SwaprStrategy__factory';
@@ -25,7 +25,7 @@ const COMPOUND_SCALARS = {
 export class SwaprStrategy {
   static async getValueSources(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
     return Promise.all([
-      getUniV2SwapValue(SWAPR_SUBGRAPH_URL, vaultDefinition),
+      getUniV2SwapValue(SWAPR_URL, vaultDefinition),
       ...(await getSwaprEmission(chain, vaultDefinition)),
     ]);
   }
