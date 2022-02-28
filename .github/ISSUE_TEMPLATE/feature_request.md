@@ -1,30 +1,21 @@
 ---
-name: Feature request
+name: Feature Request
 about: Suggest an idea for this project
-title: "[feat. request]: Feature Name"
-labels: feature request
+title: '[feat]:'
+labels: enhancement
 assignees: axejintao
-
 ---
 
-### Description
+# Background
 
-Provide a short description of the feature - provide business context if required. 
+Provide a short description of the feature - provide business context if required.
 
-#### Request Metrics 
+## Requirements
 
-| Metric | Rating | 
-| --- | --- |
-| Priority | |
-| Effort | |
-| Risk | |
- 
-**Options:** low, medium, high
+- [ ] Example of something I will need or want
+- [ ] Some other example of another item required
 
-#### Documentation (optional)
+## Tasks
 
-Add any supporting documentation, proposed API responses, interaction diagrams etc. 
-
-#### Resources (optional)
-
-Add any new or updated resource requirements for the system
+- [ ] Deliverable 1
+- [ ] Deliverable 2
