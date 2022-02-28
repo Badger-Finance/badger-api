@@ -6,9 +6,7 @@ import * as vaultUtils from '../vaults/vaults.utils';
 import { refreshVaultSnapshots } from './vault-snapshots-indexer';
 import { BigNumber, ethers } from 'ethers';
 import { TEST_ADDR } from '../test/tests.utils';
-// TODO: better export this from the sdk, and deal with testing this
-import { VaultsService } from '@badger-dao/sdk/lib/vaults/vaults.service';
-import BadgerSDK, { VaultState, VaultVersion, RegistryVault, LoadVaultOptions } from '@badger-dao/sdk';
+import BadgerSDK, { VaultState, VaultVersion, RegistryVault, LoadVaultOptions, VaultsService } from '@badger-dao/sdk';
 
 describe('refreshSettSnapshots', () => {
   const supportedAddresses = loadChains()
