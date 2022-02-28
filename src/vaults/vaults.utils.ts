@@ -23,7 +23,7 @@ import { createValueSource } from '../protocols/interfaces/value-source.interfac
 import { uniformPerformance } from '../protocols/interfaces/performance.interface';
 import { getProtocolValueSources, getRewardEmission, valueSourceToCachedValueSource } from '../rewards/rewards.utils';
 import { SourceType } from '../rewards/enums/source-type.enum';
-import { tokenEmission } from '../protocols/protocols.utils';
+import { getVaultCachedValueSources, tokenEmission } from '../protocols/protocols.utils';
 import { SOURCE_TIME_FRAMES, updatePerformance } from '../rewards/enums/source-timeframe.enum';
 
 export const VAULT_SOURCE = 'Vault Compounding';
@@ -250,69 +250,12 @@ export async function getVaultPerformance(
 ): Promise<CachedValueSource[]> {
   const rewardEmissions = await getRewardEmission(chain, vaultDefinition);
   try {
-    const incompatibleNetworks = new Set<Network>([Network.BinanceSmartChain, Network.Polygon, Network.Arbitrum]);
-    if (incompatibleNetworks.has(chain.network)) {
-      throw new Error('Network does not have standardized vaults!');
-    }
+    const [eventSources, protocol] = await Promise.all([
+      loadVaultEventPerformances(chain, vaultDefinition),
+      getProtocolValueSources(chain, vaultDefinition),
+    ]);
 
-    const sdk = await chain.getSdk();
-    const cutoff = (Date.now() - ONE_DAY_MS * 21) / 1000;
-    const { data } = await sdk.vaults.listHarvests({ address: vaultDefinition.vaultToken, timestamp_gte: cutoff });
-
-    const recentHarvests = data.sort((a, b) => b.timestamp - a.timestamp);
-
-    if (recentHarvests.length <= 1) {
-      throw new Error('Vault does not have adequate harvest history!');
-    }
-
-    const duration = recentHarvests[0].timestamp - recentHarvests[recentHarvests.length - 1].timestamp;
-    const measuredHarvests = recentHarvests.slice(1);
-    const valueSources = [];
-
-    const totalHarvested = measuredHarvests
-      .flatMap((h) => h.harvests)
-      .map((h) => h.harvested)
-      .reduce((total, harvested) => total.add(harvested), BigNumber.from(0));
-
-    const vault = await getCachedVault(vaultDefinition);
-    const depositToken = getToken(vaultDefinition.depositToken);
-    const totalHarvestedTokens = formatBalance(totalHarvested, depositToken.decimals);
-    const compoundApr = (((totalHarvestedTokens / vault.balance) * ONE_YEAR_SECONDS) / duration) * 100;
-    const compoundSource = createValueSource(VAULT_SOURCE, uniformPerformance(compoundApr));
-    const cachedCompoundSource = valueSourceToCachedValueSource(compoundSource, vaultDefinition, SourceType.Compound);
-    valueSources.push(cachedCompoundSource);
-
-    const treeDistributions = measuredHarvests.flatMap((h) => h.treeDistributions);
-    const tokensEmitted = new Map<string, BigNumber>();
-    for (const distribution of treeDistributions) {
-      const { token, amount } = distribution;
-      let entry = tokensEmitted.get(token);
-      if (!entry) {
-        entry = BigNumber.from(0);
-        tokensEmitted.set(token, entry);
-      }
-      tokensEmitted.set(token, entry.add(amount));
-    }
-
-    for (const [token, amount] of tokensEmitted.entries()) {
-      const [tokenEmitted, tokenPrice] = await Promise.all([getToken(token), getPrice(token)]);
-      if (tokenPrice.price === 0) {
-        continue;
-      }
-      const tokensEmitted = formatBalance(amount, tokenEmitted.decimals);
-      const valueEmitted = tokensEmitted * tokenPrice.price;
-      const emissionApr = (((valueEmitted / vault.value) * ONE_YEAR_SECONDS) / duration) * 100;
-      const emissionSource = createValueSource(`${tokenEmitted.symbol} Rewards`, uniformPerformance(emissionApr));
-      const cachedEmissionSource = valueSourceToCachedValueSource(
-        emissionSource,
-        vaultDefinition,
-        tokenEmission(tokenEmitted),
-      );
-      valueSources.push(cachedEmissionSource);
-    }
-
-    const protocol = await getProtocolValueSources(chain, vaultDefinition);
-    return [...valueSources, ...protocol, ...rewardEmissions];
+    return [...eventSources, ...protocol, ...rewardEmissions];
   } catch (err) {
     const [underlying, protocol] = await Promise.all([
       getVaultUnderlying(vaultDefinition),
@@ -363,4 +306,88 @@ export async function getVaultUnderlying(vaultDefinition: VaultDefinition): Prom
 
   const vaultSource = createValueSource(VAULT_SOURCE, performance);
   return valueSourceToCachedValueSource(vaultSource, vaultDefinition, SourceType.Compound);
+}
+
+export async function loadVaultEventPerformances(
+  chain: Chain,
+  vaultDefinition: VaultDefinition,
+): Promise<CachedValueSource[]> {
+  const incompatibleNetworks = new Set<Network>([Network.BinanceSmartChain, Network.Polygon, Network.Arbitrum]);
+  if (incompatibleNetworks.has(chain.network)) {
+    throw new Error('Network does not have standardized vaults!');
+  }
+
+  const sdk = await chain.getSdk();
+  const cutoff = (Date.now() - ONE_DAY_MS * 21) / 1000;
+  const { data } = await sdk.vaults.listHarvests({ address: vaultDefinition.vaultToken, timestamp_gte: cutoff });
+
+  const recentHarvests = data.sort((a, b) => b.timestamp - a.timestamp);
+
+  if (recentHarvests.length <= 1) {
+    throw new Error('Vault does not have adequate harvest history!');
+  }
+
+  const duration = recentHarvests[0].timestamp - recentHarvests[recentHarvests.length - 1].timestamp;
+  const measuredHarvests = recentHarvests.slice(1);
+  const valueSources = [];
+
+  const totalHarvested = measuredHarvests
+    .flatMap((h) => h.harvests)
+    .map((h) => h.harvested)
+    .reduce((total, harvested) => total.add(harvested), BigNumber.from(0));
+
+  const vault = await getCachedVault(vaultDefinition);
+  const depositToken = getToken(vaultDefinition.depositToken);
+  const totalHarvestedTokens = formatBalance(totalHarvested, depositToken.decimals);
+  const periods = ONE_YEAR_SECONDS / duration;
+  const compoundApr = (totalHarvestedTokens / vault.balance) * periods;
+  const compoundApy = (((1 + compoundApr / periods) ^ periods) - 1) * 100;
+  const compoundSource = createValueSource(VAULT_SOURCE, uniformPerformance(compoundApy));
+  const cachedCompoundSource = valueSourceToCachedValueSource(compoundSource, vaultDefinition, SourceType.Compound);
+  valueSources.push(cachedCompoundSource);
+
+  const treeDistributions = measuredHarvests.flatMap((h) => h.treeDistributions);
+  const tokensEmitted = new Map<string, BigNumber>();
+  for (const distribution of treeDistributions) {
+    const { token, amount } = distribution;
+    let entry = tokensEmitted.get(token);
+    if (!entry) {
+      entry = BigNumber.from(0);
+      tokensEmitted.set(token, entry);
+    }
+    tokensEmitted.set(token, entry.add(amount));
+  }
+
+  for (const [token, amount] of tokensEmitted.entries()) {
+    const [tokenEmitted, tokenPrice] = await Promise.all([getToken(token), getPrice(token)]);
+    if (tokenPrice.price === 0) {
+      continue;
+    }
+    const tokensEmitted = formatBalance(amount, tokenEmitted.decimals);
+    const valueEmitted = tokensEmitted * tokenPrice.price;
+    const emissionApr = (((valueEmitted / vault.value) * ONE_YEAR_SECONDS) / duration) * 100;
+    const emissionSource = createValueSource(`${tokenEmitted.symbol} Rewards`, uniformPerformance(emissionApr));
+    const cachedEmissionSource = valueSourceToCachedValueSource(
+      emissionSource,
+      vaultDefinition,
+      tokenEmission(tokenEmitted),
+    );
+    valueSources.push(cachedEmissionSource);
+    // try to add underlying emitted vault value sources if applicable
+    try {
+      const emittedVault = getVaultDefinition(chain, tokenEmitted.address);
+      const vaultValueSources = await getVaultCachedValueSources(emittedVault);
+      // these value sources are already saved in apy formats for vault compounding
+      const compoundingSource = vaultValueSources.find((source) => source.type === SourceType.Compound);
+      if (compoundingSource) {
+        const compoundingSourceApy = ((1 + (emissionApr * compoundSource.apr) / periods) ^ periods) - 1;
+        const sourceName = `${getToken(emittedVault.vaultToken).name} Compounding`;
+        const sourceType = sourceName.replace(' ', '_').toLowerCase();
+        const derivativeSource = createValueSource(sourceName, uniformPerformance(compoundingSourceApy));
+        valueSources.push(valueSourceToCachedValueSource(derivativeSource, vaultDefinition, sourceType));
+      }
+    } catch {} // ignore error for non vaults
+  }
+
+  return valueSources;
 }

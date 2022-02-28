@@ -3,7 +3,7 @@ import { PlatformTest } from '@tsed/common';
 import { BadRequest } from '@tsed/exceptions';
 import SuperTest from 'supertest';
 import { uniformPerformance } from '../protocols/interfaces/performance.interface';
-import { createValueSource, ValueSource } from '../protocols/interfaces/value-source.interface';
+import { createValueSource } from '../protocols/interfaces/value-source.interface';
 import * as protocolsUtils from '../protocols/protocols.utils';
 import { Server } from '../Server';
 import * as vaultsUtils from './vaults.utils';
@@ -11,6 +11,9 @@ import { TokenBalance } from '../tokens/interfaces/token-balance.interface';
 import * as tokensUtils from '../tokens/tokens.utils';
 import { mockBalance } from '../tokens/tokens.utils';
 import { VaultDefinition } from './interfaces/vault-definition.interface';
+import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
+import { valueSourceToCachedValueSource } from '../rewards/rewards.utils';
+import { SourceType } from '../rewards/enums/source-type.enum';
 
 describe('SettsController', () => {
   let request: SuperTest.SuperTest<SuperTest.Test>;
@@ -30,14 +33,19 @@ describe('SettsController', () => {
         return vault;
       });
     jest
-      .spyOn(protocolsUtils, 'getVaultValueSources')
-      .mockImplementation(async (vaultDefinition: VaultDefinition): Promise<ValueSource[]> => {
+      .spyOn(protocolsUtils, 'getVaultCachedValueSources')
+      .mockImplementation(async (vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> => {
         const performance = parseInt(vaultDefinition.vaultToken.slice(0, 5), 16) / 100;
         const underlying = createValueSource(vaultsUtils.VAULT_SOURCE, uniformPerformance(performance));
         const badger = createValueSource('Badger Rewards', uniformPerformance(performance));
         const digg = createValueSource('Digg Rewards', uniformPerformance(performance));
         const fees = createValueSource('Curve Trading Fees', uniformPerformance(performance));
-        return [underlying, badger, digg, fees];
+        return [
+          valueSourceToCachedValueSource(underlying, vaultDefinition, SourceType.Compound),
+          valueSourceToCachedValueSource(badger, vaultDefinition, SourceType.Emission),
+          valueSourceToCachedValueSource(digg, vaultDefinition, SourceType.Emission),
+          valueSourceToCachedValueSource(fees, vaultDefinition, SourceType.TradeFee),
+        ];
       });
     jest
       .spyOn(tokensUtils, 'getVaultTokens')
