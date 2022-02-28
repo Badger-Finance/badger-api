@@ -1,4 +1,4 @@
-import { MerkleProof } from '@badger-dao/sdk/lib/api/types/merkle-proof';
+import { MerkleProof } from '@badger-dao/sdk';
 import { Service } from '@tsed/common';
 import { NotFound } from '@tsed/exceptions';
 import { ethers } from 'ethers';

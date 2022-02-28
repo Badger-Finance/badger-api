@@ -1,4 +1,4 @@
-import BadgerSDK, { Protocol, Vault, VaultState, VaultType } from '@badger-dao/sdk';
+import BadgerSDK, { Protocol, Vault, VaultsService, VaultState, VaultType } from '@badger-dao/sdk';
 import { BadRequest, NotFound, UnprocessableEntity } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';
 import { BinanceSmartChain } from '../chains/config/bsc.config';
@@ -27,8 +27,6 @@ import { PricingType } from '../prices/enums/pricing-type.enum';
 import * as pricesUtils from '../prices/prices.utils';
 import * as rewardsUtils from '../rewards/rewards.utils';
 import * as tokensUtils from '../tokens/tokens.utils';
-// TODO: better export this from the sdk, and deal with testing this
-import { VaultsService } from '@badger-dao/sdk/lib/vaults/vaults.service';
 import { createValueSource } from '../protocols/interfaces/value-source.interface';
 import { uniformPerformance } from '../protocols/interfaces/performance.interface';
 import { tokenEmission } from '../protocols/protocols.utils';
