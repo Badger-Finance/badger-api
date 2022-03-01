@@ -1,8 +1,7 @@
 import { refreshChainApySnapshots } from './apy-snapshots-indexer';
 import * as rewardsUtils from '../rewards/rewards.utils';
 import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
-import { mockBatchPut, setupMapper, TEST_CHAIN } from '../test/tests.utils';
-import { DataMapper } from '@aws/dynamodb-data-mapper';
+import { mockBatchDelete, mockBatchPut, setupMapper, TEST_CHAIN } from '../test/tests.utils';
 
 describe('apy-snapshots-indexer', () => {
   const mockValueSource = Object.assign(new CachedValueSource(), {
@@ -37,8 +36,8 @@ describe('apy-snapshots-indexer', () => {
   });
 
   beforeEach(() => {
-    jest.spyOn(DataMapper.prototype, 'batchDelete').mockImplementation();
-    setupMapper([]);
+    mockBatchDelete([mockValueSource]);
+    setupMapper([mockValueSource]);
   });
 
   describe('refreshChainApySnapshots', () => {

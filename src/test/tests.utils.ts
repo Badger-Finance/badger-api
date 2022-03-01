@@ -25,7 +25,7 @@ export const TEST_CHAIN = new Ethereum();
 export const TEST_ADDR = ethers.utils.getAddress('0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484');
 
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-export const setupMapper = (items: unknown[], filter?: (items: unknown[]) => unknown[]) => {
+export function setupMapper(items: unknown[], filter?: (items: unknown[]) => unknown[]) {
   // @ts-ignore
   const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
   let result = items;
@@ -35,17 +35,27 @@ export const setupMapper = (items: unknown[], filter?: (items: unknown[]) => unk
   // @ts-ignore
   qi[Symbol.iterator] = jest.fn(() => result.values());
   return jest.spyOn(DataMapper.prototype, 'query').mockImplementation(() => qi);
-};
+}
 /* eslint-enable @typescript-eslint/ban-ts-comment */
 
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-export const mockBatchPut = (items: unknown[]) => {
+export function mockBatchPut(items: unknown[]) {
   // @ts-ignore
   const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
   // @ts-ignore
   qi[Symbol.iterator] = jest.fn(() => items.values());
   return jest.spyOn(DataMapper.prototype, 'batchPut').mockImplementation(() => qi);
-};
+}
+/* eslint-enable @typescript-eslint/ban-ts-comment */
+
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+export function mockBatchDelete(items: unknown[]) {
+  // @ts-ignore
+  const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
+  // @ts-ignore
+  qi[Symbol.iterator] = jest.fn(() => items.values());
+  return jest.spyOn(DataMapper.prototype, 'batchDelete').mockImplementation(() => qi);
+}
 /* eslint-enable @typescript-eslint/ban-ts-comment */
 
 export function defaultAccount(address: string): CachedAccount {
