@@ -341,7 +341,7 @@ describe('vaults.utils', () => {
         }));
         jest.spyOn(protocolsUtils, 'getVaultCachedValueSources').mockImplementation(async (vault) => {
           const underlying = createValueSource(VAULT_SOURCE, uniformPerformance(10));
-          return [rewardsUtils.valueSourceToCachedValueSource(underlying, vault, SourceType.Compound)];
+          return [rewardsUtils.valueSourceToCachedValueSource(underlying, vault, SourceType.PreCompound)];
         });
         const result = await getVaultPerformance(TEST_CHAIN, vault);
         expect(result).toMatchSnapshot();
