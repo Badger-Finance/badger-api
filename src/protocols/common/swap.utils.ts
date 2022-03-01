@@ -16,7 +16,7 @@ interface LiquidityData {
 
 export async function getLiquidityData(chain: Chain, contract: string): Promise<LiquidityData> {
   const sdk = await chain.getSdk();
-  const pairContract = UniV2__factory.connect(contract, sdk.multicall);
+  const pairContract = UniV2__factory.connect(contract, sdk.provider);
   const [totalPairSupply, token0, token1, reserves] = await Promise.all([
     pairContract.totalSupply(),
     pairContract.token0(),
