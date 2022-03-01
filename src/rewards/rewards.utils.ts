@@ -8,7 +8,7 @@ import { getPrice } from '../prices/prices.utils';
 import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
 import { uniformPerformance } from '../protocols/interfaces/performance.interface';
 import { createValueSource } from '../protocols/interfaces/value-source.interface';
-import { getVaultCachedValueSources, tokenEmission } from '../protocols/protocols.utils';
+import { tokenEmission } from '../protocols/protocols.utils';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { Token } from '../tokens/interfaces/token.interface';
 import { getToken } from '../tokens/tokens.utils';
@@ -24,7 +24,6 @@ import { QuickswapStrategy } from '../protocols/strategies/quickswap.strategy';
 import { SushiswapStrategy } from '../protocols/strategies/sushiswap.strategy';
 import { UniswapStrategy } from '../protocols/strategies/uniswap.strategy';
 import { SwaprStrategy } from '../protocols/strategies/swapr.strategy';
-import { getDataMapper } from '../aws/dynamodb.utils';
 import { getCachedVault, getVaultPerformance } from '../vaults/vaults.utils';
 import { SourceType } from './enums/source-type.enum';
 
@@ -194,18 +193,13 @@ export async function getVaultValueSources(
   // manual over ride for removed compounding of vaults - this can be empty
   const NO_COMPOUND_VAULTS = new Set([TOKENS.BREMBADGER, TOKENS.BVECVX]);
 
+  let sources: CachedValueSource[] = [];
   try {
-    const sources = await getVaultPerformance(chain, vaultDefinition);
+    sources = await getVaultPerformance(chain, vaultDefinition);
 
-    // check for any emission removal
-    const oldSources: Record<string, CachedValueSource> = {};
-    const oldEmission = await getVaultCachedValueSources(vaultDefinition);
-    oldEmission.forEach((source) => (oldSources[source.addressValueSourceType] = source));
-
-    let newSources = sources;
     const hasNoUnderlying = NO_COMPOUND_VAULTS.has(vaultDefinition.vaultToken);
     if (hasNoUnderlying) {
-      newSources = sources.filter((s) => s.type !== SourceType.Compound);
+      sources = sources.filter((s) => s.type !== SourceType.Compound);
     }
 
     const ARB_CRV_SETTS = new Set([TOKENS.BARB_CRV_RENBTC, TOKENS.BARB_CRV_TRICRYPTO, TOKENS.BARB_CRV_TRICRYPTO_LITE]);
@@ -213,21 +207,14 @@ export async function getVaultValueSources(
       const compounding = sources.find((s) => s.type === SourceType.Compound);
       if (compounding) {
         const crvSource = createValueSource('CRV Rewards', uniformPerformance(compounding.apr));
-        newSources.push(
+        sources.push(
           valueSourceToCachedValueSource(crvSource, vaultDefinition, tokenEmission(getToken(TOKENS.ARB_CRV))),
         );
       }
     }
-    // remove updated sources from old source list
-    newSources.forEach((source) => delete oldSources[source.addressValueSourceType]);
-
-    // delete sources which are no longer valid
-    const mapper = getDataMapper();
-    for await (const _item of mapper.batchDelete(sources)) {
-    }
-    return newSources;
+    return sources;
   } catch (err) {
-    console.log({ vaultDefinition, err });
+    console.log({ vaultDefinition, err, sources });
     return [];
   }
 }
