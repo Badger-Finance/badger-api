@@ -5,6 +5,7 @@ import { getVaultDefinition } from '../vaults/vaults.utils';
 import { randomSnapshots, setupMapper } from '../test/tests.utils';
 import { ChartsService } from './charts.service';
 import { ChartGranularity } from './enums/chart-granularity.enum';
+import { ONE_DAY_MS } from '../config/constants';
 
 describe('charts.service', () => {
   let service: ChartsService;
@@ -18,13 +19,11 @@ describe('charts.service', () => {
   afterEach(PlatformTest.reset);
 
   describe('getRequestedDataPoints', () => {
-    const today = new Date();
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    const oneWeek = new Date();
-    oneWeek.setDate(oneWeek.getDate() - 7);
-    const oneMonth = new Date();
-    oneMonth.setDate(oneMonth.getDate() - 30);
+    const baseTime = 1646105170000;
+    const today = new Date(baseTime);
+    const yesterday = new Date(baseTime - ONE_DAY_MS);
+    const oneWeek = new Date(baseTime - ONE_DAY_MS * 7);
+    const oneMonth = new Date(baseTime - ONE_DAY_MS * 30);
     it.each([
       [24, 1, ChartGranularity.HOUR, yesterday, today],
       [12, 2, ChartGranularity.HOUR, yesterday, today],

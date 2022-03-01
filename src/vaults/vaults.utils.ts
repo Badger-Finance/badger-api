@@ -339,7 +339,8 @@ export async function loadVaultEventPerformances(
   const vault = await getCachedVault(vaultDefinition);
   const depositToken = getToken(vaultDefinition.depositToken);
   const totalHarvestedTokens = formatBalance(totalHarvested, depositToken.decimals);
-  const periods = ONE_YEAR_SECONDS / duration;
+  // count of harvests is exclusive of the 0th element
+  const periods = (ONE_YEAR_SECONDS / duration) * (recentHarvests.length - 1);
   const compoundApr = (totalHarvestedTokens / vault.balance) * periods;
   const compoundApy = (((1 + compoundApr / periods) ^ periods) - 1) * 100;
   const compoundSource = createValueSource(VAULT_SOURCE, uniformPerformance(compoundApy));
