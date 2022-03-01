@@ -1,7 +1,6 @@
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
-import { DEBUG } from '../config/constants';
 import { CachedSettSnapshot } from '../vaults/interfaces/cached-sett-snapshot.interface';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { vaultToCachedSnapshot } from './indexer.utils';
@@ -25,9 +24,7 @@ async function captureSnapshot(chain: Chain, vault: VaultDefinition): Promise<Ca
     }
     return snapshot;
   } catch (err) {
-    if (DEBUG) {
-      console.error(err);
-    }
+    console.error(err);
     return null;
   }
 }
