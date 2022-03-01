@@ -342,7 +342,7 @@ export async function loadVaultEventPerformances(
   // count of harvests is exclusive of the 0th element
   const periods = (ONE_YEAR_SECONDS / duration) * (recentHarvests.length - 1);
   const compoundApr = (totalHarvestedTokens / vault.balance) * periods;
-  const compoundApy = (((1 + compoundApr / periods) ^ periods) - 1) * 100;
+  const compoundApy = ((1 + compoundApr / periods) ** periods - 1) * 100;
   const compoundSource = createValueSource(VAULT_SOURCE, uniformPerformance(compoundApy));
   const cachedCompoundSource = valueSourceToCachedValueSource(compoundSource, vaultDefinition, SourceType.Compound);
   valueSources.push(cachedCompoundSource);
@@ -381,7 +381,7 @@ export async function loadVaultEventPerformances(
       // these value sources are already saved in apy formats for vault compounding
       const compoundingSource = vaultValueSources.find((source) => source.type === SourceType.Compound);
       if (compoundingSource) {
-        const compoundingSourceApy = ((1 + (emissionApr * compoundSource.apr) / periods) ^ periods) - 1;
+        const compoundingSourceApy = (1 + (emissionApr * compoundSource.apr) / periods) ** periods - 1;
         const sourceName = `${getToken(emittedVault.vaultToken).name} Compounding`;
         const sourceType = sourceName.replace(' ', '_').toLowerCase();
         const derivativeSource = createValueSource(sourceName, uniformPerformance(compoundingSourceApy));

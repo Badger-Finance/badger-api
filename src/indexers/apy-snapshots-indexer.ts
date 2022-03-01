@@ -2,7 +2,9 @@ import { isNil } from '@tsed/core';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
+import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
 import { ValueSourceMap } from '../protocols/interfaces/value-source-map.interface';
+import { getVaultCachedValueSources } from '../protocols/protocols.utils';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { getVaultValueSources } from '../rewards/rewards.utils';
 
@@ -39,10 +41,26 @@ export async function refreshChainApySnapshots(chain: Chain) {
             mapEntry.thirtyDay += source.thirtyDay;
           }
         });
+
       const mapper = getDataMapper();
       const valueSources = Object.values(sourceMap);
+
+      // check for any emission removal
+      const oldSourcesMap: Record<string, CachedValueSource> = {};
+      const oldEmission = await getVaultCachedValueSources(vault);
+      oldEmission.forEach((source) => (oldSourcesMap[source.addressValueSourceType] = source));
+
+      // remove updated sources from old source list
+      valueSources.forEach((source) => delete oldSourcesMap[source.addressValueSourceType]);
+
+      const oldSources = Object.values(oldSourcesMap);
+      if (oldSources.length > 0) {
+        for await (const _item of mapper.batchDelete(oldSources)) {
+        }
+      }
+
       if (valueSources.length > 0) {
-        for await (const _item of mapper.batchPut(Object.values(valueSources))) {
+        for await (const _item of mapper.batchPut(valueSources)) {
         }
       }
     }),
