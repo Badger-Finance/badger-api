@@ -54,4 +54,22 @@ export const fantomSetts: VaultDefinition[] = [
     state: VaultState.Guarded,
     protocol: Protocol.Solidly,
   },
+  {
+    name: 'WFTM/SEX',
+    createdBlock: 32237088,
+    depositToken: TOKENS.SMM_WFTM_SEX,
+    vaultToken: TOKENS.BSMM_WFTM_SEX,
+    stage: Stage.Staging,
+    state: VaultState.Guarded,
+    protocol: Protocol.Solidly,
+  },
+  {
+    name: 'SOLID/SOLIDsex',
+    createdBlock: 32237094,
+    depositToken: TOKENS.SMM_SOLID_SOLIDSEX,
+    vaultToken: TOKENS.BSMM_SOLID_SOLIDSEX,
+    stage: Stage.Staging,
+    state: VaultState.Guarded,
+    protocol: Protocol.Solidly,
+  },
 ];
