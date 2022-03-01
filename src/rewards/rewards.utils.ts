@@ -207,10 +207,6 @@ export async function getVaultValueSources(
       sources = sources.filter((s) => s.type !== SourceType.Compound);
     }
 
-    // if (vaultDefinition.vaultToken === TOKENS.BVECVX) {
-    //   console.log(sources);
-    // }
-
     const ARB_CRV_SETTS = new Set([TOKENS.BARB_CRV_RENBTC, TOKENS.BARB_CRV_TRICRYPTO, TOKENS.BARB_CRV_TRICRYPTO_LITE]);
     if (ARB_CRV_SETTS.has(vaultDefinition.vaultToken)) {
       const compounding = sources.find((s) => s.type === SourceType.Compound);
