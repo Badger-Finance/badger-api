@@ -3,7 +3,7 @@ import { Service } from '@tsed/common';
 import { Chain } from '../chains/config/chain.config';
 import { convert } from '../prices/prices.utils';
 import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interface';
-import { getVaultValueSources } from '../protocols/protocols.utils';
+import { getVaultCachedValueSources } from '../protocols/protocols.utils';
 import { getVaultTokens } from '../tokens/tokens.utils';
 import { getCachedVault, getVaultDefinition, VAULT_SOURCE } from './vaults.utils';
 
@@ -29,11 +29,12 @@ export class VaultsService {
     const vaultDefinition = getVaultDefinition(chain, contract);
     const [vault, sources] = await Promise.all([
       getCachedVault(vaultDefinition),
-      getVaultValueSources(vaultDefinition),
+      getVaultCachedValueSources(vaultDefinition),
     ]);
     vault.tokens = await getVaultTokens(vaultDefinition, vault.balance, currency);
     vault.value = await convert(vault.value, currency);
     vault.sources = sources
+      .map((source) => source.toValueSource())
       .filter((source) => source.apr >= 0.001)
       .filter((source) => {
         if (source.name !== VAULT_SOURCE) {

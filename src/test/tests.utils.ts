@@ -115,7 +115,7 @@ export function randomSnapshots(vaultDefinition?: VaultDefinition, count?: numbe
       Object.assign(new VaultSnapshot(), {
         asset: sett.name,
         height: 0,
-        timestamp: Date.now() - 1 - i * ONE_DAY_MS,
+        timestamp: 1646105174169 - 1 - i * ONE_DAY_MS,
         balance: randomValue(),
         supply: randomValue(),
         ratio: 3 - i * 0.015,

@@ -22,15 +22,19 @@ import {
   getVaultPerformance,
   getVaultTokenPrice,
   getVaultUnderlying,
+  VAULT_SOURCE,
 } from './vaults.utils';
 import { PricingType } from '../prices/enums/pricing-type.enum';
 import * as pricesUtils from '../prices/prices.utils';
 import * as rewardsUtils from '../rewards/rewards.utils';
 import * as tokensUtils from '../tokens/tokens.utils';
+import * as protocolsUtils from '../protocols/protocols.utils';
 import { createValueSource } from '../protocols/interfaces/value-source.interface';
 import { uniformPerformance } from '../protocols/interfaces/performance.interface';
 import { tokenEmission } from '../protocols/protocols.utils';
 import { Polygon } from '../chains/config/polygon.config';
+import { SourceType } from '../rewards/enums/source-type.enum';
+import { ONE_DAY_SECONDS } from '../config/constants';
 
 describe('vaults.utils', () => {
   function setupSdk() {
@@ -41,14 +45,14 @@ describe('vaults.utils', () => {
       }
       const startTime = opts.timestamp_gte;
       const data = [0, 1, 2].map((int) => {
-        const timestamp = Number((startTime + int * 20000).toFixed());
+        const timestamp = Number((startTime + int * ONE_DAY_SECONDS * 14).toFixed());
         const block = Number((timestamp / 10000).toFixed());
         return {
           timestamp,
           harvests: [{ timestamp, block, harvested: BigNumber.from((int + 1 * 1.88e18).toString()) }],
           treeDistributions: [
-            { timestamp, block, token: TOKENS.SUSHI, amount: BigNumber.from((int + 1 * 5.77e12).toString()) },
-            { timestamp, block, token: TOKENS.FARM, amount: BigNumber.from((int + 1 * 4.42e12).toString()) },
+            { timestamp, block, token: TOKENS.BCVXCRV, amount: BigNumber.from((int + 1 * 5.77e12).toString()) },
+            { timestamp, block, token: TOKENS.BVECVX, amount: BigNumber.from((int + 1 * 4.42e12).toString()) },
           ],
         };
       });
@@ -273,7 +277,7 @@ describe('vaults.utils', () => {
 
     describe('no rewards or harvests', () => {
       it('returns value sources from fallback methods', async () => {
-        jest.spyOn(VaultsService.prototype, 'listHarvests').mockImplementation(async (opts) => ({ data: [] }));
+        jest.spyOn(VaultsService.prototype, 'listHarvests').mockImplementation(async (_opts) => ({ data: [] }));
         setupMapper(randomSnapshots(vault));
         const protocolFallback = jest
           .spyOn(rewardsUtils, 'getProtocolValueSources')
@@ -284,7 +288,7 @@ describe('vaults.utils', () => {
           });
         const result = await getVaultPerformance(TEST_CHAIN, vault);
         expect(result).toMatchSnapshot();
-        expect(protocolFallback.mock.calls[0]).toMatchObject([TEST_CHAIN, vault, true]);
+        expect(protocolFallback.mock.calls[1]).toMatchObject([TEST_CHAIN, vault, true]);
       });
     });
 
@@ -303,7 +307,7 @@ describe('vaults.utils', () => {
           });
         const result = await getVaultPerformance(TEST_CHAIN, vault);
         expect(result).toMatchSnapshot();
-        expect(protocolFallback.mock.calls[0]).toMatchObject([TEST_CHAIN, vault, true]);
+        expect(protocolFallback.mock.calls[1]).toMatchObject([TEST_CHAIN, vault, true]);
       });
     });
 
@@ -324,7 +328,7 @@ describe('vaults.utils', () => {
           });
         const result = await getVaultPerformance(alternateChain, vault);
         expect(result).toMatchSnapshot();
-        expect(protocolFallback.mock.calls[0]).toMatchObject([alternateChain, vault, true]);
+        expect(protocolFallback.mock.calls[1]).toMatchObject([alternateChain, vault, true]);
       });
     });
 
@@ -335,6 +339,10 @@ describe('vaults.utils', () => {
           address: token,
           price: Number(token.slice(0, 6)),
         }));
+        jest.spyOn(protocolsUtils, 'getVaultCachedValueSources').mockImplementation(async (vault) => {
+          const underlying = createValueSource(VAULT_SOURCE, uniformPerformance(10));
+          return [rewardsUtils.valueSourceToCachedValueSource(underlying, vault, SourceType.Compound)];
+        });
         const result = await getVaultPerformance(TEST_CHAIN, vault);
         expect(result).toMatchSnapshot();
       });
