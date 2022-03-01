@@ -36,6 +36,14 @@ export const fantomTokensConfig: TokenConfig = {
     symbol: 'SOLID',
     type: PricingType.OnChainUniV2LP,
   },
+  [TOKENS.FTM_SOLIDSEX]: {
+    address: TOKENS.FTM_SOLIDSEX,
+    decimals: 18,
+    lookupName: '0x62E2819Dd417F3b430B6fa5Fd34a49A377A02ac8',
+    name: 'SOLIDsex: Tokenized veSOLID',
+    symbol: 'SOLIDsex',
+    type: PricingType.OnChainUniV2LP,
+  },
   [TOKENS.FTM_SEX]: {
     address: TOKENS.FTM_SEX,
     decimals: 18,
