@@ -31,9 +31,14 @@ export async function getTreeDistribution(chain: Chain): Promise<RewardMerkleDis
   if (!chain.badgerTree) {
     return null;
   }
-  const fileName = `badger-tree-${parseInt(chain.chainId, 16)}.json`;
-  const rewardFile = await getObject(REWARD_DATA, fileName);
-  return JSON.parse(rewardFile.toString('utf-8'));
+  try {
+    const fileName = `badger-tree-${parseInt(chain.chainId, 16)}.json`;
+    const rewardFile = await getObject(REWARD_DATA, fileName);
+    return JSON.parse(rewardFile.toString('utf-8'));
+  } catch (err) {
+    console.error({ message: `Missing expected badger tree file for ${chain.network}`, err });
+    return null;
+  }
 }
 
 export function noRewards(VaultDefinition: VaultDefinition, token: Token) {
