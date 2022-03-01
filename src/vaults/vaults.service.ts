@@ -4,6 +4,7 @@ import { Chain } from '../chains/config/chain.config';
 import { convert } from '../prices/prices.utils';
 import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interface';
 import { getVaultCachedValueSources } from '../protocols/protocols.utils';
+import { SourceType } from '../rewards/enums/source-type.enum';
 import { getVaultTokens } from '../tokens/tokens.utils';
 import { getCachedVault, getVaultDefinition, VAULT_SOURCE } from './vaults.utils';
 
@@ -34,6 +35,7 @@ export class VaultsService {
     vault.tokens = await getVaultTokens(vaultDefinition, vault.balance, currency);
     vault.value = await convert(vault.value, currency);
     vault.sources = sources
+      .filter((source) => source.type !== SourceType.PreCompound)
       .map((source) => source.toValueSource())
       .filter((source) => source.apr >= 0.001)
       .filter((source) => {

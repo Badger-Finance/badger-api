@@ -59,7 +59,7 @@ export async function getClaimableRewards(
     throw new UnprocessableEntity(`No BadgerTree is available from ${chain.name}`);
   }
   const sdk = await chain.getSdk();
-  const tree = BadgerTree__factory.connect(chain.badgerTree, sdk.multicall);
+  const tree = BadgerTree__factory.connect(chain.badgerTree, sdk.provider);
   const requests = chainUsers.map(async (user): Promise<[string, [string[], BigNumber[]]]> => {
     const proof = distribution.claims[user];
     if (!proof) {
@@ -204,7 +204,7 @@ export async function getVaultValueSources(
 
     const hasNoUnderlying = NO_COMPOUND_VAULTS.has(vaultDefinition.vaultToken);
     if (hasNoUnderlying) {
-      sources = sources.filter((s) => s.type !== SourceType.Compound);
+      sources = sources.filter((s) => s.type !== SourceType.Compound && s.type !== SourceType.PreCompound);
     }
 
     const ARB_CRV_SETTS = new Set([TOKENS.BARB_CRV_RENBTC, TOKENS.BARB_CRV_TRICRYPTO, TOKENS.BARB_CRV_TRICRYPTO_LITE]);
