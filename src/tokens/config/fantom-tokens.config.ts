@@ -100,6 +100,22 @@ export const fantomTokensConfig: TokenConfig = {
     symbol: 'SMM-WBTC-RENBTC',
     type: PricingType.UniV2LP,
   },
+  [TOKENS.SMM_WFTM_SEX]: {
+    address: TOKENS.SMM_WFTM_SEX,
+    decimals: 18,
+    lpToken: true,
+    name: 'Solidly: WFTM-SEX',
+    symbol: 'SMM-WFTM-SEX',
+    type: PricingType.UniV2LP,
+  },
+  [TOKENS.SMM_SOLID_SOLIDSEX]: {
+    address: TOKENS.SMM_SOLID_SOLIDSEX,
+    decimals: 18,
+    lpToken: true,
+    name: 'Solidly: SOLID-SOLIDsex',
+    symbol: 'SMM-SOLID-SOLIDSEX',
+    type: PricingType.UniV2LP,
+  },
   [TOKENS.BSMM_BOO_XBOO]: {
     address: TOKENS.BSMM_BOO_XBOO,
     decimals: 18,
@@ -119,6 +135,28 @@ export const fantomTokensConfig: TokenConfig = {
     type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.SMM_WBTC_RENBTC,
+      network: Network.Fantom,
+    },
+  },
+  [TOKENS.BSMM_WFTM_SEX]: {
+    address: TOKENS.BSMM_WFTM_SEX,
+    decimals: 18,
+    name: 'bSolidly: WFTM-SEX',
+    symbol: 'bSMM-WFTM-SEX',
+    type: PricingType.Vault,
+    vaultToken: {
+      address: TOKENS.SMM_WFTM_SEX,
+      network: Network.Fantom,
+    },
+  },
+  [TOKENS.BSMM_SOLID_SOLIDSEX]: {
+    address: TOKENS.BSMM_SOLID_SOLIDSEX,
+    decimals: 18,
+    name: 'bSolidly: SOLID-SOLIDsex',
+    symbol: 'bSMM-SOLID-SOLIDSEX',
+    type: PricingType.Vault,
+    vaultToken: {
+      address: TOKENS.SMM_WFTM_SEX,
       network: Network.Fantom,
     },
   },
