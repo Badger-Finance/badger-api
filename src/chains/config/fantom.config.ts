@@ -61,7 +61,7 @@ export const fantomSetts: VaultDefinition[] = [
     vaultToken: TOKENS.BSMM_WFTM_SEX,
     stage: Stage.Staging,
     state: VaultState.Guarded,
-    protocol: Protocol.Solidly,
+    protocol: Protocol.Solidex,
   },
   {
     name: 'SOLID/SOLIDsex',
@@ -70,6 +70,6 @@ export const fantomSetts: VaultDefinition[] = [
     vaultToken: TOKENS.BSMM_SOLID_SOLIDSEX,
     stage: Stage.Staging,
     state: VaultState.Guarded,
-    protocol: Protocol.Solidly,
+    protocol: Protocol.Solidex,
   },
 ];
