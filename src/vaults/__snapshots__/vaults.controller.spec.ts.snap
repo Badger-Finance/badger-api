@@ -3305,7 +3305,7 @@ Array [
   },
   Object {
     "apr": 42.99,
-    "apy": 57.32,
+    "apy": 42.99,
     "asset": "imBTC",
     "available": 0,
     "balance": 0,
@@ -3368,20 +3368,6 @@ Array [
         "harvestable": false,
         "maxApr": 14.33,
         "minApr": 14.33,
-        "name": "Vault Compounding",
-        "performance": Object {
-          "oneDay": 14.33,
-          "sevenDay": 14.33,
-          "thirtyDay": 14.33,
-          "threeDay": 14.33,
-        },
-      },
-      Object {
-        "apr": 14.33,
-        "boostable": false,
-        "harvestable": false,
-        "maxApr": 14.33,
-        "minApr": 14.33,
         "name": "Badger Rewards",
         "performance": Object {
           "oneDay": 14.33,
@@ -3419,7 +3405,7 @@ Array [
         },
       },
     ],
-    "state": "open",
+    "state": "deprecated",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
@@ -3444,7 +3430,7 @@ Array [
   },
   Object {
     "apr": 18.57,
-    "apy": 24.76,
+    "apy": 18.57,
     "asset": "mhBTC",
     "available": 0,
     "balance": 0,
@@ -3507,20 +3493,6 @@ Array [
         "harvestable": false,
         "maxApr": 6.19,
         "minApr": 6.19,
-        "name": "Vault Compounding",
-        "performance": Object {
-          "oneDay": 6.19,
-          "sevenDay": 6.19,
-          "thirtyDay": 6.19,
-          "threeDay": 6.19,
-        },
-      },
-      Object {
-        "apr": 6.19,
-        "boostable": false,
-        "harvestable": false,
-        "maxApr": 6.19,
-        "minApr": 6.19,
         "name": "Badger Rewards",
         "performance": Object {
           "oneDay": 6.19,
@@ -3558,7 +3530,7 @@ Array [
         },
       },
     ],
-    "state": "open",
+    "state": "deprecated",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
@@ -7325,7 +7297,7 @@ Array [
   },
   Object {
     "apr": 42.99,
-    "apy": 57.32,
+    "apy": 42.99,
     "asset": "imBTC",
     "available": 0,
     "balance": 0,
@@ -7388,20 +7360,6 @@ Array [
         "harvestable": false,
         "maxApr": 14.33,
         "minApr": 14.33,
-        "name": "Vault Compounding",
-        "performance": Object {
-          "oneDay": 14.33,
-          "sevenDay": 14.33,
-          "thirtyDay": 14.33,
-          "threeDay": 14.33,
-        },
-      },
-      Object {
-        "apr": 14.33,
-        "boostable": false,
-        "harvestable": false,
-        "maxApr": 14.33,
-        "minApr": 14.33,
         "name": "Badger Rewards",
         "performance": Object {
           "oneDay": 14.33,
@@ -7439,7 +7397,7 @@ Array [
         },
       },
     ],
-    "state": "open",
+    "state": "deprecated",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
@@ -7464,7 +7422,7 @@ Array [
   },
   Object {
     "apr": 18.57,
-    "apy": 24.76,
+    "apy": 18.57,
     "asset": "mhBTC",
     "available": 0,
     "balance": 0,
@@ -7527,20 +7485,6 @@ Array [
         "harvestable": false,
         "maxApr": 6.19,
         "minApr": 6.19,
-        "name": "Vault Compounding",
-        "performance": Object {
-          "oneDay": 6.19,
-          "sevenDay": 6.19,
-          "thirtyDay": 6.19,
-          "threeDay": 6.19,
-        },
-      },
-      Object {
-        "apr": 6.19,
-        "boostable": false,
-        "harvestable": false,
-        "maxApr": 6.19,
-        "minApr": 6.19,
         "name": "Badger Rewards",
         "performance": Object {
           "oneDay": 6.19,
@@ -7578,7 +7522,7 @@ Array [
         },
       },
     ],
-    "state": "open",
+    "state": "deprecated",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
