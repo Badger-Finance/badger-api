@@ -128,7 +128,7 @@ export async function getVaultSnapshotsInRange(
   }
 }
 
-export const getPerformance = (current: VaultSnapshot, initial: VaultSnapshot): number => {
+export function getPerformance(current: VaultSnapshot, initial: VaultSnapshot): number {
   const ratioDiff = current.ratio - initial.ratio;
   const timestampDiff = current.timestamp - initial.timestamp;
   if (timestampDiff === 0 || ratioDiff === 0) {
@@ -137,7 +137,7 @@ export const getPerformance = (current: VaultSnapshot, initial: VaultSnapshot): 
   const scalar = ONE_YEAR_MS / timestampDiff;
   const finalRatio = initial.ratio + scalar * ratioDiff;
   return ((finalRatio - initial.ratio) / initial.ratio) * 100;
-};
+}
 
 export function getVaultDefinition(chain: Chain, contract: string): VaultDefinition {
   const contractAddress = ethers.utils.getAddress(contract);
@@ -277,13 +277,12 @@ export async function getVaultUnderlying(vaultDefinition: VaultDefinition): Prom
       SourceType.Compound,
     );
   }
-  const start = Date.now();
   const performance = uniformPerformance(0);
 
   let timeframeIndex = 0;
   for (let i = 0; i < snapshots.length; i++) {
     const currentTimeFrame = SOURCE_TIME_FRAMES[timeframeIndex];
-    const currentCutoff = start - currentTimeFrame * ONE_DAY_MS;
+    const currentCutoff = rangeEnd - currentTimeFrame * ONE_DAY_MS;
     const currentSnapshot = snapshots[i];
     if (currentSnapshot.timestamp <= currentCutoff) {
       updatePerformance(performance, currentTimeFrame, getPerformance(current, currentSnapshot));

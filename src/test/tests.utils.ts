@@ -119,13 +119,15 @@ export function randomVault(chain?: Chain): VaultDefinition {
 export function randomSnapshots(vaultDefinition?: VaultDefinition, count?: number): VaultSnapshot[] {
   const snapshots: VaultSnapshot[] = [];
   const snapshotCount = count ?? SAMPLE_DAYS;
-  const sett = vaultDefinition ?? randomVault();
+  const vault = vaultDefinition ?? randomVault();
+  const currentTimestamp = Date.now();
+  const start = currentTimestamp - (currentTimestamp % ONE_DAY_MS);
   for (let i = 0; i < snapshotCount; i++) {
     snapshots.push(
       Object.assign(new VaultSnapshot(), {
-        asset: sett.name,
-        height: 0,
-        timestamp: 1646105174169 - 1 - i * ONE_DAY_MS,
+        asset: vault.name,
+        height: 10_000_000 - i * 1_000,
+        timestamp: start - i * ONE_DAY_MS,
         balance: randomValue(),
         supply: randomValue(),
         ratio: 3 - i * 0.015,
