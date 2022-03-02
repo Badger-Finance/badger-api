@@ -1,4 +1,4 @@
-import { Network } from '@badger-dao/sdk';
+import { Network, Protocol } from '@badger-dao/sdk';
 import { UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { Chain } from '../../chains/config/chain.config';
@@ -10,7 +10,6 @@ import {
   CurvePool__factory,
   CurvePool3__factory,
   CurveRegistry__factory,
-  CvxLocker__factory,
   CvxRewards__factory,
   Erc20__factory,
   CvxBooster__factory,
@@ -19,14 +18,14 @@ import { tokenBalancesToCachedLiquidityPoolTokenBalance } from '../../indexers/i
 import { getPrice } from '../../prices/prices.utils';
 import { SourceType } from '../../rewards/enums/source-type.enum';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
-import { getCachedVault, VAULT_SOURCE } from '../../vaults/vaults.utils';
+import { getCachedVault, getVaultDefinition, VAULT_SOURCE } from '../../vaults/vaults.utils';
 import { CachedLiquidityPoolTokenBalance } from '../../tokens/interfaces/cached-liquidity-pool-token-balance.interface';
 import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
-import { formatBalance, getToken, toBalance } from '../../tokens/tokens.utils';
+import { formatBalance, getToken, getVaultTokens, toBalance } from '../../tokens/tokens.utils';
 import { CachedValueSource } from '../interfaces/cached-value-source.interface';
 import { uniformPerformance } from '../interfaces/performance.interface';
 import { createValueSource } from '../interfaces/value-source.interface';
-import { tokenEmission } from '../protocols.utils';
+import { getVaultCachedValueSources, tokenEmission } from '../protocols.utils';
 import { request } from '../../etherscan/etherscan.utils';
 import { CurveAPIResponse } from '../interfaces/curve-api-response.interrface';
 import { valueSourceToCachedValueSource } from '../../rewards/rewards.utils';
@@ -89,10 +88,6 @@ const nonRegistryPools: ContractRegistry = {
 
 const discontinuedRewards = ['0x330416C863f2acCE7aF9C9314B422d24c672534a'].map((addr) => ethers.utils.getAddress(addr));
 
-const convexWrap: Record<string, string> = {
-  [TOKENS.CVXCRV]: TOKENS.BCVXCRV,
-};
-
 interface FactoryAPYResonse {
   data: {
     poolDetails: {
@@ -113,49 +108,43 @@ export class ConvexStrategy {
       case TOKENS.BCVXCRV:
       case TOKENS.BVECVX:
         return [];
+      case TOKENS.BCRV_CVXBVECVX:
+        return getLiquiditySources(chain, vaultDefinition);
       default:
         return getVaultSources(chain, vaultDefinition, includeBaseEmission);
     }
   }
 }
 
-// TODO: potentially deprecate / remove this function
-export async function getLockedSources(chain: Chain, VaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
-  const locker = CvxLocker__factory.connect(cvxLocker, chain.provider);
-  const cvxPrice = await getPrice(TOKENS.CVX);
-  const cvxLocked = formatBalance(await locker.lockedSupply());
-  const cvxValue = cvxPrice.price * cvxLocked;
+async function getLiquiditySources(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
+  const bveCVXVault = getVaultDefinition(chain, TOKENS.BVECVX);
+  const [bveCVXLP, bveCVX, bveCVXSources] = await Promise.all([
+    getCachedVault(vaultDefinition),
+    getCachedVault(bveCVXVault),
+    getVaultCachedValueSources(bveCVXVault),
+  ]);
+  const vaultTokens = await getVaultTokens(vaultDefinition, bveCVXLP.balance);
 
-  let token = 0;
-  const sources = [];
-  while (true) {
-    try {
-      const reward = await locker.rewardTokens(token);
-      let rewardToken = getToken(reward);
-      const wrappedTokenAddress = convexWrap[rewardToken.address];
-      if (wrappedTokenAddress) {
-        rewardToken = getToken(wrappedTokenAddress);
-      }
-      const rewardAmount = await locker.getRewardForDuration(reward);
-      const duration = await locker.rewardsDuration();
-      const rewardTokenPrice = await getPrice(reward);
-      const rewardScalar = ONE_YEAR_SECONDS / duration.toNumber();
-      const rewardsValue = rewardTokenPrice.price * formatBalance(rewardAmount) * rewardScalar;
-      const rewardApr = (rewardsValue / cvxValue) * 100;
-      const cvxValueSource = createValueSource(`${rewardToken.name} Rewards`, uniformPerformance(rewardApr));
-      const cachedEmission = valueSourceToCachedValueSource(
-        cvxValueSource,
-        VaultDefinition,
-        tokenEmission(rewardToken),
-      );
-      sources.push(cachedEmission);
-      token++;
-    } catch {
-      break;
-    }
-  }
-
-  return sources;
+  const bveCVXValue = vaultTokens
+    .filter((t) => t.address === TOKENS.BVECVX)
+    .map((t) => t.value)
+    .reduce((val, total) => (total += val), 0);
+  const scalar = bveCVXValue / bveCVXLP.value;
+  const lpSources = bveCVXSources.map((s) => {
+    // rewrite object keys to simulate sources from the lp vault100
+    s.addressValueSourceType = s.addressValueSourceType.replace(bveCVX.vaultToken, bveCVXLP.vaultToken);
+    s.address = s.address.replace(bveCVX.vaultToken, bveCVXLP.vaultToken);
+    s.apr *= scalar;
+    s.maxApr *= scalar;
+    s.minApr *= scalar;
+    s.oneDay *= scalar;
+    s.threeDay *= scalar;
+    s.sevenDay *= scalar;
+    s.thirtyDay *= scalar;
+    return s;
+  });
+  const cachedTradeFees = await getCurvePerformance(chain, vaultDefinition);
+  return [cachedTradeFees, ...lpSources];
 }
 
 async function getVaultSources(
@@ -165,7 +154,8 @@ async function getVaultSources(
 ): Promise<CachedValueSource[]> {
   const cachedTradeFees = await getCurvePerformance(chain, vaultDefinition);
 
-  if (!includeBaseEmission) {
+  // handle no base emissions or a curve routed request
+  if (!includeBaseEmission || vaultDefinition.protocol !== Protocol.Convex) {
     return [cachedTradeFees];
   }
 
@@ -255,81 +245,7 @@ async function getVaultSources(
   return [cachedCompounding, cachedTradeFees, cachedCrvEmission, cachedCvxEmission, ...cachedExtraSources];
 }
 
-// TODO: potentially deprecate / remove this function
-export async function getCvxRewards(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
-  const cvx = CvxRewards__factory.connect(cvxRewards, chain.provider);
-
-  // get prices
-  const cvxPrice = await getPrice(TOKENS.CVX);
-  const cvxToken = getToken(TOKENS.CVX);
-  const cvxCrvPrice = await getPrice(TOKENS.CVXCRV);
-  const cvxCrvToken = getToken(TOKENS.CVXCRV);
-
-  // get rewards
-  const cvxCrvReward = formatBalance(await cvx.currentRewards(), cvxCrvToken.decimals);
-  const cvxLocked = formatBalance(await cvx.totalSupply(), cvxToken.decimals);
-
-  // get apr params
-  const duration = (await cvx.duration()).toNumber();
-  const scalar = ONE_YEAR_SECONDS / duration;
-
-  // calculate CVX rewards
-  const emission = cvxCrvReward * cvxCrvPrice.price * scalar;
-  const poolValue = cvxLocked * cvxPrice.price;
-  const cvxCrvApr = (emission / poolValue) * 100;
-  const valueSource = createValueSource(VAULT_SOURCE, uniformPerformance(cvxCrvApr), true);
-  return [valueSourceToCachedValueSource(valueSource, vaultDefinition, SourceType.Compound)];
-}
-
-// TODO: potentially deprecate / remove this function
-export async function getCvxCrvRewards(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
-  const vault = await getCachedVault(vaultDefinition);
-  // setup contracts
-  const cvxCrv = CvxRewards__factory.connect(cvxCrvRewards, chain.provider);
-  const threeCrv = CvxRewards__factory.connect(threeCrvRewards, chain.provider);
-
-  // get prices
-  const [cvxPrice, cvxCrvPrice, crvPrice, threeCrvPrice] = await Promise.all([
-    getPrice(TOKENS.CVX),
-    getPrice(TOKENS.CVXCRV),
-    getPrice(TOKENS.CRV),
-    getPrice(TOKENS.CRV_THREE),
-  ]);
-
-  // get rewards
-  const crvReward = parseFloat(ethers.utils.formatEther(await cvxCrv.currentRewards()));
-  const threeCrvReward = parseFloat(ethers.utils.formatEther(await threeCrv.currentRewards()));
-  const cvxReward = await getCvxMint(chain, crvReward);
-  const cvxCrvLocked = parseFloat(ethers.utils.formatEther(await cvxCrv.totalSupply()));
-
-  // get apr params
-  const duration = (await cvxCrv.duration()).toNumber();
-  const scalar = ONE_YEAR_SECONDS / duration;
-  const poolValue = cvxCrvLocked * cvxCrvPrice.price;
-  const fees = 100 - (vault.strategy.performanceFee + vault.strategy.strategistFee) / 100;
-
-  // calculate CVX rewards
-  const cvxEmission = cvxReward * cvxPrice.price * scalar;
-  const cvxApr = (cvxEmission / poolValue) * fees;
-
-  // calculate cvxCRV + 3CRV rewards
-  const cvxCrvEmission = crvReward * crvPrice.price * scalar;
-  const cvxCrvApr = (cvxCrvEmission / poolValue) * fees;
-  const threeCrvEmission = threeCrvReward * threeCrvPrice.price * scalar;
-  const threeCrvApr = (threeCrvEmission / poolValue) * fees;
-
-  const bveCVX = getToken(TOKENS.BVECVX);
-  const cvxValueSource = createValueSource(`${bveCVX.name} Rewards`, uniformPerformance(cvxApr), true);
-
-  const compoundingApr = threeCrvApr + cvxCrvApr;
-  const compoundingSource = createValueSource(VAULT_SOURCE, uniformPerformance(compoundingApr), true);
-  return [
-    valueSourceToCachedValueSource(cvxValueSource, vaultDefinition, tokenEmission(bveCVX)),
-    valueSourceToCachedValueSource(compoundingSource, vaultDefinition, SourceType.Compound),
-  ];
-}
-
-export async function getCurvePerformance(chain: Chain, VaultDefinition: VaultDefinition): Promise<CachedValueSource> {
+export async function getCurvePerformance(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource> {
   let defaultUrl;
   switch (chain.network) {
     case Network.Polygon:
@@ -342,7 +258,7 @@ export async function getCurvePerformance(chain: Chain, VaultDefinition: VaultDe
       defaultUrl = CURVE_API_URL;
   }
   let curveData = await request<CurveAPIResponse>(defaultUrl);
-  const assetKey = VaultDefinition.depositToken;
+  const assetKey = vaultDefinition.depositToken;
   const missingEntry = () => !curveData.apy.week[curvePoolApr[assetKey]];
 
   // try the secondary apy options, if not avilable give up
@@ -361,7 +277,7 @@ export async function getCurvePerformance(chain: Chain, VaultDefinition: VaultDe
   } else {
     const factoryAPY = await request<FactoryAPYResonse>(CURVE_FACTORY_APY);
     const poolDetails = factoryAPY.data.poolDetails.find(
-      (pool) => ethers.utils.getAddress(pool.poolAddress) === VaultDefinition.depositToken,
+      (pool) => ethers.utils.getAddress(pool.poolAddress) === vaultDefinition.depositToken,
     );
     if (poolDetails) {
       tradeFeePerformance = uniformPerformance(poolDetails.apy);
@@ -369,7 +285,7 @@ export async function getCurvePerformance(chain: Chain, VaultDefinition: VaultDe
   }
 
   const valueSource = createValueSource('Curve LP Fees', tradeFeePerformance);
-  return valueSourceToCachedValueSource(valueSource, VaultDefinition, SourceType.TradeFee);
+  return valueSourceToCachedValueSource(valueSource, vaultDefinition, SourceType.TradeFee);
 }
 
 /* Adapted from https://docs.convexfinance.com/convexfinanceintegration/cvx-minting */
