@@ -17,7 +17,7 @@ import { BadgerTree__factory } from '../contracts';
 import { BigNumber } from '@ethersproject/bignumber';
 import { UnprocessableEntity } from '@tsed/exceptions';
 import { EmissionSchedule } from '@badger-dao/sdk/lib/rewards/interfaces/emission-schedule.interface';
-import { getCurvePerformance, ConvexStrategy } from '../protocols/strategies/convex.strategy';
+import { ConvexStrategy } from '../protocols/strategies/convex.strategy';
 import { mStableStrategy } from '../protocols/strategies/mstable.strategy';
 import { PancakeswapStrategy } from '../protocols/strategies/pancakeswap.strategy';
 import { QuickswapStrategy } from '../protocols/strategies/quickswap.strategy';
@@ -99,6 +99,7 @@ export async function getRewardEmission(chain: Chain, vaultDefinition: VaultDefi
   }
   const { vaultToken } = vaultDefinition;
   const vault = await getCachedVault(vaultDefinition);
+
   if (vault.vaultToken === TOKENS.BVECVX) {
     delete boostFile.multiplierData[vault.vaultToken];
   }
@@ -142,7 +143,6 @@ export async function getRewardEmission(chain: Chain, vaultDefinition: VaultDefi
    * and persisted against that sett. There is a 20 minute grace period for
    * emission that have since ended, and only the latest active emission
    * will be used for yield calcuation.
-   *
    */
 
   const emissionSources = [];
@@ -231,12 +231,11 @@ export async function getProtocolValueSources(
 ): Promise<CachedValueSource[]> {
   try {
     switch (vaultDefinition.protocol) {
-      case Protocol.Curve:
-        return Promise.all([getCurvePerformance(chain, vaultDefinition)]);
       case Protocol.Pancakeswap:
         return PancakeswapStrategy.getValueSources(chain, vaultDefinition);
       case Protocol.Sushiswap:
         return SushiswapStrategy.getValueSources(chain, vaultDefinition);
+      case Protocol.Curve:
       case Protocol.Convex:
         return ConvexStrategy.getValueSources(chain, vaultDefinition, includeBaseEmission);
       case Protocol.Uniswap:
