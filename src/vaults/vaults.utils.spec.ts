@@ -89,6 +89,7 @@ describe('vaults.utils', () => {
           ? VaultState.New
           : VaultState.Open,
         apr: 0,
+        apy: 0,
         balance: 0,
         available: 0,
         boost: {
@@ -100,6 +101,7 @@ describe('vaults.utils', () => {
         protocol: Protocol.Badger,
         pricePerFullShare: 1,
         sources: [],
+        sourcesApy: [],
         tokens: [],
         underlyingToken: vaultDefinition.depositToken,
         value: 0,

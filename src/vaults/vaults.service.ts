@@ -34,9 +34,7 @@ export class VaultsService {
     ]);
     vault.tokens = await getVaultTokens(vaultDefinition, vault.balance, currency);
     vault.value = await convert(vault.value, currency);
-    vault.sources = sources
-      .filter((source) => source.type !== SourceType.PreCompound)
-      .map((source) => source.toValueSource())
+    const baseSources = sources
       .filter((source) => source.apr >= 0.001)
       .filter((source) => {
         if (source.name !== VAULT_SOURCE) {
@@ -44,7 +42,14 @@ export class VaultsService {
         }
         return vault.state !== VaultState.Deprecated && !vaultDefinition.deprecated;
       });
+    const sourcesApr = baseSources.filter(
+      (source) => source.type !== SourceType.Compound && !source.type.includes('derivative'),
+    );
+    const sourcesApy = baseSources.filter((source) => source.type !== SourceType.PreCompound);
+    vault.sources = sourcesApr.map((s) => s.toValueSource());
+    vault.sourcesApy = sourcesApy.map((s) => s.toValueSource());
     vault.apr = vault.sources.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
+    vault.apy = vault.sourcesApy.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
     vault.protocol = vaultDefinition.protocol ?? Protocol.Badger;
 
     if (vault.boost.enabled) {
@@ -52,6 +57,8 @@ export class VaultsService {
       if (hasBoostedApr) {
         vault.minApr = vault.sources.map((s) => s.minApr || s.apr).reduce((total, apr) => (total += apr), 0);
         vault.maxApr = vault.sources.map((s) => s.maxApr || s.apr).reduce((total, apr) => (total += apr), 0);
+        vault.minApy = vault.sourcesApy.map((s) => s.minApr || s.apr).reduce((total, apr) => (total += apr), 0);
+        vault.maxApy = vault.sourcesApy.map((s) => s.maxApr || s.apr).reduce((total, apr) => (total += apr), 0);
         if (vault.type !== VaultType.Native) {
           vault.type = VaultType.Boosted;
         }

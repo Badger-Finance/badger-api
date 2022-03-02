@@ -11,13 +11,13 @@ import { BoostConfig, Protocol, Vault, VaultState, TokenBalance, VaultType } fro
 
 export class VaultModel implements Vault {
   @Title('name')
-  @Description('Sett display name')
+  @Description('vault display name')
   @Example('Convex Tricrypto')
   @Property()
   public name: string;
 
   @Title('asset')
-  @Description('Sett underlying asset name')
+  @Description('vault underlying asset name')
   @Example('crvTricrypto')
   @Property()
   public asset: string;
@@ -29,7 +29,7 @@ export class VaultModel implements Vault {
   public vaultAsset: string;
 
   @Title('state')
-  @Description('Launch state of the sett')
+  @Description('Launch state of the vault')
   @Example(VaultState.Guarded)
   @Property()
   public state: VaultState;
@@ -41,13 +41,13 @@ export class VaultModel implements Vault {
   public underlyingToken: string;
 
   @Title('vaultToken')
-  @Description('Contract address for sett token')
+  @Description('Contract address for vault token')
   @Example('0x2260fac5e5542a773aa44fbcfedf7c193bc2c599')
   @Property()
   public vaultToken: string;
 
   @Title('value')
-  @Description('Currency denominated sett value')
+  @Description('Currency denominated vault value')
   @Example(1245388.433)
   @Property()
   public value: number;
@@ -71,22 +71,28 @@ export class VaultModel implements Vault {
   public protocol: Protocol;
 
   @Title('pricePerFullShare')
-  @Description('Price per full share, conversion from sett tokens to underlying tokens')
+  @Description('Price per full share, conversion from vault tokens to underlying tokens')
   @Example(1.00032103)
   @Property()
   public pricePerFullShare: number;
 
   @Title('tokens')
-  @Description('Token balances held by the sett')
+  @Description('Token balances held by the vault')
   @Example([mockBalance(getToken(TOKENS.BADGER), 3882.35294118), mockBalance(getToken(TOKENS.WBTC), 1)])
   @Property()
   public tokens: TokenBalance[];
 
   @Title('apr')
-  @Description('Baseline sett APR')
+  @Description('Baseline Vault APR')
   @Example(18.00032103)
   @Property()
   public apr: number;
+
+  @Title('apy')
+  @Description('Baseline Vault APY')
+  @Example(18.00032103)
+  @Property()
+  public apy: number;
 
   @Title('boost')
   @Description('Boost configuration indicating if the vault is boostable, and how much weight it contributes')
@@ -95,16 +101,28 @@ export class VaultModel implements Vault {
   public boost: BoostConfig;
 
   @Title('minApr')
-  @Description('Minimum sett APR as modifid by badger boost')
+  @Description('Minimum vault APR as modifid by badger boost')
   @Example(8.03)
   @Property()
   public minApr?: number;
 
   @Title('maxApr')
-  @Description('Maximum sett APR as modifid by badger boost')
+  @Description('Maximum vault APR as modifid by badger boost')
   @Example(8.03)
   @Property()
   public maxApr?: number;
+
+  @Title('minApr')
+  @Description('Minimum vault APY as modifid by badger boost')
+  @Example(8.03)
+  @Property()
+  public minApy?: number;
+
+  @Title('maxApr')
+  @Description('Maximum vault APY as modifid by badger boost')
+  @Example(8.03)
+  @Property()
+  public maxApy?: number;
 
   @Title('sources')
   @Description('Vault APR individual yield source breakdown')
@@ -116,8 +134,18 @@ export class VaultModel implements Vault {
   @Property()
   public sources: ValueSource[];
 
+  @Title('sourcesApy')
+  @Description('Vault APY individual yield source breakdown')
+  @Example([
+    createValueSource(VAULT_SOURCE, uniformPerformance(8.32)),
+    createValueSource('Badger Rewards', uniformPerformance(17.34)),
+    createValueSource('LP Trade Fee', uniformPerformance(1.45)),
+  ])
+  @Property()
+  public sourcesApy: ValueSource[];
+
   @Title('bouncer')
-  @Description('Enumeration displaying the badger bouncer type associated with the sett')
+  @Description('Enumeration displaying the badger bouncer type associated with the vault')
   @Example(BouncerType.Badger)
   @Property()
   public bouncer: BouncerType;
@@ -139,28 +167,32 @@ export class VaultModel implements Vault {
   @Property()
   public type: VaultType;
 
-  constructor(
-    name: string,
-    state: VaultState,
-    asset: string,
-    vaultAsset: string,
-    underlyingToken: string,
-    vaultToken: string,
-    value: number,
-    available: number,
-    balance: number,
-    protocol: Protocol,
-    pricePerFullShare: number,
-    tokens: TokenBalance[],
-    apr: number,
-    boost: BoostConfig,
-    sources: ValueSource[],
-    bouncer: BouncerType,
-    strategy: VaultStrategy,
-    type: VaultType,
-    minApr?: number,
-    maxApr?: number,
-  ) {
+  constructor({
+    name,
+    state,
+    asset,
+    vaultAsset,
+    underlyingToken,
+    vaultToken,
+    value,
+    available,
+    balance,
+    protocol,
+    pricePerFullShare,
+    tokens,
+    apr,
+    apy,
+    boost,
+    minApr,
+    maxApr,
+    minApy,
+    maxApy,
+    sources,
+    sourcesApy,
+    bouncer,
+    strategy,
+    type,
+  }: Vault) {
     this.name = name;
     this.state = state;
     this.asset = asset;
@@ -174,10 +206,14 @@ export class VaultModel implements Vault {
     this.pricePerFullShare = pricePerFullShare;
     this.tokens = tokens;
     this.apr = apr;
+    this.apy = apy;
     this.boost = boost;
     this.minApr = minApr;
     this.maxApr = maxApr;
+    this.minApy = minApy;
+    this.maxApy = maxApy;
     this.sources = sources;
+    this.sourcesApy = sourcesApy;
     this.bouncer = bouncer;
     this.strategy = strategy;
     this.type = type;
