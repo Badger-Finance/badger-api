@@ -375,7 +375,7 @@ export async function loadVaultEventPerformances(
     }
     const tokensEmitted = formatBalance(amount, tokenEmitted.decimals);
     const valueEmitted = tokensEmitted * tokenPrice.price;
-    const emissionApr = (((valueEmitted / vault.value) * ONE_YEAR_SECONDS) / duration) * 100;
+    const emissionApr = (valueEmitted / vault.value) * durationScalar * 100;
     const emissionSource = createValueSource(`${tokenEmitted.symbol} Rewards`, uniformPerformance(emissionApr));
     const cachedEmissionSource = valueSourceToCachedValueSource(
       emissionSource,
@@ -391,7 +391,7 @@ export async function loadVaultEventPerformances(
       const compoundingSource = vaultValueSources.find((source) => source.type === SourceType.PreCompound);
       if (compoundingSource) {
         const compoundingSourceApy =
-          ((1 + (emissionApr * compoundingSource.apr) / (periods * 100)) ** periods - 1) * 100;
+          ((1 + ((emissionApr / 100) * (compoundingSource.apr / 100)) / periods) ** periods - 1) * 100;
         const sourceName = `${getToken(emittedVault.vaultToken).name} Compounding`;
         const sourceType = sourceName.replace(' ', '_').toLowerCase();
         const derivativeSource = createValueSource(sourceName, uniformPerformance(compoundingSourceApy));
