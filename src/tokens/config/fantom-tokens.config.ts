@@ -36,6 +36,14 @@ export const fantomTokensConfig: TokenConfig = {
     symbol: 'WBTC',
     type: PricingType.LookupName,
   },
+  [TOKENS.FTM_OXD]: {
+    address: TOKENS.FTM_OXD,
+    decimals: 18,
+    lookupName: '0xdao',
+    name: '0xDAO',
+    symbol: 'OXD',
+    type: PricingType.LookupName,
+  },
   [TOKENS.FTM_SOLID]: {
     address: TOKENS.FTM_SOLID,
     decimals: 18,
@@ -140,6 +148,14 @@ export const fantomTokensConfig: TokenConfig = {
     symbol: 'SMM-WEVE-USDC',
     type: PricingType.UniV2LP,
   },
+  [TOKENS.SMM_OXD_USDC]: {
+    address: TOKENS.SMM_OXD_USDC,
+    decimals: 18,
+    lpToken: true,
+    name: 'Solidly: OXD-SDC',
+    symbol: 'SMM-OXD-USDC',
+    type: PricingType.UniV2LP,
+  },
   [TOKENS.BSMM_BOO_XBOO]: {
     address: TOKENS.BSMM_BOO_XBOO,
     decimals: 18,
@@ -192,6 +208,17 @@ export const fantomTokensConfig: TokenConfig = {
     type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.SMM_WEVE_USDC,
+      network: Network.Fantom,
+    },
+  },
+  [TOKENS.BSMM_OXD_USDC]: {
+    address: TOKENS.BSMM_OXD_USDC,
+    decimals: 18,
+    name: 'bSolidly: OXD-SDC',
+    symbol: 'bSMM-OXD-USDC',
+    type: PricingType.Vault,
+    vaultToken: {
+      address: TOKENS.SMM_OXD_USDC,
       network: Network.Fantom,
     },
   },
