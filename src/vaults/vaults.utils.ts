@@ -343,7 +343,7 @@ export async function loadVaultEventPerformances(
   // count of harvests is exclusive of the 0th element
   const periods = (ONE_YEAR_SECONDS / duration) * (recentHarvests.length - 1);
   const compoundApr = (totalHarvestedTokens / vault.balance) * periods;
-  const compoundApy = ((1 + compoundApr / periods) ** periods - 1) * 100;
+  const compoundApy = ((1 + compoundApr / 100 / periods) ** periods - 1) * 100;
   const compoundSourceApr = createValueSource(VAULT_SOURCE, uniformPerformance(compoundApr), true);
   const cachedCompoundSourceApr = valueSourceToCachedValueSource(
     compoundSourceApr,
