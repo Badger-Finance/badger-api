@@ -66,7 +66,7 @@ describe('vaults.utils', () => {
     jest.spyOn(indexerUtils, 'getVault').mockImplementation(async (_chain, _address) => ({
       sett: {
         id: TEST_ADDR,
-        balance: 10000,
+        balance: '25000000000000000000', // 25
         available: 0,
         netDeposit: 0,
         netShareDeposit: 0,
@@ -355,7 +355,7 @@ describe('vaults.utils', () => {
         setupSdk();
         jest.spyOn(pricesUtils, 'getPrice').mockImplementation(async (token) => ({
           address: token,
-          price: Number(token.slice(0, 6)),
+          price: Number(token.slice(0, 4)),
         }));
         jest.spyOn(protocolsUtils, 'getVaultCachedValueSources').mockImplementation(async (vault) => {
           const underlying = createValueSource(VAULT_SOURCE, uniformPerformance(10));
@@ -367,10 +367,18 @@ describe('vaults.utils', () => {
 
       it('skips all emitted tokens with no price', async () => {
         setupSdk();
-        jest.spyOn(pricesUtils, 'getPrice').mockImplementation(async (token) => ({
-          address: token,
-          price: 0,
-        }));
+        jest.spyOn(pricesUtils, 'getPrice').mockImplementation(async (token) => {
+          if (token !== vault.depositToken) {
+            return {
+              address: token,
+              price: 0,
+            };
+          }
+          return {
+            address: token,
+            price: Number(token.slice(0, 4)),
+          };
+        });
         const result = await getVaultPerformance(TEST_CHAIN, vault);
         expect(result).toMatchSnapshot();
       });

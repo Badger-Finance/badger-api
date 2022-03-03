@@ -246,9 +246,6 @@ export async function getVaultPerformance(
 
     return [...eventSources, ...protocol, ...rewardEmissions];
   } catch (err) {
-    if (vaultDefinition.vaultToken === TOKENS.BVECVX) {
-      console.log(err);
-    }
     const [underlying, protocol] = await Promise.all([
       getVaultUnderlying(vaultDefinition),
       getProtocolValueSources(chain, vaultDefinition, true),
