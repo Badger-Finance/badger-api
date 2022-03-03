@@ -81,4 +81,13 @@ export const fantomSetts: VaultDefinition[] = [
     state: VaultState.Guarded,
     protocol: Protocol.Solidex,
   },
+  {
+    name: 'OXD/USDC',
+    createdBlock: 32477300,
+    depositToken: TOKENS.SMM_OXD_USDC,
+    vaultToken: TOKENS.BSMM_OXD_USDC,
+    stage: Stage.Staging,
+    state: VaultState.Guarded,
+    protocol: Protocol.Solidex,
+  },
 ];
