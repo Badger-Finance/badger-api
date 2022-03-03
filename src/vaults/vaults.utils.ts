@@ -1,11 +1,9 @@
 import { between } from '@aws/dynamodb-expressions';
 import { BadRequest, NotFound, UnprocessableEntity } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';
-import { GraphQLClient } from 'graphql-request';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
 import { CURRENT, ONE_DAY_MS, ONE_YEAR_MS, ONE_YEAR_SECONDS, SAMPLE_DAYS } from '../config/constants';
-import { getSdk, SettQuery } from '../graphql/generated/badger';
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
 import { formatBalance, getToken } from '../tokens/tokens.utils';
 import { CachedSettSnapshot } from './interfaces/cached-sett-snapshot.interface';
@@ -25,6 +23,7 @@ import { getProtocolValueSources, getRewardEmission, valueSourceToCachedValueSou
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { getVaultCachedValueSources, tokenEmission } from '../protocols/protocols.utils';
 import { SOURCE_TIME_FRAMES, updatePerformance } from '../rewards/enums/source-timeframe.enum';
+import { getVault } from '../indexers/indexer.utils';
 
 export const VAULT_SOURCE = 'Vault Compounding';
 
@@ -61,18 +60,6 @@ export function defaultVault(vaultDefinition: VaultDefinition): Vault {
     },
     type: vaultDefinition.protocol === Protocol.Badger ? VaultType.Native : VaultType.Standard,
   };
-}
-
-// TODO: kill this function
-export async function getVault(graphUrl: string, contract: string, block?: number): Promise<SettQuery> {
-  const badgerGraphqlClient = new GraphQLClient(graphUrl);
-  const badgerGraphqlSdk = getSdk(badgerGraphqlClient);
-  const settId = contract.toLowerCase();
-  const vars = { id: settId };
-  if (block) {
-    return badgerGraphqlSdk.SettSnapshot({ ...vars, block: { number: block } });
-  }
-  return badgerGraphqlSdk.Sett(vars);
 }
 
 export async function getCachedVault(vaultDefinition: VaultDefinition): Promise<Vault> {
@@ -259,6 +246,9 @@ export async function getVaultPerformance(
 
     return [...eventSources, ...protocol, ...rewardEmissions];
   } catch (err) {
+    if (vaultDefinition.vaultToken === TOKENS.BVECVX) {
+      console.log(err);
+    }
     const [underlying, protocol] = await Promise.all([
       getVaultUnderlying(vaultDefinition),
       getProtocolValueSources(chain, vaultDefinition, true),
@@ -332,18 +322,33 @@ export async function loadVaultEventPerformances(
   const measuredHarvests = recentHarvests.slice(1);
   const valueSources = [];
 
-  const totalHarvested = measuredHarvests
-    .flatMap((h) => h.harvests)
+  const harvests = measuredHarvests.flatMap((h) => h.harvests);
+  const totalHarvested = harvests
     .map((h) => h.harvested)
     .reduce((total, harvested) => total.add(harvested), BigNumber.from(0));
 
-  const vault = await getCachedVault(vaultDefinition);
+  let weightedBalance = 0;
   const depositToken = getToken(vaultDefinition.depositToken);
+  const allHarvests = recentHarvests.flatMap((h) => h.harvests);
+  for (let i = 0; i < recentHarvests.length - 1; i++) {
+    const end = allHarvests[i];
+    const start = allHarvests[i + 1];
+    const duration = end.timestamp - start.timestamp;
+    const { sett } = await getVault(chain.graphUrl, vaultDefinition.vaultToken, end.block);
+    if (sett) {
+      weightedBalance += duration * formatBalance(sett.balance, depositToken.decimals);
+    }
+  }
+
+  const { price } = await getPrice(vaultDefinition.depositToken);
+  const measuredBalance = weightedBalance / duration;
+  const measuredValue = measuredBalance * price;
+
   const totalHarvestedTokens = formatBalance(totalHarvested, depositToken.decimals);
   // count of harvests is exclusive of the 0th element
   const durationScalar = ONE_YEAR_SECONDS / duration;
   const periods = durationScalar * (recentHarvests.length - 1);
-  const compoundApr = (totalHarvestedTokens / vault.balance) * durationScalar * 100;
+  const compoundApr = (totalHarvestedTokens / measuredBalance) * durationScalar * 100;
   const compoundApy = ((1 + compoundApr / 100 / periods) ** periods - 1) * 100;
   const compoundSourceApr = createValueSource(VAULT_SOURCE, uniformPerformance(compoundApr), true);
   const cachedCompoundSourceApr = valueSourceToCachedValueSource(
@@ -375,7 +380,7 @@ export async function loadVaultEventPerformances(
     }
     const tokensEmitted = formatBalance(amount, tokenEmitted.decimals);
     const valueEmitted = tokensEmitted * tokenPrice.price;
-    const emissionApr = (valueEmitted / vault.value) * durationScalar * 100;
+    const emissionApr = (valueEmitted / measuredValue) * durationScalar * 100;
     const emissionSource = createValueSource(`${tokenEmitted.symbol} Rewards`, uniformPerformance(emissionApr));
     const cachedEmissionSource = valueSourceToCachedValueSource(
       emissionSource,
