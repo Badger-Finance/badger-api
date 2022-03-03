@@ -72,4 +72,13 @@ export const fantomSetts: VaultDefinition[] = [
     state: VaultState.Guarded,
     protocol: Protocol.Solidex,
   },
+  {
+    name: 'WEVE/USDC',
+    createdBlock: 32237094,
+    depositToken: TOKENS.SMM_WEVE_USDC,
+    vaultToken: TOKENS.BSMM_WEVE_USDC,
+    stage: Stage.Staging,
+    state: VaultState.Guarded,
+    protocol: Protocol.Solidex,
+  },
 ];

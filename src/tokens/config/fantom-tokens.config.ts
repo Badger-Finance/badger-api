@@ -20,6 +20,14 @@ export const fantomTokensConfig: TokenConfig = {
     symbol: 'WFTM',
     type: PricingType.LookupName,
   },
+  [TOKENS.FTM_WEVE]: {
+    address: TOKENS.FTM_WEVE,
+    decimals: 18,
+    name: 'veDAO',
+    lookupName: 'vedao',
+    symbol: 'WEVE',
+    type: PricingType.LookupName,
+  },
   [TOKENS.FTM_WBTC]: {
     address: TOKENS.FTM_WBTC,
     decimals: 8,
@@ -124,6 +132,14 @@ export const fantomTokensConfig: TokenConfig = {
     symbol: 'SMM-SOLID-SOLIDSEX',
     type: PricingType.UniV2LP,
   },
+  [TOKENS.SMM_WEVE_USDC]: {
+    address: TOKENS.SMM_WEVE_USDC,
+    decimals: 18,
+    lpToken: true,
+    name: 'Solidly: WEVE-SDC',
+    symbol: 'SMM-WEVE-USDC',
+    type: PricingType.UniV2LP,
+  },
   [TOKENS.BSMM_BOO_XBOO]: {
     address: TOKENS.BSMM_BOO_XBOO,
     decimals: 18,
@@ -165,6 +181,17 @@ export const fantomTokensConfig: TokenConfig = {
     type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.SMM_WFTM_SEX,
+      network: Network.Fantom,
+    },
+  },
+  [TOKENS.BSMM_WEVE_USDC]: {
+    address: TOKENS.BSMM_WEVE_USDC,
+    decimals: 18,
+    name: 'bSolidly: WEVE-SDC',
+    symbol: 'bSMM-WEVE-USDC',
+    type: PricingType.Vault,
+    vaultToken: {
+      address: TOKENS.SMM_WEVE_USDC,
       network: Network.Fantom,
     },
   },
