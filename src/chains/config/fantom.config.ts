@@ -52,7 +52,7 @@ export const fantomSetts: VaultDefinition[] = [
     vaultToken: TOKENS.BSMM_WBTC_RENBTC,
     stage: Stage.Staging,
     state: VaultState.Guarded,
-    protocol: Protocol.Solidly,
+    protocol: Protocol.Solidex,
   },
   {
     name: 'WFTM/SEX',
