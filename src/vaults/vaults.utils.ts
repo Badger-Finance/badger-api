@@ -315,7 +315,7 @@ export async function loadVaultEventPerformances(
     throw new Error('Vault does not have adequate harvest history!');
   }
 
-  const duration = recentHarvests[0].timestamp - recentHarvests[recentHarvests.length - 1].timestamp;
+  const totalDuration = recentHarvests[0].timestamp - recentHarvests[recentHarvests.length - 1].timestamp;
   const measuredHarvests = recentHarvests.slice(1);
   const valueSources = [];
 
@@ -338,12 +338,12 @@ export async function loadVaultEventPerformances(
   }
 
   const { price } = await getPrice(vaultDefinition.depositToken);
-  const measuredBalance = weightedBalance / duration;
+  const measuredBalance = weightedBalance / totalDuration;
   const measuredValue = measuredBalance * price;
 
   const totalHarvestedTokens = formatBalance(totalHarvested, depositToken.decimals);
   // count of harvests is exclusive of the 0th element
-  const durationScalar = ONE_YEAR_SECONDS / duration;
+  const durationScalar = ONE_YEAR_SECONDS / totalDuration;
   const periods = durationScalar * (recentHarvests.length - 1);
   const compoundApr = (totalHarvestedTokens / measuredBalance) * durationScalar * 100;
   const compoundApy = ((1 + compoundApr / 100 / periods) ** periods - 1) * 100;
