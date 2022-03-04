@@ -315,8 +315,7 @@ export async function loadVaultEventPerformances(
     throw new Error('Vault does not have adequate harvest history!');
   }
 
-  const totalDuration = recentHarvests[0].timestamp - recentHarvests[recentHarvests.length - 1].timestamp;
-  const measuredHarvests = recentHarvests.slice(0, recentHarvests.length - 1);
+  const measuredHarvests = recentHarvests.slice(0, 3);
   const valueSources = [];
 
   const harvests = measuredHarvests.flatMap((h) => h.harvests);
@@ -324,18 +323,21 @@ export async function loadVaultEventPerformances(
     .map((h) => h.harvested)
     .reduce((total, harvested) => total.add(harvested), BigNumber.from(0));
 
+  let totalDuration = 0;
   let weightedBalance = 0;
   const depositToken = getToken(vaultDefinition.depositToken);
-  const allHarvests = recentHarvests.flatMap((h) => h.harvests);
-  for (let i = 0; i < recentHarvests.length - 1; i++) {
+  const allHarvests = measuredHarvests.flatMap((h) => h.harvests);
+  for (let i = 0; i < measuredHarvests.length - 1; i++) {
     const end = allHarvests[i];
     const start = allHarvests[i + 1];
     const duration = end.timestamp - start.timestamp;
+    totalDuration += duration;
     const { sett } = await getVault(chain.graphUrl, vaultDefinition.vaultToken, end.block);
     if (sett) {
       weightedBalance += duration * formatBalance(sett.balance, depositToken.decimals);
     }
   }
+  const { balance: currentBalance, value: currentValue } = await getCachedVault(vaultDefinition);
   const { price } = await getPrice(vaultDefinition.depositToken);
   const measuredBalance = weightedBalance / totalDuration;
   const measuredValue = measuredBalance * price;
@@ -343,7 +345,7 @@ export async function loadVaultEventPerformances(
   const totalHarvestedTokens = formatBalance(totalHarvested, depositToken.decimals);
   // count of harvests is exclusive of the 0th element
   const durationScalar = ONE_YEAR_SECONDS / totalDuration;
-  const periods = durationScalar * (recentHarvests.length - 1);
+  const periods = durationScalar * (measuredHarvests.length - 1);
   const compoundApr = (totalHarvestedTokens / measuredBalance) * durationScalar * 100;
   const compoundApy = ((1 + compoundApr / 100 / periods) ** periods - 1) * 100;
   const compoundSourceApr = createValueSource(VAULT_SOURCE, uniformPerformance(compoundApr), true);
@@ -370,12 +372,18 @@ export async function loadVaultEventPerformances(
   }
 
   for (const [token, amount] of tokensEmitted.entries()) {
-    const [tokenEmitted, tokenPrice] = await Promise.all([getToken(token), getPrice(token)]);
-    if (tokenPrice.price === 0) {
+    const { price } = await getPrice(token);
+    if (price === 0) {
       continue;
     }
+    const tokenEmitted = getToken(token);
     const tokensEmitted = formatBalance(amount, tokenEmitted.decimals);
-    const valueEmitted = tokensEmitted * tokenPrice.price;
+    const valueEmitted = tokensEmitted * price;
+    console.log({
+      vault: vaultDefinition.name,
+      tokenEmitted: tokenEmitted.name,
+      valueEmitted,
+    });
     const emissionApr = (valueEmitted / measuredValue) * durationScalar * 100;
     const emissionSource = createValueSource(`${tokenEmitted.symbol} Rewards`, uniformPerformance(emissionApr));
     const cachedEmissionSource = valueSourceToCachedValueSource(
@@ -399,6 +407,25 @@ export async function loadVaultEventPerformances(
         valueSources.push(valueSourceToCachedValueSource(derivativeSource, vaultDefinition, sourceType));
       }
     } catch {} // ignore error for non vaults
+  }
+
+  if (chain.network === Network.Fantom) {
+    console.log({
+      vault: vaultDefinition.name,
+      harvests: harvests.map((h) => formatBalance(h.harvested, depositToken.decimals)),
+      sources: valueSources.map((s) => ({
+        name: s.name,
+        apr: s.apr,
+      })),
+      totalHarvestedTokens,
+      durationScalar,
+      measuredBalance,
+      currentBalance,
+      totalDuration,
+      periods,
+      measuredValue,
+      currentValue,
+    });
   }
 
   return valueSources;
