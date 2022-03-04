@@ -29,6 +29,7 @@ import * as pricesUtils from '../prices/prices.utils';
 import * as rewardsUtils from '../rewards/rewards.utils';
 import * as tokensUtils from '../tokens/tokens.utils';
 import * as protocolsUtils from '../protocols/protocols.utils';
+import * as indexerUtils from '../indexers/indexer.utils';
 import { createValueSource } from '../protocols/interfaces/value-source.interface';
 import { uniformPerformance } from '../protocols/interfaces/performance.interface';
 import { tokenEmission } from '../protocols/protocols.utils';
@@ -62,6 +63,21 @@ describe('vaults.utils', () => {
     snapshot.value = 1000;
     snapshot.balance = 10000;
     setupMapper([snapshot]);
+    jest.spyOn(indexerUtils, 'getVault').mockImplementation(async (_chain, _address) => ({
+      sett: {
+        id: TEST_ADDR,
+        balance: '25000000000000000000', // 25
+        available: 0,
+        netDeposit: 0,
+        netShareDeposit: 0,
+        token: {
+          id: TEST_ADDR,
+          decimals: 18,
+        },
+        pricePerFullShare: 1,
+        totalSupply: 10,
+      },
+    }));
   }
 
   beforeEach(() => {
@@ -339,7 +355,7 @@ describe('vaults.utils', () => {
         setupSdk();
         jest.spyOn(pricesUtils, 'getPrice').mockImplementation(async (token) => ({
           address: token,
-          price: Number(token.slice(0, 6)),
+          price: Number(token.slice(0, 4)),
         }));
         jest.spyOn(protocolsUtils, 'getVaultCachedValueSources').mockImplementation(async (vault) => {
           const underlying = createValueSource(VAULT_SOURCE, uniformPerformance(10));
@@ -351,10 +367,18 @@ describe('vaults.utils', () => {
 
       it('skips all emitted tokens with no price', async () => {
         setupSdk();
-        jest.spyOn(pricesUtils, 'getPrice').mockImplementation(async (token) => ({
-          address: token,
-          price: 0,
-        }));
+        jest.spyOn(pricesUtils, 'getPrice').mockImplementation(async (token) => {
+          if (token !== vault.depositToken) {
+            return {
+              address: token,
+              price: 0,
+            };
+          }
+          return {
+            address: token,
+            price: Number(token.slice(0, 4)),
+          };
+        });
         const result = await getVaultPerformance(TEST_CHAIN, vault);
         expect(result).toMatchSnapshot();
       });
