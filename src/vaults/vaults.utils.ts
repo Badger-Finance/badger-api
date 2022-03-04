@@ -315,8 +315,7 @@ export async function loadVaultEventPerformances(
     throw new Error('Vault does not have adequate harvest history!');
   }
 
-  const totalDuration = recentHarvests[0].timestamp - recentHarvests[recentHarvests.length - 1].timestamp;
-  const measuredHarvests = recentHarvests.slice(0, recentHarvests.length - 1);
+  const measuredHarvests = recentHarvests.slice(0, 3);
   const valueSources = [];
 
   const harvests = measuredHarvests.flatMap((h) => h.harvests);
@@ -324,18 +323,21 @@ export async function loadVaultEventPerformances(
     .map((h) => h.harvested)
     .reduce((total, harvested) => total.add(harvested), BigNumber.from(0));
 
+  let totalDuration = 0;
   let weightedBalance = 0;
   const depositToken = getToken(vaultDefinition.depositToken);
-  const allHarvests = recentHarvests.flatMap((h) => h.harvests);
-  for (let i = 0; i < recentHarvests.length - 1; i++) {
+  const allHarvests = measuredHarvests.flatMap((h) => h.harvests);
+  for (let i = 0; i < measuredHarvests.length - 1; i++) {
     const end = allHarvests[i];
     const start = allHarvests[i + 1];
     const duration = end.timestamp - start.timestamp;
+    totalDuration += duration;
     const { sett } = await getVault(chain.graphUrl, vaultDefinition.vaultToken, end.block);
     if (sett) {
       weightedBalance += duration * formatBalance(sett.balance, depositToken.decimals);
     }
   }
+
   const { price } = await getPrice(vaultDefinition.depositToken);
   const measuredBalance = weightedBalance / totalDuration;
   const measuredValue = measuredBalance * price;
@@ -343,7 +345,7 @@ export async function loadVaultEventPerformances(
   const totalHarvestedTokens = formatBalance(totalHarvested, depositToken.decimals);
   // count of harvests is exclusive of the 0th element
   const durationScalar = ONE_YEAR_SECONDS / totalDuration;
-  const periods = durationScalar * (recentHarvests.length - 1);
+  const periods = durationScalar * (measuredHarvests.length - 1);
   const compoundApr = (totalHarvestedTokens / measuredBalance) * durationScalar * 100;
   const compoundApy = ((1 + compoundApr / 100 / periods) ** periods - 1) * 100;
   const compoundSourceApr = createValueSource(VAULT_SOURCE, uniformPerformance(compoundApr), true);
@@ -370,12 +372,13 @@ export async function loadVaultEventPerformances(
   }
 
   for (const [token, amount] of tokensEmitted.entries()) {
-    const [tokenEmitted, tokenPrice] = await Promise.all([getToken(token), getPrice(token)]);
-    if (tokenPrice.price === 0) {
+    const { price } = await getPrice(token);
+    if (price === 0) {
       continue;
     }
+    const tokenEmitted = getToken(token);
     const tokensEmitted = formatBalance(amount, tokenEmitted.decimals);
-    const valueEmitted = tokensEmitted * tokenPrice.price;
+    const valueEmitted = tokensEmitted * price;
     const emissionApr = (valueEmitted / measuredValue) * durationScalar * 100;
     const emissionSource = createValueSource(`${tokenEmitted.symbol} Rewards`, uniformPerformance(emissionApr));
     const cachedEmissionSource = valueSourceToCachedValueSource(
@@ -394,7 +397,7 @@ export async function loadVaultEventPerformances(
         const compoundingSourceApy =
           ((1 + ((emissionApr / 100) * (compoundingSource.apr / 100)) / periods) ** periods - 1) * 100;
         const sourceName = `${getToken(emittedVault.vaultToken).name} Compounding`;
-        const sourceType = sourceName.replace(' ', '_').toLowerCase();
+        const sourceType = `Derivative ${sourceName}`.replace(' ', '_').toLowerCase();
         const derivativeSource = createValueSource(sourceName, uniformPerformance(compoundingSourceApy));
         valueSources.push(valueSourceToCachedValueSource(derivativeSource, vaultDefinition, sourceType));
       }
