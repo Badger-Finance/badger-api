@@ -379,11 +379,6 @@ export async function loadVaultEventPerformances(
     const tokenEmitted = getToken(token);
     const tokensEmitted = formatBalance(amount, tokenEmitted.decimals);
     const valueEmitted = tokensEmitted * price;
-    console.log({
-      vault: vaultDefinition.name,
-      tokenEmitted: tokenEmitted.name,
-      valueEmitted,
-    });
     const emissionApr = (valueEmitted / measuredValue) * durationScalar * 100;
     const emissionSource = createValueSource(`${tokenEmitted.symbol} Rewards`, uniformPerformance(emissionApr));
     const cachedEmissionSource = valueSourceToCachedValueSource(
@@ -407,25 +402,6 @@ export async function loadVaultEventPerformances(
         valueSources.push(valueSourceToCachedValueSource(derivativeSource, vaultDefinition, sourceType));
       }
     } catch {} // ignore error for non vaults
-  }
-
-  if (chain.network === Network.Fantom) {
-    console.log({
-      vault: vaultDefinition.name,
-      harvests: harvests.map((h) => formatBalance(h.harvested, depositToken.decimals)),
-      sources: valueSources.map((s) => ({
-        name: s.name,
-        apr: s.apr,
-      })),
-      totalHarvestedTokens,
-      durationScalar,
-      measuredBalance,
-      currentBalance,
-      totalDuration,
-      periods,
-      measuredValue,
-      currentValue,
-    });
   }
 
   return valueSources;
