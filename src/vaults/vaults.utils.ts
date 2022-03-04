@@ -397,7 +397,7 @@ export async function loadVaultEventPerformances(
         const compoundingSourceApy =
           ((1 + ((emissionApr / 100) * (compoundingSource.apr / 100)) / periods) ** periods - 1) * 100;
         const sourceName = `${getToken(emittedVault.vaultToken).name} Compounding`;
-        const sourceType = sourceName.replace(' ', '_').toLowerCase();
+        const sourceType = `Derivative ${sourceName}`.replace(' ', '_').toLowerCase();
         const derivativeSource = createValueSource(sourceName, uniformPerformance(compoundingSourceApy));
         valueSources.push(valueSourceToCachedValueSource(derivativeSource, vaultDefinition, sourceType));
       }
