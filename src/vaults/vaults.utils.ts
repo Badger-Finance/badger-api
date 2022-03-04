@@ -337,7 +337,7 @@ export async function loadVaultEventPerformances(
       weightedBalance += duration * formatBalance(sett.balance, depositToken.decimals);
     }
   }
-  const { balance: currentBalance, value: currentValue } = await getCachedVault(vaultDefinition);
+
   const { price } = await getPrice(vaultDefinition.depositToken);
   const measuredBalance = weightedBalance / totalDuration;
   const measuredValue = measuredBalance * price;
