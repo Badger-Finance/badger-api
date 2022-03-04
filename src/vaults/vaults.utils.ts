@@ -316,7 +316,7 @@ export async function loadVaultEventPerformances(
   }
 
   const totalDuration = recentHarvests[0].timestamp - recentHarvests[recentHarvests.length - 1].timestamp;
-  const measuredHarvests = recentHarvests.slice(1);
+  const measuredHarvests = recentHarvests.slice(0, recentHarvests.length - 1);
   const valueSources = [];
 
   const harvests = measuredHarvests.flatMap((h) => h.harvests);
@@ -336,7 +336,6 @@ export async function loadVaultEventPerformances(
       weightedBalance += duration * formatBalance(sett.balance, depositToken.decimals);
     }
   }
-
   const { price } = await getPrice(vaultDefinition.depositToken);
   const measuredBalance = weightedBalance / totalDuration;
   const measuredValue = measuredBalance * price;
