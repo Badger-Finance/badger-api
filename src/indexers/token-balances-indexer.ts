@@ -49,6 +49,6 @@ async function saveCachedTokenBalance(
   try {
     await mapper.put(cachedTokenBalance);
   } catch (err) {
-    console.error({ err, cachedTokenBalance });
+    console.error({ err, cachedTokenBalance, tokens: cachedTokenBalance.tokenBalances });
   }
 }

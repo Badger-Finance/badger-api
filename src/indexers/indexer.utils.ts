@@ -10,11 +10,13 @@ import { getPrice } from '../prices/prices.utils';
 import { CachedSettSnapshot } from '../vaults/interfaces/cached-sett-snapshot.interface';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { VaultSnapshot } from '../vaults/interfaces/vault-snapshot.interface';
-import { getBoostWeight, getPricePerShare, getVault, getStrategyInfo, getCachedVault } from '../vaults/vaults.utils';
+import { getBoostWeight, getPricePerShare, getStrategyInfo, getCachedVault } from '../vaults/vaults.utils';
 import { CachedLiquidityPoolTokenBalance } from '../tokens/interfaces/cached-liquidity-pool-token-balance.interface';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
 import { getToken, toBalance } from '../tokens/tokens.utils';
 import { getLiquidityData } from '../protocols/common/swap.utils';
+import { GraphQLClient } from 'graphql-request';
+import { SettQuery, getSdk } from '../graphql/generated/badger';
 
 export function chunkArray(addresses: string[], count: number): string[][] {
   const chunks: string[][] = [];
@@ -42,19 +44,17 @@ export async function batchRefreshAccounts(
   }
 }
 
-export async function settToCachedSnapshot(
+export async function vaultToCachedSnapshot(
   chain: Chain,
   vaultDefinition: VaultDefinition,
 ): Promise<CachedSettSnapshot> {
   const sdk = await chain.getSdk();
-  const { address, totalSupply, balance, pricePerFullShare, available } = await sdk.vaults.loadVault(
-    vaultDefinition.vaultToken,
-    {
-      requireRegistry: false,
-      status: 2,
-      version: 'v1',
-    },
-  );
+  const { address, totalSupply, balance, pricePerFullShare, available } = await sdk.vaults.loadVault({
+    address: vaultDefinition.vaultToken,
+    requireRegistry: false,
+    status: 2,
+    version: 'v1',
+  });
 
   const [tokenPriceData, strategyInfo, boostWeight] = await Promise.all([
     getPrice(vaultDefinition.depositToken),
@@ -85,21 +85,21 @@ export async function getQueryBlock(chain: Chain, block: number): Promise<number
   return queryBlock;
 }
 
-export const settToSnapshot = async (
+export async function settToSnapshot(
   chain: Chain,
   vaultDefinition: VaultDefinition,
   block: number,
-): Promise<VaultSnapshot | null> => {
+): Promise<VaultSnapshot | null> {
   const queryBlock = await getQueryBlock(chain, block);
-  const sett = await getVault(chain.graphUrl, vaultDefinition.vaultToken, queryBlock);
+  const { sett } = await getVault(chain.graphUrl, vaultDefinition.vaultToken, queryBlock);
   const settToken = getToken(vaultDefinition.vaultToken);
   const depositToken = getToken(vaultDefinition.depositToken);
 
-  if (sett.sett == null) {
+  if (sett == null) {
     return null;
   }
 
-  const { balance, totalSupply, pricePerFullShare, available } = sett.sett;
+  const { balance, totalSupply, pricePerFullShare, available } = sett;
   const blockData = await chain.provider.getBlock(queryBlock);
   const timestamp = blockData.timestamp * 1000;
   const balanceDecimals = vaultDefinition.balanceDecimals || depositToken.decimals;
@@ -120,7 +120,7 @@ export const settToSnapshot = async (
     ratio,
     value: parseFloat(value.toFixed(4)),
   });
-};
+}
 
 export async function getIndexedBlock(
   vaultDefinition: VaultDefinition,
@@ -165,10 +165,12 @@ export async function getLpTokenBalances(
     if (!vault.protocol) {
       throw new BadRequest('LP balance look up requires a defined protocol');
     }
+    const sdk = await chain.getSdk();
     const liquidityData = await getLiquidityData(chain, vault.depositToken);
     const { token0, token1, reserve0, reserve1, totalSupply } = liquidityData;
-    const t0Token = getToken(token0);
-    const t1Token = getToken(token1);
+    const tokenData = await sdk.tokens.loadTokens([token0, token1]);
+    const t0Token = tokenData[token0];
+    const t1Token = tokenData[token1];
 
     // poolData returns the full liquidity pool, valueScalar acts to calculate the portion within the sett
     const settSnapshot = await getCachedVault(vault);
@@ -181,4 +183,16 @@ export async function getLpTokenBalances(
   } catch (err) {
     throw new NotFound(`${vault.protocol} pool pair ${vault.depositToken} does not exist`);
   }
+}
+
+// TODO: kill this function
+export async function getVault(graphUrl: string, contract: string, block?: number): Promise<SettQuery> {
+  const badgerGraphqlClient = new GraphQLClient(graphUrl);
+  const badgerGraphqlSdk = getSdk(badgerGraphqlClient);
+  const settId = contract.toLowerCase();
+  const vars = { id: settId };
+  if (block) {
+    return badgerGraphqlSdk.SettSnapshot({ ...vars, block: { number: block } });
+  }
+  return badgerGraphqlSdk.Sett(vars);
 }

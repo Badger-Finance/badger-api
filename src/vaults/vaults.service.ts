@@ -3,7 +3,8 @@ import { Service } from '@tsed/common';
 import { Chain } from '../chains/config/chain.config';
 import { convert } from '../prices/prices.utils';
 import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interface';
-import { getVaultValueSources } from '../protocols/protocols.utils';
+import { getVaultCachedValueSources } from '../protocols/protocols.utils';
+import { SourceType } from '../rewards/enums/source-type.enum';
 import { getVaultTokens } from '../tokens/tokens.utils';
 import { getCachedVault, getVaultDefinition, VAULT_SOURCE } from './vaults.utils';
 
@@ -12,8 +13,9 @@ export class VaultsService {
   async getProtocolSummary(chain: Chain, currency?: Currency): Promise<ProtocolSummary> {
     const vaults = await Promise.all(
       chain.vaults.map(async (vault) => {
-        const { name, balance, value } = await this.getVault(chain, vault.vaultToken, currency);
-        return { name, balance, value };
+        const { name, balance, value } = await getCachedVault(vault);
+        const convertedValue = await convert(value, currency);
+        return { name, balance, value: convertedValue };
       }),
     );
     const totalValue = vaults.reduce((total, vault) => (total += vault.value), 0);
@@ -28,11 +30,11 @@ export class VaultsService {
     const vaultDefinition = getVaultDefinition(chain, contract);
     const [vault, sources] = await Promise.all([
       getCachedVault(vaultDefinition),
-      getVaultValueSources(vaultDefinition),
+      getVaultCachedValueSources(vaultDefinition),
     ]);
     vault.tokens = await getVaultTokens(vaultDefinition, vault.balance, currency);
     vault.value = await convert(vault.value, currency);
-    vault.sources = sources
+    const baseSources = sources
       .filter((source) => source.apr >= 0.001)
       .filter((source) => {
         if (source.name !== VAULT_SOURCE) {
@@ -40,7 +42,14 @@ export class VaultsService {
         }
         return vault.state !== VaultState.Deprecated && !vaultDefinition.deprecated;
       });
+    const sourcesApr = baseSources.filter(
+      (source) => source.type !== SourceType.Compound && !source.type.includes('derivative'),
+    );
+    const sourcesApy = baseSources.filter((source) => source.type !== SourceType.PreCompound);
+    vault.sources = sourcesApr.map((s) => s.toValueSource());
+    vault.sourcesApy = sourcesApy.map((s) => s.toValueSource());
     vault.apr = vault.sources.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
+    vault.apy = vault.sourcesApy.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
     vault.protocol = vaultDefinition.protocol ?? Protocol.Badger;
 
     if (vault.boost.enabled) {
@@ -48,6 +57,8 @@ export class VaultsService {
       if (hasBoostedApr) {
         vault.minApr = vault.sources.map((s) => s.minApr || s.apr).reduce((total, apr) => (total += apr), 0);
         vault.maxApr = vault.sources.map((s) => s.maxApr || s.apr).reduce((total, apr) => (total += apr), 0);
+        vault.minApy = vault.sourcesApy.map((s) => s.minApr || s.apr).reduce((total, apr) => (total += apr), 0);
+        vault.maxApy = vault.sourcesApy.map((s) => s.maxApr || s.apr).reduce((total, apr) => (total += apr), 0);
         if (vault.type !== VaultType.Native) {
           vault.type = VaultType.Boosted;
         }

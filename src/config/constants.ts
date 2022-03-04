@@ -33,7 +33,7 @@ export const SUSHISWAP_MATIC_URL = process.env.SUSHISWAP_MATIC || 'MISSING REQUI
 export const SUSHISWAP_ARBITRUM_URL = process.env.SUSHISWAP_ARBITRUM || 'MISSING REQUIRED ENV VAR';
 export const PANCAKESWAP_URL = process.env.PANCAKESWAP || 'MISSING REQUIRED ENV VAR';
 export const QUICKSWAP_URL = process.env.QUICKSWAP || 'MISSING REQUIRED ENV VAR';
-export const SWAPR_SUBGRAPH_URL = process.env.SWAPR || 'MISSING REQUIRED ENV VAR';
+export const SWAPR_URL = process.env.SWAPR || 'MISSING REQUIRED ENV VAR';
 
 // general constants
 export const STAGE = process.env.STAGE || 'MISSING REQUIRED ENV VAR';

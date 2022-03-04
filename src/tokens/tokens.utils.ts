@@ -9,7 +9,8 @@ import { ethTokensConfig } from './config/eth-tokens.config';
 import { maticTokensConfig } from './config/polygon-tokens.config';
 import { xDaiTokensConfig } from './config/xdai-tokens.config';
 import { CachedLiquidityPoolTokenBalance } from './interfaces/cached-liquidity-pool-token-balance.interface';
-import { Token } from './interfaces/token.interface';
+import { Token as TokenDefinition } from './interfaces/token.interface';
+import { Token } from '@badger-dao/sdk';
 import { TokenConfig } from './interfaces/token-config.interface';
 import { Currency, TokenBalance } from '@badger-dao/sdk';
 import { avalancheTokensConfig } from './config/avax-tokens.config';
@@ -33,7 +34,7 @@ export const protocolTokens: TokenConfig = {
  * @param contract Token address.
  * @returns Standard ERC20 token information.
  */
-export const getToken = (contract: string): Token => {
+export const getToken = (contract: string): TokenDefinition => {
   const checksummedAddress = ethers.utils.getAddress(contract);
   const token = protocolTokens[checksummedAddress];
   if (!token) {

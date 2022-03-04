@@ -103,6 +103,12 @@ Object {
     "name": "Curve.fi renBTC/wBTC/sBTC",
     "symbol": "crvsBTC",
   },
+  "0x090185f2135308BaD17527004364eBcC2D37e5F6": Object {
+    "address": "0x090185f2135308BaD17527004364eBcC2D37e5F6",
+    "decimals": 18,
+    "name": "Spell Token",
+    "symbol": "SPELL",
+  },
   "0x110492b31c59716AC47337E616804E3E3AdC0b4a": Object {
     "address": "0x110492b31c59716AC47337E616804E3E3AdC0b4a",
     "decimals": 18,
@@ -623,6 +629,12 @@ Object {
     "decimals": 18,
     "name": "Curve.fi renBTC/wBTC/sBTC",
     "symbol": "crvsBTC",
+  },
+  "0x090185f2135308BaD17527004364eBcC2D37e5F6": Object {
+    "address": "0x090185f2135308BaD17527004364eBcC2D37e5F6",
+    "decimals": 18,
+    "name": "Spell Token",
+    "symbol": "SPELL",
   },
   "0x110492b31c59716AC47337E616804E3E3AdC0b4a": Object {
     "address": "0x110492b31c59716AC47337E616804E3E3AdC0b4a",

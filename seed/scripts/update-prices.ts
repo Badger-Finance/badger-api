@@ -3,21 +3,19 @@ import { writeFileSync } from 'fs';
 import { resolve } from 'path';
 
 async function updatePrices() {
-  const api = new BadgerAPI();
   let prices: { address: string; price: number; updatedAt: number }[] = [];
   for (const network of Object.values(Network)) {
     try {
-      const networkPrices = await api.loadPrices(Currency.USD, network);
-      prices = prices.concat(
-        Object.entries(networkPrices).map((entry) => {
-          const [token, price] = entry;
-          return {
-            address: token,
-            price,
-            updatedAt: Date.now(),
-          };
-        }),
-      );
+      const api = new BadgerAPI({ network, baseURL: 'https://staging-api.badger.com/v2' });
+      const networkPrices = await api.loadPrices(Currency.USD);
+      Object.entries(networkPrices).forEach((entry) => {
+        const [token, price] = entry;
+        prices.push({
+          address: token,
+          price,
+          updatedAt: Date.now(),
+        });
+      });
     } catch {}
   }
   writeFileSync(resolve(__dirname, '../prices.json'), JSON.stringify(prices, null, 2));

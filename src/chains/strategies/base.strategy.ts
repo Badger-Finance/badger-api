@@ -1,5 +1,5 @@
 import { UnprocessableEntity } from '@tsed/exceptions';
-import { getOnChainLiquidityPrice } from '../../protocols/common/swap.utils';
+import { getOnChainLiquidityPrice, resolveTokenPrice } from '../../protocols/common/swap.utils';
 import { getCurveTokenPrice } from '../../protocols/strategies/convex.strategy';
 import { PricingType } from '../../prices/enums/pricing-type.enum';
 import { Chain } from '../config/chain.config';
@@ -24,6 +24,11 @@ export class BaseStrategy extends ChainStrategy {
           throw new UnprocessableEntity(`${token.name} requires custom price implementation`);
         }
         return token.getPrice(chain, token);
+      case PricingType.OnChainUniV2LP:
+        if (!token.lookupName) {
+          throw new UnprocessableEntity(`${token.name} required lookupName to utilize OnChainUniV2LP pricing`);
+        }
+        return resolveTokenPrice(chain, token.address, token.lookupName);
       case PricingType.CurveLP:
         return getCurveTokenPrice(chain, token.address);
       case PricingType.UniV2LP:

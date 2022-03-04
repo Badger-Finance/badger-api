@@ -8,14 +8,13 @@ import { MstableVault__factory } from '../../contracts/factories/MstableVault__f
 import { getPrice } from '../../prices/prices.utils';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { Token } from '../../tokens/interfaces/token.interface';
-import { formatBalance, getToken } from '../../tokens/tokens.utils';
+import { formatBalance } from '../../tokens/tokens.utils';
 import { CachedValueSource } from '../interfaces/cached-value-source.interface';
 import { uniformPerformance } from '../interfaces/performance.interface';
 import { createValueSource } from '../interfaces/value-source.interface';
-import { tokenEmission } from '../protocols.utils';
-import { BigNumber } from 'ethers';
 import { valueSourceToCachedValueSource } from '../../rewards/rewards.utils';
 import { TokenPrice } from '../../prices/interface/token-price.interface';
+import { BigNumber } from 'ethers';
 
 const MSTABLE_MBTC_VAULT = '0xF38522f63f40f9Dd81aBAfD2B8EFc2EC958a3016';
 const MSTABLE_HMBTC_VAULT = '0xF65D53AA6e2E4A5f4F026e73cb3e22C22D75E35C';
@@ -27,7 +26,7 @@ export class mStableStrategy {
         return Promise.all([getVaultSource(chain, VaultDefinition, MSTABLE_HMBTC_VAULT)]);
       case TOKENS.IMBTC:
       default:
-        return getImBtcValuceSource(chain, VaultDefinition);
+        return Promise.all([getVaultSource(chain, VaultDefinition, MSTABLE_MBTC_VAULT)]);
     }
   }
 }
@@ -36,7 +35,6 @@ export async function getImBtcPrice(chain: Chain, token: Token): Promise<TokenPr
   const imbtc = Imbtc__factory.connect(token.address, chain.provider);
   const [exchangeRate, mbtcPrice] = await Promise.all([imbtc.exchangeRate(), getPrice(TOKENS.MBTC)]);
   const exchangeRateScalar = formatBalance(exchangeRate);
-  console.log({ exchangeRate, mbtcPrice });
   return {
     address: token.address,
     price: mbtcPrice.price * exchangeRateScalar,
@@ -53,32 +51,26 @@ export async function getMhBtcPrice(chain: Chain, token: Token): Promise<TokenPr
   const mbtcBalance = formatBalance(mhbtcPrice.k);
   const mhbtcBalance = formatBalance(totalSupply);
   const exchangeRateScalar = mbtcBalance / mhbtcBalance;
-  console.log({ exchangeRateScalar, mbtcPrice, mhbtcPrice, totalSupply });
   return {
     address: token.address,
     price: mbtcPrice.price * exchangeRateScalar,
   };
 }
 
-async function getImBtcValuceSource(chain: Chain, VaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
-  // getMAssetValueSource(VaultDefinition),
-  return Promise.all([getVaultSource(chain, VaultDefinition, MSTABLE_MBTC_VAULT)]);
-}
-
 async function getVaultSource(
   chain: Chain,
-  VaultDefinition: VaultDefinition,
+  vaultDefinition: VaultDefinition,
   vaultAddress: string,
 ): Promise<CachedValueSource> {
   const vault = MstableVault__factory.connect(vaultAddress, chain.provider);
-  if (!VaultDefinition.strategy) {
-    throw new UnprocessableEntity(`${VaultDefinition.name} requires strategy`);
+  if (!vaultDefinition.strategy) {
+    throw new UnprocessableEntity(`${vaultDefinition.name} requires strategy`);
   }
-  const { strategy } = VaultDefinition;
+  const { strategy } = vaultDefinition;
   const [balance, userData, depositTokenPrice, mtaPrice] = await Promise.all([
     vault.rawBalanceOf(strategy),
     vault.userData(strategy),
-    getPrice(VaultDefinition.depositToken),
+    getPrice(vaultDefinition.depositToken),
     getPrice(TOKENS.MTA),
   ]);
   const vaultBalance = formatBalance(balance);
@@ -108,5 +100,5 @@ async function getVaultSource(
       valueSource = createValueSource('Vested MTA Rewards', uniformPerformance(apr));
     }
   }
-  return valueSourceToCachedValueSource(valueSource, VaultDefinition, tokenEmission(getToken(TOKENS.MTA)));
+  return valueSourceToCachedValueSource(valueSource, vaultDefinition, 'flat_Vested_MTA_emission');
 }

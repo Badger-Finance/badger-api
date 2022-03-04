@@ -10,7 +10,7 @@ import { BinanceSmartChain } from '../chains/config/bsc.config';
 import { Ethereum } from '../chains/config/eth.config';
 import { Polygon } from '../chains/config/polygon.config';
 import { xDai } from '../chains/config/xdai.config';
-import { ONE_DAY_MS, ONE_MINUTE_MS, SAMPLE_DAYS } from '../config/constants';
+import { ONE_DAY_MS, SAMPLE_DAYS } from '../config/constants';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import { CachedBoost } from '../leaderboards/interface/cached-boost.interface';
 import { CachedSettSnapshot } from '../vaults/interfaces/cached-sett-snapshot.interface';
@@ -21,11 +21,11 @@ import * as dynamodbUtils from '../aws/dynamodb.utils';
 import { Fantom } from '../chains/config/fantom.config';
 import { Chain } from '../chains/config/chain.config';
 
-export const TEST_CHAIN = loadChains()[0];
+export const TEST_CHAIN = new Ethereum();
 export const TEST_ADDR = ethers.utils.getAddress('0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484');
 
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-export const setupMapper = (items: unknown[], filter?: (items: unknown[]) => unknown[]) => {
+export function setupMapper(items: unknown[], filter?: (items: unknown[]) => unknown[]) {
   // @ts-ignore
   const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
   let result = items;
@@ -35,17 +35,27 @@ export const setupMapper = (items: unknown[], filter?: (items: unknown[]) => unk
   // @ts-ignore
   qi[Symbol.iterator] = jest.fn(() => result.values());
   return jest.spyOn(DataMapper.prototype, 'query').mockImplementation(() => qi);
-};
+}
 /* eslint-enable @typescript-eslint/ban-ts-comment */
 
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-export const mockBatchPut = (items: unknown[]) => {
+export function mockBatchPut(items: unknown[]) {
   // @ts-ignore
   const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
   // @ts-ignore
   qi[Symbol.iterator] = jest.fn(() => items.values());
   return jest.spyOn(DataMapper.prototype, 'batchPut').mockImplementation(() => qi);
-};
+}
+/* eslint-enable @typescript-eslint/ban-ts-comment */
+
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+export function mockBatchDelete(items: unknown[]) {
+  // @ts-ignore
+  const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
+  // @ts-ignore
+  qi[Symbol.iterator] = jest.fn(() => items.values());
+  return jest.spyOn(DataMapper.prototype, 'batchDelete').mockImplementation(() => qi);
+}
 /* eslint-enable @typescript-eslint/ban-ts-comment */
 
 export function defaultAccount(address: string): CachedAccount {
@@ -80,7 +90,7 @@ export const randomValue = (min?: number, max?: number): number => {
 };
 
 export function randomSnapshot(vaultDefinition?: VaultDefinition): CachedSettSnapshot {
-  const vault = vaultDefinition || randomVault();
+  const vault = vaultDefinition ?? randomVault();
   const balance = randomValue();
   const supply = randomValue();
   const ratio = balance / supply;
@@ -88,7 +98,7 @@ export function randomSnapshot(vaultDefinition?: VaultDefinition): CachedSettSna
     address: vault.vaultToken,
     balance,
     ratio,
-    settValue: randomValue(),
+    value: randomValue(),
     supply,
     updatedAt: Date.now(),
     strategy: {
@@ -108,17 +118,19 @@ export function randomVault(chain?: Chain): VaultDefinition {
 
 export function randomSnapshots(vaultDefinition?: VaultDefinition, count?: number): VaultSnapshot[] {
   const snapshots: VaultSnapshot[] = [];
-  const snapshotCount = count || SAMPLE_DAYS;
-  const sett = vaultDefinition || randomVault();
+  const snapshotCount = count ?? SAMPLE_DAYS;
+  const vault = vaultDefinition ?? randomVault();
+  const currentTimestamp = Date.now();
+  const start = currentTimestamp - (currentTimestamp % ONE_DAY_MS);
   for (let i = 0; i < snapshotCount; i++) {
     snapshots.push(
       Object.assign(new VaultSnapshot(), {
-        asset: sett.name,
-        height: 0,
-        timestamp: Date.now() - 1 - i * ONE_MINUTE_MS * 30,
+        asset: vault.name,
+        height: 10_000_000 - i * 1_000,
+        timestamp: start - i * ONE_DAY_MS,
         balance: randomValue(),
         supply: randomValue(),
-        ratio: 1,
+        ratio: 3 - i * 0.015,
         value: randomValue(),
       }),
     );

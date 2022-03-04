@@ -1,4 +1,5 @@
 import { loadChains } from '../chains/chain';
+import { DEBUG } from '../config/constants';
 import { PricingType } from '../prices/enums/pricing-type.enum';
 import { updatePrice, fetchPrices } from '../prices/prices.utils';
 import { getTokenByName } from '../tokens/tokens.utils';
@@ -60,10 +61,12 @@ export async function indexPrices() {
               address: t.address,
               price: referencePrice.price,
             };
-            console.log(`Mapped look up name ${t.lookupName} price to ${t.name}`);
+            if (DEBUG) {
+              console.log(`Mapped look up name ${t.lookupName} price to ${t.name}`);
+            }
           }
         } catch (err) {
-          console.log({ message: `Unable to remap ${t.address} to expected look up name ${t.lookupName}`, err });
+          console.error(`Unable to remap ${t.address} to expected look up name ${t.lookupName}`);
         }
       });
 

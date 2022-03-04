@@ -420,6 +420,13 @@ export const ethTokensConfig: TokenConfig = {
     symbol: 'DFD',
     type: PricingType.Contract,
   },
+  [TOKENS.SPELL]: {
+    address: TOKENS.SPELL,
+    decimals: 18,
+    name: 'Spell Token',
+    symbol: 'SPELL',
+    type: PricingType.Contract,
+  },
   [TOKENS.BBADGER]: {
     address: TOKENS.BBADGER,
     decimals: 18,

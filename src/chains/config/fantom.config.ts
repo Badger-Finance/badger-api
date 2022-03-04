@@ -21,6 +21,7 @@ export class Fantom extends Chain {
       rpc[Network.Fantom],
       new BaseStrategy(Network.Fantom, Object.keys(fantomTokensConfig)),
       ONE_YEAR_SECONDS,
+      '0x89122c767A5F543e663DB536b603123225bc3823',
     );
     Chain.register(this.network, this);
   }
@@ -36,12 +37,57 @@ export class Fantom extends Chain {
 
 export const fantomSetts: VaultDefinition[] = [
   {
-    name: 'USDC/DAI',
-    createdBlock: 30679386,
-    depositToken: TOKENS.SMM_USDC_DAI,
-    vaultToken: TOKENS.BSMM_USDC_DAI,
+    name: 'BOO/xBOO',
+    createdBlock: 31817699,
+    depositToken: TOKENS.SMM_BOO_XBOO,
+    vaultToken: TOKENS.BSMM_BOO_XBOO,
     stage: Stage.Staging,
     state: VaultState.Guarded,
     protocol: Protocol.Solidly,
+  },
+  {
+    name: 'WBTC/renBTC',
+    createdBlock: 31817121,
+    depositToken: TOKENS.SMM_WBTC_RENBTC,
+    vaultToken: TOKENS.BSMM_WBTC_RENBTC,
+    stage: Stage.Staging,
+    state: VaultState.Guarded,
+    protocol: Protocol.Solidly,
+  },
+  {
+    name: 'WFTM/SEX',
+    createdBlock: 32237088,
+    depositToken: TOKENS.SMM_WFTM_SEX,
+    vaultToken: TOKENS.BSMM_WFTM_SEX,
+    stage: Stage.Staging,
+    state: VaultState.Guarded,
+    protocol: Protocol.Solidex,
+  },
+  {
+    name: 'SOLID/SOLIDsex',
+    createdBlock: 32237094,
+    depositToken: TOKENS.SMM_SOLID_SOLIDSEX,
+    vaultToken: TOKENS.BSMM_SOLID_SOLIDSEX,
+    stage: Stage.Staging,
+    state: VaultState.Guarded,
+    protocol: Protocol.Solidex,
+  },
+  {
+    name: 'WEVE/USDC',
+    createdBlock: 32237094,
+    depositToken: TOKENS.SMM_WEVE_USDC,
+    vaultToken: TOKENS.BSMM_WEVE_USDC,
+    stage: Stage.Staging,
+    state: VaultState.Guarded,
+    protocol: Protocol.Solidex,
+  },
+  {
+    name: 'OXD/USDC',
+    createdBlock: 32477300,
+    depositToken: TOKENS.SMM_OXD_USDC,
+    vaultToken: TOKENS.BSMM_OXD_USDC,
+    stage: Stage.Staging,
+    state: VaultState.Guarded,
+    protocol: Protocol.Solidex,
   },
 ];
