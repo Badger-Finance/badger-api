@@ -347,16 +347,16 @@ export async function loadVaultEventPerformances(
   const durationScalar = ONE_YEAR_SECONDS / totalDuration;
   // take the less frequent period, the actual harvest frequency or daily
   const periods = Math.min(365, durationScalar * (measuredHarvests.length - 1));
-  const compoundApr = (totalHarvestedTokens / measuredBalance) * durationScalar * 100;
-  const compoundApy = ((1 + compoundApr / 100 / periods) ** periods - 1) * 100;
-  const compoundSourceApr = createValueSource(VAULT_SOURCE, uniformPerformance(compoundApr), true);
+  const compoundApr = (totalHarvestedTokens / measuredBalance) * durationScalar;
+  const compoundApy = (1 + compoundApr / periods) ** periods - 1;
+  const compoundSourceApr = createValueSource(VAULT_SOURCE, uniformPerformance(compoundApr * 100), true);
   const cachedCompoundSourceApr = valueSourceToCachedValueSource(
     compoundSourceApr,
     vaultDefinition,
     SourceType.PreCompound,
   );
   valueSources.push(cachedCompoundSourceApr);
-  const compoundSource = createValueSource(VAULT_SOURCE, uniformPerformance(compoundApy));
+  const compoundSource = createValueSource(VAULT_SOURCE, uniformPerformance(compoundApy * 100));
   const cachedCompoundSource = valueSourceToCachedValueSource(compoundSource, vaultDefinition, SourceType.Compound);
   valueSources.push(cachedCompoundSource);
 
@@ -380,8 +380,8 @@ export async function loadVaultEventPerformances(
     const tokenEmitted = getToken(token);
     const tokensEmitted = formatBalance(amount, tokenEmitted.decimals);
     const valueEmitted = tokensEmitted * price;
-    const emissionApr = (valueEmitted / measuredValue) * durationScalar * 100;
-    const emissionSource = createValueSource(`${tokenEmitted.symbol} Rewards`, uniformPerformance(emissionApr));
+    const emissionApr = (valueEmitted / measuredValue) * durationScalar;
+    const emissionSource = createValueSource(`${tokenEmitted.symbol} Rewards`, uniformPerformance(emissionApr * 100));
     const cachedEmissionSource = valueSourceToCachedValueSource(
       emissionSource,
       vaultDefinition,
@@ -395,8 +395,7 @@ export async function loadVaultEventPerformances(
       // search for the persisted apr variant of the compounding vault source, if any
       const compoundingSource = vaultValueSources.find((source) => source.type === SourceType.PreCompound);
       if (compoundingSource) {
-        const compoundingSourceApy =
-          ((1 + ((emissionApr / 100) * (compoundingSource.apr / 100)) / periods) ** periods - 1) * 100;
+        const compoundingSourceApy = estimateDerivativeEmission(compoundApr, emissionApr, compoundingSource.apr / 100);
         const sourceName = `${getToken(emittedVault.vaultToken).name} Compounding`;
         const sourceType = `Derivative ${sourceName}`.replace(' ', '_').toLowerCase();
         const derivativeSource = createValueSource(sourceName, uniformPerformance(compoundingSourceApy));
@@ -406,4 +405,24 @@ export async function loadVaultEventPerformances(
   }
 
   return valueSources;
+}
+
+export function estimateDerivativeEmission(
+  compoundApr: number,
+  emissionApr: number,
+  emissionCompoundApr: number,
+): number {
+  let currentValueCompounded = 100;
+  let currentValueEmitted = 0;
+  let currentValueEmittedCompounded = 0;
+  for (let i = 0; i < 365; i++) {
+    const emitted = currentValueCompounded * (emissionApr / 365);
+    currentValueCompounded += currentValueCompounded * (compoundApr / 365);
+    const emittedCompounded = currentValueEmitted * (emissionCompoundApr / 365);
+    currentValueEmitted += emitted;
+    currentValueEmittedCompounded += emittedCompounded;
+    currentValueEmitted += emittedCompounded;
+  }
+  const total = currentValueCompounded + currentValueEmitted + currentValueEmittedCompounded;
+  return (currentValueEmittedCompounded / total) * 100;
 }
