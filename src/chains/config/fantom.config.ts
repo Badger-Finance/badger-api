@@ -112,4 +112,12 @@ export const fantomSetts: VaultDefinition[] = [
     state: VaultState.Guarded,
     protocol: Protocol.Solidex,
   },
+  {
+    name: 'GEIST/g3CRV',
+    createdBlock: 32803942,
+    depositToken: TOKENS.SMM_GEIST_3CRV,
+    vaultToken: TOKENS.BSMM_GEIST_3CRV,
+    state: VaultState.Guarded,
+    protocol: Protocol.Solidex,
+  },
 ];
