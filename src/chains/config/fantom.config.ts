@@ -117,6 +117,7 @@ export const fantomSetts: VaultDefinition[] = [
     createdBlock: 32803942,
     depositToken: TOKENS.SMM_GEIST_3CRV,
     vaultToken: TOKENS.BSMM_GEIST_3CRV,
+    stage: Stage.Staging,
     state: VaultState.Guarded,
     protocol: Protocol.Solidex,
   },
