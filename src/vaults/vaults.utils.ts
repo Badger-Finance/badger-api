@@ -327,8 +327,9 @@ export async function loadVaultEventPerformances(
   let totalDuration = 0;
   let weightedBalance = 0;
   const depositToken = getToken(vaultDefinition.depositToken);
-  const allHarvests = measuredHarvests.flatMap((h) => h.harvests);
-  for (let i = 0; i < measuredHarvests.length - 1; i++) {
+  const allHarvests = recentHarvests.flatMap((h) => h.harvests);
+  // use the full harvests to construct all intervals for durations, nth element is ignored for distributions
+  for (let i = 0; i < recentHarvests.length - 1; i++) {
     const end = allHarvests[i];
     const start = allHarvests[i + 1];
     const duration = end.timestamp - start.timestamp;
