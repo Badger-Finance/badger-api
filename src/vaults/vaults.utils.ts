@@ -59,6 +59,7 @@ export function defaultVault(vaultDefinition: VaultDefinition): Vault {
       strategistFee: 10,
     },
     type: vaultDefinition.protocol === Protocol.Badger ? VaultType.Native : VaultType.Standard,
+    dca: !!vaultDefinition.dca,
   };
 }
 

@@ -173,35 +173,33 @@ export class VaultModel implements Vault {
   @Property()
   public dca: boolean;
 
-  constructor(
-    {
-      name,
-      state,
-      asset,
-      vaultAsset,
-      underlyingToken,
-      vaultToken,
-      value,
-      available,
-      balance,
-      protocol,
-      pricePerFullShare,
-      tokens,
-      apr,
-      apy,
-      boost,
-      minApr,
-      maxApr,
-      minApy,
-      maxApy,
-      sources,
-      sourcesApy,
-      bouncer,
-      strategy,
-      type,
-    }: Vault,
-    dca = false,
-  ) {
+  constructor({
+    name,
+    state,
+    asset,
+    vaultAsset,
+    underlyingToken,
+    vaultToken,
+    value,
+    available,
+    balance,
+    protocol,
+    pricePerFullShare,
+    tokens,
+    apr,
+    apy,
+    boost,
+    minApr,
+    maxApr,
+    minApy,
+    maxApy,
+    sources,
+    sourcesApy,
+    bouncer,
+    strategy,
+    type,
+    dca,
+  }: Vault) {
     this.name = name;
     this.state = state;
     this.asset = asset;
