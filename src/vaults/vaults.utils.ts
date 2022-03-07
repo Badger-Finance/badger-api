@@ -315,7 +315,8 @@ export async function loadVaultEventPerformances(
     throw new Error('Vault does not have adequate harvest history!');
   }
 
-  const measuredHarvests = recentHarvests.slice(0, 3);
+  const vault = await getCachedVault(vaultDefinition);
+  const measuredHarvests = recentHarvests.slice(0, recentHarvests.length - 1);
   const valueSources = [];
 
   const harvests = measuredHarvests.flatMap((h) => h.harvests);
@@ -335,6 +336,8 @@ export async function loadVaultEventPerformances(
     const { sett } = await getVault(chain.graphUrl, vaultDefinition.vaultToken, end.block);
     if (sett) {
       weightedBalance += duration * formatBalance(sett.balance, depositToken.decimals);
+    } else {
+      weightedBalance += duration * vault.balance;
     }
   }
 
