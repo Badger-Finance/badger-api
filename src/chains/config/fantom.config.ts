@@ -91,6 +91,7 @@ export const fantomSetts: VaultDefinition[] = [
   {
     name: 'WFTM/CRV',
     createdBlock: 32477300,
+    dca: true,
     depositToken: TOKENS.SMM_WFTM_CRV,
     vaultToken: TOKENS.BSMM_WFTM_CRV,
     state: VaultState.Guarded,
@@ -99,6 +100,7 @@ export const fantomSetts: VaultDefinition[] = [
   {
     name: 'USDC/MIM',
     createdBlock: 32477300,
+    dca: true,
     depositToken: TOKENS.SMM_USDC_MIM,
     vaultToken: TOKENS.BSMM_USDC_MIM,
     state: VaultState.Guarded,
@@ -107,6 +109,7 @@ export const fantomSetts: VaultDefinition[] = [
   {
     name: 'WFTM/renBTC',
     createdBlock: 32477300,
+    dca: true,
     depositToken: TOKENS.SMM_WFTM_RENBTC,
     vaultToken: TOKENS.BSMM_WFTM_RENBTC,
     state: VaultState.Guarded,
