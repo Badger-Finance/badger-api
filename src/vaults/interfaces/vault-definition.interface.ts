@@ -20,4 +20,5 @@ export interface VaultDefinition {
   state?: VaultState;
   strategy?: string;
   supplyDecimals?: number;
+  dca?: boolean;
 }
