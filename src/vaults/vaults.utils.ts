@@ -315,7 +315,7 @@ export async function loadVaultEventPerformances(
     throw new Error('Vault does not have adequate harvest history!');
   }
 
-  const totalDuration = recentHarvests[0].timestamp - recentHarvests[recentHarvests.length - 1].timestamp;
+  const vault = await getCachedVault(vaultDefinition);
   const measuredHarvests = recentHarvests.slice(0, recentHarvests.length - 1);
   const valueSources = [];
 
@@ -324,18 +324,24 @@ export async function loadVaultEventPerformances(
     .map((h) => h.harvested)
     .reduce((total, harvested) => total.add(harvested), BigNumber.from(0));
 
+  let totalDuration = 0;
   let weightedBalance = 0;
   const depositToken = getToken(vaultDefinition.depositToken);
   const allHarvests = recentHarvests.flatMap((h) => h.harvests);
+  // use the full harvests to construct all intervals for durations, nth element is ignored for distributions
   for (let i = 0; i < recentHarvests.length - 1; i++) {
     const end = allHarvests[i];
     const start = allHarvests[i + 1];
     const duration = end.timestamp - start.timestamp;
+    totalDuration += duration;
     const { sett } = await getVault(chain.graphUrl, vaultDefinition.vaultToken, end.block);
     if (sett) {
       weightedBalance += duration * formatBalance(sett.balance, depositToken.decimals);
+    } else {
+      weightedBalance += duration * vault.balance;
     }
   }
+
   const { price } = await getPrice(vaultDefinition.depositToken);
   const measuredBalance = weightedBalance / totalDuration;
   const measuredValue = measuredBalance * price;
@@ -343,17 +349,18 @@ export async function loadVaultEventPerformances(
   const totalHarvestedTokens = formatBalance(totalHarvested, depositToken.decimals);
   // count of harvests is exclusive of the 0th element
   const durationScalar = ONE_YEAR_SECONDS / totalDuration;
-  const periods = durationScalar * (recentHarvests.length - 1);
-  const compoundApr = (totalHarvestedTokens / measuredBalance) * durationScalar * 100;
-  const compoundApy = ((1 + compoundApr / 100 / periods) ** periods - 1) * 100;
-  const compoundSourceApr = createValueSource(VAULT_SOURCE, uniformPerformance(compoundApr), true);
+  // take the less frequent period, the actual harvest frequency or daily
+  const periods = Math.min(365, durationScalar * (measuredHarvests.length - 1));
+  const compoundApr = (totalHarvestedTokens / measuredBalance) * durationScalar;
+  const compoundApy = (1 + compoundApr / periods) ** periods - 1;
+  const compoundSourceApr = createValueSource(VAULT_SOURCE, uniformPerformance(compoundApr * 100), true);
   const cachedCompoundSourceApr = valueSourceToCachedValueSource(
     compoundSourceApr,
     vaultDefinition,
     SourceType.PreCompound,
   );
   valueSources.push(cachedCompoundSourceApr);
-  const compoundSource = createValueSource(VAULT_SOURCE, uniformPerformance(compoundApy));
+  const compoundSource = createValueSource(VAULT_SOURCE, uniformPerformance(compoundApy * 100));
   const cachedCompoundSource = valueSourceToCachedValueSource(compoundSource, vaultDefinition, SourceType.Compound);
   valueSources.push(cachedCompoundSource);
 
@@ -370,14 +377,15 @@ export async function loadVaultEventPerformances(
   }
 
   for (const [token, amount] of tokensEmitted.entries()) {
-    const [tokenEmitted, tokenPrice] = await Promise.all([getToken(token), getPrice(token)]);
-    if (tokenPrice.price === 0) {
+    const { price } = await getPrice(token);
+    if (price === 0) {
       continue;
     }
+    const tokenEmitted = getToken(token);
     const tokensEmitted = formatBalance(amount, tokenEmitted.decimals);
-    const valueEmitted = tokensEmitted * tokenPrice.price;
-    const emissionApr = (valueEmitted / measuredValue) * durationScalar * 100;
-    const emissionSource = createValueSource(`${tokenEmitted.symbol} Rewards`, uniformPerformance(emissionApr));
+    const valueEmitted = tokensEmitted * price;
+    const emissionApr = (valueEmitted / measuredValue) * durationScalar;
+    const emissionSource = createValueSource(`${tokenEmitted.symbol} Rewards`, uniformPerformance(emissionApr * 100));
     const cachedEmissionSource = valueSourceToCachedValueSource(
       emissionSource,
       vaultDefinition,
@@ -391,10 +399,9 @@ export async function loadVaultEventPerformances(
       // search for the persisted apr variant of the compounding vault source, if any
       const compoundingSource = vaultValueSources.find((source) => source.type === SourceType.PreCompound);
       if (compoundingSource) {
-        const compoundingSourceApy =
-          ((1 + ((emissionApr / 100) * (compoundingSource.apr / 100)) / periods) ** periods - 1) * 100;
+        const compoundingSourceApy = estimateDerivativeEmission(compoundApr, emissionApr, compoundingSource.apr / 100);
         const sourceName = `${getToken(emittedVault.vaultToken).name} Compounding`;
-        const sourceType = sourceName.replace(' ', '_').toLowerCase();
+        const sourceType = `Derivative ${sourceName}`.replace(' ', '_').toLowerCase();
         const derivativeSource = createValueSource(sourceName, uniformPerformance(compoundingSourceApy));
         valueSources.push(valueSourceToCachedValueSource(derivativeSource, vaultDefinition, sourceType));
       }
@@ -402,4 +409,24 @@ export async function loadVaultEventPerformances(
   }
 
   return valueSources;
+}
+
+export function estimateDerivativeEmission(
+  compoundApr: number,
+  emissionApr: number,
+  emissionCompoundApr: number,
+): number {
+  let currentValueCompounded = 100;
+  let currentValueEmitted = 0;
+  let currentValueEmittedCompounded = 0;
+  for (let i = 0; i < 365; i++) {
+    const emitted = currentValueCompounded * (emissionApr / 365);
+    currentValueCompounded += currentValueCompounded * (compoundApr / 365);
+    const emittedCompounded = currentValueEmitted * (emissionCompoundApr / 365);
+    currentValueEmitted += emitted;
+    currentValueEmittedCompounded += emittedCompounded;
+    currentValueEmitted += emittedCompounded;
+  }
+  const total = currentValueCompounded + currentValueEmitted + currentValueEmittedCompounded;
+  return (currentValueEmittedCompounded / total) * 100;
 }

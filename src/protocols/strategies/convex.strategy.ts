@@ -349,9 +349,6 @@ export async function getCurvePoolBalance(chain: Chain, depositToken: string): P
   if (!poolAddress || poolAddress === ethers.constants.AddressZero) {
     poolAddress = nonRegistryPools[depositToken] ?? depositToken;
   }
-  if (!poolAddress) {
-    throw new Error(`No pool found for ${depositToken} on ${chain.network}`);
-  }
   const poolContracts = [
     CurvePool3__factory.connect(poolAddress, chain.provider),
     CurvePool__factory.connect(poolAddress, chain.provider),

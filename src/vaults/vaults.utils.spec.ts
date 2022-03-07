@@ -16,6 +16,7 @@ import {
 import { getToken } from '../tokens/tokens.utils';
 import {
   defaultVault,
+  estimateDerivativeEmission,
   getCachedVault,
   getPerformance,
   getVaultDefinition,
@@ -383,5 +384,23 @@ describe('vaults.utils', () => {
         expect(result).toMatchSnapshot();
       });
     });
+  });
+
+  describe('estimateDerivativeEmission', () => {
+    it.each([
+      // enumerate all test cases above / below 100% apr
+      [3.4883, 6.7204, 6.7204, 48.50273097726344],
+      [3.4883, 6.7204, 0.7204, 11.044313151797013],
+      [3.4883, 0.7204, 6.7204, 44.62069156343578],
+      [3.4883, 0.7204, 0.7204, 3.384116194928767],
+      [0.4883, 6.7204, 6.7204, 49.69234266493466],
+      [0.4883, 6.7204, 0.7204, 20.73028950259373],
+      [0.4883, 0.7204, 0.7204, 11.697799484189915],
+    ])(
+      'Estimates derived emission from (%d compound, %d emission, %d compound emission) as %d%%',
+      (compound, emission, compoundEmission, expected) => {
+        expect(estimateDerivativeEmission(compound, emission, compoundEmission)).toEqual(expected);
+      },
+    );
   });
 });
