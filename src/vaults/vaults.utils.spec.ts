@@ -169,16 +169,16 @@ describe('vaults.utils', () => {
   describe('getPerformance', () => {
     it('correctly evaluate no change', () => {
       const [current, initial] = randomPerformance();
-      current.ratio = 0;
-      initial.ratio = 0;
+      current.pricePerFullShare = 0;
+      initial.pricePerFullShare = 0;
       const performance = getPerformance(current, initial);
       expect(performance).toEqual(0);
     });
 
     it('correctly evaluate increase', () => {
       const [current, initial] = randomPerformance();
-      current.ratio = 1.01;
-      initial.ratio = 1;
+      current.pricePerFullShare = 1.01;
+      initial.pricePerFullShare = 1;
       const performance = getPerformance(current, initial);
       const expected = 365;
       expect(performance.toFixed(3)).toEqual(expected.toFixed(3));
@@ -186,8 +186,8 @@ describe('vaults.utils', () => {
 
     it('correctly evaluate decrease', () => {
       const [current, initial] = randomPerformance();
-      current.ratio = 1 - 0.03 / 365;
-      initial.ratio = 1;
+      current.pricePerFullShare = 1 - 0.03 / 365;
+      initial.pricePerFullShare = 1;
       const performance = getPerformance(current, initial);
       const expected = -3;
       expect(performance.toFixed(3)).toEqual(expected.toFixed(3));
