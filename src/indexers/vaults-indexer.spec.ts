@@ -6,7 +6,7 @@ import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 
-describe('sett-indexer', () => {
+describe('vaults-indexer', () => {
   const chains = loadChains();
   let indexedBlock: jest.SpyInstance<
     Promise<number>,
@@ -26,7 +26,7 @@ describe('sett-indexer', () => {
           timestamp: 123123123123,
           balance: 180000000000000000,
           supply: 18000000000000000000,
-          ratio: 12,
+          pricePerFullShare: 12,
           value: 1000,
         }),
       ),
@@ -42,7 +42,7 @@ describe('sett-indexer', () => {
       await indexProtocolVaults();
       let vaultCount = 0;
       chains.forEach((chain) => {
-        chain.vaults.forEach((vault) => {
+        chain.vaults.forEach((_v) => {
           vaultCount++;
         });
       });
