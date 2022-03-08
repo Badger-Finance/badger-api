@@ -353,8 +353,8 @@ export const fantomTokensConfig: TokenConfig = {
   [TOKENS.BSMM_WFTM_RENBTC]: {
     address: TOKENS.BSMM_WFTM_RENBTC,
     decimals: 18,
-    name: 'bSolidly: WFTM-RENBTC',
-    symbol: 'bSMM-WFTM-RENBTC',
+    name: 'bSolidly: WFTM-renBTC',
+    symbol: 'bSMM-WFTM-renBTC',
     type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.SMM_WFTM_RENBTC,

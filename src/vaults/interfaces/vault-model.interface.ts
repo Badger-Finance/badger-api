@@ -167,6 +167,12 @@ export class VaultModel implements Vault {
   @Property()
   public type: VaultType;
 
+  @Title('dca')
+  @Description('Does this vault DCA into another asset')
+  @Example(true)
+  @Property()
+  public dca: boolean;
+
   constructor({
     name,
     state,
@@ -192,6 +198,7 @@ export class VaultModel implements Vault {
     bouncer,
     strategy,
     type,
+    dca,
   }: Vault) {
     this.name = name;
     this.state = state;
@@ -217,5 +224,6 @@ export class VaultModel implements Vault {
     this.bouncer = bouncer;
     this.strategy = strategy;
     this.type = type;
+    this.dca = dca;
   }
 }
