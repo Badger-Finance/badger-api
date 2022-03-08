@@ -130,6 +130,7 @@ describe('vaults.utils', () => {
           strategistFee: 10,
         },
         type: vaultDefinition.protocol === Protocol.Badger ? VaultType.Native : VaultType.Standard,
+        dca: !!vaultDefinition.dca,
       };
       const actual = defaultVault(vaultDefinition);
       expect(actual).toMatchObject(expected);
