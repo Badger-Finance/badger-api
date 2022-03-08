@@ -283,10 +283,10 @@ export const fantomTokensConfig: TokenConfig = {
     symbol: 'SMM-WFTM-TOMB',
     type: PricingType.UniV2LP,
   },
-  [TOKENS.BSMM_GEIST_3CRV_ECO]: {
-    address: TOKENS.BSMM_GEIST_3CRV_ECO,
+  [TOKENS.BSMM_GEIST_3CRV_DCA]: {
+    address: TOKENS.BSMM_GEIST_3CRV_DCA,
     decimals: 18,
-    name: 'bSolidly: GEIST-g3CRV Ecosystem',
+    name: 'bSolidly: GEIST-g3CRV',
     symbol: 'bSMM-GEIST-G3CRV',
     type: PricingType.Vault,
     vaultToken: {
