@@ -171,6 +171,22 @@ export const fantomTokensConfig: TokenConfig = {
     symbol: 'USDT',
     type: PricingType.LookupName,
   },
+  [TOKENS.FTM_SCREAM]: {
+    address: TOKENS.FTM_SCREAM,
+    decimals: 18,
+    name: 'Scream',
+    lookupName: 'scream',
+    symbol: 'SCREAM',
+    type: PricingType.LookupName,
+  },
+  [TOKENS.FTM_TOMB]: {
+    address: TOKENS.FTM_TOMB,
+    decimals: 18,
+    name: 'Tomb',
+    lookupName: 'tomb',
+    symbol: 'TOMB',
+    type: PricingType.LookupName,
+  },
   [TOKENS.SMM_BOO_XBOO]: {
     address: TOKENS.SMM_BOO_XBOO,
     decimals: 18,
@@ -251,6 +267,22 @@ export const fantomTokensConfig: TokenConfig = {
     symbol: 'SMM-GEIST-G3CRV',
     type: PricingType.UniV2LP,
   },
+  [TOKENS.SMM_WFTM_SCREAM]: {
+    address: TOKENS.SMM_WFTM_SCREAM,
+    decimals: 18,
+    lpToken: true,
+    name: 'Solidly: WFTM-SCREAM',
+    symbol: 'SMM-WFTM-SCREAM',
+    type: PricingType.UniV2LP,
+  },
+  [TOKENS.SMM_WFTM_TOMB]: {
+    address: TOKENS.SMM_WFTM_TOMB,
+    decimals: 18,
+    lpToken: true,
+    name: 'Solidly: WFTM-TOMB',
+    symbol: 'SMM-WFTM-TOMB',
+    type: PricingType.UniV2LP,
+  },
   [TOKENS.BSMM_GEIST_3CRV]: {
     address: TOKENS.BSMM_GEIST_3CRV,
     decimals: 18,
@@ -262,10 +294,10 @@ export const fantomTokensConfig: TokenConfig = {
       network: Network.Fantom,
     },
   },
-  [TOKENS.BSMM_BOO_XBOO]: {
-    address: TOKENS.BSMM_BOO_XBOO,
+  [TOKENS.BSMM_BOO_XBOO_ECO]: {
+    address: TOKENS.BSMM_BOO_XBOO_ECO,
     decimals: 18,
-    name: 'bSolidly: BOO-xBOO',
+    name: 'bSolidly: BOO-xBOO Ecosystem',
     symbol: 'bSMM-BOO-XBOO',
     type: PricingType.Vault,
     vaultToken: {
@@ -339,6 +371,17 @@ export const fantomTokensConfig: TokenConfig = {
       network: Network.Fantom,
     },
   },
+  [TOKENS.BSMM_WFTM_CRV_ECO]: {
+    address: TOKENS.BSMM_WFTM_CRV_ECO,
+    decimals: 18,
+    name: 'bSolidly: WFTM-CRV Ecosystem',
+    symbol: 'bSMM-WFTM-CRV',
+    type: PricingType.Vault,
+    vaultToken: {
+      address: TOKENS.SMM_WFTM_CRV,
+      network: Network.Fantom,
+    },
+  },
   [TOKENS.BSMM_USDC_MIM]: {
     address: TOKENS.BSMM_USDC_MIM,
     decimals: 18,
@@ -358,6 +401,50 @@ export const fantomTokensConfig: TokenConfig = {
     type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.SMM_WFTM_RENBTC,
+      network: Network.Fantom,
+    },
+  },
+  [TOKENS.BSMM_USDC_MIM_ECO]: {
+    address: TOKENS.BSMM_USDC_MIM_ECO,
+    decimals: 18,
+    name: 'bSolidly: USDC-MIM Ecosystem',
+    symbol: 'bSMM-USDC-MIM',
+    type: PricingType.Vault,
+    vaultToken: {
+      address: TOKENS.SMM_USDC_MIM,
+      network: Network.Fantom,
+    },
+  },
+  [TOKENS.BSMM_WFTM_SCREAM_ECO]: {
+    address: TOKENS.BSMM_WFTM_SCREAM_ECO,
+    decimals: 18,
+    name: 'bSolidly: WFTM-SCREAM Ecosystem',
+    symbol: 'bSMM-WFTM-SCREAM',
+    type: PricingType.Vault,
+    vaultToken: {
+      address: TOKENS.SMM_WFTM_SCREAM,
+      network: Network.Fantom,
+    },
+  },
+  [TOKENS.BSMM_WBTC_RENBTC_ECO]: {
+    address: TOKENS.BSMM_WBTC_RENBTC_ECO,
+    decimals: 18,
+    name: 'bSolidly: WFTM-renBTC Ecosystem',
+    symbol: 'bSMM-WFTM-RENBTC',
+    type: PricingType.Vault,
+    vaultToken: {
+      address: TOKENS.SMM_WBTC_RENBTC,
+      network: Network.Fantom,
+    },
+  },
+  [TOKENS.BSMM_WFTM_TOMB_ECO]: {
+    address: TOKENS.BSMM_WFTM_TOMB_ECO,
+    decimals: 18,
+    name: 'bSolidly: WFTM-TOMB Ecosystem',
+    symbol: 'bSMM-WFTM-TOMB',
+    type: PricingType.Vault,
+    vaultToken: {
+      address: TOKENS.SMM_WFTM_TOMB,
       network: Network.Fantom,
     },
   },
