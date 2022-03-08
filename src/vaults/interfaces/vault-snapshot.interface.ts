@@ -25,5 +25,8 @@ export class VaultSnapshot {
   pricePerFullShare!: number;
 
   @attribute()
+  ratio?: number;
+
+  @attribute()
   value!: number;
 }

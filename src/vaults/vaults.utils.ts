@@ -109,6 +109,9 @@ export async function getVaultSnapshotsInRange(
       { address: assetToken.address, timestamp: between(new Date(start).getTime(), new Date(end).getTime()) },
       { scanIndexForward: false },
     )) {
+      if (snapshot.ratio) {
+        snapshot.pricePerFullShare = snapshot.ratio;
+      }
       snapshots.push(snapshot);
     }
     return snapshots;
