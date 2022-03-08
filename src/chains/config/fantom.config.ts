@@ -152,10 +152,10 @@ export const fantomSetts: VaultDefinition[] = [
     protocol: Protocol.Solidex,
   },
   {
-    name: '👻 WBTC/renBTC',
+    name: '👻 WFTM/renBTC',
     createdBlock: 32477300,
-    depositToken: TOKENS.SMM_WBTC_RENBTC,
-    vaultToken: TOKENS.BSMM_WBTC_RENBTC_ECO,
+    depositToken: TOKENS.SMM_WFTM_RENBTC,
+    vaultToken: TOKENS.BSMM_WFTM_RENBTC_ECO,
     stage: Stage.Staging,
     state: VaultState.Guarded,
     protocol: Protocol.Solidex,
