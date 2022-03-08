@@ -426,14 +426,14 @@ export const fantomTokensConfig: TokenConfig = {
       network: Network.Fantom,
     },
   },
-  [TOKENS.BSMM_WBTC_RENBTC_ECO]: {
-    address: TOKENS.BSMM_WBTC_RENBTC_ECO,
+  [TOKENS.BSMM_WFTM_RENBTC_ECO]: {
+    address: TOKENS.BSMM_WFTM_RENBTC_ECO,
     decimals: 18,
     name: 'bSolidly: WFTM-renBTC Ecosystem',
     symbol: 'bSMM-WFTM-RENBTC',
     type: PricingType.Vault,
     vaultToken: {
-      address: TOKENS.SMM_WBTC_RENBTC,
+      address: TOKENS.SMM_WFTM_RENBTC,
       network: Network.Fantom,
     },
   },
