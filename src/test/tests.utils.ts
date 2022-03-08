@@ -13,7 +13,7 @@ import { xDai } from '../chains/config/xdai.config';
 import { ONE_DAY_MS, SAMPLE_DAYS } from '../config/constants';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import { CachedBoost } from '../leaderboards/interface/cached-boost.interface';
-import { CachedSettSnapshot } from '../vaults/interfaces/cached-sett-snapshot.interface';
+import { CachedVaultSnapshot } from '../vaults/interfaces/cached-vault-snapshot.interface';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { VaultSnapshot } from '../vaults/interfaces/vault-snapshot.interface';
 import * as accountsUtils from '../accounts/accounts.utils';
@@ -89,15 +89,15 @@ export const randomValue = (min?: number, max?: number): number => {
   return minPrice + Math.random() * (maxPrice - minPrice);
 };
 
-export function randomSnapshot(vaultDefinition?: VaultDefinition): CachedSettSnapshot {
+export function randomSnapshot(vaultDefinition?: VaultDefinition): CachedVaultSnapshot {
   const vault = vaultDefinition ?? randomVault();
   const balance = randomValue();
   const supply = randomValue();
-  const ratio = balance / supply;
-  return Object.assign(new CachedSettSnapshot(), {
+  const pricePerFullShare = balance / supply;
+  return Object.assign(new CachedVaultSnapshot(), {
     address: vault.vaultToken,
     balance,
-    ratio,
+    pricePerFullShare,
     value: randomValue(),
     supply,
     updatedAt: Date.now(),
@@ -130,7 +130,7 @@ export function randomSnapshots(vaultDefinition?: VaultDefinition, count?: numbe
         timestamp: start - i * ONE_DAY_MS,
         balance: randomValue(),
         supply: randomValue(),
-        ratio: 3 - i * 0.015,
+        pricePerFullShare: 3 - i * 0.015,
         value: randomValue(),
       }),
     );

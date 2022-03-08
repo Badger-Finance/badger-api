@@ -247,7 +247,7 @@ describe('vaults.utils', () => {
         const vaultPrice = await getVaultTokenPrice(TEST_CHAIN, vault.vaultToken);
         expect(vaultPrice).toMatchObject({
           address: vault.vaultToken,
-          price: 10 * snapshot.ratio,
+          price: 10 * snapshot.pricePerFullShare,
         });
       });
     });

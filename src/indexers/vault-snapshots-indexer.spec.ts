@@ -1,7 +1,7 @@
 import { DataMapper, PutParameters, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
 import { loadChains } from '../chains/chain';
 import * as priceUtils from '../prices/prices.utils';
-import { CachedSettSnapshot } from '../vaults/interfaces/cached-sett-snapshot.interface';
+import { CachedVaultSnapshot } from '../vaults/interfaces/cached-vault-snapshot.interface';
 import * as vaultUtils from '../vaults/vaults.utils';
 import { refreshVaultSnapshots } from './vault-snapshots-indexer';
 import { BigNumber, ethers } from 'ethers';
@@ -67,7 +67,7 @@ describe('refreshSettSnapshots', () => {
     // Verify each saved object.
     for (const input of put.mock.calls) {
       // force convert input as jest overload mock causes issues
-      const snapshot = input[0] as unknown as CachedSettSnapshot;
+      const snapshot = input[0] as unknown as CachedVaultSnapshot;
       expect(snapshot).toMatchObject({
         address: expect.any(String),
         balance: expect.any(Number),
