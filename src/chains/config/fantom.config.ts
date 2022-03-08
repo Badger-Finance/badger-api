@@ -43,7 +43,7 @@ export const fantomSetts: VaultDefinition[] = [
     vaultToken: TOKENS.BSMM_BOO_XBOO_ECO,
     stage: Stage.Staging,
     state: VaultState.Guarded,
-    protocol: Protocol.Solidly,
+    protocol: Protocol.Solidex,
   },
   {
     name: 'WBTC/renBTC',
