@@ -66,7 +66,7 @@ export async function vaultToCachedSnapshot(
   return Object.assign(new CachedVaultSnapshot(), {
     address,
     balance,
-    ratio: pricePerFullShare,
+    pricePerFullShare,
     value: parseFloat(value.toFixed(2)),
     supply: totalSupply,
     available,
@@ -117,7 +117,7 @@ export async function settToSnapshot(
     balance: tokenBalance,
     supply,
     available: formatBalance(available, balanceDecimals),
-    ratio,
+    pricePerFullShare: ratio,
     value: parseFloat(value.toFixed(4)),
   });
 }
