@@ -1,4 +1,4 @@
-import BadgerSDK, { Protocol, Vault, VaultsService, VaultState, VaultType } from '@badger-dao/sdk';
+import BadgerSDK, { Protocol, Vault, VaultBehavior, VaultsService, VaultState, VaultType } from '@badger-dao/sdk';
 import { BadRequest, NotFound, UnprocessableEntity } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';
 import { BinanceSmartChain } from '../chains/config/bsc.config';
@@ -130,7 +130,7 @@ describe('vaults.utils', () => {
           strategistFee: 10,
         },
         type: vaultDefinition.protocol === Protocol.Badger ? VaultType.Native : VaultType.Standard,
-        dca: !!vaultDefinition.dca,
+        behavior: vaultDefinition.behavior ?? VaultBehavior.None,
       };
       const actual = defaultVault(vaultDefinition);
       expect(actual).toMatchObject(expected);

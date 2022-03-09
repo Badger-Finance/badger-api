@@ -1,4 +1,4 @@
-import { Protocol, VaultState } from '@badger-dao/sdk';
+import { Protocol, VaultBehavior, VaultState } from '@badger-dao/sdk';
 import { Chain } from '../../chains/config/chain.config';
 import { Stage } from '../../config/enums/stage.enum';
 import { BouncerType } from '../../rewards/enums/bouncer-type.enum';
@@ -20,5 +20,5 @@ export interface VaultDefinition {
   state?: VaultState;
   strategy?: string;
   supplyDecimals?: number;
-  dca?: boolean;
+  behavior?: VaultBehavior;
 }
