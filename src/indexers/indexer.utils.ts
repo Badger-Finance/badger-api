@@ -1,4 +1,4 @@
-import { formatBalance, Network, Protocol } from '@badger-dao/sdk';
+import { formatBalance, Network } from '@badger-dao/sdk';
 import { BadRequest, NotFound } from '@tsed/exceptions';
 import { getAccountMap } from '../accounts/accounts.utils';
 import { AccountMap } from '../accounts/interfaces/account-map.interface';
@@ -11,8 +11,7 @@ import { CachedVaultSnapshot } from '../vaults/interfaces/cached-vault-snapshot.
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { VaultSnapshot } from '../vaults/interfaces/vault-snapshot.interface';
 import { getBoostWeight, getPricePerShare, getStrategyInfo, getCachedVault } from '../vaults/vaults.utils';
-import { CachedLiquidityPoolTokenBalance } from '../tokens/interfaces/cached-liquidity-pool-token-balance.interface';
-import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
+import { CachedVaultTokenBalance } from '../tokens/interfaces/cached-vault-token-balance.interface';
 import { getToken, toBalance } from '../tokens/tokens.utils';
 import { getLiquidityData } from '../protocols/common/swap.utils';
 import { GraphQLClient } from 'graphql-request';
@@ -144,44 +143,35 @@ export async function getIndexedBlock(
   }
 }
 
-export function tokenBalancesToCachedLiquidityPoolTokenBalance(
-  pairId: string,
-  protocol: Protocol,
-  tokenBalances: CachedTokenBalance[],
-): CachedLiquidityPoolTokenBalance {
-  return Object.assign(new CachedLiquidityPoolTokenBalance(), {
-    id: `${pairId}_${protocol}`,
-    pairId,
-    protocol,
-    tokenBalances,
-  });
-}
-
 export async function getLpTokenBalances(
   chain: Chain,
-  vault: VaultDefinition,
-): Promise<CachedLiquidityPoolTokenBalance> {
+  vaultDefinition: VaultDefinition,
+): Promise<CachedVaultTokenBalance> {
+  const { protocol, depositToken, vaultToken } = vaultDefinition;
   try {
-    if (!vault.protocol) {
+    if (!protocol) {
       throw new BadRequest('LP balance look up requires a defined protocol');
     }
     const sdk = await chain.getSdk();
-    const liquidityData = await getLiquidityData(chain, vault.depositToken);
+    const liquidityData = await getLiquidityData(chain, depositToken);
     const { token0, token1, reserve0, reserve1, totalSupply } = liquidityData;
     const tokenData = await sdk.tokens.loadTokens([token0, token1]);
     const t0Token = tokenData[token0];
     const t1Token = tokenData[token1];
 
     // poolData returns the full liquidity pool, valueScalar acts to calculate the portion within the sett
-    const settSnapshot = await getCachedVault(vault);
+    const settSnapshot = await getCachedVault(vaultDefinition);
     const valueScalar = totalSupply > 0 ? settSnapshot.balance / totalSupply : 0;
     const t0TokenBalance = reserve0 * valueScalar;
     const t1TokenBalance = reserve1 * valueScalar;
     const tokenBalances = await Promise.all([toBalance(t0Token, t0TokenBalance), toBalance(t1Token, t1TokenBalance)]);
 
-    return tokenBalancesToCachedLiquidityPoolTokenBalance(vault.depositToken, vault.protocol, tokenBalances);
+    return Object.assign(new CachedVaultTokenBalance(), {
+      vault: vaultToken,
+      tokenBalances,
+    });
   } catch (err) {
-    throw new NotFound(`${vault.protocol} pool pair ${vault.depositToken} does not exist`);
+    throw new NotFound(`${protocol} pool pair ${depositToken} does not exist`);
   }
 }
 

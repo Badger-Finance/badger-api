@@ -38,7 +38,7 @@ custom:
   table:
     APY_SNAPSHOTS_DATA: apy-snapshots-${self:custom.stage}
     SETT_DATA: sett-historic-snapshots-${self:custom.stage}
-    TOKEN_BALANCES_DATA: token-balances-${self:custom.stage}
+    VAULT_BALANCES_DATA: vault-balances-${self:custom.stage}
     PRICE_DATA: token-prices-${self:custom.stage}
     VAULT_SNAPSHOTS_DATA: vaults-snapshots-${self:custom.stage}
     ACCOUNT_DATA: accounts-${self:custom.stage}
@@ -100,7 +100,7 @@ provider:
     # Table Defintions
     APY_SNAPSHOTS_DATA: ${self:custom.table.APY_SNAPSHOTS_DATA}
     SETT_DATA: ${self:custom.table.SETT_DATA}
-    TOKEN_BALANCES_DATA: ${self:custom.table.TOKEN_BALANCES_DATA}
+    VAULT_BALANCES_DATA: ${self:custom.table.VAULT_BALANCES_DATA}
     PRICE_DATA: ${self:custom.table.PRICE_DATA}
     VAULT_SNAPSHOTS_DATA: ${self:custom.table.VAULT_SNAPSHOTS_DATA}
     ACCOUNT_DATA: ${self:custom.table.ACCOUNT_DATA}
@@ -247,30 +247,17 @@ resources:
           - AttributeName: 'leaderboard'
             AttributeType: 'S'
 
-    tokenBalancesTable:
+    vaultBalancesTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:custom.table.TOKEN_BALANCES_DATA}
+        TableName: ${self:custom.table.VAULT_BALANCES_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
-          - AttributeName: 'id'
+          - AttributeName: 'vault'
             KeyType: 'HASH'
         AttributeDefinitions:
-          - AttributeName: 'id'
+          - AttributeName: 'vault'
             AttributeType: 'S'
-          - AttributeName: 'pairId'
-            AttributeType: 'S'
-          - AttributeName: 'protocol'
-            AttributeType: 'S'
-        GlobalSecondaryIndexes:
-          - IndexName: IndexLiquidityPoolTokenBalancesOnPairIdAndProtocol
-            KeySchema:
-              - AttributeName: 'pairId'
-                KeyType: 'HASH'
-              - AttributeName: 'protocol'
-                KeyType: 'RANGE'
-            Projection:
-              ProjectionType: ALL
 
     metadataTable:
       Type: AWS::DynamoDB::Table
@@ -415,14 +402,14 @@ functions:
           description: 'index leaderboard data from latest badger boosts'
           rate: rate(5 minutes)
 
-  index-token-balances:
-    handler: src/indexers/token-balances-indexer.refreshTokenBalances
+  index-vault-balances:
+    handler: src/indexers/vault-balances-indexer.refreshVaultBalances
     timeout: 180
     events:
       - schedule:
-          name: ${self:service}-${self:custom.stage}-index-token-balances
-          description: 'index token balances from the graph'
-          rate: rate(5 minutes)
+          name: ${self:service}-${self:custom.stage}-index-vault-balances
+          description: 'index vault token balances from the graph'
+          rate: rate(1 minute)
 
   index-boosts:
     handler: src/indexers/boosts-indexer.refreshUserBoosts

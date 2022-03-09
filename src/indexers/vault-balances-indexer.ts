@@ -4,16 +4,16 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
-import { CachedLiquidityPoolTokenBalance } from '../tokens/interfaces/cached-liquidity-pool-token-balance.interface';
+import { CachedVaultTokenBalance } from '../tokens/interfaces/cached-vault-token-balance.interface';
 import { getToken } from '../tokens/tokens.utils';
 import { getLpTokenBalances } from './indexer.utils';
 
-export async function refreshTokenBalances() {
+export async function refreshVaultBalances() {
   const chains = loadChains();
-  await Promise.all(chains.flatMap((c) => c.vaults.flatMap(async (v) => updateTokenBalance(c, v))));
+  await Promise.all(chains.flatMap((c) => c.vaults.flatMap(async (v) => updateVaultTokenBalances(c, v))));
 }
 
-export async function updateTokenBalance(chain: Chain, vaultDefinition: VaultDefinition): Promise<void> {
+export async function updateVaultTokenBalances(chain: Chain, vaultDefinition: VaultDefinition): Promise<void> {
   try {
     const mapper = getDataMapper();
     const depositToken = getToken(vaultDefinition.depositToken);
@@ -42,10 +42,7 @@ export async function updateTokenBalance(chain: Chain, vaultDefinition: VaultDef
   }
 }
 
-async function saveCachedTokenBalance(
-  mapper: DataMapper,
-  cachedTokenBalance: CachedLiquidityPoolTokenBalance,
-): Promise<void> {
+async function saveCachedTokenBalance(mapper: DataMapper, cachedTokenBalance: CachedVaultTokenBalance): Promise<void> {
   try {
     await mapper.put(cachedTokenBalance);
   } catch (err) {
