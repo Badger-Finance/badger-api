@@ -1,12 +1,11 @@
-import { Currency, Protocol } from '@badger-dao/sdk';
+import { Currency } from '@badger-dao/sdk';
 import { NotFound } from '@tsed/exceptions';
 import { Ethereum } from '../chains/config/eth.config';
 import { TOKENS } from '../config/tokens.config';
-import { tokenBalancesToCachedLiquidityPoolTokenBalance } from '../indexers/indexer.utils';
 import * as priceUtils from '../prices/prices.utils';
 import * as vaultUtils from '../vaults/vaults.utils';
 import { getVaultDefinition } from '../vaults/vaults.utils';
-import { setupMapper, TEST_CHAIN } from '../test/tests.utils';
+import { randomVault, setupMapper, TEST_ADDR, TEST_CHAIN } from '../test/tests.utils';
 import { ethTokensConfig } from './config/eth-tokens.config';
 import { TokenPriceSnapshot } from '../prices/interface/token-price-snapshot.interface';
 import {
@@ -179,7 +178,7 @@ describe('token.utils', () => {
     describe('no saved balances', () => {
       it('returns undefined', async () => {
         setupMapper([]);
-        const result = await getCachedTokenBalances(TOKENS.SUSHI_WBTC_WETH, Protocol.Sushiswap);
+        const result = await getCachedTokenBalances(randomVault());
         expect(result).toBeFalsy();
       });
     });
@@ -198,15 +197,12 @@ describe('token.utils', () => {
               updatedAt: Date.now(),
             };
           });
-          const balances = await Promise.all([toBalance(wbtc, 1), toBalance(weth, 20)]);
-          const cached = tokenBalancesToCachedLiquidityPoolTokenBalance(
-            TOKENS.SUSHI_ETH_WBTC,
-            Protocol.Sushiswap,
-            balances,
-          );
+          const vault = randomVault();
+          const tokenBalances = await Promise.all([toBalance(wbtc, 1), toBalance(weth, 20)]);
+          const cached = { vault: vault.vaultToken, tokenBalances };
           setupMapper([cached]);
           const expected = await Promise.all([toBalance(wbtc, 1), toBalance(weth, 20)]);
-          const actual = await getCachedTokenBalances(TOKENS.SUSHI_ETH_WBTC, Protocol.Sushiswap);
+          const actual = await getCachedTokenBalances(vault);
           expect(actual).toMatchObject(expected);
         });
       });
@@ -224,15 +220,12 @@ describe('token.utils', () => {
               updatedAt: Date.now(),
             };
           });
-          const balances = await Promise.all([toBalance(wbtc, 1), toBalance(weth, 20)]);
-          const cached = tokenBalancesToCachedLiquidityPoolTokenBalance(
-            TOKENS.SUSHI_ETH_WBTC,
-            Protocol.Sushiswap,
-            balances,
-          );
+          const vault = randomVault();
+          const tokenBalances = await Promise.all([toBalance(wbtc, 1), toBalance(weth, 20)]);
+          const cached = { vault: vault.vaultToken, tokenBalances };
           setupMapper([cached]);
           const expected = await Promise.all([toBalance(wbtc, 1, currency), toBalance(weth, 20, currency)]);
-          const actual = await getCachedTokenBalances(TOKENS.SUSHI_ETH_WBTC, Protocol.Sushiswap, currency);
+          const actual = await getCachedTokenBalances(vault, currency);
           expect(actual).toMatchObject(expected);
         });
       });
@@ -249,12 +242,8 @@ describe('token.utils', () => {
     it('returns all deposit token for a liquidity token underlying token', async () => {
       const wbtc = getToken(TOKENS.WBTC);
       const weth = getToken(TOKENS.WETH);
-      const balances = await Promise.all([toBalance(wbtc, 1), toBalance(weth, 20)]);
-      const cached = tokenBalancesToCachedLiquidityPoolTokenBalance(
-        TOKENS.SUSHI_ETH_WBTC,
-        Protocol.Sushiswap,
-        balances,
-      );
+      const tokenBalances = await Promise.all([toBalance(wbtc, 1), toBalance(weth, 20)]);
+      const cached = { vault: TEST_ADDR, tokenBalances };
       setupMapper([cached]);
       const liquidity = getVaultDefinition(new Ethereum(), TOKENS.BSUSHI_ETH_WBTC);
       const tokens = await getVaultTokens(liquidity, 10);
