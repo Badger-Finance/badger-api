@@ -2,7 +2,7 @@ import { Protocol, VaultBehavior, VaultState } from '@badger-dao/sdk';
 import { Chain } from '../../chains/config/chain.config';
 import { Stage } from '../../config/enums/stage.enum';
 import { BouncerType } from '../../rewards/enums/bouncer-type.enum';
-import { CachedLiquidityPoolTokenBalance } from '../../tokens/interfaces/cached-liquidity-pool-token-balance.interface';
+import { CachedVaultTokenBalance } from '../../tokens/interfaces/cached-vault-token-balance.interface';
 
 export interface VaultDefinition {
   balanceDecimals?: number;
@@ -10,7 +10,7 @@ export interface VaultDefinition {
   depositToken: string;
   deprecated?: boolean;
   experimental?: boolean;
-  getTokenBalance?: (chain: Chain, token: string) => Promise<CachedLiquidityPoolTokenBalance>;
+  getTokenBalance?: (chain: Chain, token: string) => Promise<CachedVaultTokenBalance>;
   bouncer?: BouncerType;
   name: string;
   newVault?: boolean;

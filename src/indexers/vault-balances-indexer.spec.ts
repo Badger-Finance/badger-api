@@ -1,27 +1,28 @@
 import { DataMapper, PutParameters, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
-import { updateTokenBalance } from './token-balances-indexer';
+import { updateVaultTokenBalances } from './vault-balances-indexer';
 import { Ethereum } from '../chains/config/eth.config';
 import { getVaultDefinition } from '../vaults/vaults.utils';
 import { TOKENS } from '../config/tokens.config';
-import { CachedLiquidityPoolTokenBalance } from '../tokens/interfaces/cached-liquidity-pool-token-balance.interface';
+import { CachedVaultTokenBalance } from '../tokens/interfaces/cached-vault-token-balance.interface';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
 import * as indexerUtils from './indexer.utils';
 import { Chain } from '../chains/config/chain.config';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
+import { TEST_ADDR } from '../test/tests.utils';
 
-describe('token-balances-indexer', () => {
+describe('vault-balances-indexer', () => {
   const chain = new Ethereum();
   let put: jest.SpyInstance<Promise<StringToAnyObjectMap>, [parameters: PutParameters]>;
   beforeEach(() => {
     put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
   });
-  describe('updateTokenBalance', () => {
+  describe('updateVaultTokenBalances', () => {
     it('should not update for token without balance', async () => {
-      await updateTokenBalance(chain, getVaultDefinition(chain, TOKENS.BDIGG));
+      await updateVaultTokenBalances(chain, getVaultDefinition(chain, TOKENS.BDIGG));
       expect(put.mock.calls.length).toEqual(0);
     });
     it('should not update for lp token wihtout balance', async () => {
-      await updateTokenBalance(
+      await updateVaultTokenBalances(
         chain,
         Object.assign({
           name: 'something',
@@ -32,7 +33,7 @@ describe('token-balances-indexer', () => {
     });
     it('should throw if lptoken and token balance', async () => {
       console.error = jest.fn();
-      await updateTokenBalance(
+      await updateVaultTokenBalances(
         chain,
         Object.assign({
           name: 'something',
@@ -48,16 +49,14 @@ describe('token-balances-indexer', () => {
       expect(put.mock.calls.length).toEqual(0);
     });
     it('should update token with balance', async () => {
-      await updateTokenBalance(
+      await updateVaultTokenBalances(
         chain,
         Object.assign({
           name: 'something',
           depositToken: TOKENS.CRV_HBTC,
           getTokenBalance: async () =>
-            Object.assign(new CachedLiquidityPoolTokenBalance(), {
-              id: '123',
-              pairId: '123',
-              protocol: 'some protocol',
+            Object.assign(new CachedVaultTokenBalance(), {
+              vault: TEST_ADDR,
               tokenBalances: [
                 Object.assign(new CachedTokenBalance(), {
                   address: TOKENS.BCRV_HTBC,
@@ -77,11 +76,9 @@ describe('token-balances-indexer', () => {
     it('should update lptoken', async () => {
       const lpBalance = jest
         .spyOn(indexerUtils, 'getLpTokenBalances')
-        .mockImplementation(async (chain: Chain, sett: VaultDefinition) => {
-          return Object.assign(new CachedLiquidityPoolTokenBalance(), {
-            id: '123',
-            pairId: '123',
-            protocol: 'some protocol',
+        .mockImplementation(async (_chain: Chain, _vault: VaultDefinition) => {
+          return Object.assign(new CachedVaultTokenBalance(), {
+            vault: TEST_ADDR,
             tokenBalances: [
               Object.assign(new CachedTokenBalance(), {
                 address: TOKENS.BCRV_HTBC,
@@ -95,7 +92,7 @@ describe('token-balances-indexer', () => {
             ],
           });
         });
-      await updateTokenBalance(
+      await updateVaultTokenBalances(
         chain,
         Object.assign({
           name: 'something',
@@ -108,15 +105,13 @@ describe('token-balances-indexer', () => {
     it('should not update lptoken no balance', async () => {
       const lpBalance = jest
         .spyOn(indexerUtils, 'getLpTokenBalances')
-        .mockImplementation(async (chain: Chain, sett: VaultDefinition) => {
-          return Object.assign(new CachedLiquidityPoolTokenBalance(), {
-            id: '123',
-            pairId: '123',
-            protocol: 'some protocol',
+        .mockImplementation(async (_chain: Chain, _vault: VaultDefinition) => {
+          return Object.assign(new CachedVaultTokenBalance(), {
+            vault: TEST_ADDR,
             tokenBalances: [],
           });
         });
-      await updateTokenBalance(
+      await updateVaultTokenBalances(
         chain,
         Object.assign({
           name: 'something',
