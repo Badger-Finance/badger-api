@@ -7,7 +7,7 @@ import { getToken, mockBalance } from '../../tokens/tokens.utils';
 import { VAULT_SOURCE } from '../vaults.utils';
 import { VaultStrategy } from './vault-strategy.interface';
 import { ethers } from 'ethers';
-import { BoostConfig, Protocol, Vault, VaultState, TokenBalance, VaultType } from '@badger-dao/sdk';
+import { BoostConfig, Protocol, Vault, VaultState, TokenBalance, VaultType, VaultBehavior } from '@badger-dao/sdk';
 
 export class VaultModel implements Vault {
   @Title('name')
@@ -167,11 +167,11 @@ export class VaultModel implements Vault {
   @Property()
   public type: VaultType;
 
-  @Title('dca')
-  @Description('Does this vault DCA into another asset')
-  @Example(true)
+  @Title('behavior')
+  @Description('Short description of the vaults strategy operations')
+  @Example(VaultBehavior.DCA)
   @Property()
-  public dca: boolean;
+  public behavior: VaultBehavior;
 
   constructor({
     name,
@@ -198,7 +198,7 @@ export class VaultModel implements Vault {
     bouncer,
     strategy,
     type,
-    dca,
+    behavior,
   }: Vault) {
     this.name = name;
     this.state = state;
@@ -224,6 +224,6 @@ export class VaultModel implements Vault {
     this.bouncer = bouncer;
     this.strategy = strategy;
     this.type = type;
-    this.dca = dca;
+    this.behavior = behavior;
   }
 }

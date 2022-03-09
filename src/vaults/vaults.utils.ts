@@ -6,13 +6,13 @@ import { Chain } from '../chains/config/chain.config';
 import { CURRENT, ONE_DAY_MS, ONE_YEAR_MS, ONE_YEAR_SECONDS, SAMPLE_DAYS } from '../config/constants';
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
 import { formatBalance, getToken } from '../tokens/tokens.utils';
-import { CachedSettSnapshot } from './interfaces/cached-sett-snapshot.interface';
+import { CachedVaultSnapshot } from './interfaces/cached-vault-snapshot.interface';
 import { VaultDefinition } from './interfaces/vault-definition.interface';
 import { VaultSnapshot } from './interfaces/vault-snapshot.interface';
 import { Sett__factory, Controller__factory, Strategy__factory, EmissionControl__factory } from '../contracts';
 import { VaultStrategy } from './interfaces/vault-strategy.interface';
 import { TOKENS } from '../config/tokens.config';
-import { Network, Protocol, Vault, VaultState, VaultType } from '@badger-dao/sdk';
+import { Network, Protocol, Vault, VaultBehavior, VaultState, VaultType } from '@badger-dao/sdk';
 import { getPrice } from '../prices/prices.utils';
 import { TokenPrice } from '../prices/interface/token-price.interface';
 import { PricingType } from '../prices/enums/pricing-type.enum';
@@ -59,38 +59,38 @@ export function defaultVault(vaultDefinition: VaultDefinition): Vault {
       strategistFee: 10,
     },
     type: vaultDefinition.protocol === Protocol.Badger ? VaultType.Native : VaultType.Standard,
-    dca: !!vaultDefinition.dca,
+    behavior: vaultDefinition.behavior ?? VaultBehavior.None,
   };
 }
 
 export async function getCachedVault(vaultDefinition: VaultDefinition): Promise<Vault> {
-  const sett = defaultVault(vaultDefinition);
+  const vault = defaultVault(vaultDefinition);
   try {
     const mapper = getDataMapper();
     for await (const item of mapper.query(
-      CachedSettSnapshot,
+      CachedVaultSnapshot,
       { address: vaultDefinition.vaultToken },
       { limit: 1, scanIndexForward: false },
     )) {
-      sett.balance = item.balance;
-      sett.value = item.value;
+      vault.balance = item.balance;
+      vault.value = item.value;
       if (item.balance === 0 || item.supply === 0) {
-        sett.pricePerFullShare = 1;
+        vault.pricePerFullShare = 1;
       } else if (vaultDefinition.vaultToken === TOKENS.BDIGG) {
-        sett.pricePerFullShare = item.balance / item.supply;
+        vault.pricePerFullShare = item.balance / item.supply;
       } else {
-        sett.pricePerFullShare = item.ratio;
+        vault.pricePerFullShare = item.pricePerFullShare;
       }
-      sett.strategy = item.strategy;
-      sett.boost = {
+      vault.strategy = item.strategy;
+      vault.boost = {
         enabled: item.boostWeight > 0,
         weight: item.boostWeight,
       };
     }
-    return sett;
+    return vault;
   } catch (err) {
     console.error(err);
-    return sett;
+    return vault;
   }
 }
 
@@ -109,6 +109,9 @@ export async function getVaultSnapshotsInRange(
       { address: assetToken.address, timestamp: between(new Date(start).getTime(), new Date(end).getTime()) },
       { scanIndexForward: false },
     )) {
+      if (snapshot.ratio) {
+        snapshot.pricePerFullShare = snapshot.ratio;
+      }
       snapshots.push(snapshot);
     }
     return snapshots;
@@ -119,14 +122,14 @@ export async function getVaultSnapshotsInRange(
 }
 
 export function getPerformance(current: VaultSnapshot, initial: VaultSnapshot): number {
-  const ratioDiff = current.ratio - initial.ratio;
+  const ratioDiff = current.pricePerFullShare - initial.pricePerFullShare;
   const timestampDiff = current.timestamp - initial.timestamp;
   if (timestampDiff === 0 || ratioDiff === 0) {
     return 0;
   }
   const scalar = ONE_YEAR_MS / timestampDiff;
-  const finalRatio = initial.ratio + scalar * ratioDiff;
-  return ((finalRatio - initial.ratio) / initial.ratio) * 100;
+  const finalRatio = initial.pricePerFullShare + scalar * ratioDiff;
+  return ((finalRatio - initial.pricePerFullShare) / initial.pricePerFullShare) * 100;
 }
 
 export function getVaultDefinition(chain: Chain, contract: string): VaultDefinition {

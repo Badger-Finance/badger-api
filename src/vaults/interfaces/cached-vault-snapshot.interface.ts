@@ -1,19 +1,18 @@
 import { embed } from '@aws/dynamodb-data-mapper';
 import { attribute, hashKey, table } from '@aws/dynamodb-data-mapper-annotations';
-import { SETT_SNAPSHOTS_DATA } from '../../config/constants';
+import { VAULT_SNAPSHOTS_DATA } from '../../config/constants';
 import { VaultStrategy } from './vault-strategy.interface';
 
-@table(SETT_SNAPSHOTS_DATA)
-export class CachedSettSnapshot {
+@table(VAULT_SNAPSHOTS_DATA)
+export class CachedVaultSnapshot {
   @hashKey()
   address!: string;
 
   @attribute()
   balance!: number;
 
-  // TODO: update this value to ppfs - this is a remnant from old implementations
   @attribute()
-  ratio!: number;
+  pricePerFullShare!: number;
 
   @attribute()
   value!: number;

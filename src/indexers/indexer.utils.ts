@@ -7,7 +7,7 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
 import { getArbitrumBlock } from '../etherscan/etherscan.utils';
 import { getPrice } from '../prices/prices.utils';
-import { CachedSettSnapshot } from '../vaults/interfaces/cached-sett-snapshot.interface';
+import { CachedVaultSnapshot } from '../vaults/interfaces/cached-vault-snapshot.interface';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { VaultSnapshot } from '../vaults/interfaces/vault-snapshot.interface';
 import { getBoostWeight, getPricePerShare, getStrategyInfo, getCachedVault } from '../vaults/vaults.utils';
@@ -47,7 +47,7 @@ export async function batchRefreshAccounts(
 export async function vaultToCachedSnapshot(
   chain: Chain,
   vaultDefinition: VaultDefinition,
-): Promise<CachedSettSnapshot> {
+): Promise<CachedVaultSnapshot> {
   const sdk = await chain.getSdk();
   const { address, totalSupply, balance, pricePerFullShare, available } = await sdk.vaults.loadVault({
     address: vaultDefinition.vaultToken,
@@ -63,10 +63,10 @@ export async function vaultToCachedSnapshot(
   ]);
   const value = balance * tokenPriceData.price;
 
-  return Object.assign(new CachedSettSnapshot(), {
+  return Object.assign(new CachedVaultSnapshot(), {
     address,
     balance,
-    ratio: pricePerFullShare,
+    pricePerFullShare,
     value: parseFloat(value.toFixed(2)),
     supply: totalSupply,
     available,
@@ -117,7 +117,7 @@ export async function settToSnapshot(
     balance: tokenBalance,
     supply,
     available: formatBalance(available, balanceDecimals),
-    ratio,
+    pricePerFullShare: ratio,
     value: parseFloat(value.toFixed(4)),
   });
 }

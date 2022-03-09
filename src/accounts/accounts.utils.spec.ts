@@ -148,9 +148,9 @@ describe('accounts.utils', () => {
   describe('getAccounts', () => {
     describe('users exist', () => {
       it('returns a list of user accounts', async () => {
-        const mockAccounts = Object.values(TOKENS);
+        const mockAccounts = [TOKENS.BADGER, TOKENS.DIGG, TOKENS.WBTC, TOKENS.FTM_GEIST];
         const result: UsersQuery = {
-          users: mockAccounts.map((token) => ({ id: token, settBalances: [] })),
+          users: mockAccounts.map((account) => ({ id: account, settBalances: [] })),
         };
         let responded = false;
         jest.spyOn(GraphQLClient.prototype, 'request').mockImplementation(async () => {

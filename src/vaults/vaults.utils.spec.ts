@@ -1,4 +1,4 @@
-import BadgerSDK, { Protocol, Vault, VaultsService, VaultState, VaultType } from '@badger-dao/sdk';
+import BadgerSDK, { Protocol, Vault, VaultBehavior, VaultsService, VaultState, VaultType } from '@badger-dao/sdk';
 import { BadRequest, NotFound, UnprocessableEntity } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';
 import { BinanceSmartChain } from '../chains/config/bsc.config';
@@ -130,7 +130,7 @@ describe('vaults.utils', () => {
           strategistFee: 10,
         },
         type: vaultDefinition.protocol === Protocol.Badger ? VaultType.Native : VaultType.Standard,
-        dca: !!vaultDefinition.dca,
+        behavior: vaultDefinition.behavior ?? VaultBehavior.None,
       };
       const actual = defaultVault(vaultDefinition);
       expect(actual).toMatchObject(expected);
@@ -169,16 +169,16 @@ describe('vaults.utils', () => {
   describe('getPerformance', () => {
     it('correctly evaluate no change', () => {
       const [current, initial] = randomPerformance();
-      current.ratio = 0;
-      initial.ratio = 0;
+      current.pricePerFullShare = 0;
+      initial.pricePerFullShare = 0;
       const performance = getPerformance(current, initial);
       expect(performance).toEqual(0);
     });
 
     it('correctly evaluate increase', () => {
       const [current, initial] = randomPerformance();
-      current.ratio = 1.01;
-      initial.ratio = 1;
+      current.pricePerFullShare = 1.01;
+      initial.pricePerFullShare = 1;
       const performance = getPerformance(current, initial);
       const expected = 365;
       expect(performance.toFixed(3)).toEqual(expected.toFixed(3));
@@ -186,8 +186,8 @@ describe('vaults.utils', () => {
 
     it('correctly evaluate decrease', () => {
       const [current, initial] = randomPerformance();
-      current.ratio = 1 - 0.03 / 365;
-      initial.ratio = 1;
+      current.pricePerFullShare = 1 - 0.03 / 365;
+      initial.pricePerFullShare = 1;
       const performance = getPerformance(current, initial);
       const expected = -3;
       expect(performance.toFixed(3)).toEqual(expected.toFixed(3));
@@ -247,7 +247,7 @@ describe('vaults.utils', () => {
         const vaultPrice = await getVaultTokenPrice(TEST_CHAIN, vault.vaultToken);
         expect(vaultPrice).toMatchObject({
           address: vault.vaultToken,
-          price: 10 * snapshot.ratio,
+          price: 10 * snapshot.pricePerFullShare,
         });
       });
     });
