@@ -12,7 +12,7 @@ import { VaultSnapshot } from './interfaces/vault-snapshot.interface';
 import { Sett__factory, Controller__factory, Strategy__factory, EmissionControl__factory } from '../contracts';
 import { VaultStrategy } from './interfaces/vault-strategy.interface';
 import { TOKENS } from '../config/tokens.config';
-import { Network, Protocol, Vault, VaultState, VaultType } from '@badger-dao/sdk';
+import { Network, Protocol, Vault, VaultBehavior, VaultState, VaultType } from '@badger-dao/sdk';
 import { getPrice } from '../prices/prices.utils';
 import { TokenPrice } from '../prices/interface/token-price.interface';
 import { PricingType } from '../prices/enums/pricing-type.enum';
@@ -59,7 +59,7 @@ export function defaultVault(vaultDefinition: VaultDefinition): Vault {
       strategistFee: 10,
     },
     type: vaultDefinition.protocol === Protocol.Badger ? VaultType.Native : VaultType.Standard,
-    dca: !!vaultDefinition.dca,
+    behavior: vaultDefinition.behavior ?? VaultBehavior.None,
   };
 }
 
