@@ -8,6 +8,7 @@ Array [
     "asset": "PLP-BNB-BTCB",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -141,6 +142,7 @@ Array [
     "asset": "PLP-BBADGER-BTCB",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -274,6 +276,7 @@ Array [
     "asset": "PLP-BDIGG-BTCB",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -412,6 +415,7 @@ Array [
     "asset": "crvsBTC",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -551,6 +555,7 @@ Array [
     "asset": "crvrenWBTC",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -690,6 +695,7 @@ Array [
     "asset": "crvtBTC",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -829,6 +835,7 @@ Array [
     "asset": "crvrenWBTC",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -954,6 +961,7 @@ Array [
     "asset": "BADGER-WBTC",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -1087,6 +1095,7 @@ Array [
     "asset": "DIGG-WBTC",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -1220,6 +1229,7 @@ Array [
     "asset": "SLP-WBTC-ETH",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -1367,6 +1377,7 @@ Array [
     "asset": "SLP-BADGER-WBTC",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -1514,6 +1525,7 @@ Array [
     "asset": "SLP-DIGG-WBTC",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -1661,6 +1673,7 @@ Array [
     "asset": "DIGG",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -1800,6 +1813,7 @@ Array [
     "asset": "BADGER",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -1925,6 +1939,7 @@ Array [
     "asset": "WBTC",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -2064,6 +2079,7 @@ Array [
     "asset": "SLP-IBBTC-WBTC",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -2211,6 +2227,7 @@ Array [
     "asset": "crvhBTC",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -2350,6 +2367,7 @@ Array [
     "asset": "crvpBTC",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -2489,6 +2507,7 @@ Array [
     "asset": "crvoBTC",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -2628,6 +2647,7 @@ Array [
     "asset": "crvbBTC",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -2767,6 +2787,7 @@ Array [
     "asset": "crvTricrypto",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -2892,6 +2913,7 @@ Array [
     "asset": "cvxCRV",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -3031,6 +3053,7 @@ Array [
     "asset": "CVX",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -3170,6 +3193,7 @@ Array [
     "asset": "crvTricrypto2",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -3309,6 +3333,7 @@ Array [
     "asset": "imBTC",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -3434,6 +3459,7 @@ Array [
     "asset": "mhBTC",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -3559,6 +3585,7 @@ Array [
     "asset": "CVX",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -3698,6 +3725,7 @@ Array [
     "asset": "crvCVXbveCVX",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -3837,6 +3865,7 @@ Array [
     "asset": "crvibBTC",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -3976,6 +4005,7 @@ Array [
     "asset": "crvMim3Crv",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -4115,6 +4145,7 @@ Array [
     "asset": "crvFrax3Crv",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -4254,6 +4285,7 @@ Array [
     "asset": "BADGER",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -4404,6 +4436,7 @@ Array [
     "asset": "crvsBTC",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -4543,6 +4576,7 @@ Array [
     "asset": "crvrenWBTC",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -4682,6 +4716,7 @@ Array [
     "asset": "crvtBTC",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -4821,6 +4856,7 @@ Array [
     "asset": "crvrenWBTC",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -4946,6 +4982,7 @@ Array [
     "asset": "BADGER-WBTC",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -5079,6 +5116,7 @@ Array [
     "asset": "DIGG-WBTC",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -5212,6 +5250,7 @@ Array [
     "asset": "SLP-WBTC-ETH",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -5359,6 +5398,7 @@ Array [
     "asset": "SLP-BADGER-WBTC",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -5506,6 +5546,7 @@ Array [
     "asset": "SLP-DIGG-WBTC",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -5653,6 +5694,7 @@ Array [
     "asset": "DIGG",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -5792,6 +5834,7 @@ Array [
     "asset": "BADGER",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -5917,6 +5960,7 @@ Array [
     "asset": "WBTC",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -6056,6 +6100,7 @@ Array [
     "asset": "SLP-IBBTC-WBTC",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -6203,6 +6248,7 @@ Array [
     "asset": "crvhBTC",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -6342,6 +6388,7 @@ Array [
     "asset": "crvpBTC",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -6481,6 +6528,7 @@ Array [
     "asset": "crvoBTC",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -6620,6 +6668,7 @@ Array [
     "asset": "crvbBTC",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -6759,6 +6808,7 @@ Array [
     "asset": "crvTricrypto",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -6884,6 +6934,7 @@ Array [
     "asset": "cvxCRV",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -7023,6 +7074,7 @@ Array [
     "asset": "CVX",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -7162,6 +7214,7 @@ Array [
     "asset": "crvTricrypto2",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -7301,6 +7354,7 @@ Array [
     "asset": "imBTC",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -7426,6 +7480,7 @@ Array [
     "asset": "mhBTC",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -7551,6 +7606,7 @@ Array [
     "asset": "CVX",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -7690,6 +7746,7 @@ Array [
     "asset": "crvCVXbveCVX",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -7829,6 +7886,7 @@ Array [
     "asset": "crvibBTC",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -7968,6 +8026,7 @@ Array [
     "asset": "crvMim3Crv",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -8107,6 +8166,7 @@ Array [
     "asset": "crvFrax3Crv",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -8246,6 +8306,7 @@ Array [
     "asset": "BADGER",
     "available": 0,
     "balance": 0,
+    "behavior": "None",
     "boost": Object {
       "enabled": false,
       "weight": 0,
