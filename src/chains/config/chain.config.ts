@@ -139,11 +139,12 @@ export abstract class Chain {
         },
       };
     }
+    // we don't have a mempool based guess here just define a spread
     return {
-      rapid: gasPrice,
-      fast: gasPrice,
+      rapid: gasPrice * 1.2,
+      fast: gasPrice * 1.1,
       standard: gasPrice,
-      slow: gasPrice,
+      slow: gasPrice * 0.9,
     };
   }
 }
