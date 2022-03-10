@@ -7,6 +7,7 @@ import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface
 import { CachedVaultTokenBalance } from '../tokens/interfaces/cached-vault-token-balance.interface';
 import { getToken } from '../tokens/tokens.utils';
 import { getLpTokenBalances } from './indexer.utils';
+import { PricingType } from '../prices/enums/pricing-type.enum';
 
 export async function refreshVaultBalances() {
   const chains = loadChains();
@@ -17,7 +18,7 @@ export async function updateVaultTokenBalances(chain: Chain, vaultDefinition: Va
   try {
     const mapper = getDataMapper();
     const depositToken = getToken(vaultDefinition.depositToken);
-    if (!depositToken.lpToken && !vaultDefinition.getTokenBalance) {
+    if (depositToken.type !== PricingType.UniV2LP && !vaultDefinition.getTokenBalance) {
       return;
     }
     if (depositToken.lpToken && vaultDefinition.getTokenBalance) {

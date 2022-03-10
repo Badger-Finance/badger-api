@@ -1,4 +1,3 @@
-import { NotFound } from '@tsed/exceptions';
 import { BigNumberish, ethers } from 'ethers';
 import { getPrice } from '../prices/prices.utils';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
@@ -9,7 +8,6 @@ import { ethTokensConfig } from './config/eth-tokens.config';
 import { maticTokensConfig } from './config/polygon-tokens.config';
 import { xDaiTokensConfig } from './config/xdai-tokens.config';
 import { CachedVaultTokenBalance } from './interfaces/cached-vault-token-balance.interface';
-import { Token as TokenDefinition } from './interfaces/token.interface';
 import { Token } from '@badger-dao/sdk';
 import { TokenConfig } from './interfaces/token-config.interface';
 import { Currency, TokenBalance } from '@badger-dao/sdk';
@@ -17,6 +15,7 @@ import { avalancheTokensConfig } from './config/avax-tokens.config';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { fantomTokensConfig } from './config/fantom-tokens.config';
 import { Chain } from '../chains/config/chain.config';
+import { PricingType } from '../prices/enums/pricing-type.enum';
 
 // map holding all protocol token information across chains
 export const protocolTokens: TokenConfig = {
@@ -29,35 +28,21 @@ export const protocolTokens: TokenConfig = {
   ...fantomTokensConfig,
 };
 
-/**
- * Get token information from address.
- * @param contract Token address.
- * @returns Standard ERC20 token information.
- */
-export const getToken = (contract: string): TokenDefinition => {
-  const checksummedAddress = ethers.utils.getAddress(contract);
-  const token = protocolTokens[checksummedAddress];
-  if (!token) {
-    throw new NotFound(`${contract} not supported`);
-  }
-  return token;
-};
-
-/**
- * Get token information from name.
- * @param name Token name.
- * @returns Standard ERC20 token information.
- */
-export function getTokenByName(chain: Chain, name: string): Token {
-  const searchName = name.toLowerCase();
-  const token = Object.values(chain.tokens).find(
-    (token) => token.name.toLowerCase() === searchName || token.lookupName?.toLowerCase() === searchName,
-  );
-  if (!token) {
-    throw new NotFound(`${name} not supported`);
-  }
-  return token;
-}
+// /**
+//  * Get token information from name.
+//  * @param name Token name.
+//  * @returns Standard ERC20 token information.
+//  */
+// export function getTokenByName(chain: Chain, name: string): Token {
+//   const searchName = name.toLowerCase();
+//   const token = Object.values(chain.tokens).find(
+//     (token) => token.name.toLowerCase() === searchName || token.lookupName?.toLowerCase() === searchName,
+//   );
+//   if (!token) {
+//     throw new NotFound(`${name} not supported`);
+//   }
+//   return token;
+// }
 
 /**
  * Convert BigNumber to human readable number.
@@ -89,19 +74,20 @@ export async function toBalance(token: Token, balance: number, currency?: Curren
  * @returns Array of token balances from the Sett.
  */
 export async function getVaultTokens(
+  chain: Chain,
   vaultDefinition: VaultDefinition,
   balance: number,
   currency?: Currency,
 ): Promise<TokenBalance[]> {
-  const { protocol, depositToken, getTokenBalance } = vaultDefinition;
-  const token = getToken(depositToken);
-  if (protocol && (token.lpToken || getTokenBalance)) {
-    const [cachedSett, cachedTokenBalances] = await Promise.all([
+  const { protocol, vaultToken, getTokenBalance } = vaultDefinition;
+  const token = chain.tokens[vaultToken];
+  if (protocol && (token.type === PricingType.UniV2LP || getTokenBalance)) {
+    const [cachedVault, cachedTokenBalances] = await Promise.all([
       getCachedVault(vaultDefinition),
       getCachedTokenBalances(vaultDefinition, currency),
     ]);
     if (cachedTokenBalances) {
-      const balanceScalar = cachedSett.balance > 0 ? balance / cachedSett.balance : 0;
+      const balanceScalar = cachedVault.balance > 0 ? balance / cachedVault.balance : 0;
       return cachedTokenBalances.map((bal) => {
         bal.balance *= balanceScalar;
         bal.value *= balanceScalar;
@@ -109,7 +95,9 @@ export async function getVaultTokens(
       });
     }
   }
-  return Promise.all([toBalance(token, balance, currency)]);
+  const sdk = await chain.getSdk();
+  const tokenInfo = await sdk.tokens.loadToken(vaultToken);
+  return Promise.all([toBalance(tokenInfo, balance, currency)]);
 }
 
 export async function getCachedTokenBalances(
