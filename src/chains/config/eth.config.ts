@@ -99,7 +99,7 @@ export const ethSetts: VaultDefinition[] = [
     depositToken: TOKENS.UNI_BADGER_WBTC,
     vaultToken: TOKENS.BUNI_BADGER_WBTC,
     protocol: Protocol.Uniswap,
-    deprecated: true,
+    state: VaultState.Deprecated,
   },
   {
     name: 'wBTC/Digg',

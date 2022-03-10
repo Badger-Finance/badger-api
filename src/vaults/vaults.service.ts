@@ -40,7 +40,7 @@ export class VaultsService {
         if (source.name !== VAULT_SOURCE) {
           return true;
         }
-        return vault.state !== VaultState.Deprecated && !vaultDefinition.deprecated;
+        return vault.state !== VaultState.Deprecated;
       });
     const sourcesApr = baseSources.filter(
       (source) => source.type !== SourceType.Compound && !source.type.includes('derivative'),
