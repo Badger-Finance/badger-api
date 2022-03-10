@@ -34,7 +34,7 @@ export const xDaiSetts: VaultDefinition[] = [
     name: 'wBTC/wETH',
     vaultToken: TOKENS.BXDAI_SUSHI_WBTC_WETH,
     depositToken: TOKENS.XDAI_SUSHI_WBTC_WETH,
-    createdBlock: 17199093,
+
     experimental: true,
     protocol: Protocol.Sushiswap,
     stage: Stage.Staging,

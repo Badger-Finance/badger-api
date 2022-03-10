@@ -2,7 +2,6 @@ import { DataMapper } from '@aws/dynamodb-data-mapper';
 import { GraphQLClient } from 'graphql-request';
 import { TestStrategy } from '../chains/strategies/test.strategy';
 import { TOKENS } from '../config/tokens.config';
-import { UserQuery, UserSettBalance, UsersQuery } from '../graphql/generated/badger';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import * as priceUtils from '../prices/prices.utils';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
@@ -17,14 +16,14 @@ import {
   getLatestMetadata,
   getUserAccount,
   queryCachedAccount,
-  toSettBalance,
+  toVaultBalance,
 } from './accounts.utils';
 import { ethers } from 'ethers';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
-import { Currency } from '@badger-dao/sdk';
+import { Currency, gqlGenT } from '@badger-dao/sdk';
 
 describe('accounts.utils', () => {
-  const testSettBalance = (vaultDefinition: VaultDefinition): UserSettBalance => {
+  const testSettBalance = (vaultDefinition: VaultDefinition): gqlGenT.UserSettBalance => {
     const settToken = getToken(vaultDefinition.vaultToken);
     const depositToken = getToken(vaultDefinition.depositToken);
     const toWei = (amt: number) => {
@@ -122,7 +121,7 @@ describe('accounts.utils', () => {
     describe('user exists', () => {
       it('returns the user account', async () => {
         const sett = getVaultDefinition(TEST_CHAIN, TOKENS.BBADGER);
-        const result: UserQuery = {
+        const result: gqlGenT.UserQuery = {
           user: {
             settBalances: [testSettBalance(sett)],
           },
@@ -135,7 +134,7 @@ describe('accounts.utils', () => {
 
     describe('user does not exist', () => {
       it('returns null', async () => {
-        const result: UserQuery = {
+        const result: gqlGenT.UserQuery = {
           user: null,
         };
         jest.spyOn(GraphQLClient.prototype, 'request').mockImplementationOnce(async () => Promise.resolve(result));
@@ -149,7 +148,7 @@ describe('accounts.utils', () => {
     describe('users exist', () => {
       it('returns a list of user accounts', async () => {
         const mockAccounts = [TOKENS.BADGER, TOKENS.DIGG, TOKENS.WBTC, TOKENS.FTM_GEIST];
-        const result: UsersQuery = {
+        const result: gqlGenT.UsersQuery = {
           users: mockAccounts.map((account) => ({ id: account, settBalances: [] })),
         };
         let responded = false;
@@ -206,11 +205,11 @@ describe('accounts.utils', () => {
           return price / 1670;
         });
         const mockBalance = testSettBalance(sett);
-        const actual = await toSettBalance(chain, mockBalance, currency as Currency);
+        const actual = await toVaultBalance(chain, mockBalance, currency as Currency);
         expect(actual).toBeTruthy();
         expect(actual.name).toEqual(depositToken.name);
         expect(actual.symbol).toEqual(depositToken.symbol);
-        expect(actual.pricePerFullShare).toEqual(snapshot.balance / snapshot.supply);
+        expect(actual.pricePerFullShare).toEqual(snapshot.balance / snapshot.totalSupply);
         const convertedPrice = await priceUtils.convert(depositTokenPrice.price, toCurrency);
         expect(actual.value).toEqual(convertedPrice * actual.balance);
       });

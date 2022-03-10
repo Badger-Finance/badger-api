@@ -1,18 +1,9 @@
 import { ethers } from 'ethers';
-import { GraphQLClient } from 'graphql-request';
 import { getChainStartBlockKey, getDataMapper, getLeaderboardKey } from '../aws/dynamodb.utils';
 import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
 import { REWARD_DATA } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
-import {
-  getSdk,
-  OrderDirection,
-  UserQuery,
-  UserSettBalance,
-  UsersQuery,
-  User_OrderBy,
-} from '../graphql/generated/badger';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import { CachedBoost } from '../leaderboards/interface/cached-boost.interface';
 import { convert, getPrice } from '../prices/prices.utils';
@@ -25,6 +16,7 @@ import { CachedSettBalance } from './interfaces/cached-sett-balance.interface';
 import { Account, Currency, formatBalance } from '@badger-dao/sdk';
 import { UserClaimSnapshot } from '../rewards/entities/user-claim-snapshot';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
+import { gqlGenT } from '@badger-dao/sdk';
 
 export function defaultBoost(chain: Chain, address: string): CachedBoost {
   return {
@@ -40,19 +32,17 @@ export function defaultBoost(chain: Chain, address: string): CachedBoost {
   };
 }
 
-export async function getUserAccount(chain: Chain, accountId: string): Promise<UserQuery> {
-  const badgerGraphqlClient = new GraphQLClient(chain.graphUrl);
-  const badgerGraphqlSdk = getSdk(badgerGraphqlClient);
-  return badgerGraphqlSdk.User({
+export async function getUserAccount(chain: Chain, accountId: string): Promise<gqlGenT.User> {
+  const sdk = await chain.getSdk();
+  return sdk.graph.loadUser({
     id: accountId.toLowerCase(),
-    orderDirection: OrderDirection.Asc,
+    orderDirection: gqlGenT.OrderDirection.Asc,
   });
 }
 
-export async function getUserAccounts(chain: Chain, accounts: string[]): Promise<UsersQuery> {
-  const badgerGraphqlClient = new GraphQLClient(chain.graphUrl);
-  const badgerGraphqlSdk = getSdk(badgerGraphqlClient);
-  return badgerGraphqlSdk.Users({
+export async function getUserAccounts(chain: Chain, accounts: string[]): Promise<gqlGenT.UsersQuery> {
+  const sdk = await chain.getSdk();
+  return sdk.graph.loadUsers({
     where: {
       id_in: accounts.map((acc) => acc.toLowerCase()),
     },
@@ -68,20 +58,18 @@ export async function getBoostFile(chain: Chain): Promise<BoostData | null> {
 }
 
 export async function getAccounts(chain: Chain): Promise<string[]> {
-  const badgerGraphqlClient = new GraphQLClient(chain.graphUrl);
-  const badgerGraphqlSdk = getSdk(badgerGraphqlClient);
-
+  const sdk = await chain.getSdk();
   const accounts = new Set<string>();
 
   let lastAddress: string | undefined;
   const pageSize = 1000;
   while (true) {
     try {
-      const userPage = await badgerGraphqlSdk.Users({
+      const userPage = await sdk.graph.loadUsers({
         first: pageSize,
         where: { id_gt: lastAddress },
-        orderBy: User_OrderBy.Id,
-        orderDirection: OrderDirection.Asc,
+        orderBy: gqlGenT.User_OrderBy.Id,
+        orderDirection: gqlGenT.OrderDirection.Asc,
       });
       if (!userPage || !userPage.users || userPage.users.length === 0) {
         break;
@@ -146,13 +134,13 @@ export async function queryCachedAccount(address: string): Promise<CachedAccount
   }
 }
 
-export async function toSettBalance(
+export async function toVaultBalance(
   chain: Chain,
-  settBalance: UserSettBalance,
+  vaultBalance: gqlGenT.UserSettBalance,
   currency?: Currency,
 ): Promise<CachedSettBalance> {
-  const vaultDefinition = getVaultDefinition(chain, settBalance.sett.id);
-  const { netShareDeposit, grossDeposit, grossWithdraw } = settBalance;
+  const vaultDefinition = getVaultDefinition(chain, vaultBalance.sett.id);
+  const { netShareDeposit, grossDeposit, grossWithdraw } = vaultBalance;
   const { pricePerFullShare } = await getCachedVault(vaultDefinition);
 
   const depositToken = getToken(vaultDefinition.depositToken);

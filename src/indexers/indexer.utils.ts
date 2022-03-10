@@ -1,21 +1,17 @@
-import { formatBalance, Network } from '@badger-dao/sdk';
 import { BadRequest, NotFound } from '@tsed/exceptions';
 import { getAccountMap } from '../accounts/accounts.utils';
 import { AccountMap } from '../accounts/interfaces/account-map.interface';
 import { CachedAccount } from '../accounts/interfaces/cached-account.interface';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
-import { getArbitrumBlock } from '../etherscan/etherscan.utils';
 import { getPrice } from '../prices/prices.utils';
-import { CachedVaultSnapshot } from '../vaults/interfaces/cached-vault-snapshot.interface';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
-import { VaultSnapshot } from '../vaults/interfaces/vault-snapshot.interface';
-import { getBoostWeight, getPricePerShare, getStrategyInfo, getCachedVault } from '../vaults/vaults.utils';
+import { getBoostWeight, getStrategyInfo, getCachedVault } from '../vaults/vaults.utils';
 import { CachedVaultTokenBalance } from '../tokens/interfaces/cached-vault-token-balance.interface';
-import { getToken, toBalance } from '../tokens/tokens.utils';
+import { toBalance } from '../tokens/tokens.utils';
 import { getLiquidityData } from '../protocols/common/swap.utils';
-import { GraphQLClient } from 'graphql-request';
-import { SettQuery, getSdk } from '../graphql/generated/badger';
+import { gqlGenT } from '@badger-dao/sdk';
+import { IVaultSnapshot } from '../vaults/interfaces/vault-snapshot.interface';
 
 export function chunkArray(addresses: string[], count: number): string[][] {
   const chunks: string[][] = [];
@@ -43,10 +39,7 @@ export async function batchRefreshAccounts(
   }
 }
 
-export async function vaultToCachedSnapshot(
-  chain: Chain,
-  vaultDefinition: VaultDefinition,
-): Promise<CachedVaultSnapshot> {
+export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefinition): Promise<IVaultSnapshot> {
   const sdk = await chain.getSdk();
   const { address, totalSupply, balance, pricePerFullShare, available } = await sdk.vaults.loadVault({
     address: vaultDefinition.vaultToken,
@@ -55,92 +48,26 @@ export async function vaultToCachedSnapshot(
     version: 'v1',
   });
 
-  const [tokenPriceData, strategyInfo, boostWeight] = await Promise.all([
+  const [tokenPriceData, strategyInfo, boostWeight, block] = await Promise.all([
     getPrice(vaultDefinition.depositToken),
     getStrategyInfo(chain, vaultDefinition),
     getBoostWeight(chain, vaultDefinition),
+    sdk.provider.getBlockNumber(),
   ]);
   const value = balance * tokenPriceData.price;
 
-  return Object.assign(new CachedVaultSnapshot(), {
+  return {
+    block,
+    timestamp: Date.now(),
     address,
     balance,
     pricePerFullShare,
     value: parseFloat(value.toFixed(2)),
-    supply: totalSupply,
+    totalSupply,
     available,
     strategy: strategyInfo,
     boostWeight: boostWeight.toNumber(),
-  });
-}
-
-export async function getQueryBlock(chain: Chain, block: number): Promise<number> {
-  let queryBlock = block;
-  if (chain.network === Network.Arbitrum) {
-    const refChain = Chain.getChain(Network.Ethereum);
-    const refBlock = await refChain.provider.getBlock(block);
-    queryBlock = await getArbitrumBlock(refBlock.timestamp);
-  }
-  return queryBlock;
-}
-
-export async function settToSnapshot(
-  chain: Chain,
-  vaultDefinition: VaultDefinition,
-  block: number,
-): Promise<VaultSnapshot | null> {
-  const queryBlock = await getQueryBlock(chain, block);
-  const { sett } = await getVault(chain.graphUrl, vaultDefinition.vaultToken, queryBlock);
-  const settToken = getToken(vaultDefinition.vaultToken);
-  const depositToken = getToken(vaultDefinition.depositToken);
-
-  if (sett == null) {
-    return null;
-  }
-
-  const { balance, totalSupply, pricePerFullShare, available } = sett;
-  const blockData = await chain.provider.getBlock(queryBlock);
-  const timestamp = blockData.timestamp * 1000;
-  const balanceDecimals = vaultDefinition.balanceDecimals || depositToken.decimals;
-  const supplyDecimals = vaultDefinition.supplyDecimals || settToken.decimals;
-  const tokenBalance = formatBalance(balance, balanceDecimals);
-  const supply = formatBalance(totalSupply, supplyDecimals);
-  const ratio = await getPricePerShare(chain, pricePerFullShare, vaultDefinition, queryBlock);
-  const tokenPriceData = await getPrice(depositToken.address);
-  const value = tokenBalance * tokenPriceData.price;
-
-  return Object.assign(new VaultSnapshot(), {
-    address: settToken.address,
-    height: block,
-    timestamp,
-    balance: tokenBalance,
-    supply,
-    available: formatBalance(available, balanceDecimals),
-    pricePerFullShare: ratio,
-    value: parseFloat(value.toFixed(4)),
-  });
-}
-
-export async function getIndexedBlock(
-  vaultDefinition: VaultDefinition,
-  startBlock: number,
-  alignment: number,
-): Promise<number> {
-  const alignedStartBlock = startBlock - (startBlock % alignment);
-  try {
-    const mapper = getDataMapper();
-    const settToken = getToken(vaultDefinition.vaultToken);
-    for await (const snapshot of mapper.query(
-      VaultSnapshot,
-      { address: settToken.address },
-      { limit: 1, scanIndexForward: false },
-    )) {
-      return snapshot.height;
-    }
-    return alignedStartBlock;
-  } catch (err) {
-    return alignedStartBlock;
-  }
+  };
 }
 
 export async function getLpTokenBalances(
@@ -176,13 +103,12 @@ export async function getLpTokenBalances(
 }
 
 // TODO: kill this function
-export async function getVault(graphUrl: string, contract: string, block?: number): Promise<SettQuery> {
-  const badgerGraphqlClient = new GraphQLClient(graphUrl);
-  const badgerGraphqlSdk = getSdk(badgerGraphqlClient);
+export async function getVault(chain: Chain, contract: string, block?: number): Promise<gqlGenT.SettQuery> {
+  const sdk = await chain.getSdk();
   const settId = contract.toLowerCase();
   const vars = { id: settId };
   if (block) {
-    return badgerGraphqlSdk.SettSnapshot({ ...vars, block: { number: block } });
+    return sdk.graph.loadSettSpanshot({ ...vars, block: { number: block } });
   }
-  return badgerGraphqlSdk.Sett(vars);
+  return sdk.graph.loadSett(vars);
 }
