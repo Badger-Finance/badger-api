@@ -1,9 +1,9 @@
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
-import { CachedVaultSnapshot } from '../vaults/interfaces/cached-vault-snapshot.interface';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
-import { vaultToCachedSnapshot } from './indexer.utils';
+import { VaultSnapshot } from '../vaults/types/vault-snapshot';
+import { vaultToSnapshot } from './indexer.utils';
 
 export async function refreshVaultSnapshots() {
   for (const chain of loadChains()) {
@@ -11,18 +11,16 @@ export async function refreshVaultSnapshots() {
   }
 }
 
-async function captureSnapshot(chain: Chain, vault: VaultDefinition): Promise<CachedVaultSnapshot | null> {
+async function captureSnapshot(chain: Chain, vault: VaultDefinition) {
   try {
     // purposefully await to leverage try / catch
-    const snapshot = await vaultToCachedSnapshot(chain, vault);
+    const snapshot = await vaultToSnapshot(chain, vault);
     if (snapshot) {
       const mapper = getDataMapper();
       console.log(`${vault.name} $${snapshot.value.toLocaleString()} (${snapshot.balance} tokens)`);
-      await mapper.put(snapshot);
+      await mapper.put(Object.assign(new VaultSnapshot(), snapshot));
     }
-    return snapshot;
   } catch (err) {
     console.error(err);
-    return null;
   }
 }

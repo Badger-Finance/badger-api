@@ -1,10 +1,9 @@
 import { ethers } from 'ethers';
-import { getAccounts, getLatestMetadata, getUserAccounts, toSettBalance } from '../accounts/accounts.utils';
+import { getAccounts, getLatestMetadata, getUserAccounts, toVaultBalance } from '../accounts/accounts.utils';
 import { AccountMap } from '../accounts/interfaces/account-map.interface';
 import { getChainStartBlockKey, getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
-import { UserSettBalance } from '../graphql/generated/badger';
 import { ClaimableBalance } from '../rewards/entities/claimable-balance';
 import { UserClaimSnapshot } from '../rewards/entities/user-claim-snapshot';
 import { getClaimableRewards, getTreeDistribution } from '../rewards/rewards.utils';
@@ -74,26 +73,28 @@ export async function refreshClaimableBalances(chain: Chain) {
 
 export async function refreshAccountSettBalances(chain: Chain, batchAccounts: AccountMap) {
   const addresses = Object.keys(batchAccounts);
-  const response = await getUserAccounts(chain, addresses);
-  for (const user of response.users) {
-    const address = ethers.utils.getAddress(user.id);
-    const account = batchAccounts[address];
-    if (user) {
-      const userBalances = user.settBalances as UserSettBalance[];
-      if (userBalances) {
-        const balances = userBalances.filter((balance) => {
-          try {
-            getVaultDefinition(chain, balance.sett.id);
-            return true;
-          } catch (err) {
-            return false;
-          }
-        });
-        const settBalances = await Promise.all(balances.map(async (bal) => toSettBalance(chain, bal)));
-        account.balances = account.balances.filter((bal) => bal.network !== chain.network).concat(settBalances);
+  const { users } = await getUserAccounts(chain, addresses);
+  if (users) {
+    for (const user of users) {
+      const address = ethers.utils.getAddress(user.id);
+      const account = batchAccounts[address];
+      if (user) {
+        const userBalances = user.settBalances;
+        if (userBalances) {
+          const balances = userBalances.filter((balance) => {
+            try {
+              getVaultDefinition(chain, balance.sett.id);
+              return true;
+            } catch (err) {
+              return false;
+            }
+          });
+          const settBalances = await Promise.all(balances.map(async (bal) => toVaultBalance(chain, bal)));
+          account.balances = account.balances.filter((bal) => bal.network !== chain.network).concat(settBalances);
+        }
       }
+      batchAccounts[address] = account;
     }
-    batchAccounts[address] = account;
   }
 }
 

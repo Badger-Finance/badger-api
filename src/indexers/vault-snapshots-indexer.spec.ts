@@ -1,12 +1,12 @@
 import { DataMapper, PutParameters, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
 import { loadChains } from '../chains/chain';
 import * as priceUtils from '../prices/prices.utils';
-import { CachedVaultSnapshot } from '../vaults/interfaces/cached-vault-snapshot.interface';
 import * as vaultUtils from '../vaults/vaults.utils';
 import { refreshVaultSnapshots } from './vault-snapshots-indexer';
 import { BigNumber, ethers } from 'ethers';
 import { TEST_ADDR } from '../test/tests.utils';
 import BadgerSDK, { VaultState, VaultVersion, RegistryVault, LoadVaultOptions, VaultsService } from '@badger-dao/sdk';
+import { VaultSnapshot } from '../vaults/types/vault-snapshot';
 
 describe('refreshSettSnapshots', () => {
   const supportedAddresses = loadChains()
@@ -57,21 +57,21 @@ describe('refreshSettSnapshots', () => {
     await refreshVaultSnapshots();
   });
 
-  it('fetches Setts for all chains', async () => {
+  it('fetches vaults for all chains', async () => {
     const requestedAddresses = vaultsMock.mock.calls.map((calls) => calls[0].address);
     expect(requestedAddresses.sort()).toEqual(supportedAddresses);
   });
 
-  it('saves Setts in Dynamo', () => {
+  it('saves vaults in dynamo db', () => {
     const requestedAddresses = [];
     // Verify each saved object.
     for (const input of put.mock.calls) {
       // force convert input as jest overload mock causes issues
-      const snapshot = input[0] as unknown as CachedVaultSnapshot;
+      const snapshot = input[0] as unknown as VaultSnapshot;
       expect(snapshot).toMatchObject({
         address: expect.any(String),
         balance: expect.any(Number),
-        supply: expect.any(Number),
+        totalSupply: expect.any(Number),
         pricePerFullShare: expect.any(Number),
         value: expect.any(Number),
         strategy: {
@@ -80,6 +80,10 @@ describe('refreshSettSnapshots', () => {
           performanceFee: expect.any(Number),
           strategistFee: expect.any(Number),
         },
+        block: expect.any(Number),
+        boostWeight: expect.any(Number),
+        timestamp: expect.any(Number),
+        available: expect.any(Number),
       });
       requestedAddresses.push(snapshot.address);
     }
