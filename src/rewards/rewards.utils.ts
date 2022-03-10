@@ -14,7 +14,8 @@ import { Token } from '../tokens/interfaces/token.interface';
 import { formatBalance, getToken } from '../tokens/tokens.utils';
 import { RewardMerkleDistribution } from './interfaces/merkle-distributor.interface';
 import { BadgerTree__factory, RewardsLogger, RewardsLogger__factory } from '../contracts';
-import { EmissionSchedule } from './interfaces/reward-schedules-vault.interface';
+import { EmissionScheduleApi } from './interfaces/reward-schedules-vault.interface';
+import { EmissionSchedule } from '@badger-dao/sdk/lib/rewards/interfaces/emission-schedule.interface';
 import { BigNumber } from '@ethersproject/bignumber';
 import { UnprocessableEntity } from '@tsed/exceptions';
 import { ConvexStrategy } from '../protocols/strategies/convex.strategy';
@@ -92,7 +93,7 @@ export async function getClaimableRewards(
   return Promise.all(requests);
 }
 
-const schedulesCache: Record<string, Omit<EmissionSchedule, 'compPercent' | 'vault'>[]> = {};
+const schedulesCache: Record<string, EmissionSchedule[]> = {};
 
 export async function getRewardEmission(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
   const boostFile = await getBoostFile(chain);
@@ -272,7 +273,7 @@ export async function getRewardSchedules(
   chain: Chain,
   address: string,
   rewardsLogger: RewardsLoggerInst,
-): Promise<EmissionSchedule[]> {
+): Promise<EmissionScheduleApi[]> {
   const vaultSchedules = await rewardsLogger.getAllUnlockSchedulesFor(address);
 
   return vaultSchedules.map(({ beneficiary, token, totalAmount, start, end, duration }) => {

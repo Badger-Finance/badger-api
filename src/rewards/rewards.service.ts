@@ -10,7 +10,7 @@ import { getRewardSchedules, getRewordLoggerInst, getTreeDistribution } from './
 
 import { AirdropMerkleClaim, AirdropMerkleDistribution } from './interfaces/merkle-distributor.interface';
 import { RewardMerkleClaim } from './interfaces/reward-merkle-claim.interface';
-import { RewardSchedulesByVault, RewardSchedulesByVaults } from './interfaces/reward-schedules-vault.interface';
+import { EmissionScheduleApi, RewardSchedulesByVaults } from './interfaces/reward-schedules-vault.interface';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 
 @Service()
@@ -52,7 +52,7 @@ export class RewardsService {
    * @param chain Network chain obj
    * @param address Vault token adress
    */
-  async rewardSchedulesByVault(chain: Chain, address: VaultDefinition['vaultToken']): Promise<RewardSchedulesByVault> {
+  async rewardSchedulesByVault(chain: Chain, address: VaultDefinition['vaultToken']): Promise<EmissionScheduleApi[]> {
     const rewardsLogger = getRewordLoggerInst(chain);
 
     if (!rewardsLogger) throw new NotFound(`No rewards token emission data for network ${Chain.name}`);
@@ -61,9 +61,7 @@ export class RewardsService {
 
     if (!vault || !vault?.vaultToken) throw new NotFound(`Unknown vault ${address}`);
 
-    return {
-      schedules: await getRewardSchedules(chain, vault.vaultToken, rewardsLogger),
-    };
+    return getRewardSchedules(chain, vault.vaultToken, rewardsLogger);
   }
 
   /**
