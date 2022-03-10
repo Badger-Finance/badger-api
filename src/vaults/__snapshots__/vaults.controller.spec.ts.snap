@@ -1655,7 +1655,7 @@ Array [
   },
   Object {
     "apr": 60.69,
-    "apy": 60.69,
+    "apy": 80.92,
     "asset": "DIGG",
     "available": 0,
     "balance": 0,
@@ -1719,6 +1719,20 @@ Array [
         "harvestable": false,
         "maxApr": 20.23,
         "minApr": 20.23,
+        "name": "Vault Compounding",
+        "performance": Object {
+          "oneDay": 20.23,
+          "sevenDay": 20.23,
+          "thirtyDay": 20.23,
+          "threeDay": 20.23,
+        },
+      },
+      Object {
+        "apr": 20.23,
+        "boostable": false,
+        "harvestable": false,
+        "maxApr": 20.23,
+        "minApr": 20.23,
         "name": "Badger Rewards",
         "performance": Object {
           "oneDay": 20.23,
@@ -1756,7 +1770,7 @@ Array [
         },
       },
     ],
-    "state": "deprecated",
+    "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
@@ -5564,7 +5578,7 @@ Array [
   },
   Object {
     "apr": 60.69,
-    "apy": 60.69,
+    "apy": 80.92,
     "asset": "DIGG",
     "available": 0,
     "balance": 0,
@@ -5628,6 +5642,20 @@ Array [
         "harvestable": false,
         "maxApr": 20.23,
         "minApr": 20.23,
+        "name": "Vault Compounding",
+        "performance": Object {
+          "oneDay": 20.23,
+          "sevenDay": 20.23,
+          "thirtyDay": 20.23,
+          "threeDay": 20.23,
+        },
+      },
+      Object {
+        "apr": 20.23,
+        "boostable": false,
+        "harvestable": false,
+        "maxApr": 20.23,
+        "minApr": 20.23,
         "name": "Badger Rewards",
         "performance": Object {
           "oneDay": 20.23,
@@ -5665,7 +5693,7 @@ Array [
         },
       },
     ],
-    "state": "deprecated",
+    "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
