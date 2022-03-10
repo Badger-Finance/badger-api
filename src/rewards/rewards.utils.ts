@@ -19,7 +19,6 @@ import { EmissionSchedule } from '@badger-dao/sdk/lib/rewards/interfaces/emissio
 import { BigNumber } from '@ethersproject/bignumber';
 import { UnprocessableEntity } from '@tsed/exceptions';
 import { ConvexStrategy } from '../protocols/strategies/convex.strategy';
-import { mStableStrategy } from '../protocols/strategies/mstable.strategy';
 import { PancakeswapStrategy } from '../protocols/strategies/pancakeswap.strategy';
 import { QuickswapStrategy } from '../protocols/strategies/quickswap.strategy';
 import { SushiswapStrategy } from '../protocols/strategies/sushiswap.strategy';
@@ -245,8 +244,6 @@ export async function getProtocolValueSources(
         return UniswapStrategy.getValueSources(vaultDefinition);
       case Protocol.Quickswap:
         return QuickswapStrategy.getValueSources(vaultDefinition);
-      case Protocol.mStable:
-        return mStableStrategy.getValueSources(chain, vaultDefinition);
       case Protocol.Swapr:
         return SwaprStrategy.getValueSources(chain, vaultDefinition);
       default: {
