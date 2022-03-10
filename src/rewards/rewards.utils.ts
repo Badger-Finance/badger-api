@@ -11,12 +11,13 @@ import { createValueSource } from '../protocols/interfaces/value-source.interfac
 import { tokenEmission } from '../protocols/protocols.utils';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { Token } from '../tokens/interfaces/token.interface';
-import { getToken } from '../tokens/tokens.utils';
+import { formatBalance, getToken } from '../tokens/tokens.utils';
 import { RewardMerkleDistribution } from './interfaces/merkle-distributor.interface';
-import { BadgerTree__factory } from '../contracts';
+import { BadgerTree__factory, RewardsLogger, RewardsLogger__factory } from '../contracts';
+import { EmissionScheduleApi } from './interfaces/reward-schedules-vault.interface';
+import { EmissionSchedule } from '@badger-dao/sdk/lib/rewards/interfaces/emission-schedule.interface';
 import { BigNumber } from '@ethersproject/bignumber';
 import { UnprocessableEntity } from '@tsed/exceptions';
-import { EmissionSchedule } from '@badger-dao/sdk/lib/rewards/interfaces/emission-schedule.interface';
 import { ConvexStrategy } from '../protocols/strategies/convex.strategy';
 import { mStableStrategy } from '../protocols/strategies/mstable.strategy';
 import { PancakeswapStrategy } from '../protocols/strategies/pancakeswap.strategy';
@@ -26,6 +27,8 @@ import { UniswapStrategy } from '../protocols/strategies/uniswap.strategy';
 import { SwaprStrategy } from '../protocols/strategies/swapr.strategy';
 import { getCachedVault, getVaultPerformance } from '../vaults/vaults.utils';
 import { SourceType } from './enums/source-type.enum';
+
+export type RewardsLoggerInst = InstanceType<typeof RewardsLogger>;
 
 export async function getTreeDistribution(chain: Chain): Promise<RewardMerkleDistribution | null> {
   if (!chain.badgerTree) {
@@ -254,4 +257,43 @@ export async function getProtocolValueSources(
     console.log(error);
     return [];
   }
+}
+
+export function getRewordLoggerInst(chain: Chain): RewardsLoggerInst | undefined {
+  let rewardsLogger: RewardsLoggerInst | undefined;
+
+  if (chain.rewardsLogger) {
+    rewardsLogger = RewardsLogger__factory.connect(chain.rewardsLogger, chain.batchProvider);
+  }
+
+  return rewardsLogger;
+}
+
+export async function getRewardSchedules(
+  chain: Chain,
+  address: string,
+  rewardsLogger: RewardsLoggerInst,
+): Promise<EmissionScheduleApi[]> {
+  const vaultSchedules = await rewardsLogger.getAllUnlockSchedulesFor(address);
+
+  return vaultSchedules.map(({ beneficiary, token, totalAmount, start, end, duration }) => {
+    const { decimals } = chain.tokens[token];
+    const amount = formatBalance(totalAmount, decimals);
+
+    const startNum = start.toNumber();
+    const endNum = end.toNumber();
+    const durationNum = duration.toNumber();
+
+    const complitionPercent = Math.round(durationNum / ((endNum - startNum) / 100));
+
+    return {
+      vault: address,
+      beneficiary,
+      amount,
+      token,
+      start: startNum,
+      end: endNum,
+      compPercent: complitionPercent,
+    };
+  });
 }
