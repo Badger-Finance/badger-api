@@ -7,7 +7,6 @@ import { CachedVaultTokenBalance } from '../../tokens/interfaces/cached-vault-to
 export interface VaultDefinition {
   balanceDecimals?: number;
   depositToken: string;
-  deprecated?: boolean;
   experimental?: boolean;
   getTokenBalance?: (chain: Chain, token: string) => Promise<CachedVaultTokenBalance>;
   bouncer?: BouncerType;
