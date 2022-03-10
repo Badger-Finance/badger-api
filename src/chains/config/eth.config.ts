@@ -131,7 +131,6 @@ export const ethSetts: VaultDefinition[] = [
     name: 'Digg',
     depositToken: TOKENS.DIGG,
     vaultToken: TOKENS.BDIGG,
-    state: VaultState.Deprecated,
   },
   {
     name: 'Badger',
