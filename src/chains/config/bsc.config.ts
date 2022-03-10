@@ -35,7 +35,6 @@ export class BinanceSmartChain extends Chain {
 export const bscSetts: VaultDefinition[] = [
   {
     name: 'BNB/BTCB',
-
     depositToken: TOKENS.PANCAKE_BNB_BTCB,
     vaultToken: TOKENS.BPANCAKE_BNB_BTCB,
     state: VaultState.Deprecated,
@@ -43,7 +42,6 @@ export const bscSetts: VaultDefinition[] = [
   },
   {
     name: 'bBADGER/BTCB',
-
     depositToken: TOKENS.PANCAKE_BBADGER_BTCB,
     vaultToken: TOKENS.BPANCAKE_BBADGER_BTCB,
     state: VaultState.Deprecated,
@@ -51,7 +49,6 @@ export const bscSetts: VaultDefinition[] = [
   },
   {
     name: 'bDIGG/BTCB',
-
     depositToken: TOKENS.PANCAKE_BDIGG_BTCB,
     vaultToken: TOKENS.BPANCAKE_BDIGG_BTCB,
     state: VaultState.Deprecated,

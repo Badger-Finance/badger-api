@@ -39,7 +39,6 @@ export const avalancheSetts: VaultDefinition[] = [
     name: 'WBTC',
     vaultToken: TOKENS.BAVAX_WBTC,
     depositToken: TOKENS.AVAX_WBTC,
-
     protocol: Protocol.Aave,
     stage: Stage.Staging,
     state: VaultState.Experimental,

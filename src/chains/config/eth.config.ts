@@ -67,7 +67,6 @@ export class Ethereum extends Chain {
 export const ethSetts: VaultDefinition[] = [
   {
     name: 'renBTC/wBTC/sBTC',
-
     depositToken: TOKENS.CRV_SBTC,
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_SBTC,
@@ -75,7 +74,6 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'renBTC/wBTC',
-
     depositToken: TOKENS.CRV_RENBTC,
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_RENBTC,
@@ -83,7 +81,6 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'tBTC/sBTC',
-
     depositToken: TOKENS.CRV_TBTC,
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_TBTC,
@@ -91,7 +88,6 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'renBTC/wBTC',
-
     depositToken: TOKENS.CRV_RENBTC,
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_HRENBTC,
@@ -100,7 +96,6 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'wBTC/Badger',
-
     depositToken: TOKENS.UNI_BADGER_WBTC,
     vaultToken: TOKENS.BUNI_BADGER_WBTC,
     protocol: Protocol.Uniswap,
@@ -108,7 +103,6 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'wBTC/Digg',
-
     depositToken: TOKENS.UNI_DIGG_WBTC,
     state: VaultState.Deprecated,
     vaultToken: TOKENS.BUNI_DIGG_WBTC,
@@ -116,34 +110,29 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'wBTC/wETH',
-
     depositToken: TOKENS.SUSHI_ETH_WBTC,
     vaultToken: TOKENS.BSUSHI_ETH_WBTC,
     protocol: Protocol.Sushiswap,
   },
   {
     name: 'wBTC/Badger',
-
     depositToken: TOKENS.SUSHI_BADGER_WBTC,
     vaultToken: TOKENS.BSUSHI_BADGER_WBTC,
     protocol: Protocol.Sushiswap,
   },
   {
     name: 'wBTC/Digg',
-
     depositToken: TOKENS.SUSHI_DIGG_WBTC,
     vaultToken: TOKENS.BSUSHI_DIGG_WBTC,
     protocol: Protocol.Sushiswap,
   },
   {
     name: 'Digg',
-
     depositToken: TOKENS.DIGG,
     vaultToken: TOKENS.BDIGG,
   },
   {
     name: 'Badger',
-
     depositToken: TOKENS.BADGER,
     vaultToken: TOKENS.BBADGER,
     state: VaultState.Deprecated,
@@ -156,7 +145,6 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'wBTC/ibBTC',
-
     depositToken: TOKENS.SUSHI_IBBTC_WBTC,
     vaultToken: TOKENS.BSUSHI_IBBTC_WBTC,
     strategy: '0xf4146A176b09C664978e03d28d07Db4431525dAd',
@@ -164,7 +152,6 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'hBTC',
-
     depositToken: TOKENS.CRV_HBTC,
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_HBTC,
@@ -172,7 +159,6 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'pBTC',
-
     depositToken: TOKENS.CRV_PBTC,
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_PBTC,
@@ -180,7 +166,6 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'oBTC',
-
     depositToken: TOKENS.CRV_OBTC,
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_OBTC,
@@ -188,7 +173,6 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'bBTC',
-
     depositToken: TOKENS.CRV_BBTC,
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_BBTC,
@@ -196,7 +180,6 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'Tricrypto',
-
     depositToken: TOKENS.CRV_TRICRYPTO,
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_TRICRYPTO,
@@ -205,21 +188,18 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'cvxCRV',
-
     depositToken: TOKENS.CVXCRV,
     vaultToken: TOKENS.BCVXCRV,
     protocol: Protocol.Convex,
   },
   {
     name: 'CVX',
-
     depositToken: TOKENS.CVX,
     vaultToken: TOKENS.BCVX,
     protocol: Protocol.Convex,
   },
   {
     name: 'Tricrypto2',
-
     depositToken: TOKENS.CRV_TRICRYPTO2,
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_TRICRYPTO2,
@@ -227,7 +207,6 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'imBTC',
-
     depositToken: TOKENS.IMBTC,
     vaultToken: TOKENS.BIMBTC,
     protocol: Protocol.mStable,
@@ -236,7 +215,6 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'mhBTC',
-
     depositToken: TOKENS.MHBTC,
     vaultToken: TOKENS.BMHBTC,
     protocol: Protocol.mStable,
@@ -245,14 +223,12 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'bveCVX',
-
     depositToken: TOKENS.CVX,
     vaultToken: TOKENS.BVECVX,
     protocol: Protocol.Convex,
   },
   {
     name: 'CVX / bveCVX',
-
     depositToken: TOKENS.CRV_CVXBVECVX,
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_CVXBVECVX,
@@ -260,7 +236,6 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'ibBTC / crvsBTC',
-
     depositToken: TOKENS.CRV_IBBTC,
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_IBBTC,
@@ -268,7 +243,6 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'MIM / 3CRV',
-
     depositToken: TOKENS.CRV_MIM_3CRV,
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_MIM_3CRV,
@@ -276,7 +250,6 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'FRAX / 3CRV',
-
     depositToken: TOKENS.CRV_FRAX_3CRV,
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_FRAX_3CRV,
@@ -284,7 +257,6 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'remBadger',
-
     depositToken: TOKENS.BADGER,
     vaultToken: TOKENS.BREMBADGER,
     protocol: Protocol.Badger,
