@@ -32,14 +32,6 @@ export function defaultBoost(chain: Chain, address: string): CachedBoost {
   };
 }
 
-export async function getUserAccount(chain: Chain, accountId: string): Promise<gqlGenT.User> {
-  const sdk = await chain.getSdk();
-  return sdk.graph.loadUser({
-    id: accountId.toLowerCase(),
-    orderDirection: gqlGenT.OrderDirection.Asc,
-  });
-}
-
 export async function getUserAccounts(chain: Chain, accounts: string[]): Promise<gqlGenT.UsersQuery> {
   const sdk = await chain.getSdk();
   return sdk.graph.loadUsers({
@@ -136,7 +128,7 @@ export async function queryCachedAccount(address: string): Promise<CachedAccount
 
 export async function toVaultBalance(
   chain: Chain,
-  vaultBalance: gqlGenT.UserSettBalance,
+  vaultBalance: gqlGenT.UserSettBalanceFragment,
   currency?: Currency,
 ): Promise<CachedSettBalance> {
   const vaultDefinition = getVaultDefinition(chain, vaultBalance.sett.id);

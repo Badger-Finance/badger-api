@@ -14,7 +14,6 @@ import {
   getAccounts,
   getCachedBoost,
   getLatestMetadata,
-  getUserAccount,
   queryCachedAccount,
   toVaultBalance,
 } from './accounts.utils';
@@ -113,33 +112,6 @@ describe('accounts.utils', () => {
         setupMapper([expected]);
         const actual = await queryCachedAccount(TEST_ADDR);
         expect(actual).toMatchObject(expected);
-      });
-    });
-  });
-
-  describe('getUserAccount', () => {
-    describe('user exists', () => {
-      it('returns the user account', async () => {
-        const sett = getVaultDefinition(TEST_CHAIN, TOKENS.BBADGER);
-        const result: gqlGenT.UserQuery = {
-          user: {
-            settBalances: [testSettBalance(sett)],
-          },
-        };
-        jest.spyOn(GraphQLClient.prototype, 'request').mockImplementationOnce(async () => Promise.resolve(result));
-        const user = await getUserAccount(TEST_CHAIN, TEST_ADDR);
-        expect(user).toMatchObject(result);
-      });
-    });
-
-    describe('user does not exist', () => {
-      it('returns null', async () => {
-        const result: gqlGenT.UserQuery = {
-          user: null,
-        };
-        jest.spyOn(GraphQLClient.prototype, 'request').mockImplementationOnce(async () => Promise.resolve(result));
-        const user = await getUserAccount(TEST_CHAIN, TEST_ADDR);
-        expect(user).toMatchObject(result);
       });
     });
   });
