@@ -1,36 +1,33 @@
 import { DataMapper } from '@aws/dynamodb-data-mapper';
 import { indexProtocolVaults } from './vaults-indexer';
 import * as indexerUtils from './indexer.utils';
-import { VaultSnapshot } from '../vaults/interfaces/vault-snapshot.interface';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
+import { IVaultSnapshot } from '../vaults/interfaces/vault-snapshot.interface';
+import { TEST_ADDR } from '../test/tests.utils';
 
 describe('vaults-indexer', () => {
   const chains = loadChains();
-  let indexedBlock: jest.SpyInstance<
-    Promise<number>,
-    [VaultDefinition: VaultDefinition, startBlock: number, alignment: number]
-  >;
-  let settToSnapshot: jest.SpyInstance<
-    Promise<VaultSnapshot | null>,
-    [chain: Chain, VaultDefinition: VaultDefinition, block: number]
-  >;
+  let vaultToSnapshot: jest.SpyInstance<Promise<IVaultSnapshot>, [chain: Chain, VaultDefinition: VaultDefinition]>;
   beforeEach(() => {
-    indexedBlock = jest.spyOn(indexerUtils, 'getIndexedBlock').mockImplementation(async () => Promise.resolve(100));
-    settToSnapshot = jest.spyOn(indexerUtils, 'settToSnapshot').mockImplementation(async () =>
-      Promise.resolve(
-        Object.assign(new VaultSnapshot(), {
-          address: '0x12d8E12e981be773cb777Be342a528285b3c7661',
-          height: 100,
-          timestamp: 123123123123,
-          balance: 180000000000000000,
-          supply: 18000000000000000000,
-          pricePerFullShare: 12,
-          value: 1000,
-        }),
-      ),
-    );
+    vaultToSnapshot = jest.spyOn(indexerUtils, 'vaultToSnapshot').mockImplementation(async (_chain, vault) => ({
+      address: vault.vaultToken,
+      block: 100,
+      timestamp: 123123123123,
+      balance: 13,
+      totalSupply: 13,
+      pricePerFullShare: 12,
+      value: 1000,
+      strategy: {
+        address: TEST_ADDR,
+        strategistFee: 10,
+        performanceFee: 10,
+        withdrawFee: 10,
+      },
+      available: 13,
+      boostWeight: 3500,
+    }));
     // Always throw because we need to exit infinite loop
     jest.spyOn(DataMapper.prototype, 'put').mockImplementation(() => {
       throw new Error();
@@ -46,8 +43,7 @@ describe('vaults-indexer', () => {
           vaultCount++;
         });
       });
-      expect(indexedBlock.mock.calls.length).toEqual(vaultCount);
-      expect(settToSnapshot.mock.calls.length).toEqual(vaultCount);
+      expect(vaultToSnapshot.mock.calls.length).toEqual(vaultCount);
     });
   });
 });

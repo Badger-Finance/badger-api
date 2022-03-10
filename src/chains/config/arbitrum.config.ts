@@ -42,7 +42,7 @@ export const arbitrumSetts: VaultDefinition[] = [
     name: 'wETH/Sushi',
     vaultToken: TOKENS.BARB_SUSHI_WETH_SUSHI,
     depositToken: TOKENS.ARB_SUSHI_WETH_SUSHI,
-    createdBlock: 13163959,
+
     protocol: Protocol.Sushiswap,
     strategy: '0x86f772C82914f5bFD168f99e208d0FC2C371e9C2',
   },
@@ -50,7 +50,7 @@ export const arbitrumSetts: VaultDefinition[] = [
     name: 'wBTC/wETH',
     vaultToken: TOKENS.BARB_SUSHI_WETH_WBTC,
     depositToken: TOKENS.ARB_SUSHI_WETH_WBTC,
-    createdBlock: 13163959,
+
     protocol: Protocol.Sushiswap,
     strategy: '0xA6827f0f14D0B83dB925B616d820434697328c22',
   },
@@ -59,7 +59,7 @@ export const arbitrumSetts: VaultDefinition[] = [
     vaultToken: TOKENS.BARB_CRV_RENBTC,
     depositToken: TOKENS.ARB_CRV_RENBTC,
     getTokenBalance: getCurveVaultTokenBalance,
-    createdBlock: 13237551,
+
     protocol: Protocol.Curve,
   },
   {
@@ -67,7 +67,7 @@ export const arbitrumSetts: VaultDefinition[] = [
     vaultToken: TOKENS.BARB_CRV_TRICRYPTO,
     depositToken: TOKENS.ARB_CRV_TRICRYPTO,
     getTokenBalance: getCurveVaultTokenBalance,
-    createdBlock: 13237551,
+
     protocol: Protocol.Curve,
   },
   {
@@ -75,7 +75,7 @@ export const arbitrumSetts: VaultDefinition[] = [
     vaultToken: TOKENS.BARB_CRV_TRICRYPTO_LITE,
     depositToken: TOKENS.ARB_CRV_TRICRYPTO,
     getTokenBalance: getCurveVaultTokenBalance,
-    createdBlock: 13321375,
+
     stage: Stage.Staging,
     state: VaultState.Experimental,
     protocol: Protocol.Curve,
@@ -84,28 +84,28 @@ export const arbitrumSetts: VaultDefinition[] = [
     name: 'Swapr/wETH',
     vaultToken: TOKENS.BARB_SWP_SWPR_WETH,
     depositToken: TOKENS.ARB_SWP_SWPR_WETH,
-    createdBlock: 13315350,
+
     protocol: Protocol.Swapr,
   },
   {
     name: 'wBTC/wETH',
     vaultToken: TOKENS.BARB_SWP_WBTC_WETH,
     depositToken: TOKENS.ARB_SWP_WBTC_WETH,
-    createdBlock: 13315350,
+
     protocol: Protocol.Swapr,
   },
   {
     name: 'Badger/wETH',
     vaultToken: TOKENS.BARB_SWP_BADGER_WETH,
     depositToken: TOKENS.ARB_SWP_BADGER_WETH,
-    createdBlock: 2188169,
+
     protocol: Protocol.Swapr,
   },
   {
     name: 'ibBTC/wETH',
     vaultToken: TOKENS.BARB_SWP_IBBTC_WETH,
     depositToken: TOKENS.ARB_SWP_IBBTC_WETH,
-    createdBlock: 2188169,
+
     protocol: Protocol.Swapr,
   },
 ];

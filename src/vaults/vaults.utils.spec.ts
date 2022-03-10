@@ -72,11 +72,21 @@ describe('vaults.utils', () => {
         netDeposit: 0,
         netShareDeposit: 0,
         token: {
+          symbol: 'TEST',
+          name: 'TEST',
           id: TEST_ADDR,
           decimals: 18,
+          totalSupply: 3,
         },
         pricePerFullShare: 1,
         totalSupply: 10,
+        symbol: 'TEST',
+        name: 'TEST',
+        decimals: 18,
+        grossDeposit: 1,
+        grossShareDeposit: 1,
+        grossShareWithdraw: 1,
+        grossWithdraw: 1,
       },
     }));
   }
@@ -148,13 +158,13 @@ describe('vaults.utils', () => {
     });
 
     describe('a cached vault exists', () => {
-      it('returns the vault sett', async () => {
+      it('returns the vault', async () => {
         const vault = randomVault();
         const snapshot = randomSnapshot(vault);
         setupMapper([snapshot]);
         const cached = await getCachedVault(vault);
         const expected = defaultVault(vault);
-        expected.pricePerFullShare = snapshot.balance / snapshot.supply;
+        expected.pricePerFullShare = snapshot.balance / snapshot.totalSupply;
         expected.balance = snapshot.balance;
         expected.value = snapshot.value;
         expected.boost = {

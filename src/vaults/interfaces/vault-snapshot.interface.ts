@@ -1,32 +1,14 @@
-import { attribute, hashKey, rangeKey, table } from '@aws/dynamodb-data-mapper-annotations';
-import { SETT_DATA } from '../../config/constants';
+import { VaultStrategy } from '@badger-dao/sdk';
 
-@table(SETT_DATA)
-export class VaultSnapshot {
-  @hashKey()
-  address!: string;
-
-  @attribute()
-  height!: number;
-
-  @rangeKey()
-  timestamp!: number;
-
-  @attribute()
-  balance!: number;
-
-  @attribute()
-  supply!: number;
-
-  @attribute()
-  available!: number;
-
-  @attribute()
-  pricePerFullShare!: number;
-
-  @attribute()
-  ratio?: number;
-
-  @attribute()
-  value!: number;
+export interface IVaultSnapshot {
+  block: number;
+  timestamp: number;
+  address: string;
+  available: number;
+  balance: number;
+  totalSupply: number;
+  pricePerFullShare: number;
+  value: number;
+  strategy: VaultStrategy;
+  boostWeight: number;
 }
