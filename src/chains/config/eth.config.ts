@@ -71,7 +71,6 @@ export const ethSetts: VaultDefinition[] = [
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_SBTC,
     protocol: Protocol.Convex,
-    state: VaultState.Deprecated,
   },
   {
     name: 'renBTC/wBTC',
@@ -100,7 +99,7 @@ export const ethSetts: VaultDefinition[] = [
     depositToken: TOKENS.UNI_BADGER_WBTC,
     vaultToken: TOKENS.BUNI_BADGER_WBTC,
     protocol: Protocol.Uniswap,
-    state: VaultState.Deprecated,
+    deprecated: true,
   },
   {
     name: 'wBTC/Digg',
@@ -143,7 +142,6 @@ export const ethSetts: VaultDefinition[] = [
     depositToken: TOKENS.WBTC,
     vaultToken: TOKENS.BVYWBTC,
     protocol: Protocol.Yearn,
-    state: VaultState.Deprecated,
   },
   {
     name: 'wBTC/ibBTC',
@@ -158,7 +156,6 @@ export const ethSetts: VaultDefinition[] = [
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_HBTC,
     protocol: Protocol.Convex,
-    state: VaultState.Deprecated,
   },
   {
     name: 'pBTC',
@@ -166,7 +163,6 @@ export const ethSetts: VaultDefinition[] = [
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_PBTC,
     protocol: Protocol.Convex,
-    state: VaultState.Deprecated,
   },
   {
     name: 'oBTC',
@@ -174,7 +170,6 @@ export const ethSetts: VaultDefinition[] = [
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_OBTC,
     protocol: Protocol.Convex,
-    state: VaultState.Deprecated,
   },
   {
     name: 'bBTC',
@@ -182,7 +177,6 @@ export const ethSetts: VaultDefinition[] = [
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_BBTC,
     protocol: Protocol.Convex,
-    state: VaultState.Deprecated,
   },
   {
     name: 'Tricrypto',
@@ -203,7 +197,6 @@ export const ethSetts: VaultDefinition[] = [
     depositToken: TOKENS.CVX,
     vaultToken: TOKENS.BCVX,
     protocol: Protocol.Convex,
-    state: VaultState.Deprecated,
   },
   {
     name: 'Tricrypto2',
