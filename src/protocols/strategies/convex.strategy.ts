@@ -78,9 +78,6 @@ export class ConvexStrategy {
     switch (vaultDefinition.vaultToken) {
       case TOKENS.BCRV_CVXBVECVX:
         return getLiquiditySources(chain, vaultDefinition);
-      case TOKENS.BCVX:
-      case TOKENS.BCVXCRV:
-      case TOKENS.BVECVX:
       default:
         return [];
     }
