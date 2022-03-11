@@ -265,25 +265,27 @@ export interface VaultHarvestData {
 
 // subgraph based emissions retrieval
 // should we put this into the sdk?
-export async function loadVaultGraphPerformances(chain: Chain, vault: VaultDefinition): Promise<CachedValueSource[]> {
-  const { vaultToken, depositToken } = vault;
+export async function loadVaultGraphPerformances(
+  chain: Chain,
+  vaultDefinition: VaultDefinition,
+): Promise<CachedValueSource[]> {
+  const { vaultToken } = vaultDefinition;
 
   const sdk = await chain.getSdk();
   const cutoff = Number(((Date.now() - ONE_DAY_MS * 21) / 1000).toFixed());
   const [vaultHarvests, treeDistributions] = await Promise.all([
     sdk.graph.loadSettHarvests({
       where: {
-        id: vaultToken.toLowerCase(),
+        sett: vaultToken.toLowerCase(),
         timestamp_gte: cutoff,
       },
     }),
     sdk.graph.loadBadgerTreeDistributions({
       where: {
-        id: vaultToken.toLowerCase(),
+        sett: vaultToken.toLowerCase(),
         timestamp_gte: cutoff,
       },
     }),
-    sdk.tokens.loadToken(depositToken),
   ]);
 
   const { settHarvests } = vaultHarvests;
@@ -310,7 +312,7 @@ export async function loadVaultGraphPerformances(chain: Chain, vault: VaultDefin
     };
   });
 
-  return estimateVaultPerformance(chain, vault, data);
+  return estimateVaultPerformance(chain, vaultDefinition, data);
 }
 
 async function estimateVaultPerformance(
