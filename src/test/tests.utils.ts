@@ -147,12 +147,6 @@ export function randomSnapshots(vaultDefinition?: VaultDefinition, count?: numbe
   return snapshots;
 }
 
-export function randomPerformance(): [IVaultSnapshot, IVaultSnapshot] {
-  const [current, initial] = randomSnapshots(randomVault(), 2);
-  initial.timestamp = current.timestamp - ONE_DAY_MS;
-  return [current, initial];
-}
-
 export function setupChainGasPrices() {
   jest.spyOn(Ethereum.prototype, 'getGasPrices').mockImplementation(async () => ({
     rapid: { maxFeePerGas: 223.06, maxPriorityFeePerGas: 3.04 },
