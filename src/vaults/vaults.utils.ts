@@ -10,16 +10,7 @@ import { VaultDefinition } from './interfaces/vault-definition.interface';
 import { EmissionControl__factory } from '../contracts';
 import { VaultStrategy } from './interfaces/vault-strategy.interface';
 import { TOKENS } from '../config/tokens.config';
-import {
-  keyBy,
-  Network,
-  Protocol,
-  Vault,
-  VaultBehavior,
-  VaultHarvestEvent,
-  VaultState,
-  VaultType,
-} from '@badger-dao/sdk';
+import { keyBy, Network, Protocol, Vault, VaultBehavior, VaultState, VaultType } from '@badger-dao/sdk';
 import { getPrice } from '../prices/prices.utils';
 import { TokenPrice } from '../prices/interface/token-price.interface';
 import { PricingType } from '../prices/enums/pricing-type.enum';
@@ -31,7 +22,7 @@ import { getVaultCachedValueSources, tokenEmission } from '../protocols/protocol
 import { getVault } from '../indexers/indexer.utils';
 import { HistoricVaultSnapshot } from './types/historic-vault-snapshot';
 import { VaultSnapshot } from './types/vault-snapshot';
-import { VaultTreeDistributionEvent } from '@badger-dao/sdk/lib/vaults/interfaces/vault-tree-distribution-event.interface';
+import { VaultHarvestData } from './interfaces/vault-harvest-data.interface';
 
 export const VAULT_SOURCE = 'Vault Compounding';
 
@@ -237,30 +228,37 @@ export async function loadVaultEventPerformances(
   return estimateVaultPerformance(chain, vaultDefinition, data);
 }
 
+/**
+ * Extrapolates a one year APR for a given vault based on compounding and emissions based on $100 deposit.
+ * @param compoundApr Base compound APR of vault
+ * @param emissionApr Emission APR of the emitted vault
+ * @param emissionCompoundApr Derivative compound APR of the tmitted vault
+ * @returns Extraposedat one year APR given current yields continue
+ */
 export function estimateDerivativeEmission(
   compoundApr: number,
   emissionApr: number,
   emissionCompoundApr: number,
 ): number {
+  // start with $100 deposited into the vault
   let currentValueCompounded = 100;
   let currentValueEmitted = 0;
   let currentValueEmittedCompounded = 0;
   for (let i = 0; i < 365; i++) {
+    // accrue emitted yield from emissionApr
     const emitted = currentValueCompounded * (emissionApr / 365);
     currentValueCompounded += currentValueCompounded * (compoundApr / 365);
+    // accrue compounded yield from emitted tokens
     const emittedCompounded = currentValueEmitted * (emissionCompoundApr / 365);
+    // account for total yield emitted
     currentValueEmitted += emitted;
+    // account for the actual compounding portion on the emitted yield (what we are looking for)
     currentValueEmittedCompounded += emittedCompounded;
+    // account for the compounded yield
     currentValueEmitted += emittedCompounded;
   }
-  const total = currentValueCompounded + currentValueEmitted + currentValueEmittedCompounded;
+  const total = currentValueCompounded + currentValueEmitted;
   return (currentValueEmittedCompounded / total) * 100;
-}
-
-export interface VaultHarvestData {
-  timestamp: number;
-  harvests: VaultHarvestEvent[];
-  treeDistributions: VaultTreeDistributionEvent[];
 }
 
 // subgraph based emissions retrieval
