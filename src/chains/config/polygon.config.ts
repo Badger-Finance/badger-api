@@ -20,7 +20,6 @@ export class Polygon extends Chain {
       maticSetts,
       rpc[Network.Polygon],
       new BaseStrategy(Network.Polygon, Object.keys(maticTokensConfig)),
-      15768000,
       '0x2C798FaFd37C7DCdcAc2498e19432898Bc51376b',
       '0xd0ee2a5108b8800d688abc834445fd03b3b2738e',
     );

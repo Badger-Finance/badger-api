@@ -28,10 +28,7 @@ describe('vaults-indexer', () => {
       available: 13,
       boostWeight: 3500,
     }));
-    // Always throw because we need to exit infinite loop
-    jest.spyOn(DataMapper.prototype, 'put').mockImplementation(() => {
-      throw new Error();
-    });
+    jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
   });
 
   describe('indexProtocolVaults', () => {

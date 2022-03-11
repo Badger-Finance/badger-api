@@ -19,7 +19,6 @@ export class Avalanche extends Chain {
       avalancheSetts,
       rpc[Network.Avalanche],
       new BaseStrategy(Network.Avalanche, Object.keys(avalancheTokensConfig)),
-      10512000,
     );
     Chain.register(this.network, this);
   }

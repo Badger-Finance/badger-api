@@ -42,11 +42,13 @@ export async function getUserAccounts(chain: Chain, accounts: string[]): Promise
 }
 
 export async function getBoostFile(chain: Chain): Promise<BoostData | null> {
-  if (!chain.rewardsLogger || !chain.badgerTree) {
+  try {
+    const boostFile = await getObject(REWARD_DATA, `badger-boosts-${parseInt(chain.chainId, 16)}.json`);
+    return JSON.parse(boostFile.toString('utf-8'));
+  } catch (err) {
+    console.warn({ message: `${chain.name} missing boost file`, err });
     return null;
   }
-  const boostFile = await getObject(REWARD_DATA, `badger-boosts-${parseInt(chain.chainId, 16)}.json`);
-  return JSON.parse(boostFile.toString('utf-8'));
 }
 
 export async function getAccounts(chain: Chain): Promise<string[]> {

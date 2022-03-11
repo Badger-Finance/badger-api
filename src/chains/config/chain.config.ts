@@ -24,8 +24,6 @@ export abstract class Chain {
   readonly provider: ethers.providers.JsonRpcProvider;
   readonly batchProvider: providers.MulticallProvider;
   readonly strategy: ChainStrategy;
-  readonly graphUrl: string;
-  readonly blocksPerYear: number;
   readonly badgerTree?: string;
   readonly rewardsLogger?: string;
   readonly emissionControl?: string;
@@ -39,7 +37,6 @@ export abstract class Chain {
     vaults: VaultDefinition[],
     rpcUrl: string,
     strategy: ChainStrategy,
-    blocksPerYear: number,
     badgerTree?: string,
     rewardsLogger?: string,
     emissionControl?: string,
@@ -53,10 +50,6 @@ export abstract class Chain {
     this.provider = new ethers.providers.JsonRpcProvider(rpcUrl);
     this.batchProvider = new providers.MulticallProvider(this.provider);
     this.strategy = strategy;
-    this.graphUrl = `https://api.thegraph.com/subgraphs/name/axejintao/badger-dao${
-      network !== Network.Ethereum ? `-${symbol.toLowerCase()}` : ''
-    }`;
-    this.blocksPerYear = blocksPerYear;
     this.badgerTree = badgerTree;
     this.rewardsLogger = rewardsLogger;
     this.emissionControl = emissionControl;
