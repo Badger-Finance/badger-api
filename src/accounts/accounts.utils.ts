@@ -46,6 +46,7 @@ export async function getBoostFile(chain: Chain): Promise<BoostData | null> {
     const boostFile = await getObject(REWARD_DATA, `badger-boosts-${parseInt(chain.chainId, 16)}.json`);
     return JSON.parse(boostFile.toString('utf-8'));
   } catch (err) {
+    console.warn({ message: `${chain.name} missing boost file`, err });
     return null;
   }
 }
