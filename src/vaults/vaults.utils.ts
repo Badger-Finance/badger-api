@@ -248,7 +248,7 @@ export function estimateDerivativeEmission(
   let currentValueCompounded = 100;
   let currentValueEmitted = 0;
   let currentValueEmittedCompounded = 0;
-  let lastEmissionTime = 1;
+  let lastEmissionTime = 0;
   const emissionsDivisor = 365 / emissionStep;
   const compoundingDivisor = 365 / compoundingStep;
   for (let i = 0; i < 365; i += compoundingStep) {
@@ -257,7 +257,7 @@ export function estimateDerivativeEmission(
     const emittedCompounded = currentValueEmitted * (emissionCompoundApr / compoundingDivisor);
 
     // We only accrue emissions if there was an emissions event
-    if (i % lastEmissionTime > emissionStep) {
+    if (lastEmissionTime + emissionStep >= i) {
       // accrue emitted yield from emissionApr
       const emitted = currentValueCompounded * (emissionApr / emissionsDivisor);
       // account for total yield emitted
