@@ -6,7 +6,6 @@ import { ONE_YEAR_SECONDS, REWARD_DATA } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
 import { getPrice } from '../prices/prices.utils';
 import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
-import { uniformPerformance } from '../protocols/interfaces/performance.interface';
 import { createValueSource } from '../protocols/interfaces/value-source.interface';
 import { tokenEmission } from '../protocols/protocols.utils';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
@@ -44,7 +43,7 @@ export async function getTreeDistribution(chain: Chain): Promise<RewardMerkleDis
 
 export function noRewards(VaultDefinition: VaultDefinition, token: Token) {
   return valueSourceToCachedValueSource(
-    createValueSource(`${token.symbol} Rewards`, uniformPerformance(0)),
+    createValueSource(`${token.symbol} Rewards`, 0),
     VaultDefinition,
     tokenEmission(token),
   );

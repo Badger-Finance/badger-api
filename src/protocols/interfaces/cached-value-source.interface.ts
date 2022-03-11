@@ -17,22 +17,7 @@ export class CachedValueSource {
   apr!: number;
 
   @attribute()
-  oneDay!: number;
-
-  @attribute()
-  threeDay!: number;
-
-  @attribute()
-  sevenDay!: number;
-
-  @attribute()
-  thirtyDay!: number;
-
-  @attribute()
   boostable!: boolean;
-
-  @attribute()
-  harvestable!: boolean;
 
   @attribute()
   minApr!: number;
@@ -51,13 +36,6 @@ export class CachedValueSource {
       name: this.name,
       apr: this.apr,
       boostable: this.boostable,
-      harvestable: this.harvestable,
-      performance: {
-        oneDay: this.oneDay,
-        threeDay: this.threeDay,
-        sevenDay: this.sevenDay,
-        thirtyDay: this.thirtyDay,
-      },
       minApr: this.minApr,
       maxApr: this.maxApr,
     };
