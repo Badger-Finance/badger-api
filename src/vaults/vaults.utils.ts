@@ -241,24 +241,36 @@ export function estimateDerivativeEmission(
   compoundApr: number,
   emissionApr: number,
   emissionCompoundApr: number,
+  compoundingStep = 1,
+  emissionStep = 1,
 ): number {
   // start with $100 deposited into the vault
   let currentValueCompounded = 100;
   let currentValueEmitted = 0;
   let currentValueEmittedCompounded = 0;
-  for (let i = 0; i < 365; i++) {
-    // accrue emitted yield from emissionApr
-    const emitted = currentValueCompounded * (emissionApr / 365);
-    currentValueCompounded += currentValueCompounded * (compoundApr / 365);
+  let lastEmissionTime = 1;
+  const emissionsDivisor = 365 / emissionStep;
+  const compoundingDivisor = 365 / compoundingStep;
+  for (let i = 0; i < 365; i += compoundingStep) {
+    currentValueCompounded += currentValueCompounded * (compoundApr / compoundingDivisor);
     // accrue compounded yield from emitted tokens
-    const emittedCompounded = currentValueEmitted * (emissionCompoundApr / 365);
-    // account for total yield emitted
-    currentValueEmitted += emitted;
+    const emittedCompounded = currentValueEmitted * (emissionCompoundApr / compoundingDivisor);
+
+    // We only accrue emissions if there was an emissions event
+    if (i % lastEmissionTime > emissionStep) {
+      // accrue emitted yield from emissionApr
+      const emitted = currentValueCompounded * (emissionApr / emissionsDivisor);
+      // account for total yield emitted
+      currentValueEmitted += emitted;
+      lastEmissionTime = i;
+    }
+
     // account for the actual compounding portion on the emitted yield (what we are looking for)
     currentValueEmittedCompounded += emittedCompounded;
     // account for the compounded yield
     currentValueEmitted += emittedCompounded;
   }
+
   const total = currentValueCompounded + currentValueEmitted;
   return (currentValueEmittedCompounded / total) * 100;
 }
