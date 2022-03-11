@@ -1,4 +1,4 @@
-import { Network, Protocol, ValueSource } from '@badger-dao/sdk';
+import { Network, Protocol } from '@badger-dao/sdk';
 import { getBoostFile, getCachedAccount } from '../accounts/accounts.utils';
 import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
@@ -6,14 +6,13 @@ import { ONE_YEAR_SECONDS, REWARD_DATA } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
 import { getPrice } from '../prices/prices.utils';
 import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
-import { createValueSource } from '../protocols/interfaces/value-source.interface';
+import { createValueSource, ValueSource } from '../protocols/interfaces/value-source.interface';
 import { tokenEmission } from '../protocols/protocols.utils';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { Token } from '../tokens/interfaces/token.interface';
-import { formatBalance, getToken } from '../tokens/tokens.utils';
+import { getToken } from '../tokens/tokens.utils';
 import { RewardMerkleDistribution } from './interfaces/merkle-distributor.interface';
-import { BadgerTree__factory, RewardsLogger, RewardsLogger__factory } from '../contracts';
-import { EmissionScheduleApi } from './interfaces/reward-schedules-vault.interface';
+import { BadgerTree__factory, RewardsLogger } from '../contracts';
 import { EmissionSchedule } from '@badger-dao/sdk/lib/rewards/interfaces/emission-schedule.interface';
 import { BigNumber } from '@ethersproject/bignumber';
 import { UnprocessableEntity } from '@tsed/exceptions';
@@ -239,43 +238,4 @@ export async function getProtocolValueSources(
     console.log(error);
     return [];
   }
-}
-
-export function getRewordLoggerInst(chain: Chain): RewardsLoggerInst | undefined {
-  let rewardsLogger: RewardsLoggerInst | undefined;
-
-  if (chain.rewardsLogger) {
-    rewardsLogger = RewardsLogger__factory.connect(chain.rewardsLogger, chain.batchProvider);
-  }
-
-  return rewardsLogger;
-}
-
-export async function getRewardSchedules(
-  chain: Chain,
-  address: string,
-  rewardsLogger: RewardsLoggerInst,
-): Promise<EmissionScheduleApi[]> {
-  const vaultSchedules = await rewardsLogger.getAllUnlockSchedulesFor(address);
-
-  return vaultSchedules.map(({ beneficiary, token, totalAmount, start, end, duration }) => {
-    const { decimals } = chain.tokens[token];
-    const amount = formatBalance(totalAmount, decimals);
-
-    const startNum = start.toNumber();
-    const endNum = end.toNumber();
-    const durationNum = duration.toNumber();
-
-    const complitionPercent = Math.round(durationNum / ((endNum - startNum) / 100));
-
-    return {
-      vault: address,
-      beneficiary,
-      amount,
-      token,
-      start: startNum,
-      end: endNum,
-      compPercent: complitionPercent,
-    };
-  });
 }
