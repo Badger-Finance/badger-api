@@ -196,16 +196,6 @@ export async function getVaultValueSources(
       sources = sources.filter((s) => s.type !== SourceType.Compound && s.type !== SourceType.PreCompound);
     }
 
-    const ARB_CRV_SETTS = new Set([TOKENS.BARB_CRV_RENBTC, TOKENS.BARB_CRV_TRICRYPTO, TOKENS.BARB_CRV_TRICRYPTO_LITE]);
-    if (ARB_CRV_SETTS.has(vaultDefinition.vaultToken)) {
-      const compounding = sources.find((s) => s.type === SourceType.Compound);
-      if (compounding) {
-        const crvSource = createValueSource('CRV Rewards', compounding.apr);
-        sources.push(
-          valueSourceToCachedValueSource(crvSource, vaultDefinition, tokenEmission(getToken(TOKENS.ARB_CRV))),
-        );
-      }
-    }
     return sources;
   } catch (err) {
     console.log({ vaultDefinition, err, sources });

@@ -3,14 +3,14 @@ import { BadRequest, NotFound, UnprocessableEntity } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
-import { ONE_DAY_MS, ONE_YEAR_SECONDS } from '../config/constants';
+import { DEBUG, ONE_DAY_MS, ONE_YEAR_SECONDS } from '../config/constants';
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
 import { formatBalance, getToken } from '../tokens/tokens.utils';
 import { VaultDefinition } from './interfaces/vault-definition.interface';
 import { EmissionControl__factory } from '../contracts';
 import { VaultStrategy } from './interfaces/vault-strategy.interface';
 import { TOKENS } from '../config/tokens.config';
-import { keyBy, Network, Protocol, Vault, VaultBehavior, VaultState, VaultType } from '@badger-dao/sdk';
+import { gqlGenT, keyBy, Network, Protocol, Vault, VaultBehavior, VaultState, VaultType } from '@badger-dao/sdk';
 import { getPrice } from '../prices/prices.utils';
 import { TokenPrice } from '../prices/interface/token-price.interface';
 import { PricingType } from '../prices/enums/pricing-type.enum';
@@ -201,12 +201,14 @@ export async function getVaultPerformance(
     getRewardEmission(chain, vaultDefinition),
     getProtocolValueSources(chain, vaultDefinition),
   ]);
-  let vaultSources = [];
+  let vaultSources: CachedValueSource[] = [];
   try {
     vaultSources = await loadVaultEventPerformances(chain, vaultDefinition);
     vaultSources.push();
   } catch (err) {
-    console.log(`${vaultDefinition.name} vault APR estimation fallback to badger subgraph`);
+    if (DEBUG) {
+      console.log(`${vaultDefinition.name} vault APR estimation fallback to badger subgraph`);
+    }
     vaultSources = await loadVaultGraphPerformances(chain, vaultDefinition);
   }
   return [...vaultSources, ...rewardEmissions, ...protocol];
@@ -271,7 +273,8 @@ export async function loadVaultGraphPerformances(
 
   const sdk = await chain.getSdk();
   const cutoff = Number(((Date.now() - ONE_DAY_MS * 21) / 1000).toFixed());
-  const [vaultHarvests, treeDistributions] = await Promise.all([
+
+  let [vaultHarvests, treeDistributions] = await Promise.all([
     sdk.graph.loadSettHarvests({
       where: {
         sett: vaultToken.toLowerCase(),
@@ -286,15 +289,56 @@ export async function loadVaultGraphPerformances(
     }),
   ]);
 
-  const { settHarvests } = vaultHarvests;
-  const { badgerTreeDistributions } = treeDistributions;
+  let { settHarvests } = vaultHarvests;
+  let { badgerTreeDistributions } = treeDistributions;
 
+  let data = constructGraphVaultData(settHarvests, badgerTreeDistributions);
+  // if there are no recent viable options, attempt to use the full vault history
+  if (data.length <= 1) {
+    [vaultHarvests, treeDistributions] = await Promise.all([
+      sdk.graph.loadSettHarvests({
+        where: {
+          sett: vaultToken.toLowerCase(),
+          timestamp_gte: cutoff,
+        },
+      }),
+      sdk.graph.loadBadgerTreeDistributions({
+        where: {
+          sett: vaultToken.toLowerCase(),
+          timestamp_gte: cutoff,
+        },
+      }),
+    ]);
+    settHarvests = vaultHarvests.settHarvests;
+    badgerTreeDistributions = treeDistributions.badgerTreeDistributions;
+    if (DEBUG) {
+      console.log(
+        `OVERRIDE ${vaultDefinition.name} with full historic harvest data (${
+          settHarvests.length + badgerTreeDistributions.length
+        })`,
+      );
+    }
+  }
+
+  data = constructGraphVaultData(settHarvests, badgerTreeDistributions);
+  // if we still don't have harvests or distributions - don't bother there is nothing to compute
+  if (data.length <= 1) {
+    return [];
+  }
+
+  return estimateVaultPerformance(chain, vaultDefinition, data);
+}
+
+function constructGraphVaultData(
+  settHarvests: gqlGenT.SettHarvestsQuery['settHarvests'],
+  badgerTreeDistributions: gqlGenT.BadgerTreeDistributionsQuery['badgerTreeDistributions'],
+): VaultHarvestData[] {
   const harvestsByTimestamp = keyBy(settHarvests, (harvest) => harvest.timestamp);
   const treeDistributionsByTimestamp = keyBy(badgerTreeDistributions, (distribution) => distribution.timestamp);
   const timestamps = Array.from(
     new Set([...harvestsByTimestamp.keys(), ...treeDistributionsByTimestamp.keys()]).values(),
   );
-  const data = timestamps.map((t) => {
+  return timestamps.map((t) => {
     const timestamp = Number(t);
     const currentHarvests = harvestsByTimestamp.get(timestamp) ?? [];
     const currentDistributions = treeDistributionsByTimestamp.get(timestamp) ?? [];
@@ -309,8 +353,6 @@ export async function loadVaultGraphPerformances(
       })),
     };
   });
-
-  return estimateVaultPerformance(chain, vaultDefinition, data);
 }
 
 async function estimateVaultPerformance(
@@ -321,7 +363,7 @@ async function estimateVaultPerformance(
   const recentHarvests = data.sort((a, b) => b.timestamp - a.timestamp);
 
   if (recentHarvests.length <= 1) {
-    throw new Error('Vault does not have adequate harvest history!');
+    throw new Error(`${vaultDefinition.name} does not have adequate harvest history`);
   }
 
   const vault = await getCachedVault(vaultDefinition);
