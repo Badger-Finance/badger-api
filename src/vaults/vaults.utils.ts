@@ -10,20 +10,28 @@ import { VaultDefinition } from './interfaces/vault-definition.interface';
 import { EmissionControl__factory } from '../contracts';
 import { VaultStrategy } from './interfaces/vault-strategy.interface';
 import { TOKENS } from '../config/tokens.config';
-import { Network, Protocol, Vault, VaultBehavior, VaultState, VaultType } from '@badger-dao/sdk';
+import {
+  keyBy,
+  Network,
+  Protocol,
+  Vault,
+  VaultBehavior,
+  VaultHarvestEvent,
+  VaultState,
+  VaultType,
+} from '@badger-dao/sdk';
 import { getPrice } from '../prices/prices.utils';
 import { TokenPrice } from '../prices/interface/token-price.interface';
 import { PricingType } from '../prices/enums/pricing-type.enum';
 import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
 import { createValueSource } from '../protocols/interfaces/value-source.interface';
-import { uniformPerformance } from '../protocols/interfaces/performance.interface';
 import { getProtocolValueSources, getRewardEmission, valueSourceToCachedValueSource } from '../rewards/rewards.utils';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { getVaultCachedValueSources, tokenEmission } from '../protocols/protocols.utils';
 import { getVault } from '../indexers/indexer.utils';
 import { HistoricVaultSnapshot } from './types/historic-vault-snapshot';
 import { VaultSnapshot } from './types/vault-snapshot';
-import { HarvestEvent, TreeDistributionEvent } from '@badger-dao/sdk/lib/contracts/Strategy';
+import { VaultTreeDistributionEvent } from '@badger-dao/sdk/lib/vaults/interfaces/vault-tree-distribution-event.interface';
 
 export const VAULT_SOURCE = 'Vault Compounding';
 
@@ -198,18 +206,20 @@ export async function getVaultPerformance(
   chain: Chain,
   vaultDefinition: VaultDefinition,
 ): Promise<CachedValueSource[]> {
-  const rewardEmissions = await getRewardEmission(chain, vaultDefinition);
+  const [rewardEmissions, protocol] = await Promise.all([
+    getRewardEmission(chain, vaultDefinition),
+    getProtocolValueSources(chain, vaultDefinition),
+  ]);
+  let vaultSources = [];
   try {
-    const [eventSources, protocol] = await Promise.all([
-      loadVaultEventPerformances(chain, vaultDefinition),
-      getProtocolValueSources(chain, vaultDefinition),
-    ]);
-
-    return [...eventSources, ...protocol, ...rewardEmissions];
+    vaultSources = await loadVaultEventPerformances(chain, vaultDefinition);
+    vaultSources.push();
   } catch (err) {
-    const [protocol] = await Promise.all([getProtocolValueSources(chain, vaultDefinition, true)]);
-    return [...protocol, ...rewardEmissions];
+    console.error(err);
+    console.log(`${vaultDefinition.name} fallback to APR estimation from badger subgraph`);
+    vaultSources = await loadVaultGraphPerformances(chain, vaultDefinition);
   }
+  return [...vaultSources, ...rewardEmissions, ...protocol];
 }
 
 export async function loadVaultEventPerformances(
@@ -225,6 +235,88 @@ export async function loadVaultEventPerformances(
   const cutoff = (Date.now() - ONE_DAY_MS * 21) / 1000;
   const { data } = await sdk.vaults.listHarvests({ address: vaultDefinition.vaultToken, timestamp_gte: cutoff });
 
+  return estimateVaultPerformance(chain, vaultDefinition, data);
+}
+
+export function estimateDerivativeEmission(
+  compoundApr: number,
+  emissionApr: number,
+  emissionCompoundApr: number,
+): number {
+  let currentValueCompounded = 100;
+  let currentValueEmitted = 0;
+  let currentValueEmittedCompounded = 0;
+  for (let i = 0; i < 365; i++) {
+    const emitted = currentValueCompounded * (emissionApr / 365);
+    currentValueCompounded += currentValueCompounded * (compoundApr / 365);
+    const emittedCompounded = currentValueEmitted * (emissionCompoundApr / 365);
+    currentValueEmitted += emitted;
+    currentValueEmittedCompounded += emittedCompounded;
+    currentValueEmitted += emittedCompounded;
+  }
+  const total = currentValueCompounded + currentValueEmitted + currentValueEmittedCompounded;
+  return (currentValueEmittedCompounded / total) * 100;
+}
+
+export interface VaultHarvestData {
+  timestamp: number;
+  harvests: VaultHarvestEvent[];
+  treeDistributions: VaultTreeDistributionEvent[];
+}
+
+// subgraph based emissions retrieval
+// should we put this into the sdk?
+export async function loadVaultGraphPerformances(chain: Chain, vault: VaultDefinition) {
+  const { vaultToken, depositToken } = vault;
+
+  const sdk = await chain.getSdk();
+  const cutoff = (Date.now() - ONE_DAY_MS * 21) / 1000;
+  const [vaultHarvests, treeDistributions] = await Promise.all([
+    sdk.graph.loadSettHarvests({
+      where: {
+        id: vaultToken.toLowerCase(),
+        timestamp_gte: cutoff,
+      },
+    }),
+    sdk.graph.loadBadgerTreeDistributions({
+      where: {
+        id: vaultToken.toLowerCase(),
+        timestamp_gte: cutoff,
+      },
+    }),
+    sdk.tokens.loadToken(depositToken),
+  ]);
+
+  const { settHarvests } = vaultHarvests;
+  const { badgerTreeDistributions } = treeDistributions;
+
+  const harvestsByTimestamp = keyBy(settHarvests, (harvest) => harvest.timestamp);
+  const treeDistributionsByTimestamp = keyBy(badgerTreeDistributions, (distribution) => distribution.timestamp);
+  const timestamps = [...new Set([...Object.keys(harvestsByTimestamp), ...Object.keys(treeDistributionsByTimestamp)])];
+  const data = timestamps.map((t) => {
+    const timestamp = Number(t);
+    const currentHarvests = harvestsByTimestamp.get(timestamp) ?? [];
+    const currentDistributions = treeDistributionsByTimestamp.get(timestamp) ?? [];
+    return {
+      timestamp,
+      harvests: currentHarvests.map((h) => ({ timestamp, block: h.blockNumber, harvested: h.amount })),
+      treeDistributions: currentDistributions.map((d) => ({
+        timestamp,
+        block: d.blockNumber,
+        token: d.token.id,
+        amount: d.amount,
+      })),
+    };
+  });
+
+  return estimateVaultPerformance(chain, vault, data);
+}
+
+async function estimateVaultPerformance(
+  chain: Chain,
+  vaultDefinition: VaultDefinition,
+  data: VaultHarvestData[],
+): Promise<CachedValueSource[]> {
   const recentHarvests = data.sort((a, b) => b.timestamp - a.timestamp);
 
   if (recentHarvests.length <= 1) {
@@ -269,14 +361,14 @@ export async function loadVaultEventPerformances(
   const periods = Math.min(365, durationScalar * (measuredHarvests.length - 1));
   const compoundApr = (totalHarvestedTokens / measuredBalance) * durationScalar;
   const compoundApy = (1 + compoundApr / periods) ** periods - 1;
-  const compoundSourceApr = createValueSource(VAULT_SOURCE, uniformPerformance(compoundApr * 100), true);
+  const compoundSourceApr = createValueSource(VAULT_SOURCE, compoundApr * 100);
   const cachedCompoundSourceApr = valueSourceToCachedValueSource(
     compoundSourceApr,
     vaultDefinition,
     SourceType.PreCompound,
   );
   valueSources.push(cachedCompoundSourceApr);
-  const compoundSource = createValueSource(VAULT_SOURCE, uniformPerformance(compoundApy * 100));
+  const compoundSource = createValueSource(VAULT_SOURCE, compoundApy * 100);
   const cachedCompoundSource = valueSourceToCachedValueSource(compoundSource, vaultDefinition, SourceType.Compound);
   valueSources.push(cachedCompoundSource);
 
@@ -301,7 +393,7 @@ export async function loadVaultEventPerformances(
     const tokensEmitted = formatBalance(amount, tokenEmitted.decimals);
     const valueEmitted = tokensEmitted * price;
     const emissionApr = (valueEmitted / measuredValue) * durationScalar;
-    const emissionSource = createValueSource(`${tokenEmitted.symbol} Rewards`, uniformPerformance(emissionApr * 100));
+    const emissionSource = createValueSource(`${tokenEmitted.symbol} Rewards`, emissionApr * 100);
     const cachedEmissionSource = valueSourceToCachedValueSource(
       emissionSource,
       vaultDefinition,
@@ -318,81 +410,11 @@ export async function loadVaultEventPerformances(
         const compoundingSourceApy = estimateDerivativeEmission(compoundApr, emissionApr, compoundingSource.apr / 100);
         const sourceName = `${getToken(emittedVault.vaultToken).name} Compounding`;
         const sourceType = `Derivative ${sourceName}`.replace(' ', '_').toLowerCase();
-        const derivativeSource = createValueSource(sourceName, uniformPerformance(compoundingSourceApy));
+        const derivativeSource = createValueSource(sourceName, compoundingSourceApy);
         valueSources.push(valueSourceToCachedValueSource(derivativeSource, vaultDefinition, sourceType));
       }
     } catch {} // ignore error for non vaults
   }
 
   return valueSources;
-}
-
-export function estimateDerivativeEmission(
-  compoundApr: number,
-  emissionApr: number,
-  emissionCompoundApr: number,
-): number {
-  let currentValueCompounded = 100;
-  let currentValueEmitted = 0;
-  let currentValueEmittedCompounded = 0;
-  for (let i = 0; i < 365; i++) {
-    const emitted = currentValueCompounded * (emissionApr / 365);
-    currentValueCompounded += currentValueCompounded * (compoundApr / 365);
-    const emittedCompounded = currentValueEmitted * (emissionCompoundApr / 365);
-    currentValueEmitted += emitted;
-    currentValueEmittedCompounded += emittedCompounded;
-    currentValueEmitted += emittedCompounded;
-  }
-  const total = currentValueCompounded + currentValueEmitted + currentValueEmittedCompounded;
-  return (currentValueEmittedCompounded / total) * 100;
-}
-
-// subgraph based emissions retrieval
-// should we put this into the sdk?
-export async function loadVaultGraphPerformances(chain: Chain, vault: VaultDefinition) {
-  const { vaultToken, depositToken } = vault;
-
-  const sdk = await chain.getSdk();
-  const cutoff = (Date.now() - ONE_DAY_MS * 21) / 1000;
-
-  const [vaultHarvests, treeDistributions, depositTokenInfo] = await Promise.all([
-    sdk.graph.loadSettHarvests({
-      where: {
-        id: vaultToken.toLowerCase(),
-        timestamp_gte: cutoff,
-      },
-    }),
-    sdk.graph.loadBadgerTreeDistributions({
-      where: {
-        id: vaultToken.toLowerCase(),
-        timestamp_gte: cutoff,
-      },
-    }),
-    sdk.tokens.loadToken(depositToken),
-  ]);
-
-  const { settHarvests } = vaultHarvests;
-  const { badgerTreeDistributions } = treeDistributions;
-
-  let harvested = 0;
-  if (settHarvests) {
-    for (const harvest of settHarvests) {
-      const { amount } = harvest;
-      harvested += formatBalance(amount, depositTokenInfo.decimals);
-    }
-  }
-}
-
-export interface VaultHarvestData {
-  timestamp: number;
-  harvests: HarvestEvent[];
-  treeDsitributions: TreeDistributionEvent[];
-}
-
-function estimateCompoundApr(data: VaultHarvestData[]) {
-  const recentHarvests = data.sort((a, b) => b.timestamp - a.timestamp);
-
-  if (recentHarvests.length <= 1) {
-    throw new Error('Vault does not have adequate harvest history!');
-  }
 }

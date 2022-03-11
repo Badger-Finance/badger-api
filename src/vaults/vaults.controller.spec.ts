@@ -2,7 +2,6 @@ import { Vault } from '@badger-dao/sdk';
 import { PlatformTest } from '@tsed/common';
 import { BadRequest } from '@tsed/exceptions';
 import SuperTest from 'supertest';
-import { uniformPerformance } from '../protocols/interfaces/performance.interface';
 import { createValueSource } from '../protocols/interfaces/value-source.interface';
 import * as protocolsUtils from '../protocols/protocols.utils';
 import { Server } from '../Server';
@@ -36,10 +35,10 @@ describe('SettsController', () => {
       .spyOn(protocolsUtils, 'getVaultCachedValueSources')
       .mockImplementation(async (vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> => {
         const performance = parseInt(vaultDefinition.vaultToken.slice(0, 5), 16) / 100;
-        const underlying = createValueSource(vaultsUtils.VAULT_SOURCE, uniformPerformance(performance));
-        const badger = createValueSource('Badger Rewards', uniformPerformance(performance));
-        const digg = createValueSource('Digg Rewards', uniformPerformance(performance));
-        const fees = createValueSource('Curve Trading Fees', uniformPerformance(performance));
+        const underlying = createValueSource(vaultsUtils.VAULT_SOURCE, performance);
+        const badger = createValueSource('Badger Rewards', performance);
+        const digg = createValueSource('Digg Rewards', performance);
+        const fees = createValueSource('Curve Trading Fees', performance);
         return [
           valueSourceToCachedValueSource(underlying, vaultDefinition, SourceType.Compound),
           valueSourceToCachedValueSource(badger, vaultDefinition, SourceType.Emission),

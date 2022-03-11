@@ -155,15 +155,10 @@ export async function getRewardEmission(chain: Chain, vaultDefinition: VaultDefi
     if (vault.boost.enabled && token.address === chain.getBadgerTokenAddress()) {
       const boostedAPR = (vault.boost.weight / 10_000) * proRataAPR;
       proRataAPR = proRataAPR - boostedAPR;
-      const boostedSource = createValueSource(
-        `Boosted ${token.name} Rewards`,
-        uniformPerformance(boostedAPR),
-        false,
-        boostRange,
-      );
+      const boostedSource = createValueSource(`Boosted ${token.name} Rewards`, boostedAPR, boostRange);
       emissionSources.push(valueSourceToCachedValueSource(boostedSource, vaultDefinition, tokenEmission(token, true)));
     }
-    const proRataSource = createValueSource(`${token.name} Rewards`, uniformPerformance(proRataAPR));
+    const proRataSource = createValueSource(`${token.name} Rewards`, proRataAPR);
     emissionSources.push(valueSourceToCachedValueSource(proRataSource, vaultDefinition, tokenEmission(token)));
   }
   return emissionSources;
@@ -180,11 +175,6 @@ export function valueSourceToCachedValueSource(
     type,
     apr: valueSource.apr,
     name: valueSource.name,
-    oneDay: valueSource.performance.oneDay,
-    threeDay: valueSource.performance.threeDay,
-    sevenDay: valueSource.performance.sevenDay,
-    thirtyDay: valueSource.performance.thirtyDay,
-    harvestable: Boolean(valueSource.harvestable),
     minApr: valueSource.minApr,
     maxApr: valueSource.maxApr,
     boostable: valueSource.boostable,
@@ -211,7 +201,7 @@ export async function getVaultValueSources(
     if (ARB_CRV_SETTS.has(vaultDefinition.vaultToken)) {
       const compounding = sources.find((s) => s.type === SourceType.Compound);
       if (compounding) {
-        const crvSource = createValueSource('CRV Rewards', uniformPerformance(compounding.apr));
+        const crvSource = createValueSource('CRV Rewards', compounding.apr);
         sources.push(
           valueSourceToCachedValueSource(crvSource, vaultDefinition, tokenEmission(getToken(TOKENS.ARB_CRV))),
         );
@@ -227,7 +217,6 @@ export async function getVaultValueSources(
 export async function getProtocolValueSources(
   chain: Chain,
   vaultDefinition: VaultDefinition,
-  includeBaseEmission = false,
 ): Promise<CachedValueSource[]> {
   try {
     switch (vaultDefinition.protocol) {
@@ -235,7 +224,7 @@ export async function getProtocolValueSources(
         return SushiswapStrategy.getValueSources(chain, vaultDefinition);
       case Protocol.Curve:
       case Protocol.Convex:
-        return ConvexStrategy.getValueSources(chain, vaultDefinition, includeBaseEmission);
+        return ConvexStrategy.getValueSources(chain, vaultDefinition);
       case Protocol.Uniswap:
         return UniswapStrategy.getValueSources(vaultDefinition);
       case Protocol.Quickswap:

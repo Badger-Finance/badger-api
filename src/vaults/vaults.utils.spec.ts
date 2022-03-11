@@ -22,7 +22,6 @@ import * as tokensUtils from '../tokens/tokens.utils';
 import * as protocolsUtils from '../protocols/protocols.utils';
 import * as indexerUtils from '../indexers/indexer.utils';
 import { createValueSource } from '../protocols/interfaces/value-source.interface';
-import { uniformPerformance } from '../protocols/interfaces/performance.interface';
 import { tokenEmission } from '../protocols/protocols.utils';
 import { Polygon } from '../chains/config/polygon.config';
 import { SourceType } from '../rewards/enums/source-type.enum';
@@ -85,7 +84,7 @@ describe('vaults.utils', () => {
     jest.spyOn(BadgerSDK.prototype, 'ready').mockImplementation();
     const vault = getVaultDefinition(TEST_CHAIN, TOKENS.BBADGER);
     jest.spyOn(rewardsUtils, 'getRewardEmission').mockImplementation(async (_chain, _vault) => {
-      const rewardSource = createValueSource('Badger Rewards', uniformPerformance(6.969));
+      const rewardSource = createValueSource('Badger Rewards', 6.969);
       return [
         rewardsUtils.valueSourceToCachedValueSource(rewardSource, vault, tokenEmission(getToken(TOKENS.BBADGER), true)),
       ];
@@ -236,7 +235,7 @@ describe('vaults.utils', () => {
           .spyOn(rewardsUtils, 'getProtocolValueSources')
           .mockImplementation(async (_chain, _vault) => {
             const emissionToken = getToken(TOKENS.SUSHI);
-            const rewardSource = createValueSource('Sushi Rewards', uniformPerformance(8.888));
+            const rewardSource = createValueSource('Sushi Rewards', 8.888);
             return [rewardsUtils.valueSourceToCachedValueSource(rewardSource, vault, tokenEmission(emissionToken))];
           });
         const result = await getVaultPerformance(TEST_CHAIN, vault);
@@ -255,7 +254,7 @@ describe('vaults.utils', () => {
           .spyOn(rewardsUtils, 'getProtocolValueSources')
           .mockImplementation(async (_chain, _vault) => {
             const emissionToken = getToken(TOKENS.SUSHI);
-            const rewardSource = createValueSource('Sushi Rewards', uniformPerformance(8.888));
+            const rewardSource = createValueSource('Sushi Rewards', 8.888);
             return [rewardsUtils.valueSourceToCachedValueSource(rewardSource, vault, tokenEmission(emissionToken))];
           });
         const result = await getVaultPerformance(TEST_CHAIN, vault);
@@ -276,7 +275,7 @@ describe('vaults.utils', () => {
           .spyOn(rewardsUtils, 'getProtocolValueSources')
           .mockImplementation(async (_chain, _vault) => {
             const emissionToken = getToken(TOKENS.SUSHI);
-            const rewardSource = createValueSource('Sushi Rewards', uniformPerformance(8.888));
+            const rewardSource = createValueSource('Sushi Rewards', 8.888);
             return [rewardsUtils.valueSourceToCachedValueSource(rewardSource, vault, tokenEmission(emissionToken))];
           });
         const result = await getVaultPerformance(alternateChain, vault);
@@ -293,7 +292,7 @@ describe('vaults.utils', () => {
           price: Number(token.slice(0, 4)),
         }));
         jest.spyOn(protocolsUtils, 'getVaultCachedValueSources').mockImplementation(async (vault) => {
-          const underlying = createValueSource(VAULT_SOURCE, uniformPerformance(10));
+          const underlying = createValueSource(VAULT_SOURCE, 10);
           return [rewardsUtils.valueSourceToCachedValueSource(underlying, vault, SourceType.PreCompound)];
         });
         const result = await getVaultPerformance(TEST_CHAIN, vault);

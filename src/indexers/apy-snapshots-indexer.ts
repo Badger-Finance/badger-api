@@ -25,21 +25,13 @@ export async function refreshChainApySnapshots(chain: Chain) {
           .forEach((source) => {
             const mapKey = [source.address, source.name, source.type].join('-');
             const mapEntry = sourceMap[mapKey];
-            // simulated underlying are harvestable, measured underlying is not
-            // directly override any saved simulated strategy performance for measured
-            const savedVirtualUnderlying = mapEntry && mapEntry.type === SourceType.Compound && mapEntry.harvestable;
-            const isVirtualUnderlying = source.type === SourceType.Compound && source.harvestable;
-            const override = !mapEntry || savedVirtualUnderlying;
-            if (override) {
+            const isVirtualUnderlying = source.type === SourceType.Compound;
+            if (!mapEntry) {
               sourceMap[mapKey] = source;
             } else if (!isVirtualUnderlying) {
               mapEntry.apr += source.apr;
               mapEntry.minApr += source.minApr;
               mapEntry.maxApr += source.maxApr;
-              mapEntry.oneDay += source.oneDay;
-              mapEntry.threeDay += source.threeDay;
-              mapEntry.sevenDay += source.sevenDay;
-              mapEntry.thirtyDay += source.thirtyDay;
             }
           });
 
