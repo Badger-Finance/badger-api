@@ -1,6 +1,5 @@
 import { Description, Example, Property, Title } from '@tsed/schema';
 import { TOKENS } from '../../config/tokens.config';
-import { uniformPerformance } from '../../protocols/interfaces/performance.interface';
 import { createValueSource, ValueSource } from '../../protocols/interfaces/value-source.interface';
 import { BouncerType } from '../../rewards/enums/bouncer-type.enum';
 import { getToken, mockBalance } from '../../tokens/tokens.utils';
@@ -127,9 +126,9 @@ export class VaultModel implements Vault {
   @Title('sources')
   @Description('Vault APR individual yield source breakdown')
   @Example([
-    createValueSource(VAULT_SOURCE, uniformPerformance(8.32)),
-    createValueSource('Badger Rewards', uniformPerformance(17.34)),
-    createValueSource('LP Trade Fee', uniformPerformance(1.45)),
+    createValueSource(VAULT_SOURCE, 8.32),
+    createValueSource('Badger Rewards', 17.34),
+    createValueSource('LP Trade Fee', 1.4),
   ])
   @Property()
   public sources: ValueSource[];
@@ -137,9 +136,9 @@ export class VaultModel implements Vault {
   @Title('sourcesApy')
   @Description('Vault APY individual yield source breakdown')
   @Example([
-    createValueSource(VAULT_SOURCE, uniformPerformance(8.32)),
-    createValueSource('Badger Rewards', uniformPerformance(17.34)),
-    createValueSource('LP Trade Fee', uniformPerformance(1.45)),
+    createValueSource(VAULT_SOURCE, 8.32),
+    createValueSource('Badger Rewards', 17.34),
+    createValueSource('LP Trade Fee', 1.45),
   ])
   @Property()
   public sourcesApy: ValueSource[];
