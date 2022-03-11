@@ -40,7 +40,7 @@ export class RewardController {
     return this.rewardsService.getUserRewards(Chain.getChain(chain), address);
   }
 
-  @Get('/schedules/list')
+  @Get('/schedules')
   @ContentType('json')
   @Summary('Get all token rewards emmited for all vaults on network')
   @Description('Return emission schedule list for all vaults')
