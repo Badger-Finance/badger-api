@@ -6,7 +6,6 @@ import { CachedVaultTokenBalance } from '../../tokens/interfaces/cached-vault-to
 
 export interface VaultDefinition {
   balanceDecimals?: number;
-  createdBlock: number;
   depositToken: string;
   deprecated?: boolean;
   experimental?: boolean;

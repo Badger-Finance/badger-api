@@ -6,9 +6,7 @@ import { Chain } from '../chains/config/chain.config';
 import { CURRENT, ONE_DAY_MS, ONE_YEAR_MS, ONE_YEAR_SECONDS, SAMPLE_DAYS } from '../config/constants';
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
 import { formatBalance, getToken } from '../tokens/tokens.utils';
-import { CachedVaultSnapshot } from './interfaces/cached-vault-snapshot.interface';
 import { VaultDefinition } from './interfaces/vault-definition.interface';
-import { VaultSnapshot } from './interfaces/vault-snapshot.interface';
 import { Sett__factory, Controller__factory, Strategy__factory, EmissionControl__factory } from '../contracts';
 import { VaultStrategy } from './interfaces/vault-strategy.interface';
 import { TOKENS } from '../config/tokens.config';
@@ -24,6 +22,8 @@ import { SourceType } from '../rewards/enums/source-type.enum';
 import { getVaultCachedValueSources, tokenEmission } from '../protocols/protocols.utils';
 import { SOURCE_TIME_FRAMES, updatePerformance } from '../rewards/enums/source-timeframe.enum';
 import { getVault } from '../indexers/indexer.utils';
+import { HistoricVaultSnapshot } from './types/historic-vault-snapshot';
+import { VaultSnapshot } from './types/vault-snapshot';
 
 export const VAULT_SOURCE = 'Vault Compounding';
 
@@ -68,16 +68,16 @@ export async function getCachedVault(vaultDefinition: VaultDefinition): Promise<
   try {
     const mapper = getDataMapper();
     for await (const item of mapper.query(
-      CachedVaultSnapshot,
+      VaultSnapshot,
       { address: vaultDefinition.vaultToken },
       { limit: 1, scanIndexForward: false },
     )) {
       vault.balance = item.balance;
       vault.value = item.value;
-      if (item.balance === 0 || item.supply === 0) {
+      if (item.balance === 0 || item.totalSupply === 0) {
         vault.pricePerFullShare = 1;
       } else if (vaultDefinition.vaultToken === TOKENS.BDIGG) {
-        vault.pricePerFullShare = item.balance / item.supply;
+        vault.pricePerFullShare = item.balance / item.totalSupply;
       } else {
         vault.pricePerFullShare = item.pricePerFullShare;
       }
@@ -98,14 +98,14 @@ export async function getVaultSnapshotsInRange(
   vaultDefinition: VaultDefinition,
   start: Date,
   end: Date,
-): Promise<VaultSnapshot[]> {
+): Promise<HistoricVaultSnapshot[]> {
   try {
     const snapshots = [];
     const mapper = getDataMapper();
     const assetToken = getToken(vaultDefinition.vaultToken);
 
     for await (const snapshot of mapper.query(
-      VaultSnapshot,
+      HistoricVaultSnapshot,
       { address: assetToken.address, timestamp: between(new Date(start).getTime(), new Date(end).getTime()) },
       { scanIndexForward: false },
     )) {
@@ -121,7 +121,7 @@ export async function getVaultSnapshotsInRange(
   }
 }
 
-export function getPerformance(current: VaultSnapshot, initial: VaultSnapshot): number {
+export function getPerformance(current: HistoricVaultSnapshot, initial: HistoricVaultSnapshot): number {
   const ratioDiff = current.pricePerFullShare - initial.pricePerFullShare;
   const timestampDiff = current.timestamp - initial.timestamp;
   if (timestampDiff === 0 || ratioDiff === 0) {
@@ -338,7 +338,7 @@ export async function loadVaultEventPerformances(
     const start = allHarvests[i + 1];
     const duration = end.timestamp - start.timestamp;
     totalDuration += duration;
-    const { sett } = await getVault(chain.graphUrl, vaultDefinition.vaultToken, end.block);
+    const { sett } = await getVault(chain, vaultDefinition.vaultToken, end.block);
     if (sett) {
       weightedBalance += duration * formatBalance(sett.balance, depositToken.decimals);
     } else {

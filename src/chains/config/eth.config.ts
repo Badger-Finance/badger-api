@@ -67,7 +67,6 @@ export class Ethereum extends Chain {
 export const ethSetts: VaultDefinition[] = [
   {
     name: 'renBTC/wBTC/sBTC',
-    createdBlock: 11380877,
     depositToken: TOKENS.CRV_SBTC,
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_SBTC,
@@ -75,7 +74,6 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'renBTC/wBTC',
-    createdBlock: 11380872,
     depositToken: TOKENS.CRV_RENBTC,
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_RENBTC,
@@ -83,7 +81,6 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'tBTC/sBTC',
-    createdBlock: 11380878,
     depositToken: TOKENS.CRV_TBTC,
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_TBTC,
@@ -91,7 +88,6 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'renBTC/wBTC',
-    createdBlock: 11380939,
     depositToken: TOKENS.CRV_RENBTC,
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_HRENBTC,
@@ -100,7 +96,6 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'wBTC/Badger',
-    createdBlock: 11380883,
     depositToken: TOKENS.UNI_BADGER_WBTC,
     vaultToken: TOKENS.BUNI_BADGER_WBTC,
     protocol: Protocol.Uniswap,
@@ -108,7 +103,6 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'wBTC/Digg',
-    createdBlock: 11680833,
     depositToken: TOKENS.UNI_DIGG_WBTC,
     state: VaultState.Deprecated,
     vaultToken: TOKENS.BUNI_DIGG_WBTC,
@@ -116,40 +110,34 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'wBTC/wETH',
-    createdBlock: 11539529,
     depositToken: TOKENS.SUSHI_ETH_WBTC,
     vaultToken: TOKENS.BSUSHI_ETH_WBTC,
     protocol: Protocol.Sushiswap,
   },
   {
     name: 'wBTC/Badger',
-    createdBlock: 11537600,
     depositToken: TOKENS.SUSHI_BADGER_WBTC,
     vaultToken: TOKENS.BSUSHI_BADGER_WBTC,
     protocol: Protocol.Sushiswap,
   },
   {
     name: 'wBTC/Digg',
-    createdBlock: 11681030,
     depositToken: TOKENS.SUSHI_DIGG_WBTC,
     vaultToken: TOKENS.BSUSHI_DIGG_WBTC,
     protocol: Protocol.Sushiswap,
   },
   {
     name: 'Digg',
-    createdBlock: 11680422,
     depositToken: TOKENS.DIGG,
     vaultToken: TOKENS.BDIGG,
   },
   {
     name: 'Badger',
-    createdBlock: 11380871,
     depositToken: TOKENS.BADGER,
     vaultToken: TOKENS.BBADGER,
     state: VaultState.Deprecated,
   },
   {
-    createdBlock: 12246710,
     name: 'wBTC',
     depositToken: TOKENS.WBTC,
     vaultToken: TOKENS.BVYWBTC,
@@ -157,7 +145,6 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'wBTC/ibBTC',
-    createdBlock: 12383984,
     depositToken: TOKENS.SUSHI_IBBTC_WBTC,
     vaultToken: TOKENS.BSUSHI_IBBTC_WBTC,
     strategy: '0xf4146A176b09C664978e03d28d07Db4431525dAd',
@@ -165,7 +152,6 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'hBTC',
-    createdBlock: 12589485,
     depositToken: TOKENS.CRV_HBTC,
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_HBTC,
@@ -173,7 +159,6 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'pBTC',
-    createdBlock: 12589485,
     depositToken: TOKENS.CRV_PBTC,
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_PBTC,
@@ -181,7 +166,6 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'oBTC',
-    createdBlock: 12589485,
     depositToken: TOKENS.CRV_OBTC,
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_OBTC,
@@ -189,7 +173,6 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'bBTC',
-    createdBlock: 12589485,
     depositToken: TOKENS.CRV_BBTC,
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_BBTC,
@@ -197,7 +180,6 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'Tricrypto',
-    createdBlock: 12679976,
     depositToken: TOKENS.CRV_TRICRYPTO,
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_TRICRYPTO,
@@ -206,21 +188,18 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'cvxCRV',
-    createdBlock: 12678302,
     depositToken: TOKENS.CVXCRV,
     vaultToken: TOKENS.BCVXCRV,
     protocol: Protocol.Convex,
   },
   {
     name: 'CVX',
-    createdBlock: 12678302,
     depositToken: TOKENS.CVX,
     vaultToken: TOKENS.BCVX,
     protocol: Protocol.Convex,
   },
   {
     name: 'Tricrypto2',
-    createdBlock: 12966048,
     depositToken: TOKENS.CRV_TRICRYPTO2,
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_TRICRYPTO2,
@@ -228,7 +207,6 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'imBTC',
-    createdBlock: 13418026,
     depositToken: TOKENS.IMBTC,
     vaultToken: TOKENS.BIMBTC,
     protocol: Protocol.mStable,
@@ -237,7 +215,6 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'mhBTC',
-    createdBlock: 13418026,
     depositToken: TOKENS.MHBTC,
     vaultToken: TOKENS.BMHBTC,
     protocol: Protocol.mStable,
@@ -246,14 +223,12 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'bveCVX',
-    createdBlock: 13239091,
     depositToken: TOKENS.CVX,
     vaultToken: TOKENS.BVECVX,
     protocol: Protocol.Convex,
   },
   {
     name: 'CVX / bveCVX',
-    createdBlock: 13006329,
     depositToken: TOKENS.CRV_CVXBVECVX,
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_CVXBVECVX,
@@ -261,7 +236,6 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'ibBTC / crvsBTC',
-    createdBlock: 13590998,
     depositToken: TOKENS.CRV_IBBTC,
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_IBBTC,
@@ -269,7 +243,6 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'MIM / 3CRV',
-    createdBlock: 13998331,
     depositToken: TOKENS.CRV_MIM_3CRV,
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_MIM_3CRV,
@@ -277,7 +250,6 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'FRAX / 3CRV',
-    createdBlock: 13998331,
     depositToken: TOKENS.CRV_FRAX_3CRV,
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_FRAX_3CRV,
@@ -285,7 +257,6 @@ export const ethSetts: VaultDefinition[] = [
   },
   {
     name: 'remBadger',
-    createdBlock: 14036178,
     depositToken: TOKENS.BADGER,
     vaultToken: TOKENS.BREMBADGER,
     protocol: Protocol.Badger,

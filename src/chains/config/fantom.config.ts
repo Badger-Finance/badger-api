@@ -39,7 +39,6 @@ export const fantomSetts: VaultDefinition[] = [
   {
     name: '👻 BOO/xBOO',
     behavior: VaultBehavior.Ecosystem,
-    createdBlock: 31817699,
     depositToken: TOKENS.SMM_BOO_XBOO,
     vaultToken: TOKENS.BSMM_BOO_XBOO_ECO,
     state: VaultState.Guarded,
@@ -48,7 +47,6 @@ export const fantomSetts: VaultDefinition[] = [
   {
     name: 'WBTC/renBTC',
     behavior: VaultBehavior.Compounder,
-    createdBlock: 31817121,
     depositToken: TOKENS.SMM_WBTC_RENBTC,
     vaultToken: TOKENS.BSMM_WBTC_RENBTC,
     state: VaultState.Guarded,
@@ -57,7 +55,6 @@ export const fantomSetts: VaultDefinition[] = [
   {
     name: 'WFTM/SEX',
     behavior: VaultBehavior.EcosystemHelper,
-    createdBlock: 32237088,
     depositToken: TOKENS.SMM_WFTM_SEX,
     vaultToken: TOKENS.BSMM_WFTM_SEX,
     state: VaultState.Guarded,
@@ -66,7 +63,6 @@ export const fantomSetts: VaultDefinition[] = [
   {
     name: 'SOLID/SOLIDsex',
     behavior: VaultBehavior.EcosystemHelper,
-    createdBlock: 32237094,
     depositToken: TOKENS.SMM_SOLID_SOLIDSEX,
     vaultToken: TOKENS.BSMM_SOLID_SOLIDSEX,
     state: VaultState.Guarded,
@@ -75,7 +71,6 @@ export const fantomSetts: VaultDefinition[] = [
   {
     name: 'WEVE/USDC',
     behavior: VaultBehavior.Compounder,
-    createdBlock: 32237094,
     depositToken: TOKENS.SMM_WEVE_USDC,
     vaultToken: TOKENS.BSMM_WEVE_USDC,
     state: VaultState.Guarded,
@@ -84,7 +79,6 @@ export const fantomSetts: VaultDefinition[] = [
   {
     name: 'OXD/USDC',
     behavior: VaultBehavior.Compounder,
-    createdBlock: 32477300,
     depositToken: TOKENS.SMM_OXD_USDC,
     vaultToken: TOKENS.BSMM_OXD_USDC,
     stage: Stage.Staging,
@@ -94,7 +88,6 @@ export const fantomSetts: VaultDefinition[] = [
   {
     name: 'WFTM/CRV',
     behavior: VaultBehavior.DCA,
-    createdBlock: 32477300,
     depositToken: TOKENS.SMM_WFTM_CRV,
     vaultToken: TOKENS.BSMM_WFTM_CRV,
     state: VaultState.Guarded,
@@ -103,7 +96,6 @@ export const fantomSetts: VaultDefinition[] = [
   {
     name: 'USDC/MIM',
     behavior: VaultBehavior.DCA,
-    createdBlock: 32477300,
     depositToken: TOKENS.SMM_USDC_MIM,
     vaultToken: TOKENS.BSMM_USDC_MIM,
     state: VaultState.Guarded,
@@ -112,7 +104,6 @@ export const fantomSetts: VaultDefinition[] = [
   {
     name: 'WFTM/renBTC',
     behavior: VaultBehavior.DCA,
-    createdBlock: 32477300,
     depositToken: TOKENS.SMM_WFTM_RENBTC,
     vaultToken: TOKENS.BSMM_WFTM_RENBTC,
     state: VaultState.Guarded,
@@ -121,7 +112,6 @@ export const fantomSetts: VaultDefinition[] = [
   {
     name: 'GEIST/g3CRV',
     behavior: VaultBehavior.DCA,
-    createdBlock: 32803942,
     depositToken: TOKENS.SMM_GEIST_3CRV,
     vaultToken: TOKENS.BSMM_GEIST_3CRV_DCA,
     state: VaultState.Guarded,
@@ -130,7 +120,6 @@ export const fantomSetts: VaultDefinition[] = [
   {
     name: '👻 WFTM/CRV',
     behavior: VaultBehavior.Ecosystem,
-    createdBlock: 32477300,
     depositToken: TOKENS.SMM_WFTM_CRV,
     vaultToken: TOKENS.BSMM_WFTM_CRV_ECO,
     state: VaultState.Guarded,
@@ -139,7 +128,6 @@ export const fantomSetts: VaultDefinition[] = [
   {
     name: '👻 USDC/MIM',
     behavior: VaultBehavior.Ecosystem,
-    createdBlock: 32477300,
     depositToken: TOKENS.SMM_USDC_MIM,
     vaultToken: TOKENS.BSMM_USDC_MIM_ECO,
     state: VaultState.Guarded,
@@ -148,7 +136,6 @@ export const fantomSetts: VaultDefinition[] = [
   {
     name: '👻 WFTM/SCREAM',
     behavior: VaultBehavior.Ecosystem,
-    createdBlock: 32477300,
     depositToken: TOKENS.SMM_WFTM_SCREAM,
     vaultToken: TOKENS.BSMM_WFTM_SCREAM_ECO,
     state: VaultState.Guarded,
@@ -157,7 +144,6 @@ export const fantomSetts: VaultDefinition[] = [
   {
     name: '👻 WFTM/renBTC',
     behavior: VaultBehavior.Ecosystem,
-    createdBlock: 32477300,
     depositToken: TOKENS.SMM_WFTM_RENBTC,
     vaultToken: TOKENS.BSMM_WFTM_RENBTC_ECO,
     state: VaultState.Guarded,
@@ -166,7 +152,6 @@ export const fantomSetts: VaultDefinition[] = [
   {
     name: '👻 WFTM/TOMB',
     behavior: VaultBehavior.Ecosystem,
-    createdBlock: 32477300,
     depositToken: TOKENS.SMM_WFTM_TOMB,
     vaultToken: TOKENS.BSMM_WFTM_TOMB_ECO,
     state: VaultState.Guarded,

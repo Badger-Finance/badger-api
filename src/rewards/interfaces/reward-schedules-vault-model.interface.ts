@@ -18,7 +18,7 @@ export class RewardSchedulesByVaultModel implements EmissionScheduleApi {
   public token: string;
 
   @Title('amount')
-  @Description('Amount of emmited token')
+  @Description('Total amount of emmited token')
   @Property()
   public amount: number;
 
@@ -38,7 +38,7 @@ export class RewardSchedulesByVaultModel implements EmissionScheduleApi {
   public vault: VaultDefinition['vaultToken'];
 
   @Title('compPercent')
-  @Description('Percent of schedule complition')
+  @Description('Percent of schedule completion')
   @Property()
   public compPercent: number;
 
