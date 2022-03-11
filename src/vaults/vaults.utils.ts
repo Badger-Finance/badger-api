@@ -215,7 +215,6 @@ export async function getVaultPerformance(
     vaultSources = await loadVaultEventPerformances(chain, vaultDefinition);
     vaultSources.push();
   } catch (err) {
-    console.error(err);
     console.log(`${vaultDefinition.name} vault APR estimation fallback to badger subgraph`);
     vaultSources = await loadVaultGraphPerformances(chain, vaultDefinition);
   }
@@ -270,7 +269,6 @@ export async function loadVaultGraphPerformances(chain: Chain, vault: VaultDefin
   const { vaultToken, depositToken } = vault;
 
   const sdk = await chain.getSdk();
-  console.log(sdk.graph.graphUrl, chain.network);
   const cutoff = Number(((Date.now() - ONE_DAY_MS * 21) / 1000).toFixed());
   const [vaultHarvests, treeDistributions] = await Promise.all([
     sdk.graph.loadSettHarvests({
@@ -293,17 +291,19 @@ export async function loadVaultGraphPerformances(chain: Chain, vault: VaultDefin
 
   const harvestsByTimestamp = keyBy(settHarvests, (harvest) => harvest.timestamp);
   const treeDistributionsByTimestamp = keyBy(badgerTreeDistributions, (distribution) => distribution.timestamp);
-  const timestamps = [...new Set([...Object.keys(harvestsByTimestamp), ...Object.keys(treeDistributionsByTimestamp)])];
+  const timestamps = Array.from(
+    new Set([...harvestsByTimestamp.keys(), ...treeDistributionsByTimestamp.keys()]).values(),
+  );
   const data = timestamps.map((t) => {
     const timestamp = Number(t);
     const currentHarvests = harvestsByTimestamp.get(timestamp) ?? [];
     const currentDistributions = treeDistributionsByTimestamp.get(timestamp) ?? [];
     return {
       timestamp,
-      harvests: currentHarvests.map((h) => ({ timestamp, block: h.blockNumber, harvested: h.amount })),
+      harvests: currentHarvests.map((h) => ({ timestamp, block: Number(h.blockNumber), harvested: h.amount })),
       treeDistributions: currentDistributions.map((d) => ({
         timestamp,
-        block: d.blockNumber,
+        block: Number(d.blockNumber),
         token: d.token.id,
         amount: d.amount,
       })),

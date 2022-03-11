@@ -1,4 +1,13 @@
-import BadgerSDK, { Protocol, Vault, VaultBehavior, VaultsService, VaultState, VaultType } from '@badger-dao/sdk';
+import BadgerSDK, {
+  BadgerGraph,
+  Protocol,
+  TokensService,
+  Vault,
+  VaultBehavior,
+  VaultsService,
+  VaultState,
+  VaultType,
+} from '@badger-dao/sdk';
 import { BadRequest, NotFound, UnprocessableEntity } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';
 import { BinanceSmartChain } from '../chains/config/bsc.config';
@@ -28,27 +37,64 @@ import { SourceType } from '../rewards/enums/source-type.enum';
 import { ONE_DAY_SECONDS } from '../config/constants';
 
 describe('vaults.utils', () => {
-  function setupSdk() {
-    const vault = getVaultDefinition(TEST_CHAIN, TOKENS.BBADGER);
-    jest.spyOn(VaultsService.prototype, 'listHarvests').mockImplementation(async (opts) => {
-      if (!opts.timestamp_gte) {
-        throw new Error('Invalid request!');
-      }
-      const startTime = opts.timestamp_gte;
-      const data = [0, 1, 2].map((int) => {
-        const timestamp = Number((startTime + int * ONE_DAY_SECONDS * 14).toFixed());
-        const block = Number((timestamp / 10000).toFixed());
-        return {
-          timestamp,
-          harvests: [{ timestamp, block, harvested: BigNumber.from((int + 1 * 1.88e18).toString()) }],
-          treeDistributions: [
-            { timestamp, block, token: TOKENS.BCVXCRV, amount: BigNumber.from((int + 1 * 5.77e12).toString()) },
-            { timestamp, block, token: TOKENS.BVECVX, amount: BigNumber.from((int + 1 * 4.42e12).toString()) },
-          ],
-        };
-      });
-      return { data };
+  const vault = getVaultDefinition(TEST_CHAIN, TOKENS.BBADGER);
+
+  beforeEach(() => {
+    jest.spyOn(BadgerGraph.prototype, 'loadSettHarvests').mockImplementation(async (_options) => {
+      const harvests = [
+        {
+          id: '',
+          blockNumber: '10',
+          timestamp: 1640159886,
+          amount: '80000000000000000000',
+          token: {
+            id: '',
+            symbol: '',
+            name: '',
+            decimals: '',
+            totalSupply: '',
+          },
+        },
+        {
+          id: '',
+          blockNumber: '10',
+          timestamp: 1642159886,
+          amount: '100000000000000000000',
+          token: {
+            id: '',
+            symbol: '',
+            name: '',
+            decimals: '',
+            totalSupply: '',
+          },
+        },
+        {
+          id: '',
+          blockNumber: '10',
+          timestamp: 1645159886,
+          amount: '125000000000000000000',
+          token: {
+            id: '',
+            symbol: '',
+            name: '',
+            decimals: '',
+            totalSupply: '',
+          },
+        },
+      ];
+      return {
+        settHarvests: harvests,
+      };
     });
+    jest.spyOn(BadgerGraph.prototype, 'loadBadgerTreeDistributions').mockImplementation(async () => ({
+      badgerTreeDistributions: [],
+    }));
+    jest.spyOn(TokensService.prototype, 'loadToken').mockImplementation(async (address) => ({
+      address,
+      decimals: 18,
+      symbol: 'TEST',
+      name: 'TEST',
+    }));
     const snapshot = randomSnapshot(vault);
     snapshot.value = 1000;
     snapshot.balance = 10000;
@@ -56,7 +102,7 @@ describe('vaults.utils', () => {
     jest.spyOn(indexerUtils, 'getVault').mockImplementation(async (_chain, _address) => ({
       sett: {
         id: TEST_ADDR,
-        balance: '25000000000000000000', // 25
+        balance: '2500000000000000000000', // 2500
         available: 0,
         netDeposit: 0,
         netShareDeposit: 0,
@@ -78,6 +124,32 @@ describe('vaults.utils', () => {
         grossWithdraw: 1,
       },
     }));
+    jest.spyOn(rewardsUtils, 'getProtocolValueSources').mockImplementation(async (_chain, _vault) => {
+      const rewardSource = createValueSource('Test LP Fees', 1.13);
+      return [rewardsUtils.valueSourceToCachedValueSource(rewardSource, vault, SourceType.TradeFee)];
+    });
+  });
+
+  function setupSdk() {
+    jest.spyOn(VaultsService.prototype, 'listHarvests').mockImplementation(async (opts) => {
+      if (!opts.timestamp_gte) {
+        throw new Error('Invalid request!');
+      }
+      const startTime = opts.timestamp_gte;
+      const data = [0, 1, 2].map((int) => {
+        const timestamp = Number((startTime + int * ONE_DAY_SECONDS * 14).toFixed());
+        const block = Number((timestamp / 10000).toFixed());
+        return {
+          timestamp,
+          harvests: [{ timestamp, block, harvested: BigNumber.from((int + 1 * 1.88e18).toString()) }],
+          treeDistributions: [
+            { timestamp, block, token: TOKENS.BCVXCRV, amount: BigNumber.from((int + 1 * 5.77e12).toString()) },
+            { timestamp, block, token: TOKENS.BVECVX, amount: BigNumber.from((int + 1 * 4.42e12).toString()) },
+          ],
+        };
+      });
+      return { data };
+    });
   }
 
   beforeEach(() => {
@@ -230,17 +302,8 @@ describe('vaults.utils', () => {
     describe('no rewards or harvests', () => {
       it('returns value sources from fallback methods', async () => {
         jest.spyOn(VaultsService.prototype, 'listHarvests').mockImplementation(async (_opts) => ({ data: [] }));
-        setupMapper(randomSnapshots(vault));
-        const protocolFallback = jest
-          .spyOn(rewardsUtils, 'getProtocolValueSources')
-          .mockImplementation(async (_chain, _vault) => {
-            const emissionToken = getToken(TOKENS.SUSHI);
-            const rewardSource = createValueSource('Sushi Rewards', 8.888);
-            return [rewardsUtils.valueSourceToCachedValueSource(rewardSource, vault, tokenEmission(emissionToken))];
-          });
         const result = await getVaultPerformance(TEST_CHAIN, vault);
         expect(result).toMatchSnapshot();
-        expect(protocolFallback.mock.calls[1]).toMatchObject([TEST_CHAIN, vault, true]);
       });
     });
 
@@ -250,16 +313,8 @@ describe('vaults.utils', () => {
           throw new Error('Incompatible vault!');
         });
         setupMapper(randomSnapshots(vault));
-        const protocolFallback = jest
-          .spyOn(rewardsUtils, 'getProtocolValueSources')
-          .mockImplementation(async (_chain, _vault) => {
-            const emissionToken = getToken(TOKENS.SUSHI);
-            const rewardSource = createValueSource('Sushi Rewards', 8.888);
-            return [rewardsUtils.valueSourceToCachedValueSource(rewardSource, vault, tokenEmission(emissionToken))];
-          });
         const result = await getVaultPerformance(TEST_CHAIN, vault);
         expect(result).toMatchSnapshot();
-        expect(protocolFallback.mock.calls[1]).toMatchObject([TEST_CHAIN, vault, true]);
       });
     });
 
@@ -267,20 +322,8 @@ describe('vaults.utils', () => {
       it('returns value sources from fallback methods', async () => {
         const alternateChain = new Polygon();
         const vault = getVaultDefinition(alternateChain, TOKENS.BMATIC_QUICK_USDC_WBTC);
-        jest.spyOn(VaultsService.prototype, 'listHarvests').mockImplementation(async (_opts) => {
-          throw new Error('Incompatible vault!');
-        });
-        setupMapper(randomSnapshots(vault));
-        const protocolFallback = jest
-          .spyOn(rewardsUtils, 'getProtocolValueSources')
-          .mockImplementation(async (_chain, _vault) => {
-            const emissionToken = getToken(TOKENS.SUSHI);
-            const rewardSource = createValueSource('Sushi Rewards', 8.888);
-            return [rewardsUtils.valueSourceToCachedValueSource(rewardSource, vault, tokenEmission(emissionToken))];
-          });
         const result = await getVaultPerformance(alternateChain, vault);
         expect(result).toMatchSnapshot();
-        expect(protocolFallback.mock.calls[1]).toMatchObject([alternateChain, vault, true]);
       });
     });
 
