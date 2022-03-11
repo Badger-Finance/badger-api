@@ -411,7 +411,7 @@ exports[`SettsController GET /v2/vaults with a specified chain returns the vault
 Array [
   Object {
     "apr": 99.96000000000001,
-    "apy": 99.96000000000001,
+    "apy": 133.28,
     "asset": "crvsBTC",
     "available": 0,
     "balance": 0,
@@ -475,6 +475,20 @@ Array [
         "harvestable": false,
         "maxApr": 33.32,
         "minApr": 33.32,
+        "name": "Vault Compounding",
+        "performance": Object {
+          "oneDay": 33.32,
+          "sevenDay": 33.32,
+          "thirtyDay": 33.32,
+          "threeDay": 33.32,
+        },
+      },
+      Object {
+        "apr": 33.32,
+        "boostable": false,
+        "harvestable": false,
+        "maxApr": 33.32,
+        "minApr": 33.32,
         "name": "Badger Rewards",
         "performance": Object {
           "oneDay": 33.32,
@@ -512,7 +526,7 @@ Array [
         },
       },
     ],
-    "state": "deprecated",
+    "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
@@ -1044,7 +1058,7 @@ Array [
         },
       },
     ],
-    "state": "deprecated",
+    "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
@@ -1921,7 +1935,7 @@ Array [
   },
   Object {
     "apr": 36.269999999999996,
-    "apy": 36.269999999999996,
+    "apy": 48.36,
     "asset": "WBTC",
     "available": 0,
     "balance": 0,
@@ -1985,6 +1999,20 @@ Array [
         "harvestable": false,
         "maxApr": 12.09,
         "minApr": 12.09,
+        "name": "Vault Compounding",
+        "performance": Object {
+          "oneDay": 12.09,
+          "sevenDay": 12.09,
+          "thirtyDay": 12.09,
+          "threeDay": 12.09,
+        },
+      },
+      Object {
+        "apr": 12.09,
+        "boostable": false,
+        "harvestable": false,
+        "maxApr": 12.09,
+        "minApr": 12.09,
         "name": "Badger Rewards",
         "performance": Object {
           "oneDay": 12.09,
@@ -2022,7 +2050,7 @@ Array [
         },
       },
     ],
-    "state": "deprecated",
+    "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
@@ -2195,7 +2223,7 @@ Array [
   },
   Object {
     "apr": 67.41,
-    "apy": 67.41,
+    "apy": 89.88,
     "asset": "crvhBTC",
     "available": 0,
     "balance": 0,
@@ -2259,6 +2287,20 @@ Array [
         "harvestable": false,
         "maxApr": 22.47,
         "minApr": 22.47,
+        "name": "Vault Compounding",
+        "performance": Object {
+          "oneDay": 22.47,
+          "sevenDay": 22.47,
+          "thirtyDay": 22.47,
+          "threeDay": 22.47,
+        },
+      },
+      Object {
+        "apr": 22.47,
+        "boostable": false,
+        "harvestable": false,
+        "maxApr": 22.47,
+        "minApr": 22.47,
         "name": "Badger Rewards",
         "performance": Object {
           "oneDay": 22.47,
@@ -2296,7 +2338,7 @@ Array [
         },
       },
     ],
-    "state": "deprecated",
+    "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
@@ -2321,7 +2363,7 @@ Array [
   },
   Object {
     "apr": 41.07,
-    "apy": 41.07,
+    "apy": 54.76,
     "asset": "crvpBTC",
     "available": 0,
     "balance": 0,
@@ -2385,6 +2427,20 @@ Array [
         "harvestable": false,
         "maxApr": 13.69,
         "minApr": 13.69,
+        "name": "Vault Compounding",
+        "performance": Object {
+          "oneDay": 13.69,
+          "sevenDay": 13.69,
+          "thirtyDay": 13.69,
+          "threeDay": 13.69,
+        },
+      },
+      Object {
+        "apr": 13.69,
+        "boostable": false,
+        "harvestable": false,
+        "maxApr": 13.69,
+        "minApr": 13.69,
         "name": "Badger Rewards",
         "performance": Object {
           "oneDay": 13.69,
@@ -2422,7 +2478,7 @@ Array [
         },
       },
     ],
-    "state": "deprecated",
+    "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
@@ -2447,7 +2503,7 @@ Array [
   },
   Object {
     "apr": 116.76,
-    "apy": 116.76,
+    "apy": 155.68,
     "asset": "crvoBTC",
     "available": 0,
     "balance": 0,
@@ -2511,6 +2567,20 @@ Array [
         "harvestable": false,
         "maxApr": 38.92,
         "minApr": 38.92,
+        "name": "Vault Compounding",
+        "performance": Object {
+          "oneDay": 38.92,
+          "sevenDay": 38.92,
+          "thirtyDay": 38.92,
+          "threeDay": 38.92,
+        },
+      },
+      Object {
+        "apr": 38.92,
+        "boostable": false,
+        "harvestable": false,
+        "maxApr": 38.92,
+        "minApr": 38.92,
         "name": "Badger Rewards",
         "performance": Object {
           "oneDay": 38.92,
@@ -2548,7 +2618,7 @@ Array [
         },
       },
     ],
-    "state": "deprecated",
+    "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
@@ -2573,7 +2643,7 @@ Array [
   },
   Object {
     "apr": 45,
-    "apy": 45,
+    "apy": 60,
     "asset": "crvbBTC",
     "available": 0,
     "balance": 0,
@@ -2637,6 +2707,20 @@ Array [
         "harvestable": false,
         "maxApr": 15,
         "minApr": 15,
+        "name": "Vault Compounding",
+        "performance": Object {
+          "oneDay": 15,
+          "sevenDay": 15,
+          "thirtyDay": 15,
+          "threeDay": 15,
+        },
+      },
+      Object {
+        "apr": 15,
+        "boostable": false,
+        "harvestable": false,
+        "maxApr": 15,
+        "minApr": 15,
         "name": "Badger Rewards",
         "performance": Object {
           "oneDay": 15,
@@ -2674,7 +2758,7 @@ Array [
         },
       },
     ],
-    "state": "deprecated",
+    "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
@@ -2965,7 +3049,7 @@ Array [
   },
   Object {
     "apr": 40.2,
-    "apy": 40.2,
+    "apy": 53.6,
     "asset": "CVX",
     "available": 0,
     "balance": 0,
@@ -3029,6 +3113,20 @@ Array [
         "harvestable": false,
         "maxApr": 13.4,
         "minApr": 13.4,
+        "name": "Vault Compounding",
+        "performance": Object {
+          "oneDay": 13.4,
+          "sevenDay": 13.4,
+          "thirtyDay": 13.4,
+          "threeDay": 13.4,
+        },
+      },
+      Object {
+        "apr": 13.4,
+        "boostable": false,
+        "harvestable": false,
+        "maxApr": 13.4,
+        "minApr": 13.4,
         "name": "Badger Rewards",
         "performance": Object {
           "oneDay": 13.4,
@@ -3066,7 +3164,7 @@ Array [
         },
       },
     ],
-    "state": "deprecated",
+    "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
@@ -4334,7 +4432,7 @@ exports[`SettsController GET /v2/vaults with no specified chain returns eth vaul
 Array [
   Object {
     "apr": 99.96000000000001,
-    "apy": 99.96000000000001,
+    "apy": 133.28,
     "asset": "crvsBTC",
     "available": 0,
     "balance": 0,
@@ -4398,6 +4496,20 @@ Array [
         "harvestable": false,
         "maxApr": 33.32,
         "minApr": 33.32,
+        "name": "Vault Compounding",
+        "performance": Object {
+          "oneDay": 33.32,
+          "sevenDay": 33.32,
+          "thirtyDay": 33.32,
+          "threeDay": 33.32,
+        },
+      },
+      Object {
+        "apr": 33.32,
+        "boostable": false,
+        "harvestable": false,
+        "maxApr": 33.32,
+        "minApr": 33.32,
         "name": "Badger Rewards",
         "performance": Object {
           "oneDay": 33.32,
@@ -4435,7 +4547,7 @@ Array [
         },
       },
     ],
-    "state": "deprecated",
+    "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
@@ -4967,7 +5079,7 @@ Array [
         },
       },
     ],
-    "state": "deprecated",
+    "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
@@ -5844,7 +5956,7 @@ Array [
   },
   Object {
     "apr": 36.269999999999996,
-    "apy": 36.269999999999996,
+    "apy": 48.36,
     "asset": "WBTC",
     "available": 0,
     "balance": 0,
@@ -5908,6 +6020,20 @@ Array [
         "harvestable": false,
         "maxApr": 12.09,
         "minApr": 12.09,
+        "name": "Vault Compounding",
+        "performance": Object {
+          "oneDay": 12.09,
+          "sevenDay": 12.09,
+          "thirtyDay": 12.09,
+          "threeDay": 12.09,
+        },
+      },
+      Object {
+        "apr": 12.09,
+        "boostable": false,
+        "harvestable": false,
+        "maxApr": 12.09,
+        "minApr": 12.09,
         "name": "Badger Rewards",
         "performance": Object {
           "oneDay": 12.09,
@@ -5945,7 +6071,7 @@ Array [
         },
       },
     ],
-    "state": "deprecated",
+    "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
@@ -6118,7 +6244,7 @@ Array [
   },
   Object {
     "apr": 67.41,
-    "apy": 67.41,
+    "apy": 89.88,
     "asset": "crvhBTC",
     "available": 0,
     "balance": 0,
@@ -6182,6 +6308,20 @@ Array [
         "harvestable": false,
         "maxApr": 22.47,
         "minApr": 22.47,
+        "name": "Vault Compounding",
+        "performance": Object {
+          "oneDay": 22.47,
+          "sevenDay": 22.47,
+          "thirtyDay": 22.47,
+          "threeDay": 22.47,
+        },
+      },
+      Object {
+        "apr": 22.47,
+        "boostable": false,
+        "harvestable": false,
+        "maxApr": 22.47,
+        "minApr": 22.47,
         "name": "Badger Rewards",
         "performance": Object {
           "oneDay": 22.47,
@@ -6219,7 +6359,7 @@ Array [
         },
       },
     ],
-    "state": "deprecated",
+    "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
@@ -6244,7 +6384,7 @@ Array [
   },
   Object {
     "apr": 41.07,
-    "apy": 41.07,
+    "apy": 54.76,
     "asset": "crvpBTC",
     "available": 0,
     "balance": 0,
@@ -6308,6 +6448,20 @@ Array [
         "harvestable": false,
         "maxApr": 13.69,
         "minApr": 13.69,
+        "name": "Vault Compounding",
+        "performance": Object {
+          "oneDay": 13.69,
+          "sevenDay": 13.69,
+          "thirtyDay": 13.69,
+          "threeDay": 13.69,
+        },
+      },
+      Object {
+        "apr": 13.69,
+        "boostable": false,
+        "harvestable": false,
+        "maxApr": 13.69,
+        "minApr": 13.69,
         "name": "Badger Rewards",
         "performance": Object {
           "oneDay": 13.69,
@@ -6345,7 +6499,7 @@ Array [
         },
       },
     ],
-    "state": "deprecated",
+    "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
@@ -6370,7 +6524,7 @@ Array [
   },
   Object {
     "apr": 116.76,
-    "apy": 116.76,
+    "apy": 155.68,
     "asset": "crvoBTC",
     "available": 0,
     "balance": 0,
@@ -6434,6 +6588,20 @@ Array [
         "harvestable": false,
         "maxApr": 38.92,
         "minApr": 38.92,
+        "name": "Vault Compounding",
+        "performance": Object {
+          "oneDay": 38.92,
+          "sevenDay": 38.92,
+          "thirtyDay": 38.92,
+          "threeDay": 38.92,
+        },
+      },
+      Object {
+        "apr": 38.92,
+        "boostable": false,
+        "harvestable": false,
+        "maxApr": 38.92,
+        "minApr": 38.92,
         "name": "Badger Rewards",
         "performance": Object {
           "oneDay": 38.92,
@@ -6471,7 +6639,7 @@ Array [
         },
       },
     ],
-    "state": "deprecated",
+    "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
@@ -6496,7 +6664,7 @@ Array [
   },
   Object {
     "apr": 45,
-    "apy": 45,
+    "apy": 60,
     "asset": "crvbBTC",
     "available": 0,
     "balance": 0,
@@ -6560,6 +6728,20 @@ Array [
         "harvestable": false,
         "maxApr": 15,
         "minApr": 15,
+        "name": "Vault Compounding",
+        "performance": Object {
+          "oneDay": 15,
+          "sevenDay": 15,
+          "thirtyDay": 15,
+          "threeDay": 15,
+        },
+      },
+      Object {
+        "apr": 15,
+        "boostable": false,
+        "harvestable": false,
+        "maxApr": 15,
+        "minApr": 15,
         "name": "Badger Rewards",
         "performance": Object {
           "oneDay": 15,
@@ -6597,7 +6779,7 @@ Array [
         },
       },
     ],
-    "state": "deprecated",
+    "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
@@ -6888,7 +7070,7 @@ Array [
   },
   Object {
     "apr": 40.2,
-    "apy": 40.2,
+    "apy": 53.6,
     "asset": "CVX",
     "available": 0,
     "balance": 0,
@@ -6952,6 +7134,20 @@ Array [
         "harvestable": false,
         "maxApr": 13.4,
         "minApr": 13.4,
+        "name": "Vault Compounding",
+        "performance": Object {
+          "oneDay": 13.4,
+          "sevenDay": 13.4,
+          "thirtyDay": 13.4,
+          "threeDay": 13.4,
+        },
+      },
+      Object {
+        "apr": 13.4,
+        "boostable": false,
+        "harvestable": false,
+        "maxApr": 13.4,
+        "minApr": 13.4,
         "name": "Badger Rewards",
         "performance": Object {
           "oneDay": 13.4,
@@ -6989,7 +7185,7 @@ Array [
         },
       },
     ],
-    "state": "deprecated",
+    "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
