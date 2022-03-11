@@ -5,7 +5,6 @@ import { Chain } from '../chains/config/chain.config';
 import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
 import { ValueSourceMap } from '../protocols/interfaces/value-source-map.interface';
 import { getVaultCachedValueSources } from '../protocols/protocols.utils';
-import { SourceType } from '../rewards/enums/source-type.enum';
 import { getVaultValueSources } from '../rewards/rewards.utils';
 
 export async function refreshApySnapshots() {
@@ -25,21 +24,12 @@ export async function refreshChainApySnapshots(chain: Chain) {
           .forEach((source) => {
             const mapKey = [source.address, source.name, source.type].join('-');
             const mapEntry = sourceMap[mapKey];
-            // simulated underlying are harvestable, measured underlying is not
-            // directly override any saved simulated strategy performance for measured
-            const savedVirtualUnderlying = mapEntry && mapEntry.type === SourceType.Compound && mapEntry.harvestable;
-            const isVirtualUnderlying = source.type === SourceType.Compound && source.harvestable;
-            const override = !mapEntry || savedVirtualUnderlying;
-            if (override) {
+            if (!mapEntry) {
               sourceMap[mapKey] = source;
-            } else if (!isVirtualUnderlying) {
+            } else {
               mapEntry.apr += source.apr;
               mapEntry.minApr += source.minApr;
               mapEntry.maxApr += source.maxApr;
-              mapEntry.oneDay += source.oneDay;
-              mapEntry.threeDay += source.threeDay;
-              mapEntry.sevenDay += source.sevenDay;
-              mapEntry.thirtyDay += source.thirtyDay;
             }
           });
 

@@ -1,11 +1,10 @@
 import { Chain } from '../../chains/config/chain.config';
 import { TOKENS } from '../../config/tokens.config';
-import { Mhbtc__factory } from '../../contracts';
-import { Imbtc__factory } from '../../contracts/factories/Imbtc__factory';
 import { getPrice } from '../../prices/prices.utils';
 import { Token } from '../../tokens/interfaces/token.interface';
 import { formatBalance } from '../../tokens/tokens.utils';
 import { TokenPrice } from '../../prices/interface/token-price.interface';
+import { Imbtc__factory, Mhbtc__factory } from '../../contracts';
 
 export async function getImBtcPrice(chain: Chain, token: Token): Promise<TokenPrice> {
   const imbtc = Imbtc__factory.connect(token.address, chain.provider);

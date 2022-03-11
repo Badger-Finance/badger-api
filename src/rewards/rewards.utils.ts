@@ -1,4 +1,4 @@
-import { Network, Protocol, ValueSource } from '@badger-dao/sdk';
+import { Network, Protocol } from '@badger-dao/sdk';
 import { getBoostFile, getCachedAccount } from '../accounts/accounts.utils';
 import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
@@ -6,15 +6,13 @@ import { ONE_YEAR_SECONDS, REWARD_DATA } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
 import { getPrice } from '../prices/prices.utils';
 import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
-import { uniformPerformance } from '../protocols/interfaces/performance.interface';
-import { createValueSource } from '../protocols/interfaces/value-source.interface';
+import { createValueSource, ValueSource } from '../protocols/interfaces/value-source.interface';
 import { tokenEmission } from '../protocols/protocols.utils';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { Token } from '../tokens/interfaces/token.interface';
-import { formatBalance, getToken } from '../tokens/tokens.utils';
+import { getToken } from '../tokens/tokens.utils';
 import { RewardMerkleDistribution } from './interfaces/merkle-distributor.interface';
-import { BadgerTree__factory, RewardsLogger, RewardsLogger__factory } from '../contracts';
-import { EmissionScheduleApi } from './interfaces/reward-schedules-vault.interface';
+import { BadgerTree__factory, RewardsLogger } from '../contracts';
 import { EmissionSchedule } from '@badger-dao/sdk/lib/rewards/interfaces/emission-schedule.interface';
 import { BigNumber } from '@ethersproject/bignumber';
 import { UnprocessableEntity } from '@tsed/exceptions';
@@ -44,7 +42,7 @@ export async function getTreeDistribution(chain: Chain): Promise<RewardMerkleDis
 
 export function noRewards(VaultDefinition: VaultDefinition, token: Token) {
   return valueSourceToCachedValueSource(
-    createValueSource(`${token.symbol} Rewards`, uniformPerformance(0)),
+    createValueSource(`${token.symbol} Rewards`, 0),
     VaultDefinition,
     tokenEmission(token),
   );
@@ -156,15 +154,10 @@ export async function getRewardEmission(chain: Chain, vaultDefinition: VaultDefi
     if (vault.boost.enabled && token.address === chain.getBadgerTokenAddress()) {
       const boostedAPR = (vault.boost.weight / 10_000) * proRataAPR;
       proRataAPR = proRataAPR - boostedAPR;
-      const boostedSource = createValueSource(
-        `Boosted ${token.name} Rewards`,
-        uniformPerformance(boostedAPR),
-        false,
-        boostRange,
-      );
+      const boostedSource = createValueSource(`Boosted ${token.name} Rewards`, boostedAPR, boostRange);
       emissionSources.push(valueSourceToCachedValueSource(boostedSource, vaultDefinition, tokenEmission(token, true)));
     }
-    const proRataSource = createValueSource(`${token.name} Rewards`, uniformPerformance(proRataAPR));
+    const proRataSource = createValueSource(`${token.name} Rewards`, proRataAPR);
     emissionSources.push(valueSourceToCachedValueSource(proRataSource, vaultDefinition, tokenEmission(token)));
   }
   return emissionSources;
@@ -181,11 +174,6 @@ export function valueSourceToCachedValueSource(
     type,
     apr: valueSource.apr,
     name: valueSource.name,
-    oneDay: valueSource.performance.oneDay,
-    threeDay: valueSource.performance.threeDay,
-    sevenDay: valueSource.performance.sevenDay,
-    thirtyDay: valueSource.performance.thirtyDay,
-    harvestable: Boolean(valueSource.harvestable),
     minApr: valueSource.minApr,
     maxApr: valueSource.maxApr,
     boostable: valueSource.boostable,
@@ -208,16 +196,6 @@ export async function getVaultValueSources(
       sources = sources.filter((s) => s.type !== SourceType.Compound && s.type !== SourceType.PreCompound);
     }
 
-    const ARB_CRV_SETTS = new Set([TOKENS.BARB_CRV_RENBTC, TOKENS.BARB_CRV_TRICRYPTO, TOKENS.BARB_CRV_TRICRYPTO_LITE]);
-    if (ARB_CRV_SETTS.has(vaultDefinition.vaultToken)) {
-      const compounding = sources.find((s) => s.type === SourceType.Compound);
-      if (compounding) {
-        const crvSource = createValueSource('CRV Rewards', uniformPerformance(compounding.apr));
-        sources.push(
-          valueSourceToCachedValueSource(crvSource, vaultDefinition, tokenEmission(getToken(TOKENS.ARB_CRV))),
-        );
-      }
-    }
     return sources;
   } catch (err) {
     console.log({ vaultDefinition, err, sources });
@@ -228,7 +206,6 @@ export async function getVaultValueSources(
 export async function getProtocolValueSources(
   chain: Chain,
   vaultDefinition: VaultDefinition,
-  includeBaseEmission = false,
 ): Promise<CachedValueSource[]> {
   try {
     switch (vaultDefinition.protocol) {
@@ -236,7 +213,7 @@ export async function getProtocolValueSources(
         return SushiswapStrategy.getValueSources(chain, vaultDefinition);
       case Protocol.Curve:
       case Protocol.Convex:
-        return ConvexStrategy.getValueSources(chain, vaultDefinition, includeBaseEmission);
+        return ConvexStrategy.getValueSources(chain, vaultDefinition);
       case Protocol.Uniswap:
         return UniswapStrategy.getValueSources(vaultDefinition);
       case Protocol.Quickswap:
@@ -251,43 +228,4 @@ export async function getProtocolValueSources(
     console.log(error);
     return [];
   }
-}
-
-export function getRewordLoggerInst(chain: Chain): RewardsLoggerInst | undefined {
-  let rewardsLogger: RewardsLoggerInst | undefined;
-
-  if (chain.rewardsLogger) {
-    rewardsLogger = RewardsLogger__factory.connect(chain.rewardsLogger, chain.batchProvider);
-  }
-
-  return rewardsLogger;
-}
-
-export async function getRewardSchedules(
-  chain: Chain,
-  address: string,
-  rewardsLogger: RewardsLoggerInst,
-): Promise<EmissionScheduleApi[]> {
-  const vaultSchedules = await rewardsLogger.getAllUnlockSchedulesFor(address);
-
-  return vaultSchedules.map(({ beneficiary, token, totalAmount, start, end, duration }) => {
-    const { decimals } = chain.tokens[token];
-    const amount = formatBalance(totalAmount, decimals);
-
-    const startNum = start.toNumber();
-    const endNum = end.toNumber();
-    const durationNum = duration.toNumber();
-
-    const complitionPercent = Math.round(durationNum / ((endNum - startNum) / 100));
-
-    return {
-      vault: address,
-      beneficiary,
-      amount,
-      token,
-      start: startNum,
-      end: endNum,
-      compPercent: complitionPercent,
-    };
-  });
 }

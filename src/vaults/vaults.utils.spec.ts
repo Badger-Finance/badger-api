@@ -1,28 +1,27 @@
-import BadgerSDK, { Protocol, Vault, VaultBehavior, VaultsService, VaultState, VaultType } from '@badger-dao/sdk';
+import BadgerSDK, {
+  BadgerGraph,
+  Protocol,
+  TokensService,
+  Vault,
+  VaultBehavior,
+  VaultsService,
+  VaultState,
+  VaultType,
+} from '@badger-dao/sdk';
 import { BadRequest, NotFound, UnprocessableEntity } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';
 import { BinanceSmartChain } from '../chains/config/bsc.config';
 import { TOKENS } from '../config/tokens.config';
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
-import {
-  randomPerformance,
-  randomVault,
-  randomSnapshot,
-  setupMapper,
-  TEST_CHAIN,
-  TEST_ADDR,
-  randomSnapshots,
-} from '../test/tests.utils';
+import { randomVault, randomSnapshot, setupMapper, TEST_CHAIN, TEST_ADDR, randomSnapshots } from '../test/tests.utils';
 import { getToken } from '../tokens/tokens.utils';
 import {
   defaultVault,
   estimateDerivativeEmission,
   getCachedVault,
-  getPerformance,
   getVaultDefinition,
   getVaultPerformance,
   getVaultTokenPrice,
-  getVaultUnderlying,
   VAULT_SOURCE,
 } from './vaults.utils';
 import { PricingType } from '../prices/enums/pricing-type.enum';
@@ -32,34 +31,70 @@ import * as tokensUtils from '../tokens/tokens.utils';
 import * as protocolsUtils from '../protocols/protocols.utils';
 import * as indexerUtils from '../indexers/indexer.utils';
 import { createValueSource } from '../protocols/interfaces/value-source.interface';
-import { uniformPerformance } from '../protocols/interfaces/performance.interface';
 import { tokenEmission } from '../protocols/protocols.utils';
 import { Polygon } from '../chains/config/polygon.config';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { ONE_DAY_SECONDS } from '../config/constants';
 
 describe('vaults.utils', () => {
-  function setupSdk() {
-    const vault = getVaultDefinition(TEST_CHAIN, TOKENS.BBADGER);
-    jest.spyOn(VaultsService.prototype, 'listHarvests').mockImplementation(async (opts) => {
-      if (!opts.timestamp_gte) {
-        throw new Error('Invalid request!');
-      }
-      const startTime = opts.timestamp_gte;
-      const data = [0, 1, 2].map((int) => {
-        const timestamp = Number((startTime + int * ONE_DAY_SECONDS * 14).toFixed());
-        const block = Number((timestamp / 10000).toFixed());
-        return {
-          timestamp,
-          harvests: [{ timestamp, block, harvested: BigNumber.from((int + 1 * 1.88e18).toString()) }],
-          treeDistributions: [
-            { timestamp, block, token: TOKENS.BCVXCRV, amount: BigNumber.from((int + 1 * 5.77e12).toString()) },
-            { timestamp, block, token: TOKENS.BVECVX, amount: BigNumber.from((int + 1 * 4.42e12).toString()) },
-          ],
-        };
-      });
-      return { data };
+  const vault = getVaultDefinition(TEST_CHAIN, TOKENS.BBADGER);
+
+  beforeEach(() => {
+    jest.spyOn(BadgerGraph.prototype, 'loadSettHarvests').mockImplementation(async (_options) => {
+      const harvests = [
+        {
+          id: '',
+          blockNumber: '10',
+          timestamp: 1640159886,
+          amount: '80000000000000000000',
+          token: {
+            id: '',
+            symbol: '',
+            name: '',
+            decimals: '',
+            totalSupply: '',
+          },
+        },
+        {
+          id: '',
+          blockNumber: '10',
+          timestamp: 1642159886,
+          amount: '100000000000000000000',
+          token: {
+            id: '',
+            symbol: '',
+            name: '',
+            decimals: '',
+            totalSupply: '',
+          },
+        },
+        {
+          id: '',
+          blockNumber: '10',
+          timestamp: 1645159886,
+          amount: '125000000000000000000',
+          token: {
+            id: '',
+            symbol: '',
+            name: '',
+            decimals: '',
+            totalSupply: '',
+          },
+        },
+      ];
+      return {
+        settHarvests: harvests,
+      };
     });
+    jest.spyOn(BadgerGraph.prototype, 'loadBadgerTreeDistributions').mockImplementation(async () => ({
+      badgerTreeDistributions: [],
+    }));
+    jest.spyOn(TokensService.prototype, 'loadToken').mockImplementation(async (address) => ({
+      address,
+      decimals: 18,
+      symbol: 'TEST',
+      name: 'TEST',
+    }));
     const snapshot = randomSnapshot(vault);
     snapshot.value = 1000;
     snapshot.balance = 10000;
@@ -67,7 +102,7 @@ describe('vaults.utils', () => {
     jest.spyOn(indexerUtils, 'getVault').mockImplementation(async (_chain, _address) => ({
       sett: {
         id: TEST_ADDR,
-        balance: '25000000000000000000', // 25
+        balance: '2500000000000000000000', // 2500
         available: 0,
         netDeposit: 0,
         netShareDeposit: 0,
@@ -87,15 +122,45 @@ describe('vaults.utils', () => {
         grossShareDeposit: 1,
         grossShareWithdraw: 1,
         grossWithdraw: 1,
+        strategy: {
+          id: TEST_ADDR,
+          balance: '2500000000000000000000',
+        },
       },
     }));
+    jest.spyOn(rewardsUtils, 'getProtocolValueSources').mockImplementation(async (_chain, _vault) => {
+      const rewardSource = createValueSource('Test LP Fees', 1.13);
+      return [rewardsUtils.valueSourceToCachedValueSource(rewardSource, vault, SourceType.TradeFee)];
+    });
+  });
+
+  function setupSdk() {
+    jest.spyOn(VaultsService.prototype, 'listHarvests').mockImplementation(async (opts) => {
+      if (!opts.timestamp_gte) {
+        throw new Error('Invalid request!');
+      }
+      const startTime = opts.timestamp_gte;
+      const data = [0, 1, 2].map((int) => {
+        const timestamp = Number((startTime + int * ONE_DAY_SECONDS * 14).toFixed());
+        const block = Number((timestamp / 10000).toFixed());
+        return {
+          timestamp,
+          harvests: [{ timestamp, block, harvested: BigNumber.from((int + 1 * 1.88e18).toString()) }],
+          treeDistributions: [
+            { timestamp, block, token: TOKENS.BCVXCRV, amount: BigNumber.from((int + 1 * 5.77e12).toString()) },
+            { timestamp, block, token: TOKENS.BVECVX, amount: BigNumber.from((int + 1 * 4.42e12).toString()) },
+          ],
+        };
+      });
+      return { data };
+    });
   }
 
   beforeEach(() => {
     jest.spyOn(BadgerSDK.prototype, 'ready').mockImplementation();
     const vault = getVaultDefinition(TEST_CHAIN, TOKENS.BBADGER);
     jest.spyOn(rewardsUtils, 'getRewardEmission').mockImplementation(async (_chain, _vault) => {
-      const rewardSource = createValueSource('Badger Rewards', uniformPerformance(6.969));
+      const rewardSource = createValueSource('Badger Rewards', 6.969);
       return [
         rewardsUtils.valueSourceToCachedValueSource(rewardSource, vault, tokenEmission(getToken(TOKENS.BBADGER), true)),
       ];
@@ -176,34 +241,6 @@ describe('vaults.utils', () => {
     });
   });
 
-  describe('getPerformance', () => {
-    it('correctly evaluate no change', () => {
-      const [current, initial] = randomPerformance();
-      current.pricePerFullShare = 0;
-      initial.pricePerFullShare = 0;
-      const performance = getPerformance(current, initial);
-      expect(performance).toEqual(0);
-    });
-
-    it('correctly evaluate increase', () => {
-      const [current, initial] = randomPerformance();
-      current.pricePerFullShare = 1.01;
-      initial.pricePerFullShare = 1;
-      const performance = getPerformance(current, initial);
-      const expected = 365;
-      expect(performance.toFixed(3)).toEqual(expected.toFixed(3));
-    });
-
-    it('correctly evaluate decrease', () => {
-      const [current, initial] = randomPerformance();
-      current.pricePerFullShare = 1 - 0.03 / 365;
-      initial.pricePerFullShare = 1;
-      const performance = getPerformance(current, initial);
-      const expected = -3;
-      expect(performance.toFixed(3)).toEqual(expected.toFixed(3));
-    });
-  });
-
   describe('getVaultDefinition', () => {
     describe('for an existing sett', () => {
       it('returns the expected sett definition', () => {
@@ -263,62 +300,14 @@ describe('vaults.utils', () => {
     });
   });
 
-  describe('getVaultUnderlying', () => {
-    describe('no snapshots are available', () => {
-      it('returns zero apr', async () => {
-        setupMapper([]);
-        const vault = randomVault();
-        const result = await getVaultUnderlying(vault);
-        expect(result.apr).toEqual(0);
-        expect(result.maxApr).toBeFalsy();
-        expect(result.minApr).toBeFalsy();
-      });
-    });
-
-    describe('full sample period snapshots available', () => {
-      it('returns performances for each sample period', async () => {
-        const vault = randomVault();
-        const snapshots = randomSnapshots(vault);
-        setupMapper(snapshots);
-        const result = await getVaultUnderlying(vault);
-        expect(result.oneDay).toEqual(getPerformance(snapshots[0], snapshots[1]));
-        expect(result.threeDay).toEqual(getPerformance(snapshots[0], snapshots[3]));
-        expect(result.sevenDay).toEqual(getPerformance(snapshots[0], snapshots[7]));
-        expect(result.thirtyDay).toEqual(getPerformance(snapshots[0], snapshots[30]));
-      });
-    });
-
-    describe('partial sample period snapshots available', () => {
-      it('return performances for valid sample periods, and estimates for unavailable data', async () => {
-        const vault = randomVault();
-        const snapshots = randomSnapshots(vault, 5);
-        setupMapper(snapshots);
-        const result = await getVaultUnderlying(vault);
-        expect(result.oneDay).toEqual(getPerformance(snapshots[0], snapshots[1]));
-        expect(result.threeDay).toEqual(getPerformance(snapshots[0], snapshots[3]));
-        expect(result.sevenDay).toEqual(getPerformance(snapshots[0], snapshots[4]));
-        expect(result.thirtyDay).toEqual(getPerformance(snapshots[0], snapshots[4]));
-      });
-    });
-  });
-
   describe('getVaultPerformance', () => {
     const vault = getVaultDefinition(TEST_CHAIN, TOKENS.BBADGER);
 
     describe('no rewards or harvests', () => {
       it('returns value sources from fallback methods', async () => {
         jest.spyOn(VaultsService.prototype, 'listHarvests').mockImplementation(async (_opts) => ({ data: [] }));
-        setupMapper(randomSnapshots(vault));
-        const protocolFallback = jest
-          .spyOn(rewardsUtils, 'getProtocolValueSources')
-          .mockImplementation(async (_chain, _vault) => {
-            const emissionToken = getToken(TOKENS.SUSHI);
-            const rewardSource = createValueSource('Sushi Rewards', uniformPerformance(8.888));
-            return [rewardsUtils.valueSourceToCachedValueSource(rewardSource, vault, tokenEmission(emissionToken))];
-          });
         const result = await getVaultPerformance(TEST_CHAIN, vault);
         expect(result).toMatchSnapshot();
-        expect(protocolFallback.mock.calls[1]).toMatchObject([TEST_CHAIN, vault, true]);
       });
     });
 
@@ -328,16 +317,8 @@ describe('vaults.utils', () => {
           throw new Error('Incompatible vault!');
         });
         setupMapper(randomSnapshots(vault));
-        const protocolFallback = jest
-          .spyOn(rewardsUtils, 'getProtocolValueSources')
-          .mockImplementation(async (_chain, _vault) => {
-            const emissionToken = getToken(TOKENS.SUSHI);
-            const rewardSource = createValueSource('Sushi Rewards', uniformPerformance(8.888));
-            return [rewardsUtils.valueSourceToCachedValueSource(rewardSource, vault, tokenEmission(emissionToken))];
-          });
         const result = await getVaultPerformance(TEST_CHAIN, vault);
         expect(result).toMatchSnapshot();
-        expect(protocolFallback.mock.calls[1]).toMatchObject([TEST_CHAIN, vault, true]);
       });
     });
 
@@ -345,20 +326,8 @@ describe('vaults.utils', () => {
       it('returns value sources from fallback methods', async () => {
         const alternateChain = new Polygon();
         const vault = getVaultDefinition(alternateChain, TOKENS.BMATIC_QUICK_USDC_WBTC);
-        jest.spyOn(VaultsService.prototype, 'listHarvests').mockImplementation(async (_opts) => {
-          throw new Error('Incompatible vault!');
-        });
-        setupMapper(randomSnapshots(vault));
-        const protocolFallback = jest
-          .spyOn(rewardsUtils, 'getProtocolValueSources')
-          .mockImplementation(async (_chain, _vault) => {
-            const emissionToken = getToken(TOKENS.SUSHI);
-            const rewardSource = createValueSource('Sushi Rewards', uniformPerformance(8.888));
-            return [rewardsUtils.valueSourceToCachedValueSource(rewardSource, vault, tokenEmission(emissionToken))];
-          });
         const result = await getVaultPerformance(alternateChain, vault);
         expect(result).toMatchSnapshot();
-        expect(protocolFallback.mock.calls[1]).toMatchObject([alternateChain, vault, true]);
       });
     });
 
@@ -370,7 +339,7 @@ describe('vaults.utils', () => {
           price: Number(token.slice(0, 4)),
         }));
         jest.spyOn(protocolsUtils, 'getVaultCachedValueSources').mockImplementation(async (vault) => {
-          const underlying = createValueSource(VAULT_SOURCE, uniformPerformance(10));
+          const underlying = createValueSource(VAULT_SOURCE, 10);
           return [rewardsUtils.valueSourceToCachedValueSource(underlying, vault, SourceType.PreCompound)];
         });
         const result = await getVaultPerformance(TEST_CHAIN, vault);
@@ -400,13 +369,13 @@ describe('vaults.utils', () => {
   describe('estimateDerivativeEmission', () => {
     it.each([
       // enumerate all test cases above / below 100% apr
-      [3.4883, 6.7204, 6.7204, 48.50273097726344],
-      [3.4883, 6.7204, 0.7204, 11.044313151797013],
-      [3.4883, 0.7204, 6.7204, 44.62069156343578],
-      [3.4883, 0.7204, 0.7204, 3.384116194928767],
-      [0.4883, 6.7204, 6.7204, 49.69234266493466],
-      [0.4883, 6.7204, 0.7204, 20.73028950259373],
-      [0.4883, 0.7204, 0.7204, 11.697799484189915],
+      [3.4883, 6.7204, 6.7204, 94.18505465959561],
+      [3.4883, 6.7204, 0.7204, 12.415522315783369],
+      [3.4883, 0.7204, 6.7204, 80.57285802791813],
+      [3.4883, 0.7204, 0.7204, 3.5026499387579375],
+      [0.4883, 6.7204, 6.7204, 98.77689659442402],
+      [0.4883, 6.7204, 0.7204, 26.151589771823414],
+      [0.4883, 0.7204, 0.7204, 13.247460896623387],
     ])(
       'Estimates derived emission from (%d compound, %d emission, %d compound emission) as %d%%',
       (compound, emission, compoundEmission, expected) => {

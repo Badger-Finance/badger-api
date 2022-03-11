@@ -2,11 +2,8 @@ import { EmissionSchedule } from '@badger-dao/sdk/lib/rewards/interfaces/emissio
 
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 
-export interface EmissionScheduleApi extends EmissionSchedule {
-  vault: VaultDefinition['vaultToken'];
-  compPercent: number;
-}
+export { EmissionSchedule };
 
 export interface RewardSchedulesByVaults {
-  [address: VaultDefinition['vaultToken']]: EmissionScheduleApi[];
+  [address: VaultDefinition['vaultToken']]: EmissionSchedule[];
 }

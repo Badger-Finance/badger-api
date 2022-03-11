@@ -8,7 +8,7 @@ import { RewardsService } from './rewards.service';
 
 import { AirdropMerkleClaim } from './interfaces/merkle-distributor.interface';
 import { RewardMerkleClaimModel } from './interfaces/reward-merkle-claim-model.interface';
-import { EmissionScheduleApi, RewardSchedulesByVaults } from './interfaces/reward-schedules-vault.interface';
+import { EmissionSchedule, RewardSchedulesByVaults } from './interfaces/reward-schedules-vault.interface';
 import { RewardSchedulesByVaultModel } from './interfaces/reward-schedules-vault-model.interface';
 import { RewardSchedulesByVaultsModel } from './interfaces/reward-schedules-vaults-model.interface';
 
@@ -45,9 +45,11 @@ export class RewardController {
   @Summary('Get all token rewards emmited for all vaults on network')
   @Description('Return emission schedule list for all vaults')
   @Returns(200, RewardSchedulesByVaultsModel)
-  @Returns(404).Description('No rewards token emission data for network')
-  async getRewardSchedulesVaultsList(@QueryParams('chain') chain?: Network): Promise<RewardSchedulesByVaults> {
-    return this.rewardsService.rewardSchedulesVaultsList(Chain.getChain(chain));
+  async getRewardSchedulesVaultsList(
+    @QueryParams('chain') chain?: Network,
+    @QueryParams('active') active?: boolean,
+  ): Promise<RewardSchedulesByVaults> {
+    return this.rewardsService.rewardSchedulesVaultsList(Chain.getChain(chain), Boolean(active));
   }
 
   @Get('/schedules/:address')
@@ -55,12 +57,12 @@ export class RewardController {
   @Summary('Get all token rewards emmited for vault on network')
   @Description('Return emission schedule list for specified vault')
   @Returns(200, Array).Of(RewardSchedulesByVaultModel)
-  @Returns(404).Description('No rewards token emission data for network')
   @Returns(404).Description('Unknown vault')
   async getRewardListSchedulesForVault(
     @PathParams('address') address: string,
     @QueryParams('chain') chain?: Network,
-  ): Promise<EmissionScheduleApi[]> {
-    return this.rewardsService.rewardSchedulesByVault(Chain.getChain(chain), address);
+    @QueryParams('active') active?: boolean,
+  ): Promise<EmissionSchedule[]> {
+    return this.rewardsService.rewardSchedulesByVault(Chain.getChain(chain), address, Boolean(active));
   }
 }

@@ -3,27 +3,26 @@ import { BadRequest, NotFound, UnprocessableEntity } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
-import { CURRENT, ONE_DAY_MS, ONE_YEAR_MS, ONE_YEAR_SECONDS, SAMPLE_DAYS } from '../config/constants';
+import { DEBUG, ONE_DAY_MS, ONE_YEAR_SECONDS } from '../config/constants';
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
 import { formatBalance, getToken } from '../tokens/tokens.utils';
 import { VaultDefinition } from './interfaces/vault-definition.interface';
-import { Sett__factory, Controller__factory, Strategy__factory, EmissionControl__factory } from '../contracts';
+import { EmissionControl__factory } from '../contracts';
 import { VaultStrategy } from './interfaces/vault-strategy.interface';
 import { TOKENS } from '../config/tokens.config';
-import { Network, Protocol, Vault, VaultBehavior, VaultState, VaultType } from '@badger-dao/sdk';
+import { gqlGenT, keyBy, Network, Protocol, Vault, VaultBehavior, VaultState, VaultType } from '@badger-dao/sdk';
 import { getPrice } from '../prices/prices.utils';
 import { TokenPrice } from '../prices/interface/token-price.interface';
 import { PricingType } from '../prices/enums/pricing-type.enum';
 import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
 import { createValueSource } from '../protocols/interfaces/value-source.interface';
-import { uniformPerformance } from '../protocols/interfaces/performance.interface';
 import { getProtocolValueSources, getRewardEmission, valueSourceToCachedValueSource } from '../rewards/rewards.utils';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { getVaultCachedValueSources, tokenEmission } from '../protocols/protocols.utils';
-import { SOURCE_TIME_FRAMES, updatePerformance } from '../rewards/enums/source-timeframe.enum';
 import { getVault } from '../indexers/indexer.utils';
 import { HistoricVaultSnapshot } from './types/historic-vault-snapshot';
 import { VaultSnapshot } from './types/vault-snapshot';
+import { VaultHarvestData } from './interfaces/vault-harvest-data.interface';
 
 export const VAULT_SOURCE = 'Vault Compounding';
 
@@ -121,17 +120,6 @@ export async function getVaultSnapshotsInRange(
   }
 }
 
-export function getPerformance(current: HistoricVaultSnapshot, initial: HistoricVaultSnapshot): number {
-  const ratioDiff = current.pricePerFullShare - initial.pricePerFullShare;
-  const timestampDiff = current.timestamp - initial.timestamp;
-  if (timestampDiff === 0 || ratioDiff === 0) {
-    return 0;
-  }
-  const scalar = ONE_YEAR_MS / timestampDiff;
-  const finalRatio = initial.pricePerFullShare + scalar * ratioDiff;
-  return ((finalRatio - initial.pricePerFullShare) / initial.pricePerFullShare) * 100;
-}
-
 export function getVaultDefinition(chain: Chain, contract: string): VaultDefinition {
   const contractAddress = ethers.utils.getAddress(contract);
   const vaultDefinition = chain.vaults.find((v) => v.vaultToken === contractAddress);
@@ -150,17 +138,8 @@ export async function getStrategyInfo(chain: Chain, vaultDefinition: VaultDefini
     strategistFee: 0,
   };
   try {
-    const contract = Sett__factory.connect(vaultDefinition.vaultToken, chain.provider);
-    const controllerAddr = await contract.controller();
-    if (controllerAddr === ethers.constants.AddressZero) {
-      return defaultStrategyInfo;
-    }
-    const controller = Controller__factory.connect(controllerAddr, chain.provider);
-    const strategyAddr = await controller.strategies(vaultDefinition.depositToken);
-    if (strategyAddr === ethers.constants.AddressZero) {
-      return defaultStrategyInfo;
-    }
-    const strategy = Strategy__factory.connect(strategyAddr, chain.provider);
+    const sdk = await chain.getSdk();
+    const strategy = await sdk.vaults.getVaultStrategy(vaultDefinition.vaultToken);
     const [withdrawFee, performanceFee, strategistFee] = await Promise.all([
       strategy.withdrawalFee(),
       strategy.performanceFeeGovernance(),
@@ -176,29 +155,6 @@ export async function getStrategyInfo(chain: Chain, vaultDefinition: VaultDefini
     return defaultStrategyInfo;
   }
 }
-
-// TODO: align this weird piece (result of non-updating ppfs for updates from graph)
-// either remove or consolidate this kind of functionality
-export const getPricePerShare = async (
-  chain: Chain,
-  pricePerShare: BigNumber,
-  vaultDefinition: VaultDefinition,
-  block?: number,
-): Promise<number> => {
-  const token = getToken(vaultDefinition.vaultToken);
-  try {
-    let ppfs: BigNumber;
-    const contract = Sett__factory.connect(vaultDefinition.vaultToken, chain.provider);
-    if (block) {
-      ppfs = await contract.getPricePerFullShare({ blockTag: block });
-    } else {
-      ppfs = await contract.getPricePerFullShare();
-    }
-    return formatBalance(ppfs, token.decimals);
-  } catch (err) {
-    return formatBalance(pricePerShare, token.decimals);
-  }
-};
 
 export async function getBoostWeight(chain: Chain, vaultDefinition: VaultDefinition): Promise<BigNumber> {
   if (!chain.emissionControl) {
@@ -241,63 +197,21 @@ export async function getVaultPerformance(
   chain: Chain,
   vaultDefinition: VaultDefinition,
 ): Promise<CachedValueSource[]> {
-  const rewardEmissions = await getRewardEmission(chain, vaultDefinition);
+  const [rewardEmissions, protocol] = await Promise.all([
+    getRewardEmission(chain, vaultDefinition),
+    getProtocolValueSources(chain, vaultDefinition),
+  ]);
+  let vaultSources: CachedValueSource[] = [];
   try {
-    const [eventSources, protocol] = await Promise.all([
-      loadVaultEventPerformances(chain, vaultDefinition),
-      getProtocolValueSources(chain, vaultDefinition),
-    ]);
-
-    return [...eventSources, ...protocol, ...rewardEmissions];
+    vaultSources = await loadVaultEventPerformances(chain, vaultDefinition);
+    vaultSources.push();
   } catch (err) {
-    const [underlying, protocol] = await Promise.all([
-      getVaultUnderlying(vaultDefinition),
-      getProtocolValueSources(chain, vaultDefinition, true),
-    ]);
-    return [underlying, ...protocol, ...rewardEmissions];
-  }
-}
-
-export async function getVaultUnderlying(vaultDefinition: VaultDefinition): Promise<CachedValueSource> {
-  const rangeEnd = Date.now();
-  const rangeStart = rangeEnd - ONE_DAY_MS * SAMPLE_DAYS;
-  const snapshots = await getVaultSnapshotsInRange(vaultDefinition, new Date(rangeStart), new Date(rangeEnd));
-  const current = snapshots[CURRENT];
-  if (current === undefined) {
-    return valueSourceToCachedValueSource(
-      createValueSource(VAULT_SOURCE, uniformPerformance(0)),
-      vaultDefinition,
-      SourceType.Compound,
-    );
-  }
-  const performance = uniformPerformance(0);
-
-  let timeframeIndex = 0;
-  for (let i = 0; i < snapshots.length; i++) {
-    const currentTimeFrame = SOURCE_TIME_FRAMES[timeframeIndex];
-    const currentCutoff = rangeEnd - currentTimeFrame * ONE_DAY_MS;
-    const currentSnapshot = snapshots[i];
-    if (currentSnapshot.timestamp <= currentCutoff) {
-      updatePerformance(performance, currentTimeFrame, getPerformance(current, currentSnapshot));
-      timeframeIndex += 1;
-      if (timeframeIndex >= SOURCE_TIME_FRAMES.length) {
-        break;
-      }
+    if (DEBUG) {
+      console.log(`${vaultDefinition.name} vault APR estimation fallback to badger subgraph`);
     }
+    vaultSources = await loadVaultGraphPerformances(chain, vaultDefinition);
   }
-
-  // handle no valid measurements, measure available data
-  while (timeframeIndex < SOURCE_TIME_FRAMES.length) {
-    updatePerformance(
-      performance,
-      SOURCE_TIME_FRAMES[timeframeIndex],
-      getPerformance(current, snapshots[snapshots.length - 1]),
-    );
-    timeframeIndex += 1;
-  }
-
-  const vaultSource = createValueSource(VAULT_SOURCE, performance);
-  return valueSourceToCachedValueSource(vaultSource, vaultDefinition, SourceType.Compound);
+  return [...vaultSources, ...rewardEmissions, ...protocol];
 }
 
 export async function loadVaultEventPerformances(
@@ -313,10 +227,143 @@ export async function loadVaultEventPerformances(
   const cutoff = (Date.now() - ONE_DAY_MS * 21) / 1000;
   const { data } = await sdk.vaults.listHarvests({ address: vaultDefinition.vaultToken, timestamp_gte: cutoff });
 
+  return estimateVaultPerformance(chain, vaultDefinition, data);
+}
+
+/**
+ * Extrapolates a one year APR for a given vault based on compounding and emissions based on $100 deposit.
+ * @param compoundApr Base compound APR of vault
+ * @param emissionApr Emission APR of the emitted vault
+ * @param emissionCompoundApr Derivative compound APR of the tmitted vault
+ * @returns Extraposedat one year APR given current yields continue
+ */
+export function estimateDerivativeEmission(
+  compoundApr: number,
+  emissionApr: number,
+  emissionCompoundApr: number,
+): number {
+  // start with $100 deposited into the vault
+  let currentValueCompounded = 100;
+  let currentValueEmitted = 0;
+  let currentValueEmittedCompounded = 0;
+  for (let i = 0; i < 365; i++) {
+    // accrue emitted yield from emissionApr
+    const emitted = currentValueCompounded * (emissionApr / 365);
+    currentValueCompounded += currentValueCompounded * (compoundApr / 365);
+    // accrue compounded yield from emitted tokens
+    const emittedCompounded = currentValueEmitted * (emissionCompoundApr / 365);
+    // account for total yield emitted
+    currentValueEmitted += emitted;
+    // account for the actual compounding portion on the emitted yield (what we are looking for)
+    currentValueEmittedCompounded += emittedCompounded;
+    // account for the compounded yield
+    currentValueEmitted += emittedCompounded;
+  }
+  const total = currentValueCompounded + currentValueEmitted;
+  return (currentValueEmittedCompounded / total) * 100;
+}
+
+// subgraph based emissions retrieval
+// should we put this into the sdk?
+export async function loadVaultGraphPerformances(
+  chain: Chain,
+  vaultDefinition: VaultDefinition,
+): Promise<CachedValueSource[]> {
+  const { vaultToken } = vaultDefinition;
+
+  const sdk = await chain.getSdk();
+  const cutoff = Number(((Date.now() - ONE_DAY_MS * 21) / 1000).toFixed());
+
+  let [vaultHarvests, treeDistributions] = await Promise.all([
+    sdk.graph.loadSettHarvests({
+      where: {
+        sett: vaultToken.toLowerCase(),
+        timestamp_gte: cutoff,
+      },
+    }),
+    sdk.graph.loadBadgerTreeDistributions({
+      where: {
+        sett: vaultToken.toLowerCase(),
+        timestamp_gte: cutoff,
+      },
+    }),
+  ]);
+
+  let { settHarvests } = vaultHarvests;
+  let { badgerTreeDistributions } = treeDistributions;
+
+  let data = constructGraphVaultData(settHarvests, badgerTreeDistributions);
+  // if there are no recent viable options, attempt to use the full vault history
+  if (data.length <= 1) {
+    [vaultHarvests, treeDistributions] = await Promise.all([
+      sdk.graph.loadSettHarvests({
+        where: {
+          sett: vaultToken.toLowerCase(),
+          timestamp_gte: cutoff,
+        },
+      }),
+      sdk.graph.loadBadgerTreeDistributions({
+        where: {
+          sett: vaultToken.toLowerCase(),
+          timestamp_gte: cutoff,
+        },
+      }),
+    ]);
+    settHarvests = vaultHarvests.settHarvests;
+    badgerTreeDistributions = treeDistributions.badgerTreeDistributions;
+    if (DEBUG) {
+      console.log(
+        `OVERRIDE ${vaultDefinition.name} with full historic harvest data (${
+          settHarvests.length + badgerTreeDistributions.length
+        })`,
+      );
+    }
+  }
+
+  data = constructGraphVaultData(settHarvests, badgerTreeDistributions);
+  // if we still don't have harvests or distributions - don't bother there is nothing to compute
+  if (data.length <= 1) {
+    return [];
+  }
+
+  return estimateVaultPerformance(chain, vaultDefinition, data);
+}
+
+function constructGraphVaultData(
+  settHarvests: gqlGenT.SettHarvestsQuery['settHarvests'],
+  badgerTreeDistributions: gqlGenT.BadgerTreeDistributionsQuery['badgerTreeDistributions'],
+): VaultHarvestData[] {
+  const harvestsByTimestamp = keyBy(settHarvests, (harvest) => harvest.timestamp);
+  const treeDistributionsByTimestamp = keyBy(badgerTreeDistributions, (distribution) => distribution.timestamp);
+  const timestamps = Array.from(
+    new Set([...harvestsByTimestamp.keys(), ...treeDistributionsByTimestamp.keys()]).values(),
+  );
+  return timestamps.map((t) => {
+    const timestamp = Number(t);
+    const currentHarvests = harvestsByTimestamp.get(timestamp) ?? [];
+    const currentDistributions = treeDistributionsByTimestamp.get(timestamp) ?? [];
+    return {
+      timestamp,
+      harvests: currentHarvests.map((h) => ({ timestamp, block: Number(h.blockNumber), harvested: h.amount })),
+      treeDistributions: currentDistributions.map((d) => ({
+        timestamp,
+        block: Number(d.blockNumber),
+        token: d.token.id,
+        amount: d.amount,
+      })),
+    };
+  });
+}
+
+async function estimateVaultPerformance(
+  chain: Chain,
+  vaultDefinition: VaultDefinition,
+  data: VaultHarvestData[],
+): Promise<CachedValueSource[]> {
   const recentHarvests = data.sort((a, b) => b.timestamp - a.timestamp);
 
   if (recentHarvests.length <= 1) {
-    throw new Error('Vault does not have adequate harvest history!');
+    throw new Error(`${vaultDefinition.name} does not have adequate harvest history`);
   }
 
   const vault = await getCachedVault(vaultDefinition);
@@ -340,7 +387,8 @@ export async function loadVaultEventPerformances(
     totalDuration += duration;
     const { sett } = await getVault(chain, vaultDefinition.vaultToken, end.block);
     if (sett) {
-      weightedBalance += duration * formatBalance(sett.balance, depositToken.decimals);
+      const balance = sett.strategy?.balance ?? sett.balance;
+      weightedBalance += duration * formatBalance(balance, depositToken.decimals);
     } else {
       weightedBalance += duration * vault.balance;
     }
@@ -357,14 +405,14 @@ export async function loadVaultEventPerformances(
   const periods = Math.min(365, durationScalar * (measuredHarvests.length - 1));
   const compoundApr = (totalHarvestedTokens / measuredBalance) * durationScalar;
   const compoundApy = (1 + compoundApr / periods) ** periods - 1;
-  const compoundSourceApr = createValueSource(VAULT_SOURCE, uniformPerformance(compoundApr * 100), true);
+  const compoundSourceApr = createValueSource(VAULT_SOURCE, compoundApr * 100);
   const cachedCompoundSourceApr = valueSourceToCachedValueSource(
     compoundSourceApr,
     vaultDefinition,
     SourceType.PreCompound,
   );
   valueSources.push(cachedCompoundSourceApr);
-  const compoundSource = createValueSource(VAULT_SOURCE, uniformPerformance(compoundApy * 100));
+  const compoundSource = createValueSource(VAULT_SOURCE, compoundApy * 100);
   const cachedCompoundSource = valueSourceToCachedValueSource(compoundSource, vaultDefinition, SourceType.Compound);
   valueSources.push(cachedCompoundSource);
 
@@ -389,7 +437,7 @@ export async function loadVaultEventPerformances(
     const tokensEmitted = formatBalance(amount, tokenEmitted.decimals);
     const valueEmitted = tokensEmitted * price;
     const emissionApr = (valueEmitted / measuredValue) * durationScalar;
-    const emissionSource = createValueSource(`${tokenEmitted.symbol} Rewards`, uniformPerformance(emissionApr * 100));
+    const emissionSource = createValueSource(`${tokenEmitted.symbol} Rewards`, emissionApr * 100);
     const cachedEmissionSource = valueSourceToCachedValueSource(
       emissionSource,
       vaultDefinition,
@@ -406,31 +454,11 @@ export async function loadVaultEventPerformances(
         const compoundingSourceApy = estimateDerivativeEmission(compoundApr, emissionApr, compoundingSource.apr / 100);
         const sourceName = `${getToken(emittedVault.vaultToken).name} Compounding`;
         const sourceType = `Derivative ${sourceName}`.replace(' ', '_').toLowerCase();
-        const derivativeSource = createValueSource(sourceName, uniformPerformance(compoundingSourceApy));
+        const derivativeSource = createValueSource(sourceName, compoundingSourceApy);
         valueSources.push(valueSourceToCachedValueSource(derivativeSource, vaultDefinition, sourceType));
       }
     } catch {} // ignore error for non vaults
   }
 
   return valueSources;
-}
-
-export function estimateDerivativeEmission(
-  compoundApr: number,
-  emissionApr: number,
-  emissionCompoundApr: number,
-): number {
-  let currentValueCompounded = 100;
-  let currentValueEmitted = 0;
-  let currentValueEmittedCompounded = 0;
-  for (let i = 0; i < 365; i++) {
-    const emitted = currentValueCompounded * (emissionApr / 365);
-    currentValueCompounded += currentValueCompounded * (compoundApr / 365);
-    const emittedCompounded = currentValueEmitted * (emissionCompoundApr / 365);
-    currentValueEmitted += emitted;
-    currentValueEmittedCompounded += emittedCompounded;
-    currentValueEmitted += emittedCompounded;
-  }
-  const total = currentValueCompounded + currentValueEmitted + currentValueEmittedCompounded;
-  return (currentValueEmittedCompounded / total) * 100;
 }
