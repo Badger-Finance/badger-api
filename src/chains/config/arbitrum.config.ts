@@ -20,7 +20,6 @@ export class Arbitrum extends Chain {
       arbitrumSetts,
       RPC[Network.Arbitrum],
       new BaseStrategy(Network.Arbitrum, Object.keys(arbitrumTokensConfig)),
-      2425847,
       '0x635EB2C39C75954bb53Ebc011BDC6AfAAcE115A6',
       '0x85E1cACAe9a63429394d68Db59E14af74143c61c',
       '0x78418681f9ed228d627f785fb9607ed5175518fd',

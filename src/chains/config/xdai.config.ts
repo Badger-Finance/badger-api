@@ -19,7 +19,6 @@ export class xDai extends Chain {
       xDaiSetts,
       rpc[Network.xDai],
       new BaseStrategy(Network.xDai, Object.keys(xDaiTokensConfig)),
-      6307200,
     );
     Chain.register(this.network, this);
   }

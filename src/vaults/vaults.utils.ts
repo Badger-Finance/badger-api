@@ -216,7 +216,7 @@ export async function getVaultPerformance(
     vaultSources.push();
   } catch (err) {
     console.error(err);
-    console.log(`${vaultDefinition.name} fallback to APR estimation from badger subgraph`);
+    console.log(`${vaultDefinition.name} vault APR estimation fallback to badger subgraph`);
     vaultSources = await loadVaultGraphPerformances(chain, vaultDefinition);
   }
   return [...vaultSources, ...rewardEmissions, ...protocol];
@@ -266,11 +266,12 @@ export interface VaultHarvestData {
 
 // subgraph based emissions retrieval
 // should we put this into the sdk?
-export async function loadVaultGraphPerformances(chain: Chain, vault: VaultDefinition) {
+export async function loadVaultGraphPerformances(chain: Chain, vault: VaultDefinition): Promise<CachedValueSource[]> {
   const { vaultToken, depositToken } = vault;
 
   const sdk = await chain.getSdk();
-  const cutoff = (Date.now() - ONE_DAY_MS * 21) / 1000;
+  console.log(sdk.graph.graphUrl, chain.network);
+  const cutoff = Number(((Date.now() - ONE_DAY_MS * 21) / 1000).toFixed());
   const [vaultHarvests, treeDistributions] = await Promise.all([
     sdk.graph.loadSettHarvests({
       where: {
