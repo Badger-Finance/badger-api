@@ -14,7 +14,7 @@ import { CachedValueSource } from '../protocols/interfaces/cached-value-source.i
 import { valueSourceToCachedValueSource } from '../rewards/rewards.utils';
 import { SourceType } from '../rewards/enums/source-type.enum';
 
-describe('SettsController', () => {
+describe('VaultsController', () => {
   let request: SuperTest.SuperTest<SuperTest.Test>;
 
   beforeAll(PlatformTest.bootstrap(Server));
