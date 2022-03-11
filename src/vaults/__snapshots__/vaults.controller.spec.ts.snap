@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`SettsController GET /v2/vaults with a specified chain returns the vaults for bsc 1`] = `
+exports[`VaultsController GET /v2/vaults with a specified chain returns the vaults for bsc 1`] = `
 Array [
   Object {
     "apr": 84.12,
@@ -281,7 +281,7 @@ Array [
 ]
 `;
 
-exports[`SettsController GET /v2/vaults with a specified chain returns the vaults for eth 1`] = `
+exports[`VaultsController GET /v2/vaults with a specified chain returns the vaults for eth 1`] = `
 Array [
   Object {
     "apr": 99.96000000000001,
@@ -328,17 +328,10 @@ Array [
         "maxApr": 33.32,
         "minApr": 33.32,
         "name": "Vault Compounding",
-        "performance": Object {
-          "oneDay": 33.32,
-          "sevenDay": 33.32,
-          "thirtyDay": 33.32,
-          "threeDay": 33.32,
-        },
       },
       Object {
         "apr": 33.32,
         "boostable": false,
-        "harvestable": false,
         "maxApr": 33.32,
         "minApr": 33.32,
         "name": "Badger Rewards",
@@ -1348,17 +1341,10 @@ Array [
         "maxApr": 12.09,
         "minApr": 12.09,
         "name": "Vault Compounding",
-        "performance": Object {
-          "oneDay": 12.09,
-          "sevenDay": 12.09,
-          "thirtyDay": 12.09,
-          "threeDay": 12.09,
-        },
       },
       Object {
         "apr": 12.09,
         "boostable": false,
-        "harvestable": false,
         "maxApr": 12.09,
         "minApr": 12.09,
         "name": "Badger Rewards",
@@ -1545,17 +1531,10 @@ Array [
         "maxApr": 22.47,
         "minApr": 22.47,
         "name": "Vault Compounding",
-        "performance": Object {
-          "oneDay": 22.47,
-          "sevenDay": 22.47,
-          "thirtyDay": 22.47,
-          "threeDay": 22.47,
-        },
       },
       Object {
         "apr": 22.47,
         "boostable": false,
-        "harvestable": false,
         "maxApr": 22.47,
         "minApr": 22.47,
         "name": "Badger Rewards",
@@ -1643,17 +1622,10 @@ Array [
         "maxApr": 13.69,
         "minApr": 13.69,
         "name": "Vault Compounding",
-        "performance": Object {
-          "oneDay": 13.69,
-          "sevenDay": 13.69,
-          "thirtyDay": 13.69,
-          "threeDay": 13.69,
-        },
       },
       Object {
         "apr": 13.69,
         "boostable": false,
-        "harvestable": false,
         "maxApr": 13.69,
         "minApr": 13.69,
         "name": "Badger Rewards",
@@ -1741,17 +1713,10 @@ Array [
         "maxApr": 38.92,
         "minApr": 38.92,
         "name": "Vault Compounding",
-        "performance": Object {
-          "oneDay": 38.92,
-          "sevenDay": 38.92,
-          "thirtyDay": 38.92,
-          "threeDay": 38.92,
-        },
       },
       Object {
         "apr": 38.92,
         "boostable": false,
-        "harvestable": false,
         "maxApr": 38.92,
         "minApr": 38.92,
         "name": "Badger Rewards",
@@ -1839,17 +1804,10 @@ Array [
         "maxApr": 15,
         "minApr": 15,
         "name": "Vault Compounding",
-        "performance": Object {
-          "oneDay": 15,
-          "sevenDay": 15,
-          "thirtyDay": 15,
-          "threeDay": 15,
-        },
       },
       Object {
         "apr": 15,
         "boostable": false,
-        "harvestable": false,
         "maxApr": 15,
         "minApr": 15,
         "name": "Badger Rewards",
@@ -2112,17 +2070,10 @@ Array [
         "maxApr": 13.4,
         "minApr": 13.4,
         "name": "Vault Compounding",
-        "performance": Object {
-          "oneDay": 13.4,
-          "sevenDay": 13.4,
-          "thirtyDay": 13.4,
-          "threeDay": 13.4,
-        },
       },
       Object {
         "apr": 13.4,
         "boostable": false,
-        "harvestable": false,
         "maxApr": 13.4,
         "minApr": 13.4,
         "name": "Badger Rewards",
@@ -2973,13 +2924,13 @@ Array [
 ]
 `;
 
-exports[`SettsController GET /v2/vaults with an invalid specified chain returns a 400 1`] = `
+exports[`VaultsController GET /v2/vaults with an invalid specified chain returns a 400 1`] = `
 Object {
   "message": "invalid is not a supported chain",
 }
 `;
 
-exports[`SettsController GET /v2/vaults with no specified chain returns eth vaults 1`] = `
+exports[`VaultsController GET /v2/vaults with no specified chain returns eth vaults 1`] = `
 Array [
   Object {
     "apr": 99.96000000000001,
@@ -3026,17 +2977,10 @@ Array [
         "maxApr": 33.32,
         "minApr": 33.32,
         "name": "Vault Compounding",
-        "performance": Object {
-          "oneDay": 33.32,
-          "sevenDay": 33.32,
-          "thirtyDay": 33.32,
-          "threeDay": 33.32,
-        },
       },
       Object {
         "apr": 33.32,
         "boostable": false,
-        "harvestable": false,
         "maxApr": 33.32,
         "minApr": 33.32,
         "name": "Badger Rewards",
@@ -4046,17 +3990,10 @@ Array [
         "maxApr": 12.09,
         "minApr": 12.09,
         "name": "Vault Compounding",
-        "performance": Object {
-          "oneDay": 12.09,
-          "sevenDay": 12.09,
-          "thirtyDay": 12.09,
-          "threeDay": 12.09,
-        },
       },
       Object {
         "apr": 12.09,
         "boostable": false,
-        "harvestable": false,
         "maxApr": 12.09,
         "minApr": 12.09,
         "name": "Badger Rewards",
@@ -4243,17 +4180,10 @@ Array [
         "maxApr": 22.47,
         "minApr": 22.47,
         "name": "Vault Compounding",
-        "performance": Object {
-          "oneDay": 22.47,
-          "sevenDay": 22.47,
-          "thirtyDay": 22.47,
-          "threeDay": 22.47,
-        },
       },
       Object {
         "apr": 22.47,
         "boostable": false,
-        "harvestable": false,
         "maxApr": 22.47,
         "minApr": 22.47,
         "name": "Badger Rewards",
@@ -4341,17 +4271,10 @@ Array [
         "maxApr": 13.69,
         "minApr": 13.69,
         "name": "Vault Compounding",
-        "performance": Object {
-          "oneDay": 13.69,
-          "sevenDay": 13.69,
-          "thirtyDay": 13.69,
-          "threeDay": 13.69,
-        },
       },
       Object {
         "apr": 13.69,
         "boostable": false,
-        "harvestable": false,
         "maxApr": 13.69,
         "minApr": 13.69,
         "name": "Badger Rewards",
@@ -4439,17 +4362,10 @@ Array [
         "maxApr": 38.92,
         "minApr": 38.92,
         "name": "Vault Compounding",
-        "performance": Object {
-          "oneDay": 38.92,
-          "sevenDay": 38.92,
-          "thirtyDay": 38.92,
-          "threeDay": 38.92,
-        },
       },
       Object {
         "apr": 38.92,
         "boostable": false,
-        "harvestable": false,
         "maxApr": 38.92,
         "minApr": 38.92,
         "name": "Badger Rewards",
@@ -4537,17 +4453,10 @@ Array [
         "maxApr": 15,
         "minApr": 15,
         "name": "Vault Compounding",
-        "performance": Object {
-          "oneDay": 15,
-          "sevenDay": 15,
-          "thirtyDay": 15,
-          "threeDay": 15,
-        },
       },
       Object {
         "apr": 15,
         "boostable": false,
-        "harvestable": false,
         "maxApr": 15,
         "minApr": 15,
         "name": "Badger Rewards",
@@ -4810,17 +4719,10 @@ Array [
         "maxApr": 13.4,
         "minApr": 13.4,
         "name": "Vault Compounding",
-        "performance": Object {
-          "oneDay": 13.4,
-          "sevenDay": 13.4,
-          "thirtyDay": 13.4,
-          "threeDay": 13.4,
-        },
       },
       Object {
         "apr": 13.4,
         "boostable": false,
-        "harvestable": false,
         "maxApr": 13.4,
         "minApr": 13.4,
         "name": "Badger Rewards",
