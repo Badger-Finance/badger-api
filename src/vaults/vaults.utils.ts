@@ -344,8 +344,9 @@ async function estimateVaultPerformance(
     const duration = end.timestamp - start.timestamp;
     totalDuration += duration;
     const { sett } = await getVault(chain, vaultDefinition.vaultToken, end.block);
-    if (sett) {
-      weightedBalance += duration * formatBalance(sett.balance, depositToken.decimals);
+    if (sett && sett.strategy) {
+      const { balance } = sett.strategy;
+      weightedBalance += duration * formatBalance(balance, depositToken.decimals);
     } else {
       weightedBalance += duration * vault.balance;
     }
