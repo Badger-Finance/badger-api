@@ -122,6 +122,10 @@ describe('vaults.utils', () => {
         grossShareDeposit: 1,
         grossShareWithdraw: 1,
         grossWithdraw: 1,
+        strategy: {
+          id: TEST_ADDR,
+          balance: '2500000000000000000000',
+        },
       },
     }));
     jest.spyOn(rewardsUtils, 'getProtocolValueSources').mockImplementation(async (_chain, _vault) => {
