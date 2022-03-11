@@ -198,7 +198,7 @@ export async function getVaultValueSources(
 
     return sources;
   } catch (err) {
-    console.log({ vaultDefinition, err, sources });
+    // console.log({ vaultDefinition, sources });
     return [];
   }
 }
