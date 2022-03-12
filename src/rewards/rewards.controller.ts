@@ -1,5 +1,5 @@
 import { Network } from '@badger-dao/sdk';
-import { Controller, Get, Inject, PathParams, QueryParams } from '@tsed/common';
+import { Controller, Get, Inject, PathParams, QueryParams, UseCache } from '@tsed/common';
 import { ContentType, Description, Hidden, Returns, Summary } from '@tsed/schema';
 
 import { Chain } from '../chains/config/chain.config';
@@ -40,6 +40,7 @@ export class RewardController {
     return this.rewardsService.getUserRewards(Chain.getChain(chain), address);
   }
 
+  @UseCache()
   @Get('/schedules')
   @ContentType('json')
   @Summary('Get all token rewards emmited for all vaults on network')
@@ -52,6 +53,7 @@ export class RewardController {
     return this.rewardsService.rewardSchedulesVaultsList(Chain.getChain(chain), Boolean(active));
   }
 
+  @UseCache()
   @Get('/schedules/:address')
   @ContentType('json')
   @Summary('Get all token rewards emmited for vault on network')

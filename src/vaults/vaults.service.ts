@@ -6,7 +6,8 @@ import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interf
 import { getVaultCachedValueSources } from '../protocols/protocols.utils';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { getVaultTokens } from '../tokens/tokens.utils';
-import { getCachedVault, getVaultDefinition, VAULT_SOURCE } from './vaults.utils';
+import { VaultDefinition } from './interfaces/vault-definition.interface';
+import { getCachedVault, VAULT_SOURCE } from './vaults.utils';
 
 @Service()
 export class VaultsService {
@@ -23,11 +24,14 @@ export class VaultsService {
   }
 
   async listVaults(chain: Chain, currency?: Currency): Promise<Vault[]> {
-    return Promise.all(chain.vaults.map((vault) => this.getVault(chain, vault.vaultToken, currency)));
+    return Promise.all(chain.vaults.map((vault) => this.getVault(vault, currency)));
   }
 
-  async getVault(chain: Chain, contract: string, currency?: Currency): Promise<Vault> {
-    const vaultDefinition = getVaultDefinition(chain, contract);
+  async getVault(vaultDefinition: VaultDefinition, currency?: Currency): Promise<Vault> {
+    return VaultsService.loadVault(vaultDefinition, currency);
+  }
+
+  static async loadVault(vaultDefinition: VaultDefinition, currency?: Currency): Promise<Vault> {
     const [vault, sources] = await Promise.all([
       getCachedVault(vaultDefinition),
       getVaultCachedValueSources(vaultDefinition),

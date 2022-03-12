@@ -1,34 +1,37 @@
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
-import { Chain } from '../chains/config/chain.config';
-import { IS_OFFLINE } from '../config/constants';
-import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { HistoricVaultSnapshot } from '../vaults/types/historic-vault-snapshot';
+import { VaultsService } from '../vaults/vaults.service';
 import { vaultToSnapshot } from './indexer.utils';
 
 /**
- * Index a sett's historic data via the graph + web3.
- * This is an expensive process to do so locally always and
- * as such will be disabled while running offline.
+ * Save snapshots of the vault current state + capture some externally
+ * computed data. All values will be availalbe via the API.
  */
 export async function indexProtocolVaults() {
-  if (IS_OFFLINE) {
-    return;
-  }
   const chains = loadChains();
-  await Promise.all(chains.map((chain) => indexChainVaults(chain)));
-}
-
-async function indexChainVaults(chain: Chain) {
-  await Promise.all(chain.vaults.map((vault) => indexVault(chain, vault)));
-}
-
-async function indexVault(chain: Chain, vaultDefinition: VaultDefinition) {
-  const mapper = getDataMapper();
-  try {
-    const snapshot = await vaultToSnapshot(chain, vaultDefinition);
-    await mapper.put(Object.assign(new HistoricVaultSnapshot(), snapshot));
-  } catch (err) {
-    console.error(err);
-  }
+  await Promise.all(
+    chains.map(async (chain) => {
+      // create a db connection object per chain
+      const mapper = getDataMapper();
+      await Promise.all(
+        chain.vaults.map(async (vault) => {
+          try {
+            const [snapshot, cachedVault] = await Promise.all([
+              vaultToSnapshot(chain, vault),
+              VaultsService.loadVault(vault),
+            ]);
+            await mapper.put(
+              Object.assign(new HistoricVaultSnapshot(), {
+                ...snapshot,
+                apr: cachedVault.apr,
+              }),
+            );
+          } catch (err) {
+            console.error(err);
+          }
+        }),
+      );
+    }),
+  );
 }
