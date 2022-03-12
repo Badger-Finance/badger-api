@@ -1,6 +1,7 @@
 import { DataMapper } from '@aws/dynamodb-data-mapper';
 import { indexProtocolVaults } from './vaults-indexer';
 import * as indexerUtils from './indexer.utils';
+import * as vaultsUtils from '../vaults/vaults.utils';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
@@ -28,6 +29,7 @@ describe('vaults-indexer', () => {
       available: 13,
       boostWeight: 3500,
     }));
+    jest.spyOn(vaultsUtils, 'getCachedVault').mockImplementation(async (v) => vaultsUtils.defaultVault(v));
     jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
   });
 
