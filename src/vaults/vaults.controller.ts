@@ -4,6 +4,7 @@ import { ContentType, Description, Returns, Summary } from '@tsed/schema';
 import { Chain } from '../chains/config/chain.config';
 import { VaultModel } from './interfaces/vault-model.interface';
 import { VaultsService } from './vaults.service';
+import { getVaultDefinition } from './vaults.utils';
 
 @Controller('/vaults')
 export class VaultsController {
@@ -23,7 +24,7 @@ export class VaultsController {
     return this.vaultService.listVaults(Chain.getChain(chain), currency);
   }
 
-  @Get('/:contract')
+  @Get('/:vault')
   @ContentType('json')
   @Summary('Get a specific vault')
   @Description('Return a specific vault for the requested chain')
@@ -31,10 +32,10 @@ export class VaultsController {
   @Returns(400).Description('Not a valid chain')
   @Returns(404).Description('Not a valid vault')
   async getVault(
-    @PathParams('contract') contract: string,
+    @PathParams('vault') vault: string,
     @QueryParams('chain') chain?: Network,
     @QueryParams('currency') currency?: Currency,
   ): Promise<VaultModel> {
-    return this.vaultService.getVault(Chain.getChain(chain), contract, currency);
+    return this.vaultService.getVault(getVaultDefinition(Chain.getChain(chain), vault), currency);
   }
 }
