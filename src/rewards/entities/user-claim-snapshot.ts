@@ -28,6 +28,9 @@ export class UserClaimSnapshot {
   @attribute({ memberType: embed(ClaimableBalance) })
   claimableBalances!: Array<ClaimableBalance>;
 
+  @attribute()
+  pageId!: number;
+
   /**
    * The TTL attribute’s value must be a timestamp in Unix epoch time format in seconds.
    * If you use any other format, the TTL processes ignore the item.

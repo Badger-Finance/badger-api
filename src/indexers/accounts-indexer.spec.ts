@@ -101,15 +101,21 @@ describe('accounts-indexer', () => {
           balance: amount.toString(),
         });
       });
-      const expected = testAccounts.map((acc) =>
-        Object.assign(new UserClaimSnapshot(), {
-          chainStartBlock: dynamodbUtils.getChainStartBlockKey(rewardsChain, startMockedBlockNumber),
-          chain: rewardsChain.network,
-          startBlock: startMockedBlockNumber,
-          address: acc,
-          claimableBalances,
-        }),
-      );
+
+      let pageId = 0;
+      const expected = [];
+      for (const acc of testAccounts) {
+        expected.push(
+          Object.assign(new UserClaimSnapshot(), {
+            chainStartBlock: dynamodbUtils.getChainStartBlockKey(rewardsChain, startMockedBlockNumber),
+            chain: rewardsChain.network,
+            startBlock: startMockedBlockNumber,
+            address: acc,
+            claimableBalances,
+            pageId: pageId++,
+          }),
+        );
+      }
       const put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
       const expectedMetadata = Object.assign(new UserClaimMetadata(), {
         // startBlock for next stored metaData obj should be endBlock + 1 value of the previous metaData entity
