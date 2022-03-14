@@ -201,6 +201,7 @@ export function setupMockAccounts() {
     startBlock: 100,
     claimableBalances: [],
     expiresAt: Date.now(),
+    pageId: 0,
   }));
   jest.spyOn(accountsUtils, 'getLatestMetadata').mockImplementation(async (chain) => ({
     startBlock: 10,

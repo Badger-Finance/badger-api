@@ -34,7 +34,10 @@ export async function refreshClaimableBalances(chain: Chain) {
 
   const chainUsers = await getAccounts(chain);
   const results = await getClaimableRewards(chain, chainUsers, distribution, endBlock);
-  const userClaimSnapshots = results.map((res) => {
+
+  let pageId = 0;
+  const userClaimSnapshots = [];
+  for (const res of results) {
     const [user, result] = res;
     const [tokens, amounts] = result;
     const claimableBalances = tokens.map((token, i) => {
@@ -44,14 +47,16 @@ export async function refreshClaimableBalances(chain: Chain) {
         balance: amount.toString(),
       });
     });
-    return Object.assign(new UserClaimSnapshot(), {
+    const snapshot = Object.assign(new UserClaimSnapshot(), {
       chainStartBlock: getChainStartBlockKey(chain, snapshotStartBlock),
       chain: chain.network,
       startBlock: snapshotStartBlock,
       address: user,
       claimableBalances,
+      pageId: pageId++,
     });
-  });
+    userClaimSnapshots.push(snapshot);
+  }
 
   console.log(`Updated ${userClaimSnapshots.length} claimable balances for ${chain.network}`);
   for await (const _item of mapper.batchPut(userClaimSnapshots)) {

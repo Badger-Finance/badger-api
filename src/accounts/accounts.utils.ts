@@ -246,6 +246,7 @@ export async function getClaimableBalanceSnapshot(
     chain: chain.network,
     startBlock,
     claimableBalances: [],
+    pageId: -1,
     expiresAt: Date.now(),
   };
 }
