@@ -11,9 +11,8 @@ https://docs.badger.finance/
 
 ## Docs:
 
-- [Api v2](./docs/api-v2.md)
+- [Api v2](https://api.badger.com/docs/)
 - [MFA](./docs/mfa.md)
-- [Health](./docs/health.md)
 
 ## Development
 
