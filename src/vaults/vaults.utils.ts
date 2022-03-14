@@ -21,8 +21,8 @@ import { SourceType } from '../rewards/enums/source-type.enum';
 import { getVaultCachedValueSources, tokenEmission } from '../protocols/protocols.utils';
 import { getVault } from '../indexers/indexer.utils';
 import { HistoricVaultSnapshot } from './types/historic-vault-snapshot';
-import { VaultSnapshot } from './types/vault-snapshot';
 import { VaultHarvestData } from './interfaces/vault-harvest-data.interface';
+import { CurrentVaultSnapshot } from './types/current-vault-snapshot';
 
 export const VAULT_SOURCE = 'Vault Compounding';
 
@@ -67,7 +67,7 @@ export async function getCachedVault(vaultDefinition: VaultDefinition): Promise<
   try {
     const mapper = getDataMapper();
     for await (const item of mapper.query(
-      VaultSnapshot,
+      CurrentVaultSnapshot,
       { address: vaultDefinition.vaultToken },
       { limit: 1, scanIndexForward: false },
     )) {
@@ -192,7 +192,12 @@ export async function getVaultTokenPrice(chain: Chain, address: string): Promise
   };
 }
 
-// TODO: probably break this up
+/**
+ * Load a Badger vault measured performance.
+ * @param chain Chain vault is deployed on
+ * @param vaultDefinition Vault definition of requested vault
+ * @returns Value source array describing vault performance
+ */
 export async function getVaultPerformance(
   chain: Chain,
   vaultDefinition: VaultDefinition,

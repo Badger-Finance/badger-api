@@ -1,11 +1,11 @@
 import { embed } from '@aws/dynamodb-data-mapper';
 import { attribute, hashKey, table } from '@aws/dynamodb-data-mapper-annotations';
+import { VaultSnapshot } from '@badger-dao/sdk';
 import { VAULT_SNAPSHOTS_DATA } from '../../config/constants';
-import { IVaultSnapshot } from '../interfaces/vault-snapshot.interface';
 import { VaultStrategy } from '../interfaces/vault-strategy.interface';
 
 @table(VAULT_SNAPSHOTS_DATA)
-export class VaultSnapshot implements IVaultSnapshot {
+export class CurrentVaultSnapshot implements VaultSnapshot {
   @attribute()
   block!: number;
 
@@ -38,4 +38,7 @@ export class VaultSnapshot implements IVaultSnapshot {
 
   @attribute()
   value!: number;
+
+  @attribute()
+  apr!: number;
 }

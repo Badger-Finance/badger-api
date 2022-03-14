@@ -10,8 +10,8 @@ import { getBoostWeight, getStrategyInfo, getCachedVault } from '../vaults/vault
 import { CachedVaultTokenBalance } from '../tokens/interfaces/cached-vault-token-balance.interface';
 import { toBalance } from '../tokens/tokens.utils';
 import { getLiquidityData } from '../protocols/common/swap.utils';
-import { gqlGenT } from '@badger-dao/sdk';
-import { IVaultSnapshot } from '../vaults/interfaces/vault-snapshot.interface';
+import { gqlGenT, VaultSnapshot } from '@badger-dao/sdk';
+import { VaultsService } from '../vaults/vaults.service';
 
 export function chunkArray(addresses: string[], count: number): string[][] {
   const chunks: string[][] = [];
@@ -39,7 +39,7 @@ export async function batchRefreshAccounts(
   }
 }
 
-export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefinition): Promise<IVaultSnapshot> {
+export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefinition): Promise<VaultSnapshot> {
   const sdk = await chain.getSdk();
   const { address, totalSupply, balance, pricePerFullShare, available } = await sdk.vaults.loadVault({
     address: vaultDefinition.vaultToken,
@@ -48,11 +48,12 @@ export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefini
     version: 'v1',
   });
 
-  const [tokenPriceData, strategyInfo, boostWeight, block] = await Promise.all([
+  const [tokenPriceData, strategyInfo, boostWeight, block, cachedVault] = await Promise.all([
     getPrice(vaultDefinition.depositToken),
     getStrategyInfo(chain, vaultDefinition),
     getBoostWeight(chain, vaultDefinition),
     sdk.provider.getBlockNumber(),
+    VaultsService.loadVault(vaultDefinition),
   ]);
   const value = balance * tokenPriceData.price;
 
@@ -67,6 +68,7 @@ export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefini
     available,
     strategy: strategyInfo,
     boostWeight: boostWeight.toNumber(),
+    apr: cachedVault.apr,
   };
 }
 
