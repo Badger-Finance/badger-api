@@ -1,9 +1,7 @@
 import { SwaggerSettings } from '@tsed/swagger';
 import { Stage } from './enums/stage.enum';
 
-// data point constants - index two times per hour, 48 per day
-export const CURRENT = 0;
-export const SAMPLE_DAYS = 31;
+// time constants
 export const ONE_MINUTE_SECONDS = 60;
 export const ONE_MINUTE_MS = ONE_MINUTE_SECONDS * 1000;
 export const ONE_DAY_SECONDS = ONE_MINUTE_SECONDS * 60 * 24;
@@ -44,8 +42,6 @@ export const PRODUCTION = STAGE === Stage.Production;
 
 // third party api constants
 export const COINGECKO_URL = 'https://api.coingecko.com/api/v3/simple';
-export const PANCAKE_CHEF = '0x73feaa1eE314F8c655E354234017bE2193C9E24E';
-export const DISTRIBUTOR = '0x660802Fc641b154aBA66a62137e71f331B6d787A';
 export const BLOCKNATIVE_API_KEY = process.env.BLOCKNATIVE_API_KEY || 'MISSING REQUIRED ENV VAR';
 
 export const swaggerConfig: SwaggerSettings = {

@@ -867,10 +867,10 @@
     "@babel/helper-validator-identifier" "^7.14.5"
     to-fast-properties "^2.0.0"
 
-"@badger-dao/sdk@^1.2.6":
-  version "1.2.6"
-  resolved "https://registry.yarnpkg.com/@badger-dao/sdk/-/sdk-1.2.6.tgz#7447a8a316605ed36e548299baa5e80753d8dae8"
-  integrity sha512-2o1thnVG1djAMH4NYtnfDm12+jG+aZD5GM8h3wfxdcSVo8CNbQ5ZhTyrPnaUVNQRx9Oqc9rc5PvD+nj7RHPLgw==
+"@badger-dao/sdk@^1.2.10":
+  version "1.2.10"
+  resolved "https://registry.yarnpkg.com/@badger-dao/sdk/-/sdk-1.2.10.tgz#bfc04a624179728488ca92ad6b06b11d4e2f176a"
+  integrity sha512-Sirp7cU8LHoXR16I7v1x2WAdiHP6gLvLnHNivEOW2RrVnTZdTOS3ClPlSslhfHIkcHV8Tuu6RJb+hYAce73gLQ==
   dependencies:
     "@0xsequence/indexer" "^0.35.5"
     "@0xsequence/multicall" "^0.35.5"
@@ -8669,9 +8669,9 @@ graphql@^15.6.1:
   integrity sha512-5gghUc24tP9HRznNpV2+FIoq3xKkj5dTQqf4v0CpdPbFVwFkWoxOM+o+2OC9ZSvjEMTjfmG9QT+gcvggTwW1zw==
 
 graphql@^16.1.0:
-  version "16.1.0"
-  resolved "https://registry.yarnpkg.com/graphql/-/graphql-16.1.0.tgz#83bebeae6e119766d04966f09de9305be7fd44e5"
-  integrity sha512-+PIjmhqGHMIxtnlEirRXDHIzs0cAHAozKG5M2w2N4TnS8VzCxO3bbv1AW9UTeycBfl2QsPduxcVrBvANFKQhiw==
+  version "16.3.0"
+  resolved "https://registry.yarnpkg.com/graphql/-/graphql-16.3.0.tgz#a91e24d10babf9e60c706919bb182b53ccdffc05"
+  integrity sha512-xm+ANmA16BzCT5pLjuXySbQVFwH3oJctUVdy81w1sV0vBU0KgDdBGtxQOUd5zqOBk/JayAFeG8Dlmeq74rjm/A==
 
 growl@1.10.5:
   version "1.10.5"

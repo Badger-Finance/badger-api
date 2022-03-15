@@ -1,10 +1,10 @@
+import { VaultSnapshot } from '@badger-dao/sdk';
 import { Controller, Get, Inject, QueryParams, UsePipe } from '@tsed/common';
 import { NotFound, UnprocessableEntity } from '@tsed/exceptions';
 import { ContentType, Hidden } from '@tsed/schema';
 import { ethers } from 'ethers';
 import { Chain } from '../chains/config/chain.config';
 import { ValidationPipe } from '../common/decorators/validation-pipe';
-import { IVaultSnapshot } from '../vaults/interfaces/vault-snapshot.interface';
 import { ChartsService } from './charts.service';
 import { ChartsQueryDto } from './dto/charts-query.dto';
 import { ChartGranularity } from './enums/chart-granularity.enum';
@@ -21,7 +21,7 @@ export class ChartsController {
     @UsePipe(ValidationPipe)
     @QueryParams()
     query: ChartsQueryDto,
-  ): Promise<IVaultSnapshot[]> {
+  ): Promise<VaultSnapshot[]> {
     const now = new Date();
     const yesterday = new Date();
     yesterday.setHours(now.getHours() - 24);
