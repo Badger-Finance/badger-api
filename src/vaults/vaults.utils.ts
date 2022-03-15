@@ -209,14 +209,37 @@ export async function getVaultPerformance(
   let vaultSources: CachedValueSource[] = [];
   try {
     vaultSources = await loadVaultEventPerformances(chain, vaultDefinition);
-    vaultSources.push();
   } catch (err) {
     if (DEBUG) {
       console.log(`${vaultDefinition.name} vault APR estimation fallback to badger subgraph`);
     }
     vaultSources = await loadVaultGraphPerformances(chain, vaultDefinition);
   }
+  const vaultApr = vaultSources.reduce((total, s) => total + s.apr, 0);
+  // if we are not able to measure any on chain, or graph based increases falleback to ppfs measurement
+  if (vaultApr === 0) {
+    vaultSources = await getVaultUnderlyingPerformance(vaultDefinition);
+  }
   return [...vaultSources, ...rewardEmissions, ...protocol];
+}
+
+export async function getVaultUnderlyingPerformance(vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
+  const end = new Date();
+  end.setHours(-24 * 30);
+  const snapshots = await getVaultSnapshotsInRange(vaultDefinition, new Date(), end);
+  const currentSnapshot = snapshots.slice(0, 1)[0];
+  const historicSnapshot = snapshots.slice(snapshots.length - 1)[0];
+  const deltaPpfs = currentSnapshot.pricePerFullShare - historicSnapshot.pricePerFullShare;
+  const deltaTime = currentSnapshot.timestamp - historicSnapshot.timestamp;
+  let underlyingApr = 0;
+  if (deltaTime > 0 && deltaPpfs > 0) {
+    underlyingApr = (deltaPpfs / deltaTime) * (ONE_YEAR_SECONDS / deltaTime) * 100;
+  }
+  const source = createValueSource(VAULT_SOURCE, underlyingApr);
+  return [
+    valueSourceToCachedValueSource(source, vaultDefinition, SourceType.PreCompound),
+    valueSourceToCachedValueSource(source, vaultDefinition, SourceType.Compound),
+  ];
 }
 
 export async function loadVaultEventPerformances(
