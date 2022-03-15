@@ -235,7 +235,7 @@ export async function getVaultUnderlyingPerformance(vaultDefinition: VaultDefini
   const currentSnapshot = snapshots[0];
   const historicSnapshot = snapshots[snapshots.length - 1];
   const currentPpfs = currentSnapshot.pricePerFullShare ?? currentSnapshot.ratio;
-  const historicPpfs = historicSnapshot.pricePerFullShare ?? currentSnapshot.ratio;
+  const historicPpfs = historicSnapshot.pricePerFullShare ?? historicSnapshot.ratio;
   const deltaPpfs = currentPpfs - historicPpfs;
   const deltaTime = currentSnapshot.timestamp - historicSnapshot.timestamp;
   let underlyingApr = 0;
