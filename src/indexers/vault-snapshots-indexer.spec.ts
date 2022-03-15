@@ -4,9 +4,15 @@ import * as priceUtils from '../prices/prices.utils';
 import * as vaultUtils from '../vaults/vaults.utils';
 import { refreshVaultSnapshots } from './vault-snapshots-indexer';
 import { BigNumber, ethers } from 'ethers';
-import { TEST_ADDR } from '../test/tests.utils';
-import BadgerSDK, { VaultState, VaultVersion, RegistryVault, LoadVaultOptions, VaultsService } from '@badger-dao/sdk';
-import { VaultSnapshot } from '../vaults/types/vault-snapshot';
+import { randomVault, setupMapper, TEST_ADDR } from '../test/tests.utils';
+import BadgerSDK, {
+  VaultState,
+  VaultVersion,
+  RegistryVault,
+  LoadVaultOptions,
+  VaultsService,
+  VaultSnapshot,
+} from '@badger-dao/sdk';
 
 describe('refreshSettSnapshots', () => {
   const supportedAddresses = loadChains()
@@ -54,6 +60,7 @@ describe('refreshSettSnapshots', () => {
       };
     });
 
+    setupMapper([randomVault()]);
     await refreshVaultSnapshots();
   });
 

@@ -3,7 +3,7 @@ import { BadRequest, NotFound, UnprocessableEntity } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
-import { DEBUG, ONE_DAY_MS, ONE_YEAR_SECONDS } from '../config/constants';
+import { DEBUG, ONE_DAY_MS, ONE_YEAR_MS, ONE_YEAR_SECONDS } from '../config/constants';
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
 import { formatBalance, getToken } from '../tokens/tokens.utils';
 import { VaultDefinition } from './interfaces/vault-definition.interface';
@@ -21,8 +21,8 @@ import { SourceType } from '../rewards/enums/source-type.enum';
 import { getVaultCachedValueSources, tokenEmission } from '../protocols/protocols.utils';
 import { getVault } from '../indexers/indexer.utils';
 import { HistoricVaultSnapshot } from './types/historic-vault-snapshot';
-import { VaultSnapshot } from './types/vault-snapshot';
 import { VaultHarvestData } from './interfaces/vault-harvest-data.interface';
+import { CurrentVaultSnapshot } from './types/current-vault-snapshot';
 
 export const VAULT_SOURCE = 'Vault Compounding';
 
@@ -67,7 +67,7 @@ export async function getCachedVault(vaultDefinition: VaultDefinition): Promise<
   try {
     const mapper = getDataMapper();
     for await (const item of mapper.query(
-      VaultSnapshot,
+      CurrentVaultSnapshot,
       { address: vaultDefinition.vaultToken },
       { limit: 1, scanIndexForward: false },
     )) {
@@ -160,8 +160,13 @@ export async function getBoostWeight(chain: Chain, vaultDefinition: VaultDefinit
   if (!chain.emissionControl) {
     return ethers.constants.Zero;
   }
-  const emissionControl = EmissionControl__factory.connect(chain.emissionControl, chain.provider);
-  return emissionControl.boostedEmissionRate(vaultDefinition.vaultToken);
+  try {
+    const emissionControl = EmissionControl__factory.connect(chain.emissionControl, chain.provider);
+    return emissionControl.boostedEmissionRate(vaultDefinition.vaultToken);
+  } catch (err) {
+    console.error(err);
+    return ethers.constants.Zero;
+  }
 }
 
 /**
@@ -192,7 +197,12 @@ export async function getVaultTokenPrice(chain: Chain, address: string): Promise
   };
 }
 
-// TODO: probably break this up
+/**
+ * Load a Badger vault measured performance.
+ * @param chain Chain vault is deployed on
+ * @param vaultDefinition Vault definition of requested vault
+ * @returns Value source array describing vault performance
+ */
 export async function getVaultPerformance(
   chain: Chain,
   vaultDefinition: VaultDefinition,
@@ -204,14 +214,39 @@ export async function getVaultPerformance(
   let vaultSources: CachedValueSource[] = [];
   try {
     vaultSources = await loadVaultEventPerformances(chain, vaultDefinition);
-    vaultSources.push();
   } catch (err) {
     if (DEBUG) {
       console.log(`${vaultDefinition.name} vault APR estimation fallback to badger subgraph`);
     }
     vaultSources = await loadVaultGraphPerformances(chain, vaultDefinition);
   }
+  const vaultApr = vaultSources.reduce((total, s) => total + s.apr, 0);
+  // if we are not able to measure any on chain, or graph based increases falleback to ppfs measurement
+  if (vaultApr === 0) {
+    vaultSources = await getVaultUnderlyingPerformance(vaultDefinition);
+  }
   return [...vaultSources, ...rewardEmissions, ...protocol];
+}
+
+export async function getVaultUnderlyingPerformance(vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
+  const start = new Date();
+  start.setDate(start.getDate() - 30);
+  const snapshots = await getVaultSnapshotsInRange(vaultDefinition, start, new Date());
+  const currentSnapshot = snapshots[0];
+  const historicSnapshot = snapshots[snapshots.length - 1];
+  const currentPpfs = currentSnapshot.pricePerFullShare ?? currentSnapshot.ratio;
+  const historicPpfs = historicSnapshot.pricePerFullShare ?? historicSnapshot.ratio;
+  const deltaPpfs = currentPpfs - historicPpfs;
+  const deltaTime = currentSnapshot.timestamp - historicSnapshot.timestamp;
+  let underlyingApr = 0;
+  if (deltaTime > 0 && deltaPpfs > 0) {
+    underlyingApr = (deltaPpfs / historicPpfs) * (ONE_YEAR_MS / deltaTime) * 100;
+  }
+  const source = createValueSource(VAULT_SOURCE, underlyingApr);
+  return [
+    valueSourceToCachedValueSource(source, vaultDefinition, SourceType.PreCompound),
+    valueSourceToCachedValueSource(source, vaultDefinition, SourceType.Compound),
+  ];
 }
 
 export async function loadVaultEventPerformances(

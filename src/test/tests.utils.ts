@@ -1,5 +1,5 @@
 import { DataMapper, QueryIterator, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
-import { Network } from '@badger-dao/sdk';
+import { Network, VaultSnapshot } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 import createMockInstance from 'jest-create-mock-instance';
 import { CachedAccount } from '../accounts/interfaces/cached-account.interface';
@@ -10,7 +10,7 @@ import { BinanceSmartChain } from '../chains/config/bsc.config';
 import { Ethereum } from '../chains/config/eth.config';
 import { Polygon } from '../chains/config/polygon.config';
 import { xDai } from '../chains/config/xdai.config';
-import { ONE_DAY_MS, SAMPLE_DAYS } from '../config/constants';
+import { ONE_DAY_MS } from '../config/constants';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import { CachedBoost } from '../leaderboards/interface/cached-boost.interface';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
@@ -18,7 +18,6 @@ import * as accountsUtils from '../accounts/accounts.utils';
 import * as dynamodbUtils from '../aws/dynamodb.utils';
 import { Fantom } from '../chains/config/fantom.config';
 import { Chain } from '../chains/config/chain.config';
-import { IVaultSnapshot } from '../vaults/interfaces/vault-snapshot.interface';
 
 export const TEST_CHAIN = new Ethereum();
 export const TEST_ADDR = ethers.utils.getAddress('0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484');
@@ -88,7 +87,7 @@ export const randomValue = (min?: number, max?: number): number => {
   return minPrice + Math.random() * (maxPrice - minPrice);
 };
 
-export function randomSnapshot(vaultDefinition?: VaultDefinition): IVaultSnapshot {
+export function randomSnapshot(vaultDefinition?: VaultDefinition): VaultSnapshot {
   const vault = vaultDefinition ?? randomVault();
   const balance = randomValue();
   const totalSupply = randomValue();
@@ -111,6 +110,7 @@ export function randomSnapshot(vaultDefinition?: VaultDefinition): IVaultSnapsho
     },
     boostWeight: 5100,
     available,
+    apr: 8.323,
   };
 }
 
@@ -119,9 +119,9 @@ export function randomVault(chain?: Chain): VaultDefinition {
   return definitions[Math.floor(Math.random() * definitions.length)];
 }
 
-export function randomSnapshots(vaultDefinition?: VaultDefinition, count?: number): IVaultSnapshot[] {
-  const snapshots: IVaultSnapshot[] = [];
-  const snapshotCount = count ?? SAMPLE_DAYS;
+export function randomSnapshots(vaultDefinition?: VaultDefinition, count?: number): VaultSnapshot[] {
+  const snapshots: VaultSnapshot[] = [];
+  const snapshotCount = count ?? 50;
   const vault = vaultDefinition ?? randomVault();
   const currentTimestamp = Date.now();
   const start = currentTimestamp - (currentTimestamp % ONE_DAY_MS);
@@ -142,6 +142,7 @@ export function randomSnapshots(vaultDefinition?: VaultDefinition, count?: numbe
         strategistFee: 10,
       },
       boostWeight: 5100,
+      apr: 13.254,
     });
   }
   return snapshots;

@@ -1,7 +1,6 @@
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { HistoricVaultSnapshot } from '../vaults/types/historic-vault-snapshot';
-import { VaultsService } from '../vaults/vaults.service';
 import { vaultToSnapshot } from './indexer.utils';
 
 /**
@@ -17,16 +16,8 @@ export async function indexProtocolVaults() {
       await Promise.all(
         chain.vaults.map(async (vault) => {
           try {
-            const [snapshot, cachedVault] = await Promise.all([
-              vaultToSnapshot(chain, vault),
-              VaultsService.loadVault(vault),
-            ]);
-            await mapper.put(
-              Object.assign(new HistoricVaultSnapshot(), {
-                ...snapshot,
-                apr: cachedVault.apr,
-              }),
-            );
+            const snapshot = await vaultToSnapshot(chain, vault);
+            await mapper.put(Object.assign(new HistoricVaultSnapshot(), snapshot));
           } catch (err) {
             console.error(err);
           }
