@@ -229,11 +229,11 @@ export async function getVaultPerformance(
 }
 
 export async function getVaultUnderlyingPerformance(vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
-  const end = new Date();
-  end.setHours(-24 * 30);
-  const snapshots = await getVaultSnapshotsInRange(vaultDefinition, new Date(), end);
-  const currentSnapshot = snapshots.slice(0, 1)[0];
-  const historicSnapshot = snapshots.slice(snapshots.length - 1)[0];
+  const start = new Date();
+  start.setDate(start.getDate() - 30);
+  const snapshots = await getVaultSnapshotsInRange(vaultDefinition, start, new Date());
+  const currentSnapshot = snapshots[0];
+  const historicSnapshot = snapshots[snapshots.length - 1];
   const deltaPpfs = currentSnapshot.pricePerFullShare - historicSnapshot.pricePerFullShare;
   const deltaTime = currentSnapshot.timestamp - historicSnapshot.timestamp;
   let underlyingApr = 0;
