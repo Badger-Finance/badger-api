@@ -35,7 +35,7 @@ import { createValueSource } from '../protocols/interfaces/value-source.interfac
 import { tokenEmission } from '../protocols/protocols.utils';
 import { Polygon } from '../chains/config/polygon.config';
 import { SourceType } from '../rewards/enums/source-type.enum';
-import { ONE_DAY_SECONDS, ONE_YEAR_SECONDS } from '../config/constants';
+import { ONE_DAY_SECONDS, ONE_YEAR_MS } from '../config/constants';
 
 describe('vaults.utils', () => {
   const vault = getVaultDefinition(TEST_CHAIN, TOKENS.BBADGER);
@@ -400,7 +400,7 @@ describe('vaults.utils', () => {
       setupMapper(snapshots);
       const duration = snapshots[0].timestamp - snapshots[snapshots.length - 1].timestamp;
       const deltaPpfs = snapshots[0].pricePerFullShare - snapshots[snapshots.length - 1].pricePerFullShare;
-      const expected = (deltaPpfs / duration) * (ONE_YEAR_SECONDS / duration) * 100;
+      const expected = (deltaPpfs / snapshots[snapshots.length - 1].pricePerFullShare) * (ONE_YEAR_MS / duration) * 100;
       const result = await getVaultUnderlyingPerformance(vault);
       result.forEach((r) => expect(r.apr).toEqual(expected));
     });
