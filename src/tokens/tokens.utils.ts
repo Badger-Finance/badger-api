@@ -16,6 +16,8 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { fantomTokensConfig } from './config/fantom-tokens.config';
 import { Chain } from '../chains/config/chain.config';
 import { PricingType } from '../prices/enums/pricing-type.enum';
+import { TokenInformationSnapshot } from './interfaces/token-information-snapshot.interface';
+import { TokenFull, TokenFullMap } from './interfaces/token-full.interface';
 
 // map holding all protocol token information across chains
 export const protocolTokens: TokenConfig = {
@@ -95,9 +97,12 @@ export async function getVaultTokens(
       });
     }
   }
-  const sdk = await chain.getSdk();
-  const tokenInfo = await sdk.tokens.loadToken(vaultToken);
-  return Promise.all([toBalance(tokenInfo, balance, currency)]);
+
+  const tokenInfo = await getFullToken(chain, vaultToken);
+
+  if (!tokenInfo) return [];
+
+  return [await toBalance(tokenInfo, balance, currency)];
 }
 
 export async function getCachedTokenBalances(
@@ -113,6 +118,78 @@ export async function getCachedTokenBalances(
     return record.tokenBalances;
   }
   return undefined;
+}
+
+export async function getFullToken(chain: Chain, tokenAddr: Token['address']): Promise<TokenFull | null> {
+  const fullTokenMap = await getFullTokens(chain, [tokenAddr]);
+  return fullTokenMap[tokenAddr] || null;
+}
+
+export async function getFullTokens(chain: Chain, tokensAddr: Token['address'][]): Promise<TokenFullMap> {
+  const cachedTokens = await getCachedTokesInfo(tokensAddr);
+  const cachedTokensAddr = cachedTokens.map((token) => token.address);
+
+  const tokensCacheMissMatch = tokensAddr.filter((addr) => !cachedTokensAddr.includes(addr));
+
+  if (tokensCacheMissMatch.length === 0) return mergeTokensFullData(cachedTokens);
+
+  const sdk = await chain.getSdk();
+  let tokensInfo: Token[] = [];
+  try {
+    const sdkTokensInfo = await sdk.tokens.loadTokens(tokensCacheMissMatch);
+    tokensInfo = Object.values(sdkTokensInfo);
+  } catch (e) {
+    console.warn(`Faild to load tokens from chain node ${e}`);
+  }
+
+  if (tokensInfo.length > 0) await cacheTokensInfo(tokensInfo);
+
+  const tokensList = tokensInfo.concat(cachedTokens);
+
+  return mergeTokensFullData(tokensList);
+}
+
+export async function getCachedTokesInfo(tokensAddr: Token['address'][]): Promise<Token[]> {
+  const mapper = getDataMapper();
+
+  const tokensInfo: Token[] = [];
+
+  for (const addr of tokensAddr) {
+    try {
+      tokensInfo.push(await mapper.get(Object.assign(new TokenInformationSnapshot(), { address: addr })));
+    } catch (e) {
+      console.log(`Token snapshot not found on addr ${addr} `);
+    }
+  }
+
+  return tokensInfo;
+}
+
+export async function cacheTokensInfo(tokens: Token[]): Promise<void> {
+  const mapper = getDataMapper();
+
+  const tokensInfoMeta = tokens.map((token) => Object.assign(new TokenInformationSnapshot(), token));
+
+  try {
+    for await (const persisted of mapper.batchPut(tokensInfoMeta)) {
+      if (!persisted) console.warn('Failed to save token info');
+    }
+  } catch (e) {
+    console.warn(`Failed to save tokens info ${e}`);
+  }
+}
+
+export function mergeTokensFullData(tokens: Token[]): TokenFullMap {
+  const mergedTokensFullData: TokenFullMap = {};
+
+  for (const token of tokens) {
+    mergedTokensFullData[token.address] = {
+      ...token,
+      ...(protocolTokens[token.address] || {}),
+    };
+  }
+
+  return mergedTokensFullData;
 }
 
 export function mockBalance(token: Token, balance: number, currency?: Currency): TokenBalance {
