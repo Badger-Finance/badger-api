@@ -9,6 +9,11 @@ Collection of serverless API to enable public access to data surrounding the Bad
 Interactive Swagger Documentation  
 https://docs.badger.finance/
 
+## Docs:
+
+- [Api v2](https://api.badger.com/docs/)
+- [MFA](./docs/mfa.md)
+
 ## Development
 
 To get started, install the following dependencies:
@@ -19,12 +24,27 @@ To get started, install the following dependencies:
 Setup project dependencies:
 
 ```bash
+yarn install --frozen-lockfile
 npm install -g serverless
 sls dynamodb install
-sls config credentials --provider aws --key x --secret x
 ```
 
-Contact **Tritium | BadgerDAO#4816** for AWS access if required.
+In case if u don't have `.aws` credentials yet
+
+```sh
+sls config credentials --provider aws \
+ --key <aws_access_key_id>
+ --secret <aws_secret_access_key>
+```
+
+> Contact **Tritium | BadgerDAO#4816** for AWS access if required.
+> After getting keys, complite the [MFA](./docs/mfa.md) section.
+
+#### Git
+
+Badger accepts only verified commits, this can be done by signing
+them with gpg keys. For more info, proccede to
+[github gpg doc](https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key).
 
 ### Environment Variables
 
@@ -39,7 +59,7 @@ cp .env.example .env
 
 Update the RPC values and Graph API key with data from the DevOps team or your own endpoints.
 
-Contact **jintao#0713** for RPC or TheGraph access if required.
+> Contact **jintao#0713** for RPC or TheGraph access if required.
 
 ### AWS Lambda Environment
 

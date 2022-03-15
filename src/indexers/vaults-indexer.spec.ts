@@ -6,6 +6,8 @@ import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { IVaultSnapshot } from '../vaults/interfaces/vault-snapshot.interface';
 import { TEST_ADDR } from '../test/tests.utils';
+import { VaultsService } from '../vaults/vaults.service';
+import { defaultVault } from '../vaults/vaults.utils';
 
 describe('vaults-indexer', () => {
   const chains = loadChains();
@@ -28,6 +30,7 @@ describe('vaults-indexer', () => {
       available: 13,
       boostWeight: 3500,
     }));
+    jest.spyOn(VaultsService, 'loadVault').mockImplementation(async (v) => defaultVault(v));
     jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
   });
 

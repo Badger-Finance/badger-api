@@ -38,4 +38,7 @@ export class HistoricVaultSnapshot implements IVaultSnapshot {
 
   @attribute()
   value!: number;
+
+  @attribute()
+  apr!: number;
 }
