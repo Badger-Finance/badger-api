@@ -160,8 +160,13 @@ export async function getBoostWeight(chain: Chain, vaultDefinition: VaultDefinit
   if (!chain.emissionControl) {
     return ethers.constants.Zero;
   }
-  const emissionControl = EmissionControl__factory.connect(chain.emissionControl, chain.provider);
-  return emissionControl.boostedEmissionRate(vaultDefinition.vaultToken);
+  try {
+    const emissionControl = EmissionControl__factory.connect(chain.emissionControl, chain.provider);
+    return emissionControl.boostedEmissionRate(vaultDefinition.vaultToken);
+  } catch (err) {
+    console.error(err);
+    return ethers.constants.Zero;
+  }
 }
 
 /**

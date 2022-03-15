@@ -48,11 +48,18 @@ export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefini
     version: 'v1',
   });
 
-  const [tokenPriceData, strategyInfo, boostWeight, block, cachedVault] = await Promise.all([
+  let block = 0;
+  try {
+    block = await sdk.provider.getBlockNumber();
+  } catch (err) {
+    console.log(err);
+    // block is not super important here - just continue on
+  }
+
+  const [tokenPriceData, strategyInfo, boostWeight, cachedVault] = await Promise.all([
     getPrice(vaultDefinition.depositToken),
     getStrategyInfo(chain, vaultDefinition),
     getBoostWeight(chain, vaultDefinition),
-    sdk.provider.getBlockNumber(),
     VaultsService.loadVault(vaultDefinition),
   ]);
   const value = balance * tokenPriceData.price;
