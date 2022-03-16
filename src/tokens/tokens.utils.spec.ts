@@ -12,7 +12,6 @@ import {
   formatBalance,
   getCachedTokenBalances,
   getToken,
-  getTokenByName,
   getVaultTokens,
   mockBalance,
   toBalance,
@@ -50,23 +49,6 @@ describe('token.utils', () => {
       it('returns the requested token information', () => {
         const expected = ethTokensConfig[TOKENS.BADGER];
         const actual = getToken(expected.address);
-        expect(actual).toMatchObject(expected);
-      });
-    });
-  });
-
-  describe('getTokenByName', () => {
-    describe('lookup invalid token name', () => {
-      it('throws a not found error', () => {
-        const token = 'invalid-token';
-        expect(() => getTokenByName(TEST_CHAIN, token)).toThrow(NotFound);
-        expect(() => getTokenByName(TEST_CHAIN, token)).toThrow(`${token} not supported`);
-      });
-    });
-    describe('lookup supported token name', () => {
-      it('returns the requested token information', () => {
-        const expected = getToken(TOKENS.BADGER);
-        const actual = getTokenByName(TEST_CHAIN, expected.name);
         expect(actual).toMatchObject(expected);
       });
     });

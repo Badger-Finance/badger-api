@@ -30,22 +30,6 @@ export const protocolTokens: TokenConfig = {
   ...fantomTokensConfig,
 };
 
-// /**
-//  * Get token information from name.
-//  * @param name Token name.
-//  * @returns Standard ERC20 token information.
-//  */
-// export function getTokenByName(chain: Chain, name: string): Token {
-//   const searchName = name.toLowerCase();
-//   const token = Object.values(chain.tokens).find(
-//     (token) => token.name.toLowerCase() === searchName || token.lookupName?.toLowerCase() === searchName,
-//   );
-//   if (!token) {
-//     throw new NotFound(`${name} not supported`);
-//   }
-//   return token;
-// }
-
 /**
  * Convert BigNumber to human readable number.
  * @param value Ethereum wei based big number.
@@ -100,7 +84,7 @@ export async function getVaultTokens(
 
   const tokenInfo = await getFullToken(chain, vaultToken);
 
-  if (!tokenInfo) return [];
+  if (!tokenInfo) throw new Error('No token info was found');
 
   return [await toBalance(tokenInfo, balance, currency)];
 }
@@ -131,7 +115,7 @@ export async function getFullTokens(chain: Chain, tokensAddr: Token['address'][]
 
   const tokensCacheMissMatch = tokensAddr.filter((addr) => !cachedTokensAddr.includes(addr));
 
-  if (tokensCacheMissMatch.length === 0) return mergeTokensFullData(cachedTokens);
+  if (tokensCacheMissMatch.length === 0) return mergeTokensFullData(chain.tokens, cachedTokens);
 
   const sdk = await chain.getSdk();
   let tokensInfo: Token[] = [];
@@ -146,20 +130,21 @@ export async function getFullTokens(chain: Chain, tokensAddr: Token['address'][]
 
   const tokensList = tokensInfo.concat(cachedTokens);
 
-  return mergeTokensFullData(tokensList);
+  return mergeTokensFullData(chain.tokens, tokensList);
 }
 
 export async function getCachedTokesInfo(tokensAddr: Token['address'][]): Promise<Token[]> {
   const mapper = getDataMapper();
+  const tokensToGet = tokensAddr.map((addr) => Object.assign(new TokenInformationSnapshot(), { address: addr }));
 
   const tokensInfo: Token[] = [];
 
-  for (const addr of tokensAddr) {
-    try {
-      tokensInfo.push(await mapper.get(Object.assign(new TokenInformationSnapshot(), { address: addr })));
-    } catch (e) {
-      console.log(`Token snapshot not found on addr ${addr} `);
+  try {
+    for await (const token of mapper.batchGet(tokensToGet)) {
+      tokensInfo.push(token);
     }
+  } catch (e) {
+    console.warn(`Failed to fetch cached tokens info ${e}`);
   }
 
   return tokensInfo;
@@ -179,13 +164,13 @@ export async function cacheTokensInfo(tokens: Token[]): Promise<void> {
   }
 }
 
-export function mergeTokensFullData(tokens: Token[]): TokenFullMap {
+export function mergeTokensFullData(chainTokens: Chain['tokens'], tokens: Token[]): TokenFullMap {
   const mergedTokensFullData: TokenFullMap = {};
 
   for (const token of tokens) {
     mergedTokensFullData[token.address] = {
       ...token,
-      ...(protocolTokens[token.address] || {}),
+      ...(chainTokens[token.address] || {}),
     };
   }
 
