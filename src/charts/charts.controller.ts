@@ -48,13 +48,14 @@ export class ChartsController {
       throw new UnprocessableEntity('Invalid contract address');
     }
 
-    const vault = Chain.getChain(chain).vaults.find((vault) => vault.vaultToken === checksumContract);
+    const chainInst = Chain.getChain(chain);
+    const vault = chainInst.vaults.find((vault) => vault.vaultToken === checksumContract);
 
     if (!vault) {
       throw new NotFound(`${checksumContract} is not a valid sett`);
     }
 
-    return this.chartsService.getChartData(vault, start, end, granularity, period);
+    return this.chartsService.getChartData(chainInst, vault, start, end, granularity, period);
   }
 
   private isValidGranularityPeriod(

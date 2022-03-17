@@ -95,7 +95,7 @@ export async function getLpTokenBalances(
     const t1Token = tokenData[token1];
 
     // poolData returns the full liquidity pool, valueScalar acts to calculate the portion within the sett
-    const settSnapshot = await getCachedVault(vaultDefinition);
+    const settSnapshot = await getCachedVault(chain, vaultDefinition);
     const valueScalar = totalSupply > 0 ? settSnapshot.balance / totalSupply : 0;
     const t0TokenBalance = reserve0 * valueScalar;
     const t1TokenBalance = reserve1 * valueScalar;

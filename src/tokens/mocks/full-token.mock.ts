@@ -18,4 +18,12 @@ export const fullTokenMockMap: TokenFullMap = {
     symbol: 'DIGG',
     type: PricingType.Contract,
   },
+  [TOKENS.WBTC]: {
+    address: TOKENS.WBTC,
+    decimals: 8,
+    lookupName: 'wrapped-bitcoin',
+    name: 'Wrapped Bitcoin',
+    symbol: 'WBTC',
+    type: PricingType.Contract,
+  },
 };

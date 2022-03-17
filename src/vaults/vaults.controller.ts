@@ -36,6 +36,9 @@ export class VaultsController {
     @QueryParams('chain') chain?: Network,
     @QueryParams('currency') currency?: Currency,
   ): Promise<VaultModel> {
-    return this.vaultService.getVault(getVaultDefinition(Chain.getChain(chain), vault), currency);
+    const chainInst = Chain.getChain(chain);
+    const vaultDef = getVaultDefinition(Chain.getChain(chain), vault);
+
+    return this.vaultService.getVault(chainInst, vaultDef, currency);
   }
 }

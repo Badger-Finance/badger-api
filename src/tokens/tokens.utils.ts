@@ -54,6 +54,7 @@ export async function toBalance(token: Token, balance: number, currency?: Curren
 
 /**
  * Get token balances within a vault.
+ * @param chain Block chain object
  * @param vaultDefinition Vault requested.
  * @param balance Balance in wei.
  * @param currency Optional currency denomination.
@@ -69,7 +70,7 @@ export async function getVaultTokens(
   const token = chain.tokens[vaultToken];
   if (protocol && (token.type === PricingType.UniV2LP || getTokenBalance)) {
     const [cachedVault, cachedTokenBalances] = await Promise.all([
-      getCachedVault(vaultDefinition),
+      getCachedVault(chain, vaultDefinition),
       getCachedTokenBalances(vaultDefinition, currency),
     ]);
     if (cachedTokenBalances) {

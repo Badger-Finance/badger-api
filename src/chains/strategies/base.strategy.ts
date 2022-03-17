@@ -7,7 +7,7 @@ import { ChainStrategy } from './chain.strategy';
 import { Network } from '@badger-dao/sdk';
 import { getVaultTokenPrice } from '../../vaults/vaults.utils';
 import { TokenPrice } from '../../prices/interface/token-price.interface';
-import { getToken } from '../../tokens/tokens.utils';
+import { getFullToken } from '../../tokens/tokens.utils';
 
 export class BaseStrategy extends ChainStrategy {
   constructor(private network: Network, tokens: string[]) {
@@ -17,7 +17,10 @@ export class BaseStrategy extends ChainStrategy {
 
   async getPrice(address: string): Promise<TokenPrice> {
     const chain = Chain.getChain(this.network);
-    const token = getToken(address);
+    const token = await getFullToken(chain, address);
+
+    if (!token) throw Error(`Token not found ${address}`);
+
     switch (token.type) {
       case PricingType.Custom:
         if (!token.getPrice) {

@@ -1,4 +1,4 @@
-import { Network, Protocol } from '@badger-dao/sdk';
+import { Network, Protocol, Token } from '@badger-dao/sdk';
 import { getBoostFile, getCachedAccount } from '../accounts/accounts.utils';
 import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
@@ -9,8 +9,7 @@ import { CachedValueSource } from '../protocols/interfaces/cached-value-source.i
 import { createValueSource, ValueSource } from '../protocols/interfaces/value-source.interface';
 import { tokenEmission } from '../protocols/protocols.utils';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
-import { Token } from '../tokens/interfaces/token.interface';
-import { getToken } from '../tokens/tokens.utils';
+import { getFullToken } from '../tokens/tokens.utils';
 import { RewardMerkleDistribution } from './interfaces/merkle-distributor.interface';
 import { BadgerTree__factory, RewardsLogger } from '../contracts';
 import { EmissionSchedule } from '@badger-dao/sdk/lib/rewards/interfaces/emission-schedule.interface';
@@ -97,7 +96,7 @@ export async function getRewardEmission(chain: Chain, vaultDefinition: VaultDefi
     return [];
   }
   const { vaultToken } = vaultDefinition;
-  const vault = await getCachedVault(vaultDefinition);
+  const vault = await getCachedVault(chain, vaultDefinition);
 
   if (vault.vaultToken === TOKENS.BVECVX) {
     delete boostFile.multiplierData[vault.vaultToken];
@@ -146,7 +145,11 @@ export async function getRewardEmission(chain: Chain, vaultDefinition: VaultDefi
 
   const emissionSources = [];
   for (const schedule of activeSchedules) {
-    const [tokenPrice, token] = await Promise.all([getPrice(schedule.token), getToken(schedule.token)]);
+    const tokenPrice = await getPrice(schedule.token);
+    const token = await getFullToken(chain, schedule.token);
+
+    if (!token) throw Error(`Token not found ${token}`);
+
     const durationScalar = ONE_YEAR_SECONDS / (schedule.end - schedule.start);
     const yearlyEmission = tokenPrice.price * schedule.amount * durationScalar;
     const apr = (yearlyEmission / (vault.value - ignoredTVL)) * 100;

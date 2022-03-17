@@ -9,7 +9,7 @@ import { CachedBoost } from '../leaderboards/interface/cached-boost.interface';
 import { convert, getPrice } from '../prices/prices.utils';
 import { BoostData } from '../rewards/interfaces/boost-data.interface';
 import { getCachedVault, getVaultDefinition } from '../vaults/vaults.utils';
-import { getVaultTokens, getToken } from '../tokens/tokens.utils';
+import { getVaultTokens, getFullToken } from '../tokens/tokens.utils';
 import { AccountMap } from './interfaces/account-map.interface';
 import { CachedAccount } from './interfaces/cached-account.interface';
 import { CachedSettBalance } from './interfaces/cached-sett-balance.interface';
@@ -134,10 +134,13 @@ export async function toVaultBalance(
 ): Promise<CachedSettBalance> {
   const vaultDefinition = getVaultDefinition(chain, vaultBalance.sett.id);
   const { netShareDeposit, grossDeposit, grossWithdraw } = vaultBalance;
-  const { pricePerFullShare } = await getCachedVault(vaultDefinition);
+  const { pricePerFullShare } = await getCachedVault(chain, vaultDefinition);
 
-  const depositToken = getToken(vaultDefinition.depositToken);
-  const settToken = getToken(vaultDefinition.vaultToken);
+  const depositToken = await getFullToken(chain, vaultDefinition.depositToken);
+  const settToken = await getFullToken(chain, vaultDefinition.vaultToken);
+
+  if (!depositToken || !settToken) throw Error('Tokens not found');
+
   const currentTokens = formatBalance(netShareDeposit, settToken.decimals);
   let depositTokenDecimals = depositToken.decimals;
   if (depositToken.address === TOKENS.DIGG) {
@@ -149,8 +152,8 @@ export async function toVaultBalance(
   const earnedBalance = balanceTokens - depositedTokens + withdrawnTokens;
   const [depositTokenPrice, earnedTokens, tokens] = await Promise.all([
     getPrice(vaultDefinition.depositToken),
-    getVaultTokens(vaultDefinition, earnedBalance, currency),
-    getVaultTokens(vaultDefinition, balanceTokens, currency),
+    getVaultTokens(chain, vaultDefinition, earnedBalance, currency),
+    getVaultTokens(chain, vaultDefinition, balanceTokens, currency),
   ]);
 
   const depositTokenConvertedPrice = await convert(depositTokenPrice.price, currency);

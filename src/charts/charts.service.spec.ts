@@ -6,6 +6,7 @@ import { randomSnapshots, setupMapper } from '../test/tests.utils';
 import { ChartsService } from './charts.service';
 import { ChartGranularity } from './enums/chart-granularity.enum';
 import { ONE_DAY_MS } from '../config/constants';
+import { Chain } from '../chains/config/chain.config';
 
 describe('charts.service', () => {
   let service: ChartsService;
@@ -82,7 +83,14 @@ describe('charts.service', () => {
         } else {
           setupMapper([]);
         }
-        const result = await service.getChartData(settDefinition, new Date(start), new Date(end), granularity, size);
+        const result = await service.getChartData(
+          Chain.getChain(),
+          settDefinition,
+          new Date(start),
+          new Date(end),
+          granularity,
+          size,
+        );
         expect(result.length).toBe(expected);
         for (const point of result) {
           expect(seed.includes(point)).toBeTruthy();

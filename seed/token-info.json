@@ -1,0 +1,26 @@
+[
+  {
+    "address": "0x3472a5a71965499acd81997a54bba8d852c6e53d",
+    "decimals": 18,
+    "name": "Badger",
+    "symbol": "BADGER",
+    "type": "Contract",
+    "updatedAt": 1647013716162
+  },
+  {
+    "address": "0x798d1be841a82a273720ce31c822c61a67a601c3",
+    "decimals": 9,
+    "name": "Digg",
+    "symbol": "DIGG",
+    "type": "Contract",
+    "updatedAt": 1647013716162
+  },
+  {
+    "address": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+    "decimals": 8,
+    "name": "Wrapped Bitcoin",
+    "symbol": "WBTC",
+    "type": "Contract",
+    "updatedAt": 1647013716162
+  }
+]
