@@ -42,7 +42,7 @@ jobs:
 env:
   ASSUME_ROLE: ${{ secrets.ASSUME_ROLE }}
   SESSION_NAME: badger-api-deployer
-  AWS_REGION: us-west-2
+  AWS_REGION: us-west-1
   GRAPH_API_KEY: ${{ secrets.GRAPH_API_KEY }}
   ETH_RPC: ${{ secrets.ETH_RPC }}
   BSC_RPC: ${{ secrets.BSC_RPC }}
