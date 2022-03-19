@@ -3,13 +3,15 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { Currency } from '@badger-dao/sdk';
 import { TOKENS } from '../config/tokens.config';
 import { TokenPrice } from './interface/token-price.interface';
-import { getFullToken, getFullTokens } from '../tokens/tokens.utils';
+import { getFullToken, getFullTokens, lookUpAddrByTokenName } from '../tokens/tokens.utils';
 import { Chain } from '../chains/config/chain.config';
 import { COINGECKO_URL } from '../config/constants';
 import { PriceData } from '../tokens/interfaces/price-data.interface';
 import { CoinGeckoPriceResponse } from './interface/coingecko-price-response.interface';
 // TODO: generalize and add some axios utilities
 import { request } from '../etherscan/etherscan.utils';
+import { NotFound } from '@tsed/exceptions';
+import { TokenFull } from '../tokens/interfaces/token-full.interface';
 
 /**
  * Update pricing db entry using chain strategy.
@@ -17,9 +19,12 @@ import { request } from '../etherscan/etherscan.utils';
  * @param token Target for price update.
  */
 export async function updatePrice(chain: Chain, { address, price }: TokenPrice): Promise<TokenPrice> {
-  const token = await getFullToken(chain, address);
-
-  if (!token) throw Error('Token not found');
+  let token: TokenFull;
+  try {
+    token = await getFullToken(chain, address);
+  } catch (_) {
+    throw new NotFound(`Token not found addr ${address}`);
+  }
 
   try {
     if (Number.isNaN(price) || price === 0) {
@@ -117,7 +122,11 @@ export async function fetchPrices(chain: Chain, inputs: string[], lookupName = f
     Object.entries(result).map((entry) => {
       const [key, value] = entry;
 
-      return [key, { address: key, price: value.usd }];
+      const addrByName = lookUpAddrByTokenName(chain, key);
+
+      const address = addrByName || key;
+
+      return [address, { address, price: value.usd }];
     }),
   );
 

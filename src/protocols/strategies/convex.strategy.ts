@@ -152,8 +152,6 @@ export async function getCurvePerformance(chain: Chain, vaultDefinition: VaultDe
 export async function getCurveTokenPrice(chain: Chain, depositToken: string): Promise<TokenPrice> {
   const deposit = await getFullToken(chain, depositToken);
 
-  if (!deposit) throw Error(`Token not found ${depositToken}`);
-
   const poolBalance = await getCurvePoolBalance(chain, depositToken);
   const token = Erc20__factory.connect(depositToken, chain.provider);
   const value = poolBalance.reduce((total, balance) => (total += balance.value), 0);
@@ -191,8 +189,6 @@ export async function getCurvePoolBalance(chain: Chain, depositToken: string): P
       const pool = poolContracts[option];
       const tokenAddress = await pool.coins(coin);
       const token = await getFullToken(chain, ethers.utils.getAddress(tokenAddress));
-
-      if (!token) throw Error(`Token not found ${token}`);
 
       const balance = formatBalance(await pool.balances(coin), token.decimals);
       cachedBalances.push(await toBalance(token, balance));

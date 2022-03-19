@@ -13,6 +13,9 @@ import { VaultDefinition } from './interfaces/vault-definition.interface';
 import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
 import { valueSourceToCachedValueSource } from '../rewards/rewards.utils';
 import { SourceType } from '../rewards/enums/source-type.enum';
+import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
+import * as tokenUtils from '../tokens/tokens.utils';
+import { TOKENS } from '../config/tokens.config';
 
 describe('VaultsController', () => {
   let request: SuperTest.SuperTest<SuperTest.Test>;
@@ -24,10 +27,13 @@ describe('VaultsController', () => {
   afterAll(PlatformTest.reset);
 
   const setupTest = (): void => {
+    jest.spyOn(tokenUtils, 'getFullToken').mockImplementation(async (_, tokenAddr) => {
+      return fullTokenMockMap[tokenAddr] || fullTokenMockMap[TOKENS.BADGER];
+    });
     jest
       .spyOn(vaultsUtils, 'getCachedVault')
-      .mockImplementation(async (vaultDefinition: VaultDefinition): Promise<Vault> => {
-        const vault = vaultsUtils.defaultVault(vaultDefinition);
+      .mockImplementation(async (chain, vaultDefinition: VaultDefinition): Promise<Vault> => {
+        const vault = await vaultsUtils.defaultVault(chain, vaultDefinition);
         vault.value = parseInt(vaultDefinition.vaultToken.slice(0, 7), 16);
         return vault;
       });
@@ -49,8 +55,8 @@ describe('VaultsController', () => {
     jest
       .spyOn(tokensUtils, 'getVaultTokens')
       .mockImplementation(
-        async (sett: VaultDefinition, _balance: number, _currency?: string): Promise<TokenBalance[]> => {
-          const token = tokensUtils.getToken(sett.depositToken);
+        async (chain, sett: VaultDefinition, _balance: number, _currency?: string): Promise<TokenBalance[]> => {
+          const token = fullTokenMockMap[sett.depositToken] || fullTokenMockMap[TOKENS.BADGER];
           if (token.lpToken) {
             const bal0 = parseInt(token.address.slice(0, 4), 16);
             const bal1 = parseInt(token.address.slice(0, 6), 16);

@@ -18,8 +18,6 @@ export abstract class ChainStrategy {
   static async getStrategy(chain: Chain, address: string): Promise<ChainStrategy> {
     const token = await getFullToken(chain, address);
 
-    if (!token) throw new BadRequest(`Token (${address}) not found`);
-
     const strategy = this.strategies[token.address];
     if (!strategy) {
       throw new BadRequest(`Token (${token.address}) not supported for pricing`);

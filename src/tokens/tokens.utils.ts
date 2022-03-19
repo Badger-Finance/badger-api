@@ -18,6 +18,7 @@ import { Chain } from '../chains/config/chain.config';
 import { PricingType } from '../prices/enums/pricing-type.enum';
 import { TokenInformationSnapshot } from './interfaces/token-information-snapshot.interface';
 import { TokenFull, TokenFullMap } from './interfaces/token-full.interface';
+import { TokenNotFound } from './errors/token.error';
 
 // map holding all protocol token information across chains
 export const protocolTokens: TokenConfig = {
@@ -66,9 +67,10 @@ export async function getVaultTokens(
   balance: number,
   currency?: Currency,
 ): Promise<TokenBalance[]> {
-  const { protocol, vaultToken, getTokenBalance } = vaultDefinition;
-  const token = chain.tokens[vaultToken];
-  if (protocol && (token.type === PricingType.UniV2LP || getTokenBalance)) {
+  const { protocol, vaultToken, depositToken, getTokenBalance } = vaultDefinition;
+  const token = await getFullToken(chain, vaultToken);
+
+  if (protocol && (token.lpToken || token.type === PricingType.UniV2LP || getTokenBalance)) {
     const [cachedVault, cachedTokenBalances] = await Promise.all([
       getCachedVault(chain, vaultDefinition),
       getCachedTokenBalances(vaultDefinition, currency),
@@ -83,9 +85,7 @@ export async function getVaultTokens(
     }
   }
 
-  const tokenInfo = await getFullToken(chain, vaultToken);
-
-  if (!tokenInfo) throw new Error('No token info was found');
+  const tokenInfo = await getFullToken(chain, depositToken);
 
   return [await toBalance(tokenInfo, balance, currency)];
 }
@@ -105,13 +105,17 @@ export async function getCachedTokenBalances(
   return undefined;
 }
 
-export async function getFullToken(chain: Chain, tokenAddr: Token['address']): Promise<TokenFull | null> {
+export async function getFullToken(chain: Chain, tokenAddr: Token['address']): Promise<TokenFull> {
   const fullTokenMap = await getFullTokens(chain, [tokenAddr]);
-  return fullTokenMap[tokenAddr] || null;
+
+  if (!fullTokenMap[tokenAddr]) throw new TokenNotFound(tokenAddr);
+
+  return fullTokenMap[tokenAddr];
 }
 
 export async function getFullTokens(chain: Chain, tokensAddr: Token['address'][]): Promise<TokenFullMap> {
   const cachedTokens = await getCachedTokesInfo(tokensAddr);
+
   const cachedTokensAddr = cachedTokens.map((token) => token.address);
 
   const tokensCacheMissMatch = tokensAddr.filter((addr) => !cachedTokensAddr.includes(addr));
@@ -176,6 +180,15 @@ export function mergeTokensFullData(chainTokens: Chain['tokens'], tokens: Token[
   }
 
   return mergedTokensFullData;
+}
+
+export function lookUpAddrByTokenName(chain: Chain, name: string): Token['address'] | undefined {
+  const tokensWithAddr = Object.keys(chain.tokens).map((address) => ({
+    ...chain.tokens[address],
+    address,
+  }));
+
+  return Object.values(tokensWithAddr).find((token) => token.lookupName === name)?.address;
 }
 
 export function mockBalance(token: Token, balance: number, currency?: Currency): TokenBalance {

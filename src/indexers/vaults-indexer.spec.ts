@@ -8,6 +8,9 @@ import { randomSnapshot } from '../test/tests.utils';
 import { VaultsService } from '../vaults/vaults.service';
 import { defaultVault } from '../vaults/vaults.utils';
 import { VaultSnapshot } from '@badger-dao/sdk';
+import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
+import { TOKENS } from '../config/tokens.config';
+import { TEST_ADDR } from '../test/tests.utils';
 
 describe('vaults-indexer', () => {
   const chains = loadChains();
@@ -22,6 +25,9 @@ describe('vaults-indexer', () => {
 
   describe('indexProtocolVaults', () => {
     it('should call update price for all tokens', async () => {
+      jest.spyOn(tokenUtils, 'getFullToken').mockImplementation(async (_, tokenAddr) => {
+        return fullTokenMockMap[tokenAddr] || fullTokenMockMap[TOKENS.BADGER];
+      });
       await indexProtocolVaults();
       let vaultCount = 0;
       chains.forEach((chain) => {

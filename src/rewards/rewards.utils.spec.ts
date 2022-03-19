@@ -3,9 +3,9 @@ import { getTreeDistribution, noRewards } from './rewards.utils';
 import * as s3Utils from '../aws/s3.utils';
 import { TOKENS } from '../config/tokens.config';
 import { Ethereum } from '../chains/config/eth.config';
-import { getToken } from '../tokens/tokens.utils';
 import { getVaultDefinition } from '../vaults/vaults.utils';
 import { MOCK_DISTRIBUTION_FILE } from '../test/constants';
+import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 
 describe('rewards.utils', () => {
   describe('getTreeDistribution', () => {
@@ -23,7 +23,7 @@ describe('rewards.utils', () => {
 
   describe('noRewards', () => {
     it('returns a cached value source for a flat emission, zero apr token rewards', async () => {
-      const token = getToken(TOKENS.CVX);
+      const token = fullTokenMockMap[TOKENS.CVX];
       const vault = getVaultDefinition(new Ethereum(), TOKENS.BVECVX);
       const cachedValueSource = await noRewards(vault, token);
       expect(cachedValueSource).toMatchObject({

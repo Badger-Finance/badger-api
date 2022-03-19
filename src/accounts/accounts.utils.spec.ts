@@ -6,8 +6,14 @@ import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import * as priceUtils from '../prices/prices.utils';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { getVaultDefinition } from '../vaults/vaults.utils';
-import { defaultAccount, randomSnapshot, setupMapper, TEST_ADDR, TEST_CHAIN } from '../test/tests.utils';
-import { getToken } from '../tokens/tokens.utils';
+import {
+  defaultAccount,
+  randomSnapshot,
+  setFullTokenDataMock,
+  setupMapper,
+  TEST_ADDR,
+  TEST_CHAIN,
+} from '../test/tests.utils';
 import {
   defaultBoost,
   getAccountMap,
@@ -20,11 +26,12 @@ import {
 import { ethers } from 'ethers';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 import { Currency, gqlGenT } from '@badger-dao/sdk';
+import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 
 describe('accounts.utils', () => {
   const testSettBalance = (vaultDefinition: VaultDefinition): gqlGenT.UserSettBalance => {
-    const settToken = getToken(vaultDefinition.vaultToken);
-    const depositToken = getToken(vaultDefinition.depositToken);
+    const settToken = fullTokenMockMap[vaultDefinition.vaultToken];
+    const depositToken = fullTokenMockMap[vaultDefinition.depositToken];
     const toWei = (amt: number) => {
       const values = amt * Math.pow(10, settToken.decimals);
       return values.toString();
@@ -164,7 +171,7 @@ describe('accounts.utils', () => {
         const sett = getVaultDefinition(chain, settAddress);
         const snapshot = randomSnapshot(sett);
         setupMapper([snapshot]);
-        const depositToken = getToken(sett.depositToken);
+        const depositToken = fullTokenMockMap[sett.depositToken];
         const depositTokenPrice = await strategy.getPrice(depositToken.address);
         jest.spyOn(priceUtils, 'getPrice').mockImplementation(async (contract) => ({
           ...depositTokenPrice,
@@ -177,6 +184,7 @@ describe('accounts.utils', () => {
           return price / 1670;
         });
         const mockBalance = testSettBalance(sett);
+        setFullTokenDataMock();
         const actual = await toVaultBalance(chain, mockBalance, currency as Currency);
         expect(actual).toBeTruthy();
         expect(actual.name).toEqual(depositToken.name);

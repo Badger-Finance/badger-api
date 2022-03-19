@@ -22,5 +22,13 @@
     "symbol": "WBTC",
     "type": "Contract",
     "updatedAt": 1647013716162
+  },
+  {
+    "address": "0xd8321AA83Fb0a4ECd6348D4577431310A6E0814d",
+    "decimals": 18,
+    "name": "Geist",
+    "symbol": "GEIST",
+    "type": "Contract",
+    "updatedAt": 1647013716162
   }
 ]

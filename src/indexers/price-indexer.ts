@@ -59,8 +59,6 @@ export async function indexPrices() {
             }
             const referenceToken = await getFullToken(chain, t.address);
 
-            if (!referenceToken) throw Error(`Token not found ${referenceToken}`);
-
             const referencePrice = priceUpdates[referenceToken.address];
             priceUpdates[t.address] = {
               address: t.address,

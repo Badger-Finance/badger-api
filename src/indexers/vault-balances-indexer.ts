@@ -5,7 +5,7 @@ import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { CachedVaultTokenBalance } from '../tokens/interfaces/cached-vault-token-balance.interface';
-import { getToken } from '../tokens/tokens.utils';
+import { getFullToken } from '../tokens/tokens.utils';
 import { getLpTokenBalances } from './indexer.utils';
 import { PricingType } from '../prices/enums/pricing-type.enum';
 
@@ -17,7 +17,7 @@ export async function refreshVaultBalances() {
 export async function updateVaultTokenBalances(chain: Chain, vaultDefinition: VaultDefinition): Promise<void> {
   try {
     const mapper = getDataMapper();
-    const depositToken = getToken(vaultDefinition.depositToken);
+    const depositToken = await getFullToken(chain, vaultDefinition.depositToken);
     if (depositToken.type !== PricingType.UniV2LP && !vaultDefinition.getTokenBalance) {
       return;
     }

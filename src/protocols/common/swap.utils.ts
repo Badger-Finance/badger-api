@@ -43,8 +43,6 @@ export const getOnChainLiquidityPrice = async (chain: Chain, contract: string): 
     if (liquidityData.totalSupply === 0) {
       const token = await getFullToken(chain, contract);
 
-      if (!token) throw Error(`Token not found ${contract}`);
-
       return {
         address: token.address,
         price: 0,
@@ -67,8 +65,6 @@ const resolveLiquidityPrice = async (chain: Chain, liquidityData: LiquidityData)
     const t1Scalar = reserve0 / reserve1;
     const t0Info = await getFullToken(chain, token0);
 
-    if (!t0Info) throw Error(`Token not found ${token0}`);
-
     t0Price = {
       address: t0Info.address,
       price: t1Price.price * t1Scalar,
@@ -78,15 +74,12 @@ const resolveLiquidityPrice = async (chain: Chain, liquidityData: LiquidityData)
     const t0Scalar = reserve1 / reserve0;
     const t1Info = await getFullToken(chain, token1);
 
-    if (!t1Info) throw Error(`Token not found ${token1}`);
     t1Price = {
       address: t1Info.address,
       price: t0Price.price * t0Scalar,
     };
   }
   const token = await getFullToken(chain, contract);
-
-  if (!token) throw Error(`Token not found ${contract}`);
 
   const price = (t0Price.price * reserve0 + t1Price.price * reserve1) / totalSupply;
   return {

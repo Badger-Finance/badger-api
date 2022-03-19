@@ -19,8 +19,6 @@ export class BaseStrategy extends ChainStrategy {
     const chain = Chain.getChain(this.network);
     const token = await getFullToken(chain, address);
 
-    if (!token) throw Error(`Token not found ${address}`);
-
     switch (token.type) {
       case PricingType.Custom:
         if (!token.getPrice) {

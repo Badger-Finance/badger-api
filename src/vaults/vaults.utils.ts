@@ -30,8 +30,6 @@ export async function defaultVault(chain: Chain, vaultDefinition: VaultDefinitio
   const assetToken = await getFullToken(chain, vaultDefinition.depositToken);
   const vaultToken = await getFullToken(chain, vaultDefinition.vaultToken);
 
-  if (!assetToken || !vaultToken) throw Error('Token not found');
-
   return {
     asset: assetToken.symbol,
     apr: 0,
@@ -107,8 +105,6 @@ export async function getVaultSnapshotsInRange(
     const mapper = getDataMapper();
     const assetToken = await getFullToken(chain, vaultDefinition.vaultToken);
 
-    if (!assetToken) throw Error(`Token not found ${vaultDefinition.vaultToken}`);
-
     for await (const snapshot of mapper.query(
       HistoricVaultSnapshot,
       { address: assetToken.address, timestamp: between(new Date(start).getTime(), new Date(end).getTime()) },
@@ -183,8 +179,6 @@ export async function getBoostWeight(chain: Chain, vaultDefinition: VaultDefinit
  */
 export async function getVaultTokenPrice(chain: Chain, address: string): Promise<TokenPrice> {
   const token = await getFullToken(chain, address);
-
-  if (!token) throw Error(`Token not found ${address}`);
 
   if (token.type !== PricingType.Vault) {
     throw new BadRequest(`${token.name} is not a vault token`);
@@ -436,8 +430,6 @@ async function estimateVaultPerformance(
   let weightedBalance = 0;
   const depositToken = await getFullToken(chain, vaultDefinition.depositToken);
 
-  if (!depositToken) throw new Error(`Token not found ${vaultDefinition.depositToken}`);
-
   const allHarvests = recentHarvests.flatMap((h) => h.harvests);
   // use the full harvests to construct all intervals for durations, nth element is ignored for distributions
   for (let i = 0; i < recentHarvests.length - 1; i++) {
@@ -495,8 +487,6 @@ async function estimateVaultPerformance(
     }
     const tokenEmitted = await getFullToken(chain, token);
 
-    if (!tokenEmitted) throw Error(`Token not found ${token}`);
-
     const tokensEmitted = formatBalance(amount, tokenEmitted.decimals);
     const valueEmitted = tokensEmitted * price;
     const emissionApr = (valueEmitted / measuredValue) * durationScalar;
@@ -516,8 +506,6 @@ async function estimateVaultPerformance(
       if (compoundingSource) {
         const compoundingSourceApy = estimateDerivativeEmission(compoundApr, emissionApr, compoundingSource.apr / 100);
         const vaultToken = await getFullToken(chain, emittedVault.vaultToken);
-
-        if (!vaultToken) throw Error(`Token not found ${emittedVault.vaultToken}`);
 
         const sourceName = `${vaultToken.name} Compounding`;
         const sourceType = `Derivative ${sourceName}`.replace(' ', '_').toLowerCase();

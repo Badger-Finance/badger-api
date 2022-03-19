@@ -139,8 +139,6 @@ export async function toVaultBalance(
   const depositToken = await getFullToken(chain, vaultDefinition.depositToken);
   const settToken = await getFullToken(chain, vaultDefinition.vaultToken);
 
-  if (!depositToken || !settToken) throw Error('Tokens not found');
-
   const currentTokens = formatBalance(netShareDeposit, settToken.decimals);
   let depositTokenDecimals = depositToken.decimals;
   if (depositToken.address === TOKENS.DIGG) {

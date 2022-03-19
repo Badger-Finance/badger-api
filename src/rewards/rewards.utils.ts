@@ -148,8 +148,6 @@ export async function getRewardEmission(chain: Chain, vaultDefinition: VaultDefi
     const tokenPrice = await getPrice(schedule.token);
     const token = await getFullToken(chain, schedule.token);
 
-    if (!token) throw Error(`Token not found ${token}`);
-
     const durationScalar = ONE_YEAR_SECONDS / (schedule.end - schedule.start);
     const yearlyEmission = tokenPrice.price * schedule.amount * durationScalar;
     const apr = (yearlyEmission / (vault.value - ignoredTVL)) * 100;
