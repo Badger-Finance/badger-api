@@ -227,15 +227,18 @@ export async function getVaultPerformance(
   const vaultApr = vaultSources.reduce((total, s) => total + s.apr, 0);
   // if we are not able to measure any on chain, or graph based increases falleback to ppfs measurement
   if (vaultApr === 0) {
-    vaultSources = await getVaultUnderlyingPerformance(vaultDefinition);
+    vaultSources = await getVaultUnderlyingPerformance(chain, vaultDefinition);
   }
   return [...vaultSources, ...rewardEmissions, ...protocol];
 }
 
-export async function getVaultUnderlyingPerformance(vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
+export async function getVaultUnderlyingPerformance(
+  chain: Chain,
+  vaultDefinition: VaultDefinition,
+): Promise<CachedValueSource[]> {
   const start = new Date();
   start.setDate(start.getDate() - 30);
-  const snapshots = await getVaultSnapshotsInRange(vaultDefinition, start, new Date());
+  const snapshots = await getVaultSnapshotsInRange(chain, vaultDefinition, start, new Date());
   const currentSnapshot = snapshots[0];
   const historicSnapshot = snapshots[snapshots.length - 1];
   const currentPpfs = currentSnapshot.pricePerFullShare ?? currentSnapshot.ratio;

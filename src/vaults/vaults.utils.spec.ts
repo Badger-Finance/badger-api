@@ -408,7 +408,8 @@ describe('vaults.utils', () => {
       const vault = randomVault();
       const snapshot = randomSnapshot(vault);
       setupMapper([snapshot]);
-      const result = await getVaultUnderlyingPerformance(vault);
+      setFullTokenDataMock();
+      const result = await getVaultUnderlyingPerformance(TEST_CHAIN, vault);
       result.forEach((r) => expect(r.apr).toEqual(0));
     });
 
@@ -419,7 +420,8 @@ describe('vaults.utils', () => {
       const duration = snapshots[0].timestamp - snapshots[snapshots.length - 1].timestamp;
       const deltaPpfs = snapshots[0].pricePerFullShare - snapshots[snapshots.length - 1].pricePerFullShare;
       const expected = (deltaPpfs / snapshots[snapshots.length - 1].pricePerFullShare) * (ONE_YEAR_MS / duration) * 100;
-      const result = await getVaultUnderlyingPerformance(vault);
+      setFullTokenDataMock();
+      const result = await getVaultUnderlyingPerformance(TEST_CHAIN, vault);
       result.forEach((r) => expect(r.apr).toEqual(expected));
     });
   });

@@ -19,6 +19,7 @@ import { PricingType } from '../prices/enums/pricing-type.enum';
 import { TokenInformationSnapshot } from './interfaces/token-information-snapshot.interface';
 import { TokenFull, TokenFullMap } from './interfaces/token-full.interface';
 import { TokenNotFound } from './errors/token.error';
+import * as thisModule from './tokens.utils';
 
 // map holding all protocol token information across chains
 export const protocolTokens: TokenConfig = {
@@ -68,7 +69,7 @@ export async function getVaultTokens(
   currency?: Currency,
 ): Promise<TokenBalance[]> {
   const { protocol, vaultToken, depositToken, getTokenBalance } = vaultDefinition;
-  const token = await getFullToken(chain, vaultToken);
+  const token = await thisModule.getFullToken(chain, vaultToken);
 
   if (protocol && (token.lpToken || token.type === PricingType.UniV2LP || getTokenBalance)) {
     const [cachedVault, cachedTokenBalances] = await Promise.all([
@@ -85,7 +86,7 @@ export async function getVaultTokens(
     }
   }
 
-  const tokenInfo = await getFullToken(chain, depositToken);
+  const tokenInfo = await thisModule.getFullToken(chain, depositToken);
 
   return [await toBalance(tokenInfo, balance, currency)];
 }
