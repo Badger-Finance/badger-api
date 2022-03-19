@@ -1,4 +1,4 @@
-import { Service } from '@tsed/common';
+import { Service, $log } from '@tsed/common';
 import { BadRequest, NotFound } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { getObject } from '../aws/s3.utils';
@@ -12,6 +12,10 @@ import { AirdropMerkleClaim, AirdropMerkleDistribution } from './interfaces/merk
 import { RewardMerkleClaim } from './interfaces/reward-merkle-claim.interface';
 import { EmissionSchedule, RewardSchedulesByVaults } from './interfaces/reward-schedules-vault.interface';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
+import { getDataMapper } from '../aws/dynamodb.utils';
+import { getLatestMetadata } from '../accounts/accounts.utils';
+import { UserClaimSnapshot } from './entities/user-claim-snapshot';
+import { ConditionExpression } from '@aws/dynamodb-expressions';
 
 @Service()
 export class RewardsService {
@@ -45,6 +49,32 @@ export class RewardsService {
       throw new NotFound(`${address} does not have claimable rewards.`);
     }
     return claim;
+  }
+
+  async list({
+    chain,
+    pageNum = 0,
+    pageCount = 50,
+  }: {
+    chain: Chain;
+    pageNum?: number;
+    pageCount?: number;
+  }): Promise<UserClaimSnapshot[]> {
+    const { chainStartBlock } = await getLatestMetadata(chain);
+    const mapper = getDataMapper();
+    const records = [];
+    const startingPageId = pageNum * pageCount;
+    const endingPageId = startingPageId + pageCount - 1;
+    const expression: ConditionExpression = {
+      type: 'Between',
+      subject: 'pageId',
+      lowerBound: startingPageId,
+      upperBound: endingPageId,
+    };
+    for await (const entry of mapper.query(UserClaimSnapshot, { chainStartBlock }, { filter: expression })) {
+      records.push(entry);
+    }
+    return records;
   }
 
   /**

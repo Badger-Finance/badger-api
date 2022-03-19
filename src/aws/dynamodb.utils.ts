@@ -3,7 +3,7 @@ import AWS from 'aws-sdk';
 import { Chain } from '../chains/config/chain.config';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 
-const offline = process.env.IS_OFFLINE;
+const offline = false; //process.env.IS_OFFLINE;
 
 export function getDataMapper(): DataMapper {
   let client: AWS.DynamoDB;
