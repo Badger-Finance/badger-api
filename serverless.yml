@@ -31,6 +31,8 @@ custom:
             sources: [./seed/value-sources.json]
           - table: ${self:custom.table.VAULT_SNAPSHOTS_DATA}
             sources: [./seed/cached-vault-snapshots.json]
+          - table: ${self:custom.table.TOKEN_INFORMATION_DATA}
+            sources: [./seed/token-info.json]
 
   serverless-offline:
     noPrependStageInUrl: true
@@ -40,6 +42,7 @@ custom:
     SETT_DATA: sett-historic-snapshots-${self:custom.stage}
     VAULT_BALANCES_DATA: vault-balances-${self:custom.stage}
     PRICE_DATA: token-prices-${self:custom.stage}
+    TOKEN_INFORMATION_DATA: token-information-${self:custom.stage}
     VAULT_SNAPSHOTS_DATA: vaults-snapshots-${self:custom.stage}
     ACCOUNT_DATA: accounts-${self:custom.stage}
     METRICS_SNAPSHOTS_DATA: metrics-snapshots-${self:custom.stage}
@@ -102,6 +105,7 @@ provider:
     SETT_DATA: ${self:custom.table.SETT_DATA}
     VAULT_BALANCES_DATA: ${self:custom.table.VAULT_BALANCES_DATA}
     PRICE_DATA: ${self:custom.table.PRICE_DATA}
+    TOKEN_INFORMATION_DATA: ${self:custom.table.TOKEN_INFORMATION_DATA}
     VAULT_SNAPSHOTS_DATA: ${self:custom.table.VAULT_SNAPSHOTS_DATA}
     ACCOUNT_DATA: ${self:custom.table.ACCOUNT_DATA}
     METRICS_SNAPSHOTS_DATA: ${self:custom.table.METRICS_SNAPSHOTS_DATA}
@@ -168,6 +172,22 @@ resources:
       Type: AWS::DynamoDB::Table
       Properties:
         TableName: ${self:custom.table.PRICE_DATA}
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: 'address'
+            KeyType: 'HASH'
+          - AttributeName: 'updatedAt'
+            KeyType: 'RANGE'
+        AttributeDefinitions:
+          - AttributeName: 'address'
+            AttributeType: 'S'
+          - AttributeName: 'updatedAt'
+            AttributeType: 'N'
+
+    tokenInfoTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.table.TOKEN_INFORMATION_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
           - AttributeName: 'address'
@@ -355,7 +375,6 @@ functions:
           path: /
           method: any
           cors: true
-
   index-setts:
     handler: src/indexers/vaults-indexer.indexProtocolVaults
     timeout: 480

@@ -18,6 +18,8 @@ import * as accountsUtils from '../accounts/accounts.utils';
 import * as dynamodbUtils from '../aws/dynamodb.utils';
 import { Fantom } from '../chains/config/fantom.config';
 import { Chain } from '../chains/config/chain.config';
+import { TokensService } from '@badger-dao/sdk/lib/tokens/tokens.service';
+import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 
 export const TEST_CHAIN = new Ethereum();
 export const TEST_ADDR = ethers.utils.getAddress('0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484');
@@ -33,6 +35,20 @@ export function setupMapper(items: unknown[], filter?: (items: unknown[]) => unk
   // @ts-ignore
   qi[Symbol.iterator] = jest.fn(() => result.values());
   return jest.spyOn(DataMapper.prototype, 'query').mockImplementation(() => qi);
+}
+/* eslint-enable @typescript-eslint/ban-ts-comment */
+
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+export function setupBatchGet(items: unknown[], filter?: (items: unknown[]) => unknown[]) {
+  // @ts-ignore
+  const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
+  let result = items;
+  if (filter) {
+    result = filter(items);
+  }
+  // @ts-ignore
+  qi[Symbol.iterator] = jest.fn(() => result.values());
+  return jest.spyOn(DataMapper.prototype, 'batchGet').mockImplementation(() => qi);
 }
 /* eslint-enable @typescript-eslint/ban-ts-comment */
 
@@ -116,7 +132,12 @@ export function randomSnapshot(vaultDefinition?: VaultDefinition): VaultSnapshot
 
 export function randomVault(chain?: Chain): VaultDefinition {
   const definitions = (chain ? [chain] : loadChains()).flatMap((chain) => chain.vaults);
-  return definitions[Math.floor(Math.random() * definitions.length)];
+
+  const controlledDefs = definitions.filter((vault) => {
+    return vault.vaultToken in fullTokenMockMap && vault.depositToken in fullTokenMockMap;
+  });
+
+  return controlledDefs[Math.floor(Math.random() * controlledDefs.length)];
 }
 
 export function randomSnapshots(vaultDefinition?: VaultDefinition, count?: number): VaultSnapshot[] {
@@ -211,4 +232,13 @@ export function setupMockAccounts() {
     chain: chain.network,
     cycle: 10,
   }));
+}
+
+export function setFullTokenDataMock() {
+  const fullTokenObjList = Object.values(fullTokenMockMap);
+
+  setupBatchGet(fullTokenObjList);
+  mockBatchPut(fullTokenObjList);
+
+  jest.spyOn(TokensService.prototype, 'loadTokens').mockImplementation(async () => fullTokenMockMap);
 }

@@ -8,7 +8,7 @@ import { getPrice } from '../prices/prices.utils';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { getBoostWeight, getStrategyInfo, getCachedVault } from '../vaults/vaults.utils';
 import { CachedVaultTokenBalance } from '../tokens/interfaces/cached-vault-token-balance.interface';
-import { toBalance } from '../tokens/tokens.utils';
+import { getFullTokens, toBalance } from '../tokens/tokens.utils';
 import { getLiquidityData } from '../protocols/common/swap.utils';
 import { gqlGenT, VaultSnapshot } from '@badger-dao/sdk';
 import { VaultsService } from '../vaults/vaults.service';
@@ -60,7 +60,7 @@ export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefini
     getPrice(vaultDefinition.depositToken),
     getStrategyInfo(chain, vaultDefinition),
     getBoostWeight(chain, vaultDefinition),
-    VaultsService.loadVault(vaultDefinition),
+    VaultsService.loadVault(chain, vaultDefinition),
   ]);
   const value = balance * tokenPriceData.price;
 
@@ -88,15 +88,14 @@ export async function getLpTokenBalances(
     if (!protocol) {
       throw new BadRequest('LP balance look up requires a defined protocol');
     }
-    const sdk = await chain.getSdk();
     const liquidityData = await getLiquidityData(chain, depositToken);
     const { token0, token1, reserve0, reserve1, totalSupply } = liquidityData;
-    const tokenData = await sdk.tokens.loadTokens([token0, token1]);
+    const tokenData = await getFullTokens(chain, [token0, token1]);
     const t0Token = tokenData[token0];
     const t1Token = tokenData[token1];
 
     // poolData returns the full liquidity pool, valueScalar acts to calculate the portion within the sett
-    const settSnapshot = await getCachedVault(vaultDefinition);
+    const settSnapshot = await getCachedVault(chain, vaultDefinition);
     const valueScalar = totalSupply > 0 ? settSnapshot.balance / totalSupply : 0;
     const t0TokenBalance = reserve0 * valueScalar;
     const t1TokenBalance = reserve1 * valueScalar;

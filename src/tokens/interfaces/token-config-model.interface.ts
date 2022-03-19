@@ -1,9 +1,9 @@
 import { Description, Example } from '@tsed/schema';
-import { ethTokensConfig } from '../config/eth-tokens.config';
-import { Token, TokenConfiguration } from '@badger-dao/sdk';
+import { TokenFull, TokenFullMap } from './token-full.interface';
+import { fullTokenMockMap } from '../mocks/full-token.mock';
 
 @Description('Mapping of checksum token address to token metadata')
-@Example(ethTokensConfig)
-export class TokenConfigModel implements TokenConfiguration {
-  [address: string]: Token;
+@Example(fullTokenMockMap)
+export class TokenConfigModel implements TokenFullMap {
+  [address: string]: TokenFull;
 }

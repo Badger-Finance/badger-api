@@ -4,6 +4,9 @@ import * as vaultsUtils from './vaults.utils';
 import * as pricesUtils from '../prices/prices.utils';
 import { Currency } from '@badger-dao/sdk';
 import { TEST_CHAIN } from '../test/tests.utils';
+import * as tokenUtils from '../tokens/tokens.utils';
+import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
+import { TOKENS } from '../config/tokens.config';
 
 describe('proofs.service', () => {
   let service: VaultsService;
@@ -14,8 +17,11 @@ describe('proofs.service', () => {
   });
 
   beforeEach(() => {
-    jest.spyOn(vaultsUtils, 'getCachedVault').mockImplementation(async (vault) => {
-      const cachedVault = vaultsUtils.defaultVault(vault);
+    jest.spyOn(tokenUtils, 'getFullToken').mockImplementation(async (_, tokenAddr) => {
+      return fullTokenMockMap[tokenAddr] || fullTokenMockMap[TOKENS.BADGER];
+    });
+    jest.spyOn(vaultsUtils, 'getCachedVault').mockImplementation(async (chain, vault) => {
+      const cachedVault = await vaultsUtils.defaultVault(chain, vault);
       cachedVault.value = Number(vault.vaultToken.slice(0, 6));
       cachedVault.balance = Number(vault.vaultToken.slice(0, 3));
       return cachedVault;

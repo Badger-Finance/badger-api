@@ -5,7 +5,7 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
 import { DEBUG, ONE_DAY_MS, ONE_YEAR_MS, ONE_YEAR_SECONDS } from '../config/constants';
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
-import { formatBalance, getToken } from '../tokens/tokens.utils';
+import { formatBalance, getFullToken } from '../tokens/tokens.utils';
 import { VaultDefinition } from './interfaces/vault-definition.interface';
 import { EmissionControl__factory } from '../contracts';
 import { VaultStrategy } from './interfaces/vault-strategy.interface';
@@ -26,9 +26,10 @@ import { CurrentVaultSnapshot } from './types/current-vault-snapshot';
 
 export const VAULT_SOURCE = 'Vault Compounding';
 
-export function defaultVault(vaultDefinition: VaultDefinition): Vault {
-  const assetToken = getToken(vaultDefinition.depositToken);
-  const vaultToken = getToken(vaultDefinition.vaultToken);
+export async function defaultVault(chain: Chain, vaultDefinition: VaultDefinition): Promise<Vault> {
+  const assetToken = await getFullToken(chain, vaultDefinition.depositToken);
+  const vaultToken = await getFullToken(chain, vaultDefinition.vaultToken);
+
   return {
     asset: assetToken.symbol,
     apr: 0,
@@ -62,8 +63,8 @@ export function defaultVault(vaultDefinition: VaultDefinition): Vault {
   };
 }
 
-export async function getCachedVault(vaultDefinition: VaultDefinition): Promise<Vault> {
-  const vault = defaultVault(vaultDefinition);
+export async function getCachedVault(chain: Chain, vaultDefinition: VaultDefinition): Promise<Vault> {
+  const vault = await defaultVault(chain, vaultDefinition);
   try {
     const mapper = getDataMapper();
     for await (const item of mapper.query(
@@ -94,6 +95,7 @@ export async function getCachedVault(vaultDefinition: VaultDefinition): Promise<
 }
 
 export async function getVaultSnapshotsInRange(
+  chain: Chain,
   vaultDefinition: VaultDefinition,
   start: Date,
   end: Date,
@@ -101,7 +103,7 @@ export async function getVaultSnapshotsInRange(
   try {
     const snapshots = [];
     const mapper = getDataMapper();
-    const assetToken = getToken(vaultDefinition.vaultToken);
+    const assetToken = await getFullToken(chain, vaultDefinition.vaultToken);
 
     for await (const snapshot of mapper.query(
       HistoricVaultSnapshot,
@@ -171,11 +173,13 @@ export async function getBoostWeight(chain: Chain, vaultDefinition: VaultDefinit
 
 /**
  * Get pricing information for a vault token.
+ * @param chain Block chain instance
  * @param address Address for vault token.
  * @returns Pricing data for the given vault token based on the pricePerFullShare.
  */
 export async function getVaultTokenPrice(chain: Chain, address: string): Promise<TokenPrice> {
-  const token = getToken(address);
+  const token = await getFullToken(chain, address);
+
   if (token.type !== PricingType.Vault) {
     throw new BadRequest(`${token.name} is not a vault token`);
   }
@@ -189,7 +193,7 @@ export async function getVaultTokenPrice(chain: Chain, address: string): Promise
   const vaultDefintion = getVaultDefinition(targetChain, targetVault);
   const [underlyingTokenPrice, vaultTokenSnapshot] = await Promise.all([
     getPrice(vaultToken.address),
-    getCachedVault(vaultDefintion),
+    getCachedVault(chain, vaultDefintion),
   ]);
   return {
     address: token.address,
@@ -223,15 +227,18 @@ export async function getVaultPerformance(
   const vaultApr = vaultSources.reduce((total, s) => total + s.apr, 0);
   // if we are not able to measure any on chain, or graph based increases falleback to ppfs measurement
   if (vaultApr === 0) {
-    vaultSources = await getVaultUnderlyingPerformance(vaultDefinition);
+    vaultSources = await getVaultUnderlyingPerformance(chain, vaultDefinition);
   }
   return [...vaultSources, ...rewardEmissions, ...protocol];
 }
 
-export async function getVaultUnderlyingPerformance(vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
+export async function getVaultUnderlyingPerformance(
+  chain: Chain,
+  vaultDefinition: VaultDefinition,
+): Promise<CachedValueSource[]> {
   const start = new Date();
   start.setDate(start.getDate() - 30);
-  const snapshots = await getVaultSnapshotsInRange(vaultDefinition, start, new Date());
+  const snapshots = await getVaultSnapshotsInRange(chain, vaultDefinition, start, new Date());
   const currentSnapshot = snapshots[0];
   const historicSnapshot = snapshots[snapshots.length - 1];
   const currentPpfs = currentSnapshot.pricePerFullShare ?? currentSnapshot.ratio;
@@ -413,7 +420,7 @@ async function estimateVaultPerformance(
     throw new Error(`${vaultDefinition.name} does not have adequate harvest history`);
   }
 
-  const vault = await getCachedVault(vaultDefinition);
+  const vault = await getCachedVault(chain, vaultDefinition);
   const measuredHarvests = recentHarvests.slice(0, recentHarvests.length - 1);
   const valueSources = [];
 
@@ -424,7 +431,8 @@ async function estimateVaultPerformance(
 
   let totalDuration = 0;
   let weightedBalance = 0;
-  const depositToken = getToken(vaultDefinition.depositToken);
+  const depositToken = await getFullToken(chain, vaultDefinition.depositToken);
+
   const allHarvests = recentHarvests.flatMap((h) => h.harvests);
   // use the full harvests to construct all intervals for durations, nth element is ignored for distributions
   for (let i = 0; i < recentHarvests.length - 1; i++) {
@@ -480,7 +488,8 @@ async function estimateVaultPerformance(
     if (price === 0) {
       continue;
     }
-    const tokenEmitted = getToken(token);
+    const tokenEmitted = await getFullToken(chain, token);
+
     const tokensEmitted = formatBalance(amount, tokenEmitted.decimals);
     const valueEmitted = tokensEmitted * price;
     const emissionApr = (valueEmitted / measuredValue) * durationScalar;
@@ -499,7 +508,9 @@ async function estimateVaultPerformance(
       const compoundingSource = vaultValueSources.find((source) => source.type === SourceType.PreCompound);
       if (compoundingSource) {
         const compoundingSourceApy = estimateDerivativeEmission(compoundApr, emissionApr, compoundingSource.apr / 100);
-        const sourceName = `${getToken(emittedVault.vaultToken).name} Compounding`;
+        const vaultToken = await getFullToken(chain, emittedVault.vaultToken);
+
+        const sourceName = `${vaultToken.name} Compounding`;
         const sourceType = `Derivative ${sourceName}`.replace(' ', '_').toLowerCase();
         const derivativeSource = createValueSource(sourceName, compoundingSourceApy);
         valueSources.push(valueSourceToCachedValueSource(derivativeSource, vaultDefinition, sourceType));

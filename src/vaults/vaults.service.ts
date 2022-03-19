@@ -14,7 +14,7 @@ export class VaultsService {
   async getProtocolSummary(chain: Chain, currency?: Currency): Promise<ProtocolSummary> {
     const vaults = await Promise.all(
       chain.vaults.map(async (vault) => {
-        const { name, balance, value } = await getCachedVault(vault);
+        const { name, balance, value } = await getCachedVault(chain, vault);
         const convertedValue = await convert(value, currency);
         return { name, balance, value: convertedValue };
       }),
@@ -24,19 +24,19 @@ export class VaultsService {
   }
 
   async listVaults(chain: Chain, currency?: Currency): Promise<Vault[]> {
-    return Promise.all(chain.vaults.map((vault) => this.getVault(vault, currency)));
+    return Promise.all(chain.vaults.map((vault) => this.getVault(chain, vault, currency)));
   }
 
-  async getVault(vaultDefinition: VaultDefinition, currency?: Currency): Promise<Vault> {
-    return VaultsService.loadVault(vaultDefinition, currency);
+  async getVault(chain: Chain, vaultDefinition: VaultDefinition, currency?: Currency): Promise<Vault> {
+    return VaultsService.loadVault(chain, vaultDefinition, currency);
   }
 
-  static async loadVault(vaultDefinition: VaultDefinition, currency?: Currency): Promise<Vault> {
+  static async loadVault(chain: Chain, vaultDefinition: VaultDefinition, currency?: Currency): Promise<Vault> {
     const [vault, sources] = await Promise.all([
-      getCachedVault(vaultDefinition),
+      getCachedVault(chain, vaultDefinition),
       getVaultCachedValueSources(vaultDefinition),
     ]);
-    vault.tokens = await getVaultTokens(vaultDefinition, vault.balance, currency);
+    vault.tokens = await getVaultTokens(chain, vaultDefinition, vault.balance, currency);
     vault.value = await convert(vault.value, currency);
     const baseSources = sources
       .filter((source) => source.apr >= 0.001)

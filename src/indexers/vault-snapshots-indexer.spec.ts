@@ -13,6 +13,9 @@ import BadgerSDK, {
   VaultsService,
   VaultSnapshot,
 } from '@badger-dao/sdk';
+import * as tokenUtils from '../tokens/tokens.utils';
+import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
+import { TOKENS } from '../config/tokens.config';
 
 describe('refreshSettSnapshots', () => {
   const supportedAddresses = loadChains()
@@ -58,6 +61,9 @@ describe('refreshSettSnapshots', () => {
         address,
         price: 10,
       };
+    });
+    jest.spyOn(tokenUtils, 'getFullToken').mockImplementation(async (_, tokenAddr) => {
+      return fullTokenMockMap[tokenAddr] || fullTokenMockMap[TOKENS.BADGER];
     });
 
     setupMapper([randomVault()]);
