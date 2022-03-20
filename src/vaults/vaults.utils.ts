@@ -5,12 +5,22 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
 import { DEBUG, ONE_DAY_MS, ONE_YEAR_MS, ONE_YEAR_SECONDS } from '../config/constants';
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
-import { formatBalance, getFullToken } from '../tokens/tokens.utils';
+import { getFullToken } from '../tokens/tokens.utils';
 import { VaultDefinition } from './interfaces/vault-definition.interface';
 import { EmissionControl__factory } from '../contracts';
 import { VaultStrategy } from './interfaces/vault-strategy.interface';
 import { TOKENS } from '../config/tokens.config';
-import { gqlGenT, keyBy, Network, Protocol, Vault, VaultBehavior, VaultState, VaultType } from '@badger-dao/sdk';
+import {
+  formatBalance,
+  gqlGenT,
+  keyBy,
+  Network,
+  Protocol,
+  Vault,
+  VaultBehavior,
+  VaultState,
+  VaultType,
+} from '@badger-dao/sdk';
 import { getPrice } from '../prices/prices.utils';
 import { TokenPrice } from '../prices/interface/token-price.interface';
 import { PricingType } from '../prices/enums/pricing-type.enum';
@@ -346,20 +356,18 @@ export async function loadVaultGraphPerformances(
   let { settHarvests } = vaultHarvests;
   let { badgerTreeDistributions } = treeDistributions;
 
-  let data = constructGraphVaultData(settHarvests, badgerTreeDistributions);
+  let data = constructGraphVaultData(vaultDefinition, settHarvests, badgerTreeDistributions);
   // if there are no recent viable options, attempt to use the full vault history
   if (data.length <= 1) {
     [vaultHarvests, treeDistributions] = await Promise.all([
       sdk.graph.loadSettHarvests({
         where: {
           sett: vaultToken.toLowerCase(),
-          timestamp_gte: cutoff,
         },
       }),
       sdk.graph.loadBadgerTreeDistributions({
         where: {
           sett: vaultToken.toLowerCase(),
-          timestamp_gte: cutoff,
         },
       }),
     ]);
@@ -374,7 +382,7 @@ export async function loadVaultGraphPerformances(
     }
   }
 
-  data = constructGraphVaultData(settHarvests, badgerTreeDistributions);
+  data = constructGraphVaultData(vaultDefinition, settHarvests, badgerTreeDistributions);
   // if we still don't have harvests or distributions - don't bother there is nothing to compute
   if (data.length <= 1) {
     return [];
@@ -384,6 +392,7 @@ export async function loadVaultGraphPerformances(
 }
 
 function constructGraphVaultData(
+  vaultDefinition: VaultDefinition,
   settHarvests: gqlGenT.SettHarvestsQuery['settHarvests'],
   badgerTreeDistributions: gqlGenT.BadgerTreeDistributionsQuery['badgerTreeDistributions'],
 ): VaultHarvestData[] {
@@ -398,7 +407,12 @@ function constructGraphVaultData(
     const currentDistributions = treeDistributionsByTimestamp.get(timestamp) ?? [];
     return {
       timestamp,
-      harvests: currentHarvests.map((h) => ({ timestamp, block: Number(h.blockNumber), harvested: h.amount })),
+      harvests: currentHarvests.map((h) => ({
+        timestamp,
+        block: Number(h.blockNumber),
+        token: vaultDefinition.depositToken,
+        amount: h.amount,
+      })),
       treeDistributions: currentDistributions.map((d) => ({
         timestamp,
         block: Number(d.blockNumber),
@@ -426,7 +440,7 @@ async function estimateVaultPerformance(
 
   const harvests = measuredHarvests.flatMap((h) => h.harvests);
   const totalHarvested = harvests
-    .map((h) => h.harvested)
+    .map((h) => h.amount)
     .reduce((total, harvested) => total.add(harvested), BigNumber.from(0));
 
   let totalDuration = 0;

@@ -153,7 +153,9 @@ describe('vaults.utils', () => {
         const block = Number((timestamp / 10000).toFixed());
         return {
           timestamp,
-          harvests: [{ timestamp, block, harvested: BigNumber.from((int + 1 * 1.88e18).toString()) }],
+          harvests: [
+            { timestamp, block, token: TOKENS.CRV_IBBTC, amount: BigNumber.from((int + 1 * 1.88e18).toString()) },
+          ],
           treeDistributions: [
             { timestamp, block, token: TOKENS.BCVXCRV, amount: BigNumber.from((int + 1 * 5.77e12).toString()) },
             { timestamp, block, token: TOKENS.BVECVX, amount: BigNumber.from((int + 1 * 4.42e12).toString()) },
