@@ -124,6 +124,7 @@ describe('accounts-indexer', () => {
         startBlock: startMockedBlockNumber,
         endBlock: endMockedBlockNumber,
         cycle: MOCK_DISTRIBUTION_FILE.cycle,
+        count: expected.length,
       });
       const batchPut = mockBatchPut(expected);
       await accountsIndexer.refreshClaimableBalances(rewardsChain);

@@ -69,6 +69,7 @@ export async function refreshClaimableBalances(chain: Chain) {
     startBlock: snapshotStartBlock,
     endBlock: snapshotEndBlock,
     cycle: distribution.cycle,
+    count: userClaimSnapshots.length,
   });
 
   const saved = await mapper.put(metadata);
