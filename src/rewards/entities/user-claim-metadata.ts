@@ -25,4 +25,7 @@ export class UserClaimMetadata {
 
   @attribute()
   cycle!: number;
+
+  @attribute()
+  count!: number;
 }

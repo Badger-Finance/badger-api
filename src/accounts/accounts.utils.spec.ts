@@ -251,12 +251,14 @@ describe('accounts.utils', () => {
         endBlock: 101,
         chainStartBlock: `${TEST_CHAIN.network}_123123`,
         chain: TEST_CHAIN.network,
+        count: 0,
       });
       setupMapper([meta]);
       const latest_meta = await getLatestMetadata(TEST_CHAIN);
       expect(latest_meta).toEqual(meta);
       expect(put.mock.calls).toEqual([]);
     });
+
     it('should create new meta if no meta obj found', async () => {
       const put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
       const mockedBlockNumber = 100;
@@ -268,6 +270,7 @@ describe('accounts.utils', () => {
         endBlock: 101,
         chainStartBlock: `${TEST_CHAIN.network}_${mockedBlockNumber}`,
         chain: TEST_CHAIN.network,
+        count: 0,
       });
       setupMapper([]);
       await getLatestMetadata(TEST_CHAIN);

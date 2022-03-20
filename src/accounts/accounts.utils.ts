@@ -270,6 +270,7 @@ export async function getLatestMetadata(chain: Chain): Promise<UserClaimMetadata
       endBlock: blockNumber + 1,
       chainStartBlock: getChainStartBlockKey(chain, blockNumber),
       chain: chain.network,
+      count: 0,
     });
     result = await mapper.put(metaData);
   }
