@@ -1,5 +1,4 @@
 import { DataMapper } from '@aws/dynamodb-data-mapper';
-import { GraphQLClient } from 'graphql-request';
 import { TestStrategy } from '../chains/strategies/test.strategy';
 import { TOKENS } from '../config/tokens.config';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
@@ -25,7 +24,7 @@ import {
 } from './accounts.utils';
 import { ethers } from 'ethers';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
-import { Currency, gqlGenT } from '@badger-dao/sdk';
+import { BadgerGraph, Currency, gqlGenT } from '@badger-dao/sdk';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 
 describe('accounts.utils', () => {
@@ -131,12 +130,12 @@ describe('accounts.utils', () => {
           users: mockAccounts.map((account) => ({ id: account, settBalances: [] })),
         };
         let responded = false;
-        jest.spyOn(GraphQLClient.prototype, 'request').mockImplementation(async () => {
+        jest.spyOn(BadgerGraph.prototype, 'loadUsers').mockImplementation(async () => {
           if (responded) {
             return { users: [] };
           }
           responded = true;
-          return Promise.resolve(result);
+          return result;
         });
         const users = await getAccounts(TEST_CHAIN);
         expect(users).toMatchObject(mockAccounts);
@@ -145,15 +144,9 @@ describe('accounts.utils', () => {
 
     describe('users do not exist', () => {
       it('returns an empty list', async () => {
-        jest.spyOn(GraphQLClient.prototype, 'request').mockImplementationOnce(async () => Promise.resolve(null));
+        jest.spyOn(BadgerGraph.prototype, 'loadUsers').mockImplementationOnce(async () => ({ users: [] }));
         const nullReturn = await getAccounts(TEST_CHAIN);
         expect(nullReturn).toMatchObject([]);
-
-        jest
-          .spyOn(GraphQLClient.prototype, 'request')
-          .mockImplementationOnce(async () => Promise.resolve({ users: null }));
-        const nullUsers = await getAccounts(TEST_CHAIN);
-        expect(nullUsers).toMatchObject([]);
       });
     });
   });
