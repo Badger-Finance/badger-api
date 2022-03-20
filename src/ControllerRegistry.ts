@@ -5,11 +5,12 @@ import { LeaderBoardsController } from './leaderboards/leaderboards.controller';
 import { MetricsController } from './metrics/metrics.controller';
 import { PriceController } from './prices/prices.controller';
 import { ProtocolController } from './protocols/protocols.controller';
-import { RewardController } from './rewards/rewards.controller';
+import { RewardsController } from './rewards/rewards.controller';
 import { VaultsController } from './vaults/vaults.controller';
 import { SettsController } from './vaults/setts.controller';
 import { TokensController } from './tokens/tokens.controller';
 import { ProofsController } from './proofs/proofs.controller';
+import { RewardController } from './rewards/reward.controller';
 
 /**
  * Controller registry forces serverless offline to load
@@ -18,16 +19,17 @@ import { ProofsController } from './proofs/proofs.controller';
  * without this.
  */
 export const controllers = [
+  AccountsController,
   ChartsController,
+  GasController,
+  LeaderBoardsController,
+  MetricsController,
   PriceController,
+  ProofsController,
   ProtocolController,
   RewardController,
-  VaultsController,
+  RewardsController,
   SettsController,
-  AccountsController,
-  LeaderBoardsController,
   TokensController,
-  MetricsController,
-  GasController,
-  ProofsController,
+  VaultsController,
 ];
