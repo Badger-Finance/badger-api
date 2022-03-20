@@ -19,4 +19,4 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           threshold: 50
           package-manager: yarn
-          test-script: yarn test -ci --json --coverage --testLocationInResults --outputFile=report.json
+          test-script: yarn test -ci --json --coverage --runInBand --detectOpenHandles --testLocationInResults --outputFile=report.json
