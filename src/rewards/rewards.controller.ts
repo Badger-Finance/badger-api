@@ -2,6 +2,7 @@ import { Network } from '@badger-dao/sdk';
 import { Controller, Get, Inject, QueryParams } from '@tsed/common';
 import { ContentType } from '@tsed/schema';
 import { Chain } from '../chains/config/chain.config';
+import { DEFAULT_PAGE_SIZE } from '../config/constants';
 import { UserClaimSnapshot } from './entities/user-claim-snapshot';
 import { DebankUser } from './interfaces/debank-user.interface';
 import { ListRewardsResponse } from './interfaces/list-rewards-response.interface';
@@ -20,10 +21,10 @@ export class RewardsController {
     @QueryParams('page_count') pageCount?: number,
   ): Promise<ListRewardsResponse> {
     const chain = Chain.getChain(chainId);
-    const records = await this.rewardsService.list({ chain, pageNum, pageCount });
+    const { count, records } = await this.rewardsService.list({ chain, pageNum, pageCount });
     return {
-      total_count: 0,
-      total_page_num: 0,
+      total_count: count,
+      total_page_num: Math.ceil(count / (pageCount || DEFAULT_PAGE_SIZE)),
       users: records.map(this.userClaimedSnapshotToDebankUser),
     };
   }

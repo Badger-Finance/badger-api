@@ -1,10 +1,10 @@
-import { Service, $log } from '@tsed/common';
+import { Service } from '@tsed/common';
 import { BadRequest, NotFound } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { getObject } from '../aws/s3.utils';
 
 import { Chain } from '../chains/config/chain.config';
-import { REWARD_DATA } from '../config/constants';
+import { DEFAULT_PAGE_SIZE, REWARD_DATA } from '../config/constants';
 
 import { getTreeDistribution } from './rewards.utils';
 
@@ -54,13 +54,16 @@ export class RewardsService {
   async list({
     chain,
     pageNum = 0,
-    pageCount = 50,
+    pageCount = DEFAULT_PAGE_SIZE,
   }: {
     chain: Chain;
     pageNum?: number;
     pageCount?: number;
-  }): Promise<UserClaimSnapshot[]> {
-    const { chainStartBlock } = await getLatestMetadata(chain);
+  }): Promise<{
+    count: number;
+    records: UserClaimSnapshot[];
+  }> {
+    const { chainStartBlock, count } = await getLatestMetadata(chain);
     const mapper = getDataMapper();
     const records = [];
     const startingPageId = pageNum * pageCount;
@@ -74,7 +77,10 @@ export class RewardsService {
     for await (const entry of mapper.query(UserClaimSnapshot, { chainStartBlock }, { filter: expression })) {
       records.push(entry);
     }
-    return records;
+    return {
+      count,
+      records: records.sort((record) => record.pageId),
+    };
   }
 
   /**
