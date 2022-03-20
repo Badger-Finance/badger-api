@@ -1,19 +1,10 @@
-import { BigNumberish, ethers } from 'ethers';
 import { getPrice } from '../prices/prices.utils';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { getCachedVault } from '../vaults/vaults.utils';
-import { arbitrumTokensConfig } from './config/arbitrum-tokens.config';
-import { bscTokensConfig } from './config/bsc-tokens.config';
-import { ethTokensConfig } from './config/eth-tokens.config';
-import { maticTokensConfig } from './config/polygon-tokens.config';
-import { xDaiTokensConfig } from './config/xdai-tokens.config';
 import { CachedVaultTokenBalance } from './interfaces/cached-vault-token-balance.interface';
-import { Token } from '@badger-dao/sdk';
-import { TokenConfig } from './interfaces/token-config.interface';
-import { Currency, TokenBalance } from '@badger-dao/sdk';
-import { avalancheTokensConfig } from './config/avax-tokens.config';
+import { Token, TokenValue } from '@badger-dao/sdk';
+import { Currency } from '@badger-dao/sdk';
 import { getDataMapper } from '../aws/dynamodb.utils';
-import { fantomTokensConfig } from './config/fantom-tokens.config';
 import { Chain } from '../chains/config/chain.config';
 import { PricingType } from '../prices/enums/pricing-type.enum';
 import { TokenInformationSnapshot } from './interfaces/token-information-snapshot.interface';
@@ -21,28 +12,7 @@ import { TokenFull, TokenFullMap } from './interfaces/token-full.interface';
 import { TokenNotFound } from './errors/token.error';
 import * as thisModule from './tokens.utils';
 
-// map holding all protocol token information across chains
-export const protocolTokens: TokenConfig = {
-  ...ethTokensConfig,
-  ...bscTokensConfig,
-  ...maticTokensConfig,
-  ...xDaiTokensConfig,
-  ...arbitrumTokensConfig,
-  ...avalancheTokensConfig,
-  ...fantomTokensConfig,
-};
-
-/**
- * Convert BigNumber to human readable number.
- * @param value Ethereum wei based big number.
- * @param decimals Decimals for parsing value.
- * @returns Parsed big number from decimals.
- */
-export function formatBalance(value: BigNumberish, decimals = 18): number {
-  return Number(ethers.utils.formatUnits(value, decimals));
-}
-
-export async function toBalance(token: Token, balance: number, currency?: Currency): Promise<TokenBalance> {
+export async function toBalance(token: Token, balance: number, currency?: Currency): Promise<TokenValue> {
   const { price } = await getPrice(token.address, currency);
   return {
     address: token.address,
@@ -67,7 +37,7 @@ export async function getVaultTokens(
   vaultDefinition: VaultDefinition,
   balance: number,
   currency?: Currency,
-): Promise<TokenBalance[]> {
+): Promise<TokenValue[]> {
   const { protocol, vaultToken, depositToken, getTokenBalance } = vaultDefinition;
   const token = await thisModule.getFullToken(chain, vaultToken);
 
@@ -94,7 +64,7 @@ export async function getVaultTokens(
 export async function getCachedTokenBalances(
   vaultDefinition: VaultDefinition,
   currency?: string,
-): Promise<TokenBalance[] | undefined> {
+): Promise<TokenValue[] | undefined> {
   const mapper = getDataMapper();
   for await (const record of mapper.query(
     CachedVaultTokenBalance,
@@ -192,7 +162,7 @@ export function lookUpAddrByTokenName(chain: Chain, name: string): Token['addres
   return Object.values(tokensWithAddr).find((token) => token.lookupName === name)?.address;
 }
 
-export function mockBalance(token: Token, balance: number, currency?: Currency): TokenBalance {
+export function mockBalance(token: Token, balance: number, currency?: Currency): TokenValue {
   const price = parseInt(token.address.slice(0, 4), 16);
   return {
     address: token.address,

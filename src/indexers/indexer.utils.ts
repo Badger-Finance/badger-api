@@ -10,7 +10,7 @@ import { getBoostWeight, getStrategyInfo, getCachedVault } from '../vaults/vault
 import { CachedVaultTokenBalance } from '../tokens/interfaces/cached-vault-token-balance.interface';
 import { getFullTokens, toBalance } from '../tokens/tokens.utils';
 import { getLiquidityData } from '../protocols/common/swap.utils';
-import { gqlGenT, VaultSnapshot } from '@badger-dao/sdk';
+import { gqlGenT, VaultSnapshot, VaultState, VaultVersion } from '@badger-dao/sdk';
 import { VaultsService } from '../vaults/vaults.service';
 
 export function chunkArray(addresses: string[], count: number): string[][] {
@@ -44,8 +44,8 @@ export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefini
   const { address, totalSupply, balance, pricePerFullShare, available } = await sdk.vaults.loadVault({
     address: vaultDefinition.vaultToken,
     requireRegistry: false,
-    status: 2,
-    version: 'v1',
+    state: VaultState.Open,
+    version: VaultVersion.v1,
   });
 
   let block = 0;
