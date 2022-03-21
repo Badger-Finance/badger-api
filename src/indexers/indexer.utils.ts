@@ -7,7 +7,7 @@ import { Chain } from '../chains/config/chain.config';
 import { getPrice } from '../prices/prices.utils';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { getBoostWeight, getStrategyInfo, getCachedVault } from '../vaults/vaults.utils';
-import { CachedVaultTokenBalance } from '../tokens/interfaces/cached-vault-token-balance.interface';
+import { VaultTokenBalance } from '../vaults/types/vault-token-balance.interface';
 import { getFullTokens, toBalance } from '../tokens/tokens.utils';
 import { getLiquidityData } from '../protocols/common/swap.utils';
 import { gqlGenT, VaultSnapshot, VaultState, VaultVersion } from '@badger-dao/sdk';
@@ -84,10 +84,7 @@ export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefini
   };
 }
 
-export async function getLpTokenBalances(
-  chain: Chain,
-  vaultDefinition: VaultDefinition,
-): Promise<CachedVaultTokenBalance> {
+export async function getLpTokenBalances(chain: Chain, vaultDefinition: VaultDefinition): Promise<VaultTokenBalance> {
   const { protocol, depositToken, vaultToken } = vaultDefinition;
   try {
     if (!protocol) {
@@ -106,7 +103,7 @@ export async function getLpTokenBalances(
     const t1TokenBalance = reserve1 * valueScalar;
     const tokenBalances = await Promise.all([toBalance(t0Token, t0TokenBalance), toBalance(t1Token, t1TokenBalance)]);
 
-    return Object.assign(new CachedVaultTokenBalance(), {
+    return Object.assign(new VaultTokenBalance(), {
       vault: vaultToken,
       tokenBalances,
     });

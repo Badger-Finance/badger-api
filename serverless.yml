@@ -51,6 +51,7 @@ custom:
     METADATA_DATA: metadata-${self:custom.stage}
     UNCLAIMED_SNAPSHOTS_DATA: unclaimed-snapshots-${self:custom.stage}
     CYCLE_ANALYTICS_DATA: rewards-${self:custom.stage}
+    HARVEST_DATA: harvest-data-${self:custom.stage}
 
   merkleProofs:
     staging: 'badger-staging-merkle-proofs'
@@ -332,6 +333,18 @@ resources:
           AttributeName: 'expiresAt'
           Enabled: true
 
+    harvestDataTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.table.HARVEST_DATA}
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: 'vault'
+            KeyType: 'HASH'
+        AttributeDefinitions:
+          - AttributeName: 'vault'
+            AttributeType: 'S'
+
     cycleAnalyticsTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -375,7 +388,8 @@ functions:
           path: /
           method: any
           cors: true
-  index-setts:
+
+  index-vaults:
     handler: src/indexers/vaults-indexer.indexProtocolVaults
     timeout: 480
     events:

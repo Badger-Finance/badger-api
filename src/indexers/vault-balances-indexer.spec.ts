@@ -3,7 +3,7 @@ import { updateVaultTokenBalances } from './vault-balances-indexer';
 import { Ethereum } from '../chains/config/eth.config';
 import { getVaultDefinition } from '../vaults/vaults.utils';
 import { TOKENS } from '../config/tokens.config';
-import { CachedVaultTokenBalance } from '../tokens/interfaces/cached-vault-token-balance.interface';
+import { VaultTokenBalance } from '../vaults/types/vault-token-balance.interface';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
 import * as indexerUtils from './indexer.utils';
 import { Chain } from '../chains/config/chain.config';
@@ -59,7 +59,7 @@ describe('vault-balances-indexer', () => {
           name: 'something',
           depositToken: TOKENS.BADGER,
           getTokenBalance: async () =>
-            Object.assign(new CachedVaultTokenBalance(), {
+            Object.assign(new VaultTokenBalance(), {
               vault: TEST_ADDR,
               tokenBalances: [
                 Object.assign(new CachedTokenBalance(), {
@@ -81,7 +81,7 @@ describe('vault-balances-indexer', () => {
       const lpBalance = jest
         .spyOn(indexerUtils, 'getLpTokenBalances')
         .mockImplementation(async (_chain: Chain, _vault: VaultDefinition) => {
-          return Object.assign(new CachedVaultTokenBalance(), {
+          return Object.assign(new VaultTokenBalance(), {
             vault: TEST_ADDR,
             tokenBalances: [
               Object.assign(new CachedTokenBalance(), {
@@ -111,7 +111,7 @@ describe('vault-balances-indexer', () => {
       const lpBalance = jest
         .spyOn(indexerUtils, 'getLpTokenBalances')
         .mockImplementation(async (_chain: Chain, _vault: VaultDefinition) => {
-          return Object.assign(new CachedVaultTokenBalance(), {
+          return Object.assign(new VaultTokenBalance(), {
             vault: TEST_ADDR,
             tokenBalances: [],
           });

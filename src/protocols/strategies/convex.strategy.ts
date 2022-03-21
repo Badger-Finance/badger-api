@@ -14,7 +14,7 @@ import {
 import { SourceType } from '../../rewards/enums/source-type.enum';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { getCachedVault, getVaultDefinition } from '../../vaults/vaults.utils';
-import { CachedVaultTokenBalance } from '../../tokens/interfaces/cached-vault-token-balance.interface';
+import { VaultTokenBalance } from '../../vaults/types/vault-token-balance.interface';
 import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
 import { getFullToken, getVaultTokens, toBalance } from '../../tokens/tokens.utils';
 import { CachedValueSource } from '../interfaces/cached-value-source.interface';
@@ -207,7 +207,7 @@ export async function getCurvePoolBalance(chain: Chain, depositToken: string): P
   return cachedBalances;
 }
 
-export async function getCurveVaultTokenBalance(chain: Chain, token: string): Promise<CachedVaultTokenBalance> {
+export async function getCurveVaultTokenBalance(chain: Chain, token: string): Promise<VaultTokenBalance> {
   const vaultDefinition = getVaultDefinition(chain, token);
   const { protocol, depositToken, vaultToken } = vaultDefinition;
   if (!protocol) {
@@ -222,7 +222,7 @@ export async function getCurveVaultTokenBalance(chain: Chain, token: string): Pr
     cachedToken.balance *= scalar;
     cachedToken.value *= scalar;
   });
-  return Object.assign(new CachedVaultTokenBalance(), {
+  return Object.assign(new VaultTokenBalance(), {
     vault: vaultToken,
     tokenBalances: cachedTokens,
   });
