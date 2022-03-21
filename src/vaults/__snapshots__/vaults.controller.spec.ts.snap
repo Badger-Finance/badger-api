@@ -14,6 +14,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "BNB/BTCB",
     "pricePerFullShare": 1,
     "protocol": "Pancakeswap",
@@ -67,7 +68,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -85,6 +86,13 @@ Array [
     "value": 718009,
     "vaultAsset": "BADGER",
     "vaultToken": "0xaf4B9C4b545D5324904bAa15e29796D2E2f90813",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 64.05000000000001,
@@ -98,6 +106,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "bBADGER/BTCB",
     "pricePerFullShare": 1,
     "protocol": "Pancakeswap",
@@ -151,7 +160,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -169,6 +178,13 @@ Array [
     "value": 546809,
     "vaultAsset": "BADGER",
     "vaultToken": "0x857F91f735f4B03b19D2b5c6E476C73DB8241F55",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 80.82000000000001,
@@ -182,6 +198,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "bDIGG/BTCB",
     "pricePerFullShare": 1,
     "protocol": "Pancakeswap",
@@ -235,7 +252,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -253,6 +270,13 @@ Array [
     "value": 689691,
     "vaultAsset": "BADGER",
     "vaultToken": "0xa861Ba302674b08f7F2F24381b705870521DDfed",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
 ]
 `;
@@ -271,6 +295,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "renBTC/wBTC/sBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -331,7 +356,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -349,6 +374,13 @@ Array [
     "value": 853188,
     "vaultAsset": "BADGER",
     "vaultToken": "0xd04c48A53c111300aD41190D63681ed3dAd998eC",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 52.739999999999995,
@@ -362,6 +394,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "renBTC/wBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -422,7 +455,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -440,6 +473,13 @@ Array [
     "value": 450293,
     "vaultAsset": "BADGER",
     "vaultToken": "0x6dEf55d2e18486B9dDfaA075bc4e4EE0B28c1545",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 89.19,
@@ -453,6 +493,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "tBTC/sBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -513,7 +554,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -531,6 +572,13 @@ Array [
     "value": 761095,
     "vaultAsset": "BADGER",
     "vaultToken": "0xb9D076fDe463dbc9f915E5392F807315Bf940334",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 84.15,
@@ -544,6 +592,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "renBTC/wBTC",
     "pricePerFullShare": 1,
     "protocol": "Curve",
@@ -597,7 +646,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -615,6 +664,13 @@ Array [
     "value": 718241,
     "vaultAsset": "BADGER",
     "vaultToken": "0xAf5A1DECfa95BAF63E0084a35c62592B774A2A87",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 16.950000000000003,
@@ -628,6 +684,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "wBTC/Badger",
     "pricePerFullShare": 1,
     "protocol": "Uniswap",
@@ -681,7 +738,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -699,6 +756,13 @@ Array [
     "value": 144841,
     "vaultAsset": "BADGER",
     "vaultToken": "0x235c9e24D3FB2FAFd58a2E49D454Fdcd2DBf7FF1",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 92.85,
@@ -712,6 +776,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "wBTC/Digg",
     "pricePerFullShare": 1,
     "protocol": "Uniswap",
@@ -765,7 +830,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -783,6 +848,13 @@ Array [
     "value": 792327,
     "vaultAsset": "BADGER",
     "vaultToken": "0xC17078FDd324CC473F8175Dc5290fae5f2E84714",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 56.400000000000006,
@@ -796,6 +868,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "wBTC/wETH",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
@@ -856,7 +929,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -874,6 +947,13 @@ Array [
     "value": 481444,
     "vaultAsset": "bSLP-WBTC-ETH",
     "vaultToken": "0x758A43EE2BFf8230eeb784879CdcFF4828F2544D",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 11.7,
@@ -887,6 +967,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "wBTC/Badger",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
@@ -947,7 +1028,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -973,6 +1054,13 @@ Array [
     "value": 99882,
     "vaultAsset": "BADGER",
     "vaultToken": "0x1862A18181346EBd9EdAf800804f89190DeF24a5",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 65.31,
@@ -986,6 +1074,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "wBTC/Digg",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
@@ -1046,7 +1135,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -1064,6 +1153,13 @@ Array [
     "value": 557352,
     "vaultAsset": "BADGER",
     "vaultToken": "0x88128580ACdD9c04Ce47AFcE196875747bF2A9f6",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 60.69,
@@ -1077,6 +1173,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "Digg",
     "pricePerFullShare": 1,
     "protocol": "Badger",
@@ -1137,7 +1234,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -1155,6 +1252,13 @@ Array [
     "value": 518113,
     "vaultAsset": "bDIGG",
     "vaultToken": "0x7e7E112A68d8D2E221E11047a72fFC1065c38e1a",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 12.39,
@@ -1168,6 +1272,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "Badger",
     "pricePerFullShare": 1,
     "protocol": "Badger",
@@ -1221,7 +1326,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -1239,6 +1344,13 @@ Array [
     "value": 105879,
     "vaultAsset": "bBADGER",
     "vaultToken": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 36.269999999999996,
@@ -1252,6 +1364,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "wBTC",
     "pricePerFullShare": 1,
     "protocol": "Yearn",
@@ -1312,7 +1425,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -1330,6 +1443,13 @@ Array [
     "value": 309549,
     "vaultAsset": "BADGER",
     "vaultToken": "0x4b92d19c11435614CD49Af1b589001b7c08cD4D5",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 66.48,
@@ -1343,6 +1463,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "wBTC/ibBTC",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
@@ -1403,7 +1524,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -1421,6 +1542,13 @@ Array [
     "value": 567551,
     "vaultAsset": "BADGER",
     "vaultToken": "0x8a8FFec8f4A0C8c9585Da95D9D97e8Cd6de273DE",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 67.41,
@@ -1434,6 +1562,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "hBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -1494,7 +1623,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -1512,6 +1641,13 @@ Array [
     "value": 575337,
     "vaultAsset": "BADGER",
     "vaultToken": "0x8c76970747afd5398e958bDfadA4cf0B9FcA16c4",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 41.07,
@@ -1525,6 +1661,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "pBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -1585,7 +1722,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -1603,6 +1740,13 @@ Array [
     "value": 350482,
     "vaultAsset": "BADGER",
     "vaultToken": "0x55912D0Cf83B75c492E761932ABc4DB4a5CB1b17",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 116.76,
@@ -1616,6 +1760,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "oBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -1676,7 +1821,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -1694,6 +1839,13 @@ Array [
     "value": 996508,
     "vaultAsset": "BADGER",
     "vaultToken": "0xf349c0faA80fC1870306Ac093f75934078e28991",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 45,
@@ -1707,6 +1859,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "bBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -1767,7 +1920,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -1785,6 +1938,13 @@ Array [
     "value": 384226,
     "vaultAsset": "BADGER",
     "vaultToken": "0x5Dce29e92b1b939F8E8C60DcF15BDE82A85be4a9",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 91.19999999999999,
@@ -1798,6 +1958,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "Tricrypto",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -1851,7 +2012,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -1869,6 +2030,13 @@ Array [
     "value": 778382,
     "vaultAsset": "BADGER",
     "vaultToken": "0xBE08Ef12e4a553666291E9fFC24fCCFd354F2Dd2",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 20.79,
@@ -1882,6 +2050,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "cvxCRV",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -1942,7 +2111,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -1960,6 +2129,13 @@ Array [
     "value": 177477,
     "vaultAsset": "bCVXCRV",
     "vaultToken": "0x2B5455aac8d64C14786c3a29858E43b5945819C0",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 40.2,
@@ -1973,6 +2149,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "CVX",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -2033,7 +2210,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -2051,6 +2228,13 @@ Array [
     "value": 343182,
     "vaultAsset": "BADGER",
     "vaultToken": "0x53C8E199eb2Cb7c01543C137078a038937a68E40",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 19.14,
@@ -2064,6 +2248,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "Tricrypto2",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -2124,7 +2309,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -2142,6 +2327,13 @@ Array [
     "value": 163480,
     "vaultAsset": "BADGER",
     "vaultToken": "0x27E98fC7d05f54E544d16F58C194C2D7ba71e3B5",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 42.99,
@@ -2155,6 +2347,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "imBTC",
     "pricePerFullShare": 1,
     "protocol": "mStable",
@@ -2208,7 +2401,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -2226,6 +2419,13 @@ Array [
     "value": 367065,
     "vaultAsset": "BADGER",
     "vaultToken": "0x599D92B453C010b1050d31C364f6ee17E819f193",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 18.57,
@@ -2239,6 +2439,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "mhBTC",
     "pricePerFullShare": 1,
     "protocol": "mStable",
@@ -2292,7 +2493,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -2310,6 +2511,13 @@ Array [
     "value": 158606,
     "vaultAsset": "BADGER",
     "vaultToken": "0x26B8efa69603537AC8ab55768b6740b67664D518",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 121.44,
@@ -2323,6 +2531,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "bveCVX",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -2383,7 +2592,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -2401,6 +2610,13 @@ Array [
     "value": 1036381,
     "vaultAsset": "bVECVX",
     "vaultToken": "0xfd05D3C7fe2924020620A8bE4961bBaA747e6305",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 70.77,
@@ -2414,6 +2630,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "CVX / bveCVX",
     "pricePerFullShare": 1,
     "protocol": "Curve",
@@ -2474,7 +2691,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -2492,6 +2709,13 @@ Array [
     "value": 604088,
     "vaultAsset": "BADGER",
     "vaultToken": "0x937B8E917d0F36eDEBBA8E459C5FB16F3b315551",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 83.78999999999999,
@@ -2505,6 +2729,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "ibBTC / crvsBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -2565,7 +2790,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -2583,6 +2808,13 @@ Array [
     "value": 715119,
     "vaultAsset": "BADGER",
     "vaultToken": "0xaE96fF08771a109dc6650a1BdCa62F2d558E40af",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 12.419999999999998,
@@ -2596,6 +2828,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "MIM / 3CRV",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -2656,7 +2889,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -2674,6 +2907,13 @@ Array [
     "value": 106061,
     "vaultAsset": "BADGER",
     "vaultToken": "0x19E4d89e0cB807ea21B8CEF02df5eAA99A110dA5",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 10.44,
@@ -2687,6 +2927,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "FRAX / 3CRV",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -2747,7 +2988,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -2765,6 +3006,13 @@ Array [
     "value": 89276,
     "vaultAsset": "BADGER",
     "vaultToken": "0x15cBC4ac1e81c97667780fE6DAdeDd04a6EEB47B",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 51.33,
@@ -2778,6 +3026,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "remBadger",
     "pricePerFullShare": 1,
     "protocol": "Badger",
@@ -2838,7 +3087,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -2856,6 +3105,13 @@ Array [
     "value": 438131,
     "vaultAsset": "BADGER",
     "vaultToken": "0x6aF7377b5009d7d154F36FE9e235aE1DA27Aea22",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
 ]
 `;
@@ -2880,6 +3136,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "renBTC/wBTC/sBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -2940,7 +3197,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -2958,6 +3215,13 @@ Array [
     "value": 853188,
     "vaultAsset": "BADGER",
     "vaultToken": "0xd04c48A53c111300aD41190D63681ed3dAd998eC",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 52.739999999999995,
@@ -2971,6 +3235,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "renBTC/wBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -3031,7 +3296,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -3049,6 +3314,13 @@ Array [
     "value": 450293,
     "vaultAsset": "BADGER",
     "vaultToken": "0x6dEf55d2e18486B9dDfaA075bc4e4EE0B28c1545",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 89.19,
@@ -3062,6 +3334,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "tBTC/sBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -3122,7 +3395,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -3140,6 +3413,13 @@ Array [
     "value": 761095,
     "vaultAsset": "BADGER",
     "vaultToken": "0xb9D076fDe463dbc9f915E5392F807315Bf940334",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 84.15,
@@ -3153,6 +3433,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "renBTC/wBTC",
     "pricePerFullShare": 1,
     "protocol": "Curve",
@@ -3206,7 +3487,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -3224,6 +3505,13 @@ Array [
     "value": 718241,
     "vaultAsset": "BADGER",
     "vaultToken": "0xAf5A1DECfa95BAF63E0084a35c62592B774A2A87",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 16.950000000000003,
@@ -3237,6 +3525,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "wBTC/Badger",
     "pricePerFullShare": 1,
     "protocol": "Uniswap",
@@ -3290,7 +3579,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -3308,6 +3597,13 @@ Array [
     "value": 144841,
     "vaultAsset": "BADGER",
     "vaultToken": "0x235c9e24D3FB2FAFd58a2E49D454Fdcd2DBf7FF1",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 92.85,
@@ -3321,6 +3617,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "wBTC/Digg",
     "pricePerFullShare": 1,
     "protocol": "Uniswap",
@@ -3374,7 +3671,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -3392,6 +3689,13 @@ Array [
     "value": 792327,
     "vaultAsset": "BADGER",
     "vaultToken": "0xC17078FDd324CC473F8175Dc5290fae5f2E84714",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 56.400000000000006,
@@ -3405,6 +3709,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "wBTC/wETH",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
@@ -3465,7 +3770,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -3483,6 +3788,13 @@ Array [
     "value": 481444,
     "vaultAsset": "bSLP-WBTC-ETH",
     "vaultToken": "0x758A43EE2BFf8230eeb784879CdcFF4828F2544D",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 11.7,
@@ -3496,6 +3808,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "wBTC/Badger",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
@@ -3556,7 +3869,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -3582,6 +3895,13 @@ Array [
     "value": 99882,
     "vaultAsset": "BADGER",
     "vaultToken": "0x1862A18181346EBd9EdAf800804f89190DeF24a5",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 65.31,
@@ -3595,6 +3915,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "wBTC/Digg",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
@@ -3655,7 +3976,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -3673,6 +3994,13 @@ Array [
     "value": 557352,
     "vaultAsset": "BADGER",
     "vaultToken": "0x88128580ACdD9c04Ce47AFcE196875747bF2A9f6",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 60.69,
@@ -3686,6 +4014,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "Digg",
     "pricePerFullShare": 1,
     "protocol": "Badger",
@@ -3746,7 +4075,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -3764,6 +4093,13 @@ Array [
     "value": 518113,
     "vaultAsset": "bDIGG",
     "vaultToken": "0x7e7E112A68d8D2E221E11047a72fFC1065c38e1a",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 12.39,
@@ -3777,6 +4113,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "Badger",
     "pricePerFullShare": 1,
     "protocol": "Badger",
@@ -3830,7 +4167,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -3848,6 +4185,13 @@ Array [
     "value": 105879,
     "vaultAsset": "bBADGER",
     "vaultToken": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 36.269999999999996,
@@ -3861,6 +4205,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "wBTC",
     "pricePerFullShare": 1,
     "protocol": "Yearn",
@@ -3921,7 +4266,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -3939,6 +4284,13 @@ Array [
     "value": 309549,
     "vaultAsset": "BADGER",
     "vaultToken": "0x4b92d19c11435614CD49Af1b589001b7c08cD4D5",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 66.48,
@@ -3952,6 +4304,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "wBTC/ibBTC",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
@@ -4012,7 +4365,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -4030,6 +4383,13 @@ Array [
     "value": 567551,
     "vaultAsset": "BADGER",
     "vaultToken": "0x8a8FFec8f4A0C8c9585Da95D9D97e8Cd6de273DE",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 67.41,
@@ -4043,6 +4403,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "hBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -4103,7 +4464,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -4121,6 +4482,13 @@ Array [
     "value": 575337,
     "vaultAsset": "BADGER",
     "vaultToken": "0x8c76970747afd5398e958bDfadA4cf0B9FcA16c4",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 41.07,
@@ -4134,6 +4502,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "pBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -4194,7 +4563,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -4212,6 +4581,13 @@ Array [
     "value": 350482,
     "vaultAsset": "BADGER",
     "vaultToken": "0x55912D0Cf83B75c492E761932ABc4DB4a5CB1b17",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 116.76,
@@ -4225,6 +4601,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "oBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -4285,7 +4662,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -4303,6 +4680,13 @@ Array [
     "value": 996508,
     "vaultAsset": "BADGER",
     "vaultToken": "0xf349c0faA80fC1870306Ac093f75934078e28991",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 45,
@@ -4316,6 +4700,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "bBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -4376,7 +4761,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -4394,6 +4779,13 @@ Array [
     "value": 384226,
     "vaultAsset": "BADGER",
     "vaultToken": "0x5Dce29e92b1b939F8E8C60DcF15BDE82A85be4a9",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 91.19999999999999,
@@ -4407,6 +4799,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "Tricrypto",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -4460,7 +4853,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -4478,6 +4871,13 @@ Array [
     "value": 778382,
     "vaultAsset": "BADGER",
     "vaultToken": "0xBE08Ef12e4a553666291E9fFC24fCCFd354F2Dd2",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 20.79,
@@ -4491,6 +4891,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "cvxCRV",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -4551,7 +4952,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -4569,6 +4970,13 @@ Array [
     "value": 177477,
     "vaultAsset": "bCVXCRV",
     "vaultToken": "0x2B5455aac8d64C14786c3a29858E43b5945819C0",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 40.2,
@@ -4582,6 +4990,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "CVX",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -4642,7 +5051,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -4660,6 +5069,13 @@ Array [
     "value": 343182,
     "vaultAsset": "BADGER",
     "vaultToken": "0x53C8E199eb2Cb7c01543C137078a038937a68E40",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 19.14,
@@ -4673,6 +5089,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "Tricrypto2",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -4733,7 +5150,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -4751,6 +5168,13 @@ Array [
     "value": 163480,
     "vaultAsset": "BADGER",
     "vaultToken": "0x27E98fC7d05f54E544d16F58C194C2D7ba71e3B5",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 42.99,
@@ -4764,6 +5188,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "imBTC",
     "pricePerFullShare": 1,
     "protocol": "mStable",
@@ -4817,7 +5242,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -4835,6 +5260,13 @@ Array [
     "value": 367065,
     "vaultAsset": "BADGER",
     "vaultToken": "0x599D92B453C010b1050d31C364f6ee17E819f193",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 18.57,
@@ -4848,6 +5280,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "mhBTC",
     "pricePerFullShare": 1,
     "protocol": "mStable",
@@ -4901,7 +5334,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -4919,6 +5352,13 @@ Array [
     "value": 158606,
     "vaultAsset": "BADGER",
     "vaultToken": "0x26B8efa69603537AC8ab55768b6740b67664D518",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 121.44,
@@ -4932,6 +5372,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "bveCVX",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -4992,7 +5433,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -5010,6 +5451,13 @@ Array [
     "value": 1036381,
     "vaultAsset": "bVECVX",
     "vaultToken": "0xfd05D3C7fe2924020620A8bE4961bBaA747e6305",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 70.77,
@@ -5023,6 +5471,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "CVX / bveCVX",
     "pricePerFullShare": 1,
     "protocol": "Curve",
@@ -5083,7 +5532,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -5101,6 +5550,13 @@ Array [
     "value": 604088,
     "vaultAsset": "BADGER",
     "vaultToken": "0x937B8E917d0F36eDEBBA8E459C5FB16F3b315551",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 83.78999999999999,
@@ -5114,6 +5570,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "ibBTC / crvsBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -5174,7 +5631,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -5192,6 +5649,13 @@ Array [
     "value": 715119,
     "vaultAsset": "BADGER",
     "vaultToken": "0xaE96fF08771a109dc6650a1BdCa62F2d558E40af",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 12.419999999999998,
@@ -5205,6 +5669,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "MIM / 3CRV",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -5265,7 +5730,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -5283,6 +5748,13 @@ Array [
     "value": 106061,
     "vaultAsset": "BADGER",
     "vaultToken": "0x19E4d89e0cB807ea21B8CEF02df5eAA99A110dA5",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 10.44,
@@ -5296,6 +5768,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "FRAX / 3CRV",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -5356,7 +5829,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -5374,6 +5847,13 @@ Array [
     "value": 89276,
     "vaultAsset": "BADGER",
     "vaultToken": "0x15cBC4ac1e81c97667780fE6DAdeDd04a6EEB47B",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
   Object {
     "apr": 51.33,
@@ -5387,6 +5867,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
+    "lastHarvest": 0,
     "name": "remBadger",
     "pricePerFullShare": 1,
     "protocol": "Badger",
@@ -5447,7 +5928,7 @@ Array [
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "performanceFee": 20,
-      "strategistFee": 10,
+      "strategistFee": 0,
       "withdrawFee": 50,
     },
     "tokens": Array [
@@ -5465,6 +5946,13 @@ Array [
     "value": 438131,
     "vaultAsset": "BADGER",
     "vaultToken": "0x6aF7377b5009d7d154F36FE9e235aE1DA27Aea22",
+    "yieldProjection": Object {
+      "harvestApr": 0,
+      "harvestApy": 0,
+      "harvestTokens": Array [],
+      "yieldApr": 0,
+      "yieldTokens": Array [],
+    },
   },
 ]
 `;

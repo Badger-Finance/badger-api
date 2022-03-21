@@ -217,7 +217,7 @@ describe('vaults.utils', () => {
           address: ethers.constants.AddressZero,
           withdrawFee: 50,
           performanceFee: 20,
-          strategistFee: 10,
+          strategistFee: 0,
         },
         type: vaultDefinition.protocol === Protocol.Badger ? VaultType.Native : VaultType.Standard,
         behavior: vaultDefinition.behavior ?? VaultBehavior.None,
