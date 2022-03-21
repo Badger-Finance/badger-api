@@ -82,9 +82,11 @@ export async function defaultVault(chain: Chain, vaultDefinition: VaultDefinitio
     yieldProjection: {
       yieldApr: 0,
       yieldTokens: [],
+      yieldValue: 0,
       harvestApr: 0,
       harvestApy: 0,
       harvestTokens: [],
+      harvestValue: 0,
     },
     lastHarvest: 0,
   };

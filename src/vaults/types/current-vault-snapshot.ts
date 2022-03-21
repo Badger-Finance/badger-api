@@ -41,4 +41,10 @@ export class CurrentVaultSnapshot implements VaultSnapshot {
 
   @attribute()
   apr!: number;
+
+  @attribute()
+  yieldApr!: number;
+
+  @attribute()
+  harvestApr!: number;
 }

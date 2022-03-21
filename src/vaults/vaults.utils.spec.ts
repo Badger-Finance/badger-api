@@ -225,9 +225,11 @@ describe('vaults.utils', () => {
         yieldProjection: {
           yieldApr: 0,
           yieldTokens: [],
+          yieldValue: 0,
           harvestApr: 0,
           harvestApy: 0,
           harvestTokens: [],
+          harvestValue: 0,
         },
       };
       setFullTokenDataMock();
@@ -256,7 +258,6 @@ describe('vaults.utils', () => {
         setFullTokenDataMock();
         const cached = await getCachedVault(TEST_CHAIN, vault);
         const expected = await defaultVault(TEST_CHAIN, vault);
-
         expected.pricePerFullShare = snapshot.balance / snapshot.totalSupply;
         expected.balance = snapshot.balance;
         expected.value = snapshot.value;

@@ -127,6 +127,8 @@ export function randomSnapshot(vaultDefinition?: VaultDefinition): VaultSnapshot
     boostWeight: 5100,
     available,
     apr: 8.323,
+    yieldApr: 8.4,
+    harvestApr: 8.37,
   };
 }
 
@@ -164,6 +166,8 @@ export function randomSnapshots(vaultDefinition?: VaultDefinition, count?: numbe
       },
       boostWeight: 5100,
       apr: 13.254,
+      yieldApr: 8.4,
+      harvestApr: 8.37,
     });
   }
   return snapshots;

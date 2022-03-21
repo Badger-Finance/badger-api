@@ -63,6 +63,9 @@ export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefini
     VaultsService.loadVault(chain, vaultDefinition),
   ]);
   const value = balance * tokenPriceData.price;
+  const {
+    yieldProjection: { yieldApr, harvestApr },
+  } = cachedVault;
 
   return {
     block,
@@ -76,6 +79,8 @@ export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefini
     strategy: strategyInfo,
     boostWeight: boostWeight.toNumber(),
     apr: cachedVault.apr,
+    yieldApr,
+    harvestApr,
   };
 }
 
