@@ -1,4 +1,4 @@
-import { Currency, Protocol, Vault, VaultState, VaultType } from '@badger-dao/sdk';
+import { Currency, Protocol, VaultDTO, VaultState, VaultType } from '@badger-dao/sdk';
 import { Service } from '@tsed/common';
 import { Chain } from '../chains/config/chain.config';
 import { convert } from '../prices/prices.utils';
@@ -23,15 +23,15 @@ export class VaultsService {
     return { totalValue, vaults, setts: vaults };
   }
 
-  async listVaults(chain: Chain, currency?: Currency): Promise<Vault[]> {
+  async listVaults(chain: Chain, currency?: Currency): Promise<VaultDTO[]> {
     return Promise.all(chain.vaults.map((vault) => this.getVault(chain, vault, currency)));
   }
 
-  async getVault(chain: Chain, vaultDefinition: VaultDefinition, currency?: Currency): Promise<Vault> {
+  async getVault(chain: Chain, vaultDefinition: VaultDefinition, currency?: Currency): Promise<VaultDTO> {
     return VaultsService.loadVault(chain, vaultDefinition, currency);
   }
 
-  static async loadVault(chain: Chain, vaultDefinition: VaultDefinition, currency?: Currency): Promise<Vault> {
+  static async loadVault(chain: Chain, vaultDefinition: VaultDefinition, currency?: Currency): Promise<VaultDTO> {
     const [vault, sources] = await Promise.all([
       getCachedVault(chain, vaultDefinition),
       getVaultCachedValueSources(vaultDefinition),

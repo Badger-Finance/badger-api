@@ -1,4 +1,4 @@
-import { Vault } from '@badger-dao/sdk';
+import { VaultDTO } from '@badger-dao/sdk';
 import * as accountsUtils from '../accounts/accounts.utils';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import * as vaultUtils from '../vaults/vaults.utils';
@@ -29,7 +29,7 @@ describe('metrics.utils', () => {
     jest
       .spyOn(vaultUtils, 'getCachedVault')
       .mockImplementation(
-        async (chain: Chain, VaultDefinition: VaultDefinition): Promise<Vault> =>
+        async (chain: Chain, VaultDefinition: VaultDefinition): Promise<VaultDTO> =>
           vaultUtils.defaultVault(chain, VaultDefinition),
       );
   });

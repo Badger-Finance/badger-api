@@ -14,7 +14,7 @@
     "deploy:prod": "sls deploy --stage prod",
     "dev": "sls offline start",
     "dev:local": "npx ts-node src/index.ts",
-    "format": "prettier --write \"src/**/*.ts\"",
+    "format": "pretty-quick",
     "lint": "eslint \"src/**/*.ts\" --fix",
     "test": "jest --detectOpenHandles",
     "prepare": "husky install"
@@ -26,7 +26,7 @@
     "@0xsequence/relayer": "0.35.5",
     "@aws/dynamodb-data-mapper": "0.7.3",
     "@aws/dynamodb-data-mapper-annotations": "0.7.3",
-    "@badger-dao/sdk": "1.2.11",
+    "@badger-dao/sdk": "1.3.2",
     "@tsed/common": "6.95.9",
     "@tsed/core": "6.95.9",
     "@tsed/di": "6.95.9",

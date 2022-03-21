@@ -1,4 +1,4 @@
-import { Vault } from '@badger-dao/sdk';
+import { VaultDTO } from '@badger-dao/sdk';
 import { PlatformTest } from '@tsed/common';
 import { BadRequest } from '@tsed/exceptions';
 import SuperTest from 'supertest';
@@ -32,7 +32,7 @@ describe('VaultsController', () => {
     });
     jest
       .spyOn(vaultsUtils, 'getCachedVault')
-      .mockImplementation(async (chain, vaultDefinition: VaultDefinition): Promise<Vault> => {
+      .mockImplementation(async (chain, vaultDefinition: VaultDefinition): Promise<VaultDTO> => {
         const vault = await vaultsUtils.defaultVault(chain, vaultDefinition);
         vault.value = parseInt(vaultDefinition.vaultToken.slice(0, 7), 16);
         return vault;

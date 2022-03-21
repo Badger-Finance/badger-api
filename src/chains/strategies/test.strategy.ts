@@ -1,11 +1,11 @@
+import { TOKENS } from '../../config/tokens.config';
 import { TokenPrice } from '../../prices/interface/token-price.interface';
-import { protocolTokens } from '../../tokens/tokens.utils';
 import { ChainStrategy } from './chain.strategy';
 
 export class TestStrategy extends ChainStrategy {
   constructor() {
     super();
-    ChainStrategy.register(this, Object.keys(protocolTokens));
+    ChainStrategy.register(this, Object.values(TOKENS));
   }
 
   async getPrice(address: string): Promise<TokenPrice> {

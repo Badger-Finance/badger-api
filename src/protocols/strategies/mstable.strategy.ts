@@ -1,8 +1,7 @@
-import { Token } from '@badger-dao/sdk';
+import { formatBalance, Token } from '@badger-dao/sdk';
 import { Chain } from '../../chains/config/chain.config';
 import { TOKENS } from '../../config/tokens.config';
 import { getPrice } from '../../prices/prices.utils';
-import { formatBalance } from '../../tokens/tokens.utils';
 import { TokenPrice } from '../../prices/interface/token-price.interface';
 import { Imbtc__factory, Mhbtc__factory } from '../../contracts';
 

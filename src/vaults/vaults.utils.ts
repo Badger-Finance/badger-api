@@ -5,12 +5,22 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
 import { DEBUG, ONE_DAY_MS, ONE_YEAR_MS, ONE_YEAR_SECONDS } from '../config/constants';
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
-import { formatBalance, getFullToken } from '../tokens/tokens.utils';
+import { getFullToken } from '../tokens/tokens.utils';
 import { VaultDefinition } from './interfaces/vault-definition.interface';
 import { EmissionControl__factory } from '../contracts';
 import { VaultStrategy } from './interfaces/vault-strategy.interface';
 import { TOKENS } from '../config/tokens.config';
-import { gqlGenT, keyBy, Network, Protocol, Vault, VaultBehavior, VaultState, VaultType } from '@badger-dao/sdk';
+import {
+  formatBalance,
+  gqlGenT,
+  keyBy,
+  Network,
+  Protocol,
+  VaultBehavior,
+  VaultDTO,
+  VaultState,
+  VaultType,
+} from '@badger-dao/sdk';
 import { getPrice } from '../prices/prices.utils';
 import { TokenPrice } from '../prices/interface/token-price.interface';
 import { PricingType } from '../prices/enums/pricing-type.enum';
@@ -26,44 +36,63 @@ import { CurrentVaultSnapshot } from './types/current-vault-snapshot';
 
 export const VAULT_SOURCE = 'Vault Compounding';
 
-export async function defaultVault(chain: Chain, vaultDefinition: VaultDefinition): Promise<Vault> {
+export async function defaultVault(chain: Chain, vaultDefinition: VaultDefinition): Promise<VaultDTO> {
   const assetToken = await getFullToken(chain, vaultDefinition.depositToken);
   const vaultToken = await getFullToken(chain, vaultDefinition.vaultToken);
 
+  const state = vaultDefinition.state
+    ? vaultDefinition.state
+    : vaultDefinition.newVault
+    ? VaultState.New
+    : VaultState.Open;
+  const bouncer = vaultDefinition.bouncer ?? BouncerType.None;
+  const type = vaultDefinition.protocol === Protocol.Badger ? VaultType.Native : VaultType.Standard;
+  const behavior = vaultDefinition.behavior ?? VaultBehavior.None;
+
   return {
-    asset: assetToken.symbol,
     apr: 0,
     apy: 0,
+    asset: assetToken.symbol,
     available: 0,
     balance: 0,
+    behavior,
     boost: {
       enabled: false,
       weight: 0,
     },
-    bouncer: vaultDefinition.bouncer ?? BouncerType.None,
+    bouncer,
     name: vaultDefinition.name,
-    protocol: Protocol.Badger,
     pricePerFullShare: 1,
+    protocol: Protocol.Badger,
     sources: [],
     sourcesApy: [],
-    state: vaultDefinition.state ? vaultDefinition.state : vaultDefinition.newVault ? VaultState.New : VaultState.Open,
+    state,
     tokens: [],
-    underlyingToken: vaultDefinition.depositToken,
-    value: 0,
-    vaultAsset: vaultToken.symbol,
-    vaultToken: vaultDefinition.vaultToken,
     strategy: {
       address: ethers.constants.AddressZero,
       withdrawFee: 50,
       performanceFee: 20,
-      strategistFee: 10,
+      strategistFee: 0,
     },
-    type: vaultDefinition.protocol === Protocol.Badger ? VaultType.Native : VaultType.Standard,
-    behavior: vaultDefinition.behavior ?? VaultBehavior.None,
+    type,
+    underlyingToken: vaultDefinition.depositToken,
+    value: 0,
+    vaultAsset: vaultToken.symbol,
+    vaultToken: vaultDefinition.vaultToken,
+    yieldProjection: {
+      yieldApr: 0,
+      yieldTokens: [],
+      yieldValue: 0,
+      harvestApr: 0,
+      harvestApy: 0,
+      harvestTokens: [],
+      harvestValue: 0,
+    },
+    lastHarvest: 0,
   };
 }
 
-export async function getCachedVault(chain: Chain, vaultDefinition: VaultDefinition): Promise<Vault> {
+export async function getCachedVault(chain: Chain, vaultDefinition: VaultDefinition): Promise<VaultDTO> {
   const vault = await defaultVault(chain, vaultDefinition);
   try {
     const mapper = getDataMapper();
@@ -346,20 +375,18 @@ export async function loadVaultGraphPerformances(
   let { settHarvests } = vaultHarvests;
   let { badgerTreeDistributions } = treeDistributions;
 
-  let data = constructGraphVaultData(settHarvests, badgerTreeDistributions);
+  let data = constructGraphVaultData(vaultDefinition, settHarvests, badgerTreeDistributions);
   // if there are no recent viable options, attempt to use the full vault history
   if (data.length <= 1) {
     [vaultHarvests, treeDistributions] = await Promise.all([
       sdk.graph.loadSettHarvests({
         where: {
           sett: vaultToken.toLowerCase(),
-          timestamp_gte: cutoff,
         },
       }),
       sdk.graph.loadBadgerTreeDistributions({
         where: {
           sett: vaultToken.toLowerCase(),
-          timestamp_gte: cutoff,
         },
       }),
     ]);
@@ -374,7 +401,7 @@ export async function loadVaultGraphPerformances(
     }
   }
 
-  data = constructGraphVaultData(settHarvests, badgerTreeDistributions);
+  data = constructGraphVaultData(vaultDefinition, settHarvests, badgerTreeDistributions);
   // if we still don't have harvests or distributions - don't bother there is nothing to compute
   if (data.length <= 1) {
     return [];
@@ -384,6 +411,7 @@ export async function loadVaultGraphPerformances(
 }
 
 function constructGraphVaultData(
+  vaultDefinition: VaultDefinition,
   settHarvests: gqlGenT.SettHarvestsQuery['settHarvests'],
   badgerTreeDistributions: gqlGenT.BadgerTreeDistributionsQuery['badgerTreeDistributions'],
 ): VaultHarvestData[] {
@@ -398,7 +426,12 @@ function constructGraphVaultData(
     const currentDistributions = treeDistributionsByTimestamp.get(timestamp) ?? [];
     return {
       timestamp,
-      harvests: currentHarvests.map((h) => ({ timestamp, block: Number(h.blockNumber), harvested: h.amount })),
+      harvests: currentHarvests.map((h) => ({
+        timestamp,
+        block: Number(h.blockNumber),
+        token: vaultDefinition.depositToken,
+        amount: h.amount,
+      })),
       treeDistributions: currentDistributions.map((d) => ({
         timestamp,
         block: Number(d.blockNumber),
@@ -426,7 +459,7 @@ async function estimateVaultPerformance(
 
   const harvests = measuredHarvests.flatMap((h) => h.harvests);
   const totalHarvested = harvests
-    .map((h) => h.harvested)
+    .map((h) => h.amount)
     .reduce((total, harvested) => total.add(harvested), BigNumber.from(0));
 
   let totalDuration = 0;

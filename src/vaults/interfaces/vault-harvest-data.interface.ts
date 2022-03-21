@@ -1,7 +1,7 @@
-import { VaultHarvestEvent, VaultTreeDistributionEvent } from '@badger-dao/sdk';
+import { VaultPerformanceEvent } from '@badger-dao/sdk';
 
 export interface VaultHarvestData {
   timestamp: number;
-  harvests: VaultHarvestEvent[];
-  treeDistributions: VaultTreeDistributionEvent[];
+  harvests: VaultPerformanceEvent[];
+  treeDistributions: VaultPerformanceEvent[];
 }

@@ -2,8 +2,8 @@ import BadgerSDK, {
   BadgerGraph,
   Protocol,
   TokensService,
-  Vault,
   VaultBehavior,
+  VaultDTO,
   VaultsService,
   VaultState,
   VaultType,
@@ -153,7 +153,9 @@ describe('vaults.utils', () => {
         const block = Number((timestamp / 10000).toFixed());
         return {
           timestamp,
-          harvests: [{ timestamp, block, harvested: BigNumber.from((int + 1 * 1.88e18).toString()) }],
+          harvests: [
+            { timestamp, block, token: TOKENS.CRV_IBBTC, amount: BigNumber.from((int + 1 * 1.88e18).toString()) },
+          ],
           treeDistributions: [
             { timestamp, block, token: TOKENS.BCVXCRV, amount: BigNumber.from((int + 1 * 5.77e12).toString()) },
             { timestamp, block, token: TOKENS.BVECVX, amount: BigNumber.from((int + 1 * 4.42e12).toString()) },
@@ -185,7 +187,7 @@ describe('vaults.utils', () => {
 
       const depositToken = fullTokenMockMap[vaultDefinition.depositToken];
       const settToken = fullTokenMockMap[vaultDefinition.vaultToken];
-      const expected: Vault = {
+      const expected: VaultDTO = {
         asset: depositToken.symbol,
         vaultAsset: settToken.symbol,
         state: vaultDefinition.state
@@ -215,10 +217,20 @@ describe('vaults.utils', () => {
           address: ethers.constants.AddressZero,
           withdrawFee: 50,
           performanceFee: 20,
-          strategistFee: 10,
+          strategistFee: 0,
         },
         type: vaultDefinition.protocol === Protocol.Badger ? VaultType.Native : VaultType.Standard,
         behavior: vaultDefinition.behavior ?? VaultBehavior.None,
+        lastHarvest: 0,
+        yieldProjection: {
+          yieldApr: 0,
+          yieldTokens: [],
+          yieldValue: 0,
+          harvestApr: 0,
+          harvestApy: 0,
+          harvestTokens: [],
+          harvestValue: 0,
+        },
       };
       setFullTokenDataMock();
       const actual = await defaultVault(TEST_CHAIN, vaultDefinition);
@@ -244,9 +256,9 @@ describe('vaults.utils', () => {
         const snapshot = randomSnapshot(vault);
         setupMapper([snapshot]);
         setFullTokenDataMock();
+
         const cached = await getCachedVault(TEST_CHAIN, vault);
         const expected = await defaultVault(TEST_CHAIN, vault);
-
         expected.pricePerFullShare = snapshot.balance / snapshot.totalSupply;
         expected.balance = snapshot.balance;
         expected.value = snapshot.value;

@@ -1,4 +1,4 @@
-import { Network } from '@badger-dao/sdk';
+import { formatBalance, Network } from '@badger-dao/sdk';
 import { UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { Chain } from '../../chains/config/chain.config';
@@ -16,7 +16,7 @@ import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interf
 import { getCachedVault, getVaultDefinition } from '../../vaults/vaults.utils';
 import { CachedVaultTokenBalance } from '../../tokens/interfaces/cached-vault-token-balance.interface';
 import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
-import { formatBalance, getFullToken, getVaultTokens, toBalance } from '../../tokens/tokens.utils';
+import { getFullToken, getVaultTokens, toBalance } from '../../tokens/tokens.utils';
 import { CachedValueSource } from '../interfaces/cached-value-source.interface';
 import { createValueSource } from '../interfaces/value-source.interface';
 import { getVaultCachedValueSources } from '../protocols.utils';
