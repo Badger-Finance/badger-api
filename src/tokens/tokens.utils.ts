@@ -1,7 +1,7 @@
 import { getPrice } from '../prices/prices.utils';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { getCachedVault } from '../vaults/vaults.utils';
-import { CachedVaultTokenBalance } from './interfaces/cached-vault-token-balance.interface';
+import { VaultTokenBalance } from '../vaults/types/vault-token-balance.interface';
 import { Token, TokenValue } from '@badger-dao/sdk';
 import { Currency } from '@badger-dao/sdk';
 import { getDataMapper } from '../aws/dynamodb.utils';
@@ -66,11 +66,7 @@ export async function getCachedTokenBalances(
   currency?: string,
 ): Promise<TokenValue[] | undefined> {
   const mapper = getDataMapper();
-  for await (const record of mapper.query(
-    CachedVaultTokenBalance,
-    { vault: vaultDefinition.vaultToken },
-    { limit: 1 },
-  )) {
+  for await (const record of mapper.query(VaultTokenBalance, { vault: vaultDefinition.vaultToken }, { limit: 1 })) {
     return record.tokenBalances;
   }
   return undefined;

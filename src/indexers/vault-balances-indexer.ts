@@ -4,10 +4,10 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
-import { CachedVaultTokenBalance } from '../tokens/interfaces/cached-vault-token-balance.interface';
 import { getFullToken } from '../tokens/tokens.utils';
 import { getLpTokenBalances } from './indexer.utils';
 import { PricingType } from '../prices/enums/pricing-type.enum';
+import { VaultTokenBalance } from '../vaults/types/vault-token-balance.interface';
 
 export async function refreshVaultBalances() {
   const chains = loadChains();
@@ -43,7 +43,7 @@ export async function updateVaultTokenBalances(chain: Chain, vaultDefinition: Va
   }
 }
 
-async function saveCachedTokenBalance(mapper: DataMapper, cachedTokenBalance: CachedVaultTokenBalance): Promise<void> {
+async function saveCachedTokenBalance(mapper: DataMapper, cachedTokenBalance: VaultTokenBalance): Promise<void> {
   try {
     await mapper.put(cachedTokenBalance);
   } catch (err) {
