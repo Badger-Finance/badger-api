@@ -231,6 +231,7 @@ export function setupMockAccounts() {
     chainStartBlock: dynamodbUtils.getChainStartBlockKey(chain, 10),
     chain: chain.network,
     cycle: 10,
+    count: 0,
   }));
 }
 

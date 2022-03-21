@@ -45,6 +45,8 @@ export const PRODUCTION = STAGE === Stage.Production;
 export const COINGECKO_URL = 'https://api.coingecko.com/api/v3/simple';
 export const BLOCKNATIVE_API_KEY = process.env.BLOCKNATIVE_API_KEY || 'MISSING REQUIRED ENV VAR';
 
+export const DEFAULT_PAGE_SIZE = 20;
+
 export const swaggerConfig: SwaggerSettings = {
   path: '/docs',
   spec: {

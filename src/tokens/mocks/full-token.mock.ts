@@ -4,7 +4,6 @@ import { TokenFullMap } from '../interfaces/token-full.interface';
 import { TOKENS } from '../../config/tokens.config';
 import { PricingType } from '../../prices/enums/pricing-type.enum';
 import { getRemDiggPrice } from '../../prices/custom/remdigg-price';
-import { TEST_ADDR } from '../../test/tests.utils';
 
 // temp solution, remove after sdk lib mocks
 export const fullTokenMockMap: TokenFullMap = {
@@ -158,12 +157,5 @@ export const fullTokenMockMap: TokenFullMap = {
     name: 'Sushiswap: WBTC-ETH',
     symbol: 'SLP-WBTC-ETH',
     type: PricingType.Vault,
-  },
-  [TEST_ADDR]: {
-    address: TEST_ADDR,
-    symbol: 'TEST',
-    name: 'TEST',
-    decimals: 18,
-    type: PricingType.Contract,
   },
 };
