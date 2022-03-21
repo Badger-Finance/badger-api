@@ -179,22 +179,18 @@ export class VaultModel implements VaultDTO {
   @Example({
     yieldApr: 10,
     yieldTokens: [TOKENS.CRV],
+    yieldValue: 30,
     harvestApr: 9.95,
     harvestApy: 14.32,
     harvestTokens: [TOKENS.BCVXCRV],
+    harvestValue: 35,
   })
   @Property()
   public yieldProjection: VaultYieldProjection;
 
   @Title('lastHarvest')
   @Description('Timestamp of the previous harvest')
-  @Example({
-    yieldApr: 10,
-    yieldTokens: [TOKENS.CRV],
-    harvestApr: 9.95,
-    harvestApy: 14.32,
-    harvestTokens: [TOKENS.BCVXCRV],
-  })
+  @Example(Date.now())
   @Property()
   public lastHarvest: number;
 
