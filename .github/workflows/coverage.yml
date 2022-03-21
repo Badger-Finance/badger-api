@@ -2,6 +2,9 @@ name: Test Coverage
 
 on: [pull_request]
 
+env:
+  NODE_OPTIONS: '--max-old-space-size=4096'
+
 jobs:
   test_coverage:
     runs-on: ubuntu-latest
