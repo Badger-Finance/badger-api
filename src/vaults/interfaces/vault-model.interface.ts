@@ -6,10 +6,11 @@ import { mockBalance } from '../../tokens/tokens.utils';
 import { VAULT_SOURCE } from '../vaults.utils';
 import { VaultStrategy } from './vault-strategy.interface';
 import { ethers } from 'ethers';
-import { BoostConfig, Protocol, Vault, VaultState, VaultType, VaultBehavior, TokenValue } from '@badger-dao/sdk';
+import { BoostConfig, Protocol, VaultState, VaultType, VaultBehavior, TokenValue, VaultDTO } from '@badger-dao/sdk';
 import { fullTokenMockMap } from '../../tokens/mocks/full-token.mock';
+import { VaultYieldProjection } from '@badger-dao/sdk/lib/api/interfaces/vault-yield-projection.interface';
 
-export class VaultModel implements Vault {
+export class VaultModel implements VaultDTO {
   @Title('name')
   @Description('vault display name')
   @Example('Convex Tricrypto')
@@ -173,6 +174,30 @@ export class VaultModel implements Vault {
   @Property()
   public behavior: VaultBehavior;
 
+  @Title('yieldProjection')
+  @Description('Projection of current yield and harvest yield')
+  @Example({
+    yieldApr: 10,
+    yieldTokens: [TOKENS.CRV],
+    harvestApr: 9.95,
+    harvestApy: 14.32,
+    harvestTokens: [TOKENS.BCVXCRV],
+  })
+  @Property()
+  public yieldProjection: VaultYieldProjection;
+
+  @Title('lastHarvest')
+  @Description('Timestamp of the previous harvest')
+  @Example({
+    yieldApr: 10,
+    yieldTokens: [TOKENS.CRV],
+    harvestApr: 9.95,
+    harvestApy: 14.32,
+    harvestTokens: [TOKENS.BCVXCRV],
+  })
+  @Property()
+  public lastHarvest: number;
+
   constructor({
     name,
     state,
@@ -199,7 +224,9 @@ export class VaultModel implements Vault {
     strategy,
     type,
     behavior,
-  }: Vault) {
+    yieldProjection,
+    lastHarvest,
+  }: VaultDTO) {
     this.name = name;
     this.state = state;
     this.asset = asset;
@@ -225,5 +252,7 @@ export class VaultModel implements Vault {
     this.strategy = strategy;
     this.type = type;
     this.behavior = behavior;
+    this.yieldProjection = yieldProjection;
+    this.lastHarvest = lastHarvest;
   }
 }

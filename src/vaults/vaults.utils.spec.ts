@@ -2,8 +2,8 @@ import BadgerSDK, {
   BadgerGraph,
   Protocol,
   TokensService,
-  Vault,
   VaultBehavior,
+  VaultDTO,
   VaultsService,
   VaultState,
   VaultType,
@@ -187,7 +187,7 @@ describe('vaults.utils', () => {
 
       const depositToken = fullTokenMockMap[vaultDefinition.depositToken];
       const settToken = fullTokenMockMap[vaultDefinition.vaultToken];
-      const expected: Vault = {
+      const expected: VaultDTO = {
         asset: depositToken.symbol,
         vaultAsset: settToken.symbol,
         state: vaultDefinition.state
@@ -221,6 +221,14 @@ describe('vaults.utils', () => {
         },
         type: vaultDefinition.protocol === Protocol.Badger ? VaultType.Native : VaultType.Standard,
         behavior: vaultDefinition.behavior ?? VaultBehavior.None,
+        lastHarvest: 0,
+        yieldProjection: {
+          yieldApr: 0,
+          yieldTokens: [],
+          harvestApr: 0,
+          harvestApy: 0,
+          harvestTokens: [],
+        },
       };
       setFullTokenDataMock();
       const actual = await defaultVault(TEST_CHAIN, vaultDefinition);

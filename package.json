@@ -14,7 +14,7 @@
     "deploy:prod": "sls deploy --stage prod",
     "dev": "sls offline start",
     "dev:local": "npx ts-node src/index.ts",
-    "format": "prettier --write \"src/**/*.ts\"",
+    "format": "pretty-quick",
     "lint": "eslint \"src/**/*.ts\" --fix",
     "test": "jest --detectOpenHandles",
     "prepare": "husky install"

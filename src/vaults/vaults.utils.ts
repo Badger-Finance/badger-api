@@ -16,8 +16,8 @@ import {
   keyBy,
   Network,
   Protocol,
-  Vault,
   VaultBehavior,
+  VaultDTO,
   VaultState,
   VaultType,
 } from '@badger-dao/sdk';
@@ -36,44 +36,61 @@ import { CurrentVaultSnapshot } from './types/current-vault-snapshot';
 
 export const VAULT_SOURCE = 'Vault Compounding';
 
-export async function defaultVault(chain: Chain, vaultDefinition: VaultDefinition): Promise<Vault> {
+export async function defaultVault(chain: Chain, vaultDefinition: VaultDefinition): Promise<VaultDTO> {
   const assetToken = await getFullToken(chain, vaultDefinition.depositToken);
   const vaultToken = await getFullToken(chain, vaultDefinition.vaultToken);
 
+  const state = vaultDefinition.state
+    ? vaultDefinition.state
+    : vaultDefinition.newVault
+    ? VaultState.New
+    : VaultState.Open;
+  const bouncer = vaultDefinition.bouncer ?? BouncerType.None;
+  const type = vaultDefinition.protocol === Protocol.Badger ? VaultType.Native : VaultType.Standard;
+  const behavior = vaultDefinition.behavior ?? VaultBehavior.None;
+
   return {
-    asset: assetToken.symbol,
     apr: 0,
     apy: 0,
+    asset: assetToken.symbol,
     available: 0,
     balance: 0,
+    behavior,
     boost: {
       enabled: false,
       weight: 0,
     },
-    bouncer: vaultDefinition.bouncer ?? BouncerType.None,
+    bouncer,
     name: vaultDefinition.name,
-    protocol: Protocol.Badger,
     pricePerFullShare: 1,
+    protocol: Protocol.Badger,
     sources: [],
     sourcesApy: [],
-    state: vaultDefinition.state ? vaultDefinition.state : vaultDefinition.newVault ? VaultState.New : VaultState.Open,
+    state,
     tokens: [],
-    underlyingToken: vaultDefinition.depositToken,
-    value: 0,
-    vaultAsset: vaultToken.symbol,
-    vaultToken: vaultDefinition.vaultToken,
     strategy: {
       address: ethers.constants.AddressZero,
       withdrawFee: 50,
       performanceFee: 20,
-      strategistFee: 10,
+      strategistFee: 0,
     },
-    type: vaultDefinition.protocol === Protocol.Badger ? VaultType.Native : VaultType.Standard,
-    behavior: vaultDefinition.behavior ?? VaultBehavior.None,
+    type,
+    underlyingToken: vaultDefinition.depositToken,
+    value: 0,
+    vaultAsset: vaultToken.symbol,
+    vaultToken: vaultDefinition.vaultToken,
+    yieldProjection: {
+      yieldApr: 0,
+      yieldTokens: [],
+      harvestApr: 0,
+      harvestApy: 0,
+      harvestTokens: [],
+    },
+    lastHarvest: 0,
   };
 }
 
-export async function getCachedVault(chain: Chain, vaultDefinition: VaultDefinition): Promise<Vault> {
+export async function getCachedVault(chain: Chain, vaultDefinition: VaultDefinition): Promise<VaultDTO> {
   const vault = await defaultVault(chain, vaultDefinition);
   try {
     const mapper = getDataMapper();
