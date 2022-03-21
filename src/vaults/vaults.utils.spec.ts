@@ -256,6 +256,7 @@ describe('vaults.utils', () => {
         const snapshot = randomSnapshot(vault);
         setupMapper([snapshot]);
         setFullTokenDataMock();
+
         const cached = await getCachedVault(TEST_CHAIN, vault);
         const expected = await defaultVault(TEST_CHAIN, vault);
         expected.pricePerFullShare = snapshot.balance / snapshot.totalSupply;
