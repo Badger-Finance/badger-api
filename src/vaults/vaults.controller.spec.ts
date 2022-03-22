@@ -35,7 +35,7 @@ describe('VaultsController', () => {
         vault: vaultDefinition.vaultToken,
         yieldTokens: [],
         harvestTokens: [],
-        lastHarvestedAt: Date.now() / 1000,
+        lastHarvestedAt: 1048968337,
       }),
     );
     jest
