@@ -13,13 +13,12 @@ import {
 } from '../../contracts';
 import { SourceType } from '../../rewards/enums/source-type.enum';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
-import { getCachedVault, getVaultDefinition } from '../../vaults/vaults.utils';
+import { getCachedVault, getVaultCachedValueSources, getVaultDefinition } from '../../vaults/vaults.utils';
 import { VaultTokenBalance } from '../../vaults/types/vault-token-balance.interface';
 import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
 import { getFullToken, getVaultTokens, toBalance } from '../../tokens/tokens.utils';
 import { CachedValueSource } from '../interfaces/cached-value-source.interface';
 import { createValueSource } from '../interfaces/value-source.interface';
-import { getVaultCachedValueSources } from '../protocols.utils';
 import { request } from '../../etherscan/etherscan.utils';
 import { CurveAPIResponse } from '../interfaces/curve-api-response.interrface';
 import { valueSourceToCachedValueSource } from '../../rewards/rewards.utils';

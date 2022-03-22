@@ -11,6 +11,7 @@ import { TokenInformationSnapshot } from './interfaces/token-information-snapsho
 import { TokenFull, TokenFullMap } from './interfaces/token-full.interface';
 import { TokenNotFound } from './errors/token.error';
 import * as thisModule from './tokens.utils';
+import { SourceType } from '../rewards/enums/source-type.enum';
 
 export async function toBalance(token: Token, balance: number, currency?: Currency): Promise<TokenValue> {
   const { price } = await getPrice(token.address, currency);
@@ -168,4 +169,8 @@ export function mockBalance(token: Token, balance: number, currency?: Currency):
     balance: balance,
     value: balance * price,
   };
+}
+
+export function tokenEmission(token: Token, boosted = false): string {
+  return `${boosted ? 'boosted_' : 'flat_'}${token.symbol}_${SourceType.Emission}`;
 }

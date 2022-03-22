@@ -5,7 +5,7 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
 import { DEBUG, ONE_DAY_MS, ONE_YEAR_MS, ONE_YEAR_SECONDS } from '../config/constants';
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
-import { getFullToken } from '../tokens/tokens.utils';
+import { getFullToken, tokenEmission } from '../tokens/tokens.utils';
 import { VaultDefinition } from './interfaces/vault-definition.interface';
 import { EmissionControl__factory } from '../contracts';
 import { VaultStrategy } from './interfaces/vault-strategy.interface';
@@ -20,6 +20,7 @@ import {
   VaultDTO,
   VaultState,
   VaultType,
+  VaultVersion,
 } from '@badger-dao/sdk';
 import { getPrice } from '../prices/prices.utils';
 import { TokenPrice } from '../prices/interface/token-price.interface';
@@ -28,11 +29,11 @@ import { CachedValueSource } from '../protocols/interfaces/cached-value-source.i
 import { createValueSource } from '../protocols/interfaces/value-source.interface';
 import { getProtocolValueSources, getRewardEmission, valueSourceToCachedValueSource } from '../rewards/rewards.utils';
 import { SourceType } from '../rewards/enums/source-type.enum';
-import { getVaultCachedValueSources, tokenEmission } from '../protocols/protocols.utils';
 import { getVault } from '../indexers/indexer.utils';
 import { HistoricVaultSnapshot } from './types/historic-vault-snapshot';
 import { VaultHarvestData } from './interfaces/vault-harvest-data.interface';
 import { CurrentVaultSnapshot } from './types/current-vault-snapshot';
+import { VaultPendingHarvestData } from './types/vault-pending-harvest-data';
 
 export const VAULT_SOURCE = 'Vault Compounding';
 
@@ -89,6 +90,7 @@ export async function defaultVault(chain: Chain, vaultDefinition: VaultDefinitio
       harvestValue: 0,
     },
     lastHarvest: 0,
+    version: VaultVersion.v1,
   };
 }
 
@@ -552,4 +554,42 @@ async function estimateVaultPerformance(
   }
 
   return valueSources;
+}
+
+export async function getVaultCachedValueSources(vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
+  const valueSources = [];
+  const mapper = getDataMapper();
+  for await (const source of mapper.query(
+    CachedValueSource,
+    { address: vaultDefinition.vaultToken },
+    { indexName: 'IndexApySnapshotsOnAddress' },
+  )) {
+    valueSources.push(source);
+  }
+  return valueSources;
+}
+
+export async function getVaultPendingHarvest(vaultDefinition: VaultDefinition): Promise<VaultPendingHarvestData> {
+  let pendingHarvest: VaultPendingHarvestData = {
+    vault: vaultDefinition.vaultToken,
+    yieldTokens: [],
+    harvestTokens: [],
+    lastHarvestedAt: 0,
+  };
+  try {
+    const mapper = getDataMapper();
+    for await (const item of mapper.query(
+      VaultPendingHarvestData,
+      { vault: vaultDefinition.vaultToken },
+      { limit: 1 },
+    )) {
+      pendingHarvest.yieldTokens = item.yieldTokens;
+      pendingHarvest.harvestTokens = item.harvestTokens;
+      pendingHarvest.lastHarvestedAt = item.lastHarvestedAt;
+    }
+    return pendingHarvest;
+  } catch (err) {
+    console.error(err);
+    return pendingHarvest;
+  }
 }

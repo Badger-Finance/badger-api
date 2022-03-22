@@ -22,6 +22,9 @@ export class CurrentVaultSnapshot implements VaultSnapshot {
   balance!: number;
 
   @attribute()
+  strategyBalance!: number;
+
+  @attribute()
   totalSupply!: number;
 
   @attribute()
