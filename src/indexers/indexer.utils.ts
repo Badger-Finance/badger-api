@@ -75,8 +75,6 @@ export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefini
     strategyBalance: balance - available,
     pricePerFullShare,
     value: parseFloat(value.toFixed(2)),
-    // dunno where this comes from
-    strategyBalance: 0,
     totalSupply,
     available,
     strategy: strategyInfo,

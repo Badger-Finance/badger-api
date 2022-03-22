@@ -50,7 +50,4 @@ export class CurrentVaultSnapshot implements VaultSnapshot {
 
   @attribute()
   harvestApr!: number;
-
-  @attribute()
-  strategyBalance!: number;
 }
