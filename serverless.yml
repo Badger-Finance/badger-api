@@ -426,6 +426,15 @@ functions:
           description: 'index data for supported vaults'
           rate: rate(1 minute)
 
+  index-vault-harvests:
+    handler: src/indexers/vault-harvests-indexer.refreshVaultHarvests
+    timeout: 150
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-vault-harvests
+          description: 'index harvests data for supported vaults'
+          rate: rate(5 minutes)
+
   index-leaderboard:
     handler: src/indexers/leaderboard-indexer.indexBoostLeaderBoard
     timeout: 120
