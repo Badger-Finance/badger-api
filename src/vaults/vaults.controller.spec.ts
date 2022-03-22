@@ -3,7 +3,6 @@ import { PlatformTest } from '@tsed/common';
 import { BadRequest } from '@tsed/exceptions';
 import SuperTest from 'supertest';
 import { createValueSource } from '../protocols/interfaces/value-source.interface';
-import * as protocolsUtils from '../protocols/protocols.utils';
 import { Server } from '../Server';
 import * as vaultsUtils from './vaults.utils';
 import { TokenBalance } from '../tokens/interfaces/token-balance.interface';
@@ -16,6 +15,7 @@ import { SourceType } from '../rewards/enums/source-type.enum';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import * as tokenUtils from '../tokens/tokens.utils';
 import { TOKENS } from '../config/tokens.config';
+import { VaultPendingHarvestData } from './types/vault-pending-harvest-data';
 
 describe('VaultsController', () => {
   let request: SuperTest.SuperTest<SuperTest.Test>;
@@ -30,6 +30,14 @@ describe('VaultsController', () => {
     jest.spyOn(tokenUtils, 'getFullToken').mockImplementation(async (_, tokenAddr) => {
       return fullTokenMockMap[tokenAddr] || fullTokenMockMap[TOKENS.BADGER];
     });
+    jest.spyOn(vaultsUtils, 'getVaultPendingHarvest').mockImplementation(
+      async (vaultDefinition: VaultDefinition): Promise<VaultPendingHarvestData> => ({
+        vault: vaultDefinition.vaultToken,
+        yieldTokens: [],
+        harvestTokens: [],
+        lastHarvestedAt: Date.now() / 1000,
+      }),
+    );
     jest
       .spyOn(vaultsUtils, 'getCachedVault')
       .mockImplementation(async (chain, vaultDefinition: VaultDefinition): Promise<VaultDTO> => {
@@ -38,7 +46,7 @@ describe('VaultsController', () => {
         return vault;
       });
     jest
-      .spyOn(protocolsUtils, 'getVaultCachedValueSources')
+      .spyOn(vaultsUtils, 'getVaultCachedValueSources')
       .mockImplementation(async (vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> => {
         const performance = parseInt(vaultDefinition.vaultToken.slice(0, 5), 16) / 100;
         const underlying = createValueSource(vaultsUtils.VAULT_SOURCE, performance);

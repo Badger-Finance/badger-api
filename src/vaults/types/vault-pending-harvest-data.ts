@@ -4,7 +4,7 @@ import { HARVEST_DATA } from '../../config/constants';
 import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
 
 @table(HARVEST_DATA)
-export class VaultHarvestData {
+export class VaultPendingHarvestData {
   @hashKey()
   vault!: string;
 
@@ -13,4 +13,7 @@ export class VaultHarvestData {
 
   @attribute({ memberType: embed(CachedTokenBalance) })
   harvestTokens!: Array<CachedTokenBalance>;
+
+  @attribute()
+  lastHarvestedAt!: number;
 }

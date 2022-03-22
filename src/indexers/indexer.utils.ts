@@ -72,6 +72,7 @@ export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefini
     timestamp: Date.now(),
     address,
     balance,
+    strategyBalance: balance - available,
     pricePerFullShare,
     value: parseFloat(value.toFixed(2)),
     totalSupply,

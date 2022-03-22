@@ -7,6 +7,7 @@ import BadgerSDK, {
   VaultsService,
   VaultState,
   VaultType,
+  VaultVersion,
 } from '@badger-dao/sdk';
 import { BadRequest, NotFound } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';
@@ -34,15 +35,14 @@ import {
 } from './vaults.utils';
 import * as pricesUtils from '../prices/prices.utils';
 import * as rewardsUtils from '../rewards/rewards.utils';
-import * as protocolsUtils from '../protocols/protocols.utils';
 import * as indexerUtils from '../indexers/indexer.utils';
 import { createValueSource } from '../protocols/interfaces/value-source.interface';
-import { tokenEmission } from '../protocols/protocols.utils';
 import { Polygon } from '../chains/config/polygon.config';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { ONE_DAY_SECONDS, ONE_YEAR_MS } from '../config/constants';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import { TokenNotFound } from '../tokens/errors/token.error';
+import { tokenEmission } from '../tokens/tokens.utils';
 
 describe('vaults.utils', () => {
   const vault = getVaultDefinition(TEST_CHAIN, TOKENS.BBADGER);
@@ -231,6 +231,7 @@ describe('vaults.utils', () => {
           harvestTokens: [],
           harvestValue: 0,
         },
+        version: VaultVersion.v1,
       };
       setFullTokenDataMock();
       const actual = await defaultVault(TEST_CHAIN, vaultDefinition);
@@ -367,10 +368,8 @@ describe('vaults.utils', () => {
           address: token,
           price: Number(token.slice(0, 4)),
         }));
-        jest.spyOn(protocolsUtils, 'getVaultCachedValueSources').mockImplementation(async (vault) => {
-          const underlying = createValueSource(VAULT_SOURCE, 10);
-          return [rewardsUtils.valueSourceToCachedValueSource(underlying, vault, SourceType.PreCompound)];
-        });
+        const underlying = createValueSource(VAULT_SOURCE, 10);
+        setupMapper([rewardsUtils.valueSourceToCachedValueSource(underlying, vault, SourceType.PreCompound)]);
         setFullTokenDataMock();
         const result = await getVaultPerformance(TEST_CHAIN, vault);
         expect(result).toMatchSnapshot();

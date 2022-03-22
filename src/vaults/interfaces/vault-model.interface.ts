@@ -6,7 +6,16 @@ import { mockBalance } from '../../tokens/tokens.utils';
 import { VAULT_SOURCE } from '../vaults.utils';
 import { VaultStrategy } from './vault-strategy.interface';
 import { ethers } from 'ethers';
-import { BoostConfig, Protocol, VaultState, VaultType, VaultBehavior, TokenValue, VaultDTO } from '@badger-dao/sdk';
+import {
+  BoostConfig,
+  Protocol,
+  VaultState,
+  VaultType,
+  VaultBehavior,
+  TokenValue,
+  VaultDTO,
+  VaultVersion,
+} from '@badger-dao/sdk';
 import { fullTokenMockMap } from '../../tokens/mocks/full-token.mock';
 import { VaultYieldProjection } from '@badger-dao/sdk/lib/api/interfaces/vault-yield-projection.interface';
 
@@ -194,6 +203,12 @@ export class VaultModel implements VaultDTO {
   @Property()
   public lastHarvest: number;
 
+  @Title('version')
+  @Description('Version of Badger Vault')
+  @Example(VaultVersion.v1_5)
+  @Property()
+  public version: VaultVersion;
+
   constructor({
     name,
     state,
@@ -222,6 +237,7 @@ export class VaultModel implements VaultDTO {
     behavior,
     yieldProjection,
     lastHarvest,
+    version,
   }: VaultDTO) {
     this.name = name;
     this.state = state;
@@ -250,5 +266,6 @@ export class VaultModel implements VaultDTO {
     this.behavior = behavior;
     this.yieldProjection = yieldProjection;
     this.lastHarvest = lastHarvest;
+    this.version = version;
   }
 }

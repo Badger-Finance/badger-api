@@ -1,13 +1,15 @@
 import { Currency, Protocol, VaultDTO, VaultState, VaultType } from '@badger-dao/sdk';
+import { VaultYieldProjection } from '@badger-dao/sdk/lib/api/interfaces/vault-yield-projection.interface';
 import { Service } from '@tsed/common';
 import { Chain } from '../chains/config/chain.config';
+import { ONE_YEAR_SECONDS } from '../config/constants';
 import { convert } from '../prices/prices.utils';
 import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interface';
-import { getVaultCachedValueSources } from '../protocols/protocols.utils';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { getVaultTokens } from '../tokens/tokens.utils';
 import { VaultDefinition } from './interfaces/vault-definition.interface';
-import { getCachedVault, VAULT_SOURCE } from './vaults.utils';
+import { VaultPendingHarvestData } from './types/vault-pending-harvest-data';
+import { getCachedVault, getVaultCachedValueSources, getVaultPendingHarvest, VAULT_SOURCE } from './vaults.utils';
 
 @Service()
 export class VaultsService {
@@ -32,9 +34,10 @@ export class VaultsService {
   }
 
   static async loadVault(chain: Chain, vaultDefinition: VaultDefinition, currency?: Currency): Promise<VaultDTO> {
-    const [vault, sources] = await Promise.all([
+    const [vault, sources, pendingHarvest] = await Promise.all([
       getCachedVault(chain, vaultDefinition),
       getVaultCachedValueSources(vaultDefinition),
+      getVaultPendingHarvest(vaultDefinition),
     ]);
     vault.tokens = await getVaultTokens(chain, vaultDefinition, vault.balance, currency);
     vault.value = await convert(vault.value, currency);
@@ -55,6 +58,8 @@ export class VaultsService {
     vault.apr = vault.sources.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
     vault.apy = vault.sourcesApy.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
     vault.protocol = vaultDefinition.protocol ?? Protocol.Badger;
+    vault.yieldProjection = this.getVaultYieldProjection(vault, pendingHarvest);
+    vault.lastHarvest = pendingHarvest.lastHarvestedAt;
 
     if (vault.boost.enabled) {
       const hasBoostedApr = vault.sources.some((source) => source.boostable);
@@ -72,5 +77,28 @@ export class VaultsService {
     }
 
     return vault;
+  }
+
+  private static getVaultYieldProjection(
+    vault: VaultDTO,
+    pendingHarvest: VaultPendingHarvestData,
+  ): VaultYieldProjection {
+    const { value, lastHarvest } = vault;
+    const harvestValue = pendingHarvest.harvestTokens.reduce((total, token) => (total += token.value), 0);
+    const yieldValue = pendingHarvest.yieldTokens.reduce((total, token) => (total += token.value), 0);
+    return {
+      harvestApr: this.calculateProjectedYield(value, harvestValue, lastHarvest),
+      harvestApy: this.calculateProjectedYield(value, harvestValue, lastHarvest),
+      harvestTokens: pendingHarvest.harvestTokens,
+      harvestValue,
+      yieldApr: this.calculateProjectedYield(value, yieldValue, lastHarvest),
+      yieldTokens: pendingHarvest.yieldTokens,
+      yieldValue,
+    };
+  }
+
+  private static calculateProjectedYield(value: number, pendingValue: number, lastHarvested: number): number {
+    const duration = Date.now() / 1000 - lastHarvested;
+    return (pendingValue / value) * (ONE_YEAR_SECONDS / duration) * 100;
   }
 }

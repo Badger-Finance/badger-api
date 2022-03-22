@@ -4,8 +4,8 @@ import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
 import { ValueSourceMap } from '../protocols/interfaces/value-source-map.interface';
-import { getVaultCachedValueSources } from '../protocols/protocols.utils';
 import { getVaultValueSources } from '../rewards/rewards.utils';
+import { getVaultCachedValueSources } from '../vaults/vaults.utils';
 
 export async function refreshApySnapshots() {
   const chains = loadChains();
