@@ -15,13 +15,13 @@ import { BinanceSmartChain } from '../chains/config/bsc.config';
 import { TOKENS } from '../config/tokens.config';
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
 import {
-  randomVault,
   randomSnapshot,
-  setupMapper,
-  TEST_CHAIN,
-  TEST_ADDR,
   randomSnapshots,
+  randomVault,
   setFullTokenDataMock,
+  setupMapper,
+  TEST_ADDR,
+  TEST_CHAIN,
 } from '../test/tests.utils';
 import {
   defaultVault,

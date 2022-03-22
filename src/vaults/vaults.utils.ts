@@ -37,7 +37,11 @@ import { VaultPendingHarvestData } from './types/vault-pending-harvest-data';
 
 export const VAULT_SOURCE = 'Vault Compounding';
 
-export async function defaultVault(chain: Chain, vaultDefinition: VaultDefinition): Promise<VaultDTO> {
+export async function defaultVault(
+  chain: Chain,
+  vaultDefinition: VaultDefinition,
+  version: VaultVersion = VaultVersion.v1,
+): Promise<VaultDTO> {
   const assetToken = await getFullToken(chain, vaultDefinition.depositToken);
   const vaultToken = await getFullToken(chain, vaultDefinition.vaultToken);
 
@@ -90,7 +94,7 @@ export async function defaultVault(chain: Chain, vaultDefinition: VaultDefinitio
       harvestValue: 0,
     },
     lastHarvest: 0,
-    version: VaultVersion.v1,
+    version,
   };
 }
 
