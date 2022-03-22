@@ -3,6 +3,6 @@
     "resolveJsonModule": true
   },
   "extends": "./tsconfig.json",
-  "exclude": ["node_modules"],
-  "include": ["src/**/*.ts"]
+  "include": ["./src/**/*.ts", "./seed/scripts/*.ts"],
+  "exclude": ["build", "node_modules"]
 }
