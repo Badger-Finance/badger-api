@@ -4,12 +4,17 @@ frameworkVersion: '2'
 useDotenv: true
 
 plugins:
-  - serverless-plugin-typescript
+  - serverless-webpack
   - serverless-dynamodb-local
   - serverless-offline
 
 custom:
   stage: ${opt:stage, self:provider.stage}
+
+  webpack:
+    webpackConfig: ./webpack.config.js
+    packager: 'yarn'
+    includeModules: false
 
   dynamodb:
     stages:
