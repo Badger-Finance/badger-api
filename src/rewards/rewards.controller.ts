@@ -1,8 +1,12 @@
-import { Network } from '@badger-dao/sdk';
+import { formatBalance, Network } from '@badger-dao/sdk';
+import { BigNumber } from '@ethersproject/bignumber';
 import { Controller, Get, Inject, QueryParams } from '@tsed/common';
-import { ContentType } from '@tsed/schema';
+import { ContentType, Description, Returns, Summary } from '@tsed/schema';
 import { Chain } from '../chains/config/chain.config';
 import { DEFAULT_PAGE_SIZE } from '../config/constants';
+import { TOKENS } from '../config/tokens.config';
+import { REMDIGG_SHARE_PER_FRAGMENT } from '../prices/custom/remdigg-price';
+import { getFullToken } from '../tokens/tokens.utils';
 import { UserClaimSnapshot } from './entities/user-claim-snapshot';
 import { DebankUser } from './interfaces/debank-user.interface';
 import { ListRewardsResponse } from './interfaces/list-rewards-response.interface';
@@ -15,6 +19,9 @@ export class RewardsController {
 
   @Get()
   @ContentType('json')
+  @Summary('List the unclaimable reward balances')
+  @Description('Returns a paginated chunk of reward balance snapshots for users')
+  @Returns(200)
   async list(
     @QueryParams('chain_id') chainId: Network,
     @QueryParams('page_num') pageNum?: number,
@@ -25,15 +32,24 @@ export class RewardsController {
     return {
       total_count: count,
       total_page_num: Math.ceil(count / (pageCount || DEFAULT_PAGE_SIZE)),
-      users: records.map(this.userClaimedSnapshotToDebankUser),
+      users: await Promise.all(records.map((record) => this.userClaimedSnapshotToDebankUser(chain, record))),
     };
   }
 
-  private userClaimedSnapshotToDebankUser(snapshot: UserClaimSnapshot): DebankUser {
+  private async userClaimedSnapshotToDebankUser(chain: Chain, snapshot: UserClaimSnapshot): Promise<DebankUser> {
+    const rewards: Record<string, number> = {};
+    for (const record of snapshot.claimableBalances) {
+      const { address, balance } = record;
+      const token = await getFullToken(chain, address);
+      if (token.address === TOKENS.DIGG) {
+        rewards[address] = BigNumber.from(balance).div(REMDIGG_SHARE_PER_FRAGMENT).toNumber();
+      } else {
+        rewards[address] = formatBalance(balance, token.decimals);
+      }
+    }
     return {
       user_addr: snapshot.address,
-      tokens: snapshot.claimableBalances.map((record) => record.address),
-      cumulativeAmounts: snapshot.claimableBalances.map((record) => record.balance),
+      rewards,
     };
   }
 }
