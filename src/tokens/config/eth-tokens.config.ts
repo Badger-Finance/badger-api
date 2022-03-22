@@ -24,6 +24,9 @@ export const ethTokensConfig: TokenConfig = {
   [TOKENS.CRV_RENBTC]: {
     type: PricingType.CurveLP,
   },
+  [TOKENS.CRV_BADGER]: {
+    type: PricingType.CurveLP,
+  },
   [TOKENS.SBTC]: {
     lookupName: 'sbtc',
     type: PricingType.LookupName,
@@ -386,6 +389,13 @@ export const ethTokensConfig: TokenConfig = {
     type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.CRV_CVXBVECVX,
+      network: Network.Ethereum,
+    },
+  },
+  [TOKENS.BCRV_BADGER]: {
+    type: PricingType.Vault,
+    vaultToken: {
+      address: TOKENS.CRV_BADGER,
       network: Network.Ethereum,
     },
   },
