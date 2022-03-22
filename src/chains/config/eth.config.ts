@@ -10,6 +10,7 @@ import { Chain } from './chain.config';
 import axios from 'axios';
 import { BlocknativeGasResponse } from '../../gas/interfaces/blocknative-gas-response.interface';
 import { BaseStrategy } from '../strategies/base.strategy';
+import { Stage } from '../../config/enums/stage.enum';
 
 export class Ethereum extends Chain {
   private readonly client = axios.create({
@@ -259,5 +260,14 @@ export const ethSetts: VaultDefinition[] = [
     depositToken: TOKENS.BADGER,
     vaultToken: TOKENS.BREMBADGER,
     protocol: Protocol.Badger,
+  },
+  {
+    name: 'BADGER / WBTC',
+    depositToken: TOKENS.CRV_BADGER,
+    getTokenBalance: getCurveVaultTokenBalance,
+    vaultToken: TOKENS.BCRV_BADGER,
+    protocol: Protocol.Convex,
+    stage: Stage.Staging,
+    state: VaultState.Guarded,
   },
 ];
