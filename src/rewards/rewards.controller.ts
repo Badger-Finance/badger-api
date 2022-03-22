@@ -1,6 +1,6 @@
 import { Network } from '@badger-dao/sdk';
 import { Controller, Get, Inject, QueryParams } from '@tsed/common';
-import { ContentType } from '@tsed/schema';
+import { ContentType, Description, Returns, Summary } from '@tsed/schema';
 import { Chain } from '../chains/config/chain.config';
 import { DEFAULT_PAGE_SIZE } from '../config/constants';
 import { UserClaimSnapshot } from './entities/user-claim-snapshot';
@@ -15,6 +15,9 @@ export class RewardsController {
 
   @Get()
   @ContentType('json')
+  @Summary('List the unclaimable reward balances')
+  @Description('Returns a paginated chunk of reward balance snapshots for users')
+  @Returns(200)
   async list(
     @QueryParams('chain_id') chainId: Network,
     @QueryParams('page_num') pageNum?: number,
@@ -30,10 +33,10 @@ export class RewardsController {
   }
 
   private userClaimedSnapshotToDebankUser(snapshot: UserClaimSnapshot): DebankUser {
+    const rewards = Object.fromEntries(snapshot.claimableBalances.map((record) => [record.address, record.balance]));
     return {
       user_addr: snapshot.address,
-      tokens: snapshot.claimableBalances.map((record) => record.address),
-      cumulativeAmounts: snapshot.claimableBalances.map((record) => record.balance),
+      rewards,
     };
   }
 }

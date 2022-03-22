@@ -1,5 +1,6 @@
 export interface DebankUser {
   user_addr: string;
-  tokens: string[];
-  cumulativeAmounts: string[];
+  rewards: {
+    [token: string]: string;
+  };
 }
