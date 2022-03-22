@@ -390,9 +390,9 @@ functions:
     timeout: 480
     events:
       - schedule:
-          name: ${self:service}-${self:custom.stage}-index-vaults
+          name: ${self:service}-${self:custom.stage}-index-vaults-history
           description: 'index historical data for all vaults'
-          rate: rate(20 minutes)
+          rate: rate(30 minutes)
 
   index-apy-snapshots:
     handler: src/indexers/apy-snapshots-indexer.refreshApySnapshots
