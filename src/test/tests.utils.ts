@@ -119,6 +119,7 @@ export function randomSnapshot(vaultDefinition?: VaultDefinition): VaultSnapshot
     value: randomValue(),
     totalSupply,
     timestamp: Date.now(),
+    strategyBalance: randomValue(),
     strategy: {
       address: ethers.constants.AddressZero,
       withdrawFee: 50,
@@ -160,6 +161,7 @@ export function randomSnapshots(vaultDefinition?: VaultDefinition, count?: numbe
       pricePerFullShare: 3 - i * 0.015,
       value: randomValue(),
       available: randomValue(),
+      strategyBalance: randomValue(),
       strategy: {
         address: ethers.constants.AddressZero,
         withdrawFee: 50,

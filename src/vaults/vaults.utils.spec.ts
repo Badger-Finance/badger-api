@@ -15,13 +15,13 @@ import { BinanceSmartChain } from '../chains/config/bsc.config';
 import { TOKENS } from '../config/tokens.config';
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
 import {
-  randomVault,
   randomSnapshot,
-  setupMapper,
-  TEST_CHAIN,
-  TEST_ADDR,
   randomSnapshots,
+  randomVault,
   setFullTokenDataMock,
+  setupMapper,
+  TEST_ADDR,
+  TEST_CHAIN,
 } from '../test/tests.utils';
 import {
   defaultVault,
@@ -35,6 +35,11 @@ import {
 } from './vaults.utils';
 import * as pricesUtils from '../prices/prices.utils';
 import * as rewardsUtils from '../rewards/rewards.utils';
+<<<<<<< HEAD
+=======
+import * as protocolsUtils from '../protocols/protocols.utils';
+import { tokenEmission } from '../protocols/protocols.utils';
+>>>>>>> af4c31c (fix: upd vaults types and strcts)
 import * as indexerUtils from '../indexers/indexer.utils';
 import { createValueSource } from '../protocols/interfaces/value-source.interface';
 import { Polygon } from '../chains/config/polygon.config';
