@@ -1,8 +1,7 @@
 import { DataMapper } from '@aws/dynamodb-data-mapper';
-import { NotFound } from '@tsed/exceptions';
 import { TestStrategy } from '../chains/strategies/test.strategy';
 import { TOKENS } from '../config/tokens.config';
-import { setFullTokenDataMock, setupMapper, TEST_ADDR, TEST_CHAIN } from '../test/tests.utils';
+import { setFullTokenDataMock, setupMapper, TEST_CHAIN } from '../test/tests.utils';
 import { convert, fetchPrices, getPrice, updatePrice } from './prices.utils';
 import * as requestUtils from '../etherscan/etherscan.utils';
 import { Currency } from '@badger-dao/sdk';
@@ -45,20 +44,11 @@ describe('prices.utils', () => {
   });
 
   describe('updatePrice', () => {
-    describe('update unsupported token', () => {
-      it('throws an bad request error', async () => {
-        const put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
-        setFullTokenDataMock();
-        await expect(updatePrice(TEST_CHAIN, { address: TEST_ADDR, price: 10 })).rejects.toThrow(NotFound);
-        expect(put.mock.calls.length).toEqual(0);
-      });
-    });
-
     describe('encounters an error from a price of 0', () => {
       it('returns the price of 0, but does not save the record', async () => {
         const put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
         setFullTokenDataMock();
-        const result = await updatePrice(TEST_CHAIN, { address: TOKENS.BADGER, price: 0 });
+        const result = await updatePrice({ address: TOKENS.BADGER, price: 0 });
         expect(put.mock.calls.length).toEqual(0);
         expect(result).toMatchObject({ address: TOKENS.BADGER, price: 0 });
       });
@@ -68,7 +58,7 @@ describe('prices.utils', () => {
       it('returns the price of NaN, but does not save the record', async () => {
         const put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
         setFullTokenDataMock();
-        const result = await updatePrice(TEST_CHAIN, { address: TOKENS.BADGER, price: NaN });
+        const result = await updatePrice({ address: TOKENS.BADGER, price: NaN });
         expect(put.mock.calls.length).toEqual(0);
         expect(result).toMatchObject({ address: TOKENS.BADGER, price: 0 });
       });
@@ -78,7 +68,7 @@ describe('prices.utils', () => {
       it('creates an price db entry', async () => {
         const put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
         setFullTokenDataMock();
-        await updatePrice(TEST_CHAIN, { address: TOKENS.BADGER, price: 10 });
+        await updatePrice({ address: TOKENS.BADGER, price: 10 });
         expect(put.mock.calls.length).toEqual(1);
       });
     });

@@ -76,7 +76,9 @@ export async function getCachedTokenBalances(
 export async function getFullToken(chain: Chain, tokenAddr: Token['address']): Promise<TokenFull> {
   const fullTokenMap = await getFullTokens(chain, [tokenAddr]);
 
-  if (!fullTokenMap[tokenAddr]) throw new TokenNotFound(tokenAddr);
+  if (!fullTokenMap[tokenAddr]) {
+    throw new TokenNotFound(tokenAddr);
+  }
 
   return fullTokenMap[tokenAddr];
 }
@@ -88,7 +90,9 @@ export async function getFullTokens(chain: Chain, tokensAddr: Token['address'][]
 
   const tokensCacheMissMatch = tokensAddr.filter((addr) => !cachedTokensAddr.includes(addr));
 
-  if (tokensCacheMissMatch.length === 0) return mergeTokensFullData(chain.tokens, cachedTokens);
+  if (tokensCacheMissMatch.length === 0) {
+    return mergeTokensFullData(chain.tokens, cachedTokens);
+  }
 
   const sdk = await chain.getSdk();
   let tokensInfo: Token[] = [];
@@ -99,7 +103,9 @@ export async function getFullTokens(chain: Chain, tokensAddr: Token['address'][]
     console.warn(`Faild to load tokens from chain node ${e}`);
   }
 
-  if (tokensInfo.length > 0) await cacheTokensInfo(tokensInfo);
+  if (tokensInfo.length > 0) {
+    await cacheTokensInfo(tokensInfo);
+  }
 
   const tokensList = tokensInfo.concat(cachedTokens);
 

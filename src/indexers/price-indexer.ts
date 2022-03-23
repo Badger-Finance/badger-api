@@ -1,12 +1,14 @@
 import { loadChains } from '../chains/chain';
+import { Chain } from '../chains/config/chain.config';
 import { PricingType } from '../prices/enums/pricing-type.enum';
+import { CoinGeckoPriceResponse } from '../prices/interface/coingecko-price-response.interface';
 import { updatePrice, fetchPrices } from '../prices/prices.utils';
-import { getFullToken } from '../tokens/tokens.utils';
+import { lookUpAddrByTokenName } from '../tokens/tokens.utils';
 
 export async function indexPrices() {
   const chains = loadChains();
 
-  for (const chain of chains) {
+  for (const chain of [chains[0]]) {
     try {
       const { tokens, strategy } = chain;
       const chainTokens = Object.entries(tokens).map((e) => ({
@@ -44,10 +46,12 @@ export async function indexPrices() {
       );
 
       const priceUpdates = {
-        ...contractPrices,
-        ...lookupNamePrices,
+        ...evaluateCoingeckoResponse(chain, contractPrices),
+        ...evaluateCoingeckoResponse(chain, lookupNamePrices),
         ...Object.fromEntries(onChainPrices.map((p) => [p.address, p])),
       };
+
+      console.log(priceUpdates);
 
       // map back unsupported (cross priced) tokens - no cg support or good on chain LP
       for (const t of chainTokens) {
@@ -57,12 +61,10 @@ export async function indexPrices() {
             if (!t.lookupName) {
               throw new Error('Invalid token definition, LookUpName pricing required lookup name');
             }
-            const referenceToken = await getFullToken(chain, t.address);
-
-            const referencePrice = priceUpdates[referenceToken.address];
+            const referencePrice = lookupNamePrices[t.lookupName].usd;
             priceUpdates[t.address] = {
               address: t.address,
-              price: referencePrice.price,
+              price: referencePrice,
             };
           }
         } catch (err) {
@@ -73,7 +75,7 @@ export async function indexPrices() {
       await Promise.all(
         Object.values(priceUpdates).map(async (p) => {
           try {
-            await updatePrice(chain, p);
+            await updatePrice(p);
           } catch (err) {
             console.error(err);
           }
@@ -83,4 +85,15 @@ export async function indexPrices() {
       console.error(err);
     }
   }
+}
+
+function evaluateCoingeckoResponse(chain: Chain, result: CoinGeckoPriceResponse) {
+  return Object.fromEntries(
+    Object.entries(result).map((entry) => {
+      const [key, value] = entry;
+      const addrByName = lookUpAddrByTokenName(chain, key);
+      const address = addrByName || key;
+      return [key, { address, price: value.usd }];
+    }),
+  );
 }
