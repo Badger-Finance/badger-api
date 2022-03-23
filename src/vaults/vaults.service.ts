@@ -98,6 +98,9 @@ export class VaultsService {
   }
 
   private static calculateProjectedYield(value: number, pendingValue: number, lastHarvested: number): number {
+    if (lastHarvested === 0) {
+      return 0;
+    }
     const duration = Date.now() / 1000 - lastHarvested;
     return (pendingValue / value) * (ONE_YEAR_SECONDS / duration) * 100;
   }
