@@ -12,15 +12,16 @@ export async function refreshVaultSnapshots() {
 }
 
 async function captureSnapshot(chain: Chain, vault: VaultDefinition) {
+  let snapshot;
   try {
     // purposefully await to leverage try / catch
-    const snapshot = await vaultToSnapshot(chain, vault);
+    snapshot = await vaultToSnapshot(chain, vault);
     if (snapshot) {
       const mapper = getDataMapper();
       console.log(`${vault.name} $${snapshot.value.toLocaleString()} (${snapshot.balance} tokens)`);
       await mapper.put(Object.assign(new CurrentVaultSnapshot(), snapshot));
     }
   } catch (err) {
-    console.error(err);
+    console.error({ err, snapshot });
   }
 }

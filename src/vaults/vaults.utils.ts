@@ -274,6 +274,9 @@ export async function getVaultUnderlyingPerformance(
   const start = new Date();
   start.setDate(start.getDate() - 30);
   const snapshots = await getVaultSnapshotsInRange(chain, vaultDefinition, start, new Date());
+  if (snapshots.length === 0) {
+    return [];
+  }
   const currentSnapshot = snapshots[0];
   const historicSnapshot = snapshots[snapshots.length - 1];
   const currentPpfs = currentSnapshot.pricePerFullShare ?? currentSnapshot.ratio;
