@@ -24,7 +24,7 @@ export async function updateVaultTokenBalances(chain: Chain, vaultDefinition: Va
     if (depositToken.lpToken && vaultDefinition.getTokenBalance) {
       throw new UnprocessableEntity(`${vaultDefinition.name} cannot specify multiple token caching strategies!`);
     }
-    if (depositToken.lpToken) {
+    if (depositToken.lpToken || depositToken.type === PricingType.UniV2LP) {
       const cachedLiquidityPoolTokenBalance = await getLpTokenBalances(chain, vaultDefinition);
       if (cachedLiquidityPoolTokenBalance.tokenBalances.length === 0) {
         return;
