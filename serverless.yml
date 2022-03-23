@@ -59,7 +59,7 @@ custom:
 
 package:
   exclude:
-    - node_modules/*serverless*/**
+    - node_modules/serverless*/**
 
 provider:
   name: aws
@@ -390,7 +390,7 @@ functions:
     timeout: 480
     events:
       - schedule:
-          name: ${self:service}-${self:custom.stage}-index-vault-history
+          name: ${self:service}-${self:custom.stage}-index-vaults-history
           description: 'index historical data for all vaults'
           rate: rate(30 minutes)
 
@@ -427,7 +427,7 @@ functions:
     timeout: 150
     events:
       - schedule:
-          name: ${self:service}-${self:custom.stage}-index-vault-pending-harvests
+          name: ${self:service}-${self:custom.stage}-index-vault-harvests
           description: 'index harvests data for supported vaults'
           rate: rate(5 minutes)
 
