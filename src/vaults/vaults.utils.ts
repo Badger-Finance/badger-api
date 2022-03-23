@@ -231,13 +231,10 @@ export async function getVaultTokenPrice(chain: Chain, address: string): Promise
     getPrice(vaultToken.address),
     getCachedVault(chain, vaultDefintion),
   ]);
-
-  const result = {
+  return {
     address: token.address,
     price: underlyingTokenPrice.price * vaultTokenSnapshot.pricePerFullShare,
   };
-
-  return result;
 }
 
 /**

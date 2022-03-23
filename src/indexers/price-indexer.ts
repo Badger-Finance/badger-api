@@ -51,8 +51,6 @@ export async function indexPrices() {
         ...Object.fromEntries(onChainPrices.map((p) => [p.address, p])),
       };
 
-      console.log(priceUpdates);
-
       // map back unsupported (cross priced) tokens - no cg support or good on chain LP
       for (const t of chainTokens) {
         try {
