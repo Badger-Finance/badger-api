@@ -427,7 +427,7 @@ functions:
     timeout: 150
     events:
       - schedule:
-          name: ${self:service}-${self:custom.stage}-index-vault-harvests
+          name: ${self:service}-${self:custom.stage}-index-vault-pending-harvests
           description: 'index harvests data for supported vaults'
           rate: rate(5 minutes)
 
