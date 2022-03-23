@@ -42,8 +42,10 @@ export async function defaultVault(
   vaultDefinition: VaultDefinition,
   version: VaultVersion = VaultVersion.v1,
 ): Promise<VaultDTO> {
-  const assetToken = await getFullToken(chain, vaultDefinition.depositToken);
-  const vaultToken = await getFullToken(chain, vaultDefinition.vaultToken);
+  const [assetToken, vaultToken] = await Promise.all([
+    getFullToken(chain, vaultDefinition.depositToken),
+    getFullToken(chain, vaultDefinition.vaultToken),
+  ]);
 
   const state = vaultDefinition.state
     ? vaultDefinition.state
@@ -214,7 +216,6 @@ export async function getBoostWeight(chain: Chain, vaultDefinition: VaultDefinit
  */
 export async function getVaultTokenPrice(chain: Chain, address: string): Promise<TokenPrice> {
   const token = await getFullToken(chain, address);
-
   if (token.type !== PricingType.Vault) {
     throw new BadRequest(`${token.name} is not a vault token`);
   }
@@ -230,10 +231,17 @@ export async function getVaultTokenPrice(chain: Chain, address: string): Promise
     getPrice(vaultToken.address),
     getCachedVault(chain, vaultDefintion),
   ]);
-  return {
+
+  const result = {
     address: token.address,
     price: underlyingTokenPrice.price * vaultTokenSnapshot.pricePerFullShare,
   };
+
+  if (isNaN(result.price)) {
+    console.log({ result, address, underlyingTokenPrice, vaultTokenSnapshot });
+  }
+
+  return result;
 }
 
 /**
@@ -306,6 +314,12 @@ export async function loadVaultEventPerformances(
   const sdk = await chain.getSdk();
   const cutoff = (Date.now() - ONE_DAY_MS * 21) / 1000;
   const { data } = await sdk.vaults.listHarvests({ address: vaultDefinition.vaultToken, timestamp_gte: cutoff });
+
+  if (vaultDefinition.vaultToken === TOKENS.BVECVX) {
+    console.log({
+      data,
+    });
+  }
 
   return estimateVaultPerformance(chain, vaultDefinition, data);
 }
