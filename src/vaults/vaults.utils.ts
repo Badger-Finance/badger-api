@@ -237,10 +237,6 @@ export async function getVaultTokenPrice(chain: Chain, address: string): Promise
     price: underlyingTokenPrice.price * vaultTokenSnapshot.pricePerFullShare,
   };
 
-  if (isNaN(result.price)) {
-    console.log({ result, address, underlyingTokenPrice, vaultTokenSnapshot });
-  }
-
   return result;
 }
 
@@ -314,12 +310,6 @@ export async function loadVaultEventPerformances(
   const sdk = await chain.getSdk();
   const cutoff = (Date.now() - ONE_DAY_MS * 21) / 1000;
   const { data } = await sdk.vaults.listHarvests({ address: vaultDefinition.vaultToken, timestamp_gte: cutoff });
-
-  if (vaultDefinition.vaultToken === TOKENS.BVECVX) {
-    console.log({
-      data,
-    });
-  }
 
   return estimateVaultPerformance(chain, vaultDefinition, data);
 }
