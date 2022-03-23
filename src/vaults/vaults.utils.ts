@@ -574,7 +574,7 @@ export async function getVaultCachedValueSources(vaultDefinition: VaultDefinitio
 }
 
 export async function getVaultPendingHarvest(vaultDefinition: VaultDefinition): Promise<VaultPendingHarvestData> {
-  let pendingHarvest: VaultPendingHarvestData = {
+  const pendingHarvest: VaultPendingHarvestData = {
     vault: vaultDefinition.vaultToken,
     yieldTokens: [],
     harvestTokens: [],
