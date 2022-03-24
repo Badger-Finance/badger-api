@@ -1,4 +1,4 @@
-import { Network } from '@badger-dao/sdk';
+import { formatBalance, Network } from '@badger-dao/sdk';
 import { UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { Chain } from '../../chains/config/chain.config';
@@ -13,13 +13,12 @@ import {
 } from '../../contracts';
 import { SourceType } from '../../rewards/enums/source-type.enum';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
-import { getCachedVault, getVaultDefinition } from '../../vaults/vaults.utils';
-import { CachedVaultTokenBalance } from '../../tokens/interfaces/cached-vault-token-balance.interface';
+import { getCachedVault, getVaultCachedValueSources, getVaultDefinition } from '../../vaults/vaults.utils';
+import { VaultTokenBalance } from '../../vaults/types/vault-token-balance.interface';
 import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
-import { formatBalance, getToken, getVaultTokens, toBalance } from '../../tokens/tokens.utils';
+import { getFullToken, getVaultTokens, toBalance } from '../../tokens/tokens.utils';
 import { CachedValueSource } from '../interfaces/cached-value-source.interface';
 import { createValueSource } from '../interfaces/value-source.interface';
-import { getVaultCachedValueSources } from '../protocols.utils';
 import { request } from '../../etherscan/etherscan.utils';
 import { CurveAPIResponse } from '../interfaces/curve-api-response.interrface';
 import { valueSourceToCachedValueSource } from '../../rewards/rewards.utils';
@@ -62,6 +61,7 @@ const nonRegistryPools: ContractRegistry = {
   [TOKENS.MATIC_CRV_TRICRYPTO]: '0x751B1e21756bDbc307CBcC5085c042a0e9AaEf36',
   [TOKENS.ARB_CRV_TRICRYPTO]: '0x960ea3e3C7FB317332d990873d354E18d7645590',
   [TOKENS.CRV_TRICRYPTO2]: '0xD51a44d3FaE010294C616388b506AcdA1bfAAE46',
+  [TOKENS.CRV_BADGER]: '0x50f3752289e1456BfA505afd37B241bca23e685d',
 };
 
 interface FactoryAPYResonse {
@@ -87,11 +87,11 @@ export class ConvexStrategy {
 async function getLiquiditySources(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
   const bveCVXVault = getVaultDefinition(chain, TOKENS.BVECVX);
   const [bveCVXLP, bveCVX, bveCVXSources] = await Promise.all([
-    getCachedVault(vaultDefinition),
-    getCachedVault(bveCVXVault),
+    getCachedVault(chain, vaultDefinition),
+    getCachedVault(chain, bveCVXVault),
     getVaultCachedValueSources(bveCVXVault),
   ]);
-  const vaultTokens = await getVaultTokens(vaultDefinition, bveCVXLP.balance);
+  const vaultTokens = await getVaultTokens(chain, bveCVXLP, bveCVXLP.balance);
 
   const bveCVXValue = vaultTokens
     .filter((t) => t.address === TOKENS.BVECVX)
@@ -150,7 +150,8 @@ export async function getCurvePerformance(chain: Chain, vaultDefinition: VaultDe
 }
 
 export async function getCurveTokenPrice(chain: Chain, depositToken: string): Promise<TokenPrice> {
-  const deposit = getToken(depositToken);
+  const deposit = await getFullToken(chain, depositToken);
+
   const poolBalance = await getCurvePoolBalance(chain, depositToken);
   const token = Erc20__factory.connect(depositToken, chain.provider);
   const value = poolBalance.reduce((total, balance) => (total += balance.value), 0);
@@ -180,14 +181,14 @@ export async function getCurvePoolBalance(chain: Chain, depositToken: string): P
     CurvePool3__factory.connect(poolAddress, chain.provider),
     CurvePool__factory.connect(poolAddress, chain.provider),
   ];
-
   let option = 0;
   let coin = 0;
   while (true) {
     try {
       const pool = poolContracts[option];
       const tokenAddress = await pool.coins(coin);
-      const token = getToken(ethers.utils.getAddress(tokenAddress));
+      const token = await getFullToken(chain, ethers.utils.getAddress(tokenAddress));
+
       const balance = formatBalance(await pool.balances(coin), token.decimals);
       cachedBalances.push(await toBalance(token, balance));
       coin++;
@@ -205,22 +206,22 @@ export async function getCurvePoolBalance(chain: Chain, depositToken: string): P
   return cachedBalances;
 }
 
-export async function getCurveVaultTokenBalance(chain: Chain, token: string): Promise<CachedVaultTokenBalance> {
+export async function getCurveVaultTokenBalance(chain: Chain, token: string): Promise<VaultTokenBalance> {
   const vaultDefinition = getVaultDefinition(chain, token);
   const { protocol, depositToken, vaultToken } = vaultDefinition;
   if (!protocol) {
-    throw new UnprocessableEntity('Cannot get curve sett token balances, requires a sett definition');
+    throw new UnprocessableEntity('Cannot get curve vault token balances, requires a vault definition');
   }
   const cachedTokens = await getCurvePoolBalance(chain, depositToken);
   const contract = Erc20__factory.connect(depositToken, chain.provider);
-  const sett = await getCachedVault(vaultDefinition);
+  const sett = await getCachedVault(chain, vaultDefinition);
   const totalSupply = parseFloat(ethers.utils.formatEther(await contract.totalSupply()));
   const scalar = sett.balance / totalSupply;
   cachedTokens.forEach((cachedToken) => {
     cachedToken.balance *= scalar;
     cachedToken.value *= scalar;
   });
-  return Object.assign(new CachedVaultTokenBalance(), {
+  return Object.assign(new VaultTokenBalance(), {
     vault: vaultToken,
     tokenBalances: cachedTokens,
   });

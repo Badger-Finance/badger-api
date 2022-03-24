@@ -1,9 +1,10 @@
+import { formatBalance } from '@badger-dao/sdk';
 import { NotFound, UnprocessableEntity } from '@tsed/exceptions';
 import { Chain } from '../../chains/config/chain.config';
 import { UniV2__factory } from '../../contracts';
 import { TokenPrice } from '../../prices/interface/token-price.interface';
 import { getPrice } from '../../prices/prices.utils';
-import { formatBalance, getToken } from '../../tokens/tokens.utils';
+import { getFullToken } from '../../tokens/tokens.utils';
 
 interface LiquidityData {
   contract: string;
@@ -41,20 +42,21 @@ export const getOnChainLiquidityPrice = async (chain: Chain, contract: string): 
   try {
     const liquidityData = await getLiquidityData(chain, contract);
     if (liquidityData.totalSupply === 0) {
-      const token = getToken(contract);
+      const token = await getFullToken(chain, contract);
+
       return {
         address: token.address,
         price: 0,
       };
     }
-    return resolveLiquidityPrice(liquidityData);
+    return resolveLiquidityPrice(chain, liquidityData);
   } catch (err) {
     console.log(err);
     throw new NotFound(`No pair found for ${contract}`);
   }
 };
 
-const resolveLiquidityPrice = async (liquidityData: LiquidityData): Promise<TokenPrice> => {
+const resolveLiquidityPrice = async (chain: Chain, liquidityData: LiquidityData): Promise<TokenPrice> => {
   const { contract, token0, token1, reserve0, reserve1, totalSupply } = liquidityData;
   let [t0Price, t1Price] = await Promise.all([getPrice(token0), getPrice(token1)]);
   if (!t0Price && !t1Price) {
@@ -62,7 +64,8 @@ const resolveLiquidityPrice = async (liquidityData: LiquidityData): Promise<Toke
   }
   if (!t0Price) {
     const t1Scalar = reserve0 / reserve1;
-    const t0Info = getToken(token0);
+    const t0Info = await getFullToken(chain, token0);
+
     t0Price = {
       address: t0Info.address,
       price: t1Price.price * t1Scalar,
@@ -70,13 +73,15 @@ const resolveLiquidityPrice = async (liquidityData: LiquidityData): Promise<Toke
   }
   if (!t1Price) {
     const t0Scalar = reserve1 / reserve0;
-    const t1Info = getToken(token1);
+    const t1Info = await getFullToken(chain, token1);
+
     t1Price = {
       address: t1Info.address,
       price: t0Price.price * t0Scalar,
     };
   }
-  const token = getToken(contract);
+  const token = await getFullToken(chain, contract);
+
   const price = (t0Price.price * reserve0 + t1Price.price * reserve1) / totalSupply;
   return {
     address: token.address,

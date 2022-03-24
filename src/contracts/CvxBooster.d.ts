@@ -17,7 +17,7 @@ import {
 import { BytesLike } from '@ethersproject/bytes';
 import { Listener, Provider } from '@ethersproject/providers';
 import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
-import { TypedEventFilter, TypedEvent, TypedListener } from './commons';
+import type { TypedEventFilter, TypedEvent, TypedListener } from './common';
 
 interface CvxBoosterInterface extends ethers.utils.Interface {
   functions: {
@@ -204,6 +204,22 @@ interface CvxBoosterInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: 'Deposited'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'Withdrawn'): EventFragment;
 }
+
+export type DepositedEvent = TypedEvent<
+  [string, BigNumber, BigNumber] & {
+    user: string;
+    poolid: BigNumber;
+    amount: BigNumber;
+  }
+>;
+
+export type WithdrawnEvent = TypedEvent<
+  [string, BigNumber, BigNumber] & {
+    user: string;
+    poolid: BigNumber;
+    amount: BigNumber;
+  }
+>;
 
 export class CvxBooster extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -802,7 +818,19 @@ export class CvxBooster extends BaseContract {
   };
 
   filters: {
+    'Deposited(address,uint256,uint256)'(
+      user?: string | null,
+      poolid?: BigNumberish | null,
+      amount?: null,
+    ): TypedEventFilter<[string, BigNumber, BigNumber], { user: string; poolid: BigNumber; amount: BigNumber }>;
+
     Deposited(
+      user?: string | null,
+      poolid?: BigNumberish | null,
+      amount?: null,
+    ): TypedEventFilter<[string, BigNumber, BigNumber], { user: string; poolid: BigNumber; amount: BigNumber }>;
+
+    'Withdrawn(address,uint256,uint256)'(
       user?: string | null,
       poolid?: BigNumberish | null,
       amount?: null,

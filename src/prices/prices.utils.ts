@@ -3,20 +3,18 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { Currency } from '@badger-dao/sdk';
 import { TOKENS } from '../config/tokens.config';
 import { TokenPrice } from './interface/token-price.interface';
-import { getToken, getTokenByName } from '../tokens/tokens.utils';
 import { Chain } from '../chains/config/chain.config';
 import { COINGECKO_URL } from '../config/constants';
-import { PriceData } from '../tokens/interfaces/price-data.interface';
 import { CoinGeckoPriceResponse } from './interface/coingecko-price-response.interface';
 // TODO: generalize and add some axios utilities
 import { request } from '../etherscan/etherscan.utils';
 
 /**
  * Update pricing db entry using chain strategy.
+ * @param chain Chain objects
  * @param token Target for price update.
  */
 export async function updatePrice({ address, price }: TokenPrice): Promise<TokenPrice> {
-  const token = getToken(address);
   try {
     if (Number.isNaN(price) || price === 0) {
       // TODO: add discord warning logs for errors on pricing
@@ -25,7 +23,7 @@ export async function updatePrice({ address, price }: TokenPrice): Promise<Token
     const mapper = getDataMapper();
     return mapper.put(
       Object.assign(new TokenPriceSnapshot(), {
-        address: token.address,
+        address,
         price,
       }),
     );
@@ -83,7 +81,7 @@ export async function convert(value: number, currency?: Currency): Promise<numbe
   }
 }
 
-export async function fetchPrices(chain: Chain, inputs: string[], lookupName = false): Promise<PriceData> {
+export async function fetchPrices(chain: Chain, inputs: string[], lookupName = false): Promise<CoinGeckoPriceResponse> {
   if (inputs.length === 0) {
     return {};
   }
@@ -106,26 +104,5 @@ export async function fetchPrices(chain: Chain, inputs: string[], lookupName = f
     };
   }
 
-  const expectedTokens: string[] = [];
-  const result = await request<CoinGeckoPriceResponse>(baseURL, params);
-  const priceData = Object.fromEntries(
-    Object.entries(result).map((entry) => {
-      const [key, value] = entry;
-      let token;
-      try {
-        token = getToken(key);
-      } catch {
-        token = getTokenByName(chain, key);
-      }
-      const { address } = token;
-      expectedTokens.push(address);
-      return [address, { address, price: value.usd }];
-    }),
-  );
-
-  // TODO: identify and send discord notifications for failed or missing prices
-  // issue is doing proper linkages here when request names my be in name form
-  // this may be easier to evaluate post facto
-
-  return priceData;
+  return request<CoinGeckoPriceResponse>(baseURL, params);
 }

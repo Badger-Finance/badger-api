@@ -12,9 +12,15 @@ import BadgerSDK, {
   LoadVaultOptions,
   VaultsService,
   VaultSnapshot,
+  TokenValue,
+  VaultDTO,
 } from '@badger-dao/sdk';
+import * as tokensUtils from '../tokens/tokens.utils';
+import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
+import { TOKENS } from '../config/tokens.config';
+import { Chain } from '../chains/config/chain.config';
 
-describe('refreshSettSnapshots', () => {
+describe('refreshVaultSnapshots', () => {
   const supportedAddresses = loadChains()
     .flatMap((s) => s.vaults)
     .map((settDefinition) => settDefinition.vaultToken)
@@ -49,6 +55,12 @@ describe('refreshSettSnapshots', () => {
       version: VaultVersion.v1,
     }));
     jest.spyOn(vaultUtils, 'getBoostWeight').mockImplementation(async (_chain, _sett) => BigNumber.from(5100));
+    jest.spyOn(vaultUtils, 'getVaultPendingHarvest').mockImplementation(async (vault) => ({
+      vault: vault.vaultToken,
+      yieldTokens: [],
+      harvestTokens: [],
+      lastHarvestedAt: 0,
+    }));
 
     put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
 
@@ -59,6 +71,20 @@ describe('refreshSettSnapshots', () => {
         price: 10,
       };
     });
+    jest.spyOn(tokensUtils, 'getFullToken').mockImplementation(async (_, tokenAddr) => {
+      return fullTokenMockMap[tokenAddr] || fullTokenMockMap[TOKENS.BADGER];
+    });
+    jest
+      .spyOn(tokensUtils, 'getCachedTokenBalances')
+      .mockImplementation(async (_chain: Chain, vault: VaultDTO, _currency?: string): Promise<TokenValue[]> => {
+        const token = fullTokenMockMap[vault.underlyingToken] || fullTokenMockMap[TOKENS.BADGER];
+        if (token.lpToken) {
+          const bal0 = parseInt(token.address.slice(0, 4), 16);
+          const bal1 = parseInt(token.address.slice(0, 6), 16);
+          return [tokensUtils.mockBalance(token, bal0), tokensUtils.mockBalance(token, bal1)];
+        }
+        return [tokensUtils.mockBalance(token, parseInt(token.address.slice(0, 4), 16))];
+      });
 
     setupMapper([randomVault()]);
     await refreshVaultSnapshots();

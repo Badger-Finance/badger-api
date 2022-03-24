@@ -17,7 +17,7 @@ import {
 import { BytesLike } from '@ethersproject/bytes';
 import { Listener, Provider } from '@ethersproject/providers';
 import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
-import { TypedEventFilter, TypedEvent, TypedListener } from './commons';
+import type { TypedEventFilter, TypedEvent, TypedListener } from './common';
 
 interface CvxRewardsInterface extends ethers.utils.Interface {
   functions: {
@@ -145,6 +145,14 @@ interface CvxRewardsInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: 'Staked'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'Withdrawn'): EventFragment;
 }
+
+export type RewardAddedEvent = TypedEvent<[BigNumber] & { reward: BigNumber }>;
+
+export type RewardPaidEvent = TypedEvent<[string, BigNumber] & { user: string; reward: BigNumber }>;
+
+export type StakedEvent = TypedEvent<[string, BigNumber] & { user: string; amount: BigNumber }>;
+
+export type WithdrawnEvent = TypedEvent<[string, BigNumber] & { user: string; amount: BigNumber }>;
 
 export class CvxRewards extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -483,14 +491,31 @@ export class CvxRewards extends BaseContract {
   };
 
   filters: {
+    'RewardAdded(uint256)'(reward?: null): TypedEventFilter<[BigNumber], { reward: BigNumber }>;
+
     RewardAdded(reward?: null): TypedEventFilter<[BigNumber], { reward: BigNumber }>;
+
+    'RewardPaid(address,uint256)'(
+      user?: string | null,
+      reward?: null,
+    ): TypedEventFilter<[string, BigNumber], { user: string; reward: BigNumber }>;
 
     RewardPaid(
       user?: string | null,
       reward?: null,
     ): TypedEventFilter<[string, BigNumber], { user: string; reward: BigNumber }>;
 
+    'Staked(address,uint256)'(
+      user?: string | null,
+      amount?: null,
+    ): TypedEventFilter<[string, BigNumber], { user: string; amount: BigNumber }>;
+
     Staked(
+      user?: string | null,
+      amount?: null,
+    ): TypedEventFilter<[string, BigNumber], { user: string; amount: BigNumber }>;
+
+    'Withdrawn(address,uint256)'(
       user?: string | null,
       amount?: null,
     ): TypedEventFilter<[string, BigNumber], { user: string; amount: BigNumber }>;

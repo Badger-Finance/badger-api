@@ -4,9 +4,10 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
-import { CachedVaultTokenBalance } from '../tokens/interfaces/cached-vault-token-balance.interface';
-import { getToken } from '../tokens/tokens.utils';
+import { getFullToken } from '../tokens/tokens.utils';
 import { getLpTokenBalances } from './indexer.utils';
+import { PricingType } from '../prices/enums/pricing-type.enum';
+import { VaultTokenBalance } from '../vaults/types/vault-token-balance.interface';
 
 export async function refreshVaultBalances() {
   const chains = loadChains();
@@ -16,14 +17,14 @@ export async function refreshVaultBalances() {
 export async function updateVaultTokenBalances(chain: Chain, vaultDefinition: VaultDefinition): Promise<void> {
   try {
     const mapper = getDataMapper();
-    const depositToken = getToken(vaultDefinition.depositToken);
-    if (!depositToken.lpToken && !vaultDefinition.getTokenBalance) {
+    const depositToken = await getFullToken(chain, vaultDefinition.depositToken);
+    if (depositToken.type !== PricingType.UniV2LP && !vaultDefinition.getTokenBalance) {
       return;
     }
     if (depositToken.lpToken && vaultDefinition.getTokenBalance) {
       throw new UnprocessableEntity(`${vaultDefinition.name} cannot specify multiple token caching strategies!`);
     }
-    if (depositToken.lpToken) {
+    if (depositToken.lpToken || depositToken.type === PricingType.UniV2LP) {
       const cachedLiquidityPoolTokenBalance = await getLpTokenBalances(chain, vaultDefinition);
       if (cachedLiquidityPoolTokenBalance.tokenBalances.length === 0) {
         return;
@@ -42,7 +43,7 @@ export async function updateVaultTokenBalances(chain: Chain, vaultDefinition: Va
   }
 }
 
-async function saveCachedTokenBalance(mapper: DataMapper, cachedTokenBalance: CachedVaultTokenBalance): Promise<void> {
+async function saveCachedTokenBalance(mapper: DataMapper, cachedTokenBalance: VaultTokenBalance): Promise<void> {
   try {
     await mapper.put(cachedTokenBalance);
   } catch (err) {

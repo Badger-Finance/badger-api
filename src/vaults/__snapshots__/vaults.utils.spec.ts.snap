@@ -179,13 +179,13 @@ Array [
   },
   CachedValueSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "addressValueSourceType": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_flat_bveCVX_emission",
+    "addressValueSourceType": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_flat_bVECVX_emission",
     "apr": 0.000022426642857150473,
     "boostable": false,
     "maxApr": 0.000022426642857150473,
     "minApr": 0.000022426642857150473,
-    "name": "bveCVX Rewards",
-    "type": "flat_bveCVX_emission",
+    "name": "bVECVX Rewards",
+    "type": "flat_bVECVX_emission",
   },
   CachedValueSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -194,7 +194,7 @@ Array [
     "boostable": false,
     "maxApr": 0.000001141224351973436,
     "minApr": 0.000001141224351973436,
-    "name": "bveCVX Compounding",
+    "name": "bVECVX Compounding",
     "type": "derivative_bvecvx compounding",
   },
   CachedValueSource {

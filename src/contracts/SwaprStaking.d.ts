@@ -17,7 +17,7 @@ import {
 import { BytesLike } from '@ethersproject/bytes';
 import { Listener, Provider } from '@ethersproject/providers';
 import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
-import { TypedEventFilter, TypedEvent, TypedListener } from './commons';
+import type { TypedEventFilter, TypedEvent, TypedListener } from './common';
 
 interface SwaprStakingInterface extends ethers.utils.Interface {
   functions: {
@@ -139,6 +139,30 @@ interface SwaprStakingInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: 'Staked'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'Withdrawn'): EventFragment;
 }
+
+export type CanceledEvent = TypedEvent<[] & {}>;
+
+export type ClaimedEvent = TypedEvent<[string, BigNumber[]] & { claimer: string; amounts: BigNumber[] }>;
+
+export type InitializedEvent = TypedEvent<
+  [string[], string, BigNumber[], BigNumber, BigNumber, boolean, BigNumber] & {
+    rewardsTokenAddresses: string[];
+    stakableTokenAddress: string;
+    rewardsAmounts: BigNumber[];
+    startingTimestamp: BigNumber;
+    endingTimestamp: BigNumber;
+    locked: boolean;
+    stakingCap: BigNumber;
+  }
+>;
+
+export type OwnershipTransferredEvent = TypedEvent<[string, string] & { previousOwner: string; newOwner: string }>;
+
+export type RecoveredEvent = TypedEvent<[BigNumber[]] & { amounts: BigNumber[] }>;
+
+export type StakedEvent = TypedEvent<[string, BigNumber] & { staker: string; amount: BigNumber }>;
+
+export type WithdrawnEvent = TypedEvent<[string, BigNumber] & { withdrawer: string; amount: BigNumber }>;
 
 export class SwaprStaking extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -466,12 +490,40 @@ export class SwaprStaking extends BaseContract {
   };
 
   filters: {
+    'Canceled()'(): TypedEventFilter<[], {}>;
+
     Canceled(): TypedEventFilter<[], {}>;
+
+    'Claimed(address,uint256[])'(
+      claimer?: string | null,
+      amounts?: null,
+    ): TypedEventFilter<[string, BigNumber[]], { claimer: string; amounts: BigNumber[] }>;
 
     Claimed(
       claimer?: string | null,
       amounts?: null,
     ): TypedEventFilter<[string, BigNumber[]], { claimer: string; amounts: BigNumber[] }>;
+
+    'Initialized(address[],address,uint256[],uint64,uint64,bool,uint256)'(
+      rewardsTokenAddresses?: null,
+      stakableTokenAddress?: null,
+      rewardsAmounts?: null,
+      startingTimestamp?: null,
+      endingTimestamp?: null,
+      locked?: null,
+      stakingCap?: null,
+    ): TypedEventFilter<
+      [string[], string, BigNumber[], BigNumber, BigNumber, boolean, BigNumber],
+      {
+        rewardsTokenAddresses: string[];
+        stakableTokenAddress: string;
+        rewardsAmounts: BigNumber[];
+        startingTimestamp: BigNumber;
+        endingTimestamp: BigNumber;
+        locked: boolean;
+        stakingCap: BigNumber;
+      }
+    >;
 
     Initialized(
       rewardsTokenAddresses?: null,
@@ -494,17 +546,34 @@ export class SwaprStaking extends BaseContract {
       }
     >;
 
+    'OwnershipTransferred(address,address)'(
+      previousOwner?: string | null,
+      newOwner?: string | null,
+    ): TypedEventFilter<[string, string], { previousOwner: string; newOwner: string }>;
+
     OwnershipTransferred(
       previousOwner?: string | null,
       newOwner?: string | null,
     ): TypedEventFilter<[string, string], { previousOwner: string; newOwner: string }>;
 
+    'Recovered(uint256[])'(amounts?: null): TypedEventFilter<[BigNumber[]], { amounts: BigNumber[] }>;
+
     Recovered(amounts?: null): TypedEventFilter<[BigNumber[]], { amounts: BigNumber[] }>;
+
+    'Staked(address,uint256)'(
+      staker?: string | null,
+      amount?: null,
+    ): TypedEventFilter<[string, BigNumber], { staker: string; amount: BigNumber }>;
 
     Staked(
       staker?: string | null,
       amount?: null,
     ): TypedEventFilter<[string, BigNumber], { staker: string; amount: BigNumber }>;
+
+    'Withdrawn(address,uint256)'(
+      withdrawer?: string | null,
+      amount?: null,
+    ): TypedEventFilter<[string, BigNumber], { withdrawer: string; amount: BigNumber }>;
 
     Withdrawn(
       withdrawer?: string | null,

@@ -37,6 +37,9 @@ export class SettsController {
     @QueryParams('chain') chain?: Network,
     @QueryParams('currency') currency?: Currency,
   ): Promise<VaultModel> {
-    return this.settsService.getVault(getVaultDefinition(Chain.getChain(chain), vault), currency);
+    const chainInst = Chain.getChain(chain);
+    const vaultDef = getVaultDefinition(Chain.getChain(chain), vault);
+
+    return this.settsService.getVault(chainInst, vaultDef, currency);
   }
 }

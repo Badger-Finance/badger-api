@@ -32,7 +32,7 @@ export async function getProtocolSettMetrics(): Promise<ProtocolSettsMetrics> {
 }
 
 export async function getChainMetrics(chain: Chain): Promise<ProtocolSummary> {
-  const vaults = await Promise.all(chain.vaults.map((vault) => getCachedVault(vault)));
+  const vaults = await Promise.all(chain.vaults.map((vault) => getCachedVault(chain, vault)));
   const totalValue = vaults.reduce((total, vault) => total + vault.value, 0);
   const vaultSummaries = vaults.map(({ name, balance, value }) => ({ name, balance, value }));
   return { totalValue, setts: vaultSummaries, vaults: vaultSummaries };

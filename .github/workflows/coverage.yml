@@ -2,6 +2,9 @@ name: Test Coverage
 
 on: [pull_request]
 
+env:
+  NODE_OPTIONS: '--max-old-space-size=4096'
+
 jobs:
   test_coverage:
     runs-on: ubuntu-latest
@@ -11,7 +14,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14.x'
+          node-version: '16.x'
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - uses: artiomtr/jest-coverage-report-action@v2.0-rc.6
@@ -19,4 +22,4 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           threshold: 50
           package-manager: yarn
-          test-script: yarn test -ci --json --coverage --testLocationInResults --outputFile=report.json
+          test-script: yarn test -ci --json --coverage --detectOpenHandles --testLocationInResults --outputFile=report.json

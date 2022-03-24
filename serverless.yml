@@ -31,6 +31,8 @@ custom:
             sources: [./seed/value-sources.json]
           - table: ${self:custom.table.VAULT_SNAPSHOTS_DATA}
             sources: [./seed/cached-vault-snapshots.json]
+          - table: ${self:custom.table.TOKEN_INFORMATION_DATA}
+            sources: [./seed/token-info.json]
 
   serverless-offline:
     noPrependStageInUrl: true
@@ -40,6 +42,7 @@ custom:
     SETT_DATA: sett-historic-snapshots-${self:custom.stage}
     VAULT_BALANCES_DATA: vault-balances-${self:custom.stage}
     PRICE_DATA: token-prices-${self:custom.stage}
+    TOKEN_INFORMATION_DATA: token-information-${self:custom.stage}
     VAULT_SNAPSHOTS_DATA: vaults-snapshots-${self:custom.stage}
     ACCOUNT_DATA: accounts-${self:custom.stage}
     METRICS_SNAPSHOTS_DATA: metrics-snapshots-${self:custom.stage}
@@ -48,6 +51,7 @@ custom:
     METADATA_DATA: metadata-${self:custom.stage}
     UNCLAIMED_SNAPSHOTS_DATA: unclaimed-snapshots-${self:custom.stage}
     CYCLE_ANALYTICS_DATA: rewards-${self:custom.stage}
+    HARVEST_DATA: harvest-data-${self:custom.stage}
 
   merkleProofs:
     staging: 'badger-staging-merkle-proofs'
@@ -55,11 +59,7 @@ custom:
 
 package:
   exclude:
-    - node_modules/eslint*/**
-    - node_modules/prettier/**
     - node_modules/serverless*/**
-    - node_modules/@graphql-codegen/**
-    - node_modules/@types*/**
 
 provider:
   name: aws
@@ -102,6 +102,7 @@ provider:
     SETT_DATA: ${self:custom.table.SETT_DATA}
     VAULT_BALANCES_DATA: ${self:custom.table.VAULT_BALANCES_DATA}
     PRICE_DATA: ${self:custom.table.PRICE_DATA}
+    TOKEN_INFORMATION_DATA: ${self:custom.table.TOKEN_INFORMATION_DATA}
     VAULT_SNAPSHOTS_DATA: ${self:custom.table.VAULT_SNAPSHOTS_DATA}
     ACCOUNT_DATA: ${self:custom.table.ACCOUNT_DATA}
     METRICS_SNAPSHOTS_DATA: ${self:custom.table.METRICS_SNAPSHOTS_DATA}
@@ -109,6 +110,7 @@ provider:
     LEADERBOARD_SUMMARY_DATA: ${self:custom.table.LEADERBOARD_SUMMARY_DATA}
     METADATA_DATA: ${self:custom.table.METADATA_DATA}
     UNCLAIMED_SNAPSHOTS_DATA: ${self:custom.table.UNCLAIMED_SNAPSHOTS_DATA}
+    HARVEST_DATA: ${self:custom.table.HARVEST_DATA}
     # General Defintions
     REWARD_DATA: ${self:custom.merkleProofs.${self:custom.stage}}
     STAGE: ${opt:stage, self:provider.stage}
@@ -179,6 +181,18 @@ resources:
             AttributeType: 'S'
           - AttributeName: 'updatedAt'
             AttributeType: 'N'
+
+    tokenInfoTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.table.TOKEN_INFORMATION_DATA}
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: 'address'
+            KeyType: 'HASH'
+        AttributeDefinitions:
+          - AttributeName: 'address'
+            AttributeType: 'S'
 
     protocolMetricsSnapshotsTable:
       Type: AWS::DynamoDB::Table
@@ -312,6 +326,18 @@ resources:
           AttributeName: 'expiresAt'
           Enabled: true
 
+    harvestDataTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.table.HARVEST_DATA}
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: 'vault'
+            KeyType: 'HASH'
+        AttributeDefinitions:
+          - AttributeName: 'vault'
+            AttributeType: 'S'
+
     cycleAnalyticsTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -356,14 +382,14 @@ functions:
           method: any
           cors: true
 
-  index-setts:
+  index-vaults:
     handler: src/indexers/vaults-indexer.indexProtocolVaults
     timeout: 480
     events:
       - schedule:
-          name: ${self:service}-${self:custom.stage}-index-vaults
+          name: ${self:service}-${self:custom.stage}-index-vaults-history
           description: 'index historical data for all vaults'
-          rate: rate(20 minutes)
+          rate: rate(30 minutes)
 
   index-apy-snapshots:
     handler: src/indexers/apy-snapshots-indexer.refreshApySnapshots
@@ -392,6 +418,15 @@ functions:
           name: ${self:service}-${self:custom.stage}-index-vault-snapshots
           description: 'index data for supported vaults'
           rate: rate(1 minute)
+
+  index-vault-harvests:
+    handler: src/indexers/vault-harvests-indexer.refreshVaultHarvests
+    timeout: 150
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-vault-harvests
+          description: 'index harvests data for supported vaults'
+          rate: rate(5 minutes)
 
   index-leaderboard:
     handler: src/indexers/leaderboard-indexer.indexBoostLeaderBoard

@@ -3,12 +3,12 @@ import { updateVaultTokenBalances } from './vault-balances-indexer';
 import { Ethereum } from '../chains/config/eth.config';
 import { getVaultDefinition } from '../vaults/vaults.utils';
 import { TOKENS } from '../config/tokens.config';
-import { CachedVaultTokenBalance } from '../tokens/interfaces/cached-vault-token-balance.interface';
+import { VaultTokenBalance } from '../vaults/types/vault-token-balance.interface';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
 import * as indexerUtils from './indexer.utils';
 import { Chain } from '../chains/config/chain.config';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
-import { TEST_ADDR } from '../test/tests.utils';
+import { setFullTokenDataMock, TEST_ADDR } from '../test/tests.utils';
 
 describe('vault-balances-indexer', () => {
   const chain = new Ethereum();
@@ -18,21 +18,24 @@ describe('vault-balances-indexer', () => {
   });
   describe('updateVaultTokenBalances', () => {
     it('should not update for token without balance', async () => {
+      setFullTokenDataMock();
       await updateVaultTokenBalances(chain, getVaultDefinition(chain, TOKENS.BDIGG));
       expect(put.mock.calls.length).toEqual(0);
     });
     it('should not update for lp token wihtout balance', async () => {
+      setFullTokenDataMock();
       await updateVaultTokenBalances(
         chain,
         Object.assign({
           name: 'something',
-          depositToken: TOKENS.CRV_HBTC,
+          depositToken: TOKENS.BADGER,
         }),
       );
       expect(put.mock.calls.length).toEqual(0);
     });
     it('should throw if lptoken and token balance', async () => {
       console.error = jest.fn();
+      setFullTokenDataMock();
       await updateVaultTokenBalances(
         chain,
         Object.assign({
@@ -49,23 +52,23 @@ describe('vault-balances-indexer', () => {
       expect(put.mock.calls.length).toEqual(0);
     });
     it('should update token with balance', async () => {
+      setFullTokenDataMock();
       await updateVaultTokenBalances(
         chain,
         Object.assign({
           name: 'something',
-          depositToken: TOKENS.CRV_HBTC,
+          depositToken: TOKENS.BADGER,
           getTokenBalance: async () =>
-            Object.assign(new CachedVaultTokenBalance(), {
+            Object.assign(new VaultTokenBalance(), {
               vault: TEST_ADDR,
               tokenBalances: [
                 Object.assign(new CachedTokenBalance(), {
-                  address: TOKENS.BCRV_HTBC,
+                  address: TOKENS.BBADGER,
                   name: 'BCRV_HBTC',
                   symbol: 'BCRVHBTC',
                   decimals: 18,
                   balance: 100000000,
-                  valueEth: 1,
-                  valueUsd: 10101010,
+                  value: 1,
                 }),
               ],
             }),
@@ -77,7 +80,7 @@ describe('vault-balances-indexer', () => {
       const lpBalance = jest
         .spyOn(indexerUtils, 'getLpTokenBalances')
         .mockImplementation(async (_chain: Chain, _vault: VaultDefinition) => {
-          return Object.assign(new CachedVaultTokenBalance(), {
+          return Object.assign(new VaultTokenBalance(), {
             vault: TEST_ADDR,
             tokenBalances: [
               Object.assign(new CachedTokenBalance(), {
@@ -92,6 +95,7 @@ describe('vault-balances-indexer', () => {
             ],
           });
         });
+      setFullTokenDataMock();
       await updateVaultTokenBalances(
         chain,
         Object.assign({
@@ -106,11 +110,12 @@ describe('vault-balances-indexer', () => {
       const lpBalance = jest
         .spyOn(indexerUtils, 'getLpTokenBalances')
         .mockImplementation(async (_chain: Chain, _vault: VaultDefinition) => {
-          return Object.assign(new CachedVaultTokenBalance(), {
+          return Object.assign(new VaultTokenBalance(), {
             vault: TEST_ADDR,
             tokenBalances: [],
           });
         });
+      setFullTokenDataMock();
       await updateVaultTokenBalances(
         chain,
         Object.assign({

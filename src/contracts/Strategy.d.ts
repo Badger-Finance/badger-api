@@ -17,7 +17,7 @@ import {
 import { BytesLike } from '@ethersproject/bytes';
 import { Listener, Provider } from '@ethersproject/providers';
 import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
-import { TypedEventFilter, TypedEvent, TypedListener } from './commons';
+import type { TypedEventFilter, TypedEvent, TypedListener } from './common';
 
 interface StrategyInterface extends ethers.utils.Interface {
   functions: {
@@ -264,6 +264,61 @@ interface StrategyInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: 'WithdrawAll'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'WithdrawOther'): EventFragment;
 }
+
+export type HarvestEvent = TypedEvent<[BigNumber, BigNumber] & { harvested: BigNumber; blockNumber: BigNumber }>;
+
+export type PausedEvent = TypedEvent<[string] & { account: string }>;
+
+export type PerformanceFeeGovernanceEvent = TypedEvent<
+  [string, string, BigNumber, BigNumber, BigNumber] & {
+    destination: string;
+    token: string;
+    amount: BigNumber;
+    blockNumber: BigNumber;
+    timestamp: BigNumber;
+  }
+>;
+
+export type PerformanceFeeStrategistEvent = TypedEvent<
+  [string, string, BigNumber, BigNumber, BigNumber] & {
+    destination: string;
+    token: string;
+    amount: BigNumber;
+    blockNumber: BigNumber;
+    timestamp: BigNumber;
+  }
+>;
+
+export type SetControllerEvent = TypedEvent<[string] & { controller: string }>;
+
+export type SetGovernanceEvent = TypedEvent<[string] & { governance: string }>;
+
+export type SetPerformanceFeeGovernanceEvent = TypedEvent<[BigNumber] & { performanceFeeGovernance: BigNumber }>;
+
+export type SetPerformanceFeeStrategistEvent = TypedEvent<[BigNumber] & { performanceFeeStrategist: BigNumber }>;
+
+export type SetStrategistEvent = TypedEvent<[string] & { strategist: string }>;
+
+export type SetWithdrawalFeeEvent = TypedEvent<[BigNumber] & { withdrawalFee: BigNumber }>;
+
+export type TendEvent = TypedEvent<[BigNumber] & { tended: BigNumber }>;
+
+export type TreeDistributionEvent = TypedEvent<
+  [string, BigNumber, BigNumber, BigNumber] & {
+    token: string;
+    amount: BigNumber;
+    blockNumber: BigNumber;
+    timestamp: BigNumber;
+  }
+>;
+
+export type UnpausedEvent = TypedEvent<[string] & { account: string }>;
+
+export type WithdrawEvent = TypedEvent<[BigNumber] & { amount: BigNumber }>;
+
+export type WithdrawAllEvent = TypedEvent<[BigNumber] & { balance: BigNumber }>;
+
+export type WithdrawOtherEvent = TypedEvent<[string, BigNumber] & { token: string; amount: BigNumber }>;
 
 export class Strategy extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -846,14 +901,55 @@ export class Strategy extends BaseContract {
   };
 
   filters: {
+    'Harvest(uint256,uint256)'(
+      harvested?: null,
+      blockNumber?: BigNumberish | null,
+    ): TypedEventFilter<[BigNumber, BigNumber], { harvested: BigNumber; blockNumber: BigNumber }>;
+
     Harvest(
       harvested?: null,
       blockNumber?: BigNumberish | null,
     ): TypedEventFilter<[BigNumber, BigNumber], { harvested: BigNumber; blockNumber: BigNumber }>;
 
+    'Paused(address)'(account?: null): TypedEventFilter<[string], { account: string }>;
+
     Paused(account?: null): TypedEventFilter<[string], { account: string }>;
 
+    'PerformanceFeeGovernance(address,address,uint256,uint256,uint256)'(
+      destination?: string | null,
+      token?: string | null,
+      amount?: null,
+      blockNumber?: BigNumberish | null,
+      timestamp?: null,
+    ): TypedEventFilter<
+      [string, string, BigNumber, BigNumber, BigNumber],
+      {
+        destination: string;
+        token: string;
+        amount: BigNumber;
+        blockNumber: BigNumber;
+        timestamp: BigNumber;
+      }
+    >;
+
     PerformanceFeeGovernance(
+      destination?: string | null,
+      token?: string | null,
+      amount?: null,
+      blockNumber?: BigNumberish | null,
+      timestamp?: null,
+    ): TypedEventFilter<
+      [string, string, BigNumber, BigNumber, BigNumber],
+      {
+        destination: string;
+        token: string;
+        amount: BigNumber;
+        blockNumber: BigNumber;
+        timestamp: BigNumber;
+      }
+    >;
+
+    'PerformanceFeeStrategist(address,address,uint256,uint256,uint256)'(
       destination?: string | null,
       token?: string | null,
       amount?: null,
@@ -887,23 +983,56 @@ export class Strategy extends BaseContract {
       }
     >;
 
+    'SetController(address)'(controller?: null): TypedEventFilter<[string], { controller: string }>;
+
     SetController(controller?: null): TypedEventFilter<[string], { controller: string }>;
 
+    'SetGovernance(address)'(governance?: null): TypedEventFilter<[string], { governance: string }>;
+
     SetGovernance(governance?: null): TypedEventFilter<[string], { governance: string }>;
+
+    'SetPerformanceFeeGovernance(uint256)'(
+      performanceFeeGovernance?: null,
+    ): TypedEventFilter<[BigNumber], { performanceFeeGovernance: BigNumber }>;
 
     SetPerformanceFeeGovernance(
       performanceFeeGovernance?: null,
     ): TypedEventFilter<[BigNumber], { performanceFeeGovernance: BigNumber }>;
 
+    'SetPerformanceFeeStrategist(uint256)'(
+      performanceFeeStrategist?: null,
+    ): TypedEventFilter<[BigNumber], { performanceFeeStrategist: BigNumber }>;
+
     SetPerformanceFeeStrategist(
       performanceFeeStrategist?: null,
     ): TypedEventFilter<[BigNumber], { performanceFeeStrategist: BigNumber }>;
 
+    'SetStrategist(address)'(strategist?: null): TypedEventFilter<[string], { strategist: string }>;
+
     SetStrategist(strategist?: null): TypedEventFilter<[string], { strategist: string }>;
+
+    'SetWithdrawalFee(uint256)'(withdrawalFee?: null): TypedEventFilter<[BigNumber], { withdrawalFee: BigNumber }>;
 
     SetWithdrawalFee(withdrawalFee?: null): TypedEventFilter<[BigNumber], { withdrawalFee: BigNumber }>;
 
+    'Tend(uint256)'(tended?: null): TypedEventFilter<[BigNumber], { tended: BigNumber }>;
+
     Tend(tended?: null): TypedEventFilter<[BigNumber], { tended: BigNumber }>;
+
+    'TreeDistribution(address,uint256,uint256,uint256)'(
+      token?: string | null,
+      amount?: null,
+      blockNumber?: BigNumberish | null,
+      timestamp?: null,
+    ): TypedEventFilter<
+      [string, BigNumber, BigNumber, BigNumber],
+      {
+        token: string;
+        amount: BigNumber;
+        blockNumber: BigNumber;
+        timestamp: BigNumber;
+      }
+    >;
 
     TreeDistribution(
       token?: string | null,
@@ -920,11 +1049,22 @@ export class Strategy extends BaseContract {
       }
     >;
 
+    'Unpaused(address)'(account?: null): TypedEventFilter<[string], { account: string }>;
+
     Unpaused(account?: null): TypedEventFilter<[string], { account: string }>;
+
+    'Withdraw(uint256)'(amount?: null): TypedEventFilter<[BigNumber], { amount: BigNumber }>;
 
     Withdraw(amount?: null): TypedEventFilter<[BigNumber], { amount: BigNumber }>;
 
+    'WithdrawAll(uint256)'(balance?: null): TypedEventFilter<[BigNumber], { balance: BigNumber }>;
+
     WithdrawAll(balance?: null): TypedEventFilter<[BigNumber], { balance: BigNumber }>;
+
+    'WithdrawOther(address,uint256)'(
+      token?: null,
+      amount?: null,
+    ): TypedEventFilter<[string, BigNumber], { token: string; amount: BigNumber }>;
 
     WithdrawOther(
       token?: null,

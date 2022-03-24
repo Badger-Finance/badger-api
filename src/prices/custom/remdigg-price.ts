@@ -6,7 +6,7 @@ import { TokenPrice } from '../interface/token-price.interface';
 import { getPrice } from '../prices.utils';
 
 const REMDIGG_PER_DIGG = 1e9;
-const REMDIGG_SHARE_PER_FRAGMENT = '222256308823765331027878635805365830922307440079959220679625904457';
+export const REMDIGG_SHARE_PER_FRAGMENT = '222256308823765331027878635805365830922307440079959220679625904457';
 
 export async function getRemDiggPrice(chain: Chain, token: Token): Promise<TokenPrice> {
   const digg = Digg__factory.connect(TOKENS.DIGG, chain.batchProvider);

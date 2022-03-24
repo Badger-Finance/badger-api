@@ -1,8 +1,7 @@
 import { PlatformTest } from '@tsed/common';
-import { Ethereum } from '../chains/config/eth.config';
 import { TOKENS } from '../config/tokens.config';
 import { getVaultDefinition } from '../vaults/vaults.utils';
-import { randomSnapshots, setupMapper } from '../test/tests.utils';
+import { randomSnapshots, setFullTokenDataMock, setupMapper, TEST_CHAIN } from '../test/tests.utils';
 import { ChartsService } from './charts.service';
 import { ChartGranularity } from './enums/chart-granularity.enum';
 import { ONE_DAY_MS } from '../config/constants';
@@ -49,12 +48,16 @@ describe('charts.service', () => {
 
   describe('getChartData', () => {
     const today = new Date();
+    today.setUTCHours(0, 0, 0, 0);
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
+    yesterday.setUTCHours(0, 0, 0, 0);
     const oneWeek = new Date();
     oneWeek.setDate(oneWeek.getDate() - 7);
+    oneWeek.setUTCHours(0, 0, 0, 0);
     const oneMonth = new Date();
     oneMonth.setDate(oneMonth.getDate() - 30);
+    oneMonth.setUTCHours(0, 0, 0, 0);
     it.each([
       [24, 1, ChartGranularity.HOUR, yesterday, today],
       [12, 2, ChartGranularity.HOUR, yesterday, today],
@@ -72,8 +75,9 @@ describe('charts.service', () => {
     ])(
       'returns %d data points for granularity %d %s from %s to %s',
       async (count: number, size: number, granularity: ChartGranularity, start: Date, end: Date) => {
+        setFullTokenDataMock();
         const expected = ChartsService.getRequestedDataPoints(new Date(start), new Date(end), granularity, size);
-        const settDefinition = getVaultDefinition(new Ethereum(), TOKENS.BBADGER);
+        const settDefinition = getVaultDefinition(TEST_CHAIN, TOKENS.BBADGER);
         // snapshot granularity @ 30 min intervals, 2 per hour, 48 per day
         const interval = granularity === ChartGranularity.HOUR ? 2 : 48 * size;
         const seed = randomSnapshots(settDefinition, count * interval);
@@ -82,7 +86,14 @@ describe('charts.service', () => {
         } else {
           setupMapper([]);
         }
-        const result = await service.getChartData(settDefinition, new Date(start), new Date(end), granularity, size);
+        const result = await service.getChartData(
+          TEST_CHAIN,
+          settDefinition,
+          new Date(start),
+          new Date(end),
+          granularity,
+          size,
+        );
         expect(result.length).toBe(expected);
         for (const point of result) {
           expect(seed.includes(point)).toBeTruthy();

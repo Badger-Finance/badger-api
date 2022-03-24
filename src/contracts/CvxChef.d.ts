@@ -18,7 +18,7 @@ import {
 import { BytesLike } from '@ethersproject/bytes';
 import { Listener, Provider } from '@ethersproject/providers';
 import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
-import { TypedEventFilter, TypedEvent, TypedListener } from './commons';
+import type { TypedEventFilter, TypedEvent, TypedListener } from './common';
 
 interface CvxChefInterface extends ethers.utils.Interface {
   functions: {
@@ -144,6 +144,72 @@ interface CvxChefInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: 'OwnershipTransferred'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'Withdraw'): EventFragment;
 }
+
+export type DepositEvent = TypedEvent<
+  [string, BigNumber, BigNumber, string] & {
+    user: string;
+    pid: BigNumber;
+    amount: BigNumber;
+    to: string;
+  }
+>;
+
+export type EmergencyWithdrawEvent = TypedEvent<
+  [string, BigNumber, BigNumber, string] & {
+    user: string;
+    pid: BigNumber;
+    amount: BigNumber;
+    to: string;
+  }
+>;
+
+export type HarvestEvent = TypedEvent<
+  [string, BigNumber, BigNumber] & {
+    user: string;
+    pid: BigNumber;
+    amount: BigNumber;
+  }
+>;
+
+export type LogInitEvent = TypedEvent<[] & {}>;
+
+export type LogPoolAdditionEvent = TypedEvent<
+  [BigNumber, BigNumber, string, string] & {
+    pid: BigNumber;
+    allocPoint: BigNumber;
+    lpToken: string;
+    rewarder: string;
+  }
+>;
+
+export type LogSetPoolEvent = TypedEvent<
+  [BigNumber, BigNumber, string, boolean] & {
+    pid: BigNumber;
+    allocPoint: BigNumber;
+    rewarder: string;
+    overwrite: boolean;
+  }
+>;
+
+export type LogUpdatePoolEvent = TypedEvent<
+  [BigNumber, BigNumber, BigNumber, BigNumber] & {
+    pid: BigNumber;
+    lastRewardBlock: BigNumber;
+    lpSupply: BigNumber;
+    accSushiPerShare: BigNumber;
+  }
+>;
+
+export type OwnershipTransferredEvent = TypedEvent<[string, string] & { previousOwner: string; newOwner: string }>;
+
+export type WithdrawEvent = TypedEvent<
+  [string, BigNumber, BigNumber, string] & {
+    user: string;
+    pid: BigNumber;
+    amount: BigNumber;
+    to: string;
+  }
+>;
 
 export class CvxChef extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -581,7 +647,27 @@ export class CvxChef extends BaseContract {
   };
 
   filters: {
+    'Deposit(address,uint256,uint256,address)'(
+      user?: string | null,
+      pid?: BigNumberish | null,
+      amount?: null,
+      to?: string | null,
+    ): TypedEventFilter<
+      [string, BigNumber, BigNumber, string],
+      { user: string; pid: BigNumber; amount: BigNumber; to: string }
+    >;
+
     Deposit(
+      user?: string | null,
+      pid?: BigNumberish | null,
+      amount?: null,
+      to?: string | null,
+    ): TypedEventFilter<
+      [string, BigNumber, BigNumber, string],
+      { user: string; pid: BigNumber; amount: BigNumber; to: string }
+    >;
+
+    'EmergencyWithdraw(address,uint256,uint256,address)'(
       user?: string | null,
       pid?: BigNumberish | null,
       amount?: null,
@@ -601,13 +687,36 @@ export class CvxChef extends BaseContract {
       { user: string; pid: BigNumber; amount: BigNumber; to: string }
     >;
 
+    'Harvest(address,uint256,uint256)'(
+      user?: string | null,
+      pid?: BigNumberish | null,
+      amount?: null,
+    ): TypedEventFilter<[string, BigNumber, BigNumber], { user: string; pid: BigNumber; amount: BigNumber }>;
+
     Harvest(
       user?: string | null,
       pid?: BigNumberish | null,
       amount?: null,
     ): TypedEventFilter<[string, BigNumber, BigNumber], { user: string; pid: BigNumber; amount: BigNumber }>;
 
+    'LogInit()'(): TypedEventFilter<[], {}>;
+
     LogInit(): TypedEventFilter<[], {}>;
+
+    'LogPoolAddition(uint256,uint256,address,address)'(
+      pid?: BigNumberish | null,
+      allocPoint?: null,
+      lpToken?: string | null,
+      rewarder?: string | null,
+    ): TypedEventFilter<
+      [BigNumber, BigNumber, string, string],
+      {
+        pid: BigNumber;
+        allocPoint: BigNumber;
+        lpToken: string;
+        rewarder: string;
+      }
+    >;
 
     LogPoolAddition(
       pid?: BigNumberish | null,
@@ -621,6 +730,21 @@ export class CvxChef extends BaseContract {
         allocPoint: BigNumber;
         lpToken: string;
         rewarder: string;
+      }
+    >;
+
+    'LogSetPool(uint256,uint256,address,bool)'(
+      pid?: BigNumberish | null,
+      allocPoint?: null,
+      rewarder?: string | null,
+      overwrite?: null,
+    ): TypedEventFilter<
+      [BigNumber, BigNumber, string, boolean],
+      {
+        pid: BigNumber;
+        allocPoint: BigNumber;
+        rewarder: string;
+        overwrite: boolean;
       }
     >;
 
@@ -639,6 +763,21 @@ export class CvxChef extends BaseContract {
       }
     >;
 
+    'LogUpdatePool(uint256,uint64,uint256,uint256)'(
+      pid?: BigNumberish | null,
+      lastRewardBlock?: null,
+      lpSupply?: null,
+      accSushiPerShare?: null,
+    ): TypedEventFilter<
+      [BigNumber, BigNumber, BigNumber, BigNumber],
+      {
+        pid: BigNumber;
+        lastRewardBlock: BigNumber;
+        lpSupply: BigNumber;
+        accSushiPerShare: BigNumber;
+      }
+    >;
+
     LogUpdatePool(
       pid?: BigNumberish | null,
       lastRewardBlock?: null,
@@ -654,10 +793,25 @@ export class CvxChef extends BaseContract {
       }
     >;
 
+    'OwnershipTransferred(address,address)'(
+      previousOwner?: string | null,
+      newOwner?: string | null,
+    ): TypedEventFilter<[string, string], { previousOwner: string; newOwner: string }>;
+
     OwnershipTransferred(
       previousOwner?: string | null,
       newOwner?: string | null,
     ): TypedEventFilter<[string, string], { previousOwner: string; newOwner: string }>;
+
+    'Withdraw(address,uint256,uint256,address)'(
+      user?: string | null,
+      pid?: BigNumberish | null,
+      amount?: null,
+      to?: string | null,
+    ): TypedEventFilter<
+      [string, BigNumber, BigNumber, string],
+      { user: string; pid: BigNumber; amount: BigNumber; to: string }
+    >;
 
     Withdraw(
       user?: string | null,

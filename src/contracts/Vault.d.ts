@@ -17,7 +17,7 @@ import {
 import { BytesLike } from '@ethersproject/bytes';
 import { Listener, Provider } from '@ethersproject/providers';
 import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
-import { TypedEventFilter, TypedEvent, TypedListener } from './commons';
+import type { TypedEventFilter, TypedEvent, TypedListener } from './common';
 
 interface VaultInterface extends ethers.utils.Interface {
   functions: {
@@ -174,6 +174,28 @@ interface VaultInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: 'Transfer'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'Unpaused'): EventFragment;
 }
+
+export type ApprovalEvent = TypedEvent<
+  [string, string, BigNumber] & {
+    owner: string;
+    spender: string;
+    value: BigNumber;
+  }
+>;
+
+export type FullPricePerShareUpdatedEvent = TypedEvent<
+  [BigNumber, BigNumber, BigNumber] & {
+    value: BigNumber;
+    timestamp: BigNumber;
+    blockNumber: BigNumber;
+  }
+>;
+
+export type PausedEvent = TypedEvent<[string] & { account: string }>;
+
+export type TransferEvent = TypedEvent<[string, string, BigNumber] & { from: string; to: string; value: BigNumber }>;
+
+export type UnpausedEvent = TypedEvent<[string] & { account: string }>;
 
 export class Vault extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -621,11 +643,26 @@ export class Vault extends BaseContract {
   };
 
   filters: {
+    'Approval(address,address,uint256)'(
+      owner?: string | null,
+      spender?: string | null,
+      value?: null,
+    ): TypedEventFilter<[string, string, BigNumber], { owner: string; spender: string; value: BigNumber }>;
+
     Approval(
       owner?: string | null,
       spender?: string | null,
       value?: null,
     ): TypedEventFilter<[string, string, BigNumber], { owner: string; spender: string; value: BigNumber }>;
+
+    'FullPricePerShareUpdated(uint256,uint256,uint256)'(
+      value?: null,
+      timestamp?: BigNumberish | null,
+      blockNumber?: BigNumberish | null,
+    ): TypedEventFilter<
+      [BigNumber, BigNumber, BigNumber],
+      { value: BigNumber; timestamp: BigNumber; blockNumber: BigNumber }
+    >;
 
     FullPricePerShareUpdated(
       value?: null,
@@ -636,13 +673,23 @@ export class Vault extends BaseContract {
       { value: BigNumber; timestamp: BigNumber; blockNumber: BigNumber }
     >;
 
+    'Paused(address)'(account?: null): TypedEventFilter<[string], { account: string }>;
+
     Paused(account?: null): TypedEventFilter<[string], { account: string }>;
+
+    'Transfer(address,address,uint256)'(
+      from?: string | null,
+      to?: string | null,
+      value?: null,
+    ): TypedEventFilter<[string, string, BigNumber], { from: string; to: string; value: BigNumber }>;
 
     Transfer(
       from?: string | null,
       to?: string | null,
       value?: null,
     ): TypedEventFilter<[string, string, BigNumber], { from: string; to: string; value: BigNumber }>;
+
+    'Unpaused(address)'(account?: null): TypedEventFilter<[string], { account: string }>;
 
     Unpaused(account?: null): TypedEventFilter<[string], { account: string }>;
   };

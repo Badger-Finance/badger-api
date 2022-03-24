@@ -1,18 +1,21 @@
-import { Vault } from '@badger-dao/sdk';
+import { TokenValue, VaultDTO } from '@badger-dao/sdk';
 import { PlatformTest } from '@tsed/common';
 import { BadRequest } from '@tsed/exceptions';
 import SuperTest from 'supertest';
 import { createValueSource } from '../protocols/interfaces/value-source.interface';
-import * as protocolsUtils from '../protocols/protocols.utils';
 import { Server } from '../Server';
 import * as vaultsUtils from './vaults.utils';
-import { TokenBalance } from '../tokens/interfaces/token-balance.interface';
 import * as tokensUtils from '../tokens/tokens.utils';
 import { mockBalance } from '../tokens/tokens.utils';
 import { VaultDefinition } from './interfaces/vault-definition.interface';
 import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
 import { valueSourceToCachedValueSource } from '../rewards/rewards.utils';
 import { SourceType } from '../rewards/enums/source-type.enum';
+import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
+import * as tokenUtils from '../tokens/tokens.utils';
+import { TOKENS } from '../config/tokens.config';
+import { VaultPendingHarvestData } from './types/vault-pending-harvest-data';
+import { Chain } from '../chains/config/chain.config';
 
 describe('VaultsController', () => {
   let request: SuperTest.SuperTest<SuperTest.Test>;
@@ -24,15 +27,26 @@ describe('VaultsController', () => {
   afterAll(PlatformTest.reset);
 
   const setupTest = (): void => {
+    jest.spyOn(tokenUtils, 'getFullToken').mockImplementation(async (_, tokenAddr) => {
+      return fullTokenMockMap[tokenAddr] || fullTokenMockMap[TOKENS.BADGER];
+    });
+    jest.spyOn(vaultsUtils, 'getVaultPendingHarvest').mockImplementation(
+      async (vaultDefinition: VaultDefinition): Promise<VaultPendingHarvestData> => ({
+        vault: vaultDefinition.vaultToken,
+        yieldTokens: [],
+        harvestTokens: [],
+        lastHarvestedAt: 1048968337,
+      }),
+    );
     jest
       .spyOn(vaultsUtils, 'getCachedVault')
-      .mockImplementation(async (vaultDefinition: VaultDefinition): Promise<Vault> => {
-        const vault = vaultsUtils.defaultVault(vaultDefinition);
+      .mockImplementation(async (chain, vaultDefinition: VaultDefinition): Promise<VaultDTO> => {
+        const vault = await vaultsUtils.defaultVault(chain, vaultDefinition);
         vault.value = parseInt(vaultDefinition.vaultToken.slice(0, 7), 16);
         return vault;
       });
     jest
-      .spyOn(protocolsUtils, 'getVaultCachedValueSources')
+      .spyOn(vaultsUtils, 'getVaultCachedValueSources')
       .mockImplementation(async (vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> => {
         const performance = parseInt(vaultDefinition.vaultToken.slice(0, 5), 16) / 100;
         const underlying = createValueSource(vaultsUtils.VAULT_SOURCE, performance);
@@ -47,18 +61,16 @@ describe('VaultsController', () => {
         ];
       });
     jest
-      .spyOn(tokensUtils, 'getVaultTokens')
-      .mockImplementation(
-        async (sett: VaultDefinition, _balance: number, _currency?: string): Promise<TokenBalance[]> => {
-          const token = tokensUtils.getToken(sett.depositToken);
-          if (token.lpToken) {
-            const bal0 = parseInt(token.address.slice(0, 4), 16);
-            const bal1 = parseInt(token.address.slice(0, 6), 16);
-            return [mockBalance(token, bal0), mockBalance(token, bal1)];
-          }
-          return [mockBalance(token, parseInt(token.address.slice(0, 4), 16))];
-        },
-      );
+      .spyOn(tokensUtils, 'getCachedTokenBalances')
+      .mockImplementation(async (_chain: Chain, vault: VaultDTO, _currency?: string): Promise<TokenValue[]> => {
+        const token = fullTokenMockMap[vault.underlyingToken] || fullTokenMockMap[TOKENS.BADGER];
+        if (token.lpToken) {
+          const bal0 = parseInt(token.address.slice(0, 4), 16);
+          const bal1 = parseInt(token.address.slice(0, 6), 16);
+          return [mockBalance(token, bal0), mockBalance(token, bal1)];
+        }
+        return [mockBalance(token, parseInt(token.address.slice(0, 4), 16))];
+      });
   };
 
   describe('GET /v2/vaults', () => {

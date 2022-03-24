@@ -12,7 +12,7 @@ const ARBISCAN_API_KEY = process.env.ARBISCAN_API_KEY || 'MISSING REQUIRED ENV V
 export async function request<T>(baseURL: string, params?: Record<string, string>): Promise<T> {
   try {
     const { data } = await axios.get(baseURL, { params });
-    return data;
+    return data as T;
   } catch (error) {
     throw error;
   }

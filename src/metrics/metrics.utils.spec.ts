@@ -1,8 +1,12 @@
-import { Vault } from '@badger-dao/sdk';
+import { VaultDTO } from '@badger-dao/sdk';
 import * as accountsUtils from '../accounts/accounts.utils';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import * as vaultUtils from '../vaults/vaults.utils';
 import { getProtocolMetrics, getProtocolSettMetrics, getProtocolTotalUsers } from './metrics.utils';
+import { Chain } from '../chains/config/chain.config';
+import * as tokenUtils from '../tokens/tokens.utils';
+import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
+import { TOKENS } from '../config/tokens.config';
 
 describe('metrics.utils', () => {
   beforeEach(() => {
@@ -19,11 +23,14 @@ describe('metrics.utils', () => {
           '0x0000000000000000000000000000000000000006',
         ]),
       );
-
+    jest.spyOn(tokenUtils, 'getFullToken').mockImplementation(async (_, tokenAddr) => {
+      return fullTokenMockMap[tokenAddr] || fullTokenMockMap[TOKENS.BADGER];
+    });
     jest
       .spyOn(vaultUtils, 'getCachedVault')
       .mockImplementation(
-        async (VaultDefinition: VaultDefinition): Promise<Vault> => vaultUtils.defaultVault(VaultDefinition),
+        async (chain: Chain, VaultDefinition: VaultDefinition): Promise<VaultDTO> =>
+          vaultUtils.defaultVault(chain, VaultDefinition),
       );
   });
 

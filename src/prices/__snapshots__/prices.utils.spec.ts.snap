@@ -3,25 +3,21 @@
 exports[`prices.utils fetchPrices request prices for contracts returns a price map of requested token prices in usd 1`] = `
 Object {
   "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599": Object {
-    "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
-    "price": 43500,
+    "usd": 43500,
   },
   "0x3472A5A71965499acd81997a54BBA8D852C6E53d": Object {
-    "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
-    "price": 10,
+    "usd": 10,
   },
 }
 `;
 
 exports[`prices.utils fetchPrices request prices for look up names returns a price map of requested token prices in usd 1`] = `
 Object {
-  "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599": Object {
-    "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
-    "price": 43500,
+  "badger": Object {
+    "usd": 10,
   },
-  "0x3472A5A71965499acd81997a54BBA8D852C6E53d": Object {
-    "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
-    "price": 10,
+  "wrapped-bitcoin": Object {
+    "usd": 43500,
   },
 }
 `;

@@ -5,144 +5,72 @@ import { TokenConfig } from '../interfaces/token-config.interface';
 
 export const arbitrumTokensConfig: TokenConfig = {
   [TOKENS.ARB_USDT]: {
-    address: TOKENS.ARB_USDT,
-    decimals: 6,
     lookupName: 'tether',
-    name: 'Tether',
-    symbol: 'USDT',
     type: PricingType.LookupName,
   },
   [TOKENS.ARB_IBBTC]: {
-    address: TOKENS.ARB_IBBTC,
-    decimals: 18,
     lookupName: 'interest-bearing-bitcoin',
-    name: 'ibBTC',
-    symbol: 'ibBTC',
     type: PricingType.LookupName,
   },
   [TOKENS.ARB_BADGER]: {
-    address: TOKENS.ARB_BADGER,
-    decimals: 18,
     lookupName: 'badger-dao',
-    name: 'Badger',
-    symbol: 'BADGER',
     type: PricingType.LookupName,
   },
   [TOKENS.ARB_CRV]: {
-    address: TOKENS.ARB_CRV,
-    decimals: 18,
     lookupName: 'curve-dao-token',
-    name: 'Curve DAO Token',
-    symbol: 'CRV',
     type: PricingType.LookupName,
   },
   [TOKENS.MULTI_RENBTC]: {
-    address: TOKENS.MULTI_RENBTC,
-    decimals: 8,
     lookupName: 'renbtc',
-    name: 'Ren Protocol BTC',
-    symbol: 'renBTC',
     type: PricingType.LookupName,
   },
   [TOKENS.ARB_WETH]: {
-    address: TOKENS.ARB_WETH,
-    decimals: 18,
     lookupName: 'ethereum',
-    name: 'Wrapped Ethereum',
-    symbol: 'WETH',
     type: PricingType.LookupName,
   },
   [TOKENS.ARB_WBTC]: {
-    address: TOKENS.ARB_WBTC,
-    decimals: 8,
     lookupName: 'bitcoin',
-    name: 'Wrapped Bitcoin',
-    symbol: 'WBTC',
     type: PricingType.LookupName,
   },
   [TOKENS.ARB_SUSHI]: {
-    address: TOKENS.ARB_SUSHI,
-    decimals: 18,
     lookupName: 'sushi',
-    name: 'Sushi',
-    symbol: 'SUSHI',
     type: PricingType.LookupName,
   },
   [TOKENS.ARB_SWAPR]: {
-    address: TOKENS.ARB_SWAPR,
-    decimals: 18,
     lookupName: 'swapr',
-    name: 'Swapr',
-    symbol: 'SWAPR',
     type: PricingType.LookupName,
   },
   [TOKENS.ARB_SUSHI_WETH_SUSHI]: {
-    address: TOKENS.ARB_SUSHI_WETH_SUSHI,
-    decimals: 18,
     lpToken: true,
-    name: 'Sushiswap: WETH-SUSHI',
-    symbol: 'SLP-WETH-SUSHI',
     type: PricingType.UniV2LP,
   },
   [TOKENS.ARB_SUSHI_WETH_WBTC]: {
-    address: TOKENS.ARB_SUSHI_WETH_WBTC,
-    decimals: 18,
     lpToken: true,
-    name: 'Sushiswap: WETH-WBTC',
-    symbol: 'SLP-WETH-WBTC',
     type: PricingType.UniV2LP,
   },
   [TOKENS.ARB_CRV_RENBTC]: {
-    address: TOKENS.ARB_CRV_RENBTC,
-    decimals: 18,
-    name: 'Curve.fi: renBTC/wBTC',
-    symbol: 'crvrenWBTC',
     type: PricingType.CurveLP,
   },
   [TOKENS.ARB_CRV_TRICRYPTO]: {
-    address: TOKENS.ARB_CRV_TRICRYPTO,
-    decimals: 18,
-    name: 'Curve.fi Tricrypto',
-    symbol: 'crvTricrypto',
     type: PricingType.CurveLP,
   },
   [TOKENS.ARB_SWP_SWPR_WETH]: {
-    address: TOKENS.ARB_SWP_SWPR_WETH,
-    decimals: 18,
     lpToken: true,
-    name: 'Swapr SWPR-WETH',
-    symbol: 'SWLP-SWPR-WETH',
     type: PricingType.UniV2LP,
   },
   [TOKENS.ARB_SWP_WBTC_WETH]: {
-    address: TOKENS.ARB_SWP_WBTC_WETH,
-    decimals: 18,
     lpToken: true,
-    name: 'Swapr WBTC-WETH',
-    symbol: 'SWLP-WBTC-WETH',
     type: PricingType.UniV2LP,
   },
   [TOKENS.ARB_SWP_BADGER_WETH]: {
-    address: TOKENS.ARB_SWP_BADGER_WETH,
-    decimals: 18,
     lpToken: true,
-    name: 'Swapr BADGER-WETH',
-    symbol: 'SWLP-BADGER-WETH',
     type: PricingType.UniV2LP,
   },
   [TOKENS.ARB_SWP_IBBTC_WETH]: {
-    address: TOKENS.ARB_SWP_IBBTC_WETH,
-    decimals: 18,
     lpToken: true,
-    name: 'Swapr ibBTC-WETH',
-    symbol: 'SWLP-IBBTC-WETH',
     type: PricingType.UniV2LP,
   },
   [TOKENS.BARB_SUSHI_WETH_SUSHI]: {
-    address: TOKENS.BARB_SUSHI_WETH_SUSHI,
-    decimals: 18,
-    name: 'bSushiswap: WETH-SUSHI',
-    symbol: 'bSLP-WETH-SUSHI',
     type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.ARB_SUSHI_WETH_SUSHI,
@@ -150,10 +78,6 @@ export const arbitrumTokensConfig: TokenConfig = {
     },
   },
   [TOKENS.BARB_SUSHI_WETH_WBTC]: {
-    address: TOKENS.BARB_SUSHI_WETH_WBTC,
-    decimals: 18,
-    name: 'bSushiswap: WETH-WBTC',
-    symbol: 'bSLP-WETH-WBTC',
     type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.ARB_SUSHI_WETH_WBTC,
@@ -161,10 +85,6 @@ export const arbitrumTokensConfig: TokenConfig = {
     },
   },
   [TOKENS.BARB_CRV_RENBTC]: {
-    address: TOKENS.BARB_CRV_RENBTC,
-    decimals: 18,
-    name: 'bCurve.fi wBTC/renBTC',
-    symbol: 'bcrvrenBTC',
     type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.ARB_CRV_RENBTC,
@@ -172,10 +92,6 @@ export const arbitrumTokensConfig: TokenConfig = {
     },
   },
   [TOKENS.BARB_CRV_TRICRYPTO]: {
-    address: TOKENS.BARB_CRV_TRICRYPTO,
-    decimals: 18,
-    name: 'bCurve.fi Tricrypto',
-    symbol: 'bcrvTricrypto',
     type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.ARB_CRV_TRICRYPTO,
@@ -183,10 +99,6 @@ export const arbitrumTokensConfig: TokenConfig = {
     },
   },
   [TOKENS.BARB_CRV_TRICRYPTO_LITE]: {
-    address: TOKENS.BARB_CRV_TRICRYPTO_LITE,
-    decimals: 18,
-    name: 'bCurve.fi Tricrypto Light',
-    symbol: 'bcrvTricryptoLight',
     type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.ARB_CRV_TRICRYPTO,
@@ -194,10 +106,6 @@ export const arbitrumTokensConfig: TokenConfig = {
     },
   },
   [TOKENS.BARB_SWP_SWPR_WETH]: {
-    address: TOKENS.BARB_SWP_SWPR_WETH,
-    decimals: 18,
-    name: 'bSwapr SWPR-WETH',
-    symbol: 'bSWLP-SWPR-WETH',
     type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.ARB_SWP_SWPR_WETH,
@@ -205,10 +113,6 @@ export const arbitrumTokensConfig: TokenConfig = {
     },
   },
   [TOKENS.BARB_SWP_WBTC_WETH]: {
-    address: TOKENS.BARB_SWP_WBTC_WETH,
-    decimals: 18,
-    name: 'bSwapr WBTC-WETH',
-    symbol: 'bSWLP-WBTC-WETH',
     type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.ARB_SWP_WBTC_WETH,
@@ -216,10 +120,6 @@ export const arbitrumTokensConfig: TokenConfig = {
     },
   },
   [TOKENS.BARB_SWP_BADGER_WETH]: {
-    address: TOKENS.BARB_SWP_BADGER_WETH,
-    decimals: 18,
-    name: 'bSwapr BADGER-WETH',
-    symbol: 'bSWLP-BADGER-WETH',
     type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.ARB_SWP_BADGER_WETH,
@@ -227,10 +127,6 @@ export const arbitrumTokensConfig: TokenConfig = {
     },
   },
   [TOKENS.BARB_SWP_IBBTC_WETH]: {
-    address: TOKENS.BARB_SWP_IBBTC_WETH,
-    decimals: 18,
-    name: 'bSwapr ibBTC-WETH',
-    symbol: 'bSWLP-IBBTC-WETH',
     type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.ARB_SWP_IBBTC_WETH,

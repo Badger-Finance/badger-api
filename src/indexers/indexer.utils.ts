@@ -1,4 +1,4 @@
-import { BadRequest, NotFound } from '@tsed/exceptions';
+import { NotFound } from '@tsed/exceptions';
 import { getAccountMap } from '../accounts/accounts.utils';
 import { AccountMap } from '../accounts/interfaces/account-map.interface';
 import { CachedAccount } from '../accounts/interfaces/cached-account.interface';
@@ -7,10 +7,10 @@ import { Chain } from '../chains/config/chain.config';
 import { getPrice } from '../prices/prices.utils';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { getBoostWeight, getStrategyInfo, getCachedVault } from '../vaults/vaults.utils';
-import { CachedVaultTokenBalance } from '../tokens/interfaces/cached-vault-token-balance.interface';
-import { toBalance } from '../tokens/tokens.utils';
+import { VaultTokenBalance } from '../vaults/types/vault-token-balance.interface';
+import { getFullTokens, toBalance } from '../tokens/tokens.utils';
 import { getLiquidityData } from '../protocols/common/swap.utils';
-import { gqlGenT, VaultSnapshot } from '@badger-dao/sdk';
+import { gqlGenT, VaultSnapshot, VaultState, VaultVersion } from '@badger-dao/sdk';
 import { VaultsService } from '../vaults/vaults.service';
 
 export function chunkArray(addresses: string[], count: number): string[][] {
@@ -44,31 +44,32 @@ export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefini
   const { address, totalSupply, balance, pricePerFullShare, available } = await sdk.vaults.loadVault({
     address: vaultDefinition.vaultToken,
     requireRegistry: false,
-    status: 2,
-    version: 'v1',
+    state: VaultState.Open,
+    version: VaultVersion.v1,
   });
 
   let block = 0;
   try {
     block = await sdk.provider.getBlockNumber();
-  } catch (err) {
-    console.log(err);
-    // block is not super important here - just continue on
-  }
+  } catch (err) {} // block is not super important here - just continue on
 
   const [tokenPriceData, strategyInfo, boostWeight, cachedVault] = await Promise.all([
     getPrice(vaultDefinition.depositToken),
     getStrategyInfo(chain, vaultDefinition),
     getBoostWeight(chain, vaultDefinition),
-    VaultsService.loadVault(vaultDefinition),
+    VaultsService.loadVault(chain, vaultDefinition),
   ]);
   const value = balance * tokenPriceData.price;
+  const {
+    yieldProjection: { yieldApr, harvestApr },
+  } = cachedVault;
 
   return {
     block,
     timestamp: Date.now(),
     address,
     balance,
+    strategyBalance: balance - available,
     pricePerFullShare,
     value: parseFloat(value.toFixed(2)),
     totalSupply,
@@ -76,38 +77,33 @@ export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefini
     strategy: strategyInfo,
     boostWeight: boostWeight.toNumber(),
     apr: cachedVault.apr,
+    yieldApr,
+    harvestApr,
   };
 }
 
-export async function getLpTokenBalances(
-  chain: Chain,
-  vaultDefinition: VaultDefinition,
-): Promise<CachedVaultTokenBalance> {
-  const { protocol, depositToken, vaultToken } = vaultDefinition;
+export async function getLpTokenBalances(chain: Chain, vaultDefinition: VaultDefinition): Promise<VaultTokenBalance> {
+  const { depositToken, vaultToken } = vaultDefinition;
   try {
-    if (!protocol) {
-      throw new BadRequest('LP balance look up requires a defined protocol');
-    }
-    const sdk = await chain.getSdk();
     const liquidityData = await getLiquidityData(chain, depositToken);
     const { token0, token1, reserve0, reserve1, totalSupply } = liquidityData;
-    const tokenData = await sdk.tokens.loadTokens([token0, token1]);
+    const tokenData = await getFullTokens(chain, [token0, token1]);
     const t0Token = tokenData[token0];
     const t1Token = tokenData[token1];
 
     // poolData returns the full liquidity pool, valueScalar acts to calculate the portion within the sett
-    const settSnapshot = await getCachedVault(vaultDefinition);
+    const settSnapshot = await getCachedVault(chain, vaultDefinition);
     const valueScalar = totalSupply > 0 ? settSnapshot.balance / totalSupply : 0;
     const t0TokenBalance = reserve0 * valueScalar;
     const t1TokenBalance = reserve1 * valueScalar;
     const tokenBalances = await Promise.all([toBalance(t0Token, t0TokenBalance), toBalance(t1Token, t1TokenBalance)]);
 
-    return Object.assign(new CachedVaultTokenBalance(), {
+    return Object.assign(new VaultTokenBalance(), {
       vault: vaultToken,
       tokenBalances,
     });
   } catch (err) {
-    throw new NotFound(`${protocol} pool pair ${depositToken} does not exist`);
+    throw new NotFound(`${vaultDefinition.protocol} pool pair ${depositToken} does not exist`);
   }
 }
 

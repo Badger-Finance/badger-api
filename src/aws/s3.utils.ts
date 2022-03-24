@@ -31,8 +31,7 @@ export const getObject = async (bucket: string, key: string): Promise<AWS.S3.Bod
     }
     s3Cache.set(cacheKey, object.Body);
     return object.Body;
-  } catch (err) {
-    console.log(err);
+  } catch {
     throw new BadRequest(`Unable to satisfy object request: ${s3Path}`);
   }
 };

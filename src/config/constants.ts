@@ -14,6 +14,7 @@ export const APY_SNAPSHOTS_DATA = process.env.APY_SNAPSHOTS_DATA || 'MISSING REQ
 export const SETT_DATA = process.env.SETT_DATA || 'MISSING REQUIRED ENV VAR';
 export const VAULT_BALANCES_DATA = process.env.VAULT_BALANCES_DATA || 'MISSING REQUIRED ENV VAR';
 export const PRICE_DATA = process.env.PRICE_DATA || 'MISSING REQUIRED ENV VAR';
+export const TOKEN_INFORMATION_DATA = process.env.TOKEN_INFORMATION_DATA || 'MISSING REQUIRED ENV VAR';
 export const VAULT_SNAPSHOTS_DATA = process.env.VAULT_SNAPSHOTS_DATA || 'MISSING REQUIRED ENV VAR';
 export const REWARD_DATA = process.env.REWARD_DATA || 'MISSING REQUIRED ENV VAR';
 export const LEADERBOARD_DATA = process.env.LEADERBOARD_DATA || 'MISSING REQUIRED ENV VAR';
@@ -22,6 +23,7 @@ export const METRICS_SNAPSHOTS_DATA = process.env.METRICS_SNAPSHOTS_DATA || 'MIS
 export const LEADERBOARD_SUMMARY_DATA = process.env.LEADERBOARD_SUMMARY_DATA || 'MISSING REQUIRED ENV VAR';
 export const UNCLAIMED_SNAPSHOTS_DATA = process.env.UNCLAIMED_SNAPSHOTS_DATA || 'MISSING REQUIRED ENV VAR';
 export const USER_CLAIMED_METADATA = process.env.METADATA_DATA || 'MISSING REQUIRED ENV VAR';
+export const HARVEST_DATA = process.env.HARVEST_DATA || 'MISSING REQUIRED ENV VAR';
 
 // thegraph constants
 export const UNISWAP_URL = process.env.UNISWAP || 'MISSING REQUIRED ENV VAR';
@@ -43,6 +45,8 @@ export const PRODUCTION = STAGE === Stage.Production;
 // third party api constants
 export const COINGECKO_URL = 'https://api.coingecko.com/api/v3/simple';
 export const BLOCKNATIVE_API_KEY = process.env.BLOCKNATIVE_API_KEY || 'MISSING REQUIRED ENV VAR';
+
+export const DEFAULT_PAGE_SIZE = 20;
 
 export const swaggerConfig: SwaggerSettings = {
   path: '/docs',
