@@ -1,11 +1,10 @@
-import { VaultDTO } from '@badger-dao/sdk';
+import { TokenValue, VaultDTO } from '@badger-dao/sdk';
 import { PlatformTest } from '@tsed/common';
 import { BadRequest } from '@tsed/exceptions';
 import SuperTest from 'supertest';
 import { createValueSource } from '../protocols/interfaces/value-source.interface';
 import { Server } from '../Server';
 import * as vaultsUtils from './vaults.utils';
-import { TokenBalance } from '../tokens/interfaces/token-balance.interface';
 import * as tokensUtils from '../tokens/tokens.utils';
 import { mockBalance } from '../tokens/tokens.utils';
 import { VaultDefinition } from './interfaces/vault-definition.interface';
@@ -61,18 +60,16 @@ describe('VaultsController', () => {
         ];
       });
     jest
-      .spyOn(tokensUtils, 'getVaultTokens')
-      .mockImplementation(
-        async (chain, sett: VaultDefinition, _balance: number, _currency?: string): Promise<TokenBalance[]> => {
-          const token = fullTokenMockMap[sett.depositToken] || fullTokenMockMap[TOKENS.BADGER];
-          if (token.lpToken) {
-            const bal0 = parseInt(token.address.slice(0, 4), 16);
-            const bal1 = parseInt(token.address.slice(0, 6), 16);
-            return [mockBalance(token, bal0), mockBalance(token, bal1)];
-          }
-          return [mockBalance(token, parseInt(token.address.slice(0, 4), 16))];
-        },
-      );
+      .spyOn(tokensUtils, 'getCachedTokenBalances')
+      .mockImplementation(async (vault: VaultDefinition, _currency?: string): Promise<TokenValue[]> => {
+        const token = fullTokenMockMap[vault.depositToken] || fullTokenMockMap[TOKENS.BADGER];
+        if (token.lpToken) {
+          const bal0 = parseInt(token.address.slice(0, 4), 16);
+          const bal1 = parseInt(token.address.slice(0, 6), 16);
+          return [mockBalance(token, bal0), mockBalance(token, bal1)];
+        }
+        return [mockBalance(token, parseInt(token.address.slice(0, 4), 16))];
+      });
   };
 
   describe('GET /v2/vaults', () => {

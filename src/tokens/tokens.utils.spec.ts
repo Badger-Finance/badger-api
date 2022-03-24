@@ -1,4 +1,4 @@
-import { Currency, TokensService } from '@badger-dao/sdk';
+import BadgerSDK, { Currency, TokensService } from '@badger-dao/sdk';
 import { Ethereum } from '../chains/config/eth.config';
 import { TOKENS } from '../config/tokens.config';
 import * as priceUtils from '../prices/prices.utils';
@@ -6,6 +6,7 @@ import * as vaultUtils from '../vaults/vaults.utils';
 import { getVaultDefinition } from '../vaults/vaults.utils';
 import {
   mockBatchPut,
+  mockPricing,
   randomVault,
   setFullTokenDataMock,
   setupBatchGet,
@@ -13,7 +14,6 @@ import {
   TEST_ADDR,
   TEST_CHAIN,
 } from '../test/tests.utils';
-import { TokenPriceSnapshot } from '../prices/interface/token-price-snapshot.interface';
 import {
   getCachedTokenBalances,
   getFullToken,
@@ -35,15 +35,8 @@ describe('token.utils', () => {
       defaultVault.balance = 10;
       return defaultVault;
     });
-    jest.spyOn(priceUtils, 'getPrice').mockImplementation(async (contract): Promise<TokenPriceSnapshot> => {
-      const token = fullTokenMockMap[contract];
-      const price = parseInt(token.address.slice(0, 4), 16);
-      return {
-        address: token.address,
-        price,
-        updatedAt: Date.now(),
-      };
-    });
+    mockPricing();
+    jest.spyOn(BadgerSDK.prototype, 'ready').mockImplementation();
   });
 
   describe('toBalance', () => {
@@ -99,7 +92,7 @@ describe('token.utils', () => {
     describe('no requested currency', () => {
       it('converts to a usd based token balance', () => {
         const badger = fullTokenMockMap[TOKENS.BADGER];
-        const mockPrice = parseInt(badger.address.slice(0, 4), 16);
+        const mockPrice = parseInt(badger.address.slice(0, 5), 16);
         const actual = mockBalance(badger, 1);
         const expected = {
           name: badger.name,
@@ -116,7 +109,10 @@ describe('token.utils', () => {
     describe('with a requested currency', () => {
       it.each([Currency.USD, Currency.ETH])('converts to an %s based token balance', (currency) => {
         const badger = fullTokenMockMap[TOKENS.BADGER];
-        const mockPrice = parseInt(badger.address.slice(0, 4), 16);
+        let mockPrice = parseInt(badger.address.slice(0, 5), 16);
+        if (currency !== Currency.USD) {
+          mockPrice /= 2;
+        }
         const actual = mockBalance(badger, 1, currency);
         const expected = {
           name: badger.name,
@@ -133,10 +129,10 @@ describe('token.utils', () => {
 
   describe('getCachedTokenBalances', () => {
     describe('no saved balances', () => {
-      it('returns undefined', async () => {
+      it('returns an empty array', async () => {
         setupMapper([]);
         const result = await getCachedTokenBalances(randomVault());
-        expect(result).toBeFalsy();
+        expect(result).toMatchObject([]);
       });
     });
 
@@ -145,22 +141,12 @@ describe('token.utils', () => {
         it('converts to a usd based token balance', async () => {
           const wbtc = fullTokenMockMap[TOKENS.WBTC];
           const weth = fullTokenMockMap[TOKENS.WETH];
-          jest.spyOn(priceUtils, 'getPrice').mockImplementation(async (contract): Promise<TokenPriceSnapshot> => {
-            const token = fullTokenMockMap[contract];
-            const price = parseInt(token.address.slice(0, 4), 16);
-            return {
-              address: token.address,
-              price,
-              updatedAt: Date.now(),
-            };
-          });
           const vault = randomVault();
-          const tokenBalances = await Promise.all([toBalance(wbtc, 1), toBalance(weth, 20)]);
+          const tokenBalances = [mockBalance(wbtc, 1), mockBalance(weth, 20)];
           const cached = { vault: vault.vaultToken, tokenBalances };
           setupMapper([cached]);
-          const expected = await Promise.all([toBalance(wbtc, 1), toBalance(weth, 20)]);
           const actual = await getCachedTokenBalances(vault);
-          expect(actual).toMatchObject(expected);
+          expect(actual).toMatchObject(tokenBalances);
         });
       });
 
@@ -168,20 +154,11 @@ describe('token.utils', () => {
         it.each([Currency.ETH, Currency.USD])('converts to an %s based token balance', async (currency) => {
           const wbtc = fullTokenMockMap[TOKENS.WBTC];
           const weth = fullTokenMockMap[TOKENS.WETH];
-          jest.spyOn(priceUtils, 'getPrice').mockImplementation(async (contract): Promise<TokenPriceSnapshot> => {
-            const token = fullTokenMockMap[contract];
-            const price = parseInt(token.address.slice(0, 4), 16);
-            return {
-              address: token.address,
-              price,
-              updatedAt: Date.now(),
-            };
-          });
           const vault = randomVault();
-          const tokenBalances = await Promise.all([toBalance(wbtc, 1), toBalance(weth, 20)]);
+          const tokenBalances = [mockBalance(wbtc, 1), mockBalance(weth, 20)];
           const cached = { vault: vault.vaultToken, tokenBalances };
           setupMapper([cached]);
-          const expected = await Promise.all([toBalance(wbtc, 1, currency), toBalance(weth, 20, currency)]);
+          const expected = [mockBalance(wbtc, 1, currency), mockBalance(weth, 20, currency)];
           const actual = await getCachedTokenBalances(vault, currency);
           expect(actual).toMatchObject(expected);
         });

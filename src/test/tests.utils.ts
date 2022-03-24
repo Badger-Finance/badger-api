@@ -1,5 +1,5 @@
 import { DataMapper, QueryIterator, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
-import { Network, VaultSnapshot } from '@badger-dao/sdk';
+import { Currency, Network, VaultSnapshot } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 import createMockInstance from 'jest-create-mock-instance';
 import { CachedAccount } from '../accounts/interfaces/cached-account.interface';
@@ -16,6 +16,7 @@ import { CachedBoost } from '../leaderboards/interface/cached-boost.interface';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import * as accountsUtils from '../accounts/accounts.utils';
 import * as dynamodbUtils from '../aws/dynamodb.utils';
+import * as pricesUtils from '../prices/prices.utils';
 import { Fantom } from '../chains/config/fantom.config';
 import { Chain } from '../chains/config/chain.config';
 import { TokensService } from '@badger-dao/sdk/lib/tokens/tokens.service';
@@ -248,4 +249,18 @@ export function setFullTokenDataMock() {
   mockBatchPut(fullTokenObjList);
 
   jest.spyOn(TokensService.prototype, 'loadTokens').mockImplementation(async () => fullTokenMockMap);
+}
+
+export function mockPricing() {
+  jest.spyOn(pricesUtils, 'getPrice').mockImplementation(async (token: string) => ({
+    address: token,
+    price: parseInt(token.slice(0, 5), 16),
+    updatedAt: Date.now(),
+  }));
+  jest.spyOn(pricesUtils, 'convert').mockImplementation(async (price: number, currency?: Currency) => {
+    if (!currency || currency === Currency.USD) {
+      return price;
+    }
+    return price / 2;
+  });
 }

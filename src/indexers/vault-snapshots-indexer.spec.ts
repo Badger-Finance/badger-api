@@ -12,12 +12,14 @@ import BadgerSDK, {
   LoadVaultOptions,
   VaultsService,
   VaultSnapshot,
+  TokenValue,
 } from '@badger-dao/sdk';
-import * as tokenUtils from '../tokens/tokens.utils';
+import * as tokensUtils from '../tokens/tokens.utils';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import { TOKENS } from '../config/tokens.config';
+import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 
-describe('refreshSettSnapshots', () => {
+describe('refreshVaultSnapshots', () => {
   const supportedAddresses = loadChains()
     .flatMap((s) => s.vaults)
     .map((settDefinition) => settDefinition.vaultToken)
@@ -68,9 +70,20 @@ describe('refreshSettSnapshots', () => {
         price: 10,
       };
     });
-    jest.spyOn(tokenUtils, 'getFullToken').mockImplementation(async (_, tokenAddr) => {
+    jest.spyOn(tokensUtils, 'getFullToken').mockImplementation(async (_, tokenAddr) => {
       return fullTokenMockMap[tokenAddr] || fullTokenMockMap[TOKENS.BADGER];
     });
+    jest
+      .spyOn(tokensUtils, 'getCachedTokenBalances')
+      .mockImplementation(async (vault: VaultDefinition, _currency?: string): Promise<TokenValue[]> => {
+        const token = fullTokenMockMap[vault.depositToken] || fullTokenMockMap[TOKENS.BADGER];
+        if (token.lpToken) {
+          const bal0 = parseInt(token.address.slice(0, 4), 16);
+          const bal1 = parseInt(token.address.slice(0, 6), 16);
+          return [tokensUtils.mockBalance(token, bal0), tokensUtils.mockBalance(token, bal1)];
+        }
+        return [tokensUtils.mockBalance(token, parseInt(token.address.slice(0, 4), 16))];
+      });
 
     setupMapper([randomVault()]);
     await refreshVaultSnapshots();

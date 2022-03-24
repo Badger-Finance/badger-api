@@ -6,7 +6,7 @@ import { ONE_YEAR_SECONDS } from '../config/constants';
 import { convert } from '../prices/prices.utils';
 import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interface';
 import { SourceType } from '../rewards/enums/source-type.enum';
-import { getVaultTokens } from '../tokens/tokens.utils';
+import { getCachedTokenBalances } from '../tokens/tokens.utils';
 import { VaultDefinition } from './interfaces/vault-definition.interface';
 import { VaultPendingHarvestData } from './types/vault-pending-harvest-data';
 import { getCachedVault, getVaultCachedValueSources, getVaultPendingHarvest, VAULT_SOURCE } from './vaults.utils';
@@ -34,12 +34,13 @@ export class VaultsService {
   }
 
   static async loadVault(chain: Chain, vaultDefinition: VaultDefinition, currency?: Currency): Promise<VaultDTO> {
-    const [vault, sources, pendingHarvest] = await Promise.all([
+    const [vault, sources, pendingHarvest, tokens] = await Promise.all([
       getCachedVault(chain, vaultDefinition),
       getVaultCachedValueSources(vaultDefinition),
       getVaultPendingHarvest(vaultDefinition),
+      getCachedTokenBalances(vaultDefinition, currency),
     ]);
-    vault.tokens = await getVaultTokens(chain, vaultDefinition, vault.balance, currency);
+    vault.tokens = tokens;
     vault.value = await convert(vault.value, currency);
     const baseSources = sources
       .filter((source) => source.apr >= 0.001)
