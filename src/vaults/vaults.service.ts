@@ -34,13 +34,12 @@ export class VaultsService {
   }
 
   static async loadVault(chain: Chain, vaultDefinition: VaultDefinition, currency?: Currency): Promise<VaultDTO> {
-    const [vault, sources, pendingHarvest, tokens] = await Promise.all([
+    const [vault, sources, pendingHarvest] = await Promise.all([
       getCachedVault(chain, vaultDefinition),
       getVaultCachedValueSources(vaultDefinition),
       getVaultPendingHarvest(vaultDefinition),
-      getCachedTokenBalances(vaultDefinition, currency),
     ]);
-    vault.tokens = tokens;
+    vault.tokens = await getCachedTokenBalances(chain, vault, currency);
     vault.value = await convert(vault.value, currency);
     const baseSources = sources
       .filter((source) => source.apr >= 0.001)

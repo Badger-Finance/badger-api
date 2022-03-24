@@ -4,19 +4,19 @@ exports[`token.utils getVaultTokens returns all deposit token for a liquidity to
 Array [
   Object {
     "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
-    "balance": 1,
+    "balance": 0,
     "decimals": 8,
     "name": "Wrapped Bitcoin",
     "symbol": "WBTC",
-    "value": 550,
+    "value": 0,
   },
   Object {
     "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
-    "balance": 20,
+    "balance": 0,
     "decimals": 18,
     "name": "Wrapped Ethereum",
     "symbol": "WETH",
-    "value": 61480,
+    "value": 0,
   },
 ]
 `;

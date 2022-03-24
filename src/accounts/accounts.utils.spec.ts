@@ -1,12 +1,11 @@
 import { DataMapper } from '@aws/dynamodb-data-mapper';
-import { TestStrategy } from '../chains/strategies/test.strategy';
 import { TOKENS } from '../config/tokens.config';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
-import * as priceUtils from '../prices/prices.utils';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { getVaultDefinition } from '../vaults/vaults.utils';
 import {
   defaultAccount,
+  mockPricing,
   randomSnapshot,
   setFullTokenDataMock,
   setupMapper,
@@ -26,6 +25,8 @@ import { ethers } from 'ethers';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 import { BadgerGraph, Currency, gqlGenT } from '@badger-dao/sdk';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
+import * as vaultsUtils from '../vaults/vaults.utils';
+import { mockBalance } from '../tokens/tokens.utils';
 
 describe('accounts.utils', () => {
   const testSettBalance = (vaultDefinition: VaultDefinition): gqlGenT.UserSettBalance => {
@@ -74,6 +75,10 @@ describe('accounts.utils', () => {
       },
     };
   };
+
+  beforeEach(() => {
+    setFullTokenDataMock();
+  });
 
   describe('getAccountMap', () => {
     describe('no saved account', () => {
@@ -151,49 +156,44 @@ describe('accounts.utils', () => {
     });
   });
 
-  describe('toSettBalance', () => {
+  describe('toVaultBalance', () => {
     const chain = TEST_CHAIN;
-    const strategy = new TestStrategy();
 
-    const testToSettBalance = (settAddress: string) => {
+    const testToVaultBalance = (vaultAddress: string) => {
       it.each([
         [undefined, Currency.USD],
         [Currency.USD, Currency.USD],
         [Currency.ETH, Currency.ETH],
       ])('returns sett balance request in %s currency with %s denominated value', async (currency, toCurrency) => {
-        const sett = getVaultDefinition(chain, settAddress);
-        const snapshot = randomSnapshot(sett);
-        setupMapper([snapshot]);
-        const depositToken = fullTokenMockMap[sett.depositToken];
-        const depositTokenPrice = await strategy.getPrice(depositToken.address);
-        jest.spyOn(priceUtils, 'getPrice').mockImplementation(async (contract) => ({
-          ...depositTokenPrice,
-          updatedAt: Date.now(),
-        }));
-        jest.spyOn(priceUtils, 'convert').mockImplementation(async (price: number, currency?: Currency) => {
-          if (!currency || currency === Currency.USD) {
-            return price;
-          }
-          return price / 1670;
-        });
-        const mockBalance = testSettBalance(sett);
+        const vault = getVaultDefinition(chain, vaultAddress);
+        const snapshot = randomSnapshot(vault);
+        const cachedVault = await vaultsUtils.defaultVault(chain, vault);
+        cachedVault.balance = snapshot.balance;
+        cachedVault.pricePerFullShare = snapshot.balance / snapshot.totalSupply;
+        jest.spyOn(vaultsUtils, 'getCachedVault').mockImplementation(async (_c, _v) => cachedVault);
+        const depositToken = fullTokenMockMap[cachedVault.underlyingToken];
+        mockPricing();
         setFullTokenDataMock();
-        const actual = await toVaultBalance(chain, mockBalance, currency as Currency);
+        const wbtc = fullTokenMockMap[TOKENS.WBTC];
+        const weth = fullTokenMockMap[TOKENS.WETH];
+        const tokenBalances = [mockBalance(wbtc, 1), mockBalance(weth, 20)];
+        const cached = { vault: vault.vaultToken, tokenBalances };
+        setupMapper([cached]);
+        const mockedBalance = testSettBalance(vault);
+        const actual = await toVaultBalance(chain, mockedBalance, currency);
         expect(actual).toBeTruthy();
         expect(actual.name).toEqual(depositToken.name);
         expect(actual.symbol).toEqual(depositToken.symbol);
         expect(actual.pricePerFullShare).toEqual(snapshot.balance / snapshot.totalSupply);
-        const convertedPrice = await priceUtils.convert(depositTokenPrice.price, toCurrency);
-        expect(actual.value).toEqual(convertedPrice * actual.balance);
       });
     };
 
     describe('non-digg token conversion', () => {
-      testToSettBalance(TOKENS.BBADGER);
+      testToVaultBalance(TOKENS.BBADGER);
     });
 
     describe('digg token conversion', () => {
-      testToSettBalance(TOKENS.BDIGG);
+      testToVaultBalance(TOKENS.BDIGG);
     });
   });
 

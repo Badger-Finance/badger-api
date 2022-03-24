@@ -90,7 +90,7 @@ async function getLiquiditySources(chain: Chain, vaultDefinition: VaultDefinitio
     getCachedVault(chain, bveCVXVault),
     getVaultCachedValueSources(bveCVXVault),
   ]);
-  const vaultTokens = await getVaultTokens(chain, vaultDefinition, bveCVXLP.balance);
+  const vaultTokens = await getVaultTokens(chain, bveCVXLP, bveCVXLP.balance);
 
   const bveCVXValue = vaultTokens
     .filter((t) => t.address === TOKENS.BVECVX)

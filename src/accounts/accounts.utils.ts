@@ -134,7 +134,8 @@ export async function toVaultBalance(
 ): Promise<CachedSettBalance> {
   const vaultDefinition = getVaultDefinition(chain, vaultBalance.sett.id);
   const { netShareDeposit, grossDeposit, grossWithdraw } = vaultBalance;
-  const { pricePerFullShare } = await getCachedVault(chain, vaultDefinition);
+  const vault = await getCachedVault(chain, vaultDefinition);
+  const { pricePerFullShare } = vault;
 
   const depositToken = await getFullToken(chain, vaultDefinition.depositToken);
   const settToken = await getFullToken(chain, vaultDefinition.vaultToken);
@@ -150,8 +151,8 @@ export async function toVaultBalance(
   const earnedBalance = balanceTokens - depositedTokens + withdrawnTokens;
   const [depositTokenPrice, earnedTokens, tokens] = await Promise.all([
     getPrice(vaultDefinition.depositToken),
-    getVaultTokens(chain, vaultDefinition, earnedBalance, currency),
-    getVaultTokens(chain, vaultDefinition, balanceTokens, currency),
+    getVaultTokens(chain, vault, earnedBalance, currency),
+    getVaultTokens(chain, vault, balanceTokens, currency),
   ]);
 
   const depositTokenConvertedPrice = await convert(depositTokenPrice.price, currency);

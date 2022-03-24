@@ -13,11 +13,12 @@ import BadgerSDK, {
   VaultsService,
   VaultSnapshot,
   TokenValue,
+  VaultDTO,
 } from '@badger-dao/sdk';
 import * as tokensUtils from '../tokens/tokens.utils';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import { TOKENS } from '../config/tokens.config';
-import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
+import { Chain } from '../chains/config/chain.config';
 
 describe('refreshVaultSnapshots', () => {
   const supportedAddresses = loadChains()
@@ -75,8 +76,8 @@ describe('refreshVaultSnapshots', () => {
     });
     jest
       .spyOn(tokensUtils, 'getCachedTokenBalances')
-      .mockImplementation(async (vault: VaultDefinition, _currency?: string): Promise<TokenValue[]> => {
-        const token = fullTokenMockMap[vault.depositToken] || fullTokenMockMap[TOKENS.BADGER];
+      .mockImplementation(async (_chain: Chain, vault: VaultDTO, _currency?: string): Promise<TokenValue[]> => {
+        const token = fullTokenMockMap[vault.underlyingToken] || fullTokenMockMap[TOKENS.BADGER];
         if (token.lpToken) {
           const bal0 = parseInt(token.address.slice(0, 4), 16);
           const bal1 = parseInt(token.address.slice(0, 6), 16);

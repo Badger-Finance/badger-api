@@ -15,6 +15,7 @@ import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import * as tokenUtils from '../tokens/tokens.utils';
 import { TOKENS } from '../config/tokens.config';
 import { VaultPendingHarvestData } from './types/vault-pending-harvest-data';
+import { Chain } from '../chains/config/chain.config';
 
 describe('VaultsController', () => {
   let request: SuperTest.SuperTest<SuperTest.Test>;
@@ -61,8 +62,8 @@ describe('VaultsController', () => {
       });
     jest
       .spyOn(tokensUtils, 'getCachedTokenBalances')
-      .mockImplementation(async (vault: VaultDefinition, _currency?: string): Promise<TokenValue[]> => {
-        const token = fullTokenMockMap[vault.depositToken] || fullTokenMockMap[TOKENS.BADGER];
+      .mockImplementation(async (_chain: Chain, vault: VaultDTO, _currency?: string): Promise<TokenValue[]> => {
+        const token = fullTokenMockMap[vault.underlyingToken] || fullTokenMockMap[TOKENS.BADGER];
         if (token.lpToken) {
           const bal0 = parseInt(token.address.slice(0, 4), 16);
           const bal1 = parseInt(token.address.slice(0, 6), 16);
