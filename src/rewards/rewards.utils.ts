@@ -104,6 +104,8 @@ export async function getRewardEmission(chain: Chain, vaultDefinition: VaultDefi
 
   if (!schedulesCache[vaultDefinition.vaultToken]) {
     const sdk = await chain.getSdk();
+    // TODO: resolve this in the sdk
+    await sdk.rewards.ready();
     schedulesCache[vaultDefinition.vaultToken] = await sdk.rewards.loadActiveSchedules(vaultToken);
   }
   const activeSchedules = schedulesCache[vaultDefinition.vaultToken];

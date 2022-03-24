@@ -3,7 +3,7 @@ import { BadRequest, NotFound, UnprocessableEntity } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
-import { DEBUG, ONE_DAY_MS, ONE_YEAR_MS, ONE_YEAR_SECONDS } from '../config/constants';
+import { ONE_DAY_MS, ONE_YEAR_MS, ONE_YEAR_SECONDS } from '../config/constants';
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
 import { getFullToken, tokenEmission } from '../tokens/tokens.utils';
 import { VaultDefinition } from './interfaces/vault-definition.interface';
@@ -231,14 +231,13 @@ export async function getVaultTokenPrice(chain: Chain, address: string): Promise
     getPrice(vaultToken.address),
     getCachedVault(chain, vaultDefintion),
   ]);
-
-  const result = {
+  return {
     address: token.address,
     price: underlyingTokenPrice.price * vaultTokenSnapshot.pricePerFullShare,
   };
-
-  return result;
 }
+
+const vaultLookupMethod: Record<string, string> = {};
 
 /**
  * Load a Badger vault measured performance.
@@ -258,9 +257,6 @@ export async function getVaultPerformance(
   try {
     vaultSources = await loadVaultEventPerformances(chain, vaultDefinition);
   } catch (err) {
-    if (DEBUG) {
-      console.log(`${vaultDefinition.name} vault APR estimation fallback to badger subgraph`);
-    }
     vaultSources = await loadVaultGraphPerformances(chain, vaultDefinition);
   }
   const vaultApr = vaultSources.reduce((total, s) => total + s.apr, 0);
@@ -268,6 +264,7 @@ export async function getVaultPerformance(
   if (vaultApr === 0) {
     vaultSources = await getVaultUnderlyingPerformance(chain, vaultDefinition);
   }
+  console.log(`${vaultDefinition.name}: ${vaultLookupMethod[vaultDefinition.vaultToken]}`);
   return [...vaultSources, ...rewardEmissions, ...protocol];
 }
 
@@ -275,6 +272,7 @@ export async function getVaultUnderlyingPerformance(
   chain: Chain,
   vaultDefinition: VaultDefinition,
 ): Promise<CachedValueSource[]> {
+  vaultLookupMethod[vaultDefinition.vaultToken] = 'MeasuredPPFS';
   const start = new Date();
   start.setDate(start.getDate() - 30);
   const snapshots = await getVaultSnapshotsInRange(chain, vaultDefinition, start, new Date());
@@ -310,6 +308,8 @@ export async function loadVaultEventPerformances(
   const sdk = await chain.getSdk();
   const cutoff = (Date.now() - ONE_DAY_MS * 21) / 1000;
   const { data } = await sdk.vaults.listHarvests({ address: vaultDefinition.vaultToken, timestamp_gte: cutoff });
+
+  vaultLookupMethod[vaultDefinition.vaultToken] = 'EventAPR';
 
   return estimateVaultPerformance(chain, vaultDefinition, data);
 }
@@ -388,6 +388,7 @@ export async function loadVaultGraphPerformances(
   let { settHarvests } = vaultHarvests;
   let { badgerTreeDistributions } = treeDistributions;
 
+  vaultLookupMethod[vaultDefinition.vaultToken] = 'GraphAPR';
   let data = constructGraphVaultData(vaultDefinition, settHarvests, badgerTreeDistributions);
   // if there are no recent viable options, attempt to use the full vault history
   if (data.length <= 1) {
@@ -405,13 +406,7 @@ export async function loadVaultGraphPerformances(
     ]);
     settHarvests = vaultHarvests.settHarvests;
     badgerTreeDistributions = treeDistributions.badgerTreeDistributions;
-    if (DEBUG) {
-      console.log(
-        `OVERRIDE ${vaultDefinition.name} with full historic harvest data (${
-          settHarvests.length + badgerTreeDistributions.length
-        })`,
-      );
-    }
+    vaultLookupMethod[vaultDefinition.vaultToken] = 'FullGraphAPR';
   }
 
   data = constructGraphVaultData(vaultDefinition, settHarvests, badgerTreeDistributions);
@@ -481,7 +476,7 @@ async function estimateVaultPerformance(
 
   const allHarvests = recentHarvests.flatMap((h) => h.harvests);
   // use the full harvests to construct all intervals for durations, nth element is ignored for distributions
-  for (let i = 0; i < recentHarvests.length - 1; i++) {
+  for (let i = 0; i < allHarvests.length - 1; i++) {
     const end = allHarvests[i];
     const start = allHarvests[i + 1];
     const duration = end.timestamp - start.timestamp;
@@ -535,7 +530,6 @@ async function estimateVaultPerformance(
       continue;
     }
     const tokenEmitted = await getFullToken(chain, token);
-
     const tokensEmitted = formatBalance(amount, tokenEmitted.decimals);
     const valueEmitted = tokensEmitted * price;
     const emissionApr = (valueEmitted / measuredValue) * durationScalar;

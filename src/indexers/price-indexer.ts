@@ -8,7 +8,7 @@ import { lookUpAddrByTokenName } from '../tokens/tokens.utils';
 export async function indexPrices() {
   const chains = loadChains();
 
-  for (const chain of [chains[0]]) {
+  for (const chain of chains) {
     try {
       const { tokens, strategy } = chain;
       const chainTokens = Object.entries(tokens).map((e) => ({
@@ -50,8 +50,6 @@ export async function indexPrices() {
         ...evaluateCoingeckoResponse(chain, lookupNamePrices),
         ...Object.fromEntries(onChainPrices.map((p) => [p.address, p])),
       };
-
-      console.log(priceUpdates);
 
       // map back unsupported (cross priced) tokens - no cg support or good on chain LP
       for (const t of chainTokens) {

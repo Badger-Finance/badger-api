@@ -85,30 +85,29 @@ export async function getFullToken(chain: Chain, tokenAddr: Token['address']): P
 
 export async function getFullTokens(chain: Chain, tokensAddr: Token['address'][]): Promise<TokenFullMap> {
   const cachedTokens = await getCachedTokesInfo(tokensAddr);
-
-  const cachedTokensAddr = cachedTokens.map((token) => token.address);
-
-  const tokensCacheMissMatch = tokensAddr.filter((addr) => !cachedTokensAddr.includes(addr));
+  const requestedTokenAddresses = new Set(tokensAddr);
+  const validToken = (t: Token) => t.name.length > 0 && t.symbol.length > 0;
+  cachedTokens
+    .filter((t) => requestedTokenAddresses.has(t.address) || !validToken(t))
+    .map((t) => t.address)
+    .forEach((t) => requestedTokenAddresses.delete(t));
+  const tokensCacheMissMatch = [...requestedTokenAddresses];
 
   if (tokensCacheMissMatch.length === 0) {
     return mergeTokensFullData(chain.tokens, cachedTokens);
   }
 
   const sdk = await chain.getSdk();
-  let tokensInfo: Token[] = [];
-  try {
-    const sdkTokensInfo = await sdk.tokens.loadTokens(tokensCacheMissMatch);
-    tokensInfo = Object.values(sdkTokensInfo);
-  } catch (e) {
-    console.warn(`Faild to load tokens from chain node ${e}`);
-  }
+  await sdk.ready();
+
+  const sdkTokensInfo = await sdk.tokens.loadTokens(tokensCacheMissMatch);
+  const tokensInfo = Object.values(sdkTokensInfo).filter((t) => validToken(t));
 
   if (tokensInfo.length > 0) {
     await cacheTokensInfo(tokensInfo);
   }
 
   const tokensList = tokensInfo.concat(cachedTokens);
-
   return mergeTokensFullData(chain.tokens, tokensList);
 }
 

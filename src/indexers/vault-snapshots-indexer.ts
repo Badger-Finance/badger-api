@@ -22,6 +22,6 @@ async function captureSnapshot(chain: Chain, vault: VaultDefinition) {
       await mapper.put(Object.assign(new CurrentVaultSnapshot(), snapshot));
     }
   } catch (err) {
-    console.error({ err, snapshot });
+    console.error({ err, vault: vault.name, snapshot });
   }
 }

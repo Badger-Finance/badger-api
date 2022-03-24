@@ -56,7 +56,7 @@ export async function refreshChainApySnapshots(chain: Chain) {
             }
           }
         } catch (err) {
-          console.log({ err, oldSources, valueSources });
+          console.log({ err, oldSources, valueSources, vault });
         }
       }),
     );
