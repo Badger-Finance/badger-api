@@ -31,6 +31,14 @@ export const fantomTokensConfig: TokenConfig = {
     lookupName: '0xdao',
     type: PricingType.LookupName,
   },
+  [TOKENS.FTM_OXD_2]: {
+    lookupName: '0xdao-v2',
+    type: PricingType.LookupName,
+  },
+  [TOKENS.FTM_OXSOLID]: {
+    lookupName: 'oxsolid',
+    type: PricingType.LookupName,
+  },
   [TOKENS.FTM_SOLID]: {
     lookupName: '0xe4bc39fdD4618a76f6472079C329bdfa820afA75',
     type: PricingType.OnChainUniV2LP,
@@ -245,6 +253,20 @@ export const fantomTokensConfig: TokenConfig = {
     type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.SMM_WFTM_TOMB,
+      network: Network.Fantom,
+    },
+  },
+  [TOKENS.BOXD]: {
+    type: PricingType.Vault,
+    vaultToken: {
+      address: TOKENS.FTM_OXD_2,
+      network: Network.Fantom,
+    },
+  },
+  [TOKENS.BOXSOLID]: {
+    type: PricingType.Vault,
+    vaultToken: {
+      address: TOKENS.FTM_OXSOLID,
       network: Network.Fantom,
     },
   },

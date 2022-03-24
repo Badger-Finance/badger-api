@@ -155,4 +155,20 @@ export const fantomSetts: VaultDefinition[] = [
     state: VaultState.Guarded,
     protocol: Protocol.Solidex,
   },
+  {
+    name: 'bOXD',
+    depositToken: TOKENS.FTM_OXD_2,
+    vaultToken: TOKENS.BOXD,
+    state: VaultState.Guarded,
+    protocol: Protocol.OxDAO,
+    stage: Stage.Staging,
+  },
+  {
+    name: 'boxSOLID',
+    depositToken: TOKENS.FTM_OXSOLID,
+    vaultToken: TOKENS.BOXSOLID,
+    state: VaultState.Guarded,
+    protocol: Protocol.OxDAO,
+    stage: Stage.Staging,
+  },
 ];

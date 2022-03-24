@@ -58,8 +58,8 @@ export class VaultsService {
     vault.apr = vault.sources.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
     vault.apy = vault.sourcesApy.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
     vault.protocol = vaultDefinition.protocol ?? Protocol.Badger;
-    vault.yieldProjection = this.getVaultYieldProjection(vault, pendingHarvest);
     vault.lastHarvest = pendingHarvest.lastHarvestedAt;
+    vault.yieldProjection = this.getVaultYieldProjection(vault, pendingHarvest);
 
     if (vault.boost.enabled) {
       const hasBoostedApr = vault.sources.some((source) => source.boostable);
@@ -88,7 +88,7 @@ export class VaultsService {
     const yieldValue = pendingHarvest.yieldTokens.reduce((total, token) => (total += token.value), 0);
     return {
       harvestApr: this.calculateProjectedYield(value, harvestValue, lastHarvest),
-      harvestApy: this.calculateProjectedYield(value, harvestValue, lastHarvest),
+      harvestApy: this.calculateProjectedYield(value, harvestValue, lastHarvest, true),
       harvestTokens: pendingHarvest.harvestTokens,
       harvestValue,
       yieldApr: this.calculateProjectedYield(value, yieldValue, lastHarvest),
@@ -97,11 +97,21 @@ export class VaultsService {
     };
   }
 
-  private static calculateProjectedYield(value: number, pendingValue: number, lastHarvested: number): number {
+  private static calculateProjectedYield(
+    value: number,
+    pendingValue: number,
+    lastHarvested: number,
+    apy = false,
+  ): number {
     if (lastHarvested === 0) {
       return 0;
     }
     const duration = Date.now() / 1000 - lastHarvested;
-    return (pendingValue / value) * (ONE_YEAR_SECONDS / duration) * 100;
+    const apr = (pendingValue / value) * (ONE_YEAR_SECONDS / duration);
+    if (!apy) {
+      return apr * 100;
+    }
+    const periods = ONE_YEAR_SECONDS / duration;
+    return ((1 + apr / periods) ** periods - 1) * 100;
   }
 }
