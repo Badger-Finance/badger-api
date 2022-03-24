@@ -24,6 +24,7 @@ export async function refreshVaultHarvests() {
               pendingHarvest.tokenRewards.map(async (t) => toBalance(await getFullToken(c, t.address), t.balance)),
             ),
           ]);
+
           const harvestData: VaultPendingHarvestData = {
             vault: vault.vaultToken,
             yieldTokens,
@@ -32,7 +33,8 @@ export async function refreshVaultHarvests() {
           };
           await mapper.put(Object.assign(new VaultPendingHarvestData(), harvestData));
         } catch (err) {
-          console.log(err);
+          // TODO: add verification if errors are valid (i.e. from a vaults 1.5 target)
+          console.log(`Failed Index Harvests: ${vault.name} (${c.network})`);
         }
       }
     }),
