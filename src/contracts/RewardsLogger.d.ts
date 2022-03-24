@@ -17,7 +17,7 @@ import {
 import { BytesLike } from '@ethersproject/bytes';
 import { Listener, Provider } from '@ethersproject/providers';
 import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
-import { TypedEventFilter, TypedEvent, TypedListener } from './commons';
+import type { TypedEventFilter, TypedEvent, TypedListener } from './common';
 
 interface RewardsLoggerInterface extends ethers.utils.Interface {
   functions: {
@@ -87,6 +87,41 @@ interface RewardsLoggerInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: 'RoleRevoked'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'UnlockScheduleSet'): EventFragment;
 }
+
+export type DiggPegRewardsEvent = TypedEvent<
+  [string, BigNumber, BigNumber, BigNumber, BigNumber] & {
+    beneficiary: string;
+    response: BigNumber;
+    rate: BigNumber;
+    timestamp: BigNumber;
+    blockNumber: BigNumber;
+  }
+>;
+
+export type RoleAdminChangedEvent = TypedEvent<
+  [string, string, string] & {
+    role: string;
+    previousAdminRole: string;
+    newAdminRole: string;
+  }
+>;
+
+export type RoleGrantedEvent = TypedEvent<[string, string, string] & { role: string; account: string; sender: string }>;
+
+export type RoleRevokedEvent = TypedEvent<[string, string, string] & { role: string; account: string; sender: string }>;
+
+export type UnlockScheduleSetEvent = TypedEvent<
+  [string, string, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
+    beneficiary: string;
+    token: string;
+    totalAmount: BigNumber;
+    start: BigNumber;
+    end: BigNumber;
+    duration: BigNumber;
+    timestamp: BigNumber;
+    blockNumber: BigNumber;
+  }
+>;
 
 export class RewardsLogger extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -415,6 +450,23 @@ export class RewardsLogger extends BaseContract {
   };
 
   filters: {
+    'DiggPegRewards(address,uint256,uint256,uint256,uint256)'(
+      beneficiary?: string | null,
+      response?: null,
+      rate?: null,
+      timestamp?: BigNumberish | null,
+      blockNumber?: BigNumberish | null,
+    ): TypedEventFilter<
+      [string, BigNumber, BigNumber, BigNumber, BigNumber],
+      {
+        beneficiary: string;
+        response: BigNumber;
+        rate: BigNumber;
+        timestamp: BigNumber;
+        blockNumber: BigNumber;
+      }
+    >;
+
     DiggPegRewards(
       beneficiary?: string | null,
       response?: null,
@@ -432,13 +484,31 @@ export class RewardsLogger extends BaseContract {
       }
     >;
 
+    'RoleAdminChanged(bytes32,bytes32,bytes32)'(
+      role?: BytesLike | null,
+      previousAdminRole?: BytesLike | null,
+      newAdminRole?: BytesLike | null,
+    ): TypedEventFilter<[string, string, string], { role: string; previousAdminRole: string; newAdminRole: string }>;
+
     RoleAdminChanged(
       role?: BytesLike | null,
       previousAdminRole?: BytesLike | null,
       newAdminRole?: BytesLike | null,
     ): TypedEventFilter<[string, string, string], { role: string; previousAdminRole: string; newAdminRole: string }>;
 
+    'RoleGranted(bytes32,address,address)'(
+      role?: BytesLike | null,
+      account?: string | null,
+      sender?: string | null,
+    ): TypedEventFilter<[string, string, string], { role: string; account: string; sender: string }>;
+
     RoleGranted(
+      role?: BytesLike | null,
+      account?: string | null,
+      sender?: string | null,
+    ): TypedEventFilter<[string, string, string], { role: string; account: string; sender: string }>;
+
+    'RoleRevoked(bytes32,address,address)'(
       role?: BytesLike | null,
       account?: string | null,
       sender?: string | null,
@@ -449,6 +519,29 @@ export class RewardsLogger extends BaseContract {
       account?: string | null,
       sender?: string | null,
     ): TypedEventFilter<[string, string, string], { role: string; account: string; sender: string }>;
+
+    'UnlockScheduleSet(address,address,uint256,uint256,uint256,uint256,uint256,uint256)'(
+      beneficiary?: string | null,
+      token?: null,
+      totalAmount?: null,
+      start?: null,
+      end?: null,
+      duration?: null,
+      timestamp?: BigNumberish | null,
+      blockNumber?: BigNumberish | null,
+    ): TypedEventFilter<
+      [string, string, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber],
+      {
+        beneficiary: string;
+        token: string;
+        totalAmount: BigNumber;
+        start: BigNumber;
+        end: BigNumber;
+        duration: BigNumber;
+        timestamp: BigNumber;
+        blockNumber: BigNumber;
+      }
+    >;
 
     UnlockScheduleSet(
       beneficiary?: string | null,

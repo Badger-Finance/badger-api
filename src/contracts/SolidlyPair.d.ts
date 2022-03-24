@@ -17,7 +17,7 @@ import {
 import { BytesLike } from '@ethersproject/bytes';
 import { Listener, Provider } from '@ethersproject/providers';
 import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
-import { TypedEventFilter, TypedEvent, TypedListener } from './commons';
+import type { TypedEventFilter, TypedEvent, TypedListener } from './common';
 
 interface SolidlyPairInterface extends ethers.utils.Interface {
   functions: {
@@ -180,6 +180,63 @@ interface SolidlyPairInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: 'Sync'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'Transfer'): EventFragment;
 }
+
+export type ApprovalEvent = TypedEvent<
+  [string, string, BigNumber] & {
+    owner: string;
+    spender: string;
+    amount: BigNumber;
+  }
+>;
+
+export type BurnEvent = TypedEvent<
+  [string, BigNumber, BigNumber, string] & {
+    sender: string;
+    amount0: BigNumber;
+    amount1: BigNumber;
+    to: string;
+  }
+>;
+
+export type ClaimEvent = TypedEvent<
+  [string, string, BigNumber, BigNumber] & {
+    sender: string;
+    recipient: string;
+    amount0: BigNumber;
+    amount1: BigNumber;
+  }
+>;
+
+export type FeesEvent = TypedEvent<
+  [string, BigNumber, BigNumber] & {
+    sender: string;
+    amount0: BigNumber;
+    amount1: BigNumber;
+  }
+>;
+
+export type MintEvent = TypedEvent<
+  [string, BigNumber, BigNumber] & {
+    sender: string;
+    amount0: BigNumber;
+    amount1: BigNumber;
+  }
+>;
+
+export type SwapEvent = TypedEvent<
+  [string, BigNumber, BigNumber, BigNumber, BigNumber, string] & {
+    sender: string;
+    amount0In: BigNumber;
+    amount1In: BigNumber;
+    amount0Out: BigNumber;
+    amount1Out: BigNumber;
+    to: string;
+  }
+>;
+
+export type SyncEvent = TypedEvent<[BigNumber, BigNumber] & { reserve0: BigNumber; reserve1: BigNumber }>;
+
+export type TransferEvent = TypedEvent<[string, string, BigNumber] & { from: string; to: string; amount: BigNumber }>;
 
 export class SolidlyPair extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -734,11 +791,27 @@ export class SolidlyPair extends BaseContract {
   };
 
   filters: {
+    'Approval(address,address,uint256)'(
+      owner?: string | null,
+      spender?: string | null,
+      amount?: null,
+    ): TypedEventFilter<[string, string, BigNumber], { owner: string; spender: string; amount: BigNumber }>;
+
     Approval(
       owner?: string | null,
       spender?: string | null,
       amount?: null,
     ): TypedEventFilter<[string, string, BigNumber], { owner: string; spender: string; amount: BigNumber }>;
+
+    'Burn(address,uint256,uint256,address)'(
+      sender?: string | null,
+      amount0?: null,
+      amount1?: null,
+      to?: string | null,
+    ): TypedEventFilter<
+      [string, BigNumber, BigNumber, string],
+      { sender: string; amount0: BigNumber; amount1: BigNumber; to: string }
+    >;
 
     Burn(
       sender?: string | null,
@@ -748,6 +821,21 @@ export class SolidlyPair extends BaseContract {
     ): TypedEventFilter<
       [string, BigNumber, BigNumber, string],
       { sender: string; amount0: BigNumber; amount1: BigNumber; to: string }
+    >;
+
+    'Claim(address,address,uint256,uint256)'(
+      sender?: string | null,
+      recipient?: string | null,
+      amount0?: null,
+      amount1?: null,
+    ): TypedEventFilter<
+      [string, string, BigNumber, BigNumber],
+      {
+        sender: string;
+        recipient: string;
+        amount0: BigNumber;
+        amount1: BigNumber;
+      }
     >;
 
     Claim(
@@ -765,7 +853,19 @@ export class SolidlyPair extends BaseContract {
       }
     >;
 
+    'Fees(address,uint256,uint256)'(
+      sender?: string | null,
+      amount0?: null,
+      amount1?: null,
+    ): TypedEventFilter<[string, BigNumber, BigNumber], { sender: string; amount0: BigNumber; amount1: BigNumber }>;
+
     Fees(
+      sender?: string | null,
+      amount0?: null,
+      amount1?: null,
+    ): TypedEventFilter<[string, BigNumber, BigNumber], { sender: string; amount0: BigNumber; amount1: BigNumber }>;
+
+    'Mint(address,uint256,uint256)'(
       sender?: string | null,
       amount0?: null,
       amount1?: null,
@@ -776,6 +876,25 @@ export class SolidlyPair extends BaseContract {
       amount0?: null,
       amount1?: null,
     ): TypedEventFilter<[string, BigNumber, BigNumber], { sender: string; amount0: BigNumber; amount1: BigNumber }>;
+
+    'Swap(address,uint256,uint256,uint256,uint256,address)'(
+      sender?: string | null,
+      amount0In?: null,
+      amount1In?: null,
+      amount0Out?: null,
+      amount1Out?: null,
+      to?: string | null,
+    ): TypedEventFilter<
+      [string, BigNumber, BigNumber, BigNumber, BigNumber, string],
+      {
+        sender: string;
+        amount0In: BigNumber;
+        amount1In: BigNumber;
+        amount0Out: BigNumber;
+        amount1Out: BigNumber;
+        to: string;
+      }
+    >;
 
     Swap(
       sender?: string | null,
@@ -796,10 +915,21 @@ export class SolidlyPair extends BaseContract {
       }
     >;
 
+    'Sync(uint256,uint256)'(
+      reserve0?: null,
+      reserve1?: null,
+    ): TypedEventFilter<[BigNumber, BigNumber], { reserve0: BigNumber; reserve1: BigNumber }>;
+
     Sync(
       reserve0?: null,
       reserve1?: null,
     ): TypedEventFilter<[BigNumber, BigNumber], { reserve0: BigNumber; reserve1: BigNumber }>;
+
+    'Transfer(address,address,uint256)'(
+      from?: string | null,
+      to?: string | null,
+      amount?: null,
+    ): TypedEventFilter<[string, string, BigNumber], { from: string; to: string; amount: BigNumber }>;
 
     Transfer(
       from?: string | null,

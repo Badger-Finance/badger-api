@@ -17,7 +17,7 @@ import {
 import { BytesLike } from '@ethersproject/bytes';
 import { Listener, Provider } from '@ethersproject/providers';
 import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
-import { TypedEventFilter, TypedEvent, TypedListener } from './commons';
+import type { TypedEventFilter, TypedEvent, TypedListener } from './common';
 
 interface MhbtcInterface extends ethers.utils.Interface {
   functions: {
@@ -39,7 +39,7 @@ interface MhbtcInterface extends ethers.utils.Interface {
     'getRedeemOutput(address,uint256)': FunctionFragment;
     'getSwapOutput(address,address,uint256)': FunctionFragment;
     'increaseAllowance(address,uint256)': FunctionFragment;
-    'initialize(string,string,tuple,tuple,address[],tuple)': FunctionFragment;
+    'initialize(string,string,(address,address,bool,uint8),(address,address,bool,uint8),address[],(uint256,(uint128,uint128)))': FunctionFragment;
     'mAsset()': FunctionFragment;
     'migrateBassets(address[],address)': FunctionFragment;
     'mint(address,uint256,uint256,address)': FunctionFragment;
@@ -205,6 +205,98 @@ interface MhbtcInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: 'Unpaused'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'WeightLimitsChanged'): EventFragment;
 }
+
+export type ApprovalEvent = TypedEvent<
+  [string, string, BigNumber] & {
+    owner: string;
+    spender: string;
+    value: BigNumber;
+  }
+>;
+
+export type BassetsMigratedEvent = TypedEvent<[string[], string] & { bAssets: string[]; newIntegrator: string }>;
+
+export type CacheSizeChangedEvent = TypedEvent<[BigNumber] & { cacheSize: BigNumber }>;
+
+export type FeesChangedEvent = TypedEvent<
+  [BigNumber, BigNumber, BigNumber] & {
+    swapFee: BigNumber;
+    redemptionFee: BigNumber;
+    govFee: BigNumber;
+  }
+>;
+
+export type MintedEvent = TypedEvent<
+  [string, string, BigNumber, string, BigNumber] & {
+    minter: string;
+    recipient: string;
+    output: BigNumber;
+    input: string;
+    inputQuantity: BigNumber;
+  }
+>;
+
+export type MintedMultiEvent = TypedEvent<
+  [string, string, BigNumber, string[], BigNumber[]] & {
+    minter: string;
+    recipient: string;
+    output: BigNumber;
+    inputs: string[];
+    inputQuantities: BigNumber[];
+  }
+>;
+
+export type PausedEvent = TypedEvent<[string] & { account: string }>;
+
+export type RedeemedEvent = TypedEvent<
+  [string, string, BigNumber, string, BigNumber, BigNumber] & {
+    redeemer: string;
+    recipient: string;
+    mAssetQuantity: BigNumber;
+    output: string;
+    outputQuantity: BigNumber;
+    scaledFee: BigNumber;
+  }
+>;
+
+export type RedeemedMultiEvent = TypedEvent<
+  [string, string, BigNumber, string[], BigNumber[], BigNumber] & {
+    redeemer: string;
+    recipient: string;
+    mAssetQuantity: BigNumber;
+    outputs: string[];
+    outputQuantity: BigNumber[];
+    scaledFee: BigNumber;
+  }
+>;
+
+export type StartRampAEvent = TypedEvent<
+  [BigNumber, BigNumber, BigNumber, BigNumber] & {
+    currentA: BigNumber;
+    targetA: BigNumber;
+    startTime: BigNumber;
+    rampEndTime: BigNumber;
+  }
+>;
+
+export type StopRampAEvent = TypedEvent<[BigNumber, BigNumber] & { currentA: BigNumber; time: BigNumber }>;
+
+export type SwappedEvent = TypedEvent<
+  [string, string, string, BigNumber, BigNumber, string] & {
+    swapper: string;
+    input: string;
+    output: string;
+    outputAmount: BigNumber;
+    fee: BigNumber;
+    recipient: string;
+  }
+>;
+
+export type TransferEvent = TypedEvent<[string, string, BigNumber] & { from: string; to: string; value: BigNumber }>;
+
+export type UnpausedEvent = TypedEvent<[string] & { account: string }>;
+
+export type WeightLimitsChangedEvent = TypedEvent<[BigNumber, BigNumber] & { min: BigNumber; max: BigNumber }>;
 
 export class Mhbtc extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -1046,18 +1138,40 @@ export class Mhbtc extends BaseContract {
   };
 
   filters: {
+    'Approval(address,address,uint256)'(
+      owner?: string | null,
+      spender?: string | null,
+      value?: null,
+    ): TypedEventFilter<[string, string, BigNumber], { owner: string; spender: string; value: BigNumber }>;
+
     Approval(
       owner?: string | null,
       spender?: string | null,
       value?: null,
     ): TypedEventFilter<[string, string, BigNumber], { owner: string; spender: string; value: BigNumber }>;
 
+    'BassetsMigrated(address[],address)'(
+      bAssets?: null,
+      newIntegrator?: null,
+    ): TypedEventFilter<[string[], string], { bAssets: string[]; newIntegrator: string }>;
+
     BassetsMigrated(
       bAssets?: null,
       newIntegrator?: null,
     ): TypedEventFilter<[string[], string], { bAssets: string[]; newIntegrator: string }>;
 
+    'CacheSizeChanged(uint256)'(cacheSize?: null): TypedEventFilter<[BigNumber], { cacheSize: BigNumber }>;
+
     CacheSizeChanged(cacheSize?: null): TypedEventFilter<[BigNumber], { cacheSize: BigNumber }>;
+
+    'FeesChanged(uint256,uint256,uint256)'(
+      swapFee?: null,
+      redemptionFee?: null,
+      govFee?: null,
+    ): TypedEventFilter<
+      [BigNumber, BigNumber, BigNumber],
+      { swapFee: BigNumber; redemptionFee: BigNumber; govFee: BigNumber }
+    >;
 
     FeesChanged(
       swapFee?: null,
@@ -1066,6 +1180,23 @@ export class Mhbtc extends BaseContract {
     ): TypedEventFilter<
       [BigNumber, BigNumber, BigNumber],
       { swapFee: BigNumber; redemptionFee: BigNumber; govFee: BigNumber }
+    >;
+
+    'Minted(address,address,uint256,address,uint256)'(
+      minter?: string | null,
+      recipient?: null,
+      output?: null,
+      input?: null,
+      inputQuantity?: null,
+    ): TypedEventFilter<
+      [string, string, BigNumber, string, BigNumber],
+      {
+        minter: string;
+        recipient: string;
+        output: BigNumber;
+        input: string;
+        inputQuantity: BigNumber;
+      }
     >;
 
     Minted(
@@ -1082,6 +1213,23 @@ export class Mhbtc extends BaseContract {
         output: BigNumber;
         input: string;
         inputQuantity: BigNumber;
+      }
+    >;
+
+    'MintedMulti(address,address,uint256,address[],uint256[])'(
+      minter?: string | null,
+      recipient?: null,
+      output?: null,
+      inputs?: null,
+      inputQuantities?: null,
+    ): TypedEventFilter<
+      [string, string, BigNumber, string[], BigNumber[]],
+      {
+        minter: string;
+        recipient: string;
+        output: BigNumber;
+        inputs: string[];
+        inputQuantities: BigNumber[];
       }
     >;
 
@@ -1102,7 +1250,28 @@ export class Mhbtc extends BaseContract {
       }
     >;
 
+    'Paused(address)'(account?: null): TypedEventFilter<[string], { account: string }>;
+
     Paused(account?: null): TypedEventFilter<[string], { account: string }>;
+
+    'Redeemed(address,address,uint256,address,uint256,uint256)'(
+      redeemer?: string | null,
+      recipient?: null,
+      mAssetQuantity?: null,
+      output?: null,
+      outputQuantity?: null,
+      scaledFee?: null,
+    ): TypedEventFilter<
+      [string, string, BigNumber, string, BigNumber, BigNumber],
+      {
+        redeemer: string;
+        recipient: string;
+        mAssetQuantity: BigNumber;
+        output: string;
+        outputQuantity: BigNumber;
+        scaledFee: BigNumber;
+      }
+    >;
 
     Redeemed(
       redeemer?: string | null,
@@ -1119,6 +1288,25 @@ export class Mhbtc extends BaseContract {
         mAssetQuantity: BigNumber;
         output: string;
         outputQuantity: BigNumber;
+        scaledFee: BigNumber;
+      }
+    >;
+
+    'RedeemedMulti(address,address,uint256,address[],uint256[],uint256)'(
+      redeemer?: string | null,
+      recipient?: null,
+      mAssetQuantity?: null,
+      outputs?: null,
+      outputQuantity?: null,
+      scaledFee?: null,
+    ): TypedEventFilter<
+      [string, string, BigNumber, string[], BigNumber[], BigNumber],
+      {
+        redeemer: string;
+        recipient: string;
+        mAssetQuantity: BigNumber;
+        outputs: string[];
+        outputQuantity: BigNumber[];
         scaledFee: BigNumber;
       }
     >;
@@ -1142,6 +1330,21 @@ export class Mhbtc extends BaseContract {
       }
     >;
 
+    'StartRampA(uint256,uint256,uint256,uint256)'(
+      currentA?: null,
+      targetA?: null,
+      startTime?: null,
+      rampEndTime?: null,
+    ): TypedEventFilter<
+      [BigNumber, BigNumber, BigNumber, BigNumber],
+      {
+        currentA: BigNumber;
+        targetA: BigNumber;
+        startTime: BigNumber;
+        rampEndTime: BigNumber;
+      }
+    >;
+
     StartRampA(
       currentA?: null,
       targetA?: null,
@@ -1157,10 +1360,34 @@ export class Mhbtc extends BaseContract {
       }
     >;
 
+    'StopRampA(uint256,uint256)'(
+      currentA?: null,
+      time?: null,
+    ): TypedEventFilter<[BigNumber, BigNumber], { currentA: BigNumber; time: BigNumber }>;
+
     StopRampA(
       currentA?: null,
       time?: null,
     ): TypedEventFilter<[BigNumber, BigNumber], { currentA: BigNumber; time: BigNumber }>;
+
+    'Swapped(address,address,address,uint256,uint256,address)'(
+      swapper?: string | null,
+      input?: null,
+      output?: null,
+      outputAmount?: null,
+      fee?: null,
+      recipient?: null,
+    ): TypedEventFilter<
+      [string, string, string, BigNumber, BigNumber, string],
+      {
+        swapper: string;
+        input: string;
+        output: string;
+        outputAmount: BigNumber;
+        fee: BigNumber;
+        recipient: string;
+      }
+    >;
 
     Swapped(
       swapper?: string | null,
@@ -1181,13 +1408,26 @@ export class Mhbtc extends BaseContract {
       }
     >;
 
+    'Transfer(address,address,uint256)'(
+      from?: string | null,
+      to?: string | null,
+      value?: null,
+    ): TypedEventFilter<[string, string, BigNumber], { from: string; to: string; value: BigNumber }>;
+
     Transfer(
       from?: string | null,
       to?: string | null,
       value?: null,
     ): TypedEventFilter<[string, string, BigNumber], { from: string; to: string; value: BigNumber }>;
 
+    'Unpaused(address)'(account?: null): TypedEventFilter<[string], { account: string }>;
+
     Unpaused(account?: null): TypedEventFilter<[string], { account: string }>;
+
+    'WeightLimitsChanged(uint128,uint128)'(
+      min?: null,
+      max?: null,
+    ): TypedEventFilter<[BigNumber, BigNumber], { min: BigNumber; max: BigNumber }>;
 
     WeightLimitsChanged(
       min?: null,

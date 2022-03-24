@@ -17,7 +17,7 @@ import {
 import { BytesLike } from '@ethersproject/bytes';
 import { Listener, Provider } from '@ethersproject/providers';
 import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
-import { TypedEventFilter, TypedEvent, TypedListener } from './commons';
+import type { TypedEventFilter, TypedEvent, TypedListener } from './common';
 
 interface CurveBaseRegistryInterface extends ethers.utils.Interface {
   functions: {
@@ -76,6 +76,26 @@ interface CurveBaseRegistryInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: 'CommitNewAdmin'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'NewAdmin'): EventFragment;
 }
+
+export type NewAddressIdentifierEvent = TypedEvent<
+  [BigNumber, string, string] & {
+    id: BigNumber;
+    addr: string;
+    description: string;
+  }
+>;
+
+export type AddressModifiedEvent = TypedEvent<
+  [BigNumber, string, BigNumber] & {
+    id: BigNumber;
+    new_address: string;
+    version: BigNumber;
+  }
+>;
+
+export type CommitNewAdminEvent = TypedEvent<[BigNumber, string] & { deadline: BigNumber; admin: string }>;
+
+export type NewAdminEvent = TypedEvent<[string] & { admin: string }>;
 
 export class CurveBaseRegistry extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -266,11 +286,23 @@ export class CurveBaseRegistry extends BaseContract {
   };
 
   filters: {
+    'NewAddressIdentifier(uint256,address,string)'(
+      id?: BigNumberish | null,
+      addr?: null,
+      description?: null,
+    ): TypedEventFilter<[BigNumber, string, string], { id: BigNumber; addr: string; description: string }>;
+
     NewAddressIdentifier(
       id?: BigNumberish | null,
       addr?: null,
       description?: null,
     ): TypedEventFilter<[BigNumber, string, string], { id: BigNumber; addr: string; description: string }>;
+
+    'AddressModified(uint256,address,uint256)'(
+      id?: BigNumberish | null,
+      new_address?: null,
+      version?: null,
+    ): TypedEventFilter<[BigNumber, string, BigNumber], { id: BigNumber; new_address: string; version: BigNumber }>;
 
     AddressModified(
       id?: BigNumberish | null,
@@ -278,10 +310,17 @@ export class CurveBaseRegistry extends BaseContract {
       version?: null,
     ): TypedEventFilter<[BigNumber, string, BigNumber], { id: BigNumber; new_address: string; version: BigNumber }>;
 
+    'CommitNewAdmin(uint256,address)'(
+      deadline?: BigNumberish | null,
+      admin?: string | null,
+    ): TypedEventFilter<[BigNumber, string], { deadline: BigNumber; admin: string }>;
+
     CommitNewAdmin(
       deadline?: BigNumberish | null,
       admin?: string | null,
     ): TypedEventFilter<[BigNumber, string], { deadline: BigNumber; admin: string }>;
+
+    'NewAdmin(address)'(admin?: string | null): TypedEventFilter<[string], { admin: string }>;
 
     NewAdmin(admin?: string | null): TypedEventFilter<[string], { admin: string }>;
   };

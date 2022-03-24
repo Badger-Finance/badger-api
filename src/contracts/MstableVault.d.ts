@@ -17,7 +17,7 @@ import {
 import { BytesLike } from '@ethersproject/bytes';
 import { Listener, Provider } from '@ethersproject/providers';
 import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
-import { TypedEventFilter, TypedEvent, TypedListener } from './commons';
+import type { TypedEventFilter, TypedEvent, TypedListener } from './common';
 
 interface MstableVaultInterface extends ethers.utils.Interface {
   functions: {
@@ -155,6 +155,24 @@ interface MstableVaultInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: 'Transfer'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'Withdrawn'): EventFragment;
 }
+
+export type PokedEvent = TypedEvent<[string] & { user: string }>;
+
+export type RewardAddedEvent = TypedEvent<[BigNumber] & { reward: BigNumber }>;
+
+export type RewardPaidEvent = TypedEvent<[string, BigNumber] & { user: string; reward: BigNumber }>;
+
+export type StakedEvent = TypedEvent<
+  [string, BigNumber, string] & {
+    user: string;
+    amount: BigNumber;
+    payer: string;
+  }
+>;
+
+export type TransferEvent = TypedEvent<[string, string, BigNumber] & { from: string; to: string; value: BigNumber }>;
+
+export type WithdrawnEvent = TypedEvent<[string, BigNumber] & { user: string; amount: BigNumber }>;
 
 export class MstableVault extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -610,14 +628,29 @@ export class MstableVault extends BaseContract {
   };
 
   filters: {
+    'Poked(address)'(user?: string | null): TypedEventFilter<[string], { user: string }>;
+
     Poked(user?: string | null): TypedEventFilter<[string], { user: string }>;
 
+    'RewardAdded(uint256)'(reward?: null): TypedEventFilter<[BigNumber], { reward: BigNumber }>;
+
     RewardAdded(reward?: null): TypedEventFilter<[BigNumber], { reward: BigNumber }>;
+
+    'RewardPaid(address,uint256)'(
+      user?: string | null,
+      reward?: null,
+    ): TypedEventFilter<[string, BigNumber], { user: string; reward: BigNumber }>;
 
     RewardPaid(
       user?: string | null,
       reward?: null,
     ): TypedEventFilter<[string, BigNumber], { user: string; reward: BigNumber }>;
+
+    'Staked(address,uint256,address)'(
+      user?: string | null,
+      amount?: null,
+      payer?: null,
+    ): TypedEventFilter<[string, BigNumber, string], { user: string; amount: BigNumber; payer: string }>;
 
     Staked(
       user?: string | null,
@@ -625,11 +658,22 @@ export class MstableVault extends BaseContract {
       payer?: null,
     ): TypedEventFilter<[string, BigNumber, string], { user: string; amount: BigNumber; payer: string }>;
 
+    'Transfer(address,address,uint256)'(
+      from?: string | null,
+      to?: string | null,
+      value?: null,
+    ): TypedEventFilter<[string, string, BigNumber], { from: string; to: string; value: BigNumber }>;
+
     Transfer(
       from?: string | null,
       to?: string | null,
       value?: null,
     ): TypedEventFilter<[string, string, BigNumber], { from: string; to: string; value: BigNumber }>;
+
+    'Withdrawn(address,uint256)'(
+      user?: string | null,
+      amount?: null,
+    ): TypedEventFilter<[string, BigNumber], { user: string; amount: BigNumber }>;
 
     Withdrawn(
       user?: string | null,

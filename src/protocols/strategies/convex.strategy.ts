@@ -61,6 +61,7 @@ const nonRegistryPools: ContractRegistry = {
   [TOKENS.MATIC_CRV_TRICRYPTO]: '0x751B1e21756bDbc307CBcC5085c042a0e9AaEf36',
   [TOKENS.ARB_CRV_TRICRYPTO]: '0x960ea3e3C7FB317332d990873d354E18d7645590',
   [TOKENS.CRV_TRICRYPTO2]: '0xD51a44d3FaE010294C616388b506AcdA1bfAAE46',
+  [TOKENS.CRV_BADGER]: '0x50f3752289e1456BfA505afd37B241bca23e685d',
 };
 
 interface FactoryAPYResonse {
@@ -180,7 +181,6 @@ export async function getCurvePoolBalance(chain: Chain, depositToken: string): P
     CurvePool3__factory.connect(poolAddress, chain.provider),
     CurvePool__factory.connect(poolAddress, chain.provider),
   ];
-
   let option = 0;
   let coin = 0;
   while (true) {
@@ -210,7 +210,7 @@ export async function getCurveVaultTokenBalance(chain: Chain, token: string): Pr
   const vaultDefinition = getVaultDefinition(chain, token);
   const { protocol, depositToken, vaultToken } = vaultDefinition;
   if (!protocol) {
-    throw new UnprocessableEntity('Cannot get curve sett token balances, requires a sett definition');
+    throw new UnprocessableEntity('Cannot get curve vault token balances, requires a vault definition');
   }
   const cachedTokens = await getCurvePoolBalance(chain, depositToken);
   const contract = Erc20__factory.connect(depositToken, chain.provider);

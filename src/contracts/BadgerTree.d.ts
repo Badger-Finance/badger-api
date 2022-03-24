@@ -17,7 +17,7 @@ import {
 import { BytesLike } from '@ethersproject/bytes';
 import { Listener, Provider } from '@ethersproject/providers';
 import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
-import { TypedEventFilter, TypedEvent, TypedListener } from './commons';
+import type { TypedEventFilter, TypedEvent, TypedListener } from './common';
 
 interface BadgerTreeInterface extends ethers.utils.Interface {
   functions: {
@@ -191,6 +191,59 @@ interface BadgerTreeInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: 'RootUpdated'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'Unpaused'): EventFragment;
 }
+
+export type ClaimedEvent = TypedEvent<
+  [string, string, BigNumber, BigNumber, BigNumber, BigNumber] & {
+    user: string;
+    token: string;
+    amount: BigNumber;
+    cycle: BigNumber;
+    timestamp: BigNumber;
+    blockNumber: BigNumber;
+  }
+>;
+
+export type InsufficientFundsForRootEvent = TypedEvent<[string] & { root: string }>;
+
+export type PausedEvent = TypedEvent<[string] & { account: string }>;
+
+export type RoleAdminChangedEvent = TypedEvent<
+  [string, string, string] & {
+    role: string;
+    previousAdminRole: string;
+    newAdminRole: string;
+  }
+>;
+
+export type RoleGrantedEvent = TypedEvent<[string, string, string] & { role: string; account: string; sender: string }>;
+
+export type RoleRevokedEvent = TypedEvent<[string, string, string] & { role: string; account: string; sender: string }>;
+
+export type RootProposedEvent = TypedEvent<
+  [BigNumber, string, string, BigNumber, BigNumber, BigNumber, BigNumber] & {
+    cycle: BigNumber;
+    root: string;
+    contentHash: string;
+    startBlock: BigNumber;
+    endBlock: BigNumber;
+    timestamp: BigNumber;
+    blockNumber: BigNumber;
+  }
+>;
+
+export type RootUpdatedEvent = TypedEvent<
+  [BigNumber, string, string, BigNumber, BigNumber, BigNumber, BigNumber] & {
+    cycle: BigNumber;
+    root: string;
+    contentHash: string;
+    startBlock: BigNumber;
+    endBlock: BigNumber;
+    timestamp: BigNumber;
+    blockNumber: BigNumber;
+  }
+>;
+
+export type UnpausedEvent = TypedEvent<[string] & { account: string }>;
 
 export class BadgerTree extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -721,6 +774,25 @@ export class BadgerTree extends BaseContract {
   };
 
   filters: {
+    'Claimed(address,address,uint256,uint256,uint256,uint256)'(
+      user?: string | null,
+      token?: string | null,
+      amount?: null,
+      cycle?: BigNumberish | null,
+      timestamp?: null,
+      blockNumber?: null,
+    ): TypedEventFilter<
+      [string, string, BigNumber, BigNumber, BigNumber, BigNumber],
+      {
+        user: string;
+        token: string;
+        amount: BigNumber;
+        cycle: BigNumber;
+        timestamp: BigNumber;
+        blockNumber: BigNumber;
+      }
+    >;
+
     Claimed(
       user?: string | null,
       token?: string | null,
@@ -740,9 +812,19 @@ export class BadgerTree extends BaseContract {
       }
     >;
 
+    'InsufficientFundsForRoot(bytes32)'(root?: BytesLike | null): TypedEventFilter<[string], { root: string }>;
+
     InsufficientFundsForRoot(root?: BytesLike | null): TypedEventFilter<[string], { root: string }>;
 
+    'Paused(address)'(account?: null): TypedEventFilter<[string], { account: string }>;
+
     Paused(account?: null): TypedEventFilter<[string], { account: string }>;
+
+    'RoleAdminChanged(bytes32,bytes32,bytes32)'(
+      role?: BytesLike | null,
+      previousAdminRole?: BytesLike | null,
+      newAdminRole?: BytesLike | null,
+    ): TypedEventFilter<[string, string, string], { role: string; previousAdminRole: string; newAdminRole: string }>;
 
     RoleAdminChanged(
       role?: BytesLike | null,
@@ -750,7 +832,19 @@ export class BadgerTree extends BaseContract {
       newAdminRole?: BytesLike | null,
     ): TypedEventFilter<[string, string, string], { role: string; previousAdminRole: string; newAdminRole: string }>;
 
+    'RoleGranted(bytes32,address,address)'(
+      role?: BytesLike | null,
+      account?: string | null,
+      sender?: string | null,
+    ): TypedEventFilter<[string, string, string], { role: string; account: string; sender: string }>;
+
     RoleGranted(
+      role?: BytesLike | null,
+      account?: string | null,
+      sender?: string | null,
+    ): TypedEventFilter<[string, string, string], { role: string; account: string; sender: string }>;
+
+    'RoleRevoked(bytes32,address,address)'(
       role?: BytesLike | null,
       account?: string | null,
       sender?: string | null,
@@ -762,7 +856,49 @@ export class BadgerTree extends BaseContract {
       sender?: string | null,
     ): TypedEventFilter<[string, string, string], { role: string; account: string; sender: string }>;
 
+    'RootProposed(uint256,bytes32,bytes32,uint256,uint256,uint256,uint256)'(
+      cycle?: BigNumberish | null,
+      root?: BytesLike | null,
+      contentHash?: BytesLike | null,
+      startBlock?: null,
+      endBlock?: null,
+      timestamp?: null,
+      blockNumber?: null,
+    ): TypedEventFilter<
+      [BigNumber, string, string, BigNumber, BigNumber, BigNumber, BigNumber],
+      {
+        cycle: BigNumber;
+        root: string;
+        contentHash: string;
+        startBlock: BigNumber;
+        endBlock: BigNumber;
+        timestamp: BigNumber;
+        blockNumber: BigNumber;
+      }
+    >;
+
     RootProposed(
+      cycle?: BigNumberish | null,
+      root?: BytesLike | null,
+      contentHash?: BytesLike | null,
+      startBlock?: null,
+      endBlock?: null,
+      timestamp?: null,
+      blockNumber?: null,
+    ): TypedEventFilter<
+      [BigNumber, string, string, BigNumber, BigNumber, BigNumber, BigNumber],
+      {
+        cycle: BigNumber;
+        root: string;
+        contentHash: string;
+        startBlock: BigNumber;
+        endBlock: BigNumber;
+        timestamp: BigNumber;
+        blockNumber: BigNumber;
+      }
+    >;
+
+    'RootUpdated(uint256,bytes32,bytes32,uint256,uint256,uint256,uint256)'(
       cycle?: BigNumberish | null,
       root?: BytesLike | null,
       contentHash?: BytesLike | null,
@@ -803,6 +939,8 @@ export class BadgerTree extends BaseContract {
         blockNumber: BigNumber;
       }
     >;
+
+    'Unpaused(address)'(account?: null): TypedEventFilter<[string], { account: string }>;
 
     Unpaused(account?: null): TypedEventFilter<[string], { account: string }>;
   };

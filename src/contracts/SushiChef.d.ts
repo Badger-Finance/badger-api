@@ -17,7 +17,7 @@ import {
 import { BytesLike } from '@ethersproject/bytes';
 import { Listener, Provider } from '@ethersproject/providers';
 import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
-import { TypedEventFilter, TypedEvent, TypedListener } from './commons';
+import type { TypedEventFilter, TypedEvent, TypedListener } from './common';
 
 interface SushiChefInterface extends ethers.utils.Interface {
   functions: {
@@ -115,6 +115,32 @@ interface SushiChefInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: 'OwnershipTransferred'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'Withdraw'): EventFragment;
 }
+
+export type DepositEvent = TypedEvent<
+  [string, BigNumber, BigNumber] & {
+    user: string;
+    pid: BigNumber;
+    amount: BigNumber;
+  }
+>;
+
+export type EmergencyWithdrawEvent = TypedEvent<
+  [string, BigNumber, BigNumber] & {
+    user: string;
+    pid: BigNumber;
+    amount: BigNumber;
+  }
+>;
+
+export type OwnershipTransferredEvent = TypedEvent<[string, string] & { previousOwner: string; newOwner: string }>;
+
+export type WithdrawEvent = TypedEvent<
+  [string, BigNumber, BigNumber] & {
+    user: string;
+    pid: BigNumber;
+    amount: BigNumber;
+  }
+>;
 
 export class SushiChef extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -428,7 +454,19 @@ export class SushiChef extends BaseContract {
   };
 
   filters: {
+    'Deposit(address,uint256,uint256)'(
+      user?: string | null,
+      pid?: BigNumberish | null,
+      amount?: null,
+    ): TypedEventFilter<[string, BigNumber, BigNumber], { user: string; pid: BigNumber; amount: BigNumber }>;
+
     Deposit(
+      user?: string | null,
+      pid?: BigNumberish | null,
+      amount?: null,
+    ): TypedEventFilter<[string, BigNumber, BigNumber], { user: string; pid: BigNumber; amount: BigNumber }>;
+
+    'EmergencyWithdraw(address,uint256,uint256)'(
       user?: string | null,
       pid?: BigNumberish | null,
       amount?: null,
@@ -440,10 +478,21 @@ export class SushiChef extends BaseContract {
       amount?: null,
     ): TypedEventFilter<[string, BigNumber, BigNumber], { user: string; pid: BigNumber; amount: BigNumber }>;
 
+    'OwnershipTransferred(address,address)'(
+      previousOwner?: string | null,
+      newOwner?: string | null,
+    ): TypedEventFilter<[string, string], { previousOwner: string; newOwner: string }>;
+
     OwnershipTransferred(
       previousOwner?: string | null,
       newOwner?: string | null,
     ): TypedEventFilter<[string, string], { previousOwner: string; newOwner: string }>;
+
+    'Withdraw(address,uint256,uint256)'(
+      user?: string | null,
+      pid?: BigNumberish | null,
+      amount?: null,
+    ): TypedEventFilter<[string, BigNumber, BigNumber], { user: string; pid: BigNumber; amount: BigNumber }>;
 
     Withdraw(
       user?: string | null,
