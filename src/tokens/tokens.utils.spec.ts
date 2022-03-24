@@ -181,7 +181,7 @@ describe('token.utils', () => {
   });
 
   describe('getVaultTokens', () => {
-    it('returns the single underlying token for a non liquidity token underlying token', async () => {
+    it('returns the single token for a non liquidity token underlying token', async () => {
       const liquidity = getVaultDefinition(TEST_CHAIN, TOKENS.BBADGER);
       setFullTokenDataMock();
       setupMapper([]);
@@ -203,6 +203,7 @@ describe('token.utils', () => {
 
       setFullTokenDataMock();
       const dto = await vaultUtils.defaultVault(TEST_CHAIN, liquidity);
+      dto.balance = 10;
       const tokens = await getVaultTokens(TEST_CHAIN, dto, 10);
       expect(tokens).toMatchSnapshot();
     });
