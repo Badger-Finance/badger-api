@@ -367,6 +367,11 @@ export async function loadVaultGraphPerformances(
 ): Promise<CachedValueSource[]> {
   const { vaultToken } = vaultDefinition;
 
+  // digg does not play well with this accounting
+  if (vaultToken === TOKENS.DIGG) {
+    return [];
+  }
+
   const sdk = await chain.getSdk();
   const cutoff = Number(((Date.now() - ONE_DAY_MS * 21) / 1000).toFixed());
 
