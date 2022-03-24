@@ -1,6 +1,6 @@
 import { Token } from '@badger-dao/sdk';
 
-import { attribute, hashKey, table } from '@aws/dynamodb-data-mapper-annotations';
+import { attribute, hashKey, rangeKey, table } from '@aws/dynamodb-data-mapper-annotations';
 
 import { TOKEN_INFORMATION_DATA } from '../../config/constants';
 
@@ -17,4 +17,7 @@ export class TokenInformationSnapshot implements Token {
 
   @attribute()
   decimals!: number;
+
+  @rangeKey({ defaultProvider: () => Date.now() })
+  updatedAt!: number;
 }

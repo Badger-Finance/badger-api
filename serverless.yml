@@ -190,9 +190,13 @@ resources:
         KeySchema:
           - AttributeName: 'address'
             KeyType: 'HASH'
+          - AttributeName: 'updatedAt'
+            KeyType: 'RANGE'
         AttributeDefinitions:
           - AttributeName: 'address'
             AttributeType: 'S'
+          - AttributeName: 'updatedAt'
+            AttributeType: 'N'
 
     protocolMetricsSnapshotsTable:
       Type: AWS::DynamoDB::Table
@@ -399,7 +403,7 @@ functions:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-apy-snapshots
           description: 'index data for sett apy'
-          rate: rate(5 minutes)
+          rate: rate(2 minutes)
 
   index-prices:
     handler: src/indexers/price-indexer.indexPrices
@@ -417,7 +421,7 @@ functions:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-vault-snapshots
           description: 'index data for supported vaults'
-          rate: rate(1 minute)
+          rate: rate(5 minutes)
 
   index-vault-harvests:
     handler: src/indexers/vault-harvests-indexer.refreshVaultHarvests

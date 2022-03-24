@@ -8,7 +8,7 @@ import { lookUpAddrByTokenName } from '../tokens/tokens.utils';
 export async function indexPrices() {
   const chains = loadChains();
 
-  for (const chain of [chains[0]]) {
+  for (const chain of chains) {
     try {
       const { tokens, strategy } = chain;
       const chainTokens = Object.entries(tokens).map((e) => ({
