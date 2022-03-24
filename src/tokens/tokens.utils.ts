@@ -1,4 +1,4 @@
-import { getPrice } from '../prices/prices.utils';
+import { convert, getPrice } from '../prices/prices.utils';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { getCachedVault } from '../vaults/vaults.utils';
 import { VaultTokenBalance } from '../vaults/types/vault-token-balance.interface';
@@ -39,15 +39,15 @@ export async function getVaultTokens(
   balance: number,
   currency?: Currency,
 ): Promise<TokenValue[]> {
-  const { protocol, vaultToken, depositToken, getTokenBalance } = vaultDefinition;
-  const token = await thisModule.getFullToken(chain, vaultToken);
+  const { depositToken, getTokenBalance } = vaultDefinition;
+  const token = await thisModule.getFullToken(chain, depositToken);
 
-  if (protocol && (token.lpToken || token.type === PricingType.UniV2LP || getTokenBalance)) {
+  if (token.lpToken || token.type === PricingType.UniV2LP || getTokenBalance) {
     const [cachedVault, cachedTokenBalances] = await Promise.all([
       getCachedVault(chain, vaultDefinition),
       getCachedTokenBalances(vaultDefinition, currency),
     ]);
-    if (cachedTokenBalances) {
+    if (cachedTokenBalances.length > 0) {
       const balanceScalar = cachedVault.balance > 0 ? balance / cachedVault.balance : 0;
       return cachedTokenBalances.map((bal) => {
         bal.balance *= balanceScalar;
@@ -57,20 +57,23 @@ export async function getVaultTokens(
     }
   }
 
-  const tokenInfo = await thisModule.getFullToken(chain, depositToken);
-
-  return [await toBalance(tokenInfo, balance, currency)];
+  return [await toBalance(token, balance, currency)];
 }
 
 export async function getCachedTokenBalances(
   vaultDefinition: VaultDefinition,
-  currency?: string,
-): Promise<TokenValue[] | undefined> {
+  currency?: Currency,
+): Promise<TokenValue[]> {
   const mapper = getDataMapper();
   for await (const record of mapper.query(VaultTokenBalance, { vault: vaultDefinition.vaultToken }, { limit: 1 })) {
-    return record.tokenBalances;
+    return Promise.all(
+      record.tokenBalances.map(async (b) => ({
+        ...b,
+        value: await convert(b.value, currency),
+      })),
+    );
   }
-  return undefined;
+  return [];
 }
 
 export async function getFullToken(chain: Chain, tokenAddr: Token['address']): Promise<TokenFull> {
@@ -165,7 +168,10 @@ export function lookUpAddrByTokenName(chain: Chain, name: string): Token['addres
 }
 
 export function mockBalance(token: Token, balance: number, currency?: Currency): TokenValue {
-  const price = parseInt(token.address.slice(0, 4), 16);
+  let price = parseInt(token.address.slice(0, 5), 16);
+  if (currency && currency !== Currency.USD) {
+    price /= 2;
+  }
   return {
     address: token.address,
     name: token.name,

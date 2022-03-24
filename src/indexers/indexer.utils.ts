@@ -1,4 +1,4 @@
-import { BadRequest, NotFound } from '@tsed/exceptions';
+import { NotFound } from '@tsed/exceptions';
 import { getAccountMap } from '../accounts/accounts.utils';
 import { AccountMap } from '../accounts/interfaces/account-map.interface';
 import { CachedAccount } from '../accounts/interfaces/cached-account.interface';
@@ -83,11 +83,8 @@ export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefini
 }
 
 export async function getLpTokenBalances(chain: Chain, vaultDefinition: VaultDefinition): Promise<VaultTokenBalance> {
-  const { protocol, depositToken, vaultToken } = vaultDefinition;
+  const { depositToken, vaultToken } = vaultDefinition;
   try {
-    if (!protocol) {
-      throw new BadRequest('LP balance look up requires a defined protocol');
-    }
     const liquidityData = await getLiquidityData(chain, depositToken);
     const { token0, token1, reserve0, reserve1, totalSupply } = liquidityData;
     const tokenData = await getFullTokens(chain, [token0, token1]);
@@ -106,7 +103,7 @@ export async function getLpTokenBalances(chain: Chain, vaultDefinition: VaultDef
       tokenBalances,
     });
   } catch (err) {
-    throw new NotFound(`${protocol} pool pair ${depositToken} does not exist`);
+    throw new NotFound(`${vaultDefinition.protocol} pool pair ${depositToken} does not exist`);
   }
 }
 
