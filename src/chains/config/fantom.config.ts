@@ -161,6 +161,7 @@ export const fantomSetts: VaultDefinition[] = [
     vaultToken: TOKENS.BOXD,
     state: VaultState.Guarded,
     protocol: Protocol.OxDAO,
+    stage: Stage.Staging,
   },
   {
     name: 'boxSOLID',
@@ -168,5 +169,6 @@ export const fantomSetts: VaultDefinition[] = [
     vaultToken: TOKENS.BOXSOLID,
     state: VaultState.Guarded,
     protocol: Protocol.OxDAO,
+    stage: Stage.Staging,
   },
 ];
