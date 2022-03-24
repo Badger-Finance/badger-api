@@ -17,7 +17,7 @@ import {
 import { BytesLike } from '@ethersproject/bytes';
 import { Listener, Provider } from '@ethersproject/providers';
 import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
-import { TypedEventFilter, TypedEvent, TypedListener } from './commons';
+import type { TypedEventFilter, TypedEvent, TypedListener } from './common';
 
 interface DiggInterface extends ethers.utils.Interface {
   functions: {
@@ -125,6 +125,24 @@ interface DiggInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: 'Transfer'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'Approval'): EventFragment;
 }
+
+export type LogRebaseEvent = TypedEvent<[BigNumber, BigNumber] & { epoch: BigNumber; totalSupply: BigNumber }>;
+
+export type LogMonetaryPolicyUpdatedEvent = TypedEvent<[string] & { monetaryPolicy: string }>;
+
+export type OwnershipRenouncedEvent = TypedEvent<[string] & { previousOwner: string }>;
+
+export type OwnershipTransferredEvent = TypedEvent<[string, string] & { previousOwner: string; newOwner: string }>;
+
+export type TransferEvent = TypedEvent<[string, string, BigNumber] & { from: string; to: string; value: BigNumber }>;
+
+export type ApprovalEvent = TypedEvent<
+  [string, string, BigNumber] & {
+    owner: string;
+    spender: string;
+    value: BigNumber;
+  }
+>;
 
 export class Digg extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -431,25 +449,51 @@ export class Digg extends BaseContract {
   };
 
   filters: {
+    'LogRebase(uint256,uint256)'(
+      epoch?: BigNumberish | null,
+      totalSupply?: null,
+    ): TypedEventFilter<[BigNumber, BigNumber], { epoch: BigNumber; totalSupply: BigNumber }>;
+
     LogRebase(
       epoch?: BigNumberish | null,
       totalSupply?: null,
     ): TypedEventFilter<[BigNumber, BigNumber], { epoch: BigNumber; totalSupply: BigNumber }>;
 
+    'LogMonetaryPolicyUpdated(address)'(monetaryPolicy?: null): TypedEventFilter<[string], { monetaryPolicy: string }>;
+
     LogMonetaryPolicyUpdated(monetaryPolicy?: null): TypedEventFilter<[string], { monetaryPolicy: string }>;
 
+    'OwnershipRenounced(address)'(previousOwner?: string | null): TypedEventFilter<[string], { previousOwner: string }>;
+
     OwnershipRenounced(previousOwner?: string | null): TypedEventFilter<[string], { previousOwner: string }>;
+
+    'OwnershipTransferred(address,address)'(
+      previousOwner?: string | null,
+      newOwner?: string | null,
+    ): TypedEventFilter<[string, string], { previousOwner: string; newOwner: string }>;
 
     OwnershipTransferred(
       previousOwner?: string | null,
       newOwner?: string | null,
     ): TypedEventFilter<[string, string], { previousOwner: string; newOwner: string }>;
 
+    'Transfer(address,address,uint256)'(
+      from?: string | null,
+      to?: string | null,
+      value?: null,
+    ): TypedEventFilter<[string, string, BigNumber], { from: string; to: string; value: BigNumber }>;
+
     Transfer(
       from?: string | null,
       to?: string | null,
       value?: null,
     ): TypedEventFilter<[string, string, BigNumber], { from: string; to: string; value: BigNumber }>;
+
+    'Approval(address,address,uint256)'(
+      owner?: string | null,
+      spender?: string | null,
+      value?: null,
+    ): TypedEventFilter<[string, string, BigNumber], { owner: string; spender: string; value: BigNumber }>;
 
     Approval(
       owner?: string | null,

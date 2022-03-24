@@ -17,7 +17,7 @@ import {
 import { BytesLike } from '@ethersproject/bytes';
 import { Listener, Provider } from '@ethersproject/providers';
 import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
-import { TypedEventFilter, TypedEvent, TypedListener } from './commons';
+import type { TypedEventFilter, TypedEvent, TypedListener } from './common';
 
 interface ImbtcInterface extends ethers.utils.Interface {
   functions: {
@@ -161,6 +161,59 @@ interface ImbtcInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: 'SavingsDeposited'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'Transfer'): EventFragment;
 }
+
+export type ApprovalEvent = TypedEvent<
+  [string, string, BigNumber] & {
+    owner: string;
+    spender: string;
+    value: BigNumber;
+  }
+>;
+
+export type AutomaticInterestCollectionSwitchedEvent = TypedEvent<[boolean] & { automationEnabled: boolean }>;
+
+export type ConnectorUpdatedEvent = TypedEvent<[string] & { connector: string }>;
+
+export type CreditsRedeemedEvent = TypedEvent<
+  [string, BigNumber, BigNumber] & {
+    redeemer: string;
+    creditsRedeemed: BigNumber;
+    savingsCredited: BigNumber;
+  }
+>;
+
+export type EmergencyUpdateEvent = TypedEvent<[] & {}>;
+
+export type ExchangeRateUpdatedEvent = TypedEvent<
+  [BigNumber, BigNumber] & {
+    newExchangeRate: BigNumber;
+    interestCollected: BigNumber;
+  }
+>;
+
+export type FractionUpdatedEvent = TypedEvent<[BigNumber] & { fraction: BigNumber }>;
+
+export type PokedEvent = TypedEvent<
+  [BigNumber, BigNumber, BigNumber] & {
+    oldBalance: BigNumber;
+    newBalance: BigNumber;
+    interestDetected: BigNumber;
+  }
+>;
+
+export type PokedRawEvent = TypedEvent<[] & {}>;
+
+export type PokerUpdatedEvent = TypedEvent<[string] & { poker: string }>;
+
+export type SavingsDepositedEvent = TypedEvent<
+  [string, BigNumber, BigNumber] & {
+    saver: string;
+    savingsDeposited: BigNumber;
+    creditsIssued: BigNumber;
+  }
+>;
+
+export type TransferEvent = TypedEvent<[string, string, BigNumber] & { from: string; to: string; value: BigNumber }>;
 
 export class Imbtc extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -570,17 +623,42 @@ export class Imbtc extends BaseContract {
   };
 
   filters: {
+    'Approval(address,address,uint256)'(
+      owner?: string | null,
+      spender?: string | null,
+      value?: null,
+    ): TypedEventFilter<[string, string, BigNumber], { owner: string; spender: string; value: BigNumber }>;
+
     Approval(
       owner?: string | null,
       spender?: string | null,
       value?: null,
     ): TypedEventFilter<[string, string, BigNumber], { owner: string; spender: string; value: BigNumber }>;
 
+    'AutomaticInterestCollectionSwitched(bool)'(
+      automationEnabled?: null,
+    ): TypedEventFilter<[boolean], { automationEnabled: boolean }>;
+
     AutomaticInterestCollectionSwitched(
       automationEnabled?: null,
     ): TypedEventFilter<[boolean], { automationEnabled: boolean }>;
 
+    'ConnectorUpdated(address)'(connector?: null): TypedEventFilter<[string], { connector: string }>;
+
     ConnectorUpdated(connector?: null): TypedEventFilter<[string], { connector: string }>;
+
+    'CreditsRedeemed(address,uint256,uint256)'(
+      redeemer?: string | null,
+      creditsRedeemed?: null,
+      savingsCredited?: null,
+    ): TypedEventFilter<
+      [string, BigNumber, BigNumber],
+      {
+        redeemer: string;
+        creditsRedeemed: BigNumber;
+        savingsCredited: BigNumber;
+      }
+    >;
 
     CreditsRedeemed(
       redeemer?: string | null,
@@ -595,14 +673,36 @@ export class Imbtc extends BaseContract {
       }
     >;
 
+    'EmergencyUpdate()'(): TypedEventFilter<[], {}>;
+
     EmergencyUpdate(): TypedEventFilter<[], {}>;
+
+    'ExchangeRateUpdated(uint256,uint256)'(
+      newExchangeRate?: null,
+      interestCollected?: null,
+    ): TypedEventFilter<[BigNumber, BigNumber], { newExchangeRate: BigNumber; interestCollected: BigNumber }>;
 
     ExchangeRateUpdated(
       newExchangeRate?: null,
       interestCollected?: null,
     ): TypedEventFilter<[BigNumber, BigNumber], { newExchangeRate: BigNumber; interestCollected: BigNumber }>;
 
+    'FractionUpdated(uint256)'(fraction?: null): TypedEventFilter<[BigNumber], { fraction: BigNumber }>;
+
     FractionUpdated(fraction?: null): TypedEventFilter<[BigNumber], { fraction: BigNumber }>;
+
+    'Poked(uint256,uint256,uint256)'(
+      oldBalance?: null,
+      newBalance?: null,
+      interestDetected?: null,
+    ): TypedEventFilter<
+      [BigNumber, BigNumber, BigNumber],
+      {
+        oldBalance: BigNumber;
+        newBalance: BigNumber;
+        interestDetected: BigNumber;
+      }
+    >;
 
     Poked(
       oldBalance?: null,
@@ -617,9 +717,22 @@ export class Imbtc extends BaseContract {
       }
     >;
 
+    'PokedRaw()'(): TypedEventFilter<[], {}>;
+
     PokedRaw(): TypedEventFilter<[], {}>;
 
+    'PokerUpdated(address)'(poker?: null): TypedEventFilter<[string], { poker: string }>;
+
     PokerUpdated(poker?: null): TypedEventFilter<[string], { poker: string }>;
+
+    'SavingsDeposited(address,uint256,uint256)'(
+      saver?: string | null,
+      savingsDeposited?: null,
+      creditsIssued?: null,
+    ): TypedEventFilter<
+      [string, BigNumber, BigNumber],
+      { saver: string; savingsDeposited: BigNumber; creditsIssued: BigNumber }
+    >;
 
     SavingsDeposited(
       saver?: string | null,
@@ -629,6 +742,12 @@ export class Imbtc extends BaseContract {
       [string, BigNumber, BigNumber],
       { saver: string; savingsDeposited: BigNumber; creditsIssued: BigNumber }
     >;
+
+    'Transfer(address,address,uint256)'(
+      from?: string | null,
+      to?: string | null,
+      value?: null,
+    ): TypedEventFilter<[string, string, BigNumber], { from: string; to: string; value: BigNumber }>;
 
     Transfer(
       from?: string | null,

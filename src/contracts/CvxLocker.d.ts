@@ -17,7 +17,7 @@ import {
 import { BytesLike } from '@ethersproject/bytes';
 import { Listener, Provider } from '@ethersproject/providers';
 import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
-import { TypedEventFilter, TypedEvent, TypedListener } from './commons';
+import type { TypedEventFilter, TypedEvent, TypedListener } from './common';
 
 interface CvxLockerInterface extends ethers.utils.Interface {
   functions: {
@@ -229,6 +229,45 @@ interface CvxLockerInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: 'Staked'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'Withdrawn'): EventFragment;
 }
+
+export type KickRewardEvent = TypedEvent<
+  [string, string, BigNumber] & {
+    _user: string;
+    _kicked: string;
+    _reward: BigNumber;
+  }
+>;
+
+export type OwnershipTransferredEvent = TypedEvent<[string, string] & { previousOwner: string; newOwner: string }>;
+
+export type RecoveredEvent = TypedEvent<[string, BigNumber] & { _token: string; _amount: BigNumber }>;
+
+export type RewardAddedEvent = TypedEvent<[string, BigNumber] & { _token: string; _reward: BigNumber }>;
+
+export type RewardPaidEvent = TypedEvent<
+  [string, string, BigNumber] & {
+    _user: string;
+    _rewardsToken: string;
+    _reward: BigNumber;
+  }
+>;
+
+export type StakedEvent = TypedEvent<
+  [string, BigNumber, BigNumber, BigNumber] & {
+    _user: string;
+    _paidAmount: BigNumber;
+    _lockedAmount: BigNumber;
+    _boostedAmount: BigNumber;
+  }
+>;
+
+export type WithdrawnEvent = TypedEvent<
+  [string, BigNumber, boolean] & {
+    _user: string;
+    _amount: BigNumber;
+    _relocked: boolean;
+  }
+>;
 
 export class CvxLocker extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -990,32 +1029,74 @@ export class CvxLocker extends BaseContract {
   };
 
   filters: {
+    'KickReward(address,address,uint256)'(
+      _user?: string | null,
+      _kicked?: string | null,
+      _reward?: null,
+    ): TypedEventFilter<[string, string, BigNumber], { _user: string; _kicked: string; _reward: BigNumber }>;
+
     KickReward(
       _user?: string | null,
       _kicked?: string | null,
       _reward?: null,
     ): TypedEventFilter<[string, string, BigNumber], { _user: string; _kicked: string; _reward: BigNumber }>;
 
+    'OwnershipTransferred(address,address)'(
+      previousOwner?: string | null,
+      newOwner?: string | null,
+    ): TypedEventFilter<[string, string], { previousOwner: string; newOwner: string }>;
+
     OwnershipTransferred(
       previousOwner?: string | null,
       newOwner?: string | null,
     ): TypedEventFilter<[string, string], { previousOwner: string; newOwner: string }>;
+
+    'Recovered(address,uint256)'(
+      _token?: null,
+      _amount?: null,
+    ): TypedEventFilter<[string, BigNumber], { _token: string; _amount: BigNumber }>;
 
     Recovered(
       _token?: null,
       _amount?: null,
     ): TypedEventFilter<[string, BigNumber], { _token: string; _amount: BigNumber }>;
 
+    'RewardAdded(address,uint256)'(
+      _token?: string | null,
+      _reward?: null,
+    ): TypedEventFilter<[string, BigNumber], { _token: string; _reward: BigNumber }>;
+
     RewardAdded(
       _token?: string | null,
       _reward?: null,
     ): TypedEventFilter<[string, BigNumber], { _token: string; _reward: BigNumber }>;
+
+    'RewardPaid(address,address,uint256)'(
+      _user?: string | null,
+      _rewardsToken?: string | null,
+      _reward?: null,
+    ): TypedEventFilter<[string, string, BigNumber], { _user: string; _rewardsToken: string; _reward: BigNumber }>;
 
     RewardPaid(
       _user?: string | null,
       _rewardsToken?: string | null,
       _reward?: null,
     ): TypedEventFilter<[string, string, BigNumber], { _user: string; _rewardsToken: string; _reward: BigNumber }>;
+
+    'Staked(address,uint256,uint256,uint256)'(
+      _user?: string | null,
+      _paidAmount?: null,
+      _lockedAmount?: null,
+      _boostedAmount?: null,
+    ): TypedEventFilter<
+      [string, BigNumber, BigNumber, BigNumber],
+      {
+        _user: string;
+        _paidAmount: BigNumber;
+        _lockedAmount: BigNumber;
+        _boostedAmount: BigNumber;
+      }
+    >;
 
     Staked(
       _user?: string | null,
@@ -1031,6 +1112,12 @@ export class CvxLocker extends BaseContract {
         _boostedAmount: BigNumber;
       }
     >;
+
+    'Withdrawn(address,uint256,bool)'(
+      _user?: string | null,
+      _amount?: null,
+      _relocked?: null,
+    ): TypedEventFilter<[string, BigNumber, boolean], { _user: string; _amount: BigNumber; _relocked: boolean }>;
 
     Withdrawn(
       _user?: string | null,

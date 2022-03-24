@@ -17,7 +17,7 @@ import {
 import { BytesLike } from '@ethersproject/bytes';
 import { Listener, Provider } from '@ethersproject/providers';
 import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
-import { TypedEventFilter, TypedEvent, TypedListener } from './commons';
+import type { TypedEventFilter, TypedEvent, TypedListener } from './common';
 
 interface CurveRegistryInterface extends ethers.utils.Interface {
   functions: {
@@ -269,6 +269,10 @@ interface CurveRegistryInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: 'PoolAdded'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'PoolRemoved'): EventFragment;
 }
+
+export type PoolAddedEvent = TypedEvent<[string, string] & { pool: string; rate_method_id: string }>;
+
+export type PoolRemovedEvent = TypedEvent<[string] & { pool: string }>;
 
 export class CurveRegistry extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -1177,10 +1181,17 @@ export class CurveRegistry extends BaseContract {
   };
 
   filters: {
+    'PoolAdded(address,bytes)'(
+      pool?: string | null,
+      rate_method_id?: null,
+    ): TypedEventFilter<[string, string], { pool: string; rate_method_id: string }>;
+
     PoolAdded(
       pool?: string | null,
       rate_method_id?: null,
     ): TypedEventFilter<[string, string], { pool: string; rate_method_id: string }>;
+
+    'PoolRemoved(address)'(pool?: string | null): TypedEventFilter<[string], { pool: string }>;
 
     PoolRemoved(pool?: string | null): TypedEventFilter<[string], { pool: string }>;
   };

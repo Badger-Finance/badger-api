@@ -17,7 +17,7 @@ import {
 import { BytesLike } from '@ethersproject/bytes';
 import { Listener, Provider } from '@ethersproject/providers';
 import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
-import { TypedEventFilter, TypedEvent, TypedListener } from './commons';
+import type { TypedEventFilter, TypedEvent, TypedListener } from './common';
 
 interface EmissionControlInterface extends ethers.utils.Interface {
   functions: {
@@ -71,6 +71,12 @@ interface EmissionControlInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: 'TokenBoostedEmissionChanged'): EventFragment;
   getEvent(nameOrSignatureOrTopic: 'TokenWeightChanged'): EventFragment;
 }
+
+export type OwnershipTransferredEvent = TypedEvent<[string, string] & { previousOwner: string; newOwner: string }>;
+
+export type TokenBoostedEmissionChangedEvent = TypedEvent<[string, BigNumber] & { _vault: string; _weight: BigNumber }>;
+
+export type TokenWeightChangedEvent = TypedEvent<[string, BigNumber] & { _token: string; _weight: BigNumber }>;
 
 export class EmissionControl extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -226,15 +232,30 @@ export class EmissionControl extends BaseContract {
   };
 
   filters: {
+    'OwnershipTransferred(address,address)'(
+      previousOwner?: string | null,
+      newOwner?: string | null,
+    ): TypedEventFilter<[string, string], { previousOwner: string; newOwner: string }>;
+
     OwnershipTransferred(
       previousOwner?: string | null,
       newOwner?: string | null,
     ): TypedEventFilter<[string, string], { previousOwner: string; newOwner: string }>;
 
+    'TokenBoostedEmissionChanged(address,uint256)'(
+      _vault?: string | null,
+      _weight?: BigNumberish | null,
+    ): TypedEventFilter<[string, BigNumber], { _vault: string; _weight: BigNumber }>;
+
     TokenBoostedEmissionChanged(
       _vault?: string | null,
       _weight?: BigNumberish | null,
     ): TypedEventFilter<[string, BigNumber], { _vault: string; _weight: BigNumber }>;
+
+    'TokenWeightChanged(address,uint256)'(
+      _token?: string | null,
+      _weight?: BigNumberish | null,
+    ): TypedEventFilter<[string, BigNumber], { _token: string; _weight: BigNumber }>;
 
     TokenWeightChanged(
       _token?: string | null,
