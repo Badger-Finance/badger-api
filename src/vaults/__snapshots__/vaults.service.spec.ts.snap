@@ -148,8 +148,13 @@ Object {
       "name": "remBadger",
       "value": 73021.33333333333,
     },
+    Object {
+      "balance": 14,
+      "name": "BADGER / WBTC",
+      "value": 161184,
+    },
   ],
-  "totalValue": 2273885.3333333335,
+  "totalValue": 2435069.3333333335,
   "vaults": Array [
     Object {
       "balance": 13,
@@ -295,6 +300,11 @@ Object {
       "balance": 6,
       "name": "remBadger",
       "value": 73021.33333333333,
+    },
+    Object {
+      "balance": 14,
+      "name": "BADGER / WBTC",
+      "value": 161184,
     },
   ],
 }
@@ -448,8 +458,13 @@ Object {
       "name": "remBadger",
       "value": 73021.33333333333,
     },
+    Object {
+      "balance": 14,
+      "name": "BADGER / WBTC",
+      "value": 161184,
+    },
   ],
-  "totalValue": 2273885.3333333335,
+  "totalValue": 2435069.3333333335,
   "vaults": Array [
     Object {
       "balance": 13,
@@ -595,6 +610,11 @@ Object {
       "balance": 6,
       "name": "remBadger",
       "value": 73021.33333333333,
+    },
+    Object {
+      "balance": 14,
+      "name": "BADGER / WBTC",
+      "value": 161184,
     },
   ],
 }
