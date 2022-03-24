@@ -187,7 +187,7 @@ export async function getVaultValueSources(
   vaultDefinition: VaultDefinition,
 ): Promise<CachedValueSource[]> {
   // manual over ride for removed compounding of vaults - this can be empty
-  const NO_COMPOUND_VAULTS = new Set([TOKENS.BREMBADGER, TOKENS.BVECVX]);
+  const NO_COMPOUND_VAULTS = new Set([TOKENS.BREMBADGER, TOKENS.BVECVX, TOKENS.BCVX]);
 
   let sources: CachedValueSource[] = [];
   try {
