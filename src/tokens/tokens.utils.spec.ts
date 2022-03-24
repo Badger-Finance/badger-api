@@ -1,5 +1,4 @@
-import BadgerSDK, { Currency, TokensService } from '@badger-dao/sdk';
-import { Ethereum } from '../chains/config/eth.config';
+import BadgerSDK, { Currency, TokensService, TokenValue } from '@badger-dao/sdk';
 import { TOKENS } from '../config/tokens.config';
 import * as priceUtils from '../prices/prices.utils';
 import * as vaultUtils from '../vaults/vaults.utils';
@@ -129,10 +128,21 @@ describe('token.utils', () => {
 
   describe('getCachedTokenBalances', () => {
     describe('no saved balances', () => {
-      it('returns an empty array', async () => {
+      it('returns single token underlying balance', async () => {
         setupMapper([]);
-        const result = await getCachedTokenBalances(randomVault());
-        expect(result).toMatchObject([]);
+        setFullTokenDataMock();
+        const dto = await vaultUtils.defaultVault(TEST_CHAIN, randomVault());
+        const result = await getCachedTokenBalances(TEST_CHAIN, dto);
+        const token = fullTokenMockMap[dto.underlyingToken];
+        const expected: TokenValue = {
+          address: token.address,
+          name: token.name,
+          decimals: token.decimals,
+          symbol: token.symbol,
+          balance: 0,
+          value: 0,
+        };
+        expect(result).toMatchObject([expected]);
       });
     });
 
@@ -142,10 +152,12 @@ describe('token.utils', () => {
           const wbtc = fullTokenMockMap[TOKENS.WBTC];
           const weth = fullTokenMockMap[TOKENS.WETH];
           const vault = randomVault();
+          setFullTokenDataMock();
+          const dto = await vaultUtils.defaultVault(TEST_CHAIN, vault);
           const tokenBalances = [mockBalance(wbtc, 1), mockBalance(weth, 20)];
           const cached = { vault: vault.vaultToken, tokenBalances };
           setupMapper([cached]);
-          const actual = await getCachedTokenBalances(vault);
+          const actual = await getCachedTokenBalances(TEST_CHAIN, dto);
           expect(actual).toMatchObject(tokenBalances);
         });
       });
@@ -155,11 +167,13 @@ describe('token.utils', () => {
           const wbtc = fullTokenMockMap[TOKENS.WBTC];
           const weth = fullTokenMockMap[TOKENS.WETH];
           const vault = randomVault();
+          setFullTokenDataMock();
+          const dto = await vaultUtils.defaultVault(TEST_CHAIN, vault);
           const tokenBalances = [mockBalance(wbtc, 1), mockBalance(weth, 20)];
           const cached = { vault: vault.vaultToken, tokenBalances };
           setupMapper([cached]);
           const expected = [mockBalance(wbtc, 1, currency), mockBalance(weth, 20, currency)];
-          const actual = await getCachedTokenBalances(vault, currency);
+          const actual = await getCachedTokenBalances(TEST_CHAIN, dto, currency);
           expect(actual).toMatchObject(expected);
         });
       });
@@ -167,10 +181,14 @@ describe('token.utils', () => {
   });
 
   describe('getVaultTokens', () => {
-    it('returns the single underlying token for a non liquidity token underlying token', async () => {
-      const liquidity = getVaultDefinition(new Ethereum(), TOKENS.BBADGER);
+    it('returns the single token for a non liquidity token underlying token', async () => {
+      const liquidity = getVaultDefinition(TEST_CHAIN, TOKENS.BBADGER);
       setFullTokenDataMock();
-      const tokens = await getVaultTokens(TEST_CHAIN, liquidity, 10);
+      setupMapper([]);
+      mockPricing();
+      const dto = await vaultUtils.defaultVault(TEST_CHAIN, liquidity);
+      dto.balance = 10;
+      const tokens = await getVaultTokens(TEST_CHAIN, dto, 10);
       expect(tokens).toMatchSnapshot();
     });
 
@@ -181,10 +199,12 @@ describe('token.utils', () => {
       const tokenBalances = await Promise.all([toBalance(wbtc, 1), toBalance(weth, 20)]);
       const cached = { vault: TEST_ADDR, tokenBalances };
       setupMapper([cached]);
-      const liquidity = getVaultDefinition(new Ethereum(), TOKENS.BSUSHI_ETH_WBTC);
+      const liquidity = getVaultDefinition(TEST_CHAIN, TOKENS.BSUSHI_ETH_WBTC);
 
       setFullTokenDataMock();
-      const tokens = await getVaultTokens(TEST_CHAIN, liquidity, 10);
+      const dto = await vaultUtils.defaultVault(TEST_CHAIN, liquidity);
+      dto.balance = 10;
+      const tokens = await getVaultTokens(TEST_CHAIN, dto, 10);
       expect(tokens).toMatchSnapshot();
     });
   });

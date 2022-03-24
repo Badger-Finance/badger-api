@@ -1,8 +1,7 @@
 import { convert, getPrice } from '../prices/prices.utils';
-import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
-import { getCachedVault } from '../vaults/vaults.utils';
+import { getVaultDefinition } from '../vaults/vaults.utils';
 import { VaultTokenBalance } from '../vaults/types/vault-token-balance.interface';
-import { Token, TokenValue } from '@badger-dao/sdk';
+import { Token, TokenValue, VaultDTO } from '@badger-dao/sdk';
 import { Currency } from '@badger-dao/sdk';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
@@ -28,28 +27,26 @@ export async function toBalance(token: Token, balance: number, currency?: Curren
 /**
  * Get token balances within a vault.
  * @param chain Block chain object
- * @param vaultDefinition Vault requested.
+ * @param vault Vault requested.
  * @param balance Balance in wei.
  * @param currency Optional currency denomination.
  * @returns Array of token balances from the Sett.
  */
 export async function getVaultTokens(
   chain: Chain,
-  vaultDefinition: VaultDefinition,
+  vault: VaultDTO,
   balance: number,
   currency?: Currency,
 ): Promise<TokenValue[]> {
+  const tokens = await getCachedTokenBalances(chain, vault, currency);
+  const vaultDefinition = getVaultDefinition(chain, vault.vaultToken);
   const { depositToken, getTokenBalance } = vaultDefinition;
   const token = await thisModule.getFullToken(chain, depositToken);
 
   if (token.lpToken || token.type === PricingType.UniV2LP || getTokenBalance) {
-    const [cachedVault, cachedTokenBalances] = await Promise.all([
-      getCachedVault(chain, vaultDefinition),
-      getCachedTokenBalances(vaultDefinition, currency),
-    ]);
-    if (cachedTokenBalances.length > 0) {
-      const balanceScalar = cachedVault.balance > 0 ? balance / cachedVault.balance : 0;
-      return cachedTokenBalances.map((bal) => {
+    if (tokens.length > 0) {
+      const balanceScalar = vault.balance > 0 ? balance / vault.balance : 0;
+      return tokens.map((bal) => {
         bal.balance *= balanceScalar;
         bal.value *= balanceScalar;
         return bal;
@@ -57,23 +54,29 @@ export async function getVaultTokens(
     }
   }
 
-  return [await toBalance(token, balance, currency)];
+  return tokens;
 }
 
 export async function getCachedTokenBalances(
-  vaultDefinition: VaultDefinition,
+  chain: Chain,
+  vault: VaultDTO,
   currency?: Currency,
 ): Promise<TokenValue[]> {
+  let tokens: TokenValue[] = [];
   const mapper = getDataMapper();
-  for await (const record of mapper.query(VaultTokenBalance, { vault: vaultDefinition.vaultToken }, { limit: 1 })) {
-    return Promise.all(
+  for await (const record of mapper.query(VaultTokenBalance, { vault: vault.vaultToken }, { limit: 1 })) {
+    tokens = await Promise.all(
       record.tokenBalances.map(async (b) => ({
         ...b,
         value: await convert(b.value, currency),
       })),
     );
   }
-  return [];
+  if (tokens.length === 0) {
+    const token = await thisModule.getFullToken(chain, vault.underlyingToken);
+    tokens = [await toBalance(token, vault.balance, currency)];
+  }
+  return tokens;
 }
 
 export async function getFullToken(chain: Chain, tokenAddr: Token['address']): Promise<TokenFull> {
@@ -101,8 +104,6 @@ export async function getFullTokens(chain: Chain, tokensAddr: Token['address'][]
   }
 
   const sdk = await chain.getSdk();
-  await sdk.ready();
-
   const sdkTokensInfo = await sdk.tokens.loadTokens(tokensCacheMissMatch);
   const tokensInfo = Object.values(sdkTokensInfo).filter((t) => validToken(t));
 
