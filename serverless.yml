@@ -421,7 +421,7 @@ functions:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-vault-snapshots
           description: 'index data for supported vaults'
-          rate: rate(1 minutes)
+          rate: rate(1 minute)
 
   index-vault-harvests:
     handler: src/indexers/vault-harvests-indexer.refreshVaultHarvests
