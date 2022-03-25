@@ -7,8 +7,8 @@ import { TokenConfig } from '../interfaces/token-config.interface';
 
 export const ethTokensConfig: TokenConfig = {
   [TOKENS.BADGER]: {
-    lookupName: 'badger',
-    type: PricingType.Contract,
+    lookupName: 'badger-dao',
+    type: PricingType.LookupName,
   },
   [TOKENS.WBTC]: {
     lookupName: 'wrapped-bitcoin',

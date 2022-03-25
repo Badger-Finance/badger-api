@@ -75,6 +75,10 @@ export const fantomTokensConfig: TokenConfig = {
     lookupName: 'boo-mirrorworld',
     type: PricingType.LookupName,
   },
+  [TOKENS.FTM_DEUS]: {
+    lookupName: 'deus-finance-2',
+    type: PricingType.LookupName,
+  },
   [TOKENS.MULTI_RENBTC]: {
     lookupName: 'renbtc',
     type: PricingType.LookupName,

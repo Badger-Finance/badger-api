@@ -178,7 +178,10 @@ export async function getStrategyInfo(chain: Chain, vaultDefinition: VaultDefini
   };
   try {
     const sdk = await chain.getSdk();
-    const strategy = await sdk.vaults.getVaultStrategy(vaultDefinition.vaultToken);
+    const strategy = await sdk.vaults.getVaultStrategy({
+      address: vaultDefinition.vaultToken,
+      version: vaultDefinition.version ?? VaultVersion.v1,
+    });
     const [withdrawFee, performanceFee, strategistFee] = await Promise.all([
       strategy.withdrawalFee(),
       strategy.performanceFeeGovernance(),
@@ -307,7 +310,11 @@ export async function loadVaultEventPerformances(
 
   const sdk = await chain.getSdk();
   const cutoff = (Date.now() - ONE_DAY_MS * 21) / 1000;
-  const { data } = await sdk.vaults.listHarvests({ address: vaultDefinition.vaultToken, timestamp_gte: cutoff });
+  const { data } = await sdk.vaults.listHarvests({
+    address: vaultDefinition.vaultToken,
+    timestamp_gte: cutoff,
+    version: vaultDefinition.version ?? VaultVersion.v1,
+  });
 
   vaultLookupMethod[vaultDefinition.vaultToken] = 'EventAPR';
 

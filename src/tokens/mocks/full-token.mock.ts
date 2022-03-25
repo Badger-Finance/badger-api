@@ -12,8 +12,8 @@ export const fullTokenMockMap: TokenFullMap = {
     decimals: 18,
     name: 'Badger',
     symbol: 'BADGER',
-    lookupName: 'badger',
-    type: PricingType.Contract,
+    lookupName: 'badger-dao',
+    type: PricingType.LookupName,
   },
   [TOKENS.DIGG]: {
     address: TOKENS.DIGG,
