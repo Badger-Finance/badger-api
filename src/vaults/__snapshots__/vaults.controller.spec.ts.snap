@@ -14,7 +14,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "BNB/BTCB",
     "pricePerFullShare": 1,
     "protocol": "Pancakeswap",
@@ -88,8 +88,8 @@ Array [
     "vaultToken": "0xaf4B9C4b545D5324904bAa15e29796D2E2f90813",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 9.223795488183333,
-      "harvestApy": 5.473299222164751,
+      "harvestApr": -0.0033569506203115344,
+      "harvestApy": -0.0019393563649883205,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -101,7 +101,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.040310588148596206,
+      "yieldApr": -0.0000146708211455808,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -127,7 +127,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "bBADGER/BTCB",
     "pricePerFullShare": 1,
     "protocol": "Pancakeswap",
@@ -201,8 +201,8 @@ Array [
     "vaultToken": "0x857F91f735f4B03b19D2b5c6E476C73DB8241F55",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 12.111666367369642,
-      "harvestApy": 6.487114945590244,
+      "harvestApr": -0.0044079756513504065,
+      "harvestApy": -0.002287504184750322,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -214,7 +214,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.05293139850658167,
+      "yieldApr": -0.000019264097006298956,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -240,7 +240,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "bDIGG/BTCB",
     "pricePerFullShare": 1,
     "protocol": "Pancakeswap",
@@ -314,8 +314,8 @@ Array [
     "vaultToken": "0xa861Ba302674b08f7F2F24381b705870521DDfed",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 9.602515002624402,
-      "harvestApy": 5.616640134151973,
+      "harvestApr": -0.00349478354500677,
+      "harvestApy": -0.0019887828183517975,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -327,7 +327,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.04196569925660247,
+      "yieldApr": -0.000015273189906664468,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -358,7 +358,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "renBTC/wBTC/sBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -439,8 +439,8 @@ Array [
     "vaultToken": "0xd04c48A53c111300aD41190D63681ed3dAd998eC",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 7.762378485547221,
-      "harvestApy": 4.884698925609632,
+      "harvestApr": -0.002825075783929526,
+      "harvestApy": -0.0017356897317299946,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -452,7 +452,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.03392378360787422,
+      "yieldApr": -0.000012346378078357086,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -478,7 +478,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "renBTC/wBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -559,8 +559,8 @@ Array [
     "vaultToken": "0x6dEf55d2e18486B9dDfaA075bc4e4EE0B28c1545",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 14.70768627388625,
-      "harvestApy": 7.270348761505585,
+      "harvestApr": -0.005352783094427993,
+      "harvestApy": -0.002554206542404458,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -572,7 +572,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.06427673778814015,
+      "yieldApr": -0.000023393172045573274,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -598,7 +598,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "tBTC/sBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -679,8 +679,8 @@ Array [
     "vaultToken": "0xb9D076fDe463dbc9f915E5392F807315Bf940334",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 8.701631432773913,
-      "harvestApy": 5.269731689527402,
+      "harvestApr": -0.003166911828272771,
+      "harvestApy": -0.0018690471189630742,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -692,7 +692,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.03802858393345771,
+      "yieldApr": -0.000013840298017878616,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -718,7 +718,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "renBTC/wBTC",
     "pricePerFullShare": 1,
     "protocol": "Curve",
@@ -792,8 +792,8 @@ Array [
     "vaultToken": "0xAf5A1DECfa95BAF63E0084a35c62592B774A2A87",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 9.220816098394637,
-      "harvestApy": 5.47215754534387,
+      "harvestApr": -0.0033558662871365796,
+      "harvestApy": -0.0019389624249854798,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -805,7 +805,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.04029756737478784,
+      "yieldApr": -0.000014666082303735548,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -831,7 +831,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "wBTC/Badger",
     "pricePerFullShare": 1,
     "protocol": "Uniswap",
@@ -905,8 +905,8 @@ Array [
     "vaultToken": "0x235c9e24D3FB2FAFd58a2E49D454Fdcd2DBf7FF1",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 45.72440245045989,
-      "harvestApy": 12.694276036626807,
+      "harvestApr": -0.016641149660243052,
+      "harvestApy": -0.004349350790300299,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -918,7 +918,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.19982853673224432,
+      "yieldApr": -0.00007272651818143569,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -944,7 +944,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "wBTC/Digg",
     "pricePerFullShare": 1,
     "protocol": "Uniswap",
@@ -1018,8 +1018,8 @@ Array [
     "vaultToken": "0xC17078FDd324CC473F8175Dc5290fae5f2E84714",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 8.358629928460171,
-      "harvestApy": 5.132049047386267,
+      "harvestApr": -0.003042078280734172,
+      "harvestApy": -0.0018214164027363644,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -1031,7 +1031,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.03652957060511,
+      "yieldApr": -0.000013294740201857724,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -1057,7 +1057,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "wBTC/wETH",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
@@ -1138,8 +1138,8 @@ Array [
     "vaultToken": "0x758A43EE2BFf8230eeb784879CdcFF4828F2544D",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 13.756050912104131,
-      "harvestApy": 6.9950796848982755,
+      "harvestApr": -0.005006440537091051,
+      "harvestApy": -0.0024606961337547695,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -1151,7 +1151,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.06011782281809514,
+      "yieldApr": -0.000021879557373063795,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -1177,7 +1177,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "wBTC/Badger",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
@@ -1266,8 +1266,8 @@ Array [
     "vaultToken": "0x1862A18181346EBd9EdAf800804f89190DeF24a5",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 66.3059227421063,
-      "harvestApy": 14.723257403789258,
+      "harvestApr": -0.024131682965291685,
+      "harvestApy": -0.004998748303608469,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -1279,7 +1279,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.2897755860799242,
+      "yieldApr": -0.00010546226166794141,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -1305,7 +1305,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "wBTC/Digg",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
@@ -1386,8 +1386,8 @@ Array [
     "vaultToken": "0x88128580ACdD9c04Ce47AFcE196875747bF2A9f6",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 11.882559271927008,
-      "harvestApy": 6.412753582817898,
+      "harvestApr": -0.004324593359204352,
+      "harvestApy": -0.002262081151094275,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -1399,7 +1399,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.051930135872545524,
+      "yieldApr": -0.000018899692868990016,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -1425,7 +1425,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "Digg",
     "pricePerFullShare": 1,
     "protocol": "Badger",
@@ -1506,8 +1506,8 @@ Array [
     "vaultToken": "0x7e7E112A68d8D2E221E11047a72fFC1065c38e1a",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 12.78247829204645,
-      "harvestApy": 6.699616796885222,
+      "harvestApr": -0.0046521140329219,
+      "harvestApy": -0.002360057603267851,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -1519,7 +1519,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.055863035841283645,
+      "yieldApr": -0.000020331050600771114,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -1545,7 +1545,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "Badger",
     "pricePerFullShare": 1,
     "protocol": "Badger",
@@ -1619,8 +1619,8 @@ Array [
     "vaultToken": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 62.55034686129508,
-      "harvestApy": 14.398297568595453,
+      "harvestApr": -0.022764861378925604,
+      "harvestApy": -0.0048955178521215,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -1632,7 +1632,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.27336266010101146,
+      "yieldApr": -0.00009948886577996887,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -1658,7 +1658,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "wBTC",
     "pricePerFullShare": 1,
     "protocol": "Yearn",
@@ -1739,8 +1739,8 @@ Array [
     "vaultToken": "0x4b92d19c11435614CD49Af1b589001b7c08cD4D5",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 21.394894428110128,
-      "harvestApy": 8.913238649222155,
+      "harvestApr": -0.007786556435133903,
+      "harvestApy": -0.0031073618542265535,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -1752,7 +1752,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.09350172376210227,
+      "yieldApr": -0.00003402944806772861,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -1778,7 +1778,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "wBTC/ibBTC",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
@@ -1859,8 +1859,8 @@ Array [
     "vaultToken": "0x8a8FFec8f4A0C8c9585Da95D9D97e8Cd6de273DE",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 11.669027409566826,
-      "harvestApy": 6.342594989332628,
+      "harvestApr": -0.004246879589568628,
+      "harvestApy": -0.0022380786822817633,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -1872,7 +1872,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.05099694140057016,
+      "yieldApr": -0.0000185600617740385,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -1898,7 +1898,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "hBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -1979,8 +1979,8 @@ Array [
     "vaultToken": "0x8c76970747afd5398e958bDfadA4cf0B9FcA16c4",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 11.511111184100905,
-      "harvestApy": 6.2901683370431005,
+      "harvestApr": -0.004189406831021235,
+      "harvestApy": -0.0022201322735448947,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -1992,7 +1992,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.05030680294998409,
+      "yieldApr": -0.000018308889607164713,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -2018,7 +2018,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "pBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -2099,8 +2099,8 @@ Array [
     "vaultToken": "0x55912D0Cf83B75c492E761932ABc4DB4a5CB1b17",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 18.896172058271357,
-      "harvestApy": 8.350584754605883,
+      "harvestApr": -0.006877159905328274,
+      "harvestApy": -0.002918863709644448,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -2112,7 +2112,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.08258160216169445,
+      "yieldApr": -0.00003005512870822845,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -2138,7 +2138,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "oBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -2219,8 +2219,8 @@ Array [
     "vaultToken": "0xf349c0faA80fC1870306Ac093f75934078e28991",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 6.645975923251056,
-      "harvestApy": 4.391254897636343,
+      "harvestApr": -0.002418767092626717,
+      "harvestApy": -0.0015640659410509627,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -2232,7 +2232,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.029044789493747163,
+      "yieldApr": -0.000010570694485059152,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -2258,7 +2258,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "bBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -2339,8 +2339,8 @@ Array [
     "vaultToken": "0x5Dce29e92b1b939F8E8C60DcF15BDE82A85be4a9",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 17.23664763791899,
-      "harvestApy": 7.945562990341792,
+      "harvestApr": -0.00627318494307846,
+      "harvestApy": -0.0027825677484272227,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -2352,7 +2352,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.07532901232304684,
+      "yieldApr": -0.000027415587752826007,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -2378,7 +2378,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "Tricrypto",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -2452,8 +2452,8 @@ Array [
     "vaultToken": "0xBE08Ef12e4a553666291E9fFC24fCCFd354F2Dd2",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 8.508377859877363,
-      "harvestApy": 5.19255803945835,
+      "harvestApr": -0.0030965782327176945,
+      "harvestApy": -0.00184235690875445,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -2465,7 +2465,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.037184011306575684,
+      "yieldApr": -0.00001353292036547264,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -2491,7 +2491,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "cvxCRV",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -2572,8 +2572,8 @@ Array [
     "vaultToken": "0x2B5455aac8d64C14786c3a29858E43b5945819C0",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 37.31620534112625,
-      "harvestApy": 11.630571713498107,
+      "harvestApr": -0.013581031671367356,
+      "harvestApy": -0.004004211865993312,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -2585,7 +2585,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.1630823435647154,
+      "yieldApr": -0.00005935293936632535,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -2611,7 +2611,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "CVX",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -2692,8 +2692,8 @@ Array [
     "vaultToken": "0x53C8E199eb2Cb7c01543C137078a038937a68E40",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 19.2981222072459,
-      "harvestApy": 8.444712676533129,
+      "harvestApr": -0.007023447494155476,
+      "harvestApy": -0.002950466190632106,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -2705,7 +2705,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.08433823769555221,
+      "yieldApr": -0.00003069444673647606,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -2731,7 +2731,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "Tricrypto2",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -2812,8 +2812,8 @@ Array [
     "vaultToken": "0x27E98fC7d05f54E544d16F58C194C2D7ba71e3B5",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 40.5111828684063,
-      "harvestApy": 12.056431051336315,
+      "harvestApr": -0.014743826510516663,
+      "harvestApy": -0.004142783245653092,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -2825,7 +2825,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.17704529660408,
+      "yieldApr": -0.00006443468081671964,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -2851,7 +2851,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "imBTC",
     "pricePerFullShare": 1,
     "protocol": "mStable",
@@ -2925,8 +2925,8 @@ Array [
     "vaultToken": "0x599D92B453C010b1050d31C364f6ee17E819f193",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 18.042494313887357,
-      "harvestApy": 8.145649184457039,
+      "harvestApr": -0.006566468494515316,
+      "harvestApy": -0.0028499636045231647,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -2938,7 +2938,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.0788507896117445,
+      "yieldApr": -0.000028697319602569914,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -2964,7 +2964,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "mhBTC",
     "pricePerFullShare": 1,
     "protocol": "mStable",
@@ -3038,8 +3038,8 @@ Array [
     "vaultToken": "0x26B8efa69603537AC8ab55768b6740b67664D518",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 41.75610112686192,
-      "harvestApy": 12.214780106171386,
+      "harvestApr": -0.015196907796295627,
+      "harvestApy": -0.004194174497729186,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -3051,7 +3051,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.18248594056236836,
+      "yieldApr": -0.00006641477384157803,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -3077,7 +3077,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "bveCVX",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -3158,8 +3158,8 @@ Array [
     "vaultToken": "0xfd05D3C7fe2924020620A8bE4961bBaA747e6305",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 6.390283279341345,
-      "harvestApy": 4.27208356261779,
+      "harvestApr": -0.002325709133937485,
+      "harvestApy": -0.0015224955336012869,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -3171,7 +3171,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.02792734051360937,
+      "yieldApr": -0.00001016400495562667,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -3197,7 +3197,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "CVX / bveCVX",
     "pricePerFullShare": 1,
     "protocol": "Curve",
@@ -3278,8 +3278,8 @@ Array [
     "vaultToken": "0x937B8E917d0F36eDEBBA8E459C5FB16F3b315551",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 10.963250677595088,
-      "harvestApy": 6.104586182846838,
+      "harvestApr": -0.003990015954528585,
+      "harvestApy": -0.0021565335623585646,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -3291,7 +3291,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.04791249799505203,
+      "yieldApr": -0.000017437495232345827,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -3317,7 +3317,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "ibBTC / crvsBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -3398,8 +3398,8 @@ Array [
     "vaultToken": "0xaE96fF08771a109dc6650a1BdCa62F2d558E40af",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 9.261071479469937,
-      "harvestApy": 5.48756429626962,
+      "harvestApr": -0.003370517015964146,
+      "harvestApy": -0.001944278221766016,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -3411,7 +3411,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.04047349474539901,
+      "yieldApr": -0.000014730110121416612,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -3437,7 +3437,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "MIM / 3CRV",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -3518,8 +3518,8 @@ Array [
     "vaultToken": "0x19E4d89e0cB807ea21B8CEF02df5eAA99A110dA5",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 62.44301086475767,
-      "harvestApy": 14.388761582898058,
+      "harvestApr": -0.022725797021895554,
+      "harvestApy": -0.00489248411348342,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -3531,7 +3531,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.27289357151860716,
+      "yieldApr": -0.00009931814352040171,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -3557,7 +3557,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "FRAX / 3CRV",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -3638,8 +3638,8 @@ Array [
     "vaultToken": "0x15cBC4ac1e81c97667780fE6DAdeDd04a6EEB47B",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 74.1830746821885,
-      "harvestApy": 15.355390205348197,
+      "harvestApr": -0.026998529928976032,
+      "harvestApy": -0.00519872355101425,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -3651,7 +3651,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.324200962059624,
+      "yieldApr": -0.00011799119158471846,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -3677,7 +3677,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "remBadger",
     "pricePerFullShare": 1,
     "protocol": "Badger",
@@ -3758,8 +3758,8 @@ Array [
     "vaultToken": "0x6aF7377b5009d7d154F36FE9e235aE1DA27Aea22",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 15.115954304368016,
-      "harvestApy": 7.384652411639436,
+      "harvestApr": -0.005501370042154663,
+      "harvestApy": -0.0025929656023437886,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -3771,7 +3771,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.06606098424634411,
+      "yieldApr": -0.000024042538920818942,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -3797,7 +3797,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "BADGER / WBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -3878,8 +3878,8 @@ Array [
     "vaultToken": "0xeC1c717A3b02582A4Aa2275260C583095536b613",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 6.847991776876762,
-      "harvestApy": 4.483706953959143,
+      "harvestApr": -0.0024922896729943763,
+      "harvestApy": -0.0015962832039306818,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -3891,7 +3891,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.029927655759095905,
+      "yieldApr": -0.00001089200890065083,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -3928,7 +3928,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "renBTC/wBTC/sBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -4009,8 +4009,8 @@ Array [
     "vaultToken": "0xd04c48A53c111300aD41190D63681ed3dAd998eC",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 7.762378486816628,
-      "harvestApy": 4.884698926427644,
+      "harvestApr": -0.002825075783929526,
+      "harvestApy": -0.0017356897317299946,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -4022,7 +4022,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.03392378361342189,
+      "yieldApr": -0.000012346378078357086,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -4048,7 +4048,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "renBTC/wBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -4129,8 +4129,8 @@ Array [
     "vaultToken": "0x6dEf55d2e18486B9dDfaA075bc4e4EE0B28c1545",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 14.707686276291446,
-      "harvestApy": 7.270348762736756,
+      "harvestApr": -0.005352783094427993,
+      "harvestApy": -0.002554206542404458,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -4142,7 +4142,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.06427673779865153,
+      "yieldApr": -0.000023393172045573274,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -4168,7 +4168,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "tBTC/sBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -4249,8 +4249,8 @@ Array [
     "vaultToken": "0xb9D076fDe463dbc9f915E5392F807315Bf940334",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 8.70163143419692,
-      "harvestApy": 5.269731690411494,
+      "harvestApr": -0.003166911828272771,
+      "harvestApy": -0.0018690471189630742,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -4262,7 +4262,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.03802858393967664,
+      "yieldApr": -0.000013840298017878616,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -4288,7 +4288,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "renBTC/wBTC",
     "pricePerFullShare": 1,
     "protocol": "Curve",
@@ -4362,8 +4362,8 @@ Array [
     "vaultToken": "0xAf5A1DECfa95BAF63E0084a35c62592B774A2A87",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 9.220816099902546,
-      "harvestApy": 5.472157546262779,
+      "harvestApr": -0.0033558662871365796,
+      "harvestApy": -0.0019389624249854798,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -4375,7 +4375,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.04029756738137783,
+      "yieldApr": -0.000014666082303735548,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -4401,7 +4401,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "wBTC/Badger",
     "pricePerFullShare": 1,
     "protocol": "Uniswap",
@@ -4475,8 +4475,8 @@ Array [
     "vaultToken": "0x235c9e24D3FB2FAFd58a2E49D454Fdcd2DBf7FF1",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 45.72440245793735,
-      "harvestApy": 12.694276038829244,
+      "harvestApr": -0.016641149660243052,
+      "harvestApy": -0.004349350790300299,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -4488,7 +4488,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.1998285367649229,
+      "yieldApr": -0.00007272651818143569,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -4514,7 +4514,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "wBTC/Digg",
     "pricePerFullShare": 1,
     "protocol": "Uniswap",
@@ -4588,8 +4588,8 @@ Array [
     "vaultToken": "0xC17078FDd324CC473F8175Dc5290fae5f2E84714",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 8.358629929827083,
-      "harvestApy": 5.132049048246712,
+      "harvestApr": -0.003042078280734172,
+      "harvestApy": -0.0018214164027363644,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -4601,7 +4601,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.0365295706110838,
+      "yieldApr": -0.000013294740201857724,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -4627,7 +4627,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "wBTC/wETH",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
@@ -4708,8 +4708,8 @@ Array [
     "vaultToken": "0x758A43EE2BFf8230eeb784879CdcFF4828F2544D",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 13.7560509143537,
-      "harvestApy": 6.995079686081307,
+      "harvestApr": -0.005006440537091051,
+      "harvestApy": -0.0024606961337547695,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -4721,7 +4721,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.060117822827926395,
+      "yieldApr": -0.000021879557373063795,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -4747,7 +4747,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "wBTC/Badger",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
@@ -4836,8 +4836,8 @@ Array [
     "vaultToken": "0x1862A18181346EBd9EdAf800804f89190DeF24a5",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 66.30592275294951,
-      "harvestApy": 14.723257406366152,
+      "harvestApr": -0.024131682965291685,
+      "harvestApy": -0.004998748303608469,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -4849,7 +4849,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.28977558612731213,
+      "yieldApr": -0.00010546226166794141,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -4875,7 +4875,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "wBTC/Digg",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
@@ -4956,8 +4956,8 @@ Array [
     "vaultToken": "0x88128580ACdD9c04Ce47AFcE196875747bF2A9f6",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 11.8825592738702,
-      "harvestApy": 6.412753583899522,
+      "harvestApr": -0.004324593359204352,
+      "harvestApy": -0.002262081151094275,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -4969,7 +4969,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.05193013588103782,
+      "yieldApr": -0.000018899692868990016,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -4995,7 +4995,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "Digg",
     "pricePerFullShare": 1,
     "protocol": "Badger",
@@ -5076,8 +5076,8 @@ Array [
     "vaultToken": "0x7e7E112A68d8D2E221E11047a72fFC1065c38e1a",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 12.782478294136808,
-      "harvestApy": 6.699616798016739,
+      "harvestApr": -0.0046521140329219,
+      "harvestApy": -0.002360057603267851,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -5089,7 +5089,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.0558630358504191,
+      "yieldApr": -0.000020331050600771114,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -5115,7 +5115,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "Badger",
     "pricePerFullShare": 1,
     "protocol": "Badger",
@@ -5189,8 +5189,8 @@ Array [
     "vaultToken": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 62.550346871524134,
-      "harvestApy": 14.398297571111973,
+      "harvestApr": -0.022764861378925604,
+      "harvestApy": -0.0048955178521215,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -5202,7 +5202,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.27336266014571536,
+      "yieldApr": -0.00009948886577996887,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -5228,7 +5228,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "wBTC",
     "pricePerFullShare": 1,
     "protocol": "Yearn",
@@ -5309,8 +5309,8 @@ Array [
     "vaultToken": "0x4b92d19c11435614CD49Af1b589001b7c08cD4D5",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 21.394894431608904,
-      "harvestApy": 8.913238650742873,
+      "harvestApr": -0.007786556435133903,
+      "harvestApy": -0.0031073618542265535,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -5322,7 +5322,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.0935017237773929,
+      "yieldApr": -0.00003402944806772861,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -5348,7 +5348,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "wBTC/ibBTC",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
@@ -5429,8 +5429,8 @@ Array [
     "vaultToken": "0x8a8FFec8f4A0C8c9585Da95D9D97e8Cd6de273DE",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 11.6690274114751,
-      "harvestApy": 6.342594990402062,
+      "harvestApr": -0.004246879589568628,
+      "harvestApy": -0.0022380786822817633,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -5442,7 +5442,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.05099694140890985,
+      "yieldApr": -0.0000185600617740385,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -5468,7 +5468,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "hBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -5549,8 +5549,8 @@ Array [
     "vaultToken": "0x8c76970747afd5398e958bDfadA4cf0B9FcA16c4",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 11.511111185983355,
-      "harvestApy": 6.290168338103452,
+      "harvestApr": -0.004189406831021235,
+      "harvestApy": -0.0022201322735448947,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -5562,7 +5562,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.05030680295821092,
+      "yieldApr": -0.000018308889607164713,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -5588,7 +5588,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "pBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -5669,8 +5669,8 @@ Array [
     "vaultToken": "0x55912D0Cf83B75c492E761932ABc4DB4a5CB1b17",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 18.896172061361508,
-      "harvestApy": 8.350584756026969,
+      "harvestApr": -0.006877159905328274,
+      "harvestApy": -0.002918863709644448,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -5682,7 +5682,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.08258160217519928,
+      "yieldApr": -0.00003005512870822845,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -5708,7 +5708,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "oBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -5789,8 +5789,8 @@ Array [
     "vaultToken": "0xf349c0faA80fC1870306Ac093f75934078e28991",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 6.645975924337892,
-      "harvestApy": 4.391254898370001,
+      "harvestApr": -0.002418767092626717,
+      "harvestApy": -0.0015640659410509627,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -5802,7 +5802,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.029044789498496947,
+      "yieldApr": -0.000010570694485059152,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -5828,7 +5828,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "bBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -5909,8 +5909,8 @@ Array [
     "vaultToken": "0x5Dce29e92b1b939F8E8C60DcF15BDE82A85be4a9",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 17.236647640737754,
-      "harvestApy": 7.945562991691446,
+      "harvestApr": -0.00627318494307846,
+      "harvestApy": -0.0027825677484272227,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -5922,7 +5922,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.07532901233536564,
+      "yieldApr": -0.000027415587752826007,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -5948,7 +5948,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "Tricrypto",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -6022,8 +6022,8 @@ Array [
     "vaultToken": "0xBE08Ef12e4a553666291E9fFC24fCCFd354F2Dd2",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 8.508377861268764,
-      "harvestApy": 5.192558040329187,
+      "harvestApr": -0.0030965782327176945,
+      "harvestApy": -0.00184235690875445,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -6035,7 +6035,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.03718401131265651,
+      "yieldApr": -0.00001353292036547264,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -6061,7 +6061,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "cvxCRV",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -6142,8 +6142,8 @@ Array [
     "vaultToken": "0x2B5455aac8d64C14786c3a29858E43b5945819C0",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 37.31620534722868,
-      "harvestApy": 11.630571715506633,
+      "harvestApr": -0.013581031671367356,
+      "harvestApy": -0.004004211865993312,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -6155,7 +6155,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.16308234359138477,
+      "yieldApr": -0.00005935293936632535,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -6181,7 +6181,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "CVX",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -6262,8 +6262,8 @@ Array [
     "vaultToken": "0x53C8E199eb2Cb7c01543C137078a038937a68E40",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 19.298122210401782,
-      "harvestApy": 8.444712677970866,
+      "harvestApr": -0.007023447494155476,
+      "harvestApy": -0.002950466190632106,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -6275,7 +6275,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.0843382377093443,
+      "yieldApr": -0.00003069444673647606,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -6301,7 +6301,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "Tricrypto2",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -6382,8 +6382,8 @@ Array [
     "vaultToken": "0x27E98fC7d05f54E544d16F58C194C2D7ba71e3B5",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 40.511182875031224,
-      "harvestApy": 12.056431053422267,
+      "harvestApr": -0.014743826510516663,
+      "harvestApy": -0.004142783245653092,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -6395,7 +6395,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.17704529663303276,
+      "yieldApr": -0.00006443468081671964,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -6421,7 +6421,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "imBTC",
     "pricePerFullShare": 1,
     "protocol": "mStable",
@@ -6495,8 +6495,8 @@ Array [
     "vaultToken": "0x599D92B453C010b1050d31C364f6ee17E819f193",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 18.0424943168379,
-      "harvestApy": 8.145649185841952,
+      "harvestApr": -0.006566468494515316,
+      "harvestApy": -0.0028499636045231647,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -6508,7 +6508,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.07885078962463922,
+      "yieldApr": -0.000028697319602569914,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -6534,7 +6534,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "mhBTC",
     "pricePerFullShare": 1,
     "protocol": "mStable",
@@ -6608,8 +6608,8 @@ Array [
     "vaultToken": "0x26B8efa69603537AC8ab55768b6740b67664D518",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 41.75610113369043,
-      "harvestApy": 12.214780108286227,
+      "harvestApr": -0.015196907796295627,
+      "harvestApy": -0.004194174497729186,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -6621,7 +6621,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.18248594059221088,
+      "yieldApr": -0.00006641477384157803,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -6647,7 +6647,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "bveCVX",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -6728,8 +6728,8 @@ Array [
     "vaultToken": "0xfd05D3C7fe2924020620A8bE4961bBaA747e6305",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 6.390283280386368,
-      "harvestApy": 4.2720835633311305,
+      "harvestApr": -0.002325709133937485,
+      "harvestApy": -0.0015224955336012869,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -6741,7 +6741,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.027927340518176413,
+      "yieldApr": -0.00001016400495562667,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -6767,7 +6767,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "CVX / bveCVX",
     "pricePerFullShare": 1,
     "protocol": "Curve",
@@ -6848,8 +6848,8 @@ Array [
     "vaultToken": "0x937B8E917d0F36eDEBBA8E459C5FB16F3b315551",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 10.963250679387942,
-      "harvestApy": 6.104586183875016,
+      "harvestApr": -0.003990015954528585,
+      "harvestApy": -0.0021565335623585646,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -6861,7 +6861,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.04791249800288731,
+      "yieldApr": -0.000017437495232345827,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -6887,7 +6887,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "ibBTC / crvsBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -6968,8 +6968,8 @@ Array [
     "vaultToken": "0xaE96fF08771a109dc6650a1BdCa62F2d558E40af",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 9.26107148098443,
-      "harvestApy": 5.487564297191216,
+      "harvestApr": -0.003370517015964146,
+      "harvestApy": -0.001944278221766016,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -6981,7 +6981,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.040473494752017766,
+      "yieldApr": -0.000014730110121416612,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -7007,7 +7007,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "MIM / 3CRV",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -7088,8 +7088,8 @@ Array [
     "vaultToken": "0x19E4d89e0cB807ea21B8CEF02df5eAA99A110dA5",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 62.44301087496916,
-      "harvestApy": 14.388761585412801,
+      "harvestApr": -0.022725797021895554,
+      "harvestApy": -0.00489248411348342,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -7101,7 +7101,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.27289357156323435,
+      "yieldApr": -0.00009931814352040171,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -7127,7 +7127,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "FRAX / 3CRV",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -7208,8 +7208,8 @@ Array [
     "vaultToken": "0x15cBC4ac1e81c97667780fE6DAdeDd04a6EEB47B",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 74.18307469431991,
-      "harvestApy": 15.35539020804293,
+      "harvestApr": -0.026998529928976032,
+      "harvestApy": -0.00519872355101425,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -7221,7 +7221,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.32420096211264166,
+      "yieldApr": -0.00011799119158471846,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -7247,7 +7247,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "remBadger",
     "pricePerFullShare": 1,
     "protocol": "Badger",
@@ -7328,8 +7328,8 @@ Array [
     "vaultToken": "0x6aF7377b5009d7d154F36FE9e235aE1DA27Aea22",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 15.115954306839974,
-      "harvestApy": 7.384652412890613,
+      "harvestApr": -0.005501370042154663,
+      "harvestApy": -0.0025929656023437886,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -7341,7 +7341,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.06606098425714726,
+      "yieldApr": -0.000024042538920818942,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -7367,7 +7367,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1048968337,
+    "lastHarvest": 1648236387419,
     "name": "BADGER / WBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -7448,8 +7448,8 @@ Array [
     "vaultToken": "0xeC1c717A3b02582A4Aa2275260C583095536b613",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 6.8479917779966355,
-      "harvestApy": 4.483706954708566,
+      "harvestApr": -0.0024922896729943763,
+      "harvestApy": -0.0015962832039306818,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -7461,7 +7461,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0.029927655763990063,
+      "yieldApr": -0.00001089200890065083,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
