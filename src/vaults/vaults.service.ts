@@ -220,10 +220,9 @@ export class VaultsService {
     lastHarvested: number,
     apy = false,
   ): number {
-    if (lastHarvested === 0 || value === 0 || pendingValue) {
+    if (lastHarvested === 0 || value === 0 || pendingValue === 0) {
       return 0;
     }
-    console.log({ value, pendingValue, lastHarvested });
     const duration = Date.now() / 1000 - lastHarvested;
     const apr = (pendingValue / value) * (ONE_YEAR_SECONDS / duration);
     if (!apy) {

@@ -23,6 +23,7 @@ import { vaultsGraphSdkMapMock } from './mocks/vaults-graph-sdk-map.mock';
 import * as gqlGenT from '@badger-dao/sdk/lib/graphql/generated/badger';
 
 const TEST_VAULT = TOKENS.BCRV_SBTC;
+import { ONE_DAY_SECONDS } from '../config/constants';
 
 describe('VaultsController', () => {
   let request: SuperTest.SuperTest<SuperTest.Test>;
@@ -37,12 +38,13 @@ describe('VaultsController', () => {
     jest.spyOn(tokenUtils, 'getFullToken').mockImplementation(async (_, tokenAddr) => {
       return fullTokenMockMap[tokenAddr] || fullTokenMockMap[TOKENS.BADGER];
     });
+    jest.spyOn(Date, 'now').mockImplementation(() => 1648236387419 + ONE_DAY_SECONDS);
     jest.spyOn(vaultsUtils, 'getVaultPendingHarvest').mockImplementation(
       async (vaultDefinition: VaultDefinition): Promise<VaultPendingHarvestData> => ({
         vault: vaultDefinition.vaultToken,
         yieldTokens: [mockBalance(fullTokenMockMap[TOKENS.WBTC], 10)],
         harvestTokens: [mockBalance(fullTokenMockMap[TOKENS.BADGER], 1500)],
-        lastHarvestedAt: 1048968337,
+        lastHarvestedAt: 1648236387419,
       }),
     );
     jest
