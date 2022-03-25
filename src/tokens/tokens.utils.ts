@@ -11,6 +11,7 @@ import { TokenFull, TokenFullMap } from './interfaces/token-full.interface';
 import { TokenNotFound } from './errors/token.error';
 import * as thisModule from './tokens.utils';
 import { SourceType } from '../rewards/enums/source-type.enum';
+import { ethers } from 'ethers';
 
 export async function toBalance(token: Token, balance: number, currency?: Currency): Promise<TokenValue> {
   const { price } = await getPrice(token.address, currency);
@@ -80,13 +81,14 @@ export async function getCachedTokenBalances(
 }
 
 export async function getFullToken(chain: Chain, tokenAddr: Token['address']): Promise<TokenFull> {
-  const fullTokenMap = await getFullTokens(chain, [tokenAddr]);
+  const address = ethers.utils.getAddress(tokenAddr);
+  const fullTokenMap = await getFullTokens(chain, [address]);
 
-  if (!fullTokenMap[tokenAddr]) {
-    throw new TokenNotFound(tokenAddr);
+  if (!fullTokenMap[address]) {
+    throw new TokenNotFound(address);
   }
 
-  return fullTokenMap[tokenAddr];
+  return fullTokenMap[address];
 }
 
 export async function getFullTokens(chain: Chain, tokensAddr: Token['address'][]): Promise<TokenFullMap> {
@@ -117,7 +119,9 @@ export async function getFullTokens(chain: Chain, tokensAddr: Token['address'][]
 
 export async function getCachedTokesInfo(tokensAddr: Token['address'][]): Promise<Token[]> {
   const mapper = getDataMapper();
-  const tokensToGet = tokensAddr.map((addr) => Object.assign(new TokenInformationSnapshot(), { address: addr }));
+  const tokensToGet = tokensAddr.map((addr) =>
+    Object.assign(new TokenInformationSnapshot(), { address: ethers.utils.getAddress(addr) }),
+  );
 
   const tokensInfo: Token[] = [];
 

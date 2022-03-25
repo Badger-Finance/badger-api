@@ -87,16 +87,6 @@ export class VaultsService {
     const harvestValue = pendingHarvest.harvestTokens.reduce((total, token) => (total += token.value), 0);
     const yieldValue = pendingHarvest.yieldTokens.reduce((total, token) => (total += token.value), 0);
     const earningValue = value * ((balance - available) / balance);
-    console.log({
-      harvestApr: this.calculateProjectedYield(earningValue, harvestValue, lastHarvest),
-      harvestApy: this.calculateProjectedYield(earningValue, harvestValue, lastHarvest, true),
-      harvestTokens: pendingHarvest.harvestTokens,
-      harvestValue,
-      yieldApr: this.calculateProjectedYield(earningValue, yieldValue, lastHarvest),
-      yieldTokens: pendingHarvest.yieldTokens,
-      yieldValue,
-      lastHarvest,
-    });
     return {
       harvestApr: this.calculateProjectedYield(earningValue, harvestValue, lastHarvest),
       harvestApy: this.calculateProjectedYield(earningValue, harvestValue, lastHarvest, true),

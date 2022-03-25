@@ -107,13 +107,12 @@ export async function getLpTokenBalances(chain: Chain, vaultDefinition: VaultDef
   }
 }
 
-// TODO: kill this function
 export async function getVault(chain: Chain, contract: string, block?: number): Promise<gqlGenT.SettQuery> {
   const sdk = await chain.getSdk();
   const settId = contract.toLowerCase();
   const vars = { id: settId };
   if (block) {
-    return sdk.graph.loadSettSpanshot({ ...vars, block: { number: block } });
+    return sdk.graph.loadSett({ ...vars, block: { number: block } });
   }
   return sdk.graph.loadSett(vars);
 }
