@@ -137,6 +137,7 @@ const RAW_TOKENS: ContractRegistry = {
   FTM_SCREAM: '0xe0654C8e6fd4D733349ac7E09f6f23DA256bF475',
   FTM_TOMB: '0x6c021ae822bea943b2e66552bde1d2696a53fbb7',
   FTM_OXSOLID: '0xda0053f0befcbcac208a3f867bb243716734d809',
+  FTM_DEUS: '0xde5ed76e7c05ec5e4572cfc88d1acea165109e44',
   // solidly market maker - avoid sushi liquidity pool collision
   SMM_USDC_DAI: '0xC0240Ee4405f11EFb87A00B432A8be7b7Afc97CC',
   SMM_BOO_XBOO: '0x5804f6c40f44cf7593f73cf3aa16f7037213a623',

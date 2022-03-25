@@ -1,5 +1,6 @@
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
+import { TOKENS } from '../config/tokens.config';
 import { PricingType } from '../prices/enums/pricing-type.enum';
 import { CoinGeckoPriceResponse } from '../prices/interface/coingecko-price-response.interface';
 import { updatePrice, fetchPrices } from '../prices/prices.utils';
@@ -73,6 +74,9 @@ export async function indexPrices() {
       await Promise.all(
         Object.values(priceUpdates).map(async (p) => {
           try {
+            if (p.address === TOKENS.BADGER) {
+              console.log(p);
+            }
             await updatePrice(p);
           } catch (err) {
             console.error(err);

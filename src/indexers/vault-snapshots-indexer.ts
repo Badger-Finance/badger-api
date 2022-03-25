@@ -1,3 +1,4 @@
+import { Network } from '@badger-dao/sdk';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
@@ -12,6 +13,9 @@ export async function refreshVaultSnapshots() {
 }
 
 async function captureSnapshot(chain: Chain, vault: VaultDefinition) {
+  if (chain.network !== Network.Avalanche) {
+    return;
+  }
   let snapshot;
   try {
     // purposefully await to leverage try / catch
