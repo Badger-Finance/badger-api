@@ -260,17 +260,10 @@ export const fantomTokensConfig: TokenConfig = {
       network: Network.Fantom,
     },
   },
-  [TOKENS.BOXD]: {
+  [TOKENS.BVEOXD]: {
     type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.FTM_OXD_2,
-      network: Network.Fantom,
-    },
-  },
-  [TOKENS.BOXSOLID]: {
-    type: PricingType.Vault,
-    vaultToken: {
-      address: TOKENS.FTM_OXSOLID,
       network: Network.Fantom,
     },
   },
