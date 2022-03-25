@@ -19,11 +19,11 @@ import { Chain } from '../chains/config/chain.config';
 import { VaultsService } from '@badger-dao/sdk/lib/vaults/vaults.service';
 import { vaultsHarvestsSdkMock } from './mocks/vaults-harvests-sdk.mock';
 import { BadgerGraph } from '@badger-dao/sdk/lib/graphql';
+import { ONE_DAY_SECONDS } from '../config/constants';
 import { vaultsGraphSdkMapMock } from './mocks/vaults-graph-sdk-map.mock';
 import * as gqlGenT from '@badger-dao/sdk/lib/graphql/generated/badger';
 
 const TEST_VAULT = TOKENS.BCRV_SBTC;
-import { ONE_DAY_SECONDS } from '../config/constants';
 
 describe('VaultsController', () => {
   let request: SuperTest.SuperTest<SuperTest.Test>;
@@ -97,7 +97,7 @@ describe('VaultsController', () => {
       .mockImplementation(async ({ id, block }): Promise<gqlGenT.SettQuery> => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        return vaultsGraphSdkMapMock[`${id.toLowerCase()}-${(block || {}).number || 0})`];
+        return vaultsGraphSdkMapMock[`${id.toLowerCase()}-${(block || {}).number || 0}`];
       });
   };
 
