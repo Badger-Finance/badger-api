@@ -194,6 +194,7 @@ export async function getStrategyInfo(chain: Chain, vaultDefinition: VaultDefini
       strategistFee: strategistFee.toNumber(),
     };
   } catch (err) {
+    console.log(err);
     return defaultStrategyInfo;
   }
 }
@@ -419,9 +420,9 @@ export async function loadVaultGraphPerformances(
     settHarvests = vaultHarvests.settHarvests;
     badgerTreeDistributions = treeDistributions.badgerTreeDistributions;
     vaultLookupMethod[vaultDefinition.vaultToken] = 'FullGraphAPR';
+    data = constructGraphVaultData(vaultDefinition, settHarvests, badgerTreeDistributions);
   }
 
-  data = constructGraphVaultData(vaultDefinition, settHarvests, badgerTreeDistributions);
   // if we still don't have harvests or distributions - don't bother there is nothing to compute
   if (data.length <= 1) {
     return [];
@@ -452,12 +453,15 @@ function constructGraphVaultData(
         token: vaultDefinition.depositToken,
         amount: h.amount,
       })),
-      treeDistributions: currentDistributions.map((d) => ({
-        timestamp,
-        block: Number(d.blockNumber),
-        token: d.token.id,
-        amount: d.amount,
-      })),
+      treeDistributions: currentDistributions.map((d) => {
+        const tokenAddress = d.token.id.startsWith('0x0x') ? d.token.id.slice(2) : d.token.id;
+        return {
+          timestamp,
+          block: Number(d.blockNumber),
+          token: tokenAddress,
+          amount: d.amount,
+        };
+      }),
     };
   });
 }
