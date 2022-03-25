@@ -83,15 +83,26 @@ export class VaultsService {
     vault: VaultDTO,
     pendingHarvest: VaultPendingHarvestData,
   ): VaultYieldProjection {
-    const { value, lastHarvest } = vault;
+    const { value, balance, available, lastHarvest } = vault;
     const harvestValue = pendingHarvest.harvestTokens.reduce((total, token) => (total += token.value), 0);
     const yieldValue = pendingHarvest.yieldTokens.reduce((total, token) => (total += token.value), 0);
-    return {
-      harvestApr: this.calculateProjectedYield(value, harvestValue, lastHarvest),
-      harvestApy: this.calculateProjectedYield(value, harvestValue, lastHarvest, true),
+    const earningValue = value * ((balance - available) / balance);
+    console.log({
+      harvestApr: this.calculateProjectedYield(earningValue, harvestValue, lastHarvest),
+      harvestApy: this.calculateProjectedYield(earningValue, harvestValue, lastHarvest, true),
       harvestTokens: pendingHarvest.harvestTokens,
       harvestValue,
-      yieldApr: this.calculateProjectedYield(value, yieldValue, lastHarvest),
+      yieldApr: this.calculateProjectedYield(earningValue, yieldValue, lastHarvest),
+      yieldTokens: pendingHarvest.yieldTokens,
+      yieldValue,
+      lastHarvest,
+    });
+    return {
+      harvestApr: this.calculateProjectedYield(earningValue, harvestValue, lastHarvest),
+      harvestApy: this.calculateProjectedYield(earningValue, harvestValue, lastHarvest, true),
+      harvestTokens: pendingHarvest.harvestTokens,
+      harvestValue,
+      yieldApr: this.calculateProjectedYield(earningValue, yieldValue, lastHarvest),
       yieldTokens: pendingHarvest.yieldTokens,
       yieldValue,
     };
@@ -103,9 +114,10 @@ export class VaultsService {
     lastHarvested: number,
     apy = false,
   ): number {
-    if (lastHarvested === 0) {
+    if (lastHarvested === 0 || value === 0 || pendingValue) {
       return 0;
     }
+    console.log({ value, pendingValue, lastHarvested });
     const duration = Date.now() / 1000 - lastHarvested;
     const apr = (pendingValue / value) * (ONE_YEAR_SECONDS / duration);
     if (!apy) {

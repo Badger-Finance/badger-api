@@ -33,8 +33,8 @@ describe('VaultsController', () => {
     jest.spyOn(vaultsUtils, 'getVaultPendingHarvest').mockImplementation(
       async (vaultDefinition: VaultDefinition): Promise<VaultPendingHarvestData> => ({
         vault: vaultDefinition.vaultToken,
-        yieldTokens: [],
-        harvestTokens: [],
+        yieldTokens: [mockBalance(fullTokenMockMap[TOKENS.WBTC], 10)],
+        harvestTokens: [mockBalance(fullTokenMockMap[TOKENS.BADGER], 1500)],
         lastHarvestedAt: 1048968337,
       }),
     );
@@ -43,6 +43,7 @@ describe('VaultsController', () => {
       .mockImplementation(async (chain, vaultDefinition: VaultDefinition): Promise<VaultDTO> => {
         const vault = await vaultsUtils.defaultVault(chain, vaultDefinition);
         vault.value = parseInt(vaultDefinition.vaultToken.slice(0, 7), 16);
+        vault.balance = 10;
         return vault;
       });
     jest

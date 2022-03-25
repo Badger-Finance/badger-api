@@ -1,4 +1,4 @@
-import { Network, Protocol, VaultState } from '@badger-dao/sdk';
+import { Network, Protocol, VaultState, VaultVersion } from '@badger-dao/sdk';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
@@ -41,5 +41,6 @@ export const avalancheSetts: VaultDefinition[] = [
     protocol: Protocol.Aave,
     stage: Stage.Staging,
     state: VaultState.Experimental,
+    version: VaultVersion.v1_5,
   },
 ];

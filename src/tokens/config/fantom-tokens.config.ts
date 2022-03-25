@@ -75,6 +75,10 @@ export const fantomTokensConfig: TokenConfig = {
     lookupName: 'boo-mirrorworld',
     type: PricingType.LookupName,
   },
+  [TOKENS.FTM_DEUS]: {
+    lookupName: 'deus-finance-2',
+    type: PricingType.LookupName,
+  },
   [TOKENS.MULTI_RENBTC]: {
     lookupName: 'renbtc',
     type: PricingType.LookupName,
@@ -256,17 +260,10 @@ export const fantomTokensConfig: TokenConfig = {
       network: Network.Fantom,
     },
   },
-  [TOKENS.BOXD]: {
+  [TOKENS.BVEOXD]: {
     type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.FTM_OXD_2,
-      network: Network.Fantom,
-    },
-  },
-  [TOKENS.BOXSOLID]: {
-    type: PricingType.Vault,
-    vaultToken: {
-      address: TOKENS.FTM_OXSOLID,
       network: Network.Fantom,
     },
   },
