@@ -88,8 +88,8 @@ Array [
     "vaultToken": "0xaf4B9C4b545D5324904bAa15e29796D2E2f90813",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 9.223795488183333,
+      "harvestApy": 5.473299222164751,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -101,7 +101,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.040310588148596206,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -201,8 +201,8 @@ Array [
     "vaultToken": "0x857F91f735f4B03b19D2b5c6E476C73DB8241F55",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 12.111666367369642,
+      "harvestApy": 6.487114945590244,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -214,7 +214,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.05293139850658167,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -314,8 +314,8 @@ Array [
     "vaultToken": "0xa861Ba302674b08f7F2F24381b705870521DDfed",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 9.602515002624402,
+      "harvestApy": 5.616640134151973,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -327,7 +327,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.04196569925660247,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -439,8 +439,8 @@ Array [
     "vaultToken": "0xd04c48A53c111300aD41190D63681ed3dAd998eC",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 7.762378485547221,
+      "harvestApy": 4.884698925609632,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -452,7 +452,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.03392378360787422,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -559,8 +559,8 @@ Array [
     "vaultToken": "0x6dEf55d2e18486B9dDfaA075bc4e4EE0B28c1545",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 14.70768627388625,
+      "harvestApy": 7.270348761505585,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -572,7 +572,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.06427673778814015,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -679,8 +679,8 @@ Array [
     "vaultToken": "0xb9D076fDe463dbc9f915E5392F807315Bf940334",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 8.701631432773913,
+      "harvestApy": 5.269731689527402,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -692,7 +692,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.03802858393345771,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -792,8 +792,8 @@ Array [
     "vaultToken": "0xAf5A1DECfa95BAF63E0084a35c62592B774A2A87",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 9.220816098394637,
+      "harvestApy": 5.47215754534387,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -805,7 +805,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.04029756737478784,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -905,8 +905,8 @@ Array [
     "vaultToken": "0x235c9e24D3FB2FAFd58a2E49D454Fdcd2DBf7FF1",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 45.72440245045989,
+      "harvestApy": 12.694276036626807,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -918,7 +918,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.19982853673224432,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -1018,8 +1018,8 @@ Array [
     "vaultToken": "0xC17078FDd324CC473F8175Dc5290fae5f2E84714",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 8.358629928460171,
+      "harvestApy": 5.132049047386267,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -1031,7 +1031,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.03652957060511,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -1138,8 +1138,8 @@ Array [
     "vaultToken": "0x758A43EE2BFf8230eeb784879CdcFF4828F2544D",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 13.756050912104131,
+      "harvestApy": 6.9950796848982755,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -1151,7 +1151,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.06011782281809514,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -1266,8 +1266,8 @@ Array [
     "vaultToken": "0x1862A18181346EBd9EdAf800804f89190DeF24a5",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 66.3059227421063,
+      "harvestApy": 14.723257403789258,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -1279,7 +1279,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.2897755860799242,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -1386,8 +1386,8 @@ Array [
     "vaultToken": "0x88128580ACdD9c04Ce47AFcE196875747bF2A9f6",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 11.882559271927008,
+      "harvestApy": 6.412753582817898,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -1399,7 +1399,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.051930135872545524,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -1506,8 +1506,8 @@ Array [
     "vaultToken": "0x7e7E112A68d8D2E221E11047a72fFC1065c38e1a",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 12.78247829204645,
+      "harvestApy": 6.699616796885222,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -1519,7 +1519,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.055863035841283645,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -1619,8 +1619,8 @@ Array [
     "vaultToken": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 62.55034686129508,
+      "harvestApy": 14.398297568595453,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -1632,7 +1632,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.27336266010101146,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -1739,8 +1739,8 @@ Array [
     "vaultToken": "0x4b92d19c11435614CD49Af1b589001b7c08cD4D5",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 21.394894428110128,
+      "harvestApy": 8.913238649222155,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -1752,7 +1752,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.09350172376210227,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -1859,8 +1859,8 @@ Array [
     "vaultToken": "0x8a8FFec8f4A0C8c9585Da95D9D97e8Cd6de273DE",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 11.669027409566826,
+      "harvestApy": 6.342594989332628,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -1872,7 +1872,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.05099694140057016,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -1979,8 +1979,8 @@ Array [
     "vaultToken": "0x8c76970747afd5398e958bDfadA4cf0B9FcA16c4",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 11.511111184100905,
+      "harvestApy": 6.2901683370431005,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -1992,7 +1992,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.05030680294998409,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -2099,8 +2099,8 @@ Array [
     "vaultToken": "0x55912D0Cf83B75c492E761932ABc4DB4a5CB1b17",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 18.896172058271357,
+      "harvestApy": 8.350584754605883,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -2112,7 +2112,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.08258160216169445,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -2219,8 +2219,8 @@ Array [
     "vaultToken": "0xf349c0faA80fC1870306Ac093f75934078e28991",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 6.645975923251056,
+      "harvestApy": 4.391254897636343,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -2232,7 +2232,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.029044789493747163,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -2339,8 +2339,8 @@ Array [
     "vaultToken": "0x5Dce29e92b1b939F8E8C60DcF15BDE82A85be4a9",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 17.23664763791899,
+      "harvestApy": 7.945562990341792,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -2352,7 +2352,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.07532901232304684,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -2452,8 +2452,8 @@ Array [
     "vaultToken": "0xBE08Ef12e4a553666291E9fFC24fCCFd354F2Dd2",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 8.508377859877363,
+      "harvestApy": 5.19255803945835,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -2465,7 +2465,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.037184011306575684,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -2572,8 +2572,8 @@ Array [
     "vaultToken": "0x2B5455aac8d64C14786c3a29858E43b5945819C0",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 37.31620534112625,
+      "harvestApy": 11.630571713498107,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -2585,7 +2585,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.1630823435647154,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -2692,8 +2692,8 @@ Array [
     "vaultToken": "0x53C8E199eb2Cb7c01543C137078a038937a68E40",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 19.2981222072459,
+      "harvestApy": 8.444712676533129,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -2705,7 +2705,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.08433823769555221,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -2812,8 +2812,8 @@ Array [
     "vaultToken": "0x27E98fC7d05f54E544d16F58C194C2D7ba71e3B5",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 40.5111828684063,
+      "harvestApy": 12.056431051336315,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -2825,7 +2825,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.17704529660408,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -2925,8 +2925,8 @@ Array [
     "vaultToken": "0x599D92B453C010b1050d31C364f6ee17E819f193",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 18.042494313887357,
+      "harvestApy": 8.145649184457039,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -2938,7 +2938,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.0788507896117445,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -3038,8 +3038,8 @@ Array [
     "vaultToken": "0x26B8efa69603537AC8ab55768b6740b67664D518",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 41.75610112686192,
+      "harvestApy": 12.214780106171386,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -3051,7 +3051,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.18248594056236836,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -3158,8 +3158,8 @@ Array [
     "vaultToken": "0xfd05D3C7fe2924020620A8bE4961bBaA747e6305",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 6.390283279341345,
+      "harvestApy": 4.27208356261779,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -3171,7 +3171,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.02792734051360937,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -3278,8 +3278,8 @@ Array [
     "vaultToken": "0x937B8E917d0F36eDEBBA8E459C5FB16F3b315551",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 10.963250677595088,
+      "harvestApy": 6.104586182846838,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -3291,7 +3291,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.04791249799505203,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -3398,8 +3398,8 @@ Array [
     "vaultToken": "0xaE96fF08771a109dc6650a1BdCa62F2d558E40af",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 9.261071479469937,
+      "harvestApy": 5.48756429626962,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -3411,7 +3411,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.04047349474539901,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -3518,8 +3518,8 @@ Array [
     "vaultToken": "0x19E4d89e0cB807ea21B8CEF02df5eAA99A110dA5",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 62.44301086475767,
+      "harvestApy": 14.388761582898058,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -3531,7 +3531,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.27289357151860716,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -3638,8 +3638,8 @@ Array [
     "vaultToken": "0x15cBC4ac1e81c97667780fE6DAdeDd04a6EEB47B",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 74.1830746821885,
+      "harvestApy": 15.355390205348197,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -3651,7 +3651,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.324200962059624,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -3758,8 +3758,8 @@ Array [
     "vaultToken": "0x6aF7377b5009d7d154F36FE9e235aE1DA27Aea22",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 15.115954304368016,
+      "harvestApy": 7.384652411639436,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -3771,7 +3771,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.06606098424634411,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -3878,8 +3878,8 @@ Array [
     "vaultToken": "0xeC1c717A3b02582A4Aa2275260C583095536b613",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 6.847991776876762,
+      "harvestApy": 4.483706953959143,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -3891,7 +3891,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.029927655759095905,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -4009,8 +4009,8 @@ Array [
     "vaultToken": "0xd04c48A53c111300aD41190D63681ed3dAd998eC",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 7.762378486816628,
+      "harvestApy": 4.884698926427644,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -4022,7 +4022,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.03392378361342189,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -4129,8 +4129,8 @@ Array [
     "vaultToken": "0x6dEf55d2e18486B9dDfaA075bc4e4EE0B28c1545",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 14.707686276291446,
+      "harvestApy": 7.270348762736756,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -4142,7 +4142,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.06427673779865153,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -4249,8 +4249,8 @@ Array [
     "vaultToken": "0xb9D076fDe463dbc9f915E5392F807315Bf940334",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 8.70163143419692,
+      "harvestApy": 5.269731690411494,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -4262,7 +4262,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.03802858393967664,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -4362,8 +4362,8 @@ Array [
     "vaultToken": "0xAf5A1DECfa95BAF63E0084a35c62592B774A2A87",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 9.220816099902546,
+      "harvestApy": 5.472157546262779,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -4375,7 +4375,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.04029756738137783,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -4475,8 +4475,8 @@ Array [
     "vaultToken": "0x235c9e24D3FB2FAFd58a2E49D454Fdcd2DBf7FF1",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 45.72440245793735,
+      "harvestApy": 12.694276038829244,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -4488,7 +4488,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.1998285367649229,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -4588,8 +4588,8 @@ Array [
     "vaultToken": "0xC17078FDd324CC473F8175Dc5290fae5f2E84714",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 8.358629929827083,
+      "harvestApy": 5.132049048246712,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -4601,7 +4601,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.0365295706110838,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -4708,8 +4708,8 @@ Array [
     "vaultToken": "0x758A43EE2BFf8230eeb784879CdcFF4828F2544D",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 13.7560509143537,
+      "harvestApy": 6.995079686081307,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -4721,7 +4721,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.060117822827926395,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -4836,8 +4836,8 @@ Array [
     "vaultToken": "0x1862A18181346EBd9EdAf800804f89190DeF24a5",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 66.30592275294951,
+      "harvestApy": 14.723257406366152,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -4849,7 +4849,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.28977558612731213,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -4956,8 +4956,8 @@ Array [
     "vaultToken": "0x88128580ACdD9c04Ce47AFcE196875747bF2A9f6",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 11.8825592738702,
+      "harvestApy": 6.412753583899522,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -4969,7 +4969,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.05193013588103782,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -5076,8 +5076,8 @@ Array [
     "vaultToken": "0x7e7E112A68d8D2E221E11047a72fFC1065c38e1a",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 12.782478294136808,
+      "harvestApy": 6.699616798016739,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -5089,7 +5089,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.0558630358504191,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -5189,8 +5189,8 @@ Array [
     "vaultToken": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 62.550346871524134,
+      "harvestApy": 14.398297571111973,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -5202,7 +5202,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.27336266014571536,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -5309,8 +5309,8 @@ Array [
     "vaultToken": "0x4b92d19c11435614CD49Af1b589001b7c08cD4D5",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 21.394894431608904,
+      "harvestApy": 8.913238650742873,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -5322,7 +5322,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.0935017237773929,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -5429,8 +5429,8 @@ Array [
     "vaultToken": "0x8a8FFec8f4A0C8c9585Da95D9D97e8Cd6de273DE",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 11.6690274114751,
+      "harvestApy": 6.342594990402062,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -5442,7 +5442,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.05099694140890985,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -5549,8 +5549,8 @@ Array [
     "vaultToken": "0x8c76970747afd5398e958bDfadA4cf0B9FcA16c4",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 11.511111185983355,
+      "harvestApy": 6.290168338103452,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -5562,7 +5562,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.05030680295821092,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -5669,8 +5669,8 @@ Array [
     "vaultToken": "0x55912D0Cf83B75c492E761932ABc4DB4a5CB1b17",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 18.896172061361508,
+      "harvestApy": 8.350584756026969,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -5682,7 +5682,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.08258160217519928,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -5789,8 +5789,8 @@ Array [
     "vaultToken": "0xf349c0faA80fC1870306Ac093f75934078e28991",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 6.645975924337892,
+      "harvestApy": 4.391254898370001,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -5802,7 +5802,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.029044789498496947,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -5909,8 +5909,8 @@ Array [
     "vaultToken": "0x5Dce29e92b1b939F8E8C60DcF15BDE82A85be4a9",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 17.236647640737754,
+      "harvestApy": 7.945562991691446,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -5922,7 +5922,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.07532901233536564,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -6022,8 +6022,8 @@ Array [
     "vaultToken": "0xBE08Ef12e4a553666291E9fFC24fCCFd354F2Dd2",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 8.508377861268764,
+      "harvestApy": 5.192558040329187,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -6035,7 +6035,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.03718401131265651,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -6142,8 +6142,8 @@ Array [
     "vaultToken": "0x2B5455aac8d64C14786c3a29858E43b5945819C0",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 37.31620534722868,
+      "harvestApy": 11.630571715506633,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -6155,7 +6155,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.16308234359138477,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -6262,8 +6262,8 @@ Array [
     "vaultToken": "0x53C8E199eb2Cb7c01543C137078a038937a68E40",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 19.298122210401782,
+      "harvestApy": 8.444712677970866,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -6275,7 +6275,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.0843382377093443,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -6382,8 +6382,8 @@ Array [
     "vaultToken": "0x27E98fC7d05f54E544d16F58C194C2D7ba71e3B5",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 40.511182875031224,
+      "harvestApy": 12.056431053422267,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -6395,7 +6395,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.17704529663303276,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -6495,8 +6495,8 @@ Array [
     "vaultToken": "0x599D92B453C010b1050d31C364f6ee17E819f193",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 18.0424943168379,
+      "harvestApy": 8.145649185841952,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -6508,7 +6508,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.07885078962463922,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -6608,8 +6608,8 @@ Array [
     "vaultToken": "0x26B8efa69603537AC8ab55768b6740b67664D518",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 41.75610113369043,
+      "harvestApy": 12.214780108286227,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -6621,7 +6621,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.18248594059221088,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -6728,8 +6728,8 @@ Array [
     "vaultToken": "0xfd05D3C7fe2924020620A8bE4961bBaA747e6305",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 6.390283280386368,
+      "harvestApy": 4.2720835633311305,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -6741,7 +6741,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.027927340518176413,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -6848,8 +6848,8 @@ Array [
     "vaultToken": "0x937B8E917d0F36eDEBBA8E459C5FB16F3b315551",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 10.963250679387942,
+      "harvestApy": 6.104586183875016,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -6861,7 +6861,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.04791249800288731,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -6968,8 +6968,8 @@ Array [
     "vaultToken": "0xaE96fF08771a109dc6650a1BdCa62F2d558E40af",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 9.26107148098443,
+      "harvestApy": 5.487564297191216,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -6981,7 +6981,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.040473494752017766,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -7088,8 +7088,8 @@ Array [
     "vaultToken": "0x19E4d89e0cB807ea21B8CEF02df5eAA99A110dA5",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 62.44301087496916,
+      "harvestApy": 14.388761585412801,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -7101,7 +7101,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.27289357156323435,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -7208,8 +7208,8 @@ Array [
     "vaultToken": "0x15cBC4ac1e81c97667780fE6DAdeDd04a6EEB47B",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 74.18307469431991,
+      "harvestApy": 15.35539020804293,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -7221,7 +7221,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.32420096211264166,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -7328,8 +7328,8 @@ Array [
     "vaultToken": "0x6aF7377b5009d7d154F36FE9e235aE1DA27Aea22",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 15.115954306839974,
+      "harvestApy": 7.384652412890613,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -7341,7 +7341,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.06606098425714726,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -7448,8 +7448,8 @@ Array [
     "vaultToken": "0xeC1c717A3b02582A4Aa2275260C583095536b613",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": 0,
-      "harvestApy": 0,
+      "harvestApr": 6.8479917779966355,
+      "harvestApy": 4.483706954708566,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -7461,7 +7461,7 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": 0,
+      "yieldApr": 0.029927655763990063,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",

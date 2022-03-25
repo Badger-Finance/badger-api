@@ -30,7 +30,7 @@ custom:
           - table: ${self:custom.table.APY_SNAPSHOTS_DATA}
             sources: [./seed/value-sources.json]
           - table: ${self:custom.table.VAULT_SNAPSHOTS_DATA}
-            sources: [./seed/cached-vault-snapshots.json]
+            sources: [./seed/vault-snapshots.json]
           - table: ${self:custom.table.TOKEN_INFORMATION_DATA}
             sources: [./seed/token-info.json]
 
@@ -399,25 +399,25 @@ functions:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-apy-snapshots
           description: 'index data for sett apy'
-          rate: rate(5 minutes)
+          rate: rate(2 minutes)
 
-  index-prices:
-    handler: src/indexers/price-indexer.indexPrices
-    timeout: 150
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-prices
-          description: 'index price data for all protocol tokens'
-          rate: rate(1 minute)
+  # index-prices:
+  #   handler: src/indexers/price-indexer.indexPrices
+  #   timeout: 150
+  #   events:
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-prices
+  #         description: 'index price data for all protocol tokens'
+  #         rate: rate(1 minute)
 
-  index-vault-snapshots:
-    handler: src/indexers/vault-snapshots-indexer.refreshVaultSnapshots
-    timeout: 150
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-vault-snapshots
-          description: 'index data for supported vaults'
-          rate: rate(1 minute)
+  # index-vault-snapshots:
+  #   handler: src/indexers/vault-snapshots-indexer.refreshVaultSnapshots
+  #   timeout: 150
+  #   events:
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-vault-snapshots
+  #         description: 'index data for supported vaults'
+  #         rate: rate(1 minute)
 
   index-vault-harvests:
     handler: src/indexers/vault-harvests-indexer.refreshVaultHarvests
@@ -426,57 +426,57 @@ functions:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-vault-harvests
           description: 'index harvests data for supported vaults'
-          rate: rate(5 minutes)
+          rate: rate(2 minutes)
 
-  index-leaderboard:
-    handler: src/indexers/leaderboard-indexer.indexBoostLeaderBoard
-    timeout: 120
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-leaderboard
-          description: 'index leaderboard data from latest badger boosts'
-          rate: rate(5 minutes)
+  # index-leaderboard:
+  #   handler: src/indexers/leaderboard-indexer.indexBoostLeaderBoard
+  #   timeout: 120
+  #   events:
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-leaderboard
+  #         description: 'index leaderboard data from latest badger boosts'
+  #         rate: rate(5 minutes)
 
-  index-vault-balances:
-    handler: src/indexers/vault-balances-indexer.refreshVaultBalances
-    timeout: 180
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-vault-balances
-          description: 'index vault token balances from the graph'
-          rate: rate(1 minute)
+  # index-vault-balances:
+  #   handler: src/indexers/vault-balances-indexer.refreshVaultBalances
+  #   timeout: 180
+  #   events:
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-vault-balances
+  #         description: 'index vault token balances from the graph'
+  #         rate: rate(1 minute)
 
-  index-boosts:
-    handler: src/indexers/boosts-indexer.refreshUserBoosts
-    timeout: 360
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-boosts
-          description: 'index accounts boost information'
-          rate: rate(20 minutes)
+  # index-boosts:
+  #   handler: src/indexers/boosts-indexer.refreshUserBoosts
+  #   timeout: 360
+  #   events:
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-boosts
+  #         description: 'index accounts boost information'
+  #         rate: rate(20 minutes)
 
-  index-accounts:
-    handler: src/indexers/accounts-indexer.refreshUserAccounts
-    timeout: 900
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-claimables
-          description: 'index accounts claimable from badger tree'
-          rate: rate(2 hours)
-          input:
-            mode: ClaimableBalanceData
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-balances
-          description: 'index accounts information from the graph'
-          rate: rate(15 minutes)
-          input:
-            mode: BalanceData
+  # index-accounts:
+  #   handler: src/indexers/accounts-indexer.refreshUserAccounts
+  #   timeout: 900
+  #   events:
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-claimables
+  #         description: 'index accounts claimable from badger tree'
+  #         rate: rate(2 hours)
+  #         input:
+  #           mode: ClaimableBalanceData
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-balances
+  #         description: 'index accounts information from the graph'
+  #         rate: rate(15 minutes)
+  #         input:
+  #           mode: BalanceData
 
-  index-protocol-metrics-snapshots:
-    handler: src/indexers/protocol-metric-indexer.indexProtocolMetrics
-    timeout: 240
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-protocol-metrics-snapshots
-          description: 'index protocol metrics'
-          rate: rate(1 day)
+  # index-protocol-metrics-snapshots:
+  #   handler: src/indexers/protocol-metric-indexer.indexProtocolMetrics
+  #   timeout: 240
+  #   events:
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-protocol-metrics-snapshots
+  #         description: 'index protocol metrics'
+  #         rate: rate(1 day)
