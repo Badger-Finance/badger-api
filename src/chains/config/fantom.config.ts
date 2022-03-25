@@ -161,7 +161,6 @@ export const fantomSetts: VaultDefinition[] = [
     vaultToken: TOKENS.BVEOXD,
     state: VaultState.Guarded,
     protocol: Protocol.OxDAO,
-    stage: Stage.Staging,
     version: VaultVersion.v1_5,
   },
 ];
