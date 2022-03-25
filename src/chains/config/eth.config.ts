@@ -267,5 +267,6 @@ export const ethSetts: VaultDefinition[] = [
     vaultToken: TOKENS.BCRV_BADGER,
     protocol: Protocol.Convex,
     state: VaultState.Guarded,
+    newVault: true,
   },
 ];
