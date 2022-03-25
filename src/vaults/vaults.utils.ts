@@ -37,11 +37,7 @@ import { VaultPendingHarvestData } from './types/vault-pending-harvest-data';
 
 export const VAULT_SOURCE = 'Vault Compounding';
 
-export async function defaultVault(
-  chain: Chain,
-  vaultDefinition: VaultDefinition,
-  version: VaultVersion = VaultVersion.v1,
-): Promise<VaultDTO> {
+export async function defaultVault(chain: Chain, vaultDefinition: VaultDefinition): Promise<VaultDTO> {
   const [assetToken, vaultToken] = await Promise.all([
     getFullToken(chain, vaultDefinition.depositToken),
     getFullToken(chain, vaultDefinition.vaultToken),
@@ -55,6 +51,7 @@ export async function defaultVault(
   const bouncer = vaultDefinition.bouncer ?? BouncerType.None;
   const type = vaultDefinition.protocol === Protocol.Badger ? VaultType.Native : VaultType.Standard;
   const behavior = vaultDefinition.behavior ?? VaultBehavior.None;
+  const version = vaultDefinition.version ?? VaultVersion.v1;
 
   return {
     apr: 0,
@@ -509,7 +506,6 @@ async function estimateVaultPerformance(
   const { price } = await getPrice(vaultDefinition.depositToken);
   const measuredBalance = weightedBalance / totalDuration;
   const measuredValue = measuredBalance * price;
-
   const totalHarvestedTokens = formatBalance(totalHarvested, depositToken.decimals);
   // count of harvests is exclusive of the 0th element
   const durationScalar = ONE_YEAR_SECONDS / totalDuration;
