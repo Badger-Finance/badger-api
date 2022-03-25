@@ -1,4 +1,3 @@
-import { Network } from '@badger-dao/sdk';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { getFullToken, toBalance } from '../tokens/tokens.utils';
@@ -8,9 +7,6 @@ export async function refreshVaultHarvests() {
   const chains = loadChains();
   await Promise.all(
     chains.map(async (chain) => {
-      if (chain.network !== Network.Avalanche) {
-        return;
-      }
       const sdk = await chain.getSdk();
       const mapper = getDataMapper();
       for (const vault of chain.vaults) {
