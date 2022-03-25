@@ -85,14 +85,17 @@ describe('VaultsController', () => {
     jest.spyOn(tokenUtils, 'getFullToken').mockImplementation(async (_, tokenAddr) => {
       return fullTokenMockMap[tokenAddr] || fullTokenMockMap[TOKENS.BADGER];
     });
+    // eslint-disable-next-line
     jest.spyOn(VaultsService.prototype, 'listHarvests').mockImplementation(async ({ address }): Promise<any> => {
       return vaultsHarvestsSdkMock[address];
     });
+    /* eslint-disable @typescript-eslint/ban-ts-comment */
     jest
       .spyOn(BadgerGraph.prototype, 'loadSett')
       .mockImplementation(async ({ id, block }): Promise<gqlGenT.SettQuery> => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        return vaultsGraphSdkMapMock[`${id.toLowerCase()}-${(block || {}).number || 0}`];
+        return vaultsGraphSdkMapMock[`${id.toLowerCase()}-${(block || {}).number || 0})`];
       });
   };
 
