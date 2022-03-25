@@ -1,4 +1,4 @@
-import { Network, Protocol, VaultBehavior, VaultState } from '@badger-dao/sdk';
+import { Network, Protocol, VaultBehavior, VaultState, VaultVersion } from '@badger-dao/sdk';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
@@ -162,6 +162,7 @@ export const fantomSetts: VaultDefinition[] = [
     state: VaultState.Guarded,
     protocol: Protocol.OxDAO,
     stage: Stage.Staging,
+    version: VaultVersion.v1_5,
   },
   {
     name: 'boxSOLID',
@@ -170,5 +171,6 @@ export const fantomSetts: VaultDefinition[] = [
     state: VaultState.Guarded,
     protocol: Protocol.OxDAO,
     stage: Stage.Staging,
+    version: VaultVersion.v1_5,
   },
 ];

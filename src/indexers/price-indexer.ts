@@ -1,6 +1,5 @@
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
-import { TOKENS } from '../config/tokens.config';
 import { PricingType } from '../prices/enums/pricing-type.enum';
 import { CoinGeckoPriceResponse } from '../prices/interface/coingecko-price-response.interface';
 import { updatePrice, fetchPrices } from '../prices/prices.utils';
@@ -52,31 +51,9 @@ export async function indexPrices() {
         ...Object.fromEntries(onChainPrices.map((p) => [p.address, p])),
       };
 
-      // map back unsupported (cross priced) tokens - no cg support or good on chain LP
-      for (const t of chainTokens) {
-        try {
-          // token mapping price is gone - lost in name associated lookup
-          if (!priceUpdates[t.address] && t.type === PricingType.LookupName) {
-            if (!t.lookupName) {
-              throw new Error('Invalid token definition, LookUpName pricing required lookup name');
-            }
-            const referencePrice = lookupNamePrices[t.lookupName].usd;
-            priceUpdates[t.address] = {
-              address: t.address,
-              price: referencePrice,
-            };
-          }
-        } catch (err) {
-          console.error(`Unable to remap ${t.address} to expected look up name ${t.lookupName}`);
-        }
-      }
-
       await Promise.all(
         Object.values(priceUpdates).map(async (p) => {
           try {
-            if (p.address === TOKENS.BADGER) {
-              console.log(p);
-            }
             await updatePrice(p);
           } catch (err) {
             console.error(err);
@@ -95,7 +72,7 @@ function evaluateCoingeckoResponse(chain: Chain, result: CoinGeckoPriceResponse)
       const [key, value] = entry;
       const addrByName = lookUpAddrByTokenName(chain, key);
       const address = addrByName || key;
-      return [key, { address, price: value.usd }];
+      return [address, { address, price: value.usd }];
     }),
   );
 }
