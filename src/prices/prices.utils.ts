@@ -8,6 +8,7 @@ import { COINGECKO_URL } from '../config/constants';
 import { CoinGeckoPriceResponse } from './interface/coingecko-price-response.interface';
 // TODO: generalize and add some axios utilities
 import { request } from '../etherscan/etherscan.utils';
+import { ethers } from 'ethers';
 
 /**
  * Update pricing db entry using chain strategy.
@@ -41,7 +42,11 @@ export async function updatePrice({ address, price }: TokenPrice): Promise<Token
 export async function getPrice(address: string, currency?: Currency): Promise<TokenPrice> {
   try {
     const mapper = getDataMapper();
-    for await (const item of mapper.query(TokenPriceSnapshot, { address }, { limit: 1, scanIndexForward: false })) {
+    for await (const item of mapper.query(
+      TokenPriceSnapshot,
+      { address: ethers.utils.getAddress(address) },
+      { limit: 1, scanIndexForward: false },
+    )) {
       item.price = await convert(item.price, currency);
       return item;
     }
