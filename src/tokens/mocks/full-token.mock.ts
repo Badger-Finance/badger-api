@@ -158,4 +158,26 @@ export const fullTokenMockMap: TokenFullMap = {
     symbol: 'SLP-WBTC-ETH',
     type: PricingType.Vault,
   },
+  [TOKENS.BCRV_TBTC]: {
+    address: TOKENS.BCRV_TBTC,
+    decimals: 18,
+    name: 'bCurve.fi tBTC/sbtcCrv',
+    symbol: 'btBTCCRV',
+    type: PricingType.Vault,
+    vaultToken: {
+      address: TOKENS.CRV_TBTC,
+      network: Network.Ethereum,
+    },
+  },
+  [TOKENS.BCRV_SBTC]: {
+    address: TOKENS.BCRV_SBTC,
+    decimals: 18,
+    name: 'bCurve.fi renBTC/wBTC/sBTC',
+    symbol: 'bsBTCCRV',
+    type: PricingType.Vault,
+    vaultToken: {
+      address: TOKENS.CRV_SBTC,
+      network: Network.Ethereum,
+    },
+  },
 };

@@ -18,6 +18,7 @@ import {
   Protocol,
   VaultBehavior,
   VaultDTO,
+  VaultPerformanceEvent,
   VaultState,
   VaultType,
   VaultVersion,
@@ -461,6 +462,29 @@ function constructGraphVaultData(
       }),
     };
   });
+}
+
+export async function estimateHarvestEventApr(
+  chain: Chain,
+  vault: VaultDefinition,
+  start: number,
+  end: number,
+  amount: VaultPerformanceEvent['amount'],
+  balance: number,
+): Promise<number> {
+  const duration = end - start;
+
+  const depositToken = await getFullToken(chain, vault.depositToken);
+
+  const fmtBalance = formatBalance(balance, depositToken.decimals);
+
+  const measuredBalance = fmtBalance / duration;
+  const totalHarvestedTokens = formatBalance(amount || BigNumber.from(0), depositToken.decimals);
+  const durationScalar = ONE_YEAR_SECONDS / duration;
+
+  const compoundApr = (totalHarvestedTokens / measuredBalance) * durationScalar;
+
+  return parseFloat(compoundApr.toFixed(2));
 }
 
 async function estimateVaultPerformance(

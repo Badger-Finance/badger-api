@@ -16,6 +16,13 @@ import * as tokenUtils from '../tokens/tokens.utils';
 import { TOKENS } from '../config/tokens.config';
 import { VaultPendingHarvestData } from './types/vault-pending-harvest-data';
 import { Chain } from '../chains/config/chain.config';
+import { VaultsService } from '@badger-dao/sdk/lib/vaults/vaults.service';
+import { vaultsHarvestsSdkMock } from './mocks/vaults-harvests-sdk.mock';
+import { BadgerGraph } from '@badger-dao/sdk/lib/graphql';
+import { vaultsGraphSdkMapMock } from './mocks/vaults-graph-sdk-map.mock';
+import * as gqlGenT from '@badger-dao/sdk/lib/graphql/generated/badger';
+
+const TEST_VAULT = TOKENS.BCRV_SBTC;
 
 describe('VaultsController', () => {
   let request: SuperTest.SuperTest<SuperTest.Test>;
@@ -26,7 +33,7 @@ describe('VaultsController', () => {
   });
   afterAll(PlatformTest.reset);
 
-  const setupTest = (): void => {
+  const setupTestVault = (): void => {
     jest.spyOn(tokenUtils, 'getFullToken').mockImplementation(async (_, tokenAddr) => {
       return fullTokenMockMap[tokenAddr] || fullTokenMockMap[TOKENS.BADGER];
     });
@@ -74,10 +81,25 @@ describe('VaultsController', () => {
       });
   };
 
+  const setupTestVaultHarvests = (): void => {
+    jest.spyOn(tokenUtils, 'getFullToken').mockImplementation(async (_, tokenAddr) => {
+      return fullTokenMockMap[tokenAddr] || fullTokenMockMap[TOKENS.BADGER];
+    });
+    jest.spyOn(VaultsService.prototype, 'listHarvests').mockImplementation(async ({ address }): Promise<any> => {
+      return vaultsHarvestsSdkMock[address];
+    });
+    jest
+      .spyOn(BadgerGraph.prototype, 'loadSett')
+      .mockImplementation(async ({ id, block }): Promise<gqlGenT.SettQuery> => {
+        // @ts-ignore
+        return vaultsGraphSdkMapMock[`${id.toLowerCase()}-${(block || {}).number || 0}`];
+      });
+  };
+
   describe('GET /v2/vaults', () => {
     describe('with no specified chain', () => {
       it('returns eth vaults', async (done: jest.DoneCallback) => {
-        setupTest();
+        setupTestVault();
         const { body } = await request.get('/v2/vaults').expect(200);
         expect(body).toMatchSnapshot();
         done();
@@ -86,14 +108,14 @@ describe('VaultsController', () => {
 
     describe('with a specified chain', () => {
       it('returns the vaults for eth', async (done: jest.DoneCallback) => {
-        setupTest();
+        setupTestVault();
         const { body } = await request.get('/v2/vaults?chain=ethereum').expect(200);
         expect(body).toMatchSnapshot();
         done();
       });
 
       it('returns the vaults for bsc', async (done: jest.DoneCallback) => {
-        setupTest();
+        setupTestVault();
         const { body } = await request.get('/v2/vaults?chain=binancesmartchain').expect(200);
         expect(body).toMatchSnapshot();
         done();
@@ -103,6 +125,42 @@ describe('VaultsController', () => {
     describe('with an invalid specified chain', () => {
       it('returns a 400', async (done: jest.DoneCallback) => {
         const { body } = await request.get('/v2/vaults?chain=invalid').expect(BadRequest.STATUS);
+        expect(body).toMatchSnapshot();
+        done();
+      });
+    });
+  });
+
+  describe('GET /v2/harvests', () => {
+    describe('success cases', () => {
+      it('Return extended harvest for chain vaults', async (done: jest.DoneCallback) => {
+        setupTestVaultHarvests();
+        const { body } = await request.get('/v2/vaults/harvests').expect(200);
+        expect(body).toMatchSnapshot();
+        done();
+      });
+    });
+    describe('error cases', () => {
+      it('returns a 400 for invalide chain', async (done: jest.DoneCallback) => {
+        const { body } = await request.get('/v2/vaults/harvests?chain=invalid').expect(BadRequest.STATUS);
+        expect(body).toMatchSnapshot();
+        done();
+      });
+    });
+  });
+
+  describe('GET /v2/harvests/:vault', () => {
+    describe('success cases', () => {
+      it('Return extended harvests for chain vault by addr', async (done: jest.DoneCallback) => {
+        setupTestVaultHarvests();
+        const { body } = await request.get(`/v2/vaults/harvests/${TEST_VAULT}`).expect(200);
+        expect(body).toMatchSnapshot();
+        done();
+      });
+    });
+    describe('error cases', () => {
+      it('returns a 400 for invalide chain', async (done: jest.DoneCallback) => {
+        const { body } = await request.get(`/v2/vaults/harvests/${TEST_VAULT}?chain=invalid`).expect(BadRequest.STATUS);
         expect(body).toMatchSnapshot();
         done();
       });

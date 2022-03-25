@@ -1,5 +1,491 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`VaultsController GET /v2/harvests error cases returns a 400 for invalide chain 1`] = `
+Object {
+  "message": "invalid is not a supported chain",
+}
+`;
+
+exports[`VaultsController GET /v2/harvests success cases Return extended harvest for chain vaults 1`] = `
+Object {
+  "0x15cBC4ac1e81c97667780fE6DAdeDd04a6EEB47B": Array [],
+  "0x1862A18181346EBd9EdAf800804f89190DeF24a5": Array [],
+  "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28": Array [],
+  "0x19E4d89e0cB807ea21B8CEF02df5eAA99A110dA5": Array [],
+  "0x235c9e24D3FB2FAFd58a2E49D454Fdcd2DBf7FF1": Array [],
+  "0x26B8efa69603537AC8ab55768b6740b67664D518": Array [],
+  "0x27E98fC7d05f54E544d16F58C194C2D7ba71e3B5": Array [],
+  "0x2B5455aac8d64C14786c3a29858E43b5945819C0": Array [],
+  "0x4b92d19c11435614CD49Af1b589001b7c08cD4D5": Array [],
+  "0x53C8E199eb2Cb7c01543C137078a038937a68E40": Array [],
+  "0x55912D0Cf83B75c492E761932ABc4DB4a5CB1b17": Array [],
+  "0x599D92B453C010b1050d31C364f6ee17E819f193": Array [],
+  "0x5Dce29e92b1b939F8E8C60DcF15BDE82A85be4a9": Array [],
+  "0x6aF7377b5009d7d154F36FE9e235aE1DA27Aea22": Array [],
+  "0x6dEf55d2e18486B9dDfaA075bc4e4EE0B28c1545": Array [
+    Object {
+      "amount": Object {
+        "hex": "0x01fb4d02ff225338",
+        "type": "BigNumber",
+      },
+      "block": 13612609,
+      "estimatedApr": 1924.14,
+      "eventType": "harvest",
+      "strategyBalance": "2340323802791288979784",
+      "timestamp": 1636874531,
+      "token": "",
+    },
+    Object {
+      "amount": Object {
+        "hex": "0x035a0af86bb64129",
+        "type": "BigNumber",
+      },
+      "block": 13647062,
+      "estimatedApr": 2346.89,
+      "eventType": "harvest",
+      "strategyBalance": "3245358791831689762726",
+      "timestamp": 1637345324,
+      "token": "",
+    },
+    Object {
+      "amount": Object {
+        "hex": "0x0dbea271f653d670",
+        "type": "BigNumber",
+      },
+      "block": 13845169,
+      "estimatedApr": 5912.8,
+      "eventType": "harvest",
+      "strategyBalance": "5282352247859790132321",
+      "timestamp": 1640044054,
+      "token": "",
+    },
+    Object {
+      "amount": Object {
+        "hex": "0x6c57196406b9",
+        "type": "BigNumber",
+      },
+      "block": 13845245,
+      "estimatedApr": 0,
+      "eventType": "harvest",
+      "strategyBalance": "5282352366981134072602",
+      "timestamp": 1640044922,
+      "token": "",
+    },
+    Object {
+      "amount": Object {
+        "hex": "0x01fb4d02ff225338",
+        "type": "BigNumber",
+      },
+      "block": 13612609,
+      "estimatedApr": 1924.14,
+      "eventType": "TreeDistribution",
+      "strategyBalance": "2340323802791288979784",
+      "timestamp": 1636874531,
+      "token": "",
+    },
+    Object {
+      "amount": Object {
+        "hex": "0x035a0af86bb64129",
+        "type": "BigNumber",
+      },
+      "block": 13647062,
+      "estimatedApr": 2346.89,
+      "eventType": "TreeDistribution",
+      "strategyBalance": "3245358791831689762726",
+      "timestamp": 1637345324,
+      "token": "",
+    },
+    Object {
+      "amount": Object {
+        "hex": "0x0dbea271f653d670",
+        "type": "BigNumber",
+      },
+      "block": 13845169,
+      "estimatedApr": 5912.8,
+      "eventType": "TreeDistribution",
+      "strategyBalance": "5282352247859790132321",
+      "timestamp": 1640044054,
+      "token": "",
+    },
+    Object {
+      "amount": Object {
+        "hex": "0x6c57196406b9",
+        "type": "BigNumber",
+      },
+      "block": 13845245,
+      "estimatedApr": 0,
+      "eventType": "TreeDistribution",
+      "strategyBalance": "5282352366981134072602",
+      "timestamp": 1640044922,
+      "token": "",
+    },
+  ],
+  "0x758A43EE2BFf8230eeb784879CdcFF4828F2544D": Array [],
+  "0x7e7E112A68d8D2E221E11047a72fFC1065c38e1a": Array [],
+  "0x88128580ACdD9c04Ce47AFcE196875747bF2A9f6": Array [],
+  "0x8a8FFec8f4A0C8c9585Da95D9D97e8Cd6de273DE": Array [],
+  "0x8c76970747afd5398e958bDfadA4cf0B9FcA16c4": Array [],
+  "0x937B8E917d0F36eDEBBA8E459C5FB16F3b315551": Array [],
+  "0xAf5A1DECfa95BAF63E0084a35c62592B774A2A87": Array [],
+  "0xBE08Ef12e4a553666291E9fFC24fCCFd354F2Dd2": Array [],
+  "0xC17078FDd324CC473F8175Dc5290fae5f2E84714": Array [],
+  "0xaE96fF08771a109dc6650a1BdCa62F2d558E40af": Array [],
+  "0xb9D076fDe463dbc9f915E5392F807315Bf940334": Array [],
+  "0xd04c48A53c111300aD41190D63681ed3dAd998eC": Array [
+    Object {
+      "amount": Object {
+        "hex": "0x11bc85620d1c13",
+        "type": "BigNumber",
+      },
+      "block": 13612910,
+      "estimatedApr": 63.43,
+      "eventType": "harvest",
+      "strategyBalance": "2481941296192304936740",
+      "timestamp": 1636878824,
+      "token": "",
+    },
+    Object {
+      "amount": Object {
+        "hex": "0x3ddb4d0d018648",
+        "type": "BigNumber",
+      },
+      "block": 13647172,
+      "estimatedApr": 232.06,
+      "eventType": "harvest",
+      "strategyBalance": "2366061351720088564649",
+      "timestamp": 1637346968,
+      "token": "",
+    },
+    Object {
+      "amount": Object {
+        "hex": "0x53a18268ac9569",
+        "type": "BigNumber",
+      },
+      "block": 13674352,
+      "estimatedApr": 320.81,
+      "eventType": "harvest",
+      "strategyBalance": "2314042647612435605751",
+      "timestamp": 1637717848,
+      "token": "",
+    },
+    Object {
+      "amount": Object {
+        "hex": "0x3531891e4ac3f5",
+        "type": "BigNumber",
+      },
+      "block": 13699647,
+      "estimatedApr": 205.29,
+      "eventType": "harvest",
+      "strategyBalance": "2300047794001301134071",
+      "timestamp": 1638065247,
+      "token": "",
+    },
+    Object {
+      "amount": Object {
+        "hex": "0x8212074a2405cf",
+        "type": "BigNumber",
+      },
+      "block": 13844434,
+      "estimatedApr": 505.1,
+      "eventType": "harvest",
+      "strategyBalance": "2285851497293213464358",
+      "timestamp": 1640034477,
+      "token": "",
+    },
+    Object {
+      "amount": Object {
+        "hex": "0x00",
+        "type": "BigNumber",
+      },
+      "block": 13870247,
+      "estimatedApr": 0,
+      "eventType": "harvest",
+      "strategyBalance": "2257647238481134566616",
+      "timestamp": 1640380383,
+      "token": "",
+    },
+    Object {
+      "amount": Object {
+        "hex": "0x30197df9db1863",
+        "type": "BigNumber",
+      },
+      "block": 13896464,
+      "estimatedApr": 0,
+      "eventType": "harvest",
+      "strategyBalance": "2255639612689547422513",
+      "timestamp": 1640731025,
+      "token": "",
+    },
+    Object {
+      "amount": Object {
+        "hex": "0x11bc85620d1c13",
+        "type": "BigNumber",
+      },
+      "block": 13612910,
+      "estimatedApr": 63.43,
+      "eventType": "TreeDistribution",
+      "strategyBalance": "2481941296192304936740",
+      "timestamp": 1636878824,
+      "token": "",
+    },
+    Object {
+      "amount": Object {
+        "hex": "0x3ddb4d0d018648",
+        "type": "BigNumber",
+      },
+      "block": 13647172,
+      "estimatedApr": 232.06,
+      "eventType": "TreeDistribution",
+      "strategyBalance": "2366061351720088564649",
+      "timestamp": 1637346968,
+      "token": "",
+    },
+    Object {
+      "amount": Object {
+        "hex": "0x53a18268ac9569",
+        "type": "BigNumber",
+      },
+      "block": 13674352,
+      "estimatedApr": 320.81,
+      "eventType": "TreeDistribution",
+      "strategyBalance": "2314042647612435605751",
+      "timestamp": 1637717848,
+      "token": "",
+    },
+    Object {
+      "amount": Object {
+        "hex": "0x3531891e4ac3f5",
+        "type": "BigNumber",
+      },
+      "block": 13699647,
+      "estimatedApr": 205.29,
+      "eventType": "TreeDistribution",
+      "strategyBalance": "2300047794001301134071",
+      "timestamp": 1638065247,
+      "token": "",
+    },
+    Object {
+      "amount": Object {
+        "hex": "0x8212074a2405cf",
+        "type": "BigNumber",
+      },
+      "block": 13844434,
+      "estimatedApr": 505.1,
+      "eventType": "TreeDistribution",
+      "strategyBalance": "2285851497293213464358",
+      "timestamp": 1640034477,
+      "token": "",
+    },
+    Object {
+      "amount": Object {
+        "hex": "0x00",
+        "type": "BigNumber",
+      },
+      "block": 13870247,
+      "estimatedApr": 0,
+      "eventType": "TreeDistribution",
+      "strategyBalance": "2257647238481134566616",
+      "timestamp": 1640380383,
+      "token": "",
+    },
+    Object {
+      "amount": Object {
+        "hex": "0x30197df9db1863",
+        "type": "BigNumber",
+      },
+      "block": 13896464,
+      "estimatedApr": 0,
+      "eventType": "TreeDistribution",
+      "strategyBalance": "2255639612689547422513",
+      "timestamp": 1640731025,
+      "token": "",
+    },
+  ],
+  "0xeC1c717A3b02582A4Aa2275260C583095536b613": Array [],
+  "0xf349c0faA80fC1870306Ac093f75934078e28991": Array [],
+  "0xfd05D3C7fe2924020620A8bE4961bBaA747e6305": Array [],
+}
+`;
+
+exports[`VaultsController GET /v2/harvests/:vault error cases returns a 400 for invalide chain 1`] = `
+Object {
+  "message": "invalid is not a supported chain",
+}
+`;
+
+exports[`VaultsController GET /v2/harvests/:vault success cases Return extended harvests for chain vault by addr 1`] = `
+Array [
+  Object {
+    "amount": Object {
+      "hex": "0x11bc85620d1c13",
+      "type": "BigNumber",
+    },
+    "block": 13612910,
+    "estimatedApr": 63.43,
+    "eventType": "harvest",
+    "strategyBalance": "2481941296192304936740",
+    "timestamp": 1636878824,
+    "token": "",
+  },
+  Object {
+    "amount": Object {
+      "hex": "0x3ddb4d0d018648",
+      "type": "BigNumber",
+    },
+    "block": 13647172,
+    "estimatedApr": 232.06,
+    "eventType": "harvest",
+    "strategyBalance": "2366061351720088564649",
+    "timestamp": 1637346968,
+    "token": "",
+  },
+  Object {
+    "amount": Object {
+      "hex": "0x53a18268ac9569",
+      "type": "BigNumber",
+    },
+    "block": 13674352,
+    "estimatedApr": 320.81,
+    "eventType": "harvest",
+    "strategyBalance": "2314042647612435605751",
+    "timestamp": 1637717848,
+    "token": "",
+  },
+  Object {
+    "amount": Object {
+      "hex": "0x3531891e4ac3f5",
+      "type": "BigNumber",
+    },
+    "block": 13699647,
+    "estimatedApr": 205.29,
+    "eventType": "harvest",
+    "strategyBalance": "2300047794001301134071",
+    "timestamp": 1638065247,
+    "token": "",
+  },
+  Object {
+    "amount": Object {
+      "hex": "0x8212074a2405cf",
+      "type": "BigNumber",
+    },
+    "block": 13844434,
+    "estimatedApr": 505.1,
+    "eventType": "harvest",
+    "strategyBalance": "2285851497293213464358",
+    "timestamp": 1640034477,
+    "token": "",
+  },
+  Object {
+    "amount": Object {
+      "hex": "0x00",
+      "type": "BigNumber",
+    },
+    "block": 13870247,
+    "estimatedApr": 0,
+    "eventType": "harvest",
+    "strategyBalance": "2257647238481134566616",
+    "timestamp": 1640380383,
+    "token": "",
+  },
+  Object {
+    "amount": Object {
+      "hex": "0x30197df9db1863",
+      "type": "BigNumber",
+    },
+    "block": 13896464,
+    "estimatedApr": 0,
+    "eventType": "harvest",
+    "strategyBalance": "2255639612689547422513",
+    "timestamp": 1640731025,
+    "token": "",
+  },
+  Object {
+    "amount": Object {
+      "hex": "0x11bc85620d1c13",
+      "type": "BigNumber",
+    },
+    "block": 13612910,
+    "estimatedApr": 63.43,
+    "eventType": "TreeDistribution",
+    "strategyBalance": "2481941296192304936740",
+    "timestamp": 1636878824,
+    "token": "",
+  },
+  Object {
+    "amount": Object {
+      "hex": "0x3ddb4d0d018648",
+      "type": "BigNumber",
+    },
+    "block": 13647172,
+    "estimatedApr": 232.06,
+    "eventType": "TreeDistribution",
+    "strategyBalance": "2366061351720088564649",
+    "timestamp": 1637346968,
+    "token": "",
+  },
+  Object {
+    "amount": Object {
+      "hex": "0x53a18268ac9569",
+      "type": "BigNumber",
+    },
+    "block": 13674352,
+    "estimatedApr": 320.81,
+    "eventType": "TreeDistribution",
+    "strategyBalance": "2314042647612435605751",
+    "timestamp": 1637717848,
+    "token": "",
+  },
+  Object {
+    "amount": Object {
+      "hex": "0x3531891e4ac3f5",
+      "type": "BigNumber",
+    },
+    "block": 13699647,
+    "estimatedApr": 205.29,
+    "eventType": "TreeDistribution",
+    "strategyBalance": "2300047794001301134071",
+    "timestamp": 1638065247,
+    "token": "",
+  },
+  Object {
+    "amount": Object {
+      "hex": "0x8212074a2405cf",
+      "type": "BigNumber",
+    },
+    "block": 13844434,
+    "estimatedApr": 505.1,
+    "eventType": "TreeDistribution",
+    "strategyBalance": "2285851497293213464358",
+    "timestamp": 1640034477,
+    "token": "",
+  },
+  Object {
+    "amount": Object {
+      "hex": "0x00",
+      "type": "BigNumber",
+    },
+    "block": 13870247,
+    "estimatedApr": 0,
+    "eventType": "TreeDistribution",
+    "strategyBalance": "2257647238481134566616",
+    "timestamp": 1640380383,
+    "token": "",
+  },
+  Object {
+    "amount": Object {
+      "hex": "0x30197df9db1863",
+      "type": "BigNumber",
+    },
+    "block": 13896464,
+    "estimatedApr": 0,
+    "eventType": "TreeDistribution",
+    "strategyBalance": "2255639612689547422513",
+    "timestamp": 1640731025,
+    "token": "",
+  },
+]
+`;
+
 exports[`VaultsController GET /v2/vaults with a specified chain returns the vaults for bsc 1`] = `
 Array [
   Object {
@@ -435,7 +921,7 @@ Array [
     "type": "standard",
     "underlyingToken": "0x075b1bb99792c9E1041bA13afEf80C91a1e70fB3",
     "value": 853188,
-    "vaultAsset": "BADGER",
+    "vaultAsset": "bsBTCCRV",
     "vaultToken": "0xd04c48A53c111300aD41190D63681ed3dAd998eC",
     "version": "v1",
     "yieldProjection": Object {
@@ -675,7 +1161,7 @@ Array [
     "type": "standard",
     "underlyingToken": "0x64eda51d3Ad40D56b9dFc5554E06F94e1Dd786Fd",
     "value": 761095,
-    "vaultAsset": "BADGER",
+    "vaultAsset": "btBTCCRV",
     "vaultToken": "0xb9D076fDe463dbc9f915E5392F807315Bf940334",
     "version": "v1",
     "yieldProjection": Object {
@@ -4005,7 +4491,7 @@ Array [
     "type": "standard",
     "underlyingToken": "0x075b1bb99792c9E1041bA13afEf80C91a1e70fB3",
     "value": 853188,
-    "vaultAsset": "BADGER",
+    "vaultAsset": "bsBTCCRV",
     "vaultToken": "0xd04c48A53c111300aD41190D63681ed3dAd998eC",
     "version": "v1",
     "yieldProjection": Object {
@@ -4245,7 +4731,7 @@ Array [
     "type": "standard",
     "underlyingToken": "0x64eda51d3Ad40D56b9dFc5554E06F94e1Dd786Fd",
     "value": 761095,
-    "vaultAsset": "BADGER",
+    "vaultAsset": "btBTCCRV",
     "vaultToken": "0xb9D076fDe463dbc9f915E5392F807315Bf940334",
     "version": "v1",
     "yieldProjection": Object {

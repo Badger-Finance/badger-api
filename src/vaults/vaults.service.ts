@@ -1,4 +1,12 @@
-import { Currency, Protocol, VaultDTO, VaultState, VaultType } from '@badger-dao/sdk';
+import {
+  Currency,
+  Protocol,
+  VaultDTO,
+  VaultPerformanceEvent,
+  VaultState,
+  VaultType,
+  VaultVersion,
+} from '@badger-dao/sdk';
 import { VaultYieldProjection } from '@badger-dao/sdk/lib/api/interfaces/vault-yield-projection.interface';
 import { Service } from '@tsed/common';
 import { Chain } from '../chains/config/chain.config';
@@ -9,7 +17,18 @@ import { SourceType } from '../rewards/enums/source-type.enum';
 import { getCachedTokenBalances } from '../tokens/tokens.utils';
 import { VaultDefinition } from './interfaces/vault-definition.interface';
 import { VaultPendingHarvestData } from './types/vault-pending-harvest-data';
-import { getCachedVault, getVaultCachedValueSources, getVaultPendingHarvest, VAULT_SOURCE } from './vaults.utils';
+import {
+  estimateHarvestEventApr,
+  getCachedVault,
+  getVaultCachedValueSources,
+  getVaultPendingHarvest,
+  VAULT_SOURCE,
+} from './vaults.utils';
+import { ethers } from 'ethers';
+import { VaultHarvestsExtended } from './interfaces/vault-harvest-extended';
+import { VaultHarvestsMap } from './interfaces/vault-harvest-map';
+import { HarvestType } from './enums/harvest.enum';
+import { VaultHarvestData } from '@badger-dao/sdk/lib/vaults/interfaces';
 
 @Service()
 export class VaultsService {
@@ -31,6 +50,103 @@ export class VaultsService {
 
   async getVault(chain: Chain, vaultDefinition: VaultDefinition, currency?: Currency): Promise<VaultDTO> {
     return VaultsService.loadVault(chain, vaultDefinition, currency);
+  }
+
+  async listVaultHarvests(chain: Chain): Promise<VaultHarvestsMap> {
+    const harvestsWithSnapshots = await Promise.all(
+      chain.vaults.map(async (vault) => {
+        return {
+          vault: vault.vaultToken,
+          harvests: await this.getVaultHarvests(chain, vault.vaultToken),
+        };
+      }),
+    );
+
+    return harvestsWithSnapshots.reduce((acc, harvestWithSnapshot) => {
+      acc[harvestWithSnapshot.vault] = harvestWithSnapshot.harvests;
+      return acc;
+    }, <VaultHarvestsMap>{});
+  }
+
+  async getVaultHarvests(chain: Chain, vaultAddr: VaultDefinition['vaultToken']): Promise<VaultHarvestsExtended[]> {
+    const vaultHarvests: VaultHarvestsExtended[] = [];
+
+    vaultAddr = ethers.utils.getAddress(vaultAddr.toLowerCase());
+
+    const sdk = await chain.getSdk();
+    const vaultDef = chain.vaults.find((vault) => vault.vaultToken === vaultAddr);
+
+    let sdkVaultHarvestsResp: {
+      data: VaultHarvestData[];
+    } = { data: [] };
+
+    if (!vaultDef) return vaultHarvests;
+
+    try {
+      sdkVaultHarvestsResp = await sdk.vaults.listHarvests({
+        address: vaultAddr,
+        version: vaultDef.version ?? VaultVersion.v1,
+      });
+    } catch (e) {
+      console.warn(`Failed to get harvests list ${e}`);
+    }
+
+    if (!sdkVaultHarvestsResp || sdkVaultHarvestsResp?.data?.length === 0) {
+      return vaultHarvests;
+    }
+
+    const sdkVaultHarvests = sdkVaultHarvestsResp.data;
+
+    const _extend_harvests_data = async (harvestsList: VaultPerformanceEvent[], eventType: HarvestType) => {
+      if (!harvestsList || harvestsList?.length === 0) return;
+
+      for (let i = 0; i < harvestsList.length; i++) {
+        const harvest = harvestsList[i];
+
+        const vaultGraph = await sdk.graph.loadSett({
+          id: vaultAddr,
+          block: { number: harvest.block },
+        });
+
+        const extendedHarvest = {
+          ...harvest,
+          eventType,
+          strategyBalance: 0,
+          estimatedApr: 0,
+        };
+
+        if (vaultGraph?.sett) {
+          extendedHarvest.strategyBalance = vaultGraph.sett?.strategy?.balance || 0;
+
+          if (i === harvestsList.length - 1) {
+            vaultHarvests.push(extendedHarvest);
+            continue;
+          }
+
+          const startOfHarvest = harvest.timestamp;
+          const endOfCurrentHarvest = harvestsList[i + 1].timestamp;
+
+          extendedHarvest.estimatedApr = await estimateHarvestEventApr(
+            chain,
+            vaultDef,
+            startOfHarvest,
+            endOfCurrentHarvest,
+            harvest.amount,
+            vaultGraph.sett?.strategy?.balance ?? vaultGraph.sett.balance,
+          );
+        }
+
+        vaultHarvests.push(extendedHarvest);
+      }
+    };
+
+    const allHarvests = sdkVaultHarvests.flatMap((h) => h.harvests).sort((a, b) => a.timestamp - b.timestamp);
+    const allTreeDistributions = sdkVaultHarvests.flatMap((h) => h.harvests).sort((a, b) => a.timestamp - b.timestamp);
+
+    await _extend_harvests_data(allHarvests, HarvestType.Harvest);
+    await _extend_harvests_data(allTreeDistributions, HarvestType.TreeDistribution);
+
+    return vaultHarvests;
   }
 
   static async loadVault(chain: Chain, vaultDefinition: VaultDefinition, currency?: Currency): Promise<VaultDTO> {
