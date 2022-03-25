@@ -14,11 +14,16 @@ async function updatePrices() {
           block: 0,
           timestamp: Date.now(),
           strategyBalance: vault.balance - vault.available,
-          boostWeight: 0,
+          boostWeight: vault.boost.weight,
           totalSupply: 0,
-          yieldApr: 0,
-          harvestApr: 0,
-          ...vault,
+          yieldApr: vault.yieldProjection.yieldApr,
+          harvestApr: vault.yieldProjection.harvestApr,
+          available: vault.available,
+          balance: vault.balance,
+          pricePerFullShare: vault.pricePerFullShare,
+          strategy: vault.strategy,
+          value: vault.value,
+          apr: vault.apr,
         });
       });
     } catch {}

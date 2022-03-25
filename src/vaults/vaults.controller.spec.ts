@@ -16,6 +16,7 @@ import * as tokenUtils from '../tokens/tokens.utils';
 import { TOKENS } from '../config/tokens.config';
 import { VaultPendingHarvestData } from './types/vault-pending-harvest-data';
 import { Chain } from '../chains/config/chain.config';
+import { ONE_DAY_SECONDS } from '../config/constants';
 
 describe('VaultsController', () => {
   let request: SuperTest.SuperTest<SuperTest.Test>;
@@ -30,12 +31,13 @@ describe('VaultsController', () => {
     jest.spyOn(tokenUtils, 'getFullToken').mockImplementation(async (_, tokenAddr) => {
       return fullTokenMockMap[tokenAddr] || fullTokenMockMap[TOKENS.BADGER];
     });
+    jest.spyOn(Date, 'now').mockImplementation(() => 1648236387419 + ONE_DAY_SECONDS);
     jest.spyOn(vaultsUtils, 'getVaultPendingHarvest').mockImplementation(
       async (vaultDefinition: VaultDefinition): Promise<VaultPendingHarvestData> => ({
         vault: vaultDefinition.vaultToken,
         yieldTokens: [mockBalance(fullTokenMockMap[TOKENS.WBTC], 10)],
         harvestTokens: [mockBalance(fullTokenMockMap[TOKENS.BADGER], 1500)],
-        lastHarvestedAt: 1048968337,
+        lastHarvestedAt: 1648236387419,
       }),
     );
     jest
