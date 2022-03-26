@@ -1,5 +1,5 @@
 // free rpc provider for local development
 export enum HarvestType {
-  Harvest = 'harvest',
+  Harvest = 'Harvest',
   TreeDistribution = 'TreeDistribution',
 }

@@ -21,6 +21,7 @@ import {
   estimateHarvestEventApr,
   getCachedVault,
   getVaultCachedValueSources,
+  getVaultDefinition,
   getVaultPendingHarvest,
   VAULT_SOURCE,
 } from './vaults.utils';
@@ -71,10 +72,10 @@ export class VaultsService {
   async getVaultHarvests(chain: Chain, vaultAddr: VaultDefinition['vaultToken']): Promise<VaultHarvestsExtended[]> {
     const vaultHarvests: VaultHarvestsExtended[] = [];
 
-    vaultAddr = ethers.utils.getAddress(vaultAddr.toLowerCase());
+    vaultAddr = ethers.utils.getAddress(vaultAddr);
 
     const sdk = await chain.getSdk();
-    const vaultDef = chain.vaults.find((vault) => vault.vaultToken === vaultAddr);
+    const vaultDef = getVaultDefinition(chain, vaultAddr);
 
     let sdkVaultHarvestsResp: {
       data: VaultHarvestData[];
@@ -116,7 +117,9 @@ export class VaultsService {
         };
 
         if (vaultGraph?.sett) {
-          extendedHarvest.strategyBalance = vaultGraph.sett?.strategy?.balance || 0;
+          const balance = vaultGraph.sett?.strategy?.balance || vaultGraph.sett.balance || 0;
+
+          extendedHarvest.strategyBalance = balance;
 
           if (i === harvestsList.length - 1) {
             vaultHarvests.push(extendedHarvest);
@@ -128,11 +131,11 @@ export class VaultsService {
 
           extendedHarvest.estimatedApr = await estimateHarvestEventApr(
             chain,
-            vaultDef,
+            harvest.token || vaultDef.depositToken,
             startOfHarvest,
             endOfCurrentHarvest,
             harvest.amount,
-            vaultGraph.sett?.strategy?.balance ?? vaultGraph.sett.balance,
+            balance,
           );
         }
 

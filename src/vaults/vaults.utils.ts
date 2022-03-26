@@ -466,7 +466,7 @@ function constructGraphVaultData(
 
 export async function estimateHarvestEventApr(
   chain: Chain,
-  vault: VaultDefinition,
+  token: VaultPerformanceEvent['token'],
   start: number,
   end: number,
   amount: VaultPerformanceEvent['amount'],
@@ -474,15 +474,14 @@ export async function estimateHarvestEventApr(
 ): Promise<number> {
   const duration = end - start;
 
-  const depositToken = await getFullToken(chain, vault.depositToken);
+  const depositToken = await getFullToken(chain, token);
 
   const fmtBalance = formatBalance(balance, depositToken.decimals);
 
-  const measuredBalance = fmtBalance / duration;
   const totalHarvestedTokens = formatBalance(amount || BigNumber.from(0), depositToken.decimals);
   const durationScalar = ONE_YEAR_SECONDS / duration;
 
-  const compoundApr = (totalHarvestedTokens / measuredBalance) * durationScalar;
+  const compoundApr = (totalHarvestedTokens / fmtBalance) * durationScalar * 100;
 
   return parseFloat(compoundApr.toFixed(2));
 }

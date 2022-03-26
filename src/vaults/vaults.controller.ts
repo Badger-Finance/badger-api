@@ -1,5 +1,5 @@
 import { Currency, Network } from '@badger-dao/sdk';
-import { Controller, Get, Inject, PathParams, QueryParams } from '@tsed/common';
+import { Controller, Get, Inject, PathParams, QueryParams, UseCache } from '@tsed/common';
 import { ContentType, Description, Returns, Summary } from '@tsed/schema';
 import { Chain } from '../chains/config/chain.config';
 import { VaultModel } from './interfaces/vault-model.interface';
@@ -29,6 +29,7 @@ export class VaultsController {
   }
 
   @Get('/harvests')
+  @UseCache()
   @ContentType('json')
   @Summary('Get all vaults harvests on a chain')
   @Description('Return map of vaults, with harvests')
