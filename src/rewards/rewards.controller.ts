@@ -1,4 +1,4 @@
-import { formatBalance, Network } from '@badger-dao/sdk';
+import { formatBalance } from '@badger-dao/sdk';
 import { BigNumber } from '@ethersproject/bignumber';
 import { Controller, Get, Inject, QueryParams } from '@tsed/common';
 import { ContentType, Description, Returns, Summary } from '@tsed/schema';
