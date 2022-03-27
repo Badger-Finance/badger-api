@@ -23,11 +23,11 @@ export class RewardsController {
   @Description('Returns a paginated chunk of reward balance snapshots for users')
   @Returns(200)
   async list(
-    @QueryParams('chain_id') chainId: Network,
+    @QueryParams('chain_id') chainId: string,
     @QueryParams('page_num') pageNum?: number,
     @QueryParams('page_count') pageCount?: number,
   ): Promise<ListRewardsResponse> {
-    const chain = Chain.getChain(chainId);
+    const chain = Chain.getChainById(chainId);
     const { count, records } = await this.rewardsService.list({ chain, pageNum, pageCount });
     return {
       total_count: count,

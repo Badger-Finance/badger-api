@@ -1,4 +1,4 @@
-import { BadRequest } from '@tsed/exceptions';
+import { BadRequest, NotFound } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { STAGE } from '../../config/constants';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
@@ -14,6 +14,7 @@ type Sdks = Record<string, BadgerSDK>;
 
 export abstract class Chain {
   private static chains: Chains = {};
+  private static chainsByNetworkId: Record<string, Chain> = {};
   private static sdks: Sdks = {};
   readonly name: string;
   readonly symbol: string;
@@ -61,6 +62,7 @@ export abstract class Chain {
     }
     Chain.chains[network] = chain;
     Chain.chains[chain.symbol] = chain;
+    Chain.chainsByNetworkId[chain.chainId] = chain;
     if (network === Network.Polygon) {
       Chain.chains['matic'] = chain;
     }
@@ -76,6 +78,14 @@ export abstract class Chain {
     const chain = this.chains[network];
     if (!chain) {
       throw new BadRequest(`${network} is not a supported chain`);
+    }
+    return chain;
+  }
+
+  static getChainById(id: string): Chain {
+    const chain = Chain.chainsByNetworkId[id];
+    if (!chain) {
+      throw new NotFound(`Could not find chain for '${id}'`);
     }
     return chain;
   }
