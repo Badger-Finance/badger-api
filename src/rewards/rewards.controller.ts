@@ -27,7 +27,7 @@ export class RewardsController {
     @QueryParams('page_num') pageNum?: number,
     @QueryParams('page_count') pageCount?: number,
   ): Promise<ListRewardsResponse> {
-    const chain = Chain.getChain(chainId);
+    const chain = Chain.getChainById(chainId);
     const { count, records } = await this.rewardsService.list({ chain, pageNum, pageCount });
     return {
       total_count: count,
