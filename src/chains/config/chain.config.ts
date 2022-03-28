@@ -82,7 +82,10 @@ export abstract class Chain {
     return chain;
   }
 
-  static getChainById(id: string): Chain {
+  static getChainById(id?: string): Chain {
+    if (!id) {
+      id = '1';
+    }
     const chain = Chain.chainsByNetworkId[id];
     if (!chain) {
       throw new NotFound(`Could not find chain for '${id}'`);

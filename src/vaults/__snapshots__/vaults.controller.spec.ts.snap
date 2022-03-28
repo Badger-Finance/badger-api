@@ -553,6 +553,7 @@ Array [
     "state": "deprecated",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -666,6 +667,7 @@ Array [
     "state": "deprecated",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -779,6 +781,7 @@ Array [
     "state": "deprecated",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -904,6 +907,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -1024,6 +1028,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -1144,6 +1149,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -1257,6 +1263,7 @@ Array [
     "state": "deprecated",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -1370,6 +1377,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -1483,6 +1491,7 @@ Array [
     "state": "deprecated",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -1603,6 +1612,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -1723,6 +1733,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -1851,6 +1862,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -1971,6 +1983,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -2084,6 +2097,7 @@ Array [
     "state": "deprecated",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -2204,6 +2218,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -2324,6 +2339,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -2444,6 +2460,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -2564,6 +2581,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -2684,6 +2702,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -2804,6 +2823,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -2917,6 +2937,7 @@ Array [
     "state": "deprecated",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -3037,6 +3058,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -3157,6 +3179,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -3277,6 +3300,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -3390,6 +3414,7 @@ Array [
     "state": "deprecated",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -3503,6 +3528,7 @@ Array [
     "state": "deprecated",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -3623,6 +3649,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -3743,6 +3770,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -3863,6 +3891,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -3983,6 +4012,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -4103,6 +4133,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -4223,6 +4254,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -4343,6 +4375,7 @@ Array [
     "state": "guarded",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -4474,6 +4507,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -4594,6 +4628,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -4714,6 +4749,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -4827,6 +4863,7 @@ Array [
     "state": "deprecated",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -4940,6 +4977,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -5053,6 +5091,7 @@ Array [
     "state": "deprecated",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -5173,6 +5212,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -5293,6 +5333,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -5421,6 +5462,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -5541,6 +5583,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -5654,6 +5697,7 @@ Array [
     "state": "deprecated",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -5774,6 +5818,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -5894,6 +5939,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -6014,6 +6060,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -6134,6 +6181,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -6254,6 +6302,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -6374,6 +6423,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -6487,6 +6537,7 @@ Array [
     "state": "deprecated",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -6607,6 +6658,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -6727,6 +6779,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -6847,6 +6900,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -6960,6 +7014,7 @@ Array [
     "state": "deprecated",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -7073,6 +7128,7 @@ Array [
     "state": "deprecated",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -7193,6 +7249,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -7313,6 +7370,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -7433,6 +7491,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -7553,6 +7612,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -7673,6 +7733,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -7793,6 +7854,7 @@ Array [
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
@@ -7913,6 +7975,7 @@ Array [
     "state": "guarded",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
       "performanceFee": 20,
       "strategistFee": 0,
       "withdrawFee": 50,
