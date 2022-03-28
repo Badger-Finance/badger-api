@@ -35,6 +35,7 @@ describe('refreshVaultSnapshots', () => {
       withdrawFee: 50,
       performanceFee: 20,
       strategistFee: 10,
+      aumFee: 0,
     }));
     vaultsMock = jest.spyOn(VaultsService.prototype, 'loadVault').mockImplementation(async ({ address }) => ({
       name: 'Test Vault',

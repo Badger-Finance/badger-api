@@ -16,11 +16,13 @@ import {
   keyBy,
   Network,
   Protocol,
+  Strategy__factory,
   VaultBehavior,
   VaultDTO,
   VaultPerformanceEvent,
   VaultState,
   VaultType,
+  VaultV15__factory,
   VaultVersion,
 } from '@badger-dao/sdk';
 import { getPrice } from '../prices/prices.utils';
@@ -78,6 +80,7 @@ export async function defaultVault(chain: Chain, vaultDefinition: VaultDefinitio
       withdrawFee: 50,
       performanceFee: 20,
       strategistFee: 0,
+      aumFee: 0,
     },
     type,
     underlyingToken: vaultDefinition.depositToken,
@@ -168,29 +171,50 @@ export function getVaultDefinition(chain: Chain, contract: string): VaultDefinit
 
 // TODO: migration to SDK is probably the best option here
 export async function getStrategyInfo(chain: Chain, vaultDefinition: VaultDefinition): Promise<VaultStrategy> {
-  const defaultStrategyInfo = {
+  const defaultStrategyInfo: VaultStrategy = {
     address: ethers.constants.AddressZero,
     withdrawFee: 0,
     performanceFee: 0,
     strategistFee: 0,
+    aumFee: 0,
   };
   try {
     const sdk = await chain.getSdk();
-    const strategy = await sdk.vaults.getVaultStrategy({
+    const version = vaultDefinition.version ?? VaultVersion.v1;
+    const strategyAddress = await sdk.vaults.getVaultStrategy({
       address: vaultDefinition.vaultToken,
-      version: vaultDefinition.version ?? VaultVersion.v1,
+      version,
     });
-    const [withdrawFee, performanceFee, strategistFee] = await Promise.all([
-      strategy.withdrawalFee(),
-      strategy.performanceFeeGovernance(),
-      strategy.performanceFeeStrategist(),
-    ]);
-    return {
-      address: strategy.address,
-      withdrawFee: withdrawFee.toNumber(),
-      performanceFee: performanceFee.toNumber(),
-      strategistFee: strategistFee.toNumber(),
-    };
+    if (version === VaultVersion.v1) {
+      const strategy = Strategy__factory.connect(strategyAddress, sdk.provider);
+      const [withdrawFee, performanceFee, strategistFee] = await Promise.all([
+        strategy.withdrawalFee(),
+        strategy.performanceFeeGovernance(),
+        strategy.performanceFeeStrategist(),
+      ]);
+      return {
+        address: strategyAddress,
+        withdrawFee: withdrawFee.toNumber(),
+        performanceFee: performanceFee.toNumber(),
+        strategistFee: strategistFee.toNumber(),
+        aumFee: 0,
+      };
+    } else {
+      const vault = VaultV15__factory.connect(vaultDefinition.vaultToken, sdk.provider);
+      const [withdrawFee, performanceFee, strategistFee, aumFee] = await Promise.all([
+        vault.withdrawalFee(),
+        vault.performanceFeeGovernance(),
+        vault.performanceFeeStrategist(),
+        vault.managementFee(),
+      ]);
+      return {
+        address: strategyAddress,
+        withdrawFee: withdrawFee.toNumber(),
+        performanceFee: performanceFee.toNumber(),
+        strategistFee: strategistFee.toNumber(),
+        aumFee: aumFee.toNumber(),
+      };
+    }
   } catch (err) {
     console.log(err);
     return defaultStrategyInfo;
