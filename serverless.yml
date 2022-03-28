@@ -30,7 +30,7 @@ custom:
           - table: ${self:custom.table.APY_SNAPSHOTS_DATA}
             sources: [./seed/value-sources.json]
           - table: ${self:custom.table.VAULT_SNAPSHOTS_DATA}
-            sources: [./seed/cached-vault-snapshots.json]
+            sources: [./seed/vault-snapshots.json]
           - table: ${self:custom.table.TOKEN_INFORMATION_DATA}
             sources: [./seed/token-info.json]
 

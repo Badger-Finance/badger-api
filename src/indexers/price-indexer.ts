@@ -51,8 +51,6 @@ export async function indexPrices() {
         ...Object.fromEntries(onChainPrices.map((p) => [p.address, p])),
       };
 
-      console.log(priceUpdates);
-
       const persistedPrices = [];
       await Promise.all(
         Object.values(priceUpdates).map(async (p) => {

@@ -24,7 +24,7 @@ export async function updatePrice({ address, price }: TokenPrice): Promise<Token
     const mapper = getDataMapper();
     return mapper.put(
       Object.assign(new TokenPriceSnapshot(), {
-        address,
+        address: ethers.utils.getAddress(address),
         price,
       }),
     );
