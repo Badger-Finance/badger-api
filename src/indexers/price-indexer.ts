@@ -51,15 +51,21 @@ export async function indexPrices() {
         ...Object.fromEntries(onChainPrices.map((p) => [p.address, p])),
       };
 
+      console.log(priceUpdates);
+
+      const persistedPrices = [];
       await Promise.all(
         Object.values(priceUpdates).map(async (p) => {
           try {
-            await updatePrice(p);
+            const persisted = await updatePrice(p);
+            persistedPrices.push(persisted);
           } catch (err) {
             console.error(err);
           }
         }),
       );
+
+      console.log(`Updated ${persistedPrices.length} / ${Object.keys(priceUpdates).length} token prices`);
     } catch (err) {
       console.error(err);
     }
