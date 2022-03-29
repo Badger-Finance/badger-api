@@ -60,10 +60,14 @@ export async function refreshVaultHarvests() {
               orderBy: BadgerTreeDistribution_OrderBy.Timestamp,
               orderDirection: OrderDirection.Desc,
             });
-            if (settHarvests) {
+
+            if (settHarvests.length > 0) {
               harvestData.lastHarvestedAt = settHarvests[0].timestamp;
             }
-            if (badgerTreeDistributions && badgerTreeDistributions[0].timestamp > harvestData.lastHarvestedAt) {
+            if (
+              badgerTreeDistributions.length > 0 &&
+              badgerTreeDistributions[0].timestamp > harvestData.lastHarvestedAt
+            ) {
               harvestData.lastHarvestedAt = badgerTreeDistributions[0].timestamp;
             }
           }
