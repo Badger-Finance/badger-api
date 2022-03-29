@@ -1,5 +1,9 @@
 import { VaultVersion } from '@badger-dao/sdk';
-import { OrderDirection, SettHarvest_OrderBy } from '@badger-dao/sdk/lib/graphql/generated/badger';
+import {
+  BadgerTreeDistribution_OrderBy,
+  OrderDirection,
+  SettHarvest_OrderBy,
+} from '@badger-dao/sdk/lib/graphql/generated/badger';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { getFullToken, toBalance } from '../tokens/tokens.utils';
@@ -48,8 +52,19 @@ export async function refreshVaultHarvests() {
               orderBy: SettHarvest_OrderBy.Timestamp,
               orderDirection: OrderDirection.Desc,
             });
+            const { badgerTreeDistributions } = await sdk.graph.loadBadgerTreeDistributions({
+              first: 1,
+              where: {
+                sett: vault.vaultToken.toLowerCase(),
+              },
+              orderBy: BadgerTreeDistribution_OrderBy.Timestamp,
+              orderDirection: OrderDirection.Desc,
+            });
             if (settHarvests) {
               harvestData.lastHarvestedAt = settHarvests[0].timestamp;
+            }
+            if (badgerTreeDistributions && badgerTreeDistributions[0].timestamp > harvestData.lastHarvestedAt) {
+              harvestData.lastHarvestedAt = badgerTreeDistributions[0].timestamp;
             }
           }
         }
