@@ -1,4 +1,4 @@
-import { BadgerGraph, VaultVersion } from '@badger-dao/sdk';
+import { VaultVersion } from '@badger-dao/sdk';
 import { OrderDirection, SettHarvest_OrderBy } from '@badger-dao/sdk/lib/graphql/generated/badger';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
@@ -9,11 +9,15 @@ export async function refreshVaultHarvests() {
   const chains = loadChains();
   await Promise.all(
     chains.map(async (chain) => {
-      const graph = new BadgerGraph({ network: chain.network });
       const sdk = await chain.getSdk();
       const mapper = getDataMapper();
       for (const vault of chain.vaults) {
-        let harvestData: VaultPendingHarvestData;
+        const harvestData: VaultPendingHarvestData = {
+          vault: vault.vaultToken,
+          yieldTokens: [],
+          harvestTokens: [],
+          lastHarvestedAt: 0,
+        };
         try {
           const [pendingYield, pendingHarvest] = await Promise.all([
             sdk.vaults.getPendingYield(vault.vaultToken),
@@ -29,18 +33,14 @@ export async function refreshVaultHarvests() {
             ),
           ]);
 
-          harvestData = {
-            vault: vault.vaultToken,
-            yieldTokens,
-            harvestTokens,
-            lastHarvestedAt: pendingYield.lastHarvestedAt,
-          };
-          await mapper.put(Object.assign(new VaultPendingHarvestData(), harvestData));
+          harvestData.yieldTokens = yieldTokens;
+          harvestData.harvestTokens = harvestTokens;
+          harvestData.lastHarvestedAt = pendingHarvest.lastHarvestedAt;
         } catch (err) {
           if (vault.version && vault.version === VaultVersion.v1_5) {
             console.error(`Failed Index Harvests: ${vault.name} (${chain.network})`);
           } else {
-            const { settHarvests } = await graph.loadSettHarvests({
+            const { settHarvests } = await sdk.graph.loadSettHarvests({
               first: 1,
               where: {
                 sett: vault.vaultToken.toLowerCase(),
@@ -49,14 +49,15 @@ export async function refreshVaultHarvests() {
               orderDirection: OrderDirection.Desc,
             });
             if (settHarvests) {
-              harvestData = {
-                vault: vault.vaultToken,
-                yieldTokens: [],
-                harvestTokens: [],
-                lastHarvestedAt: settHarvests[0].timestamp,
-              };
+              harvestData.lastHarvestedAt = settHarvests[0].timestamp;
             }
           }
+        }
+
+        try {
+          await mapper.put(Object.assign(new VaultPendingHarvestData(), harvestData));
+        } catch (err) {
+          console.error({ err, vault });
         }
       }
     }),
