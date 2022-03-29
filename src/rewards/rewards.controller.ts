@@ -42,7 +42,7 @@ export class RewardsController {
       const { address, balance } = record;
       const token = await getFullToken(chain, address);
       if (token.address === TOKENS.DIGG) {
-        rewards[address] = BigNumber.from(balance).div(REMDIGG_SHARE_PER_FRAGMENT).toNumber();
+        rewards[address] = formatBalance(BigNumber.from(balance).div(REMDIGG_SHARE_PER_FRAGMENT), token.decimals);
       } else {
         rewards[address] = formatBalance(balance, token.decimals);
       }

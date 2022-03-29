@@ -62,7 +62,7 @@ export abstract class Chain {
     }
     Chain.chains[network] = chain;
     Chain.chains[chain.symbol] = chain;
-    Chain.chainsByNetworkId[chain.chainId] = chain;
+    Chain.chainsByNetworkId[parseInt(chain.chainId, 16)] = chain;
     if (network === Network.Polygon) {
       Chain.chains['matic'] = chain;
     }
