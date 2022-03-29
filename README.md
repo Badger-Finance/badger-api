@@ -21,6 +21,9 @@ To get started, install the following dependencies:
 - Node
 - Java
 
+**Note: If you are running on an M1 Mac you will have to install the x86 version of Java and run the following commands in [Rosetta](https://osxdaily.com/2020/11/18/how-run-homebrew-x86-terminal-apple-silicon-mac/)**
+
+
 Setup project dependencies:
 
 ```bash
@@ -43,7 +46,7 @@ sls config credentials --provider aws \
 #### Git
 
 Badger accepts only verified commits, this can be done by signing
-them with gpg keys. For more info, proccede to
+them with gpg keys. For more info, proceed to
 [github gpg doc](https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key).
 
 ### Environment Variables
