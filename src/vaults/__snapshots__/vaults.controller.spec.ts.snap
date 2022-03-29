@@ -4372,7 +4372,7 @@ Array [
         "name": "Curve Trading Fees",
       },
     ],
-    "state": "guarded",
+    "state": "new",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "aumFee": 0,
@@ -7972,7 +7972,7 @@ Array [
         "name": "Curve Trading Fees",
       },
     ],
-    "state": "guarded",
+    "state": "new",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "aumFee": 0,
