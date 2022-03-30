@@ -261,6 +261,7 @@ describe('vaults.utils', () => {
 
         const cached = await getCachedVault(TEST_CHAIN, vault);
         const expected = await defaultVault(TEST_CHAIN, vault);
+        expected.available = snapshot.available;
         expected.pricePerFullShare = snapshot.balance / snapshot.totalSupply;
         expected.balance = snapshot.balance;
         expected.value = snapshot.value;
