@@ -18,9 +18,9 @@
     "dev:node:api": "npx ts-node src/index.ts",
     "format": "pretty-quick",
     "lint": "eslint \"src/**/*.ts\" --fix",
-    "test": "jest --detectOpenHandles",
-    "test:upd": "jest --detectOpenHandles -u",
-    "test:path": "jest --detectOpenHandles --testPathPattern",
+    "test": "jest --detectOpenHandles --runInBand",
+    "test:upd": "yarn test -u",
+    "test:path": "yarn test --testPathPattern",
     "ddb:migrate:local": "sls dynamodb migrate",
     "ddb:seed:local": "sls dynamodb seed",
     "prepare": "husky install"

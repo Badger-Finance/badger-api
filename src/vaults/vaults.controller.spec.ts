@@ -1,4 +1,4 @@
-import { TokenValue, VaultDTO } from '@badger-dao/sdk';
+import BadgerSDK, { TokenValue, VaultDTO } from '@badger-dao/sdk';
 import { PlatformTest } from '@tsed/common';
 import { BadRequest } from '@tsed/exceptions';
 import SuperTest from 'supertest';
@@ -99,6 +99,7 @@ describe('VaultsController', () => {
         // @ts-ignore
         return vaultsGraphSdkMapMock[`${id.toLowerCase()}-${(block || {}).number || 0}`];
       });
+    jest.spyOn(BadgerSDK.prototype, 'ready').mockImplementation();
   };
 
   describe('GET /v2/vaults', () => {

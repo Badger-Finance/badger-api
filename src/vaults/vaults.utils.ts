@@ -110,6 +110,7 @@ export async function getCachedVault(chain: Chain, vaultDefinition: VaultDefinit
       { address: vaultDefinition.vaultToken },
       { limit: 1, scanIndexForward: false },
     )) {
+      vault.available = item.available;
       vault.balance = item.balance;
       vault.value = item.value;
       if (item.balance === 0 || item.totalSupply === 0) {
