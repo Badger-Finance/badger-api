@@ -46,6 +46,7 @@ export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefini
     requireRegistry: false,
     state: VaultState.Open,
     version: vaultDefinition.version ?? VaultVersion.v1,
+    update: true,
   });
 
   let block = 0;
