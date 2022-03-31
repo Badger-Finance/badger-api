@@ -38,7 +38,7 @@ export const CURVE_API_URL = 'https://stats.curve.fi/raw-stats/apys.json';
 export const CURVE_CRYPTO_API_URL = 'https://stats.curve.fi/raw-stats-crypto/apys.json';
 export const CURVE_MATIC_API_URL = 'https://stats.curve.fi/raw-stats-polygon/apys.json';
 export const CURVE_ARBITRUM_API_URL = 'https://stats.curve.fi/raw-stats-arbitrum/apys.json';
-export const CURVE_FACTORY_APY = 'https://api.curve.fi/api/getFactoryAPYs?version=2';
+export const CURVE_FACTORY_APY = 'https://api.curve.fi/api/getFactoryAPYs';
 
 /* Protocol Definitions */
 const curvePoolApr: Record<string, string> = {
@@ -136,7 +136,19 @@ export async function getCurvePerformance(chain: Chain, vaultDefinition: VaultDe
   if (!missingEntry()) {
     tradeFeePerformance = curveData.apy.week[curvePoolApr[assetKey]] * 100;
   } else {
-    const factoryAPY = await request<FactoryAPYResonse>(CURVE_FACTORY_APY);
+    const factoryAPY = await request<FactoryAPYResonse>(CURVE_FACTORY_APY, { version: '2' });
+    const poolDetails = factoryAPY.data.poolDetails.find(
+      (pool) => ethers.utils.getAddress(pool.poolAddress) === vaultDefinition.depositToken,
+    );
+    if (poolDetails) {
+      tradeFeePerformance = poolDetails.apy;
+    }
+  }
+
+  if (!missingEntry()) {
+    tradeFeePerformance = curveData.apy.week[curvePoolApr[assetKey]] * 100;
+  } else {
+    const factoryAPY = await request<FactoryAPYResonse>(CURVE_FACTORY_APY, { version: 'crypto' });
     const poolDetails = factoryAPY.data.poolDetails.find(
       (pool) => ethers.utils.getAddress(pool.poolAddress) === vaultDefinition.depositToken,
     );
