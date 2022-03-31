@@ -155,6 +155,10 @@ export const fantomTokensConfig: TokenConfig = {
     lpToken: true,
     type: PricingType.UniV2LP,
   },
+  [TOKENS.SMM_BVEOXD_OXD]: {
+    lpToken: true,
+    type: PricingType.UniV2LP,
+  },
   [TOKENS.BSMM_GEIST_3CRV_DCA]: {
     type: PricingType.Vault,
     vaultToken: {
@@ -264,6 +268,20 @@ export const fantomTokensConfig: TokenConfig = {
     type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.FTM_OXD_2,
+      network: Network.Fantom,
+    },
+  },
+  [TOKENS.BOXSOLID]: {
+    type: PricingType.Vault,
+    vaultToken: {
+      address: TOKENS.FTM_OXSOLID,
+      network: Network.Fantom,
+    },
+  },
+  [TOKENS.BSMM_BVEOXD_OXD]: {
+    type: PricingType.Vault,
+    vaultToken: {
+      address: TOKENS.SMM_BVEOXD_OXD,
       network: Network.Fantom,
     },
   },
