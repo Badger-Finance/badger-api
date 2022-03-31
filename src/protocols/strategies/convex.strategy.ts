@@ -133,28 +133,24 @@ export async function getCurvePerformance(chain: Chain, vaultDefinition: VaultDe
   }
 
   let tradeFeePerformance = 0;
-  if (!missingEntry()) {
-    tradeFeePerformance = curveData.apy.week[curvePoolApr[assetKey]] * 100;
-  } else {
-    const factoryAPY = await request<FactoryAPYResonse>(CURVE_FACTORY_APY, { version: '2' });
-    const poolDetails = factoryAPY.data.poolDetails.find(
-      (pool) => ethers.utils.getAddress(pool.poolAddress) === vaultDefinition.depositToken,
-    );
-    if (poolDetails) {
-      tradeFeePerformance = poolDetails.apy;
+
+  async function updateFactoryApy(version: string) {
+    if (!missingEntry()) {
+      tradeFeePerformance = curveData.apy.week[curvePoolApr[assetKey]] * 100;
+    } else {
+      const factoryAPY = await request<FactoryAPYResonse>(CURVE_FACTORY_APY, { version });
+      const poolDetails = factoryAPY.data.poolDetails.find(
+        (pool) => ethers.utils.getAddress(pool.poolAddress) === vaultDefinition.depositToken,
+      );
+      if (poolDetails) {
+        tradeFeePerformance = poolDetails.apy;
+      }
     }
   }
 
-  if (!missingEntry()) {
-    tradeFeePerformance = curveData.apy.week[curvePoolApr[assetKey]] * 100;
-  } else {
-    const factoryAPY = await request<FactoryAPYResonse>(CURVE_FACTORY_APY, { version: 'crypto' });
-    const poolDetails = factoryAPY.data.poolDetails.find(
-      (pool) => ethers.utils.getAddress(pool.poolAddress) === vaultDefinition.depositToken,
-    );
-    if (poolDetails) {
-      tradeFeePerformance = poolDetails.apy;
-    }
+  await updateFactoryApy('2');
+  if (tradeFeePerformance === 0) {
+    await updateFactoryApy('crypto');
   }
 
   const valueSource = createValueSource('Curve LP Fees', tradeFeePerformance);
