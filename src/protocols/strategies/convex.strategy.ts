@@ -79,7 +79,7 @@ export class ConvexStrategy {
       case TOKENS.BCRV_CVXBVECVX:
         return getLiquiditySources(chain, vaultDefinition);
       default:
-        return [];
+        return Promise.all([getCurvePerformance(chain, vaultDefinition)]);
     }
   }
 }
