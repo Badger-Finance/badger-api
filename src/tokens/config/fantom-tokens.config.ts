@@ -23,6 +23,10 @@ export const fantomTokensConfig: TokenConfig = {
     lookupName: 'vedao',
     type: PricingType.LookupName,
   },
+  [TOKENS.FTM_DEI]: {
+    lookupName: 'dei-token',
+    type: PricingType.LookupName,
+  },
   [TOKENS.FTM_WBTC]: {
     lookupName: 'wrapped-bitcoin',
     type: PricingType.LookupName,
