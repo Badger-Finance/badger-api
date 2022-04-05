@@ -116,7 +116,7 @@ const RAW_TOKENS: ContractRegistry = {
   // ftm tokens
   FTM_WFTM: '0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83',
   FTM_DAI: '0x8d11ec38a3eb5e956b052f67da8bdc9bef8abf3e',
-  FTM_DEI: '0x8d11ec38a3eb5e956b052f67da8bdc9bef8abf3e',
+  FTM_DEI: '0xDE12c7959E1a72bbe8a5f7A1dc8f8EeF9Ab011B3',
   FTM_USDC: '0x04068da6c83afcfa0e13ba15a6696662335d5b75',
   FTM_USDT: '0x049d68029688eAbF473097a2fC38ef61633A3C7A',
   FTM_BOO: '0x841fad6eae12c286d1fd18d1d525dffa75c7effe',
