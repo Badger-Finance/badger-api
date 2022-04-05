@@ -9,7 +9,6 @@ import { Avalanche } from '../chains/config/avax.config';
 import { BinanceSmartChain } from '../chains/config/bsc.config';
 import { Ethereum } from '../chains/config/eth.config';
 import { Polygon } from '../chains/config/polygon.config';
-import { xDai } from '../chains/config/xdai.config';
 import { ONE_DAY_MS } from '../config/constants';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import { CachedBoost } from '../leaderboards/interface/cached-boost.interface';
@@ -190,9 +189,6 @@ export function setupChainGasPrices() {
     .mockImplementation(async () => ({ rapid: 38, fast: 33, standard: 33, slow: 33 }));
   jest
     .spyOn(Arbitrum.prototype, 'getGasPrices')
-    .mockImplementation(async () => ({ rapid: 38, fast: 33, standard: 33, slow: 33 }));
-  jest
-    .spyOn(xDai.prototype, 'getGasPrices')
     .mockImplementation(async () => ({ rapid: 38, fast: 33, standard: 33, slow: 33 }));
   jest
     .spyOn(Polygon.prototype, 'getGasPrices')

@@ -38,7 +38,7 @@ export const CURVE_API_URL = 'https://stats.curve.fi/raw-stats/apys.json';
 export const CURVE_CRYPTO_API_URL = 'https://stats.curve.fi/raw-stats-crypto/apys.json';
 export const CURVE_MATIC_API_URL = 'https://stats.curve.fi/raw-stats-polygon/apys.json';
 export const CURVE_ARBITRUM_API_URL = 'https://stats.curve.fi/raw-stats-arbitrum/apys.json';
-export const CURVE_FACTORY_APY = 'https://api.curve.fi/api/getFactoryAPYs?version=2';
+export const CURVE_FACTORY_APY = 'https://api.curve.fi/api/getFactoryAPYs';
 
 /* Protocol Definitions */
 const curvePoolApr: Record<string, string> = {
@@ -79,7 +79,7 @@ export class ConvexStrategy {
       case TOKENS.BCRV_CVXBVECVX:
         return getLiquiditySources(chain, vaultDefinition);
       default:
-        return [];
+        return Promise.all([getCurvePerformance(chain, vaultDefinition)]);
     }
   }
 }
@@ -133,16 +133,24 @@ export async function getCurvePerformance(chain: Chain, vaultDefinition: VaultDe
   }
 
   let tradeFeePerformance = 0;
-  if (!missingEntry()) {
-    tradeFeePerformance = curveData.apy.week[curvePoolApr[assetKey]] * 100;
-  } else {
-    const factoryAPY = await request<FactoryAPYResonse>(CURVE_FACTORY_APY);
-    const poolDetails = factoryAPY.data.poolDetails.find(
-      (pool) => ethers.utils.getAddress(pool.poolAddress) === vaultDefinition.depositToken,
-    );
-    if (poolDetails) {
-      tradeFeePerformance = poolDetails.apy;
+
+  async function updateFactoryApy(version: string) {
+    if (!missingEntry()) {
+      tradeFeePerformance = curveData.apy.week[curvePoolApr[assetKey]] * 100;
+    } else {
+      const factoryAPY = await request<FactoryAPYResonse>(CURVE_FACTORY_APY, { version });
+      const poolDetails = factoryAPY.data.poolDetails.find(
+        (pool) => ethers.utils.getAddress(pool.poolAddress) === vaultDefinition.depositToken,
+      );
+      if (poolDetails) {
+        tradeFeePerformance = poolDetails.apy;
+      }
     }
+  }
+
+  await updateFactoryApy('2');
+  if (tradeFeePerformance === 0) {
+    await updateFactoryApy('crypto');
   }
 
   const valueSource = createValueSource('Curve LP Fees', tradeFeePerformance);

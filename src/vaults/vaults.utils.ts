@@ -558,7 +558,7 @@ async function estimateVaultPerformance(
   // count of harvests is exclusive of the 0th element
   const durationScalar = ONE_YEAR_SECONDS / totalDuration;
   // take the less frequent period, the actual harvest frequency or daily
-  const periods = Math.min(365, durationScalar * (measuredHarvests.length - 1));
+  const periods = Math.min(365, durationScalar * measuredHarvests.length);
   const compoundApr = (totalHarvestedTokens / measuredBalance) * durationScalar;
   const compoundApy = (1 + compoundApr / periods) ** periods - 1;
   const compoundSourceApr = createValueSource(VAULT_SOURCE, compoundApr * 100);

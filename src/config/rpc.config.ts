@@ -5,7 +5,6 @@ const rpc = {
   [Network.Ethereum]: process.env.ETH_RPC || Provider.Cloudflare,
   [Network.BinanceSmartChain]: process.env.BSC_RPC || Provider.Binance,
   [Network.Polygon]: process.env.MATIC_RPC || Provider.Quicknode,
-  [Network.xDai]: process.env.XDAI_RPC || Provider.xDai,
   [Network.Arbitrum]: process.env.ARBITRUM_RPC || Provider.Arbitrum,
   [Network.Avalanche]: process.env.AVALANCHE_RPC || Provider.Avalanche,
   [Network.Fantom]: process.env.FANTOM_RPC || Provider.Fantom,
