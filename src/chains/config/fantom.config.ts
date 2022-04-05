@@ -170,6 +170,8 @@ export const fantomSetts: VaultDefinition[] = [
     state: VaultState.Guarded,
     protocol: Protocol.OxDAO,
     version: VaultVersion.v1_5,
+    stage: Stage.Staging,
+    behavior: VaultBehavior.EcosystemHelper,
   },
   {
     name: 'bveOXD/OXD',
@@ -178,5 +180,17 @@ export const fantomSetts: VaultDefinition[] = [
     state: VaultState.Guarded,
     protocol: Protocol.OxDAO,
     version: VaultVersion.v1_5,
+    stage: Stage.Staging,
+    behavior: VaultBehavior.EcosystemHelper,
+  },
+  {
+    name: 'USDC/DEI',
+    depositToken: TOKENS.SMM_USDC_DEI,
+    vaultToken: TOKENS.BSMM_USDC_DEI,
+    state: VaultState.Guarded,
+    protocol: Protocol.OxDAO,
+    version: VaultVersion.v1_5,
+    stage: Stage.Staging,
+    behavior: VaultBehavior.Ecosystem,
   },
 ];

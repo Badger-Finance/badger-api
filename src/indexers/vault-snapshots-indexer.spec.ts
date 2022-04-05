@@ -1,10 +1,9 @@
 import { DataMapper, PutParameters, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
 import { loadChains } from '../chains/chain';
-import * as priceUtils from '../prices/prices.utils';
 import * as vaultUtils from '../vaults/vaults.utils';
 import { refreshVaultSnapshots } from './vault-snapshots-indexer';
 import { BigNumber, ethers } from 'ethers';
-import { randomVault, setupMapper, TEST_ADDR } from '../test/tests.utils';
+import { mockPricing, randomVault, setupMapper, TEST_ADDR } from '../test/tests.utils';
 import BadgerSDK, {
   VaultState,
   VaultVersion,
@@ -66,12 +65,7 @@ describe('refreshVaultSnapshots', () => {
     put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
 
     jest.spyOn(BadgerSDK.prototype, 'ready').mockImplementation();
-    jest.spyOn(priceUtils, 'getPrice').mockImplementation(async (address: string) => {
-      return {
-        address,
-        price: 10,
-      };
-    });
+    jest.spyOn(ethers.providers.BaseProvider.prototype, 'getBlockNumber').mockImplementation(async () => 13_420_690);
     jest.spyOn(tokensUtils, 'getFullToken').mockImplementation(async (_, tokenAddr) => {
       return fullTokenMockMap[tokenAddr] || fullTokenMockMap[TOKENS.BADGER];
     });
@@ -87,6 +81,7 @@ describe('refreshVaultSnapshots', () => {
         return [tokensUtils.mockBalance(token, parseInt(token.address.slice(0, 4), 16))];
       });
 
+    mockPricing();
     setupMapper([randomVault()]);
     await refreshVaultSnapshots();
   });
