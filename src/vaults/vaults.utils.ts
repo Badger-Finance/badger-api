@@ -428,15 +428,19 @@ export async function loadVaultGraphPerformances(
   let data = constructGraphVaultData(vaultDefinition, settHarvests, badgerTreeDistributions);
   // if there are no recent viable options, attempt to use the full vault history
   if (data.length <= 1) {
+    // take the last 6 weeks as the "full graph" to avoid really old data
+    const cutoff = Number(((Date.now() - ONE_DAY_MS * 42) / 1000).toFixed());
     [vaultHarvests, treeDistributions] = await Promise.all([
       sdk.graph.loadSettHarvests({
         where: {
           sett: vaultToken.toLowerCase(),
+          timestamp_gte: cutoff,
         },
       }),
       sdk.graph.loadBadgerTreeDistributions({
         where: {
           sett: vaultToken.toLowerCase(),
+          timestamp_gte: cutoff,
         },
       }),
     ]);
