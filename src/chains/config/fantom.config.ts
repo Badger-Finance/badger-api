@@ -39,7 +39,7 @@ export const fantomSetts: VaultDefinition[] = [
     behavior: VaultBehavior.Ecosystem,
     depositToken: TOKENS.SMM_BOO_XBOO,
     vaultToken: TOKENS.BSMM_BOO_XBOO_ECO,
-    state: VaultState.Guarded,
+    state: VaultState.Deprecated,
     protocol: Protocol.Solidex,
   },
   {
@@ -55,7 +55,7 @@ export const fantomSetts: VaultDefinition[] = [
     behavior: VaultBehavior.EcosystemHelper,
     depositToken: TOKENS.SMM_WFTM_SEX,
     vaultToken: TOKENS.BSMM_WFTM_SEX,
-    state: VaultState.Guarded,
+    state: VaultState.Deprecated,
     protocol: Protocol.Solidex,
   },
   {
@@ -63,7 +63,7 @@ export const fantomSetts: VaultDefinition[] = [
     behavior: VaultBehavior.EcosystemHelper,
     depositToken: TOKENS.SMM_SOLID_SOLIDSEX,
     vaultToken: TOKENS.BSMM_SOLID_SOLIDSEX,
-    state: VaultState.Guarded,
+    state: VaultState.Deprecated,
     protocol: Protocol.Solidex,
   },
   {
@@ -80,7 +80,7 @@ export const fantomSetts: VaultDefinition[] = [
     depositToken: TOKENS.SMM_OXD_USDC,
     vaultToken: TOKENS.BSMM_OXD_USDC,
     stage: Stage.Staging,
-    state: VaultState.Guarded,
+    state: VaultState.Deprecated,
     protocol: Protocol.Solidex,
   },
   {
@@ -112,7 +112,7 @@ export const fantomSetts: VaultDefinition[] = [
     behavior: VaultBehavior.DCA,
     depositToken: TOKENS.SMM_GEIST_3CRV,
     vaultToken: TOKENS.BSMM_GEIST_3CRV_DCA,
-    state: VaultState.Guarded,
+    state: VaultState.Deprecated,
     protocol: Protocol.Solidex,
   },
   {
@@ -120,7 +120,7 @@ export const fantomSetts: VaultDefinition[] = [
     behavior: VaultBehavior.Ecosystem,
     depositToken: TOKENS.SMM_WFTM_CRV,
     vaultToken: TOKENS.BSMM_WFTM_CRV_ECO,
-    state: VaultState.Guarded,
+    state: VaultState.Deprecated,
     protocol: Protocol.Solidex,
   },
   {
@@ -128,7 +128,7 @@ export const fantomSetts: VaultDefinition[] = [
     behavior: VaultBehavior.Ecosystem,
     depositToken: TOKENS.SMM_USDC_MIM,
     vaultToken: TOKENS.BSMM_USDC_MIM_ECO,
-    state: VaultState.Guarded,
+    state: VaultState.Deprecated,
     protocol: Protocol.Solidex,
   },
   {
@@ -136,7 +136,7 @@ export const fantomSetts: VaultDefinition[] = [
     behavior: VaultBehavior.Ecosystem,
     depositToken: TOKENS.SMM_WFTM_SCREAM,
     vaultToken: TOKENS.BSMM_WFTM_SCREAM_ECO,
-    state: VaultState.Guarded,
+    state: VaultState.Deprecated,
     protocol: Protocol.Solidex,
   },
   {
@@ -144,7 +144,7 @@ export const fantomSetts: VaultDefinition[] = [
     behavior: VaultBehavior.Ecosystem,
     depositToken: TOKENS.SMM_WFTM_RENBTC,
     vaultToken: TOKENS.BSMM_WFTM_RENBTC_ECO,
-    state: VaultState.Guarded,
+    state: VaultState.Deprecated,
     protocol: Protocol.Solidex,
   },
   {
@@ -152,7 +152,7 @@ export const fantomSetts: VaultDefinition[] = [
     behavior: VaultBehavior.Ecosystem,
     depositToken: TOKENS.SMM_WFTM_TOMB,
     vaultToken: TOKENS.BSMM_WFTM_TOMB_ECO,
-    state: VaultState.Guarded,
+    state: VaultState.Deprecated,
     protocol: Protocol.Solidex,
   },
   {

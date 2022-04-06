@@ -18,6 +18,7 @@ import * as tokensUtils from '../tokens/tokens.utils';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import { TOKENS } from '../config/tokens.config';
 import { Chain } from '../chains/config/chain.config';
+import { VaultsService as VaultsServiceAPI } from '../vaults/vaults.service';
 
 describe('refreshVaultSnapshots', () => {
   const supportedAddresses = loadChains()
@@ -36,6 +37,13 @@ describe('refreshVaultSnapshots', () => {
       strategistFee: 10,
       aumFee: 0,
     }));
+    jest.spyOn(VaultsServiceAPI, 'loadVault').mockImplementation(async (chain, vaultDefinition, currency) => {
+      const dummyVault = await vaultUtils.defaultVault(chain, vaultDefinition);
+      dummyVault.balance = 1;
+      dummyVault.available = 0.5;
+      dummyVault.pricePerFullShare = 1.003;
+      return dummyVault;
+    });
     vaultsMock = jest.spyOn(VaultsService.prototype, 'loadVault').mockImplementation(async ({ address }) => ({
       name: 'Test Vault',
       address,
