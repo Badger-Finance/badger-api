@@ -4,7 +4,7 @@ exports[`metrics.utils getProtocolMetrics returns protocolMetrics 1`] = `
 Object {
   "totalUsers": 7,
   "totalValueLocked": 0,
-  "totalVaults": 59,
+  "totalVaults": 62,
 }
 `;
 
@@ -13,6 +13,6 @@ exports[`metrics.utils getProtocolUsersMetric returns total users 1`] = `7`;
 exports[`metrics.utils getSettsMetrics returns setts metrics 1`] = `
 Object {
   "totalValueLocked": 0,
-  "totalVaults": 59,
+  "totalVaults": 62,
 }
 `;
