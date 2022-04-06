@@ -170,7 +170,6 @@ export const fantomSetts: VaultDefinition[] = [
     state: VaultState.Guarded,
     protocol: Protocol.OxDAO,
     version: VaultVersion.v1_5,
-    stage: Stage.Staging,
     behavior: VaultBehavior.EcosystemHelper,
   },
   {
@@ -180,7 +179,6 @@ export const fantomSetts: VaultDefinition[] = [
     state: VaultState.Guarded,
     protocol: Protocol.OxDAO,
     version: VaultVersion.v1_5,
-    stage: Stage.Staging,
     behavior: VaultBehavior.EcosystemHelper,
   },
   {
@@ -190,7 +188,6 @@ export const fantomSetts: VaultDefinition[] = [
     state: VaultState.Guarded,
     protocol: Protocol.OxDAO,
     version: VaultVersion.v1_5,
-    stage: Stage.Staging,
     behavior: VaultBehavior.Ecosystem,
   },
 ];
