@@ -92,16 +92,24 @@ async function getLiquiditySources(chain: Chain, vaultDefinition: VaultDefinitio
     getVaultCachedValueSources(bveCVXVault),
   ]);
   const vaultTokens = await getVaultTokens(chain, bveCVXLP, bveCVXLP.balance);
-
   const bveCVXValue = vaultTokens
     .filter((t) => t.address === TOKENS.BVECVX)
     .map((t) => t.value)
-    .reduce((val, total) => (total += val), 0);
+    .reduce((total, val) => (total += val), 0);
   const scalar = bveCVXValue / bveCVXLP.value;
+  const vaultToken = await getFullToken(chain, bveCVX.vaultToken);
   const lpSources = bveCVXSources.map((s) => {
+    if (s.type === SourceType.Compound || s.type === SourceType.PreCompound) {
+      s.name = `${vaultToken.name} ${s.name}`;
+      const sourceTypeName = `${s.type === SourceType.Compound ? 'Derivative ' : ''}${vaultToken.name} ${s.type}`;
+      s.addressValueSourceType = s.addressValueSourceType.replace(
+        s.type,
+        sourceTypeName.replace(/ /g, '_').toLowerCase(),
+      );
+    }
     // rewrite object keys to simulate sources from the lp vault
     s.addressValueSourceType = s.addressValueSourceType.replace(bveCVX.vaultToken, bveCVXLP.vaultToken);
-    s.address = s.address.replace(bveCVX.vaultToken, bveCVXLP.vaultToken);
+    s.address = bveCVXLP.vaultToken;
     s.apr *= scalar;
     s.maxApr *= scalar;
     s.minApr *= scalar;

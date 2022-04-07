@@ -49,7 +49,7 @@ export async function defaultVault(chain: Chain, vaultDefinition: VaultDefinitio
   const state = vaultDefinition.state
     ? vaultDefinition.state
     : vaultDefinition.newVault
-    ? VaultState.New
+    ? VaultState.Featured
     : VaultState.Open;
   const bouncer = vaultDefinition.bouncer ?? BouncerType.None;
   const type = vaultDefinition.protocol === Protocol.Badger ? VaultType.Native : VaultType.Standard;
@@ -615,7 +615,7 @@ async function estimateVaultPerformance(
         const vaultToken = await getFullToken(chain, emittedVault.vaultToken);
 
         const sourceName = `${vaultToken.name} Compounding`;
-        const sourceType = `Derivative ${sourceName}`.replace(' ', '_').toLowerCase();
+        const sourceType = `derivative_${sourceName.replace(/ /g, '_')}`.toLowerCase();
         const derivativeSource = createValueSource(sourceName, compoundingSourceApy);
         valueSources.push(valueSourceToCachedValueSource(derivativeSource, vaultDefinition, sourceType));
       }

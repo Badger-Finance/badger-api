@@ -169,13 +169,13 @@ Array [
   },
   CachedValueSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "addressValueSourceType": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_derivative_bcvxcrv compounding",
+    "addressValueSourceType": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_derivative_bcvxcrv_compounding",
     "apr": 2.5320518074012263e-7,
     "boostable": false,
     "maxApr": 2.5320518074012263e-7,
     "minApr": 2.5320518074012263e-7,
     "name": "bCVXCRV Compounding",
-    "type": "derivative_bcvxcrv compounding",
+    "type": "derivative_bcvxcrv_compounding",
   },
   CachedValueSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -189,13 +189,13 @@ Array [
   },
   CachedValueSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "addressValueSourceType": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_derivative_bvecvx compounding",
+    "addressValueSourceType": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_derivative_bvecvx_compounding",
     "apr": 0.000001141224351973436,
     "boostable": false,
     "maxApr": 0.000001141224351973436,
     "minApr": 0.000001141224351973436,
     "name": "bVECVX Compounding",
-    "type": "derivative_bvecvx compounding",
+    "type": "derivative_bvecvx_compounding",
   },
   CachedValueSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
