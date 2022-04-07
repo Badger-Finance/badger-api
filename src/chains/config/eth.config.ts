@@ -204,6 +204,7 @@ export const ethSetts: VaultDefinition[] = [
     depositToken: TOKENS.CVX,
     vaultToken: TOKENS.BCVX,
     protocol: Protocol.Convex,
+    state: VaultState.Discontinued,
   },
   {
     name: 'Tricrypto2',
