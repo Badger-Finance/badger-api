@@ -49,7 +49,7 @@ export async function defaultVault(chain: Chain, vaultDefinition: VaultDefinitio
   const state = vaultDefinition.state
     ? vaultDefinition.state
     : vaultDefinition.newVault
-    ? VaultState.Featured
+    ? VaultState.New
     : VaultState.Open;
   const bouncer = vaultDefinition.bouncer ?? BouncerType.None;
   const type = vaultDefinition.protocol === Protocol.Badger ? VaultType.Native : VaultType.Standard;
