@@ -28,7 +28,7 @@ async function getLiquiditySources(chain: Chain, vaultDefinition: VaultDefinitio
   const bveOXDValue = vaultTokens
     .filter((t) => t.address === TOKENS.BVEOXD)
     .map((t) => t.value)
-    .reduce((val, total) => (total += val), 0);
+    .reduce((total, val) => (total += val), 0);
   const scalar = bveOXDValue / bveOXDLP.value;
   const vaultToken = await getFullToken(chain, bveOXD.vaultToken);
   return bveOXDSources.map((s) => {

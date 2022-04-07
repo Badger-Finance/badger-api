@@ -95,7 +95,7 @@ async function getLiquiditySources(chain: Chain, vaultDefinition: VaultDefinitio
   const bveCVXValue = vaultTokens
     .filter((t) => t.address === TOKENS.BVECVX)
     .map((t) => t.value)
-    .reduce((val, total) => (total += val), 0);
+    .reduce((total, val) => (total += val), 0);
   const scalar = bveCVXValue / bveCVXLP.value;
   const vaultToken = await getFullToken(chain, bveCVX.vaultToken);
   const lpSources = bveCVXSources.map((s) => {
