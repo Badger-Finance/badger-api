@@ -21,6 +21,7 @@ import { UniswapStrategy } from '../protocols/strategies/uniswap.strategy';
 import { SwaprStrategy } from '../protocols/strategies/swapr.strategy';
 import { getCachedVault, getVaultPerformance } from '../vaults/vaults.utils';
 import { SourceType } from './enums/source-type.enum';
+import { OxDaoStrategy } from '../protocols/strategies/oxdao.strategy';
 
 export type RewardsLoggerInst = InstanceType<typeof RewardsLogger>;
 
@@ -223,6 +224,8 @@ export async function getProtocolValueSources(
         return QuickswapStrategy.getValueSources(vaultDefinition);
       case Protocol.Swapr:
         return SwaprStrategy.getValueSources(chain, vaultDefinition);
+      case Protocol.OxDAO:
+        return OxDaoStrategy.getValueSources(chain, vaultDefinition);
       default: {
         return [];
       }
