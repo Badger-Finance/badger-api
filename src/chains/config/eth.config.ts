@@ -90,7 +90,7 @@ export const ethSetts: VaultDefinition[] = [
     depositToken: TOKENS.CRV_RENBTC,
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_HRENBTC,
-    state: VaultState.Discontinued,
+    state: VaultState.Deprecated,
     protocol: Protocol.Curve,
   },
   {
@@ -103,7 +103,7 @@ export const ethSetts: VaultDefinition[] = [
   {
     name: 'wBTC/Digg',
     depositToken: TOKENS.UNI_DIGG_WBTC,
-    state: VaultState.Discontinued,
+    state: VaultState.Deprecated,
     vaultToken: TOKENS.BUNI_DIGG_WBTC,
     protocol: Protocol.Uniswap,
   },
@@ -134,7 +134,7 @@ export const ethSetts: VaultDefinition[] = [
     name: 'Badger',
     depositToken: TOKENS.BADGER,
     vaultToken: TOKENS.BBADGER,
-    state: VaultState.Discontinued,
+    state: VaultState.Deprecated,
   },
   {
     name: 'wBTC',
@@ -182,7 +182,7 @@ export const ethSetts: VaultDefinition[] = [
     depositToken: TOKENS.CRV_TRICRYPTO,
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_TRICRYPTO,
-    state: VaultState.Discontinued,
+    state: VaultState.Deprecated,
     protocol: Protocol.Convex,
   },
   {
@@ -209,7 +209,7 @@ export const ethSetts: VaultDefinition[] = [
     depositToken: TOKENS.IMBTC,
     vaultToken: TOKENS.BIMBTC,
     protocol: Protocol.mStable,
-    state: VaultState.Discontinued,
+    state: VaultState.Deprecated,
     strategy: '0x10D96b1Fd46Ce7cE092aA905274B8eD9d4585A6E',
   },
   {
@@ -217,7 +217,7 @@ export const ethSetts: VaultDefinition[] = [
     depositToken: TOKENS.MHBTC,
     vaultToken: TOKENS.BMHBTC,
     protocol: Protocol.mStable,
-    state: VaultState.Discontinued,
+    state: VaultState.Deprecated,
     strategy: '0x10D96b1Fd46Ce7cE092aA905274B8eD9d4585A6E',
   },
   {
@@ -266,6 +266,6 @@ export const ethSetts: VaultDefinition[] = [
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_BADGER,
     protocol: Protocol.Convex,
-    state: VaultState.Featured,
+    state: VaultState.New,
   },
 ];

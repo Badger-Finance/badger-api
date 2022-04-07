@@ -193,7 +193,7 @@ describe('vaults.utils', () => {
         state: vaultDefinition.state
           ? vaultDefinition.state
           : vaultDefinition.newVault
-          ? VaultState.Featured
+          ? VaultState.New
           : VaultState.Open,
         apr: 0,
         apy: 0,
