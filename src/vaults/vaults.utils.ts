@@ -615,7 +615,7 @@ async function estimateVaultPerformance(
         const vaultToken = await getFullToken(chain, emittedVault.vaultToken);
 
         const sourceName = `${vaultToken.name} Compounding`;
-        const sourceType = `Derivative ${sourceName}`.replace(' ', '_').toLowerCase();
+        const sourceType = `derivative_${sourceName.replace(/ /g, '_')}`.toLowerCase();
         const derivativeSource = createValueSource(sourceName, compoundingSourceApy);
         valueSources.push(valueSourceToCachedValueSource(derivativeSource, vaultDefinition, sourceType));
       }
