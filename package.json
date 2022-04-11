@@ -20,7 +20,8 @@
     "lint": "eslint \"src/**/*.ts\" --fix",
     "test": "jest --detectOpenHandles --runInBand",
     "test:upd": "yarn test -u",
-    "test:path": "yarn test --testPathPattern",
+    "test:path": "yarn test --no-cache --testPathPattern",
+    "test:clean": "jest --clearCache",
     "ddb:migrate:local": "sls dynamodb migrate",
     "ddb:seed:local": "sls dynamodb seed",
     "prepare": "husky install"
@@ -29,6 +30,7 @@
     "@aws/dynamodb-data-mapper": "^0.7.3",
     "@aws/dynamodb-data-mapper-annotations": "^0.7.3",
     "@badger-dao/sdk": "^1.5.1",
+    "@badger-dao/sdk-mocks": "^1.5.7",
     "@tsed/common": "^6.95.9",
     "@tsed/core": "^6.95.9",
     "@tsed/di": "^6.95.9",
