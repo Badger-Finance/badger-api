@@ -1,4 +1,4 @@
-import { Network, Protocol, Token } from '@badger-dao/sdk';
+import { BadgerTree__factory, Network, Protocol, Token } from '@badger-dao/sdk';
 import { getBoostFile, getCachedAccount } from '../accounts/accounts.utils';
 import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
@@ -10,7 +10,6 @@ import { createValueSource, ValueSource } from '../protocols/interfaces/value-so
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { getFullToken, tokenEmission } from '../tokens/tokens.utils';
 import { RewardMerkleDistribution } from './interfaces/merkle-distributor.interface';
-import { BadgerTree__factory, RewardsLogger } from '../contracts';
 import { EmissionSchedule } from '@badger-dao/sdk/lib/rewards/interfaces/emission-schedule.interface';
 import { BigNumber } from '@ethersproject/bignumber';
 import { UnprocessableEntity } from '@tsed/exceptions';
@@ -22,8 +21,6 @@ import { SwaprStrategy } from '../protocols/strategies/swapr.strategy';
 import { getCachedVault, getVaultPerformance } from '../vaults/vaults.utils';
 import { SourceType } from './enums/source-type.enum';
 import { OxDaoStrategy } from '../protocols/strategies/oxdao.strategy';
-
-export type RewardsLoggerInst = InstanceType<typeof RewardsLogger>;
 
 export async function getTreeDistribution(chain: Chain): Promise<RewardMerkleDistribution | null> {
   if (!chain.badgerTree) {
