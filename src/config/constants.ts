@@ -1,5 +1,6 @@
 import { SwaggerSettings } from '@tsed/swagger';
 import { Stage } from './enums/stage.enum';
+import { getEnvVar } from './util';
 
 // time constants
 export const ONE_MINUTE_SECONDS = 60;
@@ -10,41 +11,39 @@ export const ONE_YEAR_SECONDS = ONE_DAY_SECONDS * 365;
 export const ONE_YEAR_MS = ONE_YEAR_SECONDS * 1000;
 
 // data access constants
-export const APY_SNAPSHOTS_DATA = process.env.APY_SNAPSHOTS_DATA || 'MISSING REQUIRED ENV VAR';
-export const SETT_DATA = process.env.SETT_DATA || 'MISSING REQUIRED ENV VAR';
-export const VAULT_BALANCES_DATA = process.env.VAULT_BALANCES_DATA || 'MISSING REQUIRED ENV VAR';
-export const PRICE_DATA = process.env.PRICE_DATA || 'MISSING REQUIRED ENV VAR';
-export const TOKEN_INFORMATION_DATA = process.env.TOKEN_INFORMATION_DATA || 'MISSING REQUIRED ENV VAR';
-export const VAULT_SNAPSHOTS_DATA = process.env.VAULT_SNAPSHOTS_DATA || 'MISSING REQUIRED ENV VAR';
-export const REWARD_DATA = process.env.REWARD_DATA || 'MISSING REQUIRED ENV VAR';
-export const LEADERBOARD_DATA = process.env.LEADERBOARD_DATA || 'MISSING REQUIRED ENV VAR';
-export const ACCOUNT_DATA = process.env.ACCOUNT_DATA || 'MISSING REQUIRED ENV VAR';
-export const METRICS_SNAPSHOTS_DATA = process.env.METRICS_SNAPSHOTS_DATA || 'MISSING REQUIRED ENV VAR';
-export const LEADERBOARD_SUMMARY_DATA = process.env.LEADERBOARD_SUMMARY_DATA || 'MISSING REQUIRED ENV VAR';
-export const UNCLAIMED_SNAPSHOTS_DATA = process.env.UNCLAIMED_SNAPSHOTS_DATA || 'MISSING REQUIRED ENV VAR';
-export const USER_CLAIMED_METADATA = process.env.METADATA_DATA || 'MISSING REQUIRED ENV VAR';
-export const HARVEST_DATA = process.env.HARVEST_DATA || 'MISSING REQUIRED ENV VAR';
+export const APY_SNAPSHOTS_DATA = getEnvVar('APY_SNAPSHOTS_DATA');
+export const SETT_DATA = getEnvVar('SETT_DATA');
+export const VAULT_BALANCES_DATA = getEnvVar('VAULT_BALANCES_DATA');
+export const PRICE_DATA = getEnvVar('PRICE_DATA');
+export const TOKEN_INFORMATION_DATA = getEnvVar('TOKEN_INFORMATION_DATA');
+export const VAULT_SNAPSHOTS_DATA = getEnvVar('VAULT_SNAPSHOTS_DATA');
+export const REWARD_DATA = getEnvVar('REWARD_DATA');
+export const LEADERBOARD_DATA = getEnvVar('LEADERBOARD_DATA');
+export const ACCOUNT_DATA = getEnvVar('ACCOUNT_DATA');
+export const METRICS_SNAPSHOTS_DATA = getEnvVar('METRICS_SNAPSHOTS_DATA');
+export const LEADERBOARD_SUMMARY_DATA = getEnvVar('LEADERBOARD_SUMMARY_DATA');
+export const UNCLAIMED_SNAPSHOTS_DATA = getEnvVar('UNCLAIMED_SNAPSHOTS_DATA');
+export const USER_CLAIMED_METADATA = getEnvVar('METADATA_DATA');
+export const HARVEST_DATA = getEnvVar('HARVEST_DATA');
 
 // thegraph constants
-export const UNISWAP_URL = process.env.UNISWAP || 'MISSING REQUIRED ENV VAR';
-export const SUSHISWAP_URL = process.env.SUSHISWAP || 'MISSING REQUIRED ENV VAR';
-export const SUSHISWAP_XDAI_URL = process.env.SUSHISWAP_XDAI || 'MISSING REQUIRED ENV VAR';
-export const SUSHISWAP_MATIC_URL = process.env.SUSHISWAP_MATIC || 'MISSING REQUIRED ENV VAR';
-export const SUSHISWAP_ARBITRUM_URL = process.env.SUSHISWAP_ARBITRUM || 'MISSING REQUIRED ENV VAR';
-export const PANCAKESWAP_URL = process.env.PANCAKESWAP || 'MISSING REQUIRED ENV VAR';
-export const QUICKSWAP_URL = process.env.QUICKSWAP || 'MISSING REQUIRED ENV VAR';
-export const SWAPR_URL = process.env.SWAPR || 'MISSING REQUIRED ENV VAR';
+export const UNISWAP_URL = getEnvVar('UNISWAP');
+export const SUSHISWAP_URL = getEnvVar('SUSHISWAP');
+export const SUSHISWAP_XDAI_URL = getEnvVar('SUSHISWAP_XDAI');
+export const SUSHISWAP_MATIC_URL = getEnvVar('SUSHISWAP_MATIC');
+export const SUSHISWAP_ARBITRUM_URL = getEnvVar('SUSHISWAP_ARBITRUM');
+export const PANCAKESWAP_URL = getEnvVar('PANCAKESWAP');
+export const QUICKSWAP_URL = getEnvVar('QUICKSWAP');
+export const SWAPR_URL = getEnvVar('SWAPR');
 
 // general constants
-export const STAGE = process.env.STAGE || 'MISSING REQUIRED ENV VAR';
-export const IS_OFFLINE = process.env.IS_OFFLINE !== undefined && process.env.IS_OFFLINE === 'true';
-export const DEBUG = IS_OFFLINE;
+export const STAGE = getEnvVar('STAGE');
 export const API_VERSION = 'v2.0.0';
 export const PRODUCTION = STAGE === Stage.Production;
 
 // third party api constants
 export const COINGECKO_URL = 'https://api.coingecko.com/api/v3/simple';
-export const BLOCKNATIVE_API_KEY = process.env.BLOCKNATIVE_API_KEY || 'MISSING REQUIRED ENV VAR';
+export const BLOCKNATIVE_API_KEY = getEnvVar('BLOCKNATIVE_API_KEY');
 
 export const DEFAULT_PAGE_SIZE = 20;
 
