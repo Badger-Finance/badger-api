@@ -4,14 +4,14 @@ import { AccountMap } from '../accounts/interfaces/account-map.interface';
 import { getChainStartBlockKey, getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
-import { ClaimableBalance } from '../rewards/entities/claimable-balance';
-import { UserClaimSnapshot } from '../rewards/entities/user-claim-snapshot';
+import { ClaimableBalance } from '../rewards/types/claimable-balance';
 import { getClaimableRewards, getTreeDistribution } from '../rewards/rewards.utils';
 import { getVaultDefinition } from '../vaults/vaults.utils';
 import { batchRefreshAccounts, chunkArray } from './indexer.utils';
-import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 import { AccountIndexMode } from './enums/account-index-mode.enum';
 import { AccountIndexEvent } from './interfaces/account-index-event.interface';
+import { UserClaimSnapshot } from '../rewards/types/user-claim-snapshot';
+import { UserClaimMetadata } from '../rewards/types/user-claim-metadata';
 
 export async function refreshClaimableBalances(chain: Chain) {
   const mapper = getDataMapper();
@@ -62,15 +62,16 @@ export async function refreshClaimableBalances(chain: Chain) {
   for await (const _item of mapper.batchPut(userClaimSnapshots)) {
   }
 
-  // Create new metadata entry after user claim snapshots are calculated
-  const metadata = Object.assign(new UserClaimMetadata(), {
+  const useClaimMetadata: UserClaimMetadata = {
     chainStartBlock: getChainStartBlockKey(chain, snapshotStartBlock),
     chain: chain.network,
     startBlock: snapshotStartBlock,
     endBlock: snapshotEndBlock,
     cycle: distribution.cycle,
     count: userClaimSnapshots.length,
-  });
+  };
+  // Create new metadata entry after user claim snapshots are calculated
+  const metadata = Object.assign(new UserClaimMetadata(), useClaimMetadata);
 
   const saved = await mapper.put(metadata);
   console.log(`Completed balance snapshot for ${chain.network} up to ${snapshotEndBlock}`);

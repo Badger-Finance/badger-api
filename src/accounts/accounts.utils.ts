@@ -14,9 +14,8 @@ import { AccountMap } from './interfaces/account-map.interface';
 import { CachedAccount } from './interfaces/cached-account.interface';
 import { CachedSettBalance } from './interfaces/cached-sett-balance.interface';
 import { Account, Currency, formatBalance } from '@badger-dao/sdk';
-import { UserClaimSnapshot } from '../rewards/entities/user-claim-snapshot';
-import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 import { gqlGenT } from '@badger-dao/sdk';
+import { UserClaimMetadata, UserClaimSnapshot } from '../rewards/types';
 
 export function defaultBoost(chain: Chain, address: string): CachedBoost {
   return {

@@ -9,6 +9,7 @@ export class CurrentVaultSnapshot implements VaultSnapshot {
   @attribute()
   block!: number;
 
+  /* istanbul ignore next */
   @attribute({ defaultProvider: () => Date.now() })
   timestamp!: number;
 
@@ -33,6 +34,7 @@ export class CurrentVaultSnapshot implements VaultSnapshot {
   @attribute()
   ratio?: number;
 
+  /* istanbul ignore next */
   @attribute({ memberType: embed(VaultStrategy) })
   strategy!: VaultStrategy;
 

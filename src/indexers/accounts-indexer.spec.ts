@@ -6,18 +6,18 @@ import * as dynamodbUtils from '../aws/dynamodb.utils';
 import { Network } from '@badger-dao/sdk';
 import { Chain } from '../chains/config/chain.config';
 import { ethers } from 'ethers';
-import { MOCK_DISTRIBUTION_FILE } from '../test/constants';
+import { MOCK_DISTRIBUTION_FILE } from '../test/fixtures';
 import { Ethereum } from '../chains/config/eth.config';
 import { BinanceSmartChain } from '../chains/config/bsc.config';
 import { RewardMerkleDistribution } from '../rewards/interfaces/merkle-distributor.interface';
 import { BigNumber } from '@ethersproject/bignumber';
 import { TOKENS } from '../config/tokens.config';
 import { mockBatchPut } from '../test/tests.utils';
-import { UserClaimSnapshot } from '../rewards/entities/user-claim-snapshot';
-import { ClaimableBalance } from '../rewards/entities/claimable-balance';
-import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
+import { ClaimableBalance } from '../rewards/types/claimable-balance';
 import { DataMapper } from '@aws/dynamodb-data-mapper';
 import { AccountIndexMode } from './enums/account-index-mode.enum';
+import { UserClaimMetadata } from '../rewards/types/user-claim-metadata';
+import { UserClaimSnapshot } from '../rewards/types/user-claim-snapshot';
 
 describe('accounts-indexer', () => {
   const rewardsChain = new Ethereum();

@@ -22,11 +22,11 @@ import {
   toVaultBalance,
 } from './accounts.utils';
 import { ethers } from 'ethers';
-import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 import { BadgerGraph, Currency, gqlGenT } from '@badger-dao/sdk';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import * as vaultsUtils from '../vaults/vaults.utils';
 import { mockBalance } from '../tokens/tokens.utils';
+import { UserClaimMetadata } from '../rewards/types/user-claim-metadata';
 
 describe('accounts.utils', () => {
   const testSettBalance = (vaultDefinition: VaultDefinition): gqlGenT.UserSettBalance => {

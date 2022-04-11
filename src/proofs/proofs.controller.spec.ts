@@ -4,7 +4,7 @@ import { Server } from '../Server';
 import { ProofsService } from './proofs.service';
 import { TEST_ADDR } from '../test/tests.utils';
 import { TOKENS } from '../config/tokens.config';
-import { MOCK_BOUNCER_FILE } from '../test/constants';
+import { MOCK_BOUNCER_FILE } from '../test/fixtures';
 import { NotFound } from '@tsed/exceptions';
 import { Ethereum } from '../chains/config/eth.config';
 import { Chain } from '../chains/config/chain.config';

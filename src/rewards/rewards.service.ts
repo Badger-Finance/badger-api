@@ -14,8 +14,8 @@ import { EmissionSchedule, RewardSchedulesByVaults } from './interfaces/reward-s
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { getLatestMetadata } from '../accounts/accounts.utils';
-import { UserClaimSnapshot } from './entities/user-claim-snapshot';
 import { ConditionExpression } from '@aws/dynamodb-expressions';
+import { UserClaimSnapshot } from './types';
 
 @Service()
 export class RewardsService {

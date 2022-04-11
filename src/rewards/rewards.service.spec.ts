@@ -1,15 +1,15 @@
 import { PlatformTest } from '@tsed/common';
 import { BinanceSmartChain } from '../chains/config/bsc.config';
 import { Chain } from '../chains/config/chain.config';
-import { MOCK_DISTRIBUTION_FILE } from '../test/constants';
+import { MOCK_DISTRIBUTION_FILE } from '../test/fixtures';
 import { setupMapper, TEST_ADDR } from '../test/tests.utils';
 import { RewardsService } from './rewards.service';
 import * as accountsUtils from '../accounts/accounts.utils';
 import * as dynamodbUtils from '../aws/dynamodb.utils';
 import * as rewardsUtils from './rewards.utils';
-import { UserClaimMetadata } from './entities/user-claim-metadata';
-import { UserClaimSnapshot } from './entities/user-claim-snapshot';
 import { Ethereum } from '../chains/config/eth.config';
+import { UserClaimMetadata } from './types/user-claim-metadata';
+import { UserClaimSnapshot } from './types/user-claim-snapshot';
 
 describe('rewards.service', () => {
   let service: RewardsService;

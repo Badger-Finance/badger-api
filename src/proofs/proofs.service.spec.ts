@@ -2,7 +2,7 @@ import { PlatformTest } from '@tsed/common';
 import { ProofsService } from './proofs.service';
 import * as s3Utils from '../aws/s3.utils';
 import { TEST_ADDR, TEST_CHAIN } from '../test/tests.utils';
-import { MOCK_BOUNCER_FILE } from '../test/constants';
+import { MOCK_BOUNCER_FILE } from '../test/fixtures';
 import { TOKENS } from '../config/tokens.config';
 
 describe('proofs.service', () => {

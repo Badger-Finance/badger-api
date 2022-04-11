@@ -1,6 +1,6 @@
 import BadgerSDK, { TokenValue, VaultDTO } from '@badger-dao/sdk';
 import { PlatformTest } from '@tsed/common';
-import { BadRequest } from '@tsed/exceptions';
+import { BadRequest, NotFound } from '@tsed/exceptions';
 import SuperTest from 'supertest';
 import { createValueSource } from '../protocols/interfaces/value-source.interface';
 import { Server } from '../Server';
@@ -131,6 +131,43 @@ describe('VaultsController', () => {
     describe('with an invalid specified chain', () => {
       it('returns a 400', async (done: jest.DoneCallback) => {
         const { body } = await request.get('/v2/vaults?chain=invalid').expect(BadRequest.STATUS);
+        expect(body).toMatchSnapshot();
+        done();
+      });
+    });
+  });
+
+  describe('GET /v2/vaults/:vault', () => {
+    describe('with no specified chain for an eth vault', () => {
+      it('returns vault', async (done: jest.DoneCallback) => {
+        setupTestVault();
+        const { body } = await request.get(`/v2/vaults/${TOKENS.BBADGER}`).expect(200);
+        expect(body).toMatchSnapshot();
+        done();
+      });
+    });
+
+    describe('with a specified chain for an eth vault', () => {
+      it('returns the vaults for eth', async (done: jest.DoneCallback) => {
+        setupTestVault();
+        const { body } = await request.get(`/v2/vaults/${TOKENS.BBADGER}?chain=ethereum`).expect(200);
+        expect(body).toMatchSnapshot();
+        done();
+      });
+
+      it('returns the eth vault is not found for bsc', async (done: jest.DoneCallback) => {
+        setupTestVault();
+        const { body } = await request
+          .get(`/v2/vaults/${TOKENS.BBADGER}?chain=binancesmartchain`)
+          .expect(NotFound.STATUS);
+        expect(body).toMatchSnapshot();
+        done();
+      });
+    });
+
+    describe('with an invalid specified chain', () => {
+      it('returns a 400', async (done: jest.DoneCallback) => {
+        const { body } = await request.get(`/v2/vaults/${TOKENS.BBADGER}?chain=invalid`).expect(BadRequest.STATUS);
         expect(body).toMatchSnapshot();
         done();
       });

@@ -1,4 +1,4 @@
-import { BadgerTree__factory, Network, Protocol, Token } from '@badger-dao/sdk';
+import { BadgerTree__factory, Network, Protocol } from '@badger-dao/sdk';
 import { getBoostFile, getCachedAccount } from '../accounts/accounts.utils';
 import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
@@ -34,14 +34,6 @@ export async function getTreeDistribution(chain: Chain): Promise<RewardMerkleDis
     console.error({ message: `Missing expected badger tree file for ${chain.network}`, err });
     return null;
   }
-}
-
-export function noRewards(VaultDefinition: VaultDefinition, token: Token) {
-  return valueSourceToCachedValueSource(
-    createValueSource(`${token.symbol} Rewards`, 0),
-    VaultDefinition,
-    tokenEmission(token),
-  );
 }
 
 export async function getClaimableRewards(
@@ -102,8 +94,6 @@ export async function getRewardEmission(chain: Chain, vaultDefinition: VaultDefi
 
   if (!schedulesCache[vaultDefinition.vaultToken]) {
     const sdk = await chain.getSdk();
-    // TODO: resolve this in the sdk
-    await sdk.rewards.ready();
     schedulesCache[vaultDefinition.vaultToken] = await sdk.rewards.loadActiveSchedules(vaultToken);
   }
   const activeSchedules = schedulesCache[vaultDefinition.vaultToken];
