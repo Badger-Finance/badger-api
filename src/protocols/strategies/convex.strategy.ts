@@ -1,4 +1,4 @@
-import { formatBalance, Network } from '@badger-dao/sdk';
+import { Erc20__factory, formatBalance, Network } from '@badger-dao/sdk';
 import { UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { Chain } from '../../chains/config/chain.config';
@@ -9,7 +9,6 @@ import {
   CurvePool__factory,
   CurvePool3__factory,
   CurveRegistry__factory,
-  Erc20__factory,
 } from '../../contracts';
 import { SourceType } from '../../rewards/enums/source-type.enum';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
@@ -23,15 +22,6 @@ import { request } from '../../etherscan/etherscan.utils';
 import { CurveAPIResponse } from '../interfaces/curve-api-response.interrface';
 import { valueSourceToCachedValueSource } from '../../rewards/rewards.utils';
 import { TokenPrice } from '../../prices/interface/token-price.interface';
-
-/* Strategy Definitions */
-export const cvxRewards = '0xCF50b810E57Ac33B91dCF525C6ddd9881B139332';
-export const cvxCrvRewards = '0x3Fe65692bfCD0e6CF84cB1E7d24108E434A7587e';
-export const threeCrvRewards = '0x7091dbb7fcbA54569eF1387Ac89Eb2a5C9F6d2EA';
-export const cvxChef = '0xEF0881eC094552b2e128Cf945EF17a6752B4Ec5d';
-export const cvxBooster = '0xF403C135812408BFbE8713b5A23a04b3D48AAE31';
-export const crvBaseRegistry = '0x0000000022D53366457F9d5E68Ec105046FC4383';
-export const cvxLocker = '0xd18140b4b819b895a3dba5442f959fa44994af50';
 
 /* Protocol Constants */
 export const CURVE_API_URL = 'https://stats.curve.fi/raw-stats/apys.json';
