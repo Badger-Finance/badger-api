@@ -38,8 +38,6 @@ export const SWAPR_URL = getEnvVar('SWAPR');
 
 // general constants
 export const STAGE = getEnvVar('STAGE');
-export const IS_OFFLINE = process.env.IS_OFFLINE !== undefined && process.env.IS_OFFLINE === 'true';
-export const DEBUG = IS_OFFLINE;
 export const API_VERSION = 'v2.0.0';
 export const PRODUCTION = STAGE === Stage.Production;
 
@@ -47,30 +45,6 @@ export const PRODUCTION = STAGE === Stage.Production;
 export const COINGECKO_URL = 'https://api.coingecko.com/api/v3/simple';
 export const BLOCKNATIVE_API_KEY = getEnvVar('BLOCKNATIVE_API_KEY');
 
-export const ENV_VARS = [
-  'APY_SNAPSHOTS_DATA',
-  'SETT_DATA',
-  'VAULT_BALANCES_DATA',
-  'PRICE_DATA',
-  'TOKEN_INFORMATION_DATA',
-  'VAULT_SNAPSHOTS_DATA',
-  'REWARD_DATA',
-  'LEADERBOARD_DATA',
-  'ACOUNT_DATA',
-  'METRICS_SNAPSHOTS_DATA',
-  'LEADERBOARD_SUMMARY_DATA',
-  'UNCLAIMED_SNAPSHOTS_DATA',
-  'METADATA_DATA',
-  'HARVEST_DATA',
-  'UNISWAP',
-  'SUSHISWAP',
-  'SUSHISWAP_XDAI',
-  'SUSHISWAP_MATIC',
-  'SUSHISWAP_ARBITRUM',
-  'PANCAKESWAP',
-  'QUICKSWAP',
-  'SWAPR',
-];
 export const DEFAULT_PAGE_SIZE = 20;
 
 export const swaggerConfig: SwaggerSettings = {

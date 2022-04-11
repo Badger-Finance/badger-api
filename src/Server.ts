@@ -9,7 +9,6 @@ import methodOverride from 'method-override';
 import { loadChains } from './chains/chain';
 import { swaggerConfig } from './config/constants';
 import { controllers } from './ControllerRegistry';
-import { loadEnvVariables } from './config/util';
 
 @Configuration({
   rootDir: __dirname,
@@ -30,7 +29,6 @@ export class Server {
   app!: PlatformApplication;
 
   public $beforeInit(): void {
-    loadEnvVariables();
     loadChains();
   }
 
