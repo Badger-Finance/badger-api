@@ -1,7 +1,6 @@
-import { Token } from '@badger-dao/sdk';
+import { Digg__factory, Token } from '@badger-dao/sdk';
 import { Chain } from '../../chains/config/chain.config';
 import { TOKENS } from '../../config/tokens.config';
-import { Digg__factory } from '../../contracts/factories/Digg__factory';
 import { TokenPrice } from '../interface/token-price.interface';
 import { getPrice } from '../prices.utils';
 
