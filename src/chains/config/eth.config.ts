@@ -255,6 +255,7 @@ export const ethSetts: VaultDefinition[] = [
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_MIM_3CRV,
     protocol: Protocol.Convex,
+    state: VaultState.Discontinued,
   },
   {
     name: 'FRAX / 3CRV',
@@ -262,6 +263,7 @@ export const ethSetts: VaultDefinition[] = [
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_FRAX_3CRV,
     protocol: Protocol.Convex,
+    state: VaultState.Discontinued,
   },
   {
     name: 'remBadger',
