@@ -29,8 +29,12 @@ import { queryPrice } from '../prices/prices.utils';
 import { TokenPrice } from '../prices/interface/token-price.interface';
 import { PricingType } from '../prices/enums/pricing-type.enum';
 import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
-import { createValueSource } from '../protocols/interfaces/value-source.interface';
-import { getProtocolValueSources, getRewardEmission, valueSourceToCachedValueSource } from '../rewards/rewards.utils';
+import {
+  createValueSource,
+  getProtocolValueSources,
+  getRewardEmission,
+  valueSourceToCachedValueSource,
+} from '../rewards/rewards.utils';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { getVault } from '../indexers/indexer.utils';
 import { HistoricVaultSnapshot } from './types/historic-vault-snapshot';

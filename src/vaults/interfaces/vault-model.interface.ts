@@ -1,6 +1,5 @@
 import { Description, Example, Property, Title } from '@tsed/schema';
 import { TOKENS } from '../../config/tokens.config';
-import { createValueSource, ValueSource } from '../../protocols/interfaces/value-source.interface';
 import { BouncerType } from '../../rewards/enums/bouncer-type.enum';
 import { mockBalance } from '../../tokens/tokens.utils';
 import { VAULT_SOURCE } from '../vaults.utils';
@@ -15,9 +14,11 @@ import {
   TokenValue,
   VaultDTO,
   VaultVersion,
+  ValueSource,
 } from '@badger-dao/sdk';
 import { fullTokenMockMap } from '../../tokens/mocks/full-token.mock';
 import { VaultYieldProjection } from '@badger-dao/sdk/lib/api/interfaces/vault-yield-projection.interface';
+import { createValueSource } from '../../rewards/rewards.utils';
 
 export class VaultModel implements VaultDTO {
   @Title('name')

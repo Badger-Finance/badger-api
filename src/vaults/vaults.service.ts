@@ -168,12 +168,12 @@ export class VaultsService {
         }
         return vault.state !== VaultState.Discontinued && !vaultDefinition.deprecated;
       });
-    const sourcesApr = baseSources.filter(
-      (source) => source.type !== SourceType.Compound && !source.type.includes('derivative'),
-    );
-    const sourcesApy = baseSources.filter((source) => source.type !== SourceType.PreCompound);
-    vault.sources = sourcesApr.map((s) => s.toValueSource());
-    vault.sourcesApy = sourcesApy.map((s) => s.toValueSource());
+    vault.sources = baseSources
+      .filter((source) => source.type !== SourceType.Compound && !source.type.includes('derivative'))
+      .map((s) => s.toValueSource());
+    vault.sourcesApy = baseSources
+      .filter((source) => source.type !== SourceType.PreCompound)
+      .map((s) => s.toValueSource());
     vault.apr = vault.sources.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
     vault.apy = vault.sourcesApy.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
     vault.protocol = vaultDefinition.protocol ?? Protocol.Badger;

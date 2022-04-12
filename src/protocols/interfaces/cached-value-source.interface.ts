@@ -1,6 +1,7 @@
 import { attribute, hashKey, table } from '@aws/dynamodb-data-mapper-annotations';
+import { ValueSource } from '@badger-dao/sdk';
 import { APY_SNAPSHOTS_DATA } from '../../config/constants';
-import { ValueSource } from './value-source.interface';
+import { SourceType } from '../../rewards/enums/source-type.enum';
 
 @table(APY_SNAPSHOTS_DATA)
 export class CachedValueSource {
@@ -26,7 +27,7 @@ export class CachedValueSource {
   maxApr!: number;
 
   @attribute()
-  type!: string;
+  type!: SourceType;
 
   @attribute({ defaultProvider: () => Date.now() })
   updatedAt!: number;

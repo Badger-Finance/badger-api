@@ -1,4 +1,4 @@
-import { BadgerTree__factory, Network, Protocol } from '@badger-dao/sdk';
+import { BadgerTree__factory, Network, Protocol, ValueSource } from '@badger-dao/sdk';
 import { getBoostFile, getCachedAccount } from '../accounts/accounts.utils';
 import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
@@ -6,7 +6,6 @@ import { ONE_YEAR_SECONDS, REWARD_DATA } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
 import { queryPrice } from '../prices/prices.utils';
 import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
-import { createValueSource, ValueSource } from '../protocols/interfaces/value-source.interface';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { getFullToken, tokenEmission } from '../tokens/tokens.utils';
 import { RewardMerkleDistribution } from './interfaces/merkle-distributor.interface';
@@ -21,6 +20,7 @@ import { SwaprStrategy } from '../protocols/strategies/swapr.strategy';
 import { getCachedVault, getVaultPerformance } from '../vaults/vaults.utils';
 import { SourceType } from './enums/source-type.enum';
 import { OxDaoStrategy } from '../protocols/strategies/oxdao.strategy';
+import { BoostRange } from './interfaces/boost-range.interface';
 
 export async function getTreeDistribution(chain: Chain): Promise<RewardMerkleDistribution | null> {
   if (!chain.badgerTree) {
@@ -221,4 +221,16 @@ export async function getProtocolValueSources(
     console.log(error);
     return [];
   }
+}
+
+export function createValueSource(name: string, apr: number, boost?: BoostRange): ValueSource {
+  const evaluatedBoost = boost ?? { min: 1, max: 1 };
+  const isBoostable = evaluatedBoost.min != evaluatedBoost.max;
+  return {
+    name,
+    apr,
+    boostable: isBoostable,
+    minApr: apr * evaluatedBoost.min,
+    maxApr: apr * evaluatedBoost.max,
+  };
 }

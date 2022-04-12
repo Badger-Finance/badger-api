@@ -2,12 +2,11 @@ import { GraphQLClient } from 'graphql-request';
 import { getSdk as getUniswapSdk, OrderDirection, PairDayData_OrderBy } from '../../graphql/generated/uniswap';
 import { queryPrice } from '../../prices/prices.utils';
 import { SourceType } from '../../rewards/enums/source-type.enum';
-import { valueSourceToCachedValueSource } from '../../rewards/rewards.utils';
+import { createValueSource, valueSourceToCachedValueSource } from '../../rewards/rewards.utils';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { CachedValueSource } from '../interfaces/cached-value-source.interface';
 import { PairDayData } from '../interfaces/pair-day-data.interface';
 import { UniPairDayData } from '../interfaces/uni-pair-day-data.interface';
-import { createValueSource } from '../interfaces/value-source.interface';
 
 export async function getUniV2SwapValue(
   graphUrl: string,

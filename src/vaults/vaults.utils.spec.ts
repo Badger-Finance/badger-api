@@ -36,7 +36,6 @@ import {
 import * as pricesUtils from '../prices/prices.utils';
 import * as rewardsUtils from '../rewards/rewards.utils';
 import * as indexerUtils from '../indexers/indexer.utils';
-import { createValueSource } from '../protocols/interfaces/value-source.interface';
 import { Polygon } from '../chains/config/polygon.config';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { ONE_DAY_SECONDS, ONE_YEAR_MS } from '../config/constants';
@@ -137,7 +136,7 @@ describe('vaults.utils', () => {
       },
     }));
     jest.spyOn(rewardsUtils, 'getProtocolValueSources').mockImplementation(async (_chain, _vault) => {
-      const rewardSource = createValueSource('Test LP Fees', 1.13);
+      const rewardSource = rewardsUtils.createValueSource('Test LP Fees', 1.13);
       return [rewardsUtils.valueSourceToCachedValueSource(rewardSource, vault, SourceType.TradeFee)];
     });
   });
@@ -170,7 +169,7 @@ describe('vaults.utils', () => {
     jest.spyOn(BadgerSDK.prototype, 'ready').mockImplementation();
     const vault = getVaultDefinition(TEST_CHAIN, TOKENS.BBADGER);
     jest.spyOn(rewardsUtils, 'getRewardEmission').mockImplementation(async (_chain, _vault) => {
-      const rewardSource = createValueSource('Badger Rewards', 6.969);
+      const rewardSource = rewardsUtils.createValueSource('Badger Rewards', 6.969);
       return [
         rewardsUtils.valueSourceToCachedValueSource(
           rewardSource,
@@ -370,7 +369,7 @@ describe('vaults.utils', () => {
           address: token,
           price: Number(token.slice(0, 4)),
         }));
-        const underlying = createValueSource(VAULT_SOURCE, 10);
+        const underlying = rewardsUtils.createValueSource(VAULT_SOURCE, 10);
         setupMapper([rewardsUtils.valueSourceToCachedValueSource(underlying, vault, SourceType.PreCompound)]);
         setFullTokenDataMock();
         const result = await getVaultPerformance(TEST_CHAIN, vault);
