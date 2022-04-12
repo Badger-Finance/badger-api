@@ -253,7 +253,7 @@ export function mockPricing() {
   jest.spyOn(pricesUtils, 'queryPrice').mockImplementation(async (token: string, currency?: Currency) => ({
     address: token,
     price: parseInt(token.slice(0, 5), 16),
-    updatedAt: Date.now(),
+    updatedAt: 1649791964861,
   }));
   jest.spyOn(pricesUtils, 'convert').mockImplementation(async (price: number, currency?: Currency) => {
     if (!currency || currency === Currency.USD) {
