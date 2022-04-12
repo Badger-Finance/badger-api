@@ -318,7 +318,7 @@ describe('vaults.utils', () => {
         const vault = randomVault(TEST_CHAIN);
         const snapshot = randomSnapshot(vault);
         setupMapper([snapshot]);
-        jest.spyOn(pricesUtils, 'getPrice').mockImplementation(async (address) => ({ address, price: 10 }));
+        jest.spyOn(pricesUtils, 'queryPrice').mockImplementation(async (address) => ({ address, price: 10 }));
         setFullTokenDataMock();
         const vaultPrice = await getVaultTokenPrice(TEST_CHAIN, vault.vaultToken);
         expect(vaultPrice).toMatchObject({
@@ -366,7 +366,7 @@ describe('vaults.utils', () => {
     describe('requests standard vault performance', () => {
       it('returns value sources from standard methods', async () => {
         setupSdk();
-        jest.spyOn(pricesUtils, 'getPrice').mockImplementation(async (token) => ({
+        jest.spyOn(pricesUtils, 'queryPrice').mockImplementation(async (token) => ({
           address: token,
           price: Number(token.slice(0, 4)),
         }));
@@ -379,7 +379,7 @@ describe('vaults.utils', () => {
 
       it('skips all emitted tokens with no price', async () => {
         setupSdk();
-        jest.spyOn(pricesUtils, 'getPrice').mockImplementation(async (token) => {
+        jest.spyOn(pricesUtils, 'queryPrice').mockImplementation(async (token) => {
           if (token !== vault.depositToken) {
             return {
               address: token,

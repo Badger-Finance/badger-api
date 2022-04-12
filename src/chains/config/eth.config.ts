@@ -9,7 +9,6 @@ import { ethTokensConfig } from '../../tokens/config/eth-tokens.config';
 import { Chain } from './chain.config';
 import axios from 'axios';
 import { BlocknativeGasResponse } from '../../gas/interfaces/blocknative-gas-response.interface';
-import { BaseStrategy } from '../strategies/base.strategy';
 
 export class Ethereum extends Chain {
   private readonly client = axios.create({
@@ -26,7 +25,6 @@ export class Ethereum extends Chain {
       ethTokensConfig,
       ethSetts,
       rpc[Network.Ethereum],
-      new BaseStrategy(Network.Ethereum, Object.keys(ethTokensConfig)),
       '0x660802Fc641b154aBA66a62137e71f331B6d787A',
       '0x0A4F4e92C3334821EbB523324D09E321a6B0d8ec',
       '0x31825c0a6278b89338970e3eb979b05b27faa263',

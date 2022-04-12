@@ -4,7 +4,6 @@ import { TOKENS } from '../../config/tokens.config';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { Chain } from './chain.config';
-import { BaseStrategy } from '../strategies/base.strategy';
 import { avalancheTokensConfig } from '../../tokens/config/avax-tokens.config';
 import { Stage } from '../../config/enums/stage.enum';
 
@@ -18,7 +17,6 @@ export class Avalanche extends Chain {
       avalancheTokensConfig,
       avalancheSetts,
       rpc[Network.Avalanche],
-      new BaseStrategy(Network.Avalanche, Object.keys(avalancheTokensConfig)),
     );
     Chain.register(this.network, this);
   }

@@ -25,7 +25,7 @@ import {
   VaultV15__factory,
   VaultVersion,
 } from '@badger-dao/sdk';
-import { getPrice } from '../prices/prices.utils';
+import { queryPrice } from '../prices/prices.utils';
 import { TokenPrice } from '../prices/interface/token-price.interface';
 import { PricingType } from '../prices/enums/pricing-type.enum';
 import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
@@ -255,7 +255,7 @@ export async function getVaultTokenPrice(chain: Chain, address: string): Promise
   const targetVault = isCrossChainVault ? vaultToken.address : token.address;
   const vaultDefintion = getVaultDefinition(targetChain, targetVault);
   const [underlyingTokenPrice, vaultTokenSnapshot] = await Promise.all([
-    getPrice(vaultToken.address),
+    queryPrice(vaultToken.address),
     getCachedVault(chain, vaultDefintion),
   ]);
   return {
@@ -555,7 +555,7 @@ async function estimateVaultPerformance(
     }
   }
 
-  const { price } = await getPrice(vaultDefinition.depositToken);
+  const { price } = await queryPrice(vaultDefinition.depositToken);
   const measuredBalance = weightedBalance / totalDuration;
   const measuredValue = measuredBalance * price;
   const totalHarvestedTokens = formatBalance(totalHarvested, depositToken.decimals);
@@ -589,7 +589,7 @@ async function estimateVaultPerformance(
   }
 
   for (const [token, amount] of tokensEmitted.entries()) {
-    const { price } = await getPrice(token);
+    const { price } = await queryPrice(token);
     if (price === 0) {
       continue;
     }

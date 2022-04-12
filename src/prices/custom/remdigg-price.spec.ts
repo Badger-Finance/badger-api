@@ -7,7 +7,7 @@ import { fullTokenMockMap } from '../../tokens/mocks/full-token.mock';
 describe('remdigg-price', () => {
   describe('getRemDiggPrice', () => {
     it('converts the digg price to the frozen remdigg price', async () => {
-      jest.spyOn(pricesUtils, 'getPrice').mockImplementation(async (digg) => ({
+      jest.spyOn(pricesUtils, 'queryPrice').mockImplementation(async (digg) => ({
         address: digg,
         price: 31000,
       }));

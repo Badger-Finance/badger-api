@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`leaderboards.service getPriceSummary returns a price summary for the requested chains tokens 1`] = `
+exports[`leaderboards.service queryPriceSummary returns a price summary for the requested chains tokens 1`] = `
 Object {
   "0x0316EB71485b0Ab14103307bf65a021042c6d380": 49,
   "0x04c90C198b2eFF55716079bc06d7CCc4aa4d7512": 76,

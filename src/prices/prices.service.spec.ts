@@ -12,7 +12,7 @@ describe('leaderboards.service', () => {
 
   afterEach(PlatformTest.reset);
 
-  describe('getPriceSummary', () => {
+  describe('queryPriceSummary', () => {
     it('returns a price summary for the requested chains tokens', async () => {
       mockPricing();
       const results = await service.getPriceSummary(TEST_CHAIN);

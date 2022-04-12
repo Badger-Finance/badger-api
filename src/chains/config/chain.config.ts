@@ -4,7 +4,6 @@ import { STAGE } from '../../config/constants';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { TokenConfig } from '../../tokens/interfaces/token-config.interface';
-import { ChainStrategy } from '../strategies/chain.strategy';
 import BadgerSDK, { Network } from '@badger-dao/sdk';
 import { TOKENS } from '../../config/tokens.config';
 import { providers } from '@0xsequence/multicall';
@@ -24,7 +23,6 @@ export abstract class Chain {
   readonly vaults: VaultDefinition[];
   readonly provider: ethers.providers.JsonRpcProvider;
   readonly batchProvider: providers.MulticallProvider;
-  readonly strategy: ChainStrategy;
   readonly badgerTree?: string;
   readonly rewardsLogger?: string;
   readonly emissionControl?: string;
@@ -37,7 +35,6 @@ export abstract class Chain {
     tokens: TokenConfig,
     vaults: VaultDefinition[],
     rpcUrl: string,
-    strategy: ChainStrategy,
     badgerTree?: string,
     rewardsLogger?: string,
     emissionControl?: string,
@@ -50,7 +47,6 @@ export abstract class Chain {
     this.vaults = vaults.filter((vault) => !vault.stage || vault.stage === STAGE);
     this.provider = new ethers.providers.JsonRpcProvider(rpcUrl);
     this.batchProvider = new providers.MulticallProvider(this.provider);
-    this.strategy = strategy;
     this.badgerTree = badgerTree;
     this.rewardsLogger = rewardsLogger;
     this.emissionControl = emissionControl;

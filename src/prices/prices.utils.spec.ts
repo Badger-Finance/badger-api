@@ -1,21 +1,18 @@
 import { DataMapper } from '@aws/dynamodb-data-mapper';
-import { TestStrategy } from '../chains/strategies/test.strategy';
 import { TOKENS } from '../config/tokens.config';
-import { setFullTokenDataMock, setupMapper, TEST_CHAIN } from '../test/tests.utils';
-import { convert, fetchPrices, getPrice, updatePrice } from './prices.utils';
 import * as requestUtils from '../common/request';
+import { mockPricing, setFullTokenDataMock, setupMapper, TEST_CHAIN } from '../test/tests.utils';
+import { convert, fetchPrices, queryPrice, updatePrice } from './prices.utils';
 import { Currency } from '@badger-dao/sdk';
 
 describe('prices.utils', () => {
-  const strategy = new TestStrategy();
-
-  describe('getPrice', () => {
+  describe('queryPrice', () => {
     describe('query encounters an error', () => {
       it('returns a price of 0', async () => {
         jest.spyOn(DataMapper.prototype, 'query').mockImplementation(() => {
           throw new Error('QueryError');
         });
-        const cakePrice = await getPrice(TOKENS.CAKE);
+        const cakePrice = await queryPrice(TOKENS.CAKE);
         expect(cakePrice).toBeDefined();
         const expected = { address: TOKENS.CAKE, price: 0 };
         expect(cakePrice).toMatchObject(expected);
@@ -25,7 +22,7 @@ describe('prices.utils', () => {
     describe('when price is not available', () => {
       it('returns a price of 0', async () => {
         setupMapper([]);
-        const cakePrice = await getPrice(TOKENS.CAKE);
+        const cakePrice = await queryPrice(TOKENS.CAKE);
         expect(cakePrice).toBeDefined();
         const expected = { address: TOKENS.CAKE, price: 0 };
         expect(cakePrice).toMatchObject(expected);
@@ -34,11 +31,9 @@ describe('prices.utils', () => {
 
     describe('when price is available', () => {
       it('returns a token snapshot with the latest price data', async () => {
-        const price = await strategy.getPrice(TOKENS.BADGER);
-        setupMapper([price]);
-        const fetchedBadgerPrice = await getPrice(TOKENS.BADGER);
-        expect(fetchedBadgerPrice).toBeDefined();
-        expect(fetchedBadgerPrice).toMatchObject(price);
+        mockPricing();
+        const fetchedBadgerPrice = await queryPrice(TOKENS.BADGER);
+        expect(fetchedBadgerPrice).toMatchSnapshot();
       });
     });
   });

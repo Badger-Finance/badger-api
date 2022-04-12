@@ -2,7 +2,7 @@ import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { PricingType } from '../prices/enums/pricing-type.enum';
 import { CoinGeckoPriceResponse } from '../prices/interface/coingecko-price-response.interface';
-import { updatePrice, fetchPrices } from '../prices/prices.utils';
+import { updatePrice, fetchPrices, getPrice } from '../prices/prices.utils';
 import { lookUpAddrByTokenName } from '../tokens/tokens.utils';
 
 export async function indexPrices() {
@@ -10,7 +10,7 @@ export async function indexPrices() {
 
   for (const chain of chains) {
     try {
-      const { tokens, strategy } = chain;
+      const { tokens } = chain;
       const chainTokens = Object.entries(tokens).map((e) => ({
         address: e[0],
         ...e[1],
@@ -34,7 +34,7 @@ export async function indexPrices() {
       const onChainPrices = await Promise.all(
         onChainTokens.map(async (t) => {
           try {
-            const result = await strategy.getPrice(t.address);
+            const result = await getPrice(chain, t.address);
             // allow catch to handle any issues
             return result;
           } catch (err) {

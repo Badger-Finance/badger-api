@@ -1,4 +1,4 @@
-import { convert, getPrice } from '../prices/prices.utils';
+import { convert, queryPrice } from '../prices/prices.utils';
 import { getVaultDefinition } from '../vaults/vaults.utils';
 import { VaultTokenBalance } from '../vaults/types/vault-token-balance.interface';
 import { Token, TokenValue, VaultDTO } from '@badger-dao/sdk';
@@ -14,7 +14,7 @@ import { SourceType } from '../rewards/enums/source-type.enum';
 import { ethers } from 'ethers';
 
 export async function toBalance(token: Token, balance: number, currency?: Currency): Promise<TokenValue> {
-  const { price } = await getPrice(token.address, currency);
+  const { price } = await queryPrice(token.address, currency);
   return {
     address: token.address,
     name: token.name,

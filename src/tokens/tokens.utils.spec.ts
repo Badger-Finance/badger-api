@@ -47,7 +47,7 @@ describe('token.utils', () => {
           price: 8,
           updatedAt: Date.now(),
         };
-        jest.spyOn(priceUtils, 'getPrice').mockImplementationOnce(async (_contract) => price);
+        jest.spyOn(priceUtils, 'queryPrice').mockImplementationOnce(async (_contract) => price);
         const actual = await toBalance(badger, 10);
         const expected = {
           name: badger.name,
@@ -68,7 +68,7 @@ describe('token.utils', () => {
         const baseTokens = 10;
         const expectedValue = convertedPrice * baseTokens;
         const badger = fullTokenMockMap[TOKENS.BADGER];
-        jest.spyOn(priceUtils, 'getPrice').mockImplementation(async (token: string) => ({
+        jest.spyOn(priceUtils, 'queryPrice').mockImplementation(async (token: string) => ({
           address: token,
           price: convertedPrice,
           updatedAt: Date.now(),

@@ -4,7 +4,7 @@ import { AccountMap } from '../accounts/interfaces/account-map.interface';
 import { CachedAccount } from '../accounts/interfaces/cached-account.interface';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
-import { getPrice } from '../prices/prices.utils';
+import { queryPrice } from '../prices/prices.utils';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { getBoostWeight, getStrategyInfo, getCachedVault } from '../vaults/vaults.utils';
 import { VaultTokenBalance } from '../vaults/types/vault-token-balance.interface';
@@ -55,7 +55,7 @@ export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefini
   } catch (err) {} // block is not super important here - just continue on
 
   const [tokenPriceData, strategyInfo, boostWeight, cachedVault] = await Promise.all([
-    getPrice(vaultDefinition.depositToken),
+    queryPrice(vaultDefinition.depositToken),
     getStrategyInfo(chain, vaultDefinition),
     getBoostWeight(chain, vaultDefinition),
     VaultsService.loadVault(chain, vaultDefinition),

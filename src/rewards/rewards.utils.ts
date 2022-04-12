@@ -4,7 +4,7 @@ import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
 import { ONE_YEAR_SECONDS, REWARD_DATA } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
-import { getPrice } from '../prices/prices.utils';
+import { queryPrice } from '../prices/prices.utils';
 import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
 import { createValueSource, ValueSource } from '../protocols/interfaces/value-source.interface';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
@@ -135,7 +135,7 @@ export async function getRewardEmission(chain: Chain, vaultDefinition: VaultDefi
 
   const emissionSources = [];
   for (const schedule of activeSchedules) {
-    const tokenPrice = await getPrice(schedule.token);
+    const tokenPrice = await queryPrice(schedule.token);
     const token = await getFullToken(chain, schedule.token);
 
     const durationScalar = ONE_YEAR_SECONDS / (schedule.end - schedule.start);

@@ -6,7 +6,6 @@ import { getCurveVaultTokenBalance } from '../../protocols/strategies/convex.str
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { maticTokensConfig } from '../../tokens/config/polygon-tokens.config';
 import { Chain } from './chain.config';
-import { BaseStrategy } from '../strategies/base.strategy';
 
 // TODO: handle sdk based tree / logger look ups
 export class Polygon extends Chain {
@@ -19,7 +18,6 @@ export class Polygon extends Chain {
       maticTokensConfig,
       maticSetts,
       rpc[Network.Polygon],
-      new BaseStrategy(Network.Polygon, Object.keys(maticTokensConfig)),
       '0x2C798FaFd37C7DCdcAc2498e19432898Bc51376b',
       '0xd0ee2a5108b8800d688abc834445fd03b3b2738e',
     );

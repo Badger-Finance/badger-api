@@ -8,6 +8,12 @@ import { COINGECKO_URL } from '../config/constants';
 import { CoinGeckoPriceResponse } from './interface/coingecko-price-response.interface';
 import { request } from '../common/request';
 import { ethers } from 'ethers';
+import { UnprocessableEntity } from '@tsed/exceptions';
+import { resolveTokenPrice, getOnChainLiquidityPrice } from '../protocols/common/swap.utils';
+import { getCurveTokenPrice } from '../protocols/strategies/convex.strategy';
+import { getFullToken } from '../tokens/tokens.utils';
+import { getVaultTokenPrice } from '../vaults/vaults.utils';
+import { PricingType } from './enums/pricing-type.enum';
 
 /**
  * Update pricing db entry using chain strategy.
@@ -38,7 +44,7 @@ export async function updatePrice({ address, price }: TokenPrice): Promise<Token
  * @param contract Address for the token price being requested.
  * @returns Most recent price data for the requested contract.
  */
-export async function getPrice(address: string, currency?: Currency): Promise<TokenPrice> {
+export async function queryPrice(address: string, currency?: Currency): Promise<TokenPrice> {
   try {
     const mapper = getDataMapper();
     for await (const item of mapper.query(
@@ -68,16 +74,16 @@ export async function convert(value: number, currency?: Currency): Promise<numbe
   }
   switch (currency) {
     case Currency.ETH:
-      const wethPrice = await getPrice(TOKENS.WETH);
+      const wethPrice = await queryPrice(TOKENS.WETH);
       return value / wethPrice.price;
     case Currency.AVAX:
-      const wavaxPrice = await getPrice(TOKENS.AVAX_WAVAX);
+      const wavaxPrice = await queryPrice(TOKENS.AVAX_WAVAX);
       return value / wavaxPrice.price;
     case Currency.FTM:
-      const wftmPrice = await getPrice(TOKENS.FTM_WFTM);
+      const wftmPrice = await queryPrice(TOKENS.FTM_WFTM);
       return value / wftmPrice.price;
     case Currency.MATIC:
-      const wmaticPrice = await getPrice(TOKENS.MATIC_WMATIC);
+      const wmaticPrice = await queryPrice(TOKENS.MATIC_WMATIC);
       return value / wmaticPrice.price;
     case Currency.USD:
     default:
@@ -109,4 +115,31 @@ export async function fetchPrices(chain: Chain, inputs: string[], lookupName = f
   }
 
   return request<CoinGeckoPriceResponse>(baseURL, params);
+}
+
+export async function getPrice(chain: Chain, address: string): Promise<TokenPrice> {
+  const token = await getFullToken(chain, address);
+  switch (token.type) {
+    case PricingType.Custom:
+      if (!token.getPrice) {
+        throw new UnprocessableEntity(`${token.name} requires custom price implementation`);
+      }
+      return token.getPrice(chain, token);
+    case PricingType.OnChainUniV2LP:
+      if (!token.lookupName) {
+        throw new UnprocessableEntity(`${token.name} required lookupName to utilize OnChainUniV2LP pricing`);
+      }
+      return resolveTokenPrice(chain, token.address, token.lookupName);
+    case PricingType.CurveLP:
+      return getCurveTokenPrice(chain, token.address);
+    case PricingType.UniV2LP:
+      return getOnChainLiquidityPrice(chain, token.address);
+    case PricingType.Vault:
+      return getVaultTokenPrice(chain, token.address);
+    case PricingType.Contract:
+    case PricingType.LookupName:
+      throw new UnprocessableEntity('CoinGecko pricing should utilize fetchPrices via utilities');
+    default:
+      throw new UnprocessableEntity('Unsupported PricingType');
+  }
 }

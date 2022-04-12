@@ -1,6 +1,6 @@
 import { GraphQLClient } from 'graphql-request';
 import { getSdk as getUniswapSdk, OrderDirection, PairDayData_OrderBy } from '../../graphql/generated/uniswap';
-import { getPrice } from '../../prices/prices.utils';
+import { queryPrice } from '../../prices/prices.utils';
 import { SourceType } from '../../rewards/enums/source-type.enum';
 import { valueSourceToCachedValueSource } from '../../rewards/rewards.utils';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
@@ -35,8 +35,8 @@ async function getUniSwapValue(
     return valueSourceToCachedValueSource(createValueSource(name, 0), VaultDefinition, SourceType.TradeFee);
   }
   const [token0Price, token1Price] = await Promise.all([
-    getPrice(tradeData[0].token0.id),
-    getPrice(tradeData[0].token1.id),
+    queryPrice(tradeData[0].token0.id),
+    queryPrice(tradeData[0].token1.id),
   ]);
   let totalApy = 0;
   let currentApy = 0;
