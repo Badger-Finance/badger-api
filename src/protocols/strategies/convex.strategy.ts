@@ -18,7 +18,7 @@ import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance
 import { getFullToken, getVaultTokens, toBalance } from '../../tokens/tokens.utils';
 import { CachedValueSource } from '../interfaces/cached-value-source.interface';
 import { createValueSource } from '../interfaces/value-source.interface';
-import { request } from '../../etherscan/etherscan.utils';
+import { request } from '../../common/request';
 import { CurveAPIResponse } from '../interfaces/curve-api-response.interrface';
 import { valueSourceToCachedValueSource } from '../../rewards/rewards.utils';
 import { TokenPrice } from '../../prices/interface/token-price.interface';

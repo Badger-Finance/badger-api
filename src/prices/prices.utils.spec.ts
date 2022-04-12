@@ -3,7 +3,7 @@ import { TestStrategy } from '../chains/strategies/test.strategy';
 import { TOKENS } from '../config/tokens.config';
 import { setFullTokenDataMock, setupMapper, TEST_CHAIN } from '../test/tests.utils';
 import { convert, fetchPrices, getPrice, updatePrice } from './prices.utils';
-import * as requestUtils from '../etherscan/etherscan.utils';
+import * as requestUtils from '../common/request';
 import { Currency } from '@badger-dao/sdk';
 
 describe('prices.utils', () => {

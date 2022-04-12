@@ -6,8 +6,7 @@ import { TokenPrice } from './interface/token-price.interface';
 import { Chain } from '../chains/config/chain.config';
 import { COINGECKO_URL } from '../config/constants';
 import { CoinGeckoPriceResponse } from './interface/coingecko-price-response.interface';
-// TODO: generalize and add some axios utilities
-import { request } from '../etherscan/etherscan.utils';
+import { request } from '../common/request';
 import { ethers } from 'ethers';
 
 /**
