@@ -33,7 +33,7 @@ export class SettsController {
   @Returns(400).Description('Not a valid chain')
   @Returns(404).Description('Not a valid sett')
   async getSett(
-    @PathParams('contract') vault: string,
+    @PathParams('vault') vault: string,
     @QueryParams('chain') chain?: Network,
     @QueryParams('currency') currency?: Currency,
   ): Promise<VaultModel> {
