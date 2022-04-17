@@ -25,6 +25,7 @@ export const LEADERBOARD_SUMMARY_DATA = getEnvVar('LEADERBOARD_SUMMARY_DATA');
 export const UNCLAIMED_SNAPSHOTS_DATA = getEnvVar('UNCLAIMED_SNAPSHOTS_DATA');
 export const USER_CLAIMED_METADATA = getEnvVar('METADATA_DATA');
 export const HARVEST_DATA = getEnvVar('HARVEST_DATA');
+export const HARVEST_COMPOUND_DATA = getEnvVar('HARVEST_COMPOUND_DATA');
 
 // thegraph constants
 export const UNISWAP_URL = getEnvVar('UNISWAP');

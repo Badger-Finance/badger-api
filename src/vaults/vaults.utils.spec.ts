@@ -28,6 +28,7 @@ import {
   estimateDerivativeEmission,
   getCachedVault,
   getVaultDefinition,
+  getVaultHarvestsOnChain,
   getVaultPerformance,
   getVaultTokenPrice,
   getVaultUnderlyingPerformance,
@@ -43,11 +44,17 @@ import { ONE_DAY_SECONDS, ONE_YEAR_MS } from '../config/constants';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import { TokenNotFound } from '../tokens/errors/token.error';
 import { tokenEmission } from '../tokens/tokens.utils';
+import * as tokenUtils from '../tokens/tokens.utils';
+import { vaultsHarvestsSdkMock } from './mocks/vaults-harvests-sdk.mock';
+import * as gqlGenT from '@badger-dao/sdk/lib/graphql/generated/badger';
+import { vaultsGraphSdkMapMock } from './mocks/vaults-graph-sdk-map.mock';
 
 describe('vaults.utils', () => {
   const vault = getVaultDefinition(TEST_CHAIN, TOKENS.BBADGER);
 
   beforeEach(() => {
+    // console.log = jest.fn();
+
     jest.spyOn(BadgerGraph.prototype, 'loadSettHarvests').mockImplementation(async (_options) => {
       const harvests = [
         {
@@ -180,6 +187,25 @@ describe('vaults.utils', () => {
       ];
     });
   });
+
+  const setupTestVaultHarvests = (): void => {
+    jest.spyOn(tokenUtils, 'getFullToken').mockImplementation(async (_, tokenAddr) => {
+      return fullTokenMockMap[tokenAddr] || fullTokenMockMap[TOKENS.BADGER];
+    });
+    // eslint-disable-next-line
+    jest.spyOn(VaultsService.prototype, 'listHarvests').mockImplementation(async ({ address }): Promise<any> => {
+      return vaultsHarvestsSdkMock[address];
+    });
+    /* eslint-disable @typescript-eslint/ban-ts-comment */
+    jest
+      .spyOn(BadgerGraph.prototype, 'loadSett')
+      .mockImplementation(async ({ id, block }): Promise<gqlGenT.SettQuery> => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        return vaultsGraphSdkMapMock[`${id.toLowerCase()}-${(block || {}).number || 0}`];
+      });
+    jest.spyOn(BadgerSDK.prototype, 'ready').mockImplementation();
+  };
 
   describe('defaultVault', () => {
     it('returns a sett default fields', async () => {
@@ -436,6 +462,26 @@ describe('vaults.utils', () => {
       setFullTokenDataMock();
       const result = await getVaultUnderlyingPerformance(TEST_CHAIN, vault);
       result.forEach((r) => expect(r.apr).toEqual(expected));
+    });
+  });
+
+  describe('getVaultHarvestsOnChain', () => {
+    const TEST_VAULT = TOKENS.BCRV_SBTC;
+
+    it('returns vaults harvests with apr', async () => {
+      setupTestVaultHarvests();
+
+      const sdk = await TEST_CHAIN.getSdk();
+
+      expect(await getVaultHarvestsOnChain(TEST_CHAIN, TEST_VAULT, sdk)).toMatchSnapshot();
+    });
+
+    it('returns empty harvests for unknown vault', async () => {
+      setupTestVaultHarvests();
+
+      const sdk = await TEST_CHAIN.getSdk();
+
+      await expect(getVaultHarvestsOnChain(TEST_CHAIN, '0x000000000000', sdk)).rejects.toThrow(Error);
     });
   });
 });

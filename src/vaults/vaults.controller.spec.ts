@@ -16,12 +16,10 @@ import * as tokenUtils from '../tokens/tokens.utils';
 import { TOKENS } from '../config/tokens.config';
 import { VaultPendingHarvestData } from './types/vault-pending-harvest-data';
 import { Chain } from '../chains/config/chain.config';
-import { VaultsService } from '@badger-dao/sdk/lib/vaults/vaults.service';
-import { vaultsHarvestsSdkMock } from './mocks/vaults-harvests-sdk.mock';
-import { BadgerGraph } from '@badger-dao/sdk/lib/graphql';
 import { ONE_DAY_SECONDS } from '../config/constants';
-import { vaultsGraphSdkMapMock } from './mocks/vaults-graph-sdk-map.mock';
-import * as gqlGenT from '@badger-dao/sdk/lib/graphql/generated/badger';
+import { vaultsHarvestsMapMock } from './mocks/vaults-harvests-map.mock';
+import { DataMapper, QueryIterator, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
+import createMockInstance from 'jest-create-mock-instance';
 
 const TEST_VAULT = TOKENS.BCRV_SBTC;
 
@@ -33,6 +31,24 @@ describe('VaultsController', () => {
     request = SuperTest(PlatformTest.callback());
   });
   afterAll(PlatformTest.reset);
+
+  function setupDdbHarvests() {
+    jest.spyOn(BadgerSDK.prototype, 'ready').mockImplementation();
+
+    /* eslint-disable @typescript-eslint/ban-ts-comment */
+    // @ts-ignore
+    jest.spyOn(DataMapper.prototype, 'query').mockImplementation((_model, _condition) => {
+      // @ts-ignore
+      const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
+      // @ts-ignore
+      qi[Symbol.iterator] = jest.fn(() => {
+        return (vaultsHarvestsMapMock[_condition.vault] || []).values();
+      });
+
+      return qi;
+    });
+    /* eslint-enable @typescript-eslint/ban-ts-comment */
+  }
 
   const setupTestVault = (): void => {
     jest.spyOn(tokenUtils, 'getFullToken').mockImplementation(async (_, tokenAddr) => {
@@ -83,25 +99,6 @@ describe('VaultsController', () => {
       });
   };
 
-  const setupTestVaultHarvests = (): void => {
-    jest.spyOn(tokenUtils, 'getFullToken').mockImplementation(async (_, tokenAddr) => {
-      return fullTokenMockMap[tokenAddr] || fullTokenMockMap[TOKENS.BADGER];
-    });
-    // eslint-disable-next-line
-    jest.spyOn(VaultsService.prototype, 'listHarvests').mockImplementation(async ({ address }): Promise<any> => {
-      return vaultsHarvestsSdkMock[address];
-    });
-    /* eslint-disable @typescript-eslint/ban-ts-comment */
-    jest
-      .spyOn(BadgerGraph.prototype, 'loadSett')
-      .mockImplementation(async ({ id, block }): Promise<gqlGenT.SettQuery> => {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        return vaultsGraphSdkMapMock[`${id.toLowerCase()}-${(block || {}).number || 0}`];
-      });
-    jest.spyOn(BadgerSDK.prototype, 'ready').mockImplementation();
-  };
-
   describe('GET /v2/vaults', () => {
     describe('with no specified chain', () => {
       it('returns eth vaults', async (done: jest.DoneCallback) => {
@@ -138,9 +135,10 @@ describe('VaultsController', () => {
   });
 
   describe('GET /v2/harvests', () => {
+    beforeEach(setupDdbHarvests);
+
     describe('success cases', () => {
       it('Return extended harvest for chain vaults', async (done: jest.DoneCallback) => {
-        setupTestVaultHarvests();
         const { body } = await request.get('/v2/vaults/harvests').expect(200);
         expect(body).toMatchSnapshot();
         done();
@@ -156,9 +154,10 @@ describe('VaultsController', () => {
   });
 
   describe('GET /v2/harvests/:vault', () => {
+    beforeEach(setupDdbHarvests);
+
     describe('success cases', () => {
       it('Return extended harvests for chain vault by addr', async (done: jest.DoneCallback) => {
-        setupTestVaultHarvests();
         const { body } = await request.get(`/v2/vaults/harvests/${TEST_VAULT}`).expect(200);
         expect(body).toMatchSnapshot();
         done();

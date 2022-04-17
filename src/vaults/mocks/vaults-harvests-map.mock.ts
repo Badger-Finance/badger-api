@@ -12,7 +12,7 @@ export const vaultsHarvestsMapMock = {
       token: '0x2B5455aac8d64C14786c3a29858E43b5945819C0',
       eventType: 'harvest',
       strategyBalance: '2481941296192304936740',
-      estimatedApr: 0,
+      estimatedApr: 30,
     },
     {
       timestamp: 1636878824,
@@ -24,7 +24,7 @@ export const vaultsHarvestsMapMock = {
       },
       eventType: 'TreeDistribution',
       strategyBalance: '2481941296192304936740',
-      estimatedApr: 0,
+      estimatedApr: 5,
     },
   ],
   [TOKENS.BCRV_TBTC]: [

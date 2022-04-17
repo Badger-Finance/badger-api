@@ -1,5 +1,178 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`vaults.utils getVaultHarvestsOnChain returns vaults harvests with apr 1`] = `
+Array [
+  Object {
+    "amount": Object {
+      "hex": "0x11bc85620d1c13",
+      "type": "BigNumber",
+    },
+    "block": 13612910,
+    "estimatedApr": 0.01,
+    "eventType": "Harvest",
+    "strategyBalance": "2481941296192304936740",
+    "timestamp": 1636878824,
+    "token": "",
+  },
+  Object {
+    "amount": Object {
+      "hex": "0x3ddb4d0d018648",
+      "type": "BigNumber",
+    },
+    "block": 13647172,
+    "estimatedApr": 0.06,
+    "eventType": "Harvest",
+    "strategyBalance": "2366061351720088564649",
+    "timestamp": 1637346968,
+    "token": "",
+  },
+  Object {
+    "amount": Object {
+      "hex": "0x53a18268ac9569",
+      "type": "BigNumber",
+    },
+    "block": 13674352,
+    "estimatedApr": 0.09,
+    "eventType": "Harvest",
+    "strategyBalance": "2314042647612435605751",
+    "timestamp": 1637717848,
+    "token": "",
+  },
+  Object {
+    "amount": Object {
+      "hex": "0x3531891e4ac3f5",
+      "type": "BigNumber",
+    },
+    "block": 13699647,
+    "estimatedApr": 0.01,
+    "eventType": "Harvest",
+    "strategyBalance": "2300047794001301134071",
+    "timestamp": 1638065247,
+    "token": "",
+  },
+  Object {
+    "amount": Object {
+      "hex": "0x8212074a2405cf",
+      "type": "BigNumber",
+    },
+    "block": 13844434,
+    "estimatedApr": 0.15,
+    "eventType": "Harvest",
+    "strategyBalance": "2285851497293213464358",
+    "timestamp": 1640034477,
+    "token": "",
+  },
+  Object {
+    "amount": Object {
+      "hex": "0x00",
+      "type": "BigNumber",
+    },
+    "block": 13870247,
+    "estimatedApr": 0,
+    "eventType": "Harvest",
+    "strategyBalance": "2257647238481134566616",
+    "timestamp": 1640380383,
+    "token": "",
+  },
+  Object {
+    "amount": Object {
+      "hex": "0x30197df9db1863",
+      "type": "BigNumber",
+    },
+    "block": 13896464,
+    "estimatedApr": 0,
+    "eventType": "Harvest",
+    "strategyBalance": "2255639612689547422513",
+    "timestamp": 1640731025,
+    "token": "",
+  },
+  Object {
+    "amount": Object {
+      "hex": "0x11bc85620d1c13",
+      "type": "BigNumber",
+    },
+    "block": 13612910,
+    "estimatedApr": 0.01,
+    "eventType": "TreeDistribution",
+    "strategyBalance": "2481941296192304936740",
+    "timestamp": 1636878824,
+    "token": "",
+  },
+  Object {
+    "amount": Object {
+      "hex": "0x3ddb4d0d018648",
+      "type": "BigNumber",
+    },
+    "block": 13647172,
+    "estimatedApr": 0.06,
+    "eventType": "TreeDistribution",
+    "strategyBalance": "2366061351720088564649",
+    "timestamp": 1637346968,
+    "token": "",
+  },
+  Object {
+    "amount": Object {
+      "hex": "0x53a18268ac9569",
+      "type": "BigNumber",
+    },
+    "block": 13674352,
+    "estimatedApr": 0.09,
+    "eventType": "TreeDistribution",
+    "strategyBalance": "2314042647612435605751",
+    "timestamp": 1637717848,
+    "token": "",
+  },
+  Object {
+    "amount": Object {
+      "hex": "0x3531891e4ac3f5",
+      "type": "BigNumber",
+    },
+    "block": 13699647,
+    "estimatedApr": 0.01,
+    "eventType": "TreeDistribution",
+    "strategyBalance": "2300047794001301134071",
+    "timestamp": 1638065247,
+    "token": "",
+  },
+  Object {
+    "amount": Object {
+      "hex": "0x8212074a2405cf",
+      "type": "BigNumber",
+    },
+    "block": 13844434,
+    "estimatedApr": 0.15,
+    "eventType": "TreeDistribution",
+    "strategyBalance": "2285851497293213464358",
+    "timestamp": 1640034477,
+    "token": "",
+  },
+  Object {
+    "amount": Object {
+      "hex": "0x00",
+      "type": "BigNumber",
+    },
+    "block": 13870247,
+    "estimatedApr": 0,
+    "eventType": "TreeDistribution",
+    "strategyBalance": "2257647238481134566616",
+    "timestamp": 1640380383,
+    "token": "",
+  },
+  Object {
+    "amount": Object {
+      "hex": "0x30197df9db1863",
+      "type": "BigNumber",
+    },
+    "block": 13896464,
+    "estimatedApr": 0,
+    "eventType": "TreeDistribution",
+    "strategyBalance": "2255639612689547422513",
+    "timestamp": 1640731025,
+    "token": "",
+  },
+]
+`;
+
 exports[`vaults.utils getVaultPerformance no rewards or harvests returns value sources from fallback methods 1`] = `
 Array [
   CachedValueSource {
