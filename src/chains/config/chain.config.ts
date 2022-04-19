@@ -129,28 +129,32 @@ export abstract class Chain {
       return {
         rapid: {
           maxPriorityFeePerGas: defaultPriorityFee,
-          maxFeePerGas: gasPrice * 2,
+          maxFeePerGas: this.sanitizePrice(gasPrice * 2),
         },
         fast: {
           maxPriorityFeePerGas: defaultPriorityFee,
-          maxFeePerGas: gasPrice * 1.8,
+          maxFeePerGas: this.sanitizePrice(gasPrice * 1.8),
         },
         standard: {
           maxPriorityFeePerGas: defaultPriorityFee,
-          maxFeePerGas: gasPrice * 1.6,
+          maxFeePerGas: this.sanitizePrice(gasPrice * 1.6),
         },
         slow: {
           maxPriorityFeePerGas: defaultPriorityFee,
-          maxFeePerGas: gasPrice * 1.4,
+          maxFeePerGas: this.sanitizePrice(gasPrice * 1.4),
         },
       };
     }
     // we don't have a mempool based guess here just define a spread
     return {
-      rapid: gasPrice * 1.2,
-      fast: gasPrice * 1.1,
-      standard: gasPrice,
-      slow: gasPrice * 0.9,
+      rapid: this.sanitizePrice(gasPrice * 1.2),
+      fast: this.sanitizePrice(gasPrice * 1.1),
+      standard: this.sanitizePrice(gasPrice),
+      slow: this.sanitizePrice(gasPrice * 0.9),
     };
+  }
+
+  private sanitizePrice(price: number): number {
+    return Math.max(1, price);
   }
 }
