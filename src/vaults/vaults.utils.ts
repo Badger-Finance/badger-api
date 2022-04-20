@@ -705,6 +705,8 @@ export async function getVaultHarvestsOnChain(
 
   const sdkVaultHarvests = sdkVaultHarvestsResp.data;
 
+  const harvestsStartEndMap: Record<string, number> = {};
+
   const _extend_harvests_data = async (harvestsList: VaultPerformanceEvent[], eventType: HarvestType) => {
     if (!harvestsList || harvestsList?.length === 0) return;
 
@@ -736,22 +738,31 @@ export async function getVaultHarvestsOnChain(
 
         extendedHarvest.strategyBalance = formatBalance(balance, depositToken.decimals);
 
-        if (i === harvestsList.length - 1) {
+        if (i === harvestsList.length - 1 && eventType === HarvestType.Harvest) {
           vaultHarvests.push(extendedHarvest);
           continue;
         }
 
         const startOfHarvest = harvest.timestamp;
-        const endOfCurrentHarvest = harvestsList[i + 1].timestamp;
+        let endOfCurrentHarvest: Nullable<number>;
 
-        extendedHarvest.estimatedApr = await estimateHarvestEventApr(
-          chain,
-          harvestToken,
-          startOfHarvest,
-          endOfCurrentHarvest,
-          harvest.amount,
-          balance,
-        );
+        if (eventType === HarvestType.Harvest) {
+          endOfCurrentHarvest = harvestsList[i + 1].timestamp;
+          harvestsStartEndMap[`${startOfHarvest}`] = endOfCurrentHarvest;
+        } else if (eventType === HarvestType.TreeDistribution) {
+          endOfCurrentHarvest = harvestsStartEndMap[`${harvest.timestamp}`];
+        }
+
+        if (endOfCurrentHarvest) {
+          extendedHarvest.estimatedApr = await estimateHarvestEventApr(
+            chain,
+            harvestToken,
+            startOfHarvest,
+            endOfCurrentHarvest,
+            harvest.amount,
+            balance,
+          );
+        }
       }
 
       vaultHarvests.push(extendedHarvest);

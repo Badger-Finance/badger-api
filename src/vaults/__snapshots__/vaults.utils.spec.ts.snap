@@ -68,7 +68,7 @@ Array [
   Object {
     "amount": 84.17266705379542,
     "block": 13612910,
-    "estimatedApr": Infinity,
+    "estimatedApr": 228.46,
     "eventType": "TreeDistribution",
     "strategyBalance": 2481.941296192305,
     "timestamp": 1636878824,
@@ -95,7 +95,7 @@ Array [
   Object {
     "amount": 725.4052573992801,
     "block": 13674352,
-    "estimatedApr": Infinity,
+    "estimatedApr": 2845.69,
     "eventType": "TreeDistribution",
     "strategyBalance": 2314.0426476124358,
     "timestamp": 1637717848,
@@ -122,7 +122,7 @@ Array [
   Object {
     "amount": 895.551949222039,
     "block": 13844434,
-    "estimatedApr": Infinity,
+    "estimatedApr": 3571.83,
     "eventType": "TreeDistribution",
     "strategyBalance": 2285.8514972932135,
     "timestamp": 1640034477,
@@ -131,7 +131,7 @@ Array [
   Object {
     "amount": 113.37673517546946,
     "block": 13844434,
-    "estimatedApr": 224.56,
+    "estimatedApr": 452.19,
     "eventType": "TreeDistribution",
     "strategyBalance": 2285.8514972932135,
     "timestamp": 1640034477,
