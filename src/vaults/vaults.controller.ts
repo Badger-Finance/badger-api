@@ -8,7 +8,7 @@ import { getVaultDefinition } from './vaults.utils';
 import { VaultHarvestsMapModel } from './interfaces/vault-harvests-list-model.interface';
 import { VaultHarvestsMap } from './interfaces/vault-harvest-map';
 import { VaultHarvestsModel } from './interfaces/vault-harvests-model.interface';
-import { VaultHarvestsExtended } from './interfaces/vault-harvest-extended';
+import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
 
 @Controller('/vaults')
 export class VaultsController {
@@ -48,7 +48,7 @@ export class VaultsController {
   async getVaultsHarvests(
     @PathParams('vault') vault: string,
     @QueryParams('chain') chain?: Network,
-  ): Promise<VaultHarvestsExtended[]> {
+  ): Promise<VaultHarvestsExtendedResp[]> {
     return this.vaultService.getVaultHarvests(Chain.getChain(chain), vault);
   }
 

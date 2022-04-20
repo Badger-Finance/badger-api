@@ -52,6 +52,7 @@ custom:
     UNCLAIMED_SNAPSHOTS_DATA: unclaimed-snapshots-${self:custom.stage}
     CYCLE_ANALYTICS_DATA: rewards-${self:custom.stage}
     HARVEST_DATA: harvest-data-${self:custom.stage}
+    HARVEST_COMPOUND_DATA: harvest-compound-data-${self:custom.stage}
 
   merkleProofs:
     staging: 'badger-staging-merkle-proofs'
@@ -111,6 +112,7 @@ provider:
     METADATA_DATA: ${self:custom.table.METADATA_DATA}
     UNCLAIMED_SNAPSHOTS_DATA: ${self:custom.table.UNCLAIMED_SNAPSHOTS_DATA}
     HARVEST_DATA: ${self:custom.table.HARVEST_DATA}
+    HARVEST_COMPOUND_DATA: ${self:custom.table.HARVEST_COMPOUND_DATA}
     # General Defintions
     REWARD_DATA: ${self:custom.merkleProofs.${self:custom.stage}}
     STAGE: ${opt:stage, self:provider.stage}
@@ -338,6 +340,37 @@ resources:
           - AttributeName: 'vault'
             AttributeType: 'S'
 
+    harvestCompoundDataTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.table.HARVEST_COMPOUND_DATA}
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: 'vault'
+            KeyType: 'HASH'
+          - AttributeName: 'timestamp'
+            KeyType: 'RANGE'
+        AttributeDefinitions:
+          - AttributeName: 'vault'
+            AttributeType: 'S'
+          - AttributeName: 'timestamp'
+            AttributeType: 'N'
+          - AttributeName: 'block'
+            AttributeType: 'N'
+        GlobalSecondaryIndexes:
+          - IndexName: IndexHarvestCompoundDataBlock
+            KeySchema:
+              - AttributeName: 'block'
+                KeyType: 'HASH'
+            Projection:
+              ProjectionType: ALL
+          - IndexName: IndexHarvestCompoundDataVault
+            KeySchema:
+              - AttributeName: 'vault'
+                KeyType: 'HASH'
+            Projection:
+              ProjectionType: ALL
+
     cycleAnalyticsTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -427,6 +460,16 @@ functions:
           name: ${self:service}-${self:custom.stage}-index-vault-harvests
           description: 'index harvests data for supported vaults'
           rate: rate(5 minutes)
+
+  index-harvest-compound:
+    handler: src/indexers/harvest-compound-indexer.indexVaultsHarvestsCompund
+    # this only for first launch, then we can decrease to 360 sec
+    timeout: 900
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-harvest-compound
+          description: 'index onchain harvests for all vaults'
+          rate: rate(2 hours)
 
   index-leaderboard:
     handler: src/indexers/leaderboard-indexer.indexBoostLeaderBoard
