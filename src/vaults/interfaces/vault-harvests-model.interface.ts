@@ -1,5 +1,4 @@
 import { Description, Example, Property, Title } from '@tsed/schema';
-import { BigNumber } from 'ethers';
 import { HarvestType } from '../enums/harvest.enum';
 import { TOKENS } from '../../config/tokens.config';
 import { VaultHarvestsExtendedResp } from './vault-harvest-extended-resp.interface';
@@ -25,12 +24,9 @@ export class VaultHarvestsModel implements VaultHarvestsExtendedResp {
 
   @Title('amount')
   @Description('amount of harvested token')
-  @Example({
-    hex: '0x01fb4d02ff225338',
-    type: 'BigNumber',
-  })
+  @Example('15.3452')
   @Property()
-  public amount: BigNumber;
+  public amount: number;
 
   @Title('eventType')
   @Description('Harvest or TreeDistribution')

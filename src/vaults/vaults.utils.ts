@@ -39,9 +39,9 @@ import { CurrentVaultSnapshot } from './types/current-vault-snapshot';
 import { VaultPendingHarvestData } from './types/vault-pending-harvest-data';
 import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
 import { HarvestType } from './enums/harvest.enum';
-import { HarvestCompoundData } from './models/harvest-compound.model';
 import { Nullable } from '../utils/types.utils';
 import { ListHarvestOptions } from '@badger-dao/sdk/lib/vaults/interfaces';
+import { HarvestCompoundData } from './models/harvest-compound.model';
 
 export const VAULT_SOURCE = 'Vault Compounding';
 
@@ -504,7 +504,7 @@ export async function estimateHarvestEventApr(
   start: number,
   end: number,
   amount: VaultPerformanceEvent['amount'],
-  balance: number,
+  balance: BigNumber,
 ): Promise<number> {
   const duration = end - start;
 
@@ -716,17 +716,25 @@ export async function getVaultHarvestsOnChain(
         block: { number: harvest.block },
       });
 
+      const harvestToken = harvest.token || vaultDef.depositToken;
+
+      const depositToken = await getFullToken(chain, harvestToken);
+
+      const harvestAmount = formatBalance(harvest.amount || BigNumber.from(0), depositToken.decimals);
+
       const extendedHarvest = {
         ...harvest,
+        token: harvestToken,
+        amount: harvestAmount,
         eventType,
         strategyBalance: 0,
         estimatedApr: 0,
       };
 
       if (vaultGraph?.sett) {
-        const balance = vaultGraph.sett?.strategy?.balance || vaultGraph.sett.balance || 0;
+        const balance = BigNumber.from(vaultGraph.sett?.strategy?.balance || vaultGraph.sett.balance || 0);
 
-        extendedHarvest.strategyBalance = balance;
+        extendedHarvest.strategyBalance = formatBalance(balance, depositToken.decimals);
 
         if (i === harvestsList.length - 1) {
           vaultHarvests.push(extendedHarvest);
@@ -738,7 +746,7 @@ export async function getVaultHarvestsOnChain(
 
         extendedHarvest.estimatedApr = await estimateHarvestEventApr(
           chain,
-          harvest.token || vaultDef.depositToken,
+          harvestToken,
           startOfHarvest,
           endOfCurrentHarvest,
           harvest.amount,

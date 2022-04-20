@@ -53,7 +53,7 @@ describe('vaults.utils', () => {
   const vault = getVaultDefinition(TEST_CHAIN, TOKENS.BBADGER);
 
   beforeEach(() => {
-    // console.log = jest.fn();
+    console.log = jest.fn();
 
     jest.spyOn(BadgerGraph.prototype, 'loadSettHarvests').mockImplementation(async (_options) => {
       const harvests = [
