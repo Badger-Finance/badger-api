@@ -30,7 +30,6 @@ export const HARVEST_COMPOUND_DATA = getEnvVar('HARVEST_COMPOUND_DATA');
 // thegraph constants
 export const UNISWAP_URL = getEnvVar('UNISWAP');
 export const SUSHISWAP_URL = getEnvVar('SUSHISWAP');
-export const SUSHISWAP_XDAI_URL = getEnvVar('SUSHISWAP_XDAI');
 export const SUSHISWAP_MATIC_URL = getEnvVar('SUSHISWAP_MATIC');
 export const SUSHISWAP_ARBITRUM_URL = getEnvVar('SUSHISWAP_ARBITRUM');
 export const PANCAKESWAP_URL = getEnvVar('PANCAKESWAP');
