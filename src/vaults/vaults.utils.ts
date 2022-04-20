@@ -759,7 +759,9 @@ export async function getVaultHarvestsOnChain(
   };
 
   const allHarvests = sdkVaultHarvests.flatMap((h) => h.harvests).sort((a, b) => a.timestamp - b.timestamp);
-  const allTreeDistributions = sdkVaultHarvests.flatMap((h) => h.harvests).sort((a, b) => a.timestamp - b.timestamp);
+  const allTreeDistributions = sdkVaultHarvests
+    .flatMap((h) => h.treeDistributions)
+    .sort((a, b) => a.timestamp - b.timestamp);
 
   await _extend_harvests_data(allHarvests, HarvestType.Harvest);
   await _extend_harvests_data(allTreeDistributions, HarvestType.TreeDistribution);
