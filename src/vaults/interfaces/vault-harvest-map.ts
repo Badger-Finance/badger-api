@@ -1,6 +1,6 @@
 import { VaultDefinition } from './vault-definition.interface';
-import { VaultHarvestsExtended } from './vault-harvest-extended';
+import { VaultHarvestsExtendedResp } from './vault-harvest-extended-resp.interface';
 
 export interface VaultHarvestsMap {
-  [address: VaultDefinition['vaultToken']]: VaultHarvestsExtended[];
+  [address: VaultDefinition['vaultToken']]: VaultHarvestsExtendedResp[];
 }
