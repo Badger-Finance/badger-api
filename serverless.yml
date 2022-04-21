@@ -25,7 +25,7 @@ custom:
     seed:
       default:
         sources:
-          - table: ${self:custom.table.PRICE_DATA}
+          - table: ${self:custom.table.TOKEN_PRICE_DATA}
             sources: [./seed/prices.json]
           - table: ${self:custom.table.APY_SNAPSHOTS_DATA}
             sources: [./seed/value-sources.json]
@@ -39,20 +39,20 @@ custom:
 
   table:
     APY_SNAPSHOTS_DATA: apy-snapshots-${self:custom.stage}
-    SETT_DATA: sett-historic-snapshots-${self:custom.stage}
-    VAULT_BALANCES_DATA: vault-balances-${self:custom.stage}
-    PRICE_DATA: token-prices-${self:custom.stage}
-    TOKEN_INFORMATION_DATA: token-information-${self:custom.stage}
+    SETT_HISTORIC_DATA: sett-historic-snapshots-${self:custom.stage}
     VAULT_SNAPSHOTS_DATA: vaults-snapshots-${self:custom.stage}
-    ACCOUNT_DATA: accounts-${self:custom.stage}
-    METRICS_SNAPSHOTS_DATA: metrics-snapshots-${self:custom.stage}
-    LEADERBOARD_DATA: leaderboards-${self:custom.stage}
-    LEADERBOARD_SUMMARY_DATA: leaderboards-summary-${self:custom.stage}
-    METADATA_DATA: metadata-${self:custom.stage}
-    UNCLAIMED_SNAPSHOTS_DATA: unclaimed-snapshots-${self:custom.stage}
-    CYCLE_ANALYTICS_DATA: rewards-${self:custom.stage}
+    VAULT_BALANCES_DATA: vault-balances-${self:custom.stage}
+    TOKEN_PRICE_DATA: token-prices-${self:custom.stage}
+    TOKEN_INFORMATION_DATA: token-information-${self:custom.stage}
     HARVEST_DATA: harvest-data-${self:custom.stage}
     HARVEST_COMPOUND_DATA: harvest-compound-data-${self:custom.stage}
+    ACCOUNT_DATA: accounts-${self:custom.stage}
+    METADATA_DATA: metadata-${self:custom.stage}
+    METRICS_SNAPSHOTS_DATA: metrics-snapshots-${self:custom.stage}
+    UNCLAIMED_SNAPSHOTS_DATA: unclaimed-snapshots-${self:custom.stage}
+    LEADERBOARD_DATA: leaderboards-${self:custom.stage}
+    LEADERBOARD_SUMMARY_DATA: leaderboards-summary-${self:custom.stage}
+    CYCLE_ANALYTICS_DATA: rewards-${self:custom.stage}
 
   merkleProofs:
     staging: 'badger-staging-merkle-proofs'
@@ -100,19 +100,19 @@ provider:
     SWAPR: 'https://api.thegraph.com/subgraphs/name/dxgraphs/swapr-arbitrum-one-v3'
     # Table Defintions
     APY_SNAPSHOTS_DATA: ${self:custom.table.APY_SNAPSHOTS_DATA}
-    SETT_DATA: ${self:custom.table.SETT_DATA}
-    VAULT_BALANCES_DATA: ${self:custom.table.VAULT_BALANCES_DATA}
-    PRICE_DATA: ${self:custom.table.PRICE_DATA}
-    TOKEN_INFORMATION_DATA: ${self:custom.table.TOKEN_INFORMATION_DATA}
+    SETT_HISTORIC_DATA: ${self:custom.table.SETT_HISTORIC_DATA}
     VAULT_SNAPSHOTS_DATA: ${self:custom.table.VAULT_SNAPSHOTS_DATA}
+    VAULT_BALANCES_DATA: ${self:custom.table.VAULT_BALANCES_DATA}
+    TOKEN_PRICE_DATA: ${self:custom.table.TOKEN_PRICE_DATA}
+    TOKEN_INFORMATION_DATA: ${self:custom.table.TOKEN_INFORMATION_DATA}
+    HARVEST_DATA: ${self:custom.table.HARVEST_DATA}
+    HARVEST_COMPOUND_DATA: ${self:custom.table.HARVEST_COMPOUND_DATA}
     ACCOUNT_DATA: ${self:custom.table.ACCOUNT_DATA}
+    METADATA_DATA: ${self:custom.table.METADATA_DATA}
     METRICS_SNAPSHOTS_DATA: ${self:custom.table.METRICS_SNAPSHOTS_DATA}
     LEADERBOARD_DATA: ${self:custom.table.LEADERBOARD_DATA}
     LEADERBOARD_SUMMARY_DATA: ${self:custom.table.LEADERBOARD_SUMMARY_DATA}
-    METADATA_DATA: ${self:custom.table.METADATA_DATA}
     UNCLAIMED_SNAPSHOTS_DATA: ${self:custom.table.UNCLAIMED_SNAPSHOTS_DATA}
-    HARVEST_DATA: ${self:custom.table.HARVEST_DATA}
-    HARVEST_COMPOUND_DATA: ${self:custom.table.HARVEST_COMPOUND_DATA}
     # General Defintions
     REWARD_DATA: ${self:custom.merkleProofs.${self:custom.stage}}
     STAGE: ${opt:stage, self:provider.stage}
@@ -155,7 +155,7 @@ resources:
     settHistoricSnapshots:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:custom.table.SETT_DATA}
+        TableName: ${self:custom.table.SETT_HISTORIC_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
           - AttributeName: 'address'
@@ -171,7 +171,7 @@ resources:
     priceTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:custom.table.PRICE_DATA}
+        TableName: ${self:custom.table.TOKEN_PRICE_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
           - AttributeName: 'address'

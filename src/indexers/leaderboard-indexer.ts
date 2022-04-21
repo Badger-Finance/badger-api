@@ -4,8 +4,8 @@ import { getBoostFile } from '../accounts/accounts.utils';
 import { getDataMapper, getLeaderboardKey } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
-import { CachedBoost } from '../leaderboards/interface/cached-boost.interface';
-import { CachedLeaderboardSummary } from '../leaderboards/interface/cached-leaderboard-summary.interface';
+import { CachedBoost } from '../aws/models/cached-boost.model';
+import { CachedLeaderboardSummary } from '../aws/models/cached-leaderboard-summary.model';
 import { getBadgerType } from '../leaderboards/leaderboards.config';
 
 export const indexBoostLeaderBoard = async (): Promise<void> => {

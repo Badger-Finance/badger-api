@@ -1,7 +1,7 @@
 import { UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { getBoostFile } from '../accounts/accounts.utils';
-import { CachedAccount } from '../accounts/interfaces/cached-account.interface';
+import { CachedAccount } from '../aws/models/cached-account.model';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';

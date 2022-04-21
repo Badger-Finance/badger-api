@@ -2,7 +2,7 @@ import { isNil } from '@tsed/core';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
-import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
+import { CachedValueSource } from '../aws/models/apy-snapshots.model';
 import { ValueSourceMap } from '../protocols/interfaces/value-source-map.interface';
 import { getVaultValueSources } from '../rewards/rewards.utils';
 import { getVaultCachedValueSources } from '../vaults/vaults.utils';

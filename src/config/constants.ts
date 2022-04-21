@@ -12,9 +12,9 @@ export const ONE_YEAR_MS = ONE_YEAR_SECONDS * 1000;
 
 // data access constants
 export const APY_SNAPSHOTS_DATA = getEnvVar('APY_SNAPSHOTS_DATA');
-export const SETT_DATA = getEnvVar('SETT_DATA');
+export const SETT_HISTORIC_DATA = getEnvVar('SETT_HISTORIC_DATA');
 export const VAULT_BALANCES_DATA = getEnvVar('VAULT_BALANCES_DATA');
-export const PRICE_DATA = getEnvVar('PRICE_DATA');
+export const TOKEN_PRICE_DATA = getEnvVar('TOKEN_PRICE_DATA');
 export const TOKEN_INFORMATION_DATA = getEnvVar('TOKEN_INFORMATION_DATA');
 export const VAULT_SNAPSHOTS_DATA = getEnvVar('VAULT_SNAPSHOTS_DATA');
 export const REWARD_DATA = getEnvVar('REWARD_DATA');
