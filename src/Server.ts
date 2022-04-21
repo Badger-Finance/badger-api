@@ -8,13 +8,15 @@ import cors from 'cors';
 import methodOverride from 'method-override';
 import { loadChains } from './chains/chain';
 import { swaggerConfig } from './config/constants';
-import { controllers } from './ControllerRegistry';
+import { V2_CONTROLLERS } from './ControllerRegistry';
+import { CITADEL_V1_CONTROLLERS } from './CitadelControllerRegistry';
 
 @Configuration({
   rootDir: __dirname,
   acceptMimes: ['application/json'],
   mount: {
-    '/v2/': controllers,
+    '/v2/': V2_CONTROLLERS,
+    '/citadel/v1/': CITADEL_V1_CONTROLLERS,
   },
   swagger: [swaggerConfig],
   logger: {

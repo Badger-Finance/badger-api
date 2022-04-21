@@ -9,7 +9,6 @@ import { TreasuryPosition } from '../treasury/interfaces/treasy-position.interfa
 import { TreasurySummary } from '../treasury/interfaces/treasury-summary.interface';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { TreasurySummarySnapshot } from '../aws/models/treasury-summary-snapshot.model';
-import { TOKEN_PRICE_DATA, TREASURY_HISTORIC_DATA, TREASURY_SNAPSHOT_DATA } from '../config/constants';
 
 export async function snapshotTreasury() {
   const chain = new Ethereum();
@@ -83,7 +82,6 @@ export async function snapshotTreasury() {
 
   const mapper = getDataMapper();
 
-  console.log({ TREASURY_SNAPSHOT_DATA, TREASURY_HISTORIC_DATA, TOKEN_PRICE_DATA });
   // capture a current view of the treasury
   try {
     const currentSnapshot = Object.assign(new TreasurySummarySnapshot(), treasurySummary);
