@@ -1,9 +1,6 @@
-import { Protocol, Token } from '@badger-dao/sdk';
+import { Protocol, Token, TokenValue } from '@badger-dao/sdk';
 
-export interface TreasuryPosition {
-  token: Token;
-  amount: number;
-  value: number;
+export interface TreasuryPosition extends TokenValue {
   protocol?: Protocol | string;
   apr: number;
 }
