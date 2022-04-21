@@ -1,13 +1,15 @@
-import { Erc20__factory, formatBalance } from '@badger-dao/sdk';
+import { Erc20__factory, formatBalance, Protocol } from '@badger-dao/sdk';
 import { getCachedAccount } from '../accounts/accounts.utils';
 import { Ethereum } from '../chains/config/eth.config';
-import { TOKENS } from '../config/tokens.config';
 import { getPrice } from '../prices/prices.utils';
 import { VaultsService } from '../vaults/vaults.service';
 import { getVaultDefinition } from '../vaults/vaults.utils';
 import { CITADEL_TREASURY_ADDRESS, TRACKED_TOKENS, TRACKED_VAULTS } from './config/citadel-treasury.config';
-import { TreasuryPosition } from './interfaces/treasy-position.interface';
-import { CitadelTreasurySummary } from './interfaces/citadel-treasury-summary.interface';
+import { TreasuryPosition } from '../treasury/interfaces/treasy-position.interface';
+import { TreasurySummary } from '../treasury/interfaces/treasury-summary.interface';
+import { getDataMapper } from '../aws/dynamodb.utils';
+import { TreasurySummarySnapshot } from '../aws/models/treasury-summary-snapshot.model';
+import { TOKEN_PRICE_DATA, TREASURY_HISTORIC_DATA, TREASURY_SNAPSHOT_DATA } from '../config/constants';
 
 export async function snapshotTreasury() {
   const chain = new Ethereum();
@@ -23,18 +25,19 @@ export async function snapshotTreasury() {
       const isFarming = vaultPositions.has(address);
 
       const contract = Erc20__factory.connect(address, sdk.provider);
-      const balance = await contract.balanceOf(CITADEL_TREASURY_ADDRESS);
+      const treasuryBalance = await contract.balanceOf(CITADEL_TREASURY_ADDRESS);
 
       const { price } = await getPrice(address);
-      const amount = formatBalance(balance, token.decimals);
-      const value = price * amount;
+      const balance = formatBalance(treasuryBalance, token.decimals);
+      const value = price * balance;
 
       if (!isFarming) {
         return {
-          token,
-          amount,
+          ...token,
+          balance,
           value,
           apr: 0,
+          protocol: 'none',
         };
       }
 
@@ -50,23 +53,17 @@ export async function snapshotTreasury() {
       }
 
       return {
-        token,
-        amount,
+        ...token,
+        balance,
         value,
         apr: treasuryApr,
+        protocol: Protocol.Badger,
       };
     }),
   );
 
   const positions = treasuryPositions.filter((p) => p.value > 0);
   const value = positions.reduce((total, position) => (total += position.value), 0);
-  const btcPrice = await getPrice(TOKENS.WBTC);
-  const valueBtc = value / btcPrice.price;
-
-  const valuePaid = 0;
-  const valuePaidBtc = valuePaid / btcPrice.price;
-
-  const marketCapToTreasuryRatio = 0;
 
   let tvlApr = 0;
   positions.forEach((p) => {
@@ -75,17 +72,24 @@ export async function snapshotTreasury() {
     }
   });
 
-  const treasuryYieldApr = value === 0 ? 0 : tvlApr / value;
+  const treasuryYield = value === 0 ? 0 : tvlApr / value;
 
-  const treasurySummary: CitadelTreasurySummary = {
+  const treasurySummary: TreasurySummary = {
+    address: CITADEL_TREASURY_ADDRESS,
     value,
-    valueBtc,
-    valuePaid,
-    valuePaidBtc,
-    marketCapToTreasuryRatio,
-    treasuryYieldApr,
+    yield: treasuryYield,
     positions,
   };
 
-  console.log(treasurySummary);
+  const mapper = getDataMapper();
+
+  console.log({ TREASURY_SNAPSHOT_DATA, TREASURY_HISTORIC_DATA, TOKEN_PRICE_DATA });
+  // capture a current view of the treasury
+  try {
+    const currentSnapshot = Object.assign(new TreasurySummarySnapshot(), treasurySummary);
+    console.log(currentSnapshot);
+    await mapper.put(currentSnapshot);
+  } catch (err) {
+    console.error({ message: 'Unable to save Ctiadel treasury snapshot', err });
+  }
 }

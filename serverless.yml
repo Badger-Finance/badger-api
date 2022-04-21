@@ -53,6 +53,8 @@ custom:
     LEADERBOARD_DATA: leaderboards-${self:custom.stage}
     LEADERBOARD_SUMMARY_DATA: leaderboards-summary-${self:custom.stage}
     CYCLE_ANALYTICS_DATA: rewards-${self:custom.stage}
+    TREASURY_HISTORIC_DATA: treasury-historic-snapshots-${self:custom.stage}
+    TREASURY_SNAPSHOT_DATA: treasury-snapshot-${self:custom.stage}
 
   merkleProofs:
     staging: 'badger-staging-merkle-proofs'
@@ -92,7 +94,6 @@ provider:
     BLOCKNATIVE_API_KEY: ${env:BLOCKNATIVE_API_KEY}
     UNISWAP: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2'
     SUSHISWAP: 'https://api.thegraph.com/subgraphs/name/sushiswap/exchange'
-    SUSHISWAP_XDAI: 'https://api.thegraph.com/subgraphs/name/sushiswap/xdai-exchange'
     SUSHISWAP_MATIC: 'https://api.thegraph.com/subgraphs/name/sushiswap/matic-exchange'
     SUSHISWAP_ARBITRUM: 'https://api.thegraph.com/subgraphs/name/sushiswap/arbitrum-exchange'
     PANCAKESWAP: 'https://api.thegraph.com/subgraphs/name/pancakeswap/exchange'
@@ -113,6 +114,8 @@ provider:
     LEADERBOARD_DATA: ${self:custom.table.LEADERBOARD_DATA}
     LEADERBOARD_SUMMARY_DATA: ${self:custom.table.LEADERBOARD_SUMMARY_DATA}
     UNCLAIMED_SNAPSHOTS_DATA: ${self:custom.table.UNCLAIMED_SNAPSHOTS_DATA}
+    TREASURY_HISTORIC_DATA: ${self:custom.table.TREASURY_HISTORIC_DATA}
+    TREASURY_SNAPSHOT_DATA: ${self:custom.table.TREASURY_SNAPSHOT_DATA}
     # General Defintions
     REWARD_DATA: ${self:custom.merkleProofs.${self:custom.stage}}
     STAGE: ${opt:stage, self:provider.stage}
@@ -400,6 +403,34 @@ resources:
             Projection:
               ProjectionType: ALL
 
+    treasuryHistoricData:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.table.TREASURY_HISTORIC_DATA}
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: 'address'
+            KeyType: 'HASH'
+          - AttributeName: 'timestamp'
+            KeyType: 'RANGE'
+        AttributeDefinitions:
+          - AttributeName: 'address'
+            AttributeType: 'S'
+          - AttributeName: 'timestamp'
+            AttributeType: 'N'
+
+    treasurySnapshotData:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.table.TREASURY_SNAPSHOT_DATA}
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: 'address'
+            KeyType: 'HASH'
+        AttributeDefinitions:
+          - AttributeName: 'address'
+            AttributeType: 'S'
+
 functions:
   request-handler:
     handler: src/LambdaServer.handler
@@ -415,114 +446,114 @@ functions:
           method: any
           cors: true
 
-  # index-vaults:
-  #   handler: src/indexers/vaults-indexer.indexProtocolVaults
-  #   timeout: 480
-  #   events:
-  #     - schedule:
-  #         name: ${self:service}-${self:custom.stage}-index-vaults-history
-  #         description: 'index historical data for all vaults'
-  #         rate: rate(30 minutes)
+  index-vaults:
+    handler: src/indexers/vaults-indexer.indexProtocolVaults
+    timeout: 480
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-vaults-history
+          description: 'index historical data for all vaults'
+          rate: rate(30 minutes)
 
-  # index-apy-snapshots:
-  #   handler: src/indexers/apy-snapshots-indexer.refreshApySnapshots
-  #   timeout: 120
-  #   memorySize: 4096
-  #   events:
-  #     - schedule:
-  #         name: ${self:service}-${self:custom.stage}-index-apy-snapshots
-  #         description: 'index data for sett apy'
-  #         rate: rate(5 minutes)
+  index-apy-snapshots:
+    handler: src/indexers/apy-snapshots-indexer.refreshApySnapshots
+    timeout: 120
+    memorySize: 4096
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-apy-snapshots
+          description: 'index data for sett apy'
+          rate: rate(5 minutes)
 
-  # index-prices:
-  #   handler: src/indexers/price-indexer.indexPrices
-  #   timeout: 150
-  #   events:
-  #     - schedule:
-  #         name: ${self:service}-${self:custom.stage}-index-prices
-  #         description: 'index price data for all protocol tokens'
-  #         rate: rate(1 minute)
+  index-prices:
+    handler: src/indexers/price-indexer.indexPrices
+    timeout: 150
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-prices
+          description: 'index price data for all protocol tokens'
+          rate: rate(1 minute)
 
-  # index-vault-snapshots:
-  #   handler: src/indexers/vault-snapshots-indexer.refreshVaultSnapshots
-  #   timeout: 150
-  #   events:
-  #     - schedule:
-  #         name: ${self:service}-${self:custom.stage}-index-vault-snapshots
-  #         description: 'index data for supported vaults'
-  #         rate: rate(1 minute)
+  index-vault-snapshots:
+    handler: src/indexers/vault-snapshots-indexer.refreshVaultSnapshots
+    timeout: 150
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-vault-snapshots
+          description: 'index data for supported vaults'
+          rate: rate(1 minute)
 
-  # index-vault-harvests:
-  #   handler: src/indexers/vault-harvests-indexer.refreshVaultHarvests
-  #   timeout: 150
-  #   events:
-  #     - schedule:
-  #         name: ${self:service}-${self:custom.stage}-index-vault-harvests
-  #         description: 'index harvests data for supported vaults'
-  #         rate: rate(5 minutes)
+  index-vault-harvests:
+    handler: src/indexers/vault-harvests-indexer.refreshVaultHarvests
+    timeout: 150
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-vault-harvests
+          description: 'index harvests data for supported vaults'
+          rate: rate(5 minutes)
 
-  # index-harvest-compound:
-  #   handler: src/indexers/harvest-compound-indexer.indexVaultsHarvestsCompund
-  #   # this only for first launch, then we can decrease to 360 sec
-  #   timeout: 900
-  #   events:
-  #     - schedule:
-  #         name: ${self:service}-${self:custom.stage}-index-harvest-compound
-  #         description: 'index onchain harvests for all vaults'
-  #         rate: rate(2 hours)
+  index-harvest-compound:
+    handler: src/indexers/harvest-compound-indexer.indexVaultsHarvestsCompund
+    # this only for first launch, then we can decrease to 360 sec
+    timeout: 900
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-harvest-compound
+          description: 'index onchain harvests for all vaults'
+          rate: rate(2 hours)
 
-  # index-leaderboard:
-  #   handler: src/indexers/leaderboard-indexer.indexBoostLeaderBoard
-  #   timeout: 120
-  #   events:
-  #     - schedule:
-  #         name: ${self:service}-${self:custom.stage}-index-leaderboard
-  #         description: 'index leaderboard data from latest badger boosts'
-  #         rate: rate(5 minutes)
+  index-leaderboard:
+    handler: src/indexers/leaderboard-indexer.indexBoostLeaderBoard
+    timeout: 120
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-leaderboard
+          description: 'index leaderboard data from latest badger boosts'
+          rate: rate(5 minutes)
 
-  # index-vault-balances:
-  #   handler: src/indexers/vault-balances-indexer.refreshVaultBalances
-  #   timeout: 180
-  #   events:
-  #     - schedule:
-  #         name: ${self:service}-${self:custom.stage}-index-vault-balances
-  #         description: 'index vault token balances from the graph'
-  #         rate: rate(1 minute)
+  index-vault-balances:
+    handler: src/indexers/vault-balances-indexer.refreshVaultBalances
+    timeout: 180
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-vault-balances
+          description: 'index vault token balances from the graph'
+          rate: rate(1 minute)
 
-  # index-boosts:
-  #   handler: src/indexers/boosts-indexer.refreshUserBoosts
-  #   timeout: 360
-  #   events:
-  #     - schedule:
-  #         name: ${self:service}-${self:custom.stage}-index-boosts
-  #         description: 'index accounts boost information'
-  #         rate: rate(20 minutes)
+  index-boosts:
+    handler: src/indexers/boosts-indexer.refreshUserBoosts
+    timeout: 360
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-boosts
+          description: 'index accounts boost information'
+          rate: rate(20 minutes)
 
-  # index-accounts:
-  #   handler: src/indexers/accounts-indexer.refreshUserAccounts
-  #   timeout: 900
-  #   events:
-  #     - schedule:
-  #         name: ${self:service}-${self:custom.stage}-index-claimables
-  #         description: 'index accounts claimable from badger tree'
-  #         rate: rate(2 hours)
-  #         input:
-  #           mode: ClaimableBalanceData
-  #     - schedule:
-  #         name: ${self:service}-${self:custom.stage}-index-balances
-  #         description: 'index accounts information from the graph'
-  #         rate: rate(15 minutes)
-  #         input:
-  #           mode: BalanceData
+  index-accounts:
+    handler: src/indexers/accounts-indexer.refreshUserAccounts
+    timeout: 900
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-claimables
+          description: 'index accounts claimable from badger tree'
+          rate: rate(2 hours)
+          input:
+            mode: ClaimableBalanceData
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-balances
+          description: 'index accounts information from the graph'
+          rate: rate(15 minutes)
+          input:
+            mode: BalanceData
 
-  # index-protocol-metrics-snapshots:
-  #   handler: src/indexers/protocol-metric-indexer.indexProtocolMetrics
-  #   timeout: 240
-  #   events:
-  #     - schedule:
-  #         name: ${self:service}-${self:custom.stage}-index-protocol-metrics-snapshots
-  #         description: 'index protocol metrics'
-  #         rate: rate(1 day)
+  index-protocol-metrics-snapshots:
+    handler: src/indexers/protocol-metric-indexer.indexProtocolMetrics
+    timeout: 240
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-protocol-metrics-snapshots
+          description: 'index protocol metrics'
+          rate: rate(1 day)
 
   index-citadel-treasury:
     handler: src/citadel/citadel-indexer.snapshotTreasury
@@ -531,4 +562,4 @@ functions:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-vaults-history
           description: 'index citadel treasury holdings'
-          rate: rate(1 minute)
+          rate: rate(5 minutes)
