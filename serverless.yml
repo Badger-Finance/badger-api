@@ -560,6 +560,6 @@ functions:
     timeout: 480
     events:
       - schedule:
-          name: ${self:service}-${self:custom.stage}-index-vaults-history
+          name: ${self:service}-${self:custom.stage}-index-citadel-treasury
           description: 'index citadel treasury holdings'
           rate: rate(5 minutes)
