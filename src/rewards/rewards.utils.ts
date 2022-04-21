@@ -5,7 +5,7 @@ import { Chain } from '../chains/config/chain.config';
 import { ONE_YEAR_SECONDS, REWARD_DATA } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
 import { getPrice } from '../prices/prices.utils';
-import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
+import { CachedValueSource } from '../aws/models/apy-snapshots.model';
 import { createValueSource, ValueSource } from '../protocols/interfaces/value-source.interface';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { getFullToken, tokenEmission } from '../tokens/tokens.utils';

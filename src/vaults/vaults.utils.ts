@@ -28,20 +28,20 @@ import BadgerSDK, {
 import { getPrice } from '../prices/prices.utils';
 import { TokenPrice } from '../prices/interface/token-price.interface';
 import { PricingType } from '../prices/enums/pricing-type.enum';
-import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
+import { CachedValueSource } from '../aws/models/apy-snapshots.model';
 import { createValueSource } from '../protocols/interfaces/value-source.interface';
 import { getProtocolValueSources, getRewardEmission, valueSourceToCachedValueSource } from '../rewards/rewards.utils';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { getVault } from '../indexers/indexer.utils';
-import { HistoricVaultSnapshot } from './types/historic-vault-snapshot';
+import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
 import { VaultHarvestData } from './interfaces/vault-harvest-data.interface';
-import { CurrentVaultSnapshot } from './types/current-vault-snapshot';
-import { VaultPendingHarvestData } from './types/vault-pending-harvest-data';
+import { CurrentVaultSnapshotModel } from '../aws/models/current-vault-snapshot.model';
+import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
 import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
 import { HarvestType } from './enums/harvest.enum';
 import { Nullable } from '../utils/types.utils';
 import { ListHarvestOptions } from '@badger-dao/sdk/lib/vaults/interfaces';
-import { HarvestCompoundData } from './models/harvest-compound.model';
+import { HarvestCompoundData } from '../aws/models/harvest-compound.model';
 
 export const VAULT_SOURCE = 'Vault Compounding';
 
@@ -111,7 +111,7 @@ export async function getCachedVault(chain: Chain, vaultDefinition: VaultDefinit
   try {
     const mapper = getDataMapper();
     for await (const item of mapper.query(
-      CurrentVaultSnapshot,
+      CurrentVaultSnapshotModel,
       { address: vaultDefinition.vaultToken },
       { limit: 1, scanIndexForward: false },
     )) {
@@ -143,14 +143,14 @@ export async function getVaultSnapshotsInRange(
   vaultDefinition: VaultDefinition,
   start: Date,
   end: Date,
-): Promise<HistoricVaultSnapshot[]> {
+): Promise<HistoricVaultSnapshotModel[]> {
   try {
     const snapshots = [];
     const mapper = getDataMapper();
     const assetToken = await getFullToken(chain, vaultDefinition.vaultToken);
 
     for await (const snapshot of mapper.query(
-      HistoricVaultSnapshot,
+      HistoricVaultSnapshotModel,
       { address: assetToken.address, timestamp: between(new Date(start).getTime(), new Date(end).getTime()) },
       { scanIndexForward: false },
     )) {

@@ -1,5 +1,5 @@
 import { TOKENS } from '../config/tokens.config';
-import { CachedBoost } from '../leaderboards/interface/cached-boost.interface';
+import { CachedBoost } from '../aws/models/cached-boost.model';
 import { BoostData } from '../rewards/interfaces/boost-data.interface';
 import { randomCachedBoosts } from '../test/tests.utils';
 import { generateBoostsLeaderBoard } from './leaderboard-indexer';

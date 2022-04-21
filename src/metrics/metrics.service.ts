@@ -3,7 +3,7 @@ import { NotFound } from '@tsed/exceptions';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { MetricType } from './enums/metric-type';
 import { ProtocolMetrics } from './interfaces/metrics.interface';
-import { ProtocolMetricSnapshot } from './interfaces/protocol-metric-snapshot';
+import { ProtocolMetricSnapshot } from '../aws/models/protocol-metric-snapshot.model';
 
 @Service()
 export class MetricsService {

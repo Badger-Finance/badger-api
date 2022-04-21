@@ -1,4 +1,4 @@
-import { TokenPriceSnapshot } from './interface/token-price-snapshot.interface';
+import { TokenPriceSnapshot } from '../aws/models/token-price-snapshot.model';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Currency } from '@badger-dao/sdk';
 import { TOKENS } from '../config/tokens.config';

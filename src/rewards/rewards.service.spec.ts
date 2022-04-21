@@ -8,7 +8,7 @@ import * as accountsUtils from '../accounts/accounts.utils';
 import * as dynamodbUtils from '../aws/dynamodb.utils';
 import * as rewardsUtils from './rewards.utils';
 import { UserClaimMetadata } from './entities/user-claim-metadata';
-import { UserClaimSnapshot } from './entities/user-claim-snapshot';
+import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
 import { Ethereum } from '../chains/config/eth.config';
 
 describe('rewards.service', () => {

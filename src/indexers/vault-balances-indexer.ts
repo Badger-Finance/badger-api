@@ -7,7 +7,7 @@ import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface
 import { getFullToken } from '../tokens/tokens.utils';
 import { getLpTokenBalances } from './indexer.utils';
 import { PricingType } from '../prices/enums/pricing-type.enum';
-import { VaultTokenBalance } from '../vaults/types/vault-token-balance.interface';
+import { VaultTokenBalance } from '../aws/models/vault-token-balance.model';
 
 export async function refreshVaultBalances() {
   const chains = loadChains();

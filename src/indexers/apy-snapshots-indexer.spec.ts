@@ -1,6 +1,6 @@
 import { refreshChainApySnapshots } from './apy-snapshots-indexer';
 import * as rewardsUtils from '../rewards/rewards.utils';
-import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
+import { CachedValueSource } from '../aws/models/apy-snapshots.model';
 import { mockBatchDelete, mockBatchPut, setupMapper, TEST_CHAIN } from '../test/tests.utils';
 
 describe('apy-snapshots-indexer', () => {

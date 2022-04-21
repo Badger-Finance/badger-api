@@ -1,12 +1,12 @@
 import { convert, getPrice } from '../prices/prices.utils';
 import { getVaultDefinition } from '../vaults/vaults.utils';
-import { VaultTokenBalance } from '../vaults/types/vault-token-balance.interface';
+import { VaultTokenBalance } from '../aws/models/vault-token-balance.model';
 import { Token, TokenValue, VaultDTO } from '@badger-dao/sdk';
 import { Currency } from '@badger-dao/sdk';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
 import { PricingType } from '../prices/enums/pricing-type.enum';
-import { TokenInformationSnapshot } from './interfaces/token-information-snapshot.interface';
+import { TokenInformationSnapshot } from '../aws/models/token-information-snapshot.model';
 import { TokenFull, TokenFullMap } from './interfaces/token-full.interface';
 import { TokenNotFound } from './errors/token.error';
 import * as thisModule from './tokens.utils';

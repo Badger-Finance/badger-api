@@ -13,10 +13,10 @@ import {
 import { SourceType } from '../../rewards/enums/source-type.enum';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { getCachedVault, getVaultCachedValueSources, getVaultDefinition } from '../../vaults/vaults.utils';
-import { VaultTokenBalance } from '../../vaults/types/vault-token-balance.interface';
+import { VaultTokenBalance } from '../../aws/models/vault-token-balance.model';
 import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
 import { getFullToken, getVaultTokens, toBalance } from '../../tokens/tokens.utils';
-import { CachedValueSource } from '../interfaces/cached-value-source.interface';
+import { CachedValueSource } from '../../aws/models/apy-snapshots.model';
 import { createValueSource } from '../interfaces/value-source.interface';
 import { request } from '../../common/request';
 import { CurveAPIResponse } from '../interfaces/curve-api-response.interrface';

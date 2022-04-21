@@ -4,7 +4,7 @@ import { Chain } from '../../chains/config/chain.config';
 import { SUSHISWAP_ARBITRUM_URL, SUSHISWAP_MATIC_URL, SUSHISWAP_URL } from '../../config/constants';
 import { getSdk as getSushiswapSdk, OrderDirection, PairDayData_OrderBy } from '../../graphql/generated/sushiswap';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
-import { CachedValueSource } from '../interfaces/cached-value-source.interface';
+import { CachedValueSource } from '../../aws/models/apy-snapshots.model';
 import { PairDayData } from '../interfaces/pair-day-data.interface';
 import { getSwapValue } from './strategy.utils';
 

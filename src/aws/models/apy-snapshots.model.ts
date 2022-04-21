@@ -1,7 +1,8 @@
 import { attribute, hashKey, table } from '@aws/dynamodb-data-mapper-annotations';
 import { APY_SNAPSHOTS_DATA } from '../../config/constants';
-import { ValueSource } from './value-source.interface';
+import { ValueSource } from '../../protocols/interfaces/value-source.interface';
 
+// Can be removed, used only to collect data, no outside exposure found
 @table(APY_SNAPSHOTS_DATA)
 export class CachedValueSource {
   @hashKey()
