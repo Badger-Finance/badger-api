@@ -12,7 +12,7 @@ Object {
       "token": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
     },
     Object {
-      "amount": 2.1074160241191548e+64,
+      "amount": 0.094819176,
       "beneficiary": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28",
       "compPercent": 50,
       "end": 1617901200,
@@ -36,7 +36,7 @@ Object {
       "token": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
     },
     Object {
-      "amount": 6.71594117576434e+63,
+      "amount": 0.0302171,
       "beneficiary": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28",
       "compPercent": 50,
       "end": 1620925200,
@@ -214,7 +214,7 @@ Object {
       "token": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
     },
     Object {
-      "amount": 2.1074160241191548e+64,
+      "amount": 0.094819176,
       "beneficiary": "0x53C8E199eb2Cb7c01543C137078a038937a68E40",
       "compPercent": 70,
       "end": 1617901200,
@@ -238,7 +238,7 @@ Object {
       "token": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
     },
     Object {
-      "amount": 6.71594117576434e+63,
+      "amount": 0.0302171,
       "beneficiary": "0x53C8E199eb2Cb7c01543C137078a038937a68E40",
       "compPercent": 70,
       "end": 1620925200,
@@ -427,7 +427,7 @@ Object {
       "token": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
     },
     Object {
-      "amount": 2.1074160241191548e+64,
+      "amount": 0.094819176,
       "beneficiary": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28",
       "compPercent": 100,
       "end": 1617901200,
@@ -451,7 +451,7 @@ Object {
       "token": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
     },
     Object {
-      "amount": 6.71594117576434e+63,
+      "amount": 0.0302171,
       "beneficiary": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28",
       "compPercent": 100,
       "end": 1620925200,
@@ -629,7 +629,7 @@ Object {
       "token": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
     },
     Object {
-      "amount": 2.1074160241191548e+64,
+      "amount": 0.094819176,
       "beneficiary": "0x53C8E199eb2Cb7c01543C137078a038937a68E40",
       "compPercent": 100,
       "end": 1617901200,
@@ -653,7 +653,7 @@ Object {
       "token": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
     },
     Object {
-      "amount": 6.71594117576434e+63,
+      "amount": 0.0302171,
       "beneficiary": "0x53C8E199eb2Cb7c01543C137078a038937a68E40",
       "compPercent": 100,
       "end": 1620925200,
@@ -835,7 +835,7 @@ Array [
     "token": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
   },
   Object {
-    "amount": 2.1074160241191548e+64,
+    "amount": 0.094819176,
     "beneficiary": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28",
     "compPercent": 50,
     "end": 1617901200,
@@ -859,7 +859,7 @@ Array [
     "token": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
   },
   Object {
-    "amount": 6.71594117576434e+63,
+    "amount": 0.0302171,
     "beneficiary": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28",
     "compPercent": 50,
     "end": 1620925200,
@@ -1052,7 +1052,7 @@ Array [
     "token": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
   },
   Object {
-    "amount": 2.1074160241191548e+64,
+    "amount": 0.094819176,
     "beneficiary": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28",
     "compPercent": 100,
     "end": 1617901200,
@@ -1076,7 +1076,7 @@ Array [
     "token": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
   },
   Object {
-    "amount": 6.71594117576434e+63,
+    "amount": 0.0302171,
     "beneficiary": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28",
     "compPercent": 100,
     "end": 1620925200,
