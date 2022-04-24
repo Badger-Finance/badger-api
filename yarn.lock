@@ -844,9 +844,9 @@
     to-fast-properties "^2.0.0"
 
 "@badger-dao/sdk-mocks@^1.7.1":
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/@badger-dao/sdk-mocks/-/sdk-mocks-1.7.0.tgz#07e04dc449871b2b0e9ee3ca4d0fe7ffda6c5a77"
-  integrity sha512-BFgNknRHWzjsDuGKmlD80exC5H4+wus1gy1k5nnQW0CllSPajL8asfvAXxuR6DFwKQDtHTYJFcGmTXye1KzKBQ==
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/@badger-dao/sdk-mocks/-/sdk-mocks-1.7.1.tgz#3c5ffec60035eba58ebc50b92d17faccfba53257"
+  integrity sha512-Rx2Tod6T+klv4STFn6vnXzIKWO6HXh55C14BlnMWgx2mRrtZYzD/45lWOGYivKE9qh9BtjxoM7l8rG4xPOVmdg==
   dependencies:
     "@types/jest" "27.0.2"
     "@typescript-eslint/eslint-plugin" "5.0.0"
