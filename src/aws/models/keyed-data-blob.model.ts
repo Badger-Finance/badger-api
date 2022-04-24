@@ -7,7 +7,7 @@ export class KeyedDataBlob {
   id!: string;
 
   @attribute({ memberType: { type: 'Any' } })
-  data!: Map<string, string | number | Object>;
+  data!: Map<string, string | number | unknown>;
 
   getProperty<T>(property: string): T {
     const result = this.data.get(property) as T;

@@ -1,1 +1,1 @@
-export type DataBlob = Map<string, string | number | Object>;
+export type DataBlob = Map<string, string | number | unknown>;
