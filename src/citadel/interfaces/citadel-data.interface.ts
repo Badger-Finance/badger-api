@@ -1,6 +1,8 @@
 import { ConvertableDataBlob } from '../../aws/types/convertable-data-blob';
 import { DataBlob } from '../../aws/types/data-blob';
 
+export const CTIADEL_DATA = 'citadel-protocol-overview';
+
 export class CitadelData extends ConvertableDataBlob<CitadelData> {
   valuePaid: number;
   marketCap: number;
@@ -20,7 +22,7 @@ export class CitadelData extends ConvertableDataBlob<CitadelData> {
   }
 
   id(): string {
-    return 'citadel-protocol-overview';
+    return CTIADEL_DATA;
   }
 
   toBlob(): DataBlob {

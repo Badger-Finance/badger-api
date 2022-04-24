@@ -3,20 +3,22 @@ import { Service } from '@tsed/di';
 import { TOKENS } from '../config/tokens.config';
 import { getPrice } from '../prices/prices.utils';
 import { queryTreasurySummary } from '../treasury/treasury.utils';
+import { queryCitadelData } from './citadel.utils';
 import { CITADEL_TREASURY_ADDRESS } from './config/citadel-treasury.config';
 
 @Service()
 export class CitadelService {
   async loadTreasurySummary(): Promise<CitadelTreasurySummary> {
-    const baseTreasurySummary = await queryTreasurySummary(CITADEL_TREASURY_ADDRESS);
+    const [baseTreasurySummary, citadelData] = await Promise.all([
+      queryTreasurySummary(CITADEL_TREASURY_ADDRESS),
+      queryCitadelData(),
+    ]);
 
     const { price } = await getPrice(TOKENS.WBTC);
+    const { marketCapToTreasuryRatio, valuePaid } = citadelData;
 
     const valueBtc = baseTreasurySummary.value / price;
-    const valuePaid = 0;
     const valuePaidBtc = valuePaid / price;
-
-    const marketCapToTreasuryRatio = 0;
 
     return {
       ...baseTreasurySummary,
