@@ -10,7 +10,6 @@ import { createValueSource, ValueSource } from '../protocols/interfaces/value-so
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { getFullToken, tokenEmission } from '../tokens/tokens.utils';
 import { RewardMerkleDistribution } from './interfaces/merkle-distributor.interface';
-import { EmissionSchedule } from '@badger-dao/sdk/lib/rewards/interfaces/emission-schedule.interface';
 import { BigNumber } from '@ethersproject/bignumber';
 import { UnprocessableEntity } from '@tsed/exceptions';
 import { ConvexStrategy } from '../protocols/strategies/convex.strategy';
@@ -85,8 +84,6 @@ export async function getClaimableRewards(
   return Promise.all(requests);
 }
 
-const schedulesCache: Record<string, EmissionSchedule[]> = {};
-
 export async function getRewardEmission(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
   const boostFile = await getBoostFile(chain);
   if (!chain.rewardsLogger || vaultDefinition.depositToken === TOKENS.DIGG || !boostFile) {
@@ -99,14 +96,8 @@ export async function getRewardEmission(chain: Chain, vaultDefinition: VaultDefi
     delete boostFile.multiplierData[vault.vaultToken];
   }
   const boostRange = boostFile.multiplierData[vault.vaultToken] ?? { min: 1, max: 1 };
-
-  if (!schedulesCache[vaultDefinition.vaultToken]) {
-    const sdk = await chain.getSdk();
-    // TODO: resolve this in the sdk
-    await sdk.rewards.ready();
-    schedulesCache[vaultDefinition.vaultToken] = await sdk.rewards.loadActiveSchedules(vaultToken);
-  }
-  const activeSchedules = schedulesCache[vaultDefinition.vaultToken];
+  const sdk = await chain.getSdk();
+  const activeSchedules = await sdk.rewards.loadActiveSchedules(vaultToken);
 
   // Badger controlled addresses are blacklisted from receiving rewards. We only dogfood on ETH
   let ignoredTVL = 0;
