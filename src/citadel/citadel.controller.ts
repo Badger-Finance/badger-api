@@ -1,7 +1,7 @@
+import { CitadelTreasurySummary } from '@badger-dao/sdk/lib/api/interfaces/citadel-treasury-summary.interface';
 import { Controller, Get, Inject, UseCache } from '@tsed/common';
 import { ContentType, Summary, Returns, Description } from '@tsed/schema';
 import { CitadelService } from './citadel.service';
-import { CitadelTreasurySummary } from './interfaces';
 import { CitadelTreasurySummaryModel } from './interfaces/citadel-treasury-summary-model.interface';
 
 @Controller('/')
@@ -14,7 +14,7 @@ export class CitadelController {
   @ContentType('json')
   @Summary('Citadel DAO Treasury Allocation and Metrics')
   @Description('Returns specific treasury metrics, positions, and yield')
-  @Returns(200, Array).Of(CitadelTreasurySummaryModel)
+  @Returns(200, CitadelTreasurySummaryModel)
   async loadCitadelTreasury(): Promise<CitadelTreasurySummary> {
     return this.citadelService.loadTreasurySummary();
   }

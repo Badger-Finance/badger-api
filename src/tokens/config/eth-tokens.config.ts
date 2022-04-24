@@ -4,6 +4,7 @@ import { getRemDiggPrice } from '../../prices/custom/remdigg-price';
 import { getImBtcPrice, getMhBtcPrice } from '../../protocols/strategies/mstable.strategy';
 import { PricingType } from '../../prices/enums/pricing-type.enum';
 import { TokenConfig } from '../interfaces/token-config.interface';
+import { resolveCurvePoolTokenPrice } from '../../protocols/strategies/convex.strategy';
 
 export const ethTokensConfig: TokenConfig = {
   [TOKENS.BADGER]: {
@@ -188,6 +189,17 @@ export const ethTokensConfig: TokenConfig = {
   },
   [TOKENS.SPELL]: {
     type: PricingType.Contract,
+  },
+  [TOKENS.CTDL]: {
+    type: PricingType.Custom,
+    getPrice: resolveCurvePoolTokenPrice,
+  },
+  [TOKENS.XCTDL]: {
+    type: PricingType.Vault,
+    vaultToken: {
+      address: TOKENS.CTDL,
+      network: Network.Ethereum,
+    },
   },
   [TOKENS.BBADGER]: {
     type: PricingType.Vault,

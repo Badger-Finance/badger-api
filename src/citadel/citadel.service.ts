@@ -1,9 +1,9 @@
+import { CitadelTreasurySummary } from '@badger-dao/sdk/lib/api/interfaces/citadel-treasury-summary.interface';
 import { Service } from '@tsed/di';
 import { TOKENS } from '../config/tokens.config';
 import { getPrice } from '../prices/prices.utils';
 import { queryTreasurySummary } from '../treasury/treasury.utils';
 import { CITADEL_TREASURY_ADDRESS } from './config/citadel-treasury.config';
-import { CitadelTreasurySummary } from './interfaces';
 
 @Service()
 export class CitadelService {

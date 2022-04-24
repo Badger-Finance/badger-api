@@ -55,6 +55,7 @@ custom:
     CYCLE_ANALYTICS_DATA: rewards-${self:custom.stage}
     TREASURY_HISTORIC_DATA: treasury-historic-snapshots-${self:custom.stage}
     TREASURY_SNAPSHOT_DATA: treasury-snapshot-${self:custom.stage}
+    PROTOCOL_DATA: protocol-data-${self:custom.stage}
 
   merkleProofs:
     staging: 'badger-staging-merkle-proofs'
@@ -116,6 +117,7 @@ provider:
     UNCLAIMED_SNAPSHOTS_DATA: ${self:custom.table.UNCLAIMED_SNAPSHOTS_DATA}
     TREASURY_HISTORIC_DATA: ${self:custom.table.TREASURY_HISTORIC_DATA}
     TREASURY_SNAPSHOT_DATA: ${self:custom.table.TREASURY_SNAPSHOT_DATA}
+    PROTOCOL_DATA: ${self:custom.table.PROTOCOL_DATA}
     # General Defintions
     REWARD_DATA: ${self:custom.merkleProofs.${self:custom.stage}}
     STAGE: ${opt:stage, self:provider.stage}
@@ -431,6 +433,18 @@ resources:
           - AttributeName: 'address'
             AttributeType: 'S'
 
+    protocolData:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.table.PROTOCOL_DATA}
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: 'id'
+            KeyType: 'HASH'
+        AttributeDefinitions:
+          - AttributeName: 'id'
+            AttributeType: 'S'
+
 functions:
   request-handler:
     handler: src/LambdaServer.handler
@@ -494,8 +508,7 @@ functions:
 
   index-harvest-compound:
     handler: src/indexers/harvest-compound-indexer.indexVaultsHarvestsCompund
-    # this only for first launch, then we can decrease to 360 sec
-    timeout: 900
+    timeout: 300
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-harvest-compound
