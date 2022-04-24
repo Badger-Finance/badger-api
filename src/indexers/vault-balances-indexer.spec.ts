@@ -3,7 +3,7 @@ import { updateVaultTokenBalances } from './vault-balances-indexer';
 import { Ethereum } from '../chains/config/eth.config';
 import { getVaultDefinition } from '../vaults/vaults.utils';
 import { TOKENS } from '../config/tokens.config';
-import { VaultTokenBalance } from '../vaults/types/vault-token-balance.interface';
+import { VaultTokenBalance } from '../aws/models/vault-token-balance.model';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
 import * as indexerUtils from './indexer.utils';
 import { Chain } from '../chains/config/chain.config';

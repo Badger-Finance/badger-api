@@ -4,7 +4,7 @@ import BadgerSDK from '@badger-dao/sdk';
 import { DataMapper, PutParameters, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
 import { indexVaultsHarvestsCompund } from './harvest-compound-indexer';
 import { Chain } from '../chains/config/chain.config';
-import { HarvestCompoundData } from '../vaults/models/harvest-compound.model';
+import { HarvestCompoundData } from '../aws/models/harvest-compound.model';
 
 describe('harvest-compound.indexer', () => {
   let put: jest.SpyInstance<Promise<StringToAnyObjectMap>, [parameters: PutParameters]>;

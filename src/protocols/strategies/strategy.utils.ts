@@ -4,7 +4,7 @@ import { getPrice } from '../../prices/prices.utils';
 import { SourceType } from '../../rewards/enums/source-type.enum';
 import { valueSourceToCachedValueSource } from '../../rewards/rewards.utils';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
-import { CachedValueSource } from '../interfaces/cached-value-source.interface';
+import { CachedValueSource } from '../../aws/models/apy-snapshots.model';
 import { PairDayData } from '../interfaces/pair-day-data.interface';
 import { UniPairDayData } from '../interfaces/uni-pair-day-data.interface';
 import { createValueSource } from '../interfaces/value-source.interface';

@@ -1,11 +1,11 @@
 import { embed } from '@aws/dynamodb-data-mapper';
 import { attribute, hashKey, rangeKey, table } from '@aws/dynamodb-data-mapper-annotations';
 import { VaultSnapshot } from '@badger-dao/sdk';
-import { SETT_DATA } from '../../config/constants';
-import { VaultStrategy } from '../interfaces/vault-strategy.interface';
+import { SETT_HISTORIC_DATA } from '../../config/constants';
+import { VaultStrategy } from '../../vaults/interfaces/vault-strategy.interface';
 
-@table(SETT_DATA)
-export class HistoricVaultSnapshot implements VaultSnapshot {
+@table(SETT_HISTORIC_DATA)
+export class HistoricVaultSnapshotModel implements VaultSnapshot {
   @attribute()
   block!: number;
 

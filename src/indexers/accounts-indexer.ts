@@ -5,7 +5,7 @@ import { getChainStartBlockKey, getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { ClaimableBalance } from '../rewards/entities/claimable-balance';
-import { UserClaimSnapshot } from '../rewards/entities/user-claim-snapshot';
+import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
 import { getClaimableRewards, getTreeDistribution } from '../rewards/rewards.utils';
 import { getVaultDefinition } from '../vaults/vaults.utils';
 import { batchRefreshAccounts, chunkArray } from './indexer.utils';

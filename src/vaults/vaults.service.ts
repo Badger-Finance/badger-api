@@ -8,7 +8,7 @@ import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interf
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { getCachedTokenBalances } from '../tokens/tokens.utils';
 import { VaultDefinition } from './interfaces/vault-definition.interface';
-import { VaultPendingHarvestData } from './types/vault-pending-harvest-data';
+import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
 import {
   getCachedVault,
   getVaultCachedValueSources,
@@ -20,7 +20,7 @@ import { ethers } from 'ethers';
 import { VaultHarvestsMap } from './interfaces/vault-harvest-map';
 import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
 import { NotFound } from '@tsed/exceptions';
-import { HarvestCompoundData } from './models/harvest-compound.model';
+import { HarvestCompoundData } from '../aws/models/harvest-compound.model';
 import { getDataMapper } from '../aws/dynamodb.utils';
 
 @Service()

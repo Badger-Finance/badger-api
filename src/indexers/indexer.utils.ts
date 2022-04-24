@@ -1,13 +1,13 @@
 import { NotFound } from '@tsed/exceptions';
 import { getAccountMap } from '../accounts/accounts.utils';
 import { AccountMap } from '../accounts/interfaces/account-map.interface';
-import { CachedAccount } from '../accounts/interfaces/cached-account.interface';
+import { CachedAccount } from '../aws/models/cached-account.model';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
 import { getPrice } from '../prices/prices.utils';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { getBoostWeight, getStrategyInfo, getCachedVault } from '../vaults/vaults.utils';
-import { VaultTokenBalance } from '../vaults/types/vault-token-balance.interface';
+import { VaultTokenBalance } from '../aws/models/vault-token-balance.model';
 import { getFullTokens, toBalance } from '../tokens/tokens.utils';
 import { getLiquidityData } from '../protocols/common/swap.utils';
 import { gqlGenT, VaultSnapshot, VaultState, VaultVersion } from '@badger-dao/sdk';

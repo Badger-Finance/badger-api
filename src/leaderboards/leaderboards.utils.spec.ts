@@ -3,7 +3,7 @@ import { getLeaderboardKey } from '../aws/dynamodb.utils';
 import { Ethereum } from '../chains/config/eth.config';
 import { randomValue, setupMapper } from '../test/tests.utils';
 import { LeaderBoardType } from './enums/leaderboard-type.enum';
-import { CachedBoost } from './interface/cached-boost.interface';
+import { CachedBoost } from '../aws/models/cached-boost.model';
 import { getLeaderBoardSize, getUserLeaderBoardRank, queryLeaderboardSummary } from './leaderboards.utils';
 
 describe('leaderboards.utils', () => {

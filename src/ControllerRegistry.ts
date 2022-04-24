@@ -18,7 +18,7 @@ import { RewardController } from './rewards/reward.controller';
  * lazy loading makes dealing with local development a pain
  * without this.
  */
-export const controllers = [
+export const V2_CONTROLLERS = [
   AccountsController,
   ChartsController,
   GasController,

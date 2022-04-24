@@ -1,7 +1,7 @@
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { getLastCompoundHarvest, getVaultHarvestsOnChain } from '../vaults/vaults.utils';
-import { HarvestCompoundData } from '../vaults/models/harvest-compound.model';
+import { HarvestCompoundData } from '../aws/models/harvest-compound.model';
 import { VaultHarvestsExtended } from '../vaults/interfaces/vault-harvest-extended.interface';
 
 /**

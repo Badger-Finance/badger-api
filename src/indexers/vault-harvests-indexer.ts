@@ -7,7 +7,7 @@ import {
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { getFullToken, toBalance } from '../tokens/tokens.utils';
-import { VaultPendingHarvestData } from '../vaults/types/vault-pending-harvest-data';
+import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
 
 export async function refreshVaultHarvests() {
   const chains = loadChains();
