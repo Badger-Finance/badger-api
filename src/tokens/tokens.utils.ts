@@ -12,7 +12,6 @@ import { TokenNotFound } from './errors/token.error';
 import * as thisModule from './tokens.utils';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { ethers } from 'ethers';
-import { TOKENS } from '../config/tokens.config';
 
 export async function toBalance(token: Token, balance: number, currency?: Currency): Promise<TokenValue> {
   const { price } = await getPrice(token.address, currency);
