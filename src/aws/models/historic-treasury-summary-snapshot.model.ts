@@ -1,15 +1,13 @@
 import { embed } from '@aws/dynamodb-data-mapper';
-import { attribute, hashKey, rangeKey, table } from '@aws/dynamodb-data-mapper-annotations';
-import { TREASURY_HISTORIC_DATA } from '../../config/constants';
+import { attribute } from '@aws/dynamodb-data-mapper-annotations';
 import { CachedTreasuryPosition } from '../../treasury/interfaces/cached-treasury-position';
 import { TreasurySummary } from '../../treasury/interfaces/treasury-summary.interface';
 
-@table(TREASURY_HISTORIC_DATA)
 export class HistoricTreasurySummarySnapshot implements TreasurySummary {
-  @hashKey()
+  @attribute()
   address!: string;
 
-  @rangeKey({ defaultProvider: () => Date.now() })
+  @attribute()
   timestamp!: number;
 
   @attribute()

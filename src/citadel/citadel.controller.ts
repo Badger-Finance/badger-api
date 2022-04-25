@@ -1,8 +1,13 @@
 import { CitadelTreasurySummary } from '@badger-dao/sdk/lib/api/interfaces/citadel-treasury-summary.interface';
-import { CitadelTreasurySummaryModel } from './interfaces/citadel-treasury-summary-model.interface';
-
+import { Controller, Get, Inject, QueryParams, UseCache } from '@tsed/common';
+import { ContentType, Summary, Returns, Description } from '@tsed/schema';
+import { HistoricTreasurySummarySnapshot } from '../aws/models/historic-treasury-summary-snapshot.model';
+import { ChartTimeFrame } from '../charts/enums/chart-timeframe.enum';
+import { TreasuryService } from '../treasury/treasury.service';
 import { CitadelService } from './citadel.service';
-
+import { CITADEL_TREASURY_ADDRESS } from './config/citadel-treasury.config';
+import { CitadelTreasurySummaryModel } from './interfaces/citadel-treasury-summary-model.interface';
+import { CitadelService } from './citadel.service';
 import { Controller, Get, Inject, QueryParams, UseCache } from '@tsed/common';
 import { ContentType, Summary, Returns, Description } from '@tsed/schema';
 import { RewardFilter } from '@badger-dao/sdk/lib/citadel/enums/reward-filter.enum';
@@ -13,6 +18,9 @@ import { CitadelRewardEvent } from './interfaces/citadel-reward-event.interface'
 export class CitadelController {
   @Inject()
   citadelService!: CitadelService;
+
+  @Inject()
+  treasuryService!: TreasuryService;
 
   @UseCache()
   @Get('/treasury')
@@ -37,5 +45,14 @@ export class CitadelController {
     @QueryParams('filter') filter?: RewardFilter,
   ): Promise<CitadelRewardEvent[]> {
     return this.citadelService.getListRewards(token, user, filter);
+  }
+
+  @UseCache()
+  @Get('/history')
+  @ContentType('json')
+  async loadCitadelTreasuryCharts(
+    @QueryParams('timeframe') timeframe = ChartTimeFrame.Day,
+  ): Promise<HistoricTreasurySummarySnapshot[]> {
+    return this.treasuryService.loadTreasuryChartData(CITADEL_TREASURY_ADDRESS, timeframe);
   }
 }

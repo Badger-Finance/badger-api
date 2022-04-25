@@ -26,9 +26,9 @@ export const UNCLAIMED_SNAPSHOTS_DATA = getEnvVar('UNCLAIMED_SNAPSHOTS_DATA');
 export const USER_CLAIMED_METADATA = getEnvVar('METADATA_DATA');
 export const HARVEST_DATA = getEnvVar('HARVEST_DATA');
 export const HARVEST_COMPOUND_DATA = getEnvVar('HARVEST_COMPOUND_DATA');
-export const TREASURY_HISTORIC_DATA = getEnvVar('TREASURY_HISTORIC_DATA');
 export const TREASURY_SNAPSHOT_DATA = getEnvVar('TREASURY_SNAPSHOT_DATA');
 export const PROTOCOL_DATA = getEnvVar('PROTOCOL_DATA');
+export const CHART_DATA = getEnvVar('CHART_DATA');
 
 // thegraph constants
 export const UNISWAP_URL = getEnvVar('UNISWAP');
