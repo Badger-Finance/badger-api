@@ -16,7 +16,13 @@ describe('CitadelController', () => {
 
   describe('GET /citadel/v1/treasury', () => {
     it('it returns the current citadel treasury summary', async (done: jest.DoneCallback) => {
-      jest.spyOn(CitadelService.prototype, 'loadTreasurySummary').mockImplementation(async () => citadelTreasuryMock);
+      // TODO: remove to simply the mock once the sdk mocks are updated
+      jest.spyOn(CitadelService.prototype, 'loadTreasurySummary').mockImplementation(async () => ({
+        ...citadelTreasuryMock,
+        fundingBps: 50,
+        lockingBps: 40,
+        stakingBps: 10,
+      }));
       const { body } = await request.get('/citadel/v1/treasury').expect(200);
       expect(body).toMatchObject(citadelTreasuryMock);
       done();

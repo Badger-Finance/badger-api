@@ -15,7 +15,7 @@ export class CitadelService {
     ]);
 
     const { price } = await getPrice(TOKENS.WBTC);
-    const { marketCapToTreasuryRatio, valuePaid } = citadelData;
+    const { marketCapToTreasuryRatio, valuePaid, fundingBps, lockingBps, stakingBps } = citadelData;
 
     const valueBtc = baseTreasurySummary.value / price;
     const valuePaidBtc = valuePaid / price;
@@ -26,6 +26,9 @@ export class CitadelService {
       valuePaid,
       valuePaidBtc,
       marketCapToTreasuryRatio,
+      fundingBps,
+      stakingBps,
+      lockingBps,
     };
   }
 }

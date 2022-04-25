@@ -1,11 +1,4 @@
-import {
-  CitadelMinter__factory,
-  Erc20__factory,
-  formatBalance,
-  ONE_HOUR_MS,
-  Protocol,
-  Vault__factory,
-} from '@badger-dao/sdk';
+import { Erc20__factory, formatBalance, ONE_HOUR_MS, Protocol, Vault__factory } from '@badger-dao/sdk';
 import { getCachedAccount } from '../accounts/accounts.utils';
 import { Ethereum } from '../chains/config/eth.config';
 import { getPrice } from '../prices/prices.utils';
