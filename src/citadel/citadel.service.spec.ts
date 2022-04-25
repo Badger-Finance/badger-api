@@ -31,6 +31,9 @@ describe('CitadelService', () => {
     citadelData.set('staked', staked);
     const stakedPercent = (staked / citadelSupply) * 100;
     citadelData.set('stakedPercent', stakedPercent);
+    citadelData.set('fundingBps', 50);
+    citadelData.set('stakingBps', 10);
+    citadelData.set('lockingBps', 40);
     return new CitadelData(citadelData);
   }
 
