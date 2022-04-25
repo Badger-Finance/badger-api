@@ -1,4 +1,11 @@
-import { Erc20__factory, formatBalance, ONE_HOUR_MS, Protocol, Vault__factory } from '@badger-dao/sdk';
+import {
+  CitadelMinter__factory,
+  Erc20__factory,
+  formatBalance,
+  ONE_HOUR_MS,
+  Protocol,
+  Vault__factory,
+} from '@badger-dao/sdk';
 import { getCachedAccount } from '../accounts/accounts.utils';
 import { Ethereum } from '../chains/config/eth.config';
 import { getPrice } from '../prices/prices.utils';
@@ -136,6 +143,17 @@ export async function snapshotCitadelMetrics() {
 
   const stakedPercent = (staked / citadelSupply) * 100;
   citadelData.set('stakedPercent', stakedPercent);
+
+  // TODO: Replace full call here with sdk
+  const minter = CitadelMinter__factory.connect('0x594691aEa75080dd9B3e91e648Db6045d4fF6E22', sdk.provider);
+  const [fundingBps, stakingBps, lockingBps] = await Promise.all([
+    minter.fundingBps(),
+    minter.stakingBps(),
+    minter.lockingBps(),
+  ]);
+  citadelData.set('fundingBps', fundingBps.toNumber());
+  citadelData.set('stakingBps', stakingBps.toNumber());
+  citadelData.set('lockingBps', lockingBps.toNumber());
 
   const citadelDataBlob = new CitadelData(citadelData);
 
