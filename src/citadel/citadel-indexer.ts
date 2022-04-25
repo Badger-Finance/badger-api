@@ -144,16 +144,10 @@ export async function snapshotCitadelMetrics() {
   const stakedPercent = (staked / citadelSupply) * 100;
   citadelData.set('stakedPercent', stakedPercent);
 
-  // TODO: Replace full call here with sdk
-  const minter = CitadelMinter__factory.connect('0x594691aEa75080dd9B3e91e648Db6045d4fF6E22', sdk.provider);
-  const [fundingBps, stakingBps, lockingBps] = await Promise.all([
-    minter.fundingBps(),
-    minter.stakingBps(),
-    minter.lockingBps(),
-  ]);
-  citadelData.set('fundingBps', fundingBps.toNumber());
-  citadelData.set('stakingBps', stakingBps.toNumber());
-  citadelData.set('lockingBps', lockingBps.toNumber());
+  const { fundingBps, stakingBps, lockingBps } = await sdk.citadel.getCitadelMintDistribution();
+  citadelData.set('fundingBps', fundingBps);
+  citadelData.set('stakingBps', stakingBps);
+  citadelData.set('lockingBps', lockingBps);
 
   const citadelDataBlob = new CitadelData(citadelData);
 

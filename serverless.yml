@@ -508,7 +508,7 @@ functions:
 
   index-harvest-compound:
     handler: src/indexers/harvest-compound-indexer.indexVaultsHarvestsCompund
-    timeout: 300
+    timeout: 360
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-harvest-compound
