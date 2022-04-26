@@ -1,4 +1,4 @@
-import { Erc20__factory, formatBalance, ONE_HOUR_MS, Protocol, Vault__factory } from '@badger-dao/sdk';
+import { Erc20__factory, formatBalance, Protocol, Vault__factory } from '@badger-dao/sdk';
 import { getCachedAccount } from '../accounts/accounts.utils';
 import { Ethereum } from '../chains/config/eth.config';
 import { getPrice } from '../prices/prices.utils';
@@ -10,9 +10,10 @@ import { TreasurySummary } from '../treasury/interfaces/treasury-summary.interfa
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { TreasurySummarySnapshot } from '../aws/models/treasury-summary-snapshot.model';
 import { TOKENS } from '../config/tokens.config';
-import { getLatestTreasurySnapshot, queryTreasurySummary } from '../treasury/treasury.utils';
+import { queryTreasurySummary } from '../treasury/treasury.utils';
 import { HistoricTreasurySummarySnapshot } from '../aws/models/historic-treasury-summary-snapshot.model';
 import { CitadelData } from './interfaces/citadel-data.interface';
+import { indexTreasuryCachedCharts } from '../treasury/treasury-indexer';
 
 export async function snapshotTreasury() {
   const chain = new Ethereum();
@@ -94,16 +95,12 @@ export async function snapshotTreasury() {
     console.error({ message: 'Unable to save Ctiadel treasury snapshot', err });
   }
 
-  // save one snapshot per hour of the treasury
-  const previousHistoricTreasurySnapshot = await getLatestTreasurySnapshot(CITADEL_TREASURY_ADDRESS);
-  if (previousHistoricTreasurySnapshot.timestamp + ONE_HOUR_MS < Date.now()) {
-    try {
-      const currentSnapshot = Object.assign(new HistoricTreasurySummarySnapshot(), treasurySummary);
-      await mapper.put(currentSnapshot);
-    } catch (err) {
-      console.error({ message: 'Unable to save Ctiadel treasury snapshot', err });
-    }
-  }
+  await indexTreasuryCachedCharts(
+    Object.assign(new HistoricTreasurySummarySnapshot(), {
+      ...treasurySummary,
+      timestamp: Date.now(),
+    }),
+  );
 
   await snapshotCitadelMetrics();
 }
