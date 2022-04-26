@@ -1,0 +1,36 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CitadelController GET /citadel/v1/rewards should fail without token addr param 1`] = `
+Object {
+  "message": "Error: Token should be specified",
+}
+`;
+
+exports[`CitadelController GET /citadel/v1/rewards should fail without user addr param for paid filter 1`] = `
+Object {
+  "message": "Error: User or token param is missing",
+}
+`;
+
+exports[`CitadelController GET /citadel/v1/rewards should return rewards for user 1`] = `
+Array [
+  Object {
+    "amount": 10.234,
+    "block": 10,
+    "token": "0xaF0b1FDf9c6BfeC7b3512F207553c0BA00D7f1A2",
+    "user": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28",
+  },
+  Object {
+    "amount": 3,
+    "block": 11,
+    "token": "0xaF0b1FDf9c6BfeC7b3512F207553c0BA00D7f1A2",
+    "user": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28",
+  },
+  Object {
+    "amount": 0,
+    "block": 12,
+    "token": "0xaF0b1FDf9c6BfeC7b3512F207553c0BA00D7f1A2",
+    "user": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28",
+  },
+]
+`;
