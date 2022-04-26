@@ -9,34 +9,31 @@ export const TREASURY_NAMESPACE = 'treasury';
 
 export async function indexTreasuryCachedCharts(snapshot: HistoricTreasurySummarySnapshot) {
   const treasury = snapshot.address;
+  const now = snapshot.timestamp;
 
   const mapper = getDataMapper();
-  const searchKeys = Object.values(ChartTimeFrame).map((timeframe) =>
-    Object.assign(new ChartDataBlob<HistoricTreasurySummarySnapshot>(), {
+
+  for (const timeframe of Object.values(ChartTimeFrame)) {
+    const searchKey = Object.assign(new ChartDataBlob<HistoricTreasurySummarySnapshot>(), {
       id: toChartDataKey(TREASURY_NAMESPACE, treasury, timeframe),
-    }),
-  );
+    });
 
-  const searchResults = [];
-  for await (const result of mapper.batchGet(searchKeys)) {
-    searchResults.push(result);
-  }
-
-  const cachedCharts = Object.fromEntries(searchResults.map((r) => [r.id, r]));
-
-  const now = Date.now();
-  for (const searchKey of searchKeys) {
-    let cachedChart = cachedCharts[searchKey.id];
+    let cachedChart: ChartDataBlob<HistoricTreasurySummarySnapshot> | undefined;
+    try {
+      cachedChart = await mapper.get(searchKey);
+    } catch {} // no item found
 
     let updateCache = false;
     if (!cachedChart) {
       const blob = Object.assign(new ChartDataBlob<HistoricTreasurySummarySnapshot>(), {
         id: searchKey.id,
+        timeframe: timeframe,
         data: [],
       });
       try {
         console.log(`Create blob for ${searchKey.id}`);
         cachedChart = await mapper.put(blob);
+        console.log(cachedChart);
       } catch (err) {
         console.error({ message: 'Unable to save Ctiadel treasury historic snapshots blob', err });
       }
@@ -52,7 +49,7 @@ export async function indexTreasuryCachedCharts(snapshot: HistoricTreasurySummar
       }
     }
 
-    if (updateCache) {
+    if (updateCache && cachedChart) {
       cachedChart.data.splice(0, 0, snapshot);
       try {
         console.log(`Update ${searchKey.id} (${cachedChart.data.length} entries)`);
