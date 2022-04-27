@@ -124,6 +124,12 @@ export const ethTokensConfig: TokenConfig = {
   [TOKENS.FRAX]: {
     type: PricingType.Contract,
   },
+  [TOKENS.UST]: {
+    type: PricingType.Contract,
+  },
+  [TOKENS.WUST]: {
+    type: PricingType.Contract,
+  },
   [TOKENS.MIM]: {
     type: PricingType.Contract,
   },
