@@ -59,6 +59,26 @@ export class CitadelTreasurySummaryModel implements CitadelTreasurySummary {
   @Property()
   lockingBps: number;
 
+  @Title('supply')
+  @Description('CTDL Supply')
+  @Property()
+  supply: number;
+
+  @Title('marketCap')
+  @Description('CTDL market capitalization')
+  @Property()
+  marketCap: number;
+
+  @Title('staked')
+  @Description('CTDL staked amount')
+  @Property()
+  staked: number;
+
+  @Title('stakedPercent')
+  @Description('CTDL staked percentage')
+  @Property()
+  stakedPercent: number;
+
   constructor(summary: CitadelTreasurySummary) {
     this.address = summary.address;
     this.marketCapToTreasuryRatio = summary.marketCapToTreasuryRatio;
@@ -71,5 +91,9 @@ export class CitadelTreasurySummaryModel implements CitadelTreasurySummary {
     this.fundingBps = summary.fundingBps;
     this.stakingBps = summary.stakingBps;
     this.lockingBps = summary.lockingBps;
+    this.supply = summary.supply;
+    this.marketCap = summary.marketCap;
+    this.staked = summary.staked;
+    this.stakedPercent = summary.stakedPercent;
   }
 }

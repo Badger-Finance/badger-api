@@ -1,3 +1,4 @@
+import { RewardFilter } from '@badger-dao/sdk/lib/citadel/enums/reward-filter.enum';
 import { TOKENS } from '../../config/tokens.config';
 import { CitadelRewardEvent } from '../interfaces/citadel-reward-event.interface';
 
@@ -10,17 +11,20 @@ export const citadelRewardEventsMock: CitadelRewardEvent[] = [
     user: TEST_USER,
     token: TEST_TOKEN,
     amount: 10.234,
+    type: RewardFilter.ADDED,
   },
   {
     block: 11,
     user: TEST_USER,
     token: TEST_TOKEN,
     amount: 3,
+    type: RewardFilter.ADDED,
   },
   {
     block: 12,
     user: TEST_USER,
     token: TEST_TOKEN,
     amount: 0,
+    type: RewardFilter.ADDED,
   },
 ];

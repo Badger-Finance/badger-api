@@ -9,6 +9,7 @@ import citadelTreasuryMock from '@badger-dao/sdk-mocks/generated/ethereum/api/lo
 import { TOKENS } from '../config/tokens.config';
 import { RewardFilter } from '@badger-dao/sdk/lib/citadel/enums/reward-filter.enum';
 import { citadelRewardEventsMock } from './mocks/citadel-reward-events.mock';
+import { CitadelTreasurySummary } from '@badger-dao/sdk';
 
 describe('CitadelController', () => {
   let request: SuperTest.SuperTest<SuperTest.Test>;
@@ -22,9 +23,16 @@ describe('CitadelController', () => {
   describe('GET /citadel/v1/treasury', () => {
     it('it returns the current citadel treasury summary', async (done: jest.DoneCallback) => {
       // TODO: remove to simply the mock once the sdk mocks are updated
-      jest.spyOn(CitadelService.prototype, 'loadTreasurySummary').mockImplementation(async () => citadelTreasuryMock);
+      const expected: CitadelTreasurySummary = {
+        ...citadelTreasuryMock,
+        staked: 0,
+        stakedPercent: 0,
+        supply: 10,
+        marketCap: 100,
+      };
+      jest.spyOn(CitadelService.prototype, 'loadTreasurySummary').mockImplementation(async () => expected);
       const { body } = await request.get('/citadel/v1/treasury').expect(200);
-      expect(body).toMatchObject(citadelTreasuryMock);
+      expect(body).toMatchObject(expected);
       done();
     });
   });
