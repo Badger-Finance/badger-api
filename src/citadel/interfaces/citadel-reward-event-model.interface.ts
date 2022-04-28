@@ -1,3 +1,5 @@
+import { RewardEventType } from '@badger-dao/sdk/lib/citadel/enums/reward-event-type.enum';
+import { RewardFilter } from '@badger-dao/sdk/lib/citadel/enums/reward-filter.enum';
 import { Description, Example, Property, Title } from '@tsed/schema';
 import { CitadelRewardEvent } from './citadel-reward-event.interface';
 
@@ -27,10 +29,17 @@ export class CitadelRewardEventModel implements CitadelRewardEvent {
   @Property()
   amount: number;
 
+  @Title('type')
+  @Description('Value of roken reward')
+  @Example(RewardFilter.ADDED)
+  @Property()
+  type: RewardEventType;
+
   constructor(summary: CitadelRewardEvent) {
     this.block = summary.block;
     this.user = summary.user;
     this.token = summary.token;
     this.amount = summary.amount;
+    this.type = summary.type;
   }
 }

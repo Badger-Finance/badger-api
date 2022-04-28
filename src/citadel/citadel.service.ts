@@ -21,7 +21,17 @@ export class CitadelService {
     ]);
 
     const { price } = await getPrice(TOKENS.WBTC);
-    const { marketCapToTreasuryRatio, valuePaid, fundingBps, lockingBps, stakingBps } = citadelData;
+    const {
+      marketCapToTreasuryRatio,
+      valuePaid,
+      fundingBps,
+      lockingBps,
+      stakingBps,
+      marketCap,
+      supply,
+      staked,
+      stakedPercent,
+    } = citadelData;
 
     const valueBtc = baseTreasurySummary.value / price;
     const valuePaidBtc = valuePaid / price;
@@ -35,6 +45,10 @@ export class CitadelService {
       fundingBps,
       stakingBps,
       lockingBps,
+      marketCap,
+      supply,
+      staked,
+      stakedPercent,
     };
   }
 
@@ -56,6 +70,7 @@ export class CitadelService {
           token: event.token,
           block: event.block,
           amount: 0,
+          type: filter ?? RewardFilter.ADDED,
         };
 
         const tokenContract = Erc20__factory.connect(event.token, sdk.provider);
