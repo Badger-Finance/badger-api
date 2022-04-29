@@ -108,7 +108,7 @@ export async function refreshAccountSettBalances(chain: Chain, batchAccounts: Ac
 export async function refreshUserAccounts(event: AccountIndexEvent) {
   const { mode } = event;
   console.log(`Invoked refreshUserAccounts in ${mode} mode`);
-  const chains = loadChains().filter((c) => c.network === Network.BinanceSmartChain);
+  const chains = loadChains().filter((c) => c.network !== Network.BinanceSmartChain);
   await Promise.all(
     chains.map(async (chain) => {
       if (mode === AccountIndexMode.BalanceData) {
