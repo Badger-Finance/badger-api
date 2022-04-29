@@ -1,4 +1,4 @@
-import { Erc20__factory, formatBalance, Protocol } from '@badger-dao/sdk';
+import { Erc20__factory, formatBalance, Protocol, Vault__factory } from '@badger-dao/sdk';
 import { getCachedAccount } from '../accounts/accounts.utils';
 import { Ethereum } from '../chains/config/eth.config';
 import { getPrice } from '../prices/prices.utils';
@@ -9,6 +9,11 @@ import { TreasuryPosition } from '../treasury/interfaces/treasy-position.interfa
 import { TreasurySummary } from '../treasury/interfaces/treasury-summary.interface';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { TreasurySummarySnapshot } from '../aws/models/treasury-summary-snapshot.model';
+import { TOKENS } from '../config/tokens.config';
+import { queryTreasurySummary } from '../treasury/treasury.utils';
+import { HistoricTreasurySummarySnapshot } from '../aws/models/historic-treasury-summary-snapshot.model';
+import { CitadelData } from './interfaces/citadel-data.interface';
+import { indexTreasuryCachedCharts } from '../treasury/treasury-indexer';
 
 export async function snapshotTreasury() {
   const chain = new Ethereum();
@@ -85,8 +90,61 @@ export async function snapshotTreasury() {
   // capture a current view of the treasury
   try {
     const currentSnapshot = Object.assign(new TreasurySummarySnapshot(), treasurySummary);
-    console.log(currentSnapshot);
     await mapper.put(currentSnapshot);
+  } catch (err) {
+    console.error({ message: 'Unable to save Ctiadel treasury snapshot', err });
+  }
+
+  await indexTreasuryCachedCharts(
+    Object.assign(new HistoricTreasurySummarySnapshot(), {
+      ...treasurySummary,
+      timestamp: Date.now(),
+    }),
+  );
+
+  await snapshotCitadelMetrics();
+}
+
+export async function snapshotCitadelMetrics() {
+  const chain = new Ethereum();
+  const sdk = await chain.getSdk();
+
+  const citadelData = new Map();
+
+  const { price } = await getPrice(TOKENS.CTDL);
+  const citadel = Erc20__factory.connect(TOKENS.CTDL, sdk.provider);
+  const citadelTotalSupply = await citadel.totalSupply();
+  const citadelDecimals = await citadel.decimals();
+
+  const citadelSupply = formatBalance(citadelTotalSupply, citadelDecimals);
+  const treasurySummary = await queryTreasurySummary(CITADEL_TREASURY_ADDRESS);
+  const marketCap = citadelSupply * price;
+  citadelData.set('marketCap', marketCap);
+
+  const marketCapToTreasuryRatio = marketCap / treasurySummary.value;
+  citadelData.set('marketCapToTreasuryRatio', marketCapToTreasuryRatio);
+
+  citadelData.set('valuePaid', 0);
+  citadelData.set('supply', citadelSupply);
+
+  const xCitadel = Vault__factory.connect(TOKENS.XCTDL, sdk.provider);
+  const staked = formatBalance(await xCitadel.balance(), citadelDecimals);
+  citadelData.set('staked', staked);
+
+  const stakedPercent = (staked / citadelSupply) * 100;
+  citadelData.set('stakedPercent', stakedPercent);
+
+  const { fundingBps, stakingBps, lockingBps } = await sdk.citadel.getCitadelMintDistribution();
+  citadelData.set('fundingBps', fundingBps);
+  citadelData.set('stakingBps', stakingBps);
+  citadelData.set('lockingBps', lockingBps);
+
+  const citadelDataBlob = new CitadelData(citadelData);
+
+  const mapper = getDataMapper();
+  // capture a current view of the treasury
+  try {
+    await mapper.put(citadelDataBlob.keyedBlob);
   } catch (err) {
     console.error({ message: 'Unable to save Ctiadel treasury snapshot', err });
   }

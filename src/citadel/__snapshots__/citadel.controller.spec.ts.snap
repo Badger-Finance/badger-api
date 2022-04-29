@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CitadelController GET /citadel/v1/rewards should fail without token addr param 1`] = `
+Object {
+  "message": "Error: processing response error (body=\\"{\\\\\\"jsonrpc\\\\\\":\\\\\\"2.0\\\\\\",\\\\\\"error\\\\\\":{\\\\\\"code\\\\\\":-32600,\\\\\\"message\\\\\\":\\\\\\"Invalid Request. Requested data is older than 128 blocks.\\\\\\"},\\\\\\"id\\\\\\":51}\\", error={\\"code\\":-32600}, requestBody=\\"{\\\\\\"method\\\\\\":\\\\\\"eth_getLogs\\\\\\",\\\\\\"params\\\\\\":[{\\\\\\"fromBlock\\\\\\":\\\\\\"0xdfb49f\\\\\\",\\\\\\"toBlock\\\\\\":\\\\\\"0xdfe837\\\\\\",\\\\\\"address\\\\\\":\\\\\\"0xb1c38253ad6ab3e2a2d53a094692fcf1321b12d4\\\\\\",\\\\\\"topics\\\\\\":[\\\\\\"0xa3e98ad001ab3597c5c4a0afe6de30207ef7d124a67337acefc3d5d5d905242f\\\\\\"]}],\\\\\\"id\\\\\\":51,\\\\\\"jsonrpc\\\\\\":\\\\\\"2.0\\\\\\"}\\", requestMethod=\\"POST\\", url=\\"https://cloudflare-eth.com\\", code=SERVER_ERROR, version=web/5.6.0)",
+}
+`;
+
+exports[`CitadelController GET /citadel/v1/rewards should fail without user addr param for paid filter 1`] = `
+Object {
+  "message": "Error: processing response error (body=\\"{\\\\\\"jsonrpc\\\\\\":\\\\\\"2.0\\\\\\",\\\\\\"error\\\\\\":{\\\\\\"code\\\\\\":-32600,\\\\\\"message\\\\\\":\\\\\\"Invalid Request. Requested data is older than 128 blocks.\\\\\\"},\\\\\\"id\\\\\\":55}\\", error={\\"code\\":-32600}, requestBody=\\"{\\\\\\"method\\\\\\":\\\\\\"eth_getLogs\\\\\\",\\\\\\"params\\\\\\":[{\\\\\\"fromBlock\\\\\\":\\\\\\"0xdfb49f\\\\\\",\\\\\\"toBlock\\\\\\":\\\\\\"0xdfe837\\\\\\",\\\\\\"address\\\\\\":\\\\\\"0xb1c38253ad6ab3e2a2d53a094692fcf1321b12d4\\\\\\",\\\\\\"topics\\\\\\":[\\\\\\"0x540798df468d7b23d11f156fdb954cb19ad414d150722a7b6d55ba369dea792e\\\\\\",null,\\\\\\"0x000000000000000000000000af0b1fdf9c6bfec7b3512f207553c0ba00d7f1a2\\\\\\"]}],\\\\\\"id\\\\\\":55,\\\\\\"jsonrpc\\\\\\":\\\\\\"2.0\\\\\\"}\\", requestMethod=\\"POST\\", url=\\"https://cloudflare-eth.com\\", code=SERVER_ERROR, version=web/5.6.0)",
+}
+`;
+
+exports[`CitadelController GET /citadel/v1/rewards should return rewards for user 1`] = `
+Array [
+  Object {
+    "amount": 10.234,
+    "block": 10,
+    "token": "0xaF0b1FDf9c6BfeC7b3512F207553c0BA00D7f1A2",
+    "type": "added",
+    "user": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28",
+  },
+  Object {
+    "amount": 3,
+    "block": 11,
+    "token": "0xaF0b1FDf9c6BfeC7b3512F207553c0BA00D7f1A2",
+    "type": "added",
+    "user": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28",
+  },
+  Object {
+    "amount": 0,
+    "block": 12,
+    "token": "0xaF0b1FDf9c6BfeC7b3512F207553c0BA00D7f1A2",
+    "type": "added",
+    "user": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28",
+  },
+]
+`;

@@ -1,4 +1,6 @@
 import { getDataMapper } from '../aws/dynamodb.utils';
+import { ChartDataBlob } from '../aws/models/chart-data-blob.model';
+import { HistoricTreasurySummarySnapshot } from '../aws/models/historic-treasury-summary-snapshot.model';
 import { TreasurySummarySnapshot } from '../aws/models/treasury-summary-snapshot.model';
 import { TreasurySummary } from './interfaces/treasury-summary.interface';
 
@@ -26,5 +28,18 @@ export async function queryTreasurySummary(address: string): Promise<TreasurySum
   } catch (err) {
     console.error(err);
     return treasury;
+  }
+}
+
+export async function queryTreasuryCharts(id: string): Promise<HistoricTreasurySummarySnapshot[]> {
+  try {
+    const mapper = getDataMapper();
+    for await (const item of mapper.query(ChartDataBlob, { id }, { limit: 1, scanIndexForward: false })) {
+      return item.data as HistoricTreasurySummarySnapshot[];
+    }
+    return [];
+  } catch (err) {
+    console.error(err);
+    return [];
   }
 }
