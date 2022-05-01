@@ -1,4 +1,3 @@
-import { Erc20__factory, formatBalance } from '@badger-dao/sdk';
 import { CitadelTreasurySummary } from '@badger-dao/sdk/lib/api/interfaces/citadel-treasury-summary.interface';
 import { Service } from '@tsed/di';
 import { TOKENS } from '../config/tokens.config';
@@ -6,11 +5,13 @@ import { getPrice } from '../prices/prices.utils';
 import { queryTreasurySummary } from '../treasury/treasury.utils';
 import { queryCitadelData } from './citadel.utils';
 import { CITADEL_TREASURY_ADDRESS } from './config/citadel-treasury.config';
-import { Chain } from '../chains/config/chain.config';
 import { RewardFilter } from '@badger-dao/sdk/lib/citadel/enums/reward-filter.enum';
-import { BadRequest } from '@tsed/exceptions';
-import { ListRewardsEvent } from '@badger-dao/sdk/lib/citadel/interfaces/list-rewards-event.interface';
 import { CitadelRewardEvent } from './interfaces/citadel-reward-event.interface';
+import { getDataMapper } from '../aws/dynamodb.utils';
+import { CitadelRewardsSnapshot } from '../aws/models/citadel-rewards-snapshot';
+import { CitadelRewardEventData } from './destructors/citadel-reward-event.destructor';
+import { RewardEventType } from '@badger-dao/sdk/lib/citadel/enums/reward-event-type.enum';
+import { ConditionExpression } from '@aws/dynamodb-expressions';
 
 @Service()
 export class CitadelService {
@@ -52,36 +53,48 @@ export class CitadelService {
     };
   }
 
-  async getListRewards(token: string, user?: string, filter?: RewardFilter): Promise<CitadelRewardEvent[]> {
-    const chain = Chain.getChain();
-    const sdk = await chain.getSdk();
+  async getListRewards(
+    token?: string,
+    account?: string,
+    filter: RewardFilter = RewardFilter.PAID,
+  ): Promise<CitadelRewardEvent[]> {
+    const rewards: CitadelRewardEvent[] = [];
 
-    let chainRewards: ListRewardsEvent[] = [];
+    const mapper = getDataMapper();
 
-    try {
-      chainRewards = await sdk.citadel.listRewards({ user, token, filter });
-    } catch (err) {
-      throw new BadRequest(`${err}`);
+    const queryKeys: {
+      payType: RewardEventType;
+      token?: string;
+      account?: string;
+    } = { payType: filter };
+
+    const queryOpts: {
+      indexName: string;
+      filter?: ConditionExpression;
+    } = { indexName: 'IndexCitadelRewardsDataPayType' };
+
+    if (filter === RewardFilter.ADDED) {
+      queryOpts.indexName = 'IndexCitadelRewardsDataPayTypeFinishTime';
+      queryOpts.filter = {
+        type: 'GreaterThanOrEqualTo',
+        object: Date.now(),
+        subject: 'finishTime',
+      };
     }
 
-    return Promise.all(
-      chainRewards.map(async (event) => {
-        const rewardEventResp: CitadelRewardEvent = {
-          token: event.token,
-          block: event.block,
-          amount: 0,
-          type: filter ?? RewardFilter.ADDED,
-        };
+    if (account) queryKeys.account = account;
+    if (token) queryKeys.token = token;
 
-        const tokenContract = Erc20__factory.connect(event.token, sdk.provider);
-        const tokenDecimals = await tokenContract.decimals();
+    const query = mapper.query(CitadelRewardsSnapshot, queryKeys, queryOpts);
 
-        rewardEventResp.amount = formatBalance(event.reward, tokenDecimals);
+    try {
+      for await (const reward of query) {
+        rewards.push(new CitadelRewardEventData(reward));
+      }
+    } catch (e) {
+      console.error(`Failed to get citadel reward from ddb`);
+    }
 
-        if (event.user) rewardEventResp.user = event.user;
-
-        return rewardEventResp;
-      }),
-    );
+    return rewards;
   }
 }

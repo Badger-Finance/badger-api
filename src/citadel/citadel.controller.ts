@@ -37,11 +37,11 @@ export class CitadelController {
   @Returns(400).Description('Token should be specified')
   @Returns(400).Description('User or token param is missing')
   async loadRewardsList(
-    @QueryParams('token') token: string,
-    @QueryParams('user') user?: string,
+    @QueryParams('token') token?: string,
+    @QueryParams('account') account?: string,
     @QueryParams('filter') filter?: RewardFilter,
   ): Promise<CitadelRewardEvent[]> {
-    return this.citadelService.getListRewards(token, user, filter);
+    return this.citadelService.getListRewards(token, account, filter);
   }
 
   @UseCache()

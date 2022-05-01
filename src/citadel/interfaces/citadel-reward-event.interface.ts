@@ -1,5 +1,12 @@
-import { ListRewardsEvent } from '@badger-dao/sdk/lib/citadel/interfaces/list-rewards-event.interface';
+import { RewardEventType } from '@badger-dao/sdk/lib/citadel/enums/reward-event-type.enum';
 
-export interface CitadelRewardEvent extends Omit<ListRewardsEvent, 'reward'> {
+export interface CitadelRewardEvent {
+  account: string;
+  block: number;
+  token: string;
   amount: number;
+  payType: RewardEventType;
+  dataType?: string;
+  startTime?: number;
+  finishTime?: number;
 }

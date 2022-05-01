@@ -9,7 +9,7 @@ import * as treasuryUtils from '../treasury/treasury.utils';
 import * as citadelUtils from './citadel.utils';
 
 import citadelTreasuryMock from '@badger-dao/sdk-mocks/generated/ethereum/api/loadCitadelTreasury.json';
-import { CitadelData } from './interfaces/citadel-data.interface';
+import { CitadelData } from './destructors/citadel-data.destructor';
 
 describe('CitadelService', () => {
   let service: CitadelService;

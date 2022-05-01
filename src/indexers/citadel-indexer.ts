@@ -4,7 +4,7 @@ import { Ethereum } from '../chains/config/eth.config';
 import { getPrice } from '../prices/prices.utils';
 import { VaultsService } from '../vaults/vaults.service';
 import { getVaultDefinition } from '../vaults/vaults.utils';
-import { CITADEL_TREASURY_ADDRESS, TRACKED_TOKENS, TRACKED_VAULTS } from './config/citadel-treasury.config';
+import { CITADEL_TREASURY_ADDRESS, TRACKED_TOKENS, TRACKED_VAULTS } from '../citadel/config/citadel-treasury.config';
 import { TreasuryPosition } from '../treasury/interfaces/treasy-position.interface';
 import { TreasurySummary } from '../treasury/interfaces/treasury-summary.interface';
 import { getDataMapper } from '../aws/dynamodb.utils';
@@ -12,7 +12,7 @@ import { TreasurySummarySnapshot } from '../aws/models/treasury-summary-snapshot
 import { TOKENS } from '../config/tokens.config';
 import { queryTreasurySummary } from '../treasury/treasury.utils';
 import { HistoricTreasurySummarySnapshot } from '../aws/models/historic-treasury-summary-snapshot.model';
-import { CitadelData } from './interfaces/citadel-data.interface';
+import { CitadelData } from '../citadel/destructors/citadel-data.destructor';
 import { indexTreasuryCachedCharts } from '../treasury/treasury-indexer';
 
 export async function snapshotTreasury() {
