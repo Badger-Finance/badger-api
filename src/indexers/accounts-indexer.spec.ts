@@ -22,14 +22,7 @@ import { AccountIndexMode } from './enums/account-index-mode.enum';
 describe('accounts-indexer', () => {
   const rewardsChain = new Ethereum();
   const noRewardsChain = new BinanceSmartChain();
-  const networks = [
-    Network.Ethereum,
-    Network.BinanceSmartChain,
-    Network.Polygon,
-    Network.Arbitrum,
-    Network.Avalanche,
-    Network.Fantom,
-  ];
+  const networks = [Network.Ethereum, Network.Polygon, Network.Arbitrum, Network.Avalanche, Network.Fantom];
   const previousMockedBlockNumber = 90;
   const startMockedBlockNumber = 100;
   const endMockedBlockNumber = 110;
