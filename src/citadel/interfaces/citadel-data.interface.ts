@@ -4,6 +4,7 @@ import { DataBlob } from '../../aws/types/data-blob';
 export const CTIADEL_DATA = 'citadel-protocol-overview';
 
 export class CitadelData extends ConvertableDataBlob<CitadelData> {
+  // treasury or fed related data
   valuePaid: number;
   marketCap: number;
   supply: number;
@@ -13,6 +14,9 @@ export class CitadelData extends ConvertableDataBlob<CitadelData> {
   fundingBps: number;
   stakingBps: number;
   lockingBps: number;
+
+  // apr related data
+  stakingApr: number;
 
   constructor(blob: DataBlob) {
     super(blob);
@@ -25,6 +29,7 @@ export class CitadelData extends ConvertableDataBlob<CitadelData> {
     this.fundingBps = this.keyedBlob.getNumber('fundingBps');
     this.stakingBps = this.keyedBlob.getNumber('stakingBps');
     this.lockingBps = this.keyedBlob.getNumber('lockingBps');
+    this.stakingApr = this.keyedBlob.getNumber('stakingApr');
   }
 
   id(): string {
@@ -42,6 +47,7 @@ export class CitadelData extends ConvertableDataBlob<CitadelData> {
     map.set('fundingBps', this.fundingBps);
     map.set('stakingBps', this.stakingBps);
     map.set('lockingBps', this.lockingBps);
+    map.set('stakingApr', this.stakingApr);
     return map;
   }
 }

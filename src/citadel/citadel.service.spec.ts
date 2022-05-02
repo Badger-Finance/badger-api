@@ -34,6 +34,7 @@ describe('CitadelService', () => {
     citadelData.set('fundingBps', citadelTreasuryMock.fundingBps);
     citadelData.set('stakingBps', citadelTreasuryMock.stakingBps);
     citadelData.set('lockingBps', citadelTreasuryMock.lockingBps);
+    citadelData.set('stakingApr', 0);
     return new CitadelData(citadelData);
   }
 
