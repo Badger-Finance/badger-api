@@ -33,8 +33,6 @@ custom:
             sources: [./seed/vault-snapshots.json]
           - table: ${self:custom.table.TOKEN_INFORMATION_DATA}
             sources: [./seed/token-info.json]
-          - table: ${self:custom.table.CITADEL_REWARDS_DATA}
-            sources: [./seed/citadel-rewards-snapshots.json]
 
   serverless-offline:
     noPrependStageInUrl: true
@@ -462,7 +460,9 @@ resources:
             AttributeType: 'N'
           - AttributeName: 'payType'
             AttributeType: 'S'
-          - AttributeName: 'finishTime'
+          - AttributeName: 'token'
+            AttributeType: 'S'
+          - AttributeName: 'block'
             AttributeType: 'N'
         GlobalSecondaryIndexes:
           - IndexName: IndexCitadelRewardsDataPayType
@@ -471,11 +471,27 @@ resources:
                 KeyType: 'HASH'
             Projection:
               ProjectionType: ALL
-          - IndexName: IndexCitadelRewardsDataPayTypeFinishTime
+          - IndexName: IndexCitadelRewardsDataPayTypeBlock
             KeySchema:
               - AttributeName: 'payType'
                 KeyType: 'HASH'
-              - AttributeName: 'finishTime'
+              - AttributeName: 'block'
+                KeyType: 'RANGE'
+            Projection:
+              ProjectionType: ALL
+          - IndexName: IndexCitadelRewardsDataPayTypeAccount
+            KeySchema:
+              - AttributeName: 'payType'
+                KeyType: 'HASH'
+              - AttributeName: 'account'
+                KeyType: 'RANGE'
+            Projection:
+              ProjectionType: ALL
+          - IndexName: IndexCitadelRewardsDataPayTypeToken
+            KeySchema:
+              - AttributeName: 'payType'
+                KeyType: 'HASH'
+              - AttributeName: 'token'
                 KeyType: 'RANGE'
             Projection:
               ProjectionType: ALL

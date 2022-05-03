@@ -1,5 +1,6 @@
 import { ConvertableDataBlob } from '../../aws/types/convertable-data-blob';
 import { DataBlob } from '../../aws/types/data-blob';
+import { CitadelRewardsAprBlob } from '../interfaces/citadel-rewards-apr-blob.interface';
 
 export const CTIADEL_DATA = 'citadel-protocol-overview';
 
@@ -17,6 +18,10 @@ export class CitadelData extends ConvertableDataBlob<CitadelData> {
 
   // apr related data
   stakingApr: number;
+  lockingApr: CitadelRewardsAprBlob;
+
+  // paid data
+  tokensPaid: Record<string, number>;
 
   constructor(blob: DataBlob) {
     super(blob);
@@ -30,6 +35,8 @@ export class CitadelData extends ConvertableDataBlob<CitadelData> {
     this.stakingBps = this.keyedBlob.getNumber('stakingBps');
     this.lockingBps = this.keyedBlob.getNumber('lockingBps');
     this.stakingApr = this.keyedBlob.getNumber('stakingApr');
+    this.lockingApr = this.keyedBlob.getJSON<CitadelRewardsAprBlob>('lockingApr');
+    this.tokensPaid = this.keyedBlob.getJSON<Record<string, number>>('tokensPaid');
   }
 
   id(): string {
@@ -48,6 +55,8 @@ export class CitadelData extends ConvertableDataBlob<CitadelData> {
     map.set('stakingBps', this.stakingBps);
     map.set('lockingBps', this.lockingBps);
     map.set('stakingApr', this.stakingApr);
+    map.set('lockingApr', JSON.stringify(this.lockingApr));
+    map.set('tokensPaid', JSON.stringify(this.tokensPaid));
     return map;
   }
 }

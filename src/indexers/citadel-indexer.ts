@@ -15,6 +15,7 @@ import { HistoricTreasurySummarySnapshot } from '../aws/models/historic-treasury
 import { CitadelData } from '../citadel/destructors/citadel-data.destructor';
 import { indexTreasuryCachedCharts } from '../treasury/treasury-indexer';
 import { ONE_YEAR_SECONDS } from '../config/constants';
+import { getRewardsAprForDataBlob } from '../citadel/citadel.utils';
 
 export async function snapshotTreasury() {
   const chain = new Ethereum();
@@ -148,6 +149,9 @@ export async function snapshotCitadelMetrics() {
   const duration = await supplySchedule.epochLength();
   const stakingApr = ((citadelMintedToStaking * ONE_YEAR_SECONDS) / duration.toNumber() / staked) * 100;
   citadelData.set('stakingApr', stakingApr);
+
+  const lockingAprs = await getRewardsAprForDataBlob();
+  citadelData.set('lockingApr', JSON.stringify(lockingAprs));
 
   const citadelDataBlob = new CitadelData(citadelData);
 

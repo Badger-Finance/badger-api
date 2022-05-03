@@ -1,4 +1,3 @@
-import { Chain } from '../chains/config/chain.config';
 import BadgerSDK, { Erc20__factory, formatBalance, Vault__factory } from '@badger-dao/sdk';
 import { getRewardsOnchain } from '../citadel/citadel.utils';
 import { getDataMapper } from '../aws/dynamodb.utils';
@@ -7,13 +6,10 @@ import { RewardEventType, RewardEventTypeEnum } from '@badger-dao/sdk/lib/citade
 import { getPrice } from '../prices/prices.utils';
 import { ONE_YEAR_SECONDS } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
-
-// improvment: clean up tasks for outdated added rewards
-// meaning if finishTime < Date.now() = its outdated
-// and probably bacame 'paid' already
+import { Ethereum } from '../chains/config/eth.config';
 
 export async function indexAllRewards() {
-  const chain = Chain.getChain();
+  const chain = new Ethereum();
   const sdk = await chain.getSdk();
 
   try {
@@ -79,8 +75,6 @@ async function saveCitadelRewards(sdk: BadgerSDK, type: RewardEventType) {
       continue;
     }
 
-    // Prob we should do ethers.utils.formatBytes32String(event.dataTypeHash)
-    // but now throws parse Err coz of null bytes, figure out with dapp
     rewardToSave.dataType = event.dataTypeHash;
     rewardToSave.startTime = event.timestamp;
 
@@ -101,6 +95,7 @@ async function saveCitadelRewards(sdk: BadgerSDK, type: RewardEventType) {
     let tokenPrice = tokenPriceMap[event.token];
 
     if (!tokenPrice) {
+      // can be 0, then apr will be 0 to
       tokenPrice = (await getPrice(event.token)).price;
       tokenPriceMap[event.token] = tokenPrice;
     }

@@ -12,6 +12,7 @@ import { CitadelRewardEventModel } from './interfaces/citadel-reward-event-model
 import { CitadelRewardEvent } from './interfaces/citadel-reward-event.interface';
 import { CitadelSummary } from '@badger-dao/sdk/lib/api/interfaces/citadel-summary.interface';
 import { CitadelSummaryModel } from './interfaces/citadel-summary-model.interface';
+import { NotFound } from '@tsed/exceptions';
 
 @Controller('/')
 export class CitadelController {
@@ -53,6 +54,10 @@ export class CitadelController {
     @QueryParams('account') account?: string,
     @QueryParams('filter') filter?: RewardFilter,
   ): Promise<CitadelRewardEvent[]> {
+    if (filter && !Object.values(RewardFilter).includes(filter)) {
+      throw new NotFound(`Unknown filter ${filter}`);
+    }
+
     return this.citadelService.getListRewards(token, account, filter);
   }
 

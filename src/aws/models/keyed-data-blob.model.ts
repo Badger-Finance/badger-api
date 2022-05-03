@@ -24,4 +24,14 @@ export class KeyedDataBlob {
   getNumber(property: string): number {
     return this.getProperty<number>(property);
   }
+
+  getJSON<T>(propery: string): T {
+    let resp: T;
+    try {
+      resp = JSON.parse(this.getProperty<string>(propery));
+    } catch (e) {
+      resp = <T>{};
+    }
+    return resp;
+  }
 }

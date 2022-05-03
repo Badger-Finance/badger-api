@@ -1,5 +1,4 @@
-import { CitadelRewardType, Erc20__factory, formatBalance } from '@badger-dao/sdk';
-// ugh, reee every time...
+import { CitadelRewardType } from '@badger-dao/sdk';
 import { CitadelTreasurySummary } from '@badger-dao/sdk/lib/api/interfaces/citadel-treasury-summary.interface';
 import { Service } from '@tsed/di';
 import { TOKENS } from '../config/tokens.config';
@@ -57,15 +56,15 @@ export class CitadelService {
   }
 
   async loadRewardSummary(): Promise<CitadelSummary> {
-    const { stakingApr, valuePaid } = await queryCitadelData();
+    const { stakingApr, lockingApr, valuePaid } = await queryCitadelData();
     return {
       stakingApr,
-      lockingApr: 69420.888,
+      lockingApr: lockingApr.overall,
       lockingAprSources: {
-        [CitadelRewardType.Citadel]: 68900,
-        [CitadelRewardType.Funding]: 420.888,
-        [CitadelRewardType.Tokens]: 60,
-        [CitadelRewardType.Yield]: 40,
+        [CitadelRewardType.Citadel]: lockingApr[CitadelRewardType.Citadel],
+        [CitadelRewardType.Funding]: lockingApr[CitadelRewardType.Funding],
+        [CitadelRewardType.Yield]: lockingApr[CitadelRewardType.Yield],
+        [CitadelRewardType.Tokens]: lockingApr[CitadelRewardType.Tokens],
       },
       // TODO: this data can be pulled curently from the subgraph or rewards db aggregation
       tokensPaid: {},
@@ -89,12 +88,11 @@ export class CitadelService {
     } = { payType: filter };
 
     const queryOpts: {
-      indexName: string;
+      indexName?: string;
       filter?: ConditionExpression;
     } = { indexName: 'IndexCitadelRewardsDataPayType' };
 
     if (filter === RewardFilter.ADDED) {
-      queryOpts.indexName = 'IndexCitadelRewardsDataPayTypeFinishTime';
       queryOpts.filter = {
         type: 'GreaterThanOrEqualTo',
         object: Date.now(),
@@ -102,8 +100,14 @@ export class CitadelService {
       };
     }
 
-    if (account) queryKeys.account = account;
-    if (token) queryKeys.token = token;
+    if (account) {
+      queryKeys.account = account;
+      queryOpts.indexName = 'IndexCitadelRewardsDataPayTypeAccount';
+    }
+    if (token) {
+      queryKeys.token = token;
+      queryOpts.indexName = 'IndexCitadelRewardsDataPayTypeToken';
+    }
 
     const query = mapper.query(CitadelRewardsSnapshot, queryKeys, queryOpts);
 
