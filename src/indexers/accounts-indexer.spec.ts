@@ -36,7 +36,7 @@ describe('accounts-indexer', () => {
       .spyOn(accountsUtils, 'getAccounts')
       .mockImplementation((chain) => Promise.resolve([chain.network]));
     getTreeDistribution = jest.spyOn(rewardsUtils, 'getTreeDistribution').mockImplementation(async (chain: Chain) => {
-      if (!chain.badgerTree) {
+      if (chain.network !== Network.Ethereum) {
         return null;
       }
       return MOCK_DISTRIBUTION_FILE;

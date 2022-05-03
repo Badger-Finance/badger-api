@@ -12,13 +12,15 @@ import { batchRefreshAccounts, chunkArray } from './indexer.utils';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 import { AccountIndexMode } from './enums/account-index-mode.enum';
 import { AccountIndexEvent } from './interfaces/account-index-event.interface';
-import { Network } from '@badger-dao/sdk';
+import { Network, RegistryKey } from '@badger-dao/sdk';
 
 export async function refreshClaimableBalances(chain: Chain) {
   const mapper = getDataMapper();
   const distribution = await getTreeDistribution(chain);
+  const sdk = await chain.getSdk();
 
-  if (!distribution || !chain.badgerTree) {
+  const badgerTree = await sdk.registry.get(RegistryKey.BadgerTree);
+  if (!distribution || !badgerTree) {
     return;
   }
 

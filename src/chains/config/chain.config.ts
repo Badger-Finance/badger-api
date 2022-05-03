@@ -7,7 +7,6 @@ import { TokenConfig } from '../../tokens/interfaces/token-config.interface';
 import { ChainStrategy } from '../strategies/chain.strategy';
 import BadgerSDK, { Network } from '@badger-dao/sdk';
 import { TOKENS } from '../../config/tokens.config';
-import { providers } from '@0xsequence/multicall';
 
 type Chains = Record<string, Chain>;
 type Sdks = Record<string, BadgerSDK>;
@@ -16,50 +15,41 @@ export abstract class Chain {
   private static chains: Chains = {};
   private static chainsByNetworkId: Record<string, Chain> = {};
   private static sdks: Sdks = {};
-  readonly name: string;
-  readonly symbol: string;
-  readonly chainId: string;
-  readonly network: Network;
-  readonly tokens: TokenConfig;
+
+  private sdk: BadgerSDK;
+
   readonly vaults: VaultDefinition[];
-  readonly provider: ethers.providers.JsonRpcProvider;
-  readonly batchProvider: providers.MulticallProvider;
   readonly strategy: ChainStrategy;
-  readonly badgerTree?: string;
-  readonly rewardsLogger?: string;
+  // TODO: add emission control support to sdk
   readonly emissionControl?: string;
 
   constructor(
-    name: string,
-    symbol: string,
-    chainId: string,
-    network: Network,
-    tokens: TokenConfig,
+    readonly name: string,
+    readonly symbol: string,
+    readonly chainId: string,
+    readonly network: Network,
+    readonly tokens: TokenConfig,
+    readonly rpcUrl: string,
     vaults: VaultDefinition[],
-    rpcUrl: string,
     strategy: ChainStrategy,
-    badgerTree?: string,
-    rewardsLogger?: string,
     emissionControl?: string,
   ) {
-    this.name = name;
-    this.symbol = symbol;
-    this.chainId = chainId;
-    this.network = network;
-    this.tokens = tokens;
     this.vaults = vaults.filter((vault) => !vault.stage || vault.stage === STAGE);
-    this.provider = new ethers.providers.JsonRpcProvider(rpcUrl);
-    this.batchProvider = new providers.MulticallProvider(this.provider);
+    this.sdk = new BadgerSDK({ network: parseInt(chainId, 16), provider: rpcUrl });
     this.strategy = strategy;
-    this.badgerTree = badgerTree;
-    this.rewardsLogger = rewardsLogger;
     this.emissionControl = emissionControl;
+  }
+
+  get provider() {
+    return this.sdk.provider;
   }
 
   static register(network: Network, chain: Chain): void {
     if (Chain.chains[network]) {
       return;
     }
+
+    // Register chain objects
     Chain.chains[network] = chain;
     Chain.chains[chain.symbol] = chain;
     Chain.chainsByNetworkId[parseInt(chain.chainId, 16)] = chain;
@@ -68,6 +58,17 @@ export abstract class Chain {
     }
     if (network === Network.BinanceSmartChain) {
       Chain.chains['binancesmartchain'] = chain;
+    }
+
+    // Register sdk objects
+    const { sdk, symbol } = chain;
+    Chain.sdks[network] = sdk;
+    Chain.sdks[symbol] = sdk;
+    if (network === Network.Polygon) {
+      Chain.sdks['matic'] = sdk;
+    }
+    if (network === Network.BinanceSmartChain) {
+      Chain.sdks['binancesmartchain'] = sdk;
     }
   }
 
@@ -94,18 +95,7 @@ export abstract class Chain {
   }
 
   async getSdk(): Promise<BadgerSDK> {
-    let sdk = Chain.sdks[this.network];
-    if (!sdk) {
-      sdk = new BadgerSDK({ network: parseInt(this.chainId, 16), provider: this.provider });
-      Chain.sdks[this.network] = sdk;
-      Chain.sdks[this.symbol] = sdk;
-      if (this.network === Network.Polygon) {
-        Chain.sdks['matic'] = sdk;
-      }
-      if (this.network === Network.BinanceSmartChain) {
-        Chain.sdks['binancesmartchain'] = sdk;
-      }
-    }
+    const sdk = Chain.sdks[this.network];
     await sdk.ready();
     return sdk;
   }
