@@ -1,3 +1,5 @@
+import { CitadelRewardType, Erc20__factory, formatBalance } from '@badger-dao/sdk';
+// ugh, reee every time...
 import { CitadelTreasurySummary } from '@badger-dao/sdk/lib/api/interfaces/citadel-treasury-summary.interface';
 import { Service } from '@tsed/di';
 import { TOKENS } from '../config/tokens.config';
@@ -12,6 +14,7 @@ import { CitadelRewardsSnapshot } from '../aws/models/citadel-rewards-snapshot';
 import { CitadelRewardEventData } from './destructors/citadel-reward-event.destructor';
 import { RewardEventType } from '@badger-dao/sdk/lib/citadel/enums/reward-event-type.enum';
 import { ConditionExpression } from '@aws/dynamodb-expressions';
+import { CitadelSummary } from '@badger-dao/sdk/lib/api/interfaces/citadel-summary.interface';
 
 @Service()
 export class CitadelService {
@@ -50,6 +53,23 @@ export class CitadelService {
       supply,
       staked,
       stakedPercent,
+    };
+  }
+
+  async loadRewardSummary(): Promise<CitadelSummary> {
+    const { stakingApr, valuePaid } = await queryCitadelData();
+    return {
+      stakingApr,
+      lockingApr: 69420.888,
+      lockingAprSources: {
+        [CitadelRewardType.Citadel]: 68900,
+        [CitadelRewardType.Funding]: 420.888,
+        [CitadelRewardType.Tokens]: 60,
+        [CitadelRewardType.Yield]: 40,
+      },
+      // TODO: this data can be pulled curently from the subgraph or rewards db aggregation
+      tokensPaid: {},
+      valuePaid,
     };
   }
 

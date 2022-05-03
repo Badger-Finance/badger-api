@@ -10,6 +10,8 @@ import { CitadelTreasurySummaryModel } from './interfaces/citadel-treasury-summa
 import { RewardFilter } from '@badger-dao/sdk/lib/citadel/enums/reward-filter.enum';
 import { CitadelRewardEventModel } from './interfaces/citadel-reward-event-model.interface';
 import { CitadelRewardEvent } from './interfaces/citadel-reward-event.interface';
+import { CitadelSummary } from '@badger-dao/sdk/lib/api/interfaces/citadel-summary.interface';
+import { CitadelSummaryModel } from './interfaces/citadel-summary-model.interface';
 
 @Controller('/')
 export class CitadelController {
@@ -27,6 +29,16 @@ export class CitadelController {
   @Returns(200, CitadelTreasurySummaryModel)
   async loadCitadelTreasury(): Promise<CitadelTreasurySummary> {
     return this.citadelService.loadTreasurySummary();
+  }
+
+  @UseCache()
+  @Get('/summary')
+  @ContentType('json')
+  @Summary('Protocol aggregate rewards information')
+  @Description('Returns aggregate paid tokens and yield for staking or locking')
+  @Returns(200, CitadelSummaryModel)
+  async loadRewardsSummary(): Promise<CitadelSummary> {
+    return this.citadelService.loadRewardSummary();
   }
 
   @Get('/rewards')
