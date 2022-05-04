@@ -5,9 +5,10 @@ import { BouncerType } from '../../rewards/enums/bouncer-type.enum';
 import { VaultTokenBalance } from '../../aws/models/vault-token-balance.model';
 
 export interface VaultDefinition {
-  balanceDecimals?: number;
   behavior?: VaultBehavior;
   bouncer?: BouncerType;
+  // this may be temporary, as a way to include citadel vaults without exposing to badger ui
+  client?: string;
   depositToken: string;
   deprecated?: boolean;
   experimental?: boolean;
@@ -18,7 +19,6 @@ export interface VaultDefinition {
   stage?: Stage;
   state?: VaultState;
   strategy?: string;
-  supplyDecimals?: number;
   vaultToken: string;
   version?: VaultVersion;
 }

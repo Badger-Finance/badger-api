@@ -16,8 +16,8 @@ export class Fantom extends Chain {
       '0xFA',
       Network.Fantom,
       fantomTokensConfig,
-      fantomSetts,
       rpc[Network.Fantom],
+      fantomSetts,
       new BaseStrategy(Network.Fantom, Object.keys(fantomTokensConfig)),
       '0x89122c767A5F543e663DB536b603123225bc3823',
     );

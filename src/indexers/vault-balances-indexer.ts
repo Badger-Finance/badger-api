@@ -1,17 +1,16 @@
 import { DataMapper } from '@aws/dynamodb-data-mapper';
 import { UnprocessableEntity } from '@tsed/exceptions';
 import { getDataMapper } from '../aws/dynamodb.utils';
-import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { getFullToken } from '../tokens/tokens.utils';
 import { getLpTokenBalances } from './indexer.utils';
 import { PricingType } from '../prices/enums/pricing-type.enum';
 import { VaultTokenBalance } from '../aws/models/vault-token-balance.model';
+import { SUPPORTED_CHAINS } from '../chains/chain';
 
 export async function refreshVaultBalances() {
-  const chains = loadChains();
-  await Promise.all(chains.flatMap((c) => c.vaults.flatMap(async (v) => updateVaultTokenBalances(c, v))));
+  await Promise.all(SUPPORTED_CHAINS.flatMap((c) => c.vaults.flatMap(async (v) => updateVaultTokenBalances(c, v))));
 }
 
 export async function updateVaultTokenBalances(chain: Chain, vaultDefinition: VaultDefinition): Promise<void> {
