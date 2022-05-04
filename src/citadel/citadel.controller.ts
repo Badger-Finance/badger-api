@@ -13,6 +13,7 @@ import { CitadelRewardEvent } from './interfaces/citadel-reward-event.interface'
 import { CitadelSummary } from '@badger-dao/sdk/lib/api/interfaces/citadel-summary.interface';
 import { CitadelSummaryModel } from './interfaces/citadel-summary-model.interface';
 import { NotFound } from '@tsed/exceptions';
+import { CitadelAccount } from './interfaces/citadel-account.interface';
 
 @Controller('/')
 export class CitadelController {
@@ -68,5 +69,12 @@ export class CitadelController {
     @QueryParams('timeframe') timeframe = ChartTimeFrame.Day,
   ): Promise<HistoricTreasurySummarySnapshot[]> {
     return this.treasuryService.loadTreasuryChartData(CITADEL_TREASURY_ADDRESS, timeframe);
+  }
+
+  @UseCache()
+  @Get('/accounts')
+  @ContentType('json')
+  async loadCitadelAccount(@QueryParams('address') address: string): Promise<CitadelAccount> {
+    return this.citadelService.loadAccount(address);
   }
 }
