@@ -25,4 +25,6 @@ export async function indexProtocolVaults() {
       );
     }),
   );
+
+  return 'done';
 }

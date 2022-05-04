@@ -56,7 +56,7 @@ export class CitadelService {
   }
 
   async loadRewardSummary(): Promise<CitadelSummary> {
-    const { stakingApr, lockingApr, valuePaid } = await queryCitadelData();
+    const { stakingApr, lockingApr, tokensPaid, valuePaid } = await queryCitadelData();
     return {
       stakingApr,
       lockingApr: lockingApr.overall,
@@ -66,8 +66,7 @@ export class CitadelService {
         [CitadelRewardType.Yield]: lockingApr[CitadelRewardType.Yield],
         [CitadelRewardType.Tokens]: lockingApr[CitadelRewardType.Tokens],
       },
-      // TODO: this data can be pulled curently from the subgraph or rewards db aggregation
-      tokensPaid: {},
+      tokensPaid,
       valuePaid,
     };
   }
@@ -78,8 +77,6 @@ export class CitadelService {
     filter: RewardFilter = RewardFilter.PAID,
   ): Promise<CitadelRewardEvent[]> {
     const rewards: CitadelRewardEvent[] = [];
-
-    const mapper = getDataMapper();
 
     const queryKeys: {
       payType: RewardEventType;
@@ -109,6 +106,8 @@ export class CitadelService {
       queryOpts.indexName = 'IndexCitadelRewardsDataPayTypeToken';
     }
 
+    const mapper = getDataMapper();
+
     const query = mapper.query(CitadelRewardsSnapshot, queryKeys, queryOpts);
 
     try {
@@ -116,7 +115,7 @@ export class CitadelService {
         rewards.push(new CitadelRewardEventData(reward));
       }
     } catch (e) {
-      console.error(`Failed to get citadel reward from ddb`);
+      console.error(`Failed to get citadel reward from ddb ${e}`);
     }
 
     return rewards;

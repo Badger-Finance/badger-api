@@ -127,4 +127,6 @@ export async function refreshUserAccounts(event: AccountIndexEvent) {
       }
     }),
   );
+
+  return 'done';
 }

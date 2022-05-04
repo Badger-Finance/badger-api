@@ -5,22 +5,41 @@ import { RewardEventType } from '@badger-dao/sdk/lib/citadel/enums/reward-event-
 @table(CITADEL_REWARDS_DATA)
 export class CitadelRewardsSnapshot {
   // user or account, depends on payType
-  @hashKey()
+  @hashKey({
+    indexKeyConfigurations: {
+      IndexCitadelRewardsDataPayTypeAccount: 'RANGE',
+    },
+  })
   account!: string;
 
-  @rangeKey({ defaultProvider: () => Date.now() })
+  @rangeKey()
   createdAt!: number;
 
-  @attribute()
+  @attribute({
+    indexKeyConfigurations: {
+      IndexCitadelRewardsDataPayTypeBlock: 'RANGE',
+    },
+  })
   block!: number;
 
-  @attribute()
+  @attribute({
+    indexKeyConfigurations: {
+      IndexCitadelRewardsDataPayTypeToken: 'RANGE',
+    },
+  })
   token!: string;
 
   @attribute()
   amount!: number;
 
-  @attribute()
+  @attribute({
+    indexKeyConfigurations: {
+      IndexCitadelRewardsDataPayType: 'HASH',
+      IndexCitadelRewardsDataPayTypeBlock: 'HASH',
+      IndexCitadelRewardsDataPayTypeAccount: 'HASH',
+      IndexCitadelRewardsDataPayTypeToken: 'HASH',
+    },
+  })
   payType!: RewardEventType;
 
   @attribute()

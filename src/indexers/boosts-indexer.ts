@@ -13,9 +13,12 @@ import { CachedBoostMultiplier } from '../rewards/interfaces/cached-boost-multip
  * Each chain is independently updated in its own promise
  * such that a single chain failure will not cause others to fail.
  */
-export async function refreshUserBoosts(): Promise<void[]> {
+export async function refreshUserBoosts() {
   const chains = loadChains();
-  return Promise.all(chains.map((c) => exports.updateChainBoosts(c)));
+
+  await Promise.all(chains.map((c) => exports.updateChainBoosts(c)));
+
+  return 'done';
 }
 
 /**

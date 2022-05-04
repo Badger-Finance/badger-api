@@ -23,6 +23,8 @@ export async function indexAllRewards() {
   } catch (e) {
     console.warn(`Failed to save citadel added rewards. ${e}`);
   }
+
+  return 'done';
 }
 
 async function saveCitadelRewards(sdk: BadgerSDK, type: RewardEventType) {

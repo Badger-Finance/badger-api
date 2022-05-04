@@ -81,4 +81,6 @@ export async function refreshVaultHarvests() {
       }
     }),
   );
+
+  return 'done';
 }

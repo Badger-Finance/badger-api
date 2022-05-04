@@ -15,7 +15,7 @@ import { HistoricTreasurySummarySnapshot } from '../aws/models/historic-treasury
 import { CitadelData } from '../citadel/destructors/citadel-data.destructor';
 import { indexTreasuryCachedCharts } from '../treasury/treasury-indexer';
 import { ONE_YEAR_SECONDS } from '../config/constants';
-import { getRewardsAprForDataBlob } from '../citadel/citadel.utils';
+import { getRewardsAprForDataBlob, getTokensPaidSummary } from '../citadel/citadel.utils';
 
 export async function snapshotTreasury() {
   const chain = new Ethereum();
@@ -105,6 +105,8 @@ export async function snapshotTreasury() {
   );
 
   await snapshotCitadelMetrics();
+
+  return 'done';
 }
 
 export async function snapshotCitadelMetrics() {
@@ -150,8 +152,9 @@ export async function snapshotCitadelMetrics() {
   const stakingApr = ((citadelMintedToStaking * ONE_YEAR_SECONDS) / duration.toNumber() / staked) * 100;
   citadelData.set('stakingApr', stakingApr);
 
-  const lockingAprs = await getRewardsAprForDataBlob();
-  citadelData.set('lockingApr', JSON.stringify(lockingAprs));
+  citadelData.set('lockingApr', await getRewardsAprForDataBlob());
+
+  citadelData.set('tokensPaid', await getTokensPaidSummary());
 
   const citadelDataBlob = new CitadelData(citadelData);
 
@@ -162,4 +165,6 @@ export async function snapshotCitadelMetrics() {
   } catch (err) {
     console.error({ message: 'Unable to save Ctiadel treasury snapshot', err });
   }
+
+  return 'done';
 }

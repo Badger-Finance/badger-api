@@ -633,6 +633,6 @@ functions:
     timeout: 480
     events:
       - schedule:
-          name: ${self:service}-${self:custom.stage}-index-citadel-treasury
-          description: 'index citadel treasury holdings'
+          name: ${self:service}-${self:custom.stage}-index-citadel-rewards
+          description: 'index citadel rewards'
           rate: rate(2 hours)
