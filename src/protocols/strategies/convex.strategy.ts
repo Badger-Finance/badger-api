@@ -1,4 +1,14 @@
-import { Erc20__factory, formatBalance, Network, Token } from '@badger-dao/sdk';
+import {
+  BribesProcessor,
+  BribesProcessor__factory,
+  chunkQueryFilter,
+  Erc20__factory,
+  evaluateEvents,
+  formatBalance,
+  Network,
+  parseHarvestEvents,
+  Token,
+} from '@badger-dao/sdk';
 import { UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { Chain } from '../../chains/config/chain.config';
@@ -12,7 +22,12 @@ import {
 } from '../../contracts';
 import { SourceType } from '../../rewards/enums/source-type.enum';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
-import { getCachedVault, getVaultCachedValueSources, getVaultDefinition } from '../../vaults/vaults.utils';
+import {
+  estimateVaultPerformance,
+  getCachedVault,
+  getVaultCachedValueSources,
+  getVaultDefinition,
+} from '../../vaults/vaults.utils';
 import { VaultTokenBalance } from '../../aws/models/vault-token-balance.model';
 import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
 import { getFullToken, getVaultTokens, toBalance } from '../../tokens/tokens.utils';
@@ -22,6 +37,8 @@ import { request } from '../../common/request';
 import { CurveAPIResponse } from '../interfaces/curve-api-response.interrface';
 import { valueSourceToCachedValueSource } from '../../rewards/rewards.utils';
 import { TokenPrice } from '../../prices/interface/token-price.interface';
+import { ONE_DAY_SECONDS } from '../../config/constants';
+import { TreeDistributionEvent, TreeDistributionEventFilter } from '@badger-dao/sdk/lib/contracts/BribesProcessor';
 
 /* Protocol Constants */
 export const CURVE_API_URL = 'https://stats.curve.fi/raw-stats/apys.json';
@@ -67,6 +84,8 @@ interface FactoryAPYResonse {
 export class ConvexStrategy {
   static async getValueSources(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
     switch (vaultDefinition.vaultToken) {
+      case TOKENS.BVECVX:
+        return retrieveBribesProcessorData(chain, vaultDefinition);
       case TOKENS.BCRV_CVXBVECVX:
         return getLiquiditySources(chain, vaultDefinition);
       default:
@@ -247,4 +266,26 @@ export async function resolveCurvePoolTokenPrice(chain: Chain, token: Token): Pr
     address: token.address,
     price: requestTokenPrice,
   };
+}
+
+async function retrieveBribesProcessorData(chain: Chain, vault: VaultDefinition): Promise<CachedValueSource[]> {
+  const sdk = await chain.getSdk();
+  const bribeProcessor = BribesProcessor__factory.connect('0xbed8f323456578981952e33bbfbe80d23289246b', sdk.provider);
+
+  const treeDistributionFilter = bribeProcessor.filters.TreeDistribution();
+
+  const endBlock = await sdk.provider.getBlockNumber();
+  const startBlock = endBlock - (21 * ONE_DAY_SECONDS) / 13;
+  const allTreeDistributions = await chunkQueryFilter<
+    BribesProcessor,
+    TreeDistributionEventFilter,
+    TreeDistributionEvent
+  >(bribeProcessor, treeDistributionFilter, startBlock, endBlock);
+
+  const { harvests, distributions } = await parseHarvestEvents([], allTreeDistributions);
+
+  const timestampCutoff = Date.now() / 1000 - 21 * ONE_DAY_SECONDS;
+  const { data } = await evaluateEvents(harvests, distributions, { timestamp_gte: timestampCutoff });
+
+  return estimateVaultPerformance(chain, vault, data);
 }
