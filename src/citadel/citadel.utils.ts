@@ -4,12 +4,18 @@ import { KeyedDataBlob } from '../aws/models/keyed-data-blob.model';
 import { CitadelData, CTIADEL_DATA } from './destructors/citadel-data.destructor';
 import { Nullable } from '../utils/types.utils';
 import { CitadelRewardsSnapshot } from '../aws/models/citadel-rewards-snapshot';
-import BadgerSDK from '@badger-dao/sdk';
+import BadgerSDK, { Token } from '@badger-dao/sdk';
 import { RewardEventType, RewardEventTypeEnum } from '@badger-dao/sdk/lib/citadel/enums/reward-event-type.enum';
 import { ListRewardsEvent } from '@badger-dao/sdk/lib/citadel/interfaces/list-rewards-event.interface';
 import { CitadelRewardType } from '@badger-dao/sdk/lib/api/enums/citadel-reward-type.enum';
 import { CitadelRewardsAprBlob } from './interfaces/citadel-rewards-apr-blob.interface';
 import { CitadelRewardsTokenPaidMap } from './interfaces/citadel-rewards-token-paid-map.interface';
+import { Chain } from '../chains/config/chain.config';
+import { TokenPrice } from '../prices/interface/token-price.interface';
+import { getPrice } from '../prices/prices.utils';
+import { TOKENS } from '../config/tokens.config';
+import { VaultState } from '@badger-dao/sdk';
+import { VaultVersion } from '@badger-dao/sdk';
 
 export async function queryCitadelData(): Promise<CitadelData> {
   const mapper = getDataMapper();
@@ -170,4 +176,21 @@ export function getRewardsEventTypeMapped(hashKey: string): CitadelRewardType {
       [dataTypeRawKeyToKeccak('Tokens')]: CitadelRewardType.Tokens,
     }[hashKey] || CitadelRewardType.Tokens
   );
+}
+
+export async function getStakedCitadelPrice(chain: Chain, { address }: Token): Promise<TokenPrice> {
+  const sdk = await chain.getSdk();
+  // xCitadel is not a vault, but has the interface - let's use it!
+  const { pricePerFullShare } = await sdk.vaults.loadVault({
+    address,
+    requireRegistry: false,
+    state: VaultState.Open,
+    version: VaultVersion.v1_5,
+    update: true,
+  });
+  const { price } = await getPrice(TOKENS.CTDL);
+  return {
+    address,
+    price: price * pricePerFullShare,
+  };
 }
