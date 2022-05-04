@@ -84,17 +84,20 @@ export class CitadelService {
 
     const balances = await sdk.tokens.loadBalances([TOKENS.CTDL, TOKENS.XCTDL], address);
 
+    // Aggregate balances
     const citadelBalance = formatBalance(balances[TOKENS.CTDL]);
+    const stakedCitadelBalance = formatBalance(balances[TOKENS.XCTDL]);
+    const lockedCitadelBalance = formatBalance(await sdk.citadel.lockedBalanceOf(address));
 
     const citadelHoldings = citadelBalance * citadelPrice;
-    const stakedCitadelHoldings = formatBalance(balances[TOKENS.XCTDL]) * stakedCitadelPrice;
-    const lockedCitadelHoldings = formatBalance(await sdk.citadel.lockedBalanceOf(address)) * stakedCitadelPrice;
+    const stakedCitadelHoldings = stakedCitadelBalance * stakedCitadelPrice;
+    const lockedCitadelHoldings = lockedCitadelBalance * stakedCitadelPrice;
     const value = citadelHoldings + stakedCitadelHoldings + lockedCitadelHoldings;
 
     const stakingEarned = (await getStakedCitadelEarnings(address)) * citadelPrice;
     // really we probably need to calculate some twap balance here or something or freeze it somehow
     // if we remove ourselves completely our roi becomes infinity
-    const stakingRoi = stakingEarned / citadelBalance;
+    const stakingRoi = stakingEarned / stakedCitadelBalance;
 
     const lockingEarned = 0;
     // we fukt. prob need usd denominated data or idk
