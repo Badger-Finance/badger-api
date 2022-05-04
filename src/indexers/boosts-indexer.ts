@@ -3,10 +3,10 @@ import { ethers } from 'ethers';
 import { getBoostFile } from '../accounts/accounts.utils';
 import { CachedAccount } from '../aws/models/cached-account.model';
 import { getDataMapper } from '../aws/dynamodb.utils';
-import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { BoostData } from '../rewards/interfaces/boost-data.interface';
 import { CachedBoostMultiplier } from '../rewards/interfaces/cached-boost-multiplier.interface';
+import { SUPPORTED_CHAINS } from '../chains/chain';
 
 /**
  * Top level indexer call to separate chain updates.
@@ -14,9 +14,7 @@ import { CachedBoostMultiplier } from '../rewards/interfaces/cached-boost-multip
  * such that a single chain failure will not cause others to fail.
  */
 export async function refreshUserBoosts() {
-  const chains = loadChains();
-
-  await Promise.all(chains.map((c) => exports.updateChainBoosts(c)));
+  await Promise.all(SUPPORTED_CHAINS.map((c) => exports.updateChainBoosts(c)));
 
   return 'done';
 }
