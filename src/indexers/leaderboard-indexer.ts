@@ -8,12 +8,14 @@ import { CachedBoost } from '../aws/models/cached-boost.model';
 import { CachedLeaderboardSummary } from '../aws/models/cached-leaderboard-summary.model';
 import { getBadgerType } from '../leaderboards/leaderboards.config';
 
-export const indexBoostLeaderBoard = async (): Promise<void> => {
+export const indexBoostLeaderBoard = async () => {
   const chains = loadChains();
   const boosts: CachedBoost[] = await generateBoostsLeaderBoard(chains);
   const mapper = getDataMapper();
   for await (const _item of mapper.batchPut(boosts)) {
   }
+
+  return 'done';
 };
 
 export async function generateBoostsLeaderBoard(chains: Chain[]): Promise<CachedBoost[]> {

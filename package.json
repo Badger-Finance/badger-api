@@ -12,7 +12,7 @@
     "codegen:contracts": "typechain --target ethers-v5 --out-dir src/contracts src/abi/*.abi",
     "deploy": "sls deploy",
     "deploy:prod": "sls deploy --stage prod",
-    "dev": "sls offline start",
+    "dev": "sls offline start --useChildProcesses",
     "dev:sls": "yarn dev",
     "dev:sls:api": "yarn dev --disableScheduledEvents",
     "dev:node:api": "npx ts-node src/index.ts",

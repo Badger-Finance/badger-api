@@ -10,6 +10,8 @@ import { getVaultCachedValueSources } from '../vaults/vaults.utils';
 export async function refreshApySnapshots() {
   const chains = loadChains();
   await Promise.all(chains.map((chain) => refreshChainApySnapshots(chain)));
+
+  return 'done';
 }
 
 export async function refreshChainApySnapshots(chain: Chain) {

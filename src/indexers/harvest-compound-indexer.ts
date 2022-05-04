@@ -41,4 +41,6 @@ export async function indexVaultsHarvestsCompund() {
       }
     }
   }
+
+  return 'done';
 }

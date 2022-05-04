@@ -68,6 +68,8 @@ export async function indexPrices() {
       console.error(err);
     }
   }
+
+  return 'done';
 }
 
 function evaluateCoingeckoResponse(chain: Chain, result: CoinGeckoPriceResponse) {

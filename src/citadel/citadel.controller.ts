@@ -12,6 +12,7 @@ import { CitadelRewardEventModel } from './interfaces/citadel-reward-event-model
 import { CitadelRewardEvent } from './interfaces/citadel-reward-event.interface';
 import { CitadelSummary } from '@badger-dao/sdk/lib/api/interfaces/citadel-summary.interface';
 import { CitadelSummaryModel } from './interfaces/citadel-summary-model.interface';
+import { NotFound } from '@tsed/exceptions';
 
 @Controller('/')
 export class CitadelController {
@@ -49,11 +50,15 @@ export class CitadelController {
   @Returns(400).Description('Token should be specified')
   @Returns(400).Description('User or token param is missing')
   async loadRewardsList(
-    @QueryParams('token') token: string,
-    @QueryParams('user') user?: string,
+    @QueryParams('token') token?: string,
+    @QueryParams('account') account?: string,
     @QueryParams('filter') filter?: RewardFilter,
   ): Promise<CitadelRewardEvent[]> {
-    return this.citadelService.getListRewards(token, user, filter);
+    if (filter && !Object.values(RewardFilter).includes(filter)) {
+      throw new NotFound(`Unknown filter ${filter}`);
+    }
+
+    return this.citadelService.getListRewards(token, account, filter);
   }
 
   @UseCache()

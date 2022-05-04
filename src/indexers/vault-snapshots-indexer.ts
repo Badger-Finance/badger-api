@@ -9,6 +9,8 @@ export async function refreshVaultSnapshots() {
   for (const chain of loadChains()) {
     await Promise.all(chain.vaults.map(async (vault) => captureSnapshot(chain, vault)));
   }
+
+  return 'done';
 }
 
 async function captureSnapshot(chain: Chain, vault: VaultDefinition) {
