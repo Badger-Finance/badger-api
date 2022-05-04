@@ -2,7 +2,6 @@ import { ethers } from 'ethers';
 import { getAccounts, getLatestMetadata, getUserAccounts, toVaultBalance } from '../accounts/accounts.utils';
 import { AccountMap } from '../accounts/interfaces/account-map.interface';
 import { getChainStartBlockKey, getDataMapper } from '../aws/dynamodb.utils';
-import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { ClaimableBalance } from '../rewards/entities/claimable-balance';
 import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
@@ -12,21 +11,22 @@ import { batchRefreshAccounts, chunkArray } from './indexer.utils';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 import { AccountIndexMode } from './enums/account-index-mode.enum';
 import { AccountIndexEvent } from './interfaces/account-index-event.interface';
-import { Network, RegistryKey } from '@badger-dao/sdk';
+import { Network } from '@badger-dao/sdk';
+import { SUPPORTED_CHAINS } from '../chains/chain';
 
 export async function refreshClaimableBalances(chain: Chain) {
   const mapper = getDataMapper();
   const distribution = await getTreeDistribution(chain);
   const sdk = await chain.getSdk();
 
-  const badgerTree = await sdk.registry.get(RegistryKey.BadgerTree);
-  if (!distribution || !badgerTree) {
+  if (!distribution || !sdk.rewards.hasBadgerTree()) {
     return;
   }
 
   const latestMetadata = await getLatestMetadata(chain);
-  console.log(`Updating Claimable Balances for ${chain.network}`);
-  console.log(latestMetadata);
+  console.log(
+    `Updating Claimable Balances for ${chain.network} (prev. ${latestMetadata.startBlock} - ${latestMetadata.endBlock})`,
+  );
   const { endBlock } = latestMetadata;
   const snapshotStartBlock = endBlock + 1;
   const snapshotEndBlock = await chain.provider.getBlockNumber();
@@ -75,9 +75,8 @@ export async function refreshClaimableBalances(chain: Chain) {
     count: userClaimSnapshots.length,
   });
 
-  const saved = await mapper.put(metadata);
+  await mapper.put(metadata);
   console.log(`Completed balance snapshot for ${chain.network} up to ${snapshotEndBlock}`);
-  console.log(saved);
 }
 
 export async function refreshAccountSettBalances(chain: Chain, batchAccounts: AccountMap) {
@@ -110,7 +109,7 @@ export async function refreshAccountSettBalances(chain: Chain, batchAccounts: Ac
 export async function refreshUserAccounts(event: AccountIndexEvent) {
   const { mode } = event;
   console.log(`Invoked refreshUserAccounts in ${mode} mode`);
-  const chains = loadChains().filter((c) => c.network !== Network.BinanceSmartChain);
+  const chains = SUPPORTED_CHAINS.filter((c) => c.network !== Network.BinanceSmartChain);
   await Promise.all(
     chains.map(async (chain) => {
       if (mode === AccountIndexMode.BalanceData) {

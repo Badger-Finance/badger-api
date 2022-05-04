@@ -7,6 +7,7 @@ import { TokenConfig } from '../../tokens/interfaces/token-config.interface';
 import { ChainStrategy } from '../strategies/chain.strategy';
 import BadgerSDK, { Network } from '@badger-dao/sdk';
 import { TOKENS } from '../../config/tokens.config';
+import { providers } from '@0xsequence/multicall';
 
 type Chains = Record<string, Chain>;
 type Sdks = Record<string, BadgerSDK>;
@@ -40,7 +41,7 @@ export abstract class Chain {
     this.emissionControl = emissionControl;
   }
 
-  get provider() {
+  get provider(): providers.MulticallProvider {
     return this.sdk.provider;
   }
 

@@ -29,7 +29,7 @@
   "dependencies": {
     "@aws/dynamodb-data-mapper": "^0.7.3",
     "@aws/dynamodb-data-mapper-annotations": "^0.7.3",
-    "@badger-dao/sdk": "^1.9.4",
+    "@badger-dao/sdk": "^1.9.6",
     "@tsed/common": "^6.95.9",
     "@tsed/core": "^6.95.9",
     "@tsed/di": "^6.95.9",
@@ -74,7 +74,7 @@
     "@types/web3": "^1.2.2",
     "@typescript-eslint/eslint-plugin": "^4.25.0",
     "@typescript-eslint/parser": "^4.33.0",
-    "@badger-dao/sdk-mocks": "^1.9.1",
+    "@badger-dao/sdk-mocks": "^1.9.3",
     "clean-modules": "^2.0.4",
     "eslint": "^7.27.0",
     "eslint-config-prettier": "^8.3.0",

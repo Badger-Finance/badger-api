@@ -1,5 +1,5 @@
 import { getAccounts } from '../accounts/accounts.utils';
-import { loadChains } from '../chains/chain';
+import { SUPPORTED_CHAINS } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interface';
 import { getCachedVault } from '../vaults/vaults.utils';
@@ -11,14 +11,12 @@ export const getProtocolMetrics = async (): Promise<ProtocolMetrics> => {
 };
 
 export async function getProtocolTotalUsers(): Promise<number> {
-  const chains = loadChains();
-  const usersAcrossChains = await Promise.all(chains.map((chain) => getAccounts(chain)));
+  const usersAcrossChains = await Promise.all(SUPPORTED_CHAINS.map((chain) => getAccounts(chain)));
   return new Set([...usersAcrossChains.flat()]).size;
 }
 
 export async function getProtocolSettMetrics(): Promise<ProtocolSettsMetrics> {
-  const chains = loadChains();
-  const multichainsSummary = await Promise.all(chains.map((chain) => getChainMetrics(chain)));
+  const multichainsSummary = await Promise.all(SUPPORTED_CHAINS.map((chain) => getChainMetrics(chain)));
 
   let totalValueLocked = 0;
   let totalVaults = 0;

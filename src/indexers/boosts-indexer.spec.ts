@@ -1,14 +1,10 @@
-import { loadChains } from '../chains/chain';
 import { TOKENS } from '../config/tokens.config';
 import { BoostMultiplierData } from '../rewards/interfaces/boost-multiplier-data.interface';
 import { UserBoosts } from '../rewards/interfaces/user-boosts.interface';
-import { TEST_ADDR } from '../test/tests.utils';
+import { TEST_ADDR, TEST_CHAIN } from '../test/tests.utils';
 import * as boostIndexer from './boosts-indexer';
 
 describe('boosts-indexer', () => {
-  const chains = loadChains();
-  const chain = chains[0];
-
   // common test data
   let multiplierData: BoostMultiplierData;
   let userData: UserBoosts;
@@ -39,7 +35,7 @@ describe('boosts-indexer', () => {
 
   describe('evaluateUserBoosts', () => {
     it('returns an empty record on an empty boost file', () => {
-      const result = boostIndexer.evaluateUserBoosts(chain, {
+      const result = boostIndexer.evaluateUserBoosts(TEST_CHAIN, {
         multiplierData: {},
         userData: {},
       });
@@ -47,7 +43,7 @@ describe('boosts-indexer', () => {
     });
 
     it('uses existing user boost if applicable', () => {
-      const result = boostIndexer.evaluateUserBoosts(chain, {
+      const result = boostIndexer.evaluateUserBoosts(TEST_CHAIN, {
         multiplierData,
         userData,
       });
@@ -56,7 +52,7 @@ describe('boosts-indexer', () => {
 
     it('updates user boost if applicable', () => {
       userData[TEST_ADDR].boost = 2000;
-      const result = boostIndexer.evaluateUserBoosts(chain, {
+      const result = boostIndexer.evaluateUserBoosts(TEST_CHAIN, {
         multiplierData,
         userData,
       });
@@ -65,7 +61,7 @@ describe('boosts-indexer', () => {
 
     it('adds user boost if applicable', () => {
       multiplierData[TOKENS.BBADGER] = { min: 2, max: 22 };
-      const result = boostIndexer.evaluateUserBoosts(chain, {
+      const result = boostIndexer.evaluateUserBoosts(TEST_CHAIN, {
         multiplierData,
         userData,
       });

@@ -5,7 +5,6 @@ import * as rewardsUtils from '../rewards/rewards.utils';
 import * as dynamodbUtils from '../aws/dynamodb.utils';
 import { Network } from '@badger-dao/sdk';
 import { Chain } from '../chains/config/chain.config';
-import { ethers } from 'ethers';
 import { MOCK_DISTRIBUTION_FILE } from '../test/constants';
 import { Ethereum } from '../chains/config/eth.config';
 import { BinanceSmartChain } from '../chains/config/bsc.config';
@@ -49,9 +48,7 @@ describe('accounts-indexer', () => {
         endBlock: startMockedBlockNumber - 1,
       });
     });
-    jest
-      .spyOn(ethers.providers.JsonRpcProvider.prototype, 'getBlockNumber')
-      .mockImplementation(() => Promise.resolve(endMockedBlockNumber));
+    jest.spyOn(rewardsChain.provider, 'getBlockNumber').mockImplementation(async () => endMockedBlockNumber);
   });
 
   describe('refreshUserAccounts', () => {
