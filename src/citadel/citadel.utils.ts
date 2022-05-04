@@ -4,7 +4,7 @@ import { KeyedDataBlob } from '../aws/models/keyed-data-blob.model';
 import { CitadelData, CTIADEL_DATA } from './destructors/citadel-data.destructor';
 import { Nullable } from '../utils/types.utils';
 import { CitadelRewardsSnapshot } from '../aws/models/citadel-rewards-snapshot';
-import BadgerSDK, { Token } from '@badger-dao/sdk';
+import BadgerSDK, { Network, Token } from '@badger-dao/sdk';
 import { RewardEventType, RewardEventTypeEnum } from '@badger-dao/sdk/lib/citadel/enums/reward-event-type.enum';
 import { ListRewardsEvent } from '@badger-dao/sdk/lib/citadel/interfaces/list-rewards-event.interface';
 import { CitadelRewardType } from '@badger-dao/sdk/lib/api/enums/citadel-reward-type.enum';
@@ -16,6 +16,11 @@ import { getPrice } from '../prices/prices.utils';
 import { TOKENS } from '../config/tokens.config';
 import { VaultState } from '@badger-dao/sdk';
 import { VaultVersion } from '@badger-dao/sdk';
+import { GraphQLClient } from 'graphql-request';
+import { getSdk } from '../graphql/generated/citadel';
+import { formatBalance } from '@badger-dao/sdk';
+
+const CITADEL_SUBGRAPH_URL = 'https://api.thegraph.com/subgraphs/name/axejintao/citadog';
 
 export async function queryCitadelData(): Promise<CitadelData> {
   const mapper = getDataMapper();
@@ -193,4 +198,29 @@ export async function getStakedCitadelPrice(chain: Chain, { address }: Token): P
     address,
     price: price * pricePerFullShare,
   };
+}
+
+export async function getStakedCitadelEarnings(address: string): Promise<number> {
+  const client = new GraphQLClient(CITADEL_SUBGRAPH_URL);
+  const graphSdk = getSdk(client);
+  const id = `${address.toLowerCase()}-${TOKENS.XCTDL.toLowerCase()}`;
+  const { vaultBalance } = await graphSdk.VaultBalance({ id });
+  if (!vaultBalance) {
+    return 0;
+  }
+  const sdk = await Chain.getChain(Network.Ethereum).getSdk();
+  // xCitadel is not a vault, but has the interface - let's use it!
+  const { pricePerFullShare } = await sdk.vaults.loadVault({
+    address,
+    requireRegistry: false,
+    state: VaultState.Open,
+    version: VaultVersion.v1_5,
+    update: true,
+  });
+  const { netShareDeposit, grossDeposit, grossWithdraw } = vaultBalance;
+  const currentTokens = formatBalance(netShareDeposit);
+  const depositedTokens = formatBalance(grossDeposit);
+  const withdrawnTokens = formatBalance(grossWithdraw);
+  const balanceTokens = currentTokens * pricePerFullShare;
+  return balanceTokens - depositedTokens + withdrawnTokens;
 }
