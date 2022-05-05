@@ -29,6 +29,12 @@ export class CitadelRewardEventModel implements CitadelRewardEvent {
   @Property()
   amount: number;
 
+  @Title('epoch')
+  @Description('Epoch reward were')
+  @Example('1')
+  @Property()
+  epoch: number;
+
   @Title('type')
   @Description('State of reward event')
   @Example(RewardFilter.ADDED)
@@ -53,14 +59,15 @@ export class CitadelRewardEventModel implements CitadelRewardEvent {
   @Property()
   finishTime?: number;
 
-  constructor(summary: CitadelRewardEvent) {
-    this.account = summary.account;
-    this.block = summary.block;
-    this.token = summary.token;
-    this.amount = summary.amount;
-    this.payType = summary.payType;
-    this.dataType = summary.dataType;
-    this.startTime = summary.startTime;
-    this.finishTime = summary.finishTime;
+  constructor(reward: CitadelRewardEvent) {
+    this.account = reward.account;
+    this.block = reward.block;
+    this.token = reward.token;
+    this.amount = reward.amount;
+    this.epoch = reward.epoch;
+    this.payType = reward.payType;
+    this.dataType = reward.dataType;
+    this.startTime = reward.startTime;
+    this.finishTime = reward.finishTime;
   }
 }

@@ -134,6 +134,7 @@ export class CitadelService {
   async getListRewards(
     token?: string,
     account?: string,
+    epoch?: number,
     filter: RewardFilter = RewardFilter.PAID,
   ): Promise<CitadelRewardEvent[]> {
     const rewards: CitadelRewardEvent[] = [];
@@ -172,7 +173,13 @@ export class CitadelService {
 
     try {
       for await (const reward of query) {
-        rewards.push(new CitadelRewardEventData(reward));
+        if (epoch) {
+          if (reward.epoch >= epoch) {
+            rewards.push(new CitadelRewardEventData(reward));
+          }
+        } else {
+          rewards.push(new CitadelRewardEventData(reward));
+        }
       }
     } catch (e) {
       console.error(`Failed to get citadel reward from ddb ${e}`);

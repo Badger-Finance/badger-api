@@ -161,7 +161,7 @@ export function dataTypeRawKeyToKeccak(key: string): string {
   let hashedKey: string;
 
   try {
-    hashedKey = ethers.utils.keccak256(ethers.utils.formatBytes32String(key));
+    hashedKey = ethers.utils.solidityKeccak256(['string'], [key]);
   } catch (e) {
     console.warn(`Failed to hash raw key: ${key}. ${e}`);
     hashedKey = '';
@@ -173,8 +173,6 @@ export function dataTypeRawKeyToKeccak(key: string): string {
 export function getRewardsEventTypeMapped(hashKey: string): CitadelRewardType {
   return (
     {
-      // Note! This is still not actual keys, need to figure out, what value
-      // is hashed in the event
       [dataTypeRawKeyToKeccak('xcitadel-locker-emissions')]: CitadelRewardType.Citadel,
       [dataTypeRawKeyToKeccak('funding-revenue')]: CitadelRewardType.Funding,
       [dataTypeRawKeyToKeccak('treasury-yield')]: CitadelRewardType.Yield,
