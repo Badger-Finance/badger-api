@@ -97,7 +97,7 @@ export class CitadelService {
     const stakingEarned = (await getStakedCitadelEarnings(address)) * citadelPrice;
     // really we probably need to calculate some twap balance here or something or freeze it somehow
     // if we remove ourselves completely our roi becomes infinity
-    const stakingRoi = stakingEarned / stakedCitadelBalance;
+    const stakingRoi = stakedCitadelBalance > 0 ? stakingEarned / stakedCitadelBalance : 0;
 
     const lockingEarned = 0;
     // we fukt. prob need usd denominated data or idk
@@ -105,7 +105,7 @@ export class CitadelService {
 
     // TODO: weighted average of staking + locking
     const earned = stakingEarned;
-    const roi = stakingRoi;
+    const roi = stakingRoi + lockingRoi;
     // TODO: load earned btc from contract / ddb / graph
     // do we need to account for multiple flavors of btc, wbtc ibbtc lp etc.?
     const earnedBtc = 0;
