@@ -32,6 +32,9 @@ export class CitadelRewardsSnapshot {
   @attribute()
   amount!: number;
 
+  @attribute()
+  epoch!: number;
+
   @attribute({
     indexKeyConfigurations: {
       IndexCitadelRewardsDataPayType: 'HASH',
@@ -51,6 +54,6 @@ export class CitadelRewardsSnapshot {
   @attribute()
   startTime?: number;
 
-  @rangeKey()
+  @attribute()
   finishTime?: number;
 }

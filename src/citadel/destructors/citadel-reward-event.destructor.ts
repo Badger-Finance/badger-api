@@ -7,6 +7,7 @@ export class CitadelRewardEventData implements CitadelRewardEvent {
   block: number;
   token: string;
   amount: number;
+  epoch: number;
   payType: RewardEventType;
   dataType?: string;
   startTime?: number;
@@ -17,6 +18,7 @@ export class CitadelRewardEventData implements CitadelRewardEvent {
     this.block = data.block;
     this.token = data.token;
     this.amount = data.amount;
+    this.epoch = data.epoch;
     this.payType = data.payType;
 
     if (data.payType === RewardEventTypeEnum.ADDED) {

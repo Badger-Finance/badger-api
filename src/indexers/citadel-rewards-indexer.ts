@@ -31,6 +31,7 @@ async function saveCitadelRewards(sdk: BadgerSDK, type: RewardEventType) {
   const mapper = getDataMapper();
 
   const chainRewards = await getRewardsOnchain(sdk, type, true);
+  const currentEpoch = (await sdk.citadel.getLastEpochIx()).toNumber();
 
   const tokenDecimalMap: Record<string, number> = {};
   const tokenFinshMap: Record<string, number> = {};
@@ -68,6 +69,7 @@ async function saveCitadelRewards(sdk: BadgerSDK, type: RewardEventType) {
       createdAt: Date.now(),
       block: <number>event.block,
       token: event.token,
+      epoch: currentEpoch,
       payType: type,
       amount,
     };
@@ -93,6 +95,10 @@ async function saveCitadelRewards(sdk: BadgerSDK, type: RewardEventType) {
     }
 
     rewardToSave.finishTime = finishTime;
+
+    rewardToSave.epoch = event.timestamp
+      ? (await sdk.citadel.getEpochByTimestamp(event.timestamp)).toNumber()
+      : currentEpoch;
 
     let tokenPrice = tokenPriceMap[event.token];
 

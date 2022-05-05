@@ -53,13 +53,14 @@ export class CitadelController {
   async loadRewardsList(
     @QueryParams('token') token?: string,
     @QueryParams('account') account?: string,
+    @QueryParams('epoch') epoch?: number,
     @QueryParams('filter') filter?: RewardFilter,
   ): Promise<CitadelRewardEvent[]> {
     if (filter && !Object.values(RewardFilter).includes(filter)) {
       throw new NotFound(`Unknown filter ${filter}`);
     }
 
-    return this.citadelService.getListRewards(token, account, filter);
+    return this.citadelService.getListRewards(token, account, epoch, filter);
   }
 
   @UseCache()

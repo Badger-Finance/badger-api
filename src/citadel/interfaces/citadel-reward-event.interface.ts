@@ -5,6 +5,7 @@ export interface CitadelRewardEvent {
   block: number;
   token: string;
   amount: number;
+  epoch: number;
   payType: RewardEventType;
   dataType?: string;
   startTime?: number;
