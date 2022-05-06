@@ -3,7 +3,7 @@ import { BadRequest, NotFound, UnprocessableEntity } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
-import { ONE_DAY_MS, ONE_YEAR_MS, ONE_YEAR_SECONDS } from '../config/constants';
+import { ONE_YEAR_SECONDS } from '../config/constants';
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
 import { getFullToken, tokenEmission } from '../tokens/tokens.utils';
 import { VaultDefinition } from './interfaces/vault-definition.interface';
@@ -15,6 +15,8 @@ import BadgerSDK, {
   gqlGenT,
   keyBy,
   Network,
+  ONE_DAY_MS,
+  ONE_YEAR_MS,
   Protocol,
   Strategy__factory,
   VaultBehavior,
