@@ -12,6 +12,7 @@ import { batchRefreshAccounts, chunkArray } from './indexer.utils';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 import { AccountIndexMode } from './enums/account-index-mode.enum';
 import { AccountIndexEvent } from './interfaces/account-index-event.interface';
+import { Network } from '@badger-dao/sdk';
 
 export async function refreshClaimableBalances(chain: Chain) {
   const mapper = getDataMapper();
@@ -107,7 +108,7 @@ export async function refreshAccountSettBalances(chain: Chain, batchAccounts: Ac
 export async function refreshUserAccounts(event: AccountIndexEvent) {
   const { mode } = event;
   console.log(`Invoked refreshUserAccounts in ${mode} mode`);
-  const chains = loadChains();
+  const chains = loadChains().filter((c) => c.network !== Network.BinanceSmartChain);
   await Promise.all(
     chains.map(async (chain) => {
       if (mode === AccountIndexMode.BalanceData) {
