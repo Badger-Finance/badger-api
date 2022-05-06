@@ -82,7 +82,8 @@ export async function updateSnapshots<T extends ChartData>(namespace: string, sn
         const date = new Date(now);
         const isFirstOfYear = date.getDay() === 0 && date.getMonth() === 0;
         if (isFirstOfYear && cachedChart.data.length > 1) {
-          throw new Error('Triggering record reset for new year');
+          // new year, force a new object to be created
+          cachedChart = undefined;
         }
       }
     } catch {} // no item found
