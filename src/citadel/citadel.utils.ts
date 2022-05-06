@@ -103,7 +103,7 @@ export async function getRewardsAprForDataBlob(): Promise<CitadelRewardsAprBlob>
       indexName: 'IndexCitadelRewardsDataPayType',
       filter: {
         type: 'GreaterThanOrEqualTo',
-        object: Date.now(),
+        object: Date.now() / 1000,
         subject: 'finishTime',
       },
     },

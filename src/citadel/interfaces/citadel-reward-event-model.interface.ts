@@ -49,13 +49,13 @@ export class CitadelRewardEventModel implements CitadelRewardEvent {
 
   @Title('startTime')
   @Description('Timestamp, start of event')
-  @Example(Date.now())
+  @Example(Date.now() / 1000)
   @Property()
   startTime?: number;
 
   @Title('finishTime')
   @Description('Timestamp, finish of the event')
-  @Example(RewardFilter.ADDED)
+  @Example(Date.now() / 1000)
   @Property()
   finishTime?: number;
 
