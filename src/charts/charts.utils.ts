@@ -3,7 +3,7 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { ChartDataBlob } from '../aws/models/chart-data-blob.model';
 import { ChartData } from './chart-data.model';
 
-export function toChartDataBlob<T extends ChartData>(
+export function toChartDataBlob<T extends ChartData<T>>(
   id: string,
   timeframe: ChartTimeFrame,
   data: T[],
@@ -66,8 +66,9 @@ export function shouldTrim(reference: number, timestamp: number, timeframe: Char
   return update;
 }
 
-export async function updateSnapshots<T extends ChartData>(namespace: string, snapshot: T) {
+export async function updateSnapshots<T extends ChartData<T>>(namespace: string, snapshot: T) {
   const mapper = getDataMapper();
+  const isFirstOfYear = (date: Date) => date.getDay() === 0 && date.getMonth() === 0;
 
   const { id, timestamp: now } = snapshot;
   for (const timeframe of Object.values(ChartTimeFrame)) {
@@ -80,8 +81,7 @@ export async function updateSnapshots<T extends ChartData>(namespace: string, sn
       cachedChart = await mapper.get(searchKey);
       if (timeframe === ChartTimeFrame.YTD) {
         const date = new Date(now);
-        const isFirstOfYear = date.getDay() === 0 && date.getMonth() === 0;
-        if (isFirstOfYear && cachedChart.data.length > 1) {
+        if (isFirstOfYear(date) && cachedChart.data.length > 1) {
           // new year, force a new object to be created
           cachedChart = undefined;
         }
@@ -113,6 +113,14 @@ export async function updateSnapshots<T extends ChartData>(namespace: string, sn
 
     if (updateCache && cachedChart) {
       cachedChart.data.splice(0, 0, snapshot);
+      // we should backfill YTD if required, snapshot is guaranteed to be our only data point
+      if (timeframe === ChartTimeFrame.YTD && cachedChart.data.length === 1) {
+        for (let i = 1; i <= new Date(snapshot.timestamp).getDay(); i++) {
+          const historicBlank = snapshot.toBlankData();
+          historicBlank.timestamp = new Date(now - ONE_DAY_MS * i).getTime();
+          cachedChart.data.splice(0, 0, historicBlank);
+        }
+      }
       console.log(`Update ${searchKey.id} (${cachedChart.data.length} entries)`);
       try {
         await mapper.put(cachedChart);

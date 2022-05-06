@@ -4,7 +4,7 @@ import { ChartData } from '../../charts/chart-data.model';
 import { CHART_DATA } from '../../config/constants';
 
 @table(CHART_DATA)
-export class ChartDataBlob<T extends ChartData> {
+export class ChartDataBlob<T extends ChartData<T>> {
   @hashKey()
   id!: string;
 
