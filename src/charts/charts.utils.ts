@@ -24,8 +24,11 @@ export function shouldUpdate(reference: number, timestamp: number, timeframe: Ch
   let update = false;
   switch (timeframe) {
     case ChartTimeFrame.Max:
+      console.log('dog');
     case ChartTimeFrame.Year:
+      console.log('cat');
     case ChartTimeFrame.ThreeMonth:
+      console.log('pig');
     case ChartTimeFrame.Month:
     case ChartTimeFrame.YTD:
       update = difference >= ONE_DAY_MS;
@@ -86,7 +89,9 @@ export async function updateSnapshots<T extends ChartData>(namespace: string, sn
           cachedChart = undefined;
         }
       }
-    } catch {} // no item found
+    } catch (err) {
+      console.log({ message: 'Unable to query cached chart, may simply not exist', err });
+    } // no item found
 
     let updateCache = false;
     if (!cachedChart) {
