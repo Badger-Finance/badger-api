@@ -1,5 +1,5 @@
 import { DataMapper, QueryIterator, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
-import { Currency, Network, VaultSnapshot } from '@badger-dao/sdk';
+import { Currency, Network, ONE_DAY_MS, VaultSnapshot } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 import createMockInstance from 'jest-create-mock-instance';
 import { CachedAccount } from '../aws/models/cached-account.model';
@@ -9,7 +9,6 @@ import { Avalanche } from '../chains/config/avax.config';
 import { BinanceSmartChain } from '../chains/config/bsc.config';
 import { Ethereum } from '../chains/config/eth.config';
 import { Polygon } from '../chains/config/polygon.config';
-import { ONE_DAY_MS } from '../config/constants';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import { CachedBoost } from '../aws/models/cached-boost.model';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';

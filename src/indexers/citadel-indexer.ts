@@ -13,9 +13,9 @@ import { TOKENS } from '../config/tokens.config';
 import { queryTreasurySummary } from '../treasury/treasury.utils';
 import { HistoricTreasurySummarySnapshot } from '../aws/models/historic-treasury-summary-snapshot.model';
 import { CitadelData } from '../citadel/destructors/citadel-data.destructor';
-import { indexTreasuryCachedCharts } from '../treasury/treasury-indexer';
 import { ONE_YEAR_SECONDS } from '../config/constants';
 import { getRewardsAprForDataBlob, getTokensPaidSummary } from '../citadel/citadel.utils';
+import { updateSnapshots } from '../charts/charts.utils';
 
 export async function snapshotTreasury() {
   const chain = new Ethereum();
@@ -97,12 +97,12 @@ export async function snapshotTreasury() {
     console.error({ message: 'Unable to save Ctiadel treasury snapshot', err });
   }
 
-  await indexTreasuryCachedCharts(
-    Object.assign(new HistoricTreasurySummarySnapshot(), {
-      ...treasurySummary,
-      timestamp: Date.now(),
-    }),
-  );
+  const historicSnapshot = Object.assign(new HistoricTreasurySummarySnapshot(), {
+    ...treasurySummary,
+    id: CITADEL_TREASURY_ADDRESS,
+    timestamp: Date.now(),
+  });
+  updateSnapshots('treasury', historicSnapshot);
 
   await snapshotCitadelMetrics();
 

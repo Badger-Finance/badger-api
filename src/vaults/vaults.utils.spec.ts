@@ -1,5 +1,6 @@
 import BadgerSDK, {
   BadgerGraph,
+  ONE_YEAR_MS,
   Protocol,
   TokensService,
   VaultBehavior,
@@ -40,7 +41,7 @@ import * as indexerUtils from '../indexers/indexer.utils';
 import { createValueSource } from '../protocols/interfaces/value-source.interface';
 import { Polygon } from '../chains/config/polygon.config';
 import { SourceType } from '../rewards/enums/source-type.enum';
-import { ONE_DAY_SECONDS, ONE_YEAR_MS } from '../config/constants';
+import { ONE_DAY_SECONDS } from '../config/constants';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import { TokenNotFound } from '../tokens/errors/token.error';
 import { tokenEmission } from '../tokens/tokens.utils';

@@ -4,7 +4,7 @@ import { getVaultDefinition } from '../vaults/vaults.utils';
 import { randomSnapshots, setFullTokenDataMock, setupMapper, TEST_CHAIN } from '../test/tests.utils';
 import { ChartsService } from './charts.service';
 import { ChartGranularity } from './enums/chart-granularity.enum';
-import { ONE_DAY_MS } from '../config/constants';
+import { ONE_DAY_MS } from '@badger-dao/sdk';
 
 describe('charts.service', () => {
   let service: ChartsService;

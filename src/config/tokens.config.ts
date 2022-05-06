@@ -1,5 +1,5 @@
 import { ContractRegistry } from './interfaces/contract-registry.interface';
-import { checksumEntries } from './util';
+import { checksumEntries } from './config.utils';
 
 const RAW_TOKENS: ContractRegistry = {
   // eth tokens
