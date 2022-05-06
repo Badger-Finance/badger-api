@@ -1,4 +1,4 @@
-import { loadChains } from '../chains/chain';
+import { SUPPORTED_CHAINS } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { PricingType } from '../prices/enums/pricing-type.enum';
 import { CoinGeckoPriceResponse } from '../prices/interface/coingecko-price-response.interface';
@@ -6,9 +6,7 @@ import { updatePrice, fetchPrices } from '../prices/prices.utils';
 import { lookUpAddrByTokenName } from '../tokens/tokens.utils';
 
 export async function indexPrices() {
-  const chains = loadChains();
-
-  for (const chain of chains) {
+  for (const chain of SUPPORTED_CHAINS) {
     try {
       const { tokens, strategy } = chain;
       const chainTokens = Object.entries(tokens).map((e) => ({
@@ -68,6 +66,8 @@ export async function indexPrices() {
       console.error(err);
     }
   }
+
+  return 'done';
 }
 
 function evaluateCoingeckoResponse(chain: Chain, result: CoinGeckoPriceResponse) {

@@ -1,16 +1,21 @@
-import { Erc20__factory, formatBalance } from '@badger-dao/sdk';
+import { CitadelRewardType, formatBalance, Network } from '@badger-dao/sdk';
 import { CitadelTreasurySummary } from '@badger-dao/sdk/lib/api/interfaces/citadel-treasury-summary.interface';
 import { Service } from '@tsed/di';
 import { TOKENS } from '../config/tokens.config';
 import { getPrice } from '../prices/prices.utils';
 import { queryTreasurySummary } from '../treasury/treasury.utils';
-import { queryCitadelData } from './citadel.utils';
+import { getStakedCitadelEarnings, queryCitadelData } from './citadel.utils';
 import { CITADEL_TREASURY_ADDRESS } from './config/citadel-treasury.config';
-import { Chain } from '../chains/config/chain.config';
 import { RewardFilter } from '@badger-dao/sdk/lib/citadel/enums/reward-filter.enum';
-import { BadRequest } from '@tsed/exceptions';
-import { ListRewardsEvent } from '@badger-dao/sdk/lib/citadel/interfaces/list-rewards-event.interface';
 import { CitadelRewardEvent } from './interfaces/citadel-reward-event.interface';
+import { getDataMapper } from '../aws/dynamodb.utils';
+import { CitadelRewardsSnapshot } from '../aws/models/citadel-rewards-snapshot';
+import { CitadelRewardEventData } from './destructors/citadel-reward-event.destructor';
+import { RewardEventType } from '@badger-dao/sdk/lib/citadel/enums/reward-event-type.enum';
+import { ConditionExpression } from '@aws/dynamodb-expressions';
+import { CitadelSummary } from '@badger-dao/sdk/lib/api/interfaces/citadel-summary.interface';
+import { CitadelAccount } from './interfaces/citadel-account.interface';
+import { Chain } from '../chains/config/chain.config';
 
 @Service()
 export class CitadelService {
@@ -52,36 +57,169 @@ export class CitadelService {
     };
   }
 
-  async getListRewards(token: string, user?: string, filter?: RewardFilter): Promise<CitadelRewardEvent[]> {
-    const chain = Chain.getChain();
-    const sdk = await chain.getSdk();
+  async loadRewardSummary(): Promise<CitadelSummary> {
+    const { stakingApr, lockingApr, tokensPaid, valuePaid } = await queryCitadelData();
+    return {
+      stakingApr,
+      lockingApr: lockingApr.overall,
+      lockingAprSources: {
+        [CitadelRewardType.Citadel]: lockingApr[CitadelRewardType.Citadel],
+        [CitadelRewardType.Funding]: lockingApr[CitadelRewardType.Funding],
+        [CitadelRewardType.Yield]: lockingApr[CitadelRewardType.Yield],
+        [CitadelRewardType.Tokens]: lockingApr[CitadelRewardType.Tokens],
+      },
+      tokensPaid,
+      valuePaid,
+    };
+  }
 
-    let chainRewards: ListRewardsEvent[] = [];
+  async loadAccount(address: string): Promise<CitadelAccount> {
+    const sdk = await Chain.getChain(Network.Ethereum).getSdk();
+    const [citadelTokenPrice, stakedCitadelTokenPrice] = await Promise.all([
+      getPrice(TOKENS.CTDL),
+      getPrice(TOKENS.XCTDL),
+    ]);
+    const { price: citadelPrice } = citadelTokenPrice;
+    const { price: stakedCitadelPrice } = stakedCitadelTokenPrice;
 
-    try {
-      chainRewards = await sdk.citadel.listRewards({ user, token, filter });
-    } catch (err) {
-      throw new BadRequest(`${err}`);
-    }
+    const balances = await sdk.tokens.loadBalances([TOKENS.CTDL, TOKENS.XCTDL], address);
 
-    return Promise.all(
-      chainRewards.map(async (event) => {
-        const rewardEventResp: CitadelRewardEvent = {
-          token: event.token,
-          block: event.block,
-          amount: 0,
-          type: filter ?? RewardFilter.ADDED,
-        };
+    // Aggregate balances
+    const citadelBalance = formatBalance(balances[TOKENS.CTDL]);
+    const stakedCitadelBalance = formatBalance(balances[TOKENS.XCTDL]);
+    const lockedCitadelBalance = formatBalance(await sdk.citadel.lockedBalanceOf(address));
 
-        const tokenContract = Erc20__factory.connect(event.token, sdk.provider);
-        const tokenDecimals = await tokenContract.decimals();
+    const citadelHoldings = citadelBalance * citadelPrice;
+    const stakedCitadelHoldings = stakedCitadelBalance * stakedCitadelPrice;
+    const lockedCitadelHoldings = lockedCitadelBalance * stakedCitadelPrice;
+    const value = citadelHoldings + stakedCitadelHoldings + lockedCitadelHoldings;
 
-        rewardEventResp.amount = formatBalance(event.reward, tokenDecimals);
+    const stakingEarned = (await getStakedCitadelEarnings(address)) * citadelPrice;
+    // really we probably need to calculate some twap balance here or something or freeze it somehow
+    // if we remove ourselves completely our roi becomes infinity
+    const stakingRoi = stakedCitadelBalance > 0 ? stakingEarned / stakedCitadelBalance : 0;
 
-        if (event.user) rewardEventResp.user = event.user;
-
-        return rewardEventResp;
+    const rewardTokens = await sdk.citadel.locker.getRewardTokens();
+    const rewardAmounts = await Promise.all(
+      rewardTokens.map(async (t) => {
+        const [token, amount] = await Promise.all([
+          sdk.tokens.loadToken(t),
+          sdk.citadel.getCumulativeClaimedRewards(address, t),
+        ]);
+        return formatBalance(amount, token.decimals);
       }),
     );
+
+    // TODO: load earned btc from contract / ddb / graph
+    // do we need to account for multiple flavors of btc, wbtc ibbtc lp etc.?
+    let earnedBtc = 0;
+    let lockingEarned = 0;
+
+    for (let i = 0; i < rewardTokens.length; i++) {
+      const token = rewardTokens[i];
+      const amount = rewardAmounts[i];
+      // TODO: probably want a better check here who knows what
+      if (token === TOKENS.WBTC || token === TOKENS.BCRV_IBBTC) {
+        earnedBtc += amount;
+      }
+      const { price } = await getPrice(token);
+      lockingEarned += price * amount;
+    }
+
+    const claimable = await sdk.citadel.getClaimableRewards(address);
+    for (const claim of claimable) {
+      const { token, amount } = claim;
+      const { decimals } = await sdk.tokens.loadToken(token);
+      const balance = formatBalance(amount, decimals);
+      if (token === TOKENS.WBTC || token === TOKENS.BCRV_IBBTC) {
+        earnedBtc += balance;
+      }
+      const { price } = await getPrice(token);
+      lockingEarned += price * balance;
+    }
+
+    // we fukt. prob need usd denominated data or idk
+    const lockingRoi = lockedCitadelHoldings > 0 ? lockingEarned / lockedCitadelHoldings : 0;
+
+    // TODO: weighted average of staking + locking
+    const earned = stakingEarned + lockingEarned;
+    const roi = (stakingRoi * stakedCitadelHoldings) / value + (lockingRoi * lockedCitadelHoldings) / value;
+
+    return {
+      address,
+      value,
+      earned,
+      earnedBtc,
+      roi,
+      // TODO: caculate earnings for current epoch and LERP for current epoch
+      // we should save this epoch data and probably take guidance from previous epochs once possible
+      projectedEarnings: {
+        [CitadelRewardType.Funding]: 0,
+        [CitadelRewardType.Yield]: 0,
+        [CitadelRewardType.Citadel]: 0,
+        [CitadelRewardType.Tokens]: 0,
+      },
+      stakingEarned,
+      stakingRoi,
+      lockingEarned,
+      lockingRoi,
+    };
+  }
+
+  async getListRewards(
+    token?: string,
+    account?: string,
+    epoch?: number,
+    filter: RewardFilter = RewardFilter.PAID,
+  ): Promise<CitadelRewardEvent[]> {
+    const rewards: CitadelRewardEvent[] = [];
+
+    const queryKeys: {
+      payType: RewardEventType;
+      token?: string;
+      account?: string;
+    } = { payType: filter };
+
+    const queryOpts: {
+      indexName?: string;
+      filter?: ConditionExpression;
+    } = { indexName: 'IndexCitadelRewardsDataPayType' };
+
+    if (filter === RewardFilter.ADDED) {
+      queryOpts.filter = {
+        type: 'GreaterThanOrEqualTo',
+        object: Date.now(),
+        subject: 'finishTime',
+      };
+    }
+
+    if (account) {
+      queryKeys.account = account;
+      queryOpts.indexName = 'IndexCitadelRewardsDataPayTypeAccount';
+    }
+    if (token) {
+      queryKeys.token = token;
+      queryOpts.indexName = 'IndexCitadelRewardsDataPayTypeToken';
+    }
+
+    const mapper = getDataMapper();
+
+    const query = mapper.query(CitadelRewardsSnapshot, queryKeys, queryOpts);
+
+    try {
+      for await (const reward of query) {
+        if (epoch) {
+          if (reward.epoch >= epoch) {
+            rewards.push(new CitadelRewardEventData(reward));
+          }
+        } else {
+          rewards.push(new CitadelRewardEventData(reward));
+        }
+      }
+    } catch (e) {
+      console.error(`Failed to get citadel reward from ddb ${e}`);
+    }
+
+    return rewards;
   }
 }

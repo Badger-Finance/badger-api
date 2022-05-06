@@ -21,7 +21,6 @@ import {
   queryCachedAccount,
   toVaultBalance,
 } from './accounts.utils';
-import { ethers } from 'ethers';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 import { BadgerGraph, Currency, gqlGenT } from '@badger-dao/sdk';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
@@ -255,9 +254,7 @@ describe('accounts.utils', () => {
     it('should create new meta if no meta obj found', async () => {
       const put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
       const mockedBlockNumber = 100;
-      jest
-        .spyOn(ethers.providers.JsonRpcProvider.prototype, 'getBlockNumber')
-        .mockImplementation(() => Promise.resolve(mockedBlockNumber));
+      jest.spyOn(TEST_CHAIN.provider, 'getBlockNumber').mockImplementation(() => Promise.resolve(mockedBlockNumber));
       const expected = Object.assign(new UserClaimMetadata(), {
         startBlock: 100,
         endBlock: 101,

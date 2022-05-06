@@ -15,8 +15,8 @@ export class BinanceSmartChain extends Chain {
       '0x38',
       Network.BinanceSmartChain,
       bscTokensConfig,
-      bscSetts,
       rpc[Network.BinanceSmartChain],
+      bscSetts,
       new BaseStrategy(Network.BinanceSmartChain, Object.keys(bscTokensConfig)),
     );
     Chain.register(this.network, this);

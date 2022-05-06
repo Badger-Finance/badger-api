@@ -5,6 +5,7 @@ import { getImBtcPrice, getMhBtcPrice } from '../../protocols/strategies/mstable
 import { PricingType } from '../../prices/enums/pricing-type.enum';
 import { TokenConfig } from '../interfaces/token-config.interface';
 import { resolveCurvePoolTokenPrice } from '../../protocols/strategies/convex.strategy';
+import { getStakedCitadelPrice } from '../../citadel/citadel.utils';
 
 export const ethTokensConfig: TokenConfig = {
   [TOKENS.BADGER]: {
@@ -201,11 +202,8 @@ export const ethTokensConfig: TokenConfig = {
     getPrice: resolveCurvePoolTokenPrice,
   },
   [TOKENS.XCTDL]: {
-    type: PricingType.Vault,
-    vaultToken: {
-      address: TOKENS.CTDL,
-      network: Network.Ethereum,
-    },
+    type: PricingType.Custom,
+    getPrice: getStakedCitadelPrice,
   },
   [TOKENS.BBADGER]: {
     type: PricingType.Vault,

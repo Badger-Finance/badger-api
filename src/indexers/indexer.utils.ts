@@ -51,7 +51,7 @@ export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefini
 
   let block = 0;
   try {
-    block = await sdk.provider.getBlockNumber();
+    block = await chain.provider.getBlockNumber();
   } catch (err) {} // block is not super important here - just continue on
 
   const [tokenPriceData, strategyInfo, boostWeight, cachedVault] = await Promise.all([

@@ -520,7 +520,7 @@ export async function estimateHarvestEventApr(
   return parseFloat(compoundApr.toFixed(2));
 }
 
-async function estimateVaultPerformance(
+export async function estimateVaultPerformance(
   chain: Chain,
   vaultDefinition: VaultDefinition,
   data: VaultHarvestData[],
