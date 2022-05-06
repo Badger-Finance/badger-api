@@ -91,10 +91,9 @@ export async function updateSnapshots<T extends ChartData>(namespace: string, sn
     let updateCache = false;
     if (!cachedChart) {
       const blob = toChartDataBlob(searchKey.id, timeframe, []);
+      console.log(`Create blob for ${searchKey.id}`);
       try {
-        console.log(`Create blob for ${searchKey.id}`);
         cachedChart = await mapper.put(blob);
-        console.log(cachedChart);
       } catch (err) {
         console.error({ message: 'Unable to save blob', err });
       }
@@ -112,8 +111,8 @@ export async function updateSnapshots<T extends ChartData>(namespace: string, sn
 
     if (updateCache && cachedChart) {
       cachedChart.data.splice(0, 0, snapshot);
+      console.log(`Update ${searchKey.id} (${cachedChart.data.length} entries)`);
       try {
-        console.log(`Update ${searchKey.id} (${cachedChart.data.length} entries)`);
         await mapper.put(cachedChart);
       } catch (err) {
         console.error({ message: 'Unable to save blob', err });
