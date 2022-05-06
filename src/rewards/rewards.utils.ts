@@ -1,4 +1,4 @@
-import { Network, Protocol, RegistryKey, Token } from '@badger-dao/sdk';
+import { Network, Protocol, Token } from '@badger-dao/sdk';
 import { getBoostFile, getCachedAccount } from '../accounts/accounts.utils';
 import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
@@ -81,9 +81,7 @@ export async function getRewardEmission(chain: Chain, vaultDefinition: VaultDefi
   const boostFile = await getBoostFile(chain);
   const sdk = await chain.getSdk();
 
-  // TODO: add `hasRewardsLogger` and `hasBadgerTree` etc
-  const rewardsLogger = await sdk.registry.get(RegistryKey.RewardsLogger);
-  if (rewardsLogger || vaultDefinition.depositToken === TOKENS.DIGG || !boostFile) {
+  if (!sdk.rewards.hasRewardsLogger() || vaultDefinition.depositToken === TOKENS.DIGG || !boostFile) {
     return [];
   }
   const { vaultToken } = vaultDefinition;

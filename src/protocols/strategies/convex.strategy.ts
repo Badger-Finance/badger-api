@@ -275,7 +275,7 @@ async function retrieveBribesProcessorData(chain: Chain, vault: VaultDefinition)
   const treeDistributionFilter = bribeProcessor.filters.TreeDistribution();
 
   const endBlock = await sdk.provider.getBlockNumber();
-  const startBlock = endBlock - (21 * ONE_DAY_SECONDS) / 13;
+  const startBlock = Math.floor(endBlock - (21 * ONE_DAY_SECONDS) / 13);
   const allTreeDistributions = await chunkQueryFilter<
     BribesProcessor,
     TreeDistributionEventFilter,
@@ -284,7 +284,7 @@ async function retrieveBribesProcessorData(chain: Chain, vault: VaultDefinition)
 
   const { harvests, distributions } = await parseHarvestEvents([], allTreeDistributions);
 
-  const timestampCutoff = Date.now() / 1000 - 21 * ONE_DAY_SECONDS;
+  const timestampCutoff = Math.floor(Date.now() / 1000 - 21 * ONE_DAY_SECONDS);
   const { data } = await evaluateEvents(harvests, distributions, { timestamp_gte: timestampCutoff });
 
   return estimateVaultPerformance(chain, vault, data);
