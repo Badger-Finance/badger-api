@@ -24,11 +24,8 @@ export function shouldUpdate(reference: number, timestamp: number, timeframe: Ch
   let update = false;
   switch (timeframe) {
     case ChartTimeFrame.Max:
-      console.log('dog');
     case ChartTimeFrame.Year:
-      console.log('cat');
     case ChartTimeFrame.ThreeMonth:
-      console.log('pig');
     case ChartTimeFrame.Month:
     case ChartTimeFrame.YTD:
       update = difference >= ONE_DAY_MS;
