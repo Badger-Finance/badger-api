@@ -188,7 +188,7 @@ export class CitadelService {
     if (filter === RewardFilter.ADDED) {
       queryOpts.filter = {
         type: 'GreaterThanOrEqualTo',
-        object: Date.now(),
+        object: Date.now() / 1000,
         subject: 'finishTime',
       };
     }
