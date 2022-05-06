@@ -1,8 +1,7 @@
-import { ONE_DAY_MS, ONE_HOUR_MS } from '@badger-dao/sdk';
+import { ChartTimeFrame, ONE_DAY_MS, ONE_HOUR_MS } from '@badger-dao/sdk';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { ChartDataBlob } from '../aws/models/chart-data-blob.model';
 import { ChartData } from './chart-data.model';
-import { ChartTimeFrame } from './enums/chart-timeframe.enum';
 
 export function toChartDataBlob<T extends ChartData>(
   id: string,
@@ -26,14 +25,10 @@ export function shouldUpdate(reference: number, timestamp: number, timeframe: Ch
   switch (timeframe) {
     case ChartTimeFrame.Max:
     case ChartTimeFrame.Year:
-    case ChartTimeFrame.NineMonth:
-    case ChartTimeFrame.SixMonth:
     case ChartTimeFrame.ThreeMonth:
     case ChartTimeFrame.Month:
+    case ChartTimeFrame.YTD:
       update = difference >= ONE_DAY_MS;
-      break;
-    case ChartTimeFrame.TwoWeek:
-      update = difference >= ONE_HOUR_MS * 12;
       break;
     case ChartTimeFrame.Week:
       update = difference >= ONE_HOUR_MS * 6;
@@ -51,20 +46,11 @@ export function shouldTrim(reference: number, timestamp: number, timeframe: Char
     case ChartTimeFrame.Year:
       update = difference >= ONE_DAY_MS * 365;
       break;
-    case ChartTimeFrame.NineMonth:
-      update = difference >= ONE_DAY_MS * 270;
-      break;
-    case ChartTimeFrame.SixMonth:
-      update = difference >= ONE_DAY_MS * 180;
-      break;
     case ChartTimeFrame.ThreeMonth:
       update = difference >= ONE_DAY_MS * 90;
       break;
     case ChartTimeFrame.Month:
       update = difference >= ONE_DAY_MS * 30;
-      break;
-    case ChartTimeFrame.TwoWeek:
-      update = difference >= ONE_DAY_MS * 14;
       break;
     case ChartTimeFrame.Week:
       update = difference >= ONE_DAY_MS * 7;
@@ -72,6 +58,8 @@ export function shouldTrim(reference: number, timestamp: number, timeframe: Char
     case ChartTimeFrame.Day:
       update = difference >= ONE_DAY_MS;
       break;
+    // Year to date needs a full clear - so we will never trim
+    case ChartTimeFrame.YTD:
     default:
       update = false;
   }
@@ -90,6 +78,13 @@ export async function updateSnapshots<T extends ChartData>(namespace: string, sn
     let cachedChart: ChartDataBlob<T> | undefined;
     try {
       cachedChart = await mapper.get(searchKey);
+      if (timeframe === ChartTimeFrame.YTD) {
+        const date = new Date(now);
+        const isFirstOfYear = date.getDay() === 0 && date.getMonth() === 0;
+        if (isFirstOfYear && cachedChart.data.length > 1) {
+          throw new Error('Triggering record reset for new year');
+        }
+      }
     } catch {} // no item found
 
     let updateCache = false;
