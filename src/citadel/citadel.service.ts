@@ -99,16 +99,51 @@ export class CitadelService {
     // if we remove ourselves completely our roi becomes infinity
     const stakingRoi = stakedCitadelBalance > 0 ? stakingEarned / stakedCitadelBalance : 0;
 
-    const lockingEarned = 0;
-    // we fukt. prob need usd denominated data or idk
-    const lockingRoi = 0;
+    const rewardTokens = await sdk.citadel.locker.getRewardTokens();
+    const rewardAmounts = await Promise.all(
+      rewardTokens.map(async (t) => {
+        const [token, amount] = await Promise.all([
+          sdk.tokens.loadToken(t),
+          sdk.citadel.getCumulativeClaimedRewards(address, t),
+        ]);
+        return formatBalance(amount, token.decimals);
+      }),
+    );
 
-    // TODO: weighted average of staking + locking
-    const earned = stakingEarned;
-    const roi = stakingRoi + lockingRoi;
     // TODO: load earned btc from contract / ddb / graph
     // do we need to account for multiple flavors of btc, wbtc ibbtc lp etc.?
-    const earnedBtc = 0;
+    let earnedBtc = 0;
+    let lockingEarned = 0;
+
+    for (let i = 0; i < rewardTokens.length; i++) {
+      const token = rewardTokens[i];
+      const amount = rewardAmounts[i];
+      // TODO: probably want a better check here who knows what
+      if (token === TOKENS.WBTC || token === TOKENS.BCRV_IBBTC) {
+        earnedBtc += amount;
+      }
+      const { price } = await getPrice(token);
+      lockingEarned += price * amount;
+    }
+
+    const claimable = await sdk.citadel.getClaimableRewards(address);
+    for (const claim of claimable) {
+      const { token, amount } = claim;
+      const { decimals } = await sdk.tokens.loadToken(token);
+      const balance = formatBalance(amount, decimals);
+      if (token === TOKENS.WBTC || token === TOKENS.BCRV_IBBTC) {
+        earnedBtc += balance;
+      }
+      const { price } = await getPrice(token);
+      lockingEarned += price * balance;
+    }
+
+    // we fukt. prob need usd denominated data or idk
+    const lockingRoi = lockedCitadelHoldings > 0 ? lockingEarned / lockedCitadelHoldings : 0;
+
+    // TODO: weighted average of staking + locking
+    const earned = stakingEarned + lockingEarned;
+    const roi = (stakingRoi * stakedCitadelHoldings) / value + (lockingRoi * lockedCitadelHoldings) / value;
 
     return {
       address,
