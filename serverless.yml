@@ -56,6 +56,7 @@ custom:
     TREASURY_SNAPSHOT_DATA: treasury-snapshot-${self:custom.stage}
     PROTOCOL_DATA: protocol-data-${self:custom.stage}
     CHART_DATA: chart-data-${self:custom.stage}
+    CITADEL_REWARDS_DATA: citadel-rewards-snapshot-${self:custom.stage}
 
   merkleProofs:
     staging: 'badger-staging-merkle-proofs'
@@ -118,6 +119,7 @@ provider:
     TREASURY_SNAPSHOT_DATA: ${self:custom.table.TREASURY_SNAPSHOT_DATA}
     PROTOCOL_DATA: ${self:custom.table.PROTOCOL_DATA}
     CHART_DATA: ${self:custom.table.CHART_DATA}
+    CITADEL_REWARDS_DATA: ${self:custom.table.CITADEL_REWARDS_DATA}
     # General Defintions
     REWARD_DATA: ${self:custom.merkleProofs.${self:custom.stage}}
     STAGE: ${opt:stage, self:provider.stage}
@@ -441,6 +443,59 @@ resources:
           - AttributeName: 'id'
             AttributeType: 'S'
 
+    citadelRewardsData:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.table.CITADEL_REWARDS_DATA}
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: 'account'
+            KeyType: 'HASH'
+          - AttributeName: 'createdAt'
+            KeyType: 'RANGE'
+        AttributeDefinitions:
+          - AttributeName: 'account'
+            AttributeType: 'S'
+          - AttributeName: 'createdAt'
+            AttributeType: 'N'
+          - AttributeName: 'payType'
+            AttributeType: 'S'
+          - AttributeName: 'token'
+            AttributeType: 'S'
+          - AttributeName: 'block'
+            AttributeType: 'N'
+        GlobalSecondaryIndexes:
+          - IndexName: IndexCitadelRewardsDataPayType
+            KeySchema:
+              - AttributeName: 'payType'
+                KeyType: 'HASH'
+            Projection:
+              ProjectionType: ALL
+          - IndexName: IndexCitadelRewardsDataPayTypeBlock
+            KeySchema:
+              - AttributeName: 'payType'
+                KeyType: 'HASH'
+              - AttributeName: 'block'
+                KeyType: 'RANGE'
+            Projection:
+              ProjectionType: ALL
+          - IndexName: IndexCitadelRewardsDataPayTypeAccount
+            KeySchema:
+              - AttributeName: 'payType'
+                KeyType: 'HASH'
+              - AttributeName: 'account'
+                KeyType: 'RANGE'
+            Projection:
+              ProjectionType: ALL
+          - IndexName: IndexCitadelRewardsDataPayTypeToken
+            KeySchema:
+              - AttributeName: 'payType'
+                KeyType: 'HASH'
+              - AttributeName: 'token'
+                KeyType: 'RANGE'
+            Projection:
+              ProjectionType: ALL
+
 functions:
   request-handler:
     handler: src/LambdaServer.handler
@@ -565,10 +620,19 @@ functions:
           rate: rate(1 day)
 
   index-citadel-treasury:
-    handler: src/citadel/citadel-indexer.snapshotTreasury
+    handler: src/indexers/citadel-indexer.snapshotTreasury
     timeout: 480
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-citadel-treasury
           description: 'index citadel treasury holdings'
           rate: rate(5 minutes)
+
+  index-citadel-rewards:
+    handler: src/indexers/citadel-rewards-indexer.indexAllRewards
+    timeout: 480
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-citadel-rewards
+          description: 'index citadel rewards'
+          rate: rate(2 hours)

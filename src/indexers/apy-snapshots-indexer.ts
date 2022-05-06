@@ -1,6 +1,6 @@
 import { isNil } from '@tsed/core';
 import { getDataMapper } from '../aws/dynamodb.utils';
-import { loadChains } from '../chains/chain';
+import { SUPPORTED_CHAINS } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { CachedValueSource } from '../aws/models/apy-snapshots.model';
 import { ValueSourceMap } from '../protocols/interfaces/value-source-map.interface';
@@ -8,8 +8,9 @@ import { getVaultValueSources } from '../rewards/rewards.utils';
 import { getVaultCachedValueSources } from '../vaults/vaults.utils';
 
 export async function refreshApySnapshots() {
-  const chains = loadChains();
-  await Promise.all(chains.map((chain) => refreshChainApySnapshots(chain)));
+  await Promise.all(SUPPORTED_CHAINS.map((chain) => refreshChainApySnapshots(chain)));
+
+  return 'done';
 }
 
 export async function refreshChainApySnapshots(chain: Chain) {

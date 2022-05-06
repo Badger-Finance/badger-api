@@ -1,6 +1,6 @@
 import { getDataMapper } from '../aws/dynamodb.utils';
-import { loadChains } from '../chains/chain';
 import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
+import { SUPPORTED_CHAINS } from '../chains/chain';
 import { vaultToSnapshot } from './indexer.utils';
 
 /**
@@ -8,9 +8,8 @@ import { vaultToSnapshot } from './indexer.utils';
  * computed data. All values will be availalbe via the API.
  */
 export async function indexProtocolVaults() {
-  const chains = loadChains();
   await Promise.all(
-    chains.map(async (chain) => {
+    SUPPORTED_CHAINS.map(async (chain) => {
       // create a db connection object per chain
       const mapper = getDataMapper();
       await Promise.all(
@@ -25,4 +24,6 @@ export async function indexProtocolVaults() {
       );
     }),
   );
+
+  return 'done';
 }

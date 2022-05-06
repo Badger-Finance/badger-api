@@ -5,14 +5,13 @@ import {
   SettHarvest_OrderBy,
 } from '@badger-dao/sdk/lib/graphql/generated/badger';
 import { getDataMapper } from '../aws/dynamodb.utils';
-import { loadChains } from '../chains/chain';
 import { getFullToken, toBalance } from '../tokens/tokens.utils';
 import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
+import { SUPPORTED_CHAINS } from '../chains/chain';
 
 export async function refreshVaultHarvests() {
-  const chains = loadChains();
   await Promise.all(
-    chains.map(async (chain) => {
+    SUPPORTED_CHAINS.map(async (chain) => {
       const sdk = await chain.getSdk();
       const mapper = getDataMapper();
       for (const vault of chain.vaults) {
@@ -81,4 +80,6 @@ export async function refreshVaultHarvests() {
       }
     }),
   );
+
+  return 'done';
 }

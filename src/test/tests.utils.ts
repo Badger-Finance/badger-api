@@ -3,7 +3,7 @@ import { Currency, Network, VaultSnapshot } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 import createMockInstance from 'jest-create-mock-instance';
 import { CachedAccount } from '../aws/models/cached-account.model';
-import { loadChains } from '../chains/chain';
+import { SUPPORTED_CHAINS } from '../chains/chain';
 import { Arbitrum } from '../chains/config/arbitrum.config';
 import { Avalanche } from '../chains/config/avax.config';
 import { BinanceSmartChain } from '../chains/config/bsc.config';
@@ -21,7 +21,7 @@ import { Chain } from '../chains/config/chain.config';
 import { TokensService } from '@badger-dao/sdk/lib/tokens/tokens.service';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 
-export const TEST_CHAIN = new Ethereum();
+export const TEST_CHAIN = SUPPORTED_CHAINS[0];
 export const TEST_ADDR = ethers.utils.getAddress('0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484');
 
 /* eslint-disable @typescript-eslint/ban-ts-comment */
@@ -135,7 +135,7 @@ export function randomSnapshot(vaultDefinition?: VaultDefinition): VaultSnapshot
 }
 
 export function randomVault(chain?: Chain): VaultDefinition {
-  const definitions = (chain ? [chain] : loadChains()).flatMap((chain) => chain.vaults);
+  const definitions = (chain ? [chain] : SUPPORTED_CHAINS).flatMap((chain) => chain.vaults);
 
   const controlledDefs = definitions.filter((vault) => {
     return vault.vaultToken in fullTokenMockMap && vault.depositToken in fullTokenMockMap;

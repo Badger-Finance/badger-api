@@ -10,6 +10,7 @@ import * as rewardsUtils from './rewards.utils';
 import { UserClaimMetadata } from './entities/user-claim-metadata';
 import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
 import { Ethereum } from '../chains/config/eth.config';
+import { Network } from '@badger-dao/sdk';
 
 describe('rewards.service', () => {
   let service: RewardsService;
@@ -18,7 +19,7 @@ describe('rewards.service', () => {
     await PlatformTest.create();
     service = PlatformTest.get<RewardsService>(RewardsService);
     jest.spyOn(rewardsUtils, 'getTreeDistribution').mockImplementation(async (chain: Chain) => {
-      if (!chain.badgerTree) {
+      if (chain.network !== Network.Ethereum) {
         return null;
       }
       return MOCK_DISTRIBUTION_FILE;

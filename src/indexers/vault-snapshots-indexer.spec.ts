@@ -1,5 +1,5 @@
 import { DataMapper, PutParameters, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
-import { loadChains } from '../chains/chain';
+import { SUPPORTED_CHAINS } from '../chains/chain';
 import * as vaultUtils from '../vaults/vaults.utils';
 import { refreshVaultSnapshots } from './vault-snapshots-indexer';
 import { BigNumber, ethers } from 'ethers';
@@ -21,8 +21,7 @@ import { Chain } from '../chains/config/chain.config';
 import { VaultsService as VaultsServiceAPI } from '../vaults/vaults.service';
 
 describe('refreshVaultSnapshots', () => {
-  const supportedAddresses = loadChains()
-    .flatMap((s) => s.vaults)
+  const supportedAddresses = SUPPORTED_CHAINS.flatMap((s) => s.vaults)
     .map((settDefinition) => settDefinition.vaultToken)
     .sort();
 
@@ -37,7 +36,7 @@ describe('refreshVaultSnapshots', () => {
       strategistFee: 10,
       aumFee: 0,
     }));
-    jest.spyOn(VaultsServiceAPI, 'loadVault').mockImplementation(async (chain, vaultDefinition, currency) => {
+    jest.spyOn(VaultsServiceAPI, 'loadVault').mockImplementation(async (chain, vaultDefinition, _currency) => {
       const dummyVault = await vaultUtils.defaultVault(chain, vaultDefinition);
       dummyVault.balance = 1;
       dummyVault.available = 0.5;
@@ -73,7 +72,6 @@ describe('refreshVaultSnapshots', () => {
     put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
 
     jest.spyOn(BadgerSDK.prototype, 'ready').mockImplementation();
-    jest.spyOn(ethers.providers.BaseProvider.prototype, 'getBlockNumber').mockImplementation(async () => 13_420_690);
     jest.spyOn(tokensUtils, 'getFullToken').mockImplementation(async (_, tokenAddr) => {
       return fullTokenMockMap[tokenAddr] || fullTokenMockMap[TOKENS.BADGER];
     });
@@ -88,6 +86,9 @@ describe('refreshVaultSnapshots', () => {
         }
         return [tokensUtils.mockBalance(token, parseInt(token.address.slice(0, 4), 16))];
       });
+    SUPPORTED_CHAINS.forEach((c) =>
+      jest.spyOn(c.provider, 'getBlockNumber').mockImplementation(async () => 13_420_690),
+    );
 
     mockPricing();
     setupMapper([randomVault()]);
