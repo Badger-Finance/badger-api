@@ -1,8 +1,8 @@
 import { attribute, hashKey, rangeKey, table } from '@aws/dynamodb-data-mapper-annotations';
-import { PRICE_DATA } from '../../config/constants';
-import { TokenPrice } from './token-price.interface';
+import { TOKEN_PRICE_DATA } from '../../config/constants';
+import { TokenPrice } from '../../prices/interface/token-price.interface';
 
-@table(PRICE_DATA)
+@table(TOKEN_PRICE_DATA)
 export class TokenPriceSnapshot implements TokenPrice {
   @hashKey()
   address!: string;

@@ -10,7 +10,7 @@ import { VaultDefinition } from './interfaces/vault-definition.interface';
 import { EmissionControl__factory } from '../contracts';
 import { VaultStrategy } from './interfaces/vault-strategy.interface';
 import { TOKENS } from '../config/tokens.config';
-import {
+import BadgerSDK, {
   formatBalance,
   gqlGenT,
   keyBy,
@@ -28,15 +28,20 @@ import {
 import { getPrice } from '../prices/prices.utils';
 import { TokenPrice } from '../prices/interface/token-price.interface';
 import { PricingType } from '../prices/enums/pricing-type.enum';
-import { CachedValueSource } from '../protocols/interfaces/cached-value-source.interface';
+import { CachedValueSource } from '../aws/models/apy-snapshots.model';
 import { createValueSource } from '../protocols/interfaces/value-source.interface';
 import { getProtocolValueSources, getRewardEmission, valueSourceToCachedValueSource } from '../rewards/rewards.utils';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { getVault } from '../indexers/indexer.utils';
-import { HistoricVaultSnapshot } from './types/historic-vault-snapshot';
+import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
 import { VaultHarvestData } from './interfaces/vault-harvest-data.interface';
-import { CurrentVaultSnapshot } from './types/current-vault-snapshot';
-import { VaultPendingHarvestData } from './types/vault-pending-harvest-data';
+import { CurrentVaultSnapshotModel } from '../aws/models/current-vault-snapshot.model';
+import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
+import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
+import { HarvestType } from './enums/harvest.enum';
+import { Nullable } from '../utils/types.utils';
+import { ListHarvestOptions } from '@badger-dao/sdk/lib/vaults/interfaces';
+import { HarvestCompoundData } from '../aws/models/harvest-compound.model';
 
 export const VAULT_SOURCE = 'Vault Compounding';
 
@@ -106,7 +111,7 @@ export async function getCachedVault(chain: Chain, vaultDefinition: VaultDefinit
   try {
     const mapper = getDataMapper();
     for await (const item of mapper.query(
-      CurrentVaultSnapshot,
+      CurrentVaultSnapshotModel,
       { address: vaultDefinition.vaultToken },
       { limit: 1, scanIndexForward: false },
     )) {
@@ -138,14 +143,14 @@ export async function getVaultSnapshotsInRange(
   vaultDefinition: VaultDefinition,
   start: Date,
   end: Date,
-): Promise<HistoricVaultSnapshot[]> {
+): Promise<HistoricVaultSnapshotModel[]> {
   try {
     const snapshots = [];
     const mapper = getDataMapper();
     const assetToken = await getFullToken(chain, vaultDefinition.vaultToken);
 
     for await (const snapshot of mapper.query(
-      HistoricVaultSnapshot,
+      HistoricVaultSnapshotModel,
       { address: assetToken.address, timestamp: between(new Date(start).getTime(), new Date(end).getTime()) },
       { scanIndexForward: false },
     )) {
@@ -499,7 +504,7 @@ export async function estimateHarvestEventApr(
   start: number,
   end: number,
   amount: VaultPerformanceEvent['amount'],
-  balance: number,
+  balance: BigNumber,
 ): Promise<number> {
   const duration = end - start;
 
@@ -661,4 +666,133 @@ export async function getVaultPendingHarvest(vaultDefinition: VaultDefinition): 
     console.error(err);
     return pendingHarvest;
   }
+}
+
+export async function getVaultHarvestsOnChain(
+  chain: Chain,
+  vaultAddr: VaultDefinition['vaultToken'],
+  sdk: BadgerSDK,
+  startFromBlock: Nullable<number> = null,
+): Promise<VaultHarvestsExtendedResp[]> {
+  const vaultHarvests: VaultHarvestsExtendedResp[] = [];
+
+  vaultAddr = ethers.utils.getAddress(vaultAddr);
+
+  const vaultDef = getVaultDefinition(chain, vaultAddr);
+
+  let sdkVaultHarvestsResp: {
+    data: VaultHarvestData[];
+  } = { data: [] };
+
+  if (!vaultDef) return vaultHarvests;
+
+  try {
+    const listHarvestsArgs: ListHarvestOptions = {
+      address: vaultAddr,
+      version: vaultDef.version ?? VaultVersion.v1,
+    };
+
+    if (startFromBlock) listHarvestsArgs.startBlock = startFromBlock;
+
+    sdkVaultHarvestsResp = await sdk.vaults.listHarvests(listHarvestsArgs);
+  } catch (e) {
+    console.warn(`Failed to get harvests list ${e}`);
+  }
+
+  if (!sdkVaultHarvestsResp || sdkVaultHarvestsResp?.data?.length === 0) {
+    return vaultHarvests;
+  }
+
+  const sdkVaultHarvests = sdkVaultHarvestsResp.data;
+
+  const harvestsStartEndMap: Record<string, number> = {};
+
+  const _extend_harvests_data = async (harvestsList: VaultPerformanceEvent[], eventType: HarvestType) => {
+    if (!harvestsList || harvestsList?.length === 0) return;
+
+    for (let i = 0; i < harvestsList.length; i++) {
+      const harvest = harvestsList[i];
+
+      const vaultGraph = await sdk.graph.loadSett({
+        id: vaultAddr,
+        block: { number: harvest.block },
+      });
+
+      const harvestToken = harvest.token || vaultDef.depositToken;
+
+      const depositToken = await getFullToken(chain, harvestToken);
+
+      const harvestAmount = formatBalance(harvest.amount || BigNumber.from(0), depositToken.decimals);
+
+      const extendedHarvest = {
+        ...harvest,
+        token: harvestToken,
+        amount: harvestAmount,
+        eventType,
+        strategyBalance: 0,
+        estimatedApr: 0,
+      };
+
+      if (vaultGraph?.sett) {
+        const balance = BigNumber.from(vaultGraph.sett?.strategy?.balance || vaultGraph.sett.balance || 0);
+
+        extendedHarvest.strategyBalance = formatBalance(balance, depositToken.decimals);
+
+        if (i === harvestsList.length - 1 && eventType === HarvestType.Harvest) {
+          vaultHarvests.push(extendedHarvest);
+          continue;
+        }
+
+        const startOfHarvest = harvest.timestamp;
+        let endOfCurrentHarvest: Nullable<number>;
+
+        if (eventType === HarvestType.Harvest) {
+          endOfCurrentHarvest = harvestsList[i + 1].timestamp;
+          harvestsStartEndMap[`${startOfHarvest}`] = endOfCurrentHarvest;
+        } else if (eventType === HarvestType.TreeDistribution) {
+          endOfCurrentHarvest = harvestsStartEndMap[`${harvest.timestamp}`];
+        }
+
+        if (endOfCurrentHarvest) {
+          extendedHarvest.estimatedApr = await estimateHarvestEventApr(
+            chain,
+            harvestToken,
+            startOfHarvest,
+            endOfCurrentHarvest,
+            harvest.amount,
+            balance,
+          );
+        }
+      }
+
+      vaultHarvests.push(extendedHarvest);
+    }
+  };
+
+  const allHarvests = sdkVaultHarvests.flatMap((h) => h.harvests).sort((a, b) => a.timestamp - b.timestamp);
+  const allTreeDistributions = sdkVaultHarvests
+    .flatMap((h) => h.treeDistributions)
+    .sort((a, b) => a.timestamp - b.timestamp);
+
+  await _extend_harvests_data(allHarvests, HarvestType.Harvest);
+  await _extend_harvests_data(allTreeDistributions, HarvestType.TreeDistribution);
+
+  return vaultHarvests;
+}
+
+export async function getLastCompoundHarvest(vault: string): Promise<Nullable<HarvestCompoundData>> {
+  const mapper = getDataMapper();
+  const query = mapper.query(HarvestCompoundData, { vault }, { limit: 1, scanIndexForward: false });
+
+  let lastHarvest = null;
+
+  try {
+    for await (const harvest of query) {
+      lastHarvest = harvest;
+    }
+  } catch (e) {
+    console.error(`Failed to get compound harvest from ddb for vault: ${vault}; ${e}`);
+  }
+
+  return lastHarvest;
 }

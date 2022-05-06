@@ -25,7 +25,7 @@ custom:
     seed:
       default:
         sources:
-          - table: ${self:custom.table.PRICE_DATA}
+          - table: ${self:custom.table.TOKEN_PRICE_DATA}
             sources: [./seed/prices.json]
           - table: ${self:custom.table.APY_SNAPSHOTS_DATA}
             sources: [./seed/value-sources.json]
@@ -39,19 +39,23 @@ custom:
 
   table:
     APY_SNAPSHOTS_DATA: apy-snapshots-${self:custom.stage}
-    SETT_DATA: sett-historic-snapshots-${self:custom.stage}
-    VAULT_BALANCES_DATA: vault-balances-${self:custom.stage}
-    PRICE_DATA: token-prices-${self:custom.stage}
-    TOKEN_INFORMATION_DATA: token-information-${self:custom.stage}
+    SETT_HISTORIC_DATA: sett-historic-snapshots-${self:custom.stage}
     VAULT_SNAPSHOTS_DATA: vaults-snapshots-${self:custom.stage}
+    VAULT_BALANCES_DATA: vault-balances-${self:custom.stage}
+    TOKEN_PRICE_DATA: token-prices-${self:custom.stage}
+    TOKEN_INFORMATION_DATA: token-information-${self:custom.stage}
+    HARVEST_DATA: harvest-data-${self:custom.stage}
+    HARVEST_COMPOUND_DATA: harvest-compound-data-${self:custom.stage}
     ACCOUNT_DATA: accounts-${self:custom.stage}
+    METADATA_DATA: metadata-${self:custom.stage}
     METRICS_SNAPSHOTS_DATA: metrics-snapshots-${self:custom.stage}
+    UNCLAIMED_SNAPSHOTS_DATA: unclaimed-snapshots-${self:custom.stage}
     LEADERBOARD_DATA: leaderboards-${self:custom.stage}
     LEADERBOARD_SUMMARY_DATA: leaderboards-summary-${self:custom.stage}
-    METADATA_DATA: metadata-${self:custom.stage}
-    UNCLAIMED_SNAPSHOTS_DATA: unclaimed-snapshots-${self:custom.stage}
     CYCLE_ANALYTICS_DATA: rewards-${self:custom.stage}
-    HARVEST_DATA: harvest-data-${self:custom.stage}
+    TREASURY_SNAPSHOT_DATA: treasury-snapshot-${self:custom.stage}
+    PROTOCOL_DATA: protocol-data-${self:custom.stage}
+    CHART_DATA: chart-data-${self:custom.stage}
 
   merkleProofs:
     staging: 'badger-staging-merkle-proofs'
@@ -91,7 +95,6 @@ provider:
     BLOCKNATIVE_API_KEY: ${env:BLOCKNATIVE_API_KEY}
     UNISWAP: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2'
     SUSHISWAP: 'https://api.thegraph.com/subgraphs/name/sushiswap/exchange'
-    SUSHISWAP_XDAI: 'https://api.thegraph.com/subgraphs/name/sushiswap/xdai-exchange'
     SUSHISWAP_MATIC: 'https://api.thegraph.com/subgraphs/name/sushiswap/matic-exchange'
     SUSHISWAP_ARBITRUM: 'https://api.thegraph.com/subgraphs/name/sushiswap/arbitrum-exchange'
     PANCAKESWAP: 'https://api.thegraph.com/subgraphs/name/pancakeswap/exchange'
@@ -99,18 +102,22 @@ provider:
     SWAPR: 'https://api.thegraph.com/subgraphs/name/dxgraphs/swapr-arbitrum-one-v3'
     # Table Defintions
     APY_SNAPSHOTS_DATA: ${self:custom.table.APY_SNAPSHOTS_DATA}
-    SETT_DATA: ${self:custom.table.SETT_DATA}
-    VAULT_BALANCES_DATA: ${self:custom.table.VAULT_BALANCES_DATA}
-    PRICE_DATA: ${self:custom.table.PRICE_DATA}
-    TOKEN_INFORMATION_DATA: ${self:custom.table.TOKEN_INFORMATION_DATA}
+    SETT_HISTORIC_DATA: ${self:custom.table.SETT_HISTORIC_DATA}
     VAULT_SNAPSHOTS_DATA: ${self:custom.table.VAULT_SNAPSHOTS_DATA}
+    VAULT_BALANCES_DATA: ${self:custom.table.VAULT_BALANCES_DATA}
+    TOKEN_PRICE_DATA: ${self:custom.table.TOKEN_PRICE_DATA}
+    TOKEN_INFORMATION_DATA: ${self:custom.table.TOKEN_INFORMATION_DATA}
+    HARVEST_DATA: ${self:custom.table.HARVEST_DATA}
+    HARVEST_COMPOUND_DATA: ${self:custom.table.HARVEST_COMPOUND_DATA}
     ACCOUNT_DATA: ${self:custom.table.ACCOUNT_DATA}
+    METADATA_DATA: ${self:custom.table.METADATA_DATA}
     METRICS_SNAPSHOTS_DATA: ${self:custom.table.METRICS_SNAPSHOTS_DATA}
     LEADERBOARD_DATA: ${self:custom.table.LEADERBOARD_DATA}
     LEADERBOARD_SUMMARY_DATA: ${self:custom.table.LEADERBOARD_SUMMARY_DATA}
-    METADATA_DATA: ${self:custom.table.METADATA_DATA}
     UNCLAIMED_SNAPSHOTS_DATA: ${self:custom.table.UNCLAIMED_SNAPSHOTS_DATA}
-    HARVEST_DATA: ${self:custom.table.HARVEST_DATA}
+    TREASURY_SNAPSHOT_DATA: ${self:custom.table.TREASURY_SNAPSHOT_DATA}
+    PROTOCOL_DATA: ${self:custom.table.PROTOCOL_DATA}
+    CHART_DATA: ${self:custom.table.CHART_DATA}
     # General Defintions
     REWARD_DATA: ${self:custom.merkleProofs.${self:custom.stage}}
     STAGE: ${opt:stage, self:provider.stage}
@@ -153,7 +160,7 @@ resources:
     settHistoricSnapshots:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:custom.table.SETT_DATA}
+        TableName: ${self:custom.table.SETT_HISTORIC_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
           - AttributeName: 'address'
@@ -169,7 +176,7 @@ resources:
     priceTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:custom.table.PRICE_DATA}
+        TableName: ${self:custom.table.TOKEN_PRICE_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
           - AttributeName: 'address'
@@ -338,6 +345,37 @@ resources:
           - AttributeName: 'vault'
             AttributeType: 'S'
 
+    harvestCompoundDataTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.table.HARVEST_COMPOUND_DATA}
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: 'vault'
+            KeyType: 'HASH'
+          - AttributeName: 'timestamp'
+            KeyType: 'RANGE'
+        AttributeDefinitions:
+          - AttributeName: 'vault'
+            AttributeType: 'S'
+          - AttributeName: 'timestamp'
+            AttributeType: 'N'
+          - AttributeName: 'block'
+            AttributeType: 'N'
+        GlobalSecondaryIndexes:
+          - IndexName: IndexHarvestCompoundDataBlock
+            KeySchema:
+              - AttributeName: 'block'
+                KeyType: 'HASH'
+            Projection:
+              ProjectionType: ALL
+          - IndexName: IndexHarvestCompoundDataVault
+            KeySchema:
+              - AttributeName: 'vault'
+                KeyType: 'HASH'
+            Projection:
+              ProjectionType: ALL
+
     cycleAnalyticsTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -367,6 +405,42 @@ resources:
             Projection:
               ProjectionType: ALL
 
+    treasurySnapshotData:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.table.TREASURY_SNAPSHOT_DATA}
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: 'address'
+            KeyType: 'HASH'
+        AttributeDefinitions:
+          - AttributeName: 'address'
+            AttributeType: 'S'
+
+    protocolData:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.table.PROTOCOL_DATA}
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: 'id'
+            KeyType: 'HASH'
+        AttributeDefinitions:
+          - AttributeName: 'id'
+            AttributeType: 'S'
+
+    chartData:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.table.CHART_DATA}
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: 'id'
+            KeyType: 'HASH'
+        AttributeDefinitions:
+          - AttributeName: 'id'
+            AttributeType: 'S'
+
 functions:
   request-handler:
     handler: src/LambdaServer.handler
@@ -393,7 +467,7 @@ functions:
 
   index-apy-snapshots:
     handler: src/indexers/apy-snapshots-indexer.refreshApySnapshots
-    timeout: 120
+    timeout: 180
     memorySize: 4096
     events:
       - schedule:
@@ -427,6 +501,15 @@ functions:
           name: ${self:service}-${self:custom.stage}-index-vault-harvests
           description: 'index harvests data for supported vaults'
           rate: rate(5 minutes)
+
+  index-harvest-compound:
+    handler: src/indexers/harvest-compound-indexer.indexVaultsHarvestsCompund
+    timeout: 360
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-harvest-compound
+          description: 'index onchain harvests for all vaults'
+          rate: rate(2 hours)
 
   index-leaderboard:
     handler: src/indexers/leaderboard-indexer.indexBoostLeaderBoard
@@ -480,3 +563,12 @@ functions:
           name: ${self:service}-${self:custom.stage}-index-protocol-metrics-snapshots
           description: 'index protocol metrics'
           rate: rate(1 day)
+
+  index-citadel-treasury:
+    handler: src/citadel/citadel-indexer.snapshotTreasury
+    timeout: 480
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-citadel-treasury
+          description: 'index citadel treasury holdings'
+          rate: rate(5 minutes)

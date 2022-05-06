@@ -12,9 +12,9 @@ export const ONE_YEAR_MS = ONE_YEAR_SECONDS * 1000;
 
 // data access constants
 export const APY_SNAPSHOTS_DATA = getEnvVar('APY_SNAPSHOTS_DATA');
-export const SETT_DATA = getEnvVar('SETT_DATA');
+export const SETT_HISTORIC_DATA = getEnvVar('SETT_HISTORIC_DATA');
 export const VAULT_BALANCES_DATA = getEnvVar('VAULT_BALANCES_DATA');
-export const PRICE_DATA = getEnvVar('PRICE_DATA');
+export const TOKEN_PRICE_DATA = getEnvVar('TOKEN_PRICE_DATA');
 export const TOKEN_INFORMATION_DATA = getEnvVar('TOKEN_INFORMATION_DATA');
 export const VAULT_SNAPSHOTS_DATA = getEnvVar('VAULT_SNAPSHOTS_DATA');
 export const REWARD_DATA = getEnvVar('REWARD_DATA');
@@ -25,11 +25,14 @@ export const LEADERBOARD_SUMMARY_DATA = getEnvVar('LEADERBOARD_SUMMARY_DATA');
 export const UNCLAIMED_SNAPSHOTS_DATA = getEnvVar('UNCLAIMED_SNAPSHOTS_DATA');
 export const USER_CLAIMED_METADATA = getEnvVar('METADATA_DATA');
 export const HARVEST_DATA = getEnvVar('HARVEST_DATA');
+export const HARVEST_COMPOUND_DATA = getEnvVar('HARVEST_COMPOUND_DATA');
+export const TREASURY_SNAPSHOT_DATA = getEnvVar('TREASURY_SNAPSHOT_DATA');
+export const PROTOCOL_DATA = getEnvVar('PROTOCOL_DATA');
+export const CHART_DATA = getEnvVar('CHART_DATA');
 
 // thegraph constants
 export const UNISWAP_URL = getEnvVar('UNISWAP');
 export const SUSHISWAP_URL = getEnvVar('SUSHISWAP');
-export const SUSHISWAP_XDAI_URL = getEnvVar('SUSHISWAP_XDAI');
 export const SUSHISWAP_MATIC_URL = getEnvVar('SUSHISWAP_MATIC');
 export const SUSHISWAP_ARBITRUM_URL = getEnvVar('SUSHISWAP_ARBITRUM');
 export const PANCAKESWAP_URL = getEnvVar('PANCAKESWAP');

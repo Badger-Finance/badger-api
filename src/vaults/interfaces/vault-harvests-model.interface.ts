@@ -1,10 +1,9 @@
 import { Description, Example, Property, Title } from '@tsed/schema';
-import { VaultHarvestsExtended } from './vault-harvest-extended';
-import { BigNumber } from 'ethers';
 import { HarvestType } from '../enums/harvest.enum';
 import { TOKENS } from '../../config/tokens.config';
+import { VaultHarvestsExtendedResp } from './vault-harvest-extended-resp.interface';
 
-export class VaultHarvestsModel implements VaultHarvestsExtended {
+export class VaultHarvestsModel implements VaultHarvestsExtendedResp {
   @Title('timestamp')
   @Description('time of harvest emitted')
   @Example(Date.now())
@@ -25,9 +24,9 @@ export class VaultHarvestsModel implements VaultHarvestsExtended {
 
   @Title('amount')
   @Description('amount of harvested token')
-  @Example(15.34534)
+  @Example('15.3452')
   @Property()
-  public amount: BigNumber;
+  public amount: number;
 
   @Title('eventType')
   @Description('Harvest or TreeDistribution')
@@ -47,7 +46,15 @@ export class VaultHarvestsModel implements VaultHarvestsExtended {
   @Property()
   public estimatedApr?: number;
 
-  constructor({ timestamp, block, token, amount, eventType, strategyBalance, estimatedApr }: VaultHarvestsExtended) {
+  constructor({
+    timestamp,
+    block,
+    token,
+    amount,
+    eventType,
+    strategyBalance,
+    estimatedApr,
+  }: VaultHarvestsExtendedResp) {
     this.timestamp = timestamp;
     this.block = block;
     this.token = token;

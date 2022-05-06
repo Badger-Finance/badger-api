@@ -1,10 +1,10 @@
 import { Network } from '@badger-dao/sdk';
 import { GraphQLClient } from 'graphql-request';
 import { Chain } from '../../chains/config/chain.config';
-import { SUSHISWAP_ARBITRUM_URL, SUSHISWAP_MATIC_URL, SUSHISWAP_URL, SUSHISWAP_XDAI_URL } from '../../config/constants';
+import { SUSHISWAP_ARBITRUM_URL, SUSHISWAP_MATIC_URL, SUSHISWAP_URL } from '../../config/constants';
 import { getSdk as getSushiswapSdk, OrderDirection, PairDayData_OrderBy } from '../../graphql/generated/sushiswap';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
-import { CachedValueSource } from '../interfaces/cached-value-source.interface';
+import { CachedValueSource } from '../../aws/models/apy-snapshots.model';
 import { PairDayData } from '../interfaces/pair-day-data.interface';
 import { getSwapValue } from './strategy.utils';
 
@@ -17,9 +17,6 @@ export class SushiswapStrategy {
 async function getSushiswapSwapValue(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource> {
   let graphUrl;
   switch (chain.network) {
-    case Network.xDai:
-      graphUrl = SUSHISWAP_XDAI_URL;
-      break;
     case Network.Polygon:
       graphUrl = SUSHISWAP_MATIC_URL;
       break;

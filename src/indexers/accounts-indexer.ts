@@ -5,13 +5,14 @@ import { getChainStartBlockKey, getDataMapper } from '../aws/dynamodb.utils';
 import { loadChains } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { ClaimableBalance } from '../rewards/entities/claimable-balance';
-import { UserClaimSnapshot } from '../rewards/entities/user-claim-snapshot';
+import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
 import { getClaimableRewards, getTreeDistribution } from '../rewards/rewards.utils';
 import { getVaultDefinition } from '../vaults/vaults.utils';
 import { batchRefreshAccounts, chunkArray } from './indexer.utils';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 import { AccountIndexMode } from './enums/account-index-mode.enum';
 import { AccountIndexEvent } from './interfaces/account-index-event.interface';
+import { Network } from '@badger-dao/sdk';
 
 export async function refreshClaimableBalances(chain: Chain) {
   const mapper = getDataMapper();
@@ -107,7 +108,7 @@ export async function refreshAccountSettBalances(chain: Chain, batchAccounts: Ac
 export async function refreshUserAccounts(event: AccountIndexEvent) {
   const { mode } = event;
   console.log(`Invoked refreshUserAccounts in ${mode} mode`);
-  const chains = loadChains();
+  const chains = loadChains().filter((c) => c.network !== Network.BinanceSmartChain);
   await Promise.all(
     chains.map(async (chain) => {
       if (mode === AccountIndexMode.BalanceData) {

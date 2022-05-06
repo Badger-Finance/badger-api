@@ -3,7 +3,7 @@ import { TOKENS } from '../../config/tokens.config';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { getCachedVault, getVaultCachedValueSources, getVaultDefinition } from '../../vaults/vaults.utils';
 import { getFullToken, getVaultTokens } from '../../tokens/tokens.utils';
-import { CachedValueSource } from '../interfaces/cached-value-source.interface';
+import { CachedValueSource } from '../../aws/models/apy-snapshots.model';
 import { SourceType } from '../../rewards/enums/source-type.enum';
 
 export class OxDaoStrategy {

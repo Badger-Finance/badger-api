@@ -1,4 +1,4 @@
-import { Erc20__factory, formatBalance, Network } from '@badger-dao/sdk';
+import { Erc20__factory, formatBalance, Network, Token } from '@badger-dao/sdk';
 import { UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { Chain } from '../../chains/config/chain.config';
@@ -13,10 +13,10 @@ import {
 import { SourceType } from '../../rewards/enums/source-type.enum';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { getCachedVault, getVaultCachedValueSources, getVaultDefinition } from '../../vaults/vaults.utils';
-import { VaultTokenBalance } from '../../vaults/types/vault-token-balance.interface';
+import { VaultTokenBalance } from '../../aws/models/vault-token-balance.model';
 import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
 import { getFullToken, getVaultTokens, toBalance } from '../../tokens/tokens.utils';
-import { CachedValueSource } from '../interfaces/cached-value-source.interface';
+import { CachedValueSource } from '../../aws/models/apy-snapshots.model';
 import { createValueSource } from '../interfaces/value-source.interface';
 import { request } from '../../common/request';
 import { CurveAPIResponse } from '../interfaces/curve-api-response.interrface';
@@ -52,6 +52,7 @@ const nonRegistryPools: ContractRegistry = {
   [TOKENS.ARB_CRV_TRICRYPTO]: '0x960ea3e3C7FB317332d990873d354E18d7645590',
   [TOKENS.CRV_TRICRYPTO2]: '0xD51a44d3FaE010294C616388b506AcdA1bfAAE46',
   [TOKENS.CRV_BADGER]: '0x50f3752289e1456BfA505afd37B241bca23e685d',
+  [TOKENS.CTDL]: TOKENS.CRV_CTDL,
 };
 
 interface FactoryAPYResonse {
@@ -157,7 +158,6 @@ export async function getCurvePerformance(chain: Chain, vaultDefinition: VaultDe
 
 export async function getCurveTokenPrice(chain: Chain, depositToken: string): Promise<TokenPrice> {
   const deposit = await getFullToken(chain, depositToken);
-
   const poolBalance = await getCurvePoolBalance(chain, depositToken);
   const token = Erc20__factory.connect(depositToken, chain.provider);
   const value = poolBalance.reduce((total, balance) => (total += balance.value), 0);
@@ -231,4 +231,20 @@ export async function getCurveVaultTokenBalance(chain: Chain, token: string): Pr
     vault: vaultToken,
     tokenBalances: cachedTokens,
   });
+}
+
+// this should really only be used on 50:50 curve v2 crypto pools
+export async function resolveCurvePoolTokenPrice(chain: Chain, token: Token): Promise<TokenPrice> {
+  const balances = await getCurvePoolBalance(chain, nonRegistryPools[token.address]);
+  if (balances.length != 2) {
+    throw new Error('Pool has unexpected number of tokens!');
+  }
+  const requestTokenIndex = balances[0].address === token.address ? 0 : 1;
+  const requestToken = balances[requestTokenIndex];
+  const pairToken = balances[1 - requestTokenIndex];
+  const requestTokenPrice = pairToken.value / requestToken.balance;
+  return {
+    address: token.address,
+    price: requestTokenPrice,
+  };
 }

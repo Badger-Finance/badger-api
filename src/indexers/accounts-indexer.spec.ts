@@ -13,7 +13,7 @@ import { RewardMerkleDistribution } from '../rewards/interfaces/merkle-distribut
 import { BigNumber } from '@ethersproject/bignumber';
 import { TOKENS } from '../config/tokens.config';
 import { mockBatchPut } from '../test/tests.utils';
-import { UserClaimSnapshot } from '../rewards/entities/user-claim-snapshot';
+import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
 import { ClaimableBalance } from '../rewards/entities/claimable-balance';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 import { DataMapper } from '@aws/dynamodb-data-mapper';

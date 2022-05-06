@@ -13,7 +13,7 @@ export const vaultsHarvestsSdkMock = {
               type: 'BigNumber',
               hex: '0x11bc85620d1c13',
             },
-            token: '',
+            token: '0x075b1bb99792c9e1041ba13afef80c91a1e70fb3',
           },
         ],
         treeDistributions: [
@@ -47,7 +47,7 @@ export const vaultsHarvestsSdkMock = {
               type: 'BigNumber',
               hex: '0x3ddb4d0d018648',
             },
-            token: '',
+            token: '0x075b1bb99792c9e1041ba13afef80c91a1e70fb3',
           },
         ],
         treeDistributions: [
@@ -72,7 +72,7 @@ export const vaultsHarvestsSdkMock = {
               type: 'BigNumber',
               hex: '0x53a18268ac9569',
             },
-            token: '',
+            token: '0x075b1bb99792c9e1041ba13afef80c91a1e70fb3',
           },
         ],
         treeDistributions: [
@@ -106,7 +106,7 @@ export const vaultsHarvestsSdkMock = {
               type: 'BigNumber',
               hex: '0x3531891e4ac3f5',
             },
-            token: '',
+            token: '0x075b1bb99792c9e1041ba13afef80c91a1e70fb3',
           },
         ],
         treeDistributions: [
@@ -131,7 +131,7 @@ export const vaultsHarvestsSdkMock = {
               type: 'BigNumber',
               hex: '0x8212074a2405cf',
             },
-            token: '',
+            token: '0x075b1bb99792c9e1041ba13afef80c91a1e70fb3',
           },
         ],
         treeDistributions: [
@@ -165,7 +165,7 @@ export const vaultsHarvestsSdkMock = {
               type: 'BigNumber',
               hex: '0x00',
             },
-            token: '',
+            token: '0x075b1bb99792c9e1041ba13afef80c91a1e70fb3',
           },
         ],
         treeDistributions: [],
@@ -180,7 +180,7 @@ export const vaultsHarvestsSdkMock = {
               type: 'BigNumber',
               hex: '0x30197df9db1863',
             },
-            token: '',
+            token: '0x075b1bb99792c9e1041ba13afef80c91a1e70fb3',
           },
         ],
         treeDistributions: [
@@ -209,7 +209,7 @@ export const vaultsHarvestsSdkMock = {
               type: 'BigNumber',
               hex: '0x01fb4d02ff225338',
             },
-            token: '',
+            token: '0x49849c98ae39fff122806c06791fa73784fb3675',
           },
         ],
         treeDistributions: [
@@ -243,7 +243,7 @@ export const vaultsHarvestsSdkMock = {
               type: 'BigNumber',
               hex: '0x035a0af86bb64129',
             },
-            token: '',
+            token: '0x49849c98ae39fff122806c06791fa73784fb3675',
           },
         ],
         treeDistributions: [
@@ -268,7 +268,7 @@ export const vaultsHarvestsSdkMock = {
               type: 'BigNumber',
               hex: '0x0dbea271f653d670',
             },
-            token: '',
+            token: '0x49849c98ae39fff122806c06791fa73784fb3675',
           },
         ],
         treeDistributions: [
@@ -302,7 +302,7 @@ export const vaultsHarvestsSdkMock = {
               type: 'BigNumber',
               hex: '0x6c57196406b9',
             },
-            token: '',
+            token: '0x49849c98ae39fff122806c06791fa73784fb3675',
           },
         ],
         treeDistributions: [
