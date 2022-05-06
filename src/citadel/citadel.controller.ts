@@ -2,7 +2,6 @@ import { CitadelTreasurySummary } from '@badger-dao/sdk/lib/api/interfaces/citad
 import { Controller, Get, Inject, QueryParams, UseCache } from '@tsed/common';
 import { ContentType, Summary, Returns, Description } from '@tsed/schema';
 import { HistoricTreasurySummarySnapshot } from '../aws/models/historic-treasury-summary-snapshot.model';
-import { ChartTimeFrame } from '../charts/enums/chart-timeframe.enum';
 import { TreasuryService } from '../treasury/treasury.service';
 import { CitadelService } from './citadel.service';
 import { CITADEL_TREASURY_ADDRESS } from './config/citadel-treasury.config';
@@ -14,6 +13,7 @@ import { CitadelSummary } from '@badger-dao/sdk/lib/api/interfaces/citadel-summa
 import { CitadelSummaryModel } from './interfaces/citadel-summary-model.interface';
 import { NotFound } from '@tsed/exceptions';
 import { CitadelAccount } from './interfaces/citadel-account.interface';
+import { ChartTimeFrame } from '@badger-dao/sdk';
 
 @Controller('/')
 export class CitadelController {
