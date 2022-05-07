@@ -4,7 +4,10 @@ import { ChartData } from '../../charts/chart-data.model';
 import { CachedTreasuryPosition } from '../../treasury/interfaces/cached-treasury-position';
 import { TreasurySummary } from '../../treasury/interfaces/treasury-summary.interface';
 
-export class HistoricTreasurySummarySnapshot extends ChartData implements TreasurySummary {
+export class HistoricTreasurySummarySnapshot
+  extends ChartData<HistoricTreasurySummarySnapshot>
+  implements TreasurySummary
+{
   @attribute()
   id!: string;
 
@@ -22,4 +25,12 @@ export class HistoricTreasurySummarySnapshot extends ChartData implements Treasu
 
   @attribute({ memberType: embed(CachedTreasuryPosition) })
   positions!: CachedTreasuryPosition[];
+
+  toBlankData(): HistoricTreasurySummarySnapshot {
+    const copy = JSON.parse(JSON.stringify(this));
+    copy.value = 0;
+    copy.yield = 0;
+    copy.positions = [];
+    return copy;
+  }
 }

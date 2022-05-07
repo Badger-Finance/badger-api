@@ -287,5 +287,10 @@ async function retrieveBribesProcessorData(chain: Chain, vault: VaultDefinition)
   const timestampCutoff = Math.floor(Date.now() / 1000 - 21 * ONE_DAY_SECONDS);
   const { data } = await evaluateEvents(harvests, distributions, { timestamp_gte: timestampCutoff });
 
-  return estimateVaultPerformance(chain, vault, data);
+  try {
+    return estimateVaultPerformance(chain, vault, data);
+  } catch (err) {
+    console.log({ message: 'Unable to update bribes processor APR', err });
+    return [];
+  }
 }
