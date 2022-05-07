@@ -116,7 +116,7 @@ export async function updateSnapshots<T extends ChartData<T>>(namespace: string,
       // we should backfill YTD if required, snapshot is guaranteed to be our only data point
       if (timeframe === ChartTimeFrame.YTD && cachedChart.data.length === 1) {
         const startOfYear = new Date(new Date().getFullYear(), 0, 0);
-        const daysPast = Math.floor((snapshot.timestamp - startOfYear.getDate()) / ONE_DAY_MS);
+        const daysPast = Math.floor((snapshot.timestamp - startOfYear.getTime()) / ONE_DAY_MS);
         for (let i = 1; i <= daysPast; i++) {
           const historicBlank = snapshot.toBlankData();
           historicBlank.timestamp = new Date(now - ONE_DAY_MS * i).getTime();
