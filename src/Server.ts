@@ -23,6 +23,10 @@ import { CITADEL_V1_CONTROLLERS } from './CitadelControllerRegistry';
     disableBootstrapLog: true,
     logRequest: false,
   },
+  cache: {
+    ttl: 300, // default TTL
+    store: 'memory',
+  },
   exclude: ['**/*.spec.ts'],
 })
 export class Server {
