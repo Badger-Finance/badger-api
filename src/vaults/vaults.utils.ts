@@ -528,11 +528,12 @@ export async function estimateVaultPerformance(
   data: VaultHarvestData[],
 ): Promise<CachedValueSource[]> {
   const recentHarvests = data.sort((a, b) => b.timestamp - a.timestamp);
-  const totalDuration = data[0].timestamp - data[data.length - 1].timestamp;
 
   if (recentHarvests.length <= 1) {
     throw new Error(`${vaultDefinition.name} does not have adequate harvest history`);
   }
+
+  const totalDuration = recentHarvests[0].timestamp - recentHarvests[data.length - 1].timestamp;
 
   const vault = await getCachedVault(chain, vaultDefinition);
   const measuredHarvests = recentHarvests.slice(0, recentHarvests.length - 1);
