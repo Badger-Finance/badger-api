@@ -268,6 +268,7 @@ export async function resolveCurvePoolTokenPrice(chain: Chain, token: Token): Pr
   };
 }
 
+// TODO: this function is a bit weird, we can't assume to ever have a 'Harvest'
 async function retrieveBribesProcessorData(chain: Chain, vault: VaultDefinition): Promise<CachedValueSource[]> {
   const sdk = await chain.getSdk();
   const bribeProcessor = BribesProcessor__factory.connect('0xbed8f323456578981952e33bbfbe80d23289246b', sdk.provider);
@@ -287,12 +288,10 @@ async function retrieveBribesProcessorData(chain: Chain, vault: VaultDefinition)
   const timestampCutoff = Math.floor(Date.now() / 1000 - 21 * ONE_DAY_SECONDS);
   const { data } = await evaluateEvents(harvests, distributions, { timestamp_gte: timestampCutoff });
 
-  try {
-    const result = estimateVaultPerformance(chain, vault, data);
-    // ensure try + catch allows function to resolve
-    return result;
-  } catch (err) {
-    console.log({ message: 'Unable to update bribes processor APR', err });
+  // cannot construct data with this - will be fine after the test emission
+  if (data.length <= 1) {
     return [];
   }
+
+  return estimateVaultPerformance(chain, vault, data);
 }

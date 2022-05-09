@@ -533,6 +533,8 @@ export async function estimateVaultPerformance(
     throw new Error(`${vaultDefinition.name} does not have adequate harvest history`);
   }
 
+  const totalDuration = recentHarvests[0].timestamp - recentHarvests[data.length - 1].timestamp;
+
   const vault = await getCachedVault(chain, vaultDefinition);
   const measuredHarvests = recentHarvests.slice(0, recentHarvests.length - 1);
   const valueSources = [];
@@ -542,7 +544,6 @@ export async function estimateVaultPerformance(
     .map((h) => h.amount)
     .reduce((total, harvested) => total.add(harvested), BigNumber.from(0));
 
-  let totalDuration = 0;
   let weightedBalance = 0;
   const depositToken = await getFullToken(chain, vaultDefinition.depositToken);
 
@@ -552,7 +553,6 @@ export async function estimateVaultPerformance(
     const end = allHarvests[i];
     const start = allHarvests[i + 1];
     const duration = end.timestamp - start.timestamp;
-    totalDuration += duration;
     const { sett } = await getVault(chain, vaultDefinition.vaultToken, end.block);
     if (sett) {
       const balance = sett.strategy?.balance ?? sett.balance;
@@ -560,6 +560,11 @@ export async function estimateVaultPerformance(
     } else {
       weightedBalance += duration * vault.balance;
     }
+  }
+
+  // TODO: generalize or combine weighted balance calculation and distribution timestamp aggregation
+  if (weightedBalance === 0) {
+    weightedBalance = vault.balance * totalDuration;
   }
 
   const { price } = await getPrice(vaultDefinition.depositToken);
