@@ -528,6 +528,7 @@ export async function estimateVaultPerformance(
   data: VaultHarvestData[],
 ): Promise<CachedValueSource[]> {
   const recentHarvests = data.sort((a, b) => b.timestamp - a.timestamp);
+  const totalDuration = data[0].timestamp - data[data.length - 1].timestamp;
 
   if (recentHarvests.length <= 1) {
     throw new Error(`${vaultDefinition.name} does not have adequate harvest history`);
@@ -546,7 +547,6 @@ export async function estimateVaultPerformance(
   const depositToken = await getFullToken(chain, vaultDefinition.depositToken);
 
   const allHarvests = recentHarvests.flatMap((h) => h.harvests);
-  const totalDuration = allHarvests[0].timestamp - allHarvests[allHarvests.length - 1].timestamp;
   // use the full harvests to construct all intervals for durations, nth element is ignored for distributions
   for (let i = 0; i < allHarvests.length - 1; i++) {
     const end = allHarvests[i];
