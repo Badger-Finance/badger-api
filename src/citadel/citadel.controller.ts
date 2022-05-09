@@ -13,7 +13,7 @@ import { CitadelSummary } from '@badger-dao/sdk/lib/api/interfaces/citadel-summa
 import { CitadelSummaryModel } from './interfaces/citadel-summary-model.interface';
 import { NotFound } from '@tsed/exceptions';
 import { CitadelAccount } from './interfaces/citadel-account.interface';
-import { ChartTimeFrame } from '@badger-dao/sdk';
+import { ChartTimeFrame, CitadelLeaderboardEntry } from '@badger-dao/sdk';
 
 @Controller('/')
 export class CitadelController {
@@ -77,5 +77,12 @@ export class CitadelController {
   @ContentType('json')
   async loadCitadelAccount(@QueryParams('address') address: string): Promise<CitadelAccount> {
     return this.citadelService.loadAccount(address);
+  }
+
+  @UseCache()
+  @Get('/leaderboard')
+  @ContentType('json')
+  async loadKnightingRoundLeaderboard(): Promise<CitadelLeaderboardEntry[]> {
+    return this.citadelService.loadKnightingRoundLeaderboard();
   }
 }

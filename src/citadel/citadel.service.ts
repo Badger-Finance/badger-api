@@ -1,10 +1,10 @@
-import { CitadelRewardType, formatBalance, Network } from '@badger-dao/sdk';
+import { CitadelLeaderboardEntry, CitadelRewardType, formatBalance, Network } from '@badger-dao/sdk';
 import { CitadelTreasurySummary } from '@badger-dao/sdk/lib/api/interfaces/citadel-treasury-summary.interface';
 import { Service } from '@tsed/di';
 import { TOKENS } from '../config/tokens.config';
 import { getPrice } from '../prices/prices.utils';
 import { queryTreasurySummary } from '../treasury/treasury.utils';
-import { getStakedCitadelEarnings, queryCitadelData } from './citadel.utils';
+import { CITADEL_KNIGHTS, getStakedCitadelEarnings, queryCitadelData } from './citadel.utils';
 import { CITADEL_TREASURY_ADDRESS } from './config/citadel-treasury.config';
 import { RewardFilter } from '@badger-dao/sdk/lib/citadel/enums/reward-filter.enum';
 import { CitadelRewardEvent } from './interfaces/citadel-reward-event.interface';
@@ -221,5 +221,16 @@ export class CitadelService {
     }
 
     return rewards;
+  }
+
+  async loadKnightingRoundLeaderboard(): Promise<CitadelLeaderboardEntry[]> {
+    return CITADEL_KNIGHTS.map((k, i) => ({
+      rank: i + 1,
+      knight: k,
+      votes: 0,
+      voteWeight: 0,
+      users: 0,
+      funding: 0,
+    }));
   }
 }
