@@ -4,7 +4,7 @@ import { KeyedDataBlob } from '../aws/models/keyed-data-blob.model';
 import { CitadelData, CTIADEL_DATA } from './destructors/citadel-data.destructor';
 import { Nullable } from '../utils/types.utils';
 import { CitadelRewardsSnapshot } from '../aws/models/citadel-rewards-snapshot';
-import BadgerSDK, { Network, Token, VaultV15__factory } from '@badger-dao/sdk';
+import BadgerSDK, { Network, Protocol, Token, VaultV15__factory } from '@badger-dao/sdk';
 import { RewardEventType, RewardEventTypeEnum } from '@badger-dao/sdk/lib/citadel/enums/reward-event-type.enum';
 import { ListRewardsEvent } from '@badger-dao/sdk/lib/citadel/interfaces/list-rewards-event.interface';
 import { CitadelRewardType } from '@badger-dao/sdk/lib/api/enums/citadel-reward-type.enum';
@@ -21,6 +21,17 @@ import { getSdk } from '../graphql/generated/citadel';
 import { formatBalance } from '@badger-dao/sdk';
 
 const CITADEL_SUBGRAPH_URL = 'https://api.thegraph.com/subgraphs/name/axejintao/citadog';
+export const CITADEL_KNIGHTS = [
+  Protocol.Terra,
+  Protocol.Frax,
+  Protocol.Alchemix,
+  Protocol.Convex,
+  Protocol.Redacted,
+  Protocol.JonesDao,
+  Protocol.Tokemak,
+  Protocol.Tribe,
+  Protocol.Ren,
+];
 
 export async function queryCitadelData(): Promise<CitadelData> {
   const mapper = getDataMapper();
