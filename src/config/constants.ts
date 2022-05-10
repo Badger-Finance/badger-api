@@ -1,14 +1,11 @@
 import { SwaggerSettings } from '@tsed/swagger';
 import { Stage } from './enums/stage.enum';
-import { getEnvVar } from './util';
+import { getEnvVar } from './config.utils';
 
 // time constants
 export const ONE_MINUTE_SECONDS = 60;
-export const ONE_MINUTE_MS = ONE_MINUTE_SECONDS * 1000;
 export const ONE_DAY_SECONDS = ONE_MINUTE_SECONDS * 60 * 24;
-export const ONE_DAY_MS = ONE_DAY_SECONDS * 1000;
 export const ONE_YEAR_SECONDS = ONE_DAY_SECONDS * 365;
-export const ONE_YEAR_MS = ONE_YEAR_SECONDS * 1000;
 
 // data access constants
 export const APY_SNAPSHOTS_DATA = getEnvVar('APY_SNAPSHOTS_DATA');
@@ -29,6 +26,7 @@ export const HARVEST_COMPOUND_DATA = getEnvVar('HARVEST_COMPOUND_DATA');
 export const TREASURY_SNAPSHOT_DATA = getEnvVar('TREASURY_SNAPSHOT_DATA');
 export const PROTOCOL_DATA = getEnvVar('PROTOCOL_DATA');
 export const CHART_DATA = getEnvVar('CHART_DATA');
+export const CITADEL_REWARDS_DATA = getEnvVar('CITADEL_REWARDS_DATA');
 
 // thegraph constants
 export const UNISWAP_URL = getEnvVar('UNISWAP');
@@ -51,7 +49,7 @@ export const BLOCKNATIVE_API_KEY = getEnvVar('BLOCKNATIVE_API_KEY');
 export const DEFAULT_PAGE_SIZE = 20;
 
 export const swaggerConfig: SwaggerSettings = {
-  path: '/docs',
+  path: 'docs',
   spec: {
     info: {
       title: 'Badger API',

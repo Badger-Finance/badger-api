@@ -2,7 +2,6 @@ import { CitadelTreasurySummary } from '@badger-dao/sdk/lib/api/interfaces/citad
 import { Controller, Get, Inject, QueryParams, UseCache } from '@tsed/common';
 import { ContentType, Summary, Returns, Description } from '@tsed/schema';
 import { HistoricTreasurySummarySnapshot } from '../aws/models/historic-treasury-summary-snapshot.model';
-import { ChartTimeFrame } from '../charts/enums/chart-timeframe.enum';
 import { TreasuryService } from '../treasury/treasury.service';
 import { CitadelService } from './citadel.service';
 import { CITADEL_TREASURY_ADDRESS } from './config/citadel-treasury.config';
@@ -10,6 +9,11 @@ import { CitadelTreasurySummaryModel } from './interfaces/citadel-treasury-summa
 import { RewardFilter } from '@badger-dao/sdk/lib/citadel/enums/reward-filter.enum';
 import { CitadelRewardEventModel } from './interfaces/citadel-reward-event-model.interface';
 import { CitadelRewardEvent } from './interfaces/citadel-reward-event.interface';
+import { CitadelSummary } from '@badger-dao/sdk/lib/api/interfaces/citadel-summary.interface';
+import { CitadelSummaryModel } from './interfaces/citadel-summary-model.interface';
+import { NotFound } from '@tsed/exceptions';
+import { CitadelAccount } from './interfaces/citadel-account.interface';
+import { ChartTimeFrame, CitadelLeaderboardEntry } from '@badger-dao/sdk';
 
 @Controller('/')
 export class CitadelController {
@@ -29,6 +33,16 @@ export class CitadelController {
     return this.citadelService.loadTreasurySummary();
   }
 
+  @UseCache()
+  @Get('/summary')
+  @ContentType('json')
+  @Summary('Protocol aggregate rewards information')
+  @Description('Returns aggregate paid tokens and yield for staking or locking')
+  @Returns(200, CitadelSummaryModel)
+  async loadRewardsSummary(): Promise<CitadelSummary> {
+    return this.citadelService.loadRewardSummary();
+  }
+
   @Get('/rewards')
   @ContentType('json')
   @Summary('Added/paid rewards list')
@@ -37,11 +51,16 @@ export class CitadelController {
   @Returns(400).Description('Token should be specified')
   @Returns(400).Description('User or token param is missing')
   async loadRewardsList(
-    @QueryParams('token') token: string,
-    @QueryParams('user') user?: string,
+    @QueryParams('token') token?: string,
+    @QueryParams('account') account?: string,
+    @QueryParams('epoch') epoch?: number,
     @QueryParams('filter') filter?: RewardFilter,
   ): Promise<CitadelRewardEvent[]> {
-    return this.citadelService.getListRewards(token, user, filter);
+    if (filter && !Object.values(RewardFilter).includes(filter)) {
+      throw new NotFound(`Unknown filter ${filter}`);
+    }
+
+    return this.citadelService.getListRewards(token, account, epoch, filter);
   }
 
   @UseCache()
@@ -51,5 +70,19 @@ export class CitadelController {
     @QueryParams('timeframe') timeframe = ChartTimeFrame.Day,
   ): Promise<HistoricTreasurySummarySnapshot[]> {
     return this.treasuryService.loadTreasuryChartData(CITADEL_TREASURY_ADDRESS, timeframe);
+  }
+
+  @UseCache()
+  @Get('/accounts')
+  @ContentType('json')
+  async loadCitadelAccount(@QueryParams('address') address: string): Promise<CitadelAccount> {
+    return this.citadelService.loadAccount(address);
+  }
+
+  @UseCache()
+  @Get('/leaderboard')
+  @ContentType('json')
+  async loadKnightingRoundLeaderboard(): Promise<CitadelLeaderboardEntry[]> {
+    return this.citadelService.loadKnightingRoundLeaderboard();
   }
 }

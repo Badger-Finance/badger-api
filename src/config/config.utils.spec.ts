@@ -1,5 +1,5 @@
 import { TOKENS } from './tokens.config';
-import { checksumEntries, getEnvVar } from './util';
+import { checksumEntries, getEnvVar } from './config.utils';
 import { Stage } from './enums/stage.enum';
 
 describe('utils', () => {

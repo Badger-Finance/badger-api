@@ -1,0 +1,25 @@
+query VaultBalance($id: ID!, $block: Block_height) {
+  vaultBalance(id: $id, block: $block) {
+    ...VaultBalance
+  }
+}
+
+query VaultBalances(
+  $block: Block_height
+  $first: Int = 100
+  $skip: Int = 0
+  $orderBy: VaultBalance_orderBy
+  $orderDirection: OrderDirection
+  $where: VaultBalance_filter
+) {
+  vaultBalances(
+    block: $block
+    first: $first
+    skip: $skip
+    where: $where
+    orderBy: $orderBy
+    orderDirection: $orderDirection
+  ) {
+    ...VaultBalance
+  }
+}

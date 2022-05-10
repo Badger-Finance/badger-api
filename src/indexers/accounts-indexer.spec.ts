@@ -5,7 +5,6 @@ import * as rewardsUtils from '../rewards/rewards.utils';
 import * as dynamodbUtils from '../aws/dynamodb.utils';
 import { Network } from '@badger-dao/sdk';
 import { Chain } from '../chains/config/chain.config';
-import { ethers } from 'ethers';
 import { MOCK_DISTRIBUTION_FILE } from '../test/constants';
 import { Ethereum } from '../chains/config/eth.config';
 import { BinanceSmartChain } from '../chains/config/bsc.config';
@@ -22,14 +21,7 @@ import { AccountIndexMode } from './enums/account-index-mode.enum';
 describe('accounts-indexer', () => {
   const rewardsChain = new Ethereum();
   const noRewardsChain = new BinanceSmartChain();
-  const networks = [
-    Network.Ethereum,
-    Network.BinanceSmartChain,
-    Network.Polygon,
-    Network.Arbitrum,
-    Network.Avalanche,
-    Network.Fantom,
-  ];
+  const networks = [Network.Ethereum, Network.Polygon, Network.Arbitrum, Network.Avalanche, Network.Fantom];
   const previousMockedBlockNumber = 90;
   const startMockedBlockNumber = 100;
   const endMockedBlockNumber = 110;
@@ -43,7 +35,7 @@ describe('accounts-indexer', () => {
       .spyOn(accountsUtils, 'getAccounts')
       .mockImplementation((chain) => Promise.resolve([chain.network]));
     getTreeDistribution = jest.spyOn(rewardsUtils, 'getTreeDistribution').mockImplementation(async (chain: Chain) => {
-      if (!chain.badgerTree) {
+      if (chain.network !== Network.Ethereum) {
         return null;
       }
       return MOCK_DISTRIBUTION_FILE;
@@ -56,9 +48,7 @@ describe('accounts-indexer', () => {
         endBlock: startMockedBlockNumber - 1,
       });
     });
-    jest
-      .spyOn(ethers.providers.JsonRpcProvider.prototype, 'getBlockNumber')
-      .mockImplementation(() => Promise.resolve(endMockedBlockNumber));
+    jest.spyOn(rewardsChain.provider, 'getBlockNumber').mockImplementation(async () => endMockedBlockNumber);
   });
 
   describe('refreshUserAccounts', () => {

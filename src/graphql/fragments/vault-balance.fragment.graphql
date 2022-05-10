@@ -1,0 +1,15 @@
+fragment VaultBalance on VaultBalance {
+  id
+  account {
+    id
+  }
+  vault {
+    id
+  }
+  netDeposit
+  netShareDeposit
+  grossDeposit
+  grossShareDeposit
+  grossWithdraw
+  grossShareWithdraw
+}

@@ -1,4 +1,4 @@
-import { BadgerTree__factory, Network, Protocol, Token } from '@badger-dao/sdk';
+import { Network, Protocol, Token } from '@badger-dao/sdk';
 import { getBoostFile, getCachedAccount } from '../accounts/accounts.utils';
 import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
@@ -11,7 +11,6 @@ import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface
 import { getFullToken, tokenEmission } from '../tokens/tokens.utils';
 import { RewardMerkleDistribution } from './interfaces/merkle-distributor.interface';
 import { BigNumber } from '@ethersproject/bignumber';
-import { UnprocessableEntity } from '@tsed/exceptions';
 import { ConvexStrategy } from '../protocols/strategies/convex.strategy';
 import { QuickswapStrategy } from '../protocols/strategies/quickswap.strategy';
 import { SushiswapStrategy } from '../protocols/strategies/sushiswap.strategy';
@@ -22,9 +21,6 @@ import { SourceType } from './enums/source-type.enum';
 import { OxDaoStrategy } from '../protocols/strategies/oxdao.strategy';
 
 export async function getTreeDistribution(chain: Chain): Promise<RewardMerkleDistribution | null> {
-  if (!chain.badgerTree) {
-    return null;
-  }
   try {
     const fileName = `badger-tree-${parseInt(chain.chainId, 16)}.json`;
     const rewardFile = await getObject(REWARD_DATA, fileName);
@@ -49,11 +45,8 @@ export async function getClaimableRewards(
   distribution: RewardMerkleDistribution,
   blockNumber: number,
 ): Promise<[string, [string[], BigNumber[]]][]> {
-  if (!chain.badgerTree) {
-    throw new UnprocessableEntity(`No BadgerTree is available from ${chain.name}`);
-  }
-  const sdk = await chain.getSdk();
-  const tree = BadgerTree__factory.connect(chain.badgerTree, sdk.provider);
+  const { rewards } = await chain.getSdk();
+  const { badgerTree } = rewards;
   const requests = chainUsers.map(async (user): Promise<[string, [string[], BigNumber[]]]> => {
     const proof = distribution.claims[user];
     if (!proof) {
@@ -62,14 +55,14 @@ export async function getClaimableRewards(
     let attempt = 0;
     while (attempt < 3) {
       try {
-        const result = await tree.getClaimableFor(user, proof.tokens, proof.cumulativeAmounts, {
+        const result = await badgerTree.getClaimableFor(user, proof.tokens, proof.cumulativeAmounts, {
           blockTag: blockNumber,
         });
         return [user, result];
       } catch (err) {
         for (let i = 0; i < proof.tokens.length; i++) {
           const token = proof.tokens[i];
-          const amount = await tree.claimed(user, token);
+          const amount = await badgerTree.claimed(user, token);
           if (BigNumber.from(proof.cumulativeAmounts[i]).lt(amount)) proof.cumulativeAmounts[i] = amount.toString();
         }
         attempt++;
@@ -86,7 +79,9 @@ export async function getClaimableRewards(
 
 export async function getRewardEmission(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
   const boostFile = await getBoostFile(chain);
-  if (!chain.rewardsLogger || vaultDefinition.depositToken === TOKENS.DIGG || !boostFile) {
+  const sdk = await chain.getSdk();
+
+  if (!sdk.rewards.hasRewardsLogger() || vaultDefinition.depositToken === TOKENS.DIGG || !boostFile) {
     return [];
   }
   const { vaultToken } = vaultDefinition;
@@ -96,7 +91,6 @@ export async function getRewardEmission(chain: Chain, vaultDefinition: VaultDefi
     delete boostFile.multiplierData[vault.vaultToken];
   }
   const boostRange = boostFile.multiplierData[vault.vaultToken] ?? { min: 1, max: 1 };
-  const sdk = await chain.getSdk();
   const activeSchedules = await sdk.rewards.loadActiveSchedules(vaultToken);
 
   // Badger controlled addresses are blacklisted from receiving rewards. We only dogfood on ETH

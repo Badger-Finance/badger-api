@@ -6,7 +6,6 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import methodOverride from 'method-override';
-import { loadChains } from './chains/chain';
 import { swaggerConfig } from './config/constants';
 import { V2_CONTROLLERS } from './ControllerRegistry';
 import { CITADEL_V1_CONTROLLERS } from './CitadelControllerRegistry';
@@ -24,15 +23,15 @@ import { CITADEL_V1_CONTROLLERS } from './CitadelControllerRegistry';
     disableBootstrapLog: true,
     logRequest: false,
   },
+  cache: {
+    ttl: 300, // default TTL
+    store: 'memory',
+  },
   exclude: ['**/*.spec.ts'],
 })
 export class Server {
   @Inject()
   app!: PlatformApplication;
-
-  public $beforeInit(): void {
-    loadChains();
-  }
 
   /**
    * This method let you configure the express middleware required by your application to work.

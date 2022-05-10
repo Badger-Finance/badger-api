@@ -4,16 +4,18 @@ import { Ethereum } from '../chains/config/eth.config';
 import { getPrice } from '../prices/prices.utils';
 import { VaultsService } from '../vaults/vaults.service';
 import { getVaultDefinition } from '../vaults/vaults.utils';
-import { CITADEL_TREASURY_ADDRESS, TRACKED_TOKENS, TRACKED_VAULTS } from './config/citadel-treasury.config';
+import { CITADEL_TREASURY_ADDRESS, TRACKED_TOKENS, TRACKED_VAULTS } from '../citadel/config/citadel-treasury.config';
 import { TreasuryPosition } from '../treasury/interfaces/treasy-position.interface';
 import { TreasurySummary } from '../treasury/interfaces/treasury-summary.interface';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { TreasurySummarySnapshot } from '../aws/models/treasury-summary-snapshot.model';
 import { TOKENS } from '../config/tokens.config';
-import { queryTreasurySummary } from '../treasury/treasury.utils';
+import { queryTreasurySummary, TREASURY_NAMESPACE } from '../treasury/treasury.utils';
 import { HistoricTreasurySummarySnapshot } from '../aws/models/historic-treasury-summary-snapshot.model';
-import { CitadelData } from './interfaces/citadel-data.interface';
-import { indexTreasuryCachedCharts } from '../treasury/treasury-indexer';
+import { CitadelData } from '../citadel/destructors/citadel-data.destructor';
+import { ONE_YEAR_SECONDS } from '../config/constants';
+import { getRewardsAprForDataBlob, getTokensPaidSummary } from '../citadel/citadel.utils';
+import { updateSnapshots } from '../charts/charts.utils';
 
 export async function snapshotTreasury() {
   const chain = new Ethereum();
@@ -95,14 +97,16 @@ export async function snapshotTreasury() {
     console.error({ message: 'Unable to save Ctiadel treasury snapshot', err });
   }
 
-  await indexTreasuryCachedCharts(
-    Object.assign(new HistoricTreasurySummarySnapshot(), {
-      ...treasurySummary,
-      timestamp: Date.now(),
-    }),
-  );
+  const historicSnapshot = Object.assign(new HistoricTreasurySummarySnapshot(), {
+    ...treasurySummary,
+    id: CITADEL_TREASURY_ADDRESS,
+    timestamp: Date.now(),
+  });
+  updateSnapshots(TREASURY_NAMESPACE, historicSnapshot);
 
   await snapshotCitadelMetrics();
+
+  return 'done';
 }
 
 export async function snapshotCitadelMetrics() {
@@ -139,6 +143,19 @@ export async function snapshotCitadelMetrics() {
   citadelData.set('stakingBps', stakingBps);
   citadelData.set('lockingBps', lockingBps);
 
+  // TODO: let's invert the citadelMinter <> minter relationship for readability
+  const supplySchedule = await sdk.citadel.getSupplySchedule();
+  const currentEmissions = await supplySchedule.getEmissionsForCurrentEpoch();
+  const citadelMinted = formatBalance(currentEmissions, citadelDecimals);
+  const citadelMintedToStaking = citadelMinted * (stakingBps / 10_000);
+  const duration = await supplySchedule.epochLength();
+  const stakingApr = ((citadelMintedToStaking * ONE_YEAR_SECONDS) / duration.toNumber() / staked) * 100;
+  citadelData.set('stakingApr', stakingApr);
+
+  citadelData.set('lockingApr', await getRewardsAprForDataBlob());
+
+  citadelData.set('tokensPaid', await getTokensPaidSummary());
+
   const citadelDataBlob = new CitadelData(citadelData);
 
   const mapper = getDataMapper();
@@ -148,4 +165,6 @@ export async function snapshotCitadelMetrics() {
   } catch (err) {
     console.error({ message: 'Unable to save Ctiadel treasury snapshot', err });
   }
+
+  return 'done';
 }

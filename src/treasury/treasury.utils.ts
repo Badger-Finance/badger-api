@@ -43,3 +43,5 @@ export async function queryTreasuryCharts(id: string): Promise<HistoricTreasuryS
     return [];
   }
 }
+
+export const TREASURY_NAMESPACE = 'treasury';
