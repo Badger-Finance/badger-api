@@ -98,7 +98,6 @@ export const ethSetts: VaultDefinition[] = [
     depositToken: TOKENS.UNI_BADGER_WBTC,
     vaultToken: TOKENS.BUNI_BADGER_WBTC,
     protocol: Protocol.Uniswap,
-    deprecated: true,
     state: VaultState.Discontinued,
   },
   {
@@ -147,7 +146,6 @@ export const ethSetts: VaultDefinition[] = [
     name: 'wBTC/ibBTC',
     depositToken: TOKENS.SUSHI_IBBTC_WBTC,
     vaultToken: TOKENS.BSUSHI_IBBTC_WBTC,
-    strategy: '0xf4146A176b09C664978e03d28d07Db4431525dAd',
     protocol: Protocol.Sushiswap,
     state: VaultState.Discontinued,
   },
@@ -217,7 +215,6 @@ export const ethSetts: VaultDefinition[] = [
     vaultToken: TOKENS.BIMBTC,
     protocol: Protocol.mStable,
     state: VaultState.Discontinued,
-    strategy: '0x10D96b1Fd46Ce7cE092aA905274B8eD9d4585A6E',
   },
   {
     name: 'mhBTC',
@@ -225,7 +222,6 @@ export const ethSetts: VaultDefinition[] = [
     vaultToken: TOKENS.BMHBTC,
     protocol: Protocol.mStable,
     state: VaultState.Discontinued,
-    strategy: '0x10D96b1Fd46Ce7cE092aA905274B8eD9d4585A6E',
   },
   {
     name: 'bveCVX',
