@@ -47,6 +47,7 @@ describe('AccountsController', () => {
           stakeRatio: 0,
           nftBalance: 0,
           bveCvxBalance: 0,
+          diggBalance: 0,
           nativeBalance: 0,
           nonNativeBalance: 0,
         }));
@@ -70,6 +71,7 @@ describe('AccountsController', () => {
           stakeRatio: 1,
           nftBalance: 3,
           bveCvxBalance: 0,
+          diggBalance: 0,
           nativeBalance: 3,
           nonNativeBalance: 5,
         }));

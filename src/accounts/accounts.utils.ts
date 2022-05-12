@@ -28,6 +28,7 @@ export function defaultBoost(chain: Chain, address: string): CachedBoost {
     nftBalance: 0,
     nativeBalance: 0,
     bveCvxBalance: 0,
+    diggBalance: 0,
     nonNativeBalance: 0,
   };
 }
@@ -207,7 +208,8 @@ export async function getCachedAccount(chain: Chain, address: string): Promise<A
     claimableBalanceSnapshot.claimableBalances.map((bal) => [bal.address, bal.balance]),
   );
   const cachedBoost = await getCachedBoost(chain, cachedAccount.address);
-  const { boost, rank, stakeRatio, nftBalance, bveCvxBalance, nativeBalance, nonNativeBalance } = cachedBoost;
+  const { boost, rank, stakeRatio, nftBalance, bveCvxBalance, nativeBalance, nonNativeBalance, diggBalance } =
+    cachedBoost;
   const value = balances.map((b) => b.value).reduce((total, value) => (total += value), 0);
   const earnedValue = balances.map((b) => b.earnedValue).reduce((total, value) => (total += value), 0);
   const account: Account = {
@@ -223,6 +225,7 @@ export async function getCachedAccount(chain: Chain, address: string): Promise<A
     stakeRatio,
     nftBalance,
     bveCvxBalance,
+    diggBalance,
     nativeBalance,
     nonNativeBalance,
   };

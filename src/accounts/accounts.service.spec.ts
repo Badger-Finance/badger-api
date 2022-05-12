@@ -30,6 +30,7 @@ describe('accounts.service', () => {
         stakeRatio: 1,
         nftBalance: 3,
         bveCvxBalance: 1,
+        diggBalance: 1,
         nativeBalance: 5,
         nonNativeBalance: 5,
       }));
