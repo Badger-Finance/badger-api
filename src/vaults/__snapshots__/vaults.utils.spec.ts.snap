@@ -308,13 +308,13 @@ Array [
   },
   CachedValueSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "addressValueSourceType": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_flat_bCVXCRV_emission",
+    "addressValueSourceType": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_vault_emitted_bcvxcrv",
     "apr": 0.000004975832417583712,
     "boostable": false,
     "maxApr": 0.000004975832417583712,
     "minApr": 0.000004975832417583712,
     "name": "bCVXCRV Rewards",
-    "type": "flat_bCVXCRV_emission",
+    "type": "vault_emitted_bcvxcrv",
   },
   CachedValueSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -328,13 +328,13 @@ Array [
   },
   CachedValueSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "addressValueSourceType": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_flat_bVECVX_emission",
+    "addressValueSourceType": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_vault_emitted_bvecvx",
     "apr": 0.000022426642857150473,
     "boostable": false,
     "maxApr": 0.000022426642857150473,
     "minApr": 0.000022426642857150473,
     "name": "bVECVX Rewards",
-    "type": "flat_bVECVX_emission",
+    "type": "vault_emitted_bvecvx",
   },
   CachedValueSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",

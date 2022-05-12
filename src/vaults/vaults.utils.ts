@@ -5,7 +5,7 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
 import { ONE_YEAR_SECONDS } from '../config/constants';
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
-import { getFullToken, tokenEmission } from '../tokens/tokens.utils';
+import { getFullToken } from '../tokens/tokens.utils';
 import { VaultDefinition } from './interfaces/vault-definition.interface';
 import { EmissionControl__factory } from '../contracts';
 import { VaultStrategy } from './interfaces/vault-strategy.interface';
@@ -613,7 +613,7 @@ export async function estimateVaultPerformance(
     const cachedEmissionSource = valueSourceToCachedValueSource(
       emissionSource,
       vaultDefinition,
-      tokenEmission(tokenEmitted),
+      `vault_emitted_${tokenEmitted.symbol.toLowerCase()}`,
     );
     valueSources.push(cachedEmissionSource);
     // try to add underlying emitted vault value sources if applicable
