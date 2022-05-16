@@ -15,7 +15,7 @@ import { Network } from '@badger-dao/sdk';
 describe('rewards.service', () => {
   let service: RewardsService;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     await PlatformTest.create();
     service = PlatformTest.get<RewardsService>(RewardsService);
     jest.spyOn(rewardsUtils, 'getTreeDistribution').mockImplementation(async (chain: Chain) => {

@@ -26,6 +26,7 @@ describe('boosts-indexer', () => {
         stakeRatio: 0.5,
         nftBalance: 10,
         bveCvxBalance: 5,
+        diggBalance: 1,
         multipliers: {
           [TEST_ADDR]: 5.5,
         },
