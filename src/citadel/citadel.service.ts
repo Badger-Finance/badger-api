@@ -245,8 +245,8 @@ export class CitadelService {
         votes: graphKnight.votes,
         voteWeight: graphKnight.voteWeight,
         users: graphKnight.votersCount,
-        // not sure about this field, do we need to convert in USD
-        funding: graphKnight.funding,
+        // considering CTDL start price is 21 USD
+        funding: graphKnight.funding * 21,
       };
     });
 
