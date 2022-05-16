@@ -18,20 +18,10 @@ import { VaultState } from '@badger-dao/sdk';
 import { VaultVersion } from '@badger-dao/sdk';
 import { GraphQLClient } from 'graphql-request';
 import { getSdk } from '../graphql/generated/citadel';
+import { getSdk as setKnightsRoundStatsSdk } from '../graphql/generated/citadel.knights.round';
 import { formatBalance } from '@badger-dao/sdk';
-
-const CITADEL_SUBGRAPH_URL = 'https://api.thegraph.com/subgraphs/name/axejintao/citadog';
-export const CITADEL_KNIGHTS = [
-  Protocol.Terra,
-  Protocol.Frax,
-  Protocol.Alchemix,
-  Protocol.Convex,
-  Protocol.Redacted,
-  Protocol.JonesDao,
-  Protocol.Tokemak,
-  Protocol.Tribe,
-  Protocol.Ren,
-];
+import { CITADEL_KNIGHTS, CITADEL_KNIGHTS_ROUND_SUBGRAPH_URL, CITADEL_SUBGRAPH_URL } from './citadel.constants';
+import { CitadelKnightsRoundStat } from './interfaces/citadel-knights-round-stat.interface';
 
 export async function queryCitadelData(): Promise<CitadelData> {
   const mapper = getDataMapper();
@@ -227,4 +217,24 @@ export async function getStakedCitadelEarnings(address: string): Promise<number>
   const withdrawnTokens = formatBalance(grossWithdraw);
   const balanceTokens = currentTokens * pricePerFullShare;
   return balanceTokens - depositedTokens + withdrawnTokens;
+}
+
+export async function getCitadelKnightingRoundsStats(): Promise<CitadelKnightsRoundStat[]> {
+  const client = new GraphQLClient(CITADEL_KNIGHTS_ROUND_SUBGRAPH_URL);
+  const graphSdk = setKnightsRoundStatsSdk(client);
+
+  const knightsRoundStatResp = await graphSdk.KnightsRounds();
+
+  return knightsRoundStatResp.knights.map((knight) => ({
+    knight: getKnightEnumByIx(Number(knight.id)),
+    votes: knight.voteCount,
+    voteWeight: Math.pow(knight.voteCount, 1 / 1.3),
+    votersCount: knight.voters.length,
+    funding: knight.voteAmount,
+  }));
+}
+
+// not sure, that order is correct
+export function getKnightEnumByIx(ix: number): Protocol | string {
+  return CITADEL_KNIGHTS[ix] || 'unknown';
 }

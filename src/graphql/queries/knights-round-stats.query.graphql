@@ -1,0 +1,25 @@
+query KnightRounds($id: ID!, $block: Block_height) {
+  knight(id: $id, block: $block) {
+    ...Knight
+  }
+}
+
+query KnightsRounds(
+  $block: Block_height
+  $first: Int = 100
+  $skip: Int = 0
+  $orderBy: Knight_orderBy
+  $orderDirection: OrderDirection
+  $where: Knight_filter
+) {
+  knights(
+    block: $block
+    first: $first
+    skip: $skip
+    where: $where
+    orderBy: $orderBy
+    orderDirection: $orderDirection
+  ) {
+    ...Knight
+  }
+}
