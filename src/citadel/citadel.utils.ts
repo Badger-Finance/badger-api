@@ -4,7 +4,7 @@ import { KeyedDataBlob } from '../aws/models/keyed-data-blob.model';
 import { CitadelData, CTIADEL_DATA } from './destructors/citadel-data.destructor';
 import { Nullable } from '../utils/types.utils';
 import { CitadelRewardsSnapshot } from '../aws/models/citadel-rewards-snapshot';
-import BadgerSDK, { Erc20__factory, Network, Protocol, Token, VaultV15__factory } from '@badger-dao/sdk';
+import BadgerSDK, { Network, Protocol, Token, VaultV15__factory } from '@badger-dao/sdk';
 import { RewardEventType, RewardEventTypeEnum } from '@badger-dao/sdk/lib/citadel/enums/reward-event-type.enum';
 import { ListRewardsEvent } from '@badger-dao/sdk/lib/citadel/interfaces/list-rewards-event.interface';
 import { CitadelRewardType } from '@badger-dao/sdk/lib/api/enums/citadel-reward-type.enum';
@@ -27,6 +27,7 @@ import {
   CITADEL_SUBGRAPH_URL,
 } from './citadel.constants';
 import { CitadelKnightsRoundStat } from './interfaces/citadel-knights-round-stat.interface';
+import { getFullToken } from '../tokens/tokens.utils';
 
 export async function queryCitadelData(): Promise<CitadelData> {
   const mapper = getDataMapper();
@@ -225,22 +226,19 @@ export async function getStakedCitadelEarnings(address: string): Promise<number>
 }
 
 export async function getCitadelKnightingRoundsStats(): Promise<CitadelKnightsRoundStat[]> {
-  const sdk = await Chain.getChain(Network.Ethereum).getSdk();
-
   const client = new GraphQLClient(CITADEL_KNIGHTS_ROUND_SUBGRAPH_URL);
   const graphSdk = setKnightsRoundStatsSdk(client);
 
   const knightsRoundStatResp = await graphSdk.KnightsRounds();
 
-  const citadel = Erc20__factory.connect(TOKENS.CTDL, sdk.provider);
-  const citadelDecimals = await citadel.decimals();
+  const ctdlToken = await getFullToken(Chain.getChain(Network.Ethereum), TOKENS.CTDL);
 
   return knightsRoundStatResp.knights.map((knight) => ({
     knight: getKnightEnumByIx(Number(knight.id)),
     votes: knight.voteCount,
     voteWeight: Math.pow(knight.voteCount, 1 / 1.3),
     votersCount: knight.voters.length,
-    funding: formatBalance(knight.voteAmount, citadelDecimals) * CITADEL_START_PRICE_USD,
+    funding: formatBalance(knight.voteAmount, ctdlToken.decimals) * CITADEL_START_PRICE_USD,
   }));
 }
 
