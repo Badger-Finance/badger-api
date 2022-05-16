@@ -245,8 +245,7 @@ export class CitadelService {
         votes: graphKnight.votes,
         voteWeight: graphKnight.voteWeight,
         users: graphKnight.votersCount,
-        // considering CTDL start price is 21 USD
-        funding: graphKnight.funding * 21,
+        funding: graphKnight.funding,
       };
     });
 
