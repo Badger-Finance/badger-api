@@ -34,6 +34,9 @@ export class CachedBoost implements UserBoostData {
   bveCvxBalance!: number;
 
   @attribute()
+  diggBalance!: number;
+
+  @attribute()
   nativeBalance!: number;
 
   @attribute()

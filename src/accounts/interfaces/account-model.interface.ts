@@ -109,6 +109,12 @@ export class AccountModel implements Account {
   @Property()
   public bveCvxBalance: number;
 
+  @Title('diggBalance')
+  @Description("Currency value of an account's current digg hodlings")
+  @Example(1313.13)
+  @Property()
+  public diggBalance: number;
+
   @Title('nativeBalance')
   @Description("Currency value of an account's current native hodlings")
   @Example(1313.13)
@@ -136,5 +142,6 @@ export class AccountModel implements Account {
     this.nonNativeBalance = account.nonNativeBalance;
     this.nftBalance = account.nftBalance;
     this.bveCvxBalance = account.bveCvxBalance;
+    this.diggBalance = account.diggBalance;
   }
 }

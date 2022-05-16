@@ -1,0 +1,11 @@
+fragment Knight on Knight {
+  id
+  voters {
+    id
+  }
+  votes {
+    id
+  }
+  voteCount
+  voteAmount
+}

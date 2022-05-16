@@ -8,6 +8,7 @@ Object {
   "bveCvxBalance": 1,
   "claimableBalances": Object {},
   "data": Object {},
+  "diggBalance": 1,
   "earnedValue": 1,
   "multipliers": Object {},
   "nativeBalance": 5,

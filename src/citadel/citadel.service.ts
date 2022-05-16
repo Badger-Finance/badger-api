@@ -4,7 +4,7 @@ import { Service } from '@tsed/di';
 import { TOKENS } from '../config/tokens.config';
 import { getPrice } from '../prices/prices.utils';
 import { queryTreasurySummary } from '../treasury/treasury.utils';
-import { CITADEL_KNIGHTS, getStakedCitadelEarnings, queryCitadelData } from './citadel.utils';
+import { getCitadelKnightingRoundsStats, getStakedCitadelEarnings, queryCitadelData } from './citadel.utils';
 import { CITADEL_TREASURY_ADDRESS } from './config/citadel-treasury.config';
 import { RewardFilter } from '@badger-dao/sdk/lib/citadel/enums/reward-filter.enum';
 import { CitadelRewardEvent } from './interfaces/citadel-reward-event.interface';
@@ -16,6 +16,7 @@ import { ConditionExpression } from '@aws/dynamodb-expressions';
 import { CitadelSummary } from '@badger-dao/sdk/lib/api/interfaces/citadel-summary.interface';
 import { CitadelAccount } from './interfaces/citadel-account.interface';
 import { Chain } from '../chains/config/chain.config';
+import { CITADEL_KNIGHTS } from './citadel.constants';
 
 @Service()
 export class CitadelService {
@@ -224,13 +225,35 @@ export class CitadelService {
   }
 
   async loadKnightingRoundLeaderboard(): Promise<CitadelLeaderboardEntry[]> {
-    return CITADEL_KNIGHTS.map((k, i) => ({
-      rank: i + 1,
-      knight: k,
-      votes: 0,
-      voteWeight: 0,
-      users: 0,
-      funding: 0,
-    }));
+    const knightingRoundStats = await getCitadelKnightingRoundsStats();
+
+    const knighsData = CITADEL_KNIGHTS.map((k, i) => {
+      const knightStatTemplate = {
+        knight: k,
+        votes: 0,
+        voteWeight: 0,
+        users: 0,
+        funding: 0,
+      };
+
+      const graphKnight = knightingRoundStats.find((stat) => stat.knight === k);
+
+      if (!graphKnight) return knightStatTemplate;
+
+      return {
+        ...knightStatTemplate,
+        votes: graphKnight.votes,
+        voteWeight: graphKnight.voteWeight,
+        users: graphKnight.votersCount,
+        funding: graphKnight.funding,
+      };
+    });
+
+    return knighsData
+      .sort((a, b) => b.votes - a.votes)
+      .map((knight, ix) => ({
+        ...knight,
+        rank: ix,
+      }));
   }
 }
