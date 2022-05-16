@@ -8,9 +8,8 @@ export interface VaultDefinition {
   behavior?: VaultBehavior;
   bouncer?: BouncerType;
   // this may be temporary, as a way to include citadel vaults without exposing to badger ui
-  client?: string;
+  client?: string | Protocol;
   depositToken: string;
-  deprecated?: boolean;
   experimental?: boolean;
   getTokenBalance?: (chain: Chain, token: string) => Promise<VaultTokenBalance>;
   name: string;
@@ -18,7 +17,6 @@ export interface VaultDefinition {
   protocol?: Protocol;
   stage?: Stage;
   state?: VaultState;
-  strategy?: string;
   vaultToken: string;
   version?: VaultVersion;
 }

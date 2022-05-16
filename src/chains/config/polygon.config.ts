@@ -38,14 +38,12 @@ export const maticSetts: VaultDefinition[] = [
     vaultToken: TOKENS.BMATIC_SUSHI_IBBTC_WBTC,
     depositToken: TOKENS.MATIC_SUSHI_IBBTC_WBTC,
     protocol: Protocol.Sushiswap,
-    strategy: '0xDed61Bd8a8c90596D8A6Cf0e678dA04036146963',
   },
   {
     name: 'wBTC/USDC',
     vaultToken: TOKENS.BMATIC_QUICK_USDC_WBTC,
     depositToken: TOKENS.MATIC_QUICK_USDC_WBTC,
     protocol: Protocol.Quickswap,
-    strategy: '0x809990849D53a5109e0cb9C446137793B9f6f1Eb',
   },
   {
     name: 'amWBTC/renBTC',
@@ -53,6 +51,5 @@ export const maticSetts: VaultDefinition[] = [
     depositToken: TOKENS.MATIC_CRV_AMWBTC,
     getTokenBalance: getCurveVaultTokenBalance,
     protocol: Protocol.Curve,
-    strategy: '0xF8F02D0d41C79a1973f65A440C98acAc7eAA8Dc1',
   },
 ];
