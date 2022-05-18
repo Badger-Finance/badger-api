@@ -205,12 +205,12 @@ export const ethTokensConfig: TokenConfig = {
     type: PricingType.Custom,
     getPrice: getStakedCitadelPrice,
   },
-  [TOKENS.BBADGER]: {
-    type: PricingType.Vault,
-    vaultToken: {
-      address: TOKENS.BADGER,
-      network: Network.Ethereum,
-    },
+  [TOKENS.XCTDL]: {
+    type: PricingType.Custom,
+    getPrice: getStakedCitadelPrice,
+  },
+  [TOKENS.BPT_WBTC_BADGER]: {
+    type: PricingType.BalancerLP,
   },
   [TOKENS.BREMBADGER]: {
     type: PricingType.Vault,

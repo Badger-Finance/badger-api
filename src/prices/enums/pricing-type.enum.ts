@@ -1,4 +1,5 @@
 export enum PricingType {
+  BalancerLP = 'Balancer',
   Contract = 'Contract',
   Custom = 'Custom',
   CurveLP = 'CurveLP',
