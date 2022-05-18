@@ -61,7 +61,9 @@ export async function indexPrices() {
         }),
       );
 
-      console.log(`Updated ${persistedPrices.length} / ${Object.keys(priceUpdates).length} token prices`);
+      console.log(
+        `Updated ${persistedPrices.length} / ${Object.keys(priceUpdates).length} ${chain.network} token prices`,
+      );
     } catch (err) {
       console.error(err);
     }
