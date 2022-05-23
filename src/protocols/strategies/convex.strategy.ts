@@ -46,6 +46,10 @@ export const CURVE_MATIC_API_URL = 'https://stats.curve.fi/raw-stats-polygon/apy
 export const CURVE_ARBITRUM_API_URL = 'https://stats.curve.fi/raw-stats-arbitrum/apys.json';
 export const CURVE_FACTORY_APY = 'https://api.curve.fi/api/getFactoryAPYs';
 
+/* Protocol Contracts */
+export const CURVE_BASE_REGISTRY = '0x0000000022D53366457F9d5E68Ec105046FC4383';
+export const HARVEST_FORWARDER = '0xA84B663837D94ec41B0f99903f37e1d69af9Ed3E';
+
 /* Protocol Definitions */
 const curvePoolApr: Record<string, string> = {
   [TOKENS.CRV_RENBTC]: 'ren2',
@@ -125,7 +129,8 @@ async function getLiquiditySources(chain: Chain, vaultDefinition: VaultDefinitio
     return s;
   });
   const cachedTradeFees = await getCurvePerformance(chain, vaultDefinition);
-  return [cachedTradeFees, ...lpSources];
+  const forwardedDistributions = await retrieveHarvestForwarderData(chain, vaultDefinition);
+  return [cachedTradeFees, ...lpSources, ...forwardedDistributions];
 }
 
 export async function getCurvePerformance(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource> {
@@ -189,7 +194,7 @@ export async function getCurveTokenPrice(chain: Chain, depositToken: string): Pr
 }
 
 export async function getCurvePoolBalance(chain: Chain, depositToken: string): Promise<CachedTokenBalance[]> {
-  const baseRegistry = CurveBaseRegistry__factory.connect('0x0000000022D53366457F9d5E68Ec105046FC4383', chain.provider);
+  const baseRegistry = CurveBaseRegistry__factory.connect(CURVE_BASE_REGISTRY, chain.provider);
   const cachedBalances = [];
   const registryAddr = await baseRegistry.get_registry();
   let poolAddress;
@@ -267,13 +272,9 @@ export async function resolveCurvePoolTokenPrice(chain: Chain, token: Token): Pr
   };
 }
 
-// TODO: this function is a bit weird, we can't assume to ever have a 'Harvest'
 async function retrieveHarvestForwarderData(chain: Chain, vault: VaultDefinition): Promise<CachedValueSource[]> {
   const sdk = await chain.getSdk();
-  const harvestForwarder = HarvestDistributor__factory.connect(
-    '0xA84B663837D94ec41B0f99903f37e1d69af9Ed3E',
-    sdk.provider,
-  );
+  const harvestForwarder = HarvestDistributor__factory.connect(HARVEST_FORWARDER, sdk.provider);
 
   const treeDistributionFilter = harvestForwarder.filters.TreeDistribution();
 
@@ -286,7 +287,7 @@ async function retrieveHarvestForwarderData(chain: Chain, vault: VaultDefinition
   >(harvestForwarder, treeDistributionFilter, startBlock, endBlock);
 
   const distributions = allTreeDistributions
-    .filter((d) => d.args.beneficiary === TOKENS.BVECVX)
+    .filter((d) => d.args.beneficiary === vault.vaultToken)
     .map((d) => ({
       timestamp: d.args.block_timestamp.toNumber(),
       block: d.args.block_number.toNumber(),
