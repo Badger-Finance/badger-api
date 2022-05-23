@@ -17,6 +17,8 @@ jobs:
           node-version: '16.x'
       - name: Install dependencies
         run: yarn install --frozen-lockfile
+      - name: Codegen
+        run: yarn codegen:contracts
       - uses: artiomtr/jest-coverage-report-action@v2.0-rc.6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
