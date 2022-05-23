@@ -3,7 +3,6 @@
 
 node_modules
 build
-contracts
 
 .serverless
 .build
