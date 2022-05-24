@@ -1,13 +1,12 @@
 import {
-  BribesProcessor,
-  BribesProcessor__factory,
   chunkQueryFilter,
   Erc20__factory,
   evaluateEvents,
   formatBalance,
   Network,
-  parseHarvestEvents,
   Token,
+  HarvestDistributor,
+  HarvestDistributor__factory,
 } from '@badger-dao/sdk';
 import { UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
@@ -38,7 +37,7 @@ import { CurveAPIResponse } from '../interfaces/curve-api-response.interrface';
 import { valueSourceToCachedValueSource } from '../../rewards/rewards.utils';
 import { TokenPrice } from '../../prices/interface/token-price.interface';
 import { ONE_DAY_SECONDS } from '../../config/constants';
-import { TreeDistributionEvent, TreeDistributionEventFilter } from '@badger-dao/sdk/lib/contracts/BribesProcessor';
+import { TreeDistributionEvent, TreeDistributionEventFilter } from '@badger-dao/sdk/lib/contracts/HarvestDistributor';
 
 /* Protocol Constants */
 export const CURVE_API_URL = 'https://stats.curve.fi/raw-stats/apys.json';
@@ -46,6 +45,10 @@ export const CURVE_CRYPTO_API_URL = 'https://stats.curve.fi/raw-stats-crypto/apy
 export const CURVE_MATIC_API_URL = 'https://stats.curve.fi/raw-stats-polygon/apys.json';
 export const CURVE_ARBITRUM_API_URL = 'https://stats.curve.fi/raw-stats-arbitrum/apys.json';
 export const CURVE_FACTORY_APY = 'https://api.curve.fi/api/getFactoryAPYs';
+
+/* Protocol Contracts */
+export const CURVE_BASE_REGISTRY = '0x0000000022D53366457F9d5E68Ec105046FC4383';
+export const HARVEST_FORWARDER = '0xA84B663837D94ec41B0f99903f37e1d69af9Ed3E';
 
 /* Protocol Definitions */
 const curvePoolApr: Record<string, string> = {
@@ -85,7 +88,7 @@ export class ConvexStrategy {
   static async getValueSources(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
     switch (vaultDefinition.vaultToken) {
       case TOKENS.BVECVX:
-        return retrieveBribesProcessorData(chain, vaultDefinition);
+        return retrieveHarvestForwarderData(chain, vaultDefinition);
       case TOKENS.BCRV_CVXBVECVX:
         return getLiquiditySources(chain, vaultDefinition);
       default:
@@ -126,7 +129,8 @@ async function getLiquiditySources(chain: Chain, vaultDefinition: VaultDefinitio
     return s;
   });
   const cachedTradeFees = await getCurvePerformance(chain, vaultDefinition);
-  return [cachedTradeFees, ...lpSources];
+  const forwardedDistributions = await retrieveHarvestForwarderData(chain, vaultDefinition);
+  return [cachedTradeFees, ...lpSources, ...forwardedDistributions];
 }
 
 export async function getCurvePerformance(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource> {
@@ -190,7 +194,7 @@ export async function getCurveTokenPrice(chain: Chain, depositToken: string): Pr
 }
 
 export async function getCurvePoolBalance(chain: Chain, depositToken: string): Promise<CachedTokenBalance[]> {
-  const baseRegistry = CurveBaseRegistry__factory.connect('0x0000000022D53366457F9d5E68Ec105046FC4383', chain.provider);
+  const baseRegistry = CurveBaseRegistry__factory.connect(CURVE_BASE_REGISTRY, chain.provider);
   const cachedBalances = [];
   const registryAddr = await baseRegistry.get_registry();
   let poolAddress;
@@ -268,25 +272,31 @@ export async function resolveCurvePoolTokenPrice(chain: Chain, token: Token): Pr
   };
 }
 
-// TODO: this function is a bit weird, we can't assume to ever have a 'Harvest'
-async function retrieveBribesProcessorData(chain: Chain, vault: VaultDefinition): Promise<CachedValueSource[]> {
+async function retrieveHarvestForwarderData(chain: Chain, vault: VaultDefinition): Promise<CachedValueSource[]> {
   const sdk = await chain.getSdk();
-  const bribeProcessor = BribesProcessor__factory.connect('0xbed8f323456578981952e33bbfbe80d23289246b', sdk.provider);
+  const harvestForwarder = HarvestDistributor__factory.connect(HARVEST_FORWARDER, sdk.provider);
 
-  const treeDistributionFilter = bribeProcessor.filters.TreeDistribution();
+  const treeDistributionFilter = harvestForwarder.filters.TreeDistribution();
 
   const endBlock = await sdk.provider.getBlockNumber();
   const startBlock = Math.floor(endBlock - (21 * ONE_DAY_SECONDS) / 13);
   const allTreeDistributions = await chunkQueryFilter<
-    BribesProcessor,
+    HarvestDistributor,
     TreeDistributionEventFilter,
     TreeDistributionEvent
-  >(bribeProcessor, treeDistributionFilter, startBlock, endBlock);
+  >(harvestForwarder, treeDistributionFilter, startBlock, endBlock);
 
-  const { harvests, distributions } = await parseHarvestEvents([], allTreeDistributions);
+  const distributions = allTreeDistributions
+    .filter((d) => d.args.beneficiary === vault.vaultToken)
+    .map((d) => ({
+      timestamp: d.args.block_timestamp.toNumber(),
+      block: d.args.block_number.toNumber(),
+      token: d.args.token,
+      amount: d.args.amount,
+    }));
 
   const timestampCutoff = Math.floor(Date.now() / 1000 - 21 * ONE_DAY_SECONDS);
-  const { data } = await evaluateEvents(harvests, distributions, { timestamp_gte: timestampCutoff });
+  const { data } = await evaluateEvents([], distributions, { timestamp_gte: timestampCutoff });
 
   // cannot construct data with this - will be fine after the test emission
   if (data.length <= 1) {
