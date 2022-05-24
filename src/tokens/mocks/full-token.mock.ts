@@ -15,6 +15,14 @@ export const fullTokenMockMap: TokenFullMap = {
     lookupName: 'badger-dao',
     type: PricingType.LookupName,
   },
+  [TOKENS.CTDL]: {
+    address: TOKENS.CTDL,
+    decimals: 18,
+    name: 'Citadel',
+    symbol: 'CTDL',
+    lookupName: 'citadel-dao',
+    type: PricingType.LookupName,
+  },
   [TOKENS.DIGG]: {
     address: TOKENS.DIGG,
     decimals: 9,
