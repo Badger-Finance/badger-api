@@ -15,7 +15,7 @@
     "dev": "sls offline start --useChildProcesses",
     "dev:sls": "yarn dev",
     "dev:sls:api": "yarn dev --disableScheduledEvents",
-    "dev:node:api": "npx ts-node src/index.ts",
+    "dev:node:api": "ts-node -r dotenv/config src/index.ts",
     "format": "pretty-quick",
     "lint": "eslint \"src/**/*.ts\" --fix",
     "test": "jest --detectOpenHandles --runInBand",
