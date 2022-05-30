@@ -49,7 +49,7 @@ export const BLOCKNATIVE_API_KEY = getEnvVar('BLOCKNATIVE_API_KEY');
 export const DEFAULT_PAGE_SIZE = 20;
 
 export const swaggerConfig: SwaggerSettings = {
-  path: 'docs',
+  path: '/docs',
   spec: {
     info: {
       title: 'Badger API',
@@ -58,11 +58,11 @@ export const swaggerConfig: SwaggerSettings = {
       contact: {
         name: 'Badger Finance',
         email: 'jintao@badger.finance',
-        url: 'https://app.badger.finance/',
+        url: 'https://app.badger.com/',
       },
     },
     schemes: ['https'],
-    host: 'api.badger.finance',
+    host: 'api.badger.com',
     basePath: '/',
   },
 };
