@@ -36,6 +36,10 @@ export async function updateChainBoosts(chain: Chain): Promise<void> {
       throw new UnprocessableEntity(`Unable to load boost file for ${chain.name}, expected file to exist!`);
     }
 
+    console.log({
+      chain: chain.network,
+      multipliers: file.multiplierData,
+    });
     const boostMultipliers = evaluateUserBoosts(chain, file);
 
     // construct batch queries for all users accounts, and fetch their stored entities

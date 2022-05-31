@@ -28,6 +28,7 @@ import {
 } from './citadel.constants';
 import { CitadelKnightsRoundStat } from './interfaces/citadel-knights-round-stat.interface';
 import { getFullToken } from '../tokens/tokens.utils';
+import * as citadelUtils from './citadel.utils';
 
 export async function queryCitadelData(): Promise<CitadelData> {
   const mapper = getDataMapper();
@@ -52,7 +53,7 @@ export async function getRewardsOnchain(
 
   let lastRewardBlock: Nullable<number>;
 
-  if (fromLastBlock) lastRewardBlock = (await getLastRewardByType(type))?.block;
+  if (fromLastBlock) lastRewardBlock = (await citadelUtils.getLastRewardByType(type))?.block;
 
   try {
     const getOpts: { filter: RewardEventType; startBlock?: number } = { filter: type };
@@ -184,7 +185,7 @@ export function getRewardsEventTypeMapped(hashKey: string): CitadelRewardType {
       [dataTypeRawKeyToKeccak('funding-revenue')]: CitadelRewardType.Funding,
       [dataTypeRawKeyToKeccak('treasury-yield')]: CitadelRewardType.Yield,
       [dataTypeRawKeyToKeccak('Tokens')]: CitadelRewardType.Tokens,
-    }[hashKey] || CitadelRewardType.Tokens
+    }[hashKey] ?? CitadelRewardType.Tokens
   );
 }
 
@@ -242,7 +243,6 @@ export async function getCitadelKnightingRoundsStats(): Promise<CitadelKnightsRo
   }));
 }
 
-// not sure, that order is correct
 export function getKnightEnumByIx(ix: number): Protocol | string {
   return CITADEL_KNIGHTS[ix] || 'unknown';
 }
