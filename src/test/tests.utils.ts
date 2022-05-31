@@ -1,5 +1,12 @@
 import { DataMapper, QueryIterator, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
-import { Currency, Network, ONE_DAY_MS, VaultSnapshot } from '@badger-dao/sdk';
+import BadgerSDK, {
+  Currency,
+  Network,
+  ONE_DAY_MS,
+  RegistryService,
+  RewardsService,
+  VaultSnapshot,
+} from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 import createMockInstance from 'jest-create-mock-instance';
 import { CachedAccount } from '../aws/models/cached-account.model';
@@ -19,9 +26,12 @@ import { Fantom } from '../chains/config/fantom.config';
 import { Chain } from '../chains/config/chain.config';
 import { TokensService } from '@badger-dao/sdk/lib/tokens/tokens.service';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
+import { mock } from 'jest-mock-extended';
+import { JsonRpcProvider, JsonRpcSigner } from '@ethersproject/providers';
 
 export const TEST_CHAIN = SUPPORTED_CHAINS[0];
 export const TEST_ADDR = ethers.utils.getAddress('0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484');
+export const CURRENT_BLOCK = 0;
 
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 export function setupMapper(items: unknown[], filter?: (items: unknown[]) => unknown[]) {
@@ -259,5 +269,30 @@ export function mockPricing() {
       return price;
     }
     return price / 2;
+  });
+}
+
+export async function mockBadgerSdk({
+  addr = TEST_ADDR,
+  network = Network.Ethereum,
+  currBlock = CURRENT_BLOCK,
+}: {
+  addr?: string;
+  network?: Network;
+  currBlock?: number;
+}): Promise<BadgerSDK> {
+  const mockSigner = mock<JsonRpcSigner>();
+  mockSigner.getAddress.calledWith().mockImplementation(async () => addr);
+  const mockProvider = mock<JsonRpcProvider>();
+  mockProvider.getSigner.calledWith().mockImplementation(() => mockSigner);
+  mockProvider.getBlockNumber.calledWith().mockImplementation(async () => currBlock);
+
+  // Services that will force contracts connection in sdk constructor
+  jest.spyOn(RegistryService.prototype, 'ready').mockImplementation();
+  jest.spyOn(RewardsService.prototype, 'ready').mockImplementation();
+
+  return new BadgerSDK({
+    network: network,
+    provider: mockProvider,
   });
 }

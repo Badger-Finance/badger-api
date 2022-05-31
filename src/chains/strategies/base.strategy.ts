@@ -8,6 +8,7 @@ import { Network } from '@badger-dao/sdk';
 import { getVaultTokenPrice } from '../../vaults/vaults.utils';
 import { TokenPrice } from '../../prices/interface/token-price.interface';
 import { getFullToken } from '../../tokens/tokens.utils';
+import { getBPTPrice } from '../../protocols/strategies/balancer.strategy';
 
 export class BaseStrategy extends ChainStrategy {
   constructor(private network: Network, tokens: string[]) {
@@ -30,6 +31,8 @@ export class BaseStrategy extends ChainStrategy {
           throw new UnprocessableEntity(`${token.name} required lookupName to utilize OnChainUniV2LP pricing`);
         }
         return resolveTokenPrice(chain, token.address, token.lookupName);
+      case PricingType.BalancerLP:
+        return getBPTPrice(chain, token.address);
       case PricingType.CurveLP:
         return getCurveTokenPrice(chain, token.address);
       case PricingType.UniV2LP:
