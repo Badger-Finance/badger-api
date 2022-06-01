@@ -313,10 +313,7 @@ async function retrieveHarvestForwarderData(chain: Chain, vault: VaultDefinition
     return [];
   }
 
-  console.log({ combinedData });
-  const result = await estimateVaultPerformance(chain, vault, combinedData);
-  console.log({ result });
-  return result;
+  return estimateVaultPerformance(chain, vault, combinedData);
 }
 
 async function retrieveBribesProcessorData(chain: Chain, vault: VaultDefinition): Promise<VaultHarvestData[]> {
