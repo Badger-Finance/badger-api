@@ -475,7 +475,7 @@ Object {
 
 exports[`CitadelController GET /citadel/v1/treasury returns the current citadel treasury summary 1`] = `
 Object {
-  "address": "0x38724146C8dc1Aa49c3395091cf86B789c37F52c",
+  "address": "0xb7Bf6c956da0f013BC59ecDB0748f73d0473cd3a",
   "fundingBps": 4000,
   "lockingBps": 3000,
   "marketCap": 309486236.0874132,
