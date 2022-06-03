@@ -108,7 +108,6 @@ export class CitadelService {
             sdk.tokens.loadToken(t),
             sdk.citadel.getCumulativeClaimedRewards(address, t),
           ]);
-          console.log({ t, token, amount, address });
           return formatBalance(amount, token.decimals);
         }),
       );
