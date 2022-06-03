@@ -206,8 +206,8 @@ describe('CitadelController', () => {
       jest.spyOn(CitadelService.prototype, 'getCumulativeClaimedRewards').mockImplementation(
         async (_, token: string) =>
           ({
-            [TOKENS.BADGER]: BigNumber.from(300 * 18),
-            [TOKENS.WBTC]: BigNumber.from(1000000000002345 * 18),
+            [TOKENS.BADGER]: BigNumber.from('3000000000000000000000'), // 300 BADGER (18 decimals)
+            [TOKENS.WBTC]: BigNumber.from('200000000'), // 2 WBTC (8 decimals)
           }[token]),
       );
 
