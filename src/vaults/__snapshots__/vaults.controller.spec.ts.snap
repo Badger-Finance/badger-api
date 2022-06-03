@@ -3493,7 +3493,7 @@ Array [
     "type": "standard",
     "underlyingToken": "0xFbdCA68601f835b27790D98bbb8eC7f05FDEaA9B",
     "value": 715119,
-    "vaultAsset": "BADGER",
+    "vaultAsset": "bcrvIbbtc",
     "vaultToken": "0xaE96fF08771a109dc6650a1BdCa62F2d558E40af",
     "version": "v1",
     "yieldProjection": Object {
@@ -7023,7 +7023,7 @@ Array [
     "type": "standard",
     "underlyingToken": "0xFbdCA68601f835b27790D98bbb8eC7f05FDEaA9B",
     "value": 715119,
-    "vaultAsset": "BADGER",
+    "vaultAsset": "bcrvIbbtc",
     "vaultToken": "0xaE96fF08771a109dc6650a1BdCa62F2d558E40af",
     "version": "v1",
     "yieldProjection": Object {
