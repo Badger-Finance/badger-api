@@ -17,6 +17,7 @@ import { CitadelSummary } from '@badger-dao/sdk/lib/api/interfaces/citadel-summa
 import { CitadelAccount } from './interfaces/citadel-account.interface';
 import { Chain } from '../chains/config/chain.config';
 import { CITADEL_KNIGHTS } from './citadel.constants';
+import { GetListRewardsOptions } from './interfaces/get-list-rewards-options.interface';
 
 @Service()
 export class CitadelService {
@@ -76,7 +77,8 @@ export class CitadelService {
 
   async loadAccount(address: string): Promise<CitadelAccount> {
     try {
-      const sdk = await Chain.getChain(Network.Ethereum).getSdk();
+      const chain = Chain.getChain(Network.Ethereum);
+      const sdk = await chain.getSdk();
       const [citadelTokenPrice, stakedCitadelTokenPrice] = await Promise.all([
         getPrice(TOKENS.CTDL),
         getPrice(TOKENS.XCTDL),
@@ -101,7 +103,7 @@ export class CitadelService {
       // if we remove ourselves completely our roi becomes infinity
       const stakingRoi = stakedCitadelBalance > 0 ? stakingEarned / stakedCitadelBalance : 0;
 
-      const rewardTokens = await sdk.citadel.locker.getRewardTokens();
+      const rewardTokens = await sdk.citadel.getRewardTokens();
       const rewardAmounts = await Promise.all(
         rewardTokens.map(async (t) => {
           const [token, amount] = await Promise.all([
@@ -172,12 +174,7 @@ export class CitadelService {
     }
   }
 
-  async getListRewards(
-    token?: string,
-    account?: string,
-    epoch?: number,
-    filter: RewardFilter = RewardFilter.PAID,
-  ): Promise<CitadelRewardEvent[]> {
+  async getListRewards({ token, account, epoch, filter }: GetListRewardsOptions): Promise<CitadelRewardEvent[]> {
     const rewards: CitadelRewardEvent[] = [];
 
     const queryKeys: {
