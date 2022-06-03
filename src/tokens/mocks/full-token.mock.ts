@@ -23,6 +23,14 @@ export const fullTokenMockMap: TokenFullMap = {
     lookupName: 'citadel-dao',
     type: PricingType.LookupName,
   },
+  [TOKENS.XCTDL]: {
+    address: TOKENS.XCTDL,
+    decimals: 18,
+    name: 'Staked Citadel',
+    symbol: 'xCTDL',
+    lookupName: 'citadel-dao',
+    type: PricingType.LookupName,
+  },
   [TOKENS.DIGG]: {
     address: TOKENS.DIGG,
     decimals: 9,
@@ -101,6 +109,17 @@ export const fullTokenMockMap: TokenFullMap = {
     type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.CVX,
+      network: Network.Ethereum,
+    },
+  },
+  [TOKENS.BCRV_IBBTC]: {
+    address: TOKENS.BCRV_IBBTC,
+    decimals: 18,
+    name: 'bcrvIbbtc',
+    symbol: 'bcrvIbbtc',
+    type: PricingType.Vault,
+    vaultToken: {
+      address: TOKENS.CRV_IBBTC,
       network: Network.Ethereum,
     },
   },
