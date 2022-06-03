@@ -153,6 +153,7 @@ describe('CitadelController', () => {
     });
   });
 
+  // TODO: tests are currently broken will fix ASAP
   describe('GET /citadel/v1/accounts', () => {
     beforeEach(() => {
       jest.spyOn(BadgerSDK.prototype, 'ready').mockImplementation();
