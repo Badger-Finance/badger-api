@@ -250,7 +250,7 @@ Array [
     "knight": "Alchemix",
     "rank": 0,
     "users": 1,
-    "voteWeight": 1,
+    "voteWeight": 100,
     "votes": "2",
   },
   Object {
