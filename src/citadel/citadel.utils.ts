@@ -235,13 +235,13 @@ export async function getCitadelKnightingRoundsStats(): Promise<CitadelKnightsRo
   const ctdlToken = await getFullToken(Chain.getChain(Network.Ethereum), TOKENS.CTDL);
 
   const totalWeight = knightsRoundStatResp.knights
-    .map((k) => Math.pow(k.voteCount, 1 / 1.3))
+    .map((k) => Math.pow(k.voteAmount, 1 / 1.3))
     .reduce((total, weight) => (total += weight), 0);
 
   return knightsRoundStatResp.knights.map((knight) => ({
     knight: getKnightEnumByIx(Number(knight.id)),
     votes: knight.voteCount,
-    voteWeight: Math.pow(knight.voteCount, 1 / 1.3) / totalWeight,
+    voteWeight: (Math.pow(knight.voteAmount, 1 / 1.3) / totalWeight) * 100,
     votersCount: knight.voters.length,
     funding: formatBalance(knight.voteAmount, ctdlToken.decimals) * CITADEL_START_PRICE_USD,
   }));

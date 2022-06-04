@@ -252,7 +252,7 @@ export class CitadelService {
     });
 
     return knighsData
-      .sort((a, b) => b.votes - a.votes)
+      .sort((a, b) => b.voteWeight - a.voteWeight)
       .map((knight, ix) => ({
         ...knight,
         rank: ix,
