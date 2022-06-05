@@ -275,8 +275,8 @@ export async function getCitadelKnightingRoundsStats(): Promise<CitadelKnightsRo
         (total, voteAmount) => (total += Math.pow(voteAmount, 1 / 1.3)),
         0,
       );
-      const voteCount = Object.values(votes).reduce((total, voteAmount) => (total += voteAmount), 0);
-      return [knight, { voteWeight, voteCount }];
+      const voteAmount = Object.values(votes).reduce((total, voteAmount) => (total += voteAmount), 0);
+      return [knight, { voteWeight, voteAmount }];
     }),
   );
 
@@ -285,13 +285,13 @@ export async function getCitadelKnightingRoundsStats(): Promise<CitadelKnightsRo
     .reduce((total, weight) => (total += weight), 0);
 
   return Object.entries(knightVoteWeights).map((e) => {
-    const [knight, { voteCount, voteWeight }] = e;
+    const [knight, { voteAmount, voteWeight }] = e;
     return {
       knight: getKnightEnumByIx(Number(knight)),
-      votes: voteCount,
+      voteAmount,
       voteWeight: (voteWeight / totalWeight) * 100,
       votersCount: Object.keys(recordedVotes[knight]).length,
-      funding: voteCount * CITADEL_START_PRICE_USD,
+      funding: voteAmount * CITADEL_START_PRICE_USD,
     };
   });
 }

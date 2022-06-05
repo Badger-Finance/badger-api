@@ -232,7 +232,7 @@ export class CitadelService {
     const knighsData = CITADEL_KNIGHTS.map((k, i) => {
       const knightStatTemplate = {
         knight: k,
-        votes: 0,
+        voteAmount: 0,
         voteWeight: 0,
         users: 0,
         funding: 0,
@@ -244,7 +244,7 @@ export class CitadelService {
 
       return {
         ...knightStatTemplate,
-        votes: graphKnight.votes,
+        voteAmount: graphKnight.voteAmount,
         voteWeight: graphKnight.voteWeight,
         users: graphKnight.votersCount,
         funding: graphKnight.funding,
