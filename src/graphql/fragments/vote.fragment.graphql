@@ -1,0 +1,10 @@
+fragment Vote on Vote {
+  id
+  knight {
+    id
+  }
+  voter {
+    id
+  }
+  amount
+}

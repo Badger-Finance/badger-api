@@ -24,7 +24,7 @@ import { BigNumber } from 'ethers';
 // import { CitadelService } from '@badger-dao/sdk/lib/citadel';
 import { mock } from 'jest-mock-extended';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
-import { knightingRoundKnightGraphMock } from './mocks/knighting-round-knight.graph.mock';
+import { knightingRoundVoteGraphMock } from './mocks/knighting-round-knight.graph.mock';
 import { Provider } from '../chains/enums/provider.enum';
 import { Ethereum } from '../chains/config/eth.config';
 
@@ -229,8 +229,15 @@ describe('CitadelController', () => {
 
   describe('GET /citadel/v1/leaderboard', () => {
     beforeEach(() => {
+      let called = false;
       const citadelKnightingRoundGraphMock = {
-        KnightsRounds: async () => knightingRoundKnightGraphMock,
+        Votes: async () => {
+          if (!called) {
+            called = true;
+            return knightingRoundVoteGraphMock;
+          }
+          return { votes: [] };
+        },
       };
       // @ts-ignore
       jest.spyOn(citadelKnightingRoundGraph, 'getSdk').mockImplementation(() => citadelKnightingRoundGraphMock);

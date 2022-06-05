@@ -1,0 +1,18 @@
+query Vote($id: ID!, $block: Block_height) {
+  vote(id: $id, block: $block) {
+    ...Vote
+  }
+}
+
+query Votes(
+  $block: Block_height
+  $first: Int = 100
+  $skip: Int = 0
+  $orderBy: Vote_orderBy
+  $orderDirection: OrderDirection
+  $where: Vote_filter
+) {
+  votes(block: $block, first: $first, skip: $skip, where: $where, orderBy: $orderBy, orderDirection: $orderDirection) {
+    ...Vote
+  }
+}

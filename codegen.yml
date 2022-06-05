@@ -36,7 +36,9 @@ generates:
     schema: ${CITADEL_KNIGHTS_ROUND_SUBGRAPH_URL}
     documents:
       - src/graphql/fragments/knight-round.fragment.graphql
+      - src/graphql/fragments/vote.fragment.graphql
       - src/graphql/queries/knights-round-stats.query.graphql
+      - src/graphql/queries/votes.query.graphql
     plugins:
       - typescript
       - typescript-graphql-request

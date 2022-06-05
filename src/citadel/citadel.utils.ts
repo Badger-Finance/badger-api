@@ -18,7 +18,11 @@ import { VaultState } from '@badger-dao/sdk';
 import { VaultVersion } from '@badger-dao/sdk';
 import { GraphQLClient } from 'graphql-request';
 import { getSdk } from '../graphql/generated/citadel';
-import { getSdk as setKnightsRoundStatsSdk } from '../graphql/generated/citadel.knights.round';
+import {
+  getSdk as setKnightsRoundStatsSdk,
+  VoteFragment,
+  Vote_OrderBy,
+} from '../graphql/generated/citadel.knights.round';
 import { formatBalance } from '@badger-dao/sdk';
 import {
   CITADEL_KNIGHTS,
@@ -29,6 +33,7 @@ import {
 import { CitadelKnightsRoundStat } from './interfaces/citadel-knights-round-stat.interface';
 import { getFullToken } from '../tokens/tokens.utils';
 import * as citadelUtils from './citadel.utils';
+import { OrderDirection } from '@badger-dao/sdk/lib/graphql/generated/badger';
 
 export async function queryCitadelData(): Promise<CitadelData> {
   const mapper = getDataMapper();
@@ -230,21 +235,65 @@ export async function getCitadelKnightingRoundsStats(): Promise<CitadelKnightsRo
   const client = new GraphQLClient(CITADEL_KNIGHTS_ROUND_SUBGRAPH_URL);
   const graphSdk = setKnightsRoundStatsSdk(client);
 
-  const knightsRoundStatResp = await graphSdk.KnightsRounds();
+  let totalVotes: VoteFragment[] = [];
+
+  let voteId;
+  while (true) {
+    const voteData = await graphSdk.Votes({
+      first: 2,
+      orderBy: Vote_OrderBy.Id,
+      orderDirection: OrderDirection.Asc,
+      where: {
+        id_gt: voteId,
+      },
+    });
+    const { votes } = voteData;
+    if (votes.length === 0) {
+      break;
+    }
+    totalVotes = totalVotes.concat(votes);
+  }
 
   const ctdlToken = await getFullToken(Chain.getChain(Network.Ethereum), TOKENS.CTDL);
+  const recordedVotes: Record<string, Record<string, number>> = {};
 
-  const totalWeight = knightsRoundStatResp.knights
-    .map((k) => Math.pow(k.voteAmount, 1 / 1.3))
+  totalVotes.forEach((v) => {
+    const { knight, amount, voter } = v;
+    if (!recordedVotes[knight.id]) {
+      recordedVotes[knight.id] = {};
+    }
+    if (!recordedVotes[knight.id][voter.id]) {
+      recordedVotes[knight.id][voter.id] = 0;
+    }
+    recordedVotes[knight.id][voter.id] += formatBalance(amount, ctdlToken.decimals);
+  });
+
+  const knightVoteWeights = Object.fromEntries(
+    Object.entries(recordedVotes).map((e) => {
+      const [knight, votes] = e;
+      const voteWeight = Object.values(votes).reduce(
+        (total, voteAmount) => (total += Math.pow(voteAmount, 1 / 1.3)),
+        0,
+      );
+      const voteCount = Object.values(votes).reduce((total, voteAmount) => (total += voteAmount), 0);
+      return [knight, { voteWeight, voteCount }];
+    }),
+  );
+
+  const totalWeight = Object.values(knightVoteWeights)
+    .map((i) => i.voteWeight)
     .reduce((total, weight) => (total += weight), 0);
 
-  return knightsRoundStatResp.knights.map((knight) => ({
-    knight: getKnightEnumByIx(Number(knight.id)),
-    votes: knight.voteCount,
-    voteWeight: (Math.pow(knight.voteAmount, 1 / 1.3) / totalWeight) * 100,
-    votersCount: knight.voters.length,
-    funding: formatBalance(knight.voteAmount, ctdlToken.decimals) * CITADEL_START_PRICE_USD,
-  }));
+  return Object.entries(knightVoteWeights).map((e) => {
+    const [knight, { voteCount, voteWeight }] = e;
+    return {
+      knight: getKnightEnumByIx(Number(knight)),
+      votes: voteCount,
+      voteWeight: (voteWeight / totalWeight) * 100,
+      votersCount: Object.keys(recordedVotes[knight]).length,
+      funding: voteCount * CITADEL_START_PRICE_USD,
+    };
+  });
 }
 
 export function getKnightEnumByIx(ix: number): Protocol | string {
