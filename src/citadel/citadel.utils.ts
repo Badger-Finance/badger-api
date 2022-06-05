@@ -237,10 +237,9 @@ export async function getCitadelKnightingRoundsStats(): Promise<CitadelKnightsRo
 
   let totalVotes: VoteFragment[] = [];
 
-  let voteId;
+  let voteId: string | undefined;
   while (true) {
     const voteData = await graphSdk.Votes({
-      first: 2,
       orderBy: Vote_OrderBy.Id,
       orderDirection: OrderDirection.Asc,
       where: {
@@ -251,6 +250,7 @@ export async function getCitadelKnightingRoundsStats(): Promise<CitadelKnightsRo
     if (votes.length === 0) {
       break;
     }
+    voteId = votes[votes.length - 1].id;
     totalVotes = totalVotes.concat(votes);
   }
 
