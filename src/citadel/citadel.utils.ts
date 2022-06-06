@@ -94,17 +94,24 @@ export async function getLastRewardByType(type: string): Promise<Nullable<Citade
   return lastReward;
 }
 
+export function baseCitadelRewards<T>(defaultItem: T): Record<CitadelRewardType, T> {
+  return {
+    [CitadelRewardType.Citadel]: defaultItem,
+    [CitadelRewardType.Funding]: defaultItem,
+    [CitadelRewardType.Tokens]: defaultItem,
+    [CitadelRewardType.Yield]: defaultItem,
+  };
+}
+
 export async function getRewardsAprForDataBlob(): Promise<CitadelRewardsAprBlob> {
   const summaryCountTemplate = {
     apr: 0,
     count: 0,
   };
+  const baseRewards = baseCitadelRewards(summaryCountTemplate);
   const summary = {
-    overall: { ...summaryCountTemplate },
-    [CitadelRewardType.Citadel]: { ...summaryCountTemplate },
-    [CitadelRewardType.Funding]: { ...summaryCountTemplate },
-    [CitadelRewardType.Tokens]: { ...summaryCountTemplate },
-    [CitadelRewardType.Yield]: { ...summaryCountTemplate },
+    overall: { apr: 0, count: 0 },
+    ...baseRewards,
   };
 
   const mapper = getDataMapper();
@@ -127,7 +134,7 @@ export async function getRewardsAprForDataBlob(): Promise<CitadelRewardsAprBlob>
       summary.overall.apr += reward.apr || 0;
       summary.overall.count += 1;
 
-      const rewardTypeKey = getRewardsEventTypeMapped(<string>reward.dataType);
+      const rewardTypeKey = getRewardsEventTypeMapped(reward.dataType);
 
       summary[rewardTypeKey].apr += reward.apr || 0;
       summary[rewardTypeKey].count += 1;

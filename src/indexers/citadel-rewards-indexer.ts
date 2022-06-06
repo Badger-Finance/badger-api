@@ -66,12 +66,13 @@ async function saveCitadelRewards(sdk: BadgerSDK, type: RewardEventType) {
 
     const rewardToSave: CitadelRewardsSnapshot = {
       account,
-      createdAt: Date.now(),
+      amount,
       block: <number>event.block,
-      token: event.token,
+      createdAt: Date.now(),
+      dataType: '',
       epoch: currentEpoch,
       payType: type,
-      amount,
+      token: event.token,
     };
 
     if (type === RewardEventTypeEnum.PAID) {
@@ -79,7 +80,8 @@ async function saveCitadelRewards(sdk: BadgerSDK, type: RewardEventType) {
       continue;
     }
 
-    rewardToSave.dataType = event.dataTypeHash;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    rewardToSave.dataType = event.dataTypeHash!;
     rewardToSave.startTime = event.timestamp;
 
     let finishTime = tokenFinshMap[event.token];

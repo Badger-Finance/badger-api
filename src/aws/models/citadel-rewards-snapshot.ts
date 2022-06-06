@@ -46,7 +46,7 @@ export class CitadelRewardsSnapshot {
   payType!: RewardEventType;
 
   @attribute()
-  dataType?: string;
+  dataType!: string;
 
   @attribute()
   apr?: number;

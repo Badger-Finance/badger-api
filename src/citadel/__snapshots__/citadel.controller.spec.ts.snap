@@ -3,20 +3,20 @@
 exports[`CitadelController GET /citadel/v1/accounts returns citadel account data 1`] = `
 Object {
   "address": "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484",
-  "earned": 75000,
+  "earned": 2518100.0000000005,
   "earnedBtc": 2,
-  "lockingEarned": 75000,
-  "lockingRoi": 539253791216.2296,
+  "lockingEarned": 2518100,
+  "lockingRoi": 351558568714.9742,
   "projectedEarnings": Object {
     "0": 0,
-    "1": 0,
-    "2": 0,
+    "1": 2575.275,
+    "2": 2205438.210898796,
     "3": 0,
   },
-  "roi": 539238304124.0036,
-  "stakingEarned": 4.683e-12,
-  "stakingRoi": 64.97668997668998,
-  "value": 1.39085075052e-7,
+  "roi": 351546902355.9754,
+  "stakingEarned": 6.244e-10,
+  "stakingRoi": 8663.558663558664,
+  "value": 0.0000071629133499,
 }
 `;
 
