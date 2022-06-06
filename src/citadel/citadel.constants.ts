@@ -6,12 +6,12 @@ export const CITADEL_SUBGRAPH_URL = 'https://api.thegraph.com/subgraphs/name/axe
 export const CITADEL_KNIGHTS_ROUND_SUBGRAPH_URL = 'https://api.thegraph.com/subgraphs/name/axejintao/dog-round';
 
 export const CITADEL_KNIGHTS = [
-  Protocol.Frax,
   Protocol.Alchemix,
-  Protocol.Convex,
   Protocol.Redacted,
-  Protocol.JonesDao,
   Protocol.Tokemak,
-  Protocol.Tribe,
+  Protocol.Convex,
   Protocol.Ren,
+  Protocol.Frax,
+  Protocol.Tribe,
+  Protocol.JonesDao,
 ];

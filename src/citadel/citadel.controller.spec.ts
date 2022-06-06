@@ -19,18 +19,14 @@ import { RewardEventTypeEnum } from '@badger-dao/sdk/lib/citadel/enums/reward-ev
 import { NotFound } from '@tsed/exceptions';
 import { citadelChartDataBlobModel } from './mocks/citadel-chart-data-blob.model.mock';
 import { TOKENS } from '../config/tokens.config';
-import BadgerSDK, {
-  StakedCitadelLocker,
-  StakedCitadelLocker__factory,
-  VaultV15,
-  VaultV15__factory,
-} from '@badger-dao/sdk';
-import { TokensService } from '@badger-dao/sdk/lib/tokens/tokens.service';
+import BadgerSDK, { Network, VaultV15, VaultV15__factory } from '@badger-dao/sdk';
 import { BigNumber } from 'ethers';
-import { CitadelService } from '@badger-dao/sdk/lib/citadel';
+// import { CitadelService } from '@badger-dao/sdk/lib/citadel';
 import { mock } from 'jest-mock-extended';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import { knightingRoundKnightGraphMock } from './mocks/knighting-round-knight.graph.mock';
+import { Provider } from '../chains/enums/provider.enum';
+import { Ethereum } from '../chains/config/eth.config';
 
 describe('CitadelController', () => {
   let request: SuperTest.SuperTest<SuperTest.Test>;
@@ -154,19 +150,22 @@ describe('CitadelController', () => {
   });
 
   describe('GET /citadel/v1/accounts', () => {
-    beforeEach(() => {
-      jest.spyOn(BadgerSDK.prototype, 'ready').mockImplementation();
+    beforeEach(async () => {
+      const sdk = new BadgerSDK({
+        network: Network.Ethereum,
+        provider: Provider.Cloudflare,
+      });
+      jest.spyOn(Ethereum.prototype, 'getSdk').mockImplementation(async () => sdk);
+      jest.spyOn(sdk, 'ready').mockImplementation();
       // eslint-disable-next-line
-      jest.spyOn(BadgerSDK.prototype as any, 'initialize').mockImplementation(async () => true);
+      jest.spyOn(sdk as any, 'initialize').mockImplementation(async () => true);
 
-      jest.spyOn(TokensService.prototype, 'loadBalances').mockImplementation(async () => ({
+      jest.spyOn(sdk.tokens, 'loadBalances').mockImplementation(async () => ({
         [TOKENS.CTDL]: BigNumber.from(1034 * 18),
         [TOKENS.XCTDL]: BigNumber.from(4004 * 18),
       }));
 
-      jest
-        .spyOn(CitadelService.prototype, 'lockedBalanceOf')
-        .mockImplementation(async () => BigNumber.from(154534534 * 18));
+      jest.spyOn(sdk.citadel, 'lockedBalanceOf').mockImplementation(async () => BigNumber.from(154534534 * 18));
 
       jest.spyOn(priceUtils, 'getPrice').mockImplementation(async (token: string) => {
         return {
@@ -195,15 +194,10 @@ describe('CitadelController', () => {
       jest.spyOn(VaultV15__factory, 'connect').mockImplementation(() => vaultV15);
       vaultV15.getPricePerFullShare.calledWith().mockImplementation(async () => BigNumber.from(21));
 
-      const citadelLocker = mock<StakedCitadelLocker>();
-      jest.spyOn(StakedCitadelLocker__factory, 'connect').mockImplementation(() => citadelLocker);
-      citadelLocker.getRewardTokens.calledWith().mockImplementation(async () => [TOKENS.BADGER, TOKENS.WBTC]);
+      jest.spyOn(sdk.citadel, 'getRewardTokens').mockImplementation(async () => [TOKENS.BADGER, TOKENS.WBTC]);
+      jest.spyOn(sdk.tokens, 'loadToken').mockImplementation(async (token: string) => fullTokenMockMap[token]);
 
-      jest
-        .spyOn(TokensService.prototype, 'loadToken')
-        .mockImplementation(async (token: string) => fullTokenMockMap[token]);
-
-      jest.spyOn(CitadelService.prototype, 'getCumulativeClaimedRewards').mockImplementation(
+      jest.spyOn(sdk.citadel, 'getCumulativeClaimedRewards').mockImplementation(
         async (_, token: string) =>
           ({
             [TOKENS.BADGER]: BigNumber.from('3000000000000000000000'), // 300 BADGER (18 decimals)
@@ -223,7 +217,7 @@ describe('CitadelController', () => {
       ];
 
       // @ts-ignore
-      jest.spyOn(CitadelService.prototype, 'getClaimableRewards').mockImplementation(async () => citadelClaimableRw);
+      jest.spyOn(sdk.citadel, 'getClaimableRewards').mockImplementation(async () => citadelClaimableRw);
     });
 
     it('returns citadel account data', async (done: jest.DoneCallback) => {

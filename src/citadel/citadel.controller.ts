@@ -60,7 +60,7 @@ export class CitadelController {
       throw new NotFound(`Unknown filter ${filter}`);
     }
 
-    return this.citadelService.getListRewards(token, account, epoch, filter);
+    return this.citadelService.getListRewards({ token, account, epoch, filter: filter ?? RewardFilter.ADDED });
   }
 
   @UseCache()
