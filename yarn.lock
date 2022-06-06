@@ -863,10 +863,10 @@
     tslib "2.3.1"
     typescript "4.5.4"
 
-"@badger-dao/sdk@^1.13.1":
-  version "1.13.1"
-  resolved "https://registry.yarnpkg.com/@badger-dao/sdk/-/sdk-1.13.1.tgz#a1954b8d73d92a91e213c519414032597b5edd5e"
-  integrity sha512-MrhlK2cU83rpnshY+r2dmT+fNFpqBREhBAlU6cM9zTIa5GDxq6KAdCSPxsyoTJmBzHSEoie6+OqEEbLj5q1J7g==
+"@badger-dao/sdk@^1.13.3":
+  version "1.13.3"
+  resolved "https://registry.yarnpkg.com/@badger-dao/sdk/-/sdk-1.13.3.tgz#78eed5a34f84f1b5ce3a66ff3f55bcbda461540c"
+  integrity sha512-a8uyn7x9nMdQkOV0rYqkZ3eS0q1yLI3JqEtYNLaDtCdAVDd6Ui2Fo0VdlQaoC3UlxBEBoHe8VdrSH3T8h2aqyw==
   dependencies:
     "@0xsequence/indexer" "0.36.8"
     "@0xsequence/multicall" "0.36.8"

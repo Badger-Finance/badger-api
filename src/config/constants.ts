@@ -49,7 +49,7 @@ export const BLOCKNATIVE_API_KEY = getEnvVar('BLOCKNATIVE_API_KEY');
 export const DEFAULT_PAGE_SIZE = 20;
 
 export const swaggerConfig: SwaggerSettings = {
-  path: 'docs',
+  path: '/docs',
   spec: {
     info: {
       title: 'Badger API',
