@@ -102,16 +102,8 @@ export async function queryCachedAccount(address: string): Promise<CachedAccount
   const checksummedAccount = ethers.utils.getAddress(address);
   const defaultAccount: CachedAccount = {
     address: checksummedAccount,
-    boost: 0,
-    boostRank: 0,
-    nftBalance: 0,
     multipliers: [],
-    value: 0,
-    earnedValue: 0,
     balances: [],
-    stakeRatio: 0,
-    nativeBalance: 0,
-    nonNativeBalance: 0,
   };
   try {
     const mapper = getDataMapper();
