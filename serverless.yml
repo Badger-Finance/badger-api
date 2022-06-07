@@ -50,7 +50,7 @@ custom:
     METADATA_DATA: metadata-${self:custom.stage}
     METRICS_SNAPSHOTS_DATA: metrics-snapshots-${self:custom.stage}
     UNCLAIMED_SNAPSHOTS_DATA: unclaimed-snapshots-${self:custom.stage}
-    LEADERBOARD_DATA: leaderboards-${self:custom.stage}
+    LEADERBOARD_DATA: leaderboards-data-${self:custom.stage}
     LEADERBOARD_SUMMARY_DATA: leaderboards-summary-${self:custom.stage}
     CYCLE_ANALYTICS_DATA: rewards-${self:custom.stage}
     TREASURY_SNAPSHOT_DATA: treasury-snapshot-${self:custom.stage}
