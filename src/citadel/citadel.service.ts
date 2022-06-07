@@ -4,7 +4,13 @@ import { Service } from '@tsed/di';
 import { TOKENS } from '../config/tokens.config';
 import { getPrice } from '../prices/prices.utils';
 import { queryTreasurySummary } from '../treasury/treasury.utils';
-import { getCitadelKnightingRoundsStats, getStakedCitadelEarnings, queryCitadelData } from './citadel.utils';
+import {
+  baseCitadelRewards,
+  getCitadelKnightingRoundsStats,
+  getRewardsEventTypeMapped,
+  getStakedCitadelEarnings,
+  queryCitadelData,
+} from './citadel.utils';
 import { CITADEL_TREASURY_ADDRESS } from './config/citadel-treasury.config';
 import { RewardFilter } from '@badger-dao/sdk/lib/citadel/enums/reward-filter.enum';
 import { CitadelRewardEvent } from './interfaces/citadel-reward-event.interface';
@@ -18,6 +24,7 @@ import { CitadelAccount } from './interfaces/citadel-account.interface';
 import { Chain } from '../chains/config/chain.config';
 import { CITADEL_KNIGHTS } from './citadel.constants';
 import { GetListRewardsOptions } from './interfaces/get-list-rewards-options.interface';
+import { equals } from '@aws/dynamodb-expressions';
 
 @Service()
 export class CitadelService {
@@ -79,6 +86,10 @@ export class CitadelService {
     try {
       const chain = Chain.getChain(Network.Ethereum);
       const sdk = await chain.getSdk();
+
+      const epoch = await sdk.citadel.getLastEpochIx();
+      const projectedEarnings = await this.calculateProjectedEarningsForEpoch(address, epoch.toNumber());
+
       const [citadelTokenPrice, stakedCitadelTokenPrice] = await Promise.all([
         getPrice(TOKENS.CTDL),
         getPrice(TOKENS.XCTDL),
@@ -155,14 +166,7 @@ export class CitadelService {
         earned,
         earnedBtc,
         roi,
-        // TODO: caculate earnings for current epoch and LERP for current epoch
-        // we should save this epoch data and probably take guidance from previous epochs once possible
-        projectedEarnings: {
-          [CitadelRewardType.Funding]: 0,
-          [CitadelRewardType.Yield]: 0,
-          [CitadelRewardType.Citadel]: 0,
-          [CitadelRewardType.Tokens]: 0,
-        },
+        projectedEarnings,
         stakingEarned,
         stakingRoi,
         lockingEarned,
@@ -206,7 +210,6 @@ export class CitadelService {
     }
 
     const mapper = getDataMapper();
-
     const query = mapper.query(CitadelRewardsSnapshot, queryKeys, queryOpts);
 
     try {
@@ -257,5 +260,50 @@ export class CitadelService {
         ...knight,
         rank: ix,
       }));
+  }
+
+  private async calculateProjectedEarningsForEpoch(
+    account: string,
+    epoch: number,
+  ): Promise<Record<CitadelRewardType, number>> {
+    const chain = Chain.getChain(Network.Ethereum);
+    const sdk = await chain.getSdk();
+
+    const mapper = getDataMapper();
+    const query = mapper.query(
+      CitadelRewardsSnapshot,
+      { payType: RewardFilter.ADDED },
+      { indexName: 'IndexCitadelRewardsDataPayType', filter: { ...equals(epoch), subject: 'epoch' } },
+    );
+
+    const epochPaid: CitadelRewardEvent[] = [];
+    try {
+      for await (const reward of query) {
+        epochPaid.push(new CitadelRewardEventData(reward));
+      }
+    } catch (e) {
+      console.error(`Failed to get citadel reward from ddb ${e}`);
+    }
+
+    const rewardsPaid = baseCitadelRewards(0);
+    const [userBalance, totalSupply] = await Promise.all([
+      sdk.citadel.balanceAtEpochOf(epoch, account),
+      sdk.citadel.getTotalSupplyAtEpoch(epoch),
+    ]);
+
+    await Promise.all(
+      epochPaid.map(async (item) => {
+        const rewardTypeKey = getRewardsEventTypeMapped(item.dataType);
+        if (!rewardsPaid[rewardTypeKey]) {
+          rewardsPaid[rewardTypeKey] = 0;
+        }
+        const { price } = await getPrice(item.token);
+        const balanceScalar =
+          userBalance.eq(0) || totalSupply.eq(0) ? 0 : formatBalance(userBalance) / formatBalance(totalSupply);
+        rewardsPaid[rewardTypeKey] += item.amount * balanceScalar * price;
+      }),
+    );
+
+    return rewardsPaid;
   }
 }

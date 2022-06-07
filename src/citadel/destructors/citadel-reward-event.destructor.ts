@@ -9,7 +9,7 @@ export class CitadelRewardEventData implements CitadelRewardEvent {
   amount: number;
   epoch: number;
   payType: RewardEventType;
-  dataType?: string;
+  dataType: string;
   startTime?: number;
   finishTime?: number;
 
@@ -20,9 +20,9 @@ export class CitadelRewardEventData implements CitadelRewardEvent {
     this.amount = data.amount;
     this.epoch = data.epoch;
     this.payType = data.payType;
+    this.dataType = data.dataType;
 
     if (data.payType === RewardEventTypeEnum.ADDED) {
-      this.dataType = data.dataType;
       this.startTime = data.startTime;
       this.finishTime = data.finishTime;
     }
