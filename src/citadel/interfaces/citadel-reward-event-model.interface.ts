@@ -45,7 +45,7 @@ export class CitadelRewardEventModel implements CitadelRewardEvent {
   @Description('Type of reward event')
   @Example('Hashed 32b string')
   @Property()
-  dataType?: string;
+  dataType: string;
 
   @Title('startTime')
   @Description('Timestamp, start of event')

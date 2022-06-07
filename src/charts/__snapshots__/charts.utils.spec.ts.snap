@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`charts.utils toChartDataBlob converts arbitrary data array into a chart data blob 1`] = `
+ChartDataBlob {
+  "data": Array [
+    AnimalData {
+      "animal": "cow",
+      "id": "sighting-0",
+      "noise": "moo",
+      "timestamp": 10,
+    },
+    AnimalData {
+      "animal": "dog",
+      "id": "sighting-1",
+      "noise": "bark",
+      "timestamp": 20,
+    },
+    AnimalData {
+      "animal": "cat",
+      "id": "sighting-2",
+      "noise": "lmeow",
+      "timestamp": 30,
+    },
+  ],
+  "id": "animals",
+  "timeframe": "7d",
+}
+`;

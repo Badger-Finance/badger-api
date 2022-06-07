@@ -1,9 +1,9 @@
 import { Protocol } from '@badger-dao/sdk';
 
 export interface CitadelKnightsRoundStat {
+  funding: number;
   knight: Protocol | string;
-  votes: number;
+  voteAmount: number;
   voteWeight: number;
   votersCount: number;
-  funding: number;
 }

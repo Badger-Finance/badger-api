@@ -200,7 +200,7 @@ describe('accounts.utils', () => {
     it('returns a boost with all fields as the default values', () => {
       const expected = {
         leaderboard: `${TEST_CHAIN.network}_${LeaderBoardType.BadgerBoost}`,
-        rank: 0,
+        boostRank: 0,
         address: TEST_ADDR,
         boost: 1,
         stakeRatio: 0,
@@ -225,7 +225,7 @@ describe('accounts.utils', () => {
     describe('a previously cached boost', () => {
       it('returns the default boost', async () => {
         const boost = defaultBoost(TEST_CHAIN, TEST_ADDR);
-        boost.rank = 42;
+        boost.boostRank = 42;
         boost.stakeRatio = 1;
         boost.nativeBalance = 32021;
         boost.nonNativeBalance = 32021;

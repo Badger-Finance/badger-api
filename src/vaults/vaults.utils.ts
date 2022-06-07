@@ -177,7 +177,6 @@ export function getVaultDefinition(chain: Chain, contract: string): VaultDefinit
   return vaultDefinition;
 }
 
-// TODO: migration to SDK is probably the best option here
 export async function getStrategyInfo(chain: Chain, vaultDefinition: VaultDefinition): Promise<VaultStrategy> {
   const defaultStrategyInfo: VaultStrategy = {
     address: ethers.constants.AddressZero,

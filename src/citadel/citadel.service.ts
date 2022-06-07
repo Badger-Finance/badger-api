@@ -4,7 +4,13 @@ import { Service } from '@tsed/di';
 import { TOKENS } from '../config/tokens.config';
 import { getPrice } from '../prices/prices.utils';
 import { queryTreasurySummary } from '../treasury/treasury.utils';
-import { getCitadelKnightingRoundsStats, getStakedCitadelEarnings, queryCitadelData } from './citadel.utils';
+import {
+  baseCitadelRewards,
+  getCitadelKnightingRoundsStats,
+  getRewardsEventTypeMapped,
+  getStakedCitadelEarnings,
+  queryCitadelData,
+} from './citadel.utils';
 import { CITADEL_TREASURY_ADDRESS } from './config/citadel-treasury.config';
 import { RewardFilter } from '@badger-dao/sdk/lib/citadel/enums/reward-filter.enum';
 import { CitadelRewardEvent } from './interfaces/citadel-reward-event.interface';
@@ -17,6 +23,8 @@ import { CitadelSummary } from '@badger-dao/sdk/lib/api/interfaces/citadel-summa
 import { CitadelAccount } from './interfaces/citadel-account.interface';
 import { Chain } from '../chains/config/chain.config';
 import { CITADEL_KNIGHTS } from './citadel.constants';
+import { GetListRewardsOptions } from './interfaces/get-list-rewards-options.interface';
+import { equals } from '@aws/dynamodb-expressions';
 
 @Service()
 export class CitadelService {
@@ -76,7 +84,12 @@ export class CitadelService {
 
   async loadAccount(address: string): Promise<CitadelAccount> {
     try {
-      const sdk = await Chain.getChain(Network.Ethereum).getSdk();
+      const chain = Chain.getChain(Network.Ethereum);
+      const sdk = await chain.getSdk();
+
+      const epoch = await sdk.citadel.getLastEpochIx();
+      const projectedEarnings = await this.calculateProjectedEarningsForEpoch(address, epoch.toNumber());
+
       const [citadelTokenPrice, stakedCitadelTokenPrice] = await Promise.all([
         getPrice(TOKENS.CTDL),
         getPrice(TOKENS.XCTDL),
@@ -101,14 +114,13 @@ export class CitadelService {
       // if we remove ourselves completely our roi becomes infinity
       const stakingRoi = stakedCitadelBalance > 0 ? stakingEarned / stakedCitadelBalance : 0;
 
-      const rewardTokens = await sdk.citadel.locker.getRewardTokens();
+      const rewardTokens = await sdk.citadel.getRewardTokens();
       const rewardAmounts = await Promise.all(
         rewardTokens.map(async (t) => {
           const [token, amount] = await Promise.all([
             sdk.tokens.loadToken(t),
             sdk.citadel.getCumulativeClaimedRewards(address, t),
           ]);
-          console.log({ t, token, amount, address });
           return formatBalance(amount, token.decimals);
         }),
       );
@@ -154,14 +166,7 @@ export class CitadelService {
         earned,
         earnedBtc,
         roi,
-        // TODO: caculate earnings for current epoch and LERP for current epoch
-        // we should save this epoch data and probably take guidance from previous epochs once possible
-        projectedEarnings: {
-          [CitadelRewardType.Funding]: 0,
-          [CitadelRewardType.Yield]: 0,
-          [CitadelRewardType.Citadel]: 0,
-          [CitadelRewardType.Tokens]: 0,
-        },
+        projectedEarnings,
         stakingEarned,
         stakingRoi,
         lockingEarned,
@@ -173,12 +178,7 @@ export class CitadelService {
     }
   }
 
-  async getListRewards(
-    token?: string,
-    account?: string,
-    epoch?: number,
-    filter: RewardFilter = RewardFilter.PAID,
-  ): Promise<CitadelRewardEvent[]> {
+  async getListRewards({ token, account, epoch, filter }: GetListRewardsOptions): Promise<CitadelRewardEvent[]> {
     const rewards: CitadelRewardEvent[] = [];
 
     const queryKeys: {
@@ -210,7 +210,6 @@ export class CitadelService {
     }
 
     const mapper = getDataMapper();
-
     const query = mapper.query(CitadelRewardsSnapshot, queryKeys, queryOpts);
 
     try {
@@ -236,7 +235,7 @@ export class CitadelService {
     const knighsData = CITADEL_KNIGHTS.map((k, i) => {
       const knightStatTemplate = {
         knight: k,
-        votes: 0,
+        voteAmount: 0,
         voteWeight: 0,
         users: 0,
         funding: 0,
@@ -248,7 +247,7 @@ export class CitadelService {
 
       return {
         ...knightStatTemplate,
-        votes: graphKnight.votes,
+        voteAmount: graphKnight.voteAmount,
         voteWeight: graphKnight.voteWeight,
         users: graphKnight.votersCount,
         funding: graphKnight.funding,
@@ -256,10 +255,64 @@ export class CitadelService {
     });
 
     return knighsData
-      .sort((a, b) => b.votes - a.votes)
+      .sort((a, b) => b.voteWeight - a.voteWeight)
       .map((knight, ix) => ({
         ...knight,
         rank: ix,
       }));
+  }
+
+  private async calculateProjectedEarningsForEpoch(
+    account: string,
+    epoch: number,
+  ): Promise<Record<CitadelRewardType, number>> {
+    const chain = Chain.getChain(Network.Ethereum);
+    const sdk = await chain.getSdk();
+
+    const mapper = getDataMapper();
+    const query = mapper.query(
+      CitadelRewardsSnapshot,
+      { payType: RewardFilter.ADDED },
+      { indexName: 'IndexCitadelRewardsDataPayType', filter: { ...equals(epoch), subject: 'epoch' } },
+    );
+
+    const epochPaid: CitadelRewardEvent[] = [];
+    try {
+      for await (const reward of query) {
+        epochPaid.push(new CitadelRewardEventData(reward));
+      }
+    } catch (e) {
+      console.error(`Failed to get citadel reward from ddb ${e}`);
+    }
+
+    const rewardsPaid = baseCitadelRewards(0);
+
+    if (epochPaid.length === 0) {
+      return rewardsPaid;
+    }
+
+    await Promise.all(
+      epochPaid.map(async (item) => {
+        const rewardTypeKey = getRewardsEventTypeMapped(item.dataType);
+        if (!rewardsPaid[rewardTypeKey]) {
+          rewardsPaid[rewardTypeKey] = 0;
+        }
+        const { price } = await getPrice(item.token);
+        let userBalance, totalSupply;
+        try {
+          [userBalance, totalSupply] = await Promise.all([
+            sdk.citadel.balanceOf(account, { blockTag: item.block }),
+            sdk.citadel.getTotalSupply({ blockTag: item.block }),
+          ]);
+          const balanceScalar =
+            userBalance.eq(0) || totalSupply.eq(0) ? 0 : formatBalance(userBalance) / formatBalance(totalSupply);
+          rewardsPaid[rewardTypeKey] += item.amount * balanceScalar * price;
+        } catch (err) {
+          console.warn(err);
+        }
+      }),
+    );
+
+    return rewardsPaid;
   }
 }

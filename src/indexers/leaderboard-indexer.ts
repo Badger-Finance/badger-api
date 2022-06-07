@@ -66,18 +66,19 @@ async function generateChainBoostsLeaderBoard(chain: Chain): Promise<CachedBoost
         const [address, userBoost] = entry;
         const { boost, stakeRatio, nftBalance, bveCvxBalance, diggBalance, nativeBalance, nonNativeBalance } =
           userBoost;
-        return Object.assign(new CachedBoost(), {
+        const cachedBoost: CachedBoost = {
           leaderboard: getLeaderboardKey(chain),
-          rank: i + 1,
+          boostRank: i + 1,
           address: ethers.utils.getAddress(address),
           boost,
           stakeRatio,
           nftBalance,
           bveCvxBalance,
           diggBalance,
-          nativeBalance: nativeBalance || 0,
-          nonNativeBalance: nonNativeBalance || 0,
-        });
+          nativeBalance,
+          nonNativeBalance,
+        };
+        return Object.assign(new CachedBoost(), cachedBoost);
       });
   } catch (err) {
     console.log(err);

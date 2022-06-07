@@ -509,6 +509,18 @@ export const KnightFragmentDoc = gql`
     voteAmount
   }
 `;
+export const VoteFragmentDoc = gql`
+  fragment Vote on Vote {
+    id
+    knight {
+      id
+    }
+    voter {
+      id
+    }
+    amount
+  }
+`;
 export const KnightRoundsDocument = gql`
   query KnightRounds($id: ID!, $block: Block_height) {
     knight(id: $id, block: $block) {
@@ -538,6 +550,36 @@ export const KnightsRoundsDocument = gql`
     }
   }
   ${KnightFragmentDoc}
+`;
+export const VoteDocument = gql`
+  query Vote($id: ID!, $block: Block_height) {
+    vote(id: $id, block: $block) {
+      ...Vote
+    }
+  }
+  ${VoteFragmentDoc}
+`;
+export const VotesDocument = gql`
+  query Votes(
+    $block: Block_height
+    $first: Int = 100
+    $skip: Int = 0
+    $orderBy: Vote_orderBy
+    $orderDirection: OrderDirection
+    $where: Vote_filter
+  ) {
+    votes(
+      block: $block
+      first: $first
+      skip: $skip
+      where: $where
+      orderBy: $orderBy
+      orderDirection: $orderDirection
+    ) {
+      ...Vote
+    }
+  }
+  ${VoteFragmentDoc}
 `;
 
 export type SdkFunctionWrapper = <T>(
@@ -578,6 +620,22 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         'query',
       );
     },
+    Vote(variables: VoteQueryVariables, requestHeaders?: Dom.RequestInit['headers']): Promise<VoteQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<VoteQuery>(VoteDocument, variables, { ...requestHeaders, ...wrappedRequestHeaders }),
+        'Vote',
+        'query',
+      );
+    },
+    Votes(variables?: VotesQueryVariables, requestHeaders?: Dom.RequestInit['headers']): Promise<VotesQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<VotesQuery>(VotesDocument, variables, { ...requestHeaders, ...wrappedRequestHeaders }),
+        'Votes',
+        'query',
+      );
+    },
   };
 }
 export type Sdk = ReturnType<typeof getSdk>;
@@ -588,6 +646,14 @@ export type KnightFragment = {
   voteAmount: any;
   voters: Array<{ __typename?: 'KnightVoter'; id: string }>;
   votes: Array<{ __typename?: 'Vote'; id: string }>;
+};
+
+export type VoteFragment = {
+  __typename?: 'Vote';
+  id: string;
+  amount: any;
+  knight: { __typename?: 'Knight'; id: string };
+  voter: { __typename?: 'Voter'; id: string };
 };
 
 export type KnightRoundsQueryVariables = Exact<{
@@ -625,5 +691,41 @@ export type KnightsRoundsQuery = {
     voteAmount: any;
     voters: Array<{ __typename?: 'KnightVoter'; id: string }>;
     votes: Array<{ __typename?: 'Vote'; id: string }>;
+  }>;
+};
+
+export type VoteQueryVariables = Exact<{
+  id: Scalars['ID'];
+  block?: InputMaybe<Block_Height>;
+}>;
+
+export type VoteQuery = {
+  __typename?: 'Query';
+  vote?: {
+    __typename?: 'Vote';
+    id: string;
+    amount: any;
+    knight: { __typename?: 'Knight'; id: string };
+    voter: { __typename?: 'Voter'; id: string };
+  } | null;
+};
+
+export type VotesQueryVariables = Exact<{
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Vote_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<Vote_Filter>;
+}>;
+
+export type VotesQuery = {
+  __typename?: 'Query';
+  votes: Array<{
+    __typename?: 'Vote';
+    id: string;
+    amount: any;
+    knight: { __typename?: 'Knight'; id: string };
+    voter: { __typename?: 'Voter'; id: string };
   }>;
 };

@@ -2,9 +2,7 @@
 import SuperTest from 'supertest';
 import { PlatformTest } from '@tsed/common';
 import { Server } from '../Server';
-
 import * as treasuryUtils from '../treasury/treasury.utils';
-import * as priceUtils from '../prices/prices.utils';
 import * as tokenUtils from '../tokens/tokens.utils';
 import * as citadelUtils from './citadel.utils';
 import * as citadelGraph from '../graphql/generated/citadel';
@@ -19,18 +17,14 @@ import { RewardEventTypeEnum } from '@badger-dao/sdk/lib/citadel/enums/reward-ev
 import { NotFound } from '@tsed/exceptions';
 import { citadelChartDataBlobModel } from './mocks/citadel-chart-data-blob.model.mock';
 import { TOKENS } from '../config/tokens.config';
-import BadgerSDK, {
-  StakedCitadelLocker,
-  StakedCitadelLocker__factory,
-  VaultV15,
-  VaultV15__factory,
-} from '@badger-dao/sdk';
-import { TokensService } from '@badger-dao/sdk/lib/tokens/tokens.service';
+import BadgerSDK, { Network, VaultV15, VaultV15__factory } from '@badger-dao/sdk';
 import { BigNumber } from 'ethers';
-import { CitadelService } from '@badger-dao/sdk/lib/citadel';
+// import { CitadelService } from '@badger-dao/sdk/lib/citadel';
 import { mock } from 'jest-mock-extended';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
-import { knightingRoundKnightGraphMock } from './mocks/knighting-round-knight.graph.mock';
+import { knightingRoundVoteGraphMock } from './mocks/knighting-round-knight.graph.mock';
+import { Provider } from '../chains/enums/provider.enum';
+import { Ethereum } from '../chains/config/eth.config';
 
 describe('CitadelController', () => {
   let request: SuperTest.SuperTest<SuperTest.Test>;
@@ -40,6 +34,35 @@ describe('CitadelController', () => {
     request = SuperTest(PlatformTest.callback());
   });
   afterAll(PlatformTest.reset);
+
+  function setupRewardDatabase() {
+    jest.spyOn(Date, 'now').mockImplementation(() => <number>RewardsSnapshotModelMock[1].startTime * 1000);
+
+    // @ts-ignore
+    const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
+
+    // @ts-ignore
+    jest.spyOn(DataMapper.prototype, 'query').mockImplementation((model, keys, opts) => {
+      let dataSource = RewardsSnapshotModelMock;
+      if (keys.payType === RewardEventTypeEnum.ADDED) {
+        dataSource = dataSource.filter((obj) => {
+          return <number>obj.startTime >= opts.filter.object;
+        });
+      }
+      if (keys.payType) {
+        dataSource = dataSource.filter((obj) => obj.payType === keys.payType);
+      }
+      if (keys.account) {
+        dataSource = dataSource.filter((obj) => obj.account === keys.account);
+      }
+      if (keys.token) {
+        dataSource = dataSource.filter((obj) => obj.token === keys.token);
+      }
+      // @ts-ignore
+      qi[Symbol.iterator] = jest.fn(() => dataSource.map((obj) => Object.assign(new model(), obj)).values());
+      return qi;
+    });
+  }
 
   describe('GET /citadel/v1/treasury', () => {
     beforeEach(() => {
@@ -70,32 +93,7 @@ describe('CitadelController', () => {
 
   describe('GET /citadel/v1/rewards', () => {
     beforeEach(() => {
-      jest.spyOn(Date, 'now').mockImplementation(() => <number>RewardsSnapshotModelMock[1].startTime * 1000);
-
-      // @ts-ignore
-      const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
-
-      // @ts-ignore
-      jest.spyOn(DataMapper.prototype, 'query').mockImplementation((model, keys, opts) => {
-        let dataSource = RewardsSnapshotModelMock;
-        if (keys.payType === RewardEventTypeEnum.ADDED) {
-          dataSource = dataSource.filter((obj) => {
-            return <number>obj.startTime >= opts.filter.object;
-          });
-        }
-        if (keys.payType) {
-          dataSource = dataSource.filter((obj) => obj.payType === keys.payType);
-        }
-        if (keys.account) {
-          dataSource = dataSource.filter((obj) => obj.account === keys.account);
-        }
-        if (keys.token) {
-          dataSource = dataSource.filter((obj) => obj.token === keys.token);
-        }
-        // @ts-ignore
-        qi[Symbol.iterator] = jest.fn(() => dataSource.map((obj) => Object.assign(new model(), obj)).values());
-        return qi;
-      });
+      setupRewardDatabase();
     });
 
     it('returns paid rewards list', async (done: jest.DoneCallback) => {
@@ -154,30 +152,24 @@ describe('CitadelController', () => {
   });
 
   describe('GET /citadel/v1/accounts', () => {
-    beforeEach(() => {
-      jest.spyOn(BadgerSDK.prototype, 'ready').mockImplementation();
+    beforeEach(async () => {
+      setupRewardDatabase();
+      mockPricing();
+      const sdk = new BadgerSDK({
+        network: Network.Ethereum,
+        provider: Provider.Cloudflare,
+      });
+      jest.spyOn(Ethereum.prototype, 'getSdk').mockImplementation(async () => sdk);
+      jest.spyOn(sdk, 'ready').mockImplementation();
       // eslint-disable-next-line
-      jest.spyOn(BadgerSDK.prototype as any, 'initialize').mockImplementation(async () => true);
+      jest.spyOn(sdk as any, 'initialize').mockImplementation(async () => true);
 
-      jest.spyOn(TokensService.prototype, 'loadBalances').mockImplementation(async () => ({
+      jest.spyOn(sdk.tokens, 'loadBalances').mockImplementation(async () => ({
         [TOKENS.CTDL]: BigNumber.from(1034 * 18),
         [TOKENS.XCTDL]: BigNumber.from(4004 * 18),
       }));
 
-      jest
-        .spyOn(CitadelService.prototype, 'lockedBalanceOf')
-        .mockImplementation(async () => BigNumber.from(154534534 * 18));
-
-      jest.spyOn(priceUtils, 'getPrice').mockImplementation(async (token: string) => {
-        return {
-          [TOKENS.CTDL]: { address: TOKENS.CTDL, price: 21 },
-          [TOKENS.XCTDL]: { address: TOKENS.XCTDL, price: 50 },
-          [TOKENS.BADGER]: { address: TOKENS.BADGER, price: 5 },
-          [TOKENS.WBTC]: { address: TOKENS.WBTC, price: 30_000 },
-          [TOKENS.BCVXCRV]: { address: TOKENS.BCVXCRV, price: 1.25 },
-          [TOKENS.BVECVX]: { address: TOKENS.BVECVX, price: 1.3 },
-        }[token];
-      });
+      jest.spyOn(sdk.citadel, 'lockedBalanceOf').mockImplementation(async () => BigNumber.from(154534534 * 18));
 
       const citadelGraphSdkMock = {
         VaultBalance: async () => ({
@@ -195,15 +187,15 @@ describe('CitadelController', () => {
       jest.spyOn(VaultV15__factory, 'connect').mockImplementation(() => vaultV15);
       vaultV15.getPricePerFullShare.calledWith().mockImplementation(async () => BigNumber.from(21));
 
-      const citadelLocker = mock<StakedCitadelLocker>();
-      jest.spyOn(StakedCitadelLocker__factory, 'connect').mockImplementation(() => citadelLocker);
-      citadelLocker.getRewardTokens.calledWith().mockImplementation(async () => [TOKENS.BADGER, TOKENS.WBTC]);
-
+      jest.spyOn(sdk.citadel, 'getLastEpochIx').mockImplementation(async () => BigNumber.from('1'));
       jest
-        .spyOn(TokensService.prototype, 'loadToken')
-        .mockImplementation(async (token: string) => fullTokenMockMap[token]);
+        .spyOn(sdk.citadel, 'balanceOf')
+        .mockImplementation(async (_account) => BigNumber.from('10000000000000000000'));
+      jest.spyOn(sdk.citadel, 'getTotalSupply').mockImplementation(async () => BigNumber.from('10000000000000000000'));
+      jest.spyOn(sdk.citadel, 'getRewardTokens').mockImplementation(async () => [TOKENS.BADGER, TOKENS.WBTC]);
+      jest.spyOn(sdk.tokens, 'loadToken').mockImplementation(async (token: string) => fullTokenMockMap[token]);
 
-      jest.spyOn(CitadelService.prototype, 'getCumulativeClaimedRewards').mockImplementation(
+      jest.spyOn(sdk.citadel, 'getCumulativeClaimedRewards').mockImplementation(
         async (_, token: string) =>
           ({
             [TOKENS.BADGER]: BigNumber.from('3000000000000000000000'), // 300 BADGER (18 decimals)
@@ -223,7 +215,7 @@ describe('CitadelController', () => {
       ];
 
       // @ts-ignore
-      jest.spyOn(CitadelService.prototype, 'getClaimableRewards').mockImplementation(async () => citadelClaimableRw);
+      jest.spyOn(sdk.citadel, 'getClaimableRewards').mockImplementation(async () => citadelClaimableRw);
     });
 
     it('returns citadel account data', async (done: jest.DoneCallback) => {
@@ -235,8 +227,15 @@ describe('CitadelController', () => {
 
   describe('GET /citadel/v1/leaderboard', () => {
     beforeEach(() => {
+      let called = false;
       const citadelKnightingRoundGraphMock = {
-        KnightsRounds: async () => knightingRoundKnightGraphMock,
+        Votes: async () => {
+          if (!called) {
+            called = true;
+            return knightingRoundVoteGraphMock;
+          }
+          return { votes: [] };
+        },
       };
       // @ts-ignore
       jest.spyOn(citadelKnightingRoundGraph, 'getSdk').mockImplementation(() => citadelKnightingRoundGraphMock);
