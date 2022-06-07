@@ -12,7 +12,7 @@ export class CachedBoost implements UserBoostData {
   leaderboard!: string;
 
   @rangeKey()
-  rank!: number;
+  boostRank!: number;
 
   @attribute({
     indexKeyConfigurations: {

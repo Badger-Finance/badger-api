@@ -20,16 +20,16 @@ import { gqlGenT } from '@badger-dao/sdk';
 
 export function defaultBoost(chain: Chain, address: string): CachedBoost {
   return {
-    leaderboard: `${chain.network}_${LeaderBoardType.BadgerBoost}`,
-    rank: 0,
     address,
     boost: 1,
-    stakeRatio: 0,
-    nftBalance: 0,
-    nativeBalance: 0,
+    boostRank: 0,
     bveCvxBalance: 0,
     diggBalance: 0,
+    leaderboard: `${chain.network}_${LeaderBoardType.BadgerBoost}`,
+    nativeBalance: 0,
+    nftBalance: 0,
     nonNativeBalance: 0,
+    stakeRatio: 0,
   };
 }
 
@@ -102,7 +102,6 @@ export async function queryCachedAccount(address: string): Promise<CachedAccount
   const checksummedAccount = ethers.utils.getAddress(address);
   const defaultAccount: CachedAccount = {
     address: checksummedAccount,
-    multipliers: [],
     balances: [],
   };
   try {
@@ -190,17 +189,12 @@ export async function getCachedAccount(chain: Chain, address: string): Promise<A
       tokens: bal.tokens,
       earnedTokens: bal.earnedTokens,
     }));
-  const multipliers = Object.fromEntries(
-    cachedAccount.multipliers
-      .filter((mult) => mult.network === network)
-      .map((entry) => [entry.address, entry.multiplier]),
-  );
   const data = Object.fromEntries(balances.map((bal) => [bal.address, bal]));
   const claimableBalances = Object.fromEntries(
     claimableBalanceSnapshot.claimableBalances.map((bal) => [bal.address, bal.balance]),
   );
   const cachedBoost = await getCachedBoost(chain, cachedAccount.address);
-  const { boost, rank, stakeRatio, nftBalance, bveCvxBalance, nativeBalance, nonNativeBalance, diggBalance } =
+  const { boost, boostRank, stakeRatio, nftBalance, bveCvxBalance, nativeBalance, nonNativeBalance, diggBalance } =
     cachedBoost;
   const value = balances.map((b) => b.value).reduce((total, value) => (total += value), 0);
   const earnedValue = balances.map((b) => b.earnedValue).reduce((total, value) => (total += value), 0);
@@ -209,9 +203,7 @@ export async function getCachedAccount(chain: Chain, address: string): Promise<A
     value,
     earnedValue,
     boost,
-    rank,
-    boostRank: rank,
-    multipliers,
+    boostRank,
     data,
     claimableBalances,
     stakeRatio,

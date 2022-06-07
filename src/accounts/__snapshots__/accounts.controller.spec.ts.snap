@@ -10,11 +10,9 @@ Object {
   "data": Object {},
   "diggBalance": 0,
   "earnedValue": 0,
-  "multipliers": Object {},
   "nativeBalance": 0,
   "nftBalance": 0,
   "nonNativeBalance": 0,
-  "rank": 1035,
   "stakeRatio": 0,
   "value": 0,
 }
@@ -30,11 +28,9 @@ Object {
   "data": Object {},
   "diggBalance": 0,
   "earnedValue": 1,
-  "multipliers": Object {},
   "nativeBalance": 3,
   "nftBalance": 3,
   "nonNativeBalance": 5,
-  "rank": 1,
   "stakeRatio": 1,
   "value": 10,
 }

@@ -84,7 +84,6 @@ export function mockBatchDelete(items: unknown[]) {
 export function defaultAccount(address: string): CachedAccount {
   return {
     address,
-    multipliers: [],
     balances: [],
   };
 }
