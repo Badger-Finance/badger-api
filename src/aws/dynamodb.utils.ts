@@ -8,13 +8,12 @@ const offline = process.env.IS_OFFLINE;
 export function getDataMapper(): DataMapper {
   let client: AWS.DynamoDB;
   if (offline) {
-    // client = new AWS.DynamoDB({
-    //   region: 'localhost',
-    //   endpoint: 'http://localhost:8000',
-    //   accessKeyId: '',
-    //   secretAccessKey: '',
-    // });
-    client = new AWS.DynamoDB();
+    client = new AWS.DynamoDB({
+      region: 'localhost',
+      endpoint: 'http://localhost:8000',
+      accessKeyId: '',
+      secretAccessKey: '',
+    });
   } else {
     client = new AWS.DynamoDB();
   }
