@@ -286,10 +286,10 @@ export class CitadelService {
     }
 
     const rewardsPaid = baseCitadelRewards(0);
-    const [userBalance, totalSupply] = await Promise.all([
-      sdk.citadel.balanceAtEpochOf(epoch, account),
-      sdk.citadel.getTotalSupplyAtEpoch(epoch),
-    ]);
+
+    if (epochPaid.length === 0) {
+      return rewardsPaid;
+    }
 
     await Promise.all(
       epochPaid.map(async (item) => {
@@ -298,9 +298,18 @@ export class CitadelService {
           rewardsPaid[rewardTypeKey] = 0;
         }
         const { price } = await getPrice(item.token);
-        const balanceScalar =
-          userBalance.eq(0) || totalSupply.eq(0) ? 0 : formatBalance(userBalance) / formatBalance(totalSupply);
-        rewardsPaid[rewardTypeKey] += item.amount * balanceScalar * price;
+        let userBalance, totalSupply;
+        try {
+          [userBalance, totalSupply] = await Promise.all([
+            sdk.citadel.balanceOf(account, { blockTag: item.block }),
+            sdk.citadel.getTotalSupply({ blockTag: item.block }),
+          ]);
+          const balanceScalar =
+            userBalance.eq(0) || totalSupply.eq(0) ? 0 : formatBalance(userBalance) / formatBalance(totalSupply);
+          rewardsPaid[rewardTypeKey] += item.amount * balanceScalar * price;
+        } catch (err) {
+          console.warn(err);
+        }
       }),
     );
 
