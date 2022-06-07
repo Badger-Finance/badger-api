@@ -195,18 +195,19 @@ export function setupChainGasPrices() {
 export function randomCachedBoosts(count: number): CachedBoost[] {
   const boosts = [];
   for (let i = 0; i < count; i += 1) {
-    boosts.push(
-      Object.assign(new CachedBoost(), {
-        leaderboard: `${Network.Ethereum}_${LeaderBoardType.BadgerBoost}`,
-        rank: i + 1,
-        address: TEST_ADDR,
-        boost: 2000 - i * 10,
-        nftBalance: 1,
-        stakeRatio: 1 - i * 0.01,
-        nativeBalance: 100000 / (i + 1),
-        nonNativeBalance: 250000 / (i + 1),
-      }),
-    );
+    const boost: CachedBoost = {
+      leaderboard: `${Network.Ethereum}_${LeaderBoardType.BadgerBoost}`,
+      boostRank: i + 1,
+      address: TEST_ADDR,
+      boost: 2000 - i * 10,
+      nftBalance: 1,
+      stakeRatio: 1 - i * 0.01,
+      nativeBalance: 100000 / (i + 1),
+      nonNativeBalance: 250000 / (i + 1),
+      bveCvxBalance: 120 * (i + 1),
+      diggBalance: 1.3 * (i + 1),
+    };
+    boosts.push(Object.assign(new CachedBoost(), boost));
   }
   return boosts;
 }
