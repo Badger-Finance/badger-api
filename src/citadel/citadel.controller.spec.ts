@@ -189,11 +189,9 @@ describe('CitadelController', () => {
 
       jest.spyOn(sdk.citadel, 'getLastEpochIx').mockImplementation(async () => BigNumber.from('1'));
       jest
-        .spyOn(sdk.citadel, 'balanceAtEpochOf')
-        .mockImplementation(async (_epoch) => BigNumber.from('10000000000000000000'));
-      jest
-        .spyOn(sdk.citadel, 'getTotalSupplyAtEpoch')
-        .mockImplementation(async (_epoch, _account) => BigNumber.from('10000000000000000000'));
+        .spyOn(sdk.citadel, 'balanceOf')
+        .mockImplementation(async (_account) => BigNumber.from('10000000000000000000'));
+      jest.spyOn(sdk.citadel, 'getTotalSupply').mockImplementation(async () => BigNumber.from('10000000000000000000'));
       jest.spyOn(sdk.citadel, 'getRewardTokens').mockImplementation(async () => [TOKENS.BADGER, TOKENS.WBTC]);
       jest.spyOn(sdk.tokens, 'loadToken').mockImplementation(async (token: string) => fullTokenMockMap[token]);
 
