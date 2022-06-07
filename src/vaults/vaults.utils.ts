@@ -194,11 +194,17 @@ export async function getStrategyInfo(chain: Chain, vaultDefinition: VaultDefini
     });
     if (version === VaultVersion.v1) {
       const strategy = Strategy__factory.connect(strategyAddress, sdk.provider);
-      const [withdrawFee, performanceFee, strategistFee] = await Promise.all([
+      // you know, these things happen...
+      // eslint-disable-next-line prefer-const
+      let [withdrawFee, performanceFee, strategistFee] = await Promise.all([
         strategy.withdrawalFee(),
         strategy.performanceFeeGovernance(),
         strategy.performanceFeeStrategist(),
       ]);
+      // bveCVX does not have a way to capture materially its performance fee
+      if (vaultDefinition.vaultToken === TOKENS.BVECVX) {
+        performanceFee = BigNumber.from('1500'); // set performance fee to 15%
+      }
       return {
         address: strategyAddress,
         withdrawFee: withdrawFee.toNumber(),
