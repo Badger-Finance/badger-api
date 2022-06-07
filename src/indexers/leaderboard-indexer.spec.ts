@@ -52,9 +52,9 @@ describe('leaderboard-indexer', () => {
         let last: number | undefined;
         for (const boost of boosts) {
           if (last) {
-            expect(last).toBeLessThan(boost.rank);
+            expect(last).toBeLessThan(boost.boostRank);
           }
-          last = boost.rank;
+          last = boost.boostRank;
         }
       }
     });

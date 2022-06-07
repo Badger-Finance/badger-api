@@ -53,7 +53,7 @@ export async function getLeaderBoardSize(chain: Chain): Promise<number> {
     },
     { limit: 1, scanIndexForward: false },
   )) {
-    return entry.rank;
+    return entry.boostRank;
   }
   return 0;
 }
@@ -65,7 +65,7 @@ export async function getUserLeaderBoardRank(chain: Chain, accountId: string): P
     { leaderboard: getLeaderboardKey(chain), address: ethers.utils.getAddress(accountId) },
     { limit: 1, indexName: 'IndexLeaderBoardRankOnAddress' },
   )) {
-    return entry.rank;
+    return entry.boostRank;
   }
   const leaderboardSize = await getLeaderBoardSize(chain);
   return leaderboardSize + 1;

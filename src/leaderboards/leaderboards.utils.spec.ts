@@ -23,7 +23,7 @@ describe('leaderboards.utils', () => {
       entries.push(
         Object.assign(new CachedBoost(), {
           leaderboard: LeaderBoardType.BadgerBoost,
-          rank: i + minRank,
+          boostRank: i + minRank,
           boost: maxBoost - i * 0.01,
           stakeRatio: maxRatio - i * 0.25,
           nftMultiplier: maxMultiplier - i * 0.01,

@@ -239,12 +239,12 @@ resources:
         KeySchema:
           - AttributeName: 'leaderboard'
             KeyType: 'HASH'
-          - AttributeName: 'rank'
+          - AttributeName: 'boostRank'
             KeyType: 'RANGE'
         AttributeDefinitions:
           - AttributeName: 'leaderboard'
             AttributeType: 'S'
-          - AttributeName: 'rank'
+          - AttributeName: 'boostRank'
             AttributeType: 'N'
           - AttributeName: 'address'
             AttributeType: 'S'
@@ -583,15 +583,6 @@ functions:
           name: ${self:service}-${self:custom.stage}-index-vault-balances
           description: 'index vault token balances from the graph'
           rate: rate(1 minute)
-
-  index-boosts:
-    handler: src/indexers/boosts-indexer.refreshUserBoosts
-    timeout: 360
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-boosts
-          description: 'index accounts boost information'
-          rate: rate(20 minutes)
 
   index-accounts:
     handler: src/indexers/accounts-indexer.refreshUserAccounts

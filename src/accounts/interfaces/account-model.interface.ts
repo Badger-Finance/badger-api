@@ -18,27 +18,11 @@ export class AccountModel implements Account {
   @Property()
   public boost: number;
 
-  @Title('rank')
-  @Description('Badger Boost Rank')
-  @Example('6')
-  @Property()
-  public rank: number;
-
   @Title('boostRank')
   @Description('Badger Boost Rank')
   @Example('6')
   @Property()
   public boostRank: number;
-
-  @Title('boostMultipliers')
-  @Description("Mapping of user's individual sett multipliers for rewards distribution")
-  @Example({
-    [TOKENS.BBADER]: 0.73,
-    [TOKENS.BDIGG]: 0.61,
-    [TOKENS.CVXCRV]: 0.88,
-  })
-  @Property()
-  public multipliers: Record<string, number>;
 
   @Title('value')
   @Description("Currency value of an account's current holdings")
@@ -130,9 +114,7 @@ export class AccountModel implements Account {
   constructor(account: Account) {
     this.address = account.address;
     this.boost = account.boost;
-    this.rank = account.rank;
     this.boostRank = account.boostRank;
-    this.multipliers = account.multipliers;
     this.value = account.value;
     this.earnedValue = account.earnedValue;
     this.data = account.data;
