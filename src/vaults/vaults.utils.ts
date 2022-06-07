@@ -195,7 +195,7 @@ export async function getStrategyInfo(chain: Chain, vaultDefinition: VaultDefini
     if (version === VaultVersion.v1) {
       const strategy = Strategy__factory.connect(strategyAddress, sdk.provider);
       // you know, these things happen...
-      // eslint-ignore-next-line prefer-const
+      // eslint-disable-next-line prefer-const
       let [withdrawFee, performanceFee, strategistFee] = await Promise.all([
         strategy.withdrawalFee(),
         strategy.performanceFeeGovernance(),
