@@ -9,33 +9,9 @@ export class CachedAccount {
   @hashKey()
   address!: string;
 
-  @attribute()
-  boost!: number;
-
-  @attribute()
-  boostRank!: number;
-
   @attribute({ memberType: embed(CachedBoostMultiplier) })
   multipliers!: Array<CachedBoostMultiplier>;
 
-  @attribute()
-  value!: number;
-
-  @attribute()
-  earnedValue!: number;
-
   @attribute({ memberType: embed(CachedSettBalance) })
   balances!: Array<CachedSettBalance>;
-
-  @attribute()
-  stakeRatio!: number;
-
-  @attribute()
-  nativeBalance!: number;
-
-  @attribute()
-  nonNativeBalance!: number;
-
-  @attribute()
-  nftBalance!: number;
 }

@@ -84,26 +84,9 @@ export function mockBatchDelete(items: unknown[]) {
 export function defaultAccount(address: string): CachedAccount {
   return {
     address,
-    boost: 0,
-    boostRank: 0,
     multipliers: [],
-    nftBalance: 0,
-    value: 0,
-    earnedValue: 0,
     balances: [],
-    nativeBalance: 0,
-    nonNativeBalance: 0,
-    stakeRatio: 0,
   };
-}
-
-export function randomAccount(address: string): CachedAccount {
-  const account = defaultAccount(address);
-  account.value = randomValue();
-  account.earnedValue = randomValue();
-  account.boost = randomValue();
-  account.boostRank = randomValue();
-  return account;
 }
 
 export const randomValue = (min?: number, max?: number): number => {

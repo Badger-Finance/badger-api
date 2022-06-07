@@ -1,5 +1,5 @@
 import { TOKENS } from '../config/tokens.config';
-import { mockBatchPut, randomAccount, TEST_ADDR } from '../test/tests.utils';
+import { defaultAccount, mockBatchPut, TEST_ADDR } from '../test/tests.utils';
 import { batchRefreshAccounts, chunkArray } from './indexer.utils';
 import * as accountsUtils from '../accounts/accounts.utils';
 
@@ -26,7 +26,7 @@ describe('indexer.utils', () => {
       const getAccounts = jest.spyOn(accountsUtils, 'getAccountMap').mockImplementation(async () =>
         Object.fromEntries(
           accounts.map((a) => {
-            return [a, randomAccount(a)];
+            return [a, defaultAccount(a)];
           }),
         ),
       );

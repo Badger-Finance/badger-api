@@ -75,8 +75,8 @@ async function generateChainBoostsLeaderBoard(chain: Chain): Promise<CachedBoost
           nftBalance,
           bveCvxBalance,
           diggBalance,
-          nativeBalance: nativeBalance || 0,
-          nonNativeBalance: nonNativeBalance || 0,
+          nativeBalance,
+          nonNativeBalance,
         });
       });
   } catch (err) {

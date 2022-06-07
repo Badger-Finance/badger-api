@@ -5,15 +5,7 @@ Object {
   "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484": Object {
     "address": "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484",
     "balances": Array [],
-    "boost": 0,
-    "boostRank": 0,
-    "earnedValue": 0,
     "multipliers": Array [],
-    "nativeBalance": 0,
-    "nftBalance": 0,
-    "nonNativeBalance": 0,
-    "stakeRatio": 0,
-    "value": 0,
   },
 }
 `;
@@ -23,15 +15,7 @@ Object {
   "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484": Object {
     "address": "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484",
     "balances": Array [],
-    "boost": 0,
-    "boostRank": 0,
-    "earnedValue": 0,
     "multipliers": Array [],
-    "nativeBalance": 0,
-    "nftBalance": 0,
-    "nonNativeBalance": 0,
-    "stakeRatio": 0,
-    "value": 0,
   },
 }
 `;
