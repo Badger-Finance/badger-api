@@ -1,6 +1,5 @@
 import * as accountsIndexer from './accounts-indexer';
 import * as accountsUtils from '../accounts/accounts.utils';
-import * as indexerUtils from './indexer.utils';
 import * as rewardsUtils from '../rewards/rewards.utils';
 import * as dynamodbUtils from '../aws/dynamodb.utils';
 import { Network } from '@badger-dao/sdk';
@@ -16,12 +15,10 @@ import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
 import { ClaimableBalance } from '../rewards/entities/claimable-balance';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 import { DataMapper } from '@aws/dynamodb-data-mapper';
-import { AccountIndexMode } from './enums/account-index-mode.enum';
 
 describe('accounts-indexer', () => {
   const rewardsChain = new Ethereum();
   const noRewardsChain = new BinanceSmartChain();
-  const networks = [Network.Ethereum, Network.Polygon, Network.Arbitrum, Network.Avalanche, Network.Fantom];
   const previousMockedBlockNumber = 90;
   const startMockedBlockNumber = 100;
   const endMockedBlockNumber = 110;
@@ -49,16 +46,6 @@ describe('accounts-indexer', () => {
       });
     });
     jest.spyOn(rewardsChain.provider, 'getBlockNumber').mockImplementation(async () => endMockedBlockNumber);
-  });
-
-  describe('refreshUserAccounts', () => {
-    it('calls refreshAccountSettBalances for each chain separately', async () => {
-      jest.spyOn(accountsIndexer, 'refreshClaimableBalances').mockImplementation(() => Promise.resolve());
-      const batchRefresh = jest.spyOn(indexerUtils, 'batchRefreshAccounts').mockImplementation(() => Promise.resolve());
-      await accountsIndexer.refreshUserAccounts({ mode: AccountIndexMode.BalanceData });
-      const chainCallData = batchRefresh.mock.calls.flatMap((calls) => calls[0]);
-      expect(chainCallData).toEqual(networks);
-    });
   });
 
   describe('refreshClaimableBalances', () => {

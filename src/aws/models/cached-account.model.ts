@@ -10,4 +10,7 @@ export class CachedAccount {
 
   @attribute({ memberType: embed(CachedSettBalance) })
   balances!: Array<CachedSettBalance>;
+
+  @attribute({ defaultProvider: () => Date.now() })
+  updatedAt!: number;
 }

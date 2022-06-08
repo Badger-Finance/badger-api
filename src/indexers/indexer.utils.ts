@@ -1,8 +1,4 @@
 import { NotFound } from '@tsed/exceptions';
-import { getAccountMap } from '../accounts/accounts.utils';
-import { AccountMap } from '../accounts/interfaces/account-map.interface';
-import { CachedAccount } from '../aws/models/cached-account.model';
-import { getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
 import { getPrice } from '../prices/prices.utils';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
@@ -20,23 +16,6 @@ export function chunkArray(addresses: string[], count: number): string[][] {
     chunks.push(addresses.slice(i, i + chunkSize));
   }
   return chunks;
-}
-
-export async function batchRefreshAccounts(
-  accounts: string[],
-  refreshFns: (batchAccounts: AccountMap) => Promise<void>[],
-  customBatch?: number,
-): Promise<void> {
-  const batchSize = customBatch ?? 500;
-  const mapper = getDataMapper();
-  for (let i = 0; i < accounts.length; i += batchSize) {
-    const addresses = accounts.slice(i, i + batchSize);
-    const batchAccounts = await getAccountMap(addresses);
-    await Promise.all(refreshFns(batchAccounts));
-    const cachedAccounts = Object.values(batchAccounts).map((account) => Object.assign(new CachedAccount(), account));
-    for await (const _item of mapper.batchPut(cachedAccounts)) {
-    }
-  }
 }
 
 export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefinition): Promise<VaultSnapshot> {

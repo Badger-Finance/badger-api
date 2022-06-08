@@ -5,6 +5,7 @@ Object {
   "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484": Object {
     "address": "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484",
     "balances": Array [],
+    "updatedAt": 0,
   },
 }
 `;
@@ -14,6 +15,7 @@ Object {
   "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484": Object {
     "address": "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484",
     "balances": Array [],
+    "updatedAt": 0,
   },
 }
 `;
