@@ -1,12 +1,10 @@
-import { ethers } from 'ethers';
 import { SUPPORTED_CHAINS } from '../chains/chain';
-import { getAccounts, getLatestMetadata, queryCachedAccount, toVaultBalance } from '../accounts/accounts.utils';
+import { getAccounts, getLatestMetadata } from '../accounts/accounts.utils';
 import { getChainStartBlockKey, getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
 import { ClaimableBalance } from '../rewards/entities/claimable-balance';
 import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
 import { getClaimableRewards, getTreeDistribution } from '../rewards/rewards.utils';
-import { getVaultDefinition } from '../vaults/vaults.utils';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 import { Network } from '@badger-dao/sdk';
 
@@ -73,35 +71,6 @@ export async function refreshClaimableBalances(chain: Chain) {
 
   await mapper.put(metadata);
   console.log(`Completed balance snapshot for ${chain.network} up to ${snapshotEndBlock}`);
-}
-
-export async function refreshAccountVaultBalances(chain: Chain, account: string) {
-  const sdk = await chain.getSdk();
-
-  const { user } = await sdk.graph.loadUser({ id: account.toLowerCase() });
-
-  if (user) {
-    const address = ethers.utils.getAddress(user.id);
-    const cachedAccount = await queryCachedAccount(address);
-    const userBalances = user.settBalances;
-    if (userBalances) {
-      const balances = userBalances.filter((balance) => {
-        try {
-          getVaultDefinition(chain, balance.sett.id);
-          return true;
-        } catch (err) {
-          return false;
-        }
-      });
-      const userVaultBalances = await Promise.all(balances.map(async (bal) => toVaultBalance(chain, bal)));
-      cachedAccount.balances = cachedAccount.balances
-        .filter((bal) => bal.network !== chain.network)
-        .concat(userVaultBalances);
-
-      const mapper = getDataMapper();
-      await mapper.put(cachedAccount);
-    }
-  }
 }
 
 export async function refreshUserAccounts() {

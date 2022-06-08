@@ -17,7 +17,6 @@ import { Account, Currency, formatBalance, ONE_MIN_MS } from '@badger-dao/sdk';
 import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 import { gqlGenT } from '@badger-dao/sdk';
-import { refreshAccountVaultBalances } from '../indexers/accounts-indexer';
 
 export function defaultBoost(chain: Chain, address: string): CachedBoost {
   return {
@@ -259,4 +258,33 @@ export async function getLatestMetadata(chain: Chain): Promise<UserClaimMetadata
     result = await mapper.put(metaData);
   }
   return result;
+}
+
+export async function refreshAccountVaultBalances(chain: Chain, account: string) {
+  const sdk = await chain.getSdk();
+
+  const { user } = await sdk.graph.loadUser({ id: account.toLowerCase() });
+
+  if (user) {
+    const address = ethers.utils.getAddress(user.id);
+    const cachedAccount = await queryCachedAccount(address);
+    const userBalances = user.settBalances;
+    if (userBalances) {
+      const balances = userBalances.filter((balance) => {
+        try {
+          getVaultDefinition(chain, balance.sett.id);
+          return true;
+        } catch (err) {
+          return false;
+        }
+      });
+      const userVaultBalances = await Promise.all(balances.map(async (bal) => toVaultBalance(chain, bal)));
+      cachedAccount.balances = cachedAccount.balances
+        .filter((bal) => bal.network !== chain.network)
+        .concat(userVaultBalances);
+
+      const mapper = getDataMapper();
+      await mapper.put(cachedAccount);
+    }
+  }
 }
