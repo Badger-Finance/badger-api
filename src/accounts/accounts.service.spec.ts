@@ -1,3 +1,4 @@
+import { Account } from '@badger-dao/sdk';
 import { PlatformTest } from '@tsed/common';
 import { Ethereum } from '../chains/config/eth.config';
 import { TEST_ADDR } from '../test/tests.utils';
@@ -17,23 +18,24 @@ describe('accounts.service', () => {
 
   describe('getAccount', () => {
     it('returns the expected account', async () => {
-      jest.spyOn(accountsUtils, 'getCachedAccount').mockImplementation(async (_chain, address) => ({
-        address,
-        value: 10,
-        earnedValue: 1,
-        boost: 2000,
-        rank: 1,
-        boostRank: 1,
-        multipliers: {},
-        data: {},
-        claimableBalances: {},
-        stakeRatio: 1,
-        nftBalance: 3,
-        bveCvxBalance: 1,
-        diggBalance: 1,
-        nativeBalance: 5,
-        nonNativeBalance: 5,
-      }));
+      jest.spyOn(accountsUtils, 'getCachedAccount').mockImplementation(async (_chain, address) => {
+        const cachedAccount: Account = {
+          address,
+          value: 10,
+          earnedValue: 1,
+          boost: 2000,
+          boostRank: 1,
+          data: {},
+          claimableBalances: {},
+          stakeRatio: 1,
+          nftBalance: 3,
+          bveCvxBalance: 1,
+          diggBalance: 1,
+          nativeBalance: 5,
+          nonNativeBalance: 5,
+        };
+        return cachedAccount;
+      });
       const result = await service.getAccount(chain, TEST_ADDR);
       expect(result).toMatchSnapshot();
     });

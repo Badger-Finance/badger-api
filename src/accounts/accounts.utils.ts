@@ -13,10 +13,11 @@ import { getVaultTokens, getFullToken } from '../tokens/tokens.utils';
 import { AccountMap } from './interfaces/account-map.interface';
 import { CachedAccount } from '../aws/models/cached-account.model';
 import { CachedSettBalance } from './interfaces/cached-sett-balance.interface';
-import { Account, Currency, formatBalance } from '@badger-dao/sdk';
+import { Account, Currency, formatBalance, ONE_MIN_MS } from '@badger-dao/sdk';
 import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 import { gqlGenT } from '@badger-dao/sdk';
+import { refreshAccountVaultBalances } from '../indexers/accounts-indexer';
 
 export function defaultBoost(chain: Chain, address: string): CachedBoost {
   return {
@@ -31,15 +32,6 @@ export function defaultBoost(chain: Chain, address: string): CachedBoost {
     nonNativeBalance: 0,
     stakeRatio: 0,
   };
-}
-
-export async function getUserAccounts(chain: Chain, accounts: string[]): Promise<gqlGenT.UsersQuery> {
-  const sdk = await chain.getSdk();
-  return sdk.graph.loadUsers({
-    where: {
-      id_in: accounts.map((acc) => acc.toLowerCase()),
-    },
-  });
 }
 
 export async function getBoostFile(chain: Chain): Promise<BoostData | null> {
@@ -103,6 +95,7 @@ export async function queryCachedAccount(address: string): Promise<CachedAccount
   const defaultAccount: CachedAccount = {
     address: checksummedAccount,
     balances: [],
+    updatedAt: 0,
   };
   try {
     const mapper = getDataMapper();
@@ -180,10 +173,13 @@ export async function getCachedBoost(chain: Chain, address: string): Promise<Cac
 
 export async function getCachedAccount(chain: Chain, address: string): Promise<Account> {
   const [cachedAccount, metadata] = await Promise.all([queryCachedAccount(address), getLatestMetadata(chain)]);
+  if (cachedAccount.updatedAt + ONE_MIN_MS < Date.now()) {
+    await refreshAccountVaultBalances(chain, address);
+  }
   const claimableBalanceSnapshot = await getClaimableBalanceSnapshot(chain, address, metadata.startBlock);
   const { network } = chain;
   const balances = cachedAccount.balances
-    .filter((bal) => !network || bal.network === network)
+    .filter((bal) => bal.network === network)
     .map((bal) => ({
       ...bal,
       tokens: bal.tokens,

@@ -1,18 +1,14 @@
 import { ethers } from 'ethers';
-import { getAccounts, getLatestMetadata, getUserAccounts, toVaultBalance } from '../accounts/accounts.utils';
-import { AccountMap } from '../accounts/interfaces/account-map.interface';
+import { SUPPORTED_CHAINS } from '../chains/chain';
+import { getAccounts, getLatestMetadata, queryCachedAccount, toVaultBalance } from '../accounts/accounts.utils';
 import { getChainStartBlockKey, getDataMapper } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
 import { ClaimableBalance } from '../rewards/entities/claimable-balance';
 import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
 import { getClaimableRewards, getTreeDistribution } from '../rewards/rewards.utils';
 import { getVaultDefinition } from '../vaults/vaults.utils';
-import { batchRefreshAccounts, chunkArray } from './indexer.utils';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
-import { AccountIndexMode } from './enums/account-index-mode.enum';
-import { AccountIndexEvent } from './interfaces/account-index-event.interface';
 import { Network } from '@badger-dao/sdk';
-import { SUPPORTED_CHAINS } from '../chains/chain';
 
 export async function refreshClaimableBalances(chain: Chain) {
   const mapper = getDataMapper();
@@ -79,52 +75,44 @@ export async function refreshClaimableBalances(chain: Chain) {
   console.log(`Completed balance snapshot for ${chain.network} up to ${snapshotEndBlock}`);
 }
 
-export async function refreshAccountSettBalances(chain: Chain, batchAccounts: AccountMap) {
-  const addresses = Object.keys(batchAccounts);
-  const { users } = await getUserAccounts(chain, addresses);
-  if (users) {
-    for (const user of users) {
-      const address = ethers.utils.getAddress(user.id);
-      const account = batchAccounts[address];
-      if (user) {
-        const userBalances = user.settBalances;
-        if (userBalances) {
-          const balances = userBalances.filter((balance) => {
-            try {
-              getVaultDefinition(chain, balance.sett.id);
-              return true;
-            } catch (err) {
-              return false;
-            }
-          });
-          const settBalances = await Promise.all(balances.map(async (bal) => toVaultBalance(chain, bal)));
-          account.balances = account.balances.filter((bal) => bal.network !== chain.network).concat(settBalances);
+export async function refreshAccountVaultBalances(chain: Chain, account: string) {
+  const sdk = await chain.getSdk();
+
+  const { user } = await sdk.graph.loadUser({ id: account.toLowerCase() });
+
+  if (user) {
+    const address = ethers.utils.getAddress(user.id);
+    const cachedAccount = await queryCachedAccount(address);
+    const userBalances = user.settBalances;
+    if (userBalances) {
+      const balances = userBalances.filter((balance) => {
+        try {
+          getVaultDefinition(chain, balance.sett.id);
+          return true;
+        } catch (err) {
+          return false;
         }
-      }
-      batchAccounts[address] = account;
+      });
+      const userVaultBalances = await Promise.all(balances.map(async (bal) => toVaultBalance(chain, bal)));
+      cachedAccount.balances = cachedAccount.balances
+        .filter((bal) => bal.network !== chain.network)
+        .concat(userVaultBalances);
+
+      const mapper = getDataMapper();
+      await mapper.put(cachedAccount);
     }
   }
 }
 
-export async function refreshUserAccounts(event: AccountIndexEvent) {
-  const { mode } = event;
-  console.log(`Invoked refreshUserAccounts in ${mode} mode`);
+export async function refreshUserAccounts() {
   const chains = SUPPORTED_CHAINS.filter((c) => c.network !== Network.BinanceSmartChain);
   await Promise.all(
     chains.map(async (chain) => {
-      if (mode === AccountIndexMode.BalanceData) {
-        const accounts = await getAccounts(chain);
-        const refreshFns = chunkArray(accounts, 10).flatMap((chunk) =>
-          batchRefreshAccounts(chunk, (batchAccounts) => [refreshAccountSettBalances(chain, batchAccounts)], 100),
-        );
-        await Promise.all(refreshFns);
-      } else {
-        try {
-          await refreshClaimableBalances(chain);
-        } catch (err) {
-          console.log(`Failred to refresh claimable balances for ${chain.network}`);
-          console.error(err);
-        }
+      try {
+        await refreshClaimableBalances(chain);
+      } catch (err) {
+        console.log(`Failred to refresh claimable balances for ${chain.network}`);
+        console.error(err);
       }
     }),
   );

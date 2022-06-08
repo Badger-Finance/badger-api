@@ -85,6 +85,7 @@ export function defaultAccount(address: string): CachedAccount {
   return {
     address,
     balances: [],
+    updatedAt: 0,
   };
 }
 
