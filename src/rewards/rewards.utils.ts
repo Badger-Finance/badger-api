@@ -172,6 +172,9 @@ export async function getVaultValueSources(
 ): Promise<CachedValueSource[]> {
   // manual over ride for removed compounding of vaults - this can be empty
   const NO_COMPOUND_VAULTS = new Set([TOKENS.BREMBADGER, TOKENS.BVECVX, TOKENS.BCVX]);
+  if (vaultDefinition.vaultToken !== TOKENS.BVECVX) {
+    return [];
+  }
 
   let sources: CachedValueSource[] = [];
   try {
@@ -213,7 +216,7 @@ export async function getProtocolValueSources(
       }
     }
   } catch (error) {
-    console.log(error);
+    console.log({ error, message: `Failed to update value sources for ${vaultDefinition.protocol}` });
     return [];
   }
 }
