@@ -58,6 +58,7 @@ export const CURVE_FACTORY_APY = 'https://api.curve.fi/api/getFactoryAPYs';
 export const CURVE_BASE_REGISTRY = '0x0000000022D53366457F9d5E68Ec105046FC4383';
 export const HARVEST_FORWARDER = '0xA84B663837D94ec41B0f99903f37e1d69af9Ed3E';
 export const BRIBES_PROCESSOR = '0xb2Bf1d48F2C2132913278672e6924efda3385de2';
+
 /* Protocol Definitions */
 const curvePoolApr: Record<string, string> = {
   [TOKENS.CRV_RENBTC]: 'ren2',
