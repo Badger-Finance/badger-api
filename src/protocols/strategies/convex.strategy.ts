@@ -57,7 +57,7 @@ export const CURVE_FACTORY_APY = 'https://api.curve.fi/api/getFactoryAPYs';
 /* Protocol Contracts */
 export const CURVE_BASE_REGISTRY = '0x0000000022D53366457F9d5E68Ec105046FC4383';
 export const HARVEST_FORWARDER = '0xA84B663837D94ec41B0f99903f37e1d69af9Ed3E';
-
+export const BRIBES_PROCESSOR = '0xb2Bf1d48F2C2132913278672e6924efda3385de2';
 /* Protocol Definitions */
 const curvePoolApr: Record<string, string> = {
   [TOKENS.CRV_RENBTC]: 'ren2',
@@ -320,7 +320,7 @@ async function retrieveHarvestForwarderData(chain: Chain, vault: VaultDefinition
 
 async function retrieveBribesProcessorData(chain: Chain, vault: VaultDefinition): Promise<VaultHarvestData[]> {
   const sdk = await chain.getSdk();
-  const bribeProcessor = BribesProcessor__factory.connect('0xbed8f323456578981952e33bbfbe80d23289246b', sdk.provider);
+  const bribeProcessor = BribesProcessor__factory.connect(BRIBES_PROCESSOR, sdk.provider);
 
   const treeDistributionFilter = bribeProcessor.filters.TreeDistribution();
 
