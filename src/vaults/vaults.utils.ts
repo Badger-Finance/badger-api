@@ -599,6 +599,7 @@ export async function estimateVaultPerformance(
   const treeDistributions = measuredHarvests.flatMap((h) => h.treeDistributions);
   const tokensEmitted = new Map<string, BigNumber>();
   for (const distribution of treeDistributions) {
+    console.log('Distribution processing:', distribution);
     const { token, amount } = distribution;
     let entry = tokensEmitted.get(token);
     if (!entry) {
