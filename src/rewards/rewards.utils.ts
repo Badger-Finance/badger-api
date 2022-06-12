@@ -213,7 +213,7 @@ export async function getProtocolValueSources(
       }
     }
   } catch (error) {
-    console.log(error);
+    console.log({ error, message: `Failed to update value sources for ${vaultDefinition.protocol}` });
     return [];
   }
 }
