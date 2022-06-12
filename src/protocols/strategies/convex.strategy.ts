@@ -57,6 +57,8 @@ export const CURVE_FACTORY_APY = 'https://api.curve.fi/api/getFactoryAPYs';
 /* Protocol Contracts */
 export const CURVE_BASE_REGISTRY = '0x0000000022D53366457F9d5E68Ec105046FC4383';
 export const HARVEST_FORWARDER = '0xA84B663837D94ec41B0f99903f37e1d69af9Ed3E';
+export const BRIBES_PROCESSOR = '0xb2Bf1d48F2C2132913278672e6924efda3385de2';
+export const OLD_BRIBES_PROCESSOR = '0xbeD8f323456578981952e33bBfbE80D23289246B';
 
 /* Protocol Definitions */
 const curvePoolApr: Record<string, string> = {
@@ -307,8 +309,9 @@ async function retrieveHarvestForwarderData(chain: Chain, vault: VaultDefinition
   // cut off after 21 days in seconds
   const timestampCutoff = Math.floor(Date.now() / 1000 - 21 * ONE_DAY_SECONDS);
   const { data } = await evaluateEvents([], distributions, { timestamp_gte: timestampCutoff });
-  const previousData = await retrieveBribesProcessorData(chain, vault);
-  const combinedData = previousData.concat(data);
+  const previousOldData = await retrieveBribesProcessorData(chain, OLD_BRIBES_PROCESSOR);
+  const previousData = await retrieveBribesProcessorData(chain, BRIBES_PROCESSOR);
+  const combinedData = previousData.concat(previousOldData).concat(data);
 
   // cannot construct data with this - will be fine after the test emission
   if (combinedData.length <= 1) {
@@ -318,26 +321,31 @@ async function retrieveHarvestForwarderData(chain: Chain, vault: VaultDefinition
   return estimateVaultPerformance(chain, vault, combinedData);
 }
 
-async function retrieveBribesProcessorData(chain: Chain, vault: VaultDefinition): Promise<VaultHarvestData[]> {
-  const sdk = await chain.getSdk();
-  const bribeProcessor = BribesProcessor__factory.connect('0xbed8f323456578981952e33bbfbe80d23289246b', sdk.provider);
+async function retrieveBribesProcessorData(chain: Chain, processor: string): Promise<VaultHarvestData[]> {
+  try {
+    const sdk = await chain.getSdk();
+    const bribeProcessor = BribesProcessor__factory.connect(processor, sdk.provider);
 
-  const treeDistributionFilter = bribeProcessor.filters.TreeDistribution();
+    const treeDistributionFilter = bribeProcessor.filters.TreeDistribution();
 
-  const endBlock = await sdk.provider.getBlockNumber();
-  // cut off after 21 days in blocks, this is in seconds by 13 second blocks
-  const startBlock = Math.floor(endBlock - (21 * ONE_DAY_SECONDS) / 13);
-  const allTreeDistributions = await chunkQueryFilter<
-    BribesProcessor,
-    BribeProcessorTreeDistributionEventFilter,
-    BribeProcessorTreeDistributionEvent
-  >(bribeProcessor, treeDistributionFilter, startBlock, endBlock);
+    const endBlock = await sdk.provider.getBlockNumber();
+    // cut off after 21 days in blocks, this is in seconds by 13 second blocks
+    const startBlock = Math.floor(endBlock - (30 * ONE_DAY_SECONDS) / 13);
+    const allTreeDistributions = await chunkQueryFilter<
+      BribesProcessor,
+      BribeProcessorTreeDistributionEventFilter,
+      BribeProcessorTreeDistributionEvent
+    >(bribeProcessor, treeDistributionFilter, startBlock, endBlock);
 
-  const { harvests, distributions } = await parseHarvestEvents([], allTreeDistributions);
+    const { harvests, distributions } = await parseHarvestEvents([], allTreeDistributions);
 
-  // cut off after 21 days in seconds
-  const timestampCutoff = Math.floor(Date.now() / 1000 - 21 * ONE_DAY_SECONDS);
-  const { data } = await evaluateEvents(harvests, distributions, { timestamp_gte: timestampCutoff });
+    // cut off after 21 days in seconds
+    const timestampCutoff = Math.floor(Date.now() / 1000 - 30 * ONE_DAY_SECONDS);
+    const { data } = await evaluateEvents(harvests, distributions, { timestamp_gte: timestampCutoff });
 
-  return data;
+    return data;
+  } catch (err) {
+    console.log({ err, message: `Failed to retrieve bribes processor data for ${processor}` });
+    return [];
+  }
 }

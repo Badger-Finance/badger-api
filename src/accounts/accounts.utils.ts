@@ -107,7 +107,7 @@ export async function queryCachedAccount(address: string): Promise<CachedAccount
     }
     return defaultAccount;
   } catch (err) {
-    return defaultAccount;
+    return Object.assign(new CachedAccount(), defaultAccount);
   }
 }
 
@@ -261,30 +261,35 @@ export async function getLatestMetadata(chain: Chain): Promise<UserClaimMetadata
 }
 
 export async function refreshAccountVaultBalances(chain: Chain, account: string) {
-  const sdk = await chain.getSdk();
+  try {
+    const sdk = await chain.getSdk();
 
-  const { user } = await sdk.graph.loadUser({ id: account.toLowerCase() });
+    const { user } = await sdk.graph.loadUser({ id: account.toLowerCase() });
 
-  if (user) {
-    const address = ethers.utils.getAddress(user.id);
-    const cachedAccount = await queryCachedAccount(address);
-    const userBalances = user.settBalances;
-    if (userBalances) {
-      const balances = userBalances.filter((balance) => {
-        try {
-          getVaultDefinition(chain, balance.sett.id);
-          return true;
-        } catch (err) {
-          return false;
-        }
-      });
-      const userVaultBalances = await Promise.all(balances.map(async (bal) => toVaultBalance(chain, bal)));
-      cachedAccount.balances = cachedAccount.balances
-        .filter((bal) => bal.network !== chain.network)
-        .concat(userVaultBalances);
+    if (user) {
+      const address = ethers.utils.getAddress(user.id);
+      const cachedAccount = await queryCachedAccount(address);
+      const userBalances = user.settBalances;
+      if (userBalances) {
+        const balances = userBalances.filter((balance) => {
+          try {
+            getVaultDefinition(chain, balance.sett.id);
+            return true;
+          } catch (err) {
+            return false;
+          }
+        });
 
-      const mapper = getDataMapper();
-      await mapper.put(cachedAccount);
+        const userVaultBalances = await Promise.all(balances.map(async (bal) => toVaultBalance(chain, bal)));
+        cachedAccount.balances = cachedAccount.balances
+          .filter((bal) => bal.network !== chain.network)
+          .concat(userVaultBalances);
+
+        const mapper = getDataMapper();
+        await mapper.put(cachedAccount);
+      }
     }
+  } catch (err) {
+    console.log({ err, message: `Unable to update account ${account} on ${chain.network}` });
   }
 }
