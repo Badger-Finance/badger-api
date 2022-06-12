@@ -6,7 +6,6 @@ import { CachedValueSource } from '../aws/models/apy-snapshots.model';
 import { ValueSourceMap } from '../protocols/interfaces/value-source-map.interface';
 import { getVaultValueSources } from '../rewards/rewards.utils';
 import { getVaultCachedValueSources } from '../vaults/vaults.utils';
-import { Network } from '@badger-dao/sdk';
 
 export async function refreshApySnapshots() {
   await Promise.all(SUPPORTED_CHAINS.map((chain) => refreshChainApySnapshots(chain)));
@@ -15,9 +14,6 @@ export async function refreshApySnapshots() {
 }
 
 export async function refreshChainApySnapshots(chain: Chain) {
-  if (chain.network !== Network.Ethereum) {
-    return;
-  }
   try {
     await Promise.all(
       chain.vaults.map(async (vault) => {
