@@ -124,11 +124,13 @@ export const ethSetts: VaultDefinition[] = [
     depositToken: TOKENS.SUSHI_DIGG_WBTC,
     vaultToken: TOKENS.BSUSHI_DIGG_WBTC,
     protocol: Protocol.Sushiswap,
+    state: VaultState.Discontinued,
   },
   {
     name: 'Digg',
     depositToken: TOKENS.DIGG,
     vaultToken: TOKENS.BDIGG,
+    state: VaultState.Discontinued,
   },
   {
     name: 'Badger',

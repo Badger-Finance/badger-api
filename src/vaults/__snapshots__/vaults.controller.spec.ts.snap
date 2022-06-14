@@ -1418,7 +1418,7 @@ Array [
   },
   Object {
     "apr": 65.31,
-    "apy": 87.08,
+    "apy": 65.31,
     "asset": "BADGER",
     "available": 0,
     "balance": 10,
@@ -1461,13 +1461,6 @@ Array [
         "boostable": false,
         "maxApr": 21.77,
         "minApr": 21.77,
-        "name": "Vault Compounding",
-      },
-      Object {
-        "apr": 21.77,
-        "boostable": false,
-        "maxApr": 21.77,
-        "minApr": 21.77,
         "name": "Badger Rewards",
       },
       Object {
@@ -1485,7 +1478,7 @@ Array [
         "name": "Curve Trading Fees",
       },
     ],
-    "state": "open",
+    "state": "discontinued",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "aumFee": 0,
@@ -1539,7 +1532,7 @@ Array [
   },
   Object {
     "apr": 60.69,
-    "apy": 80.92,
+    "apy": 60.69,
     "asset": "DIGG",
     "available": 0,
     "balance": 10,
@@ -1582,13 +1575,6 @@ Array [
         "boostable": false,
         "maxApr": 20.23,
         "minApr": 20.23,
-        "name": "Vault Compounding",
-      },
-      Object {
-        "apr": 20.23,
-        "boostable": false,
-        "maxApr": 20.23,
-        "minApr": 20.23,
         "name": "Badger Rewards",
       },
       Object {
@@ -1606,7 +1592,7 @@ Array [
         "name": "Curve Trading Fees",
       },
     ],
-    "state": "open",
+    "state": "discontinued",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "aumFee": 0,
@@ -4948,7 +4934,7 @@ Array [
   },
   Object {
     "apr": 65.31,
-    "apy": 87.08,
+    "apy": 65.31,
     "asset": "BADGER",
     "available": 0,
     "balance": 10,
@@ -4991,13 +4977,6 @@ Array [
         "boostable": false,
         "maxApr": 21.77,
         "minApr": 21.77,
-        "name": "Vault Compounding",
-      },
-      Object {
-        "apr": 21.77,
-        "boostable": false,
-        "maxApr": 21.77,
-        "minApr": 21.77,
         "name": "Badger Rewards",
       },
       Object {
@@ -5015,7 +4994,7 @@ Array [
         "name": "Curve Trading Fees",
       },
     ],
-    "state": "open",
+    "state": "discontinued",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "aumFee": 0,
@@ -5069,7 +5048,7 @@ Array [
   },
   Object {
     "apr": 60.69,
-    "apy": 80.92,
+    "apy": 60.69,
     "asset": "DIGG",
     "available": 0,
     "balance": 10,
@@ -5112,13 +5091,6 @@ Array [
         "boostable": false,
         "maxApr": 20.23,
         "minApr": 20.23,
-        "name": "Vault Compounding",
-      },
-      Object {
-        "apr": 20.23,
-        "boostable": false,
-        "maxApr": 20.23,
-        "minApr": 20.23,
         "name": "Badger Rewards",
       },
       Object {
@@ -5136,7 +5108,7 @@ Array [
         "name": "Curve Trading Fees",
       },
     ],
-    "state": "open",
+    "state": "discontinued",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "aumFee": 0,
