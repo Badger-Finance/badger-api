@@ -46,6 +46,6 @@ Object {
 exports[`AccountsController GET /v3/account with no specified account returns a not found response 1`] = `
 Object {
   "code": 1000,
-  "message": "Query param userId invalid",
+  "message": "Query param address invalid",
 }
 `;

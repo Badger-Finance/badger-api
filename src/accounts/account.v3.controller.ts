@@ -21,11 +21,11 @@ export class AccountV3Controller {
   @Returns(400).Description('Not a valid chain')
   @Returns(404).Description('Not a valid account')
   async getAccount(
-    @QueryParams('accountId') userId: string,
-    @QueryParams('chain') chain: Network,
+    @QueryParams('address') address: string,
+    @QueryParams('chain') chain?: Network,
   ): Promise<AccountModel> {
-    if (!userId) throw new QueryParamError('userId');
+    if (!address) throw new QueryParamError('address');
 
-    return this.accountsService.getAccount(Chain.getChain(chain), userId);
+    return this.accountsService.getAccount(Chain.getChain(chain), address);
   }
 }

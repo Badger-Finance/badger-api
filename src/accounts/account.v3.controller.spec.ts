@@ -29,7 +29,7 @@ describe('AccountsController', () => {
     });
     describe('with an invalid account input', () => {
       it('returns a bad request response', async (done: jest.DoneCallback) => {
-        const { body } = await request.get('/v3/account?accountId=0xjintao').expect(NetworkStatus.BadRequest);
+        const { body } = await request.get('/v3/account?address=0xjintao').expect(NetworkStatus.BadRequest);
         expect(body).toMatchSnapshot();
         done();
       });
@@ -53,7 +53,7 @@ describe('AccountsController', () => {
           nativeBalance: 0,
           nonNativeBalance: 0,
         }));
-        const { body } = await request.get(`/v3/account?accountId=${TEST_ADDR}`).expect(200);
+        const { body } = await request.get(`/v3/account?address=${TEST_ADDR}`).expect(200);
         expect(body).toMatchSnapshot();
         done();
       });
@@ -77,7 +77,7 @@ describe('AccountsController', () => {
           nativeBalance: 3,
           nonNativeBalance: 5,
         }));
-        const { body } = await request.get(`/v3/account?accountId=${TEST_ADDR}`).expect(200);
+        const { body } = await request.get(`/v3/account?address=${TEST_ADDR}`).expect(200);
         expect(body).toMatchSnapshot();
         done();
       });
