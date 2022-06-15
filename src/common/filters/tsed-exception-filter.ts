@@ -7,8 +7,9 @@ interface ExceptionBody {
   errors?: unknown[];
 }
 
+// Deprecated, plz consider using ApiExceptionFilter
 @Catch(Exception)
-export class BadgerExceptionFilter implements ExceptionFilterMethods {
+export class TsedExceptionFilter implements ExceptionFilterMethods {
   catch(error: Exception, ctx: PlatformContext) {
     const { response } = ctx;
     let exception: Exception = new InternalServerError('Internal server error');

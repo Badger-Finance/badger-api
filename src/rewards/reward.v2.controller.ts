@@ -1,6 +1,6 @@
 import { Network } from '@badger-dao/sdk';
 import { Controller, Get, Inject, PathParams, QueryParams, UseCache } from '@tsed/common';
-import { ContentType, Description, Hidden, Returns, Summary } from '@tsed/schema';
+import { ContentType, Deprecated, Description, Hidden, Returns, Summary } from '@tsed/schema';
 
 import { Chain } from '../chains/config/chain.config';
 
@@ -12,8 +12,9 @@ import { EmissionSchedule, RewardSchedulesByVaults } from './interfaces/reward-s
 import { RewardSchedulesByVaultModel } from './interfaces/reward-schedules-vault-model.interface';
 import { RewardSchedulesByVaultsModel } from './interfaces/reward-schedules-vaults-model.interface';
 
+@Deprecated()
 @Controller('/reward')
-export class RewardController {
+export class RewardV2Controller {
   @Inject()
   rewardsService!: RewardsService;
 

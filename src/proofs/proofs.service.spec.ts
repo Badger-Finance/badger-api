@@ -19,14 +19,14 @@ describe('proofs.service', () => {
     it('throws a 404 when a chain is missing a bouncer file', async () => {
       jest.spyOn(s3Utils, 'getObject').mockImplementation();
       await expect(service.getBouncerProof(TEST_CHAIN, TEST_ADDR)).rejects.toThrow(
-        `${TEST_CHAIN.name} does not have a bouncer list`,
+        `${TEST_CHAIN.name} does not have requested data`,
       );
     });
 
     it('throws a 404 when a chain is missing an entry for the user in the bouncer file', async () => {
       jest.spyOn(s3Utils, 'getObject').mockImplementation(async () => JSON.stringify(MOCK_BOUNCER_FILE));
       await expect(service.getBouncerProof(TEST_CHAIN, TOKENS.BADGER)).rejects.toThrow(
-        `${TOKENS.BADGER} is not on the bouncer list`,
+        `No data for specified address: ${TOKENS.BADGER}`,
       );
     });
 

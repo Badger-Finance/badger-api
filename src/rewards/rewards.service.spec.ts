@@ -32,7 +32,7 @@ describe('rewards.service', () => {
     it('throws a bad request on chains with no rewards', async () => {
       const chain = new BinanceSmartChain();
       await expect(service.getUserRewards(chain, TEST_ADDR)).rejects.toThrow(
-        `${chain.name} does not support claimable rewards.`,
+        `${chain.name} is not supportable for request`,
       );
     });
   });
