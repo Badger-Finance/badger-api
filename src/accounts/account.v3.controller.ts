@@ -21,7 +21,7 @@ export class AccountV3Controller {
   @Returns(400).Description('Not a valid chain')
   @Returns(404).Description('Not a valid account')
   async getAccount(
-    @QueryParams('accountId') userId: string,
+    @QueryParams('address') userId: string,
     @QueryParams('chain') chain: Network,
   ): Promise<AccountModel> {
     if (!userId) throw new QueryParamError('userId');
