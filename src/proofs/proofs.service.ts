@@ -20,9 +20,6 @@ export class ProofsService {
   async getBouncerProof(chain: Chain, address: string): Promise<MerkleProof> {
     const fileName = `badger-bouncer-${parseInt(chain.chainId)}.json`;
     const bouncerFile = await getObject(REWARD_DATA, fileName);
-    console.log('--------------------------------------------------');
-    console.log(`${JSON.stringify(bouncerFile, null, 2)}`);
-    console.log('--------------------------------------------------');
     if (!bouncerFile) {
       throw new NodataForChainError(chain.name);
     }
