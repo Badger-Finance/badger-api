@@ -1,5 +1,6 @@
 import '@tsed/platform-express';
-import './common/filters/badger-exception-filter';
+import './common/filters/tsed-exception-filter';
+import './common/filters/api-exception-filter';
 import '@tsed/swagger';
 import { Configuration, Inject, PlatformApplication } from '@tsed/common';
 import bodyParser from 'body-parser';
@@ -7,7 +8,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import methodOverride from 'method-override';
 import { swaggerConfig } from './config/constants';
-import { V2_CONTROLLERS } from './ControllerRegistry';
+import { V2_CONTROLLERS, V3_CONTROLLERS } from './ControllerRegistry';
 import { CITADEL_V1_CONTROLLERS } from './CitadelControllerRegistry';
 
 @Configuration({
@@ -15,6 +16,7 @@ import { CITADEL_V1_CONTROLLERS } from './CitadelControllerRegistry';
   acceptMimes: ['application/json'],
   mount: {
     '/v2/': V2_CONTROLLERS,
+    '/v3/': V3_CONTROLLERS,
     '/citadel/v1/': CITADEL_V1_CONTROLLERS,
   },
   swagger: [swaggerConfig],

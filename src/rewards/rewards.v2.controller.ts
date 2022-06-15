@@ -1,7 +1,7 @@
 import { formatBalance } from '@badger-dao/sdk';
 import { BigNumber } from '@ethersproject/bignumber';
 import { Controller, Get, Inject, QueryParams } from '@tsed/common';
-import { ContentType, Description, Returns, Summary } from '@tsed/schema';
+import { ContentType, Deprecated, Description, Returns, Summary } from '@tsed/schema';
 import { Chain } from '../chains/config/chain.config';
 import { DEFAULT_PAGE_SIZE } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
@@ -12,8 +12,9 @@ import { DebankUser } from './interfaces/debank-user.interface';
 import { ListRewardsResponse } from './interfaces/list-rewards-response.interface';
 import { RewardsService } from './rewards.service';
 
+@Deprecated()
 @Controller('/rewards')
-export class RewardsController {
+export class RewardsV2Controller {
   @Inject()
   readonly rewardsService!: RewardsService;
 

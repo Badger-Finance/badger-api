@@ -256,15 +256,24 @@ export function mockPricing() {
   });
 }
 
-export async function mockBadgerSdk({
-  addr = TEST_ADDR,
-  network = Network.Ethereum,
-  currBlock = CURRENT_BLOCK,
-}: {
-  addr?: string;
-  network?: Network;
-  currBlock?: number;
-}): Promise<BadgerSDK> {
+export async function mockBadgerSdk(
+  // in case u want to skip one param
+  {
+    addr = TEST_ADDR,
+    network = Network.Ethereum,
+    currBlock = CURRENT_BLOCK,
+  }: {
+    // type description
+    addr?: string;
+    network?: Network;
+    currBlock?: number;
+  } = {
+    // in case u want to skip all params
+    addr: TEST_ADDR,
+    network: Network.Ethereum,
+    currBlock: CURRENT_BLOCK,
+  },
+): Promise<BadgerSDK> {
   const mockSigner = mock<JsonRpcSigner>();
   mockSigner.getAddress.calledWith().mockImplementation(async () => addr);
   const mockProvider = mock<JsonRpcProvider>();
