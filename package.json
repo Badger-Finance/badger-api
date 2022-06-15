@@ -18,7 +18,7 @@
     "dev:node:api": "ts-node -r dotenv/config src/index.ts",
     "format": "pretty-quick",
     "lint": "eslint \"src/**/*.ts\" --fix",
-    "test": "jest --detectOpenHandles --runInBand",
+    "test": "jest --detectOpenHandles --runInBand --logHeapUsage",
     "test:upd": "yarn test -u",
     "test:path": "yarn test --no-cache --testPathPattern",
     "test:clean": "jest --clearCache",
