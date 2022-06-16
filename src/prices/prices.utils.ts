@@ -1,13 +1,14 @@
-import { TokenPriceSnapshot } from '../aws/models/token-price-snapshot.model';
-import { getDataMapper } from '../aws/dynamodb.utils';
 import { Currency } from '@badger-dao/sdk';
-import { TOKENS } from '../config/tokens.config';
-import { TokenPrice } from './interface/token-price.interface';
-import { Chain } from '../chains/config/chain.config';
-import { COINGECKO_URL } from '../config/constants';
-import { CoinGeckoPriceResponse } from './interface/coingecko-price-response.interface';
-import { request } from '../common/request';
 import { ethers } from 'ethers';
+
+import { getDataMapper } from '../aws/dynamodb.utils';
+import { TokenPriceSnapshot } from '../aws/models/token-price-snapshot.model';
+import { Chain } from '../chains/config/chain.config';
+import { request } from '../common/request';
+import { COINGECKO_URL } from '../config/constants';
+import { TOKENS } from '../config/tokens.config';
+import { CoinGeckoPriceResponse } from './interface/coingecko-price-response.interface';
+import { TokenPrice } from './interface/token-price.interface';
 
 /**
  * Update pricing db entry using chain strategy.

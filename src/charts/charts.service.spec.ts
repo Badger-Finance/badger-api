@@ -1,10 +1,11 @@
+import { ONE_DAY_MS } from '@badger-dao/sdk';
 import { PlatformTest } from '@tsed/common';
+
 import { TOKENS } from '../config/tokens.config';
-import { getVaultDefinition } from '../vaults/vaults.utils';
 import { randomSnapshots, setFullTokenDataMock, setupMapper, TEST_CHAIN } from '../test/tests.utils';
+import { getVaultDefinition } from '../vaults/vaults.utils';
 import { ChartsService } from './charts.service';
 import { ChartGranularity } from './enums/chart-granularity.enum';
-import { ONE_DAY_MS } from '@badger-dao/sdk';
 
 describe('charts.service', () => {
   let service: ChartsService;

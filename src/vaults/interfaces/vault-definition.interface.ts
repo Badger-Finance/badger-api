@@ -1,8 +1,9 @@
 import { Protocol, VaultBehavior, VaultState, VaultVersion } from '@badger-dao/sdk';
+
+import { VaultTokenBalance } from '../../aws/models/vault-token-balance.model';
 import { Chain } from '../../chains/config/chain.config';
 import { Stage } from '../../config/enums/stage.enum';
 import { BouncerType } from '../../rewards/enums/bouncer-type.enum';
-import { VaultTokenBalance } from '../../aws/models/vault-token-balance.model';
 
 export interface VaultDefinition {
   behavior?: VaultBehavior;

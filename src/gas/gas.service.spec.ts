@@ -1,4 +1,5 @@
 import { PlatformTest } from '@tsed/common';
+
 import { Ethereum } from '../chains/config/eth.config';
 import { setupChainGasPrices } from '../test/tests.utils';
 import { GasService } from './gas.service';

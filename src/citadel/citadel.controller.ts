@@ -1,19 +1,20 @@
+import { ChartTimeFrame, CitadelLeaderboardEntry } from '@badger-dao/sdk';
+import { CitadelSummary } from '@badger-dao/sdk/lib/api/interfaces/citadel-summary.interface';
 import { CitadelTreasurySummary } from '@badger-dao/sdk/lib/api/interfaces/citadel-treasury-summary.interface';
+import { RewardFilter } from '@badger-dao/sdk/lib/citadel/enums/reward-filter.enum';
 import { Controller, Get, Inject, QueryParams, UseCache } from '@tsed/common';
-import { ContentType, Summary, Returns, Description } from '@tsed/schema';
+import { NotFound } from '@tsed/exceptions';
+import { ContentType, Description, Returns, Summary } from '@tsed/schema';
+
 import { HistoricTreasurySummarySnapshot } from '../aws/models/historic-treasury-summary-snapshot.model';
 import { TreasuryService } from '../treasury/treasury.service';
 import { CitadelService } from './citadel.service';
 import { CITADEL_TREASURY_ADDRESS } from './config/citadel-treasury.config';
-import { CitadelTreasurySummaryModel } from './interfaces/citadel-treasury-summary-model.interface';
-import { RewardFilter } from '@badger-dao/sdk/lib/citadel/enums/reward-filter.enum';
-import { CitadelRewardEventModel } from './interfaces/citadel-reward-event-model.interface';
-import { CitadelRewardEvent } from './interfaces/citadel-reward-event.interface';
-import { CitadelSummary } from '@badger-dao/sdk/lib/api/interfaces/citadel-summary.interface';
-import { CitadelSummaryModel } from './interfaces/citadel-summary-model.interface';
-import { NotFound } from '@tsed/exceptions';
 import { CitadelAccount } from './interfaces/citadel-account.interface';
-import { ChartTimeFrame, CitadelLeaderboardEntry } from '@badger-dao/sdk';
+import { CitadelRewardEvent } from './interfaces/citadel-reward-event.interface';
+import { CitadelRewardEventModel } from './interfaces/citadel-reward-event-model.interface';
+import { CitadelSummaryModel } from './interfaces/citadel-summary-model.interface';
+import { CitadelTreasurySummaryModel } from './interfaces/citadel-treasury-summary-model.interface';
 
 @Controller('/')
 export class CitadelController {

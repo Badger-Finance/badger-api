@@ -1,13 +1,14 @@
+import { providers } from '@0xsequence/multicall';
+import BadgerSDK, { Network } from '@badger-dao/sdk';
 import { BadRequest, NotFound } from '@tsed/exceptions';
 import { ethers } from 'ethers';
+
 import { STAGE } from '../../config/constants';
-import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
-import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
-import { TokenConfig } from '../../tokens/interfaces/token-config.interface';
-import { ChainStrategy } from '../strategies/chain.strategy';
-import BadgerSDK, { Network } from '@badger-dao/sdk';
 import { TOKENS } from '../../config/tokens.config';
-import { providers } from '@0xsequence/multicall';
+import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
+import { TokenConfig } from '../../tokens/interfaces/token-config.interface';
+import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
+import { ChainStrategy } from '../strategies/chain.strategy';
 
 type Chains = Record<string, Chain>;
 type Sdks = Record<string, BadgerSDK>;

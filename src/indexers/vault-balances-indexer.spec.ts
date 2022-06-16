@@ -1,14 +1,15 @@
 import { DataMapper, PutParameters, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
-import { updateVaultTokenBalances } from './vault-balances-indexer';
-import { Ethereum } from '../chains/config/eth.config';
-import { getVaultDefinition } from '../vaults/vaults.utils';
-import { TOKENS } from '../config/tokens.config';
+
 import { VaultTokenBalance } from '../aws/models/vault-token-balance.model';
-import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
-import * as indexerUtils from './indexer.utils';
 import { Chain } from '../chains/config/chain.config';
-import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
+import { Ethereum } from '../chains/config/eth.config';
+import { TOKENS } from '../config/tokens.config';
 import { setFullTokenDataMock, TEST_ADDR } from '../test/tests.utils';
+import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
+import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
+import { getVaultDefinition } from '../vaults/vaults.utils';
+import * as indexerUtils from './indexer.utils';
+import { updateVaultTokenBalances } from './vault-balances-indexer';
 
 describe('vault-balances-indexer', () => {
   const chain = new Ethereum();

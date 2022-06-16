@@ -1,10 +1,11 @@
 import { DataMapper } from '@aws/dynamodb-data-mapper';
+import { Currency } from '@badger-dao/sdk';
+
 import { TestStrategy } from '../chains/strategies/test.strategy';
+import * as requestUtils from '../common/request';
 import { TOKENS } from '../config/tokens.config';
 import { setFullTokenDataMock, setupMapper, TEST_CHAIN } from '../test/tests.utils';
 import { convert, fetchPrices, getPrice, updatePrice } from './prices.utils';
-import * as requestUtils from '../common/request';
-import { Currency } from '@badger-dao/sdk';
 
 describe('prices.utils', () => {
   const strategy = new TestStrategy();

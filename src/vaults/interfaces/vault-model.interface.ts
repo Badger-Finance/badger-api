@@ -1,23 +1,24 @@
-import { Description, Example, Property, Title } from '@tsed/schema';
-import { TOKENS } from '../../config/tokens.config';
-import { createValueSource, ValueSource } from '../../protocols/interfaces/value-source.interface';
-import { BouncerType } from '../../rewards/enums/bouncer-type.enum';
-import { mockBalance } from '../../tokens/tokens.utils';
-import { VAULT_SOURCE } from '../vaults.utils';
-import { VaultStrategy } from './vault-strategy.interface';
-import { ethers } from 'ethers';
 import {
   BoostConfig,
   Protocol,
+  TokenValue,
+  VaultBehavior,
+  VaultDTO,
   VaultState,
   VaultType,
-  VaultBehavior,
-  TokenValue,
-  VaultDTO,
   VaultVersion,
 } from '@badger-dao/sdk';
-import { fullTokenMockMap } from '../../tokens/mocks/full-token.mock';
 import { VaultYieldProjection } from '@badger-dao/sdk/lib/api/interfaces/vault-yield-projection.interface';
+import { Description, Example, Property, Title } from '@tsed/schema';
+import { ethers } from 'ethers';
+
+import { TOKENS } from '../../config/tokens.config';
+import { createValueSource, ValueSource } from '../../protocols/interfaces/value-source.interface';
+import { BouncerType } from '../../rewards/enums/bouncer-type.enum';
+import { fullTokenMockMap } from '../../tokens/mocks/full-token.mock';
+import { mockBalance } from '../../tokens/tokens.utils';
+import { VAULT_SOURCE } from '../vaults.utils';
+import { VaultStrategy } from './vault-strategy.interface';
 
 export class VaultModel implements VaultDTO {
   @Title('name')

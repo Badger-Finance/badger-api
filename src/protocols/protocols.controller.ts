@@ -1,6 +1,7 @@
 import { Currency, Network } from '@badger-dao/sdk';
 import { Controller, Get, Inject, QueryParams } from '@tsed/common';
 import { ContentType, Description, Returns, Summary } from '@tsed/schema';
+
 import { Chain } from '../chains/config/chain.config';
 import { VaultsService } from '../vaults/vaults.service';
 import { ProtocolSummaryModel } from './interfaces/protocol-summary-model.interface';

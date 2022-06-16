@@ -1,10 +1,11 @@
 import { Network } from '@badger-dao/sdk';
 import { Controller, Get, QueryParams, UseCache } from '@tsed/common';
 import { ContentType, Description, Returns, Summary } from '@tsed/schema';
+
 import { Chain } from '../chains/config/chain.config';
 import { TokenConfigModel } from './interfaces/token-config-model.interface';
-import { getFullTokens } from './tokens.utils';
 import { TokenFullMap } from './interfaces/token-full.interface';
+import { getFullTokens } from './tokens.utils';
 
 @Controller('/tokens')
 export class TokensController {

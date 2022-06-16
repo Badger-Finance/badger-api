@@ -1,5 +1,6 @@
 import { Description, Example, Property, Title } from '@tsed/schema';
 import { ethers } from 'ethers';
+
 import { TOKENS } from '../../config/tokens.config';
 import { RewardMerkleClaim } from './reward-merkle-claim.interface';
 

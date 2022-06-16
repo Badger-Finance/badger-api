@@ -1,10 +1,11 @@
+import { Network } from '@badger-dao/sdk';
 import { Controller, Get, Inject, QueryParams } from '@tsed/common';
 import { ContentType, Description, Returns, Summary } from '@tsed/schema';
+
 import { Chain } from '../chains/config/chain.config';
 import { GasService } from './gas.service';
 import { GasPrices } from './interfaces/gas-prices.interface';
 import { GasPricesModel } from './interfaces/gas-prices-model';
-import { Network } from '@badger-dao/sdk';
 
 @Controller('/gas')
 export class GasController {

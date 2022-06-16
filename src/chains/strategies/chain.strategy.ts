@@ -1,8 +1,9 @@
-import { ethers } from 'ethers';
 import { BadRequest } from '@tsed/exceptions';
+import { ethers } from 'ethers';
+
 import { TokenPrice } from '../../prices/interface/token-price.interface';
-import { Chain } from '../config/chain.config';
 import { getFullToken } from '../../tokens/tokens.utils';
+import { Chain } from '../config/chain.config';
 
 type Strategies = Record<string, ChainStrategy>;
 

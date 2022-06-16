@@ -1,8 +1,8 @@
 import { getDataMapper } from '../aws/dynamodb.utils';
-import { getLastCompoundHarvest, getVaultHarvestsOnChain } from '../vaults/vaults.utils';
 import { HarvestCompoundData } from '../aws/models/harvest-compound.model';
-import { VaultHarvestsExtended } from '../vaults/interfaces/vault-harvest-extended.interface';
 import { SUPPORTED_CHAINS } from '../chains/chain';
+import { VaultHarvestsExtended } from '../vaults/interfaces/vault-harvest-extended.interface';
+import { getLastCompoundHarvest, getVaultHarvestsOnChain } from '../vaults/vaults.utils';
 
 /**
  * Save compound data for all vaults harvests, on all chains

@@ -1,13 +1,12 @@
 import BadgerSDK, { RewardsService } from '@badger-dao/sdk';
+import rewardsLoadSchedulesMock from '@badger-dao/sdk-mocks/generated/ethereum/rewards/loadSchedules.json';
 import { PlatformTest } from '@tsed/common';
 import { BadRequest } from '@tsed/exceptions';
 import SuperTest from 'supertest';
-import { Server } from '../Server';
 
 import { TOKENS } from '../config/tokens.config';
-
-import rewardsLoadSchedulesMock from '@badger-dao/sdk-mocks/generated/ethereum/rewards/loadSchedules.json';
 import { NetworkStatus } from '../errors/enums/newtroks.status.enum';
+import { Server } from '../Server';
 
 describe('RewardController', () => {
   let request: SuperTest.SuperTest<SuperTest.Test>;

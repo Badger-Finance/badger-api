@@ -1,5 +1,6 @@
 import { Controller, Get, Inject } from '@tsed/common';
 import { ContentType, Description, Returns, Summary } from '@tsed/schema';
+
 import { ProtocolMetrics } from './interfaces/metrics.interface';
 import { ProtocolMetricModel } from './interfaces/protocol-metric-model';
 import { MetricsService } from './metrics.service';

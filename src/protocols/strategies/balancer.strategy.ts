@@ -1,5 +1,6 @@
 import { Erc20__factory, formatBalance } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
+
 import { VaultTokenBalance } from '../../aws/models/vault-token-balance.model';
 import { Chain } from '../../chains/config/chain.config';
 import { BalancerVault__factory, WeightedPool__factory } from '../../contracts';

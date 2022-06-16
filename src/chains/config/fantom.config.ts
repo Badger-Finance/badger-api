@@ -1,12 +1,13 @@
 import { Network, Protocol, VaultBehavior, VaultState, VaultVersion } from '@badger-dao/sdk';
+
+import { Stage } from '../../config/enums/stage.enum';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
-import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
-import { Chain } from './chain.config';
 import { fantomTokensConfig } from '../../tokens/config/fantom-tokens.config';
-import { Stage } from '../../config/enums/stage.enum';
+import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { BaseStrategy } from '../strategies/base.strategy';
+import { Chain } from './chain.config';
 
 export class Fantom extends Chain {
   constructor() {

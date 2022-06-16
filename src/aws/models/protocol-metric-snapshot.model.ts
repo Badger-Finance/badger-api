@@ -1,4 +1,5 @@
 import { attribute, hashKey, rangeKey, table } from '@aws/dynamodb-data-mapper-annotations';
+
 import { METRICS_SNAPSHOTS_DATA } from '../../config/constants';
 import { ProtocolMetrics } from '../../metrics/interfaces/metrics.interface';
 

@@ -1,8 +1,8 @@
 import { TOKENS } from '../../config/tokens.config';
 import { TEST_CHAIN } from '../../test/tests.utils';
+import { fullTokenMockMap } from '../../tokens/mocks/full-token.mock';
 import * as pricesUtils from '../prices.utils';
 import { getRemDiggPrice } from './remdigg-price';
-import { fullTokenMockMap } from '../../tokens/mocks/full-token.mock';
 
 describe('remdigg-price', () => {
   describe('getRemDiggPrice', () => {

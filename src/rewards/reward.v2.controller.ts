@@ -3,14 +3,12 @@ import { Controller, Get, Inject, PathParams, QueryParams, UseCache } from '@tse
 import { ContentType, Deprecated, Description, Hidden, Returns, Summary } from '@tsed/schema';
 
 import { Chain } from '../chains/config/chain.config';
-
-import { RewardsService } from './rewards.service';
-
 import { AirdropMerkleClaim } from './interfaces/merkle-distributor.interface';
 import { RewardMerkleClaimModel } from './interfaces/reward-merkle-claim-model.interface';
 import { EmissionSchedule, RewardSchedulesByVaults } from './interfaces/reward-schedules-vault.interface';
 import { RewardSchedulesByVaultModel } from './interfaces/reward-schedules-vault-model.interface';
 import { RewardSchedulesByVaultsModel } from './interfaces/reward-schedules-vaults-model.interface';
+import { RewardsService } from './rewards.service';
 
 @Deprecated()
 @Controller('/reward')

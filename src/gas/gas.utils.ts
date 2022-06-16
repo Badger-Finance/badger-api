@@ -1,4 +1,5 @@
 import NodeCache from 'node-cache';
+
 import { SUPPORTED_CHAINS } from '../chains/chain';
 import { ChainGasPrices } from './interfaces/gas-prices.interface';
 

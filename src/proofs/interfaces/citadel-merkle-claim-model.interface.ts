@@ -1,4 +1,5 @@
 import { Description, Example, Property, Title } from '@tsed/schema';
+
 import { CitadelMerkleClaim } from './citadel-merkle-claim.interface';
 
 export class CitadelMerkleClaimModel implements CitadelMerkleClaim {

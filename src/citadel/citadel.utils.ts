@@ -1,39 +1,45 @@
-import { ethers } from 'ethers';
-import { getDataMapper } from '../aws/dynamodb.utils';
-import { KeyedDataBlob } from '../aws/models/keyed-data-blob.model';
-import { CitadelData, CTIADEL_DATA } from './destructors/citadel-data.destructor';
-import { Nullable } from '../utils/types.utils';
-import { CitadelRewardsSnapshot } from '../aws/models/citadel-rewards-snapshot';
-import BadgerSDK, { Network, Protocol, Token, VaultV15__factory } from '@badger-dao/sdk';
+import BadgerSDK, {
+  formatBalance,
+  Network,
+  Protocol,
+  Token,
+  VaultState,
+  VaultV15__factory,
+  VaultVersion,
+} from '@badger-dao/sdk';
+import { CitadelRewardType } from '@badger-dao/sdk/lib/api/enums/citadel-reward-type.enum';
 import { RewardEventType, RewardEventTypeEnum } from '@badger-dao/sdk/lib/citadel/enums/reward-event-type.enum';
 import { ListRewardsEvent } from '@badger-dao/sdk/lib/citadel/interfaces/list-rewards-event.interface';
-import { CitadelRewardType } from '@badger-dao/sdk/lib/api/enums/citadel-reward-type.enum';
-import { CitadelRewardsAprBlob } from './interfaces/citadel-rewards-apr-blob.interface';
-import { CitadelRewardsTokenPaidMap } from './interfaces/citadel-rewards-token-paid-map.interface';
-import { Chain } from '../chains/config/chain.config';
-import { TokenPrice } from '../prices/interface/token-price.interface';
-import { getPrice } from '../prices/prices.utils';
-import { TOKENS } from '../config/tokens.config';
-import { VaultState } from '@badger-dao/sdk';
-import { VaultVersion } from '@badger-dao/sdk';
+import { OrderDirection } from '@badger-dao/sdk/lib/graphql/generated/badger';
+import { ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
+
+import { getDataMapper } from '../aws/dynamodb.utils';
+import { CitadelRewardsSnapshot } from '../aws/models/citadel-rewards-snapshot';
+import { KeyedDataBlob } from '../aws/models/keyed-data-blob.model';
+import { Chain } from '../chains/config/chain.config';
+import { TOKENS } from '../config/tokens.config';
 import { getSdk } from '../graphql/generated/citadel';
 import {
   getSdk as setKnightsRoundStatsSdk,
-  VoteFragment,
   Vote_OrderBy,
+  VoteFragment,
 } from '../graphql/generated/citadel.knights.round';
-import { formatBalance } from '@badger-dao/sdk';
+import { TokenPrice } from '../prices/interface/token-price.interface';
+import { getPrice } from '../prices/prices.utils';
+import { getFullToken } from '../tokens/tokens.utils';
+import { Nullable } from '../utils/types.utils';
 import {
   CITADEL_KNIGHTS,
   CITADEL_KNIGHTS_ROUND_SUBGRAPH_URL,
   CITADEL_START_PRICE_USD,
   CITADEL_SUBGRAPH_URL,
 } from './citadel.constants';
-import { CitadelKnightsRoundStat } from './interfaces/citadel-knights-round-stat.interface';
-import { getFullToken } from '../tokens/tokens.utils';
 import * as citadelUtils from './citadel.utils';
-import { OrderDirection } from '@badger-dao/sdk/lib/graphql/generated/badger';
+import { CitadelData, CTIADEL_DATA } from './destructors/citadel-data.destructor';
+import { CitadelKnightsRoundStat } from './interfaces/citadel-knights-round-stat.interface';
+import { CitadelRewardsAprBlob } from './interfaces/citadel-rewards-apr-blob.interface';
+import { CitadelRewardsTokenPaidMap } from './interfaces/citadel-rewards-token-paid-map.interface';
 
 export async function queryCitadelData(): Promise<CitadelData> {
   const mapper = getDataMapper();

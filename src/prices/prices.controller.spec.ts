@@ -1,6 +1,7 @@
 import { PlatformTest } from '@tsed/common';
 import { BadRequest } from '@tsed/exceptions';
 import SuperTest from 'supertest';
+
 import { Server } from '../Server';
 import { bscTokensConfig } from '../tokens/config/bsc-tokens.config';
 import { ethTokensConfig } from '../tokens/config/eth-tokens.config';

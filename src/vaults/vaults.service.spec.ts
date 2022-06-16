@@ -1,12 +1,13 @@
+import { Currency } from '@badger-dao/sdk';
 import { PlatformTest } from '@tsed/common';
+
+import { TOKENS } from '../config/tokens.config';
+import * as pricesUtils from '../prices/prices.utils';
+import { TEST_CHAIN } from '../test/tests.utils';
+import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
+import * as tokenUtils from '../tokens/tokens.utils';
 import { VaultsService } from './vaults.service';
 import * as vaultsUtils from './vaults.utils';
-import * as pricesUtils from '../prices/prices.utils';
-import { Currency } from '@badger-dao/sdk';
-import { TEST_CHAIN } from '../test/tests.utils';
-import * as tokenUtils from '../tokens/tokens.utils';
-import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
-import { TOKENS } from '../config/tokens.config';
 
 describe('proofs.service', () => {
   let service: VaultsService;

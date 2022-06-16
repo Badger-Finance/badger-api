@@ -7,27 +7,28 @@ import BadgerSDK, {
   RewardsService,
   VaultSnapshot,
 } from '@badger-dao/sdk';
+import { TokensService } from '@badger-dao/sdk/lib/tokens/tokens.service';
+import { JsonRpcProvider, JsonRpcSigner } from '@ethersproject/providers';
 import { ethers } from 'ethers';
 import createMockInstance from 'jest-create-mock-instance';
+import { mock } from 'jest-mock-extended';
+
+import * as accountsUtils from '../accounts/accounts.utils';
+import * as dynamodbUtils from '../aws/dynamodb.utils';
 import { CachedAccount } from '../aws/models/cached-account.model';
+import { CachedBoost } from '../aws/models/cached-boost.model';
 import { SUPPORTED_CHAINS } from '../chains/chain';
 import { Arbitrum } from '../chains/config/arbitrum.config';
 import { Avalanche } from '../chains/config/avax.config';
 import { BinanceSmartChain } from '../chains/config/bsc.config';
+import { Chain } from '../chains/config/chain.config';
 import { Ethereum } from '../chains/config/eth.config';
+import { Fantom } from '../chains/config/fantom.config';
 import { Polygon } from '../chains/config/polygon.config';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
-import { CachedBoost } from '../aws/models/cached-boost.model';
-import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
-import * as accountsUtils from '../accounts/accounts.utils';
-import * as dynamodbUtils from '../aws/dynamodb.utils';
 import * as pricesUtils from '../prices/prices.utils';
-import { Fantom } from '../chains/config/fantom.config';
-import { Chain } from '../chains/config/chain.config';
-import { TokensService } from '@badger-dao/sdk/lib/tokens/tokens.service';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
-import { mock } from 'jest-mock-extended';
-import { JsonRpcProvider, JsonRpcSigner } from '@ethersproject/providers';
+import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 
 export const TEST_CHAIN = SUPPORTED_CHAINS[0];
 export const TEST_ADDR = ethers.utils.getAddress('0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484');

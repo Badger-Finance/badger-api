@@ -1,4 +1,5 @@
 import { Description, Example, Property, Title } from '@tsed/schema';
+
 import { ethSetts } from '../../chains/config/eth.config';
 import { VaultSummary } from '../../vaults/interfaces/vault-summary.interface';
 import { ProtocolSummary } from './protocol-summary.interface';

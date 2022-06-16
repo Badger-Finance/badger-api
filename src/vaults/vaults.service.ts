@@ -1,14 +1,21 @@
 import { Currency, Protocol, VaultDTO, VaultState, VaultType } from '@badger-dao/sdk';
 import { VaultYieldProjection } from '@badger-dao/sdk/lib/api/interfaces/vault-yield-projection.interface';
 import { Service } from '@tsed/common';
+import { ethers } from 'ethers';
+
+import { getDataMapper } from '../aws/dynamodb.utils';
+import { HarvestCompoundData } from '../aws/models/harvest-compound.model';
+import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
 import { Chain } from '../chains/config/chain.config';
 import { ONE_YEAR_SECONDS } from '../config/constants';
+import { NodataForVaultError } from '../errors/allocation/nodata.for.vault.error';
 import { convert } from '../prices/prices.utils';
 import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interface';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { getCachedTokenBalances } from '../tokens/tokens.utils';
 import { VaultDefinition } from './interfaces/vault-definition.interface';
-import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
+import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
+import { VaultHarvestsMap } from './interfaces/vault-harvest-map';
 import {
   getCachedVault,
   getVaultCachedValueSources,
@@ -16,12 +23,6 @@ import {
   getVaultPendingHarvest,
   VAULT_SOURCE,
 } from './vaults.utils';
-import { ethers } from 'ethers';
-import { VaultHarvestsMap } from './interfaces/vault-harvest-map';
-import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
-import { HarvestCompoundData } from '../aws/models/harvest-compound.model';
-import { getDataMapper } from '../aws/dynamodb.utils';
-import { NodataForVaultError } from '../errors/allocation/nodata.for.vault.error';
 
 @Service()
 export class VaultsService {

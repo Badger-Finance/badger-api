@@ -1,9 +1,10 @@
 import { PlatformTest } from '@tsed/common';
 import SuperTest from 'supertest';
+
+import { NetworkStatus } from '../errors/enums/newtroks.status.enum';
 import { Server } from '../Server';
 import { mockBadgerSdk, setupMockAccounts, TEST_ADDR } from '../test/tests.utils';
 import * as accountsUtils from './accounts.utils';
-import { NetworkStatus } from '../errors/enums/newtroks.status.enum';
 
 describe('AccountsController', () => {
   let request: SuperTest.SuperTest<SuperTest.Test>;

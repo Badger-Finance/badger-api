@@ -1,15 +1,4 @@
 import { between } from '@aws/dynamodb-expressions';
-import { BadRequest, NotFound, UnprocessableEntity } from '@tsed/exceptions';
-import { BigNumber, ethers } from 'ethers';
-import { getDataMapper } from '../aws/dynamodb.utils';
-import { Chain } from '../chains/config/chain.config';
-import { ONE_YEAR_SECONDS } from '../config/constants';
-import { BouncerType } from '../rewards/enums/bouncer-type.enum';
-import { getFullToken } from '../tokens/tokens.utils';
-import { VaultDefinition } from './interfaces/vault-definition.interface';
-import { EmissionControl__factory } from '../contracts';
-import { VaultStrategy } from './interfaces/vault-strategy.interface';
-import { TOKENS } from '../config/tokens.config';
 import BadgerSDK, {
   formatBalance,
   gqlGenT,
@@ -27,23 +16,35 @@ import BadgerSDK, {
   VaultV15__factory,
   VaultVersion,
 } from '@badger-dao/sdk';
-import { getPrice } from '../prices/prices.utils';
-import { TokenPrice } from '../prices/interface/token-price.interface';
-import { PricingType } from '../prices/enums/pricing-type.enum';
-import { CachedValueSource } from '../aws/models/apy-snapshots.model';
-import { createValueSource } from '../protocols/interfaces/value-source.interface';
-import { getProtocolValueSources, getRewardEmission, valueSourceToCachedValueSource } from '../rewards/rewards.utils';
-import { SourceType } from '../rewards/enums/source-type.enum';
-import { getVault } from '../indexers/indexer.utils';
-import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
-import { VaultHarvestData } from './interfaces/vault-harvest-data.interface';
-import { CurrentVaultSnapshotModel } from '../aws/models/current-vault-snapshot.model';
-import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
-import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
-import { HarvestType } from './enums/harvest.enum';
-import { Nullable } from '../utils/types.utils';
 import { ListHarvestOptions } from '@badger-dao/sdk/lib/vaults/interfaces';
+import { BadRequest, NotFound, UnprocessableEntity } from '@tsed/exceptions';
+import { BigNumber, ethers } from 'ethers';
+
+import { getDataMapper } from '../aws/dynamodb.utils';
+import { CachedValueSource } from '../aws/models/apy-snapshots.model';
+import { CurrentVaultSnapshotModel } from '../aws/models/current-vault-snapshot.model';
 import { HarvestCompoundData } from '../aws/models/harvest-compound.model';
+import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
+import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
+import { Chain } from '../chains/config/chain.config';
+import { ONE_YEAR_SECONDS } from '../config/constants';
+import { TOKENS } from '../config/tokens.config';
+import { EmissionControl__factory } from '../contracts';
+import { getVault } from '../indexers/indexer.utils';
+import { PricingType } from '../prices/enums/pricing-type.enum';
+import { TokenPrice } from '../prices/interface/token-price.interface';
+import { getPrice } from '../prices/prices.utils';
+import { createValueSource } from '../protocols/interfaces/value-source.interface';
+import { BouncerType } from '../rewards/enums/bouncer-type.enum';
+import { SourceType } from '../rewards/enums/source-type.enum';
+import { getProtocolValueSources, getRewardEmission, valueSourceToCachedValueSource } from '../rewards/rewards.utils';
+import { getFullToken } from '../tokens/tokens.utils';
+import { Nullable } from '../utils/types.utils';
+import { HarvestType } from './enums/harvest.enum';
+import { VaultDefinition } from './interfaces/vault-definition.interface';
+import { VaultHarvestData } from './interfaces/vault-harvest-data.interface';
+import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
+import { VaultStrategy } from './interfaces/vault-strategy.interface';
 
 export const VAULT_SOURCE = 'Vault Compounding';
 

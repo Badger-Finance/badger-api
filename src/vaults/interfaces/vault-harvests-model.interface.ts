@@ -1,6 +1,7 @@
 import { Description, Example, Property, Title } from '@tsed/schema';
-import { HarvestType } from '../enums/harvest.enum';
+
 import { TOKENS } from '../../config/tokens.config';
+import { HarvestType } from '../enums/harvest.enum';
 import { VaultHarvestsExtendedResp } from './vault-harvest-extended-resp.interface';
 
 export class VaultHarvestsModel implements VaultHarvestsExtendedResp {

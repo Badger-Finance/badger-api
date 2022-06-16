@@ -1,6 +1,6 @@
-import { TOKENS } from './tokens.config';
 import { checksumEntries, getEnvVar } from './config.utils';
 import { Stage } from './enums/stage.enum';
+import { TOKENS } from './tokens.config';
 
 describe('utils', () => {
   const oldNodeEnv = { ...process.env };

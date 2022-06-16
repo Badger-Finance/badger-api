@@ -1,7 +1,7 @@
 import { Description, Example, Property, Title } from '@tsed/schema';
 
+import { firstVaultAddr, rewardSchedules } from '../examples/reward-schedules-vaults.mock';
 import { EmissionSchedule } from './reward-schedules-vault.interface';
-import { rewardSchedules, firstVaultAddr } from '../examples/reward-schedules-vaults.mock';
 
 @Description('Rewards schedules by vaults map')
 @Example(rewardSchedules[firstVaultAddr])

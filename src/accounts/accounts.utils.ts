@@ -1,22 +1,22 @@
+import { Account, Currency, formatBalance, gqlGenT, ONE_MIN_MS } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
+
 import { getChainStartBlockKey, getDataMapper, getLeaderboardKey } from '../aws/dynamodb.utils';
+import { CachedAccount } from '../aws/models/cached-account.model';
+import { CachedBoost } from '../aws/models/cached-boost.model';
+import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
 import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
 import { REWARD_DATA } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
-import { CachedBoost } from '../aws/models/cached-boost.model';
 import { convert, getPrice } from '../prices/prices.utils';
-import { BoostData } from '../rewards/interfaces/boost-data.interface';
-import { getCachedVault, getVaultDefinition } from '../vaults/vaults.utils';
-import { getVaultTokens, getFullToken } from '../tokens/tokens.utils';
-import { AccountMap } from './interfaces/account-map.interface';
-import { CachedAccount } from '../aws/models/cached-account.model';
-import { CachedSettBalance } from './interfaces/cached-sett-balance.interface';
-import { Account, Currency, formatBalance, ONE_MIN_MS } from '@badger-dao/sdk';
-import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
-import { gqlGenT } from '@badger-dao/sdk';
+import { BoostData } from '../rewards/interfaces/boost-data.interface';
+import { getFullToken, getVaultTokens } from '../tokens/tokens.utils';
+import { getCachedVault, getVaultDefinition } from '../vaults/vaults.utils';
+import { AccountMap } from './interfaces/account-map.interface';
+import { CachedSettBalance } from './interfaces/cached-sett-balance.interface';
 
 export function defaultBoost(chain: Chain, address: string): CachedBoost {
   return {

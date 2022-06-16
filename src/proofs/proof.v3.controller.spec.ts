@@ -1,14 +1,15 @@
 import { PlatformTest } from '@tsed/common';
 import SuperTest from 'supertest';
-import { Server } from '../Server';
-import { ProofsService } from './proofs.service';
-import { TEST_ADDR } from '../test/tests.utils';
-import { TOKENS } from '../config/tokens.config';
-import { MOCK_BOUNCER_FILE } from '../test/constants';
+
 import { Chain } from '../chains/config/chain.config';
+import { TOKENS } from '../config/tokens.config';
+import { NodataForAddrError } from '../errors/allocation/nodata.for.addr.error';
 import { NodataForChainError } from '../errors/allocation/nodata.for.chain.error';
 import { NetworkStatus } from '../errors/enums/newtroks.status.enum';
-import { NodataForAddrError } from '../errors/allocation/nodata.for.addr.error';
+import { Server } from '../Server';
+import { MOCK_BOUNCER_FILE } from '../test/constants';
+import { TEST_ADDR } from '../test/tests.utils';
+import { ProofsService } from './proofs.service';
 
 describe('ProofsController', () => {
   let request: SuperTest.SuperTest<SuperTest.Test>;

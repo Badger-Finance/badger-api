@@ -1,10 +1,11 @@
 import { Network } from '@badger-dao/sdk';
 import { Controller, Get, Inject, QueryParams } from '@tsed/common';
 import { ContentType, Description, Returns, Summary } from '@tsed/schema';
+
 import { Chain } from '../chains/config/chain.config';
+import { QueryParamError } from '../errors/validation/query.param.error';
 import { AccountsService } from './accounts.service';
 import { AccountModel } from './interfaces/account-model.interface';
-import { QueryParamError } from '../errors/validation/query.param.error';
 
 @Controller('/account')
 export class AccountV3Controller {

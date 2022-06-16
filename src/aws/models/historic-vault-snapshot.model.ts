@@ -1,6 +1,7 @@
 import { embed } from '@aws/dynamodb-data-mapper';
 import { attribute, hashKey, rangeKey, table } from '@aws/dynamodb-data-mapper-annotations';
 import { VaultSnapshot } from '@badger-dao/sdk';
+
 import { SETT_HISTORIC_DATA } from '../../config/constants';
 import { VaultStrategy } from '../../vaults/interfaces/vault-strategy.interface';
 

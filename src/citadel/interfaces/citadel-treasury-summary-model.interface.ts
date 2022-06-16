@@ -1,5 +1,6 @@
 import { CitadelTreasurySummary } from '@badger-dao/sdk/lib/api/interfaces/citadel-treasury-summary.interface';
 import { Description, Property, Title } from '@tsed/schema';
+
 import { TreasuryPosition } from '../../treasury/interfaces/treasy-position.interface';
 
 @Description('Citadel DAO Treasury Summary')
