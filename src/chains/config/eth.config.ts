@@ -275,4 +275,11 @@ export const ethSetts: VaultDefinition[] = [
     protocol: Protocol.Convex,
     state: VaultState.Featured,
   },
+  {
+    name: 'graviAURA',
+    depositToken: TOKENS.AURA,
+    vaultToken: TOKENS.GRAVI_AURA,
+    protocol: Protocol.Aura,
+    state: VaultState.Guarded,
+  },
 ];
