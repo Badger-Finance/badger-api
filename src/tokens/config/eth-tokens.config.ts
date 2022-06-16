@@ -107,6 +107,10 @@ export const ethTokensConfig: TokenConfig = {
     lookupName: 'binance-wrapped-btc',
     type: PricingType.LookupName,
   },
+  [TOKENS.AURA]: {
+    lookupName: 'aura-finance',
+    type: PricingType.LookupName,
+  },
   [TOKENS.CRV_BBTC]: {
     type: PricingType.CurveLP,
   },
@@ -418,6 +422,13 @@ export const ethTokensConfig: TokenConfig = {
     type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.CRV_BADGER,
+      network: Network.Ethereum,
+    },
+  },
+  [TOKENS.GRAVI_AURA]: {
+    type: PricingType.Vault,
+    vaultToken: {
+      address: TOKENS.AURA,
       network: Network.Ethereum,
     },
   },

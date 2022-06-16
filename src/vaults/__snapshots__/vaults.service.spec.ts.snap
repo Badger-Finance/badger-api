@@ -153,8 +153,13 @@ Object {
       "name": "BADGER / WBTC",
       "value": 161184,
     },
+    Object {
+      "balance": 11,
+      "name": "graviAURA",
+      "value": 127168,
+    },
   ],
-  "totalValue": 2435069.3333333335,
+  "totalValue": 2562237.3333333335,
   "vaults": Array [
     Object {
       "balance": 13,
@@ -305,6 +310,11 @@ Object {
       "balance": 14,
       "name": "BADGER / WBTC",
       "value": 161184,
+    },
+    Object {
+      "balance": 11,
+      "name": "graviAURA",
+      "value": 127168,
     },
   ],
 }
@@ -463,8 +473,13 @@ Object {
       "name": "BADGER / WBTC",
       "value": 161184,
     },
+    Object {
+      "balance": 11,
+      "name": "graviAURA",
+      "value": 127168,
+    },
   ],
-  "totalValue": 2435069.3333333335,
+  "totalValue": 2562237.3333333335,
   "vaults": Array [
     Object {
       "balance": 13,
@@ -615,6 +630,11 @@ Object {
       "balance": 14,
       "name": "BADGER / WBTC",
       "value": 161184,
+    },
+    Object {
+      "balance": 11,
+      "name": "graviAURA",
+      "value": 127168,
     },
   ],
 }
