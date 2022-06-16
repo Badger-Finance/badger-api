@@ -3831,7 +3831,7 @@ Array [
         "name": "Curve Trading Fees",
       },
     ],
-    "state": "featured",
+    "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "aumFee": 0,
@@ -3975,7 +3975,7 @@ Array [
     "value": 763013,
     "vaultAsset": "BADGER",
     "vaultToken": "0xBA485b556399123261a5F9c95d413B4f93107407",
-    "version": "v1",
+    "version": "v1.5",
     "yieldProjection": Object {
       "harvestApr": -0.0031589511029815535,
       "harvestApy": -0.0018660447817175907,
@@ -7468,7 +7468,7 @@ Array [
         "name": "Curve Trading Fees",
       },
     ],
-    "state": "featured",
+    "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "aumFee": 0,
@@ -7612,7 +7612,7 @@ Array [
     "value": 763013,
     "vaultAsset": "BADGER",
     "vaultToken": "0xBA485b556399123261a5F9c95d413B4f93107407",
-    "version": "v1",
+    "version": "v1.5",
     "yieldProjection": Object {
       "harvestApr": -0.0031589511029815535,
       "harvestApy": -0.0018660447817175907,
