@@ -10,7 +10,6 @@ import { Chain } from './chain.config';
 import axios from 'axios';
 import { BlocknativeGasResponse } from '../../gas/interfaces/blocknative-gas-response.interface';
 import { BaseStrategy } from '../strategies/base.strategy';
-import { getBalancerVaultTokenBalance } from '../../protocols/strategies/balancer.strategy';
 
 export class Ethereum extends Chain {
   private readonly client = axios.create({
@@ -279,7 +278,6 @@ export const ethSetts: VaultDefinition[] = [
   {
     name: 'graviAURA',
     depositToken: TOKENS.AURA,
-    getTokenBalance: getBalancerVaultTokenBalance,
     vaultToken: TOKENS.GRAVI_AURA,
     protocol: Protocol.Aura,
     state: VaultState.Guarded,
