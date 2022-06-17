@@ -19,9 +19,9 @@ import {
 import { ethers } from 'ethers';
 import { VaultHarvestsMap } from './interfaces/vault-harvest-map';
 import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
-import { NotFound } from '@tsed/exceptions';
 import { HarvestCompoundData } from '../aws/models/harvest-compound.model';
 import { getDataMapper } from '../aws/dynamodb.utils';
+import { NodataForVaultError } from '../errors/allocation/nodata.for.vault.error';
 
 @Service()
 export class VaultsService {
@@ -71,7 +71,7 @@ export class VaultsService {
     const vaultDef = getVaultDefinition(chain, vaultAddr);
 
     if (!vaultDef) {
-      throw new NotFound(`No vault ${vaultAddr}, found on chain ${chain.name}`);
+      throw new NodataForVaultError(`${vaultAddr}`);
     }
 
     const queryHarvests = mapper.query(

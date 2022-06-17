@@ -1,4 +1,4 @@
-import { Network, Protocol, VaultState } from '@badger-dao/sdk';
+import { Network, Protocol, VaultState, VaultVersion } from '@badger-dao/sdk';
 import { BLOCKNATIVE_API_KEY } from '../../config/constants';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
@@ -273,6 +273,13 @@ export const ethSetts: VaultDefinition[] = [
     getTokenBalance: getCurveVaultTokenBalance,
     vaultToken: TOKENS.BCRV_BADGER,
     protocol: Protocol.Convex,
-    state: VaultState.Featured,
+  },
+  {
+    name: 'graviAURA',
+    depositToken: TOKENS.AURA,
+    vaultToken: TOKENS.GRAVI_AURA,
+    protocol: Protocol.Aura,
+    state: VaultState.Guarded,
+    version: VaultVersion.v1_5,
   },
 ];

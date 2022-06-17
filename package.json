@@ -18,7 +18,7 @@
     "dev:node:api": "ts-node -r dotenv/config src/index.ts",
     "format": "pretty-quick",
     "lint": "eslint \"src/**/*.ts\" --fix",
-    "test": "jest --detectOpenHandles --runInBand",
+    "test": "node --expose-gc --no-compilation-cache ./node_modules/.bin/jest --detectOpenHandles --runInBand",
     "test:upd": "yarn test -u",
     "test:path": "yarn test --no-cache --testPathPattern",
     "test:clean": "jest --clearCache",
@@ -29,7 +29,7 @@
   "dependencies": {
     "@aws/dynamodb-data-mapper": "^0.7.3",
     "@aws/dynamodb-data-mapper-annotations": "^0.7.3",
-    "@badger-dao/sdk": "^1.13.4",
+    "@badger-dao/sdk": "^1.14.2",
     "@tsed/common": "^6.95.9",
     "@tsed/core": "^6.95.9",
     "@tsed/di": "^6.95.9",

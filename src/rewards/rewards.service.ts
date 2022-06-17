@@ -1,5 +1,4 @@
 import { Service } from '@tsed/common';
-import { BadRequest, NotFound } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 import { getObject } from '../aws/s3.utils';
 
@@ -16,6 +15,9 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { getLatestMetadata } from '../accounts/accounts.utils';
 import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
 import { ConditionExpression } from '@aws/dynamodb-expressions';
+import { NodataForAddrError } from '../errors/allocation/nodata.for.addr.error';
+import { UnsupportedChainError } from '../errors/validation/unsupported.chain.error';
+import { NodataForVaultError } from '../errors/allocation/nodata.for.vault.error';
 
 @Service()
 export class RewardsService {
@@ -30,7 +32,7 @@ export class RewardsService {
     const fileContents: AirdropMerkleDistribution = JSON.parse(airdropFile.toString('utf-8'));
     const claim = fileContents.claims[address.toLowerCase()] || fileContents.claims[ethers.utils.getAddress(address)];
     if (!claim) {
-      throw new NotFound(`${address} is not on the bouncer list`);
+      throw new NodataForAddrError(`${address}`);
     }
     return claim;
   }
@@ -42,11 +44,11 @@ export class RewardsService {
   async getUserRewards(chain: Chain, address: string): Promise<RewardMerkleClaim> {
     const treeDistribution = await getTreeDistribution(chain);
     if (!treeDistribution) {
-      throw new BadRequest(`${chain.name} does not support claimable rewards.`);
+      throw new UnsupportedChainError(`${chain.name}`);
     }
     const claim = treeDistribution.claims[address];
     if (!claim) {
-      throw new NotFound(`${address} does not have claimable rewards.`);
+      throw new NodataForAddrError(`${address}`);
     }
     return claim;
   }
@@ -98,7 +100,7 @@ export class RewardsService {
 
     const vault = chain.vaults.find((v) => v.vaultToken === address);
 
-    if (!vault || !vault?.vaultToken) throw new NotFound(`Unknown vault ${address}`);
+    if (!vault || !vault?.vaultToken) throw new NodataForVaultError(`${address}`);
 
     const loadMethod = active ? 'loadActiveSchedules' : 'loadSchedules';
 

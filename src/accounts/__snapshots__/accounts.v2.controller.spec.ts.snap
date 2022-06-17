@@ -38,7 +38,8 @@ Object {
 
 exports[`AccountsController GET /v2/accounts with an invalid account input returns a bad request response 1`] = `
 Object {
-  "message": "0xjintao is not a valid account",
+  "code": 1001,
+  "message": "Addr 0xjintao is not a valid account",
 }
 `;
 

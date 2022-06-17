@@ -1,6 +1,6 @@
 import { Currency, Network } from '@badger-dao/sdk';
 import { Controller, Get, Inject, PathParams, QueryParams, UseCache } from '@tsed/common';
-import { ContentType, Description, Returns, Summary } from '@tsed/schema';
+import { ContentType, Deprecated, Description, Returns, Summary } from '@tsed/schema';
 import { Chain } from '../chains/config/chain.config';
 import { VaultModel } from './interfaces/vault-model.interface';
 import { VaultsService } from './vaults.service';
@@ -10,8 +10,9 @@ import { VaultHarvestsMap } from './interfaces/vault-harvest-map';
 import { VaultHarvestsModel } from './interfaces/vault-harvests-model.interface';
 import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
 
+@Deprecated()
 @Controller('/vaults')
-export class VaultsController {
+export class VaultsV2Controller {
   @Inject()
   vaultService!: VaultsService;
 
