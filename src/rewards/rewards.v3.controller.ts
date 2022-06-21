@@ -2,6 +2,7 @@ import { formatBalance, Network } from '@badger-dao/sdk';
 import { BigNumber } from '@ethersproject/bignumber';
 import { Controller, Get, Inject, QueryParams, UseCache } from '@tsed/common';
 import { ContentType, Description, Hidden, Returns, Summary } from '@tsed/schema';
+import { ethers } from 'ethers';
 
 import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
 import { Chain } from '../chains/config/chain.config';
@@ -19,8 +20,8 @@ import { RewardSchedulesByVaultModel } from './interfaces/reward-schedules-vault
 import { RewardSchedulesByVaultsModel } from './interfaces/reward-schedules-vaults-model.interface';
 import { RewardsService } from './rewards.service';
 
-@Controller('/reward')
-export class RewardV3Controller {
+@Controller('/rewards')
+export class RewardsV3Controller {
   @Inject()
   rewardsService!: RewardsService;
 
@@ -33,7 +34,7 @@ export class RewardV3Controller {
   ): Promise<AirdropMerkleClaim> {
     if (!address) throw new QueryParamError('address');
 
-    return this.rewardsService.getBouncerProof(Chain.getChain(chain), address);
+    return this.rewardsService.getBouncerProof(Chain.getChain(chain), ethers.utils.getAddress(address));
   }
 
   @Get('/list')
@@ -84,7 +85,7 @@ export class RewardV3Controller {
   ): Promise<RewardMerkleClaimModel> {
     if (!address) throw new QueryParamError('address');
 
-    return this.rewardsService.getUserRewards(Chain.getChain(chain), address);
+    return this.rewardsService.getUserRewards(Chain.getChain(chain), ethers.utils.getAddress(address));
   }
 
   @UseCache()

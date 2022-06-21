@@ -1,7 +1,4 @@
-// Shared
-// V3 Current
 import { AccountV3Controller } from './accounts/account.v3.controller';
-// V2 Deprecated
 import { AccountsV2Controller } from './accounts/accounts.v2.controller';
 import { ChartsController } from './charts/charts.controller';
 import { GasController } from './gas/gas.controller';
@@ -12,8 +9,8 @@ import { ProofsV3Controller } from './proofs/proof.v3.controller';
 import { ProofsV2Controller } from './proofs/proofs.v2.controller';
 import { ProtocolController } from './protocols/protocols.controller';
 import { RewardV2Controller } from './rewards/reward.v2.controller';
-import { RewardV3Controller } from './rewards/reward.v3.controller';
 import { RewardsV2Controller } from './rewards/rewards.v2.controller';
+import { RewardsV3Controller } from './rewards/rewards.v3.controller';
 import { TokensController } from './tokens/tokens.controller';
 import { SettsV2Controller } from './vaults/setts.v2.controller';
 import { VaultsV3Controller } from './vaults/vault.v3.controller';
@@ -53,6 +50,6 @@ export const V3_CONTROLLERS = [
 
   AccountV3Controller,
   ProofsV3Controller,
-  RewardV3Controller,
+  RewardsV3Controller,
   VaultsV3Controller,
 ];
