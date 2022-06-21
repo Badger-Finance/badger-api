@@ -1,6 +1,7 @@
-import { CitadelRewardEvent } from '../interfaces/citadel-reward-event.interface';
-import { CitadelRewardsSnapshot } from '../../aws/models/citadel-rewards-snapshot';
 import { RewardEventType, RewardEventTypeEnum } from '@badger-dao/sdk/lib/citadel/enums/reward-event-type.enum';
+
+import { CitadelRewardsSnapshot } from '../../aws/models/citadel-rewards-snapshot';
+import { CitadelRewardEvent } from '../interfaces/citadel-reward-event.interface';
 
 export class CitadelRewardEventData implements CitadelRewardEvent {
   account: string;

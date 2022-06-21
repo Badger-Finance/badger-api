@@ -1,6 +1,7 @@
 import { RewardEventType } from '@badger-dao/sdk/lib/citadel/enums/reward-event-type.enum';
 import { RewardFilter } from '@badger-dao/sdk/lib/citadel/enums/reward-filter.enum';
 import { Description, Example, Property, Title } from '@tsed/schema';
+
 import { CitadelRewardEvent } from './citadel-reward-event.interface';
 
 @Description('Citadel DAO Reward Event')

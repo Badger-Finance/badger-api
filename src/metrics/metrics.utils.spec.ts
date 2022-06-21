@@ -1,12 +1,13 @@
 import { VaultDTO } from '@badger-dao/sdk';
+
 import * as accountsUtils from '../accounts/accounts.utils';
+import { Chain } from '../chains/config/chain.config';
+import { TOKENS } from '../config/tokens.config';
+import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
+import * as tokenUtils from '../tokens/tokens.utils';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import * as vaultUtils from '../vaults/vaults.utils';
 import { getProtocolMetrics, getProtocolSettMetrics, getProtocolTotalUsers } from './metrics.utils';
-import { Chain } from '../chains/config/chain.config';
-import * as tokenUtils from '../tokens/tokens.utils';
-import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
-import { TOKENS } from '../config/tokens.config';
 
 describe('metrics.utils', () => {
   beforeEach(() => {

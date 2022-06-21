@@ -1,9 +1,10 @@
 import { Account } from '@badger-dao/sdk';
 import { Service } from '@tsed/di';
 import { ethers } from 'ethers';
+
 import { Chain } from '../chains/config/chain.config';
-import { getCachedAccount } from './accounts.utils';
 import { InvalidAddrError } from '../errors/validation/invalid.addr.error';
+import { getCachedAccount } from './accounts.utils';
 
 @Service()
 export class AccountsService {

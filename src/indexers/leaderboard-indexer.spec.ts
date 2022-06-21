@@ -1,11 +1,12 @@
-import { TOKENS } from '../config/tokens.config';
+import { DataMapper } from '@aws/dynamodb-data-mapper';
+
+import * as accountsUtils from '../accounts/accounts.utils';
 import { CachedBoost } from '../aws/models/cached-boost.model';
+import { Ethereum } from '../chains/config/eth.config';
+import { TOKENS } from '../config/tokens.config';
 import { BoostData } from '../rewards/interfaces/boost-data.interface';
 import { randomCachedBoosts } from '../test/tests.utils';
 import { generateBoostsLeaderBoard } from './leaderboard-indexer';
-import * as accountsUtils from '../accounts/accounts.utils';
-import { Ethereum } from '../chains/config/eth.config';
-import { DataMapper } from '@aws/dynamodb-data-mapper';
 
 describe('leaderboard-indexer', () => {
   const chain = new Ethereum();

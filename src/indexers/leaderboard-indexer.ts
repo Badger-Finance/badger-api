@@ -1,12 +1,13 @@
 import { BadgerType, BadgerTypeMap } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
+
 import { getBoostFile } from '../accounts/accounts.utils';
 import { getDataMapper, getLeaderboardKey } from '../aws/dynamodb.utils';
-import { Chain } from '../chains/config/chain.config';
 import { CachedBoost } from '../aws/models/cached-boost.model';
 import { CachedLeaderboardSummary } from '../aws/models/cached-leaderboard-summary.model';
-import { getBadgerType } from '../leaderboards/leaderboards.config';
 import { SUPPORTED_CHAINS } from '../chains/chain';
+import { Chain } from '../chains/config/chain.config';
+import { getBadgerType } from '../leaderboards/leaderboards.config';
 
 export const indexBoostLeaderBoard = async () => {
   const boosts: CachedBoost[] = await generateBoostsLeaderBoard(SUPPORTED_CHAINS);

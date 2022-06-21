@@ -1,5 +1,6 @@
 import { DataMapper } from '@aws/dynamodb-data-mapper';
 import AWS from 'aws-sdk';
+
 import { Chain } from '../chains/config/chain.config';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 

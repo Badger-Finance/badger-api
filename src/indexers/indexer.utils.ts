@@ -1,13 +1,14 @@
+import { gqlGenT, VaultSnapshot, VaultState, VaultVersion } from '@badger-dao/sdk';
 import { NotFound } from '@tsed/exceptions';
+
+import { VaultTokenBalance } from '../aws/models/vault-token-balance.model';
 import { Chain } from '../chains/config/chain.config';
 import { getPrice } from '../prices/prices.utils';
-import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
-import { getBoostWeight, getStrategyInfo, getCachedVault } from '../vaults/vaults.utils';
-import { VaultTokenBalance } from '../aws/models/vault-token-balance.model';
-import { getFullTokens, toBalance } from '../tokens/tokens.utils';
 import { getLiquidityData } from '../protocols/common/swap.utils';
-import { gqlGenT, VaultSnapshot, VaultState, VaultVersion } from '@badger-dao/sdk';
+import { getFullTokens, toBalance } from '../tokens/tokens.utils';
+import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { VaultsService } from '../vaults/vaults.service';
+import { getBoostWeight, getCachedVault, getStrategyInfo } from '../vaults/vaults.utils';
 
 export function chunkArray(addresses: string[], count: number): string[][] {
   const chunks: string[][] = [];

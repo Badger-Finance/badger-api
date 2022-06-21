@@ -1,7 +1,7 @@
-import { refreshChainApySnapshots } from './apy-snapshots-indexer';
-import * as rewardsUtils from '../rewards/rewards.utils';
 import { CachedValueSource } from '../aws/models/apy-snapshots.model';
+import * as rewardsUtils from '../rewards/rewards.utils';
 import { mockBatchDelete, mockBatchPut, setupMapper, TEST_CHAIN } from '../test/tests.utils';
+import { refreshChainApySnapshots } from './apy-snapshots-indexer';
 
 describe('apy-snapshots-indexer', () => {
   const mockValueSource = Object.assign(new CachedValueSource(), {

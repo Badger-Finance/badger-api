@@ -1,4 +1,5 @@
 import { Network } from '@badger-dao/sdk';
+
 import { SUPPORTED_CHAINS } from '../../chains/chain';
 import { STAGE } from '../../config/constants';
 import { Stage } from '../../config/enums/stage.enum';

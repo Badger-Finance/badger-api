@@ -1,20 +1,21 @@
-import * as accountsIndexer from './accounts-indexer';
-import * as accountsUtils from '../accounts/accounts.utils';
-import * as rewardsUtils from '../rewards/rewards.utils';
-import * as dynamodbUtils from '../aws/dynamodb.utils';
+import { DataMapper } from '@aws/dynamodb-data-mapper';
 import { Network } from '@badger-dao/sdk';
-import { Chain } from '../chains/config/chain.config';
-import { MOCK_DISTRIBUTION_FILE } from '../test/constants';
-import { Ethereum } from '../chains/config/eth.config';
-import { BinanceSmartChain } from '../chains/config/bsc.config';
-import { RewardMerkleDistribution } from '../rewards/interfaces/merkle-distributor.interface';
 import { BigNumber } from '@ethersproject/bignumber';
-import { TOKENS } from '../config/tokens.config';
-import { mockBatchPut } from '../test/tests.utils';
+
+import * as accountsUtils from '../accounts/accounts.utils';
+import * as dynamodbUtils from '../aws/dynamodb.utils';
 import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
+import { BinanceSmartChain } from '../chains/config/bsc.config';
+import { Chain } from '../chains/config/chain.config';
+import { Ethereum } from '../chains/config/eth.config';
+import { TOKENS } from '../config/tokens.config';
 import { ClaimableBalance } from '../rewards/entities/claimable-balance';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
-import { DataMapper } from '@aws/dynamodb-data-mapper';
+import { RewardMerkleDistribution } from '../rewards/interfaces/merkle-distributor.interface';
+import * as rewardsUtils from '../rewards/rewards.utils';
+import { MOCK_DISTRIBUTION_FILE } from '../test/constants';
+import { mockBatchPut } from '../test/tests.utils';
+import * as accountsIndexer from './accounts-indexer';
 
 describe('accounts-indexer', () => {
   const rewardsChain = new Ethereum();

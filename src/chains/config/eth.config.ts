@@ -1,15 +1,16 @@
 import { Network, Protocol, VaultState, VaultVersion } from '@badger-dao/sdk';
+import axios from 'axios';
+
 import { BLOCKNATIVE_API_KEY } from '../../config/constants';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
+import { BlocknativeGasResponse } from '../../gas/interfaces/blocknative-gas-response.interface';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { getCurveVaultTokenBalance } from '../../protocols/strategies/convex.strategy';
-import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { ethTokensConfig } from '../../tokens/config/eth-tokens.config';
-import { Chain } from './chain.config';
-import axios from 'axios';
-import { BlocknativeGasResponse } from '../../gas/interfaces/blocknative-gas-response.interface';
+import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { BaseStrategy } from '../strategies/base.strategy';
+import { Chain } from './chain.config';
 
 export class Ethereum extends Chain {
   private readonly client = axios.create({

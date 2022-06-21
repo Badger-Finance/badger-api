@@ -1,5 +1,6 @@
 import { BadgerType } from '@badger-dao/sdk';
 import { PlatformTest } from '@tsed/common';
+
 import { getLeaderboardKey } from '../aws/dynamodb.utils';
 import { Ethereum } from '../chains/config/eth.config';
 import { setupMapper } from '../test/tests.utils';

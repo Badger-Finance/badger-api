@@ -1,24 +1,25 @@
 import { Network, Protocol, Token } from '@badger-dao/sdk';
+import { BigNumber } from '@ethersproject/bignumber';
+
 import { getBoostFile, getCachedAccount } from '../accounts/accounts.utils';
+import { CachedValueSource } from '../aws/models/apy-snapshots.model';
 import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
 import { ONE_YEAR_SECONDS, REWARD_DATA } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
 import { getPrice } from '../prices/prices.utils';
-import { CachedValueSource } from '../aws/models/apy-snapshots.model';
 import { createValueSource, ValueSource } from '../protocols/interfaces/value-source.interface';
-import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
-import { getFullToken, tokenEmission } from '../tokens/tokens.utils';
-import { RewardMerkleDistribution } from './interfaces/merkle-distributor.interface';
-import { BigNumber } from '@ethersproject/bignumber';
 import { ConvexStrategy } from '../protocols/strategies/convex.strategy';
+import { OxDaoStrategy } from '../protocols/strategies/oxdao.strategy';
 import { QuickswapStrategy } from '../protocols/strategies/quickswap.strategy';
 import { SushiswapStrategy } from '../protocols/strategies/sushiswap.strategy';
-import { UniswapStrategy } from '../protocols/strategies/uniswap.strategy';
 import { SwaprStrategy } from '../protocols/strategies/swapr.strategy';
+import { UniswapStrategy } from '../protocols/strategies/uniswap.strategy';
+import { getFullToken, tokenEmission } from '../tokens/tokens.utils';
+import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { getCachedVault, getVaultPerformance } from '../vaults/vaults.utils';
 import { SourceType } from './enums/source-type.enum';
-import { OxDaoStrategy } from '../protocols/strategies/oxdao.strategy';
+import { RewardMerkleDistribution } from './interfaces/merkle-distributor.interface';
 
 export async function getTreeDistribution(chain: Chain): Promise<RewardMerkleDistribution | null> {
   try {

@@ -1,20 +1,30 @@
 import {
+  BribesProcessor,
+  BribesProcessor__factory,
   chunkQueryFilter,
   Erc20__factory,
   evaluateEvents,
   formatBalance,
-  Network,
-  Token,
   HarvestDistributor,
   HarvestDistributor__factory,
-  BribesProcessor__factory,
-  BribesProcessor,
+  Network,
   parseHarvestEvents,
+  Token,
   VaultHarvestData,
 } from '@badger-dao/sdk';
+import {
+  TreeDistributionEvent as BribeProcessorTreeDistributionEvent,
+  TreeDistributionEventFilter as BribeProcessorTreeDistributionEventFilter,
+} from '@badger-dao/sdk/lib/contracts/BribesProcessor';
+import { TreeDistributionEvent, TreeDistributionEventFilter } from '@badger-dao/sdk/lib/contracts/HarvestDistributor';
 import { UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
+
+import { CachedValueSource } from '../../aws/models/apy-snapshots.model';
+import { VaultTokenBalance } from '../../aws/models/vault-token-balance.model';
 import { Chain } from '../../chains/config/chain.config';
+import { request } from '../../common/request';
+import { ONE_DAY_SECONDS } from '../../config/constants';
 import { ContractRegistry } from '../../config/interfaces/contract-registry.interface';
 import { TOKENS } from '../../config/tokens.config';
 import {
@@ -23,7 +33,11 @@ import {
   CurvePool3__factory,
   CurveRegistry__factory,
 } from '../../contracts';
+import { TokenPrice } from '../../prices/interface/token-price.interface';
 import { SourceType } from '../../rewards/enums/source-type.enum';
+import { valueSourceToCachedValueSource } from '../../rewards/rewards.utils';
+import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
+import { getFullToken, getVaultTokens, toBalance } from '../../tokens/tokens.utils';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import {
   estimateVaultPerformance,
@@ -31,21 +45,8 @@ import {
   getVaultCachedValueSources,
   getVaultDefinition,
 } from '../../vaults/vaults.utils';
-import { VaultTokenBalance } from '../../aws/models/vault-token-balance.model';
-import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
-import { getFullToken, getVaultTokens, toBalance } from '../../tokens/tokens.utils';
-import { CachedValueSource } from '../../aws/models/apy-snapshots.model';
-import { createValueSource } from '../interfaces/value-source.interface';
-import { request } from '../../common/request';
 import { CurveAPIResponse } from '../interfaces/curve-api-response.interrface';
-import { valueSourceToCachedValueSource } from '../../rewards/rewards.utils';
-import { TokenPrice } from '../../prices/interface/token-price.interface';
-import { ONE_DAY_SECONDS } from '../../config/constants';
-import { TreeDistributionEvent, TreeDistributionEventFilter } from '@badger-dao/sdk/lib/contracts/HarvestDistributor';
-import {
-  TreeDistributionEvent as BribeProcessorTreeDistributionEvent,
-  TreeDistributionEventFilter as BribeProcessorTreeDistributionEventFilter,
-} from '@badger-dao/sdk/lib/contracts/BribesProcessor';
+import { createValueSource } from '../interfaces/value-source.interface';
 
 /* Protocol Constants */
 export const CURVE_API_URL = 'https://stats.curve.fi/raw-stats/apys.json';

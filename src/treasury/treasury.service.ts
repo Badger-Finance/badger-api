@@ -1,5 +1,6 @@
 import { ChartTimeFrame } from '@badger-dao/sdk';
 import { Service } from '@tsed/di';
+
 import { HistoricTreasurySummarySnapshot } from '../aws/models/historic-treasury-summary-snapshot.model';
 import { toChartDataKey } from '../charts/charts.utils';
 import { queryTreasuryCharts, TREASURY_NAMESPACE } from './treasury.utils';

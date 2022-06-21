@@ -3,6 +3,7 @@ import { Controller, Get, Inject, QueryParams, UsePipe } from '@tsed/common';
 import { NotFound, UnprocessableEntity } from '@tsed/exceptions';
 import { ContentType, Hidden } from '@tsed/schema';
 import { ethers } from 'ethers';
+
 import { Chain } from '../chains/config/chain.config';
 import { ValidationPipe } from '../common/decorators/validation-pipe';
 import { ChartsService } from './charts.service';

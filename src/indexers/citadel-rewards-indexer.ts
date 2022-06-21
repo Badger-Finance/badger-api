@@ -1,12 +1,13 @@
 import BadgerSDK, { Erc20__factory, formatBalance, Vault__factory } from '@badger-dao/sdk';
-import { getRewardsOnchain } from '../citadel/citadel.utils';
+import { RewardEventType, RewardEventTypeEnum } from '@badger-dao/sdk/lib/citadel/enums/reward-event-type.enum';
+
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { CitadelRewardsSnapshot } from '../aws/models/citadel-rewards-snapshot';
-import { RewardEventType, RewardEventTypeEnum } from '@badger-dao/sdk/lib/citadel/enums/reward-event-type.enum';
-import { getPrice } from '../prices/prices.utils';
+import { Ethereum } from '../chains/config/eth.config';
+import { getRewardsOnchain } from '../citadel/citadel.utils';
 import { ONE_YEAR_SECONDS } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
-import { Ethereum } from '../chains/config/eth.config';
+import { getPrice } from '../prices/prices.utils';
 
 export async function indexAllRewards() {
   const chain = new Ethereum();

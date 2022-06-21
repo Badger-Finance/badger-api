@@ -1,21 +1,22 @@
 import { Erc20__factory, formatBalance, Protocol, Vault__factory } from '@badger-dao/sdk';
+
 import { getCachedAccount } from '../accounts/accounts.utils';
-import { Ethereum } from '../chains/config/eth.config';
-import { getPrice } from '../prices/prices.utils';
-import { VaultsService } from '../vaults/vaults.service';
-import { getVaultDefinition } from '../vaults/vaults.utils';
-import { CITADEL_TREASURY_ADDRESS, TRACKED_TOKENS, TRACKED_VAULTS } from '../citadel/config/citadel-treasury.config';
-import { TreasuryPosition } from '../treasury/interfaces/treasy-position.interface';
-import { TreasurySummary } from '../treasury/interfaces/treasury-summary.interface';
 import { getDataMapper } from '../aws/dynamodb.utils';
-import { TreasurySummarySnapshot } from '../aws/models/treasury-summary-snapshot.model';
-import { TOKENS } from '../config/tokens.config';
-import { queryTreasurySummary, TREASURY_NAMESPACE } from '../treasury/treasury.utils';
 import { HistoricTreasurySummarySnapshot } from '../aws/models/historic-treasury-summary-snapshot.model';
+import { TreasurySummarySnapshot } from '../aws/models/treasury-summary-snapshot.model';
+import { Ethereum } from '../chains/config/eth.config';
+import { updateSnapshots } from '../charts/charts.utils';
+import { getRewardsAprForDataBlob, getTokensPaidSummary } from '../citadel/citadel.utils';
+import { CITADEL_TREASURY_ADDRESS, TRACKED_TOKENS, TRACKED_VAULTS } from '../citadel/config/citadel-treasury.config';
 import { CitadelData } from '../citadel/destructors/citadel-data.destructor';
 import { ONE_YEAR_SECONDS } from '../config/constants';
-import { getRewardsAprForDataBlob, getTokensPaidSummary } from '../citadel/citadel.utils';
-import { updateSnapshots } from '../charts/charts.utils';
+import { TOKENS } from '../config/tokens.config';
+import { getPrice } from '../prices/prices.utils';
+import { TreasurySummary } from '../treasury/interfaces/treasury-summary.interface';
+import { TreasuryPosition } from '../treasury/interfaces/treasy-position.interface';
+import { queryTreasurySummary, TREASURY_NAMESPACE } from '../treasury/treasury.utils';
+import { VaultsService } from '../vaults/vaults.service';
+import { getVaultDefinition } from '../vaults/vaults.utils';
 
 export async function snapshotTreasury() {
   const chain = new Ethereum();

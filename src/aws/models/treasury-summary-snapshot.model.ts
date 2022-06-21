@@ -1,5 +1,6 @@
 import { embed } from '@aws/dynamodb-data-mapper';
 import { attribute, hashKey, table } from '@aws/dynamodb-data-mapper-annotations';
+
 import { TREASURY_SNAPSHOT_DATA } from '../../config/constants';
 import { CachedTreasuryPosition } from '../../treasury/interfaces/cached-treasury-position';
 import { TreasurySummary } from '../../treasury/interfaces/treasury-summary.interface';

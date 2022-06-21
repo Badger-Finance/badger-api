@@ -1,6 +1,6 @@
 import { getDataMapper } from '../aws/dynamodb.utils';
-import { MetricType } from '../metrics/enums/metric-type';
 import { ProtocolMetricSnapshot } from '../aws/models/protocol-metric-snapshot.model';
+import { MetricType } from '../metrics/enums/metric-type';
 import { getProtocolMetrics } from '../metrics/metrics.utils';
 
 export const indexProtocolMetrics = async () => {

@@ -1,11 +1,11 @@
-import { BinanceSmartChain } from '../chains/config/bsc.config';
-import { getTreeDistribution, noRewards } from './rewards.utils';
 import * as s3Utils from '../aws/s3.utils';
-import { TOKENS } from '../config/tokens.config';
+import { BinanceSmartChain } from '../chains/config/bsc.config';
 import { Ethereum } from '../chains/config/eth.config';
-import { getVaultDefinition } from '../vaults/vaults.utils';
+import { TOKENS } from '../config/tokens.config';
 import { MOCK_DISTRIBUTION_FILE } from '../test/constants';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
+import { getVaultDefinition } from '../vaults/vaults.utils';
+import { getTreeDistribution, noRewards } from './rewards.utils';
 
 describe('rewards.utils', () => {
   describe('getTreeDistribution', () => {

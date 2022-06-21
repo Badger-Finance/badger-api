@@ -1,4 +1,5 @@
 import { attribute, hashKey, table } from '@aws/dynamodb-data-mapper-annotations';
+
 import { USER_CLAIMED_METADATA } from '../../config/constants';
 
 @table(USER_CLAIMED_METADATA)

@@ -10,11 +10,20 @@ import BadgerSDK, {
   VaultType,
   VaultVersion,
 } from '@badger-dao/sdk';
+import * as gqlGenT from '@badger-dao/sdk/lib/graphql/generated/badger';
 import { BadRequest, NotFound } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';
+
 import { BinanceSmartChain } from '../chains/config/bsc.config';
+import { Polygon } from '../chains/config/polygon.config';
+import { ONE_DAY_SECONDS } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
+import * as indexerUtils from '../indexers/indexer.utils';
+import * as pricesUtils from '../prices/prices.utils';
+import { createValueSource } from '../protocols/interfaces/value-source.interface';
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
+import { SourceType } from '../rewards/enums/source-type.enum';
+import * as rewardsUtils from '../rewards/rewards.utils';
 import {
   randomSnapshot,
   randomSnapshots,
@@ -24,6 +33,12 @@ import {
   TEST_ADDR,
   TEST_CHAIN,
 } from '../test/tests.utils';
+import { TokenNotFound } from '../tokens/errors/token.error';
+import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
+import { tokenEmission } from '../tokens/tokens.utils';
+import * as tokenUtils from '../tokens/tokens.utils';
+import { vaultsGraphSdkMapMock } from './mocks/vaults-graph-sdk-map.mock';
+import { vaultsHarvestsSdkMock } from './mocks/vaults-harvests-sdk.mock';
 import {
   defaultVault,
   estimateDerivativeEmission,
@@ -35,20 +50,6 @@ import {
   getVaultUnderlyingPerformance,
   VAULT_SOURCE,
 } from './vaults.utils';
-import * as pricesUtils from '../prices/prices.utils';
-import * as rewardsUtils from '../rewards/rewards.utils';
-import * as indexerUtils from '../indexers/indexer.utils';
-import { createValueSource } from '../protocols/interfaces/value-source.interface';
-import { Polygon } from '../chains/config/polygon.config';
-import { SourceType } from '../rewards/enums/source-type.enum';
-import { ONE_DAY_SECONDS } from '../config/constants';
-import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
-import { TokenNotFound } from '../tokens/errors/token.error';
-import { tokenEmission } from '../tokens/tokens.utils';
-import * as tokenUtils from '../tokens/tokens.utils';
-import { vaultsHarvestsSdkMock } from './mocks/vaults-harvests-sdk.mock';
-import * as gqlGenT from '@badger-dao/sdk/lib/graphql/generated/badger';
-import { vaultsGraphSdkMapMock } from './mocks/vaults-graph-sdk-map.mock';
 
 describe('vaults.utils', () => {
   const vault = getVaultDefinition(TEST_CHAIN, TOKENS.BBADGER);

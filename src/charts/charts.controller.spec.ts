@@ -1,6 +1,7 @@
 import { PlatformTest } from '@tsed/common';
 import { NotFound, UnprocessableEntity } from '@tsed/exceptions';
 import SuperTest from 'supertest';
+
 import { Server } from '../Server';
 import { ChartGranularity } from './enums/chart-granularity.enum';
 

@@ -1,10 +1,10 @@
+import { CachedValueSource } from '../../aws/models/apy-snapshots.model';
 import { Chain } from '../../chains/config/chain.config';
 import { TOKENS } from '../../config/tokens.config';
+import { SourceType } from '../../rewards/enums/source-type.enum';
+import { getFullToken, getVaultTokens } from '../../tokens/tokens.utils';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { getCachedVault, getVaultCachedValueSources, getVaultDefinition } from '../../vaults/vaults.utils';
-import { getFullToken, getVaultTokens } from '../../tokens/tokens.utils';
-import { CachedValueSource } from '../../aws/models/apy-snapshots.model';
-import { SourceType } from '../../rewards/enums/source-type.enum';
 
 export class OxDaoStrategy {
   static async getValueSources(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {

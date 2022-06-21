@@ -1,17 +1,17 @@
-import { convert, getPrice } from '../prices/prices.utils';
-import { getVaultDefinition } from '../vaults/vaults.utils';
-import { VaultTokenBalance } from '../aws/models/vault-token-balance.model';
-import { Token, TokenValue, VaultDTO } from '@badger-dao/sdk';
-import { Currency } from '@badger-dao/sdk';
+import { Currency, Token, TokenValue, VaultDTO } from '@badger-dao/sdk';
+import { ethers } from 'ethers';
+
 import { getDataMapper } from '../aws/dynamodb.utils';
+import { TokenInformationSnapshot } from '../aws/models/token-information-snapshot.model';
+import { VaultTokenBalance } from '../aws/models/vault-token-balance.model';
 import { Chain } from '../chains/config/chain.config';
 import { PricingType } from '../prices/enums/pricing-type.enum';
-import { TokenInformationSnapshot } from '../aws/models/token-information-snapshot.model';
-import { TokenFull, TokenFullMap } from './interfaces/token-full.interface';
-import { TokenNotFound } from './errors/token.error';
-import * as thisModule from './tokens.utils';
+import { convert, getPrice } from '../prices/prices.utils';
 import { SourceType } from '../rewards/enums/source-type.enum';
-import { ethers } from 'ethers';
+import { getVaultDefinition } from '../vaults/vaults.utils';
+import { TokenNotFound } from './errors/token.error';
+import { TokenFull, TokenFullMap } from './interfaces/token-full.interface';
+import * as thisModule from './tokens.utils';
 
 export async function toBalance(token: Token, balance: number, currency?: Currency): Promise<TokenValue> {
   const { price } = await getPrice(token.address, currency);

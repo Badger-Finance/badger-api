@@ -1,4 +1,5 @@
 import { Service } from '@tsed/common';
+
 import { Chain } from '../chains/config/chain.config';
 import { getGasCache } from './gas.utils';
 import { GasPrices } from './interfaces/gas-prices.interface';

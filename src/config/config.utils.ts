@@ -1,4 +1,5 @@
 import { ethers } from 'ethers';
+
 import { ContractRegistry } from './interfaces/contract-registry.interface';
 
 export const checksumEntries = (registry: ContractRegistry): ContractRegistry => {

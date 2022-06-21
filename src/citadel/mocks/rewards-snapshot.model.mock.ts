@@ -1,5 +1,6 @@
-import { CitadelRewardsSnapshot } from '../../aws/models/citadel-rewards-snapshot';
 import { RewardEventTypeEnum } from '@badger-dao/sdk/lib/citadel/enums/reward-event-type.enum';
+
+import { CitadelRewardsSnapshot } from '../../aws/models/citadel-rewards-snapshot';
 
 export const TEST_WBTC_TOKEN = '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599';
 export const TEST_IBBTC_TOKEN = '0xaE96fF08771a109dc6650a1BdCa62F2d558E40af';

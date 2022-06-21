@@ -4,10 +4,11 @@ import {
   OrderDirection,
   SettHarvest_OrderBy,
 } from '@badger-dao/sdk/lib/graphql/generated/badger';
+
 import { getDataMapper } from '../aws/dynamodb.utils';
-import { getFullToken, toBalance } from '../tokens/tokens.utils';
 import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
 import { SUPPORTED_CHAINS } from '../chains/chain';
+import { getFullToken, toBalance } from '../tokens/tokens.utils';
 
 export async function refreshVaultHarvests() {
   await Promise.all(

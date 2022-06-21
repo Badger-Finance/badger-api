@@ -1,12 +1,13 @@
-import { SUPPORTED_CHAINS } from '../chains/chain';
+import { Network } from '@badger-dao/sdk';
+
 import { getAccounts, getLatestMetadata } from '../accounts/accounts.utils';
 import { getChainStartBlockKey, getDataMapper } from '../aws/dynamodb.utils';
+import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
+import { SUPPORTED_CHAINS } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { ClaimableBalance } from '../rewards/entities/claimable-balance';
-import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
-import { getClaimableRewards, getTreeDistribution } from '../rewards/rewards.utils';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
-import { Network } from '@badger-dao/sdk';
+import { getClaimableRewards, getTreeDistribution } from '../rewards/rewards.utils';
 
 export async function refreshClaimableBalances(chain: Chain) {
   const mapper = getDataMapper();

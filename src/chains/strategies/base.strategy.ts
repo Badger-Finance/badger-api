@@ -1,14 +1,15 @@
+import { Network } from '@badger-dao/sdk';
 import { UnprocessableEntity } from '@tsed/exceptions';
-import { getOnChainLiquidityPrice, resolveTokenPrice } from '../../protocols/common/swap.utils';
-import { getCurveTokenPrice } from '../../protocols/strategies/convex.strategy';
+
 import { PricingType } from '../../prices/enums/pricing-type.enum';
+import { TokenPrice } from '../../prices/interface/token-price.interface';
+import { getOnChainLiquidityPrice, resolveTokenPrice } from '../../protocols/common/swap.utils';
+import { getBPTPrice } from '../../protocols/strategies/balancer.strategy';
+import { getCurveTokenPrice } from '../../protocols/strategies/convex.strategy';
+import { getFullToken } from '../../tokens/tokens.utils';
+import { getVaultTokenPrice } from '../../vaults/vaults.utils';
 import { Chain } from '../config/chain.config';
 import { ChainStrategy } from './chain.strategy';
-import { Network } from '@badger-dao/sdk';
-import { getVaultTokenPrice } from '../../vaults/vaults.utils';
-import { TokenPrice } from '../../prices/interface/token-price.interface';
-import { getFullToken } from '../../tokens/tokens.utils';
-import { getBPTPrice } from '../../protocols/strategies/balancer.strategy';
 
 export class BaseStrategy extends ChainStrategy {
   constructor(private network: Network, tokens: string[]) {

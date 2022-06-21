@@ -1,5 +1,6 @@
 import { attribute, hashKey, rangeKey, table } from '@aws/dynamodb-data-mapper-annotations';
 import { UserBoostData } from '@badger-dao/sdk';
+
 import { LEADERBOARD_DATA } from '../../config/constants';
 
 @table(LEADERBOARD_DATA)

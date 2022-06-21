@@ -1,9 +1,9 @@
 import { getDataMapper } from '../aws/dynamodb.utils';
+import { CurrentVaultSnapshotModel } from '../aws/models/current-vault-snapshot.model';
+import { SUPPORTED_CHAINS } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
-import { CurrentVaultSnapshotModel } from '../aws/models/current-vault-snapshot.model';
 import { vaultToSnapshot } from './indexer.utils';
-import { SUPPORTED_CHAINS } from '../chains/chain';
 
 export async function refreshVaultSnapshots() {
   for (const chain of SUPPORTED_CHAINS) {
