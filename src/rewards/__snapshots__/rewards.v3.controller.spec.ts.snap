@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`RewardController GET /v3/reward/schedules with active param true returns active schedules for default chain and all vaults 1`] = `
+exports[`RewardController GET /v3/rewards/schedules with active param true returns active schedules for default chain and all vaults 1`] = `
 Object {
   "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28": Array [
     Object {
@@ -409,7 +409,7 @@ Object {
 }
 `;
 
-exports[`RewardController GET /v3/reward/schedules with active param true returns schedules for default chain and one vault 1`] = `
+exports[`RewardController GET /v3/rewards/schedules with active param true returns schedules for default chain and one vault 1`] = `
 Array [
   Object {
     "amount": 2035.82,
@@ -614,26 +614,26 @@ Array [
 ]
 `;
 
-exports[`RewardController GET /v3/reward/schedules with an invalid specified chain returns a 400 1`] = `
+exports[`RewardController GET /v3/rewards/schedules with an invalid specified chain returns a 400 1`] = `
 Object {
   "message": "invalid is not a supported chain",
 }
 `;
 
-exports[`RewardController GET /v3/reward/schedules with an invalid specified chain returns a 400 2`] = `
+exports[`RewardController GET /v3/rewards/schedules with an invalid specified chain returns a 400 2`] = `
 Object {
   "message": "invalid is not a supported chain",
 }
 `;
 
-exports[`RewardController GET /v3/reward/schedules with invalid param specified returns a 404, NotFound 1`] = `
+exports[`RewardController GET /v3/rewards/schedules with invalid param specified returns a 404, NotFound 1`] = `
 Object {
   "code": 2002,
   "message": "Vault unknowsvaultdata doest have any data",
 }
 `;
 
-exports[`RewardController GET /v3/reward/schedules with no specified chain returns schedule for default chain and one vault 1`] = `
+exports[`RewardController GET /v3/rewards/schedules with no specified chain returns schedule for default chain and one vault 1`] = `
 Array [
   Object {
     "amount": 2035.82,
@@ -838,7 +838,7 @@ Array [
 ]
 `;
 
-exports[`RewardController GET /v3/reward/schedules with no specified chain returns schedules for default chain and all vaults 1`] = `
+exports[`RewardController GET /v3/rewards/schedules with no specified chain returns schedules for default chain and all vaults 1`] = `
 Object {
   "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28": Array [
     Object {

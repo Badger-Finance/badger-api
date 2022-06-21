@@ -18,9 +18,10 @@ import { EmissionSchedule, RewardSchedulesByVaults } from './interfaces/reward-s
 import { RewardSchedulesByVaultModel } from './interfaces/reward-schedules-vault-model.interface';
 import { RewardSchedulesByVaultsModel } from './interfaces/reward-schedules-vaults-model.interface';
 import { RewardsService } from './rewards.service';
+import { ethers } from 'ethers';
 
-@Controller('/reward')
-export class RewardV3Controller {
+@Controller('/rewards')
+export class RewardsV3Controller {
   @Inject()
   rewardsService!: RewardsService;
 
@@ -33,7 +34,7 @@ export class RewardV3Controller {
   ): Promise<AirdropMerkleClaim> {
     if (!address) throw new QueryParamError('address');
 
-    return this.rewardsService.getBouncerProof(Chain.getChain(chain), address);
+    return this.rewardsService.getBouncerProof(Chain.getChain(chain), ethers.utils.getAddress(address));
   }
 
   @Get('/list')
@@ -84,7 +85,7 @@ export class RewardV3Controller {
   ): Promise<RewardMerkleClaimModel> {
     if (!address) throw new QueryParamError('address');
 
-    return this.rewardsService.getUserRewards(Chain.getChain(chain), address);
+    return this.rewardsService.getUserRewards(Chain.getChain(chain), ethers.utils.getAddress(address));
   }
 
   @UseCache()
