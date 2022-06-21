@@ -2,6 +2,7 @@ import { formatBalance, Network } from '@badger-dao/sdk';
 import { BigNumber } from '@ethersproject/bignumber';
 import { Controller, Get, Inject, QueryParams, UseCache } from '@tsed/common';
 import { ContentType, Description, Hidden, Returns, Summary } from '@tsed/schema';
+import { ethers } from 'ethers';
 
 import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
 import { Chain } from '../chains/config/chain.config';
@@ -18,7 +19,6 @@ import { EmissionSchedule, RewardSchedulesByVaults } from './interfaces/reward-s
 import { RewardSchedulesByVaultModel } from './interfaces/reward-schedules-vault-model.interface';
 import { RewardSchedulesByVaultsModel } from './interfaces/reward-schedules-vaults-model.interface';
 import { RewardsService } from './rewards.service';
-import { ethers } from 'ethers';
 
 @Controller('/rewards')
 export class RewardsV3Controller {
