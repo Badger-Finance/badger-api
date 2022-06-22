@@ -5,10 +5,10 @@ import { Chain } from '../../chains/config/chain.config';
 import { Stage } from '../../config/enums/stage.enum';
 import { BouncerType } from '../../rewards/enums/bouncer-type.enum';
 
+// remove after regV2 migration
 export interface VaultDefinition {
   behavior?: VaultBehavior;
   bouncer?: BouncerType;
-  // this may be temporary, as a way to include citadel vaults without exposing to badger ui
   client?: string | Protocol;
   depositToken: string;
   experimental?: boolean;
