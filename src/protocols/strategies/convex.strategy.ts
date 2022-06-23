@@ -290,8 +290,8 @@ async function retrieveHarvestForwarderData(chain: Chain, vault: VaultDefinition
   const treeDistributionFilter = harvestForwarder.filters.TreeDistribution();
 
   const endBlock = await sdk.provider.getBlockNumber();
-  // cut off after 21 days in blocks, this is in seconds by 13 second blocks
-  const startBlock = Math.floor(endBlock - (21 * ONE_DAY_SECONDS) / 13);
+  // cut off after 30 days in blocks, this is in seconds by 13 second blocks
+  const startBlock = Math.floor(endBlock - (30 * ONE_DAY_SECONDS) / 13);
   const allTreeDistributions = await chunkQueryFilter<
     HarvestDistributor,
     TreeDistributionEventFilter,
@@ -307,8 +307,8 @@ async function retrieveHarvestForwarderData(chain: Chain, vault: VaultDefinition
       amount: d.args.amount,
     }));
 
-  // cut off after 21 days in seconds
-  const timestampCutoff = Math.floor(Date.now() / 1000 - 21 * ONE_DAY_SECONDS);
+  // cut off after 30 days in seconds
+  const timestampCutoff = Math.floor(Date.now() / 1000 - 30 * ONE_DAY_SECONDS);
   const { data } = await evaluateEvents([], distributions, { timestamp_gte: timestampCutoff });
   const previousOldData = await retrieveBribesProcessorData(chain, OLD_BRIBES_PROCESSOR);
   const previousData = await retrieveBribesProcessorData(chain, BRIBES_PROCESSOR);
@@ -330,7 +330,7 @@ async function retrieveBribesProcessorData(chain: Chain, processor: string): Pro
     const treeDistributionFilter = bribeProcessor.filters.TreeDistribution();
 
     const endBlock = await sdk.provider.getBlockNumber();
-    // cut off after 21 days in blocks, this is in seconds by 13 second blocks
+    // cut off after 30 days in blocks, this is in seconds by 13 second blocks
     const startBlock = Math.floor(endBlock - (30 * ONE_DAY_SECONDS) / 13);
     const allTreeDistributions = await chunkQueryFilter<
       BribesProcessor,
@@ -340,7 +340,7 @@ async function retrieveBribesProcessorData(chain: Chain, processor: string): Pro
 
     const { harvests, distributions } = await parseHarvestEvents([], allTreeDistributions);
 
-    // cut off after 21 days in seconds
+    // cut off after 30 days in seconds
     const timestampCutoff = Math.floor(Date.now() / 1000 - 30 * ONE_DAY_SECONDS);
     const { data } = await evaluateEvents(harvests, distributions, { timestamp_gte: timestampCutoff });
 
