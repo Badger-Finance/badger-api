@@ -1,6 +1,7 @@
 import { Network } from '@badger-dao/sdk';
 import { Controller, Get, Inject, PathParams, QueryParams } from '@tsed/common';
-import { ContentType, Description, Returns, Summary, Deprecated } from '@tsed/schema';
+import { ContentType, Deprecated, Description, Returns, Summary } from '@tsed/schema';
+
 import { Chain } from '../chains/config/chain.config';
 import { AccountsService } from './accounts.service';
 import { AccountModel } from './interfaces/account-model.interface';

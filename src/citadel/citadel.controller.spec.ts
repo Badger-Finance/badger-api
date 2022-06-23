@@ -1,30 +1,31 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import SuperTest from 'supertest';
-import { PlatformTest } from '@tsed/common';
-import { Server } from '../Server';
-import * as treasuryUtils from '../treasury/treasury.utils';
-import * as tokenUtils from '../tokens/tokens.utils';
-import * as citadelUtils from './citadel.utils';
-import * as citadelGraph from '../graphql/generated/citadel';
-import * as citadelKnightingRoundGraph from '../graphql/generated/citadel.knights.round';
-import { queryTreasurySummaryUtilMock } from './mocks/query-treasury-summary.util.mock';
-import { queryCitadelDataUtilMock } from './mocks/query-citadel-data.util.mock';
-import { mockPricing, setupMapper, TEST_ADDR } from '../test/tests.utils';
-import { REWARD_ACCOUNT_1, RewardsSnapshotModelMock, TEST_XCTDL_TOKEN } from './mocks/rewards-snapshot.model.mock';
 import { DataMapper, QueryIterator, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
-import createMockInstance from 'jest-create-mock-instance';
-import { RewardEventTypeEnum } from '@badger-dao/sdk/lib/citadel/enums/reward-event-type.enum';
-import { NotFound } from '@tsed/exceptions';
-import { citadelChartDataBlobModel } from './mocks/citadel-chart-data-blob.model.mock';
-import { TOKENS } from '../config/tokens.config';
 import BadgerSDK, { Network, VaultV15, VaultV15__factory } from '@badger-dao/sdk';
+import { RewardEventTypeEnum } from '@badger-dao/sdk/lib/citadel/enums/reward-event-type.enum';
+import { PlatformTest } from '@tsed/common';
+import { NotFound } from '@tsed/exceptions';
 import { BigNumber } from 'ethers';
+import createMockInstance from 'jest-create-mock-instance';
 // import { CitadelService } from '@badger-dao/sdk/lib/citadel';
 import { mock } from 'jest-mock-extended';
-import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
-import { knightingRoundVoteGraphMock } from './mocks/knighting-round-knight.graph.mock';
-import { Provider } from '../chains/enums/provider.enum';
+import SuperTest from 'supertest';
+
 import { Ethereum } from '../chains/config/eth.config';
+import { Provider } from '../chains/enums/provider.enum';
+import { TOKENS } from '../config/tokens.config';
+import * as citadelGraph from '../graphql/generated/citadel';
+import * as citadelKnightingRoundGraph from '../graphql/generated/citadel.knights.round';
+import { Server } from '../Server';
+import { mockPricing, setupMapper, TEST_ADDR } from '../test/tests.utils';
+import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
+import * as tokenUtils from '../tokens/tokens.utils';
+import * as treasuryUtils from '../treasury/treasury.utils';
+import * as citadelUtils from './citadel.utils';
+import { citadelChartDataBlobModel } from './mocks/citadel-chart-data-blob.model.mock';
+import { knightingRoundVoteGraphMock } from './mocks/knighting-round-knight.graph.mock';
+import { queryCitadelDataUtilMock } from './mocks/query-citadel-data.util.mock';
+import { queryTreasurySummaryUtilMock } from './mocks/query-treasury-summary.util.mock';
+import { REWARD_ACCOUNT_1, RewardsSnapshotModelMock, TEST_XCTDL_TOKEN } from './mocks/rewards-snapshot.model.mock';
 
 describe('CitadelController', () => {
   let request: SuperTest.SuperTest<SuperTest.Test>;

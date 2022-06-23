@@ -1,13 +1,14 @@
 import { Network, Protocol, VaultState } from '@badger-dao/sdk';
+
 import { Stage } from '../../config/enums/stage.enum';
 import RPC from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { getCurveVaultTokenBalance } from '../../protocols/strategies/convex.strategy';
-import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { arbitrumTokensConfig } from '../../tokens/config/arbitrum-tokens.config';
-import { Chain } from './chain.config';
+import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { BaseStrategy } from '../strategies/base.strategy';
+import { Chain } from './chain.config';
 
 export class Arbitrum extends Chain {
   constructor() {

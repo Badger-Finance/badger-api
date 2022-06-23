@@ -1,10 +1,11 @@
-import * as vaultsUtils from '../vaults/vaults.utils';
-import { vaultHarvestsOnChainMock } from '../vaults/mocks/vault-harvests-on-chain';
-import BadgerSDK from '@badger-dao/sdk';
 import { DataMapper, PutParameters, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
-import { indexVaultsHarvestsCompund } from './harvest-compound-indexer';
-import { Chain } from '../chains/config/chain.config';
+import BadgerSDK from '@badger-dao/sdk';
+
 import { HarvestCompoundData } from '../aws/models/harvest-compound.model';
+import { Chain } from '../chains/config/chain.config';
+import { vaultHarvestsOnChainMock } from '../vaults/mocks/vault-harvests-on-chain';
+import * as vaultsUtils from '../vaults/vaults.utils';
+import { indexVaultsHarvestsCompund } from './harvest-compound-indexer';
 
 describe('harvest-compound.indexer', () => {
   let put: jest.SpyInstance<Promise<StringToAnyObjectMap>, [parameters: PutParameters]>;

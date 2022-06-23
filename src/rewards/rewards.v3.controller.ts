@@ -1,28 +1,27 @@
 import { formatBalance, Network } from '@badger-dao/sdk';
+import { BigNumber } from '@ethersproject/bignumber';
 import { Controller, Get, Inject, QueryParams, UseCache } from '@tsed/common';
 import { ContentType, Description, Hidden, Returns, Summary } from '@tsed/schema';
+import { ethers } from 'ethers';
 
+import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
 import { Chain } from '../chains/config/chain.config';
-
-import { RewardsService } from './rewards.service';
-
+import { DEFAULT_PAGE_SIZE } from '../config/constants';
+import { TOKENS } from '../config/tokens.config';
+import { QueryParamError } from '../errors/validation/query.param.error';
+import { REMDIGG_SHARE_PER_FRAGMENT } from '../prices/custom/remdigg-price';
+import { getFullToken } from '../tokens/tokens.utils';
+import { DebankUser } from './interfaces/debank-user.interface';
+import { ListRewardsResponse } from './interfaces/list-rewards-response.interface';
 import { AirdropMerkleClaim } from './interfaces/merkle-distributor.interface';
 import { RewardMerkleClaimModel } from './interfaces/reward-merkle-claim-model.interface';
 import { EmissionSchedule, RewardSchedulesByVaults } from './interfaces/reward-schedules-vault.interface';
 import { RewardSchedulesByVaultModel } from './interfaces/reward-schedules-vault-model.interface';
 import { RewardSchedulesByVaultsModel } from './interfaces/reward-schedules-vaults-model.interface';
-import { ListRewardsResponse } from './interfaces/list-rewards-response.interface';
-import { DEFAULT_PAGE_SIZE } from '../config/constants';
-import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
-import { DebankUser } from './interfaces/debank-user.interface';
-import { getFullToken } from '../tokens/tokens.utils';
-import { TOKENS } from '../config/tokens.config';
-import { BigNumber } from '@ethersproject/bignumber';
-import { REMDIGG_SHARE_PER_FRAGMENT } from '../prices/custom/remdigg-price';
-import { QueryParamError } from '../errors/validation/query.param.error';
+import { RewardsService } from './rewards.service';
 
-@Controller('/reward')
-export class RewardV3Controller {
+@Controller('/rewards')
+export class RewardsV3Controller {
   @Inject()
   rewardsService!: RewardsService;
 
@@ -35,7 +34,7 @@ export class RewardV3Controller {
   ): Promise<AirdropMerkleClaim> {
     if (!address) throw new QueryParamError('address');
 
-    return this.rewardsService.getBouncerProof(Chain.getChain(chain), address);
+    return this.rewardsService.getBouncerProof(Chain.getChain(chain), ethers.utils.getAddress(address));
   }
 
   @Get('/list')
@@ -86,7 +85,7 @@ export class RewardV3Controller {
   ): Promise<RewardMerkleClaimModel> {
     if (!address) throw new QueryParamError('address');
 
-    return this.rewardsService.getUserRewards(Chain.getChain(chain), address);
+    return this.rewardsService.getUserRewards(Chain.getChain(chain), ethers.utils.getAddress(address));
   }
 
   @UseCache()

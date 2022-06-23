@@ -1,4 +1,5 @@
 import { PlatformTest } from '@tsed/common';
+
 import { mockPricing, TEST_CHAIN } from '../test/tests.utils';
 import { PricesService } from './prices.service';
 

@@ -1,4 +1,5 @@
 import { ChartTimeFrame, ONE_DAY_MS, ONE_HOUR_MS } from '@badger-dao/sdk';
+
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { ChartDataBlob } from '../aws/models/chart-data-blob.model';
 import { ChartData } from './chart-data.model';

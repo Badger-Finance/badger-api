@@ -1,5 +1,6 @@
 import { embed } from '@aws/dynamodb-data-mapper';
 import { attribute, hashKey, rangeKey, table } from '@aws/dynamodb-data-mapper-annotations';
+
 import { ONE_DAY_SECONDS, PRODUCTION, UNCLAIMED_SNAPSHOTS_DATA } from '../../config/constants';
 import { ClaimableBalance } from '../../rewards/entities/claimable-balance';
 

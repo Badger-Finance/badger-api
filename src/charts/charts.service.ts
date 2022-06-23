@@ -1,9 +1,10 @@
 import { Service } from '@tsed/di';
+
+import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
+import { Chain } from '../chains/config/chain.config';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { getVaultSnapshotsInRange } from '../vaults/vaults.utils';
 import { ChartGranularity } from './enums/chart-granularity.enum';
-import { Chain } from '../chains/config/chain.config';
-import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
 
 @Service()
 export class ChartsService {

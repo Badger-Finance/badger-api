@@ -1,13 +1,14 @@
 import { PlatformTest } from '@tsed/common';
-import SuperTest from 'supertest';
-import { Server } from '../Server';
-import { ProofsService } from './proofs.service';
-import { TEST_ADDR } from '../test/tests.utils';
-import { TOKENS } from '../config/tokens.config';
-import { MOCK_BOUNCER_FILE } from '../test/constants';
 import { NotFound } from '@tsed/exceptions';
-import { Ethereum } from '../chains/config/eth.config';
+import SuperTest from 'supertest';
+
 import { Chain } from '../chains/config/chain.config';
+import { Ethereum } from '../chains/config/eth.config';
+import { TOKENS } from '../config/tokens.config';
+import { Server } from '../Server';
+import { MOCK_BOUNCER_FILE } from '../test/constants';
+import { TEST_ADDR } from '../test/tests.utils';
+import { ProofsService } from './proofs.service';
 
 describe('ProofsController', () => {
   const chain = new Ethereum();

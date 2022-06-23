@@ -1,6 +1,7 @@
 import { attribute, hashKey, rangeKey, table } from '@aws/dynamodb-data-mapper-annotations';
-import { CITADEL_REWARDS_DATA } from '../../config/constants';
 import { RewardEventType } from '@badger-dao/sdk/lib/citadel/enums/reward-event-type.enum';
+
+import { CITADEL_REWARDS_DATA } from '../../config/constants';
 
 @table(CITADEL_REWARDS_DATA)
 export class CitadelRewardsSnapshot {

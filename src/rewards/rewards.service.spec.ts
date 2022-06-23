@@ -1,16 +1,17 @@
+import { Network } from '@badger-dao/sdk';
 import { PlatformTest } from '@tsed/common';
-import { BinanceSmartChain } from '../chains/config/bsc.config';
-import { Chain } from '../chains/config/chain.config';
-import { MOCK_DISTRIBUTION_FILE } from '../test/constants';
-import { setupMapper, TEST_ADDR } from '../test/tests.utils';
-import { RewardsService } from './rewards.service';
+
 import * as accountsUtils from '../accounts/accounts.utils';
 import * as dynamodbUtils from '../aws/dynamodb.utils';
-import * as rewardsUtils from './rewards.utils';
-import { UserClaimMetadata } from './entities/user-claim-metadata';
 import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
+import { BinanceSmartChain } from '../chains/config/bsc.config';
+import { Chain } from '../chains/config/chain.config';
 import { Ethereum } from '../chains/config/eth.config';
-import { Network } from '@badger-dao/sdk';
+import { MOCK_DISTRIBUTION_FILE } from '../test/constants';
+import { setupMapper, TEST_ADDR } from '../test/tests.utils';
+import { UserClaimMetadata } from './entities/user-claim-metadata';
+import { RewardsService } from './rewards.service';
+import * as rewardsUtils from './rewards.utils';
 
 describe('rewards.service', () => {
   let service: RewardsService;

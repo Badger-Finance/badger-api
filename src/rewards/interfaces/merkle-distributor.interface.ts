@@ -1,4 +1,5 @@
 import { BigNumberish } from 'ethers';
+
 import { RewardMerkleClaim } from './reward-merkle-claim.interface';
 
 export interface AirdropMerkleDistribution {

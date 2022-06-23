@@ -1,14 +1,27 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import BadgerSDK, { ListRewardsOptions, VaultV15__factory } from '@badger-dao/sdk';
-
-import * as citadelUtils from './citadel.utils';
-import { RewardsSnapshotModelMock } from './mocks/rewards-snapshot.model.mock';
+import { VaultState } from '@badger-dao/sdk/lib/api';
+import { CitadelRewardType } from '@badger-dao/sdk/lib/api/enums/citadel-reward-type.enum';
 import { CitadelService } from '@badger-dao/sdk/lib/citadel';
+import { RewardEventTypeEnum } from '@badger-dao/sdk/lib/citadel/enums/reward-event-type.enum';
 import { ListRewardsEvent } from '@badger-dao/sdk/lib/citadel/interfaces/list-rewards-event.interface';
-import { Nullable } from '../utils/types.utils';
+import { VaultV15 } from '@badger-dao/sdk/lib/contracts/VaultV15';
+import { VaultVersion } from '@badger-dao/sdk/lib/vaults';
+import { LoadVaultOptions } from '@badger-dao/sdk/lib/vaults/interfaces';
+import { VaultsService } from '@badger-dao/sdk/lib/vaults/vaults.service';
+import { BigNumber, ethers } from 'ethers';
+import { mock } from 'jest-mock-extended';
+
 import { CitadelRewardsSnapshot } from '../aws/models/citadel-rewards-snapshot';
-import { citadelListRewardsSdkMock } from './mocks/citadel-list-rewards.sdk.mock';
+import { Chain } from '../chains/config/chain.config';
+import { Ethereum } from '../chains/config/eth.config';
+import { TOKENS } from '../config/tokens.config';
+import * as citadelGraph from '../graphql/generated/citadel';
+import * as priceUtils from '../prices/prices.utils';
 import { mockBadgerSdk, setupMapper, TEST_ADDR } from '../test/tests.utils';
+import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
+import { Nullable } from '../utils/types.utils';
+import * as citadelUtils from './citadel.utils';
 import {
   dataTypeRawKeyToKeccak,
   getRewardsAprForDataBlob,
@@ -18,21 +31,8 @@ import {
   getStakedCitadelPrice,
   getTokensPaidSummary,
 } from './citadel.utils';
-import { RewardEventTypeEnum } from '@badger-dao/sdk/lib/citadel/enums/reward-event-type.enum';
-import { BigNumber, ethers } from 'ethers';
-import { CitadelRewardType } from '@badger-dao/sdk/lib/api/enums/citadel-reward-type.enum';
-import { Ethereum } from '../chains/config/eth.config';
-import { mock } from 'jest-mock-extended';
-import { VaultsService } from '@badger-dao/sdk/lib/vaults/vaults.service';
-import { VaultState } from '@badger-dao/sdk/lib/api';
-import { VaultVersion } from '@badger-dao/sdk/lib/vaults';
-import { TOKENS } from '../config/tokens.config';
-import { LoadVaultOptions } from '@badger-dao/sdk/lib/vaults/interfaces';
-import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
-import * as priceUtils from '../prices/prices.utils';
-import * as citadelGraph from '../graphql/generated/citadel';
-import { Chain } from '../chains/config/chain.config';
-import { VaultV15 } from '@badger-dao/sdk/lib/contracts/VaultV15';
+import { citadelListRewardsSdkMock } from './mocks/citadel-list-rewards.sdk.mock';
+import { RewardsSnapshotModelMock } from './mocks/rewards-snapshot.model.mock';
 
 const CURRENT_BLOCK = RewardsSnapshotModelMock[0].block;
 

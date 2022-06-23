@@ -1,9 +1,18 @@
+import { ConditionExpression, equals } from '@aws/dynamodb-expressions';
 import { CitadelLeaderboardEntry, CitadelRewardType, formatBalance, Network } from '@badger-dao/sdk';
+import { CitadelSummary } from '@badger-dao/sdk/lib/api/interfaces/citadel-summary.interface';
 import { CitadelTreasurySummary } from '@badger-dao/sdk/lib/api/interfaces/citadel-treasury-summary.interface';
+import { RewardEventType } from '@badger-dao/sdk/lib/citadel/enums/reward-event-type.enum';
+import { RewardFilter } from '@badger-dao/sdk/lib/citadel/enums/reward-filter.enum';
 import { Service } from '@tsed/di';
+
+import { getDataMapper } from '../aws/dynamodb.utils';
+import { CitadelRewardsSnapshot } from '../aws/models/citadel-rewards-snapshot';
+import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
 import { getPrice } from '../prices/prices.utils';
 import { queryTreasurySummary } from '../treasury/treasury.utils';
+import { CITADEL_KNIGHTS } from './citadel.constants';
 import {
   baseCitadelRewards,
   getCitadelKnightingRoundsStats,
@@ -12,19 +21,10 @@ import {
   queryCitadelData,
 } from './citadel.utils';
 import { CITADEL_TREASURY_ADDRESS } from './config/citadel-treasury.config';
-import { RewardFilter } from '@badger-dao/sdk/lib/citadel/enums/reward-filter.enum';
-import { CitadelRewardEvent } from './interfaces/citadel-reward-event.interface';
-import { getDataMapper } from '../aws/dynamodb.utils';
-import { CitadelRewardsSnapshot } from '../aws/models/citadel-rewards-snapshot';
 import { CitadelRewardEventData } from './destructors/citadel-reward-event.destructor';
-import { RewardEventType } from '@badger-dao/sdk/lib/citadel/enums/reward-event-type.enum';
-import { ConditionExpression } from '@aws/dynamodb-expressions';
-import { CitadelSummary } from '@badger-dao/sdk/lib/api/interfaces/citadel-summary.interface';
 import { CitadelAccount } from './interfaces/citadel-account.interface';
-import { Chain } from '../chains/config/chain.config';
-import { CITADEL_KNIGHTS } from './citadel.constants';
+import { CitadelRewardEvent } from './interfaces/citadel-reward-event.interface';
 import { GetListRewardsOptions } from './interfaces/get-list-rewards-options.interface';
-import { equals } from '@aws/dynamodb-expressions';
 
 @Service()
 export class CitadelService {

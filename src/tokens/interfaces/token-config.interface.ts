@@ -1,4 +1,5 @@
 import { Token } from '@badger-dao/sdk';
+
 import { Chain } from '../../chains/config/chain.config';
 import { PricingType } from '../../prices/enums/pricing-type.enum';
 import { TokenPrice } from '../../prices/interface/token-price.interface';

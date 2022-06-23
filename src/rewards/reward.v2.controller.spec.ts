@@ -1,12 +1,11 @@
 import BadgerSDK, { RewardsService } from '@badger-dao/sdk';
+import rewardsLoadSchedulesMock from '@badger-dao/sdk-mocks/generated/ethereum/rewards/loadSchedules.json';
 import { PlatformTest } from '@tsed/common';
 import { BadRequest, NotFound } from '@tsed/exceptions';
 import SuperTest from 'supertest';
-import { Server } from '../Server';
 
 import { TOKENS } from '../config/tokens.config';
-
-import rewardsLoadSchedulesMock from '@badger-dao/sdk-mocks/generated/ethereum/rewards/loadSchedules.json';
+import { Server } from '../Server';
 
 describe('RewardController', () => {
   let request: SuperTest.SuperTest<SuperTest.Test>;

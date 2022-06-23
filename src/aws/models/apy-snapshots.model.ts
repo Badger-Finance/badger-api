@@ -1,4 +1,5 @@
 import { attribute, hashKey, table } from '@aws/dynamodb-data-mapper-annotations';
+
 import { APY_SNAPSHOTS_DATA } from '../../config/constants';
 import { ValueSource } from '../../protocols/interfaces/value-source.interface';
 

@@ -1,9 +1,10 @@
 import { BadgerType } from '@badger-dao/sdk';
+
 import { getLeaderboardKey } from '../aws/dynamodb.utils';
+import { CachedBoost } from '../aws/models/cached-boost.model';
 import { Ethereum } from '../chains/config/eth.config';
 import { randomValue, setupMapper } from '../test/tests.utils';
 import { LeaderBoardType } from './enums/leaderboard-type.enum';
-import { CachedBoost } from '../aws/models/cached-boost.model';
 import { getLeaderBoardSize, getUserLeaderBoardRank, queryLeaderboardSummary } from './leaderboards.utils';
 
 describe('leaderboards.utils', () => {

@@ -1,5 +1,7 @@
 import '@tsed/platform-express';
+
 import { PlatformAws } from '@tsed/platform-aws';
+
 import { swaggerConfig } from './config/constants';
 import { Server } from './Server';
 

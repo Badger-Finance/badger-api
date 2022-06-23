@@ -1,23 +1,21 @@
+import { ConditionExpression } from '@aws/dynamodb-expressions';
 import { Service } from '@tsed/common';
 import { ethers } from 'ethers';
-import { getObject } from '../aws/s3.utils';
 
+import { getLatestMetadata } from '../accounts/accounts.utils';
+import { getDataMapper } from '../aws/dynamodb.utils';
+import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
+import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
 import { DEFAULT_PAGE_SIZE, REWARD_DATA } from '../config/constants';
-
-import { getTreeDistribution } from './rewards.utils';
-
+import { NodataForAddrError } from '../errors/allocation/nodata.for.addr.error';
+import { NodataForVaultError } from '../errors/allocation/nodata.for.vault.error';
+import { UnsupportedChainError } from '../errors/validation/unsupported.chain.error';
+import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { AirdropMerkleClaim, AirdropMerkleDistribution } from './interfaces/merkle-distributor.interface';
 import { RewardMerkleClaim } from './interfaces/reward-merkle-claim.interface';
 import { EmissionSchedule, RewardSchedulesByVaults } from './interfaces/reward-schedules-vault.interface';
-import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
-import { getDataMapper } from '../aws/dynamodb.utils';
-import { getLatestMetadata } from '../accounts/accounts.utils';
-import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
-import { ConditionExpression } from '@aws/dynamodb-expressions';
-import { NodataForAddrError } from '../errors/allocation/nodata.for.addr.error';
-import { UnsupportedChainError } from '../errors/validation/unsupported.chain.error';
-import { NodataForVaultError } from '../errors/allocation/nodata.for.vault.error';
+import { getTreeDistribution } from './rewards.utils';
 
 @Service()
 export class RewardsService {

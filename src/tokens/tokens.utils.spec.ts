@@ -1,8 +1,8 @@
 import BadgerSDK, { Currency, TokensService, TokenValue } from '@badger-dao/sdk';
+
+import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
 import * as priceUtils from '../prices/prices.utils';
-import * as vaultUtils from '../vaults/vaults.utils';
-import { getVaultDefinition } from '../vaults/vaults.utils';
 import {
   mockBatchPut,
   mockPricing,
@@ -13,6 +13,11 @@ import {
   TEST_ADDR,
   TEST_CHAIN,
 } from '../test/tests.utils';
+import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
+import * as vaultUtils from '../vaults/vaults.utils';
+import { getVaultDefinition } from '../vaults/vaults.utils';
+import { TokenNotFound } from './errors/token.error';
+import { fullTokenMockMap } from './mocks/full-token.mock';
 import {
   getCachedTokenBalances,
   getFullToken,
@@ -21,10 +26,6 @@ import {
   mockBalance,
   toBalance,
 } from './tokens.utils';
-import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
-import { Chain } from '../chains/config/chain.config';
-import { fullTokenMockMap } from './mocks/full-token.mock';
-import { TokenNotFound } from './errors/token.error';
 
 describe('token.utils', () => {
   beforeEach(() => {

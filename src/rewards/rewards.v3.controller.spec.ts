@@ -1,13 +1,12 @@
 import BadgerSDK, { RewardsService } from '@badger-dao/sdk';
+import rewardsLoadSchedulesMock from '@badger-dao/sdk-mocks/generated/ethereum/rewards/loadSchedules.json';
 import { PlatformTest } from '@tsed/common';
 import { BadRequest } from '@tsed/exceptions';
 import SuperTest from 'supertest';
-import { Server } from '../Server';
 
 import { TOKENS } from '../config/tokens.config';
-
-import rewardsLoadSchedulesMock from '@badger-dao/sdk-mocks/generated/ethereum/rewards/loadSchedules.json';
 import { NetworkStatus } from '../errors/enums/newtroks.status.enum';
+import { Server } from '../Server';
 
 describe('RewardController', () => {
   let request: SuperTest.SuperTest<SuperTest.Test>;
@@ -47,11 +46,11 @@ describe('RewardController', () => {
   });
   afterAll(PlatformTest.reset);
 
-  describe('GET /v3/reward/schedules', () => {
+  describe('GET /v3/rewards/schedules', () => {
     describe('with no specified chain', () => {
       it('returns schedules for default chain and all vaults', async (done: jest.DoneCallback) => {
         setupDefaultMocks();
-        const { body } = await request.get('/v3/reward/schedules/list').expect(200);
+        const { body } = await request.get('/v3/rewards/schedules/list').expect(200);
         expect(body).toMatchSnapshot();
         done();
       });
@@ -60,7 +59,7 @@ describe('RewardController', () => {
     describe('with active param true', () => {
       it('returns active schedules for default chain and all vaults', async (done: jest.DoneCallback) => {
         setupDefaultMocks();
-        const { body } = await request.get('/v3/reward/schedules/list?active=true').expect(200);
+        const { body } = await request.get('/v3/rewards/schedules/list?active=true').expect(200);
         expect(body).toMatchSnapshot();
         done();
       });
@@ -69,19 +68,19 @@ describe('RewardController', () => {
     describe('with an invalid specified chain', () => {
       it('returns a 400', async (done: jest.DoneCallback) => {
         setupDefaultMocks();
-        const { body } = await request.get('/v3/reward/schedules/list?chain=invalid').expect(BadRequest.STATUS);
+        const { body } = await request.get('/v3/rewards/schedules/list?chain=invalid').expect(BadRequest.STATUS);
         expect(body).toMatchSnapshot();
         done();
       });
     });
   });
 
-  describe('GET /v3/reward/schedules', () => {
+  describe('GET /v3/rewards/schedules', () => {
     describe('with no specified chain', () => {
       it('returns schedule for default chain and one vault', async (done: jest.DoneCallback) => {
         setupDefaultMocks();
         const { body } = await request
-          .get(`/v3/reward/schedules?address=${TOKENS.BBADGER}`)
+          .get(`/v3/rewards/schedules?address=${TOKENS.BBADGER}`)
           .expect(NetworkStatus.Success);
         expect(body).toMatchSnapshot();
         done();
@@ -92,7 +91,7 @@ describe('RewardController', () => {
       it('returns schedules for default chain and one vault', async (done: jest.DoneCallback) => {
         setupDefaultMocks();
         const { body } = await request
-          .get(`/v3/reward/schedules?address=${TOKENS.BBADGER}&active=true`)
+          .get(`/v3/rewards/schedules?address=${TOKENS.BBADGER}&active=true`)
           .expect(NetworkStatus.Success);
         expect(body).toMatchSnapshot();
         done();
@@ -103,7 +102,7 @@ describe('RewardController', () => {
       it('returns a 400', async (done: jest.DoneCallback) => {
         setupDefaultMocks();
         const { body } = await request
-          .get(`/v3/reward/schedules?address=${TOKENS.BBADGER}&chain=invalid`)
+          .get(`/v3/rewards/schedules?address=${TOKENS.BBADGER}&chain=invalid`)
           .expect(NetworkStatus.BadRequest);
         expect(body).toMatchSnapshot();
         done();
@@ -114,7 +113,7 @@ describe('RewardController', () => {
       it('returns a 404, NotFound', async (done: jest.DoneCallback) => {
         setupDefaultMocks();
         const { body } = await request
-          .get(`/v3/reward/schedules?address=unknowsvaultdata`)
+          .get(`/v3/rewards/schedules?address=unknowsvaultdata`)
           .expect(NetworkStatus.NotFound);
         expect(body).toMatchSnapshot();
         done();

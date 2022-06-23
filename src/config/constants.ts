@@ -1,6 +1,7 @@
 import { SwaggerSettings } from '@tsed/swagger';
-import { Stage } from './enums/stage.enum';
+
 import { getEnvVar } from './config.utils';
+import { Stage } from './enums/stage.enum';
 
 // time constants
 export const ONE_MINUTE_SECONDS = 60;

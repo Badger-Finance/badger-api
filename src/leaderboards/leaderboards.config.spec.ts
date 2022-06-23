@@ -1,4 +1,5 @@
 import { BadgerType } from '@badger-dao/sdk';
+
 import { getBadgerType } from './leaderboards.config';
 
 describe('leaderboards.config', () => {

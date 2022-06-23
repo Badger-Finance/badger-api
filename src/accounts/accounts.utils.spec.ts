@@ -1,8 +1,9 @@
 import { DataMapper } from '@aws/dynamodb-data-mapper';
+import { BadgerGraph, Currency, gqlGenT } from '@badger-dao/sdk';
+
 import { TOKENS } from '../config/tokens.config';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
-import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
-import { getVaultDefinition } from '../vaults/vaults.utils';
+import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 import {
   defaultAccount,
   mockPricing,
@@ -12,6 +13,11 @@ import {
   TEST_ADDR,
   TEST_CHAIN,
 } from '../test/tests.utils';
+import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
+import { mockBalance } from '../tokens/tokens.utils';
+import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
+import { getVaultDefinition } from '../vaults/vaults.utils';
+import * as vaultsUtils from '../vaults/vaults.utils';
 import {
   defaultBoost,
   getAccountMap,
@@ -21,11 +27,6 @@ import {
   queryCachedAccount,
   toVaultBalance,
 } from './accounts.utils';
-import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
-import { BadgerGraph, Currency, gqlGenT } from '@badger-dao/sdk';
-import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
-import * as vaultsUtils from '../vaults/vaults.utils';
-import { mockBalance } from '../tokens/tokens.utils';
 
 describe('accounts.utils', () => {
   const testSettBalance = (vaultDefinition: VaultDefinition): gqlGenT.UserSettBalance => {
@@ -163,7 +164,7 @@ describe('accounts.utils', () => {
         [undefined, Currency.USD],
         [Currency.USD, Currency.USD],
         [Currency.ETH, Currency.ETH],
-      ])('returns sett balance request in %s currency with %s denominated value', async (currency, toCurrency) => {
+      ])('returns sett balance request in %s currency with %s denominated value', async (currency, _toCurrency) => {
         const vault = getVaultDefinition(chain, vaultAddress);
         const snapshot = randomSnapshot(vault);
         const cachedVault = await vaultsUtils.defaultVault(chain, vault);

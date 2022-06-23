@@ -1,6 +1,7 @@
 import { BadgerType } from '@badger-dao/sdk';
 import { PlatformTest } from '@tsed/common';
 import SuperTest from 'supertest';
+
 import { Chain } from '../chains/config/chain.config';
 import { Server } from '../Server';
 import { LeaderBoardsService } from './leaderboards.service';

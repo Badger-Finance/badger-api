@@ -1,5 +1,6 @@
 import { Currency } from '@badger-dao/sdk';
 import { Service } from '@tsed/common';
+
 import { Chain } from '../chains/config/chain.config';
 import { PriceSummary } from '../tokens/interfaces/price-summary.interface';
 import { convert, getPrice } from './prices.utils';

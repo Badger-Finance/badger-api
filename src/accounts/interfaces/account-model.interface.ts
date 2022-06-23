@@ -1,9 +1,10 @@
 import { Account, VaultData } from '@badger-dao/sdk';
 import { Description, Example, Property, Title } from '@tsed/schema';
 import { ethers } from 'ethers';
+
 import { TOKENS } from '../../config/tokens.config';
-import { mockBalance } from '../../tokens/tokens.utils';
 import { fullTokenMockMap } from '../../tokens/mocks/full-token.mock';
+import { mockBalance } from '../../tokens/tokens.utils';
 
 export class AccountModel implements Account {
   @Title('id')

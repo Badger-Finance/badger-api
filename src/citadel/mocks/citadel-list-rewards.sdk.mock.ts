@@ -1,5 +1,5 @@
-import { ListRewardsEvent } from '@badger-dao/sdk/lib/citadel/interfaces/list-rewards-event.interface';
 import { RewardFilter } from '@badger-dao/sdk/lib/citadel/enums/reward-filter.enum';
+import { ListRewardsEvent } from '@badger-dao/sdk/lib/citadel/interfaces/list-rewards-event.interface';
 import { BigNumber } from 'ethers';
 
 export const citadelListRewardsSdkMock: ListRewardsEvent[] = [

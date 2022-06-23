@@ -1,4 +1,5 @@
 import { Network } from '@badger-dao/sdk';
+
 import { TOKENS } from '../../config/tokens.config';
 import { PricingType } from '../../prices/enums/pricing-type.enum';
 import { TokenConfig } from '../interfaces/token-config.interface';

@@ -1,4 +1,5 @@
 import { Network } from '@badger-dao/sdk';
+
 import { Provider } from '../chains/enums/provider.enum';
 
 const rpc = {

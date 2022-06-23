@@ -1,11 +1,12 @@
 import { Network } from '@badger-dao/sdk';
+
+import { getStakedCitadelPrice } from '../../citadel/citadel.utils';
 import { TOKENS } from '../../config/tokens.config';
 import { getRemDiggPrice } from '../../prices/custom/remdigg-price';
-import { getImBtcPrice, getMhBtcPrice } from '../../protocols/strategies/mstable.strategy';
 import { PricingType } from '../../prices/enums/pricing-type.enum';
-import { TokenConfig } from '../interfaces/token-config.interface';
 import { resolveCurvePoolTokenPrice } from '../../protocols/strategies/convex.strategy';
-import { getStakedCitadelPrice } from '../../citadel/citadel.utils';
+import { getImBtcPrice, getMhBtcPrice } from '../../protocols/strategies/mstable.strategy';
+import { TokenConfig } from '../interfaces/token-config.interface';
 
 export const ethTokensConfig: TokenConfig = {
   [TOKENS.BADGER]: {

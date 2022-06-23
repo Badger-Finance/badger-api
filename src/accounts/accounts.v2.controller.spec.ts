@@ -1,6 +1,7 @@
 import { PlatformTest } from '@tsed/common';
 import { BadRequest, NotFound } from '@tsed/exceptions';
 import SuperTest from 'supertest';
+
 import { Server } from '../Server';
 import { setupMockAccounts, TEST_ADDR } from '../test/tests.utils';
 import * as accountsUtils from './accounts.utils';

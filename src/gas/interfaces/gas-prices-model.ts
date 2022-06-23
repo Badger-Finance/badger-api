@@ -1,4 +1,5 @@
 import { Description, Example } from '@tsed/schema';
+
 import { EIP1559GasPrices, GasPrices } from './gas-prices.interface';
 
 /**

@@ -1,25 +1,25 @@
+import { DataMapper, QueryIterator, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
 import BadgerSDK, { TokenValue, VaultDTO } from '@badger-dao/sdk';
 import { PlatformTest } from '@tsed/common';
 import { BadRequest } from '@tsed/exceptions';
+import createMockInstance from 'jest-create-mock-instance';
 import SuperTest from 'supertest';
-import { createValueSource } from '../protocols/interfaces/value-source.interface';
-import { Server } from '../Server';
-import * as vaultsUtils from './vaults.utils';
-import * as tokensUtils from '../tokens/tokens.utils';
-import { mockBalance } from '../tokens/tokens.utils';
-import { VaultDefinition } from './interfaces/vault-definition.interface';
+
 import { CachedValueSource } from '../aws/models/apy-snapshots.model';
-import { valueSourceToCachedValueSource } from '../rewards/rewards.utils';
-import { SourceType } from '../rewards/enums/source-type.enum';
-import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
-import * as tokenUtils from '../tokens/tokens.utils';
-import { TOKENS } from '../config/tokens.config';
 import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
 import { Chain } from '../chains/config/chain.config';
 import { ONE_DAY_SECONDS } from '../config/constants';
+import { TOKENS } from '../config/tokens.config';
+import { createValueSource } from '../protocols/interfaces/value-source.interface';
+import { SourceType } from '../rewards/enums/source-type.enum';
+import { valueSourceToCachedValueSource } from '../rewards/rewards.utils';
+import { Server } from '../Server';
+import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
+import * as tokensUtils from '../tokens/tokens.utils';
+import { mockBalance } from '../tokens/tokens.utils';
+import { VaultDefinition } from './interfaces/vault-definition.interface';
 import { vaultsHarvestsMapMock } from './mocks/vaults-harvests-map.mock';
-import { DataMapper, QueryIterator, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
-import createMockInstance from 'jest-create-mock-instance';
+import * as vaultsUtils from './vaults.utils';
 
 const TEST_VAULT = TOKENS.BCRV_SBTC;
 
@@ -51,7 +51,7 @@ describe('VaultsController', () => {
   }
 
   const setupTestVault = (): void => {
-    jest.spyOn(tokenUtils, 'getFullToken').mockImplementation(async (_, tokenAddr) => {
+    jest.spyOn(tokensUtils, 'getFullToken').mockImplementation(async (_, tokenAddr) => {
       return fullTokenMockMap[tokenAddr] || fullTokenMockMap[TOKENS.BADGER];
     });
     jest.spyOn(Date, 'now').mockImplementation(() => 1648236387419 + ONE_DAY_SECONDS);

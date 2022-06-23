@@ -1,5 +1,6 @@
 import { PlatformTest } from '@tsed/common';
 import SuperTest from 'supertest';
+
 import { Server } from '../Server';
 import { MetricsService } from './metrics.service';
 

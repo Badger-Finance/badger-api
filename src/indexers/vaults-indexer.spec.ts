@@ -1,16 +1,17 @@
 import { DataMapper } from '@aws/dynamodb-data-mapper';
-import { indexProtocolVaults } from './vaults-indexer';
-import * as indexerUtils from './indexer.utils';
-import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
+import { VaultSnapshot } from '@badger-dao/sdk';
+
+import { SUPPORTED_CHAINS } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
+import { TOKENS } from '../config/tokens.config';
 import { randomSnapshot } from '../test/tests.utils';
+import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
+import * as tokenUtils from '../tokens/tokens.utils';
+import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { VaultsService } from '../vaults/vaults.service';
 import { defaultVault } from '../vaults/vaults.utils';
-import * as tokenUtils from '../tokens/tokens.utils';
-import { VaultSnapshot } from '@badger-dao/sdk';
-import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
-import { TOKENS } from '../config/tokens.config';
-import { SUPPORTED_CHAINS } from '../chains/chain';
+import * as indexerUtils from './indexer.utils';
+import { indexProtocolVaults } from './vaults-indexer';
 
 describe('vaults-indexer', () => {
   let vaultToSnapshot: jest.SpyInstance<Promise<VaultSnapshot>, [chain: Chain, VaultDefinition: VaultDefinition]>;

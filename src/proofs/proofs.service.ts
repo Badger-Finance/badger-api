@@ -1,15 +1,16 @@
 import { MerkleProof } from '@badger-dao/sdk';
 import { Service } from '@tsed/common';
 import { ethers } from 'ethers';
+
 import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
 import { REWARD_DATA } from '../config/constants';
-import { AirdropMerkleDistribution } from '../rewards/interfaces/merkle-distributor.interface';
-import { CitadelMerkleClaim, CitadelMerkleDistribution } from './interfaces/citadel-merkle-claim.interface';
-import { NodataForChainError } from '../errors/allocation/nodata.for.chain.error';
 import { NodataForAddrError } from '../errors/allocation/nodata.for.addr.error';
+import { NodataForChainError } from '../errors/allocation/nodata.for.chain.error';
 import { NotFoundError } from '../errors/allocation/not.found.error';
 import { ApiErrorCode } from '../errors/enums/error.codes.enum';
+import { AirdropMerkleDistribution } from '../rewards/interfaces/merkle-distributor.interface';
+import { CitadelMerkleClaim, CitadelMerkleDistribution } from './interfaces/citadel-merkle-claim.interface';
 
 @Service()
 export class ProofsService {

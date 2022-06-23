@@ -1,4 +1,5 @@
 import { ChartTimeFrame, ONE_DAY_MS, ONE_HOUR_MS } from '@badger-dao/sdk';
+
 import { ChartData } from './chart-data.model';
 import { shouldTrim, shouldUpdate, toChartDataBlob, toChartDataKey } from './charts.utils';
 

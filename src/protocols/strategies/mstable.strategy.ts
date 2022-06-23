@@ -1,9 +1,10 @@
 import { formatBalance, Token } from '@badger-dao/sdk';
+
 import { Chain } from '../../chains/config/chain.config';
 import { TOKENS } from '../../config/tokens.config';
-import { getPrice } from '../../prices/prices.utils';
-import { TokenPrice } from '../../prices/interface/token-price.interface';
 import { Imbtc__factory, Mhbtc__factory } from '../../contracts';
+import { TokenPrice } from '../../prices/interface/token-price.interface';
+import { getPrice } from '../../prices/prices.utils';
 
 export async function getImBtcPrice(chain: Chain, token: Token): Promise<TokenPrice> {
   const imbtc = Imbtc__factory.connect(token.address, chain.provider);

@@ -1,6 +1,7 @@
 import { Network } from '@badger-dao/sdk';
 import { Transform } from 'class-transformer';
 import { IsEnum, IsEthereumAddress, IsInt, IsISO8601, IsOptional, IsPositive, ValidateIf } from 'class-validator';
+
 import { ChartGranularity } from '../enums/chart-granularity.enum';
 
 export class ChartsQueryDto {

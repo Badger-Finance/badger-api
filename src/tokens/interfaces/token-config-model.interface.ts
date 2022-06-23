@@ -1,6 +1,7 @@
 import { Description, Example } from '@tsed/schema';
-import { TokenFull, TokenFullMap } from './token-full.interface';
+
 import { fullTokenMockMap } from '../mocks/full-token.mock';
+import { TokenFull, TokenFullMap } from './token-full.interface';
 
 @Description('Mapping of checksum token address to token metadata')
 @Example(fullTokenMockMap)

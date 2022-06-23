@@ -1,4 +1,5 @@
 import { attribute, hashKey, table } from '@aws/dynamodb-data-mapper-annotations';
+
 import { PROTOCOL_DATA } from '../../config/constants';
 
 type dataType = Map<string, string | number | unknown | dataType>;

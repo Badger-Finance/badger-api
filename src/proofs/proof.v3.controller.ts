@@ -2,10 +2,11 @@ import { Network } from '@badger-dao/sdk';
 import { MerkleProof } from '@badger-dao/sdk/lib/api/types/merkle-proof';
 import { Controller, Get, Inject, QueryParams } from '@tsed/common';
 import { ContentType } from '@tsed/schema';
+
 import { Chain } from '../chains/config/chain.config';
-import { ProofsService } from './proofs.service';
-import { CitadelMerkleClaim } from './interfaces/citadel-merkle-claim.interface';
 import { QueryParamError } from '../errors/validation/query.param.error';
+import { CitadelMerkleClaim } from './interfaces/citadel-merkle-claim.interface';
+import { ProofsService } from './proofs.service';
 
 @Controller('/proof')
 export class ProofsV3Controller {
