@@ -73,7 +73,7 @@ provider:
   stage: staging
   region: us-west-1
   iam:
-    role: ${env:LAMBDA_EXECUTION_ROLE_ARN}
+    role: ${env:LAMBDA_EXECUTION_ROLE}
   versionFunctions: false
   apiGateway:
     shouldStartNameWithService: true
