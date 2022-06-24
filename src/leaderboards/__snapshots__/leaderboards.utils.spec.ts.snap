@@ -29,7 +29,7 @@ Object {
 }
 `;
 
-exports[`leaderboards.utils queryLeaderboardSummary saved leaderboard summary data returns the appropriate chain summary data 1`] = `
+exports[`leaderboards.utils queryLeaderboardSummary saved leaderboard summary data returns the appropriate TEST_CHAIN summary data 1`] = `
 Object {
   "leaderboard": "ethereum_boost",
   "rankSummaries": Array [
