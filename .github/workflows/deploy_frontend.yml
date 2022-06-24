@@ -1,0 +1,64 @@
+name: Deploy
+
+permissions:
+  id-token: write
+  contents: read
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main, staging]
+
+jobs:
+  deploy:
+    name: Release API Version
+    runs-on: ubuntu-latest
+    # These permissions are needed to interact with GitHub's OIDC Token endpoint.
+    permissions:
+      id-token: write
+      contents: read
+    if: github.event.pull_request.merged == true
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16.x'
+      - name: Overwrite serverless.yml
+        run: cp serverless_frontend.yml serverless.yml
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
+      - name: Codegen
+        run: yarn codegen:contracts
+      - name: Cleanse Dependencies
+        run: yarn clean-modules --exclude "/**/*serverless/**" "@tsed/**" -y
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ env.ASSUME_ROLE }}
+          role-session-name: ${{ env.SESSION_NAME }}
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Deploy Staging
+        uses: serverless/github-action@v3.0.0
+        with:
+          args: deploy
+        if: contains(github.ref, 'staging')
+      - name: Deploy Production
+        uses: serverless/github-action@v3.0.0
+        with:
+          args: deploy --stage prod
+        if: contains(github.ref, 'main')
+
+env:
+  ASSUME_ROLE: ${{ secrets.DEPLOYER_ASSUME_ROLE }}
+  LAMBDA_EXECUTION_ROLE: ${{ secrets.LAMBDA_EXECUTION_ROLE }}
+  SESSION_NAME: badger-api-deployer
+  AWS_REGION: us-west-1
+  GRAPH_API_KEY: ${{ secrets.GRAPH_API_KEY }}
+  ETH_RPC: ${{ secrets.ETH_RPC }}
+  BSC_RPC: ${{ secrets.BSC_RPC }}
+  MATIC_RPC: ${{ secrets.MATIC_RPC }}
+  ARBITRUM_RPC: ${{ secrets.ARBITRUM_RPC }}
+  ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
+  ARBISCAN_API_KEY: ${{ secrets.ARBISCAN_API_KEY }}
+  BLOCKNATIVE_API_KEY: ${{ secrets.BLOCKNATIVE_API_KEY }}
