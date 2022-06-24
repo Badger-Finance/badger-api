@@ -5,6 +5,7 @@ import { getChainStartBlockKey, getDataMapper } from '../aws/dynamodb.utils';
 import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
 import { SUPPORTED_CHAINS } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
+import { PRODUCTION } from '../config/constants';
 import { ClaimableBalance } from '../rewards/entities/claimable-balance';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 import { getClaimableRewards, getTreeDistribution } from '../rewards/rewards.utils';
@@ -19,9 +20,11 @@ export async function refreshClaimableBalances(chain: Chain) {
   }
 
   const latestMetadata = await getLatestMetadata(chain);
-  console.log(
-    `Updating Claimable Balances for ${chain.network} (prev. ${latestMetadata.startBlock} - ${latestMetadata.endBlock})`,
-  );
+  if (PRODUCTION) {
+    console.log(
+      `Updating Claimable Balances for ${chain.network} (prev. ${latestMetadata.startBlock} - ${latestMetadata.endBlock})`,
+    );
+  }
   const { endBlock } = latestMetadata;
   const snapshotStartBlock = endBlock + 1;
   const snapshotEndBlock = await chain.provider.getBlockNumber();
@@ -56,7 +59,9 @@ export async function refreshClaimableBalances(chain: Chain) {
     userClaimSnapshots.push(snapshot);
   }
 
-  console.log(`Updated ${userClaimSnapshots.length} claimable balances for ${chain.network}`);
+  if (PRODUCTION) {
+    console.log(`Updated ${userClaimSnapshots.length} claimable balances for ${chain.network}`);
+  }
   for await (const _item of mapper.batchPut(userClaimSnapshots)) {
   }
 
@@ -71,7 +76,9 @@ export async function refreshClaimableBalances(chain: Chain) {
   });
 
   await mapper.put(metadata);
-  console.log(`Completed balance snapshot for ${chain.network} up to ${snapshotEndBlock}`);
+  if (PRODUCTION) {
+    console.log(`Completed balance snapshot for ${chain.network} up to ${snapshotEndBlock}`);
+  }
 }
 
 export async function refreshUserAccounts() {

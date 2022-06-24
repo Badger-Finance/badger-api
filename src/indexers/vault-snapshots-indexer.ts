@@ -2,6 +2,7 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { CurrentVaultSnapshotModel } from '../aws/models/current-vault-snapshot.model';
 import { SUPPORTED_CHAINS } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
+import { PRODUCTION } from '../config/constants';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { vaultToSnapshot } from './indexer.utils';
 
@@ -20,7 +21,9 @@ async function captureSnapshot(chain: Chain, vault: VaultDefinition) {
     snapshot = await vaultToSnapshot(chain, vault);
     if (snapshot) {
       const mapper = getDataMapper();
-      console.log(`${vault.name} $${snapshot.value.toLocaleString()} (${snapshot.balance} tokens)`);
+      if (PRODUCTION) {
+        console.log(`${vault.name} $${snapshot.value.toLocaleString()} (${snapshot.balance} tokens)`);
+      }
       await mapper.put(Object.assign(new CurrentVaultSnapshotModel(), snapshot));
     }
   } catch (err) {

@@ -23,7 +23,9 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '18.x'
+          node-version: '16.x'
+      - name: Overwrite serverless.yml
+        run: cp serverless_frontend.yml serverless.yml
       - name: Install Dependencies
         run: yarn install --frozen-lockfile
       - name: Codegen
@@ -48,7 +50,8 @@ jobs:
         if: contains(github.ref, 'main')
 
 env:
-  ASSUME_ROLE: ${{ secrets.ASSUME_ROLE }}
+  ASSUME_ROLE: ${{ secrets.DEPLOYER_ASSUME_ROLE }}
+  LAMBDA_EXECUTION_ROLE: ${{ secrets.LAMBDA_EXECUTION_ROLE }}
   SESSION_NAME: badger-api-deployer
   AWS_REGION: us-west-1
   GRAPH_API_KEY: ${{ secrets.GRAPH_API_KEY }}
