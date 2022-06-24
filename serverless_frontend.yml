@@ -1,5 +1,5 @@
 ---
-service: badger-v2
+service: badger-frontend-api-v2
 frameworkVersion: '2'
 useDotenv: true
 
