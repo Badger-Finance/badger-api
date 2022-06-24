@@ -1,15 +1,17 @@
-import { DataMapper } from '@aws/dynamodb-data-mapper';
+import { DataMapper, StringToAnyObjectMap, SyncOrAsyncIterable } from '@aws/dynamodb-data-mapper';
 
 import * as accountsUtils from '../accounts/accounts.utils';
 import { CachedBoost } from '../aws/models/cached-boost.model';
-import { Ethereum } from '../chains/config/eth.config';
 import { TOKENS } from '../config/tokens.config';
 import { BoostData } from '../rewards/interfaces/boost-data.interface';
-import { randomCachedBoosts } from '../test/tests.utils';
-import { generateBoostsLeaderBoard } from './leaderboard-indexer';
+import { mockBatchDelete, mockBatchPut, randomCachedBoosts, setupMapper } from '../test/tests.utils';
+import { indexBoostLeaderBoard } from './leaderboard-indexer';
 
 describe('leaderboard-indexer', () => {
-  const chain = new Ethereum();
+  let batchPut: jest.SpyInstance<
+    AsyncIterableIterator<StringToAnyObjectMap>,
+    [items: SyncOrAsyncIterable<StringToAnyObjectMap>]
+  >;
 
   describe('generateBoostsLeaderBoard', () => {
     const seeded = randomCachedBoosts(2);
@@ -28,49 +30,38 @@ describe('leaderboard-indexer', () => {
       multiplierData: {},
     };
 
-    async function getPerChainBoosts() {
+    beforeEach(async () => {
+      setupMapper([]);
+      batchPut = mockBatchPut([]);
+      mockBatchDelete([]);
+      jest.spyOn(Date, 'now').mockImplementation(() => 1000);
       jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
       jest.spyOn(accountsUtils, 'getBoostFile').mockImplementation(() => Promise.resolve(boostData));
-      const response = await generateBoostsLeaderBoard([chain]);
-      const perChainBoosts: Record<string, CachedBoost[]> = {};
-      response.forEach((res) => {
-        if (!perChainBoosts[res.leaderboard]) {
-          perChainBoosts[res.leaderboard] = [];
-        }
-        perChainBoosts[res.leaderboard] = perChainBoosts[res.leaderboard].concat(res);
-      });
-      return perChainBoosts;
-    }
+      await indexBoostLeaderBoard();
+    });
 
     it('indexes all user accounts', async () => {
-      const perChainBoosts = await getPerChainBoosts();
-      expect(perChainBoosts[seeded[0].leaderboard]).toMatchObject(seeded);
+      expect(batchPut.mock.calls[0][0]).toMatchObject(Object.values(seeded));
     });
 
     it('sorts ranks by boosts', async () => {
-      const perChainBoosts = await getPerChainBoosts();
-      for (const boosts of Object.values(perChainBoosts)) {
-        let last: number | undefined;
-        for (const boost of boosts) {
-          if (last) {
-            expect(last).toBeLessThan(boost.boostRank);
-          }
-          last = boost.boostRank;
+      let last: number | undefined;
+      for (const boost of batchPut.mock.calls[0][0] as CachedBoost[]) {
+        if (last) {
+          expect(last).toBeLessThan(boost.boostRank);
         }
+        last = boost.boostRank;
       }
     });
 
     // seeded data has 2 of each boost rank
     it('resovles boost rank ties with stake ratio score', async () => {
-      const perChainBoosts = await getPerChainBoosts();
-      for (const boosts of Object.values(perChainBoosts)) {
-        let last: number | undefined;
-        for (const boost of boosts) {
-          if (last) {
-            expect(last).toBeGreaterThanOrEqual(boost.stakeRatio);
-          }
-          last = boost.stakeRatio;
+      let last: number | undefined;
+      for (const boost of batchPut.mock.calls[0][0] as CachedBoost[]) {
+        if (last) {
+          expect(last).toBeGreaterThanOrEqual(boost.stakeRatio);
         }
+        last = boost.stakeRatio;
       }
     });
   });

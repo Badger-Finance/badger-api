@@ -10,16 +10,8 @@ import { Chain } from '../chains/config/chain.config';
 import { getBadgerType } from '../leaderboards/leaderboards.config';
 
 export const indexBoostLeaderBoard = async () => {
-  const boosts: CachedBoost[] = await generateBoostsLeaderBoard(SUPPORTED_CHAINS);
-  const mapper = getDataMapper();
-  for await (const _item of mapper.batchPut(boosts)) {
-  }
-  return 'done';
-};
-
-export async function generateBoostsLeaderBoard(chains: Chain[]): Promise<CachedBoost[]> {
-  const results = await Promise.all(
-    chains.map(async (chain) => {
+  await Promise.all(
+    SUPPORTED_CHAINS.map(async (chain) => {
       const chainResults = await generateChainBoostsLeaderBoard(chain);
       const summary: BadgerTypeMap = {
         [BadgerType.Basic]: 0,
@@ -34,17 +26,35 @@ export async function generateBoostsLeaderBoard(chains: Chain[]): Promise<Cached
         badgerType: e[0],
         amount: e[1],
       }));
+
+      const chainEntries = [];
+
+      for await (const entry of mapper.query(CachedBoost, { leaderboard: getLeaderboardKey(chain) })) {
+        chainEntries.push(entry);
+      }
+
+      console.log(`Clearing ${chainEntries.length} existing entries from leaderboard`);
+      for await (const _item of mapper.batchDelete(chainEntries)) {
+      }
+
+      console.log(`Updating ${chainEntries.length} new entries to leaderboard`);
+      for await (const _item of mapper.batchPut(chainResults)) {
+      }
+
       await mapper.put(
         Object.assign(new CachedLeaderboardSummary(), {
           leaderboard: getLeaderboardKey(chain),
           rankSummaries,
         }),
       );
-      return chainResults;
+      console.log({
+        chain: chain.network,
+        rankSummaries,
+      });
     }),
   );
-  return results.flatMap((item) => item);
-}
+  return 'done';
+};
 
 async function generateChainBoostsLeaderBoard(chain: Chain): Promise<CachedBoost[]> {
   try {
@@ -52,6 +62,7 @@ async function generateChainBoostsLeaderBoard(chain: Chain): Promise<CachedBoost
     if (!boostFile) {
       return [];
     }
+    console.log(`Updating ${chain.network} boost leaderboard from ${Object.entries(boostFile.userData).length} users`);
     return Object.entries(boostFile.userData)
       .sort((a, b) => {
         const [_a, aData] = a;
@@ -78,6 +89,7 @@ async function generateChainBoostsLeaderBoard(chain: Chain): Promise<CachedBoost
           diggBalance,
           nativeBalance,
           nonNativeBalance,
+          updatedAt: Date.now(),
         };
         return Object.assign(new CachedBoost(), cachedBoost);
       });

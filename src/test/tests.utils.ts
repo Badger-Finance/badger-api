@@ -208,6 +208,7 @@ export function randomCachedBoosts(count: number): CachedBoost[] {
       nonNativeBalance: 250000 / (i + 1),
       bveCvxBalance: 120 * (i + 1),
       diggBalance: 1.3 * (i + 1),
+      updatedAt: 1000,
     };
     boosts.push(Object.assign(new CachedBoost(), boost));
   }

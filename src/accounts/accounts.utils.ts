@@ -30,6 +30,7 @@ export function defaultBoost(chain: Chain, address: string): CachedBoost {
     nftBalance: 0,
     nonNativeBalance: 0,
     stakeRatio: 0,
+    updatedAt: 0,
   };
 }
 
@@ -172,7 +173,7 @@ export async function getCachedBoost(chain: Chain, address: string): Promise<Cac
 
 export async function getCachedAccount(chain: Chain, address: string): Promise<Account> {
   const [cachedAccount, metadata] = await Promise.all([queryCachedAccount(address), getLatestMetadata(chain)]);
-  if (cachedAccount.updatedAt + ONE_MIN_MS < Date.now()) {
+  if (!cachedAccount.updatedAt || cachedAccount.updatedAt + ONE_MIN_MS < Date.now()) {
     await refreshAccountVaultBalances(chain, address);
   }
   const claimableBalanceSnapshot = await getClaimableBalanceSnapshot(chain, address, metadata.startBlock);

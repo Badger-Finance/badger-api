@@ -1,5 +1,5 @@
 import { DataMapper } from '@aws/dynamodb-data-mapper';
-import { BadgerGraph, Currency, gqlGenT } from '@badger-dao/sdk';
+import { BadgerGraph, Currency, gqlGenT, Protocol, VaultBehavior, VaultStatus, VaultVersion } from '@badger-dao/sdk';
 
 import { TOKENS } from '../config/tokens.config';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
@@ -72,6 +72,14 @@ describe('accounts.utils', () => {
         },
         treeDistributions: [],
         harvests: [],
+        version: VaultVersion.v1_5,
+        status: VaultStatus.guarded,
+        isProduction: true,
+        protocol: Protocol.Badger,
+        createdAt: 0,
+        behavior: VaultBehavior.Compounder,
+        lastUpdatedAt: 0,
+        releasedAt: 0,
       },
     };
   };
