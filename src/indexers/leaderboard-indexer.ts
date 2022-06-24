@@ -33,11 +33,9 @@ export const indexBoostLeaderBoard = async () => {
         chainEntries.push(entry);
       }
 
-      console.log(`Clearing ${chainEntries.length} existing entries from leaderboard`);
       for await (const _item of mapper.batchDelete(chainEntries)) {
       }
 
-      console.log(`Updating ${chainEntries.length} new entries to leaderboard`);
       for await (const _item of mapper.batchPut(chainResults)) {
       }
 
@@ -47,10 +45,6 @@ export const indexBoostLeaderBoard = async () => {
           rankSummaries,
         }),
       );
-      console.log({
-        chain: chain.network,
-        rankSummaries,
-      });
     }),
   );
   return 'done';
@@ -62,7 +56,6 @@ async function generateChainBoostsLeaderBoard(chain: Chain): Promise<CachedBoost
     if (!boostFile) {
       return [];
     }
-    console.log(`Updating ${chain.network} boost leaderboard from ${Object.entries(boostFile.userData).length} users`);
     return Object.entries(boostFile.userData)
       .sort((a, b) => {
         const [_a, aData] = a;

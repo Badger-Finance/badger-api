@@ -8,38 +8,40 @@ import { mockBatchDelete, mockBatchPut, randomCachedBoosts, setupMapper } from '
 import { indexBoostLeaderBoard } from './leaderboard-indexer';
 
 describe('leaderboard-indexer', () => {
+  const seeded = randomCachedBoosts(2);
+  const addresses = Object.values(TOKENS);
+  const boostData: BoostData = {
+    userData: Object.fromEntries(
+      seeded.map((cachedBoost, i) => {
+        cachedBoost.address = addresses[i];
+        const boost = {
+          ...cachedBoost,
+          multipliers: {},
+        };
+        return [cachedBoost.address, boost];
+      }),
+    ),
+    multiplierData: {},
+  };
+
   let batchPut: jest.SpyInstance<
     AsyncIterableIterator<StringToAnyObjectMap>,
     [items: SyncOrAsyncIterable<StringToAnyObjectMap>]
   >;
 
+  beforeEach(async () => {
+    setupMapper([]);
+    batchPut = mockBatchPut([]);
+    mockBatchDelete([]);
+    jest.spyOn(Date, 'now').mockImplementation(() => 1000);
+    jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
+    jest.spyOn(accountsUtils, 'getBoostFile').mockImplementation(() => Promise.resolve(boostData));
+    await indexBoostLeaderBoard();
+  });
+
+  afterAll(() => jest.resetAllMocks());
+
   describe('generateBoostsLeaderBoard', () => {
-    const seeded = randomCachedBoosts(2);
-    const addresses = Object.values(TOKENS);
-    const boostData: BoostData = {
-      userData: Object.fromEntries(
-        seeded.map((cachedBoost, i) => {
-          cachedBoost.address = addresses[i];
-          const boost = {
-            ...cachedBoost,
-            multipliers: {},
-          };
-          return [cachedBoost.address, boost];
-        }),
-      ),
-      multiplierData: {},
-    };
-
-    beforeEach(async () => {
-      setupMapper([]);
-      batchPut = mockBatchPut([]);
-      mockBatchDelete([]);
-      jest.spyOn(Date, 'now').mockImplementation(() => 1000);
-      jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
-      jest.spyOn(accountsUtils, 'getBoostFile').mockImplementation(() => Promise.resolve(boostData));
-      await indexBoostLeaderBoard();
-    });
-
     it('indexes all user accounts', async () => {
       expect(batchPut.mock.calls[0][0]).toMatchObject(Object.values(seeded));
     });

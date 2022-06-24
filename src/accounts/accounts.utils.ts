@@ -7,7 +7,7 @@ import { CachedBoost } from '../aws/models/cached-boost.model';
 import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
 import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
-import { REWARD_DATA } from '../config/constants';
+import { PRODUCTION, REWARD_DATA } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import { convert, getPrice } from '../prices/prices.utils';
@@ -73,7 +73,10 @@ export async function getAccounts(chain: Chain): Promise<string[]> {
     }
   }
 
-  console.log(`Retrieved ${accounts.size} accounts on ${chain.name}`);
+  if (PRODUCTION) {
+    console.log(`Retrieved ${accounts.size} accounts on ${chain.name}`);
+  }
+
   return [...accounts];
 }
 
