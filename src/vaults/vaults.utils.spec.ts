@@ -7,6 +7,7 @@ import BadgerSDK, {
   VaultDTO,
   VaultsService,
   VaultState,
+  VaultStatus,
   VaultType,
   VaultVersion,
 } from '@badger-dao/sdk';
@@ -143,6 +144,14 @@ describe('vaults.utils', () => {
           id: TEST_ADDR,
           balance: '2500000000000000000000',
         },
+        version: VaultVersion.v1_5,
+        status: VaultStatus.guarded,
+        isProduction: true,
+        protocol: Protocol.Badger,
+        createdAt: 0,
+        behavior: VaultBehavior.Compounder,
+        lastUpdatedAt: 0,
+        releasedAt: 0,
       },
     }));
     jest.spyOn(rewardsUtils, 'getProtocolValueSources').mockImplementation(async (_chain, _vault) => {

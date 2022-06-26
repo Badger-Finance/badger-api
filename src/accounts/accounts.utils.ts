@@ -7,7 +7,7 @@ import { CachedBoost } from '../aws/models/cached-boost.model';
 import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
 import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
-import { REWARD_DATA } from '../config/constants';
+import { PRODUCTION, REWARD_DATA } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import { convert, getPrice } from '../prices/prices.utils';
@@ -30,6 +30,7 @@ export function defaultBoost(chain: Chain, address: string): CachedBoost {
     nftBalance: 0,
     nonNativeBalance: 0,
     stakeRatio: 0,
+    updatedAt: 0,
   };
 }
 
@@ -72,7 +73,10 @@ export async function getAccounts(chain: Chain): Promise<string[]> {
     }
   }
 
-  console.log(`Retrieved ${accounts.size} accounts on ${chain.name}`);
+  if (PRODUCTION) {
+    console.log(`Retrieved ${accounts.size} accounts on ${chain.name}`);
+  }
+
   return [...accounts];
 }
 
@@ -172,7 +176,7 @@ export async function getCachedBoost(chain: Chain, address: string): Promise<Cac
 
 export async function getCachedAccount(chain: Chain, address: string): Promise<Account> {
   const [cachedAccount, metadata] = await Promise.all([queryCachedAccount(address), getLatestMetadata(chain)]);
-  if (cachedAccount.updatedAt + ONE_MIN_MS < Date.now()) {
+  if (!cachedAccount.updatedAt || cachedAccount.updatedAt + ONE_MIN_MS < Date.now()) {
     await refreshAccountVaultBalances(chain, address);
   }
   const claimableBalanceSnapshot = await getClaimableBalanceSnapshot(chain, address, metadata.startBlock);

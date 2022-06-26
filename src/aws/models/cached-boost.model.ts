@@ -42,4 +42,7 @@ export class CachedBoost implements UserBoostData {
 
   @attribute()
   nonNativeBalance!: number;
+
+  @attribute({ defaultProvider: () => Date.now() })
+  updatedAt!: number;
 }

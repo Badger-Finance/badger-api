@@ -18,7 +18,7 @@
     "dev:node:api": "ts-node -r dotenv/config src/index.ts",
     "format": "pretty-quick",
     "lint": "eslint \"src/**/*.ts\" --fix",
-    "test": "node --expose-gc --no-compilation-cache ./node_modules/.bin/jest --detectOpenHandles --runInBand",
+    "test": "node --expose-gc --no-compilation-cache ./node_modules/.bin/jest --detectOpenHandles --runInBand --logHeapUsage",
     "test:upd": "yarn test -u",
     "test:path": "yarn test --no-cache --testPathPattern",
     "test:clean": "jest --clearCache",
@@ -29,7 +29,7 @@
   "dependencies": {
     "@aws/dynamodb-data-mapper": "^0.7.3",
     "@aws/dynamodb-data-mapper-annotations": "^0.7.3",
-    "@badger-dao/sdk": "^1.15.3",
+    "@badger-dao/sdk": "^1.15.8",
     "@tsed/common": "^6.95.9",
     "@tsed/core": "^6.95.9",
     "@tsed/di": "^6.95.9",
@@ -57,7 +57,7 @@
     "tslib": "^2.2.0"
   },
   "devDependencies": {
-    "@badger-dao/sdk-mocks": "^1.10.3",
+    "@badger-dao/sdk-mocks": "^1.15.8",
     "@graphql-codegen/cli": "^2.3.0",
     "@graphql-codegen/typescript": "^2.4.1",
     "@graphql-codegen/typescript-graphql-request": "^4.3.2",
