@@ -146,8 +146,9 @@ export class VaultsService {
     return vault;
   }
 
-  private static getVaultYieldProjection(
-    vault: VaultDTO,
+  public static getVaultYieldProjection(
+    // refactor regV2, Data Objects interfaces should be in api alongside with models
+    vault: Pick<VaultDTO, 'value' | 'balance' | 'available' | 'lastHarvest'>,
     pendingHarvest: VaultPendingHarvestData,
   ): VaultYieldProjection {
     const { value, balance, available, lastHarvest } = vault;
