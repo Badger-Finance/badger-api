@@ -1,9 +1,11 @@
+import { BadgerSDK, RegistryVault } from '@badger-dao/sdk';
+import { ethers } from 'ethers';
+
 import { getDataMapper } from '../aws/dynamodb.utils';
+import { VaultCompoundModel } from '../aws/models/vault-compound.model';
+import { SUPPORTED_CHAINS } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { constructVaultModel } from './indexer.utils';
-import { SUPPORTED_CHAINS } from '../chains/chain';
-import { BadgerSDK, RegistryVault } from '@badger-dao/sdk';
-import { VaultCompoundModel } from '../aws/models/vault-compound.model';
 
 export async function captureVaultData() {
   for (const chain of SUPPORTED_CHAINS) {
@@ -22,7 +24,15 @@ export async function captureVaultData() {
     await Promise.all(registryVaults.map(async (vault) => compoundVaultData(chain, sdk, vault)));
 
     // update isProduction status, for vaults that were already saved in ddb
-    const prdVaultsAddrs = registryVaults.map((v) => v.address.toLowerCase());
+    const prdVaultsAddrs = registryVaults
+      .map((v) => {
+        try {
+          return ethers.utils.getAddress(v.address);
+        } catch (_) {
+          return null;
+        }
+      })
+      .filter((v) => v);
 
     const mapper = getDataMapper();
     const query = mapper.query(
@@ -33,7 +43,7 @@ export async function captureVaultData() {
 
     try {
       for await (const compoundVault of query) {
-        if (!prdVaultsAddrs.includes(compoundVault.address.toLowerCase())) {
+        if (!prdVaultsAddrs.includes(compoundVault.address)) {
           // mark this vault as not a prod one, mb just delete it, not sure
           compoundVault.isProduction = 0;
           await mapper.put(compoundVault);

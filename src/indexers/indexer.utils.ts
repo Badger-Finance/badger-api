@@ -84,13 +84,13 @@ export async function constructVaultModel(
   let vaultAddr;
 
   try {
-    vaultAddr = ethers.utils.getAddress(vault.address).toLowerCase();
+    vaultAddr = ethers.utils.getAddress(address);
   } catch (_) {
     console.warn(`Invalid vault addr from onchain ${chain.name} registry`);
     return null;
   }
 
-  const { sett } = await sdk.graph.loadSett({ id: vaultAddr });
+  const { sett } = await sdk.graph.loadSett({ id: vaultAddr.toLowerCase() });
 
   if (!sett) {
     console.warn(`Cant fetch vault data from The Graph for chain ${chain.name}, ${vaultAddr}`);
@@ -143,10 +143,10 @@ export async function constructVaultModel(
   const { yieldApr, harvestApr } = VaultsService.getVaultYieldProjection(vaultDTO, pendingHarvest);
 
   return Object.assign(new VaultCompoundModel(), {
-    address,
+    address: vaultAddr,
     createdAt: sett.createdAt,
     chain: chain.network,
-    isProduction: sett.isProduction ? 1 : 0,
+    isProduction: 1,
     verstion: vault.version,
     state: vault.state,
     name: vault.name,
