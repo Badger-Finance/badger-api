@@ -25,6 +25,7 @@ import { CachedValueSource } from '../aws/models/apy-snapshots.model';
 import { CurrentVaultSnapshotModel } from '../aws/models/current-vault-snapshot.model';
 import { HarvestCompoundData } from '../aws/models/harvest-compound.model';
 import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
+import { VaultCompoundModel } from '../aws/models/vault-compound.model';
 import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
 import { Chain } from '../chains/config/chain.config';
 import { ONE_YEAR_SECONDS } from '../config/constants';
@@ -808,4 +809,20 @@ export async function getLastCompoundHarvest(vault: string): Promise<Nullable<Ha
   }
 
   return lastHarvest;
+}
+
+// temp helper during migration
+export function vaultCompoundToDefinition(vault: VaultCompoundModel): VaultDefinition {
+  return {
+    behavior: vault.behavior,
+    client: vault.client,
+    depositToken: vault.depositToken.address,
+    experimental: vault.state === VaultState.Experimental,
+    name: vault.name,
+    newVault: vault.isNew(),
+    protocol: vault.protocol,
+    state: vault.state,
+    vaultToken: vault.address,
+    version: vault.version,
+  };
 }

@@ -1,12 +1,15 @@
 import { embed } from '@aws/dynamodb-data-mapper';
 import { attribute, hashKey, rangeKey, table } from '@aws/dynamodb-data-mapper-annotations';
-import { VAULT_COMPOUND_DATA } from '../../config/constants';
-import { VaultStrategy } from '../../vaults/interfaces/vault-strategy.interface';
+import { Protocol, VaultBehavior, VaultState, VaultVersion } from '@badger-dao/sdk';
+
+import { ONE_WEEK_SECONDS, VAULT_COMPOUND_DATA } from '../../config/constants';
 import { TokenDestructor } from '../../tokens/destructors/token.destructor';
 import { BoostDestructor } from '../../vaults/destructors/boost.destructor';
+import { VaultStrategy } from '../../vaults/interfaces/vault-strategy.interface';
+import { IVaultCompoundModel } from '../interfaces/vault-compound-model.interface';
 
 @table(VAULT_COMPOUND_DATA)
-export class VaultCompoundModel {
+export class VaultCompoundModel implements IVaultCompoundModel {
   @hashKey()
   address!: string;
 
@@ -33,16 +36,16 @@ export class VaultCompoundModel {
   name!: string;
 
   @attribute()
-  version!: string;
+  version!: VaultVersion;
 
   @attribute()
-  state!: string;
+  state!: VaultState;
 
   @attribute()
-  protocol!: string;
+  protocol!: Protocol;
 
   @attribute()
-  behavior!: string;
+  behavior!: VaultBehavior;
 
   @attribute()
   client!: string;
@@ -94,4 +97,8 @@ export class VaultCompoundModel {
 
   @attribute({ defaultProvider: () => Date.now() })
   timestamp!: number;
+
+  isNew() {
+    return Date.now() / 1000 - this.releasedAt <= ONE_WEEK_SECONDS * 2;
+  }
 }

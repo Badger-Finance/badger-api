@@ -1,4 +1,4 @@
-import { ChartTimeFrame, CitadelLeaderboardEntry } from '@badger-dao/sdk';
+import { ChartTimeFrame, CitadelLeaderboardEntry, Currency, Network } from '@badger-dao/sdk';
 import { CitadelSummary } from '@badger-dao/sdk/lib/api/interfaces/citadel-summary.interface';
 import { CitadelTreasurySummary } from '@badger-dao/sdk/lib/api/interfaces/citadel-treasury-summary.interface';
 import { RewardFilter } from '@badger-dao/sdk/lib/citadel/enums/reward-filter.enum';
@@ -7,7 +7,10 @@ import { NotFound } from '@tsed/exceptions';
 import { ContentType, Description, Returns, Summary } from '@tsed/schema';
 
 import { HistoricTreasurySummarySnapshot } from '../aws/models/historic-treasury-summary-snapshot.model';
+import { Chain } from '../chains/config/chain.config';
 import { TreasuryService } from '../treasury/treasury.service';
+import { VaultModel } from '../vaults/interfaces/vault-model.interface';
+import { VaultsService } from '../vaults/vaults.service';
 import { CitadelService } from './citadel.service';
 import { CITADEL_TREASURY_ADDRESS } from './config/citadel-treasury.config';
 import { CitadelAccount } from './interfaces/citadel-account.interface';
@@ -15,6 +18,7 @@ import { CitadelRewardEvent } from './interfaces/citadel-reward-event.interface'
 import { CitadelRewardEventModel } from './interfaces/citadel-reward-event-model.interface';
 import { CitadelSummaryModel } from './interfaces/citadel-summary-model.interface';
 import { CitadelTreasurySummaryModel } from './interfaces/citadel-treasury-summary-model.interface';
+import { MetadataClient } from '@badger-dao/sdk/lib/registry.v2/enums/metadata.client.enum';
 
 @Controller('/')
 export class CitadelController {
@@ -23,6 +27,9 @@ export class CitadelController {
 
   @Inject()
   treasuryService!: TreasuryService;
+
+  @Inject()
+  vaultsService!: VaultsService;
 
   @UseCache()
   @Get('/treasury')
@@ -85,5 +92,18 @@ export class CitadelController {
   @ContentType('json')
   async loadKnightingRoundLeaderboard(): Promise<CitadelLeaderboardEntry[]> {
     return this.citadelService.loadKnightingRoundLeaderboard();
+  }
+
+  @Get('/vaults')
+  @ContentType('json')
+  @Summary('Get a list of protocol vaults')
+  @Description('Return a list of protocol vaults for the requested chain')
+  @Returns(200, VaultModel)
+  @Returns(400).Description('Not a valid chain')
+  async listVaults(
+    @QueryParams('chain') chain?: Network,
+    @QueryParams('currency') currency?: Currency,
+  ): Promise<VaultModel[]> {
+    return this.vaultsService.listV3Vaults(Chain.getChain(chain), currency, MetadataClient.Citadel);
   }
 }

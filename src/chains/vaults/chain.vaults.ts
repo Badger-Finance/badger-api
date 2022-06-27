@@ -1,12 +1,15 @@
 import { Network } from '@badger-dao/sdk';
 
 import { getDataMapper } from '../../aws/dynamodb.utils';
+import { IVaultCompoundModel } from '../../aws/interfaces/vault-compound-model.interface';
 import { VaultCompoundModel } from '../../aws/models/vault-compound.model';
 import { ONE_MINUTE_SECONDS } from '../../config/constants';
 
+type VaultCompoundModelTypes = IVaultCompoundModel[keyof IVaultCompoundModel];
+
 export class ChainVaults {
   network: Network;
-  cachedVaults: VaultCompoundModel[] = [];
+  cachedVaults: IVaultCompoundModel[] = [];
 
   readonly cacheTtl = ONE_MINUTE_SECONDS * 2 * 1000;
   private cacheLastUpd!: number;
@@ -20,20 +23,13 @@ export class ChainVaults {
     return this.cachedVaults;
   }
 
-  async getAllBy<T>(key: string, val: T) {
+  async getAllBy<T extends VaultCompoundModelTypes>(key: keyof IVaultCompoundModel, val: T) {
     await this.#updateCachedVaults();
-    // Note, this will be removed, when VaultCompoundModel will have proper
-    // interface to get the keys by keysof
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     return this.cachedVaults.filter((vault) => vault[key] === val);
   }
 
-  async getOneBy<T>(key: string, val: T) {
+  async getOneBy<T extends VaultCompoundModelTypes>(key: keyof IVaultCompoundModel, val: T) {
     await this.#updateCachedVaults();
-    // Same as for getAllBy
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     return this.cachedVaults.find((vault) => vault[key] === val);
   }
 
@@ -54,10 +50,12 @@ export class ChainVaults {
 
     try {
       for await (const compoundVault of query) {
-        this.cachedVaults.push(compoundVault);
+        const cachedVaultIx = this.cachedVaults.findIndex((v) => v.address === compoundVault.address);
+        if (cachedVaultIx >= 0) this.cachedVaults[cachedVaultIx] = compoundVault;
+        else this.cachedVaults.push(compoundVault);
       }
     } catch (e) {
-      console.error(`Failed to get compoundVault ${this.network}`);
+      console.error(`Failed to get compoundVault ${this.network}. ${e}`);
     }
 
     this.cacheLastUpd = Date.now();

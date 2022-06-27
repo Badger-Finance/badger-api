@@ -6,6 +6,7 @@ import { Stage } from './enums/stage.enum';
 // time constants
 export const ONE_MINUTE_SECONDS = 60;
 export const ONE_DAY_SECONDS = ONE_MINUTE_SECONDS * 60 * 24;
+export const ONE_WEEK_SECONDS = ONE_DAY_SECONDS * 7;
 export const ONE_YEAR_SECONDS = ONE_DAY_SECONDS * 365;
 
 // data access constants
