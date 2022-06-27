@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+
 import { DataMapper, QueryIterator, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
 import BadgerSDK, {
   Currency,
@@ -13,6 +15,7 @@ import { ethers } from 'ethers';
 import createMockInstance from 'jest-create-mock-instance';
 import { mock } from 'jest-mock-extended';
 
+import VaultsCompoundMock from '../../seed/vaults-compound.json';
 import * as accountsUtils from '../accounts/accounts.utils';
 import * as dynamodbUtils from '../aws/dynamodb.utils';
 import { CachedAccount } from '../aws/models/cached-account.model';
@@ -34,7 +37,6 @@ export const TEST_CHAIN = SUPPORTED_CHAINS[0];
 export const TEST_ADDR = ethers.utils.getAddress('0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484');
 export const CURRENT_BLOCK = 0;
 
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 export function setupMapper(items: unknown[], filter?: (items: unknown[]) => unknown[]) {
   // @ts-ignore
   const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
@@ -46,9 +48,7 @@ export function setupMapper(items: unknown[], filter?: (items: unknown[]) => unk
   qi[Symbol.iterator] = jest.fn(() => result.values());
   return jest.spyOn(DataMapper.prototype, 'query').mockImplementation(() => qi);
 }
-/* eslint-enable @typescript-eslint/ban-ts-comment */
 
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 export function setupBatchGet(items: unknown[], filter?: (items: unknown[]) => unknown[]) {
   // @ts-ignore
   const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
@@ -60,9 +60,7 @@ export function setupBatchGet(items: unknown[], filter?: (items: unknown[]) => u
   qi[Symbol.iterator] = jest.fn(() => result.values());
   return jest.spyOn(DataMapper.prototype, 'batchGet').mockImplementation(() => qi);
 }
-/* eslint-enable @typescript-eslint/ban-ts-comment */
 
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 export function mockBatchPut(items: unknown[]) {
   // @ts-ignore
   const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
@@ -70,9 +68,7 @@ export function mockBatchPut(items: unknown[]) {
   qi[Symbol.iterator] = jest.fn(() => items.values());
   return jest.spyOn(DataMapper.prototype, 'batchPut').mockImplementation(() => qi);
 }
-/* eslint-enable @typescript-eslint/ban-ts-comment */
 
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 export function mockBatchDelete(items: unknown[]) {
   // @ts-ignore
   const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
@@ -80,7 +76,22 @@ export function mockBatchDelete(items: unknown[]) {
   qi[Symbol.iterator] = jest.fn(() => items.values());
   return jest.spyOn(DataMapper.prototype, 'batchDelete').mockImplementation(() => qi);
 }
-/* eslint-enable @typescript-eslint/ban-ts-comment */
+
+export function setupVaultsCoumpoundDDB() {
+  // @ts-ignore
+  jest.spyOn(DataMapper.prototype, 'query').mockImplementation((model, keys) => {
+    let dataSource = VaultsCompoundMock;
+    // @ts-ignore
+    const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
+
+    if (keys.chain) dataSource = dataSource.filter((v) => v.chain === keys.chain);
+    if (keys.isProduction) dataSource = dataSource.filter((v) => v.isProduction === keys.isProduction);
+
+    // @ts-ignore
+    qi[Symbol.iterator] = jest.fn(() => dataSource.map((obj) => Object.assign(new model(), obj)).values());
+    return qi;
+  });
+}
 
 export function defaultAccount(address: string): CachedAccount {
   return {

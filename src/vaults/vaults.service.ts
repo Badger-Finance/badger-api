@@ -1,5 +1,6 @@
 import { Currency, Protocol, VaultDTO, VaultState, VaultType } from '@badger-dao/sdk';
 import { VaultYieldProjection } from '@badger-dao/sdk/lib/api/interfaces/vault-yield-projection.interface';
+import { MetadataClient } from '@badger-dao/sdk/lib/registry.v2/enums/metadata.client.enum';
 import { Service } from '@tsed/common';
 import { ethers } from 'ethers';
 
@@ -22,6 +23,7 @@ import {
   getVaultDefinition,
   getVaultPendingHarvest,
   VAULT_SOURCE,
+  vaultCompoundToDefinition,
 } from './vaults.utils';
 
 @Service()
@@ -40,6 +42,18 @@ export class VaultsService {
 
   async listVaults(chain: Chain, currency?: Currency): Promise<VaultDTO[]> {
     return Promise.all(chain.vaults.map((vault) => this.getVault(chain, vault, currency)));
+  }
+
+  async listV3Vaults(chain: Chain, currency?: Currency, client?: MetadataClient): Promise<VaultDTO[]> {
+    let chainVaults = await chain.vaultsCompound.all();
+
+    if (client) chainVaults = chainVaults.filter((v) => v.client === client);
+
+    return Promise.all(
+      chainVaults.map((vault) => {
+        return this.getVault(chain, vaultCompoundToDefinition(vault), currency);
+      }),
+    );
   }
 
   async getVault(chain: Chain, vaultDefinition: VaultDefinition, currency?: Currency): Promise<VaultDTO> {
