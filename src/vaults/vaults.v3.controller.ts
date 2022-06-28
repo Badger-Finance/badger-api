@@ -1,8 +1,9 @@
-import { Currency, Network } from '@badger-dao/sdk';
+import { Currency, Network, VaultSnapshot } from '@badger-dao/sdk';
 import { Controller, Get, Inject, QueryParams, UseCache } from '@tsed/common';
-import { ContentType, Description, Returns, Summary } from '@tsed/schema';
+import { ContentType, Description, Hidden, Returns, Summary } from '@tsed/schema';
 
 import { Chain } from '../chains/config/chain.config';
+import { UnknownVaultError } from '../errors/allocation/unknown.vault.error';
 import { QueryParamError } from '../errors/validation/query.param.error';
 import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
 import { VaultHarvestsMap } from './interfaces/vault-harvest-map';
@@ -10,9 +11,9 @@ import { VaultHarvestsMapModel } from './interfaces/vault-harvests-list-model.in
 import { VaultHarvestsModel } from './interfaces/vault-harvests-model.interface';
 import { VaultModel } from './interfaces/vault-model.interface';
 import { VaultsService } from './vaults.service';
-import { getVaultDefinition } from './vaults.utils';
+import { getVaultDefinition, vaultCompoundToDefinition } from './vaults.utils';
 
-@Controller('/vault')
+@Controller('/vaults')
 export class VaultsV3Controller {
   @Inject()
   vaultService!: VaultsService;
@@ -25,14 +26,18 @@ export class VaultsV3Controller {
   @Returns(400).Description('Not a valid chain')
   @Returns(404).Description('Not a valid vault')
   async getVault(
-    @QueryParams('vault') vault: string,
+    @QueryParams('address') address: string,
     @QueryParams('chain') chain?: Network,
     @QueryParams('currency') currency?: Currency,
   ): Promise<VaultModel> {
-    if (!vault) throw new QueryParamError('vault');
+    if (!address) throw new QueryParamError('vault');
 
     const chainInst = Chain.getChain(chain);
-    const vaultDef = getVaultDefinition(Chain.getChain(chain), vault);
+    const compoundVault = await chainInst.vaultsCompound.getOneBy('address', address);
+
+    if (!compoundVault) throw new UnknownVaultError('vault');
+
+    const vaultDef = vaultCompoundToDefinition(compoundVault);
 
     return this.vaultService.getVault(chainInst, vaultDef, currency);
   }
@@ -47,7 +52,7 @@ export class VaultsV3Controller {
     @QueryParams('chain') chain?: Network,
     @QueryParams('currency') currency?: Currency,
   ): Promise<VaultModel[]> {
-    return this.vaultService.listVaults(Chain.getChain(chain), currency);
+    return this.vaultService.listV3Vaults(Chain.getChain(chain), currency);
   }
 
   @Get('/harvests')
@@ -74,5 +79,25 @@ export class VaultsV3Controller {
   @Returns(400).Description('Not a valid chain')
   async getlistVaultHarvests(@QueryParams('chain') chain?: Network): Promise<VaultHarvestsMap> {
     return this.vaultService.listVaultHarvests(Chain.getChain(chain));
+  }
+
+  @Hidden()
+  @UseCache()
+  @Get('/snapshots')
+  @ContentType('json')
+  async getVaultSnapshots(
+    @QueryParams('vault') vault: string,
+    @QueryParams('timestamps') timestamps: string,
+    @QueryParams('chain') chain?: Network,
+  ): Promise<VaultSnapshot[]> {
+    if (!vault) {
+      throw new QueryParamError('vault');
+    }
+    const vaultDef = getVaultDefinition(Chain.getChain(chain), vault);
+    return this.vaultService.getVaultSnapshots(
+      Chain.getChain(chain),
+      vaultDef,
+      timestamps.split(',').map((n) => Number(n)),
+    );
   }
 }

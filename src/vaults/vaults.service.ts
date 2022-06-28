@@ -1,5 +1,6 @@
-import { Currency, Protocol, VaultDTO, VaultState, VaultType } from '@badger-dao/sdk';
+import { Currency, Protocol, VaultDTO, VaultSnapshot, VaultState, VaultType } from '@badger-dao/sdk';
 import { VaultYieldProjection } from '@badger-dao/sdk/lib/api/interfaces/vault-yield-projection.interface';
+import { MetadataClient } from '@badger-dao/sdk/lib/registry.v2/enums/metadata.client.enum';
 import { Service } from '@tsed/common';
 import { ethers } from 'ethers';
 
@@ -21,7 +22,9 @@ import {
   getVaultCachedValueSources,
   getVaultDefinition,
   getVaultPendingHarvest,
+  getVaultSnapshotsAtTimestamps,
   VAULT_SOURCE,
+  vaultCompoundToDefinition,
 } from './vaults.utils';
 
 @Service()
@@ -40,6 +43,18 @@ export class VaultsService {
 
   async listVaults(chain: Chain, currency?: Currency): Promise<VaultDTO[]> {
     return Promise.all(chain.vaults.map((vault) => this.getVault(chain, vault, currency)));
+  }
+
+  async listV3Vaults(chain: Chain, currency?: Currency, client?: MetadataClient): Promise<VaultDTO[]> {
+    let chainVaults = await chain.vaultsCompound.all();
+
+    if (client) chainVaults = chainVaults.filter((v) => v.client === client);
+
+    return Promise.all(
+      chainVaults.map((vault) => {
+        return this.getVault(chain, vaultCompoundToDefinition(vault), currency);
+      }),
+    );
   }
 
   async getVault(chain: Chain, vaultDefinition: VaultDefinition, currency?: Currency): Promise<VaultDTO> {
@@ -146,8 +161,13 @@ export class VaultsService {
     return vault;
   }
 
-  private static getVaultYieldProjection(
-    vault: VaultDTO,
+  async getVaultSnapshots(chain: Chain, vault: VaultDefinition, timestamps: number[]): Promise<VaultSnapshot[]> {
+    return getVaultSnapshotsAtTimestamps(chain, vault, timestamps);
+  }
+
+  public static getVaultYieldProjection(
+    // refactor regV2, Data Objects interfaces should be in api alongside with models
+    vault: Pick<VaultDTO, 'value' | 'balance' | 'available' | 'lastHarvest'>,
     pendingHarvest: VaultPendingHarvestData,
   ): VaultYieldProjection {
     const { value, balance, available, lastHarvest } = vault;

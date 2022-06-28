@@ -9,6 +9,7 @@ import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { TokenConfig } from '../../tokens/interfaces/token-config.interface';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { ChainStrategy } from '../strategies/chain.strategy';
+import { ChainVaults } from '../vaults/chain.vaults';
 
 type Chains = Record<string, Chain>;
 type Sdks = Record<string, BadgerSDK>;
@@ -21,6 +22,7 @@ export abstract class Chain {
   private sdk: BadgerSDK;
 
   readonly vaults: VaultDefinition[];
+  readonly vaultsCompound: ChainVaults;
   readonly strategy: ChainStrategy;
   // TODO: add emission control support to sdk
   readonly emissionControl?: string;
@@ -37,6 +39,7 @@ export abstract class Chain {
     emissionControl?: string,
   ) {
     this.vaults = vaults.filter((vault) => !vault.stage || vault.stage === STAGE);
+    this.vaultsCompound = new ChainVaults(network);
     this.sdk = new BadgerSDK({ network: parseInt(chainId, 16), provider: rpcUrl });
     this.strategy = strategy;
     this.emissionControl = emissionControl;

@@ -13,4 +13,7 @@ export class TokenPriceSnapshot implements TokenPrice {
 
   @rangeKey({ defaultProvider: () => Date.now() })
   updatedAt!: number;
+
+  @attribute()
+  usd?: number;
 }

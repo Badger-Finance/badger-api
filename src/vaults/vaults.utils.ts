@@ -1,4 +1,4 @@
-import { between } from '@aws/dynamodb-expressions';
+import { between, greaterThanOrEqualTo } from '@aws/dynamodb-expressions';
 import BadgerSDK, {
   formatBalance,
   gqlGenT,
@@ -25,6 +25,7 @@ import { CachedValueSource } from '../aws/models/apy-snapshots.model';
 import { CurrentVaultSnapshotModel } from '../aws/models/current-vault-snapshot.model';
 import { HarvestCompoundData } from '../aws/models/harvest-compound.model';
 import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
+import { VaultCompoundModel } from '../aws/models/vault-compound.model';
 import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
 import { Chain } from '../chains/config/chain.config';
 import { ONE_YEAR_SECONDS } from '../config/constants';
@@ -808,4 +809,50 @@ export async function getLastCompoundHarvest(vault: string): Promise<Nullable<Ha
   }
 
   return lastHarvest;
+}
+
+// temp helper during migration
+export function vaultCompoundToDefinition(vault: VaultCompoundModel): VaultDefinition {
+  return {
+    behavior: vault.behavior,
+    client: vault.client,
+    depositToken: vault.depositToken.address,
+    experimental: vault.state === VaultState.Experimental,
+    name: vault.name,
+    newVault: vault.isNew(),
+    protocol: vault.protocol,
+    state: vault.state,
+    vaultToken: vault.address,
+    version: vault.version,
+  };
+}
+
+export async function getVaultSnapshotsAtTimestamps(
+  chain: Chain,
+  vaultDefinition: VaultDefinition,
+  timestamps: number[],
+): Promise<HistoricVaultSnapshotModel[]> {
+  try {
+    const snapshots = [];
+    const mapper = getDataMapper();
+    const assetToken = await getFullToken(chain, vaultDefinition.vaultToken);
+
+    for (const timestamp of timestamps) {
+      for await (const snapshot of mapper.query(
+        HistoricVaultSnapshotModel,
+        { address: assetToken.address, timestamp: greaterThanOrEqualTo(new Date(timestamp).getTime()) },
+        { limit: 1 },
+      )) {
+        if (!snapshot.pricePerFullShare && snapshot.ratio) {
+          snapshot.pricePerFullShare = snapshot.ratio;
+        }
+        snapshots.push(snapshot);
+      }
+    }
+
+    return snapshots;
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
 }

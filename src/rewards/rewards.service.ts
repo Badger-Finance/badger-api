@@ -40,13 +40,14 @@ export class RewardsService {
    * @param address User Ethereum address.
    */
   async getUserRewards(chain: Chain, address: string): Promise<RewardMerkleClaim> {
+    const userAddress = ethers.utils.getAddress(address);
     const treeDistribution = await getTreeDistribution(chain);
     if (!treeDistribution) {
       throw new UnsupportedChainError(`${chain.name}`);
     }
-    const claim = treeDistribution.claims[address];
+    const claim = treeDistribution.claims[userAddress];
     if (!claim) {
-      throw new NodataForAddrError(`${address}`);
+      throw new NodataForAddrError(`${userAddress}`);
     }
     return claim;
   }

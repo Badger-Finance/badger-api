@@ -29,8 +29,11 @@ custom:
             sources: [./seed/prices.json]
           - table: ${self:custom.table.APY_SNAPSHOTS_DATA}
             sources: [./seed/value-sources.json]
+          # deprecated, rm after regV2
           - table: ${self:custom.table.VAULT_SNAPSHOTS_DATA}
             sources: [./seed/vault-snapshots.json]
+          - table: ${self:custom.table.VAULT_COMPOUND_DATA}
+            sources: [./seed/vaults-compound.json]
           - table: ${self:custom.table.TOKEN_INFORMATION_DATA}
             sources: [./seed/token-info.json]
 
@@ -40,7 +43,9 @@ custom:
   table:
     APY_SNAPSHOTS_DATA: apy-snapshots-${self:custom.stage}
     SETT_HISTORIC_DATA: sett-historic-snapshots-${self:custom.stage}
+    # deprecated
     VAULT_SNAPSHOTS_DATA: vaults-snapshots-${self:custom.stage}
+    VAULT_COMPOUND_DATA: vaults-compound-${self:custom.stage}
     VAULT_BALANCES_DATA: vault-balances-${self:custom.stage}
     TOKEN_PRICE_DATA: token-prices-${self:custom.stage}
     TOKEN_INFORMATION_DATA: token-information-${self:custom.stage}
@@ -104,7 +109,9 @@ provider:
     # Table Defintions
     APY_SNAPSHOTS_DATA: ${self:custom.table.APY_SNAPSHOTS_DATA}
     SETT_HISTORIC_DATA: ${self:custom.table.SETT_HISTORIC_DATA}
+    # deprecated
     VAULT_SNAPSHOTS_DATA: ${self:custom.table.VAULT_SNAPSHOTS_DATA}
+    VAULT_COMPOUND_DATA: ${self:custom.table.VAULT_COMPOUND_DATA}
     VAULT_BALANCES_DATA: ${self:custom.table.VAULT_BALANCES_DATA}
     TOKEN_PRICE_DATA: ${self:custom.table.TOKEN_PRICE_DATA}
     TOKEN_INFORMATION_DATA: ${self:custom.table.TOKEN_INFORMATION_DATA}
@@ -219,6 +226,7 @@ resources:
           - AttributeName: 'timestamp'
             AttributeType: 'N'
 
+    # deprecated
     vaultsSnapshotsTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -230,6 +238,41 @@ resources:
         AttributeDefinitions:
           - AttributeName: 'address'
             AttributeType: 'S'
+
+    vaultsCompoundTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.table.VAULT_COMPOUND_DATA}
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: 'address'
+            KeyType: 'HASH'
+          - AttributeName: 'createdAt'
+            KeyType: 'RANGE'
+        AttributeDefinitions:
+          - AttributeName: 'address'
+            AttributeType: 'S'
+          - AttributeName: 'createdAt'
+            AttributeType: 'N'
+          - AttributeName: 'chain'
+            AttributeType: 'S'
+          - AttributeName: 'isProduction'
+            AttributeType: 'N'
+        GlobalSecondaryIndexes:
+          - IndexName: IndexVaultCompoundDataChain
+            KeySchema:
+              - AttributeName: 'chain'
+                KeyType: 'HASH'
+            Projection:
+              ProjectionType: ALL
+          - IndexName: IndexVaultCompoundDataChainIsProd
+            KeySchema:
+              - AttributeName: 'chain'
+                KeyType: 'HASH'
+              - AttributeName: 'isProduction'
+                KeyType: 'RANGE'
+            Projection:
+              ProjectionType: ALL
 
     leaderboardsTable:
       Type: AWS::DynamoDB::Table
@@ -537,7 +580,7 @@ functions:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-prices
           description: 'index price data for all protocol tokens'
-          rate: rate(1 minute)
+          rate: rate(5 minutes)
 
   index-vault-snapshots:
     handler: src/indexers/vault-snapshots-indexer.refreshVaultSnapshots
@@ -547,6 +590,15 @@ functions:
           name: ${self:service}-${self:custom.stage}-index-vault-snapshots
           description: 'index data for supported vaults'
           rate: rate(1 minute)
+
+  index-vault-compound:
+    handler: src/indexers/vault-compound-indexer.captureVaultData
+    timeout: 150
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-vault-compound
+          description: 'index data for supported vaults'
+          rate: rate(2 minutes)
 
   index-vault-harvests:
     handler: src/indexers/vault-harvests-indexer.refreshVaultHarvests

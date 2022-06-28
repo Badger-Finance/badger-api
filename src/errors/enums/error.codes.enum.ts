@@ -9,6 +9,8 @@ export enum ApiErrorCode {
   NoDataForAddress = 2001,
   NoDataForVault = 2002,
 
+  UnknownVault = 2100,
+
   // Citadel Errors
   NoDataInBouncerList = 9000,
 }

@@ -14,6 +14,7 @@ import { createValueSource } from '../protocols/interfaces/value-source.interfac
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { valueSourceToCachedValueSource } from '../rewards/rewards.utils';
 import { Server } from '../Server';
+import { setupVaultsCoumpoundDDB } from '../test/tests.utils';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import * as tokensUtils from '../tokens/tokens.utils';
 import { mockBalance } from '../tokens/tokens.utils';
@@ -99,11 +100,12 @@ describe('VaultsController', () => {
       });
   };
 
-  describe('GET /v3/vault/list', () => {
+  describe('GET /v3/vaults/list', () => {
     describe('with no specified chain', () => {
       it('returns eth vaults', async (done: jest.DoneCallback) => {
+        setupVaultsCoumpoundDDB();
         setupTestVault();
-        const { body } = await request.get('/v3/vault/list').expect(NetworkStatus.Success);
+        const { body } = await request.get('/v3/vaults/list').expect(NetworkStatus.Success);
         expect(body).toMatchSnapshot();
         done();
       });
@@ -111,15 +113,17 @@ describe('VaultsController', () => {
 
     describe('with a specified chain', () => {
       it('returns the vaults for eth', async (done: jest.DoneCallback) => {
+        setupVaultsCoumpoundDDB();
         setupTestVault();
-        const { body } = await request.get('/v3/vault/list?chain=ethereum').expect(NetworkStatus.Success);
+        const { body } = await request.get('/v3/vaults/list?chain=ethereum').expect(NetworkStatus.Success);
         expect(body).toMatchSnapshot();
         done();
       });
 
-      it('returns the vaults for bsc', async (done: jest.DoneCallback) => {
+      it('returns the vaults for polygon', async (done: jest.DoneCallback) => {
+        setupVaultsCoumpoundDDB();
         setupTestVault();
-        const { body } = await request.get('/v3/vault/list?chain=binancesmartchain').expect(NetworkStatus.Success);
+        const { body } = await request.get('/v3/vaults/list?chain=polygon').expect(NetworkStatus.Success);
         expect(body).toMatchSnapshot();
         done();
       });
@@ -127,38 +131,38 @@ describe('VaultsController', () => {
 
     describe('with an invalid specified chain', () => {
       it('returns a 400', async (done: jest.DoneCallback) => {
-        const { body } = await request.get('/v3/vault/list?chain=invalid').expect(NetworkStatus.BadRequest);
+        const { body } = await request.get('/v3/vaults/list?chain=invalid').expect(NetworkStatus.BadRequest);
         expect(body).toMatchSnapshot();
         done();
       });
     });
   });
 
-  describe('GET /v3/vault/list/harvests', () => {
+  describe('GET /v3/vaults/list/harvests', () => {
     beforeEach(setupDdbHarvests);
 
     describe('success cases', () => {
       it('Return extended harvest for chain vaults', async (done: jest.DoneCallback) => {
-        const { body } = await request.get('/v3/vault/list/harvests').expect(NetworkStatus.Success);
+        const { body } = await request.get('/v3/vaults/list/harvests').expect(NetworkStatus.Success);
         expect(body).toMatchSnapshot();
         done();
       });
     });
     describe('error cases', () => {
       it('returns a 400 for invalide chain', async (done: jest.DoneCallback) => {
-        const { body } = await request.get('/v3/vault/list/harvests?chain=invalid').expect(NetworkStatus.BadRequest);
+        const { body } = await request.get('/v3/vaults/list/harvests?chain=invalid').expect(NetworkStatus.BadRequest);
         expect(body).toMatchSnapshot();
         done();
       });
     });
   });
 
-  describe('GET /v3/vault/harvests', () => {
+  describe('GET /v3/vaults/harvests', () => {
     beforeEach(setupDdbHarvests);
 
     describe('success cases', () => {
       it('Return extended harvests for chain vault by addr', async (done: jest.DoneCallback) => {
-        const { body } = await request.get(`/v3/vault/harvests?vault=${TEST_VAULT}`).expect(NetworkStatus.Success);
+        const { body } = await request.get(`/v3/vaults/harvests?vault=${TEST_VAULT}`).expect(NetworkStatus.Success);
         expect(body).toMatchSnapshot();
         done();
       });
@@ -166,7 +170,7 @@ describe('VaultsController', () => {
     describe('error cases', () => {
       it('returns a 400 for invalide chain', async (done: jest.DoneCallback) => {
         const { body } = await request
-          .get(`/v3/vault/harvests?vault=${TEST_VAULT}&chain=invalid`)
+          .get(`/v3/vaults/harvests?vault=${TEST_VAULT}&chain=invalid`)
           .expect(NetworkStatus.BadRequest);
         expect(body).toMatchSnapshot();
         done();

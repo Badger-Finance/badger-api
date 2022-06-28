@@ -6,6 +6,7 @@ import { Stage } from './enums/stage.enum';
 // time constants
 export const ONE_MINUTE_SECONDS = 60;
 export const ONE_DAY_SECONDS = ONE_MINUTE_SECONDS * 60 * 24;
+export const ONE_WEEK_SECONDS = ONE_DAY_SECONDS * 7;
 export const ONE_YEAR_SECONDS = ONE_DAY_SECONDS * 365;
 
 // data access constants
@@ -15,6 +16,7 @@ export const VAULT_BALANCES_DATA = getEnvVar('VAULT_BALANCES_DATA');
 export const TOKEN_PRICE_DATA = getEnvVar('TOKEN_PRICE_DATA');
 export const TOKEN_INFORMATION_DATA = getEnvVar('TOKEN_INFORMATION_DATA');
 export const VAULT_SNAPSHOTS_DATA = getEnvVar('VAULT_SNAPSHOTS_DATA');
+export const VAULT_COMPOUND_DATA = getEnvVar('VAULT_COMPOUND_DATA');
 export const REWARD_DATA = getEnvVar('REWARD_DATA');
 export const LEADERBOARD_DATA = getEnvVar('LEADERBOARD_DATA');
 export const ACCOUNT_DATA = getEnvVar('ACCOUNT_DATA');
