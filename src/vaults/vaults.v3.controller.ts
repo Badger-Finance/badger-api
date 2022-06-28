@@ -1,6 +1,6 @@
-import { Currency, Network } from '@badger-dao/sdk';
+import { Currency, Network, VaultSnapshot } from '@badger-dao/sdk';
 import { Controller, Get, Inject, QueryParams, UseCache } from '@tsed/common';
-import { ContentType, Description, Returns, Summary } from '@tsed/schema';
+import { ContentType, Description, Hidden, Returns, Summary } from '@tsed/schema';
 
 import { Chain } from '../chains/config/chain.config';
 import { UnknownVaultError } from '../errors/allocation/unknown.vault.error';
@@ -11,9 +11,9 @@ import { VaultHarvestsMapModel } from './interfaces/vault-harvests-list-model.in
 import { VaultHarvestsModel } from './interfaces/vault-harvests-model.interface';
 import { VaultModel } from './interfaces/vault-model.interface';
 import { VaultsService } from './vaults.service';
-import { vaultCompoundToDefinition } from './vaults.utils';
+import { getVaultDefinition, vaultCompoundToDefinition } from './vaults.utils';
 
-@Controller('/vault')
+@Controller('/vaults')
 export class VaultsV3Controller {
   @Inject()
   vaultService!: VaultsService;
@@ -79,5 +79,24 @@ export class VaultsV3Controller {
   @Returns(400).Description('Not a valid chain')
   async getlistVaultHarvests(@QueryParams('chain') chain?: Network): Promise<VaultHarvestsMap> {
     return this.vaultService.listVaultHarvests(Chain.getChain(chain));
+  }
+
+  @Hidden()
+  @Get('/snapshots')
+  @ContentType('json')
+  async getVaultSnapshots(
+    @QueryParams('vault') vault: string,
+    @QueryParams('timestamps') timestamps: string[],
+    @QueryParams('chain') chain?: Network,
+  ): Promise<VaultSnapshot[]> {
+    if (!vault) {
+      throw new QueryParamError('vault');
+    }
+    const vaultDef = getVaultDefinition(Chain.getChain(chain), vault);
+    return this.vaultService.getVaultSnapshots(
+      Chain.getChain(chain),
+      vaultDef,
+      timestamps.map((n) => Number(n)),
+    );
   }
 }
