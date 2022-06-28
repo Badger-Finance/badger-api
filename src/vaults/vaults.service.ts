@@ -1,4 +1,4 @@
-import { Currency, Protocol, VaultDTO, VaultState, VaultType } from '@badger-dao/sdk';
+import { Currency, Protocol, VaultDTO, VaultSnapshot, VaultState, VaultType } from '@badger-dao/sdk';
 import { VaultYieldProjection } from '@badger-dao/sdk/lib/api/interfaces/vault-yield-projection.interface';
 import { MetadataClient } from '@badger-dao/sdk/lib/registry.v2/enums/metadata.client.enum';
 import { Service } from '@tsed/common';
@@ -22,6 +22,7 @@ import {
   getVaultCachedValueSources,
   getVaultDefinition,
   getVaultPendingHarvest,
+  getVaultSnapshotsAtTimestamps,
   VAULT_SOURCE,
   vaultCompoundToDefinition,
 } from './vaults.utils';
@@ -158,6 +159,10 @@ export class VaultsService {
     }
 
     return vault;
+  }
+
+  async getVaultSnapshots(chain: Chain, vault: VaultDefinition, timestamps: number[]): Promise<VaultSnapshot[]> {
+    return getVaultSnapshotsAtTimestamps(chain, vault, timestamps);
   }
 
   public static getVaultYieldProjection(

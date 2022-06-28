@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`VaultsController GET /v3/vault/harvests error cases returns a 400 for invalide chain 1`] = `
+exports[`VaultsController GET /v3/vaults/harvests error cases returns a 400 for invalide chain 1`] = `
 Object {
   "message": "invalid is not a supported chain",
 }
 `;
 
-exports[`VaultsController GET /v3/vault/harvests success cases Return extended harvests for chain vault by addr 1`] = `
+exports[`VaultsController GET /v3/vaults/harvests success cases Return extended harvests for chain vault by addr 1`] = `
 Array [
   Object {
     "amount": 0.004992355665779731,
@@ -29,7 +29,7 @@ Array [
 ]
 `;
 
-exports[`VaultsController GET /v3/vault/list with a specified chain returns the vaults for eth 1`] = `
+exports[`VaultsController GET /v3/vaults/list with a specified chain returns the vaults for eth 1`] = `
 Array [
   Object {
     "apr": 83.78999999999999,
@@ -1615,7 +1615,7 @@ Array [
 ]
 `;
 
-exports[`VaultsController GET /v3/vault/list with a specified chain returns the vaults for polygon 1`] = `
+exports[`VaultsController GET /v3/vaults/list with a specified chain returns the vaults for polygon 1`] = `
 Array [
   Object {
     "apr": 59.22,
@@ -1991,13 +1991,13 @@ Array [
 ]
 `;
 
-exports[`VaultsController GET /v3/vault/list with an invalid specified chain returns a 400 1`] = `
+exports[`VaultsController GET /v3/vaults/list with an invalid specified chain returns a 400 1`] = `
 Object {
   "message": "invalid is not a supported chain",
 }
 `;
 
-exports[`VaultsController GET /v3/vault/list with no specified chain returns eth vaults 1`] = `
+exports[`VaultsController GET /v3/vaults/list with no specified chain returns eth vaults 1`] = `
 Array [
   Object {
     "apr": 83.78999999999999,
@@ -3583,13 +3583,13 @@ Array [
 ]
 `;
 
-exports[`VaultsController GET /v3/vault/list/harvests error cases returns a 400 for invalide chain 1`] = `
+exports[`VaultsController GET /v3/vaults/list/harvests error cases returns a 400 for invalide chain 1`] = `
 Object {
   "message": "invalid is not a supported chain",
 }
 `;
 
-exports[`VaultsController GET /v3/vault/list/harvests success cases Return extended harvest for chain vaults 1`] = `
+exports[`VaultsController GET /v3/vaults/list/harvests success cases Return extended harvest for chain vaults 1`] = `
 Object {
   "0x15cBC4ac1e81c97667780fE6DAdeDd04a6EEB47B": Array [],
   "0x1862A18181346EBd9EdAf800804f89190DeF24a5": Array [],

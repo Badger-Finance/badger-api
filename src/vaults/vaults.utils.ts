@@ -1,4 +1,4 @@
-import { between } from '@aws/dynamodb-expressions';
+import { between, greaterThanOrEqualTo } from '@aws/dynamodb-expressions';
 import BadgerSDK, {
   formatBalance,
   gqlGenT,
@@ -825,4 +825,34 @@ export function vaultCompoundToDefinition(vault: VaultCompoundModel): VaultDefin
     vaultToken: vault.address,
     version: vault.version,
   };
+}
+
+export async function getVaultSnapshotsAtTimestamps(
+  chain: Chain,
+  vaultDefinition: VaultDefinition,
+  timestamps: number[],
+): Promise<HistoricVaultSnapshotModel[]> {
+  try {
+    const snapshots = [];
+    const mapper = getDataMapper();
+    const assetToken = await getFullToken(chain, vaultDefinition.vaultToken);
+
+    for (const timestamp of timestamps) {
+      for await (const snapshot of mapper.query(
+        HistoricVaultSnapshotModel,
+        { address: assetToken.address, timestamp: greaterThanOrEqualTo(new Date(timestamp).getTime()) },
+        { scanIndexForward: false, limit: 1 },
+      )) {
+        if (!snapshot.pricePerFullShare && snapshot.ratio) {
+          snapshot.pricePerFullShare = snapshot.ratio;
+        }
+        snapshots.push(snapshot);
+      }
+    }
+
+    return snapshots;
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
 }
