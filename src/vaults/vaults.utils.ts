@@ -846,6 +846,7 @@ export async function getVaultSnapshotsAtTimestamps(
         if (!snapshot.pricePerFullShare && snapshot.ratio) {
           snapshot.pricePerFullShare = snapshot.ratio;
         }
+        snapshot.timestamp = timestamp;
         snapshots.push(snapshot);
       }
     }

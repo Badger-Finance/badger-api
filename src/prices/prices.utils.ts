@@ -129,6 +129,7 @@ export async function getPriceSnapshotsAtTimestamps(
         { limit: 1 },
       )) {
         snapshot.price = await convert(snapshot.price ?? snapshot.usd, currency);
+        snapshot.updatedAt = timestamp;
         snapshots.push(snapshot);
       }
     }
