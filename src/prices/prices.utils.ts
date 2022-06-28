@@ -1,3 +1,4 @@
+import { greaterThanOrEqualTo } from '@aws/dynamodb-expressions';
 import { Currency } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 
@@ -110,4 +111,31 @@ export async function fetchPrices(chain: Chain, inputs: string[], lookupName = f
   }
 
   return request<CoinGeckoPriceResponse>(baseURL, params);
+}
+
+export async function getPriceSnapshotsAtTimestamps(
+  address: string,
+  timestamps: number[],
+  currency?: Currency,
+): Promise<TokenPriceSnapshot[]> {
+  try {
+    const snapshots = [];
+    const mapper = getDataMapper();
+
+    for (const timestamp of timestamps) {
+      for await (const snapshot of mapper.query(
+        TokenPriceSnapshot,
+        { address: ethers.utils.getAddress(address), updatedAt: greaterThanOrEqualTo(timestamp) },
+        { limit: 1 },
+      )) {
+        snapshot.price = await convert(snapshot.price ?? snapshot.usd, currency);
+        snapshots.push(snapshot);
+      }
+    }
+
+    return snapshots;
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
 }

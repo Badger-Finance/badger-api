@@ -2,6 +2,7 @@ import { ChartTimeFrame, CitadelLeaderboardEntry, Currency, Network } from '@bad
 import { CitadelSummary } from '@badger-dao/sdk/lib/api/interfaces/citadel-summary.interface';
 import { CitadelTreasurySummary } from '@badger-dao/sdk/lib/api/interfaces/citadel-treasury-summary.interface';
 import { RewardFilter } from '@badger-dao/sdk/lib/citadel/enums/reward-filter.enum';
+import { MetadataClient } from '@badger-dao/sdk/lib/registry.v2/enums/metadata.client.enum';
 import { Controller, Get, Inject, QueryParams, UseCache } from '@tsed/common';
 import { NotFound } from '@tsed/exceptions';
 import { ContentType, Description, Returns, Summary } from '@tsed/schema';
@@ -18,7 +19,6 @@ import { CitadelRewardEvent } from './interfaces/citadel-reward-event.interface'
 import { CitadelRewardEventModel } from './interfaces/citadel-reward-event-model.interface';
 import { CitadelSummaryModel } from './interfaces/citadel-summary-model.interface';
 import { CitadelTreasurySummaryModel } from './interfaces/citadel-treasury-summary-model.interface';
-import { MetadataClient } from '@badger-dao/sdk/lib/registry.v2/enums/metadata.client.enum';
 
 @Controller('/')
 export class CitadelController {
