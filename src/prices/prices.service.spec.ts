@@ -16,7 +16,7 @@ describe('leaderboards.service', () => {
   describe('getPriceSummary', () => {
     it('returns a price summary for the requested chains tokens', async () => {
       mockPricing();
-      const results = await service.getPriceSummary(TEST_CHAIN);
+      const results = await service.getPriceSummary(Object.keys(TEST_CHAIN.tokens));
       expect(results).toMatchSnapshot();
     });
   });

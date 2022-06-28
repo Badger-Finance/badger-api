@@ -841,7 +841,7 @@ export async function getVaultSnapshotsAtTimestamps(
       for await (const snapshot of mapper.query(
         HistoricVaultSnapshotModel,
         { address: assetToken.address, timestamp: greaterThanOrEqualTo(new Date(timestamp).getTime()) },
-        { scanIndexForward: false, limit: 1 },
+        { limit: 1 },
       )) {
         if (!snapshot.pricePerFullShare && snapshot.ratio) {
           snapshot.pricePerFullShare = snapshot.ratio;

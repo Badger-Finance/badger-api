@@ -87,7 +87,7 @@ export class VaultsV3Controller {
   @ContentType('json')
   async getVaultSnapshots(
     @QueryParams('vault') vault: string,
-    @QueryParams('timestamps') timestamps: string[],
+    @QueryParams('timestamps') timestamps: string,
     @QueryParams('chain') chain?: Network,
   ): Promise<VaultSnapshot[]> {
     if (!vault) {
@@ -97,7 +97,7 @@ export class VaultsV3Controller {
     return this.vaultService.getVaultSnapshots(
       Chain.getChain(chain),
       vaultDef,
-      timestamps.map((n) => Number(n)),
+      timestamps.split(',').map((n) => Number(n)),
     );
   }
 }

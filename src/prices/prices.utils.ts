@@ -9,6 +9,7 @@ import { COINGECKO_URL } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
 import { CoinGeckoPriceResponse } from './interface/coingecko-price-response.interface';
 import { TokenPrice } from './interface/token-price.interface';
+import { greaterThanOrEqualTo } from '@aws/dynamodb-expressions';
 
 /**
  * Update pricing db entry using chain strategy.
@@ -110,4 +111,31 @@ export async function fetchPrices(chain: Chain, inputs: string[], lookupName = f
   }
 
   return request<CoinGeckoPriceResponse>(baseURL, params);
+}
+
+export async function getPriceSnapshotsAtTimestamps(
+  address: string,
+  timestamps: number[],
+  currency?: Currency,
+): Promise<TokenPriceSnapshot[]> {
+  try {
+    const snapshots = [];
+    const mapper = getDataMapper();
+
+    for (const timestamp of timestamps) {
+      for await (const snapshot of mapper.query(
+        TokenPriceSnapshot,
+        { address: ethers.utils.getAddress(address), updatedAt: greaterThanOrEqualTo(timestamp) },
+        { limit: 1 },
+      )) {
+        snapshot.price = await convert(snapshot.price ?? snapshot.usd, currency);
+        snapshots.push(snapshot);
+      }
+    }
+
+    return snapshots;
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
 }
