@@ -3,10 +3,10 @@ import { Controller, Get, Inject, QueryParams, UseCache } from '@tsed/common';
 import { ContentType, Description, Hidden, Returns, Summary } from '@tsed/schema';
 
 import { Chain } from '../chains/config/chain.config';
+import { PriceSnapshots } from '../tokens/interfaces/price-snapshots.interface';
 import { PriceSummary } from '../tokens/interfaces/price-summary.interface';
 import { PriceSummaryModel } from '../tokens/interfaces/price-summary-model.interface';
 import { PricesService } from './prices.service';
-import { PriceSnapshots } from '../tokens/interfaces/price-snapshots.interface';
 
 @Controller('/prices')
 export class PriceController {
@@ -20,11 +20,14 @@ export class PriceController {
   @Description('Return a map of checksum contract address to the currency value of the token')
   @Returns(200, PriceSummaryModel)
   async listPrices(
-    @QueryParams('tokens') tokens?: string[],
+    @QueryParams('tokens') tokens?: string,
     @QueryParams('chain') chain?: Network,
     @QueryParams('currency') currency?: Currency,
   ): Promise<PriceSummary> {
-    return this.pricesService.getPriceSummary(tokens ?? Object.keys(Chain.getChain(chain).tokens), currency);
+    return this.pricesService.getPriceSummary(
+      tokens?.split(',') ?? Object.keys(Chain.getChain(chain).tokens),
+      currency,
+    );
   }
 
   @Get('/snapshots')

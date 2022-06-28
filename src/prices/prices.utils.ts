@@ -1,3 +1,4 @@
+import { greaterThanOrEqualTo } from '@aws/dynamodb-expressions';
 import { Currency } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 
@@ -9,7 +10,6 @@ import { COINGECKO_URL } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
 import { CoinGeckoPriceResponse } from './interface/coingecko-price-response.interface';
 import { TokenPrice } from './interface/token-price.interface';
-import { greaterThanOrEqualTo } from '@aws/dynamodb-expressions';
 
 /**
  * Update pricing db entry using chain strategy.
