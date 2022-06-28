@@ -82,6 +82,7 @@ export class VaultsV3Controller {
   }
 
   @Hidden()
+  @UseCache()
   @Get('/snapshots')
   @ContentType('json')
   async getVaultSnapshots(
