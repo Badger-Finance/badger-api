@@ -20,13 +20,14 @@ export class BaseStrategy extends ChainStrategy {
   async getPrice(address: string): Promise<TokenPrice> {
     const chain = Chain.getChain(this.network);
     const token = await getFullToken(chain, address);
+    const tokenConfig = chain.tokens[address];
 
     switch (token.type) {
       case PricingType.Custom:
         if (!token.getPrice) {
           throw new UnprocessableEntity(`${token.name} requires custom price implementation`);
         }
-        return token.getPrice(chain, token);
+        return token.getPrice(chain, token, tokenConfig.lookupName);
       case PricingType.OnChainUniV2LP:
         if (!token.lookupName) {
           throw new UnprocessableEntity(`${token.name} required lookupName to utilize OnChainUniV2LP pricing`);

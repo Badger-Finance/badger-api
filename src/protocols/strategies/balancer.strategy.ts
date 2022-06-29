@@ -1,4 +1,4 @@
-import { Erc20__factory, formatBalance } from '@badger-dao/sdk';
+import { Erc20__factory, formatBalance, Token } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 
 import { VaultTokenBalance } from '../../aws/models/vault-token-balance.model';
@@ -57,4 +57,56 @@ export async function getBalancerVaultTokenBalance(chain: Chain, token: string):
     tokenBalances: cachedTokens,
   };
   return Object.assign(new VaultTokenBalance(), vaultTokenBalance);
+}
+
+export async function resolveBalancerPoolTokenPrice(chain: Chain, token: Token, pool?: string): Promise<TokenPrice> {
+  const balances = await getBalancerPoolTokens(chain, pool!);
+  const sdk = await chain.getSdk();
+
+  const maybeWeightedPool = WeightedPool__factory.connect(pool!, sdk.provider);
+  try {
+    const weights = await maybeWeightedPool.getNormalizedWeights();
+    const targetIndex = balances.findIndex((b) => b.address === token.address);
+
+    if (targetIndex < 0) {
+      throw new Error(`${token.name} not found in target BPT (${pool})`);
+    }
+
+    const targetBalance = balances[targetIndex];
+    const expectedWeight = formatBalance(weights[targetIndex]);
+    const totalOtherValue = balances
+      .filter((b) => b.address !== token.address)
+      .reduce((total, balance) => (total += balance.value), 0);
+    const multiplier = expectedWeight / (1 - expectedWeight);
+    const tokenPrice = (totalOtherValue * multiplier) / targetBalance.balance;
+
+    return {
+      address: token.address,
+      price: tokenPrice,
+    };
+  } catch {
+    // Attempt instead, to evaluate as a stable pool
+    // We will assume stable pools, by nature, to have two assets - presuambly pegged
+
+    try {
+      if (balances.length != 2) {
+        throw new Error('Pool has unexpected number of tokens!');
+      }
+      const requestTokenIndex = balances[0].address === token.address ? 0 : 1;
+      const requestToken = balances[requestTokenIndex];
+      const pairToken = balances[1 - requestTokenIndex];
+      const requestTokenPrice = pairToken.value / requestToken.balance;
+      return {
+        address: token.address,
+        price: requestTokenPrice,
+      };
+    } catch (err) {
+      console.error({ err, message: `Unable to price ${token.name}` });
+    }
+  }
+
+  return {
+    address: token.address,
+    price: 0,
+  };
 }
