@@ -211,6 +211,9 @@ export const ethTokensConfig: TokenConfig = {
   [TOKENS.FXS]: {
     type: PricingType.Contract,
   },
+  [TOKENS.BAL]: {
+    type: PricingType.Contract,
+  },
   [TOKENS.CTDL]: {
     type: PricingType.Custom,
     getPrice: resolveCurvePoolTokenPrice,

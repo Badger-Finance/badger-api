@@ -1,1542 +1,1592 @@
 [
   {
     "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
-    "price": 4.2,
-    "updatedAt": 1655010795496
+    "price": 3.07,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
-    "price": 27461,
-    "updatedAt": 1655010795496
+    "price": 19938.86,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
-    "price": 1444.33,
-    "updatedAt": 1655010795496
+    "price": 1087.86,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0xEB4C2781e4ebA804CE9a9803C67d0893436bB27D",
-    "price": 27435,
-    "updatedAt": 1655010795496
+    "price": 19955.25,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x49849C98ae39Fff122806C06791Fa73784FB3675",
-    "price": 27974.658035464745,
-    "updatedAt": 1655010795496
+    "price": 20355.470479695596,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x137469B55D1f15651BA46A89D0588e97dD0B6562",
-    "price": 680.3880339382328,
-    "updatedAt": 1655010795496
+    "price": 497.2924170013161,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0xfE18be6b3Bd88A2D2A7f928d00292E7a9963CfC6",
-    "price": 28163,
-    "updatedAt": 1655010795496
+    "price": 20198,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0xa3BeD4E1c75D00fa6f4E5E6922DB7261B5E9AcD2",
-    "price": 0.167273,
-    "updatedAt": 1655010795496
+    "price": 0.129856,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x945Facb997494CC2570096c74b5F66A3507330a1",
     "price": 44202,
-    "updatedAt": 1655010795496
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x17d8CBB6Bce8cEE970a4027d1198F6700A7a6c24",
-    "price": 4567.287309567104,
-    "updatedAt": 1655010795496
+    "price": 4569.841095672168,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x48c59199Da51B7E30Ea200a74Ea07974e62C4bA7",
-    "price": 44550.873906559435,
-    "updatedAt": 1655010795496
+    "price": 44559.94620141231,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x04c90C198b2eFF55716079bc06d7CCc4aa4d7512",
-    "price": 5.060964746379656,
-    "updatedAt": 1655010795496
+    "price": 3.5979732583588033,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x075b1bb99792c9E1041bA13afEf80C91a1e70fB3",
-    "price": 27979.47388338332,
-    "updatedAt": 1655010795496
+    "price": 20283.290980458085,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x8dAEBADE922dF735c38C80C7eBD708Af50815fAa",
-    "price": 27871,
-    "updatedAt": 1655010795496
+    "price": 20962,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x64eda51d3Ad40D56b9dFc5554E06F94e1Dd786Fd",
-    "price": 27965.660933049796,
-    "updatedAt": 1655010795496
+    "price": 20525.93321965188,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x798D1bE841a82a273720CE31c822C61a67a601C3",
-    "price": 5860.76,
-    "updatedAt": 1655010795496
+    "price": 3394.69,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x99F39D495C6A5237f43602f3Ab5F49786E46c9B0",
-    "price": 5860.76,
-    "updatedAt": 1655010795496
+    "price": 3394.69,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2",
-    "price": 1.11,
-    "updatedAt": 1655010795496
+    "price": 1.043,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x8798249c2E607446EfB7Ad49eC89dD1865Ff4272",
-    "price": 1.46,
-    "updatedAt": 1655010795496
+    "price": 1.41,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x8751D4196027d4e6DA63716fA7786B5174F04C15",
-    "price": 28378,
-    "updatedAt": 1655010795496
+    "price": 21305,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0xc4E15973E6fF2A35cC804c2CF9D2a1b817a8b40F",
     "price": 42862,
-    "updatedAt": 1655010795496
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x0316EB71485b0Ab14103307bf65a021042c6d380",
-    "price": 27396,
-    "updatedAt": 1655010795496
+    "price": 19956.44,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0xb19059ebb43466C323583928285a49f558E572Fd",
-    "price": 27654.75036567182,
-    "updatedAt": 1655010795496
+    "price": 20131.688300033966,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x5228a22e72ccC52d415EcFd199F99D0665E7733b",
-    "price": 27176,
-    "updatedAt": 1655010795496
+    "price": 19534.72,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0xDE5331AC4B3630f94853Ff322B66407e0D6331E8",
-    "price": 27596.895354727643,
-    "updatedAt": 1655010795496
+    "price": 19921.239877740292,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x8064d9Ae6cDf087b1bcd5BDf3531bD5d8C537a68",
     "price": 44315,
-    "updatedAt": 1655010795496
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x2fE94ea3d5d4a175184081439753DE15AeF9d614",
-    "price": 35448.065051474085,
-    "updatedAt": 1655010795496
+    "price": 33495.7201835711,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x9BE89D2a4cd102D8Fecc6BF9dA793be995C22541",
-    "price": 27325,
-    "updatedAt": 1655010795496
+    "price": 19881.82,
+    "updatedAt": 1656524675940
+  },
+  {
+    "address": "0xC0c293ce456fF0ED870ADd98a0828Dd4d2903DBF",
+    "price": 1.19,
+    "updatedAt": 1656524675940
+  },
+  {
+    "address": "0x616e8BfA43F920657B3497DBf40D6b1A02D4608d",
+    "price": 0.46857010254568165,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x410e3E86ef427e30B9235497143881f717d93c2A",
-    "price": 27761.672328200904,
-    "updatedAt": 1655010795496
+    "price": 20220.509858525034,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0xFbdCA68601f835b27790D98bbb8eC7f05FDEaA9B",
-    "price": 28119.334851196778,
-    "updatedAt": 1655010795496
+    "price": 20816.133853493782,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0xD533a949740bb3306d119CC777fa900bA034cd52",
-    "price": 0.849633,
-    "updatedAt": 1655010795496
+    "price": 0.698601,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
     "price": 1.001,
-    "updatedAt": 1655010795496
+    "updatedAt": 1656524675940
   },
   {
     "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-    "price": 1,
-    "updatedAt": 1655010795496
+    "price": 0.999797,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x853d955aCEf822Db058eb8505911ED77F175b99e",
-    "price": 1.002,
-    "updatedAt": 1655010795496
+    "price": 0.997966,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0xa47c8bf37f92aBed4A126BDA807A7b7498661acD",
-    "price": 0.00795848,
-    "updatedAt": 1655010795496
+    "price": 0.068724,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0xa693B19d2931d498c5B318dF961919BB4aee87a5",
-    "price": 0.00850456,
-    "updatedAt": 1655010795496
+    "price": 0.070573,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x99D8a9C45b2ecA8864373A26D1459e3Dff1e17F3",
-    "price": 1.003,
-    "updatedAt": 1655010795496
+    "price": 0.9941,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
-    "price": 1.001,
-    "updatedAt": 1655010795496
+    "price": 1,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
-    "price": 5.04,
-    "updatedAt": 1655010795496
+    "price": 3.58,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x62B9c7356A2Dc64a1969e19C23e4f579F9810Aa7",
-    "price": 0.837478,
-    "updatedAt": 1655010795496
+    "price": 0.676018,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490",
-    "price": 1.0224473315811942,
-    "updatedAt": 1655010795496
+    "price": 1.021880734485773,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x5a6A4D54456819380173272A5E8E9B9904BdF41B",
-    "price": 1.0075592917291054,
-    "updatedAt": 1655010795496
+    "price": 1.0033061141641468,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0xd632f22692FaC7611d2AA1C0D552930D43CAEd3B",
-    "price": 1.0099896900811978,
-    "updatedAt": 1655010795496
+    "price": 1.0071252319960966,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0xBC19712FEB3a26080eBf6f2F7849b417FdD792CA",
-    "price": 0.01326251,
-    "updatedAt": 1655010795496
+    "price": 0.01435002,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x3c9d6c1C73b31c837832c72E04D3152f051fc1A9",
-    "price": 261.44,
-    "updatedAt": 1655010795496
+    "price": 130.72,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x89Ab32156e46F46D02ade3FEcbe5Fc4243B9AAeD",
-    "price": 0.208636,
-    "updatedAt": 1655010795496
+    "price": 0.2012,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x85Eee30c52B0b379b046Fb0F85F4f3Dc3009aFEC",
-    "price": 0.214857,
-    "updatedAt": 1655010795496
+    "price": 0.197934,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0xcA3d75aC011BF5aD07a98d02f18225F9bD9A6BDF",
-    "price": 1037.6994261624009,
-    "updatedAt": 1655010795496
+    "price": 851.0642009029829,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0xc4AD29ba4B3c580e6D59105FFf484999997675Ff",
-    "price": 1036.7408369803852,
-    "updatedAt": 1655010795496
+    "price": 855.9121338334855,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x110492b31c59716AC47337E616804E3E3AdC0b4a",
-    "price": 77348088.54803008,
-    "updatedAt": 1655010795496
+    "price": 56787219.67243328,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x9a13867048e01c663ce8Ce2fE0cDAE69Ff9F35E3",
-    "price": 27027170838768.695,
-    "updatedAt": 1655010795496
+    "price": 17561891001012.916,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0xCEfF51756c56CeFFCA006cD410B03FFC46dd3a58",
-    "price": 31140365469.68695,
-    "updatedAt": 1655010795496
+    "price": 23145683719.03861,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x18d98D452072Ac2EB7b74ce3DB723374360539f1",
-    "price": 7098317980.201685,
-    "updatedAt": 1655010795496
+    "price": 6337974392.2068815,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0xcD7989894bc033581532D2cd88Da5db0A4b12859",
-    "price": 84186827.16064897,
-    "updatedAt": 1655010795496
+    "price": 61896302.01445264,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0xE86204c4eDDd2f70eE00EAd6805f917671F56c52",
-    "price": 31565571044314.11,
-    "updatedAt": 1655010795496
+    "price": 20526545012786.586,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0xa0246c9032bC3A600820415aE600c6388619A14D",
-    "price": 35.12,
-    "updatedAt": 1655010795496
+    "price": 37.04,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x20c36f062a31865bED8a5B1e512D9a1A20AA333A",
-    "price": 0.02547898,
-    "updatedAt": 1655010795496
+    "price": 0.02530339,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x090185f2135308BaD17527004364eBcC2D37e5F6",
-    "price": 0.00093736,
-    "updatedAt": 1655010795496
+    "price": 0.00085807,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x3432B6A60D23Ca0dFCa7761B7ab56459D9C964D0",
-    "price": 5.15,
-    "updatedAt": 1655010795496
+    "price": 4.64,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0xaF0b1FDf9c6BfeC7b3512F207553c0BA00D7f1A2",
-    "price": 1307.6666666666667,
-    "updatedAt": 1655010795496
+    "price": 950.7009523809525,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0xa0FFfb6b575045f215432b3158Ffd0A9ee0454B9",
-    "price": 13575.073115491237,
-    "updatedAt": 1655010795496
+    "price": 9899.72797008611,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0xb460DAa847c45f1C4a41cb05BFB3b51c92e41B36",
-    "price": 20.09409774203837,
-    "updatedAt": 1655010795496
+    "price": 14.71588670200768,
+    "updatedAt": 1656524675940
+  },
+  {
+    "address": "0x5c6Ee304399DBdB9C8Ef030aB642B10820DB8F56",
+    "price": 2.311757844076555,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "price": 5.186503092440672,
-    "updatedAt": 1655010795496
+    "price": 3.8034356011231596,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x6aF7377b5009d7d154F36FE9e235aE1DA27Aea22",
-    "price": 1621.5346110604326,
-    "updatedAt": 1655010795496
+    "price": 1221.5865453200838,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x7e7E112A68d8D2E221E11047a72fFC1065c38e1a",
-    "price": 1127.1574970533227,
-    "updatedAt": 1655010795496
+    "price": 663.3180417971129,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0xC17078FDd324CC473F8175Dc5290fae5f2E84714",
-    "price": 52636422973916.55,
-    "updatedAt": 1655010795496
+    "price": 34277654221678.84,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x235c9e24D3FB2FAFd58a2E49D454Fdcd2DBf7FF1",
-    "price": 152202275.11940664,
-    "updatedAt": 1655010795496
+    "price": 112026743.06766102,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x758A43EE2BFf8230eeb784879CdcFF4828F2544D",
-    "price": 31124130489.37289,
-    "updatedAt": 1655010795496
+    "price": 23199699039.54697,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x8a8FFec8f4A0C8c9585Da95D9D97e8Cd6de273DE",
-    "price": 7095392749.516232,
-    "updatedAt": 1655010795496
+    "price": 6342045171.233077,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x1862A18181346EBd9EdAf800804f89190DeF24a5",
-    "price": 108571338.62678462,
-    "updatedAt": 1655010795496
+    "price": 79798750.3611779,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x88128580ACdD9c04Ce47AFcE196875747bF2A9f6",
-    "price": 46788672100516.83,
-    "updatedAt": 1655010795496
+    "price": 30446132954708.645,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x6dEf55d2e18486B9dDfaA075bc4e4EE0B28c1545",
-    "price": 28354.448038535036,
-    "updatedAt": 1655010795496
+    "price": 20666.161878168354,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0xd04c48A53c111300aD41190D63681ed3dAd998eC",
-    "price": 28382.27218281456,
-    "updatedAt": 1655010795496
+    "price": 20601.48899551818,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0xb9D076fDe463dbc9f915E5392F807315Bf940334",
-    "price": 28782.906403290017,
-    "updatedAt": 1655010795496
+    "price": 21149.329412049636,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0xAf5A1DECfa95BAF63E0084a35c62592B774A2A87",
-    "price": 28745.445416741142,
-    "updatedAt": 1655010795496
+    "price": 20951.140410527583,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0xaE96fF08771a109dc6650a1BdCa62F2d558E40af",
-    "price": 28104.11916404388,
-    "updatedAt": 1655010795496
+    "price": 20822.218554085557,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x4b92d19c11435614CD49Af1b589001b7c08cD4D5",
-    "price": 28037.70928483,
-    "updatedAt": 1655010795496
+    "price": 20384.0721555952,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x8c76970747afd5398e958bDfadA4cf0B9FcA16c4",
-    "price": 27770.75056821831,
-    "updatedAt": 1655010795496
+    "price": 20240.911803845713,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x55912D0Cf83B75c492E761932ABc4DB4a5CB1b17",
-    "price": 27687.532676239454,
-    "updatedAt": 1655010795496
+    "price": 20004.37708272509,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0xf349c0faA80fC1870306Ac093f75934078e28991",
-    "price": 35627.74681690972,
-    "updatedAt": 1655010795496
+    "price": 33689.75046847607,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x5Dce29e92b1b939F8E8C60DcF15BDE82A85be4a9",
-    "price": 28047.507176136656,
-    "updatedAt": 1655010795496
+    "price": 20442.447577113875,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x19E4d89e0cB807ea21B8CEF02df5eAA99A110dA5",
-    "price": 1.0075593065194504,
-    "updatedAt": 1655010795496
+    "price": 1.0035912925038966,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x15cBC4ac1e81c97667780fE6DAdeDd04a6EEB47B",
-    "price": 1.0094939642165677,
-    "updatedAt": 1655010795496
+    "price": 1.0077086600191554,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0xBE08Ef12e4a553666291E9fFC24fCCFd354F2Dd2",
-    "price": 1125.1077644002064,
-    "updatedAt": 1655010795496
+    "price": 924.5461942181627,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x27E98fC7d05f54E544d16F58C194C2D7ba71e3B5",
-    "price": 1055.4418126235223,
-    "updatedAt": 1655010795496
+    "price": 873.5956019910909,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x53C8E199eb2Cb7c01543C137078a038937a68E40",
-    "price": 5.533784238286999,
-    "updatedAt": 1655010795496
+    "price": 3.9339179040495695,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0xfd05D3C7fe2924020620A8bE4961bBaA747e6305",
-    "price": 5.05,
-    "updatedAt": 1655010795496
+    "price": 3.59,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x2B5455aac8d64C14786c3a29858E43b5945819C0",
-    "price": 1.2271845778560198,
-    "updatedAt": 1655010795496
+    "price": 1.0046918169668262,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x599D92B453C010b1050d31C364f6ee17E819f193",
-    "price": 4603.7268507259905,
-    "updatedAt": 1655010795496
+    "price": 4606.301011900013,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x26B8efa69603537AC8ab55768b6740b67664D518",
-    "price": 45135.58457438335,
-    "updatedAt": 1655010795496
+    "price": 45144.77593912458,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x937B8E917d0F36eDEBBA8E459C5FB16F3b315551",
-    "price": 5.058485569066347,
-    "updatedAt": 1655010795496
+    "price": 3.5979732583588033,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0xeC1c717A3b02582A4Aa2275260C583095536b613",
-    "price": 679.2208594927605,
-    "updatedAt": 1655010795496
+    "price": 496.9779578847839,
+    "updatedAt": 1656524675940
+  },
+  {
+    "address": "0xBA485b556399123261a5F9c95d413B4f93107407",
+    "price": 1.15,
+    "updatedAt": 1656524675940
+  },
+  {
+    "address": "0x37d9D2C6035b744849C15F1BFEE8F268a20fCBd8",
+    "price": 0.4696890221768257,
+    "updatedAt": 1656524675940
   },
   {
     "address": "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
-    "price": 0.508059,
-    "updatedAt": 1655010795722
+    "price": 0.488714,
+    "updatedAt": 1656524676390
   },
   {
     "address": "0xDBf31dF14B66535aF65AaC99C32e9eA844e14501",
-    "price": 27435,
-    "updatedAt": 1655010795722
+    "price": 19955.25,
+    "updatedAt": 1656524676390
   },
   {
     "address": "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6",
-    "price": 27461,
-    "updatedAt": 1655010795722
+    "price": 19938.86,
+    "updatedAt": 1656524676390
   },
   {
     "address": "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
-    "price": 1,
-    "updatedAt": 1655010795722
+    "price": 0.999797,
+    "updatedAt": 1656524676390
   },
   {
     "address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
-    "price": 1.001,
-    "updatedAt": 1655010795722
+    "price": 1,
+    "updatedAt": 1656524676390
   },
   {
     "address": "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
     "price": 1.001,
-    "updatedAt": 1655010795722
+    "updatedAt": 1656524676390
   },
   {
     "address": "0x4EaC4c4e9050464067D673102F8E24b2FccEB350",
-    "price": 28378,
-    "updatedAt": 1655010795722
+    "price": 21305,
+    "updatedAt": 1656524676390
   },
   {
     "address": "0x5c2ed810328349100A66B82b78a1791B101C9D61",
-    "price": 27481,
-    "updatedAt": 1655010795722
+    "price": 19847.5,
+    "updatedAt": 1656524676390
   },
   {
     "address": "0x28424507fefb6f7f8E9D3860F56504E4e5f5f390",
-    "price": 1453.53,
-    "updatedAt": 1655010795722
+    "price": 1099.44,
+    "updatedAt": 1656524676390
   },
   {
     "address": "0x27F8D03b3a2196956ED754baDc28D73be8830A6e",
-    "price": 0.995676,
-    "updatedAt": 1655010795722
+    "price": 0.992339,
+    "updatedAt": 1656524676390
   },
   {
     "address": "0x1a13F4Ca1d028320A707D99520AbFefca3998b7F",
     "price": 1.002,
-    "updatedAt": 1655010795722
+    "updatedAt": 1656524676390
   },
   {
     "address": "0x60D55F02A771d515e077c9C2403a1ef324885CeC",
-    "price": 1.001,
-    "updatedAt": 1655010795722
+    "price": 0.998984,
+    "updatedAt": 1656524676390
   },
   {
     "address": "0x172370d5Cd63279eFa6d502DAB29171933a610AF",
-    "price": 0.850176,
-    "updatedAt": 1655010795722
+    "price": 0.698601,
+    "updatedAt": 1656524676390
   },
   {
     "address": "0x1FcbE5937B0cc2adf69772D228fA4205aCF4D9b2",
-    "price": 4.2,
-    "updatedAt": 1655010795722
+    "price": 3.07,
+    "updatedAt": 1656524676390
   },
   {
     "address": "0x0b3F868E0BE5597D5DB7fEB59E1CADBb0fdDa50a",
-    "price": 1.11,
-    "updatedAt": 1655010795722
+    "price": 1.043,
+    "updatedAt": 1656524676390
   },
   {
     "address": "0x8F8e95Ff4B4c5E354ccB005c6B0278492D7B5907",
-    "price": 5650738745.283849,
-    "updatedAt": 1655010795722
+    "price": 4177955653.346468,
+    "updatedAt": 1656524676390
   },
   {
     "address": "0xF6a637525402643B0654a54bEAd2Cb9A83C8B498",
-    "price": 40458027566137.16,
-    "updatedAt": 1655010795722
+    "price": 34987697467092.324,
+    "updatedAt": 1656524676390
   },
   {
     "address": "0xE7a24EF0C5e95Ffb0f6684b813A78F2a3AD7D171",
-    "price": 1.0562648715479546,
-    "updatedAt": 1655010795722
+    "price": 1.0558732576538639,
+    "updatedAt": 1656524676390
   },
   {
     "address": "0xf8a57c1d3b9629b77b6726a042ca48990A84Fb49",
-    "price": 27712.501673787865,
-    "updatedAt": 1655010795722
+    "price": 20097.42168578806,
+    "updatedAt": 1656524676390
   },
   {
     "address": "0xEa8567d84E3e54B32176418B4e0C736b56378961",
-    "price": 5665954691.898878,
-    "updatedAt": 1655010795722
+    "price": 4194748409.7974505,
+    "updatedAt": 1656524676390
   },
   {
     "address": "0x6B2d4c4bb50274c5D4986Ff678cC971c0260E967",
-    "price": 41711455697868.03,
-    "updatedAt": 1655010795722
+    "price": 36140815532400.47,
+    "updatedAt": 1656524676390
   },
   {
     "address": "0x7B6bfB88904e4B3A6d239d5Ed8adF557B22C10FC",
-    "price": 27806.842528912894,
-    "updatedAt": 1655010795722
+    "price": 20155.60053551006,
+    "updatedAt": 1656524676390
   },
   {
     "address": "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
-    "price": 1.002,
-    "updatedAt": 1655010796109
+    "price": 1,
+    "updatedAt": 1656524676775
   },
   {
     "address": "0x9Ab3FD50FcAe73A1AEDa959468FD0D662c881b42",
-    "price": 28378,
-    "updatedAt": 1655010796109
+    "price": 21305,
+    "updatedAt": 1656524676775
   },
   {
     "address": "0xBfa641051Ba0a0Ad1b0AcF549a89536A0D76472E",
-    "price": 4.19,
-    "updatedAt": 1655010796109
+    "price": 3.07,
+    "updatedAt": 1656524676775
   },
   {
     "address": "0x11cDb42B0EB46D95f990BeDD4695A6e3fA034978",
-    "price": 0.849633,
-    "updatedAt": 1655010796109
+    "price": 0.698601,
+    "updatedAt": 1656524676775
   },
   {
     "address": "0xDBf31dF14B66535aF65AaC99C32e9eA844e14501",
-    "price": 27435,
-    "updatedAt": 1655010796109
+    "price": 19955.25,
+    "updatedAt": 1656524676775
   },
   {
     "address": "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
-    "price": 1447.79,
-    "updatedAt": 1655010796109
+    "price": 1089.92,
+    "updatedAt": 1656524676775
   },
   {
     "address": "0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f",
-    "price": 27452,
-    "updatedAt": 1655010796109
+    "price": 19980.82,
+    "updatedAt": 1656524676775
   },
   {
     "address": "0xd4d42F0b6DEF4CE0383636770eF773390d85c61A",
-    "price": 1.11,
-    "updatedAt": 1655010796109
+    "price": 1.043,
+    "updatedAt": 1656524676775
   },
   {
     "address": "0xdE903E2712288A1dA82942DDdF2c20529565aC30",
-    "price": 0.04094423,
-    "updatedAt": 1655010796109
+    "price": 0.02676605,
+    "updatedAt": 1656524676775
   },
   {
     "address": "0x3221022e37029923aCe4235D812273C5A42C322d",
-    "price": 87.35876707851315,
-    "updatedAt": 1655010796109
+    "price": 73.87236725644712,
+    "updatedAt": 1656524676775
   },
   {
     "address": "0x515e252b2b5c22b4b2b6Df66c2eBeeA871AA4d69",
-    "price": 1302705597.0115035,
-    "updatedAt": 1655010796109
+    "price": 967845507.8359432,
+    "updatedAt": 1656524676775
   },
   {
     "address": "0x3E01dD8a5E1fb3481F0F589056b428Fc308AF0Fb",
-    "price": 27465.214857442737,
-    "updatedAt": 1655010796109
+    "price": 19987.07035954281,
+    "updatedAt": 1656524676775
   },
   {
     "address": "0x8e0B8c8BB9db49a46697F3a5Bb8A308e744821D2",
-    "price": 1042.2625003646083,
-    "updatedAt": 1655010796109
+    "price": 854.4748423467836,
+    "updatedAt": 1656524676775
   },
   {
     "address": "0xA66b20912cBEa522278f3056B4aE60D0d3EE271b",
-    "price": 15.721133647941478,
-    "updatedAt": 1655010796109
+    "price": 11.059205026142418,
+    "updatedAt": 1656524676775
   },
   {
     "address": "0x9A17D97Fb5f76F44604270448Ac77D55Ac40C15c",
-    "price": 1269346046.8106127,
-    "updatedAt": 1655010796109
+    "price": 941506013.7513798,
+    "updatedAt": 1656524676775
   },
   {
     "address": "0x3C6bd88cdD2AECf466E22d4ED86dB6B8953FDb72",
-    "price": 158.05871564317326,
-    "updatedAt": 1655010796109
+    "price": 117.65872871185813,
+    "updatedAt": 1656524676775
   },
   {
     "address": "0x6a060a569e04a41794d6b1308865a13F27D27E53",
-    "price": 12899.044570522417,
-    "updatedAt": 1655010796109
+    "price": 9712.17956899167,
+    "updatedAt": 1656524676775
   },
   {
     "address": "0xe774D1FB3133b037AA17D39165b8F45f444f632d",
-    "price": 91.20644801012597,
-    "updatedAt": 1655010796109
+    "price": 77.30394340556414,
+    "updatedAt": 1656524676775
   },
   {
     "address": "0xFc13209cAfE8fb3bb5fbD929eC9F11a39e8Ac041",
-    "price": 1310565938.8059916,
-    "updatedAt": 1655010796109
+    "price": 974228552.154435,
+    "updatedAt": 1656524676775
   },
   {
     "address": "0xBA418CDdd91111F5c1D1Ac2777Fa8CEa28D71843",
-    "price": 27795.296750197875,
-    "updatedAt": 1655010796109
+    "price": 20244.461738814334,
+    "updatedAt": 1656524676775
   },
   {
     "address": "0x4591890225394BF66044347653e112621AF7DDeb",
-    "price": 1091.1021025115874,
-    "updatedAt": 1655010796109
+    "price": 897.2221375570805,
+    "updatedAt": 1656524676775
   },
   {
     "address": "0xfdb9e5a186FB7655aC9cD7CAFF3d6D4c6064cc50",
-    "price": 1042.9099917674646,
-    "updatedAt": 1655010796109
+    "price": 855.1644644275577,
+    "updatedAt": 1656524676775
   },
   {
     "address": "0x0c2153e8aE4DB8233c61717cDC4c75630E952561",
-    "price": 20.477237388036794,
-    "updatedAt": 1655010796109
+    "price": 14.546760707360558,
+    "updatedAt": 1656524676775
   },
   {
     "address": "0xaf9aB64F568149361ab670372b16661f4380e80B",
-    "price": 1322131522.361989,
-    "updatedAt": 1655010796109
+    "price": 981598286.0896136,
+    "updatedAt": 1656524676775
   },
   {
     "address": "0xE9C12F06F8AFFD8719263FE4a81671453220389c",
-    "price": 157.98935522922991,
-    "updatedAt": 1655010796109
+    "price": 117.57333388594185,
+    "updatedAt": 1656524676775
   },
   {
     "address": "0x60129B2b762952Dfe8b21f40ee8aa3B2A4623546",
-    "price": 12908.496950064937,
-    "updatedAt": 1655010796109
+    "price": 9721.287979565597,
+    "updatedAt": 1656524676775
   },
   {
     "address": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
-    "price": 3.79,
-    "updatedAt": 1655010796494
+    "price": 3.02,
+    "updatedAt": 1656524677176
   },
   {
     "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
-    "price": 254.98,
-    "updatedAt": 1655010796494
+    "price": 216.88,
+    "updatedAt": 1656524677176
   },
   {
     "address": "0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c",
-    "price": 27391,
-    "updatedAt": 1655010796494
+    "price": 20013,
+    "updatedAt": 1656524677176
   },
   {
     "address": "0x61EB789d75A95CAa3fF50ed7E47b96c132fEc082",
-    "price": 5669.929646573214,
-    "updatedAt": 1655010796494
+    "price": 4476.985833932977,
+    "updatedAt": 1656524677176
   },
   {
     "address": "0x7561EEe90e24F3b348E1087A005F78B4c8453524",
-    "price": 5968.895138991843,
-    "updatedAt": 1655010796494
+    "price": 4707.260897943596,
+    "updatedAt": 1656524677176
   },
   {
     "address": "0x5A58609dA96469E9dEf3fE344bC39B00d18eb9A5",
-    "price": 853.3460355900095,
-    "updatedAt": 1655010796494
+    "price": 626.4697176250943,
+    "updatedAt": 1656524677176
   },
   {
     "address": "0x81d776C90c89B8d51E9497D58338933127e2fA80",
-    "price": 6734.400577251994,
-    "updatedAt": 1655010796494
+    "price": 4390.218427223157,
+    "updatedAt": 1656524677176
   },
   {
     "address": "0x753fbc5800a8C8e3Fb6DC6415810d627A387Dfc9",
-    "price": 4.2,
-    "updatedAt": 1655010796494
+    "price": 3.07,
+    "updatedAt": 1656524677176
   },
   {
     "address": "0x1F7216fdB338247512Ec99715587bb97BBf96eae",
-    "price": 6.404717697118251,
-    "updatedAt": 1655010796494
+    "price": 4.696792977886718,
+    "updatedAt": 1656524677176
   },
   {
     "address": "0x5986D5c77c65e5801a5cAa4fAE80089f870A71dA",
-    "price": 216.77803274038024,
-    "updatedAt": 1655010796494
+    "price": 129.61148869957387,
+    "updatedAt": 1656524677176
   },
   {
     "address": "0xaf4B9C4b545D5324904bAa15e29796D2E2f90813",
-    "price": 5740.668448779875,
-    "updatedAt": 1655010796494
+    "price": 4528.0291272871555,
+    "updatedAt": 1656524677176
   },
   {
     "address": "0x857F91f735f4B03b19D2b5c6E476C73DB8241F55",
-    "price": 1006.5569784167451,
-    "updatedAt": 1655010796494
+    "price": 737.5664132175903,
+    "updatedAt": 1656524677176
   },
   {
     "address": "0xa861Ba302674b08f7F2F24381b705870521DDfed",
-    "price": 8558.16547706844,
-    "updatedAt": 1655010796494
+    "price": 5573.123965676158,
+    "updatedAt": 1656524677176
   },
   {
     "address": "0x50b7545627a5162F82A992c33b87aDc75187B218",
-    "price": 27461,
-    "updatedAt": 1655010797056
+    "price": 19938.86,
+    "updatedAt": 1656524677552
   },
   {
     "address": "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7",
-    "price": 18.25,
-    "updatedAt": 1655010797056
+    "price": 17.32,
+    "updatedAt": 1656524677552
   },
   {
     "address": "0x711555f2B421DA9A86a18Dc163d04699310fE297",
-    "price": 27470.665653398184,
-    "updatedAt": 1655010797056
+    "price": 19978.109370280305,
+    "updatedAt": 1656524677552
   },
   {
     "address": "0x753fbc5800a8C8e3Fb6DC6415810d627A387Dfc9",
-    "price": 4.2,
-    "updatedAt": 1655010797541
+    "price": 3.07,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83",
-    "price": 0.256352,
-    "updatedAt": 1655010797541
+    "price": 0.256982,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0xd8321AA83Fb0a4ECd6348D4577431310A6E0814d",
-    "price": 0.00649546,
-    "updatedAt": 1655010797541
+    "price": 0.00819516,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0xD02a30d33153877BC20e5721ee53DeDEE0422B2F",
-    "price": 1.0199696305779782,
-    "updatedAt": 1655010797541
+    "price": 1.0200197424108368,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0x911da02C1232A3c3E1418B834A311921143B04d7",
-    "price": 0.0103298,
-    "updatedAt": 1655010797541
+    "price": 0.0064946,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0xDE12c7959E1a72bbe8a5f7A1dc8f8EeF9Ab011B3",
-    "price": 0.748092,
-    "updatedAt": 1655010797541
+    "price": 0.469931,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0x321162Cd933E2Be498Cd2267a90534A804051b11",
-    "price": 27461,
-    "updatedAt": 1655010797541
+    "price": 19938.86,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0xc165d941481e68696f43EE6E99BFB2B23E0E3114",
-    "price": 0.00250703,
-    "updatedAt": 1655010797541
+    "price": 0.00217222,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0xc5A9848b9d145965d821AaeC8fA32aaEE026492d",
-    "price": 0.235974,
-    "updatedAt": 1655010797541
+    "price": 0.155272,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0xDA0053F0bEfCbcaC208A3f867BB243716734D809",
-    "price": 0.03871255,
-    "updatedAt": 1655010797541
+    "price": 0.01897711,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0x888EF71766ca594DED1F0FA3AE64eD2941740A20",
-    "price": 0.23975465949760466,
-    "updatedAt": 1655010797541
+    "price": 0.10312374374537625,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0x41adAc6C1Ff52C5e27568f27998d747F7b69795B",
-    "price": 0.009189884796737633,
-    "updatedAt": 1655010797541
+    "price": 0.006650452031829555,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0xD31Fcd1f7Ba190dBc75354046F6024A9b86014d7",
-    "price": 0.121689,
-    "updatedAt": 1655010797541
+    "price": 0.093337,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0x07E6332dD090D287d3489245038daF987955DCFB",
     "price": 1.001,
-    "updatedAt": 1655010797541
+    "updatedAt": 1656524678035
   },
   {
     "address": "0x8D11eC38a3EB5E956B052f67Da8Bdc9bef8Abf3E",
     "price": 1.001,
-    "updatedAt": 1655010797541
+    "updatedAt": 1656524678035
   },
   {
     "address": "0x1E4F97b9f9F913c46F1632781732927B9019C68b",
-    "price": 0.849633,
-    "updatedAt": 1655010797541
+    "price": 0.698601,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0x841FAD6EAe12c286d1Fd18d1d525DFfA75C7EFFE",
-    "price": 2.49,
-    "updatedAt": 1655010797541
+    "price": 2.17,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0x82f0B8B456c1A451378467398982d4834b6829c1",
-    "price": 1.003,
-    "updatedAt": 1655010797541
+    "price": 0.9941,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0xa48d959AE2E88f1dAA7D5F611E01908106dE7598",
-    "price": 5.02,
-    "updatedAt": 1655010797541
+    "price": 4.47,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0xDE5ed76E7c05eC5e4572CfC88d1ACEA165109E44",
-    "price": 73.61,
-    "updatedAt": 1655010797541
+    "price": 42.78,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0xDBf31dF14B66535aF65AaC99C32e9eA844e14501",
-    "price": 27435,
-    "updatedAt": 1655010797541
+    "price": 19955.25,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0xe578C856933D8e1082740bf7661e379Aa2A30b26",
-    "price": 1,
-    "updatedAt": 1655010797541
+    "price": 0.999797,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0x04068DA6C83AFCFA0e13ba15A6696662335D5B75",
     "price": 0.999876,
-    "updatedAt": 1655010797541
+    "updatedAt": 1656524678035
   },
   {
     "address": "0x940F41F0ec9ba1A34CF001cc03347ac092F5F6B5",
-    "price": 1.001,
-    "updatedAt": 1655010797541
+    "price": 1,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0x049d68029688eAbF473097a2fC38ef61633A3C7A",
     "price": 0.999703,
-    "updatedAt": 1655010797541
+    "updatedAt": 1656524678035
   },
   {
     "address": "0xe0654C8e6fd4D733349ac7E09f6f23DA256bF475",
-    "price": 1.95,
-    "updatedAt": 1655010797541
+    "price": 1.77,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0x6c021Ae822BEa943b2E66552bDe1D2696a53fbB7",
-    "price": 0.080339,
-    "updatedAt": 1655010797541
+    "price": 0.04401227,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0x5804F6C40f44cF7593F73cf3aa16F7037213A623",
-    "price": 7.07131851068858,
-    "updatedAt": 1655010797541
+    "price": 6.243537529873862,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0x6058345A4D8B89Ddac7042Be08091F91a404B80b",
-    "price": 549002534537795.7,
-    "updatedAt": 1655010797541
+    "price": 399311715941000.44,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0xFCEC86aF8774d69e2e4412B8De3f4aBf1f671ecC",
-    "price": 0.3533169093813852,
-    "updatedAt": 1655010797541
+    "price": 0.30989792098631996,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0x62E2819Dd417F3b430B6fa5Fd34a49A377A02ac8",
-    "price": 0.04938328940234322,
-    "updatedAt": 1655010797541
+    "price": 0.031384845377588066,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0xD9A4108CBB40a12dE16dFFDc54aE5065878816d7",
-    "price": 203989.56592376632,
-    "updatedAt": 1655010797541
+    "price": 162067.12627945523,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0xEaFB5Ae6eEa34954eE5e5a27B068B8705CE926a6",
-    "price": 6130911.029172754,
-    "updatedAt": 1655010797541
+    "price": 5714211.693399971,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0xED7Fd242ce91a541ABcaE52f3d617dacA7fe6e34",
-    "price": 0.9353598699416779,
-    "updatedAt": 1655010797541
+    "price": 0.849421549220116,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0xbcab7d083Cf6a01e0DdA9ed7F8a02b47d125e682",
-    "price": 2006003.7084894988,
-    "updatedAt": 1655010797541
+    "price": 1997192.1257055826,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0x4A81E80f7d77B4D1440A7Fef12bD47e0344F215B",
-    "price": 16774403.03738194,
-    "updatedAt": 1655010797541
+    "price": 14325494.188510971,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0x6c90B69aF6DBD929458497a8D1013Aa255ac71F1",
-    "price": 0.16314282336911487,
-    "updatedAt": 1655010797541
+    "price": 0.1836846451965314,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0x86dD79265814756713e631Dde7E162bdD538b7B1",
-    "price": 1.4159569072863543,
-    "updatedAt": 1655010797541
+    "price": 1.350786631317148,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0x60a861Cd30778678E3d613db96139440Bd333143",
-    "price": 0.28794957966919343,
-    "updatedAt": 1655010797541
+    "price": 0.2144243248525913,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0x6519546433dCB0a34A0De908e1032c46906EF664",
-    "price": 0.49120490741647427,
-    "updatedAt": 1655010797541
+    "price": 0.3232986222526088,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0x5821573d8F04947952e76d94f3ABC6d7b43bF8d0",
-    "price": 1648767.8209234814,
-    "updatedAt": 1655010797541
+    "price": 1188804.2647560688,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0x02330E37fcc7C27eB4632b3E31b951fDE5126c48",
-    "price": 0.1622941129549007,
-    "updatedAt": 1655010797541
+    "price": 0.1823635176537496,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0xFce6e3115D84c94df98BD286C1C67279dc021361",
-    "price": 7.113960922857798,
-    "updatedAt": 1655010797541
+    "price": 6.22922357917015,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0xB6D63A4e5Ca740e96C26AdAbcAc73BE78Ee39Dc5",
-    "price": 549269801315430.2,
-    "updatedAt": 1655010797541
+    "price": 400151084898381.44,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0x7cc6049a125388B51c530e51727A87aE101f6417",
-    "price": 0.39008432398787907,
-    "updatedAt": 1655010797541
+    "price": 0.3421703946138631,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0xC7cBF5a24caBA375C09cc824481F5508c644dF28",
-    "price": 0.47149403731133827,
-    "updatedAt": 1655010797541
+    "price": 0.41358057959262445,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0xd9770deC6fdA576450e66f0c441B6b8755F7184A",
-    "price": 248644.40190959448,
-    "updatedAt": 1655010797541
+    "price": 197120.4690390076,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0x3BA15548226aA045aD6fe9DC9Bec1f0891532D60",
-    "price": 6403038.279455489,
-    "updatedAt": 1655010797541
+    "price": 5973510.740643865,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0x4145a9B8B7bdC76F14e65c26f9c71e23B9069b25",
-    "price": 0.937460671940667,
-    "updatedAt": 1655010797541
+    "price": 0.8497427063049469,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0x60c5A975Bd0511e45D4C9Ae5592c8CA412BE2310",
-    "price": 0.937460671940667,
-    "updatedAt": 1655010797541
+    "price": 0.8497427063049469,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0x1AaF7f8154704D80E2380B3DbC967FD0486016e0",
-    "price": 2003782.7160307858,
-    "updatedAt": 1655010797541
+    "price": 1997367.3243966857,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0x9a28eeFB2c5F8311f37c39314D78Be85C54B5da6",
-    "price": 16776534.440256095,
-    "updatedAt": 1655010797541
+    "price": 14330516.196432369,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0x561f4dBaFA71ad05694C7ea1b894b9D99f684281",
-    "price": 2003782.7160307858,
-    "updatedAt": 1655010797541
+    "price": 1997367.3243966857,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0x77e803F7d0B6d85731F68CfE1f1CA4c48de105F4",
-    "price": 1.4161357719501784,
-    "updatedAt": 1655010797541
+    "price": 1.3511018138275228,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0x609A51e13fd0896c0c02f0B642756533b29f36Ab",
-    "price": 16776534.440256095,
-    "updatedAt": 1655010797541
+    "price": 14330516.196432369,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0x3f96f8cA67AcDE9041AD62125C5a4D062b07872c",
-    "price": 0.28849164207292155,
-    "updatedAt": 1655010797541
+    "price": 0.2161734196190457,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0x96d4dBdc91Bef716eb407e415c9987a9fAfb8906",
-    "price": 0.2441967662448567,
-    "updatedAt": 1655010797541
+    "price": 0.16069400210531704,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0xa8bD8655A0dCABE76913D821Ab437562276b3B59",
-    "price": 0.03986525957490564,
-    "updatedAt": 1655010797541
+    "price": 0.01954366789989089,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0xbF2F3a9ba42A00CA5B18842D8eB1954120e4a2A9",
-    "price": 0.5093092986613994,
-    "updatedAt": 1655010797541
+    "price": 0.33545226961016766,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0xcd1e62b390373fcFeA87Dd06E2497Fdc907935fA",
-    "price": 1649109.2941443552,
-    "updatedAt": 1655010797541
+    "price": 1183767.2825626018,
+    "updatedAt": 1656524678035
   },
   {
     "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
-    "price": 4.2,
-    "updatedAt": 1655010798199
+    "price": 3.07,
+    "updatedAt": 1656524678800
   },
   {
     "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
-    "price": 27461,
-    "updatedAt": 1655010798199
+    "price": 19938.86,
+    "updatedAt": 1656524678800
   },
   {
     "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
-    "price": 1444.33,
-    "updatedAt": 1655010798199
+    "price": 1087.86,
+    "updatedAt": 1656524678800
   },
   {
     "address": "0xEB4C2781e4ebA804CE9a9803C67d0893436bB27D",
-    "price": 27435,
-    "updatedAt": 1655010798199
+    "price": 19955.25,
+    "updatedAt": 1656524678800
   },
   {
     "address": "0x49849C98ae39Fff122806C06791Fa73784FB3675",
-    "price": 27974.658035464745,
-    "updatedAt": 1655010798199
+    "price": 20355.470479695596,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x137469B55D1f15651BA46A89D0588e97dD0B6562",
-    "price": 680.3880339382328,
-    "updatedAt": 1655010798199
+    "price": 497.2924170013161,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0xfE18be6b3Bd88A2D2A7f928d00292E7a9963CfC6",
-    "price": 28163,
-    "updatedAt": 1655010798199
+    "price": 20198,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0xa3BeD4E1c75D00fa6f4E5E6922DB7261B5E9AcD2",
-    "price": 0.167273,
-    "updatedAt": 1655010798199
+    "price": 0.129856,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x945Facb997494CC2570096c74b5F66A3507330a1",
     "price": 44202,
-    "updatedAt": 1655010798199
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x17d8CBB6Bce8cEE970a4027d1198F6700A7a6c24",
-    "price": 4567.287309567104,
-    "updatedAt": 1655010798199
+    "price": 4569.841095672168,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x48c59199Da51B7E30Ea200a74Ea07974e62C4bA7",
-    "price": 44550.873906559435,
-    "updatedAt": 1655010798199
+    "price": 44559.94620141231,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x04c90C198b2eFF55716079bc06d7CCc4aa4d7512",
-    "price": 5.060964746379656,
-    "updatedAt": 1655010798199
+    "price": 3.5979732583588033,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x075b1bb99792c9E1041bA13afEf80C91a1e70fB3",
-    "price": 27979.47388338332,
-    "updatedAt": 1655010798199
+    "price": 20283.290980458085,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x8dAEBADE922dF735c38C80C7eBD708Af50815fAa",
-    "price": 27871,
-    "updatedAt": 1655010798199
+    "price": 20962,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x64eda51d3Ad40D56b9dFc5554E06F94e1Dd786Fd",
-    "price": 27965.660933049796,
-    "updatedAt": 1655010798199
+    "price": 20525.93321965188,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x798D1bE841a82a273720CE31c822C61a67a601C3",
-    "price": 5860.76,
-    "updatedAt": 1655010798199
+    "price": 3394.69,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x99F39D495C6A5237f43602f3Ab5F49786E46c9B0",
-    "price": 5860.76,
-    "updatedAt": 1655010798199
+    "price": 3394.69,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2",
-    "price": 1.11,
-    "updatedAt": 1655010798199
+    "price": 1.043,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x8798249c2E607446EfB7Ad49eC89dD1865Ff4272",
-    "price": 1.46,
-    "updatedAt": 1655010798199
+    "price": 1.41,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x8751D4196027d4e6DA63716fA7786B5174F04C15",
-    "price": 28378,
-    "updatedAt": 1655010798199
+    "price": 21305,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0xc4E15973E6fF2A35cC804c2CF9D2a1b817a8b40F",
     "price": 42862,
-    "updatedAt": 1655010798199
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x0316EB71485b0Ab14103307bf65a021042c6d380",
-    "price": 27396,
-    "updatedAt": 1655010798199
+    "price": 19956.44,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0xb19059ebb43466C323583928285a49f558E572Fd",
-    "price": 27654.75036567182,
-    "updatedAt": 1655010798199
+    "price": 20131.688300033966,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x5228a22e72ccC52d415EcFd199F99D0665E7733b",
-    "price": 27176,
-    "updatedAt": 1655010798199
+    "price": 19534.72,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0xDE5331AC4B3630f94853Ff322B66407e0D6331E8",
-    "price": 27596.895354727643,
-    "updatedAt": 1655010798199
+    "price": 19921.239877740292,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x8064d9Ae6cDf087b1bcd5BDf3531bD5d8C537a68",
     "price": 44315,
-    "updatedAt": 1655010798199
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x2fE94ea3d5d4a175184081439753DE15AeF9d614",
-    "price": 35448.065051474085,
-    "updatedAt": 1655010798199
+    "price": 33495.7201835711,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x9BE89D2a4cd102D8Fecc6BF9dA793be995C22541",
-    "price": 27325,
-    "updatedAt": 1655010798199
+    "price": 19881.82,
+    "updatedAt": 1656524678801
+  },
+  {
+    "address": "0xC0c293ce456fF0ED870ADd98a0828Dd4d2903DBF",
+    "price": 1.19,
+    "updatedAt": 1656524678801
+  },
+  {
+    "address": "0x616e8BfA43F920657B3497DBf40D6b1A02D4608d",
+    "price": 0.46857010254568165,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x410e3E86ef427e30B9235497143881f717d93c2A",
-    "price": 27761.672328200904,
-    "updatedAt": 1655010798199
+    "price": 20220.509858525034,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0xFbdCA68601f835b27790D98bbb8eC7f05FDEaA9B",
-    "price": 28119.334851196778,
-    "updatedAt": 1655010798199
+    "price": 20816.133853493782,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0xD533a949740bb3306d119CC777fa900bA034cd52",
-    "price": 0.849633,
-    "updatedAt": 1655010798199
+    "price": 0.698601,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
     "price": 1.001,
-    "updatedAt": 1655010798199
+    "updatedAt": 1656524678801
   },
   {
     "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-    "price": 1,
-    "updatedAt": 1655010798199
+    "price": 0.999797,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x853d955aCEf822Db058eb8505911ED77F175b99e",
-    "price": 1.002,
-    "updatedAt": 1655010798199
+    "price": 0.997966,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0xa47c8bf37f92aBed4A126BDA807A7b7498661acD",
-    "price": 0.00795848,
-    "updatedAt": 1655010798199
+    "price": 0.068724,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0xa693B19d2931d498c5B318dF961919BB4aee87a5",
-    "price": 0.00850456,
-    "updatedAt": 1655010798199
+    "price": 0.070573,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x99D8a9C45b2ecA8864373A26D1459e3Dff1e17F3",
-    "price": 1.003,
-    "updatedAt": 1655010798199
+    "price": 0.9941,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
-    "price": 1.001,
-    "updatedAt": 1655010798199
+    "price": 1,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
-    "price": 5.04,
-    "updatedAt": 1655010798199
+    "price": 3.58,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x62B9c7356A2Dc64a1969e19C23e4f579F9810Aa7",
-    "price": 0.837478,
-    "updatedAt": 1655010798199
+    "price": 0.676018,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490",
-    "price": 1.0224473315811942,
-    "updatedAt": 1655010798199
+    "price": 1.021880734485773,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x5a6A4D54456819380173272A5E8E9B9904BdF41B",
-    "price": 1.0075592917291054,
-    "updatedAt": 1655010798199
+    "price": 1.0033061141641468,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0xd632f22692FaC7611d2AA1C0D552930D43CAEd3B",
-    "price": 1.0099896900811978,
-    "updatedAt": 1655010798199
+    "price": 1.0071252319960966,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0xBC19712FEB3a26080eBf6f2F7849b417FdD792CA",
-    "price": 0.01326251,
-    "updatedAt": 1655010798199
+    "price": 0.01435002,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x3c9d6c1C73b31c837832c72E04D3152f051fc1A9",
-    "price": 261.44,
-    "updatedAt": 1655010798199
+    "price": 130.72,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x89Ab32156e46F46D02ade3FEcbe5Fc4243B9AAeD",
-    "price": 0.208636,
-    "updatedAt": 1655010798199
+    "price": 0.2012,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x85Eee30c52B0b379b046Fb0F85F4f3Dc3009aFEC",
-    "price": 0.214857,
-    "updatedAt": 1655010798199
+    "price": 0.197934,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0xcA3d75aC011BF5aD07a98d02f18225F9bD9A6BDF",
-    "price": 1037.6994261624009,
-    "updatedAt": 1655010798199
+    "price": 851.0642009029829,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0xc4AD29ba4B3c580e6D59105FFf484999997675Ff",
-    "price": 1036.7408369803852,
-    "updatedAt": 1655010798199
+    "price": 855.9121338334855,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x110492b31c59716AC47337E616804E3E3AdC0b4a",
-    "price": 77348088.54803008,
-    "updatedAt": 1655010798199
+    "price": 56787219.67243328,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x9a13867048e01c663ce8Ce2fE0cDAE69Ff9F35E3",
-    "price": 27027170838768.695,
-    "updatedAt": 1655010798199
+    "price": 17561891001012.916,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0xCEfF51756c56CeFFCA006cD410B03FFC46dd3a58",
-    "price": 31140365469.68695,
-    "updatedAt": 1655010798199
+    "price": 23145683719.03861,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x18d98D452072Ac2EB7b74ce3DB723374360539f1",
-    "price": 7098317980.201685,
-    "updatedAt": 1655010798199
+    "price": 6337974392.2068815,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0xcD7989894bc033581532D2cd88Da5db0A4b12859",
-    "price": 84186827.16064897,
-    "updatedAt": 1655010798199
+    "price": 61896302.01445264,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0xE86204c4eDDd2f70eE00EAd6805f917671F56c52",
-    "price": 31565571044314.11,
-    "updatedAt": 1655010798199
+    "price": 20526545012786.586,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0xa0246c9032bC3A600820415aE600c6388619A14D",
-    "price": 35.12,
-    "updatedAt": 1655010798199
+    "price": 37.04,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x20c36f062a31865bED8a5B1e512D9a1A20AA333A",
-    "price": 0.02547898,
-    "updatedAt": 1655010798199
+    "price": 0.02530339,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x090185f2135308BaD17527004364eBcC2D37e5F6",
-    "price": 0.00093736,
-    "updatedAt": 1655010798199
+    "price": 0.00085807,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x3432B6A60D23Ca0dFCa7761B7ab56459D9C964D0",
-    "price": 5.15,
-    "updatedAt": 1655010798199
+    "price": 4.64,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0xaF0b1FDf9c6BfeC7b3512F207553c0BA00D7f1A2",
-    "price": 1307.6666666666667,
-    "updatedAt": 1655010798199
+    "price": 950.7009523809525,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0xa0FFfb6b575045f215432b3158Ffd0A9ee0454B9",
-    "price": 13575.073115491237,
-    "updatedAt": 1655010798199
+    "price": 9899.72797008611,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0xb460DAa847c45f1C4a41cb05BFB3b51c92e41B36",
-    "price": 20.09409774203837,
-    "updatedAt": 1655010798199
+    "price": 14.71588670200768,
+    "updatedAt": 1656524678801
+  },
+  {
+    "address": "0x5c6Ee304399DBdB9C8Ef030aB642B10820DB8F56",
+    "price": 2.311757844076555,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "price": 5.186503092440672,
-    "updatedAt": 1655010798199
+    "price": 3.8034356011231596,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x6aF7377b5009d7d154F36FE9e235aE1DA27Aea22",
-    "price": 1621.5346110604326,
-    "updatedAt": 1655010798199
+    "price": 1221.5865453200838,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x7e7E112A68d8D2E221E11047a72fFC1065c38e1a",
-    "price": 1127.1574970533227,
-    "updatedAt": 1655010798199
+    "price": 663.3180417971129,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0xC17078FDd324CC473F8175Dc5290fae5f2E84714",
-    "price": 52636422973916.55,
-    "updatedAt": 1655010798199
+    "price": 34277654221678.84,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x235c9e24D3FB2FAFd58a2E49D454Fdcd2DBf7FF1",
-    "price": 152202275.11940664,
-    "updatedAt": 1655010798199
+    "price": 112026743.06766102,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x758A43EE2BFf8230eeb784879CdcFF4828F2544D",
-    "price": 31124130489.37289,
-    "updatedAt": 1655010798199
+    "price": 23199699039.54697,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x8a8FFec8f4A0C8c9585Da95D9D97e8Cd6de273DE",
-    "price": 7095392749.516232,
-    "updatedAt": 1655010798199
+    "price": 6342045171.233077,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x1862A18181346EBd9EdAf800804f89190DeF24a5",
-    "price": 108571338.62678462,
-    "updatedAt": 1655010798199
+    "price": 79798750.3611779,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x88128580ACdD9c04Ce47AFcE196875747bF2A9f6",
-    "price": 46788672100516.83,
-    "updatedAt": 1655010798199
+    "price": 30446132954708.645,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x6dEf55d2e18486B9dDfaA075bc4e4EE0B28c1545",
-    "price": 28354.448038535036,
-    "updatedAt": 1655010798199
+    "price": 20666.161878168354,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0xd04c48A53c111300aD41190D63681ed3dAd998eC",
-    "price": 28382.27218281456,
-    "updatedAt": 1655010798199
+    "price": 20601.48899551818,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0xb9D076fDe463dbc9f915E5392F807315Bf940334",
-    "price": 28782.906403290017,
-    "updatedAt": 1655010798199
+    "price": 21149.329412049636,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0xAf5A1DECfa95BAF63E0084a35c62592B774A2A87",
-    "price": 28745.445416741142,
-    "updatedAt": 1655010798199
+    "price": 20951.140410527583,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0xaE96fF08771a109dc6650a1BdCa62F2d558E40af",
-    "price": 28104.11916404388,
-    "updatedAt": 1655010798199
+    "price": 20822.218554085557,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x4b92d19c11435614CD49Af1b589001b7c08cD4D5",
-    "price": 28037.70928483,
-    "updatedAt": 1655010798199
+    "price": 20384.0721555952,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x8c76970747afd5398e958bDfadA4cf0B9FcA16c4",
-    "price": 27770.75056821831,
-    "updatedAt": 1655010798199
+    "price": 20240.911803845713,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x55912D0Cf83B75c492E761932ABc4DB4a5CB1b17",
-    "price": 27687.532676239454,
-    "updatedAt": 1655010798199
+    "price": 20004.37708272509,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0xf349c0faA80fC1870306Ac093f75934078e28991",
-    "price": 35627.74681690972,
-    "updatedAt": 1655010798199
+    "price": 33689.75046847607,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x5Dce29e92b1b939F8E8C60DcF15BDE82A85be4a9",
-    "price": 28047.507176136656,
-    "updatedAt": 1655010798199
+    "price": 20442.447577113875,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x19E4d89e0cB807ea21B8CEF02df5eAA99A110dA5",
-    "price": 1.0075593065194504,
-    "updatedAt": 1655010798199
+    "price": 1.0035912925038966,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x15cBC4ac1e81c97667780fE6DAdeDd04a6EEB47B",
-    "price": 1.0094939642165677,
-    "updatedAt": 1655010798199
+    "price": 1.0077086600191554,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0xBE08Ef12e4a553666291E9fFC24fCCFd354F2Dd2",
-    "price": 1125.1077644002064,
-    "updatedAt": 1655010798199
+    "price": 924.5461942181627,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x27E98fC7d05f54E544d16F58C194C2D7ba71e3B5",
-    "price": 1055.4418126235223,
-    "updatedAt": 1655010798199
+    "price": 873.5956019910909,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x53C8E199eb2Cb7c01543C137078a038937a68E40",
-    "price": 5.533784238286999,
-    "updatedAt": 1655010798199
+    "price": 3.9339179040495695,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0xfd05D3C7fe2924020620A8bE4961bBaA747e6305",
-    "price": 5.05,
-    "updatedAt": 1655010798199
+    "price": 3.59,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x2B5455aac8d64C14786c3a29858E43b5945819C0",
-    "price": 1.2271845778560198,
-    "updatedAt": 1655010798199
+    "price": 1.0046918169668262,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x599D92B453C010b1050d31C364f6ee17E819f193",
-    "price": 4603.7268507259905,
-    "updatedAt": 1655010798199
+    "price": 4606.301011900013,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x26B8efa69603537AC8ab55768b6740b67664D518",
-    "price": 45135.58457438335,
-    "updatedAt": 1655010798199
+    "price": 45144.77593912458,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0x937B8E917d0F36eDEBBA8E459C5FB16F3b315551",
-    "price": 5.058485569066347,
-    "updatedAt": 1655010798199
+    "price": 3.5979732583588033,
+    "updatedAt": 1656524678801
   },
   {
     "address": "0xeC1c717A3b02582A4Aa2275260C583095536b613",
-    "price": 679.2208594927605,
-    "updatedAt": 1655010798199
+    "price": 496.9779578847839,
+    "updatedAt": 1656524678801
+  },
+  {
+    "address": "0xBA485b556399123261a5F9c95d413B4f93107407",
+    "price": 1.15,
+    "updatedAt": 1656524678801
+  },
+  {
+    "address": "0x37d9D2C6035b744849C15F1BFEE8F268a20fCBd8",
+    "price": 0.4696890221768257,
+    "updatedAt": 1656524678801
   }
 ]
