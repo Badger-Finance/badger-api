@@ -122,20 +122,7 @@ export async function resolveBalancerPoolTokenPrice(chain: Chain, token: Token, 
       const denominator = 1 + denominatorTop / divisor;
 
       const resultScalar = scalar * (numerator / denominator);
-      const requestTokenPrice = resultScalar * (requestToken.value / requestToken.balance);
-
-      console.log({
-        amplificiation,
-        invariant,
-        scalar,
-        divisor,
-        numerator,
-        denominator,
-        resultScalar,
-        requestTokenPrice,
-        requestToken,
-        pairToken,
-      });
+      const requestTokenPrice = resultScalar * (pairToken.value / pairToken.balance);
 
       return {
         address: token.address,
