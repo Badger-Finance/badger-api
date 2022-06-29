@@ -283,4 +283,12 @@ export const ethSetts: VaultDefinition[] = [
     state: VaultState.Guarded,
     version: VaultVersion.v1_5,
   },
+  {
+    name: 'bauraBAL',
+    depositToken: TOKENS.AURA_BAL,
+    vaultToken: TOKENS.BAURA_BAL,
+    protocol: Protocol.Aura,
+    state: VaultState.Guarded,
+    version: VaultVersion.v1_5,
+  },
 ];

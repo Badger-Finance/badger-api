@@ -4,6 +4,7 @@ import { getStakedCitadelPrice } from '../../citadel/citadel.utils';
 import { TOKENS } from '../../config/tokens.config';
 import { getRemDiggPrice } from '../../prices/custom/remdigg-price';
 import { PricingType } from '../../prices/enums/pricing-type.enum';
+import { resolveBalancerPoolTokenPrice } from '../../protocols/strategies/balancer.strategy';
 import { resolveCurvePoolTokenPrice } from '../../protocols/strategies/convex.strategy';
 import { getImBtcPrice, getMhBtcPrice } from '../../protocols/strategies/mstable.strategy';
 import { TokenConfig } from '../interfaces/token-config.interface';
@@ -112,6 +113,11 @@ export const ethTokensConfig: TokenConfig = {
     lookupName: 'aura-finance',
     type: PricingType.LookupName,
   },
+  [TOKENS.AURA_BAL]: {
+    type: PricingType.Custom,
+    lookupName: '0x3dd0843A028C86e0b760b1A76929d1C5Ef93a2dd',
+    getPrice: resolveBalancerPoolTokenPrice,
+  },
   [TOKENS.CRV_BBTC]: {
     type: PricingType.CurveLP,
   },
@@ -205,6 +211,9 @@ export const ethTokensConfig: TokenConfig = {
   [TOKENS.FXS]: {
     type: PricingType.Contract,
   },
+  [TOKENS.BAL]: {
+    type: PricingType.Contract,
+  },
   [TOKENS.CTDL]: {
     type: PricingType.Custom,
     getPrice: resolveCurvePoolTokenPrice,
@@ -214,6 +223,9 @@ export const ethTokensConfig: TokenConfig = {
     getPrice: getStakedCitadelPrice,
   },
   [TOKENS.BPT_WBTC_BADGER]: {
+    type: PricingType.BalancerLP,
+  },
+  [TOKENS.BPT_WETH_BAL]: {
     type: PricingType.BalancerLP,
   },
   [TOKENS.BBADGER]: {
@@ -430,6 +442,13 @@ export const ethTokensConfig: TokenConfig = {
     type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.AURA,
+      network: Network.Ethereum,
+    },
+  },
+  [TOKENS.BAURA_BAL]: {
+    type: PricingType.Vault,
+    vaultToken: {
+      address: TOKENS.AURA_BAL,
       network: Network.Ethereum,
     },
   },
