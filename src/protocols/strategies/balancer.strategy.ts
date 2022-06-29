@@ -9,6 +9,8 @@ import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance
 import { getFullToken, toBalance } from '../../tokens/tokens.utils';
 import { getCachedVault, getVaultDefinition } from '../../vaults/vaults.utils';
 
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+
 export async function getBPTPrice(chain: Chain, token: string): Promise<TokenPrice> {
   const sdk = await chain.getSdk();
   const pool = WeightedPool__factory.connect(token, sdk.provider);
@@ -106,12 +108,13 @@ export async function resolveBalancerPoolTokenPrice(chain: Chain, token: Token, 
       const requestToken = balances[requestTokenIndex];
       const pairToken = balances[1 - requestTokenIndex];
 
-      const amplificiation = amplificationParameter.value.toNumber() / amplificationParameter.precision.toNumber();
+      const amplificiation =
+        4 * (amplificationParameter.value.toNumber() / amplificationParameter.precision.toNumber());
       const invariant = formatBalance(lastInvariantData.lastInvariant);
 
       // calculate scalar y/x
       const scalar = pairToken.balance / requestToken.balance;
-      const divisor = Math.pow(invariant / 2, 3);
+      const divisor = Math.pow(invariant, 3);
 
       // calculate numerator
       const numeratorTop = 2 * amplificiation * Math.pow(requestToken.balance, 2) * pairToken.balance;
