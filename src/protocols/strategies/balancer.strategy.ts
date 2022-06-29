@@ -3,7 +3,7 @@ import { ethers } from 'ethers';
 
 import { VaultTokenBalance } from '../../aws/models/vault-token-balance.model';
 import { Chain } from '../../chains/config/chain.config';
-import { BalancerVault__factory, WeightedPool__factory } from '../../contracts';
+import { BalancerVault__factory, StablePool__factory, WeightedPool__factory } from '../../contracts';
 import { TokenPrice } from '../../prices/interface/token-price.interface';
 import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
 import { getFullToken, toBalance } from '../../tokens/tokens.utils';
@@ -92,10 +92,51 @@ export async function resolveBalancerPoolTokenPrice(chain: Chain, token: Token, 
       if (balances.length != 2) {
         throw new Error('Pool has unexpected number of tokens!');
       }
+
+      // we can calculate "x" in terms of "y" - this is our token in terms of some known token
+      const probablyStablePool = StablePool__factory.connect(pool!, sdk.provider);
+
+      // derivation adapted from https://twitter.com/0xa9a/status/1514192791689179137
+      const [amplificationParameter, lastInvariantData] = await Promise.all([
+        probablyStablePool.getAmplificationParameter(),
+        probablyStablePool.getLastInvariant(),
+      ]);
+
       const requestTokenIndex = balances[0].address === token.address ? 0 : 1;
       const requestToken = balances[requestTokenIndex];
       const pairToken = balances[1 - requestTokenIndex];
-      const requestTokenPrice = pairToken.value / requestToken.balance;
+
+      const amplificiation = amplificationParameter.value.toNumber() / amplificationParameter.precision.toNumber();
+      const invariant = formatBalance(lastInvariantData.lastInvariant);
+
+      // calculate scalar y/x
+      const scalar = pairToken.balance / requestToken.balance;
+      const divisor = Math.pow(invariant / 2, 3);
+
+      // calculate numerator
+      const numeratorTop = 2 * amplificiation * Math.pow(requestToken.balance, 2) * pairToken.balance;
+      const numerator = 1 + numeratorTop / divisor;
+
+      // calculate denominator
+      const denominatorTop = 2 * amplificiation * Math.pow(pairToken.balance, 2) * requestToken.balance;
+      const denominator = 1 + denominatorTop / divisor;
+
+      const resultScalar = scalar * (numerator / denominator);
+      const requestTokenPrice = resultScalar * (requestToken.value / requestToken.balance);
+
+      console.log({
+        amplificiation,
+        invariant,
+        scalar,
+        divisor,
+        numerator,
+        denominator,
+        resultScalar,
+        requestTokenPrice,
+        requestToken,
+        pairToken,
+      });
+
       return {
         address: token.address,
         price: requestTokenPrice,
