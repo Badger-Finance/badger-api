@@ -311,47 +311,15 @@ async function retrieveHarvestForwarderData(chain: Chain, vault: VaultDefinition
     // cut off after 30 days in seconds
     const timestampCutoff = Math.floor(Date.now() / 1000 - 30 * ONE_DAY_SECONDS);
     const { data } = await evaluateEvents([], distributions, { timestamp_gte: timestampCutoff });
-    const previousOldData = await retrieveBribesProcessorData(chain, OLD_BRIBES_PROCESSOR);
-    const previousData = await retrieveBribesProcessorData(chain, BRIBES_PROCESSOR);
-    const combinedData = previousData.concat(previousOldData).concat(data);
 
     // cannot construct data with this - will be fine after the test emission
-    if (combinedData.length <= 1) {
+    if (data.length <= 1) {
       return [];
     }
 
-    return estimateVaultPerformance(chain, vault, combinedData);
+    return estimateVaultPerformance(chain, vault, data);
   } catch (err) {
     console.error({ err, message: 'Failed to capture harvest forwarder data' });
-    return [];
-  }
-}
-
-async function retrieveBribesProcessorData(chain: Chain, processor: string): Promise<VaultHarvestData[]> {
-  try {
-    const sdk = await chain.getSdk();
-    const bribeProcessor = BribesProcessor__factory.connect(processor, sdk.provider);
-
-    const treeDistributionFilter = bribeProcessor.filters.TreeDistribution();
-
-    const endBlock = await sdk.provider.getBlockNumber();
-    // cut off after 30 days in blocks, this is in seconds by 13 second blocks
-    const startBlock = Math.floor(endBlock - (30 * ONE_DAY_SECONDS) / 13);
-    const allTreeDistributions = await chunkQueryFilter<
-      BribesProcessor,
-      BribeProcessorTreeDistributionEventFilter,
-      BribeProcessorTreeDistributionEvent
-    >(bribeProcessor, treeDistributionFilter, startBlock, endBlock);
-
-    const { harvests, distributions } = await parseHarvestEvents([], allTreeDistributions);
-
-    // cut off after 30 days in seconds
-    const timestampCutoff = Math.floor(Date.now() / 1000 - 30 * ONE_DAY_SECONDS);
-    const { data } = await evaluateEvents(harvests, distributions, { timestamp_gte: timestampCutoff });
-
-    return data;
-  } catch (err) {
-    console.log({ err, message: `Failed to retrieve bribes processor data for ${processor}` });
     return [];
   }
 }

@@ -109,7 +109,8 @@ export async function queryCachedAccount(address: string): Promise<CachedAccount
     )) {
       return item;
     }
-    return defaultAccount;
+
+    return mapper.put(defaultAccount);
   } catch (err) {
     return Object.assign(new CachedAccount(), defaultAccount);
   }
