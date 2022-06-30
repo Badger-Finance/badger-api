@@ -256,7 +256,7 @@ export function setFullTokenDataMock() {
 }
 
 export function mockPricing() {
-  jest.spyOn(pricesUtils, 'getPrice').mockImplementation(async (token: string, currency?: Currency) => ({
+  jest.spyOn(pricesUtils, 'getPrice').mockImplementation(async (token: string, _currency?: Currency) => ({
     address: token,
     price: parseInt(token.slice(0, 5), 16),
     updatedAt: Date.now(),
