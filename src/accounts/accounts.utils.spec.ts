@@ -85,6 +85,10 @@ describe('accounts.utils', () => {
   };
 
   beforeEach(() => {
+    jest.spyOn(DataMapper.prototype, 'put').mockImplementation(async (o) => ({
+      ...o,
+      updatedAt: 0,
+    }));
     setFullTokenDataMock();
   });
 

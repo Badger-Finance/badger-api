@@ -28,7 +28,7 @@ import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapsho
 import { VaultCompoundModel } from '../aws/models/vault-compound.model';
 import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
 import { Chain } from '../chains/config/chain.config';
-import { ONE_DAY_SECONDS, ONE_YEAR_SECONDS } from '../config/constants';
+import { ONE_DAY_SECONDS, ONE_YEAR_SECONDS, PRODUCTION } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
 import { EmissionControl__factory } from '../contracts';
 import { getVault } from '../indexers/indexer.utils';
@@ -290,7 +290,9 @@ export async function getVaultPerformance(
   chain: Chain,
   vaultDefinition: VaultDefinition,
 ): Promise<CachedValueSource[]> {
-  console.time(`${vaultDefinition.name}-${vaultDefinition.vaultToken}`);
+  if (PRODUCTION) {
+    console.time(`${vaultDefinition.name}-${vaultDefinition.vaultToken}`);
+  }
   const [rewardEmissions, protocol] = await Promise.all([
     getRewardEmission(chain, vaultDefinition),
     getProtocolValueSources(chain, vaultDefinition),
@@ -306,8 +308,17 @@ export async function getVaultPerformance(
   if (vaultApr === 0) {
     vaultSources = await getVaultUnderlyingPerformance(chain, vaultDefinition);
   }
-  console.log(`${vaultDefinition.name}: ${vaultLookupMethod[vaultDefinition.vaultToken]}`);
-  console.timeEnd(`${vaultDefinition.name}-${vaultDefinition.vaultToken}`);
+  if (PRODUCTION) {
+    console.log(`${vaultDefinition.name}: ${vaultLookupMethod[vaultDefinition.vaultToken]}`);
+    console.timeEnd(`${vaultDefinition.name}-${vaultDefinition.vaultToken}`);
+  }
+  if (vaultDefinition.vaultToken === TOKENS.BVECVX) {
+    console.log({
+      vaultSources,
+      rewardEmissions,
+      protocol,
+    });
+  }
   return [...vaultSources, ...rewardEmissions, ...protocol];
 }
 
@@ -349,10 +360,10 @@ export async function loadVaultEventPerformances(
   }
 
   const sdk = await chain.getSdk();
-  const threeWeeks = 21 * ONE_DAY_SECONDS;
-  const cutoff = Date.now() / 1000 - threeWeeks;
+  const cutoffPeriod = 16 * ONE_DAY_SECONDS;
+  const cutoff = Date.now() / 1000 - cutoffPeriod;
   const startBlock = await sdk.provider.getBlockNumber();
-  -(threeWeeks / 13);
+  -Math.floor(cutoffPeriod / 13);
   const { data } = await sdk.vaults.listHarvests({
     address: vaultDefinition.vaultToken,
     timestamp_gte: cutoff,
@@ -424,7 +435,7 @@ export async function loadVaultGraphPerformances(
   }
 
   const sdk = await chain.getSdk();
-  const cutoff = Number(((Date.now() - ONE_DAY_MS * 21) / 1000).toFixed());
+  const cutoff = Number(((Date.now() - ONE_DAY_MS * 16) / 1000).toFixed());
 
   let [vaultHarvests, treeDistributions] = await Promise.all([
     sdk.graph.loadSettHarvests({

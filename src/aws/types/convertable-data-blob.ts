@@ -1,7 +1,7 @@
 import { KeyedDataBlob } from '../models/keyed-data-blob.model';
 import { DataBlob } from './data-blob';
 
-export abstract class ConvertableDataBlob<T> {
+export abstract class ConvertableDataBlob {
   public keyedBlob: KeyedDataBlob;
 
   constructor(protected blob: DataBlob) {
