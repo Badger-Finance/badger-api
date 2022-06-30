@@ -28,7 +28,7 @@ import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapsho
 import { VaultCompoundModel } from '../aws/models/vault-compound.model';
 import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
 import { Chain } from '../chains/config/chain.config';
-import { ONE_YEAR_SECONDS } from '../config/constants';
+import { ONE_DAY_SECONDS, ONE_YEAR_SECONDS } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
 import { EmissionControl__factory } from '../contracts';
 import { getVault } from '../indexers/indexer.utils';
@@ -290,6 +290,7 @@ export async function getVaultPerformance(
   chain: Chain,
   vaultDefinition: VaultDefinition,
 ): Promise<CachedValueSource[]> {
+  console.time(`${vaultDefinition.name}-${vaultDefinition.vaultToken}`);
   const [rewardEmissions, protocol] = await Promise.all([
     getRewardEmission(chain, vaultDefinition),
     getProtocolValueSources(chain, vaultDefinition),
@@ -306,6 +307,7 @@ export async function getVaultPerformance(
     vaultSources = await getVaultUnderlyingPerformance(chain, vaultDefinition);
   }
   console.log(`${vaultDefinition.name}: ${vaultLookupMethod[vaultDefinition.vaultToken]}`);
+  console.timeEnd(`${vaultDefinition.name}-${vaultDefinition.vaultToken}`);
   return [...vaultSources, ...rewardEmissions, ...protocol];
 }
 
@@ -347,11 +349,15 @@ export async function loadVaultEventPerformances(
   }
 
   const sdk = await chain.getSdk();
-  const cutoff = (Date.now() - ONE_DAY_MS * 21) / 1000;
+  const threeWeeks = 21 * ONE_DAY_SECONDS;
+  const cutoff = Date.now() / 1000 - threeWeeks;
+  const startBlock = await sdk.provider.getBlockNumber();
+  -(threeWeeks / 13);
   const { data } = await sdk.vaults.listHarvests({
     address: vaultDefinition.vaultToken,
     timestamp_gte: cutoff,
     version: vaultDefinition.version ?? VaultVersion.v1,
+    startBlock,
   });
 
   vaultLookupMethod[vaultDefinition.vaultToken] = 'EventAPR';
