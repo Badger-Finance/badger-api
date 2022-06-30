@@ -232,7 +232,7 @@ export class CitadelService {
   async loadKnightingRoundLeaderboard(): Promise<CitadelLeaderboardEntry[]> {
     const knightingRoundStats = await getCitadelKnightingRoundsStats();
 
-    const knighsData = CITADEL_KNIGHTS.map((k, i) => {
+    const knighsData = CITADEL_KNIGHTS.map((k) => {
       const knightStatTemplate = {
         knight: k,
         voteAmount: 0,

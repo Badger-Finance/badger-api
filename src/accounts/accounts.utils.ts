@@ -100,6 +100,7 @@ export async function queryCachedAccount(address: string): Promise<CachedAccount
     balances: [],
     updatedAt: 0,
   };
+  const baseAccount = Object.assign(new CachedAccount(), defaultAccount);
   try {
     const mapper = getDataMapper();
     for await (const item of mapper.query(
@@ -109,9 +110,10 @@ export async function queryCachedAccount(address: string): Promise<CachedAccount
     )) {
       return item;
     }
-    return defaultAccount;
+
+    return mapper.put(baseAccount);
   } catch (err) {
-    return Object.assign(new CachedAccount(), defaultAccount);
+    return baseAccount;
   }
 }
 

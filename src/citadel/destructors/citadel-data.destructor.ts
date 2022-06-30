@@ -5,7 +5,7 @@ import { CitadelRewardsTokenPaidMap } from '../interfaces/citadel-rewards-token-
 
 export const CTIADEL_DATA = 'citadel-protocol-overview';
 
-export class CitadelData extends ConvertableDataBlob<CitadelData> {
+export class CitadelData extends ConvertableDataBlob {
   // treasury or fed related data
   valuePaid: number;
   marketCap: number;

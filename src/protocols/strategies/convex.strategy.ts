@@ -1,22 +1,4 @@
-import {
-  BribesProcessor,
-  BribesProcessor__factory,
-  chunkQueryFilter,
-  Erc20__factory,
-  evaluateEvents,
-  formatBalance,
-  HarvestDistributor,
-  HarvestDistributor__factory,
-  Network,
-  parseHarvestEvents,
-  Token,
-  VaultHarvestData,
-} from '@badger-dao/sdk';
-import {
-  TreeDistributionEvent as BribeProcessorTreeDistributionEvent,
-  TreeDistributionEventFilter as BribeProcessorTreeDistributionEventFilter,
-} from '@badger-dao/sdk/lib/contracts/BribesProcessor';
-import { TreeDistributionEvent, TreeDistributionEventFilter } from '@badger-dao/sdk/lib/contracts/HarvestDistributor';
+import { Erc20__factory, formatBalance, Network, Token } from '@badger-dao/sdk';
 import { UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 
@@ -24,7 +6,6 @@ import { CachedValueSource } from '../../aws/models/apy-snapshots.model';
 import { VaultTokenBalance } from '../../aws/models/vault-token-balance.model';
 import { Chain } from '../../chains/config/chain.config';
 import { request } from '../../common/request';
-import { ONE_DAY_SECONDS } from '../../config/constants';
 import { ContractRegistry } from '../../config/interfaces/contract-registry.interface';
 import { TOKENS } from '../../config/tokens.config';
 import {
@@ -39,12 +20,7 @@ import { valueSourceToCachedValueSource } from '../../rewards/rewards.utils';
 import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
 import { getFullToken, getVaultTokens, toBalance } from '../../tokens/tokens.utils';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
-import {
-  estimateVaultPerformance,
-  getCachedVault,
-  getVaultCachedValueSources,
-  getVaultDefinition,
-} from '../../vaults/vaults.utils';
+import { getCachedVault, getVaultCachedValueSources, getVaultDefinition } from '../../vaults/vaults.utils';
 import { CurveAPIResponse } from '../interfaces/curve-api-response.interrface';
 import { createValueSource } from '../interfaces/value-source.interface';
 
@@ -98,8 +74,8 @@ interface FactoryAPYResonse {
 export class ConvexStrategy {
   static async getValueSources(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
     switch (vaultDefinition.vaultToken) {
-      case TOKENS.BVECVX:
-        return retrieveHarvestForwarderData(chain, vaultDefinition);
+      // case TOKENS.BVECVX:
+      //   return retrieveHarvestForwarderData(chain, vaultDefinition);
       case TOKENS.BCRV_CVXBVECVX:
         return getLiquiditySources(chain, vaultDefinition);
       default:
@@ -140,8 +116,8 @@ async function getLiquiditySources(chain: Chain, vaultDefinition: VaultDefinitio
     return s;
   });
   const cachedTradeFees = await getCurvePerformance(chain, vaultDefinition);
-  const forwardedDistributions = await retrieveHarvestForwarderData(chain, vaultDefinition);
-  return [cachedTradeFees, ...lpSources, ...forwardedDistributions];
+  // const forwardedDistributions = await retrieveHarvestForwarderData(chain, vaultDefinition);
+  return [cachedTradeFees, ...lpSources]; // ...forwardedDistributions
 }
 
 export async function getCurvePerformance(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource> {
@@ -283,75 +259,44 @@ export async function resolveCurvePoolTokenPrice(chain: Chain, token: Token): Pr
   };
 }
 
-async function retrieveHarvestForwarderData(chain: Chain, vault: VaultDefinition): Promise<CachedValueSource[]> {
-  try {
-    const sdk = await chain.getSdk();
-    const harvestForwarder = HarvestDistributor__factory.connect(HARVEST_FORWARDER, sdk.provider);
+// TODO: remove if we never need to use again - but keep in case graph support is lost
+// async function retrieveHarvestForwarderData(chain: Chain, vault: VaultDefinition): Promise<CachedValueSource[]> {
+//   try {
+//     const sdk = await chain.getSdk();
+//     const harvestForwarder = HarvestDistributor__factory.connect(HARVEST_FORWARDER, sdk.provider);
 
-    const treeDistributionFilter = harvestForwarder.filters.TreeDistribution();
+//     const treeDistributionFilter = harvestForwarder.filters.TreeDistribution();
 
-    const endBlock = await sdk.provider.getBlockNumber();
-    // cut off after 30 days in blocks, this is in seconds by 13 second blocks
-    const startBlock = Math.floor(endBlock - (30 * ONE_DAY_SECONDS) / 13);
-    const allTreeDistributions = await chunkQueryFilter<
-      HarvestDistributor,
-      TreeDistributionEventFilter,
-      TreeDistributionEvent
-    >(harvestForwarder, treeDistributionFilter, startBlock, endBlock);
+//     const endBlock = await sdk.provider.getBlockNumber();
+//     // cut off after 16 days in blocks, this is in seconds by 13 second blocks
+//     const startBlock = Math.floor(endBlock - (16 * ONE_DAY_SECONDS) / 13);
+//     const allTreeDistributions = await chunkQueryFilter<
+//       HarvestDistributor,
+//       TreeDistributionEventFilter,
+//       TreeDistributionEvent
+//     >(harvestForwarder, treeDistributionFilter, startBlock, endBlock);
 
-    const distributions = allTreeDistributions
-      .filter((d) => d.args.beneficiary === vault.vaultToken)
-      .map((d) => ({
-        timestamp: d.args.block_timestamp.toNumber(),
-        block: d.args.block_number.toNumber(),
-        token: d.args.token,
-        amount: d.args.amount,
-      }));
+//     const distributions = allTreeDistributions
+//       .filter((d) => d.args.beneficiary === vault.vaultToken)
+//       .map((d) => ({
+//         timestamp: d.args.block_timestamp.toNumber(),
+//         block: d.args.block_number.toNumber(),
+//         token: d.args.token,
+//         amount: d.args.amount,
+//       }));
 
-    // cut off after 30 days in seconds
-    const timestampCutoff = Math.floor(Date.now() / 1000 - 30 * ONE_DAY_SECONDS);
-    const { data } = await evaluateEvents([], distributions, { timestamp_gte: timestampCutoff });
-    const previousOldData = await retrieveBribesProcessorData(chain, OLD_BRIBES_PROCESSOR);
-    const previousData = await retrieveBribesProcessorData(chain, BRIBES_PROCESSOR);
-    const combinedData = previousData.concat(previousOldData).concat(data);
+//     // cut off after 16 days in seconds
+//     const timestampCutoff = Math.floor(Date.now() / 1000 - 16 * ONE_DAY_SECONDS);
+//     const { data } = await evaluateEvents([], distributions, { timestamp_gte: timestampCutoff });
 
-    // cannot construct data with this - will be fine after the test emission
-    if (combinedData.length <= 1) {
-      return [];
-    }
+//     // cannot construct data with this - will be fine after the test emission
+//     if (data.length <= 1) {
+//       return [];
+//     }
 
-    return estimateVaultPerformance(chain, vault, combinedData);
-  } catch (err) {
-    console.error({ err, message: 'Failed to capture harvest forwarder data' });
-    return [];
-  }
-}
-
-async function retrieveBribesProcessorData(chain: Chain, processor: string): Promise<VaultHarvestData[]> {
-  try {
-    const sdk = await chain.getSdk();
-    const bribeProcessor = BribesProcessor__factory.connect(processor, sdk.provider);
-
-    const treeDistributionFilter = bribeProcessor.filters.TreeDistribution();
-
-    const endBlock = await sdk.provider.getBlockNumber();
-    // cut off after 30 days in blocks, this is in seconds by 13 second blocks
-    const startBlock = Math.floor(endBlock - (30 * ONE_DAY_SECONDS) / 13);
-    const allTreeDistributions = await chunkQueryFilter<
-      BribesProcessor,
-      BribeProcessorTreeDistributionEventFilter,
-      BribeProcessorTreeDistributionEvent
-    >(bribeProcessor, treeDistributionFilter, startBlock, endBlock);
-
-    const { harvests, distributions } = await parseHarvestEvents([], allTreeDistributions);
-
-    // cut off after 30 days in seconds
-    const timestampCutoff = Math.floor(Date.now() / 1000 - 30 * ONE_DAY_SECONDS);
-    const { data } = await evaluateEvents(harvests, distributions, { timestamp_gte: timestampCutoff });
-
-    return data;
-  } catch (err) {
-    console.log({ err, message: `Failed to retrieve bribes processor data for ${processor}` });
-    return [];
-  }
-}
+//     return estimateVaultPerformance(chain, vault, data);
+//   } catch (err) {
+//     console.error({ err, message: 'Failed to capture harvest forwarder data' });
+//     return [];
+//   }
+// }
