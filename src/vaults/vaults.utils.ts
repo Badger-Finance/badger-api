@@ -312,13 +312,6 @@ export async function getVaultPerformance(
     console.log(`${vaultDefinition.name}: ${vaultLookupMethod[vaultDefinition.vaultToken]}`);
     console.timeEnd(`${vaultDefinition.name}-${vaultDefinition.vaultToken}`);
   }
-  if (vaultDefinition.vaultToken === TOKENS.BVECVX) {
-    console.log({
-      vaultSources,
-      rewardEmissions,
-      protocol,
-    });
-  }
   return [...vaultSources, ...rewardEmissions, ...protocol];
 }
 
