@@ -297,13 +297,15 @@ export const ethSetts: VaultDefinition[] = [
     depositToken: TOKENS.BPT_WBTC_BADGER,
     getTokenBalance: getBalancerVaultTokenBalance,
     vaultToken: TOKENS.BBPT_WBTC_BADGER,
-    protocol: Protocol.Balancer,
+    protocol: Protocol.Aura,
+    version: VaultVersion.v1_5,
   },
   {
-    name: 'BobbaUSD',
+    name: 'Aave Boosted 3USD',
     depositToken: TOKENS.BPT_BB_AAVE_USD,
     getTokenBalance: getBalancerVaultTokenBalance,
     vaultToken: TOKENS.BBPT_BB_AAVE_USD,
-    protocol: Protocol.Balancer,
+    protocol: Protocol.Aura,
+    version: VaultVersion.v1_5,
   },
 ];

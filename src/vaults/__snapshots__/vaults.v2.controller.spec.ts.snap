@@ -4241,7 +4241,7 @@ Array [
     "lastHarvest": 1648236387419,
     "name": "BADGER / WBTC",
     "pricePerFullShare": 1,
-    "protocol": "Balancer",
+    "protocol": "Aura",
     "sources": Array [
       Object {
         "apr": 15.94,
@@ -4318,7 +4318,7 @@ Array [
     "value": 408279,
     "vaultAsset": "BADGER",
     "vaultToken": "0x63ad745506BD6a3E57F764409A47ed004BEc40b1",
-    "version": "v1",
+    "version": "v1.5",
     "yieldProjection": Object {
       "harvestApr": -0.005903611887800412,
       "harvestApy": -0.002694117281110131,
@@ -4360,9 +4360,9 @@ Array [
     },
     "bouncer": "none",
     "lastHarvest": 1648236387419,
-    "name": "BobbaUSD",
+    "name": "Aave Boosted 3USD",
     "pricePerFullShare": 1,
-    "protocol": "Balancer",
+    "protocol": "Aura",
     "sources": Array [
       Object {
         "apr": 1.09,
@@ -4439,7 +4439,7 @@ Array [
     "value": 28021,
     "vaultAsset": "BADGER",
     "vaultToken": "0x06D756861De0724FAd5B5636124e0f252d3C1404",
-    "version": "v1",
+    "version": "v1.5",
     "yieldProjection": Object {
       "harvestApr": -0.08601837043429086,
       "harvestApy": -0.007328835462283578,
@@ -8241,7 +8241,7 @@ Array [
     "lastHarvest": 1648236387419,
     "name": "BADGER / WBTC",
     "pricePerFullShare": 1,
-    "protocol": "Balancer",
+    "protocol": "Aura",
     "sources": Array [
       Object {
         "apr": 15.94,
@@ -8318,7 +8318,7 @@ Array [
     "value": 408279,
     "vaultAsset": "BADGER",
     "vaultToken": "0x63ad745506BD6a3E57F764409A47ed004BEc40b1",
-    "version": "v1",
+    "version": "v1.5",
     "yieldProjection": Object {
       "harvestApr": -0.005903611887800412,
       "harvestApy": -0.002694117281110131,
@@ -8360,9 +8360,9 @@ Array [
     },
     "bouncer": "none",
     "lastHarvest": 1648236387419,
-    "name": "BobbaUSD",
+    "name": "Aave Boosted 3USD",
     "pricePerFullShare": 1,
-    "protocol": "Balancer",
+    "protocol": "Aura",
     "sources": Array [
       Object {
         "apr": 1.09,
@@ -8439,7 +8439,7 @@ Array [
     "value": 28021,
     "vaultAsset": "BADGER",
     "vaultToken": "0x06D756861De0724FAd5B5636124e0f252d3C1404",
-    "version": "v1",
+    "version": "v1.5",
     "yieldProjection": Object {
       "harvestApr": -0.08601837043429086,
       "harvestApy": -0.007328835462283578,
