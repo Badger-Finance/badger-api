@@ -6,6 +6,7 @@ import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
 import { BlocknativeGasResponse } from '../../gas/interfaces/blocknative-gas-response.interface';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
+import { getBalancerVaultTokenBalance } from '../../protocols/strategies/balancer.strategy';
 import { getCurveVaultTokenBalance } from '../../protocols/strategies/convex.strategy';
 import { ethTokensConfig } from '../../tokens/config/eth-tokens.config';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
@@ -289,6 +290,22 @@ export const ethSetts: VaultDefinition[] = [
     vaultToken: TOKENS.BAURA_BAL,
     protocol: Protocol.Aura,
     state: VaultState.Guarded,
+    version: VaultVersion.v1_5,
+  },
+  {
+    name: 'BADGER / WBTC',
+    depositToken: TOKENS.BPT_WBTC_BADGER,
+    getTokenBalance: getBalancerVaultTokenBalance,
+    vaultToken: TOKENS.BBPT_WBTC_BADGER,
+    protocol: Protocol.Aura,
+    version: VaultVersion.v1_5,
+  },
+  {
+    name: 'Aave Boosted 3USD',
+    depositToken: TOKENS.BPT_BB_AAVE_USD,
+    getTokenBalance: getBalancerVaultTokenBalance,
+    vaultToken: TOKENS.BBPT_BB_AAVE_USD,
+    protocol: Protocol.Aura,
     version: VaultVersion.v1_5,
   },
 ];
