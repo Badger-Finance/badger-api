@@ -6,6 +6,7 @@ if (nodeEnv !== 'test' && nodeEnv !== 'ci') {
 }
 
 module.exports = {
+  preset: 'ts-jest/presets/js-with-ts',
   clearMocks: true,
   moduleFileExtensions: ['js', 'json', 'ts'],
   resetMocks: true,
@@ -14,6 +15,6 @@ module.exports = {
   testRegex: '.spec.ts$',
   testTimeout: 10000,
   setupFilesAfterEnv: ['./src/test/jest.setup.ts'],
-  transform: { '^.+\\.ts$': 'ts-jest' },
+  transformIgnorePatterns: ['/node_modules/(?!(uuid|ng-dynamic))'],
   coveragePathIgnorePatterns: ['interfaces', 'enums', 'generated', 'chains', 'abi', 'contracts'],
 };
