@@ -214,6 +214,15 @@ export const ethTokensConfig: TokenConfig = {
   [TOKENS.BAL]: {
     type: PricingType.Contract,
   },
+  [TOKENS.BB_A_DAI]: {
+    type: PricingType.Contract,
+  },
+  [TOKENS.BB_A_USDC]: {
+    type: PricingType.Contract,
+  },
+  [TOKENS.BB_A_USDT]: {
+    type: PricingType.Contract,
+  },
   [TOKENS.CTDL]: {
     type: PricingType.Custom,
     getPrice: resolveCurvePoolTokenPrice,
@@ -228,9 +237,8 @@ export const ethTokensConfig: TokenConfig = {
   [TOKENS.BPT_WETH_BAL]: {
     type: PricingType.BalancerLP,
   },
-  [TOKENS.BBPT_BB_AAVE_USD]: {
-    type: PricingType.LookupName,
-    lookupName: 'balancer-booster-aave-usd',
+  [TOKENS.BPT_BB_AAVE_USD]: {
+    type: PricingType.BalancerLP,
   },
   [TOKENS.BBADGER]: {
     type: PricingType.Vault,
