@@ -12,6 +12,7 @@ import { getLpTokenBalances } from './indexer.utils';
 
 export async function refreshVaultBalances() {
   await Promise.all(SUPPORTED_CHAINS.flatMap((c) => c.vaults.flatMap(async (v) => updateVaultTokenBalances(c, v))));
+  return 'done';
 }
 
 export async function updateVaultTokenBalances(chain: Chain, vaultDefinition: VaultDefinition): Promise<void> {
