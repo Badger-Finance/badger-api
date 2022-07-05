@@ -228,6 +228,10 @@ export const ethTokensConfig: TokenConfig = {
   [TOKENS.BPT_WETH_BAL]: {
     type: PricingType.BalancerLP,
   },
+  [TOKENS.BBPT_BB_AAVE_USD]: {
+    type: PricingType.LookupName,
+    lookupName: 'balancer-booster-aave-usd',
+  },
   [TOKENS.BBADGER]: {
     type: PricingType.Vault,
     vaultToken: {
@@ -449,6 +453,13 @@ export const ethTokensConfig: TokenConfig = {
     type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.AURA_BAL,
+      network: Network.Ethereum,
+    },
+  },
+  [TOKENS.BBPT_BB_AAVE_USD]: {
+    type: PricingType.Vault,
+    vaultToken: {
+      address: TOKENS.BPT_BB_AAVE_USD,
       network: Network.Ethereum,
     },
   },
