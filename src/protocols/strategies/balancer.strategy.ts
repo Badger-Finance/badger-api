@@ -1,9 +1,13 @@
 import { Erc20__factory, formatBalance, Token } from '@badger-dao/sdk';
-import { ethers } from 'ethers';
 
 import { VaultTokenBalance } from '../../aws/models/vault-token-balance.model';
 import { Chain } from '../../chains/config/chain.config';
-import { BalancerVault__factory, StablePool__factory, WeightedPool__factory } from '../../contracts';
+import {
+  BalancerVault__factory,
+  StablePhantomVault__factory,
+  StablePool__factory,
+  WeightedPool__factory,
+} from '../../contracts';
 import { TokenPrice } from '../../prices/interface/token-price.interface';
 import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
 import { getFullToken, toBalance } from '../../tokens/tokens.utils';
@@ -12,19 +16,36 @@ import { getCachedVault, getVaultDefinition } from '../../vaults/vaults.utils';
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 export async function getBPTPrice(chain: Chain, token: string): Promise<TokenPrice> {
-  const sdk = await chain.getSdk();
-  const pool = WeightedPool__factory.connect(token, sdk.provider);
-  const totalSupply = await pool.totalSupply();
+  let totalSupply;
+
+  try {
+    const maybePhantomPool = StablePhantomVault__factory.connect(token, chain.provider);
+    // total supply never changes on a phantom pool, you must use virtual supply
+    totalSupply = formatBalance(await maybePhantomPool.getVirtualSupply());
+  } catch {
+    const contract = Erc20__factory.connect(token, chain.provider);
+    totalSupply = formatBalance(await contract.totalSupply());
+  }
+
   const tokens = await getBalancerPoolTokens(chain, token);
-  const price = tokens.map((t) => t.value).reduce((total, value) => (total += value), 0);
+  const value = tokens.map((t) => t.value).reduce((total, value) => (total += value), 0);
+
   return {
     address: token,
-    price: price / formatBalance(totalSupply),
+    price: value / totalSupply,
   };
 }
 
 export async function getBalancerPoolTokens(chain: Chain, token: string): Promise<CachedTokenBalance[]> {
   const sdk = await chain.getSdk();
+
+  const maybePhantomPool = StablePhantomVault__factory.connect(token, sdk.provider);
+  let bptIndex: number | undefined;
+  try {
+    const maybeBptIndex = await maybePhantomPool.getBptIndex();
+    bptIndex = maybeBptIndex.toNumber();
+  } catch {} // ignore the error - its not a phantom pool
+
   const pool = WeightedPool__factory.connect(token, sdk.provider);
   const [vault, poolId] = await Promise.all([pool.getVault(), pool.getPoolId()]);
   const vaultContract = BalancerVault__factory.connect(vault, sdk.provider);
@@ -33,6 +54,9 @@ export async function getBalancerPoolTokens(chain: Chain, token: string): Promis
   const tokens: CachedTokenBalance[] = [];
 
   for (let i = 0; i < poolTokens.balances.length; i++) {
+    if (bptIndex && i === bptIndex) {
+      continue;
+    }
     const token = await getFullToken(chain, poolTokens.tokens[i]);
     const balance = formatBalance(poolTokens.balances[i], token.decimals);
     const tokenBalance = await toBalance(token, balance);
@@ -46,9 +70,19 @@ export async function getBalancerVaultTokenBalance(chain: Chain, token: string):
   const vaultDefinition = getVaultDefinition(chain, token);
   const { depositToken, vaultToken } = vaultDefinition;
   const cachedTokens = await getBalancerPoolTokens(chain, depositToken);
-  const contract = Erc20__factory.connect(depositToken, chain.provider);
   const sett = await getCachedVault(chain, vaultDefinition);
-  const totalSupply = parseFloat(ethers.utils.formatEther(await contract.totalSupply()));
+
+  let totalSupply;
+
+  try {
+    const maybePhantomPool = StablePhantomVault__factory.connect(depositToken, chain.provider);
+    // total supply never changes on a phantom pool, you must use virtual supply
+    totalSupply = formatBalance(await maybePhantomPool.getVirtualSupply());
+  } catch {
+    const contract = Erc20__factory.connect(depositToken, chain.provider);
+    totalSupply = formatBalance(await contract.totalSupply());
+  }
+
   const scalar = sett.balance / totalSupply;
   cachedTokens.forEach((cachedToken) => {
     cachedToken.balance *= scalar;

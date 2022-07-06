@@ -163,8 +163,18 @@ Object {
       "name": "bauraBAL",
       "value": 38125.333333333336,
     },
+    Object {
+      "balance": 6,
+      "name": "BADGER / WBTC",
+      "value": 68045.33333333333,
+    },
+    Object {
+      "balance": 0,
+      "name": "Aave Boosted 3USD",
+      "value": 4669.333333333333,
+    },
   ],
-  "totalValue": 2600362.666666667,
+  "totalValue": 2673077.333333334,
   "vaults": Array [
     Object {
       "balance": 13,
@@ -325,6 +335,16 @@ Object {
       "balance": 3,
       "name": "bauraBAL",
       "value": 38125.333333333336,
+    },
+    Object {
+      "balance": 6,
+      "name": "BADGER / WBTC",
+      "value": 68045.33333333333,
+    },
+    Object {
+      "balance": 0,
+      "name": "Aave Boosted 3USD",
+      "value": 4669.333333333333,
     },
   ],
 }
@@ -493,8 +513,18 @@ Object {
       "name": "bauraBAL",
       "value": 38125.333333333336,
     },
+    Object {
+      "balance": 6,
+      "name": "BADGER / WBTC",
+      "value": 68045.33333333333,
+    },
+    Object {
+      "balance": 0,
+      "name": "Aave Boosted 3USD",
+      "value": 4669.333333333333,
+    },
   ],
-  "totalValue": 2600362.666666667,
+  "totalValue": 2673077.333333334,
   "vaults": Array [
     Object {
       "balance": 13,
@@ -655,6 +685,16 @@ Object {
       "balance": 3,
       "name": "bauraBAL",
       "value": 38125.333333333336,
+    },
+    Object {
+      "balance": 6,
+      "name": "BADGER / WBTC",
+      "value": 68045.33333333333,
+    },
+    Object {
+      "balance": 0,
+      "name": "Aave Boosted 3USD",
+      "value": 4669.333333333333,
     },
   ],
 }
