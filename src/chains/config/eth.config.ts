@@ -1,4 +1,4 @@
-import { Network, Protocol, VaultState, VaultVersion } from '@badger-dao/sdk';
+import { Network, Protocol, VaultBehavior, VaultState, VaultVersion } from '@badger-dao/sdk';
 import axios from 'axios';
 
 import { BLOCKNATIVE_API_KEY } from '../../config/constants';
@@ -198,6 +198,7 @@ export const ethSetts: VaultDefinition[] = [
     depositToken: TOKENS.CVXCRV,
     vaultToken: TOKENS.BCVXCRV,
     protocol: Protocol.Convex,
+    behavior: VaultBehavior.EcosystemHelper,
   },
   {
     name: 'CVX',
@@ -285,11 +286,12 @@ export const ethSetts: VaultDefinition[] = [
     version: VaultVersion.v1_5,
   },
   {
-    name: 'bauraBAL',
+    name: 'auraBAL',
     depositToken: TOKENS.AURA_BAL,
     vaultToken: TOKENS.BAURA_BAL,
     protocol: Protocol.Aura,
     state: VaultState.Guarded,
+    behavior: VaultBehavior.EcosystemHelper,
     version: VaultVersion.v1_5,
   },
   {
@@ -298,14 +300,17 @@ export const ethSetts: VaultDefinition[] = [
     getTokenBalance: getBalancerVaultTokenBalance,
     vaultToken: TOKENS.BBPT_WBTC_BADGER,
     protocol: Protocol.Aura,
+    state: VaultState.Guarded,
     version: VaultVersion.v1_5,
   },
   {
-    name: 'Aave Boosted 3USD',
+    name: 'bb-a-USD',
     depositToken: TOKENS.BPT_BB_AAVE_USD,
     getTokenBalance: getBalancerVaultTokenBalance,
     vaultToken: TOKENS.BBPT_BB_AAVE_USD,
     protocol: Protocol.Aura,
+    state: VaultState.Guarded,
+    behavior: VaultBehavior.EcosystemHelper,
     version: VaultVersion.v1_5,
   },
 ];

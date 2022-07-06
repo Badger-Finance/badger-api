@@ -2573,7 +2573,7 @@ Array [
     "asset": "BADGER",
     "available": 0,
     "balance": 10,
-    "behavior": "None",
+    "behavior": "Ecosystem Helper",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -4111,14 +4111,14 @@ Array [
     "asset": "BADGER",
     "available": 0,
     "balance": 10,
-    "behavior": "None",
+    "behavior": "Ecosystem Helper",
     "boost": Object {
       "enabled": false,
       "weight": 0,
     },
     "bouncer": "none",
     "lastHarvest": 1648236387419,
-    "name": "bauraBAL",
+    "name": "auraBAL",
     "pricePerFullShare": 1,
     "protocol": "Aura",
     "sources": Array [
@@ -4295,7 +4295,7 @@ Array [
         "name": "Curve Trading Fees",
       },
     ],
-    "state": "open",
+    "state": "guarded",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "aumFee": 0,
@@ -4353,14 +4353,14 @@ Array [
     "asset": "BADGER",
     "available": 0,
     "balance": 10,
-    "behavior": "None",
+    "behavior": "Ecosystem Helper",
     "boost": Object {
       "enabled": false,
       "weight": 0,
     },
     "bouncer": "none",
     "lastHarvest": 1648236387419,
-    "name": "Aave Boosted 3USD",
+    "name": "bb-a-USD",
     "pricePerFullShare": 1,
     "protocol": "Aura",
     "sources": Array [
@@ -4416,7 +4416,7 @@ Array [
         "name": "Curve Trading Fees",
       },
     ],
-    "state": "open",
+    "state": "guarded",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "aumFee": 0,
@@ -6573,7 +6573,7 @@ Array [
     "asset": "BADGER",
     "available": 0,
     "balance": 10,
-    "behavior": "None",
+    "behavior": "Ecosystem Helper",
     "boost": Object {
       "enabled": false,
       "weight": 0,
@@ -8111,14 +8111,14 @@ Array [
     "asset": "BADGER",
     "available": 0,
     "balance": 10,
-    "behavior": "None",
+    "behavior": "Ecosystem Helper",
     "boost": Object {
       "enabled": false,
       "weight": 0,
     },
     "bouncer": "none",
     "lastHarvest": 1648236387419,
-    "name": "bauraBAL",
+    "name": "auraBAL",
     "pricePerFullShare": 1,
     "protocol": "Aura",
     "sources": Array [
@@ -8295,7 +8295,7 @@ Array [
         "name": "Curve Trading Fees",
       },
     ],
-    "state": "open",
+    "state": "guarded",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "aumFee": 0,
@@ -8353,14 +8353,14 @@ Array [
     "asset": "BADGER",
     "available": 0,
     "balance": 10,
-    "behavior": "None",
+    "behavior": "Ecosystem Helper",
     "boost": Object {
       "enabled": false,
       "weight": 0,
     },
     "bouncer": "none",
     "lastHarvest": 1648236387419,
-    "name": "Aave Boosted 3USD",
+    "name": "bb-a-USD",
     "pricePerFullShare": 1,
     "protocol": "Aura",
     "sources": Array [
@@ -8416,7 +8416,7 @@ Array [
         "name": "Curve Trading Fees",
       },
     ],
-    "state": "open",
+    "state": "guarded",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
       "aumFee": 0,

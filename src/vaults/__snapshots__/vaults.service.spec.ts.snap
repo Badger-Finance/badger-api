@@ -160,7 +160,7 @@ Object {
     },
     Object {
       "balance": 3,
-      "name": "bauraBAL",
+      "name": "auraBAL",
       "value": 38125.333333333336,
     },
     Object {
@@ -170,7 +170,7 @@ Object {
     },
     Object {
       "balance": 0,
-      "name": "Aave Boosted 3USD",
+      "name": "bb-a-USD",
       "value": 4669.333333333333,
     },
   ],
@@ -333,7 +333,7 @@ Object {
     },
     Object {
       "balance": 3,
-      "name": "bauraBAL",
+      "name": "auraBAL",
       "value": 38125.333333333336,
     },
     Object {
@@ -343,7 +343,7 @@ Object {
     },
     Object {
       "balance": 0,
-      "name": "Aave Boosted 3USD",
+      "name": "bb-a-USD",
       "value": 4669.333333333333,
     },
   ],
@@ -510,7 +510,7 @@ Object {
     },
     Object {
       "balance": 3,
-      "name": "bauraBAL",
+      "name": "auraBAL",
       "value": 38125.333333333336,
     },
     Object {
@@ -520,7 +520,7 @@ Object {
     },
     Object {
       "balance": 0,
-      "name": "Aave Boosted 3USD",
+      "name": "bb-a-USD",
       "value": 4669.333333333333,
     },
   ],
@@ -683,7 +683,7 @@ Object {
     },
     Object {
       "balance": 3,
-      "name": "bauraBAL",
+      "name": "auraBAL",
       "value": 38125.333333333336,
     },
     Object {
@@ -693,7 +693,7 @@ Object {
     },
     Object {
       "balance": 0,
-      "name": "Aave Boosted 3USD",
+      "name": "bb-a-USD",
       "value": 4669.333333333333,
     },
   ],
