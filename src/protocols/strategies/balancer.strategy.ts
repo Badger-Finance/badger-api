@@ -16,14 +16,23 @@ import { getCachedVault, getVaultDefinition } from '../../vaults/vaults.utils';
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 export async function getBPTPrice(chain: Chain, token: string): Promise<TokenPrice> {
-  const sdk = await chain.getSdk();
-  const pool = WeightedPool__factory.connect(token, sdk.provider);
-  const totalSupply = await pool.totalSupply();
+  let totalSupply;
+
+  try {
+    const maybePhantomPool = StablePhantomVault__factory.connect(token, chain.provider);
+    // total supply never changes on a phantom pool, you must use virtual supply
+    totalSupply = formatBalance(await maybePhantomPool.getVirtualSupply());
+  } catch {
+    const contract = Erc20__factory.connect(token, chain.provider);
+    totalSupply = formatBalance(await contract.totalSupply());
+  }
+
   const tokens = await getBalancerPoolTokens(chain, token);
-  const price = tokens.map((t) => t.value).reduce((total, value) => (total += value), 0);
+  const value = tokens.map((t) => t.value).reduce((total, value) => (total += value), 0);
+
   return {
     address: token,
-    price: price / formatBalance(totalSupply),
+    price: value / totalSupply,
   };
 }
 
