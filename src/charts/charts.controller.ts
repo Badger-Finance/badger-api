@@ -1,11 +1,14 @@
-import { VaultSnapshot } from '@badger-dao/sdk';
-import { Controller, Get, Inject, QueryParams, UsePipe } from '@tsed/common';
+import { ChartTimeFrame, VaultSnapshot } from '@badger-dao/sdk';
+import { Controller, Get, Inject, QueryParams, UseCache, UsePipe } from '@tsed/common';
 import { NotFound, UnprocessableEntity } from '@tsed/exceptions';
 import { ContentType, Hidden } from '@tsed/schema';
 import { ethers } from 'ethers';
 
+import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
 import { Chain } from '../chains/config/chain.config';
 import { ValidationPipe } from '../common/decorators/validation-pipe';
+import { QueryParamError } from '../errors/validation/query.param.error';
+import { VaultsService } from '../vaults/vaults.service';
 import { ChartsService } from './charts.service';
 import { ChartsQueryDto } from './dto/charts-query.dto';
 import { ChartGranularity } from './enums/chart-granularity.enum';
@@ -14,6 +17,8 @@ import { ChartGranularity } from './enums/chart-granularity.enum';
 export class ChartsController {
   @Inject()
   chartsService!: ChartsService;
+  @Inject()
+  vaultsService!: VaultsService;
 
   @Hidden()
   @Get()
@@ -85,5 +90,17 @@ export class ChartsController {
     return {
       isValid: true,
     };
+  }
+
+  @UseCache()
+  @Get('/vault')
+  @ContentType('json')
+  async loadCitadelTreasuryCharts(
+    @QueryParams('address') address: string,
+    @QueryParams('timeframe') timeframe = ChartTimeFrame.Day,
+  ): Promise<HistoricVaultSnapshotModel[]> {
+    if (!address) throw new QueryParamError('address');
+
+    return this.vaultsService.loadVaultChartData(address, timeframe);
   }
 }

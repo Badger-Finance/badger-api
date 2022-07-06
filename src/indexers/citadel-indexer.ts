@@ -14,7 +14,7 @@ import { TOKENS } from '../config/tokens.config';
 import { getPrice } from '../prices/prices.utils';
 import { TreasurySummary } from '../treasury/interfaces/treasury-summary.interface';
 import { TreasuryPosition } from '../treasury/interfaces/treasy-position.interface';
-import { queryTreasurySummary, TREASURY_NAMESPACE } from '../treasury/treasury.utils';
+import { queryTreasurySummary } from '../treasury/treasury.utils';
 import { VaultsService } from '../vaults/vaults.service';
 import { getVaultDefinition } from '../vaults/vaults.utils';
 
@@ -103,7 +103,7 @@ export async function snapshotTreasury() {
     id: CITADEL_TREASURY_ADDRESS,
     timestamp: Date.now(),
   });
-  updateSnapshots(TREASURY_NAMESPACE, historicSnapshot);
+  await updateSnapshots(HistoricTreasurySummarySnapshot.NAMESPACE, historicSnapshot);
 
   await snapshotCitadelMetrics();
 
