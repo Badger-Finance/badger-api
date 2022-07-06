@@ -574,7 +574,7 @@ functions:
           rate: rate(5 minutes)
 
   index-prices:
-    handler: src/indexers/price-indexer.indexPrices
+    handler: src/indexers/prices-indexer.indexPrices
     timeout: 150
     events:
       - schedule:
