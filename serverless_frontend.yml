@@ -603,7 +603,7 @@ functions:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-vault-harvests
           description: 'index harvests data for supported vaults'
-          rate: rate(5 minutes)
+          rate: rate(1 hour)
 
   index-harvest-compound:
     handler: src/indexers/harvest-compound-indexer.indexVaultsHarvestsCompund
@@ -630,7 +630,7 @@ functions:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-vault-balances
           description: 'index vault token balances from the graph'
-          rate: rate(1 minute)
+          rate: rate(5 minutes)
 
   index-accounts:
     handler: src/indexers/accounts-indexer.refreshUserAccounts
