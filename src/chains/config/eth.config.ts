@@ -282,7 +282,6 @@ export const ethSetts: VaultDefinition[] = [
     depositToken: TOKENS.AURA,
     vaultToken: TOKENS.GRAVI_AURA,
     protocol: Protocol.Aura,
-    state: VaultState.Guarded,
     version: VaultVersion.v1_5,
   },
   {
