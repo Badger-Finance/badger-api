@@ -60,6 +60,7 @@ const nonRegistryPools: ContractRegistry = {
   [TOKENS.CRV_TRICRYPTO2]: '0xD51a44d3FaE010294C616388b506AcdA1bfAAE46',
   [TOKENS.CRV_BADGER]: '0x50f3752289e1456BfA505afd37B241bca23e685d',
   [TOKENS.CTDL]: TOKENS.CRV_CTDL,
+  [TOKENS.CVXFXS]: '0xd658A338613198204DCa1143Ac3F01A722b5d94A',
 };
 
 interface FactoryAPYResonse {
@@ -256,6 +257,72 @@ export async function resolveCurvePoolTokenPrice(chain: Chain, token: Token): Pr
   return {
     address: token.address,
     price: requestTokenPrice,
+  };
+}
+
+export async function resolveCurveStablePoolTokenPrice(chain: Chain, token: Token): Promise<TokenPrice> {
+  // TODO: figure out how to get this from the registry or crypto registry (?) properly
+  const pool = nonRegistryPools[token.address];
+  const balances = await getCurvePoolBalance(chain, pool);
+  const sdk = await chain.getSdk();
+
+  try {
+    if (balances.length != 2) {
+      throw new Error('Pool has unexpected number of tokens!');
+    }
+
+    // we can calculate "x" in terms of "y" - this is our token in terms of some known token
+    const swapPool = CurvePool3__factory.connect(pool, sdk.provider);
+
+    // derivation adapted from https://twitter.com/0xa9a/status/1514192791689179137
+    const [amplificationParameter, gamma] = await Promise.all([swapPool.A(), swapPool.gamma()]);
+
+    const requestTokenIndex = balances[0].address === token.address ? 0 : 1;
+    const requestToken = balances[requestTokenIndex];
+    const pairToken = balances[1 - requestTokenIndex];
+
+    const amplificiation = 4 * amplificationParameter.toNumber();
+    const invariant = formatBalance(gamma);
+
+    // calculate scalar y/x
+    const scalar = pairToken.balance / requestToken.balance;
+    const divisor = Math.pow(invariant, 3);
+
+    // calculate numerator
+    const numeratorTop = 2 * amplificiation * Math.pow(requestToken.balance, 2) * pairToken.balance;
+    const numerator = 1 + numeratorTop / divisor;
+
+    // calculate denominator
+    const denominatorTop = 2 * amplificiation * Math.pow(pairToken.balance, 2) * requestToken.balance;
+    const denominator = 1 + denominatorTop / divisor;
+
+    const resultScalar = scalar * (numerator / denominator);
+    const requestTokenPrice = resultScalar * (pairToken.value / pairToken.balance);
+
+    console.log({
+      amplificiation,
+      invariant,
+      scalar,
+      divisor,
+      numerator,
+      numeratorTop,
+      denominatorTop,
+      denominator,
+      resultScalar,
+      requestTokenPrice,
+    });
+
+    return {
+      address: token.address,
+      price: requestTokenPrice,
+    };
+  } catch (err) {
+    console.error({ err, message: `Unable to price ${token.name}` });
+  }
+
+  return {
+    address: token.address,
+    price: 0,
   };
 }
 
