@@ -15,6 +15,7 @@ import {
   CurveRegistry__factory,
 } from '../../contracts';
 import { TokenPrice } from '../../prices/interface/token-price.interface';
+import { getPrice } from '../../prices/prices.utils';
 import { SourceType } from '../../rewards/enums/source-type.enum';
 import { valueSourceToCachedValueSource } from '../../rewards/rewards.utils';
 import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
@@ -274,43 +275,14 @@ export async function resolveCurveStablePoolTokenPrice(chain: Chain, token: Toke
     // we can calculate "x" in terms of "y" - this is our token in terms of some known token
     const swapPool = CurvePool3__factory.connect(pool, sdk.provider);
 
-    // derivation adapted from https://twitter.com/0xa9a/status/1514192791689179137
-    const [amplificationParameter, gamma] = await Promise.all([swapPool.A(), swapPool.gamma()]);
-
     const requestTokenIndex = balances[0].address === token.address ? 0 : 1;
-    const requestToken = balances[requestTokenIndex];
     const pairToken = balances[1 - requestTokenIndex];
 
-    const amplificiation = 4 * amplificationParameter.toNumber();
-    const invariant = formatBalance(gamma);
-
-    // calculate scalar y/x
-    const scalar = pairToken.balance / requestToken.balance;
-    const divisor = Math.pow(invariant, 3);
-
-    // calculate numerator
-    const numeratorTop = 2 * amplificiation * Math.pow(requestToken.balance, 2) * pairToken.balance;
-    const numerator = 1 + numeratorTop / divisor;
-
-    // calculate denominator
-    const denominatorTop = 2 * amplificiation * Math.pow(pairToken.balance, 2) * requestToken.balance;
-    const denominator = 1 + denominatorTop / divisor;
-
-    const resultScalar = scalar * (numerator / denominator);
-    const requestTokenPrice = resultScalar * (pairToken.value / pairToken.balance);
-
-    console.log({
-      amplificiation,
-      invariant,
-      scalar,
-      divisor,
-      numerator,
-      numeratorTop,
-      denominatorTop,
-      denominator,
-      resultScalar,
-      requestTokenPrice,
-    });
+    // token 0 in terms of token 1
+    const tokenOutRatio = formatBalance(await swapPool.price_oracle());
+    const scalar = requestTokenIndex === 0 ? 1 / tokenOutRatio : tokenOutRatio;
+    const { price } = await getPrice(pairToken.address);
+    const requestTokenPrice = scalar * price;
 
     return {
       address: token.address,
