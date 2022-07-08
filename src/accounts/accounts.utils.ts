@@ -15,7 +15,6 @@ import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 import { BoostData } from '../rewards/interfaces/boost-data.interface';
 import { getFullToken, getVaultTokens } from '../tokens/tokens.utils';
 import { getCachedVault, getVaultDefinition } from '../vaults/vaults.utils';
-import { AccountMap } from './interfaces/account-map.interface';
 import { CachedSettBalance } from './interfaces/cached-sett-balance.interface';
 
 export function defaultBoost(chain: Chain, address: string): CachedBoost {
@@ -86,11 +85,6 @@ export async function getAccountsFomBoostFile(chain: Chain): Promise<string[]> {
     return [];
   }
   return Object.keys(boostFile.userData).map((acc) => ethers.utils.getAddress(acc));
-}
-
-export async function getAccountMap(addresses: string[]): Promise<AccountMap> {
-  const accounts = await Promise.all(addresses.map(async (addr) => queryCachedAccount(addr)));
-  return Object.fromEntries(accounts.map((acc) => [ethers.utils.getAddress(acc.address), acc]));
 }
 
 export async function queryCachedAccount(address: string): Promise<CachedAccount> {
