@@ -1,6 +1,7 @@
 import { DataMapper } from '@aws/dynamodb-data-mapper';
 import BadgerSDK, { Currency, gqlGenT, Protocol, VaultBehavior, VaultStatus, VaultVersion } from '@badger-dao/sdk';
 
+import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
@@ -20,7 +21,6 @@ import { getVaultDefinition } from '../vaults/vaults.utils';
 import * as vaultsUtils from '../vaults/vaults.utils';
 import {
   defaultBoost,
-  getAccountMap,
   getAccounts,
   getCachedBoost,
   getLatestMetadata,
@@ -92,24 +92,6 @@ describe('accounts.utils', () => {
     setFullTokenDataMock();
   });
 
-  describe('getAccountMap', () => {
-    describe('no saved account', () => {
-      it('returns the account with the default account mapping', async () => {
-        setupMapper([]);
-        const actual = await getAccountMap([TEST_ADDR]);
-        expect(actual).toMatchSnapshot();
-      });
-    });
-
-    describe('a saved account', () => {
-      it('returns the stored account', async () => {
-        setupMapper([defaultAccount(TEST_ADDR), defaultAccount(TOKENS.BADGER), defaultAccount(TOKENS.DIGG)]);
-        const actual = await getAccountMap([TEST_ADDR]);
-        expect(actual).toMatchSnapshot();
-      });
-    });
-  });
-
   describe('queryCachedAccount', () => {
     describe('no saved account', () => {
       it('returns undefined', async () => {
@@ -147,9 +129,8 @@ describe('accounts.utils', () => {
           users: mockAccounts.map((account) => ({ id: account, settBalances: [] })),
         };
         let responded = false;
-        jest.spyOn(BadgerSDK.prototype, 'ready');
-        const sdk = await TEST_CHAIN.getSdk();
-        jest.spyOn(sdk.graph, 'loadUsers').mockImplementation(async () => {
+        jest.spyOn(Chain.prototype, 'getSdk').mockImplementation(async () => TEST_CHAIN.sdk);
+        jest.spyOn(TEST_CHAIN.sdk.graph, 'loadUsers').mockImplementation(async (_a) => {
           if (responded) {
             return { users: [] };
           }
@@ -164,8 +145,8 @@ describe('accounts.utils', () => {
     describe('users do not exist', () => {
       it('returns an empty list', async () => {
         jest.spyOn(BadgerSDK.prototype, 'ready');
-        const sdk = await TEST_CHAIN.getSdk();
-        jest.spyOn(sdk.graph, 'loadUsers').mockImplementationOnce(async () => ({ users: [] }));
+        jest.spyOn(Chain.prototype, 'getSdk').mockImplementation(async () => TEST_CHAIN.sdk);
+        jest.spyOn(TEST_CHAIN.sdk.graph, 'loadUsers').mockImplementationOnce(async () => ({ users: [] }));
         const nullReturn = await getAccounts(TEST_CHAIN);
         expect(nullReturn).toMatchObject([]);
       });
