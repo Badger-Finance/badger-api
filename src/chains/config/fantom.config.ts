@@ -160,7 +160,7 @@ export const fantomSetts: VaultDefinition[] = [
     name: 'bveOXD',
     depositToken: TOKENS.FTM_OXD_2,
     vaultToken: TOKENS.BVEOXD,
-    state: VaultState.Guarded,
+    state: VaultState.Discontinued,
     protocol: Protocol.OxDAO,
     version: VaultVersion.v1_5,
   },
