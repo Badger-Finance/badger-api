@@ -5,7 +5,10 @@ import { TOKENS } from '../../config/tokens.config';
 import { getRemDiggPrice } from '../../prices/custom/remdigg-price';
 import { PricingType } from '../../prices/enums/pricing-type.enum';
 import { resolveBalancerPoolTokenPrice } from '../../protocols/strategies/balancer.strategy';
-import { resolveCurvePoolTokenPrice } from '../../protocols/strategies/convex.strategy';
+import {
+  resolveCurvePoolTokenPrice,
+  resolveCurveStablePoolTokenPrice,
+} from '../../protocols/strategies/convex.strategy';
 import { getImBtcPrice, getMhBtcPrice } from '../../protocols/strategies/mstable.strategy';
 import { TokenConfig } from '../interfaces/token-config.interface';
 
@@ -230,6 +233,10 @@ export const ethTokensConfig: TokenConfig = {
   [TOKENS.XCTDL]: {
     type: PricingType.Custom,
     getPrice: getStakedCitadelPrice,
+  },
+  [TOKENS.CVXFXS]: {
+    type: PricingType.Custom,
+    getPrice: resolveCurveStablePoolTokenPrice,
   },
   [TOKENS.BPT_WBTC_BADGER]: {
     type: PricingType.BalancerLP,

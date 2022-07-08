@@ -1,5 +1,5 @@
 import { DataMapper } from '@aws/dynamodb-data-mapper';
-import { BadgerGraph, Currency, gqlGenT, Protocol, VaultBehavior, VaultStatus, VaultVersion } from '@badger-dao/sdk';
+import BadgerSDK, { Currency, gqlGenT, Protocol, VaultBehavior, VaultStatus, VaultVersion } from '@badger-dao/sdk';
 
 import { TOKENS } from '../config/tokens.config';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
@@ -147,7 +147,9 @@ describe('accounts.utils', () => {
           users: mockAccounts.map((account) => ({ id: account, settBalances: [] })),
         };
         let responded = false;
-        jest.spyOn(BadgerGraph.prototype, 'loadUsers').mockImplementation(async () => {
+        jest.spyOn(BadgerSDK.prototype, 'ready');
+        const sdk = await TEST_CHAIN.getSdk();
+        jest.spyOn(sdk.graph, 'loadUsers').mockImplementation(async () => {
           if (responded) {
             return { users: [] };
           }
@@ -161,7 +163,9 @@ describe('accounts.utils', () => {
 
     describe('users do not exist', () => {
       it('returns an empty list', async () => {
-        jest.spyOn(BadgerGraph.prototype, 'loadUsers').mockImplementationOnce(async () => ({ users: [] }));
+        jest.spyOn(BadgerSDK.prototype, 'ready');
+        const sdk = await TEST_CHAIN.getSdk();
+        jest.spyOn(sdk.graph, 'loadUsers').mockImplementationOnce(async () => ({ users: [] }));
         const nullReturn = await getAccounts(TEST_CHAIN);
         expect(nullReturn).toMatchObject([]);
       });
