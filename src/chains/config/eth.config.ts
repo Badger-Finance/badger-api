@@ -2,6 +2,7 @@ import { Network, Protocol, VaultBehavior, VaultState, VaultVersion } from '@bad
 import axios from 'axios';
 
 import { BLOCKNATIVE_API_KEY } from '../../config/constants';
+import { Stage } from '../../config/enums/stage.enum';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
 import { BlocknativeGasResponse } from '../../gas/interfaces/blocknative-gas-response.interface';
@@ -290,6 +291,7 @@ export const ethSetts: VaultDefinition[] = [
     vaultToken: TOKENS.BAURA_BAL,
     protocol: Protocol.Aura,
     state: VaultState.Guarded,
+    stage: Stage.Staging,
     behavior: VaultBehavior.EcosystemHelper,
     version: VaultVersion.v1_5,
   },
@@ -300,6 +302,7 @@ export const ethSetts: VaultDefinition[] = [
     vaultToken: TOKENS.BBPT_WBTC_BADGER,
     protocol: Protocol.Aura,
     state: VaultState.Guarded,
+    stage: Stage.Staging,
     version: VaultVersion.v1_5,
   },
   {
@@ -309,6 +312,7 @@ export const ethSetts: VaultDefinition[] = [
     vaultToken: TOKENS.BBPT_BB_AAVE_USD,
     protocol: Protocol.Aura,
     state: VaultState.Guarded,
+    stage: Stage.Staging,
     behavior: VaultBehavior.EcosystemHelper,
     version: VaultVersion.v1_5,
   },
