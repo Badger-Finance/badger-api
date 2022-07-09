@@ -3,29 +3,22 @@
 exports[`GasController GET /v2/gas returns a list of gas prices in eip-1559 format 1`] = `
 Object {
   "fast": Object {
-    "maxFeePerGas": 221.96,
-    "maxPriorityFeePerGas": 1.94,
+    "maxFeePerGas": 38.892441339,
+    "maxPriorityFeePerGas": 2,
   },
   "rapid": Object {
-    "maxFeePerGas": 223.06,
-    "maxPriorityFeePerGas": 3.04,
+    "maxFeePerGas": 43.21382371,
+    "maxPriorityFeePerGas": 2,
   },
   "slow": Object {
-    "maxFeePerGas": 221.81,
-    "maxPriorityFeePerGas": 1.79,
+    "maxFeePerGas": 30.249676596999997,
+    "maxPriorityFeePerGas": 2,
   },
   "standard": Object {
-    "maxFeePerGas": 221.91,
-    "maxPriorityFeePerGas": 1.89,
+    "maxFeePerGas": 34.571058968,
+    "maxPriorityFeePerGas": 2,
   },
 }
 `;
 
-exports[`GasController returns a list of gas prices in legacy format 1`] = `
-Object {
-  "fast": 33,
-  "rapid": 38,
-  "slow": 33,
-  "standard": 33,
-}
-`;
+exports[`GasController returns a list of gas prices in legacy format 1`] = `""`;

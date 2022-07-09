@@ -10,7 +10,7 @@ Array [
 
 exports[`ProofsController GET /v2/proofs returns 404 for a chain with no bouncer file 1`] = `
 Object {
-  "message": "Ethereum does not have a bouncer list",
+  "message": "TEthereum does not have a bouncer list",
 }
 `;
 

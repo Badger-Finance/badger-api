@@ -2,24 +2,6 @@
 
 exports[`gas.utils getGasPrices returns gas prices for all networks 1`] = `
 Object {
-  "arbitrum": Object {
-    "fast": 33,
-    "rapid": 38,
-    "slow": 33,
-    "standard": 33,
-  },
-  "avalanche": Object {
-    "fast": 33,
-    "rapid": 38,
-    "slow": 33,
-    "standard": 33,
-  },
-  "binance-smart-chain": Object {
-    "fast": 33,
-    "rapid": 38,
-    "slow": 33,
-    "standard": 33,
-  },
   "ethereum": Object {
     "fast": Object {
       "maxFeePerGas": 221.96,
@@ -37,18 +19,6 @@ Object {
       "maxFeePerGas": 221.91,
       "maxPriorityFeePerGas": 1.89,
     },
-  },
-  "fantom": Object {
-    "fast": 33,
-    "rapid": 38,
-    "slow": 33,
-    "standard": 33,
-  },
-  "polygon": Object {
-    "fast": 33,
-    "rapid": 38,
-    "slow": 33,
-    "standard": 33,
   },
 }
 `;
