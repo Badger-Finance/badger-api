@@ -48,75 +48,68 @@ describe('RewardController', () => {
 
   describe('GET /v3/rewards/schedules', () => {
     describe('with no specified chain', () => {
-      it('returns schedules for default chain and all vaults', async (done: jest.DoneCallback) => {
+      it('returns schedules for default chain and all vaults', async () => {
         setupDefaultMocks();
         const { body } = await request.get('/v3/rewards/schedules/list').expect(200);
         expect(body).toMatchSnapshot();
-        done();
       });
     });
 
     describe('with active param true', () => {
-      it('returns active schedules for default chain and all vaults', async (done: jest.DoneCallback) => {
+      it('returns active schedules for default chain and all vaults', async () => {
         setupDefaultMocks();
         const { body } = await request.get('/v3/rewards/schedules/list?active=true').expect(200);
         expect(body).toMatchSnapshot();
-        done();
       });
     });
 
     describe('with an invalid specified chain', () => {
-      it('returns a 400', async (done: jest.DoneCallback) => {
+      it('returns a 400', async () => {
         setupDefaultMocks();
         const { body } = await request.get('/v3/rewards/schedules/list?chain=invalid').expect(BadRequest.STATUS);
         expect(body).toMatchSnapshot();
-        done();
       });
     });
   });
 
   describe('GET /v3/rewards/schedules', () => {
     describe('with no specified chain', () => {
-      it('returns schedule for default chain and one vault', async (done: jest.DoneCallback) => {
+      it('returns schedule for default chain and one vault', async () => {
         setupDefaultMocks();
         const { body } = await request
           .get(`/v3/rewards/schedules?address=${TOKENS.BBADGER}`)
           .expect(NetworkStatus.Success);
         expect(body).toMatchSnapshot();
-        done();
       });
     });
 
     describe('with active param true', () => {
-      it('returns schedules for default chain and one vault', async (done: jest.DoneCallback) => {
+      it('returns schedules for default chain and one vault', async () => {
         setupDefaultMocks();
         const { body } = await request
           .get(`/v3/rewards/schedules?address=${TOKENS.BBADGER}&active=true`)
           .expect(NetworkStatus.Success);
         expect(body).toMatchSnapshot();
-        done();
       });
     });
 
     describe('with an invalid specified chain', () => {
-      it('returns a 400', async (done: jest.DoneCallback) => {
+      it('returns a 400', async () => {
         setupDefaultMocks();
         const { body } = await request
           .get(`/v3/rewards/schedules?address=${TOKENS.BBADGER}&chain=invalid`)
           .expect(NetworkStatus.BadRequest);
         expect(body).toMatchSnapshot();
-        done();
       });
     });
 
     describe('with invalid param specified', () => {
-      it('returns a 404, NotFound', async (done: jest.DoneCallback) => {
+      it('returns a 404, NotFound', async () => {
         setupDefaultMocks();
         const { body } = await request
           .get(`/v3/rewards/schedules?address=unknowsvaultdata`)
           .expect(NetworkStatus.NotFound);
         expect(body).toMatchSnapshot();
-        done();
       });
     });
   });

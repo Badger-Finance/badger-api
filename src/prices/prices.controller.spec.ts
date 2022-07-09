@@ -23,38 +23,34 @@ describe('PricesController', () => {
 
   describe('GET /v2/prices', () => {
     describe('with no specified chain', () => {
-      it('returns eth token config', async (done: jest.DoneCallback) => {
+      it('returns eth token config', async () => {
         const result = Object.fromEntries(Object.keys(ethTokensConfig).map((token) => [token, getPrice(token)]));
         jest.spyOn(pricesService, 'getPriceSummary').mockImplementationOnce(() => Promise.resolve(result));
         const { body } = await request.get('/v2/prices').expect(200);
         expect(body).toMatchSnapshot();
-        done();
       });
     });
 
     describe('with a specified chain', () => {
-      it('returns the specified token config for eth', async (done: jest.DoneCallback) => {
+      it('returns the specified token config for eth', async () => {
         const result = Object.fromEntries(Object.keys(ethTokensConfig).map((token) => [token, getPrice(token)]));
         jest.spyOn(pricesService, 'getPriceSummary').mockImplementationOnce(() => Promise.resolve(result));
         const { body } = await request.get('/v2/prices?chain=ethereum').expect(200);
         expect(body).toMatchSnapshot();
-        done();
       });
 
-      it('returns the specified token config for bsc', async (done: jest.DoneCallback) => {
+      it('returns the specified token config for bsc', async () => {
         const result = Object.fromEntries(Object.keys(bscTokensConfig).map((token) => [token, getPrice(token)]));
         jest.spyOn(pricesService, 'getPriceSummary').mockImplementationOnce(() => Promise.resolve(result));
         const { body } = await request.get('/v2/prices?chain=binancesmartchain').expect(200);
         expect(body).toMatchSnapshot();
-        done();
       });
     });
 
     describe('with an invalid specified chain', () => {
-      it('returns a 400', async (done: jest.DoneCallback) => {
+      it('returns a 400', async () => {
         const { body } = await request.get('/v2/prices?chain=invalid').expect(BadRequest.STATUS);
         expect(body).toMatchSnapshot();
-        done();
       });
     });
   });

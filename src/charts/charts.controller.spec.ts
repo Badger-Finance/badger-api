@@ -18,16 +18,15 @@ describe('ChartsController', () => {
   describe('GET /v2/charts', () => {
     describe('with invalid args', () => {
       describe('with a missing id', () => {
-        it('returns a 422', async (done) => {
+        it('returns a 422', async () => {
           const { body } = await request.get('/v2/charts').expect(UnprocessableEntity.STATUS);
 
-          expect(body).toMatchSnapshot();
-          done();
+          expect(body).toMatchSnapshot;
         });
       });
 
       describe('with an invalid address', () => {
-        it('returns a 422', async (done) => {
+        it('returns a 422', async () => {
           const { body } = await request
             .get('/v2/charts')
             .query({
@@ -35,13 +34,12 @@ describe('ChartsController', () => {
             })
             .expect(UnprocessableEntity.STATUS);
 
-          expect(body).toMatchSnapshot();
-          done();
+          expect(body).toMatchSnapshot;
         });
       });
 
       describe('with an invalid chain', () => {
-        it('returns a 422', async (done) => {
+        it('returns a 422', async () => {
           const { body } = await request
             .get('/v2/charts')
             .query({
@@ -50,13 +48,12 @@ describe('ChartsController', () => {
             })
             .expect(UnprocessableEntity.STATUS);
 
-          expect(body).toMatchSnapshot();
-          done();
+          expect(body).toMatchSnapshot;
         });
       });
 
       describe('with start but no end', () => {
-        it('returns a 422', async (done) => {
+        it('returns a 422', async () => {
           const { body } = await request
             .get('/v2/charts')
             .query({
@@ -65,13 +62,12 @@ describe('ChartsController', () => {
             })
             .expect(UnprocessableEntity.STATUS);
 
-          expect(body).toMatchSnapshot();
-          done();
+          expect(body).toMatchSnapshot;
         });
       });
 
       describe('with end but no start', () => {
-        it('returns a 422', async (done) => {
+        it('returns a 422', async () => {
           const { body } = await request
             .get('/v2/charts')
             .query({
@@ -80,15 +76,14 @@ describe('ChartsController', () => {
             })
             .expect(UnprocessableEntity.STATUS);
 
-          expect(body).toMatchSnapshot();
-          done();
+          expect(body).toMatchSnapshot;
         });
       });
 
       describe('with an invalid time range', () => {
-        it('returns a 422', async (done) => {
-          const start = new Date().toISOString();
-          const end = new Date(Date.now() - 1).toISOString();
+        it('returns a 422', async () => {
+          const start = new Date().toISOString;
+          const end = new Date(Date.now() - 1).toISOString;
           const { body } = await request
             .get('/v2/charts')
             .query({
@@ -98,13 +93,12 @@ describe('ChartsController', () => {
             })
             .expect(UnprocessableEntity.STATUS);
 
-          expect(body).toMatchSnapshot();
-          done();
+          expect(body).toMatchSnapshot;
         });
       });
 
       describe('with an invalid granularity', () => {
-        it('returns a 422', async (done) => {
+        it('returns a 422', async () => {
           const { body } = await request
             .get('/v2/charts')
             .query({
@@ -113,13 +107,12 @@ describe('ChartsController', () => {
             })
             .expect(UnprocessableEntity.STATUS);
 
-          expect(body).toMatchSnapshot();
-          done();
+          expect(body).toMatchSnapshot;
         });
       });
 
       describe('with an invalid period', () => {
-        it('returns a 422', async (done) => {
+        it('returns a 422', async () => {
           const { body } = await request
             .get('/v2/charts')
             .query({
@@ -128,13 +121,12 @@ describe('ChartsController', () => {
             })
             .expect(UnprocessableEntity.STATUS);
 
-          expect(body).toMatchSnapshot();
-          done();
+          expect(body).toMatchSnapshot;
         });
       });
 
       describe('with a large time range for HOUR granularity', () => {
-        it('returns a 422', async (done) => {
+        it('returns a 422', async () => {
           const start = '2021-05-01T00:00:00.000Z';
           const end = '2021-06-01T00:00:00.000Z';
           const { body } = await request
@@ -148,13 +140,12 @@ describe('ChartsController', () => {
             })
             .expect(UnprocessableEntity.STATUS);
 
-          expect(body).toMatchSnapshot();
-          done();
+          expect(body).toMatchSnapshot;
         });
       });
 
       describe('with a large time range for DAY granularity', () => {
-        it('returns a 422', async (done) => {
+        it('returns a 422', async () => {
           const start = '2021-01-01T00:00:00.000Z';
           const end = '2021-06-01T00:00:00.000Z';
           const { body } = await request
@@ -168,14 +159,13 @@ describe('ChartsController', () => {
             })
             .expect(UnprocessableEntity.STATUS);
 
-          expect(body).toMatchSnapshot();
-          done();
+          expect(body).toMatchSnapshot;
         });
       });
     });
 
     describe('with an unsupported address', () => {
-      it('returns a 404', async (done) => {
+      it('returns a 404', async () => {
         const { body } = await request
           .get('/v2/charts')
           .query({
@@ -183,8 +173,7 @@ describe('ChartsController', () => {
           })
           .expect(NotFound.STATUS);
 
-        expect(body).toMatchSnapshot();
-        done();
+        expect(body).toMatchSnapshot;
       });
     });
   });

@@ -15,7 +15,7 @@ describe('MetricsController', () => {
   });
 
   describe('GET /v2/metrics', () => {
-    it('returns metric', async (done: jest.DoneCallback) => {
+    it('returns metric', async () => {
       jest.spyOn(metricsService, 'getProtocolMetrics').mockReturnValue(
         Promise.resolve({
           totalUsers: 30_000,
@@ -26,7 +26,6 @@ describe('MetricsController', () => {
 
       const { body } = await request.get('/v2/metrics').expect(200);
       expect(body).toMatchSnapshot();
-      done();
     });
   });
 });

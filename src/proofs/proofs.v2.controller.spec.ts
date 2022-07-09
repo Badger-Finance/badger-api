@@ -24,17 +24,16 @@ describe('ProofsController', () => {
   afterEach(PlatformTest.reset);
 
   describe('GET /v2/proofs', () => {
-    it('returns 404 for a chain with no bouncer file', async (done: jest.DoneCallback) => {
+    it('returns 404 for a chain with no bouncer file', async () => {
       jest.spyOn(proofsService, 'getBouncerProof').mockImplementation(async () => {
         // simulate no chain path
         throw new NotFound(`${chain.name} does not have a bouncer list`);
       });
       const { body } = await request.get(`/v2/proofs/${TEST_ADDR}`).expect(404);
       expect(body).toMatchSnapshot();
-      done();
     });
 
-    it('returns 404 for users not on the bouncer list', async (done: jest.DoneCallback) => {
+    it('returns 404 for users not on the bouncer list', async () => {
       const badAddress = TOKENS.BADGER;
       jest.spyOn(proofsService, 'getBouncerProof').mockImplementation(async () => {
         // simulate no user proofs path
@@ -42,16 +41,14 @@ describe('ProofsController', () => {
       });
       const { body } = await request.get(`/v2/proofs/${badAddress}`).expect(404);
       expect(body).toMatchSnapshot();
-      done();
     });
 
-    it('returns 200 and the merkle proof for a user on the bouncer list', async (done: jest.DoneCallback) => {
+    it('returns 200 and the merkle proof for a user on the bouncer list', async () => {
       jest
         .spyOn(proofsService, 'getBouncerProof')
         .mockImplementation(async (_chain: Chain, _address: string) => MOCK_BOUNCER_FILE.claims[TEST_ADDR].proof);
       const { body } = await request.get(`/v2/proofs/${TEST_ADDR}`).expect(200);
       expect(body).toMatchSnapshot();
-      done();
     });
   });
 });

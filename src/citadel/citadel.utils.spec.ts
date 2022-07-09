@@ -56,55 +56,47 @@ describe('getRewardsOnchain', () => {
     await sdk.ready();
   });
 
-  it('returns rewards from the last block param', async (done) => {
+  it('returns rewards from the last block param', async () => {
     const rewards = await getRewardsOnchain(sdk, RewardEventTypeEnum.ADDED, true);
 
     expect(getLastRewardByTypeMock.mock.calls.length).toBe(1);
     expect(listRewardsMock).toHaveBeenCalledWith({ filter: RewardEventTypeEnum.ADDED, startBlock: CURRENT_BLOCK + 1 });
     expect(rewards).toMatchObject(citadelListRewardsSdkMock);
-
-    done();
   });
 
-  it('returns rewards all reward from when contract was deployed', async (done) => {
+  it('returns rewards all reward from when contract was deployed', async () => {
     const rewards = await getRewardsOnchain(sdk, RewardEventTypeEnum.ADDED);
 
     expect(getLastRewardByTypeMock.mock.calls.length).toBe(0);
     expect(listRewardsMock).toHaveBeenCalledWith({ filter: RewardEventTypeEnum.ADDED });
     expect(rewards).toMatchObject(citadelListRewardsSdkMock);
-
-    done();
   });
 
-  it('throws error if something went wrong in onchain call', async (done) => {
+  it('throws error if something went wrong in onchain call', async () => {
     jest.spyOn(CitadelService.prototype, 'listRewards').mockImplementation(async () => {
       throw Error('Bad things');
     });
     await expect(async () => getRewardsOnchain(sdk, RewardEventTypeEnum.ADDED)).rejects.toThrowError();
-
-    done();
   });
 });
 
 describe('getRewardsAprForDataBlob', () => {
-  it('returns rewards apr', async (done) => {
+  it('returns rewards apr', async () => {
     setupMapper(RewardsSnapshotModelMock.filter((rw) => rw.payType === RewardEventTypeEnum.ADDED));
 
     const rwSummary = await getRewardsAprForDataBlob();
 
     expect(rwSummary).toMatchSnapshot();
-    done();
   });
 });
 
 describe('getTokensPaidSummary', () => {
-  it('should return rewards tokens paid summary', async (done) => {
+  it('should return rewards tokens paid summary', async () => {
     setupMapper(RewardsSnapshotModelMock.filter((rw) => rw.payType === RewardEventTypeEnum.PAID));
 
     const tokensPaidRwSummary = await getTokensPaidSummary();
 
     expect(tokensPaidRwSummary).toMatchSnapshot();
-    done();
   });
 });
 
@@ -141,7 +133,7 @@ describe('getRewardsEventTypeMapped', () => {
 });
 
 describe('getStakedCitadelPrice', () => {
-  it('returns staked price and addr', async (done) => {
+  it('returns staked price and addr', async () => {
     jest.spyOn(VaultsService.prototype, 'loadVault').mockImplementation(async ({ address }: LoadVaultOptions) => ({
       address,
       name: 'Citadel',
@@ -168,7 +160,6 @@ describe('getStakedCitadelPrice', () => {
     const stakedPrice = await getStakedCitadelPrice(ethChain, fullTokenMockMap[TOKENS.BADGER]);
 
     expect(stakedPrice).toMatchSnapshot();
-    done();
   });
 });
 

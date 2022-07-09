@@ -73,10 +73,9 @@ describe('CitadelController', () => {
       mockPricing();
     });
 
-    it('returns the current citadel treasury summary', async (done: jest.DoneCallback) => {
+    it('returns the current citadel treasury summary', async () => {
       const { body } = await request.get('/citadel/v1/treasury').expect(200);
       expect(body).toMatchSnapshot();
-      done();
     });
   });
 
@@ -85,10 +84,9 @@ describe('CitadelController', () => {
       jest.spyOn(citadelUtils, 'queryCitadelData').mockImplementation(async () => queryCitadelDataUtilMock);
     });
 
-    it('returns protocol aggregate rewards information', async (done: jest.DoneCallback) => {
+    it('returns protocol aggregate rewards information', async () => {
       const { body } = await request.get('/citadel/v1/summary').expect(200);
       expect(body).toMatchSnapshot();
-      done();
     });
   });
 
@@ -97,46 +95,40 @@ describe('CitadelController', () => {
       setupRewardDatabase();
     });
 
-    it('returns paid rewards list', async (done: jest.DoneCallback) => {
+    it('returns paid rewards list', async () => {
       const { body } = await request.get('/citadel/v1/rewards').expect(200);
       expect(body).toMatchSnapshot();
-      done();
     });
 
-    it('returns added rewards list', async (done: jest.DoneCallback) => {
+    it('returns added rewards list', async () => {
       const { body } = await request.get(`/citadel/v1/rewards?filter=${RewardEventTypeEnum.ADDED}`).expect(200);
       expect(body).toMatchSnapshot();
-      done();
     });
 
-    it('returns added rewards list filtered on account', async (done: jest.DoneCallback) => {
+    it('returns added rewards list filtered on account', async () => {
       const { body } = await request
         .get(`/citadel/v1/rewards?filter=${RewardEventTypeEnum.ADDED}&account=${REWARD_ACCOUNT_1}`)
         .expect(200);
       expect(body).toMatchSnapshot();
-      done();
     });
 
-    it('returns added rewards list filtered on token', async (done: jest.DoneCallback) => {
+    it('returns added rewards list filtered on token', async () => {
       const { body } = await request
         .get(`/citadel/v1/rewards?filter=${RewardEventTypeEnum.ADDED}&token=${TEST_XCTDL_TOKEN}`)
         .expect(200);
       expect(body).toMatchSnapshot();
-      done();
     });
 
-    it('returns added rewards list filtered on epoch', async (done: jest.DoneCallback) => {
+    it('returns added rewards list filtered on epoch', async () => {
       const { body } = await request
         .get(`/citadel/v1/rewards?filter=${RewardEventTypeEnum.ADDED}&epoch=${0}`)
         .expect(200);
       expect(body).toMatchSnapshot();
-      done();
     });
 
-    it('should throw NotFound for unknown filter', async (done: jest.DoneCallback) => {
+    it('should throw NotFound for unknown filter', async () => {
       const { body } = await request.get(`/citadel/v1/rewards?filter=unknown`).expect(NotFound.STATUS);
       expect(body).toMatchSnapshot();
-      done();
     });
   });
 
@@ -145,10 +137,9 @@ describe('CitadelController', () => {
       setupMapper([citadelChartDataBlobModel]);
     });
 
-    it('returns timeframed data for charts', async (done: jest.DoneCallback) => {
+    it('returns timeframed data for charts', async () => {
       const { body } = await request.get('/citadel/v1/history').expect(200);
       expect(body).toMatchSnapshot();
-      done();
     });
   });
 
@@ -219,10 +210,9 @@ describe('CitadelController', () => {
       jest.spyOn(sdk.citadel, 'getClaimableRewards').mockImplementation(async () => citadelClaimableRw);
     });
 
-    it('returns citadel account data', async (done: jest.DoneCallback) => {
+    it('returns citadel account data', async () => {
       const { body } = await request.get(`/citadel/v1/accounts?address=${TEST_ADDR}`).expect(200);
       expect(body).toMatchSnapshot();
-      done();
     });
   });
 
@@ -244,10 +234,9 @@ describe('CitadelController', () => {
       jest.spyOn(tokenUtils, 'getFullToken').mockImplementation(async () => fullTokenMockMap[TOKENS.CTDL]);
     });
 
-    it('returns knighting round info', async (done: jest.DoneCallback) => {
+    it('returns knighting round info', async () => {
       const { body } = await request.get('/citadel/v1/leaderboard').expect(200);
       expect(body).toMatchSnapshot();
-      done();
     });
   });
 });

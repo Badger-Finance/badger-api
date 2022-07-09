@@ -1,7 +1,4 @@
 {
-  "compilerOptions": {
-    "resolveJsonModule": true
-  },
   "extends": "./tsconfig.json",
   "include": ["./src/**/*.ts", "./seed/scripts/*.ts"],
   "exclude": ["build", "node_modules"]

@@ -160,6 +160,7 @@ Array [
     "minApr": 56.764799999999994,
     "name": "Vault Compounding",
     "type": "precompound",
+    "updatedAt": undefined,
   },
   CachedValueSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -170,6 +171,7 @@ Array [
     "minApr": 74.23705993472916,
     "name": "Vault Compounding",
     "type": "compound",
+    "updatedAt": undefined,
   },
   CachedValueSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -180,6 +182,7 @@ Array [
     "minApr": 6.969,
     "name": "Badger Rewards",
     "type": "boosted_bBADGER_emission",
+    "updatedAt": undefined,
   },
   CachedValueSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -190,6 +193,7 @@ Array [
     "minApr": 1.13,
     "name": "Test LP Fees",
     "type": "lp_fee",
+    "updatedAt": undefined,
   },
 ]
 `;
@@ -205,6 +209,7 @@ Array [
     "minApr": 56.764799999999994,
     "name": "Vault Compounding",
     "type": "precompound",
+    "updatedAt": undefined,
   },
   CachedValueSource {
     "address": "0x6B2d4c4bb50274c5D4986Ff678cC971c0260E967",
@@ -215,6 +220,7 @@ Array [
     "minApr": 74.23705993472916,
     "name": "Vault Compounding",
     "type": "compound",
+    "updatedAt": undefined,
   },
   CachedValueSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -225,6 +231,7 @@ Array [
     "minApr": 6.969,
     "name": "Badger Rewards",
     "type": "boosted_bBADGER_emission",
+    "updatedAt": undefined,
   },
   CachedValueSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -235,6 +242,7 @@ Array [
     "minApr": 1.13,
     "name": "Test LP Fees",
     "type": "lp_fee",
+    "updatedAt": undefined,
   },
 ]
 `;
@@ -250,6 +258,7 @@ Array [
     "minApr": 56.764799999999994,
     "name": "Vault Compounding",
     "type": "precompound",
+    "updatedAt": undefined,
   },
   CachedValueSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -260,6 +269,7 @@ Array [
     "minApr": 74.23705993472916,
     "name": "Vault Compounding",
     "type": "compound",
+    "updatedAt": undefined,
   },
   CachedValueSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -270,6 +280,7 @@ Array [
     "minApr": 6.969,
     "name": "Badger Rewards",
     "type": "boosted_bBADGER_emission",
+    "updatedAt": undefined,
   },
   CachedValueSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -280,6 +291,7 @@ Array [
     "minApr": 1.13,
     "name": "Test LP Fees",
     "type": "lp_fee",
+    "updatedAt": undefined,
   },
 ]
 `;
@@ -295,6 +307,7 @@ Array [
     "minApr": 1.9605714285714286,
     "name": "Vault Compounding",
     "type": "precompound",
+    "updatedAt": undefined,
   },
   CachedValueSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -305,6 +318,7 @@ Array [
     "minApr": 1.9791654594512487,
     "name": "Vault Compounding",
     "type": "compound",
+    "updatedAt": undefined,
   },
   CachedValueSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -315,6 +329,7 @@ Array [
     "minApr": 0.000004975832417583712,
     "name": "bCVXCRV Rewards",
     "type": "vault_emitted_bcvxcrv",
+    "updatedAt": undefined,
   },
   CachedValueSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -325,6 +340,7 @@ Array [
     "minApr": 2.5320518074012263e-7,
     "name": "bCVXCRV Compounding",
     "type": "derivative_bcvxcrv_compounding",
+    "updatedAt": undefined,
   },
   CachedValueSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -335,6 +351,7 @@ Array [
     "minApr": 0.000022426642857150473,
     "name": "bVECVX Rewards",
     "type": "vault_emitted_bvecvx",
+    "updatedAt": undefined,
   },
   CachedValueSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -345,6 +362,7 @@ Array [
     "minApr": 0.000001141224351973436,
     "name": "bVECVX Compounding",
     "type": "derivative_bvecvx_compounding",
+    "updatedAt": undefined,
   },
   CachedValueSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -355,6 +373,7 @@ Array [
     "minApr": 6.969,
     "name": "Badger Rewards",
     "type": "boosted_bBADGER_emission",
+    "updatedAt": undefined,
   },
   CachedValueSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -365,6 +384,7 @@ Array [
     "minApr": 1.13,
     "name": "Test LP Fees",
     "type": "lp_fee",
+    "updatedAt": undefined,
   },
 ]
 `;
@@ -380,6 +400,7 @@ Array [
     "minApr": 1.9605714285714286,
     "name": "Vault Compounding",
     "type": "precompound",
+    "updatedAt": undefined,
   },
   CachedValueSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -390,6 +411,7 @@ Array [
     "minApr": 1.9791654594512487,
     "name": "Vault Compounding",
     "type": "compound",
+    "updatedAt": undefined,
   },
   CachedValueSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -400,6 +422,7 @@ Array [
     "minApr": 6.969,
     "name": "Badger Rewards",
     "type": "boosted_bBADGER_emission",
+    "updatedAt": undefined,
   },
   CachedValueSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -410,6 +433,7 @@ Array [
     "minApr": 1.13,
     "name": "Test LP Fees",
     "type": "lp_fee",
+    "updatedAt": undefined,
   },
 ]
 `;

@@ -101,35 +101,31 @@ describe('VaultsController', () => {
 
   describe('GET /v2/vaults', () => {
     describe('with no specified chain', () => {
-      it('returns eth vaults', async (done: jest.DoneCallback) => {
+      it('returns eth vaults', async () => {
         setupTestVault();
         const { body } = await request.get('/v2/vaults').expect(200);
         expect(body).toMatchSnapshot();
-        done();
       });
     });
 
     describe('with a specified chain', () => {
-      it('returns the vaults for eth', async (done: jest.DoneCallback) => {
+      it('returns the vaults for eth', async () => {
         setupTestVault();
         const { body } = await request.get('/v2/vaults?chain=ethereum').expect(200);
         expect(body).toMatchSnapshot();
-        done();
       });
 
-      it('returns the vaults for bsc', async (done: jest.DoneCallback) => {
+      it('returns the vaults for bsc', async () => {
         setupTestVault();
         const { body } = await request.get('/v2/vaults?chain=binancesmartchain').expect(200);
         expect(body).toMatchSnapshot();
-        done();
       });
     });
 
     describe('with an invalid specified chain', () => {
-      it('returns a 400', async (done: jest.DoneCallback) => {
+      it('returns a 400', async () => {
         const { body } = await request.get('/v2/vaults?chain=invalid').expect(BadRequest.STATUS);
         expect(body).toMatchSnapshot();
-        done();
       });
     });
   });
@@ -138,17 +134,15 @@ describe('VaultsController', () => {
     beforeEach(setupDdbHarvests);
 
     describe('success cases', () => {
-      it('Return extended harvest for chain vaults', async (done: jest.DoneCallback) => {
+      it('Return extended harvest for chain vaults', async () => {
         const { body } = await request.get('/v2/vaults/harvests').expect(200);
         expect(body).toMatchSnapshot();
-        done();
       });
     });
     describe('error cases', () => {
-      it('returns a 400 for invalide chain', async (done: jest.DoneCallback) => {
+      it('returns a 400 for invalide chain', async () => {
         const { body } = await request.get('/v2/vaults/harvests?chain=invalid').expect(BadRequest.STATUS);
         expect(body).toMatchSnapshot();
-        done();
       });
     });
   });
@@ -157,17 +151,15 @@ describe('VaultsController', () => {
     beforeEach(setupDdbHarvests);
 
     describe('success cases', () => {
-      it('Return extended harvests for chain vault by addr', async (done: jest.DoneCallback) => {
+      it('Return extended harvests for chain vault by addr', async () => {
         const { body } = await request.get(`/v2/vaults/harvests/${TEST_VAULT}`).expect(200);
         expect(body).toMatchSnapshot();
-        done();
       });
     });
     describe('error cases', () => {
-      it('returns a 400 for invalide chain', async (done: jest.DoneCallback) => {
+      it('returns a 400 for invalide chain', async () => {
         const { body } = await request.get(`/v2/vaults/harvests/${TEST_VAULT}?chain=invalid`).expect(BadRequest.STATUS);
         expect(body).toMatchSnapshot();
-        done();
       });
     });
   });
