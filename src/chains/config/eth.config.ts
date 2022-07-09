@@ -317,7 +317,7 @@ export const ethSetts: VaultDefinition[] = [
     version: VaultVersion.v1_5,
   },
   {
-    name: 'graviAURAbal',
+    name: 'graviAURA / auraBAL / WETH',
     depositToken: TOKENS.BPT_GRAV_AURABAL_WETH,
     getTokenBalance: getBalancerVaultTokenBalance,
     vaultToken: TOKENS.BBPT_GRAV_AURABAL_WETH,
