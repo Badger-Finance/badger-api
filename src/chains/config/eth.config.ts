@@ -316,4 +316,14 @@ export const ethSetts: VaultDefinition[] = [
     behavior: VaultBehavior.EcosystemHelper,
     version: VaultVersion.v1_5,
   },
+  {
+    name: 'graviAURAbal',
+    depositToken: TOKENS.BPT_GRAV_AURABAL_WETH,
+    getTokenBalance: getBalancerVaultTokenBalance,
+    vaultToken: TOKENS.BBPT_GRAV_AURABAL_WETH,
+    protocol: Protocol.Aura,
+    state: VaultState.Guarded,
+    stage: Stage.Staging,
+    version: VaultVersion.v1_5,
+  },
 ];

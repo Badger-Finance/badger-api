@@ -7,11 +7,11 @@ import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
 import { Chain } from '../chains/config/chain.config';
 import { DEFAULT_PAGE_SIZE } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
-import { REMDIGG_SHARE_PER_FRAGMENT } from '../prices/custom/remdigg-price';
 import { getFullToken } from '../tokens/tokens.utils';
 import { DebankUser } from './interfaces/debank-user.interface';
 import { ListRewardsResponse } from './interfaces/list-rewards-response.interface';
 import { RewardsService } from './rewards.service';
+import { DIGG_SHARE_PER_FRAGMENT } from './rewards.utils';
 
 @Deprecated()
 @Controller('/rewards')
@@ -44,7 +44,7 @@ export class RewardsV2Controller {
       const { address, balance } = record;
       const token = await getFullToken(chain, address);
       if (token.address === TOKENS.DIGG) {
-        rewards[address] = formatBalance(BigNumber.from(balance).div(REMDIGG_SHARE_PER_FRAGMENT), token.decimals);
+        rewards[address] = formatBalance(BigNumber.from(balance).div(DIGG_SHARE_PER_FRAGMENT), token.decimals);
       } else {
         rewards[address] = formatBalance(balance, token.decimals);
       }
