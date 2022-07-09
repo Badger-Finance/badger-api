@@ -1,10 +1,10 @@
-import { Ethereum } from '../chains/config/eth.config';
+import { TEST_CHAIN } from '../test/tests.utils';
 import { getChainStartBlockKey } from './dynamodb.utils';
 
 describe('rewards.utils', () => {
   describe('getChainStartBlockKey', () => {
     it('returns underscore delimited string comprised of chain network and requested block', () => {
-      expect(getChainStartBlockKey(new Ethereum(), 13500000)).toEqual(`ethereum_13500000`);
+      expect(getChainStartBlockKey(TEST_CHAIN, 13500000)).toEqual(`ethereum_13500000`);
     });
   });
 });

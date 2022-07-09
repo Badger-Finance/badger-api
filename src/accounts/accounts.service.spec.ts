@@ -1,13 +1,11 @@
 import { Account } from '@badger-dao/sdk';
 import { PlatformTest } from '@tsed/common';
 
-import { Ethereum } from '../chains/config/eth.config';
-import { TEST_ADDR } from '../test/tests.utils';
+import { TEST_ADDR, TEST_CHAIN } from '../test/tests.utils';
 import { AccountsService } from './accounts.service';
 import * as accountsUtils from './accounts.utils';
 
 describe('accounts.service', () => {
-  const chain = new Ethereum();
   let service: AccountsService;
 
   beforeAll(async () => {
@@ -37,7 +35,7 @@ describe('accounts.service', () => {
         };
         return cachedAccount;
       });
-      const result = await service.getAccount(chain, TEST_ADDR);
+      const result = await service.getAccount(TEST_CHAIN, TEST_ADDR);
       expect(result).toMatchSnapshot();
     });
   });

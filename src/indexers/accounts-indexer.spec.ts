@@ -5,9 +5,7 @@ import { BigNumber } from '@ethersproject/bignumber';
 import * as accountsUtils from '../accounts/accounts.utils';
 import * as dynamodbUtils from '../aws/dynamodb.utils';
 import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
-import { BinanceSmartChain } from '../chains/config/bsc.config';
 import { Chain } from '../chains/config/chain.config';
-import { Ethereum } from '../chains/config/eth.config';
 import { TOKENS } from '../config/tokens.config';
 import { ClaimableBalance } from '../rewards/entities/claimable-balance';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
@@ -18,8 +16,6 @@ import { mockBatchPut, TEST_CHAIN } from '../test/tests.utils';
 import * as accountsIndexer from './accounts-indexer';
 
 describe('accounts-indexer', () => {
-  const rewardsChain = new Ethereum();
-  const noRewardsChain = new BinanceSmartChain();
   const previousMockedBlockNumber = 90;
   const startMockedBlockNumber = 100;
   const endMockedBlockNumber = 110;
@@ -40,21 +36,21 @@ describe('accounts-indexer', () => {
     });
     getLatestMetadata = jest.spyOn(accountsUtils, 'getLatestMetadata').mockImplementation(async (chain: Chain) => {
       return Object.assign(new UserClaimMetadata(), {
-        chainStartBlock: dynamodbUtils.getChainStartBlockKey(rewardsChain, previousMockedBlockNumber),
+        chainStartBlock: dynamodbUtils.getChainStartBlockKey(TEST_CHAIN, previousMockedBlockNumber),
         chain: chain.network,
         startBlock: previousMockedBlockNumber,
         endBlock: startMockedBlockNumber - 1,
       });
     });
-    jest.spyOn(rewardsChain.provider, 'getBlockNumber').mockImplementation(async () => endMockedBlockNumber);
+    jest.spyOn(TEST_CHAIN.provider, 'getBlockNumber').mockImplementation(async () => endMockedBlockNumber);
   });
 
   describe('refreshClaimableBalances', () => {
     it('takes no action on chains with no rewards', async () => {
       jest.spyOn(Chain.prototype, 'getSdk').mockImplementation(async () => TEST_CHAIN.sdk);
-      await accountsIndexer.refreshClaimableBalances(noRewardsChain);
+      await accountsIndexer.refreshClaimableBalances(TEST_CHAIN);
       expect(getTreeDistribution.mock.calls.length).toEqual(1);
-      expect(getTreeDistribution.mock.calls[0][0]).toMatchObject(noRewardsChain);
+      expect(getTreeDistribution.mock.calls[0][0]).toMatchObject(TEST_CHAIN);
       expect(getAccounts.mock.calls.length).toEqual(0);
     });
 
@@ -86,8 +82,8 @@ describe('accounts-indexer', () => {
       for (const acc of testAccounts) {
         expected.push(
           Object.assign(new UserClaimSnapshot(), {
-            chainStartBlock: dynamodbUtils.getChainStartBlockKey(rewardsChain, startMockedBlockNumber),
-            chain: rewardsChain.network,
+            chainStartBlock: dynamodbUtils.getChainStartBlockKey(TEST_CHAIN, startMockedBlockNumber),
+            chain: TEST_CHAIN.network,
             startBlock: startMockedBlockNumber,
             address: acc,
             claimableBalances,
@@ -98,21 +94,21 @@ describe('accounts-indexer', () => {
       const put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
       const expectedMetadata = Object.assign(new UserClaimMetadata(), {
         // startBlock for next stored metaData obj should be endBlock + 1 value of the previous metaData entity
-        chainStartBlock: dynamodbUtils.getChainStartBlockKey(rewardsChain, startMockedBlockNumber),
-        chain: rewardsChain.network,
+        chainStartBlock: dynamodbUtils.getChainStartBlockKey(TEST_CHAIN, startMockedBlockNumber),
+        chain: TEST_CHAIN.network,
         startBlock: startMockedBlockNumber,
         endBlock: endMockedBlockNumber,
         cycle: MOCK_DISTRIBUTION_FILE.cycle,
         count: expected.length,
       });
       const batchPut = mockBatchPut(expected);
-      await accountsIndexer.refreshClaimableBalances(rewardsChain);
+      await accountsIndexer.refreshClaimableBalances(TEST_CHAIN);
       // verify tree distribution was loaded, and the proper chain was called
       expect(getTreeDistribution.mock.calls.length).toEqual(1);
-      expect(getTreeDistribution.mock.calls[0][0]).toMatchObject(rewardsChain);
+      expect(getTreeDistribution.mock.calls[0][0]).toMatchObject(TEST_CHAIN);
       // verify get accounts was called, and the proper expected accounts were returned
       expect(getAccounts.mock.calls.length).toEqual(1);
-      expect(getAccounts.mock.calls[0][0]).toMatchObject(rewardsChain);
+      expect(getAccounts.mock.calls[0][0]).toMatchObject(TEST_CHAIN);
       expect(getLatestMetadata.mock.calls.length).toEqual(1);
       expect(put.mock.calls[0][0]).toEqual(expectedMetadata);
       // verify the function calls the update on all expected accounts

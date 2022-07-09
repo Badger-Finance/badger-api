@@ -28,7 +28,7 @@ export class ChartsController {
     yesterday.setHours(now.getHours() - 24);
 
     const {
-      id: settToken,
+      id: vaultToken,
       chain,
       start = yesterday,
       end = now,
@@ -42,9 +42,9 @@ export class ChartsController {
       throw new UnprocessableEntity(error);
     }
 
-    let checksumContract = settToken;
+    let checksumContract = vaultToken;
     try {
-      checksumContract = ethers.utils.getAddress(settToken);
+      checksumContract = ethers.utils.getAddress(vaultToken);
     } catch (err) {
       throw new UnprocessableEntity('Invalid contract address');
     }
@@ -53,7 +53,7 @@ export class ChartsController {
     const vault = chainInst.vaults.find((vault) => vault.vaultToken === checksumContract);
 
     if (!vault) {
-      throw new NotFound(`${checksumContract} is not a valid sett`);
+      throw new NotFound(`${checksumContract} is not a valid vault`);
     }
 
     return this.chartsService.getChartData(chainInst, vault, start, end, granularity, period);

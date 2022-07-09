@@ -21,19 +21,15 @@ import * as dynamodbUtils from '../aws/dynamodb.utils';
 import { CachedAccount } from '../aws/models/cached-account.model';
 import { CachedBoost } from '../aws/models/cached-boost.model';
 import { SUPPORTED_CHAINS } from '../chains/chain';
-import { Arbitrum } from '../chains/config/arbitrum.config';
-import { Avalanche } from '../chains/config/avax.config';
-import { BinanceSmartChain } from '../chains/config/bsc.config';
 import { Chain } from '../chains/config/chain.config';
-import { Ethereum } from '../chains/config/eth.config';
-import { Fantom } from '../chains/config/fantom.config';
-import { Polygon } from '../chains/config/polygon.config';
+import { TestChain } from '../chains/config/test-chain.config';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import * as pricesUtils from '../prices/prices.utils';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 
-export const TEST_CHAIN = SUPPORTED_CHAINS[0];
+export const TEST_CHAIN = new TestChain();
+
 export const TEST_ADDR = ethers.utils.getAddress('0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484');
 export const CURRENT_BLOCK = 0;
 
@@ -182,27 +178,12 @@ export function randomSnapshots(vaultDefinition?: VaultDefinition, count?: numbe
 }
 
 export function setupChainGasPrices() {
-  jest.spyOn(Ethereum.prototype, 'getGasPrices').mockImplementation(async () => ({
+  jest.spyOn(TestChain.prototype, 'getGasPrices').mockImplementation(async () => ({
     rapid: { maxFeePerGas: 223.06, maxPriorityFeePerGas: 3.04 },
     fast: { maxFeePerGas: 221.96, maxPriorityFeePerGas: 1.94 },
     standard: { maxFeePerGas: 221.91, maxPriorityFeePerGas: 1.89 },
     slow: { maxFeePerGas: 221.81, maxPriorityFeePerGas: 1.79 },
   }));
-  jest
-    .spyOn(BinanceSmartChain.prototype, 'getGasPrices')
-    .mockImplementation(async () => ({ rapid: 38, fast: 33, standard: 33, slow: 33 }));
-  jest
-    .spyOn(Arbitrum.prototype, 'getGasPrices')
-    .mockImplementation(async () => ({ rapid: 38, fast: 33, standard: 33, slow: 33 }));
-  jest
-    .spyOn(Polygon.prototype, 'getGasPrices')
-    .mockImplementation(async () => ({ rapid: 38, fast: 33, standard: 33, slow: 33 }));
-  jest
-    .spyOn(Avalanche.prototype, 'getGasPrices')
-    .mockImplementation(async () => ({ rapid: 38, fast: 33, standard: 33, slow: 33 }));
-  jest
-    .spyOn(Fantom.prototype, 'getGasPrices')
-    .mockImplementation(async () => ({ rapid: 38, fast: 33, standard: 33, slow: 33 }));
 }
 
 export function randomCachedBoosts(count: number): CachedBoost[] {

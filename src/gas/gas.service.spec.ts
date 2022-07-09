@@ -1,11 +1,9 @@
 import { PlatformTest } from '@tsed/common';
 
-import { Ethereum } from '../chains/config/eth.config';
-import { setupChainGasPrices } from '../test/tests.utils';
+import { setupChainGasPrices, TEST_CHAIN } from '../test/tests.utils';
 import { GasService } from './gas.service';
 
 describe('GasService', () => {
-  const chain = new Ethereum();
   let service: GasService;
 
   beforeAll(async () => {
@@ -18,7 +16,7 @@ describe('GasService', () => {
   describe('getGasPrices', () => {
     it('returns gas prices for a chain', async () => {
       setupChainGasPrices();
-      const gasPrices = await service.getGasPrices(chain);
+      const gasPrices = await service.getGasPrices(TEST_CHAIN);
       expect(gasPrices).toMatchObject({
         fast: {
           maxFeePerGas: expect.any(Number),

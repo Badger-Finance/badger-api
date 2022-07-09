@@ -2,9 +2,8 @@ import { DataMapper, PutParameters, StringToAnyObjectMap } from '@aws/dynamodb-d
 
 import { VaultTokenBalance } from '../aws/models/vault-token-balance.model';
 import { Chain } from '../chains/config/chain.config';
-import { Ethereum } from '../chains/config/eth.config';
 import { TOKENS } from '../config/tokens.config';
-import { setFullTokenDataMock, TEST_ADDR } from '../test/tests.utils';
+import { setFullTokenDataMock, TEST_ADDR, TEST_CHAIN } from '../test/tests.utils';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { getVaultDefinition } from '../vaults/vaults.utils';
@@ -12,7 +11,6 @@ import * as indexerUtils from './indexer.utils';
 import { updateVaultTokenBalances } from './vault-balances-indexer';
 
 describe('vault-balances-indexer', () => {
-  const chain = new Ethereum();
   let put: jest.SpyInstance<Promise<StringToAnyObjectMap>, [parameters: PutParameters]>;
   beforeEach(() => {
     put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
@@ -20,13 +18,13 @@ describe('vault-balances-indexer', () => {
   describe('updateVaultTokenBalances', () => {
     it('should not update for token without balance', async () => {
       setFullTokenDataMock();
-      await updateVaultTokenBalances(chain, getVaultDefinition(chain, TOKENS.BDIGG));
+      await updateVaultTokenBalances(TEST_CHAIN, getVaultDefinition(TEST_CHAIN, TOKENS.BDIGG));
       expect(put.mock.calls.length).toEqual(0);
     });
     it('should not update for lp token wihtout balance', async () => {
       setFullTokenDataMock();
       await updateVaultTokenBalances(
-        chain,
+        TEST_CHAIN,
         Object.assign({
           name: 'something',
           depositToken: TOKENS.BADGER,
@@ -38,7 +36,7 @@ describe('vault-balances-indexer', () => {
       console.error = jest.fn();
       setFullTokenDataMock();
       await updateVaultTokenBalances(
-        chain,
+        TEST_CHAIN,
         Object.assign({
           name: 'something',
           depositToken: TOKENS.SUSHI_BADGER_WBTC,
@@ -55,7 +53,7 @@ describe('vault-balances-indexer', () => {
     it('should update token with balance', async () => {
       setFullTokenDataMock();
       await updateVaultTokenBalances(
-        chain,
+        TEST_CHAIN,
         Object.assign({
           name: 'something',
           depositToken: TOKENS.BADGER,
@@ -98,7 +96,7 @@ describe('vault-balances-indexer', () => {
         });
       setFullTokenDataMock();
       await updateVaultTokenBalances(
-        chain,
+        TEST_CHAIN,
         Object.assign({
           name: 'something',
           depositToken: TOKENS.SUSHI_BADGER_WBTC,
@@ -118,7 +116,7 @@ describe('vault-balances-indexer', () => {
         });
       setFullTokenDataMock();
       await updateVaultTokenBalances(
-        chain,
+        TEST_CHAIN,
         Object.assign({
           name: 'something',
           depositToken: TOKENS.SUSHI_BADGER_WBTC,

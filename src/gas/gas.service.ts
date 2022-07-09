@@ -13,7 +13,7 @@ export class GasService {
    * @returns object of gas speeds and prices
    */
   async getGasPrices(chain: Chain): Promise<GasPrices> {
-    const gasCache = await getGasCache();
+    const gasCache = await getGasCache([chain]);
     return gasCache[chain.network];
   }
 }

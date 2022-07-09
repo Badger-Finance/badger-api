@@ -3,15 +3,13 @@ import { NotFound } from '@tsed/exceptions';
 import SuperTest from 'supertest';
 
 import { Chain } from '../chains/config/chain.config';
-import { Ethereum } from '../chains/config/eth.config';
 import { TOKENS } from '../config/tokens.config';
 import { Server } from '../Server';
 import { MOCK_BOUNCER_FILE } from '../test/constants';
-import { TEST_ADDR } from '../test/tests.utils';
+import { TEST_ADDR, TEST_CHAIN } from '../test/tests.utils';
 import { ProofsService } from './proofs.service';
 
 describe('ProofsController', () => {
-  const chain = new Ethereum();
   let request: SuperTest.SuperTest<SuperTest.Test>;
   let proofsService: ProofsService;
 
@@ -27,7 +25,7 @@ describe('ProofsController', () => {
     it('returns 404 for a chain with no bouncer file', async () => {
       jest.spyOn(proofsService, 'getBouncerProof').mockImplementation(async () => {
         // simulate no chain path
-        throw new NotFound(`${chain.name} does not have a bouncer list`);
+        throw new NotFound(`${TEST_CHAIN.name} does not have a bouncer list`);
       });
       const { body } = await request.get(`/v2/proofs/${TEST_ADDR}`).expect(404);
       expect(body).toMatchSnapshot();

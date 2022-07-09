@@ -21,7 +21,7 @@ describe('ChartsController', () => {
         it('returns a 422', async () => {
           const { body } = await request.get('/v2/charts').expect(UnprocessableEntity.STATUS);
 
-          expect(body).toMatchSnapshot;
+          expect(body).toMatchSnapshot();
         });
       });
 
@@ -34,7 +34,7 @@ describe('ChartsController', () => {
             })
             .expect(UnprocessableEntity.STATUS);
 
-          expect(body).toMatchSnapshot;
+          expect(body).toMatchSnapshot();
         });
       });
 
@@ -48,7 +48,7 @@ describe('ChartsController', () => {
             })
             .expect(UnprocessableEntity.STATUS);
 
-          expect(body).toMatchSnapshot;
+          expect(body).toMatchSnapshot();
         });
       });
 
@@ -62,7 +62,7 @@ describe('ChartsController', () => {
             })
             .expect(UnprocessableEntity.STATUS);
 
-          expect(body).toMatchSnapshot;
+          expect(body).toMatchSnapshot();
         });
       });
 
@@ -76,7 +76,7 @@ describe('ChartsController', () => {
             })
             .expect(UnprocessableEntity.STATUS);
 
-          expect(body).toMatchSnapshot;
+          expect(body).toMatchSnapshot();
         });
       });
 
@@ -93,7 +93,7 @@ describe('ChartsController', () => {
             })
             .expect(UnprocessableEntity.STATUS);
 
-          expect(body).toMatchSnapshot;
+          expect(body).toMatchSnapshot();
         });
       });
 
@@ -107,7 +107,7 @@ describe('ChartsController', () => {
             })
             .expect(UnprocessableEntity.STATUS);
 
-          expect(body).toMatchSnapshot;
+          expect(body).toMatchSnapshot();
         });
       });
 
@@ -121,7 +121,7 @@ describe('ChartsController', () => {
             })
             .expect(UnprocessableEntity.STATUS);
 
-          expect(body).toMatchSnapshot;
+          expect(body).toMatchSnapshot();
         });
       });
 
@@ -140,7 +140,7 @@ describe('ChartsController', () => {
             })
             .expect(UnprocessableEntity.STATUS);
 
-          expect(body).toMatchSnapshot;
+          expect(body).toMatchSnapshot();
         });
       });
 
@@ -159,21 +159,27 @@ describe('ChartsController', () => {
             })
             .expect(UnprocessableEntity.STATUS);
 
-          expect(body).toMatchSnapshot;
+          expect(body).toMatchSnapshot();
         });
       });
     });
 
     describe('with an unsupported address', () => {
       it('returns a 404', async () => {
+        const start = '2021-01-01T00:00:00.000Z';
+        const end = '2021-01-02T00:00:00.000Z';
         const { body } = await request
           .get('/v2/charts')
           .query({
-            id: '0x4206942069420694206942069420694206942069',
+            id: '0x0c7213bac2B9e7b99ABa344243C9de84227911Be',
+            start,
+            end,
+            granularity: ChartGranularity.DAY,
+            period: 1,
           })
           .expect(NotFound.STATUS);
 
-        expect(body).toMatchSnapshot;
+        expect(body).toMatchSnapshot();
       });
     });
   });
