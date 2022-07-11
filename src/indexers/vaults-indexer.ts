@@ -12,6 +12,8 @@ export async function indexProtocolVaults() {
     SUPPORTED_CHAINS.map(async (chain) => {
       // create a db connection object per chain
       const mapper = getDataMapper();
+      const timestamp = Date.now();
+
       await Promise.all(
         chain.vaults.map(async (vault) => {
           try {
@@ -20,8 +22,8 @@ export async function indexProtocolVaults() {
             // update chartDataBlob with historic data for vault
             const historicSnapshot = Object.assign(new HistoricVaultSnapshotModel(), {
               ...snapshot,
-              id: snapshot.address,
-              timestamp: Date.now(),
+              id: HistoricVaultSnapshotModel.formBlobId(snapshot.address, chain.network),
+              timestamp,
             });
 
             await updateSnapshots(HistoricVaultSnapshotModel.NAMESPACE, historicSnapshot);

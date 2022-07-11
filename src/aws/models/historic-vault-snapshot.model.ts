@@ -8,8 +8,15 @@ import { VaultStrategy } from '../../vaults/interfaces/vault-strategy.interface'
 export class HistoricVaultSnapshotModel extends ChartData<HistoricVaultSnapshotModel> implements VaultSnapshot {
   static NAMESPACE = 'vault';
 
+  static formBlobId(address: string, chain: string) {
+    return `${address}_${chain}`;
+  }
+
   @attribute()
   id!: string;
+
+  @attribute()
+  chain!: string;
 
   @attribute()
   address!: string;

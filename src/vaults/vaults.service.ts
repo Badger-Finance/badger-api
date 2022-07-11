@@ -188,8 +188,13 @@ export class VaultsService {
     };
   }
 
-  async loadVaultChartData(vaultAddr: string, timeframe: ChartTimeFrame): Promise<HistoricVaultSnapshotModel[]> {
-    const dataKey = toChartDataKey(HistoricVaultSnapshotModel.NAMESPACE, vaultAddr, timeframe);
+  async loadVaultChartData(
+    vaultAddr: string,
+    timeframe: ChartTimeFrame,
+    chain: Chain,
+  ): Promise<HistoricVaultSnapshotModel[]> {
+    const vaultBlobId = HistoricVaultSnapshotModel.formBlobId(vaultAddr, chain.network);
+    const dataKey = toChartDataKey(HistoricVaultSnapshotModel.NAMESPACE, vaultBlobId, timeframe);
 
     return queryVaultCharts(dataKey);
   }

@@ -1,4 +1,4 @@
-import { ChartTimeFrame, VaultSnapshot } from '@badger-dao/sdk';
+import { ChartTimeFrame, Network, VaultSnapshot } from '@badger-dao/sdk';
 import { Controller, Get, Inject, QueryParams, UseCache, UsePipe } from '@tsed/common';
 import { NotFound, UnprocessableEntity } from '@tsed/exceptions';
 import { ContentType, Hidden } from '@tsed/schema';
@@ -95,12 +95,13 @@ export class ChartsController {
   @UseCache()
   @Get('/vault')
   @ContentType('json')
-  async loadCitadelTreasuryCharts(
+  async loadVaultCharts(
     @QueryParams('address') address: string,
     @QueryParams('timeframe') timeframe = ChartTimeFrame.Day,
+    @QueryParams('chain') chain?: Network,
   ): Promise<HistoricVaultSnapshotModel[]> {
     if (!address) throw new QueryParamError('address');
 
-    return this.vaultsService.loadVaultChartData(address, timeframe);
+    return this.vaultsService.loadVaultChartData(address, timeframe, Chain.getChain(chain));
   }
 }
