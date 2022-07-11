@@ -2,10 +2,12 @@ import { Network } from '@badger-dao/sdk';
 
 import { getStakedCitadelPrice } from '../../citadel/citadel.utils';
 import { TOKENS } from '../../config/tokens.config';
-import { getRemDiggPrice } from '../../prices/custom/remdigg-price';
 import { PricingType } from '../../prices/enums/pricing-type.enum';
 import { resolveBalancerPoolTokenPrice } from '../../protocols/strategies/balancer.strategy';
-import { resolveCurvePoolTokenPrice } from '../../protocols/strategies/convex.strategy';
+import {
+  resolveCurvePoolTokenPrice,
+  resolveCurveStablePoolTokenPrice,
+} from '../../protocols/strategies/convex.strategy';
 import { getImBtcPrice, getMhBtcPrice } from '../../protocols/strategies/mstable.strategy';
 import { TokenConfig } from '../interfaces/token-config.interface';
 
@@ -65,10 +67,6 @@ export const ethTokensConfig: TokenConfig = {
   },
   [TOKENS.DIGG]: {
     type: PricingType.Contract,
-  },
-  [TOKENS.REMDIGG]: {
-    getPrice: getRemDiggPrice,
-    type: PricingType.Custom,
   },
   [TOKENS.SUSHI]: {
     type: PricingType.Contract,
@@ -231,6 +229,10 @@ export const ethTokensConfig: TokenConfig = {
     type: PricingType.Custom,
     getPrice: getStakedCitadelPrice,
   },
+  [TOKENS.CVXFXS]: {
+    type: PricingType.Custom,
+    getPrice: resolveCurveStablePoolTokenPrice,
+  },
   [TOKENS.BPT_WBTC_BADGER]: {
     type: PricingType.BalancerLP,
   },
@@ -238,6 +240,9 @@ export const ethTokensConfig: TokenConfig = {
     type: PricingType.BalancerLP,
   },
   [TOKENS.BPT_BB_AAVE_USD]: {
+    type: PricingType.BalancerLP,
+  },
+  [TOKENS.BPT_GRAV_AURABAL_WETH]: {
     type: PricingType.BalancerLP,
   },
   [TOKENS.BBADGER]: {
@@ -468,6 +473,13 @@ export const ethTokensConfig: TokenConfig = {
     type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.BPT_BB_AAVE_USD,
+      network: Network.Ethereum,
+    },
+  },
+  [TOKENS.BBPT_GRAV_AURABAL_WETH]: {
+    type: PricingType.Vault,
+    vaultToken: {
+      address: TOKENS.BPT_GRAV_AURABAL_WETH,
       network: Network.Ethereum,
     },
   },
