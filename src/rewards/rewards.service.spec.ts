@@ -1,11 +1,9 @@
-import { Network } from '@badger-dao/sdk';
 import { PlatformTest } from '@tsed/common';
 
 import * as accountsUtils from '../accounts/accounts.utils';
 import * as dynamodbUtils from '../aws/dynamodb.utils';
 import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
 import { Chain } from '../chains/config/chain.config';
-import { MOCK_DISTRIBUTION_FILE } from '../test/constants';
 import { setupMapper, TEST_ADDR, TEST_CHAIN } from '../test/tests.utils';
 import { UserClaimMetadata } from './entities/user-claim-metadata';
 import { RewardsService } from './rewards.service';
@@ -17,18 +15,13 @@ describe('rewards.service', () => {
   beforeEach(async () => {
     await PlatformTest.create();
     service = PlatformTest.get<RewardsService>(RewardsService);
-    jest.spyOn(rewardsUtils, 'getTreeDistribution').mockImplementation(async (chain: Chain) => {
-      if (chain.network !== Network.Ethereum) {
-        return null;
-      }
-      return MOCK_DISTRIBUTION_FILE;
-    });
   });
 
   afterEach(PlatformTest.reset);
 
   describe('getUserRewards', () => {
     it('throws a bad request on chains with no rewards', async () => {
+      jest.spyOn(rewardsUtils, 'getTreeDistribution').mockImplementation(async (_chain: Chain) => null);
       await expect(service.getUserRewards(TEST_CHAIN, TEST_ADDR)).rejects.toThrow(
         `${TEST_CHAIN.name} is not supportable for request`,
       );

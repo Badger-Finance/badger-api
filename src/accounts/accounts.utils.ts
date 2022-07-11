@@ -219,13 +219,13 @@ export async function getClaimableBalanceSnapshot(
   const mapper = getDataMapper();
   for await (const entry of mapper.query(
     UserClaimSnapshot,
-    { chainStartBlock: getChainStartBlockKey(chain, startBlock), address: ethers.utils.getAddress(address) },
+    { chainStartBlock: getChainStartBlockKey(chain.network, startBlock), address: ethers.utils.getAddress(address) },
     { limit: 1, indexName: 'IndexUnclaimedSnapshotsOnAddressAndChainStartBlock' },
   )) {
     return entry;
   }
   return {
-    chainStartBlock: getChainStartBlockKey(chain, startBlock),
+    chainStartBlock: getChainStartBlockKey(chain.network, startBlock),
     address,
     chain: chain.network,
     startBlock,
@@ -251,7 +251,7 @@ export async function getLatestMetadata(chain: Chain): Promise<UserClaimMetadata
     const metaData = Object.assign(new UserClaimMetadata(), {
       startBlock: blockNumber,
       endBlock: blockNumber + 1,
-      chainStartBlock: getChainStartBlockKey(chain, blockNumber),
+      chainStartBlock: getChainStartBlockKey(chain.network, blockNumber),
       chain: chain.network,
       count: 0,
     });

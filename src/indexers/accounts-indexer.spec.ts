@@ -28,12 +28,6 @@ describe('accounts-indexer', () => {
     getAccounts = jest
       .spyOn(accountsUtils, 'getAccounts')
       .mockImplementation((chain) => Promise.resolve([chain.network]));
-    getTreeDistribution = jest.spyOn(rewardsUtils, 'getTreeDistribution').mockImplementation(async (chain: Chain) => {
-      if (chain.network !== Network.Ethereum) {
-        return null;
-      }
-      return MOCK_DISTRIBUTION_FILE;
-    });
     getLatestMetadata = jest.spyOn(accountsUtils, 'getLatestMetadata').mockImplementation(async (chain: Chain) => {
       return Object.assign(new UserClaimMetadata(), {
         chainStartBlock: dynamodbUtils.getChainStartBlockKey(TEST_CHAIN, previousMockedBlockNumber),
@@ -42,12 +36,15 @@ describe('accounts-indexer', () => {
         endBlock: startMockedBlockNumber - 1,
       });
     });
+    jest.spyOn(Chain.prototype, 'getSdk').mockImplementation(async () => TEST_CHAIN.sdk);
     jest.spyOn(TEST_CHAIN.provider, 'getBlockNumber').mockImplementation(async () => endMockedBlockNumber);
   });
 
   describe('refreshClaimableBalances', () => {
     it('takes no action on chains with no rewards', async () => {
-      jest.spyOn(Chain.prototype, 'getSdk').mockImplementation(async () => TEST_CHAIN.sdk);
+      getTreeDistribution = jest
+        .spyOn(rewardsUtils, 'getTreeDistribution')
+        .mockImplementation(async (_chain: Chain) => null);
       await accountsIndexer.refreshClaimableBalances(TEST_CHAIN);
       expect(getTreeDistribution.mock.calls.length).toEqual(1);
       expect(getTreeDistribution.mock.calls[0][0]).toMatchObject(TEST_CHAIN);
@@ -55,6 +52,12 @@ describe('accounts-indexer', () => {
     });
 
     it('looks up all user claimable balances on chains with rewards and persists them', async () => {
+      getTreeDistribution = jest.spyOn(rewardsUtils, 'getTreeDistribution').mockImplementation(async (chain: Chain) => {
+        if (chain.network !== Network.Ethereum) {
+          return null;
+        }
+        return MOCK_DISTRIBUTION_FILE;
+      });
       const testAccounts = [TOKENS.WBTC, TOKENS.DAI, TOKENS.WETH, TOKENS.USDT, TOKENS.USDC];
       jest.spyOn(accountsUtils, 'getAccounts').mockImplementation((_chain) => Promise.resolve(testAccounts));
       const claimableResults: [string[], BigNumber[]] = [

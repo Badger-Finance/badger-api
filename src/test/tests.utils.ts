@@ -22,13 +22,10 @@ import { CachedAccount } from '../aws/models/cached-account.model';
 import { CachedBoost } from '../aws/models/cached-boost.model';
 import { SUPPORTED_CHAINS } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
-import { TestChain } from '../chains/config/test-chain.config';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import * as pricesUtils from '../prices/prices.utils';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
-
-export const TEST_CHAIN = new TestChain();
 
 export const TEST_ADDR = ethers.utils.getAddress('0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484');
 export const CURRENT_BLOCK = 0;
@@ -177,15 +174,6 @@ export function randomSnapshots(vaultDefinition?: VaultDefinition, count?: numbe
   return snapshots;
 }
 
-export function setupChainGasPrices() {
-  jest.spyOn(TestChain.prototype, 'getGasPrices').mockImplementation(async () => ({
-    rapid: { maxFeePerGas: 223.06, maxPriorityFeePerGas: 3.04 },
-    fast: { maxFeePerGas: 221.96, maxPriorityFeePerGas: 1.94 },
-    standard: { maxFeePerGas: 221.91, maxPriorityFeePerGas: 1.89 },
-    slow: { maxFeePerGas: 221.81, maxPriorityFeePerGas: 1.79 },
-  }));
-}
-
 export function randomCachedBoosts(count: number): CachedBoost[] {
   const boosts = [];
   for (let i = 0; i < count; i += 1) {
@@ -209,9 +197,9 @@ export function randomCachedBoosts(count: number): CachedBoost[] {
 
 export function setupMockAccounts() {
   jest.spyOn(accountsUtils, 'getClaimableBalanceSnapshot').mockImplementation(async () => ({
-    chainStartBlock: dynamodbUtils.getChainStartBlockKey(TEST_CHAIN, 10),
+    chainStartBlock: dynamodbUtils.getChainStartBlockKey(Network.Ethereum, 10),
     address: TEST_ADDR,
-    chain: TEST_CHAIN.network,
+    chain: Network.Ethereum,
     startBlock: 100,
     claimableBalances: [],
     expiresAt: Date.now(),
@@ -220,8 +208,8 @@ export function setupMockAccounts() {
   jest.spyOn(accountsUtils, 'getLatestMetadata').mockImplementation(async (chain) => ({
     startBlock: 10,
     endBlock: 15,
-    chainStartBlock: dynamodbUtils.getChainStartBlockKey(chain, 10),
-    chain: chain.network,
+    chainStartBlock: dynamodbUtils.getChainStartBlockKey(Network.Ethereum, 10),
+    chain: Network.Ethereum,
     cycle: 10,
     count: 0,
   }));

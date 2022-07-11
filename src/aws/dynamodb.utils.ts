@@ -1,4 +1,5 @@
 import { DataMapper } from '@aws/dynamodb-data-mapper';
+import { Network } from '@badger-dao/sdk';
 import AWS from 'aws-sdk';
 
 import { Chain } from '../chains/config/chain.config';
@@ -25,6 +26,6 @@ export function getLeaderboardKey(chain: Chain): string {
   return `${chain.network}_${LeaderBoardType.BadgerBoost}`;
 }
 
-export function getChainStartBlockKey(chain: Chain, block: number): string {
-  return `${chain.network}_${block}`;
+export function getChainStartBlockKey(network: Network, block: number): string {
+  return `${network}_${block}`;
 }
