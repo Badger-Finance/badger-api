@@ -15,6 +15,7 @@ import {
   CurveRegistry__factory,
 } from '../../contracts';
 import { TokenPrice } from '../../prices/interface/token-price.interface';
+import { getPrice } from '../../prices/prices.utils';
 import { SourceType } from '../../rewards/enums/source-type.enum';
 import { valueSourceToCachedValueSource } from '../../rewards/rewards.utils';
 import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
@@ -60,6 +61,7 @@ const nonRegistryPools: ContractRegistry = {
   [TOKENS.CRV_TRICRYPTO2]: '0xD51a44d3FaE010294C616388b506AcdA1bfAAE46',
   [TOKENS.CRV_BADGER]: '0x50f3752289e1456BfA505afd37B241bca23e685d',
   [TOKENS.CTDL]: TOKENS.CRV_CTDL,
+  [TOKENS.CVXFXS]: '0xd658A338613198204DCa1143Ac3F01A722b5d94A',
 };
 
 interface FactoryAPYResonse {
@@ -256,6 +258,43 @@ export async function resolveCurvePoolTokenPrice(chain: Chain, token: Token): Pr
   return {
     address: token.address,
     price: requestTokenPrice,
+  };
+}
+
+export async function resolveCurveStablePoolTokenPrice(chain: Chain, token: Token): Promise<TokenPrice> {
+  // TODO: figure out how to get this from the registry or crypto registry (?) properly
+  const pool = nonRegistryPools[token.address];
+  const balances = await getCurvePoolBalance(chain, pool);
+  const sdk = await chain.getSdk();
+
+  try {
+    if (balances.length != 2) {
+      throw new Error('Pool has unexpected number of tokens!');
+    }
+
+    // we can calculate "x" in terms of "y" - this is our token in terms of some known token
+    const swapPool = CurvePool3__factory.connect(pool, sdk.provider);
+
+    const requestTokenIndex = balances[0].address === token.address ? 0 : 1;
+    const pairToken = balances[1 - requestTokenIndex];
+
+    // token 0 in terms of token 1
+    const tokenOutRatio = formatBalance(await swapPool.price_oracle());
+    const scalar = requestTokenIndex === 0 ? 1 / tokenOutRatio : tokenOutRatio;
+    const { price } = await getPrice(pairToken.address);
+    const requestTokenPrice = scalar * price;
+
+    return {
+      address: token.address,
+      price: requestTokenPrice,
+    };
+  } catch (err) {
+    console.error({ err, message: `Unable to price ${token.name}` });
+  }
+
+  return {
+    address: token.address,
+    price: 0,
   };
 }
 

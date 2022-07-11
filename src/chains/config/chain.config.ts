@@ -19,8 +19,7 @@ export abstract class Chain {
   private static chainsByNetworkId: Record<string, Chain> = {};
   private static sdks: Sdks = {};
 
-  private sdk: BadgerSDK;
-
+  readonly sdk: BadgerSDK;
   readonly vaults: VaultDefinition[];
   readonly vaultsCompound: ChainVaults;
   readonly strategy: ChainStrategy;

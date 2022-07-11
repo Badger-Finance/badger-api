@@ -21,6 +21,8 @@ import { getCachedVault, getVaultPerformance } from '../vaults/vaults.utils';
 import { SourceType } from './enums/source-type.enum';
 import { RewardMerkleDistribution } from './interfaces/merkle-distributor.interface';
 
+export const DIGG_SHARE_PER_FRAGMENT = '222256308823765331027878635805365830922307440079959220679625904457';
+
 export async function getTreeDistribution(chain: Chain): Promise<RewardMerkleDistribution | null> {
   try {
     const fileName = `badger-tree-${parseInt(chain.chainId, 16)}.json`;
