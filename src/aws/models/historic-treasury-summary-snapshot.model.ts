@@ -9,6 +9,8 @@ export class HistoricTreasurySummarySnapshot
   extends ChartData<HistoricTreasurySummarySnapshot>
   implements TreasurySummary
 {
+  static NAMESPACE = 'treasury';
+
   @attribute()
   id!: string;
 

@@ -1,4 +1,4 @@
-import { Currency, Protocol, VaultDTO, VaultSnapshot, VaultState, VaultType } from '@badger-dao/sdk';
+import { ChartTimeFrame, Currency, Protocol, VaultDTO, VaultSnapshot, VaultState, VaultType } from '@badger-dao/sdk';
 import { VaultYieldProjection } from '@badger-dao/sdk/lib/api/interfaces/vault-yield-projection.interface';
 import { MetadataClient } from '@badger-dao/sdk/lib/registry.v2/enums/metadata.client.enum';
 import { Service } from '@tsed/common';
@@ -6,8 +6,10 @@ import { ethers } from 'ethers';
 
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { HarvestCompoundData } from '../aws/models/harvest-compound.model';
+import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
 import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
 import { Chain } from '../chains/config/chain.config';
+import { toChartDataKey } from '../charts/charts.utils';
 import { ONE_YEAR_SECONDS } from '../config/constants';
 import { NodataForVaultError } from '../errors/allocation/nodata.for.vault.error';
 import { convert } from '../prices/prices.utils';
@@ -23,6 +25,7 @@ import {
   getVaultDefinition,
   getVaultPendingHarvest,
   getVaultSnapshotsAtTimestamps,
+  queryVaultCharts,
   VAULT_SOURCE,
   vaultCompoundToDefinition,
 } from './vaults.utils';
@@ -183,6 +186,17 @@ export class VaultsService {
       yieldTokens: pendingHarvest.yieldTokens,
       yieldValue,
     };
+  }
+
+  async loadVaultChartData(
+    vaultAddr: string,
+    timeframe: ChartTimeFrame,
+    chain: Chain,
+  ): Promise<HistoricVaultSnapshotModel[]> {
+    const vaultBlobId = HistoricVaultSnapshotModel.formBlobId(vaultAddr, chain.network);
+    const dataKey = toChartDataKey(HistoricVaultSnapshotModel.NAMESPACE, vaultBlobId, timeframe);
+
+    return queryVaultCharts(dataKey);
   }
 
   private static calculateProjectedYield(

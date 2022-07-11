@@ -22,9 +22,11 @@ import { BigNumber, ethers } from 'ethers';
 
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { CachedValueSource } from '../aws/models/apy-snapshots.model';
+import { ChartDataBlob } from '../aws/models/chart-data-blob.model';
 import { CurrentVaultSnapshotModel } from '../aws/models/current-vault-snapshot.model';
 import { HarvestCompoundData } from '../aws/models/harvest-compound.model';
 import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
+import { HistoricVaultSnapshotOldModel } from '../aws/models/historic-vault-snapshot-old.model';
 import { VaultCompoundModel } from '../aws/models/vault-compound.model';
 import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
 import { Chain } from '../chains/config/chain.config';
@@ -147,14 +149,14 @@ export async function getVaultSnapshotsInRange(
   vaultDefinition: VaultDefinition,
   start: Date,
   end: Date,
-): Promise<HistoricVaultSnapshotModel[]> {
+): Promise<HistoricVaultSnapshotOldModel[]> {
   try {
     const snapshots = [];
     const mapper = getDataMapper();
     const assetToken = await getFullToken(chain, vaultDefinition.vaultToken);
 
     for await (const snapshot of mapper.query(
-      HistoricVaultSnapshotModel,
+      HistoricVaultSnapshotOldModel,
       { address: assetToken.address, timestamp: between(new Date(start).getTime(), new Date(end).getTime()) },
       { scanIndexForward: false },
     )) {
@@ -841,7 +843,7 @@ export async function getVaultSnapshotsAtTimestamps(
   chain: Chain,
   vaultDefinition: VaultDefinition,
   timestamps: number[],
-): Promise<HistoricVaultSnapshotModel[]> {
+): Promise<HistoricVaultSnapshotOldModel[]> {
   try {
     const snapshots = [];
     const mapper = getDataMapper();
@@ -849,7 +851,7 @@ export async function getVaultSnapshotsAtTimestamps(
 
     for (const timestamp of timestamps) {
       for await (const snapshot of mapper.query(
-        HistoricVaultSnapshotModel,
+        HistoricVaultSnapshotOldModel,
         { address: assetToken.address, timestamp: greaterThanOrEqualTo(new Date(timestamp).getTime()) },
         { limit: 1 },
       )) {
@@ -862,6 +864,19 @@ export async function getVaultSnapshotsAtTimestamps(
     }
 
     return snapshots;
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
+}
+
+export async function queryVaultCharts(id: string): Promise<HistoricVaultSnapshotModel[]> {
+  try {
+    const mapper = getDataMapper();
+    for await (const item of mapper.query(ChartDataBlob, { id }, { limit: 1, scanIndexForward: false })) {
+      return item.data as HistoricVaultSnapshotModel[];
+    }
+    return [];
   } catch (err) {
     console.error(err);
     return [];
