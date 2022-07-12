@@ -3,6 +3,7 @@ import BadgerSDK, {
   formatBalance,
   gqlGenT,
   keyBy,
+  ListHarvestOptions,
   Network,
   ONE_DAY_MS,
   ONE_YEAR_MS,
@@ -16,7 +17,6 @@ import BadgerSDK, {
   VaultV15__factory,
   VaultVersion,
 } from '@badger-dao/sdk';
-import { ListHarvestOptions } from '@badger-dao/sdk/lib/vaults/interfaces';
 import { BadRequest, NotFound, UnprocessableEntity } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';
 
@@ -307,10 +307,7 @@ export async function getVaultPerformance(
   if (vaultApr === 0) {
     vaultSources = await getVaultUnderlyingPerformance(chain, vaultDefinition);
   }
-  if (PRODUCTION) {
-    console.log(`${vaultDefinition.name}: ${vaultLookupMethod[vaultDefinition.vaultToken]}`);
-  }
-
+  console.log(`${vaultDefinition.name}: ${vaultLookupMethod[vaultDefinition.vaultToken]}`);
   return [...vaultSources, ...rewardEmissions, ...protocol];
 }
 
@@ -426,7 +423,7 @@ export async function loadVaultGraphPerformances(
     return [];
   }
 
-  const sdk = await chain.getSdk();
+  const { graph } = chain.sdk;
   const now = Date.now() / 1000;
 
   let cutoff;
@@ -439,13 +436,13 @@ export async function loadVaultGraphPerformances(
   }
 
   let [vaultHarvests, treeDistributions] = await Promise.all([
-    sdk.graph.loadSettHarvests({
+    graph.loadSettHarvests({
       where: {
         sett: vaultToken.toLowerCase(),
         timestamp_gte: cutoff,
       },
     }),
-    sdk.graph.loadBadgerTreeDistributions({
+    graph.loadBadgerTreeDistributions({
       where: {
         sett: vaultToken.toLowerCase(),
         timestamp_gte: cutoff,
@@ -463,13 +460,13 @@ export async function loadVaultGraphPerformances(
     // take the last 6 weeks as the "full graph" to avoid really old data
     const cutoff = Number(((Date.now() - ONE_DAY_MS * 42) / 1000).toFixed());
     [vaultHarvests, treeDistributions] = await Promise.all([
-      sdk.graph.loadSettHarvests({
+      graph.loadSettHarvests({
         where: {
           sett: vaultToken.toLowerCase(),
           timestamp_gte: cutoff,
         },
       }),
-      sdk.graph.loadBadgerTreeDistributions({
+      graph.loadBadgerTreeDistributions({
         where: {
           sett: vaultToken.toLowerCase(),
           timestamp_gte: cutoff,
