@@ -14,7 +14,7 @@ import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 import { RewardMerkleDistribution } from '../rewards/interfaces/merkle-distributor.interface';
 import * as rewardsUtils from '../rewards/rewards.utils';
 import { MOCK_DISTRIBUTION_FILE } from '../test/constants';
-import { mockBatchPut } from '../test/tests.utils';
+import { mockBatchPut, TEST_CHAIN } from '../test/tests.utils';
 import * as accountsIndexer from './accounts-indexer';
 
 describe('accounts-indexer', () => {
@@ -51,6 +51,7 @@ describe('accounts-indexer', () => {
 
   describe('refreshClaimableBalances', () => {
     it('takes no action on chains with no rewards', async () => {
+      jest.spyOn(Chain.prototype, 'getSdk').mockImplementation(async () => TEST_CHAIN.sdk);
       await accountsIndexer.refreshClaimableBalances(noRewardsChain);
       expect(getTreeDistribution.mock.calls.length).toEqual(1);
       expect(getTreeDistribution.mock.calls[0][0]).toMatchObject(noRewardsChain);

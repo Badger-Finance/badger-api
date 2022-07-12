@@ -1,7 +1,6 @@
 import { Network } from '@badger-dao/sdk';
 
 import { TOKENS } from '../../config/tokens.config';
-import { getRemDiggPrice } from '../../prices/custom/remdigg-price';
 import { PricingType } from '../../prices/enums/pricing-type.enum';
 import { TokenFullMap } from '../interfaces/token-full.interface';
 
@@ -149,22 +148,6 @@ export const fullTokenMockMap: TokenFullMap = {
     name: 'Sushiswap: WBTC-BADGER',
     symbol: 'SLP-BADGER-WBTC',
     type: PricingType.LookupName,
-  },
-  [TOKENS.BREMDIGG]: {
-    address: TOKENS.BREMDIGG,
-    decimals: 18,
-    getPrice: getRemDiggPrice,
-    name: 'remDigg',
-    symbol: 'bremDIGG',
-    type: PricingType.Custom,
-  },
-  [TOKENS.REMDIGG]: {
-    address: TOKENS.REMDIGG,
-    decimals: 18,
-    getPrice: getRemDiggPrice,
-    name: 'remDigg',
-    symbol: 'remDIGG',
-    type: PricingType.Custom,
   },
   [TOKENS.BSUSHI_ETH_WBTC]: {
     address: TOKENS.BSUSHI_ETH_WBTC,

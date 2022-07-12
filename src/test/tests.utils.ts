@@ -32,6 +32,7 @@ import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import * as pricesUtils from '../prices/prices.utils';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
+import { historicVaultSnapshotsMock } from '../vaults/mocks/historic-vault-snapshots.mock';
 
 export const TEST_CHAIN = SUPPORTED_CHAINS[0];
 export const TEST_ADDR = ethers.utils.getAddress('0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484');
@@ -86,6 +87,21 @@ export function setupVaultsCoumpoundDDB() {
 
     if (keys.chain) dataSource = dataSource.filter((v) => v.chain === keys.chain);
     if (keys.isProduction) dataSource = dataSource.filter((v) => v.isProduction === keys.isProduction);
+
+    // @ts-ignore
+    qi[Symbol.iterator] = jest.fn(() => dataSource.map((obj) => Object.assign(new model(), obj)).values());
+    return qi;
+  });
+}
+
+export function setupVaultsHistoricDDB() {
+  // @ts-ignore
+  jest.spyOn(DataMapper.prototype, 'query').mockImplementation((model, keys) => {
+    let dataSource = historicVaultSnapshotsMock;
+    // @ts-ignore
+    const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
+
+    if (keys.id) dataSource = dataSource.filter((v) => v.id === keys.id);
 
     // @ts-ignore
     qi[Symbol.iterator] = jest.fn(() => dataSource.map((obj) => Object.assign(new model(), obj)).values());

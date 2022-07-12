@@ -1,6 +1,6 @@
 import { Service } from '@tsed/di';
 
-import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
+import { HistoricVaultSnapshotOldModel } from '../aws/models/historic-vault-snapshot-old.model';
 import { Chain } from '../chains/config/chain.config';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { getVaultSnapshotsInRange } from '../vaults/vaults.utils';
@@ -15,7 +15,7 @@ export class ChartsService {
     end: Date,
     granularity: ChartGranularity,
     period: number,
-  ): Promise<HistoricVaultSnapshotModel[]> {
+  ): Promise<HistoricVaultSnapshotOldModel[]> {
     let snapshots = await getVaultSnapshotsInRange(chain, sett, start, end);
 
     // snapshot granularity @ 30 min intervals, 2 per hour, 48 per day

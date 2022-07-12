@@ -1,20 +1,31 @@
 import { embed } from '@aws/dynamodb-data-mapper';
-import { attribute, hashKey, rangeKey, table } from '@aws/dynamodb-data-mapper-annotations';
+import { attribute } from '@aws/dynamodb-data-mapper-annotations';
 import { VaultSnapshot } from '@badger-dao/sdk';
 
-import { SETT_HISTORIC_DATA } from '../../config/constants';
+import { ChartData } from '../../charts/chart-data.model';
 import { VaultStrategy } from '../../vaults/interfaces/vault-strategy.interface';
 
-@table(SETT_HISTORIC_DATA)
-export class HistoricVaultSnapshotModel implements VaultSnapshot {
-  @attribute()
-  block!: number;
+export class HistoricVaultSnapshotModel extends ChartData<HistoricVaultSnapshotModel> implements VaultSnapshot {
+  static NAMESPACE = 'vault';
 
-  @rangeKey({ defaultProvider: () => Date.now() })
+  static formBlobId(address: string, chain: string) {
+    return `${address}_${chain}`;
+  }
+
+  @attribute()
+  id!: string;
+
+  @attribute()
+  chain!: string;
+
+  @attribute()
+  address!: string;
+
+  @attribute()
   timestamp!: number;
 
-  @hashKey()
-  address!: string;
+  @attribute()
+  block!: number;
 
   @attribute()
   available!: number;
@@ -51,4 +62,24 @@ export class HistoricVaultSnapshotModel implements VaultSnapshot {
 
   @attribute()
   harvestApr!: number;
+
+  toBlankData(): HistoricVaultSnapshotModel {
+    const copy = JSON.parse(JSON.stringify(this));
+    copy.block = 0;
+    copy.available = 0;
+    copy.balance = 0;
+    copy.strategyBalance = 0;
+    copy.totalSupply = 0;
+    copy.pricePerFullShare = 0;
+    copy.totalSupply = 0;
+    copy.ratio = 0;
+    copy.boostWeight = 0;
+    copy.value = 0;
+    copy.balance = 0;
+    copy.apr = 0;
+    copy.yieldApr = 0;
+    copy.harvestApr = 0;
+    copy.strategy = {};
+    return copy;
+  }
 }
