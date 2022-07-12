@@ -3,6 +3,7 @@ import BadgerSDK, {
   formatBalance,
   gqlGenT,
   keyBy,
+  ListHarvestOptions,
   Network,
   ONE_DAY_MS,
   ONE_YEAR_MS,
@@ -16,7 +17,6 @@ import BadgerSDK, {
   VaultV15__factory,
   VaultVersion,
 } from '@badger-dao/sdk';
-import { ListHarvestOptions } from '@badger-dao/sdk/lib/vaults/interfaces';
 import { BadRequest, NotFound, UnprocessableEntity } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';
 
@@ -30,7 +30,7 @@ import { HistoricVaultSnapshotOldModel } from '../aws/models/historic-vault-snap
 import { VaultCompoundModel } from '../aws/models/vault-compound.model';
 import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
 import { Chain } from '../chains/config/chain.config';
-import { ONE_DAY_SECONDS, ONE_YEAR_SECONDS, PRODUCTION } from '../config/constants';
+import { ONE_DAY_SECONDS, ONE_YEAR_SECONDS } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
 import { EmissionControl__factory } from '../contracts';
 import { getVault } from '../indexers/indexer.utils';
@@ -292,9 +292,6 @@ export async function getVaultPerformance(
   chain: Chain,
   vaultDefinition: VaultDefinition,
 ): Promise<CachedValueSource[]> {
-  if (PRODUCTION) {
-    console.time(`${vaultDefinition.name}-${vaultDefinition.vaultToken}`);
-  }
   const [rewardEmissions, protocol] = await Promise.all([
     getRewardEmission(chain, vaultDefinition),
     getProtocolValueSources(chain, vaultDefinition),
@@ -310,11 +307,7 @@ export async function getVaultPerformance(
   if (vaultApr === 0) {
     vaultSources = await getVaultUnderlyingPerformance(chain, vaultDefinition);
   }
-  if (PRODUCTION) {
-    console.log(`${vaultDefinition.name}: ${vaultLookupMethod[vaultDefinition.vaultToken]}`);
-    console.timeEnd(`${vaultDefinition.name}-${vaultDefinition.vaultToken}`);
-  }
-
+  console.log(`${vaultDefinition.name}: ${vaultLookupMethod[vaultDefinition.vaultToken]}`);
   return [...vaultSources, ...rewardEmissions, ...protocol];
 }
 
@@ -356,7 +349,7 @@ export async function loadVaultEventPerformances(
   }
 
   const sdk = await chain.getSdk();
-  const cutoffPeriod = 16 * ONE_DAY_SECONDS;
+  const cutoffPeriod = 14 * ONE_DAY_SECONDS;
   const cutoff = Date.now() / 1000 - cutoffPeriod;
   const startBlock = await sdk.provider.getBlockNumber();
   -Math.floor(cutoffPeriod / 13);
@@ -430,7 +423,7 @@ export async function loadVaultGraphPerformances(
     return [];
   }
 
-  const sdk = await chain.getSdk();
+  const { graph } = chain.sdk;
   const now = Date.now() / 1000;
 
   let cutoff;
@@ -443,13 +436,13 @@ export async function loadVaultGraphPerformances(
   }
 
   let [vaultHarvests, treeDistributions] = await Promise.all([
-    sdk.graph.loadSettHarvests({
+    graph.loadSettHarvests({
       where: {
         sett: vaultToken.toLowerCase(),
         timestamp_gte: cutoff,
       },
     }),
-    sdk.graph.loadBadgerTreeDistributions({
+    graph.loadBadgerTreeDistributions({
       where: {
         sett: vaultToken.toLowerCase(),
         timestamp_gte: cutoff,
@@ -467,13 +460,13 @@ export async function loadVaultGraphPerformances(
     // take the last 6 weeks as the "full graph" to avoid really old data
     const cutoff = Number(((Date.now() - ONE_DAY_MS * 42) / 1000).toFixed());
     [vaultHarvests, treeDistributions] = await Promise.all([
-      sdk.graph.loadSettHarvests({
+      graph.loadSettHarvests({
         where: {
           sett: vaultToken.toLowerCase(),
           timestamp_gte: cutoff,
         },
       }),
-      sdk.graph.loadBadgerTreeDistributions({
+      graph.loadBadgerTreeDistributions({
         where: {
           sett: vaultToken.toLowerCase(),
           timestamp_gte: cutoff,

@@ -1,5 +1,5 @@
 import { Network, Protocol, Token } from '@badger-dao/sdk';
-import { BigNumber } from '@ethersproject/bignumber';
+import { BigNumber } from 'ethers';
 
 import { getBoostFile, getCachedAccount } from '../accounts/accounts.utils';
 import { CachedValueSource } from '../aws/models/apy-snapshots.model';
