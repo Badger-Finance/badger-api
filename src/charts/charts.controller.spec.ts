@@ -1,8 +1,11 @@
+import { ChartTimeFrame } from '@badger-dao/sdk/lib/api/enums/chart-timeframe.enum';
 import { PlatformTest } from '@tsed/common';
 import { NotFound, UnprocessableEntity } from '@tsed/exceptions';
 import SuperTest from 'supertest';
 
+import { NetworkStatus } from '../errors/enums/newtroks.status.enum';
 import { Server } from '../Server';
+import { setupVaultsHistoricDDB } from '../test/tests.utils';
 import { ChartGranularity } from './enums/chart-granularity.enum';
 
 describe('ChartsController', () => {
@@ -185,6 +188,41 @@ describe('ChartsController', () => {
 
         expect(body).toMatchSnapshot();
         done();
+      });
+    });
+  });
+
+  describe('GET /v2/charts/vault', () => {
+    describe('with a missing vault address', () => {
+      it('returns 400, QueryParamError', async (done) => {
+        const { body } = await request.get('/v2/charts/vault').expect(NetworkStatus.BadRequest);
+
+        expect(body).toMatchSnapshot();
+        done();
+      });
+    });
+
+    describe('get vault data with different timeframes', () => {
+      const TEST_VAULT = '0xBE08Ef12e4a553666291E9fFC24fCCFd354F2Dd2';
+
+      it('should return vault data for YTD', async () => {
+        setupVaultsHistoricDDB();
+
+        const { body } = await request
+          .get(`/v2/charts/vault?address=${TEST_VAULT}&timeframe=${ChartTimeFrame.YTD}`)
+          .expect(NetworkStatus.Success);
+
+        expect(body).toMatchSnapshot();
+      });
+
+      it('should return vault data for 1Y', async () => {
+        setupVaultsHistoricDDB();
+
+        const { body } = await request
+          .get(`/v2/charts/vault?address=${TEST_VAULT}&timeframe=${ChartTimeFrame.Year}`)
+          .expect(NetworkStatus.Success);
+
+        expect(body).toMatchSnapshot();
       });
     });
   });
