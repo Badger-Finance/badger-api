@@ -314,6 +314,7 @@ export async function getVaultPerformance(
     console.log(`${vaultDefinition.name}: ${vaultLookupMethod[vaultDefinition.vaultToken]}`);
     console.timeEnd(`${vaultDefinition.name}-${vaultDefinition.vaultToken}`);
   }
+
   return [...vaultSources, ...rewardEmissions, ...protocol];
 }
 
@@ -430,7 +431,16 @@ export async function loadVaultGraphPerformances(
   }
 
   const sdk = await chain.getSdk();
-  const cutoff = Number(((Date.now() - ONE_DAY_MS * 16) / 1000).toFixed());
+  const now = Date.now() / 1000;
+
+  let cutoff;
+  if (vaultToken === TOKENS.BVECVX) {
+    const roundOneStart = 1632182660;
+    const modulo = (now - roundOneStart) % (14 * ONE_DAY_SECONDS);
+    cutoff = Math.floor(now - modulo);
+  } else {
+    cutoff = Math.floor(now - 14 * ONE_DAY_SECONDS);
+  }
 
   let [vaultHarvests, treeDistributions] = await Promise.all([
     sdk.graph.loadSettHarvests({
@@ -566,12 +576,21 @@ export async function estimateVaultPerformance(
   let weightedBalance = 0;
   const depositToken = await getFullToken(chain, vaultDefinition.depositToken);
 
-  const allHarvests = recentHarvests.flatMap((h) => h.harvests);
+  let allHarvests = recentHarvests.flatMap((h) => h.harvests);
+
+  // this will probably need more generalization, quickly becoming a huge pain in the ass
+  if (allHarvests.length === 0 || vaultDefinition.vaultToken === TOKENS.BVECVX) {
+    allHarvests = recentHarvests.flatMap((d) => d.treeDistributions);
+  }
+
   // use the full harvests to construct all intervals for durations, nth element is ignored for distributions
   for (let i = 0; i < allHarvests.length - 1; i++) {
     const end = allHarvests[i];
     const start = allHarvests[i + 1];
     const duration = end.timestamp - start.timestamp;
+    if (duration === 0) {
+      continue;
+    }
     const { sett } = await getVault(chain, vaultDefinition.vaultToken, end.block);
     if (sett) {
       const balance = sett.strategy?.balance ?? sett.balance;

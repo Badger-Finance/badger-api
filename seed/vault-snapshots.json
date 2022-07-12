@@ -2,7 +2,7 @@
   {
     "address": "0xd04c48A53c111300aD41190D63681ed3dAd998eC",
     "block": 0,
-    "timestamp": 1657052783892,
+    "timestamp": 1657653142188,
     "strategyBalance": 52.97264440213831,
     "boostWeight": 10000,
     "totalSupply": 0,
@@ -18,21 +18,21 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 1098627.34,
-    "apr": 1.2241754729392484
+    "value": 1060666.08,
+    "apr": 0.426510289142934
   },
   {
     "address": "0x6dEf55d2e18486B9dDfaA075bc4e4EE0B28c1545",
     "block": 0,
-    "timestamp": 1657052783892,
-    "strategyBalance": 761.7014505941254,
+    "timestamp": 1657653142188,
+    "strategyBalance": 761.6356238458688,
     "boostWeight": 10000,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
-    "available": 0.03618185724699958,
-    "balance": 761.7376324513724,
-    "pricePerFullShare": 1.0139254404074194,
+    "available": 0,
+    "balance": 761.6356238458688,
+    "pricePerFullShare": 1.0139254447666541,
     "strategy": {
       "address": "0x61e16b46F74aEd8f9c2Ec6CB2dCb2258Bdfc7071",
       "withdrawFee": 10,
@@ -40,13 +40,13 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 15899119.67,
-    "apr": 1.221123711966901
+    "value": 15316738.69,
+    "apr": 1.2579402634939891
   },
   {
     "address": "0xb9D076fDe463dbc9f915E5392F807315Bf940334",
     "block": 0,
-    "timestamp": 1657052783892,
+    "timestamp": 1657653142188,
     "strategyBalance": 11.48272909517939,
     "boostWeight": 10000,
     "totalSupply": 0,
@@ -62,21 +62,21 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 240173.98,
-    "apr": 0.8785269825017261
+    "value": 232149.55,
+    "apr": 0.8173253985230389
   },
   {
     "address": "0xAf5A1DECfa95BAF63E0084a35c62592B774A2A87",
     "block": 0,
-    "timestamp": 1657052783892,
-    "strategyBalance": 3.963562498023537,
+    "timestamp": 1657653142188,
+    "strategyBalance": 3.9705956489594483,
     "boostWeight": 0,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
     "available": 0,
-    "balance": 3.963562498023537,
-    "pricePerFullShare": 1.0279070737998173,
+    "balance": 3.9705956489594483,
+    "pricePerFullShare": 1.029731045441927,
     "strategy": {
       "address": "0xaaE82E3c89e15E6F26F60724f115d5012363e030",
       "withdrawFee": 0,
@@ -84,21 +84,21 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 82728.16,
-    "apr": 0.3334830897221197
+    "value": 79849.96,
+    "apr": 0.5870936157979623
   },
   {
     "address": "0x235c9e24D3FB2FAFd58a2E49D454Fdcd2DBf7FF1",
     "block": 0,
-    "timestamp": 1657052783892,
-    "strategyBalance": 0.012785596203665168,
+    "timestamp": 1657653142188,
+    "strategyBalance": 0.01274171657724269,
     "boostWeight": 0,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
     "available": 0,
-    "balance": 0.012785596203665168,
-    "pricePerFullShare": 1.8110174182838048,
+    "balance": 0.01274171657724269,
+    "pricePerFullShare": 1.811017418283805,
     "strategy": {
       "address": "0x95826C65EB1f2d2F0EDBb7EcB176563B61C60bBf",
       "withdrawFee": 0,
@@ -106,13 +106,13 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 821839.73,
-    "apr": 20.32943663712035
+    "value": 790717.76,
+    "apr": 21.02386717861103
   },
   {
     "address": "0xC17078FDd324CC473F8175Dc5290fae5f2E84714",
     "block": 0,
-    "timestamp": 1657052783892,
+    "timestamp": 1657653142188,
     "strategyBalance": 4.521414793e-9,
     "boostWeight": 0,
     "totalSupply": 0,
@@ -128,20 +128,20 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 95313.17,
-    "apr": 13.822353585215401
+    "value": 116878.11,
+    "apr": 42.13208766361653
   },
   {
     "address": "0x758A43EE2BFf8230eeb784879CdcFF4828F2544D",
     "block": 0,
-    "timestamp": 1657052783892,
-    "strategyBalance": 0.00027928646473071,
+    "timestamp": 1657653142188,
+    "strategyBalance": 0.000279279142377567,
     "boostWeight": 10000,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
-    "available": 0,
-    "balance": 0.00027928646473071,
+    "available": 6.6628841e-11,
+    "balance": 0.000279279209006408,
     "pricePerFullShare": 1,
     "strategy": {
       "address": "0x7A56d65254705B4Def63c68488C0182968C452ce",
@@ -150,13 +150,13 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 6713794.7,
-    "apr": 5.43100847873672
+    "value": 6343283.31,
+    "apr": 5.162947107583021
   },
   {
     "address": "0x1862A18181346EBd9EdAf800804f89190DeF24a5",
     "block": 0,
-    "timestamp": 1657052783892,
+    "timestamp": 1657653142188,
     "strategyBalance": 0.0193920030823526,
     "boostWeight": 0,
     "totalSupply": 0,
@@ -172,21 +172,21 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 1143775.32,
-    "apr": 12.04979911842725
+    "value": 1104224.73,
+    "apr": 13.299962679979043
   },
   {
     "address": "0x88128580ACdD9c04Ce47AFcE196875747bF2A9f6",
     "block": 0,
-    "timestamp": 1657052783892,
-    "strategyBalance": 2.7524622315e-8,
+    "timestamp": 1657653142188,
+    "strategyBalance": 2.6887326353e-8,
     "boostWeight": 0,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
     "available": 0,
-    "balance": 2.7524622315e-8,
-    "pricePerFullShare": 1.731897987229779,
+    "balance": 2.6887326353e-8,
+    "pricePerFullShare": 1.731897987340547,
     "strategy": {
       "address": "0xaa8dddfe7DFA3C3269f1910d89E4413dD006D08a",
       "withdrawFee": 0,
@@ -194,21 +194,21 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 496433.81,
-    "apr": 2.3502750963201335
+    "value": 592567.43,
+    "apr": 3.4301227230047497
   },
   {
     "address": "0x7e7E112A68d8D2E221E11047a72fFC1065c38e1a",
     "block": 0,
-    "timestamp": 1657052783892,
-    "strategyBalance": 127.306162862,
+    "timestamp": 1657653142188,
+    "strategyBalance": 114.518207583,
     "boostWeight": 0,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
     "available": 0,
-    "balance": 127.306162862,
-    "pricePerFullShare": 0.19539870852439983,
+    "balance": 114.518207583,
+    "pricePerFullShare": 0.19539870857494432,
     "strategy": {
       "address": "0x4a8651F2edD68850B944AD93f2c67af817F39F62",
       "withdrawFee": 0,
@@ -216,20 +216,20 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 445348.78,
+    "value": 617312.69,
     "apr": 0
   },
   {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
     "block": 0,
-    "timestamp": 1657052783892,
+    "timestamp": 1657653142188,
     "strategyBalance": 0,
     "boostWeight": 0,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
-    "available": 1111168.107865966,
-    "balance": 1111168.107865966,
+    "available": 1095938.7703731938,
+    "balance": 1095938.7703731938,
     "pricePerFullShare": 1.2348816886763505,
     "strategy": {
       "address": "0x75b8E21BD623012Efb3b69E1B562465A68944eE6",
@@ -238,13 +238,13 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 3655743.07,
+    "value": 3408369.58,
     "apr": 0
   },
   {
     "address": "0x4b92d19c11435614CD49Af1b589001b7c08cD4D5",
     "block": 0,
-    "timestamp": 1657052783892,
+    "timestamp": 1657653142188,
     "strategyBalance": 140.82244056,
     "boostWeight": 10000,
     "totalSupply": 0,
@@ -260,20 +260,20 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 2875030.95,
-    "apr": 0.019711538832662592
+    "value": 2768334.01,
+    "apr": 0.019696948249257797
   },
   {
     "address": "0x8a8FFec8f4A0C8c9585Da95D9D97e8Cd6de273DE",
     "block": 0,
-    "timestamp": 1657052783892,
-    "strategyBalance": 0.000128165381088661,
+    "timestamp": 1657653142188,
+    "strategyBalance": 0.000127128359101895,
     "boostWeight": 10000,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
     "available": 0,
-    "balance": 0.000128165381088661,
+    "balance": 0.000127128359101895,
     "pricePerFullShare": 1,
     "strategy": {
       "address": "0xf4146A176b09C664978e03d28d07Db4431525dAd",
@@ -282,13 +282,13 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 818942.93,
-    "apr": 0.34968367687661617
+    "value": 803000.8,
+    "apr": 0.3574325761988289
   },
   {
     "address": "0x8c76970747afd5398e958bDfadA4cf0B9FcA16c4",
     "block": 0,
-    "timestamp": 1657052783892,
+    "timestamp": 1657653142188,
     "strategyBalance": 0.27393237070560966,
     "boostWeight": 10000,
     "totalSupply": 0,
@@ -304,13 +304,13 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 5654.97,
-    "apr": 1.0451784487250038
+    "value": 5450.29,
+    "apr": 0.43360976994619715
   },
   {
     "address": "0x55912D0Cf83B75c492E761932ABc4DB4a5CB1b17",
     "block": 0,
-    "timestamp": 1657052783892,
+    "timestamp": 1657653142188,
     "strategyBalance": 0.03046218451007627,
     "boostWeight": 10000,
     "totalSupply": 0,
@@ -326,13 +326,13 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 626.2,
-    "apr": 0.718988203396731
+    "value": 605.1,
+    "apr": 0.4209878385722954
   },
   {
     "address": "0xf349c0faA80fC1870306Ac093f75934078e28991",
     "block": 0,
-    "timestamp": 1657052783892,
+    "timestamp": 1657653142188,
     "strategyBalance": 5.741269294503195,
     "boostWeight": 10000,
     "totalSupply": 0,
@@ -348,13 +348,13 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 194165.77,
-    "apr": 0.5601908135235423
+    "value": 209306.78,
+    "apr": 0.3160738690876741
   },
   {
     "address": "0x5Dce29e92b1b939F8E8C60DcF15BDE82A85be4a9",
     "block": 0,
-    "timestamp": 1657052783892,
+    "timestamp": 1657653142188,
     "strategyBalance": 0.01073050870987165,
     "boostWeight": 10000,
     "totalSupply": 0,
@@ -370,13 +370,13 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 222.13,
-    "apr": 1.2523578327316098
+    "value": 213.97,
+    "apr": 0.2553547461811245
   },
   {
     "address": "0xBE08Ef12e4a553666291E9fFC24fCCFd354F2Dd2",
     "block": 0,
-    "timestamp": 1657052783892,
+    "timestamp": 1657653142188,
     "strategyBalance": 0.1610241919976674,
     "boostWeight": 0,
     "totalSupply": 0,
@@ -392,21 +392,21 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 140.42,
-    "apr": 0.8656999133023868
+    "value": 135.43,
+    "apr": 0.9521755335811122
   },
   {
     "address": "0x2B5455aac8d64C14786c3a29858E43b5945819C0",
     "block": 0,
-    "timestamp": 1657052783892,
-    "strategyBalance": 3853827.0615652697,
+    "timestamp": 1657653142188,
+    "strategyBalance": 4254403.520718816,
     "boostWeight": 10000,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
-    "available": 0,
-    "balance": 3853827.0615652697,
-    "pricePerFullShare": 1.493090885495462,
+    "available": 23557.866872611135,
+    "balance": 4277961.387591427,
+    "pricePerFullShare": 1.5069682556850106,
     "strategy": {
       "address": "0x826048381d65a65DAa51342C51d464428d301896",
       "withdrawFee": 10,
@@ -414,20 +414,20 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 3724827.91,
-    "apr": 44.79181635520577
+    "value": 3706844.99,
+    "apr": 57.5480824030696
   },
   {
     "address": "0x53C8E199eb2Cb7c01543C137078a038937a68E40",
     "block": 0,
-    "timestamp": 1657052783892,
-    "strategyBalance": 35470.92053191968,
+    "timestamp": 1657653142188,
+    "strategyBalance": 35453.878771806914,
     "boostWeight": 0,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
     "available": 0,
-    "balance": 35470.92053191968,
+    "balance": 35453.878771806914,
     "pricePerFullShare": 1.0957988590667325,
     "strategy": {
       "address": "0xBCee2c6CfA7A4e29892c3665f464Be5536F16D95",
@@ -436,21 +436,21 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 214599.07,
+    "value": 187905.56,
     "apr": 0
   },
   {
     "address": "0x27E98fC7d05f54E544d16F58C194C2D7ba71e3B5",
     "block": 0,
-    "timestamp": 1657052783892,
-    "strategyBalance": 866.2633218775446,
+    "timestamp": 1657653142188,
+    "strategyBalance": 866.6298136488214,
     "boostWeight": 10000,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
-    "available": 0,
-    "balance": 866.2633218775446,
-    "pricePerFullShare": 1.0191035048848165,
+    "available": 0.7540500937958643,
+    "balance": 867.3838637426172,
+    "pricePerFullShare": 1.0194878789429016,
     "strategy": {
       "address": "0x647eeb5C5ED5A71621183f09F6CE8fa66b96827d",
       "withdrawFee": 10,
@@ -458,13 +458,13 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 758867.16,
-    "apr": 11.665886441191557
+    "value": 732369.82,
+    "apr": 10.106332173241679
   },
   {
     "address": "0x599D92B453C010b1050d31C364f6ee17E819f193",
     "block": 0,
-    "timestamp": 1657052783892,
+    "timestamp": 1657653142188,
     "strategyBalance": 60.51232444078985,
     "boostWeight": 10000,
     "totalSupply": 0,
@@ -480,13 +480,13 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 276591.52,
+    "value": 276636.07,
     "apr": 0
   },
   {
     "address": "0x26B8efa69603537AC8ab55768b6740b67664D518",
     "block": 0,
-    "timestamp": 1657052783892,
+    "timestamp": 1657653142188,
     "strategyBalance": 0.1364876666668777,
     "boostWeight": 10000,
     "totalSupply": 0,
@@ -508,14 +508,14 @@
   {
     "address": "0xfd05D3C7fe2924020620A8bE4961bBaA747e6305",
     "block": 0,
-    "timestamp": 1657052783892,
-    "strategyBalance": 1823721.8410012806,
+    "timestamp": 1657653142188,
+    "strategyBalance": 2389817.952241348,
     "boostWeight": 0,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
-    "available": 550196.7285600584,
-    "balance": 2373918.569561339,
+    "available": 34562.16416883354,
+    "balance": 2424380.116410182,
     "pricePerFullShare": 1,
     "strategy": {
       "address": "0x898111d1F4eB55025D0036568212425EE2274082",
@@ -524,20 +524,20 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 14362207.35,
-    "apr": 34.69034541753887
+    "value": 12849214.62,
+    "apr": 89.34374016070177
   },
   {
     "address": "0x937B8E917d0F36eDEBBA8E459C5FB16F3b315551",
     "block": 0,
-    "timestamp": 1657052783892,
-    "strategyBalance": 213678.76401948306,
+    "timestamp": 1657653142188,
+    "strategyBalance": 211947.13037128572,
     "boostWeight": 0,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
-    "available": 0,
-    "balance": 213678.76401948306,
+    "available": 882.1496338274103,
+    "balance": 212829.28000511313,
     "pricePerFullShare": 1,
     "strategy": {
       "address": "0x98Ca7AFa876f0e15494E76E92C5b3658cdE1Ffe1",
@@ -546,20 +546,20 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 1279023.33,
-    "apr": 27.292594927504204
+    "value": 1136825.02,
+    "apr": 59.03355328343761
   },
   {
     "address": "0xaE96fF08771a109dc6650a1BdCa62F2d558E40af",
     "block": 0,
-    "timestamp": 1657052783892,
-    "strategyBalance": 999.2432953713687,
+    "timestamp": 1657653142188,
+    "strategyBalance": 993.6746996919312,
     "boostWeight": 10000,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
-    "available": 0,
-    "balance": 999.2432953713687,
+    "available": 0.13611358759005254,
+    "balance": 993.8108132795213,
     "pricePerFullShare": 1,
     "strategy": {
       "address": "0x6D4BA00Fd7BB73b5aa5b3D6180c6f1B0c89f70D1",
@@ -568,13 +568,13 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 19770352.23,
-    "apr": 16.8537789793195
+    "value": 20067344.4,
+    "apr": 14.858540942874846
   },
   {
     "address": "0x19E4d89e0cB807ea21B8CEF02df5eAA99A110dA5",
     "block": 0,
-    "timestamp": 1657052783892,
+    "timestamp": 1657653142188,
     "strategyBalance": 149.3933368661469,
     "boostWeight": 0,
     "totalSupply": 0,
@@ -590,13 +590,13 @@
       "strategistFee": 2000,
       "aumFee": 0
     },
-    "value": 149.93,
-    "apr": 0.40126525083368225
+    "value": 150.89,
+    "apr": 0.36695169777520853
   },
   {
     "address": "0x15cBC4ac1e81c97667780fE6DAdeDd04a6EEB47B",
     "block": 0,
-    "timestamp": 1657052783892,
+    "timestamp": 1657653142188,
     "strategyBalance": 148.89773963942488,
     "boostWeight": 0,
     "totalSupply": 0,
@@ -612,21 +612,21 @@
       "strategistFee": 2000,
       "aumFee": 0
     },
-    "value": 149.52,
-    "apr": 0.3499289586864629
+    "value": 150.02,
+    "apr": 0.06645981858837136
   },
   {
     "address": "0x6aF7377b5009d7d154F36FE9e235aE1DA27Aea22",
     "block": 0,
-    "timestamp": 1657052783892,
-    "strategyBalance": 21999.16804834333,
+    "timestamp": 1657653142188,
+    "strategyBalance": 22294.435237750877,
     "boostWeight": 0,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
-    "available": 417984.19291852345,
-    "balance": 439983.3609668668,
-    "pricePerFullShare": 401.88891293659293,
+    "available": 423594.2695172668,
+    "balance": 445888.70475501765,
+    "pricePerFullShare": 407.2829628168463,
     "strategy": {
       "address": "0xD8d8aE4A5363edb6C3E01759576Da04bcc3a947e",
       "withdrawFee": 0,
@@ -634,20 +634,20 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 1447545.26,
-    "apr": 32.568738201368085
+    "value": 1386713.87,
+    "apr": 31.755776820075678
   },
   {
     "address": "0xeC1c717A3b02582A4Aa2275260C583095536b613",
     "block": 0,
-    "timestamp": 1657052783892,
-    "strategyBalance": 5499.037584972017,
+    "timestamp": 1657653142188,
+    "strategyBalance": 5671.935008065345,
     "boostWeight": 0,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
-    "available": 27.619871124487535,
-    "balance": 5526.657456096505,
+    "available": 3.778632256752904,
+    "balance": 5675.7136403220975,
     "pricePerFullShare": 1,
     "strategy": {
       "address": "0x1905FD2D2D09792eE058C2b46a05F11630a1EcA1",
@@ -656,21 +656,21 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 2850315.52,
-    "apr": 18.552845917336953
+    "value": 2822799.92,
+    "apr": 16.672958778208116
   },
   {
     "address": "0xBA485b556399123261a5F9c95d413B4f93107407",
     "block": 0,
-    "timestamp": 1657052783892,
-    "strategyBalance": 276903.0188711159,
+    "timestamp": 1657653142188,
+    "strategyBalance": 329398.315431905,
     "boostWeight": 5000,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
-    "available": 35503.6670897625,
-    "balance": 312406.68596087844,
-    "pricePerFullShare": 1.0002714687379444,
+    "available": 61685.800437247985,
+    "balance": 391084.11586915294,
+    "pricePerFullShare": 1.0296527098589794,
     "strategy": {
       "address": "0x3c0989eF27e3e3fAb87a2d7C38B35880C90E63b5",
       "withdrawFee": 0,
@@ -678,42 +678,42 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 421749.03,
-    "apr": 95.44681617751058
+    "value": 934691.04,
+    "apr": 102.48935253762174
   },
   {
     "address": "0x37d9D2C6035b744849C15F1BFEE8F268a20fCBd8",
     "block": 0,
-    "timestamp": 1657052783892,
-    "strategyBalance": 2213.5973040455847,
+    "timestamp": 1657653142188,
+    "strategyBalance": 1158.4054980439832,
     "boostWeight": 0,
     "totalSupply": 0,
-    "yieldApr": 31.367783207115828,
-    "harvestApr": 31.298716096454775,
-    "available": 0,
-    "balance": 2213.5973040455847,
-    "pricePerFullShare": 1.0037308292243474,
+    "yieldApr": 23.642964496001444,
+    "harvestApr": 23.80010307126712,
+    "available": 3.6048741866048384,
+    "balance": 1162.010372230588,
+    "pricePerFullShare": 1.0061014863704327,
     "strategy": {
-      "address": "0xfB490b5beA343ABAe0E71B61bBdfd4301F5e4df9",
+      "address": "0xED6d51A82065725e283fC035f488213e869FD976",
       "withdrawFee": 0,
       "performanceFee": 1000,
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 25952.24,
-    "apr": 30.553859981337553
+    "value": 11989.39,
+    "apr": 56.6182266246568
   },
   {
     "address": "0x63ad745506BD6a3E57F764409A47ed004BEc40b1",
     "block": 0,
-    "timestamp": 1657052783892,
-    "strategyBalance": 3.529890858001712,
+    "timestamp": 1657653142188,
+    "strategyBalance": 8.07607099578534,
     "boostWeight": 0,
     "totalSupply": 0,
-    "yieldApr": 42.96563354045984,
-    "harvestApr": 42.847697735045074,
-    "available": 0.1760313026300066,
-    "balance": 3.7059221606317183,
+    "yieldApr": 34.447051181292146,
+    "harvestApr": 34.777062859428916,
+    "available": 0.010425868834801254,
+    "balance": 8.086496864620141,
     "pricePerFullShare": 1,
     "strategy": {
       "address": "0xe43857fE16D18b6633A663389934d6c64D5E81FD",
@@ -722,20 +722,20 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 57.04,
-    "apr": 0
+    "value": 119.94,
+    "apr": 52.64082855731273
   },
   {
     "address": "0x06D756861De0724FAd5B5636124e0f252d3C1404",
     "block": 0,
-    "timestamp": 1657052783892,
-    "strategyBalance": 10.258304937600654,
+    "timestamp": 1657653142188,
+    "strategyBalance": 42092.62003239975,
     "boostWeight": 0,
     "totalSupply": 0,
-    "yieldApr": 0,
-    "harvestApr": 0,
-    "available": 0.5115690126362531,
-    "balance": 10.769873950236907,
+    "yieldApr": 6.214636469338453,
+    "harvestApr": 6.274219024154748,
+    "available": 0,
+    "balance": 42092.62003239975,
     "pricePerFullShare": 1,
     "strategy": {
       "address": "0x2eDc46AC0eE850081e14a6E6cF09d69A29D61563",
@@ -744,13 +744,35 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 0,
-    "apr": 0
+    "value": 42313.39,
+    "apr": 5.644424807559858
+  },
+  {
+    "address": "0xf8f5677B6bCecdb9be94AE8f6770a05a6C53C378",
+    "block": 0,
+    "timestamp": 1657653142188,
+    "strategyBalance": 3.6503006644468443,
+    "boostWeight": 0,
+    "totalSupply": 0,
+    "yieldApr": 49.06261829646855,
+    "harvestApr": 49.410134357518494,
+    "available": 3.5223503278224224,
+    "balance": 7.172650992269267,
+    "pricePerFullShare": 1,
+    "strategy": {
+      "address": "0xA773b13A64D213291a063a1910b96C117b2438Df",
+      "withdrawFee": 10,
+      "performanceFee": 1000,
+      "strategistFee": 0,
+      "aumFee": 0
+    },
+    "value": 217.21,
+    "apr": 76.71703186934516
   },
   {
     "address": "0xEa8567d84E3e54B32176418B4e0C736b56378961",
     "block": 0,
-    "timestamp": 1657052784326,
+    "timestamp": 1657653142593,
     "strategyBalance": 2.61511722484e-7,
     "boostWeight": 0,
     "totalSupply": 0,
@@ -766,21 +788,21 @@
       "strategistFee": 1000,
       "aumFee": 0
     },
-    "value": 1043.88,
-    "apr": 0.1883709654743067
+    "value": 1061.66,
+    "apr": 0.18881857097802257
   },
   {
     "address": "0x6B2d4c4bb50274c5D4986Ff678cC971c0260E967",
     "block": 0,
-    "timestamp": 1657052784326,
-    "strategyBalance": 1.2982958999999999e-11,
+    "timestamp": 1657653142593,
+    "strategyBalance": 1.2983641e-11,
     "boostWeight": 0,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
-    "available": 6.11739e-13,
-    "balance": 1.3594698e-11,
-    "pricePerFullShare": 1.0318351947638835,
+    "available": 6.24694e-13,
+    "balance": 1.3608335e-11,
+    "pricePerFullShare": 1.03183521493801,
     "strategy": {
       "address": "0x809990849D53a5109e0cb9C446137793B9f6f1Eb",
       "withdrawFee": 10,
@@ -788,13 +810,13 @@
       "strategistFee": 1000,
       "aumFee": 0
     },
-    "value": 481.29,
-    "apr": 48.002477755124644
+    "value": 474.04,
+    "apr": 45.738052440631606
   },
   {
     "address": "0x7B6bfB88904e4B3A6d239d5Ed8adF557B22C10FC",
     "block": 0,
-    "timestamp": 1657052784326,
+    "timestamp": 1657653142593,
     "strategyBalance": 0.002699743581875215,
     "boostWeight": 0,
     "totalSupply": 0,
@@ -810,21 +832,21 @@
       "strategistFee": 1000,
       "aumFee": 0
     },
-    "value": 55.8,
-    "apr": 0.09677504862504183
+    "value": 53.67,
+    "apr": 0.10616187576544256
   },
   {
     "address": "0xe774D1FB3133b037AA17D39165b8F45f444f632d",
     "block": 0,
-    "timestamp": 1657052784934,
-    "strategyBalance": 89.72911165053087,
+    "timestamp": 1657653143252,
+    "strategyBalance": 90.24915662836837,
     "boostWeight": 0,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
-    "available": 0.6964546866298469,
-    "balance": 90.42556633716072,
-    "pricePerFullShare": 1.0461971466771804,
+    "available": 0.4879292831497309,
+    "balance": 90.7370859115181,
+    "pricePerFullShare": 1.0472060174636215,
     "strategy": {
       "address": "0x86f772C82914f5bFD168f99e208d0FC2C371e9C2",
       "withdrawFee": 10,
@@ -832,21 +854,21 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 7039.14,
-    "apr": 15.852428908086038
+    "value": 6942.34,
+    "apr": 16.184640101188165
   },
   {
     "address": "0xFc13209cAfE8fb3bb5fbD929eC9F11a39e8Ac041",
     "block": 0,
-    "timestamp": 1657052784934,
-    "strategyBalance": 0.000431352868334937,
+    "timestamp": 1657653143252,
+    "strategyBalance": 0.000431423499770225,
     "boostWeight": 10000,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
     "available": 0,
-    "balance": 0.000431352868334937,
-    "pricePerFullShare": 1.0057743840408928,
+    "balance": 0.000431423499770225,
+    "pricePerFullShare": 1.0059390735411502,
     "strategy": {
       "address": "0xA6827f0f14D0B83dB925B616d820434697328c22",
       "withdrawFee": 10,
@@ -854,21 +876,21 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 436721.9,
-    "apr": 7.74338724931896
+    "value": 409819.81,
+    "apr": 6.799018436118863
   },
   {
     "address": "0xBA418CDdd91111F5c1D1Ac2777Fa8CEa28D71843",
     "block": 0,
-    "timestamp": 1657052784934,
-    "strategyBalance": 76.73243391109887,
+    "timestamp": 1657653143252,
+    "strategyBalance": 79.31963977526438,
     "boostWeight": 10000,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
-    "available": 0.18977474109502793,
-    "balance": 76.92220865219389,
-    "pricePerFullShare": 1.0130805107851397,
+    "available": 0.1352098725372268,
+    "balance": 79.45484964780161,
+    "pricePerFullShare": 1.0134396757720772,
     "strategy": {
       "address": "0x4C5d19Da5EaeC298B79879a5f7481bEDE055F4F8",
       "withdrawFee": 10,
@@ -876,21 +898,21 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 1583167.79,
-    "apr": 9.692243300902268
+    "value": 1567825.3,
+    "apr": 9.141067476922375
   },
   {
     "address": "0x4591890225394BF66044347653e112621AF7DDeb",
     "block": 0,
-    "timestamp": 1657052784934,
-    "strategyBalance": 385.2927223893018,
+    "timestamp": 1657653143252,
+    "strategyBalance": 385.91187226648765,
     "boostWeight": 10000,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
-    "available": 0.3661450242586706,
-    "balance": 385.6588674135605,
-    "pricePerFullShare": 1.0505025261452867,
+    "available": 0.6063550636744436,
+    "balance": 386.5182273301621,
+    "pricePerFullShare": 1.052153979099354,
     "strategy": {
       "address": "0xE83A790fC3B7132fb8d7f8d438Bc5139995BF5f4",
       "withdrawFee": 10,
@@ -898,13 +920,13 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 339091.66,
-    "apr": 17.9367788629428
+    "value": 326201.89,
+    "apr": 18.194656694936235
   },
   {
     "address": "0xfdb9e5a186FB7655aC9cD7CAFF3d6D4c6064cc50",
     "block": 0,
-    "timestamp": 1657052784934,
+    "timestamp": 1657653143252,
     "strategyBalance": 0.001824104169880054,
     "boostWeight": 0,
     "totalSupply": 0,
@@ -920,21 +942,21 @@
       "strategistFee": 350,
       "aumFee": 0
     },
-    "value": 1.68,
+    "value": 1.62,
     "apr": 0.6264058184706878
   },
   {
     "address": "0x0c2153e8aE4DB8233c61717cDC4c75630E952561",
     "block": 0,
-    "timestamp": 1657052784934,
-    "strategyBalance": 387.869265227653,
+    "timestamp": 1657653143252,
+    "strategyBalance": 393.36850113339534,
     "boostWeight": 0,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
-    "available": 0.21922606195727876,
-    "balance": 388.08849128961026,
-    "pricePerFullShare": 1.3244522713425717,
+    "available": 1.548617294264677,
+    "balance": 394.91711842766,
+    "pricePerFullShare": 1.329097972172922,
     "strategy": {
       "address": "0x85386C3cE0679b035a9F8F17f531C076d0b35954",
       "withdrawFee": 10,
@@ -942,21 +964,21 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 3862.94,
-    "apr": 69.58915441372363
+    "value": 3356.17,
+    "apr": 69.3019471664598
   },
   {
     "address": "0xaf9aB64F568149361ab670372b16661f4380e80B",
     "block": 0,
-    "timestamp": 1657052784934,
-    "strategyBalance": 0.000047538779067955,
+    "timestamp": 1657653143252,
+    "strategyBalance": 0.000047527236217842,
     "boostWeight": 0,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
-    "available": 4.05637078298e-7,
-    "balance": 0.000047944416146253,
-    "pricePerFullShare": 1.0421127057229904,
+    "available": 3.5528924503e-8,
+    "balance": 0.000047562765142345,
+    "pricePerFullShare": 1.0422852128816698,
     "strategy": {
       "address": "0x43942cEae98CC7485B48a37fBB1aa5035e1c8B46",
       "withdrawFee": 10,
@@ -964,20 +986,20 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 47202.77,
-    "apr": 13.412225247859748
+    "value": 43927.02,
+    "apr": 11.438271208873743
   },
   {
     "address": "0xE9C12F06F8AFFD8719263FE4a81671453220389c",
     "block": 0,
-    "timestamp": 1657052784934,
-    "strategyBalance": 2279.019353663528,
+    "timestamp": 1657653143252,
+    "strategyBalance": 2273.2028146164744,
     "boostWeight": 0,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
-    "available": 0,
-    "balance": 2279.019353663528,
+    "available": 2.455181663499321,
+    "balance": 2275.6579962799738,
     "pricePerFullShare": 1,
     "strategy": {
       "address": "0x22F340C2604Dc1cDBe26caC5838Ea9EBC8862a46",
@@ -986,13 +1008,13 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 283490.27,
-    "apr": 28.11478320093072
+    "value": 265936.97,
+    "apr": 27.929679086115133
   },
   {
     "address": "0x60129B2b762952Dfe8b21f40ee8aa3B2A4623546",
     "block": 0,
-    "timestamp": 1657052784934,
+    "timestamp": 1657653143252,
     "strategyBalance": 1.4827633130556221,
     "boostWeight": 10000,
     "totalSupply": 0,
@@ -1008,13 +1030,13 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 14016.46,
-    "apr": 9.836086648355465
+    "value": 13904.85,
+    "apr": 8.081192905626315
   },
   {
     "address": "0xaf4B9C4b545D5324904bAa15e29796D2E2f90813",
     "block": 0,
-    "timestamp": 1657052785199,
+    "timestamp": 1657653143680,
     "strategyBalance": 0.003526581053957382,
     "boostWeight": 0,
     "totalSupply": 0,
@@ -1036,7 +1058,7 @@
   {
     "address": "0x857F91f735f4B03b19D2b5c6E476C73DB8241F55",
     "block": 0,
-    "timestamp": 1657052785199,
+    "timestamp": 1657653143680,
     "strategyBalance": 6.94957347501457,
     "boostWeight": 0,
     "totalSupply": 0,
@@ -1058,7 +1080,7 @@
   {
     "address": "0xa861Ba302674b08f7F2F24381b705870521DDfed",
     "block": 0,
-    "timestamp": 1657052785199,
+    "timestamp": 1657653143680,
     "strategyBalance": 3.2360030589942945,
     "boostWeight": 0,
     "totalSupply": 0,
@@ -1080,7 +1102,7 @@
   {
     "address": "0x711555f2B421DA9A86a18Dc163d04699310fE297",
     "block": 0,
-    "timestamp": 1657052785649,
+    "timestamp": 1657653143911,
     "strategyBalance": 0.047645799999999995,
     "boostWeight": 0,
     "totalSupply": 0,
@@ -1102,7 +1124,7 @@
   {
     "address": "0xFce6e3115D84c94df98BD286C1C67279dc021361",
     "block": 0,
-    "timestamp": 1657052786289,
+    "timestamp": 1657653144420,
     "strategyBalance": 5.562039171802492,
     "boostWeight": 0,
     "totalSupply": 0,
@@ -1124,7 +1146,7 @@
   {
     "address": "0xB6D63A4e5Ca740e96C26AdAbcAc73BE78Ee39Dc5",
     "block": 0,
-    "timestamp": 1657052786289,
+    "timestamp": 1657653144420,
     "strategyBalance": 1.547674e-12,
     "boostWeight": 0,
     "totalSupply": 0,
@@ -1141,12 +1163,12 @@
       "aumFee": 0
     },
     "value": 1206.63,
-    "apr": 1.5382111064659947
+    "apr": 0
   },
   {
     "address": "0x7cc6049a125388B51c530e51727A87aE101f6417",
     "block": 0,
-    "timestamp": 1657052786289,
+    "timestamp": 1657653144420,
     "strategyBalance": 55.8452101302777,
     "boostWeight": 0,
     "totalSupply": 0,
@@ -1163,12 +1185,12 @@
       "aumFee": 0
     },
     "value": 72.48,
-    "apr": 73.74775421961319
+    "apr": 0
   },
   {
     "address": "0xC7cBF5a24caBA375C09cc824481F5508c644dF28",
     "block": 0,
-    "timestamp": 1657052786289,
+    "timestamp": 1657653144420,
     "strategyBalance": 563.0526901031719,
     "boostWeight": 0,
     "totalSupply": 0,
@@ -1185,12 +1207,12 @@
       "aumFee": 0
     },
     "value": 132.7,
-    "apr": 12.109485622439248
+    "apr": 0
   },
   {
     "address": "0xd9770deC6fdA576450e66f0c441B6b8755F7184A",
     "block": 0,
-    "timestamp": 1657052786289,
+    "timestamp": 1657653144420,
     "strategyBalance": 0.14792227059873084,
     "boostWeight": 0,
     "totalSupply": 0,
@@ -1207,12 +1229,12 @@
       "aumFee": 0
     },
     "value": 38384.85,
-    "apr": 4.772449688035271
+    "apr": 0
   },
   {
     "address": "0x3BA15548226aA045aD6fe9DC9Bec1f0891532D60",
     "block": 0,
-    "timestamp": 1657052786289,
+    "timestamp": 1657653144420,
     "strategyBalance": 0.000007045143369389,
     "boostWeight": 0,
     "totalSupply": 0,
@@ -1234,7 +1256,7 @@
   {
     "address": "0x4145a9B8B7bdC76F14e65c26f9c71e23B9069b25",
     "block": 0,
-    "timestamp": 1657052786289,
+    "timestamp": 1657653144420,
     "strategyBalance": 65.18571683749443,
     "boostWeight": 0,
     "totalSupply": 0,
@@ -1256,7 +1278,7 @@
   {
     "address": "0x1AaF7f8154704D80E2380B3DbC967FD0486016e0",
     "block": 0,
-    "timestamp": 1657052786289,
+    "timestamp": 1657653144420,
     "strategyBalance": 0.007482615688387753,
     "boostWeight": 0,
     "totalSupply": 0,
@@ -1278,7 +1300,7 @@
   {
     "address": "0x9a28eeFB2c5F8311f37c39314D78Be85C54B5da6",
     "block": 0,
-    "timestamp": 1657052786289,
+    "timestamp": 1657653144420,
     "strategyBalance": 0.000114475302788218,
     "boostWeight": 0,
     "totalSupply": 0,
@@ -1295,12 +1317,12 @@
       "aumFee": 0
     },
     "value": 4002.94,
-    "apr": 3.6638573285813734
+    "apr": 2.967856682640019
   },
   {
     "address": "0x02330E37fcc7C27eB4632b3E31b951fDE5126c48",
     "block": 0,
-    "timestamp": 1657052786289,
+    "timestamp": 1657653144420,
     "strategyBalance": 0,
     "boostWeight": 0,
     "totalSupply": 0,
@@ -1322,7 +1344,7 @@
   {
     "address": "0x60c5A975Bd0511e45D4C9Ae5592c8CA412BE2310",
     "block": 0,
-    "timestamp": 1657052786289,
+    "timestamp": 1657653144420,
     "strategyBalance": 4.086791195116073,
     "boostWeight": 0,
     "totalSupply": 0,
@@ -1344,7 +1366,7 @@
   {
     "address": "0x561f4dBaFA71ad05694C7ea1b894b9D99f684281",
     "block": 0,
-    "timestamp": 1657052786289,
+    "timestamp": 1657653144420,
     "strategyBalance": 0.000006525557488914,
     "boostWeight": 0,
     "totalSupply": 0,
@@ -1366,7 +1388,7 @@
   {
     "address": "0x77e803F7d0B6d85731F68CfE1f1CA4c48de105F4",
     "block": 0,
-    "timestamp": 1657052786289,
+    "timestamp": 1657653144420,
     "strategyBalance": 7.411623689145685,
     "boostWeight": 0,
     "totalSupply": 0,
@@ -1388,7 +1410,7 @@
   {
     "address": "0x609A51e13fd0896c0c02f0B642756533b29f36Ab",
     "block": 0,
-    "timestamp": 1657052786289,
+    "timestamp": 1657653144420,
     "strategyBalance": 0,
     "boostWeight": 0,
     "totalSupply": 0,
@@ -1410,7 +1432,7 @@
   {
     "address": "0x3f96f8cA67AcDE9041AD62125C5a4D062b07872c",
     "block": 0,
-    "timestamp": 1657052786289,
+    "timestamp": 1657653144420,
     "strategyBalance": 5.174944254855618,
     "boostWeight": 0,
     "totalSupply": 0,
@@ -1432,12 +1454,12 @@
   {
     "address": "0x96d4dBdc91Bef716eb407e415c9987a9fAfb8906",
     "block": 0,
-    "timestamp": 1657052786289,
+    "timestamp": 1657653144420,
     "strategyBalance": 50134.47179334325,
     "boostWeight": 0,
     "totalSupply": 0,
-    "yieldApr": 0.1557310293740914,
-    "harvestApr": 0.15557591177785396,
+    "yieldApr": 0.21916733924151793,
+    "harvestApr": 0.21913134403234685,
     "available": 36.04458494986337,
     "balance": 50170.51637829311,
     "pricePerFullShare": 1.0348460688247718,
@@ -1449,12 +1471,12 @@
       "aumFee": 200
     },
     "value": 18280.73,
-    "apr": 0.3378683419252752
+    "apr": 0
   },
   {
     "address": "0xa8bD8655A0dCABE76913D821Ab437562276b3B59",
     "block": 0,
-    "timestamp": 1657052786289,
+    "timestamp": 1657653144420,
     "strategyBalance": 4777.012933037797,
     "boostWeight": 0,
     "totalSupply": 0,
@@ -1476,7 +1498,7 @@
   {
     "address": "0xbF2F3a9ba42A00CA5B18842D8eB1954120e4a2A9",
     "block": 0,
-    "timestamp": 1657052786289,
+    "timestamp": 1657653144420,
     "strategyBalance": 26883.890474312633,
     "boostWeight": 0,
     "totalSupply": 0,
@@ -1493,12 +1515,12 @@
       "aumFee": 0
     },
     "value": 19944.37,
-    "apr": 0.08379269138649417
+    "apr": 0.06487398673667955
   },
   {
     "address": "0xcd1e62b390373fcFeA87Dd06E2497Fdc907935fA",
     "block": 0,
-    "timestamp": 1657052786289,
+    "timestamp": 1657653144420,
     "strategyBalance": 0.000028685089037334,
     "boostWeight": 0,
     "totalSupply": 0,
@@ -1520,7 +1542,7 @@
   {
     "address": "0xd04c48A53c111300aD41190D63681ed3dAd998eC",
     "block": 0,
-    "timestamp": 1657052787493,
+    "timestamp": 1657653145256,
     "strategyBalance": 52.97264440213831,
     "boostWeight": 10000,
     "totalSupply": 0,
@@ -1536,21 +1558,21 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 1098627.34,
-    "apr": 1.2241754729392484
+    "value": 1060666.08,
+    "apr": 0.426510289142934
   },
   {
     "address": "0x6dEf55d2e18486B9dDfaA075bc4e4EE0B28c1545",
     "block": 0,
-    "timestamp": 1657052787493,
-    "strategyBalance": 761.7014505941254,
+    "timestamp": 1657653145256,
+    "strategyBalance": 761.6356238458688,
     "boostWeight": 10000,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
-    "available": 0.03618185724699958,
-    "balance": 761.7376324513724,
-    "pricePerFullShare": 1.0139254404074194,
+    "available": 0,
+    "balance": 761.6356238458688,
+    "pricePerFullShare": 1.0139254447666541,
     "strategy": {
       "address": "0x61e16b46F74aEd8f9c2Ec6CB2dCb2258Bdfc7071",
       "withdrawFee": 10,
@@ -1558,13 +1580,13 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 15899119.67,
-    "apr": 1.221123711966901
+    "value": 15316738.69,
+    "apr": 1.2579402634939891
   },
   {
     "address": "0xb9D076fDe463dbc9f915E5392F807315Bf940334",
     "block": 0,
-    "timestamp": 1657052787493,
+    "timestamp": 1657653145256,
     "strategyBalance": 11.48272909517939,
     "boostWeight": 10000,
     "totalSupply": 0,
@@ -1580,21 +1602,21 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 240173.98,
-    "apr": 0.8785269825017261
+    "value": 232149.55,
+    "apr": 0.8173253985230389
   },
   {
     "address": "0xAf5A1DECfa95BAF63E0084a35c62592B774A2A87",
     "block": 0,
-    "timestamp": 1657052787493,
-    "strategyBalance": 3.963562498023537,
+    "timestamp": 1657653145256,
+    "strategyBalance": 3.9705956489594483,
     "boostWeight": 0,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
     "available": 0,
-    "balance": 3.963562498023537,
-    "pricePerFullShare": 1.0279070737998173,
+    "balance": 3.9705956489594483,
+    "pricePerFullShare": 1.029731045441927,
     "strategy": {
       "address": "0xaaE82E3c89e15E6F26F60724f115d5012363e030",
       "withdrawFee": 0,
@@ -1602,21 +1624,21 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 82728.16,
-    "apr": 0.3334830897221197
+    "value": 79849.96,
+    "apr": 0.5870936157979623
   },
   {
     "address": "0x235c9e24D3FB2FAFd58a2E49D454Fdcd2DBf7FF1",
     "block": 0,
-    "timestamp": 1657052787493,
-    "strategyBalance": 0.012785596203665168,
+    "timestamp": 1657653145256,
+    "strategyBalance": 0.01274171657724269,
     "boostWeight": 0,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
     "available": 0,
-    "balance": 0.012785596203665168,
-    "pricePerFullShare": 1.8110174182838048,
+    "balance": 0.01274171657724269,
+    "pricePerFullShare": 1.811017418283805,
     "strategy": {
       "address": "0x95826C65EB1f2d2F0EDBb7EcB176563B61C60bBf",
       "withdrawFee": 0,
@@ -1624,13 +1646,13 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 821839.73,
-    "apr": 20.32943663712035
+    "value": 790717.76,
+    "apr": 21.02386717861103
   },
   {
     "address": "0xC17078FDd324CC473F8175Dc5290fae5f2E84714",
     "block": 0,
-    "timestamp": 1657052787493,
+    "timestamp": 1657653145256,
     "strategyBalance": 4.521414793e-9,
     "boostWeight": 0,
     "totalSupply": 0,
@@ -1646,20 +1668,20 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 95313.17,
-    "apr": 13.822353585215401
+    "value": 116878.11,
+    "apr": 42.13208766361653
   },
   {
     "address": "0x758A43EE2BFf8230eeb784879CdcFF4828F2544D",
     "block": 0,
-    "timestamp": 1657052787493,
-    "strategyBalance": 0.00027928646473071,
+    "timestamp": 1657653145256,
+    "strategyBalance": 0.000279279142377567,
     "boostWeight": 10000,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
-    "available": 0,
-    "balance": 0.00027928646473071,
+    "available": 6.6628841e-11,
+    "balance": 0.000279279209006408,
     "pricePerFullShare": 1,
     "strategy": {
       "address": "0x7A56d65254705B4Def63c68488C0182968C452ce",
@@ -1668,13 +1690,13 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 6713794.7,
-    "apr": 5.43100847873672
+    "value": 6343283.31,
+    "apr": 5.162947107583021
   },
   {
     "address": "0x1862A18181346EBd9EdAf800804f89190DeF24a5",
     "block": 0,
-    "timestamp": 1657052787493,
+    "timestamp": 1657653145256,
     "strategyBalance": 0.0193920030823526,
     "boostWeight": 0,
     "totalSupply": 0,
@@ -1690,21 +1712,21 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 1143775.32,
-    "apr": 12.04979911842725
+    "value": 1104224.73,
+    "apr": 13.299962679979043
   },
   {
     "address": "0x88128580ACdD9c04Ce47AFcE196875747bF2A9f6",
     "block": 0,
-    "timestamp": 1657052787493,
-    "strategyBalance": 2.7524622315e-8,
+    "timestamp": 1657653145256,
+    "strategyBalance": 2.6887326353e-8,
     "boostWeight": 0,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
     "available": 0,
-    "balance": 2.7524622315e-8,
-    "pricePerFullShare": 1.731897987229779,
+    "balance": 2.6887326353e-8,
+    "pricePerFullShare": 1.731897987340547,
     "strategy": {
       "address": "0xaa8dddfe7DFA3C3269f1910d89E4413dD006D08a",
       "withdrawFee": 0,
@@ -1712,21 +1734,21 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 496433.81,
-    "apr": 2.3502750963201335
+    "value": 592567.43,
+    "apr": 3.4301227230047497
   },
   {
     "address": "0x7e7E112A68d8D2E221E11047a72fFC1065c38e1a",
     "block": 0,
-    "timestamp": 1657052787493,
-    "strategyBalance": 127.306162862,
+    "timestamp": 1657653145256,
+    "strategyBalance": 114.518207583,
     "boostWeight": 0,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
     "available": 0,
-    "balance": 127.306162862,
-    "pricePerFullShare": 0.19539870852439983,
+    "balance": 114.518207583,
+    "pricePerFullShare": 0.19539870857494432,
     "strategy": {
       "address": "0x4a8651F2edD68850B944AD93f2c67af817F39F62",
       "withdrawFee": 0,
@@ -1734,20 +1756,20 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 445348.78,
+    "value": 617312.69,
     "apr": 0
   },
   {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
     "block": 0,
-    "timestamp": 1657052787493,
+    "timestamp": 1657653145256,
     "strategyBalance": 0,
     "boostWeight": 0,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
-    "available": 1111168.107865966,
-    "balance": 1111168.107865966,
+    "available": 1095938.7703731938,
+    "balance": 1095938.7703731938,
     "pricePerFullShare": 1.2348816886763505,
     "strategy": {
       "address": "0x75b8E21BD623012Efb3b69E1B562465A68944eE6",
@@ -1756,13 +1778,13 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 3655743.07,
+    "value": 3408369.58,
     "apr": 0
   },
   {
     "address": "0x4b92d19c11435614CD49Af1b589001b7c08cD4D5",
     "block": 0,
-    "timestamp": 1657052787493,
+    "timestamp": 1657653145256,
     "strategyBalance": 140.82244056,
     "boostWeight": 10000,
     "totalSupply": 0,
@@ -1778,20 +1800,20 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 2875030.95,
-    "apr": 0.019711538832662592
+    "value": 2768334.01,
+    "apr": 0.019696948249257797
   },
   {
     "address": "0x8a8FFec8f4A0C8c9585Da95D9D97e8Cd6de273DE",
     "block": 0,
-    "timestamp": 1657052787493,
-    "strategyBalance": 0.000128165381088661,
+    "timestamp": 1657653145256,
+    "strategyBalance": 0.000127128359101895,
     "boostWeight": 10000,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
     "available": 0,
-    "balance": 0.000128165381088661,
+    "balance": 0.000127128359101895,
     "pricePerFullShare": 1,
     "strategy": {
       "address": "0xf4146A176b09C664978e03d28d07Db4431525dAd",
@@ -1800,13 +1822,13 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 818942.93,
-    "apr": 0.34968367687661617
+    "value": 803000.8,
+    "apr": 0.3574325761988289
   },
   {
     "address": "0x8c76970747afd5398e958bDfadA4cf0B9FcA16c4",
     "block": 0,
-    "timestamp": 1657052787493,
+    "timestamp": 1657653145256,
     "strategyBalance": 0.27393237070560966,
     "boostWeight": 10000,
     "totalSupply": 0,
@@ -1822,13 +1844,13 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 5654.97,
-    "apr": 1.0451784487250038
+    "value": 5450.29,
+    "apr": 0.43360976994619715
   },
   {
     "address": "0x55912D0Cf83B75c492E761932ABc4DB4a5CB1b17",
     "block": 0,
-    "timestamp": 1657052787493,
+    "timestamp": 1657653145256,
     "strategyBalance": 0.03046218451007627,
     "boostWeight": 10000,
     "totalSupply": 0,
@@ -1844,13 +1866,13 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 626.2,
-    "apr": 0.718988203396731
+    "value": 605.1,
+    "apr": 0.4209878385722954
   },
   {
     "address": "0xf349c0faA80fC1870306Ac093f75934078e28991",
     "block": 0,
-    "timestamp": 1657052787493,
+    "timestamp": 1657653145256,
     "strategyBalance": 5.741269294503195,
     "boostWeight": 10000,
     "totalSupply": 0,
@@ -1866,13 +1888,13 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 194165.77,
-    "apr": 0.5601908135235423
+    "value": 209306.78,
+    "apr": 0.3160738690876741
   },
   {
     "address": "0x5Dce29e92b1b939F8E8C60DcF15BDE82A85be4a9",
     "block": 0,
-    "timestamp": 1657052787493,
+    "timestamp": 1657653145256,
     "strategyBalance": 0.01073050870987165,
     "boostWeight": 10000,
     "totalSupply": 0,
@@ -1888,13 +1910,13 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 222.13,
-    "apr": 1.2523578327316098
+    "value": 213.97,
+    "apr": 0.2553547461811245
   },
   {
     "address": "0xBE08Ef12e4a553666291E9fFC24fCCFd354F2Dd2",
     "block": 0,
-    "timestamp": 1657052787493,
+    "timestamp": 1657653145256,
     "strategyBalance": 0.1610241919976674,
     "boostWeight": 0,
     "totalSupply": 0,
@@ -1910,21 +1932,21 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 140.42,
-    "apr": 0.8656999133023868
+    "value": 135.43,
+    "apr": 0.9521755335811122
   },
   {
     "address": "0x2B5455aac8d64C14786c3a29858E43b5945819C0",
     "block": 0,
-    "timestamp": 1657052787493,
-    "strategyBalance": 3853827.0615652697,
+    "timestamp": 1657653145256,
+    "strategyBalance": 4254403.520718816,
     "boostWeight": 10000,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
-    "available": 0,
-    "balance": 3853827.0615652697,
-    "pricePerFullShare": 1.493090885495462,
+    "available": 23557.866872611135,
+    "balance": 4277961.387591427,
+    "pricePerFullShare": 1.5069682556850106,
     "strategy": {
       "address": "0x826048381d65a65DAa51342C51d464428d301896",
       "withdrawFee": 10,
@@ -1932,20 +1954,20 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 3724827.91,
-    "apr": 44.79181635520577
+    "value": 3706844.99,
+    "apr": 57.5480824030696
   },
   {
     "address": "0x53C8E199eb2Cb7c01543C137078a038937a68E40",
     "block": 0,
-    "timestamp": 1657052787493,
-    "strategyBalance": 35470.92053191968,
+    "timestamp": 1657653145256,
+    "strategyBalance": 35453.878771806914,
     "boostWeight": 0,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
     "available": 0,
-    "balance": 35470.92053191968,
+    "balance": 35453.878771806914,
     "pricePerFullShare": 1.0957988590667325,
     "strategy": {
       "address": "0xBCee2c6CfA7A4e29892c3665f464Be5536F16D95",
@@ -1954,21 +1976,21 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 214599.07,
+    "value": 187905.56,
     "apr": 0
   },
   {
     "address": "0x27E98fC7d05f54E544d16F58C194C2D7ba71e3B5",
     "block": 0,
-    "timestamp": 1657052787493,
-    "strategyBalance": 866.2633218775446,
+    "timestamp": 1657653145256,
+    "strategyBalance": 866.6298136488214,
     "boostWeight": 10000,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
-    "available": 0,
-    "balance": 866.2633218775446,
-    "pricePerFullShare": 1.0191035048848165,
+    "available": 0.7540500937958643,
+    "balance": 867.3838637426172,
+    "pricePerFullShare": 1.0194878789429016,
     "strategy": {
       "address": "0x647eeb5C5ED5A71621183f09F6CE8fa66b96827d",
       "withdrawFee": 10,
@@ -1976,13 +1998,13 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 758867.16,
-    "apr": 11.665886441191557
+    "value": 732369.82,
+    "apr": 10.106332173241679
   },
   {
     "address": "0x599D92B453C010b1050d31C364f6ee17E819f193",
     "block": 0,
-    "timestamp": 1657052787493,
+    "timestamp": 1657653145256,
     "strategyBalance": 60.51232444078985,
     "boostWeight": 10000,
     "totalSupply": 0,
@@ -1998,13 +2020,13 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 276591.52,
+    "value": 276636.07,
     "apr": 0
   },
   {
     "address": "0x26B8efa69603537AC8ab55768b6740b67664D518",
     "block": 0,
-    "timestamp": 1657052787493,
+    "timestamp": 1657653145256,
     "strategyBalance": 0.1364876666668777,
     "boostWeight": 10000,
     "totalSupply": 0,
@@ -2026,14 +2048,14 @@
   {
     "address": "0xfd05D3C7fe2924020620A8bE4961bBaA747e6305",
     "block": 0,
-    "timestamp": 1657052787493,
-    "strategyBalance": 1823721.8410012806,
+    "timestamp": 1657653145256,
+    "strategyBalance": 2389817.952241348,
     "boostWeight": 0,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
-    "available": 550196.7285600584,
-    "balance": 2373918.569561339,
+    "available": 34562.16416883354,
+    "balance": 2424380.116410182,
     "pricePerFullShare": 1,
     "strategy": {
       "address": "0x898111d1F4eB55025D0036568212425EE2274082",
@@ -2042,20 +2064,20 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 14362207.35,
-    "apr": 34.69034541753887
+    "value": 12849214.62,
+    "apr": 89.34374016070177
   },
   {
     "address": "0x937B8E917d0F36eDEBBA8E459C5FB16F3b315551",
     "block": 0,
-    "timestamp": 1657052787493,
-    "strategyBalance": 213678.76401948306,
+    "timestamp": 1657653145256,
+    "strategyBalance": 211947.13037128572,
     "boostWeight": 0,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
-    "available": 0,
-    "balance": 213678.76401948306,
+    "available": 882.1496338274103,
+    "balance": 212829.28000511313,
     "pricePerFullShare": 1,
     "strategy": {
       "address": "0x98Ca7AFa876f0e15494E76E92C5b3658cdE1Ffe1",
@@ -2064,20 +2086,20 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 1279023.33,
-    "apr": 27.292594927504204
+    "value": 1136825.02,
+    "apr": 59.03355328343761
   },
   {
     "address": "0xaE96fF08771a109dc6650a1BdCa62F2d558E40af",
     "block": 0,
-    "timestamp": 1657052787493,
-    "strategyBalance": 999.2432953713687,
+    "timestamp": 1657653145256,
+    "strategyBalance": 993.6746996919312,
     "boostWeight": 10000,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
-    "available": 0,
-    "balance": 999.2432953713687,
+    "available": 0.13611358759005254,
+    "balance": 993.8108132795213,
     "pricePerFullShare": 1,
     "strategy": {
       "address": "0x6D4BA00Fd7BB73b5aa5b3D6180c6f1B0c89f70D1",
@@ -2086,13 +2108,13 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 19770352.23,
-    "apr": 16.8537789793195
+    "value": 20067344.4,
+    "apr": 14.858540942874846
   },
   {
     "address": "0x19E4d89e0cB807ea21B8CEF02df5eAA99A110dA5",
     "block": 0,
-    "timestamp": 1657052787493,
+    "timestamp": 1657653145256,
     "strategyBalance": 149.3933368661469,
     "boostWeight": 0,
     "totalSupply": 0,
@@ -2108,13 +2130,13 @@
       "strategistFee": 2000,
       "aumFee": 0
     },
-    "value": 149.93,
-    "apr": 0.40126525083368225
+    "value": 150.89,
+    "apr": 0.36695169777520853
   },
   {
     "address": "0x15cBC4ac1e81c97667780fE6DAdeDd04a6EEB47B",
     "block": 0,
-    "timestamp": 1657052787493,
+    "timestamp": 1657653145256,
     "strategyBalance": 148.89773963942488,
     "boostWeight": 0,
     "totalSupply": 0,
@@ -2130,21 +2152,21 @@
       "strategistFee": 2000,
       "aumFee": 0
     },
-    "value": 149.52,
-    "apr": 0.3499289586864629
+    "value": 150.02,
+    "apr": 0.06645981858837136
   },
   {
     "address": "0x6aF7377b5009d7d154F36FE9e235aE1DA27Aea22",
     "block": 0,
-    "timestamp": 1657052787493,
-    "strategyBalance": 21999.16804834333,
+    "timestamp": 1657653145256,
+    "strategyBalance": 22294.435237750877,
     "boostWeight": 0,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
-    "available": 417984.19291852345,
-    "balance": 439983.3609668668,
-    "pricePerFullShare": 401.88891293659293,
+    "available": 423594.2695172668,
+    "balance": 445888.70475501765,
+    "pricePerFullShare": 407.2829628168463,
     "strategy": {
       "address": "0xD8d8aE4A5363edb6C3E01759576Da04bcc3a947e",
       "withdrawFee": 0,
@@ -2152,20 +2174,20 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 1447545.26,
-    "apr": 32.568738201368085
+    "value": 1386713.87,
+    "apr": 31.755776820075678
   },
   {
     "address": "0xeC1c717A3b02582A4Aa2275260C583095536b613",
     "block": 0,
-    "timestamp": 1657052787493,
-    "strategyBalance": 5499.037584972017,
+    "timestamp": 1657653145256,
+    "strategyBalance": 5671.935008065345,
     "boostWeight": 0,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
-    "available": 27.619871124487535,
-    "balance": 5526.657456096505,
+    "available": 3.778632256752904,
+    "balance": 5675.7136403220975,
     "pricePerFullShare": 1,
     "strategy": {
       "address": "0x1905FD2D2D09792eE058C2b46a05F11630a1EcA1",
@@ -2174,21 +2196,21 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 2850315.52,
-    "apr": 18.552845917336953
+    "value": 2822799.92,
+    "apr": 16.672958778208116
   },
   {
     "address": "0xBA485b556399123261a5F9c95d413B4f93107407",
     "block": 0,
-    "timestamp": 1657052787493,
-    "strategyBalance": 276903.0188711159,
+    "timestamp": 1657653145256,
+    "strategyBalance": 329398.315431905,
     "boostWeight": 5000,
     "totalSupply": 0,
     "yieldApr": 0,
     "harvestApr": 0,
-    "available": 35503.6670897625,
-    "balance": 312406.68596087844,
-    "pricePerFullShare": 1.0002714687379444,
+    "available": 61685.800437247985,
+    "balance": 391084.11586915294,
+    "pricePerFullShare": 1.0296527098589794,
     "strategy": {
       "address": "0x3c0989eF27e3e3fAb87a2d7C38B35880C90E63b5",
       "withdrawFee": 0,
@@ -2196,42 +2218,42 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 421749.03,
-    "apr": 95.44681617751058
+    "value": 934691.04,
+    "apr": 102.48935253762174
   },
   {
     "address": "0x37d9D2C6035b744849C15F1BFEE8F268a20fCBd8",
     "block": 0,
-    "timestamp": 1657052787493,
-    "strategyBalance": 2213.5973040455847,
+    "timestamp": 1657653145256,
+    "strategyBalance": 1158.4054980439832,
     "boostWeight": 0,
     "totalSupply": 0,
-    "yieldApr": 31.362370616897607,
-    "harvestApr": 31.293315423940943,
-    "available": 0,
-    "balance": 2213.5973040455847,
-    "pricePerFullShare": 1.0037308292243474,
+    "yieldApr": 23.637946877638544,
+    "harvestApr": 23.79505210423507,
+    "available": 3.6048741866048384,
+    "balance": 1162.010372230588,
+    "pricePerFullShare": 1.0061014863704327,
     "strategy": {
-      "address": "0xfB490b5beA343ABAe0E71B61bBdfd4301F5e4df9",
+      "address": "0xED6d51A82065725e283fC035f488213e869FD976",
       "withdrawFee": 0,
       "performanceFee": 1000,
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 25952.24,
-    "apr": 30.553859981337553
+    "value": 11989.39,
+    "apr": 56.6182266246568
   },
   {
     "address": "0x63ad745506BD6a3E57F764409A47ed004BEc40b1",
     "block": 0,
-    "timestamp": 1657052787493,
-    "strategyBalance": 3.529890858001712,
+    "timestamp": 1657653145256,
+    "strategyBalance": 8.07607099578534,
     "boostWeight": 0,
     "totalSupply": 0,
-    "yieldApr": 42.950229287973904,
-    "harvestApr": 42.832335765490264,
-    "available": 0.1760313026300066,
-    "balance": 3.7059221606317183,
+    "yieldApr": 34.44640184714119,
+    "harvestApr": 34.77640730448851,
+    "available": 0.010425868834801254,
+    "balance": 8.086496864620141,
     "pricePerFullShare": 1,
     "strategy": {
       "address": "0xe43857fE16D18b6633A663389934d6c64D5E81FD",
@@ -2240,20 +2262,20 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 57.04,
-    "apr": 0
+    "value": 119.94,
+    "apr": 52.64082855731273
   },
   {
     "address": "0x06D756861De0724FAd5B5636124e0f252d3C1404",
     "block": 0,
-    "timestamp": 1657052787493,
-    "strategyBalance": 10.258304937600654,
+    "timestamp": 1657653145256,
+    "strategyBalance": 42092.62003239975,
     "boostWeight": 0,
     "totalSupply": 0,
-    "yieldApr": 0,
-    "harvestApr": 0,
-    "available": 0.5115690126362531,
-    "balance": 10.769873950236907,
+    "yieldApr": 6.214519456394852,
+    "harvestApr": 6.274100889354678,
+    "available": 0,
+    "balance": 42092.62003239975,
     "pricePerFullShare": 1,
     "strategy": {
       "address": "0x2eDc46AC0eE850081e14a6E6cF09d69A29D61563",
@@ -2262,7 +2284,29 @@
       "strategistFee": 0,
       "aumFee": 0
     },
-    "value": 0,
-    "apr": 0
+    "value": 42313.39,
+    "apr": 5.644424807559858
+  },
+  {
+    "address": "0xf8f5677B6bCecdb9be94AE8f6770a05a6C53C378",
+    "block": 0,
+    "timestamp": 1657653145256,
+    "strategyBalance": 3.6503006644468443,
+    "boostWeight": 0,
+    "totalSupply": 0,
+    "yieldApr": 49.0520879204623,
+    "harvestApr": 49.39952939367086,
+    "available": 3.5223503278224224,
+    "balance": 7.172650992269267,
+    "pricePerFullShare": 1,
+    "strategy": {
+      "address": "0xA773b13A64D213291a063a1910b96C117b2438Df",
+      "withdrawFee": 10,
+      "performanceFee": 1000,
+      "strategistFee": 0,
+      "aumFee": 0
+    },
+    "value": 217.21,
+    "apr": 76.71703186934516
   }
 ]
