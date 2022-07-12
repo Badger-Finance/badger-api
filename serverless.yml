@@ -554,14 +554,14 @@ functions:
           method: any
           cors: true
 
-  index-vaults:
-    handler: src/indexers/vaults-indexer.indexProtocolVaults
-    timeout: 480
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-vaults-history
-          description: 'index historical data for all vaults'
-          rate: rate(5 minutes)
+  # index-vaults:
+  #   handler: src/indexers/vaults-indexer.indexProtocolVaults
+  #   timeout: 480
+  #   events:
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-vaults-history
+  #         description: 'index historical data for all vaults'
+  #         rate: rate(5 minutes)
 
   index-apy-snapshots:
     handler: src/indexers/apy-snapshots-indexer.refreshApySnapshots
@@ -571,105 +571,105 @@ functions:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-apy-snapshots
           description: 'index data for sett apy'
-          rate: rate(5 minutes)
+          rate: rate(2 minutes)
 
-  index-prices:
-    handler: src/indexers/prices-indexer.indexPrices
-    timeout: 150
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-prices
-          description: 'index price data for all protocol tokens'
-          rate: rate(5 minutes)
+  # index-prices:
+  #   handler: src/indexers/prices-indexer.indexPrices
+  #   timeout: 150
+  #   events:
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-prices
+  #         description: 'index price data for all protocol tokens'
+  #         rate: rate(5 minutes)
 
-  index-vault-snapshots:
-    handler: src/indexers/vault-snapshots-indexer.refreshVaultSnapshots
-    timeout: 150
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-vault-snapshots
-          description: 'index data for supported vaults'
-          rate: rate(5 minutes)
+  # index-vault-snapshots:
+  #   handler: src/indexers/vault-snapshots-indexer.refreshVaultSnapshots
+  #   timeout: 150
+  #   events:
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-vault-snapshots
+  #         description: 'index data for supported vaults'
+  #         rate: rate(5 minutes)
 
-  index-vault-compound:
-    handler: src/indexers/vault-compound-indexer.captureVaultData
-    timeout: 150
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-vault-compound
-          description: 'index data for supported vaults'
-          rate: rate(5 minutes)
+  # index-vault-compound:
+  #   handler: src/indexers/vault-compound-indexer.captureVaultData
+  #   timeout: 150
+  #   events:
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-vault-compound
+  #         description: 'index data for supported vaults'
+  #         rate: rate(5 minutes)
 
-  index-vault-harvests:
-    handler: src/indexers/vault-harvests-indexer.refreshVaultHarvests
-    timeout: 150
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-vault-harvests
-          description: 'index harvests data for supported vaults'
-          rate: rate(1 hour)
+  # index-vault-harvests:
+  #   handler: src/indexers/vault-harvests-indexer.refreshVaultHarvests
+  #   timeout: 150
+  #   events:
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-vault-harvests
+  #         description: 'index harvests data for supported vaults'
+  #         rate: rate(1 hour)
 
-  index-harvest-compound:
-    handler: src/indexers/harvest-compound-indexer.indexVaultsHarvestsCompund
-    timeout: 360
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-harvest-compound
-          description: 'index onchain harvests for all vaults'
-          rate: rate(2 hours)
+  # index-harvest-compound:
+  #   handler: src/indexers/harvest-compound-indexer.indexVaultsHarvestsCompund
+  #   timeout: 360
+  #   events:
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-harvest-compound
+  #         description: 'index onchain harvests for all vaults'
+  #         rate: rate(2 hours)
 
-  index-leaderboard:
-    handler: src/indexers/leaderboard-indexer.indexBoostLeaderBoard
-    timeout: 120
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-leaderboard
-          description: 'index leaderboard data from latest badger boosts'
-          rate: rate(5 minutes)
+  # index-leaderboard:
+  #   handler: src/indexers/leaderboard-indexer.indexBoostLeaderBoard
+  #   timeout: 120
+  #   events:
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-leaderboard
+  #         description: 'index leaderboard data from latest badger boosts'
+  #         rate: rate(5 minutes)
 
-  index-vault-balances:
-    handler: src/indexers/vault-balances-indexer.refreshVaultBalances
-    timeout: 180
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-vault-balances
-          description: 'index vault token balances from the graph'
-          rate: rate(5 minutes)
+  # index-vault-balances:
+  #   handler: src/indexers/vault-balances-indexer.refreshVaultBalances
+  #   timeout: 180
+  #   events:
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-vault-balances
+  #         description: 'index vault token balances from the graph'
+  #         rate: rate(5 minutes)
 
-  index-accounts:
-    handler: src/indexers/accounts-indexer.refreshUserAccounts
-    timeout: 900
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-claimables
-          description: 'index accounts claimable from badger tree'
-          rate: rate(2 hours)
-          input:
-            mode: ClaimableBalanceData
+  # index-accounts:
+  #   handler: src/indexers/accounts-indexer.refreshUserAccounts
+  #   timeout: 900
+  #   events:
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-claimables
+  #         description: 'index accounts claimable from badger tree'
+  #         rate: rate(2 hours)
+  #         input:
+  #           mode: ClaimableBalanceData
 
-  index-protocol-metrics-snapshots:
-    handler: src/indexers/protocol-metric-indexer.indexProtocolMetrics
-    timeout: 240
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-protocol-metrics-snapshots
-          description: 'index protocol metrics'
-          rate: rate(1 day)
+  # index-protocol-metrics-snapshots:
+  #   handler: src/indexers/protocol-metric-indexer.indexProtocolMetrics
+  #   timeout: 240
+  #   events:
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-protocol-metrics-snapshots
+  #         description: 'index protocol metrics'
+  #         rate: rate(1 day)
 
-  index-citadel-treasury:
-    handler: src/indexers/citadel-indexer.snapshotTreasury
-    timeout: 480
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-citadel-treasury
-          description: 'index citadel treasury holdings'
-          rate: rate(5 minutes)
+  # index-citadel-treasury:
+  #   handler: src/indexers/citadel-indexer.snapshotTreasury
+  #   timeout: 480
+  #   events:
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-citadel-treasury
+  #         description: 'index citadel treasury holdings'
+  #         rate: rate(5 minutes)
 
-  index-citadel-rewards:
-    handler: src/indexers/citadel-rewards-indexer.indexAllRewards
-    timeout: 480
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-citadel-rewards
-          description: 'index citadel rewards'
-          rate: rate(2 hours)
+  # index-citadel-rewards:
+  #   handler: src/indexers/citadel-rewards-indexer.indexAllRewards
+  #   timeout: 480
+  #   events:
+  #     - schedule:
+  #         name: ${self:service}-${self:custom.stage}-index-citadel-rewards
+  #         description: 'index citadel rewards'
+  #         rate: rate(2 hours)

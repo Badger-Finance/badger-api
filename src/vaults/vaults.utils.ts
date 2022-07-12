@@ -292,9 +292,6 @@ export async function getVaultPerformance(
   chain: Chain,
   vaultDefinition: VaultDefinition,
 ): Promise<CachedValueSource[]> {
-  if (PRODUCTION) {
-    console.time(`${vaultDefinition.name}-${vaultDefinition.vaultToken}`);
-  }
   const [rewardEmissions, protocol] = await Promise.all([
     getRewardEmission(chain, vaultDefinition),
     getProtocolValueSources(chain, vaultDefinition),
@@ -312,7 +309,6 @@ export async function getVaultPerformance(
   }
   if (PRODUCTION) {
     console.log(`${vaultDefinition.name}: ${vaultLookupMethod[vaultDefinition.vaultToken]}`);
-    console.timeEnd(`${vaultDefinition.name}-${vaultDefinition.vaultToken}`);
   }
 
   return [...vaultSources, ...rewardEmissions, ...protocol];
