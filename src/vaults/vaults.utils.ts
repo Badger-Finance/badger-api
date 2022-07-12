@@ -30,7 +30,7 @@ import { HistoricVaultSnapshotOldModel } from '../aws/models/historic-vault-snap
 import { VaultCompoundModel } from '../aws/models/vault-compound.model';
 import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
 import { Chain } from '../chains/config/chain.config';
-import { ONE_DAY_SECONDS, ONE_YEAR_SECONDS, PRODUCTION } from '../config/constants';
+import { ONE_DAY_SECONDS, ONE_YEAR_SECONDS } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
 import { EmissionControl__factory } from '../contracts';
 import { getVault } from '../indexers/indexer.utils';
@@ -349,7 +349,7 @@ export async function loadVaultEventPerformances(
   }
 
   const sdk = await chain.getSdk();
-  const cutoffPeriod = 16 * ONE_DAY_SECONDS;
+  const cutoffPeriod = 14 * ONE_DAY_SECONDS;
   const cutoff = Date.now() / 1000 - cutoffPeriod;
   const startBlock = await sdk.provider.getBlockNumber();
   -Math.floor(cutoffPeriod / 13);
