@@ -1,7 +1,7 @@
 import { formatBalance } from '@badger-dao/sdk';
-import { BigNumber } from '@ethersproject/bignumber';
 import { Controller, Get, Inject, QueryParams } from '@tsed/common';
 import { ContentType, Deprecated, Description, Returns, Summary } from '@tsed/schema';
+import { BigNumber } from 'ethers';
 
 import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
 import { Chain } from '../chains/config/chain.config';
