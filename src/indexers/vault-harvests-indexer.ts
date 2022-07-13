@@ -1,3 +1,4 @@
+import { VaultVersion } from '@badger-dao/sdk';
 import {
   BadgerTreeDistribution_OrderBy,
   OrderDirection,
@@ -24,22 +25,26 @@ export async function refreshVaultHarvests() {
 
         let shouldCheckGraph = false;
 
-        try {
-          const pendingHarvest = await sdk.vaults.getPendingHarvest(vault.vaultToken);
+        if (vault.version && vault.version === VaultVersion.v1_5) {
+          try {
+            const pendingHarvest = await sdk.vaults.getPendingHarvest(vault.vaultToken);
 
-          harvestData.harvestTokens = await Promise.all(
-            pendingHarvest.tokenRewards.map(async (t) => toBalance(await getFullToken(chain, t.address), t.balance)),
+            harvestData.harvestTokens = await Promise.all(
+              pendingHarvest.tokenRewards.map(async (t) => toBalance(await getFullToken(chain, t.address), t.balance)),
+            );
+
+            harvestData.lastHarvestedAt = pendingHarvest.lastHarvestedAt;
+          } catch {
+            shouldCheckGraph = true;
+          }
+
+          const pendingYield = await sdk.vaults.getPendingYield(vault.vaultToken);
+          harvestData.yieldTokens = await Promise.all(
+            pendingYield.tokenRewards.map(async (t) => toBalance(await getFullToken(chain, t.address), t.balance)),
           );
-
-          harvestData.lastHarvestedAt = pendingHarvest.lastHarvestedAt;
-        } catch {
+        } else {
           shouldCheckGraph = true;
         }
-
-        const pendingYield = await sdk.vaults.getPendingYield(vault.vaultToken);
-        harvestData.yieldTokens = await Promise.all(
-          pendingYield.tokenRewards.map(async (t) => toBalance(await getFullToken(chain, t.address), t.balance)),
-        );
 
         if (shouldCheckGraph) {
           const { settHarvests } = await sdk.graph.loadSettHarvests({
