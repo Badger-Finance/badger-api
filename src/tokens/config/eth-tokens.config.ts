@@ -483,4 +483,11 @@ export const ethTokensConfig: TokenConfig = {
       network: Network.Ethereum,
     },
   },
+  [TOKENS.BBPT_WBTC_BADGER]: {
+    type: PricingType.Vault,
+    vaultToken: {
+      address: TOKENS.BPT_WBTC_BADGER,
+      network: Network.Ethereum,
+    },
+  },
 };
