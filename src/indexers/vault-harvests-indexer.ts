@@ -14,29 +14,34 @@ export async function refreshVaultHarvests() {
     SUPPORTED_CHAINS.map(async (chain) => {
       const sdk = await chain.getSdk();
       const mapper = getDataMapper();
-      for (let vault of chain.vaults) {
+      for (const vault of chain.vaults) {
         const harvestData: VaultPendingHarvestData = {
           vault: vault.vaultToken,
           yieldTokens: [],
           harvestTokens: [],
           lastHarvestedAt: 0,
         };
+
+        let shouldCheckGraph = false;
+
         try {
-          try {
-            const pendingHarvest = await sdk.vaults.getPendingHarvest(vault.vaultToken);
+          const pendingHarvest = await sdk.vaults.getPendingHarvest(vault.vaultToken);
 
-            harvestData.harvestTokens = await Promise.all(
-              pendingHarvest.tokenRewards.map(async (t) => toBalance(await getFullToken(chain, t.address), t.balance)),
-            );
-
-            harvestData.lastHarvestedAt = pendingHarvest.lastHarvestedAt;
-          } catch {} //
-
-          const pendingYield = await sdk.vaults.getPendingYield(vault.vaultToken);
-          harvestData.yieldTokens = await Promise.all(
-            pendingYield.tokenRewards.map(async (t) => toBalance(await getFullToken(chain, t.address), t.balance)),
+          harvestData.harvestTokens = await Promise.all(
+            pendingHarvest.tokenRewards.map(async (t) => toBalance(await getFullToken(chain, t.address), t.balance)),
           );
-        } catch (err) {
+
+          harvestData.lastHarvestedAt = pendingHarvest.lastHarvestedAt;
+        } catch {
+          shouldCheckGraph = true;
+        }
+
+        const pendingYield = await sdk.vaults.getPendingYield(vault.vaultToken);
+        harvestData.yieldTokens = await Promise.all(
+          pendingYield.tokenRewards.map(async (t) => toBalance(await getFullToken(chain, t.address), t.balance)),
+        );
+
+        if (shouldCheckGraph) {
           const { settHarvests } = await sdk.graph.loadSettHarvests({
             first: 1,
             where: {
