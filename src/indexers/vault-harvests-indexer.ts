@@ -7,7 +7,6 @@ import {
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
 import { SUPPORTED_CHAINS } from '../chains/chain';
-import { TOKENS } from '../config/tokens.config';
 import { getFullToken, toBalance } from '../tokens/tokens.utils';
 
 export async function refreshVaultHarvests() {
@@ -16,9 +15,6 @@ export async function refreshVaultHarvests() {
       const sdk = await chain.getSdk();
       const mapper = getDataMapper();
       for (let vault of chain.vaults) {
-        if (vault.vaultToken !== TOKENS.GRAVI_AURA) {
-          continue;
-        }
         const harvestData: VaultPendingHarvestData = {
           vault: vault.vaultToken,
           yieldTokens: [],
