@@ -22,54 +22,56 @@ export async function refreshVaultHarvests() {
           harvestTokens: [],
           lastHarvestedAt: 0,
         };
-        try {
-          const [pendingYield, pendingHarvest] = await Promise.all([
-            sdk.vaults.getPendingYield(vault.vaultToken),
-            sdk.vaults.getPendingHarvest(vault.vaultToken),
-          ]);
 
-          const [yieldTokens, harvestTokens] = await Promise.all([
-            await Promise.all(
-              pendingYield.tokenRewards.map(async (t) => toBalance(await getFullToken(chain, t.address), t.balance)),
-            ),
-            await Promise.all(
+        let shouldCheckGraph = false;
+
+        if (vault.version && vault.version === VaultVersion.v1_5) {
+          try {
+            const pendingHarvest = await sdk.vaults.getPendingHarvest(vault.vaultToken);
+
+            harvestData.harvestTokens = await Promise.all(
               pendingHarvest.tokenRewards.map(async (t) => toBalance(await getFullToken(chain, t.address), t.balance)),
-            ),
-          ]);
+            );
 
-          harvestData.yieldTokens = yieldTokens;
-          harvestData.harvestTokens = harvestTokens;
-          harvestData.lastHarvestedAt = pendingHarvest.lastHarvestedAt;
-        } catch (err) {
-          if (vault.version && vault.version === VaultVersion.v1_5) {
-            console.error(`Failed Index Harvests: ${vault.name} (${chain.network})`);
-          } else {
-            const { settHarvests } = await sdk.graph.loadSettHarvests({
-              first: 1,
-              where: {
-                sett: vault.vaultToken.toLowerCase(),
-              },
-              orderBy: SettHarvest_OrderBy.Timestamp,
-              orderDirection: OrderDirection.Desc,
-            });
-            const { badgerTreeDistributions } = await sdk.graph.loadBadgerTreeDistributions({
-              first: 1,
-              where: {
-                sett: vault.vaultToken.toLowerCase(),
-              },
-              orderBy: BadgerTreeDistribution_OrderBy.Timestamp,
-              orderDirection: OrderDirection.Desc,
-            });
+            harvestData.lastHarvestedAt = pendingHarvest.lastHarvestedAt;
+          } catch {
+            shouldCheckGraph = true;
+          }
 
-            if (settHarvests.length > 0) {
-              harvestData.lastHarvestedAt = settHarvests[0].timestamp;
-            }
-            if (
-              badgerTreeDistributions.length > 0 &&
-              badgerTreeDistributions[0].timestamp > harvestData.lastHarvestedAt
-            ) {
-              harvestData.lastHarvestedAt = badgerTreeDistributions[0].timestamp;
-            }
+          const pendingYield = await sdk.vaults.getPendingYield(vault.vaultToken);
+          harvestData.yieldTokens = await Promise.all(
+            pendingYield.tokenRewards.map(async (t) => toBalance(await getFullToken(chain, t.address), t.balance)),
+          );
+        } else {
+          shouldCheckGraph = true;
+        }
+
+        if (shouldCheckGraph) {
+          const { settHarvests } = await sdk.graph.loadSettHarvests({
+            first: 1,
+            where: {
+              sett: vault.vaultToken.toLowerCase(),
+            },
+            orderBy: SettHarvest_OrderBy.Timestamp,
+            orderDirection: OrderDirection.Desc,
+          });
+          const { badgerTreeDistributions } = await sdk.graph.loadBadgerTreeDistributions({
+            first: 1,
+            where: {
+              sett: vault.vaultToken.toLowerCase(),
+            },
+            orderBy: BadgerTreeDistribution_OrderBy.Timestamp,
+            orderDirection: OrderDirection.Desc,
+          });
+
+          if (settHarvests.length > 0) {
+            harvestData.lastHarvestedAt = settHarvests[0].timestamp;
+          }
+          if (
+            badgerTreeDistributions.length > 0 &&
+            badgerTreeDistributions[0].timestamp > harvestData.lastHarvestedAt
+          ) {
+            harvestData.lastHarvestedAt = badgerTreeDistributions[0].timestamp;
           }
         }
 
