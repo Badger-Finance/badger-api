@@ -1,4 +1,3 @@
-import { VaultVersion } from '@badger-dao/sdk';
 import {
   BadgerTreeDistribution_OrderBy,
   OrderDirection,
@@ -8,6 +7,7 @@ import {
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
 import { SUPPORTED_CHAINS } from '../chains/chain';
+import { TOKENS } from '../config/tokens.config';
 import { getFullToken, toBalance } from '../tokens/tokens.utils';
 
 export async function refreshVaultHarvests() {
@@ -15,7 +15,10 @@ export async function refreshVaultHarvests() {
     SUPPORTED_CHAINS.map(async (chain) => {
       const sdk = await chain.getSdk();
       const mapper = getDataMapper();
-      for (const vault of chain.vaults) {
+      for (let vault of chain.vaults) {
+        if (vault.vaultToken !== TOKENS.GRAVI_AURA) {
+          continue;
+        }
         const harvestData: VaultPendingHarvestData = {
           vault: vault.vaultToken,
           yieldTokens: [],
@@ -23,53 +26,46 @@ export async function refreshVaultHarvests() {
           lastHarvestedAt: 0,
         };
         try {
-          const [pendingYield, pendingHarvest] = await Promise.all([
-            sdk.vaults.getPendingYield(vault.vaultToken),
-            sdk.vaults.getPendingHarvest(vault.vaultToken),
-          ]);
+          try {
+            const pendingHarvest = await sdk.vaults.getPendingHarvest(vault.vaultToken);
 
-          const [yieldTokens, harvestTokens] = await Promise.all([
-            await Promise.all(
-              pendingYield.tokenRewards.map(async (t) => toBalance(await getFullToken(chain, t.address), t.balance)),
-            ),
-            await Promise.all(
+            harvestData.harvestTokens = await Promise.all(
               pendingHarvest.tokenRewards.map(async (t) => toBalance(await getFullToken(chain, t.address), t.balance)),
-            ),
-          ]);
+            );
 
-          harvestData.yieldTokens = yieldTokens;
-          harvestData.harvestTokens = harvestTokens;
-          harvestData.lastHarvestedAt = pendingHarvest.lastHarvestedAt;
+            harvestData.lastHarvestedAt = pendingHarvest.lastHarvestedAt;
+          } catch {} //
+
+          const pendingYield = await sdk.vaults.getPendingYield(vault.vaultToken);
+          harvestData.yieldTokens = await Promise.all(
+            pendingYield.tokenRewards.map(async (t) => toBalance(await getFullToken(chain, t.address), t.balance)),
+          );
         } catch (err) {
-          if (vault.version && vault.version === VaultVersion.v1_5) {
-            console.error(`Failed Index Harvests: ${vault.name} (${chain.network})`);
-          } else {
-            const { settHarvests } = await sdk.graph.loadSettHarvests({
-              first: 1,
-              where: {
-                sett: vault.vaultToken.toLowerCase(),
-              },
-              orderBy: SettHarvest_OrderBy.Timestamp,
-              orderDirection: OrderDirection.Desc,
-            });
-            const { badgerTreeDistributions } = await sdk.graph.loadBadgerTreeDistributions({
-              first: 1,
-              where: {
-                sett: vault.vaultToken.toLowerCase(),
-              },
-              orderBy: BadgerTreeDistribution_OrderBy.Timestamp,
-              orderDirection: OrderDirection.Desc,
-            });
+          const { settHarvests } = await sdk.graph.loadSettHarvests({
+            first: 1,
+            where: {
+              sett: vault.vaultToken.toLowerCase(),
+            },
+            orderBy: SettHarvest_OrderBy.Timestamp,
+            orderDirection: OrderDirection.Desc,
+          });
+          const { badgerTreeDistributions } = await sdk.graph.loadBadgerTreeDistributions({
+            first: 1,
+            where: {
+              sett: vault.vaultToken.toLowerCase(),
+            },
+            orderBy: BadgerTreeDistribution_OrderBy.Timestamp,
+            orderDirection: OrderDirection.Desc,
+          });
 
-            if (settHarvests.length > 0) {
-              harvestData.lastHarvestedAt = settHarvests[0].timestamp;
-            }
-            if (
-              badgerTreeDistributions.length > 0 &&
-              badgerTreeDistributions[0].timestamp > harvestData.lastHarvestedAt
-            ) {
-              harvestData.lastHarvestedAt = badgerTreeDistributions[0].timestamp;
-            }
+          if (settHarvests.length > 0) {
+            harvestData.lastHarvestedAt = settHarvests[0].timestamp;
+          }
+          if (
+            badgerTreeDistributions.length > 0 &&
+            badgerTreeDistributions[0].timestamp > harvestData.lastHarvestedAt
+          ) {
+            harvestData.lastHarvestedAt = badgerTreeDistributions[0].timestamp;
           }
         }
 
