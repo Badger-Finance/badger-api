@@ -189,7 +189,7 @@ export class VaultsService {
       }),
       harvestValue,
       yieldApr: this.calculateProjectedYield(earningValue, yieldValue, lastHarvest),
-      yieldTokens:  pendingHarvest.yieldTokens.map((t) => {
+      yieldTokens: pendingHarvest.yieldTokens.map((t) => {
         const apr = this.calculateProjectedYield(earningValue, t.value, lastHarvest);
         return {
           apr,
