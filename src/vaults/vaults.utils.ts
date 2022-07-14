@@ -292,6 +292,9 @@ export async function getVaultPerformance(
   chain: Chain,
   vaultDefinition: VaultDefinition,
 ): Promise<CachedValueSource[]> {
+  if (vaultDefinition.vaultToken !== TOKENS.BVECVX) {
+    return [];
+  }
   const [rewardEmissions, protocol] = await Promise.all([
     getRewardEmission(chain, vaultDefinition),
     getProtocolValueSources(chain, vaultDefinition),
@@ -308,6 +311,7 @@ export async function getVaultPerformance(
     vaultSources = await getVaultUnderlyingPerformance(chain, vaultDefinition);
   }
   console.log(`${vaultDefinition.name}: ${vaultLookupMethod[vaultDefinition.vaultToken]}`);
+  console.log(vaultSources);
   return [...vaultSources, ...rewardEmissions, ...protocol];
 }
 
@@ -426,14 +430,7 @@ export async function loadVaultGraphPerformances(
   const { graph } = chain.sdk;
   const now = Date.now() / 1000;
 
-  let cutoff;
-  if (vaultToken === TOKENS.BVECVX) {
-    const roundOneStart = 1632182660;
-    const modulo = (now - roundOneStart) % (14 * ONE_DAY_SECONDS);
-    cutoff = Math.floor(now - modulo);
-  } else {
-    cutoff = Math.floor(now - 14 * ONE_DAY_SECONDS);
-  }
+  const cutoff = Math.floor(now - 21 * ONE_DAY_SECONDS);
 
   let [vaultHarvests, treeDistributions] = await Promise.all([
     graph.loadSettHarvests({
@@ -555,10 +552,26 @@ export async function estimateVaultPerformance(
     throw new Error(`${vaultDefinition.name} does not have adequate harvest history`);
   }
 
-  const totalDuration = recentHarvests[0].timestamp - recentHarvests[data.length - 1].timestamp;
+  let totalDuration;
+
+  // TODO: generalize this for voting vaults + look up their voting periods
+  if (vaultDefinition.vaultToken === TOKENS.BVECVX) {
+    totalDuration = ONE_DAY_SECONDS * 14;
+  } else {
+    totalDuration = recentHarvests[0].timestamp - recentHarvests[data.length - 1].timestamp;
+  }
 
   const vault = await getCachedVault(chain, vaultDefinition);
-  const measuredHarvests = recentHarvests.slice(0, recentHarvests.length - 1);
+
+  let measuredHarvests;
+
+  if (vaultDefinition.vaultToken === TOKENS.BVECVX) {
+    const cutoff = recentHarvests[0].timestamp - totalDuration;
+    measuredHarvests = recentHarvests.filter((h) => h.timestamp > cutoff).slice(0, recentHarvests.length - 1);
+  } else {
+    measuredHarvests = recentHarvests.slice(0, recentHarvests.length - 1);
+  }
+
   const valueSources = [];
 
   const harvests = measuredHarvests.flatMap((h) => h.harvests);
@@ -569,27 +582,34 @@ export async function estimateVaultPerformance(
   let weightedBalance = 0;
   const depositToken = await getFullToken(chain, vaultDefinition.depositToken);
 
-  let allHarvests = recentHarvests.flatMap((h) => h.harvests);
-
   // this will probably need more generalization, quickly becoming a huge pain in the ass
-  if (allHarvests.length === 0 || vaultDefinition.vaultToken === TOKENS.BVECVX) {
-    allHarvests = recentHarvests.flatMap((d) => d.treeDistributions);
-  }
-
-  // use the full harvests to construct all intervals for durations, nth element is ignored for distributions
-  for (let i = 0; i < allHarvests.length - 1; i++) {
-    const end = allHarvests[i];
-    const start = allHarvests[i + 1];
-    const duration = end.timestamp - start.timestamp;
-    if (duration === 0) {
-      continue;
-    }
-    const { sett } = await getVault(chain, vaultDefinition.vaultToken, end.block);
-    if (sett) {
-      const balance = sett.strategy?.balance ?? sett.balance;
-      weightedBalance += duration * formatBalance(balance, depositToken.decimals);
-    } else {
-      weightedBalance += duration * vault.balance;
+  if (vaultDefinition.vaultToken === TOKENS.BVECVX) {
+    const sdk = await chain.getSdk();
+    const strategy = await sdk.vaults.getVaultStrategy({
+      address: vaultDefinition.vaultToken,
+      version: vaultDefinition.version ?? VaultVersion.v1,
+    });
+    const strategyContract = Strategy__factory.connect(strategy, sdk.provider);
+    const targetBlock = recentHarvests[0].treeDistributions[0].block;
+    const strategyBalance = await strategyContract.balanceOf({ blockTag: targetBlock });
+    weightedBalance = formatBalance(strategyBalance);
+  } else {
+    const allHarvests = recentHarvests.flatMap((h) => h.harvests);
+    // use the full harvests to construct all intervals for durations, nth element is ignored for distributions
+    for (let i = 0; i < allHarvests.length - 1; i++) {
+      const end = allHarvests[i];
+      const start = allHarvests[i + 1];
+      const duration = end.timestamp - start.timestamp;
+      if (duration === 0) {
+        continue;
+      }
+      const { sett } = await getVault(chain, vaultDefinition.vaultToken, end.block);
+      if (sett) {
+        const balance = sett.strategy?.balance ?? sett.balance;
+        weightedBalance += duration * formatBalance(balance, depositToken.decimals);
+      } else {
+        weightedBalance += duration * vault.balance;
+      }
     }
   }
 
@@ -600,7 +620,8 @@ export async function estimateVaultPerformance(
 
   const { price } = await getPrice(vaultDefinition.depositToken);
   const measuredBalance = weightedBalance / totalDuration;
-  const measuredValue = measuredBalance * price;
+  // lord, forgive me for my sins... we will generalize this shortly i hope
+  const measuredValue = (vault.vaultToken === TOKENS.BVECVX ? weightedBalance : measuredBalance) * price;
   const totalHarvestedTokens = formatBalance(totalHarvested, depositToken.decimals);
   // count of harvests is exclusive of the 0th element
   const durationScalar = ONE_YEAR_SECONDS / totalDuration;
