@@ -233,7 +233,7 @@ export async function getStrategyInfo(chain: Chain, vaultDefinition: VaultDefini
       };
     }
   } catch (err) {
-    console.log(err);
+    console.error(err);
     return defaultStrategyInfo;
   }
 }
@@ -308,7 +308,6 @@ export async function getVaultPerformance(
     vaultSources = await getVaultUnderlyingPerformance(chain, vaultDefinition);
   }
   console.log(`${vaultDefinition.name}: ${vaultLookupMethod[vaultDefinition.vaultToken]}`);
-  console.log(vaultSources);
   return [...vaultSources, ...rewardEmissions, ...protocol];
 }
 
