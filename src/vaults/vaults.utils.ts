@@ -292,9 +292,6 @@ export async function getVaultPerformance(
   chain: Chain,
   vaultDefinition: VaultDefinition,
 ): Promise<CachedValueSource[]> {
-  if (vaultDefinition.vaultToken !== TOKENS.BVECVX) {
-    return [];
-  }
   const [rewardEmissions, protocol] = await Promise.all([
     getRewardEmission(chain, vaultDefinition),
     getProtocolValueSources(chain, vaultDefinition),
