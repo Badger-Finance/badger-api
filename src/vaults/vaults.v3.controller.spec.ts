@@ -1,5 +1,5 @@
 import { DataMapper, QueryIterator, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
-import BadgerSDK, { TokenValue, VaultDTO } from '@badger-dao/sdk';
+import BadgerSDK, { ONE_DAY_MS, TokenValue, VaultDTO } from '@badger-dao/sdk';
 import { PlatformTest } from '@tsed/common';
 import createMockInstance from 'jest-create-mock-instance';
 import SuperTest from 'supertest';
@@ -7,7 +7,6 @@ import SuperTest from 'supertest';
 import { CachedValueSource } from '../aws/models/apy-snapshots.model';
 import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
 import { Chain } from '../chains/config/chain.config';
-import { ONE_DAY_SECONDS } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
 import { NetworkStatus } from '../errors/enums/newtroks.status.enum';
 import { createValueSource } from '../protocols/interfaces/value-source.interface';
@@ -55,13 +54,14 @@ describe('VaultsController', () => {
     jest.spyOn(tokensUtils, 'getFullToken').mockImplementation(async (_, tokenAddr) => {
       return fullTokenMockMap[tokenAddr] || fullTokenMockMap[TOKENS.BADGER];
     });
-    jest.spyOn(Date, 'now').mockImplementation(() => 1648236387419 + ONE_DAY_SECONDS);
+    const baseTime = 1656606946;
+    jest.spyOn(Date, 'now').mockImplementation(() => baseTime * 1000 + ONE_DAY_MS * 14);
     jest.spyOn(vaultsUtils, 'getVaultPendingHarvest').mockImplementation(
       async (vaultDefinition: VaultDefinition): Promise<VaultPendingHarvestData> => ({
         vault: vaultDefinition.vaultToken,
         yieldTokens: [mockBalance(fullTokenMockMap[TOKENS.WBTC], 10)],
         harvestTokens: [mockBalance(fullTokenMockMap[TOKENS.BADGER], 1500)],
-        lastHarvestedAt: 1648236387419,
+        lastHarvestedAt: baseTime,
       }),
     );
     jest

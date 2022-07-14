@@ -16,6 +16,7 @@ import BadgerSDK, {
   VaultType,
   VaultV15__factory,
   VaultVersion,
+  Vault__factory,
 } from '@badger-dao/sdk';
 import { BadRequest, NotFound, UnprocessableEntity } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';
@@ -581,13 +582,9 @@ export async function estimateVaultPerformance(
   // this will probably need more generalization, quickly becoming a huge pain in the ass
   if (vaultDefinition.vaultToken === TOKENS.BVECVX) {
     const sdk = await chain.getSdk();
-    const strategy = await sdk.vaults.getVaultStrategy({
-      address: vaultDefinition.vaultToken,
-      version: vaultDefinition.version ?? VaultVersion.v1,
-    });
-    const strategyContract = Strategy__factory.connect(strategy, sdk.provider);
     const targetBlock = recentHarvests[0].treeDistributions[0].block;
-    const strategyBalance = await strategyContract.balanceOf({ blockTag: targetBlock });
+    const vaultContract = Vault__factory.connect(vaultDefinition.vaultToken, sdk.provider);
+    const strategyBalance = await vaultContract.totalSupply({ blockTag: targetBlock });
     weightedBalance = formatBalance(strategyBalance);
   } else {
     const allHarvests = recentHarvests.flatMap((h) => h.harvests);
