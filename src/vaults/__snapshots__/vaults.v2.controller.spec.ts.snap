@@ -141,7 +141,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "BNB/BTCB",
     "pricePerFullShare": 1,
     "protocol": "Pancakeswap",
@@ -216,11 +216,12 @@ Array [
     "vaultToken": "0xaf4B9C4b545D5324904bAa15e29796D2E2f90813",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.0033569506203115344,
-      "harvestApy": -0.0019393563649883205,
+      "harvestApr": 4569.704955946633,
+      "harvestApy": 29201400365610.695,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 4569.704955946633,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -229,10 +230,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.0000146708211455808,
+      "yieldApr": 19.970899688284845,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 19.970899688284845,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -255,7 +257,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "bBADGER/BTCB",
     "pricePerFullShare": 1,
     "protocol": "Pancakeswap",
@@ -330,11 +332,12 @@ Array [
     "vaultToken": "0x857F91f735f4B03b19D2b5c6E476C73DB8241F55",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.0044079756513504065,
-      "harvestApy": -0.002287504184750322,
+      "harvestApr": 6000.43028866439,
+      "harvestApy": 3339368590257056.5,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 6000.43028866439,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -343,10 +346,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000019264097006298956,
+      "yieldApr": 26.223572973900787,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 26.223572973900787,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -369,7 +373,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "bDIGG/BTCB",
     "pricePerFullShare": 1,
     "protocol": "Pancakeswap",
@@ -444,11 +448,12 @@ Array [
     "vaultToken": "0xa861Ba302674b08f7F2F24381b705870521DDfed",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.00349478354500677,
-      "harvestApy": -0.0019887828183517975,
+      "harvestApr": 4757.332320871646,
+      "harvestApy": 57228710908818.164,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 4757.332320871646,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -457,10 +462,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000015273189906664468,
+      "yieldApr": 20.790884199280132,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 20.790884199280132,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -488,7 +494,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "renBTC/wBTC/sBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -563,11 +569,12 @@ Array [
     "vaultToken": "0xd04c48A53c111300aD41190D63681ed3dAd998eC",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.002825075783929526,
-      "harvestApy": -0.0017356897317299946,
+      "harvestApr": 3845.6814743225245,
+      "harvestApy": 1825255078284.0232,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 3845.6814743225245,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -576,10 +583,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000012346378078357086,
+      "yieldApr": 16.806712839709085,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 16.806712839709085,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -602,7 +610,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "renBTC/wBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -684,11 +692,12 @@ Array [
     "vaultToken": "0x6dEf55d2e18486B9dDfaA075bc4e4EE0B28c1545",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.005352783094427993,
-      "harvestApy": -0.002554206542404458,
+      "harvestApr": 7286.565160271836,
+      "harvestApy": 126014869281428200,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 7286.565160271836,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -697,10 +706,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000023393172045573274,
+      "yieldApr": 31.844345158120856,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 31.844345158120856,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -723,7 +733,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "tBTC/sBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -798,11 +808,12 @@ Array [
     "vaultToken": "0xb9D076fDe463dbc9f915E5392F807315Bf940334",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.003166911828272771,
-      "harvestApy": -0.0018690471189630742,
+      "harvestApr": 4311.011484393257,
+      "harvestApy": 11213317292637.77,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 4311.011484393257,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -811,10 +822,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000013840298017878616,
+      "yieldApr": 18.840336244865245,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 18.840336244865245,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -837,7 +849,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "renBTC/wBTC",
     "pricePerFullShare": 1,
     "protocol": "Curve",
@@ -912,11 +924,12 @@ Array [
     "vaultToken": "0xAf5A1DECfa95BAF63E0084a35c62592B774A2A87",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.0033558662871365796,
-      "harvestApy": -0.0019389624249854798,
+      "harvestApr": 4568.228889348124,
+      "harvestApy": 29045221804377.656,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 4568.228889348124,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -925,10 +938,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000014666082303735548,
+      "yieldApr": 19.964448860877777,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 19.964448860877777,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -951,7 +965,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "wBTC/Badger",
     "pricePerFullShare": 1,
     "protocol": "Uniswap",
@@ -1026,11 +1040,12 @@ Array [
     "vaultToken": "0x235c9e24D3FB2FAFd58a2E49D454Fdcd2DBf7FF1",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.016641149660243052,
-      "harvestApy": -0.004349350790300299,
+      "harvestApr": 22653.04220292794,
+      "harvestApy": 5.170257302969165e+27,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 22653.04220292794,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -1039,10 +1054,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00007272651818143569,
+      "yieldApr": 99.00018443869979,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 99.00018443869979,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -1065,7 +1081,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "wBTC/Digg",
     "pricePerFullShare": 1,
     "protocol": "Uniswap",
@@ -1140,11 +1156,12 @@ Array [
     "vaultToken": "0xC17078FDd324CC473F8175Dc5290fae5f2E84714",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.003042078280734172,
-      "harvestApy": -0.0018214164027363644,
+      "harvestApr": 4141.079738181693,
+      "harvestApy": 5863279520224.032,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 4141.079738181693,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -1153,10 +1170,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000013294740201857724,
+      "yieldApr": 18.097686579260476,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 18.097686579260476,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -1179,7 +1197,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "wBTC/wETH",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
@@ -1261,11 +1279,12 @@ Array [
     "vaultToken": "0x758A43EE2BFf8230eeb784879CdcFF4828F2544D",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.005006440537091051,
-      "harvestApy": -0.0024606961337547695,
+      "harvestApr": 6815.100584313619,
+      "harvestApy": 35284436541368464,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 6815.100584313619,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -1274,10 +1293,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000021879557373063795,
+      "yieldApr": 29.783911969586736,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 29.783911969586736,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -1300,7 +1320,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "wBTC/Badger",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
@@ -1390,11 +1410,12 @@ Array [
     "vaultToken": "0x1862A18181346EBd9EdAf800804f89190DeF24a5",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.024131682965291685,
-      "harvestApy": -0.004998748303608469,
+      "harvestApr": 32849.65545057454,
+      "harvestApy": 3.571648038456034e+31,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 32849.65545057454,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -1403,10 +1424,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00010546226166794141,
+      "yieldApr": 143.5622606103774,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 143.5622606103774,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -1429,7 +1451,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "wBTC/Digg",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
@@ -1504,11 +1526,12 @@ Array [
     "vaultToken": "0x88128580ACdD9c04Ce47AFcE196875747bF2A9f6",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.004324593359204352,
-      "harvestApy": -0.002262081151094275,
+      "harvestApr": 5886.924754399886,
+      "harvestApy": 2362448522223782,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 5886.924754399886,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -1517,10 +1540,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000018899692868990016,
+      "yieldApr": 25.727521771314564,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 25.727521771314564,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -1543,7 +1567,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "Digg",
     "pricePerFullShare": 1,
     "protocol": "Badger",
@@ -1618,11 +1642,12 @@ Array [
     "vaultToken": "0x7e7E112A68d8D2E221E11047a72fFC1065c38e1a",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.0046521140329219,
-      "harvestApy": -0.002360057603267851,
+      "harvestApr": 6332.767727724041,
+      "harvestApy": 8966094557329073,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 6332.767727724041,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -1631,10 +1656,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000020331050600771114,
+      "yieldApr": 27.67598132894892,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 27.67598132894892,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -1657,7 +1683,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "Badger",
     "pricePerFullShare": 1,
     "protocol": "Badger",
@@ -1732,11 +1758,12 @@ Array [
     "vaultToken": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.022764861378925604,
-      "harvestApy": -0.0048955178521215,
+      "harvestApr": 30989.04679600568,
+      "harvestApy": 8.760920478871593e+30,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 30989.04679600568,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -1745,10 +1772,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00009948886577996887,
+      "yieldApr": 135.43087594599226,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 135.43087594599226,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -1771,7 +1799,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "wBTC",
     "pricePerFullShare": 1,
     "protocol": "Yearn",
@@ -1853,11 +1881,12 @@ Array [
     "vaultToken": "0x4b92d19c11435614CD49Af1b589001b7c08cD4D5",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.007786556435133903,
-      "harvestApy": -0.0031073618542265535,
+      "harvestApr": 10599.579664978037,
+      "harvestApy": 234809988229209300000,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 10599.579664978037,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -1866,10 +1895,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00003402944806772861,
+      "yieldApr": 46.32315308492586,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 46.32315308492586,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -1892,7 +1922,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "wBTC/ibBTC",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
@@ -1967,11 +1997,12 @@ Array [
     "vaultToken": "0x8a8FFec8f4A0C8c9585Da95D9D97e8Cd6de273DE",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.004246879589568628,
-      "harvestApy": -0.0022380786822817633,
+      "harvestApr": 5781.135590835513,
+      "harvestApy": 1703957749541336.2,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 5781.135590835513,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -1980,10 +2011,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.0000185600617740385,
+      "yieldApr": 25.265193285335968,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 25.265193285335968,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -2006,7 +2038,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "hBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -2081,11 +2113,12 @@ Array [
     "vaultToken": "0x8c76970747afd5398e958bDfadA4cf0B9FcA16c4",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.004189406831021235,
-      "harvestApy": -0.0022201322735448947,
+      "harvestApr": 5702.899840813794,
+      "harvestApy": 1334624139557046.8,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 5702.899840813794,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -2094,10 +2127,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000018308889607164713,
+      "yieldApr": 24.92328098885647,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 24.92328098885647,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -2120,7 +2154,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "pBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -2195,11 +2229,12 @@ Array [
     "vaultToken": "0x55912D0Cf83B75c492E761932ABc4DB4a5CB1b17",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.006877159905328274,
-      "harvestApy": -0.002918863709644448,
+      "harvestApr": 9361.648488978852,
+      "harvestApy": 18042623182058279000,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 9361.648488978852,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -2208,10 +2243,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00003005512870822845,
+      "yieldApr": 40.913044647901216,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 40.913044647901216,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -2234,7 +2270,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "oBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -2309,11 +2345,12 @@ Array [
     "vaultToken": "0xf349c0faA80fC1870306Ac093f75934078e28991",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.002418767092626717,
-      "harvestApy": -0.0015640659410509627,
+      "harvestApr": 3292.586999516598,
+      "harvestApy": 176474967101.71515,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 3292.586999516598,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -2322,10 +2359,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000010570694485059152,
+      "yieldApr": 14.389533966898124,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 14.389533966898124,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -2348,7 +2386,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "bBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -2423,11 +2461,12 @@ Array [
     "vaultToken": "0x5Dce29e92b1b939F8E8C60DcF15BDE82A85be4a9",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.00627318494307846,
-      "harvestApy": -0.0027825677484272227,
+      "harvestApr": 8539.477509888155,
+      "harvestApy": 2821680256603544600,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 8539.477509888155,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -2436,10 +2475,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000027415587752826007,
+      "yieldApr": 37.319925549769444,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 37.319925549769444,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -2462,7 +2502,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "Tricrypto",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -2537,11 +2577,12 @@ Array [
     "vaultToken": "0xBE08Ef12e4a553666291E9fFC24fCCFd354F2Dd2",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.0030965782327176945,
-      "harvestApy": -0.00184235690875445,
+      "harvestApr": 4215.26870574382,
+      "harvestApy": 7797244802558.292,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 4215.26870574382,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -2550,10 +2591,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00001353292036547264,
+      "yieldApr": 18.421913294867707,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 18.421913294867707,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -2576,7 +2618,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "cvxCRV",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -2658,11 +2700,12 @@ Array [
     "vaultToken": "0x2B5455aac8d64C14786c3a29858E43b5945819C0",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.013581031671367356,
-      "harvestApy": -0.004004211865993312,
+      "harvestApr": 18487.405611511836,
+      "harvestApy": 4.709752189332785e+25,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 18487.405611511836,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -2671,10 +2714,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00005935293936632535,
+      "yieldApr": 80.79517748376249,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 80.79517748376249,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -2697,7 +2741,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "CVX",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -2772,11 +2816,12 @@ Array [
     "vaultToken": "0x53C8E199eb2Cb7c01543C137078a038937a68E40",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.007023447494155476,
-      "harvestApy": -0.002950466190632106,
+      "harvestApr": 9560.78490630128,
+      "harvestApy": 27741890841396000000,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 9560.78490630128,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -2785,10 +2830,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00003069444673647606,
+      "yieldApr": 41.78332696436794,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 41.78332696436794,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -2811,7 +2857,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "Tricrypto2",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -2893,11 +2939,12 @@ Array [
     "vaultToken": "0x27E98fC7d05f54E544d16F58C194C2D7ba71e3B5",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.014743826510516663,
-      "harvestApy": -0.004142783245653092,
+      "harvestApr": 20070.27945751337,
+      "harvestApy": 3.106364380817761e+26,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 20070.27945751337,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -2906,10 +2953,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00006443468081671964,
+      "yieldApr": 87.71278269076166,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 87.71278269076166,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -2932,7 +2980,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "imBTC",
     "pricePerFullShare": 1,
     "protocol": "mStable",
@@ -3007,11 +3055,12 @@ Array [
     "vaultToken": "0x599D92B453C010b1050d31C364f6ee17E819f193",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.006566468494515316,
-      "harvestApy": -0.0028499636045231647,
+      "harvestApr": 8938.714630145303,
+      "harvestApy": 7062476012827675000,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 8938.714630145303,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -3020,10 +3069,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000028697319602569914,
+      "yieldApr": 39.064704382836055,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 39.064704382836055,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -3046,7 +3096,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "mhBTC",
     "pricePerFullShare": 1,
     "protocol": "mStable",
@@ -3121,11 +3171,12 @@ Array [
     "vaultToken": "0x26B8efa69603537AC8ab55768b6740b67664D518",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.015196907796295627,
-      "harvestApy": -0.004194174497729186,
+      "harvestApr": 20687.043905743074,
+      "harvestApy": 6.252955149854873e+26,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 20687.043905743074,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -3134,10 +3185,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00006641477384157803,
+      "yieldApr": 90.408217307578,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 90.408217307578,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -3160,7 +3212,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "bveCVX",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -3242,11 +3294,12 @@ Array [
     "vaultToken": "0xfd05D3C7fe2924020620A8bE4961bBaA747e6305",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.002325709133937485,
-      "harvestApy": -0.0015224955336012869,
+      "harvestApr": 3165.9103029815155,
+      "harvestApy": 100211826069.54974,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 3165.9103029815155,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -3255,10 +3308,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00001016400495562667,
+      "yieldApr": 13.83592106984373,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 13.83592106984373,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -3281,7 +3335,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "CVX / bveCVX",
     "pricePerFullShare": 1,
     "protocol": "Curve",
@@ -3363,11 +3417,12 @@ Array [
     "vaultToken": "0x937B8E917d0F36eDEBBA8E459C5FB16F3b315551",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.003990015954528585,
-      "harvestApy": -0.0021565335623585646,
+      "harvestApr": 5431.4756884994995,
+      "harvestApy": 561514720899822.25,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 5431.4756884994995,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -3376,10 +3431,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000017437495232345827,
+      "yieldApr": 23.737080879417757,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 23.737080879417757,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -3402,7 +3458,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "ibBTC / crvsBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -3484,11 +3540,12 @@ Array [
     "vaultToken": "0xaE96fF08771a109dc6650a1BdCa62F2d558E40af",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.003370517015964146,
-      "harvestApy": -0.001944278221766016,
+      "harvestApr": 4588.17243803379,
+      "harvestApy": 31224953354683.625,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 4588.17243803379,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -3497,10 +3554,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000014730110121416612,
+      "yieldApr": 20.051607794347113,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 20.051607794347113,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -3523,7 +3581,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "MIM / 3CRV",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -3598,11 +3656,12 @@ Array [
     "vaultToken": "0x19E4d89e0cB807ea21B8CEF02df5eAA99A110dA5",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.022725797021895554,
-      "harvestApy": -0.00489248411348342,
+      "harvestApr": 30935.869789218337,
+      "harvestApy": 8.406470298941348e+30,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 30935.869789218337,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -3611,10 +3670,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00009931814352040171,
+      "yieldApr": 135.19847742606345,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 135.19847742606345,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -3637,7 +3697,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "FRAX / 3CRV",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -3712,11 +3772,12 @@ Array [
     "vaultToken": "0x15cBC4ac1e81c97667780fE6DAdeDd04a6EEB47B",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.026998529928976032,
-      "harvestApy": -0.00519872355101425,
+      "harvestApr": 36752.19863921194,
+      "harvestApy": 5.4345526382462595e+32,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 36752.19863921194,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -3725,10 +3786,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00011799119158471846,
+      "yieldApr": 160.61747518129974,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 160.61747518129974,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -3751,7 +3813,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "remBadger",
     "pricePerFullShare": 1,
     "protocol": "Badger",
@@ -3833,11 +3895,12 @@ Array [
     "vaultToken": "0x6aF7377b5009d7d154F36FE9e235aE1DA27Aea22",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.005501370042154663,
-      "harvestApy": -0.0025929656023437886,
+      "harvestApr": 7488.8316182016015,
+      "harvestApy": 213583455717982660,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 7488.8316182016015,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -3846,10 +3909,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000024042538920818942,
+      "yieldApr": 32.72830663496926,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 32.72830663496926,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -3872,7 +3936,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "BADGER / WBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -3954,11 +4018,12 @@ Array [
     "vaultToken": "0xeC1c717A3b02582A4Aa2275260C583095536b613",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.0024922896729943763,
-      "harvestApy": -0.0015962832039306818,
+      "harvestApr": 3392.670836868039,
+      "harvestApy": 273622337492.97958,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 3392.670836868039,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -3967,10 +4032,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00001089200890065083,
+      "yieldApr": 14.826928567957262,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 14.826928567957262,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -3993,7 +4059,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "graviAURA",
     "pricePerFullShare": 1,
     "protocol": "Aura",
@@ -4075,11 +4141,12 @@ Array [
     "vaultToken": "0xBA485b556399123261a5F9c95d413B4f93107407",
     "version": "v1.5",
     "yieldProjection": Object {
-      "harvestApr": -0.0031589511029815535,
-      "harvestApy": -0.0018660447817175907,
+      "harvestApr": 4300.174814471426,
+      "harvestApy": 10764261611215.35,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 4300.174814471426,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -4088,10 +4155,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000013805507402779934,
+      "yieldApr": 18.79297694047902,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 18.79297694047902,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -4125,7 +4193,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "renBTC/wBTC/sBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -4200,11 +4268,12 @@ Array [
     "vaultToken": "0xd04c48A53c111300aD41190D63681ed3dAd998eC",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.002825075783929526,
-      "harvestApy": -0.0017356897317299946,
+      "harvestApr": 3845.6814743225245,
+      "harvestApy": 1825255078284.0232,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 3845.6814743225245,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -4213,10 +4282,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000012346378078357086,
+      "yieldApr": 16.806712839709085,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 16.806712839709085,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -4239,7 +4309,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "renBTC/wBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -4321,11 +4391,12 @@ Array [
     "vaultToken": "0x6dEf55d2e18486B9dDfaA075bc4e4EE0B28c1545",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.005352783094427993,
-      "harvestApy": -0.002554206542404458,
+      "harvestApr": 7286.565160271836,
+      "harvestApy": 126014869281428200,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 7286.565160271836,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -4334,10 +4405,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000023393172045573274,
+      "yieldApr": 31.844345158120856,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 31.844345158120856,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -4360,7 +4432,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "tBTC/sBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -4435,11 +4507,12 @@ Array [
     "vaultToken": "0xb9D076fDe463dbc9f915E5392F807315Bf940334",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.003166911828272771,
-      "harvestApy": -0.0018690471189630742,
+      "harvestApr": 4311.011484393257,
+      "harvestApy": 11213317292637.77,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 4311.011484393257,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -4448,10 +4521,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000013840298017878616,
+      "yieldApr": 18.840336244865245,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 18.840336244865245,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -4474,7 +4548,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "renBTC/wBTC",
     "pricePerFullShare": 1,
     "protocol": "Curve",
@@ -4549,11 +4623,12 @@ Array [
     "vaultToken": "0xAf5A1DECfa95BAF63E0084a35c62592B774A2A87",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.0033558662871365796,
-      "harvestApy": -0.0019389624249854798,
+      "harvestApr": 4568.228889348124,
+      "harvestApy": 29045221804377.656,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 4568.228889348124,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -4562,10 +4637,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000014666082303735548,
+      "yieldApr": 19.964448860877777,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 19.964448860877777,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -4588,7 +4664,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "wBTC/Badger",
     "pricePerFullShare": 1,
     "protocol": "Uniswap",
@@ -4663,11 +4739,12 @@ Array [
     "vaultToken": "0x235c9e24D3FB2FAFd58a2E49D454Fdcd2DBf7FF1",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.016641149660243052,
-      "harvestApy": -0.004349350790300299,
+      "harvestApr": 22653.04220292794,
+      "harvestApy": 5.170257302969165e+27,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 22653.04220292794,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -4676,10 +4753,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00007272651818143569,
+      "yieldApr": 99.00018443869979,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 99.00018443869979,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -4702,7 +4780,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "wBTC/Digg",
     "pricePerFullShare": 1,
     "protocol": "Uniswap",
@@ -4777,11 +4855,12 @@ Array [
     "vaultToken": "0xC17078FDd324CC473F8175Dc5290fae5f2E84714",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.003042078280734172,
-      "harvestApy": -0.0018214164027363644,
+      "harvestApr": 4141.079738181693,
+      "harvestApy": 5863279520224.032,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 4141.079738181693,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -4790,10 +4869,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000013294740201857724,
+      "yieldApr": 18.097686579260476,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 18.097686579260476,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -4816,7 +4896,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "wBTC/wETH",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
@@ -4898,11 +4978,12 @@ Array [
     "vaultToken": "0x758A43EE2BFf8230eeb784879CdcFF4828F2544D",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.005006440537091051,
-      "harvestApy": -0.0024606961337547695,
+      "harvestApr": 6815.100584313619,
+      "harvestApy": 35284436541368464,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 6815.100584313619,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -4911,10 +4992,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000021879557373063795,
+      "yieldApr": 29.783911969586736,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 29.783911969586736,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -4937,7 +5019,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "wBTC/Badger",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
@@ -5027,11 +5109,12 @@ Array [
     "vaultToken": "0x1862A18181346EBd9EdAf800804f89190DeF24a5",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.024131682965291685,
-      "harvestApy": -0.004998748303608469,
+      "harvestApr": 32849.65545057454,
+      "harvestApy": 3.571648038456034e+31,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 32849.65545057454,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -5040,10 +5123,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00010546226166794141,
+      "yieldApr": 143.5622606103774,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 143.5622606103774,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -5066,7 +5150,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "wBTC/Digg",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
@@ -5141,11 +5225,12 @@ Array [
     "vaultToken": "0x88128580ACdD9c04Ce47AFcE196875747bF2A9f6",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.004324593359204352,
-      "harvestApy": -0.002262081151094275,
+      "harvestApr": 5886.924754399886,
+      "harvestApy": 2362448522223782,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 5886.924754399886,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -5154,10 +5239,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000018899692868990016,
+      "yieldApr": 25.727521771314564,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 25.727521771314564,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -5180,7 +5266,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "Digg",
     "pricePerFullShare": 1,
     "protocol": "Badger",
@@ -5255,11 +5341,12 @@ Array [
     "vaultToken": "0x7e7E112A68d8D2E221E11047a72fFC1065c38e1a",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.0046521140329219,
-      "harvestApy": -0.002360057603267851,
+      "harvestApr": 6332.767727724041,
+      "harvestApy": 8966094557329073,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 6332.767727724041,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -5268,10 +5355,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000020331050600771114,
+      "yieldApr": 27.67598132894892,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 27.67598132894892,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -5294,7 +5382,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "Badger",
     "pricePerFullShare": 1,
     "protocol": "Badger",
@@ -5369,11 +5457,12 @@ Array [
     "vaultToken": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.022764861378925604,
-      "harvestApy": -0.0048955178521215,
+      "harvestApr": 30989.04679600568,
+      "harvestApy": 8.760920478871593e+30,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 30989.04679600568,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -5382,10 +5471,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00009948886577996887,
+      "yieldApr": 135.43087594599226,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 135.43087594599226,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -5408,7 +5498,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "wBTC",
     "pricePerFullShare": 1,
     "protocol": "Yearn",
@@ -5490,11 +5580,12 @@ Array [
     "vaultToken": "0x4b92d19c11435614CD49Af1b589001b7c08cD4D5",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.007786556435133903,
-      "harvestApy": -0.0031073618542265535,
+      "harvestApr": 10599.579664978037,
+      "harvestApy": 234809988229209300000,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 10599.579664978037,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -5503,10 +5594,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00003402944806772861,
+      "yieldApr": 46.32315308492586,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 46.32315308492586,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -5529,7 +5621,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "wBTC/ibBTC",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
@@ -5604,11 +5696,12 @@ Array [
     "vaultToken": "0x8a8FFec8f4A0C8c9585Da95D9D97e8Cd6de273DE",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.004246879589568628,
-      "harvestApy": -0.0022380786822817633,
+      "harvestApr": 5781.135590835513,
+      "harvestApy": 1703957749541336.2,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 5781.135590835513,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -5617,10 +5710,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.0000185600617740385,
+      "yieldApr": 25.265193285335968,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 25.265193285335968,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -5643,7 +5737,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "hBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -5718,11 +5812,12 @@ Array [
     "vaultToken": "0x8c76970747afd5398e958bDfadA4cf0B9FcA16c4",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.004189406831021235,
-      "harvestApy": -0.0022201322735448947,
+      "harvestApr": 5702.899840813794,
+      "harvestApy": 1334624139557046.8,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 5702.899840813794,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -5731,10 +5826,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000018308889607164713,
+      "yieldApr": 24.92328098885647,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 24.92328098885647,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -5757,7 +5853,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "pBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -5832,11 +5928,12 @@ Array [
     "vaultToken": "0x55912D0Cf83B75c492E761932ABc4DB4a5CB1b17",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.006877159905328274,
-      "harvestApy": -0.002918863709644448,
+      "harvestApr": 9361.648488978852,
+      "harvestApy": 18042623182058279000,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 9361.648488978852,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -5845,10 +5942,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00003005512870822845,
+      "yieldApr": 40.913044647901216,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 40.913044647901216,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -5871,7 +5969,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "oBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -5946,11 +6044,12 @@ Array [
     "vaultToken": "0xf349c0faA80fC1870306Ac093f75934078e28991",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.002418767092626717,
-      "harvestApy": -0.0015640659410509627,
+      "harvestApr": 3292.586999516598,
+      "harvestApy": 176474967101.71515,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 3292.586999516598,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -5959,10 +6058,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000010570694485059152,
+      "yieldApr": 14.389533966898124,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 14.389533966898124,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -5985,7 +6085,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "bBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -6060,11 +6160,12 @@ Array [
     "vaultToken": "0x5Dce29e92b1b939F8E8C60DcF15BDE82A85be4a9",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.00627318494307846,
-      "harvestApy": -0.0027825677484272227,
+      "harvestApr": 8539.477509888155,
+      "harvestApy": 2821680256603544600,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 8539.477509888155,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -6073,10 +6174,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000027415587752826007,
+      "yieldApr": 37.319925549769444,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 37.319925549769444,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -6099,7 +6201,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "Tricrypto",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -6174,11 +6276,12 @@ Array [
     "vaultToken": "0xBE08Ef12e4a553666291E9fFC24fCCFd354F2Dd2",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.0030965782327176945,
-      "harvestApy": -0.00184235690875445,
+      "harvestApr": 4215.26870574382,
+      "harvestApy": 7797244802558.292,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 4215.26870574382,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -6187,10 +6290,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00001353292036547264,
+      "yieldApr": 18.421913294867707,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 18.421913294867707,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -6213,7 +6317,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "cvxCRV",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -6295,11 +6399,12 @@ Array [
     "vaultToken": "0x2B5455aac8d64C14786c3a29858E43b5945819C0",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.013581031671367356,
-      "harvestApy": -0.004004211865993312,
+      "harvestApr": 18487.405611511836,
+      "harvestApy": 4.709752189332785e+25,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 18487.405611511836,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -6308,10 +6413,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00005935293936632535,
+      "yieldApr": 80.79517748376249,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 80.79517748376249,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -6334,7 +6440,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "CVX",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -6409,11 +6515,12 @@ Array [
     "vaultToken": "0x53C8E199eb2Cb7c01543C137078a038937a68E40",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.007023447494155476,
-      "harvestApy": -0.002950466190632106,
+      "harvestApr": 9560.78490630128,
+      "harvestApy": 27741890841396000000,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 9560.78490630128,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -6422,10 +6529,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00003069444673647606,
+      "yieldApr": 41.78332696436794,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 41.78332696436794,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -6448,7 +6556,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "Tricrypto2",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -6530,11 +6638,12 @@ Array [
     "vaultToken": "0x27E98fC7d05f54E544d16F58C194C2D7ba71e3B5",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.014743826510516663,
-      "harvestApy": -0.004142783245653092,
+      "harvestApr": 20070.27945751337,
+      "harvestApy": 3.106364380817761e+26,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 20070.27945751337,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -6543,10 +6652,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00006443468081671964,
+      "yieldApr": 87.71278269076166,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 87.71278269076166,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -6569,7 +6679,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "imBTC",
     "pricePerFullShare": 1,
     "protocol": "mStable",
@@ -6644,11 +6754,12 @@ Array [
     "vaultToken": "0x599D92B453C010b1050d31C364f6ee17E819f193",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.006566468494515316,
-      "harvestApy": -0.0028499636045231647,
+      "harvestApr": 8938.714630145303,
+      "harvestApy": 7062476012827675000,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 8938.714630145303,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -6657,10 +6768,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000028697319602569914,
+      "yieldApr": 39.064704382836055,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 39.064704382836055,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -6683,7 +6795,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "mhBTC",
     "pricePerFullShare": 1,
     "protocol": "mStable",
@@ -6758,11 +6870,12 @@ Array [
     "vaultToken": "0x26B8efa69603537AC8ab55768b6740b67664D518",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.015196907796295627,
-      "harvestApy": -0.004194174497729186,
+      "harvestApr": 20687.043905743074,
+      "harvestApy": 6.252955149854873e+26,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 20687.043905743074,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -6771,10 +6884,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00006641477384157803,
+      "yieldApr": 90.408217307578,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 90.408217307578,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -6797,7 +6911,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "bveCVX",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -6879,11 +6993,12 @@ Array [
     "vaultToken": "0xfd05D3C7fe2924020620A8bE4961bBaA747e6305",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.002325709133937485,
-      "harvestApy": -0.0015224955336012869,
+      "harvestApr": 3165.9103029815155,
+      "harvestApy": 100211826069.54974,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 3165.9103029815155,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -6892,10 +7007,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00001016400495562667,
+      "yieldApr": 13.83592106984373,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 13.83592106984373,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -6918,7 +7034,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "CVX / bveCVX",
     "pricePerFullShare": 1,
     "protocol": "Curve",
@@ -7000,11 +7116,12 @@ Array [
     "vaultToken": "0x937B8E917d0F36eDEBBA8E459C5FB16F3b315551",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.003990015954528585,
-      "harvestApy": -0.0021565335623585646,
+      "harvestApr": 5431.4756884994995,
+      "harvestApy": 561514720899822.25,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 5431.4756884994995,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -7013,10 +7130,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000017437495232345827,
+      "yieldApr": 23.737080879417757,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 23.737080879417757,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -7039,7 +7157,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "ibBTC / crvsBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -7121,11 +7239,12 @@ Array [
     "vaultToken": "0xaE96fF08771a109dc6650a1BdCa62F2d558E40af",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.003370517015964146,
-      "harvestApy": -0.001944278221766016,
+      "harvestApr": 4588.17243803379,
+      "harvestApy": 31224953354683.625,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 4588.17243803379,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -7134,10 +7253,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000014730110121416612,
+      "yieldApr": 20.051607794347113,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 20.051607794347113,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -7160,7 +7280,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "MIM / 3CRV",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -7235,11 +7355,12 @@ Array [
     "vaultToken": "0x19E4d89e0cB807ea21B8CEF02df5eAA99A110dA5",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.022725797021895554,
-      "harvestApy": -0.00489248411348342,
+      "harvestApr": 30935.869789218337,
+      "harvestApy": 8.406470298941348e+30,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 30935.869789218337,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -7248,10 +7369,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00009931814352040171,
+      "yieldApr": 135.19847742606345,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 135.19847742606345,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -7274,7 +7396,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "FRAX / 3CRV",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -7349,11 +7471,12 @@ Array [
     "vaultToken": "0x15cBC4ac1e81c97667780fE6DAdeDd04a6EEB47B",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.026998529928976032,
-      "harvestApy": -0.00519872355101425,
+      "harvestApr": 36752.19863921194,
+      "harvestApy": 5.4345526382462595e+32,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 36752.19863921194,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -7362,10 +7485,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00011799119158471846,
+      "yieldApr": 160.61747518129974,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 160.61747518129974,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -7388,7 +7512,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "remBadger",
     "pricePerFullShare": 1,
     "protocol": "Badger",
@@ -7470,11 +7594,12 @@ Array [
     "vaultToken": "0x6aF7377b5009d7d154F36FE9e235aE1DA27Aea22",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.005501370042154663,
-      "harvestApy": -0.0025929656023437886,
+      "harvestApr": 7488.8316182016015,
+      "harvestApy": 213583455717982660,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 7488.8316182016015,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -7483,10 +7608,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000024042538920818942,
+      "yieldApr": 32.72830663496926,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 32.72830663496926,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -7509,7 +7635,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "BADGER / WBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -7591,11 +7717,12 @@ Array [
     "vaultToken": "0xeC1c717A3b02582A4Aa2275260C583095536b613",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.0024922896729943763,
-      "harvestApy": -0.0015962832039306818,
+      "harvestApr": 3392.670836868039,
+      "harvestApy": 273622337492.97958,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 3392.670836868039,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -7604,10 +7731,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00001089200890065083,
+      "yieldApr": 14.826928567957262,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 14.826928567957262,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -7630,7 +7758,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "graviAURA",
     "pricePerFullShare": 1,
     "protocol": "Aura",
@@ -7712,11 +7840,12 @@ Array [
     "vaultToken": "0xBA485b556399123261a5F9c95d413B4f93107407",
     "version": "v1.5",
     "yieldProjection": Object {
-      "harvestApr": -0.0031589511029815535,
-      "harvestApy": -0.0018660447817175907,
+      "harvestApr": 4300.174814471426,
+      "harvestApy": 10764261611215.35,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 4300.174814471426,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -7725,10 +7854,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000013805507402779934,
+      "yieldApr": 18.79297694047902,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 18.79297694047902,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",

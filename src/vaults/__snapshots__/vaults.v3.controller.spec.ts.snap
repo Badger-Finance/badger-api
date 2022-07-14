@@ -43,7 +43,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "Badger Sett Curve.fi Factory BTC Metapool: ibBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -125,11 +125,12 @@ Array [
     "vaultToken": "0xaE96fF08771a109dc6650a1BdCa62F2d558E40af",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.003370517015964146,
-      "harvestApy": -0.001944278221766016,
+      "harvestApr": 4588.17243803379,
+      "harvestApy": 31224953354683.625,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 4588.17243803379,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -138,10 +139,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000014730110121416612,
+      "yieldApr": 20.051607794347113,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 20.051607794347113,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -164,7 +166,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "Badger Vested Escrow Convex Token",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -246,11 +248,12 @@ Array [
     "vaultToken": "0xfd05D3C7fe2924020620A8bE4961bBaA747e6305",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.002325709133937485,
-      "harvestApy": -0.0015224955336012869,
+      "harvestApr": 3165.9103029815155,
+      "harvestApy": 100211826069.54974,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 3165.9103029815155,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -259,10 +262,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00001016400495562667,
+      "yieldApr": 13.83592106984373,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 13.83592106984373,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -285,7 +289,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "Badger Sett Curve.fi Factory Crypto Pool: BADGER/WBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -367,11 +371,12 @@ Array [
     "vaultToken": "0xeC1c717A3b02582A4Aa2275260C583095536b613",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.0024922896729943763,
-      "harvestApy": -0.0015962832039306818,
+      "harvestApr": 3392.670836868039,
+      "harvestApy": 273622337492.97958,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 3392.670836868039,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -380,10 +385,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00001089200890065083,
+      "yieldApr": 14.826928567957262,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 14.826928567957262,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -406,7 +412,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "Badger WBTC yVault",
     "pricePerFullShare": 1,
     "protocol": "Yearn",
@@ -488,11 +494,12 @@ Array [
     "vaultToken": "0x4b92d19c11435614CD49Af1b589001b7c08cD4D5",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.007786556435133903,
-      "harvestApy": -0.0031073618542265535,
+      "harvestApr": 10599.579664978037,
+      "harvestApy": 234809988229209300000,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 10599.579664978037,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -501,10 +508,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00003402944806772861,
+      "yieldApr": 46.32315308492586,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 46.32315308492586,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -527,7 +535,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "Badger Sett Curve.fi USD-BTC-ETH",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -609,11 +617,12 @@ Array [
     "vaultToken": "0x27E98fC7d05f54E544d16F58C194C2D7ba71e3B5",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.014743826510516663,
-      "harvestApy": -0.004142783245653092,
+      "harvestApr": 20070.27945751337,
+      "harvestApy": 3.106364380817761e+26,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 20070.27945751337,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -622,10 +631,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00006443468081671964,
+      "yieldApr": 87.71278269076166,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 87.71278269076166,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -648,7 +658,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "Badger Sett Digg",
     "pricePerFullShare": 1,
     "protocol": "Badger",
@@ -730,11 +740,12 @@ Array [
     "vaultToken": "0x7e7E112A68d8D2E221E11047a72fFC1065c38e1a",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.0046521140329219,
-      "harvestApy": -0.002360057603267851,
+      "harvestApr": 6332.767727724041,
+      "harvestApy": 8966094557329073,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 6332.767727724041,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -743,10 +754,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000020331050600771114,
+      "yieldApr": 27.67598132894892,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 27.67598132894892,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -769,7 +781,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "Badger Sett Convex CRV",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -851,11 +863,12 @@ Array [
     "vaultToken": "0x2B5455aac8d64C14786c3a29858E43b5945819C0",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.013581031671367356,
-      "harvestApy": -0.004004211865993312,
+      "harvestApr": 18487.405611511836,
+      "harvestApy": 4.709752189332785e+25,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 18487.405611511836,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -864,10 +877,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00005935293936632535,
+      "yieldApr": 80.79517748376249,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 80.79517748376249,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -890,7 +904,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "remBADGER",
     "pricePerFullShare": 1,
     "protocol": "Badger",
@@ -972,11 +986,12 @@ Array [
     "vaultToken": "0x6aF7377b5009d7d154F36FE9e235aE1DA27Aea22",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.005501370042154663,
-      "harvestApy": -0.0025929656023437886,
+      "harvestApr": 7488.8316182016015,
+      "harvestApy": 213583455717982660,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 7488.8316182016015,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -985,10 +1000,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000024042538920818942,
+      "yieldApr": 32.72830663496926,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 32.72830663496926,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -1011,7 +1027,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "Badger Sett Curve.fi renBTC/wBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -1093,11 +1109,12 @@ Array [
     "vaultToken": "0x6dEf55d2e18486B9dDfaA075bc4e4EE0B28c1545",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.005352783094427993,
-      "harvestApy": -0.002554206542404458,
+      "harvestApr": 7286.565160271836,
+      "harvestApy": 126014869281428200,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 7286.565160271836,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -1106,10 +1123,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000023393172045573274,
+      "yieldApr": 31.844345158120856,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 31.844345158120856,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -1132,7 +1150,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "Badger Sett SushiSwap LP Token",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
@@ -1222,11 +1240,12 @@ Array [
     "vaultToken": "0x1862A18181346EBd9EdAf800804f89190DeF24a5",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.024131682965291685,
-      "harvestApy": -0.004998748303608469,
+      "harvestApr": 32849.65545057454,
+      "harvestApy": 3.571648038456034e+31,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 32849.65545057454,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -1235,10 +1254,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00010546226166794141,
+      "yieldApr": 143.5622606103774,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 143.5622606103774,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -1261,7 +1281,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "Badger Sett Curve.fi Factory Plain Pool: Badger Locked CVX",
     "pricePerFullShare": 1,
     "protocol": "Curve",
@@ -1343,11 +1363,12 @@ Array [
     "vaultToken": "0x937B8E917d0F36eDEBBA8E459C5FB16F3b315551",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.003990015954528585,
-      "harvestApy": -0.0021565335623585646,
+      "harvestApr": 5431.4756884994995,
+      "harvestApy": 561514720899822.25,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 5431.4756884994995,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -1356,10 +1377,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000017437495232345827,
+      "yieldApr": 23.737080879417757,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 23.737080879417757,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -1382,7 +1404,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "Badger Sett SushiSwap LP Token",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
@@ -1464,11 +1486,12 @@ Array [
     "vaultToken": "0x758A43EE2BFf8230eeb784879CdcFF4828F2544D",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.005006440537091051,
-      "harvestApy": -0.0024606961337547695,
+      "harvestApr": 6815.100584313619,
+      "harvestApy": 35284436541368464,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 6815.100584313619,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -1477,10 +1500,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000021879557373063795,
+      "yieldApr": 29.783911969586736,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 29.783911969586736,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -1503,7 +1527,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "Badger Sett SushiSwap LP Token",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
@@ -1585,11 +1609,12 @@ Array [
     "vaultToken": "0x88128580ACdD9c04Ce47AFcE196875747bF2A9f6",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.004324593359204352,
-      "harvestApy": -0.002262081151094275,
+      "harvestApr": 5886.924754399886,
+      "harvestApy": 2362448522223782,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 5886.924754399886,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -1598,10 +1623,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000018899692868990016,
+      "yieldApr": 25.727521771314564,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 25.727521771314564,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -1629,7 +1655,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "Badger Sett Curve.fi amWBTC/renBTC",
     "pricePerFullShare": 1,
     "protocol": "Curve",
@@ -1711,11 +1737,12 @@ Array [
     "vaultToken": "0x7B6bfB88904e4B3A6d239d5Ed8adF557B22C10FC",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.0047678612913829195,
-      "harvestApy": -0.002393518125110017,
+      "harvestApr": 6490.330611558617,
+      "harvestApy": 14139155661051440,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 6490.330611558617,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -1724,10 +1751,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00002083689877044582,
+      "yieldApr": 28.364575576934765,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 28.364575576934765,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -1750,7 +1778,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "Badger Sett SushiSwap LP Token",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
@@ -1832,11 +1860,12 @@ Array [
     "vaultToken": "0xEa8567d84E3e54B32176418B4e0C736b56378961",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.0025091877746354504,
-      "harvestApy": -0.0016036119020790274,
+      "harvestApr": 3415.6736592354823,
+      "harvestApy": 302328309960.73535,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 3415.6736592354823,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -1845,10 +1874,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000010965858371469985,
+      "yieldApr": 14.92745739038153,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 14.92745739038153,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -1871,7 +1901,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "Badger Sett Uniswap V2",
     "pricePerFullShare": 1,
     "protocol": "Quickswap",
@@ -1961,11 +1991,12 @@ Array [
     "vaultToken": "0x6B2d4c4bb50274c5D4986Ff678cC971c0260E967",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.005490530114031254,
-      "harvestApy": -0.0025901643688985843,
+      "harvestApr": 7474.075585459289,
+      "harvestApy": 205592160791726370,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 7474.075585459289,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -1974,10 +2005,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00002399516537717274,
+      "yieldApr": 32.66381860947643,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 32.66381860947643,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -2011,7 +2043,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "Badger Sett Curve.fi Factory BTC Metapool: ibBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -2093,11 +2125,12 @@ Array [
     "vaultToken": "0xaE96fF08771a109dc6650a1BdCa62F2d558E40af",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.003370517015964146,
-      "harvestApy": -0.001944278221766016,
+      "harvestApr": 4588.17243803379,
+      "harvestApy": 31224953354683.625,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 4588.17243803379,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -2106,10 +2139,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000014730110121416612,
+      "yieldApr": 20.051607794347113,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 20.051607794347113,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -2132,7 +2166,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "Badger Vested Escrow Convex Token",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -2214,11 +2248,12 @@ Array [
     "vaultToken": "0xfd05D3C7fe2924020620A8bE4961bBaA747e6305",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.002325709133937485,
-      "harvestApy": -0.0015224955336012869,
+      "harvestApr": 3165.9103029815155,
+      "harvestApy": 100211826069.54974,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 3165.9103029815155,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -2227,10 +2262,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00001016400495562667,
+      "yieldApr": 13.83592106984373,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 13.83592106984373,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -2253,7 +2289,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "Badger Sett Curve.fi Factory Crypto Pool: BADGER/WBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -2335,11 +2371,12 @@ Array [
     "vaultToken": "0xeC1c717A3b02582A4Aa2275260C583095536b613",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.0024922896729943763,
-      "harvestApy": -0.0015962832039306818,
+      "harvestApr": 3392.670836868039,
+      "harvestApy": 273622337492.97958,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 3392.670836868039,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -2348,10 +2385,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00001089200890065083,
+      "yieldApr": 14.826928567957262,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 14.826928567957262,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -2374,7 +2412,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "Badger WBTC yVault",
     "pricePerFullShare": 1,
     "protocol": "Yearn",
@@ -2456,11 +2494,12 @@ Array [
     "vaultToken": "0x4b92d19c11435614CD49Af1b589001b7c08cD4D5",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.007786556435133903,
-      "harvestApy": -0.0031073618542265535,
+      "harvestApr": 10599.579664978037,
+      "harvestApy": 234809988229209300000,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 10599.579664978037,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -2469,10 +2508,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00003402944806772861,
+      "yieldApr": 46.32315308492586,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 46.32315308492586,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -2495,7 +2535,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "Badger Sett Curve.fi USD-BTC-ETH",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -2577,11 +2617,12 @@ Array [
     "vaultToken": "0x27E98fC7d05f54E544d16F58C194C2D7ba71e3B5",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.014743826510516663,
-      "harvestApy": -0.004142783245653092,
+      "harvestApr": 20070.27945751337,
+      "harvestApy": 3.106364380817761e+26,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 20070.27945751337,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -2590,10 +2631,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00006443468081671964,
+      "yieldApr": 87.71278269076166,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 87.71278269076166,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -2616,7 +2658,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "Badger Sett Digg",
     "pricePerFullShare": 1,
     "protocol": "Badger",
@@ -2698,11 +2740,12 @@ Array [
     "vaultToken": "0x7e7E112A68d8D2E221E11047a72fFC1065c38e1a",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.0046521140329219,
-      "harvestApy": -0.002360057603267851,
+      "harvestApr": 6332.767727724041,
+      "harvestApy": 8966094557329073,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 6332.767727724041,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -2711,10 +2754,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000020331050600771114,
+      "yieldApr": 27.67598132894892,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 27.67598132894892,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -2737,7 +2781,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "Badger Sett Convex CRV",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -2819,11 +2863,12 @@ Array [
     "vaultToken": "0x2B5455aac8d64C14786c3a29858E43b5945819C0",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.013581031671367356,
-      "harvestApy": -0.004004211865993312,
+      "harvestApr": 18487.405611511836,
+      "harvestApy": 4.709752189332785e+25,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 18487.405611511836,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -2832,10 +2877,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00005935293936632535,
+      "yieldApr": 80.79517748376249,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 80.79517748376249,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -2858,7 +2904,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "remBADGER",
     "pricePerFullShare": 1,
     "protocol": "Badger",
@@ -2940,11 +2986,12 @@ Array [
     "vaultToken": "0x6aF7377b5009d7d154F36FE9e235aE1DA27Aea22",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.005501370042154663,
-      "harvestApy": -0.0025929656023437886,
+      "harvestApr": 7488.8316182016015,
+      "harvestApy": 213583455717982660,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 7488.8316182016015,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -2953,10 +3000,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000024042538920818942,
+      "yieldApr": 32.72830663496926,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 32.72830663496926,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -2979,7 +3027,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "Badger Sett Curve.fi renBTC/wBTC",
     "pricePerFullShare": 1,
     "protocol": "Convex",
@@ -3061,11 +3109,12 @@ Array [
     "vaultToken": "0x6dEf55d2e18486B9dDfaA075bc4e4EE0B28c1545",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.005352783094427993,
-      "harvestApy": -0.002554206542404458,
+      "harvestApr": 7286.565160271836,
+      "harvestApy": 126014869281428200,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 7286.565160271836,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -3074,10 +3123,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000023393172045573274,
+      "yieldApr": 31.844345158120856,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 31.844345158120856,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -3100,7 +3150,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "Badger Sett SushiSwap LP Token",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
@@ -3190,11 +3240,12 @@ Array [
     "vaultToken": "0x1862A18181346EBd9EdAf800804f89190DeF24a5",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.024131682965291685,
-      "harvestApy": -0.004998748303608469,
+      "harvestApr": 32849.65545057454,
+      "harvestApy": 3.571648038456034e+31,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 32849.65545057454,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -3203,10 +3254,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.00010546226166794141,
+      "yieldApr": 143.5622606103774,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 143.5622606103774,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -3229,7 +3281,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "Badger Sett Curve.fi Factory Plain Pool: Badger Locked CVX",
     "pricePerFullShare": 1,
     "protocol": "Curve",
@@ -3311,11 +3363,12 @@ Array [
     "vaultToken": "0x937B8E917d0F36eDEBBA8E459C5FB16F3b315551",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.003990015954528585,
-      "harvestApy": -0.0021565335623585646,
+      "harvestApr": 5431.4756884994995,
+      "harvestApy": 561514720899822.25,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 5431.4756884994995,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -3324,10 +3377,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000017437495232345827,
+      "yieldApr": 23.737080879417757,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 23.737080879417757,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -3350,7 +3404,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "Badger Sett SushiSwap LP Token",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
@@ -3432,11 +3486,12 @@ Array [
     "vaultToken": "0x758A43EE2BFf8230eeb784879CdcFF4828F2544D",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.005006440537091051,
-      "harvestApy": -0.0024606961337547695,
+      "harvestApr": 6815.100584313619,
+      "harvestApy": 35284436541368464,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 6815.100584313619,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -3445,10 +3500,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000021879557373063795,
+      "yieldApr": 29.783911969586736,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 29.783911969586736,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",
@@ -3471,7 +3527,7 @@ Array [
       "weight": 0,
     },
     "bouncer": "none",
-    "lastHarvest": 1648236387419,
+    "lastHarvest": 1656606946,
     "name": "Badger Sett SushiSwap LP Token",
     "pricePerFullShare": 1,
     "protocol": "Sushiswap",
@@ -3553,11 +3609,12 @@ Array [
     "vaultToken": "0x88128580ACdD9c04Ce47AFcE196875747bF2A9f6",
     "version": "v1",
     "yieldProjection": Object {
-      "harvestApr": -0.004324593359204352,
-      "harvestApy": -0.002262081151094275,
+      "harvestApr": 5886.924754399886,
+      "harvestApy": 2362448522223782,
       "harvestTokens": Array [
         Object {
           "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+          "apr": 5886.924754399886,
           "balance": 1500,
           "decimals": 18,
           "name": "Badger",
@@ -3566,10 +3623,11 @@ Array [
         },
       ],
       "harvestValue": 1258500,
-      "yieldApr": -0.000018899692868990016,
+      "yieldApr": 25.727521771314564,
       "yieldTokens": Array [
         Object {
           "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+          "apr": 25.727521771314564,
           "balance": 10,
           "decimals": 8,
           "name": "Wrapped Bitcoin",

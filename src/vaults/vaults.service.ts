@@ -180,10 +180,22 @@ export class VaultsService {
     return {
       harvestApr: this.calculateProjectedYield(earningValue, harvestValue, lastHarvest),
       harvestApy: this.calculateProjectedYield(earningValue, harvestValue, lastHarvest, true),
-      harvestTokens: pendingHarvest.harvestTokens,
+      harvestTokens: pendingHarvest.harvestTokens.map((t) => {
+        const apr = this.calculateProjectedYield(earningValue, t.value, lastHarvest);
+        return {
+          apr,
+          ...t,
+        };
+      }),
       harvestValue,
       yieldApr: this.calculateProjectedYield(earningValue, yieldValue, lastHarvest),
-      yieldTokens: pendingHarvest.yieldTokens,
+      yieldTokens:  pendingHarvest.yieldTokens.map((t) => {
+        const apr = this.calculateProjectedYield(earningValue, t.value, lastHarvest);
+        return {
+          apr,
+          ...t,
+        };
+      }),
       yieldValue,
     };
   }
