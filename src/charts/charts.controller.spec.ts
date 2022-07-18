@@ -194,11 +194,10 @@ describe('ChartsController', () => {
 
   describe('GET /v2/charts/vault', () => {
     describe('with a missing vault address', () => {
-      it('returns 400, QueryParamError', async (done) => {
+      it('returns 400, QueryParamError', async () => {
         const { body } = await request.get('/v2/charts/vault').expect(NetworkStatus.BadRequest);
 
         expect(body).toMatchSnapshot();
-        done();
       });
     });
 
