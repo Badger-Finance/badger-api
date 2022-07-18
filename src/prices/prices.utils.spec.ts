@@ -10,6 +10,10 @@ import { convert, fetchPrices, getPrice, updatePrice } from './prices.utils';
 describe('prices.utils', () => {
   const strategy = new TestStrategy();
 
+  beforeEach(() => {
+    jest.spyOn(console, 'error').mockImplementation(jest.fn);
+  });
+
   describe('getPrice', () => {
     describe('query encounters an error', () => {
       it('returns a price of 0', async () => {

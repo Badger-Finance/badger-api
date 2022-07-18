@@ -11,6 +11,10 @@ describe('utils', () => {
 
   afterAll(resetProccessEnv);
 
+  beforeEach(() => {
+    jest.spyOn(console, 'error').mockImplementation(jest.fn);
+  });
+
   describe('checksumEntries', () => {
     describe('given a valid address record with all lowercase addresses', () => {
       it('returns the address record with checksummed addresses', () => {
