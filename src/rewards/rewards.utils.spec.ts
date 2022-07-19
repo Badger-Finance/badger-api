@@ -8,6 +8,10 @@ import { getVaultDefinition } from '../vaults/vaults.utils';
 import { getTreeDistribution, noRewards } from './rewards.utils';
 
 describe('rewards.utils', () => {
+  beforeEach(() => {
+    jest.spyOn(console, 'error').mockImplementation(jest.fn);
+  });
+
   describe('getTreeDistribution', () => {
     it('returns null for a chain with no badger tree', async () => {
       const distribution = await getTreeDistribution(new BinanceSmartChain());
