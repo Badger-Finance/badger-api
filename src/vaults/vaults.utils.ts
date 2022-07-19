@@ -9,6 +9,7 @@ import BadgerSDK, {
   ONE_YEAR_MS,
   Protocol,
   Strategy__factory,
+  Vault__factory,
   VaultBehavior,
   VaultDTO,
   VaultPerformanceEvent,
@@ -16,7 +17,6 @@ import BadgerSDK, {
   VaultType,
   VaultV15__factory,
   VaultVersion,
-  Vault__factory,
 } from '@badger-dao/sdk';
 import { BadRequest, NotFound, UnprocessableEntity } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';

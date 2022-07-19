@@ -158,8 +158,33 @@ Object {
       "name": "graviAURA",
       "value": 127168,
     },
+    Object {
+      "balance": 3,
+      "name": "auraBAL",
+      "value": 38125.333333333336,
+    },
+    Object {
+      "balance": 6,
+      "name": "BADGER / WBTC",
+      "value": 68045.33333333333,
+    },
+    Object {
+      "balance": 0,
+      "name": "bb-a-USD",
+      "value": 4669.333333333333,
+    },
+    Object {
+      "balance": 15,
+      "name": "graviAURA / auraBAL / WETH",
+      "value": 169954.66666666666,
+    },
+    Object {
+      "balance": 3,
+      "name": "graviAURA / DIGG / WBTC",
+      "value": 37618.666666666664,
+    },
   ],
-  "totalValue": 2562237.3333333335,
+  "totalValue": 2880650.666666667,
   "vaults": Array [
     Object {
       "balance": 13,
@@ -315,6 +340,31 @@ Object {
       "balance": 11,
       "name": "graviAURA",
       "value": 127168,
+    },
+    Object {
+      "balance": 3,
+      "name": "auraBAL",
+      "value": 38125.333333333336,
+    },
+    Object {
+      "balance": 6,
+      "name": "BADGER / WBTC",
+      "value": 68045.33333333333,
+    },
+    Object {
+      "balance": 0,
+      "name": "bb-a-USD",
+      "value": 4669.333333333333,
+    },
+    Object {
+      "balance": 15,
+      "name": "graviAURA / auraBAL / WETH",
+      "value": 169954.66666666666,
+    },
+    Object {
+      "balance": 3,
+      "name": "graviAURA / DIGG / WBTC",
+      "value": 37618.666666666664,
     },
   ],
 }
@@ -478,8 +528,33 @@ Object {
       "name": "graviAURA",
       "value": 127168,
     },
+    Object {
+      "balance": 3,
+      "name": "auraBAL",
+      "value": 38125.333333333336,
+    },
+    Object {
+      "balance": 6,
+      "name": "BADGER / WBTC",
+      "value": 68045.33333333333,
+    },
+    Object {
+      "balance": 0,
+      "name": "bb-a-USD",
+      "value": 4669.333333333333,
+    },
+    Object {
+      "balance": 15,
+      "name": "graviAURA / auraBAL / WETH",
+      "value": 169954.66666666666,
+    },
+    Object {
+      "balance": 3,
+      "name": "graviAURA / DIGG / WBTC",
+      "value": 37618.666666666664,
+    },
   ],
-  "totalValue": 2562237.3333333335,
+  "totalValue": 2880650.666666667,
   "vaults": Array [
     Object {
       "balance": 13,
@@ -635,6 +710,31 @@ Object {
       "balance": 11,
       "name": "graviAURA",
       "value": 127168,
+    },
+    Object {
+      "balance": 3,
+      "name": "auraBAL",
+      "value": 38125.333333333336,
+    },
+    Object {
+      "balance": 6,
+      "name": "BADGER / WBTC",
+      "value": 68045.33333333333,
+    },
+    Object {
+      "balance": 0,
+      "name": "bb-a-USD",
+      "value": 4669.333333333333,
+    },
+    Object {
+      "balance": 15,
+      "name": "graviAURA / auraBAL / WETH",
+      "value": 169954.66666666666,
+    },
+    Object {
+      "balance": 3,
+      "name": "graviAURA / DIGG / WBTC",
+      "value": 37618.666666666664,
     },
   ],
 }
