@@ -3,6 +3,7 @@ import BadgerSDK, { Network } from '@badger-dao/sdk';
 import { BadRequest, NotFound } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 
+import { STAGE } from '../../config/constants';
 import { TOKENS } from '../../config/tokens.config';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { TokenConfig } from '../../tokens/interfaces/token-config.interface';
@@ -12,6 +13,10 @@ import { ChainVaults } from '../vaults/chain.vaults';
 
 type Chains = Record<string, Chain>;
 type Sdks = Record<string, BadgerSDK>;
+
+export function isStageVault(vault: VaultDefinition): boolean {
+  return !vault.stage || vault.stage === STAGE;
+}
 
 export abstract class Chain {
   private static chains: Chains = {};
