@@ -49,6 +49,7 @@ import { VaultDefinition } from './interfaces/vault-definition.interface';
 import { VaultHarvestData } from './interfaces/vault-harvest-data.interface';
 import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
 import { VaultStrategy } from './interfaces/vault-strategy.interface';
+import { SUPPORTED_CHAINS } from '../chains/chain';
 
 export const VAULT_SOURCE = 'Vault Compounding';
 
@@ -907,4 +908,8 @@ export async function queryVaultCharts(id: string): Promise<HistoricVaultSnapsho
     console.error(err);
     return [];
   }
+}
+
+export function getChainByVaultAddr(addr: string): Nullable<Chain> {
+  return SUPPORTED_CHAINS.find((chain) => !!chain.vaults.find((vault) => vault.vaultToken === addr));
 }
