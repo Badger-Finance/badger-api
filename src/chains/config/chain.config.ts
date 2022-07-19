@@ -3,7 +3,6 @@ import BadgerSDK, { Network } from '@badger-dao/sdk';
 import { BadRequest, NotFound } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 
-import { STAGE } from '../../config/constants';
 import { TOKENS } from '../../config/tokens.config';
 import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { TokenConfig } from '../../tokens/interfaces/token-config.interface';
@@ -20,7 +19,6 @@ export abstract class Chain {
   private static sdks: Sdks = {};
 
   readonly sdk: BadgerSDK;
-  readonly vaults: VaultDefinition[];
   readonly vaultsCompound: ChainVaults;
   readonly strategy: ChainStrategy;
   // TODO: add emission control support to sdk
@@ -33,11 +31,10 @@ export abstract class Chain {
     readonly network: Network,
     readonly tokens: TokenConfig,
     readonly rpcUrl: string,
-    vaults: VaultDefinition[],
+    readonly vaults: VaultDefinition[],
     strategy: ChainStrategy,
     emissionControl?: string,
   ) {
-    this.vaults = vaults.filter((vault) => !vault.stage || vault.stage === STAGE);
     this.vaultsCompound = new ChainVaults(network);
     this.sdk = new BadgerSDK({ network: parseInt(chainId, 16), provider: rpcUrl });
     this.strategy = strategy;

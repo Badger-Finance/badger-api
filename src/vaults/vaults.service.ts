@@ -10,7 +10,7 @@ import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapsho
 import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
 import { Chain } from '../chains/config/chain.config';
 import { toChartDataKey } from '../charts/charts.utils';
-import { ONE_YEAR_SECONDS } from '../config/constants';
+import { ONE_YEAR_SECONDS, STAGE } from '../config/constants';
 import { NodataForVaultError } from '../errors/allocation/nodata.for.vault.error';
 import { convert } from '../prices/prices.utils';
 import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interface';
@@ -45,7 +45,11 @@ export class VaultsService {
   }
 
   async listVaults(chain: Chain, currency?: Currency): Promise<VaultDTO[]> {
-    return Promise.all(chain.vaults.map((vault) => this.getVault(chain, vault, currency)));
+    return Promise.all(
+      chain.vaults
+        .filter((vault) => !vault.stage || vault.stage === STAGE)
+        .map((vault) => this.getVault(chain, vault, currency)),
+    );
   }
 
   async listV3Vaults(chain: Chain, currency?: Currency, client?: MetadataClient): Promise<VaultDTO[]> {
@@ -189,7 +193,7 @@ export class VaultsService {
       }),
       harvestValue,
       yieldApr: this.calculateProjectedYield(earningValue, yieldValue, lastHarvest),
-      yieldTokens:  pendingHarvest.yieldTokens.map((t) => {
+      yieldTokens: pendingHarvest.yieldTokens.map((t) => {
         const apr = this.calculateProjectedYield(earningValue, t.value, lastHarvest);
         return {
           apr,
