@@ -326,4 +326,14 @@ export const ethSetts: VaultDefinition[] = [
     stage: Stage.Staging,
     version: VaultVersion.v1_5,
   },
+  {
+    name: 'graviAURA / DIGG / WBTC',
+    depositToken: TOKENS.BPT_GRAV_DIGG_WBTC,
+    getTokenBalance: getBalancerVaultTokenBalance,
+    vaultToken: TOKENS.BBPT_GRAV_DIGG_WBTC,
+    protocol: Protocol.Aura,
+    state: VaultState.Guarded,
+    stage: Stage.Staging,
+    version: VaultVersion.v1_5,
+  },
 ];
