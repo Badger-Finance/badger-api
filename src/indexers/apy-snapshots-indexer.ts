@@ -38,7 +38,7 @@ export async function refreshChainApySnapshots(chain: Chain) {
         const totalApr = results.reduce((total, s) => (total += s.apr), 0);
 
         // TODO: throw a discord webhook there is some issue ongoing
-        if (SourceBufferList.length === 0 || totalApr === 0) {
+        if (results.length === 0 || totalApr === 0) {
           // returning here prevents the bad zero data from being persisted
           return;
         }
