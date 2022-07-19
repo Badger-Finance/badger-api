@@ -3,6 +3,7 @@ import { VaultSnapshot } from '@badger-dao/sdk';
 
 import { SUPPORTED_CHAINS } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
+import * as chartUtils from '../charts/charts.utils';
 import { TOKENS } from '../config/tokens.config';
 import { randomSnapshot } from '../test/tests.utils';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
@@ -21,6 +22,10 @@ describe('vaults-indexer', () => {
       .mockImplementation(async (_chain, vault) => randomSnapshot(vault));
     jest.spyOn(VaultsService, 'loadVault').mockImplementation(async (c, v) => defaultVault(c, v));
     jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
+
+    // just mock, to prevent dramatic amount of console output
+    // will be refactored, when old vault historic data be removed
+    jest.spyOn(chartUtils, 'updateSnapshots').mockImplementation();
   });
 
   describe('indexProtocolVaults', () => {
