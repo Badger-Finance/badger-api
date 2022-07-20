@@ -8,3 +8,4 @@ process.env.SUSHISWAP = 'https://api.thegraph.com/subgraphs/name/sushiswap/excha
 process.env.PANCAKESWAP = 'https://api.thegraph.com/subgraphs/name/pancakeswap/exchange';
 process.env.MASTERCHEF = 'https://api.thegraph.com/subgraphs/name/sushiswap/master-chef';
 process.env.REWARD_DATA = 'badger-merkle-proofs-testing';
+process.env.STAGE = 'prod';

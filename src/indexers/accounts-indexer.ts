@@ -88,7 +88,8 @@ export async function refreshUserAccounts() {
       try {
         await refreshClaimableBalances(chain);
       } catch (err) {
-        console.log(`Failred to refresh claimable balances for ${chain.network}`);
+        console.log(`Failed to refresh claimable balances for ${chain.network}`);
+        console.log(`Chain information: ${(chain.name, chain.chainId, chain.rpcUrl)}`);
         console.error(err);
       }
     }),

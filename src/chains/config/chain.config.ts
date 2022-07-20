@@ -14,13 +14,16 @@ import { ChainVaults } from '../vaults/chain.vaults';
 type Chains = Record<string, Chain>;
 type Sdks = Record<string, BadgerSDK>;
 
+export function isStageVault(vault: VaultDefinition): boolean {
+  return !vault.stage || vault.stage === STAGE;
+}
+
 export abstract class Chain {
   private static chains: Chains = {};
   private static chainsByNetworkId: Record<string, Chain> = {};
   private static sdks: Sdks = {};
 
   readonly sdk: BadgerSDK;
-  readonly vaults: VaultDefinition[];
   readonly vaultsCompound: ChainVaults;
   readonly strategy: ChainStrategy;
   // TODO: add emission control support to sdk
@@ -33,11 +36,10 @@ export abstract class Chain {
     readonly network: Network,
     readonly tokens: TokenConfig,
     readonly rpcUrl: string,
-    vaults: VaultDefinition[],
+    readonly vaults: VaultDefinition[],
     strategy: ChainStrategy,
     emissionControl?: string,
   ) {
-    this.vaults = vaults.filter((vault) => !vault.stage || vault.stage === STAGE);
     this.vaultsCompound = new ChainVaults(network);
     this.sdk = new BadgerSDK({ network: parseInt(chainId, 16), provider: rpcUrl });
     this.strategy = strategy;
