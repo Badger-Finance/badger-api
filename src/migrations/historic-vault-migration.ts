@@ -49,7 +49,6 @@ export async function run() {
       ...item,
       id: HistoricVaultSnapshotModel.formBlobId(item.address, chain.network),
       timestamp: item.timestamp,
-      migrated: true,
     });
 
     const migratedCnt = await pushHistoricSnapshots(HistoricVaultSnapshotModel.NAMESPACE, historicSnapshot);

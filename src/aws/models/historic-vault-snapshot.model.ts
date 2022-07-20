@@ -63,9 +63,6 @@ export class HistoricVaultSnapshotModel extends ChartData<HistoricVaultSnapshotM
   @attribute()
   harvestApr!: number;
 
-  @attribute({ defaultProvider: () => false })
-  migrated!: boolean;
-
   toBlankData(): HistoricVaultSnapshotModel {
     const copy = JSON.parse(JSON.stringify(this));
     copy.block = 0;
