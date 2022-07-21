@@ -9,6 +9,7 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
 import { SUPPORTED_CHAINS } from '../chains/chain';
 import { getFullToken, toBalance } from '../tokens/tokens.utils';
+import { sendPlainTextToDiscord } from '../utils/discord.utils';
 
 export async function refreshVaultHarvests() {
   await Promise.all(
@@ -36,6 +37,7 @@ export async function refreshVaultHarvests() {
             harvestData.lastHarvestedAt = pendingHarvest.lastHarvestedAt;
           } catch {
             shouldCheckGraph = true;
+            sendPlainTextToDiscord('Harvest failed', 'Error Bot');
           }
 
           const pendingYield = await sdk.vaults.getPendingYield(vault.vaultToken);
