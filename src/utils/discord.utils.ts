@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { DISCORD_WEBHOOK_URL } from '../config/constants';
 
-export const sendErrorToDiscord = (e: Error, errorMsg: string, errorType: string) => {
+export function sendErrorToDiscord(e: Error, errorMsg: string, errorType: string) {
   sendMessageToDiscord(
     `**${errorType}**`,
     `:x: ${errorMsg}`,
@@ -24,15 +24,15 @@ export const sendErrorToDiscord = (e: Error, errorMsg: string, errorType: string
     ],
     'Error Bot',
   );
-};
+}
 
-export const sendMessageToDiscord = async (
+export async function sendMessageToDiscord(
   title: string,
   description: string,
   fields: { name: string; value: string; inline: boolean }[],
   username: string,
   url: string = DISCORD_WEBHOOK_URL,
-) => {
+) {
   try {
     await axios.post(url, {
       embeds: [
@@ -47,21 +47,21 @@ export const sendMessageToDiscord = async (
   } catch (error) {
     console.log(error);
   }
-};
+}
 
-export const sendPlainTextToDiscord = async (message: string, username: string, url: string = DISCORD_WEBHOOK_URL) => {
+export async function sendPlainTextToDiscord(message: string, username: string, url: string = DISCORD_WEBHOOK_URL) {
   try {
     await axios.post(url, { content: message, username });
   } catch (error) {
     console.log(error);
   }
-};
+}
 
-export const sendCodeBlockToDiscord = async (message: string, username: string, url: string = DISCORD_WEBHOOK_URL) => {
-  const msg = '```\n{message}\n```';
+export async function sendCodeBlockToDiscord(message: string, username: string, url: string = DISCORD_WEBHOOK_URL) {
+  const msg = '```\n' + message + '\n```';
   try {
     await axios.post(url, { content: msg, username });
   } catch (error) {
     console.log(error);
   }
-};
+}
