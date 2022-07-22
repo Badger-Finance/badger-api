@@ -100,6 +100,7 @@ provider:
     ARBISCAN_API_KEY: ${env:ARBISCAN_API_KEY}
     # 3rd party API keys
     BLOCKNATIVE_API_KEY: ${env:BLOCKNATIVE_API_KEY}
+    DISCORD_WEBHOOK_URL: ${env:DISCORD_WEBHOOK_URL}
     UNISWAP: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2'
     SUSHISWAP: 'https://api.thegraph.com/subgraphs/name/sushiswap/exchange'
     SUSHISWAP_MATIC: 'https://api.thegraph.com/subgraphs/name/sushiswap/matic-exchange'
