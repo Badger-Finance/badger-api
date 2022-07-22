@@ -30,6 +30,7 @@ export const TREASURY_SNAPSHOT_DATA = getEnvVar('TREASURY_SNAPSHOT_DATA');
 export const PROTOCOL_DATA = getEnvVar('PROTOCOL_DATA');
 export const CHART_DATA = getEnvVar('CHART_DATA');
 export const CITADEL_REWARDS_DATA = getEnvVar('CITADEL_REWARDS_DATA');
+export const MIGRATION_PROCESS_DATA = getEnvVar('MIGRATION_PROCESS_DATA');
 
 // thegraph constants
 export const UNISWAP_URL = getEnvVar('UNISWAP');
