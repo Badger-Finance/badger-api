@@ -183,6 +183,13 @@ resources:
             AttributeType: 'S'
           - AttributeName: 'timestamp'
             AttributeType: 'N'
+        GlobalSecondaryIndexes:
+          - IndexName: IndexHistoricVaultRange
+            KeySchema:
+              - AttributeName: 'timestamp'
+                KeyType: 'HASH'
+            Projection:
+              ProjectionType: ALL
 
     priceTable:
       Type: AWS::DynamoDB::Table

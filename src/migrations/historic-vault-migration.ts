@@ -1,11 +1,9 @@
-import { greaterThanOrEqualTo } from '@aws/dynamodb-expressions';
-
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
 import { HistoricVaultSnapshotOldModel } from '../aws/models/historic-vault-snapshot-old.model';
 import { MigrationProcessData } from '../aws/models/migration-process.model';
+import { SUPPORTED_CHAINS } from '../chains/chain';
 import { CHART_DATA, SETT_HISTORIC_DATA } from '../config/constants';
-import { getChainByVaultAddr } from '../vaults/vaults.utils';
 import {
   HISTORIC_VAULT_FIRST_ITEM_TO_MIGR_TS,
   HISTORIC_VAULT_SEQUENCE_NAME,
@@ -33,12 +31,18 @@ export async function run() {
 
   let lastItem;
 
-  for await (const item of mapper.query(
-    HistoricVaultSnapshotOldModel,
-    { rangeKey: greaterThanOrEqualTo(lastInsertedTimestamp) },
-    { limit: 1000 },
-  )) {
-    const chain = getChainByVaultAddr(item.address);
+  for await (const item of mapper.scan(HistoricVaultSnapshotOldModel, {
+    limit: 1000,
+    indexName: 'IndexHistoricVaultRange',
+    filter: {
+      type: 'GreaterThanOrEqualTo',
+      object: lastInsertedTimestamp,
+      subject: 'timestamp',
+    },
+  })) {
+    const chain = SUPPORTED_CHAINS.find((chain) => {
+      return !!chain.vaults.find((vault) => vault.vaultToken === item.address);
+    });
 
     if (!chain) {
       console.log(`Unable to determine chain by vault addr: ${item.address}`);
