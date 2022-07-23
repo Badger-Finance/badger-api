@@ -1,4 +1,4 @@
-import { Network, VaultState, VaultVersion } from '@badger-dao/sdk';
+import { VaultState, VaultVersion } from '@badger-dao/sdk';
 import {
   BadgerTreeDistribution_OrderBy,
   OrderDirection,
@@ -14,9 +14,6 @@ import { sendPlainTextToDiscord } from '../utils/discord.utils';
 export async function refreshVaultHarvests() {
   await Promise.all(
     SUPPORTED_CHAINS.map(async (chain) => {
-      if (chain.network !== Network.Ethereum) {
-        return;
-      }
       const sdk = await chain.getSdk();
       const mapper = getDataMapper();
       for (const vault of chain.vaults) {
