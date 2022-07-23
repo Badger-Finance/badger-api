@@ -22,7 +22,6 @@ import { CachedAccount } from '../aws/models/cached-account.model';
 import { CachedBoost } from '../aws/models/cached-boost.model';
 import { SUPPORTED_CHAINS } from '../chains/chain';
 import { Arbitrum } from '../chains/config/arbitrum.config';
-import { Avalanche } from '../chains/config/avax.config';
 import { BinanceSmartChain } from '../chains/config/bsc.config';
 import { Chain } from '../chains/config/chain.config';
 import { Ethereum } from '../chains/config/eth.config';
@@ -212,9 +211,6 @@ export function setupChainGasPrices() {
     .mockImplementation(async () => ({ rapid: 38, fast: 33, standard: 33, slow: 33 }));
   jest
     .spyOn(Polygon.prototype, 'getGasPrices')
-    .mockImplementation(async () => ({ rapid: 38, fast: 33, standard: 33, slow: 33 }));
-  jest
-    .spyOn(Avalanche.prototype, 'getGasPrices')
     .mockImplementation(async () => ({ rapid: 38, fast: 33, standard: 33, slow: 33 }));
   jest
     .spyOn(Fantom.prototype, 'getGasPrices')

@@ -2,7 +2,6 @@ import { Network, Protocol } from '@badger-dao/sdk';
 
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
-import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { getCurveVaultTokenBalance } from '../../protocols/strategies/convex.strategy';
 import { maticTokensConfig } from '../../tokens/config/polygon-tokens.config';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
@@ -22,10 +21,6 @@ export class Polygon extends Chain {
       new BaseStrategy(Network.Polygon, Object.keys(maticTokensConfig)),
     );
     Chain.register(this.network, this);
-  }
-
-  async getGasPrices(): Promise<GasPrices> {
-    return this.defaultGasPrice();
   }
 
   getBadgerTokenAddress(): string {

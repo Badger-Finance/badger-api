@@ -47,10 +47,6 @@ export const API_VERSION = 'v2.0.0';
 export const PRODUCTION = STAGE === Stage.Production;
 export const DISCORD_WEBHOOK_URL = getEnvVar('DISCORD_WEBHOOK_URL');
 
-// third party api constants
-export const COINGECKO_URL = 'https://api.coingecko.com/api/v3/simple';
-export const BLOCKNATIVE_API_KEY = getEnvVar('BLOCKNATIVE_API_KEY');
-
 export const DEFAULT_PAGE_SIZE = 20;
 
 export const swaggerConfig: SwaggerSettings = {

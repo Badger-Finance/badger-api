@@ -6,10 +6,11 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { TokenPriceSnapshot } from '../aws/models/token-price-snapshot.model';
 import { Chain } from '../chains/config/chain.config';
 import { request } from '../common/request';
-import { COINGECKO_URL } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
 import { CoinGeckoPriceResponse } from './interface/coingecko-price-response.interface';
 import { TokenPrice } from './interface/token-price.interface';
+
+const COINGECKO_URL = 'https://api.coingecko.com/api/v3/simple';
 
 /**
  * Update pricing db entry using chain strategy.
