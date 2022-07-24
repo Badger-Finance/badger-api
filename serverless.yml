@@ -95,11 +95,7 @@ provider:
     BSC_RPC: ${env:BSC_RPC}
     MATIC_RPC: ${env:MATIC_RPC}
     ARBITRUM_RPC: ${env:ARBITRUM_RPC}
-    # etherscan secrets
-    ETHERSCAN_API_KEY: ${env:ETHERSCAN_API_KEY}
-    ARBISCAN_API_KEY: ${env:ARBISCAN_API_KEY}
     # 3rd party API keys
-    BLOCKNATIVE_API_KEY: ${env:BLOCKNATIVE_API_KEY}
     DISCORD_WEBHOOK_URL: ${env:DISCORD_WEBHOOK_URL}
     UNISWAP: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2'
     SUSHISWAP: 'https://api.thegraph.com/subgraphs/name/sushiswap/exchange'
@@ -638,7 +634,7 @@ functions:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-vault-harvests
           description: 'index harvests data for supported vaults'
-          rate: rate(1 hour)
+          rate: rate(5 minutes)
 
   index-harvest-compound:
     handler: src/indexers/harvest-compound-indexer.indexVaultsHarvestsCompund
@@ -686,21 +682,3 @@ functions:
           name: ${self:service}-${self:custom.stage}-index-protocol-metrics-snapshots
           description: 'index protocol metrics'
           rate: rate(1 day)
-
-  index-citadel-treasury:
-    handler: src/indexers/citadel-indexer.snapshotTreasury
-    timeout: 480
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-citadel-treasury
-          description: 'index citadel treasury holdings'
-          rate: rate(5 minutes)
-
-  index-citadel-rewards:
-    handler: src/indexers/citadel-rewards-indexer.indexAllRewards
-    timeout: 480
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-citadel-rewards
-          description: 'index citadel rewards'
-          rate: rate(2 hours)

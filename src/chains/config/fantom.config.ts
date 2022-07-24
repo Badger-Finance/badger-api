@@ -3,7 +3,6 @@ import { Network, Protocol, VaultBehavior, VaultState, VaultVersion } from '@bad
 import { Stage } from '../../config/enums/stage.enum';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
-import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { fantomTokensConfig } from '../../tokens/config/fantom-tokens.config';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { BaseStrategy } from '../strategies/base.strategy';
@@ -23,10 +22,6 @@ export class Fantom extends Chain {
       '0x89122c767A5F543e663DB536b603123225bc3823',
     );
     Chain.register(this.network, this);
-  }
-
-  async getGasPrices(): Promise<GasPrices> {
-    return this.defaultGasPrice();
   }
 
   getBadgerTokenAddress(): string {

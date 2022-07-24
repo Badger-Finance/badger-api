@@ -110,9 +110,7 @@ export abstract class Chain {
     return TOKENS.BADGER;
   }
 
-  abstract getGasPrices(): Promise<GasPrices>;
-
-  async defaultGasPrice(): Promise<GasPrices> {
+  async getGasPrices(): Promise<GasPrices> {
     let gasPrice;
     try {
       gasPrice = Number(ethers.utils.formatUnits(await this.provider.getGasPrice(), 9));

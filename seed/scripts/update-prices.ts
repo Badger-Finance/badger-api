@@ -6,7 +6,7 @@ async function updatePrices() {
   let prices: { address: string; price: number; updatedAt: number }[] = [];
   for (const network of Object.values(Network)) {
     try {
-      const api = new BadgerAPI({ network, baseURL: 'https://staging-api.badger.com/v2' });
+      const api = new BadgerAPI({ network, baseURL: 'https://staging-api.badger.com/' });
       const networkPrices = await api.loadPrices(Currency.USD);
       Object.entries(networkPrices).forEach((entry) => {
         const [token, price] = entry;

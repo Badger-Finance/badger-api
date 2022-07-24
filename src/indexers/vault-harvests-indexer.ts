@@ -1,4 +1,4 @@
-import { VaultVersion } from '@badger-dao/sdk';
+import { VaultState, VaultVersion } from '@badger-dao/sdk';
 import {
   BadgerTreeDistribution_OrderBy,
   OrderDirection,
@@ -17,6 +17,10 @@ export async function refreshVaultHarvests() {
       const sdk = await chain.getSdk();
       const mapper = getDataMapper();
       for (const vault of chain.vaults) {
+        if (vault.state && vault.state === VaultState.Discontinued) {
+          continue;
+        }
+
         const harvestData: VaultPendingHarvestData = {
           vault: vault.vaultToken,
           yieldTokens: [],
@@ -37,7 +41,9 @@ export async function refreshVaultHarvests() {
             harvestData.lastHarvestedAt = pendingHarvest.lastHarvestedAt;
           } catch {
             shouldCheckGraph = true;
-            sendPlainTextToDiscord('Harvest failed', 'Error Bot');
+            sendPlainTextToDiscord(
+              `${chain.name} ${vault.name} (${vault.protocol}, ${vault.version}, ${vault.state}) failed to harvest!`,
+            );
           }
 
           const pendingYield = await sdk.vaults.getPendingYield(vault.vaultToken);
