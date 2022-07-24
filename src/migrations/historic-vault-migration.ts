@@ -67,6 +67,10 @@ export async function run() {
     return;
   }
 
+  const migrationStatus =
+    lastItem.timestamp >= HITORIC_VAULT_LAST_ITEM_TO_MIGR_TS ? MigrationStatus.Complite : MigrationStatus.Process;
+  const migrationStatusText = migrationStatus === MigrationStatus.Complite ? 'Complite' : 'Process';
+
   await mapper.put(
     Object.assign(new MigrationProcessData(), {
       id: HISTORIC_VAULT_TO_CHART_DATA_MIGRATION_ID,
@@ -74,10 +78,15 @@ export async function run() {
         name: HISTORIC_VAULT_SEQUENCE_NAME,
         value: `${lastItem.timestamp}`,
       },
-      status:
-        lastItem.timestamp >= HITORIC_VAULT_LAST_ITEM_TO_MIGR_TS ? MigrationStatus.Complite : MigrationStatus.Process,
+      status: migrationStatus,
     }),
   );
 
   console.log(`Historic vault migration successfully finished with total ${chartDataMigratedCnt} rows pushed.`);
+  console.log(
+    `Migration status is ${migrationStatusText}, 
+    searchTerm timestamp: ${lastInsertedTimestamp}, 
+    lastItem.timestamp: ${lastItem.timestamp}, 
+    lastItem.address: ${lastItem.address}`,
+  );
 }
