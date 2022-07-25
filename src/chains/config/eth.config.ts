@@ -1,12 +1,8 @@
 import { Network, Protocol, VaultBehavior, VaultState, VaultVersion } from '@badger-dao/sdk';
-import axios from 'axios';
 
-import { BLOCKNATIVE_API_KEY } from '../../config/constants';
 import { Stage } from '../../config/enums/stage.enum';
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
-import { BlocknativeGasResponse } from '../../gas/interfaces/blocknative-gas-response.interface';
-import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { getBalancerVaultTokenBalance } from '../../protocols/strategies/balancer.strategy';
 import { getCurveVaultTokenBalance } from '../../protocols/strategies/convex.strategy';
 import { ethTokensConfig } from '../../tokens/config/eth-tokens.config';
@@ -15,11 +11,6 @@ import { BaseStrategy } from '../strategies/base.strategy';
 import { Chain } from './chain.config';
 
 export class Ethereum extends Chain {
-  private readonly client = axios.create({
-    baseURL: 'https://api.blocknative.com/gasprices/blockprices',
-    headers: { Authorization: BLOCKNATIVE_API_KEY },
-  });
-
   constructor() {
     super(
       'Ethereum',
@@ -33,34 +24,6 @@ export class Ethereum extends Chain {
       '0x31825c0a6278b89338970e3eb979b05b27faa263',
     );
     Chain.register(this.network, this);
-  }
-
-  async getGasPrices(): Promise<GasPrices> {
-    try {
-      const { data } = await this.client.get('/');
-      const result = data as BlocknativeGasResponse;
-      const blockPrices = result.blockPrices[0];
-      return {
-        rapid: {
-          maxPriorityFeePerGas: blockPrices.estimatedPrices[0].maxPriorityFeePerGas,
-          maxFeePerGas: blockPrices.estimatedPrices[0].maxFeePerGas,
-        },
-        fast: {
-          maxPriorityFeePerGas: blockPrices.estimatedPrices[1].maxPriorityFeePerGas,
-          maxFeePerGas: blockPrices.estimatedPrices[1].maxFeePerGas,
-        },
-        standard: {
-          maxPriorityFeePerGas: blockPrices.estimatedPrices[2].maxPriorityFeePerGas,
-          maxFeePerGas: blockPrices.estimatedPrices[2].maxFeePerGas,
-        },
-        slow: {
-          maxPriorityFeePerGas: blockPrices.estimatedPrices[3].maxPriorityFeePerGas,
-          maxFeePerGas: blockPrices.estimatedPrices[3].maxFeePerGas,
-        },
-      };
-    } catch (err) {
-      return this.defaultGasPrice();
-    }
   }
 }
 
@@ -321,6 +284,16 @@ export const ethSetts: VaultDefinition[] = [
     depositToken: TOKENS.BPT_GRAV_AURABAL_WETH,
     getTokenBalance: getBalancerVaultTokenBalance,
     vaultToken: TOKENS.BBPT_GRAV_AURABAL_WETH,
+    protocol: Protocol.Aura,
+    state: VaultState.Guarded,
+    stage: Stage.Staging,
+    version: VaultVersion.v1_5,
+  },
+  {
+    name: 'graviAURA / DIGG / WBTC',
+    depositToken: TOKENS.BPT_GRAV_DIGG_WBTC,
+    getTokenBalance: getBalancerVaultTokenBalance,
+    vaultToken: TOKENS.BBPT_GRAV_DIGG_WBTC,
     protocol: Protocol.Aura,
     state: VaultState.Guarded,
     stage: Stage.Staging,

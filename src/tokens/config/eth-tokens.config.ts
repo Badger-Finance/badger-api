@@ -245,6 +245,9 @@ export const ethTokensConfig: TokenConfig = {
   [TOKENS.BPT_GRAV_AURABAL_WETH]: {
     type: PricingType.BalancerLP,
   },
+  [TOKENS.BPT_GRAV_DIGG_WBTC]: {
+    type: PricingType.BalancerLP,
+  },
   [TOKENS.BBADGER]: {
     type: PricingType.Vault,
     vaultToken: {
@@ -487,6 +490,13 @@ export const ethTokensConfig: TokenConfig = {
     type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.BPT_WBTC_BADGER,
+      network: Network.Ethereum,
+    },
+  },
+  [TOKENS.BBPT_GRAV_DIGG_WBTC]: {
+    type: PricingType.Vault,
+    vaultToken: {
+      address: TOKENS.BPT_GRAV_DIGG_WBTC,
       network: Network.Ethereum,
     },
   },

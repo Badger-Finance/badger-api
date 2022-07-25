@@ -3,7 +3,6 @@ import { Network, Protocol, VaultState } from '@badger-dao/sdk';
 import { Stage } from '../../config/enums/stage.enum';
 import RPC from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
-import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { getCurveVaultTokenBalance } from '../../protocols/strategies/convex.strategy';
 import { arbitrumTokensConfig } from '../../tokens/config/arbitrum-tokens.config';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
@@ -24,10 +23,6 @@ export class Arbitrum extends Chain {
       '0x78418681f9ed228d627f785fb9607ed5175518fd',
     );
     Chain.register(this.network, this);
-  }
-
-  async getGasPrices(): Promise<GasPrices> {
-    return this.defaultGasPrice();
   }
 
   getBadgerTokenAddress(): string {

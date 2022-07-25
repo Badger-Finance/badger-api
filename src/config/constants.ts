@@ -30,6 +30,7 @@ export const TREASURY_SNAPSHOT_DATA = getEnvVar('TREASURY_SNAPSHOT_DATA');
 export const PROTOCOL_DATA = getEnvVar('PROTOCOL_DATA');
 export const CHART_DATA = getEnvVar('CHART_DATA');
 export const CITADEL_REWARDS_DATA = getEnvVar('CITADEL_REWARDS_DATA');
+export const MIGRATION_PROCESS_DATA = getEnvVar('MIGRATION_PROCESS_DATA');
 
 // thegraph constants
 export const UNISWAP_URL = getEnvVar('UNISWAP');
@@ -44,10 +45,7 @@ export const SWAPR_URL = getEnvVar('SWAPR');
 export const STAGE = getEnvVar('STAGE');
 export const API_VERSION = 'v2.0.0';
 export const PRODUCTION = STAGE === Stage.Production;
-
-// third party api constants
-export const COINGECKO_URL = 'https://api.coingecko.com/api/v3/simple';
-export const BLOCKNATIVE_API_KEY = getEnvVar('BLOCKNATIVE_API_KEY');
+export const DISCORD_WEBHOOK_URL = getEnvVar('DISCORD_WEBHOOK_URL');
 
 export const DEFAULT_PAGE_SIZE = 20;
 

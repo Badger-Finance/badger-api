@@ -2,7 +2,6 @@ import { Network, Protocol, VaultState } from '@badger-dao/sdk';
 
 import rpc from '../../config/rpc.config';
 import { TOKENS } from '../../config/tokens.config';
-import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { bscTokensConfig } from '../../tokens/config/bsc-tokens.config';
 import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { BaseStrategy } from '../strategies/base.strategy';
@@ -21,10 +20,6 @@ export class BinanceSmartChain extends Chain {
       new BaseStrategy(Network.BinanceSmartChain, Object.keys(bscTokensConfig)),
     );
     Chain.register(this.network, this);
-  }
-
-  async getGasPrices(): Promise<GasPrices> {
-    return this.defaultGasPrice();
   }
 
   getBadgerTokenAddress(): string {

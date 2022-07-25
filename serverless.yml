@@ -62,6 +62,7 @@ custom:
     PROTOCOL_DATA: protocol-data-${self:custom.stage}
     CHART_DATA: chart-data-${self:custom.stage}
     CITADEL_REWARDS_DATA: citadel-rewards-snapshot-${self:custom.stage}
+    MIGRATION_PROCESS_DATA: migration-process-${self:custom.stage}
 
   merkleProofs:
     staging: 'badger-staging-merkle-proofs'
@@ -94,11 +95,8 @@ provider:
     BSC_RPC: ${env:BSC_RPC}
     MATIC_RPC: ${env:MATIC_RPC}
     ARBITRUM_RPC: ${env:ARBITRUM_RPC}
-    # etherscan secrets
-    ETHERSCAN_API_KEY: ${env:ETHERSCAN_API_KEY}
-    ARBISCAN_API_KEY: ${env:ARBISCAN_API_KEY}
     # 3rd party API keys
-    BLOCKNATIVE_API_KEY: ${env:BLOCKNATIVE_API_KEY}
+    DISCORD_WEBHOOK_URL: ${env:DISCORD_WEBHOOK_URL}
     UNISWAP: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2'
     SUSHISWAP: 'https://api.thegraph.com/subgraphs/name/sushiswap/exchange'
     SUSHISWAP_MATIC: 'https://api.thegraph.com/subgraphs/name/sushiswap/matic-exchange'
@@ -127,6 +125,7 @@ provider:
     PROTOCOL_DATA: ${self:custom.table.PROTOCOL_DATA}
     CHART_DATA: ${self:custom.table.CHART_DATA}
     CITADEL_REWARDS_DATA: ${self:custom.table.CITADEL_REWARDS_DATA}
+    MIGRATION_PROCESS_DATA: ${self:custom.table.MIGRATION_PROCESS_DATA}
     # General Defintions
     REWARD_DATA: ${self:custom.merkleProofs.${self:custom.stage}}
     STAGE: ${opt:stage, self:provider.stage}
@@ -181,6 +180,13 @@ resources:
             AttributeType: 'S'
           - AttributeName: 'timestamp'
             AttributeType: 'N'
+        GlobalSecondaryIndexes:
+          - IndexName: IndexHistoricVaultRange
+            KeySchema:
+              - AttributeName: 'timestamp'
+                KeyType: 'HASH'
+            Projection:
+              ProjectionType: ALL
 
     priceTable:
       Type: AWS::DynamoDB::Table
@@ -539,6 +545,18 @@ resources:
             Projection:
               ProjectionType: ALL
 
+    migrationProcessData:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.table.MIGRATION_PROCESS_DATA}
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: 'id'
+            KeyType: 'HASH'
+        AttributeDefinitions:
+          - AttributeName: 'id'
+            AttributeType: 'S'
+
 functions:
   request-handler:
     handler: src/LambdaServer.handler
@@ -562,6 +580,15 @@ functions:
           name: ${self:service}-${self:custom.stage}-index-vaults-history
           description: 'index historical data for all vaults'
           rate: rate(30 minutes)
+
+  migrate-vaults-historic-data:
+    handler: src/migrations/historic-vault-migration.run
+    timeout: 480
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-migrate-vaults-historic-data
+          description: 'migrate vaults historic data to chart data blob'
+          rate: rate(10 minutes)
 
   index-apy-snapshots:
     handler: src/indexers/apy-snapshots-indexer.refreshApySnapshots
@@ -607,7 +634,7 @@ functions:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-vault-harvests
           description: 'index harvests data for supported vaults'
-          rate: rate(1 hour)
+          rate: rate(5 minutes)
 
   index-harvest-compound:
     handler: src/indexers/harvest-compound-indexer.indexVaultsHarvestsCompund
@@ -655,21 +682,3 @@ functions:
           name: ${self:service}-${self:custom.stage}-index-protocol-metrics-snapshots
           description: 'index protocol metrics'
           rate: rate(1 day)
-
-  index-citadel-treasury:
-    handler: src/indexers/citadel-indexer.snapshotTreasury
-    timeout: 480
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-citadel-treasury
-          description: 'index citadel treasury holdings'
-          rate: rate(5 minutes)
-
-  index-citadel-rewards:
-    handler: src/indexers/citadel-rewards-indexer.indexAllRewards
-    timeout: 480
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-citadel-rewards
-          description: 'index citadel rewards'
-          rate: rate(2 hours)

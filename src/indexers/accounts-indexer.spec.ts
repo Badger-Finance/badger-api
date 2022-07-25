@@ -28,6 +28,7 @@ describe('accounts-indexer', () => {
   let getTreeDistribution: jest.SpyInstance<Promise<RewardMerkleDistribution | null>, [chain: Chain]>;
 
   beforeEach(() => {
+    jest.spyOn(console, 'log').mockImplementation(jest.fn);
     // utilize getAccounts as a canary for detecting the network calls being made
     getAccounts = jest
       .spyOn(accountsUtils, 'getAccounts')

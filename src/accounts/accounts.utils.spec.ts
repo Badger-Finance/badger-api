@@ -89,6 +89,7 @@ describe('accounts.utils', () => {
       ...o,
       updatedAt: 0,
     }));
+    jest.spyOn(console, 'log').mockImplementation(jest.fn);
     setFullTokenDataMock();
   });
 

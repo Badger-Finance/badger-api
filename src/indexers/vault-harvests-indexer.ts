@@ -1,4 +1,4 @@
-import { VaultVersion } from '@badger-dao/sdk';
+import { VaultState, VaultVersion } from '@badger-dao/sdk';
 import {
   BadgerTreeDistribution_OrderBy,
   OrderDirection,
@@ -9,6 +9,7 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
 import { SUPPORTED_CHAINS } from '../chains/chain';
 import { getFullToken, toBalance } from '../tokens/tokens.utils';
+import { sendPlainTextToDiscord } from '../utils/discord.utils';
 
 export async function refreshVaultHarvests() {
   await Promise.all(
@@ -16,6 +17,10 @@ export async function refreshVaultHarvests() {
       const sdk = await chain.getSdk();
       const mapper = getDataMapper();
       for (const vault of chain.vaults) {
+        if (vault.state && vault.state === VaultState.Discontinued) {
+          continue;
+        }
+
         const harvestData: VaultPendingHarvestData = {
           vault: vault.vaultToken,
           yieldTokens: [],
@@ -36,6 +41,9 @@ export async function refreshVaultHarvests() {
             harvestData.lastHarvestedAt = pendingHarvest.lastHarvestedAt;
           } catch {
             shouldCheckGraph = true;
+            sendPlainTextToDiscord(
+              `${chain.name} ${vault.name} (${vault.protocol}, ${vault.version}, ${vault.state}) failed to harvest!`,
+            );
           }
 
           const pendingYield = await sdk.vaults.getPendingYield(vault.vaultToken);

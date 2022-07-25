@@ -30,6 +30,8 @@ describe('refreshVaultSnapshots', () => {
   let put: jest.SpyInstance<Promise<StringToAnyObjectMap>, [items: PutParameters<StringToAnyObjectMap>]>;
 
   beforeEach(async () => {
+    jest.spyOn(console, 'log').mockImplementation(jest.fn);
+
     jest.spyOn(vaultUtils, 'getStrategyInfo').mockImplementation(async (_chain, _sett) => ({
       address: ethers.constants.AddressZero,
       withdrawFee: 50,
