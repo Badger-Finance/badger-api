@@ -3,7 +3,7 @@ import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapsho
 import { HistoricVaultSnapshotOldModel } from '../aws/models/historic-vault-snapshot-old.model';
 import { MigrationProcessData } from '../aws/models/migration-process.model';
 import { SUPPORTED_CHAINS } from '../chains/chain';
-import { CHART_DATA, SETT_HISTORIC_DATA } from '../config/constants';
+import { CHART_DATA, PRODUCTION, SETT_HISTORIC_DATA } from '../config/constants';
 import {
   HISTORIC_VAULT_FIRST_ITEM_TO_MIGR_TS,
   HISTORIC_VAULT_SEQUENCE_NAME,
@@ -14,6 +14,11 @@ import { MigrationStatus } from './migration.enums';
 import { getMigrationData, pushHistoricSnapshots } from './migration.utils';
 
 export async function run() {
+  if (PRODUCTION) {
+    console.log('Skip historic vault migration on prod');
+    return;
+  }
+
   let chartDataMigratedCnt = 0;
 
   const mapper = getDataMapper();
