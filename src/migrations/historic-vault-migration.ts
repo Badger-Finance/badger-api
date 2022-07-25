@@ -38,7 +38,6 @@ export async function run() {
 
   for await (const item of mapper.scan(HistoricVaultSnapshotOldModel, {
     limit: 1000,
-    indexName: 'IndexHistoricVaultRange',
     filter: {
       type: 'GreaterThanOrEqualTo',
       object: lastInsertedTimestamp,
