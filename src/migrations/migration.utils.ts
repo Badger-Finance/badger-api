@@ -84,7 +84,8 @@ export async function pushHistoricSnapshots<T extends ChartData<T>>(namespace: s
     const prevSnapshot = data[0];
 
     const inTimeFrameCondition = checkTimeframeCondition(snapshot.timestamp, timeframe);
-    const frequencyGapMatch = !!prevSnapshot && shouldUpdate(snapshot.timestamp, prevSnapshot.timestamp, timeframe);
+    const frequencyGapMatch =
+      !prevSnapshot || (prevSnapshot && shouldUpdate(snapshot.timestamp, prevSnapshot.timestamp, timeframe));
 
     if (inTimeFrameCondition && frequencyGapMatch) {
       cachedChart.data.unshift(snapshot);
