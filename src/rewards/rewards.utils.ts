@@ -143,10 +143,10 @@ export async function getRewardEmission(chain: Chain, vaultDefinition: VaultDefi
     if (vault.boost.enabled && token.address === chain.getBadgerTokenAddress()) {
       const boostedAPR = (vault.boost.weight / 10_000) * proRataAPR;
       proRataAPR = proRataAPR - boostedAPR;
-      const boostedSource = createValueSource(`Boosted ${token.name} Rewards`, boostedAPR, boostRange);
+      const boostedSource = createValueSource(`Boosted ${token.name}`, boostedAPR, boostRange);
       emissionSources.push(valueSourceToCachedValueSource(boostedSource, vaultDefinition, tokenEmission(token, true)));
     }
-    const proRataSource = createValueSource(`${token.name} Rewards`, proRataAPR);
+    const proRataSource = createValueSource(`${token.name}`, proRataAPR);
     emissionSources.push(valueSourceToCachedValueSource(proRataSource, vaultDefinition, tokenEmission(token)));
   }
   return emissionSources;
