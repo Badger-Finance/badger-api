@@ -36,6 +36,8 @@ custom:
             sources: [./seed/vaults-compound.json]
           - table: ${self:custom.table.TOKEN_INFORMATION_DATA}
             sources: [./seed/token-info.json]
+          - table: ${self:custom.table.SETT_HISTORIC_DATA}
+            sources: [./seed/vaults-historic-snapshot.json]
 
   serverless-offline:
     noPrependStageInUrl: true

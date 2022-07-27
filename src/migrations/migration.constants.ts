@@ -1,7 +1,5 @@
 export const HISTORIC_VAULT_TO_CHART_DATA_MIGRATION_ID = 'historic-vault-to-chart-data';
 
-export const HISTORIC_VAULT_SEQUENCE_NAME = 'timestamp';
-
 // 2021-09-19T04:08:17.000Z
 export const HISTORIC_VAULT_FIRST_ITEM_TO_MIGR_TS = 1632024497000;
 
