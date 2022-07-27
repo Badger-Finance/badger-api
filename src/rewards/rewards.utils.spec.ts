@@ -14,6 +14,9 @@ describe('rewards.utils', () => {
 
   describe('getTreeDistribution', () => {
     it('returns null for a chain with no badger tree', async () => {
+      jest.spyOn(s3Utils, 'getObject').mockImplementation(async () => {
+        throw new Error('Expected test error, missing Badger Tree file.');
+      });
       const distribution = await getTreeDistribution(new BinanceSmartChain());
       expect(distribution).toEqual(null);
     });

@@ -654,11 +654,11 @@ export async function estimateVaultPerformance(
     const tokensEmitted = formatBalance(amount, tokenEmitted.decimals);
     const valueEmitted = tokensEmitted * price;
     const emissionApr = (valueEmitted / measuredValue) * durationScalar;
-    const emissionSource = createValueSource(`${tokenEmitted.symbol} Rewards`, emissionApr * 100);
+    const emissionSource = createValueSource(`${tokenEmitted.name} Rewards`, emissionApr * 100);
     const cachedEmissionSource = valueSourceToCachedValueSource(
       emissionSource,
       vaultDefinition,
-      `vault_emitted_${tokenEmitted.symbol.toLowerCase()}`,
+      `vault_emitted_${tokenEmitted.name.toLowerCase()}`,
     );
     valueSources.push(cachedEmissionSource);
     // try to add underlying emitted vault value sources if applicable
