@@ -583,7 +583,7 @@ functions:
       - schedule:
           name: ${self:service}-${self:custom.stage}-migrate-vaults-historic-data
           description: 'migrate vaults historic data to chart data blob'
-          rate: rate(3 minutes)
+          rate: rate(6 minutes)
 
   index-apy-snapshots:
     handler: src/indexers/apy-snapshots-indexer.refreshApySnapshots
