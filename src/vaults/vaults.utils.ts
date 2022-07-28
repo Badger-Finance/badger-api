@@ -645,6 +645,8 @@ export async function estimateVaultPerformance(
     tokensEmitted.set(token, entry.add(amount));
   }
 
+  let flywheelCompounding = 0;
+
   for (const [token, amount] of tokensEmitted.entries()) {
     const { price } = await getPrice(token);
     if (price === 0) {
@@ -654,11 +656,11 @@ export async function estimateVaultPerformance(
     const tokensEmitted = formatBalance(amount, tokenEmitted.decimals);
     const valueEmitted = tokensEmitted * price;
     const emissionApr = (valueEmitted / measuredValue) * durationScalar;
-    const emissionSource = createValueSource(`${tokenEmitted.symbol} Rewards`, emissionApr * 100);
+    const emissionSource = createValueSource(`${tokenEmitted.name}`, emissionApr * 100);
     const cachedEmissionSource = valueSourceToCachedValueSource(
       emissionSource,
       vaultDefinition,
-      `vault_emitted_${tokenEmitted.symbol.toLowerCase()}`,
+      `vault_emitted_${tokenEmitted.name.toLowerCase()}`,
     );
     valueSources.push(cachedEmissionSource);
     // try to add underlying emitted vault value sources if applicable
@@ -668,15 +670,16 @@ export async function estimateVaultPerformance(
       // search for the persisted apr variant of the compounding vault source, if any
       const compoundingSource = vaultValueSources.find((source) => source.type === SourceType.PreCompound);
       if (compoundingSource) {
-        const compoundingSourceApy = estimateDerivativeEmission(compoundApr, emissionApr, compoundingSource.apr / 100);
-        const vaultToken = await getFullToken(chain, emittedVault.vaultToken);
-
-        const sourceName = `${vaultToken.name} Compounding`;
-        const sourceType = `derivative_${sourceName.replace(/ /g, '_')}`.toLowerCase();
-        const derivativeSource = createValueSource(sourceName, compoundingSourceApy);
-        valueSources.push(valueSourceToCachedValueSource(derivativeSource, vaultDefinition, sourceType));
+        flywheelCompounding += estimateDerivativeEmission(compoundApr, emissionApr, compoundingSource.apr / 100);
       }
     } catch {} // ignore error for non vaults
+  }
+
+  if (flywheelCompounding > 0) {
+    const sourceName = `Vault Flywheel`;
+    const sourceType = `derivative_${sourceName.replace(/ /g, '_')}`.toLowerCase();
+    const derivativeSource = createValueSource(sourceName, flywheelCompounding);
+    valueSources.push(valueSourceToCachedValueSource(derivativeSource, vaultDefinition, sourceType));
   }
 
   return valueSources;

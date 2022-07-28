@@ -10,6 +10,7 @@ import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.mod
 import { SUPPORTED_CHAINS } from '../chains/chain';
 import { getFullToken, toBalance } from '../tokens/tokens.utils';
 import { sendPlainTextToDiscord } from '../utils/discord.utils';
+import { VAULT_SOURCE } from '../vaults/vaults.utils';
 
 export async function refreshVaultHarvests() {
   await Promise.all(
@@ -82,6 +83,12 @@ export async function refreshVaultHarvests() {
             harvestData.lastHarvestedAt = badgerTreeDistributions[0].timestamp;
           }
         }
+
+        harvestData.harvestTokens.forEach((t) => {
+          if (t.address === vault.depositToken) {
+            t.name = VAULT_SOURCE;
+          }
+        });
 
         try {
           await mapper.put(Object.assign(new VaultPendingHarvestData(), harvestData));

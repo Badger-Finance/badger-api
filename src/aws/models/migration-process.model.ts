@@ -13,6 +13,9 @@ class MigrationSequence {
 
   @attribute()
   value!: string;
+
+  @attribute()
+  status!: MigrationStatus;
 }
 
 @table(MIGRATION_PROCESS_DATA)
@@ -27,5 +30,5 @@ export class MigrationProcessData {
   status!: MigrationStatus;
 
   @attribute({ memberType: embed(MigrationSequence) })
-  sequence!: MigrationSequence;
+  sequences!: MigrationSequence[];
 }
