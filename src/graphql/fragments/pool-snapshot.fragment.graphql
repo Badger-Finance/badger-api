@@ -1,0 +1,9 @@
+fragment PoolSnapshot on PoolSnapshot {
+  id
+  swapFees
+  amounts
+  liquidity
+  totalShares
+  swapVolume
+  timestamp
+}

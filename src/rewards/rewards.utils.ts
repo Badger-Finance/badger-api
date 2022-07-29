@@ -9,6 +9,7 @@ import { ONE_YEAR_SECONDS, REWARD_DATA } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
 import { getPrice } from '../prices/prices.utils';
 import { createValueSource, ValueSource } from '../protocols/interfaces/value-source.interface';
+import { BalancerStrategy } from '../protocols/strategies/balancer.strategy';
 import { ConvexStrategy } from '../protocols/strategies/convex.strategy';
 import { OxDaoStrategy } from '../protocols/strategies/oxdao.strategy';
 import { QuickswapStrategy } from '../protocols/strategies/quickswap.strategy';
@@ -211,6 +212,9 @@ export async function getProtocolValueSources(
         return SwaprStrategy.getValueSources(chain, vaultDefinition);
       case Protocol.OxDAO:
         return OxDaoStrategy.getValueSources(chain, vaultDefinition);
+      case Protocol.Aura:
+      case Protocol.Balancer:
+        return BalancerStrategy.getValueSources(vaultDefinition);
       default: {
         return [];
       }

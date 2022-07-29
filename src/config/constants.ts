@@ -40,6 +40,7 @@ export const SUSHISWAP_ARBITRUM_URL = getEnvVar('SUSHISWAP_ARBITRUM');
 export const PANCAKESWAP_URL = getEnvVar('PANCAKESWAP');
 export const QUICKSWAP_URL = getEnvVar('QUICKSWAP');
 export const SWAPR_URL = getEnvVar('SWAPR');
+export const BALANCER_URL = getEnvVar('BALANCER');
 
 // general constants
 export const STAGE = getEnvVar('STAGE');
