@@ -16,8 +16,8 @@ describe('discord.utils', () => {
   it('Should send error to discord', () => {
     try {
       throw new Error('Whoops!');
-    } catch (e: any) {
-      sendErrorToDiscord(e, 'Error with subgraph', 'Subgraph Error');
+    } catch (e) {
+      sendErrorToDiscord(e as Error, 'Error with subgraph', 'Subgraph Error');
       expect(mockedAxios.post).toBeCalled();
     }
   });

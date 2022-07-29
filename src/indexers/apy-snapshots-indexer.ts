@@ -1,4 +1,3 @@
-import { Protocol } from '@badger-dao/sdk';
 import { isNil } from '@tsed/core';
 
 import { getDataMapper } from '../aws/dynamodb.utils';
@@ -19,10 +18,6 @@ export async function refreshChainApySnapshots(chain: Chain) {
   try {
     await Promise.all(
       chain.vaults.map(async (vault) => {
-        if (!vault.protocol || vault.protocol !== Protocol.Aura) {
-          return;
-        }
-        console.log(`Update ${vault.name} APR`);
         const results = await getVaultValueSources(chain, vault);
         const sourceMap: ValueSourceMap = {};
         results
