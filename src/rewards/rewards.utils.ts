@@ -1,4 +1,4 @@
-import { Network, Protocol, Token } from '@badger-dao/sdk';
+import { Network, Protocol } from '@badger-dao/sdk';
 import { BigNumber } from 'ethers';
 
 import { getBoostFile, getCachedAccount } from '../accounts/accounts.utils';
@@ -33,14 +33,6 @@ export async function getTreeDistribution(chain: Chain): Promise<RewardMerkleDis
     console.error({ message: `Missing expected badger tree file for ${chain.network}`, err });
     return null;
   }
-}
-
-export function noRewards(VaultDefinition: VaultDefinition, token: Token) {
-  return valueSourceToCachedValueSource(
-    createValueSource(`${token.symbol} Rewards`, 0),
-    VaultDefinition,
-    tokenEmission(token),
-  );
 }
 
 export async function getClaimableRewards(
