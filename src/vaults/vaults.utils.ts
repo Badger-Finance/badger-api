@@ -297,10 +297,6 @@ export async function getVaultPerformance(
     getRewardEmission(chain, vaultDefinition),
     getProtocolValueSources(chain, vaultDefinition),
   ]);
-  // console.log({
-  //   vault: vaultDefinition.name,
-  //   protocol,
-  // })
   let vaultSources: CachedValueSource[] = [];
   try {
     vaultSources = await loadVaultEventPerformances(chain, vaultDefinition);
