@@ -106,6 +106,7 @@ provider:
     PANCAKESWAP: 'https://api.thegraph.com/subgraphs/name/pancakeswap/exchange'
     QUICKSWAP: 'https://api.thegraph.com/subgraphs/name/sameepsi/quickswap06'
     SWAPR: 'https://api.thegraph.com/subgraphs/name/dxgraphs/swapr-arbitrum-one-v3'
+    BALANCER: 'https://api.thegraph.com/subgraphs/name/balancer-labs/balancer-v2'
     # Table Defintions
     APY_SNAPSHOTS_DATA: ${self:custom.table.APY_SNAPSHOTS_DATA}
     SETT_HISTORIC_DATA: ${self:custom.table.SETT_HISTORIC_DATA}

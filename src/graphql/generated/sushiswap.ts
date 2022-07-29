@@ -148,6 +148,7 @@ export type Burn_Filter = {
   logIndex_not?: InputMaybe<Scalars['BigInt']>;
   logIndex_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   pair?: InputMaybe<Scalars['String']>;
+  pair_?: InputMaybe<Pair_Filter>;
   pair_contains?: InputMaybe<Scalars['String']>;
   pair_contains_nocase?: InputMaybe<Scalars['String']>;
   pair_ends_with?: InputMaybe<Scalars['String']>;
@@ -188,6 +189,7 @@ export type Burn_Filter = {
   to_not_contains?: InputMaybe<Scalars['Bytes']>;
   to_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
   transaction?: InputMaybe<Scalars['String']>;
+  transaction_?: InputMaybe<Transaction_Filter>;
   transaction_contains?: InputMaybe<Scalars['String']>;
   transaction_contains_nocase?: InputMaybe<Scalars['String']>;
   transaction_ends_with?: InputMaybe<Scalars['String']>;
@@ -251,6 +253,7 @@ export type DayData_Filter = {
   date_not?: InputMaybe<Scalars['Int']>;
   date_not_in?: InputMaybe<Array<Scalars['Int']>>;
   factory?: InputMaybe<Scalars['String']>;
+  factory_?: InputMaybe<Factory_Filter>;
   factory_contains?: InputMaybe<Scalars['String']>;
   factory_contains_nocase?: InputMaybe<Scalars['String']>;
   factory_ends_with?: InputMaybe<Scalars['String']>;
@@ -393,6 +396,8 @@ export type FactoryTokensArgs = {
 export type Factory_Filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
+  dayData_?: InputMaybe<DayData_Filter>;
+  hourData_?: InputMaybe<HourData_Filter>;
   id?: InputMaybe<Scalars['ID']>;
   id_gt?: InputMaybe<Scalars['ID']>;
   id_gte?: InputMaybe<Scalars['ID']>;
@@ -425,6 +430,7 @@ export type Factory_Filter = {
   pairCount_lte?: InputMaybe<Scalars['BigInt']>;
   pairCount_not?: InputMaybe<Scalars['BigInt']>;
   pairCount_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  pairs_?: InputMaybe<Pair_Filter>;
   tokenCount?: InputMaybe<Scalars['BigInt']>;
   tokenCount_gt?: InputMaybe<Scalars['BigInt']>;
   tokenCount_gte?: InputMaybe<Scalars['BigInt']>;
@@ -433,6 +439,7 @@ export type Factory_Filter = {
   tokenCount_lte?: InputMaybe<Scalars['BigInt']>;
   tokenCount_not?: InputMaybe<Scalars['BigInt']>;
   tokenCount_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  tokens_?: InputMaybe<Token_Filter>;
   txCount?: InputMaybe<Scalars['BigInt']>;
   txCount_gt?: InputMaybe<Scalars['BigInt']>;
   txCount_gte?: InputMaybe<Scalars['BigInt']>;
@@ -517,6 +524,7 @@ export type HourData_Filter = {
   date_not?: InputMaybe<Scalars['Int']>;
   date_not_in?: InputMaybe<Array<Scalars['Int']>>;
   factory?: InputMaybe<Scalars['String']>;
+  factory_?: InputMaybe<Factory_Filter>;
   factory_contains?: InputMaybe<Scalars['String']>;
   factory_contains_nocase?: InputMaybe<Scalars['String']>;
   factory_ends_with?: InputMaybe<Scalars['String']>;
@@ -662,6 +670,7 @@ export type LiquidityPositionSnapshot_Filter = {
   id_not?: InputMaybe<Scalars['ID']>;
   id_not_in?: InputMaybe<Array<Scalars['ID']>>;
   liquidityPosition?: InputMaybe<Scalars['String']>;
+  liquidityPosition_?: InputMaybe<LiquidityPosition_Filter>;
   liquidityPosition_contains?: InputMaybe<Scalars['String']>;
   liquidityPosition_contains_nocase?: InputMaybe<Scalars['String']>;
   liquidityPosition_ends_with?: InputMaybe<Scalars['String']>;
@@ -698,6 +707,7 @@ export type LiquidityPositionSnapshot_Filter = {
   liquidityTokenTotalSupply_not?: InputMaybe<Scalars['BigDecimal']>;
   liquidityTokenTotalSupply_not_in?: InputMaybe<Array<Scalars['BigDecimal']>>;
   pair?: InputMaybe<Scalars['String']>;
+  pair_?: InputMaybe<Pair_Filter>;
   pair_contains?: InputMaybe<Scalars['String']>;
   pair_contains_nocase?: InputMaybe<Scalars['String']>;
   pair_ends_with?: InputMaybe<Scalars['String']>;
@@ -766,6 +776,7 @@ export type LiquidityPositionSnapshot_Filter = {
   token1PriceUSD_not?: InputMaybe<Scalars['BigDecimal']>;
   token1PriceUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']>>;
   user?: InputMaybe<Scalars['String']>;
+  user_?: InputMaybe<User_Filter>;
   user_contains?: InputMaybe<Scalars['String']>;
   user_contains_nocase?: InputMaybe<Scalars['String']>;
   user_ends_with?: InputMaybe<Scalars['String']>;
@@ -831,6 +842,7 @@ export type LiquidityPosition_Filter = {
   liquidityTokenBalance_not?: InputMaybe<Scalars['BigDecimal']>;
   liquidityTokenBalance_not_in?: InputMaybe<Array<Scalars['BigDecimal']>>;
   pair?: InputMaybe<Scalars['String']>;
+  pair_?: InputMaybe<Pair_Filter>;
   pair_contains?: InputMaybe<Scalars['String']>;
   pair_contains_nocase?: InputMaybe<Scalars['String']>;
   pair_ends_with?: InputMaybe<Scalars['String']>;
@@ -850,6 +862,7 @@ export type LiquidityPosition_Filter = {
   pair_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
   pair_starts_with?: InputMaybe<Scalars['String']>;
   pair_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  snapshots_?: InputMaybe<LiquidityPositionSnapshot_Filter>;
   timestamp?: InputMaybe<Scalars['Int']>;
   timestamp_gt?: InputMaybe<Scalars['Int']>;
   timestamp_gte?: InputMaybe<Scalars['Int']>;
@@ -859,6 +872,7 @@ export type LiquidityPosition_Filter = {
   timestamp_not?: InputMaybe<Scalars['Int']>;
   timestamp_not_in?: InputMaybe<Array<Scalars['Int']>>;
   user?: InputMaybe<Scalars['String']>;
+  user_?: InputMaybe<User_Filter>;
   user_contains?: InputMaybe<Scalars['String']>;
   user_contains_nocase?: InputMaybe<Scalars['String']>;
   user_ends_with?: InputMaybe<Scalars['String']>;
@@ -973,6 +987,7 @@ export type Mint_Filter = {
   logIndex_not?: InputMaybe<Scalars['BigInt']>;
   logIndex_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   pair?: InputMaybe<Scalars['String']>;
+  pair_?: InputMaybe<Pair_Filter>;
   pair_contains?: InputMaybe<Scalars['String']>;
   pair_contains_nocase?: InputMaybe<Scalars['String']>;
   pair_ends_with?: InputMaybe<Scalars['String']>;
@@ -1013,6 +1028,7 @@ export type Mint_Filter = {
   to_not_contains?: InputMaybe<Scalars['Bytes']>;
   to_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
   transaction?: InputMaybe<Scalars['String']>;
+  transaction_?: InputMaybe<Transaction_Filter>;
   transaction_contains?: InputMaybe<Scalars['String']>;
   transaction_contains_nocase?: InputMaybe<Scalars['String']>;
   transaction_ends_with?: InputMaybe<Scalars['String']>;
@@ -1181,6 +1197,7 @@ export type PairDayData_Filter = {
   id_not?: InputMaybe<Scalars['ID']>;
   id_not_in?: InputMaybe<Array<Scalars['ID']>>;
   pair?: InputMaybe<Scalars['String']>;
+  pair_?: InputMaybe<Pair_Filter>;
   pair_contains?: InputMaybe<Scalars['String']>;
   pair_contains_nocase?: InputMaybe<Scalars['String']>;
   pair_ends_with?: InputMaybe<Scalars['String']>;
@@ -1225,6 +1242,7 @@ export type PairDayData_Filter = {
   reserveUSD_not?: InputMaybe<Scalars['BigDecimal']>;
   reserveUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']>>;
   token0?: InputMaybe<Scalars['String']>;
+  token0_?: InputMaybe<Token_Filter>;
   token0_contains?: InputMaybe<Scalars['String']>;
   token0_contains_nocase?: InputMaybe<Scalars['String']>;
   token0_ends_with?: InputMaybe<Scalars['String']>;
@@ -1245,6 +1263,7 @@ export type PairDayData_Filter = {
   token0_starts_with?: InputMaybe<Scalars['String']>;
   token0_starts_with_nocase?: InputMaybe<Scalars['String']>;
   token1?: InputMaybe<Scalars['String']>;
+  token1_?: InputMaybe<Token_Filter>;
   token1_contains?: InputMaybe<Scalars['String']>;
   token1_contains_nocase?: InputMaybe<Scalars['String']>;
   token1_ends_with?: InputMaybe<Scalars['String']>;
@@ -1356,6 +1375,7 @@ export type PairHourData_Filter = {
   id_not?: InputMaybe<Scalars['ID']>;
   id_not_in?: InputMaybe<Array<Scalars['ID']>>;
   pair?: InputMaybe<Scalars['String']>;
+  pair_?: InputMaybe<Pair_Filter>;
   pair_contains?: InputMaybe<Scalars['String']>;
   pair_contains_nocase?: InputMaybe<Scalars['String']>;
   pair_ends_with?: InputMaybe<Scalars['String']>;
@@ -1457,7 +1477,10 @@ export type Pair_Filter = {
   block_lte?: InputMaybe<Scalars['BigInt']>;
   block_not?: InputMaybe<Scalars['BigInt']>;
   block_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  burns_?: InputMaybe<Burn_Filter>;
+  dayData_?: InputMaybe<PairDayData_Filter>;
   factory?: InputMaybe<Scalars['String']>;
+  factory_?: InputMaybe<Factory_Filter>;
   factory_contains?: InputMaybe<Scalars['String']>;
   factory_contains_nocase?: InputMaybe<Scalars['String']>;
   factory_ends_with?: InputMaybe<Scalars['String']>;
@@ -1477,6 +1500,7 @@ export type Pair_Filter = {
   factory_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
   factory_starts_with?: InputMaybe<Scalars['String']>;
   factory_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  hourData_?: InputMaybe<PairHourData_Filter>;
   id?: InputMaybe<Scalars['ID']>;
   id_gt?: InputMaybe<Scalars['ID']>;
   id_gte?: InputMaybe<Scalars['ID']>;
@@ -1485,6 +1509,8 @@ export type Pair_Filter = {
   id_lte?: InputMaybe<Scalars['ID']>;
   id_not?: InputMaybe<Scalars['ID']>;
   id_not_in?: InputMaybe<Array<Scalars['ID']>>;
+  liquidityPositionSnapshots_?: InputMaybe<LiquidityPositionSnapshot_Filter>;
+  liquidityPositions_?: InputMaybe<LiquidityPosition_Filter>;
   liquidityProviderCount?: InputMaybe<Scalars['BigInt']>;
   liquidityProviderCount_gt?: InputMaybe<Scalars['BigInt']>;
   liquidityProviderCount_gte?: InputMaybe<Scalars['BigInt']>;
@@ -1493,6 +1519,7 @@ export type Pair_Filter = {
   liquidityProviderCount_lte?: InputMaybe<Scalars['BigInt']>;
   liquidityProviderCount_not?: InputMaybe<Scalars['BigInt']>;
   liquidityProviderCount_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  mints_?: InputMaybe<Mint_Filter>;
   name?: InputMaybe<Scalars['String']>;
   name_contains?: InputMaybe<Scalars['String']>;
   name_contains_nocase?: InputMaybe<Scalars['String']>;
@@ -1545,6 +1572,7 @@ export type Pair_Filter = {
   reserveUSD_lte?: InputMaybe<Scalars['BigDecimal']>;
   reserveUSD_not?: InputMaybe<Scalars['BigDecimal']>;
   reserveUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']>>;
+  swaps_?: InputMaybe<Swap_Filter>;
   timestamp?: InputMaybe<Scalars['BigInt']>;
   timestamp_gt?: InputMaybe<Scalars['BigInt']>;
   timestamp_gte?: InputMaybe<Scalars['BigInt']>;
@@ -1562,6 +1590,7 @@ export type Pair_Filter = {
   token0Price_lte?: InputMaybe<Scalars['BigDecimal']>;
   token0Price_not?: InputMaybe<Scalars['BigDecimal']>;
   token0Price_not_in?: InputMaybe<Array<Scalars['BigDecimal']>>;
+  token0_?: InputMaybe<Token_Filter>;
   token0_contains?: InputMaybe<Scalars['String']>;
   token0_contains_nocase?: InputMaybe<Scalars['String']>;
   token0_ends_with?: InputMaybe<Scalars['String']>;
@@ -1590,6 +1619,7 @@ export type Pair_Filter = {
   token1Price_lte?: InputMaybe<Scalars['BigDecimal']>;
   token1Price_not?: InputMaybe<Scalars['BigDecimal']>;
   token1Price_not_in?: InputMaybe<Array<Scalars['BigDecimal']>>;
+  token1_?: InputMaybe<Token_Filter>;
   token1_contains?: InputMaybe<Scalars['String']>;
   token1_contains_nocase?: InputMaybe<Scalars['String']>;
   token1_ends_with?: InputMaybe<Scalars['String']>;
@@ -2433,6 +2463,7 @@ export type Swap_Filter = {
   logIndex_not?: InputMaybe<Scalars['BigInt']>;
   logIndex_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   pair?: InputMaybe<Scalars['String']>;
+  pair_?: InputMaybe<Pair_Filter>;
   pair_contains?: InputMaybe<Scalars['String']>;
   pair_contains_nocase?: InputMaybe<Scalars['String']>;
   pair_ends_with?: InputMaybe<Scalars['String']>;
@@ -2473,6 +2504,7 @@ export type Swap_Filter = {
   to_not_contains?: InputMaybe<Scalars['Bytes']>;
   to_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
   transaction?: InputMaybe<Scalars['String']>;
+  transaction_?: InputMaybe<Transaction_Filter>;
   transaction_contains?: InputMaybe<Scalars['String']>;
   transaction_contains_nocase?: InputMaybe<Scalars['String']>;
   transaction_ends_with?: InputMaybe<Scalars['String']>;
@@ -2646,6 +2678,7 @@ export type TokenDayData_Filter = {
   priceUSD_not?: InputMaybe<Scalars['BigDecimal']>;
   priceUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']>>;
   token?: InputMaybe<Scalars['String']>;
+  token_?: InputMaybe<Token_Filter>;
   token_contains?: InputMaybe<Scalars['String']>;
   token_contains_nocase?: InputMaybe<Scalars['String']>;
   token_ends_with?: InputMaybe<Scalars['String']>;
@@ -2780,6 +2813,7 @@ export type TokenHourData_Filter = {
   priceUSD_not?: InputMaybe<Scalars['BigDecimal']>;
   priceUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']>>;
   token?: InputMaybe<Scalars['String']>;
+  token_?: InputMaybe<Token_Filter>;
   token_contains?: InputMaybe<Scalars['String']>;
   token_contains_nocase?: InputMaybe<Scalars['String']>;
   token_ends_with?: InputMaybe<Scalars['String']>;
@@ -2850,6 +2884,9 @@ export enum TokenHourData_OrderBy {
 export type Token_Filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
+  basePairsDayData_?: InputMaybe<PairDayData_Filter>;
+  basePairs_?: InputMaybe<Pair_Filter>;
+  dayData_?: InputMaybe<TokenDayData_Filter>;
   decimals?: InputMaybe<Scalars['BigInt']>;
   decimals_gt?: InputMaybe<Scalars['BigInt']>;
   decimals_gte?: InputMaybe<Scalars['BigInt']>;
@@ -2867,6 +2904,7 @@ export type Token_Filter = {
   derivedETH_not?: InputMaybe<Scalars['BigDecimal']>;
   derivedETH_not_in?: InputMaybe<Array<Scalars['BigDecimal']>>;
   factory?: InputMaybe<Scalars['String']>;
+  factory_?: InputMaybe<Factory_Filter>;
   factory_contains?: InputMaybe<Scalars['String']>;
   factory_contains_nocase?: InputMaybe<Scalars['String']>;
   factory_ends_with?: InputMaybe<Scalars['String']>;
@@ -2886,6 +2924,7 @@ export type Token_Filter = {
   factory_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
   factory_starts_with?: InputMaybe<Scalars['String']>;
   factory_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  hourData_?: InputMaybe<TokenHourData_Filter>;
   id?: InputMaybe<Scalars['ID']>;
   id_gt?: InputMaybe<Scalars['ID']>;
   id_gte?: InputMaybe<Scalars['ID']>;
@@ -2922,6 +2961,8 @@ export type Token_Filter = {
   name_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
   name_starts_with?: InputMaybe<Scalars['String']>;
   name_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  quotePairsDayData_?: InputMaybe<PairDayData_Filter>;
+  quotePairs_?: InputMaybe<Pair_Filter>;
   symbol?: InputMaybe<Scalars['String']>;
   symbol_contains?: InputMaybe<Scalars['String']>;
   symbol_contains_nocase?: InputMaybe<Scalars['String']>;
@@ -3051,6 +3092,7 @@ export type Transaction_Filter = {
   blockNumber_not?: InputMaybe<Scalars['BigInt']>;
   blockNumber_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   burns?: InputMaybe<Array<Scalars['String']>>;
+  burns_?: InputMaybe<Burn_Filter>;
   burns_contains?: InputMaybe<Array<Scalars['String']>>;
   burns_contains_nocase?: InputMaybe<Array<Scalars['String']>>;
   burns_not?: InputMaybe<Array<Scalars['String']>>;
@@ -3065,12 +3107,14 @@ export type Transaction_Filter = {
   id_not?: InputMaybe<Scalars['ID']>;
   id_not_in?: InputMaybe<Array<Scalars['ID']>>;
   mints?: InputMaybe<Array<Scalars['String']>>;
+  mints_?: InputMaybe<Mint_Filter>;
   mints_contains?: InputMaybe<Array<Scalars['String']>>;
   mints_contains_nocase?: InputMaybe<Array<Scalars['String']>>;
   mints_not?: InputMaybe<Array<Scalars['String']>>;
   mints_not_contains?: InputMaybe<Array<Scalars['String']>>;
   mints_not_contains_nocase?: InputMaybe<Array<Scalars['String']>>;
   swaps?: InputMaybe<Array<Scalars['String']>>;
+  swaps_?: InputMaybe<Swap_Filter>;
   swaps_contains?: InputMaybe<Array<Scalars['String']>>;
   swaps_contains_nocase?: InputMaybe<Array<Scalars['String']>>;
   swaps_not?: InputMaybe<Array<Scalars['String']>>;
@@ -3120,6 +3164,7 @@ export type User_Filter = {
   id_lte?: InputMaybe<Scalars['ID']>;
   id_not?: InputMaybe<Scalars['ID']>;
   id_not_in?: InputMaybe<Array<Scalars['ID']>>;
+  liquidityPositions_?: InputMaybe<LiquidityPosition_Filter>;
 };
 
 export enum User_OrderBy {

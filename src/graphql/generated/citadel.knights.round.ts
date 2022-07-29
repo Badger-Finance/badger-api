@@ -72,6 +72,7 @@ export type KnightVoter_Filter = {
   id_not?: InputMaybe<Scalars['ID']>;
   id_not_in?: InputMaybe<Array<Scalars['ID']>>;
   knight?: InputMaybe<Scalars['String']>;
+  knight_?: InputMaybe<Knight_Filter>;
   knight_contains?: InputMaybe<Scalars['String']>;
   knight_contains_nocase?: InputMaybe<Scalars['String']>;
   knight_ends_with?: InputMaybe<Scalars['String']>;
@@ -92,6 +93,7 @@ export type KnightVoter_Filter = {
   knight_starts_with?: InputMaybe<Scalars['String']>;
   knight_starts_with_nocase?: InputMaybe<Scalars['String']>;
   voter?: InputMaybe<Scalars['String']>;
+  voter_?: InputMaybe<Voter_Filter>;
   voter_contains?: InputMaybe<Scalars['String']>;
   voter_contains_nocase?: InputMaybe<Scalars['String']>;
   voter_ends_with?: InputMaybe<Scalars['String']>;
@@ -146,6 +148,8 @@ export type Knight_Filter = {
   voteCount_lte?: InputMaybe<Scalars['BigInt']>;
   voteCount_not?: InputMaybe<Scalars['BigInt']>;
   voteCount_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  voters_?: InputMaybe<KnightVoter_Filter>;
+  votes_?: InputMaybe<Vote_Filter>;
 };
 
 export enum Knight_OrderBy {
@@ -354,6 +358,7 @@ export type Vote_Filter = {
   id_not?: InputMaybe<Scalars['ID']>;
   id_not_in?: InputMaybe<Array<Scalars['ID']>>;
   knight?: InputMaybe<Scalars['String']>;
+  knight_?: InputMaybe<Knight_Filter>;
   knight_contains?: InputMaybe<Scalars['String']>;
   knight_contains_nocase?: InputMaybe<Scalars['String']>;
   knight_ends_with?: InputMaybe<Scalars['String']>;
@@ -374,6 +379,7 @@ export type Vote_Filter = {
   knight_starts_with?: InputMaybe<Scalars['String']>;
   knight_starts_with_nocase?: InputMaybe<Scalars['String']>;
   voter?: InputMaybe<Scalars['String']>;
+  voter_?: InputMaybe<Voter_Filter>;
   voter_contains?: InputMaybe<Scalars['String']>;
   voter_contains_nocase?: InputMaybe<Scalars['String']>;
   voter_ends_with?: InputMaybe<Scalars['String']>;
@@ -438,6 +444,7 @@ export type Voter_Filter = {
   id_lte?: InputMaybe<Scalars['ID']>;
   id_not?: InputMaybe<Scalars['ID']>;
   id_not_in?: InputMaybe<Array<Scalars['ID']>>;
+  knights_?: InputMaybe<KnightVoter_Filter>;
   voteAmount?: InputMaybe<Scalars['BigInt']>;
   voteAmount_gt?: InputMaybe<Scalars['BigInt']>;
   voteAmount_gte?: InputMaybe<Scalars['BigInt']>;
@@ -454,6 +461,7 @@ export type Voter_Filter = {
   voteCount_lte?: InputMaybe<Scalars['BigInt']>;
   voteCount_not?: InputMaybe<Scalars['BigInt']>;
   voteCount_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  votes_?: InputMaybe<Vote_Filter>;
 };
 
 export enum Voter_OrderBy {

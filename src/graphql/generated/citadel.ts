@@ -44,6 +44,8 @@ export type AccountEarningsArgs = {
 export type Account_Filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
+  balances_?: InputMaybe<VaultBalance_Filter>;
+  earnings_?: InputMaybe<RewardPayment_Filter>;
   id?: InputMaybe<Scalars['ID']>;
   id_gt?: InputMaybe<Scalars['ID']>;
   id_gte?: InputMaybe<Scalars['ID']>;
@@ -205,6 +207,7 @@ export type Funding_Filter = {
   minPrice_not?: InputMaybe<Scalars['BigInt']>;
   minPrice_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   token?: InputMaybe<Scalars['String']>;
+  token_?: InputMaybe<Token_Filter>;
   token_contains?: InputMaybe<Scalars['String']>;
   token_contains_nocase?: InputMaybe<Scalars['String']>;
   token_ends_with?: InputMaybe<Scalars['String']>;
@@ -441,6 +444,7 @@ export type RewardPayment_Filter = {
   id_not?: InputMaybe<Scalars['ID']>;
   id_not_in?: InputMaybe<Array<Scalars['ID']>>;
   to?: InputMaybe<Scalars['String']>;
+  to_?: InputMaybe<Account_Filter>;
   to_contains?: InputMaybe<Scalars['String']>;
   to_contains_nocase?: InputMaybe<Scalars['String']>;
   to_ends_with?: InputMaybe<Scalars['String']>;
@@ -461,6 +465,7 @@ export type RewardPayment_Filter = {
   to_starts_with?: InputMaybe<Scalars['String']>;
   to_starts_with_nocase?: InputMaybe<Scalars['String']>;
   token?: InputMaybe<Scalars['String']>;
+  token_?: InputMaybe<Token_Filter>;
   token_contains?: InputMaybe<Scalars['String']>;
   token_contains_nocase?: InputMaybe<Scalars['String']>;
   token_ends_with?: InputMaybe<Scalars['String']>;
@@ -526,6 +531,7 @@ export type StakedCitadelEmission_Filter = {
   timestamp_not?: InputMaybe<Scalars['BigInt']>;
   timestamp_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   token?: InputMaybe<Scalars['String']>;
+  token_?: InputMaybe<Token_Filter>;
   token_contains?: InputMaybe<Scalars['String']>;
   token_contains_nocase?: InputMaybe<Scalars['String']>;
   token_ends_with?: InputMaybe<Scalars['String']>;
@@ -782,6 +788,7 @@ export type TokenBalance_Filter = {
   id_not?: InputMaybe<Scalars['ID']>;
   id_not_in?: InputMaybe<Array<Scalars['ID']>>;
   token?: InputMaybe<Scalars['String']>;
+  token_?: InputMaybe<Token_Filter>;
   token_contains?: InputMaybe<Scalars['String']>;
   token_contains_nocase?: InputMaybe<Scalars['String']>;
   token_ends_with?: InputMaybe<Scalars['String']>;
@@ -922,6 +929,7 @@ export type VaultBalance_Filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
   account?: InputMaybe<Scalars['String']>;
+  account_?: InputMaybe<Account_Filter>;
   account_contains?: InputMaybe<Scalars['String']>;
   account_contains_nocase?: InputMaybe<Scalars['String']>;
   account_ends_with?: InputMaybe<Scalars['String']>;
@@ -998,6 +1006,7 @@ export type VaultBalance_Filter = {
   netShareDeposit_not?: InputMaybe<Scalars['BigInt']>;
   netShareDeposit_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   vault?: InputMaybe<Scalars['String']>;
+  vault_?: InputMaybe<Vault_Filter>;
   vault_contains?: InputMaybe<Scalars['String']>;
   vault_contains_nocase?: InputMaybe<Scalars['String']>;
   vault_ends_with?: InputMaybe<Scalars['String']>;
@@ -1163,6 +1172,7 @@ export type Vault_Filter = {
   symbol_starts_with?: InputMaybe<Scalars['String']>;
   symbol_starts_with_nocase?: InputMaybe<Scalars['String']>;
   token?: InputMaybe<Scalars['String']>;
+  token_?: InputMaybe<Token_Filter>;
   token_contains?: InputMaybe<Scalars['String']>;
   token_contains_nocase?: InputMaybe<Scalars['String']>;
   token_ends_with?: InputMaybe<Scalars['String']>;
