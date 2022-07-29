@@ -1,0 +1,10 @@
+query PoolSnapshots(
+  $first: Int
+  $where: PoolSnapshot_filter
+  $orderBy: PoolSnapshot_orderBy
+  $orderDirection: OrderDirection
+) {
+  poolSnapshots(first: $first, where: $where, orderBy: $orderBy, orderDirection: $orderDirection) {
+    ...PoolSnapshot
+  }
+}

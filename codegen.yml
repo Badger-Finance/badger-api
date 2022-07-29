@@ -23,6 +23,15 @@ generates:
       - typescript
       - typescript-graphql-request
       - typescript-operations
+  src/graphql/generated/balancer.ts:
+    schema: ${BALANCER_SUBGRAPH_URL}
+    documents:
+      - src/graphql/fragments/pool-snapshot.fragment.graphql
+      - src/graphql/queries/pool-snapshot.query.graphql
+    plugins:
+      - typescript
+      - typescript-graphql-request
+      - typescript-operations
   src/graphql/generated/citadel.ts:
     schema: ${CITADEL_SUBGRAPH_URL}
     documents:

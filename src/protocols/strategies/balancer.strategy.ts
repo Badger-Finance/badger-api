@@ -1,19 +1,33 @@
-import { Erc20__factory, formatBalance, Token } from '@badger-dao/sdk';
+import { Erc20__factory, formatBalance, Network, Token } from '@badger-dao/sdk';
+import { GraphQLClient } from 'graphql-request';
 
+import { CachedValueSource } from '../../aws/models/apy-snapshots.model';
 import { VaultTokenBalance } from '../../aws/models/vault-token-balance.model';
 import { Chain } from '../../chains/config/chain.config';
+import { BALANCER_URL } from '../../config/constants';
 import {
   BalancerVault__factory,
   StablePhantomVault__factory,
   StablePool__factory,
   WeightedPool__factory,
 } from '../../contracts';
+import { getSdk as getBalancerSdk, OrderDirection, PoolSnapshot_OrderBy } from '../../graphql/generated/balancer';
 import { TokenPrice } from '../../prices/interface/token-price.interface';
+import { SourceType } from '../../rewards/enums/source-type.enum';
+import { valueSourceToCachedValueSource } from '../../rewards/rewards.utils';
 import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
 import { getFullToken, toBalance } from '../../tokens/tokens.utils';
+import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { getCachedVault, getVaultDefinition } from '../../vaults/vaults.utils';
+import { createValueSource } from '../interfaces/value-source.interface';
 
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+
+export class BalancerStrategy {
+  static async getValueSources(vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
+    return getBalancerSwapFees(vaultDefinition);
+  }
+}
 
 export async function getBPTPrice(chain: Chain, token: string): Promise<TokenPrice> {
   let totalSupply;
@@ -174,4 +188,48 @@ export async function resolveBalancerPoolTokenPrice(chain: Chain, token: Token, 
     address: token.address,
     price: 0,
   };
+}
+
+export async function getBalancerSwapFees(vault: VaultDefinition): Promise<CachedValueSource[]> {
+  try {
+    const chain = Chain.getChain(Network.Ethereum);
+    const client = new GraphQLClient(BALANCER_URL);
+    const sdk = getBalancerSdk(client);
+
+    const pool = WeightedPool__factory.connect(vault.depositToken, chain.provider);
+    const poolId = await pool.getPoolId();
+
+    const { poolSnapshots } = await sdk.PoolSnapshots({
+      first: 14,
+      where: {
+        pool: poolId.toLowerCase(),
+      },
+      orderBy: PoolSnapshot_OrderBy.Timestamp,
+      orderDirection: OrderDirection.Desc,
+    });
+
+    if (poolSnapshots.length < 1) {
+      return [];
+    }
+
+    let totalFees = 0;
+    let totalLiquifity = 0;
+
+    for (const snapshot of poolSnapshots) {
+      const { swapFees, liquidity } = snapshot;
+      totalFees += Number(swapFees);
+      totalLiquifity += Number(liquidity);
+    }
+
+    // we are taking an average of the fees over 2 weeks, there are 26 two week periods
+    const yearlyFees = totalFees * 26;
+    const yearlyApr = (yearlyFees / totalLiquifity) * 100;
+
+    return [
+      valueSourceToCachedValueSource(createValueSource('Balancer LP Fees', yearlyApr), vault, SourceType.TradeFee),
+    ];
+  } catch {
+    // some of the aura vaults are not pools - they will error (auraBal, graviAura)
+    return [];
+  }
 }
