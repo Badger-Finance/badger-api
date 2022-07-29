@@ -138,6 +138,7 @@ export async function constructVaultModel(
     balance,
     available,
     lastHarvest: pendingHarvest.lastHarvestedAt,
+    underlyingToken: vault.token.address,
   };
 
   const { yieldApr, harvestApr } = VaultsService.getVaultYieldProjection(vaultDTO, pendingHarvest);

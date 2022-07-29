@@ -144,7 +144,31 @@ export class VaultsService {
     vault.apy = vault.sourcesApy.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
     vault.protocol = vaultDefinition.protocol ?? Protocol.Badger;
     vault.lastHarvest = pendingHarvest.lastHarvestedAt;
-    vault.yieldProjection = this.getVaultYieldProjection(vault, pendingHarvest);
+
+    const harvestProjection = this.getVaultYieldProjection(vault, pendingHarvest);
+    const passiveSources = sourcesApr.filter((s) => s.type === SourceType.TradeFee || s.type === SourceType.Emission);
+    const passiveSourcesApr = passiveSources.reduce((total, s) => (total += s.apr), 0);
+    const convertedPassiveSources = passiveSources.map((s) => {
+      const { name, apr, address, type } = s;
+      const value = (apr * vault.value) / 100;
+      return {
+        name,
+        apr,
+        address,
+        symbol: type,
+        decimals: 0,
+        balance: 0,
+        value,
+      };
+    });
+
+    harvestProjection.harvestTokens = harvestProjection.harvestTokens.concat(convertedPassiveSources);
+    harvestProjection.yieldTokens = harvestProjection.yieldTokens.concat(convertedPassiveSources);
+    harvestProjection.yieldApr += passiveSourcesApr;
+    harvestProjection.harvestApr += passiveSourcesApr;
+    harvestProjection.harvestApy += passiveSourcesApr;
+
+    vault.yieldProjection = harvestProjection;
 
     if (vault.boost.enabled) {
       const hasBoostedApr = vault.sources.some((source) => source.boostable);
@@ -170,16 +194,21 @@ export class VaultsService {
 
   public static getVaultYieldProjection(
     // refactor regV2, Data Objects interfaces should be in api alongside with models
-    vault: Pick<VaultDTO, 'value' | 'balance' | 'available' | 'lastHarvest'>,
+    vault: Pick<VaultDTO, 'value' | 'balance' | 'available' | 'lastHarvest' | 'underlyingToken'>,
     pendingHarvest: VaultPendingHarvestData,
   ): VaultYieldProjection {
     const { value, balance, available, lastHarvest } = vault;
+
     const harvestValue = pendingHarvest.harvestTokens.reduce((total, token) => (total += token.value), 0);
     const yieldValue = pendingHarvest.yieldTokens.reduce((total, token) => (total += token.value), 0);
+    const harvestCompoundValue = pendingHarvest.harvestTokens
+      .filter((t) => vault.underlyingToken === t.address)
+      .reduce((total, token) => (total += token.value), 0);
+
     const earningValue = balance > 0 ? value * ((balance - available) / balance) : 0;
     return {
       harvestApr: this.calculateProjectedYield(earningValue, harvestValue, lastHarvest),
-      harvestApy: this.calculateProjectedYield(earningValue, harvestValue, lastHarvest, true),
+      harvestApy: this.calculateProjectedYield(earningValue, harvestValue, lastHarvest, harvestCompoundValue),
       harvestTokens: pendingHarvest.harvestTokens.map((t) => {
         const apr = this.calculateProjectedYield(earningValue, t.value, lastHarvest);
         return {
@@ -215,17 +244,18 @@ export class VaultsService {
     value: number,
     pendingValue: number,
     lastHarvested: number,
-    apy = false,
+    compoundingValue = 0,
   ): number {
     if (lastHarvested === 0 || value === 0 || pendingValue === 0) {
       return 0;
     }
     const duration = Date.now() / 1000 - lastHarvested;
-    const apr = (pendingValue / value) * (ONE_YEAR_SECONDS / duration);
-    if (!apy) {
-      return apr * 100;
+    const apr = (pendingValue / value) * (ONE_YEAR_SECONDS / duration) * 100;
+    if (compoundingValue === 0) {
+      return apr;
     }
+    const compoundingApr = (compoundingValue / value) * (ONE_YEAR_SECONDS / duration);
     const periods = ONE_YEAR_SECONDS / duration;
-    return ((1 + apr / periods) ** periods - 1) * 100;
+    return apr - compoundingApr + ((1 + compoundingApr / periods) ** periods - 1) * 100;
   }
 }
