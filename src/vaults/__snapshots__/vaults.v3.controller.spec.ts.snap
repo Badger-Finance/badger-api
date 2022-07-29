@@ -3292,7 +3292,7 @@ Array [
     "version": "v1",
     "yieldProjection": Object {
       "harvestApr": 121.8380764225896,
-      "harvestApy": 276.1696012316744,
+      "harvestApy": 275.2192204674485,
       "harvestTokens": Array [
         Object {
           "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
@@ -3858,7 +3858,7 @@ Array [
     "version": "v1",
     "yieldProjection": Object {
       "harvestApr": 112.43043137886274,
-      "harvestApy": 149.1579832184646,
+      "harvestApy": 148.84327890467597,
       "harvestTokens": Array [
         Object {
           "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
@@ -7673,7 +7673,7 @@ Array [
     "version": "v1",
     "yieldProjection": Object {
       "harvestApr": 121.8380764225896,
-      "harvestApy": 276.1696012316744,
+      "harvestApy": 275.2192204674485,
       "harvestTokens": Array [
         Object {
           "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
@@ -8239,7 +8239,7 @@ Array [
     "version": "v1",
     "yieldProjection": Object {
       "harvestApr": 112.43043137886274,
-      "harvestApy": 149.1579832184646,
+      "harvestApy": 148.84327890467597,
       "harvestTokens": Array [
         Object {
           "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
@@ -9564,7 +9564,7 @@ Array [
     "version": "v1",
     "yieldProjection": Object {
       "harvestApr": 112.43043137886274,
-      "harvestApy": 149.1579832184646,
+      "harvestApy": 148.84327890467597,
       "harvestTokens": Array [
         Object {
           "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
@@ -11916,7 +11916,7 @@ Array [
     "version": "v1",
     "yieldProjection": Object {
       "harvestApr": 112.43043137886274,
-      "harvestApy": 149.1579832184646,
+      "harvestApy": 148.84327890467597,
       "harvestTokens": Array [
         Object {
           "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",

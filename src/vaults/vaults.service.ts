@@ -256,6 +256,6 @@ export class VaultsService {
     }
     const compoundingApr = (compoundingValue / value) * (ONE_YEAR_SECONDS / duration);
     const periods = ONE_YEAR_SECONDS / duration;
-    return apr + ((1 + compoundingApr / periods) ** periods - 1) * 100;
+    return apr - compoundingApr + ((1 + compoundingApr / periods) ** periods - 1) * 100;
   }
 }
