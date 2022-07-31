@@ -1,4 +1,4 @@
-import { Protocol, VaultState, VaultVersion } from '@badger-dao/sdk';
+import { VaultState, VaultVersion } from '@badger-dao/sdk';
 import {
   BadgerTreeDistribution_OrderBy,
   OrderDirection,
@@ -18,9 +18,6 @@ export async function refreshVaultHarvests() {
       const sdk = await chain.getSdk();
       const mapper = getDataMapper();
       for (const vault of chain.vaults) {
-        if (!vault.protocol || vault.protocol !== Protocol.Aura) {
-          continue;
-        }
         if (vault.state && vault.state === VaultState.Discontinued) {
           continue;
         }
