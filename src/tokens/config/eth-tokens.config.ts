@@ -1,13 +1,9 @@
 import { Network } from '@badger-dao/sdk';
 
-import { getStakedCitadelPrice } from '../../citadel/citadel.utils';
 import { TOKENS } from '../../config/tokens.config';
 import { PricingType } from '../../prices/enums/pricing-type.enum';
 import { resolveBalancerPoolTokenPrice } from '../../protocols/strategies/balancer.strategy';
-import {
-  resolveCurvePoolTokenPrice,
-  resolveCurveStablePoolTokenPrice,
-} from '../../protocols/strategies/convex.strategy';
+import { resolveCurveStablePoolTokenPrice } from '../../protocols/strategies/convex.strategy';
 import { getImBtcPrice, getMhBtcPrice } from '../../protocols/strategies/mstable.strategy';
 import { TokenConfig } from '../interfaces/token-config.interface';
 
@@ -220,14 +216,6 @@ export const ethTokensConfig: TokenConfig = {
   },
   [TOKENS.BB_A_USDT]: {
     type: PricingType.Contract,
-  },
-  [TOKENS.CTDL]: {
-    type: PricingType.Custom,
-    getPrice: resolveCurvePoolTokenPrice,
-  },
-  [TOKENS.XCTDL]: {
-    type: PricingType.Custom,
-    getPrice: getStakedCitadelPrice,
   },
   [TOKENS.CVXFXS]: {
     type: PricingType.Custom,
