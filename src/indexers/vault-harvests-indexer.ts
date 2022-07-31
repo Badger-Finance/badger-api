@@ -1,4 +1,4 @@
-import { VaultState, VaultVersion } from '@badger-dao/sdk';
+import { ONE_DAY_MS, VaultState, VaultVersion } from '@badger-dao/sdk';
 import {
   BadgerTreeDistribution_OrderBy,
   OrderDirection,
@@ -32,9 +32,11 @@ export async function refreshVaultHarvests() {
           previousHarvestTokens: existingHarvest.harvestTokens,
           lastMeasuredAt: existingHarvest.lastMeasuredAt,
           duration: 0,
+          lastReportedAt: existingHarvest.lastReportedAt,
         };
 
         let shouldCheckGraph = false;
+        const now = Date.now();
 
         if (vault.version && vault.version === VaultVersion.v1_5) {
           try {
@@ -47,9 +49,15 @@ export async function refreshVaultHarvests() {
             harvestData.lastHarvestedAt = pendingHarvest.lastHarvestedAt;
           } catch {
             shouldCheckGraph = true;
-            sendPlainTextToDiscord(
-              `${chain.name} ${vault.name} (${vault.protocol}, ${vault.version}, ${vault.state}) failed to harvest!`,
-            );
+            // only report an error with the vault every eight hours
+            if (now - ONE_DAY_MS / 3 > harvestData.lastReportedAt) {
+              sendPlainTextToDiscord(
+                `${chain.name} ${vault.name} (${vault.protocol}, ${vault.version}, ${
+                  vault.state ?? VaultState.Open
+                }) failed to harvest!`,
+              );
+              harvestData.lastReportedAt = now;
+            }
           }
 
           const pendingYield = await sdk.vaults.getPendingYield(vault.vaultToken);
@@ -94,8 +102,8 @@ export async function refreshVaultHarvests() {
             t.name = VAULT_SOURCE;
           }
         });
-        harvestData.duration = Date.now() - harvestData.lastMeasuredAt;
-        harvestData.lastMeasuredAt = Date.now();
+        harvestData.duration = now - harvestData.lastMeasuredAt;
+        harvestData.lastMeasuredAt = now;
         harvestData.lastHarvestedAt *= 1000;
 
         try {

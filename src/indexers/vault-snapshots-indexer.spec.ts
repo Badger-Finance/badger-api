@@ -74,6 +74,7 @@ describe('refreshVaultSnapshots', () => {
       previousYieldTokens: [],
       previousHarvestTokens: [],
       duration: 0,
+      lastReportedAt: 0,
     }));
 
     put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();

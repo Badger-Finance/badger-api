@@ -713,6 +713,7 @@ export async function getVaultPendingHarvest(vaultDefinition: VaultDefinition): 
     previousHarvestTokens: [],
     lastMeasuredAt: 0,
     duration: 0,
+    lastReportedAt: 0,
   };
   try {
     const mapper = getDataMapper();

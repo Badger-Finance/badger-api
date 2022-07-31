@@ -29,4 +29,7 @@ export class VaultPendingHarvestData {
 
   @attribute()
   duration!: number;
+
+  @attribute()
+  lastReportedAt!: number;
 }
