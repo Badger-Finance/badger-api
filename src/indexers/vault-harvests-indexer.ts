@@ -46,7 +46,7 @@ export async function refreshVaultHarvests() {
               pendingHarvest.tokenRewards.map(async (t) => toBalance(await getFullToken(chain, t.address), t.balance)),
             );
 
-            harvestData.lastHarvestedAt = pendingHarvest.lastHarvestedAt;
+            harvestData.lastHarvestedAt = pendingHarvest.lastHarvestedAt * 1000;
           } catch {
             shouldCheckGraph = true;
             // only report an error with the vault every eight hours
@@ -87,13 +87,13 @@ export async function refreshVaultHarvests() {
           });
 
           if (settHarvests.length > 0) {
-            harvestData.lastHarvestedAt = settHarvests[0].timestamp;
+            harvestData.lastHarvestedAt = settHarvests[0].timestamp * 1000;
           }
           if (
             badgerTreeDistributions.length > 0 &&
             badgerTreeDistributions[0].timestamp > harvestData.lastHarvestedAt
           ) {
-            harvestData.lastHarvestedAt = badgerTreeDistributions[0].timestamp;
+            harvestData.lastHarvestedAt = badgerTreeDistributions[0].timestamp * 1000;
           }
         }
 
@@ -104,7 +104,6 @@ export async function refreshVaultHarvests() {
         });
         harvestData.duration = now - harvestData.lastMeasuredAt;
         harvestData.lastMeasuredAt = now;
-        harvestData.lastHarvestedAt *= 1000;
 
         try {
           await mapper.put(Object.assign(new VaultPendingHarvestData(), harvestData));
