@@ -102,10 +102,15 @@ export async function defaultVault(chain: Chain, vaultDefinition: VaultDefinitio
     yieldProjection: {
       yieldApr: 0,
       yieldTokens: [],
+      yieldPeriodApr: 0,
+      yieldTokensPerPeriod: [],
       yieldValue: 0,
       harvestApr: 0,
       harvestApy: 0,
+      harvestPeriodApr: 0,
+      harvestPeriodApy: 0,
       harvestTokens: [],
+      harvestTokensPerPeriod: [],
       harvestValue: 0,
     },
     lastHarvest: 0,
@@ -699,11 +704,15 @@ export async function getVaultCachedValueSources(vaultDefinition: VaultDefinitio
 }
 
 export async function getVaultPendingHarvest(vaultDefinition: VaultDefinition): Promise<VaultPendingHarvestData> {
-  const pendingHarvest: VaultPendingHarvestData = {
+  let pendingHarvest: VaultPendingHarvestData = {
     vault: vaultDefinition.vaultToken,
     yieldTokens: [],
     harvestTokens: [],
     lastHarvestedAt: 0,
+    previousYieldTokens: [],
+    previousHarvestTokens: [],
+    lastMeasuredAt: 0,
+    duration: 0,
   };
   try {
     const mapper = getDataMapper();
@@ -712,9 +721,10 @@ export async function getVaultPendingHarvest(vaultDefinition: VaultDefinition): 
       { vault: vaultDefinition.vaultToken },
       { limit: 1 },
     )) {
-      pendingHarvest.yieldTokens = item.yieldTokens;
-      pendingHarvest.harvestTokens = item.harvestTokens;
-      pendingHarvest.lastHarvestedAt = item.lastHarvestedAt;
+      pendingHarvest = {
+        ...pendingHarvest,
+        ...item,
+      };
     }
     return pendingHarvest;
   } catch (err) {

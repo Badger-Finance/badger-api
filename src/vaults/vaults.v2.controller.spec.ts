@@ -52,6 +52,10 @@ export function setupTestVault() {
       yieldTokens: [mockBalance(fullTokenMockMap[TOKENS.CVX], 10)],
       harvestTokens: [mockBalance(fullTokenMockMap[TOKENS.CVX], 10)],
       lastHarvestedAt: baseTime,
+      lastMeasuredAt: baseTime,
+      previousYieldTokens: [mockBalance(fullTokenMockMap[TOKENS.CVX], 10)],
+      previousHarvestTokens: [mockBalance(fullTokenMockMap[TOKENS.CVX], 10)],
+      duration: 60000,
     }),
   );
   jest

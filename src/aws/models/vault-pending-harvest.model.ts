@@ -17,4 +17,16 @@ export class VaultPendingHarvestData {
 
   @attribute()
   lastHarvestedAt!: number;
+
+  @attribute({ memberType: embed(CachedTokenBalance) })
+  previousYieldTokens!: Array<CachedTokenBalance>;
+
+  @attribute({ memberType: embed(CachedTokenBalance) })
+  previousHarvestTokens!: Array<CachedTokenBalance>;
+
+  @attribute()
+  lastMeasuredAt!: number;
+
+  @attribute()
+  duration!: number;
 }

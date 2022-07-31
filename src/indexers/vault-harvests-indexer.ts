@@ -1,4 +1,4 @@
-import { VaultState, VaultVersion } from '@badger-dao/sdk';
+import { Protocol, VaultState, VaultVersion } from '@badger-dao/sdk';
 import {
   BadgerTreeDistribution_OrderBy,
   OrderDirection,
@@ -10,7 +10,7 @@ import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.mod
 import { SUPPORTED_CHAINS } from '../chains/chain';
 import { getFullToken, toBalance } from '../tokens/tokens.utils';
 import { sendPlainTextToDiscord } from '../utils/discord.utils';
-import { VAULT_SOURCE } from '../vaults/vaults.utils';
+import { getVaultPendingHarvest, VAULT_SOURCE } from '../vaults/vaults.utils';
 
 export async function refreshVaultHarvests() {
   await Promise.all(
@@ -18,15 +18,23 @@ export async function refreshVaultHarvests() {
       const sdk = await chain.getSdk();
       const mapper = getDataMapper();
       for (const vault of chain.vaults) {
+        if (!vault.protocol || vault.protocol !== Protocol.Aura) {
+          continue;
+        }
         if (vault.state && vault.state === VaultState.Discontinued) {
           continue;
         }
 
+        const existingHarvest = await getVaultPendingHarvest(vault);
         const harvestData: VaultPendingHarvestData = {
           vault: vault.vaultToken,
           yieldTokens: [],
           harvestTokens: [],
           lastHarvestedAt: 0,
+          previousYieldTokens: existingHarvest.yieldTokens,
+          previousHarvestTokens: existingHarvest.harvestTokens,
+          lastMeasuredAt: existingHarvest.lastMeasuredAt,
+          duration: 0,
         };
 
         let shouldCheckGraph = false;
@@ -89,6 +97,9 @@ export async function refreshVaultHarvests() {
             t.name = VAULT_SOURCE;
           }
         });
+        harvestData.duration = Date.now() - harvestData.lastMeasuredAt;
+        harvestData.lastMeasuredAt = Date.now();
+        harvestData.lastHarvestedAt *= 1000;
 
         try {
           await mapper.put(Object.assign(new VaultPendingHarvestData(), harvestData));
