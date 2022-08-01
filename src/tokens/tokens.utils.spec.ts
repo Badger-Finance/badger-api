@@ -1,6 +1,6 @@
 import BadgerSDK, { Currency, TokensService, TokenValue } from '@badger-dao/sdk';
-import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 
+import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
 import * as priceUtils from '../prices/prices.utils';

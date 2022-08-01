@@ -1,4 +1,5 @@
 import { BouncerType, Network, Protocol, VaultBehavior, VaultState, VaultVersion } from '@badger-dao/sdk';
+
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { Stage } from '../config/enums/stage.enum';
 import { TOKENS } from '../config/tokens.config';

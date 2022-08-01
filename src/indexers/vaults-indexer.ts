@@ -1,6 +1,6 @@
 import { getDataMapper } from '../aws/dynamodb.utils';
-import { HistoricVaultSnapshotOldModel } from '../aws/models/historic-vault-snapshot-old.model';
 import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
+import { HistoricVaultSnapshotOldModel } from '../aws/models/historic-vault-snapshot-old.model';
 import { SUPPORTED_CHAINS } from '../chains/chain';
 import { updateSnapshots } from '../charts/charts.utils';
 import { vaultToSnapshot } from './indexer.utils';

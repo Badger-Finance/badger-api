@@ -1,7 +1,7 @@
 import { DataMapper } from '@aws/dynamodb-data-mapper';
 import { VaultSnapshot } from '@badger-dao/sdk';
-import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 
+import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { Chain } from '../chains/config/chain.config';
 import * as chartUtils from '../charts/charts.utils';
 import { TOKENS } from '../config/tokens.config';

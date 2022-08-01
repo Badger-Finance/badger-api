@@ -1,7 +1,7 @@
 import { DataMapper } from '@aws/dynamodb-data-mapper';
 import BadgerSDK, { Currency, gqlGenT, Protocol, VaultBehavior, VaultStatus, VaultVersion } from '@badger-dao/sdk';
-import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 
+import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';

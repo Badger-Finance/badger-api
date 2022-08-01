@@ -23,6 +23,7 @@ import { createValueSource } from '../protocols/interfaces/value-source.interfac
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import * as rewardsUtils from '../rewards/rewards.utils';
+import { MOCK_VAULT_DEFINITION } from '../test/constants';
 import {
   randomSnapshot,
   randomSnapshots,
@@ -47,7 +48,6 @@ import {
   getVaultUnderlyingPerformance,
   VAULT_SOURCE,
 } from './vaults.utils';
-import { MOCK_VAULT_DEFINITION } from '../test/constants';
 
 describe('vaults.utils', () => {
   beforeEach(() => {

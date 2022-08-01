@@ -1,6 +1,6 @@
 import { DataMapper, PutParameters, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
-import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 
+import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { VaultTokenBalance } from '../aws/models/vault-token-balance.model';
 import { Chain } from '../chains/config/chain.config';
 import { Ethereum } from '../chains/config/eth.config';
