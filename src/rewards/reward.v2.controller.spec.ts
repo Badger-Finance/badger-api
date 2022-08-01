@@ -6,6 +6,7 @@ import SuperTest from 'supertest';
 
 import { TOKENS } from '../config/tokens.config';
 import { Server } from '../Server';
+import { mockChainVaults } from '../test/tests.utils';
 
 describe('RewardController', () => {
   let request: SuperTest.SuperTest<SuperTest.Test>;
@@ -37,6 +38,7 @@ describe('RewardController', () => {
       return activeSchedulesMockMap[beneficiary];
     });
     jest.spyOn(BadgerSDK.prototype, 'ready').mockImplementation();
+    mockChainVaults();
   }
 
   beforeAll(PlatformTest.bootstrap(Server));

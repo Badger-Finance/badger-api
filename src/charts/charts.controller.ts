@@ -101,7 +101,9 @@ export class ChartsController {
     @QueryParams('timeframe') timeframe = ChartTimeFrame.Day,
     @QueryParams('chain') chain?: Network,
   ): Promise<HistoricVaultSnapshotModel[]> {
-    if (!address) throw new QueryParamError('address');
+    if (!address) {
+      throw new QueryParamError('address');
+    }
 
     return this.vaultsService.loadVaultChartData(address, timeframe, Chain.getChain(chain));
   }

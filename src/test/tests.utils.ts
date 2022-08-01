@@ -292,6 +292,7 @@ export function mockPricing() {
 
 export function mockChainVaults() {
   jest.spyOn(ChainVaults.prototype, 'getVault').mockImplementation(async (_) => MOCK_VAULT_DEFINITION);
+  jest.spyOn(ChainVaults.prototype, 'all').mockImplementation(async () => [MOCK_VAULT_DEFINITION]);
 }
 
 export async function mockBadgerSdk(

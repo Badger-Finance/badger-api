@@ -863,6 +863,7 @@ export async function queryVaultCharts(id: string): Promise<HistoricVaultSnapsho
   try {
     const mapper = getDataMapper();
     for await (const item of mapper.query(ChartDataBlob, { id }, { limit: 1, scanIndexForward: false })) {
+      console.log(item);
       return item.data as HistoricVaultSnapshotModel[];
     }
     return [];
