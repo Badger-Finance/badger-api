@@ -2,6 +2,7 @@ import {
   ChartTimeFrame,
   Currency,
   keyBy,
+  Network,
   ONE_YEAR_MS,
   Protocol,
   VaultDTO,
@@ -329,6 +330,42 @@ export class VaultsService {
     const dataKey = toChartDataKey(HistoricVaultSnapshotModel.NAMESPACE, vaultBlobId, timeframe);
 
     return queryVaultCharts(dataKey);
+  }
+
+  async getVaultChartDataByTimestamps(
+    vaultAddr: string,
+    network: Network,
+    timestamps: number[],
+  ): Promise<HistoricVaultSnapshotModel[]> {
+    // from smaller to greater, we need this order for search to work correctly
+    const sortedTimestamps = timestamps.sort((a, b) => (a > b ? 1 : -1));
+
+    const vaultBlobId = HistoricVaultSnapshotModel.formBlobId(vaultAddr, network);
+    const dataKey = toChartDataKey(HistoricVaultSnapshotModel.NAMESPACE, vaultBlobId, ChartTimeFrame.Max);
+
+    const vaultChartData = await queryVaultCharts(dataKey);
+
+    const snapshots: Set<HistoricVaultSnapshotModel> = new Set();
+
+    if (vaultChartData.length === 0) return Array.from(snapshots);
+
+    // from smaller to greater, we need this order for search to work correctly
+    const preparedVaultsChartData = vaultChartData.reverse();
+
+    for (const timestamp of sortedTimestamps) {
+      const snapshotItem = preparedVaultsChartData.find((i) => Number(i.timestamp) >= timestamp);
+
+      if (snapshotItem) {
+        if (!snapshotItem.pricePerFullShare && snapshotItem.ratio) {
+          snapshotItem.pricePerFullShare = snapshotItem.ratio;
+        }
+        snapshotItem.timestamp = timestamp;
+        snapshots.add(snapshotItem);
+      }
+    }
+
+    // now we reverse, so relevant data will come at the start of the list
+    return Array.from(snapshots).reverse();
   }
 
   private static calculateProjectedYield(

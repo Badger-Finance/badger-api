@@ -38,6 +38,8 @@ custom:
             sources: [./seed/token-info.json]
           - table: ${self:custom.table.SETT_HISTORIC_DATA}
             sources: [./seed/vaults-historic-snapshot.json]
+          - table: ${self:custom.table.CHART_DATA}
+            sources: [./seed/chart-data.json]
 
   serverless-offline:
     noPrependStageInUrl: true

@@ -81,6 +81,7 @@ export class VaultsV3Controller {
     return this.vaultService.listVaultHarvests(Chain.getChain(chain));
   }
 
+  // make deprecated, after getVaultSnapshotsInRange will be used
   @Hidden()
   @UseCache()
   @Get('/snapshots')
@@ -99,5 +100,31 @@ export class VaultsV3Controller {
       vaultDef,
       timestamps.split(',').map((n) => Number(n)),
     );
+  }
+
+  @Hidden()
+  @UseCache()
+  @Get('/inrange/snapshots')
+  @ContentType('json')
+  async getVaultSnapshotsInRange(
+    @QueryParams('vaultAddr') vaultAddr: string,
+    @QueryParams('timestamps') timestamps: string,
+    @QueryParams('chain') chain?: Network,
+  ): Promise<VaultSnapshot[]> {
+    if (!vaultAddr) {
+      throw new QueryParamError('vaultAddr');
+    }
+    if (!timestamps) {
+      throw new QueryParamError('timestamps');
+    }
+
+    const timestampsList = timestamps.split(',').map((n) => Number(n));
+    const isTimestampsValid = timestampsList.every((time) => time > 0);
+
+    if (!isTimestampsValid) {
+      throw new QueryParamError('timestamps');
+    }
+
+    return this.vaultService.getVaultChartDataByTimestamps(vaultAddr, Chain.getChain(chain).network, timestampsList);
   }
 }
