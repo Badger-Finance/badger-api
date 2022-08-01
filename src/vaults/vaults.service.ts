@@ -236,6 +236,7 @@ export class VaultsService {
     yieldTokensCurrent.forEach((t) => {
       const yieldedTokens = previousYieldByToken.get(t.address);
       if (yieldedTokens) {
+        // lock in current price and caculate value on updated balance
         for (const token of yieldedTokens) {
           const price = t.value / t.balance;
           t.balance -= token.balance;
@@ -249,6 +250,7 @@ export class VaultsService {
     harvestTokensCurrent.forEach((t) => {
       const harvestedTokens = previousHarvestByToken.get(t.address);
       if (harvestedTokens) {
+        // lock in current price and caculate value on updated balance
         for (const token of harvestedTokens) {
           const price = t.value / t.balance;
           t.balance -= token.balance;
