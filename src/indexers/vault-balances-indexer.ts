@@ -7,6 +7,8 @@ import { SUPPORTED_CHAINS } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { getBalancerVaultTokenBalance } from '../protocols/strategies/balancer.strategy';
 import { getCurveVaultTokenBalance } from '../protocols/strategies/convex.strategy';
+import { getFullToken, toBalance } from '../tokens/tokens.utils';
+import { getCachedVault } from '../vaults/vaults.utils';
 import { getLpTokenBalances } from './indexer.utils';
 
 export async function refreshVaultBalances() {
@@ -22,6 +24,10 @@ export async function refreshVaultBalances() {
 export async function updateVaultTokenBalances(chain: Chain, vault: VaultDefinitionModel): Promise<void> {
   try {
     const mapper = getDataMapper();
+    const [depositToken, cachedVault] = await Promise.all([
+      getFullToken(chain, vault.depositToken),
+      getCachedVault(chain, vault),
+    ]);
 
     let cachedTokenBalance: VaultTokenBalance | undefined;
 
@@ -35,13 +41,20 @@ export async function updateVaultTokenBalances(chain: Chain, vault: VaultDefinit
       case Protocol.Sushiswap:
       case Protocol.Uniswap:
         cachedTokenBalance = await getLpTokenBalances(chain, vault);
+        break;
       case Protocol.Convex:
       case Protocol.Curve:
         cachedTokenBalance = await getCurveVaultTokenBalance(chain, vault.address);
+        break;
       case Protocol.Aura:
       case Protocol.Balancer:
         cachedTokenBalance = await getBalancerVaultTokenBalance(chain, vault.address);
+        break;
       default:
+        cachedTokenBalance = Object.assign(new VaultTokenBalance(), {
+          vault: vault.address,
+          tokenBalances: [await toBalance(depositToken, cachedVault.balance)],
+        });
         break;
     }
 

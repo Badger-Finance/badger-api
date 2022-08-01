@@ -38,22 +38,22 @@ export const MOCK_BOUNCER_FILE = {
 };
 
 export const MOCK_VAULT_DEFINITION: VaultDefinitionModel = {
-  address: TOKENS.BVECVX,
-  name: 'bveCVX',
+  address: TOKENS.BBADGER,
+  name: 'Badger',
   createdAt: 0,
   updatedAt: 0,
   releasedAt: 0,
   stage: Stage.Production,
   behavior: VaultBehavior.Compounder,
   state: VaultState.Open,
-  protocol: Protocol.Convex,
+  protocol: Protocol.Badger,
   isProduction: 1,
   bouncer: BouncerType.None,
   chain: Network.Ethereum,
   isNew: false,
   version: VaultVersion.v1,
   client: '',
-  depositToken: TOKENS.CVX,
+  depositToken: TOKENS.BADGER,
   isMigrating: true,
   isStageVault: () => true,
 };

@@ -2,10 +2,11 @@ import { DataMapper } from '@aws/dynamodb-data-mapper';
 import { VaultSnapshot } from '@badger-dao/sdk';
 
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
+import { SUPPORTED_CHAINS } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import * as chartUtils from '../charts/charts.utils';
 import { TOKENS } from '../config/tokens.config';
-import { randomSnapshot } from '../test/tests.utils';
+import { mockChainVaults, randomSnapshot } from '../test/tests.utils';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import * as tokenUtils from '../tokens/tokens.utils';
 import { VaultsService } from '../vaults/vaults.service';
@@ -16,6 +17,7 @@ import { indexProtocolVaults } from './vaults-indexer';
 describe('vaults-indexer', () => {
   let vaultToSnapshot: jest.SpyInstance<Promise<VaultSnapshot>, [chain: Chain, VaultDefinition: VaultDefinitionModel]>;
   beforeEach(() => {
+    mockChainVaults();
     vaultToSnapshot = jest
       .spyOn(indexerUtils, 'vaultToSnapshot')
       .mockImplementation(async (_chain, vault) => randomSnapshot(vault));
@@ -33,7 +35,7 @@ describe('vaults-indexer', () => {
         return fullTokenMockMap[<string>tokenAddr] || fullTokenMockMap[TOKENS.BADGER];
       });
       await indexProtocolVaults();
-      expect(vaultToSnapshot.mock.calls.length).toEqual(3);
+      expect(vaultToSnapshot.mock.calls.length).toEqual(SUPPORTED_CHAINS.length);
     });
   });
 });

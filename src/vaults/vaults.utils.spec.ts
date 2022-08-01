@@ -25,6 +25,7 @@ import { SourceType } from '../rewards/enums/source-type.enum';
 import * as rewardsUtils from '../rewards/rewards.utils';
 import { MOCK_VAULT_DEFINITION } from '../test/constants';
 import {
+  mockChainVaults,
   randomSnapshot,
   randomSnapshots,
   setFullTokenDataMock,
@@ -48,10 +49,12 @@ import {
   getVaultUnderlyingPerformance,
   VAULT_SOURCE,
 } from './vaults.utils';
+import { ChainVaults } from '../chains/vaults/chain.vaults';
 
 describe('vaults.utils', () => {
   beforeEach(() => {
     console.log = jest.fn();
+    mockChainVaults();
 
     jest.spyOn(BadgerGraph.prototype, 'loadSettHarvests').mockImplementation(async (_options) => {
       const harvests = [
@@ -449,6 +452,9 @@ describe('vaults.utils', () => {
 
     it('returns empty harvests for unknown vault', async () => {
       setupTestVaultHarvests();
+      jest.spyOn(ChainVaults.prototype, 'getVault').mockImplementation(async (_) => {
+        throw new Error('Missing Vault');
+      });
       await expect(getVaultHarvestsOnChain(TEST_CHAIN, '0x000000000000')).rejects.toThrow(Error);
     });
   });

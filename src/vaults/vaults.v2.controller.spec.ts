@@ -14,6 +14,7 @@ import { createValueSource } from '../protocols/interfaces/value-source.interfac
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { valueSourceToCachedValueSource } from '../rewards/rewards.utils';
 import { Server } from '../Server';
+import { mockChainVaults } from '../test/tests.utils';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import * as tokensUtils from '../tokens/tokens.utils';
 import { mockBalance } from '../tokens/tokens.utils';
@@ -23,6 +24,7 @@ import * as vaultsUtils from './vaults.utils';
 const TEST_VAULT = TOKENS.BCRV_SBTC;
 
 export function setupDdbHarvests() {
+  mockChainVaults();
   jest.spyOn(BadgerSDK.prototype, 'ready').mockImplementation();
 
   /* eslint-disable @typescript-eslint/ban-ts-comment */
@@ -41,6 +43,7 @@ export function setupDdbHarvests() {
 }
 
 export function setupTestVault() {
+  mockChainVaults();
   jest.spyOn(tokensUtils, 'getFullToken').mockImplementation(async (_, tokenAddr) => {
     return fullTokenMockMap[tokenAddr] || fullTokenMockMap[TOKENS.BADGER];
   });

@@ -9,6 +9,7 @@ import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
 import { DEFAULT_PAGE_SIZE, REWARD_DATA } from '../config/constants';
 import { NodataForAddrError } from '../errors/allocation/nodata.for.addr.error';
+import { NodataForVaultError } from '../errors/allocation/nodata.for.vault.error';
 import { UnsupportedChainError } from '../errors/validation/unsupported.chain.error';
 import { AirdropMerkleClaim, AirdropMerkleDistribution } from './interfaces/merkle-distributor.interface';
 import { RewardMerkleClaim } from './interfaces/reward-merkle-claim.interface';
@@ -90,9 +91,13 @@ export class RewardsService {
    */
   async rewardSchedulesByVault(chain: Chain, address: string, active: boolean): Promise<EmissionSchedule[]> {
     const chainSdk = await chain.getSdk();
-    const vault = await chain.vaults.getVault(address);
-    const loadMethod = active ? 'loadActiveSchedules' : 'loadSchedules';
-    return chainSdk.rewards[loadMethod](vault.address);
+    try {
+      const vault = await chain.vaults.getVault(address);
+      const loadMethod = active ? 'loadActiveSchedules' : 'loadSchedules';
+      return chainSdk.rewards[loadMethod](vault.address);
+    } catch (err) {
+      throw new NodataForVaultError(address);
+    }
   }
 
   /**

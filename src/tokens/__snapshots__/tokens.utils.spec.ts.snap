@@ -24,12 +24,12 @@ Array [
 exports[`token.utils getVaultTokens returns the single token for a non liquidity token underlying token 1`] = `
 Array [
   Object {
-    "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
+    "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
     "balance": 10,
     "decimals": 18,
-    "name": "Convex Token",
-    "symbol": "CVX",
-    "value": 12510,
+    "name": "Badger",
+    "symbol": "BADGER",
+    "value": 8390,
   },
 ]
 `;
