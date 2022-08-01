@@ -5,7 +5,6 @@ import { ContentType } from '@tsed/schema';
 
 import { Chain } from '../chains/config/chain.config';
 import { QueryParamError } from '../errors/validation/query.param.error';
-import { CitadelMerkleClaim } from './interfaces/citadel-merkle-claim.interface';
 import { ProofsService } from './proofs.service';
 
 @Controller('/proof')
@@ -22,13 +21,5 @@ export class ProofsV3Controller {
     if (!address) throw new QueryParamError('address');
 
     return this.proofsService.getBouncerProof(Chain.getChain(chain), address);
-  }
-
-  @Get('/citadel')
-  @ContentType('json')
-  async getCitadelProof(@QueryParams('address') address: string): Promise<CitadelMerkleClaim> {
-    if (!address) throw new QueryParamError('address');
-
-    return this.proofsService.getCitadelClaim(address);
   }
 }
