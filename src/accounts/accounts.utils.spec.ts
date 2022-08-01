@@ -9,6 +9,7 @@ import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 import { MOCK_VAULT_DEFINITION } from '../test/constants';
 import {
   defaultAccount,
+  mockChainVaults,
   mockPricing,
   randomSnapshot,
   setFullTokenDataMock,
@@ -36,11 +37,11 @@ describe('accounts.utils', () => {
     updatedAt: 0,
   };
 
-  const testSettBalance = (vaultDefinition: VaultDefinitionModel): gqlGenT.UserSettBalance => {
-    const settToken = fullTokenMockMap[vaultDefinition.address];
+  function testVaultBalance(vaultDefinition: VaultDefinitionModel): gqlGenT.UserSettBalance {
+    const vaultToken = fullTokenMockMap[vaultDefinition.address];
     const depositToken = fullTokenMockMap[vaultDefinition.depositToken];
     const toWei = (amt: number) => {
-      const values = amt * Math.pow(10, settToken.decimals);
+      const values = amt * Math.pow(10, vaultToken.decimals);
       return values.toString();
     };
     return {
@@ -56,9 +57,9 @@ describe('accounts.utils', () => {
         settBalances: [],
       },
       sett: {
-        id: settToken.address,
-        name: settToken.name,
-        symbol: settToken.symbol,
+        id: vaultToken.address,
+        name: vaultToken.name,
+        symbol: vaultToken.symbol,
         available: 1,
         pricePerFullShare: 1034039284374221,
         balance: 3,
@@ -89,7 +90,7 @@ describe('accounts.utils', () => {
         releasedAt: 0,
       },
     };
-  };
+  }
 
   beforeEach(() => {
     jest.spyOn(DataMapper.prototype, 'put').mockImplementation(async (o) => ({
@@ -164,12 +165,13 @@ describe('accounts.utils', () => {
   describe('toVaultBalance', () => {
     const chain = TEST_CHAIN;
 
-    const testToVaultBalance = (vaultAddress: string) => {
+    describe('digg token conversion', () => {
       it.each([
         [undefined, Currency.USD],
         [Currency.USD, Currency.USD],
         [Currency.ETH, Currency.ETH],
-      ])('returns sett balance request in %s currency with %s denominated value', async (currency, _toCurrency) => {
+      ])('returns vault balance request in %s currency with %s denominated value', async (currency, _toCurrency) => {
+        mockChainVaults();
         const snapshot = randomSnapshot(MOCK_VAULT_DEFINITION);
         const cachedVault = await vaultsUtils.defaultVault(chain, MOCK_VAULT_DEFINITION);
         cachedVault.balance = snapshot.balance;
@@ -183,21 +185,13 @@ describe('accounts.utils', () => {
         const tokenBalances = [mockBalance(wbtc, 1), mockBalance(weth, 20)];
         const cached = { vault: MOCK_VAULT_DEFINITION.address, tokenBalances };
         setupMapper([cached]);
-        const mockedBalance = testSettBalance(MOCK_VAULT_DEFINITION);
+        const mockedBalance = testVaultBalance(MOCK_VAULT_DEFINITION);
         const actual = await toVaultBalance(chain, mockedBalance, currency);
         expect(actual).toBeTruthy();
-        expect(actual.name).toEqual(depositToken.name);
+        expect(actual.name).toEqual(MOCK_VAULT_DEFINITION.name);
         expect(actual.symbol).toEqual(depositToken.symbol);
         expect(actual.pricePerFullShare).toEqual(snapshot.balance / snapshot.totalSupply);
       });
-    };
-
-    describe('non-digg token conversion', () => {
-      testToVaultBalance(TOKENS.BBADGER);
-    });
-
-    describe('digg token conversion', () => {
-      testToVaultBalance(TOKENS.BDIGG);
     });
   });
 

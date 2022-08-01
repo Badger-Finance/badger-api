@@ -27,6 +27,7 @@ import { BinanceSmartChain } from '../chains/config/bsc.config';
 import { Ethereum } from '../chains/config/eth.config';
 import { Fantom } from '../chains/config/fantom.config';
 import { Polygon } from '../chains/config/polygon.config';
+import { ChainVaults } from '../chains/vaults/chain.vaults';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import * as pricesUtils from '../prices/prices.utils';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
@@ -287,6 +288,10 @@ export function mockPricing() {
     }
     return price / 2;
   });
+}
+
+export function mockChainVaults() {
+  jest.spyOn(ChainVaults.prototype, 'getVault').mockImplementation(async (_) => MOCK_VAULT_DEFINITION);
 }
 
 export async function mockBadgerSdk(
