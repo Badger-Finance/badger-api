@@ -1,4 +1,4 @@
-import { VaultState, VaultVersion } from '@badger-dao/sdk';
+import { ONE_DAY_MS, VaultState, VaultVersion } from '@badger-dao/sdk';
 import {
   BadgerTreeDistribution_OrderBy,
   OrderDirection,
@@ -10,7 +10,7 @@ import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.mod
 import { SUPPORTED_CHAINS } from '../chains/chain';
 import { getFullToken, toBalance } from '../tokens/tokens.utils';
 import { sendPlainTextToDiscord } from '../utils/discord.utils';
-import { VAULT_SOURCE } from '../vaults/vaults.utils';
+import { getVaultPendingHarvest, VAULT_SOURCE } from '../vaults/vaults.utils';
 
 export async function refreshVaultHarvests() {
   await Promise.all(
@@ -22,14 +22,21 @@ export async function refreshVaultHarvests() {
           continue;
         }
 
+        const existingHarvest = await getVaultPendingHarvest(vault);
         const harvestData: VaultPendingHarvestData = {
           vault: vault.vaultToken,
           yieldTokens: [],
           harvestTokens: [],
           lastHarvestedAt: 0,
+          previousYieldTokens: existingHarvest.yieldTokens,
+          previousHarvestTokens: existingHarvest.harvestTokens,
+          lastMeasuredAt: existingHarvest.lastMeasuredAt,
+          duration: 0,
+          lastReportedAt: existingHarvest.lastReportedAt,
         };
 
         let shouldCheckGraph = false;
+        const now = Date.now();
 
         if (vault.version && vault.version === VaultVersion.v1_5) {
           try {
@@ -39,12 +46,18 @@ export async function refreshVaultHarvests() {
               pendingHarvest.tokenRewards.map(async (t) => toBalance(await getFullToken(chain, t.address), t.balance)),
             );
 
-            harvestData.lastHarvestedAt = pendingHarvest.lastHarvestedAt;
+            harvestData.lastHarvestedAt = pendingHarvest.lastHarvestedAt * 1000;
           } catch {
             shouldCheckGraph = true;
-            sendPlainTextToDiscord(
-              `${chain.name} ${vault.name} (${vault.protocol}, ${vault.version}, ${vault.state}) failed to harvest!`,
-            );
+            // only report an error with the vault every eight hours
+            if (now - ONE_DAY_MS / 3 > harvestData.lastReportedAt) {
+              sendPlainTextToDiscord(
+                `${chain.name} ${vault.name} (${vault.protocol}, ${vault.version}, ${
+                  vault.state ?? VaultState.Open
+                }) failed to harvest!`,
+              );
+              harvestData.lastReportedAt = now;
+            }
           }
 
           const pendingYield = await sdk.vaults.getPendingYield(vault.vaultToken);
@@ -74,13 +87,13 @@ export async function refreshVaultHarvests() {
           });
 
           if (settHarvests.length > 0) {
-            harvestData.lastHarvestedAt = settHarvests[0].timestamp;
+            harvestData.lastHarvestedAt = settHarvests[0].timestamp * 1000;
           }
           if (
             badgerTreeDistributions.length > 0 &&
             badgerTreeDistributions[0].timestamp > harvestData.lastHarvestedAt
           ) {
-            harvestData.lastHarvestedAt = badgerTreeDistributions[0].timestamp;
+            harvestData.lastHarvestedAt = badgerTreeDistributions[0].timestamp * 1000;
           }
         }
 
@@ -89,6 +102,8 @@ export async function refreshVaultHarvests() {
             t.name = VAULT_SOURCE;
           }
         });
+        harvestData.duration = now - harvestData.lastMeasuredAt;
+        harvestData.lastMeasuredAt = now;
 
         try {
           await mapper.put(Object.assign(new VaultPendingHarvestData(), harvestData));

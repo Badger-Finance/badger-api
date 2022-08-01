@@ -1,4 +1,14 @@
-import { ChartTimeFrame, Currency, Protocol, VaultDTO, VaultSnapshot, VaultState, VaultType } from '@badger-dao/sdk';
+import {
+  ChartTimeFrame,
+  Currency,
+  keyBy,
+  ONE_YEAR_MS,
+  Protocol,
+  VaultDTO,
+  VaultSnapshot,
+  VaultState,
+  VaultType,
+} from '@badger-dao/sdk';
 import { VaultYieldProjection } from '@badger-dao/sdk/lib/api/interfaces/vault-yield-projection.interface';
 import { MetadataClient } from '@badger-dao/sdk/lib/registry.v2/enums/metadata.client.enum';
 import { Service } from '@tsed/common';
@@ -10,7 +20,6 @@ import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapsho
 import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
 import { Chain, isStageVault } from '../chains/config/chain.config';
 import { toChartDataKey } from '../charts/charts.utils';
-import { ONE_YEAR_SECONDS } from '../config/constants';
 import { NodataForVaultError } from '../errors/allocation/nodata.for.vault.error';
 import { convert } from '../prices/prices.utils';
 import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interface';
@@ -194,34 +203,103 @@ export class VaultsService {
     return getVaultSnapshotsAtTimestamps(chain, vault, timestamps);
   }
 
+  /**
+   * Evalauate the projected vault yield in a multitude of ways.
+   * - Evaluates the previous yield measurement period performance
+   * - Evaluates the previous harvest measurement performance
+   * The yield measuremeant is a most update data differential reward measurement between
+   * measurement intervals. This is the closest to spot APR any system can come.
+   * The harvest measurement is the truer APR being realized during the overall harvest.
+   * This value may be lower than spot due to fluctuating reward values during measurement or
+   * harvest periods.
+   * @param vault vault requested for projection
+   * @param pendingHarvest vault harvest measurements
+   * @returns evaluated vault yield projection
+   */
   public static getVaultYieldProjection(
     // refactor regV2, Data Objects interfaces should be in api alongside with models
     vault: Pick<VaultDTO, 'value' | 'balance' | 'available' | 'lastHarvest' | 'underlyingToken'>,
     pendingHarvest: VaultPendingHarvestData,
   ): VaultYieldProjection {
     const { value, balance, available, lastHarvest } = vault;
+    const { yieldTokens, previousYieldTokens, harvestTokens, previousHarvestTokens, duration } = pendingHarvest;
 
-    const harvestValue = pendingHarvest.harvestTokens.reduce((total, token) => (total += token.value), 0);
-    const yieldValue = pendingHarvest.yieldTokens.reduce((total, token) => (total += token.value), 0);
-    const harvestCompoundValue = pendingHarvest.harvestTokens
+    // we need to construct a measurement diff from the originally measured tokens and the new tokens
+    const previousYieldByToken = keyBy(previousYieldTokens, (t) => t.address);
+    const yieldTokensCurrent = yieldTokens.slice();
+    yieldTokensCurrent.forEach((t) => {
+      const yieldedTokens = previousYieldByToken.get(t.address);
+      if (yieldedTokens) {
+        for (const token of yieldedTokens) {
+          t.balance -= token.balance;
+          t.value -= token.value;
+        }
+      }
+    });
+    const previousHarvestByToken = keyBy(previousHarvestTokens, (t) => t.address);
+    const harvestTokensCurrent = harvestTokens.slice();
+    harvestTokensCurrent.forEach((t) => {
+      const harvestedTokens = previousHarvestByToken.get(t.address);
+      if (harvestedTokens) {
+        for (const token of harvestedTokens) {
+          t.balance -= token.balance;
+          t.value -= token.value;
+        }
+      }
+    });
+
+    // calculate the overall harvest values
+    const harvestValue = harvestTokens.reduce((total, token) => (total += token.value), 0);
+    const yieldValue = yieldTokens.reduce((total, token) => (total += token.value), 0);
+    const harvestCompoundValue = harvestTokens
+      .filter((t) => vault.underlyingToken === t.address)
+      .reduce((total, token) => (total += token.value), 0);
+    const harvestDuration = Date.now() - lastHarvest;
+
+    // calculate the current measurement periods values
+    const harvestValuePerPeriod = harvestTokensCurrent.reduce((total, token) => (total += token.value), 0);
+    const yieldValuePerPeriod = yieldTokensCurrent.reduce((total, token) => (total += token.value), 0);
+    const harvestCompoundValuePerPeriod = harvestTokensCurrent
       .filter((t) => vault.underlyingToken === t.address)
       .reduce((total, token) => (total += token.value), 0);
 
     const earningValue = balance > 0 ? value * ((balance - available) / balance) : 0;
     return {
-      harvestApr: this.calculateProjectedYield(earningValue, harvestValue, lastHarvest),
-      harvestApy: this.calculateProjectedYield(earningValue, harvestValue, lastHarvest, harvestCompoundValue),
+      harvestApr: this.calculateProjectedYield(earningValue, harvestValue, harvestDuration),
+      harvestApy: this.calculateProjectedYield(earningValue, harvestValue, harvestDuration, harvestCompoundValue),
+      harvestPeriodApr: this.calculateProjectedYield(earningValue, harvestValuePerPeriod, duration),
+      harvestPeriodApy: this.calculateProjectedYield(
+        earningValue,
+        harvestValuePerPeriod,
+        duration,
+        harvestCompoundValuePerPeriod,
+      ),
       harvestTokens: pendingHarvest.harvestTokens.map((t) => {
-        const apr = this.calculateProjectedYield(earningValue, t.value, lastHarvest);
+        const apr = this.calculateProjectedYield(earningValue, t.value, harvestDuration);
+        return {
+          apr,
+          ...t,
+        };
+      }),
+      harvestTokensPerPeriod: harvestTokensCurrent.map((t) => {
+        const apr = this.calculateProjectedYield(earningValue, t.value, duration);
         return {
           apr,
           ...t,
         };
       }),
       harvestValue,
-      yieldApr: this.calculateProjectedYield(earningValue, yieldValue, lastHarvest),
+      yieldApr: this.calculateProjectedYield(earningValue, yieldValue, harvestDuration),
+      yieldPeriodApr: this.calculateProjectedYield(earningValue, yieldValuePerPeriod, duration),
       yieldTokens: pendingHarvest.yieldTokens.map((t) => {
-        const apr = this.calculateProjectedYield(earningValue, t.value, lastHarvest);
+        const apr = this.calculateProjectedYield(earningValue, t.value, harvestDuration);
+        return {
+          apr,
+          ...t,
+        };
+      }),
+      yieldTokensPerPeriod: yieldTokensCurrent.map((t) => {
+        const apr = this.calculateProjectedYield(earningValue, t.value, duration);
         return {
           apr,
           ...t,
@@ -245,19 +323,18 @@ export class VaultsService {
   private static calculateProjectedYield(
     value: number,
     pendingValue: number,
-    lastHarvested: number,
+    duration: number,
     compoundingValue = 0,
   ): number {
-    if (lastHarvested === 0 || value === 0 || pendingValue === 0) {
+    if (duration === 0 || value === 0 || pendingValue === 0) {
       return 0;
     }
-    const duration = Date.now() / 1000 - lastHarvested;
-    const apr = (pendingValue / value) * (ONE_YEAR_SECONDS / duration) * 100;
+    const apr = (pendingValue / value) * (ONE_YEAR_MS / duration) * 100;
     if (compoundingValue === 0) {
       return apr;
     }
-    const compoundingApr = (compoundingValue / value) * (ONE_YEAR_SECONDS / duration);
-    const periods = ONE_YEAR_SECONDS / duration;
+    const compoundingApr = (compoundingValue / value) * (ONE_YEAR_MS / duration);
+    const periods = ONE_YEAR_MS / duration;
     return apr - compoundingApr + ((1 + compoundingApr / periods) ** periods - 1) * 100;
   }
 }
