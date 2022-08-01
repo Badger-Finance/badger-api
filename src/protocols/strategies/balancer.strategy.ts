@@ -213,17 +213,17 @@ export async function getBalancerSwapFees(vault: VaultDefinition): Promise<Cache
     }
 
     let totalFees = 0;
-    let totalLiquifity = 0;
+    let totalLiquidity = 0;
 
     for (const snapshot of poolSnapshots) {
       const { swapFees, liquidity } = snapshot;
       totalFees += Number(swapFees);
-      totalLiquifity += Number(liquidity);
+      totalLiquidity += Number(liquidity);
     }
 
     // we are taking an average of the fees over 2 weeks, there are 26 two week periods
     const yearlyFees = totalFees * 26;
-    const yearlyApr = (yearlyFees / totalLiquifity) * 100;
+    const yearlyApr = (yearlyFees / totalLiquidity) * 100;
 
     return [
       valueSourceToCachedValueSource(createValueSource('Balancer LP Fees', yearlyApr), vault, SourceType.TradeFee),
