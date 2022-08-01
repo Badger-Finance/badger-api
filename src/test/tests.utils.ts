@@ -32,6 +32,7 @@ import * as pricesUtils from '../prices/prices.utils';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { historicVaultSnapshotsMock } from '../vaults/mocks/historic-vault-snapshots.mock';
+import { vaultsChartDataMock } from '../vaults/mocks/vaults-chart-data.mock';
 
 export const TEST_CHAIN = SUPPORTED_CHAINS[0];
 export const TEST_ADDR = ethers.utils.getAddress('0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484');
@@ -106,6 +107,23 @@ export function setupVaultsHistoricDDB() {
     qi[Symbol.iterator] = jest.fn(() => dataSource.map((obj) => Object.assign(new model(), obj)).values());
     return qi;
   });
+}
+
+export function setupDdbVaultsChartsData() {
+  jest.spyOn(BadgerSDK.prototype, 'ready').mockImplementation();
+
+  /* eslint-disable @typescript-eslint/ban-ts-comment */
+  // @ts-ignore
+  jest.spyOn(DataMapper.prototype, 'query').mockImplementation((_model, _condition) => {
+    // @ts-ignore
+    const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
+    const vaultsChart = vaultsChartDataMock.find((val) => val.id);
+    // @ts-ignore
+    qi[Symbol.iterator] = jest.fn(() => ((!!vaultsChart && [vaultsChart]) || []).values());
+
+    return qi;
+  });
+  /* eslint-enable @typescript-eslint/ban-ts-comment */
 }
 
 export function defaultAccount(address: string): CachedAccount {

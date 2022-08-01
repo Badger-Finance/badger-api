@@ -35,7 +35,7 @@ export async function run() {
       const migrationSequence = migrationSequences.find((sequence) => sequence.name === vault.vaultToken);
 
       if (migrationSequence && migrationSequence.status === MigrationStatus.Complite) {
-        console.log(`Nothing left to process, for vaults ${vault.vaultToken}. Skip`);
+        console.log(`Nothing left to process, for vault ${vault.vaultToken}. Skip`);
         continue;
       }
 
