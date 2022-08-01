@@ -3,8 +3,8 @@ import rewardsLoadSchedulesMock from '@badger-dao/sdk-mocks/generated/ethereum/r
 import { PlatformTest } from '@tsed/common';
 import { BadRequest, NotFound } from '@tsed/exceptions';
 import SuperTest from 'supertest';
-import { ChainVaults } from '../chains/vaults/chain.vaults';
 
+import { ChainVaults } from '../chains/vaults/chain.vaults';
 import { TOKENS } from '../config/tokens.config';
 import { Server } from '../Server';
 import { mockChainVaults } from '../test/tests.utils';

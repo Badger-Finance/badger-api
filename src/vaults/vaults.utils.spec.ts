@@ -15,6 +15,7 @@ import { BadRequest } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';
 
 import { Polygon } from '../chains/config/polygon.config';
+import { ChainVaults } from '../chains/vaults/chain.vaults';
 import { ONE_DAY_SECONDS } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
 import * as indexerUtils from '../indexers/indexer.utils';
@@ -49,7 +50,6 @@ import {
   getVaultUnderlyingPerformance,
   VAULT_SOURCE,
 } from './vaults.utils';
-import { ChainVaults } from '../chains/vaults/chain.vaults';
 
 describe('vaults.utils', () => {
   beforeEach(() => {
