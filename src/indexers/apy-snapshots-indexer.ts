@@ -16,8 +16,9 @@ export async function refreshApySnapshots() {
 
 export async function refreshChainApySnapshots(chain: Chain) {
   try {
+    const vaults = await chain.vaults.all();
     await Promise.all(
-      chain.vaults.map(async (vault) => {
+      vaults.map(async (vault) => {
         const results = await getVaultValueSources(chain, vault);
         const sourceMap: ValueSourceMap = {};
         results

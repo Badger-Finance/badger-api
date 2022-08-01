@@ -23,8 +23,8 @@ describe('proofs.service', () => {
     });
     jest.spyOn(vaultsUtils, 'getCachedVault').mockImplementation(async (chain, vault) => {
       const cachedVault = await vaultsUtils.defaultVault(chain, vault);
-      cachedVault.value = Number(vault.vaultToken.slice(0, 6));
-      cachedVault.balance = Number(vault.vaultToken.slice(0, 3));
+      cachedVault.value = Number(vault.address.slice(0, 6));
+      cachedVault.balance = Number(vault.address.slice(0, 3));
       return cachedVault;
     });
     // TODO: implement pricing fixtures for test suites

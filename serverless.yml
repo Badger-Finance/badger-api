@@ -398,28 +398,9 @@ resources:
         KeySchema:
           - AttributeName: 'vault'
             KeyType: 'HASH'
-          - AttributeName: 'timestamp'
-            KeyType: 'RANGE'
         AttributeDefinitions:
           - AttributeName: 'vault'
             AttributeType: 'S'
-          - AttributeName: 'timestamp'
-            AttributeType: 'N'
-          - AttributeName: 'block'
-            AttributeType: 'N'
-        GlobalSecondaryIndexes:
-          - IndexName: IndexHarvestCompoundDataBlock
-            KeySchema:
-              - AttributeName: 'block'
-                KeyType: 'HASH'
-            Projection:
-              ProjectionType: ALL
-          - IndexName: IndexHarvestCompoundDataVault
-            KeySchema:
-              - AttributeName: 'vault'
-                KeyType: 'HASH'
-            Projection:
-              ProjectionType: ALL
 
     cycleAnalyticsTable:
       Type: AWS::DynamoDB::Table

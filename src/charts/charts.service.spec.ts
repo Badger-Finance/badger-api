@@ -1,9 +1,8 @@
 import { ONE_DAY_MS } from '@badger-dao/sdk';
 import { PlatformTest } from '@tsed/common';
 
-import { TOKENS } from '../config/tokens.config';
+import { MOCK_VAULT_DEFINITION } from '../test/constants';
 import { randomSnapshots, setFullTokenDataMock, setupMapper, TEST_CHAIN } from '../test/tests.utils';
-import { getVaultDefinition } from '../vaults/vaults.utils';
 import { ChartsService } from './charts.service';
 import { ChartGranularity } from './enums/chart-granularity.enum';
 
@@ -78,10 +77,9 @@ describe('charts.service', () => {
       async (count: number, size: number, granularity: ChartGranularity, start: Date, end: Date) => {
         setFullTokenDataMock();
         const expected = ChartsService.getRequestedDataPoints(new Date(start), new Date(end), granularity, size);
-        const settDefinition = getVaultDefinition(TEST_CHAIN, TOKENS.BBADGER);
         // snapshot granularity @ 30 min intervals, 2 per hour, 48 per day
         const interval = granularity === ChartGranularity.HOUR ? 2 : 48 * size;
-        const seed = randomSnapshots(settDefinition, count * interval);
+        const seed = randomSnapshots(MOCK_VAULT_DEFINITION, count * interval);
         if (start !== end) {
           setupMapper(seed);
         } else {
@@ -89,7 +87,7 @@ describe('charts.service', () => {
         }
         const result = await service.getChartData(
           TEST_CHAIN,
-          settDefinition,
+          MOCK_VAULT_DEFINITION,
           new Date(start),
           new Date(end),
           granularity,

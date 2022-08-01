@@ -13,74 +13,72 @@ import {
 import { VaultYieldProjection } from '@badger-dao/sdk/lib/api/interfaces/vault-yield-projection.interface';
 import { MetadataClient } from '@badger-dao/sdk/lib/registry.v2/enums/metadata.client.enum';
 import { Service } from '@tsed/common';
-import { ethers } from 'ethers';
 
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { HarvestCompoundData } from '../aws/models/harvest-compound.model';
 import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
+import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
-import { Chain, isStageVault } from '../chains/config/chain.config';
+import { Chain } from '../chains/config/chain.config';
 import { toChartDataKey } from '../charts/charts.utils';
-import { NodataForVaultError } from '../errors/allocation/nodata.for.vault.error';
+import { ONE_YEAR_SECONDS } from '../config/constants';
 import { convert } from '../prices/prices.utils';
 import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interface';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
 import { getCachedTokenBalances } from '../tokens/tokens.utils';
-import { VaultDefinition } from './interfaces/vault-definition.interface';
 import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
 import { VaultHarvestsMap } from './interfaces/vault-harvest-map';
 import {
   getCachedVault,
   getVaultCachedValueSources,
-  getVaultDefinition,
   getVaultPendingHarvest,
   getVaultSnapshotsAtTimestamps,
   queryVaultCharts,
   VAULT_SOURCE,
-  vaultCompoundToDefinition,
 } from './vaults.utils';
 
 @Service()
 export class VaultsService {
   async getProtocolSummary(chain: Chain, currency?: Currency): Promise<ProtocolSummary> {
-    const vaults = await Promise.all(
-      chain.vaults.map(async (vault) => {
+    const vaults = await chain.vaults.all();
+    const summaries = await Promise.all(
+      vaults.map(async (vault) => {
         const { name, balance, value } = await getCachedVault(chain, vault);
         const convertedValue = await convert(value, currency);
         return { name, balance, value: convertedValue };
       }),
     );
-    const totalValue = vaults.reduce((total, vault) => (total += vault.value), 0);
-    return { totalValue, vaults, setts: vaults };
+    const totalValue = summaries.reduce((total, vault) => (total += vault.value), 0);
+    return { totalValue, vaults: summaries, setts: summaries };
   }
 
   async listVaults(chain: Chain, currency?: Currency): Promise<VaultDTO[]> {
-    return Promise.all(chain.vaults.filter(isStageVault).map((vault) => this.getVault(chain, vault, currency)));
+    const vaults = await chain.vaults.all();
+    return Promise.all(vaults.filter((v) => v.isStageVault()).map((vault) => this.getVault(chain, vault, currency)));
   }
 
   async listV3Vaults(chain: Chain, currency?: Currency, client?: MetadataClient): Promise<VaultDTO[]> {
-    let chainVaults = await chain.vaultsCompound.all();
+    let vaults = await chain.vaults.all();
 
-    if (client) chainVaults = chainVaults.filter((v) => v.client === client);
+    if (client) {
+      vaults = vaults.filter((v) => v.client === client);
+    }
 
-    return Promise.all(
-      chainVaults.map((vault) => {
-        return this.getVault(chain, vaultCompoundToDefinition(vault), currency);
-      }),
-    );
+    return Promise.all(vaults.map((vault) => this.getVault(chain, vault, currency)));
   }
 
-  async getVault(chain: Chain, vaultDefinition: VaultDefinition, currency?: Currency): Promise<VaultDTO> {
+  async getVault(chain: Chain, vaultDefinition: VaultDefinitionModel, currency?: Currency): Promise<VaultDTO> {
     return VaultsService.loadVault(chain, vaultDefinition, currency);
   }
 
   async listVaultHarvests(chain: Chain): Promise<VaultHarvestsMap> {
+    const vaults = await chain.vaults.all();
     const harvestsWithSnapshots = await Promise.all(
-      chain.vaults.map(async (vault) => {
+      vaults.map(async (vault) => {
         return {
-          vault: vault.vaultToken,
-          harvests: await this.getVaultHarvests(chain, vault.vaultToken),
+          vault: vault.address,
+          harvests: await this.getVaultHarvests(chain, vault.address),
         };
       }),
     );
@@ -91,22 +89,15 @@ export class VaultsService {
     }, <VaultHarvestsMap>{});
   }
 
-  async getVaultHarvests(chain: Chain, vaultAddr: VaultDefinition['vaultToken']): Promise<VaultHarvestsExtendedResp[]> {
+  async getVaultHarvests(chain: Chain, address: string): Promise<VaultHarvestsExtendedResp[]> {
     const vaultHarvests: VaultHarvestsExtendedResp[] = [];
 
     const mapper = getDataMapper();
-
-    vaultAddr = ethers.utils.getAddress(vaultAddr);
-
-    const vaultDef = getVaultDefinition(chain, vaultAddr);
-
-    if (!vaultDef) {
-      throw new NodataForVaultError(`${vaultAddr}`);
-    }
+    const vault = await chain.vaults.getVault(address);
 
     const queryHarvests = mapper.query(
       HarvestCompoundData,
-      { vault: vaultDef.vaultToken },
+      { vault: vault.address },
       { indexName: 'IndexHarvestCompoundDataVault' },
     );
 
@@ -123,13 +114,13 @@ export class VaultsService {
         });
       }
     } catch (e) {
-      console.error(`Failed to get compound harvest from ddb for vault ${vaultDef.vaultToken}; ${e}`);
+      console.error(`Failed to get compound harvest from ddb for vault ${vault.address}; ${e}`);
     }
 
     return vaultHarvests;
   }
 
-  static async loadVault(chain: Chain, vaultDefinition: VaultDefinition, currency?: Currency): Promise<VaultDTO> {
+  static async loadVault(chain: Chain, vaultDefinition: VaultDefinitionModel, currency?: Currency): Promise<VaultDTO> {
     const [vault, sources, pendingHarvest] = await Promise.all([
       getCachedVault(chain, vaultDefinition),
       getVaultCachedValueSources(vaultDefinition),
@@ -206,7 +197,7 @@ export class VaultsService {
     return vault;
   }
 
-  async getVaultSnapshots(chain: Chain, vault: VaultDefinition, timestamps: number[]): Promise<VaultSnapshot[]> {
+  async getVaultSnapshots(chain: Chain, vault: VaultDefinitionModel, timestamps: number[]): Promise<VaultSnapshot[]> {
     return getVaultSnapshotsAtTimestamps(chain, vault, timestamps);
   }
 

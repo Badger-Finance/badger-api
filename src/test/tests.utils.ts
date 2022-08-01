@@ -20,19 +20,19 @@ import * as accountsUtils from '../accounts/accounts.utils';
 import * as dynamodbUtils from '../aws/dynamodb.utils';
 import { CachedAccount } from '../aws/models/cached-account.model';
 import { CachedBoost } from '../aws/models/cached-boost.model';
+import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { SUPPORTED_CHAINS } from '../chains/chain';
 import { Arbitrum } from '../chains/config/arbitrum.config';
 import { BinanceSmartChain } from '../chains/config/bsc.config';
-import { Chain } from '../chains/config/chain.config';
 import { Ethereum } from '../chains/config/eth.config';
 import { Fantom } from '../chains/config/fantom.config';
 import { Polygon } from '../chains/config/polygon.config';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import * as pricesUtils from '../prices/prices.utils';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
-import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { historicVaultSnapshotsMock } from '../vaults/mocks/historic-vault-snapshots.mock';
 import { vaultsChartDataMock } from '../vaults/mocks/vaults-chart-data.mock';
+import { MOCK_VAULT_DEFINITION } from './constants';
 
 export const TEST_CHAIN = SUPPORTED_CHAINS[0];
 export const TEST_ADDR = ethers.utils.getAddress('0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484');
@@ -140,8 +140,8 @@ export const randomValue = (min?: number, max?: number): number => {
   return minPrice + Math.random() * (maxPrice - minPrice);
 };
 
-export function randomSnapshot(vaultDefinition?: VaultDefinition): VaultSnapshot {
-  const vault = vaultDefinition ?? randomVault();
+export function randomSnapshot(vaultDefinition?: VaultDefinitionModel): VaultSnapshot {
+  const vault = vaultDefinition ?? MOCK_VAULT_DEFINITION;
   const balance = randomValue();
   const totalSupply = randomValue();
   const block = randomValue();
@@ -149,7 +149,7 @@ export function randomSnapshot(vaultDefinition?: VaultDefinition): VaultSnapshot
   const pricePerFullShare = balance / totalSupply;
   return {
     block,
-    address: vault.vaultToken,
+    address: vault.address,
     balance,
     strategyBalance: randomValue(),
     pricePerFullShare,
@@ -171,25 +171,15 @@ export function randomSnapshot(vaultDefinition?: VaultDefinition): VaultSnapshot
   };
 }
 
-export function randomVault(chain?: Chain): VaultDefinition {
-  const definitions = (chain ? [chain] : SUPPORTED_CHAINS).flatMap((chain) => chain.vaults);
-
-  const controlledDefs = definitions.filter((vault) => {
-    return vault.vaultToken in fullTokenMockMap && vault.depositToken in fullTokenMockMap;
-  });
-
-  return controlledDefs[Math.floor(Math.random() * controlledDefs.length)];
-}
-
-export function randomSnapshots(vaultDefinition?: VaultDefinition, count?: number): VaultSnapshot[] {
+export function randomSnapshots(vaultDefinition?: VaultDefinitionModel, count?: number): VaultSnapshot[] {
   const snapshots: VaultSnapshot[] = [];
   const snapshotCount = count ?? 50;
-  const vault = vaultDefinition ?? randomVault();
+  const vault = vaultDefinition ?? MOCK_VAULT_DEFINITION;
   const currentTimestamp = Date.now();
   const start = currentTimestamp - (currentTimestamp % ONE_DAY_MS);
   for (let i = 0; i < snapshotCount; i++) {
     snapshots.push({
-      address: vault.vaultToken,
+      address: vault.address,
       block: 10_000_000 - i * 1_000,
       timestamp: start - i * ONE_DAY_MS,
       balance: randomValue(),

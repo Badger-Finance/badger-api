@@ -1,13 +1,13 @@
 import { DataMapper, PutParameters, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
+import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 
 import { VaultTokenBalance } from '../aws/models/vault-token-balance.model';
 import { Chain } from '../chains/config/chain.config';
 import { Ethereum } from '../chains/config/eth.config';
 import { TOKENS } from '../config/tokens.config';
+import { MOCK_VAULT_DEFINITION } from '../test/constants';
 import { setFullTokenDataMock, TEST_ADDR } from '../test/tests.utils';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
-import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
-import { getVaultDefinition } from '../vaults/vaults.utils';
 import * as indexerUtils from './indexer.utils';
 import { updateVaultTokenBalances } from './vault-balances-indexer';
 
@@ -20,7 +20,7 @@ describe('vault-balances-indexer', () => {
   describe('updateVaultTokenBalances', () => {
     it('should not update for token without balance', async () => {
       setFullTokenDataMock();
-      await updateVaultTokenBalances(chain, getVaultDefinition(chain, TOKENS.BDIGG));
+      await updateVaultTokenBalances(chain, MOCK_VAULT_DEFINITION);
       expect(put.mock.calls.length).toEqual(0);
     });
     it('should not update for lp token wihtout balance', async () => {
@@ -80,7 +80,7 @@ describe('vault-balances-indexer', () => {
     it('should update lptoken', async () => {
       const lpBalance = jest
         .spyOn(indexerUtils, 'getLpTokenBalances')
-        .mockImplementation(async (_chain: Chain, _vault: VaultDefinition) => {
+        .mockImplementation(async (_chain: Chain, _vault: VaultDefinitionModel) => {
           return Object.assign(new VaultTokenBalance(), {
             vault: TEST_ADDR,
             tokenBalances: [
@@ -110,7 +110,7 @@ describe('vault-balances-indexer', () => {
     it('should not update lptoken no balance', async () => {
       const lpBalance = jest
         .spyOn(indexerUtils, 'getLpTokenBalances')
-        .mockImplementation(async (_chain: Chain, _vault: VaultDefinition) => {
+        .mockImplementation(async (_chain: Chain, _vault: VaultDefinitionModel) => {
           return Object.assign(new VaultTokenBalance(), {
             vault: TEST_ADDR,
             tokenBalances: [],

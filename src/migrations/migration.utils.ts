@@ -99,5 +99,6 @@ export async function pushHistoricSnapshots<T extends ChartData<T>>(namespace: s
       updatedCount++;
     }
   }
+
   return updatedCount;
 }

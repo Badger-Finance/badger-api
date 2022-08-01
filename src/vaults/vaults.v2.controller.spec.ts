@@ -6,6 +6,7 @@ import createMockInstance from 'jest-create-mock-instance';
 import SuperTest from 'supertest';
 
 import { CachedValueSource } from '../aws/models/apy-snapshots.model';
+import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
 import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
@@ -16,7 +17,6 @@ import { Server } from '../Server';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import * as tokensUtils from '../tokens/tokens.utils';
 import { mockBalance } from '../tokens/tokens.utils';
-import { VaultDefinition } from './interfaces/vault-definition.interface';
 import { vaultsHarvestsMapMock } from './mocks/vaults-harvests-map.mock';
 import * as vaultsUtils from './vaults.utils';
 
@@ -47,8 +47,8 @@ export function setupTestVault() {
   const baseTime = 1656606946;
   jest.spyOn(Date, 'now').mockImplementation(() => baseTime * 1000 + ONE_DAY_MS * 14);
   jest.spyOn(vaultsUtils, 'getVaultPendingHarvest').mockImplementation(
-    async (vaultDefinition: VaultDefinition): Promise<VaultPendingHarvestData> => ({
-      vault: vaultDefinition.vaultToken,
+    async (vaultDefinition: VaultDefinitionModel): Promise<VaultPendingHarvestData> => ({
+      vault: vaultDefinition.address,
       yieldTokens: [mockBalance(fullTokenMockMap[TOKENS.CVX], 10)],
       harvestTokens: [mockBalance(fullTokenMockMap[TOKENS.CVX], 10)],
       lastHarvestedAt: baseTime,
@@ -61,16 +61,16 @@ export function setupTestVault() {
   );
   jest
     .spyOn(vaultsUtils, 'getCachedVault')
-    .mockImplementation(async (chain, vaultDefinition: VaultDefinition): Promise<VaultDTO> => {
+    .mockImplementation(async (chain, vaultDefinition: VaultDefinitionModel): Promise<VaultDTO> => {
       const vault = await vaultsUtils.defaultVault(chain, vaultDefinition);
-      vault.value = parseInt(vaultDefinition.vaultToken.slice(0, 7), 16);
+      vault.value = parseInt(vaultDefinition.address.slice(0, 7), 16);
       vault.balance = 10;
       return vault;
     });
   jest
     .spyOn(vaultsUtils, 'getVaultCachedValueSources')
-    .mockImplementation(async (vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> => {
-      const performance = parseInt(vaultDefinition.vaultToken.slice(0, 5), 16) / 100;
+    .mockImplementation(async (vaultDefinition: VaultDefinitionModel): Promise<CachedValueSource[]> => {
+      const performance = parseInt(vaultDefinition.address.slice(0, 5), 16) / 100;
       const underlying = createValueSource(vaultsUtils.VAULT_SOURCE, performance);
       const badger = createValueSource('Badger Rewards', performance);
       const fees = createValueSource('Curve Trading Fees', performance);

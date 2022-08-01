@@ -6,11 +6,7 @@ import { HistoricVaultSnapshotOldModel } from '../aws/models/historic-vault-snap
 import { MigrationProcessData } from '../aws/models/migration-process.model';
 import { SUPPORTED_CHAINS } from '../chains/chain';
 import { CHART_DATA, SETT_HISTORIC_DATA } from '../config/constants';
-import {
-  HISTORIC_VAULT_FIRST_ITEM_TO_MIGR_TS,
-  HISTORIC_VAULT_TO_CHART_DATA_MIGRATION_ID,
-  HITORIC_VAULT_LAST_ITEM_TO_MIGR_TS,
-} from './migration.constants';
+import { HISTORIC_VAULT_FIRST_ITEM_TO_MIGR_TS, HISTORIC_VAULT_TO_CHART_DATA_MIGRATION_ID } from './migration.constants';
 import { MigrationStatus } from './migration.enums';
 import { getMigrationData, pushHistoricSnapshots } from './migration.utils';
 
@@ -21,21 +17,22 @@ export async function run() {
 
   const migrationData = await getMigrationData(HISTORIC_VAULT_TO_CHART_DATA_MIGRATION_ID);
 
-  if (migrationData && migrationData.status === MigrationStatus.Complite) {
+  if (migrationData && migrationData.status === MigrationStatus.Complete) {
     console.log(`Nothing left to process, ${SETT_HISTORIC_DATA} table copied to ${CHART_DATA}. Exiting`);
     return;
   }
 
   const migrationSequences = migrationData ? migrationData.sequences : [];
+  const sequenceByVault = Object.fromEntries(migrationSequences.map((m) => [m.name, m]));
 
   for (const chain of SUPPORTED_CHAINS) {
-    const vaults = chain.vaults;
+    const vaults = await chain.vaults.all();
 
     for (const vault of vaults) {
-      const migrationSequence = migrationSequences.find((sequence) => sequence.name === vault.vaultToken);
+      let migrationSequence = sequenceByVault[vault.address];
 
-      if (migrationSequence && migrationSequence.status === MigrationStatus.Complite) {
-        console.log(`Nothing left to process, for vault ${vault.vaultToken}. Skip`);
+      if (migrationSequence && migrationSequence.status === MigrationStatus.Complete) {
+        console.log(`Nothing left to process, for vault ${vault.address}. Skip`);
         continue;
       }
 
@@ -44,53 +41,47 @@ export async function run() {
         : HISTORIC_VAULT_FIRST_ITEM_TO_MIGR_TS;
 
       let lastItem;
-
+      let migratedSnapshots = 0;
       for await (const item of mapper.query(
         HistoricVaultSnapshotOldModel,
-        { address: vault.vaultToken, timestamp: greaterThanOrEqualTo(lastInsertedTimestamp) },
-        { scanIndexForward: true, limit: 20 },
+        { address: vault.address, timestamp: greaterThanOrEqualTo(lastInsertedTimestamp) },
+        { scanIndexForward: true, limit: 200 },
       )) {
         const historicSnapshot = Object.assign(new HistoricVaultSnapshotModel(), {
           ...item,
           id: HistoricVaultSnapshotModel.formBlobId(item.address, chain.network),
           timestamp: item.timestamp,
         });
+        migratedSnapshots += 1;
 
         const migratedCnt = await pushHistoricSnapshots(HistoricVaultSnapshotModel.NAMESPACE, historicSnapshot);
-
         lastItem = item;
-
         chartDataMigratedCnt += migratedCnt;
       }
 
       if (!lastItem) {
-        console.log(`No items found for ${vault.vaultToken}. Looks like we done with it`);
+        console.log(`No items found for ${vault.address}. Looks like we done with it`);
       }
 
       const lastTimestamp = lastItem ? lastItem.timestamp : Date.now();
 
-      const migrationStatus =
-        lastTimestamp >= HITORIC_VAULT_LAST_ITEM_TO_MIGR_TS ? MigrationStatus.Complite : MigrationStatus.Process;
-
-      const updMigrationSequence = {
-        name: vault.vaultToken,
-        value: `${lastTimestamp}`,
-        status: migrationStatus,
-      };
-
       if (!migrationSequence) {
-        migrationSequences.push(updMigrationSequence);
+        migrationSequence = {
+          name: vault.address,
+          value: `${lastTimestamp}`,
+          status: MigrationStatus.Process,
+        };
+        migrationSequences.push(migrationSequence);
       } else {
-        migrationSequence.name = updMigrationSequence.name;
-        migrationSequence.value = updMigrationSequence.value;
-        migrationSequence.status = updMigrationSequence.status;
+        migrationSequence.value = `${lastTimestamp}`;
+        migrationSequence.status = migratedSnapshots === 0 ? MigrationStatus.Complete : MigrationStatus.Process;
       }
     }
   }
 
-  const isEverySequenceMigrated = migrationSequences.every((seq) => seq.status === MigrationStatus.Complite);
-  const migrationStatus = isEverySequenceMigrated ? MigrationStatus.Complite : MigrationStatus.Process;
-  const migrationStatusText = migrationStatus === MigrationStatus.Complite ? 'Complite' : 'Process';
+  const isEverySequenceMigrated = migrationSequences.every((seq) => seq.status === MigrationStatus.Complete);
+  const migrationStatus = isEverySequenceMigrated ? MigrationStatus.Complete : MigrationStatus.Process;
+  const migrationStatusText = migrationStatus === MigrationStatus.Complete ? 'Complete' : 'Process';
 
   await mapper.put(
     Object.assign(new MigrationProcessData(), {

@@ -5,7 +5,6 @@ import { ContentType, Deprecated, Description, Returns, Summary } from '@tsed/sc
 import { Chain } from '../chains/config/chain.config';
 import { VaultModel } from './interfaces/vault-model.interface';
 import { VaultsService } from './vaults.service';
-import { getVaultDefinition } from './vaults.utils';
 
 @Deprecated()
 @Controller('/setts')
@@ -40,7 +39,7 @@ export class SettsV2Controller {
     @QueryParams('currency') currency?: Currency,
   ): Promise<VaultModel> {
     const chainInst = Chain.getChain(chain);
-    const vaultDef = getVaultDefinition(Chain.getChain(chain), vault);
+    const vaultDef = await chainInst.vaults.getVault(vault);
 
     return this.settsService.getVault(chainInst, vaultDef, currency);
   }

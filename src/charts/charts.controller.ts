@@ -55,7 +55,8 @@ export class ChartsController {
     }
 
     const chainInst = Chain.getChain(chain);
-    const vault = chainInst.vaults.find((vault) => vault.vaultToken === checksumContract);
+    const vaults = await chainInst.vaults.all();
+    const vault = vaults.find((vault) => vault.address === checksumContract);
 
     if (!vault) {
       throw new NotFound(`${checksumContract} is not a valid sett`);

@@ -1,11 +1,11 @@
-import { BadgerSDK, RegistryVault } from '@badger-dao/sdk';
+import { RegistryVault } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 
 import { getDataMapper } from '../aws/dynamodb.utils';
-import { VaultCompoundModel } from '../aws/models/vault-compound.model';
+import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { SUPPORTED_CHAINS } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
-import { constructVaultModel } from './indexer.utils';
+import { constractVaultDefinition } from './indexer.utils';
 
 export async function captureVaultData() {
   for (const chain of SUPPORTED_CHAINS) {
@@ -18,10 +18,12 @@ export async function captureVaultData() {
       console.error(`Registry is not defined for ${chain.name}`);
     }
 
-    if (registryVaults.length === 0) continue;
+    if (registryVaults.length === 0) {
+      continue;
+    }
 
     // update vaults from chain
-    await Promise.all(registryVaults.map(async (vault) => compoundVaultData(chain, sdk, vault)));
+    await Promise.all(registryVaults.map(async (vault) => compoundVaultData(chain, vault)));
 
     // update isProduction status, for vaults that were already saved in ddb
     const prdVaultsAddrs = registryVaults
@@ -36,7 +38,7 @@ export async function captureVaultData() {
 
     const mapper = getDataMapper();
     const query = mapper.query(
-      VaultCompoundModel,
+      VaultDefinitionModel,
       { chain: chain.network },
       { indexName: 'IndexVaultCompoundDataChain' },
     );
@@ -57,10 +59,10 @@ export async function captureVaultData() {
   return 'done';
 }
 
-async function compoundVaultData(chain: Chain, sdk: BadgerSDK, vault: RegistryVault) {
+async function compoundVaultData(chain: Chain, vault: RegistryVault) {
   let compoundVault;
   try {
-    compoundVault = await constructVaultModel(chain, sdk, vault);
+    compoundVault = await constractVaultDefinition(chain, vault);
     if (compoundVault) {
       const mapper = getDataMapper();
       await mapper.put(compoundVault);
