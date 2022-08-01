@@ -24,6 +24,7 @@ import { NodataForVaultError } from '../errors/allocation/nodata.for.vault.error
 import { convert } from '../prices/prices.utils';
 import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interface';
 import { SourceType } from '../rewards/enums/source-type.enum';
+import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
 import { getCachedTokenBalances } from '../tokens/tokens.utils';
 import { VaultDefinition } from './interfaces/vault-definition.interface';
 import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
@@ -175,9 +176,14 @@ export class VaultsService {
 
     harvestProjection.harvestTokens = harvestProjection.harvestTokens.concat(convertedPassiveSources);
     harvestProjection.yieldTokens = harvestProjection.yieldTokens.concat(convertedPassiveSources);
+    harvestProjection.harvestTokensPerPeriod = harvestProjection.harvestTokensPerPeriod.concat(convertedPassiveSources);
+    harvestProjection.yieldTokensPerPeriod = harvestProjection.yieldTokensPerPeriod.concat(convertedPassiveSources);
     harvestProjection.yieldApr += passiveSourcesApr;
+    harvestProjection.yieldPeriodApr += passiveSourcesApr;
     harvestProjection.harvestApr += passiveSourcesApr;
     harvestProjection.harvestApy += passiveSourcesApr;
+    harvestProjection.harvestPeriodApr += passiveSourcesApr;
+    harvestProjection.harvestPeriodApy += passiveSourcesApr;
 
     vault.yieldProjection = harvestProjection;
 
@@ -226,24 +232,29 @@ export class VaultsService {
 
     // we need to construct a measurement diff from the originally measured tokens and the new tokens
     const previousYieldByToken = keyBy(previousYieldTokens, (t) => t.address);
-    const yieldTokensCurrent = yieldTokens.slice();
+    const yieldTokensCurrent: CachedTokenBalance[] = JSON.parse(JSON.stringify(yieldTokens));
     yieldTokensCurrent.forEach((t) => {
       const yieldedTokens = previousYieldByToken.get(t.address);
       if (yieldedTokens) {
+        // lock in current price and caculate value on updated balance
         for (const token of yieldedTokens) {
+          const price = t.value / t.balance;
           t.balance -= token.balance;
-          t.value -= token.value;
+          t.value = t.balance * price;
         }
       }
     });
+
     const previousHarvestByToken = keyBy(previousHarvestTokens, (t) => t.address);
-    const harvestTokensCurrent = harvestTokens.slice();
+    const harvestTokensCurrent: CachedTokenBalance[] = JSON.parse(JSON.stringify(harvestTokens));
     harvestTokensCurrent.forEach((t) => {
       const harvestedTokens = previousHarvestByToken.get(t.address);
       if (harvestedTokens) {
+        // lock in current price and caculate value on updated balance
         for (const token of harvestedTokens) {
+          const price = t.value / t.balance;
           t.balance -= token.balance;
-          t.value -= token.value;
+          t.value = t.balance * price;
         }
       }
     });
@@ -274,7 +285,7 @@ export class VaultsService {
         duration,
         harvestCompoundValuePerPeriod,
       ),
-      harvestTokens: pendingHarvest.harvestTokens.map((t) => {
+      harvestTokens: harvestTokens.map((t) => {
         const apr = this.calculateProjectedYield(earningValue, t.value, harvestDuration);
         return {
           apr,
@@ -291,7 +302,7 @@ export class VaultsService {
       harvestValue,
       yieldApr: this.calculateProjectedYield(earningValue, yieldValue, harvestDuration),
       yieldPeriodApr: this.calculateProjectedYield(earningValue, yieldValuePerPeriod, duration),
-      yieldTokens: pendingHarvest.yieldTokens.map((t) => {
+      yieldTokens: yieldTokens.map((t) => {
         const apr = this.calculateProjectedYield(earningValue, t.value, harvestDuration);
         return {
           apr,
