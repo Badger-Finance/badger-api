@@ -18,14 +18,15 @@ export async function indexProtocolVaults() {
           try {
             const snapshot = await vaultToSnapshot(chain, vault);
             await mapper.put(Object.assign(new HistoricVaultSnapshotOldModel(), snapshot));
-            // update chartDataBlob with historic data for vault
-            const historicSnapshot = Object.assign(new HistoricVaultSnapshotModel(), {
-              ...snapshot,
-              id: HistoricVaultSnapshotModel.formBlobId(snapshot.address, chain.network),
-              timestamp,
-            });
-
-            await updateSnapshots(HistoricVaultSnapshotModel.NAMESPACE, historicSnapshot);
+            if (!vault.isMigrating) {
+              // update chartDataBlob with historic data for vault
+              const historicSnapshot = Object.assign(new HistoricVaultSnapshotModel(), {
+                ...snapshot,
+                id: HistoricVaultSnapshotModel.formBlobId(snapshot.address, chain.network),
+                timestamp,
+              });
+              await updateSnapshots(HistoricVaultSnapshotModel.NAMESPACE, historicSnapshot);
+            }
           } catch (err) {
             console.error(err);
           }

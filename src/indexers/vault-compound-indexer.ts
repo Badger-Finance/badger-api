@@ -5,7 +5,7 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { SUPPORTED_CHAINS } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
-import { constractVaultDefinition } from './indexer.utils';
+import { constructVaultDefinition } from './indexer.utils';
 
 export async function captureVaultData() {
   for (const chain of SUPPORTED_CHAINS) {
@@ -62,7 +62,7 @@ export async function captureVaultData() {
 async function compoundVaultData(chain: Chain, vault: RegistryVault) {
   let compoundVault;
   try {
-    compoundVault = await constractVaultDefinition(chain, vault);
+    compoundVault = await constructVaultDefinition(chain, vault);
     if (compoundVault) {
       const mapper = getDataMapper();
       await mapper.put(compoundVault);
