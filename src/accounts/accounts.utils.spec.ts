@@ -19,16 +19,23 @@ import { mockBalance } from '../tokens/tokens.utils';
 import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { getVaultDefinition } from '../vaults/vaults.utils';
 import * as vaultsUtils from '../vaults/vaults.utils';
-import {
-  defaultBoost,
-  getAccounts,
-  getCachedBoost,
-  getLatestMetadata,
-  queryCachedAccount,
-  toVaultBalance,
-} from './accounts.utils';
+import { getAccounts, getCachedBoost, getLatestMetadata, queryCachedAccount, toVaultBalance } from './accounts.utils';
 
 describe('accounts.utils', () => {
+  const mockBoost = {
+    address: TEST_ADDR,
+    boost: 1,
+    boostRank: 0,
+    bveCvxBalance: 0,
+    diggBalance: 0,
+    leaderboard: `${TEST_CHAIN.network}_${LeaderBoardType.BadgerBoost}`,
+    nativeBalance: 0,
+    nftBalance: 0,
+    nonNativeBalance: 0,
+    stakeRatio: 0,
+    updatedAt: 0,
+  };
+
   const testSettBalance = (vaultDefinition: VaultDefinition): gqlGenT.UserSettBalance => {
     const settToken = fullTokenMockMap[vaultDefinition.vaultToken];
     const depositToken = fullTokenMockMap[vaultDefinition.depositToken];
@@ -195,42 +202,23 @@ describe('accounts.utils', () => {
     });
   });
 
-  describe('defaultBoost', () => {
-    it('returns a boost with all fields as the default values', () => {
-      const expected = {
-        leaderboard: `${TEST_CHAIN.network}_${LeaderBoardType.BadgerBoost}`,
-        boostRank: 0,
-        address: TEST_ADDR,
-        boost: 1,
-        stakeRatio: 0,
-        nftBalance: 0,
-        nativeBalance: 0,
-        bveCvxBalance: 0,
-        diggBalance: 0,
-        nonNativeBalance: 0,
-      };
-      expect(defaultBoost(TEST_CHAIN, TEST_ADDR)).toMatchObject(expected);
-    });
-  });
-
   describe('getCachedBoost', () => {
     describe('no cached boost', () => {
       it('returns the default boost', async () => {
         setupMapper([]);
         const result = await getCachedBoost(TEST_CHAIN, TEST_ADDR);
-        expect(result).toMatchObject(defaultBoost(TEST_CHAIN, TEST_ADDR));
+        expect(result).toMatchObject(mockBoost);
       });
     });
     describe('a previously cached boost', () => {
       it('returns the default boost', async () => {
-        const boost = defaultBoost(TEST_CHAIN, TEST_ADDR);
-        boost.boostRank = 42;
-        boost.stakeRatio = 1;
-        boost.nativeBalance = 32021;
-        boost.nonNativeBalance = 32021;
-        setupMapper([boost]);
+        mockBoost.boostRank = 42;
+        mockBoost.stakeRatio = 1;
+        mockBoost.nativeBalance = 32021;
+        mockBoost.nonNativeBalance = 32021;
+        setupMapper([mockBoost]);
         const result = await getCachedBoost(TEST_CHAIN, TEST_ADDR);
-        expect(result).toMatchObject(boost);
+        expect(result).toMatchObject(mockBoost);
       });
     });
   });
