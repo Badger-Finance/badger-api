@@ -1,4 +1,4 @@
-import { attribute, hashKey, rangeKey, table } from '@aws/dynamodb-data-mapper-annotations';
+import { attribute, hashKey, table } from '@aws/dynamodb-data-mapper-annotations';
 import { BouncerType, Network, Protocol, VaultBehavior, VaultState, VaultVersion } from '@badger-dao/sdk';
 
 import { STAGE, VAULT_COMPOUND_DATA } from '../../config/constants';
@@ -8,9 +8,12 @@ import { IVaultDefinition } from '../interfaces/vault-definition-model.interface
 @table(VAULT_COMPOUND_DATA)
 export class VaultDefinitionModel implements IVaultDefinition {
   @hashKey()
+  id!: string;
+
+  @attribute()
   address!: string;
 
-  @rangeKey()
+  @attribute()
   createdAt!: number;
 
   @attribute({
@@ -65,7 +68,7 @@ export class VaultDefinitionModel implements IVaultDefinition {
   @attribute()
   isNew!: boolean;
 
-  @attribute()
+  @attribute({ defaultProvider: () => true })
   isMigrating!: boolean;
 
   isStageVault(): boolean {

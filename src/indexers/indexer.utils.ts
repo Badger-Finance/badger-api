@@ -88,6 +88,7 @@ export async function constructVaultDefinition(
   const { createdAt, releasedAt, lastUpdatedAt } = sett;
 
   return Object.assign(new VaultDefinitionModel(), {
+    id: `${chain.network}-${address}`,
     address,
     createdAt: Number(createdAt),
     chain: chain.network,
