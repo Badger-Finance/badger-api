@@ -38,6 +38,7 @@ export const MOCK_BOUNCER_FILE = {
 };
 
 export const MOCK_VAULT_DEFINITION: VaultDefinitionModel = {
+  id: `${Network.Ethereum}-${TOKENS.BBADGER}`,
   address: TOKENS.BBADGER,
   name: 'Badger',
   createdAt: 0,
