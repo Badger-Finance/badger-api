@@ -17,22 +17,6 @@ import { getFullToken, getVaultTokens } from '../tokens/tokens.utils';
 import { getCachedVault, getVaultDefinition } from '../vaults/vaults.utils';
 import { CachedSettBalance } from './interfaces/cached-sett-balance.interface';
 
-export function defaultBoost(chain: Chain, address: string): CachedBoost {
-  return {
-    address,
-    boost: 1,
-    boostRank: 0,
-    bveCvxBalance: 0,
-    diggBalance: 0,
-    leaderboard: `${chain.network}_${LeaderBoardType.BadgerBoost}`,
-    nativeBalance: 0,
-    nftBalance: 0,
-    nonNativeBalance: 0,
-    stakeRatio: 0,
-    updatedAt: 0,
-  };
-}
-
 export async function getBoostFile(chain: Chain): Promise<BoostData | null> {
   try {
     const boostFile = await getObject(REWARD_DATA, `badger-boosts-${parseInt(chain.chainId, 16)}.json`);
@@ -77,14 +61,6 @@ export async function getAccounts(chain: Chain): Promise<string[]> {
   }
 
   return [...accounts];
-}
-
-export async function getAccountsFomBoostFile(chain: Chain): Promise<string[]> {
-  const boostFile = await getBoostFile(chain);
-  if (!boostFile) {
-    return [];
-  }
-  return Object.keys(boostFile.userData).map((acc) => ethers.utils.getAddress(acc));
 }
 
 export async function queryCachedAccount(address: string): Promise<CachedAccount> {
@@ -167,7 +143,19 @@ export async function getCachedBoost(chain: Chain, address: string): Promise<Cac
   )) {
     return entry;
   }
-  return defaultBoost(chain, address);
+  return {
+    address,
+    boost: 1,
+    boostRank: 0,
+    bveCvxBalance: 0,
+    diggBalance: 0,
+    leaderboard: `${chain.network}_${LeaderBoardType.BadgerBoost}`,
+    nativeBalance: 0,
+    nftBalance: 0,
+    nonNativeBalance: 0,
+    stakeRatio: 0,
+    updatedAt: 0,
+  };
 }
 
 export async function getCachedAccount(chain: Chain, address: string): Promise<Account> {

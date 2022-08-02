@@ -62,7 +62,6 @@ custom:
     LEADERBOARD_DATA: leaderboards-data-${self:custom.stage}
     LEADERBOARD_SUMMARY_DATA: leaderboards-summary-${self:custom.stage}
     CYCLE_ANALYTICS_DATA: rewards-${self:custom.stage}
-    TREASURY_SNAPSHOT_DATA: treasury-snapshot-${self:custom.stage}
     PROTOCOL_DATA: protocol-data-${self:custom.stage}
     CHART_DATA: chart-data-${self:custom.stage}
     MIGRATION_PROCESS_DATA: migration-process-${self:custom.stage}
@@ -125,7 +124,6 @@ provider:
     LEADERBOARD_DATA: ${self:custom.table.LEADERBOARD_DATA}
     LEADERBOARD_SUMMARY_DATA: ${self:custom.table.LEADERBOARD_SUMMARY_DATA}
     UNCLAIMED_SNAPSHOTS_DATA: ${self:custom.table.UNCLAIMED_SNAPSHOTS_DATA}
-    TREASURY_SNAPSHOT_DATA: ${self:custom.table.TREASURY_SNAPSHOT_DATA}
     PROTOCOL_DATA: ${self:custom.table.PROTOCOL_DATA}
     CHART_DATA: ${self:custom.table.CHART_DATA}
     MIGRATION_PROCESS_DATA: ${self:custom.table.MIGRATION_PROCESS_DATA}
@@ -451,18 +449,6 @@ resources:
                 KeyType: 'RANGE'
             Projection:
               ProjectionType: ALL
-
-    treasurySnapshotData:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: ${self:custom.table.TREASURY_SNAPSHOT_DATA}
-        BillingMode: PAY_PER_REQUEST
-        KeySchema:
-          - AttributeName: 'address'
-            KeyType: 'HASH'
-        AttributeDefinitions:
-          - AttributeName: 'address'
-            AttributeType: 'S'
 
     protocolData:
       Type: AWS::DynamoDB::Table
