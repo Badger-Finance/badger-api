@@ -2,7 +2,8 @@ import { Network } from '@badger-dao/sdk';
 
 import { getDataMapper } from '../../aws/dynamodb.utils';
 import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
-import { ONE_MINUTE_SECONDS } from '../../config/constants';
+import { ONE_MINUTE_SECONDS, STAGE } from '../../config/constants';
+import { Stage } from '../../config/enums/stage.enum';
 
 export class ChainVaults {
   network: Network;
@@ -45,12 +46,14 @@ export class ChainVaults {
       );
 
       try {
-        for await (const compoundVault of query) {
-          const cachedVaultIx = this.cachedVaults.findIndex((v) => v.address === compoundVault.address);
-          if (cachedVaultIx >= 0) {
-            this.cachedVaults[cachedVaultIx] = compoundVault;
+        for await (const vault of query) {
+          const index = this.cachedVaults.findIndex((v) => v.address === vault.address);
+          if (index >= 0) {
+            this.cachedVaults[index] = vault;
           } else {
-            this.cachedVaults.push(compoundVault);
+            if (vault.stage === Stage.Production || vault.stage === STAGE) {
+              this.cachedVaults.push(vault);
+            }
           }
         }
       } catch (e) {

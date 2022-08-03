@@ -54,7 +54,7 @@ export class VaultsService {
 
   async listVaults(chain: Chain, currency?: Currency): Promise<VaultDTO[]> {
     const vaults = await chain.vaults.all();
-    return Promise.all(vaults.filter((v) => v.isStageVault()).map((vault) => this.getVault(chain, vault, currency)));
+    return Promise.all(vaults.map((vault) => this.getVault(chain, vault, currency)));
   }
 
   async listV3Vaults(chain: Chain, currency?: Currency, client?: MetadataClient): Promise<VaultDTO[]> {

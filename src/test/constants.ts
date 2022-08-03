@@ -56,5 +56,4 @@ export const MOCK_VAULT_DEFINITION: VaultDefinitionModel = {
   client: '',
   depositToken: TOKENS.BADGER,
   isMigrating: true,
-  isStageVault: () => true,
 };
