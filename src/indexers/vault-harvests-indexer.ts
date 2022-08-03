@@ -111,7 +111,6 @@ export async function refreshVaultHarvests() {
         };
         harvestData.harvestTokens.forEach(feeScalingFunction);
         harvestData.yieldTokens.forEach(feeScalingFunction);
-        console.log(`Applying ${feeMultiplier} scalar to ${vault.name}`);
 
         harvestData.harvestTokens.forEach((t) => {
           if (t.address === vault.depositToken) {
