@@ -51,7 +51,7 @@ export class ChainVaults {
           }
         }
       } catch (e) {
-        console.error(`Failed to get compoundVault ${this.network}. ${e}`);
+        console.error(`Failed to update cached vaults for ${this.network} network. ${e}`);
       }
 
       this.updatedAt = Date.now();
