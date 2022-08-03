@@ -1,16 +1,18 @@
 import { VaultDTO } from '@badger-dao/sdk';
 
 import * as accountsUtils from '../accounts/accounts.utils';
+import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
+import { mockChainVaults } from '../test/tests.utils';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import * as tokenUtils from '../tokens/tokens.utils';
-import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import * as vaultUtils from '../vaults/vaults.utils';
 import { getProtocolMetrics, getProtocolSettMetrics, getProtocolTotalUsers } from './metrics.utils';
 
 describe('metrics.utils', () => {
   beforeEach(() => {
+    mockChainVaults();
     jest
       .spyOn(accountsUtils, 'getAccounts')
       .mockReturnValue(
@@ -30,7 +32,7 @@ describe('metrics.utils', () => {
     jest
       .spyOn(vaultUtils, 'getCachedVault')
       .mockImplementation(
-        async (chain: Chain, VaultDefinition: VaultDefinition): Promise<VaultDTO> =>
+        async (chain: Chain, VaultDefinition: VaultDefinitionModel): Promise<VaultDTO> =>
           vaultUtils.defaultVault(chain, VaultDefinition),
       );
   });

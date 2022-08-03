@@ -14,7 +14,8 @@ import { BigNumber, ethers } from 'ethers';
 import { SUPPORTED_CHAINS } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
-import { mockPricing, randomVault, setupMapper, TEST_ADDR } from '../test/tests.utils';
+import { MOCK_VAULT_DEFINITION } from '../test/constants';
+import { mockChainVaults, mockPricing, setupMapper, TEST_ADDR } from '../test/tests.utils';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import * as tokensUtils from '../tokens/tokens.utils';
 import { VaultsService as VaultsServiceAPI } from '../vaults/vaults.service';
@@ -22,10 +23,7 @@ import * as vaultUtils from '../vaults/vaults.utils';
 import { refreshVaultSnapshots } from './vault-snapshots-indexer';
 
 describe('refreshVaultSnapshots', () => {
-  const supportedAddresses = SUPPORTED_CHAINS.flatMap((s) => s.vaults)
-    .map((settDefinition) => settDefinition.vaultToken)
-    .sort();
-
+  const supportedAddresses = Array.from({ length: SUPPORTED_CHAINS.length }, () => MOCK_VAULT_DEFINITION.address);
   let vaultsMock: jest.SpyInstance<Promise<RegistryVault>, [opts: LoadVaultOptions]>;
   let put: jest.SpyInstance<Promise<StringToAnyObjectMap>, [items: PutParameters<StringToAnyObjectMap>]>;
 
@@ -66,7 +64,7 @@ describe('refreshVaultSnapshots', () => {
     }));
     jest.spyOn(vaultUtils, 'getBoostWeight').mockImplementation(async (_chain, _sett) => BigNumber.from(5100));
     jest.spyOn(vaultUtils, 'getVaultPendingHarvest').mockImplementation(async (vault) => ({
-      vault: vault.vaultToken,
+      vault: vault.address,
       yieldTokens: [],
       harvestTokens: [],
       lastHarvestedAt: 0,
@@ -99,7 +97,8 @@ describe('refreshVaultSnapshots', () => {
     );
 
     mockPricing();
-    setupMapper([randomVault()]);
+    mockChainVaults();
+    setupMapper([MOCK_VAULT_DEFINITION]);
     await refreshVaultSnapshots();
   });
 

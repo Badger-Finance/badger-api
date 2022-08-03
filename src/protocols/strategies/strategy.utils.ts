@@ -1,19 +1,16 @@
 import { GraphQLClient } from 'graphql-request';
 
 import { CachedValueSource } from '../../aws/models/apy-snapshots.model';
+import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
 import { getSdk as getUniswapSdk, OrderDirection, PairDayData_OrderBy } from '../../graphql/generated/uniswap';
 import { getPrice } from '../../prices/prices.utils';
 import { SourceType } from '../../rewards/enums/source-type.enum';
 import { valueSourceToCachedValueSource } from '../../rewards/rewards.utils';
-import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
 import { PairDayData } from '../interfaces/pair-day-data.interface';
 import { UniPairDayData } from '../interfaces/uni-pair-day-data.interface';
 import { createValueSource } from '../interfaces/value-source.interface';
 
-export async function getUniV2SwapValue(
-  graphUrl: string,
-  VaultDefinition: VaultDefinition,
-): Promise<CachedValueSource> {
+export async function getUniV2SwapValue(graphUrl: string, vault: VaultDefinitionModel): Promise<CachedValueSource> {
   const client = new GraphQLClient(graphUrl);
   const sdk = getUniswapSdk(client);
   const { pairDayDatas } = await sdk.UniPairDayDatas({
@@ -21,19 +18,16 @@ export async function getUniV2SwapValue(
     orderBy: PairDayData_OrderBy.Date,
     orderDirection: OrderDirection.Desc,
     where: {
-      pairAddress: VaultDefinition.depositToken.toLowerCase(),
+      pairAddress: vault.depositToken.toLowerCase(),
     },
   });
-  return getUniSwapValue(VaultDefinition, pairDayDatas);
+  return getUniSwapValue(vault, pairDayDatas);
 }
 
-async function getUniSwapValue(
-  VaultDefinition: VaultDefinition,
-  tradeData: UniPairDayData[],
-): Promise<CachedValueSource> {
-  const name = `${VaultDefinition.protocol} LP Fees`;
+async function getUniSwapValue(vault: VaultDefinitionModel, tradeData: UniPairDayData[]): Promise<CachedValueSource> {
+  const name = `${vault.protocol} LP Fees`;
   if (!tradeData || tradeData.length === 0) {
-    return valueSourceToCachedValueSource(createValueSource(name, 0), VaultDefinition, SourceType.TradeFee);
+    return valueSourceToCachedValueSource(createValueSource(name, 0), vault, SourceType.TradeFee);
   }
   const [token0Price, token1Price] = await Promise.all([
     getPrice(tradeData[0].token0.id),
@@ -49,13 +43,13 @@ async function getUniSwapValue(
     totalApy += (fees / poolReserve) * 365 * 100;
     currentApy = totalApy / (i + 1);
   }
-  return valueSourceToCachedValueSource(createValueSource(name, currentApy), VaultDefinition, SourceType.TradeFee);
+  return valueSourceToCachedValueSource(createValueSource(name, currentApy), vault, SourceType.TradeFee);
 }
 
-export function getSwapValue(VaultDefinition: VaultDefinition, tradeData: PairDayData[]): CachedValueSource {
-  const name = `${VaultDefinition.protocol} LP Fees`;
+export function getSwapValue(vault: VaultDefinitionModel, tradeData: PairDayData[]): CachedValueSource {
+  const name = `${vault.protocol} LP Fees`;
   if (!tradeData || tradeData.length === 0) {
-    return valueSourceToCachedValueSource(createValueSource(name, 0), VaultDefinition, SourceType.TradeFee);
+    return valueSourceToCachedValueSource(createValueSource(name, 0), vault, SourceType.TradeFee);
   }
   let totalApy = 0;
   let currentApy = 0;
@@ -66,5 +60,5 @@ export function getSwapValue(VaultDefinition: VaultDefinition, tradeData: PairDa
     totalApy += (fees / poolReserve) * 365 * 100;
     currentApy = totalApy / (i + 1);
   }
-  return valueSourceToCachedValueSource(createValueSource(name, currentApy), VaultDefinition, SourceType.TradeFee);
+  return valueSourceToCachedValueSource(createValueSource(name, currentApy), vault, SourceType.TradeFee);
 }

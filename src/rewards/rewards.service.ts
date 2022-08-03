@@ -11,7 +11,6 @@ import { DEFAULT_PAGE_SIZE, REWARD_DATA } from '../config/constants';
 import { NodataForAddrError } from '../errors/allocation/nodata.for.addr.error';
 import { NodataForVaultError } from '../errors/allocation/nodata.for.vault.error';
 import { UnsupportedChainError } from '../errors/validation/unsupported.chain.error';
-import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { AirdropMerkleClaim, AirdropMerkleDistribution } from './interfaces/merkle-distributor.interface';
 import { RewardMerkleClaim } from './interfaces/reward-merkle-claim.interface';
 import { EmissionSchedule, RewardSchedulesByVaults } from './interfaces/reward-schedules-vault.interface';
@@ -90,20 +89,15 @@ export class RewardsService {
    * @param address Vault token adress
    * @param active Vault end date is not passed
    */
-  async rewardSchedulesByVault(
-    chain: Chain,
-    address: VaultDefinition['vaultToken'],
-    active: boolean,
-  ): Promise<EmissionSchedule[]> {
+  async rewardSchedulesByVault(chain: Chain, address: string, active: boolean): Promise<EmissionSchedule[]> {
     const chainSdk = await chain.getSdk();
-
-    const vault = chain.vaults.find((v) => v.vaultToken === address);
-
-    if (!vault || !vault?.vaultToken) throw new NodataForVaultError(`${address}`);
-
-    const loadMethod = active ? 'loadActiveSchedules' : 'loadSchedules';
-
-    return chainSdk.rewards[loadMethod](vault.vaultToken);
+    try {
+      const vault = await chain.vaults.getVault(address);
+      const loadMethod = active ? 'loadActiveSchedules' : 'loadSchedules';
+      return chainSdk.rewards[loadMethod](vault.address);
+    } catch (err) {
+      throw new NodataForVaultError(address);
+    }
   }
 
   /**
@@ -113,14 +107,15 @@ export class RewardsService {
    */
   async rewardSchedulesVaultsList(chain: Chain, active: boolean): Promise<RewardSchedulesByVaults> {
     const chainSdk = await chain.getSdk();
+    const vaults = await chain.vaults.all();
 
     const vaultsSchedules = await Promise.all(
-      chain.vaults.map(async (vault) => {
-        if (!vault.vaultToken) return [];
+      vaults.map(async (vault) => {
+        if (!vault.address) return [];
 
         const loadMethod = active ? 'loadActiveSchedules' : 'loadSchedules';
 
-        return chainSdk.rewards[loadMethod](vault.vaultToken);
+        return chainSdk.rewards[loadMethod](vault.address);
       }),
     );
 

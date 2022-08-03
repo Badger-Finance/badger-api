@@ -5,10 +5,8 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { TokenInformationSnapshot } from '../aws/models/token-information-snapshot.model';
 import { VaultTokenBalance } from '../aws/models/vault-token-balance.model';
 import { Chain } from '../chains/config/chain.config';
-import { PricingType } from '../prices/enums/pricing-type.enum';
 import { convert, getPrice } from '../prices/prices.utils';
 import { SourceType } from '../rewards/enums/source-type.enum';
-import { getVaultDefinition } from '../vaults/vaults.utils';
 import { TokenNotFound } from './errors/token.error';
 import { TokenFull, TokenFullMap } from './interfaces/token-full.interface';
 import * as thisModule from './tokens.utils';
@@ -40,22 +38,12 @@ export async function getVaultTokens(
   currency?: Currency,
 ): Promise<TokenValue[]> {
   const tokens = await getCachedTokenBalances(chain, vault, currency);
-  const vaultDefinition = getVaultDefinition(chain, vault.vaultToken);
-  const { depositToken, getTokenBalance } = vaultDefinition;
-  const token = await thisModule.getFullToken(chain, depositToken);
-
-  if (token.lpToken || token.type === PricingType.UniV2LP || getTokenBalance) {
-    if (tokens.length > 0) {
-      const balanceScalar = vault.balance > 0 ? balance / vault.balance : 0;
-      return tokens.map((bal) => {
-        bal.balance *= balanceScalar;
-        bal.value *= balanceScalar;
-        return bal;
-      });
-    }
-  }
-
-  return tokens;
+  const balanceScalar = vault.balance > 0 ? balance / vault.balance : 0;
+  return tokens.map((bal) => {
+    bal.balance *= balanceScalar;
+    bal.value *= balanceScalar;
+    return bal;
+  });
 }
 
 export async function getCachedTokenBalances(

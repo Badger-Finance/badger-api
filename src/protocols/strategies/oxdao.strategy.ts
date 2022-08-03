@@ -1,14 +1,14 @@
 import { CachedValueSource } from '../../aws/models/apy-snapshots.model';
+import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
 import { Chain } from '../../chains/config/chain.config';
 import { TOKENS } from '../../config/tokens.config';
 import { SourceType } from '../../rewards/enums/source-type.enum';
 import { getFullToken, getVaultTokens } from '../../tokens/tokens.utils';
-import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
-import { getCachedVault, getVaultCachedValueSources, getVaultDefinition } from '../../vaults/vaults.utils';
+import { getCachedVault, getVaultCachedValueSources } from '../../vaults/vaults.utils';
 
 export class OxDaoStrategy {
-  static async getValueSources(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
-    switch (vaultDefinition.vaultToken) {
+  static async getValueSources(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<CachedValueSource[]> {
+    switch (vaultDefinition.address) {
       case TOKENS.BSMM_BVEOXD_OXD:
         return getLiquiditySources(chain, vaultDefinition);
       default:
@@ -17,8 +17,8 @@ export class OxDaoStrategy {
   }
 }
 
-async function getLiquiditySources(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
-  const bveOXDVault = getVaultDefinition(chain, TOKENS.BVEOXD);
+async function getLiquiditySources(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<CachedValueSource[]> {
+  const bveOXDVault = await chain.vaults.getVault(TOKENS.BVEOXD);
   const [bveOXDLP, bveOXD, bveOXDSources] = await Promise.all([
     getCachedVault(chain, vaultDefinition),
     getCachedVault(chain, bveOXDVault),

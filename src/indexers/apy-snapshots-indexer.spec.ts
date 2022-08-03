@@ -1,6 +1,6 @@
 import { CachedValueSource } from '../aws/models/apy-snapshots.model';
 import * as rewardsUtils from '../rewards/rewards.utils';
-import { mockBatchDelete, mockBatchPut, setupMapper, TEST_CHAIN } from '../test/tests.utils';
+import { mockBatchDelete, mockBatchPut, mockChainVaults, setupMapper, TEST_CHAIN } from '../test/tests.utils';
 import { refreshChainApySnapshots } from './apy-snapshots-indexer';
 
 describe('apy-snapshots-indexer', () => {
@@ -38,6 +38,7 @@ describe('apy-snapshots-indexer', () => {
   beforeEach(() => {
     mockBatchDelete([mockValueSource]);
     setupMapper([mockValueSource]);
+    mockChainVaults();
   });
 
   describe('refreshChainApySnapshots', () => {
@@ -48,7 +49,8 @@ describe('apy-snapshots-indexer', () => {
       await refreshChainApySnapshots(TEST_CHAIN);
       expect(batchPut.mock.calls[0][0]).toEqual([mockValueSource]);
       // Make sure was called for each sett in the chain
-      expect(batchPut.mock.calls.length).toEqual(TEST_CHAIN.vaults.length);
+      const allChainVault = await TEST_CHAIN.vaults.all();
+      expect(batchPut.mock.calls.length).toEqual(allChainVault.length);
     });
     it('doesnt call batch put if value source invalid', async () => {
       const batchPut = mockBatchPut([mockInvalidValueSource]);

@@ -3,6 +3,7 @@ import { BigNumber } from 'ethers';
 
 import { getBoostFile, getCachedAccount } from '../accounts/accounts.utils';
 import { CachedValueSource } from '../aws/models/apy-snapshots.model';
+import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
 import { ONE_YEAR_SECONDS, REWARD_DATA } from '../config/constants';
@@ -17,7 +18,6 @@ import { SushiswapStrategy } from '../protocols/strategies/sushiswap.strategy';
 import { SwaprStrategy } from '../protocols/strategies/swapr.strategy';
 import { UniswapStrategy } from '../protocols/strategies/uniswap.strategy';
 import { getFullToken, tokenEmission } from '../tokens/tokens.utils';
-import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { getCachedVault, getVaultPerformance } from '../vaults/vaults.utils';
 import { SourceType } from './enums/source-type.enum';
 import { RewardMerkleDistribution } from './interfaces/merkle-distributor.interface';
@@ -73,21 +73,21 @@ export async function getClaimableRewards(
   return Promise.all(requests);
 }
 
-export async function getRewardEmission(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
+export async function getRewardEmission(chain: Chain, vault: VaultDefinitionModel): Promise<CachedValueSource[]> {
   const boostFile = await getBoostFile(chain);
   const sdk = await chain.getSdk();
 
-  if (!sdk.rewards.hasRewardsLogger() || vaultDefinition.depositToken === TOKENS.DIGG || !boostFile) {
+  if (!sdk.rewards.hasRewardsLogger() || vault.depositToken === TOKENS.DIGG || !boostFile) {
     return [];
   }
-  const { vaultToken } = vaultDefinition;
-  const vault = await getCachedVault(chain, vaultDefinition);
+  const { address } = vault;
+  const cachedVault = await getCachedVault(chain, vault);
 
-  if (vault.vaultToken === TOKENS.BVECVX) {
-    delete boostFile.multiplierData[vault.vaultToken];
+  if (address === TOKENS.BVECVX) {
+    delete boostFile.multiplierData[address];
   }
-  const boostRange = boostFile.multiplierData[vault.vaultToken] ?? { min: 1, max: 1 };
-  const activeSchedules = await sdk.rewards.loadActiveSchedules(vaultToken);
+  const boostRange = boostFile.multiplierData[address] ?? { min: 1, max: 1 };
+  const activeSchedules = await sdk.rewards.loadActiveSchedules(address);
 
   // Badger controlled addresses are blacklisted from receiving rewards. We only dogfood on ETH
   let ignoredTVL = 0;
@@ -100,7 +100,7 @@ export async function getRewardEmission(chain: Chain, vaultDefinition: VaultDefi
       getCachedAccount(chain, '0xA9ed98B5Fb8428d68664f3C5027c62A10d45826b'), // treasury bveCVX voting multisig
     ]);
     ignoredTVL = blacklistedAccounts
-      .map((a) => a.data[vault.vaultToken])
+      .map((a) => a.data[vault.address])
       .map((s) => (s ? s.value : 0))
       .reduce((total, value) => total + value, 0);
   }
@@ -131,28 +131,28 @@ export async function getRewardEmission(chain: Chain, vaultDefinition: VaultDefi
 
     const durationScalar = ONE_YEAR_SECONDS / (schedule.end - schedule.start);
     const yearlyEmission = tokenPrice.price * schedule.amount * durationScalar;
-    const apr = (yearlyEmission / (vault.value - ignoredTVL)) * 100;
+    const apr = (yearlyEmission / (cachedVault.value - ignoredTVL)) * 100;
     let proRataAPR = apr;
-    if (vault.boost.enabled && token.address === chain.getBadgerTokenAddress()) {
-      const boostedAPR = (vault.boost.weight / 10_000) * proRataAPR;
+    if (cachedVault.boost.enabled && token.address === chain.getBadgerTokenAddress()) {
+      const boostedAPR = (cachedVault.boost.weight / 10_000) * proRataAPR;
       proRataAPR = proRataAPR - boostedAPR;
       const boostedSource = createValueSource(`Boosted ${token.name}`, boostedAPR, boostRange);
-      emissionSources.push(valueSourceToCachedValueSource(boostedSource, vaultDefinition, tokenEmission(token, true)));
+      emissionSources.push(valueSourceToCachedValueSource(boostedSource, vault, tokenEmission(token, true)));
     }
     const proRataSource = createValueSource(`${token.name}`, proRataAPR);
-    emissionSources.push(valueSourceToCachedValueSource(proRataSource, vaultDefinition, tokenEmission(token)));
+    emissionSources.push(valueSourceToCachedValueSource(proRataSource, vault, tokenEmission(token)));
   }
   return emissionSources;
 }
 
 export function valueSourceToCachedValueSource(
   valueSource: ValueSource,
-  vaultDefinition: VaultDefinition,
+  vault: VaultDefinitionModel,
   type: string,
 ): CachedValueSource {
   return Object.assign(new CachedValueSource(), {
-    addressValueSourceType: `${vaultDefinition.vaultToken}_${type}`,
-    address: vaultDefinition.vaultToken,
+    addressValueSourceType: `${vault.address}_${type}`,
+    address: vault.address,
     type,
     apr: valueSource.apr,
     name: valueSource.name,
@@ -164,7 +164,7 @@ export function valueSourceToCachedValueSource(
 
 export async function getVaultValueSources(
   chain: Chain,
-  vaultDefinition: VaultDefinition,
+  vaultDefinition: VaultDefinitionModel,
 ): Promise<CachedValueSource[]> {
   // manual over ride for removed compounding of vaults - this can be empty
   const NO_COMPOUND_VAULTS = new Set([TOKENS.BREMBADGER, TOKENS.BVECVX, TOKENS.BCVX]);
@@ -173,7 +173,7 @@ export async function getVaultValueSources(
   try {
     sources = await getVaultPerformance(chain, vaultDefinition);
 
-    const hasNoUnderlying = NO_COMPOUND_VAULTS.has(vaultDefinition.vaultToken);
+    const hasNoUnderlying = NO_COMPOUND_VAULTS.has(vaultDefinition.address);
     if (hasNoUnderlying) {
       sources = sources.filter((s) => s.type !== SourceType.Compound && s.type !== SourceType.PreCompound);
     }
@@ -187,7 +187,7 @@ export async function getVaultValueSources(
 
 export async function getProtocolValueSources(
   chain: Chain,
-  vaultDefinition: VaultDefinition,
+  vaultDefinition: VaultDefinitionModel,
 ): Promise<CachedValueSource[]> {
   try {
     switch (vaultDefinition.protocol) {

@@ -1,6 +1,6 @@
-import { VaultDefinition } from './vault-definition.interface';
+import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
 import { VaultHarvestsExtendedResp } from './vault-harvest-extended-resp.interface';
 
 export interface VaultHarvestsMap {
-  [address: VaultDefinition['vaultToken']]: VaultHarvestsExtendedResp[];
+  [address: VaultDefinitionModel['address']]: VaultHarvestsExtendedResp[];
 }

@@ -245,15 +245,11 @@ resources:
         TableName: ${self:custom.table.VAULT_COMPOUND_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
-          - AttributeName: 'address'
+          - AttributeName: 'id'
             KeyType: 'HASH'
-          - AttributeName: 'createdAt'
-            KeyType: 'RANGE'
         AttributeDefinitions:
-          - AttributeName: 'address'
+          - AttributeName: 'id'
             AttributeType: 'S'
-          - AttributeName: 'createdAt'
-            AttributeType: 'N'
           - AttributeName: 'chain'
             AttributeType: 'S'
           - AttributeName: 'isProduction'

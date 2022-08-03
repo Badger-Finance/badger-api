@@ -2,7 +2,10 @@ import { DataMapper, PutParameters, StringToAnyObjectMap } from '@aws/dynamodb-d
 import BadgerSDK from '@badger-dao/sdk';
 
 import { HarvestCompoundData } from '../aws/models/harvest-compound.model';
+import { SUPPORTED_CHAINS } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
+import { MOCK_VAULT_DEFINITION } from '../test/constants';
+import { mockChainVaults } from '../test/tests.utils';
 import { vaultHarvestsOnChainMock } from '../vaults/mocks/vault-harvests-on-chain';
 import * as vaultsUtils from '../vaults/vaults.utils';
 import { indexVaultsHarvestsCompund } from './harvest-compound-indexer';
@@ -11,6 +14,7 @@ describe('harvest-compound.indexer', () => {
   let put: jest.SpyInstance<Promise<StringToAnyObjectMap>, [parameters: PutParameters]>;
 
   beforeEach(() => {
+    mockChainVaults();
     console.log = jest.fn();
     console.error = jest.fn();
     console.warn = jest.fn();
@@ -20,10 +24,12 @@ describe('harvest-compound.indexer', () => {
     jest.spyOn(vaultsUtils, 'getLastCompoundHarvest').mockImplementation(async () => null);
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    jest.spyOn(vaultsUtils, 'getVaultHarvestsOnChain').mockImplementation(async (chain, vault, sdk, fromBlock) => {
+    jest.spyOn(vaultsUtils, 'getVaultHarvestsOnChain').mockImplementation(async (chain, vault, fromBlock) => {
       let onChainHarvests = vaultHarvestsOnChainMock[<string>vault];
 
-      if (fromBlock) onChainHarvests = onChainHarvests.filter((harvest) => harvest.block > <number>fromBlock);
+      if (fromBlock) {
+        onChainHarvests = onChainHarvests.filter((harvest) => harvest.block > <number>fromBlock);
+      }
 
       return onChainHarvests;
     });
@@ -35,18 +41,25 @@ describe('harvest-compound.indexer', () => {
   describe('indexVaultsHarvestsCompund', () => {
     it('should save all harvests from all chains to ddb', async () => {
       await indexVaultsHarvestsCompund();
-
-      expect(put.mock.calls.length).toBe(22);
+      expect(put.mock.calls.length).toBe(
+        SUPPORTED_CHAINS.length * vaultHarvestsOnChainMock[MOCK_VAULT_DEFINITION.address].length,
+      );
     });
 
     it('should get and save harvests only after the block of the last in ddb', async () => {
+      const blocks = vaultHarvestsOnChainMock[MOCK_VAULT_DEFINITION.address].map((h) => h.block).sort();
+      const cutoffBlock = blocks[1];
+      const conformingHarvests = vaultHarvestsOnChainMock[MOCK_VAULT_DEFINITION.address].filter(
+        (h) => h.block > cutoffBlock,
+      );
       jest
         .spyOn(vaultsUtils, 'getLastCompoundHarvest')
-        .mockImplementation(async () => <HarvestCompoundData>{ block: 13870247 });
+        .mockImplementation(async () => <HarvestCompoundData>{ block: cutoffBlock });
 
       await indexVaultsHarvestsCompund();
 
-      expect(put.mock.calls.length).toBe(2);
+      // mock data intentionally includes
+      expect(put.mock.calls.length).toBe(SUPPORTED_CHAINS.length * conformingHarvests.length);
     });
   });
 });

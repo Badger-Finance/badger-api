@@ -17,14 +17,15 @@ export async function refreshVaultHarvests() {
     SUPPORTED_CHAINS.map(async (chain) => {
       const sdk = await chain.getSdk();
       const mapper = getDataMapper();
-      for (const vault of chain.vaults) {
+      const vaults = await chain.vaults.all();
+      for (const vault of vaults) {
         if (vault.state && vault.state === VaultState.Discontinued) {
           continue;
         }
 
         const existingHarvest = await getVaultPendingHarvest(vault);
         const harvestData: VaultPendingHarvestData = {
-          vault: vault.vaultToken,
+          vault: vault.address,
           yieldTokens: [],
           harvestTokens: [],
           lastHarvestedAt: 0,
@@ -40,7 +41,7 @@ export async function refreshVaultHarvests() {
 
         if (vault.version && vault.version === VaultVersion.v1_5) {
           try {
-            const pendingHarvest = await sdk.vaults.getPendingHarvest(vault.vaultToken);
+            const pendingHarvest = await sdk.vaults.getPendingHarvest(vault.address);
 
             harvestData.harvestTokens = await Promise.all(
               pendingHarvest.tokenRewards.map(async (t) => toBalance(await getFullToken(chain, t.address), t.balance)),
@@ -60,7 +61,7 @@ export async function refreshVaultHarvests() {
             }
           }
 
-          const pendingYield = await sdk.vaults.getPendingYield(vault.vaultToken);
+          const pendingYield = await sdk.vaults.getPendingYield(vault.address);
           harvestData.yieldTokens = await Promise.all(
             pendingYield.tokenRewards.map(async (t) => toBalance(await getFullToken(chain, t.address), t.balance)),
           );
@@ -72,7 +73,7 @@ export async function refreshVaultHarvests() {
           const { settHarvests } = await sdk.graph.loadSettHarvests({
             first: 1,
             where: {
-              sett: vault.vaultToken.toLowerCase(),
+              sett: vault.address.toLowerCase(),
             },
             orderBy: SettHarvest_OrderBy.Timestamp,
             orderDirection: OrderDirection.Desc,
@@ -80,7 +81,7 @@ export async function refreshVaultHarvests() {
           const { badgerTreeDistributions } = await sdk.graph.loadBadgerTreeDistributions({
             first: 1,
             where: {
-              sett: vault.vaultToken.toLowerCase(),
+              sett: vault.address.toLowerCase(),
             },
             orderBy: BadgerTreeDistribution_OrderBy.Timestamp,
             orderDirection: OrderDirection.Desc,
