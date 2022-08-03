@@ -95,7 +95,7 @@ export async function constructVaultDefinition(
     isProduction: 1,
     version: vault.version as VaultVersion,
     state: vault.state,
-    name: vault.name,
+    name: vault.metadata?.name || vault.name,
     protocol: (vault.metadata?.protocol as Protocol) || Protocol.Badger,
     behavior: (vault.metadata?.behavior as VaultBehavior) || VaultBehavior.None,
     client: vault.metadata?.client || '',
