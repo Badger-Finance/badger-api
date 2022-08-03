@@ -2,7 +2,7 @@ import { Network } from '@badger-dao/sdk';
 
 import { getDataMapper } from '../../aws/dynamodb.utils';
 import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
-import { ONE_MINUTE_SECONDS, PRODUCTION } from '../../config/constants';
+import { ONE_MINUTE_SECONDS } from '../../config/constants';
 
 export class ChainVaults {
   network: Network;
@@ -38,8 +38,11 @@ export class ChainVaults {
   async #updateCachedVaults() {
     if (this.#shouldUpdate()) {
       const mapper = getDataMapper();
-      const indexName = PRODUCTION ? 'IndexVaultCompoundDataChainIsProd' : 'IndexVaultCompoundDataChain';
-      const query = mapper.query(VaultDefinitionModel, { chain: this.network, isProduction: 1 }, { indexName });
+      const query = mapper.query(
+        VaultDefinitionModel,
+        { chain: this.network, isProduction: 1 },
+        { indexName: 'IndexVaultCompoundDataChainIsProd' },
+      );
 
       try {
         for await (const compoundVault of query) {
