@@ -8,9 +8,10 @@ import {
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
 import { SUPPORTED_CHAINS } from '../chains/chain';
+import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
 import { getFullToken, toBalance } from '../tokens/tokens.utils';
 import { sendPlainTextToDiscord } from '../utils/discord.utils';
-import { getVaultPendingHarvest, VAULT_SOURCE } from '../vaults/vaults.utils';
+import { getCachedVault, getVaultPendingHarvest, VAULT_SOURCE } from '../vaults/vaults.utils';
 
 export async function refreshVaultHarvests() {
   await Promise.all(
@@ -97,6 +98,20 @@ export async function refreshVaultHarvests() {
             harvestData.lastHarvestedAt = badgerTreeDistributions[0].timestamp * 1000;
           }
         }
+
+        const cachedVault = await getCachedVault(chain, vault);
+        const {
+          strategy: { performanceFee },
+        } = cachedVault;
+        // max fee bps is 10_000, this scales values by the remainder after fees
+        const feeMultiplier = 1 - performanceFee / 10_000;
+        const feeScalingFunction = (t: CachedTokenBalance) => {
+          t.balance *= feeMultiplier;
+          t.value *= feeMultiplier;
+        };
+        harvestData.harvestTokens.forEach(feeScalingFunction);
+        harvestData.yieldTokens.forEach(feeScalingFunction);
+        console.log(`Applying ${feeMultiplier} scalar to ${vault.name}`);
 
         harvestData.harvestTokens.forEach((t) => {
           if (t.address === vault.depositToken) {
