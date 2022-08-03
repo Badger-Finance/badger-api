@@ -17,8 +17,9 @@ export async function indexProtocolVaults() {
         vaults.map(async (vault) => {
           try {
             const snapshot = await vaultToSnapshot(chain, vault);
-            await mapper.put(Object.assign(new HistoricVaultSnapshotOldModel(), snapshot));
-            if (!vault.isMigrating) {
+            if (vault.isMigrating) {
+              await mapper.put(Object.assign(new HistoricVaultSnapshotOldModel(), snapshot));
+            } else {
               // update chartDataBlob with historic data for vault
               const historicSnapshot = Object.assign(new HistoricVaultSnapshotModel(), {
                 ...snapshot,

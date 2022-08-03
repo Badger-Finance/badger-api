@@ -22,13 +22,13 @@ import { Nullable } from '../utils/types.utils';
 import { VaultsService } from '../vaults/vaults.service';
 import { getBoostWeight, getCachedVault, getStrategyInfo } from '../vaults/vaults.utils';
 
-export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<VaultSnapshot> {
+export async function vaultToSnapshot(chain: Chain, vault: VaultDefinitionModel): Promise<VaultSnapshot> {
   const sdk = await chain.getSdk();
   const { address, totalSupply, balance, pricePerFullShare, available } = await sdk.vaults.loadVault({
-    address: vaultDefinition.address,
+    address: vault.address,
     requireRegistry: false,
-    state: VaultState.Open,
-    version: vaultDefinition.version ?? VaultVersion.v1,
+    state: vault.state,
+    version: vault.version,
     update: true,
   });
 
@@ -38,10 +38,10 @@ export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefini
   } catch (err) {} // block is not super important here - just continue on
 
   const [tokenPriceData, strategyInfo, boostWeight, cachedVault] = await Promise.all([
-    getPrice(vaultDefinition.depositToken),
-    getStrategyInfo(chain, vaultDefinition),
-    getBoostWeight(chain, vaultDefinition),
-    VaultsService.loadVault(chain, vaultDefinition),
+    getPrice(vault.depositToken),
+    getStrategyInfo(chain, vault),
+    getBoostWeight(chain, vault),
+    VaultsService.loadVault(chain, vault),
   ]);
   const value = balance * tokenPriceData.price;
   const {
