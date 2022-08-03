@@ -32,7 +32,7 @@ custom:
           # deprecated, rm after regV2
           - table: ${self:custom.table.VAULT_SNAPSHOTS_DATA}
             sources: [./seed/vault-snapshots.json]
-          - table: ${self:custom.table.VAULT_COMPOUND_DATA}
+          - table: ${self:custom.table.VAULT_DEFINITION_DATA}
             sources: [./seed/vaults-compound.json]
           - table: ${self:custom.table.TOKEN_INFORMATION_DATA}
             sources: [./seed/token-info.json]
@@ -49,7 +49,7 @@ custom:
     SETT_HISTORIC_DATA: sett-historic-snapshots-${self:custom.stage}
     # deprecated
     VAULT_SNAPSHOTS_DATA: vaults-snapshots-${self:custom.stage}
-    VAULT_COMPOUND_DATA: vaults-compound-${self:custom.stage}
+    VAULT_DEFINITION_DATA: vaults-definitions-${self:custom.stage}
     VAULT_BALANCES_DATA: vault-balances-${self:custom.stage}
     TOKEN_PRICE_DATA: token-prices-${self:custom.stage}
     TOKEN_INFORMATION_DATA: token-information-${self:custom.stage}
@@ -112,7 +112,7 @@ provider:
     SETT_HISTORIC_DATA: ${self:custom.table.SETT_HISTORIC_DATA}
     # deprecated
     VAULT_SNAPSHOTS_DATA: ${self:custom.table.VAULT_SNAPSHOTS_DATA}
-    VAULT_COMPOUND_DATA: ${self:custom.table.VAULT_COMPOUND_DATA}
+    VAULT_DEFINITION_DATA: ${self:custom.table.VAULT_DEFINITION_DATA}
     VAULT_BALANCES_DATA: ${self:custom.table.VAULT_BALANCES_DATA}
     TOKEN_PRICE_DATA: ${self:custom.table.TOKEN_PRICE_DATA}
     TOKEN_INFORMATION_DATA: ${self:custom.table.TOKEN_INFORMATION_DATA}
@@ -242,7 +242,7 @@ resources:
     vaultsCompoundTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:custom.table.VAULT_COMPOUND_DATA}
+        TableName: ${self:custom.table.VAULT_DEFINITION_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
           - AttributeName: 'id'
@@ -543,13 +543,13 @@ functions:
           description: 'index data for supported vaults'
           rate: rate(5 minutes)
 
-  index-vault-compound:
-    handler: src/indexers/vault-compound-indexer.captureVaultData
+  index-vault-definitions:
+    handler: src/indexers/vault-definition-indexer.captureVaultData
     timeout: 150
     events:
       - schedule:
-          name: ${self:service}-${self:custom.stage}-index-vault-compound
-          description: 'index data for supported vaults'
+          name: ${self:service}-${self:custom.stage}-index-vault-definition
+          description: 'index definitions for supported vaults'
           rate: rate(5 minutes)
 
   index-vault-harvests:

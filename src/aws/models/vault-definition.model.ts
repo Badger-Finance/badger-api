@@ -1,11 +1,11 @@
 import { attribute, hashKey, table } from '@aws/dynamodb-data-mapper-annotations';
 import { BouncerType, Network, Protocol, VaultBehavior, VaultState, VaultVersion } from '@badger-dao/sdk';
 
-import { STAGE, VAULT_COMPOUND_DATA } from '../../config/constants';
+import { STAGE, VAULT_DEFINITION_DATA } from '../../config/constants';
 import { Stage } from '../../config/enums/stage.enum';
 import { IVaultDefinition } from '../interfaces/vault-definition-model.interface';
 
-@table(VAULT_COMPOUND_DATA)
+@table(VAULT_DEFINITION_DATA)
 export class VaultDefinitionModel implements IVaultDefinition {
   @hashKey()
   id!: string;
