@@ -5,7 +5,7 @@ import { CachedValueSource } from '../../aws/models/apy-snapshots.model';
 import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
 import { VaultTokenBalance } from '../../aws/models/vault-token-balance.model';
 import { Chain } from '../../chains/config/chain.config';
-import { BALANCER_URL } from '../../config/constants';
+import { BALANCER_URL, PRODUCTION } from '../../config/constants';
 import {
   BalancerVault__factory,
   StablePhantomVault__factory,
@@ -191,6 +191,9 @@ export async function resolveBalancerPoolTokenPrice(chain: Chain, token: Token, 
 }
 
 export async function getBalancerSwapFees(vault: VaultDefinitionModel): Promise<CachedValueSource[]> {
+  if (PRODUCTION) {
+    return [];
+  }
   try {
     const chain = Chain.getChain(Network.Ethereum);
     const client = new GraphQLClient(BALANCER_URL);
