@@ -15,6 +15,7 @@ import { TokensController } from './tokens/tokens.controller';
 import { SettsV2Controller } from './vaults/setts.v2.controller';
 import { VaultsV2Controller } from './vaults/vaults.v2.controller';
 import { VaultsV3Controller } from './vaults/vaults.v3.controller';
+import { DevelopmentController } from './dev/dev.controller';
 
 /**
  * Controller registry forces serverless offline to load
@@ -47,6 +48,8 @@ export const V3_CONTROLLERS = [
   MetricsController,
   PriceController,
   TokensController,
+
+  DevelopmentController,
 
   AccountV3Controller,
   ProofsV3Controller,
