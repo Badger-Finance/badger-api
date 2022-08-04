@@ -32,9 +32,9 @@ export async function refreshVaultHarvests() {
           lastHarvestedAt: 0,
           previousYieldTokens: existingHarvest.yieldTokens,
           previousHarvestTokens: existingHarvest.harvestTokens,
-          lastMeasuredAt: existingHarvest.lastMeasuredAt,
-          duration: 0,
-          lastReportedAt: existingHarvest.lastReportedAt,
+          lastMeasuredAt: existingHarvest.lastMeasuredAt ?? 0,
+          duration: existingHarvest.duration ?? Number.MAX_SAFE_INTEGER,
+          lastReportedAt: existingHarvest.lastReportedAt ?? 0,
         };
 
         let shouldCheckGraph = false;
