@@ -16,7 +16,7 @@ export const VAULT_BALANCES_DATA = getEnvVar('VAULT_BALANCES_DATA');
 export const TOKEN_PRICE_DATA = getEnvVar('TOKEN_PRICE_DATA');
 export const TOKEN_INFORMATION_DATA = getEnvVar('TOKEN_INFORMATION_DATA');
 export const VAULT_SNAPSHOTS_DATA = getEnvVar('VAULT_SNAPSHOTS_DATA');
-export const VAULT_COMPOUND_DATA = getEnvVar('VAULT_COMPOUND_DATA');
+export const VAULT_DEFINITION_DATA = getEnvVar('VAULT_DEFINITION_DATA');
 export const REWARD_DATA = getEnvVar('REWARD_DATA');
 export const LEADERBOARD_DATA = getEnvVar('LEADERBOARD_DATA');
 export const ACCOUNT_DATA = getEnvVar('ACCOUNT_DATA');
@@ -26,10 +26,8 @@ export const UNCLAIMED_SNAPSHOTS_DATA = getEnvVar('UNCLAIMED_SNAPSHOTS_DATA');
 export const USER_CLAIMED_METADATA = getEnvVar('METADATA_DATA');
 export const HARVEST_DATA = getEnvVar('HARVEST_DATA');
 export const HARVEST_COMPOUND_DATA = getEnvVar('HARVEST_COMPOUND_DATA');
-export const TREASURY_SNAPSHOT_DATA = getEnvVar('TREASURY_SNAPSHOT_DATA');
 export const PROTOCOL_DATA = getEnvVar('PROTOCOL_DATA');
 export const CHART_DATA = getEnvVar('CHART_DATA');
-export const CITADEL_REWARDS_DATA = getEnvVar('CITADEL_REWARDS_DATA');
 export const MIGRATION_PROCESS_DATA = getEnvVar('MIGRATION_PROCESS_DATA');
 
 // thegraph constants

@@ -1,5 +1,5 @@
 import { between, greaterThanOrEqualTo } from '@aws/dynamodb-expressions';
-import BadgerSDK, {
+import {
   formatBalance,
   gqlGenT,
   keyBy,
@@ -10,15 +10,13 @@ import BadgerSDK, {
   Protocol,
   Strategy__factory,
   Vault__factory,
-  VaultBehavior,
   VaultDTO,
   VaultPerformanceEvent,
-  VaultState,
   VaultType,
   VaultV15__factory,
   VaultVersion,
 } from '@badger-dao/sdk';
-import { BadRequest, NotFound, UnprocessableEntity } from '@tsed/exceptions';
+import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';
 
 import { getDataMapper } from '../aws/dynamodb.utils';
@@ -28,7 +26,7 @@ import { CurrentVaultSnapshotModel } from '../aws/models/current-vault-snapshot.
 import { HarvestCompoundData } from '../aws/models/harvest-compound.model';
 import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
 import { HistoricVaultSnapshotOldModel } from '../aws/models/historic-vault-snapshot-old.model';
-import { VaultCompoundModel } from '../aws/models/vault-compound.model';
+import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
 import { Chain } from '../chains/config/chain.config';
 import { ONE_DAY_SECONDS, ONE_YEAR_SECONDS } from '../config/constants';
@@ -39,34 +37,25 @@ import { PricingType } from '../prices/enums/pricing-type.enum';
 import { TokenPrice } from '../prices/interface/token-price.interface';
 import { getPrice } from '../prices/prices.utils';
 import { createValueSource } from '../protocols/interfaces/value-source.interface';
-import { BouncerType } from '../rewards/enums/bouncer-type.enum';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { getProtocolValueSources, getRewardEmission, valueSourceToCachedValueSource } from '../rewards/rewards.utils';
 import { getFullToken } from '../tokens/tokens.utils';
 import { Nullable } from '../utils/types.utils';
 import { HarvestType } from './enums/harvest.enum';
-import { VaultDefinition } from './interfaces/vault-definition.interface';
 import { VaultHarvestData } from './interfaces/vault-harvest-data.interface';
 import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
 import { VaultStrategy } from './interfaces/vault-strategy.interface';
 
 export const VAULT_SOURCE = 'Vault Compounding';
 
-export async function defaultVault(chain: Chain, vaultDefinition: VaultDefinition): Promise<VaultDTO> {
+export async function defaultVault(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<VaultDTO> {
   const [assetToken, vaultToken] = await Promise.all([
     getFullToken(chain, vaultDefinition.depositToken),
-    getFullToken(chain, vaultDefinition.vaultToken),
+    getFullToken(chain, vaultDefinition.address),
   ]);
 
-  const state = vaultDefinition.state
-    ? vaultDefinition.state
-    : vaultDefinition.newVault
-    ? VaultState.Featured
-    : VaultState.Open;
-  const bouncer = vaultDefinition.bouncer ?? BouncerType.None;
-  const type = vaultDefinition.protocol === Protocol.Badger ? VaultType.Native : VaultType.Standard;
-  const behavior = vaultDefinition.behavior ?? VaultBehavior.None;
-  const version = vaultDefinition.version ?? VaultVersion.v1;
+  const { state, bouncer, behavior, version, protocol, name, depositToken, address } = vaultDefinition;
+  const type = protocol === Protocol.Badger ? VaultType.Native : VaultType.Standard;
 
   return {
     apr: 0,
@@ -80,7 +69,7 @@ export async function defaultVault(chain: Chain, vaultDefinition: VaultDefinitio
       weight: 0,
     },
     bouncer,
-    name: vaultDefinition.name,
+    name,
     pricePerFullShare: 1,
     protocol: Protocol.Badger,
     sources: [],
@@ -95,17 +84,22 @@ export async function defaultVault(chain: Chain, vaultDefinition: VaultDefinitio
       aumFee: 0,
     },
     type,
-    underlyingToken: vaultDefinition.depositToken,
+    underlyingToken: depositToken,
     value: 0,
     vaultAsset: vaultToken.symbol,
-    vaultToken: vaultDefinition.vaultToken,
+    vaultToken: address,
     yieldProjection: {
       yieldApr: 0,
       yieldTokens: [],
+      yieldPeriodApr: 0,
+      yieldTokensPerPeriod: [],
       yieldValue: 0,
       harvestApr: 0,
       harvestApy: 0,
+      harvestPeriodApr: 0,
+      harvestPeriodApy: 0,
       harvestTokens: [],
+      harvestTokensPerPeriod: [],
       harvestValue: 0,
     },
     lastHarvest: 0,
@@ -113,13 +107,13 @@ export async function defaultVault(chain: Chain, vaultDefinition: VaultDefinitio
   };
 }
 
-export async function getCachedVault(chain: Chain, vaultDefinition: VaultDefinition): Promise<VaultDTO> {
+export async function getCachedVault(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<VaultDTO> {
   const vault = await defaultVault(chain, vaultDefinition);
   try {
     const mapper = getDataMapper();
     for await (const item of mapper.query(
       CurrentVaultSnapshotModel,
-      { address: vaultDefinition.vaultToken },
+      { address: vaultDefinition.address },
       { limit: 1, scanIndexForward: false },
     )) {
       vault.available = item.available;
@@ -127,7 +121,7 @@ export async function getCachedVault(chain: Chain, vaultDefinition: VaultDefinit
       vault.value = item.value;
       if (item.balance === 0 || item.totalSupply === 0) {
         vault.pricePerFullShare = 1;
-      } else if (vaultDefinition.vaultToken === TOKENS.BDIGG) {
+      } else if (vaultDefinition.address === TOKENS.BDIGG) {
         vault.pricePerFullShare = item.balance / item.totalSupply;
       } else {
         vault.pricePerFullShare = item.pricePerFullShare;
@@ -147,14 +141,14 @@ export async function getCachedVault(chain: Chain, vaultDefinition: VaultDefinit
 
 export async function getVaultSnapshotsInRange(
   chain: Chain,
-  vaultDefinition: VaultDefinition,
+  vault: VaultDefinitionModel,
   start: Date,
   end: Date,
 ): Promise<HistoricVaultSnapshotOldModel[]> {
   try {
     const snapshots = [];
     const mapper = getDataMapper();
-    const assetToken = await getFullToken(chain, vaultDefinition.vaultToken);
+    const assetToken = await getFullToken(chain, vault.address);
 
     for await (const snapshot of mapper.query(
       HistoricVaultSnapshotOldModel,
@@ -173,16 +167,7 @@ export async function getVaultSnapshotsInRange(
   }
 }
 
-export function getVaultDefinition(chain: Chain, contract: string): VaultDefinition {
-  const contractAddress = ethers.utils.getAddress(contract);
-  const vaultDefinition = chain.vaults.find((v) => v.vaultToken === contractAddress);
-  if (!vaultDefinition) {
-    throw new NotFound(`${contract} is not a valid sett`);
-  }
-  return vaultDefinition;
-}
-
-export async function getStrategyInfo(chain: Chain, vaultDefinition: VaultDefinition): Promise<VaultStrategy> {
+export async function getStrategyInfo(chain: Chain, vault: VaultDefinitionModel): Promise<VaultStrategy> {
   const defaultStrategyInfo: VaultStrategy = {
     address: ethers.constants.AddressZero,
     withdrawFee: 0,
@@ -192,9 +177,9 @@ export async function getStrategyInfo(chain: Chain, vaultDefinition: VaultDefini
   };
   try {
     const sdk = await chain.getSdk();
-    const version = vaultDefinition.version ?? VaultVersion.v1;
+    const version = vault.version ?? VaultVersion.v1;
     const strategyAddress = await sdk.vaults.getVaultStrategy({
-      address: vaultDefinition.vaultToken,
+      address: vault.address,
       version,
     });
     if (version === VaultVersion.v1) {
@@ -207,7 +192,7 @@ export async function getStrategyInfo(chain: Chain, vaultDefinition: VaultDefini
         strategy.performanceFeeStrategist(),
       ]);
       // bveCVX does not have a way to capture materially its performance fee
-      if (vaultDefinition.vaultToken === TOKENS.BVECVX) {
+      if (vault.address === TOKENS.BVECVX) {
         performanceFee = BigNumber.from('1500'); // set performance fee to 15%
       }
       return {
@@ -218,12 +203,12 @@ export async function getStrategyInfo(chain: Chain, vaultDefinition: VaultDefini
         aumFee: 0,
       };
     } else {
-      const vault = VaultV15__factory.connect(vaultDefinition.vaultToken, sdk.provider);
+      const vaultContract = VaultV15__factory.connect(vault.address, sdk.provider);
       const [withdrawFee, performanceFee, strategistFee, aumFee] = await Promise.all([
-        vault.withdrawalFee(),
-        vault.performanceFeeGovernance(),
-        vault.performanceFeeStrategist(),
-        vault.managementFee(),
+        vaultContract.withdrawalFee(),
+        vaultContract.performanceFeeGovernance(),
+        vaultContract.performanceFeeStrategist(),
+        vaultContract.managementFee(),
       ]);
       return {
         address: strategyAddress,
@@ -239,13 +224,13 @@ export async function getStrategyInfo(chain: Chain, vaultDefinition: VaultDefini
   }
 }
 
-export async function getBoostWeight(chain: Chain, vaultDefinition: VaultDefinition): Promise<BigNumber> {
+export async function getBoostWeight(chain: Chain, vault: VaultDefinitionModel): Promise<BigNumber> {
   if (!chain.emissionControl) {
     return ethers.constants.Zero;
   }
   try {
     const emissionControl = EmissionControl__factory.connect(chain.emissionControl, chain.provider);
-    return emissionControl.boostedEmissionRate(vaultDefinition.vaultToken);
+    return emissionControl.boostedEmissionRate(vault.address);
   } catch (err) {
     console.error(err);
     return ethers.constants.Zero;
@@ -270,7 +255,7 @@ export async function getVaultTokenPrice(chain: Chain, address: string): Promise
   const isCrossChainVault = chain.network !== vaultToken.network;
   const targetChain = isCrossChainVault ? Chain.getChain(vaultToken.network) : chain;
   const targetVault = isCrossChainVault ? vaultToken.address : token.address;
-  const vaultDefintion = getVaultDefinition(targetChain, targetVault);
+  const vaultDefintion = await targetChain.vaults.getVault(targetVault);
   const [underlyingTokenPrice, vaultTokenSnapshot] = await Promise.all([
     getPrice(vaultToken.address),
     getCachedVault(chain, vaultDefintion),
@@ -291,7 +276,7 @@ const vaultLookupMethod: Record<string, string> = {};
  */
 export async function getVaultPerformance(
   chain: Chain,
-  vaultDefinition: VaultDefinition,
+  vaultDefinition: VaultDefinitionModel,
 ): Promise<CachedValueSource[]> {
   const [rewardEmissions, protocol] = await Promise.all([
     getRewardEmission(chain, vaultDefinition),
@@ -308,15 +293,15 @@ export async function getVaultPerformance(
   if (vaultApr === 0) {
     vaultSources = await getVaultUnderlyingPerformance(chain, vaultDefinition);
   }
-  console.log(`${vaultDefinition.name}: ${vaultLookupMethod[vaultDefinition.vaultToken]}`);
+  console.log(`${vaultDefinition.name}: ${vaultLookupMethod[vaultDefinition.address]}`);
   return [...vaultSources, ...rewardEmissions, ...protocol];
 }
 
 export async function getVaultUnderlyingPerformance(
   chain: Chain,
-  vaultDefinition: VaultDefinition,
+  vaultDefinition: VaultDefinitionModel,
 ): Promise<CachedValueSource[]> {
-  vaultLookupMethod[vaultDefinition.vaultToken] = 'MeasuredPPFS';
+  vaultLookupMethod[vaultDefinition.address] = 'MeasuredPPFS';
   const start = new Date();
   start.setDate(start.getDate() - 30);
   const snapshots = await getVaultSnapshotsInRange(chain, vaultDefinition, start, new Date());
@@ -342,7 +327,7 @@ export async function getVaultUnderlyingPerformance(
 
 export async function loadVaultEventPerformances(
   chain: Chain,
-  vaultDefinition: VaultDefinition,
+  vaultDefinition: VaultDefinitionModel,
 ): Promise<CachedValueSource[]> {
   const incompatibleNetworks = new Set<Network>([Network.BinanceSmartChain, Network.Polygon, Network.Arbitrum]);
   if (incompatibleNetworks.has(chain.network)) {
@@ -355,13 +340,13 @@ export async function loadVaultEventPerformances(
   const startBlock = await sdk.provider.getBlockNumber();
   -Math.floor(cutoffPeriod / 13);
   const { data } = await sdk.vaults.listHarvests({
-    address: vaultDefinition.vaultToken,
+    address: vaultDefinition.address,
     timestamp_gte: cutoff,
     version: vaultDefinition.version ?? VaultVersion.v1,
     startBlock,
   });
 
-  vaultLookupMethod[vaultDefinition.vaultToken] = 'EventAPR';
+  vaultLookupMethod[vaultDefinition.address] = 'EventAPR';
 
   return estimateVaultPerformance(chain, vaultDefinition, data);
 }
@@ -415,12 +400,12 @@ export function estimateDerivativeEmission(
 // should we put this into the sdk?
 export async function loadVaultGraphPerformances(
   chain: Chain,
-  vaultDefinition: VaultDefinition,
+  vault: VaultDefinitionModel,
 ): Promise<CachedValueSource[]> {
-  const { vaultToken } = vaultDefinition;
+  const { address } = vault;
 
   // digg does not play well with this accounting
-  if (vaultToken === TOKENS.DIGG) {
+  if (address === TOKENS.DIGG) {
     return [];
   }
 
@@ -432,13 +417,13 @@ export async function loadVaultGraphPerformances(
   let [vaultHarvests, treeDistributions] = await Promise.all([
     graph.loadSettHarvests({
       where: {
-        sett: vaultToken.toLowerCase(),
+        sett: address.toLowerCase(),
         timestamp_gte: cutoff,
       },
     }),
     graph.loadBadgerTreeDistributions({
       where: {
-        sett: vaultToken.toLowerCase(),
+        sett: address.toLowerCase(),
         timestamp_gte: cutoff,
       },
     }),
@@ -447,8 +432,8 @@ export async function loadVaultGraphPerformances(
   let { settHarvests } = vaultHarvests;
   let { badgerTreeDistributions } = treeDistributions;
 
-  vaultLookupMethod[vaultDefinition.vaultToken] = 'GraphAPR';
-  let data = constructGraphVaultData(vaultDefinition, settHarvests, badgerTreeDistributions);
+  vaultLookupMethod[address] = 'GraphAPR';
+  let data = constructGraphVaultData(vault, settHarvests, badgerTreeDistributions);
   // if there are no recent viable options, attempt to use the full vault history
   if (data.length <= 1) {
     // take the last 6 weeks as the "full graph" to avoid really old data
@@ -456,21 +441,21 @@ export async function loadVaultGraphPerformances(
     [vaultHarvests, treeDistributions] = await Promise.all([
       graph.loadSettHarvests({
         where: {
-          sett: vaultToken.toLowerCase(),
+          sett: address.toLowerCase(),
           timestamp_gte: cutoff,
         },
       }),
       graph.loadBadgerTreeDistributions({
         where: {
-          sett: vaultToken.toLowerCase(),
+          sett: address.toLowerCase(),
           timestamp_gte: cutoff,
         },
       }),
     ]);
     settHarvests = vaultHarvests.settHarvests;
     badgerTreeDistributions = treeDistributions.badgerTreeDistributions;
-    vaultLookupMethod[vaultDefinition.vaultToken] = 'FullGraphAPR';
-    data = constructGraphVaultData(vaultDefinition, settHarvests, badgerTreeDistributions);
+    vaultLookupMethod[address] = 'FullGraphAPR';
+    data = constructGraphVaultData(vault, settHarvests, badgerTreeDistributions);
   }
 
   // if we still don't have harvests or distributions - don't bother there is nothing to compute
@@ -478,11 +463,11 @@ export async function loadVaultGraphPerformances(
     return [];
   }
 
-  return estimateVaultPerformance(chain, vaultDefinition, data);
+  return estimateVaultPerformance(chain, vault, data);
 }
 
 function constructGraphVaultData(
-  vaultDefinition: VaultDefinition,
+  vault: VaultDefinitionModel,
   settHarvests: gqlGenT.SettHarvestsQuery['settHarvests'],
   badgerTreeDistributions: gqlGenT.BadgerTreeDistributionsQuery['badgerTreeDistributions'],
 ): VaultHarvestData[] {
@@ -500,7 +485,7 @@ function constructGraphVaultData(
       harvests: currentHarvests.map((h) => ({
         timestamp,
         block: Number(h.blockNumber),
-        token: vaultDefinition.depositToken,
+        token: vault.depositToken,
         amount: h.amount,
       })),
       treeDistributions: currentDistributions.map((d) => {
@@ -540,29 +525,29 @@ export async function estimateHarvestEventApr(
 
 export async function estimateVaultPerformance(
   chain: Chain,
-  vaultDefinition: VaultDefinition,
+  vault: VaultDefinitionModel,
   data: VaultHarvestData[],
 ): Promise<CachedValueSource[]> {
   const recentHarvests = data.sort((a, b) => b.timestamp - a.timestamp);
 
   if (recentHarvests.length <= 1) {
-    throw new Error(`${vaultDefinition.name} does not have adequate harvest history`);
+    throw new Error(`${vault.name} does not have adequate harvest history`);
   }
 
   let totalDuration;
 
   // TODO: generalize this for voting vaults + look up their voting periods
-  if (vaultDefinition.vaultToken === TOKENS.BVECVX) {
+  if (vault.address === TOKENS.BVECVX) {
     totalDuration = ONE_DAY_SECONDS * 14;
   } else {
     totalDuration = recentHarvests[0].timestamp - recentHarvests[data.length - 1].timestamp;
   }
 
-  const vault = await getCachedVault(chain, vaultDefinition);
+  const cachedVault = await getCachedVault(chain, vault);
 
   let measuredHarvests;
 
-  if (vaultDefinition.vaultToken === TOKENS.BVECVX) {
+  if (vault.address === TOKENS.BVECVX) {
     const cutoff = recentHarvests[0].timestamp - totalDuration;
     measuredHarvests = recentHarvests.filter((h) => h.timestamp > cutoff).slice(0, recentHarvests.length - 1);
   } else {
@@ -577,13 +562,13 @@ export async function estimateVaultPerformance(
     .reduce((total, harvested) => total.add(harvested), BigNumber.from(0));
 
   let weightedBalance = 0;
-  const depositToken = await getFullToken(chain, vaultDefinition.depositToken);
+  const depositToken = await getFullToken(chain, vault.depositToken);
 
   // this will probably need more generalization, quickly becoming a huge pain in the ass
-  if (vaultDefinition.vaultToken === TOKENS.BVECVX) {
+  if (vault.address === TOKENS.BVECVX) {
     const sdk = await chain.getSdk();
     const targetBlock = recentHarvests[0].treeDistributions[0].block;
-    const vaultContract = Vault__factory.connect(vaultDefinition.vaultToken, sdk.provider);
+    const vaultContract = Vault__factory.connect(vault.address, sdk.provider);
     const strategyBalance = await vaultContract.totalSupply({ blockTag: targetBlock });
     weightedBalance = formatBalance(strategyBalance);
   } else {
@@ -596,25 +581,25 @@ export async function estimateVaultPerformance(
       if (duration === 0) {
         continue;
       }
-      const { sett } = await getVault(chain, vaultDefinition.vaultToken, end.block);
+      const { sett } = await getVault(chain, vault.address, end.block);
       if (sett) {
         const balance = sett.strategy?.balance ?? sett.balance;
         weightedBalance += duration * formatBalance(balance, depositToken.decimals);
       } else {
-        weightedBalance += duration * vault.balance;
+        weightedBalance += duration * cachedVault.balance;
       }
     }
   }
 
   // TODO: generalize or combine weighted balance calculation and distribution timestamp aggregation
   if (weightedBalance === 0) {
-    weightedBalance = vault.balance * totalDuration;
+    weightedBalance = cachedVault.balance * totalDuration;
   }
 
-  const { price } = await getPrice(vaultDefinition.depositToken);
+  const { price } = await getPrice(vault.depositToken);
   const measuredBalance = weightedBalance / totalDuration;
   // lord, forgive me for my sins... we will generalize this shortly i hope
-  const measuredValue = (vault.vaultToken === TOKENS.BVECVX ? weightedBalance : measuredBalance) * price;
+  const measuredValue = (vault.address === TOKENS.BVECVX ? weightedBalance : measuredBalance) * price;
   const totalHarvestedTokens = formatBalance(totalHarvested, depositToken.decimals);
   // count of harvests is exclusive of the 0th element
   const durationScalar = ONE_YEAR_SECONDS / totalDuration;
@@ -623,14 +608,10 @@ export async function estimateVaultPerformance(
   const compoundApr = (totalHarvestedTokens / measuredBalance) * durationScalar;
   const compoundApy = (1 + compoundApr / periods) ** periods - 1;
   const compoundSourceApr = createValueSource(VAULT_SOURCE, compoundApr * 100);
-  const cachedCompoundSourceApr = valueSourceToCachedValueSource(
-    compoundSourceApr,
-    vaultDefinition,
-    SourceType.PreCompound,
-  );
+  const cachedCompoundSourceApr = valueSourceToCachedValueSource(compoundSourceApr, vault, SourceType.PreCompound);
   valueSources.push(cachedCompoundSourceApr);
   const compoundSource = createValueSource(VAULT_SOURCE, compoundApy * 100);
-  const cachedCompoundSource = valueSourceToCachedValueSource(compoundSource, vaultDefinition, SourceType.Compound);
+  const cachedCompoundSource = valueSourceToCachedValueSource(compoundSource, vault, SourceType.Compound);
   valueSources.push(cachedCompoundSource);
 
   const treeDistributions = measuredHarvests.flatMap((h) => h.treeDistributions);
@@ -659,13 +640,13 @@ export async function estimateVaultPerformance(
     const emissionSource = createValueSource(`${tokenEmitted.name}`, emissionApr * 100);
     const cachedEmissionSource = valueSourceToCachedValueSource(
       emissionSource,
-      vaultDefinition,
+      vault,
       `vault_emitted_${tokenEmitted.name.toLowerCase()}`,
     );
     valueSources.push(cachedEmissionSource);
     // try to add underlying emitted vault value sources if applicable
     try {
-      const emittedVault = getVaultDefinition(chain, tokenEmitted.address);
+      const emittedVault = await chain.vaults.getVault(tokenEmitted.address);
       const vaultValueSources = await getVaultCachedValueSources(emittedVault);
       // search for the persisted apr variant of the compounding vault source, if any
       const compoundingSource = vaultValueSources.find((source) => source.type === SourceType.PreCompound);
@@ -679,18 +660,18 @@ export async function estimateVaultPerformance(
     const sourceName = `Vault Flywheel`;
     const sourceType = `derivative_${sourceName.replace(/ /g, '_')}`.toLowerCase();
     const derivativeSource = createValueSource(sourceName, flywheelCompounding);
-    valueSources.push(valueSourceToCachedValueSource(derivativeSource, vaultDefinition, sourceType));
+    valueSources.push(valueSourceToCachedValueSource(derivativeSource, vault, sourceType));
   }
 
   return valueSources;
 }
 
-export async function getVaultCachedValueSources(vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
+export async function getVaultCachedValueSources(vaultDefinition: VaultDefinitionModel): Promise<CachedValueSource[]> {
   const valueSources = [];
   const mapper = getDataMapper();
   for await (const source of mapper.query(
     CachedValueSource,
-    { address: vaultDefinition.vaultToken },
+    { address: vaultDefinition.address },
     { indexName: 'IndexApySnapshotsOnAddress' },
   )) {
     valueSources.push(source);
@@ -698,23 +679,22 @@ export async function getVaultCachedValueSources(vaultDefinition: VaultDefinitio
   return valueSources;
 }
 
-export async function getVaultPendingHarvest(vaultDefinition: VaultDefinition): Promise<VaultPendingHarvestData> {
+export async function getVaultPendingHarvest(vault: VaultDefinitionModel): Promise<VaultPendingHarvestData> {
   const pendingHarvest: VaultPendingHarvestData = {
-    vault: vaultDefinition.vaultToken,
+    vault: vault.address,
     yieldTokens: [],
     harvestTokens: [],
     lastHarvestedAt: 0,
+    previousYieldTokens: [],
+    previousHarvestTokens: [],
+    lastMeasuredAt: 0,
+    duration: 0,
+    lastReportedAt: 0,
   };
   try {
     const mapper = getDataMapper();
-    for await (const item of mapper.query(
-      VaultPendingHarvestData,
-      { vault: vaultDefinition.vaultToken },
-      { limit: 1 },
-    )) {
-      pendingHarvest.yieldTokens = item.yieldTokens;
-      pendingHarvest.harvestTokens = item.harvestTokens;
-      pendingHarvest.lastHarvestedAt = item.lastHarvestedAt;
+    for await (const item of mapper.query(VaultPendingHarvestData, { vault: vault.address }, { limit: 1 })) {
+      return item;
     }
     return pendingHarvest;
   } catch (err) {
@@ -725,26 +705,22 @@ export async function getVaultPendingHarvest(vaultDefinition: VaultDefinition): 
 
 export async function getVaultHarvestsOnChain(
   chain: Chain,
-  vaultAddr: VaultDefinition['vaultToken'],
-  sdk: BadgerSDK,
+  address: VaultDefinitionModel['address'],
   startFromBlock: Nullable<number> = null,
 ): Promise<VaultHarvestsExtendedResp[]> {
   const vaultHarvests: VaultHarvestsExtendedResp[] = [];
 
-  vaultAddr = ethers.utils.getAddress(vaultAddr);
-
-  const vaultDef = getVaultDefinition(chain, vaultAddr);
+  const sdk = await chain.getSdk();
+  const { version, depositToken } = await chain.vaults.getVault(address);
 
   let sdkVaultHarvestsResp: {
     data: VaultHarvestData[];
   } = { data: [] };
 
-  if (!vaultDef) return vaultHarvests;
-
   try {
     const listHarvestsArgs: ListHarvestOptions = {
-      address: vaultAddr,
-      version: vaultDef.version ?? VaultVersion.v1,
+      address,
+      version,
     };
 
     if (startFromBlock) listHarvestsArgs.startBlock = startFromBlock;
@@ -769,15 +745,15 @@ export async function getVaultHarvestsOnChain(
       const harvest = harvestsList[i];
 
       const vaultGraph = await sdk.graph.loadSett({
-        id: vaultAddr,
+        id: address.toLowerCase(),
         block: { number: harvest.block },
       });
 
-      const harvestToken = harvest.token || vaultDef.depositToken;
+      const harvestToken = harvest.token || depositToken;
 
-      const depositToken = await getFullToken(chain, harvestToken);
+      const depositTokenInfo = await getFullToken(chain, harvestToken);
 
-      const harvestAmount = formatBalance(harvest.amount || BigNumber.from(0), depositToken.decimals);
+      const harvestAmount = formatBalance(harvest.amount || BigNumber.from(0), depositTokenInfo.decimals);
 
       const extendedHarvest = {
         ...harvest,
@@ -791,7 +767,7 @@ export async function getVaultHarvestsOnChain(
       if (vaultGraph?.sett) {
         const balance = BigNumber.from(vaultGraph.sett?.strategy?.balance || vaultGraph.sett.balance || 0);
 
-        extendedHarvest.strategyBalance = formatBalance(balance, depositToken.decimals);
+        extendedHarvest.strategyBalance = formatBalance(balance, depositTokenInfo.decimals);
 
         if (i === harvestsList.length - 1 && eventType === HarvestType.Harvest) {
           vaultHarvests.push(extendedHarvest);
@@ -852,31 +828,15 @@ export async function getLastCompoundHarvest(vault: string): Promise<Nullable<Ha
   return lastHarvest;
 }
 
-// temp helper during migration
-export function vaultCompoundToDefinition(vault: VaultCompoundModel): VaultDefinition {
-  return {
-    behavior: vault.behavior,
-    client: vault.client,
-    depositToken: vault.depositToken.address,
-    experimental: vault.state === VaultState.Experimental,
-    name: vault.name,
-    newVault: vault.isNew(),
-    protocol: vault.protocol,
-    state: vault.state,
-    vaultToken: vault.address,
-    version: vault.version,
-  };
-}
-
 export async function getVaultSnapshotsAtTimestamps(
   chain: Chain,
-  vaultDefinition: VaultDefinition,
+  vault: VaultDefinitionModel,
   timestamps: number[],
 ): Promise<HistoricVaultSnapshotOldModel[]> {
   try {
     const snapshots = [];
     const mapper = getDataMapper();
-    const assetToken = await getFullToken(chain, vaultDefinition.vaultToken);
+    const assetToken = await getFullToken(chain, vault.address);
 
     for (const timestamp of timestamps) {
       for await (const snapshot of mapper.query(

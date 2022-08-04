@@ -5,7 +5,7 @@ import SuperTest from 'supertest';
 
 import { NetworkStatus } from '../errors/enums/newtroks.status.enum';
 import { Server } from '../Server';
-import { setupVaultsHistoricDDB } from '../test/tests.utils';
+import { mockChainVaults, setupVaultsHistoricDDB } from '../test/tests.utils';
 import { ChartGranularity } from './enums/chart-granularity.enum';
 
 describe('ChartsController', () => {
@@ -13,6 +13,7 @@ describe('ChartsController', () => {
 
   beforeEach(PlatformTest.bootstrap(Server));
   beforeEach(async () => {
+    mockChainVaults();
     request = SuperTest(PlatformTest.callback());
   });
 

@@ -12,16 +12,16 @@ export async function indexVaultsHarvestsCompund() {
 
   for (const chain of SUPPORTED_CHAINS) {
     const mapper = getDataMapper();
-    const sdk = await chain.getSdk();
+    const vaults = await chain.vaults.all();
 
-    for (const vault of chain.vaults) {
+    for (const vault of vaults) {
       try {
-        const lastCompHarvest = await getLastCompoundHarvest(vault.vaultToken);
+        const lastCompHarvest = await getLastCompoundHarvest(vault.address);
 
-        const harvests = await getVaultHarvestsOnChain(chain, vault.vaultToken, sdk, lastCompHarvest?.block);
+        const harvests = await getVaultHarvestsOnChain(chain, vault.address, lastCompHarvest?.block);
 
         if (!harvests || harvests.length === 0) {
-          console.warn(`Empty harvests for vault ${vault.vaultToken}`);
+          console.warn(`Empty harvests for vault ${vault.address}`);
           continue;
         }
 
@@ -29,7 +29,7 @@ export async function indexVaultsHarvestsCompund() {
           harvests.map(async (harvest) => {
             const harvestToSave: VaultHarvestsExtended = {
               ...harvest,
-              vault: vault.vaultToken,
+              vault: vault.address,
             };
             return mapper.put(Object.assign(new HarvestCompoundData(), harvestToSave));
           }),

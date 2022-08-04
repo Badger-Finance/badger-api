@@ -1,10 +1,10 @@
 import { TOKENS } from '../../config/tokens.config';
 
 export const vaultHarvestsOnChainMock = {
-  [TOKENS.BCRV_SBTC]: [
+  [TOKENS.BBADGER]: [
     {
       timestamp: 1636878824,
-      block: 13612910,
+      block: 13870247,
       amount: 0.004992355665779731,
       token: '0x075b1bb99792c9e1041ba13afef80c91a1e70fb3',
       eventType: 'Harvest',

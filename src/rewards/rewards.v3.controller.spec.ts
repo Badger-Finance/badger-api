@@ -4,9 +4,11 @@ import { PlatformTest } from '@tsed/common';
 import { BadRequest } from '@tsed/exceptions';
 import SuperTest from 'supertest';
 
+import { ChainVaults } from '../chains/vaults/chain.vaults';
 import { TOKENS } from '../config/tokens.config';
 import { NetworkStatus } from '../errors/enums/newtroks.status.enum';
 import { Server } from '../Server';
+import { mockChainVaults } from '../test/tests.utils';
 
 describe('RewardController', () => {
   let request: SuperTest.SuperTest<SuperTest.Test>;
@@ -38,6 +40,7 @@ describe('RewardController', () => {
       return activeSchedulesMockMap[beneficiary];
     });
     jest.spyOn(BadgerSDK.prototype, 'ready').mockImplementation();
+    mockChainVaults();
   }
 
   beforeAll(PlatformTest.bootstrap(Server));
@@ -112,6 +115,9 @@ describe('RewardController', () => {
     describe('with invalid param specified', () => {
       it('returns a 404, NotFound', async (done: jest.DoneCallback) => {
         setupDefaultMocks();
+        jest.spyOn(ChainVaults.prototype, 'getVault').mockImplementation(async (_) => {
+          throw new Error('Missing Vault');
+        });
         const { body } = await request
           .get(`/v3/rewards/schedules?address=unknowsvaultdata`)
           .expect(NetworkStatus.NotFound);

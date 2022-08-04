@@ -3,6 +3,7 @@ import { UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 
 import { CachedValueSource } from '../../aws/models/apy-snapshots.model';
+import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
 import { VaultTokenBalance } from '../../aws/models/vault-token-balance.model';
 import { Chain } from '../../chains/config/chain.config';
 import { request } from '../../common/request';
@@ -20,8 +21,7 @@ import { SourceType } from '../../rewards/enums/source-type.enum';
 import { valueSourceToCachedValueSource } from '../../rewards/rewards.utils';
 import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
 import { getFullToken, getVaultTokens, toBalance } from '../../tokens/tokens.utils';
-import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
-import { getCachedVault, getVaultCachedValueSources, getVaultDefinition } from '../../vaults/vaults.utils';
+import { getCachedVault, getVaultCachedValueSources } from '../../vaults/vaults.utils';
 import { CurveAPIResponse } from '../interfaces/curve-api-response.interrface';
 import { createValueSource } from '../interfaces/value-source.interface';
 
@@ -74,10 +74,8 @@ interface FactoryAPYResonse {
 }
 
 export class ConvexStrategy {
-  static async getValueSources(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
-    switch (vaultDefinition.vaultToken) {
-      // case TOKENS.BVECVX:
-      //   return retrieveHarvestForwarderData(chain, vaultDefinition);
+  static async getValueSources(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<CachedValueSource[]> {
+    switch (vaultDefinition.address) {
       case TOKENS.BCRV_CVXBVECVX:
         return getLiquiditySources(chain, vaultDefinition);
       default:
@@ -86,8 +84,8 @@ export class ConvexStrategy {
   }
 }
 
-async function getLiquiditySources(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
-  const bveCVXVault = getVaultDefinition(chain, TOKENS.BVECVX);
+async function getLiquiditySources(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<CachedValueSource[]> {
+  const bveCVXVault = await chain.vaults.getVault(TOKENS.BVECVX);
   const [bveCVXLP, bveCVX, bveCVXSources] = await Promise.all([
     getCachedVault(chain, vaultDefinition),
     getCachedVault(chain, bveCVXVault),
@@ -122,7 +120,10 @@ async function getLiquiditySources(chain: Chain, vaultDefinition: VaultDefinitio
   return [cachedTradeFees, ...lpSources]; // ...forwardedDistributions
 }
 
-export async function getCurvePerformance(chain: Chain, vaultDefinition: VaultDefinition): Promise<CachedValueSource> {
+export async function getCurvePerformance(
+  chain: Chain,
+  vaultDefinition: VaultDefinitionModel,
+): Promise<CachedValueSource> {
   let defaultUrl;
   switch (chain.network) {
     case Network.Polygon:
@@ -225,8 +226,8 @@ export async function getCurvePoolBalance(chain: Chain, depositToken: string): P
 }
 
 export async function getCurveVaultTokenBalance(chain: Chain, token: string): Promise<VaultTokenBalance> {
-  const vaultDefinition = getVaultDefinition(chain, token);
-  const { protocol, depositToken, vaultToken } = vaultDefinition;
+  const vaultDefinition = await chain.vaults.getVault(token);
+  const { protocol, depositToken, address } = vaultDefinition;
   if (!protocol) {
     throw new UnprocessableEntity('Cannot get curve vault token balances, requires a vault definition');
   }
@@ -240,7 +241,7 @@ export async function getCurveVaultTokenBalance(chain: Chain, token: string): Pr
     cachedToken.value *= scalar;
   });
   return Object.assign(new VaultTokenBalance(), {
-    vault: vaultToken,
+    vault: address,
     tokenBalances: cachedTokens,
   });
 }

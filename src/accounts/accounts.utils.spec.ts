@@ -1,12 +1,15 @@
 import { DataMapper } from '@aws/dynamodb-data-mapper';
 import BadgerSDK, { Currency, gqlGenT, Protocol, VaultBehavior, VaultStatus, VaultVersion } from '@badger-dao/sdk';
 
+import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
+import { MOCK_VAULT_DEFINITION } from '../test/constants';
 import {
   defaultAccount,
+  mockChainVaults,
   mockPricing,
   randomSnapshot,
   setFullTokenDataMock,
@@ -16,24 +19,29 @@ import {
 } from '../test/tests.utils';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import { mockBalance } from '../tokens/tokens.utils';
-import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
-import { getVaultDefinition } from '../vaults/vaults.utils';
 import * as vaultsUtils from '../vaults/vaults.utils';
-import {
-  defaultBoost,
-  getAccounts,
-  getCachedBoost,
-  getLatestMetadata,
-  queryCachedAccount,
-  toVaultBalance,
-} from './accounts.utils';
+import { getAccounts, getCachedBoost, getLatestMetadata, queryCachedAccount, toVaultBalance } from './accounts.utils';
 
 describe('accounts.utils', () => {
-  const testSettBalance = (vaultDefinition: VaultDefinition): gqlGenT.UserSettBalance => {
-    const settToken = fullTokenMockMap[vaultDefinition.vaultToken];
+  const mockBoost = {
+    address: TEST_ADDR,
+    boost: 1,
+    boostRank: 0,
+    bveCvxBalance: 0,
+    diggBalance: 0,
+    leaderboard: `${TEST_CHAIN.network}_${LeaderBoardType.BadgerBoost}`,
+    nativeBalance: 0,
+    nftBalance: 0,
+    nonNativeBalance: 0,
+    stakeRatio: 0,
+    updatedAt: 0,
+  };
+
+  function testVaultBalance(vaultDefinition: VaultDefinitionModel): gqlGenT.UserSettBalance {
+    const vaultToken = fullTokenMockMap[vaultDefinition.address];
     const depositToken = fullTokenMockMap[vaultDefinition.depositToken];
     const toWei = (amt: number) => {
-      const values = amt * Math.pow(10, settToken.decimals);
+      const values = amt * Math.pow(10, vaultToken.decimals);
       return values.toString();
     };
     return {
@@ -49,9 +57,9 @@ describe('accounts.utils', () => {
         settBalances: [],
       },
       sett: {
-        id: settToken.address,
-        name: settToken.name,
-        symbol: settToken.symbol,
+        id: vaultToken.address,
+        name: vaultToken.name,
+        symbol: vaultToken.symbol,
         available: 1,
         pricePerFullShare: 1034039284374221,
         balance: 3,
@@ -82,7 +90,7 @@ describe('accounts.utils', () => {
         releasedAt: 0,
       },
     };
-  };
+  }
 
   beforeEach(() => {
     jest.spyOn(DataMapper.prototype, 'put').mockImplementation(async (o) => ({
@@ -157,15 +165,15 @@ describe('accounts.utils', () => {
   describe('toVaultBalance', () => {
     const chain = TEST_CHAIN;
 
-    const testToVaultBalance = (vaultAddress: string) => {
+    describe('digg token conversion', () => {
       it.each([
         [undefined, Currency.USD],
         [Currency.USD, Currency.USD],
         [Currency.ETH, Currency.ETH],
-      ])('returns sett balance request in %s currency with %s denominated value', async (currency, _toCurrency) => {
-        const vault = getVaultDefinition(chain, vaultAddress);
-        const snapshot = randomSnapshot(vault);
-        const cachedVault = await vaultsUtils.defaultVault(chain, vault);
+      ])('returns vault balance request in %s currency with %s denominated value', async (currency, _toCurrency) => {
+        mockChainVaults();
+        const snapshot = randomSnapshot(MOCK_VAULT_DEFINITION);
+        const cachedVault = await vaultsUtils.defaultVault(chain, MOCK_VAULT_DEFINITION);
         cachedVault.balance = snapshot.balance;
         cachedVault.pricePerFullShare = snapshot.balance / snapshot.totalSupply;
         jest.spyOn(vaultsUtils, 'getCachedVault').mockImplementation(async (_c, _v) => cachedVault);
@@ -175,41 +183,15 @@ describe('accounts.utils', () => {
         const wbtc = fullTokenMockMap[TOKENS.WBTC];
         const weth = fullTokenMockMap[TOKENS.WETH];
         const tokenBalances = [mockBalance(wbtc, 1), mockBalance(weth, 20)];
-        const cached = { vault: vault.vaultToken, tokenBalances };
+        const cached = { vault: MOCK_VAULT_DEFINITION.address, tokenBalances };
         setupMapper([cached]);
-        const mockedBalance = testSettBalance(vault);
+        const mockedBalance = testVaultBalance(MOCK_VAULT_DEFINITION);
         const actual = await toVaultBalance(chain, mockedBalance, currency);
         expect(actual).toBeTruthy();
-        expect(actual.name).toEqual(depositToken.name);
+        expect(actual.name).toEqual(MOCK_VAULT_DEFINITION.name);
         expect(actual.symbol).toEqual(depositToken.symbol);
         expect(actual.pricePerFullShare).toEqual(snapshot.balance / snapshot.totalSupply);
       });
-    };
-
-    describe('non-digg token conversion', () => {
-      testToVaultBalance(TOKENS.BBADGER);
-    });
-
-    describe('digg token conversion', () => {
-      testToVaultBalance(TOKENS.BDIGG);
-    });
-  });
-
-  describe('defaultBoost', () => {
-    it('returns a boost with all fields as the default values', () => {
-      const expected = {
-        leaderboard: `${TEST_CHAIN.network}_${LeaderBoardType.BadgerBoost}`,
-        boostRank: 0,
-        address: TEST_ADDR,
-        boost: 1,
-        stakeRatio: 0,
-        nftBalance: 0,
-        nativeBalance: 0,
-        bveCvxBalance: 0,
-        diggBalance: 0,
-        nonNativeBalance: 0,
-      };
-      expect(defaultBoost(TEST_CHAIN, TEST_ADDR)).toMatchObject(expected);
     });
   });
 
@@ -218,19 +200,18 @@ describe('accounts.utils', () => {
       it('returns the default boost', async () => {
         setupMapper([]);
         const result = await getCachedBoost(TEST_CHAIN, TEST_ADDR);
-        expect(result).toMatchObject(defaultBoost(TEST_CHAIN, TEST_ADDR));
+        expect(result).toMatchObject(mockBoost);
       });
     });
     describe('a previously cached boost', () => {
       it('returns the default boost', async () => {
-        const boost = defaultBoost(TEST_CHAIN, TEST_ADDR);
-        boost.boostRank = 42;
-        boost.stakeRatio = 1;
-        boost.nativeBalance = 32021;
-        boost.nonNativeBalance = 32021;
-        setupMapper([boost]);
+        mockBoost.boostRank = 42;
+        mockBoost.stakeRatio = 1;
+        mockBoost.nativeBalance = 32021;
+        mockBoost.nonNativeBalance = 32021;
+        setupMapper([mockBoost]);
         const result = await getCachedBoost(TEST_CHAIN, TEST_ADDR);
-        expect(result).toMatchObject(boost);
+        expect(result).toMatchObject(mockBoost);
       });
     });
   });

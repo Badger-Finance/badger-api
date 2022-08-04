@@ -1,6 +1,6 @@
 import { getAccounts } from '../accounts/accounts.utils';
 import { SUPPORTED_CHAINS } from '../chains/chain';
-import { Chain, isStageVault } from '../chains/config/chain.config';
+import { Chain } from '../chains/config/chain.config';
 import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interface';
 import { getCachedVault } from '../vaults/vaults.utils';
 import { ProtocolMetrics, ProtocolSettsMetrics } from './interfaces/metrics.interface';
@@ -30,8 +30,9 @@ export async function getProtocolSettMetrics(): Promise<ProtocolSettsMetrics> {
 }
 
 export async function getChainMetrics(chain: Chain): Promise<ProtocolSummary> {
-  const vaults = await Promise.all(chain.vaults.filter(isStageVault).map((vault) => getCachedVault(chain, vault)));
-  const totalValue = vaults.reduce((total, vault) => total + vault.value, 0);
-  const vaultSummaries = vaults.map(({ name, balance, value }) => ({ name, balance, value }));
+  const vaults = await chain.vaults.all();
+  const chainVaults = await Promise.all(vaults.map((vault) => getCachedVault(chain, vault)));
+  const totalValue = chainVaults.reduce((total, vault) => total + vault.value, 0);
+  const vaultSummaries = chainVaults.map(({ name, balance, value }) => ({ name, balance, value }));
   return { totalValue, setts: vaultSummaries, vaults: vaultSummaries };
 }

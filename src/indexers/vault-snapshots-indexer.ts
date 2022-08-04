@@ -1,20 +1,21 @@
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { CurrentVaultSnapshotModel } from '../aws/models/current-vault-snapshot.model';
+import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { SUPPORTED_CHAINS } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { PRODUCTION } from '../config/constants';
-import { VaultDefinition } from '../vaults/interfaces/vault-definition.interface';
 import { vaultToSnapshot } from './indexer.utils';
 
 export async function refreshVaultSnapshots() {
   for (const chain of SUPPORTED_CHAINS) {
-    await Promise.all(chain.vaults.map(async (vault) => captureSnapshot(chain, vault)));
+    const vaults = await chain.vaults.all();
+    await Promise.all(vaults.map(async (vault) => captureSnapshot(chain, vault)));
   }
 
   return 'done';
 }
 
-async function captureSnapshot(chain: Chain, vault: VaultDefinition) {
+async function captureSnapshot(chain: Chain, vault: VaultDefinitionModel) {
   let snapshot;
   try {
     // purposefully await to leverage try / catch

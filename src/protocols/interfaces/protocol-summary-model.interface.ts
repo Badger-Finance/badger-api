@@ -1,6 +1,5 @@
 import { Description, Example, Property, Title } from '@tsed/schema';
 
-import { ethSetts } from '../../chains/config/eth.config';
 import { VaultSummary } from '../../vaults/interfaces/vault-summary.interface';
 import { ProtocolSummary } from './protocol-summary.interface';
 
@@ -14,8 +13,8 @@ export class ProtocolSummaryModel implements ProtocolSummary {
   @Title('setts')
   @Description('Minimal summaries of setts on requested chain')
   @Example([
-    { name: ethSetts[0], balance: 10, value: 60 },
-    { name: ethSetts[1], balance: 12.32, value: 91345 },
+    { name: 'Badger', balance: 10, value: 60 },
+    { name: 'Digg', balance: 12.32, value: 91345 },
   ])
   @Property()
   public setts?: VaultSummary[];

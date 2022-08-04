@@ -9,7 +9,6 @@ import { VaultHarvestsMapModel } from './interfaces/vault-harvests-list-model.in
 import { VaultHarvestsModel } from './interfaces/vault-harvests-model.interface';
 import { VaultModel } from './interfaces/vault-model.interface';
 import { VaultsService } from './vaults.service';
-import { getVaultDefinition } from './vaults.utils';
 
 @Deprecated()
 @Controller('/vaults')
@@ -67,7 +66,7 @@ export class VaultsV2Controller {
     @QueryParams('currency') currency?: Currency,
   ): Promise<VaultModel> {
     const chainInst = Chain.getChain(chain);
-    const vaultDef = getVaultDefinition(Chain.getChain(chain), vault);
+    const vaultDef = await chainInst.vaults.getVault(vault);
 
     return this.vaultService.getVault(chainInst, vaultDef, currency);
   }

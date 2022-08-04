@@ -1,75 +1,83 @@
-import { ChartTimeFrame, Currency, Protocol, VaultDTO, VaultSnapshot, VaultState, VaultType } from '@badger-dao/sdk';
+import {
+  ChartTimeFrame,
+  Currency,
+  keyBy,
+  Network,
+  ONE_YEAR_MS,
+  Protocol,
+  VaultDTO,
+  VaultSnapshot,
+  VaultState,
+  VaultType,
+} from '@badger-dao/sdk';
 import { VaultYieldProjection } from '@badger-dao/sdk/lib/api/interfaces/vault-yield-projection.interface';
 import { MetadataClient } from '@badger-dao/sdk/lib/registry.v2/enums/metadata.client.enum';
 import { Service } from '@tsed/common';
-import { ethers } from 'ethers';
 
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { HarvestCompoundData } from '../aws/models/harvest-compound.model';
 import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
+import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
-import { Chain, isStageVault } from '../chains/config/chain.config';
+import { Chain } from '../chains/config/chain.config';
 import { toChartDataKey } from '../charts/charts.utils';
-import { ONE_YEAR_SECONDS } from '../config/constants';
-import { NodataForVaultError } from '../errors/allocation/nodata.for.vault.error';
 import { convert } from '../prices/prices.utils';
 import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interface';
 import { SourceType } from '../rewards/enums/source-type.enum';
+import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
 import { getCachedTokenBalances } from '../tokens/tokens.utils';
-import { VaultDefinition } from './interfaces/vault-definition.interface';
 import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
 import { VaultHarvestsMap } from './interfaces/vault-harvest-map';
 import {
   getCachedVault,
   getVaultCachedValueSources,
-  getVaultDefinition,
   getVaultPendingHarvest,
   getVaultSnapshotsAtTimestamps,
   queryVaultCharts,
   VAULT_SOURCE,
-  vaultCompoundToDefinition,
 } from './vaults.utils';
 
 @Service()
 export class VaultsService {
   async getProtocolSummary(chain: Chain, currency?: Currency): Promise<ProtocolSummary> {
-    const vaults = await Promise.all(
-      chain.vaults.map(async (vault) => {
+    const vaults = await chain.vaults.all();
+    const summaries = await Promise.all(
+      vaults.map(async (vault) => {
         const { name, balance, value } = await getCachedVault(chain, vault);
         const convertedValue = await convert(value, currency);
         return { name, balance, value: convertedValue };
       }),
     );
-    const totalValue = vaults.reduce((total, vault) => (total += vault.value), 0);
-    return { totalValue, vaults, setts: vaults };
+    const totalValue = summaries.reduce((total, vault) => (total += vault.value), 0);
+    return { totalValue, vaults: summaries, setts: summaries };
   }
 
   async listVaults(chain: Chain, currency?: Currency): Promise<VaultDTO[]> {
-    return Promise.all(chain.vaults.filter(isStageVault).map((vault) => this.getVault(chain, vault, currency)));
+    const vaults = await chain.vaults.all();
+    return Promise.all(vaults.map((vault) => this.getVault(chain, vault, currency)));
   }
 
   async listV3Vaults(chain: Chain, currency?: Currency, client?: MetadataClient): Promise<VaultDTO[]> {
-    let chainVaults = await chain.vaultsCompound.all();
+    let vaults = await chain.vaults.all();
 
-    if (client) chainVaults = chainVaults.filter((v) => v.client === client);
+    if (client) {
+      vaults = vaults.filter((v) => v.client === client);
+    }
 
-    return Promise.all(
-      chainVaults.map((vault) => {
-        return this.getVault(chain, vaultCompoundToDefinition(vault), currency);
-      }),
-    );
+    return Promise.all(vaults.map((vault) => this.getVault(chain, vault, currency)));
   }
 
-  async getVault(chain: Chain, vaultDefinition: VaultDefinition, currency?: Currency): Promise<VaultDTO> {
+  async getVault(chain: Chain, vaultDefinition: VaultDefinitionModel, currency?: Currency): Promise<VaultDTO> {
     return VaultsService.loadVault(chain, vaultDefinition, currency);
   }
 
   async listVaultHarvests(chain: Chain): Promise<VaultHarvestsMap> {
+    const vaults = await chain.vaults.all();
     const harvestsWithSnapshots = await Promise.all(
-      chain.vaults.map(async (vault) => {
+      vaults.map(async (vault) => {
         return {
-          vault: vault.vaultToken,
-          harvests: await this.getVaultHarvests(chain, vault.vaultToken),
+          vault: vault.address,
+          harvests: await this.getVaultHarvests(chain, vault.address),
         };
       }),
     );
@@ -80,22 +88,15 @@ export class VaultsService {
     }, <VaultHarvestsMap>{});
   }
 
-  async getVaultHarvests(chain: Chain, vaultAddr: VaultDefinition['vaultToken']): Promise<VaultHarvestsExtendedResp[]> {
+  async getVaultHarvests(chain: Chain, address: string): Promise<VaultHarvestsExtendedResp[]> {
     const vaultHarvests: VaultHarvestsExtendedResp[] = [];
 
     const mapper = getDataMapper();
-
-    vaultAddr = ethers.utils.getAddress(vaultAddr);
-
-    const vaultDef = getVaultDefinition(chain, vaultAddr);
-
-    if (!vaultDef) {
-      throw new NodataForVaultError(`${vaultAddr}`);
-    }
+    const vault = await chain.vaults.getVault(address);
 
     const queryHarvests = mapper.query(
       HarvestCompoundData,
-      { vault: vaultDef.vaultToken },
+      { vault: vault.address },
       { indexName: 'IndexHarvestCompoundDataVault' },
     );
 
@@ -112,13 +113,13 @@ export class VaultsService {
         });
       }
     } catch (e) {
-      console.error(`Failed to get compound harvest from ddb for vault ${vaultDef.vaultToken}; ${e}`);
+      console.error(`Failed to get compound harvest from ddb for vault ${vault.address}; ${e}`);
     }
 
     return vaultHarvests;
   }
 
-  static async loadVault(chain: Chain, vaultDefinition: VaultDefinition, currency?: Currency): Promise<VaultDTO> {
+  static async loadVault(chain: Chain, vaultDefinition: VaultDefinitionModel, currency?: Currency): Promise<VaultDTO> {
     const [vault, sources, pendingHarvest] = await Promise.all([
       getCachedVault(chain, vaultDefinition),
       getVaultCachedValueSources(vaultDefinition),
@@ -146,7 +147,9 @@ export class VaultsService {
     vault.lastHarvest = pendingHarvest.lastHarvestedAt;
 
     const harvestProjection = this.getVaultYieldProjection(vault, pendingHarvest);
-    const passiveSources = sourcesApr.filter((s) => s.type === SourceType.TradeFee || s.type === SourceType.Emission);
+    const passiveSources = sourcesApr.filter(
+      (s) => s.type.includes(SourceType.TradeFee) || s.type.includes(SourceType.Emission),
+    );
     const passiveSourcesApr = passiveSources.reduce((total, s) => (total += s.apr), 0);
     const convertedPassiveSources = passiveSources.map((s) => {
       const { name, apr, address, type } = s;
@@ -164,9 +167,14 @@ export class VaultsService {
 
     harvestProjection.harvestTokens = harvestProjection.harvestTokens.concat(convertedPassiveSources);
     harvestProjection.yieldTokens = harvestProjection.yieldTokens.concat(convertedPassiveSources);
+    harvestProjection.harvestTokensPerPeriod = harvestProjection.harvestTokensPerPeriod.concat(convertedPassiveSources);
+    harvestProjection.yieldTokensPerPeriod = harvestProjection.yieldTokensPerPeriod.concat(convertedPassiveSources);
     harvestProjection.yieldApr += passiveSourcesApr;
+    harvestProjection.yieldPeriodApr += passiveSourcesApr;
     harvestProjection.harvestApr += passiveSourcesApr;
     harvestProjection.harvestApy += passiveSourcesApr;
+    harvestProjection.harvestPeriodApr += passiveSourcesApr;
+    harvestProjection.harvestPeriodApy += passiveSourcesApr;
 
     vault.yieldProjection = harvestProjection;
 
@@ -188,38 +196,112 @@ export class VaultsService {
     return vault;
   }
 
-  async getVaultSnapshots(chain: Chain, vault: VaultDefinition, timestamps: number[]): Promise<VaultSnapshot[]> {
+  async getVaultSnapshots(chain: Chain, vault: VaultDefinitionModel, timestamps: number[]): Promise<VaultSnapshot[]> {
     return getVaultSnapshotsAtTimestamps(chain, vault, timestamps);
   }
 
+  /**
+   * Evalauate the projected vault yield in a multitude of ways.
+   * - Evaluates the previous yield measurement period performance
+   * - Evaluates the previous harvest measurement performance
+   * The yield measuremeant is a most update data differential reward measurement between
+   * measurement intervals. This is the closest to spot APR any system can come.
+   * The harvest measurement is the truer APR being realized during the overall harvest.
+   * This value may be lower than spot due to fluctuating reward values during measurement or
+   * harvest periods.
+   * @param vault vault requested for projection
+   * @param pendingHarvest vault harvest measurements
+   * @returns evaluated vault yield projection
+   */
   public static getVaultYieldProjection(
     // refactor regV2, Data Objects interfaces should be in api alongside with models
     vault: Pick<VaultDTO, 'value' | 'balance' | 'available' | 'lastHarvest' | 'underlyingToken'>,
     pendingHarvest: VaultPendingHarvestData,
   ): VaultYieldProjection {
     const { value, balance, available, lastHarvest } = vault;
+    const { yieldTokens, previousYieldTokens, harvestTokens, previousHarvestTokens, duration } = pendingHarvest;
 
-    const harvestValue = pendingHarvest.harvestTokens.reduce((total, token) => (total += token.value), 0);
-    const yieldValue = pendingHarvest.yieldTokens.reduce((total, token) => (total += token.value), 0);
-    const harvestCompoundValue = pendingHarvest.harvestTokens
+    // we need to construct a measurement diff from the originally measured tokens and the new tokens
+    const previousYieldByToken = keyBy(previousYieldTokens, (t) => t.address);
+    const yieldTokensCurrent: CachedTokenBalance[] = JSON.parse(JSON.stringify(yieldTokens));
+    yieldTokensCurrent.forEach((t) => {
+      const yieldedTokens = previousYieldByToken.get(t.address);
+      if (yieldedTokens) {
+        // lock in current price and caculate value on updated balance
+        for (const token of yieldedTokens) {
+          const price = t.value / t.balance;
+          t.balance -= token.balance;
+          t.value = t.balance * price;
+        }
+      }
+    });
+
+    const previousHarvestByToken = keyBy(previousHarvestTokens, (t) => t.address);
+    const harvestTokensCurrent: CachedTokenBalance[] = JSON.parse(JSON.stringify(harvestTokens));
+    harvestTokensCurrent.forEach((t) => {
+      const harvestedTokens = previousHarvestByToken.get(t.address);
+      if (harvestedTokens) {
+        // lock in current price and caculate value on updated balance
+        for (const token of harvestedTokens) {
+          const price = t.value / t.balance;
+          t.balance -= token.balance;
+          t.value = t.balance * price;
+        }
+      }
+    });
+
+    // calculate the overall harvest values
+    const harvestValue = harvestTokens.reduce((total, token) => (total += token.value), 0);
+    const yieldValue = yieldTokens.reduce((total, token) => (total += token.value), 0);
+    const harvestCompoundValue = harvestTokens
+      .filter((t) => vault.underlyingToken === t.address)
+      .reduce((total, token) => (total += token.value), 0);
+    const harvestDuration = Date.now() - lastHarvest;
+
+    // calculate the current measurement periods values
+    const harvestValuePerPeriod = harvestTokensCurrent.reduce((total, token) => (total += token.value), 0);
+    const yieldValuePerPeriod = yieldTokensCurrent.reduce((total, token) => (total += token.value), 0);
+    const harvestCompoundValuePerPeriod = harvestTokensCurrent
       .filter((t) => vault.underlyingToken === t.address)
       .reduce((total, token) => (total += token.value), 0);
 
     const earningValue = balance > 0 ? value * ((balance - available) / balance) : 0;
     return {
-      harvestApr: this.calculateProjectedYield(earningValue, harvestValue, lastHarvest),
-      harvestApy: this.calculateProjectedYield(earningValue, harvestValue, lastHarvest, harvestCompoundValue),
-      harvestTokens: pendingHarvest.harvestTokens.map((t) => {
-        const apr = this.calculateProjectedYield(earningValue, t.value, lastHarvest);
+      harvestApr: this.calculateProjectedYield(earningValue, harvestValue, harvestDuration),
+      harvestApy: this.calculateProjectedYield(earningValue, harvestValue, harvestDuration, harvestCompoundValue),
+      harvestPeriodApr: this.calculateProjectedYield(earningValue, harvestValuePerPeriod, duration),
+      harvestPeriodApy: this.calculateProjectedYield(
+        earningValue,
+        harvestValuePerPeriod,
+        duration,
+        harvestCompoundValuePerPeriod,
+      ),
+      harvestTokens: harvestTokens.map((t) => {
+        const apr = this.calculateProjectedYield(earningValue, t.value, harvestDuration);
+        return {
+          apr,
+          ...t,
+        };
+      }),
+      harvestTokensPerPeriod: harvestTokensCurrent.map((t) => {
+        const apr = this.calculateProjectedYield(earningValue, t.value, duration);
         return {
           apr,
           ...t,
         };
       }),
       harvestValue,
-      yieldApr: this.calculateProjectedYield(earningValue, yieldValue, lastHarvest),
-      yieldTokens: pendingHarvest.yieldTokens.map((t) => {
-        const apr = this.calculateProjectedYield(earningValue, t.value, lastHarvest);
+      yieldApr: this.calculateProjectedYield(earningValue, yieldValue, harvestDuration),
+      yieldPeriodApr: this.calculateProjectedYield(earningValue, yieldValuePerPeriod, duration),
+      yieldTokens: yieldTokens.map((t) => {
+        const apr = this.calculateProjectedYield(earningValue, t.value, harvestDuration);
+        return {
+          apr,
+          ...t,
+        };
+      }),
+      yieldTokensPerPeriod: yieldTokensCurrent.map((t) => {
+        const apr = this.calculateProjectedYield(earningValue, t.value, duration);
         return {
           apr,
           ...t,
@@ -240,22 +322,57 @@ export class VaultsService {
     return queryVaultCharts(dataKey);
   }
 
+  async getVaultChartDataByTimestamps(
+    vaultAddr: string,
+    network: Network,
+    timestamps: number[],
+  ): Promise<HistoricVaultSnapshotModel[]> {
+    // from smaller to greater, we need this order for search to work correctly
+    const sortedTimestamps = timestamps.sort((a, b) => (a > b ? 1 : -1));
+
+    const vaultBlobId = HistoricVaultSnapshotModel.formBlobId(vaultAddr, network);
+    const dataKey = toChartDataKey(HistoricVaultSnapshotModel.NAMESPACE, vaultBlobId, ChartTimeFrame.Max);
+
+    const vaultChartData = await queryVaultCharts(dataKey);
+
+    const snapshots: Set<HistoricVaultSnapshotModel> = new Set();
+
+    if (vaultChartData.length === 0) return Array.from(snapshots);
+
+    // from smaller to greater, we need this order for search to work correctly
+    const preparedVaultsChartData = vaultChartData.reverse();
+
+    for (const timestamp of sortedTimestamps) {
+      const snapshotItem = preparedVaultsChartData.find((i) => Number(i.timestamp) >= timestamp);
+
+      if (snapshotItem) {
+        if (!snapshotItem.pricePerFullShare && snapshotItem.ratio) {
+          snapshotItem.pricePerFullShare = snapshotItem.ratio;
+        }
+        snapshotItem.timestamp = timestamp;
+        snapshots.add(snapshotItem);
+      }
+    }
+
+    // now we reverse, so relevant data will come at the start of the list
+    return Array.from(snapshots).reverse();
+  }
+
   private static calculateProjectedYield(
     value: number,
     pendingValue: number,
-    lastHarvested: number,
+    duration: number,
     compoundingValue = 0,
   ): number {
-    if (lastHarvested === 0 || value === 0 || pendingValue === 0) {
+    if (duration === 0 || value === 0 || pendingValue === 0) {
       return 0;
     }
-    const duration = Date.now() / 1000 - lastHarvested;
-    const apr = (pendingValue / value) * (ONE_YEAR_SECONDS / duration) * 100;
+    const apr = (pendingValue / value) * (ONE_YEAR_MS / duration) * 100;
     if (compoundingValue === 0) {
       return apr;
     }
-    const compoundingApr = (compoundingValue / value) * (ONE_YEAR_SECONDS / duration);
-    const periods = ONE_YEAR_SECONDS / duration;
+    const compoundingApr = (compoundingValue / value) * (ONE_YEAR_MS / duration);
+    const periods = ONE_YEAR_MS / duration;
     return apr - compoundingApr + ((1 + compoundingApr / periods) ** periods - 1) * 100;
   }
 }

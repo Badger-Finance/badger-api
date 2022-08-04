@@ -3,7 +3,9 @@ import axios from 'axios';
 import { DISCORD_WEBHOOK_URL } from '../config/constants';
 
 export const SENTRY_NAME = 'Lord Brocktree';
+// TODO: once we have more generalized errors for other things - use the badger api role
 export const BADGER_API_ROLE_ID = '804758043727233044';
+export const VAULT_MANAGER_ROLE_ID = '1003408385170997299';
 
 export function sendErrorToDiscord(e: Error, errorMsg: string, errorType: string) {
   sendMessageToDiscord(
@@ -42,7 +44,7 @@ export async function sendMessageToDiscord(
       embeds: [
         {
           title,
-          description: `${description} <@&${BADGER_API_ROLE_ID}>`,
+          description: `${description} <@&${VAULT_MANAGER_ROLE_ID}>`,
           fields,
         },
       ],
@@ -55,14 +57,14 @@ export async function sendMessageToDiscord(
 
 export async function sendPlainTextToDiscord(message: string, username = SENTRY_NAME, url = DISCORD_WEBHOOK_URL) {
   try {
-    await axios.post(url, { content: `${message} <@&${BADGER_API_ROLE_ID}>`, username });
+    await axios.post(url, { content: `${message} <@&${VAULT_MANAGER_ROLE_ID}>`, username });
   } catch (error) {
     console.error(error);
   }
 }
 
 export async function sendCodeBlockToDiscord(message: string, username = SENTRY_NAME, url = DISCORD_WEBHOOK_URL) {
-  const msg = '```\n' + message + '\n``` <@&' + BADGER_API_ROLE_ID + '>';
+  const msg = '```\n' + message + '\n``` <@&' + VAULT_MANAGER_ROLE_ID + '>';
   try {
     await axios.post(url, { content: msg, username });
   } catch (error) {

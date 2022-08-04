@@ -14,24 +14,8 @@ import { convert, getPrice } from '../prices/prices.utils';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 import { BoostData } from '../rewards/interfaces/boost-data.interface';
 import { getFullToken, getVaultTokens } from '../tokens/tokens.utils';
-import { getCachedVault, getVaultDefinition } from '../vaults/vaults.utils';
+import { getCachedVault } from '../vaults/vaults.utils';
 import { CachedSettBalance } from './interfaces/cached-sett-balance.interface';
-
-export function defaultBoost(chain: Chain, address: string): CachedBoost {
-  return {
-    address,
-    boost: 1,
-    boostRank: 0,
-    bveCvxBalance: 0,
-    diggBalance: 0,
-    leaderboard: `${chain.network}_${LeaderBoardType.BadgerBoost}`,
-    nativeBalance: 0,
-    nftBalance: 0,
-    nonNativeBalance: 0,
-    stakeRatio: 0,
-    updatedAt: 0,
-  };
-}
 
 export async function getBoostFile(chain: Chain): Promise<BoostData | null> {
   try {
@@ -79,14 +63,6 @@ export async function getAccounts(chain: Chain): Promise<string[]> {
   return [...accounts];
 }
 
-export async function getAccountsFomBoostFile(chain: Chain): Promise<string[]> {
-  const boostFile = await getBoostFile(chain);
-  if (!boostFile) {
-    return [];
-  }
-  return Object.keys(boostFile.userData).map((acc) => ethers.utils.getAddress(acc));
-}
-
 export async function queryCachedAccount(address: string): Promise<CachedAccount> {
   const checksummedAccount = ethers.utils.getAddress(address);
   const defaultAccount: CachedAccount = {
@@ -116,13 +92,13 @@ export async function toVaultBalance(
   vaultBalance: gqlGenT.UserSettBalanceFragment,
   currency?: Currency,
 ): Promise<CachedSettBalance> {
-  const vaultDefinition = getVaultDefinition(chain, vaultBalance.sett.id);
+  const vaultDefinition = await chain.vaults.getVault(vaultBalance.sett.id);
   const { netShareDeposit, grossDeposit, grossWithdraw } = vaultBalance;
   const vault = await getCachedVault(chain, vaultDefinition);
   const { pricePerFullShare } = vault;
 
   const depositToken = await getFullToken(chain, vaultDefinition.depositToken);
-  const settToken = await getFullToken(chain, vaultDefinition.vaultToken);
+  const settToken = await getFullToken(chain, vaultDefinition.address);
 
   const currentTokens = formatBalance(netShareDeposit, settToken.decimals);
   let depositTokenDecimals = depositToken.decimals;
@@ -143,7 +119,7 @@ export async function toVaultBalance(
 
   return Object.assign(new CachedSettBalance(), {
     network: chain.network,
-    address: vaultDefinition.vaultToken,
+    address: vaultDefinition.address,
     name: vaultDefinition.name,
     symbol: depositToken.symbol,
     pricePerFullShare: pricePerFullShare,
@@ -167,7 +143,19 @@ export async function getCachedBoost(chain: Chain, address: string): Promise<Cac
   )) {
     return entry;
   }
-  return defaultBoost(chain, address);
+  return {
+    address,
+    boost: 1,
+    boostRank: 0,
+    bveCvxBalance: 0,
+    diggBalance: 0,
+    leaderboard: `${chain.network}_${LeaderBoardType.BadgerBoost}`,
+    nativeBalance: 0,
+    nftBalance: 0,
+    nonNativeBalance: 0,
+    stakeRatio: 0,
+    updatedAt: 0,
+  };
 }
 
 export async function getCachedAccount(chain: Chain, address: string): Promise<Account> {
@@ -271,14 +259,16 @@ export async function refreshAccountVaultBalances(chain: Chain, account: string)
       const cachedAccount = await queryCachedAccount(address);
       const userBalances = user.settBalances;
       if (userBalances) {
-        const balances = userBalances.filter((balance) => {
-          try {
-            getVaultDefinition(chain, balance.sett.id);
-            return true;
-          } catch (err) {
-            return false;
-          }
-        });
+        const balances = await Promise.all(
+          userBalances.filter(async (balance) => {
+            try {
+              await chain.vaults.getVault(balance.sett.id);
+              return true;
+            } catch (err) {
+              return false;
+            }
+          }),
+        );
 
         const userVaultBalances = await Promise.all(balances.map(async (bal) => toVaultBalance(chain, bal)));
         cachedAccount.balances = cachedAccount.balances

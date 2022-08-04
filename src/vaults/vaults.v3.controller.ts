@@ -3,7 +3,6 @@ import { Controller, Get, Inject, QueryParams, UseCache } from '@tsed/common';
 import { ContentType, Description, Hidden, Returns, Summary } from '@tsed/schema';
 
 import { Chain } from '../chains/config/chain.config';
-import { UnknownVaultError } from '../errors/allocation/unknown.vault.error';
 import { QueryParamError } from '../errors/validation/query.param.error';
 import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
 import { VaultHarvestsMap } from './interfaces/vault-harvest-map';
@@ -11,7 +10,6 @@ import { VaultHarvestsMapModel } from './interfaces/vault-harvests-list-model.in
 import { VaultHarvestsModel } from './interfaces/vault-harvests-model.interface';
 import { VaultModel } from './interfaces/vault-model.interface';
 import { VaultsService } from './vaults.service';
-import { getVaultDefinition, vaultCompoundToDefinition } from './vaults.utils';
 
 @Controller('/vaults')
 export class VaultsV3Controller {
@@ -33,13 +31,8 @@ export class VaultsV3Controller {
     if (!address) throw new QueryParamError('vault');
 
     const chainInst = Chain.getChain(chain);
-    const compoundVault = await chainInst.vaultsCompound.getOneBy('address', address);
-
-    if (!compoundVault) throw new UnknownVaultError('vault');
-
-    const vaultDef = vaultCompoundToDefinition(compoundVault);
-
-    return this.vaultService.getVault(chainInst, vaultDef, currency);
+    const compoundVault = await chainInst.vaults.getVault(address);
+    return this.vaultService.getVault(chainInst, compoundVault, currency);
   }
 
   @Get('/list')
@@ -81,6 +74,7 @@ export class VaultsV3Controller {
     return this.vaultService.listVaultHarvests(Chain.getChain(chain));
   }
 
+  // make deprecated, after getVaultSnapshotsInRange will be used
   @Hidden()
   @UseCache()
   @Get('/snapshots')
@@ -93,11 +87,37 @@ export class VaultsV3Controller {
     if (!vault) {
       throw new QueryParamError('vault');
     }
-    const vaultDef = getVaultDefinition(Chain.getChain(chain), vault);
+    const vaultDef = await Chain.getChain(chain).vaults.getVault(vault);
     return this.vaultService.getVaultSnapshots(
       Chain.getChain(chain),
       vaultDef,
       timestamps.split(',').map((n) => Number(n)),
     );
+  }
+
+  @Hidden()
+  @UseCache()
+  @Get('/inrange/snapshots')
+  @ContentType('json')
+  async getVaultSnapshotsInRange(
+    @QueryParams('vaultAddr') vaultAddr: string,
+    @QueryParams('timestamps') timestamps: string,
+    @QueryParams('chain') chain?: Network,
+  ): Promise<VaultSnapshot[]> {
+    if (!vaultAddr) {
+      throw new QueryParamError('vaultAddr');
+    }
+    if (!timestamps) {
+      throw new QueryParamError('timestamps');
+    }
+
+    const timestampsList = timestamps.split(',').map((n) => Number(n));
+    const isTimestampsValid = timestampsList.every((time) => time > 0);
+
+    if (!isTimestampsValid) {
+      throw new QueryParamError('timestamps');
+    }
+
+    return this.vaultService.getVaultChartDataByTimestamps(vaultAddr, Chain.getChain(chain).network, timestampsList);
   }
 }

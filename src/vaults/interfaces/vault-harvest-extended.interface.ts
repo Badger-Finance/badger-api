@@ -1,10 +1,10 @@
 import { VaultPerformanceEvent } from '@badger-dao/sdk';
 
+import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
 import { HarvestType } from '../enums/harvest.enum';
-import { VaultDefinition } from './vault-definition.interface';
 
 export interface VaultHarvestsExtended extends Omit<VaultPerformanceEvent, 'amount'> {
-  vault: VaultDefinition['vaultToken'];
+  vault: VaultDefinitionModel['address'];
   eventType: HarvestType;
   amount: number;
   strategyBalance?: number;

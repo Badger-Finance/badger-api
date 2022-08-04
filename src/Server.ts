@@ -9,7 +9,6 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import methodOverride from 'method-override';
 
-import { CITADEL_V1_CONTROLLERS } from './CitadelControllerRegistry';
 import { swaggerConfig } from './config/constants';
 import { V2_CONTROLLERS, V3_CONTROLLERS } from './ControllerRegistry';
 
@@ -19,7 +18,6 @@ import { V2_CONTROLLERS, V3_CONTROLLERS } from './ControllerRegistry';
   mount: {
     '/v2/': V2_CONTROLLERS,
     '/v3/': V3_CONTROLLERS,
-    '/citadel/v1/': CITADEL_V1_CONTROLLERS,
   },
   swagger: [swaggerConfig],
   logger: {

@@ -1,4 +1,4 @@
 export enum MigrationStatus {
   Process,
-  Complite,
+  Complete,
 }

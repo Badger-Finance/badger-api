@@ -2,9 +2,10 @@ import { Erc20__factory, formatBalance, Network, Token } from '@badger-dao/sdk';
 import { GraphQLClient } from 'graphql-request';
 
 import { CachedValueSource } from '../../aws/models/apy-snapshots.model';
+import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
 import { VaultTokenBalance } from '../../aws/models/vault-token-balance.model';
 import { Chain } from '../../chains/config/chain.config';
-import { BALANCER_URL } from '../../config/constants';
+import { BALANCER_URL, PRODUCTION } from '../../config/constants';
 import {
   BalancerVault__factory,
   StablePhantomVault__factory,
@@ -17,15 +18,14 @@ import { SourceType } from '../../rewards/enums/source-type.enum';
 import { valueSourceToCachedValueSource } from '../../rewards/rewards.utils';
 import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
 import { getFullToken, toBalance } from '../../tokens/tokens.utils';
-import { VaultDefinition } from '../../vaults/interfaces/vault-definition.interface';
-import { getCachedVault, getVaultDefinition } from '../../vaults/vaults.utils';
+import { getCachedVault } from '../../vaults/vaults.utils';
 import { createValueSource } from '../interfaces/value-source.interface';
 
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 export class BalancerStrategy {
-  static async getValueSources(vaultDefinition: VaultDefinition): Promise<CachedValueSource[]> {
-    return getBalancerSwapFees(vaultDefinition);
+  static async getValueSources(vault: VaultDefinitionModel): Promise<CachedValueSource[]> {
+    return getBalancerSwapFees(vault);
   }
 }
 
@@ -81,8 +81,8 @@ export async function getBalancerPoolTokens(chain: Chain, token: string): Promis
 }
 
 export async function getBalancerVaultTokenBalance(chain: Chain, token: string): Promise<VaultTokenBalance> {
-  const vaultDefinition = getVaultDefinition(chain, token);
-  const { depositToken, vaultToken } = vaultDefinition;
+  const vaultDefinition = await chain.vaults.getVault(token);
+  const { depositToken, address } = vaultDefinition;
   const cachedTokens = await getBalancerPoolTokens(chain, depositToken);
   const sett = await getCachedVault(chain, vaultDefinition);
 
@@ -103,7 +103,7 @@ export async function getBalancerVaultTokenBalance(chain: Chain, token: string):
     cachedToken.value *= scalar;
   });
   const vaultTokenBalance = {
-    vault: vaultToken,
+    vault: address,
     tokenBalances: cachedTokens,
   };
   return Object.assign(new VaultTokenBalance(), vaultTokenBalance);
@@ -190,7 +190,10 @@ export async function resolveBalancerPoolTokenPrice(chain: Chain, token: Token, 
   };
 }
 
-export async function getBalancerSwapFees(vault: VaultDefinition): Promise<CachedValueSource[]> {
+export async function getBalancerSwapFees(vault: VaultDefinitionModel): Promise<CachedValueSource[]> {
+  if (PRODUCTION) {
+    return [];
+  }
   try {
     const chain = Chain.getChain(Network.Ethereum);
     const client = new GraphQLClient(BALANCER_URL);
@@ -213,17 +216,17 @@ export async function getBalancerSwapFees(vault: VaultDefinition): Promise<Cache
     }
 
     let totalFees = 0;
-    let totalLiquifity = 0;
+    let totalLiquidity = 0;
 
     for (const snapshot of poolSnapshots) {
       const { swapFees, liquidity } = snapshot;
       totalFees += Number(swapFees);
-      totalLiquifity += Number(liquidity);
+      totalLiquidity += Number(liquidity);
     }
 
     // we are taking an average of the fees over 2 weeks, there are 26 two week periods
     const yearlyFees = totalFees * 26;
-    const yearlyApr = (yearlyFees / totalLiquifity) * 100;
+    const yearlyApr = (yearlyFees / totalLiquidity) * 100;
 
     return [
       valueSourceToCachedValueSource(createValueSource('Balancer LP Fees', yearlyApr), vault, SourceType.TradeFee),
