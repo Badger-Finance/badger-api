@@ -270,24 +270,21 @@ const vaultLookupMethod: Record<string, string> = {};
 /**
  * Load a Badger vault measured performance.
  * @param chain Chain vault is deployed on
- * @param vaultDefinition Vault definition of requested vault
+ * @param vault Vault definition of requested vault
  * @returns Value source array describing vault performance
  */
-export async function getVaultPerformance(
-  chain: Chain,
-  vaultDefinition: VaultDefinitionModel,
-): Promise<CachedValueSource[]> {
+export async function getVaultPerformance(chain: Chain, vault: VaultDefinitionModel): Promise<CachedValueSource[]> {
   const [rewardEmissions, protocol] = await Promise.all([
-    getRewardEmission(chain, vaultDefinition),
-    getProtocolValueSources(chain, vaultDefinition),
+    getRewardEmission(chain, vault),
+    getProtocolValueSources(chain, vault),
   ]);
   let vaultSources: CachedValueSource[] = [];
   try {
-    vaultSources = await loadVaultEventPerformances(chain, vaultDefinition);
+    vaultSources = await loadVaultEventPerformances(chain, vault);
   } catch (err) {
-    vaultSources = await loadVaultGraphPerformances(chain, vaultDefinition);
+    vaultSources = await loadVaultGraphPerformances(chain, vault);
   }
-  console.log(`${vaultDefinition.name}: ${vaultLookupMethod[vaultDefinition.address]}`);
+  console.log(`${vault.name}: ${vaultLookupMethod[vault.address]}`);
   return [...vaultSources, ...rewardEmissions, ...protocol];
 }
 
