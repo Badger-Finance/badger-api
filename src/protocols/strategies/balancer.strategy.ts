@@ -5,7 +5,7 @@ import { CachedValueSource } from '../../aws/models/apy-snapshots.model';
 import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
 import { VaultTokenBalance } from '../../aws/models/vault-token-balance.model';
 import { Chain } from '../../chains/config/chain.config';
-import { BALANCER_URL, PRODUCTION } from '../../config/constants';
+import { BALANCER_URL } from '../../config/constants';
 import {
   BalancerVault__factory,
   StablePhantomVault__factory,
@@ -191,9 +191,6 @@ export async function resolveBalancerPoolTokenPrice(chain: Chain, token: Token, 
 }
 
 export async function getBalancerSwapFees(vault: VaultDefinitionModel): Promise<CachedValueSource[]> {
-  if (PRODUCTION) {
-    return [];
-  }
   try {
     const chain = Chain.getChain(Network.Ethereum);
     const client = new GraphQLClient(BALANCER_URL);
@@ -203,7 +200,7 @@ export async function getBalancerSwapFees(vault: VaultDefinitionModel): Promise<
     const poolId = await pool.getPoolId();
 
     const { poolSnapshots } = await sdk.PoolSnapshots({
-      first: 14,
+      first: 3,
       where: {
         pool: poolId.toLowerCase(),
       },
@@ -211,22 +208,22 @@ export async function getBalancerSwapFees(vault: VaultDefinitionModel): Promise<
       orderDirection: OrderDirection.Desc,
     });
 
-    if (poolSnapshots.length < 1) {
+    if (poolSnapshots.length !== 3) {
       return [];
     }
 
-    let totalFees = 0;
-    let totalLiquidity = 0;
+    // retrieve previous day boundaries for pool snapshots
+    const [_, previousPeriodEnd, previousPeriodStart] = poolSnapshots;
 
-    for (const snapshot of poolSnapshots) {
-      const { swapFees, liquidity } = snapshot;
-      totalFees += Number(swapFees);
-      totalLiquidity += Number(liquidity);
-    }
+    // calcualte previous day swap fee difference
+    const totalFees = Number(previousPeriodEnd.swapFees) - Number(previousPeriodStart.swapFees);
+    const balancerFees = totalFees / 2;
+    const poolFees = totalFees - balancerFees;
 
-    // we are taking an average of the fees over 2 weeks, there are 26 two week periods
-    const yearlyFees = totalFees * 26;
-    const yearlyApr = (yearlyFees / totalLiquidity) * 100;
+    // calculate swap fee apr based on full previous days fees
+    const poolLiquidity = Number(previousPeriodEnd.liquidity);
+    const yearlyFees = poolFees * 365;
+    const yearlyApr = (yearlyFees / poolLiquidity) * 100;
 
     return [
       valueSourceToCachedValueSource(createValueSource('Balancer LP Fees', yearlyApr), vault, SourceType.TradeFee),
