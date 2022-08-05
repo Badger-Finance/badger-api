@@ -6,7 +6,6 @@ import {
   ListHarvestOptions,
   Network,
   ONE_DAY_MS,
-  ONE_YEAR_MS,
   Protocol,
   Strategy__factory,
   Vault__factory,
@@ -288,41 +287,8 @@ export async function getVaultPerformance(
   } catch (err) {
     vaultSources = await loadVaultGraphPerformances(chain, vaultDefinition);
   }
-  const vaultApr = vaultSources.reduce((total, s) => total + s.apr, 0);
-  // if we are not able to measure any on chain, or graph based increases falleback to ppfs measurement
-  if (vaultApr === 0) {
-    vaultSources = await getVaultUnderlyingPerformance(chain, vaultDefinition);
-  }
   console.log(`${vaultDefinition.name}: ${vaultLookupMethod[vaultDefinition.address]}`);
   return [...vaultSources, ...rewardEmissions, ...protocol];
-}
-
-export async function getVaultUnderlyingPerformance(
-  chain: Chain,
-  vaultDefinition: VaultDefinitionModel,
-): Promise<CachedValueSource[]> {
-  vaultLookupMethod[vaultDefinition.address] = 'MeasuredPPFS';
-  const start = new Date();
-  start.setDate(start.getDate() - 30);
-  const snapshots = await getVaultSnapshotsInRange(chain, vaultDefinition, start, new Date());
-  if (snapshots.length === 0) {
-    return [];
-  }
-  const currentSnapshot = snapshots[0];
-  const historicSnapshot = snapshots[snapshots.length - 1];
-  const currentPpfs = currentSnapshot.pricePerFullShare ?? currentSnapshot.ratio;
-  const historicPpfs = historicSnapshot.pricePerFullShare ?? historicSnapshot.ratio;
-  const deltaPpfs = currentPpfs - historicPpfs;
-  const deltaTime = currentSnapshot.timestamp - historicSnapshot.timestamp;
-  let underlyingApr = 0;
-  if (deltaTime > 0 && deltaPpfs > 0) {
-    underlyingApr = (deltaPpfs / historicPpfs) * (ONE_YEAR_MS / deltaTime) * 100;
-  }
-  const source = createValueSource(VAULT_SOURCE, underlyingApr);
-  return [
-    valueSourceToCachedValueSource(source, vaultDefinition, SourceType.PreCompound),
-    valueSourceToCachedValueSource(source, vaultDefinition, SourceType.Compound),
-  ];
 }
 
 export async function loadVaultEventPerformances(
@@ -605,11 +571,15 @@ export async function estimateVaultPerformance(
   const durationScalar = ONE_YEAR_SECONDS / totalDuration;
   // take the less frequent period, the actual harvest frequency or daily
   const periods = Math.min(365, durationScalar * measuredHarvests.length);
+
+  // create the apr source for harvests
   const compoundApr = (totalHarvestedTokens / measuredBalance) * durationScalar;
-  const compoundApy = (1 + compoundApr / periods) ** periods - 1;
   const compoundSourceApr = createValueSource(VAULT_SOURCE, compoundApr * 100);
   const cachedCompoundSourceApr = valueSourceToCachedValueSource(compoundSourceApr, vault, SourceType.PreCompound);
   valueSources.push(cachedCompoundSourceApr);
+
+  // create the apy source for harvests
+  const compoundApy = (1 + compoundApr / periods) ** periods - 1;
   const compoundSource = createValueSource(VAULT_SOURCE, compoundApy * 100);
   const cachedCompoundSource = valueSourceToCachedValueSource(compoundSource, vault, SourceType.Compound);
   valueSources.push(cachedCompoundSource);
@@ -658,9 +628,8 @@ export async function estimateVaultPerformance(
 
   if (flywheelCompounding > 0) {
     const sourceName = `Vault Flywheel`;
-    const sourceType = `derivative_${sourceName.replace(/ /g, '_')}`.toLowerCase();
     const derivativeSource = createValueSource(sourceName, flywheelCompounding);
-    valueSources.push(valueSourceToCachedValueSource(derivativeSource, vault, sourceType));
+    valueSources.push(valueSourceToCachedValueSource(derivativeSource, vault, SourceType.Flywheel));
   }
 
   return valueSources;

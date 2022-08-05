@@ -1,6 +1,5 @@
 import BadgerSDK, {
   BadgerGraph,
-  ONE_YEAR_MS,
   Protocol,
   TokensService,
   VaultBehavior,
@@ -47,7 +46,6 @@ import {
   getVaultHarvestsOnChain,
   getVaultPerformance,
   getVaultTokenPrice,
-  getVaultUnderlyingPerformance,
   VAULT_SOURCE,
 } from './vaults.utils';
 
@@ -419,27 +417,6 @@ describe('vaults.utils', () => {
         expect(estimateDerivativeEmission(compound, emission, compoundEmission)).toEqual(expected);
       },
     );
-  });
-
-  describe('getVaultUnderlyingPerformance', () => {
-    it('returns 0 for no pricePerFullShare increase', async () => {
-      const snapshot = randomSnapshot(MOCK_VAULT_DEFINITION);
-      setupMapper([snapshot]);
-      setFullTokenDataMock();
-      const result = await getVaultUnderlyingPerformance(TEST_CHAIN, MOCK_VAULT_DEFINITION);
-      result.forEach((r) => expect(r.apr).toEqual(0));
-    });
-
-    it('returns expected apr for increase in pricePerFullShare', async () => {
-      const snapshots = randomSnapshots(MOCK_VAULT_DEFINITION);
-      setupMapper(snapshots);
-      const duration = snapshots[0].timestamp - snapshots[snapshots.length - 1].timestamp;
-      const deltaPpfs = snapshots[0].pricePerFullShare - snapshots[snapshots.length - 1].pricePerFullShare;
-      const expected = (deltaPpfs / snapshots[snapshots.length - 1].pricePerFullShare) * (ONE_YEAR_MS / duration) * 100;
-      setFullTokenDataMock();
-      const result = await getVaultUnderlyingPerformance(TEST_CHAIN, MOCK_VAULT_DEFINITION);
-      result.forEach((r) => expect(r.apr).toEqual(expected));
-    });
   });
 
   describe('getVaultHarvestsOnChain', () => {
