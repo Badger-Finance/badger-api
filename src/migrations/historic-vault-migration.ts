@@ -1,4 +1,4 @@
-import { greaterThanOrEqualTo } from '@aws/dynamodb-expressions';
+import { greaterThan } from '@aws/dynamodb-expressions';
 
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
@@ -45,7 +45,7 @@ export async function run() {
         let migratedSnapshots = 0;
         for await (const item of mapper.query(
           HistoricVaultSnapshotOldModel,
-          { address: vault.address, timestamp: greaterThanOrEqualTo(lastInsertedTimestamp) },
+          { address: vault.address, timestamp: greaterThan(lastInsertedTimestamp) },
           { scanIndexForward: true, limit: 200 },
         )) {
           const historicSnapshot = Object.assign(new HistoricVaultSnapshotModel(), {
@@ -58,7 +58,9 @@ export async function run() {
           const migratedCnt = await pushHistoricSnapshots(HistoricVaultSnapshotModel.NAMESPACE, historicSnapshot);
           lastItem = item;
           chartDataMigratedCnt += migratedCnt;
+          console.log(`Updated ${migratedCnt} timeframes for ${chain.network} ${vault.name}`);
         }
+        console.log(`Updated ${migratedSnapshots} snapshots for ${chain.network} ${vault.name}`);
 
         if (!lastItem) {
           console.log(`No items found for ${vault.address}. Looks like we done with it`);
@@ -102,4 +104,5 @@ export async function run() {
 
   console.log(`Migration status is ${migrationStatusText}, sequences: ${JSON.stringify(migrationSequences, null, 2)}`);
   console.log(`Historic vault migration successfully finished with total ${chartDataMigratedCnt} rows pushed.`);
+  return 'done';
 }
