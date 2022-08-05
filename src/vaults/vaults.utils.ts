@@ -6,7 +6,6 @@ import {
   ListHarvestOptions,
   Network,
   ONE_DAY_MS,
-  ONE_YEAR_MS,
   Protocol,
   Strategy__factory,
   Vault__factory,
@@ -39,7 +38,7 @@ import { getPrice } from '../prices/prices.utils';
 import { createValueSource } from '../protocols/interfaces/value-source.interface';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { getProtocolValueSources, getRewardEmission, valueSourceToCachedValueSource } from '../rewards/rewards.utils';
-import { getFullToken } from '../tokens/tokens.utils';
+import { getFullToken, tokenEmission } from '../tokens/tokens.utils';
 import { Nullable } from '../utils/types.utils';
 import { HarvestType } from './enums/harvest.enum';
 import { VaultHarvestData } from './interfaces/vault-harvest-data.interface';
@@ -271,58 +270,22 @@ const vaultLookupMethod: Record<string, string> = {};
 /**
  * Load a Badger vault measured performance.
  * @param chain Chain vault is deployed on
- * @param vaultDefinition Vault definition of requested vault
+ * @param vault Vault definition of requested vault
  * @returns Value source array describing vault performance
  */
-export async function getVaultPerformance(
-  chain: Chain,
-  vaultDefinition: VaultDefinitionModel,
-): Promise<CachedValueSource[]> {
+export async function getVaultPerformance(chain: Chain, vault: VaultDefinitionModel): Promise<CachedValueSource[]> {
   const [rewardEmissions, protocol] = await Promise.all([
-    getRewardEmission(chain, vaultDefinition),
-    getProtocolValueSources(chain, vaultDefinition),
+    getRewardEmission(chain, vault),
+    getProtocolValueSources(chain, vault),
   ]);
   let vaultSources: CachedValueSource[] = [];
   try {
-    vaultSources = await loadVaultEventPerformances(chain, vaultDefinition);
+    vaultSources = await loadVaultEventPerformances(chain, vault);
   } catch (err) {
-    vaultSources = await loadVaultGraphPerformances(chain, vaultDefinition);
+    vaultSources = await loadVaultGraphPerformances(chain, vault);
   }
-  const vaultApr = vaultSources.reduce((total, s) => total + s.apr, 0);
-  // if we are not able to measure any on chain, or graph based increases falleback to ppfs measurement
-  if (vaultApr === 0) {
-    vaultSources = await getVaultUnderlyingPerformance(chain, vaultDefinition);
-  }
-  console.log(`${vaultDefinition.name}: ${vaultLookupMethod[vaultDefinition.address]}`);
+  console.log(`${vault.name}: ${vaultLookupMethod[vault.address]}`);
   return [...vaultSources, ...rewardEmissions, ...protocol];
-}
-
-export async function getVaultUnderlyingPerformance(
-  chain: Chain,
-  vaultDefinition: VaultDefinitionModel,
-): Promise<CachedValueSource[]> {
-  vaultLookupMethod[vaultDefinition.address] = 'MeasuredPPFS';
-  const start = new Date();
-  start.setDate(start.getDate() - 30);
-  const snapshots = await getVaultSnapshotsInRange(chain, vaultDefinition, start, new Date());
-  if (snapshots.length === 0) {
-    return [];
-  }
-  const currentSnapshot = snapshots[0];
-  const historicSnapshot = snapshots[snapshots.length - 1];
-  const currentPpfs = currentSnapshot.pricePerFullShare ?? currentSnapshot.ratio;
-  const historicPpfs = historicSnapshot.pricePerFullShare ?? historicSnapshot.ratio;
-  const deltaPpfs = currentPpfs - historicPpfs;
-  const deltaTime = currentSnapshot.timestamp - historicSnapshot.timestamp;
-  let underlyingApr = 0;
-  if (deltaTime > 0 && deltaPpfs > 0) {
-    underlyingApr = (deltaPpfs / historicPpfs) * (ONE_YEAR_MS / deltaTime) * 100;
-  }
-  const source = createValueSource(VAULT_SOURCE, underlyingApr);
-  return [
-    valueSourceToCachedValueSource(source, vaultDefinition, SourceType.PreCompound),
-    valueSourceToCachedValueSource(source, vaultDefinition, SourceType.Compound),
-  ];
 }
 
 export async function loadVaultEventPerformances(
@@ -605,11 +568,15 @@ export async function estimateVaultPerformance(
   const durationScalar = ONE_YEAR_SECONDS / totalDuration;
   // take the less frequent period, the actual harvest frequency or daily
   const periods = Math.min(365, durationScalar * measuredHarvests.length);
+
+  // create the apr source for harvests
   const compoundApr = (totalHarvestedTokens / measuredBalance) * durationScalar;
-  const compoundApy = (1 + compoundApr / periods) ** periods - 1;
   const compoundSourceApr = createValueSource(VAULT_SOURCE, compoundApr * 100);
   const cachedCompoundSourceApr = valueSourceToCachedValueSource(compoundSourceApr, vault, SourceType.PreCompound);
   valueSources.push(cachedCompoundSourceApr);
+
+  // create the apy source for harvests
+  const compoundApy = (1 + compoundApr / periods) ** periods - 1;
   const compoundSource = createValueSource(VAULT_SOURCE, compoundApy * 100);
   const cachedCompoundSource = valueSourceToCachedValueSource(compoundSource, vault, SourceType.Compound);
   valueSources.push(cachedCompoundSource);
@@ -638,11 +605,7 @@ export async function estimateVaultPerformance(
     const valueEmitted = tokensEmitted * price;
     const emissionApr = (valueEmitted / measuredValue) * durationScalar;
     const emissionSource = createValueSource(`${tokenEmitted.name}`, emissionApr * 100);
-    const cachedEmissionSource = valueSourceToCachedValueSource(
-      emissionSource,
-      vault,
-      `vault_emitted_${tokenEmitted.name.toLowerCase()}`,
-    );
+    const cachedEmissionSource = valueSourceToCachedValueSource(emissionSource, vault, tokenEmission(tokenEmitted));
     valueSources.push(cachedEmissionSource);
     // try to add underlying emitted vault value sources if applicable
     try {
@@ -658,9 +621,8 @@ export async function estimateVaultPerformance(
 
   if (flywheelCompounding > 0) {
     const sourceName = `Vault Flywheel`;
-    const sourceType = `derivative_${sourceName.replace(/ /g, '_')}`.toLowerCase();
     const derivativeSource = createValueSource(sourceName, flywheelCompounding);
-    valueSources.push(valueSourceToCachedValueSource(derivativeSource, vault, sourceType));
+    valueSources.push(valueSourceToCachedValueSource(derivativeSource, vault, SourceType.Flywheel));
   }
 
   return valueSources;
@@ -870,4 +832,12 @@ export async function queryVaultCharts(id: string): Promise<HistoricVaultSnapsho
     console.error(err);
     return [];
   }
+}
+
+export function isPassiveVaultSource(source: CachedValueSource): boolean {
+  return (
+    source.type.includes(SourceType.Emission) ||
+    source.type.includes(SourceType.TradeFee) ||
+    source.type.includes(SourceType.Flywheel)
+  );
 }

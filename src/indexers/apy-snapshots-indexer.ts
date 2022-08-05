@@ -6,7 +6,7 @@ import { SUPPORTED_CHAINS } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { ValueSourceMap } from '../protocols/interfaces/value-source-map.interface';
 import { getVaultValueSources } from '../rewards/rewards.utils';
-import { getVaultCachedValueSources } from '../vaults/vaults.utils';
+import { getVaultCachedValueSources, VAULT_SOURCE } from '../vaults/vaults.utils';
 
 export async function refreshApySnapshots() {
   await Promise.all(SUPPORTED_CHAINS.map((chain) => refreshChainApySnapshots(chain)));
@@ -25,7 +25,8 @@ export async function refreshChainApySnapshots(chain: Chain) {
           .filter((rawValueSource) => !isNil(rawValueSource))
           .filter((source) => !isNaN(source.apr) && isFinite(source.apr))
           .forEach((source) => {
-            const mapKey = [source.address, source.name, source.type].join('-');
+            const sourceName = source.name === VAULT_SOURCE ? `${source.name}-${source.type}` : source.name;
+            const mapKey = [source.address, sourceName, source.boostable].join('-');
             const mapEntry = sourceMap[mapKey];
             if (!mapEntry) {
               sourceMap[mapKey] = source;
