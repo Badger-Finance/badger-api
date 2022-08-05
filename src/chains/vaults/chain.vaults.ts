@@ -1,4 +1,5 @@
 import { Network } from '@badger-dao/sdk';
+import { NotFound } from '@tsed/exceptions';
 
 import { getDataMapper } from '../../aws/dynamodb.utils';
 import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
@@ -22,9 +23,10 @@ export class ChainVaults {
   }
 
   async getVault(address: string) {
+    await this.#updateCachedVaults();
     const vault = Object.fromEntries(this.cachedVaults.map((v) => [v.address, v]))[address];
     if (!vault) {
-      throw new Error(`No vault exists with address ${address}`);
+      throw new NotFound(`No vault exists with address ${address}`);
     }
     return vault;
   }

@@ -38,7 +38,7 @@ import { getPrice } from '../prices/prices.utils';
 import { createValueSource } from '../protocols/interfaces/value-source.interface';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { getProtocolValueSources, getRewardEmission, valueSourceToCachedValueSource } from '../rewards/rewards.utils';
-import { getFullToken } from '../tokens/tokens.utils';
+import { getFullToken, tokenEmission } from '../tokens/tokens.utils';
 import { Nullable } from '../utils/types.utils';
 import { HarvestType } from './enums/harvest.enum';
 import { VaultHarvestData } from './interfaces/vault-harvest-data.interface';
@@ -608,11 +608,7 @@ export async function estimateVaultPerformance(
     const valueEmitted = tokensEmitted * price;
     const emissionApr = (valueEmitted / measuredValue) * durationScalar;
     const emissionSource = createValueSource(`${tokenEmitted.name}`, emissionApr * 100);
-    const cachedEmissionSource = valueSourceToCachedValueSource(
-      emissionSource,
-      vault,
-      `vault_emitted_${tokenEmitted.name.toLowerCase()}`,
-    );
+    const cachedEmissionSource = valueSourceToCachedValueSource(emissionSource, vault, tokenEmission(tokenEmitted));
     valueSources.push(cachedEmissionSource);
     // try to add underlying emitted vault value sources if applicable
     try {
