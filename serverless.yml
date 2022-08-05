@@ -64,7 +64,6 @@ custom:
     CYCLE_ANALYTICS_DATA: rewards-${self:custom.stage}
     PROTOCOL_DATA: protocol-data-${self:custom.stage}
     CHART_DATA: chart-data-${self:custom.stage}
-    MIGRATION_PROCESS_DATA: migration-process-${self:custom.stage}
 
   merkleProofs:
     staging: 'badger-staging-merkle-proofs'
@@ -126,7 +125,6 @@ provider:
     UNCLAIMED_SNAPSHOTS_DATA: ${self:custom.table.UNCLAIMED_SNAPSHOTS_DATA}
     PROTOCOL_DATA: ${self:custom.table.PROTOCOL_DATA}
     CHART_DATA: ${self:custom.table.CHART_DATA}
-    MIGRATION_PROCESS_DATA: ${self:custom.table.MIGRATION_PROCESS_DATA}
     # General Defintions
     REWARD_DATA: ${self:custom.merkleProofs.${self:custom.stage}}
     STAGE: ${opt:stage, self:provider.stage}
@@ -470,18 +468,6 @@ resources:
           - AttributeName: 'id'
             AttributeType: 'S'
 
-    migrationProcessData:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: ${self:custom.table.MIGRATION_PROCESS_DATA}
-        BillingMode: PAY_PER_REQUEST
-        KeySchema:
-          - AttributeName: 'id'
-            KeyType: 'HASH'
-        AttributeDefinitions:
-          - AttributeName: 'id'
-            AttributeType: 'S'
-
 functions:
   request-handler:
     handler: src/LambdaServer.handler
@@ -505,15 +491,6 @@ functions:
           name: ${self:service}-${self:custom.stage}-index-vaults-history
           description: 'index historical data for all vaults'
           rate: rate(30 minutes)
-
-  migrate-vaults-historic-data:
-    handler: src/migrations/historic-vault-migration.run
-    timeout: 480
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-migrate-vaults-historic-data
-          description: 'migrate vaults historic data to chart data blob'
-          rate: rate(3 minutes)
 
   index-apy-snapshots:
     handler: src/indexers/apy-snapshots-indexer.refreshApySnapshots
