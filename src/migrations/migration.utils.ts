@@ -89,8 +89,6 @@ export async function pushHistoricSnapshots<T extends ChartData<T>>(namespace: s
 
     if (inTimeFrameCondition && frequencyGapMatch) {
       cachedChart.data.unshift(snapshot);
-
-      console.log(`Update ${searchKey.id} (${cachedChart.data.length} entries)`);
       try {
         await mapper.put(cachedChart);
       } catch (err) {
