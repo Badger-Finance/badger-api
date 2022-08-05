@@ -3,5 +3,5 @@ export enum SourceType {
   TradeFee = 'lp_fee',
   PreCompound = 'precompound',
   Compound = 'compound',
-  Native = 'native',
+  Flywheel = 'flywheel',
 }

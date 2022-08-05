@@ -147,9 +147,8 @@ export class VaultsService {
     vault.lastHarvest = pendingHarvest.lastHarvestedAt;
 
     const harvestProjection = this.getVaultYieldProjection(vault, pendingHarvest);
-    const passiveSources = sourcesApy.filter(
-      (s) => s.type.includes(SourceType.TradeFee) || s.type.includes(SourceType.Emission),
-    );
+    // filter out all vault compound sources - this include 'precompound' as well
+    const passiveSources = sourcesApy.filter((s) => !s.type.includes(SourceType.Compound));
     const passiveSourcesApr = passiveSources.reduce((total, s) => (total += s.apr), 0);
     const convertedPassiveSources = passiveSources.map((s) => {
       const { name, apr, address, type } = s;
