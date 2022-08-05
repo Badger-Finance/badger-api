@@ -24,7 +24,7 @@ exports[`VaultsController GET /v2/vaults with a specified chain returns the vaul
 Array [
   Object {
     "apr": 8.26,
-    "apy": 8.26,
+    "apy": 12.39,
     "asset": "BADGER",
     "available": 0,
     "balance": 10,
@@ -55,6 +55,13 @@ Array [
       },
     ],
     "sourcesApy": Array [
+      Object {
+        "apr": 4.13,
+        "boostable": false,
+        "maxApr": 4.13,
+        "minApr": 4.13,
+        "name": "Vault Compounding",
+      },
       Object {
         "apr": 4.13,
         "boostable": false,
@@ -228,7 +235,7 @@ exports[`VaultsController GET /v2/vaults with a specified chain returns the vaul
 Array [
   Object {
     "apr": 8.26,
-    "apy": 8.26,
+    "apy": 12.39,
     "asset": "BADGER",
     "available": 0,
     "balance": 10,
@@ -259,6 +266,13 @@ Array [
       },
     ],
     "sourcesApy": Array [
+      Object {
+        "apr": 4.13,
+        "boostable": false,
+        "maxApr": 4.13,
+        "minApr": 4.13,
+        "name": "Vault Compounding",
+      },
       Object {
         "apr": 4.13,
         "boostable": false,
@@ -438,7 +452,7 @@ exports[`VaultsController GET /v2/vaults with no specified chain returns eth vau
 Array [
   Object {
     "apr": 8.26,
-    "apy": 8.26,
+    "apy": 12.39,
     "asset": "BADGER",
     "available": 0,
     "balance": 10,
@@ -469,6 +483,13 @@ Array [
       },
     ],
     "sourcesApy": Array [
+      Object {
+        "apr": 4.13,
+        "boostable": false,
+        "maxApr": 4.13,
+        "minApr": 4.13,
+        "name": "Vault Compounding",
+      },
       Object {
         "apr": 4.13,
         "boostable": false,

@@ -139,7 +139,7 @@ export class VaultsService {
     const sourcesApr = baseSources.filter(
       (source) => source.type !== SourceType.Compound && !source.type.includes('derivative'),
     );
-    const sourcesApy = baseSources.filter(isPassiveVaultSource);
+    const sourcesApy = baseSources.filter((source) => source.type !== SourceType.PreCompound);
     vault.sources = sourcesApr.map((s) => s.toValueSource());
     vault.sourcesApy = sourcesApy.map((s) => s.toValueSource());
     vault.apr = vault.sources.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
@@ -149,7 +149,7 @@ export class VaultsService {
 
     const harvestProjection = this.getVaultYieldProjection(vault, pendingHarvest);
     // filter out all vault compound sources - this include 'precompound' as well
-    const passiveSources = sourcesApy.filter((s) => !s.type.includes(SourceType.Compound));
+    const passiveSources = sourcesApy.filter(isPassiveVaultSource);
     const passiveSourcesApr = passiveSources.reduce((total, s) => (total += s.apr), 0);
     const convertedPassiveSources = passiveSources.map((s) => {
       const { name, apr, address, type } = s;
