@@ -147,7 +147,7 @@ export class VaultsService {
     vault.lastHarvest = pendingHarvest.lastHarvestedAt;
 
     const harvestProjection = this.getVaultYieldProjection(vault, pendingHarvest);
-    const passiveSources = sourcesApr.filter(
+    const passiveSources = sourcesApy.filter(
       (s) => s.type.includes(SourceType.TradeFee) || s.type.includes(SourceType.Emission),
     );
     const passiveSourcesApr = passiveSources.reduce((total, s) => (total += s.apr), 0);
