@@ -33,6 +33,7 @@ import {
   getVaultCachedValueSources,
   getVaultPendingHarvest,
   getVaultSnapshotsAtTimestamps,
+  isPassiveVaultSource,
   queryVaultCharts,
   VAULT_SOURCE,
 } from './vaults.utils';
@@ -138,7 +139,7 @@ export class VaultsService {
     const sourcesApr = baseSources.filter(
       (source) => source.type !== SourceType.Compound && !source.type.includes('derivative'),
     );
-    const sourcesApy = baseSources.filter((source) => source.type !== SourceType.PreCompound);
+    const sourcesApy = baseSources.filter(isPassiveVaultSource);
     vault.sources = sourcesApr.map((s) => s.toValueSource());
     vault.sourcesApy = sourcesApy.map((s) => s.toValueSource());
     vault.apr = vault.sources.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);

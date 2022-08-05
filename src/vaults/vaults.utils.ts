@@ -840,3 +840,11 @@ export async function queryVaultCharts(id: string): Promise<HistoricVaultSnapsho
     return [];
   }
 }
+
+export function isPassiveVaultSource(source: CachedValueSource): boolean {
+  return (
+    source.type.includes(SourceType.Emission) ||
+    source.type.includes(SourceType.TradeFee) ||
+    source.type.includes(SourceType.Flywheel)
+  );
+}
