@@ -1,5 +1,4 @@
 import { Erc20__factory, formatBalance, Network, Token } from '@badger-dao/sdk';
-import { UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 
 import { CachedValueSource } from '../../aws/models/apy-snapshots.model';
@@ -76,6 +75,8 @@ interface FactoryAPYResonse {
 export class ConvexStrategy {
   static async getValueSources(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<CachedValueSource[]> {
     switch (vaultDefinition.address) {
+      case TOKENS.BVECVX:
+        return [];
       case TOKENS.BCRV_CVXBVECVX:
         return getLiquiditySources(chain, vaultDefinition);
       default:
@@ -116,8 +117,7 @@ async function getLiquiditySources(chain: Chain, vaultDefinition: VaultDefinitio
     return s;
   });
   const cachedTradeFees = await getCurvePerformance(chain, vaultDefinition);
-  // const forwardedDistributions = await retrieveHarvestForwarderData(chain, vaultDefinition);
-  return [cachedTradeFees, ...lpSources]; // ...forwardedDistributions
+  return [cachedTradeFees, ...lpSources];
 }
 
 export async function getCurvePerformance(
@@ -225,17 +225,16 @@ export async function getCurvePoolBalance(chain: Chain, depositToken: string): P
   return cachedBalances;
 }
 
-export async function getCurveVaultTokenBalance(chain: Chain, token: string): Promise<VaultTokenBalance> {
-  const vaultDefinition = await chain.vaults.getVault(token);
-  const { protocol, depositToken, address } = vaultDefinition;
-  if (!protocol) {
-    throw new UnprocessableEntity('Cannot get curve vault token balances, requires a vault definition');
-  }
+export async function getCurveVaultTokenBalance(
+  chain: Chain,
+  vaultDefinition: VaultDefinitionModel,
+): Promise<VaultTokenBalance> {
+  const { depositToken, address } = vaultDefinition;
   const cachedTokens = await getCurvePoolBalance(chain, depositToken);
   const contract = Erc20__factory.connect(depositToken, chain.provider);
-  const sett = await getCachedVault(chain, vaultDefinition);
+  const vault = await getCachedVault(chain, vaultDefinition);
   const totalSupply = parseFloat(ethers.utils.formatEther(await contract.totalSupply()));
-  const scalar = sett.balance / totalSupply;
+  const scalar = vault.balance / totalSupply;
   cachedTokens.forEach((cachedToken) => {
     cachedToken.balance *= scalar;
     cachedToken.value *= scalar;
@@ -298,45 +297,3 @@ export async function resolveCurveStablePoolTokenPrice(chain: Chain, token: Toke
     price: 0,
   };
 }
-
-// TODO: remove if we never need to use again - but keep in case graph support is lost
-// async function retrieveHarvestForwarderData(chain: Chain, vault: VaultDefinition): Promise<CachedValueSource[]> {
-//   try {
-//     const sdk = await chain.getSdk();
-//     const harvestForwarder = HarvestDistributor__factory.connect(HARVEST_FORWARDER, sdk.provider);
-
-//     const treeDistributionFilter = harvestForwarder.filters.TreeDistribution();
-
-//     const endBlock = await sdk.provider.getBlockNumber();
-//     // cut off after 16 days in blocks, this is in seconds by 13 second blocks
-//     const startBlock = Math.floor(endBlock - (16 * ONE_DAY_SECONDS) / 13);
-//     const allTreeDistributions = await chunkQueryFilter<
-//       HarvestDistributor,
-//       TreeDistributionEventFilter,
-//       TreeDistributionEvent
-//     >(harvestForwarder, treeDistributionFilter, startBlock, endBlock);
-
-//     const distributions = allTreeDistributions
-//       .filter((d) => d.args.beneficiary === vault.vaultToken)
-//       .map((d) => ({
-//         timestamp: d.args.block_timestamp.toNumber(),
-//         block: d.args.block_number.toNumber(),
-//         token: d.args.token,
-//         amount: d.args.amount,
-//       }));
-
-//     // cut off after 16 days in seconds
-//     const timestampCutoff = Math.floor(Date.now() / 1000 - 16 * ONE_DAY_SECONDS);
-//     const { data } = await evaluateEvents([], distributions, { timestamp_gte: timestampCutoff });
-
-//     // cannot construct data with this - will be fine after the test emission
-//     if (data.length <= 1) {
-//       return [];
-//     }
-
-//     return estimateVaultPerformance(chain, vault, data);
-//   } catch (err) {
-//     console.error({ err, message: 'Failed to capture harvest forwarder data' });
-//     return [];
-//   }
-// }

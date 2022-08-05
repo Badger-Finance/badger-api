@@ -38,7 +38,7 @@ import { getPrice } from '../prices/prices.utils';
 import { createValueSource } from '../protocols/interfaces/value-source.interface';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { getProtocolValueSources, getRewardEmission, valueSourceToCachedValueSource } from '../rewards/rewards.utils';
-import { getFullToken } from '../tokens/tokens.utils';
+import { getFullToken, tokenEmission } from '../tokens/tokens.utils';
 import { Nullable } from '../utils/types.utils';
 import { HarvestType } from './enums/harvest.enum';
 import { VaultHarvestData } from './interfaces/vault-harvest-data.interface';
@@ -270,24 +270,21 @@ const vaultLookupMethod: Record<string, string> = {};
 /**
  * Load a Badger vault measured performance.
  * @param chain Chain vault is deployed on
- * @param vaultDefinition Vault definition of requested vault
+ * @param vault Vault definition of requested vault
  * @returns Value source array describing vault performance
  */
-export async function getVaultPerformance(
-  chain: Chain,
-  vaultDefinition: VaultDefinitionModel,
-): Promise<CachedValueSource[]> {
+export async function getVaultPerformance(chain: Chain, vault: VaultDefinitionModel): Promise<CachedValueSource[]> {
   const [rewardEmissions, protocol] = await Promise.all([
-    getRewardEmission(chain, vaultDefinition),
-    getProtocolValueSources(chain, vaultDefinition),
+    getRewardEmission(chain, vault),
+    getProtocolValueSources(chain, vault),
   ]);
   let vaultSources: CachedValueSource[] = [];
   try {
-    vaultSources = await loadVaultEventPerformances(chain, vaultDefinition);
+    vaultSources = await loadVaultEventPerformances(chain, vault);
   } catch (err) {
-    vaultSources = await loadVaultGraphPerformances(chain, vaultDefinition);
+    vaultSources = await loadVaultGraphPerformances(chain, vault);
   }
-  console.log(`${vaultDefinition.name}: ${vaultLookupMethod[vaultDefinition.address]}`);
+  console.log(`${vault.name}: ${vaultLookupMethod[vault.address]}`);
   return [...vaultSources, ...rewardEmissions, ...protocol];
 }
 
@@ -608,11 +605,7 @@ export async function estimateVaultPerformance(
     const valueEmitted = tokensEmitted * price;
     const emissionApr = (valueEmitted / measuredValue) * durationScalar;
     const emissionSource = createValueSource(`${tokenEmitted.name}`, emissionApr * 100);
-    const cachedEmissionSource = valueSourceToCachedValueSource(
-      emissionSource,
-      vault,
-      `vault_emitted_${tokenEmitted.name.toLowerCase()}`,
-    );
+    const cachedEmissionSource = valueSourceToCachedValueSource(emissionSource, vault, tokenEmission(tokenEmitted));
     valueSources.push(cachedEmissionSource);
     // try to add underlying emitted vault value sources if applicable
     try {

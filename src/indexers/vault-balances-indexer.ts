@@ -12,12 +12,10 @@ import { getCachedVault } from '../vaults/vaults.utils';
 import { getLpTokenBalances } from './indexer.utils';
 
 export async function refreshVaultBalances() {
-  await Promise.all(
-    SUPPORTED_CHAINS.flatMap(async (c) => {
-      const vaults = await c.vaults.all();
-      return vaults.map(async (v) => updateVaultTokenBalances(c, v));
-    }),
-  );
+  for (const chain of SUPPORTED_CHAINS) {
+    const vaults = await chain.vaults.all();
+    await Promise.all(vaults.map(async (v) => updateVaultTokenBalances(chain, v)));
+  }
   return 'done';
 }
 
@@ -44,7 +42,7 @@ export async function updateVaultTokenBalances(chain: Chain, vault: VaultDefinit
         break;
       case Protocol.Convex:
       case Protocol.Curve:
-        cachedTokenBalance = await getCurveVaultTokenBalance(chain, vault.address);
+        cachedTokenBalance = await getCurveVaultTokenBalance(chain, vault);
         break;
       case Protocol.Aura:
       case Protocol.Balancer:
