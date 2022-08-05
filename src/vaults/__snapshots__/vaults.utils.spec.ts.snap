@@ -328,13 +328,13 @@ Array [
   },
   CachedValueSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "addressValueSourceType": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_derivative_vault_flywheel",
+    "addressValueSourceType": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_flywheel",
     "apr": 0.0000013944295327135587,
     "boostable": false,
     "maxApr": 0.0000013944295327135587,
     "minApr": 0.0000013944295327135587,
     "name": "Vault Flywheel",
-    "type": "derivative_vault_flywheel",
+    "type": "flywheel",
   },
   CachedValueSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
