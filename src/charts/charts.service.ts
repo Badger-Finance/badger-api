@@ -9,13 +9,12 @@ import { toChartDataKey } from './charts.utils';
 @Service()
 export class ChartsService {
   async loadVaultChartData(
-    vaultAddr: string,
-    timeframe: ChartTimeFrame,
     chain: Chain,
+    address: string,
+    timeframe: ChartTimeFrame,
   ): Promise<HistoricVaultSnapshotModel[]> {
-    const vaultBlobId = HistoricVaultSnapshotModel.formBlobId(vaultAddr, chain.network);
+    const vaultBlobId = HistoricVaultSnapshotModel.formBlobId(address, chain.network);
     const dataKey = toChartDataKey(HistoricVaultSnapshotModel.NAMESPACE, vaultBlobId, timeframe);
-
     return queryVaultCharts(dataKey);
   }
 }

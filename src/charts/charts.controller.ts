@@ -23,6 +23,6 @@ export class ChartsController {
     if (!address) {
       throw new QueryParamError('address');
     }
-    return this.chartsService.loadVaultChartData(address, timeframe, Chain.getChain(chain));
+    return this.chartsService.loadVaultChartData(Chain.getChain(chain), address, timeframe);
   }
 }
