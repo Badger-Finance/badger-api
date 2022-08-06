@@ -1,4 +1,4 @@
-import BadgerSDK, { Currency, TokensService, TokenValue } from '@badger-dao/sdk';
+import BadgerSDK, { Currency, TokensService } from '@badger-dao/sdk';
 
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { Chain } from '../chains/config/chain.config';
@@ -11,20 +11,12 @@ import {
   setFullTokenDataMock,
   setupBatchGet,
   setupMapper,
-  TEST_ADDR,
   TEST_CHAIN,
 } from '../test/tests.utils';
 import * as vaultUtils from '../vaults/vaults.utils';
 import { TokenNotFound } from './errors/token.error';
 import { fullTokenMockMap } from './mocks/full-token.mock';
-import {
-  getCachedTokenBalances,
-  getFullToken,
-  getFullTokens,
-  getVaultTokens,
-  mockBalance,
-  toBalance,
-} from './tokens.utils';
+import { getFullToken, getFullTokens, getVaultTokens, mockBalance, toBalance } from './tokens.utils';
 
 describe('token.utils', () => {
   beforeEach(() => {
@@ -126,22 +118,15 @@ describe('token.utils', () => {
     });
   });
 
-  describe('getCachedTokenBalances', () => {
+  describe('getVaultTokens', () => {
     describe('no saved balances', () => {
       it('returns single token underlying balance', async () => {
-        setupMapper([]);
+        const badger = fullTokenMockMap[TOKENS.BADGER];
         setFullTokenDataMock();
+        const expected = mockBalance(badger, 10);
+        setupMapper([{ vault: MOCK_VAULT_DEFINITION.address, tokenBalances: [expected] }]);
         const dto = await vaultUtils.defaultVault(TEST_CHAIN, MOCK_VAULT_DEFINITION);
-        const result = await getCachedTokenBalances(TEST_CHAIN, dto);
-        const token = fullTokenMockMap[dto.underlyingToken];
-        const expected: TokenValue = {
-          address: token.address,
-          name: token.name,
-          decimals: token.decimals,
-          symbol: token.symbol,
-          balance: 0,
-          value: 0,
-        };
+        const result = await getVaultTokens(TEST_CHAIN, dto);
         expect(result).toMatchObject([expected]);
       });
     });
@@ -156,7 +141,7 @@ describe('token.utils', () => {
           const tokenBalances = [mockBalance(wbtc, 1), mockBalance(weth, 20)];
           const cached = { vault: MOCK_VAULT_DEFINITION.address, tokenBalances };
           setupMapper([cached]);
-          const actual = await getCachedTokenBalances(TEST_CHAIN, dto);
+          const actual = await getVaultTokens(TEST_CHAIN, dto);
           expect(actual).toMatchObject(tokenBalances);
         });
       });
@@ -171,37 +156,10 @@ describe('token.utils', () => {
           const cached = { vault: MOCK_VAULT_DEFINITION.address, tokenBalances };
           setupMapper([cached]);
           const expected = [mockBalance(wbtc, 1, currency), mockBalance(weth, 20, currency)];
-          const actual = await getCachedTokenBalances(TEST_CHAIN, dto, currency);
+          const actual = await getVaultTokens(TEST_CHAIN, dto, currency);
           expect(actual).toMatchObject(expected);
         });
       });
-    });
-  });
-
-  describe('getVaultTokens', () => {
-    it('returns the single token for a non liquidity token underlying token', async () => {
-      setFullTokenDataMock();
-      setupMapper([]);
-      mockPricing();
-      const dto = await vaultUtils.defaultVault(TEST_CHAIN, MOCK_VAULT_DEFINITION);
-      dto.balance = 10;
-      const tokens = await getVaultTokens(TEST_CHAIN, dto, 10);
-      expect(tokens).toMatchSnapshot();
-    });
-
-    it('returns all deposit token for a liquidity token underlying token', async () => {
-      const wbtc = fullTokenMockMap[TOKENS.WBTC];
-      const weth = fullTokenMockMap[TOKENS.WETH];
-
-      const tokenBalances = await Promise.all([toBalance(wbtc, 1), toBalance(weth, 20)]);
-      const cached = { vault: TEST_ADDR, tokenBalances };
-      setupMapper([cached]);
-
-      setFullTokenDataMock();
-      const dto = await vaultUtils.defaultVault(TEST_CHAIN, MOCK_VAULT_DEFINITION);
-      dto.balance = 10;
-      const tokens = await getVaultTokens(TEST_CHAIN, dto, 10);
-      expect(tokens).toMatchSnapshot();
     });
   });
 

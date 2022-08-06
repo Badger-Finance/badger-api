@@ -2,8 +2,8 @@ import { Network, Protocol } from '@badger-dao/sdk';
 import { BigNumber } from 'ethers';
 
 import { getBoostFile, getCachedAccount } from '../accounts/accounts.utils';
-import { YieldSource } from '../aws/models/yield-source.model';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
+import { YieldSource } from '../aws/models/yield-source.model';
 import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
 import { ONE_YEAR_SECONDS, REWARD_DATA } from '../config/constants';
@@ -17,7 +17,7 @@ import { SushiswapStrategy } from '../protocols/strategies/sushiswap.strategy';
 import { SwaprStrategy } from '../protocols/strategies/swapr.strategy';
 import { UniswapStrategy } from '../protocols/strategies/uniswap.strategy';
 import { getFullToken, tokenEmission } from '../tokens/tokens.utils';
-import { getCachedVault, getVaultPerformance } from '../vaults/vaults.utils';
+import { createYieldSource, getCachedVault, getVaultPerformance } from '../vaults/vaults.utils';
 import { SourceType } from './enums/source-type.enum';
 import { RewardMerkleDistribution } from './interfaces/merkle-distributor.interface';
 
@@ -136,8 +136,8 @@ export async function getRewardEmission(chain: Chain, vault: VaultDefinitionMode
       const boostedApr = (cachedVault.boost.weight / 10_000) * proRataApr;
       proRataApr = proRataApr - boostedApr;
       const boostedName = `Boosted ${token.name}`;
-      const boostYieldSource = VaultDefinitionModel.createYieldSource(
-        vault,
+      const boostYieldSource = createYieldSource(
+        vault.address,
         tokenEmission(token, true),
         boostedName,
         boostedApr,
@@ -145,12 +145,7 @@ export async function getRewardEmission(chain: Chain, vault: VaultDefinitionMode
       );
       emissionSources.push(boostYieldSource);
     }
-    const proRataYieldSource = VaultDefinitionModel.createYieldSource(
-      vault,
-      tokenEmission(token),
-      token.name,
-      proRataApr,
-    );
+    const proRataYieldSource = createYieldSource(vault.address, tokenEmission(token), token.name, proRataApr);
     emissionSources.push(proRataYieldSource);
   }
   return emissionSources;

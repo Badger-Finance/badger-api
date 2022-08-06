@@ -1,9 +1,9 @@
 import { Erc20__factory, formatBalance, Network, Token } from '@badger-dao/sdk';
 import { GraphQLClient } from 'graphql-request';
 
-import { YieldSource } from '../../aws/models/yield-source.model';
 import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
 import { VaultTokenBalance } from '../../aws/models/vault-token-balance.model';
+import { YieldSource } from '../../aws/models/yield-source.model';
 import { Chain } from '../../chains/config/chain.config';
 import { BALANCER_URL } from '../../config/constants';
 import {
@@ -17,7 +17,7 @@ import { TokenPrice } from '../../prices/interface/token-price.interface';
 import { SourceType } from '../../rewards/enums/source-type.enum';
 import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
 import { getFullToken, toBalance } from '../../tokens/tokens.utils';
-import { getCachedVault } from '../../vaults/vaults.utils';
+import { createYieldSource, getCachedVault } from '../../vaults/vaults.utils';
 
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
@@ -223,7 +223,7 @@ export async function getBalancerSwapFees(vault: VaultDefinitionModel): Promise<
     const yearlyFees = poolFees * 365;
     const yearlyApr = (yearlyFees / poolLiquidity) * 100;
 
-    return [VaultDefinitionModel.createYieldSource(vault, SourceType.TradeFee, 'Balancer LP Fees', yearlyApr)];
+    return [createYieldSource(vault.address, SourceType.TradeFee, 'Balancer LP Fees', yearlyApr)];
   } catch {
     // some of the aura vaults are not pools - they will error (auraBal, graviAura)
     return [];

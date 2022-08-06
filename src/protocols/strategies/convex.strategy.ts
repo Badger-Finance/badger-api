@@ -1,9 +1,9 @@
 import { Erc20__factory, formatBalance, Network, Token } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 
-import { YieldSource } from '../../aws/models/yield-source.model';
 import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
 import { VaultTokenBalance } from '../../aws/models/vault-token-balance.model';
+import { YieldSource } from '../../aws/models/yield-source.model';
 import { Chain } from '../../chains/config/chain.config';
 import { request } from '../../common/request';
 import { ContractRegistry } from '../../config/interfaces/contract-registry.interface';
@@ -19,7 +19,7 @@ import { getPrice } from '../../prices/prices.utils';
 import { SourceType } from '../../rewards/enums/source-type.enum';
 import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
 import { getFullToken, getVaultTokens, toBalance } from '../../tokens/tokens.utils';
-import { getCachedVault, getVaultYieldSources } from '../../vaults/vaults.utils';
+import { createYieldSource, getCachedVault, getVaultYieldSources } from '../../vaults/vaults.utils';
 import { CurveAPIResponse } from '../interfaces/curve-api-response.interrface';
 
 /* Protocol Constants */
@@ -157,12 +157,7 @@ export async function getCurvePerformance(chain: Chain, vaultDefinition: VaultDe
     await updateFactoryApy('crypto');
   }
 
-  return VaultDefinitionModel.createYieldSource(
-    vaultDefinition,
-    SourceType.TradeFee,
-    'Curve LP Fees',
-    tradeFeePerformance,
-  );
+  return createYieldSource(vaultDefinition.address, SourceType.TradeFee, 'Curve LP Fees', tradeFeePerformance);
 }
 
 export async function getCurveTokenPrice(chain: Chain, depositToken: string): Promise<TokenPrice> {

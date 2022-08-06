@@ -1,8 +1,8 @@
 import { Network } from '@badger-dao/sdk';
 import { GraphQLClient } from 'graphql-request';
 
-import { YieldSource } from '../../aws/models/yield-source.model';
 import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
+import { YieldSource } from '../../aws/models/yield-source.model';
 import { Chain } from '../../chains/config/chain.config';
 import { SUSHISWAP_ARBITRUM_URL, SUSHISWAP_MATIC_URL, SUSHISWAP_URL } from '../../config/constants';
 import { getSdk as getSushiswapSdk, OrderDirection, PairDayData_OrderBy } from '../../graphql/generated/sushiswap';

@@ -22,35 +22,7 @@ export async function toBalance(token: Token, balance: number, currency?: Curren
   };
 }
 
-/**
- * Get token balances within a vault.
- * @param chain Block chain object
- * @param vault Vault requested.
- * @param balance Balance in wei.
- * @param currency Optional currency denomination.
- * @returns Array of token balances from the Sett.
- */
-export async function getVaultTokens(
-  chain: Chain,
-  vault: VaultDTO,
-  balance: number,
-  currency?: Currency,
-): Promise<TokenValue[]> {
-  const tokens = await getCachedTokenBalances(chain, vault, currency);
-  const balanceScalar = vault.balance > 0 ? balance / vault.balance : 0;
-  return tokens.map((bal) => {
-    bal.balance *= balanceScalar;
-    bal.value *= balanceScalar;
-    return bal;
-  });
-}
-
-// TODO: deal with id and chain.network-vault.address
-export async function getCachedTokenBalances(
-  chain: Chain,
-  vault: VaultDTO,
-  currency?: Currency,
-): Promise<TokenValue[]> {
+export async function getVaultTokens(chain: Chain, vault: VaultDTO, currency?: Currency): Promise<TokenValue[]> {
   let tokens: TokenValue[] = [];
   const mapper = getDataMapper();
   for await (const record of mapper.query(VaultTokenBalance, { vault: vault.vaultToken }, { limit: 1 })) {

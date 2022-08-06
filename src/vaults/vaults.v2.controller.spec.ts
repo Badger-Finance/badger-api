@@ -72,14 +72,14 @@ export function setupTestVault() {
     .spyOn(vaultsUtils, 'getVaultYieldSources')
     .mockImplementation(async (vault: VaultDefinitionModel): Promise<YieldSource[]> => {
       const performance = parseInt(vault.address.slice(0, 5), 16) / 100;
-      const underlying = VaultDefinitionModel.createYieldSource(
-        vault,
+      const underlying = vaultsUtils.createYieldSource(
+        vault.address,
         SourceType.Compound,
         vaultsUtils.VAULT_SOURCE,
         performance,
       );
-      const badger = VaultDefinitionModel.createYieldSource(vault, SourceType.Emission, 'Badger Rewards', performance);
-      const fees = VaultDefinitionModel.createYieldSource(vault, SourceType.TradeFee, 'Curve LP Fees', performance);
+      const badger = vaultsUtils.createYieldSource(vault.address, SourceType.Emission, 'Badger Rewards', performance);
+      const fees = vaultsUtils.createYieldSource(vault.address, SourceType.TradeFee, 'Curve LP Fees', performance);
       return [underlying, badger, fees];
     });
   jest

@@ -6,20 +6,19 @@ import {
   ListHarvestOptions,
   Network,
   ONE_DAY_MS,
+  Protocol,
   Strategy__factory,
   Vault__factory,
+  VaultDTO,
   VaultPerformanceEvent,
+  VaultType,
   VaultV15__factory,
   VaultVersion,
-  VaultDTO,
-  Protocol,
-  VaultType,
 } from '@badger-dao/sdk';
 import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';
 
 import { getDataMapper } from '../aws/dynamodb.utils';
-import { YieldSource } from '../aws/models/yield-source.model';
 import { ChartDataBlob } from '../aws/models/chart-data-blob.model';
 import { CurrentVaultSnapshotModel } from '../aws/models/current-vault-snapshot.model';
 import { HarvestCompoundData } from '../aws/models/harvest-compound.model';
@@ -27,6 +26,7 @@ import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapsho
 import { HistoricVaultSnapshotOldModel } from '../aws/models/historic-vault-snapshot-old.model';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
+import { YieldSource } from '../aws/models/yield-source.model';
 import { Chain } from '../chains/config/chain.config';
 import { ONE_DAY_SECONDS, ONE_YEAR_SECONDS } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
@@ -36,6 +36,7 @@ import { PricingType } from '../prices/enums/pricing-type.enum';
 import { TokenPrice } from '../prices/interface/token-price.interface';
 import { getPrice } from '../prices/prices.utils';
 import { SourceType } from '../rewards/enums/source-type.enum';
+import { BoostRange } from '../rewards/interfaces/boost-range.interface';
 import { getProtocolValueSources, getRewardEmission } from '../rewards/rewards.utils';
 import { getFullToken } from '../tokens/tokens.utils';
 import { Nullable } from '../utils/types.utils';
@@ -566,22 +567,12 @@ export async function estimateVaultPerformance(
 
   // create the apr source for harvests
   const compoundApr = (totalHarvestedTokens / measuredBalance) * durationScalar;
-  const compoundYieldSource = VaultDefinitionModel.createYieldSource(
-    vault,
-    SourceType.PreCompound,
-    VAULT_SOURCE,
-    compoundApr * 100,
-  );
+  const compoundYieldSource = createYieldSource(vault.address, SourceType.PreCompound, VAULT_SOURCE, compoundApr * 100);
   valueSources.push(compoundYieldSource);
 
   // create the apy source for harvests
   const compoundApy = (1 + compoundApr / periods) ** periods - 1;
-  const compoundedYieldSource = VaultDefinitionModel.createYieldSource(
-    vault,
-    SourceType.Compound,
-    VAULT_SOURCE,
-    compoundApy * 100,
-  );
+  const compoundedYieldSource = createYieldSource(vault.address, SourceType.Compound, VAULT_SOURCE, compoundApy * 100);
   valueSources.push(compoundedYieldSource);
 
   const treeDistributions = measuredHarvests.flatMap((h) => h.treeDistributions);
@@ -607,8 +598,8 @@ export async function estimateVaultPerformance(
     const tokensEmitted = formatBalance(amount, tokenEmitted.decimals);
     const valueEmitted = tokensEmitted * price;
     const emissionApr = (valueEmitted / measuredValue) * durationScalar;
-    const emissionYieldSource = VaultDefinitionModel.createYieldSource(
-      vault,
+    const emissionYieldSource = createYieldSource(
+      vault.address,
       SourceType.Distribution,
       tokenEmitted.name,
       emissionApr * 100,
@@ -629,12 +620,7 @@ export async function estimateVaultPerformance(
 
   if (flywheelCompounding > 0) {
     const sourceName = `Vault Flywheel`;
-    const flywheelYieldSource = VaultDefinitionModel.createYieldSource(
-      vault,
-      SourceType.Flywheel,
-      sourceName,
-      flywheelCompounding,
-    );
+    const flywheelYieldSource = createYieldSource(vault.address, SourceType.Flywheel, sourceName, flywheelCompounding);
     valueSources.push(flywheelYieldSource);
   }
 
@@ -853,4 +839,25 @@ export function isPassiveVaultSource(source: YieldSource): boolean {
     source.type.includes(SourceType.TradeFee) ||
     source.type.includes(SourceType.Flywheel)
   );
+}
+
+export function createYieldSource(
+  address: string,
+  type: string,
+  name: string,
+  apr: number,
+  boost: BoostRange = { min: 1, max: 1 },
+): YieldSource {
+  const id = [address, type, name].map((p) => p.toLowerCase()).join('_');
+  const isBoostable = boost.min != boost.max;
+  return Object.assign(new YieldSource(), {
+    id,
+    address,
+    type,
+    name,
+    apr,
+    boostable: isBoostable,
+    minApr: apr * boost.min,
+    maxApr: apr * boost.max,
+  });
 }

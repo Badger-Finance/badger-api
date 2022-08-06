@@ -39,6 +39,7 @@ import * as tokenUtils from '../tokens/tokens.utils';
 import { vaultsGraphSdkMapMock } from './mocks/vaults-graph-sdk-map.mock';
 import { vaultsHarvestsSdkMock } from './mocks/vaults-harvests-sdk.mock';
 import {
+  createYieldSource,
   defaultVault,
   estimateDerivativeEmission,
   getCachedVault,
@@ -47,7 +48,6 @@ import {
   getVaultTokenPrice,
   VAULT_SOURCE,
 } from './vaults.utils';
-import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 
 describe('vaults.utils', () => {
   beforeEach(() => {
@@ -151,7 +151,7 @@ describe('vaults.utils', () => {
       },
     }));
     jest.spyOn(rewardsUtils, 'getProtocolValueSources').mockImplementation(async (_chain, vault) => {
-      return [VaultDefinitionModel.createYieldSource(vault, SourceType.TradeFee, 'Test LP Fees', 1.13)];
+      return [createYieldSource(vault.address, SourceType.TradeFee, 'Test LP Fees', 1.13)];
     });
   });
 
@@ -183,8 +183,8 @@ describe('vaults.utils', () => {
     jest.spyOn(BadgerSDK.prototype, 'ready').mockImplementation();
     jest.spyOn(rewardsUtils, 'getRewardEmission').mockImplementation(async (_chain, vault) => {
       return [
-        VaultDefinitionModel.createYieldSource(
-          vault,
+        createYieldSource(
+          vault.address,
           tokenEmission(fullTokenMockMap[TOKENS.BBADGER], true),
           'Badger Rewards',
           6.969,
@@ -371,9 +371,7 @@ describe('vaults.utils', () => {
           address: token,
           price: Number(token.slice(0, 4)),
         }));
-        setupMapper([
-          VaultDefinitionModel.createYieldSource(MOCK_VAULT_DEFINITION, SourceType.PreCompound, VAULT_SOURCE, 10),
-        ]);
+        setupMapper([createYieldSource(MOCK_VAULT_DEFINITION.address, SourceType.PreCompound, VAULT_SOURCE, 10)]);
         setFullTokenDataMock();
         const result = await getVaultPerformance(TEST_CHAIN, MOCK_VAULT_DEFINITION);
         expect(result).toMatchSnapshot();

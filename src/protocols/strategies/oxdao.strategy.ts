@@ -1,5 +1,5 @@
-import { YieldSource } from '../../aws/models/yield-source.model';
 import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
+import { YieldSource } from '../../aws/models/yield-source.model';
 import { Chain } from '../../chains/config/chain.config';
 import { TOKENS } from '../../config/tokens.config';
 import { SourceType } from '../../rewards/enums/source-type.enum';
@@ -24,7 +24,7 @@ async function getLiquiditySources(chain: Chain, vaultDefinition: VaultDefinitio
     getCachedVault(chain, bveOXDVault),
     getVaultYieldSources(bveOXDVault),
   ]);
-  const vaultTokens = await getVaultTokens(chain, bveOXDLP, bveOXDLP.balance);
+  const vaultTokens = await getVaultTokens(chain, bveOXDLP);
   const bveOXDValue = vaultTokens
     .filter((t) => t.address === TOKENS.BVEOXD)
     .map((t) => t.value)
