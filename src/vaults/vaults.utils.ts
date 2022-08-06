@@ -1,4 +1,3 @@
-import { between } from '@aws/dynamodb-expressions';
 import {
   formatBalance,
   gqlGenT,
@@ -23,7 +22,6 @@ import { ChartDataBlob } from '../aws/models/chart-data-blob.model';
 import { CurrentVaultSnapshotModel } from '../aws/models/current-vault-snapshot.model';
 import { HarvestCompoundData } from '../aws/models/harvest-compound.model';
 import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
-import { HistoricVaultSnapshotOldModel } from '../aws/models/historic-vault-snapshot-old.model';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
 import { YieldSource } from '../aws/models/yield-source.model';
@@ -133,34 +131,6 @@ export async function getCachedVault(chain: Chain, vaultDefinition: VaultDefinit
     return vault;
   } catch {
     return vault;
-  }
-}
-
-export async function getVaultSnapshotsInRange(
-  chain: Chain,
-  vault: VaultDefinitionModel,
-  start: Date,
-  end: Date,
-): Promise<HistoricVaultSnapshotOldModel[]> {
-  try {
-    const snapshots = [];
-    const mapper = getDataMapper();
-    const assetToken = await getFullToken(chain, vault.address);
-
-    for await (const snapshot of mapper.query(
-      HistoricVaultSnapshotOldModel,
-      { address: assetToken.address, timestamp: between(new Date(start).getTime(), new Date(end).getTime()) },
-      { scanIndexForward: false },
-    )) {
-      if (!snapshot.pricePerFullShare && snapshot.ratio) {
-        snapshot.pricePerFullShare = snapshot.ratio;
-      }
-      snapshots.push(snapshot);
-    }
-    return snapshots;
-  } catch (err) {
-    console.error(err);
-    return [];
   }
 }
 
