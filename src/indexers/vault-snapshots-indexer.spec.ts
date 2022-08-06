@@ -82,7 +82,7 @@ describe('refreshVaultSnapshots', () => {
       return fullTokenMockMap[tokenAddr] || fullTokenMockMap[TOKENS.BADGER];
     });
     jest
-      .spyOn(tokensUtils, 'getCachedTokenBalances')
+      .spyOn(tokensUtils, 'getVaultTokens')
       .mockImplementation(async (_chain: Chain, vault: VaultDTO, _currency?: string): Promise<TokenValue[]> => {
         const token = fullTokenMockMap[vault.underlyingToken] || fullTokenMockMap[TOKENS.BADGER];
         if (token.lpToken) {

@@ -83,7 +83,7 @@ export function setupTestVault() {
       return [underlying, badger, fees];
     });
   jest
-    .spyOn(tokensUtils, 'getCachedTokenBalances')
+    .spyOn(tokensUtils, 'getVaultTokens')
     .mockImplementation(async (_chain: Chain, vault: VaultDTO, _currency?: string): Promise<TokenValue[]> => {
       const token = fullTokenMockMap[vault.underlyingToken] || fullTokenMockMap[TOKENS.BADGER];
       if (token.lpToken) {

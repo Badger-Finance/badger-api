@@ -25,7 +25,7 @@ import { convert } from '../prices/prices.utils';
 import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interface';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
-import { getCachedTokenBalances } from '../tokens/tokens.utils';
+import { getVaultTokens } from '../tokens/tokens.utils';
 import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
 import { VaultHarvestsMap } from './interfaces/vault-harvest-map';
 import {
@@ -126,7 +126,7 @@ export class VaultsService {
       getVaultYieldSources(vaultDefinition),
       getVaultPendingHarvest(vaultDefinition),
     ]);
-    vault.tokens = await getCachedTokenBalances(chain, vault, currency);
+    vault.tokens = await getVaultTokens(chain, vault, currency);
     vault.value = await convert(vault.value, currency);
     const baseSources = sources
       .filter((source) => source.apr >= 0.001)

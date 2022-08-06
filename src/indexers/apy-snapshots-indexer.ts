@@ -17,7 +17,8 @@ export async function refreshApySnapshots() {
 
 export async function refreshChainApySnapshots(chain: Chain, vault: VaultDefinitionModel) {
   try {
-    const currentYieldSources = await getVaultValueSources(chain, vault);
+    const reportedYieldSources = await getVaultValueSources(chain, vault);
+    const currentYieldSources = reportedYieldSources.filter((s) => !isNaN(s.apr) && isFinite(s.apr));
     const currentApr = currentYieldSources.reduce((total, s) => (total += s.apr), 0);
     const previousYieldSources = await getVaultYieldSources(vault);
     const previousApr = previousYieldSources.reduce((total, s) => (total += s.apr), 0);

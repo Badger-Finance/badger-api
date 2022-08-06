@@ -49,6 +49,7 @@ describe('apy-snapshots-indexer', () => {
       const allChainVault = await TEST_CHAIN.vaults.all();
       expect(batchPut.mock.calls.length).toEqual(allChainVault.length);
     });
+
     it('doesnt call batch put if value source invalid', async () => {
       const batchPut = mockBatchPut([mockInvalidValueSource]);
       jest.spyOn(rewardsUtils, 'getVaultValueSources').mockReturnValue(Promise.resolve([mockInvalidValueSource]));

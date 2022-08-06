@@ -159,8 +159,8 @@ export function randomSnapshot(vaultDefinition?: VaultDefinitionModel): VaultSna
     timestamp: Date.now(),
     strategy: {
       address: ethers.constants.AddressZero,
-      withdrawFee: 50,
-      performanceFee: 20,
+      withdrawFee: 0,
+      performanceFee: 0,
       strategistFee: 0,
       aumFee: 0,
     },

@@ -111,8 +111,8 @@ export async function toVaultBalance(
   const earnedBalance = balanceTokens - depositedTokens + withdrawnTokens;
   const [depositTokenPrice, earnedTokens, tokens] = await Promise.all([
     getPrice(vaultDefinition.depositToken),
-    getVaultTokens(chain, vault, earnedBalance, currency),
-    getVaultTokens(chain, vault, balanceTokens, currency),
+    getVaultTokens(chain, vault, currency),
+    getVaultTokens(chain, vault, currency),
   ]);
 
   const depositTokenConvertedPrice = await convert(depositTokenPrice.price, currency);
