@@ -1,7 +1,7 @@
 import { Network } from '@badger-dao/sdk';
 import { GraphQLClient } from 'graphql-request';
 
-import { CachedValueSource } from '../../aws/models/apy-snapshots.model';
+import { YieldSource } from '../../aws/models/yield-source.model';
 import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
 import { Chain } from '../../chains/config/chain.config';
 import { SUSHISWAP_ARBITRUM_URL, SUSHISWAP_MATIC_URL, SUSHISWAP_URL } from '../../config/constants';
@@ -10,12 +10,12 @@ import { PairDayData } from '../interfaces/pair-day-data.interface';
 import { getSwapValue } from './strategy.utils';
 
 export class SushiswapStrategy {
-  static async getValueSources(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<CachedValueSource[]> {
+  static async getValueSources(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<YieldSource[]> {
     return Promise.all([getSushiswapSwapValue(chain, vaultDefinition)]);
   }
 }
 
-async function getSushiswapSwapValue(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<CachedValueSource> {
+async function getSushiswapSwapValue(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<YieldSource> {
   let graphUrl;
   switch (chain.network) {
     case Network.Polygon:
@@ -30,10 +30,7 @@ async function getSushiswapSwapValue(chain: Chain, vaultDefinition: VaultDefinit
   return getSushiSwapValue(vaultDefinition, graphUrl);
 }
 
-export async function getSushiSwapValue(
-  vaultDefinition: VaultDefinitionModel,
-  graphUrl: string,
-): Promise<CachedValueSource> {
+export async function getSushiSwapValue(vaultDefinition: VaultDefinitionModel, graphUrl: string): Promise<YieldSource> {
   const client = new GraphQLClient(graphUrl);
   const sdk = getSushiswapSdk(client);
   const { pairDayDatas } = await sdk.SushiPairDayDatas({

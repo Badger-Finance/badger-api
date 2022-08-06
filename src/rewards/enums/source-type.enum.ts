@@ -4,4 +4,5 @@ export enum SourceType {
   PreCompound = 'precompound',
   Compound = 'compound',
   Flywheel = 'flywheel',
+  Distribution = 'distribution',
 }

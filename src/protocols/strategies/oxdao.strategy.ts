@@ -1,13 +1,13 @@
-import { CachedValueSource } from '../../aws/models/apy-snapshots.model';
+import { YieldSource } from '../../aws/models/yield-source.model';
 import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
 import { Chain } from '../../chains/config/chain.config';
 import { TOKENS } from '../../config/tokens.config';
 import { SourceType } from '../../rewards/enums/source-type.enum';
 import { getFullToken, getVaultTokens } from '../../tokens/tokens.utils';
-import { getCachedVault, getVaultCachedValueSources } from '../../vaults/vaults.utils';
+import { getCachedVault, getVaultYieldSources } from '../../vaults/vaults.utils';
 
 export class OxDaoStrategy {
-  static async getValueSources(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<CachedValueSource[]> {
+  static async getValueSources(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<YieldSource[]> {
     switch (vaultDefinition.address) {
       case TOKENS.BSMM_BVEOXD_OXD:
         return getLiquiditySources(chain, vaultDefinition);
@@ -17,12 +17,12 @@ export class OxDaoStrategy {
   }
 }
 
-async function getLiquiditySources(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<CachedValueSource[]> {
+async function getLiquiditySources(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<YieldSource[]> {
   const bveOXDVault = await chain.vaults.getVault(TOKENS.BVEOXD);
   const [bveOXDLP, bveOXD, bveOXDSources] = await Promise.all([
     getCachedVault(chain, vaultDefinition),
     getCachedVault(chain, bveOXDVault),
-    getVaultCachedValueSources(bveOXDVault),
+    getVaultYieldSources(bveOXDVault),
   ]);
   const vaultTokens = await getVaultTokens(chain, bveOXDLP, bveOXDLP.balance);
   const bveOXDValue = vaultTokens
@@ -35,13 +35,10 @@ async function getLiquiditySources(chain: Chain, vaultDefinition: VaultDefinitio
     if (s.type === SourceType.Compound || s.type === SourceType.PreCompound) {
       s.name = `${vaultToken.name} ${s.name}`;
       const sourceTypeName = `${s.type === SourceType.Compound ? 'Derivative ' : ''}${vaultToken.name} ${s.type}`;
-      s.addressValueSourceType = s.addressValueSourceType.replace(
-        s.type,
-        sourceTypeName.replace(/ /g, '_').toLowerCase(),
-      );
+      s.id = s.id.replace(s.type, sourceTypeName.replace(/ /g, '_').toLowerCase());
     }
     // rewrite object keys to simulate sources from the lp vault
-    s.addressValueSourceType = s.addressValueSourceType.replace(bveOXD.vaultToken, bveOXDLP.vaultToken);
+    s.id = s.id.replace(bveOXD.vaultToken, bveOXDLP.vaultToken);
     s.address = bveOXDLP.vaultToken;
     s.apr *= scalar;
     s.maxApr *= scalar;

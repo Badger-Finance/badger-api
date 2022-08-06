@@ -19,7 +19,6 @@ import { ONE_DAY_SECONDS } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
 import * as indexerUtils from '../indexers/indexer.utils';
 import * as pricesUtils from '../prices/prices.utils';
-import { createValueSource } from '../protocols/interfaces/value-source.interface';
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import * as rewardsUtils from '../rewards/rewards.utils';
@@ -48,6 +47,7 @@ import {
   getVaultTokenPrice,
   VAULT_SOURCE,
 } from './vaults.utils';
+import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 
 describe('vaults.utils', () => {
   beforeEach(() => {
@@ -150,9 +150,8 @@ describe('vaults.utils', () => {
         releasedAt: 0,
       },
     }));
-    jest.spyOn(rewardsUtils, 'getProtocolValueSources').mockImplementation(async (_chain, _vault) => {
-      const rewardSource = createValueSource('Test LP Fees', 1.13);
-      return [rewardsUtils.valueSourceToCachedValueSource(rewardSource, MOCK_VAULT_DEFINITION, SourceType.TradeFee)];
+    jest.spyOn(rewardsUtils, 'getProtocolValueSources').mockImplementation(async (_chain, vault) => {
+      return [VaultDefinitionModel.createYieldSource(vault, SourceType.TradeFee, 'Test LP Fees', 1.13)];
     });
   });
 
@@ -182,13 +181,14 @@ describe('vaults.utils', () => {
 
   beforeEach(() => {
     jest.spyOn(BadgerSDK.prototype, 'ready').mockImplementation();
-    jest.spyOn(rewardsUtils, 'getRewardEmission').mockImplementation(async (_chain, _vault) => {
-      const rewardSource = createValueSource('Badger Rewards', 6.969);
+    jest.spyOn(rewardsUtils, 'getRewardEmission').mockImplementation(async (_chain, vault) => {
       return [
-        rewardsUtils.valueSourceToCachedValueSource(
-          rewardSource,
-          MOCK_VAULT_DEFINITION,
+        VaultDefinitionModel.createYieldSource(
+          vault,
           tokenEmission(fullTokenMockMap[TOKENS.BBADGER], true),
+          'Badger Rewards',
+          6.969,
+          { min: 1, max: 2 },
         ),
       ];
     });
@@ -241,8 +241,8 @@ describe('vaults.utils', () => {
         vaultToken: MOCK_VAULT_DEFINITION.address,
         strategy: {
           address: ethers.constants.AddressZero,
-          withdrawFee: 50,
-          performanceFee: 20,
+          withdrawFee: 0,
+          performanceFee: 0,
           strategistFee: 0,
           aumFee: 0,
         },
@@ -371,9 +371,8 @@ describe('vaults.utils', () => {
           address: token,
           price: Number(token.slice(0, 4)),
         }));
-        const underlying = createValueSource(VAULT_SOURCE, 10);
         setupMapper([
-          rewardsUtils.valueSourceToCachedValueSource(underlying, MOCK_VAULT_DEFINITION, SourceType.PreCompound),
+          VaultDefinitionModel.createYieldSource(MOCK_VAULT_DEFINITION, SourceType.PreCompound, VAULT_SOURCE, 10),
         ]);
         setFullTokenDataMock();
         const result = await getVaultPerformance(TEST_CHAIN, MOCK_VAULT_DEFINITION);

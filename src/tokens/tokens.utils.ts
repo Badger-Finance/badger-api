@@ -9,7 +9,6 @@ import { convert, getPrice } from '../prices/prices.utils';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { TokenNotFound } from './errors/token.error';
 import { TokenFull, TokenFullMap } from './interfaces/token-full.interface';
-import * as thisModule from './tokens.utils';
 
 export async function toBalance(token: Token, balance: number, currency?: Currency): Promise<TokenValue> {
   const { price } = await getPrice(token.address, currency);
@@ -46,6 +45,7 @@ export async function getVaultTokens(
   });
 }
 
+// TODO: deal with id and chain.network-vault.address
 export async function getCachedTokenBalances(
   chain: Chain,
   vault: VaultDTO,
@@ -60,10 +60,6 @@ export async function getCachedTokenBalances(
         value: await convert(b.value, currency),
       })),
     );
-  }
-  if (tokens.length === 0) {
-    const token = await thisModule.getFullToken(chain, vault.underlyingToken);
-    tokens = [await toBalance(token, vault.balance, currency)];
   }
   return tokens;
 }

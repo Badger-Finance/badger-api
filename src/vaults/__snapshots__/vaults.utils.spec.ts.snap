@@ -151,41 +151,41 @@ Array [
 
 exports[`vaults.utils getVaultPerformance no rewards or harvests returns value sources from fallback methods 1`] = `
 Array [
-  CachedValueSource {
+  YieldSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "addressValueSourceType": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_precompound",
     "apr": 56.764799999999994,
     "boostable": false,
+    "id": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_precompound_vault compounding",
     "maxApr": 56.764799999999994,
     "minApr": 56.764799999999994,
     "name": "Vault Compounding",
     "type": "precompound",
   },
-  CachedValueSource {
+  YieldSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "addressValueSourceType": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_compound",
     "apr": 74.23705993472916,
     "boostable": false,
+    "id": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_compound_vault compounding",
     "maxApr": 74.23705993472916,
     "minApr": 74.23705993472916,
     "name": "Vault Compounding",
     "type": "compound",
   },
-  CachedValueSource {
+  YieldSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "addressValueSourceType": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_boosted_bBADGER_emission",
     "apr": 6.969,
-    "boostable": false,
-    "maxApr": 6.969,
+    "boostable": true,
+    "id": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_boosted_bbadger_emission_badger rewards",
+    "maxApr": 13.938,
     "minApr": 6.969,
     "name": "Badger Rewards",
     "type": "boosted_bBADGER_emission",
   },
-  CachedValueSource {
+  YieldSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "addressValueSourceType": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_lp_fee",
     "apr": 1.13,
     "boostable": false,
+    "id": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_lp_fee_test lp fees",
     "maxApr": 1.13,
     "minApr": 1.13,
     "name": "Test LP Fees",
@@ -196,41 +196,41 @@ Array [
 
 exports[`vaults.utils getVaultPerformance requests non compatible network vault performances returns value sources from fallback methods 1`] = `
 Array [
-  CachedValueSource {
+  YieldSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "addressValueSourceType": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_precompound",
     "apr": 56.764799999999994,
     "boostable": false,
+    "id": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_precompound_vault compounding",
     "maxApr": 56.764799999999994,
     "minApr": 56.764799999999994,
     "name": "Vault Compounding",
     "type": "precompound",
   },
-  CachedValueSource {
+  YieldSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "addressValueSourceType": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_compound",
     "apr": 74.23705993472916,
     "boostable": false,
+    "id": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_compound_vault compounding",
     "maxApr": 74.23705993472916,
     "minApr": 74.23705993472916,
     "name": "Vault Compounding",
     "type": "compound",
   },
-  CachedValueSource {
+  YieldSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "addressValueSourceType": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_boosted_bBADGER_emission",
     "apr": 6.969,
-    "boostable": false,
-    "maxApr": 6.969,
+    "boostable": true,
+    "id": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_boosted_bbadger_emission_badger rewards",
+    "maxApr": 13.938,
     "minApr": 6.969,
     "name": "Badger Rewards",
     "type": "boosted_bBADGER_emission",
   },
-  CachedValueSource {
+  YieldSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "addressValueSourceType": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_lp_fee",
     "apr": 1.13,
     "boostable": false,
+    "id": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_lp_fee_test lp fees",
     "maxApr": 1.13,
     "minApr": 1.13,
     "name": "Test LP Fees",
@@ -241,41 +241,41 @@ Array [
 
 exports[`vaults.utils getVaultPerformance requests non standard vault performance returns value sources from fallback methods 1`] = `
 Array [
-  CachedValueSource {
+  YieldSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "addressValueSourceType": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_precompound",
     "apr": 56.764799999999994,
     "boostable": false,
+    "id": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_precompound_vault compounding",
     "maxApr": 56.764799999999994,
     "minApr": 56.764799999999994,
     "name": "Vault Compounding",
     "type": "precompound",
   },
-  CachedValueSource {
+  YieldSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "addressValueSourceType": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_compound",
     "apr": 74.23705993472916,
     "boostable": false,
+    "id": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_compound_vault compounding",
     "maxApr": 74.23705993472916,
     "minApr": 74.23705993472916,
     "name": "Vault Compounding",
     "type": "compound",
   },
-  CachedValueSource {
+  YieldSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "addressValueSourceType": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_boosted_bBADGER_emission",
     "apr": 6.969,
-    "boostable": false,
-    "maxApr": 6.969,
+    "boostable": true,
+    "id": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_boosted_bbadger_emission_badger rewards",
+    "maxApr": 13.938,
     "minApr": 6.969,
     "name": "Badger Rewards",
     "type": "boosted_bBADGER_emission",
   },
-  CachedValueSource {
+  YieldSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "addressValueSourceType": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_lp_fee",
     "apr": 1.13,
     "boostable": false,
+    "id": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_lp_fee_test lp fees",
     "maxApr": 1.13,
     "minApr": 1.13,
     "name": "Test LP Fees",
@@ -286,71 +286,71 @@ Array [
 
 exports[`vaults.utils getVaultPerformance requests standard vault performance returns value sources from standard methods 1`] = `
 Array [
-  CachedValueSource {
+  YieldSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "addressValueSourceType": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_precompound",
     "apr": 1.9605714285714286,
     "boostable": false,
+    "id": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_precompound_vault compounding",
     "maxApr": 1.9605714285714286,
     "minApr": 1.9605714285714286,
     "name": "Vault Compounding",
     "type": "precompound",
   },
-  CachedValueSource {
+  YieldSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "addressValueSourceType": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_compound",
     "apr": 1.9791654594512487,
     "boostable": false,
+    "id": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_compound_vault compounding",
     "maxApr": 1.9791654594512487,
     "minApr": 1.9791654594512487,
     "name": "Vault Compounding",
     "type": "compound",
   },
-  CachedValueSource {
+  YieldSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "addressValueSourceType": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_flat_bCVXCRV_emission",
     "apr": 0.000004975832417583712,
     "boostable": false,
+    "id": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_distribution_bcvxcrv",
     "maxApr": 0.000004975832417583712,
     "minApr": 0.000004975832417583712,
     "name": "bCVXCRV",
-    "type": "flat_bCVXCRV_emission",
+    "type": "distribution",
   },
-  CachedValueSource {
+  YieldSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "addressValueSourceType": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_flat_bVECVX_emission",
     "apr": 0.000022426642857150473,
     "boostable": false,
+    "id": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_distribution_bvecvx",
     "maxApr": 0.000022426642857150473,
     "minApr": 0.000022426642857150473,
     "name": "bVECVX",
-    "type": "flat_bVECVX_emission",
+    "type": "distribution",
   },
-  CachedValueSource {
+  YieldSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "addressValueSourceType": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_flywheel",
     "apr": 0.0000013944295327135587,
     "boostable": false,
+    "id": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_flywheel_vault flywheel",
     "maxApr": 0.0000013944295327135587,
     "minApr": 0.0000013944295327135587,
     "name": "Vault Flywheel",
     "type": "flywheel",
   },
-  CachedValueSource {
+  YieldSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "addressValueSourceType": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_boosted_bBADGER_emission",
     "apr": 6.969,
-    "boostable": false,
-    "maxApr": 6.969,
+    "boostable": true,
+    "id": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_boosted_bbadger_emission_badger rewards",
+    "maxApr": 13.938,
     "minApr": 6.969,
     "name": "Badger Rewards",
     "type": "boosted_bBADGER_emission",
   },
-  CachedValueSource {
+  YieldSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "addressValueSourceType": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_lp_fee",
     "apr": 1.13,
     "boostable": false,
+    "id": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_lp_fee_test lp fees",
     "maxApr": 1.13,
     "minApr": 1.13,
     "name": "Test LP Fees",
@@ -361,41 +361,41 @@ Array [
 
 exports[`vaults.utils getVaultPerformance requests standard vault performance skips all emitted tokens with no price 1`] = `
 Array [
-  CachedValueSource {
+  YieldSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "addressValueSourceType": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_precompound",
     "apr": 1.9605714285714286,
     "boostable": false,
+    "id": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_precompound_vault compounding",
     "maxApr": 1.9605714285714286,
     "minApr": 1.9605714285714286,
     "name": "Vault Compounding",
     "type": "precompound",
   },
-  CachedValueSource {
+  YieldSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "addressValueSourceType": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_compound",
     "apr": 1.9791654594512487,
     "boostable": false,
+    "id": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_compound_vault compounding",
     "maxApr": 1.9791654594512487,
     "minApr": 1.9791654594512487,
     "name": "Vault Compounding",
     "type": "compound",
   },
-  CachedValueSource {
+  YieldSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "addressValueSourceType": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_boosted_bBADGER_emission",
     "apr": 6.969,
-    "boostable": false,
-    "maxApr": 6.969,
+    "boostable": true,
+    "id": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_boosted_bbadger_emission_badger rewards",
+    "maxApr": 13.938,
     "minApr": 6.969,
     "name": "Badger Rewards",
     "type": "boosted_bBADGER_emission",
   },
-  CachedValueSource {
+  YieldSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "addressValueSourceType": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_lp_fee",
     "apr": 1.13,
     "boostable": false,
+    "id": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_lp_fee_test lp fees",
     "maxApr": 1.13,
     "minApr": 1.13,
     "name": "Test LP Fees",

@@ -30,9 +30,9 @@ import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-r
 import { VaultHarvestsMap } from './interfaces/vault-harvest-map';
 import {
   getCachedVault,
-  getVaultCachedValueSources,
   getVaultPendingHarvest,
   getVaultSnapshotsAtTimestamps,
+  getVaultYieldSources,
   isPassiveVaultSource,
   queryVaultCharts,
   VAULT_SOURCE,
@@ -44,9 +44,9 @@ export class VaultsService {
     const vaults = await chain.vaults.all();
     const summaries = await Promise.all(
       vaults.map(async (vault) => {
-        const { name, balance, value } = await getCachedVault(chain, vault);
+        const { balance, value } = await getCachedVault(chain, vault);
         const convertedValue = await convert(value, currency);
-        return { name, balance, value: convertedValue };
+        return { name: vault.name, balance, value: convertedValue };
       }),
     );
     const totalValue = summaries.reduce((total, vault) => (total += vault.value), 0);
@@ -123,7 +123,7 @@ export class VaultsService {
   static async loadVault(chain: Chain, vaultDefinition: VaultDefinitionModel, currency?: Currency): Promise<VaultDTO> {
     const [vault, sources, pendingHarvest] = await Promise.all([
       getCachedVault(chain, vaultDefinition),
-      getVaultCachedValueSources(vaultDefinition),
+      getVaultYieldSources(vaultDefinition),
       getVaultPendingHarvest(vaultDefinition),
     ]);
     vault.tokens = await getCachedTokenBalances(chain, vault, currency);

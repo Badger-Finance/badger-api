@@ -6,20 +6,20 @@ import {
   ListHarvestOptions,
   Network,
   ONE_DAY_MS,
-  Protocol,
   Strategy__factory,
   Vault__factory,
-  VaultDTO,
   VaultPerformanceEvent,
-  VaultType,
   VaultV15__factory,
   VaultVersion,
+  VaultDTO,
+  Protocol,
+  VaultType,
 } from '@badger-dao/sdk';
 import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';
 
 import { getDataMapper } from '../aws/dynamodb.utils';
-import { CachedValueSource } from '../aws/models/apy-snapshots.model';
+import { YieldSource } from '../aws/models/yield-source.model';
 import { ChartDataBlob } from '../aws/models/chart-data-blob.model';
 import { CurrentVaultSnapshotModel } from '../aws/models/current-vault-snapshot.model';
 import { HarvestCompoundData } from '../aws/models/harvest-compound.model';
@@ -35,10 +35,9 @@ import { getVault } from '../indexers/indexer.utils';
 import { PricingType } from '../prices/enums/pricing-type.enum';
 import { TokenPrice } from '../prices/interface/token-price.interface';
 import { getPrice } from '../prices/prices.utils';
-import { createValueSource } from '../protocols/interfaces/value-source.interface';
 import { SourceType } from '../rewards/enums/source-type.enum';
-import { getProtocolValueSources, getRewardEmission, valueSourceToCachedValueSource } from '../rewards/rewards.utils';
-import { getFullToken, tokenEmission } from '../tokens/tokens.utils';
+import { getProtocolValueSources, getRewardEmission } from '../rewards/rewards.utils';
+import { getFullToken } from '../tokens/tokens.utils';
 import { Nullable } from '../utils/types.utils';
 import { HarvestType } from './enums/harvest.enum';
 import { VaultHarvestData } from './interfaces/vault-harvest-data.interface';
@@ -47,13 +46,10 @@ import { VaultStrategy } from './interfaces/vault-strategy.interface';
 
 export const VAULT_SOURCE = 'Vault Compounding';
 
-export async function defaultVault(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<VaultDTO> {
-  const [assetToken, vaultToken] = await Promise.all([
-    getFullToken(chain, vaultDefinition.depositToken),
-    getFullToken(chain, vaultDefinition.address),
-  ]);
+export async function defaultVault(chain: Chain, vault: VaultDefinitionModel): Promise<VaultDTO> {
+  const { state, bouncer, behavior, version, protocol, name, depositToken, address } = vault;
+  const [assetToken, vaultToken] = await Promise.all([getFullToken(chain, depositToken), getFullToken(chain, address)]);
 
-  const { state, bouncer, behavior, version, protocol, name, depositToken, address } = vaultDefinition;
   const type = protocol === Protocol.Badger ? VaultType.Native : VaultType.Standard;
 
   return {
@@ -77,8 +73,8 @@ export async function defaultVault(chain: Chain, vaultDefinition: VaultDefinitio
     tokens: [],
     strategy: {
       address: ethers.constants.AddressZero,
-      withdrawFee: 50,
-      performanceFee: 20,
+      withdrawFee: 0,
+      performanceFee: 0,
       strategistFee: 0,
       aumFee: 0,
     },
@@ -106,6 +102,7 @@ export async function defaultVault(chain: Chain, vaultDefinition: VaultDefinitio
   };
 }
 
+// TODO: vault should migration from address -> id where id = chain.network-vault.address
 export async function getCachedVault(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<VaultDTO> {
   const vault = await defaultVault(chain, vaultDefinition);
   try {
@@ -130,10 +127,10 @@ export async function getCachedVault(chain: Chain, vaultDefinition: VaultDefinit
         enabled: item.boostWeight > 0,
         weight: item.boostWeight,
       };
+      return vault;
     }
     return vault;
-  } catch (err) {
-    console.error(err);
+  } catch {
     return vault;
   }
 }
@@ -254,10 +251,10 @@ export async function getVaultTokenPrice(chain: Chain, address: string): Promise
   const isCrossChainVault = chain.network !== vaultToken.network;
   const targetChain = isCrossChainVault ? Chain.getChain(vaultToken.network) : chain;
   const targetVault = isCrossChainVault ? vaultToken.address : token.address;
-  const vaultDefintion = await targetChain.vaults.getVault(targetVault);
+  const vault = await targetChain.vaults.getVault(targetVault);
   const [underlyingTokenPrice, vaultTokenSnapshot] = await Promise.all([
     getPrice(vaultToken.address),
-    getCachedVault(chain, vaultDefintion),
+    getCachedVault(chain, vault),
   ]);
   return {
     address: token.address,
@@ -273,12 +270,12 @@ const vaultLookupMethod: Record<string, string> = {};
  * @param vault Vault definition of requested vault
  * @returns Value source array describing vault performance
  */
-export async function getVaultPerformance(chain: Chain, vault: VaultDefinitionModel): Promise<CachedValueSource[]> {
+export async function getVaultPerformance(chain: Chain, vault: VaultDefinitionModel): Promise<YieldSource[]> {
   const [rewardEmissions, protocol] = await Promise.all([
     getRewardEmission(chain, vault),
     getProtocolValueSources(chain, vault),
   ]);
-  let vaultSources: CachedValueSource[] = [];
+  let vaultSources: YieldSource[] = [];
   try {
     vaultSources = await loadVaultEventPerformances(chain, vault);
   } catch (err) {
@@ -291,7 +288,7 @@ export async function getVaultPerformance(chain: Chain, vault: VaultDefinitionMo
 export async function loadVaultEventPerformances(
   chain: Chain,
   vaultDefinition: VaultDefinitionModel,
-): Promise<CachedValueSource[]> {
+): Promise<YieldSource[]> {
   const incompatibleNetworks = new Set<Network>([Network.BinanceSmartChain, Network.Polygon, Network.Arbitrum]);
   if (incompatibleNetworks.has(chain.network)) {
     throw new Error('Network does not have standardized vaults!');
@@ -361,10 +358,7 @@ export function estimateDerivativeEmission(
 
 // subgraph based emissions retrieval
 // should we put this into the sdk?
-export async function loadVaultGraphPerformances(
-  chain: Chain,
-  vault: VaultDefinitionModel,
-): Promise<CachedValueSource[]> {
+export async function loadVaultGraphPerformances(chain: Chain, vault: VaultDefinitionModel): Promise<YieldSource[]> {
   const { address } = vault;
 
   // digg does not play well with this accounting
@@ -490,7 +484,7 @@ export async function estimateVaultPerformance(
   chain: Chain,
   vault: VaultDefinitionModel,
   data: VaultHarvestData[],
-): Promise<CachedValueSource[]> {
+): Promise<YieldSource[]> {
   const recentHarvests = data.sort((a, b) => b.timestamp - a.timestamp);
 
   if (recentHarvests.length <= 1) {
@@ -544,6 +538,7 @@ export async function estimateVaultPerformance(
       if (duration === 0) {
         continue;
       }
+      // TODO: replace with snapshot based lookup
       const { sett } = await getVault(chain, vault.address, end.block);
       if (sett) {
         const balance = sett.strategy?.balance ?? sett.balance;
@@ -571,15 +566,23 @@ export async function estimateVaultPerformance(
 
   // create the apr source for harvests
   const compoundApr = (totalHarvestedTokens / measuredBalance) * durationScalar;
-  const compoundSourceApr = createValueSource(VAULT_SOURCE, compoundApr * 100);
-  const cachedCompoundSourceApr = valueSourceToCachedValueSource(compoundSourceApr, vault, SourceType.PreCompound);
-  valueSources.push(cachedCompoundSourceApr);
+  const compoundYieldSource = VaultDefinitionModel.createYieldSource(
+    vault,
+    SourceType.PreCompound,
+    VAULT_SOURCE,
+    compoundApr * 100,
+  );
+  valueSources.push(compoundYieldSource);
 
   // create the apy source for harvests
   const compoundApy = (1 + compoundApr / periods) ** periods - 1;
-  const compoundSource = createValueSource(VAULT_SOURCE, compoundApy * 100);
-  const cachedCompoundSource = valueSourceToCachedValueSource(compoundSource, vault, SourceType.Compound);
-  valueSources.push(cachedCompoundSource);
+  const compoundedYieldSource = VaultDefinitionModel.createYieldSource(
+    vault,
+    SourceType.Compound,
+    VAULT_SOURCE,
+    compoundApy * 100,
+  );
+  valueSources.push(compoundedYieldSource);
 
   const treeDistributions = measuredHarvests.flatMap((h) => h.treeDistributions);
   const tokensEmitted = new Map<string, BigNumber>();
@@ -604,13 +607,18 @@ export async function estimateVaultPerformance(
     const tokensEmitted = formatBalance(amount, tokenEmitted.decimals);
     const valueEmitted = tokensEmitted * price;
     const emissionApr = (valueEmitted / measuredValue) * durationScalar;
-    const emissionSource = createValueSource(`${tokenEmitted.name}`, emissionApr * 100);
-    const cachedEmissionSource = valueSourceToCachedValueSource(emissionSource, vault, tokenEmission(tokenEmitted));
-    valueSources.push(cachedEmissionSource);
+    const emissionYieldSource = VaultDefinitionModel.createYieldSource(
+      vault,
+      SourceType.Distribution,
+      tokenEmitted.name,
+      emissionApr * 100,
+    );
+    valueSources.push(emissionYieldSource);
+
     // try to add underlying emitted vault value sources if applicable
     try {
       const emittedVault = await chain.vaults.getVault(tokenEmitted.address);
-      const vaultValueSources = await getVaultCachedValueSources(emittedVault);
+      const vaultValueSources = await getVaultYieldSources(emittedVault);
       // search for the persisted apr variant of the compounding vault source, if any
       const compoundingSource = vaultValueSources.find((source) => source.type === SourceType.PreCompound);
       if (compoundingSource) {
@@ -621,19 +629,24 @@ export async function estimateVaultPerformance(
 
   if (flywheelCompounding > 0) {
     const sourceName = `Vault Flywheel`;
-    const derivativeSource = createValueSource(sourceName, flywheelCompounding);
-    valueSources.push(valueSourceToCachedValueSource(derivativeSource, vault, SourceType.Flywheel));
+    const flywheelYieldSource = VaultDefinitionModel.createYieldSource(
+      vault,
+      SourceType.Flywheel,
+      sourceName,
+      flywheelCompounding,
+    );
+    valueSources.push(flywheelYieldSource);
   }
 
   return valueSources;
 }
 
-export async function getVaultCachedValueSources(vaultDefinition: VaultDefinitionModel): Promise<CachedValueSource[]> {
+export async function getVaultYieldSources(vault: VaultDefinitionModel): Promise<YieldSource[]> {
   const valueSources = [];
   const mapper = getDataMapper();
   for await (const source of mapper.query(
-    CachedValueSource,
-    { address: vaultDefinition.address },
+    YieldSource,
+    { address: vault.address },
     { indexName: 'IndexApySnapshotsOnAddress' },
   )) {
     valueSources.push(source);
@@ -834,7 +847,7 @@ export async function queryVaultCharts(id: string): Promise<HistoricVaultSnapsho
   }
 }
 
-export function isPassiveVaultSource(source: CachedValueSource): boolean {
+export function isPassiveVaultSource(source: YieldSource): boolean {
   return (
     source.type.includes(SourceType.Emission) ||
     source.type.includes(SourceType.TradeFee) ||

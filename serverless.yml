@@ -27,7 +27,7 @@ custom:
         sources:
           - table: ${self:custom.table.TOKEN_PRICE_DATA}
             sources: [./seed/prices.json]
-          - table: ${self:custom.table.APY_SNAPSHOTS_DATA}
+          - table: ${self:custom.table.YIELD_SNAPSHOTS_DATA}
             sources: [./seed/value-sources.json]
           # deprecated, rm after regV2
           - table: ${self:custom.table.VAULT_SNAPSHOTS_DATA}
@@ -45,7 +45,7 @@ custom:
     noPrependStageInUrl: true
 
   table:
-    APY_SNAPSHOTS_DATA: apy-snapshots-${self:custom.stage}
+    YIELD_SNAPSHOTS_DATA: apy-snapshots-${self:custom.stage}
     SETT_HISTORIC_DATA: sett-historic-snapshots-${self:custom.stage}
     # deprecated
     VAULT_SNAPSHOTS_DATA: vaults-snapshots-${self:custom.stage}
@@ -107,7 +107,7 @@ provider:
     SWAPR: 'https://api.thegraph.com/subgraphs/name/dxgraphs/swapr-arbitrum-one-v3'
     BALANCER: 'https://api.thegraph.com/subgraphs/name/balancer-labs/balancer-v2'
     # Table Defintions
-    APY_SNAPSHOTS_DATA: ${self:custom.table.APY_SNAPSHOTS_DATA}
+    YIELD_SNAPSHOTS_DATA: ${self:custom.table.YIELD_SNAPSHOTS_DATA}
     SETT_HISTORIC_DATA: ${self:custom.table.SETT_HISTORIC_DATA}
     # deprecated
     VAULT_SNAPSHOTS_DATA: ${self:custom.table.VAULT_SNAPSHOTS_DATA}
@@ -143,16 +143,16 @@ resources:
           - AttributeName: 'address'
             AttributeType: 'S'
 
-    apySnapshotsTable:
+    yieldSnapshotsTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:custom.table.APY_SNAPSHOTS_DATA}
+        TableName: ${self:custom.table.YIELD_SNAPSHOTS_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
-          - AttributeName: 'addressValueSourceType'
+          - AttributeName: 'id'
             KeyType: 'HASH'
         AttributeDefinitions:
-          - AttributeName: 'addressValueSourceType'
+          - AttributeName: 'id'
             AttributeType: 'S'
           - AttributeName: 'address'
             AttributeType: 'S'

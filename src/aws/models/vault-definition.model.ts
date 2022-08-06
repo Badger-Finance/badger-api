@@ -3,7 +3,9 @@ import { BouncerType, Network, Protocol, VaultBehavior, VaultState, VaultVersion
 
 import { VAULT_DEFINITION_DATA } from '../../config/constants';
 import { Stage } from '../../config/enums/stage.enum';
+import { BoostRange } from '../../rewards/interfaces/boost-range.interface';
 import { IVaultDefinition } from '../interfaces/vault-definition-model.interface';
+import { YieldSource } from './yield-source.model';
 
 @table(VAULT_DEFINITION_DATA)
 export class VaultDefinitionModel implements IVaultDefinition {

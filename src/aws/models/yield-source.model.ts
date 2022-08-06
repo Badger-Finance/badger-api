@@ -1,13 +1,12 @@
 import { attribute, hashKey, table } from '@aws/dynamodb-data-mapper-annotations';
+import { ValueSource } from '@badger-dao/sdk';
 
-import { APY_SNAPSHOTS_DATA } from '../../config/constants';
-import { ValueSource } from '../../protocols/interfaces/value-source.interface';
+import { YIELD_SNAPSHOTS_DATA } from '../../config/constants';
 
-// Can be removed, used only to collect data, no outside exposure found
-@table(APY_SNAPSHOTS_DATA)
-export class CachedValueSource {
+@table(YIELD_SNAPSHOTS_DATA)
+export class YieldSource implements ValueSource {
   @hashKey()
-  addressValueSourceType!: string;
+  id!: string;
 
   @attribute()
   address!: string;
@@ -29,9 +28,6 @@ export class CachedValueSource {
 
   @attribute()
   type!: string;
-
-  @attribute({ defaultProvider: () => Date.now() })
-  updatedAt!: number;
 
   toValueSource(): ValueSource {
     return {
