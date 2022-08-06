@@ -32,7 +32,7 @@ export class VaultsV3Controller {
 
     const chainInst = Chain.getChain(chain);
     const compoundVault = await chainInst.vaults.getVault(address);
-    return this.vaultService.getVault(chainInst, compoundVault, currency);
+    return VaultsService.loadVault(chainInst, compoundVault, currency);
   }
 
   @Get('/list')
@@ -45,7 +45,7 @@ export class VaultsV3Controller {
     @QueryParams('chain') chain?: Network,
     @QueryParams('currency') currency?: Currency,
   ): Promise<VaultModel[]> {
-    return this.vaultService.listV3Vaults(Chain.getChain(chain), currency);
+    return this.vaultService.listVaults(Chain.getChain(chain), currency);
   }
 
   @Get('/harvests')

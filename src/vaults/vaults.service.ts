@@ -4,14 +4,12 @@ import {
   keyBy,
   Network,
   ONE_YEAR_MS,
-  Protocol,
   VaultDTO,
   VaultSnapshot,
   VaultState,
   VaultType,
 } from '@badger-dao/sdk';
 import { VaultYieldProjection } from '@badger-dao/sdk/lib/api/interfaces/vault-yield-projection.interface';
-import { MetadataClient } from '@badger-dao/sdk/lib/registry.v2/enums/metadata.client.enum';
 import { Service } from '@tsed/common';
 
 import { getDataMapper } from '../aws/dynamodb.utils';
@@ -55,21 +53,7 @@ export class VaultsService {
 
   async listVaults(chain: Chain, currency?: Currency): Promise<VaultDTO[]> {
     const vaults = await chain.vaults.all();
-    return Promise.all(vaults.map((vault) => this.getVault(chain, vault, currency)));
-  }
-
-  async listV3Vaults(chain: Chain, currency?: Currency, client?: MetadataClient): Promise<VaultDTO[]> {
-    let vaults = await chain.vaults.all();
-
-    if (client) {
-      vaults = vaults.filter((v) => v.client === client);
-    }
-
-    return Promise.all(vaults.map((vault) => this.getVault(chain, vault, currency)));
-  }
-
-  async getVault(chain: Chain, vaultDefinition: VaultDefinitionModel, currency?: Currency): Promise<VaultDTO> {
-    return VaultsService.loadVault(chain, vaultDefinition, currency);
+    return Promise.all(vaults.map((vault) => VaultsService.loadVault(chain, vault, currency)));
   }
 
   async listVaultHarvests(chain: Chain): Promise<VaultHarvestsMap> {
@@ -126,8 +110,10 @@ export class VaultsService {
       getVaultYieldSources(vaultDefinition),
       getVaultPendingHarvest(vaultDefinition),
     ]);
+
     vault.tokens = await getVaultTokens(chain, vault, currency);
     vault.value = await convert(vault.value, currency);
+
     const baseSources = sources
       .filter((source) => source.apr >= 0.001)
       .filter((source) => {
@@ -136,6 +122,7 @@ export class VaultsService {
         }
         return vault.state !== VaultState.Discontinued;
       });
+
     const sourcesApr = baseSources.filter(
       (source) => source.type !== SourceType.Compound && !source.type.includes('derivative'),
     );
@@ -144,7 +131,7 @@ export class VaultsService {
     vault.sourcesApy = sourcesApy.map((s) => s.toValueSource());
     vault.apr = vault.sources.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
     vault.apy = vault.sourcesApy.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
-    vault.protocol = vaultDefinition.protocol ?? Protocol.Badger;
+    vault.protocol = vaultDefinition.protocol;
     vault.lastHarvest = pendingHarvest.lastHarvestedAt;
 
     const harvestProjection = this.getVaultYieldProjection(vault, pendingHarvest);

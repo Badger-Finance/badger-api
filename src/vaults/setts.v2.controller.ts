@@ -10,7 +10,7 @@ import { VaultsService } from './vaults.service';
 @Controller('/setts')
 export class SettsV2Controller {
   @Inject()
-  settsService!: VaultsService;
+  vaultsService!: VaultsService;
 
   @Get()
   @ContentType('json')
@@ -23,7 +23,7 @@ export class SettsV2Controller {
     @QueryParams('chain') chain?: Network,
     @QueryParams('currency') currency?: Currency,
   ): Promise<VaultModel[]> {
-    return this.settsService.listVaults(Chain.getChain(chain), currency);
+    return this.vaultsService.listVaults(Chain.getChain(chain), currency);
   }
 
   @Get('/:vault')
@@ -41,6 +41,6 @@ export class SettsV2Controller {
     const chainInst = Chain.getChain(chain);
     const vaultDef = await chainInst.vaults.getVault(vault);
 
-    return this.settsService.getVault(chainInst, vaultDef, currency);
+    return VaultsService.loadVault(chainInst, vaultDef, currency);
   }
 }

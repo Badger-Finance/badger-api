@@ -848,7 +848,7 @@ export function createYieldSource(
   apr: number,
   boost: BoostRange = { min: 1, max: 1 },
 ): YieldSource {
-  const id = [address, type, name].map((p) => p.toLowerCase()).join('_');
+  const id = [address, type, name].map((p) => p.replace(/ /g, '_').toLowerCase()).join('_');
   const isBoostable = boost.min != boost.max;
   return Object.assign(new YieldSource(), {
     id,
