@@ -1,4 +1,4 @@
-import { between, greaterThanOrEqualTo } from '@aws/dynamodb-expressions';
+import { between } from '@aws/dynamodb-expressions';
 import {
   formatBalance,
   gqlGenT,
@@ -787,37 +787,6 @@ export async function getLastCompoundHarvest(vault: string): Promise<Nullable<Ha
   }
 
   return lastHarvest;
-}
-
-export async function getVaultSnapshotsAtTimestamps(
-  chain: Chain,
-  vault: VaultDefinitionModel,
-  timestamps: number[],
-): Promise<HistoricVaultSnapshotOldModel[]> {
-  try {
-    const snapshots = [];
-    const mapper = getDataMapper();
-    const assetToken = await getFullToken(chain, vault.address);
-
-    for (const timestamp of timestamps) {
-      for await (const snapshot of mapper.query(
-        HistoricVaultSnapshotOldModel,
-        { address: assetToken.address, timestamp: greaterThanOrEqualTo(new Date(timestamp).getTime()) },
-        { limit: 1 },
-      )) {
-        if (!snapshot.pricePerFullShare && snapshot.ratio) {
-          snapshot.pricePerFullShare = snapshot.ratio;
-        }
-        snapshot.timestamp = timestamp;
-        snapshots.push(snapshot);
-      }
-    }
-
-    return snapshots;
-  } catch (err) {
-    console.error(err);
-    return [];
-  }
 }
 
 export async function queryVaultCharts(id: string): Promise<HistoricVaultSnapshotModel[]> {

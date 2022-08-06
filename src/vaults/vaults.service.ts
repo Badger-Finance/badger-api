@@ -5,7 +5,6 @@ import {
   Network,
   ONE_YEAR_MS,
   VaultDTO,
-  VaultSnapshot,
   VaultState,
   VaultType,
 } from '@badger-dao/sdk';
@@ -29,7 +28,6 @@ import { VaultHarvestsMap } from './interfaces/vault-harvest-map';
 import {
   getCachedVault,
   getVaultPendingHarvest,
-  getVaultSnapshotsAtTimestamps,
   getVaultYieldSources,
   isPassiveVaultSource,
   queryVaultCharts,
@@ -181,10 +179,6 @@ export class VaultsService {
     }
 
     return vault;
-  }
-
-  async getVaultSnapshots(chain: Chain, vault: VaultDefinitionModel, timestamps: number[]): Promise<VaultSnapshot[]> {
-    return getVaultSnapshotsAtTimestamps(chain, vault, timestamps);
   }
 
   /**
