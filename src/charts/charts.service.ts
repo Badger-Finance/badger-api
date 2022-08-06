@@ -1,41 +1,21 @@
+import { ChartTimeFrame } from '@badger-dao/sdk';
 import { Service } from '@tsed/di';
 
-import { HistoricVaultSnapshotOldModel } from '../aws/models/historic-vault-snapshot-old.model';
-import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
+import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
 import { Chain } from '../chains/config/chain.config';
-import { getVaultSnapshotsInRange } from '../vaults/vaults.utils';
-import { ChartGranularity } from './enums/chart-granularity.enum';
+import { queryVaultCharts } from '../vaults/vaults.utils';
+import { toChartDataKey } from './charts.utils';
 
 @Service()
 export class ChartsService {
-  async getChartData(
+  async loadVaultChartData(
+    vaultAddr: string,
+    timeframe: ChartTimeFrame,
     chain: Chain,
-    vault: VaultDefinitionModel,
-    start: Date,
-    end: Date,
-    granularity: ChartGranularity,
-    period: number,
-  ): Promise<HistoricVaultSnapshotOldModel[]> {
-    let snapshots = await getVaultSnapshotsInRange(chain, vault, start, end);
+  ): Promise<HistoricVaultSnapshotModel[]> {
+    const vaultBlobId = HistoricVaultSnapshotModel.formBlobId(vaultAddr, chain.network);
+    const dataKey = toChartDataKey(HistoricVaultSnapshotModel.NAMESPACE, vaultBlobId, timeframe);
 
-    // snapshot granularity @ 30 min intervals, 2 per hour, 48 per day
-    const interval = granularity === ChartGranularity.HOUR ? 2 : 48 * period;
-    // filter data down to selected granularity period combination
-    snapshots = snapshots.filter((_s, i) => i % interval === 0);
-
-    return snapshots;
-  }
-
-  static getRequestedDataPoints(start: Date, end: Date, granularity: ChartGranularity, period: number): number {
-    let returnedDataPoints: number;
-    const diffInMs = new Date(end).getTime() - new Date(start).getTime();
-    if (granularity === ChartGranularity.DAY) {
-      const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
-      returnedDataPoints = Math.floor(diffInDays / period);
-    } else {
-      const diffInHours = diffInMs / (1000 * 60 * 60);
-      returnedDataPoints = Math.floor(diffInHours / period);
-    }
-    return returnedDataPoints;
+    return queryVaultCharts(dataKey);
   }
 }

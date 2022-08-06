@@ -667,88 +667,6 @@ Object {
 
 exports[`VaultsController GET /v3/vaults/harvests success cases Return extended harvests for chain vault by addr 1`] = `Array []`;
 
-exports[`VaultsController GET /v3/vaults/inrange/snapshots error cases returns a 400 for invalide chain 1`] = `
-Object {
-  "message": "invalid is not a supported chain",
-}
-`;
-
-exports[`VaultsController GET /v3/vaults/inrange/snapshots error cases returns a 400 for invalide timestamps 1`] = `
-Object {
-  "code": 1000,
-  "message": "Query param timestamps invalid",
-}
-`;
-
-exports[`VaultsController GET /v3/vaults/inrange/snapshots error cases returns a 400 for missed vault address param 1`] = `
-Object {
-  "code": 1000,
-  "message": "Query param vaultAddr invalid",
-}
-`;
-
-exports[`VaultsController GET /v3/vaults/inrange/snapshots success cases return 200 and vaults snapshots for all dates, without duplications 1`] = `
-Array [
-  Object {
-    "address": "0x4591890225394BF66044347653e112621AF7DDeb",
-    "available": 0.8441047101358636,
-    "balance": 1313.2024161551205,
-    "id": "0x4591890225394BF66044347653e112621AF7DDeb_arbitrum",
-    "pricePerFullShare": 1.0318408019214105,
-    "ratio": 1.0318408019214105,
-    "timestamp": 1645103004000,
-    "value": 2032359.1094,
-  },
-  Object {
-    "address": "0x4591890225394BF66044347653e112621AF7DDeb",
-    "available": 0,
-    "balance": 1312.1235049307659,
-    "id": "0x4591890225394BF66044347653e112621AF7DDeb_arbitrum",
-    "pricePerFullShare": 1.0316911107514206,
-    "ratio": 1.0316911107514206,
-    "timestamp": 1645015261000,
-    "value": 2061137.5997,
-  },
-  Object {
-    "address": "0x4591890225394BF66044347653e112621AF7DDeb",
-    "available": 0.09301841726863323,
-    "balance": 1331.85239374146,
-    "id": "0x4591890225394BF66044347653e112621AF7DDeb_arbitrum",
-    "pricePerFullShare": 1.0315443246375726,
-    "ratio": 1.0315443246375726,
-    "timestamp": 1644928124000,
-    "value": 2087438.8599,
-  },
-]
-`;
-
-exports[`VaultsController GET /v3/vaults/inrange/snapshots success cases return 200 with 1 relevant vault and 2 old snapshots 1`] = `
-Array [
-  Object {
-    "address": "0x4591890225394BF66044347653e112621AF7DDeb",
-    "available": 0.8441047101358636,
-    "balance": 1313.2024161551205,
-    "id": "0x4591890225394BF66044347653e112621AF7DDeb_arbitrum",
-    "pricePerFullShare": 1.0318408019214105,
-    "ratio": 1.0318408019214105,
-    "timestamp": 1634821933000,
-    "value": 2032359.1094,
-  },
-  Object {
-    "address": "0x4591890225394BF66044347653e112621AF7DDeb",
-    "available": 0,
-    "balance": 1306.3528590407586,
-    "id": "0x4591890225394BF66044347653e112621AF7DDeb_arbitrum",
-    "pricePerFullShare": 1.031977892102678,
-    "ratio": 1.031977892102678,
-    "timestamp": 1634821931000,
-    "value": 1945766.2918,
-  },
-]
-`;
-
-exports[`VaultsController GET /v3/vaults/inrange/snapshots success cases return 200 with empty array, got unmached data 1`] = `Array []`;
-
 exports[`VaultsController GET /v3/vaults/list with a specified chain returns the vaults for eth 1`] = `
 Array [
   Object {
@@ -1399,3 +1317,85 @@ Object {
   "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28": Array [],
 }
 `;
+
+exports[`VaultsController GET /v3/vaults/snapshots error cases returns a 400 for invalide chain 1`] = `
+Object {
+  "message": "invalid is not a supported chain",
+}
+`;
+
+exports[`VaultsController GET /v3/vaults/snapshots error cases returns a 400 for invalide timestamps 1`] = `
+Object {
+  "code": 1000,
+  "message": "Query param timestamps invalid",
+}
+`;
+
+exports[`VaultsController GET /v3/vaults/snapshots error cases returns a 400 for missed vault address param 1`] = `
+Object {
+  "code": 1000,
+  "message": "Query param vaultAddr invalid",
+}
+`;
+
+exports[`VaultsController GET /v3/vaults/snapshots success cases return 200 and vaults snapshots for all dates, without duplications 1`] = `
+Array [
+  Object {
+    "address": "0x4591890225394BF66044347653e112621AF7DDeb",
+    "available": 0.8441047101358636,
+    "balance": 1313.2024161551205,
+    "id": "0x4591890225394BF66044347653e112621AF7DDeb_arbitrum",
+    "pricePerFullShare": 1.0318408019214105,
+    "ratio": 1.0318408019214105,
+    "timestamp": 1645103004000,
+    "value": 2032359.1094,
+  },
+  Object {
+    "address": "0x4591890225394BF66044347653e112621AF7DDeb",
+    "available": 0,
+    "balance": 1312.1235049307659,
+    "id": "0x4591890225394BF66044347653e112621AF7DDeb_arbitrum",
+    "pricePerFullShare": 1.0316911107514206,
+    "ratio": 1.0316911107514206,
+    "timestamp": 1645015261000,
+    "value": 2061137.5997,
+  },
+  Object {
+    "address": "0x4591890225394BF66044347653e112621AF7DDeb",
+    "available": 0.09301841726863323,
+    "balance": 1331.85239374146,
+    "id": "0x4591890225394BF66044347653e112621AF7DDeb_arbitrum",
+    "pricePerFullShare": 1.0315443246375726,
+    "ratio": 1.0315443246375726,
+    "timestamp": 1644928124000,
+    "value": 2087438.8599,
+  },
+]
+`;
+
+exports[`VaultsController GET /v3/vaults/snapshots success cases return 200 with 1 relevant vault and 2 old snapshots 1`] = `
+Array [
+  Object {
+    "address": "0x4591890225394BF66044347653e112621AF7DDeb",
+    "available": 0.8441047101358636,
+    "balance": 1313.2024161551205,
+    "id": "0x4591890225394BF66044347653e112621AF7DDeb_arbitrum",
+    "pricePerFullShare": 1.0318408019214105,
+    "ratio": 1.0318408019214105,
+    "timestamp": 1634821933000,
+    "value": 2032359.1094,
+  },
+  Object {
+    "address": "0x4591890225394BF66044347653e112621AF7DDeb",
+    "available": 0,
+    "balance": 1306.3528590407586,
+    "id": "0x4591890225394BF66044347653e112621AF7DDeb_arbitrum",
+    "pricePerFullShare": 1.031977892102678,
+    "ratio": 1.031977892102678,
+    "timestamp": 1634821931000,
+    "value": 1945766.2918,
+  },
+]
+`;
+
+exports[`VaultsController GET /v3/vaults/snapshots success cases return 200 with empty array, got unmached data 1`] = `Array []`;
