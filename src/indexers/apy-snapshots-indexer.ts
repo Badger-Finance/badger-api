@@ -4,7 +4,7 @@ import { YieldSource } from '../aws/models/yield-source.model';
 import { SUPPORTED_CHAINS } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import { getVaultValueSources } from '../rewards/rewards.utils';
-import { getVaultYieldSources } from '../vaults/vaults.utils';
+import { queryYieldSources } from '../vaults/vaults.utils';
 
 export async function refreshApySnapshots() {
   for (const chain of SUPPORTED_CHAINS) {
@@ -20,7 +20,7 @@ export async function refreshChainApySnapshots(chain: Chain, vault: VaultDefinit
     const reportedYieldSources = await getVaultValueSources(chain, vault);
     const currentYieldSources = reportedYieldSources.filter((s) => !isNaN(s.apr) && isFinite(s.apr));
     const currentApr = currentYieldSources.reduce((total, s) => (total += s.apr), 0);
-    const previousYieldSources = await getVaultYieldSources(vault);
+    const previousYieldSources = await queryYieldSources(vault);
     const previousApr = previousYieldSources.reduce((total, s) => (total += s.apr), 0);
 
     if (currentYieldSources.length === 0 || currentApr === 0) {

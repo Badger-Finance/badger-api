@@ -63,7 +63,7 @@ describe('refreshVaultSnapshots', () => {
       version: VaultVersion.v1,
     }));
     jest.spyOn(vaultUtils, 'getBoostWeight').mockImplementation(async (_chain, _sett) => BigNumber.from(5100));
-    jest.spyOn(vaultUtils, 'getVaultPendingHarvest').mockImplementation(async (vault) => ({
+    jest.spyOn(vaultUtils, 'queryPendingHarvest').mockImplementation(async (vault) => ({
       vault: vault.address,
       yieldTokens: [],
       harvestTokens: [],

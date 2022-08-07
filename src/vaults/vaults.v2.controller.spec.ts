@@ -47,7 +47,7 @@ export function setupTestVault() {
   });
   const baseTime = 1656606946;
   jest.spyOn(Date, 'now').mockImplementation(() => baseTime * 1000 + ONE_DAY_MS * 14);
-  jest.spyOn(vaultsUtils, 'getVaultPendingHarvest').mockImplementation(
+  jest.spyOn(vaultsUtils, 'queryPendingHarvest').mockImplementation(
     async (vaultDefinition: VaultDefinitionModel): Promise<VaultPendingHarvestData> => ({
       vault: vaultDefinition.address,
       yieldTokens: [mockBalance(fullTokenMockMap[TOKENS.CVX], 10)],
@@ -69,7 +69,7 @@ export function setupTestVault() {
       return vault;
     });
   jest
-    .spyOn(vaultsUtils, 'getVaultYieldSources')
+    .spyOn(vaultsUtils, 'queryYieldSources')
     .mockImplementation(async (vault: VaultDefinitionModel): Promise<YieldSource[]> => {
       const performance = parseInt(vault.address.slice(0, 5), 16) / 100;
       const underlying = vaultsUtils.createYieldSource(

@@ -4,7 +4,7 @@ import { Chain } from '../../chains/config/chain.config';
 import { TOKENS } from '../../config/tokens.config';
 import { SourceType } from '../../rewards/enums/source-type.enum';
 import { getFullToken, getVaultTokens } from '../../tokens/tokens.utils';
-import { getCachedVault, getVaultYieldSources } from '../../vaults/vaults.utils';
+import { getCachedVault, queryYieldSources } from '../../vaults/vaults.utils';
 
 export class OxDaoStrategy {
   static async getValueSources(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<YieldSource[]> {
@@ -22,7 +22,7 @@ async function getLiquiditySources(chain: Chain, vaultDefinition: VaultDefinitio
   const [bveOXDLP, bveOXD, bveOXDSources] = await Promise.all([
     getCachedVault(chain, vaultDefinition),
     getCachedVault(chain, bveOXDVault),
-    getVaultYieldSources(bveOXDVault),
+    queryYieldSources(bveOXDVault),
   ]);
   const vaultTokens = await getVaultTokens(chain, bveOXDLP);
   const bveOXDValue = vaultTokens

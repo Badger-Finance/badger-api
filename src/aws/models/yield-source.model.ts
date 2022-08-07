@@ -1,5 +1,5 @@
 import { attribute, hashKey, table } from '@aws/dynamodb-data-mapper-annotations';
-import { ValueSource } from '@badger-dao/sdk';
+import { Network, ValueSource } from '@badger-dao/sdk';
 
 import { YIELD_SNAPSHOTS_DATA } from '../../config/constants';
 
@@ -9,7 +9,13 @@ export class YieldSource implements ValueSource {
   id!: string;
 
   @attribute()
+  chain!: Network;
+
+  @attribute()
   address!: string;
+
+  @attribute()
+  type!: string;
 
   @attribute()
   name!: string;
@@ -25,9 +31,6 @@ export class YieldSource implements ValueSource {
 
   @attribute()
   maxApr!: number;
-
-  @attribute()
-  type!: string;
 
   toValueSource(): ValueSource {
     return {

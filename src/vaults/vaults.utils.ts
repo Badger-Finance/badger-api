@@ -1,4 +1,5 @@
 import {
+  Currency,
   formatBalance,
   gqlGenT,
   keyBy,
@@ -32,11 +33,11 @@ import { EmissionControl__factory } from '../contracts';
 import { getVault } from '../indexers/indexer.utils';
 import { PricingType } from '../prices/enums/pricing-type.enum';
 import { TokenPrice } from '../prices/interface/token-price.interface';
-import { getPrice } from '../prices/prices.utils';
+import { convert, getPrice } from '../prices/prices.utils';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { BoostRange } from '../rewards/interfaces/boost-range.interface';
 import { getProtocolValueSources, getRewardEmission } from '../rewards/rewards.utils';
-import { getFullToken } from '../tokens/tokens.utils';
+import { getFullToken, getVaultTokens } from '../tokens/tokens.utils';
 import { Nullable } from '../utils/types.utils';
 import { HarvestType } from './enums/harvest.enum';
 import { VaultHarvestData } from './interfaces/vault-harvest-data.interface';
@@ -65,7 +66,7 @@ export async function defaultVault(chain: Chain, vault: VaultDefinitionModel): P
     bouncer,
     name,
     pricePerFullShare: 1,
-    protocol: Protocol.Badger,
+    protocol: vault.protocol,
     sources: [],
     sourcesApy: [],
     state,
@@ -86,15 +87,19 @@ export async function defaultVault(chain: Chain, vault: VaultDefinitionModel): P
       yieldApr: 0,
       yieldTokens: [],
       yieldPeriodApr: 0,
-      yieldTokensPerPeriod: [],
+      yieldPeriodSources: [],
       yieldValue: 0,
       harvestApr: 0,
-      harvestApy: 0,
       harvestPeriodApr: 0,
       harvestPeriodApy: 0,
       harvestTokens: [],
-      harvestTokensPerPeriod: [],
+      harvestPeriodSources: [],
+      harvestPeriodSourcesApy: [],
       harvestValue: 0,
+      nonHarvestApr: 0,
+      nonHarvestSources: [],
+      nonHarvestApy: 0,
+      nonHarvestSourcesApy: [],
     },
     lastHarvest: 0,
     version,
@@ -102,7 +107,11 @@ export async function defaultVault(chain: Chain, vault: VaultDefinitionModel): P
 }
 
 // TODO: vault should migration from address -> id where id = chain.network-vault.address
-export async function getCachedVault(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<VaultDTO> {
+export async function getCachedVault(
+  chain: Chain,
+  vaultDefinition: VaultDefinitionModel,
+  currency = Currency.USD,
+): Promise<VaultDTO> {
   const vault = await defaultVault(chain, vaultDefinition);
   try {
     const mapper = getDataMapper();
@@ -126,6 +135,12 @@ export async function getCachedVault(chain: Chain, vaultDefinition: VaultDefinit
         enabled: item.boostWeight > 0,
         weight: item.boostWeight,
       };
+      const [tokens, convertedValue] = await Promise.all([
+        getVaultTokens(chain, vault, currency),
+        convert(item.value, currency),
+      ]);
+      vault.tokens = tokens;
+      vault.value = convertedValue;
       return vault;
     }
     return vault;
@@ -579,7 +594,7 @@ export async function estimateVaultPerformance(
     // try to add underlying emitted vault value sources if applicable
     try {
       const emittedVault = await chain.vaults.getVault(tokenEmitted.address);
-      const vaultValueSources = await getVaultYieldSources(emittedVault);
+      const vaultValueSources = await queryYieldSources(emittedVault);
       // search for the persisted apr variant of the compounding vault source, if any
       const compoundingSource = vaultValueSources.find((source) => source.type === SourceType.PreCompound);
       if (compoundingSource) {
@@ -597,7 +612,7 @@ export async function estimateVaultPerformance(
   return valueSources;
 }
 
-export async function getVaultYieldSources(vault: VaultDefinitionModel): Promise<YieldSource[]> {
+export async function queryYieldSources(vault: VaultDefinitionModel): Promise<YieldSource[]> {
   const valueSources = [];
   const mapper = getDataMapper();
   for await (const source of mapper.query(
@@ -610,7 +625,7 @@ export async function getVaultYieldSources(vault: VaultDefinitionModel): Promise
   return valueSources;
 }
 
-export async function getVaultPendingHarvest(vault: VaultDefinitionModel): Promise<VaultPendingHarvestData> {
+export async function queryPendingHarvest(vault: VaultDefinitionModel): Promise<VaultPendingHarvestData> {
   const pendingHarvest: VaultPendingHarvestData = {
     vault: vault.address,
     yieldTokens: [],
@@ -770,14 +785,6 @@ export async function queryVaultCharts(id: string): Promise<HistoricVaultSnapsho
     console.error(err);
     return [];
   }
-}
-
-export function isPassiveVaultSource(source: YieldSource): boolean {
-  return (
-    source.type.includes(SourceType.Emission) ||
-    source.type.includes(SourceType.TradeFee) ||
-    source.type.includes(SourceType.Flywheel)
-  );
 }
 
 export function createYieldSource(

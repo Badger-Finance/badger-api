@@ -19,7 +19,7 @@ import { getPrice } from '../../prices/prices.utils';
 import { SourceType } from '../../rewards/enums/source-type.enum';
 import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
 import { getFullToken, getVaultTokens, toBalance } from '../../tokens/tokens.utils';
-import { createYieldSource, getCachedVault, getVaultYieldSources } from '../../vaults/vaults.utils';
+import { createYieldSource, getCachedVault, queryYieldSources } from '../../vaults/vaults.utils';
 import { CurveAPIResponse } from '../interfaces/curve-api-response.interrface';
 
 /* Protocol Constants */
@@ -88,7 +88,7 @@ async function getLiquiditySources(chain: Chain, vaultDefinition: VaultDefinitio
   const [bveCVXLP, bveCVX, bveCVXSources] = await Promise.all([
     getCachedVault(chain, vaultDefinition),
     getCachedVault(chain, bveCVXVault),
-    getVaultYieldSources(bveCVXVault),
+    queryYieldSources(bveCVXVault),
   ]);
   const vaultTokens = await getVaultTokens(chain, bveCVXLP);
   const bveCVXValue = vaultTokens
