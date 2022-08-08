@@ -18,6 +18,7 @@ import * as tokensUtils from '../tokens/tokens.utils';
 import { mockBalance } from '../tokens/tokens.utils';
 import { vaultsHarvestsMapMock } from './mocks/vaults-harvests-map.mock';
 import * as vaultsUtils from './vaults.utils';
+import { createYieldSource } from './yields.utils';
 
 const TEST_VAULT = TOKENS.BCRV_SBTC;
 
@@ -72,14 +73,9 @@ export function setupTestVault() {
     .spyOn(vaultsUtils, 'queryYieldSources')
     .mockImplementation(async (vault: VaultDefinitionModel): Promise<YieldSource[]> => {
       const performance = parseInt(vault.address.slice(0, 5), 16) / 100;
-      const underlying = vaultsUtils.createYieldSource(
-        vault.address,
-        SourceType.Compound,
-        vaultsUtils.VAULT_SOURCE,
-        performance,
-      );
-      const badger = vaultsUtils.createYieldSource(vault.address, SourceType.Emission, 'Badger Rewards', performance);
-      const fees = vaultsUtils.createYieldSource(vault.address, SourceType.TradeFee, 'Curve LP Fees', performance);
+      const underlying = createYieldSource(vault, SourceType.Compound, vaultsUtils.VAULT_SOURCE, performance);
+      const badger = createYieldSource(vault, SourceType.Emission, 'Badger Rewards', performance);
+      const fees = createYieldSource(vault, SourceType.TradeFee, 'Curve LP Fees', performance);
       return [underlying, badger, fees];
     });
   jest

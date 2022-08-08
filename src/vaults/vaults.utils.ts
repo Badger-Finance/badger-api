@@ -35,7 +35,6 @@ import { PricingType } from '../prices/enums/pricing-type.enum';
 import { TokenPrice } from '../prices/interface/token-price.interface';
 import { convert, getPrice } from '../prices/prices.utils';
 import { SourceType } from '../rewards/enums/source-type.enum';
-import { BoostRange } from '../rewards/interfaces/boost-range.interface';
 import { getProtocolValueSources, getRewardEmission } from '../rewards/rewards.utils';
 import { getFullToken, getVaultTokens } from '../tokens/tokens.utils';
 import { Nullable } from '../utils/types.utils';
@@ -43,6 +42,7 @@ import { HarvestType } from './enums/harvest.enum';
 import { VaultHarvestData } from './interfaces/vault-harvest-data.interface';
 import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
 import { VaultStrategy } from './interfaces/vault-strategy.interface';
+import { createYieldSource } from './yields.utils';
 
 export const VAULT_SOURCE = 'Vault Compounding';
 
@@ -552,12 +552,12 @@ export async function estimateVaultPerformance(
 
   // create the apr source for harvests
   const compoundApr = (totalHarvestedTokens / measuredBalance) * durationScalar;
-  const compoundYieldSource = createYieldSource(vault.address, SourceType.PreCompound, VAULT_SOURCE, compoundApr * 100);
+  const compoundYieldSource = createYieldSource(vault, SourceType.PreCompound, VAULT_SOURCE, compoundApr * 100);
   valueSources.push(compoundYieldSource);
 
   // create the apy source for harvests
   const compoundApy = (1 + compoundApr / periods) ** periods - 1;
-  const compoundedYieldSource = createYieldSource(vault.address, SourceType.Compound, VAULT_SOURCE, compoundApy * 100);
+  const compoundedYieldSource = createYieldSource(vault, SourceType.Compound, VAULT_SOURCE, compoundApy * 100);
   valueSources.push(compoundedYieldSource);
 
   const treeDistributions = measuredHarvests.flatMap((h) => h.treeDistributions);
@@ -583,12 +583,7 @@ export async function estimateVaultPerformance(
     const tokensEmitted = formatBalance(amount, tokenEmitted.decimals);
     const valueEmitted = tokensEmitted * price;
     const emissionApr = (valueEmitted / measuredValue) * durationScalar;
-    const emissionYieldSource = createYieldSource(
-      vault.address,
-      SourceType.Distribution,
-      tokenEmitted.name,
-      emissionApr * 100,
-    );
+    const emissionYieldSource = createYieldSource(vault, SourceType.Distribution, tokenEmitted.name, emissionApr * 100);
     valueSources.push(emissionYieldSource);
 
     // try to add underlying emitted vault value sources if applicable
@@ -605,7 +600,7 @@ export async function estimateVaultPerformance(
 
   if (flywheelCompounding > 0) {
     const sourceName = `Vault Flywheel`;
-    const flywheelYieldSource = createYieldSource(vault.address, SourceType.Flywheel, sourceName, flywheelCompounding);
+    const flywheelYieldSource = createYieldSource(vault, SourceType.Flywheel, sourceName, flywheelCompounding);
     valueSources.push(flywheelYieldSource);
   }
 
@@ -618,7 +613,7 @@ export async function queryYieldSources(vault: VaultDefinitionModel): Promise<Yi
   const mapper = getDataMapper();
   for await (const source of mapper.query(
     YieldSource,
-    { address: vault.address },
+    { chainAddress: vault.id },
     { indexName: 'IndexApySnapshotsOnAddress' },
   )) {
     valueSources.push(source);
@@ -786,25 +781,4 @@ export async function queryVaultCharts(id: string): Promise<HistoricVaultSnapsho
     console.error(err);
     return [];
   }
-}
-
-export function createYieldSource(
-  address: string,
-  type: string,
-  name: string,
-  apr: number,
-  boost: BoostRange = { min: 1, max: 1 },
-): YieldSource {
-  const id = [address, type, name].map((p) => p.replace(/ /g, '_').toLowerCase()).join('_');
-  const isBoostable = boost.min != boost.max;
-  return Object.assign(new YieldSource(), {
-    id,
-    address,
-    type,
-    name,
-    apr,
-    boostable: isBoostable,
-    minApr: apr * boost.min,
-    maxApr: apr * boost.max,
-  });
 }

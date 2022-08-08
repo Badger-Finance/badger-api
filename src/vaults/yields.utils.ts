@@ -4,6 +4,7 @@ import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
 import { YieldSource } from '../aws/models/yield-source.model';
 import { SourceType } from '../rewards/enums/source-type.enum';
+import { BoostRange } from '../rewards/interfaces/boost-range.interface';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
 import { YieldSources } from './interfaces/yield-sources.interface';
 import { queryYieldSources, VAULT_SOURCE } from './vaults.utils';
@@ -228,4 +229,29 @@ export function getVaultYieldProjection(
     nonHarvestApy,
     nonHarvestSourcesApy,
   };
+}
+
+export function createYieldSource(
+  vault: VaultDefinitionModel,
+  type: SourceType,
+  name: string,
+  apr: number,
+  { min, max }: BoostRange = { min: 1, max: 1 },
+): YieldSource {
+  const { id: vaultId, address, chain } = vault;
+  const isBoostable = min != max;
+  const boostModifier = isBoostable ? 'Boosted' : 'Flat';
+  const id = [vaultId, type, name, boostModifier].map((p) => p.replace(/ /g, '_').toLowerCase()).join('_');
+  return Object.assign(new YieldSource(), {
+    id,
+    chainAddress: vaultId,
+    chain,
+    address,
+    type,
+    name,
+    apr,
+    boostable: isBoostable,
+    minApr: apr * min,
+    maxApr: apr * max,
+  });
 }

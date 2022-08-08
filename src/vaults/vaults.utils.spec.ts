@@ -34,12 +34,10 @@ import {
 } from '../test/tests.utils';
 import { TokenNotFound } from '../tokens/errors/token.error';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
-import { tokenEmission } from '../tokens/tokens.utils';
 import * as tokenUtils from '../tokens/tokens.utils';
 import { vaultsGraphSdkMapMock } from './mocks/vaults-graph-sdk-map.mock';
 import { vaultsHarvestsSdkMock } from './mocks/vaults-harvests-sdk.mock';
 import {
-  createYieldSource,
   defaultVault,
   estimateDerivativeEmission,
   getCachedVault,
@@ -48,6 +46,7 @@ import {
   getVaultTokenPrice,
   VAULT_SOURCE,
 } from './vaults.utils';
+import { createYieldSource } from './yields.utils';
 
 describe('vaults.utils', () => {
   beforeEach(() => {
@@ -151,7 +150,7 @@ describe('vaults.utils', () => {
       },
     }));
     jest.spyOn(rewardsUtils, 'getProtocolValueSources').mockImplementation(async (_chain, vault) => {
-      return [createYieldSource(vault.address, SourceType.TradeFee, 'Test LP Fees', 1.13)];
+      return [createYieldSource(vault, SourceType.TradeFee, 'Test LP Fees', 1.13)];
     });
   });
 
@@ -182,15 +181,7 @@ describe('vaults.utils', () => {
   beforeEach(() => {
     jest.spyOn(BadgerSDK.prototype, 'ready').mockImplementation();
     jest.spyOn(rewardsUtils, 'getRewardEmission').mockImplementation(async (_chain, vault) => {
-      return [
-        createYieldSource(
-          vault.address,
-          tokenEmission(fullTokenMockMap[TOKENS.BBADGER], true),
-          'Badger Rewards',
-          6.969,
-          { min: 1, max: 2 },
-        ),
-      ];
+      return [createYieldSource(vault, SourceType.Emission, 'Badger Rewards', 6.969, { min: 1, max: 2 })];
     });
   });
 
@@ -375,7 +366,7 @@ describe('vaults.utils', () => {
           address: token,
           price: Number(token.slice(0, 4)),
         }));
-        setupMapper([createYieldSource(MOCK_VAULT_DEFINITION.address, SourceType.PreCompound, VAULT_SOURCE, 10)]);
+        setupMapper([createYieldSource(MOCK_VAULT_DEFINITION, SourceType.PreCompound, VAULT_SOURCE, 10)]);
         setFullTokenDataMock();
         const result = await getVaultPerformance(TEST_CHAIN, MOCK_VAULT_DEFINITION);
         expect(result).toMatchSnapshot();

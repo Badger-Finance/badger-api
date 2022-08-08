@@ -17,7 +17,8 @@ import { TokenPrice } from '../../prices/interface/token-price.interface';
 import { SourceType } from '../../rewards/enums/source-type.enum';
 import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
 import { getFullToken, toBalance } from '../../tokens/tokens.utils';
-import { createYieldSource, getCachedVault } from '../../vaults/vaults.utils';
+import { getCachedVault } from '../../vaults/vaults.utils';
+import { createYieldSource } from '../../vaults/yields.utils';
 
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
@@ -223,7 +224,7 @@ export async function getBalancerSwapFees(vault: VaultDefinitionModel): Promise<
     const yearlyFees = poolFees * 365;
     const yearlyApr = (yearlyFees / poolLiquidity) * 100;
 
-    return [createYieldSource(vault.address, SourceType.TradeFee, 'Balancer LP Fees', yearlyApr)];
+    return [createYieldSource(vault, SourceType.TradeFee, 'Balancer LP Fees', yearlyApr)];
   } catch {
     // some of the aura vaults are not pools - they will error (auraBal, graviAura)
     return [];

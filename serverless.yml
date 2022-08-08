@@ -154,12 +154,12 @@ resources:
         AttributeDefinitions:
           - AttributeName: 'id'
             AttributeType: 'S'
-          - AttributeName: 'address'
+          - AttributeName: 'chainAddress'
             AttributeType: 'S'
         GlobalSecondaryIndexes:
           - IndexName: IndexApySnapshotsOnAddress
             KeySchema:
-              - AttributeName: address
+              - AttributeName: chainAddress
                 KeyType: 'HASH'
             Projection:
               ProjectionType: ALL

@@ -6,7 +6,6 @@ import { TokenInformationSnapshot } from '../aws/models/token-information-snapsh
 import { VaultTokenBalance } from '../aws/models/vault-token-balance.model';
 import { Chain } from '../chains/config/chain.config';
 import { convert, getPrice } from '../prices/prices.utils';
-import { SourceType } from '../rewards/enums/source-type.enum';
 import { TokenNotFound } from './errors/token.error';
 import { TokenFull, TokenFullMap } from './interfaces/token-full.interface';
 
@@ -141,8 +140,4 @@ export function mockBalance(token: Token, balance: number, currency?: Currency):
     balance: balance,
     value: balance * price,
   };
-}
-
-export function tokenEmission(token: Token, boosted = false): string {
-  return `${boosted ? 'boosted_' : 'flat_'}${token.symbol}_${SourceType.Emission}`;
 }

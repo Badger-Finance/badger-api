@@ -16,8 +16,9 @@ import { QuickswapStrategy } from '../protocols/strategies/quickswap.strategy';
 import { SushiswapStrategy } from '../protocols/strategies/sushiswap.strategy';
 import { SwaprStrategy } from '../protocols/strategies/swapr.strategy';
 import { UniswapStrategy } from '../protocols/strategies/uniswap.strategy';
-import { getFullToken, tokenEmission } from '../tokens/tokens.utils';
-import { createYieldSource, getCachedVault, getVaultPerformance } from '../vaults/vaults.utils';
+import { getFullToken } from '../tokens/tokens.utils';
+import { getCachedVault, getVaultPerformance } from '../vaults/vaults.utils';
+import { createYieldSource } from '../vaults/yields.utils';
 import { SourceType } from './enums/source-type.enum';
 import { RewardMerkleDistribution } from './interfaces/merkle-distributor.interface';
 
@@ -136,16 +137,10 @@ export async function getRewardEmission(chain: Chain, vault: VaultDefinitionMode
       const boostedApr = (cachedVault.boost.weight / 10_000) * proRataApr;
       proRataApr = proRataApr - boostedApr;
       const boostedName = `Boosted ${token.name}`;
-      const boostYieldSource = createYieldSource(
-        vault.address,
-        tokenEmission(token, true),
-        boostedName,
-        boostedApr,
-        boostRange,
-      );
+      const boostYieldSource = createYieldSource(vault, SourceType.Emission, boostedName, boostedApr, boostRange);
       emissionSources.push(boostYieldSource);
     }
-    const proRataYieldSource = createYieldSource(vault.address, tokenEmission(token), token.name, proRataApr);
+    const proRataYieldSource = createYieldSource(vault, SourceType.Emission, token.name, proRataApr);
     emissionSources.push(proRataYieldSource);
   }
   return emissionSources;

@@ -19,7 +19,8 @@ import { getPrice } from '../../prices/prices.utils';
 import { SourceType } from '../../rewards/enums/source-type.enum';
 import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
 import { getFullToken, getVaultTokens, toBalance } from '../../tokens/tokens.utils';
-import { createYieldSource, getCachedVault, queryYieldSources } from '../../vaults/vaults.utils';
+import { getCachedVault, queryYieldSources } from '../../vaults/vaults.utils';
+import { createYieldSource } from '../../vaults/yields.utils';
 import { CurveAPIResponse } from '../interfaces/curve-api-response.interrface';
 
 /* Protocol Constants */
@@ -157,7 +158,7 @@ export async function getCurvePerformance(chain: Chain, vaultDefinition: VaultDe
     await updateFactoryApy('crypto');
   }
 
-  return createYieldSource(vaultDefinition.address, SourceType.TradeFee, 'Curve LP Fees', tradeFeePerformance);
+  return createYieldSource(vaultDefinition, SourceType.TradeFee, 'Curve LP Fees', tradeFeePerformance);
 }
 
 export async function getCurveTokenPrice(chain: Chain, depositToken: string): Promise<TokenPrice> {

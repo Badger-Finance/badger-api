@@ -5,7 +5,7 @@ import { YieldSource } from '../../aws/models/yield-source.model';
 import { getSdk as getUniswapSdk, OrderDirection, PairDayData_OrderBy } from '../../graphql/generated/uniswap';
 import { getPrice } from '../../prices/prices.utils';
 import { SourceType } from '../../rewards/enums/source-type.enum';
-import { createYieldSource } from '../../vaults/vaults.utils';
+import { createYieldSource } from '../../vaults/yields.utils';
 import { PairDayData } from '../interfaces/pair-day-data.interface';
 import { UniPairDayData } from '../interfaces/uni-pair-day-data.interface';
 
@@ -26,7 +26,7 @@ export async function getUniV2SwapValue(graphUrl: string, vault: VaultDefinition
 async function getUniSwapValue(vault: VaultDefinitionModel, tradeData: UniPairDayData[]): Promise<YieldSource> {
   const name = `${vault.protocol} LP Fees`;
   if (!tradeData || tradeData.length === 0) {
-    return createYieldSource(vault.address, SourceType.TradeFee, name, 0);
+    return createYieldSource(vault, SourceType.TradeFee, name, 0);
   }
   const [token0Price, token1Price] = await Promise.all([
     getPrice(tradeData[0].token0.id),
@@ -42,13 +42,13 @@ async function getUniSwapValue(vault: VaultDefinitionModel, tradeData: UniPairDa
     totalApy += (fees / poolReserve) * 365 * 100;
     currentApy = totalApy / (i + 1);
   }
-  return createYieldSource(vault.address, SourceType.TradeFee, name, currentApy);
+  return createYieldSource(vault, SourceType.TradeFee, name, currentApy);
 }
 
 export function getSwapValue(vault: VaultDefinitionModel, tradeData: PairDayData[]): YieldSource {
   const name = `${vault.protocol} LP Fees`;
   if (!tradeData || tradeData.length === 0) {
-    return createYieldSource(vault.address, SourceType.TradeFee, name, 0);
+    return createYieldSource(vault, SourceType.TradeFee, name, 0);
   }
   let totalApy = 0;
   let currentApy = 0;
@@ -59,5 +59,5 @@ export function getSwapValue(vault: VaultDefinitionModel, tradeData: PairDayData
     totalApy += (fees / poolReserve) * 365 * 100;
     currentApy = totalApy / (i + 1);
   }
-  return createYieldSource(vault.address, SourceType.TradeFee, name, currentApy);
+  return createYieldSource(vault, SourceType.TradeFee, name, currentApy);
 }
