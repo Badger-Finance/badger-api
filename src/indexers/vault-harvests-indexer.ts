@@ -11,7 +11,7 @@ import { SUPPORTED_CHAINS } from '../chains/chain';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
 import { getFullToken, toBalance } from '../tokens/tokens.utils';
 import { sendPlainTextToDiscord } from '../utils/discord.utils';
-import { getCachedVault, getVaultPendingHarvest, VAULT_SOURCE } from '../vaults/vaults.utils';
+import { getCachedVault, queryPendingHarvest, VAULT_SOURCE } from '../vaults/vaults.utils';
 
 export async function refreshVaultHarvests() {
   await Promise.all(
@@ -24,7 +24,7 @@ export async function refreshVaultHarvests() {
           continue;
         }
 
-        const existingHarvest = await getVaultPendingHarvest(vault);
+        const existingHarvest = await queryPendingHarvest(vault);
         const harvestData: VaultPendingHarvestData = {
           vault: vault.address,
           yieldTokens: [],

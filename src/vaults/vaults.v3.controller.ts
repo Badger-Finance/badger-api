@@ -32,7 +32,7 @@ export class VaultsV3Controller {
 
     const chainInst = Chain.getChain(chain);
     const compoundVault = await chainInst.vaults.getVault(address);
-    return this.vaultService.getVault(chainInst, compoundVault, currency);
+    return VaultsService.loadVault(chainInst, compoundVault, currency);
   }
 
   @Get('/list')
@@ -45,7 +45,7 @@ export class VaultsV3Controller {
     @QueryParams('chain') chain?: Network,
     @QueryParams('currency') currency?: Currency,
   ): Promise<VaultModel[]> {
-    return this.vaultService.listV3Vaults(Chain.getChain(chain), currency);
+    return this.vaultService.listVaults(Chain.getChain(chain), currency);
   }
 
   @Get('/harvests')
@@ -74,33 +74,12 @@ export class VaultsV3Controller {
     return this.vaultService.listVaultHarvests(Chain.getChain(chain));
   }
 
-  // make deprecated, after getVaultSnapshotsInRange will be used
   @Hidden()
   @UseCache()
   @Get('/snapshots')
   @ContentType('json')
-  async getVaultSnapshots(
-    @QueryParams('vault') vault: string,
-    @QueryParams('timestamps') timestamps: string,
-    @QueryParams('chain') chain?: Network,
-  ): Promise<VaultSnapshot[]> {
-    if (!vault) {
-      throw new QueryParamError('vault');
-    }
-    const vaultDef = await Chain.getChain(chain).vaults.getVault(vault);
-    return this.vaultService.getVaultSnapshots(
-      Chain.getChain(chain),
-      vaultDef,
-      timestamps.split(',').map((n) => Number(n)),
-    );
-  }
-
-  @Hidden()
-  @UseCache()
-  @Get('/inrange/snapshots')
-  @ContentType('json')
   async getVaultSnapshotsInRange(
-    @QueryParams('vaultAddr') vaultAddr: string,
+    @QueryParams('vault') vaultAddr: string,
     @QueryParams('timestamps') timestamps: string,
     @QueryParams('chain') chain?: Network,
   ): Promise<VaultSnapshot[]> {

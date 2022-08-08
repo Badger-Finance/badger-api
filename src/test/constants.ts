@@ -1,4 +1,13 @@
-import { BouncerType, Network, Protocol, VaultBehavior, VaultState, VaultVersion } from '@badger-dao/sdk';
+import {
+  BouncerType,
+  Network,
+  Protocol,
+  VaultBehavior,
+  VaultSnapshot,
+  VaultState,
+  VaultVersion,
+} from '@badger-dao/sdk';
+import mockVaultSnapshots from '@badger-dao/sdk-mocks/generated/ethereum/api/loadVaultChart.json';
 
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { Stage } from '../config/enums/stage.enum';
@@ -56,3 +65,11 @@ export const MOCK_VAULT_DEFINITION: VaultDefinitionModel = {
   client: '',
   depositToken: TOKENS.BADGER,
 };
+
+// export const MOCK_VAULTS: VaultDTO[] = mockVaults as VaultDTO[];
+// export const MOCK_VAULT: VaultDTO = MOCK_VAULTS[0];
+
+export const MOCK_VAULT_SNAPSHOTS: VaultSnapshot[] = mockVaultSnapshots;
+export const MOCK_VAULT_SNAPSHOT = MOCK_VAULT_SNAPSHOTS[0];
+
+// export const MOCK_YIELD_SOURCES: ValueSource[] = MOCK_VAULT.sources;

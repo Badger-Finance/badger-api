@@ -5,14 +5,12 @@ import { BadRequest } from '@tsed/exceptions';
 import createMockInstance from 'jest-create-mock-instance';
 import SuperTest from 'supertest';
 
-import { CachedValueSource } from '../aws/models/apy-snapshots.model';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
+import { YieldSource } from '../aws/models/yield-source.model';
 import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
-import { createValueSource } from '../protocols/interfaces/value-source.interface';
 import { SourceType } from '../rewards/enums/source-type.enum';
-import { valueSourceToCachedValueSource } from '../rewards/rewards.utils';
 import { Server } from '../Server';
 import { mockChainVaults } from '../test/tests.utils';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
@@ -20,6 +18,7 @@ import * as tokensUtils from '../tokens/tokens.utils';
 import { mockBalance } from '../tokens/tokens.utils';
 import { vaultsHarvestsMapMock } from './mocks/vaults-harvests-map.mock';
 import * as vaultsUtils from './vaults.utils';
+import { createYieldSource } from './yields.utils';
 
 const TEST_VAULT = TOKENS.BCRV_SBTC;
 
@@ -49,7 +48,7 @@ export function setupTestVault() {
   });
   const baseTime = 1656606946;
   jest.spyOn(Date, 'now').mockImplementation(() => baseTime * 1000 + ONE_DAY_MS * 14);
-  jest.spyOn(vaultsUtils, 'getVaultPendingHarvest').mockImplementation(
+  jest.spyOn(vaultsUtils, 'queryPendingHarvest').mockImplementation(
     async (vaultDefinition: VaultDefinitionModel): Promise<VaultPendingHarvestData> => ({
       vault: vaultDefinition.address,
       yieldTokens: [mockBalance(fullTokenMockMap[TOKENS.CVX], 10)],
@@ -64,27 +63,23 @@ export function setupTestVault() {
   );
   jest
     .spyOn(vaultsUtils, 'getCachedVault')
-    .mockImplementation(async (chain, vaultDefinition: VaultDefinitionModel): Promise<VaultDTO> => {
+    .mockImplementation(async (chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<VaultDTO> => {
       const vault = await vaultsUtils.defaultVault(chain, vaultDefinition);
       vault.value = parseInt(vaultDefinition.address.slice(0, 7), 16);
       vault.balance = 10;
       return vault;
     });
   jest
-    .spyOn(vaultsUtils, 'getVaultCachedValueSources')
-    .mockImplementation(async (vaultDefinition: VaultDefinitionModel): Promise<CachedValueSource[]> => {
-      const performance = parseInt(vaultDefinition.address.slice(0, 5), 16) / 100;
-      const underlying = createValueSource(vaultsUtils.VAULT_SOURCE, performance);
-      const badger = createValueSource('Badger Rewards', performance);
-      const fees = createValueSource('Curve Trading Fees', performance);
-      return [
-        valueSourceToCachedValueSource(underlying, vaultDefinition, SourceType.Compound),
-        valueSourceToCachedValueSource(badger, vaultDefinition, SourceType.Emission),
-        valueSourceToCachedValueSource(fees, vaultDefinition, SourceType.TradeFee),
-      ];
+    .spyOn(vaultsUtils, 'queryYieldSources')
+    .mockImplementation(async (vault: VaultDefinitionModel): Promise<YieldSource[]> => {
+      const performance = parseInt(vault.address.slice(0, 5), 16) / 100;
+      const underlying = createYieldSource(vault, SourceType.Compound, vaultsUtils.VAULT_SOURCE, performance);
+      const badger = createYieldSource(vault, SourceType.Emission, 'Badger Rewards', performance);
+      const fees = createYieldSource(vault, SourceType.TradeFee, 'Curve LP Fees', performance);
+      return [underlying, badger, fees];
     });
   jest
-    .spyOn(tokensUtils, 'getCachedTokenBalances')
+    .spyOn(tokensUtils, 'getVaultTokens')
     .mockImplementation(async (_chain: Chain, vault: VaultDTO, _currency?: string): Promise<TokenValue[]> => {
       const token = fullTokenMockMap[vault.underlyingToken] || fullTokenMockMap[TOKENS.BADGER];
       if (token.lpToken) {

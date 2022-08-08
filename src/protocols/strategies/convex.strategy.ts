@@ -1,9 +1,9 @@
 import { Erc20__factory, formatBalance, Network, Token } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 
-import { CachedValueSource } from '../../aws/models/apy-snapshots.model';
 import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
 import { VaultTokenBalance } from '../../aws/models/vault-token-balance.model';
+import { YieldSource } from '../../aws/models/yield-source.model';
 import { Chain } from '../../chains/config/chain.config';
 import { request } from '../../common/request';
 import { ContractRegistry } from '../../config/interfaces/contract-registry.interface';
@@ -17,12 +17,11 @@ import {
 import { TokenPrice } from '../../prices/interface/token-price.interface';
 import { getPrice } from '../../prices/prices.utils';
 import { SourceType } from '../../rewards/enums/source-type.enum';
-import { valueSourceToCachedValueSource } from '../../rewards/rewards.utils';
 import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
 import { getFullToken, getVaultTokens, toBalance } from '../../tokens/tokens.utils';
-import { getCachedVault, getVaultCachedValueSources } from '../../vaults/vaults.utils';
+import { getCachedVault, queryYieldSources } from '../../vaults/vaults.utils';
+import { createYieldSource } from '../../vaults/yields.utils';
 import { CurveAPIResponse } from '../interfaces/curve-api-response.interrface';
-import { createValueSource } from '../interfaces/value-source.interface';
 
 /* Protocol Constants */
 export const CURVE_API_URL = 'https://stats.curve.fi/raw-stats/apys.json';
@@ -73,7 +72,7 @@ interface FactoryAPYResonse {
 }
 
 export class ConvexStrategy {
-  static async getValueSources(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<CachedValueSource[]> {
+  static async getValueSources(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<YieldSource[]> {
     switch (vaultDefinition.address) {
       case TOKENS.BVECVX:
         return [];
@@ -85,14 +84,14 @@ export class ConvexStrategy {
   }
 }
 
-async function getLiquiditySources(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<CachedValueSource[]> {
+async function getLiquiditySources(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<YieldSource[]> {
   const bveCVXVault = await chain.vaults.getVault(TOKENS.BVECVX);
   const [bveCVXLP, bveCVX, bveCVXSources] = await Promise.all([
     getCachedVault(chain, vaultDefinition),
     getCachedVault(chain, bveCVXVault),
-    getVaultCachedValueSources(bveCVXVault),
+    queryYieldSources(bveCVXVault),
   ]);
-  const vaultTokens = await getVaultTokens(chain, bveCVXLP, bveCVXLP.balance);
+  const vaultTokens = await getVaultTokens(chain, bveCVXLP);
   const bveCVXValue = vaultTokens
     .filter((t) => t.address === TOKENS.BVECVX)
     .map((t) => t.value)
@@ -103,13 +102,10 @@ async function getLiquiditySources(chain: Chain, vaultDefinition: VaultDefinitio
     if (s.type === SourceType.Compound || s.type === SourceType.PreCompound) {
       s.name = `${vaultToken.name} ${s.name}`;
       const sourceTypeName = `${s.type === SourceType.Compound ? 'Derivative ' : ''}${vaultToken.name} ${s.type}`;
-      s.addressValueSourceType = s.addressValueSourceType.replace(
-        s.type,
-        sourceTypeName.replace(/ /g, '_').toLowerCase(),
-      );
+      s.id = s.id.replace(s.type, sourceTypeName.replace(/ /g, '_').toLowerCase());
     }
     // rewrite object keys to simulate sources from the lp vault
-    s.addressValueSourceType = s.addressValueSourceType.replace(bveCVX.vaultToken, bveCVXLP.vaultToken);
+    s.id = s.id.replace(bveCVX.vaultToken, bveCVXLP.vaultToken);
     s.address = bveCVXLP.vaultToken;
     s.apr *= scalar;
     s.maxApr *= scalar;
@@ -120,10 +116,7 @@ async function getLiquiditySources(chain: Chain, vaultDefinition: VaultDefinitio
   return [cachedTradeFees, ...lpSources];
 }
 
-export async function getCurvePerformance(
-  chain: Chain,
-  vaultDefinition: VaultDefinitionModel,
-): Promise<CachedValueSource> {
+export async function getCurvePerformance(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<YieldSource> {
   let defaultUrl;
   switch (chain.network) {
     case Network.Polygon:
@@ -165,8 +158,7 @@ export async function getCurvePerformance(
     await updateFactoryApy('crypto');
   }
 
-  const valueSource = createValueSource('Curve LP Fees', tradeFeePerformance);
-  return valueSourceToCachedValueSource(valueSource, vaultDefinition, SourceType.TradeFee);
+  return createYieldSource(vaultDefinition, SourceType.TradeFee, 'Curve LP Fees', tradeFeePerformance);
 }
 
 export async function getCurveTokenPrice(chain: Chain, depositToken: string): Promise<TokenPrice> {

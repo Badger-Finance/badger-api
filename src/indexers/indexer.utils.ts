@@ -103,11 +103,8 @@ export async function constructVaultDefinition(
   });
 }
 
-export async function getLpTokenBalances(
-  chain: Chain,
-  vaultDefinition: VaultDefinitionModel,
-): Promise<VaultTokenBalance> {
-  const { depositToken, address } = vaultDefinition;
+export async function getLpTokenBalances(chain: Chain, vault: VaultDefinitionModel): Promise<VaultTokenBalance> {
+  const { depositToken, address } = vault;
   try {
     const liquidityData = await getLiquidityData(chain, depositToken);
     const { token0, token1, reserve0, reserve1, totalSupply } = liquidityData;
@@ -116,7 +113,7 @@ export async function getLpTokenBalances(
     const t1Token = tokenData[token1];
 
     // poolData returns the full liquidity pool, valueScalar acts to calculate the portion within the sett
-    const settSnapshot = await getCachedVault(chain, vaultDefinition);
+    const settSnapshot = await getCachedVault(chain, vault);
     const valueScalar = totalSupply > 0 ? settSnapshot.balance / totalSupply : 0;
     const t0TokenBalance = reserve0 * valueScalar;
     const t1TokenBalance = reserve1 * valueScalar;
@@ -127,7 +124,7 @@ export async function getLpTokenBalances(
       tokenBalances,
     });
   } catch (err) {
-    throw new NotFound(`${vaultDefinition.protocol} pool pair ${depositToken} does not exist`);
+    throw new NotFound(`${vault.protocol} pool pair ${depositToken} does not exist`);
   }
 }
 
