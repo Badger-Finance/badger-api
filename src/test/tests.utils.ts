@@ -7,6 +7,7 @@ import BadgerSDK, {
   ONE_DAY_MS,
   RegistryService,
   RewardsService,
+  VaultDTO,
   VaultSnapshot,
 } from '@badger-dao/sdk';
 import { TokensService } from '@badger-dao/sdk/lib/tokens/tokens.service';
@@ -33,11 +34,19 @@ import * as pricesUtils from '../prices/prices.utils';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import { historicVaultSnapshotsMock } from '../vaults/mocks/historic-vault-snapshots.mock';
 import { vaultsChartDataMock } from '../vaults/mocks/vaults-chart-data.mock';
-import { MOCK_VAULT_DEFINITION } from './constants';
+import { MOCK_VAULTS, MOCK_VAULT_DEFINITION } from './constants';
 
 export const TEST_CHAIN = SUPPORTED_CHAINS[0];
 export const TEST_ADDR = ethers.utils.getAddress('0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484');
 export const CURRENT_BLOCK = 0;
+
+export function mockVaultDTO(address: string): VaultDTO {
+  const vault = MOCK_VAULTS.find((v) => v.vaultToken === address);
+  if (!vault) {
+    throw new Error(`DTO for ${address} does not exist`);
+  }
+  return vault;
+}
 
 export function setupMapper(items: unknown[], filter?: (items: unknown[]) => unknown[]) {
   // @ts-ignore

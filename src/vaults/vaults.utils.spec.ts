@@ -214,6 +214,10 @@ describe('vaults.utils', () => {
         state: MOCK_VAULT_DEFINITION.state,
         apr: 0,
         apy: 0,
+        minApr: 0,
+        minApy: 0,
+        maxApr: 0,
+        maxApy: 0,
         balance: 0,
         available: 0,
         boost: {
