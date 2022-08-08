@@ -12,7 +12,7 @@ import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interf
 import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
 import { VaultHarvestsMap } from './interfaces/vault-harvest-map';
 import { getCachedVault, queryPendingHarvest, queryVaultCharts } from './vaults.utils';
-import { getVaultYieldProjection, getYieldSources } from './yield.utils';
+import { getVaultYieldProjection, getYieldSources } from './yields.utils';
 
 @Service()
 export class VaultsService {
@@ -92,12 +92,10 @@ export class VaultsService {
     const { apr, sources, apy, sourcesApy } = yieldSources;
 
     vault.lastHarvest = lastHarvestedAt;
-
     vault.sources = sources;
     vault.sourcesApy = sourcesApy;
     vault.apr = apr;
     vault.apy = apy;
-
     vault.yieldProjection = getVaultYieldProjection(vault, yieldSources, pendingHarvest);
 
     if (vault.boost.enabled) {

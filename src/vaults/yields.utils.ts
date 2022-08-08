@@ -8,6 +8,12 @@ import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.in
 import { YieldSources } from './interfaces/yield-sources.interface';
 import { queryYieldSources } from './vaults.utils';
 
+/**
+ *
+ * @param source
+ * @param state
+ * @returns
+ */
 function isRelevantSource(source: YieldSource, state: VaultState): boolean {
   if (source.apr < 0.001) {
     return false;
@@ -18,43 +24,95 @@ function isRelevantSource(source: YieldSource, state: VaultState): boolean {
   return false;
 }
 
+/**
+ *
+ * @param source
+ * @returns
+ */
 function isPassiveSource(source: YieldSource): boolean {
   return !(isAprSource(source) || isApySource(source));
 }
 
+/**
+ *
+ * @param source
+ * @returns
+ */
 function isNonHarvestSource(source: YieldSource): boolean {
   return source.type !== SourceType.Compound && source.type !== SourceType.PreCompound;
 }
 
+/**
+ *
+ * @param source
+ * @returns
+ */
 function isAprSource(source: YieldSource): boolean {
   return source.type !== SourceType.Compound && source.type !== SourceType.Flywheel;
 }
 
+/**
+ *
+ * @param source
+ * @returns
+ */
 function isApySource(source: YieldSource): boolean {
   return source.type !== SourceType.PreCompound;
 }
 
+/**
+ *
+ * @param balance
+ * @param principal
+ * @param duration
+ * @returns
+ */
 function balanceToTokenRate(balance: CachedTokenBalance, principal: number, duration: number): TokenRate {
-  const apr = calculateProjectedYield(principal, balance.value, duration);
+  const apr = calculateYield(principal, balance.value, duration);
   return {
     apr,
     ...balance,
   };
 }
 
-function calculateProjectedYield(value: number, pendingValue: number, duration: number, compoundingValue = 0): number {
-  if (duration === 0 || value === 0 || pendingValue === 0) {
+/**
+ * Calculate the yield for a given value earned over a set duration, with an optional amount being a compounded portion over that period.
+ * @param principal base value
+ * @param earned earned value
+ * @param duration period of time in ms
+ * @param compoundingValue compounded portion of base value
+ * @returns apr or apy for given inputs, any value with compouned portions are apy
+ */
+export function calculateYield(principal: number, earned: number, duration: number, compoundingValue = 0): number {
+  if (compoundingValue > principal) {
+    throw new Error('Compounding value must be less than or equal to principal');
+  }
+  if (duration === 0 || principal === 0 || earned === 0) {
     return 0;
   }
-  const apr = (pendingValue / value) * (ONE_YEAR_MS / duration) * 100;
+  const periods = ONE_YEAR_MS / duration;
+  const apr = (earned / principal) * periods * 100;
   if (compoundingValue === 0) {
     return apr;
   }
-  const compoundingApr = (compoundingValue / value) * (ONE_YEAR_MS / duration);
-  const periods = ONE_YEAR_MS / duration;
-  return apr - compoundingApr + ((1 + compoundingApr / periods) ** periods - 1) * 100;
+  const nonCompoundingValue = principal - compoundingValue;
+  const nonCompoundingScalar = nonCompoundingValue / principal;
+  let nonCompoundingApr = 0;
+  if (nonCompoundingValue > 0) {
+    const nonCompoundedEarned = earned * nonCompoundingScalar;
+    nonCompoundingApr = (nonCompoundedEarned / principal) * periods;
+  }
+  const compoundingApr = ((earned * (1 - nonCompoundingScalar)) / principal) * periods;
+  const compoundingApy = (1 + compoundingApr / periods) ** periods - 1;
+  return (nonCompoundingApr + compoundingApy) * 100;
 }
 
+/**
+ *
+ * @param listA
+ * @param listB
+ * @returns
+ */
 function calculateBalanceDifference(listA: CachedTokenBalance[], listB: CachedTokenBalance[]): CachedTokenBalance[] {
   // we need to construct a measurement diff from the originally measured tokens and the new tokens
   const listAByToken = keyBy(listA, (t) => t.address);
@@ -147,9 +205,9 @@ export function getVaultYieldProjection(
   const nonHarvestApy = nonHarvestSourcesApy.reduce((total, token) => (total += token.apr), 0);
   return {
     harvestValue,
-    harvestApr: calculateProjectedYield(earningValue, harvestValue, harvestDuration),
-    harvestPeriodApr: calculateProjectedYield(earningValue, harvestValuePerPeriod, periodDuration),
-    harvestPeriodApy: calculateProjectedYield(
+    harvestApr: calculateYield(earningValue, harvestValue, harvestDuration),
+    harvestPeriodApr: calculateYield(earningValue, harvestValuePerPeriod, periodDuration),
+    harvestPeriodApy: calculateYield(
       earningValue,
       harvestValuePerPeriod,
       periodDuration,
@@ -160,9 +218,9 @@ export function getVaultYieldProjection(
     // TODO: ensure vault token harvests receive apy maths
     harvestPeriodSourcesApy: harvestTokensCurrent.map((t) => balanceToTokenRate(t, earningValue, periodDuration)),
     yieldValue,
-    yieldApr: calculateProjectedYield(earningValue, yieldValue, harvestDuration),
+    yieldApr: calculateYield(earningValue, yieldValue, harvestDuration),
     yieldTokens: yieldTokens.map((t) => balanceToTokenRate(t, earningValue, harvestDuration)),
-    yieldPeriodApr: calculateProjectedYield(earningValue, yieldValuePerPeriod, periodDuration),
+    yieldPeriodApr: calculateYield(earningValue, yieldValuePerPeriod, periodDuration),
     yieldPeriodSources: yieldTokensCurrent.map((t) => balanceToTokenRate(t, earningValue, periodDuration)),
     nonHarvestApr,
     nonHarvestSources,
