@@ -29,36 +29,41 @@ export async function updateVaultTokenBalances(chain: Chain, vault: VaultDefinit
 
     let cachedTokenBalance: VaultTokenBalance | undefined;
 
-    switch (vault.protocol) {
-      case Protocol.Solidex:
-      case Protocol.OxDAO:
-      case Protocol.Swapr:
-      case Protocol.Spookyswap:
-      case Protocol.Quickswap:
-      case Protocol.Solidly:
-      case Protocol.Sushiswap:
-      case Protocol.Uniswap:
-        cachedTokenBalance = await getLpTokenBalances(chain, vault);
-        break;
-      case Protocol.Convex:
-      case Protocol.Curve:
-        cachedTokenBalance = await getCurveVaultTokenBalance(chain, vault);
-        break;
-      case Protocol.Aura:
-      case Protocol.Balancer:
-        cachedTokenBalance = await getBalancerVaultTokenBalance(chain, vault.address);
-        break;
-      default:
-        cachedTokenBalance = Object.assign(new VaultTokenBalance(), {
-          vault: vault.address,
-          tokenBalances: [await toBalance(depositToken, cachedVault.balance)],
-        });
-        break;
+    try {
+      switch (vault.protocol) {
+        case Protocol.Solidex:
+        case Protocol.OxDAO:
+        case Protocol.Swapr:
+        case Protocol.Spookyswap:
+        case Protocol.Quickswap:
+        case Protocol.Solidly:
+        case Protocol.Sushiswap:
+        case Protocol.Uniswap:
+          cachedTokenBalance = await getLpTokenBalances(chain, vault);
+          break;
+        case Protocol.Convex:
+        case Protocol.Curve:
+          cachedTokenBalance = await getCurveVaultTokenBalance(chain, vault);
+          break;
+        case Protocol.Aura:
+        case Protocol.Balancer:
+          cachedTokenBalance = await getBalancerVaultTokenBalance(chain, vault.address);
+          break;
+        default:
+          break;
+      }
+    } catch (err) {
+      console.warn({ message: `${vault.name} failed to create protocol based token balance`, err });
     }
 
-    if (cachedTokenBalance) {
-      await mapper.put(cachedTokenBalance);
+    if (!cachedTokenBalance || cachedTokenBalance.tokenBalances.length === 0) {
+      cachedTokenBalance = Object.assign(new VaultTokenBalance(), {
+        vault: vault.address,
+        tokenBalances: [await toBalance(depositToken, cachedVault.balance)],
+      });
     }
+
+    await mapper.put(cachedTokenBalance);
   } catch (err) {
     console.error({ message: `Failed to index ${vault.name} token balances`, err });
   }

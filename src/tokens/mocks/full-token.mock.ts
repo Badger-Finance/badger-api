@@ -1,7 +1,7 @@
 import { Network } from '@badger-dao/sdk';
+
 import { TOKENS } from '../../config/tokens.config';
 import { PricingType } from '../../prices/enums/pricing-type.enum';
-
 import { TokenFullMap } from '../interfaces/token-full.interface';
 
 // temp solution, remove after sdk lib mocks
