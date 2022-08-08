@@ -29,7 +29,7 @@ jobs:
       - name: Codegen
         run: yarn codegen:contracts
       - name: Cleanse Dependencies
-        run: yarn clean-modules --exclude "/**/*serverless/**" "@tsed/**" "@badger-dao/**" -y
+        run: yarn clean-modules --exclude "/**/*serverless/**" "@tsed/**" -y
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:

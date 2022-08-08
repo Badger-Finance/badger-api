@@ -15,7 +15,6 @@ import { ethers } from 'ethers';
 
 import { TOKENS } from '../../config/tokens.config';
 import { BouncerType } from '../../rewards/enums/bouncer-type.enum';
-// import { MOCK_YIELD_SOURCES } from '../../test/constants';
 import { fullTokenMockMap } from '../../tokens/mocks/full-token.mock';
 import { mockBalance } from '../../tokens/tokens.utils';
 import { VaultStrategy } from './vault-strategy.interface';
