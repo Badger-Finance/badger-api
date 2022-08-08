@@ -30,8 +30,6 @@ custom:
           # deprecated, rm after regV2
           - table: ${self:custom.table.VAULT_SNAPSHOTS_DATA}
             sources: [./seed/vault-snapshots.json]
-          - table: ${self:custom.table.VAULT_DEFINITION_DATA}
-            sources: [./seed/vaults-compound.json]
           - table: ${self:custom.table.TOKEN_INFORMATION_DATA}
             sources: [./seed/token-info.json]
           - table: ${self:custom.table.SETT_HISTORIC_DATA}
@@ -480,15 +478,6 @@ functions:
           path: /
           method: any
           cors: true
-
-  index-vaults:
-    handler: src/indexers/vaults-indexer.indexProtocolVaults
-    timeout: 480
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-vaults-history
-          description: 'index historical data for all vaults'
-          rate: rate(30 minutes)
 
   index-apy-snapshots:
     handler: src/indexers/apy-snapshots-indexer.refreshApySnapshots
