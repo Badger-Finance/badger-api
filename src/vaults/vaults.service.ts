@@ -96,20 +96,18 @@ export class VaultsService {
     vault.sourcesApy = sourcesApy;
     vault.apr = apr;
     vault.apy = apy;
+    vault.minApr = vault.sources.map((s) => s.minApr).reduce((total, apr) => (total += apr), 0);
+    vault.maxApr = vault.sources.map((s) => s.maxApr).reduce((total, apr) => (total += apr), 0);
+    vault.minApy = vault.sourcesApy.map((s) => s.minApr).reduce((total, apr) => (total += apr), 0);
+    vault.maxApy = vault.sourcesApy.map((s) => s.maxApr).reduce((total, apr) => (total += apr), 0);
     vault.yieldProjection = getVaultYieldProjection(vault, yieldSources, pendingHarvest);
 
     if (vault.boost.enabled) {
       const hasBoostedApr = vault.sources.some((source) => source.boostable);
       if (hasBoostedApr) {
-        vault.minApr = vault.sources.map((s) => s.minApr || s.apr).reduce((total, apr) => (total += apr), 0);
-        vault.maxApr = vault.sources.map((s) => s.maxApr || s.apr).reduce((total, apr) => (total += apr), 0);
-        vault.minApy = vault.sourcesApy.map((s) => s.minApr || s.apr).reduce((total, apr) => (total += apr), 0);
-        vault.maxApy = vault.sourcesApy.map((s) => s.maxApr || s.apr).reduce((total, apr) => (total += apr), 0);
         if (vault.type !== VaultType.Native) {
           vault.type = VaultType.Boosted;
         }
-      } else {
-        vault.boost.enabled = false;
       }
     }
 
