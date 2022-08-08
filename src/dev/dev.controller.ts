@@ -18,7 +18,7 @@ export class DevelopmentController {
     return param;
   }
 
-  @Get('/ddb/update/seeds')
+  @Get('/ddb/seeds')
   @ContentType('json')
   @Description('Update seed files for DynamoDb')
   async getAccount(): Promise<{ status: string }> {
