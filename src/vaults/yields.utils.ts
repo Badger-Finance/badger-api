@@ -6,7 +6,7 @@ import { YieldSource } from '../aws/models/yield-source.model';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
 import { YieldSources } from './interfaces/yield-sources.interface';
-import { queryYieldSources } from './vaults.utils';
+import { queryYieldSources, VAULT_SOURCE } from './vaults.utils';
 
 /**
  *
@@ -68,7 +68,8 @@ function isApySource(source: YieldSource): boolean {
  * @returns
  */
 function balanceToTokenRate(balance: CachedTokenBalance, principal: number, duration: number): TokenRate {
-  const apr = calculateYield(principal, balance.value, duration);
+  const compoundingValue = balance.name === VAULT_SOURCE ? principal : 0;
+  const apr = calculateYield(principal, balance.value, duration, compoundingValue);
   return {
     apr,
     ...balance,
@@ -203,6 +204,7 @@ export function getVaultYieldProjection(
   const earningValue = balance > 0 ? value * ((balance - available) / balance) : 0;
   const nonHarvestApr = nonHarvestSources.reduce((total, token) => (total += token.apr), 0);
   const nonHarvestApy = nonHarvestSourcesApy.reduce((total, token) => (total += token.apr), 0);
+
   return {
     harvestValue,
     harvestApr: calculateYield(earningValue, harvestValue, harvestDuration),
@@ -215,7 +217,6 @@ export function getVaultYieldProjection(
     ),
     harvestTokens: harvestTokens.map((t) => balanceToTokenRate(t, earningValue, harvestDuration)),
     harvestPeriodSources: harvestTokensCurrent.map((t) => balanceToTokenRate(t, earningValue, periodDuration)),
-    // TODO: ensure vault token harvests receive apy maths
     harvestPeriodSourcesApy: harvestTokensCurrent.map((t) => balanceToTokenRate(t, earningValue, periodDuration)),
     yieldValue,
     yieldApr: calculateYield(earningValue, yieldValue, harvestDuration),
