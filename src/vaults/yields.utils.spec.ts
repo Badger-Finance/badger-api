@@ -1,5 +1,8 @@
 import { ONE_DAY_MS } from '@badger-dao/sdk';
-import { calculateYield } from './yields.utils';
+import { TOKENS } from '../config/tokens.config';
+import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
+import { mockBalance } from '../tokens/tokens.utils';
+import { calculateBalanceDifference, calculateYield } from './yields.utils';
 
 describe('yields.utils', () => {
   describe('calculateYield', () => {
@@ -15,5 +18,15 @@ describe('yields.utils', () => {
         expect(calculateYield(principal, earned, duration, compoundingValue)).toEqual(expected);
       },
     );
+  });
+
+  describe('calculateBalanceDifference', () => {
+    it('returns an array with the difference in token amounts', () => {
+      const badger = fullTokenMockMap[TOKENS.BADGER];
+      const wbtc = fullTokenMockMap[TOKENS.WBTC];
+      const listA = [mockBalance(badger, 10), mockBalance(wbtc, 2)];
+      const listB = [mockBalance(badger, 25), mockBalance(wbtc, 5)];
+      expect(calculateBalanceDifference(listA, listB)).toMatchObject([mockBalance(badger, 15), mockBalance(wbtc, 3)]);
+    });
   });
 });

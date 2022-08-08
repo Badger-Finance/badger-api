@@ -1,4 +1,4 @@
-import { keyBy, ONE_YEAR_MS, TokenRate, VaultDTO, VaultState, VaultYieldProjection } from '@badger-dao/sdk';
+import { keyBy, ONE_YEAR_MS, TokenRate, TokenValue, VaultDTO, VaultState, VaultYieldProjection } from '@badger-dao/sdk';
 
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
@@ -108,12 +108,12 @@ export function calculateYield(principal: number, earned: number, duration: numb
 }
 
 /**
- *
- * @param listA
- * @param listB
- * @returns
+ * Calculate the difference in two lists of tokens.
+ * @param listA reference previous list
+ * @param listB reference current list
+ * @returns difference between previous and current list
  */
-function calculateBalanceDifference(listA: CachedTokenBalance[], listB: CachedTokenBalance[]): CachedTokenBalance[] {
+export function calculateBalanceDifference(listA: TokenValue[], listB: TokenValue[]): TokenValue[] {
   // we need to construct a measurement diff from the originally measured tokens and the new tokens
   const listAByToken = keyBy(listA, (t) => t.address);
   const listBCopy: CachedTokenBalance[] = JSON.parse(JSON.stringify(listB));
