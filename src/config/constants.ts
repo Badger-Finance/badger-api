@@ -28,7 +28,6 @@ export const HARVEST_DATA = getEnvVar('HARVEST_DATA');
 export const HARVEST_COMPOUND_DATA = getEnvVar('HARVEST_COMPOUND_DATA');
 export const PROTOCOL_DATA = getEnvVar('PROTOCOL_DATA');
 export const CHART_DATA = getEnvVar('CHART_DATA');
-export const MIGRATION_PROCESS_DATA = getEnvVar('MIGRATION_PROCESS_DATA');
 
 // thegraph constants
 export const UNISWAP_URL = getEnvVar('UNISWAP');

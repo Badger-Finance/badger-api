@@ -55,5 +55,4 @@ export const MOCK_VAULT_DEFINITION: VaultDefinitionModel = {
   version: VaultVersion.v1,
   client: '',
   depositToken: TOKENS.BADGER,
-  isMigrating: true,
 };

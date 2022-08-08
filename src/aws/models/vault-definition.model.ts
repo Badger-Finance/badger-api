@@ -67,7 +67,4 @@ export class VaultDefinitionModel implements IVaultDefinition {
 
   @attribute()
   isNew!: boolean;
-
-  @attribute({ defaultProvider: () => true })
-  isMigrating!: boolean;
 }
