@@ -41,7 +41,7 @@ custom:
     noPrependStageInUrl: true
 
   table:
-    YIELD_SNAPSHOTS_DATA: apy-snapshots-${self:custom.stage}
+    YIELD_SNAPSHOTS_DATA: yield-snapshots-${self:custom.stage}
     SETT_HISTORIC_DATA: sett-historic-snapshots-${self:custom.stage}
     # deprecated
     VAULT_SNAPSHOTS_DATA: vaults-snapshots-${self:custom.stage}
