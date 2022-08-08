@@ -88,13 +88,13 @@ export async function updateSnapshots<T extends ChartData<T>>(namespace: string,
         }
       }
     } catch (err) {
-      console.log({ message: 'Unable to query cached chart, may simply not exist', err });
+      console.debug({ message: 'Unable to query cached chart, may simply not exist', err });
     } // no item found
 
     let updateCache = false;
     if (!cachedChart) {
       const blob = toChartDataBlob(searchKey.id, timeframe, []);
-      console.log(`Create blob for ${searchKey.id}`);
+      console.debug(`Create blob for ${searchKey.id}`);
       try {
         cachedChart = await mapper.put(blob);
       } catch (err) {
@@ -114,7 +114,7 @@ export async function updateSnapshots<T extends ChartData<T>>(namespace: string,
 
     if (updateCache && cachedChart) {
       cachedChart.data.splice(0, 0, snapshot);
-      console.log(`Update ${searchKey.id} (${cachedChart.data.length} entries)`);
+      console.debug(`Update ${searchKey.id} (${cachedChart.data.length} entries)`);
       try {
         await mapper.put(cachedChart);
       } catch (err) {

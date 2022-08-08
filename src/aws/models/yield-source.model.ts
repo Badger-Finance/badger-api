@@ -38,14 +38,4 @@ export class YieldSource implements ValueSource {
 
   @attribute()
   maxApr!: number;
-
-  toValueSource(): ValueSource {
-    return {
-      name: this.name,
-      apr: this.apr,
-      boostable: this.boostable,
-      minApr: this.minApr,
-      maxApr: this.maxApr,
-    };
-  }
 }

@@ -27,8 +27,6 @@ custom:
         sources:
           - table: ${self:custom.table.TOKEN_PRICE_DATA}
             sources: [./seed/prices.json]
-          - table: ${self:custom.table.YIELD_SNAPSHOTS_DATA}
-            sources: [./seed/value-sources.json]
           # deprecated, rm after regV2
           - table: ${self:custom.table.VAULT_SNAPSHOTS_DATA}
             sources: [./seed/vault-snapshots.json]

@@ -1,4 +1,13 @@
-import { keyBy, ONE_YEAR_MS, TokenRate, TokenValue, VaultDTO, VaultState, VaultYieldProjection } from '@badger-dao/sdk';
+import {
+  keyBy,
+  ONE_YEAR_MS,
+  TokenRate,
+  TokenValue,
+  ValueSource,
+  VaultDTO,
+  VaultState,
+  VaultYieldProjection,
+} from '@badger-dao/sdk';
 
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
@@ -10,10 +19,12 @@ import { YieldSources } from './interfaces/yield-sources.interface';
 import { queryYieldSources, VAULT_SOURCE } from './vaults.utils';
 
 /**
- *
- * @param source
- * @param state
- * @returns
+ * Determine if a yield source in relevant in a given context.
+ * Only sources not stemming from a DAO action are considered relevant in discontinued state.
+ * Only sources providing a material apr are considered relevant.
+ * @param source yield source to validate
+ * @param state state of the vault the yield source references
+ * @returns true if the source is relevant, false if not
  */
 function isRelevantSource(source: YieldSource, state: VaultState): boolean {
   if (source.apr < 0.001) {
@@ -22,25 +33,29 @@ function isRelevantSource(source: YieldSource, state: VaultState): boolean {
   if (state === VaultState.Discontinued) {
     return isPassiveSource(source);
   }
-  return false;
+  return true;
 }
 
 /**
- *
- * @param source
- * @returns
+ * Determine if a yield source is not associated with any harvest.
+ * @param source yield source to validate
+ * @returns true if source does not originate from any harvest, false if so
  */
 function isPassiveSource(source: YieldSource): boolean {
-  return !(isAprSource(source) || isApySource(source));
+  return isNonHarvestSource(source) && source.type !== SourceType.Flywheel;
 }
 
 /**
- *
- * @param source
- * @returns
+ * Determine if a yield source is not directly associated with a singular harvest.
+ * @param source yield source to validate
+ * @returns true if source does not originate directly from a singular harvest, false if so
  */
 function isNonHarvestSource(source: YieldSource): boolean {
-  return source.type !== SourceType.Compound && source.type !== SourceType.PreCompound;
+  return (
+    source.type !== SourceType.Compound &&
+    source.type !== SourceType.PreCompound &&
+    source.type !== SourceType.Distribution
+  );
 }
 
 /**
@@ -74,6 +89,21 @@ function balanceToTokenRate(balance: CachedTokenBalance, principal: number, dura
   return {
     apr,
     ...balance,
+  };
+}
+
+/**
+ *
+ * @param source
+ * @returns
+ */
+function yieldToValueSource(source: YieldSource): ValueSource {
+  return {
+    name: source.name,
+    apr: source.apr,
+    boostable: source.boostable,
+    minApr: source.minApr,
+    maxApr: source.maxApr,
   };
 }
 
@@ -151,11 +181,11 @@ export async function getYieldSources(vault: VaultDefinitionModel): Promise<Yiel
   const nonHarvestSourcesApy = sourcesApy.filter(isNonHarvestSource);
   return {
     apr,
-    sources,
+    sources: sources.map(yieldToValueSource),
     apy,
-    sourcesApy,
-    nonHarvestSources,
-    nonHarvestSourcesApy,
+    sourcesApy: sourcesApy.map(yieldToValueSource),
+    nonHarvestSources: nonHarvestSources.map(yieldToValueSource),
+    nonHarvestSourcesApy: nonHarvestSourcesApy.map(yieldToValueSource),
   };
 }
 
@@ -231,6 +261,15 @@ export function getVaultYieldProjection(
   };
 }
 
+/**
+ *
+ * @param vault
+ * @param type
+ * @param name
+ * @param apr
+ * @param param4
+ * @returns
+ */
 export function createYieldSource(
   vault: VaultDefinitionModel,
   type: SourceType,

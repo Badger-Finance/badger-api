@@ -23,8 +23,8 @@ exports[`VaultsController GET /v2/harvests/:vault success cases Return extended 
 exports[`VaultsController GET /v2/vaults with a specified chain returns the vaults for bsc 1`] = `
 Array [
   Object {
-    "apr": 0,
-    "apy": 0,
+    "apr": 8.26,
+    "apy": 12.39,
     "asset": "BADGER",
     "available": 0,
     "balance": 10,
@@ -38,8 +38,45 @@ Array [
     "name": "Badger",
     "pricePerFullShare": 1,
     "protocol": "Badger",
-    "sources": Array [],
-    "sourcesApy": Array [],
+    "sources": Array [
+      Object {
+        "apr": 4.13,
+        "boostable": false,
+        "maxApr": 4.13,
+        "minApr": 4.13,
+        "name": "Badger Rewards",
+      },
+      Object {
+        "apr": 4.13,
+        "boostable": false,
+        "maxApr": 4.13,
+        "minApr": 4.13,
+        "name": "Curve LP Fees",
+      },
+    ],
+    "sourcesApy": Array [
+      Object {
+        "apr": 4.13,
+        "boostable": false,
+        "maxApr": 4.13,
+        "minApr": 4.13,
+        "name": "Vault Compounding",
+      },
+      Object {
+        "apr": 4.13,
+        "boostable": false,
+        "maxApr": 4.13,
+        "minApr": 4.13,
+        "name": "Badger Rewards",
+      },
+      Object {
+        "apr": 4.13,
+        "boostable": false,
+        "maxApr": 4.13,
+        "minApr": 4.13,
+        "name": "Curve LP Fees",
+      },
+    ],
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
@@ -93,10 +130,40 @@ Array [
         },
       ],
       "harvestValue": 12510,
-      "nonHarvestApr": 0,
-      "nonHarvestApy": 0,
-      "nonHarvestSources": Array [],
-      "nonHarvestSourcesApy": Array [],
+      "nonHarvestApr": 8.26,
+      "nonHarvestApy": 8.26,
+      "nonHarvestSources": Array [
+        Object {
+          "apr": 4.13,
+          "boostable": false,
+          "maxApr": 4.13,
+          "minApr": 4.13,
+          "name": "Badger Rewards",
+        },
+        Object {
+          "apr": 4.13,
+          "boostable": false,
+          "maxApr": 4.13,
+          "minApr": 4.13,
+          "name": "Curve LP Fees",
+        },
+      ],
+      "nonHarvestSourcesApy": Array [
+        Object {
+          "apr": 4.13,
+          "boostable": false,
+          "maxApr": 4.13,
+          "minApr": 4.13,
+          "name": "Badger Rewards",
+        },
+        Object {
+          "apr": 4.13,
+          "boostable": false,
+          "maxApr": 4.13,
+          "minApr": 4.13,
+          "name": "Curve LP Fees",
+        },
+      ],
       "yieldApr": 0.22498409152323756,
       "yieldPeriodApr": 0,
       "yieldPeriodSources": Array [
@@ -130,8 +197,8 @@ Array [
 exports[`VaultsController GET /v2/vaults with a specified chain returns the vaults for eth 1`] = `
 Array [
   Object {
-    "apr": 0,
-    "apy": 0,
+    "apr": 8.26,
+    "apy": 12.39,
     "asset": "BADGER",
     "available": 0,
     "balance": 10,
@@ -145,8 +212,45 @@ Array [
     "name": "Badger",
     "pricePerFullShare": 1,
     "protocol": "Badger",
-    "sources": Array [],
-    "sourcesApy": Array [],
+    "sources": Array [
+      Object {
+        "apr": 4.13,
+        "boostable": false,
+        "maxApr": 4.13,
+        "minApr": 4.13,
+        "name": "Badger Rewards",
+      },
+      Object {
+        "apr": 4.13,
+        "boostable": false,
+        "maxApr": 4.13,
+        "minApr": 4.13,
+        "name": "Curve LP Fees",
+      },
+    ],
+    "sourcesApy": Array [
+      Object {
+        "apr": 4.13,
+        "boostable": false,
+        "maxApr": 4.13,
+        "minApr": 4.13,
+        "name": "Vault Compounding",
+      },
+      Object {
+        "apr": 4.13,
+        "boostable": false,
+        "maxApr": 4.13,
+        "minApr": 4.13,
+        "name": "Badger Rewards",
+      },
+      Object {
+        "apr": 4.13,
+        "boostable": false,
+        "maxApr": 4.13,
+        "minApr": 4.13,
+        "name": "Curve LP Fees",
+      },
+    ],
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
@@ -200,10 +304,40 @@ Array [
         },
       ],
       "harvestValue": 12510,
-      "nonHarvestApr": 0,
-      "nonHarvestApy": 0,
-      "nonHarvestSources": Array [],
-      "nonHarvestSourcesApy": Array [],
+      "nonHarvestApr": 8.26,
+      "nonHarvestApy": 8.26,
+      "nonHarvestSources": Array [
+        Object {
+          "apr": 4.13,
+          "boostable": false,
+          "maxApr": 4.13,
+          "minApr": 4.13,
+          "name": "Badger Rewards",
+        },
+        Object {
+          "apr": 4.13,
+          "boostable": false,
+          "maxApr": 4.13,
+          "minApr": 4.13,
+          "name": "Curve LP Fees",
+        },
+      ],
+      "nonHarvestSourcesApy": Array [
+        Object {
+          "apr": 4.13,
+          "boostable": false,
+          "maxApr": 4.13,
+          "minApr": 4.13,
+          "name": "Badger Rewards",
+        },
+        Object {
+          "apr": 4.13,
+          "boostable": false,
+          "maxApr": 4.13,
+          "minApr": 4.13,
+          "name": "Curve LP Fees",
+        },
+      ],
       "yieldApr": 0.22498409152323756,
       "yieldPeriodApr": 0,
       "yieldPeriodSources": Array [
@@ -243,8 +377,8 @@ Object {
 exports[`VaultsController GET /v2/vaults with no specified chain returns eth vaults 1`] = `
 Array [
   Object {
-    "apr": 0,
-    "apy": 0,
+    "apr": 8.26,
+    "apy": 12.39,
     "asset": "BADGER",
     "available": 0,
     "balance": 10,
@@ -258,8 +392,45 @@ Array [
     "name": "Badger",
     "pricePerFullShare": 1,
     "protocol": "Badger",
-    "sources": Array [],
-    "sourcesApy": Array [],
+    "sources": Array [
+      Object {
+        "apr": 4.13,
+        "boostable": false,
+        "maxApr": 4.13,
+        "minApr": 4.13,
+        "name": "Badger Rewards",
+      },
+      Object {
+        "apr": 4.13,
+        "boostable": false,
+        "maxApr": 4.13,
+        "minApr": 4.13,
+        "name": "Curve LP Fees",
+      },
+    ],
+    "sourcesApy": Array [
+      Object {
+        "apr": 4.13,
+        "boostable": false,
+        "maxApr": 4.13,
+        "minApr": 4.13,
+        "name": "Vault Compounding",
+      },
+      Object {
+        "apr": 4.13,
+        "boostable": false,
+        "maxApr": 4.13,
+        "minApr": 4.13,
+        "name": "Badger Rewards",
+      },
+      Object {
+        "apr": 4.13,
+        "boostable": false,
+        "maxApr": 4.13,
+        "minApr": 4.13,
+        "name": "Curve LP Fees",
+      },
+    ],
     "state": "open",
     "strategy": Object {
       "address": "0x0000000000000000000000000000000000000000",
@@ -313,10 +484,40 @@ Array [
         },
       ],
       "harvestValue": 12510,
-      "nonHarvestApr": 0,
-      "nonHarvestApy": 0,
-      "nonHarvestSources": Array [],
-      "nonHarvestSourcesApy": Array [],
+      "nonHarvestApr": 8.26,
+      "nonHarvestApy": 8.26,
+      "nonHarvestSources": Array [
+        Object {
+          "apr": 4.13,
+          "boostable": false,
+          "maxApr": 4.13,
+          "minApr": 4.13,
+          "name": "Badger Rewards",
+        },
+        Object {
+          "apr": 4.13,
+          "boostable": false,
+          "maxApr": 4.13,
+          "minApr": 4.13,
+          "name": "Curve LP Fees",
+        },
+      ],
+      "nonHarvestSourcesApy": Array [
+        Object {
+          "apr": 4.13,
+          "boostable": false,
+          "maxApr": 4.13,
+          "minApr": 4.13,
+          "name": "Badger Rewards",
+        },
+        Object {
+          "apr": 4.13,
+          "boostable": false,
+          "maxApr": 4.13,
+          "minApr": 4.13,
+          "name": "Curve LP Fees",
+        },
+      ],
       "yieldApr": 0.22498409152323756,
       "yieldPeriodApr": 0,
       "yieldPeriodSources": Array [
