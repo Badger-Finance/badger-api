@@ -11,7 +11,6 @@ export interface IVaultDefinition {
   createdAt: number;
   depositToken: string;
   isNew: boolean;
-  isMigrating: boolean;
   isProduction: number;
   name: string;
   protocol: Protocol;

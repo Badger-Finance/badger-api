@@ -80,11 +80,6 @@ export async function constructVaultDefinition(
     return null;
   }
 
-  let currentDefinition: Nullable<VaultDefinitionModel>;
-  try {
-    currentDefinition = await chain.vaults.getVault(vault.address);
-  } catch {}
-
   const { createdAt, releasedAt, lastUpdatedAt } = sett;
 
   return Object.assign(new VaultDefinitionModel(), {
@@ -104,7 +99,6 @@ export async function constructVaultDefinition(
     releasedAt: Number(releasedAt),
     stage: vault.state === VaultState.Experimental ? Stage.Staging : Stage.Production,
     bouncer: BouncerType.None,
-    isMigrating: currentDefinition ? currentDefinition.isMigrating : true,
     isNew: Date.now() / 1000 - Number(releasedAt) <= ONE_WEEK_SECONDS * 2,
   });
 }
