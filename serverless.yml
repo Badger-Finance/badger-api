@@ -370,7 +370,7 @@ resources:
           AttributeName: 'expiresAt'
           Enabled: true
 
-    harvestDataTable:
+    yieldEstimatesTable:
       Type: AWS::DynamoDB::Table
       Properties:
         TableName: ${self:custom.table.YIELD_ESTIMATES_DATA}
