@@ -57,6 +57,10 @@ export async function defaultVault(chain: Chain, vault: VaultDefinitionModel): P
   return {
     apr: 0,
     apy: 0,
+    minApr: 0,
+    maxApr: 0,
+    minApy: 0,
+    maxApy: 0,
     asset: assetToken.symbol,
     available: 0,
     balance: 0,
@@ -609,7 +613,6 @@ export async function estimateVaultPerformance(
   return valueSources;
 }
 
-// TOD: deal with index chain.network+address
 export async function queryYieldSources(vault: VaultDefinitionModel): Promise<YieldSource[]> {
   const valueSources = [];
   const mapper = getDataMapper();

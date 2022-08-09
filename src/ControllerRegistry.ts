@@ -12,7 +12,6 @@ import { RewardV2Controller } from './rewards/reward.v2.controller';
 import { RewardsV2Controller } from './rewards/rewards.v2.controller';
 import { RewardsV3Controller } from './rewards/rewards.v3.controller';
 import { TokensController } from './tokens/tokens.controller';
-import { SettsV2Controller } from './vaults/setts.v2.controller';
 import { VaultsV2Controller } from './vaults/vaults.v2.controller';
 import { VaultsV3Controller } from './vaults/vaults.v3.controller';
 
@@ -30,9 +29,6 @@ export const V2_CONTROLLERS = [
   ProtocolController,
   PriceController,
   TokensController,
-
-  SettsV2Controller,
-
   AccountsV2Controller,
   ProofsV2Controller,
   RewardV2Controller,

@@ -114,25 +114,25 @@ export class VaultModel implements VaultDTO {
   @Description('Minimum vault APR as modifid by badger boost')
   @Example(8.03)
   @Property()
-  public minApr?: number;
+  public minApr: number;
 
   @Title('maxApr')
   @Description('Maximum vault APR as modifid by badger boost')
   @Example(8.03)
   @Property()
-  public maxApr?: number;
+  public maxApr: number;
 
   @Title('minApr')
   @Description('Minimum vault APY as modifid by badger boost')
   @Example(8.03)
   @Property()
-  public minApy?: number;
+  public minApy: number;
 
   @Title('maxApr')
   @Description('Maximum vault APY as modifid by badger boost')
   @Example(8.03)
   @Property()
-  public maxApy?: number;
+  public maxApy: number;
 
   @Title('sources')
   @Description('Vault APR individual yield source breakdown')
