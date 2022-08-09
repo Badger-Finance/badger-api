@@ -11,6 +11,9 @@ export enum ApiErrorCode {
 
   UnknownVault = 2100,
 
+  // Access Errors
+  AccessDeniedDevModeOnly = 3000,
+
   // Citadel Errors
   NoDataInBouncerList = 9000,
 }

@@ -16,7 +16,7 @@ import { ethers } from 'ethers';
 import createMockInstance from 'jest-create-mock-instance';
 import { mock } from 'jest-mock-extended';
 
-import VaultsCompoundMock from '../../seed/vaults-compound.json';
+import VaultsCompoundMock from '../../seed/vault-definition.json';
 import * as accountsUtils from '../accounts/accounts.utils';
 import * as dynamodbUtils from '../aws/dynamodb.utils';
 import { CachedAccount } from '../aws/models/cached-account.model';
