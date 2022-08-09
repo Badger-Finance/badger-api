@@ -25,7 +25,7 @@ export const DIGG_SHARE_PER_FRAGMENT = '2222563088237653310278786358053658309223
 
 export async function getTreeDistribution(chain: Chain): Promise<RewardMerkleDistribution | null> {
   try {
-    const fileName = `badger-tree-${parseInt(chain.chainId, 16)}.json`;
+    const fileName = `badger-tree-${chain.chainId}.json`;
     const rewardFile = await getObject(REWARD_DATA, fileName);
     return JSON.parse(rewardFile.toString('utf-8'));
   } catch (err) {

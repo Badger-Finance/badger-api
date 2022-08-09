@@ -14,7 +14,7 @@ import { sendPlainTextToDiscord } from '../utils/discord.utils';
 import { getCachedVault, queryYieldEstimate, VAULT_SOURCE } from '../vaults/vaults.utils';
 import { calculateBalanceDifference } from '../vaults/yields.utils';
 
-export async function refreshVaultHarvests() {
+export async function refreshYieldEstimates() {
   await Promise.all(
     SUPPORTED_CHAINS.map(async (chain) => {
       const sdk = await chain.getSdk();
@@ -55,7 +55,7 @@ export async function refreshVaultHarvests() {
             // only report an error with the vault every eight hours
             if (now - ONE_DAY_MS / 3 > harvestData.lastReportedAt) {
               sendPlainTextToDiscord(
-                `${chain.name} ${vault.name} (${vault.protocol}, ${vault.version}, ${
+                `${chain.network} ${vault.name} (${vault.protocol}, ${vault.version}, ${
                   vault.state ?? VaultState.Open
                 }) failed to harvest!`,
               );

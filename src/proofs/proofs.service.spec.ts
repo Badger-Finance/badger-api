@@ -20,7 +20,7 @@ describe('proofs.service', () => {
     it('throws a 404 when a chain is missing a bouncer file', async () => {
       jest.spyOn(s3Utils, 'getObject').mockImplementation();
       await expect(service.getBouncerProof(TEST_CHAIN, TEST_ADDR)).rejects.toThrow(
-        `${TEST_CHAIN.name} does not have requested data`,
+        `${TEST_CHAIN.network} does not have requested data`,
       );
     });
 

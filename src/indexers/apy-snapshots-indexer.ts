@@ -54,6 +54,6 @@ export async function refreshChainApySnapshots(chain: Chain, vault: VaultDefinit
       console.log({ err, currentYieldSources, prunedPreviousYieldSources, vault });
     }
   } catch (err) {
-    console.error({ err, message: `${chain.name} failed to update APY snapshots for vaults` });
+    console.error({ err, message: `${chain.network} failed to update APY snapshots for vaults` });
   }
 }

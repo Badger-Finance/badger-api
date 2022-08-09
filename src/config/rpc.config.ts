@@ -9,6 +9,7 @@ const rpc = {
   [Network.Arbitrum]: process.env.ARBITRUM_RPC || Provider.Arbitrum,
   [Network.Avalanche]: process.env.AVALANCHE_RPC || Provider.Avalanche,
   [Network.Fantom]: process.env.FANTOM_RPC || Provider.Fantom,
+  [Network.Optimism]: process.env.OPTIMISM_RPC || Provider.Optimism,
 };
 
 export default rpc;

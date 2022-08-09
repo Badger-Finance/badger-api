@@ -1,6 +1,7 @@
 import { AccountV3Controller } from './accounts/account.v3.controller';
 import { AccountsV2Controller } from './accounts/accounts.v2.controller';
 import { ChartsController } from './charts/charts.controller';
+import { DevelopmentController } from './dev/dev.controller';
 import { GasController } from './gas/gas.controller';
 import { LeaderBoardsController } from './leaderboards/leaderboards.controller';
 import { MetricsController } from './metrics/metrics.controller';
@@ -14,7 +15,6 @@ import { RewardsV3Controller } from './rewards/rewards.v3.controller';
 import { TokensController } from './tokens/tokens.controller';
 import { VaultsV2Controller } from './vaults/vaults.v2.controller';
 import { VaultsV3Controller } from './vaults/vaults.v3.controller';
-import { DevelopmentController } from './dev/dev.controller';
 
 /**
  * Controller registry forces serverless offline to load

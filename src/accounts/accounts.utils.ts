@@ -19,7 +19,7 @@ import { CachedSettBalance } from './interfaces/cached-sett-balance.interface';
 
 export async function getBoostFile(chain: Chain): Promise<BoostData | null> {
   try {
-    const boostFile = await getObject(REWARD_DATA, `badger-boosts-${parseInt(chain.chainId, 16)}.json`);
+    const boostFile = await getObject(REWARD_DATA, `badger-boosts-${chain.chainId}.json`);
     return JSON.parse(boostFile.toString('utf-8'));
   } catch (err) {
     return null;
@@ -57,7 +57,7 @@ export async function getAccounts(chain: Chain): Promise<string[]> {
   }
 
   if (PRODUCTION) {
-    console.log(`Retrieved ${accounts.size} accounts on ${chain.name}`);
+    console.log(`Retrieved ${accounts.size} accounts on ${chain.network}`);
   }
 
   return [...accounts];

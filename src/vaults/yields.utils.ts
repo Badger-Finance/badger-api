@@ -117,7 +117,7 @@ function yieldToValueSource(source: YieldSource): ValueSource {
 function aggregateSources(sources: ValueSource[]): ValueSource[] {
   const sourceMap: Record<string, ValueSource> = {};
   const sourcesCopy = JSON.parse(JSON.stringify(sources));
-  for (let source of sourcesCopy) {
+  for (const source of sourcesCopy) {
     if (!sourceMap[source.name]) {
       sourceMap[source.name] = source;
     } else {

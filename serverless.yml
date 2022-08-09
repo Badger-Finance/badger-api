@@ -518,13 +518,13 @@ functions:
           description: 'index definitions for supported vaults'
           rate: rate(5 minutes)
 
-  index-vault-harvests:
-    handler: src/indexers/vault-harvests-indexer.refreshVaultHarvests
+  index-yield-estimates:
+    handler: src/indexers/yield-estimates-indexer.refreshYieldEstimates
     timeout: 150
     events:
       - schedule:
-          name: ${self:service}-${self:custom.stage}-index-vault-harvests
-          description: 'index harvests data for supported vaults'
+          name: ${self:service}-${self:custom.stage}-index-yield-estimates
+          description: 'index yield estimate data for supported vaults'
           rate: rate(5 minutes)
 
   index-harvest-compound:

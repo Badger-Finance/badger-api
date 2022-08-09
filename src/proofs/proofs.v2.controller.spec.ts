@@ -27,7 +27,7 @@ describe('ProofsController', () => {
     it('returns 404 for a chain with no bouncer file', async (done: jest.DoneCallback) => {
       jest.spyOn(proofsService, 'getBouncerProof').mockImplementation(async () => {
         // simulate no chain path
-        throw new NotFound(`${chain.name} does not have a bouncer list`);
+        throw new NotFound(`${chain.network} does not have a bouncer list`);
       });
       const { body } = await request.get(`/v2/proofs/${TEST_ADDR}`).expect(404);
       expect(body).toMatchSnapshot();

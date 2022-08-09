@@ -20,11 +20,11 @@ export async function getVaultsDefinitionSeedData(): Promise<VaultDefinitionMode
     try {
       registryVaults = await sdk.vaults.loadVaults(true);
     } catch (e) {
-      console.error(`Problems with getting vaults for chain ${chain.name}. ${e}`);
+      console.error(`Problems with getting vaults for chain ${chain.network}. ${e}`);
     }
 
     if (registryVaults.length === 0) {
-      console.error(`No vaults found for chain: ${chain.name}`);
+      console.error(`No vaults found for chain: ${chain.network}`);
       continue;
     }
 

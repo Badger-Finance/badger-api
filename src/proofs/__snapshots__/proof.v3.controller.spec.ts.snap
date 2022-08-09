@@ -11,7 +11,7 @@ Array [
 exports[`ProofsController GET /v3/proofs returns 404 for a chain with no bouncer file 1`] = `
 Object {
   "code": 2000,
-  "message": "Ethereum does not have requested data",
+  "message": "ethereum does not have requested data",
 }
 `;
 

@@ -9,9 +9,6 @@ import { Chain } from './chain.config';
 export class Polygon extends Chain {
   constructor() {
     super(
-      'Polygon',
-      'polygon',
-      '0x89',
       Network.Polygon,
       maticTokensConfig,
       rpc[Network.Polygon],

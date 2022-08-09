@@ -1,5 +1,5 @@
 import { providers } from '@0xsequence/multicall';
-import BadgerSDK, { Network } from '@badger-dao/sdk';
+import BadgerSDK, { getNetworkConfig, Network } from '@badger-dao/sdk';
 import { BadRequest, NotFound } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 
@@ -17,6 +17,7 @@ export abstract class Chain {
   private static chainsByNetworkId: Record<string, Chain> = {};
   private static sdks: Sdks = {};
 
+  readonly chainId: number;
   readonly sdk: BadgerSDK;
   readonly vaults: ChainVaults;
   readonly strategy: ChainStrategy;
@@ -24,17 +25,17 @@ export abstract class Chain {
   readonly emissionControl?: string;
 
   constructor(
-    readonly name: string,
-    readonly symbol: string,
-    readonly chainId: string,
     readonly network: Network,
     readonly tokens: TokenConfig,
     readonly rpcUrl: string,
     strategy: ChainStrategy,
     emissionControl?: string,
   ) {
+    const config = getNetworkConfig(network);
+    const { chainId } = config;
+    this.chainId = chainId;
     this.vaults = new ChainVaults(network);
-    this.sdk = new BadgerSDK({ network: parseInt(chainId, 16), provider: rpcUrl });
+    this.sdk = new BadgerSDK({ network, provider: rpcUrl });
     this.strategy = strategy;
     this.emissionControl = emissionControl;
   }
@@ -50,8 +51,7 @@ export abstract class Chain {
 
     // Register chain objects
     Chain.chains[network] = chain;
-    Chain.chains[chain.symbol] = chain;
-    Chain.chainsByNetworkId[parseInt(chain.chainId, 16)] = chain;
+    Chain.chainsByNetworkId[chain.chainId] = chain;
     if (network === Network.Polygon) {
       Chain.chains['matic'] = chain;
     }
@@ -60,9 +60,8 @@ export abstract class Chain {
     }
 
     // Register sdk objects
-    const { sdk, symbol } = chain;
+    const { sdk } = chain;
     Chain.sdks[network] = sdk;
-    Chain.sdks[symbol] = sdk;
     if (network === Network.Polygon) {
       Chain.sdks['matic'] = sdk;
     }

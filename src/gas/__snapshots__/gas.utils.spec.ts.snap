@@ -38,6 +38,12 @@ Object {
     "slow": 33,
     "standard": 33,
   },
+  "optimism": Object {
+    "fast": 1,
+    "rapid": 1,
+    "slow": 1,
+    "standard": 1,
+  },
   "polygon": Object {
     "fast": 33,
     "rapid": 38,
