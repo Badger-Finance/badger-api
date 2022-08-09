@@ -8,9 +8,6 @@ import { Chain } from './chain.config';
 export class Ethereum extends Chain {
   constructor() {
     super(
-      'Ethereum',
-      'eth',
-      '0x01',
       Network.Ethereum,
       ethTokensConfig,
       rpc[Network.Ethereum],

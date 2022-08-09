@@ -24,7 +24,7 @@ export class RewardsService {
    * @param address User Ethereum address.
    */
   async getBouncerProof(chain: Chain, address: string): Promise<AirdropMerkleClaim> {
-    const fileName = `badger-bouncer-${parseInt(chain.chainId)}.json`;
+    const fileName = `badger-bouncer-${chain.chainId}.json`;
     const airdropFile = await getObject(REWARD_DATA, fileName);
     const fileContents: AirdropMerkleDistribution = JSON.parse(airdropFile.toString('utf-8'));
     const claim = fileContents.claims[address.toLowerCase()] || fileContents.claims[ethers.utils.getAddress(address)];
@@ -42,7 +42,7 @@ export class RewardsService {
     const userAddress = ethers.utils.getAddress(address);
     const treeDistribution = await getTreeDistribution(chain);
     if (!treeDistribution) {
-      throw new UnsupportedChainError(`${chain.name}`);
+      throw new UnsupportedChainError(`${chain.network}`);
     }
     const claim = treeDistribution.claims[userAddress];
     if (!claim) {

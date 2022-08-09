@@ -16,10 +16,10 @@ export class ProofsService {
    * @param address User Ethereum address.
    */
   async getBouncerProof(chain: Chain, address: string): Promise<MerkleProof> {
-    const fileName = `badger-bouncer-${parseInt(chain.chainId)}.json`;
+    const fileName = `badger-bouncer-${chain.chainId}.json`;
     const bouncerFile = await getObject(REWARD_DATA, fileName);
     if (!bouncerFile) {
-      throw new NodataForChainError(chain.name);
+      throw new NodataForChainError(chain.network);
     }
     const fileContents: AirdropMerkleDistribution = JSON.parse(bouncerFile.toString('utf-8'));
     const claim = fileContents.claims[ethers.utils.getAddress(address)];

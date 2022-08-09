@@ -77,7 +77,7 @@ export async function constructVaultDefinition(
   const { sett } = await sdk.graph.loadSett({ id: address.toLowerCase() });
 
   if (!sett) {
-    console.warn(`Cant fetch vault data from The Graph for chain ${chain.name}, ${address}`);
+    console.warn(`Cant fetch vault data from The Graph for chain ${chain.network}, ${address}`);
     return null;
   }
 

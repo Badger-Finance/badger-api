@@ -11,7 +11,7 @@ import { convert } from '../prices/prices.utils';
 import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interface';
 import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
 import { VaultHarvestsMap } from './interfaces/vault-harvest-map';
-import { getCachedVault, queryYieldEstimate, queryVaultCharts } from './vaults.utils';
+import { getCachedVault, queryVaultCharts, queryYieldEstimate } from './vaults.utils';
 import { getVaultYieldProjection, getYieldSources } from './yields.utils';
 
 @Service()

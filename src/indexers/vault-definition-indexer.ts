@@ -15,7 +15,7 @@ export async function captureVaultData() {
     try {
       registryVaults = await sdk.vaults.loadVaults(true);
     } catch (_) {
-      console.error(`Registry is not defined for ${chain.name}`);
+      console.error(`Registry is not defined for ${chain.network}`);
     }
 
     if (registryVaults.length === 0) {
@@ -52,7 +52,7 @@ export async function captureVaultData() {
         }
       }
     } catch (e) {
-      console.error(`Failed to update isProduction status for vaults and chain: ${chain.name}`);
+      console.error(`Failed to update isProduction status for vaults and chain: ${chain.network}`);
     }
   }
 
