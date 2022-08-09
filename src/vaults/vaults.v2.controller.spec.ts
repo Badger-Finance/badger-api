@@ -6,7 +6,7 @@ import createMockInstance from 'jest-create-mock-instance';
 import SuperTest from 'supertest';
 
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
-import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
+import { YieldEstimate } from '../aws/models/yield-estimate.model';
 import { YieldSource } from '../aws/models/yield-source.model';
 import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
@@ -48,8 +48,8 @@ export function setupTestVault() {
   });
   const baseTime = 1656606946;
   jest.spyOn(Date, 'now').mockImplementation(() => baseTime * 1000 + ONE_DAY_MS * 14);
-  jest.spyOn(vaultsUtils, 'queryPendingHarvest').mockImplementation(
-    async (vaultDefinition: VaultDefinitionModel): Promise<VaultPendingHarvestData> => ({
+  jest.spyOn(vaultsUtils, 'queryYieldEstimate').mockImplementation(
+    async (vaultDefinition: VaultDefinitionModel): Promise<YieldEstimate> => ({
       vault: vaultDefinition.address,
       yieldTokens: [mockBalance(fullTokenMockMap[TOKENS.CVX], 10)],
       harvestTokens: [mockBalance(fullTokenMockMap[TOKENS.CVX], 10)],

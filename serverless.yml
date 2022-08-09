@@ -44,6 +44,7 @@ custom:
 
   table:
     YIELD_SNAPSHOTS_DATA: yield-snapshots-${self:custom.stage}
+    YIELD_ESTIMATES_DATA: yield-estimates-${self:custom.stage}
     SETT_HISTORIC_DATA: sett-historic-snapshots-${self:custom.stage}
     # deprecated
     VAULT_SNAPSHOTS_DATA: vaults-snapshots-${self:custom.stage}
@@ -51,7 +52,6 @@ custom:
     VAULT_BALANCES_DATA: vault-balances-${self:custom.stage}
     TOKEN_PRICE_DATA: token-prices-${self:custom.stage}
     TOKEN_INFORMATION_DATA: token-information-${self:custom.stage}
-    HARVEST_DATA: harvest-data-${self:custom.stage}
     HARVEST_COMPOUND_DATA: harvest-compound-data-${self:custom.stage}
     ACCOUNT_DATA: accounts-${self:custom.stage}
     METADATA_DATA: metadata-${self:custom.stage}
@@ -113,7 +113,7 @@ provider:
     VAULT_BALANCES_DATA: ${self:custom.table.VAULT_BALANCES_DATA}
     TOKEN_PRICE_DATA: ${self:custom.table.TOKEN_PRICE_DATA}
     TOKEN_INFORMATION_DATA: ${self:custom.table.TOKEN_INFORMATION_DATA}
-    HARVEST_DATA: ${self:custom.table.HARVEST_DATA}
+    YIELD_ESTIMATES_DATA: ${self:custom.table.YIELD_ESTIMATES_DATA}
     HARVEST_COMPOUND_DATA: ${self:custom.table.HARVEST_COMPOUND_DATA}
     ACCOUNT_DATA: ${self:custom.table.ACCOUNT_DATA}
     METADATA_DATA: ${self:custom.table.METADATA_DATA}
@@ -370,10 +370,10 @@ resources:
           AttributeName: 'expiresAt'
           Enabled: true
 
-    harvestDataTable:
+    yieldEstimatesTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:custom.table.HARVEST_DATA}
+        TableName: ${self:custom.table.YIELD_ESTIMATES_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
           - AttributeName: 'vault'

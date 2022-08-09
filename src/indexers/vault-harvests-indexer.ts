@@ -6,12 +6,13 @@ import {
 } from '@badger-dao/sdk/lib/graphql/generated/badger';
 
 import { getDataMapper } from '../aws/dynamodb.utils';
-import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
+import { YieldEstimate } from '../aws/models/yield-estimate.model';
 import { SUPPORTED_CHAINS } from '../chains/chain';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
 import { getFullToken, toBalance } from '../tokens/tokens.utils';
 import { sendPlainTextToDiscord } from '../utils/discord.utils';
-import { getCachedVault, queryPendingHarvest, VAULT_SOURCE } from '../vaults/vaults.utils';
+import { getCachedVault, queryYieldEstimate, VAULT_SOURCE } from '../vaults/vaults.utils';
+import { calculateBalanceDifference } from '../vaults/yields.utils';
 
 export async function refreshVaultHarvests() {
   await Promise.all(
@@ -24,8 +25,8 @@ export async function refreshVaultHarvests() {
           continue;
         }
 
-        const existingHarvest = await queryPendingHarvest(vault);
-        const harvestData: VaultPendingHarvestData = {
+        const existingHarvest = await queryYieldEstimate(vault);
+        const harvestData: YieldEstimate = {
           vault: vault.address,
           yieldTokens: [],
           harvestTokens: [],
@@ -99,6 +100,12 @@ export async function refreshVaultHarvests() {
           }
         }
 
+        // a harvest happened since we last measured, all previous data is now invalid
+        if (harvestData.lastHarvestedAt > harvestData.lastMeasuredAt) {
+          harvestData.previousHarvestTokens = [];
+          harvestData.previousYieldTokens = [];
+        }
+
         const cachedVault = await getCachedVault(chain, vault);
         const {
           strategy: { performanceFee },
@@ -120,8 +127,19 @@ export async function refreshVaultHarvests() {
         harvestData.duration = now - harvestData.lastMeasuredAt;
         harvestData.lastMeasuredAt = now;
 
+        const harvestDifference = calculateBalanceDifference(
+          harvestData.previousHarvestTokens,
+          harvestData.harvestTokens,
+        );
+        const hasNegatives = harvestDifference.some((b) => b.balance < 0);
+
+        // if the difference incur negative values due to slippage or otherwise, force a comparison against the full harvest
+        if (hasNegatives) {
+          harvestData.previousHarvestTokens = [];
+        }
+
         try {
-          await mapper.put(Object.assign(new VaultPendingHarvestData(), harvestData));
+          await mapper.put(Object.assign(new YieldEstimate(), harvestData));
         } catch (err) {
           console.error({ err, vault });
         }
