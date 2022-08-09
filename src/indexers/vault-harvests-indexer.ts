@@ -6,12 +6,12 @@ import {
 } from '@badger-dao/sdk/lib/graphql/generated/badger';
 
 import { getDataMapper } from '../aws/dynamodb.utils';
-import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
+import { YieldEstimate } from '../aws/models/yield-estimate.model';
 import { SUPPORTED_CHAINS } from '../chains/chain';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
 import { getFullToken, toBalance } from '../tokens/tokens.utils';
 import { sendPlainTextToDiscord } from '../utils/discord.utils';
-import { getCachedVault, queryPendingHarvest, VAULT_SOURCE } from '../vaults/vaults.utils';
+import { getCachedVault, queryYieldEstimate, VAULT_SOURCE } from '../vaults/vaults.utils';
 import { calculateBalanceDifference } from '../vaults/yields.utils';
 
 export async function refreshVaultHarvests() {
@@ -25,8 +25,8 @@ export async function refreshVaultHarvests() {
           continue;
         }
 
-        const existingHarvest = await queryPendingHarvest(vault);
-        const harvestData: VaultPendingHarvestData = {
+        const existingHarvest = await queryYieldEstimate(vault);
+        const harvestData: YieldEstimate = {
           vault: vault.address,
           yieldTokens: [],
           harvestTokens: [],
@@ -139,7 +139,7 @@ export async function refreshVaultHarvests() {
         }
 
         try {
-          await mapper.put(Object.assign(new VaultPendingHarvestData(), harvestData));
+          await mapper.put(Object.assign(new YieldEstimate(), harvestData));
         } catch (err) {
           console.error({ err, vault });
         }

@@ -10,7 +10,7 @@ import {
 } from '@badger-dao/sdk';
 
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
-import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
+import { YieldEstimate } from '../aws/models/yield-estimate.model';
 import { YieldSource } from '../aws/models/yield-source.model';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { BoostRange } from '../rewards/interfaces/boost-range.interface';
@@ -229,13 +229,13 @@ export async function getYieldSources(vault: VaultDefinitionModel): Promise<Yiel
  * This value may be lower than spot due to fluctuating reward values during measurement or
  * harvest periods.
  * @param vault vault requested for projection
- * @param pendingHarvest vault harvest measurements
+ * @param yieldEstimate vault harvest measurements
  * @returns evaluated vault yield projection
  */
 export function getVaultYieldProjection(
   vault: VaultDTO,
   yieldSources: YieldSources,
-  pendingHarvest: VaultPendingHarvestData,
+  yieldEstimate: YieldEstimate,
 ): VaultYieldProjection {
   const { value, balance, available, lastHarvest } = vault;
   const { nonHarvestSources, nonHarvestSourcesApy } = yieldSources;
@@ -245,7 +245,7 @@ export function getVaultYieldProjection(
     harvestTokens,
     previousHarvestTokens,
     duration: periodDuration,
-  } = pendingHarvest;
+  } = yieldEstimate;
 
   const yieldTokensCurrent = calculateBalanceDifference(previousYieldTokens, yieldTokens);
   const harvestTokensCurrent = calculateBalanceDifference(previousHarvestTokens, harvestTokens);

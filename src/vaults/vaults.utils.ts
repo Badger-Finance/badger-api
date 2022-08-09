@@ -26,7 +26,7 @@ import { HarvestCompoundData } from '../aws/models/harvest-compound.model';
 import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
 import { HistoricVaultSnapshotOldModel } from '../aws/models/historic-vault-snapshot-old.model';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
-import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
+import { YieldEstimate } from '../aws/models/yield-estimate.model';
 import { YieldSource } from '../aws/models/yield-source.model';
 import { Chain } from '../chains/config/chain.config';
 import { ONE_DAY_SECONDS, ONE_YEAR_SECONDS } from '../config/constants';
@@ -626,8 +626,8 @@ export async function queryYieldSources(vault: VaultDefinitionModel): Promise<Yi
   return valueSources;
 }
 
-export async function queryPendingHarvest(vault: VaultDefinitionModel): Promise<VaultPendingHarvestData> {
-  const pendingHarvest: VaultPendingHarvestData = {
+export async function queryYieldEstimate(vault: VaultDefinitionModel): Promise<YieldEstimate> {
+  const yieldEstimate: YieldEstimate = {
     vault: vault.address,
     yieldTokens: [],
     harvestTokens: [],
@@ -640,13 +640,13 @@ export async function queryPendingHarvest(vault: VaultDefinitionModel): Promise<
   };
   try {
     const mapper = getDataMapper();
-    for await (const item of mapper.query(VaultPendingHarvestData, { vault: vault.address }, { limit: 1 })) {
+    for await (const item of mapper.query(YieldEstimate, { vault: vault.address }, { limit: 1 })) {
       return item;
     }
-    return pendingHarvest;
+    return yieldEstimate;
   } catch (err) {
     console.error(err);
-    return pendingHarvest;
+    return yieldEstimate;
   }
 }
 
