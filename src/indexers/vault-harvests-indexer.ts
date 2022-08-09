@@ -12,7 +12,6 @@ import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.in
 import { getFullToken, toBalance } from '../tokens/tokens.utils';
 import { sendPlainTextToDiscord } from '../utils/discord.utils';
 import { getCachedVault, queryPendingHarvest, VAULT_SOURCE } from '../vaults/vaults.utils';
-import { calculateBalanceDifference } from '../vaults/yields.utils';
 
 export async function refreshVaultHarvests() {
   await Promise.all(
@@ -100,6 +99,12 @@ export async function refreshVaultHarvests() {
           }
         }
 
+        // a harvest happened since we last measured, all previous data is now invalid
+        if (harvestData.lastHarvestedAt > harvestData.lastMeasuredAt) {
+          harvestData.previousHarvestTokens = [];
+          harvestData.previousYieldTokens = [];
+        }
+
         const cachedVault = await getCachedVault(chain, vault);
         const {
           strategy: { performanceFee },
@@ -121,26 +126,10 @@ export async function refreshVaultHarvests() {
         harvestData.duration = now - harvestData.lastMeasuredAt;
         harvestData.lastMeasuredAt = now;
 
-        // sanity check our results - report and skip potential bad harvest reads as it may be due to liquidity conditions
-        const difference = calculateBalanceDifference(harvestData.harvestTokens, harvestData.previousHarvestTokens);
-        const hasNegatives = difference.some((d) => d.balance < 0);
-
-        if (hasNegatives) {
-          // only report an error with the vault every one day
-          if (now - ONE_DAY_MS > harvestData.lastReportedAt) {
-            sendPlainTextToDiscord(
-              `${chain.name} ${vault.name} (${vault.protocol}, ${vault.version}, ${
-                vault.state ?? VaultState.Open
-              }) encountered a sub optimal harvest - previous harvest was better with less tokens.`,
-            );
-            harvestData.lastReportedAt = now;
-          }
-        } else {
-          try {
-            await mapper.put(Object.assign(new VaultPendingHarvestData(), harvestData));
-          } catch (err) {
-            console.error({ err, vault });
-          }
+        try {
+          await mapper.put(Object.assign(new VaultPendingHarvestData(), harvestData));
+        } catch (err) {
+          console.error({ err, vault });
         }
       }
     }),
