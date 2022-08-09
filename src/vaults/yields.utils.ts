@@ -59,29 +59,31 @@ function isNonHarvestSource(source: YieldSource): boolean {
 }
 
 /**
- *
- * @param source
- * @returns
+ * Determine if a yield source is an apr source.
+ * Any source that is not part of a compounding yield is considered an apr source.
+ * @param source yield source to validate
+ * @returns true if source is not compounded
  */
 function isAprSource(source: YieldSource): boolean {
   return source.type !== SourceType.Compound && source.type !== SourceType.Flywheel;
 }
 
 /**
- *
- * @param source
- * @returns
+ * Determine if a yield source is an apy source.
+ * Any source that is not tied specifically no non compounding harvest yield is considered an apy source.
+ * @param source yield source to validate
+ * @returns true if source is compounded
  */
 function isApySource(source: YieldSource): boolean {
   return source.type !== SourceType.PreCompound;
 }
 
 /**
- *
- * @param balance
- * @param principal
- * @param duration
- * @returns
+ * Convert a token balance to a token rate given inputs.
+ * @param balance balance to convert to token rate
+ * @param principal principal amount given balance is referenced against
+ * @param duration duration balance was accrued
+ * @returns token rate representing the balance earned over a given duration
  */
 function balanceToTokenRate(balance: CachedTokenBalance, principal: number, duration: number): TokenRate {
   const compoundingValue = balance.name === VAULT_SOURCE ? principal : 0;
@@ -93,9 +95,9 @@ function balanceToTokenRate(balance: CachedTokenBalance, principal: number, dura
 }
 
 /**
- *
- * @param source
- * @returns
+ * Convert yield source to value source.
+ * @param source yield source to be converted
+ * @returns value source derived from yield source
  */
 function yieldToValueSource(source: YieldSource): ValueSource {
   return {
@@ -105,6 +107,27 @@ function yieldToValueSource(source: YieldSource): ValueSource {
     minApr: source.minApr,
     maxApr: source.maxApr,
   };
+}
+
+/**
+ * Aggregate source by source name for readibility
+ * @param sources source list to aggregate
+ * @returns source list with all unique elements by name with aggregated values
+ */
+function aggregateSources(sources: ValueSource[]): ValueSource[] {
+  const sourceMap: Record<string, ValueSource> = {};
+  const sourcesCopy = JSON.parse(JSON.stringify(sources));
+  for (let source of sourcesCopy) {
+    if (!sourceMap[source.name]) {
+      sourceMap[source.name] = source;
+    } else {
+      const { apr, minApr, maxApr } = source;
+      sourceMap[source.name].apr += apr;
+      sourceMap[source.name].minApr += minApr;
+      sourceMap[source.name].maxApr += maxApr;
+    }
+  }
+  return Object.values(sourceMap);
 }
 
 /**
@@ -166,12 +189,13 @@ export function calculateBalanceDifference(listA: TokenValue[], listB: TokenValu
 }
 
 /**
- *
- * @param vault
- * @returns
+ * Query and filter cached yield sources into respective categories
+ * @param vault vault to query yield sources against
+ * @returns categorized yield sources
  */
 export async function getYieldSources(vault: VaultDefinitionModel): Promise<YieldSources> {
   const yieldSources = await queryYieldSources(vault);
+
   const relevantSources = yieldSources.filter((s) => isRelevantSource(s, vault.state));
   const sources = relevantSources.filter(isAprSource);
   const apr = sources.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
@@ -179,13 +203,19 @@ export async function getYieldSources(vault: VaultDefinitionModel): Promise<Yiel
   const apy = sourcesApy.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
   const nonHarvestSources = sourcesApy.filter(isPassiveSource);
   const nonHarvestSourcesApy = sourcesApy.filter(isNonHarvestSource);
+
+  const aggregatedSources = aggregateSources(sources.map(yieldToValueSource));
+  const aggregatedSourcesApy = aggregateSources(sourcesApy.map(yieldToValueSource));
+  const nonHarvestAggregatedSources = aggregateSources(nonHarvestSources.map(yieldToValueSource));
+  const nonHarvestAggregatedSourcesApy = aggregateSources(nonHarvestSourcesApy.map(yieldToValueSource));
+
   return {
     apr,
-    sources: sources.map(yieldToValueSource),
+    sources: aggregatedSources,
     apy,
-    sourcesApy: sourcesApy.map(yieldToValueSource),
-    nonHarvestSources: nonHarvestSources.map(yieldToValueSource),
-    nonHarvestSourcesApy: nonHarvestSourcesApy.map(yieldToValueSource),
+    sourcesApy: aggregatedSourcesApy,
+    nonHarvestSources: nonHarvestAggregatedSources,
+    nonHarvestSourcesApy: nonHarvestAggregatedSourcesApy,
   };
 }
 

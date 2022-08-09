@@ -1,0 +1,128 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`yields.utils getYieldSources returns vault yield sources categorized by required breakdown 1`] = `
+Object {
+  "apr": 22,
+  "apy": 31,
+  "nonHarvestSources": Array [
+    Object {
+      "apr": 2,
+      "boostable": false,
+      "maxApr": 2,
+      "minApr": 2,
+      "name": "LP Fees",
+    },
+    Object {
+      "apr": 4,
+      "boostable": false,
+      "maxApr": 4,
+      "minApr": 4,
+      "name": "Badger",
+    },
+    Object {
+      "apr": 6,
+      "boostable": true,
+      "maxApr": 12,
+      "minApr": 6,
+      "name": "Boosted Badger",
+    },
+  ],
+  "nonHarvestSourcesApy": Array [
+    Object {
+      "apr": 2,
+      "boostable": false,
+      "maxApr": 2,
+      "minApr": 2,
+      "name": "LP Fees",
+    },
+    Object {
+      "apr": 4,
+      "boostable": false,
+      "maxApr": 4,
+      "minApr": 4,
+      "name": "Badger",
+    },
+    Object {
+      "apr": 6,
+      "boostable": true,
+      "maxApr": 12,
+      "minApr": 6,
+      "name": "Boosted Badger",
+    },
+    Object {
+      "apr": 5,
+      "boostable": false,
+      "maxApr": 5,
+      "minApr": 5,
+      "name": "Vault Flywheel",
+    },
+  ],
+  "sources": Array [
+    Object {
+      "apr": 7,
+      "boostable": false,
+      "maxApr": 7,
+      "minApr": 7,
+      "name": "Vault Compounding",
+    },
+    Object {
+      "apr": 2,
+      "boostable": false,
+      "maxApr": 2,
+      "minApr": 2,
+      "name": "LP Fees",
+    },
+    Object {
+      "apr": 7,
+      "boostable": false,
+      "maxApr": 7,
+      "minApr": 7,
+      "name": "Badger",
+    },
+    Object {
+      "apr": 6,
+      "boostable": true,
+      "maxApr": 12,
+      "minApr": 6,
+      "name": "Boosted Badger",
+    },
+  ],
+  "sourcesApy": Array [
+    Object {
+      "apr": 11,
+      "boostable": false,
+      "maxApr": 11,
+      "minApr": 11,
+      "name": "Vault Compounding",
+    },
+    Object {
+      "apr": 2,
+      "boostable": false,
+      "maxApr": 2,
+      "minApr": 2,
+      "name": "LP Fees",
+    },
+    Object {
+      "apr": 7,
+      "boostable": false,
+      "maxApr": 7,
+      "minApr": 7,
+      "name": "Badger",
+    },
+    Object {
+      "apr": 6,
+      "boostable": true,
+      "maxApr": 12,
+      "minApr": 6,
+      "name": "Boosted Badger",
+    },
+    Object {
+      "apr": 5,
+      "boostable": false,
+      "maxApr": 5,
+      "minApr": 5,
+      "name": "Vault Flywheel",
+    },
+  ],
+}
+`;

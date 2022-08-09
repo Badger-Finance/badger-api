@@ -613,7 +613,6 @@ export async function estimateVaultPerformance(
   return valueSources;
 }
 
-// TOD: deal with index chain.network+address
 export async function queryYieldSources(vault: VaultDefinitionModel): Promise<YieldSource[]> {
   const valueSources = [];
   const mapper = getDataMapper();
