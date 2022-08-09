@@ -12,6 +12,7 @@ import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.in
 import { getFullToken, toBalance } from '../tokens/tokens.utils';
 import { sendPlainTextToDiscord } from '../utils/discord.utils';
 import { getCachedVault, queryPendingHarvest, VAULT_SOURCE } from '../vaults/vaults.utils';
+import { calculateBalanceDifference } from '../vaults/yields.utils';
 
 export async function refreshVaultHarvests() {
   await Promise.all(
@@ -125,6 +126,17 @@ export async function refreshVaultHarvests() {
         });
         harvestData.duration = now - harvestData.lastMeasuredAt;
         harvestData.lastMeasuredAt = now;
+
+        const harvestDifference = calculateBalanceDifference(
+          harvestData.previousHarvestTokens,
+          harvestData.harvestTokens,
+        );
+        const hasNegatives = harvestDifference.some((b) => b.balance < 0);
+
+        // if the difference incur negative values due to slippage or otherwise, force a comparison against the full harvest
+        if (hasNegatives) {
+          harvestData.previousHarvestTokens = [];
+        }
 
         try {
           await mapper.put(Object.assign(new VaultPendingHarvestData(), harvestData));
