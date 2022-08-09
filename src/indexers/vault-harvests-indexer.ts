@@ -122,7 +122,7 @@ export async function refreshVaultHarvests() {
         harvestData.lastMeasuredAt = now;
 
         // sanity check our results - report and skip potential bad harvest reads as it may be due to liquidity conditions
-        const difference = calculateBalanceDifference(harvestData.yieldTokens, harvestData.previousHarvestTokens);
+        const difference = calculateBalanceDifference(harvestData.harvestTokens, harvestData.previousHarvestTokens);
         const hasNegatives = difference.some((d) => d.balance < 0);
 
         if (hasNegatives) {
