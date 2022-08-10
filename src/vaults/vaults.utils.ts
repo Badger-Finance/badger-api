@@ -44,9 +44,10 @@ import { HarvestType } from './enums/harvest.enum';
 import { VaultHarvestData } from './interfaces/vault-harvest-data.interface';
 import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
 import { VaultStrategy } from './interfaces/vault-strategy.interface';
-import { createYieldSource } from './yields.utils';
+import { aggregateSources, createYieldSource } from './yields.utils';
 
 export const VAULT_SOURCE = 'Vault Compounding';
+const VAULT_TWAY_PERIOD = 15;
 
 export async function defaultVault(chain: Chain, vault: VaultDefinitionModel): Promise<VaultDTO> {
   const { state, bouncer, behavior, version, protocol, name, depositToken, address } = vault;
@@ -270,37 +271,40 @@ export async function getVaultPerformance(chain: Chain, vault: VaultDefinitionMo
   let vaultSources: YieldSource[] = [];
   try {
     vaultSources = await loadVaultEventPerformances(chain, vault);
-  } catch (err) {
+  } catch {
     vaultSources = await loadVaultGraphPerformances(chain, vault);
   }
   console.log(`${vault.name}: ${vaultLookupMethod[vault.address]}`);
-  return [...vaultSources, ...rewardEmissions, ...protocol];
+  // handle aggregation of various sources - this unfortunately loses the ddb schemas and need to be reassigned
+  const aggregatedSources = aggregateSources([...vaultSources, ...rewardEmissions, ...protocol], (s) => s.id);
+  return aggregatedSources.map((s) => Object.assign(new YieldSource(), s));
 }
 
-export async function loadVaultEventPerformances(
-  chain: Chain,
-  vaultDefinition: VaultDefinitionModel,
-): Promise<YieldSource[]> {
+export async function loadVaultEventPerformances(chain: Chain, vault: VaultDefinitionModel): Promise<YieldSource[]> {
   const incompatibleNetworks = new Set<Network>([Network.BinanceSmartChain, Network.Polygon, Network.Arbitrum]);
   if (incompatibleNetworks.has(chain.network)) {
     throw new Error('Network does not have standardized vaults!');
   }
 
+  // TODO: refactor this to a known list of any external harvest processor vaults
+  if (vault.address === TOKENS.BVECVX) {
+    throw new Error('Vault utilizes external harvest processor, not compatible with event lookup');
+  }
+
   const sdk = await chain.getSdk();
-  const cutoffPeriod = 14 * ONE_DAY_SECONDS;
+  const cutoffPeriod = VAULT_TWAY_PERIOD * ONE_DAY_SECONDS;
   const cutoff = Date.now() / 1000 - cutoffPeriod;
-  const startBlock = await sdk.provider.getBlockNumber();
-  -Math.floor(cutoffPeriod / 13);
+  const startBlock = (await sdk.provider.getBlockNumber()) - Math.floor(cutoffPeriod / 13);
   const { data } = await sdk.vaults.listHarvests({
-    address: vaultDefinition.address,
+    address: vault.address,
     timestamp_gte: cutoff,
-    version: vaultDefinition.version ?? VaultVersion.v1,
+    version: vault.version ?? VaultVersion.v1,
     startBlock,
   });
 
-  vaultLookupMethod[vaultDefinition.address] = 'EventAPR';
+  vaultLookupMethod[vault.address] = 'EventAPR';
 
-  return estimateVaultPerformance(chain, vaultDefinition, data);
+  return estimateVaultPerformance(chain, vault, data);
 }
 
 /**
@@ -353,15 +357,16 @@ export function estimateDerivativeEmission(
 export async function loadVaultGraphPerformances(chain: Chain, vault: VaultDefinitionModel): Promise<YieldSource[]> {
   const { address } = vault;
 
+  // TODO: bruh wtf bls what do, need to fix / remove this probably
   // digg does not play well with this accounting
   if (address === TOKENS.DIGG) {
     return [];
   }
 
   const { graph } = chain.sdk;
-  const now = Date.now() / 1000;
+  const now = Math.floor(Date.now() / 1000);
 
-  const cutoff = Math.floor(now - 21 * ONE_DAY_SECONDS);
+  const cutoff = Math.floor(now - VAULT_TWAY_PERIOD * ONE_DAY_SECONDS);
 
   let [vaultHarvests, treeDistributions] = await Promise.all([
     graph.loadSettHarvests({
