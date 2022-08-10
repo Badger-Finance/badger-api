@@ -86,9 +86,8 @@ export class ConvexStrategy {
 
 async function getLiquiditySources(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<YieldSource[]> {
   const bveCVXVault = await chain.vaults.getVault(TOKENS.BVECVX);
-  const [bveCVXLP, bveCVX, bveCVXSources] = await Promise.all([
+  const [bveCVXLP, bveCVXSources] = await Promise.all([
     getCachedVault(chain, vaultDefinition),
-    getCachedVault(chain, bveCVXVault),
     queryYieldSources(bveCVXVault),
   ]);
   const vaultTokens = await getVaultTokens(chain, bveCVXLP);
@@ -97,20 +96,12 @@ async function getLiquiditySources(chain: Chain, vaultDefinition: VaultDefinitio
     .map((t) => t.value)
     .reduce((total, val) => (total += val), 0);
   const scalar = bveCVXValue / bveCVXLP.value;
-  const vaultToken = await getFullToken(chain, bveCVX.vaultToken);
   const lpSources = bveCVXSources.map((s) => {
-    if (s.type === SourceType.Compound || s.type === SourceType.PreCompound) {
-      s.name = `${vaultToken.name} ${s.name}`;
-      const sourceTypeName = `${s.type === SourceType.Compound ? 'Derivative ' : ''}${vaultToken.name} ${s.type}`;
-      s.id = s.id.replace(s.type, sourceTypeName.replace(/ /g, '_').toLowerCase());
-    }
-    // rewrite object keys to simulate sources from the lp vault
-    s.id = s.id.replace(bveCVX.vaultToken, bveCVXLP.vaultToken);
-    s.address = bveCVXLP.vaultToken;
-    s.apr *= scalar;
-    s.maxApr *= scalar;
-    s.minApr *= scalar;
-    return s;
+    const { apr, minApr, maxApr, name, type } = s;
+    const scaledApr = apr * scalar;
+    const min = minApr / apr;
+    const max = maxApr / apr;
+    return createYieldSource(vaultDefinition, type, name, scaledApr, { min, max });
   });
   const cachedTradeFees = await getCurvePerformance(chain, vaultDefinition);
   return [cachedTradeFees, ...lpSources];

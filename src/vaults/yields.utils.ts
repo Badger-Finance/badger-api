@@ -114,17 +114,20 @@ function yieldToValueSource(source: YieldSource): ValueSource {
  * @param sources source list to aggregate
  * @returns source list with all unique elements by name with aggregated values
  */
-function aggregateSources(sources: ValueSource[]): ValueSource[] {
-  const sourceMap: Record<string, ValueSource> = {};
+export function aggregateSources<T extends ValueSource>(
+  sources: T[],
+  accessor: (source: T) => string = (s) => s.name,
+): T[] {
+  const sourceMap: Record<string, T> = {};
   const sourcesCopy = JSON.parse(JSON.stringify(sources));
   for (const source of sourcesCopy) {
-    if (!sourceMap[source.name]) {
-      sourceMap[source.name] = source;
+    if (!sourceMap[accessor(source)]) {
+      sourceMap[accessor(source)] = source;
     } else {
       const { apr, minApr, maxApr } = source;
-      sourceMap[source.name].apr += apr;
-      sourceMap[source.name].minApr += minApr;
-      sourceMap[source.name].maxApr += maxApr;
+      sourceMap[accessor(source)].apr += apr;
+      sourceMap[accessor(source)].minApr += minApr;
+      sourceMap[accessor(source)].maxApr += maxApr;
     }
   }
   return Object.values(sourceMap);
