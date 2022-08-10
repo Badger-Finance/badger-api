@@ -2,7 +2,7 @@ import { Account } from '@badger-dao/sdk';
 import { PlatformTest } from '@tsed/common';
 
 import { Ethereum } from '../chains/config/eth.config';
-import { TEST_ADDR } from '../test/tests.utils';
+import { TEST_ADDR } from '../test/constants';
 import { AccountsService } from './accounts.service';
 import * as accountsUtils from './accounts.utils';
 

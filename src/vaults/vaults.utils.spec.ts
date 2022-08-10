@@ -22,14 +22,13 @@ import * as pricesUtils from '../prices/prices.utils';
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import * as rewardsUtils from '../rewards/rewards.utils';
-import { MOCK_VAULT_DEFINITION } from '../test/constants';
+import { MOCK_VAULT_DEFINITION, TEST_ADDR } from '../test/constants';
 import {
   mockChainVaults,
   randomSnapshot,
   randomSnapshots,
   setFullTokenDataMock,
   setupMapper,
-  TEST_ADDR,
   TEST_CHAIN,
 } from '../test/tests.utils';
 import { TokenNotFound } from '../tokens/errors/token.error';
@@ -313,7 +312,7 @@ describe('vaults.utils', () => {
     describe('look up malformed token configuration', () => {
       it('throws an unprocessable entity error', async () => {
         setFullTokenDataMock();
-        await expect(getVaultTokenPrice(TEST_CHAIN, TEST_ADDR)).rejects.toThrow(TokenNotFound);
+        await expect(getVaultTokenPrice(TEST_CHAIN, ethers.constants.AddressZero)).rejects.toThrow(TokenNotFound);
       });
     });
 

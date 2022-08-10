@@ -10,6 +10,7 @@ import {
 } from '@badger-dao/sdk';
 import { NotFound } from '@tsed/exceptions';
 
+import { getVaultEntityId } from '../aws/dynamodb.utils';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { VaultTokenBalance } from '../aws/models/vault-token-balance.model';
 import { Chain } from '../chains/config/chain.config';
@@ -84,7 +85,7 @@ export async function constructVaultDefinition(
   const { createdAt, releasedAt, lastUpdatedAt } = sett;
 
   return Object.assign(new VaultDefinitionModel(), {
-    id: `${chain.network}-${address}`,
+    id: getVaultEntityId(chain, vault),
     address,
     createdAt: Number(createdAt),
     chain: chain.network,

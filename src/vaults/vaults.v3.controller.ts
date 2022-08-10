@@ -79,12 +79,12 @@ export class VaultsV3Controller {
   @Get('/snapshots')
   @ContentType('json')
   async getVaultSnapshotsInRange(
-    @QueryParams('vault') vaultAddr: string,
+    @QueryParams('vault') vault: string,
     @QueryParams('timestamps') timestamps: string,
     @QueryParams('chain') chain?: Network,
   ): Promise<VaultSnapshot[]> {
-    if (!vaultAddr) {
-      throw new QueryParamError('vaultAddr');
+    if (!vault) {
+      throw new QueryParamError('vault');
     }
     if (!timestamps) {
       throw new QueryParamError('timestamps');
@@ -97,6 +97,6 @@ export class VaultsV3Controller {
       throw new QueryParamError('timestamps');
     }
 
-    return this.vaultService.getVaultChartDataByTimestamps(vaultAddr, Chain.getChain(chain).network, timestampsList);
+    return this.vaultService.getVaultChartDataByTimestamps(vault, Chain.getChain(chain), timestampsList);
   }
 }

@@ -15,7 +15,8 @@ import mockVaults from '@badger-dao/sdk-mocks/generated/ethereum/api/loadVaults.
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { Stage } from '../config/enums/stage.enum';
 import { TOKENS } from '../config/tokens.config';
-import { TEST_ADDR } from './tests.utils';
+
+export const TEST_ADDR = TOKENS.BBADGER;
 
 export const MOCK_DISTRIBUTION_FILE = {
   merkleRoot: TEST_ADDR,
@@ -51,7 +52,7 @@ export const MOCK_BOUNCER_FILE = {
 
 export const MOCK_VAULT_DEFINITION: VaultDefinitionModel = {
   id: `${Network.Ethereum}-${TOKENS.BBADGER}`,
-  address: TOKENS.BBADGER,
+  address: TEST_ADDR,
   name: 'Badger',
   createdAt: 0,
   updatedAt: 0,

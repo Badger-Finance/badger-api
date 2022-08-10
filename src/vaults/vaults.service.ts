@@ -1,12 +1,12 @@
-import { ChartTimeFrame, Currency, Network, VaultDTO, VaultType } from '@badger-dao/sdk';
+import { ChartTimeFrame, Currency, VaultDTO, VaultType } from '@badger-dao/sdk';
 import { Service } from '@tsed/common';
 
-import { getDataMapper } from '../aws/dynamodb.utils';
+import { getDataMapper, getVaultEntityId } from '../aws/dynamodb.utils';
 import { HarvestCompoundData } from '../aws/models/harvest-compound.model';
 import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { Chain } from '../chains/config/chain.config';
-import { toChartDataKey } from '../charts/charts.utils';
+import { CHART_GRANULARITY_TIMEFRAMES, toChartDataKey } from '../charts/charts.utils';
 import { convert } from '../prices/prices.utils';
 import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interface';
 import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
@@ -115,48 +115,73 @@ export class VaultsService {
   }
 
   async loadVaultChartData(
-    vaultAddr: string,
+    address: string,
     timeframe: ChartTimeFrame,
     chain: Chain,
   ): Promise<HistoricVaultSnapshotModel[]> {
-    const vaultBlobId = HistoricVaultSnapshotModel.formBlobId(vaultAddr, chain.network);
+    // validate vault request is correct and valid
+    const requestedVault = await chain.vaults.getVault(address);
+    const vaultBlobId = getVaultEntityId(chain, requestedVault);
     const dataKey = toChartDataKey(HistoricVaultSnapshotModel.NAMESPACE, vaultBlobId, timeframe);
-
     return queryVaultCharts(dataKey);
   }
 
+  /**
+   *
+   * @param vault
+   * @param chain
+   * @param timestamps
+   * @returns
+   */
   async getVaultChartDataByTimestamps(
-    vaultAddr: string,
-    network: Network,
+    vault: string,
+    chain: Chain,
     timestamps: number[],
   ): Promise<HistoricVaultSnapshotModel[]> {
-    // from smaller to greater, we need this order for search to work correctly
-    const sortedTimestamps = timestamps.sort((a, b) => (a > b ? 1 : -1));
+    // validate vault request is correct and valid
+    const requestedVault = await chain.vaults.getVault(vault);
 
-    const vaultBlobId = HistoricVaultSnapshotModel.formBlobId(vaultAddr, network);
-    const dataKey = toChartDataKey(HistoricVaultSnapshotModel.NAMESPACE, vaultBlobId, ChartTimeFrame.Max);
+    // sort timestamps in ascending order for searching
+    const timestampSort = (a: number, b: number) => (a > b ? 1 : -1);
+    let sortedTimestamps = timestamps.sort(timestampSort);
 
-    const vaultChartData = await queryVaultCharts(dataKey);
-
+    // TODO: we should consider making this a map and allowing ourselves to do validation against requested timestamps
+    // construct relevant persistence and search criteria
     const snapshots: Set<HistoricVaultSnapshotModel> = new Set();
+    const vaultBlobId = getVaultEntityId(chain, requestedVault);
 
-    if (vaultChartData.length === 0) {
-      return Array.from(snapshots);
-    }
+    // iterate over all valid charting granularities to ensure discovery of all timestamps
+    for (const timeframe of CHART_GRANULARITY_TIMEFRAMES) {
+      const dataKey = toChartDataKey(HistoricVaultSnapshotModel.NAMESPACE, vaultBlobId, timeframe);
 
-    // from smaller to greater, we need this order for search to work correctly
-    const preparedVaultsChartData = vaultChartData.reverse();
+      const vaultChartData = await queryVaultCharts(dataKey);
 
-    for (const timestamp of sortedTimestamps) {
-      const snapshotItem = preparedVaultsChartData.find((i) => Number(i.timestamp) >= timestamp);
-
-      if (snapshotItem) {
-        if (!snapshotItem.pricePerFullShare && snapshotItem.ratio) {
-          snapshotItem.pricePerFullShare = snapshotItem.ratio;
-        }
-        snapshotItem.timestamp = timestamp;
-        snapshots.add(snapshotItem);
+      if (vaultChartData.length === 0) {
+        continue;
       }
+
+      // from smaller to greater, we need this order for search to work correctly
+      const preparedVaultsChartData = vaultChartData.reverse();
+      const remainingTimestamps = [];
+
+      // iterate over timestamps updating the map as snapshots are found
+      for (const timestamp of sortedTimestamps) {
+        const snapshotItem = preparedVaultsChartData.find((i) => Number(i.timestamp) >= timestamp);
+
+        if (snapshotItem) {
+          if (!snapshotItem.pricePerFullShare && snapshotItem.ratio) {
+            snapshotItem.pricePerFullShare = snapshotItem.ratio;
+          }
+          snapshotItem.timestamp = timestamp;
+          snapshots.add(snapshotItem);
+        } else {
+          // keep track of any timestamps whose snapshots could not be matched at this granularity
+          remainingTimestamps.push(timestamp);
+        }
+      }
+
+      // set sorted timestamps (for query) to only remaining timestamps
+      sortedTimestamps = remainingTimestamps.sort(timestampSort);
     }
 
     // now we reverse, so relevant data will come at the start of the list

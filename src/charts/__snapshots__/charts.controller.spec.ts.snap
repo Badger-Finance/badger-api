@@ -108,17 +108,17 @@ Object {
 }
 `;
 
-exports[`ChartsController GET /v2/charts/vault get vault data with different timeframes should return vault data for 1Y 1`] = `
+exports[`ChartsController GET /v3/charts/vault get vault data with different timeframes should return vault data for 1Y 1`] = `
 Array [
   Object {
-    "address": "0xBE08Ef12e4a553666291E9fFC24fCCFd354F2Dd2",
+    "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
     "apr": 0,
     "available": 0,
     "balance": 0.1610241919976674,
     "block": 15122792,
     "boostWeight": 0,
     "harvestApr": 0,
-    "id": "0xBE08Ef12e4a553666291E9fFC24fCCFd354F2Dd2_ethereum",
+    "id": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_ethereum",
     "pricePerFullShare": 1.0846088659170035,
     "strategy": Object {
       "address": "0x05eC4356e1acd89CC2d16adC7415c8c95E736AC1",
@@ -136,17 +136,17 @@ Array [
 ]
 `;
 
-exports[`ChartsController GET /v2/charts/vault get vault data with different timeframes should return vault data for YTD 1`] = `
+exports[`ChartsController GET /v3/charts/vault get vault data with different timeframes should return vault data for YTD 1`] = `
 Array [
   Object {
-    "address": "0xBE08Ef12e4a553666291E9fFC24fCCFd354F2Dd2",
+    "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
     "apr": 0,
     "available": 0,
     "balance": 0.1610241919976674,
     "block": 15122792,
     "boostWeight": 0,
     "harvestApr": 0,
-    "id": "0xBE08Ef12e4a553666291E9fFC24fCCFd354F2Dd2_ethereum",
+    "id": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_ethereum",
     "pricePerFullShare": 1.0846088659170035,
     "strategy": Object {
       "address": "0x05eC4356e1acd89CC2d16adC7415c8c95E736AC1",
@@ -164,7 +164,7 @@ Array [
 ]
 `;
 
-exports[`ChartsController GET /v2/charts/vault with a missing vault address returns 400, QueryParamError 1`] = `
+exports[`ChartsController GET /v3/charts/vault with a missing vault address returns 400, QueryParamError 1`] = `
 Object {
   "code": 1000,
   "message": "Query param address invalid",

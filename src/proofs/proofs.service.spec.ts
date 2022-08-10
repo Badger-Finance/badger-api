@@ -2,8 +2,8 @@ import { PlatformTest } from '@tsed/common';
 
 import * as s3Utils from '../aws/s3.utils';
 import { TOKENS } from '../config/tokens.config';
-import { MOCK_BOUNCER_FILE } from '../test/constants';
-import { TEST_ADDR, TEST_CHAIN } from '../test/tests.utils';
+import { MOCK_BOUNCER_FILE, TEST_ADDR } from '../test/constants';
+import { TEST_CHAIN } from '../test/tests.utils';
 import { ProofsService } from './proofs.service';
 
 describe('proofs.service', () => {

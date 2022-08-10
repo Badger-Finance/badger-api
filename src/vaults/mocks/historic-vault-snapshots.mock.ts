@@ -45,14 +45,14 @@ export const historicVaultSnapshotsMock: HistoricVaultSnapshotsMock[] = [
         yieldApr: 0,
         strategyBalance: 0.1610241919976674,
         apr: 0,
-        address: '0xBE08Ef12e4a553666291E9fFC24fCCFd354F2Dd2',
+        address: '0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28',
         totalSupply: 0.14846291327475586,
         available: 0,
         balance: 0.1610241919976674,
         harvestApr: 0,
         block: 15122792,
         boostWeight: 0,
-        id: '0xBE08Ef12e4a553666291E9fFC24fCCFd354F2Dd2_ethereum',
+        id: '0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_ethereum',
         strategy: {
           strategistFee: 0,
           address: '0x05eC4356e1acd89CC2d16adC7415c8c95E736AC1',
@@ -65,7 +65,7 @@ export const historicVaultSnapshotsMock: HistoricVaultSnapshotsMock[] = [
       },
     ],
     timeframe: 'YTD',
-    id: 'vault_0xBE08Ef12e4a553666291E9fFC24fCCFd354F2Dd2_ethereum_YTD',
+    id: 'vault_ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_YTD',
   },
   {
     data: [
@@ -161,14 +161,14 @@ export const historicVaultSnapshotsMock: HistoricVaultSnapshotsMock[] = [
         yieldApr: 0,
         strategyBalance: 0.1610241919976674,
         apr: 0,
-        address: '0xBE08Ef12e4a553666291E9fFC24fCCFd354F2Dd2',
+        address: '0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28',
         totalSupply: 0.14846291327475586,
         available: 0,
         balance: 0.1610241919976674,
         harvestApr: 0,
         block: 15122792,
         boostWeight: 0,
-        id: '0xBE08Ef12e4a553666291E9fFC24fCCFd354F2Dd2_ethereum',
+        id: '0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_ethereum',
         strategy: {
           strategistFee: 0,
           address: '0x05eC4356e1acd89CC2d16adC7415c8c95E736AC1',
@@ -181,7 +181,7 @@ export const historicVaultSnapshotsMock: HistoricVaultSnapshotsMock[] = [
       },
     ],
     timeframe: '1y',
-    id: 'vault_0xBE08Ef12e4a553666291E9fFC24fCCFd354F2Dd2_ethereum_1y',
+    id: 'vault_ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_1y',
   },
   {
     data: [
