@@ -9,9 +9,6 @@ import { Chain } from './chain.config';
 export class Fantom extends Chain {
   constructor() {
     super(
-      'Fantom',
-      'fantom',
-      '0xFA',
       Network.Fantom,
       fantomTokensConfig,
       rpc[Network.Fantom],

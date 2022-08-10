@@ -1,9 +1,9 @@
 import { Erc20__factory, formatBalance, Network, Token } from '@badger-dao/sdk';
 import { GraphQLClient } from 'graphql-request';
 
-import { CachedValueSource } from '../../aws/models/apy-snapshots.model';
 import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
 import { VaultTokenBalance } from '../../aws/models/vault-token-balance.model';
+import { YieldSource } from '../../aws/models/yield-source.model';
 import { Chain } from '../../chains/config/chain.config';
 import { BALANCER_URL } from '../../config/constants';
 import {
@@ -15,16 +15,15 @@ import {
 import { getSdk as getBalancerSdk, OrderDirection, PoolSnapshot_OrderBy } from '../../graphql/generated/balancer';
 import { TokenPrice } from '../../prices/interface/token-price.interface';
 import { SourceType } from '../../rewards/enums/source-type.enum';
-import { valueSourceToCachedValueSource } from '../../rewards/rewards.utils';
 import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
 import { getFullToken, toBalance } from '../../tokens/tokens.utils';
 import { getCachedVault } from '../../vaults/vaults.utils';
-import { createValueSource } from '../interfaces/value-source.interface';
+import { createYieldSource } from '../../vaults/yields.utils';
 
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 export class BalancerStrategy {
-  static async getValueSources(vault: VaultDefinitionModel): Promise<CachedValueSource[]> {
+  static async getValueSources(vault: VaultDefinitionModel): Promise<YieldSource[]> {
     return getBalancerSwapFees(vault);
   }
 }
@@ -190,7 +189,7 @@ export async function resolveBalancerPoolTokenPrice(chain: Chain, token: Token, 
   };
 }
 
-export async function getBalancerSwapFees(vault: VaultDefinitionModel): Promise<CachedValueSource[]> {
+export async function getBalancerSwapFees(vault: VaultDefinitionModel): Promise<YieldSource[]> {
   try {
     const chain = Chain.getChain(Network.Ethereum);
     const client = new GraphQLClient(BALANCER_URL);
@@ -225,9 +224,7 @@ export async function getBalancerSwapFees(vault: VaultDefinitionModel): Promise<
     const yearlyFees = poolFees * 365;
     const yearlyApr = (yearlyFees / poolLiquidity) * 100;
 
-    return [
-      valueSourceToCachedValueSource(createValueSource('Balancer LP Fees', yearlyApr), vault, SourceType.TradeFee),
-    ];
+    return [createYieldSource(vault, SourceType.TradeFee, 'Balancer LP Fees', yearlyApr)];
   } catch {
     // some of the aura vaults are not pools - they will error (auraBal, graviAura)
     return [];

@@ -9,9 +9,6 @@ import { Chain } from './chain.config';
 export class Arbitrum extends Chain {
   constructor() {
     super(
-      'Arbitrum',
-      'arbitrum',
-      '0xa4b1',
       Network.Arbitrum,
       arbitrumTokensConfig,
       RPC[Network.Arbitrum],

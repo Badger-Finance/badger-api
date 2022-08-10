@@ -2,15 +2,15 @@
 
 exports[`ProofsController GET /v2/proofs returns 200 and the merkle proof for a user on the bouncer list 1`] = `
 Array [
-  "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484",
-  "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484",
-  "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484",
+  "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+  "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+  "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
 ]
 `;
 
 exports[`ProofsController GET /v2/proofs returns 404 for a chain with no bouncer file 1`] = `
 Object {
-  "message": "Ethereum does not have a bouncer list",
+  "message": "ethereum does not have a bouncer list",
 }
 `;
 

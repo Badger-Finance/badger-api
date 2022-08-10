@@ -7,8 +7,8 @@ import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
 import { BinanceSmartChain } from '../chains/config/bsc.config';
 import { Chain } from '../chains/config/chain.config';
 import { Ethereum } from '../chains/config/eth.config';
-import { MOCK_DISTRIBUTION_FILE } from '../test/constants';
-import { setupMapper, TEST_ADDR } from '../test/tests.utils';
+import { MOCK_DISTRIBUTION_FILE, TEST_ADDR } from '../test/constants';
+import { setupMapper } from '../test/tests.utils';
 import { UserClaimMetadata } from './entities/user-claim-metadata';
 import { RewardsService } from './rewards.service';
 import * as rewardsUtils from './rewards.utils';
@@ -33,7 +33,7 @@ describe('rewards.service', () => {
     it('throws a bad request on chains with no rewards', async () => {
       const chain = new BinanceSmartChain();
       await expect(service.getUserRewards(chain, TEST_ADDR)).rejects.toThrow(
-        `${chain.name} is not supportable for request`,
+        `${chain.network} is not supportable for request`,
       );
     });
   });

@@ -5,7 +5,6 @@ import { VaultSnapshot } from '@badger-dao/sdk';
 import { VAULT_SNAPSHOTS_DATA } from '../../config/constants';
 import { VaultStrategy } from '../../vaults/interfaces/vault-strategy.interface';
 
-// Table is deprecated, rm after regV2 migration
 @table(VAULT_SNAPSHOTS_DATA)
 export class CurrentVaultSnapshotModel implements VaultSnapshot {
   @attribute()

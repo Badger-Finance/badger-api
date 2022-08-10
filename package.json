@@ -24,12 +24,13 @@
     "test:clean": "jest --clearCache",
     "ddb:migrate:local": "sls dynamodb migrate",
     "ddb:seed:local": "sls dynamodb seed",
+    "ddb:seed:gen": "curl --url localhost:3000/v3/dev/ddb/seeds",
     "prepare": "husky install"
   },
   "dependencies": {
     "@aws/dynamodb-data-mapper": "^0.7.3",
     "@aws/dynamodb-data-mapper-annotations": "^0.7.3",
-    "@badger-dao/sdk": "^1.16.7",
+    "@badger-dao/sdk": "^1.17.0",
     "@tsed/common": "^6.95.9",
     "@tsed/core": "^6.95.9",
     "@tsed/di": "^6.95.9",
@@ -57,7 +58,7 @@
     "tslib": "^2.2.0"
   },
   "devDependencies": {
-    "@badger-dao/sdk-mocks": "^1.16.7",
+    "@badger-dao/sdk-mocks": "^1.16.11",
     "@graphql-codegen/cli": "^2.3.0",
     "@graphql-codegen/typescript": "^2.4.1",
     "@graphql-codegen/typescript-graphql-request": "^4.3.2",

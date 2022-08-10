@@ -7,8 +7,7 @@ import { NodataForAddrError } from '../errors/allocation/nodata.for.addr.error';
 import { NodataForChainError } from '../errors/allocation/nodata.for.chain.error';
 import { NetworkStatus } from '../errors/enums/newtroks.status.enum';
 import { Server } from '../Server';
-import { MOCK_BOUNCER_FILE } from '../test/constants';
-import { TEST_ADDR } from '../test/tests.utils';
+import { MOCK_BOUNCER_FILE, TEST_ADDR } from '../test/constants';
 import { ProofsService } from './proofs.service';
 
 describe('ProofsController', () => {
@@ -27,7 +26,7 @@ describe('ProofsController', () => {
     it('returns 404 for a chain with no bouncer file', async (done: jest.DoneCallback) => {
       jest.spyOn(proofsService, 'getBouncerProof').mockImplementation(async (chain) => {
         // simulate no chain path
-        throw new NodataForChainError(chain.name);
+        throw new NodataForChainError(chain.network);
       });
       const { body } = await request.get(`/v3/proof?address=${TEST_ADDR}`).expect(NetworkStatus.NotFound);
       expect(body).toMatchSnapshot();

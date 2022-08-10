@@ -1,33 +1,39 @@
-import { getDataMapper } from '../aws/dynamodb.utils';
+import { getDataMapper, getVaultEntityId } from '../aws/dynamodb.utils';
 import { CurrentVaultSnapshotModel } from '../aws/models/current-vault-snapshot.model';
-import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
+import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
 import { SUPPORTED_CHAINS } from '../chains/chain';
-import { Chain } from '../chains/config/chain.config';
-import { PRODUCTION } from '../config/constants';
+import { updateSnapshots } from '../charts/charts.utils';
 import { vaultToSnapshot } from './indexer.utils';
 
 export async function refreshVaultSnapshots() {
+  const timestamp = Date.now();
+  const mapper = getDataMapper();
+
   for (const chain of SUPPORTED_CHAINS) {
     const vaults = await chain.vaults.all();
-    await Promise.all(vaults.map(async (vault) => captureSnapshot(chain, vault)));
+    await Promise.all(
+      vaults.map(async (vault) => {
+        try {
+          const snapshot = await vaultToSnapshot(chain, vault);
+
+          // save a current snapshot of the vault
+          await mapper.put(Object.assign(new CurrentVaultSnapshotModel(), snapshot));
+
+          // create a historic vault entry from the same data
+          const historicSnapshot = Object.assign(new HistoricVaultSnapshotModel(), {
+            ...snapshot,
+            id: getVaultEntityId(chain, vault),
+            timestamp,
+          });
+
+          // update whatever time period snapshot lists require the new data
+          await updateSnapshots(HistoricVaultSnapshotModel.NAMESPACE, historicSnapshot);
+        } catch (err) {
+          console.error({ err, vault: vault.name });
+        }
+      }),
+    );
   }
 
   return 'done';
-}
-
-async function captureSnapshot(chain: Chain, vault: VaultDefinitionModel) {
-  let snapshot;
-  try {
-    // purposefully await to leverage try / catch
-    snapshot = await vaultToSnapshot(chain, vault);
-    if (snapshot) {
-      const mapper = getDataMapper();
-      if (PRODUCTION) {
-        console.log(`${vault.name} $${snapshot.value.toLocaleString()} (${snapshot.balance} tokens)`);
-      }
-      await mapper.put(Object.assign(new CurrentVaultSnapshotModel(), snapshot));
-    }
-  } catch (err) {
-    console.error({ err, vault: vault.name, snapshot });
-  }
 }

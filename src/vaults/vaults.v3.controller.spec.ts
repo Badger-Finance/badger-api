@@ -5,11 +5,11 @@ import SuperTest from 'supertest';
 import { TOKENS } from '../config/tokens.config';
 import { NetworkStatus } from '../errors/enums/newtroks.status.enum';
 import { Server } from '../Server';
-import { setupDdbVaultsChartsData, setupVaultsCoumpoundDDB } from '../test/tests.utils';
+import { TEST_ADDR } from '../test/constants';
+import { mockChainVaults, setupDdbVaultsChartsData, setupVaultsCoumpoundDDB } from '../test/tests.utils';
 import { setupDdbHarvests, setupTestVault } from './vaults.v2.controller.spec';
 
 const TEST_VAULT = TOKENS.BCRV_SBTC;
-const TEST_CHART_VAULT = TOKENS.BARB_CRV_TRICRYPTO;
 
 describe('VaultsController', () => {
   let request: SuperTest.SuperTest<SuperTest.Test>;
@@ -98,17 +98,18 @@ describe('VaultsController', () => {
     });
   });
 
-  describe('GET /v3/vaults/inrange/snapshots', () => {
-    beforeEach(setupDdbVaultsChartsData);
+  describe('GET /v3/vaults/snapshots', () => {
+    beforeEach(async () => {
+      setupDdbVaultsChartsData();
+      mockChainVaults();
+    });
 
     describe('success cases', () => {
       it('return 200 and vaults snapshots for all dates, without duplications', async (done: jest.DoneCallback) => {
         const timestampsStr = '1645103004000,1645015261000,1644928124000,1644928124000,1644928124000';
 
         const { body } = await request
-          .get(
-            `/v3/vaults/inrange/snapshots?vaultAddr=${TEST_CHART_VAULT}&timestamps=${timestampsStr}&chain=${Network.Arbitrum}`,
-          )
+          .get(`/v3/vaults/snapshots?vault=${TEST_ADDR}&timestamps=${timestampsStr}&chain=${Network.Arbitrum}`)
           .expect(NetworkStatus.Success);
         expect(body).toMatchSnapshot();
         done();
@@ -118,9 +119,7 @@ describe('VaultsController', () => {
         const timestampsStr = '1645189933000,1634821933000,1634821931000';
 
         const { body } = await request
-          .get(
-            `/v3/vaults/inrange/snapshots?vaultAddr=${TEST_CHART_VAULT}&timestamps=${timestampsStr}&chain=${Network.Arbitrum}`,
-          )
+          .get(`/v3/vaults/snapshots?vault=${TEST_ADDR}&timestamps=${timestampsStr}&chain=${Network.Arbitrum}`)
           .expect(NetworkStatus.Success);
         expect(body).toMatchSnapshot();
         done();
@@ -130,9 +129,7 @@ describe('VaultsController', () => {
         const timestampsStr = Date.now() * 2;
 
         const { body } = await request
-          .get(
-            `/v3/vaults/inrange/snapshots?vaultAddr=${TEST_CHART_VAULT}&timestamps=${timestampsStr}&chain=${Network.Arbitrum}`,
-          )
+          .get(`/v3/vaults/snapshots?vault=${TEST_ADDR}&timestamps=${timestampsStr}&chain=${Network.Arbitrum}`)
           .expect(NetworkStatus.Success);
         expect(body).toMatchSnapshot();
         done();
@@ -144,7 +141,7 @@ describe('VaultsController', () => {
         const timestampsStr = '1645189933000,1634821933000,1634821931000';
 
         const { body } = await request
-          .get(`/v3/vaults/inrange/snapshots?vaultAddr=${TEST_CHART_VAULT}&timestamps=${timestampsStr}&chain=invalid`)
+          .get(`/v3/vaults/snapshots?vault=${TEST_ADDR}&timestamps=${timestampsStr}&chain=invalid`)
           .expect(NetworkStatus.BadRequest);
         expect(body).toMatchSnapshot();
         done();
@@ -154,7 +151,7 @@ describe('VaultsController', () => {
         const timestampsStr = '1645189933000,1634821933000,1634821931000';
 
         const { body } = await request
-          .get(`/v3/vaults/inrange/snapshots?timestamps=${timestampsStr}&chain=${Network.Arbitrum}`)
+          .get(`/v3/vaults/snapshots?timestamps=${timestampsStr}&chain=${Network.Arbitrum}`)
           .expect(NetworkStatus.BadRequest);
         expect(body).toMatchSnapshot();
         done();
@@ -164,9 +161,7 @@ describe('VaultsController', () => {
         const timestampsStr = 'Invalid Timestamps';
 
         const { body } = await request
-          .get(
-            `/v3/vaults/inrange/snapshots?vaultAddr=${TEST_CHART_VAULT}&timestamps=${timestampsStr}&chain=${Network.Arbitrum}`,
-          )
+          .get(`/v3/vaults/snapshots?vault=${TEST_ADDR}&timestamps=${timestampsStr}&chain=${Network.Arbitrum}`)
           .expect(NetworkStatus.BadRequest);
         expect(body).toMatchSnapshot();
         done();

@@ -7,4 +7,5 @@ export enum Provider {
   Arbitrum = 'https://arb1.arbitrum.io/rpc',
   Avalanche = 'https://api.avax.network/ext/bc/C/rpc',
   Fantom = 'https://rpc.ftm.tools/',
+  Optimism = 'https://optimism-mainnet.public.blastapi.io/',
 }

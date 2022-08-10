@@ -10,6 +10,7 @@ import {
 } from '@badger-dao/sdk';
 import { NotFound } from '@tsed/exceptions';
 
+import { getVaultEntityId } from '../aws/dynamodb.utils';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { VaultTokenBalance } from '../aws/models/vault-token-balance.model';
 import { Chain } from '../chains/config/chain.config';
@@ -43,9 +44,10 @@ export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefini
     getBoostWeight(chain, vaultDefinition),
     VaultsService.loadVault(chain, vaultDefinition),
   ]);
+
   const value = balance * tokenPriceData.price;
   const {
-    yieldProjection: { yieldApr, harvestApr },
+    yieldProjection: { yieldPeriodApr, harvestPeriodApr, nonHarvestApr },
   } = cachedVault;
 
   return {
@@ -61,8 +63,8 @@ export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefini
     strategy: strategyInfo,
     boostWeight: boostWeight.toNumber(),
     apr: cachedVault.apr,
-    yieldApr,
-    harvestApr,
+    yieldApr: yieldPeriodApr + nonHarvestApr,
+    harvestApr: harvestPeriodApr + nonHarvestApr,
   };
 }
 
@@ -76,14 +78,14 @@ export async function constructVaultDefinition(
   const { sett } = await sdk.graph.loadSett({ id: address.toLowerCase() });
 
   if (!sett) {
-    console.warn(`Cant fetch vault data from The Graph for chain ${chain.name}, ${address}`);
+    console.warn(`Cant fetch vault data from The Graph for chain ${chain.network}, ${address}`);
     return null;
   }
 
   const { createdAt, releasedAt, lastUpdatedAt } = sett;
 
   return Object.assign(new VaultDefinitionModel(), {
-    id: `${chain.network}-${address}`,
+    id: getVaultEntityId(chain, vault),
     address,
     createdAt: Number(createdAt),
     chain: chain.network,
@@ -103,11 +105,8 @@ export async function constructVaultDefinition(
   });
 }
 
-export async function getLpTokenBalances(
-  chain: Chain,
-  vaultDefinition: VaultDefinitionModel,
-): Promise<VaultTokenBalance> {
-  const { depositToken, address } = vaultDefinition;
+export async function getLpTokenBalances(chain: Chain, vault: VaultDefinitionModel): Promise<VaultTokenBalance> {
+  const { depositToken, address } = vault;
   try {
     const liquidityData = await getLiquidityData(chain, depositToken);
     const { token0, token1, reserve0, reserve1, totalSupply } = liquidityData;
@@ -116,7 +115,7 @@ export async function getLpTokenBalances(
     const t1Token = tokenData[token1];
 
     // poolData returns the full liquidity pool, valueScalar acts to calculate the portion within the sett
-    const settSnapshot = await getCachedVault(chain, vaultDefinition);
+    const settSnapshot = await getCachedVault(chain, vault);
     const valueScalar = totalSupply > 0 ? settSnapshot.balance / totalSupply : 0;
     const t0TokenBalance = reserve0 * valueScalar;
     const t1TokenBalance = reserve1 * valueScalar;
@@ -127,7 +126,7 @@ export async function getLpTokenBalances(
       tokenBalances,
     });
   } catch (err) {
-    throw new NotFound(`${vaultDefinition.protocol} pool pair ${depositToken} does not exist`);
+    throw new NotFound(`${vault.protocol} pool pair ${depositToken} does not exist`);
   }
 }
 

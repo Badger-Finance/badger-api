@@ -2,6 +2,7 @@ import {
   BoostConfig,
   Protocol,
   TokenValue,
+  ValueSource,
   VaultBehavior,
   VaultDTO,
   VaultState,
@@ -13,11 +14,9 @@ import { Description, Example, Property, Title } from '@tsed/schema';
 import { ethers } from 'ethers';
 
 import { TOKENS } from '../../config/tokens.config';
-import { createValueSource, ValueSource } from '../../protocols/interfaces/value-source.interface';
 import { BouncerType } from '../../rewards/enums/bouncer-type.enum';
 import { fullTokenMockMap } from '../../tokens/mocks/full-token.mock';
 import { mockBalance } from '../../tokens/tokens.utils';
-import { VAULT_SOURCE } from '../vaults.utils';
 import { VaultStrategy } from './vault-strategy.interface';
 
 export class VaultModel implements VaultDTO {
@@ -115,43 +114,35 @@ export class VaultModel implements VaultDTO {
   @Description('Minimum vault APR as modifid by badger boost')
   @Example(8.03)
   @Property()
-  public minApr?: number;
+  public minApr: number;
 
   @Title('maxApr')
   @Description('Maximum vault APR as modifid by badger boost')
   @Example(8.03)
   @Property()
-  public maxApr?: number;
+  public maxApr: number;
 
   @Title('minApr')
   @Description('Minimum vault APY as modifid by badger boost')
   @Example(8.03)
   @Property()
-  public minApy?: number;
+  public minApy: number;
 
   @Title('maxApr')
   @Description('Maximum vault APY as modifid by badger boost')
   @Example(8.03)
   @Property()
-  public maxApy?: number;
+  public maxApy: number;
 
   @Title('sources')
   @Description('Vault APR individual yield source breakdown')
-  @Example([
-    createValueSource(VAULT_SOURCE, 8.32),
-    createValueSource('Badger Rewards', 17.34),
-    createValueSource('LP Trade Fee', 1.4),
-  ])
+  // @Example([MOCK_YIELD_SOURCES])
   @Property()
   public sources: ValueSource[];
 
   @Title('sourcesApy')
   @Description('Vault APY individual yield source breakdown')
-  @Example([
-    createValueSource(VAULT_SOURCE, 8.32),
-    createValueSource('Badger Rewards', 17.34),
-    createValueSource('LP Trade Fee', 1.45),
-  ])
+  // @Example([MOCK_YIELD_SOURCES])
   @Property()
   public sourcesApy: ValueSource[];
 

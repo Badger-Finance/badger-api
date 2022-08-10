@@ -27,17 +27,15 @@ custom:
         sources:
           - table: ${self:custom.table.TOKEN_PRICE_DATA}
             sources: [./seed/prices.json]
-          - table: ${self:custom.table.APY_SNAPSHOTS_DATA}
-            sources: [./seed/value-sources.json]
           # deprecated, rm after regV2
           - table: ${self:custom.table.VAULT_SNAPSHOTS_DATA}
             sources: [./seed/vault-snapshots.json]
-          - table: ${self:custom.table.VAULT_DEFINITION_DATA}
-            sources: [./seed/vaults-compound.json]
           - table: ${self:custom.table.TOKEN_INFORMATION_DATA}
             sources: [./seed/token-info.json]
           - table: ${self:custom.table.SETT_HISTORIC_DATA}
             sources: [./seed/vaults-historic-snapshot.json]
+          - table: ${self:custom.table.VAULT_DEFINITION_DATA}
+            sources: [./seed/vault-definition.json]
           - table: ${self:custom.table.CHART_DATA}
             sources: [./seed/chart-data.json]
 
@@ -45,7 +43,8 @@ custom:
     noPrependStageInUrl: true
 
   table:
-    APY_SNAPSHOTS_DATA: apy-snapshots-${self:custom.stage}
+    YIELD_SNAPSHOTS_DATA: yield-snapshots-${self:custom.stage}
+    YIELD_ESTIMATES_DATA: yield-estimates-${self:custom.stage}
     SETT_HISTORIC_DATA: sett-historic-snapshots-${self:custom.stage}
     # deprecated
     VAULT_SNAPSHOTS_DATA: vaults-snapshots-${self:custom.stage}
@@ -53,7 +52,6 @@ custom:
     VAULT_BALANCES_DATA: vault-balances-${self:custom.stage}
     TOKEN_PRICE_DATA: token-prices-${self:custom.stage}
     TOKEN_INFORMATION_DATA: token-information-${self:custom.stage}
-    HARVEST_DATA: harvest-data-${self:custom.stage}
     HARVEST_COMPOUND_DATA: harvest-compound-data-${self:custom.stage}
     ACCOUNT_DATA: accounts-${self:custom.stage}
     METADATA_DATA: metadata-${self:custom.stage}
@@ -107,7 +105,7 @@ provider:
     SWAPR: 'https://api.thegraph.com/subgraphs/name/dxgraphs/swapr-arbitrum-one-v3'
     BALANCER: 'https://api.thegraph.com/subgraphs/name/balancer-labs/balancer-v2'
     # Table Defintions
-    APY_SNAPSHOTS_DATA: ${self:custom.table.APY_SNAPSHOTS_DATA}
+    YIELD_SNAPSHOTS_DATA: ${self:custom.table.YIELD_SNAPSHOTS_DATA}
     SETT_HISTORIC_DATA: ${self:custom.table.SETT_HISTORIC_DATA}
     # deprecated
     VAULT_SNAPSHOTS_DATA: ${self:custom.table.VAULT_SNAPSHOTS_DATA}
@@ -115,7 +113,7 @@ provider:
     VAULT_BALANCES_DATA: ${self:custom.table.VAULT_BALANCES_DATA}
     TOKEN_PRICE_DATA: ${self:custom.table.TOKEN_PRICE_DATA}
     TOKEN_INFORMATION_DATA: ${self:custom.table.TOKEN_INFORMATION_DATA}
-    HARVEST_DATA: ${self:custom.table.HARVEST_DATA}
+    YIELD_ESTIMATES_DATA: ${self:custom.table.YIELD_ESTIMATES_DATA}
     HARVEST_COMPOUND_DATA: ${self:custom.table.HARVEST_COMPOUND_DATA}
     ACCOUNT_DATA: ${self:custom.table.ACCOUNT_DATA}
     METADATA_DATA: ${self:custom.table.METADATA_DATA}
@@ -143,23 +141,23 @@ resources:
           - AttributeName: 'address'
             AttributeType: 'S'
 
-    apySnapshotsTable:
+    yieldSnapshotsTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:custom.table.APY_SNAPSHOTS_DATA}
+        TableName: ${self:custom.table.YIELD_SNAPSHOTS_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
-          - AttributeName: 'addressValueSourceType'
+          - AttributeName: 'id'
             KeyType: 'HASH'
         AttributeDefinitions:
-          - AttributeName: 'addressValueSourceType'
+          - AttributeName: 'id'
             AttributeType: 'S'
-          - AttributeName: 'address'
+          - AttributeName: 'chainAddress'
             AttributeType: 'S'
         GlobalSecondaryIndexes:
           - IndexName: IndexApySnapshotsOnAddress
             KeySchema:
-              - AttributeName: address
+              - AttributeName: chainAddress
                 KeyType: 'HASH'
             Projection:
               ProjectionType: ALL
@@ -372,10 +370,10 @@ resources:
           AttributeName: 'expiresAt'
           Enabled: true
 
-    harvestDataTable:
+    yieldEstimatesTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:custom.table.HARVEST_DATA}
+        TableName: ${self:custom.table.YIELD_ESTIMATES_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
           - AttributeName: 'vault'
@@ -483,15 +481,6 @@ functions:
           method: any
           cors: true
 
-  index-vaults:
-    handler: src/indexers/vaults-indexer.indexProtocolVaults
-    timeout: 480
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-vaults-history
-          description: 'index historical data for all vaults'
-          rate: rate(30 minutes)
-
   index-apy-snapshots:
     handler: src/indexers/apy-snapshots-indexer.refreshApySnapshots
     timeout: 180
@@ -529,13 +518,13 @@ functions:
           description: 'index definitions for supported vaults'
           rate: rate(5 minutes)
 
-  index-vault-harvests:
-    handler: src/indexers/vault-harvests-indexer.refreshVaultHarvests
+  index-yield-estimates:
+    handler: src/indexers/yield-estimates-indexer.refreshYieldEstimates
     timeout: 150
     events:
       - schedule:
-          name: ${self:service}-${self:custom.stage}-index-vault-harvests
-          description: 'index harvests data for supported vaults'
+          name: ${self:service}-${self:custom.stage}-index-yield-estimates
+          description: 'index yield estimate data for supported vaults'
           rate: rate(5 minutes)
 
   index-harvest-compound:

@@ -10,7 +10,7 @@ export const ONE_WEEK_SECONDS = ONE_DAY_SECONDS * 7;
 export const ONE_YEAR_SECONDS = ONE_DAY_SECONDS * 365;
 
 // data access constants
-export const APY_SNAPSHOTS_DATA = getEnvVar('APY_SNAPSHOTS_DATA');
+export const YIELD_SNAPSHOTS_DATA = getEnvVar('YIELD_SNAPSHOTS_DATA');
 export const SETT_HISTORIC_DATA = getEnvVar('SETT_HISTORIC_DATA');
 export const VAULT_BALANCES_DATA = getEnvVar('VAULT_BALANCES_DATA');
 export const TOKEN_PRICE_DATA = getEnvVar('TOKEN_PRICE_DATA');
@@ -24,7 +24,7 @@ export const METRICS_SNAPSHOTS_DATA = getEnvVar('METRICS_SNAPSHOTS_DATA');
 export const LEADERBOARD_SUMMARY_DATA = getEnvVar('LEADERBOARD_SUMMARY_DATA');
 export const UNCLAIMED_SNAPSHOTS_DATA = getEnvVar('UNCLAIMED_SNAPSHOTS_DATA');
 export const USER_CLAIMED_METADATA = getEnvVar('METADATA_DATA');
-export const HARVEST_DATA = getEnvVar('HARVEST_DATA');
+export const YIELD_ESTIMATES_DATA = getEnvVar('YIELD_ESTIMATES_DATA');
 export const HARVEST_COMPOUND_DATA = getEnvVar('HARVEST_COMPOUND_DATA');
 export const PROTOCOL_DATA = getEnvVar('PROTOCOL_DATA');
 export const CHART_DATA = getEnvVar('CHART_DATA');

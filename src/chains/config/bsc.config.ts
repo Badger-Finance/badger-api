@@ -9,9 +9,6 @@ import { Chain } from './chain.config';
 export class BinanceSmartChain extends Chain {
   constructor() {
     super(
-      'BinanceSmartChain',
-      'bsc',
-      '0x38',
       Network.BinanceSmartChain,
       bscTokensConfig,
       rpc[Network.BinanceSmartChain],

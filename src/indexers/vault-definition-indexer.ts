@@ -10,12 +10,13 @@ import { constructVaultDefinition } from './indexer.utils';
 export async function captureVaultData() {
   for (const chain of SUPPORTED_CHAINS) {
     const sdk = await chain.getSdk();
+
     let registryVaults: RegistryVault[] = [];
 
     try {
-      registryVaults = await sdk.vaults.loadVaults(true);
+      registryVaults = await sdk.vaults.loadVaults();
     } catch (_) {
-      console.error(`Registry is not defined for ${chain.name}`);
+      console.error(`Registry is not defined for ${chain.network}`);
     }
 
     if (registryVaults.length === 0) {
@@ -23,7 +24,7 @@ export async function captureVaultData() {
     }
 
     // update vaults from chain
-    await Promise.all(registryVaults.map(async (vault) => compoundVaultData(chain, vault)));
+    await Promise.all(registryVaults.map(async (vault) => updateVaultDefinition(chain, vault)));
 
     // update isProduction status, for vaults that were already saved in ddb
     const prdVaultsAddrs = registryVaults
@@ -52,14 +53,14 @@ export async function captureVaultData() {
         }
       }
     } catch (e) {
-      console.error(`Failed to update isProduction status for vaults and chain: ${chain.name}`);
+      console.error(`Failed to update isProduction status for vaults and chain: ${chain.network}`);
     }
   }
 
   return 'done';
 }
 
-async function compoundVaultData(chain: Chain, vault: RegistryVault) {
+async function updateVaultDefinition(chain: Chain, vault: RegistryVault) {
   let compoundVault;
   try {
     compoundVault = await constructVaultDefinition(chain, vault);

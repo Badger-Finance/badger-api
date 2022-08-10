@@ -1,0 +1,293 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`yields.utils getVaultYieldProjection returns a yield projection estimation from given inputs 1`] = `
+Object {
+  "harvestApr": 23.564030131826737,
+  "harvestPeriodApr": 22.787193973634643,
+  "harvestPeriodApy": 22.787193973634643,
+  "harvestPeriodSources": Array [
+    Object {
+      "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+      "apr": 22.787193973634643,
+      "balance": 0.0044,
+      "decimals": 8,
+      "name": "Wrapped Bitcoin",
+      "symbol": "WBTC",
+      "value": 2.42,
+    },
+  ],
+  "harvestPeriodSourcesApy": Array [
+    Object {
+      "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+      "apr": 22.787193973634643,
+      "balance": 0.0044,
+      "decimals": 8,
+      "name": "Wrapped Bitcoin",
+      "symbol": "WBTC",
+      "value": 2.42,
+    },
+  ],
+  "harvestTokens": Array [
+    Object {
+      "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+      "apr": 23.564030131826737,
+      "balance": 0.0091,
+      "decimals": 8,
+      "name": "Wrapped Bitcoin",
+      "symbol": "WBTC",
+      "value": 5.005,
+    },
+  ],
+  "harvestValue": 5.005,
+  "nonHarvestApr": 12,
+  "nonHarvestApy": 17,
+  "nonHarvestSources": Array [
+    Object {
+      "apr": 2,
+      "boostable": false,
+      "maxApr": 2,
+      "minApr": 2,
+      "name": "LP Fees",
+    },
+    Object {
+      "apr": 4,
+      "boostable": false,
+      "maxApr": 4,
+      "minApr": 4,
+      "name": "Badger",
+    },
+    Object {
+      "apr": 6,
+      "boostable": true,
+      "maxApr": 12,
+      "minApr": 3,
+      "name": "Boosted Badger",
+    },
+  ],
+  "nonHarvestSourcesApy": Array [
+    Object {
+      "apr": 2,
+      "boostable": false,
+      "maxApr": 2,
+      "minApr": 2,
+      "name": "LP Fees",
+    },
+    Object {
+      "apr": 4,
+      "boostable": false,
+      "maxApr": 4,
+      "minApr": 4,
+      "name": "Badger",
+    },
+    Object {
+      "apr": 6,
+      "boostable": true,
+      "maxApr": 12,
+      "minApr": 3,
+      "name": "Boosted Badger",
+    },
+    Object {
+      "apr": 5,
+      "boostable": false,
+      "maxApr": 5,
+      "minApr": 5,
+      "name": "Vault Flywheel",
+    },
+  ],
+  "yieldApr": 23.822975517890768,
+  "yieldPeriodApr": 22.787193973634643,
+  "yieldPeriodSources": Array [
+    Object {
+      "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+      "apr": 22.787193973634643,
+      "balance": 0.0044,
+      "decimals": 8,
+      "name": "Wrapped Bitcoin",
+      "symbol": "WBTC",
+      "value": 2.42,
+    },
+  ],
+  "yieldTokens": Array [
+    Object {
+      "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+      "apr": 23.822975517890768,
+      "balance": 0.0092,
+      "decimals": 8,
+      "name": "Wrapped Bitcoin",
+      "symbol": "WBTC",
+      "value": 5.06,
+    },
+  ],
+  "yieldValue": 5.06,
+}
+`;
+
+exports[`yields.utils getYieldSources returns only passive yield sources for a discontinued vault 1`] = `
+Object {
+  "apr": 2,
+  "apy": 2,
+  "nonHarvestSources": Array [
+    Object {
+      "apr": 2,
+      "boostable": false,
+      "maxApr": 2,
+      "minApr": 2,
+      "name": "LP Fees",
+    },
+  ],
+  "nonHarvestSourcesApy": Array [
+    Object {
+      "apr": 2,
+      "boostable": false,
+      "maxApr": 2,
+      "minApr": 2,
+      "name": "LP Fees",
+    },
+  ],
+  "sources": Array [
+    Object {
+      "apr": 2,
+      "boostable": false,
+      "maxApr": 2,
+      "minApr": 2,
+      "name": "LP Fees",
+    },
+  ],
+  "sourcesApy": Array [
+    Object {
+      "apr": 2,
+      "boostable": false,
+      "maxApr": 2,
+      "minApr": 2,
+      "name": "LP Fees",
+    },
+  ],
+}
+`;
+
+exports[`yields.utils getYieldSources returns vault yield sources categorized by required breakdown 1`] = `
+Object {
+  "apr": 22,
+  "apy": 31,
+  "nonHarvestSources": Array [
+    Object {
+      "apr": 2,
+      "boostable": false,
+      "maxApr": 2,
+      "minApr": 2,
+      "name": "LP Fees",
+    },
+    Object {
+      "apr": 4,
+      "boostable": false,
+      "maxApr": 4,
+      "minApr": 4,
+      "name": "Badger",
+    },
+    Object {
+      "apr": 6,
+      "boostable": true,
+      "maxApr": 12,
+      "minApr": 3,
+      "name": "Boosted Badger",
+    },
+  ],
+  "nonHarvestSourcesApy": Array [
+    Object {
+      "apr": 2,
+      "boostable": false,
+      "maxApr": 2,
+      "minApr": 2,
+      "name": "LP Fees",
+    },
+    Object {
+      "apr": 4,
+      "boostable": false,
+      "maxApr": 4,
+      "minApr": 4,
+      "name": "Badger",
+    },
+    Object {
+      "apr": 6,
+      "boostable": true,
+      "maxApr": 12,
+      "minApr": 3,
+      "name": "Boosted Badger",
+    },
+    Object {
+      "apr": 5,
+      "boostable": false,
+      "maxApr": 5,
+      "minApr": 5,
+      "name": "Vault Flywheel",
+    },
+  ],
+  "sources": Array [
+    Object {
+      "apr": 7,
+      "boostable": false,
+      "maxApr": 7,
+      "minApr": 7,
+      "name": "Vault Compounding",
+    },
+    Object {
+      "apr": 2,
+      "boostable": false,
+      "maxApr": 2,
+      "minApr": 2,
+      "name": "LP Fees",
+    },
+    Object {
+      "apr": 7,
+      "boostable": false,
+      "maxApr": 7,
+      "minApr": 7,
+      "name": "Badger",
+    },
+    Object {
+      "apr": 6,
+      "boostable": true,
+      "maxApr": 12,
+      "minApr": 3,
+      "name": "Boosted Badger",
+    },
+  ],
+  "sourcesApy": Array [
+    Object {
+      "apr": 11,
+      "boostable": false,
+      "maxApr": 11,
+      "minApr": 11,
+      "name": "Vault Compounding",
+    },
+    Object {
+      "apr": 2,
+      "boostable": false,
+      "maxApr": 2,
+      "minApr": 2,
+      "name": "LP Fees",
+    },
+    Object {
+      "apr": 7,
+      "boostable": false,
+      "maxApr": 7,
+      "minApr": 7,
+      "name": "Badger",
+    },
+    Object {
+      "apr": 6,
+      "boostable": true,
+      "maxApr": 12,
+      "minApr": 3,
+      "name": "Boosted Badger",
+    },
+    Object {
+      "apr": 5,
+      "boostable": false,
+      "maxApr": 5,
+      "minApr": 5,
+      "name": "Vault Flywheel",
+    },
+  ],
+}
+`;

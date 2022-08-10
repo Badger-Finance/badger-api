@@ -3,6 +3,8 @@ import AWS from 'aws-sdk';
 
 import { Chain } from '../chains/config/chain.config';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
+import { Chainish } from './interfaces/chainish.interface';
+import { Vaultish } from './interfaces/vaultish.interface';
 
 const offline = process.env.IS_OFFLINE;
 
@@ -27,4 +29,8 @@ export function getLeaderboardKey(chain: Chain): string {
 
 export function getChainStartBlockKey(chain: Chain, block: number): string {
   return `${chain.network}_${block}`;
+}
+
+export function getVaultEntityId({ network }: Chainish, { address }: Vaultish): string {
+  return `${network}-${address}`;
 }
