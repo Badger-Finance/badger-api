@@ -1,4 +1,4 @@
-import { getDataMapper } from '../aws/dynamodb.utils';
+import { getDataMapper, getVaultEntityId } from '../aws/dynamodb.utils';
 import { CurrentVaultSnapshotModel } from '../aws/models/current-vault-snapshot.model';
 import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
 import { SUPPORTED_CHAINS } from '../chains/chain';
@@ -22,7 +22,7 @@ export async function refreshVaultSnapshots() {
           // create a historic vault entry from the same data
           const historicSnapshot = Object.assign(new HistoricVaultSnapshotModel(), {
             ...snapshot,
-            id: HistoricVaultSnapshotModel.formBlobId(snapshot.address, chain.network),
+            id: getVaultEntityId(chain, vault),
             timestamp,
           });
 

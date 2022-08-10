@@ -10,6 +10,7 @@ import { constructVaultDefinition } from './indexer.utils';
 export async function captureVaultData() {
   for (const chain of SUPPORTED_CHAINS) {
     const sdk = await chain.getSdk();
+
     let registryVaults: RegistryVault[] = [];
 
     try {
@@ -23,7 +24,7 @@ export async function captureVaultData() {
     }
 
     // update vaults from chain
-    await Promise.all(registryVaults.map(async (vault) => compoundVaultData(chain, vault)));
+    await Promise.all(registryVaults.map(async (vault) => updateVaultDefinition(chain, vault)));
 
     // update isProduction status, for vaults that were already saved in ddb
     const prdVaultsAddrs = registryVaults
@@ -59,7 +60,7 @@ export async function captureVaultData() {
   return 'done';
 }
 
-async function compoundVaultData(chain: Chain, vault: RegistryVault) {
+async function updateVaultDefinition(chain: Chain, vault: RegistryVault) {
   let compoundVault;
   try {
     compoundVault = await constructVaultDefinition(chain, vault);

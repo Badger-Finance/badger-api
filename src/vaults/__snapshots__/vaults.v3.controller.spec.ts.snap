@@ -1136,7 +1136,7 @@ Object {
 exports[`VaultsController GET /v3/vaults/snapshots error cases returns a 400 for missed vault address param 1`] = `
 Object {
   "code": 1000,
-  "message": "Query param vaultAddr invalid",
+  "message": "Query param vault invalid",
 }
 `;
 

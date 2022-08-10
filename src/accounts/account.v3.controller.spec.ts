@@ -3,7 +3,8 @@ import SuperTest from 'supertest';
 
 import { NetworkStatus } from '../errors/enums/newtroks.status.enum';
 import { Server } from '../Server';
-import { mockBadgerSdk, setupMockAccounts, TEST_ADDR } from '../test/tests.utils';
+import { TEST_ADDR } from '../test/constants';
+import { mockBadgerSdk, setupMockAccounts } from '../test/tests.utils';
 import * as accountsUtils from './accounts.utils';
 
 describe('AccountsController', () => {

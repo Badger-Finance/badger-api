@@ -4,6 +4,9 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { ChartDataBlob } from '../aws/models/chart-data-blob.model';
 import { ChartData } from './chart-data.model';
 
+// list of ChartTimeFrame enums that contain unique capture granularities for searching
+export const CHART_GRANULARITY_TIMEFRAMES = [ChartTimeFrame.Max, ChartTimeFrame.Week, ChartTimeFrame.Day];
+
 export function toChartDataBlob<T extends ChartData<T>>(
   id: string,
   timeframe: ChartTimeFrame,

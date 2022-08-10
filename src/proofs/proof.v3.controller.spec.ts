@@ -7,8 +7,7 @@ import { NodataForAddrError } from '../errors/allocation/nodata.for.addr.error';
 import { NodataForChainError } from '../errors/allocation/nodata.for.chain.error';
 import { NetworkStatus } from '../errors/enums/newtroks.status.enum';
 import { Server } from '../Server';
-import { MOCK_BOUNCER_FILE } from '../test/constants';
-import { TEST_ADDR } from '../test/tests.utils';
+import { MOCK_BOUNCER_FILE, TEST_ADDR } from '../test/constants';
 import { ProofsService } from './proofs.service';
 
 describe('ProofsController', () => {

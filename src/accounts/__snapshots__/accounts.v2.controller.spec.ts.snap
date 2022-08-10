@@ -2,7 +2,7 @@
 
 exports[`AccountsController GET /v2/accounts with a non participant account returns a default account response 1`] = `
 Object {
-  "address": "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484",
+  "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
   "boost": 1,
   "boostRank": 1035,
   "bveCvxBalance": 0,
@@ -20,7 +20,7 @@ Object {
 
 exports[`AccountsController GET /v2/accounts with a participant account returns a cached account response 1`] = `
 Object {
-  "address": "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484",
+  "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
   "boost": 2000,
   "boostRank": 1,
   "bveCvxBalance": 0,

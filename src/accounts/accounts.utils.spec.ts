@@ -6,7 +6,7 @@ import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
-import { MOCK_VAULT_DEFINITION } from '../test/constants';
+import { MOCK_VAULT_DEFINITION, TEST_ADDR } from '../test/constants';
 import {
   defaultAccount,
   mockChainVaults,
@@ -14,7 +14,6 @@ import {
   randomSnapshot,
   setFullTokenDataMock,
   setupMapper,
-  TEST_ADDR,
   TEST_CHAIN,
 } from '../test/tests.utils';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
