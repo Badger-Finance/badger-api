@@ -104,11 +104,15 @@ export class VaultsService {
 
     const hasBoostedApr = vault.sources.some((source) => source.boostable);
     if (vault.boost.enabled && hasBoostedApr) {
-      vault.type = VaultType.Boosted;
+      if (vault.type !== VaultType.Native) {
+        vault.type = VaultType.Boosted;
+      }
     } else {
       // handle a previously boosted vault that is no longer getting boosted sources
       vault.boost.enabled = false;
-      vault.type = VaultType.Standard;
+      if (vault.type !== VaultType.Native) {
+        vault.type = VaultType.Standard;
+      }
     }
 
     return vault;
