@@ -14,7 +14,7 @@ export async function captureVaultData() {
     let registryVaults: RegistryVault[] = [];
 
     try {
-      registryVaults = await sdk.vaults.loadVaults(true);
+      registryVaults = await sdk.vaults.loadVaults();
     } catch (_) {
       console.error(`Registry is not defined for ${chain.network}`);
     }
