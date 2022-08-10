@@ -102,13 +102,13 @@ export class VaultsService {
     vault.maxApy = vault.sourcesApy.map((s) => s.maxApr).reduce((total, apr) => (total += apr), 0);
     vault.yieldProjection = getVaultYieldProjection(vault, yieldSources, pendingHarvest);
 
-    if (vault.boost.enabled) {
-      const hasBoostedApr = vault.sources.some((source) => source.boostable);
-      if (hasBoostedApr) {
-        if (vault.type !== VaultType.Native) {
-          vault.type = VaultType.Boosted;
-        }
-      }
+    const hasBoostedApr = vault.sources.some((source) => source.boostable);
+    if (vault.boost.enabled && hasBoostedApr) {
+      vault.type = VaultType.Boosted;
+    } else {
+      // handle a previously boosted vault that is no longer getting boosted sources
+      vault.boost.enabled = false;
+      vault.type = VaultType.Standard;
     }
 
     return vault;
