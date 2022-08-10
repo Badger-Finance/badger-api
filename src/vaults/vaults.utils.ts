@@ -304,7 +304,7 @@ export async function loadVaultEventPerformances(
 }
 
 /**
- * Extrapolates a one year APR for a given vault based on compounding and emissions based on $100 deposit.
+ * Extrapolates a one-year APR for a given vault based on compounding and emissions based on $100 deposit.
  * @param compoundApr Base compound APR of vault
  * @param emissionApr Emission APR of the emitted vault
  * @param emissionCompoundApr Derivative compound APR of the tmitted vault
@@ -548,7 +548,7 @@ export async function estimateVaultPerformance(
 
   const { price } = await getPrice(vault.depositToken);
   const measuredBalance = weightedBalance / totalDuration;
-  // lord, forgive me for my sins... we will generalize this shortly i hope
+  // lord, forgive me for my sins... we will generalize this shortly I hope
   const measuredValue = (vault.address === TOKENS.BVECVX ? weightedBalance : measuredBalance) * price;
   const totalHarvestedTokens = formatBalance(totalHarvested, depositToken.decimals);
   // count of harvests is exclusive of the 0th element

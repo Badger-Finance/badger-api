@@ -18,7 +18,7 @@ export async function getVaultsDefinitionSeedData(): Promise<VaultDefinitionMode
     let registryVaults: RegistryVault[] = [];
 
     try {
-      registryVaults = await sdk.vaults.loadVaults(true);
+      registryVaults = await sdk.vaults.loadVaults();
     } catch (e) {
       console.error(`Problems with getting vaults for chain ${chain.network}. ${e}`);
     }
