@@ -28,7 +28,9 @@ export class VaultsV3Controller {
     @QueryParams('chain') chain?: Network,
     @QueryParams('currency') currency?: Currency,
   ): Promise<VaultModel> {
-    if (!address) throw new QueryParamError('vault');
+    if (!address) {
+      throw new QueryParamError('vault');
+    }
 
     const chainInst = Chain.getChain(chain);
     const compoundVault = await chainInst.vaults.getVault(address);
