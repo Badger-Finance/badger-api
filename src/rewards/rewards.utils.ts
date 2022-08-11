@@ -1,4 +1,4 @@
-import { Network, Protocol } from '@badger-dao/sdk';
+import { Network, ONE_YEAR_SECONDS, Protocol } from '@badger-dao/sdk';
 import { BigNumber } from 'ethers';
 
 import { getBoostFile, getCachedAccount } from '../accounts/accounts.utils';
@@ -6,7 +6,7 @@ import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { YieldSource } from '../aws/models/yield-source.model';
 import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
-import { ONE_YEAR_SECONDS, REWARD_DATA } from '../config/constants';
+import { REWARD_DATA } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
 import { getPrice } from '../prices/prices.utils';
 import { BalancerStrategy } from '../protocols/strategies/balancer.strategy';

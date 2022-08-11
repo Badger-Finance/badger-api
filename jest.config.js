@@ -16,4 +16,7 @@ module.exports = {
   setupFilesAfterEnv: ['./src/test/jest.setup.ts'],
   transform: { '^.+\\.ts$': 'ts-jest' },
   coveragePathIgnorePatterns: ['interfaces', 'enums', 'generated', 'chains', 'abi', 'contracts'],
+  moduleNameMapper: {
+    '^uuid$': '<rootDir>/node_modules/uuid/dist/index.js',
+  },
 };

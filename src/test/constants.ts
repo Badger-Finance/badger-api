@@ -2,15 +2,15 @@ import {
   BouncerType,
   Network,
   Protocol,
-  // ValueSource,
+  ValueSource,
   VaultBehavior,
-  // VaultDTO,
-  // VaultSnapshot,
+  VaultDTO,
+  VaultSnapshot,
   VaultState,
   VaultVersion,
 } from '@badger-dao/sdk';
-// import mockVaultSnapshots from '@badger-dao/sdk-mocks/generated/ethereum/api/loadVaultChart.json';
-// import mockVaults from '@badger-dao/sdk-mocks/generated/ethereum/api/loadVaults.json';
+import mockVaultSnapshots from '@badger-dao/sdk-mocks/generated/ethereum/api/loadVaultChart.json';
+import mockVaults from '@badger-dao/sdk-mocks/generated/ethereum/api/loadVaults.json';
 
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { Stage } from '../config/enums/stage.enum';
@@ -71,10 +71,10 @@ export const MOCK_VAULT_DEFINITION: VaultDefinitionModel = {
   depositToken: 'dog',
 };
 
-// export const MOCK_VAULTS: VaultDTO[] = mockVaults as VaultDTO[];
-// export const MOCK_VAULT: VaultDTO = MOCK_VAULTS[0];
+export const MOCK_VAULTS: VaultDTO[] = mockVaults as VaultDTO[];
+export const MOCK_VAULT: VaultDTO = MOCK_VAULTS[0];
 
-// export const MOCK_VAULT_SNAPSHOTS: VaultSnapshot[] = mockVaultSnapshots;
-// export const MOCK_VAULT_SNAPSHOT = MOCK_VAULT_SNAPSHOTS[0];
+export const MOCK_VAULT_SNAPSHOTS: VaultSnapshot[] = mockVaultSnapshots;
+export const MOCK_VAULT_SNAPSHOT = MOCK_VAULT_SNAPSHOTS[0];
 
-// export const MOCK_YIELD_SOURCES: ValueSource[] = MOCK_VAULT.sources;
+export const MOCK_YIELD_SOURCES: ValueSource[] = MOCK_VAULT.sources;

@@ -1,4 +1,4 @@
-import { Account, Currency, formatBalance, gqlGenT, Network, ONE_MIN_MS } from '@badger-dao/sdk';
+import { Account, Currency, formatBalance, gqlGenT, Network, ONE_MINUTE_MS } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 
 import { getChainStartBlockKey, getDataMapper, getLeaderboardKey } from '../aws/dynamodb.utils';
@@ -160,7 +160,7 @@ export async function getCachedBoost(network: Network, address: string): Promise
 
 export async function getCachedAccount(chain: Chain, address: string): Promise<Account> {
   const [cachedAccount, metadata] = await Promise.all([queryCachedAccount(address), getLatestMetadata(chain)]);
-  if (!cachedAccount.updatedAt || cachedAccount.updatedAt + ONE_MIN_MS < Date.now()) {
+  if (!cachedAccount.updatedAt || cachedAccount.updatedAt + ONE_MINUTE_MS < Date.now()) {
     await refreshAccountVaultBalances(chain, address);
   }
   const claimableBalanceSnapshot = await getClaimableBalanceSnapshot(chain, address, metadata.startBlock);

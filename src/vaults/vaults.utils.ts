@@ -14,6 +14,8 @@ import {
   VaultType,
   VaultV15__factory,
   VaultVersion,
+  ONE_DAY_SECONDS,
+  ONE_YEAR_SECONDS,
 } from '@badger-dao/sdk';
 import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';
@@ -25,7 +27,6 @@ import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { YieldEstimate } from '../aws/models/yield-estimate.model';
 import { YieldSource } from '../aws/models/yield-source.model';
 import { Chain } from '../chains/config/chain.config';
-import { ONE_DAY_SECONDS, ONE_YEAR_SECONDS } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
 import { EmissionControl__factory } from '../contracts';
 import { getVault } from '../indexers/indexer.utils';

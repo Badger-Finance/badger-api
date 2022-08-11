@@ -1,22 +1,24 @@
-// import { ChartTimeFrame } from '@badger-dao/sdk';
+import { ChartTimeFrame } from '@badger-dao/sdk';
 import { PlatformTest } from '@tsed/common';
 import { providers } from '@0xsequence/multicall';
 
 import { JsonRpcProvider, JsonRpcSigner } from '@ethersproject/providers';
 import { mock } from 'jest-mock-extended';
-// import { ChainVaults } from '../chains/vaults/chain.vaults';
-import { MOCK_VAULT_DEFINITION, TEST_ADDR, TEST_CURRENT_BLOCK } from '../test/constants';
+import {
+  MOCK_VAULT_DEFINITION,
+  MOCK_VAULT_SNAPSHOT,
+  MOCK_VAULT_SNAPSHOTS,
+  TEST_ADDR,
+  TEST_CURRENT_BLOCK,
+} from '../test/constants';
 import BadgerSDK, { RegistryService, RewardsService } from '@badger-dao/sdk';
 import { ChainVaults } from '../chains/vaults/chain.vaults';
-// import * as dynamoDbUtils from '../aws/dynamodb.utils';
-// import { DataMapper } from '@aws/dynamodb-data-mapper';
-// import { TestEthereum } from '../chains/config/teth.config';
-// import { getVaultEntityId } from '../aws/dynamodb.utils';
-// import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
-// import { MOCK_VAULT_SNAPSHOT, MOCK_VAULT_SNAPSHOTS, TEST_CURRENT_TIMESTAMP } from '../test/constants';
-// import { setupMockChain } from '../test/tests.utils';
-// import { ChartsService } from './charts.service';
-// import * as chartsUtils from './charts.utils';
+import { TestEthereum } from '../chains/config/teth.config';
+import { getVaultEntityId } from '../aws/dynamodb.utils';
+import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
+import { TEST_CURRENT_TIMESTAMP } from '../test/constants';
+import { ChartsService } from './charts.service';
+import * as chartsUtils from './charts.utils';
 
 export function setupMockChain() {
   jest.spyOn(ChainVaults.prototype, 'getVault').mockImplementation(async (_) => MOCK_VAULT_DEFINITION);
@@ -33,7 +35,7 @@ export function setupMockChain() {
   jest.spyOn(RegistryService.prototype, 'ready').mockImplementation();
   jest.spyOn(RewardsService.prototype, 'ready').mockImplementation();
 
-  // return new TestEthereum(mockProvider);
+  return new TestEthereum(mockProvider);
 }
 
 describe('charts.service', () => {
@@ -42,22 +44,20 @@ describe('charts.service', () => {
 
   describe('loadVaultChartData', () => {
     it('returns requested vault chart data if exists', async () => {
-      setupMockChain();
-      // console.log(chain.network);
-      // const service = PlatformTest.get<ChartsService>(ChartsService);
-      // jest.spyOn(chartsUtils, 'queryVaultCharts').mockImplementation(async (_k) =>
-      //   MOCK_VAULT_SNAPSHOTS.slice(0, 4).map((snapshot) => {
-      //     const historicSnapshot = Object.assign(new HistoricVaultSnapshotModel(), {
-      //       ...snapshot,
-      //       id: getVaultEntityId(chain, MOCK_VAULT_SNAPSHOT),
-      //       timestamp: TEST_CURRENT_TIMESTAMP,
-      //     });
-      //     return historicSnapshot;
-      //   }),
-      // );
-      // console.log(service);
-      // const charts = await service.loadVaultChartData(MOCK_VAULT_SNAPSHOT.address, ChartTimeFrame.Max, chain);
-      // expect(charts).toMatchSnapshot();
+      const chain = setupMockChain();
+      const service = PlatformTest.get<ChartsService>(ChartsService);
+      jest.spyOn(chartsUtils, 'queryVaultCharts').mockImplementation(async (_k) =>
+        MOCK_VAULT_SNAPSHOTS.slice(0, 4).map((snapshot) => {
+          const historicSnapshot = Object.assign(new HistoricVaultSnapshotModel(), {
+            ...snapshot,
+            id: getVaultEntityId(chain, MOCK_VAULT_SNAPSHOT),
+            timestamp: TEST_CURRENT_TIMESTAMP,
+          });
+          return historicSnapshot;
+        }),
+      );
+      const charts = await service.loadVaultChartData(MOCK_VAULT_SNAPSHOT.address, ChartTimeFrame.Max, chain);
+      expect(charts).toMatchSnapshot();
     });
   });
 });

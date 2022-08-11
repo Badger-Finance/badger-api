@@ -1,7 +1,8 @@
 import { embed } from '@aws/dynamodb-data-mapper';
 import { attribute, hashKey, rangeKey, table } from '@aws/dynamodb-data-mapper-annotations';
+import { ONE_DAY_SECONDS } from '@badger-dao/sdk';
 
-import { ONE_DAY_SECONDS, PRODUCTION, UNCLAIMED_SNAPSHOTS_DATA } from '../../config/constants';
+import { PRODUCTION, UNCLAIMED_SNAPSHOTS_DATA } from '../../config/constants';
 import { ClaimableBalance } from '../../rewards/entities/claimable-balance';
 
 @table(UNCLAIMED_SNAPSHOTS_DATA)
