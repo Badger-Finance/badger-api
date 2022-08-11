@@ -153,8 +153,8 @@ export function calculateYield(principal: number, earned: number, duration: numb
   if (compoundingValue === 0) {
     return apr;
   }
-  const nonCompoundingValue = principal - compoundingValue;
-  const nonCompoundingScalar = nonCompoundingValue / principal;
+  const nonCompoundingValue = earned - compoundingValue;
+  const nonCompoundingScalar = nonCompoundingValue / earned;
   let nonCompoundingApr = 0;
   if (nonCompoundingValue > 0) {
     const nonCompoundedEarned = earned * nonCompoundingScalar;

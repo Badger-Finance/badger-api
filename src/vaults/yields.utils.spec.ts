@@ -32,8 +32,8 @@ describe('yields.utils', () => {
       [365, 1, ONE_DAY_MS, 0, 100],
       [365, 0.5, ONE_DAY_MS, 0, 50],
       [365, 2, ONE_DAY_MS, 0, 200],
-      [365, 1, ONE_DAY_MS, 365, 171.45674820219733],
-      [365, 1, ONE_DAY_MS, 180, 114.37716231252146],
+      [365, 1, ONE_DAY_MS, 1, 171.45674820219733],
+      [365, 1, ONE_DAY_MS, 0.5, 114.81572517391494],
       [0, 1, ONE_DAY_MS, 0, 0],
     ])(
       '%d earned %d over %d ms with %d compounded, for %d apr',
