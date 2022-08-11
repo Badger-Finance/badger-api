@@ -7,10 +7,9 @@ import BadgerSDK, {
   ONE_DAY_MS,
   RegistryService,
   RewardsService,
-  VaultDTO,
+  TokensService,
   VaultSnapshot,
 } from '@badger-dao/sdk';
-import { TokensService } from '@badger-dao/sdk/lib/tokens/tokens.service';
 import { JsonRpcProvider, JsonRpcSigner } from '@ethersproject/providers';
 import { ethers } from 'ethers';
 import createMockInstance from 'jest-create-mock-instance';
@@ -22,7 +21,6 @@ import * as dynamodbUtils from '../aws/dynamodb.utils';
 import { CachedAccount } from '../aws/models/cached-account.model';
 import { CachedBoost } from '../aws/models/cached-boost.model';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
-import { SUPPORTED_CHAINS } from '../chains/chain';
 import { Arbitrum } from '../chains/config/arbitrum.config';
 import { BinanceSmartChain } from '../chains/config/bsc.config';
 import { Ethereum } from '../chains/config/eth.config';
@@ -34,18 +32,9 @@ import * as pricesUtils from '../prices/prices.utils';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import { historicVaultSnapshotsMock } from '../vaults/mocks/historic-vault-snapshots.mock';
 import { vaultsChartDataMock } from '../vaults/mocks/vaults-chart-data.mock';
-import { MOCK_VAULT_DEFINITION, MOCK_VAULTS, TEST_ADDR } from './constants';
-
-export const TEST_CHAIN = SUPPORTED_CHAINS[0];
-export const CURRENT_BLOCK = 0;
-
-export function mockVaultDTO(address: string): VaultDTO {
-  const vault = MOCK_VAULTS.find((v) => v.vaultToken === address);
-  if (!vault) {
-    throw new Error(`DTO for ${address} does not exist`);
-  }
-  return vault;
-}
+import { MOCK_VAULT_DEFINITION, TEST_ADDR, TEST_CURRENT_BLOCK } from './constants';
+// import { Chain } from '../chains/config/chain.config';
+// import { TestEthereum } from '../chains/config/teth.config';
 
 export function setupMapper(items: unknown[], filter?: (items: unknown[]) => unknown[]) {
   // @ts-ignore
@@ -259,9 +248,9 @@ export function randomCachedBoosts(count: number): CachedBoost[] {
 
 export function setupMockAccounts() {
   jest.spyOn(accountsUtils, 'getClaimableBalanceSnapshot').mockImplementation(async () => ({
-    chainStartBlock: dynamodbUtils.getChainStartBlockKey(TEST_CHAIN, 10),
+    chainStartBlock: dynamodbUtils.getChainStartBlockKey(Network.Ethereum, 10),
     address: TEST_ADDR,
-    chain: TEST_CHAIN.network,
+    chain: Network.Ethereum,
     startBlock: 100,
     claimableBalances: [],
     expiresAt: Date.now(),
@@ -270,7 +259,7 @@ export function setupMockAccounts() {
   jest.spyOn(accountsUtils, 'getLatestMetadata').mockImplementation(async (chain) => ({
     startBlock: 10,
     endBlock: 15,
-    chainStartBlock: dynamodbUtils.getChainStartBlockKey(chain, 10),
+    chainStartBlock: dynamodbUtils.getChainStartBlockKey(Network.Ethereum, 10),
     chain: chain.network,
     cycle: 10,
     count: 0,
@@ -310,7 +299,7 @@ export async function mockBadgerSdk(
   {
     addr = TEST_ADDR,
     network = Network.Ethereum,
-    currBlock = CURRENT_BLOCK,
+    currBlock = TEST_CURRENT_BLOCK,
   }: {
     // type description
     addr?: string;
@@ -320,7 +309,7 @@ export async function mockBadgerSdk(
     // in case u want to skip all params
     addr: TEST_ADDR,
     network: Network.Ethereum,
-    currBlock: CURRENT_BLOCK,
+    currBlock: TEST_CURRENT_BLOCK,
   },
 ): Promise<BadgerSDK> {
   const mockSigner = mock<JsonRpcSigner>();
