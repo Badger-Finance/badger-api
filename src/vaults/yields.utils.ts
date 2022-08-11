@@ -249,53 +249,49 @@ export function getVaultYieldProjection(
     previousHarvestTokens,
     duration: periodDuration,
   } = yieldEstimate;
-  try {
-    const yieldTokensCurrent = calculateBalanceDifference(previousYieldTokens, yieldTokens);
-    const harvestTokensCurrent = calculateBalanceDifference(previousHarvestTokens, harvestTokens);
 
-    // calculate the overall harvest values
-    const harvestValue = harvestTokens.reduce((total, token) => (total += token.value), 0);
-    const yieldValue = yieldTokens.reduce((total, token) => (total += token.value), 0);
-    const harvestDuration = Date.now() - lastHarvest;
+  const yieldTokensCurrent = calculateBalanceDifference(previousYieldTokens, yieldTokens);
+  const harvestTokensCurrent = calculateBalanceDifference(previousHarvestTokens, harvestTokens);
 
-    // calculate the current measurement periods values
-    const harvestValuePerPeriod = harvestTokensCurrent.reduce((total, token) => (total += token.value), 0);
-    const yieldValuePerPeriod = yieldTokensCurrent.reduce((total, token) => (total += token.value), 0);
-    const harvestCompoundValuePerPeriod = harvestTokensCurrent
-      .filter((t) => vault.underlyingToken === t.address)
-      .reduce((total, token) => (total += token.value), 0);
+  // calculate the overall harvest values
+  const harvestValue = harvestTokens.reduce((total, token) => (total += token.value), 0);
+  const yieldValue = yieldTokens.reduce((total, token) => (total += token.value), 0);
+  const harvestDuration = Date.now() - lastHarvest;
 
-    const earningValue = balance > 0 ? value * ((balance - available) / balance) : 0;
-    const nonHarvestApr = nonHarvestSources.reduce((total, token) => (total += token.apr), 0);
-    const nonHarvestApy = nonHarvestSourcesApy.reduce((total, token) => (total += token.apr), 0);
+  // calculate the current measurement periods values
+  const harvestValuePerPeriod = harvestTokensCurrent.reduce((total, token) => (total += token.value), 0);
+  const yieldValuePerPeriod = yieldTokensCurrent.reduce((total, token) => (total += token.value), 0);
+  const harvestCompoundValuePerPeriod = harvestTokensCurrent
+    .filter((t) => vault.underlyingToken === t.address)
+    .reduce((total, token) => (total += token.value), 0);
 
-    return {
-      harvestValue,
-      harvestApr: calculateYield(earningValue, harvestValue, harvestDuration),
-      harvestPeriodApr: calculateYield(earningValue, harvestValuePerPeriod, periodDuration),
-      harvestPeriodApy: calculateYield(
-        earningValue,
-        harvestValuePerPeriod,
-        periodDuration,
-        harvestCompoundValuePerPeriod,
-      ),
-      harvestTokens: harvestTokens.map((t) => balanceToTokenRate(t, earningValue, harvestDuration)),
-      harvestPeriodSources: harvestTokensCurrent.map((t) => balanceToTokenRate(t, earningValue, periodDuration)),
-      harvestPeriodSourcesApy: harvestTokensCurrent.map((t) => balanceToTokenRate(t, earningValue, periodDuration)),
-      yieldValue,
-      yieldApr: calculateYield(earningValue, yieldValue, harvestDuration),
-      yieldTokens: yieldTokens.map((t) => balanceToTokenRate(t, earningValue, harvestDuration)),
-      yieldPeriodApr: calculateYield(earningValue, yieldValuePerPeriod, periodDuration),
-      yieldPeriodSources: yieldTokensCurrent.map((t) => balanceToTokenRate(t, earningValue, periodDuration)),
-      nonHarvestApr,
-      nonHarvestSources,
-      nonHarvestApy,
-      nonHarvestSourcesApy,
-    };
-  } catch {
-    // console.log({ vault, yieldSources, yieldEstimate })
-    throw new Error('REEEEEEEEEEEEEEE');
-  }
+  const earningValue = balance > 0 ? value * ((balance - available) / balance) : 0;
+  const nonHarvestApr = nonHarvestSources.reduce((total, token) => (total += token.apr), 0);
+  const nonHarvestApy = nonHarvestSourcesApy.reduce((total, token) => (total += token.apr), 0);
+
+  return {
+    harvestValue,
+    harvestApr: calculateYield(earningValue, harvestValue, harvestDuration),
+    harvestPeriodApr: calculateYield(earningValue, harvestValuePerPeriod, periodDuration),
+    harvestPeriodApy: calculateYield(
+      earningValue,
+      harvestValuePerPeriod,
+      periodDuration,
+      harvestCompoundValuePerPeriod,
+    ),
+    harvestTokens: harvestTokens.map((t) => balanceToTokenRate(t, earningValue, harvestDuration)),
+    harvestPeriodSources: harvestTokensCurrent.map((t) => balanceToTokenRate(t, earningValue, periodDuration)),
+    harvestPeriodSourcesApy: harvestTokensCurrent.map((t) => balanceToTokenRate(t, earningValue, periodDuration)),
+    yieldValue,
+    yieldApr: calculateYield(earningValue, yieldValue, harvestDuration),
+    yieldTokens: yieldTokens.map((t) => balanceToTokenRate(t, earningValue, harvestDuration)),
+    yieldPeriodApr: calculateYield(earningValue, yieldValuePerPeriod, periodDuration),
+    yieldPeriodSources: yieldTokensCurrent.map((t) => balanceToTokenRate(t, earningValue, periodDuration)),
+    nonHarvestApr,
+    nonHarvestSources,
+    nonHarvestApy,
+    nonHarvestSourcesApy,
+  };
 }
 
 /**
