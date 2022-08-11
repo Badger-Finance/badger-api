@@ -86,7 +86,7 @@ function isApySource(source: YieldSource): boolean {
  * @returns token rate representing the balance earned over a given duration
  */
 function balanceToTokenRate(balance: CachedTokenBalance, principal: number, duration: number): TokenRate {
-  const compoundingValue = balance.name === VAULT_SOURCE ? principal : 0;
+  const compoundingValue = balance.name === VAULT_SOURCE ? balance.value : 0;
   const apr = calculateYield(principal, balance.value, duration, compoundingValue);
   return {
     apr,
@@ -142,8 +142,8 @@ export function aggregateSources<T extends ValueSource>(
  * @returns apr or apy for given inputs, any value with compouned portions are apy
  */
 export function calculateYield(principal: number, earned: number, duration: number, compoundingValue = 0): number {
-  if (compoundingValue > principal) {
-    throw new Error('Compounding value must be less than or equal to principal');
+  if (compoundingValue > earned) {
+    throw new Error('Compounding value must be less than or equal to earned');
   }
   if (duration === 0 || principal === 0 || earned === 0) {
     return 0;
@@ -153,8 +153,8 @@ export function calculateYield(principal: number, earned: number, duration: numb
   if (compoundingValue === 0) {
     return apr;
   }
-  const nonCompoundingValue = principal - compoundingValue;
-  const nonCompoundingScalar = nonCompoundingValue / principal;
+  const nonCompoundingValue = earned - compoundingValue;
+  const nonCompoundingScalar = nonCompoundingValue / earned;
   let nonCompoundingApr = 0;
   if (nonCompoundingValue > 0) {
     const nonCompoundedEarned = earned * nonCompoundingScalar;
