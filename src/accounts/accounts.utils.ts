@@ -1,4 +1,4 @@
-import { Account, Currency, formatBalance, gqlGenT, ONE_MIN_MS } from '@badger-dao/sdk';
+import { Account, Currency, formatBalance, gqlGenT, Network, ONE_MIN_MS } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 
 import { getChainStartBlockKey, getDataMapper, getLeaderboardKey } from '../aws/dynamodb.utils';
@@ -134,11 +134,11 @@ export async function toVaultBalance(
   });
 }
 
-export async function getCachedBoost(chain: Chain, address: string): Promise<CachedBoost> {
+export async function getCachedBoost(network: Network, address: string): Promise<CachedBoost> {
   const mapper = getDataMapper();
   for await (const entry of mapper.query(
     CachedBoost,
-    { leaderboard: getLeaderboardKey(chain), address: ethers.utils.getAddress(address) },
+    { leaderboard: getLeaderboardKey(network), address: ethers.utils.getAddress(address) },
     { limit: 1, indexName: 'IndexLeaderBoardRankOnAddressAndLeaderboard' },
   )) {
     return entry;
@@ -149,7 +149,7 @@ export async function getCachedBoost(chain: Chain, address: string): Promise<Cac
     boostRank: 0,
     bveCvxBalance: 0,
     diggBalance: 0,
-    leaderboard: `${chain.network}_${LeaderBoardType.BadgerBoost}`,
+    leaderboard: `${network}_${LeaderBoardType.BadgerBoost}`,
     nativeBalance: 0,
     nftBalance: 0,
     nonNativeBalance: 0,
@@ -176,7 +176,7 @@ export async function getCachedAccount(chain: Chain, address: string): Promise<A
   const claimableBalances = Object.fromEntries(
     claimableBalanceSnapshot.claimableBalances.map((bal) => [bal.address, bal.balance]),
   );
-  const cachedBoost = await getCachedBoost(chain, cachedAccount.address);
+  const cachedBoost = await getCachedBoost(network, cachedAccount.address);
   const { boost, boostRank, stakeRatio, nftBalance, bveCvxBalance, nativeBalance, nonNativeBalance, diggBalance } =
     cachedBoost;
   const value = balances.map((b) => b.value).reduce((total, value) => (total += value), 0);
@@ -207,13 +207,13 @@ export async function getClaimableBalanceSnapshot(
   const mapper = getDataMapper();
   for await (const entry of mapper.query(
     UserClaimSnapshot,
-    { chainStartBlock: getChainStartBlockKey(chain, startBlock), address: ethers.utils.getAddress(address) },
+    { chainStartBlock: getChainStartBlockKey(chain.network, startBlock), address: ethers.utils.getAddress(address) },
     { limit: 1, indexName: 'IndexUnclaimedSnapshotsOnAddressAndChainStartBlock' },
   )) {
     return entry;
   }
   return {
-    chainStartBlock: getChainStartBlockKey(chain, startBlock),
+    chainStartBlock: getChainStartBlockKey(chain.network, startBlock),
     address,
     chain: chain.network,
     startBlock,
@@ -239,7 +239,7 @@ export async function getLatestMetadata(chain: Chain): Promise<UserClaimMetadata
     const metaData = Object.assign(new UserClaimMetadata(), {
       startBlock: blockNumber,
       endBlock: blockNumber + 1,
-      chainStartBlock: getChainStartBlockKey(chain, blockNumber),
+      chainStartBlock: getChainStartBlockKey(chain.network, blockNumber),
       chain: chain.network,
       count: 0,
     });

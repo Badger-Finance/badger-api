@@ -1,20 +1,27 @@
 import { DataMapper } from '@aws/dynamodb-data-mapper';
-import BadgerSDK, { Currency, gqlGenT, Protocol, VaultBehavior, VaultStatus, VaultVersion } from '@badger-dao/sdk';
+import BadgerSDK, {
+  Currency,
+  gqlGenT,
+  Network,
+  Protocol,
+  VaultBehavior,
+  VaultStatus,
+  VaultVersion,
+} from '@badger-dao/sdk';
 
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
-import { MOCK_VAULT_DEFINITION, TEST_ADDR } from '../test/constants';
+import { MOCK_VAULT_DEFINITION, TEST_ADDR, TEST_CURRENT_BLOCK } from '../test/constants';
 import {
   defaultAccount,
-  mockChainVaults,
   mockPricing,
   randomSnapshot,
   setFullTokenDataMock,
   setupMapper,
-  TEST_CHAIN,
+  setupMockChain,
 } from '../test/tests.utils';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import { mockBalance } from '../tokens/tokens.utils';
@@ -28,7 +35,7 @@ describe('accounts.utils', () => {
     boostRank: 0,
     bveCvxBalance: 0,
     diggBalance: 0,
-    leaderboard: `${TEST_CHAIN.network}_${LeaderBoardType.BadgerBoost}`,
+    leaderboard: `${Network.Ethereum}_${LeaderBoardType.BadgerBoost}`,
     nativeBalance: 0,
     nftBalance: 0,
     nonNativeBalance: 0,
@@ -132,45 +139,45 @@ describe('accounts.utils', () => {
   describe('getAccounts', () => {
     describe('users exist', () => {
       it('returns a list of user accounts', async () => {
+        const chain = setupMockChain();
         const mockAccounts = [TOKENS.BADGER, TOKENS.DIGG, TOKENS.WBTC, TOKENS.FTM_GEIST];
         const result: gqlGenT.UsersQuery = {
           users: mockAccounts.map((account) => ({ id: account, settBalances: [] })),
         };
         let responded = false;
-        jest.spyOn(Chain.prototype, 'getSdk').mockImplementation(async () => TEST_CHAIN.sdk);
-        jest.spyOn(TEST_CHAIN.sdk.graph, 'loadUsers').mockImplementation(async (_a) => {
+        jest.spyOn(Chain.prototype, 'getSdk').mockImplementation(async () => chain.sdk);
+        jest.spyOn(chain.sdk.graph, 'loadUsers').mockImplementation(async (_a) => {
           if (responded) {
             return { users: [] };
           }
           responded = true;
           return result;
         });
-        const users = await getAccounts(TEST_CHAIN);
+        const users = await getAccounts(chain);
         expect(users).toMatchObject(mockAccounts);
       });
     });
 
     describe('users do not exist', () => {
       it('returns an empty list', async () => {
+        const chain = setupMockChain();
         jest.spyOn(BadgerSDK.prototype, 'ready');
-        jest.spyOn(Chain.prototype, 'getSdk').mockImplementation(async () => TEST_CHAIN.sdk);
-        jest.spyOn(TEST_CHAIN.sdk.graph, 'loadUsers').mockImplementationOnce(async () => ({ users: [] }));
-        const nullReturn = await getAccounts(TEST_CHAIN);
+        jest.spyOn(Chain.prototype, 'getSdk').mockImplementation(async () => chain.sdk);
+        jest.spyOn(chain.sdk.graph, 'loadUsers').mockImplementationOnce(async () => ({ users: [] }));
+        const nullReturn = await getAccounts(chain);
         expect(nullReturn).toMatchObject([]);
       });
     });
   });
 
   describe('toVaultBalance', () => {
-    const chain = TEST_CHAIN;
-
     describe('digg token conversion', () => {
       it.each([
         [undefined, Currency.USD],
         [Currency.USD, Currency.USD],
         [Currency.ETH, Currency.ETH],
       ])('returns vault balance request in %s currency with %s denominated value', async (currency, _toCurrency) => {
-        mockChainVaults();
+        const chain = setupMockChain();
         const snapshot = randomSnapshot(MOCK_VAULT_DEFINITION);
         const cachedVault = await vaultsUtils.defaultVault(chain, MOCK_VAULT_DEFINITION);
         cachedVault.balance = snapshot.balance;
@@ -197,19 +204,21 @@ describe('accounts.utils', () => {
   describe('getCachedBoost', () => {
     describe('no cached boost', () => {
       it('returns the default boost', async () => {
+        const chain = setupMockChain();
         setupMapper([]);
-        const result = await getCachedBoost(TEST_CHAIN, TEST_ADDR);
+        const result = await getCachedBoost(chain.network, TEST_ADDR);
         expect(result).toMatchObject(mockBoost);
       });
     });
     describe('a previously cached boost', () => {
       it('returns the default boost', async () => {
+        const chain = setupMockChain();
         mockBoost.boostRank = 42;
         mockBoost.stakeRatio = 1;
         mockBoost.nativeBalance = 32021;
         mockBoost.nonNativeBalance = 32021;
         setupMapper([mockBoost]);
-        const result = await getCachedBoost(TEST_CHAIN, TEST_ADDR);
+        const result = await getCachedBoost(chain.network, TEST_ADDR);
         expect(result).toMatchObject(mockBoost);
       });
     });
@@ -217,33 +226,33 @@ describe('accounts.utils', () => {
 
   describe('getLatestMetadata', () => {
     it('should not create new meta obj if exists', async () => {
+      const chain = setupMockChain();
       const put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
       const meta = Object.assign(new UserClaimMetadata(), {
         startBlock: 100,
         endBlock: 101,
-        chainStartBlock: `${TEST_CHAIN.network}_123123`,
-        chain: TEST_CHAIN.network,
+        chainStartBlock: `${chain.network}_123123`,
+        chain: chain.network,
         count: 0,
       });
       setupMapper([meta]);
-      const latest_meta = await getLatestMetadata(TEST_CHAIN);
+      const latest_meta = await getLatestMetadata(chain);
       expect(latest_meta).toEqual(meta);
       expect(put.mock.calls).toEqual([]);
     });
 
     it('should create new meta if no meta obj found', async () => {
+      const chain = setupMockChain();
       const put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
-      const mockedBlockNumber = 100;
-      jest.spyOn(TEST_CHAIN.provider, 'getBlockNumber').mockImplementation(() => Promise.resolve(mockedBlockNumber));
       const expected = Object.assign(new UserClaimMetadata(), {
         startBlock: 100,
         endBlock: 101,
-        chainStartBlock: `${TEST_CHAIN.network}_${mockedBlockNumber}`,
-        chain: TEST_CHAIN.network,
+        chainStartBlock: `${chain.network}_${TEST_CURRENT_BLOCK}`,
+        chain: chain.network,
         count: 0,
       });
       setupMapper([]);
-      await getLatestMetadata(TEST_CHAIN);
+      await getLatestMetadata(chain);
       expect(put.mock.calls[0][0]).toEqual(expected);
     });
   });

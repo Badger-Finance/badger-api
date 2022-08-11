@@ -1,34 +1,33 @@
-import { Network } from '@badger-dao/sdk';
+import { Network, ONE_MINUTE_MS } from '@badger-dao/sdk';
 import { NotFound } from '@tsed/exceptions';
-import { ethers } from 'ethers';
+// import { ethers } from 'ethers';
 
 import { getDataMapper } from '../../aws/dynamodb.utils';
 import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
-import { ONE_MINUTE_SECONDS, STAGE } from '../../config/constants';
-import { Stage } from '../../config/enums/stage.enum';
+// import { Stage } from '../../config/enums/stage.enum';
 
 export class ChainVaults {
   network: Network;
   cachedVaults: VaultDefinitionModel[] = [];
 
-  readonly cacheTtl = ONE_MINUTE_SECONDS * 2 * 1000;
+  readonly cacheTtl = ONE_MINUTE_MS * 2;
   private updatedAt!: number;
 
   constructor(network: Network) {
     this.network = network;
   }
 
-  async all() {
+  async all(): Promise<VaultDefinitionModel[]> {
     await this.#updateCachedVaults();
     return this.cachedVaults;
   }
 
-  async getVault(address: string) {
+  async getVault(address: string): Promise<VaultDefinitionModel> {
     await this.#updateCachedVaults();
-    const requestAddress = ethers.utils.getAddress(address);
-    const vault = Object.fromEntries(this.cachedVaults.map((v) => [v.address, v]))[requestAddress];
+    // const requestAddress = ethers.utils.getAddress(address);
+    const vault = Object.fromEntries(this.cachedVaults.map((v) => [v.address, v]))[address];
     if (!vault) {
-      throw new NotFound(`No vault exists with address ${requestAddress}`);
+      throw new NotFound(`No vault exists with address ${address}`);
     }
     return vault;
   }
@@ -41,25 +40,28 @@ export class ChainVaults {
   }
 
   async #updateCachedVaults() {
+    console.log('update vaults');
     if (this.#shouldUpdate()) {
       const mapper = getDataMapper();
-      const query = mapper.query(
-        VaultDefinitionModel,
-        { chain: this.network, isProduction: 1 },
-        { indexName: 'IndexVaultCompoundDataChainIsProd' },
-      );
+      console.log(mapper);
+      // const query = mapper.query(
+      //   VaultDefinitionModel,
+      //   { chain: this.network, isProduction: 1 },
+      //   { indexName: 'IndexVaultCompoundDataChainIsProd' },
+      // );
+      // console.log(query);
 
       try {
-        for await (const vault of query) {
-          const index = this.cachedVaults.findIndex((v) => v.address === vault.address);
-          if (index >= 0) {
-            this.cachedVaults[index] = vault;
-          } else {
-            if (vault.stage === Stage.Production || vault.stage === STAGE) {
-              this.cachedVaults.push(vault);
-            }
-          }
-        }
+        //   for await (const vault of query) {
+        //     const index = this.cachedVaults.findIndex((v) => v.address === vault.address);
+        //     if (index >= 0) {
+        //       this.cachedVaults[index] = vault;
+        //     } else {
+        //       if (vault.stage === Stage.Production || vault.stage === STAGE) {
+        //         this.cachedVaults.push(vault);
+        //       }
+        //     }
+        //   }
       } catch (e) {
         console.error(`Failed to update cached vaults for ${this.network} network. ${e}`);
       }
