@@ -2,11 +2,19 @@ import { ChartTimeFrame, ONE_DAY_MS, ONE_HOUR_MS } from '@badger-dao/sdk';
 
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { ChartDataBlob } from '../aws/models/chart-data-blob.model';
+import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
 import { ChartData } from './chart-data.model';
 
 // list of ChartTimeFrame enums that contain unique capture granularities for searching
 export const CHART_GRANULARITY_TIMEFRAMES = [ChartTimeFrame.Max, ChartTimeFrame.Week, ChartTimeFrame.Day];
 
+/**
+ *
+ * @param id
+ * @param timeframe
+ * @param data
+ * @returns
+ */
 export function toChartDataBlob<T extends ChartData<T>>(
   id: string,
   timeframe: ChartTimeFrame,
@@ -19,10 +27,24 @@ export function toChartDataBlob<T extends ChartData<T>>(
   });
 }
 
+/**
+ *
+ * @param namespace
+ * @param id
+ * @param timeframe
+ * @returns
+ */
 export function toChartDataKey(namespace: string, id: string, timeframe: ChartTimeFrame): string {
   return [namespace, id, timeframe].join('_');
 }
 
+/**
+ *
+ * @param reference
+ * @param timestamp
+ * @param timeframe
+ * @returns
+ */
 export function shouldUpdate(reference: number, timestamp: number, timeframe: ChartTimeFrame): boolean {
   const difference = reference - timestamp;
   let update = false;
@@ -43,6 +65,13 @@ export function shouldUpdate(reference: number, timestamp: number, timeframe: Ch
   return update;
 }
 
+/**
+ *
+ * @param reference
+ * @param timestamp
+ * @param timeframe
+ * @returns
+ */
 export function shouldTrim(reference: number, timestamp: number, timeframe: ChartTimeFrame): boolean {
   const difference = reference - timestamp;
   let update;
@@ -70,6 +99,11 @@ export function shouldTrim(reference: number, timestamp: number, timeframe: Char
   return update;
 }
 
+/**
+ *
+ * @param namespace
+ * @param snapshot
+ */
 export async function updateSnapshots<T extends ChartData<T>>(namespace: string, snapshot: T) {
   const mapper = getDataMapper();
   const isFirstOfYear = (date: Date) => date.getDay() === 0 && date.getMonth() === 0;
@@ -124,5 +158,18 @@ export async function updateSnapshots<T extends ChartData<T>>(namespace: string,
         console.error({ message: 'Unable to save blob', err });
       }
     }
+  }
+}
+
+export async function queryVaultCharts(id: string): Promise<HistoricVaultSnapshotModel[]> {
+  try {
+    const mapper = getDataMapper();
+    for await (const item of mapper.query(ChartDataBlob, { id }, { limit: 1, scanIndexForward: false })) {
+      return item.data as HistoricVaultSnapshotModel[];
+    }
+    return [];
+  } catch (err) {
+    console.error(err);
+    return [];
   }
 }
