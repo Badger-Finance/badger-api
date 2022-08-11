@@ -86,7 +86,7 @@ function isApySource(source: YieldSource): boolean {
  * @returns token rate representing the balance earned over a given duration
  */
 function balanceToTokenRate(balance: CachedTokenBalance, principal: number, duration: number): TokenRate {
-  const compoundingValue = balance.name === VAULT_SOURCE ? principal : 0;
+  const compoundingValue = balance.name === VAULT_SOURCE ? balance.value : 0;
   const apr = calculateYield(principal, balance.value, duration, compoundingValue);
   return {
     apr,
