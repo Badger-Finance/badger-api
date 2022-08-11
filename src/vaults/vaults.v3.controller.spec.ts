@@ -3,7 +3,7 @@ import { PlatformTest } from '@tsed/common';
 import SuperTest from 'supertest';
 
 import { TOKENS } from '../config/tokens.config';
-import { NetworkStatus } from '../errors/enums/newtroks.status.enum';
+import { NetworkStatus } from '../errors/enums/network-status.enum';
 import { Server } from '../Server';
 import { TEST_ADDR } from '../test/constants';
 import { mockChainVaults, setupDdbVaultsChartsData, setupVaultsCoumpoundDDB } from '../test/tests.utils';

@@ -6,7 +6,7 @@ import SuperTest from 'supertest';
 
 import { ChainVaults } from '../chains/vaults/chain.vaults';
 import { TOKENS } from '../config/tokens.config';
-import { NetworkStatus } from '../errors/enums/newtroks.status.enum';
+import { NetworkStatus } from '../errors/enums/network-status.enum';
 import { Server } from '../Server';
 import { mockChainVaults } from '../test/tests.utils';
 

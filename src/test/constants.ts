@@ -17,6 +17,7 @@ import { Stage } from '../config/enums/stage.enum';
 import { TOKENS } from '../config/tokens.config';
 
 export const TEST_ADDR = TOKENS.BBADGER;
+export const TEST_CURRENT_TIMESTAMP = 1660223160457;
 
 export const MOCK_DISTRIBUTION_FILE = {
   merkleRoot: TEST_ADDR,
