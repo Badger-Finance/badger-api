@@ -1,6 +1,7 @@
 import {
   BouncerType,
   gqlGenT,
+  ONE_WEEK_SECONDS,
   Protocol,
   RegistryVault,
   VaultBehavior,
@@ -14,7 +15,6 @@ import { getVaultEntityId } from '../aws/dynamodb.utils';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { VaultTokenBalance } from '../aws/models/vault-token-balance.model';
 import { Chain } from '../chains/config/chain.config';
-import { ONE_WEEK_SECONDS } from '../config/constants';
 import { Stage } from '../config/enums/stage.enum';
 import { getPrice } from '../prices/prices.utils';
 import { getLiquidityData } from '../protocols/common/swap.utils';
