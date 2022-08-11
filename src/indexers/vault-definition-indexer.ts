@@ -1,4 +1,4 @@
-import { RegistryVault } from '@badger-dao/sdk';
+import { Protocol, RegistryVault } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 
 import { getDataMapper } from '../aws/dynamodb.utils';
@@ -65,6 +65,9 @@ async function updateVaultDefinition(chain: Chain, vault: RegistryVault) {
   try {
     compoundVault = await constructVaultDefinition(chain, vault);
     if (compoundVault) {
+      if (compoundVault.protocol === Protocol.Aura) {
+        console.log(compoundVault);
+      }
       const mapper = getDataMapper();
       await mapper.put(compoundVault);
     }

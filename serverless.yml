@@ -199,6 +199,18 @@ resources:
           - AttributeName: 'timestamp'
             AttributeType: 'N'
 
+    vaultsSnapshotsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.table.VAULT_SNAPSHOTS_DATA}
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: 'address'
+            KeyType: 'HASH'
+        AttributeDefinitions:
+          - AttributeName: 'address'
+            AttributeType: 'S'
+
     vaultsCompoundTable:
       Type: AWS::DynamoDB::Table
       Properties:
