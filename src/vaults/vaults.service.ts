@@ -1,4 +1,4 @@
-import { ChartTimeFrame, Currency, VaultDTO, VaultType } from '@badger-dao/sdk';
+import { Currency, VaultDTO, VaultType } from '@badger-dao/sdk';
 import { Service } from '@tsed/common';
 
 import { getDataMapper, getVaultEntityId } from '../aws/dynamodb.utils';
@@ -6,12 +6,12 @@ import { HarvestCompoundData } from '../aws/models/harvest-compound.model';
 import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { Chain } from '../chains/config/chain.config';
-import { CHART_GRANULARITY_TIMEFRAMES, toChartDataKey } from '../charts/charts.utils';
+import { CHART_GRANULARITY_TIMEFRAMES, queryVaultCharts, toChartDataKey } from '../charts/charts.utils';
 import { convert } from '../prices/prices.utils';
 import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interface';
 import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
 import { VaultHarvestsMap } from './interfaces/vault-harvest-map';
-import { getCachedVault, queryVaultCharts, queryYieldEstimate } from './vaults.utils';
+import { getCachedVault, queryYieldEstimate } from './vaults.utils';
 import { getVaultYieldProjection, getYieldSources } from './yields.utils';
 
 @Service()
@@ -116,18 +116,6 @@ export class VaultsService {
     }
 
     return vault;
-  }
-
-  async loadVaultChartData(
-    address: string,
-    timeframe: ChartTimeFrame,
-    chain: Chain,
-  ): Promise<HistoricVaultSnapshotModel[]> {
-    // validate vault request is correct and valid
-    const requestedVault = await chain.vaults.getVault(address);
-    const vaultBlobId = getVaultEntityId(chain, requestedVault);
-    const dataKey = toChartDataKey(HistoricVaultSnapshotModel.NAMESPACE, vaultBlobId, timeframe);
-    return queryVaultCharts(dataKey);
   }
 
   /**

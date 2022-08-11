@@ -5,7 +5,7 @@ import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
 import { NodataForAddrError } from '../errors/allocation/nodata.for.addr.error';
 import { NodataForChainError } from '../errors/allocation/nodata.for.chain.error';
-import { NetworkStatus } from '../errors/enums/newtroks.status.enum';
+import { NetworkStatus } from '../errors/enums/network-status.enum';
 import { Server } from '../Server';
 import { MOCK_BOUNCER_FILE, TEST_ADDR } from '../test/constants';
 import { ProofsService } from './proofs.service';

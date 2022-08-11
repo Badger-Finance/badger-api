@@ -1,4 +1,3 @@
-import { between } from '@aws/dynamodb-expressions';
 import {
   Currency,
   formatBalance,
@@ -20,11 +19,8 @@ import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';
 
 import { getDataMapper } from '../aws/dynamodb.utils';
-import { ChartDataBlob } from '../aws/models/chart-data-blob.model';
 import { CurrentVaultSnapshotModel } from '../aws/models/current-vault-snapshot.model';
 import { HarvestCompoundData } from '../aws/models/harvest-compound.model';
-import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
-import { HistoricVaultSnapshotOldModel } from '../aws/models/historic-vault-snapshot-old.model';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { YieldEstimate } from '../aws/models/yield-estimate.model';
 import { YieldSource } from '../aws/models/yield-source.model';
@@ -778,45 +774,4 @@ export async function getLastCompoundHarvest(vault: string): Promise<Nullable<Ha
   }
 
   return lastHarvest;
-}
-
-export async function queryVaultCharts(id: string): Promise<HistoricVaultSnapshotModel[]> {
-  try {
-    const mapper = getDataMapper();
-    for await (const item of mapper.query(ChartDataBlob, { id }, { limit: 1, scanIndexForward: false })) {
-      return item.data as HistoricVaultSnapshotModel[];
-    }
-    return [];
-  } catch (err) {
-    console.error(err);
-    return [];
-  }
-}
-
-export async function getVaultSnapshotsInRange(
-  chain: Chain,
-  vault: VaultDefinitionModel,
-  start: Date,
-  end: Date,
-): Promise<HistoricVaultSnapshotOldModel[]> {
-  try {
-    const snapshots = [];
-    const mapper = getDataMapper();
-    const assetToken = await getFullToken(chain, vault.address);
-
-    for await (const snapshot of mapper.query(
-      HistoricVaultSnapshotOldModel,
-      { address: assetToken.address, timestamp: between(new Date(start).getTime(), new Date(end).getTime()) },
-      { scanIndexForward: false },
-    )) {
-      if (!snapshot.pricePerFullShare && snapshot.ratio) {
-        snapshot.pricePerFullShare = snapshot.ratio;
-      }
-      snapshots.push(snapshot);
-    }
-    return snapshots;
-  } catch (err) {
-    console.error(err);
-    return [];
-  }
 }
