@@ -11,7 +11,6 @@ export const ONE_YEAR_SECONDS = ONE_DAY_SECONDS * 365;
 
 // data access constants
 export const YIELD_SNAPSHOTS_DATA = getEnvVar('YIELD_SNAPSHOTS_DATA');
-export const SETT_HISTORIC_DATA = getEnvVar('SETT_HISTORIC_DATA');
 export const VAULT_BALANCES_DATA = getEnvVar('VAULT_BALANCES_DATA');
 export const TOKEN_PRICE_DATA = getEnvVar('TOKEN_PRICE_DATA');
 export const TOKEN_INFORMATION_DATA = getEnvVar('TOKEN_INFORMATION_DATA');
