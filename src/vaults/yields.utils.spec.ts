@@ -43,8 +43,8 @@ describe('yields.utils', () => {
     );
 
     it('throws an error when provided with invalid principal and compounding pair', () => {
-      expect(() => calculateYield(365, 1, ONE_DAY_MS, 380)).toThrow(
-        'Compounding value must be less than or equal to principal',
+      expect(() => calculateYield(365, 1, ONE_DAY_MS, 2)).toThrow(
+        'Compounding value must be less than or equal to earned',
       );
     });
   });

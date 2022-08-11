@@ -142,8 +142,8 @@ export function aggregateSources<T extends ValueSource>(
  * @returns apr or apy for given inputs, any value with compouned portions are apy
  */
 export function calculateYield(principal: number, earned: number, duration: number, compoundingValue = 0): number {
-  if (compoundingValue > principal) {
-    throw new Error('Compounding value must be less than or equal to principal');
+  if (compoundingValue > earned) {
+    throw new Error('Compounding value must be less than or equal to earned');
   }
   if (duration === 0 || principal === 0 || earned === 0) {
     return 0;
