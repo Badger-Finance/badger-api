@@ -10,9 +10,9 @@ import {
   VaultState,
   VaultVersion,
 } from '@badger-dao/sdk';
+import mockTokens from '@badger-dao/sdk-mocks/generated/ethereum/api/loadTokens.json';
 import mockVaultSnapshots from '@badger-dao/sdk-mocks/generated/ethereum/api/loadVaultChart.json';
 import mockVaults from '@badger-dao/sdk-mocks/generated/ethereum/api/loadVaults.json';
-import mockTokens from '@badger-dao/sdk-mocks/generated/ethereum/api/loadTokens.json';
 
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { Stage } from '../config/enums/stage.enum';

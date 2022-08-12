@@ -13,8 +13,8 @@ import BadgerSDK, {
 import * as gqlGenT from '@badger-dao/sdk/lib/graphql/generated/badger';
 import { BadRequest } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';
-import { Chain } from '../chains/config/chain.config';
 
+import { Chain } from '../chains/config/chain.config';
 import { Polygon } from '../chains/config/polygon.config';
 import { ChainVaults } from '../chains/vaults/chain.vaults';
 import { TOKENS } from '../config/tokens.config';
@@ -24,8 +24,8 @@ import { BouncerType } from '../rewards/enums/bouncer-type.enum';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import * as rewardsUtils from '../rewards/rewards.utils';
 import { MOCK_VAULT_DEFINITION, TEST_ADDR } from '../test/constants';
-import { setupMockChain } from '../test/mocks.utils';
-import { randomSnapshot, randomSnapshots, setFullTokenDataMock, setupMapper } from '../test/tests.utils';
+import { mockQuery, setupMockChain } from '../test/mocks.utils';
+import { randomSnapshot, randomSnapshots } from '../test/tests.utils';
 import { TokenNotFound } from '../tokens/errors/token.error';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import * as tokenUtils from '../tokens/tokens.utils';
@@ -107,7 +107,7 @@ describe('vaults.utils', () => {
     const snapshot = randomSnapshot(MOCK_VAULT_DEFINITION);
     snapshot.value = 1000;
     snapshot.balance = 10000;
-    setupMapper([snapshot]);
+    mockQuery([snapshot]);
     jest.spyOn(indexerUtils, 'getVault').mockImplementation(async (_chain, _address) => ({
       sett: {
         id: TEST_ADDR,
@@ -260,7 +260,6 @@ describe('vaults.utils', () => {
         },
         version: VaultVersion.v1,
       };
-      setFullTokenDataMock();
       const actual = await defaultVault(chain, MOCK_VAULT_DEFINITION);
       expect(actual).toMatchObject(expected);
     });
@@ -269,8 +268,8 @@ describe('vaults.utils', () => {
   describe('getCachedVault', () => {
     describe('no cached vault exists', () => {
       it('returns the default sett', async () => {
-        setupMapper([]);
-        setFullTokenDataMock();
+        mockQuery([]);
+
         const cached = await getCachedVault(chain, MOCK_VAULT_DEFINITION);
         const defaultVaultInst = await defaultVault(chain, MOCK_VAULT_DEFINITION);
         expect(cached).toMatchObject(defaultVaultInst);
@@ -280,8 +279,7 @@ describe('vaults.utils', () => {
     describe('a cached vault exists', () => {
       it('returns the vault', async () => {
         const snapshot = randomSnapshot(MOCK_VAULT_DEFINITION);
-        setupMapper([snapshot]);
-        setFullTokenDataMock();
+        mockQuery([snapshot]);
 
         const cached = await getCachedVault(chain, MOCK_VAULT_DEFINITION);
         const expected = await defaultVault(chain, MOCK_VAULT_DEFINITION);
@@ -301,14 +299,12 @@ describe('vaults.utils', () => {
   describe('getVaultTokenPrice', () => {
     describe('look up non vault token price', () => {
       it('throws a bad request error', async () => {
-        setFullTokenDataMock();
         await expect(getVaultTokenPrice(chain, TOKENS.BADGER)).rejects.toThrow(BadRequest);
       });
     });
 
     describe('look up malformed token configuration', () => {
       it('throws an unprocessable entity error', async () => {
-        setFullTokenDataMock();
         await expect(getVaultTokenPrice(chain, ethers.constants.AddressZero)).rejects.toThrow(TokenNotFound);
       });
     });
@@ -316,9 +312,9 @@ describe('vaults.utils', () => {
     describe('look up valid, properly configured vault', () => {
       it('returns a valid token price for the vault base on price per full share', async () => {
         const snapshot = randomSnapshot(MOCK_VAULT_DEFINITION);
-        setupMapper([snapshot]);
+        mockQuery([snapshot]);
         jest.spyOn(pricesUtils, 'queryPrice').mockImplementation(async (address) => ({ address, price: 10 }));
-        setFullTokenDataMock();
+
         const vaultPrice = await getVaultTokenPrice(chain, MOCK_VAULT_DEFINITION.address);
         expect(vaultPrice).toMatchObject({
           address: MOCK_VAULT_DEFINITION.address,
@@ -332,7 +328,7 @@ describe('vaults.utils', () => {
     describe('no rewards or harvests', () => {
       it('returns value sources from fallback methods', async () => {
         jest.spyOn(VaultsService.prototype, 'listHarvests').mockImplementation(async (_opts) => ({ data: [] }));
-        setFullTokenDataMock();
+
         const result = await getVaultPerformance(chain, MOCK_VAULT_DEFINITION);
         expect(result).toMatchSnapshot();
       });
@@ -343,8 +339,8 @@ describe('vaults.utils', () => {
         jest.spyOn(VaultsService.prototype, 'listHarvests').mockImplementation(async (_opts) => {
           throw new Error('Incompatible vault!');
         });
-        setupMapper(randomSnapshots(MOCK_VAULT_DEFINITION));
-        setFullTokenDataMock();
+        mockQuery(randomSnapshots(MOCK_VAULT_DEFINITION));
+
         const result = await getVaultPerformance(chain, MOCK_VAULT_DEFINITION);
         expect(result).toMatchSnapshot();
       });
@@ -353,7 +349,7 @@ describe('vaults.utils', () => {
     describe('requests non compatible network vault performances', () => {
       it('returns value sources from fallback methods', async () => {
         const alternateChain = new Polygon();
-        setFullTokenDataMock();
+
         const result = await getVaultPerformance(alternateChain, MOCK_VAULT_DEFINITION);
         expect(result).toMatchSnapshot();
       });
@@ -366,8 +362,8 @@ describe('vaults.utils', () => {
           address: token,
           price: Number(token.slice(0, 4)),
         }));
-        setupMapper([createYieldSource(MOCK_VAULT_DEFINITION, SourceType.PreCompound, VAULT_SOURCE, 10)]);
-        setFullTokenDataMock();
+        mockQuery([createYieldSource(MOCK_VAULT_DEFINITION, SourceType.PreCompound, VAULT_SOURCE, 10)]);
+
         const result = await getVaultPerformance(chain, MOCK_VAULT_DEFINITION);
         expect(result).toMatchSnapshot();
       });
@@ -386,7 +382,7 @@ describe('vaults.utils', () => {
             price: Number(token.slice(0, 4)),
           };
         });
-        setFullTokenDataMock();
+
         const result = await getVaultPerformance(chain, MOCK_VAULT_DEFINITION);
         expect(result).toMatchSnapshot();
       });

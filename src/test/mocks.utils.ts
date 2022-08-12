@@ -16,11 +16,14 @@ import { mock } from 'jest-mock-extended';
 
 import { getVaultEntityId } from '../aws/dynamodb.utils';
 import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
+import { Chain } from '../chains/config/chain.config';
 import { TestEthereum } from '../chains/config/teth.config';
 import { ChainVaults } from '../chains/vaults/chain.vaults';
 import * as chartsUtils from '../charts/charts.utils';
 import * as pricesUtils from '../prices/prices.utils';
+import * as rewardsUtils from '../rewards/rewards.utils';
 import {
+  MOCK_DISTRIBUTION_FILE,
   MOCK_TOKENS,
   MOCK_VAULT_DEFINITION,
   MOCK_VAULT_SNAPSHOT,
@@ -62,6 +65,7 @@ export function setupMockChain() {
   jest.spyOn(BadgerSDK.prototype, 'getMulticallProvider').mockImplementation((_p) => mockMulticall);
   jest.spyOn(RegistryService.prototype, 'ready').mockImplementation();
   jest.spyOn(RewardsService.prototype, 'ready').mockImplementation();
+  jest.spyOn(RewardsService.prototype, 'hasBadgerTree').mockImplementation(() => true);
   jest
     .spyOn(TokensService.prototype, 'loadTokens')
     .mockImplementation(async (tokens) =>
@@ -72,14 +76,21 @@ export function setupMockChain() {
   mockBatchGet(chainTokensList);
   mockBatchPut(chainTokensList);
 
-  jest.spyOn(TestEthereum.prototype, 'getGasPrices').mockImplementation(async () => ({
+  const chain = new TestEthereum(mockProvider);
+
+  jest.spyOn(Chain.prototype, 'getGasPrices').mockImplementation(async () => ({
     rapid: { maxFeePerGas: 223.06, maxPriorityFeePerGas: 3.04 },
     fast: { maxFeePerGas: 221.96, maxPriorityFeePerGas: 1.94 },
     standard: { maxFeePerGas: 221.91, maxPriorityFeePerGas: 1.89 },
     slow: { maxFeePerGas: 221.81, maxPriorityFeePerGas: 1.79 },
   }));
 
-  const chain = new TestEthereum(mockProvider);
+  jest.spyOn(rewardsUtils, 'getTreeDistribution').mockImplementation(async (requestedChain: Chain) => {
+    if (chain.network !== requestedChain.network) {
+      return null;
+    }
+    return MOCK_DISTRIBUTION_FILE;
+  });
 
   // setup vault charts for the mock vault
   jest.spyOn(chartsUtils, 'queryVaultCharts').mockImplementation(async (_k) =>
@@ -88,6 +99,8 @@ export function setupMockChain() {
         ...snapshot,
         id: getVaultEntityId(chain, MOCK_VAULT_SNAPSHOT),
         timestamp: TEST_CURRENT_TIMESTAMP,
+        chain: chain.network,
+        ratio: snapshot.pricePerFullShare,
       });
       return historicSnapshot;
     }),

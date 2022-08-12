@@ -7,8 +7,7 @@ import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
 import { BinanceSmartChain } from '../chains/config/bsc.config';
 import { Chain } from '../chains/config/chain.config';
 import { MOCK_DISTRIBUTION_FILE, TEST_ADDR } from '../test/constants';
-import { setupMockChain } from '../test/mocks.utils';
-import { setupMapper } from '../test/tests.utils';
+import { mockQuery, setupMockChain } from '../test/mocks.utils';
 import { UserClaimMetadata } from './entities/user-claim-metadata';
 import { RewardsService } from './rewards.service';
 import * as rewardsUtils from './rewards.utils';
@@ -62,7 +61,7 @@ describe('rewards.service', () => {
           startBlock: 0,
         },
       ];
-      setupMapper(entries);
+      mockQuery(entries);
 
       const { records } = await service.list({ chain });
       expect(records).toEqual(entries);

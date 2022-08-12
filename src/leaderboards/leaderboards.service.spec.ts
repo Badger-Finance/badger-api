@@ -3,8 +3,7 @@ import { PlatformTest } from '@tsed/common';
 
 import { getLeaderboardKey } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
-import { setupMockChain } from '../test/mocks.utils';
-import { setupMapper } from '../test/tests.utils';
+import { mockQuery, setupMockChain } from '../test/mocks.utils';
 import { LeaderBoardsService } from './leaderboards.service';
 
 describe('leaderboards.service', () => {
@@ -24,7 +23,7 @@ describe('leaderboards.service', () => {
 
   describe('fetchLeaderboardSummary', () => {
     it('returns the current leaderboard summary for the requested chain', async () => {
-      setupMapper([
+      mockQuery([
         {
           leaderboard: getLeaderboardKey(chain.network),
           rankSummaries: [

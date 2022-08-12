@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`GasController GET /v2/gas returns a list of gas prices in eip-1559 format 1`] = `
+exports[`GasController GET /v2/gas returns gas price options in eip-1559 format 1`] = `
 Object {
   "fast": Object {
     "maxFeePerGas": 221.96,
