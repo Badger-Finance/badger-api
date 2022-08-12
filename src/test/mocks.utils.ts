@@ -12,6 +12,7 @@ import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapsho
 import { TestEthereum } from '../chains/config/teth.config';
 import { ChainVaults } from '../chains/vaults/chain.vaults';
 import * as chartsUtils from '../charts/charts.utils';
+import * as pricesUtils from '../prices/prices.utils';
 import {
   MOCK_VAULT_DEFINITION,
   MOCK_VAULT_SNAPSHOT,
@@ -20,7 +21,6 @@ import {
   TEST_CURRENT_BLOCK,
   TEST_CURRENT_TIMESTAMP,
 } from './constants';
-import * as pricesUtils from '../prices/prices.utils';
 
 export function setupMockChain() {
   jest.spyOn(pricesUtils, 'queryPrice').mockImplementation(async (token: string, _currency?: Currency) => ({
