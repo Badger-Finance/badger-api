@@ -15,16 +15,9 @@ import { TOKENS } from '../config/tokens.config';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 import { MOCK_VAULT_DEFINITION, TEST_ADDR, TEST_CURRENT_BLOCK } from '../test/constants';
-import {
-  defaultAccount,
-  mockPricing,
-  randomSnapshot,
-  setFullTokenDataMock,
-  setupMapper,
-  setupMockChain,
-} from '../test/tests.utils';
+import { mockBalance, setupMockChain } from '../test/mocks.utils';
+import { defaultAccount, randomSnapshot, setFullTokenDataMock, setupMapper } from '../test/tests.utils';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
-import { mockBalance } from '../tokens/tokens.utils';
 import * as vaultsUtils from '../vaults/vaults.utils';
 import { getAccounts, getCachedBoost, getLatestMetadata, queryCachedAccount, toVaultBalance } from './accounts.utils';
 
@@ -171,33 +164,30 @@ describe('accounts.utils', () => {
   });
 
   describe('toVaultBalance', () => {
-    describe('digg token conversion', () => {
-      it.each([
-        [undefined, Currency.USD],
-        [Currency.USD, Currency.USD],
-        [Currency.ETH, Currency.ETH],
-      ])('returns vault balance request in %s currency with %s denominated value', async (currency, _toCurrency) => {
-        const chain = setupMockChain();
-        const snapshot = randomSnapshot(MOCK_VAULT_DEFINITION);
-        const cachedVault = await vaultsUtils.defaultVault(chain, MOCK_VAULT_DEFINITION);
-        cachedVault.balance = snapshot.balance;
-        cachedVault.pricePerFullShare = snapshot.balance / snapshot.totalSupply;
-        jest.spyOn(vaultsUtils, 'getCachedVault').mockImplementation(async (_c, _v) => cachedVault);
-        const depositToken = fullTokenMockMap[cachedVault.underlyingToken];
-        mockPricing();
-        setFullTokenDataMock();
-        const wbtc = fullTokenMockMap[TOKENS.WBTC];
-        const weth = fullTokenMockMap[TOKENS.WETH];
-        const tokenBalances = [mockBalance(wbtc, 1), mockBalance(weth, 20)];
-        const cached = { vault: MOCK_VAULT_DEFINITION.address, tokenBalances };
-        setupMapper([cached]);
-        const mockedBalance = testVaultBalance(MOCK_VAULT_DEFINITION);
-        const actual = await toVaultBalance(chain, mockedBalance, currency);
-        expect(actual).toBeTruthy();
-        expect(actual.name).toEqual(MOCK_VAULT_DEFINITION.name);
-        expect(actual.symbol).toEqual(depositToken.symbol);
-        expect(actual.pricePerFullShare).toEqual(snapshot.balance / snapshot.totalSupply);
-      });
+    it.each([
+      [undefined, Currency.USD],
+      [Currency.USD, Currency.USD],
+      [Currency.ETH, Currency.ETH],
+    ])('returns vault balance request in %s currency with %s denominated value', async (currency, _toCurrency) => {
+      const chain = setupMockChain();
+      const snapshot = randomSnapshot(MOCK_VAULT_DEFINITION);
+      const cachedVault = await vaultsUtils.defaultVault(chain, MOCK_VAULT_DEFINITION);
+      cachedVault.balance = snapshot.balance;
+      cachedVault.pricePerFullShare = snapshot.balance / snapshot.totalSupply;
+      jest.spyOn(vaultsUtils, 'getCachedVault').mockImplementation(async (_c, _v) => cachedVault);
+      const depositToken = fullTokenMockMap[cachedVault.underlyingToken];
+      setFullTokenDataMock();
+      const wbtc = fullTokenMockMap[TOKENS.WBTC];
+      const weth = fullTokenMockMap[TOKENS.WETH];
+      const tokenBalances = [mockBalance(wbtc, 1), mockBalance(weth, 20)];
+      const cached = { vault: MOCK_VAULT_DEFINITION.address, tokenBalances };
+      setupMapper([cached]);
+      const mockedBalance = testVaultBalance(MOCK_VAULT_DEFINITION);
+      const actual = await toVaultBalance(chain, mockedBalance, currency);
+      expect(actual).toBeTruthy();
+      expect(actual.name).toEqual(MOCK_VAULT_DEFINITION.name);
+      expect(actual.symbol).toEqual(depositToken.symbol);
+      expect(actual.pricePerFullShare).toEqual(snapshot.balance / snapshot.totalSupply);
     });
   });
 
@@ -228,32 +218,31 @@ describe('accounts.utils', () => {
     it('should not create new meta obj if exists', async () => {
       const chain = setupMockChain();
       const put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
-      const meta = Object.assign(new UserClaimMetadata(), {
+      const cachedMetadata = Object.assign(new UserClaimMetadata(), {
         startBlock: 100,
         endBlock: 101,
         chainStartBlock: `${chain.network}_123123`,
         chain: chain.network,
         count: 0,
       });
-      setupMapper([meta]);
-      const latest_meta = await getLatestMetadata(chain);
-      expect(latest_meta).toEqual(meta);
+      setupMapper([cachedMetadata]);
+      const latestMetadata = await getLatestMetadata(chain);
+      expect(latestMetadata).toEqual(cachedMetadata);
       expect(put.mock.calls).toEqual([]);
     });
 
     it('should create new meta if no meta obj found', async () => {
       const chain = setupMockChain();
-      const put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
       const expected = Object.assign(new UserClaimMetadata(), {
-        startBlock: 100,
-        endBlock: 101,
+        startBlock: TEST_CURRENT_BLOCK,
+        endBlock: TEST_CURRENT_BLOCK + 1,
         chainStartBlock: `${chain.network}_${TEST_CURRENT_BLOCK}`,
         chain: chain.network,
         count: 0,
       });
       setupMapper([]);
-      await getLatestMetadata(chain);
-      expect(put.mock.calls[0][0]).toEqual(expected);
+      const latestMetadata = await getLatestMetadata(chain);
+      expect(latestMetadata).toMatchObject(expected);
     });
   });
 });

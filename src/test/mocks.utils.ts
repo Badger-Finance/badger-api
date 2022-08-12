@@ -45,6 +45,7 @@ export function setupMockChain() {
   mockProvider.getBlockNumber.calledWith().mockImplementation(async () => TEST_CURRENT_BLOCK);
 
   const mockMulticall = mock<providers.MulticallProvider>();
+  mockMulticall.getBlockNumber.calledWith().mockImplementation(async () => TEST_CURRENT_BLOCK);
   jest.spyOn(BadgerSDK.prototype, 'getMulticallProvider').mockImplementation((_p) => mockMulticall);
   jest.spyOn(RegistryService.prototype, 'ready').mockImplementation();
   jest.spyOn(RewardsService.prototype, 'ready').mockImplementation();

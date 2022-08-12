@@ -13,7 +13,6 @@ describe('AccountsController', () => {
   beforeEach(PlatformTest.bootstrap(Server));
   beforeEach(async () => {
     request = SuperTest(PlatformTest.callback());
-    jest.resetAllMocks();
     setupMockAccounts();
   });
 
@@ -21,21 +20,19 @@ describe('AccountsController', () => {
 
   describe('GET /v2/accounts', () => {
     describe('with no specified account', () => {
-      it('returns a not found response', async (done: jest.DoneCallback) => {
+      it('returns a not found response', async () => {
         const { body } = await request.get('/v2/accounts').expect(NotFound.STATUS);
         expect(body).toMatchSnapshot();
-        done();
       });
     });
     describe('with an invalid account input', () => {
-      it('returns a bad request response', async (done: jest.DoneCallback) => {
+      it('returns a bad request response', async () => {
         const { body } = await request.get('/v2/accounts/0xjintao').expect(BadRequest.STATUS);
         expect(body).toMatchSnapshot();
-        done();
       });
     });
     describe('with a non participant account', () => {
-      it('returns a default account response', async (done: jest.DoneCallback) => {
+      it('returns a default account response', async () => {
         jest.spyOn(accountsUtils, 'getCachedAccount').mockImplementation(async (_chain, address) => ({
           address,
           value: 0,
@@ -55,11 +52,10 @@ describe('AccountsController', () => {
         }));
         const { body } = await request.get('/v2/accounts/' + TEST_ADDR).expect(200);
         expect(body).toMatchSnapshot();
-        done();
       });
     });
     describe('with a participant account', () => {
-      it('returns a cached account response', async (done: jest.DoneCallback) => {
+      it('returns a cached account response', async () => {
         jest.spyOn(accountsUtils, 'getCachedAccount').mockImplementation(async (_chain, address) => ({
           address,
           value: 10,
@@ -79,7 +75,6 @@ describe('AccountsController', () => {
         }));
         const { body } = await request.get('/v2/accounts/' + TEST_ADDR).expect(200);
         expect(body).toMatchSnapshot();
-        done();
       });
     });
   });
