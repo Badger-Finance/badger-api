@@ -3,9 +3,9 @@ import { ONE_DAY_MS, VaultState } from '@badger-dao/sdk';
 import { TOKENS } from '../config/tokens.config';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { MOCK_VAULT, MOCK_VAULT_DEFINITION } from '../test/constants';
+import { mockBalance } from '../test/mocks.utils';
 import { setupMapper } from '../test/tests.utils';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
-import { mockBalance } from '../tokens/tokens.utils';
 import { VAULT_SOURCE } from './vaults.utils';
 import {
   calculateBalanceDifference,

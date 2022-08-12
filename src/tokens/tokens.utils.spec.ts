@@ -1,35 +1,38 @@
-import { Currency } from '@badger-dao/sdk';
+import { Currency, TokensService } from '@badger-dao/sdk';
+import { ethers } from 'ethers';
 
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { Chain } from '../chains/config/chain.config';
-// import { TOKENS } from '../config/tokens.config';
+import { TOKENS } from '../config/tokens.config';
 import * as priceUtils from '../prices/prices.utils';
-// import { mockPricing, setFullTokenDataMock } from '../test/tests.utils';
+import { MOCK_TOKENS, MOCK_VAULT_DEFINITION, TEST_TOKEN } from '../test/constants';
+import { mockBalance, mockBatchGet, mockBatchPut, mockQuery, setupMockChain } from '../test/mocks.utils';
 import * as vaultUtils from '../vaults/vaults.utils';
-import { fullTokenMockMap } from './mocks/full-token.mock';
-import { toBalance } from './tokens.utils';
+import { TokenNotFound } from './errors/token.error';
+import { getFullToken, getFullTokens, getVaultTokens, toBalance } from './tokens.utils';
 
 describe('token.utils', () => {
+  let chain: Chain;
+
   beforeEach(() => {
-    // setFullTokenDataMock();
+    chain = setupMockChain();
     jest.spyOn(vaultUtils, 'getCachedVault').mockImplementation(async (chain: Chain, vault: VaultDefinitionModel) => {
       const defaultVault = await vaultUtils.defaultVault(chain, vault);
       defaultVault.balance = 10;
       return defaultVault;
     });
-    // mockPricing();
   });
 
   describe('toBalance', () => {
     describe('no requested currency', () => {
       it('converts to a usd based token balance', async () => {
-        const badger = fullTokenMockMap[TOKENS.BADGER];
+        const badger = MOCK_TOKENS[TEST_TOKEN];
         const price = {
           address: badger.name,
           price: 8,
           updatedAt: Date.now(),
         };
-        jest.spyOn(priceUtils, 'getPrice').mockImplementationOnce(async (_contract) => price);
+        jest.spyOn(priceUtils, 'queryPrice').mockImplementationOnce(async (_contract) => price);
         const actual = await toBalance(badger, 10);
         const expected = {
           name: badger.name,
@@ -49,8 +52,8 @@ describe('token.utils', () => {
         const convertedPrice = currency === Currency.ETH ? (basePrice * 8) / 3 : basePrice;
         const baseTokens = 10;
         const expectedValue = convertedPrice * baseTokens;
-        const badger = fullTokenMockMap[TOKENS.BADGER];
-        jest.spyOn(priceUtils, 'getPrice').mockImplementation(async (token: string) => ({
+        const badger = MOCK_TOKENS[TEST_TOKEN];
+        jest.spyOn(priceUtils, 'queryPrice').mockImplementation(async (token: string) => ({
           address: token,
           price: convertedPrice,
           updatedAt: Date.now(),
@@ -72,7 +75,7 @@ describe('token.utils', () => {
   describe('mockBalance', () => {
     describe('no requested currency', () => {
       it('converts to a usd based token balance', () => {
-        const badger = fullTokenMockMap[TOKENS.BADGER];
+        const badger = MOCK_TOKENS[TEST_TOKEN];
         const mockPrice = parseInt(badger.address.slice(0, 5), 16);
         const actual = mockBalance(badger, 1);
         const expected = {
@@ -89,7 +92,7 @@ describe('token.utils', () => {
 
     describe('with a requested currency', () => {
       it.each([Currency.USD, Currency.ETH])('converts to an %s based token balance', (currency) => {
-        const badger = fullTokenMockMap[TOKENS.BADGER];
+        const badger = MOCK_TOKENS[TEST_TOKEN];
         let mockPrice = parseInt(badger.address.slice(0, 5), 16);
         if (currency !== Currency.USD) {
           mockPrice /= 2;
@@ -108,127 +111,126 @@ describe('token.utils', () => {
     });
   });
 
-  // describe('getVaultTokens', () => {
-  //   describe('no saved balances', () => {
-  //     it('returns single token underlying balance', async () => {
-  //       const badger = fullTokenMockMap[TOKENS.BADGER];
-  //       setFullTokenDataMock();
-  //       const expected = mockBalance(badger, 10);
-  //       setupMapper([{ vault: MOCK_VAULT_DEFINITION.address, tokenBalances: [expected] }]);
-  //       const dto = await vaultUtils.defaultVault(TEST_CHAIN, MOCK_VAULT_DEFINITION);
-  //       const result = await getVaultTokens(TEST_CHAIN, dto);
-  //       expect(result).toMatchObject([expected]);
-  //     });
-  //   });
+  describe('getVaultTokens', () => {
+    describe('no saved balances', () => {
+      it('returns single token underlying balance', async () => {
+        const badger = MOCK_TOKENS[TEST_TOKEN];
+        const expected = mockBalance(badger, 10);
+        mockQuery([{ vault: MOCK_VAULT_DEFINITION.address, tokenBalances: [expected] }]);
+        const dto = await vaultUtils.defaultVault(chain, MOCK_VAULT_DEFINITION);
+        const result = await getVaultTokens(chain, dto);
+        expect(result).toMatchObject([expected]);
+      });
+    });
 
-  //   describe('saved balances', () => {
-  //     describe('no requested currency', () => {
-  //       it('converts to a usd based token balance', async () => {
-  //         const wbtc = fullTokenMockMap[TOKENS.WBTC];
-  //         const weth = fullTokenMockMap[TOKENS.WETH];
-  //         setFullTokenDataMock();
-  //         const dto = await vaultUtils.defaultVault(TEST_CHAIN, MOCK_VAULT_DEFINITION);
-  //         const tokenBalances = [mockBalance(wbtc, 1), mockBalance(weth, 20)];
-  //         const cached = { vault: MOCK_VAULT_DEFINITION.address, tokenBalances };
-  //         setupMapper([cached]);
-  //         const actual = await getVaultTokens(TEST_CHAIN, dto);
-  //         expect(actual).toMatchObject(tokenBalances);
-  //       });
-  //     });
+    describe('saved balances', () => {
+      describe('no requested currency', () => {
+        it('converts to a usd based token balance', async () => {
+          const wbtc = MOCK_TOKENS[TOKENS.WBTC];
+          const weth = MOCK_TOKENS[TOKENS.WETH];
+          const dto = await vaultUtils.defaultVault(chain, MOCK_VAULT_DEFINITION);
+          const tokenBalances = [mockBalance(wbtc, 1), mockBalance(weth, 20)];
+          const cached = { vault: MOCK_VAULT_DEFINITION.address, tokenBalances };
+          mockQuery([cached]);
+          const actual = await getVaultTokens(chain, dto);
+          expect(actual).toMatchObject(tokenBalances);
+        });
+      });
 
-  //     describe('with a requested currency', () => {
-  //       it.each([Currency.ETH, Currency.USD])('converts to an %s based token balance', async (currency) => {
-  //         const wbtc = fullTokenMockMap[TOKENS.WBTC];
-  //         const weth = fullTokenMockMap[TOKENS.WETH];
-  //         setFullTokenDataMock();
-  //         const dto = await vaultUtils.defaultVault(TEST_CHAIN, MOCK_VAULT_DEFINITION);
-  //         const tokenBalances = [mockBalance(wbtc, 1), mockBalance(weth, 20)];
-  //         const cached = { vault: MOCK_VAULT_DEFINITION.address, tokenBalances };
-  //         setupMapper([cached]);
-  //         const expected = [mockBalance(wbtc, 1, currency), mockBalance(weth, 20, currency)];
-  //         const actual = await getVaultTokens(TEST_CHAIN, dto, currency);
-  //         expect(actual).toMatchObject(expected);
-  //       });
-  //     });
-  //   });
-  // });
+      describe('with a requested currency', () => {
+        it.each([Currency.ETH, Currency.USD])('converts to an %s based token balance', async (currency) => {
+          const wbtc = MOCK_TOKENS[TOKENS.WBTC];
+          const weth = MOCK_TOKENS[TOKENS.WETH];
+          const dto = await vaultUtils.defaultVault(chain, MOCK_VAULT_DEFINITION);
+          const tokenBalances = [mockBalance(wbtc, 1), mockBalance(weth, 20)];
+          const cached = { vault: MOCK_VAULT_DEFINITION.address, tokenBalances };
+          mockQuery([cached]);
+          const expected = [mockBalance(wbtc, 1, currency), mockBalance(weth, 20, currency)];
+          const actual = await getVaultTokens(chain, dto, currency);
+          expect(actual).toMatchObject(expected);
+        });
+      });
+    });
+  });
 
-  // describe('getFullToken(s)', () => {
-  //   it('throws token not found', async () => {
-  //     const batchPutMock = mockBatchPut([]);
-  //     const batchGetMock = setupBatchGet([]);
-  //     const sdkLoadMock = jest.spyOn(TokensService.prototype, 'loadTokens').mockImplementation(async () => ({}));
+  describe('getFullToken(s)', () => {
+    it('throws token not found', async () => {
+      const batchPutMock = mockBatchPut([]);
+      const batchGetMock = mockBatchGet([]);
+      const sdkLoadMock = jest.spyOn(TokensService.prototype, 'loadTokens').mockImplementation(async () => ({}));
 
-  //     await expect(getFullToken(TEST_CHAIN, '0x0000000000000000000000000000000000000000')).rejects.toThrow(
-  //       TokenNotFound,
-  //     );
+      await expect(getFullToken(chain, ethers.constants.AddressZero)).rejects.toThrow(TokenNotFound);
 
-  //     expect(batchGetMock).toBeCalled();
-  //     expect(sdkLoadMock).toBeCalled();
-  //     expect(batchPutMock).toBeCalledTimes(0);
-  //   });
-  //   it('takes token from cache', async () => {
-  //     const batchPutMock = mockBatchPut([]);
-  //     const batchGetMock = setupBatchGet(Object.values(fullTokenMockMap));
-  //     const sdkLoadMock = jest.spyOn(TokensService.prototype, 'loadTokens').mockImplementation(async () => ({}));
+      expect(batchGetMock).toBeCalled();
+      expect(sdkLoadMock).toBeCalled();
+      expect(batchPutMock).toBeCalledTimes(0);
+    });
 
-  //     const token = await getFullToken(TEST_CHAIN, TOKENS.BADGER);
+    it('takes token from cache', async () => {
+      const batchPutMock = mockBatchPut([]);
+      const batchGetMock = mockBatchGet(Object.values(MOCK_TOKENS));
+      const sdkLoadMock = jest.spyOn(TokensService.prototype, 'loadTokens').mockImplementation(async () => ({}));
 
-  //     expect(batchGetMock).toBeCalled();
-  //     expect(sdkLoadMock).toBeCalledTimes(0);
-  //     expect(batchPutMock).toBeCalledTimes(0);
-  //     expect(token).toMatchObject(fullTokenMockMap[TOKENS.BADGER]);
-  //   });
-  //   it('takes token from sdk and saves it', async () => {
-  //     const batchPutMock = mockBatchPut([]);
-  //     const batchGetMock = setupBatchGet([]);
-  //     const sdkLoadMock = jest
-  //       .spyOn(TokensService.prototype, 'loadTokens')
-  //       .mockImplementation(async () => ({ [TOKENS.BADGER]: fullTokenMockMap[TOKENS.BADGER] }));
+      const token = await getFullToken(chain, TEST_TOKEN);
 
-  //     const token = await getFullToken(TEST_CHAIN, TOKENS.BADGER);
+      expect(batchGetMock).toBeCalled();
+      expect(sdkLoadMock).toBeCalledTimes(0);
+      expect(batchPutMock).toBeCalledTimes(0);
+      expect(token).toMatchObject(MOCK_TOKENS[TEST_TOKEN]);
+    });
 
-  //     expect(batchGetMock).toBeCalled();
-  //     expect(batchPutMock).toBeCalled();
-  //     expect(sdkLoadMock).toBeCalled();
-  //     expect(token).toMatchObject(fullTokenMockMap[TOKENS.BADGER]);
-  //   });
-  //   it('returns empty object', async () => {
-  //     const batchPutMock = mockBatchPut([]);
-  //     const batchGetMock = setupBatchGet([]);
-  //     const sdkLoadMock = jest.spyOn(TokensService.prototype, 'loadTokens').mockImplementation(async () => ({}));
+    it('takes token from sdk and saves it', async () => {
+      const batchPutMock = mockBatchPut([]);
+      const batchGetMock = mockBatchGet([]);
+      const sdkLoadMock = jest
+        .spyOn(TokensService.prototype, 'loadTokens')
+        .mockImplementation(async () => ({ [TEST_TOKEN]: MOCK_TOKENS[TEST_TOKEN] }));
 
-  //     const tokens = await getFullTokens(TEST_CHAIN, [
-  //       '0x0000000000000000000000000000000000000000',
-  //       '0x0000000000000000000000000000000000000001',
-  //     ]);
+      const token = await getFullToken(chain, TEST_TOKEN);
 
-  //     expect(batchGetMock).toBeCalled();
-  //     expect(batchPutMock).toBeCalledTimes(0);
-  //     expect(sdkLoadMock).toBeCalled();
+      expect(batchGetMock).toBeCalled();
+      expect(batchPutMock).toBeCalled();
+      expect(sdkLoadMock).toBeCalled();
+      expect(token).toMatchObject(MOCK_TOKENS[TEST_TOKEN]);
+    });
 
-  //     expect(tokens).toMatchObject({});
-  //   });
-  //   it('mixed cache and sdk get with save', async () => {
-  //     const batchPutMock = mockBatchPut([]);
-  //     const batchGetMock = setupBatchGet([fullTokenMockMap[TOKENS.BADGER], fullTokenMockMap[TOKENS.WBTC]]);
-  //     const sdkLoadMock = jest
-  //       .spyOn(TokensService.prototype, 'loadTokens')
-  //       .mockImplementation(async () => ({ [TOKENS.WETH]: fullTokenMockMap[TOKENS.WETH] }));
+    it('returns empty object', async () => {
+      const batchPutMock = mockBatchPut([]);
+      const batchGetMock = mockBatchGet([]);
+      const sdkLoadMock = jest.spyOn(TokensService.prototype, 'loadTokens').mockImplementation(async () => ({}));
 
-  //     const expectedTokensMap = {
-  //       [TOKENS.BADGER]: fullTokenMockMap[TOKENS.BADGER],
-  //       [TOKENS.WBTC]: fullTokenMockMap[TOKENS.WBTC],
-  //       [TOKENS.WETH]: fullTokenMockMap[TOKENS.WETH],
-  //     };
+      const tokens = await getFullTokens(chain, [
+        '0x0000000000000000000000000000000000000000',
+        '0x0000000000000000000000000000000000000001',
+      ]);
 
-  //     const tokens = await getFullTokens(TEST_CHAIN, [TOKENS.BADGER, TOKENS.WBTC, TOKENS.WETH]);
+      expect(batchGetMock).toBeCalled();
+      expect(batchPutMock).toBeCalledTimes(0);
+      expect(sdkLoadMock).toBeCalled();
 
-  //     expect(batchGetMock).toBeCalled();
-  //     expect(batchPutMock).toBeCalled();
-  //     expect(sdkLoadMock).toBeCalled();
+      expect(tokens).toMatchObject({});
+    });
 
-  //     expect(tokens).toMatchObject(expectedTokensMap);
-  //   });
-  // });
+    it('mixed cache and sdk get with save', async () => {
+      const batchPutMock = mockBatchPut([]);
+      const batchGetMock = mockBatchGet([MOCK_TOKENS[TEST_TOKEN], MOCK_TOKENS[TOKENS.WBTC]]);
+      const sdkLoadMock = jest
+        .spyOn(TokensService.prototype, 'loadTokens')
+        .mockImplementation(async () => ({ [TOKENS.WETH]: MOCK_TOKENS[TOKENS.WETH] }));
+
+      const expectedTokensMap = {
+        [TEST_TOKEN]: MOCK_TOKENS[TEST_TOKEN],
+        [TOKENS.WBTC]: MOCK_TOKENS[TOKENS.WBTC],
+        [TOKENS.WETH]: MOCK_TOKENS[TOKENS.WETH],
+      };
+
+      const tokens = await getFullTokens(chain, [TEST_TOKEN, TOKENS.WBTC, TOKENS.WETH]);
+
+      expect(batchGetMock).toBeCalled();
+      expect(batchPutMock).toBeCalled();
+      expect(sdkLoadMock).toBeCalled();
+
+      expect(tokens).toMatchObject(expectedTokensMap);
+    });
+  });
 });

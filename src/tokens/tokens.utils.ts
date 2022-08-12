@@ -98,7 +98,9 @@ export async function cacheTokensInfo(tokens: Token[]): Promise<void> {
 
   try {
     for await (const persisted of mapper.batchPut(tokensInfoMeta)) {
-      if (!persisted) console.warn('Failed to save token info');
+      if (!persisted) {
+        console.warn('Failed to save token info');
+      }
     }
   } catch (e) {
     console.warn(`Failed to save tokens info ${e}`);

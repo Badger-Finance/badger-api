@@ -1,9 +1,10 @@
 import { Currency } from '@badger-dao/sdk';
 import { PlatformTest } from '@tsed/common';
 
+import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
 import * as pricesUtils from '../prices/prices.utils';
-import { mockChainVaults, TEST_CHAIN } from '../test/tests.utils';
+import { setupMockChain } from '../test/mocks.utils';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import * as tokenUtils from '../tokens/tokens.utils';
 import { VaultsService } from './vaults.service';
@@ -11,14 +12,15 @@ import * as vaultsUtils from './vaults.utils';
 
 describe('proofs.service', () => {
   let service: VaultsService;
+  let chain: Chain;
 
   beforeAll(async () => {
     await PlatformTest.create();
     service = PlatformTest.get<VaultsService>(VaultsService);
+    chain = setupMockChain();
   });
 
   beforeEach(() => {
-    mockChainVaults();
     jest.spyOn(tokenUtils, 'getFullToken').mockImplementation(async (_, tokenAddr) => {
       return fullTokenMockMap[tokenAddr] || fullTokenMockMap[TOKENS.BADGER];
     });
@@ -42,14 +44,14 @@ describe('proofs.service', () => {
   describe('getProtocolSummary', () => {
     describe('request with no currency', () => {
       it('returns the protocol summary in usd base currency', async () => {
-        const result = await service.getProtocolSummary(TEST_CHAIN);
+        const result = await service.getProtocolSummary(chain);
         expect(result).toMatchSnapshot();
       });
     });
 
     describe('request with currency', () => {
       it('returns the protocol summary in requested base currency', async () => {
-        const result = await service.getProtocolSummary(TEST_CHAIN, Currency.AVAX);
+        const result = await service.getProtocolSummary(chain, Currency.AVAX);
         expect(result).toMatchSnapshot();
       });
     });

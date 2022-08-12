@@ -1,14 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
 import { DataMapper, QueryIterator, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
-import BadgerSDK, {
-  Network,
-  ONE_DAY_MS,
-  RegistryService,
-  RewardsService,
-  TokensService,
-  VaultSnapshot,
-} from '@badger-dao/sdk';
+import BadgerSDK, { Network, ONE_DAY_MS, RegistryService, RewardsService, VaultSnapshot } from '@badger-dao/sdk';
 import { JsonRpcProvider, JsonRpcSigner } from '@ethersproject/providers';
 import { ethers } from 'ethers';
 import createMockInstance from 'jest-create-mock-instance';
@@ -22,50 +15,9 @@ import { CachedBoost } from '../aws/models/cached-boost.model';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { SUPPORTED_CHAINS } from '../chains/chain';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
-import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
-import { Nullable } from '../utils/types.utils';
 import { vaultsChartDataMock } from '../vaults/mocks/vaults-chart-data.mock';
 import { MOCK_VAULT_DEFINITION, TEST_ADDR, TEST_CURRENT_BLOCK } from './constants';
-
-export function setupMapper(items: unknown[], filter?: (items: unknown[]) => unknown[]) {
-  // @ts-ignore
-  const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
-  let result = items;
-  if (filter) {
-    result = filter(items);
-  }
-  // @ts-ignore
-  qi[Symbol.iterator] = jest.fn(() => result.values());
-  return jest.spyOn(DataMapper.prototype, 'query').mockImplementation(() => qi);
-}
-
-export function setupBatchGet(items: unknown[], filter?: (items: unknown[]) => unknown[]) {
-  // @ts-ignore
-  const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
-  let result = items;
-  if (filter) {
-    result = filter(items);
-  }
-  // @ts-ignore
-  qi[Symbol.iterator] = jest.fn(() => result.values());
-  return jest.spyOn(DataMapper.prototype, 'batchGet').mockImplementation(() => qi);
-}
-
-export function mockBatchPut(items: unknown[]) {
-  // @ts-ignore
-  const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
-  // @ts-ignore
-  qi[Symbol.iterator] = jest.fn(() => items.values());
-  return jest.spyOn(DataMapper.prototype, 'batchPut').mockImplementation(() => qi);
-}
-
-export function mockBatchDelete(items: unknown[]) {
-  // @ts-ignore
-  const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
-  // @ts-ignore
-  qi[Symbol.iterator] = jest.fn(() => items.values());
-  return jest.spyOn(DataMapper.prototype, 'batchDelete').mockImplementation(() => qi);
-}
+import { Nullable } from '../utils/types.utils';
 
 // @ts-ignore
 export function setupVaultsCoumpoundDDB(customFilter: Nullable<(v: any) => boolean> = null) {
@@ -86,8 +38,6 @@ export function setupVaultsCoumpoundDDB(customFilter: Nullable<(v: any) => boole
 }
 
 export function setupDdbVaultsChartsData() {
-  jest.spyOn(BadgerSDK.prototype, 'ready').mockImplementation();
-
   /* eslint-disable @typescript-eslint/ban-ts-comment */
   // @ts-ignore
   jest.spyOn(DataMapper.prototype, 'query').mockImplementation((_model, _condition) => {
@@ -219,15 +169,6 @@ export function setupMockAccounts() {
     cycle: 10,
     count: 0,
   }));
-}
-
-export function setFullTokenDataMock() {
-  const fullTokenObjList = Object.values(fullTokenMockMap);
-
-  setupBatchGet(fullTokenObjList);
-  mockBatchPut(fullTokenObjList);
-
-  jest.spyOn(TokensService.prototype, 'loadTokens').mockImplementation(async () => fullTokenMockMap);
 }
 
 export async function mockBadgerSdk(

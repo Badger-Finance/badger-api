@@ -2,40 +2,16 @@
 
 exports[`proofs.service getProtocolSummary request with currency returns the protocol summary in requested base currency 1`] = `
 Object {
-  "setts": Array [
-    Object {
-      "balance": 1,
-      "name": "Badger",
-      "value": 17645.333333333332,
-    },
-  ],
-  "totalValue": 17645.333333333332,
-  "vaults": Array [
-    Object {
-      "balance": 1,
-      "name": "Badger",
-      "value": 17645.333333333332,
-    },
-  ],
+  "setts": Array [],
+  "totalValue": 0,
+  "vaults": Array [],
 }
 `;
 
 exports[`proofs.service getProtocolSummary request with no currency returns the protocol summary in usd base currency 1`] = `
 Object {
-  "setts": Array [
-    Object {
-      "balance": 1,
-      "name": "Badger",
-      "value": 17645.333333333332,
-    },
-  ],
-  "totalValue": 17645.333333333332,
-  "vaults": Array [
-    Object {
-      "balance": 1,
-      "name": "Badger",
-      "value": 17645.333333333332,
-    },
-  ],
+  "setts": Array [],
+  "totalValue": 0,
+  "vaults": Array [],
 }
 `;
