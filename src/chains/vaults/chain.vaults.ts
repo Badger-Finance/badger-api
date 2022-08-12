@@ -41,7 +41,6 @@ export class ChainVaults {
   }
 
   async #updateCachedVaults() {
-    console.log('update vaults');
     if (this.#shouldUpdate()) {
       const mapper = getDataMapper();
       const query = mapper.query(

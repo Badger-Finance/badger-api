@@ -15,7 +15,8 @@ import mockVaults from '@badger-dao/sdk-mocks/generated/ethereum/api/loadVaults.
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { Stage } from '../config/enums/stage.enum';
 
-export const TEST_ADDR = 'WE';
+export const TEST_TOKEN = '0x3472a5a71965499acd81997a54bba8d852c6e53d';
+export const TEST_ADDR = '0x2B5455aac8d64C14786c3a29858E43b5945819C0';
 export const TEST_CURRENT_TIMESTAMP = 1660223160457;
 export const TEST_CURRENT_BLOCK = 13_500_500;
 
