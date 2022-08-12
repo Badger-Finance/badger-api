@@ -1,10 +1,9 @@
 import { providers } from '@0xsequence/multicall';
-import BadgerSDK, { getNetworkConfig, Network, SDKProvider } from '@badger-dao/sdk';
+import BadgerSDK, { GasPrices, getNetworkConfig, Network, SDKProvider } from '@badger-dao/sdk';
 import { BadRequest, NotFound } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 
 import { TOKENS } from '../../config/tokens.config';
-import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { TokenConfig } from '../../tokens/interfaces/token-config.interface';
 import { ChainStrategy } from '../strategies/chain.strategy';
 import { ChainVaults } from '../vaults/chain.vaults';

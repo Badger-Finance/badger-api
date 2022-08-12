@@ -1,17 +1,41 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`proofs.service getProtocolSummary request with currency returns the protocol summary in requested base currency 1`] = `
+exports[`vaults.service getProtocolSummary request with currency returns the protocol summary in requested base currency 1`] = `
 Object {
-  "setts": Array [],
-  "totalValue": 0,
-  "vaults": Array [],
+  "setts": Array [
+    Object {
+      "balance": 0.01073050870987165,
+      "name": "Badger",
+      "value": 129.21,
+    },
+  ],
+  "totalValue": 129.21,
+  "vaults": Array [
+    Object {
+      "balance": 0.01073050870987165,
+      "name": "Badger",
+      "value": 129.21,
+    },
+  ],
 }
 `;
 
-exports[`proofs.service getProtocolSummary request with no currency returns the protocol summary in usd base currency 1`] = `
+exports[`vaults.service getProtocolSummary request with no currency returns the protocol summary in usd base currency 1`] = `
 Object {
-  "setts": Array [],
-  "totalValue": 0,
-  "vaults": Array [],
+  "setts": Array [
+    Object {
+      "balance": 0.01073050870987165,
+      "name": "Badger",
+      "value": 258.42,
+    },
+  ],
+  "totalValue": 258.42,
+  "vaults": Array [
+    Object {
+      "balance": 0.01073050870987165,
+      "name": "Badger",
+      "value": 258.42,
+    },
+  ],
 }
 `;

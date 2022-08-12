@@ -14,7 +14,7 @@ describe('GasController', () => {
   afterAll(PlatformTest.reset);
 
   describe('GET /v2/gas', () => {
-    it('returns a list of gas prices in eip-1559 format', async () => {
+    it('returns gas price options in eip-1559 format', async () => {
       setupMockChain();
       const { body } = await request.get('/v2/gas').expect(200);
       expect(body).toMatchSnapshot();

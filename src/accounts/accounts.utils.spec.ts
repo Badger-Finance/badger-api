@@ -15,8 +15,8 @@ import { TOKENS } from '../config/tokens.config';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 import { MOCK_VAULT_DEFINITION, TEST_ADDR, TEST_CURRENT_BLOCK } from '../test/constants';
-import { mockBalance, setupMockChain } from '../test/mocks.utils';
-import { defaultAccount, randomSnapshot, setFullTokenDataMock, setupMapper } from '../test/tests.utils';
+import { mockBalance, mockQuery, setupMockChain } from '../test/mocks.utils';
+import { defaultAccount, randomSnapshot } from '../test/tests.utils';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import * as vaultsUtils from '../vaults/vaults.utils';
 import { getAccounts, getCachedBoost, getLatestMetadata, queryCachedAccount, toVaultBalance } from './accounts.utils';
@@ -97,13 +97,13 @@ describe('accounts.utils', () => {
       updatedAt: 0,
     }));
     jest.spyOn(console, 'log').mockImplementation(jest.fn);
-    setFullTokenDataMock();
+    setupMockChain();
   });
 
   describe('queryCachedAccount', () => {
     describe('no saved account', () => {
       it('returns undefined', async () => {
-        setupMapper([]);
+        mockQuery([]);
         const actual = await queryCachedAccount(TEST_ADDR);
         expect(actual).toMatchObject(defaultAccount(TEST_ADDR));
       });
@@ -122,7 +122,7 @@ describe('accounts.utils', () => {
     describe('a saved account', () => {
       it('returns the stored account', async () => {
         const expected = { address: TEST_ADDR, claimableBalances: [] };
-        setupMapper([expected]);
+        mockQuery([expected]);
         const actual = await queryCachedAccount(TEST_ADDR);
         expect(actual).toMatchObject(expected);
       });
@@ -176,12 +176,11 @@ describe('accounts.utils', () => {
       cachedVault.pricePerFullShare = snapshot.balance / snapshot.totalSupply;
       jest.spyOn(vaultsUtils, 'getCachedVault').mockImplementation(async (_c, _v) => cachedVault);
       const depositToken = fullTokenMockMap[cachedVault.underlyingToken];
-      setFullTokenDataMock();
       const wbtc = fullTokenMockMap[TOKENS.WBTC];
       const weth = fullTokenMockMap[TOKENS.WETH];
       const tokenBalances = [mockBalance(wbtc, 1), mockBalance(weth, 20)];
       const cached = { vault: MOCK_VAULT_DEFINITION.address, tokenBalances };
-      setupMapper([cached]);
+      mockQuery([cached]);
       const mockedBalance = testVaultBalance(MOCK_VAULT_DEFINITION);
       const actual = await toVaultBalance(chain, mockedBalance, currency);
       expect(actual).toBeTruthy();
@@ -195,7 +194,7 @@ describe('accounts.utils', () => {
     describe('no cached boost', () => {
       it('returns the default boost', async () => {
         const chain = setupMockChain();
-        setupMapper([]);
+        mockQuery([]);
         const result = await getCachedBoost(chain.network, TEST_ADDR);
         expect(result).toMatchObject(mockBoost);
       });
@@ -207,7 +206,7 @@ describe('accounts.utils', () => {
         mockBoost.stakeRatio = 1;
         mockBoost.nativeBalance = 32021;
         mockBoost.nonNativeBalance = 32021;
-        setupMapper([mockBoost]);
+        mockQuery([mockBoost]);
         const result = await getCachedBoost(chain.network, TEST_ADDR);
         expect(result).toMatchObject(mockBoost);
       });
@@ -225,7 +224,7 @@ describe('accounts.utils', () => {
         chain: chain.network,
         count: 0,
       });
-      setupMapper([cachedMetadata]);
+      mockQuery([cachedMetadata]);
       const latestMetadata = await getLatestMetadata(chain);
       expect(latestMetadata).toEqual(cachedMetadata);
       expect(put.mock.calls).toEqual([]);
@@ -240,7 +239,7 @@ describe('accounts.utils', () => {
         chain: chain.network,
         count: 0,
       });
-      setupMapper([]);
+      mockQuery([]);
       const latestMetadata = await getLatestMetadata(chain);
       expect(latestMetadata).toMatchObject(expected);
     });

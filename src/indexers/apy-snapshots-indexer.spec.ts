@@ -1,10 +1,13 @@
 import { YieldSource } from '../aws/models/yield-source.model';
+import { Chain } from '../chains/config/chain.config';
 import * as rewardsUtils from '../rewards/rewards.utils';
 import { MOCK_VAULT_DEFINITION } from '../test/constants';
-import { mockBatchDelete, mockBatchPut, mockChainVaults, setupMapper, TEST_CHAIN } from '../test/tests.utils';
+import { mockBatchDelete, mockBatchPut, mockQuery, setupMockChain } from '../test/mocks.utils';
 import { refreshChainApySnapshots } from './apy-snapshots-indexer';
 
 describe('apy-snapshots-indexer', () => {
+  let chain: Chain;
+
   const mockValueSource = Object.assign(new YieldSource(), {
     addressValueSourceType: '0xfd05D3C7fe2924020620A8bE4961bBaA747e6305_flat_CVX_emission',
     address: '0xfd05D3C7fe2924020620A8bE4961bBaA747e6305',
@@ -33,27 +36,26 @@ describe('apy-snapshots-indexer', () => {
   });
 
   beforeEach(() => {
+    chain = setupMockChain();
     mockBatchDelete([mockValueSource]);
-    setupMapper([mockValueSource]);
-    mockChainVaults();
+    mockQuery([mockValueSource]);
   });
 
   describe('refreshChainApySnapshots', () => {
     it('calls batchPut for valid value source', async () => {
       const batchPut = mockBatchPut([mockValueSource]);
       jest.spyOn(rewardsUtils, 'getVaultValueSources').mockReturnValue(Promise.resolve([mockValueSource]));
-      setupMapper([mockValueSource]);
-      await refreshChainApySnapshots(TEST_CHAIN, MOCK_VAULT_DEFINITION);
+      await refreshChainApySnapshots(chain, MOCK_VAULT_DEFINITION);
       expect(batchPut.mock.calls[0][0]).toEqual([mockValueSource]);
       // Make sure was called for each sett in the chain
-      const allChainVault = await TEST_CHAIN.vaults.all();
+      const allChainVault = await chain.vaults.all();
       expect(batchPut.mock.calls.length).toEqual(allChainVault.length);
     });
 
     it('doesnt call batch put if value source invalid', async () => {
       const batchPut = mockBatchPut([mockInvalidValueSource]);
       jest.spyOn(rewardsUtils, 'getVaultValueSources').mockReturnValue(Promise.resolve([mockInvalidValueSource]));
-      await refreshChainApySnapshots(TEST_CHAIN, MOCK_VAULT_DEFINITION);
+      await refreshChainApySnapshots(chain, MOCK_VAULT_DEFINITION);
       expect(batchPut.mock.calls).toEqual([]);
     });
   });

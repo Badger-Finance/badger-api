@@ -3,7 +3,7 @@
 exports[`PricesController GET /v2/prices with a valid specified chain returns token config 1`] = `
 Object {
   "0x2B5455aac8d64C14786c3a29858E43b5945819C0": 2,
-  "0x3472a5a71965499acd81997a54bba8d852c6e53d": 3,
+  "0x3472A5A71965499acd81997a54BBA8D852C6E53d": 3,
 }
 `;
 

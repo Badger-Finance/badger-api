@@ -3,8 +3,7 @@ import { ONE_DAY_MS, VaultState } from '@badger-dao/sdk';
 import { TOKENS } from '../config/tokens.config';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { MOCK_VAULT, MOCK_VAULT_DEFINITION } from '../test/constants';
-import { mockBalance } from '../test/mocks.utils';
-import { setupMapper } from '../test/tests.utils';
+import { mockBalance, mockQuery } from '../test/mocks.utils';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import { VAULT_SOURCE } from './vaults.utils';
 import {
@@ -61,7 +60,7 @@ describe('yields.utils', () => {
 
   describe('getYieldSources', () => {
     it('returns vault yield sources categorized by required breakdown', async () => {
-      setupMapper(baseMockSources);
+      mockQuery(baseMockSources);
       const yieldSources = await getYieldSources(MOCK_VAULT_DEFINITION);
       expect(yieldSources).toMatchSnapshot();
     });
@@ -75,7 +74,7 @@ describe('yields.utils', () => {
         createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Distribution, 'Badger', 3),
         createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Distribution, 'Irrelevant', 0.0001),
       ];
-      setupMapper(mockSources);
+      mockQuery(mockSources);
       const definitionCopy = JSON.parse(JSON.stringify(MOCK_VAULT_DEFINITION));
       definitionCopy.state = VaultState.Discontinued;
       const yieldSources = await getYieldSources(definitionCopy);
@@ -87,7 +86,7 @@ describe('yields.utils', () => {
     it('returns a yield projection estimation from given inputs', async () => {
       const mockDefinition = JSON.parse(JSON.stringify(MOCK_VAULT_DEFINITION));
       mockDefinition.address = MOCK_VAULT.vaultToken;
-      setupMapper(baseMockSources);
+      mockQuery(baseMockSources);
       jest.spyOn(Date, 'now').mockImplementation(() => referenceTime);
       const yieldSources = await getYieldSources(mockDefinition);
       const referenceTime = 1660071985202;

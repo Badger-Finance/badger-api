@@ -1,11 +1,9 @@
 import { DataMapper, PutParameters, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
-import BadgerSDK from '@badger-dao/sdk';
 
 import { HarvestCompoundData } from '../aws/models/harvest-compound.model';
 import { SUPPORTED_CHAINS } from '../chains/chain';
-import { Chain } from '../chains/config/chain.config';
 import { MOCK_VAULT_DEFINITION } from '../test/constants';
-import { mockChainVaults } from '../test/tests.utils';
+import { setupMockChain } from '../test/mocks.utils';
 import { vaultHarvestsOnChainMock } from '../vaults/mocks/vault-harvests-on-chain';
 import * as vaultsUtils from '../vaults/vaults.utils';
 import { indexVaultsHarvestsCompund } from './harvest-compound-indexer';
@@ -14,7 +12,7 @@ describe('harvest-compound.indexer', () => {
   let put: jest.SpyInstance<Promise<StringToAnyObjectMap>, [parameters: PutParameters]>;
 
   beforeEach(() => {
-    mockChainVaults();
+    setupMockChain();
     console.log = jest.fn();
     console.error = jest.fn();
     console.warn = jest.fn();
@@ -24,7 +22,7 @@ describe('harvest-compound.indexer', () => {
     jest.spyOn(vaultsUtils, 'getLastCompoundHarvest').mockImplementation(async () => null);
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    jest.spyOn(vaultsUtils, 'getVaultHarvestsOnChain').mockImplementation(async (chain, vault, fromBlock) => {
+    jest.spyOn(vaultsUtils, 'getVaultHarvestsOnChain').mockImplementation(async (_c, vault, fromBlock) => {
       let onChainHarvests = vaultHarvestsOnChainMock[<string>vault];
 
       if (fromBlock) {
@@ -33,9 +31,6 @@ describe('harvest-compound.indexer', () => {
 
       return onChainHarvests;
     });
-
-    jest.spyOn(BadgerSDK.prototype, 'ready').mockImplementation();
-    jest.spyOn(Chain.prototype, 'getSdk').mockImplementation();
   });
 
   describe('indexVaultsHarvestsCompund', () => {

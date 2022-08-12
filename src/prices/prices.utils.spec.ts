@@ -4,7 +4,7 @@ import { Currency } from '@badger-dao/sdk';
 import { Chain } from '../chains/config/chain.config';
 import * as requestUtils from '../common/request';
 import { TEST_ADDR, TEST_TOKEN } from '../test/constants';
-import { mockQueryResults, setupMockChain } from '../test/mocks.utils';
+import { mockQuery, setupMockChain } from '../test/mocks.utils';
 import { convert, fetchPrices, queryPrice, updatePrice } from './prices.utils';
 
 describe('prices.utils', () => {
@@ -27,7 +27,7 @@ describe('prices.utils', () => {
 
     describe('when price is not available', () => {
       it('returns a price of 0', async () => {
-        mockQueryResults([]);
+        mockQuery([]);
         const cakePrice = await queryPrice(TEST_TOKEN);
         expect(cakePrice).toMatchObject(missingPrice);
       });
@@ -37,7 +37,7 @@ describe('prices.utils', () => {
       it('returns a token snapshot with the latest price data', async () => {
         const chain = setupMockChain();
         const price = chain.strategy.getPrice(TEST_TOKEN);
-        mockQueryResults([price]);
+        mockQuery([price]);
         const queriedTokenPrice = await queryPrice(TEST_TOKEN);
         expect(queriedTokenPrice).toMatchObject(price);
       });
@@ -92,7 +92,7 @@ describe('prices.utils', () => {
         default:
           cachedPrice = { address: TEST_TOKEN, price: 1800 };
       }
-      mockQueryResults([cachedPrice]);
+      mockQuery([cachedPrice]);
       const result = await convert(price, currency);
       expect(result).toEqual(conversion);
     });
