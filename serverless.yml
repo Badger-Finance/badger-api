@@ -1,6 +1,6 @@
 ---
 service: badger-v2
-frameworkVersion: '2'
+frameworkVersion: '3'
 useDotenv: true
 
 plugins:
@@ -444,7 +444,7 @@ resources:
 
 functions:
   request-handler:
-    handler: src/LambdaServer.handler
+    handler: src/handler.handler
     timeout: 30
     memorySize: 4096
     events:

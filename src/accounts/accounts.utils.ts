@@ -1,4 +1,4 @@
-import { Account, Currency, formatBalance, gqlGenT, Network, ONE_MINUTE_MS } from '@badger-dao/sdk';
+import { Account, Currency, formatBalance, gqlGenT, ONE_MINUTE_MS } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 
 import { getChainStartBlockKey, getDataMapper, getLeaderboardKey } from '../aws/dynamodb.utils';
