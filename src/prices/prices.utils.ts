@@ -41,7 +41,7 @@ export async function updatePrice({ address, price }: TokenPrice): Promise<Token
  * @param contract Address for the token price being requested.
  * @returns Most recent price data for the requested contract.
  */
-export async function getPrice(address: string, currency?: Currency): Promise<TokenPrice> {
+export async function queryPrice(address: string, currency: Currency = Currency.USD): Promise<TokenPrice> {
   try {
     const mapper = getDataMapper();
     for await (const item of mapper.query(
@@ -71,16 +71,16 @@ export async function convert(value: number, currency?: Currency): Promise<numbe
   }
   switch (currency) {
     case Currency.ETH:
-      const wethPrice = await getPrice(TOKENS.WETH);
+      const wethPrice = await queryPrice(TOKENS.WETH);
       return value / wethPrice.price;
     case Currency.AVAX:
-      const wavaxPrice = await getPrice(TOKENS.AVAX_WAVAX);
+      const wavaxPrice = await queryPrice(TOKENS.AVAX_WAVAX);
       return value / wavaxPrice.price;
     case Currency.FTM:
-      const wftmPrice = await getPrice(TOKENS.FTM_WFTM);
+      const wftmPrice = await queryPrice(TOKENS.FTM_WFTM);
       return value / wftmPrice.price;
     case Currency.MATIC:
-      const wmaticPrice = await getPrice(TOKENS.MATIC_WMATIC);
+      const wmaticPrice = await queryPrice(TOKENS.MATIC_WMATIC);
       return value / wmaticPrice.price;
     case Currency.USD:
     default:

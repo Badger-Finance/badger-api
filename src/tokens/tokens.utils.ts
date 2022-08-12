@@ -5,12 +5,12 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { TokenInformationSnapshot } from '../aws/models/token-information-snapshot.model';
 import { VaultTokenBalance } from '../aws/models/vault-token-balance.model';
 import { Chain } from '../chains/config/chain.config';
-import { convert, getPrice } from '../prices/prices.utils';
+import { convert, queryPrice } from '../prices/prices.utils';
 import { TokenNotFound } from './errors/token.error';
 import { TokenFull, TokenFullMap } from './interfaces/token-full.interface';
 
 export async function toBalance(token: Token, balance: number, currency?: Currency): Promise<TokenValue> {
-  const { price } = await getPrice(token.address, currency);
+  const { price } = await queryPrice(token.address, currency);
   return {
     address: token.address,
     name: token.name,
@@ -125,19 +125,4 @@ export function lookUpAddrByTokenName(chain: Chain, name: string): Token['addres
   }));
 
   return Object.values(tokensWithAddr).find((token) => token.lookupName === name)?.address;
-}
-
-export function mockBalance(token: Token, balance: number, currency?: Currency): TokenValue {
-  let price = parseInt(token.address.slice(0, 5), 16);
-  if (currency && currency !== Currency.USD) {
-    price /= 2;
-  }
-  return {
-    address: token.address,
-    name: token.name,
-    symbol: token.symbol,
-    decimals: token.decimals,
-    balance: balance,
-    value: balance * price,
-  };
 }

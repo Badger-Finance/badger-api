@@ -1,8 +1,8 @@
 // import { AccountV3Controller } from './accounts/account.v3.controller';
 // import { AccountsV2Controller } from './accounts/accounts.v2.controller';
-import { ChartsController } from './charts/charts.controller';
+// import { ChartsController } from './charts/charts.controller';
 // import { DevelopmentController } from './dev/dev.controller';
-// import { GasController } from './gas/gas.controller';
+import { GasController } from './gas/gas.controller';
 // import { LeaderBoardsController } from './leaderboards/leaderboards.controller';
 // import { MetricsController } from './metrics/metrics.controller';
 // import { PriceController } from './prices/prices.controller';
@@ -23,8 +23,8 @@ import { ChartsController } from './charts/charts.controller';
  * without this.
  */
 export const V2_CONTROLLERS = [
-  ChartsController,
-  // GasController,
+  // ChartsController,
+  GasController,
   // LeaderBoardsController,
   // MetricsController,
   // ProtocolController,
@@ -38,8 +38,8 @@ export const V2_CONTROLLERS = [
 ];
 
 export const V3_CONTROLLERS = [
-  ChartsController,
-  // GasController,
+  // ChartsController,
+  GasController,
   // LeaderBoardsController,
   // MetricsController,
   // PriceController,

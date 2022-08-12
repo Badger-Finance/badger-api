@@ -12,10 +12,10 @@
     "resolveJsonModule": true,
     "sourceMap": true,
     "strict": true,
-    "target": "es2019",
-    "lib": ["es2019", "dom"]
+    "target": "es2022",
+    "lib": ["es2022"]
   },
   "compileOnSave": true,
-  "include": ["./src/**/*.ts", "./seed/scripts/*.ts"],
+  "include": ["./src/**/*.ts"],
   "exclude": ["build", "node_modules"]
 }

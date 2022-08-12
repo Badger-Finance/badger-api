@@ -6,6 +6,8 @@ import {
   ListHarvestOptions,
   Network,
   ONE_DAY_MS,
+  ONE_DAY_SECONDS,
+  ONE_YEAR_SECONDS,
   Protocol,
   Strategy__factory,
   Vault__factory,
@@ -14,8 +16,6 @@ import {
   VaultType,
   VaultV15__factory,
   VaultVersion,
-  ONE_DAY_SECONDS,
-  ONE_YEAR_SECONDS,
 } from '@badger-dao/sdk';
 import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';

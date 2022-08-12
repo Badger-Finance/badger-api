@@ -21,16 +21,11 @@ import * as dynamodbUtils from '../aws/dynamodb.utils';
 import { CachedAccount } from '../aws/models/cached-account.model';
 import { CachedBoost } from '../aws/models/cached-boost.model';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
-import { Arbitrum } from '../chains/config/arbitrum.config';
-import { BinanceSmartChain } from '../chains/config/bsc.config';
-import { Ethereum } from '../chains/config/eth.config';
-import { Fantom } from '../chains/config/fantom.config';
-import { Polygon } from '../chains/config/polygon.config';
+import { SUPPORTED_CHAINS } from '../chains/chain';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import * as pricesUtils from '../prices/prices.utils';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import { Nullable } from '../utils/types.utils';
-import { historicVaultSnapshotsMock } from '../vaults/mocks/historic-vault-snapshots.mock';
 import { vaultsChartDataMock } from '../vaults/mocks/vaults-chart-data.mock';
 import { MOCK_VAULT_DEFINITION, TEST_ADDR, TEST_CURRENT_BLOCK } from './constants';
 
@@ -85,23 +80,6 @@ export function setupVaultsCoumpoundDDB(customFilter: Nullable<(v: any) => boole
     if (keys.chain) dataSource = dataSource.filter((v) => v.chain === keys.chain);
     if (keys.isProduction) dataSource = dataSource.filter((v) => v.isProduction === keys.isProduction);
     if (customFilter) dataSource = dataSource.filter(customFilter);
-
-    // @ts-ignore
-    qi[Symbol.iterator] = jest.fn(() => dataSource.map((obj) => Object.assign(new model(), obj)).values());
-    return qi;
-  });
-}
-
-export function setupVaultsHistoricDDB() {
-  // @ts-ignore
-  jest.spyOn(DataMapper.prototype, 'query').mockImplementation((model, keys) => {
-    let dataSource = historicVaultSnapshotsMock;
-    // @ts-ignore
-    const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
-
-    if (keys.id) {
-      dataSource = dataSource.filter((v) => v.id === keys.id);
-    }
 
     // @ts-ignore
     qi[Symbol.iterator] = jest.fn(() => dataSource.map((obj) => Object.assign(new model(), obj)).values());
@@ -204,27 +182,6 @@ export function randomSnapshots(vaultDefinition?: VaultDefinitionModel, count?: 
   return snapshots;
 }
 
-export function setupChainGasPrices() {
-  jest.spyOn(Ethereum.prototype, 'getGasPrices').mockImplementation(async () => ({
-    rapid: { maxFeePerGas: 223.06, maxPriorityFeePerGas: 3.04 },
-    fast: { maxFeePerGas: 221.96, maxPriorityFeePerGas: 1.94 },
-    standard: { maxFeePerGas: 221.91, maxPriorityFeePerGas: 1.89 },
-    slow: { maxFeePerGas: 221.81, maxPriorityFeePerGas: 1.79 },
-  }));
-  jest
-    .spyOn(BinanceSmartChain.prototype, 'getGasPrices')
-    .mockImplementation(async () => ({ rapid: 38, fast: 33, standard: 33, slow: 33 }));
-  jest
-    .spyOn(Arbitrum.prototype, 'getGasPrices')
-    .mockImplementation(async () => ({ rapid: 38, fast: 33, standard: 33, slow: 33 }));
-  jest
-    .spyOn(Polygon.prototype, 'getGasPrices')
-    .mockImplementation(async () => ({ rapid: 38, fast: 33, standard: 33, slow: 33 }));
-  jest
-    .spyOn(Fantom.prototype, 'getGasPrices')
-    .mockImplementation(async () => ({ rapid: 38, fast: 33, standard: 33, slow: 33 }));
-}
-
 export function randomCachedBoosts(count: number): CachedBoost[] {
   const boosts = [];
   for (let i = 0; i < count; i += 1) {
@@ -276,7 +233,7 @@ export function setFullTokenDataMock() {
 }
 
 export function mockPricing() {
-  jest.spyOn(pricesUtils, 'getPrice').mockImplementation(async (token: string, _currency?: Currency) => ({
+  jest.spyOn(pricesUtils, 'queryPrice').mockImplementation(async (token: string, _currency?: Currency) => ({
     address: token,
     price: parseInt(token.slice(0, 5), 16),
     updatedAt: Date.now(),

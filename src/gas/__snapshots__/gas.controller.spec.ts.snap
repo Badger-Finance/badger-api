@@ -20,12 +20,3 @@ Object {
   },
 }
 `;
-
-exports[`GasController returns a list of gas prices in legacy format 1`] = `
-Object {
-  "fast": 33,
-  "rapid": 38,
-  "slow": 33,
-  "standard": 33,
-}
-`;
