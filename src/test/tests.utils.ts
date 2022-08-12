@@ -2,7 +2,6 @@
 
 import { DataMapper, QueryIterator, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
 import BadgerSDK, {
-  Currency,
   Network,
   ONE_DAY_MS,
   RegistryService,
@@ -23,7 +22,6 @@ import { CachedBoost } from '../aws/models/cached-boost.model';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { SUPPORTED_CHAINS } from '../chains/chain';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
-import * as pricesUtils from '../prices/prices.utils';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import { Nullable } from '../utils/types.utils';
 import { vaultsChartDataMock } from '../vaults/mocks/vaults-chart-data.mock';
@@ -230,20 +228,6 @@ export function setFullTokenDataMock() {
   mockBatchPut(fullTokenObjList);
 
   jest.spyOn(TokensService.prototype, 'loadTokens').mockImplementation(async () => fullTokenMockMap);
-}
-
-export function mockPricing() {
-  jest.spyOn(pricesUtils, 'queryPrice').mockImplementation(async (token: string, _currency?: Currency) => ({
-    address: token,
-    price: parseInt(token.slice(0, 5), 16),
-    updatedAt: Date.now(),
-  }));
-  jest.spyOn(pricesUtils, 'convert').mockImplementation(async (price: number, currency?: Currency) => {
-    if (!currency || currency === Currency.USD) {
-      return price;
-    }
-    return price / 2;
-  });
 }
 
 export async function mockBadgerSdk(
