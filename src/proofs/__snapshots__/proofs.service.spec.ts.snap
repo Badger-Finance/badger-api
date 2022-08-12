@@ -2,8 +2,8 @@
 
 exports[`proofs.service getBouncerProof returns the user proof for a user on the bouncer list 1`] = `
 Array [
-  "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-  "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-  "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+  "0x2B5455aac8d64C14786c3a29858E43b5945819C0",
+  "0x2B5455aac8d64C14786c3a29858E43b5945819C0",
+  "0x2B5455aac8d64C14786c3a29858E43b5945819C0",
 ]
 `;

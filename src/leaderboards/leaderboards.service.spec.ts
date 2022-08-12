@@ -2,13 +2,18 @@ import { BadgerType } from '@badger-dao/sdk';
 import { PlatformTest } from '@tsed/common';
 
 import { getLeaderboardKey } from '../aws/dynamodb.utils';
-import { Ethereum } from '../chains/config/eth.config';
+import { Chain } from '../chains/config/chain.config';
+import { setupMockChain } from '../test/mocks.utils';
 import { setupMapper } from '../test/tests.utils';
 import { LeaderBoardsService } from './leaderboards.service';
 
 describe('leaderboards.service', () => {
-  const chain = new Ethereum();
   let service: LeaderBoardsService;
+  let chain: Chain;
+
+  beforeEach(() => {
+    chain = setupMockChain();
+  });
 
   beforeAll(async () => {
     await PlatformTest.create();
@@ -21,7 +26,7 @@ describe('leaderboards.service', () => {
     it('returns the current leaderboard summary for the requested chain', async () => {
       setupMapper([
         {
-          leaderboard: getLeaderboardKey(chain),
+          leaderboard: getLeaderboardKey(chain.network),
           rankSummaries: [
             {
               badgerType: BadgerType.Basic,
