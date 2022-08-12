@@ -32,7 +32,7 @@ import { EmissionControl__factory } from '../contracts';
 import { getVault } from '../indexers/indexer.utils';
 import { PricingType } from '../prices/enums/pricing-type.enum';
 import { TokenPrice } from '../prices/interface/token-price.interface';
-import { convert, getPrice } from '../prices/prices.utils';
+import { convert, queryPrice } from '../prices/prices.utils';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { getProtocolValueSources, getRewardEmission } from '../rewards/rewards.utils';
 import { getFullToken, getVaultTokens } from '../tokens/tokens.utils';
@@ -243,7 +243,7 @@ export async function getVaultTokenPrice(chain: Chain, address: string): Promise
   const targetVault = isCrossChainVault ? vaultToken.address : token.address;
   const vault = await targetChain.vaults.getVault(targetVault);
   const [underlyingTokenPrice, vaultTokenSnapshot] = await Promise.all([
-    getPrice(vaultToken.address),
+    queryPrice(vaultToken.address),
     getCachedVault(chain, vault),
   ]);
   return {
@@ -548,7 +548,7 @@ export async function estimateVaultPerformance(
     weightedBalance = cachedVault.balance * totalDuration;
   }
 
-  const { price } = await getPrice(vault.depositToken);
+  const { price } = await queryPrice(vault.depositToken);
   const measuredBalance = weightedBalance / totalDuration;
   // lord, forgive me for my sins... we will generalize this shortly I hope
   const measuredValue = (vault.address === TOKENS.BVECVX ? weightedBalance : measuredBalance) * price;
@@ -583,7 +583,7 @@ export async function estimateVaultPerformance(
   let flywheelCompounding = 0;
 
   for (const [token, amount] of tokensEmitted.entries()) {
-    const { price } = await getPrice(token);
+    const { price } = await queryPrice(token);
     if (price === 0) {
       continue;
     }

@@ -15,7 +15,7 @@ import {
   CurveRegistry__factory,
 } from '../../contracts';
 import { TokenPrice } from '../../prices/interface/token-price.interface';
-import { getPrice } from '../../prices/prices.utils';
+import { queryPrice } from '../../prices/prices.utils';
 import { SourceType } from '../../rewards/enums/source-type.enum';
 import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
 import { getFullToken, getVaultTokens, toBalance } from '../../tokens/tokens.utils';
@@ -264,7 +264,7 @@ export async function resolveCurveStablePoolTokenPrice(chain: Chain, token: Toke
     // token 0 in terms of token 1
     const tokenOutRatio = formatBalance(await swapPool.price_oracle());
     const scalar = requestTokenIndex === 0 ? 1 / tokenOutRatio : tokenOutRatio;
-    const { price } = await getPrice(pairToken.address);
+    const { price } = await queryPrice(pairToken.address);
     const requestTokenPrice = scalar * price;
 
     return {

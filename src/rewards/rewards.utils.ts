@@ -8,7 +8,7 @@ import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
 import { REWARD_DATA } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
-import { getPrice } from '../prices/prices.utils';
+import { queryPrice } from '../prices/prices.utils';
 import { BalancerStrategy } from '../protocols/strategies/balancer.strategy';
 import { ConvexStrategy } from '../protocols/strategies/convex.strategy';
 import { OxDaoStrategy } from '../protocols/strategies/oxdao.strategy';
@@ -125,7 +125,7 @@ export async function getRewardEmission(chain: Chain, vault: VaultDefinitionMode
 
   const emissionSources = [];
   for (const schedule of activeSchedules) {
-    const tokenPrice = await getPrice(schedule.token);
+    const tokenPrice = await queryPrice(schedule.token);
     const token = await getFullToken(chain, schedule.token);
 
     const durationScalar = ONE_YEAR_SECONDS / (schedule.end - schedule.start);

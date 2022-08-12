@@ -10,7 +10,7 @@ import { Chain } from '../chains/config/chain.config';
 import { PRODUCTION, REWARD_DATA } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
-import { convert, getPrice } from '../prices/prices.utils';
+import { convert, queryPrice } from '../prices/prices.utils';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 import { BoostData } from '../rewards/interfaces/boost-data.interface';
 import { getFullToken, getVaultTokens } from '../tokens/tokens.utils';
@@ -110,7 +110,7 @@ export async function toVaultBalance(
   const balanceTokens = currentTokens * pricePerFullShare;
   const earnedBalance = balanceTokens - depositedTokens + withdrawnTokens;
   const [depositTokenPrice, earnedTokens, tokens] = await Promise.all([
-    getPrice(vaultDefinition.depositToken),
+    queryPrice(vaultDefinition.depositToken),
     getVaultTokens(chain, vault, currency),
     getVaultTokens(chain, vault, currency),
   ]);

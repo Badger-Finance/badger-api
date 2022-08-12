@@ -3,7 +3,7 @@ import { Service } from '@tsed/common';
 
 import { PriceSnapshots } from '../tokens/interfaces/price-snapshots.interface';
 import { PriceSummary } from '../tokens/interfaces/price-summary.interface';
-import { convert, getPrice, getPriceSnapshotsAtTimestamps } from './prices.utils';
+import { convert, getPriceSnapshotsAtTimestamps, queryPrice } from './prices.utils';
 
 /**
  * API price oracle service. Uses CoinGecko as a source of truth for most
@@ -13,7 +13,7 @@ import { convert, getPrice, getPriceSnapshotsAtTimestamps } from './prices.utils
 @Service()
 export class PricesService {
   async getPriceSummary(tokens: string[], currency?: Currency): Promise<PriceSummary> {
-    const prices = await Promise.all(tokens.map(async (token) => getPrice(token)));
+    const prices = await Promise.all(tokens.map(async (token) => queryPrice(token)));
     const entries = await Promise.all(
       prices.map(async (tokenPrice) => {
         const convertedPrice = await convert(tokenPrice.price, currency);

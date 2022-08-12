@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+
 import { providers } from '@0xsequence/multicall';
 import { DataMapper, QueryIterator, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
 import BadgerSDK, { Currency, RegistryService, RewardsService, Token, TokenValue } from '@badger-dao/sdk';
 import { JsonRpcProvider, JsonRpcSigner } from '@ethersproject/providers';
+import createMockInstance from 'jest-create-mock-instance';
 import { mock } from 'jest-mock-extended';
 
 import { getVaultEntityId } from '../aws/dynamodb.utils';
@@ -17,9 +20,21 @@ import {
   TEST_CURRENT_BLOCK,
   TEST_CURRENT_TIMESTAMP,
 } from './constants';
-import createMockInstance from 'jest-create-mock-instance';
+import * as pricesUtils from '../prices/prices.utils';
 
 export function setupMockChain() {
+  jest.spyOn(pricesUtils, 'queryPrice').mockImplementation(async (token: string, _currency?: Currency) => ({
+    address: token,
+    price: parseInt(token.slice(0, 5), 16),
+    updatedAt: Date.now(),
+  }));
+  jest.spyOn(pricesUtils, 'convert').mockImplementation(async (price: number, currency?: Currency) => {
+    if (!currency || currency === Currency.USD) {
+      return price;
+    }
+    return price / 2;
+  });
+
   jest.spyOn(ChainVaults.prototype, 'getVault').mockImplementation(async (_) => MOCK_VAULT_DEFINITION);
   jest.spyOn(ChainVaults.prototype, 'all').mockImplementation(async () => [MOCK_VAULT_DEFINITION]);
 

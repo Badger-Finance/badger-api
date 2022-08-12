@@ -1,14 +1,18 @@
 import { DataMapper } from '@aws/dynamodb-data-mapper';
 import { Currency } from '@badger-dao/sdk';
-import { Chain } from '../chains/config/chain.config';
 
+import { Chain } from '../chains/config/chain.config';
+import * as requestUtils from '../common/request';
 import { TEST_ADDR, TEST_TOKEN } from '../test/constants';
 import { mockQueryResults, setupMockChain } from '../test/mocks.utils';
 import { convert, fetchPrices, queryPrice, updatePrice } from './prices.utils';
-import * as requestUtils from '../common/request';
 
 describe('prices.utils', () => {
   const missingPrice = { address: TEST_TOKEN, price: 0 };
+
+  beforeEach(() => {
+    jest.spyOn(console, 'error').mockImplementation(jest.fn);
+  });
 
   describe('queryPrice', () => {
     describe('query encounters an error', () => {

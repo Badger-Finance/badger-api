@@ -2,10 +2,10 @@
 // import { AccountsV2Controller } from './accounts/accounts.v2.controller';
 // import { ChartsController } from './charts/charts.controller';
 // import { DevelopmentController } from './dev/dev.controller';
-import { GasController } from './gas/gas.controller';
+// import { GasController } from './gas/gas.controller';
 // import { LeaderBoardsController } from './leaderboards/leaderboards.controller';
 // import { MetricsController } from './metrics/metrics.controller';
-// import { PriceController } from './prices/prices.controller';
+import { PriceController } from './prices/prices.controller';
 // import { ProofsV3Controller } from './proofs/proof.v3.controller';
 // import { ProofsV2Controller } from './proofs/proofs.v2.controller';
 // import { ProtocolController } from './protocols/protocols.controller';
@@ -24,11 +24,11 @@ import { GasController } from './gas/gas.controller';
  */
 export const V2_CONTROLLERS = [
   // ChartsController,
-  GasController,
+  // GasController,
   // LeaderBoardsController,
   // MetricsController,
   // ProtocolController,
-  // PriceController,
+  PriceController,
   // TokensController,
   // AccountsV2Controller,
   // ProofsV2Controller,
@@ -39,10 +39,10 @@ export const V2_CONTROLLERS = [
 
 export const V3_CONTROLLERS = [
   // ChartsController,
-  GasController,
+  // GasController,
   // LeaderBoardsController,
   // MetricsController,
-  // PriceController,
+  PriceController,
   // TokensController,
 
   // DevelopmentController,
