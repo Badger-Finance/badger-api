@@ -1,54 +1,59 @@
-import '@tsed/platform-express';
-import './common/filters/tsed-exception-filter';
-import './common/filters/api-exception-filter';
-import '@tsed/swagger';
-
-import { Configuration, Inject, PlatformApplication } from '@tsed/common';
-import bodyParser from 'body-parser';
-import cookieParser from 'cookie-parser';
-import cors from 'cors';
-import methodOverride from 'method-override';
-
-import { swaggerConfig } from './config/constants';
-import { V2_CONTROLLERS, V3_CONTROLLERS } from './ControllerRegistry';
+import {join} from "path";
+import {Configuration, Inject} from "@tsed/di";
+import {PlatformApplication} from "@tsed/common";
+import "@tsed/platform-express"; // /!\ keep this import
+import bodyParser from "body-parser";
+import compress from "compression";
+import cookieParser from "cookie-parser";
+import methodOverride from "method-override";
+import cors from "cors";
+import "@tsed/ajv";
+import "@tsed/swagger";
+import {config} from "./config/index";
+import { V2_CONTROLLERS, V3_CONTROLLERS } from "./ControllerRegistry";
 
 @Configuration({
-  rootDir: __dirname,
-  acceptMimes: ['application/json'],
+  ...config,
+  acceptMimes: ["application/json"],
+  componentsScan: false,
   mount: {
-    '/v2/': V2_CONTROLLERS,
-    '/v3/': V3_CONTROLLERS,
+    "/v2": [
+      V2_CONTROLLERS
+    ],
+    "/v3": [
+      V3_CONTROLLERS
+    ]
   },
-  swagger: [swaggerConfig],
-  logger: {
-    disableRoutesSummary: true,
-    disableBootstrapLog: true,
-    logRequest: false,
+  swagger: [
+    {
+      path: "/doc",
+      specVersion: "3.0.1"
+    }
+  ],
+  middlewares: [
+    cors(),
+    cookieParser(),
+    compress({}),
+    methodOverride(),
+    bodyParser.json(),
+    bodyParser.urlencoded({
+      extended: true
+    })
+  ],
+  views: {
+    root: join(process.cwd(), "../views"),
+    extensions: {
+      ejs: "ejs"
+    }
   },
-  cache: {
-    ttl: 300, // default TTL
-    store: 'memory',
-  },
-  exclude: ['**/*.spec.ts'],
+  exclude: [
+    "**/*.spec.ts"
+  ]
 })
 export class Server {
   @Inject()
-  app!: PlatformApplication;
+  protected app: PlatformApplication;
 
-  /**
-   * This method let you configure the express middleware required by your application to work.
-   * @returns {Server}
-   */
-  $beforeRoutesInit(): void | Promise<void> {
-    this.app
-      .use(cors())
-      .use(cookieParser())
-      .use(methodOverride())
-      .use(bodyParser.json())
-      .use(
-        bodyParser.urlencoded({
-          extended: true,
-        }),
-      );
-  }
+  @Configuration()
+  protected settings: Configuration;
 }

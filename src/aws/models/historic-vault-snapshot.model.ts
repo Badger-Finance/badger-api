@@ -9,16 +9,10 @@ export class HistoricVaultSnapshotModel extends ChartData<HistoricVaultSnapshotM
   static NAMESPACE = 'vault';
 
   @attribute()
-  id!: string;
-
-  @attribute()
   chain!: string;
 
   @attribute()
   address!: string;
-
-  @attribute()
-  timestamp!: number;
 
   @attribute()
   block!: number;
