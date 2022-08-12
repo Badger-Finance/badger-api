@@ -6,7 +6,8 @@ import { TOKENS } from '../config/tokens.config';
 import { NetworkStatus } from '../errors/enums/network-status.enum';
 import { Server } from '../Server';
 import { TEST_ADDR } from '../test/constants';
-import { mockChainVaults, setupDdbVaultsChartsData, setupVaultsCoumpoundDDB } from '../test/tests.utils';
+import { setupMockChain } from '../test/mocks.utils';
+import { setupVaultsCoumpoundDDB } from '../test/tests.utils';
 import { setupDdbHarvests, setupTestVault } from './vaults.v2.controller.spec';
 
 const TEST_VAULT = TOKENS.BCRV_SBTC;
@@ -22,38 +23,34 @@ describe('VaultsController', () => {
 
   describe('GET /v3/vaults/list', () => {
     describe('with no specified chain', () => {
-      it('returns eth vaults', async (done: jest.DoneCallback) => {
+      it('returns eth vaults', async () => {
         setupVaultsCoumpoundDDB();
         setupTestVault();
         const { body } = await request.get('/v3/vaults/list').expect(NetworkStatus.Success);
         expect(body).toMatchSnapshot();
-        done();
       });
     });
 
     describe('with a specified chain', () => {
-      it('returns the vaults for eth', async (done: jest.DoneCallback) => {
+      it('returns the vaults for eth', async () => {
         setupVaultsCoumpoundDDB();
         setupTestVault();
         const { body } = await request.get('/v3/vaults/list?chain=ethereum').expect(NetworkStatus.Success);
         expect(body).toMatchSnapshot();
-        done();
       });
 
-      it('returns the vaults for polygon', async (done: jest.DoneCallback) => {
+      it('returns the vaults for polygon', async () => {
         setupVaultsCoumpoundDDB();
         setupTestVault();
         const { body } = await request.get('/v3/vaults/list?chain=polygon').expect(NetworkStatus.Success);
         expect(body).toMatchSnapshot();
-        done();
       });
     });
 
     describe('with an invalid specified chain', () => {
-      it('returns a 400', async (done: jest.DoneCallback) => {
+      it('returns a 400', async () => {
         const { body } = await request.get('/v3/vaults/list?chain=invalid').expect(NetworkStatus.BadRequest);
         expect(body).toMatchSnapshot();
-        done();
       });
     });
   });
@@ -62,17 +59,15 @@ describe('VaultsController', () => {
     beforeEach(setupDdbHarvests);
 
     describe('success cases', () => {
-      it('Return extended harvest for chain vaults', async (done: jest.DoneCallback) => {
+      it('Return extended harvest for chain vaults', async () => {
         const { body } = await request.get('/v3/vaults/list/harvests').expect(NetworkStatus.Success);
         expect(body).toMatchSnapshot();
-        done();
       });
     });
     describe('error cases', () => {
-      it('returns a 400 for invalide chain', async (done: jest.DoneCallback) => {
+      it('returns a 400 for invalide chain', async () => {
         const { body } = await request.get('/v3/vaults/list/harvests?chain=invalid').expect(NetworkStatus.BadRequest);
         expect(body).toMatchSnapshot();
-        done();
       });
     });
   });
@@ -81,90 +76,82 @@ describe('VaultsController', () => {
     beforeEach(setupDdbHarvests);
 
     describe('success cases', () => {
-      it('Return extended harvests for chain vault by addr', async (done: jest.DoneCallback) => {
+      it('Return extended harvests for chain vault by addr', async () => {
         const { body } = await request.get(`/v3/vaults/harvests?vault=${TEST_VAULT}`).expect(NetworkStatus.Success);
         expect(body).toMatchSnapshot();
-        done();
       });
     });
     describe('error cases', () => {
-      it('returns a 400 for invalide chain', async (done: jest.DoneCallback) => {
+      it('returns a 400 for invalide chain', async () => {
         const { body } = await request
           .get(`/v3/vaults/harvests?vault=${TEST_VAULT}&chain=invalid`)
           .expect(NetworkStatus.BadRequest);
         expect(body).toMatchSnapshot();
-        done();
       });
     });
   });
 
   describe('GET /v3/vaults/snapshots', () => {
     beforeEach(async () => {
-      setupDdbVaultsChartsData();
-      mockChainVaults();
+      // setupDdbVaultsChartsData();
+      setupMockChain();
     });
 
     describe('success cases', () => {
-      it('return 200 and vaults snapshots for all dates, without duplications', async (done: jest.DoneCallback) => {
+      it('return 200 and vaults snapshots for all dates, without duplications', async () => {
         const timestampsStr = '1645103004000,1645015261000,1644928124000,1644928124000,1644928124000';
 
         const { body } = await request
           .get(`/v3/vaults/snapshots?vault=${TEST_ADDR}&timestamps=${timestampsStr}&chain=${Network.Arbitrum}`)
           .expect(NetworkStatus.Success);
         expect(body).toMatchSnapshot();
-        done();
       });
 
-      it('return 200 with 1 relevant vault and 2 old snapshots', async (done: jest.DoneCallback) => {
+      it('return 200 with 1 relevant vault and 2 old snapshots', async () => {
         const timestampsStr = '1645189933000,1634821933000,1634821931000';
 
         const { body } = await request
           .get(`/v3/vaults/snapshots?vault=${TEST_ADDR}&timestamps=${timestampsStr}&chain=${Network.Arbitrum}`)
           .expect(NetworkStatus.Success);
         expect(body).toMatchSnapshot();
-        done();
       });
 
-      it('return 200 with empty array, got unmached data', async (done: jest.DoneCallback) => {
+      it('return 200 with empty array, got unmached data', async () => {
         const timestampsStr = Date.now() * 2;
 
         const { body } = await request
           .get(`/v3/vaults/snapshots?vault=${TEST_ADDR}&timestamps=${timestampsStr}&chain=${Network.Arbitrum}`)
           .expect(NetworkStatus.Success);
         expect(body).toMatchSnapshot();
-        done();
       });
     });
 
     describe('error cases', () => {
-      it('returns a 400 for invalide chain', async (done: jest.DoneCallback) => {
+      it('returns a 400 for invalide chain', async () => {
         const timestampsStr = '1645189933000,1634821933000,1634821931000';
 
         const { body } = await request
           .get(`/v3/vaults/snapshots?vault=${TEST_ADDR}&timestamps=${timestampsStr}&chain=invalid`)
           .expect(NetworkStatus.BadRequest);
         expect(body).toMatchSnapshot();
-        done();
       });
 
-      it('returns a 400 for missed vault address param', async (done: jest.DoneCallback) => {
+      it('returns a 400 for missed vault address param', async () => {
         const timestampsStr = '1645189933000,1634821933000,1634821931000';
 
         const { body } = await request
           .get(`/v3/vaults/snapshots?timestamps=${timestampsStr}&chain=${Network.Arbitrum}`)
           .expect(NetworkStatus.BadRequest);
         expect(body).toMatchSnapshot();
-        done();
       });
 
-      it('returns a 400 for invalide timestamps', async (done: jest.DoneCallback) => {
+      it('returns a 400 for invalide timestamps', async () => {
         const timestampsStr = 'Invalid Timestamps';
 
         const { body } = await request
           .get(`/v3/vaults/snapshots?vault=${TEST_ADDR}&timestamps=${timestampsStr}&chain=${Network.Arbitrum}`)
           .expect(NetworkStatus.BadRequest);
         expect(body).toMatchSnapshot();
-        done();
       });
     });
   });

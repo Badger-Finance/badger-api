@@ -67,8 +67,8 @@ export const fullTokenMockMap: TokenFullMap = {
   [TOKENS.BCVXCRV]: {
     address: TOKENS.BCVXCRV,
     decimals: 18,
-    name: 'bCVXCRV',
-    symbol: 'bCVXCRV',
+    name: 'bcvxCRV',
+    symbol: 'bcvxCRV',
     type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.CVXCRV,
