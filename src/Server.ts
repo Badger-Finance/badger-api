@@ -3,7 +3,7 @@ import './common/filters/tsed-exception-filter';
 import './common/filters/api-exception-filter';
 import '@tsed/swagger';
 
-import { Configuration, Inject, PlatformApplication } from '@tsed/common';
+import { Configuration } from '@tsed/common';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
@@ -26,29 +26,17 @@ import { V2_CONTROLLERS, V3_CONTROLLERS } from './ControllerRegistry';
     logRequest: false,
   },
   cache: {
-    ttl: 300, // default TTL
+    ttl: 120, // default TTL
     store: 'memory',
   },
-  exclude: ['**/*.spec.ts'],
+  middlewares: [
+    cors(),
+    cookieParser(),
+    methodOverride(),
+    bodyParser.json(),
+    bodyParser.urlencoded({
+      extended: true,
+    }),
+  ],
 })
-export class Server {
-  @Inject()
-  app!: PlatformApplication;
-
-  /**
-   * This method let you configure the express middleware required by your application to work.
-   * @returns {Server}
-   */
-  $beforeRoutesInit(): void | Promise<void> {
-    this.app
-      .use(cors())
-      .use(cookieParser())
-      .use(methodOverride())
-      .use(bodyParser.json())
-      .use(
-        bodyParser.urlencoded({
-          extended: true,
-        }),
-      );
-  }
-}
+export class Server {}

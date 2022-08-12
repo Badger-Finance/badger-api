@@ -9,14 +9,14 @@ export async function queryLeaderboardSummary(chain: Chain): Promise<CachedLeade
   for await (const entry of mapper.query(
     CachedLeaderboardSummary,
     {
-      leaderboard: getLeaderboardKey(chain),
+      leaderboard: getLeaderboardKey(chain.network),
     },
     { limit: 1 },
   )) {
     return entry;
   }
   return {
-    leaderboard: getLeaderboardKey(chain),
+    leaderboard: getLeaderboardKey(chain.network),
     rankSummaries: [
       {
         badgerType: BadgerType.Basic,
