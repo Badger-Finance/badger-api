@@ -8,15 +8,13 @@ import {
   VaultState,
   VaultType,
   VaultVersion,
+  VaultYieldProjection,
 } from '@badger-dao/sdk';
-import { VaultYieldProjection } from '@badger-dao/sdk/lib/api/interfaces/vault-yield-projection.interface';
 import { Description, Example, Property, Title } from '@tsed/schema';
 import { ethers } from 'ethers';
 
 import { TOKENS } from '../../config/tokens.config';
 import { BouncerType } from '../../rewards/enums/bouncer-type.enum';
-import { fullTokenMockMap } from '../../tokens/mocks/full-token.mock';
-import { mockBalance } from '../../tokens/tokens.utils';
 import { VaultStrategy } from './vault-strategy.interface';
 
 export class VaultModel implements VaultDTO {
@@ -88,7 +86,7 @@ export class VaultModel implements VaultDTO {
 
   @Title('tokens')
   @Description('Token balances held by the vault')
-  @Example([mockBalance(fullTokenMockMap[TOKENS.BADGER], 3882.35294118), mockBalance(fullTokenMockMap[TOKENS.WBTC], 1)])
+  // @Example([mockBalance(fullTokenMockMap[TOKENS.BADGER], 3882.35294118), mockBalance(fullTokenMockMap[TOKENS.WBTC], 1)])
   @Property()
   public tokens: TokenValue[];
 

@@ -6,8 +6,8 @@ import * as dynamodbUtils from '../aws/dynamodb.utils';
 import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
 import { BinanceSmartChain } from '../chains/config/bsc.config';
 import { Chain } from '../chains/config/chain.config';
-import { Ethereum } from '../chains/config/eth.config';
 import { MOCK_DISTRIBUTION_FILE, TEST_ADDR } from '../test/constants';
+import { setupMockChain } from '../test/mocks.utils';
 import { setupMapper } from '../test/tests.utils';
 import { UserClaimMetadata } from './entities/user-claim-metadata';
 import { RewardsService } from './rewards.service';
@@ -40,12 +40,12 @@ describe('rewards.service', () => {
 
   describe('list', () => {
     it('returns a chunk of claimable snapshots', async () => {
-      const rewardsChain = new Ethereum();
+      const chain = setupMockChain();
       const previousMockedBlockNumber = 90;
       const startMockedBlockNumber = 100;
       jest.spyOn(accountsUtils, 'getLatestMetadata').mockImplementation(async (chain: Chain) => {
         return Object.assign(new UserClaimMetadata(), {
-          chainStartBlock: dynamodbUtils.getChainStartBlockKey(rewardsChain, previousMockedBlockNumber),
+          chainStartBlock: dynamodbUtils.getChainStartBlockKey(chain.network, previousMockedBlockNumber),
           chain: chain.network,
           startBlock: previousMockedBlockNumber,
           endBlock: startMockedBlockNumber - 1,
@@ -64,7 +64,7 @@ describe('rewards.service', () => {
       ];
       setupMapper(entries);
 
-      const { records } = await service.list({ chain: rewardsChain });
+      const { records } = await service.list({ chain });
       expect(records).toEqual(entries);
     });
   });
