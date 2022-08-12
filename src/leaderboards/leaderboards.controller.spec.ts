@@ -33,18 +33,16 @@ describe('LeaderBoardsController', () => {
 
   describe('GET /v2/leaderboards', () => {
     describe('with no specified chain', () => {
-      it('returns the ethereum leaderboard', async (done: jest.DoneCallback) => {
+      it('returns the ethereum leaderboard', async () => {
         const { body } = await request.get('/v2/leaderboards').expect(200);
         expect(body).toMatchSnapshot();
-        done();
       });
     });
 
     describe('with a specified chain', () => {
-      it('returns the specified chain leaderboard', async (done: jest.DoneCallback) => {
+      it('returns the specified chain leaderboard', async () => {
         const { body } = await request.get('/v2/leaderboards?chain=arbitrum').expect(200);
         expect(body).toMatchSnapshot();
-        done();
       });
     });
   });
