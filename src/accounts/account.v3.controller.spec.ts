@@ -23,21 +23,19 @@ describe('AccountsController', () => {
 
   describe('GET /v3/account', () => {
     describe('with no specified account', () => {
-      it('returns a not found response', async (done: jest.DoneCallback) => {
+      it('returns a not found response', async () => {
         const { body } = await request.get('/v3/account').expect(NetworkStatus.BadRequest);
         expect(body).toMatchSnapshot();
-        done();
       });
     });
     describe('with an invalid account input', () => {
-      it('returns a bad request response', async (done: jest.DoneCallback) => {
+      it('returns a bad request response', async () => {
         const { body } = await request.get('/v3/account?address=0xjintao').expect(NetworkStatus.BadRequest);
         expect(body).toMatchSnapshot();
-        done();
       });
     });
     describe('with a non participant account', () => {
-      it('returns a default account response', async (done: jest.DoneCallback) => {
+      it('returns a default account response', async () => {
         jest.spyOn(accountsUtils, 'getCachedAccount').mockImplementation(async (_chain, address) => ({
           address,
           value: 0,
@@ -57,11 +55,10 @@ describe('AccountsController', () => {
         }));
         const { body } = await request.get(`/v3/account?address=${TEST_ADDR}`).expect(200);
         expect(body).toMatchSnapshot();
-        done();
       });
     });
     describe('with a participant account', () => {
-      it('returns a cached account response', async (done: jest.DoneCallback) => {
+      it('returns a cached account response', async () => {
         jest.spyOn(accountsUtils, 'getCachedAccount').mockImplementation(async (_chain, address) => ({
           address,
           value: 10,
@@ -81,7 +78,6 @@ describe('AccountsController', () => {
         }));
         const { body } = await request.get(`/v3/account?address=${TEST_ADDR}`).expect(200);
         expect(body).toMatchSnapshot();
-        done();
       });
     });
   });

@@ -15,7 +15,7 @@ import mockVaults from '@badger-dao/sdk-mocks/generated/ethereum/api/loadVaults.
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { Stage } from '../config/enums/stage.enum';
 
-export const TEST_TOKEN = '0x3472a5a71965499acd81997a54bba8d852c6e53d';
+export const TEST_TOKEN = '0x3472A5A71965499acd81997a54BBA8D852C6E53d';
 export const TEST_ADDR = '0x2B5455aac8d64C14786c3a29858E43b5945819C0';
 export const TEST_CURRENT_TIMESTAMP = 1660223160457;
 export const TEST_CURRENT_BLOCK = 13_500_500;
@@ -24,7 +24,7 @@ export const MOCK_DISTRIBUTION_FILE = {
   merkleRoot: TEST_ADDR,
   cycle: 4034,
   tokenTotal: {
-    ['0x3472a5a71965499acd81997a54bba8d852c6e53d']: 10,
+    ['0x3472A5A71965499acd81997a54BBA8D852C6E53d']: 10,
     ['0x798d1be841a82a273720ce31c822c61a67a601c3']: 3,
   },
   claims: {
@@ -32,7 +32,7 @@ export const MOCK_DISTRIBUTION_FILE = {
       index: '0x01',
       cycle: '0x01',
       user: TEST_ADDR,
-      tokens: ['0x3472a5a71965499acd81997a54bba8d852c6e53d', '0x798d1be841a82a273720ce31c822c61a67a601c3'],
+      tokens: ['0x3472A5A71965499acd81997a54BBA8D852C6E53d', '0x798d1be841a82a273720ce31c822c61a67a601c3'],
       cumulativeAmounts: ['4', '1'],
       proof: [TEST_ADDR, TEST_ADDR, TEST_ADDR],
       node: TEST_ADDR,
@@ -53,7 +53,7 @@ export const MOCK_BOUNCER_FILE = {
 };
 
 export const MOCK_VAULT_DEFINITION: VaultDefinitionModel = {
-  id: `${Network.Ethereum}-${'chad'}`,
+  id: `${Network.Ethereum}-${TEST_ADDR}`,
   address: TEST_ADDR,
   name: 'Badger',
   createdAt: 0,
@@ -69,7 +69,7 @@ export const MOCK_VAULT_DEFINITION: VaultDefinitionModel = {
   isNew: false,
   version: VaultVersion.v1,
   client: '',
-  depositToken: 'dog',
+  depositToken: TEST_TOKEN,
 };
 
 export const MOCK_VAULTS: VaultDTO[] = mockVaults as VaultDTO[];

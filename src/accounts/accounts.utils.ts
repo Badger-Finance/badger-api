@@ -225,27 +225,24 @@ export async function getClaimableBalanceSnapshot(
 
 export async function getLatestMetadata(chain: Chain): Promise<UserClaimMetadata> {
   const mapper = getDataMapper();
-  let result: UserClaimMetadata | null = null;
   for await (const metric of mapper.query(
     UserClaimMetadata,
     { chain: chain.network },
     { indexName: 'IndexMetadataChainAndStartBlock', scanIndexForward: false, limit: 1 },
   )) {
-    result = metric;
+    return metric;
   }
+
   // In case there UserClaimMetadata wasn't created yet, create it with default values
-  if (!result) {
-    const blockNumber = await chain.provider.getBlockNumber();
-    const metaData = Object.assign(new UserClaimMetadata(), {
-      startBlock: blockNumber,
-      endBlock: blockNumber + 1,
-      chainStartBlock: getChainStartBlockKey(chain.network, blockNumber),
-      chain: chain.network,
-      count: 0,
-    });
-    result = await mapper.put(metaData);
-  }
-  return result;
+  const blockNumber = await chain.provider.getBlockNumber();
+  const metaData = Object.assign(new UserClaimMetadata(), {
+    startBlock: blockNumber,
+    endBlock: blockNumber + 1,
+    chainStartBlock: getChainStartBlockKey(chain.network, blockNumber),
+    chain: chain.network,
+    count: 0,
+  });
+  return mapper.put(metaData);
 }
 
 export async function refreshAccountVaultBalances(chain: Chain, account: string) {
