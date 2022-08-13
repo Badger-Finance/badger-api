@@ -1,6 +1,7 @@
 import "@tsed/platform-express"; // /!\ keep this import
 import "@tsed/ajv";
 import "@tsed/swagger";
+import "./common/filters/api-exception-filter";
 
 import { PlatformApplication } from "@tsed/common";
 import { Configuration, Inject } from "@tsed/di";
