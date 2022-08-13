@@ -2,7 +2,7 @@ module.exports = {
   clearMocks: true,
   collectCoverage: true,
   coverageDirectory: "coverage",
-  coveragePathIgnorePatterns: ["index.ts", "/node_modules/"],
+  coveragePathIgnorePatterns: ["index.ts", "/node_modules/", "/contracts/", "/generated/", "/interfaces/", "/enums/"],
   coverageThreshold: {
     global: {
       branches: 70,

@@ -4,6 +4,7 @@ import { providers } from "@0xsequence/multicall";
 import { DataMapper, QueryIterator, StringToAnyObjectMap } from "@aws/dynamodb-data-mapper";
 import BadgerSDK, { Currency, RegistryService, RewardsService, Token, TokensService, TokenValue } from "@badger-dao/sdk";
 import { JsonRpcProvider, JsonRpcSigner } from "@ethersproject/providers";
+import createMockInstance from "jest-create-mock-instance";
 import { mock } from "jest-mock-extended";
 
 import { getVaultEntityId } from "../aws/dynamodb.utils";
@@ -116,9 +117,8 @@ export function mockBalance(token: Token, balance: number, currency?: Currency):
 
 export function mockQuery(items: unknown[], filter?: (items: unknown[]) => unknown[]) {
   // @ts-ignore
-  const qi: QueryIterator<StringToAnyObjectMap> = mock<QueryIterator<unknown>>();
+  const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
   let result = items;
-
   if (filter) {
     result = filter(items);
   }
@@ -129,7 +129,7 @@ export function mockQuery(items: unknown[], filter?: (items: unknown[]) => unkno
 
 export function mockBatchGet(items: unknown[], filter?: (items: unknown[]) => unknown[]) {
   // @ts-ignore
-  const qi: QueryIterator<StringToAnyObjectMap> = mock(QueryIterator);
+  const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
   let result = items;
   if (filter) {
     result = filter(items);
@@ -141,7 +141,7 @@ export function mockBatchGet(items: unknown[], filter?: (items: unknown[]) => un
 
 export function mockBatchPut(items: unknown[]) {
   // @ts-ignore
-  const qi: QueryIterator<StringToAnyObjectMap> = mock(QueryIterator);
+  const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
   // @ts-ignore
   qi[Symbol.iterator] = jest.fn(() => items.values());
   return jest.spyOn(DataMapper.prototype, "batchPut").mockImplementation(() => qi);
@@ -149,7 +149,7 @@ export function mockBatchPut(items: unknown[]) {
 
 export function mockBatchDelete(items: unknown[]) {
   // @ts-ignore
-  const qi: QueryIterator<StringToAnyObjectMap> = mock(QueryIterator);
+  const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
   // @ts-ignore
   qi[Symbol.iterator] = jest.fn(() => items.values());
   return jest.spyOn(DataMapper.prototype, "batchDelete").mockImplementation(() => qi);
