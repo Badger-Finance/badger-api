@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "directory": [
     "./src/controllers/rest",
     "./src/controllers/pages"
@@ -8,5 +9,9 @@
     "__mocks__",
     ".spec.ts"
   ],
+=======
+  "directory": [],
+  "exclude": ["__mock__", "__mocks__", ".spec.ts"],
+>>>>>>> c15f0091 (chore: update update)
   "delete": true
 }

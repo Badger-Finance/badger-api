@@ -14,6 +14,7 @@
    "node": true,
    "es6": true
   },
+  "ignorePatterns": ["processes.config.js", "contracts", "generated"],
   "rules": {
     "@typescript-eslint/no-inferrable-types": 0,
     "@typescript-eslint/no-unused-vars": 2,

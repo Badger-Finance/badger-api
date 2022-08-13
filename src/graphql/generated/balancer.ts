@@ -110,7 +110,11 @@ export enum AmpUpdate_OrderBy {
   PoolId = 'poolId',
   ScheduledTimestamp = 'scheduledTimestamp',
   StartAmp = 'startAmp',
+<<<<<<< HEAD
   StartTimestamp = 'startTimestamp',
+=======
+  StartTimestamp = 'startTimestamp'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export type Balancer = {
@@ -124,6 +128,10 @@ export type Balancer = {
   totalSwapVolume: Scalars['BigDecimal'];
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type BalancerPoolsArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Pool_OrderBy>;
@@ -234,7 +242,11 @@ export enum BalancerSnapshot_OrderBy {
   TotalSwapCount = 'totalSwapCount',
   TotalSwapFee = 'totalSwapFee',
   TotalSwapVolume = 'totalSwapVolume',
+<<<<<<< HEAD
   Vault = 'vault',
+=======
+  Vault = 'vault'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export type Balancer_Filter = {
@@ -298,7 +310,11 @@ export enum Balancer_OrderBy {
   TotalLiquidity = 'totalLiquidity',
   TotalSwapCount = 'totalSwapCount',
   TotalSwapFee = 'totalSwapFee',
+<<<<<<< HEAD
   TotalSwapVolume = 'totalSwapVolume',
+=======
+  TotalSwapVolume = 'totalSwapVolume'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export type BlockChangedFilter = {
@@ -399,12 +415,20 @@ export enum GradualWeightUpdate_OrderBy {
   PoolId = 'poolId',
   ScheduledTimestamp = 'scheduledTimestamp',
   StartTimestamp = 'startTimestamp',
+<<<<<<< HEAD
   StartWeights = 'startWeights',
+=======
+  StartWeights = 'startWeights'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export enum InvestType {
   Exit = 'Exit',
+<<<<<<< HEAD
   Join = 'Join',
+=======
+  Join = 'Join'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export type JoinExit = {
@@ -512,7 +536,11 @@ export enum JoinExit_OrderBy {
   Timestamp = 'timestamp',
   Tx = 'tx',
   Type = 'type',
+<<<<<<< HEAD
   User = 'user',
+=======
+  User = 'user'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export type LatestPrice = {
@@ -593,7 +621,11 @@ export enum LatestPrice_OrderBy {
   Id = 'id',
   PoolId = 'poolId',
   Price = 'price',
+<<<<<<< HEAD
   PricingAsset = 'pricingAsset',
+=======
+  PricingAsset = 'pricingAsset'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export type ManagementOperation = {
@@ -674,19 +706,31 @@ export enum ManagementOperation_OrderBy {
   ManagedDelta = 'managedDelta',
   PoolTokenId = 'poolTokenId',
   Timestamp = 'timestamp',
+<<<<<<< HEAD
   Type = 'type',
+=======
+  Type = 'type'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export enum OperationType {
   Deposit = 'Deposit',
   Update = 'Update',
+<<<<<<< HEAD
   Withdraw = 'Withdraw',
+=======
+  Withdraw = 'Withdraw'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 /** Defines the order direction, either ascending or descending */
 export enum OrderDirection {
   Asc = 'asc',
+<<<<<<< HEAD
   Desc = 'desc',
+=======
+  Desc = 'desc'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export type Pool = {
@@ -735,6 +779,10 @@ export type Pool = {
   wrappedIndex?: Maybe<Scalars['Int']>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type PoolHistoricalValuesArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<PoolHistoricalLiquidity_OrderBy>;
@@ -743,6 +791,10 @@ export type PoolHistoricalValuesArgs = {
   where?: InputMaybe<PoolHistoricalLiquidity_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type PoolPriceRateProvidersArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<PriceRateProvider_OrderBy>;
@@ -751,6 +803,10 @@ export type PoolPriceRateProvidersArgs = {
   where?: InputMaybe<PriceRateProvider_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type PoolSharesArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<PoolShare_OrderBy>;
@@ -759,6 +815,10 @@ export type PoolSharesArgs = {
   where?: InputMaybe<PoolShare_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type PoolSnapshotsArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<PoolSnapshot_OrderBy>;
@@ -767,6 +827,10 @@ export type PoolSnapshotsArgs = {
   where?: InputMaybe<PoolSnapshot_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type PoolSwapsArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Swap_OrderBy>;
@@ -775,6 +839,10 @@ export type PoolSwapsArgs = {
   where?: InputMaybe<Swap_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type PoolTokensArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<PoolToken_OrderBy>;
@@ -783,6 +851,10 @@ export type PoolTokensArgs = {
   where?: InputMaybe<PoolToken_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type PoolWeightUpdatesArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<GradualWeightUpdate_OrderBy>;
@@ -881,7 +953,11 @@ export enum PoolHistoricalLiquidity_OrderBy {
   PoolLiquidity = 'poolLiquidity',
   PoolShareValue = 'poolShareValue',
   PoolTotalShares = 'poolTotalShares',
+<<<<<<< HEAD
   PricingAsset = 'pricingAsset',
+=======
+  PricingAsset = 'pricingAsset'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export type PoolShare = {
@@ -959,7 +1035,11 @@ export enum PoolShare_OrderBy {
   Balance = 'balance',
   Id = 'id',
   PoolId = 'poolId',
+<<<<<<< HEAD
   UserAddress = 'userAddress',
+=======
+  UserAddress = 'userAddress'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export type PoolSnapshot = {
@@ -1062,7 +1142,11 @@ export enum PoolSnapshot_OrderBy {
   SwapFees = 'swapFees',
   SwapVolume = 'swapVolume',
   Timestamp = 'timestamp',
+<<<<<<< HEAD
   TotalShares = 'totalShares',
+=======
+  TotalShares = 'totalShares'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export type PoolToken = {
@@ -1083,6 +1167,10 @@ export type PoolToken = {
   weight?: Maybe<Scalars['BigDecimal']>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type PoolTokenManagementsArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<ManagementOperation_OrderBy>;
@@ -1275,7 +1363,11 @@ export enum PoolToken_OrderBy {
   PriceRate = 'priceRate',
   Symbol = 'symbol',
   Token = 'token',
+<<<<<<< HEAD
   Weight = 'weight',
+=======
+  Weight = 'weight'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export type Pool_Filter = {
@@ -1639,7 +1731,11 @@ export enum Pool_OrderBy {
   UpperTarget = 'upperTarget',
   VaultId = 'vaultID',
   WeightUpdates = 'weightUpdates',
+<<<<<<< HEAD
   WrappedIndex = 'wrappedIndex',
+=======
+  WrappedIndex = 'wrappedIndex'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export type PriceRateProvider = {
@@ -1755,7 +1851,11 @@ export enum PriceRateProvider_OrderBy {
   LastCached = 'lastCached',
   PoolId = 'poolId',
   Rate = 'rate',
+<<<<<<< HEAD
   Token = 'token',
+=======
+  Token = 'token'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export type Query = {
@@ -1806,16 +1906,28 @@ export type Query = {
   users: Array<User>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type Query_MetaArgs = {
   block?: InputMaybe<Block_Height>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryAmpUpdateArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryAmpUpdatesArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -1826,18 +1938,30 @@ export type QueryAmpUpdatesArgs = {
   where?: InputMaybe<AmpUpdate_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryBalancerArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryBalancerSnapshotArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryBalancerSnapshotsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -1848,6 +1972,10 @@ export type QueryBalancerSnapshotsArgs = {
   where?: InputMaybe<BalancerSnapshot_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryBalancersArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -1858,12 +1986,20 @@ export type QueryBalancersArgs = {
   where?: InputMaybe<Balancer_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryGradualWeightUpdateArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryGradualWeightUpdatesArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -1874,12 +2010,20 @@ export type QueryGradualWeightUpdatesArgs = {
   where?: InputMaybe<GradualWeightUpdate_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryJoinExitArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryJoinExitsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -1890,12 +2034,20 @@ export type QueryJoinExitsArgs = {
   where?: InputMaybe<JoinExit_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryLatestPriceArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryLatestPricesArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -1906,12 +2058,20 @@ export type QueryLatestPricesArgs = {
   where?: InputMaybe<LatestPrice_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryManagementOperationArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryManagementOperationsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -1922,12 +2082,20 @@ export type QueryManagementOperationsArgs = {
   where?: InputMaybe<ManagementOperation_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryPoolArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryPoolHistoricalLiquiditiesArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -1938,18 +2106,30 @@ export type QueryPoolHistoricalLiquiditiesArgs = {
   where?: InputMaybe<PoolHistoricalLiquidity_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryPoolHistoricalLiquidityArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryPoolShareArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryPoolSharesArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -1960,12 +2140,20 @@ export type QueryPoolSharesArgs = {
   where?: InputMaybe<PoolShare_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryPoolSnapshotArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryPoolSnapshotsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -1976,12 +2164,20 @@ export type QueryPoolSnapshotsArgs = {
   where?: InputMaybe<PoolSnapshot_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryPoolTokenArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryPoolTokensArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -1992,6 +2188,10 @@ export type QueryPoolTokensArgs = {
   where?: InputMaybe<PoolToken_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryPoolsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2002,12 +2202,20 @@ export type QueryPoolsArgs = {
   where?: InputMaybe<Pool_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryPriceRateProviderArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryPriceRateProvidersArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2018,12 +2226,20 @@ export type QueryPriceRateProvidersArgs = {
   where?: InputMaybe<PriceRateProvider_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QuerySwapArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QuerySwapsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2034,18 +2250,30 @@ export type QuerySwapsArgs = {
   where?: InputMaybe<Swap_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryTokenArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryTokenPriceArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryTokenPricesArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2056,12 +2284,20 @@ export type QueryTokenPricesArgs = {
   where?: InputMaybe<TokenPrice_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryTokenSnapshotArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryTokenSnapshotsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2072,6 +2308,10 @@ export type QueryTokenSnapshotsArgs = {
   where?: InputMaybe<TokenSnapshot_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryTokensArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2082,18 +2322,30 @@ export type QueryTokensArgs = {
   where?: InputMaybe<Token_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryTradePairArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryTradePairSnapshotArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryTradePairSnapshotsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2104,6 +2356,10 @@ export type QueryTradePairSnapshotsArgs = {
   where?: InputMaybe<TradePairSnapshot_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryTradePairsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2114,18 +2370,30 @@ export type QueryTradePairsArgs = {
   where?: InputMaybe<TradePair_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryUserArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryUserInternalBalanceArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryUserInternalBalancesArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2136,6 +2404,10 @@ export type QueryUserInternalBalancesArgs = {
   where?: InputMaybe<UserInternalBalance_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryUsersArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2194,16 +2466,28 @@ export type Subscription = {
   users: Array<User>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type Subscription_MetaArgs = {
   block?: InputMaybe<Block_Height>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionAmpUpdateArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionAmpUpdatesArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2214,18 +2498,30 @@ export type SubscriptionAmpUpdatesArgs = {
   where?: InputMaybe<AmpUpdate_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionBalancerArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionBalancerSnapshotArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionBalancerSnapshotsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2236,6 +2532,10 @@ export type SubscriptionBalancerSnapshotsArgs = {
   where?: InputMaybe<BalancerSnapshot_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionBalancersArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2246,12 +2546,20 @@ export type SubscriptionBalancersArgs = {
   where?: InputMaybe<Balancer_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionGradualWeightUpdateArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionGradualWeightUpdatesArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2262,12 +2570,20 @@ export type SubscriptionGradualWeightUpdatesArgs = {
   where?: InputMaybe<GradualWeightUpdate_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionJoinExitArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionJoinExitsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2278,12 +2594,20 @@ export type SubscriptionJoinExitsArgs = {
   where?: InputMaybe<JoinExit_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionLatestPriceArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionLatestPricesArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2294,12 +2618,20 @@ export type SubscriptionLatestPricesArgs = {
   where?: InputMaybe<LatestPrice_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionManagementOperationArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionManagementOperationsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2310,12 +2642,20 @@ export type SubscriptionManagementOperationsArgs = {
   where?: InputMaybe<ManagementOperation_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionPoolArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionPoolHistoricalLiquiditiesArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2326,18 +2666,30 @@ export type SubscriptionPoolHistoricalLiquiditiesArgs = {
   where?: InputMaybe<PoolHistoricalLiquidity_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionPoolHistoricalLiquidityArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionPoolShareArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionPoolSharesArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2348,12 +2700,20 @@ export type SubscriptionPoolSharesArgs = {
   where?: InputMaybe<PoolShare_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionPoolSnapshotArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionPoolSnapshotsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2364,12 +2724,20 @@ export type SubscriptionPoolSnapshotsArgs = {
   where?: InputMaybe<PoolSnapshot_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionPoolTokenArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionPoolTokensArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2380,6 +2748,10 @@ export type SubscriptionPoolTokensArgs = {
   where?: InputMaybe<PoolToken_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionPoolsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2390,12 +2762,20 @@ export type SubscriptionPoolsArgs = {
   where?: InputMaybe<Pool_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionPriceRateProviderArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionPriceRateProvidersArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2406,12 +2786,20 @@ export type SubscriptionPriceRateProvidersArgs = {
   where?: InputMaybe<PriceRateProvider_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionSwapArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionSwapsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2422,18 +2810,30 @@ export type SubscriptionSwapsArgs = {
   where?: InputMaybe<Swap_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionTokenArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionTokenPriceArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionTokenPricesArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2444,12 +2844,20 @@ export type SubscriptionTokenPricesArgs = {
   where?: InputMaybe<TokenPrice_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionTokenSnapshotArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionTokenSnapshotsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2460,6 +2868,10 @@ export type SubscriptionTokenSnapshotsArgs = {
   where?: InputMaybe<TokenSnapshot_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionTokensArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2470,18 +2882,30 @@ export type SubscriptionTokensArgs = {
   where?: InputMaybe<Token_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionTradePairArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionTradePairSnapshotArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionTradePairSnapshotsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2492,6 +2916,10 @@ export type SubscriptionTradePairSnapshotsArgs = {
   where?: InputMaybe<TradePairSnapshot_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionTradePairsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2502,18 +2930,30 @@ export type SubscriptionTradePairsArgs = {
   where?: InputMaybe<TradePair_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionUserArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionUserInternalBalanceArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionUserInternalBalancesArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2524,6 +2964,10 @@ export type SubscriptionUserInternalBalancesArgs = {
   where?: InputMaybe<UserInternalBalance_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionUsersArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2715,7 +3159,11 @@ export enum Swap_OrderBy {
   TokenOutSym = 'tokenOutSym',
   Tx = 'tx',
   UserAddress = 'userAddress',
+<<<<<<< HEAD
   ValueUsd = 'valueUSD',
+=======
+  ValueUsd = 'valueUSD'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export type Token = {
@@ -2833,7 +3281,11 @@ export enum TokenPrice_OrderBy {
   PoolId = 'poolId',
   Price = 'price',
   PricingAsset = 'pricingAsset',
+<<<<<<< HEAD
   Timestamp = 'timestamp',
+=======
+  Timestamp = 'timestamp'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export type TokenSnapshot = {
@@ -2938,7 +3390,11 @@ export enum TokenSnapshot_OrderBy {
   TotalBalanceUsd = 'totalBalanceUSD',
   TotalSwapCount = 'totalSwapCount',
   TotalVolumeNotional = 'totalVolumeNotional',
+<<<<<<< HEAD
   TotalVolumeUsd = 'totalVolumeUSD',
+=======
+  TotalVolumeUsd = 'totalVolumeUSD'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export type Token_Filter = {
@@ -3125,7 +3581,11 @@ export enum Token_OrderBy {
   TotalBalanceUsd = 'totalBalanceUSD',
   TotalSwapCount = 'totalSwapCount',
   TotalVolumeNotional = 'totalVolumeNotional',
+<<<<<<< HEAD
   TotalVolumeUsd = 'totalVolumeUSD',
+=======
+  TotalVolumeUsd = 'totalVolumeUSD'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export type TradePair = {
@@ -3210,7 +3670,11 @@ export enum TradePairSnapshot_OrderBy {
   Pair = 'pair',
   Timestamp = 'timestamp',
   TotalSwapFee = 'totalSwapFee',
+<<<<<<< HEAD
   TotalSwapVolume = 'totalSwapVolume',
+=======
+  TotalSwapVolume = 'totalSwapVolume'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export type TradePair_Filter = {
@@ -3289,7 +3753,11 @@ export enum TradePair_OrderBy {
   Token0 = 'token0',
   Token1 = 'token1',
   TotalSwapFee = 'totalSwapFee',
+<<<<<<< HEAD
   TotalSwapVolume = 'totalSwapVolume',
+=======
+  TotalSwapVolume = 'totalSwapVolume'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export type User = {
@@ -3300,6 +3768,10 @@ export type User = {
   userInternalBalances?: Maybe<Array<UserInternalBalance>>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type UserSharesOwnedArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<PoolShare_OrderBy>;
@@ -3308,6 +3780,10 @@ export type UserSharesOwnedArgs = {
   where?: InputMaybe<PoolShare_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type UserSwapsArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Swap_OrderBy>;
@@ -3316,6 +3792,10 @@ export type UserSwapsArgs = {
   where?: InputMaybe<Swap_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type UserUserInternalBalancesArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<UserInternalBalance_OrderBy>;
@@ -3384,7 +3864,11 @@ export enum UserInternalBalance_OrderBy {
   Balance = 'balance',
   Id = 'id',
   Token = 'token',
+<<<<<<< HEAD
   UserAddress = 'userAddress',
+=======
+  UserAddress = 'userAddress'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export type User_Filter = {
@@ -3407,7 +3891,11 @@ export enum User_OrderBy {
   Id = 'id',
   SharesOwned = 'sharesOwned',
   Swaps = 'swaps',
+<<<<<<< HEAD
   UserInternalBalances = 'userInternalBalances',
+=======
+  UserInternalBalances = 'userInternalBalances'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export type _Block_ = {
@@ -3439,6 +3927,7 @@ export enum _SubgraphErrorPolicy_ {
   /** Data will be returned even if the subgraph has indexing errors */
   Allow = 'allow',
   /** If the subgraph has indexing errors, data will be omitted. The default. */
+<<<<<<< HEAD
   Deny = 'deny',
 }
 
@@ -3472,11 +3961,43 @@ export type SdkFunctionWrapper = <T>(
   operationName: string,
   operationType?: string,
 ) => Promise<T>;
+=======
+  Deny = 'deny'
+}
+
+export const PoolSnapshotFragmentDoc = gql`
+    fragment PoolSnapshot on PoolSnapshot {
+  id
+  swapFees
+  amounts
+  liquidity
+  totalShares
+  swapVolume
+  timestamp
+}
+    `;
+export const PoolSnapshotsDocument = gql`
+    query PoolSnapshots($first: Int, $where: PoolSnapshot_filter, $orderBy: PoolSnapshot_orderBy, $orderDirection: OrderDirection) {
+  poolSnapshots(
+    first: $first
+    where: $where
+    orderBy: $orderBy
+    orderDirection: $orderDirection
+  ) {
+    ...PoolSnapshot
+  }
+}
+    ${PoolSnapshotFragmentDoc}`;
+
+export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string) => Promise<T>;
+
+>>>>>>> c15f0091 (chore: update update)
 
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+<<<<<<< HEAD
     PoolSnapshots(
       variables?: PoolSnapshotsQueryVariables,
       requestHeaders?: Dom.RequestInit['headers'],
@@ -3504,6 +4025,15 @@ export type PoolSnapshotFragment = {
   swapVolume: any;
   timestamp: number;
 };
+=======
+    PoolSnapshots(variables?: PoolSnapshotsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<PoolSnapshotsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<PoolSnapshotsQuery>(PoolSnapshotsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'PoolSnapshots', 'query');
+    }
+  };
+}
+export type Sdk = ReturnType<typeof getSdk>;
+export type PoolSnapshotFragment = { __typename?: 'PoolSnapshot', id: string, swapFees: any, amounts: Array<any>, liquidity: any, totalShares: any, swapVolume: any, timestamp: number };
+>>>>>>> c15f0091 (chore: update update)
 
 export type PoolSnapshotsQueryVariables = Exact<{
   first?: InputMaybe<Scalars['Int']>;
@@ -3512,6 +4042,7 @@ export type PoolSnapshotsQueryVariables = Exact<{
   orderDirection?: InputMaybe<OrderDirection>;
 }>;
 
+<<<<<<< HEAD
 export type PoolSnapshotsQuery = {
   __typename?: 'Query';
   poolSnapshots: Array<{
@@ -3525,3 +4056,7 @@ export type PoolSnapshotsQuery = {
     timestamp: number;
   }>;
 };
+=======
+
+export type PoolSnapshotsQuery = { __typename?: 'Query', poolSnapshots: Array<{ __typename?: 'PoolSnapshot', id: string, swapFees: any, amounts: Array<any>, liquidity: any, totalShares: any, swapVolume: any, timestamp: number }> };
+>>>>>>> c15f0091 (chore: update update)

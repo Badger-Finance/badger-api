@@ -2,6 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
+<<<<<<< HEAD
 import { Contract, Signer, utils } from 'ethers';
 import { Provider } from '@ethersproject/providers';
 import type { CurveBaseRegistry, CurveBaseRegistryInterface } from '../CurveBaseRegistry';
@@ -23,10 +24,37 @@ const _abi = [
       {
         type: 'string',
         name: 'description',
+=======
+import { Contract, Signer, utils } from "ethers";
+import type { Provider } from "@ethersproject/providers";
+import type {
+  CurveBaseRegistry,
+  CurveBaseRegistryInterface,
+} from "../CurveBaseRegistry";
+
+const _abi = [
+  {
+    name: "NewAddressIdentifier",
+    inputs: [
+      {
+        type: "uint256",
+        name: "id",
+        indexed: true,
+      },
+      {
+        type: "address",
+        name: "addr",
+        indexed: false,
+      },
+      {
+        type: "string",
+        name: "description",
+>>>>>>> c15f0091 (chore: update update)
         indexed: false,
       },
     ],
     anonymous: false,
+<<<<<<< HEAD
     type: 'event',
   },
   {
@@ -45,10 +73,31 @@ const _abi = [
       {
         type: 'uint256',
         name: 'version',
+=======
+    type: "event",
+  },
+  {
+    name: "AddressModified",
+    inputs: [
+      {
+        type: "uint256",
+        name: "id",
+        indexed: true,
+      },
+      {
+        type: "address",
+        name: "new_address",
+        indexed: false,
+      },
+      {
+        type: "uint256",
+        name: "version",
+>>>>>>> c15f0091 (chore: update update)
         indexed: false,
       },
     ],
     anonymous: false,
+<<<<<<< HEAD
     type: 'event',
   },
   {
@@ -62,10 +111,26 @@ const _abi = [
       {
         type: 'address',
         name: 'admin',
+=======
+    type: "event",
+  },
+  {
+    name: "CommitNewAdmin",
+    inputs: [
+      {
+        type: "uint256",
+        name: "deadline",
+        indexed: true,
+      },
+      {
+        type: "address",
+        name: "admin",
+>>>>>>> c15f0091 (chore: update update)
         indexed: true,
       },
     ],
     anonymous: false,
+<<<<<<< HEAD
     type: 'event',
   },
   {
@@ -74,16 +139,31 @@ const _abi = [
       {
         type: 'address',
         name: 'admin',
+=======
+    type: "event",
+  },
+  {
+    name: "NewAdmin",
+    inputs: [
+      {
+        type: "address",
+        name: "admin",
+>>>>>>> c15f0091 (chore: update update)
         indexed: true,
       },
     ],
     anonymous: false,
+<<<<<<< HEAD
     type: 'event',
+=======
+    type: "event",
+>>>>>>> c15f0091 (chore: update update)
   },
   {
     outputs: [],
     inputs: [
       {
+<<<<<<< HEAD
         type: 'address',
         name: '_admin',
       },
@@ -121,10 +201,50 @@ const _abi = [
       {
         type: 'address',
         name: '',
+=======
+        type: "address",
+        name: "_admin",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "constructor",
+  },
+  {
+    name: "get_registry",
+    outputs: [
+      {
+        type: "address",
+        name: "",
+      },
+    ],
+    inputs: [],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    name: "max_id",
+    outputs: [
+      {
+        type: "uint256",
+        name: "",
+      },
+    ],
+    inputs: [],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    name: "get_address",
+    outputs: [
+      {
+        type: "address",
+        name: "",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
     inputs: [
       {
+<<<<<<< HEAD
         type: 'uint256',
         name: '_id',
       },
@@ -138,10 +258,26 @@ const _abi = [
       {
         type: 'uint256',
         name: '',
+=======
+        type: "uint256",
+        name: "_id",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    name: "add_new_id",
+    outputs: [
+      {
+        type: "uint256",
+        name: "",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
     inputs: [
       {
+<<<<<<< HEAD
         type: 'address',
         name: '_address',
       },
@@ -159,10 +295,30 @@ const _abi = [
       {
         type: 'bool',
         name: '',
+=======
+        type: "address",
+        name: "_address",
+      },
+      {
+        type: "string",
+        name: "_description",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    name: "set_address",
+    outputs: [
+      {
+        type: "bool",
+        name: "",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
     inputs: [
       {
+<<<<<<< HEAD
         type: 'uint256',
         name: '_id',
       },
@@ -180,10 +336,30 @@ const _abi = [
       {
         type: 'bool',
         name: '',
+=======
+        type: "uint256",
+        name: "_id",
+      },
+      {
+        type: "address",
+        name: "_address",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    name: "unset_address",
+    outputs: [
+      {
+        type: "bool",
+        name: "",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
     inputs: [
       {
+<<<<<<< HEAD
         type: 'uint256',
         name: '_id',
       },
@@ -197,10 +373,26 @@ const _abi = [
       {
         type: 'bool',
         name: '',
+=======
+        type: "uint256",
+        name: "_id",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    name: "commit_transfer_ownership",
+    outputs: [
+      {
+        type: "bool",
+        name: "",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
     inputs: [
       {
+<<<<<<< HEAD
         type: 'address',
         name: '_new_admin',
       },
@@ -290,16 +482,116 @@ const _abi = [
       {
         type: 'string',
         name: 'description',
+=======
+        type: "address",
+        name: "_new_admin",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    name: "apply_transfer_ownership",
+    outputs: [
+      {
+        type: "bool",
+        name: "",
+      },
+    ],
+    inputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    name: "revert_transfer_ownership",
+    outputs: [
+      {
+        type: "bool",
+        name: "",
+      },
+    ],
+    inputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    name: "admin",
+    outputs: [
+      {
+        type: "address",
+        name: "",
+      },
+    ],
+    inputs: [],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    name: "transfer_ownership_deadline",
+    outputs: [
+      {
+        type: "uint256",
+        name: "",
+      },
+    ],
+    inputs: [],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    name: "future_admin",
+    outputs: [
+      {
+        type: "address",
+        name: "",
+      },
+    ],
+    inputs: [],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    name: "get_id_info",
+    outputs: [
+      {
+        type: "address",
+        name: "addr",
+      },
+      {
+        type: "bool",
+        name: "is_active",
+      },
+      {
+        type: "uint256",
+        name: "version",
+      },
+      {
+        type: "uint256",
+        name: "last_modified",
+      },
+      {
+        type: "string",
+        name: "description",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
     inputs: [
       {
+<<<<<<< HEAD
         type: 'uint256',
         name: 'arg0',
       },
     ],
     stateMutability: 'view',
     type: 'function',
+=======
+        type: "uint256",
+        name: "arg0",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+>>>>>>> c15f0091 (chore: update update)
   },
 ];
 
@@ -308,7 +600,14 @@ export class CurveBaseRegistry__factory {
   static createInterface(): CurveBaseRegistryInterface {
     return new utils.Interface(_abi) as CurveBaseRegistryInterface;
   }
+<<<<<<< HEAD
   static connect(address: string, signerOrProvider: Signer | Provider): CurveBaseRegistry {
+=======
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): CurveBaseRegistry {
+>>>>>>> c15f0091 (chore: update update)
     return new Contract(address, _abi, signerOrProvider) as CurveBaseRegistry;
   }
 }

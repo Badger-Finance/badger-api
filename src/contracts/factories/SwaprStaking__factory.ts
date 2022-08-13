@@ -2,22 +2,34 @@
 /* tslint:disable */
 /* eslint-disable */
 
+<<<<<<< HEAD
 import { Contract, Signer, utils } from 'ethers';
 import { Provider } from '@ethersproject/providers';
 import type { SwaprStaking, SwaprStakingInterface } from '../SwaprStaking';
+=======
+import { Contract, Signer, utils } from "ethers";
+import type { Provider } from "@ethersproject/providers";
+import type { SwaprStaking, SwaprStakingInterface } from "../SwaprStaking";
+>>>>>>> c15f0091 (chore: update update)
 
 const _abi = [
   {
     anonymous: false,
     inputs: [],
+<<<<<<< HEAD
     name: 'Canceled',
     type: 'event',
+=======
+    name: "Canceled",
+    type: "event",
+>>>>>>> c15f0091 (chore: update update)
   },
   {
     anonymous: false,
     inputs: [
       {
         indexed: true,
+<<<<<<< HEAD
         internalType: 'address',
         name: 'claimer',
         type: 'address',
@@ -31,12 +43,28 @@ const _abi = [
     ],
     name: 'Claimed',
     type: 'event',
+=======
+        internalType: "address",
+        name: "claimer",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256[]",
+        name: "amounts",
+        type: "uint256[]",
+      },
+    ],
+    name: "Claimed",
+    type: "event",
+>>>>>>> c15f0091 (chore: update update)
   },
   {
     anonymous: false,
     inputs: [
       {
         indexed: false,
+<<<<<<< HEAD
         internalType: 'address[]',
         name: 'rewardsTokenAddresses',
         type: 'address[]',
@@ -80,12 +108,58 @@ const _abi = [
     ],
     name: 'Initialized',
     type: 'event',
+=======
+        internalType: "address[]",
+        name: "rewardsTokenAddresses",
+        type: "address[]",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "stakableTokenAddress",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256[]",
+        name: "rewardsAmounts",
+        type: "uint256[]",
+      },
+      {
+        indexed: false,
+        internalType: "uint64",
+        name: "startingTimestamp",
+        type: "uint64",
+      },
+      {
+        indexed: false,
+        internalType: "uint64",
+        name: "endingTimestamp",
+        type: "uint64",
+      },
+      {
+        indexed: false,
+        internalType: "bool",
+        name: "locked",
+        type: "bool",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "stakingCap",
+        type: "uint256",
+      },
+    ],
+    name: "Initialized",
+    type: "event",
+>>>>>>> c15f0091 (chore: update update)
   },
   {
     anonymous: false,
     inputs: [
       {
         indexed: true,
+<<<<<<< HEAD
         internalType: 'address',
         name: 'previousOwner',
         type: 'address',
@@ -99,12 +173,28 @@ const _abi = [
     ],
     name: 'OwnershipTransferred',
     type: 'event',
+=======
+        internalType: "address",
+        name: "previousOwner",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
+    name: "OwnershipTransferred",
+    type: "event",
+>>>>>>> c15f0091 (chore: update update)
   },
   {
     anonymous: false,
     inputs: [
       {
         indexed: false,
+<<<<<<< HEAD
         internalType: 'uint256[]',
         name: 'amounts',
         type: 'uint256[]',
@@ -112,12 +202,22 @@ const _abi = [
     ],
     name: 'Recovered',
     type: 'event',
+=======
+        internalType: "uint256[]",
+        name: "amounts",
+        type: "uint256[]",
+      },
+    ],
+    name: "Recovered",
+    type: "event",
+>>>>>>> c15f0091 (chore: update update)
   },
   {
     anonymous: false,
     inputs: [
       {
         indexed: true,
+<<<<<<< HEAD
         internalType: 'address',
         name: 'staker',
         type: 'address',
@@ -131,12 +231,28 @@ const _abi = [
     ],
     name: 'Staked',
     type: 'event',
+=======
+        internalType: "address",
+        name: "staker",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+    ],
+    name: "Staked",
+    type: "event",
+>>>>>>> c15f0091 (chore: update update)
   },
   {
     anonymous: false,
     inputs: [
       {
         indexed: true,
+<<<<<<< HEAD
         internalType: 'address',
         name: 'withdrawer',
         type: 'address',
@@ -170,10 +286,46 @@ const _abi = [
     ],
     stateMutability: 'view',
     type: 'function',
+=======
+        internalType: "address",
+        name: "withdrawer",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+    ],
+    name: "Withdrawn",
+    type: "event",
+  },
+  {
+    inputs: [],
+    name: "cancel",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "canceled",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+>>>>>>> c15f0091 (chore: update update)
   },
   {
     inputs: [
       {
+<<<<<<< HEAD
         internalType: 'uint256[]',
         name: '_amounts',
         type: 'uint256[]',
@@ -188,10 +340,27 @@ const _abi = [
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
+=======
+        internalType: "uint256[]",
+        name: "_amounts",
+        type: "uint256[]",
+      },
+      {
+        internalType: "address",
+        name: "_recipient",
+        type: "address",
+      },
+    ],
+    name: "claim",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+>>>>>>> c15f0091 (chore: update update)
   },
   {
     inputs: [
       {
+<<<<<<< HEAD
         internalType: 'address',
         name: '_recipient',
         type: 'address',
@@ -201,10 +370,22 @@ const _abi = [
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
+=======
+        internalType: "address",
+        name: "_recipient",
+        type: "address",
+      },
+    ],
+    name: "claimAll",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+>>>>>>> c15f0091 (chore: update update)
   },
   {
     inputs: [
       {
+<<<<<<< HEAD
         internalType: 'address',
         name: '_account',
         type: 'address',
@@ -220,10 +401,28 @@ const _abi = [
     ],
     stateMutability: 'view',
     type: 'function',
+=======
+        internalType: "address",
+        name: "_account",
+        type: "address",
+      },
+    ],
+    name: "claimableRewards",
+    outputs: [
+      {
+        internalType: "uint256[]",
+        name: "",
+        type: "uint256[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+>>>>>>> c15f0091 (chore: update update)
   },
   {
     inputs: [
       {
+<<<<<<< HEAD
         internalType: 'address',
         name: '_staker',
         type: 'address',
@@ -252,10 +451,41 @@ const _abi = [
     ],
     stateMutability: 'view',
     type: 'function',
+=======
+        internalType: "address",
+        name: "_staker",
+        type: "address",
+      },
+    ],
+    name: "earnedRewardsOf",
+    outputs: [
+      {
+        internalType: "uint256[]",
+        name: "",
+        type: "uint256[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "endingTimestamp",
+    outputs: [
+      {
+        internalType: "uint64",
+        name: "",
+        type: "uint64",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+>>>>>>> c15f0091 (chore: update update)
   },
   {
     inputs: [
       {
+<<<<<<< HEAD
         internalType: 'address',
         name: '_recipient',
         type: 'address',
@@ -278,10 +508,35 @@ const _abi = [
     ],
     stateMutability: 'view',
     type: 'function',
+=======
+        internalType: "address",
+        name: "_recipient",
+        type: "address",
+      },
+    ],
+    name: "exit",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "factory",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+>>>>>>> c15f0091 (chore: update update)
   },
   {
     inputs: [
       {
+<<<<<<< HEAD
         internalType: 'address',
         name: '_claimer',
         type: 'address',
@@ -310,10 +565,41 @@ const _abi = [
     ],
     stateMutability: 'view',
     type: 'function',
+=======
+        internalType: "address",
+        name: "_claimer",
+        type: "address",
+      },
+    ],
+    name: "getClaimedRewards",
+    outputs: [
+      {
+        internalType: "uint256[]",
+        name: "",
+        type: "uint256[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getRewardTokens",
+    outputs: [
+      {
+        internalType: "address[]",
+        name: "",
+        type: "address[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+>>>>>>> c15f0091 (chore: update update)
   },
   {
     inputs: [
       {
+<<<<<<< HEAD
         internalType: 'address[]',
         name: '_rewardTokenAddresses',
         type: 'address[]',
@@ -412,10 +698,111 @@ const _abi = [
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
+=======
+        internalType: "address[]",
+        name: "_rewardTokenAddresses",
+        type: "address[]",
+      },
+      {
+        internalType: "address",
+        name: "_stakableTokenAddress",
+        type: "address",
+      },
+      {
+        internalType: "uint256[]",
+        name: "_rewardAmounts",
+        type: "uint256[]",
+      },
+      {
+        internalType: "uint64",
+        name: "_startingTimestamp",
+        type: "uint64",
+      },
+      {
+        internalType: "uint64",
+        name: "_endingTimestamp",
+        type: "uint64",
+      },
+      {
+        internalType: "bool",
+        name: "_locked",
+        type: "bool",
+      },
+      {
+        internalType: "uint256",
+        name: "_stakingCap",
+        type: "uint256",
+      },
+    ],
+    name: "initialize",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "initialized",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "lastConsolidationTimestamp",
+    outputs: [
+      {
+        internalType: "uint64",
+        name: "",
+        type: "uint64",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "locked",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "owner",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "recoverUnassignedRewards",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+>>>>>>> c15f0091 (chore: update update)
   },
   {
     inputs: [
       {
+<<<<<<< HEAD
         internalType: 'address',
         name: '_rewardToken',
         type: 'address',
@@ -438,10 +825,35 @@ const _abi = [
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
+=======
+        internalType: "address",
+        name: "_rewardToken",
+        type: "address",
+      },
+    ],
+    name: "recoverableUnassignedReward",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "renounceOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+>>>>>>> c15f0091 (chore: update update)
   },
   {
     inputs: [
       {
+<<<<<<< HEAD
         internalType: 'address',
         name: '_rewardToken',
         type: 'address',
@@ -457,10 +869,28 @@ const _abi = [
     ],
     stateMutability: 'view',
     type: 'function',
+=======
+        internalType: "address",
+        name: "_rewardToken",
+        type: "address",
+      },
+    ],
+    name: "rewardAmount",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+>>>>>>> c15f0091 (chore: update update)
   },
   {
     inputs: [
       {
+<<<<<<< HEAD
         internalType: 'uint256',
         name: '',
         type: 'uint256',
@@ -522,10 +952,74 @@ const _abi = [
     ],
     stateMutability: 'view',
     type: 'function',
+=======
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "rewards",
+    outputs: [
+      {
+        internalType: "address",
+        name: "token",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "perStakedToken",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "recoverableSeconds",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "claimed",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "secondsDuration",
+    outputs: [
+      {
+        internalType: "uint64",
+        name: "",
+        type: "uint64",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "stakableToken",
+    outputs: [
+      {
+        internalType: "contract IERC20",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+>>>>>>> c15f0091 (chore: update update)
   },
   {
     inputs: [
       {
+<<<<<<< HEAD
         internalType: 'uint256',
         name: '_amount',
         type: 'uint256',
@@ -535,10 +1029,22 @@ const _abi = [
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
+=======
+        internalType: "uint256",
+        name: "_amount",
+        type: "uint256",
+      },
+    ],
+    name: "stake",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+>>>>>>> c15f0091 (chore: update update)
   },
   {
     inputs: [
       {
+<<<<<<< HEAD
         internalType: 'address',
         name: '_staker',
         type: 'address',
@@ -554,10 +1060,28 @@ const _abi = [
     ],
     stateMutability: 'view',
     type: 'function',
+=======
+        internalType: "address",
+        name: "_staker",
+        type: "address",
+      },
+    ],
+    name: "stakedTokensOf",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+>>>>>>> c15f0091 (chore: update update)
   },
   {
     inputs: [
       {
+<<<<<<< HEAD
         internalType: 'address',
         name: '',
         type: 'address',
@@ -612,10 +1136,67 @@ const _abi = [
     ],
     stateMutability: 'view',
     type: 'function',
+=======
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "stakers",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "stake",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "stakingCap",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "startingTimestamp",
+    outputs: [
+      {
+        internalType: "uint64",
+        name: "",
+        type: "uint64",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "totalStakedTokensAmount",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+>>>>>>> c15f0091 (chore: update update)
   },
   {
     inputs: [
       {
+<<<<<<< HEAD
         internalType: 'address',
         name: '_newOwner',
         type: 'address',
@@ -625,10 +1206,22 @@ const _abi = [
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
+=======
+        internalType: "address",
+        name: "_newOwner",
+        type: "address",
+      },
+    ],
+    name: "transferOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+>>>>>>> c15f0091 (chore: update update)
   },
   {
     inputs: [
       {
+<<<<<<< HEAD
         internalType: 'uint256',
         name: '_amount',
         type: 'uint256',
@@ -638,6 +1231,17 @@ const _abi = [
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
+=======
+        internalType: "uint256",
+        name: "_amount",
+        type: "uint256",
+      },
+    ],
+    name: "withdraw",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+>>>>>>> c15f0091 (chore: update update)
   },
 ];
 
@@ -646,7 +1250,14 @@ export class SwaprStaking__factory {
   static createInterface(): SwaprStakingInterface {
     return new utils.Interface(_abi) as SwaprStakingInterface;
   }
+<<<<<<< HEAD
   static connect(address: string, signerOrProvider: Signer | Provider): SwaprStaking {
+=======
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): SwaprStaking {
+>>>>>>> c15f0091 (chore: update update)
     return new Contract(address, _abi, signerOrProvider) as SwaprStaking;
   }
 }

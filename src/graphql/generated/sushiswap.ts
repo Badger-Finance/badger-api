@@ -57,7 +57,11 @@ export type Bundle_Filter = {
 
 export enum Bundle_OrderBy {
   EthPrice = 'ethPrice',
+<<<<<<< HEAD
   Id = 'id',
+=======
+  Id = 'id'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export type Burn = {
@@ -225,7 +229,11 @@ export enum Burn_OrderBy {
   Sender = 'sender',
   Timestamp = 'timestamp',
   To = 'to',
+<<<<<<< HEAD
   Transaction = 'transaction',
+=======
+  Transaction = 'transaction'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export type DayData = {
@@ -340,7 +348,11 @@ export enum DayData_OrderBy {
   TxCount = 'txCount',
   UntrackedVolume = 'untrackedVolume',
   VolumeEth = 'volumeETH',
+<<<<<<< HEAD
   VolumeUsd = 'volumeUSD',
+=======
+  VolumeUsd = 'volumeUSD'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export type Factory = {
@@ -361,6 +373,10 @@ export type Factory = {
   volumeUSD: Scalars['BigDecimal'];
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type FactoryDayDataArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<DayData_OrderBy>;
@@ -369,6 +385,10 @@ export type FactoryDayDataArgs = {
   where?: InputMaybe<DayData_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type FactoryHourDataArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<HourData_OrderBy>;
@@ -377,6 +397,10 @@ export type FactoryHourDataArgs = {
   where?: InputMaybe<HourData_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type FactoryPairsArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Pair_OrderBy>;
@@ -385,6 +409,10 @@ export type FactoryPairsArgs = {
   where?: InputMaybe<Pair_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type FactoryTokensArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Token_OrderBy>;
@@ -496,7 +524,11 @@ export enum Factory_OrderBy {
   UntrackedVolumeUsd = 'untrackedVolumeUSD',
   UserCount = 'userCount',
   VolumeEth = 'volumeETH',
+<<<<<<< HEAD
   VolumeUsd = 'volumeUSD',
+=======
+  VolumeUsd = 'volumeUSD'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export type HourData = {
@@ -611,7 +643,11 @@ export enum HourData_OrderBy {
   TxCount = 'txCount',
   UntrackedVolume = 'untrackedVolume',
   VolumeEth = 'volumeETH',
+<<<<<<< HEAD
   VolumeUsd = 'volumeUSD',
+=======
+  VolumeUsd = 'volumeUSD'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export type LiquidityPosition = {
@@ -625,6 +661,10 @@ export type LiquidityPosition = {
   user: User;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type LiquidityPositionSnapshotsArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<LiquidityPositionSnapshot_OrderBy>;
@@ -811,7 +851,11 @@ export enum LiquidityPositionSnapshot_OrderBy {
   Timestamp = 'timestamp',
   Token0PriceUsd = 'token0PriceUSD',
   Token1PriceUsd = 'token1PriceUSD',
+<<<<<<< HEAD
   User = 'user',
+=======
+  User = 'user'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export type LiquidityPosition_Filter = {
@@ -901,7 +945,11 @@ export enum LiquidityPosition_OrderBy {
   Pair = 'pair',
   Snapshots = 'snapshots',
   Timestamp = 'timestamp',
+<<<<<<< HEAD
   User = 'user',
+=======
+  User = 'user'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export type Mint = {
@@ -1063,13 +1111,21 @@ export enum Mint_OrderBy {
   Sender = 'sender',
   Timestamp = 'timestamp',
   To = 'to',
+<<<<<<< HEAD
   Transaction = 'transaction',
+=======
+  Transaction = 'transaction'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 /** Defines the order direction, either ascending or descending */
 export enum OrderDirection {
   Asc = 'asc',
+<<<<<<< HEAD
   Desc = 'desc',
+=======
+  Desc = 'desc'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export type Pair = {
@@ -1104,6 +1160,10 @@ export type Pair = {
   volumeUSD: Scalars['BigDecimal'];
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type PairBurnsArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Burn_OrderBy>;
@@ -1112,6 +1172,10 @@ export type PairBurnsArgs = {
   where?: InputMaybe<Burn_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type PairDayDataArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<PairDayData_OrderBy>;
@@ -1120,6 +1184,10 @@ export type PairDayDataArgs = {
   where?: InputMaybe<PairDayData_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type PairHourDataArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<PairHourData_OrderBy>;
@@ -1128,6 +1196,10 @@ export type PairHourDataArgs = {
   where?: InputMaybe<PairHourData_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type PairLiquidityPositionSnapshotsArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<LiquidityPositionSnapshot_OrderBy>;
@@ -1136,6 +1208,10 @@ export type PairLiquidityPositionSnapshotsArgs = {
   where?: InputMaybe<LiquidityPositionSnapshot_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type PairLiquidityPositionsArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<LiquidityPosition_OrderBy>;
@@ -1144,6 +1220,10 @@ export type PairLiquidityPositionsArgs = {
   where?: InputMaybe<LiquidityPosition_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type PairMintsArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Mint_OrderBy>;
@@ -1152,6 +1232,10 @@ export type PairMintsArgs = {
   where?: InputMaybe<Mint_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type PairSwapsArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Swap_OrderBy>;
@@ -1338,7 +1422,11 @@ export enum PairDayData_OrderBy {
   TxCount = 'txCount',
   VolumeToken0 = 'volumeToken0',
   VolumeToken1 = 'volumeToken1',
+<<<<<<< HEAD
   VolumeUsd = 'volumeUSD',
+=======
+  VolumeUsd = 'volumeUSD'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export type PairHourData = {
@@ -1463,7 +1551,11 @@ export enum PairHourData_OrderBy {
   TxCount = 'txCount',
   VolumeToken0 = 'volumeToken0',
   VolumeToken1 = 'volumeToken1',
+<<<<<<< HEAD
   VolumeUsd = 'volumeUSD',
+=======
+  VolumeUsd = 'volumeUSD'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export type Pair_Filter = {
@@ -1725,7 +1817,11 @@ export enum Pair_OrderBy {
   UntrackedVolumeUsd = 'untrackedVolumeUSD',
   VolumeToken0 = 'volumeToken0',
   VolumeToken1 = 'volumeToken1',
+<<<<<<< HEAD
   VolumeUsd = 'volumeUSD',
+=======
+  VolumeUsd = 'volumeUSD'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export type Query = {
@@ -1771,16 +1867,28 @@ export type Query = {
   users: Array<User>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type Query_MetaArgs = {
   block?: InputMaybe<Block_Height>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryBundleArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryBundlesArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -1791,12 +1899,20 @@ export type QueryBundlesArgs = {
   where?: InputMaybe<Bundle_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryBurnArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryBurnsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -1807,12 +1923,20 @@ export type QueryBurnsArgs = {
   where?: InputMaybe<Burn_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryDayDataArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryDayDatasArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -1823,6 +1947,10 @@ export type QueryDayDatasArgs = {
   where?: InputMaybe<DayData_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryFactoriesArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -1833,18 +1961,30 @@ export type QueryFactoriesArgs = {
   where?: InputMaybe<Factory_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryFactoryArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryHourDataArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryHourDatasArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -1855,18 +1995,30 @@ export type QueryHourDatasArgs = {
   where?: InputMaybe<HourData_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryLiquidityPositionArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryLiquidityPositionSnapshotArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryLiquidityPositionSnapshotsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -1877,6 +2029,10 @@ export type QueryLiquidityPositionSnapshotsArgs = {
   where?: InputMaybe<LiquidityPositionSnapshot_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryLiquidityPositionsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -1887,12 +2043,20 @@ export type QueryLiquidityPositionsArgs = {
   where?: InputMaybe<LiquidityPosition_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryMintArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryMintsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -1903,18 +2067,30 @@ export type QueryMintsArgs = {
   where?: InputMaybe<Mint_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryPairArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryPairDayDataArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryPairDayDatasArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -1925,12 +2101,20 @@ export type QueryPairDayDatasArgs = {
   where?: InputMaybe<PairDayData_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryPairHourDataArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryPairHourDatasArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -1941,6 +2125,10 @@ export type QueryPairHourDatasArgs = {
   where?: InputMaybe<PairHourData_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryPairSearchArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -1949,6 +2137,10 @@ export type QueryPairSearchArgs = {
   text: Scalars['String'];
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryPairsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -1959,12 +2151,20 @@ export type QueryPairsArgs = {
   where?: InputMaybe<Pair_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QuerySwapArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QuerySwapsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -1975,18 +2175,30 @@ export type QuerySwapsArgs = {
   where?: InputMaybe<Swap_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryTokenArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryTokenDayDataArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryTokenDayDatasArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -1997,12 +2209,20 @@ export type QueryTokenDayDatasArgs = {
   where?: InputMaybe<TokenDayData_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryTokenHourDataArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryTokenHourDatasArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2013,6 +2233,10 @@ export type QueryTokenHourDatasArgs = {
   where?: InputMaybe<TokenHourData_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryTokenSearchArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2021,6 +2245,10 @@ export type QueryTokenSearchArgs = {
   text: Scalars['String'];
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryTokensArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2031,12 +2259,20 @@ export type QueryTokensArgs = {
   where?: InputMaybe<Token_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryTransactionArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryTransactionsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2047,12 +2283,20 @@ export type QueryTransactionsArgs = {
   where?: InputMaybe<Transaction_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryUserArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryUserSearchArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2061,6 +2305,10 @@ export type QueryUserSearchArgs = {
   text: Scalars['String'];
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type QueryUsersArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2111,16 +2359,28 @@ export type Subscription = {
   users: Array<User>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type Subscription_MetaArgs = {
   block?: InputMaybe<Block_Height>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionBundleArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionBundlesArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2131,12 +2391,20 @@ export type SubscriptionBundlesArgs = {
   where?: InputMaybe<Bundle_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionBurnArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionBurnsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2147,12 +2415,20 @@ export type SubscriptionBurnsArgs = {
   where?: InputMaybe<Burn_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionDayDataArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionDayDatasArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2163,6 +2439,10 @@ export type SubscriptionDayDatasArgs = {
   where?: InputMaybe<DayData_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionFactoriesArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2173,18 +2453,30 @@ export type SubscriptionFactoriesArgs = {
   where?: InputMaybe<Factory_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionFactoryArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionHourDataArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionHourDatasArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2195,18 +2487,30 @@ export type SubscriptionHourDatasArgs = {
   where?: InputMaybe<HourData_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionLiquidityPositionArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionLiquidityPositionSnapshotArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionLiquidityPositionSnapshotsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2217,6 +2521,10 @@ export type SubscriptionLiquidityPositionSnapshotsArgs = {
   where?: InputMaybe<LiquidityPositionSnapshot_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionLiquidityPositionsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2227,12 +2535,20 @@ export type SubscriptionLiquidityPositionsArgs = {
   where?: InputMaybe<LiquidityPosition_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionMintArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionMintsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2243,18 +2559,30 @@ export type SubscriptionMintsArgs = {
   where?: InputMaybe<Mint_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionPairArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionPairDayDataArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionPairDayDatasArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2265,12 +2593,20 @@ export type SubscriptionPairDayDatasArgs = {
   where?: InputMaybe<PairDayData_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionPairHourDataArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionPairHourDatasArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2281,6 +2617,10 @@ export type SubscriptionPairHourDatasArgs = {
   where?: InputMaybe<PairHourData_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionPairsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2291,12 +2631,20 @@ export type SubscriptionPairsArgs = {
   where?: InputMaybe<Pair_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionSwapArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionSwapsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2307,18 +2655,30 @@ export type SubscriptionSwapsArgs = {
   where?: InputMaybe<Swap_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionTokenArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionTokenDayDataArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionTokenDayDatasArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2329,12 +2689,20 @@ export type SubscriptionTokenDayDatasArgs = {
   where?: InputMaybe<TokenDayData_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionTokenHourDataArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionTokenHourDatasArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2345,6 +2713,10 @@ export type SubscriptionTokenHourDatasArgs = {
   where?: InputMaybe<TokenHourData_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionTokensArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2355,12 +2727,20 @@ export type SubscriptionTokensArgs = {
   where?: InputMaybe<Token_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionTransactionArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionTransactionsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2371,12 +2751,20 @@ export type SubscriptionTransactionsArgs = {
   where?: InputMaybe<Transaction_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionUserArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type SubscriptionUsersArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2538,7 +2926,11 @@ export enum Swap_OrderBy {
   Sender = 'sender',
   Timestamp = 'timestamp',
   To = 'to',
+<<<<<<< HEAD
   Transaction = 'transaction',
+=======
+  Transaction = 'transaction'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export type Token = {
@@ -2563,6 +2955,10 @@ export type Token = {
   volumeUSD: Scalars['BigDecimal'];
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type TokenBasePairsArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Pair_OrderBy>;
@@ -2571,6 +2967,10 @@ export type TokenBasePairsArgs = {
   where?: InputMaybe<Pair_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type TokenBasePairsDayDataArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<PairDayData_OrderBy>;
@@ -2579,6 +2979,10 @@ export type TokenBasePairsDayDataArgs = {
   where?: InputMaybe<PairDayData_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type TokenDayDataArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<TokenDayData_OrderBy>;
@@ -2587,6 +2991,10 @@ export type TokenDayDataArgs = {
   where?: InputMaybe<TokenDayData_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type TokenHourDataArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<TokenHourData_OrderBy>;
@@ -2595,6 +3003,10 @@ export type TokenHourDataArgs = {
   where?: InputMaybe<TokenHourData_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type TokenQuotePairsArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Pair_OrderBy>;
@@ -2603,6 +3015,10 @@ export type TokenQuotePairsArgs = {
   where?: InputMaybe<Pair_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type TokenQuotePairsDayDataArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<PairDayData_OrderBy>;
@@ -2743,7 +3159,11 @@ export enum TokenDayData_OrderBy {
   TxCount = 'txCount',
   Volume = 'volume',
   VolumeEth = 'volumeETH',
+<<<<<<< HEAD
   VolumeUsd = 'volumeUSD',
+=======
+  VolumeUsd = 'volumeUSD'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export type TokenHourData = {
@@ -2878,7 +3298,11 @@ export enum TokenHourData_OrderBy {
   TxCount = 'txCount',
   Volume = 'volume',
   VolumeEth = 'volumeETH',
+<<<<<<< HEAD
   VolumeUsd = 'volumeUSD',
+=======
+  VolumeUsd = 'volumeUSD'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export type Token_Filter = {
@@ -3043,7 +3467,11 @@ export enum Token_OrderBy {
   TxCount = 'txCount',
   UntrackedVolumeUsd = 'untrackedVolumeUSD',
   Volume = 'volume',
+<<<<<<< HEAD
   VolumeUsd = 'volumeUSD',
+=======
+  VolumeUsd = 'volumeUSD'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export type Transaction = {
@@ -3056,6 +3484,10 @@ export type Transaction = {
   timestamp: Scalars['BigInt'];
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type TransactionBurnsArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Burn_OrderBy>;
@@ -3064,6 +3496,10 @@ export type TransactionBurnsArgs = {
   where?: InputMaybe<Burn_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type TransactionMintsArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Mint_OrderBy>;
@@ -3072,6 +3508,10 @@ export type TransactionMintsArgs = {
   where?: InputMaybe<Mint_Filter>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type TransactionSwapsArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Swap_OrderBy>;
@@ -3136,7 +3576,11 @@ export enum Transaction_OrderBy {
   Id = 'id',
   Mints = 'mints',
   Swaps = 'swaps',
+<<<<<<< HEAD
   Timestamp = 'timestamp',
+=======
+  Timestamp = 'timestamp'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export type User = {
@@ -3145,6 +3589,10 @@ export type User = {
   liquidityPositions: Array<LiquidityPosition>;
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c15f0091 (chore: update update)
 export type UserLiquidityPositionsArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<LiquidityPosition_OrderBy>;
@@ -3169,7 +3617,11 @@ export type User_Filter = {
 
 export enum User_OrderBy {
   Id = 'id',
+<<<<<<< HEAD
   LiquidityPositions = 'liquidityPositions',
+=======
+  LiquidityPositions = 'liquidityPositions'
+>>>>>>> c15f0091 (chore: update update)
 }
 
 export type _Block_ = {
@@ -3201,6 +3653,7 @@ export enum _SubgraphErrorPolicy_ {
   /** Data will be returned even if the subgraph has indexing errors */
   Allow = 'allow',
   /** If the subgraph has indexing errors, data will be omitted. The default. */
+<<<<<<< HEAD
   Deny = 'deny',
 }
 
@@ -3230,11 +3683,39 @@ export type SdkFunctionWrapper = <T>(
   operationName: string,
   operationType?: string,
 ) => Promise<T>;
+=======
+  Deny = 'deny'
+}
+
+export const SushiPairDayDataFragmentDoc = gql`
+    fragment SushiPairDayData on PairDayData {
+  reserveUSD
+  volumeUSD
+  date
+}
+    `;
+export const SushiPairDayDatasDocument = gql`
+    query SushiPairDayDatas($first: Int, $where: PairDayData_filter, $orderBy: PairDayData_orderBy, $orderDirection: OrderDirection) {
+  pairDayDatas(
+    first: $first
+    where: $where
+    orderBy: $orderBy
+    orderDirection: $orderDirection
+  ) {
+    ...SushiPairDayData
+  }
+}
+    ${SushiPairDayDataFragmentDoc}`;
+
+export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string) => Promise<T>;
+
+>>>>>>> c15f0091 (chore: update update)
 
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+<<<<<<< HEAD
     SushiPairDayDatas(
       variables?: SushiPairDayDatasQueryVariables,
       requestHeaders?: Dom.RequestInit['headers'],
@@ -3253,6 +3734,15 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
 }
 export type Sdk = ReturnType<typeof getSdk>;
 export type SushiPairDayDataFragment = { __typename?: 'PairDayData'; reserveUSD: any; volumeUSD: any; date: number };
+=======
+    SushiPairDayDatas(variables?: SushiPairDayDatasQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SushiPairDayDatasQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<SushiPairDayDatasQuery>(SushiPairDayDatasDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'SushiPairDayDatas', 'query');
+    }
+  };
+}
+export type Sdk = ReturnType<typeof getSdk>;
+export type SushiPairDayDataFragment = { __typename?: 'PairDayData', reserveUSD: any, volumeUSD: any, date: number };
+>>>>>>> c15f0091 (chore: update update)
 
 export type SushiPairDayDatasQueryVariables = Exact<{
   first?: InputMaybe<Scalars['Int']>;
@@ -3261,7 +3751,12 @@ export type SushiPairDayDatasQueryVariables = Exact<{
   orderDirection?: InputMaybe<OrderDirection>;
 }>;
 
+<<<<<<< HEAD
 export type SushiPairDayDatasQuery = {
   __typename?: 'Query';
   pairDayDatas: Array<{ __typename?: 'PairDayData'; reserveUSD: any; volumeUSD: any; date: number }>;
 };
+=======
+
+export type SushiPairDayDatasQuery = { __typename?: 'Query', pairDayDatas: Array<{ __typename?: 'PairDayData', reserveUSD: any, volumeUSD: any, date: number }> };
+>>>>>>> c15f0091 (chore: update update)

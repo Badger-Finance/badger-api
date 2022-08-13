@@ -2,15 +2,22 @@
 /* tslint:disable */
 /* eslint-disable */
 
+<<<<<<< HEAD
 import { Contract, Signer, utils } from 'ethers';
 import { Provider } from '@ethersproject/providers';
 import type { CurvePool, CurvePoolInterface } from '../CurvePool';
+=======
+import { Contract, Signer, utils } from "ethers";
+import type { Provider } from "@ethersproject/providers";
+import type { CurvePool, CurvePoolInterface } from "../CurvePool";
+>>>>>>> c15f0091 (chore: update update)
 
 const _abi = [
   {
     constant: true,
     inputs: [
       {
+<<<<<<< HEAD
         type: 'int128',
         name: 'arg0',
       },
@@ -24,11 +31,27 @@ const _abi = [
     ],
     payable: false,
     type: 'function',
+=======
+        type: "int128",
+        name: "arg0",
+      },
+    ],
+    name: "coins",
+    outputs: [
+      {
+        type: "address",
+        name: "",
+      },
+    ],
+    payable: false,
+    type: "function",
+>>>>>>> c15f0091 (chore: update update)
   },
   {
     constant: true,
     inputs: [
       {
+<<<<<<< HEAD
         type: 'int128',
         name: 'arg0',
       },
@@ -42,6 +65,21 @@ const _abi = [
     ],
     payable: false,
     type: 'function',
+=======
+        type: "int128",
+        name: "arg0",
+      },
+    ],
+    name: "balances",
+    outputs: [
+      {
+        type: "uint256",
+        name: "",
+      },
+    ],
+    payable: false,
+    type: "function",
+>>>>>>> c15f0091 (chore: update update)
   },
 ];
 
@@ -50,7 +88,14 @@ export class CurvePool__factory {
   static createInterface(): CurvePoolInterface {
     return new utils.Interface(_abi) as CurvePoolInterface;
   }
+<<<<<<< HEAD
   static connect(address: string, signerOrProvider: Signer | Provider): CurvePool {
+=======
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): CurvePool {
+>>>>>>> c15f0091 (chore: update update)
     return new Contract(address, _abi, signerOrProvider) as CurvePool;
   }
 }

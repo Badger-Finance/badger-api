@@ -38,6 +38,7 @@ custom:
 
   serverless-offline:
     noPrependStageInUrl: true
+    useDocker: true
 
   table:
     YIELD_SNAPSHOTS_DATA: yield-snapshots-${self:custom.stage}

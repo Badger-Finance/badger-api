@@ -2,6 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
+<<<<<<< HEAD
 import { Contract, Signer, utils } from 'ethers';
 import { Provider } from '@ethersproject/providers';
 import type { CurvePool3, CurvePool3Interface } from '../CurvePool3';
@@ -33,10 +34,44 @@ const _abi = [
       {
         name: 'tokens_bought',
         type: 'uint256',
+=======
+import { Contract, Signer, utils } from "ethers";
+import type { Provider } from "@ethersproject/providers";
+import type { CurvePool3, CurvePool3Interface } from "../CurvePool3";
+
+const _abi = [
+  {
+    name: "TokenExchange",
+    inputs: [
+      {
+        name: "buyer",
+        type: "address",
+        indexed: true,
+      },
+      {
+        name: "sold_id",
+        type: "uint256",
+        indexed: false,
+      },
+      {
+        name: "tokens_sold",
+        type: "uint256",
+        indexed: false,
+      },
+      {
+        name: "bought_id",
+        type: "uint256",
+        indexed: false,
+      },
+      {
+        name: "tokens_bought",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
         indexed: false,
       },
     ],
     anonymous: false,
+<<<<<<< HEAD
     type: 'event',
   },
   {
@@ -60,10 +95,36 @@ const _abi = [
       {
         name: 'token_supply',
         type: 'uint256',
+=======
+    type: "event",
+  },
+  {
+    name: "AddLiquidity",
+    inputs: [
+      {
+        name: "provider",
+        type: "address",
+        indexed: true,
+      },
+      {
+        name: "token_amounts",
+        type: "uint256[2]",
+        indexed: false,
+      },
+      {
+        name: "fee",
+        type: "uint256",
+        indexed: false,
+      },
+      {
+        name: "token_supply",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
         indexed: false,
       },
     ],
     anonymous: false,
+<<<<<<< HEAD
     type: 'event',
   },
   {
@@ -82,10 +143,31 @@ const _abi = [
       {
         name: 'token_supply',
         type: 'uint256',
+=======
+    type: "event",
+  },
+  {
+    name: "RemoveLiquidity",
+    inputs: [
+      {
+        name: "provider",
+        type: "address",
+        indexed: true,
+      },
+      {
+        name: "token_amounts",
+        type: "uint256[2]",
+        indexed: false,
+      },
+      {
+        name: "token_supply",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
         indexed: false,
       },
     ],
     anonymous: false,
+<<<<<<< HEAD
     type: 'event',
   },
   {
@@ -109,10 +191,36 @@ const _abi = [
       {
         name: 'coin_amount',
         type: 'uint256',
+=======
+    type: "event",
+  },
+  {
+    name: "RemoveLiquidityOne",
+    inputs: [
+      {
+        name: "provider",
+        type: "address",
+        indexed: true,
+      },
+      {
+        name: "token_amount",
+        type: "uint256",
+        indexed: false,
+      },
+      {
+        name: "coin_index",
+        type: "uint256",
+        indexed: false,
+      },
+      {
+        name: "coin_amount",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
         indexed: false,
       },
     ],
     anonymous: false,
+<<<<<<< HEAD
     type: 'event',
   },
   {
@@ -156,10 +264,56 @@ const _abi = [
       {
         name: 'ma_half_time',
         type: 'uint256',
+=======
+    type: "event",
+  },
+  {
+    name: "CommitNewParameters",
+    inputs: [
+      {
+        name: "deadline",
+        type: "uint256",
+        indexed: true,
+      },
+      {
+        name: "admin_fee",
+        type: "uint256",
+        indexed: false,
+      },
+      {
+        name: "mid_fee",
+        type: "uint256",
+        indexed: false,
+      },
+      {
+        name: "out_fee",
+        type: "uint256",
+        indexed: false,
+      },
+      {
+        name: "fee_gamma",
+        type: "uint256",
+        indexed: false,
+      },
+      {
+        name: "allowed_extra_profit",
+        type: "uint256",
+        indexed: false,
+      },
+      {
+        name: "adjustment_step",
+        type: "uint256",
+        indexed: false,
+      },
+      {
+        name: "ma_half_time",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
         indexed: false,
       },
     ],
     anonymous: false,
+<<<<<<< HEAD
     type: 'event',
   },
   {
@@ -198,10 +352,51 @@ const _abi = [
       {
         name: 'ma_half_time',
         type: 'uint256',
+=======
+    type: "event",
+  },
+  {
+    name: "NewParameters",
+    inputs: [
+      {
+        name: "admin_fee",
+        type: "uint256",
+        indexed: false,
+      },
+      {
+        name: "mid_fee",
+        type: "uint256",
+        indexed: false,
+      },
+      {
+        name: "out_fee",
+        type: "uint256",
+        indexed: false,
+      },
+      {
+        name: "fee_gamma",
+        type: "uint256",
+        indexed: false,
+      },
+      {
+        name: "allowed_extra_profit",
+        type: "uint256",
+        indexed: false,
+      },
+      {
+        name: "adjustment_step",
+        type: "uint256",
+        indexed: false,
+      },
+      {
+        name: "ma_half_time",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
         indexed: false,
       },
     ],
     anonymous: false,
+<<<<<<< HEAD
     type: 'event',
   },
   {
@@ -235,10 +430,46 @@ const _abi = [
       {
         name: 'future_time',
         type: 'uint256',
+=======
+    type: "event",
+  },
+  {
+    name: "RampAgamma",
+    inputs: [
+      {
+        name: "initial_A",
+        type: "uint256",
+        indexed: false,
+      },
+      {
+        name: "future_A",
+        type: "uint256",
+        indexed: false,
+      },
+      {
+        name: "initial_gamma",
+        type: "uint256",
+        indexed: false,
+      },
+      {
+        name: "future_gamma",
+        type: "uint256",
+        indexed: false,
+      },
+      {
+        name: "initial_time",
+        type: "uint256",
+        indexed: false,
+      },
+      {
+        name: "future_time",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
         indexed: false,
       },
     ],
     anonymous: false,
+<<<<<<< HEAD
     type: 'event',
   },
   {
@@ -257,10 +488,31 @@ const _abi = [
       {
         name: 'time',
         type: 'uint256',
+=======
+    type: "event",
+  },
+  {
+    name: "StopRampA",
+    inputs: [
+      {
+        name: "current_A",
+        type: "uint256",
+        indexed: false,
+      },
+      {
+        name: "current_gamma",
+        type: "uint256",
+        indexed: false,
+      },
+      {
+        name: "time",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
         indexed: false,
       },
     ],
     anonymous: false,
+<<<<<<< HEAD
     type: 'event',
   },
   {
@@ -274,10 +526,26 @@ const _abi = [
       {
         name: 'tokens',
         type: 'uint256',
+=======
+    type: "event",
+  },
+  {
+    name: "ClaimAdminFee",
+    inputs: [
+      {
+        name: "admin",
+        type: "address",
+        indexed: true,
+      },
+      {
+        name: "tokens",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
         indexed: false,
       },
     ],
     anonymous: false,
+<<<<<<< HEAD
     type: 'event',
   },
   {
@@ -287,11 +555,23 @@ const _abi = [
       {
         name: '_weth',
         type: 'address',
+=======
+    type: "event",
+  },
+  {
+    stateMutability: "nonpayable",
+    type: "constructor",
+    inputs: [
+      {
+        name: "_weth",
+        type: "address",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
     outputs: [],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'payable',
     type: 'fallback',
   },
@@ -315,16 +595,47 @@ const _abi = [
       {
         name: 'min_dy',
         type: 'uint256',
+=======
+    stateMutability: "payable",
+    type: "fallback",
+  },
+  {
+    stateMutability: "payable",
+    type: "function",
+    name: "exchange",
+    inputs: [
+      {
+        name: "i",
+        type: "uint256",
+      },
+      {
+        name: "j",
+        type: "uint256",
+      },
+      {
+        name: "dx",
+        type: "uint256",
+      },
+      {
+        name: "min_dy",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
     outputs: [
       {
+<<<<<<< HEAD
         name: '',
         type: 'uint256',
+=======
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'payable',
     type: 'function',
     name: 'exchange',
@@ -348,16 +659,47 @@ const _abi = [
       {
         name: 'use_eth',
         type: 'bool',
+=======
+    stateMutability: "payable",
+    type: "function",
+    name: "exchange",
+    inputs: [
+      {
+        name: "i",
+        type: "uint256",
+      },
+      {
+        name: "j",
+        type: "uint256",
+      },
+      {
+        name: "dx",
+        type: "uint256",
+      },
+      {
+        name: "min_dy",
+        type: "uint256",
+      },
+      {
+        name: "use_eth",
+        type: "bool",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
     outputs: [
       {
+<<<<<<< HEAD
         name: '',
         type: 'uint256',
+=======
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'payable',
     type: 'function',
     name: 'exchange',
@@ -385,16 +727,51 @@ const _abi = [
       {
         name: 'receiver',
         type: 'address',
+=======
+    stateMutability: "payable",
+    type: "function",
+    name: "exchange",
+    inputs: [
+      {
+        name: "i",
+        type: "uint256",
+      },
+      {
+        name: "j",
+        type: "uint256",
+      },
+      {
+        name: "dx",
+        type: "uint256",
+      },
+      {
+        name: "min_dy",
+        type: "uint256",
+      },
+      {
+        name: "use_eth",
+        type: "bool",
+      },
+      {
+        name: "receiver",
+        type: "address",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
     outputs: [
       {
+<<<<<<< HEAD
         name: '',
         type: 'uint256',
+=======
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'payable',
     type: 'function',
     name: 'exchange_underlying',
@@ -414,16 +791,43 @@ const _abi = [
       {
         name: 'min_dy',
         type: 'uint256',
+=======
+    stateMutability: "payable",
+    type: "function",
+    name: "exchange_underlying",
+    inputs: [
+      {
+        name: "i",
+        type: "uint256",
+      },
+      {
+        name: "j",
+        type: "uint256",
+      },
+      {
+        name: "dx",
+        type: "uint256",
+      },
+      {
+        name: "min_dy",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
     outputs: [
       {
+<<<<<<< HEAD
         name: '',
         type: 'uint256',
+=======
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'payable',
     type: 'function',
     name: 'exchange_underlying',
@@ -447,16 +851,47 @@ const _abi = [
       {
         name: 'receiver',
         type: 'address',
+=======
+    stateMutability: "payable",
+    type: "function",
+    name: "exchange_underlying",
+    inputs: [
+      {
+        name: "i",
+        type: "uint256",
+      },
+      {
+        name: "j",
+        type: "uint256",
+      },
+      {
+        name: "dx",
+        type: "uint256",
+      },
+      {
+        name: "min_dy",
+        type: "uint256",
+      },
+      {
+        name: "receiver",
+        type: "address",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
     outputs: [
       {
+<<<<<<< HEAD
         name: '',
         type: 'uint256',
+=======
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'payable',
     type: 'function',
     name: 'exchange_extended',
@@ -492,16 +927,59 @@ const _abi = [
       {
         name: 'cb',
         type: 'bytes32',
+=======
+    stateMutability: "payable",
+    type: "function",
+    name: "exchange_extended",
+    inputs: [
+      {
+        name: "i",
+        type: "uint256",
+      },
+      {
+        name: "j",
+        type: "uint256",
+      },
+      {
+        name: "dx",
+        type: "uint256",
+      },
+      {
+        name: "min_dy",
+        type: "uint256",
+      },
+      {
+        name: "use_eth",
+        type: "bool",
+      },
+      {
+        name: "sender",
+        type: "address",
+      },
+      {
+        name: "receiver",
+        type: "address",
+      },
+      {
+        name: "cb",
+        type: "bytes32",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
     outputs: [
       {
+<<<<<<< HEAD
         name: '',
         type: 'uint256',
+=======
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'payable',
     type: 'function',
     name: 'add_liquidity',
@@ -513,16 +991,35 @@ const _abi = [
       {
         name: 'min_mint_amount',
         type: 'uint256',
+=======
+    stateMutability: "payable",
+    type: "function",
+    name: "add_liquidity",
+    inputs: [
+      {
+        name: "amounts",
+        type: "uint256[2]",
+      },
+      {
+        name: "min_mint_amount",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
     outputs: [
       {
+<<<<<<< HEAD
         name: '',
         type: 'uint256',
+=======
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'payable',
     type: 'function',
     name: 'add_liquidity',
@@ -538,16 +1035,39 @@ const _abi = [
       {
         name: 'use_eth',
         type: 'bool',
+=======
+    stateMutability: "payable",
+    type: "function",
+    name: "add_liquidity",
+    inputs: [
+      {
+        name: "amounts",
+        type: "uint256[2]",
+      },
+      {
+        name: "min_mint_amount",
+        type: "uint256",
+      },
+      {
+        name: "use_eth",
+        type: "bool",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
     outputs: [
       {
+<<<<<<< HEAD
         name: '',
         type: 'uint256',
+=======
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'payable',
     type: 'function',
     name: 'add_liquidity',
@@ -567,16 +1087,43 @@ const _abi = [
       {
         name: 'receiver',
         type: 'address',
+=======
+    stateMutability: "payable",
+    type: "function",
+    name: "add_liquidity",
+    inputs: [
+      {
+        name: "amounts",
+        type: "uint256[2]",
+      },
+      {
+        name: "min_mint_amount",
+        type: "uint256",
+      },
+      {
+        name: "use_eth",
+        type: "bool",
+      },
+      {
+        name: "receiver",
+        type: "address",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
     outputs: [
       {
+<<<<<<< HEAD
         name: '',
         type: 'uint256',
+=======
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'nonpayable',
     type: 'function',
     name: 'remove_liquidity',
@@ -588,11 +1135,25 @@ const _abi = [
       {
         name: 'min_amounts',
         type: 'uint256[2]',
+=======
+    stateMutability: "nonpayable",
+    type: "function",
+    name: "remove_liquidity",
+    inputs: [
+      {
+        name: "_amount",
+        type: "uint256",
+      },
+      {
+        name: "min_amounts",
+        type: "uint256[2]",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
     outputs: [],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'nonpayable',
     type: 'function',
     name: 'remove_liquidity',
@@ -608,11 +1169,29 @@ const _abi = [
       {
         name: 'use_eth',
         type: 'bool',
+=======
+    stateMutability: "nonpayable",
+    type: "function",
+    name: "remove_liquidity",
+    inputs: [
+      {
+        name: "_amount",
+        type: "uint256",
+      },
+      {
+        name: "min_amounts",
+        type: "uint256[2]",
+      },
+      {
+        name: "use_eth",
+        type: "bool",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
     outputs: [],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'nonpayable',
     type: 'function',
     name: 'remove_liquidity',
@@ -632,11 +1211,33 @@ const _abi = [
       {
         name: 'receiver',
         type: 'address',
+=======
+    stateMutability: "nonpayable",
+    type: "function",
+    name: "remove_liquidity",
+    inputs: [
+      {
+        name: "_amount",
+        type: "uint256",
+      },
+      {
+        name: "min_amounts",
+        type: "uint256[2]",
+      },
+      {
+        name: "use_eth",
+        type: "bool",
+      },
+      {
+        name: "receiver",
+        type: "address",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
     outputs: [],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'nonpayable',
     type: 'function',
     name: 'remove_liquidity_one_coin',
@@ -652,16 +1253,39 @@ const _abi = [
       {
         name: 'min_amount',
         type: 'uint256',
+=======
+    stateMutability: "nonpayable",
+    type: "function",
+    name: "remove_liquidity_one_coin",
+    inputs: [
+      {
+        name: "token_amount",
+        type: "uint256",
+      },
+      {
+        name: "i",
+        type: "uint256",
+      },
+      {
+        name: "min_amount",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
     outputs: [
       {
+<<<<<<< HEAD
         name: '',
         type: 'uint256',
+=======
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'nonpayable',
     type: 'function',
     name: 'remove_liquidity_one_coin',
@@ -681,16 +1305,43 @@ const _abi = [
       {
         name: 'use_eth',
         type: 'bool',
+=======
+    stateMutability: "nonpayable",
+    type: "function",
+    name: "remove_liquidity_one_coin",
+    inputs: [
+      {
+        name: "token_amount",
+        type: "uint256",
+      },
+      {
+        name: "i",
+        type: "uint256",
+      },
+      {
+        name: "min_amount",
+        type: "uint256",
+      },
+      {
+        name: "use_eth",
+        type: "bool",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
     outputs: [
       {
+<<<<<<< HEAD
         name: '',
         type: 'uint256',
+=======
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'nonpayable',
     type: 'function',
     name: 'remove_liquidity_one_coin',
@@ -714,23 +1365,60 @@ const _abi = [
       {
         name: 'receiver',
         type: 'address',
+=======
+    stateMutability: "nonpayable",
+    type: "function",
+    name: "remove_liquidity_one_coin",
+    inputs: [
+      {
+        name: "token_amount",
+        type: "uint256",
+      },
+      {
+        name: "i",
+        type: "uint256",
+      },
+      {
+        name: "min_amount",
+        type: "uint256",
+      },
+      {
+        name: "use_eth",
+        type: "bool",
+      },
+      {
+        name: "receiver",
+        type: "address",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
     outputs: [
       {
+<<<<<<< HEAD
         name: '',
         type: 'uint256',
+=======
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'nonpayable',
     type: 'function',
     name: 'claim_admin_fees',
+=======
+    stateMutability: "nonpayable",
+    type: "function",
+    name: "claim_admin_fees",
+>>>>>>> c15f0091 (chore: update update)
     inputs: [],
     outputs: [],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'nonpayable',
     type: 'function',
     name: 'ramp_A_gamma',
@@ -746,18 +1434,42 @@ const _abi = [
       {
         name: 'future_time',
         type: 'uint256',
+=======
+    stateMutability: "nonpayable",
+    type: "function",
+    name: "ramp_A_gamma",
+    inputs: [
+      {
+        name: "future_A",
+        type: "uint256",
+      },
+      {
+        name: "future_gamma",
+        type: "uint256",
+      },
+      {
+        name: "future_time",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
     outputs: [],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'nonpayable',
     type: 'function',
     name: 'stop_ramp_A_gamma',
+=======
+    stateMutability: "nonpayable",
+    type: "function",
+    name: "stop_ramp_A_gamma",
+>>>>>>> c15f0091 (chore: update update)
     inputs: [],
     outputs: [],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'nonpayable',
     type: 'function',
     name: 'commit_new_parameters',
@@ -789,25 +1501,71 @@ const _abi = [
       {
         name: '_new_ma_half_time',
         type: 'uint256',
+=======
+    stateMutability: "nonpayable",
+    type: "function",
+    name: "commit_new_parameters",
+    inputs: [
+      {
+        name: "_new_mid_fee",
+        type: "uint256",
+      },
+      {
+        name: "_new_out_fee",
+        type: "uint256",
+      },
+      {
+        name: "_new_admin_fee",
+        type: "uint256",
+      },
+      {
+        name: "_new_fee_gamma",
+        type: "uint256",
+      },
+      {
+        name: "_new_allowed_extra_profit",
+        type: "uint256",
+      },
+      {
+        name: "_new_adjustment_step",
+        type: "uint256",
+      },
+      {
+        name: "_new_ma_half_time",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
     outputs: [],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'nonpayable',
     type: 'function',
     name: 'apply_new_parameters',
+=======
+    stateMutability: "nonpayable",
+    type: "function",
+    name: "apply_new_parameters",
+>>>>>>> c15f0091 (chore: update update)
     inputs: [],
     outputs: [],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'nonpayable',
     type: 'function',
     name: 'revert_new_parameters',
+=======
+    stateMutability: "nonpayable",
+    type: "function",
+    name: "revert_new_parameters",
+>>>>>>> c15f0091 (chore: update update)
     inputs: [],
     outputs: [],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'get_dy',
@@ -823,16 +1581,39 @@ const _abi = [
       {
         name: 'dx',
         type: 'uint256',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "get_dy",
+    inputs: [
+      {
+        name: "i",
+        type: "uint256",
+      },
+      {
+        name: "j",
+        type: "uint256",
+      },
+      {
+        name: "dx",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
     outputs: [
       {
+<<<<<<< HEAD
         name: '',
         type: 'uint256',
+=======
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'calc_token_amount',
@@ -840,16 +1621,31 @@ const _abi = [
       {
         name: 'amounts',
         type: 'uint256[2]',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "calc_token_amount",
+    inputs: [
+      {
+        name: "amounts",
+        type: "uint256[2]",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
     outputs: [
       {
+<<<<<<< HEAD
         name: '',
         type: 'uint256',
+=======
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'calc_withdraw_one_coin',
@@ -861,16 +1657,35 @@ const _abi = [
       {
         name: 'i',
         type: 'uint256',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "calc_withdraw_one_coin",
+    inputs: [
+      {
+        name: "token_amount",
+        type: "uint256",
+      },
+      {
+        name: "i",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
     outputs: [
       {
+<<<<<<< HEAD
         name: '',
         type: 'uint256',
+=======
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'lp_price',
@@ -879,10 +1694,21 @@ const _abi = [
       {
         name: '',
         type: 'uint256',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "lp_price",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'A',
@@ -891,10 +1717,21 @@ const _abi = [
       {
         name: '',
         type: 'uint256',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "A",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'gamma',
@@ -903,10 +1740,21 @@ const _abi = [
       {
         name: '',
         type: 'uint256',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "gamma",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'fee',
@@ -915,10 +1763,21 @@ const _abi = [
       {
         name: '',
         type: 'uint256',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "fee",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'get_virtual_price',
@@ -927,10 +1786,21 @@ const _abi = [
       {
         name: '',
         type: 'uint256',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "get_virtual_price",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'price_oracle',
@@ -939,10 +1809,21 @@ const _abi = [
       {
         name: '',
         type: 'uint256',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "price_oracle",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'nonpayable',
     type: 'function',
     name: 'initialize',
@@ -998,11 +1879,69 @@ const _abi = [
       {
         name: '_precisions',
         type: 'uint256',
+=======
+    stateMutability: "nonpayable",
+    type: "function",
+    name: "initialize",
+    inputs: [
+      {
+        name: "A",
+        type: "uint256",
+      },
+      {
+        name: "gamma",
+        type: "uint256",
+      },
+      {
+        name: "mid_fee",
+        type: "uint256",
+      },
+      {
+        name: "out_fee",
+        type: "uint256",
+      },
+      {
+        name: "allowed_extra_profit",
+        type: "uint256",
+      },
+      {
+        name: "fee_gamma",
+        type: "uint256",
+      },
+      {
+        name: "adjustment_step",
+        type: "uint256",
+      },
+      {
+        name: "admin_fee",
+        type: "uint256",
+      },
+      {
+        name: "ma_half_time",
+        type: "uint256",
+      },
+      {
+        name: "initial_price",
+        type: "uint256",
+      },
+      {
+        name: "_token",
+        type: "address",
+      },
+      {
+        name: "_coins",
+        type: "address[2]",
+      },
+      {
+        name: "_precisions",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
     outputs: [],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'token',
@@ -1011,10 +1950,21 @@ const _abi = [
       {
         name: '',
         type: 'address',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "token",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'coins',
@@ -1022,16 +1972,31 @@ const _abi = [
       {
         name: 'arg0',
         type: 'uint256',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "coins",
+    inputs: [
+      {
+        name: "arg0",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
     outputs: [
       {
+<<<<<<< HEAD
         name: '',
         type: 'address',
+=======
+        name: "",
+        type: "address",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'price_scale',
@@ -1040,10 +2005,21 @@ const _abi = [
       {
         name: '',
         type: 'uint256',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "price_scale",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'last_prices',
@@ -1052,10 +2028,21 @@ const _abi = [
       {
         name: '',
         type: 'uint256',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "last_prices",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'last_prices_timestamp',
@@ -1064,10 +2051,21 @@ const _abi = [
       {
         name: '',
         type: 'uint256',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "last_prices_timestamp",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'initial_A_gamma',
@@ -1076,10 +2074,21 @@ const _abi = [
       {
         name: '',
         type: 'uint256',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "initial_A_gamma",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'future_A_gamma',
@@ -1088,10 +2097,21 @@ const _abi = [
       {
         name: '',
         type: 'uint256',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "future_A_gamma",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'initial_A_gamma_time',
@@ -1100,10 +2120,21 @@ const _abi = [
       {
         name: '',
         type: 'uint256',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "initial_A_gamma_time",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'future_A_gamma_time',
@@ -1112,10 +2143,21 @@ const _abi = [
       {
         name: '',
         type: 'uint256',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "future_A_gamma_time",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'allowed_extra_profit',
@@ -1124,10 +2166,21 @@ const _abi = [
       {
         name: '',
         type: 'uint256',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "allowed_extra_profit",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'future_allowed_extra_profit',
@@ -1136,10 +2189,21 @@ const _abi = [
       {
         name: '',
         type: 'uint256',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "future_allowed_extra_profit",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'fee_gamma',
@@ -1148,10 +2212,21 @@ const _abi = [
       {
         name: '',
         type: 'uint256',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "fee_gamma",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'future_fee_gamma',
@@ -1160,10 +2235,21 @@ const _abi = [
       {
         name: '',
         type: 'uint256',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "future_fee_gamma",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'adjustment_step',
@@ -1172,10 +2258,21 @@ const _abi = [
       {
         name: '',
         type: 'uint256',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "adjustment_step",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'future_adjustment_step',
@@ -1184,10 +2281,21 @@ const _abi = [
       {
         name: '',
         type: 'uint256',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "future_adjustment_step",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'ma_half_time',
@@ -1196,10 +2304,21 @@ const _abi = [
       {
         name: '',
         type: 'uint256',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "ma_half_time",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'future_ma_half_time',
@@ -1208,10 +2327,21 @@ const _abi = [
       {
         name: '',
         type: 'uint256',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "future_ma_half_time",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'mid_fee',
@@ -1220,10 +2350,21 @@ const _abi = [
       {
         name: '',
         type: 'uint256',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "mid_fee",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'out_fee',
@@ -1232,10 +2373,21 @@ const _abi = [
       {
         name: '',
         type: 'uint256',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "out_fee",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'admin_fee',
@@ -1244,10 +2396,21 @@ const _abi = [
       {
         name: '',
         type: 'uint256',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "admin_fee",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'future_mid_fee',
@@ -1256,10 +2419,21 @@ const _abi = [
       {
         name: '',
         type: 'uint256',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "future_mid_fee",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'future_out_fee',
@@ -1268,10 +2442,21 @@ const _abi = [
       {
         name: '',
         type: 'uint256',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "future_out_fee",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'future_admin_fee',
@@ -1280,10 +2465,21 @@ const _abi = [
       {
         name: '',
         type: 'uint256',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "future_admin_fee",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'balances',
@@ -1291,16 +2487,31 @@ const _abi = [
       {
         name: 'arg0',
         type: 'uint256',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "balances",
+    inputs: [
+      {
+        name: "arg0",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
     outputs: [
       {
+<<<<<<< HEAD
         name: '',
         type: 'uint256',
+=======
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'D',
@@ -1309,10 +2520,21 @@ const _abi = [
       {
         name: '',
         type: 'uint256',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "D",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'factory',
@@ -1321,10 +2543,21 @@ const _abi = [
       {
         name: '',
         type: 'address',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "factory",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'xcp_profit',
@@ -1333,10 +2566,21 @@ const _abi = [
       {
         name: '',
         type: 'uint256',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "xcp_profit",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'xcp_profit_a',
@@ -1345,10 +2589,21 @@ const _abi = [
       {
         name: '',
         type: 'uint256',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "xcp_profit_a",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'virtual_price',
@@ -1357,10 +2612,21 @@ const _abi = [
       {
         name: '',
         type: 'uint256',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "virtual_price",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
   {
+<<<<<<< HEAD
     stateMutability: 'view',
     type: 'function',
     name: 'admin_actions_deadline',
@@ -1369,6 +2635,16 @@ const _abi = [
       {
         name: '',
         type: 'uint256',
+=======
+    stateMutability: "view",
+    type: "function",
+    name: "admin_actions_deadline",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+>>>>>>> c15f0091 (chore: update update)
       },
     ],
   },
@@ -1379,7 +2655,14 @@ export class CurvePool3__factory {
   static createInterface(): CurvePool3Interface {
     return new utils.Interface(_abi) as CurvePool3Interface;
   }
+<<<<<<< HEAD
   static connect(address: string, signerOrProvider: Signer | Provider): CurvePool3 {
+=======
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): CurvePool3 {
+>>>>>>> c15f0091 (chore: update update)
     return new Contract(address, _abi, signerOrProvider) as CurvePool3;
   }
 }
