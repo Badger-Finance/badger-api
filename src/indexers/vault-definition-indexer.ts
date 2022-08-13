@@ -20,6 +20,7 @@ export async function captureVaultData() {
     }
 
     if (registryVaults.length === 0) {
+      console.warn(`No vault was found for chain: ${chain.network}`);
       continue;
     }
 
