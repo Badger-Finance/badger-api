@@ -12,7 +12,7 @@ import methodOverride from "method-override";
 import { join } from "path";
 
 import { config } from "./config/index";
-import { V2_CONTROLLERS, V3_CONTROLLERS } from "./ControllerRegistry";
+import { V2_CONTROLLERS, V3_CONTROLLERS } from "./controllers";
 
 @Configuration({
   ...config,

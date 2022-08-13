@@ -1,13 +1,13 @@
-import { ChartTimeFrame } from '@badger-dao/sdk';
-import { PlatformTest } from '@tsed/common';
-import SuperTest from 'supertest';
+import { ChartTimeFrame } from "@badger-dao/sdk";
+import { PlatformTest } from "@tsed/common";
+import SuperTest from "supertest";
 
-import { NetworkStatus } from '../errors/enums/network-status.enum';
-import { Server } from '../Server';
-import { TEST_ADDR } from '../test/constants';
-import { setupMockChain } from '../test/mocks.utils';
+import { NetworkStatus } from "../errors/enums/network-status.enum";
+import { Server } from "../server";
+import { TEST_ADDR } from "../test/constants";
+import { setupMockChain } from "../test/mocks.utils";
 
-describe('ChartsController', () => {
+describe("ChartsController", () => {
   let request: SuperTest.SuperTest<SuperTest.Test>;
 
   beforeAll(PlatformTest.bootstrap(Server));
@@ -20,16 +20,16 @@ describe('ChartsController', () => {
     setupMockChain();
   });
 
-  describe('GET /v3/charts/vault', () => {
-    describe('with a missing vault address', () => {
-      it('returns 400, QueryParamError', async () => {
-        const { body } = await request.get('/v3/charts/vault').expect(NetworkStatus.BadRequest);
+  describe("GET /v3/charts/vault", () => {
+    describe("with a missing vault address", () => {
+      it("returns 400, QueryParamError", async () => {
+        const { body } = await request.get("/v3/charts/vault").expect(NetworkStatus.BadRequest);
         expect(body).toMatchSnapshot();
       });
     });
 
-    describe('get vault data with different timeframes', () => {
-      it('should return vault data for YTD', async () => {
+    describe("get vault data with different timeframes", () => {
+      it("should return vault data for YTD", async () => {
         const { body } = await request
           .get(`/v3/charts/vault?address=${TEST_ADDR}&timeframe=${ChartTimeFrame.YTD}`)
           .expect(NetworkStatus.Success);
@@ -37,7 +37,7 @@ describe('ChartsController', () => {
         expect(body).toMatchSnapshot();
       });
 
-      it('should return vault data for 1Y', async () => {
+      it("should return vault data for 1Y", async () => {
         const { body } = await request
           .get(`/v3/charts/vault?address=${TEST_ADDR}&timeframe=${ChartTimeFrame.Year}`)
           .expect(NetworkStatus.Success);

@@ -1,13 +1,13 @@
-import { PlatformTest } from '@tsed/common';
-import { BadRequest, NotFound } from '@tsed/exceptions';
-import SuperTest from 'supertest';
+import { PlatformTest } from "@tsed/common";
+import { BadRequest, NotFound } from "@tsed/exceptions";
+import SuperTest from "supertest";
 
-import { Server } from '../Server';
-import { TEST_ADDR } from '../test/constants';
-import { setupMockAccounts } from '../test/tests.utils';
-import * as accountsUtils from './accounts.utils';
+import { Server } from "../server";
+import { TEST_ADDR } from "../test/constants";
+import { setupMockAccounts } from "../test/tests.utils";
+import * as accountsUtils from "./accounts.utils";
 
-describe('AccountsController', () => {
+describe("AccountsController", () => {
   let request: SuperTest.SuperTest<SuperTest.Test>;
 
   beforeEach(PlatformTest.bootstrap(Server));
@@ -18,22 +18,22 @@ describe('AccountsController', () => {
 
   afterEach(PlatformTest.reset);
 
-  describe('GET /v2/accounts', () => {
-    describe('with no specified account', () => {
-      it('returns a not found response', async () => {
-        const { body } = await request.get('/v2/accounts').expect(NotFound.STATUS);
+  describe("GET /v2/accounts", () => {
+    describe("with no specified account", () => {
+      it("returns a not found response", async () => {
+        const { body } = await request.get("/v2/accounts").expect(NotFound.STATUS);
         expect(body).toMatchSnapshot();
       });
     });
-    describe('with an invalid account input', () => {
-      it('returns a bad request response', async () => {
-        const { body } = await request.get('/v2/accounts/0xjintao').expect(BadRequest.STATUS);
+    describe("with an invalid account input", () => {
+      it("returns a bad request response", async () => {
+        const { body } = await request.get("/v2/accounts/0xjintao").expect(BadRequest.STATUS);
         expect(body).toMatchSnapshot();
       });
     });
-    describe('with a non participant account', () => {
-      it('returns a default account response', async () => {
-        jest.spyOn(accountsUtils, 'getCachedAccount').mockImplementation(async (_chain, address) => ({
+    describe("with a non participant account", () => {
+      it("returns a default account response", async () => {
+        jest.spyOn(accountsUtils, "getCachedAccount").mockImplementation(async (_chain, address) => ({
           address,
           value: 0,
           earnedValue: 0,
@@ -48,15 +48,15 @@ describe('AccountsController', () => {
           bveCvxBalance: 0,
           diggBalance: 0,
           nativeBalance: 0,
-          nonNativeBalance: 0,
+          nonNativeBalance: 0
         }));
-        const { body } = await request.get('/v2/accounts/' + TEST_ADDR).expect(200);
+        const { body } = await request.get("/v2/accounts/" + TEST_ADDR).expect(200);
         expect(body).toMatchSnapshot();
       });
     });
-    describe('with a participant account', () => {
-      it('returns a cached account response', async () => {
-        jest.spyOn(accountsUtils, 'getCachedAccount').mockImplementation(async (_chain, address) => ({
+    describe("with a participant account", () => {
+      it("returns a cached account response", async () => {
+        jest.spyOn(accountsUtils, "getCachedAccount").mockImplementation(async (_chain, address) => ({
           address,
           value: 10,
           earnedValue: 1,
@@ -71,9 +71,9 @@ describe('AccountsController', () => {
           bveCvxBalance: 0,
           diggBalance: 0,
           nativeBalance: 3,
-          nonNativeBalance: 5,
+          nonNativeBalance: 5
         }));
-        const { body } = await request.get('/v2/accounts/' + TEST_ADDR).expect(200);
+        const { body } = await request.get("/v2/accounts/" + TEST_ADDR).expect(200);
         expect(body).toMatchSnapshot();
       });
     });

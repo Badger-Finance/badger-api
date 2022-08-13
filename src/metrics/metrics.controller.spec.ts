@@ -1,10 +1,10 @@
-import { PlatformTest } from '@tsed/common';
-import SuperTest from 'supertest';
+import { PlatformTest } from "@tsed/common";
+import SuperTest from "supertest";
 
-import { Server } from '../Server';
-import { MetricsService } from './metrics.service';
+import { Server } from "../server";
+import { MetricsService } from "./metrics.service";
 
-describe('MetricsController', () => {
+describe("MetricsController", () => {
   let request: SuperTest.SuperTest<SuperTest.Test>;
   let metricsService: MetricsService;
 
@@ -14,16 +14,16 @@ describe('MetricsController', () => {
     metricsService = PlatformTest.get<MetricsService>(MetricsService);
   });
 
-  describe('GET /v2/metrics', () => {
-    it('returns metric', async () => {
-      jest.spyOn(metricsService, 'getProtocolMetrics').mockReturnValue(
+  describe("GET /v2/metrics", () => {
+    it("returns metric", async () => {
+      jest.spyOn(metricsService, "getProtocolMetrics").mockReturnValue(
         Promise.resolve({
           totalUsers: 30_000,
           totalValueLocked: 100_000_000_000,
-          totalVaults: 30,
-        }),
+          totalVaults: 30
+        })
       );
-      const { body } = await request.get('/v2/metrics').expect(200);
+      const { body } = await request.get("/v2/metrics").expect(200);
       expect(body).toMatchSnapshot();
     });
   });
