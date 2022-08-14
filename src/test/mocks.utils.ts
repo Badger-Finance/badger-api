@@ -2,7 +2,7 @@
 
 import { providers } from "@0xsequence/multicall";
 import { DataMapper, QueryIterator, StringToAnyObjectMap } from "@aws/dynamodb-data-mapper";
-import BadgerSDK, { Currency, RegistryService, RewardsService, Token, TokensService, TokenValue } from "@badger-dao/sdk";
+import BadgerSDK, { Currency, Network, RegistryService, RewardsService, Token, TokensService, TokenValue } from "@badger-dao/sdk";
 import { JsonRpcProvider, JsonRpcSigner } from "@ethersproject/providers";
 import createMockInstance from "jest-create-mock-instance";
 import { mock } from "jest-mock-extended";
@@ -26,19 +26,21 @@ import {
   TEST_CURRENT_TIMESTAMP
 } from "./constants";
 
-export function setupMockChain() {
+export function setupMockChain(mockPricing = true) {
   // setup chain pricing
-  jest.spyOn(pricesUtils, "queryPrice").mockImplementation(async (token: string, _currency?: Currency) => ({
-    address: token,
-    price: parseInt(token.slice(0, 5), 16),
-    updatedAt: Date.now()
-  }));
-  jest.spyOn(pricesUtils, "convert").mockImplementation(async (price: number, currency?: Currency) => {
-    if (!currency || currency === Currency.USD) {
-      return price;
-    }
-    return price / 2;
-  });
+  if (mockPricing) {
+    jest.spyOn(pricesUtils, "queryPrice").mockImplementation(async (token: string, _currency?: Currency) => ({
+      address: token,
+      price: parseInt(token.slice(0, 5), 16),
+      updatedAt: Date.now()
+    }));
+    jest.spyOn(pricesUtils, "convert").mockImplementation(async (price: number, currency?: Currency) => {
+      if (!currency || currency === Currency.USD) {
+        return price;
+      }
+      return price / 2;
+    });
+  }
 
   // setup chain vaults
   jest.spyOn(ChainVaults.prototype, "getVault").mockImplementation(async (_) => MOCK_VAULT_DEFINITION);
@@ -67,17 +69,9 @@ export function setupMockChain() {
   mockBatchGet(chainTokensList);
   mockBatchPut(chainTokensList);
 
-  const chain = new TestEthereum(mockProvider);
-
-  jest.spyOn(Chain.prototype, "getGasPrices").mockImplementation(async () => ({
-    rapid: { maxFeePerGas: 223.06, maxPriorityFeePerGas: 3.04 },
-    fast: { maxFeePerGas: 221.96, maxPriorityFeePerGas: 1.94 },
-    standard: { maxFeePerGas: 221.91, maxPriorityFeePerGas: 1.89 },
-    slow: { maxFeePerGas: 221.81, maxPriorityFeePerGas: 1.79 }
-  }));
-
+  // for some reason this causes tests leaks
   jest.spyOn(rewardsUtils, "getTreeDistribution").mockImplementation(async (requestedChain: Chain) => {
-    if (chain.network !== requestedChain.network) {
+    if (requestedChain.network !== Network.Ethereum) {
       return null;
     }
     return MOCK_DISTRIBUTION_FILE;
@@ -88,14 +82,18 @@ export function setupMockChain() {
     MOCK_VAULT_SNAPSHOTS.slice(0, 4).map((snapshot) => {
       const historicSnapshot = Object.assign(new HistoricVaultSnapshotModel(), {
         ...snapshot,
-        id: getVaultEntityId(chain, MOCK_VAULT_SNAPSHOT),
+        id: getVaultEntityId({ network: Network.Ethereum }, MOCK_VAULT_SNAPSHOT),
         timestamp: TEST_CURRENT_TIMESTAMP,
-        chain: chain.network,
+        chain: Network.Ethereum,
         ratio: snapshot.pricePerFullShare
       });
       return historicSnapshot;
     })
   );
+
+  const chain = new TestEthereum(mockProvider);
+
+  jest.spyOn(Chain, "getChain").mockImplementation(() => chain);
 
   return chain;
 }

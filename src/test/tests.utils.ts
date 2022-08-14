@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
-import { DataMapper, QueryIterator, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
-import BadgerSDK, { Network, ONE_DAY_MS, RegistryService, RewardsService, VaultSnapshot } from '@badger-dao/sdk';
-import { JsonRpcProvider, JsonRpcSigner } from '@ethersproject/providers';
-import { ethers } from 'ethers';
-import createMockInstance from 'jest-create-mock-instance';
-import { mock } from 'jest-mock-extended';
+import { DataMapper, QueryIterator, StringToAnyObjectMap } from "@aws/dynamodb-data-mapper";
+import BadgerSDK, { Network, ONE_DAY_MS, RegistryService, RewardsService, VaultSnapshot } from "@badger-dao/sdk";
+import { JsonRpcProvider, JsonRpcSigner } from "@ethersproject/providers";
+import { ethers } from "ethers";
+import createMockInstance from "jest-create-mock-instance";
+import { mock } from "jest-mock-extended";
 
 import VaultsCompoundMock from '../../seed/vault-definition.json';
 import * as accountsUtils from '../accounts/accounts.utils';
@@ -22,7 +22,7 @@ import { Nullable } from '../utils/types.utils';
 // @ts-ignore
 export function setupVaultsCoumpoundDDB(customFilter: Nullable<(v: any) => boolean> = null) {
   // @ts-ignore
-  jest.spyOn(DataMapper.prototype, 'query').mockImplementation((model, keys) => {
+  jest.spyOn(DataMapper.prototype, "query").mockImplementation((model, keys) => {
     let dataSource = VaultsCompoundMock;
     // @ts-ignore
     const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
@@ -40,7 +40,7 @@ export function setupVaultsCoumpoundDDB(customFilter: Nullable<(v: any) => boole
 export function setupDdbVaultsChartsData() {
   /* eslint-disable @typescript-eslint/ban-ts-comment */
   // @ts-ignore
-  jest.spyOn(DataMapper.prototype, 'query').mockImplementation((_model, _condition) => {
+  jest.spyOn(DataMapper.prototype, "query").mockImplementation((_model, _condition) => {
     // @ts-ignore
     const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
     const vaultsChart = vaultsChartDataMock.find((val) => val.id);
@@ -56,7 +56,7 @@ export function defaultAccount(address: string): CachedAccount {
   return {
     address,
     balances: [],
-    updatedAt: 0,
+    updatedAt: 0
   };
 }
 
@@ -87,13 +87,13 @@ export function randomSnapshot(vaultDefinition?: VaultDefinitionModel): VaultSna
       withdrawFee: 0,
       performanceFee: 0,
       strategistFee: 0,
-      aumFee: 0,
+      aumFee: 0
     },
     boostWeight: 5100,
     available,
     apr: 8.323,
     yieldApr: 8.4,
-    harvestApr: 8.37,
+    harvestApr: 8.37
   };
 }
 
@@ -119,12 +119,12 @@ export function randomSnapshots(vaultDefinition?: VaultDefinitionModel, count?: 
         withdrawFee: 50,
         performanceFee: 20,
         strategistFee: 0,
-        aumFee: 0,
+        aumFee: 0
       },
       boostWeight: 5100,
       apr: 13.254,
       yieldApr: 8.4,
-      harvestApr: 8.37,
+      harvestApr: 8.37
     });
   }
   return snapshots;
@@ -144,7 +144,7 @@ export function randomCachedBoosts(count: number): CachedBoost[] {
       nonNativeBalance: 250000 / (i + 1),
       bveCvxBalance: 120 * (i + 1),
       diggBalance: 1.3 * (i + 1),
-      updatedAt: 1000,
+      updatedAt: 1000
     };
     boosts.push(Object.assign(new CachedBoost(), boost));
   }
@@ -152,22 +152,22 @@ export function randomCachedBoosts(count: number): CachedBoost[] {
 }
 
 export function setupMockAccounts() {
-  jest.spyOn(accountsUtils, 'getClaimableBalanceSnapshot').mockImplementation(async () => ({
+  jest.spyOn(accountsUtils, "getClaimableBalanceSnapshot").mockImplementation(async () => ({
     chainStartBlock: dynamodbUtils.getChainStartBlockKey(Network.Ethereum, 10),
     address: TEST_ADDR,
     chain: Network.Ethereum,
     startBlock: 100,
     claimableBalances: [],
     expiresAt: Date.now(),
-    pageId: 0,
+    pageId: 0
   }));
-  jest.spyOn(accountsUtils, 'getLatestMetadata').mockImplementation(async (chain) => ({
+  jest.spyOn(accountsUtils, "getLatestMetadata").mockImplementation(async (chain) => ({
     startBlock: 10,
     endBlock: 15,
     chainStartBlock: dynamodbUtils.getChainStartBlockKey(Network.Ethereum, 10),
     chain: chain.network,
     cycle: 10,
-    count: 0,
+    count: 0
   }));
 }
 
@@ -176,7 +176,7 @@ export async function mockBadgerSdk(
   {
     addr = TEST_ADDR,
     network = Network.Ethereum,
-    currBlock = TEST_CURRENT_BLOCK,
+    currBlock = TEST_CURRENT_BLOCK
   }: {
     // type description
     addr?: string;
@@ -186,8 +186,8 @@ export async function mockBadgerSdk(
     // in case u want to skip all params
     addr: TEST_ADDR,
     network: Network.Ethereum,
-    currBlock: TEST_CURRENT_BLOCK,
-  },
+    currBlock: TEST_CURRENT_BLOCK
+  }
 ): Promise<BadgerSDK> {
   const mockSigner = mock<JsonRpcSigner>();
   mockSigner.getAddress.calledWith().mockImplementation(async () => addr);
@@ -196,12 +196,12 @@ export async function mockBadgerSdk(
   mockProvider.getBlockNumber.calledWith().mockImplementation(async () => currBlock);
 
   // Services that will force contracts connection in sdk constructor
-  jest.spyOn(RegistryService.prototype, 'ready').mockImplementation();
-  jest.spyOn(RewardsService.prototype, 'ready').mockImplementation();
+  jest.spyOn(RegistryService.prototype, "ready").mockImplementation();
+  jest.spyOn(RewardsService.prototype, "ready").mockImplementation();
 
   return new BadgerSDK({
     network: network,
-    provider: mockProvider,
+    provider: mockProvider
   });
 }
 

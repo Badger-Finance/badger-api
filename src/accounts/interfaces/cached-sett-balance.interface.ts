@@ -1,7 +1,7 @@
-import { embed } from '@aws/dynamodb-data-mapper';
-import { attribute } from '@aws/dynamodb-data-mapper-annotations';
+import { embed } from "@aws/dynamodb-data-mapper";
+import { attribute } from "@aws/dynamodb-data-mapper-annotations";
 
-import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
+import { CachedTokenBalance } from "../../tokens/interfaces/cached-token-balance.interface";
 
 export class CachedSettBalance {
   @attribute()

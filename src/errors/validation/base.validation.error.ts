@@ -1,9 +1,9 @@
-import { BaseApiError } from '../base.error';
-import { ApiErrorCode } from '../enums/error.codes.enum';
-import { NetworkStatus } from '../enums/network-status.enum';
+import { BaseApiError } from "../base.error";
+import { ApiErrorCode } from "../enums/error.codes.enum";
+import { NetworkStatus } from "../enums/network-status.enum";
 
 export class ValidationError extends BaseApiError {
   constructor(message: string, code: ApiErrorCode) {
-    super(message || 'Validation failed', code, NetworkStatus.BadRequest);
+    super(message || "Validation failed", code, NetworkStatus.BadRequest);
   }
 }

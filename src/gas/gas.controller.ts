@@ -1,19 +1,21 @@
-import { GasPrices, Network } from '@badger-dao/sdk';
-import { Controller, Get, QueryParams, UseCache } from '@tsed/common';
-import { ContentType, Description, Returns, Summary } from '@tsed/schema';
+import { GasPrices, Network } from "@badger-dao/sdk";
+import { Controller } from "@tsed/di";
+import { UseCache } from "@tsed/platform-cache";
+import { QueryParams } from "@tsed/platform-params";
+import { ContentType, Description, Get, Returns, Summary } from "@tsed/schema";
 
-import { Chain } from '../chains/config/chain.config';
+import { Chain } from "../chains/config/chain.config";
 
-@Controller('/gas')
+@Controller("/gas")
 export class GasController {
-  @Get('')
+  @Get("")
   @UseCache()
-  @ContentType('json')
-  @Summary('Get the current gas price')
-  @Description('Returns the current gas price on the requested chain')
+  @ContentType("json")
+  @Summary("Get the current gas price")
+  @Description("Returns the current gas price on the requested chain")
   @Returns(200)
-  @Returns(404).Description('Chain gas prices not available')
-  async getGasPrices(@QueryParams('chain') chain?: Network): Promise<GasPrices> {
+  @Returns(404).Description("Chain gas prices not available")
+  async getGasPrices(@QueryParams("chain") chain?: Network): Promise<GasPrices> {
     const targetChain = Chain.getChain(chain);
     return targetChain.getGasPrices();
   }

@@ -1,22 +1,13 @@
-import {
-  keyBy,
-  ONE_YEAR_MS,
-  TokenRate,
-  TokenValue,
-  ValueSource,
-  VaultDTO,
-  VaultState,
-  VaultYieldProjection,
-} from '@badger-dao/sdk';
+import { keyBy, ONE_YEAR_MS, TokenRate, TokenValue, ValueSource, VaultDTO, VaultState, VaultYieldProjection } from "@badger-dao/sdk";
 
-import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
-import { YieldEstimate } from '../aws/models/yield-estimate.model';
-import { YieldSource } from '../aws/models/yield-source.model';
-import { SourceType } from '../rewards/enums/source-type.enum';
-import { BoostRange } from '../rewards/interfaces/boost-range.interface';
-import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
-import { YieldSources } from './interfaces/yield-sources.interface';
-import { queryYieldSources, VAULT_SOURCE } from './vaults.utils';
+import { VaultDefinitionModel } from "../aws/models/vault-definition.model";
+import { YieldEstimate } from "../aws/models/yield-estimate.model";
+import { YieldSource } from "../aws/models/yield-source.model";
+import { SourceType } from "../rewards/enums/source-type.enum";
+import { BoostRange } from "../rewards/interfaces/boost-range.interface";
+import { CachedTokenBalance } from "../tokens/interfaces/cached-token-balance.interface";
+import { YieldSources } from "./interfaces/yield-sources.interface";
+import { queryYieldSources, VAULT_SOURCE } from "./vaults.utils";
 
 /**
  * Determine if a yield source in relevant in a given context.
@@ -51,11 +42,7 @@ function isPassiveSource(source: YieldSource): boolean {
  * @returns true if source does not originate directly from a singular harvest, false if so
  */
 function isNonHarvestSource(source: YieldSource): boolean {
-  return (
-    source.type !== SourceType.Compound &&
-    source.type !== SourceType.PreCompound &&
-    source.type !== SourceType.Distribution
-  );
+  return source.type !== SourceType.Compound && source.type !== SourceType.PreCompound && source.type !== SourceType.Distribution;
 }
 
 /**
@@ -90,7 +77,7 @@ function balanceToTokenRate(balance: CachedTokenBalance, principal: number, dura
   const apr = calculateYield(principal, balance.value, duration, compoundingValue);
   return {
     apr,
-    ...balance,
+    ...balance
   };
 }
 
@@ -105,7 +92,7 @@ function yieldToValueSource(source: YieldSource): ValueSource {
     apr: source.apr,
     boostable: source.boostable,
     minApr: source.minApr,
-    maxApr: source.maxApr,
+    maxApr: source.maxApr
   };
 }
 
@@ -114,10 +101,7 @@ function yieldToValueSource(source: YieldSource): ValueSource {
  * @param sources source list to aggregate
  * @returns source list with all unique elements by name with aggregated values
  */
-export function aggregateSources<T extends ValueSource>(
-  sources: T[],
-  accessor: (source: T) => string = (s) => s.name,
-): T[] {
+export function aggregateSources<T extends ValueSource>(sources: T[], accessor: (source: T) => string = (s) => s.name): T[] {
   const sourceMap: Record<string, T> = {};
   const sourcesCopy = JSON.parse(JSON.stringify(sources));
   for (const source of sourcesCopy) {
@@ -143,7 +127,7 @@ export function aggregateSources<T extends ValueSource>(
  */
 export function calculateYield(principal: number, earned: number, duration: number, compoundingValue = 0): number {
   if (compoundingValue > earned) {
-    throw new Error('Compounding value must be less than or equal to earned');
+    throw new Error("Compounding value must be less than or equal to earned");
   }
   if (duration === 0 || principal === 0 || earned === 0) {
     return 0;
@@ -218,7 +202,7 @@ export async function getYieldSources(vault: VaultDefinitionModel): Promise<Yiel
     apy,
     sourcesApy: aggregatedSourcesApy,
     nonHarvestSources: nonHarvestAggregatedSources,
-    nonHarvestSourcesApy: nonHarvestAggregatedSourcesApy,
+    nonHarvestSourcesApy: nonHarvestAggregatedSourcesApy
   };
 }
 
@@ -235,20 +219,10 @@ export async function getYieldSources(vault: VaultDefinitionModel): Promise<Yiel
  * @param yieldEstimate vault harvest measurements
  * @returns evaluated vault yield projection
  */
-export function getVaultYieldProjection(
-  vault: VaultDTO,
-  yieldSources: YieldSources,
-  yieldEstimate: YieldEstimate,
-): VaultYieldProjection {
+export function getVaultYieldProjection(vault: VaultDTO, yieldSources: YieldSources, yieldEstimate: YieldEstimate): VaultYieldProjection {
   const { value, balance, available, lastHarvest } = vault;
   const { nonHarvestSources, nonHarvestSourcesApy } = yieldSources;
-  const {
-    yieldTokens,
-    previousYieldTokens,
-    harvestTokens,
-    previousHarvestTokens,
-    duration: periodDuration,
-  } = yieldEstimate;
+  const { yieldTokens, previousYieldTokens, harvestTokens, previousHarvestTokens, duration: periodDuration } = yieldEstimate;
 
   const yieldTokensCurrent = calculateBalanceDifference(previousYieldTokens, yieldTokens);
   const harvestTokensCurrent = calculateBalanceDifference(previousHarvestTokens, harvestTokens);
@@ -273,12 +247,7 @@ export function getVaultYieldProjection(
     harvestValue,
     harvestApr: calculateYield(earningValue, harvestValue, harvestDuration),
     harvestPeriodApr: calculateYield(earningValue, harvestValuePerPeriod, periodDuration),
-    harvestPeriodApy: calculateYield(
-      earningValue,
-      harvestValuePerPeriod,
-      periodDuration,
-      harvestCompoundValuePerPeriod,
-    ),
+    harvestPeriodApy: calculateYield(earningValue, harvestValuePerPeriod, periodDuration, harvestCompoundValuePerPeriod),
     harvestTokens: harvestTokens.map((t) => balanceToTokenRate(t, earningValue, harvestDuration)),
     harvestPeriodSources: harvestTokensCurrent.map((t) => balanceToTokenRate(t, earningValue, periodDuration)),
     harvestPeriodSourcesApy: harvestTokensCurrent.map((t) => balanceToTokenRate(t, earningValue, periodDuration)),
@@ -290,7 +259,7 @@ export function getVaultYieldProjection(
     nonHarvestApr,
     nonHarvestSources,
     nonHarvestApy,
-    nonHarvestSourcesApy,
+    nonHarvestSourcesApy
   };
 }
 
@@ -308,12 +277,12 @@ export function createYieldSource(
   type: SourceType,
   name: string,
   apr: number,
-  { min, max }: BoostRange = { min: 1, max: 1 },
+  { min, max }: BoostRange = { min: 1, max: 1 }
 ): YieldSource {
   const { id: vaultId, address, chain } = vault;
   const isBoostable = min != max;
-  const boostModifier = isBoostable ? 'Boosted' : 'Flat';
-  const id = [vaultId, type, name, boostModifier].map((p) => p.replace(/ /g, '_').toLowerCase()).join('_');
+  const boostModifier = isBoostable ? "Boosted" : "Flat";
+  const id = [vaultId, type, name, boostModifier].map((p) => p.replace(/ /g, "_").toLowerCase()).join("_");
   return Object.assign(new YieldSource(), {
     id,
     chainAddress: vaultId,
@@ -324,6 +293,6 @@ export function createYieldSource(
     apr,
     boostable: isBoostable,
     minApr: apr * min,
-    maxApr: apr * max,
+    maxApr: apr * max
   });
 }

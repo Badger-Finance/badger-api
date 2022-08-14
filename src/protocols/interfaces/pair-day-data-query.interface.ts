@@ -1,4 +1,4 @@
-import { PairDayData } from './pair-day-data.interface';
+import { PairDayData } from "./pair-day-data.interface";
 
 export interface PairDayDataQuery {
   data: {

@@ -1,14 +1,14 @@
-import { getDataMapper } from '../aws/dynamodb.utils';
-import { HarvestCompoundData } from '../aws/models/harvest-compound.model';
-import { SUPPORTED_CHAINS } from '../chains/chain';
-import { VaultHarvestsExtended } from '../vaults/interfaces/vault-harvest-extended.interface';
-import { getLastCompoundHarvest, getVaultHarvestsOnChain } from '../vaults/vaults.utils';
+import { getDataMapper } from "../aws/dynamodb.utils";
+import { HarvestCompoundData } from "../aws/models/harvest-compound.model";
+import { SUPPORTED_CHAINS } from "../chains/chain";
+import { VaultHarvestsExtended } from "../vaults/interfaces/vault-harvest-extended.interface";
+import { getLastCompoundHarvest, getVaultHarvestsOnChain } from "../vaults/vaults.utils";
 
 /**
  * Save compound data for all vaults harvests, on all chains
  */
 export async function indexVaultsHarvestsCompund() {
-  console.log('IndexVaultsHarvestsCompund job has started!');
+  console.log("IndexVaultsHarvestsCompund job has started!");
 
   for (const chain of SUPPORTED_CHAINS) {
     const mapper = getDataMapper();
@@ -29,10 +29,10 @@ export async function indexVaultsHarvestsCompund() {
           harvests.map(async (harvest) => {
             const harvestToSave: VaultHarvestsExtended = {
               ...harvest,
-              vault: vault.address,
+              vault: vault.address
             };
             return mapper.put(Object.assign(new HarvestCompoundData(), harvestToSave));
-          }),
+          })
         );
       } catch (err) {
         console.error(err);
@@ -40,5 +40,5 @@ export async function indexVaultsHarvestsCompund() {
     }
   }
 
-  return 'done';
+  return "done";
 }

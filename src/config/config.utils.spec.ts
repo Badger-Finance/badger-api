@@ -1,8 +1,8 @@
-import { checksumEntries, getEnvVar } from './config.utils';
-import { Stage } from './enums/stage.enum';
-import { TOKENS } from './tokens.config';
+import { checksumEntries, getEnvVar } from "./config.utils";
+import { Stage } from "./enums/stage.enum";
+import { TOKENS } from "./tokens.config";
 
-describe('utils', () => {
+describe("utils", () => {
   const oldNodeEnv = { ...process.env };
 
   function resetProccessEnv() {
@@ -12,39 +12,39 @@ describe('utils', () => {
   afterAll(resetProccessEnv);
 
   beforeEach(() => {
-    jest.spyOn(console, 'error').mockImplementation(jest.fn);
+    jest.spyOn(console, "error").mockImplementation(jest.fn);
   });
 
-  describe('checksumEntries', () => {
-    describe('given a valid address record with all lowercase addresses', () => {
-      it('returns the address record with checksummed addresses', () => {
+  describe("checksumEntries", () => {
+    describe("given a valid address record with all lowercase addresses", () => {
+      it("returns the address record with checksummed addresses", () => {
         const input = Object.fromEntries(Object.entries(TOKENS).map((e) => [e[0], e[1].toLowerCase()]));
         const actual = checksumEntries(input);
         expect(actual).toEqual(TOKENS);
       });
     });
 
-    describe('given an invalid input', () => {
-      it('throws an error', () => {
-        expect(() => checksumEntries({ property: 'invalid ' })).toThrow();
+    describe("given an invalid input", () => {
+      it("throws an error", () => {
+        expect(() => checksumEntries({ property: "invalid " })).toThrow();
       });
     });
   });
 
-  describe('getEnvVar', () => {
-    describe('in prod ENV', () => {
-      it('return value', () => {
-        const envVarName = 'RPC_NODE';
+  describe("getEnvVar", () => {
+    describe("in prod ENV", () => {
+      it("return value", () => {
+        const envVarName = "RPC_NODE";
 
         process.env.NODE_ENV = Stage.Production;
-        process.env[envVarName] = 'https://some.node.rpc.com';
+        process.env[envVarName] = "https://some.node.rpc.com";
 
         expect(getEnvVar(envVarName)).toBe(process.env[envVarName]);
         resetProccessEnv();
       });
 
-      it('throw error, when no value', () => {
-        const envVarName = 'RPC_NODE';
+      it("throw error, when no value", () => {
+        const envVarName = "RPC_NODE";
 
         process.env.NODE_ENV = Stage.Production;
 
@@ -53,42 +53,42 @@ describe('utils', () => {
       });
     });
 
-    describe('in Offline/Test ENV', () => {
-      it('test return value', () => {
-        const envVarName = 'RPC_NODE';
+    describe("in Offline/Test ENV", () => {
+      it("test return value", () => {
+        const envVarName = "RPC_NODE";
 
-        process.env.NODE_ENV = 'test';
-        process.env[envVarName] = 'https://some.node.rpc.com';
-
-        expect(getEnvVar(envVarName)).toBe(process.env[envVarName]);
-        resetProccessEnv();
-      });
-
-      it('offline return value', () => {
-        const envVarName = 'RPC_NODE';
-
-        process.env.IS_OFFLINE = 'true';
-        process.env[envVarName] = 'https://some.node.rpc.com';
+        process.env.NODE_ENV = "test";
+        process.env[envVarName] = "https://some.node.rpc.com";
 
         expect(getEnvVar(envVarName)).toBe(process.env[envVarName]);
         resetProccessEnv();
       });
 
-      it('test return placeholder string', () => {
-        const envVarName = 'RPC_NODE';
+      it("offline return value", () => {
+        const envVarName = "RPC_NODE";
 
-        process.env.NODE_ENV = 'test';
+        process.env.IS_OFFLINE = "true";
+        process.env[envVarName] = "https://some.node.rpc.com";
 
-        expect(getEnvVar(envVarName)).toBe('Missing value');
+        expect(getEnvVar(envVarName)).toBe(process.env[envVarName]);
         resetProccessEnv();
       });
 
-      it('offlline return placeholder string', () => {
-        const envVarName = 'RPC_NODE';
+      it("test return placeholder string", () => {
+        const envVarName = "RPC_NODE";
 
-        process.env.IS_OFFLINE = 'true';
+        process.env.NODE_ENV = "test";
 
-        expect(getEnvVar(envVarName)).toBe('Missing value');
+        expect(getEnvVar(envVarName)).toBe("Missing value");
+        resetProccessEnv();
+      });
+
+      it("offlline return placeholder string", () => {
+        const envVarName = "RPC_NODE";
+
+        process.env.IS_OFFLINE = "true";
+
+        expect(getEnvVar(envVarName)).toBe("Missing value");
         resetProccessEnv();
       });
     });

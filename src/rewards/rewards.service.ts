@@ -1,20 +1,20 @@
-import { ConditionExpression } from '@aws/dynamodb-expressions';
-import { Service } from '@tsed/common';
-import { ethers } from 'ethers';
+import { ConditionExpression } from "@aws/dynamodb-expressions";
+import { Service } from "@tsed/common";
+import { ethers } from "ethers";
 
-import { getLatestMetadata } from '../accounts/accounts.utils';
-import { getDataMapper } from '../aws/dynamodb.utils';
-import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
-import { getObject } from '../aws/s3.utils';
-import { Chain } from '../chains/config/chain.config';
-import { DEFAULT_PAGE_SIZE, REWARD_DATA } from '../config/constants';
-import { NodataForAddrError } from '../errors/allocation/nodata.for.addr.error';
-import { NodataForVaultError } from '../errors/allocation/nodata.for.vault.error';
-import { UnsupportedChainError } from '../errors/validation/unsupported.chain.error';
-import { AirdropMerkleClaim, AirdropMerkleDistribution } from './interfaces/merkle-distributor.interface';
-import { RewardMerkleClaim } from './interfaces/reward-merkle-claim.interface';
-import { EmissionSchedule, RewardSchedulesByVaults } from './interfaces/reward-schedules-vault.interface';
-import { getTreeDistribution } from './rewards.utils';
+import { getLatestMetadata } from "../accounts/accounts.utils";
+import { getDataMapper } from "../aws/dynamodb.utils";
+import { UserClaimSnapshot } from "../aws/models/user-claim-snapshot.model";
+import { getObject } from "../aws/s3.utils";
+import { Chain } from "../chains/config/chain.config";
+import { DEFAULT_PAGE_SIZE, REWARD_DATA } from "../config/constants";
+import { NodataForAddrError } from "../errors/allocation/nodata.for.addr.error";
+import { NodataForVaultError } from "../errors/allocation/nodata.for.vault.error";
+import { UnsupportedChainError } from "../errors/validation/unsupported.chain.error";
+import { AirdropMerkleClaim, AirdropMerkleDistribution } from "./interfaces/merkle-distributor.interface";
+import { RewardMerkleClaim } from "./interfaces/reward-merkle-claim.interface";
+import { EmissionSchedule, RewardSchedulesByVaults } from "./interfaces/reward-schedules-vault.interface";
+import { getTreeDistribution } from "./rewards.utils";
 
 @Service()
 export class RewardsService {
@@ -26,7 +26,7 @@ export class RewardsService {
   async getBouncerProof(chain: Chain, address: string): Promise<AirdropMerkleClaim> {
     const fileName = `badger-bouncer-${chain.chainId}.json`;
     const airdropFile = await getObject(REWARD_DATA, fileName);
-    const fileContents: AirdropMerkleDistribution = JSON.parse(airdropFile.toString('utf-8'));
+    const fileContents: AirdropMerkleDistribution = JSON.parse(airdropFile.toString("utf-8"));
     const claim = fileContents.claims[address.toLowerCase()] || fileContents.claims[ethers.utils.getAddress(address)];
     if (!claim) {
       throw new NodataForAddrError(`${address}`);
@@ -51,15 +51,7 @@ export class RewardsService {
     return claim;
   }
 
-  async list({
-    chain,
-    pageNum = 0,
-    pageCount = DEFAULT_PAGE_SIZE,
-  }: {
-    chain: Chain;
-    pageNum?: number;
-    pageCount?: number;
-  }): Promise<{
+  async list({ chain, pageNum = 0, pageCount = DEFAULT_PAGE_SIZE }: { chain: Chain; pageNum?: number; pageCount?: number }): Promise<{
     count: number;
     records: UserClaimSnapshot[];
   }> {
@@ -69,17 +61,17 @@ export class RewardsService {
     const startingPageId = pageNum * pageCount;
     const endingPageId = startingPageId + pageCount - 1;
     const expression: ConditionExpression = {
-      type: 'Between',
-      subject: 'pageId',
+      type: "Between",
+      subject: "pageId",
       lowerBound: startingPageId,
-      upperBound: endingPageId,
+      upperBound: endingPageId
     };
     for await (const entry of mapper.query(UserClaimSnapshot, { chainStartBlock }, { filter: expression })) {
       records.push(entry);
     }
     return {
       count,
-      records: records.sort((record) => record.pageId),
+      records: records.sort((record) => record.pageId)
     };
   }
 
@@ -93,7 +85,7 @@ export class RewardsService {
     const chainSdk = await chain.getSdk();
     try {
       const vault = await chain.vaults.getVault(address);
-      const loadMethod = active ? 'loadActiveSchedules' : 'loadSchedules';
+      const loadMethod = active ? "loadActiveSchedules" : "loadSchedules";
       return chainSdk.rewards[loadMethod](vault.address);
     } catch (err) {
       throw new NodataForVaultError(address);
@@ -113,10 +105,10 @@ export class RewardsService {
       vaults.map(async (vault) => {
         if (!vault.address) return [];
 
-        const loadMethod = active ? 'loadActiveSchedules' : 'loadSchedules';
+        const loadMethod = active ? "loadActiveSchedules" : "loadSchedules";
 
         return chainSdk.rewards[loadMethod](vault.address);
-      }),
+      })
     );
 
     return vaultsSchedules.reduce((acc: RewardSchedulesByVaults, vaultSchedules) => {

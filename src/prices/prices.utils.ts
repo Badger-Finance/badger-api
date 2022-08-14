@@ -1,16 +1,16 @@
-import { greaterThanOrEqualTo } from '@aws/dynamodb-expressions';
-import { Currency } from '@badger-dao/sdk';
-import { ethers } from 'ethers';
+import { greaterThanOrEqualTo } from "@aws/dynamodb-expressions";
+import { Currency } from "@badger-dao/sdk";
+import { ethers } from "ethers";
 
-import { getDataMapper } from '../aws/dynamodb.utils';
-import { TokenPriceSnapshot } from '../aws/models/token-price-snapshot.model';
-import { Chain } from '../chains/config/chain.config';
-import { request } from '../common/request';
-import { TOKENS } from '../config/tokens.config';
-import { CoinGeckoPriceResponse } from './interface/coingecko-price-response.interface';
-import { TokenPrice } from './interface/token-price.interface';
+import { getDataMapper } from "../aws/dynamodb.utils";
+import { TokenPriceSnapshot } from "../aws/models/token-price-snapshot.model";
+import { Chain } from "../chains/config/chain.config";
+import { request } from "../common/request";
+import { TOKENS } from "../config/tokens.config";
+import { CoinGeckoPriceResponse } from "./interface/coingecko-price-response.interface";
+import { TokenPrice } from "./interface/token-price.interface";
 
-const COINGECKO_URL = 'https://api.coingecko.com/api/v3/simple';
+const COINGECKO_URL = "https://api.coingecko.com/api/v3/simple";
 
 /**
  * Update pricing db entry using chain strategy.
@@ -27,8 +27,8 @@ export async function updatePrice({ address, price }: TokenPrice): Promise<Token
     return mapper.put(
       Object.assign(new TokenPriceSnapshot(), {
         address: ethers.utils.getAddress(address),
-        price,
-      }),
+        price
+      })
     );
   } catch (err) {
     console.error(err);
@@ -47,7 +47,7 @@ export async function queryPrice(address: string, currency: Currency = Currency.
     for await (const item of mapper.query(
       TokenPriceSnapshot,
       { address: ethers.utils.getAddress(address) },
-      { limit: 1, scanIndexForward: false },
+      { limit: 1, scanIndexForward: false }
     )) {
       item.price = await convert(item.price, currency);
       return item;
@@ -100,14 +100,14 @@ export async function fetchPrices(chain: Chain, inputs: string[], lookupName = f
   if (lookupName) {
     baseURL = `${COINGECKO_URL}/price`;
     params = {
-      ids: inputs.join(','),
-      vs_currencies: 'usd',
+      ids: inputs.join(","),
+      vs_currencies: "usd"
     };
   } else {
     baseURL = `${COINGECKO_URL}/token_price/${chain.network}`;
     params = {
-      contract_addresses: inputs.join(','),
-      vs_currencies: 'usd',
+      contract_addresses: inputs.join(","),
+      vs_currencies: "usd"
     };
   }
 
@@ -117,7 +117,7 @@ export async function fetchPrices(chain: Chain, inputs: string[], lookupName = f
 export async function getPriceSnapshotsAtTimestamps(
   address: string,
   timestamps: number[],
-  currency?: Currency,
+  currency?: Currency
 ): Promise<TokenPriceSnapshot[]> {
   try {
     const snapshots = [];
@@ -127,7 +127,7 @@ export async function getPriceSnapshotsAtTimestamps(
       for await (const snapshot of mapper.query(
         TokenPriceSnapshot,
         { address: ethers.utils.getAddress(address), updatedAt: greaterThanOrEqualTo(timestamp) },
-        { limit: 1 },
+        { limit: 1 }
       )) {
         snapshot.price = await convert(snapshot.price ?? snapshot.usd, currency);
         snapshot.updatedAt = timestamp;

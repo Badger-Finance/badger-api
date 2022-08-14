@@ -1,18 +1,18 @@
-import { providers } from '@0xsequence/multicall';
-import BadgerSDK, { GasPrices, getNetworkConfig, Network, SDKProvider } from '@badger-dao/sdk';
-import { BadRequest, NotFound } from '@tsed/exceptions';
-import { ethers } from 'ethers';
+import { providers } from "@0xsequence/multicall";
+import BadgerSDK, { GasPrices, getNetworkConfig, Network, SDKProvider } from "@badger-dao/sdk";
+import { BadRequest, NotFound } from "@tsed/exceptions";
+import { ethers } from "ethers";
 
-import { TOKENS } from '../../config/tokens.config';
-import { TokenConfig } from '../../tokens/interfaces/token-config.interface';
-import { ChainStrategy } from '../strategies/chain.strategy';
-import { ChainVaults } from '../vaults/chain.vaults';
+import { TOKENS } from "../../config/tokens.config";
+import { TokenConfig } from "../../tokens/interfaces/token-config.interface";
+import { ChainStrategy } from "../strategies/chain.strategy";
+import { ChainVaults } from "../vaults/chain.vaults";
 
 type Chains = Record<string, Chain>;
 
 export abstract class Chain {
   private static chains: Chains = {};
-  private static chainsByNetworkId: Record<string, Chain> = {};
+  private static chainsByNetworkId: Chains = {};
 
   readonly chainId: number;
   readonly sdk: BadgerSDK;
@@ -26,7 +26,7 @@ export abstract class Chain {
     readonly tokens: TokenConfig,
     provider: string | SDKProvider,
     strategy: ChainStrategy,
-    emissionControl?: string,
+    emissionControl?: string
   ) {
     const config = getNetworkConfig(network);
     const { chainId } = config;
@@ -50,10 +50,10 @@ export abstract class Chain {
     Chain.chains[network] = chain;
     Chain.chainsByNetworkId[chain.chainId] = chain;
     if (network === Network.Polygon) {
-      Chain.chains['matic'] = chain;
+      Chain.chains["matic"] = chain;
     }
     if (network === Network.BinanceSmartChain) {
-      Chain.chains['binancesmartchain'] = chain;
+      Chain.chains["binancesmartchain"] = chain;
     }
   }
 
@@ -70,7 +70,7 @@ export abstract class Chain {
 
   static getChainById(id?: string): Chain {
     if (!id) {
-      id = '1';
+      id = "1";
     }
     const chain = Chain.chainsByNetworkId[id];
     if (!chain) {
@@ -89,6 +89,7 @@ export abstract class Chain {
   }
 
   async getGasPrices(): Promise<GasPrices> {
+    console.log("invoked get gas prices");
     let gasPrice;
     try {
       gasPrice = Number(ethers.utils.formatUnits(await this.provider.getGasPrice(), 9));
@@ -101,20 +102,20 @@ export abstract class Chain {
       return {
         rapid: {
           maxPriorityFeePerGas: defaultPriorityFee,
-          maxFeePerGas: this.sanitizePrice(gasPrice * 2),
+          maxFeePerGas: this.sanitizePrice(gasPrice * 2)
         },
         fast: {
           maxPriorityFeePerGas: defaultPriorityFee,
-          maxFeePerGas: this.sanitizePrice(gasPrice * 1.8),
+          maxFeePerGas: this.sanitizePrice(gasPrice * 1.8)
         },
         standard: {
           maxPriorityFeePerGas: defaultPriorityFee,
-          maxFeePerGas: this.sanitizePrice(gasPrice * 1.6),
+          maxFeePerGas: this.sanitizePrice(gasPrice * 1.6)
         },
         slow: {
           maxPriorityFeePerGas: defaultPriorityFee,
-          maxFeePerGas: this.sanitizePrice(gasPrice * 1.4),
-        },
+          maxFeePerGas: this.sanitizePrice(gasPrice * 1.4)
+        }
       };
     }
     // we don't have a mempool based guess here just define a spread
@@ -122,7 +123,7 @@ export abstract class Chain {
       rapid: this.sanitizePrice(gasPrice * 1.2),
       fast: this.sanitizePrice(gasPrice * 1.1),
       standard: this.sanitizePrice(gasPrice),
-      slow: this.sanitizePrice(gasPrice * 0.9),
+      slow: this.sanitizePrice(gasPrice * 0.9)
     };
   }
 

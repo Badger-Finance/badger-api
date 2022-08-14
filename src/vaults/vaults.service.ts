@@ -1,18 +1,18 @@
-import { Currency, VaultDTO, VaultType } from '@badger-dao/sdk';
-import { Service } from '@tsed/common';
+import { Currency, VaultDTO, VaultType } from "@badger-dao/sdk";
+import { Service } from "@tsed/common";
 
-import { getDataMapper, getVaultEntityId } from '../aws/dynamodb.utils';
-import { HarvestCompoundData } from '../aws/models/harvest-compound.model';
-import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
-import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
-import { Chain } from '../chains/config/chain.config';
-import { CHART_GRANULARITY_TIMEFRAMES, queryVaultCharts, toChartDataKey } from '../charts/charts.utils';
-import { convert } from '../prices/prices.utils';
-import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interface';
-import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
-import { VaultHarvestsMap } from './interfaces/vault-harvest-map';
-import { getCachedVault, queryYieldEstimate } from './vaults.utils';
-import { getVaultYieldProjection, getYieldSources } from './yields.utils';
+import { getDataMapper, getVaultEntityId } from "../aws/dynamodb.utils";
+import { HarvestCompoundData } from "../aws/models/harvest-compound.model";
+import { HistoricVaultSnapshotModel } from "../aws/models/historic-vault-snapshot.model";
+import { VaultDefinitionModel } from "../aws/models/vault-definition.model";
+import { Chain } from "../chains/config/chain.config";
+import { CHART_GRANULARITY_TIMEFRAMES, queryVaultCharts, toChartDataKey } from "../charts/charts.utils";
+import { convert } from "../prices/prices.utils";
+import { ProtocolSummary } from "../protocols/interfaces/protocol-summary.interface";
+import { VaultHarvestsExtendedResp } from "./interfaces/vault-harvest-extended-resp.interface";
+import { VaultHarvestsMap } from "./interfaces/vault-harvest-map";
+import { getCachedVault, queryYieldEstimate } from "./vaults.utils";
+import { getVaultYieldProjection, getYieldSources } from "./yields.utils";
 
 @Service()
 export class VaultsService {
@@ -23,7 +23,7 @@ export class VaultsService {
         const { balance, value } = await getCachedVault(chain, vault);
         const convertedValue = await convert(value, currency);
         return { name: vault.name, balance, value: convertedValue };
-      }),
+      })
     );
     const totalValue = summaries.reduce((total, vault) => (total += vault.value), 0);
     return { totalValue, vaults: summaries, setts: summaries };
@@ -40,9 +40,9 @@ export class VaultsService {
       vaults.map(async (vault) => {
         return {
           vault: vault.address,
-          harvests: await this.getVaultHarvests(chain, vault.address),
+          harvests: await this.getVaultHarvests(chain, vault.address)
         };
-      }),
+      })
     );
 
     return harvestsWithSnapshots.reduce((acc, harvestWithSnapshot) => {
@@ -57,11 +57,7 @@ export class VaultsService {
     const mapper = getDataMapper();
     const vault = await chain.vaults.getVault(address);
 
-    const queryHarvests = mapper.query(
-      HarvestCompoundData,
-      { vault: vault.address },
-      { indexName: 'IndexHarvestCompoundDataVault' },
-    );
+    const queryHarvests = mapper.query(HarvestCompoundData, { vault: vault.address }, { indexName: "IndexHarvestCompoundDataVault" });
 
     try {
       for await (const harvest of queryHarvests) {
@@ -72,7 +68,7 @@ export class VaultsService {
           timestamp: harvest.timestamp,
           block: harvest.block,
           token: harvest.token,
-          amount: harvest.amount,
+          amount: harvest.amount
         });
       }
     } catch (e) {
@@ -86,7 +82,7 @@ export class VaultsService {
     const [vault, yieldSources, pendingHarvest] = await Promise.all([
       getCachedVault(chain, vaultDefinition, currency),
       getYieldSources(vaultDefinition),
-      queryYieldEstimate(vaultDefinition),
+      queryYieldEstimate(vaultDefinition)
     ]);
     const { lastHarvestedAt } = pendingHarvest;
     const { apr, sources, apy, sourcesApy } = yieldSources;
@@ -125,11 +121,7 @@ export class VaultsService {
    * @param timestamps
    * @returns
    */
-  async getVaultChartDataByTimestamps(
-    vault: string,
-    chain: Chain,
-    timestamps: number[],
-  ): Promise<HistoricVaultSnapshotModel[]> {
+  async getVaultChartDataByTimestamps(vault: string, chain: Chain, timestamps: number[]): Promise<HistoricVaultSnapshotModel[]> {
     // validate vault request is correct and valid
     const requestedVault = await chain.vaults.getVault(vault);
 

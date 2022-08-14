@@ -1,5 +1,5 @@
-import { KeyedDataBlob } from '../models/keyed-data-blob.model';
-import { DataBlob } from './data-blob';
+import { KeyedDataBlob } from "../models/keyed-data-blob.model";
+import { DataBlob } from "./data-blob";
 
 export abstract class ConvertableDataBlob {
   public keyedBlob: KeyedDataBlob;
@@ -7,7 +7,7 @@ export abstract class ConvertableDataBlob {
   constructor(protected blob: DataBlob) {
     this.keyedBlob = Object.assign(new KeyedDataBlob(), {
       id: this.id(),
-      data: blob,
+      data: blob
     });
   }
 

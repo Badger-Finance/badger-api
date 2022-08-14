@@ -1,11 +1,11 @@
-import { RegistryVault } from '@badger-dao/sdk';
-import { ethers } from 'ethers';
+import { RegistryVault } from "@badger-dao/sdk";
+import { ethers } from "ethers";
 
-import { getDataMapper } from '../aws/dynamodb.utils';
-import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
-import { SUPPORTED_CHAINS } from '../chains/chain';
-import { Chain } from '../chains/config/chain.config';
-import { constructVaultDefinition } from './indexer.utils';
+import { getDataMapper } from "../aws/dynamodb.utils";
+import { VaultDefinitionModel } from "../aws/models/vault-definition.model";
+import { SUPPORTED_CHAINS } from "../chains/chain";
+import { Chain } from "../chains/config/chain.config";
+import { constructVaultDefinition } from "./indexer.utils";
 
 export async function captureVaultData() {
   for (const chain of SUPPORTED_CHAINS) {
@@ -39,11 +39,7 @@ export async function captureVaultData() {
       .filter((v) => v);
 
     const mapper = getDataMapper();
-    const query = mapper.query(
-      VaultDefinitionModel,
-      { chain: chain.network },
-      { indexName: 'IndexVaultCompoundDataChain' },
-    );
+    const query = mapper.query(VaultDefinitionModel, { chain: chain.network }, { indexName: "IndexVaultCompoundDataChain" });
 
     try {
       for await (const compoundVault of query) {
@@ -58,7 +54,7 @@ export async function captureVaultData() {
     }
   }
 
-  return 'done';
+  return "done";
 }
 
 async function updateVaultDefinition(chain: Chain, vault: RegistryVault) {

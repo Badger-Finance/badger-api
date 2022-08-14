@@ -15,5 +15,5 @@ export enum ApiErrorCode {
   AccessDeniedDevModeOnly = 3000,
 
   // Citadel Errors
-  NoDataInBouncerList = 9000,
+  NoDataInBouncerList = 9000
 }

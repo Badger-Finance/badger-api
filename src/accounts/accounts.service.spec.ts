@@ -1,13 +1,13 @@
-import { Account } from '@badger-dao/sdk';
-import { PlatformTest } from '@tsed/common';
+import { Account } from "@badger-dao/sdk";
+import { PlatformTest } from "@tsed/common";
 
-import { Chain } from '../chains/config/chain.config';
-import { TEST_ADDR } from '../test/constants';
-import { setupMockChain } from '../test/mocks.utils';
-import { AccountsService } from './accounts.service';
-import * as accountsUtils from './accounts.utils';
+import { Chain } from "../chains/config/chain.config";
+import { TEST_ADDR } from "../test/constants";
+import { setupMockChain } from "../test/mocks.utils";
+import { AccountsService } from "./accounts.service";
+import * as accountsUtils from "./accounts.utils";
 
-describe('accounts.service', () => {
+describe("accounts.service", () => {
   let service: AccountsService;
   let chain: Chain;
 
@@ -22,9 +22,9 @@ describe('accounts.service', () => {
 
   afterEach(PlatformTest.reset);
 
-  describe('getAccount', () => {
-    it('returns the expected account', async () => {
-      jest.spyOn(accountsUtils, 'getCachedAccount').mockImplementation(async (_chain, address) => {
+  describe("getAccount", () => {
+    it("returns the expected account", async () => {
+      jest.spyOn(accountsUtils, "getCachedAccount").mockImplementation(async (_chain, address) => {
         const cachedAccount: Account = {
           address,
           value: 10,
@@ -38,7 +38,7 @@ describe('accounts.service', () => {
           bveCvxBalance: 1,
           diggBalance: 1,
           nativeBalance: 5,
-          nonNativeBalance: 5,
+          nonNativeBalance: 5
         };
         return cachedAccount;
       });

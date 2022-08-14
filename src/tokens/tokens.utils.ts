@@ -1,13 +1,13 @@
-import { Currency, Token, TokenValue, VaultDTO } from '@badger-dao/sdk';
-import { ethers } from 'ethers';
+import { Currency, Token, TokenValue, VaultDTO } from "@badger-dao/sdk";
+import { ethers } from "ethers";
 
-import { getDataMapper } from '../aws/dynamodb.utils';
-import { TokenInformationSnapshot } from '../aws/models/token-information-snapshot.model';
-import { VaultTokenBalance } from '../aws/models/vault-token-balance.model';
-import { Chain } from '../chains/config/chain.config';
-import { convert, queryPrice } from '../prices/prices.utils';
-import { TokenNotFound } from './errors/token.error';
-import { TokenFull, TokenFullMap } from './interfaces/token-full.interface';
+import { getDataMapper } from "../aws/dynamodb.utils";
+import { TokenInformationSnapshot } from "../aws/models/token-information-snapshot.model";
+import { VaultTokenBalance } from "../aws/models/vault-token-balance.model";
+import { Chain } from "../chains/config/chain.config";
+import { convert, queryPrice } from "../prices/prices.utils";
+import { TokenNotFound } from "./errors/token.error";
+import { TokenFull, TokenFullMap } from "./interfaces/token-full.interface";
 
 export async function toBalance(token: Token, balance: number, currency?: Currency): Promise<TokenValue> {
   const { price } = await queryPrice(token.address, currency);
@@ -17,7 +17,7 @@ export async function toBalance(token: Token, balance: number, currency?: Curren
     symbol: token.symbol,
     decimals: token.decimals,
     balance: balance,
-    value: balance * price,
+    value: balance * price
   };
 }
 
@@ -28,14 +28,14 @@ export async function getVaultTokens(chain: Chain, vault: VaultDTO, currency?: C
     tokens = await Promise.all(
       record.tokenBalances.map(async (b) => ({
         ...b,
-        value: await convert(b.value, currency),
-      })),
+        value: await convert(b.value, currency)
+      }))
     );
   }
   return tokens;
 }
 
-export async function getFullToken(chain: Chain, tokenAddr: Token['address']): Promise<TokenFull> {
+export async function getFullToken(chain: Chain, tokenAddr: Token["address"]): Promise<TokenFull> {
   const address = ethers.utils.getAddress(tokenAddr);
   const fullTokenMap = await getFullTokens(chain, [address]);
 
@@ -46,7 +46,7 @@ export async function getFullToken(chain: Chain, tokenAddr: Token['address']): P
   return fullTokenMap[address];
 }
 
-export async function getFullTokens(chain: Chain, tokensAddr: Token['address'][]): Promise<TokenFullMap> {
+export async function getFullTokens(chain: Chain, tokensAddr: Token["address"][]): Promise<TokenFullMap> {
   const cachedTokens = await getCachedTokesInfo(tokensAddr);
   const requestedTokenAddresses = new Set(tokensAddr);
   const validToken = (t: Token) => t.name.length > 0 && t.symbol.length > 0;
@@ -72,11 +72,9 @@ export async function getFullTokens(chain: Chain, tokensAddr: Token['address'][]
   return mergeTokensFullData(chain.tokens, tokensList);
 }
 
-export async function getCachedTokesInfo(tokensAddr: Token['address'][]): Promise<Token[]> {
+export async function getCachedTokesInfo(tokensAddr: Token["address"][]): Promise<Token[]> {
   const mapper = getDataMapper();
-  const tokensToGet = tokensAddr.map((addr) =>
-    Object.assign(new TokenInformationSnapshot(), { address: ethers.utils.getAddress(addr) }),
-  );
+  const tokensToGet = tokensAddr.map((addr) => Object.assign(new TokenInformationSnapshot(), { address: ethers.utils.getAddress(addr) }));
 
   const tokensInfo: Token[] = [];
 
@@ -99,7 +97,7 @@ export async function cacheTokensInfo(tokens: Token[]): Promise<void> {
   try {
     for await (const persisted of mapper.batchPut(tokensInfoMeta)) {
       if (!persisted) {
-        console.warn('Failed to save token info');
+        console.warn("Failed to save token info");
       }
     }
   } catch (e) {
@@ -107,23 +105,23 @@ export async function cacheTokensInfo(tokens: Token[]): Promise<void> {
   }
 }
 
-export function mergeTokensFullData(chainTokens: Chain['tokens'], tokens: Token[]): TokenFullMap {
+export function mergeTokensFullData(chainTokens: Chain["tokens"], tokens: Token[]): TokenFullMap {
   const mergedTokensFullData: TokenFullMap = {};
 
   for (const token of tokens) {
     mergedTokensFullData[token.address] = {
       ...token,
-      ...(chainTokens[token.address] || {}),
+      ...(chainTokens[token.address] || {})
     };
   }
 
   return mergedTokensFullData;
 }
 
-export function lookUpAddrByTokenName(chain: Chain, name: string): Token['address'] | undefined {
+export function lookUpAddrByTokenName(chain: Chain, name: string): Token["address"] | undefined {
   const tokensWithAddr = Object.keys(chain.tokens).map((address) => ({
     ...chain.tokens[address],
-    address,
+    address
   }));
 
   return Object.values(tokensWithAddr).find((token) => token.lookupName === name)?.address;

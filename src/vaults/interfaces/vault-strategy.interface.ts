@@ -1,5 +1,5 @@
-import { attribute } from '@aws/dynamodb-data-mapper-annotations';
-import { VaultStrategy as IVaultStrategy } from '@badger-dao/sdk';
+import { attribute } from "@aws/dynamodb-data-mapper-annotations";
+import { VaultStrategy as IVaultStrategy } from "@badger-dao/sdk";
 
 export class VaultStrategy implements IVaultStrategy {
   @attribute()

@@ -1,12 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`VaultsController GET /v2/harvests error cases returns a 400 for invalide chain 1`] = `
+exports[`vaults.v2.controller GET /harvests error cases returns a 400 for invalide chain 1`] = `
 Object {
+  "errors": Array [],
   "message": "invalid is not a supported chain",
+  "name": "BAD_REQUEST",
+  "status": 400,
 }
 `;
 
-exports[`VaultsController GET /v2/harvests success cases Return extended harvest for chain vaults 1`] = `
+exports[`vaults.v2.controller GET /harvests success cases Return extended harvest for chain vaults 1`] = `
 Object {
   "0x2B5455aac8d64C14786c3a29858E43b5945819C0": Array [
     Object {
@@ -49,13 +52,16 @@ Object {
 }
 `;
 
-exports[`VaultsController GET /v2/harvests/:vault error cases returns a 400 for invalide chain 1`] = `
+exports[`vaults.v2.controller GET /harvests/:vault error cases returns a 400 for invalide chain 1`] = `
 Object {
+  "errors": Array [],
   "message": "invalid is not a supported chain",
+  "name": "BAD_REQUEST",
+  "status": 400,
 }
 `;
 
-exports[`VaultsController GET /v2/harvests/:vault success cases Return extended harvests for chain vault by addr 1`] = `
+exports[`vaults.v2.controller GET /harvests/:vault success cases Return extended harvests for chain vault by addr 1`] = `
 Array [
   Object {
     "amount": 0.019444617913515275,
@@ -96,7 +102,7 @@ Array [
 ]
 `;
 
-exports[`VaultsController GET /v2/vaults with a specified chain returns the vaults for bsc 1`] = `
+exports[`vaults.v2.controller GET /vaults with a specified chain returns the vaults for bsc 1`] = `
 Array [
   Object {
     "apr": 13.86,
@@ -274,7 +280,7 @@ Array [
 ]
 `;
 
-exports[`VaultsController GET /v2/vaults with a specified chain returns the vaults for eth 1`] = `
+exports[`vaults.v2.controller GET /vaults with a specified chain returns the vaults for eth 1`] = `
 Array [
   Object {
     "apr": 13.86,
@@ -452,13 +458,16 @@ Array [
 ]
 `;
 
-exports[`VaultsController GET /v2/vaults with an invalid specified chain returns a 400 1`] = `
+exports[`vaults.v2.controller GET /vaults with an invalid specified chain returns a 400 1`] = `
 Object {
+  "errors": Array [],
   "message": "invalid is not a supported chain",
+  "name": "BAD_REQUEST",
+  "status": 400,
 }
 `;
 
-exports[`VaultsController GET /v2/vaults with no specified chain returns eth vaults 1`] = `
+exports[`vaults.v2.controller GET /vaults with no specified chain returns eth vaults 1`] = `
 Array [
   Object {
     "apr": 13.86,

@@ -1,12 +1,12 @@
-import { BadgerAPI, Network, Token } from '@badger-dao/sdk';
-import { writeFileSync } from 'fs';
-import { resolve } from 'path';
+import { BadgerAPI, Network, Token } from "@badger-dao/sdk";
+import { writeFileSync } from "fs";
+import { resolve } from "path";
 
 async function updatePrices() {
   let tokens: Token[] = [];
   for (const network of Object.values(Network)) {
     try {
-      const api = new BadgerAPI({ network, baseURL: 'https://staging-api.badger.com/' });
+      const api = new BadgerAPI({ network, baseURL: "https://staging-api.badger.com/" });
       const networkTokens = await api.loadTokens();
       Object.entries(networkTokens).forEach((entry) => {
         const [_key, token] = entry;
@@ -15,7 +15,7 @@ async function updatePrices() {
       });
     } catch {}
   }
-  writeFileSync(resolve(__dirname, '../token-info.json'), JSON.stringify(tokens, null, 2));
+  writeFileSync(resolve(__dirname, "../token-info.json"), JSON.stringify(tokens, null, 2));
 }
 
 updatePrices();

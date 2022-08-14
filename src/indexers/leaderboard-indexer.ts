@@ -1,13 +1,13 @@
-import { BadgerType, BadgerTypeMap } from '@badger-dao/sdk';
-import { ethers } from 'ethers';
+import { BadgerType, BadgerTypeMap } from "@badger-dao/sdk";
+import { ethers } from "ethers";
 
-import { getBoostFile } from '../accounts/accounts.utils';
-import { getDataMapper, getLeaderboardKey } from '../aws/dynamodb.utils';
-import { CachedBoost } from '../aws/models/cached-boost.model';
-import { CachedLeaderboardSummary } from '../aws/models/cached-leaderboard-summary.model';
-import { SUPPORTED_CHAINS } from '../chains/chain';
-import { Chain } from '../chains/config/chain.config';
-import { getBadgerType } from '../leaderboards/leaderboards.config';
+import { getBoostFile } from "../accounts/accounts.utils";
+import { getDataMapper, getLeaderboardKey } from "../aws/dynamodb.utils";
+import { CachedBoost } from "../aws/models/cached-boost.model";
+import { CachedLeaderboardSummary } from "../aws/models/cached-leaderboard-summary.model";
+import { SUPPORTED_CHAINS } from "../chains/chain";
+import { Chain } from "../chains/config/chain.config";
+import { getBadgerType } from "../leaderboards/leaderboards.config";
 
 export const indexBoostLeaderBoard = async () => {
   await Promise.all(
@@ -18,13 +18,13 @@ export const indexBoostLeaderBoard = async () => {
         [BadgerType.Neo]: 0,
         [BadgerType.Hero]: 0,
         [BadgerType.Hyper]: 0,
-        [BadgerType.Frenzy]: 0,
+        [BadgerType.Frenzy]: 0
       };
       const mapper = getDataMapper();
       chainResults.forEach((result) => summary[getBadgerType(result.boost)]++);
       const rankSummaries = Object.entries(summary).map((e) => ({
         badgerType: e[0],
-        amount: e[1],
+        amount: e[1]
       }));
 
       const chainEntries = [];
@@ -42,12 +42,12 @@ export const indexBoostLeaderBoard = async () => {
       await mapper.put(
         Object.assign(new CachedLeaderboardSummary(), {
           leaderboard: getLeaderboardKey(chain.network),
-          rankSummaries,
-        }),
+          rankSummaries
+        })
       );
-    }),
+    })
   );
-  return 'done';
+  return "done";
 };
 
 async function generateChainBoostsLeaderBoard(chain: Chain): Promise<CachedBoost[]> {
@@ -69,8 +69,7 @@ async function generateChainBoostsLeaderBoard(chain: Chain): Promise<CachedBoost
       })
       .map((entry, i) => {
         const [address, userBoost] = entry;
-        const { boost, stakeRatio, nftBalance, bveCvxBalance, diggBalance, nativeBalance, nonNativeBalance } =
-          userBoost;
+        const { boost, stakeRatio, nftBalance, bveCvxBalance, diggBalance, nativeBalance, nonNativeBalance } = userBoost;
         const cachedBoost: CachedBoost = {
           leaderboard: getLeaderboardKey(chain.network),
           boostRank: i + 1,
@@ -82,7 +81,7 @@ async function generateChainBoostsLeaderBoard(chain: Chain): Promise<CachedBoost
           diggBalance,
           nativeBalance,
           nonNativeBalance,
-          updatedAt: Date.now(),
+          updatedAt: Date.now()
         };
         return Object.assign(new CachedBoost(), cachedBoost);
       });

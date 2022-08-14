@@ -1,14 +1,14 @@
-import { attribute, hashKey, rangeKey, table } from '@aws/dynamodb-data-mapper-annotations';
-import { UserBoostData } from '@badger-dao/sdk';
+import { attribute, hashKey, rangeKey, table } from "@aws/dynamodb-data-mapper-annotations";
+import { UserBoostData } from "@badger-dao/sdk";
 
-import { LEADERBOARD_DATA } from '../../config/constants';
+import { LEADERBOARD_DATA } from "../../config/constants";
 
 @table(LEADERBOARD_DATA)
 export class CachedBoost implements UserBoostData {
   @hashKey({
     indexKeyConfigurations: {
-      IndexLeaderBoardRankOnAddressAndLeaderboard: 'RANGE',
-    },
+      IndexLeaderBoardRankOnAddressAndLeaderboard: "RANGE"
+    }
   })
   leaderboard!: string;
 
@@ -17,8 +17,8 @@ export class CachedBoost implements UserBoostData {
 
   @attribute({
     indexKeyConfigurations: {
-      IndexLeaderBoardRankOnAddressAndLeaderboard: 'HASH',
-    },
+      IndexLeaderBoardRankOnAddressAndLeaderboard: "HASH"
+    }
   })
   address!: string;
 

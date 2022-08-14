@@ -9,5 +9,5 @@ export enum NetworkStatus {
   // server errors
   Internal = 500,
   Unavailable = 503,
-  Timeout = 504,
+  Timeout = 504
 }

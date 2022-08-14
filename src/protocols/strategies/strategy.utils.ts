@@ -1,13 +1,13 @@
-import { GraphQLClient } from 'graphql-request';
+import { GraphQLClient } from "graphql-request";
 
-import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
-import { YieldSource } from '../../aws/models/yield-source.model';
-import { getSdk as getUniswapSdk, OrderDirection, PairDayData_OrderBy } from '../../graphql/generated/uniswap';
-import { queryPrice } from '../../prices/prices.utils';
-import { SourceType } from '../../rewards/enums/source-type.enum';
-import { createYieldSource } from '../../vaults/yields.utils';
-import { PairDayData } from '../interfaces/pair-day-data.interface';
-import { UniPairDayData } from '../interfaces/uni-pair-day-data.interface';
+import { VaultDefinitionModel } from "../../aws/models/vault-definition.model";
+import { YieldSource } from "../../aws/models/yield-source.model";
+import { getSdk as getUniswapSdk, OrderDirection, PairDayData_OrderBy } from "../../graphql/generated/uniswap";
+import { queryPrice } from "../../prices/prices.utils";
+import { SourceType } from "../../rewards/enums/source-type.enum";
+import { createYieldSource } from "../../vaults/yields.utils";
+import { PairDayData } from "../interfaces/pair-day-data.interface";
+import { UniPairDayData } from "../interfaces/uni-pair-day-data.interface";
 
 export async function getUniV2SwapValue(graphUrl: string, vault: VaultDefinitionModel): Promise<YieldSource> {
   const client = new GraphQLClient(graphUrl);
@@ -17,8 +17,8 @@ export async function getUniV2SwapValue(graphUrl: string, vault: VaultDefinition
     orderBy: PairDayData_OrderBy.Date,
     orderDirection: OrderDirection.Desc,
     where: {
-      pairAddress: vault.depositToken.toLowerCase(),
-    },
+      pairAddress: vault.depositToken.toLowerCase()
+    }
   });
   return getUniSwapValue(vault, pairDayDatas);
 }
@@ -28,10 +28,7 @@ async function getUniSwapValue(vault: VaultDefinitionModel, tradeData: UniPairDa
   if (!tradeData || tradeData.length === 0) {
     return createYieldSource(vault, SourceType.TradeFee, name, 0);
   }
-  const [token0Price, token1Price] = await Promise.all([
-    queryPrice(tradeData[0].token0.id),
-    queryPrice(tradeData[0].token1.id),
-  ]);
+  const [token0Price, token1Price] = await Promise.all([queryPrice(tradeData[0].token0.id), queryPrice(tradeData[0].token1.id)]);
   let totalApy = 0;
   let currentApy = 0;
   for (let i = 0; i < tradeData.length; i++) {

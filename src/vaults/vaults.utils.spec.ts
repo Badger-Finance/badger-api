@@ -8,29 +8,29 @@ import BadgerSDK, {
   VaultsService,
   VaultStatus,
   VaultType,
-  VaultVersion,
-} from '@badger-dao/sdk';
-import * as gqlGenT from '@badger-dao/sdk/lib/graphql/generated/badger';
-import { BadRequest } from '@tsed/exceptions';
-import { BigNumber, ethers } from 'ethers';
+  VaultVersion
+} from "@badger-dao/sdk";
+import * as gqlGenT from "@badger-dao/sdk/lib/graphql/generated/badger";
+import { BadRequest } from "@tsed/exceptions";
+import { BigNumber, ethers } from "ethers";
 
-import { Chain } from '../chains/config/chain.config';
-import { Polygon } from '../chains/config/polygon.config';
-import { ChainVaults } from '../chains/vaults/chain.vaults';
-import { TOKENS } from '../config/tokens.config';
-import * as indexerUtils from '../indexers/indexer.utils';
-import * as pricesUtils from '../prices/prices.utils';
-import { BouncerType } from '../rewards/enums/bouncer-type.enum';
-import { SourceType } from '../rewards/enums/source-type.enum';
-import * as rewardsUtils from '../rewards/rewards.utils';
-import { MOCK_VAULT_DEFINITION, TEST_ADDR } from '../test/constants';
-import { mockQuery, setupMockChain } from '../test/mocks.utils';
-import { randomSnapshot, randomSnapshots } from '../test/tests.utils';
-import { TokenNotFound } from '../tokens/errors/token.error';
-import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
-import * as tokenUtils from '../tokens/tokens.utils';
-import { vaultsGraphSdkMapMock } from './mocks/vaults-graph-sdk-map.mock';
-import { vaultsHarvestsSdkMock } from './mocks/vaults-harvests-sdk.mock';
+import { Chain } from "../chains/config/chain.config";
+import { Polygon } from "../chains/config/polygon.config";
+import { ChainVaults } from "../chains/vaults/chain.vaults";
+import { TOKENS } from "../config/tokens.config";
+import * as indexerUtils from "../indexers/indexer.utils";
+import * as pricesUtils from "../prices/prices.utils";
+import { BouncerType } from "../rewards/enums/bouncer-type.enum";
+import { SourceType } from "../rewards/enums/source-type.enum";
+import * as rewardsUtils from "../rewards/rewards.utils";
+import { MOCK_VAULT_DEFINITION, TEST_ADDR } from "../test/constants";
+import { mockQuery, setupMockChain } from "../test/mocks.utils";
+import { randomSnapshot, randomSnapshots } from "../test/tests.utils";
+import { TokenNotFound } from "../tokens/errors/token.error";
+import { fullTokenMockMap } from "../tokens/mocks/full-token.mock";
+import * as tokenUtils from "../tokens/tokens.utils";
+import { vaultsGraphSdkMapMock } from "./mocks/vaults-graph-sdk-map.mock";
+import { vaultsHarvestsSdkMock } from "./mocks/vaults-harvests-sdk.mock";
 import {
   defaultVault,
   estimateDerivativeEmission,
@@ -38,94 +38,94 @@ import {
   getVaultHarvestsOnChain,
   getVaultPerformance,
   getVaultTokenPrice,
-  VAULT_SOURCE,
-} from './vaults.utils';
-import { createYieldSource } from './yields.utils';
+  VAULT_SOURCE
+} from "./vaults.utils";
+import { createYieldSource } from "./yields.utils";
 
-describe('vaults.utils', () => {
+describe("vaults.utils", () => {
   let chain: Chain;
 
   beforeEach(() => {
     chain = setupMockChain();
     console.log = jest.fn();
 
-    jest.spyOn(BadgerGraph.prototype, 'loadSettHarvests').mockImplementation(async (_options) => {
+    jest.spyOn(BadgerGraph.prototype, "loadSettHarvests").mockImplementation(async (_options) => {
       const harvests = [
         {
-          id: '',
-          blockNumber: '10',
+          id: "",
+          blockNumber: "10",
           timestamp: 1640159886,
-          amount: '80000000000000000000',
+          amount: "80000000000000000000",
           token: {
-            id: '',
-            symbol: '',
-            name: '',
-            decimals: '',
-            totalSupply: '',
-          },
+            id: "",
+            symbol: "",
+            name: "",
+            decimals: "",
+            totalSupply: ""
+          }
         },
         {
-          id: '',
-          blockNumber: '10',
+          id: "",
+          blockNumber: "10",
           timestamp: 1642159886,
-          amount: '100000000000000000000',
+          amount: "100000000000000000000",
           token: {
-            id: '',
-            symbol: '',
-            name: '',
-            decimals: '',
-            totalSupply: '',
-          },
+            id: "",
+            symbol: "",
+            name: "",
+            decimals: "",
+            totalSupply: ""
+          }
         },
         {
-          id: '',
-          blockNumber: '10',
+          id: "",
+          blockNumber: "10",
           timestamp: 1645159886,
-          amount: '125000000000000000000',
+          amount: "125000000000000000000",
           token: {
-            id: '',
-            symbol: '',
-            name: '',
-            decimals: '',
-            totalSupply: '',
-          },
-        },
+            id: "",
+            symbol: "",
+            name: "",
+            decimals: "",
+            totalSupply: ""
+          }
+        }
       ];
       return {
-        settHarvests: harvests,
+        settHarvests: harvests
       };
     });
-    jest.spyOn(BadgerGraph.prototype, 'loadBadgerTreeDistributions').mockImplementation(async () => ({
-      badgerTreeDistributions: [],
+    jest.spyOn(BadgerGraph.prototype, "loadBadgerTreeDistributions").mockImplementation(async () => ({
+      badgerTreeDistributions: []
     }));
-    jest.spyOn(TokensService.prototype, 'loadToken').mockImplementation(async (address) => ({
+    jest.spyOn(TokensService.prototype, "loadToken").mockImplementation(async (address) => ({
       address,
       decimals: 18,
-      symbol: 'TEST',
-      name: 'TEST',
+      symbol: "TEST",
+      name: "TEST"
     }));
     const snapshot = randomSnapshot(MOCK_VAULT_DEFINITION);
     snapshot.value = 1000;
     snapshot.balance = 10000;
     mockQuery([snapshot]);
-    jest.spyOn(indexerUtils, 'getVault').mockImplementation(async (_chain, _address) => ({
+    jest.spyOn(indexerUtils, "getVault").mockImplementation(async (_chain, _address) => ({
       sett: {
         id: TEST_ADDR,
-        balance: '2500000000000000000000', // 2500
+        balance: "2500000000000000000000", // 2500
         available: 0,
         netDeposit: 0,
         netShareDeposit: 0,
         token: {
-          symbol: 'TEST',
-          name: 'TEST',
+          symbol: "TEST",
+          name: "TEST",
           id: TEST_ADDR,
           decimals: 18,
-          totalSupply: 3,
+          totalSupply: 3
         },
         pricePerFullShare: 1,
         totalSupply: 10,
-        symbol: 'TEST',
-        name: 'TEST',
+        symbol: "TEST",
+        name: "TEST",
         decimals: 18,
         grossDeposit: 1,
         grossShareDeposit: 1,
@@ -133,7 +133,7 @@ describe('vaults.utils', () => {
         grossWithdraw: 1,
         strategy: {
           id: TEST_ADDR,
-          balance: '2500000000000000000000',
+          balance: "2500000000000000000000"
         },
         version: VaultVersion.v1_5,
         status: VaultStatus.guarded,
@@ -142,18 +142,18 @@ describe('vaults.utils', () => {
         createdAt: 0,
         behavior: VaultBehavior.Compounder,
         lastUpdatedAt: 0,
-        releasedAt: 0,
-      },
+        releasedAt: 0
+      }
     }));
-    jest.spyOn(rewardsUtils, 'getProtocolValueSources').mockImplementation(async (_chain, vault) => {
-      return [createYieldSource(vault, SourceType.TradeFee, 'Test LP Fees', 1.13)];
+    jest.spyOn(rewardsUtils, "getProtocolValueSources").mockImplementation(async (_chain, vault) => {
+      return [createYieldSource(vault, SourceType.TradeFee, "Test LP Fees", 1.13)];
     });
   });
 
   function setupSdk() {
-    jest.spyOn(VaultsService.prototype, 'listHarvests').mockImplementation(async (opts) => {
+    jest.spyOn(VaultsService.prototype, "listHarvests").mockImplementation(async (opts) => {
       if (!opts.timestamp_gte) {
-        throw new Error('Invalid request!');
+        throw new Error("Invalid request!");
       }
       const startTime = opts.timestamp_gte;
       const data = [0, 1, 2].map((int) => {
@@ -161,13 +161,11 @@ describe('vaults.utils', () => {
         const block = Number((timestamp / 10000).toFixed());
         return {
           timestamp,
-          harvests: [
-            { timestamp, block, token: TOKENS.CRV_IBBTC, amount: BigNumber.from((int + 1 * 1.88e18).toString()) },
-          ],
+          harvests: [{ timestamp, block, token: TOKENS.CRV_IBBTC, amount: BigNumber.from((int + 1 * 1.88e18).toString()) }],
           treeDistributions: [
             { timestamp, block, token: TOKENS.BCVXCRV, amount: BigNumber.from((int + 1 * 5.77e12).toString()) },
-            { timestamp, block, token: TOKENS.BVECVX, amount: BigNumber.from((int + 1 * 4.42e12).toString()) },
-          ],
+            { timestamp, block, token: TOKENS.BVECVX, amount: BigNumber.from((int + 1 * 4.42e12).toString()) }
+          ]
         };
       });
       return { data };
@@ -175,33 +173,31 @@ describe('vaults.utils', () => {
   }
 
   beforeEach(() => {
-    jest.spyOn(BadgerSDK.prototype, 'ready').mockImplementation();
-    jest.spyOn(rewardsUtils, 'getRewardEmission').mockImplementation(async (_chain, vault) => {
-      return [createYieldSource(vault, SourceType.Emission, 'Badger Rewards', 6.969, { min: 1, max: 2 })];
+    jest.spyOn(BadgerSDK.prototype, "ready").mockImplementation();
+    jest.spyOn(rewardsUtils, "getRewardEmission").mockImplementation(async (_chain, vault) => {
+      return [createYieldSource(vault, SourceType.Emission, "Badger Rewards", 6.969, { min: 1, max: 2 })];
     });
   });
 
   const setupTestVaultHarvests = (): void => {
-    jest.spyOn(tokenUtils, 'getFullToken').mockImplementation(async (_, tokenAddr) => {
+    jest.spyOn(tokenUtils, "getFullToken").mockImplementation(async (_, tokenAddr) => {
       return fullTokenMockMap[tokenAddr] || fullTokenMockMap[TOKENS.BADGER];
     });
     // eslint-disable-next-line
-    jest.spyOn(VaultsService.prototype, 'listHarvests').mockImplementation(async ({ address }): Promise<any> => {
+    jest.spyOn(VaultsService.prototype, "listHarvests").mockImplementation(async ({ address }): Promise<any> => {
       return vaultsHarvestsSdkMock[address];
     });
     /* eslint-disable @typescript-eslint/ban-ts-comment */
-    jest
-      .spyOn(BadgerGraph.prototype, 'loadSett')
-      .mockImplementation(async ({ id, block }): Promise<gqlGenT.SettQuery> => {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        return vaultsGraphSdkMapMock[`${id.toLowerCase()}-${(block || {}).number || 0}`];
-      });
-    jest.spyOn(BadgerSDK.prototype, 'ready').mockImplementation();
+    jest.spyOn(BadgerGraph.prototype, "loadSett").mockImplementation(async ({ id, block }): Promise<gqlGenT.SettQuery> => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      return vaultsGraphSdkMapMock[`${id.toLowerCase()}-${(block || {}).number || 0}`];
+    });
+    jest.spyOn(BadgerSDK.prototype, "ready").mockImplementation();
   };
 
-  describe('defaultVault', () => {
-    it('returns a sett default fields', async () => {
+  describe("defaultVault", () => {
+    it("returns a sett default fields", async () => {
       const depositToken = fullTokenMockMap[MOCK_VAULT_DEFINITION.depositToken];
       const settToken = fullTokenMockMap[MOCK_VAULT_DEFINITION.address];
       const expected: VaultDTO = {
@@ -218,7 +214,7 @@ describe('vaults.utils', () => {
         available: 0,
         boost: {
           enabled: false,
-          weight: 0,
+          weight: 0
         },
         bouncer: MOCK_VAULT_DEFINITION.bouncer ?? BouncerType.None,
         name: MOCK_VAULT_DEFINITION.name,
@@ -235,7 +231,7 @@ describe('vaults.utils', () => {
           withdrawFee: 0,
           performanceFee: 0,
           strategistFee: 0,
-          aumFee: 0,
+          aumFee: 0
         },
         type: MOCK_VAULT_DEFINITION.protocol === Protocol.Badger ? VaultType.Native : VaultType.Standard,
         behavior: MOCK_VAULT_DEFINITION.behavior ?? VaultBehavior.None,
@@ -256,18 +252,18 @@ describe('vaults.utils', () => {
           nonHarvestApr: 0,
           nonHarvestApy: 0,
           nonHarvestSources: [],
-          nonHarvestSourcesApy: [],
+          nonHarvestSourcesApy: []
         },
-        version: VaultVersion.v1,
+        version: VaultVersion.v1
       };
       const actual = await defaultVault(chain, MOCK_VAULT_DEFINITION);
       expect(actual).toMatchObject(expected);
     });
   });
 
-  describe('getCachedVault', () => {
-    describe('no cached vault exists', () => {
-      it('returns the default sett', async () => {
+  describe("getCachedVault", () => {
+    describe("no cached vault exists", () => {
+      it("returns the default sett", async () => {
         mockQuery([]);
 
         const cached = await getCachedVault(chain, MOCK_VAULT_DEFINITION);
@@ -276,8 +272,8 @@ describe('vaults.utils', () => {
       });
     });
 
-    describe('a cached vault exists', () => {
-      it('returns the vault', async () => {
+    describe("a cached vault exists", () => {
+      it("returns the vault", async () => {
         const snapshot = randomSnapshot(MOCK_VAULT_DEFINITION);
         mockQuery([snapshot]);
 
@@ -289,55 +285,55 @@ describe('vaults.utils', () => {
         expected.value = snapshot.value;
         expected.boost = {
           enabled: snapshot.boostWeight > 0,
-          weight: snapshot.boostWeight,
+          weight: snapshot.boostWeight
         };
         expect(cached).toMatchObject(expected);
       });
     });
   });
 
-  describe('getVaultTokenPrice', () => {
-    describe('look up non vault token price', () => {
-      it('throws a bad request error', async () => {
+  describe("getVaultTokenPrice", () => {
+    describe("look up non vault token price", () => {
+      it("throws a bad request error", async () => {
         await expect(getVaultTokenPrice(chain, TOKENS.BADGER)).rejects.toThrow(BadRequest);
       });
     });
 
-    describe('look up malformed token configuration', () => {
-      it('throws an unprocessable entity error', async () => {
+    describe("look up malformed token configuration", () => {
+      it("throws an unprocessable entity error", async () => {
         await expect(getVaultTokenPrice(chain, ethers.constants.AddressZero)).rejects.toThrow(TokenNotFound);
       });
     });
 
-    describe('look up valid, properly configured vault', () => {
-      it('returns a valid token price for the vault base on price per full share', async () => {
+    describe("look up valid, properly configured vault", () => {
+      it("returns a valid token price for the vault base on price per full share", async () => {
         const snapshot = randomSnapshot(MOCK_VAULT_DEFINITION);
         mockQuery([snapshot]);
-        jest.spyOn(pricesUtils, 'queryPrice').mockImplementation(async (address) => ({ address, price: 10 }));
+        jest.spyOn(pricesUtils, "queryPrice").mockImplementation(async (address) => ({ address, price: 10 }));
 
         const vaultPrice = await getVaultTokenPrice(chain, MOCK_VAULT_DEFINITION.address);
         expect(vaultPrice).toMatchObject({
           address: MOCK_VAULT_DEFINITION.address,
-          price: 10 * snapshot.pricePerFullShare,
+          price: 10 * snapshot.pricePerFullShare
         });
       });
     });
   });
 
-  describe('getVaultPerformance', () => {
-    describe('no rewards or harvests', () => {
-      it('returns value sources from fallback methods', async () => {
-        jest.spyOn(VaultsService.prototype, 'listHarvests').mockImplementation(async (_opts) => ({ data: [] }));
+  describe("getVaultPerformance", () => {
+    describe("no rewards or harvests", () => {
+      it("returns value sources from fallback methods", async () => {
+        jest.spyOn(VaultsService.prototype, "listHarvests").mockImplementation(async (_opts) => ({ data: [] }));
 
         const result = await getVaultPerformance(chain, MOCK_VAULT_DEFINITION);
         expect(result).toMatchSnapshot();
       });
     });
 
-    describe('requests non standard vault performance', () => {
-      it('returns value sources from fallback methods', async () => {
-        jest.spyOn(VaultsService.prototype, 'listHarvests').mockImplementation(async (_opts) => {
-          throw new Error('Incompatible vault!');
+    describe("requests non standard vault performance", () => {
+      it("returns value sources from fallback methods", async () => {
+        jest.spyOn(VaultsService.prototype, "listHarvests").mockImplementation(async (_opts) => {
+          throw new Error("Incompatible vault!");
         });
         mockQuery(randomSnapshots(MOCK_VAULT_DEFINITION));
 
@@ -346,8 +342,8 @@ describe('vaults.utils', () => {
       });
     });
 
-    describe('requests non compatible network vault performances', () => {
-      it('returns value sources from fallback methods', async () => {
+    describe("requests non compatible network vault performances", () => {
+      it("returns value sources from fallback methods", async () => {
         const alternateChain = new Polygon();
 
         const result = await getVaultPerformance(alternateChain, MOCK_VAULT_DEFINITION);
@@ -355,12 +351,12 @@ describe('vaults.utils', () => {
       });
     });
 
-    describe('requests standard vault performance', () => {
-      it('returns value sources from standard methods', async () => {
+    describe("requests standard vault performance", () => {
+      it("returns value sources from standard methods", async () => {
         setupSdk();
-        jest.spyOn(pricesUtils, 'queryPrice').mockImplementation(async (token) => ({
+        jest.spyOn(pricesUtils, "queryPrice").mockImplementation(async (token) => ({
           address: token,
-          price: Number(token.slice(0, 4)),
+          price: Number(token.slice(0, 4))
         }));
         mockQuery([createYieldSource(MOCK_VAULT_DEFINITION, SourceType.PreCompound, VAULT_SOURCE, 10)]);
 
@@ -368,18 +364,18 @@ describe('vaults.utils', () => {
         expect(result).toMatchSnapshot();
       });
 
-      it('skips all emitted tokens with no price', async () => {
+      it("skips all emitted tokens with no price", async () => {
         setupSdk();
-        jest.spyOn(pricesUtils, 'queryPrice').mockImplementation(async (token) => {
+        jest.spyOn(pricesUtils, "queryPrice").mockImplementation(async (token) => {
           if (token !== MOCK_VAULT_DEFINITION.depositToken) {
             return {
               address: token,
-              price: 0,
+              price: 0
             };
           }
           return {
             address: token,
-            price: Number(token.slice(0, 4)),
+            price: Number(token.slice(0, 4))
           };
         });
 
@@ -389,7 +385,7 @@ describe('vaults.utils', () => {
     });
   });
 
-  describe('estimateDerivativeEmission', () => {
+  describe("estimateDerivativeEmission", () => {
     it.each([
       // enumerate all test cases above / below 100% apr
       [3.4883, 6.7204, 6.7204, 94.20314377878076],
@@ -398,29 +394,29 @@ describe('vaults.utils', () => {
       [3.4883, 0.7204, 0.7204, 3.529515865690866],
       [0.4883, 6.7204, 6.7204, 98.7771522235121],
       [0.4883, 6.7204, 0.7204, 26.1556767065858],
-      [0.4883, 0.7204, 0.7204, 13.257249960438303],
+      [0.4883, 0.7204, 0.7204, 13.257249960438303]
     ])(
-      'Estimates derived emission from (%d compound, %d emission, %d compound emission) as %d%%',
+      "Estimates derived emission from (%d compound, %d emission, %d compound emission) as %d%%",
       (compound, emission, compoundEmission, expected) => {
         expect(estimateDerivativeEmission(compound, emission, compoundEmission)).toEqual(expected);
-      },
+      }
     );
   });
 
-  describe('getVaultHarvestsOnChain', () => {
+  describe("getVaultHarvestsOnChain", () => {
     const TEST_VAULT = TOKENS.BCRV_SBTC;
 
-    it('returns vaults harvests with apr', async () => {
+    it("returns vaults harvests with apr", async () => {
       setupTestVaultHarvests();
       expect(await getVaultHarvestsOnChain(chain, TEST_VAULT)).toMatchSnapshot();
     });
 
-    it('returns empty harvests for unknown vault', async () => {
+    it("returns empty harvests for unknown vault", async () => {
       setupTestVaultHarvests();
-      jest.spyOn(ChainVaults.prototype, 'getVault').mockImplementation(async (_) => {
-        throw new Error('Missing Vault');
+      jest.spyOn(ChainVaults.prototype, "getVault").mockImplementation(async (_) => {
+        throw new Error("Missing Vault");
       });
-      await expect(getVaultHarvestsOnChain(chain, '0x000000000000')).rejects.toThrow(Error);
+      await expect(getVaultHarvestsOnChain(chain, "0x000000000000")).rejects.toThrow(Error);
     });
   });
 });

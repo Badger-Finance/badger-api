@@ -1,11 +1,11 @@
-import { formatBalance } from '@badger-dao/sdk';
-import { NotFound, UnprocessableEntity } from '@tsed/exceptions';
+import { formatBalance } from "@badger-dao/sdk";
+import { NotFound, UnprocessableEntity } from "@tsed/exceptions";
 
-import { Chain } from '../../chains/config/chain.config';
-import { UniV2__factory } from '../../contracts';
-import { TokenPrice } from '../../prices/interface/token-price.interface';
-import { queryPrice } from '../../prices/prices.utils';
-import { getFullToken } from '../../tokens/tokens.utils';
+import { Chain } from "../../chains/config/chain.config";
+import { UniV2__factory } from "../../contracts";
+import { TokenPrice } from "../../prices/interface/token-price.interface";
+import { queryPrice } from "../../prices/prices.utils";
+import { getFullToken } from "../../tokens/tokens.utils";
 
 interface LiquidityData {
   contract: string;
@@ -23,7 +23,7 @@ export async function getLiquidityData(chain: Chain, contract: string): Promise<
     pairContract.totalSupply(),
     pairContract.token0(),
     pairContract.token1(),
-    pairContract.getReserves(),
+    pairContract.getReserves()
   ]);
   const totalSupply = formatBalance(totalPairSupply);
   const tokenData = await sdk.tokens.loadTokens([token0, token1]);
@@ -35,7 +35,7 @@ export async function getLiquidityData(chain: Chain, contract: string): Promise<
     token1: token1,
     reserve0: reserve0,
     reserve1: reserve1,
-    totalSupply: totalSupply,
+    totalSupply: totalSupply
   };
 }
 
@@ -47,7 +47,7 @@ export const getOnChainLiquidityPrice = async (chain: Chain, contract: string): 
 
       return {
         address: token.address,
-        price: 0,
+        price: 0
       };
     }
     return resolveLiquidityPrice(chain, liquidityData);
@@ -69,7 +69,7 @@ const resolveLiquidityPrice = async (chain: Chain, liquidityData: LiquidityData)
 
     t0Price = {
       address: t0Info.address,
-      price: t1Price.price * t1Scalar,
+      price: t1Price.price * t1Scalar
     };
   }
   if (!t1Price) {
@@ -78,7 +78,7 @@ const resolveLiquidityPrice = async (chain: Chain, liquidityData: LiquidityData)
 
     t1Price = {
       address: t1Info.address,
-      price: t0Price.price * t0Scalar,
+      price: t0Price.price * t0Scalar
     };
   }
   const token = await getFullToken(chain, contract);
@@ -86,7 +86,7 @@ const resolveLiquidityPrice = async (chain: Chain, liquidityData: LiquidityData)
   const price = (t0Price.price * reserve0 + t1Price.price * reserve1) / totalSupply;
   return {
     address: token.address,
-    price,
+    price
   };
 };
 
@@ -105,6 +105,6 @@ export async function resolveTokenPrice(chain: Chain, token: string, contract: s
   const price = knownTokenPrice.price * scalar;
   return {
     address: pricingToken.address,
-    price,
+    price
   };
 }

@@ -1,9 +1,9 @@
-import { getAccounts } from '../accounts/accounts.utils';
-import { SUPPORTED_CHAINS } from '../chains/chain';
-import { Chain } from '../chains/config/chain.config';
-import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interface';
-import { getCachedVault } from '../vaults/vaults.utils';
-import { ProtocolMetrics, ProtocolSettsMetrics } from './interfaces/metrics.interface';
+import { getAccounts } from "../accounts/accounts.utils";
+import { SUPPORTED_CHAINS } from "../chains/chain";
+import { Chain } from "../chains/config/chain.config";
+import { ProtocolSummary } from "../protocols/interfaces/protocol-summary.interface";
+import { getCachedVault } from "../vaults/vaults.utils";
+import { ProtocolMetrics, ProtocolSettsMetrics } from "./interfaces/metrics.interface";
 
 export const getProtocolMetrics = async (): Promise<ProtocolMetrics> => {
   const [totalUsers, settMetrics] = await Promise.all([getProtocolTotalUsers(), getProtocolSettMetrics()]);

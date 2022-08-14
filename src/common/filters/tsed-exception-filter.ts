@@ -1,6 +1,6 @@
-import { Catch, ExceptionFilterMethods, PlatformContext } from '@tsed/common';
-import { isObject, isString } from '@tsed/core';
-import { Exception, InternalServerError } from '@tsed/exceptions';
+import { Catch, ExceptionFilterMethods, PlatformContext } from "@tsed/common";
+import { isObject, isString } from "@tsed/core";
+import { Exception, InternalServerError } from "@tsed/exceptions";
 
 interface ExceptionBody {
   message?: string;
@@ -12,7 +12,7 @@ interface ExceptionBody {
 export class TsedExceptionFilter implements ExceptionFilterMethods {
   catch(error: Exception, ctx: PlatformContext) {
     const { response } = ctx;
-    let exception: Exception = new InternalServerError('Internal server error');
+    let exception: Exception = new InternalServerError("Internal server error");
 
     // Unfortunately, TSED HTTP Exceptions do not extend the HTTPException
     // type, so we cannot check `error instanceof HttpException`. This is a
@@ -24,7 +24,7 @@ export class TsedExceptionFilter implements ExceptionFilterMethods {
 
     const { message, status } = exception;
     const body: ExceptionBody = {
-      message,
+      message
     };
     let exceptionResponse = exception.body;
 

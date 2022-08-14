@@ -1,33 +1,33 @@
-import { Network, ONE_YEAR_SECONDS, Protocol } from '@badger-dao/sdk';
-import { BigNumber } from 'ethers';
+import { Network, ONE_YEAR_SECONDS, Protocol } from "@badger-dao/sdk";
+import { BigNumber } from "ethers";
 
-import { getBoostFile, getCachedAccount } from '../accounts/accounts.utils';
-import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
-import { YieldSource } from '../aws/models/yield-source.model';
-import { getObject } from '../aws/s3.utils';
-import { Chain } from '../chains/config/chain.config';
-import { REWARD_DATA } from '../config/constants';
-import { TOKENS } from '../config/tokens.config';
-import { queryPrice } from '../prices/prices.utils';
-import { BalancerStrategy } from '../protocols/strategies/balancer.strategy';
-import { ConvexStrategy } from '../protocols/strategies/convex.strategy';
-import { OxDaoStrategy } from '../protocols/strategies/oxdao.strategy';
-import { SushiswapStrategy } from '../protocols/strategies/sushiswap.strategy';
-import { SwaprStrategy } from '../protocols/strategies/swapr.strategy';
-import { UniswapStrategy } from '../protocols/strategies/uniswap.strategy';
-import { getFullToken } from '../tokens/tokens.utils';
-import { getCachedVault, getVaultPerformance } from '../vaults/vaults.utils';
-import { createYieldSource } from '../vaults/yields.utils';
-import { SourceType } from './enums/source-type.enum';
-import { RewardMerkleDistribution } from './interfaces/merkle-distributor.interface';
+import { getBoostFile, getCachedAccount } from "../accounts/accounts.utils";
+import { VaultDefinitionModel } from "../aws/models/vault-definition.model";
+import { YieldSource } from "../aws/models/yield-source.model";
+import { getObject } from "../aws/s3.utils";
+import { Chain } from "../chains/config/chain.config";
+import { REWARD_DATA } from "../config/constants";
+import { TOKENS } from "../config/tokens.config";
+import { queryPrice } from "../prices/prices.utils";
+import { BalancerStrategy } from "../protocols/strategies/balancer.strategy";
+import { ConvexStrategy } from "../protocols/strategies/convex.strategy";
+import { OxDaoStrategy } from "../protocols/strategies/oxdao.strategy";
+import { SushiswapStrategy } from "../protocols/strategies/sushiswap.strategy";
+import { SwaprStrategy } from "../protocols/strategies/swapr.strategy";
+import { UniswapStrategy } from "../protocols/strategies/uniswap.strategy";
+import { getFullToken } from "../tokens/tokens.utils";
+import { getCachedVault, getVaultPerformance } from "../vaults/vaults.utils";
+import { createYieldSource } from "../vaults/yields.utils";
+import { SourceType } from "./enums/source-type.enum";
+import { RewardMerkleDistribution } from "./interfaces/merkle-distributor.interface";
 
-export const DIGG_SHARE_PER_FRAGMENT = '222256308823765331027878635805365830922307440079959220679625904457';
+export const DIGG_SHARE_PER_FRAGMENT = "222256308823765331027878635805365830922307440079959220679625904457";
 
 export async function getTreeDistribution(chain: Chain): Promise<RewardMerkleDistribution | null> {
   try {
     const fileName = `badger-tree-${chain.chainId}.json`;
     const rewardFile = await getObject(REWARD_DATA, fileName);
-    return JSON.parse(rewardFile.toString('utf-8'));
+    return JSON.parse(rewardFile.toString("utf-8"));
   } catch (err) {
     console.error({ message: `Missing expected badger tree file for ${chain.network}`, err });
     return null;
@@ -38,7 +38,7 @@ export async function getClaimableRewards(
   chain: Chain,
   chainUsers: string[],
   distribution: RewardMerkleDistribution,
-  blockNumber: number,
+  blockNumber: number
 ): Promise<[string, [string[], BigNumber[]]][]> {
   const { rewards } = await chain.getSdk();
   const { badgerTree } = rewards;
@@ -51,7 +51,7 @@ export async function getClaimableRewards(
     while (attempt < 3) {
       try {
         const result = await badgerTree.getClaimableFor(user, proof.tokens, proof.cumulativeAmounts, {
-          blockTag: blockNumber,
+          blockTag: blockNumber
         });
         return [user, result];
       } catch (err) {
@@ -92,11 +92,11 @@ export async function getRewardEmission(chain: Chain, vault: VaultDefinitionMode
   let ignoredTVL = 0;
   if (chain.network === Network.Ethereum) {
     const blacklistedAccounts = await Promise.all([
-      getCachedAccount(chain, '0xB65cef03b9B89f99517643226d76e286ee999e77'), // dev multisig
-      getCachedAccount(chain, '0x86cbD0ce0c087b482782c181dA8d191De18C8275'), // tech ops multisig
-      getCachedAccount(chain, '0x042B32Ac6b453485e357938bdC38e0340d4b9276'), // treasury ops multisig
-      getCachedAccount(chain, '0xD0A7A8B98957b9CD3cFB9c0425AbE44551158e9e'), // treasury vault
-      getCachedAccount(chain, '0xA9ed98B5Fb8428d68664f3C5027c62A10d45826b'), // treasury bveCVX voting multisig
+      getCachedAccount(chain, "0xB65cef03b9B89f99517643226d76e286ee999e77"), // dev multisig
+      getCachedAccount(chain, "0x86cbD0ce0c087b482782c181dA8d191De18C8275"), // tech ops multisig
+      getCachedAccount(chain, "0x042B32Ac6b453485e357938bdC38e0340d4b9276"), // treasury ops multisig
+      getCachedAccount(chain, "0xD0A7A8B98957b9CD3cFB9c0425AbE44551158e9e"), // treasury vault
+      getCachedAccount(chain, "0xA9ed98B5Fb8428d68664f3C5027c62A10d45826b") // treasury bveCVX voting multisig
     ]);
     ignoredTVL = blacklistedAccounts
       .map((a) => a.data[vault.address])
@@ -145,10 +145,7 @@ export async function getRewardEmission(chain: Chain, vault: VaultDefinitionMode
   return emissionSources;
 }
 
-export async function getVaultValueSources(
-  chain: Chain,
-  vaultDefinition: VaultDefinitionModel,
-): Promise<YieldSource[]> {
+export async function getVaultValueSources(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<YieldSource[]> {
   // manual over ride for removed compounding of vaults - this can be empty
   const NO_COMPOUND_VAULTS = new Set([TOKENS.BREMBADGER, TOKENS.BVECVX, TOKENS.BCVX]);
 
@@ -168,10 +165,7 @@ export async function getVaultValueSources(
   }
 }
 
-export async function getProtocolValueSources(
-  chain: Chain,
-  vaultDefinition: VaultDefinitionModel,
-): Promise<YieldSource[]> {
+export async function getProtocolValueSources(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<YieldSource[]> {
   try {
     switch (vaultDefinition.protocol) {
       case Protocol.Sushiswap:

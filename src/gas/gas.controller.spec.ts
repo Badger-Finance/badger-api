@@ -1,23 +1,24 @@
-import { PlatformTest } from "@tsed/common";
-import SuperTest from "supertest";
+import { PlatformServerless } from "@tsed/platform-serverless";
+import { PlatformServerlessTest } from "@tsed/platform-serverless-testing";
 
-import { Server } from "../server";
 import { setupMockChain } from "../test/mocks.utils";
+import { GasController } from "./gas.controller";
 
 describe("GasController", () => {
-  let request: SuperTest.SuperTest<SuperTest.Test>;
+  beforeEach(
+    PlatformServerlessTest.bootstrap(PlatformServerless, {
+      lambda: [GasController]
+    })
+  );
+  afterEach(() => PlatformServerlessTest.reset());
 
-  beforeAll(PlatformTest.bootstrap(Server));
-  beforeAll(() => {
-    request = SuperTest(PlatformTest.callback());
-  });
-  afterAll(PlatformTest.reset);
+  beforeEach(setupMockChain);
 
-  describe("GET /v2/gas", () => {
+  describe("GET /gas", () => {
     it("returns gas price options in eip-1559 format", async () => {
-      setupMockChain();
-      const { body } = await request.get("/v2/gas").expect(200);
-      expect(body).toMatchSnapshot();
+      const { body, statusCode } = await PlatformServerlessTest.request.get("/gas");
+      expect(statusCode).toEqual(200);
+      expect(JSON.parse(body)).toMatchSnapshot();
     });
   });
 });

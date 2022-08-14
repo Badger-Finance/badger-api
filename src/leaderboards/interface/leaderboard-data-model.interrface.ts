@@ -1,44 +1,44 @@
-import { LeaderBoardData, UserBoostData } from '@badger-dao/sdk';
-import { Description, Example, Property, Title } from '@tsed/schema';
+import { LeaderBoardData, UserBoostData } from "@badger-dao/sdk";
+import { Description, Example, Property, Title } from "@tsed/schema";
 
 export class LeaderBoardDataModel implements LeaderBoardData {
-  @Title('data')
-  @Description('Leaderboard page data')
+  @Title("data")
+  @Description("Leaderboard page data")
   @Example([
     {
-      leaderboard: 'bosst',
+      leaderboard: "bosst",
       rank: 1,
-      address: '0xdeadbeef',
+      address: "0xdeadbeef",
       boost: 3,
       stakeRatio: 100,
       nftMultiplier: 3,
       nativeBalance: 300234.23,
-      nonNativeBalance: 3245.12,
-    },
+      nonNativeBalance: 3245.12
+    }
   ])
   @Property()
   public data: UserBoostData[];
 
-  @Title('page')
-  @Description('Leaderboard page')
+  @Title("page")
+  @Description("Leaderboard page")
   @Example(1)
   @Property()
   public page: number;
 
-  @Title('size')
-  @Description('Leaderboard page size')
+  @Title("size")
+  @Description("Leaderboard page size")
   @Example(20)
   @Property()
   public size: number;
 
-  @Title('count')
-  @Description('Leaderboard entries')
+  @Title("count")
+  @Description("Leaderboard entries")
   @Example(3087)
   @Property()
   public count: number;
 
-  @Title('maxPage')
-  @Description('Maximum leaderboard page')
+  @Title("maxPage")
+  @Description("Maximum leaderboard page")
   @Example(65)
   @Property()
   public maxPage: number;

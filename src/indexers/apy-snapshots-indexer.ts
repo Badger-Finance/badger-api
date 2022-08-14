@@ -1,10 +1,10 @@
-import { getDataMapper } from '../aws/dynamodb.utils';
-import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
-import { YieldSource } from '../aws/models/yield-source.model';
-import { SUPPORTED_CHAINS } from '../chains/chain';
-import { Chain } from '../chains/config/chain.config';
-import { getVaultValueSources } from '../rewards/rewards.utils';
-import { queryYieldSources } from '../vaults/vaults.utils';
+import { getDataMapper } from "../aws/dynamodb.utils";
+import { VaultDefinitionModel } from "../aws/models/vault-definition.model";
+import { YieldSource } from "../aws/models/yield-source.model";
+import { SUPPORTED_CHAINS } from "../chains/chain";
+import { Chain } from "../chains/config/chain.config";
+import { getVaultValueSources } from "../rewards/rewards.utils";
+import { queryYieldSources } from "../vaults/vaults.utils";
 
 export async function refreshApySnapshots() {
   for (const chain of SUPPORTED_CHAINS) {
@@ -12,7 +12,7 @@ export async function refreshApySnapshots() {
     await Promise.all(vaults.map(async (vault) => refreshChainApySnapshots(chain, vault)));
   }
 
-  return 'done';
+  return "done";
 }
 
 export async function refreshChainApySnapshots(chain: Chain, vault: VaultDefinitionModel) {

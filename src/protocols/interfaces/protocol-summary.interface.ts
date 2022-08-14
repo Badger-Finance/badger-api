@@ -1,4 +1,4 @@
-import { VaultSummary } from '../../vaults/interfaces/vault-summary.interface';
+import { VaultSummary } from "../../vaults/interfaces/vault-summary.interface";
 
 export interface ProtocolSummary {
   totalValue: number;

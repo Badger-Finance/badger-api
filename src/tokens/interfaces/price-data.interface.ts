@@ -1,4 +1,4 @@
-import { TokenPrice } from '../../prices/interface/token-price.interface';
+import { TokenPrice } from "../../prices/interface/token-price.interface";
 
 export interface PriceData {
   [address: string]: TokenPrice;

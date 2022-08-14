@@ -1,11 +1,11 @@
-import { BadgerType, BadgerTypeMap } from '@badger-dao/sdk';
+import { BadgerType, BadgerTypeMap } from "@badger-dao/sdk";
 
 export const BADGER_RANKS: BadgerTypeMap = {
   [BadgerType.Basic]: 1,
   [BadgerType.Neo]: 20,
   [BadgerType.Hero]: 200,
   [BadgerType.Hyper]: 600,
-  [BadgerType.Frenzy]: 1400,
+  [BadgerType.Frenzy]: 1400
 };
 
 export function getBadgerType(score: number): BadgerType {

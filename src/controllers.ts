@@ -5,7 +5,7 @@ import { DevelopmentController } from "./dev/dev.controller";
 import { GasController } from "./gas/gas.controller";
 import { LeaderBoardsController } from "./leaderboards/leaderboards.controller";
 import { MetricsController } from "./metrics/metrics.controller";
-import { PriceController } from "./prices/prices.controller";
+import { PricesController } from "./prices/prices.controller";
 import { ProofsV3Controller } from "./proofs/proof.v3.controller";
 import { ProofsV2Controller } from "./proofs/proofs.v2.controller";
 import { ProtocolController } from "./protocols/protocols.controller";
@@ -28,7 +28,7 @@ export const V2_CONTROLLERS = [
   LeaderBoardsController,
   MetricsController,
   ProtocolController,
-  PriceController,
+  PricesController,
   TokensController,
   AccountsV2Controller,
   ProofsV2Controller,
@@ -42,7 +42,7 @@ export const V3_CONTROLLERS = [
   GasController,
   LeaderBoardsController,
   MetricsController,
-  PriceController,
+  PricesController,
   TokensController,
 
   DevelopmentController,

@@ -1,9 +1,9 @@
-import { ChartTimeFrame, ONE_DAY_MS, ONE_HOUR_MS } from '@badger-dao/sdk';
+import { ChartTimeFrame, ONE_DAY_MS, ONE_HOUR_MS } from "@badger-dao/sdk";
 
-import { getDataMapper } from '../aws/dynamodb.utils';
-import { ChartDataBlob } from '../aws/models/chart-data-blob.model';
-import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
-import { ChartData } from './chart-data.model';
+import { getDataMapper } from "../aws/dynamodb.utils";
+import { ChartDataBlob } from "../aws/models/chart-data-blob.model";
+import { HistoricVaultSnapshotModel } from "../aws/models/historic-vault-snapshot.model";
+import { ChartData } from "./chart-data.model";
 
 // list of ChartTimeFrame enums that contain unique capture granularities for searching
 export const CHART_GRANULARITY_TIMEFRAMES = [ChartTimeFrame.Max, ChartTimeFrame.Week, ChartTimeFrame.Day];
@@ -15,15 +15,11 @@ export const CHART_GRANULARITY_TIMEFRAMES = [ChartTimeFrame.Max, ChartTimeFrame.
  * @param data
  * @returns
  */
-export function toChartDataBlob<T extends ChartData<T>>(
-  id: string,
-  timeframe: ChartTimeFrame,
-  data: T[],
-): ChartDataBlob<T> {
+export function toChartDataBlob<T extends ChartData<T>>(id: string, timeframe: ChartTimeFrame, data: T[]): ChartDataBlob<T> {
   return Object.assign(new ChartDataBlob(), {
     id,
     timeframe,
-    data,
+    data
   });
 }
 
@@ -35,7 +31,7 @@ export function toChartDataBlob<T extends ChartData<T>>(
  * @returns
  */
 export function toChartDataKey(namespace: string, id: string, timeframe: ChartTimeFrame): string {
-  return [namespace, id, timeframe].join('_');
+  return [namespace, id, timeframe].join("_");
 }
 
 /**
@@ -111,7 +107,7 @@ export async function updateSnapshots<T extends ChartData<T>>(namespace: string,
   const { id, timestamp: now } = snapshot;
   for (const timeframe of Object.values(ChartTimeFrame)) {
     const searchKey = Object.assign(new ChartDataBlob<T>(), {
-      id: toChartDataKey(namespace, id, timeframe),
+      id: toChartDataKey(namespace, id, timeframe)
     });
 
     let cachedChart: ChartDataBlob<T> | undefined;
@@ -125,7 +121,7 @@ export async function updateSnapshots<T extends ChartData<T>>(namespace: string,
         }
       }
     } catch (err) {
-      console.debug({ message: 'Unable to query cached chart, may simply not exist', err });
+      console.debug({ message: "Unable to query cached chart, may simply not exist", err });
     } // no item found
 
     let updateCache = false;
@@ -135,7 +131,7 @@ export async function updateSnapshots<T extends ChartData<T>>(namespace: string,
       try {
         cachedChart = await mapper.put(blob);
       } catch (err) {
-        console.error({ message: 'Unable to save blob', err });
+        console.error({ message: "Unable to save blob", err });
       }
       updateCache = true;
     } else {
@@ -155,7 +151,7 @@ export async function updateSnapshots<T extends ChartData<T>>(namespace: string,
       try {
         await mapper.put(cachedChart);
       } catch (err) {
-        console.error({ message: 'Unable to save blob', err });
+        console.error({ message: "Unable to save blob", err });
       }
     }
   }

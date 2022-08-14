@@ -1,8 +1,8 @@
-import { attribute, hashKey, table } from '@aws/dynamodb-data-mapper-annotations';
-import { Network, ValueSource } from '@badger-dao/sdk';
+import { attribute, hashKey, table } from "@aws/dynamodb-data-mapper-annotations";
+import { Network, ValueSource } from "@badger-dao/sdk";
 
-import { YIELD_SNAPSHOTS_DATA } from '../../config/constants';
-import { SourceType } from '../../rewards/enums/source-type.enum';
+import { YIELD_SNAPSHOTS_DATA } from "../../config/constants";
+import { SourceType } from "../../rewards/enums/source-type.enum";
 
 @table(YIELD_SNAPSHOTS_DATA)
 export class YieldSource implements ValueSource {
@@ -11,8 +11,8 @@ export class YieldSource implements ValueSource {
 
   @attribute({
     indexKeyConfigurations: {
-      IndexApySnapshotsOnAddress: 'HASH',
-    },
+      IndexApySnapshotsOnAddress: "HASH"
+    }
   })
   chainAddress!: string;
 

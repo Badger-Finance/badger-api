@@ -1,24 +1,19 @@
-import { Erc20__factory, formatBalance, Network, Token } from '@badger-dao/sdk';
-import { GraphQLClient } from 'graphql-request';
+import { Erc20__factory, formatBalance, Network, Token } from "@badger-dao/sdk";
+import { GraphQLClient } from "graphql-request";
 
-import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
-import { VaultTokenBalance } from '../../aws/models/vault-token-balance.model';
-import { YieldSource } from '../../aws/models/yield-source.model';
-import { Chain } from '../../chains/config/chain.config';
-import { BALANCER_URL } from '../../config/constants';
-import {
-  BalancerVault__factory,
-  StablePhantomVault__factory,
-  StablePool__factory,
-  WeightedPool__factory,
-} from '../../contracts';
-import { getSdk as getBalancerSdk, OrderDirection, PoolSnapshot_OrderBy } from '../../graphql/generated/balancer';
-import { TokenPrice } from '../../prices/interface/token-price.interface';
-import { SourceType } from '../../rewards/enums/source-type.enum';
-import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
-import { getFullToken, toBalance } from '../../tokens/tokens.utils';
-import { getCachedVault } from '../../vaults/vaults.utils';
-import { createYieldSource } from '../../vaults/yields.utils';
+import { VaultDefinitionModel } from "../../aws/models/vault-definition.model";
+import { VaultTokenBalance } from "../../aws/models/vault-token-balance.model";
+import { YieldSource } from "../../aws/models/yield-source.model";
+import { Chain } from "../../chains/config/chain.config";
+import { BALANCER_URL } from "../../config/constants";
+import { BalancerVault__factory, StablePhantomVault__factory, StablePool__factory, WeightedPool__factory } from "../../contracts";
+import { getSdk as getBalancerSdk, OrderDirection, PoolSnapshot_OrderBy } from "../../graphql/generated/balancer";
+import { TokenPrice } from "../../prices/interface/token-price.interface";
+import { SourceType } from "../../rewards/enums/source-type.enum";
+import { CachedTokenBalance } from "../../tokens/interfaces/cached-token-balance.interface";
+import { getFullToken, toBalance } from "../../tokens/tokens.utils";
+import { getCachedVault } from "../../vaults/vaults.utils";
+import { createYieldSource } from "../../vaults/yields.utils";
 
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
@@ -45,7 +40,7 @@ export async function getBPTPrice(chain: Chain, token: string): Promise<TokenPri
 
   return {
     address: token,
-    price: value / totalSupply,
+    price: value / totalSupply
   };
 }
 
@@ -103,7 +98,7 @@ export async function getBalancerVaultTokenBalance(chain: Chain, token: string):
   });
   const vaultTokenBalance = {
     vault: address,
-    tokenBalances: cachedTokens,
+    tokenBalances: cachedTokens
   };
   return Object.assign(new VaultTokenBalance(), vaultTokenBalance);
 }
@@ -123,15 +118,13 @@ export async function resolveBalancerPoolTokenPrice(chain: Chain, token: Token, 
 
     const targetBalance = balances[targetIndex];
     const expectedWeight = formatBalance(weights[targetIndex]);
-    const totalOtherValue = balances
-      .filter((b) => b.address !== token.address)
-      .reduce((total, balance) => (total += balance.value), 0);
+    const totalOtherValue = balances.filter((b) => b.address !== token.address).reduce((total, balance) => (total += balance.value), 0);
     const multiplier = expectedWeight / (1 - expectedWeight);
     const tokenPrice = (totalOtherValue * multiplier) / targetBalance.balance;
 
     return {
       address: token.address,
-      price: tokenPrice,
+      price: tokenPrice
     };
   } catch {
     // Attempt instead, to evaluate as a stable pool
@@ -139,7 +132,7 @@ export async function resolveBalancerPoolTokenPrice(chain: Chain, token: Token, 
 
     try {
       if (balances.length != 2) {
-        throw new Error('Pool has unexpected number of tokens!');
+        throw new Error("Pool has unexpected number of tokens!");
       }
 
       // we can calculate "x" in terms of "y" - this is our token in terms of some known token
@@ -148,15 +141,14 @@ export async function resolveBalancerPoolTokenPrice(chain: Chain, token: Token, 
       // derivation adapted from https://twitter.com/0xa9a/status/1514192791689179137
       const [amplificationParameter, lastInvariantData] = await Promise.all([
         probablyStablePool.getAmplificationParameter(),
-        probablyStablePool.getLastInvariant(),
+        probablyStablePool.getLastInvariant()
       ]);
 
       const requestTokenIndex = balances[0].address === token.address ? 0 : 1;
       const requestToken = balances[requestTokenIndex];
       const pairToken = balances[1 - requestTokenIndex];
 
-      const amplificiation =
-        4 * (amplificationParameter.value.toNumber() / amplificationParameter.precision.toNumber());
+      const amplificiation = 4 * (amplificationParameter.value.toNumber() / amplificationParameter.precision.toNumber());
       const invariant = formatBalance(lastInvariantData.lastInvariant);
 
       // calculate scalar y/x
@@ -176,7 +168,7 @@ export async function resolveBalancerPoolTokenPrice(chain: Chain, token: Token, 
 
       return {
         address: token.address,
-        price: requestTokenPrice,
+        price: requestTokenPrice
       };
     } catch (err) {
       console.error({ err, message: `Unable to price ${token.name}` });
@@ -185,7 +177,7 @@ export async function resolveBalancerPoolTokenPrice(chain: Chain, token: Token, 
 
   return {
     address: token.address,
-    price: 0,
+    price: 0
   };
 }
 
@@ -201,10 +193,10 @@ export async function getBalancerSwapFees(vault: VaultDefinitionModel): Promise<
     const { poolSnapshots } = await sdk.PoolSnapshots({
       first: 3,
       where: {
-        pool: poolId.toLowerCase(),
+        pool: poolId.toLowerCase()
       },
       orderBy: PoolSnapshot_OrderBy.Timestamp,
-      orderDirection: OrderDirection.Desc,
+      orderDirection: OrderDirection.Desc
     });
 
     if (poolSnapshots.length !== 3) {
@@ -224,7 +216,7 @@ export async function getBalancerSwapFees(vault: VaultDefinitionModel): Promise<
     const yearlyFees = poolFees * 365;
     const yearlyApr = (yearlyFees / poolLiquidity) * 100;
 
-    return [createYieldSource(vault, SourceType.TradeFee, 'Balancer LP Fees', yearlyApr)];
+    return [createYieldSource(vault, SourceType.TradeFee, "Balancer LP Fees", yearlyApr)];
   } catch {
     // some of the aura vaults are not pools - they will error (auraBal, graviAura)
     return [];

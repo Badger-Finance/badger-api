@@ -1,14 +1,14 @@
-import { Network } from '@badger-dao/sdk';
+import { Network } from "@badger-dao/sdk";
 
-import { getAccounts, getLatestMetadata } from '../accounts/accounts.utils';
-import { getChainStartBlockKey, getDataMapper } from '../aws/dynamodb.utils';
-import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
-import { SUPPORTED_CHAINS } from '../chains/chain';
-import { Chain } from '../chains/config/chain.config';
-import { PRODUCTION } from '../config/constants';
-import { ClaimableBalance } from '../rewards/entities/claimable-balance';
-import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
-import { getClaimableRewards, getTreeDistribution } from '../rewards/rewards.utils';
+import { getAccounts, getLatestMetadata } from "../accounts/accounts.utils";
+import { getChainStartBlockKey, getDataMapper } from "../aws/dynamodb.utils";
+import { UserClaimSnapshot } from "../aws/models/user-claim-snapshot.model";
+import { SUPPORTED_CHAINS } from "../chains/chain";
+import { Chain } from "../chains/config/chain.config";
+import { PRODUCTION } from "../config/constants";
+import { ClaimableBalance } from "../rewards/entities/claimable-balance";
+import { UserClaimMetadata } from "../rewards/entities/user-claim-metadata";
+import { getClaimableRewards, getTreeDistribution } from "../rewards/rewards.utils";
 
 export async function refreshClaimableBalances(chain: Chain) {
   const mapper = getDataMapper();
@@ -21,9 +21,7 @@ export async function refreshClaimableBalances(chain: Chain) {
 
   const latestMetadata = await getLatestMetadata(chain);
   if (PRODUCTION) {
-    console.log(
-      `Updating Claimable Balances for ${chain.network} (prev. ${latestMetadata.startBlock} - ${latestMetadata.endBlock})`,
-    );
+    console.log(`Updating Claimable Balances for ${chain.network} (prev. ${latestMetadata.startBlock} - ${latestMetadata.endBlock})`);
   }
   const { endBlock } = latestMetadata;
   const snapshotStartBlock = endBlock + 1;
@@ -45,7 +43,7 @@ export async function refreshClaimableBalances(chain: Chain) {
       const amount = amounts[i];
       return Object.assign(new ClaimableBalance(), {
         address: token,
-        balance: amount.toString(),
+        balance: amount.toString()
       });
     });
     const snapshot = Object.assign(new UserClaimSnapshot(), {
@@ -54,7 +52,7 @@ export async function refreshClaimableBalances(chain: Chain) {
       startBlock: snapshotStartBlock,
       address: user,
       claimableBalances,
-      pageId: pageId++,
+      pageId: pageId++
     });
     userClaimSnapshots.push(snapshot);
   }
@@ -72,7 +70,7 @@ export async function refreshClaimableBalances(chain: Chain) {
     startBlock: snapshotStartBlock,
     endBlock: snapshotEndBlock,
     cycle: distribution.cycle,
-    count: userClaimSnapshots.length,
+    count: userClaimSnapshots.length
   });
 
   await mapper.put(metadata);
@@ -92,8 +90,8 @@ export async function refreshUserAccounts() {
         console.log(`Chain information: ${(chain.network, chain.chainId)}`);
         console.error(err);
       }
-    }),
+    })
   );
 
-  return 'done';
+  return "done";
 }

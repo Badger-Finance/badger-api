@@ -1,5 +1,5 @@
-import { attribute } from '@aws/dynamodb-data-mapper-annotations';
-import { TokenValue } from '@badger-dao/sdk';
+import { attribute } from "@aws/dynamodb-data-mapper-annotations";
+import { TokenValue } from "@badger-dao/sdk";
 
 export class CachedTokenBalance implements TokenValue {
   @attribute()

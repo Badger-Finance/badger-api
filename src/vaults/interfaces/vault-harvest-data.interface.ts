@@ -1,4 +1,4 @@
-import { VaultPerformanceEvent } from '@badger-dao/sdk';
+import { VaultPerformanceEvent } from "@badger-dao/sdk";
 
 export interface VaultHarvestData {
   timestamp: number;
