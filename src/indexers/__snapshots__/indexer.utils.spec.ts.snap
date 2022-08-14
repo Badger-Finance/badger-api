@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`indexer.utils vaultToSnapshot should return valid snapshot of the vault 1`] = `
+Object {
+  "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+  "apr": 0.3067433490728799,
+  "available": 1124610.1869700644,
+  "balance": 1124610.1869700644,
+  "block": 15340364,
+  "boostWeight": 0,
+  "harvestApr": 0.3067433490728799,
+  "pricePerFullShare": 1.2348816886763505,
+  "strategy": Object {
+    "address": "0xBCee2c6CfA7A4e29892c3665f464Be5536F16D95",
+    "aumFee": 0,
+    "performanceFee": 2,
+    "strategistFee": 3,
+    "withdrawFee": 1,
+  },
+  "strategyBalance": 0,
+  "timestamp": 1660223160457,
+  "totalSupply": 910702.7800983231,
+  "value": 943547946.87,
+  "yieldApr": 0.3067433490728799,
+}
+`;
