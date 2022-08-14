@@ -57,7 +57,9 @@ export class VaultsV3Controller {
     @QueryParams("vault") vault: string,
     @QueryParams("chain") chain?: Network
   ): Promise<VaultHarvestsExtendedResp[]> {
-    if (!vault) throw new QueryParamError("vault");
+    if (!vault) {
+      throw new QueryParamError("vault");
+    }
 
     return this.vaultService.getVaultHarvests(Chain.getChain(chain), vault);
   }

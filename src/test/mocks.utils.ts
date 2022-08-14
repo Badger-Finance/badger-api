@@ -27,21 +27,6 @@ import {
 } from "./constants";
 
 export function setupMockChain(mockPricing = true) {
-  // setup chain pricing
-  if (mockPricing) {
-    jest.spyOn(pricesUtils, "queryPrice").mockImplementation(async (token: string, _currency?: Currency) => ({
-      address: token,
-      price: parseInt(token.slice(0, 5), 16),
-      updatedAt: Date.now()
-    }));
-    jest.spyOn(pricesUtils, "convert").mockImplementation(async (price: number, currency?: Currency) => {
-      if (!currency || currency === Currency.USD) {
-        return price;
-      }
-      return price / 2;
-    });
-  }
-
   // setup chain vaults
   jest.spyOn(ChainVaults.prototype, "getVault").mockImplementation(async (_) => MOCK_VAULT_DEFINITION);
   jest.spyOn(ChainVaults.prototype, "all").mockImplementation(async () => [MOCK_VAULT_DEFINITION]);
@@ -94,6 +79,17 @@ export function setupMockChain(mockPricing = true) {
   const chain = new TestEthereum(mockProvider);
 
   jest.spyOn(Chain, "getChain").mockImplementation(() => chain);
+
+  // setup chain pricing
+  if (mockPricing) {
+    jest.spyOn(pricesUtils, "queryPrice").mockImplementation(async (token, _currency) => chain.strategy.getPrice(token));
+    jest.spyOn(pricesUtils, "convert").mockImplementation(async (price: number, currency?: Currency) => {
+      if (!currency || currency === Currency.USD) {
+        return price;
+      }
+      return price / 2;
+    });
+  }
 
   return chain;
 }

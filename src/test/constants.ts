@@ -13,12 +13,14 @@ import {
 import mockTokens from "@badger-dao/sdk-mocks/generated/ethereum/api/loadTokens.json";
 import mockVaultSnapshots from "@badger-dao/sdk-mocks/generated/ethereum/api/loadVaultChart.json";
 import mockVaults from "@badger-dao/sdk-mocks/generated/ethereum/api/loadVaults.json";
+import mockVaultHarvests from "@badger-dao/sdk-mocks/generated/ethereum/api/loadVaultsHarvests.json";
+import { VaultHarvestsExtendedResp } from "src/vaults/interfaces/vault-harvest-extended-resp.interface";
 
 import { VaultDefinitionModel } from "../aws/models/vault-definition.model";
 import { Stage } from "../config/enums/stage.enum";
 
 export const TEST_TOKEN = "0x3472A5A71965499acd81997a54BBA8D852C6E53d";
-export const TEST_ADDR = "0x2B5455aac8d64C14786c3a29858E43b5945819C0";
+export const TEST_ADDR = "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28";
 export const TEST_CURRENT_TIMESTAMP = 1660223160457;
 export const TEST_CURRENT_BLOCK = 13_500_500;
 
@@ -83,3 +85,6 @@ export const MOCK_VAULT_SNAPSHOT = MOCK_VAULT_SNAPSHOTS[0];
 export const MOCK_YIELD_SOURCES: ValueSource[] = MOCK_VAULT.sources;
 
 export const MOCK_TOKENS: Record<string, Token> = mockTokens;
+
+export const MOCK_VAULTS_HARVESTS = mockVaultHarvests as Record<string, VaultHarvestsExtendedResp[]>;
+export const MOCK_VAULT_HARVESTS = MOCK_VAULTS_HARVESTS[TEST_ADDR];
