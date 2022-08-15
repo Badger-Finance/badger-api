@@ -4,8 +4,8 @@ import { PlatformServerlessTest } from "@tsed/platform-serverless-testing";
 import { NetworkStatus } from "../errors/enums/network-status.enum";
 import { TEST_ADDR } from "../test/constants";
 import { setupMockChain } from "../test/mocks.utils";
-import { setupMockAccounts } from "../test/tests.utils";
 import * as accountsUtils from "./accounts.utils";
+import { setupMockAccounts } from "./accounts.v2.controller.spec";
 import { AccountsV3Controller } from "./accounts.v3.controller";
 
 describe("accounts.v3.controller", () => {

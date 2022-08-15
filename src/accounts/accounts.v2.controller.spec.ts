@@ -1,12 +1,33 @@
+import { Network } from "@badger-dao/sdk";
 import { PlatformServerless } from "@tsed/platform-serverless";
 import { PlatformServerlessTest } from "@tsed/platform-serverless-testing";
 
+import { getChainStartBlockKey } from "../aws/dynamodb.utils";
 import { NetworkStatus } from "../errors/enums/network-status.enum";
 import { TEST_ADDR } from "../test/constants";
 import { setupMockChain } from "../test/mocks.utils";
-import { setupMockAccounts } from "../test/tests.utils";
 import * as accountsUtils from "./accounts.utils";
 import { AccountsV2Controller } from "./accounts.v2.controller";
+
+export function setupMockAccounts() {
+  jest.spyOn(accountsUtils, "getClaimableBalanceSnapshot").mockImplementation(async () => ({
+    chainStartBlock: getChainStartBlockKey(Network.Ethereum, 10),
+    address: TEST_ADDR,
+    chain: Network.Ethereum,
+    startBlock: 100,
+    claimableBalances: [],
+    expiresAt: Date.now(),
+    pageId: 0
+  }));
+  jest.spyOn(accountsUtils, "getLatestMetadata").mockImplementation(async (chain) => ({
+    startBlock: 10,
+    endBlock: 15,
+    chainStartBlock: getChainStartBlockKey(Network.Ethereum, 10),
+    chain: chain.network,
+    cycle: 10,
+    count: 0
+  }));
+}
 
 describe("accounts.v2.controller", () => {
   beforeEach(
@@ -18,7 +39,6 @@ describe("accounts.v2.controller", () => {
 
   beforeEach(() => {
     setupMockChain();
-    setupMockAccounts();
   });
 
   describe("GET /v2/accounts", () => {

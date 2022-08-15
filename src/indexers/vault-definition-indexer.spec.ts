@@ -3,10 +3,11 @@ import { BadgerGraph, BadgerSDK, RegistryVault, VaultsService } from "@badger-da
 import * as gqlGenT from "@badger-dao/sdk/lib/graphql/generated/badger";
 import graphVaults from "@badger-dao/sdk-mocks/generated/ethereum/graph/loadSetts.json";
 import registryVaults from "@badger-dao/sdk-mocks/generated/ethereum/vaults/loadVaults.json";
+import { mockQuery } from "src/test/mocks.utils";
 
 import { SUPPORTED_CHAINS } from "../chains/chain";
 import { TEST_CURRENT_TIMESTAMP } from "../test/constants";
-import { mockSupportedChains, setupMapper, setupVaultsCoumpoundDDB } from "../test/tests.utils";
+import { mockSupportedChains, setupVaultsCoumpoundDDB } from "../test/tests.utils";
 import { captureVaultData } from "./vault-definition-indexer";
 
 describe("vault-definition-indexer", () => {
@@ -18,7 +19,7 @@ describe("vault-definition-indexer", () => {
       jest.spyOn(console, "error").mockImplementation();
       jest.spyOn(console, "warn").mockImplementation();
 
-      setupMapper([]);
+      mockQuery([]);
 
       jest.spyOn(VaultsService.prototype, "loadVaults").mockImplementation(async function () {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment

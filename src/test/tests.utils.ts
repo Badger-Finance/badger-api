@@ -8,8 +8,6 @@ import createMockInstance from "jest-create-mock-instance";
 import { mock } from "jest-mock-extended";
 
 import VaultsCompoundMock from "../../seed/vault-definition.json";
-import * as accountsUtils from "../accounts/accounts.utils";
-import * as dynamodbUtils from "../aws/dynamodb.utils";
 import { CachedAccount } from "../aws/models/cached-account.model";
 import { CachedBoost } from "../aws/models/cached-boost.model";
 import { VaultDefinitionModel } from "../aws/models/vault-definition.model";
@@ -149,26 +147,6 @@ export function randomCachedBoosts(count: number): CachedBoost[] {
     boosts.push(Object.assign(new CachedBoost(), boost));
   }
   return boosts;
-}
-
-export function setupMockAccounts() {
-  jest.spyOn(accountsUtils, "getClaimableBalanceSnapshot").mockImplementation(async () => ({
-    chainStartBlock: dynamodbUtils.getChainStartBlockKey(Network.Ethereum, 10),
-    address: TEST_ADDR,
-    chain: Network.Ethereum,
-    startBlock: 100,
-    claimableBalances: [],
-    expiresAt: Date.now(),
-    pageId: 0
-  }));
-  jest.spyOn(accountsUtils, "getLatestMetadata").mockImplementation(async (chain) => ({
-    startBlock: 10,
-    endBlock: 15,
-    chainStartBlock: dynamodbUtils.getChainStartBlockKey(Network.Ethereum, 10),
-    chain: chain.network,
-    cycle: 10,
-    count: 0
-  }));
 }
 
 export async function mockBadgerSdk(
