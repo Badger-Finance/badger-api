@@ -7,7 +7,6 @@ import { Chain } from "../chains/config/chain.config";
 import { NetworkStatus } from "../errors/enums/network-status.enum";
 import { TEST_ADDR } from "../test/constants";
 import { setupMockChain } from "../test/mocks.utils";
-import { setupDdbVaultsChartsData, setupVaultsCoumpoundDDB } from "../test/tests.utils";
 import { setupDdbHarvests, setupTestVault } from "./vaults.v2.controller.spec";
 import { VaultsV3Controller } from "./vaults.v3.controller";
 
@@ -24,7 +23,6 @@ describe("vaults.v3.controller", () => {
   describe("GET /vaults/list", () => {
     describe("with no specified chain", () => {
       it("returns eth vaults", async () => {
-        setupVaultsCoumpoundDDB();
         setupTestVault();
         const { body, statusCode } = await PlatformServerlessTest.request.get("/vaults/list");
         expect(statusCode).toEqual(NetworkStatus.Success);
@@ -34,7 +32,6 @@ describe("vaults.v3.controller", () => {
 
     describe("with a specified chain", () => {
       it("returns the requested vaults", async () => {
-        setupVaultsCoumpoundDDB();
         setupTestVault();
         const { body, statusCode } = await PlatformServerlessTest.request
           .get("/vaults/list")
@@ -107,11 +104,6 @@ describe("vaults.v3.controller", () => {
   });
 
   describe("GET /vaults/snapshots", () => {
-    beforeEach(async () => {
-      setupDdbVaultsChartsData();
-      setupMockChain();
-    });
-
     describe("success cases", () => {
       it("return 200 and vaults snapshots for all dates, without duplications", async () => {
         const timestampsStr = "1645103004000,1645015261000,1644928124000,1644928124000,1644928124000";
