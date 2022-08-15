@@ -17,7 +17,7 @@ export async function refreshClaimableBalances(chain: Chain) {
 
   console.log({
     distribution,
-    hasTree: sdk.rewards.hasBadgerTree()
+    hasTree: sdk.rewards.hasBadgerTree(),
   });
   if (!distribution || !sdk.rewards.hasBadgerTree()) {
     console.log('returned');
@@ -27,7 +27,7 @@ export async function refreshClaimableBalances(chain: Chain) {
   const latestMetadata = await getLatestMetadata(chain);
   if (PRODUCTION) {
     console.log(
-      `Updating Claimable Balances for ${chain.network} (prev. ${latestMetadata.startBlock} - ${latestMetadata.endBlock})`
+      `Updating Claimable Balances for ${chain.network} (prev. ${latestMetadata.startBlock} - ${latestMetadata.endBlock})`,
     );
   }
   const { endBlock } = latestMetadata;
@@ -50,7 +50,7 @@ export async function refreshClaimableBalances(chain: Chain) {
       const amount = amounts[i];
       return Object.assign(new ClaimableBalance(), {
         address: token,
-        balance: amount.toString()
+        balance: amount.toString(),
       });
     });
     const snapshot = Object.assign(new UserClaimSnapshot(), {
@@ -59,7 +59,7 @@ export async function refreshClaimableBalances(chain: Chain) {
       startBlock: snapshotStartBlock,
       address: user,
       claimableBalances,
-      pageId: pageId++
+      pageId: pageId++,
     });
     userClaimSnapshots.push(snapshot);
   }
@@ -77,7 +77,7 @@ export async function refreshClaimableBalances(chain: Chain) {
     startBlock: snapshotStartBlock,
     endBlock: snapshotEndBlock,
     cycle: distribution.cycle,
-    count: userClaimSnapshots.length
+    count: userClaimSnapshots.length,
   });
 
   await mapper.put(metadata);
@@ -97,7 +97,7 @@ export async function refreshUserAccounts() {
         console.log(`Chain information: ${(chain.network, chain.chainId)}`);
         console.error(err);
       }
-    })
+    }),
   );
 
   return 'done';

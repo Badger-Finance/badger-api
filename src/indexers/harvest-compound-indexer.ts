@@ -29,10 +29,10 @@ export async function indexVaultsHarvestsCompund() {
           harvests.map(async (harvest) => {
             const harvestToSave: VaultHarvestsExtended = {
               ...harvest,
-              vault: vault.address
+              vault: vault.address,
             };
             return mapper.put(Object.assign(new HarvestCompoundData(), harvestToSave));
-          })
+          }),
         );
       } catch (err) {
         console.error(err);

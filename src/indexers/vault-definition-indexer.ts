@@ -42,7 +42,7 @@ export async function captureVaultData() {
     const query = mapper.query(
       VaultDefinitionModel,
       { chain: chain.network },
-      { indexName: 'IndexVaultCompoundDataChain' }
+      { indexName: 'IndexVaultCompoundDataChain' },
     );
 
     try {

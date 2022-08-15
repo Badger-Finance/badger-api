@@ -16,14 +16,14 @@ export class AccountsV3Controller {
   @ContentType('json')
   @Summary('Get badger user account information')
   @Description(
-    'Return key user information for a given account. Includes positions, earnings from use, and claimable balances.'
+    'Return key user information for a given account. Includes positions, earnings from use, and claimable balances.',
   )
   @Returns(200, AccountModel)
   @Returns(400).Description('Not a valid chain')
   @Returns(404).Description('Not a valid account')
   async getAccount(
     @QueryParams('address') address: string,
-    @QueryParams('chain') chain?: Network
+    @QueryParams('chain') chain?: Network,
   ): Promise<AccountModel> {
     if (!address) throw new QueryParamError('address');
 

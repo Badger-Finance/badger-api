@@ -6,16 +6,16 @@ module.exports = {
       branches: 35,
       functions: 50,
       lines: 50,
-      statements: 50
-    }
+      statements: 50,
+    },
   },
   moduleFileExtensions: ['js', 'json', 'jsx', 'ts', 'tsx', 'node'],
   moduleNameMapper: {
-    '^uuid$': '<rootDir>/node_modules/uuid/dist/index.js'
+    '^uuid$': '<rootDir>/node_modules/uuid/dist/index.js',
   },
   testEnvironment: 'node',
   testRegex: '.spec.ts$',
   transform: {
-    '\\.(ts)$': 'ts-jest'
-  }
+    '\\.(ts)$': 'ts-jest',
+  },
 };

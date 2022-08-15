@@ -12,7 +12,7 @@ import {
   VaultHarvestData,
   VaultState,
   VaultVersion,
-  VaultYieldProjection
+  VaultYieldProjection,
 } from '@badger-dao/sdk';
 
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
@@ -100,7 +100,7 @@ function balanceToTokenRate(balance: CachedTokenBalance, principal: number, dura
   const apr = calculateYield(principal, balance.value, duration, compoundingValue);
   return {
     apr,
-    ...balance
+    ...balance,
   };
 }
 
@@ -115,7 +115,7 @@ function yieldToValueSource(source: YieldSource): ValueSource {
     apr: source.apr,
     boostable: source.boostable,
     minApr: source.minApr,
-    maxApr: source.maxApr
+    maxApr: source.maxApr,
   };
 }
 
@@ -126,7 +126,7 @@ function yieldToValueSource(source: YieldSource): ValueSource {
  */
 export function aggregateSources<T extends ValueSource>(
   sources: T[],
-  accessor: (source: T) => string = (s) => s.name
+  accessor: (source: T) => string = (s) => s.name,
 ): T[] {
   const sourceMap: Record<string, T> = {};
   const sourcesCopy = JSON.parse(JSON.stringify(sources));
@@ -228,7 +228,7 @@ export async function getYieldSources(vault: VaultDefinitionModel): Promise<Yiel
     apy,
     sourcesApy: aggregatedSourcesApy,
     nonHarvestSources: nonHarvestAggregatedSources,
-    nonHarvestSourcesApy: nonHarvestAggregatedSourcesApy
+    nonHarvestSourcesApy: nonHarvestAggregatedSourcesApy,
   };
 }
 
@@ -248,7 +248,7 @@ export async function getYieldSources(vault: VaultDefinitionModel): Promise<Yiel
 export function getVaultYieldProjection(
   vault: VaultDTO,
   yieldSources: YieldSources,
-  yieldEstimate: YieldEstimate
+  yieldEstimate: YieldEstimate,
 ): VaultYieldProjection {
   const { value, balance, available, lastHarvest } = vault;
   const { nonHarvestSources, nonHarvestSourcesApy } = yieldSources;
@@ -257,7 +257,7 @@ export function getVaultYieldProjection(
     previousYieldTokens,
     harvestTokens,
     previousHarvestTokens,
-    duration: periodDuration
+    duration: periodDuration,
   } = yieldEstimate;
 
   const yieldTokensCurrent = calculateBalanceDifference(previousYieldTokens, yieldTokens);
@@ -287,7 +287,7 @@ export function getVaultYieldProjection(
       earningValue,
       harvestValuePerPeriod,
       periodDuration,
-      harvestCompoundValuePerPeriod
+      harvestCompoundValuePerPeriod,
     ),
     harvestTokens: harvestTokens.map((t) => balanceToTokenRate(t, earningValue, harvestDuration)),
     harvestPeriodSources: harvestTokensCurrent.map((t) => balanceToTokenRate(t, earningValue, periodDuration)),
@@ -300,7 +300,7 @@ export function getVaultYieldProjection(
     nonHarvestApr,
     nonHarvestSources,
     nonHarvestApy,
-    nonHarvestSourcesApy
+    nonHarvestSourcesApy,
   };
 }
 
@@ -318,7 +318,7 @@ export function createYieldSource(
   type: SourceType,
   name: string,
   apr: number,
-  { min, max }: BoostRange = { min: 1, max: 1 }
+  { min, max }: BoostRange = { min: 1, max: 1 },
 ): YieldSource {
   const { id: vaultId, address, chain } = vault;
   const isBoostable = min != max;
@@ -334,7 +334,7 @@ export function createYieldSource(
     apr,
     boostable: isBoostable,
     minApr: apr * min,
-    maxApr: apr * max
+    maxApr: apr * max,
   });
 }
 
@@ -357,7 +357,7 @@ export async function loadVaultEventPerformances(chain: Chain, vault: VaultDefin
     address: vault.address,
     timestamp_gte: cutoff,
     version: vault.version ?? VaultVersion.v1,
-    startBlock
+    startBlock,
   });
 
   return estimateVaultPerformance(chain, vault, data);
@@ -383,15 +383,15 @@ export async function loadVaultGraphPerformances(chain: Chain, vault: VaultDefin
     graph.loadSettHarvests({
       where: {
         sett: address.toLowerCase(),
-        timestamp_gte: cutoff
-      }
+        timestamp_gte: cutoff,
+      },
     }),
     graph.loadBadgerTreeDistributions({
       where: {
         sett: address.toLowerCase(),
-        timestamp_gte: cutoff
-      }
-    })
+        timestamp_gte: cutoff,
+      },
+    }),
   ]);
 
   let { settHarvests } = vaultHarvests;
@@ -406,15 +406,15 @@ export async function loadVaultGraphPerformances(chain: Chain, vault: VaultDefin
       graph.loadSettHarvests({
         where: {
           sett: address.toLowerCase(),
-          timestamp_gte: cutoff
-        }
+          timestamp_gte: cutoff,
+        },
       }),
       graph.loadBadgerTreeDistributions({
         where: {
           sett: address.toLowerCase(),
-          timestamp_gte: cutoff
-        }
-      })
+          timestamp_gte: cutoff,
+        },
+      }),
     ]);
     settHarvests = vaultHarvests.settHarvests;
     badgerTreeDistributions = treeDistributions.badgerTreeDistributions;
@@ -432,12 +432,12 @@ export async function loadVaultGraphPerformances(chain: Chain, vault: VaultDefin
 function constructGraphVaultData(
   vault: VaultDefinitionModel,
   settHarvests: gqlGenT.SettHarvestsQuery['settHarvests'],
-  badgerTreeDistributions: gqlGenT.BadgerTreeDistributionsQuery['badgerTreeDistributions']
+  badgerTreeDistributions: gqlGenT.BadgerTreeDistributionsQuery['badgerTreeDistributions'],
 ): VaultHarvestData[] {
   const harvestsByTimestamp = keyBy(settHarvests, (harvest) => harvest.timestamp);
   const treeDistributionsByTimestamp = keyBy(badgerTreeDistributions, (distribution) => distribution.timestamp);
   const timestamps = Array.from(
-    new Set([...harvestsByTimestamp.keys(), ...treeDistributionsByTimestamp.keys()]).values()
+    new Set([...harvestsByTimestamp.keys(), ...treeDistributionsByTimestamp.keys()]).values(),
   );
   return timestamps.map((t) => {
     const timestamp = Number(t);
@@ -449,7 +449,7 @@ function constructGraphVaultData(
         timestamp,
         block: Number(h.blockNumber),
         token: vault.depositToken,
-        amount: h.amount
+        amount: h.amount,
       })),
       treeDistributions: currentDistributions.map((d) => {
         const tokenAddress = d.token.id.startsWith('0x0x') ? d.token.id.slice(2) : d.token.id;
@@ -457,9 +457,9 @@ function constructGraphVaultData(
           timestamp,
           block: Number(d.blockNumber),
           token: tokenAddress,
-          amount: d.amount
+          amount: d.amount,
         };
-      })
+      }),
     };
   });
 }

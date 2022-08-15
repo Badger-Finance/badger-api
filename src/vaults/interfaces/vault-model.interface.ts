@@ -8,7 +8,7 @@ import {
   VaultState,
   VaultType,
   VaultVersion,
-  VaultYieldProjection
+  VaultYieldProjection,
 } from '@badger-dao/sdk';
 import { Description, Example, Property, Title } from '@tsed/schema';
 import { ethers } from 'ethers';
@@ -156,7 +156,7 @@ export class VaultModel implements VaultDTO {
     address: ethers.constants.AddressZero,
     withdrawFee: 50,
     performanceFee: 20,
-    strategistFee: 10
+    strategistFee: 10,
   })
   @Property()
   public strategy: VaultStrategy;
@@ -182,7 +182,7 @@ export class VaultModel implements VaultDTO {
     harvestApr: 9.95,
     harvestApy: 14.32,
     harvestTokens: [TOKENS.BCVXCRV],
-    harvestValue: 35
+    harvestValue: 35,
   })
   @Property()
   public yieldProjection: VaultYieldProjection;
@@ -227,7 +227,7 @@ export class VaultModel implements VaultDTO {
     behavior,
     yieldProjection,
     lastHarvest,
-    version
+    version,
   }: VaultDTO) {
     this.name = name;
     this.state = state;

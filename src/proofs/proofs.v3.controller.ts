@@ -16,7 +16,7 @@ export class ProofsV3Controller {
   @ContentType('json')
   async getBouncerProof(
     @QueryParams('address') address: string,
-    @QueryParams('chain') chain?: Network
+    @QueryParams('chain') chain?: Network,
   ): Promise<MerkleProof> {
     if (!address) {
       throw new QueryParamError('address');

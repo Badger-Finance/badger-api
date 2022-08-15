@@ -54,7 +54,7 @@ export class VaultHarvestsModel implements VaultHarvestsExtendedResp {
     amount,
     eventType,
     strategyBalance,
-    estimatedApr
+    estimatedApr,
   }: VaultHarvestsExtendedResp) {
     this.timestamp = timestamp;
     this.block = block;

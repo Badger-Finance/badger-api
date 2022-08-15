@@ -16,7 +16,7 @@ export class MetricsService {
       for await (const metric of mapper.query(
         ProtocolMetricSnapshot,
         { type: MetricType.protocol },
-        { scanIndexForward: false, limit: 1 }
+        { scanIndexForward: false, limit: 1 },
       )) {
         result = metric;
       }

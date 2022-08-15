@@ -24,7 +24,7 @@ export async function updateVaultTokenBalances(chain: Chain, vault: VaultDefinit
     const mapper = getDataMapper();
     const [depositToken, cachedVault] = await Promise.all([
       getFullToken(chain, vault.depositToken),
-      getCachedVault(chain, vault)
+      getCachedVault(chain, vault),
     ]);
 
     let cachedTokenBalance: VaultTokenBalance | undefined;
@@ -59,7 +59,7 @@ export async function updateVaultTokenBalances(chain: Chain, vault: VaultDefinit
     if (!cachedTokenBalance || cachedTokenBalance.tokenBalances.length === 0) {
       cachedTokenBalance = Object.assign(new VaultTokenBalance(), {
         vault: vault.address,
-        tokenBalances: [await toBalance(depositToken, cachedVault.balance)]
+        tokenBalances: [await toBalance(depositToken, cachedVault.balance)],
       });
     }
 

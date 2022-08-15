@@ -18,7 +18,7 @@ export class ChartsController {
   async loadVaultCharts(
     @QueryParams('address') address: string,
     @QueryParams('timeframe') timeframe = ChartTimeFrame.Day,
-    @QueryParams('chain') chain?: Network
+    @QueryParams('chain') chain?: Network,
   ): Promise<HistoricVaultSnapshotModel[]> {
     if (!address) {
       throw new QueryParamError('address');

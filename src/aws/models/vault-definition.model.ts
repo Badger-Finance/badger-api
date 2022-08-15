@@ -19,16 +19,16 @@ export class VaultDefinitionModel implements IVaultDefinition {
   @attribute({
     indexKeyConfigurations: {
       IndexVaultCompoundDataChain: 'HASH',
-      IndexVaultCompoundDataChainIsProd: 'HASH'
-    }
+      IndexVaultCompoundDataChainIsProd: 'HASH',
+    },
   })
   chain!: Network;
 
   // 0 - not in prd onchain map, 1 - yes
   @attribute({
     indexKeyConfigurations: {
-      IndexVaultCompoundDataChainIsProd: 'RANGE'
-    }
+      IndexVaultCompoundDataChainIsProd: 'RANGE',
+    },
   })
   isProduction!: number;
 

@@ -46,7 +46,7 @@ export class ChainVaults {
       const query = mapper.query(
         VaultDefinitionModel,
         { chain: this.network, isProduction: 1 },
-        { indexName: 'IndexVaultCompoundDataChainIsProd' }
+        { indexName: 'IndexVaultCompoundDataChainIsProd' },
       );
 
       try {

@@ -23,20 +23,20 @@ describe('charts.utils', () => {
           id: 'sighting-0',
           timestamp: 10,
           animal: 'cow',
-          noise: 'moo'
+          noise: 'moo',
         }),
         Object.assign(new AnimalData(), {
           id: 'sighting-1',
           timestamp: 20,
           animal: 'dog',
-          noise: 'bark'
+          noise: 'bark',
         }),
         Object.assign(new AnimalData(), {
           id: 'sighting-2',
           timestamp: 30,
           animal: 'cat',
-          noise: 'lmeow'
-        })
+          noise: 'lmeow',
+        }),
       ];
       const result = toChartDataBlob('animals', ChartTimeFrame.Week, arbitraryData);
       expect(result).toMatchSnapshot();
@@ -63,7 +63,7 @@ describe('charts.utils', () => {
       [ONE_DAY_MS, 0, ChartTimeFrame.Month, true],
       [ONE_DAY_MS, 0, ChartTimeFrame.ThreeMonth, true],
       [ONE_DAY_MS, 0, ChartTimeFrame.Year, true],
-      [ONE_DAY_MS, 0, ChartTimeFrame.Max, true]
+      [ONE_DAY_MS, 0, ChartTimeFrame.Max, true],
     ])('%d to %d on %s timeframe returns %s', (start, end, timeframe, result) => {
       expect(shouldUpdate(start, end, timeframe)).toEqual(result);
     });
@@ -84,7 +84,7 @@ describe('charts.utils', () => {
       [ONE_DAY_MS * 30, 0, ChartTimeFrame.Month, true],
       [ONE_DAY_MS * 90, 0, ChartTimeFrame.ThreeMonth, true],
       [ONE_DAY_MS * 365, 0, ChartTimeFrame.Year, true],
-      [ONE_DAY_MS * 730, 0, ChartTimeFrame.Max, false]
+      [ONE_DAY_MS * 730, 0, ChartTimeFrame.Max, false],
     ])('%d to %d on %s timeframe returns %s', (start, end, timeframe, result) => {
       expect(shouldTrim(start, end, timeframe)).toEqual(result);
     });

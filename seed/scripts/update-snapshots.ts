@@ -23,7 +23,7 @@ async function updatePrices() {
           pricePerFullShare: vault.pricePerFullShare,
           strategy: vault.strategy,
           value: vault.value,
-          apr: vault.apr
+          apr: vault.apr,
         });
       });
     } catch {}

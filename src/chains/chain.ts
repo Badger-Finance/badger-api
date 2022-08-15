@@ -11,5 +11,5 @@ export const SUPPORTED_CHAINS = [
   new Polygon(),
   new Arbitrum(),
   new Fantom(),
-  new Optimism()
+  new Optimism(),
 ];

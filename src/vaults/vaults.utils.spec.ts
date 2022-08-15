@@ -6,7 +6,7 @@ import {
   VaultDTO,
   VaultsService,
   VaultType,
-  VaultVersion
+  VaultVersion,
 } from '@badger-dao/sdk';
 import { BadRequest } from '@tsed/exceptions';
 import { ethers } from 'ethers';
@@ -30,7 +30,7 @@ import {
   getCachedVault,
   getVaultHarvestsOnChain,
   getVaultPerformance,
-  getVaultTokenPrice
+  getVaultTokenPrice,
 } from './vaults.utils';
 import * as yieldsUtils from './yields.utils';
 
@@ -59,7 +59,7 @@ describe('vaults.utils', () => {
         available: 0,
         boost: {
           enabled: false,
-          weight: 0
+          weight: 0,
         },
         bouncer: MOCK_VAULT_DEFINITION.bouncer ?? BouncerType.None,
         name: MOCK_VAULT_DEFINITION.name,
@@ -76,7 +76,7 @@ describe('vaults.utils', () => {
           withdrawFee: 0,
           performanceFee: 0,
           strategistFee: 0,
-          aumFee: 0
+          aumFee: 0,
         },
         type: MOCK_VAULT_DEFINITION.protocol === Protocol.Badger ? VaultType.Native : VaultType.Standard,
         behavior: MOCK_VAULT_DEFINITION.behavior ?? VaultBehavior.None,
@@ -97,9 +97,9 @@ describe('vaults.utils', () => {
           nonHarvestApr: 0,
           nonHarvestApy: 0,
           nonHarvestSources: [],
-          nonHarvestSourcesApy: []
+          nonHarvestSourcesApy: [],
         },
-        version: VaultVersion.v1
+        version: VaultVersion.v1,
       };
       const actual = await defaultVault(chain, MOCK_VAULT_DEFINITION);
       expect(actual).toMatchObject(expected);
@@ -181,7 +181,7 @@ describe('vaults.utils', () => {
         jest
           .spyOn(yieldsUtils, 'loadVaultGraphPerformances')
           .mockImplementation(async () => [
-            yieldsUtils.createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Distribution, 'Graph Badger', 10.3)
+            yieldsUtils.createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Distribution, 'Graph Badger', 10.3),
           ]);
         jest.spyOn(rewardsUtils, 'getRewardEmission').mockImplementation(async () => []);
         jest.spyOn(rewardsUtils, 'getProtocolValueSources').mockImplementation(async () => []);
@@ -198,13 +198,13 @@ describe('vaults.utils', () => {
           yieldsUtils.createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Emission, 'Badger', 1.3),
           yieldsUtils.createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Emission, 'Boosted Badger', 6.9, {
             min: 0.2,
-            max: 4
-          })
+            max: 4,
+          }),
         ]);
         jest
           .spyOn(rewardsUtils, 'getProtocolValueSources')
           .mockImplementation(async () => [
-            yieldsUtils.createYieldSource(MOCK_VAULT_DEFINITION, SourceType.TradeFee, 'Curve LP Fee', 0.03)
+            yieldsUtils.createYieldSource(MOCK_VAULT_DEFINITION, SourceType.TradeFee, 'Curve LP Fee', 0.03),
           ]);
         const result = await getVaultPerformance(chain, MOCK_VAULT_DEFINITION);
         expect(result).toMatchSnapshot();
@@ -221,12 +221,12 @@ describe('vaults.utils', () => {
       [3.4883, 0.7204, 0.7204, 3.529515865690866],
       [0.4883, 6.7204, 6.7204, 98.7771522235121],
       [0.4883, 6.7204, 0.7204, 26.1556767065858],
-      [0.4883, 0.7204, 0.7204, 13.257249960438303]
+      [0.4883, 0.7204, 0.7204, 13.257249960438303],
     ])(
       'Estimates derived emission from (%d compound, %d emission, %d compound emission) as %d%%',
       (compound, emission, compoundEmission, expected) => {
         expect(estimateDerivativeEmission(compound, emission, compoundEmission)).toEqual(expected);
-      }
+      },
     );
   });
 

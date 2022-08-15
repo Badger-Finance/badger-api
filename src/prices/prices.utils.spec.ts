@@ -81,7 +81,7 @@ describe('prices.utils', () => {
       [3600, 3600, Currency.USD],
       [3600, 2, Currency.ETH],
       [3600, 1800, Currency.FTM],
-      [3600, 2400, Currency.MATIC]
+      [3600, 2400, Currency.MATIC],
     ])('converts %d USD to %s %s', async (price, conversion, currency) => {
       let cachedPrice;
       switch (currency) {

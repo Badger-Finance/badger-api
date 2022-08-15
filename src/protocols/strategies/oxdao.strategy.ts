@@ -22,7 +22,7 @@ async function getLiquiditySources(chain: Chain, vaultDefinition: VaultDefinitio
   const [bveOXDLP, bveOXD, bveOXDSources] = await Promise.all([
     getCachedVault(chain, vaultDefinition),
     getCachedVault(chain, bveOXDVault),
-    queryYieldSources(bveOXDVault)
+    queryYieldSources(bveOXDVault),
   ]);
   const vaultTokens = await getVaultTokens(chain, bveOXDLP);
   const bveOXDValue = vaultTokens

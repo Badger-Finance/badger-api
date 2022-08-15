@@ -5,7 +5,7 @@ export const BADGER_RANKS: BadgerTypeMap = {
   [BadgerType.Neo]: 20,
   [BadgerType.Hero]: 200,
   [BadgerType.Hyper]: 600,
-  [BadgerType.Frenzy]: 1400
+  [BadgerType.Frenzy]: 1400,
 };
 
 export function getBadgerType(score: number): BadgerType {

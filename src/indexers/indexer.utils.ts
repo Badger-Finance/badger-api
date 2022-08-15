@@ -7,7 +7,7 @@ import {
   VaultBehavior,
   VaultSnapshot,
   VaultState,
-  VaultVersion
+  VaultVersion,
 } from '@badger-dao/sdk';
 import { NotFound } from '@tsed/exceptions';
 
@@ -30,7 +30,7 @@ export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefini
     requireRegistry: false,
     state: VaultState.Open,
     version: vaultDefinition.version ?? VaultVersion.v1,
-    update: true
+    update: true,
   });
 
   let block = 0;
@@ -42,12 +42,12 @@ export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefini
     queryPrice(vaultDefinition.depositToken),
     getStrategyInfo(chain, vaultDefinition),
     getBoostWeight(chain, vaultDefinition),
-    VaultsService.loadVault(chain, vaultDefinition)
+    VaultsService.loadVault(chain, vaultDefinition),
   ]);
 
   const value = balance * tokenPriceData.price;
   const {
-    yieldProjection: { yieldPeriodApr, harvestPeriodApr, nonHarvestApr }
+    yieldProjection: { yieldPeriodApr, harvestPeriodApr, nonHarvestApr },
   } = cachedVault;
 
   return {
@@ -64,13 +64,13 @@ export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefini
     boostWeight: boostWeight.toNumber(),
     apr: cachedVault.apr,
     yieldApr: yieldPeriodApr + nonHarvestApr,
-    harvestApr: harvestPeriodApr + nonHarvestApr
+    harvestApr: harvestPeriodApr + nonHarvestApr,
   };
 }
 
 export async function constructVaultDefinition(
   chain: Chain,
-  vault: RegistryVault
+  vault: RegistryVault,
 ): Promise<Nullable<VaultDefinitionModel>> {
   const { address } = vault;
 
@@ -101,7 +101,7 @@ export async function constructVaultDefinition(
     releasedAt: Number(releasedAt),
     stage: vault.state === VaultState.Experimental ? Stage.Staging : Stage.Production,
     bouncer: BouncerType.None,
-    isNew: Date.now() / 1000 - Number(releasedAt) <= ONE_WEEK_SECONDS * 2
+    isNew: Date.now() / 1000 - Number(releasedAt) <= ONE_WEEK_SECONDS * 2,
   });
 }
 
@@ -123,7 +123,7 @@ export async function getLpTokenBalances(chain: Chain, vault: VaultDefinitionMod
 
     return Object.assign(new VaultTokenBalance(), {
       vault: address,
-      tokenBalances
+      tokenBalances,
     });
   } catch (err) {
     throw new NotFound(`${vault.protocol} pool pair ${depositToken} does not exist`);

@@ -11,7 +11,7 @@ import {
   calculateYield,
   createYieldSource,
   getVaultYieldProjection,
-  getYieldSources
+  getYieldSources,
 } from './yields.utils';
 
 describe('yields.utils', () => {
@@ -23,7 +23,7 @@ describe('yields.utils', () => {
     createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Emission, 'Boosted Badger', 6, { min: 0.5, max: 2 }),
     createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Flywheel, 'Vault Flywheel', 5),
     createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Distribution, 'Badger', 3),
-    createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Distribution, 'Irrelevant', 0.0001)
+    createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Distribution, 'Irrelevant', 0.0001),
   ];
 
   describe('calculateYield', () => {
@@ -33,17 +33,17 @@ describe('yields.utils', () => {
       [365, 2, ONE_DAY_MS, 0, 200],
       [365, 1, ONE_DAY_MS, 1, 171.45674820219733],
       [365, 1, ONE_DAY_MS, 0.5, 114.81572517391494],
-      [0, 1, ONE_DAY_MS, 0, 0]
+      [0, 1, ONE_DAY_MS, 0, 0],
     ])(
       '%d earned %d over %d ms with %d compounded, for %d apr',
       (principal, earned, duration, compoundingValue, expected) => {
         expect(calculateYield(principal, earned, duration, compoundingValue)).toEqual(expected);
-      }
+      },
     );
 
     it('throws an error when provided with invalid principal and compounding pair', () => {
       expect(() => calculateYield(365, 1, ONE_DAY_MS, 2)).toThrow(
-        'Compounding value must be less than or equal to earned'
+        'Compounding value must be less than or equal to earned',
       );
     });
   });
@@ -72,7 +72,7 @@ describe('yields.utils', () => {
         createYieldSource(MOCK_VAULT_DEFINITION, SourceType.TradeFee, 'LP Fees', 2),
         createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Flywheel, 'Vault Flywheel', 5),
         createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Distribution, 'Badger', 3),
-        createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Distribution, 'Irrelevant', 0.0001)
+        createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Distribution, 'Irrelevant', 0.0001),
       ];
       mockQuery(mockSources);
       const definitionCopy = JSON.parse(JSON.stringify(MOCK_VAULT_DEFINITION));
@@ -102,7 +102,7 @@ describe('yields.utils', () => {
         duration: ONE_DAY_MS * 15,
         lastMeasuredAt: referenceTime - ONE_DAY_MS * 15,
         lastReportedAt: 0,
-        lastHarvestedAt: referenceTime - ONE_DAY_MS * 30
+        lastHarvestedAt: referenceTime - ONE_DAY_MS * 30,
       };
       const result = getVaultYieldProjection(mockVault, yieldSources, mockYieldEstimate);
       expect(result).toMatchSnapshot();

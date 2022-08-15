@@ -13,8 +13,8 @@ import { VaultsV3Controller } from './vaults.v3.controller';
 describe('vaults.v3.controller', () => {
   beforeEach(
     PlatformServerlessTest.bootstrap(PlatformServerless, {
-      lambda: [VaultsV3Controller]
-    })
+      lambda: [VaultsV3Controller],
+    }),
   );
   afterEach(() => PlatformServerlessTest.reset());
 
@@ -95,7 +95,7 @@ describe('vaults.v3.controller', () => {
           throw new BadRequest(`invalid is not a supported chain`);
         });
         const { body, statusCode } = await PlatformServerlessTest.request.get(
-          `/vaults/harvests?vault=${TEST_ADDR}&chain=invalid`
+          `/vaults/harvests?vault=${TEST_ADDR}&chain=invalid`,
         );
         expect(statusCode).toEqual(NetworkStatus.BadRequest);
         expect(JSON.parse(body)).toMatchSnapshot();

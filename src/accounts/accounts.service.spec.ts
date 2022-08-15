@@ -38,7 +38,7 @@ describe('accounts.service', () => {
           bveCvxBalance: 1,
           diggBalance: 1,
           nativeBalance: 5,
-          nonNativeBalance: 5
+          nonNativeBalance: 5,
         };
         return cachedAccount;
       });

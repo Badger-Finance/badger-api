@@ -37,7 +37,7 @@ export async function getVaultsDefinitionSeedData(): Promise<VaultDefinitionMode
         } catch (err) {
           console.error({ err, vault: vault.name });
         }
-      })
+      }),
     );
   }
 

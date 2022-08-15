@@ -49,12 +49,12 @@ describe('refreshVaultSnapshots', () => {
           address: expect.any(String),
           withdrawFee: expect.any(Number),
           performanceFee: expect.any(Number),
-          strategistFee: expect.any(Number)
+          strategistFee: expect.any(Number),
         },
         block: expect.any(Number),
         boostWeight: expect.any(Number),
         timestamp: expect.any(Number),
-        available: expect.any(Number)
+        available: expect.any(Number),
       });
       requestedAddresses.push(snapshot.address);
     }

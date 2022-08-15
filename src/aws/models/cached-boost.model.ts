@@ -7,8 +7,8 @@ import { LEADERBOARD_DATA } from '../../config/constants';
 export class CachedBoost implements UserBoostData {
   @hashKey({
     indexKeyConfigurations: {
-      IndexLeaderBoardRankOnAddressAndLeaderboard: 'RANGE'
-    }
+      IndexLeaderBoardRankOnAddressAndLeaderboard: 'RANGE',
+    },
   })
   leaderboard!: string;
 
@@ -17,8 +17,8 @@ export class CachedBoost implements UserBoostData {
 
   @attribute({
     indexKeyConfigurations: {
-      IndexLeaderBoardRankOnAddressAndLeaderboard: 'HASH'
-    }
+      IndexLeaderBoardRankOnAddressAndLeaderboard: 'HASH',
+    },
   })
   address!: string;
 

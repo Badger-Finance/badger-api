@@ -17,7 +17,7 @@ module.exports = {
       out_file: defaultLogFile,
       error_file: defaultLogFile,
       merge_logs: true,
-      kill_timeout: 30000
-    }
-  ]
+      kill_timeout: 30000,
+    },
+  ],
 };

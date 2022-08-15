@@ -38,7 +38,7 @@ export async function getAccounts(chain: Chain): Promise<string[]> {
         first: pageSize,
         where: { id_gt: lastAddress },
         orderBy: gqlGenT.User_OrderBy.Id,
-        orderDirection: gqlGenT.OrderDirection.Asc
+        orderDirection: gqlGenT.OrderDirection.Asc,
       });
       if (!userPage || !userPage.users || userPage.users.length === 0) {
         break;
@@ -68,7 +68,7 @@ export async function queryCachedAccount(address: string): Promise<CachedAccount
   const defaultAccount: CachedAccount = {
     address: checksummedAccount,
     balances: [],
-    updatedAt: 0
+    updatedAt: 0,
   };
   const baseAccount = Object.assign(new CachedAccount(), defaultAccount);
   try {
@@ -76,7 +76,7 @@ export async function queryCachedAccount(address: string): Promise<CachedAccount
     for await (const item of mapper.query(
       CachedAccount,
       { address: checksummedAccount },
-      { limit: 1, scanIndexForward: false }
+      { limit: 1, scanIndexForward: false },
     )) {
       return item;
     }
@@ -90,7 +90,7 @@ export async function queryCachedAccount(address: string): Promise<CachedAccount
 export async function toVaultBalance(
   chain: Chain,
   vaultBalance: gqlGenT.UserSettBalanceFragment,
-  currency?: Currency
+  currency?: Currency,
 ): Promise<CachedSettBalance> {
   const vaultDefinition = await chain.vaults.getVault(vaultBalance.sett.id);
   const { netShareDeposit, grossDeposit, grossWithdraw } = vaultBalance;
@@ -112,7 +112,7 @@ export async function toVaultBalance(
   const [depositTokenPrice, earnedTokens, tokens] = await Promise.all([
     queryPrice(vaultDefinition.depositToken),
     getVaultTokens(chain, vault, currency),
-    getVaultTokens(chain, vault, currency)
+    getVaultTokens(chain, vault, currency),
   ]);
 
   const depositTokenConvertedPrice = await convert(depositTokenPrice.price, currency);
@@ -130,7 +130,7 @@ export async function toVaultBalance(
     earnedValue: depositTokenConvertedPrice * earnedBalance,
     earnedTokens,
     depositedBalance: depositedTokens,
-    withdrawnBalance: withdrawnTokens
+    withdrawnBalance: withdrawnTokens,
   });
 }
 
@@ -139,7 +139,7 @@ export async function getCachedBoost(network: Network, address: string): Promise
   for await (const entry of mapper.query(
     CachedBoost,
     { leaderboard: getLeaderboardKey(network), address: ethers.utils.getAddress(address) },
-    { limit: 1, indexName: 'IndexLeaderBoardRankOnAddressAndLeaderboard' }
+    { limit: 1, indexName: 'IndexLeaderBoardRankOnAddressAndLeaderboard' },
   )) {
     return entry;
   }
@@ -154,7 +154,7 @@ export async function getCachedBoost(network: Network, address: string): Promise
     nftBalance: 0,
     nonNativeBalance: 0,
     stakeRatio: 0,
-    updatedAt: 0
+    updatedAt: 0,
   };
 }
 
@@ -170,11 +170,11 @@ export async function getCachedAccount(chain: Chain, address: string): Promise<A
     .map((bal) => ({
       ...bal,
       tokens: bal.tokens,
-      earnedTokens: bal.earnedTokens
+      earnedTokens: bal.earnedTokens,
     }));
   const data = Object.fromEntries(balances.map((bal) => [bal.address, bal]));
   const claimableBalances = Object.fromEntries(
-    claimableBalanceSnapshot.claimableBalances.map((bal) => [bal.address, bal.balance])
+    claimableBalanceSnapshot.claimableBalances.map((bal) => [bal.address, bal.balance]),
   );
   const cachedBoost = await getCachedBoost(network, cachedAccount.address);
   const { boost, boostRank, stakeRatio, nftBalance, bveCvxBalance, nativeBalance, nonNativeBalance, diggBalance } =
@@ -194,7 +194,7 @@ export async function getCachedAccount(chain: Chain, address: string): Promise<A
     bveCvxBalance,
     diggBalance,
     nativeBalance,
-    nonNativeBalance
+    nonNativeBalance,
   };
   return account;
 }
@@ -202,13 +202,13 @@ export async function getCachedAccount(chain: Chain, address: string): Promise<A
 export async function getClaimableBalanceSnapshot(
   chain: Chain,
   address: string,
-  startBlock: number
+  startBlock: number,
 ): Promise<UserClaimSnapshot> {
   const mapper = getDataMapper();
   for await (const entry of mapper.query(
     UserClaimSnapshot,
     { chainStartBlock: getChainStartBlockKey(chain.network, startBlock), address: ethers.utils.getAddress(address) },
-    { limit: 1, indexName: 'IndexUnclaimedSnapshotsOnAddressAndChainStartBlock' }
+    { limit: 1, indexName: 'IndexUnclaimedSnapshotsOnAddressAndChainStartBlock' },
   )) {
     return entry;
   }
@@ -219,7 +219,7 @@ export async function getClaimableBalanceSnapshot(
     startBlock,
     claimableBalances: [],
     pageId: -1,
-    expiresAt: Date.now()
+    expiresAt: Date.now(),
   };
 }
 
@@ -228,7 +228,7 @@ export async function getLatestMetadata(chain: Chain): Promise<UserClaimMetadata
   for await (const metric of mapper.query(
     UserClaimMetadata,
     { chain: chain.network },
-    { indexName: 'IndexMetadataChainAndStartBlock', scanIndexForward: false, limit: 1 }
+    { indexName: 'IndexMetadataChainAndStartBlock', scanIndexForward: false, limit: 1 },
   )) {
     return metric;
   }
@@ -240,7 +240,7 @@ export async function getLatestMetadata(chain: Chain): Promise<UserClaimMetadata
     endBlock: blockNumber + 1,
     chainStartBlock: getChainStartBlockKey(chain.network, blockNumber),
     chain: chain.network,
-    count: 0
+    count: 0,
   });
   return mapper.put(metaData);
 }
@@ -264,7 +264,7 @@ export async function refreshAccountVaultBalances(chain: Chain, account: string)
             } catch (err) {
               return false;
             }
-          })
+          }),
         );
 
         const userVaultBalances = await Promise.all(balances.map(async (bal) => toVaultBalance(chain, bal)));

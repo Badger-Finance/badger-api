@@ -50,11 +50,11 @@ export const swaggerConfig: SwaggerSettings = {
       contact: {
         name: 'Badger Finance',
         email: 'jintao@badger.finance',
-        url: 'https://app.badger.com/'
-      }
+        url: 'https://app.badger.com/',
+      },
     },
     schemes: ['https'],
     host: 'api.badger.com',
-    basePath: '/'
-  }
+    basePath: '/',
+  },
 };

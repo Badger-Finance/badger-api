@@ -17,7 +17,7 @@ export async function toBalance(token: Token, balance: number, currency?: Curren
     symbol: token.symbol,
     decimals: token.decimals,
     balance: balance,
-    value: balance * price
+    value: balance * price,
   };
 }
 
@@ -28,8 +28,8 @@ export async function getVaultTokens(chain: Chain, vault: VaultDTO, currency?: C
     tokens = await Promise.all(
       record.tokenBalances.map(async (b) => ({
         ...b,
-        value: await convert(b.value, currency)
-      }))
+        value: await convert(b.value, currency),
+      })),
     );
   }
   return tokens;
@@ -75,7 +75,7 @@ export async function getFullTokens(chain: Chain, tokensAddr: Token['address'][]
 export async function getCachedTokesInfo(tokensAddr: Token['address'][]): Promise<Token[]> {
   const mapper = getDataMapper();
   const tokensToGet = tokensAddr.map((addr) =>
-    Object.assign(new TokenInformationSnapshot(), { address: ethers.utils.getAddress(addr) })
+    Object.assign(new TokenInformationSnapshot(), { address: ethers.utils.getAddress(addr) }),
   );
 
   const tokensInfo: Token[] = [];
@@ -113,7 +113,7 @@ export function mergeTokensFullData(chainTokens: Chain['tokens'], tokens: Token[
   for (const token of tokens) {
     mergedTokensFullData[token.address] = {
       ...token,
-      ...(chainTokens[token.address] || {})
+      ...(chainTokens[token.address] || {}),
     };
   }
 
@@ -123,7 +123,7 @@ export function mergeTokensFullData(chainTokens: Chain['tokens'], tokens: Token[
 export function lookUpAddrByTokenName(chain: Chain, name: string): Token['address'] | undefined {
   const tokensWithAddr = Object.keys(chain.tokens).map((address) => ({
     ...chain.tokens[address],
-    address
+    address,
   }));
 
   return Object.values(tokensWithAddr).find((token) => token.lookupName === name)?.address;

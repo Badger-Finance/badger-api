@@ -34,7 +34,7 @@ export const V2_CONTROLLERS = [
   ProofsV2Controller,
   RewardV2Controller,
   RewardsV2Controller,
-  VaultsV2Controller
+  VaultsV2Controller,
 ];
 
 export const V3_CONTROLLERS = [
@@ -50,5 +50,5 @@ export const V3_CONTROLLERS = [
   AccountsV3Controller,
   ProofsV3Controller,
   RewardsV3Controller,
-  VaultsV3Controller
+  VaultsV3Controller,
 ];

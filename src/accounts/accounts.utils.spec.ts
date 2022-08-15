@@ -24,7 +24,7 @@ describe('accounts.utils', () => {
     nftBalance: 0,
     nonNativeBalance: 0,
     stakeRatio: 0,
-    updatedAt: 0
+    updatedAt: 0,
   };
 
   function testVaultBalance(vaultDefinition: VaultDefinitionModel): gqlGenT.UserSettBalance {
@@ -44,7 +44,7 @@ describe('accounts.utils', () => {
       grossShareWithdraw: toWei(5),
       user: {
         id: TEST_ADDR,
-        settBalances: []
+        settBalances: [],
       },
       sett: {
         id: vaultToken.address,
@@ -66,7 +66,7 @@ describe('accounts.utils', () => {
           name: depositToken.name,
           symbol: depositToken.symbol,
           decimals: depositToken.decimals,
-          totalSupply: 21000000
+          totalSupply: 21000000,
         },
         treeDistributions: [],
         harvests: [],
@@ -77,15 +77,15 @@ describe('accounts.utils', () => {
         createdAt: 0,
         behavior: VaultBehavior.Compounder,
         lastUpdatedAt: 0,
-        releasedAt: 0
-      }
+        releasedAt: 0,
+      },
     };
   }
 
   beforeEach(() => {
     jest.spyOn(DataMapper.prototype, 'put').mockImplementation(async (o) => ({
       ...o,
-      updatedAt: 0
+      updatedAt: 0,
     }));
     jest.spyOn(console, 'log').mockImplementation(jest.fn);
     setupMockChain();
@@ -126,7 +126,7 @@ describe('accounts.utils', () => {
         const chain = setupMockChain();
         const mockAccounts = [TOKENS.BADGER, TOKENS.DIGG, TOKENS.WBTC, TOKENS.FTM_GEIST];
         const result: gqlGenT.UsersQuery = {
-          users: mockAccounts.map((account) => ({ id: account, settBalances: [] }))
+          users: mockAccounts.map((account) => ({ id: account, settBalances: [] })),
         };
         let responded = false;
         jest.spyOn(Chain.prototype, 'getSdk').mockImplementation(async () => chain.sdk);
@@ -213,7 +213,7 @@ describe('accounts.utils', () => {
         endBlock: 101,
         chainStartBlock: `${chain.network}_123123`,
         chain: chain.network,
-        count: 0
+        count: 0,
       });
       mockQuery([cachedMetadata]);
       const latestMetadata = await getLatestMetadata(chain);
@@ -228,7 +228,7 @@ describe('accounts.utils', () => {
         endBlock: TEST_CURRENT_BLOCK + 1,
         chainStartBlock: `${chain.network}_${TEST_CURRENT_BLOCK}`,
         chain: chain.network,
-        count: 0
+        count: 0,
       });
       mockQuery([]);
       const latestMetadata = await getLatestMetadata(chain);

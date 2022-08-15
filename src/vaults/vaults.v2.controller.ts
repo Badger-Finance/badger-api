@@ -24,7 +24,7 @@ export class VaultsV2Controller {
   @Returns(400).Description('Not a valid chain')
   async listVaults(
     @QueryParams('chain') chain?: Network,
-    @QueryParams('currency') currency?: Currency
+    @QueryParams('currency') currency?: Currency,
   ): Promise<VaultModel[]> {
     return this.vaultService.listVaults(Chain.getChain(chain), currency);
   }
@@ -48,7 +48,7 @@ export class VaultsV2Controller {
   @Returns(400).Description('Not a valid chain')
   async getVaultsHarvests(
     @PathParams('vault') vault: string,
-    @QueryParams('chain') chain?: Network
+    @QueryParams('chain') chain?: Network,
   ): Promise<VaultHarvestsExtendedResp[]> {
     return this.vaultService.getVaultHarvests(Chain.getChain(chain), vault);
   }
@@ -63,7 +63,7 @@ export class VaultsV2Controller {
   async getVault(
     @PathParams('vault') vault: string,
     @QueryParams('chain') chain?: Network,
-    @QueryParams('currency') currency?: Currency
+    @QueryParams('currency') currency?: Currency,
   ): Promise<VaultModel> {
     const chainInst = Chain.getChain(chain);
     const vaultDef = await chainInst.vaults.getVault(vault);

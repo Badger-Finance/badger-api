@@ -38,8 +38,8 @@ export async function getSushiSwapValue(vaultDefinition: VaultDefinitionModel, g
     orderBy: PairDayData_OrderBy.Date,
     orderDirection: OrderDirection.Desc,
     where: {
-      pair: vaultDefinition.depositToken.toLowerCase()
-    }
+      pair: vaultDefinition.depositToken.toLowerCase(),
+    },
   });
   const converted = pairDayDatas.map((d): PairDayData => ({ reserveUSD: d.reserveUSD, dailyVolumeUSD: d.volumeUSD }));
   return getSwapValue(vaultDefinition, converted);

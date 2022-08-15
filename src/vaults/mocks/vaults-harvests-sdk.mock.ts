@@ -11,10 +11,10 @@ export const vaultsHarvestsSdkMock = {
             block: 13612910,
             amount: {
               type: 'BigNumber',
-              hex: '0x11bc85620d1c13'
+              hex: '0x11bc85620d1c13',
             },
-            token: '0x075b1bb99792c9e1041ba13afef80c91a1e70fb3'
-          }
+            token: '0x075b1bb99792c9e1041ba13afef80c91a1e70fb3',
+          },
         ],
         treeDistributions: [
           {
@@ -23,8 +23,8 @@ export const vaultsHarvestsSdkMock = {
             token: '0x2B5455aac8d64C14786c3a29858E43b5945819C0',
             amount: {
               type: 'BigNumber',
-              hex: '0x04902162b832b3c7c4'
-            }
+              hex: '0x04902162b832b3c7c4',
+            },
           },
           {
             timestamp: 1636878824,
@@ -32,10 +32,10 @@ export const vaultsHarvestsSdkMock = {
             token: '0xfd05D3C7fe2924020620A8bE4961bBaA747e6305',
             amount: {
               type: 'BigNumber',
-              hex: '0x015056a17562008027'
-            }
-          }
-        ]
+              hex: '0x015056a17562008027',
+            },
+          },
+        ],
       },
       {
         timestamp: 1637346968,
@@ -45,10 +45,10 @@ export const vaultsHarvestsSdkMock = {
             block: 13647172,
             amount: {
               type: 'BigNumber',
-              hex: '0x3ddb4d0d018648'
+              hex: '0x3ddb4d0d018648',
             },
-            token: '0x075b1bb99792c9e1041ba13afef80c91a1e70fb3'
-          }
+            token: '0x075b1bb99792c9e1041ba13afef80c91a1e70fb3',
+          },
         ],
         treeDistributions: [
           {
@@ -57,10 +57,10 @@ export const vaultsHarvestsSdkMock = {
             token: '0xfd05D3C7fe2924020620A8bE4961bBaA747e6305',
             amount: {
               type: 'BigNumber',
-              hex: '0x07bc91a0443f7c41fe'
-            }
-          }
-        ]
+              hex: '0x07bc91a0443f7c41fe',
+            },
+          },
+        ],
       },
       {
         timestamp: 1637717848,
@@ -70,10 +70,10 @@ export const vaultsHarvestsSdkMock = {
             block: 13674352,
             amount: {
               type: 'BigNumber',
-              hex: '0x53a18268ac9569'
+              hex: '0x53a18268ac9569',
             },
-            token: '0x075b1bb99792c9e1041ba13afef80c91a1e70fb3'
-          }
+            token: '0x075b1bb99792c9e1041ba13afef80c91a1e70fb3',
+          },
         ],
         treeDistributions: [
           {
@@ -82,8 +82,8 @@ export const vaultsHarvestsSdkMock = {
             token: '0x2B5455aac8d64C14786c3a29858E43b5945819C0',
             amount: {
               type: 'BigNumber',
-              hex: '0x2753052e3e2ce56362'
-            }
+              hex: '0x2753052e3e2ce56362',
+            },
           },
           {
             timestamp: 1637717848,
@@ -91,10 +91,10 @@ export const vaultsHarvestsSdkMock = {
             token: '0xfd05D3C7fe2924020620A8bE4961bBaA747e6305',
             amount: {
               type: 'BigNumber',
-              hex: '0x0366c4eb4f7269cb14'
-            }
-          }
-        ]
+              hex: '0x0366c4eb4f7269cb14',
+            },
+          },
+        ],
       },
       {
         timestamp: 1638065247,
@@ -104,10 +104,10 @@ export const vaultsHarvestsSdkMock = {
             block: 13699647,
             amount: {
               type: 'BigNumber',
-              hex: '0x3531891e4ac3f5'
+              hex: '0x3531891e4ac3f5',
             },
-            token: '0x075b1bb99792c9e1041ba13afef80c91a1e70fb3'
-          }
+            token: '0x075b1bb99792c9e1041ba13afef80c91a1e70fb3',
+          },
         ],
         treeDistributions: [
           {
@@ -116,10 +116,10 @@ export const vaultsHarvestsSdkMock = {
             token: '0xfd05D3C7fe2924020620A8bE4961bBaA747e6305',
             amount: {
               type: 'BigNumber',
-              hex: '0x05edf718315e10f43b'
-            }
-          }
-        ]
+              hex: '0x05edf718315e10f43b',
+            },
+          },
+        ],
       },
       {
         timestamp: 1640034477,
@@ -129,10 +129,10 @@ export const vaultsHarvestsSdkMock = {
             block: 13844434,
             amount: {
               type: 'BigNumber',
-              hex: '0x8212074a2405cf'
+              hex: '0x8212074a2405cf',
             },
-            token: '0x075b1bb99792c9e1041ba13afef80c91a1e70fb3'
-          }
+            token: '0x075b1bb99792c9e1041ba13afef80c91a1e70fb3',
+          },
         ],
         treeDistributions: [
           {
@@ -141,8 +141,8 @@ export const vaultsHarvestsSdkMock = {
             token: '0x2B5455aac8d64C14786c3a29858E43b5945819C0',
             amount: {
               type: 'BigNumber',
-              hex: '0x308c47a8fad84af701'
-            }
+              hex: '0x308c47a8fad84af701',
+            },
           },
           {
             timestamp: 1640034477,
@@ -150,10 +150,10 @@ export const vaultsHarvestsSdkMock = {
             token: '0xfd05D3C7fe2924020620A8bE4961bBaA747e6305',
             amount: {
               type: 'BigNumber',
-              hex: '0x06256b13f24764834c'
-            }
-          }
-        ]
+              hex: '0x06256b13f24764834c',
+            },
+          },
+        ],
       },
       {
         timestamp: 1640380383,
@@ -163,12 +163,12 @@ export const vaultsHarvestsSdkMock = {
             block: 13870247,
             amount: {
               type: 'BigNumber',
-              hex: '0x00'
+              hex: '0x00',
             },
-            token: '0x075b1bb99792c9e1041ba13afef80c91a1e70fb3'
-          }
+            token: '0x075b1bb99792c9e1041ba13afef80c91a1e70fb3',
+          },
         ],
-        treeDistributions: []
+        treeDistributions: [],
       },
       {
         timestamp: 1640731025,
@@ -178,10 +178,10 @@ export const vaultsHarvestsSdkMock = {
             block: 13896464,
             amount: {
               type: 'BigNumber',
-              hex: '0x30197df9db1863'
+              hex: '0x30197df9db1863',
             },
-            token: '0x075b1bb99792c9e1041ba13afef80c91a1e70fb3'
-          }
+            token: '0x075b1bb99792c9e1041ba13afef80c91a1e70fb3',
+          },
         ],
         treeDistributions: [
           {
@@ -190,12 +190,12 @@ export const vaultsHarvestsSdkMock = {
             token: '0xfd05D3C7fe2924020620A8bE4961bBaA747e6305',
             amount: {
               type: 'BigNumber',
-              hex: '0x02b79997dd58f0c5d0'
-            }
-          }
-        ]
-      }
-    ]
+              hex: '0x02b79997dd58f0c5d0',
+            },
+          },
+        ],
+      },
+    ],
   },
   [TOKENS.BCRV_RENBTC]: {
     data: [
@@ -207,10 +207,10 @@ export const vaultsHarvestsSdkMock = {
             block: 13612609,
             amount: {
               type: 'BigNumber',
-              hex: '0x01fb4d02ff225338'
+              hex: '0x01fb4d02ff225338',
             },
-            token: '0x49849c98ae39fff122806c06791fa73784fb3675'
-          }
+            token: '0x49849c98ae39fff122806c06791fa73784fb3675',
+          },
         ],
         treeDistributions: [
           {
@@ -219,8 +219,8 @@ export const vaultsHarvestsSdkMock = {
             token: '0x2B5455aac8d64C14786c3a29858E43b5945819C0',
             amount: {
               type: 'BigNumber',
-              hex: '0xd49ea2af1bdac47673'
-            }
+              hex: '0xd49ea2af1bdac47673',
+            },
           },
           {
             timestamp: 1636874531,
@@ -228,10 +228,10 @@ export const vaultsHarvestsSdkMock = {
             token: '0xfd05D3C7fe2924020620A8bE4961bBaA747e6305',
             amount: {
               type: 'BigNumber',
-              hex: '0x34149db2187180eaac'
-            }
-          }
-        ]
+              hex: '0x34149db2187180eaac',
+            },
+          },
+        ],
       },
       {
         timestamp: 1637345324,
@@ -241,10 +241,10 @@ export const vaultsHarvestsSdkMock = {
             block: 13647062,
             amount: {
               type: 'BigNumber',
-              hex: '0x035a0af86bb64129'
+              hex: '0x035a0af86bb64129',
             },
-            token: '0x49849c98ae39fff122806c06791fa73784fb3675'
-          }
+            token: '0x49849c98ae39fff122806c06791fa73784fb3675',
+          },
         ],
         treeDistributions: [
           {
@@ -253,10 +253,10 @@ export const vaultsHarvestsSdkMock = {
             token: '0xfd05D3C7fe2924020620A8bE4961bBaA747e6305',
             amount: {
               type: 'BigNumber',
-              hex: '0x6d0bb7f7d0d26bf13d'
-            }
-          }
-        ]
+              hex: '0x6d0bb7f7d0d26bf13d',
+            },
+          },
+        ],
       },
       {
         timestamp: 1640044054,
@@ -266,10 +266,10 @@ export const vaultsHarvestsSdkMock = {
             block: 13845169,
             amount: {
               type: 'BigNumber',
-              hex: '0x0dbea271f653d670'
+              hex: '0x0dbea271f653d670',
             },
-            token: '0x49849c98ae39fff122806c06791fa73784fb3675'
-          }
+            token: '0x49849c98ae39fff122806c06791fa73784fb3675',
+          },
         ],
         treeDistributions: [
           {
@@ -278,8 +278,8 @@ export const vaultsHarvestsSdkMock = {
             token: '0x2B5455aac8d64C14786c3a29858E43b5945819C0',
             amount: {
               type: 'BigNumber',
-              hex: '0x050ad37124594cb3302f'
-            }
+              hex: '0x050ad37124594cb3302f',
+            },
           },
           {
             timestamp: 1640044054,
@@ -287,10 +287,10 @@ export const vaultsHarvestsSdkMock = {
             token: '0xfd05D3C7fe2924020620A8bE4961bBaA747e6305',
             amount: {
               type: 'BigNumber',
-              hex: '0xcea4ae5769396c8ec3'
-            }
-          }
-        ]
+              hex: '0xcea4ae5769396c8ec3',
+            },
+          },
+        ],
       },
       {
         timestamp: 1640044922,
@@ -300,10 +300,10 @@ export const vaultsHarvestsSdkMock = {
             block: 13845245,
             amount: {
               type: 'BigNumber',
-              hex: '0x6c57196406b9'
+              hex: '0x6c57196406b9',
             },
-            token: '0x49849c98ae39fff122806c06791fa73784fb3675'
-          }
+            token: '0x49849c98ae39fff122806c06791fa73784fb3675',
+          },
         ],
         treeDistributions: [
           {
@@ -312,11 +312,11 @@ export const vaultsHarvestsSdkMock = {
             token: '0xfd05D3C7fe2924020620A8bE4961bBaA747e6305',
             amount: {
               type: 'BigNumber',
-              hex: '0x081f7c98e1d4c23a'
-            }
-          }
-        ]
-      }
-    ]
-  }
+              hex: '0x081f7c98e1d4c23a',
+            },
+          },
+        ],
+      },
+    ],
+  },
 };

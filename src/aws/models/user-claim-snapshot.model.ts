@@ -9,15 +9,15 @@ import { ClaimableBalance } from '../../rewards/entities/claimable-balance';
 export class UserClaimSnapshot {
   @hashKey({
     indexKeyConfigurations: {
-      IndexUnclaimedSnapshotsOnAddressAndChainStartBlock: 'RANGE'
-    }
+      IndexUnclaimedSnapshotsOnAddressAndChainStartBlock: 'RANGE',
+    },
   })
   chainStartBlock!: string;
 
   @rangeKey({
     indexKeyConfigurations: {
-      IndexUnclaimedSnapshotsOnAddressAndChainStartBlock: 'HASH'
-    }
+      IndexUnclaimedSnapshotsOnAddressAndChainStartBlock: 'HASH',
+    },
   })
   address!: string;
 
@@ -45,7 +45,7 @@ export class UserClaimSnapshot {
       const today = Date.now() / 1000;
       const expireTime = ONE_DAY_SECONDS * (PRODUCTION ? 30 : 1);
       return today + expireTime;
-    }
+    },
   })
   expiresAt!: number;
 }

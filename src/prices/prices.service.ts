@@ -18,7 +18,7 @@ export class PricesService {
       prices.map(async (tokenPrice) => {
         const convertedPrice = await convert(tokenPrice.price, currency);
         return [tokenPrice.address, convertedPrice];
-      })
+      }),
     );
     return Object.fromEntries(entries);
   }
@@ -29,7 +29,7 @@ export class PricesService {
         const snapshots = await getPriceSnapshotsAtTimestamps(t, timestamps, currency);
         const snapshotEntries = snapshots.map((s) => [s.updatedAt, s.price]);
         return [t, Object.fromEntries(snapshotEntries)];
-      })
+      }),
     );
     return Object.fromEntries(entries);
   }

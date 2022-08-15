@@ -15,7 +15,7 @@ export async function getObject(bucket: string, key: string): Promise<AWS.S3.Bod
   try {
     const params = {
       Bucket: bucket,
-      Key: key
+      Key: key,
     };
     const object = await s3.getObject(params).promise();
     if (!object.Body) {

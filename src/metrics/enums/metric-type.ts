@@ -1,3 +1,3 @@
 export enum MetricType {
-  protocol = 'protocol'
+  protocol = 'protocol',
 }

@@ -18,12 +18,12 @@ export const CHART_GRANULARITY_TIMEFRAMES = [ChartTimeFrame.Max, ChartTimeFrame.
 export function toChartDataBlob<T extends ChartData<T>>(
   id: string,
   timeframe: ChartTimeFrame,
-  data: T[]
+  data: T[],
 ): ChartDataBlob<T> {
   return Object.assign(new ChartDataBlob(), {
     id,
     timeframe,
-    data
+    data,
   });
 }
 
@@ -111,7 +111,7 @@ export async function updateSnapshots<T extends ChartData<T>>(namespace: string,
   const { id, timestamp: now } = snapshot;
   for (const timeframe of Object.values(ChartTimeFrame)) {
     const searchKey = Object.assign(new ChartDataBlob<T>(), {
-      id: toChartDataKey(namespace, id, timeframe)
+      id: toChartDataKey(namespace, id, timeframe),
     });
 
     let cachedChart: ChartDataBlob<T> | undefined;

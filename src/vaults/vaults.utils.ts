@@ -11,7 +11,7 @@ import {
   VaultPerformanceEvent,
   VaultType,
   VaultV15__factory,
-  VaultVersion
+  VaultVersion,
 } from '@badger-dao/sdk';
 import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';
@@ -41,7 +41,7 @@ import {
   aggregateSources,
   createYieldSource,
   loadVaultEventPerformances,
-  loadVaultGraphPerformances
+  loadVaultGraphPerformances,
 } from './yields.utils';
 
 export const VAULT_SOURCE = 'Vault Compounding';
@@ -65,7 +65,7 @@ export async function defaultVault(chain: Chain, vault: VaultDefinitionModel): P
     behavior,
     boost: {
       enabled: false,
-      weight: 0
+      weight: 0,
     },
     bouncer,
     name,
@@ -80,7 +80,7 @@ export async function defaultVault(chain: Chain, vault: VaultDefinitionModel): P
       withdrawFee: 0,
       performanceFee: 0,
       strategistFee: 0,
-      aumFee: 0
+      aumFee: 0,
     },
     type,
     underlyingToken: depositToken,
@@ -103,10 +103,10 @@ export async function defaultVault(chain: Chain, vault: VaultDefinitionModel): P
       nonHarvestApr: 0,
       nonHarvestSources: [],
       nonHarvestApy: 0,
-      nonHarvestSourcesApy: []
+      nonHarvestSourcesApy: [],
     },
     lastHarvest: 0,
-    version
+    version,
   };
 }
 
@@ -114,7 +114,7 @@ export async function defaultVault(chain: Chain, vault: VaultDefinitionModel): P
 export async function getCachedVault(
   chain: Chain,
   vaultDefinition: VaultDefinitionModel,
-  currency = Currency.USD
+  currency = Currency.USD,
 ): Promise<VaultDTO> {
   const vault = await defaultVault(chain, vaultDefinition);
   try {
@@ -122,7 +122,7 @@ export async function getCachedVault(
     for await (const item of mapper.query(
       CurrentVaultSnapshotModel,
       { address: vaultDefinition.address },
-      { limit: 1, scanIndexForward: false }
+      { limit: 1, scanIndexForward: false },
     )) {
       vault.available = item.available;
       vault.balance = item.balance;
@@ -137,11 +137,11 @@ export async function getCachedVault(
       vault.strategy = item.strategy;
       vault.boost = {
         enabled: item.boostWeight > 0,
-        weight: item.boostWeight
+        weight: item.boostWeight,
       };
       const [tokens, convertedValue] = await Promise.all([
         getVaultTokens(chain, vault, currency),
-        convert(item.value, currency)
+        convert(item.value, currency),
       ]);
       vault.tokens = tokens;
       vault.value = convertedValue;
@@ -159,14 +159,14 @@ export async function getStrategyInfo(chain: Chain, vault: VaultDefinitionModel)
     withdrawFee: 0,
     performanceFee: 0,
     strategistFee: 0,
-    aumFee: 0
+    aumFee: 0,
   };
   try {
     const sdk = await chain.getSdk();
     const version = vault.version ?? VaultVersion.v1;
     const strategyAddress = await sdk.vaults.getVaultStrategy({
       address: vault.address,
-      version
+      version,
     });
     if (version === VaultVersion.v1) {
       const strategy = Strategy__factory.connect(strategyAddress, sdk.provider);
@@ -175,7 +175,7 @@ export async function getStrategyInfo(chain: Chain, vault: VaultDefinitionModel)
       let [withdrawFee, performanceFee, strategistFee] = await Promise.all([
         strategy.withdrawalFee(),
         strategy.performanceFeeGovernance(),
-        strategy.performanceFeeStrategist()
+        strategy.performanceFeeStrategist(),
       ]);
       // bveCVX does not have a way to capture materially its performance fee
       if (vault.address === TOKENS.BVECVX) {
@@ -186,7 +186,7 @@ export async function getStrategyInfo(chain: Chain, vault: VaultDefinitionModel)
         withdrawFee: withdrawFee.toNumber(),
         performanceFee: performanceFee.toNumber(),
         strategistFee: strategistFee.toNumber(),
-        aumFee: 0
+        aumFee: 0,
       };
     } else {
       const vaultContract = VaultV15__factory.connect(vault.address, sdk.provider);
@@ -194,14 +194,14 @@ export async function getStrategyInfo(chain: Chain, vault: VaultDefinitionModel)
         vaultContract.withdrawalFee(),
         vaultContract.performanceFeeGovernance(),
         vaultContract.performanceFeeStrategist(),
-        vaultContract.managementFee()
+        vaultContract.managementFee(),
       ]);
       return {
         address: strategyAddress,
         withdrawFee: withdrawFee.toNumber(),
         performanceFee: performanceFee.toNumber(),
         strategistFee: strategistFee.toNumber(),
-        aumFee: aumFee.toNumber()
+        aumFee: aumFee.toNumber(),
       };
     }
   } catch (err) {
@@ -244,11 +244,11 @@ export async function getVaultTokenPrice(chain: Chain, address: string): Promise
   const vault = await targetChain.vaults.getVault(targetVault);
   const [underlyingTokenPrice, vaultTokenSnapshot] = await Promise.all([
     queryPrice(vaultToken.address),
-    getCachedVault(chain, vault)
+    getCachedVault(chain, vault),
   ]);
   return {
     address: token.address,
-    price: underlyingTokenPrice.price * vaultTokenSnapshot.pricePerFullShare
+    price: underlyingTokenPrice.price * vaultTokenSnapshot.pricePerFullShare,
   };
 }
 
@@ -261,7 +261,7 @@ export async function getVaultTokenPrice(chain: Chain, address: string): Promise
 export async function getVaultPerformance(chain: Chain, vault: VaultDefinitionModel): Promise<YieldSource[]> {
   const [rewardEmissions, protocol] = await Promise.all([
     getRewardEmission(chain, vault),
-    getProtocolValueSources(chain, vault)
+    getProtocolValueSources(chain, vault),
   ]);
   let vaultSources: YieldSource[] = [];
   try {
@@ -286,7 +286,7 @@ export function estimateDerivativeEmission(
   emissionApr: number,
   emissionCompoundApr: number,
   compoundingStep = 1,
-  emissionStep = 1
+  emissionStep = 1,
 ): number {
   // start with $100 deposited into the vault
   let currentValueCompounded = 100;
@@ -325,7 +325,7 @@ export async function estimateHarvestEventApr(
   start: number,
   end: number,
   amount: VaultPerformanceEvent['amount'],
-  balance: BigNumber
+  balance: BigNumber,
 ): Promise<number> {
   const duration = end - start;
 
@@ -344,7 +344,7 @@ export async function estimateHarvestEventApr(
 export async function estimateVaultPerformance(
   chain: Chain,
   vault: VaultDefinitionModel,
-  data: VaultHarvestData[]
+  data: VaultHarvestData[],
 ): Promise<YieldSource[]> {
   const recentHarvests = data.sort((a, b) => b.timestamp - a.timestamp);
 
@@ -488,7 +488,7 @@ export async function queryYieldSources(vault: VaultDefinitionModel): Promise<Yi
   for await (const source of mapper.query(
     YieldSource,
     { chainAddress: vault.id },
-    { indexName: 'IndexApySnapshotsOnAddress' }
+    { indexName: 'IndexApySnapshotsOnAddress' },
   )) {
     valueSources.push(source);
   }
@@ -505,7 +505,7 @@ export async function queryYieldEstimate(vault: VaultDefinitionModel): Promise<Y
     previousHarvestTokens: [],
     lastMeasuredAt: 0,
     duration: 0,
-    lastReportedAt: 0
+    lastReportedAt: 0,
   };
   try {
     const mapper = getDataMapper();
@@ -522,7 +522,7 @@ export async function queryYieldEstimate(vault: VaultDefinitionModel): Promise<Y
 export async function getVaultHarvestsOnChain(
   chain: Chain,
   address: VaultDefinitionModel['address'],
-  startFromBlock: Nullable<number> = null
+  startFromBlock: Nullable<number> = null,
 ): Promise<VaultHarvestsExtendedResp[]> {
   const vaultHarvests: VaultHarvestsExtendedResp[] = [];
 
@@ -536,7 +536,7 @@ export async function getVaultHarvestsOnChain(
   try {
     const listHarvestsArgs: ListHarvestOptions = {
       address,
-      version
+      version,
     };
 
     if (startFromBlock) listHarvestsArgs.startBlock = startFromBlock;
@@ -562,7 +562,7 @@ export async function getVaultHarvestsOnChain(
 
       const vaultGraph = await sdk.graph.loadSett({
         id: address.toLowerCase(),
-        block: { number: harvest.block }
+        block: { number: harvest.block },
       });
 
       const harvestToken = harvest.token || depositToken;
@@ -577,7 +577,7 @@ export async function getVaultHarvestsOnChain(
         amount: harvestAmount,
         eventType,
         strategyBalance: 0,
-        estimatedApr: 0
+        estimatedApr: 0,
       };
 
       if (vaultGraph?.sett) {
@@ -607,7 +607,7 @@ export async function getVaultHarvestsOnChain(
             startOfHarvest,
             endOfCurrentHarvest,
             harvest.amount,
-            balance
+            balance,
           );
         }
       }

@@ -12,8 +12,8 @@ import { RewardsV3Controller } from './rewards.v3.controller';
 describe('rewards.v3.controller', () => {
   beforeEach(
     PlatformServerlessTest.bootstrap(PlatformServerless, {
-      lambda: [RewardsV3Controller]
-    })
+      lambda: [RewardsV3Controller],
+    }),
   );
   afterEach(() => PlatformServerlessTest.reset());
 

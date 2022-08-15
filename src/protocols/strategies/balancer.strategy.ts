@@ -10,7 +10,7 @@ import {
   BalancerVault__factory,
   StablePhantomVault__factory,
   StablePool__factory,
-  WeightedPool__factory
+  WeightedPool__factory,
 } from '../../contracts';
 import { getSdk as getBalancerSdk, OrderDirection, PoolSnapshot_OrderBy } from '../../graphql/generated/balancer';
 import { TokenPrice } from '../../prices/interface/token-price.interface';
@@ -45,7 +45,7 @@ export async function getBPTPrice(chain: Chain, token: string): Promise<TokenPri
 
   return {
     address: token,
-    price: value / totalSupply
+    price: value / totalSupply,
   };
 }
 
@@ -103,7 +103,7 @@ export async function getBalancerVaultTokenBalance(chain: Chain, token: string):
   });
   const vaultTokenBalance = {
     vault: address,
-    tokenBalances: cachedTokens
+    tokenBalances: cachedTokens,
   };
   return Object.assign(new VaultTokenBalance(), vaultTokenBalance);
 }
@@ -131,7 +131,7 @@ export async function resolveBalancerPoolTokenPrice(chain: Chain, token: Token, 
 
     return {
       address: token.address,
-      price: tokenPrice
+      price: tokenPrice,
     };
   } catch {
     // Attempt instead, to evaluate as a stable pool
@@ -148,7 +148,7 @@ export async function resolveBalancerPoolTokenPrice(chain: Chain, token: Token, 
       // derivation adapted from https://twitter.com/0xa9a/status/1514192791689179137
       const [amplificationParameter, lastInvariantData] = await Promise.all([
         probablyStablePool.getAmplificationParameter(),
-        probablyStablePool.getLastInvariant()
+        probablyStablePool.getLastInvariant(),
       ]);
 
       const requestTokenIndex = balances[0].address === token.address ? 0 : 1;
@@ -176,7 +176,7 @@ export async function resolveBalancerPoolTokenPrice(chain: Chain, token: Token, 
 
       return {
         address: token.address,
-        price: requestTokenPrice
+        price: requestTokenPrice,
       };
     } catch (err) {
       console.error({ err, message: `Unable to price ${token.name}` });
@@ -185,7 +185,7 @@ export async function resolveBalancerPoolTokenPrice(chain: Chain, token: Token, 
 
   return {
     address: token.address,
-    price: 0
+    price: 0,
   };
 }
 
@@ -201,10 +201,10 @@ export async function getBalancerSwapFees(vault: VaultDefinitionModel): Promise<
     const { poolSnapshots } = await sdk.PoolSnapshots({
       first: 3,
       where: {
-        pool: poolId.toLowerCase()
+        pool: poolId.toLowerCase(),
       },
       orderBy: PoolSnapshot_OrderBy.Timestamp,
-      orderDirection: OrderDirection.Desc
+      orderDirection: OrderDirection.Desc,
     });
 
     if (poolSnapshots.length !== 3) {

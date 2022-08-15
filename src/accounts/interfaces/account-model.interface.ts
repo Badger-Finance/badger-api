@@ -70,7 +70,7 @@ export class AccountModel implements Account {
   @Example({
     [TOKENS.BADGER]: ethers.constants.WeiPerEther.mul(4).toString(),
     [TOKENS.XSUSHI]: ethers.constants.WeiPerEther.mul(88).toString(),
-    [TOKENS.DIGG]: ethers.constants.WeiPerEther.mul(128834885688).toString()
+    [TOKENS.DIGG]: ethers.constants.WeiPerEther.mul(128834885688).toString(),
   })
   @Property()
   public claimableBalances: Record<string, string>;

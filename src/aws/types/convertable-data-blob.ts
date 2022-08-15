@@ -7,7 +7,7 @@ export abstract class ConvertableDataBlob {
   constructor(protected blob: DataBlob) {
     this.keyedBlob = Object.assign(new KeyedDataBlob(), {
       id: this.id(),
-      data: blob
+      data: blob,
     });
   }
 

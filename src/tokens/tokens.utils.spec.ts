@@ -30,7 +30,7 @@ describe('token.utils', () => {
         const price = {
           address: badger.name,
           price: 8,
-          updatedAt: Date.now()
+          updatedAt: Date.now(),
         };
         jest.spyOn(priceUtils, 'queryPrice').mockImplementationOnce(async (_contract) => price);
         const actual = await toBalance(badger, 10);
@@ -40,7 +40,7 @@ describe('token.utils', () => {
           symbol: badger.symbol,
           decimals: badger.decimals,
           balance: 10,
-          value: 80
+          value: 80,
         };
         expect(actual).toEqual(expected);
       });
@@ -56,7 +56,7 @@ describe('token.utils', () => {
         jest.spyOn(priceUtils, 'queryPrice').mockImplementation(async (token: string) => ({
           address: token,
           price: convertedPrice,
-          updatedAt: Date.now()
+          updatedAt: Date.now(),
         }));
         const actual = await toBalance(badger, baseTokens, currency);
         const expected = {
@@ -65,7 +65,7 @@ describe('token.utils', () => {
           symbol: badger.symbol,
           decimals: badger.decimals,
           balance: baseTokens,
-          value: expectedValue
+          value: expectedValue,
         };
         expect(actual).toEqual(expected);
       });
@@ -84,7 +84,7 @@ describe('token.utils', () => {
           symbol: badger.symbol,
           decimals: badger.decimals,
           balance: 1,
-          value: mockPrice
+          value: mockPrice,
         };
         expect(actual).toEqual(expected);
       });
@@ -104,7 +104,7 @@ describe('token.utils', () => {
           symbol: badger.symbol,
           decimals: badger.decimals,
           balance: 1,
-          value: mockPrice
+          value: mockPrice,
         };
         expect(actual).toEqual(expected);
       });
@@ -201,7 +201,7 @@ describe('token.utils', () => {
 
       const tokens = await getFullTokens(chain, [
         '0x0000000000000000000000000000000000000000',
-        '0x0000000000000000000000000000000000000001'
+        '0x0000000000000000000000000000000000000001',
       ]);
 
       expect(batchGetMock).toBeCalled();
@@ -221,7 +221,7 @@ describe('token.utils', () => {
       const expectedTokensMap = {
         [TEST_TOKEN]: MOCK_TOKENS[TEST_TOKEN],
         [TOKENS.WBTC]: MOCK_TOKENS[TOKENS.WBTC],
-        [TOKENS.WETH]: MOCK_TOKENS[TOKENS.WETH]
+        [TOKENS.WETH]: MOCK_TOKENS[TOKENS.WETH],
       };
 
       const tokens = await getFullTokens(chain, [TEST_TOKEN, TOKENS.WBTC, TOKENS.WETH]);

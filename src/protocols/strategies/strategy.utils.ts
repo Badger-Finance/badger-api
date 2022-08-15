@@ -17,8 +17,8 @@ export async function getUniV2SwapValue(graphUrl: string, vault: VaultDefinition
     orderBy: PairDayData_OrderBy.Date,
     orderDirection: OrderDirection.Desc,
     where: {
-      pairAddress: vault.depositToken.toLowerCase()
-    }
+      pairAddress: vault.depositToken.toLowerCase(),
+    },
   });
   return getUniSwapValue(vault, pairDayDatas);
 }
@@ -30,7 +30,7 @@ async function getUniSwapValue(vault: VaultDefinitionModel, tradeData: UniPairDa
   }
   const [token0Price, token1Price] = await Promise.all([
     queryPrice(tradeData[0].token0.id),
-    queryPrice(tradeData[0].token1.id)
+    queryPrice(tradeData[0].token1.id),
   ]);
   let totalApy = 0;
   let currentApy = 0;

@@ -11,8 +11,8 @@ export class YieldSource implements ValueSource {
 
   @attribute({
     indexKeyConfigurations: {
-      IndexApySnapshotsOnAddress: 'HASH'
-    }
+      IndexApySnapshotsOnAddress: 'HASH',
+    },
   })
   chainAddress!: string;
 

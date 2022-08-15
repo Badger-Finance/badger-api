@@ -19,7 +19,7 @@ export class ProtocolController {
   @Returns(400).Description('Not a valid chain')
   async getAssetsUnderManagement(
     @QueryParams('chain') chain?: Network,
-    @QueryParams('currency') currency?: Currency
+    @QueryParams('currency') currency?: Currency,
   ): Promise<ProtocolSummaryModel> {
     return this.vaultsService.getProtocolSummary(Chain.getChain(chain), currency);
   }

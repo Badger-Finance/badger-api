@@ -23,7 +23,7 @@ export class VaultsService {
         const { balance, value } = await getCachedVault(chain, vault);
         const convertedValue = await convert(value, currency);
         return { name: vault.name, balance, value: convertedValue };
-      })
+      }),
     );
     const totalValue = summaries.reduce((total, vault) => (total += vault.value), 0);
     return { totalValue, vaults: summaries, setts: summaries };
@@ -40,9 +40,9 @@ export class VaultsService {
       vaults.map(async (vault) => {
         return {
           vault: vault.address,
-          harvests: await this.getVaultHarvests(chain, vault.address)
+          harvests: await this.getVaultHarvests(chain, vault.address),
         };
-      })
+      }),
     );
 
     return harvestsWithSnapshots.reduce((acc, harvestWithSnapshot) => {
@@ -60,7 +60,7 @@ export class VaultsService {
     const queryHarvests = mapper.query(
       HarvestCompoundData,
       { vault: vault.address },
-      { indexName: 'IndexHarvestCompoundDataVault' }
+      { indexName: 'IndexHarvestCompoundDataVault' },
     );
 
     try {
@@ -72,7 +72,7 @@ export class VaultsService {
           timestamp: harvest.timestamp,
           block: harvest.block,
           token: harvest.token,
-          amount: harvest.amount
+          amount: harvest.amount,
         });
       }
     } catch (e) {
@@ -86,7 +86,7 @@ export class VaultsService {
     const [vault, yieldSources, pendingHarvest] = await Promise.all([
       getCachedVault(chain, vaultDefinition, currency),
       getYieldSources(vaultDefinition),
-      queryYieldEstimate(vaultDefinition)
+      queryYieldEstimate(vaultDefinition),
     ]);
     const { lastHarvestedAt } = pendingHarvest;
     const { apr, sources, apy, sourcesApy } = yieldSources;
@@ -128,7 +128,7 @@ export class VaultsService {
   async getVaultChartDataByTimestamps(
     vault: string,
     chain: Chain,
-    timestamps: number[]
+    timestamps: number[],
   ): Promise<HistoricVaultSnapshotModel[]> {
     // validate vault request is correct and valid
     const requestedVault = await chain.vaults.getVault(vault);

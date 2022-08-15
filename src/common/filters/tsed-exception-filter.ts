@@ -24,7 +24,7 @@ export class TsedExceptionFilter implements ExceptionFilterMethods {
 
     const { message, status } = exception;
     const body: ExceptionBody = {
-      message
+      message,
     };
     let exceptionResponse = exception.body;
 

@@ -9,15 +9,15 @@ export class UserClaimMetadata {
 
   @attribute({
     indexKeyConfigurations: {
-      IndexMetadataChainAndStartBlock: 'RANGE'
-    }
+      IndexMetadataChainAndStartBlock: 'RANGE',
+    },
   })
   startBlock!: number;
 
   @hashKey({
     indexKeyConfigurations: {
-      IndexMetadataChainAndStartBlock: 'HASH'
-    }
+      IndexMetadataChainAndStartBlock: 'HASH',
+    },
   })
   chain!: string;
 

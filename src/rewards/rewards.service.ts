@@ -54,7 +54,7 @@ export class RewardsService {
   async list({
     chain,
     pageNum = 0,
-    pageCount = DEFAULT_PAGE_SIZE
+    pageCount = DEFAULT_PAGE_SIZE,
   }: {
     chain: Chain;
     pageNum?: number;
@@ -72,14 +72,14 @@ export class RewardsService {
       type: 'Between',
       subject: 'pageId',
       lowerBound: startingPageId,
-      upperBound: endingPageId
+      upperBound: endingPageId,
     };
     for await (const entry of mapper.query(UserClaimSnapshot, { chainStartBlock }, { filter: expression })) {
       records.push(entry);
     }
     return {
       count,
-      records: records.sort((record) => record.pageId)
+      records: records.sort((record) => record.pageId),
     };
   }
 
@@ -116,7 +116,7 @@ export class RewardsService {
         const loadMethod = active ? 'loadActiveSchedules' : 'loadSchedules';
 
         return chainSdk.rewards[loadMethod](vault.address);
-      })
+      }),
     );
 
     return vaultsSchedules.reduce((acc: RewardSchedulesByVaults, vaultSchedules) => {

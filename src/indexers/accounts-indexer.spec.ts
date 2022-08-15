@@ -34,7 +34,7 @@ describe('accounts-indexer', () => {
         chainStartBlock: getChainStartBlockKey(chain.network, previousMockedBlockNumber),
         chain: chain.network,
         startBlock: previousMockedBlockNumber,
-        endBlock: startMockedBlockNumber - 1
+        endBlock: startMockedBlockNumber - 1,
       });
     });
   });
@@ -51,7 +51,7 @@ describe('accounts-indexer', () => {
       jest.spyOn(accountsUtils, 'getAccounts').mockImplementation((_chain) => Promise.resolve(testAccounts));
       const claimableResults: [string[], BigNumber[]] = [
         [TOKENS.BADGER, TOKENS.DIGG],
-        [BigNumber.from(10000), BigNumber.from(12)]
+        [BigNumber.from(10000), BigNumber.from(12)],
       ];
       let usersChecked;
       jest
@@ -65,7 +65,7 @@ describe('accounts-indexer', () => {
         const amount = amounts[i];
         return Object.assign(new ClaimableBalance(), {
           address: token,
-          balance: amount.toString()
+          balance: amount.toString(),
         });
       });
 
@@ -79,8 +79,8 @@ describe('accounts-indexer', () => {
             startBlock: startMockedBlockNumber,
             address: acc,
             claimableBalances,
-            pageId: pageId++
-          })
+            pageId: pageId++,
+          }),
         );
       }
       const put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
@@ -90,7 +90,7 @@ describe('accounts-indexer', () => {
         startBlock: startMockedBlockNumber,
         endBlock: endMockedBlockNumber,
         cycle: MOCK_DISTRIBUTION_FILE.cycle,
-        count: expected.length
+        count: expected.length,
       });
       const batchPut = mockBatchPut(expected);
       await refreshClaimableBalances(chain);

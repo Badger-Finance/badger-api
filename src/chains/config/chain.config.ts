@@ -26,7 +26,7 @@ export abstract class Chain {
     readonly tokens: TokenConfig,
     provider: string | SDKProvider,
     strategy: ChainStrategy,
-    emissionControl?: string
+    emissionControl?: string,
   ) {
     const config = getNetworkConfig(network);
     const { chainId } = config;
@@ -102,20 +102,20 @@ export abstract class Chain {
       return {
         rapid: {
           maxPriorityFeePerGas: defaultPriorityFee,
-          maxFeePerGas: this.sanitizePrice(gasPrice * 2)
+          maxFeePerGas: this.sanitizePrice(gasPrice * 2),
         },
         fast: {
           maxPriorityFeePerGas: defaultPriorityFee,
-          maxFeePerGas: this.sanitizePrice(gasPrice * 1.8)
+          maxFeePerGas: this.sanitizePrice(gasPrice * 1.8),
         },
         standard: {
           maxPriorityFeePerGas: defaultPriorityFee,
-          maxFeePerGas: this.sanitizePrice(gasPrice * 1.6)
+          maxFeePerGas: this.sanitizePrice(gasPrice * 1.6),
         },
         slow: {
           maxPriorityFeePerGas: defaultPriorityFee,
-          maxFeePerGas: this.sanitizePrice(gasPrice * 1.4)
-        }
+          maxFeePerGas: this.sanitizePrice(gasPrice * 1.4),
+        },
       };
     }
     // we don't have a mempool based guess here just define a spread
@@ -123,7 +123,7 @@ export abstract class Chain {
       rapid: this.sanitizePrice(gasPrice * 1.2),
       fast: this.sanitizePrice(gasPrice * 1.1),
       standard: this.sanitizePrice(gasPrice),
-      slow: this.sanitizePrice(gasPrice * 0.9)
+      slow: this.sanitizePrice(gasPrice * 0.9),
     };
   }
 

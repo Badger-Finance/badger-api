@@ -21,7 +21,7 @@ describe('apy-snapshots-indexer', () => {
     harvestable: false,
     minApr: 1,
     maxApr: 1,
-    boostable: false
+    boostable: false,
   });
   const mockInvalidValueSource = Object.assign(new YieldSource(), {
     addressValueSourceType: null,
@@ -32,7 +32,7 @@ describe('apy-snapshots-indexer', () => {
     harvestable: false,
     minApr: null,
     maxApr: null,
-    boostable: false
+    boostable: false,
   });
 
   beforeEach(() => {

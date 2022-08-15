@@ -6,8 +6,8 @@ import { V2_CONTROLLERS, V3_CONTROLLERS } from './controllers';
 const platform = PlatformServerless.bootstrap({
   mount: {
     '/v2': [V2_CONTROLLERS],
-    '/v3': [V3_CONTROLLERS]
-  }
+    '/v3': [V3_CONTROLLERS],
+  },
 });
 
 export const handler = platform.handler();

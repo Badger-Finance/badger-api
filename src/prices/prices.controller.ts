@@ -24,11 +24,11 @@ export class PricesController {
   async listPrices(
     @QueryParams('tokens') tokens?: string,
     @QueryParams('chain') chain?: Network,
-    @QueryParams('currency') currency?: Currency
+    @QueryParams('currency') currency?: Currency,
   ): Promise<PriceSummary> {
     return this.pricesService.getPriceSummary(
       tokens?.split(',') ?? Object.keys(Chain.getChain(chain).tokens),
-      currency
+      currency,
     );
   }
 
@@ -39,12 +39,12 @@ export class PricesController {
   async getPriceSnapshots(
     @QueryParams('tokens') tokens: string,
     @QueryParams('timestamps') timestamps: string,
-    @QueryParams('currency') currency?: Currency
+    @QueryParams('currency') currency?: Currency,
   ): Promise<PriceSnapshots> {
     return this.pricesService.getPriceSnapshots(
       tokens.split(','),
       timestamps.split(',').map((t) => Number(t)),
-      currency
+      currency,
     );
   }
 }

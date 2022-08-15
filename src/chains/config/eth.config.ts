@@ -12,7 +12,7 @@ export class Ethereum extends Chain {
       ethTokensConfig,
       rpc[Network.Ethereum],
       new BaseStrategy(Network.Ethereum),
-      '0x31825c0a6278b89338970e3eb979b05b27faa263'
+      '0x31825c0a6278b89338970e3eb979b05b27faa263',
     );
     Chain.register(this.network, this);
   }

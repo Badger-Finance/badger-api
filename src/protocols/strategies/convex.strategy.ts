@@ -12,7 +12,7 @@ import {
   CurveBaseRegistry__factory,
   CurvePool__factory,
   CurvePool3__factory,
-  CurveRegistry__factory
+  CurveRegistry__factory,
 } from '../../contracts';
 import { TokenPrice } from '../../prices/interface/token-price.interface';
 import { queryPrice } from '../../prices/prices.utils';
@@ -50,7 +50,7 @@ const curvePoolApr: Record<string, string> = {
   [TOKENS.MATIC_CRV_TRICRYPTO]: 'atricrypto',
   [TOKENS.MATIC_CRV_AMWBTC]: 'ren',
   [TOKENS.ARB_CRV_TRICRYPTO]: 'tricrypto',
-  [TOKENS.ARB_CRV_RENBTC]: 'ren'
+  [TOKENS.ARB_CRV_RENBTC]: 'ren',
 };
 
 const nonRegistryPools: ContractRegistry = {
@@ -59,7 +59,7 @@ const nonRegistryPools: ContractRegistry = {
   [TOKENS.CRV_TRICRYPTO2]: '0xD51a44d3FaE010294C616388b506AcdA1bfAAE46',
   [TOKENS.CRV_BADGER]: '0x50f3752289e1456BfA505afd37B241bca23e685d',
   [TOKENS.CTDL]: TOKENS.CRV_CTDL,
-  [TOKENS.CVXFXS]: '0xd658A338613198204DCa1143Ac3F01A722b5d94A'
+  [TOKENS.CVXFXS]: '0xd658A338613198204DCa1143Ac3F01A722b5d94A',
 };
 
 interface FactoryAPYResonse {
@@ -88,7 +88,7 @@ async function getLiquiditySources(chain: Chain, vaultDefinition: VaultDefinitio
   const bveCVXVault = await chain.vaults.getVault(TOKENS.BVECVX);
   const [bveCVXLP, bveCVXSources] = await Promise.all([
     getCachedVault(chain, vaultDefinition),
-    queryYieldSources(bveCVXVault)
+    queryYieldSources(bveCVXVault),
   ]);
   const vaultTokens = await getVaultTokens(chain, bveCVXLP);
   const bveCVXValue = vaultTokens
@@ -136,7 +136,7 @@ export async function getCurvePerformance(chain: Chain, vaultDefinition: VaultDe
     } else {
       const factoryAPY = await request<FactoryAPYResonse>(CURVE_FACTORY_APY, { version });
       const poolDetails = factoryAPY.data.poolDetails.find(
-        (pool) => ethers.utils.getAddress(pool.poolAddress) === vaultDefinition.depositToken
+        (pool) => ethers.utils.getAddress(pool.poolAddress) === vaultDefinition.depositToken,
       );
       if (poolDetails) {
         tradeFeePerformance = poolDetails.apy;
@@ -162,7 +162,7 @@ export async function getCurveTokenPrice(chain: Chain, depositToken: string): Pr
   const price = value / supply;
   return {
     address: deposit.address,
-    price
+    price,
   };
 }
 
@@ -181,7 +181,7 @@ export async function getCurvePoolBalance(chain: Chain, depositToken: string): P
   }
   const poolContracts = [
     CurvePool3__factory.connect(poolAddress, chain.provider),
-    CurvePool__factory.connect(poolAddress, chain.provider)
+    CurvePool__factory.connect(poolAddress, chain.provider),
   ];
   let option = 0;
   let coin = 0;
@@ -210,7 +210,7 @@ export async function getCurvePoolBalance(chain: Chain, depositToken: string): P
 
 export async function getCurveVaultTokenBalance(
   chain: Chain,
-  vaultDefinition: VaultDefinitionModel
+  vaultDefinition: VaultDefinitionModel,
 ): Promise<VaultTokenBalance> {
   const { depositToken, address } = vaultDefinition;
   const cachedTokens = await getCurvePoolBalance(chain, depositToken);
@@ -224,7 +224,7 @@ export async function getCurveVaultTokenBalance(
   });
   return Object.assign(new VaultTokenBalance(), {
     vault: address,
-    tokenBalances: cachedTokens
+    tokenBalances: cachedTokens,
   });
 }
 
@@ -240,7 +240,7 @@ export async function resolveCurvePoolTokenPrice(chain: Chain, token: Token): Pr
   const requestTokenPrice = pairToken.value / requestToken.balance;
   return {
     address: token.address,
-    price: requestTokenPrice
+    price: requestTokenPrice,
   };
 }
 
@@ -269,7 +269,7 @@ export async function resolveCurveStablePoolTokenPrice(chain: Chain, token: Toke
 
     return {
       address: token.address,
-      price: requestTokenPrice
+      price: requestTokenPrice,
     };
   } catch (err) {
     console.error({ err, message: `Unable to price ${token.name}` });
@@ -277,6 +277,6 @@ export async function resolveCurveStablePoolTokenPrice(chain: Chain, token: Toke
 
   return {
     address: token.address,
-    price: 0
+    price: 0,
   };
 }

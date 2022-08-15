@@ -11,8 +11,8 @@ import { AccountsV3Controller } from './accounts.v3.controller';
 describe('accounts.v3.controller', () => {
   beforeEach(
     PlatformServerlessTest.bootstrap(PlatformServerless, {
-      lambda: [AccountsV3Controller]
-    })
+      lambda: [AccountsV3Controller],
+    }),
   );
   afterEach(() => PlatformServerlessTest.reset());
 
@@ -57,7 +57,7 @@ describe('accounts.v3.controller', () => {
           bveCvxBalance: 0,
           diggBalance: 0,
           nativeBalance: 0,
-          nonNativeBalance: 0
+          nonNativeBalance: 0,
         }));
         const { body, statusCode } = await PlatformServerlessTest.request
           .get(`/accounts`)
@@ -84,7 +84,7 @@ describe('accounts.v3.controller', () => {
           bveCvxBalance: 0,
           diggBalance: 0,
           nativeBalance: 3,
-          nonNativeBalance: 5
+          nonNativeBalance: 5,
         }));
         const { body, statusCode } = await PlatformServerlessTest.request
           .get(`/accounts`)

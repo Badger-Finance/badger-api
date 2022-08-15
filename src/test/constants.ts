@@ -8,7 +8,7 @@ import {
   VaultDTO,
   VaultSnapshot,
   VaultState,
-  VaultVersion
+  VaultVersion,
 } from '@badger-dao/sdk';
 import mockTokens from '@badger-dao/sdk-mocks/generated/ethereum/api/loadTokens.json';
 import mockVaultSnapshots from '@badger-dao/sdk-mocks/generated/ethereum/api/loadVaultChart.json';
@@ -29,7 +29,7 @@ export const MOCK_DISTRIBUTION_FILE = {
   cycle: 4034,
   tokenTotal: {
     ['0x3472A5A71965499acd81997a54BBA8D852C6E53d']: 10,
-    ['0x798d1be841a82a273720ce31c822c61a67a601c3']: 3
+    ['0x798d1be841a82a273720ce31c822c61a67a601c3']: 3,
   },
   claims: {
     [TEST_ADDR]: {
@@ -39,9 +39,9 @@ export const MOCK_DISTRIBUTION_FILE = {
       tokens: ['0x3472A5A71965499acd81997a54BBA8D852C6E53d', '0x798d1be841a82a273720ce31c822c61a67a601c3'],
       cumulativeAmounts: ['4', '1'],
       proof: [TEST_ADDR, TEST_ADDR, TEST_ADDR],
-      node: TEST_ADDR
-    }
-  }
+      node: TEST_ADDR,
+    },
+  },
 };
 
 export const MOCK_BOUNCER_FILE = {
@@ -51,9 +51,9 @@ export const MOCK_BOUNCER_FILE = {
     [TEST_ADDR]: {
       index: '0x01',
       amount: 1,
-      proof: [TEST_ADDR, TEST_ADDR, TEST_ADDR]
-    }
-  }
+      proof: [TEST_ADDR, TEST_ADDR, TEST_ADDR],
+    },
+  },
 };
 
 export const MOCK_VAULT_DEFINITION: VaultDefinitionModel = {
@@ -73,7 +73,7 @@ export const MOCK_VAULT_DEFINITION: VaultDefinitionModel = {
   isNew: false,
   version: VaultVersion.v1,
   client: '',
-  depositToken: TEST_TOKEN
+  depositToken: TEST_TOKEN,
 };
 
 export const MOCK_VAULTS: VaultDTO[] = mockVaults as VaultDTO[];

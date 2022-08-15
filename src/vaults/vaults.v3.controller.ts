@@ -28,7 +28,7 @@ export class VaultsV3Controller {
   async getVault(
     @QueryParams('address') address: string,
     @QueryParams('chain') chain?: Network,
-    @QueryParams('currency') currency?: Currency
+    @QueryParams('currency') currency?: Currency,
   ): Promise<VaultModel> {
     if (!address) {
       throw new QueryParamError('vault');
@@ -47,7 +47,7 @@ export class VaultsV3Controller {
   @Returns(400).Description('Not a valid chain')
   async listVaults(
     @QueryParams('chain') chain?: Network,
-    @QueryParams('currency') currency?: Currency
+    @QueryParams('currency') currency?: Currency,
   ): Promise<VaultModel[]> {
     return this.vaultService.listVaults(Chain.getChain(chain), currency);
   }
@@ -60,7 +60,7 @@ export class VaultsV3Controller {
   @Returns(400).Description('Not a valid chain')
   async getVaultsHarvests(
     @QueryParams('vault') vault: string,
-    @QueryParams('chain') chain?: Network
+    @QueryParams('chain') chain?: Network,
   ): Promise<VaultHarvestsExtendedResp[]> {
     if (!vault) {
       throw new QueryParamError('vault');
@@ -87,7 +87,7 @@ export class VaultsV3Controller {
   async getVaultSnapshotsInRange(
     @QueryParams('vault') vault: string,
     @QueryParams('timestamps') timestamps: string,
-    @QueryParams('chain') chain?: Network
+    @QueryParams('chain') chain?: Network,
   ): Promise<VaultSnapshot[]> {
     if (!vault) {
       throw new QueryParamError('vault');

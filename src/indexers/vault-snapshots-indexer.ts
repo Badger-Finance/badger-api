@@ -23,7 +23,7 @@ export async function refreshVaultSnapshots() {
           const historicSnapshot = Object.assign(new HistoricVaultSnapshotModel(), {
             ...snapshot,
             id: getVaultEntityId(chain, vault),
-            timestamp
+            timestamp,
           });
 
           // update whatever time period snapshot lists require the new data
@@ -31,7 +31,7 @@ export async function refreshVaultSnapshots() {
         } catch (err) {
           console.error({ err, vault: vault.name });
         }
-      })
+      }),
     );
   }
 

@@ -8,8 +8,8 @@ import { MetricsService } from './metrics.service';
 describe('MetricsController', () => {
   beforeEach(
     PlatformServerlessTest.bootstrap(PlatformServerless, {
-      lambda: [MetricsController]
-    })
+      lambda: [MetricsController],
+    }),
   );
   afterEach(() => PlatformServerlessTest.reset());
 
@@ -19,8 +19,8 @@ describe('MetricsController', () => {
         Promise.resolve({
           totalUsers: 30_000,
           totalValueLocked: 100_000_000_000,
-          totalVaults: 30
-        })
+          totalVaults: 30,
+        }),
       );
       const { body, statusCode } = await PlatformServerlessTest.request.get('/metrics');
       expect(statusCode).toEqual(NetworkStatus.Success);

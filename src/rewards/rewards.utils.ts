@@ -38,7 +38,7 @@ export async function getClaimableRewards(
   chain: Chain,
   chainUsers: string[],
   distribution: RewardMerkleDistribution,
-  blockNumber: number
+  blockNumber: number,
 ): Promise<[string, [string[], BigNumber[]]][]> {
   const { rewards } = await chain.getSdk();
   const { badgerTree } = rewards;
@@ -51,7 +51,7 @@ export async function getClaimableRewards(
     while (attempt < 3) {
       try {
         const result = await badgerTree.getClaimableFor(user, proof.tokens, proof.cumulativeAmounts, {
-          blockTag: blockNumber
+          blockTag: blockNumber,
         });
         return [user, result];
       } catch (err) {
@@ -96,7 +96,7 @@ export async function getRewardEmission(chain: Chain, vault: VaultDefinitionMode
       getCachedAccount(chain, '0x86cbD0ce0c087b482782c181dA8d191De18C8275'), // tech ops multisig
       getCachedAccount(chain, '0x042B32Ac6b453485e357938bdC38e0340d4b9276'), // treasury ops multisig
       getCachedAccount(chain, '0xD0A7A8B98957b9CD3cFB9c0425AbE44551158e9e'), // treasury vault
-      getCachedAccount(chain, '0xA9ed98B5Fb8428d68664f3C5027c62A10d45826b') // treasury bveCVX voting multisig
+      getCachedAccount(chain, '0xA9ed98B5Fb8428d68664f3C5027c62A10d45826b'), // treasury bveCVX voting multisig
     ]);
     ignoredTVL = blacklistedAccounts
       .map((a) => a.data[vault.address])
@@ -147,7 +147,7 @@ export async function getRewardEmission(chain: Chain, vault: VaultDefinitionMode
 
 export async function getVaultValueSources(
   chain: Chain,
-  vaultDefinition: VaultDefinitionModel
+  vaultDefinition: VaultDefinitionModel,
 ): Promise<YieldSource[]> {
   // manual over ride for removed compounding of vaults - this can be empty
   const NO_COMPOUND_VAULTS = new Set([TOKENS.BREMBADGER, TOKENS.BVECVX, TOKENS.BCVX]);
@@ -170,7 +170,7 @@ export async function getVaultValueSources(
 
 export async function getProtocolValueSources(
   chain: Chain,
-  vaultDefinition: VaultDefinitionModel
+  vaultDefinition: VaultDefinitionModel,
 ): Promise<YieldSource[]> {
   try {
     switch (vaultDefinition.protocol) {

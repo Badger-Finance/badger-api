@@ -14,7 +14,7 @@ export function getDataMapper(): DataMapper {
       region: 'localhost',
       endpoint: 'http://localhost:8000',
       accessKeyId: '',
-      secretAccessKey: ''
+      secretAccessKey: '',
     });
   } else {
     client = new DynamoDB();

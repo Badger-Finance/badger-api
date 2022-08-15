@@ -13,8 +13,8 @@ import { LeaderBoardsService } from './leaderboards.service';
 describe('leaderboards.controller', () => {
   beforeEach(
     PlatformServerlessTest.bootstrap(PlatformServerless, {
-      lambda: [LeaderBoardsController]
-    })
+      lambda: [LeaderBoardsController],
+    }),
   );
   afterEach(() => PlatformServerlessTest.reset());
 
@@ -29,9 +29,9 @@ describe('leaderboards.controller', () => {
           [BadgerType.Neo]: multiplier * 20,
           [BadgerType.Hero]: multiplier * 35,
           [BadgerType.Hyper]: multiplier * 25,
-          [BadgerType.Frenzy]: multiplier * 40
+          [BadgerType.Frenzy]: multiplier * 40,
         },
-        updatedAt: TEST_CURRENT_TIMESTAMP
+        updatedAt: TEST_CURRENT_TIMESTAMP,
       };
     });
   });

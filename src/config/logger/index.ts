@@ -7,19 +7,19 @@ if (isProduction) {
     type: 'stdout',
     levels: ['info', 'debug'],
     layout: {
-      type: 'json'
-    }
+      type: 'json',
+    },
   });
 
   $log.appenders.set('stderr', {
     levels: ['trace', 'fatal', 'error', 'warn'],
     type: 'stderr',
     layout: {
-      type: 'json'
-    }
+      type: 'json',
+    },
   });
 }
 
 export default <PlatformLoggerSettings>{
-  disableRoutesSummary: isProduction
+  disableRoutesSummary: isProduction,
 };

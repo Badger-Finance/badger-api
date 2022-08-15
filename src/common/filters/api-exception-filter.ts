@@ -11,7 +11,7 @@ export class ApiExceptionFilter implements ExceptionFilterMethods {
 
     response.status(status).body({
       message,
-      code
+      code,
     });
   }
 }

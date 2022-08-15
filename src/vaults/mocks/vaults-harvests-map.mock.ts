@@ -12,7 +12,7 @@ export const vaultsHarvestsMapMock: Record<string, VaultHarvestsExtendedResp[]> 
       token: '0x075b1bb99792c9e1041ba13afef80c91a1e70fb3',
       eventType: HarvestType.Harvest,
       strategyBalance: 2481.941296192305,
-      estimatedApr: 30
+      estimatedApr: 30,
     },
     {
       timestamp: 1636878824,
@@ -21,8 +21,8 @@ export const vaultsHarvestsMapMock: Record<string, VaultHarvestsExtendedResp[]> 
       amount: 84.17266705379542,
       eventType: HarvestType.TreeDistribution,
       strategyBalance: 2481.941296192305,
-      estimatedApr: 5
-    }
+      estimatedApr: 5,
+    },
   ],
   [TEST_ADDR]: [
     {
@@ -32,7 +32,7 @@ export const vaultsHarvestsMapMock: Record<string, VaultHarvestsExtendedResp[]> 
       token: '0x64eda51d3ad40d56b9dfc5554e06f94e1dd786fd',
       eventType: HarvestType.Harvest,
       strategyBalance: 675.7270352627328,
-      estimatedApr: 0
+      estimatedApr: 0,
     },
     {
       timestamp: 1636848055,
@@ -41,7 +41,7 @@ export const vaultsHarvestsMapMock: Record<string, VaultHarvestsExtendedResp[]> 
       amount: 519.4928843851667,
       eventType: HarvestType.TreeDistribution,
       strategyBalance: 675.7270352627328,
-      estimatedApr: 0
+      estimatedApr: 0,
     },
     {
       timestamp: 1636848055,
@@ -50,7 +50,7 @@ export const vaultsHarvestsMapMock: Record<string, VaultHarvestsExtendedResp[]> 
       amount: 127.77060811430661,
       eventType: HarvestType.TreeDistribution,
       strategyBalance: 675.7270352627328,
-      estimatedApr: 0
+      estimatedApr: 0,
     },
     {
       timestamp: 1637345136,
@@ -59,7 +59,7 @@ export const vaultsHarvestsMapMock: Record<string, VaultHarvestsExtendedResp[]> 
       token: '0x64eda51d3ad40d56b9dfc5554e06f94e1dd786fd',
       eventType: HarvestType.Harvest,
       strategyBalance: 671.2872269577839,
-      estimatedApr: 0
-    }
-  ]
+      estimatedApr: 0,
+    },
+  ],
 };

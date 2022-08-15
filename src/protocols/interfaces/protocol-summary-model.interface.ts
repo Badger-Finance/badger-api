@@ -14,7 +14,7 @@ export class ProtocolSummaryModel implements ProtocolSummary {
   @Description('Minimal summaries of setts on requested chain')
   @Example([
     { name: 'Badger', balance: 10, value: 60 },
-    { name: 'Digg', balance: 12.32, value: 91345 }
+    { name: 'Digg', balance: 12.32, value: 91345 },
   ])
   @Property()
   public setts?: VaultSummary[];

@@ -17,7 +17,7 @@ export function setupMockAccounts() {
     startBlock: 100,
     claimableBalances: [],
     expiresAt: Date.now(),
-    pageId: 0
+    pageId: 0,
   }));
   jest.spyOn(accountsUtils, 'getLatestMetadata').mockImplementation(async (chain) => ({
     startBlock: 10,
@@ -25,15 +25,15 @@ export function setupMockAccounts() {
     chainStartBlock: getChainStartBlockKey(Network.Ethereum, 10),
     chain: chain.network,
     cycle: 10,
-    count: 0
+    count: 0,
   }));
 }
 
 describe('accounts.v2.controller', () => {
   beforeEach(
     PlatformServerlessTest.bootstrap(PlatformServerless, {
-      lambda: [AccountsV2Controller]
-    })
+      lambda: [AccountsV2Controller],
+    }),
   );
   afterEach(() => PlatformServerlessTest.reset());
 
@@ -74,7 +74,7 @@ describe('accounts.v2.controller', () => {
           bveCvxBalance: 0,
           diggBalance: 0,
           nativeBalance: 0,
-          nonNativeBalance: 0
+          nonNativeBalance: 0,
         }));
         const { body, statusCode } = await PlatformServerlessTest.request.get('/accounts/' + TEST_ADDR);
         expect(statusCode).toEqual(NetworkStatus.Success);
@@ -99,7 +99,7 @@ describe('accounts.v2.controller', () => {
           bveCvxBalance: 0,
           diggBalance: 0,
           nativeBalance: 3,
-          nonNativeBalance: 5
+          nonNativeBalance: 5,
         }));
         const { body, statusCode } = await PlatformServerlessTest.request.get('/accounts/' + TEST_ADDR);
         expect(statusCode).toEqual(NetworkStatus.Success);

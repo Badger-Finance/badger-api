@@ -14,8 +14,8 @@ import { ProofsV2Controller } from './proofs.v2.controller';
 describe('ProofsController', () => {
   beforeEach(
     PlatformServerlessTest.bootstrap(PlatformServerless, {
-      lambda: [ProofsV2Controller]
-    })
+      lambda: [ProofsV2Controller],
+    }),
   );
   afterEach(() => PlatformServerlessTest.reset());
 

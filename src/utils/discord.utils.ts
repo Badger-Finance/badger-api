@@ -15,20 +15,20 @@ export function sendErrorToDiscord(e: Error, errorMsg: string, errorType: string
       {
         name: 'Error Name',
         value: e.name,
-        inline: true
+        inline: true,
       },
       {
         name: 'Error Description',
         value: e.message,
-        inline: true
+        inline: true,
       },
       {
         name: 'Error Stack',
         value: e.stack?.toString() ?? '',
-        inline: false
-      }
+        inline: false,
+      },
     ],
-    'Error Bot'
+    'Error Bot',
   );
 }
 
@@ -37,7 +37,7 @@ export async function sendMessageToDiscord(
   description: string,
   fields: { name: string; value: string; inline: boolean }[],
   username: string,
-  url: string = DISCORD_WEBHOOK_URL
+  url: string = DISCORD_WEBHOOK_URL,
 ) {
   try {
     await axios.post(url, {
@@ -45,10 +45,10 @@ export async function sendMessageToDiscord(
         {
           title,
           description: `${description} <@&${VAULT_MANAGER_ROLE_ID}>`,
-          fields
-        }
+          fields,
+        },
       ],
-      username
+      username,
     });
   } catch (error) {
     console.error(error);

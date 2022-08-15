@@ -21,7 +21,7 @@ export class RewardV2Controller {
   @ContentType('json')
   async getBouncerProof(
     @PathParams('address') address: string,
-    @QueryParams('chain') chain?: Network
+    @QueryParams('chain') chain?: Network,
   ): Promise<AirdropMerkleClaim> {
     return this.rewardsService.getBouncerProof(Chain.getChain(chain), address);
   }
@@ -34,7 +34,7 @@ export class RewardV2Controller {
   @Returns(404).Description('User has no rewards proof available')
   async getBadgerTreeReward(
     @PathParams('address') address: string,
-    @QueryParams('chain') chain?: Network
+    @QueryParams('chain') chain?: Network,
   ): Promise<RewardMerkleClaimModel> {
     return this.rewardsService.getUserRewards(Chain.getChain(chain), address);
   }
@@ -47,7 +47,7 @@ export class RewardV2Controller {
   @Returns(200, RewardSchedulesByVaultsModel)
   async getRewardSchedulesVaultsList(
     @QueryParams('chain') chain?: Network,
-    @QueryParams('active') active?: boolean
+    @QueryParams('active') active?: boolean,
   ): Promise<RewardSchedulesByVaults> {
     return this.rewardsService.rewardSchedulesVaultsList(Chain.getChain(chain), Boolean(active));
   }
@@ -62,7 +62,7 @@ export class RewardV2Controller {
   async getRewardListSchedulesForVault(
     @PathParams('address') address: string,
     @QueryParams('chain') chain?: Network,
-    @QueryParams('active') active?: boolean
+    @QueryParams('active') active?: boolean,
   ): Promise<EmissionSchedule[]> {
     return this.rewardsService.rewardSchedulesByVault(Chain.getChain(chain), address, Boolean(active));
   }

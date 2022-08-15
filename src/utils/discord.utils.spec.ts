@@ -4,7 +4,7 @@ import {
   sendCodeBlockToDiscord,
   sendErrorToDiscord,
   sendPlainTextToDiscord,
-  VAULT_MANAGER_ROLE_ID
+  VAULT_MANAGER_ROLE_ID,
 } from './discord.utils';
 
 jest.mock('axios');
@@ -26,7 +26,7 @@ describe('discord.utils', () => {
     sendPlainTextToDiscord('INCORRECT REWARDS DISTRIBTION', 'Rewards Bot');
     expect(mockedAxios.post).toHaveBeenCalledWith('Missing value', {
       content: `INCORRECT REWARDS DISTRIBTION <@&${VAULT_MANAGER_ROLE_ID}>`,
-      username: 'Rewards Bot'
+      username: 'Rewards Bot',
     });
   });
 
@@ -34,7 +34,7 @@ describe('discord.utils', () => {
     sendCodeBlockToDiscord('INCORRECT REWARDS DISTRIBTION', 'Rewards Bot');
     expect(mockedAxios.post).toHaveBeenCalledWith('Missing value', {
       content: '```\n' + 'INCORRECT REWARDS DISTRIBTION' + '\n```' + ' <@&' + VAULT_MANAGER_ROLE_ID + '>',
-      username: 'Rewards Bot'
+      username: 'Rewards Bot',
     });
   });
 });

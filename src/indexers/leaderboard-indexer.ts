@@ -18,13 +18,13 @@ export const indexBoostLeaderBoard = async () => {
         [BadgerType.Neo]: 0,
         [BadgerType.Hero]: 0,
         [BadgerType.Hyper]: 0,
-        [BadgerType.Frenzy]: 0
+        [BadgerType.Frenzy]: 0,
       };
       const mapper = getDataMapper();
       chainResults.forEach((result) => summary[getBadgerType(result.boost)]++);
       const rankSummaries = Object.entries(summary).map((e) => ({
         badgerType: e[0],
-        amount: e[1]
+        amount: e[1],
       }));
 
       const chainEntries = [];
@@ -42,10 +42,10 @@ export const indexBoostLeaderBoard = async () => {
       await mapper.put(
         Object.assign(new CachedLeaderboardSummary(), {
           leaderboard: getLeaderboardKey(chain.network),
-          rankSummaries
-        })
+          rankSummaries,
+        }),
       );
-    })
+    }),
   );
   return 'done';
 };
@@ -82,7 +82,7 @@ async function generateChainBoostsLeaderBoard(chain: Chain): Promise<CachedBoost
           diggBalance,
           nativeBalance,
           nonNativeBalance,
-          updatedAt: Date.now()
+          updatedAt: Date.now(),
         };
         return Object.assign(new CachedBoost(), cachedBoost);
       });

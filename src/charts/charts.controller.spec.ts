@@ -10,8 +10,8 @@ import { ChartsController } from './charts.controller';
 describe('charts.controller', () => {
   beforeEach(
     PlatformServerlessTest.bootstrap(PlatformServerless, {
-      lambda: [ChartsController]
-    })
+      lambda: [ChartsController],
+    }),
   );
   afterEach(() => PlatformServerlessTest.reset());
 

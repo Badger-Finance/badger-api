@@ -9,8 +9,8 @@ import { PricesController } from './prices.controller';
 describe('PricesController', () => {
   beforeEach(
     PlatformServerlessTest.bootstrap(PlatformServerless, {
-      lambda: [PricesController]
-    })
+      lambda: [PricesController],
+    }),
   );
   afterEach(() => PlatformServerlessTest.reset());
 

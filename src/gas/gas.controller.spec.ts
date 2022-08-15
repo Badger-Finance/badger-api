@@ -7,8 +7,8 @@ import { GasController } from './gas.controller';
 describe('gas.controller', () => {
   beforeEach(
     PlatformServerlessTest.bootstrap(PlatformServerless, {
-      lambda: [GasController]
-    })
+      lambda: [GasController],
+    }),
   );
   afterEach(() => PlatformServerlessTest.reset());
 

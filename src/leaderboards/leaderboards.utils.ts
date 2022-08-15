@@ -9,9 +9,9 @@ export async function queryLeaderboardSummary(chain: Chain): Promise<CachedLeade
   for await (const entry of mapper.query(
     CachedLeaderboardSummary,
     {
-      leaderboard: getLeaderboardKey(chain.network)
+      leaderboard: getLeaderboardKey(chain.network),
     },
-    { limit: 1 }
+    { limit: 1 },
   )) {
     return entry;
   }
@@ -20,25 +20,25 @@ export async function queryLeaderboardSummary(chain: Chain): Promise<CachedLeade
     rankSummaries: [
       {
         badgerType: BadgerType.Basic,
-        amount: 0
+        amount: 0,
       },
       {
         badgerType: BadgerType.Neo,
-        amount: 0
+        amount: 0,
       },
       {
         badgerType: BadgerType.Hero,
-        amount: 0
+        amount: 0,
       },
       {
         badgerType: BadgerType.Hyper,
-        amount: 0
+        amount: 0,
       },
       {
         badgerType: BadgerType.Frenzy,
-        amount: 0
-      }
+        amount: 0,
+      },
     ],
-    updatedAt: Date.now()
+    updatedAt: Date.now(),
   };
 }

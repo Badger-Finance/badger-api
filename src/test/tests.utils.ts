@@ -54,7 +54,7 @@ export function defaultAccount(address: string): CachedAccount {
   return {
     address,
     balances: [],
-    updatedAt: 0
+    updatedAt: 0,
   };
 }
 
@@ -85,13 +85,13 @@ export function randomSnapshot(vaultDefinition?: VaultDefinitionModel): VaultSna
       withdrawFee: 0,
       performanceFee: 0,
       strategistFee: 0,
-      aumFee: 0
+      aumFee: 0,
     },
     boostWeight: 5100,
     available,
     apr: 8.323,
     yieldApr: 8.4,
-    harvestApr: 8.37
+    harvestApr: 8.37,
   };
 }
 
@@ -117,12 +117,12 @@ export function randomSnapshots(vaultDefinition?: VaultDefinitionModel, count?: 
         withdrawFee: 50,
         performanceFee: 20,
         strategistFee: 0,
-        aumFee: 0
+        aumFee: 0,
       },
       boostWeight: 5100,
       apr: 13.254,
       yieldApr: 8.4,
-      harvestApr: 8.37
+      harvestApr: 8.37,
     });
   }
   return snapshots;
@@ -142,7 +142,7 @@ export function randomCachedBoosts(count: number): CachedBoost[] {
       nonNativeBalance: 250000 / (i + 1),
       bveCvxBalance: 120 * (i + 1),
       diggBalance: 1.3 * (i + 1),
-      updatedAt: 1000
+      updatedAt: 1000,
     };
     boosts.push(Object.assign(new CachedBoost(), boost));
   }
@@ -154,7 +154,7 @@ export async function mockBadgerSdk(
   {
     addr = TEST_ADDR,
     network = Network.Ethereum,
-    currBlock = TEST_CURRENT_BLOCK
+    currBlock = TEST_CURRENT_BLOCK,
   }: {
     // type description
     addr?: string;
@@ -164,8 +164,8 @@ export async function mockBadgerSdk(
     // in case u want to skip all params
     addr: TEST_ADDR,
     network: Network.Ethereum,
-    currBlock: TEST_CURRENT_BLOCK
-  }
+    currBlock: TEST_CURRENT_BLOCK,
+  },
 ): Promise<BadgerSDK> {
   const mockSigner = mock<JsonRpcSigner>();
   mockSigner.getAddress.calledWith().mockImplementation(async () => addr);
@@ -179,7 +179,7 @@ export async function mockBadgerSdk(
 
   return new BadgerSDK({
     network: network,
-    provider: mockProvider
+    provider: mockProvider,
   });
 }
 

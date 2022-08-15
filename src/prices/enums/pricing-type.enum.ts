@@ -6,5 +6,5 @@ export enum PricingType {
   OnChainUniV2LP = 'OnChainUniV2LP',
   LookupName = 'LookupName',
   UniV2LP = 'UniV2LP',
-  Vault = 'Vault'
+  Vault = 'Vault',
 }

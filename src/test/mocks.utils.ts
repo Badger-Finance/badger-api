@@ -9,7 +9,7 @@ import BadgerSDK, {
   RewardsService,
   Token,
   TokensService,
-  TokenValue
+  TokenValue,
 } from '@badger-dao/sdk';
 import rewardsLoadSchedulesMock from '@badger-dao/sdk-mocks/generated/ethereum/rewards/loadSchedules.json';
 import { JsonRpcProvider, JsonRpcSigner } from '@ethersproject/providers';
@@ -33,15 +33,15 @@ import {
   TEST_ADDR,
   TEST_CURRENT_BLOCK,
   TEST_CURRENT_TIMESTAMP,
-  TEST_TOKEN
+  TEST_TOKEN,
 } from './constants';
 import { MockOptions } from './interfaces/mock-options.interface';
 
 export function setupMockChain(
   { network, pricing }: MockOptions = {
     network: Network.Ethereum,
-    pricing: true
-  }
+    pricing: true,
+  },
 ) {
   // setup chain vaults
   jest.spyOn(ChainVaults.prototype, 'getVault').mockImplementation(async (_) => MOCK_VAULT_DEFINITION);
@@ -69,19 +69,19 @@ export function setupMockChain(
     [TEST_TOKEN]: baseSchedules,
     [TEST_ADDR]: baseSchedules.map((rw) => ({
       ...rw,
-      beneficiary: TEST_ADDR
-    }))
+      beneficiary: TEST_ADDR,
+    })),
   };
 
   const activeSchedulesMockMap = {
     [TEST_TOKEN]: schedulesMockMap[TEST_TOKEN].map((rw) => ({
       ...rw,
-      compPercent: 50
+      compPercent: 50,
     })),
     [TEST_ADDR]: schedulesMockMap[TEST_ADDR].map((rw) => ({
       ...rw,
-      compPercent: 70
-    }))
+      compPercent: 70,
+    })),
   };
 
   jest.spyOn(RewardsService.prototype, 'loadSchedules').mockImplementation(async (_b) => {
@@ -93,7 +93,7 @@ export function setupMockChain(
   jest
     .spyOn(TokensService.prototype, 'loadTokens')
     .mockImplementation(async (tokens) =>
-      Object.fromEntries(Object.entries(MOCK_TOKENS).filter((e) => tokens.includes(e[0])))
+      Object.fromEntries(Object.entries(MOCK_TOKENS).filter((e) => tokens.includes(e[0]))),
     );
   jest.spyOn(TokensService.prototype, 'loadToken').mockImplementation(async (token) => MOCK_TOKENS[token]);
   const chainTokensList = Object.values(MOCK_TOKENS);
@@ -116,10 +116,10 @@ export function setupMockChain(
         id: getVaultEntityId({ network: Network.Ethereum }, MOCK_VAULT_SNAPSHOT),
         timestamp: TEST_CURRENT_TIMESTAMP,
         chain: Network.Ethereum,
-        ratio: snapshot.pricePerFullShare
+        ratio: snapshot.pricePerFullShare,
       });
       return historicSnapshot;
-    })
+    }),
   );
 
   const chain = new TestEthereum(mockProvider, network);
@@ -153,7 +153,7 @@ export function mockBalance(token: Token, balance: number, currency?: Currency):
     symbol: token.symbol,
     decimals: token.decimals,
     balance: balance,
-    value: balance * price
+    value: balance * price,
   };
 }
 

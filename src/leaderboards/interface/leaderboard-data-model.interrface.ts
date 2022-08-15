@@ -13,8 +13,8 @@ export class LeaderBoardDataModel implements LeaderBoardData {
       stakeRatio: 100,
       nftMultiplier: 3,
       nativeBalance: 300234.23,
-      nonNativeBalance: 3245.12
-    }
+      nonNativeBalance: 3245.12,
+    },
   ])
   @Property()
   public data: UserBoostData[];

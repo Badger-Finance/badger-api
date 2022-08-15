@@ -52,8 +52,8 @@ export function setupTestVault() {
       previousYieldTokens: [mockBalance(fullTokenMockMap[TOKENS.CVX], 10)],
       previousHarvestTokens: [mockBalance(fullTokenMockMap[TOKENS.CVX], 10)],
       duration: 60000,
-      lastReportedAt: 0
-    })
+      lastReportedAt: 0,
+    }),
   );
   jest
     .spyOn(vaultsUtils, 'getCachedVault')
@@ -88,8 +88,8 @@ export function setupTestVault() {
 describe('vaults.v2.controller', () => {
   beforeEach(
     PlatformServerlessTest.bootstrap(PlatformServerless, {
-      lambda: [VaultsV2Controller]
-    })
+      lambda: [VaultsV2Controller],
+    }),
   );
   afterEach(() => PlatformServerlessTest.reset());
 
@@ -173,7 +173,7 @@ describe('vaults.v2.controller', () => {
           throw new BadRequest(`invalid is not a supported chain`);
         });
         const { body, statusCode } = await PlatformServerlessTest.request.get(
-          `/vaults/harvests/${TEST_ADDR}?chain=invalid`
+          `/vaults/harvests/${TEST_ADDR}?chain=invalid`,
         );
         expect(statusCode).toEqual(BadRequest.STATUS);
         expect(JSON.parse(body)).toMatchSnapshot();

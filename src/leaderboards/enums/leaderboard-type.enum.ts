@@ -1,3 +1,3 @@
 export enum LeaderBoardType {
-  BadgerBoost = 'boost'
+  BadgerBoost = 'boost',
 }

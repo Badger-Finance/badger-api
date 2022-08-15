@@ -11,14 +11,14 @@ export const fullTokenMockMap: TokenFullMap = {
     name: 'Badger',
     symbol: 'BADGER',
     lookupName: 'badger-dao',
-    type: PricingType.LookupName
+    type: PricingType.LookupName,
   },
   [TOKENS.DIGG]: {
     address: TOKENS.DIGG,
     decimals: 9,
     name: 'Digg',
     symbol: 'DIGG',
-    type: PricingType.Contract
+    type: PricingType.Contract,
   },
   [TOKENS.WBTC]: {
     address: TOKENS.WBTC,
@@ -26,14 +26,14 @@ export const fullTokenMockMap: TokenFullMap = {
     lookupName: 'wrapped-bitcoin',
     name: 'Wrapped Bitcoin',
     symbol: 'WBTC',
-    type: PricingType.LookupName
+    type: PricingType.LookupName,
   },
   [TOKENS.WETH]: {
     address: TOKENS.WETH,
     decimals: 18,
     name: 'Wrapped Ethereum',
     symbol: 'WETH',
-    type: PricingType.Contract
+    type: PricingType.Contract,
   },
   [TOKENS.BBADGER]: {
     address: TOKENS.BBADGER,
@@ -43,8 +43,8 @@ export const fullTokenMockMap: TokenFullMap = {
     type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.BADGER,
-      network: Network.Ethereum
-    }
+      network: Network.Ethereum,
+    },
   },
   [TOKENS.BDIGG]: {
     address: TOKENS.BDIGG,
@@ -54,15 +54,15 @@ export const fullTokenMockMap: TokenFullMap = {
     type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.DIGG,
-      network: Network.Ethereum
-    }
+      network: Network.Ethereum,
+    },
   },
   [TOKENS.CVX]: {
     address: TOKENS.CVX,
     decimals: 18,
     name: 'Convex Token',
     symbol: 'CVX',
-    type: PricingType.Contract
+    type: PricingType.Contract,
   },
   [TOKENS.BCVXCRV]: {
     address: TOKENS.BCVXCRV,
@@ -72,8 +72,8 @@ export const fullTokenMockMap: TokenFullMap = {
     type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.CVXCRV,
-      network: Network.Ethereum
-    }
+      network: Network.Ethereum,
+    },
   },
   [TOKENS.BVECVX]: {
     address: TOKENS.BVECVX,
@@ -83,7 +83,7 @@ export const fullTokenMockMap: TokenFullMap = {
     type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.CVX,
-      network: Network.Ethereum
-    }
-  }
+      network: Network.Ethereum,
+    },
+  },
 };

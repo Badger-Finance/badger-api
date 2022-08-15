@@ -34,7 +34,7 @@ export class RewardMerkleClaimModel implements RewardMerkleClaim {
   @Example([
     ethers.constants.WeiPerEther.mul(2).toString(),
     ethers.constants.WeiPerEther.mul(12887527662).toString(),
-    ethers.constants.WeiPerEther.mul(6).div(1000).toString()
+    ethers.constants.WeiPerEther.mul(6).div(1000).toString(),
   ])
   @Property()
   public cumulativeAmounts: string[];
@@ -46,7 +46,7 @@ export class RewardMerkleClaimModel implements RewardMerkleClaim {
     '0xcd678491cc646856ce19ab692f9070861332e300',
     '0xcd678491cc646856ce19ab692f9070861332e300',
     '0xcd678491cc646856ce19ab692f9070861332e300',
-    '0xcd678491cc646856ce19ab692f9070861332e300'
+    '0xcd678491cc646856ce19ab692f9070861332e300',
   ])
   @Property()
   public proof: string[];

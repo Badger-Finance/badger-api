@@ -24,7 +24,7 @@ describe('rewards.service', () => {
     it('throws a bad request on chains with no rewards', async () => {
       const chain = setupMockChain({ network: Network.Arbitrum });
       await expect(service.getUserRewards(chain, TEST_ADDR)).rejects.toThrow(
-        `${chain.network} is not supportable for request`
+        `${chain.network} is not supportable for request`,
       );
     });
   });
@@ -39,7 +39,7 @@ describe('rewards.service', () => {
           chainStartBlock: dynamodbUtils.getChainStartBlockKey(chain.network, previousMockedBlockNumber),
           chain: chain.network,
           startBlock: previousMockedBlockNumber,
-          endBlock: startMockedBlockNumber - 1
+          endBlock: startMockedBlockNumber - 1,
         });
       });
       const entries: UserClaimSnapshot[] = [
@@ -50,8 +50,8 @@ describe('rewards.service', () => {
           claimableBalances: [],
           expiresAt: 0,
           pageId: 0,
-          startBlock: 0
-        }
+          startBlock: 0,
+        },
       ];
       mockQuery(entries);
 

@@ -27,14 +27,14 @@ export class RewardsV2Controller {
   async list(
     @QueryParams('chain_id') chainId?: string,
     @QueryParams('page_num') pageNum?: number,
-    @QueryParams('page_count') pageCount?: number
+    @QueryParams('page_count') pageCount?: number,
   ): Promise<ListRewardsResponse> {
     const chain = Chain.getChainById(chainId);
     const { count, records } = await this.rewardsService.list({ chain, pageNum, pageCount });
     return {
       total_count: count,
       total_page_num: Math.ceil(count / (pageCount || DEFAULT_PAGE_SIZE)),
-      users: await Promise.all(records.map((record) => this.userClaimedSnapshotToDebankUser(chain, record)))
+      users: await Promise.all(records.map((record) => this.userClaimedSnapshotToDebankUser(chain, record))),
     };
   }
 
@@ -51,7 +51,7 @@ export class RewardsV2Controller {
     }
     return {
       user_addr: snapshot.address,
-      rewards
+      rewards,
     };
   }
 }

@@ -13,7 +13,7 @@ async function updatePrices() {
         prices.push({
           address: token,
           price,
-          updatedAt: Date.now()
+          updatedAt: Date.now(),
         });
       });
     } catch {}

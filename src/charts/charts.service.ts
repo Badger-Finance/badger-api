@@ -11,7 +11,7 @@ export class ChartsService {
   async loadVaultChartData(
     address: string,
     timeframe: ChartTimeFrame,
-    chain: Chain
+    chain: Chain,
   ): Promise<HistoricVaultSnapshotModel[]> {
     // validate vault request is correct and valid
     const requestedVault = await chain.vaults.getVault(address);

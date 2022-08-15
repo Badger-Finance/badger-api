@@ -29,14 +29,14 @@ export const historicVaultSnapshotsMock: HistoricVaultSnapshotsMock[] = [
           address: '0x7A56d65254705B4Def63c68488C0182968C452ce',
           withdrawFee: 10,
           aumFee: 0,
-          performanceFee: 2000
+          performanceFee: 2000,
         },
         value: 6184484.91,
-        timestamp: 1657562103195
-      }
+        timestamp: 1657562103195,
+      },
     ],
     timeframe: '3m',
-    id: 'vault_0x758A43EE2BFf8230eeb784879CdcFF4828F2544D_ethereum_3m'
+    id: 'vault_0x758A43EE2BFf8230eeb784879CdcFF4828F2544D_ethereum_3m',
   },
   {
     data: [
@@ -58,14 +58,14 @@ export const historicVaultSnapshotsMock: HistoricVaultSnapshotsMock[] = [
           address: '0x05eC4356e1acd89CC2d16adC7415c8c95E736AC1',
           withdrawFee: 0,
           aumFee: 0,
-          performanceFee: 1000
+          performanceFee: 1000,
         },
         value: 133.03,
-        timestamp: 1657562103195
-      }
+        timestamp: 1657562103195,
+      },
     ],
     timeframe: 'YTD',
-    id: 'vault_ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_YTD'
+    id: 'vault_ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_YTD',
   },
   {
     data: [
@@ -87,14 +87,14 @@ export const historicVaultSnapshotsMock: HistoricVaultSnapshotsMock[] = [
           address: '0x86f772C82914f5bFD168f99e208d0FC2C371e9C2',
           withdrawFee: 10,
           aumFee: 0,
-          performanceFee: 2000
+          performanceFee: 2000,
         },
         value: 6341.35,
-        timestamp: 1657562103196
-      }
+        timestamp: 1657562103196,
+      },
     ],
     timeframe: '3m',
-    id: 'vault_0xe774D1FB3133b037AA17D39165b8F45f444f632d_arbitrum_3m'
+    id: 'vault_0xe774D1FB3133b037AA17D39165b8F45f444f632d_arbitrum_3m',
   },
   {
     data: [
@@ -116,14 +116,14 @@ export const historicVaultSnapshotsMock: HistoricVaultSnapshotsMock[] = [
           address: '0xBCee2c6CfA7A4e29892c3665f464Be5536F16D95',
           withdrawFee: 10,
           aumFee: 0,
-          performanceFee: 1000
+          performanceFee: 1000,
         },
         value: 142170.05,
-        timestamp: 1657562103195
-      }
+        timestamp: 1657562103195,
+      },
     ],
     timeframe: '3m',
-    id: 'vault_0x53C8E199eb2Cb7c01543C137078a038937a68E40_ethereum_3m'
+    id: 'vault_0x53C8E199eb2Cb7c01543C137078a038937a68E40_ethereum_3m',
   },
   {
     data: [
@@ -145,14 +145,14 @@ export const historicVaultSnapshotsMock: HistoricVaultSnapshotsMock[] = [
           address: '0x4a8651F2edD68850B944AD93f2c67af817F39F62',
           withdrawFee: 0,
           aumFee: 0,
-          performanceFee: 0
+          performanceFee: 0,
         },
         value: 380283.76,
-        timestamp: 1657562103195
-      }
+        timestamp: 1657562103195,
+      },
     ],
     timeframe: 'max',
-    id: 'vault_0x7e7E112A68d8D2E221E11047a72fFC1065c38e1a_ethereum_max'
+    id: 'vault_0x7e7E112A68d8D2E221E11047a72fFC1065c38e1a_ethereum_max',
   },
   {
     data: [
@@ -174,14 +174,14 @@ export const historicVaultSnapshotsMock: HistoricVaultSnapshotsMock[] = [
           address: '0x05eC4356e1acd89CC2d16adC7415c8c95E736AC1',
           withdrawFee: 0,
           aumFee: 0,
-          performanceFee: 1000
+          performanceFee: 1000,
         },
         value: 133.03,
-        timestamp: 1657562103195
-      }
+        timestamp: 1657562103195,
+      },
     ],
     timeframe: '1y',
-    id: 'vault_ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_1y'
+    id: 'vault_ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28_1y',
   },
   {
     data: [
@@ -203,14 +203,14 @@ export const historicVaultSnapshotsMock: HistoricVaultSnapshotsMock[] = [
           address: '0x0000000000000000000000000000000000000000',
           withdrawFee: 0,
           aumFee: 0,
-          performanceFee: 0
+          performanceFee: 0,
         },
         value: 2700316.77,
-        timestamp: 1657562103195
-      }
+        timestamp: 1657562103195,
+      },
     ],
     timeframe: '24h',
-    id: 'vault_0x4b92d19c11435614CD49Af1b589001b7c08cD4D5_ethereum_24h'
+    id: 'vault_0x4b92d19c11435614CD49Af1b589001b7c08cD4D5_ethereum_24h',
   },
   {
     data: [
@@ -232,14 +232,14 @@ export const historicVaultSnapshotsMock: HistoricVaultSnapshotsMock[] = [
           address: '0x22F340C2604Dc1cDBe26caC5838Ea9EBC8862a46',
           withdrawFee: 10,
           aumFee: 0,
-          performanceFee: 2000
+          performanceFee: 2000,
         },
         value: 257017.32,
-        timestamp: 1657562103196
-      }
+        timestamp: 1657562103196,
+      },
     ],
     timeframe: '24h',
-    id: 'vault_0xE9C12F06F8AFFD8719263FE4a81671453220389c_arbitrum_24h'
+    id: 'vault_0xE9C12F06F8AFFD8719263FE4a81671453220389c_arbitrum_24h',
   },
   {
     data: [
@@ -261,14 +261,14 @@ export const historicVaultSnapshotsMock: HistoricVaultSnapshotsMock[] = [
           address: '0x8c26D9B6B80684CC642ED9eb1Ac1729Af3E819eE',
           withdrawFee: 10,
           aumFee: 0,
-          performanceFee: 2000
+          performanceFee: 2000,
         },
         value: 5301.4,
-        timestamp: 1657562103195
-      }
+        timestamp: 1657562103195,
+      },
     ],
     timeframe: '24h',
-    id: 'vault_0x8c76970747afd5398e958bDfadA4cf0B9FcA16c4_ethereum_24h'
+    id: 'vault_0x8c76970747afd5398e958bDfadA4cf0B9FcA16c4_ethereum_24h',
   },
   {
     data: [
@@ -290,14 +290,14 @@ export const historicVaultSnapshotsMock: HistoricVaultSnapshotsMock[] = [
           address: '0x1905FD2D2D09792eE058C2b46a05F11630a1EcA1',
           withdrawFee: 10,
           aumFee: 0,
-          performanceFee: 2000
+          performanceFee: 2000,
         },
         value: 2720779.53,
-        timestamp: 1657562103195
-      }
+        timestamp: 1657562103195,
+      },
     ],
     timeframe: 'YTD',
-    id: 'vault_0xeC1c717A3b02582A4Aa2275260C583095536b613_ethereum_YTD'
+    id: 'vault_0xeC1c717A3b02582A4Aa2275260C583095536b613_ethereum_YTD',
   },
   {
     data: [
@@ -319,14 +319,14 @@ export const historicVaultSnapshotsMock: HistoricVaultSnapshotsMock[] = [
           address: '0x4C5d19Da5EaeC298B79879a5f7481bEDE055F4F8',
           withdrawFee: 10,
           aumFee: 0,
-          performanceFee: 2000
+          performanceFee: 2000,
         },
         value: 1472030.22,
-        timestamp: 1657562103196
-      }
+        timestamp: 1657562103196,
+      },
     ],
     timeframe: '24h',
-    id: 'vault_0xBA418CDdd91111F5c1D1Ac2777Fa8CEa28D71843_arbitrum_24h'
+    id: 'vault_0xBA418CDdd91111F5c1D1Ac2777Fa8CEa28D71843_arbitrum_24h',
   },
   {
     data: [
@@ -348,14 +348,14 @@ export const historicVaultSnapshotsMock: HistoricVaultSnapshotsMock[] = [
           address: '0x3c0989eF27e3e3fAb87a2d7C38B35880C90E63b5',
           withdrawFee: 0,
           aumFee: 0,
-          performanceFee: 300
+          performanceFee: 300,
         },
         value: 393351.1,
-        timestamp: 1657562103195
-      }
+        timestamp: 1657562103195,
+      },
     ],
     timeframe: 'max',
-    id: 'vault_0xBA485b556399123261a5F9c95d413B4f93107407_ethereum_max'
+    id: 'vault_0xBA485b556399123261a5F9c95d413B4f93107407_ethereum_max',
   },
   {
     data: [
@@ -377,13 +377,13 @@ export const historicVaultSnapshotsMock: HistoricVaultSnapshotsMock[] = [
           address: '0x43942cEae98CC7485B48a37fBB1aa5035e1c8B46',
           withdrawFee: 10,
           aumFee: 0,
-          performanceFee: 2000
+          performanceFee: 2000,
         },
         value: 42831.92,
-        timestamp: 1657562103196
-      }
+        timestamp: 1657562103196,
+      },
     ],
     timeframe: '7d',
-    id: 'vault_0xaf9aB64F568149361ab670372b16661f4380e80B_arbitrum_7d'
-  }
+    id: 'vault_0xaf9aB64F568149361ab670372b16661f4380e80B_arbitrum_7d',
+  },
 ];

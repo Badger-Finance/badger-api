@@ -29,27 +29,27 @@ describe('leaderboards.service', () => {
           rankSummaries: [
             {
               badgerType: BadgerType.Basic,
-              amount: 1000
+              amount: 1000,
             },
             {
               badgerType: BadgerType.Neo,
-              amount: 20
+              amount: 20,
             },
             {
               badgerType: BadgerType.Hero,
-              amount: 35
+              amount: 35,
             },
             {
               badgerType: BadgerType.Hyper,
-              amount: 25
+              amount: 25,
             },
             {
               badgerType: BadgerType.Frenzy,
-              amount: 40
-            }
+              amount: 40,
+            },
           ],
-          updatedAt: 133742069
-        }
+          updatedAt: 133742069,
+        },
       ]);
       const result = await service.fetchLeaderboardSummary(chain);
       expect(result).toMatchSnapshot();

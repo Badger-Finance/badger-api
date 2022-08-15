@@ -12,8 +12,8 @@ import { RewardV2Controller } from './reward.v2.controller';
 describe('reward.v2.controller', () => {
   beforeEach(
     PlatformServerlessTest.bootstrap(PlatformServerless, {
-      lambda: [RewardV2Controller]
-    })
+      lambda: [RewardV2Controller],
+    }),
   );
   afterEach(() => PlatformServerlessTest.reset());
 
@@ -60,7 +60,7 @@ describe('reward.v2.controller', () => {
     describe('with active param true', () => {
       it('returns schedules for default chain and one vault', async () => {
         const { body, statusCode } = await PlatformServerlessTest.request.get(
-          `/reward/schedules/${TEST_ADDR}?active=true`
+          `/reward/schedules/${TEST_ADDR}?active=true`,
         );
         expect(statusCode).toEqual(NetworkStatus.Success);
         expect(JSON.parse(body)).toMatchSnapshot();
@@ -73,7 +73,7 @@ describe('reward.v2.controller', () => {
           throw new BadRequest(`invalid is not a supported chain`);
         });
         const { body, statusCode } = await PlatformServerlessTest.request.get(
-          `/reward/schedules/${TEST_ADDR}?chain=invalid`
+          `/reward/schedules/${TEST_ADDR}?chain=invalid`,
         );
         expect(statusCode).toEqual(NetworkStatus.BadRequest);
         expect(JSON.parse(body)).toMatchSnapshot();

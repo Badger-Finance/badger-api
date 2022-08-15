@@ -31,7 +31,7 @@ export class RewardsV3Controller {
   @ContentType('json')
   async getBouncerProof(
     @QueryParams('address') address: string,
-    @QueryParams('chain') chain?: Network
+    @QueryParams('chain') chain?: Network,
   ): Promise<AirdropMerkleClaim> {
     if (!address) throw new QueryParamError('address');
 
@@ -46,14 +46,14 @@ export class RewardsV3Controller {
   async list(
     @QueryParams('chain_id') chainId?: string,
     @QueryParams('page_num') pageNum?: number,
-    @QueryParams('page_count') pageCount?: number
+    @QueryParams('page_count') pageCount?: number,
   ): Promise<ListRewardsResponse> {
     const chain = Chain.getChainById(chainId);
     const { count, records } = await this.rewardsService.list({ chain, pageNum, pageCount });
     return {
       total_count: count,
       total_page_num: Math.ceil(count / (pageCount || DEFAULT_PAGE_SIZE)),
-      users: await Promise.all(records.map((record) => this.userClaimedSnapshotToDebankUser(chain, record)))
+      users: await Promise.all(records.map((record) => this.userClaimedSnapshotToDebankUser(chain, record))),
     };
   }
 
@@ -70,7 +70,7 @@ export class RewardsV3Controller {
     }
     return {
       user_addr: snapshot.address,
-      rewards
+      rewards,
     };
   }
 
@@ -82,7 +82,7 @@ export class RewardsV3Controller {
   @Returns(404).Description('User has no rewards proof available')
   async getBadgerTreeReward(
     @QueryParams('address') address: string,
-    @QueryParams('chain') chain?: Network
+    @QueryParams('chain') chain?: Network,
   ): Promise<RewardMerkleClaimModel> {
     if (!address) {
       throw new QueryParamError('address');
@@ -100,7 +100,7 @@ export class RewardsV3Controller {
   async getRewardListSchedulesForVault(
     @QueryParams('address') address: string,
     @QueryParams('chain') chain?: Network,
-    @QueryParams('active') active?: boolean
+    @QueryParams('active') active?: boolean,
   ): Promise<EmissionSchedule[]> {
     if (!address) {
       throw new QueryParamError('address');
@@ -116,7 +116,7 @@ export class RewardsV3Controller {
   @Returns(200, RewardSchedulesByVaultsModel)
   async getRewardSchedulesVaultsList(
     @QueryParams('chain') chain?: Network,
-    @QueryParams('active') active?: boolean
+    @QueryParams('active') active?: boolean,
   ): Promise<RewardSchedulesByVaults> {
     return this.rewardsService.rewardSchedulesVaultsList(Chain.getChain(chain), Boolean(active));
   }

@@ -17,12 +17,12 @@ describe('leaderboard-indexer', () => {
         cachedBoost.address = addresses[i];
         const boost = {
           ...cachedBoost,
-          multipliers: {}
+          multipliers: {},
         };
         return [cachedBoost.address, boost];
-      })
+      }),
     ),
-    multiplierData: {}
+    multiplierData: {},
   };
 
   let batchPut: jest.SpyInstance<
