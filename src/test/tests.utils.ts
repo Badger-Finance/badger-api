@@ -15,9 +15,9 @@ import { CachedBoost } from "../aws/models/cached-boost.model";
 import { VaultDefinitionModel } from "../aws/models/vault-definition.model";
 import { SUPPORTED_CHAINS } from "../chains/chain";
 import { LeaderBoardType } from "../leaderboards/enums/leaderboard-type.enum";
+import { Nullable } from "../utils/types.utils";
 import { vaultsChartDataMock } from "../vaults/mocks/vaults-chart-data.mock";
 import { MOCK_VAULT_DEFINITION, TEST_ADDR, TEST_CURRENT_BLOCK } from "./constants";
-import { Nullable } from "../utils/types.utils";
 
 // @ts-ignore
 export function setupVaultsCoumpoundDDB(customFilter: Nullable<(v: any) => boolean> = null) {
