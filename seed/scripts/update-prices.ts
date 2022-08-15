@@ -3,7 +3,7 @@ import { writeFileSync } from "fs";
 import { resolve } from "path";
 
 async function updatePrices() {
-  let prices: { address: string; price: number; updatedAt: number }[] = [];
+  const prices: { address: string; price: number; updatedAt: number }[] = [];
   for (const network of Object.values(Network)) {
     try {
       const api = new BadgerAPI({ network, baseURL: "https://staging-api.badger.com/" });

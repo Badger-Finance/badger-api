@@ -4,7 +4,7 @@ import { PlatformServerlessTest } from "@tsed/platform-serverless-testing";
 import { setupMockChain } from "../test/mocks.utils";
 import { GasController } from "./gas.controller";
 
-describe("GasController", () => {
+describe("gas.controller", () => {
   beforeEach(
     PlatformServerlessTest.bootstrap(PlatformServerless, {
       lambda: [GasController]
