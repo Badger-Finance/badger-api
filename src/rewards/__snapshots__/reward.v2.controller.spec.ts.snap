@@ -6,7 +6,7 @@ Object {
     Object {
       "amount": 2035.82,
       "beneficiary": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28",
-      "compPercent": 50,
+      "compPercent": 100,
       "end": 1619715600,
       "start": 1619110800,
       "token": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -14,7 +14,7 @@ Object {
     Object {
       "amount": 0.094819176,
       "beneficiary": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28",
-      "compPercent": 50,
+      "compPercent": 100,
       "end": 1617901200,
       "start": 1617296400,
       "token": "0x798D1bE841a82a273720CE31c822C61a67a601C3",
@@ -22,7 +22,7 @@ Object {
     Object {
       "amount": 1865.215,
       "beneficiary": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28",
-      "compPercent": 50,
+      "compPercent": 100,
       "end": 1620320400,
       "start": 1619715600,
       "token": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -33,7 +33,10 @@ Object {
 
 exports[`reward.v2.controller GET /v2/reward/schedules with an invalid specified chain returns a 400 1`] = `
 Object {
+  "errors": Array [],
   "message": "invalid is not a supported chain",
+  "name": "BAD_REQUEST",
+  "status": 400,
 }
 `;
 
@@ -73,7 +76,7 @@ Array [
   Object {
     "amount": 2035.82,
     "beneficiary": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28",
-    "compPercent": 50,
+    "compPercent": 100,
     "end": 1619715600,
     "start": 1619110800,
     "token": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -81,7 +84,7 @@ Array [
   Object {
     "amount": 0.094819176,
     "beneficiary": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28",
-    "compPercent": 50,
+    "compPercent": 100,
     "end": 1617901200,
     "start": 1617296400,
     "token": "0x798D1bE841a82a273720CE31c822C61a67a601C3",
@@ -89,7 +92,7 @@ Array [
   Object {
     "amount": 1865.215,
     "beneficiary": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28",
-    "compPercent": 50,
+    "compPercent": 100,
     "end": 1620320400,
     "start": 1619715600,
     "token": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -99,14 +102,19 @@ Array [
 
 exports[`reward.v2.controller GET /v2/reward/schedules/<beneficiary> with an invalid specified chain returns a 400 1`] = `
 Object {
+  "errors": Array [],
   "message": "invalid is not a supported chain",
+  "name": "BAD_REQUEST",
+  "status": 400,
 }
 `;
 
 exports[`reward.v2.controller GET /v2/reward/schedules/<beneficiary> with invalid param specified returns a 400, NotFound 1`] = `
 Object {
-  "code": 2002,
+  "errors": Array [],
   "message": "Vault unknowsvaultdata doest have any data",
+  "name": "Error",
+  "status": 404,
 }
 `;
 

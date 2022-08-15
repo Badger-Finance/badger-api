@@ -13,7 +13,7 @@ describe("prices.utils", () => {
   let chain: Chain;
 
   beforeEach(() => {
-    chain = setupMockChain(false);
+    chain = setupMockChain({ pricing: false });
     jest.spyOn(console, "error").mockImplementation(jest.fn);
   });
 

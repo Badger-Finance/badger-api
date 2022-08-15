@@ -2,7 +2,7 @@
 
 exports[`prices.utils fetchPrices request prices for contracts returns a price map of requested token prices in usd 1`] = `
 Object {
-  "0x2B5455aac8d64C14786c3a29858E43b5945819C0": Object {
+  "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28": Object {
     "usd": 43500,
   },
   "0x3472A5A71965499acd81997a54BBA8D852C6E53d": Object {

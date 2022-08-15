@@ -1,7 +1,7 @@
 import { PlatformServerless } from "@tsed/platform-serverless";
 import { PlatformServerlessTest } from "@tsed/platform-serverless-testing";
-import { NetworkStatus } from "src/errors/enums/network-status.enum";
 
+import { NetworkStatus } from "../errors/enums/network-status.enum";
 import { MetricsController } from "./metrics.controller";
 import { MetricsService } from "./metrics.service";
 
@@ -22,7 +22,7 @@ describe("MetricsController", () => {
           totalVaults: 30
         })
       );
-      const { body, statusCode } = await PlatformServerlessTest.request.get("/v2/metrics");
+      const { body, statusCode } = await PlatformServerlessTest.request.get("/metrics");
       expect(statusCode).toEqual(NetworkStatus.Success);
       expect(JSON.parse(body)).toMatchSnapshot();
     });

@@ -6,9 +6,9 @@ import { TestStrategy } from "../strategies/test.strategy";
 import { Chain } from "./chain.config";
 
 export class TestEthereum extends Chain {
-  constructor(provider: SDKProvider) {
+  constructor(provider: SDKProvider, network = Network.Ethereum) {
     super(
-      Network.Ethereum,
+      network,
       mockTokensMap as TokenConfig,
       provider,
       new TestStrategy(),

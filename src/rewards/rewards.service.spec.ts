@@ -4,13 +4,11 @@ import { PlatformTest } from "@tsed/common";
 import * as accountsUtils from "../accounts/accounts.utils";
 import * as dynamodbUtils from "../aws/dynamodb.utils";
 import { UserClaimSnapshot } from "../aws/models/user-claim-snapshot.model";
-import { BinanceSmartChain } from "../chains/config/bsc.config";
 import { Chain } from "../chains/config/chain.config";
-import { MOCK_DISTRIBUTION_FILE, TEST_ADDR } from "../test/constants";
+import { TEST_ADDR } from "../test/constants";
 import { mockQuery, setupMockChain } from "../test/mocks.utils";
 import { UserClaimMetadata } from "./entities/user-claim-metadata";
 import { RewardsService } from "./rewards.service";
-import * as rewardsUtils from "./rewards.utils";
 
 describe("rewards.service", () => {
   let service: RewardsService;
@@ -18,19 +16,13 @@ describe("rewards.service", () => {
   beforeEach(async () => {
     await PlatformTest.create();
     service = PlatformTest.get<RewardsService>(RewardsService);
-    jest.spyOn(rewardsUtils, "getTreeDistribution").mockImplementation(async (chain: Chain) => {
-      if (chain.network !== Network.Ethereum) {
-        return null;
-      }
-      return MOCK_DISTRIBUTION_FILE;
-    });
   });
 
   afterEach(PlatformTest.reset);
 
   describe("getUserRewards", () => {
     it("throws a bad request on chains with no rewards", async () => {
-      const chain = new BinanceSmartChain();
+      const chain = setupMockChain({ network: Network.Arbitrum });
       await expect(service.getUserRewards(chain, TEST_ADDR)).rejects.toThrow(
         `${chain.network} is not supportable for request`
       );

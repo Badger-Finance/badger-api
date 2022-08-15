@@ -1,6 +1,8 @@
 import { formatBalance, Network } from "@badger-dao/sdk";
-import { Controller, Get, Inject, QueryParams, UseCache } from "@tsed/common";
-import { ContentType, Description, Hidden, Returns, Summary } from "@tsed/schema";
+import { Controller, Inject } from "@tsed/di";
+import { UseCache } from "@tsed/platform-cache";
+import { QueryParams } from "@tsed/platform-params";
+import { ContentType, Description, Get, Hidden, Returns, Summary } from "@tsed/schema";
 import { BigNumber, ethers } from "ethers";
 
 import { UserClaimSnapshot } from "../aws/models/user-claim-snapshot.model";
@@ -82,8 +84,9 @@ export class RewardsV3Controller {
     @QueryParams("address") address: string,
     @QueryParams("chain") chain?: Network
   ): Promise<RewardMerkleClaimModel> {
-    if (!address) throw new QueryParamError("address");
-
+    if (!address) {
+      throw new QueryParamError("address");
+    }
     return this.rewardsService.getUserRewards(Chain.getChain(chain), ethers.utils.getAddress(address));
   }
 
@@ -99,8 +102,9 @@ export class RewardsV3Controller {
     @QueryParams("chain") chain?: Network,
     @QueryParams("active") active?: boolean
   ): Promise<EmissionSchedule[]> {
-    if (!address) throw new QueryParamError("address");
-
+    if (!address) {
+      throw new QueryParamError("address");
+    }
     return this.rewardsService.rewardSchedulesByVault(Chain.getChain(chain), address, Boolean(active));
   }
 

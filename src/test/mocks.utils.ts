@@ -11,6 +11,7 @@ import BadgerSDK, {
   TokensService,
   TokenValue
 } from "@badger-dao/sdk";
+import rewardsLoadSchedulesMock from "@badger-dao/sdk-mocks/generated/ethereum/rewards/loadSchedules.json";
 import { JsonRpcProvider, JsonRpcSigner } from "@ethersproject/providers";
 import createMockInstance from "jest-create-mock-instance";
 import { mock } from "jest-mock-extended";
@@ -31,10 +32,17 @@ import {
   MOCK_VAULT_SNAPSHOTS,
   TEST_ADDR,
   TEST_CURRENT_BLOCK,
-  TEST_CURRENT_TIMESTAMP
+  TEST_CURRENT_TIMESTAMP,
+  TEST_TOKEN
 } from "./constants";
+import { MockOptions } from "./interfaces/mock-options.interface";
 
-export function setupMockChain(mockPricing = true) {
+export function setupMockChain(
+  { network, pricing }: MockOptions = {
+    network: Network.Ethereum,
+    pricing: true
+  }
+) {
   // setup chain vaults
   jest.spyOn(ChainVaults.prototype, "getVault").mockImplementation(async (_) => MOCK_VAULT_DEFINITION);
   jest.spyOn(ChainVaults.prototype, "all").mockImplementation(async () => [MOCK_VAULT_DEFINITION]);
@@ -54,6 +62,34 @@ export function setupMockChain(mockPricing = true) {
   jest.spyOn(RegistryService.prototype, "ready").mockImplementation();
   jest.spyOn(RewardsService.prototype, "ready").mockImplementation();
   jest.spyOn(RewardsService.prototype, "hasBadgerTree").mockImplementation(() => true);
+
+  const baseSchedules = rewardsLoadSchedulesMock.slice(0, 3);
+
+  const schedulesMockMap = {
+    [TEST_TOKEN]: baseSchedules,
+    [TEST_ADDR]: baseSchedules.map((rw) => ({
+      ...rw,
+      beneficiary: TEST_ADDR
+    }))
+  };
+
+  const activeSchedulesMockMap = {
+    [TEST_TOKEN]: schedulesMockMap[TEST_TOKEN].map((rw) => ({
+      ...rw,
+      compPercent: 50
+    })),
+    [TEST_ADDR]: schedulesMockMap[TEST_ADDR].map((rw) => ({
+      ...rw,
+      compPercent: 70
+    }))
+  };
+
+  jest.spyOn(RewardsService.prototype, "loadSchedules").mockImplementation(async (_b) => {
+    return schedulesMockMap[TEST_TOKEN];
+  });
+  jest.spyOn(RewardsService.prototype, "loadActiveSchedules").mockImplementation(async (_b) => {
+    return activeSchedulesMockMap[TEST_TOKEN];
+  });
   jest
     .spyOn(TokensService.prototype, "loadTokens")
     .mockImplementation(async (tokens) =>
@@ -86,12 +122,12 @@ export function setupMockChain(mockPricing = true) {
     })
   );
 
-  const chain = new TestEthereum(mockProvider);
+  const chain = new TestEthereum(mockProvider, network);
 
   jest.spyOn(Chain, "getChain").mockImplementation(() => chain);
 
   // setup chain pricing
-  if (mockPricing) {
+  if (pricing) {
     jest
       .spyOn(pricesUtils, "queryPrice")
       .mockImplementation(async (token, _currency) => chain.strategy.getPrice(token));
