@@ -22,7 +22,10 @@ export async function refreshVaultBalances() {
 export async function updateVaultTokenBalances(chain: Chain, vault: VaultDefinitionModel): Promise<void> {
   try {
     const mapper = getDataMapper();
-    const [depositToken, cachedVault] = await Promise.all([getFullToken(chain, vault.depositToken), getCachedVault(chain, vault)]);
+    const [depositToken, cachedVault] = await Promise.all([
+      getFullToken(chain, vault.depositToken),
+      getCachedVault(chain, vault)
+    ]);
 
     let cachedTokenBalance: VaultTokenBalance | undefined;
 

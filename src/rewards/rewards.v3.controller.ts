@@ -27,7 +27,10 @@ export class RewardsV3Controller {
   @Hidden()
   @Get("/bouncer")
   @ContentType("json")
-  async getBouncerProof(@QueryParams("address") address: string, @QueryParams("chain") chain?: Network): Promise<AirdropMerkleClaim> {
+  async getBouncerProof(
+    @QueryParams("address") address: string,
+    @QueryParams("chain") chain?: Network
+  ): Promise<AirdropMerkleClaim> {
     if (!address) throw new QueryParamError("address");
 
     return this.rewardsService.getBouncerProof(Chain.getChain(chain), ethers.utils.getAddress(address));

@@ -57,7 +57,11 @@ export class VaultsService {
     const mapper = getDataMapper();
     const vault = await chain.vaults.getVault(address);
 
-    const queryHarvests = mapper.query(HarvestCompoundData, { vault: vault.address }, { indexName: "IndexHarvestCompoundDataVault" });
+    const queryHarvests = mapper.query(
+      HarvestCompoundData,
+      { vault: vault.address },
+      { indexName: "IndexHarvestCompoundDataVault" }
+    );
 
     try {
       for await (const harvest of queryHarvests) {
@@ -121,7 +125,11 @@ export class VaultsService {
    * @param timestamps
    * @returns
    */
-  async getVaultChartDataByTimestamps(vault: string, chain: Chain, timestamps: number[]): Promise<HistoricVaultSnapshotModel[]> {
+  async getVaultChartDataByTimestamps(
+    vault: string,
+    chain: Chain,
+    timestamps: number[]
+  ): Promise<HistoricVaultSnapshotModel[]> {
     // validate vault request is correct and valid
     const requestedVault = await chain.vaults.getVault(vault);
 

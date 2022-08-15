@@ -6,8 +6,8 @@ const platform_aws_1 = require("@tsed/platform-aws");
 const constants_1 = require("./config/constants");
 const Server_1 = require("./Server");
 platform_aws_1.PlatformAws.bootstrap(Server_1.Server, {
-    aws: { binaryMimeTypes: [] },
-    swagger: [constants_1.swaggerConfig],
+  aws: { binaryMimeTypes: [] },
+  swagger: [constants_1.swaggerConfig]
 });
 exports.handler = platform_aws_1.PlatformAws.callback();
 //# sourceMappingURL=LambdaServer.js.map

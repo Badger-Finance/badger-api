@@ -14,7 +14,10 @@ export class ProofsV2Controller {
 
   @Get("/:address")
   @ContentType("json")
-  async getBouncerProof(@PathParams("address") address: string, @QueryParams("chain") chain?: Network): Promise<MerkleProof> {
+  async getBouncerProof(
+    @PathParams("address") address: string,
+    @QueryParams("chain") chain?: Network
+  ): Promise<MerkleProof> {
     return this.proofsService.getBouncerProof(Chain.getChain(chain), address);
   }
 }

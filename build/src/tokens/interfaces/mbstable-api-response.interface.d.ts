@@ -1,15 +1,15 @@
 export interface mStableApiResponse {
-    mbtc: mStableAssetInfo;
+  mbtc: mStableAssetInfo;
 }
 interface mStableAssetInfo {
-    symbol: string;
-    address: string;
-    decimals: number;
-    metrics: {
-        historic: mStableAssetMetric[];
-    };
+  symbol: string;
+  address: string;
+  decimals: number;
+  metrics: {
+    historic: mStableAssetMetric[];
+  };
 }
 interface mStableAssetMetric {
-    dailyAPY: number;
+  dailyAPY: number;
 }
 export {};

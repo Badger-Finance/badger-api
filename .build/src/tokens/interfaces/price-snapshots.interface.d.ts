@@ -1,5 +1,5 @@
 export interface PriceSnapshots {
-    [token: string]: {
-        [timestamp: number]: number;
-    };
+  [token: string]: {
+    [timestamp: number]: number;
+  };
 }

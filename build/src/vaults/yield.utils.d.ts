@@ -1,7 +1,7 @@
-import { VaultDTO, VaultYieldProjection } from '@badger-dao/sdk';
-import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
-import { VaultPendingHarvestData } from '../aws/models/vault-pending-harvest.model';
-import { YieldSources } from './interfaces/yield-sources.interface';
+import { VaultDTO, VaultYieldProjection } from "@badger-dao/sdk";
+import { VaultDefinitionModel } from "../aws/models/vault-definition.model";
+import { VaultPendingHarvestData } from "../aws/models/vault-pending-harvest.model";
+import { YieldSources } from "./interfaces/yield-sources.interface";
 /**
  *
  * @param vault
@@ -21,4 +21,8 @@ export declare function getYieldSources(vault: VaultDefinitionModel): Promise<Yi
  * @param pendingHarvest vault harvest measurements
  * @returns evaluated vault yield projection
  */
-export declare function getVaultYieldProjection(vault: VaultDTO, yieldSources: YieldSources, pendingHarvest: VaultPendingHarvestData): VaultYieldProjection;
+export declare function getVaultYieldProjection(
+  vault: VaultDTO,
+  yieldSources: YieldSources,
+  pendingHarvest: VaultPendingHarvestData
+): VaultYieldProjection;

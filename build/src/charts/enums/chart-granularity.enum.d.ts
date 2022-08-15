@@ -1,4 +1,4 @@
 export declare enum ChartGranularity {
-    HOUR = "hour",
-    DAY = "day"
+  HOUR = "hour",
+  DAY = "day"
 }

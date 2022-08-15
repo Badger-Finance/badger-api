@@ -2,7 +2,15 @@
 
 import { providers } from "@0xsequence/multicall";
 import { DataMapper, QueryIterator, StringToAnyObjectMap } from "@aws/dynamodb-data-mapper";
-import BadgerSDK, { Currency, Network, RegistryService, RewardsService, Token, TokensService, TokenValue } from "@badger-dao/sdk";
+import BadgerSDK, {
+  Currency,
+  Network,
+  RegistryService,
+  RewardsService,
+  Token,
+  TokensService,
+  TokenValue
+} from "@badger-dao/sdk";
 import { JsonRpcProvider, JsonRpcSigner } from "@ethersproject/providers";
 import createMockInstance from "jest-create-mock-instance";
 import { mock } from "jest-mock-extended";
@@ -48,7 +56,9 @@ export function setupMockChain(mockPricing = true) {
   jest.spyOn(RewardsService.prototype, "hasBadgerTree").mockImplementation(() => true);
   jest
     .spyOn(TokensService.prototype, "loadTokens")
-    .mockImplementation(async (tokens) => Object.fromEntries(Object.entries(MOCK_TOKENS).filter((e) => tokens.includes(e[0]))));
+    .mockImplementation(async (tokens) =>
+      Object.fromEntries(Object.entries(MOCK_TOKENS).filter((e) => tokens.includes(e[0])))
+    );
   jest.spyOn(TokensService.prototype, "loadToken").mockImplementation(async (token) => MOCK_TOKENS[token]);
   const chainTokensList = Object.values(MOCK_TOKENS);
   mockBatchGet(chainTokensList);
@@ -82,7 +92,9 @@ export function setupMockChain(mockPricing = true) {
 
   // setup chain pricing
   if (mockPricing) {
-    jest.spyOn(pricesUtils, "queryPrice").mockImplementation(async (token, _currency) => chain.strategy.getPrice(token));
+    jest
+      .spyOn(pricesUtils, "queryPrice")
+      .mockImplementation(async (token, _currency) => chain.strategy.getPrice(token));
     jest.spyOn(pricesUtils, "convert").mockImplementation(async (price: number, currency?: Currency) => {
       if (!currency || currency === Currency.USD) {
         return price;

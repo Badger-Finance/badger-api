@@ -1,4 +1,4 @@
-import { NotFoundError } from './not.found.error';
+import { NotFoundError } from "./not.found.error";
 export declare class NodataForChainError extends NotFoundError {
-    constructor(chain: string);
+  constructor(chain: string);
 }

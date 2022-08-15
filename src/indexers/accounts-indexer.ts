@@ -21,7 +21,9 @@ export async function refreshClaimableBalances(chain: Chain) {
 
   const latestMetadata = await getLatestMetadata(chain);
   if (PRODUCTION) {
-    console.log(`Updating Claimable Balances for ${chain.network} (prev. ${latestMetadata.startBlock} - ${latestMetadata.endBlock})`);
+    console.log(
+      `Updating Claimable Balances for ${chain.network} (prev. ${latestMetadata.startBlock} - ${latestMetadata.endBlock})`
+    );
   }
   const { endBlock } = latestMetadata;
   const snapshotStartBlock = endBlock + 1;

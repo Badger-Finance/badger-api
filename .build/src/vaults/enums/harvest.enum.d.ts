@@ -1,4 +1,4 @@
 export declare enum HarvestType {
-    Harvest = "Harvest",
-    TreeDistribution = "TreeDistribution"
+  Harvest = "Harvest",
+  TreeDistribution = "TreeDistribution"
 }

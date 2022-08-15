@@ -1,3 +1,3 @@
 export interface RPCConfig {
-    [chain: string]: string;
+  [chain: string]: string;
 }

@@ -6,27 +6,27 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SwaprStrategy__factory = void 0;
 const ethers_1 = require("ethers");
 const _abi = [
-    {
-        inputs: [],
-        name: 'stakingContract',
-        outputs: [
-            {
-                internalType: 'address',
-                name: '',
-                type: 'address',
-            },
-        ],
-        stateMutability: 'view',
-        type: 'function',
-    },
+  {
+    inputs: [],
+    name: "stakingContract",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
+  }
 ];
 class SwaprStrategy__factory {
-    static createInterface() {
-        return new ethers_1.utils.Interface(_abi);
-    }
-    static connect(address, signerOrProvider) {
-        return new ethers_1.Contract(address, _abi, signerOrProvider);
-    }
+  static createInterface() {
+    return new ethers_1.utils.Interface(_abi);
+  }
+  static connect(address, signerOrProvider) {
+    return new ethers_1.Contract(address, _abi, signerOrProvider);
+  }
 }
 exports.SwaprStrategy__factory = SwaprStrategy__factory;
 SwaprStrategy__factory.abi = _abi;

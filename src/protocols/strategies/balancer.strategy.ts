@@ -6,7 +6,12 @@ import { VaultTokenBalance } from "../../aws/models/vault-token-balance.model";
 import { YieldSource } from "../../aws/models/yield-source.model";
 import { Chain } from "../../chains/config/chain.config";
 import { BALANCER_URL } from "../../config/constants";
-import { BalancerVault__factory, StablePhantomVault__factory, StablePool__factory, WeightedPool__factory } from "../../contracts";
+import {
+  BalancerVault__factory,
+  StablePhantomVault__factory,
+  StablePool__factory,
+  WeightedPool__factory
+} from "../../contracts";
 import { getSdk as getBalancerSdk, OrderDirection, PoolSnapshot_OrderBy } from "../../graphql/generated/balancer";
 import { TokenPrice } from "../../prices/interface/token-price.interface";
 import { SourceType } from "../../rewards/enums/source-type.enum";
@@ -118,7 +123,9 @@ export async function resolveBalancerPoolTokenPrice(chain: Chain, token: Token, 
 
     const targetBalance = balances[targetIndex];
     const expectedWeight = formatBalance(weights[targetIndex]);
-    const totalOtherValue = balances.filter((b) => b.address !== token.address).reduce((total, balance) => (total += balance.value), 0);
+    const totalOtherValue = balances
+      .filter((b) => b.address !== token.address)
+      .reduce((total, balance) => (total += balance.value), 0);
     const multiplier = expectedWeight / (1 - expectedWeight);
     const tokenPrice = (totalOtherValue * multiplier) / targetBalance.balance;
 
@@ -148,7 +155,8 @@ export async function resolveBalancerPoolTokenPrice(chain: Chain, token: Token, 
       const requestToken = balances[requestTokenIndex];
       const pairToken = balances[1 - requestTokenIndex];
 
-      const amplificiation = 4 * (amplificationParameter.value.toNumber() / amplificationParameter.precision.toNumber());
+      const amplificiation =
+        4 * (amplificationParameter.value.toNumber() / amplificationParameter.precision.toNumber());
       const invariant = formatBalance(lastInvariantData.lastInvariant);
 
       // calculate scalar y/x

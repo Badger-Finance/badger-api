@@ -26,7 +26,10 @@ export class PricesController {
     @QueryParams("chain") chain?: Network,
     @QueryParams("currency") currency?: Currency
   ): Promise<PriceSummary> {
-    return this.pricesService.getPriceSummary(tokens?.split(",") ?? Object.keys(Chain.getChain(chain).tokens), currency);
+    return this.pricesService.getPriceSummary(
+      tokens?.split(",") ?? Object.keys(Chain.getChain(chain).tokens),
+      currency
+    );
   }
 
   @Get("/snapshots")

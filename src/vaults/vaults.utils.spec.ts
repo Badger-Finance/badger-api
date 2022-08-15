@@ -1,4 +1,13 @@
-import { BadgerGraph, gqlGenT, Protocol, VaultBehavior, VaultDTO, VaultsService, VaultType, VaultVersion } from "@badger-dao/sdk";
+import {
+  BadgerGraph,
+  gqlGenT,
+  Protocol,
+  VaultBehavior,
+  VaultDTO,
+  VaultsService,
+  VaultType,
+  VaultVersion
+} from "@badger-dao/sdk";
 import { BadRequest } from "@tsed/exceptions";
 import { ethers } from "ethers";
 
@@ -172,7 +181,9 @@ describe("vaults.utils", () => {
         });
         jest
           .spyOn(yieldsUtils, "loadVaultGraphPerformances")
-          .mockImplementation(async () => [createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Distribution, "Graph Badger", 10.3)]);
+          .mockImplementation(async () => [
+            createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Distribution, "Graph Badger", 10.3)
+          ]);
         jest.spyOn(rewardsUtils, "getRewardEmission").mockImplementation(async () => []);
         jest.spyOn(rewardsUtils, "getProtocolValueSources").mockImplementation(async () => []);
         const result = await getVaultPerformance(chain, MOCK_VAULT_DEFINITION);
@@ -192,7 +203,9 @@ describe("vaults.utils", () => {
           ]);
         jest
           .spyOn(rewardsUtils, "getProtocolValueSources")
-          .mockImplementation(async () => [createYieldSource(MOCK_VAULT_DEFINITION, SourceType.TradeFee, "Curve LP Fee", 0.03)]);
+          .mockImplementation(async () => [
+            createYieldSource(MOCK_VAULT_DEFINITION, SourceType.TradeFee, "Curve LP Fee", 0.03)
+          ]);
         const result = await getVaultPerformance(chain, MOCK_VAULT_DEFINITION);
         expect(result).toMatchSnapshot();
       });
@@ -224,11 +237,13 @@ describe("vaults.utils", () => {
         return vaultsHarvestsSdkMock[address];
       });
       /* eslint-disable @typescript-eslint/ban-ts-comment */
-      jest.spyOn(BadgerGraph.prototype, "loadSett").mockImplementation(async ({ id, block }): Promise<gqlGenT.SettQuery> => {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        return vaultsGraphSdkMapMock[`${id.toLowerCase()}-${(block || {}).number || 0}`];
-      });
+      jest
+        .spyOn(BadgerGraph.prototype, "loadSett")
+        .mockImplementation(async ({ id, block }): Promise<gqlGenT.SettQuery> => {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          return vaultsGraphSdkMapMock[`${id.toLowerCase()}-${(block || {}).number || 0}`];
+        });
     }
 
     it("returns vaults harvests with apr", async () => {

@@ -37,7 +37,12 @@ import { HarvestType } from "./enums/harvest.enum";
 import { VaultHarvestData } from "./interfaces/vault-harvest-data.interface";
 import { VaultHarvestsExtendedResp } from "./interfaces/vault-harvest-extended-resp.interface";
 import { VaultStrategy } from "./interfaces/vault-strategy.interface";
-import { aggregateSources, createYieldSource, loadVaultEventPerformances, loadVaultGraphPerformances } from "./yields.utils";
+import {
+  aggregateSources,
+  createYieldSource,
+  loadVaultEventPerformances,
+  loadVaultGraphPerformances
+} from "./yields.utils";
 
 export const VAULT_SOURCE = "Vault Compounding";
 
@@ -106,7 +111,11 @@ export async function defaultVault(chain: Chain, vault: VaultDefinitionModel): P
 }
 
 // TODO: vault should migration from address -> id where id = chain.network-vault.address
-export async function getCachedVault(chain: Chain, vaultDefinition: VaultDefinitionModel, currency = Currency.USD): Promise<VaultDTO> {
+export async function getCachedVault(
+  chain: Chain,
+  vaultDefinition: VaultDefinitionModel,
+  currency = Currency.USD
+): Promise<VaultDTO> {
   const vault = await defaultVault(chain, vaultDefinition);
   try {
     const mapper = getDataMapper();
@@ -130,7 +139,10 @@ export async function getCachedVault(chain: Chain, vaultDefinition: VaultDefinit
         enabled: item.boostWeight > 0,
         weight: item.boostWeight
       };
-      const [tokens, convertedValue] = await Promise.all([getVaultTokens(chain, vault, currency), convert(item.value, currency)]);
+      const [tokens, convertedValue] = await Promise.all([
+        getVaultTokens(chain, vault, currency),
+        convert(item.value, currency)
+      ]);
       vault.tokens = tokens;
       vault.value = convertedValue;
       return vault;
@@ -230,7 +242,10 @@ export async function getVaultTokenPrice(chain: Chain, address: string): Promise
   const targetChain = isCrossChainVault ? Chain.getChain(vaultToken.network) : chain;
   const targetVault = isCrossChainVault ? vaultToken.address : token.address;
   const vault = await targetChain.vaults.getVault(targetVault);
-  const [underlyingTokenPrice, vaultTokenSnapshot] = await Promise.all([queryPrice(vaultToken.address), getCachedVault(chain, vault)]);
+  const [underlyingTokenPrice, vaultTokenSnapshot] = await Promise.all([
+    queryPrice(vaultToken.address),
+    getCachedVault(chain, vault)
+  ]);
   return {
     address: token.address,
     price: underlyingTokenPrice.price * vaultTokenSnapshot.pricePerFullShare
@@ -244,7 +259,10 @@ export async function getVaultTokenPrice(chain: Chain, address: string): Promise
  * @returns Value source array describing vault performance
  */
 export async function getVaultPerformance(chain: Chain, vault: VaultDefinitionModel): Promise<YieldSource[]> {
-  const [rewardEmissions, protocol] = await Promise.all([getRewardEmission(chain, vault), getProtocolValueSources(chain, vault)]);
+  const [rewardEmissions, protocol] = await Promise.all([
+    getRewardEmission(chain, vault),
+    getProtocolValueSources(chain, vault)
+  ]);
   let vaultSources: YieldSource[] = [];
   try {
     vaultSources = await loadVaultEventPerformances(chain, vault);
@@ -357,7 +375,9 @@ export async function estimateVaultPerformance(
   const valueSources = [];
 
   const harvests = measuredHarvests.flatMap((h) => h.harvests);
-  const totalHarvested = harvests.map((h) => h.amount).reduce((total, harvested) => total.add(harvested), BigNumber.from(0));
+  const totalHarvested = harvests
+    .map((h) => h.amount)
+    .reduce((total, harvested) => total.add(harvested), BigNumber.from(0));
 
   let weightedBalance = 0;
   const depositToken = await getFullToken(chain, vault.depositToken);
@@ -465,7 +485,11 @@ export async function estimateVaultPerformance(
 export async function queryYieldSources(vault: VaultDefinitionModel): Promise<YieldSource[]> {
   const valueSources = [];
   const mapper = getDataMapper();
-  for await (const source of mapper.query(YieldSource, { chainAddress: vault.id }, { indexName: "IndexApySnapshotsOnAddress" })) {
+  for await (const source of mapper.query(
+    YieldSource,
+    { chainAddress: vault.id },
+    { indexName: "IndexApySnapshotsOnAddress" }
+  )) {
     valueSources.push(source);
   }
   return valueSources;
@@ -593,7 +617,9 @@ export async function getVaultHarvestsOnChain(
   };
 
   const allHarvests = sdkVaultHarvests.flatMap((h) => h.harvests).sort((a, b) => a.timestamp - b.timestamp);
-  const allTreeDistributions = sdkVaultHarvests.flatMap((h) => h.treeDistributions).sort((a, b) => a.timestamp - b.timestamp);
+  const allTreeDistributions = sdkVaultHarvests
+    .flatMap((h) => h.treeDistributions)
+    .sort((a, b) => a.timestamp - b.timestamp);
 
   await _extend_harvests_data(allHarvests, HarvestType.Harvest);
   await _extend_harvests_data(allTreeDistributions, HarvestType.TreeDistribution);

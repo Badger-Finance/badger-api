@@ -19,7 +19,10 @@ export class RewardV2Controller {
   @Hidden()
   @Get("/bouncer/:address")
   @ContentType("json")
-  async getBouncerProof(@PathParams("address") address: string, @QueryParams("chain") chain?: Network): Promise<AirdropMerkleClaim> {
+  async getBouncerProof(
+    @PathParams("address") address: string,
+    @QueryParams("chain") chain?: Network
+  ): Promise<AirdropMerkleClaim> {
     return this.rewardsService.getBouncerProof(Chain.getChain(chain), address);
   }
 

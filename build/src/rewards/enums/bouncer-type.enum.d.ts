@@ -1,5 +1,5 @@
 export declare enum BouncerType {
-    None = "none",
-    Badger = "badger",
-    Internal = "internal"
+  None = "none",
+  Badger = "badger",
+  Internal = "internal"
 }

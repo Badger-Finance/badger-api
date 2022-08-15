@@ -61,7 +61,11 @@ function isPassiveSource(source: YieldSource): boolean {
  * @returns true if source does not originate directly from a singular harvest, false if so
  */
 function isNonHarvestSource(source: YieldSource): boolean {
-  return source.type !== SourceType.Compound && source.type !== SourceType.PreCompound && source.type !== SourceType.Distribution;
+  return (
+    source.type !== SourceType.Compound &&
+    source.type !== SourceType.PreCompound &&
+    source.type !== SourceType.Distribution
+  );
 }
 
 /**
@@ -120,7 +124,10 @@ function yieldToValueSource(source: YieldSource): ValueSource {
  * @param sources source list to aggregate
  * @returns source list with all unique elements by name with aggregated values
  */
-export function aggregateSources<T extends ValueSource>(sources: T[], accessor: (source: T) => string = (s) => s.name): T[] {
+export function aggregateSources<T extends ValueSource>(
+  sources: T[],
+  accessor: (source: T) => string = (s) => s.name
+): T[] {
   const sourceMap: Record<string, T> = {};
   const sourcesCopy = JSON.parse(JSON.stringify(sources));
   for (const source of sourcesCopy) {
@@ -238,10 +245,20 @@ export async function getYieldSources(vault: VaultDefinitionModel): Promise<Yiel
  * @param yieldEstimate vault harvest measurements
  * @returns evaluated vault yield projection
  */
-export function getVaultYieldProjection(vault: VaultDTO, yieldSources: YieldSources, yieldEstimate: YieldEstimate): VaultYieldProjection {
+export function getVaultYieldProjection(
+  vault: VaultDTO,
+  yieldSources: YieldSources,
+  yieldEstimate: YieldEstimate
+): VaultYieldProjection {
   const { value, balance, available, lastHarvest } = vault;
   const { nonHarvestSources, nonHarvestSourcesApy } = yieldSources;
-  const { yieldTokens, previousYieldTokens, harvestTokens, previousHarvestTokens, duration: periodDuration } = yieldEstimate;
+  const {
+    yieldTokens,
+    previousYieldTokens,
+    harvestTokens,
+    previousHarvestTokens,
+    duration: periodDuration
+  } = yieldEstimate;
 
   const yieldTokensCurrent = calculateBalanceDifference(previousYieldTokens, yieldTokens);
   const harvestTokensCurrent = calculateBalanceDifference(previousHarvestTokens, harvestTokens);
@@ -266,7 +283,12 @@ export function getVaultYieldProjection(vault: VaultDTO, yieldSources: YieldSour
     harvestValue,
     harvestApr: calculateYield(earningValue, harvestValue, harvestDuration),
     harvestPeriodApr: calculateYield(earningValue, harvestValuePerPeriod, periodDuration),
-    harvestPeriodApy: calculateYield(earningValue, harvestValuePerPeriod, periodDuration, harvestCompoundValuePerPeriod),
+    harvestPeriodApy: calculateYield(
+      earningValue,
+      harvestValuePerPeriod,
+      periodDuration,
+      harvestCompoundValuePerPeriod
+    ),
     harvestTokens: harvestTokens.map((t) => balanceToTokenRate(t, earningValue, harvestDuration)),
     harvestPeriodSources: harvestTokensCurrent.map((t) => balanceToTokenRate(t, earningValue, periodDuration)),
     harvestPeriodSourcesApy: harvestTokensCurrent.map((t) => balanceToTokenRate(t, earningValue, periodDuration)),
@@ -414,7 +436,9 @@ function constructGraphVaultData(
 ): VaultHarvestData[] {
   const harvestsByTimestamp = keyBy(settHarvests, (harvest) => harvest.timestamp);
   const treeDistributionsByTimestamp = keyBy(badgerTreeDistributions, (distribution) => distribution.timestamp);
-  const timestamps = Array.from(new Set([...harvestsByTimestamp.keys(), ...treeDistributionsByTimestamp.keys()]).values());
+  const timestamps = Array.from(
+    new Set([...harvestsByTimestamp.keys(), ...treeDistributionsByTimestamp.keys()]).values()
+  );
   return timestamps.map((t) => {
     const timestamp = Number(t);
     const currentHarvests = harvestsByTimestamp.get(timestamp) ?? [];

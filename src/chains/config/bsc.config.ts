@@ -8,7 +8,12 @@ import { Chain } from "./chain.config";
 
 export class BinanceSmartChain extends Chain {
   constructor() {
-    super(Network.BinanceSmartChain, bscTokensConfig, rpc[Network.BinanceSmartChain], new BaseStrategy(Network.BinanceSmartChain));
+    super(
+      Network.BinanceSmartChain,
+      bscTokensConfig,
+      rpc[Network.BinanceSmartChain],
+      new BaseStrategy(Network.BinanceSmartChain)
+    );
     Chain.register(this.network, this);
   }
 

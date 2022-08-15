@@ -145,7 +145,10 @@ export async function getRewardEmission(chain: Chain, vault: VaultDefinitionMode
   return emissionSources;
 }
 
-export async function getVaultValueSources(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<YieldSource[]> {
+export async function getVaultValueSources(
+  chain: Chain,
+  vaultDefinition: VaultDefinitionModel
+): Promise<YieldSource[]> {
   // manual over ride for removed compounding of vaults - this can be empty
   const NO_COMPOUND_VAULTS = new Set([TOKENS.BREMBADGER, TOKENS.BVECVX, TOKENS.BCVX]);
 
@@ -165,7 +168,10 @@ export async function getVaultValueSources(chain: Chain, vaultDefinition: VaultD
   }
 }
 
-export async function getProtocolValueSources(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<YieldSource[]> {
+export async function getProtocolValueSources(
+  chain: Chain,
+  vaultDefinition: VaultDefinitionModel
+): Promise<YieldSource[]> {
   try {
     switch (vaultDefinition.protocol) {
       case Protocol.Sushiswap:

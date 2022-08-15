@@ -1,5 +1,5 @@
 export declare class DevelopmentService {
-    updateDynamoDbSeeds(): Promise<{
-        status: string;
-    }>;
+  updateDynamoDbSeeds(): Promise<{
+    status: string;
+  }>;
 }

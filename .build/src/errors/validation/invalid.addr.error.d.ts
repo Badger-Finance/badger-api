@@ -1,4 +1,4 @@
-import { ValidationError } from './base.validation.error';
+import { ValidationError } from "./base.validation.error";
 export declare class InvalidAddrError extends ValidationError {
-    constructor(addr: string);
+  constructor(addr: string);
 }

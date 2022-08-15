@@ -10,25 +10,27 @@ const prices_utils_1 = require("./prices.utils");
  * via CG. Prices are cached for 5 minutes at a time, but may live up to 8.
  */
 let PricesService = class PricesService {
-    async getPriceSummary(tokens, currency) {
-        const prices = await Promise.all(tokens.map(async (token) => (0, prices_utils_1.getPrice)(token)));
-        const entries = await Promise.all(prices.map(async (tokenPrice) => {
-            const convertedPrice = await (0, prices_utils_1.convert)(tokenPrice.price, currency);
-            return [tokenPrice.address, convertedPrice];
-        }));
-        return Object.fromEntries(entries);
-    }
-    async getPriceSnapshots(tokens, timestamps, currency) {
-        const entries = await Promise.all(tokens.map(async (t) => {
-            const snapshots = await (0, prices_utils_1.getPriceSnapshotsAtTimestamps)(t, timestamps, currency);
-            const snapshotEntries = snapshots.map((s) => [s.updatedAt, s.price]);
-            return [t, Object.fromEntries(snapshotEntries)];
-        }));
-        return Object.fromEntries(entries);
-    }
+  async getPriceSummary(tokens, currency) {
+    const prices = await Promise.all(tokens.map(async (token) => (0, prices_utils_1.getPrice)(token)));
+    const entries = await Promise.all(
+      prices.map(async (tokenPrice) => {
+        const convertedPrice = await (0, prices_utils_1.convert)(tokenPrice.price, currency);
+        return [tokenPrice.address, convertedPrice];
+      })
+    );
+    return Object.fromEntries(entries);
+  }
+  async getPriceSnapshots(tokens, timestamps, currency) {
+    const entries = await Promise.all(
+      tokens.map(async (t) => {
+        const snapshots = await (0, prices_utils_1.getPriceSnapshotsAtTimestamps)(t, timestamps, currency);
+        const snapshotEntries = snapshots.map((s) => [s.updatedAt, s.price]);
+        return [t, Object.fromEntries(snapshotEntries)];
+      })
+    );
+    return Object.fromEntries(entries);
+  }
 };
-PricesService = tslib_1.__decorate([
-    (0, common_1.Service)()
-], PricesService);
+PricesService = tslib_1.__decorate([(0, common_1.Service)()], PricesService);
 exports.PricesService = PricesService;
 //# sourceMappingURL=prices.service.js.map

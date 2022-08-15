@@ -1,6 +1,11 @@
 import axios from "axios";
 
-import { sendCodeBlockToDiscord, sendErrorToDiscord, sendPlainTextToDiscord, VAULT_MANAGER_ROLE_ID } from "./discord.utils";
+import {
+  sendCodeBlockToDiscord,
+  sendErrorToDiscord,
+  sendPlainTextToDiscord,
+  VAULT_MANAGER_ROLE_ID
+} from "./discord.utils";
 
 jest.mock("axios");
 const mockedAxios = axios as jest.Mocked<typeof axios>;

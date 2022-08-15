@@ -1,5 +1,5 @@
-import { ExceptionFilterMethods, PlatformContext } from '@tsed/common';
-import { BaseApiError } from '../../errors/base.error';
+import { ExceptionFilterMethods, PlatformContext } from "@tsed/common";
+import { BaseApiError } from "../../errors/base.error";
 export declare class ApiExceptionFilter implements ExceptionFilterMethods {
-    catch(error: BaseApiError, ctx: PlatformContext): void;
+  catch(error: BaseApiError, ctx: PlatformContext): void;
 }

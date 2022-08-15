@@ -69,7 +69,8 @@ async function generateChainBoostsLeaderBoard(chain: Chain): Promise<CachedBoost
       })
       .map((entry, i) => {
         const [address, userBoost] = entry;
-        const { boost, stakeRatio, nftBalance, bveCvxBalance, diggBalance, nativeBalance, nonNativeBalance } = userBoost;
+        const { boost, stakeRatio, nftBalance, bveCvxBalance, diggBalance, nativeBalance, nonNativeBalance } =
+          userBoost;
         const cachedBoost: CachedBoost = {
           leaderboard: getLeaderboardKey(chain.network),
           boostRank: i + 1,

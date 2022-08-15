@@ -63,13 +63,15 @@ export function setupTestVault() {
       vault.balance = 10;
       return vault;
     });
-  jest.spyOn(vaultsUtils, "queryYieldSources").mockImplementation(async (vault: VaultDefinitionModel): Promise<YieldSource[]> => {
-    const performance = parseInt(vault.address.slice(0, 5), 16) / 100;
-    const underlying = createYieldSource(vault, SourceType.Compound, vaultsUtils.VAULT_SOURCE, performance);
-    const badger = createYieldSource(vault, SourceType.Emission, "Badger Rewards", performance);
-    const fees = createYieldSource(vault, SourceType.TradeFee, "Curve LP Fees", performance);
-    return [underlying, badger, fees];
-  });
+  jest
+    .spyOn(vaultsUtils, "queryYieldSources")
+    .mockImplementation(async (vault: VaultDefinitionModel): Promise<YieldSource[]> => {
+      const performance = parseInt(vault.address.slice(0, 5), 16) / 100;
+      const underlying = createYieldSource(vault, SourceType.Compound, vaultsUtils.VAULT_SOURCE, performance);
+      const badger = createYieldSource(vault, SourceType.Emission, "Badger Rewards", performance);
+      const fees = createYieldSource(vault, SourceType.TradeFee, "Curve LP Fees", performance);
+      return [underlying, badger, fees];
+    });
   jest
     .spyOn(tokensUtils, "getVaultTokens")
     .mockImplementation(async (_chain: Chain, vault: VaultDTO, _currency?: string): Promise<TokenValue[]> => {
@@ -170,7 +172,9 @@ describe("vaults.v2.controller", () => {
         jest.spyOn(Chain, "getChain").mockImplementation(() => {
           throw new BadRequest(`invalid is not a supported chain`);
         });
-        const { body, statusCode } = await PlatformServerlessTest.request.get(`/vaults/harvests/${TEST_ADDR}?chain=invalid`);
+        const { body, statusCode } = await PlatformServerlessTest.request.get(
+          `/vaults/harvests/${TEST_ADDR}?chain=invalid`
+        );
         expect(statusCode).toEqual(BadRequest.STATUS);
         expect(JSON.parse(body)).toMatchSnapshot();
       });

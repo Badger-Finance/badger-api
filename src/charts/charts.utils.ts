@@ -15,7 +15,11 @@ export const CHART_GRANULARITY_TIMEFRAMES = [ChartTimeFrame.Max, ChartTimeFrame.
  * @param data
  * @returns
  */
-export function toChartDataBlob<T extends ChartData<T>>(id: string, timeframe: ChartTimeFrame, data: T[]): ChartDataBlob<T> {
+export function toChartDataBlob<T extends ChartData<T>>(
+  id: string,
+  timeframe: ChartTimeFrame,
+  data: T[]
+): ChartDataBlob<T> {
   return Object.assign(new ChartDataBlob(), {
     id,
     timeframe,

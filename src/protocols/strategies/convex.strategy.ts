@@ -8,7 +8,12 @@ import { Chain } from "../../chains/config/chain.config";
 import { request } from "../../common/request";
 import { ContractRegistry } from "../../config/interfaces/contract-registry.interface";
 import { TOKENS } from "../../config/tokens.config";
-import { CurveBaseRegistry__factory, CurvePool__factory, CurvePool3__factory, CurveRegistry__factory } from "../../contracts";
+import {
+  CurveBaseRegistry__factory,
+  CurvePool__factory,
+  CurvePool3__factory,
+  CurveRegistry__factory
+} from "../../contracts";
 import { TokenPrice } from "../../prices/interface/token-price.interface";
 import { queryPrice } from "../../prices/prices.utils";
 import { SourceType } from "../../rewards/enums/source-type.enum";
@@ -81,7 +86,10 @@ export class ConvexStrategy {
 
 async function getLiquiditySources(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<YieldSource[]> {
   const bveCVXVault = await chain.vaults.getVault(TOKENS.BVECVX);
-  const [bveCVXLP, bveCVXSources] = await Promise.all([getCachedVault(chain, vaultDefinition), queryYieldSources(bveCVXVault)]);
+  const [bveCVXLP, bveCVXSources] = await Promise.all([
+    getCachedVault(chain, vaultDefinition),
+    queryYieldSources(bveCVXVault)
+  ]);
   const vaultTokens = await getVaultTokens(chain, bveCVXLP);
   const bveCVXValue = vaultTokens
     .filter((t) => t.address === TOKENS.BVECVX)
@@ -171,7 +179,10 @@ export async function getCurvePoolBalance(chain: Chain, depositToken: string): P
   if (!poolAddress || poolAddress === ethers.constants.AddressZero) {
     poolAddress = nonRegistryPools[depositToken] ?? depositToken;
   }
-  const poolContracts = [CurvePool3__factory.connect(poolAddress, chain.provider), CurvePool__factory.connect(poolAddress, chain.provider)];
+  const poolContracts = [
+    CurvePool3__factory.connect(poolAddress, chain.provider),
+    CurvePool__factory.connect(poolAddress, chain.provider)
+  ];
   let option = 0;
   let coin = 0;
   while (true) {
@@ -197,7 +208,10 @@ export async function getCurvePoolBalance(chain: Chain, depositToken: string): P
   return cachedBalances;
 }
 
-export async function getCurveVaultTokenBalance(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<VaultTokenBalance> {
+export async function getCurveVaultTokenBalance(
+  chain: Chain,
+  vaultDefinition: VaultDefinitionModel
+): Promise<VaultTokenBalance> {
   const { depositToken, address } = vaultDefinition;
   const cachedTokens = await getCurvePoolBalance(chain, depositToken);
   const contract = Erc20__factory.connect(depositToken, chain.provider);

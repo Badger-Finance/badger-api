@@ -1,4 +1,4 @@
 export interface TokenPrice {
-    address: string;
-    price: number;
+  address: string;
+  price: number;
 }

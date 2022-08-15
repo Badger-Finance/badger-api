@@ -1,4 +1,4 @@
 export interface PairDayData {
-    reserveUSD: string;
-    dailyVolumeUSD: string;
+  reserveUSD: string;
+  dailyVolumeUSD: string;
 }

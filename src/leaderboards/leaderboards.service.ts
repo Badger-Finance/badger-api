@@ -8,7 +8,9 @@ import { queryLeaderboardSummary } from "./leaderboards.utils";
 export class LeaderBoardsService {
   async fetchLeaderboardSummary(chain: Chain): Promise<LeaderboardSummary> {
     const cachedSummary = await queryLeaderboardSummary(chain);
-    const summary = Object.fromEntries(cachedSummary.rankSummaries.map((s) => [s.badgerType, s.amount])) as BadgerTypeMap;
+    const summary = Object.fromEntries(
+      cachedSummary.rankSummaries.map((s) => [s.badgerType, s.amount])
+    ) as BadgerTypeMap;
     return {
       summary,
       updatedAt: cachedSummary.updatedAt

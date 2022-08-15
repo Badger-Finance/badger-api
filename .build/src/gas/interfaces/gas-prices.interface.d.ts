@@ -1,10 +1,10 @@
 export interface GasPrices {
-    [speed: string]: number | EIP1559GasPrices;
+  [speed: string]: number | EIP1559GasPrices;
 }
 export interface EIP1559GasPrices {
-    maxFeePerGas: number;
-    maxPriorityFeePerGas: number;
+  maxFeePerGas: number;
+  maxPriorityFeePerGas: number;
 }
 export interface ChainGasPrices {
-    [chain: string]: GasPrices;
+  [chain: string]: GasPrices;
 }

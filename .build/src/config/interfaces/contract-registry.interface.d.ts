@@ -1,3 +1,3 @@
 export interface ContractRegistry {
-    [address: string]: string;
+  [address: string]: string;
 }

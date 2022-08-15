@@ -22,7 +22,10 @@ export class VaultsV2Controller {
   @Description("Return a list of protocol vaults for the requested chain")
   @Returns(200, VaultModel)
   @Returns(400).Description("Not a valid chain")
-  async listVaults(@QueryParams("chain") chain?: Network, @QueryParams("currency") currency?: Currency): Promise<VaultModel[]> {
+  async listVaults(
+    @QueryParams("chain") chain?: Network,
+    @QueryParams("currency") currency?: Currency
+  ): Promise<VaultModel[]> {
     return this.vaultService.listVaults(Chain.getChain(chain), currency);
   }
 
@@ -43,7 +46,10 @@ export class VaultsV2Controller {
   @Description("Return full list of vault`s harvests")
   @Returns(200, Array).Of(VaultHarvestsModel)
   @Returns(400).Description("Not a valid chain")
-  async getVaultsHarvests(@PathParams("vault") vault: string, @QueryParams("chain") chain?: Network): Promise<VaultHarvestsExtendedResp[]> {
+  async getVaultsHarvests(
+    @PathParams("vault") vault: string,
+    @QueryParams("chain") chain?: Network
+  ): Promise<VaultHarvestsExtendedResp[]> {
     return this.vaultService.getVaultHarvests(Chain.getChain(chain), vault);
   }
 

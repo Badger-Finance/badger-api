@@ -28,7 +28,10 @@ async function getUniSwapValue(vault: VaultDefinitionModel, tradeData: UniPairDa
   if (!tradeData || tradeData.length === 0) {
     return createYieldSource(vault, SourceType.TradeFee, name, 0);
   }
-  const [token0Price, token1Price] = await Promise.all([queryPrice(tradeData[0].token0.id), queryPrice(tradeData[0].token1.id)]);
+  const [token0Price, token1Price] = await Promise.all([
+    queryPrice(tradeData[0].token0.id),
+    queryPrice(tradeData[0].token1.id)
+  ]);
   let totalApy = 0;
   let currentApy = 0;
   for (let i = 0; i < tradeData.length; i++) {

@@ -1,13 +1,13 @@
-import { MigrationStatus } from '../../migrations/migration.enums';
+import { MigrationStatus } from "../../migrations/migration.enums";
 declare class MigrationSequence {
-    name: string;
-    value: string;
-    status: MigrationStatus;
+  name: string;
+  value: string;
+  status: MigrationStatus;
 }
 export declare class MigrationProcessData {
-    id: string;
-    timestamp: number;
-    status: MigrationStatus;
-    sequences: MigrationSequence[];
+  id: string;
+  timestamp: number;
+  status: MigrationStatus;
+  sequences: MigrationSequence[];
 }
 export {};

@@ -3,5 +3,5 @@
  * currency price data.
  */
 export interface PriceSummary {
-    [address: string]: number;
+  [address: string]: number;
 }

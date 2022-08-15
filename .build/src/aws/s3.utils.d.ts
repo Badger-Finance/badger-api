@@ -1,4 +1,4 @@
-import AWS from 'aws-sdk';
+import AWS from "aws-sdk";
 /**
  * Grab an object from s3.
  * e.g. s3://my-bucket/path/to/file.txt

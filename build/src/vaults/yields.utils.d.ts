@@ -1,10 +1,10 @@
-import { TokenValue, ValueSource, VaultDTO, VaultYieldProjection } from '@badger-dao/sdk';
-import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
-import { YieldEstimate } from '../aws/models/yield-estimate.model';
-import { YieldSource } from '../aws/models/yield-source.model';
-import { SourceType } from '../rewards/enums/source-type.enum';
-import { BoostRange } from '../rewards/interfaces/boost-range.interface';
-import { YieldSources } from './interfaces/yield-sources.interface';
+import { TokenValue, ValueSource, VaultDTO, VaultYieldProjection } from "@badger-dao/sdk";
+import { VaultDefinitionModel } from "../aws/models/vault-definition.model";
+import { YieldEstimate } from "../aws/models/yield-estimate.model";
+import { YieldSource } from "../aws/models/yield-source.model";
+import { SourceType } from "../rewards/enums/source-type.enum";
+import { BoostRange } from "../rewards/interfaces/boost-range.interface";
+import { YieldSources } from "./interfaces/yield-sources.interface";
 /**
  * Aggregate source by source name for readibility
  * @param sources source list to aggregate
@@ -19,7 +19,12 @@ export declare function aggregateSources<T extends ValueSource>(sources: T[], ac
  * @param compoundingValue compounded portion of base value
  * @returns apr or apy for given inputs, any value with compouned portions are apy
  */
-export declare function calculateYield(principal: number, earned: number, duration: number, compoundingValue?: number): number;
+export declare function calculateYield(
+  principal: number,
+  earned: number,
+  duration: number,
+  compoundingValue?: number
+): number;
 /**
  * Calculate the difference in two lists of tokens.
  * @param listA reference previous list
@@ -46,7 +51,11 @@ export declare function getYieldSources(vault: VaultDefinitionModel): Promise<Yi
  * @param yieldEstimate vault harvest measurements
  * @returns evaluated vault yield projection
  */
-export declare function getVaultYieldProjection(vault: VaultDTO, yieldSources: YieldSources, yieldEstimate: YieldEstimate): VaultYieldProjection;
+export declare function getVaultYieldProjection(
+  vault: VaultDTO,
+  yieldSources: YieldSources,
+  yieldEstimate: YieldEstimate
+): VaultYieldProjection;
 /**
  *
  * @param vault
@@ -56,4 +65,10 @@ export declare function getVaultYieldProjection(vault: VaultDTO, yieldSources: Y
  * @param param4
  * @returns
  */
-export declare function createYieldSource(vault: VaultDefinitionModel, type: SourceType, name: string, apr: number, { min, max }?: BoostRange): YieldSource;
+export declare function createYieldSource(
+  vault: VaultDefinitionModel,
+  type: SourceType,
+  name: string,
+  apr: number,
+  { min, max }?: BoostRange
+): YieldSource;

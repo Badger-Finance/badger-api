@@ -7,7 +7,13 @@ import { Chain } from "./chain.config";
 
 export class TestEthereum extends Chain {
   constructor(provider: SDKProvider) {
-    super(Network.Ethereum, mockTokensMap as TokenConfig, provider, new TestStrategy(), "0x31825c0a6278b89338970e3eb979b05b27faa263");
+    super(
+      Network.Ethereum,
+      mockTokensMap as TokenConfig,
+      provider,
+      new TestStrategy(),
+      "0x31825c0a6278b89338970e3eb979b05b27faa263"
+    );
     Chain.register(this.network, this);
   }
 

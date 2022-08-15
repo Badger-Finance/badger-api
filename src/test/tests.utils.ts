@@ -7,17 +7,17 @@ import { ethers } from "ethers";
 import createMockInstance from "jest-create-mock-instance";
 import { mock } from "jest-mock-extended";
 
-import VaultsCompoundMock from '../../seed/vault-definition.json';
-import * as accountsUtils from '../accounts/accounts.utils';
-import * as dynamodbUtils from '../aws/dynamodb.utils';
-import { CachedAccount } from '../aws/models/cached-account.model';
-import { CachedBoost } from '../aws/models/cached-boost.model';
-import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
-import { SUPPORTED_CHAINS } from '../chains/chain';
-import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
-import { vaultsChartDataMock } from '../vaults/mocks/vaults-chart-data.mock';
-import { MOCK_VAULT_DEFINITION, TEST_ADDR, TEST_CURRENT_BLOCK } from './constants';
-import { Nullable } from '../utils/types.utils';
+import VaultsCompoundMock from "../../seed/vault-definition.json";
+import * as accountsUtils from "../accounts/accounts.utils";
+import * as dynamodbUtils from "../aws/dynamodb.utils";
+import { CachedAccount } from "../aws/models/cached-account.model";
+import { CachedBoost } from "../aws/models/cached-boost.model";
+import { VaultDefinitionModel } from "../aws/models/vault-definition.model";
+import { SUPPORTED_CHAINS } from "../chains/chain";
+import { LeaderBoardType } from "../leaderboards/enums/leaderboard-type.enum";
+import { vaultsChartDataMock } from "../vaults/mocks/vaults-chart-data.mock";
+import { MOCK_VAULT_DEFINITION, TEST_ADDR, TEST_CURRENT_BLOCK } from "./constants";
+import { Nullable } from "../utils/types.utils";
 
 // @ts-ignore
 export function setupVaultsCoumpoundDDB(customFilter: Nullable<(v: any) => boolean> = null) {
@@ -210,6 +210,6 @@ export async function mockSupportedChains() {
   for (const chain of SUPPORTED_CHAINS) {
     const sdk = mockBadgerSdk({ network: chain.network });
 
-    jest.spyOn(chain.constructor.prototype, 'getSdk').mockImplementation(async () => sdk);
+    jest.spyOn(chain.constructor.prototype, "getSdk").mockImplementation(async () => sdk);
   }
 }

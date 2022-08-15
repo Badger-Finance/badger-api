@@ -1,5 +1,5 @@
-import { MiddlewareMethods } from '@tsed/platform-middlewares';
-import { Context } from '@tsed/platform-params';
+import { MiddlewareMethods } from "@tsed/platform-middlewares";
+import { Context } from "@tsed/platform-params";
 export default class DevelopmentFilter implements MiddlewareMethods {
-    use(_: Context): void;
+  use(_: Context): void;
 }

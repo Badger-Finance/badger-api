@@ -1,5 +1,5 @@
-import { Chain } from './chain.config';
+import { Chain } from "./chain.config";
 export declare class Fantom extends Chain {
-    constructor();
-    getBadgerTokenAddress(): string;
+  constructor();
+  getBadgerTokenAddress(): string;
 }

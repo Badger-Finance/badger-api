@@ -31,7 +31,9 @@ describe("rewards.service", () => {
   describe("getUserRewards", () => {
     it("throws a bad request on chains with no rewards", async () => {
       const chain = new BinanceSmartChain();
-      await expect(service.getUserRewards(chain, TEST_ADDR)).rejects.toThrow(`${chain.network} is not supportable for request`);
+      await expect(service.getUserRewards(chain, TEST_ADDR)).rejects.toThrow(
+        `${chain.network} is not supportable for request`
+      );
     });
   });
 

@@ -1,3 +1,3 @@
 export interface PoolMap {
-    [address: string]: number;
+  [address: string]: number;
 }

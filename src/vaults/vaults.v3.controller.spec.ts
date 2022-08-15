@@ -36,7 +36,9 @@ describe("vaults.v3.controller", () => {
       it("returns the requested vaults", async () => {
         setupVaultsCoumpoundDDB();
         setupTestVault();
-        const { body, statusCode } = await PlatformServerlessTest.request.get("/vaults/list").query({ chain: Network.Ethereum });
+        const { body, statusCode } = await PlatformServerlessTest.request
+          .get("/vaults/list")
+          .query({ chain: Network.Ethereum });
         expect(statusCode).toEqual(NetworkStatus.Success);
         expect(JSON.parse(body)).toMatchSnapshot();
       });
@@ -47,7 +49,9 @@ describe("vaults.v3.controller", () => {
         jest.spyOn(Chain, "getChain").mockImplementation(() => {
           throw new BadRequest(`invalid is not a supported chain`);
         });
-        const { body, statusCode } = await PlatformServerlessTest.request.get("/vaults/list").query({ chain: "invalid" });
+        const { body, statusCode } = await PlatformServerlessTest.request
+          .get("/vaults/list")
+          .query({ chain: "invalid" });
         expect(statusCode).toEqual(NetworkStatus.BadRequest);
         expect(JSON.parse(body)).toMatchSnapshot();
       });
@@ -81,7 +85,9 @@ describe("vaults.v3.controller", () => {
 
     describe("success cases", () => {
       it("Return extended harvests for chain vault by addr", async () => {
-        const { body, statusCode } = await PlatformServerlessTest.request.get("/vaults/harvests").query({ vault: TEST_ADDR });
+        const { body, statusCode } = await PlatformServerlessTest.request
+          .get("/vaults/harvests")
+          .query({ vault: TEST_ADDR });
         expect(statusCode).toEqual(NetworkStatus.Success);
         expect(JSON.parse(body)).toMatchSnapshot();
       });
@@ -91,7 +97,9 @@ describe("vaults.v3.controller", () => {
         jest.spyOn(Chain, "getChain").mockImplementation(() => {
           throw new BadRequest(`invalid is not a supported chain`);
         });
-        const { body, statusCode } = await PlatformServerlessTest.request.get(`/vaults/harvests?vault=${TEST_ADDR}&chain=invalid`);
+        const { body, statusCode } = await PlatformServerlessTest.request.get(
+          `/vaults/harvests?vault=${TEST_ADDR}&chain=invalid`
+        );
         expect(statusCode).toEqual(NetworkStatus.BadRequest);
         expect(JSON.parse(body)).toMatchSnapshot();
       });

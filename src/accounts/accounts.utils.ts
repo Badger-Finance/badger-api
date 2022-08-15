@@ -73,7 +73,11 @@ export async function queryCachedAccount(address: string): Promise<CachedAccount
   const baseAccount = Object.assign(new CachedAccount(), defaultAccount);
   try {
     const mapper = getDataMapper();
-    for await (const item of mapper.query(CachedAccount, { address: checksummedAccount }, { limit: 1, scanIndexForward: false })) {
+    for await (const item of mapper.query(
+      CachedAccount,
+      { address: checksummedAccount },
+      { limit: 1, scanIndexForward: false }
+    )) {
       return item;
     }
 
@@ -169,9 +173,12 @@ export async function getCachedAccount(chain: Chain, address: string): Promise<A
       earnedTokens: bal.earnedTokens
     }));
   const data = Object.fromEntries(balances.map((bal) => [bal.address, bal]));
-  const claimableBalances = Object.fromEntries(claimableBalanceSnapshot.claimableBalances.map((bal) => [bal.address, bal.balance]));
+  const claimableBalances = Object.fromEntries(
+    claimableBalanceSnapshot.claimableBalances.map((bal) => [bal.address, bal.balance])
+  );
   const cachedBoost = await getCachedBoost(network, cachedAccount.address);
-  const { boost, boostRank, stakeRatio, nftBalance, bveCvxBalance, nativeBalance, nonNativeBalance, diggBalance } = cachedBoost;
+  const { boost, boostRank, stakeRatio, nftBalance, bveCvxBalance, nativeBalance, nonNativeBalance, diggBalance } =
+    cachedBoost;
   const value = balances.map((b) => b.value).reduce((total, value) => (total += value), 0);
   const earnedValue = balances.map((b) => b.earnedValue).reduce((total, value) => (total += value), 0);
   const account: Account = {
@@ -192,7 +199,11 @@ export async function getCachedAccount(chain: Chain, address: string): Promise<A
   return account;
 }
 
-export async function getClaimableBalanceSnapshot(chain: Chain, address: string, startBlock: number): Promise<UserClaimSnapshot> {
+export async function getClaimableBalanceSnapshot(
+  chain: Chain,
+  address: string,
+  startBlock: number
+): Promise<UserClaimSnapshot> {
   const mapper = getDataMapper();
   for await (const entry of mapper.query(
     UserClaimSnapshot,
@@ -257,7 +268,9 @@ export async function refreshAccountVaultBalances(chain: Chain, account: string)
         );
 
         const userVaultBalances = await Promise.all(balances.map(async (bal) => toVaultBalance(chain, bal)));
-        cachedAccount.balances = cachedAccount.balances.filter((bal) => bal.network !== chain.network).concat(userVaultBalances);
+        cachedAccount.balances = cachedAccount.balances
+          .filter((bal) => bal.network !== chain.network)
+          .concat(userVaultBalances);
 
         const mapper = getDataMapper();
         await mapper.put(cachedAccount);

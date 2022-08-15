@@ -68,7 +68,10 @@ export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefini
   };
 }
 
-export async function constructVaultDefinition(chain: Chain, vault: RegistryVault): Promise<Nullable<VaultDefinitionModel>> {
+export async function constructVaultDefinition(
+  chain: Chain,
+  vault: RegistryVault
+): Promise<Nullable<VaultDefinitionModel>> {
   const { address } = vault;
 
   const sdk = await chain.getSdk();

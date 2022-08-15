@@ -1,4 +1,4 @@
-import { SwaggerSettings } from '@tsed/swagger';
+import { SwaggerSettings } from "@tsed/swagger";
 export declare const ONE_MINUTE_SECONDS = 60;
 export declare const ONE_DAY_SECONDS: number;
 export declare const ONE_WEEK_SECONDS: number;

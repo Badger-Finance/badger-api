@@ -51,7 +51,15 @@ export class RewardsService {
     return claim;
   }
 
-  async list({ chain, pageNum = 0, pageCount = DEFAULT_PAGE_SIZE }: { chain: Chain; pageNum?: number; pageCount?: number }): Promise<{
+  async list({
+    chain,
+    pageNum = 0,
+    pageCount = DEFAULT_PAGE_SIZE
+  }: {
+    chain: Chain;
+    pageNum?: number;
+    pageCount?: number;
+  }): Promise<{
     count: number;
     records: UserClaimSnapshot[];
   }> {

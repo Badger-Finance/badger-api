@@ -1,7 +1,7 @@
-import { ChartTimeFrame } from '@badger-dao/sdk';
-import { ChartDataBlob } from '../aws/models/chart-data-blob.model';
-import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
-import { ChartData } from './chart-data.model';
+import { ChartTimeFrame } from "@badger-dao/sdk";
+import { ChartDataBlob } from "../aws/models/chart-data-blob.model";
+import { HistoricVaultSnapshotModel } from "../aws/models/historic-vault-snapshot.model";
+import { ChartData } from "./chart-data.model";
 export declare const CHART_GRANULARITY_TIMEFRAMES: ChartTimeFrame[];
 /**
  *
@@ -10,7 +10,11 @@ export declare const CHART_GRANULARITY_TIMEFRAMES: ChartTimeFrame[];
  * @param data
  * @returns
  */
-export declare function toChartDataBlob<T extends ChartData<T>>(id: string, timeframe: ChartTimeFrame, data: T[]): ChartDataBlob<T>;
+export declare function toChartDataBlob<T extends ChartData<T>>(
+  id: string,
+  timeframe: ChartTimeFrame,
+  data: T[]
+): ChartDataBlob<T>;
 /**
  *
  * @param namespace

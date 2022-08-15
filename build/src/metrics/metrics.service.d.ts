@@ -1,4 +1,4 @@
-import { ProtocolMetrics } from './interfaces/metrics.interface';
+import { ProtocolMetrics } from "./interfaces/metrics.interface";
 export declare class MetricsService {
-    getProtocolMetrics(): Promise<ProtocolMetrics>;
+  getProtocolMetrics(): Promise<ProtocolMetrics>;
 }

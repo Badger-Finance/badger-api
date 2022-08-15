@@ -25,30 +25,30 @@ const vaults_v3_controller_1 = require("./vaults/vaults.v3.controller");
  * without this.
  */
 exports.V2_CONTROLLERS = [
-    charts_controller_1.ChartsController,
-    gas_controller_1.GasController,
-    leaderboards_controller_1.LeaderBoardsController,
-    metrics_controller_1.MetricsController,
-    protocols_controller_1.ProtocolController,
-    prices_controller_1.PriceController,
-    tokens_controller_1.TokensController,
-    accounts_v2_controller_1.AccountsV2Controller,
-    proofs_v2_controller_1.ProofsV2Controller,
-    reward_v2_controller_1.RewardV2Controller,
-    rewards_v2_controller_1.RewardsV2Controller,
-    vaults_v2_controller_1.VaultsV2Controller,
+  charts_controller_1.ChartsController,
+  gas_controller_1.GasController,
+  leaderboards_controller_1.LeaderBoardsController,
+  metrics_controller_1.MetricsController,
+  protocols_controller_1.ProtocolController,
+  prices_controller_1.PriceController,
+  tokens_controller_1.TokensController,
+  accounts_v2_controller_1.AccountsV2Controller,
+  proofs_v2_controller_1.ProofsV2Controller,
+  reward_v2_controller_1.RewardV2Controller,
+  rewards_v2_controller_1.RewardsV2Controller,
+  vaults_v2_controller_1.VaultsV2Controller
 ];
 exports.V3_CONTROLLERS = [
-    charts_controller_1.ChartsController,
-    gas_controller_1.GasController,
-    leaderboards_controller_1.LeaderBoardsController,
-    metrics_controller_1.MetricsController,
-    prices_controller_1.PriceController,
-    tokens_controller_1.TokensController,
-    dev_controller_1.DevelopmentController,
-    account_v3_controller_1.AccountV3Controller,
-    proof_v3_controller_1.ProofsV3Controller,
-    rewards_v3_controller_1.RewardsV3Controller,
-    vaults_v3_controller_1.VaultsV3Controller,
+  charts_controller_1.ChartsController,
+  gas_controller_1.GasController,
+  leaderboards_controller_1.LeaderBoardsController,
+  metrics_controller_1.MetricsController,
+  prices_controller_1.PriceController,
+  tokens_controller_1.TokensController,
+  dev_controller_1.DevelopmentController,
+  account_v3_controller_1.AccountV3Controller,
+  proof_v3_controller_1.ProofsV3Controller,
+  rewards_v3_controller_1.RewardsV3Controller,
+  vaults_v3_controller_1.VaultsV3Controller
 ];
 //# sourceMappingURL=ControllerRegistry.js.map

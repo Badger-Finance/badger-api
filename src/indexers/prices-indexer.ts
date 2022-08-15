@@ -20,7 +20,9 @@ export async function indexPrices() {
         .filter((t) => t.type === PricingType.LookupName)
         .map((t) => t.lookupName)
         .filter((name): name is string => !!name);
-      const onChainTokens = chainTokens.filter((t) => t.type !== PricingType.Contract && t.type !== PricingType.LookupName);
+      const onChainTokens = chainTokens.filter(
+        (t) => t.type !== PricingType.Contract && t.type !== PricingType.LookupName
+      );
 
       // execute price look ups
       const [contractPrices, lookupNamePrices] = await Promise.all([
@@ -59,7 +61,9 @@ export async function indexPrices() {
         })
       );
 
-      console.log(`Updated ${persistedPrices.length} / ${Object.keys(priceUpdates).length} ${chain.network} token prices`);
+      console.log(
+        `Updated ${persistedPrices.length} / ${Object.keys(priceUpdates).length} ${chain.network} token prices`
+      );
     } catch (err) {
       console.error(err);
     }

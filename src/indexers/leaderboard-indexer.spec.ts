@@ -25,7 +25,10 @@ describe("leaderboard-indexer", () => {
     multiplierData: {}
   };
 
-  let batchPut: jest.SpyInstance<AsyncIterableIterator<StringToAnyObjectMap>, [items: SyncOrAsyncIterable<StringToAnyObjectMap>]>;
+  let batchPut: jest.SpyInstance<
+    AsyncIterableIterator<StringToAnyObjectMap>,
+    [items: SyncOrAsyncIterable<StringToAnyObjectMap>]
+  >;
 
   beforeEach(async () => {
     mockQuery([]);

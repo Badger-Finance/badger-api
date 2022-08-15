@@ -1,5 +1,9 @@
 import { ONE_DAY_MS, VaultState, VaultVersion } from "@badger-dao/sdk";
-import { BadgerTreeDistribution_OrderBy, OrderDirection, SettHarvest_OrderBy } from "@badger-dao/sdk/lib/graphql/generated/badger";
+import {
+  BadgerTreeDistribution_OrderBy,
+  OrderDirection,
+  SettHarvest_OrderBy
+} from "@badger-dao/sdk/lib/graphql/generated/badger";
 
 import { getDataMapper } from "../aws/dynamodb.utils";
 import { YieldEstimate } from "../aws/models/yield-estimate.model";
@@ -51,7 +55,9 @@ export async function refreshYieldEstimates() {
             // only report an error with the vault every eight hours
             if (now - ONE_DAY_MS / 3 > harvestData.lastReportedAt) {
               sendPlainTextToDiscord(
-                `${chain.network} ${vault.name} (${vault.protocol}, ${vault.version}, ${vault.state ?? VaultState.Open}) failed to harvest!`
+                `${chain.network} ${vault.name} (${vault.protocol}, ${vault.version}, ${
+                  vault.state ?? VaultState.Open
+                }) failed to harvest!`
               );
               harvestData.lastReportedAt = now;
             }
@@ -86,7 +92,10 @@ export async function refreshYieldEstimates() {
           if (settHarvests.length > 0) {
             harvestData.lastHarvestedAt = settHarvests[0].timestamp * 1000;
           }
-          if (badgerTreeDistributions.length > 0 && badgerTreeDistributions[0].timestamp > harvestData.lastHarvestedAt) {
+          if (
+            badgerTreeDistributions.length > 0 &&
+            badgerTreeDistributions[0].timestamp > harvestData.lastHarvestedAt
+          ) {
             harvestData.lastHarvestedAt = badgerTreeDistributions[0].timestamp * 1000;
           }
         }
@@ -118,7 +127,10 @@ export async function refreshYieldEstimates() {
         harvestData.duration = now - harvestData.lastMeasuredAt;
         harvestData.lastMeasuredAt = now;
 
-        const harvestDifference = calculateBalanceDifference(harvestData.previousHarvestTokens, harvestData.harvestTokens);
+        const harvestDifference = calculateBalanceDifference(
+          harvestData.previousHarvestTokens,
+          harvestData.harvestTokens
+        );
         const hasNegatives = harvestDifference.some((b) => b.balance < 0);
 
         // if the difference incur negative values due to slippage or otherwise, force a comparison against the full harvest

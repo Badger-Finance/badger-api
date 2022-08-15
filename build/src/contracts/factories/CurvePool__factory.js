@@ -6,50 +6,50 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CurvePool__factory = void 0;
 const ethers_1 = require("ethers");
 const _abi = [
-    {
-        constant: true,
-        inputs: [
-            {
-                type: 'int128',
-                name: 'arg0',
-            },
-        ],
-        name: 'coins',
-        outputs: [
-            {
-                type: 'address',
-                name: '',
-            },
-        ],
-        payable: false,
-        type: 'function',
-    },
-    {
-        constant: true,
-        inputs: [
-            {
-                type: 'int128',
-                name: 'arg0',
-            },
-        ],
-        name: 'balances',
-        outputs: [
-            {
-                type: 'uint256',
-                name: '',
-            },
-        ],
-        payable: false,
-        type: 'function',
-    },
+  {
+    constant: true,
+    inputs: [
+      {
+        type: "int128",
+        name: "arg0"
+      }
+    ],
+    name: "coins",
+    outputs: [
+      {
+        type: "address",
+        name: ""
+      }
+    ],
+    payable: false,
+    type: "function"
+  },
+  {
+    constant: true,
+    inputs: [
+      {
+        type: "int128",
+        name: "arg0"
+      }
+    ],
+    name: "balances",
+    outputs: [
+      {
+        type: "uint256",
+        name: ""
+      }
+    ],
+    payable: false,
+    type: "function"
+  }
 ];
 class CurvePool__factory {
-    static createInterface() {
-        return new ethers_1.utils.Interface(_abi);
-    }
-    static connect(address, signerOrProvider) {
-        return new ethers_1.Contract(address, _abi, signerOrProvider);
-    }
+  static createInterface() {
+    return new ethers_1.utils.Interface(_abi);
+  }
+  static connect(address, signerOrProvider) {
+    return new ethers_1.Contract(address, _abi, signerOrProvider);
+  }
 }
 exports.CurvePool__factory = CurvePool__factory;
 CurvePool__factory.abi = _abi;

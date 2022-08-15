@@ -36,14 +36,20 @@ describe("harvest-compound.indexer", () => {
   describe("indexVaultsHarvestsCompund", () => {
     it("should save all harvests from all chains to ddb", async () => {
       await indexVaultsHarvestsCompund();
-      expect(put.mock.calls.length).toBe(SUPPORTED_CHAINS.length * vaultHarvestsOnChainMock[MOCK_VAULT_DEFINITION.address].length);
+      expect(put.mock.calls.length).toBe(
+        SUPPORTED_CHAINS.length * vaultHarvestsOnChainMock[MOCK_VAULT_DEFINITION.address].length
+      );
     });
 
     it("should get and save harvests only after the block of the last in ddb", async () => {
       const blocks = vaultHarvestsOnChainMock[MOCK_VAULT_DEFINITION.address].map((h) => h.block).sort();
       const cutoffBlock = blocks[1];
-      const conformingHarvests = vaultHarvestsOnChainMock[MOCK_VAULT_DEFINITION.address].filter((h) => h.block > cutoffBlock);
-      jest.spyOn(vaultsUtils, "getLastCompoundHarvest").mockImplementation(async () => <HarvestCompoundData>{ block: cutoffBlock });
+      const conformingHarvests = vaultHarvestsOnChainMock[MOCK_VAULT_DEFINITION.address].filter(
+        (h) => h.block > cutoffBlock
+      );
+      jest
+        .spyOn(vaultsUtils, "getLastCompoundHarvest")
+        .mockImplementation(async () => <HarvestCompoundData>{ block: cutoffBlock });
 
       await indexVaultsHarvestsCompund();
 

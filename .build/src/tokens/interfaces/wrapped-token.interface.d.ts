@@ -1,5 +1,5 @@
-import { Network } from '@badger-dao/sdk';
+import { Network } from "@badger-dao/sdk";
 export interface WrappedToken {
-    address: string;
-    network: Network;
+  address: string;
+  network: Network;
 }

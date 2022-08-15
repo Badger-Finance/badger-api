@@ -47,7 +47,15 @@ export class VaultHarvestsModel implements VaultHarvestsExtendedResp {
   @Property()
   public estimatedApr?: number;
 
-  constructor({ timestamp, block, token, amount, eventType, strategyBalance, estimatedApr }: VaultHarvestsExtendedResp) {
+  constructor({
+    timestamp,
+    block,
+    token,
+    amount,
+    eventType,
+    strategyBalance,
+    estimatedApr
+  }: VaultHarvestsExtendedResp) {
     this.timestamp = timestamp;
     this.block = block;
     this.token = token;

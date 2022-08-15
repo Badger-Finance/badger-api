@@ -43,7 +43,10 @@ export class VaultsV3Controller {
   @Description("Return a list of protocol vaults for the requested chain")
   @Returns(200, VaultModel)
   @Returns(400).Description("Not a valid chain")
-  async listVaults(@QueryParams("chain") chain?: Network, @QueryParams("currency") currency?: Currency): Promise<VaultModel[]> {
+  async listVaults(
+    @QueryParams("chain") chain?: Network,
+    @QueryParams("currency") currency?: Currency
+  ): Promise<VaultModel[]> {
     return this.vaultService.listVaults(Chain.getChain(chain), currency);
   }
 

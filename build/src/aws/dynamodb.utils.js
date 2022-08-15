@@ -7,31 +7,30 @@ const aws_sdk_1 = tslib_1.__importDefault(require("aws-sdk"));
 const leaderboard_type_enum_1 = require("../leaderboards/enums/leaderboard-type.enum");
 const offline = process.env.IS_OFFLINE;
 function getDataMapper() {
-    let client;
-    if (offline) {
-        client = new aws_sdk_1.default.DynamoDB({
-            region: 'localhost',
-            endpoint: 'http://localhost:8000',
-            accessKeyId: '',
-            secretAccessKey: '',
-        });
-    }
-    else {
-        client = new aws_sdk_1.default.DynamoDB();
-    }
-    return new dynamodb_data_mapper_1.DataMapper({ client });
+  let client;
+  if (offline) {
+    client = new aws_sdk_1.default.DynamoDB({
+      region: "localhost",
+      endpoint: "http://localhost:8000",
+      accessKeyId: "",
+      secretAccessKey: ""
+    });
+  } else {
+    client = new aws_sdk_1.default.DynamoDB();
+  }
+  return new dynamodb_data_mapper_1.DataMapper({ client });
 }
 exports.getDataMapper = getDataMapper;
 function getLeaderboardKey(chain) {
-    return `${chain.network}_${leaderboard_type_enum_1.LeaderBoardType.BadgerBoost}`;
+  return `${chain.network}_${leaderboard_type_enum_1.LeaderBoardType.BadgerBoost}`;
 }
 exports.getLeaderboardKey = getLeaderboardKey;
 function getChainStartBlockKey(chain, block) {
-    return `${chain.network}_${block}`;
+  return `${chain.network}_${block}`;
 }
 exports.getChainStartBlockKey = getChainStartBlockKey;
 function getVaultEntityId({ network }, { address }) {
-    return `${network}-${address}`;
+  return `${network}-${address}`;
 }
 exports.getVaultEntityId = getVaultEntityId;
 //# sourceMappingURL=dynamodb.utils.js.map

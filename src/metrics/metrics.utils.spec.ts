@@ -32,7 +32,8 @@ describe("metrics.utils", () => {
     jest
       .spyOn(vaultUtils, "getCachedVault")
       .mockImplementation(
-        async (chain: Chain, VaultDefinition: VaultDefinitionModel): Promise<VaultDTO> => vaultUtils.defaultVault(chain, VaultDefinition)
+        async (chain: Chain, VaultDefinition: VaultDefinitionModel): Promise<VaultDTO> =>
+          vaultUtils.defaultVault(chain, VaultDefinition)
       );
   });
 

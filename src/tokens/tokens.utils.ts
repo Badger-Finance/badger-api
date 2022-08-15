@@ -74,7 +74,9 @@ export async function getFullTokens(chain: Chain, tokensAddr: Token["address"][]
 
 export async function getCachedTokesInfo(tokensAddr: Token["address"][]): Promise<Token[]> {
   const mapper = getDataMapper();
-  const tokensToGet = tokensAddr.map((addr) => Object.assign(new TokenInformationSnapshot(), { address: ethers.utils.getAddress(addr) }));
+  const tokensToGet = tokensAddr.map((addr) =>
+    Object.assign(new TokenInformationSnapshot(), { address: ethers.utils.getAddress(addr) })
+  );
 
   const tokensInfo: Token[] = [];
 

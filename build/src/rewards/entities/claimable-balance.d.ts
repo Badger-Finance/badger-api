@@ -1,4 +1,4 @@
 export declare class ClaimableBalance {
-    address: string;
-    balance: string;
+  address: string;
+  balance: string;
 }

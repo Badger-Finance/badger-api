@@ -1,4 +1,4 @@
 export interface BoostRange {
-    min: number;
-    max: number;
+  min: number;
+  max: number;
 }

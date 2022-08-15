@@ -11,13 +11,13 @@ const vaults_utils_1 = require("./vaults.utils");
  * @returns
  */
 function isRelevantSource(source, state) {
-    if (source.apr < 0.001) {
-        return false;
-    }
-    if (state === sdk_1.VaultState.Discontinued) {
-        return isPassiveSource(source);
-    }
+  if (source.apr < 0.001) {
     return false;
+  }
+  if (state === sdk_1.VaultState.Discontinued) {
+    return isPassiveSource(source);
+  }
+  return false;
 }
 /**
  *
@@ -25,7 +25,7 @@ function isRelevantSource(source, state) {
  * @returns
  */
 function isPassiveSource(source) {
-    return !(isAprSource(source) || isApySource(source));
+  return !(isAprSource(source) || isApySource(source));
 }
 /**
  *
@@ -33,7 +33,9 @@ function isPassiveSource(source) {
  * @returns
  */
 function isNonHarvestSource(source) {
-    return source.type !== source_type_enum_1.SourceType.Compound && source.type !== source_type_enum_1.SourceType.PreCompound;
+  return (
+    source.type !== source_type_enum_1.SourceType.Compound && source.type !== source_type_enum_1.SourceType.PreCompound
+  );
 }
 /**
  *
@@ -41,7 +43,9 @@ function isNonHarvestSource(source) {
  * @returns
  */
 function isAprSource(source) {
-    return source.type !== source_type_enum_1.SourceType.Compound && source.type !== source_type_enum_1.SourceType.Flywheel;
+  return (
+    source.type !== source_type_enum_1.SourceType.Compound && source.type !== source_type_enum_1.SourceType.Flywheel
+  );
 }
 /**
  *
@@ -49,7 +53,7 @@ function isAprSource(source) {
  * @returns
  */
 function isApySource(source) {
-    return source.type !== source_type_enum_1.SourceType.PreCompound;
+  return source.type !== source_type_enum_1.SourceType.PreCompound;
 }
 /**
  *
@@ -59,11 +63,11 @@ function isApySource(source) {
  * @returns
  */
 function balanceToTokenRate(balance, principal, duration) {
-    const apr = calculateProjectedYield(principal, balance.value, duration);
-    return {
-        apr,
-        ...balance,
-    };
+  const apr = calculateProjectedYield(principal, balance.value, duration);
+  return {
+    apr,
+    ...balance
+  };
 }
 /**
  *
@@ -74,16 +78,16 @@ function balanceToTokenRate(balance, principal, duration) {
  * @returns
  */
 function calculateProjectedYield(value, pendingValue, duration, compoundingValue = 0) {
-    if (duration === 0 || value === 0 || pendingValue === 0) {
-        return 0;
-    }
-    const apr = (pendingValue / value) * (sdk_1.ONE_YEAR_MS / duration) * 100;
-    if (compoundingValue === 0) {
-        return apr;
-    }
-    const compoundingApr = (compoundingValue / value) * (sdk_1.ONE_YEAR_MS / duration);
-    const periods = sdk_1.ONE_YEAR_MS / duration;
-    return apr - compoundingApr + ((1 + compoundingApr / periods) ** periods - 1) * 100;
+  if (duration === 0 || value === 0 || pendingValue === 0) {
+    return 0;
+  }
+  const apr = (pendingValue / value) * (sdk_1.ONE_YEAR_MS / duration) * 100;
+  if (compoundingValue === 0) {
+    return apr;
+  }
+  const compoundingApr = (compoundingValue / value) * (sdk_1.ONE_YEAR_MS / duration);
+  const periods = sdk_1.ONE_YEAR_MS / duration;
+  return apr - compoundingApr + ((1 + compoundingApr / periods) ** periods - 1) * 100;
 }
 /**
  *
@@ -92,21 +96,21 @@ function calculateProjectedYield(value, pendingValue, duration, compoundingValue
  * @returns
  */
 function calculateBalanceDifference(listA, listB) {
-    // we need to construct a measurement diff from the originally measured tokens and the new tokens
-    const listAByToken = (0, sdk_1.keyBy)(listA, (t) => t.address);
-    const listBCopy = JSON.parse(JSON.stringify(listB));
-    listBCopy.forEach((t) => {
-        const yieldedTokens = listAByToken.get(t.address);
-        if (yieldedTokens) {
-            // lock in current price and caculate value on updated balance
-            for (const token of yieldedTokens) {
-                const price = t.value / t.balance;
-                t.balance -= token.balance;
-                t.value = t.balance * price;
-            }
-        }
-    });
-    return listBCopy;
+  // we need to construct a measurement diff from the originally measured tokens and the new tokens
+  const listAByToken = (0, sdk_1.keyBy)(listA, (t) => t.address);
+  const listBCopy = JSON.parse(JSON.stringify(listB));
+  listBCopy.forEach((t) => {
+    const yieldedTokens = listAByToken.get(t.address);
+    if (yieldedTokens) {
+      // lock in current price and caculate value on updated balance
+      for (const token of yieldedTokens) {
+        const price = t.value / t.balance;
+        t.balance -= token.balance;
+        t.value = t.balance * price;
+      }
+    }
+  });
+  return listBCopy;
 }
 /**
  *
@@ -114,22 +118,22 @@ function calculateBalanceDifference(listA, listB) {
  * @returns
  */
 async function getYieldSources(vault) {
-    const yieldSources = await (0, vaults_utils_1.queryYieldSources)(vault);
-    const relevantSources = yieldSources.filter((s) => isRelevantSource(s, vault.state));
-    const sources = relevantSources.filter(isAprSource);
-    const apr = sources.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
-    const sourcesApy = relevantSources.filter(isApySource);
-    const apy = sourcesApy.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
-    const nonHarvestSources = sourcesApy.filter(isPassiveSource);
-    const nonHarvestSourcesApy = sourcesApy.filter(isNonHarvestSource);
-    return {
-        apr,
-        sources,
-        apy,
-        sourcesApy,
-        nonHarvestSources,
-        nonHarvestSourcesApy,
-    };
+  const yieldSources = await (0, vaults_utils_1.queryYieldSources)(vault);
+  const relevantSources = yieldSources.filter((s) => isRelevantSource(s, vault.state));
+  const sources = relevantSources.filter(isAprSource);
+  const apr = sources.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
+  const sourcesApy = relevantSources.filter(isApySource);
+  const apy = sourcesApy.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
+  const nonHarvestSources = sourcesApy.filter(isPassiveSource);
+  const nonHarvestSourcesApy = sourcesApy.filter(isNonHarvestSource);
+  return {
+    apr,
+    sources,
+    apy,
+    sourcesApy,
+    nonHarvestSources,
+    nonHarvestSourcesApy
+  };
 }
 exports.getYieldSources = getYieldSources;
 /**
@@ -146,43 +150,54 @@ exports.getYieldSources = getYieldSources;
  * @returns evaluated vault yield projection
  */
 function getVaultYieldProjection(vault, yieldSources, pendingHarvest) {
-    const { value, balance, available, lastHarvest } = vault;
-    const { nonHarvestSources, nonHarvestSourcesApy } = yieldSources;
-    const { yieldTokens, previousYieldTokens, harvestTokens, previousHarvestTokens, duration: periodDuration, } = pendingHarvest;
-    const yieldTokensCurrent = calculateBalanceDifference(previousYieldTokens, yieldTokens);
-    const harvestTokensCurrent = calculateBalanceDifference(previousHarvestTokens, harvestTokens);
-    // calculate the overall harvest values
-    const harvestValue = harvestTokens.reduce((total, token) => (total += token.value), 0);
-    const yieldValue = yieldTokens.reduce((total, token) => (total += token.value), 0);
-    const harvestDuration = Date.now() - lastHarvest;
-    // calculate the current measurement periods values
-    const harvestValuePerPeriod = harvestTokensCurrent.reduce((total, token) => (total += token.value), 0);
-    const yieldValuePerPeriod = yieldTokensCurrent.reduce((total, token) => (total += token.value), 0);
-    const harvestCompoundValuePerPeriod = harvestTokensCurrent
-        .filter((t) => vault.underlyingToken === t.address)
-        .reduce((total, token) => (total += token.value), 0);
-    const earningValue = balance > 0 ? value * ((balance - available) / balance) : 0;
-    const nonHarvestApr = nonHarvestSources.reduce((total, token) => (total += token.apr), 0);
-    const nonHarvestApy = nonHarvestSourcesApy.reduce((total, token) => (total += token.apr), 0);
-    return {
-        harvestValue,
-        harvestApr: calculateProjectedYield(earningValue, harvestValue, harvestDuration),
-        harvestPeriodApr: calculateProjectedYield(earningValue, harvestValuePerPeriod, periodDuration),
-        harvestPeriodApy: calculateProjectedYield(earningValue, harvestValuePerPeriod, periodDuration, harvestCompoundValuePerPeriod),
-        harvestTokens: harvestTokens.map((t) => balanceToTokenRate(t, earningValue, harvestDuration)),
-        harvestPeriodSources: harvestTokensCurrent.map((t) => balanceToTokenRate(t, earningValue, periodDuration)),
-        // TODO: ensure vault token harvests receive apy maths
-        harvestPeriodSourcesApy: harvestTokensCurrent.map((t) => balanceToTokenRate(t, earningValue, periodDuration)),
-        yieldValue,
-        yieldApr: calculateProjectedYield(earningValue, yieldValue, harvestDuration),
-        yieldTokens: yieldTokens.map((t) => balanceToTokenRate(t, earningValue, harvestDuration)),
-        yieldPeriodApr: calculateProjectedYield(earningValue, yieldValuePerPeriod, periodDuration),
-        yieldPeriodSources: yieldTokensCurrent.map((t) => balanceToTokenRate(t, earningValue, periodDuration)),
-        nonHarvestApr,
-        nonHarvestSources,
-        nonHarvestApy,
-        nonHarvestSourcesApy,
-    };
+  const { value, balance, available, lastHarvest } = vault;
+  const { nonHarvestSources, nonHarvestSourcesApy } = yieldSources;
+  const {
+    yieldTokens,
+    previousYieldTokens,
+    harvestTokens,
+    previousHarvestTokens,
+    duration: periodDuration
+  } = pendingHarvest;
+  const yieldTokensCurrent = calculateBalanceDifference(previousYieldTokens, yieldTokens);
+  const harvestTokensCurrent = calculateBalanceDifference(previousHarvestTokens, harvestTokens);
+  // calculate the overall harvest values
+  const harvestValue = harvestTokens.reduce((total, token) => (total += token.value), 0);
+  const yieldValue = yieldTokens.reduce((total, token) => (total += token.value), 0);
+  const harvestDuration = Date.now() - lastHarvest;
+  // calculate the current measurement periods values
+  const harvestValuePerPeriod = harvestTokensCurrent.reduce((total, token) => (total += token.value), 0);
+  const yieldValuePerPeriod = yieldTokensCurrent.reduce((total, token) => (total += token.value), 0);
+  const harvestCompoundValuePerPeriod = harvestTokensCurrent
+    .filter((t) => vault.underlyingToken === t.address)
+    .reduce((total, token) => (total += token.value), 0);
+  const earningValue = balance > 0 ? value * ((balance - available) / balance) : 0;
+  const nonHarvestApr = nonHarvestSources.reduce((total, token) => (total += token.apr), 0);
+  const nonHarvestApy = nonHarvestSourcesApy.reduce((total, token) => (total += token.apr), 0);
+  return {
+    harvestValue,
+    harvestApr: calculateProjectedYield(earningValue, harvestValue, harvestDuration),
+    harvestPeriodApr: calculateProjectedYield(earningValue, harvestValuePerPeriod, periodDuration),
+    harvestPeriodApy: calculateProjectedYield(
+      earningValue,
+      harvestValuePerPeriod,
+      periodDuration,
+      harvestCompoundValuePerPeriod
+    ),
+    harvestTokens: harvestTokens.map((t) => balanceToTokenRate(t, earningValue, harvestDuration)),
+    harvestPeriodSources: harvestTokensCurrent.map((t) => balanceToTokenRate(t, earningValue, periodDuration)),
+    // TODO: ensure vault token harvests receive apy maths
+    harvestPeriodSourcesApy: harvestTokensCurrent.map((t) => balanceToTokenRate(t, earningValue, periodDuration)),
+    yieldValue,
+    yieldApr: calculateProjectedYield(earningValue, yieldValue, harvestDuration),
+    yieldTokens: yieldTokens.map((t) => balanceToTokenRate(t, earningValue, harvestDuration)),
+    yieldPeriodApr: calculateProjectedYield(earningValue, yieldValuePerPeriod, periodDuration),
+    yieldPeriodSources: yieldTokensCurrent.map((t) => balanceToTokenRate(t, earningValue, periodDuration)),
+    nonHarvestApr,
+    nonHarvestSources,
+    nonHarvestApy,
+    nonHarvestSourcesApy
+  };
 }
 exports.getVaultYieldProjection = getVaultYieldProjection;
 //# sourceMappingURL=yield.utils.js.map

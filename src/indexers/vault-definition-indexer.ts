@@ -39,7 +39,11 @@ export async function captureVaultData() {
       .filter((v) => v);
 
     const mapper = getDataMapper();
-    const query = mapper.query(VaultDefinitionModel, { chain: chain.network }, { indexName: "IndexVaultCompoundDataChain" });
+    const query = mapper.query(
+      VaultDefinitionModel,
+      { chain: chain.network },
+      { indexName: "IndexVaultCompoundDataChain" }
+    );
 
     try {
       for await (const compoundVault of query) {

@@ -26,12 +26,16 @@ describe("proofs.service", () => {
 
     it("throws a 404 when a chain is missing a bouncer file", async () => {
       jest.spyOn(s3Utils, "getObject").mockImplementation();
-      await expect(service.getBouncerProof(chain, TEST_ADDR)).rejects.toThrow(`${chain.network} does not have requested data`);
+      await expect(service.getBouncerProof(chain, TEST_ADDR)).rejects.toThrow(
+        `${chain.network} does not have requested data`
+      );
     });
 
     it("throws a 404 when a chain is missing an entry for the user in the bouncer file", async () => {
       jest.spyOn(s3Utils, "getObject").mockImplementation(async () => JSON.stringify(MOCK_BOUNCER_FILE));
-      await expect(service.getBouncerProof(chain, TOKENS.BADGER)).rejects.toThrow(`No data for specified address: ${TOKENS.BADGER}`);
+      await expect(service.getBouncerProof(chain, TOKENS.BADGER)).rejects.toThrow(
+        `No data for specified address: ${TOKENS.BADGER}`
+      );
     });
 
     it("returns the user proof for a user on the bouncer list", async () => {

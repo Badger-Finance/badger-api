@@ -1,4 +1,4 @@
 export declare class BoostDestructor {
-    enabled: string;
-    weight: number;
+  enabled: string;
+  weight: number;
 }

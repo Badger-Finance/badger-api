@@ -6,7 +6,13 @@ import { MOCK_VAULT, MOCK_VAULT_DEFINITION } from "../test/constants";
 import { mockBalance, mockQuery } from "../test/mocks.utils";
 import { fullTokenMockMap } from "../tokens/mocks/full-token.mock";
 import { VAULT_SOURCE } from "./vaults.utils";
-import { calculateBalanceDifference, calculateYield, createYieldSource, getVaultYieldProjection, getYieldSources } from "./yields.utils";
+import {
+  calculateBalanceDifference,
+  calculateYield,
+  createYieldSource,
+  getVaultYieldProjection,
+  getYieldSources
+} from "./yields.utils";
 
 describe("yields.utils", () => {
   const baseMockSources = [
@@ -28,12 +34,17 @@ describe("yields.utils", () => {
       [365, 1, ONE_DAY_MS, 1, 171.45674820219733],
       [365, 1, ONE_DAY_MS, 0.5, 114.81572517391494],
       [0, 1, ONE_DAY_MS, 0, 0]
-    ])("%d earned %d over %d ms with %d compounded, for %d apr", (principal, earned, duration, compoundingValue, expected) => {
-      expect(calculateYield(principal, earned, duration, compoundingValue)).toEqual(expected);
-    });
+    ])(
+      "%d earned %d over %d ms with %d compounded, for %d apr",
+      (principal, earned, duration, compoundingValue, expected) => {
+        expect(calculateYield(principal, earned, duration, compoundingValue)).toEqual(expected);
+      }
+    );
 
     it("throws an error when provided with invalid principal and compounding pair", () => {
-      expect(() => calculateYield(365, 1, ONE_DAY_MS, 2)).toThrow("Compounding value must be less than or equal to earned");
+      expect(() => calculateYield(365, 1, ONE_DAY_MS, 2)).toThrow(
+        "Compounding value must be less than or equal to earned"
+      );
     });
   });
 

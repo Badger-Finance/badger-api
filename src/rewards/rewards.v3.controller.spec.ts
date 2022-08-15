@@ -55,7 +55,9 @@ describe("rewards.v3.controller", () => {
     describe("with active param true", () => {
       it("returns schedules for default chain and one vault", async () => {
         setupRewardsMocks();
-        const { body } = await request.get(`/v3/rewards/schedules?address=${TEST_ADDR}&active=true`).expect(NetworkStatus.Success);
+        const { body } = await request
+          .get(`/v3/rewards/schedules?address=${TEST_ADDR}&active=true`)
+          .expect(NetworkStatus.Success);
         expect(body).toMatchSnapshot();
       });
     });
@@ -63,7 +65,9 @@ describe("rewards.v3.controller", () => {
     describe("with an invalid specified chain", () => {
       it("returns a 400", async () => {
         setupRewardsMocks();
-        const { body } = await request.get(`/v3/rewards/schedules?address=${TEST_ADDR}&chain=invalid`).expect(NetworkStatus.BadRequest);
+        const { body } = await request
+          .get(`/v3/rewards/schedules?address=${TEST_ADDR}&chain=invalid`)
+          .expect(NetworkStatus.BadRequest);
         expect(body).toMatchSnapshot();
       });
     });
@@ -74,7 +78,9 @@ describe("rewards.v3.controller", () => {
         jest.spyOn(ChainVaults.prototype, "getVault").mockImplementation(async (_) => {
           throw new Error("Missing Vault");
         });
-        const { body } = await request.get(`/v3/rewards/schedules?address=unknowsvaultdata`).expect(NetworkStatus.NotFound);
+        const { body } = await request
+          .get(`/v3/rewards/schedules?address=unknowsvaultdata`)
+          .expect(NetworkStatus.NotFound);
         expect(body).toMatchSnapshot();
       });
     });
