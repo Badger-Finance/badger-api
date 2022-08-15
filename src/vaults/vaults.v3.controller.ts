@@ -1,5 +1,5 @@
 import { Currency, Network, VaultSnapshot } from "@badger-dao/sdk";
-import { Controller,Inject  } from "@tsed/di";
+import { Controller, Inject } from "@tsed/di";
 import { UseCache } from "@tsed/platform-cache";
 import { QueryParams } from "@tsed/platform-params";
 import { ContentType, Description, Get, Hidden, Returns, Summary } from "@tsed/schema";

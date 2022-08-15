@@ -1,5 +1,5 @@
 import { MerkleProof, Network } from "@badger-dao/sdk";
-import { Controller,Inject } from "@tsed/di";
+import { Controller, Inject } from "@tsed/di";
 import { PathParams, QueryParams } from "@tsed/platform-params";
 import { ContentType, Deprecated, Get } from "@tsed/schema";
 
