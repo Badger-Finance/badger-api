@@ -11,7 +11,7 @@
     "dev:api": "yarn dev --disableScheduledEvents",
     "lint": "eslint '**/*.{ts,js}'",
     "test": "yarn run test:lint && yarn run test:coverage",
-    "test:unit": "cross-env NODE_ENV=test jest --runInBand --logHeapUsage --detectOpenHandles --detectLeaks",
+    "test:unit": "cross-env NODE_ENV=test jest --runInBand --logHeapUsage --detectOpenHandles",
     "test:coverage": "yarn run test:unit --coverage",
     "test:lint": "eslint '**/*.{ts,js}'",
     "test:lint:fix": "eslint '**/*.{ts,js}' --fix",
