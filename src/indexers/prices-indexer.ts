@@ -1,9 +1,9 @@
-import { SUPPORTED_CHAINS } from "../chains/chain";
-import { Chain } from "../chains/config/chain.config";
-import { PricingType } from "../prices/enums/pricing-type.enum";
-import { CoinGeckoPriceResponse } from "../prices/interface/coingecko-price-response.interface";
-import { fetchPrices, updatePrice } from "../prices/prices.utils";
-import { lookUpAddrByTokenName } from "../tokens/tokens.utils";
+import { SUPPORTED_CHAINS } from '../chains/chain';
+import { Chain } from '../chains/config/chain.config';
+import { PricingType } from '../prices/enums/pricing-type.enum';
+import { CoinGeckoPriceResponse } from '../prices/interface/coingecko-price-response.interface';
+import { fetchPrices, updatePrice } from '../prices/prices.utils';
+import { lookUpAddrByTokenName } from '../tokens/tokens.utils';
 
 export async function indexPrices() {
   for (const chain of SUPPORTED_CHAINS) {
@@ -69,7 +69,7 @@ export async function indexPrices() {
     }
   }
 
-  return "done";
+  return 'done';
 }
 
 function evaluateCoingeckoResponse(chain: Chain, result: CoinGeckoPriceResponse) {

@@ -1,12 +1,12 @@
-import { BadgerType } from "@badger-dao/sdk";
-import { PlatformTest } from "@tsed/common";
+import { BadgerType } from '@badger-dao/sdk';
+import { PlatformTest } from '@tsed/common';
 
-import { getLeaderboardKey } from "../aws/dynamodb.utils";
-import { Chain } from "../chains/config/chain.config";
-import { mockQuery, setupMockChain } from "../test/mocks.utils";
-import { LeaderBoardsService } from "./leaderboards.service";
+import { getLeaderboardKey } from '../aws/dynamodb.utils';
+import { Chain } from '../chains/config/chain.config';
+import { mockQuery, setupMockChain } from '../test/mocks.utils';
+import { LeaderBoardsService } from './leaderboards.service';
 
-describe("leaderboards.service", () => {
+describe('leaderboards.service', () => {
   let service: LeaderBoardsService;
   let chain: Chain;
 
@@ -21,8 +21,8 @@ describe("leaderboards.service", () => {
 
   afterEach(PlatformTest.reset);
 
-  describe("fetchLeaderboardSummary", () => {
-    it("returns the current leaderboard summary for the requested chain", async () => {
+  describe('fetchLeaderboardSummary', () => {
+    it('returns the current leaderboard summary for the requested chain', async () => {
       mockQuery([
         {
           leaderboard: getLeaderboardKey(chain.network),

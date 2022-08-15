@@ -1,22 +1,22 @@
-import { embed } from "@aws/dynamodb-data-mapper";
-import { attribute, hashKey, rangeKey, table } from "@aws/dynamodb-data-mapper-annotations";
-import { ONE_DAY_SECONDS } from "@badger-dao/sdk";
+import { embed } from '@aws/dynamodb-data-mapper';
+import { attribute, hashKey, rangeKey, table } from '@aws/dynamodb-data-mapper-annotations';
+import { ONE_DAY_SECONDS } from '@badger-dao/sdk';
 
-import { PRODUCTION, UNCLAIMED_SNAPSHOTS_DATA } from "../../config/constants";
-import { ClaimableBalance } from "../../rewards/entities/claimable-balance";
+import { PRODUCTION, UNCLAIMED_SNAPSHOTS_DATA } from '../../config/constants';
+import { ClaimableBalance } from '../../rewards/entities/claimable-balance';
 
 @table(UNCLAIMED_SNAPSHOTS_DATA)
 export class UserClaimSnapshot {
   @hashKey({
     indexKeyConfigurations: {
-      IndexUnclaimedSnapshotsOnAddressAndChainStartBlock: "RANGE"
+      IndexUnclaimedSnapshotsOnAddressAndChainStartBlock: 'RANGE'
     }
   })
   chainStartBlock!: string;
 
   @rangeKey({
     indexKeyConfigurations: {
-      IndexUnclaimedSnapshotsOnAddressAndChainStartBlock: "HASH"
+      IndexUnclaimedSnapshotsOnAddressAndChainStartBlock: 'HASH'
     }
   })
   address!: string;

@@ -1,10 +1,10 @@
-import { ChartTimeFrame } from "@badger-dao/sdk";
-import { Service } from "@tsed/di";
+import { ChartTimeFrame } from '@badger-dao/sdk';
+import { Service } from '@tsed/di';
 
-import { getVaultEntityId } from "../aws/dynamodb.utils";
-import { HistoricVaultSnapshotModel } from "../aws/models/historic-vault-snapshot.model";
-import { Chain } from "../chains/config/chain.config";
-import { queryVaultCharts, toChartDataKey } from "./charts.utils";
+import { getVaultEntityId } from '../aws/dynamodb.utils';
+import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
+import { Chain } from '../chains/config/chain.config';
+import { queryVaultCharts, toChartDataKey } from './charts.utils';
 
 @Service()
 export class ChartsService {

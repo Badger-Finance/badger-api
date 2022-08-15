@@ -1,5 +1,5 @@
-import { TokenPrice } from "../../prices/interface/token-price.interface";
-import { ChainStrategy } from "./chain.strategy";
+import { TokenPrice } from '../../prices/interface/token-price.interface';
+import { ChainStrategy } from './chain.strategy';
 
 export class TestStrategy extends ChainStrategy {
   constructor() {

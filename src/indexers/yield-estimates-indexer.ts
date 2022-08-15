@@ -1,18 +1,18 @@
-import { ONE_DAY_MS, VaultState, VaultVersion } from "@badger-dao/sdk";
+import { ONE_DAY_MS, VaultState, VaultVersion } from '@badger-dao/sdk';
 import {
   BadgerTreeDistribution_OrderBy,
   OrderDirection,
   SettHarvest_OrderBy
-} from "@badger-dao/sdk/lib/graphql/generated/badger";
+} from '@badger-dao/sdk/lib/graphql/generated/badger';
 
-import { getDataMapper } from "../aws/dynamodb.utils";
-import { YieldEstimate } from "../aws/models/yield-estimate.model";
-import { SUPPORTED_CHAINS } from "../chains/chain";
-import { CachedTokenBalance } from "../tokens/interfaces/cached-token-balance.interface";
-import { getFullToken, toBalance } from "../tokens/tokens.utils";
-import { sendPlainTextToDiscord } from "../utils/discord.utils";
-import { getCachedVault, queryYieldEstimate, VAULT_SOURCE } from "../vaults/vaults.utils";
-import { calculateBalanceDifference } from "../vaults/yields.utils";
+import { getDataMapper } from '../aws/dynamodb.utils';
+import { YieldEstimate } from '../aws/models/yield-estimate.model';
+import { SUPPORTED_CHAINS } from '../chains/chain';
+import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
+import { getFullToken, toBalance } from '../tokens/tokens.utils';
+import { sendPlainTextToDiscord } from '../utils/discord.utils';
+import { getCachedVault, queryYieldEstimate, VAULT_SOURCE } from '../vaults/vaults.utils';
+import { calculateBalanceDifference } from '../vaults/yields.utils';
 
 export async function refreshYieldEstimates() {
   await Promise.all(
@@ -147,5 +147,5 @@ export async function refreshYieldEstimates() {
     })
   );
 
-  return "done";
+  return 'done';
 }

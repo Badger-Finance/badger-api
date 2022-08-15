@@ -1,115 +1,115 @@
-import { Network } from "@badger-dao/sdk";
+import { Network } from '@badger-dao/sdk';
 
-import { TOKENS } from "../../config/tokens.config";
-import { PricingType } from "../../prices/enums/pricing-type.enum";
-import { TokenConfig } from "../interfaces/token-config.interface";
+import { TOKENS } from '../../config/tokens.config';
+import { PricingType } from '../../prices/enums/pricing-type.enum';
+import { TokenConfig } from '../interfaces/token-config.interface';
 
 export const fantomTokensConfig: TokenConfig = {
   [TOKENS.MULTI_BADGER]: {
-    lookupName: "badger-dao",
+    lookupName: 'badger-dao',
     type: PricingType.LookupName
   },
   [TOKENS.FTM_WFTM]: {
-    lookupName: "fantom",
+    lookupName: 'fantom',
     type: PricingType.LookupName
   },
   [TOKENS.FTM_GEIST]: {
-    lookupName: "geist-finance",
+    lookupName: 'geist-finance',
     type: PricingType.LookupName
   },
   [TOKENS.FTM_G3CRV]: {
     type: PricingType.CurveLP
   },
   [TOKENS.FTM_WEVE]: {
-    lookupName: "vedao",
+    lookupName: 'vedao',
     type: PricingType.LookupName
   },
   [TOKENS.FTM_DEI]: {
-    lookupName: "dei-token",
+    lookupName: 'dei-token',
     type: PricingType.LookupName
   },
   [TOKENS.FTM_WBTC]: {
-    lookupName: "wrapped-bitcoin",
+    lookupName: 'wrapped-bitcoin',
     type: PricingType.LookupName
   },
   [TOKENS.FTM_OXD]: {
-    lookupName: "0xdao",
+    lookupName: '0xdao',
     type: PricingType.LookupName
   },
   [TOKENS.FTM_OXD_2]: {
-    lookupName: "0xdao-v2",
+    lookupName: '0xdao-v2',
     type: PricingType.LookupName
   },
   [TOKENS.FTM_OXSOLID]: {
-    lookupName: "oxsolid",
+    lookupName: 'oxsolid',
     type: PricingType.LookupName
   },
   [TOKENS.FTM_SOLID]: {
-    lookupName: "0xe4bc39fdD4618a76f6472079C329bdfa820afA75",
+    lookupName: '0xe4bc39fdD4618a76f6472079C329bdfa820afA75',
     type: PricingType.OnChainUniV2LP
   },
   [TOKENS.FTM_SOLIDSEX]: {
-    lookupName: "0x62E2819Dd417F3b430B6fa5Fd34a49A377A02ac8",
+    lookupName: '0x62E2819Dd417F3b430B6fa5Fd34a49A377A02ac8',
     type: PricingType.OnChainUniV2LP
   },
   [TOKENS.FTM_SEX]: {
-    lookupName: "solidex",
+    lookupName: 'solidex',
     type: PricingType.LookupName
   },
   [TOKENS.FTM_GDAI]: {
-    lookupName: "dai",
+    lookupName: 'dai',
     type: PricingType.LookupName
   },
   [TOKENS.FTM_DAI]: {
-    lookupName: "dai",
+    lookupName: 'dai',
     type: PricingType.LookupName
   },
   [TOKENS.FTM_CRV]: {
-    lookupName: "curve-dao-token",
+    lookupName: 'curve-dao-token',
     type: PricingType.LookupName
   },
   [TOKENS.FTM_BOO]: {
-    lookupName: "spookyswap",
+    lookupName: 'spookyswap',
     type: PricingType.LookupName
   },
   [TOKENS.FTM_MIM]: {
-    lookupName: "magic-internet-money",
+    lookupName: 'magic-internet-money',
     type: PricingType.Contract
   },
   [TOKENS.FTM_XBOO]: {
-    lookupName: "boo-mirrorworld",
+    lookupName: 'boo-mirrorworld',
     type: PricingType.LookupName
   },
   [TOKENS.FTM_DEUS]: {
-    lookupName: "deus-finance-2",
+    lookupName: 'deus-finance-2',
     type: PricingType.LookupName
   },
   [TOKENS.MULTI_RENBTC]: {
-    lookupName: "renbtc",
+    lookupName: 'renbtc',
     type: PricingType.LookupName
   },
   [TOKENS.FTM_GUSDC]: {
-    lookupName: "usd-coin",
+    lookupName: 'usd-coin',
     type: PricingType.LookupName
   },
   [TOKENS.FTM_USDC]: {
-    lookupName: "usd-coin",
+    lookupName: 'usd-coin',
     type: PricingType.LookupName
   },
   [TOKENS.FTM_GUSDT]: {
-    lookupName: "tether",
+    lookupName: 'tether',
     type: PricingType.LookupName
   },
   [TOKENS.FTM_USDT]: {
-    lookupName: "tether",
+    lookupName: 'tether',
     type: PricingType.LookupName
   },
   [TOKENS.FTM_SCREAM]: {
-    lookupName: "scream",
+    lookupName: 'scream',
     type: PricingType.LookupName
   },
   [TOKENS.FTM_TOMB]: {
-    lookupName: "tomb",
+    lookupName: 'tomb',
     type: PricingType.LookupName
   },
   [TOKENS.SMM_BOO_XBOO]: {

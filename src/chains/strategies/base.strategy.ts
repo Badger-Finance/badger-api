@@ -1,15 +1,15 @@
-import { Network } from "@badger-dao/sdk";
-import { UnprocessableEntity } from "@tsed/exceptions";
+import { Network } from '@badger-dao/sdk';
+import { UnprocessableEntity } from '@tsed/exceptions';
 
-import { PricingType } from "../../prices/enums/pricing-type.enum";
-import { TokenPrice } from "../../prices/interface/token-price.interface";
-import { getOnChainLiquidityPrice, resolveTokenPrice } from "../../protocols/common/swap.utils";
-import { getBPTPrice } from "../../protocols/strategies/balancer.strategy";
-import { getCurveTokenPrice } from "../../protocols/strategies/convex.strategy";
-import { getFullToken } from "../../tokens/tokens.utils";
-import { getVaultTokenPrice } from "../../vaults/vaults.utils";
-import { Chain } from "../config/chain.config";
-import { ChainStrategy } from "./chain.strategy";
+import { PricingType } from '../../prices/enums/pricing-type.enum';
+import { TokenPrice } from '../../prices/interface/token-price.interface';
+import { getOnChainLiquidityPrice, resolveTokenPrice } from '../../protocols/common/swap.utils';
+import { getBPTPrice } from '../../protocols/strategies/balancer.strategy';
+import { getCurveTokenPrice } from '../../protocols/strategies/convex.strategy';
+import { getFullToken } from '../../tokens/tokens.utils';
+import { getVaultTokenPrice } from '../../vaults/vaults.utils';
+import { Chain } from '../config/chain.config';
+import { ChainStrategy } from './chain.strategy';
 
 export class BaseStrategy extends ChainStrategy {
   constructor(private network: Network) {
@@ -42,9 +42,9 @@ export class BaseStrategy extends ChainStrategy {
         return getVaultTokenPrice(chain, token.address);
       case PricingType.Contract:
       case PricingType.LookupName:
-        throw new UnprocessableEntity("CoinGecko pricing should utilize fetchPrices via utilities");
+        throw new UnprocessableEntity('CoinGecko pricing should utilize fetchPrices via utilities');
       default:
-        throw new UnprocessableEntity("Unsupported PricingType");
+        throw new UnprocessableEntity('Unsupported PricingType');
     }
   }
 }

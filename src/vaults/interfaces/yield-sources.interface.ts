@@ -1,4 +1,4 @@
-import { ValueSource } from "@badger-dao/sdk";
+import { ValueSource } from '@badger-dao/sdk';
 
 export interface YieldSources {
   apr: number;

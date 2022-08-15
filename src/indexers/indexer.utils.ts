@@ -8,20 +8,20 @@ import {
   VaultSnapshot,
   VaultState,
   VaultVersion
-} from "@badger-dao/sdk";
-import { NotFound } from "@tsed/exceptions";
+} from '@badger-dao/sdk';
+import { NotFound } from '@tsed/exceptions';
 
-import { getVaultEntityId } from "../aws/dynamodb.utils";
-import { VaultDefinitionModel } from "../aws/models/vault-definition.model";
-import { VaultTokenBalance } from "../aws/models/vault-token-balance.model";
-import { Chain } from "../chains/config/chain.config";
-import { Stage } from "../config/enums/stage.enum";
-import { queryPrice } from "../prices/prices.utils";
-import { getLiquidityData } from "../protocols/common/swap.utils";
-import { getFullTokens, toBalance } from "../tokens/tokens.utils";
-import { Nullable } from "../utils/types.utils";
-import { VaultsService } from "../vaults/vaults.service";
-import { getBoostWeight, getCachedVault, getStrategyInfo } from "../vaults/vaults.utils";
+import { getVaultEntityId } from '../aws/dynamodb.utils';
+import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
+import { VaultTokenBalance } from '../aws/models/vault-token-balance.model';
+import { Chain } from '../chains/config/chain.config';
+import { Stage } from '../config/enums/stage.enum';
+import { queryPrice } from '../prices/prices.utils';
+import { getLiquidityData } from '../protocols/common/swap.utils';
+import { getFullTokens, toBalance } from '../tokens/tokens.utils';
+import { Nullable } from '../utils/types.utils';
+import { VaultsService } from '../vaults/vaults.service';
+import { getBoostWeight, getCachedVault, getStrategyInfo } from '../vaults/vaults.utils';
 
 export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<VaultSnapshot> {
   const sdk = await chain.getSdk();
@@ -95,7 +95,7 @@ export async function constructVaultDefinition(
     name: vault.metadata?.name || vault.name,
     protocol: (vault.metadata?.protocol as Protocol) || Protocol.Badger,
     behavior: (vault.metadata?.behavior as VaultBehavior) || VaultBehavior.None,
-    client: vault.metadata?.client || "",
+    client: vault.metadata?.client || '',
     depositToken: vault.token.address,
     updatedAt: Number(lastUpdatedAt),
     releasedAt: Number(releasedAt),

@@ -1,8 +1,8 @@
-import { BadgerType } from "@badger-dao/sdk";
+import { BadgerType } from '@badger-dao/sdk';
 
-import { getDataMapper, getLeaderboardKey } from "../aws/dynamodb.utils";
-import { CachedLeaderboardSummary } from "../aws/models/cached-leaderboard-summary.model";
-import { Chain } from "../chains/config/chain.config";
+import { getDataMapper, getLeaderboardKey } from '../aws/dynamodb.utils';
+import { CachedLeaderboardSummary } from '../aws/models/cached-leaderboard-summary.model';
+import { Chain } from '../chains/config/chain.config';
 
 export async function queryLeaderboardSummary(chain: Chain): Promise<CachedLeaderboardSummary> {
   const mapper = getDataMapper();

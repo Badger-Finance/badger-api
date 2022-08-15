@@ -1,6 +1,6 @@
-import { attribute, hashKey, table } from "@aws/dynamodb-data-mapper-annotations";
+import { attribute, hashKey, table } from '@aws/dynamodb-data-mapper-annotations';
 
-import { PROTOCOL_DATA } from "../../config/constants";
+import { PROTOCOL_DATA } from '../../config/constants';
 
 type dataType = Map<string, string | number | unknown | dataType>;
 
@@ -9,7 +9,7 @@ export class KeyedDataBlob {
   @hashKey()
   id!: string;
 
-  @attribute({ memberType: { type: "Any" } })
+  @attribute({ memberType: { type: 'Any' } })
   data!: dataType;
 
   getProperty<T>(property: string): T {

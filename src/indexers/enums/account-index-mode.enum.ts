@@ -1,4 +1,4 @@
 export enum AccountIndexMode {
-  ClaimableBalanceData = "ClaimableBalanceData",
-  BalanceData = "BalanceData"
+  ClaimableBalanceData = 'ClaimableBalanceData',
+  BalanceData = 'BalanceData'
 }

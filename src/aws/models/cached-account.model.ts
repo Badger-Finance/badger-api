@@ -1,8 +1,8 @@
-import { embed } from "@aws/dynamodb-data-mapper";
-import { attribute, hashKey, table } from "@aws/dynamodb-data-mapper-annotations";
+import { embed } from '@aws/dynamodb-data-mapper';
+import { attribute, hashKey, table } from '@aws/dynamodb-data-mapper-annotations';
 
-import { CachedSettBalance } from "../../accounts/interfaces/cached-sett-balance.interface";
-import { ACCOUNT_DATA } from "../../config/constants";
+import { CachedSettBalance } from '../../accounts/interfaces/cached-sett-balance.interface';
+import { ACCOUNT_DATA } from '../../config/constants';
 
 @table(ACCOUNT_DATA)
 export class CachedAccount {

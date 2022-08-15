@@ -1,26 +1,26 @@
-import { Account, Currency, formatBalance, gqlGenT, Network, ONE_MINUTE_MS } from "@badger-dao/sdk";
-import { ethers } from "ethers";
+import { Account, Currency, formatBalance, gqlGenT, Network, ONE_MINUTE_MS } from '@badger-dao/sdk';
+import { ethers } from 'ethers';
 
-import { getChainStartBlockKey, getDataMapper, getLeaderboardKey } from "../aws/dynamodb.utils";
-import { CachedAccount } from "../aws/models/cached-account.model";
-import { CachedBoost } from "../aws/models/cached-boost.model";
-import { UserClaimSnapshot } from "../aws/models/user-claim-snapshot.model";
-import { getObject } from "../aws/s3.utils";
-import { Chain } from "../chains/config/chain.config";
-import { PRODUCTION, REWARD_DATA } from "../config/constants";
-import { TOKENS } from "../config/tokens.config";
-import { LeaderBoardType } from "../leaderboards/enums/leaderboard-type.enum";
-import { convert, queryPrice } from "../prices/prices.utils";
-import { UserClaimMetadata } from "../rewards/entities/user-claim-metadata";
-import { BoostData } from "../rewards/interfaces/boost-data.interface";
-import { getFullToken, getVaultTokens } from "../tokens/tokens.utils";
-import { getCachedVault } from "../vaults/vaults.utils";
-import { CachedSettBalance } from "./interfaces/cached-sett-balance.interface";
+import { getChainStartBlockKey, getDataMapper, getLeaderboardKey } from '../aws/dynamodb.utils';
+import { CachedAccount } from '../aws/models/cached-account.model';
+import { CachedBoost } from '../aws/models/cached-boost.model';
+import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
+import { getObject } from '../aws/s3.utils';
+import { Chain } from '../chains/config/chain.config';
+import { PRODUCTION, REWARD_DATA } from '../config/constants';
+import { TOKENS } from '../config/tokens.config';
+import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
+import { convert, queryPrice } from '../prices/prices.utils';
+import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
+import { BoostData } from '../rewards/interfaces/boost-data.interface';
+import { getFullToken, getVaultTokens } from '../tokens/tokens.utils';
+import { getCachedVault } from '../vaults/vaults.utils';
+import { CachedSettBalance } from './interfaces/cached-sett-balance.interface';
 
 export async function getBoostFile(chain: Chain): Promise<BoostData | null> {
   try {
     const boostFile = await getObject(REWARD_DATA, `badger-boosts-${chain.chainId}.json`);
-    return JSON.parse(boostFile.toString("utf-8"));
+    return JSON.parse(boostFile.toString('utf-8'));
   } catch (err) {
     return null;
   }
@@ -139,7 +139,7 @@ export async function getCachedBoost(network: Network, address: string): Promise
   for await (const entry of mapper.query(
     CachedBoost,
     { leaderboard: getLeaderboardKey(network), address: ethers.utils.getAddress(address) },
-    { limit: 1, indexName: "IndexLeaderBoardRankOnAddressAndLeaderboard" }
+    { limit: 1, indexName: 'IndexLeaderBoardRankOnAddressAndLeaderboard' }
   )) {
     return entry;
   }
@@ -208,7 +208,7 @@ export async function getClaimableBalanceSnapshot(
   for await (const entry of mapper.query(
     UserClaimSnapshot,
     { chainStartBlock: getChainStartBlockKey(chain.network, startBlock), address: ethers.utils.getAddress(address) },
-    { limit: 1, indexName: "IndexUnclaimedSnapshotsOnAddressAndChainStartBlock" }
+    { limit: 1, indexName: 'IndexUnclaimedSnapshotsOnAddressAndChainStartBlock' }
   )) {
     return entry;
   }
@@ -228,7 +228,7 @@ export async function getLatestMetadata(chain: Chain): Promise<UserClaimMetadata
   for await (const metric of mapper.query(
     UserClaimMetadata,
     { chain: chain.network },
-    { indexName: "IndexMetadataChainAndStartBlock", scanIndexForward: false, limit: 1 }
+    { indexName: 'IndexMetadataChainAndStartBlock', scanIndexForward: false, limit: 1 }
   )) {
     return metric;
   }

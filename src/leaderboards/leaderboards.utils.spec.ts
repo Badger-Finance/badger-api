@@ -1,20 +1,20 @@
-import { BadgerType } from "@badger-dao/sdk";
+import { BadgerType } from '@badger-dao/sdk';
 
-import { getLeaderboardKey } from "../aws/dynamodb.utils";
-import { Chain } from "../chains/config/chain.config";
-import { mockQuery, setupMockChain } from "../test/mocks.utils";
-import { queryLeaderboardSummary } from "./leaderboards.utils";
+import { getLeaderboardKey } from '../aws/dynamodb.utils';
+import { Chain } from '../chains/config/chain.config';
+import { mockQuery, setupMockChain } from '../test/mocks.utils';
+import { queryLeaderboardSummary } from './leaderboards.utils';
 
-describe("leaderboards.utils", () => {
-  describe("queryLeaderboardSummary", () => {
+describe('leaderboards.utils', () => {
+  describe('queryLeaderboardSummary', () => {
     let chain: Chain;
 
     beforeEach(() => {
       chain = setupMockChain();
     });
 
-    describe("no saved leaderboard summary data", () => {
-      it("returns a map of all badger ranks with zero entries", async () => {
+    describe('no saved leaderboard summary data', () => {
+      it('returns a map of all badger ranks with zero entries', async () => {
         mockQuery([]);
         const result = await queryLeaderboardSummary(chain);
         // result date will always update due to nature of function
@@ -23,8 +23,8 @@ describe("leaderboards.utils", () => {
       });
     });
 
-    describe("saved leaderboard summary data", () => {
-      it("returns the appropriate TEST_CHAIN summary data", async () => {
+    describe('saved leaderboard summary data', () => {
+      it('returns the appropriate TEST_CHAIN summary data', async () => {
         mockQuery([
           {
             leaderboard: getLeaderboardKey(chain.network),

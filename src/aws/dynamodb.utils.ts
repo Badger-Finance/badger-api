@@ -1,20 +1,20 @@
-import { DataMapper } from "@aws/dynamodb-data-mapper";
-import { Network } from "@badger-dao/sdk";
-import DynamoDB from "aws-sdk/clients/dynamodb";
+import { DataMapper } from '@aws/dynamodb-data-mapper';
+import { Network } from '@badger-dao/sdk';
+import DynamoDB from 'aws-sdk/clients/dynamodb';
 
-import { LeaderBoardType } from "../leaderboards/enums/leaderboard-type.enum";
-import { Chainish } from "./interfaces/chainish.interface";
-import { Vaultish } from "./interfaces/vaultish.interface";
+import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
+import { Chainish } from './interfaces/chainish.interface';
+import { Vaultish } from './interfaces/vaultish.interface';
 
 export function getDataMapper(): DataMapper {
   const offline = process.env.IS_OFFLINE;
   let client: DynamoDB;
   if (offline) {
     client = new DynamoDB({
-      region: "localhost",
-      endpoint: "http://localhost:8000",
-      accessKeyId: "",
-      secretAccessKey: ""
+      region: 'localhost',
+      endpoint: 'http://localhost:8000',
+      accessKeyId: '',
+      secretAccessKey: ''
     });
   } else {
     client = new DynamoDB();

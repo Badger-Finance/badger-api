@@ -1,10 +1,10 @@
-import { PlatformServerless } from "@tsed/platform-serverless";
-import { PlatformServerlessTest } from "@tsed/platform-serverless-testing";
+import { PlatformServerless } from '@tsed/platform-serverless';
+import { PlatformServerlessTest } from '@tsed/platform-serverless-testing';
 
-import { setupMockChain } from "../test/mocks.utils";
-import { GasController } from "./gas.controller";
+import { setupMockChain } from '../test/mocks.utils';
+import { GasController } from './gas.controller';
 
-describe("gas.controller", () => {
+describe('gas.controller', () => {
   beforeEach(
     PlatformServerlessTest.bootstrap(PlatformServerless, {
       lambda: [GasController]
@@ -14,9 +14,9 @@ describe("gas.controller", () => {
 
   beforeEach(setupMockChain);
 
-  describe("GET /gas", () => {
-    it("returns gas price options in eip-1559 format", async () => {
-      const { body, statusCode } = await PlatformServerlessTest.request.get("/gas");
+  describe('GET /gas', () => {
+    it('returns gas price options in eip-1559 format', async () => {
+      const { body, statusCode } = await PlatformServerlessTest.request.get('/gas');
       expect(statusCode).toEqual(200);
       expect(JSON.parse(body)).toMatchSnapshot();
     });

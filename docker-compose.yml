@@ -1,4 +1,4 @@
-version: "3.5"
+version: '3.5'
 services:
   server:
     build:
@@ -10,4 +10,4 @@ services:
         - no_proxy
     image: badger-api/server:latest
     ports:
-      - "8081:8081"
+      - '8081:8081'

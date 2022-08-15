@@ -1,21 +1,21 @@
-import { DataMapper } from "@aws/dynamodb-data-mapper";
-import { RewardsService } from "@badger-dao/sdk";
-import { BigNumber } from "ethers";
+import { DataMapper } from '@aws/dynamodb-data-mapper';
+import { RewardsService } from '@badger-dao/sdk';
+import { BigNumber } from 'ethers';
 
-import * as accountsUtils from "../accounts/accounts.utils";
-import { getChainStartBlockKey } from "../aws/dynamodb.utils";
-import { UserClaimSnapshot } from "../aws/models/user-claim-snapshot.model";
-import { Chain } from "../chains/config/chain.config";
-import { TOKENS } from "../config/tokens.config";
-import { ClaimableBalance } from "../rewards/entities/claimable-balance";
-import { UserClaimMetadata } from "../rewards/entities/user-claim-metadata";
-import { RewardMerkleDistribution } from "../rewards/interfaces/merkle-distributor.interface";
-import * as rewardsUtils from "../rewards/rewards.utils";
-import { MOCK_DISTRIBUTION_FILE, TEST_CURRENT_BLOCK } from "../test/constants";
-import { mockBatchPut, setupMockChain } from "../test/mocks.utils";
-import { refreshClaimableBalances } from "./accounts-indexer";
+import * as accountsUtils from '../accounts/accounts.utils';
+import { getChainStartBlockKey } from '../aws/dynamodb.utils';
+import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
+import { Chain } from '../chains/config/chain.config';
+import { TOKENS } from '../config/tokens.config';
+import { ClaimableBalance } from '../rewards/entities/claimable-balance';
+import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
+import { RewardMerkleDistribution } from '../rewards/interfaces/merkle-distributor.interface';
+import * as rewardsUtils from '../rewards/rewards.utils';
+import { MOCK_DISTRIBUTION_FILE, TEST_CURRENT_BLOCK } from '../test/constants';
+import { mockBatchPut, setupMockChain } from '../test/mocks.utils';
+import { refreshClaimableBalances } from './accounts-indexer';
 
-describe("accounts-indexer", () => {
+describe('accounts-indexer', () => {
   let chain: Chain;
 
   const endMockedBlockNumber = TEST_CURRENT_BLOCK;
@@ -27,9 +27,9 @@ describe("accounts-indexer", () => {
 
   beforeEach(() => {
     chain = setupMockChain();
-    jest.spyOn(console, "log").mockImplementation(jest.fn);
-    getAccounts = jest.spyOn(accountsUtils, "getAccounts").mockImplementation();
-    getLatestMetadata = jest.spyOn(accountsUtils, "getLatestMetadata").mockImplementation(async (chain: Chain) => {
+    jest.spyOn(console, 'log').mockImplementation(jest.fn);
+    getAccounts = jest.spyOn(accountsUtils, 'getAccounts').mockImplementation();
+    getLatestMetadata = jest.spyOn(accountsUtils, 'getLatestMetadata').mockImplementation(async (chain: Chain) => {
       return Object.assign(new UserClaimMetadata(), {
         chainStartBlock: getChainStartBlockKey(chain.network, previousMockedBlockNumber),
         chain: chain.network,
@@ -39,23 +39,23 @@ describe("accounts-indexer", () => {
     });
   });
 
-  describe("refreshClaimableBalances", () => {
-    it("takes no action on chains with no rewards", async () => {
-      jest.spyOn(RewardsService.prototype, "hasBadgerTree").mockImplementation(() => false);
+  describe('refreshClaimableBalances', () => {
+    it('takes no action on chains with no rewards', async () => {
+      jest.spyOn(RewardsService.prototype, 'hasBadgerTree').mockImplementation(() => false);
       await refreshClaimableBalances(chain);
       expect(getAccounts.mock.calls.length).toEqual(0);
     });
 
-    it("looks up all user claimable balances on chains with rewards and persists them", async () => {
+    it('looks up all user claimable balances on chains with rewards and persists them', async () => {
       const testAccounts = [TOKENS.WBTC, TOKENS.DAI, TOKENS.WETH, TOKENS.USDT, TOKENS.USDC];
-      jest.spyOn(accountsUtils, "getAccounts").mockImplementation((_chain) => Promise.resolve(testAccounts));
+      jest.spyOn(accountsUtils, 'getAccounts').mockImplementation((_chain) => Promise.resolve(testAccounts));
       const claimableResults: [string[], BigNumber[]] = [
         [TOKENS.BADGER, TOKENS.DIGG],
         [BigNumber.from(10000), BigNumber.from(12)]
       ];
       let usersChecked;
       jest
-        .spyOn(rewardsUtils, "getClaimableRewards")
+        .spyOn(rewardsUtils, 'getClaimableRewards')
         .mockImplementation(async (_chain: Chain, chainUsers: string[], _distribution: RewardMerkleDistribution) => {
           usersChecked = chainUsers;
           return chainUsers.map((u) => [u, claimableResults]);
@@ -83,7 +83,7 @@ describe("accounts-indexer", () => {
           })
         );
       }
-      const put = jest.spyOn(DataMapper.prototype, "put").mockImplementation();
+      const put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
       const expectedMetadata = Object.assign(new UserClaimMetadata(), {
         chainStartBlock: getChainStartBlockKey(chain.network, startMockedBlockNumber),
         chain: chain.network,

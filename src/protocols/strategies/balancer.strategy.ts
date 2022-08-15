@@ -1,24 +1,24 @@
-import { Erc20__factory, formatBalance, Network, Token } from "@badger-dao/sdk";
-import { GraphQLClient } from "graphql-request";
+import { Erc20__factory, formatBalance, Network, Token } from '@badger-dao/sdk';
+import { GraphQLClient } from 'graphql-request';
 
-import { VaultDefinitionModel } from "../../aws/models/vault-definition.model";
-import { VaultTokenBalance } from "../../aws/models/vault-token-balance.model";
-import { YieldSource } from "../../aws/models/yield-source.model";
-import { Chain } from "../../chains/config/chain.config";
-import { BALANCER_URL } from "../../config/constants";
+import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
+import { VaultTokenBalance } from '../../aws/models/vault-token-balance.model';
+import { YieldSource } from '../../aws/models/yield-source.model';
+import { Chain } from '../../chains/config/chain.config';
+import { BALANCER_URL } from '../../config/constants';
 import {
   BalancerVault__factory,
   StablePhantomVault__factory,
   StablePool__factory,
   WeightedPool__factory
-} from "../../contracts";
-import { getSdk as getBalancerSdk, OrderDirection, PoolSnapshot_OrderBy } from "../../graphql/generated/balancer";
-import { TokenPrice } from "../../prices/interface/token-price.interface";
-import { SourceType } from "../../rewards/enums/source-type.enum";
-import { CachedTokenBalance } from "../../tokens/interfaces/cached-token-balance.interface";
-import { getFullToken, toBalance } from "../../tokens/tokens.utils";
-import { getCachedVault } from "../../vaults/vaults.utils";
-import { createYieldSource } from "../../vaults/yields.utils";
+} from '../../contracts';
+import { getSdk as getBalancerSdk, OrderDirection, PoolSnapshot_OrderBy } from '../../graphql/generated/balancer';
+import { TokenPrice } from '../../prices/interface/token-price.interface';
+import { SourceType } from '../../rewards/enums/source-type.enum';
+import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
+import { getFullToken, toBalance } from '../../tokens/tokens.utils';
+import { getCachedVault } from '../../vaults/vaults.utils';
+import { createYieldSource } from '../../vaults/yields.utils';
 
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
@@ -139,7 +139,7 @@ export async function resolveBalancerPoolTokenPrice(chain: Chain, token: Token, 
 
     try {
       if (balances.length != 2) {
-        throw new Error("Pool has unexpected number of tokens!");
+        throw new Error('Pool has unexpected number of tokens!');
       }
 
       // we can calculate "x" in terms of "y" - this is our token in terms of some known token
@@ -224,7 +224,7 @@ export async function getBalancerSwapFees(vault: VaultDefinitionModel): Promise<
     const yearlyFees = poolFees * 365;
     const yearlyApr = (yearlyFees / poolLiquidity) * 100;
 
-    return [createYieldSource(vault, SourceType.TradeFee, "Balancer LP Fees", yearlyApr)];
+    return [createYieldSource(vault, SourceType.TradeFee, 'Balancer LP Fees', yearlyApr)];
   } catch {
     // some of the aura vaults are not pools - they will error (auraBal, graviAura)
     return [];

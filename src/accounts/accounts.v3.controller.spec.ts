@@ -1,14 +1,14 @@
-import { PlatformServerless } from "@tsed/platform-serverless";
-import { PlatformServerlessTest } from "@tsed/platform-serverless-testing";
+import { PlatformServerless } from '@tsed/platform-serverless';
+import { PlatformServerlessTest } from '@tsed/platform-serverless-testing';
 
-import { NetworkStatus } from "../errors/enums/network-status.enum";
-import { TEST_ADDR } from "../test/constants";
-import { setupMockChain } from "../test/mocks.utils";
-import * as accountsUtils from "./accounts.utils";
-import { setupMockAccounts } from "./accounts.v2.controller.spec";
-import { AccountsV3Controller } from "./accounts.v3.controller";
+import { NetworkStatus } from '../errors/enums/network-status.enum';
+import { TEST_ADDR } from '../test/constants';
+import { setupMockChain } from '../test/mocks.utils';
+import * as accountsUtils from './accounts.utils';
+import { setupMockAccounts } from './accounts.v2.controller.spec';
+import { AccountsV3Controller } from './accounts.v3.controller';
 
-describe("accounts.v3.controller", () => {
+describe('accounts.v3.controller', () => {
   beforeEach(
     PlatformServerlessTest.bootstrap(PlatformServerless, {
       lambda: [AccountsV3Controller]
@@ -21,28 +21,28 @@ describe("accounts.v3.controller", () => {
     setupMockAccounts();
   });
 
-  describe("GET /v3/account", () => {
-    describe("with no specified account", () => {
-      it("returns a not found response", async () => {
-        const { body, statusCode } = await PlatformServerlessTest.request.get("/accounts");
+  describe('GET /v3/account', () => {
+    describe('with no specified account', () => {
+      it('returns a not found response', async () => {
+        const { body, statusCode } = await PlatformServerlessTest.request.get('/accounts');
         expect(statusCode).toEqual(NetworkStatus.BadRequest);
         expect(JSON.parse(body)).toMatchSnapshot();
       });
     });
 
-    describe("with an invalid account input", () => {
-      it("returns a bad request response", async () => {
+    describe('with an invalid account input', () => {
+      it('returns a bad request response', async () => {
         const { body, statusCode } = await PlatformServerlessTest.request
-          .get("/accounts")
-          .query({ address: "0xjintao" });
+          .get('/accounts')
+          .query({ address: '0xjintao' });
         expect(statusCode).toEqual(NetworkStatus.BadRequest);
         expect(JSON.parse(body)).toMatchSnapshot();
       });
     });
 
-    describe("with a non participant account", () => {
-      it("returns a default account response", async () => {
-        jest.spyOn(accountsUtils, "getCachedAccount").mockImplementation(async (_chain, address) => ({
+    describe('with a non participant account', () => {
+      it('returns a default account response', async () => {
+        jest.spyOn(accountsUtils, 'getCachedAccount').mockImplementation(async (_chain, address) => ({
           address,
           value: 0,
           earnedValue: 0,
@@ -67,9 +67,9 @@ describe("accounts.v3.controller", () => {
       });
     });
 
-    describe("with a participant account", () => {
-      it("returns a cached account response", async () => {
-        jest.spyOn(accountsUtils, "getCachedAccount").mockImplementation(async (_chain, address) => ({
+    describe('with a participant account', () => {
+      it('returns a cached account response', async () => {
+        jest.spyOn(accountsUtils, 'getCachedAccount').mockImplementation(async (_chain, address) => ({
           address,
           value: 10,
           earnedValue: 1,

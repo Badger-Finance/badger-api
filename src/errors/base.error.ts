@@ -1,5 +1,5 @@
-import { ApiErrorCode } from "./enums/error.codes.enum";
-import { NetworkStatus } from "./enums/network-status.enum";
+import { ApiErrorCode } from './enums/error.codes.enum';
+import { NetworkStatus } from './enums/network-status.enum';
 
 export class BaseApiError extends Error {
   readonly message: string;

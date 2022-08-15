@@ -12,39 +12,39 @@ import {
   VaultType,
   VaultV15__factory,
   VaultVersion
-} from "@badger-dao/sdk";
-import { BadRequest, UnprocessableEntity } from "@tsed/exceptions";
-import { BigNumber, ethers } from "ethers";
+} from '@badger-dao/sdk';
+import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
+import { BigNumber, ethers } from 'ethers';
 
-import { getDataMapper } from "../aws/dynamodb.utils";
-import { CurrentVaultSnapshotModel } from "../aws/models/current-vault-snapshot.model";
-import { HarvestCompoundData } from "../aws/models/harvest-compound.model";
-import { VaultDefinitionModel } from "../aws/models/vault-definition.model";
-import { YieldEstimate } from "../aws/models/yield-estimate.model";
-import { YieldSource } from "../aws/models/yield-source.model";
-import { Chain } from "../chains/config/chain.config";
-import { TOKENS } from "../config/tokens.config";
-import { EmissionControl__factory } from "../contracts";
-import { getVault } from "../indexers/indexer.utils";
-import { PricingType } from "../prices/enums/pricing-type.enum";
-import { TokenPrice } from "../prices/interface/token-price.interface";
-import { convert, queryPrice } from "../prices/prices.utils";
-import { SourceType } from "../rewards/enums/source-type.enum";
-import { getProtocolValueSources, getRewardEmission } from "../rewards/rewards.utils";
-import { getFullToken, getVaultTokens } from "../tokens/tokens.utils";
-import { Nullable } from "../utils/types.utils";
-import { HarvestType } from "./enums/harvest.enum";
-import { VaultHarvestData } from "./interfaces/vault-harvest-data.interface";
-import { VaultHarvestsExtendedResp } from "./interfaces/vault-harvest-extended-resp.interface";
-import { VaultStrategy } from "./interfaces/vault-strategy.interface";
+import { getDataMapper } from '../aws/dynamodb.utils';
+import { CurrentVaultSnapshotModel } from '../aws/models/current-vault-snapshot.model';
+import { HarvestCompoundData } from '../aws/models/harvest-compound.model';
+import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
+import { YieldEstimate } from '../aws/models/yield-estimate.model';
+import { YieldSource } from '../aws/models/yield-source.model';
+import { Chain } from '../chains/config/chain.config';
+import { TOKENS } from '../config/tokens.config';
+import { EmissionControl__factory } from '../contracts';
+import { getVault } from '../indexers/indexer.utils';
+import { PricingType } from '../prices/enums/pricing-type.enum';
+import { TokenPrice } from '../prices/interface/token-price.interface';
+import { convert, queryPrice } from '../prices/prices.utils';
+import { SourceType } from '../rewards/enums/source-type.enum';
+import { getProtocolValueSources, getRewardEmission } from '../rewards/rewards.utils';
+import { getFullToken, getVaultTokens } from '../tokens/tokens.utils';
+import { Nullable } from '../utils/types.utils';
+import { HarvestType } from './enums/harvest.enum';
+import { VaultHarvestData } from './interfaces/vault-harvest-data.interface';
+import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
+import { VaultStrategy } from './interfaces/vault-strategy.interface';
 import {
   aggregateSources,
   createYieldSource,
   loadVaultEventPerformances,
   loadVaultGraphPerformances
-} from "./yields.utils";
+} from './yields.utils';
 
-export const VAULT_SOURCE = "Vault Compounding";
+export const VAULT_SOURCE = 'Vault Compounding';
 
 export async function defaultVault(chain: Chain, vault: VaultDefinitionModel): Promise<VaultDTO> {
   const { state, bouncer, behavior, version, protocol, name, depositToken, address } = vault;
@@ -179,7 +179,7 @@ export async function getStrategyInfo(chain: Chain, vault: VaultDefinitionModel)
       ]);
       // bveCVX does not have a way to capture materially its performance fee
       if (vault.address === TOKENS.BVECVX) {
-        performanceFee = BigNumber.from("1500"); // set performance fee to 15%
+        performanceFee = BigNumber.from('1500'); // set performance fee to 15%
       }
       return {
         address: strategyAddress,
@@ -321,10 +321,10 @@ export function estimateDerivativeEmission(
 
 export async function estimateHarvestEventApr(
   chain: Chain,
-  token: VaultPerformanceEvent["token"],
+  token: VaultPerformanceEvent['token'],
   start: number,
   end: number,
-  amount: VaultPerformanceEvent["amount"],
+  amount: VaultPerformanceEvent['amount'],
   balance: BigNumber
 ): Promise<number> {
   const duration = end - start;
@@ -488,7 +488,7 @@ export async function queryYieldSources(vault: VaultDefinitionModel): Promise<Yi
   for await (const source of mapper.query(
     YieldSource,
     { chainAddress: vault.id },
-    { indexName: "IndexApySnapshotsOnAddress" }
+    { indexName: 'IndexApySnapshotsOnAddress' }
   )) {
     valueSources.push(source);
   }
@@ -521,7 +521,7 @@ export async function queryYieldEstimate(vault: VaultDefinitionModel): Promise<Y
 
 export async function getVaultHarvestsOnChain(
   chain: Chain,
-  address: VaultDefinitionModel["address"],
+  address: VaultDefinitionModel['address'],
   startFromBlock: Nullable<number> = null
 ): Promise<VaultHarvestsExtendedResp[]> {
   const vaultHarvests: VaultHarvestsExtendedResp[] = [];

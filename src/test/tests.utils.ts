@@ -1,26 +1,26 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
-import { DataMapper, QueryIterator, StringToAnyObjectMap } from "@aws/dynamodb-data-mapper";
-import BadgerSDK, { Network, ONE_DAY_MS, RegistryService, RewardsService, VaultSnapshot } from "@badger-dao/sdk";
-import { JsonRpcProvider, JsonRpcSigner } from "@ethersproject/providers";
-import { ethers } from "ethers";
-import createMockInstance from "jest-create-mock-instance";
-import { mock } from "jest-mock-extended";
+import { DataMapper, QueryIterator, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
+import BadgerSDK, { Network, ONE_DAY_MS, RegistryService, RewardsService, VaultSnapshot } from '@badger-dao/sdk';
+import { JsonRpcProvider, JsonRpcSigner } from '@ethersproject/providers';
+import { ethers } from 'ethers';
+import createMockInstance from 'jest-create-mock-instance';
+import { mock } from 'jest-mock-extended';
 
-import VaultsCompoundMock from "../../seed/vault-definition.json";
-import { CachedAccount } from "../aws/models/cached-account.model";
-import { CachedBoost } from "../aws/models/cached-boost.model";
-import { VaultDefinitionModel } from "../aws/models/vault-definition.model";
-import { SUPPORTED_CHAINS } from "../chains/chain";
-import { LeaderBoardType } from "../leaderboards/enums/leaderboard-type.enum";
-import { Nullable } from "../utils/types.utils";
-import { vaultsChartDataMock } from "../vaults/mocks/vaults-chart-data.mock";
-import { MOCK_VAULT_DEFINITION, TEST_ADDR, TEST_CURRENT_BLOCK } from "./constants";
+import VaultsCompoundMock from '../../seed/vault-definition.json';
+import { CachedAccount } from '../aws/models/cached-account.model';
+import { CachedBoost } from '../aws/models/cached-boost.model';
+import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
+import { SUPPORTED_CHAINS } from '../chains/chain';
+import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
+import { Nullable } from '../utils/types.utils';
+import { vaultsChartDataMock } from '../vaults/mocks/vaults-chart-data.mock';
+import { MOCK_VAULT_DEFINITION, TEST_ADDR, TEST_CURRENT_BLOCK } from './constants';
 
 // @ts-ignore
 export function setupVaultsCoumpoundDDB(customFilter: Nullable<(v: any) => boolean> = null) {
   // @ts-ignore
-  jest.spyOn(DataMapper.prototype, "query").mockImplementation((model, keys) => {
+  jest.spyOn(DataMapper.prototype, 'query').mockImplementation((model, keys) => {
     let dataSource = VaultsCompoundMock;
     // @ts-ignore
     const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
@@ -38,7 +38,7 @@ export function setupVaultsCoumpoundDDB(customFilter: Nullable<(v: any) => boole
 export function setupDdbVaultsChartsData() {
   /* eslint-disable @typescript-eslint/ban-ts-comment */
   // @ts-ignore
-  jest.spyOn(DataMapper.prototype, "query").mockImplementation((_model, _condition) => {
+  jest.spyOn(DataMapper.prototype, 'query').mockImplementation((_model, _condition) => {
     // @ts-ignore
     const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
     const vaultsChart = vaultsChartDataMock.find((val) => val.id);
@@ -174,8 +174,8 @@ export async function mockBadgerSdk(
   mockProvider.getBlockNumber.calledWith().mockImplementation(async () => currBlock);
 
   // Services that will force contracts connection in sdk constructor
-  jest.spyOn(RegistryService.prototype, "ready").mockImplementation();
-  jest.spyOn(RewardsService.prototype, "ready").mockImplementation();
+  jest.spyOn(RegistryService.prototype, 'ready').mockImplementation();
+  jest.spyOn(RewardsService.prototype, 'ready').mockImplementation();
 
   return new BadgerSDK({
     network: network,
@@ -188,6 +188,6 @@ export async function mockSupportedChains() {
   for (const chain of SUPPORTED_CHAINS) {
     const sdk = mockBadgerSdk({ network: chain.network });
 
-    jest.spyOn(chain.constructor.prototype, "getSdk").mockImplementation(async () => sdk);
+    jest.spyOn(chain.constructor.prototype, 'getSdk').mockImplementation(async () => sdk);
   }
 }

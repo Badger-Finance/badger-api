@@ -1,6 +1,6 @@
 ---
 service: badger-v2
-frameworkVersion: "3.21.0"
+frameworkVersion: '3.21.0'
 useDotenv: true
 
 plugins:
@@ -60,8 +60,8 @@ custom:
     CHART_DATA: chart-data-${self:custom.stage}
 
   merkleProofs:
-    staging: "badger-staging-merkle-proofs"
-    prod: "badger-merkle-proofs"
+    staging: 'badger-staging-merkle-proofs'
+    prod: 'badger-merkle-proofs'
 
 package:
   exclude:
@@ -92,14 +92,14 @@ provider:
     ARBITRUM_RPC: ${env:ARBITRUM_RPC}
     # 3rd party API keys
     DISCORD_WEBHOOK_URL: ${env:DISCORD_WEBHOOK_URL}
-    UNISWAP: "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2"
-    SUSHISWAP: "https://api.thegraph.com/subgraphs/name/sushiswap/exchange"
-    SUSHISWAP_MATIC: "https://api.thegraph.com/subgraphs/name/sushiswap/matic-exchange"
-    SUSHISWAP_ARBITRUM: "https://api.thegraph.com/subgraphs/name/sushiswap/arbitrum-exchange"
-    PANCAKESWAP: "https://api.thegraph.com/subgraphs/name/pancakeswap/exchange"
-    QUICKSWAP: "https://api.thegraph.com/subgraphs/name/sameepsi/quickswap06"
-    SWAPR: "https://api.thegraph.com/subgraphs/name/dxgraphs/swapr-arbitrum-one-v3"
-    BALANCER: "https://api.thegraph.com/subgraphs/name/balancer-labs/balancer-v2"
+    UNISWAP: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2'
+    SUSHISWAP: 'https://api.thegraph.com/subgraphs/name/sushiswap/exchange'
+    SUSHISWAP_MATIC: 'https://api.thegraph.com/subgraphs/name/sushiswap/matic-exchange'
+    SUSHISWAP_ARBITRUM: 'https://api.thegraph.com/subgraphs/name/sushiswap/arbitrum-exchange'
+    PANCAKESWAP: 'https://api.thegraph.com/subgraphs/name/pancakeswap/exchange'
+    QUICKSWAP: 'https://api.thegraph.com/subgraphs/name/sameepsi/quickswap06'
+    SWAPR: 'https://api.thegraph.com/subgraphs/name/dxgraphs/swapr-arbitrum-one-v3'
+    BALANCER: 'https://api.thegraph.com/subgraphs/name/balancer-labs/balancer-v2'
     # Table Defintions
     YIELD_SNAPSHOTS_DATA: ${self:custom.table.YIELD_SNAPSHOTS_DATA}
     VAULT_SNAPSHOTS_DATA: ${self:custom.table.VAULT_SNAPSHOTS_DATA}
@@ -129,11 +129,11 @@ resources:
         TableName: ${self:custom.table.ACCOUNT_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
-          - AttributeName: "address"
-            KeyType: "HASH"
+          - AttributeName: 'address'
+            KeyType: 'HASH'
         AttributeDefinitions:
-          - AttributeName: "address"
-            AttributeType: "S"
+          - AttributeName: 'address'
+            AttributeType: 'S'
 
     yieldSnapshotsTable:
       Type: AWS::DynamoDB::Table
@@ -141,18 +141,18 @@ resources:
         TableName: ${self:custom.table.YIELD_SNAPSHOTS_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
-          - AttributeName: "id"
-            KeyType: "HASH"
+          - AttributeName: 'id'
+            KeyType: 'HASH'
         AttributeDefinitions:
-          - AttributeName: "id"
-            AttributeType: "S"
-          - AttributeName: "chainAddress"
-            AttributeType: "S"
+          - AttributeName: 'id'
+            AttributeType: 'S'
+          - AttributeName: 'chainAddress'
+            AttributeType: 'S'
         GlobalSecondaryIndexes:
           - IndexName: IndexApySnapshotsOnAddress
             KeySchema:
               - AttributeName: chainAddress
-                KeyType: "HASH"
+                KeyType: 'HASH'
             Projection:
               ProjectionType: ALL
 
@@ -162,15 +162,15 @@ resources:
         TableName: ${self:custom.table.TOKEN_PRICE_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
-          - AttributeName: "address"
-            KeyType: "HASH"
-          - AttributeName: "updatedAt"
-            KeyType: "RANGE"
+          - AttributeName: 'address'
+            KeyType: 'HASH'
+          - AttributeName: 'updatedAt'
+            KeyType: 'RANGE'
         AttributeDefinitions:
-          - AttributeName: "address"
-            AttributeType: "S"
-          - AttributeName: "updatedAt"
-            AttributeType: "N"
+          - AttributeName: 'address'
+            AttributeType: 'S'
+          - AttributeName: 'updatedAt'
+            AttributeType: 'N'
 
     tokenInfoTable:
       Type: AWS::DynamoDB::Table
@@ -178,11 +178,11 @@ resources:
         TableName: ${self:custom.table.TOKEN_INFORMATION_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
-          - AttributeName: "address"
-            KeyType: "HASH"
+          - AttributeName: 'address'
+            KeyType: 'HASH'
         AttributeDefinitions:
-          - AttributeName: "address"
-            AttributeType: "S"
+          - AttributeName: 'address'
+            AttributeType: 'S'
 
     protocolMetricsSnapshotsTable:
       Type: AWS::DynamoDB::Table
@@ -190,15 +190,15 @@ resources:
         TableName: ${self:custom.table.METRICS_SNAPSHOTS_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
-          - AttributeName: "type"
-            KeyType: "HASH"
-          - AttributeName: "timestamp"
-            KeyType: "RANGE"
+          - AttributeName: 'type'
+            KeyType: 'HASH'
+          - AttributeName: 'timestamp'
+            KeyType: 'RANGE'
         AttributeDefinitions:
-          - AttributeName: "type"
-            AttributeType: "S"
-          - AttributeName: "timestamp"
-            AttributeType: "N"
+          - AttributeName: 'type'
+            AttributeType: 'S'
+          - AttributeName: 'timestamp'
+            AttributeType: 'N'
 
     vaultsSnapshotsTable:
       Type: AWS::DynamoDB::Table
@@ -206,11 +206,11 @@ resources:
         TableName: ${self:custom.table.VAULT_SNAPSHOTS_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
-          - AttributeName: "address"
-            KeyType: "HASH"
+          - AttributeName: 'address'
+            KeyType: 'HASH'
         AttributeDefinitions:
-          - AttributeName: "address"
-            AttributeType: "S"
+          - AttributeName: 'address'
+            AttributeType: 'S'
 
     vaultsCompoundTable:
       Type: AWS::DynamoDB::Table
@@ -218,28 +218,28 @@ resources:
         TableName: ${self:custom.table.VAULT_DEFINITION_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
-          - AttributeName: "id"
-            KeyType: "HASH"
+          - AttributeName: 'id'
+            KeyType: 'HASH'
         AttributeDefinitions:
-          - AttributeName: "id"
-            AttributeType: "S"
-          - AttributeName: "chain"
-            AttributeType: "S"
-          - AttributeName: "isProduction"
-            AttributeType: "N"
+          - AttributeName: 'id'
+            AttributeType: 'S'
+          - AttributeName: 'chain'
+            AttributeType: 'S'
+          - AttributeName: 'isProduction'
+            AttributeType: 'N'
         GlobalSecondaryIndexes:
           - IndexName: IndexVaultCompoundDataChain
             KeySchema:
-              - AttributeName: "chain"
-                KeyType: "HASH"
+              - AttributeName: 'chain'
+                KeyType: 'HASH'
             Projection:
               ProjectionType: ALL
           - IndexName: IndexVaultCompoundDataChainIsProd
             KeySchema:
-              - AttributeName: "chain"
-                KeyType: "HASH"
-              - AttributeName: "isProduction"
-                KeyType: "RANGE"
+              - AttributeName: 'chain'
+                KeyType: 'HASH'
+              - AttributeName: 'isProduction'
+                KeyType: 'RANGE'
             Projection:
               ProjectionType: ALL
 
@@ -249,24 +249,24 @@ resources:
         TableName: ${self:custom.table.LEADERBOARD_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
-          - AttributeName: "leaderboard"
-            KeyType: "HASH"
-          - AttributeName: "boostRank"
-            KeyType: "RANGE"
+          - AttributeName: 'leaderboard'
+            KeyType: 'HASH'
+          - AttributeName: 'boostRank'
+            KeyType: 'RANGE'
         AttributeDefinitions:
-          - AttributeName: "leaderboard"
-            AttributeType: "S"
-          - AttributeName: "boostRank"
-            AttributeType: "N"
-          - AttributeName: "address"
-            AttributeType: "S"
+          - AttributeName: 'leaderboard'
+            AttributeType: 'S'
+          - AttributeName: 'boostRank'
+            AttributeType: 'N'
+          - AttributeName: 'address'
+            AttributeType: 'S'
         GlobalSecondaryIndexes:
           - IndexName: IndexLeaderBoardRankOnAddressAndLeaderboard
             KeySchema:
-              - AttributeName: "address"
-                KeyType: "HASH"
-              - AttributeName: "leaderboard"
-                KeyType: "RANGE"
+              - AttributeName: 'address'
+                KeyType: 'HASH'
+              - AttributeName: 'leaderboard'
+                KeyType: 'RANGE'
             Projection:
               ProjectionType: ALL
 
@@ -276,11 +276,11 @@ resources:
         TableName: ${self:custom.table.LEADERBOARD_SUMMARY_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
-          - AttributeName: "leaderboard"
-            KeyType: "HASH"
+          - AttributeName: 'leaderboard'
+            KeyType: 'HASH'
         AttributeDefinitions:
-          - AttributeName: "leaderboard"
-            AttributeType: "S"
+          - AttributeName: 'leaderboard'
+            AttributeType: 'S'
 
     vaultBalancesTable:
       Type: AWS::DynamoDB::Table
@@ -288,11 +288,11 @@ resources:
         TableName: ${self:custom.table.VAULT_BALANCES_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
-          - AttributeName: "vault"
-            KeyType: "HASH"
+          - AttributeName: 'vault'
+            KeyType: 'HASH'
         AttributeDefinitions:
-          - AttributeName: "vault"
-            AttributeType: "S"
+          - AttributeName: 'vault'
+            AttributeType: 'S'
 
     metadataTable:
       Type: AWS::DynamoDB::Table
@@ -300,22 +300,22 @@ resources:
         TableName: ${self:custom.table.METADATA_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
-          - AttributeName: "chainStartBlock"
-            KeyType: "HASH"
+          - AttributeName: 'chainStartBlock'
+            KeyType: 'HASH'
         AttributeDefinitions:
-          - AttributeName: "chainStartBlock"
-            AttributeType: "S"
-          - AttributeName: "chain"
-            AttributeType: "S"
-          - AttributeName: "startBlock"
-            AttributeType: "N"
+          - AttributeName: 'chainStartBlock'
+            AttributeType: 'S'
+          - AttributeName: 'chain'
+            AttributeType: 'S'
+          - AttributeName: 'startBlock'
+            AttributeType: 'N'
         GlobalSecondaryIndexes:
           - IndexName: IndexMetadataChainAndStartBlock
             KeySchema:
-              - AttributeName: "chain"
-                KeyType: "HASH"
-              - AttributeName: "startBlock"
-                KeyType: "RANGE"
+              - AttributeName: 'chain'
+                KeyType: 'HASH'
+              - AttributeName: 'startBlock'
+                KeyType: 'RANGE'
             Projection:
               ProjectionType: ALL
 
@@ -325,26 +325,26 @@ resources:
         TableName: ${self:custom.table.UNCLAIMED_SNAPSHOTS_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
-          - AttributeName: "chainStartBlock"
-            KeyType: "HASH"
-          - AttributeName: "address"
-            KeyType: "RANGE"
+          - AttributeName: 'chainStartBlock'
+            KeyType: 'HASH'
+          - AttributeName: 'address'
+            KeyType: 'RANGE'
         AttributeDefinitions:
-          - AttributeName: "chainStartBlock"
-            AttributeType: "S"
-          - AttributeName: "address"
-            AttributeType: "S"
+          - AttributeName: 'chainStartBlock'
+            AttributeType: 'S'
+          - AttributeName: 'address'
+            AttributeType: 'S'
         GlobalSecondaryIndexes:
           - IndexName: IndexUnclaimedSnapshotsOnAddressAndChainStartBlock
             KeySchema:
-              - AttributeName: "address"
-                KeyType: "HASH"
-              - AttributeName: "chainStartBlock"
-                KeyType: "RANGE"
+              - AttributeName: 'address'
+                KeyType: 'HASH'
+              - AttributeName: 'chainStartBlock'
+                KeyType: 'RANGE'
             Projection:
               ProjectionType: ALL
         TimeToLiveSpecification:
-          AttributeName: "expiresAt"
+          AttributeName: 'expiresAt'
           Enabled: true
 
     yieldEstimatesTable:
@@ -353,11 +353,11 @@ resources:
         TableName: ${self:custom.table.YIELD_ESTIMATES_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
-          - AttributeName: "vault"
-            KeyType: "HASH"
+          - AttributeName: 'vault'
+            KeyType: 'HASH'
         AttributeDefinitions:
-          - AttributeName: "vault"
-            AttributeType: "S"
+          - AttributeName: 'vault'
+            AttributeType: 'S'
 
     harvestCompoundDataTable:
       Type: AWS::DynamoDB::Table
@@ -365,28 +365,28 @@ resources:
         TableName: ${self:custom.table.HARVEST_COMPOUND_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
-          - AttributeName: "vault"
-            KeyType: "HASH"
-          - AttributeName: "timestamp"
-            KeyType: "RANGE"
+          - AttributeName: 'vault'
+            KeyType: 'HASH'
+          - AttributeName: 'timestamp'
+            KeyType: 'RANGE'
         AttributeDefinitions:
-          - AttributeName: "vault"
-            AttributeType: "S"
-          - AttributeName: "timestamp"
-            AttributeType: "N"
-          - AttributeName: "block"
-            AttributeType: "N"
+          - AttributeName: 'vault'
+            AttributeType: 'S'
+          - AttributeName: 'timestamp'
+            AttributeType: 'N'
+          - AttributeName: 'block'
+            AttributeType: 'N'
         GlobalSecondaryIndexes:
           - IndexName: IndexHarvestCompoundDataBlock
             KeySchema:
-              - AttributeName: "block"
-                KeyType: "HASH"
+              - AttributeName: 'block'
+                KeyType: 'HASH'
             Projection:
               ProjectionType: ALL
           - IndexName: IndexHarvestCompoundDataVault
             KeySchema:
-              - AttributeName: "vault"
-                KeyType: "HASH"
+              - AttributeName: 'vault'
+                KeyType: 'HASH'
             Projection:
               ProjectionType: ALL
 
@@ -396,26 +396,26 @@ resources:
         TableName: ${self:custom.table.CYCLE_ANALYTICS_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
-          - AttributeName: "networkCycle"
-            KeyType: "HASH"
-          - AttributeName: "cycle"
-            KeyType: "RANGE"
+          - AttributeName: 'networkCycle'
+            KeyType: 'HASH'
+          - AttributeName: 'cycle'
+            KeyType: 'RANGE'
         AttributeDefinitions:
-          - AttributeName: "networkCycle"
-            AttributeType: "S"
-          - AttributeName: "cycle"
-            AttributeType: "N"
-          - AttributeName: "network"
-            AttributeType: "S"
-          - AttributeName: "endBlock"
-            AttributeType: "N"
+          - AttributeName: 'networkCycle'
+            AttributeType: 'S'
+          - AttributeName: 'cycle'
+            AttributeType: 'N'
+          - AttributeName: 'network'
+            AttributeType: 'S'
+          - AttributeName: 'endBlock'
+            AttributeType: 'N'
         GlobalSecondaryIndexes:
           - IndexName: IndexRewardsOnNetworkAndEndBlock
             KeySchema:
-              - AttributeName: "network"
-                KeyType: "HASH"
-              - AttributeName: "endBlock"
-                KeyType: "RANGE"
+              - AttributeName: 'network'
+                KeyType: 'HASH'
+              - AttributeName: 'endBlock'
+                KeyType: 'RANGE'
             Projection:
               ProjectionType: ALL
 
@@ -425,11 +425,11 @@ resources:
         TableName: ${self:custom.table.PROTOCOL_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
-          - AttributeName: "id"
-            KeyType: "HASH"
+          - AttributeName: 'id'
+            KeyType: 'HASH'
         AttributeDefinitions:
-          - AttributeName: "id"
-            AttributeType: "S"
+          - AttributeName: 'id'
+            AttributeType: 'S'
 
     chartData:
       Type: AWS::DynamoDB::Table
@@ -437,11 +437,11 @@ resources:
         TableName: ${self:custom.table.CHART_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
-          - AttributeName: "id"
-            KeyType: "HASH"
+          - AttributeName: 'id'
+            KeyType: 'HASH'
         AttributeDefinitions:
-          - AttributeName: "id"
-            AttributeType: "S"
+          - AttributeName: 'id'
+            AttributeType: 'S'
 
 functions:
   request-handler:
@@ -465,7 +465,7 @@ functions:
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-apy-snapshots
-          description: "index data for sett apy"
+          description: 'index data for sett apy'
           rate: rate(5 minutes)
 
   index-prices:
@@ -474,7 +474,7 @@ functions:
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-prices
-          description: "index price data for all protocol tokens"
+          description: 'index price data for all protocol tokens'
           rate: rate(5 minutes)
 
   index-vault-snapshots:
@@ -483,7 +483,7 @@ functions:
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-vault-snapshots
-          description: "index data for supported vaults"
+          description: 'index data for supported vaults'
           rate: rate(5 minutes)
 
   index-vault-definitions:
@@ -492,7 +492,7 @@ functions:
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-vault-definition
-          description: "index definitions for supported vaults"
+          description: 'index definitions for supported vaults'
           rate: rate(5 minutes)
 
   index-yield-estimates:
@@ -501,7 +501,7 @@ functions:
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-yield-estimates
-          description: "index yield estimate data for supported vaults"
+          description: 'index yield estimate data for supported vaults'
           rate: rate(5 minutes)
 
   index-harvest-compound:
@@ -510,7 +510,7 @@ functions:
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-harvest-compound
-          description: "index onchain harvests for all vaults"
+          description: 'index onchain harvests for all vaults'
           rate: rate(2 hours)
 
   index-leaderboard:
@@ -519,7 +519,7 @@ functions:
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-leaderboard
-          description: "index leaderboard data from latest badger boosts"
+          description: 'index leaderboard data from latest badger boosts'
           rate: rate(5 minutes)
 
   index-vault-balances:
@@ -528,7 +528,7 @@ functions:
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-vault-balances
-          description: "index vault token balances from the graph"
+          description: 'index vault token balances from the graph'
           rate: rate(5 minutes)
 
   index-accounts:
@@ -537,7 +537,7 @@ functions:
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-claimables
-          description: "index accounts claimable from badger tree"
+          description: 'index accounts claimable from badger tree'
           rate: rate(2 hours)
           input:
             mode: ClaimableBalanceData
@@ -548,5 +548,5 @@ functions:
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-protocol-metrics-snapshots
-          description: "index protocol metrics"
+          description: 'index protocol metrics'
           rate: rate(1 day)

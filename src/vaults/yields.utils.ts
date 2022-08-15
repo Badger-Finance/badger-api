@@ -13,18 +13,18 @@ import {
   VaultState,
   VaultVersion,
   VaultYieldProjection
-} from "@badger-dao/sdk";
+} from '@badger-dao/sdk';
 
-import { VaultDefinitionModel } from "../aws/models/vault-definition.model";
-import { YieldEstimate } from "../aws/models/yield-estimate.model";
-import { YieldSource } from "../aws/models/yield-source.model";
-import { Chain } from "../chains/config/chain.config";
-import { TOKENS } from "../config/tokens.config";
-import { SourceType } from "../rewards/enums/source-type.enum";
-import { BoostRange } from "../rewards/interfaces/boost-range.interface";
-import { CachedTokenBalance } from "../tokens/interfaces/cached-token-balance.interface";
-import { YieldSources } from "./interfaces/yield-sources.interface";
-import { estimateVaultPerformance, queryYieldSources, VAULT_SOURCE } from "./vaults.utils";
+import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
+import { YieldEstimate } from '../aws/models/yield-estimate.model';
+import { YieldSource } from '../aws/models/yield-source.model';
+import { Chain } from '../chains/config/chain.config';
+import { TOKENS } from '../config/tokens.config';
+import { SourceType } from '../rewards/enums/source-type.enum';
+import { BoostRange } from '../rewards/interfaces/boost-range.interface';
+import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
+import { YieldSources } from './interfaces/yield-sources.interface';
+import { estimateVaultPerformance, queryYieldSources, VAULT_SOURCE } from './vaults.utils';
 
 const VAULT_TWAY_PERIOD = 15;
 
@@ -153,7 +153,7 @@ export function aggregateSources<T extends ValueSource>(
  */
 export function calculateYield(principal: number, earned: number, duration: number, compoundingValue = 0): number {
   if (compoundingValue > earned) {
-    throw new Error("Compounding value must be less than or equal to earned");
+    throw new Error('Compounding value must be less than or equal to earned');
   }
   if (duration === 0 || principal === 0 || earned === 0) {
     return 0;
@@ -322,8 +322,8 @@ export function createYieldSource(
 ): YieldSource {
   const { id: vaultId, address, chain } = vault;
   const isBoostable = min != max;
-  const boostModifier = isBoostable ? "Boosted" : "Flat";
-  const id = [vaultId, type, name, boostModifier].map((p) => p.replace(/ /g, "_").toLowerCase()).join("_");
+  const boostModifier = isBoostable ? 'Boosted' : 'Flat';
+  const id = [vaultId, type, name, boostModifier].map((p) => p.replace(/ /g, '_').toLowerCase()).join('_');
   return Object.assign(new YieldSource(), {
     id,
     chainAddress: vaultId,
@@ -341,12 +341,12 @@ export function createYieldSource(
 export async function loadVaultEventPerformances(chain: Chain, vault: VaultDefinitionModel): Promise<YieldSource[]> {
   const incompatibleNetworks = new Set<Network>([Network.BinanceSmartChain, Network.Polygon, Network.Arbitrum]);
   if (incompatibleNetworks.has(chain.network)) {
-    throw new Error("Network does not have standardized vaults!");
+    throw new Error('Network does not have standardized vaults!');
   }
 
   // TODO: refactor this to a known list of any external harvest processor vaults
   if (vault.address === TOKENS.BVECVX) {
-    throw new Error("Vault utilizes external harvest processor, not compatible with event lookup");
+    throw new Error('Vault utilizes external harvest processor, not compatible with event lookup');
   }
 
   const sdk = await chain.getSdk();
@@ -431,8 +431,8 @@ export async function loadVaultGraphPerformances(chain: Chain, vault: VaultDefin
 
 function constructGraphVaultData(
   vault: VaultDefinitionModel,
-  settHarvests: gqlGenT.SettHarvestsQuery["settHarvests"],
-  badgerTreeDistributions: gqlGenT.BadgerTreeDistributionsQuery["badgerTreeDistributions"]
+  settHarvests: gqlGenT.SettHarvestsQuery['settHarvests'],
+  badgerTreeDistributions: gqlGenT.BadgerTreeDistributionsQuery['badgerTreeDistributions']
 ): VaultHarvestData[] {
   const harvestsByTimestamp = keyBy(settHarvests, (harvest) => harvest.timestamp);
   const treeDistributionsByTimestamp = keyBy(badgerTreeDistributions, (distribution) => distribution.timestamp);
@@ -452,7 +452,7 @@ function constructGraphVaultData(
         amount: h.amount
       })),
       treeDistributions: currentDistributions.map((d) => {
-        const tokenAddress = d.token.id.startsWith("0x0x") ? d.token.id.slice(2) : d.token.id;
+        const tokenAddress = d.token.id.startsWith('0x0x') ? d.token.id.slice(2) : d.token.id;
         return {
           timestamp,
           block: Number(d.blockNumber),

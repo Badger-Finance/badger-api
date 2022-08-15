@@ -1,5 +1,5 @@
-import { KeyedDataBlob } from "../models/keyed-data-blob.model";
-import { DataBlob } from "./data-blob";
+import { KeyedDataBlob } from '../models/keyed-data-blob.model';
+import { DataBlob } from './data-blob';
 
 export abstract class ConvertableDataBlob {
   public keyedBlob: KeyedDataBlob;

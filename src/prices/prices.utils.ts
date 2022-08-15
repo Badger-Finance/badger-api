@@ -1,16 +1,16 @@
-import { greaterThanOrEqualTo } from "@aws/dynamodb-expressions";
-import { Currency } from "@badger-dao/sdk";
-import { ethers } from "ethers";
+import { greaterThanOrEqualTo } from '@aws/dynamodb-expressions';
+import { Currency } from '@badger-dao/sdk';
+import { ethers } from 'ethers';
 
-import { getDataMapper } from "../aws/dynamodb.utils";
-import { TokenPriceSnapshot } from "../aws/models/token-price-snapshot.model";
-import { Chain } from "../chains/config/chain.config";
-import { request } from "../common/request";
-import { TOKENS } from "../config/tokens.config";
-import { CoinGeckoPriceResponse } from "./interface/coingecko-price-response.interface";
-import { TokenPrice } from "./interface/token-price.interface";
+import { getDataMapper } from '../aws/dynamodb.utils';
+import { TokenPriceSnapshot } from '../aws/models/token-price-snapshot.model';
+import { Chain } from '../chains/config/chain.config';
+import { request } from '../common/request';
+import { TOKENS } from '../config/tokens.config';
+import { CoinGeckoPriceResponse } from './interface/coingecko-price-response.interface';
+import { TokenPrice } from './interface/token-price.interface';
 
-const COINGECKO_URL = "https://api.coingecko.com/api/v3/simple";
+const COINGECKO_URL = 'https://api.coingecko.com/api/v3/simple';
 
 /**
  * Update pricing db entry using chain strategy.
@@ -100,14 +100,14 @@ export async function fetchPrices(chain: Chain, inputs: string[], lookupName = f
   if (lookupName) {
     baseURL = `${COINGECKO_URL}/price`;
     params = {
-      ids: inputs.join(","),
-      vs_currencies: "usd"
+      ids: inputs.join(','),
+      vs_currencies: 'usd'
     };
   } else {
     baseURL = `${COINGECKO_URL}/token_price/${chain.network}`;
     params = {
-      contract_addresses: inputs.join(","),
-      vs_currencies: "usd"
+      contract_addresses: inputs.join(','),
+      vs_currencies: 'usd'
     };
   }
 

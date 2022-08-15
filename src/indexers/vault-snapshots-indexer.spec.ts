@@ -1,16 +1,16 @@
-import { DataMapper, PutParameters, StringToAnyObjectMap } from "@aws/dynamodb-data-mapper";
-import { VaultSnapshot } from "@badger-dao/sdk";
+import { DataMapper, PutParameters, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
+import { VaultSnapshot } from '@badger-dao/sdk';
 
-import { VaultDefinitionModel } from "../aws/models/vault-definition.model";
-import { SUPPORTED_CHAINS } from "../chains/chain";
-import { Chain } from "../chains/config/chain.config";
-import * as chartUtils from "../charts/charts.utils";
-import { MOCK_VAULT_DEFINITION, MOCK_VAULT_SNAPSHOT } from "../test/constants";
-import { setupMockChain } from "../test/mocks.utils";
-import * as indexerUtils from "./indexer.utils";
-import { refreshVaultSnapshots } from "./vault-snapshots-indexer";
+import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
+import { SUPPORTED_CHAINS } from '../chains/chain';
+import { Chain } from '../chains/config/chain.config';
+import * as chartUtils from '../charts/charts.utils';
+import { MOCK_VAULT_DEFINITION, MOCK_VAULT_SNAPSHOT } from '../test/constants';
+import { setupMockChain } from '../test/mocks.utils';
+import * as indexerUtils from './indexer.utils';
+import { refreshVaultSnapshots } from './vault-snapshots-indexer';
 
-describe("refreshVaultSnapshots", () => {
+describe('refreshVaultSnapshots', () => {
   const supportedAddresses = Array.from({ length: SUPPORTED_CHAINS.length }, () => MOCK_VAULT_DEFINITION.address);
 
   let vaultToSnapshot: jest.SpyInstance<Promise<VaultSnapshot>, [chain: Chain, vault: VaultDefinitionModel]>;
@@ -19,21 +19,21 @@ describe("refreshVaultSnapshots", () => {
   beforeEach(async () => {
     setupMockChain();
 
-    jest.spyOn(chartUtils, "updateSnapshots").mockImplementation();
+    jest.spyOn(chartUtils, 'updateSnapshots').mockImplementation();
     const baseSnapshot: VaultSnapshot = JSON.parse(JSON.stringify(MOCK_VAULT_SNAPSHOT));
     baseSnapshot.address = MOCK_VAULT_DEFINITION.address;
-    vaultToSnapshot = jest.spyOn(indexerUtils, "vaultToSnapshot").mockImplementation(async (_c, _v) => baseSnapshot);
-    put = jest.spyOn(DataMapper.prototype, "put").mockImplementation();
+    vaultToSnapshot = jest.spyOn(indexerUtils, 'vaultToSnapshot').mockImplementation(async (_c, _v) => baseSnapshot);
+    put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
 
     await refreshVaultSnapshots();
   });
 
-  it("fetches vaults for all chains", async () => {
+  it('fetches vaults for all chains', async () => {
     const requestedAddresses = vaultToSnapshot.mock.calls.map((calls) => calls[1].address);
     expect(requestedAddresses.sort()).toEqual(supportedAddresses);
   });
 
-  it("saves vaults in dynamo db", () => {
+  it('saves vaults in dynamo db', () => {
     const requestedAddresses = [];
     // Verify each saved object.
     for (const input of put.mock.calls) {

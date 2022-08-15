@@ -1,12 +1,12 @@
-import { providers } from "@0xsequence/multicall";
-import BadgerSDK, { GasPrices, getNetworkConfig, Network, SDKProvider } from "@badger-dao/sdk";
-import { BadRequest, NotFound } from "@tsed/exceptions";
-import { ethers } from "ethers";
+import { providers } from '@0xsequence/multicall';
+import BadgerSDK, { GasPrices, getNetworkConfig, Network, SDKProvider } from '@badger-dao/sdk';
+import { BadRequest, NotFound } from '@tsed/exceptions';
+import { ethers } from 'ethers';
 
-import { TOKENS } from "../../config/tokens.config";
-import { TokenConfig } from "../../tokens/interfaces/token-config.interface";
-import { ChainStrategy } from "../strategies/chain.strategy";
-import { ChainVaults } from "../vaults/chain.vaults";
+import { TOKENS } from '../../config/tokens.config';
+import { TokenConfig } from '../../tokens/interfaces/token-config.interface';
+import { ChainStrategy } from '../strategies/chain.strategy';
+import { ChainVaults } from '../vaults/chain.vaults';
 
 type Chains = Record<string, Chain>;
 
@@ -50,10 +50,10 @@ export abstract class Chain {
     Chain.chains[network] = chain;
     Chain.chainsByNetworkId[chain.chainId] = chain;
     if (network === Network.Polygon) {
-      Chain.chains["matic"] = chain;
+      Chain.chains['matic'] = chain;
     }
     if (network === Network.BinanceSmartChain) {
-      Chain.chains["binancesmartchain"] = chain;
+      Chain.chains['binancesmartchain'] = chain;
     }
   }
 
@@ -70,7 +70,7 @@ export abstract class Chain {
 
   static getChainById(id?: string): Chain {
     if (!id) {
-      id = "1";
+      id = '1';
     }
     const chain = Chain.chainsByNetworkId[id];
     if (!chain) {
@@ -89,7 +89,7 @@ export abstract class Chain {
   }
 
   async getGasPrices(): Promise<GasPrices> {
-    console.log("invoked get gas prices");
+    console.log('invoked get gas prices');
     let gasPrice;
     try {
       gasPrice = Number(ethers.utils.formatUnits(await this.provider.getGasPrice(), 9));

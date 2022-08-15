@@ -1,25 +1,25 @@
-import { Network } from "@badger-dao/sdk";
+import { Network } from '@badger-dao/sdk';
 
-import { TOKENS } from "../../config/tokens.config";
-import { PricingType } from "../../prices/enums/pricing-type.enum";
-import { resolveBalancerPoolTokenPrice } from "../../protocols/strategies/balancer.strategy";
-import { resolveCurveStablePoolTokenPrice } from "../../protocols/strategies/convex.strategy";
-import { TokenConfig } from "../interfaces/token-config.interface";
+import { TOKENS } from '../../config/tokens.config';
+import { PricingType } from '../../prices/enums/pricing-type.enum';
+import { resolveBalancerPoolTokenPrice } from '../../protocols/strategies/balancer.strategy';
+import { resolveCurveStablePoolTokenPrice } from '../../protocols/strategies/convex.strategy';
+import { TokenConfig } from '../interfaces/token-config.interface';
 
 export const ethTokensConfig: TokenConfig = {
   [TOKENS.BADGER]: {
-    lookupName: "badger-dao",
+    lookupName: 'badger-dao',
     type: PricingType.LookupName
   },
   [TOKENS.WBTC]: {
-    lookupName: "wrapped-bitcoin",
+    lookupName: 'wrapped-bitcoin',
     type: PricingType.LookupName
   },
   [TOKENS.WETH]: {
     type: PricingType.Contract
   },
   [TOKENS.RENBTC]: {
-    lookupName: "renbtc",
+    lookupName: 'renbtc',
     type: PricingType.LookupName
   },
   [TOKENS.CRV_RENBTC]: {
@@ -29,14 +29,14 @@ export const ethTokensConfig: TokenConfig = {
     type: PricingType.CurveLP
   },
   [TOKENS.SBTC]: {
-    lookupName: "sbtc",
+    lookupName: 'sbtc',
     type: PricingType.LookupName
   },
   [TOKENS.MTA]: {
     type: PricingType.Contract
   },
   [TOKENS.MBTC]: {
-    lookupName: "renbtc",
+    lookupName: 'renbtc',
     type: PricingType.LookupName
   },
   [TOKENS.IMBTC]: {
@@ -52,7 +52,7 @@ export const ethTokensConfig: TokenConfig = {
     type: PricingType.CurveLP
   },
   [TOKENS.TBTC]: {
-    lookupName: "tbtc",
+    lookupName: 'tbtc',
     type: PricingType.LookupName
   },
   [TOKENS.CRV_TBTC]: {
@@ -68,45 +68,45 @@ export const ethTokensConfig: TokenConfig = {
     type: PricingType.Contract
   },
   [TOKENS.WIBBTC]: {
-    lookupName: "interest-bearing-bitcoin",
+    lookupName: 'interest-bearing-bitcoin',
     type: PricingType.LookupName
   },
   [TOKENS.IBBTC]: {
-    lookupName: "interest-bearing-bitcoin",
+    lookupName: 'interest-bearing-bitcoin',
     type: PricingType.LookupName
   },
   [TOKENS.HBTC]: {
-    lookupName: "huobi-btc",
+    lookupName: 'huobi-btc',
     type: PricingType.LookupName
   },
   [TOKENS.CRV_HBTC]: {
     type: PricingType.CurveLP
   },
   [TOKENS.PBTC]: {
-    lookupName: "ptokens-btc",
+    lookupName: 'ptokens-btc',
     type: PricingType.LookupName
   },
   [TOKENS.CRV_PBTC]: {
     type: PricingType.CurveLP
   },
   [TOKENS.OBTC]: {
-    lookupName: "wrapped-bitcoin",
+    lookupName: 'wrapped-bitcoin',
     type: PricingType.LookupName
   },
   [TOKENS.CRV_OBTC]: {
     type: PricingType.CurveLP
   },
   [TOKENS.BBTC]: {
-    lookupName: "binance-wrapped-btc",
+    lookupName: 'binance-wrapped-btc',
     type: PricingType.LookupName
   },
   [TOKENS.AURA]: {
-    lookupName: "aura-finance",
+    lookupName: 'aura-finance',
     type: PricingType.LookupName
   },
   [TOKENS.AURA_BAL]: {
     type: PricingType.Custom,
-    lookupName: "0x3dd0843A028C86e0b760b1A76929d1C5Ef93a2dd",
+    lookupName: '0x3dd0843A028C86e0b760b1A76929d1C5Ef93a2dd',
     getPrice: resolveBalancerPoolTokenPrice
   },
   [TOKENS.CRV_BBTC]: {

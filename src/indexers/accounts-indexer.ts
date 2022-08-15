@@ -1,14 +1,14 @@
-import { Network } from "@badger-dao/sdk";
+import { Network } from '@badger-dao/sdk';
 
-import { getAccounts, getLatestMetadata } from "../accounts/accounts.utils";
-import { getChainStartBlockKey, getDataMapper } from "../aws/dynamodb.utils";
-import { UserClaimSnapshot } from "../aws/models/user-claim-snapshot.model";
-import { SUPPORTED_CHAINS } from "../chains/chain";
-import { Chain } from "../chains/config/chain.config";
-import { PRODUCTION } from "../config/constants";
-import { ClaimableBalance } from "../rewards/entities/claimable-balance";
-import { UserClaimMetadata } from "../rewards/entities/user-claim-metadata";
-import { getClaimableRewards, getTreeDistribution } from "../rewards/rewards.utils";
+import { getAccounts, getLatestMetadata } from '../accounts/accounts.utils';
+import { getChainStartBlockKey, getDataMapper } from '../aws/dynamodb.utils';
+import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
+import { SUPPORTED_CHAINS } from '../chains/chain';
+import { Chain } from '../chains/config/chain.config';
+import { PRODUCTION } from '../config/constants';
+import { ClaimableBalance } from '../rewards/entities/claimable-balance';
+import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
+import { getClaimableRewards, getTreeDistribution } from '../rewards/rewards.utils';
 
 export async function refreshClaimableBalances(chain: Chain) {
   const mapper = getDataMapper();
@@ -20,7 +20,7 @@ export async function refreshClaimableBalances(chain: Chain) {
     hasTree: sdk.rewards.hasBadgerTree()
   });
   if (!distribution || !sdk.rewards.hasBadgerTree()) {
-    console.log("returned");
+    console.log('returned');
     return;
   }
 
@@ -100,5 +100,5 @@ export async function refreshUserAccounts() {
     })
   );
 
-  return "done";
+  return 'done';
 }

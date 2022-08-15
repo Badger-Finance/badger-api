@@ -1,22 +1,22 @@
-import { Protocol } from "@badger-dao/sdk";
+import { Protocol } from '@badger-dao/sdk';
 
-import { getDataMapper } from "../aws/dynamodb.utils";
-import { VaultDefinitionModel } from "../aws/models/vault-definition.model";
-import { VaultTokenBalance } from "../aws/models/vault-token-balance.model";
-import { SUPPORTED_CHAINS } from "../chains/chain";
-import { Chain } from "../chains/config/chain.config";
-import { getBalancerVaultTokenBalance } from "../protocols/strategies/balancer.strategy";
-import { getCurveVaultTokenBalance } from "../protocols/strategies/convex.strategy";
-import { getFullToken, toBalance } from "../tokens/tokens.utils";
-import { getCachedVault } from "../vaults/vaults.utils";
-import { getLpTokenBalances } from "./indexer.utils";
+import { getDataMapper } from '../aws/dynamodb.utils';
+import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
+import { VaultTokenBalance } from '../aws/models/vault-token-balance.model';
+import { SUPPORTED_CHAINS } from '../chains/chain';
+import { Chain } from '../chains/config/chain.config';
+import { getBalancerVaultTokenBalance } from '../protocols/strategies/balancer.strategy';
+import { getCurveVaultTokenBalance } from '../protocols/strategies/convex.strategy';
+import { getFullToken, toBalance } from '../tokens/tokens.utils';
+import { getCachedVault } from '../vaults/vaults.utils';
+import { getLpTokenBalances } from './indexer.utils';
 
 export async function refreshVaultBalances() {
   for (const chain of SUPPORTED_CHAINS) {
     const vaults = await chain.vaults.all();
     await Promise.all(vaults.map(async (v) => updateVaultTokenBalances(chain, v)));
   }
-  return "done";
+  return 'done';
 }
 
 export async function updateVaultTokenBalances(chain: Chain, vault: VaultDefinitionModel): Promise<void> {

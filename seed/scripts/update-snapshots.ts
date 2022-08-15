@@ -1,12 +1,12 @@
-import { BadgerAPI, Network, VaultSnapshot } from "@badger-dao/sdk";
-import { writeFileSync } from "fs";
-import { resolve } from "path";
+import { BadgerAPI, Network, VaultSnapshot } from '@badger-dao/sdk';
+import { writeFileSync } from 'fs';
+import { resolve } from 'path';
 
 async function updatePrices() {
   const vaults: VaultSnapshot[] = [];
   for (const network of Object.values(Network)) {
     try {
-      const api = new BadgerAPI({ network, baseURL: "https://staging-api.badger.com/" });
+      const api = new BadgerAPI({ network, baseURL: 'https://staging-api.badger.com/' });
       const networkVaults = await api.loadVaults();
       networkVaults.forEach((vault) => {
         vaults.push({
@@ -28,7 +28,7 @@ async function updatePrices() {
       });
     } catch {}
   }
-  writeFileSync(resolve(__dirname, "../vault-snapshots.json"), JSON.stringify(vaults, null, 2));
+  writeFileSync(resolve(__dirname, '../vault-snapshots.json'), JSON.stringify(vaults, null, 2));
 }
 
 updatePrices();

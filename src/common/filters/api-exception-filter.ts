@@ -1,6 +1,6 @@
-import { Catch, ExceptionFilterMethods, PlatformContext } from "@tsed/common";
+import { Catch, ExceptionFilterMethods, PlatformContext } from '@tsed/common';
 
-import { BaseApiError } from "../../errors/base.error";
+import { BaseApiError } from '../../errors/base.error';
 
 @Catch(BaseApiError)
 export class ApiExceptionFilter implements ExceptionFilterMethods {

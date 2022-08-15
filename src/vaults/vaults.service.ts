@@ -1,18 +1,18 @@
-import { Currency, VaultDTO, VaultType } from "@badger-dao/sdk";
-import { Service } from "@tsed/common";
+import { Currency, VaultDTO, VaultType } from '@badger-dao/sdk';
+import { Service } from '@tsed/common';
 
-import { getDataMapper, getVaultEntityId } from "../aws/dynamodb.utils";
-import { HarvestCompoundData } from "../aws/models/harvest-compound.model";
-import { HistoricVaultSnapshotModel } from "../aws/models/historic-vault-snapshot.model";
-import { VaultDefinitionModel } from "../aws/models/vault-definition.model";
-import { Chain } from "../chains/config/chain.config";
-import { CHART_GRANULARITY_TIMEFRAMES, queryVaultCharts, toChartDataKey } from "../charts/charts.utils";
-import { convert } from "../prices/prices.utils";
-import { ProtocolSummary } from "../protocols/interfaces/protocol-summary.interface";
-import { VaultHarvestsExtendedResp } from "./interfaces/vault-harvest-extended-resp.interface";
-import { VaultHarvestsMap } from "./interfaces/vault-harvest-map";
-import { getCachedVault, queryYieldEstimate } from "./vaults.utils";
-import { getVaultYieldProjection, getYieldSources } from "./yields.utils";
+import { getDataMapper, getVaultEntityId } from '../aws/dynamodb.utils';
+import { HarvestCompoundData } from '../aws/models/harvest-compound.model';
+import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
+import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
+import { Chain } from '../chains/config/chain.config';
+import { CHART_GRANULARITY_TIMEFRAMES, queryVaultCharts, toChartDataKey } from '../charts/charts.utils';
+import { convert } from '../prices/prices.utils';
+import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interface';
+import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
+import { VaultHarvestsMap } from './interfaces/vault-harvest-map';
+import { getCachedVault, queryYieldEstimate } from './vaults.utils';
+import { getVaultYieldProjection, getYieldSources } from './yields.utils';
 
 @Service()
 export class VaultsService {
@@ -60,7 +60,7 @@ export class VaultsService {
     const queryHarvests = mapper.query(
       HarvestCompoundData,
       { vault: vault.address },
-      { indexName: "IndexHarvestCompoundDataVault" }
+      { indexName: 'IndexHarvestCompoundDataVault' }
     );
 
     try {

@@ -1,13 +1,13 @@
-import { GraphQLClient } from "graphql-request";
+import { GraphQLClient } from 'graphql-request';
 
-import { VaultDefinitionModel } from "../../aws/models/vault-definition.model";
-import { YieldSource } from "../../aws/models/yield-source.model";
-import { getSdk as getUniswapSdk, OrderDirection, PairDayData_OrderBy } from "../../graphql/generated/uniswap";
-import { queryPrice } from "../../prices/prices.utils";
-import { SourceType } from "../../rewards/enums/source-type.enum";
-import { createYieldSource } from "../../vaults/yields.utils";
-import { PairDayData } from "../interfaces/pair-day-data.interface";
-import { UniPairDayData } from "../interfaces/uni-pair-day-data.interface";
+import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
+import { YieldSource } from '../../aws/models/yield-source.model';
+import { getSdk as getUniswapSdk, OrderDirection, PairDayData_OrderBy } from '../../graphql/generated/uniswap';
+import { queryPrice } from '../../prices/prices.utils';
+import { SourceType } from '../../rewards/enums/source-type.enum';
+import { createYieldSource } from '../../vaults/yields.utils';
+import { PairDayData } from '../interfaces/pair-day-data.interface';
+import { UniPairDayData } from '../interfaces/uni-pair-day-data.interface';
 
 export async function getUniV2SwapValue(graphUrl: string, vault: VaultDefinitionModel): Promise<YieldSource> {
   const client = new GraphQLClient(graphUrl);

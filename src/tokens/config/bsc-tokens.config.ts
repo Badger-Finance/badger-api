@@ -1,20 +1,20 @@
-import { Network } from "@badger-dao/sdk";
+import { Network } from '@badger-dao/sdk';
 
-import { TOKENS } from "../../config/tokens.config";
-import { PricingType } from "../../prices/enums/pricing-type.enum";
-import { TokenConfig } from "../interfaces/token-config.interface";
+import { TOKENS } from '../../config/tokens.config';
+import { PricingType } from '../../prices/enums/pricing-type.enum';
+import { TokenConfig } from '../interfaces/token-config.interface';
 
 export const bscTokensConfig: TokenConfig = {
   [TOKENS.CAKE]: {
-    lookupName: "pancakeswap-token",
+    lookupName: 'pancakeswap-token',
     type: PricingType.LookupName
   },
   [TOKENS.WBNB]: {
-    lookupName: "binancecoin",
+    lookupName: 'binancecoin',
     type: PricingType.LookupName
   },
   [TOKENS.BTCB]: {
-    lookupName: "binance-bitcoin",
+    lookupName: 'binance-bitcoin',
     type: PricingType.LookupName
   },
   [TOKENS.PANCAKE_BNB_BTCB]: {
@@ -34,7 +34,7 @@ export const bscTokensConfig: TokenConfig = {
     type: PricingType.UniV2LP
   },
   [TOKENS.MULTI_BADGER]: {
-    lookupName: "badger-dao",
+    lookupName: 'badger-dao',
     type: PricingType.Contract
   },
   [TOKENS.BSC_BBADGER]: {

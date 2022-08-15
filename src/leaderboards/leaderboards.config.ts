@@ -1,4 +1,4 @@
-import { BadgerType, BadgerTypeMap } from "@badger-dao/sdk";
+import { BadgerType, BadgerTypeMap } from '@badger-dao/sdk';
 
 export const BADGER_RANKS: BadgerTypeMap = {
   [BadgerType.Basic]: 1,

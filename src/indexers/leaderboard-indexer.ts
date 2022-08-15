@@ -1,13 +1,13 @@
-import { BadgerType, BadgerTypeMap } from "@badger-dao/sdk";
-import { ethers } from "ethers";
+import { BadgerType, BadgerTypeMap } from '@badger-dao/sdk';
+import { ethers } from 'ethers';
 
-import { getBoostFile } from "../accounts/accounts.utils";
-import { getDataMapper, getLeaderboardKey } from "../aws/dynamodb.utils";
-import { CachedBoost } from "../aws/models/cached-boost.model";
-import { CachedLeaderboardSummary } from "../aws/models/cached-leaderboard-summary.model";
-import { SUPPORTED_CHAINS } from "../chains/chain";
-import { Chain } from "../chains/config/chain.config";
-import { getBadgerType } from "../leaderboards/leaderboards.config";
+import { getBoostFile } from '../accounts/accounts.utils';
+import { getDataMapper, getLeaderboardKey } from '../aws/dynamodb.utils';
+import { CachedBoost } from '../aws/models/cached-boost.model';
+import { CachedLeaderboardSummary } from '../aws/models/cached-leaderboard-summary.model';
+import { SUPPORTED_CHAINS } from '../chains/chain';
+import { Chain } from '../chains/config/chain.config';
+import { getBadgerType } from '../leaderboards/leaderboards.config';
 
 export const indexBoostLeaderBoard = async () => {
   await Promise.all(
@@ -47,7 +47,7 @@ export const indexBoostLeaderBoard = async () => {
       );
     })
   );
-  return "done";
+  return 'done';
 };
 
 async function generateChainBoostsLeaderBoard(chain: Chain): Promise<CachedBoost[]> {

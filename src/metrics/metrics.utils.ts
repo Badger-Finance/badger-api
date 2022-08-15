@@ -1,8 +1,8 @@
-import { Chain } from "src/chains/config/chain.config";
+import { Chain } from 'src/chains/config/chain.config';
 
-import { getAccounts } from "../accounts/accounts.utils";
-import { getCachedVault } from "../vaults/vaults.utils";
-import { ProtocolMetrics } from "./interfaces/metrics.interface";
+import { getAccounts } from '../accounts/accounts.utils';
+import { getCachedVault } from '../vaults/vaults.utils';
+import { ProtocolMetrics } from './interfaces/metrics.interface';
 
 export async function getChainMetrics(chains: Chain[]): Promise<ProtocolMetrics> {
   let totalUsers = 0;

@@ -1,8 +1,8 @@
-import { BadgerTypeMap, LeaderboardSummary } from "@badger-dao/sdk";
-import { Service } from "@tsed/common";
+import { BadgerTypeMap, LeaderboardSummary } from '@badger-dao/sdk';
+import { Service } from '@tsed/common';
 
-import { Chain } from "../chains/config/chain.config";
-import { queryLeaderboardSummary } from "./leaderboards.utils";
+import { Chain } from '../chains/config/chain.config';
+import { queryLeaderboardSummary } from './leaderboards.utils';
 
 @Service()
 export class LeaderBoardsService {

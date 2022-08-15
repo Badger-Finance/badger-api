@@ -1,10 +1,10 @@
-import { Network } from "@badger-dao/sdk";
+import { Network } from '@badger-dao/sdk';
 
-import rpc from "../../config/rpc.config";
-import { TOKENS } from "../../config/tokens.config";
-import { maticTokensConfig } from "../../tokens/config/polygon-tokens.config";
-import { BaseStrategy } from "../strategies/base.strategy";
-import { Chain } from "./chain.config";
+import rpc from '../../config/rpc.config';
+import { TOKENS } from '../../config/tokens.config';
+import { maticTokensConfig } from '../../tokens/config/polygon-tokens.config';
+import { BaseStrategy } from '../strategies/base.strategy';
+import { Chain } from './chain.config';
 
 export class Polygon extends Chain {
   constructor() {

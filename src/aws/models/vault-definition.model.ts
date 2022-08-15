@@ -1,9 +1,9 @@
-import { attribute, hashKey, table } from "@aws/dynamodb-data-mapper-annotations";
-import { BouncerType, Network, Protocol, VaultBehavior, VaultState, VaultVersion } from "@badger-dao/sdk";
+import { attribute, hashKey, table } from '@aws/dynamodb-data-mapper-annotations';
+import { BouncerType, Network, Protocol, VaultBehavior, VaultState, VaultVersion } from '@badger-dao/sdk';
 
-import { VAULT_DEFINITION_DATA } from "../../config/constants";
-import { Stage } from "../../config/enums/stage.enum";
-import { IVaultDefinition } from "../interfaces/vault-definition-model.interface";
+import { VAULT_DEFINITION_DATA } from '../../config/constants';
+import { Stage } from '../../config/enums/stage.enum';
+import { IVaultDefinition } from '../interfaces/vault-definition-model.interface';
 
 @table(VAULT_DEFINITION_DATA)
 export class VaultDefinitionModel implements IVaultDefinition {
@@ -18,8 +18,8 @@ export class VaultDefinitionModel implements IVaultDefinition {
 
   @attribute({
     indexKeyConfigurations: {
-      IndexVaultCompoundDataChain: "HASH",
-      IndexVaultCompoundDataChainIsProd: "HASH"
+      IndexVaultCompoundDataChain: 'HASH',
+      IndexVaultCompoundDataChainIsProd: 'HASH'
     }
   })
   chain!: Network;
@@ -27,7 +27,7 @@ export class VaultDefinitionModel implements IVaultDefinition {
   // 0 - not in prd onchain map, 1 - yes
   @attribute({
     indexKeyConfigurations: {
-      IndexVaultCompoundDataChainIsProd: "RANGE"
+      IndexVaultCompoundDataChainIsProd: 'RANGE'
     }
   })
   isProduction!: number;

@@ -1,6 +1,6 @@
-import { BigNumberish } from "ethers";
+import { BigNumberish } from 'ethers';
 
-import { RewardMerkleClaim } from "./reward-merkle-claim.interface";
+import { RewardMerkleClaim } from './reward-merkle-claim.interface';
 
 export interface AirdropMerkleDistribution {
   merkleRoot: string;

@@ -1,10 +1,10 @@
-import { Service } from "@tsed/common";
-import { NotFound } from "@tsed/exceptions";
+import { Service } from '@tsed/common';
+import { NotFound } from '@tsed/exceptions';
 
-import { getDataMapper } from "../aws/dynamodb.utils";
-import { ProtocolMetricSnapshot } from "../aws/models/protocol-metric-snapshot.model";
-import { MetricType } from "./enums/metric-type";
-import { ProtocolMetrics } from "./interfaces/metrics.interface";
+import { getDataMapper } from '../aws/dynamodb.utils';
+import { ProtocolMetricSnapshot } from '../aws/models/protocol-metric-snapshot.model';
+import { MetricType } from './enums/metric-type';
+import { ProtocolMetrics } from './interfaces/metrics.interface';
 
 @Service()
 export class MetricsService {
@@ -22,11 +22,11 @@ export class MetricsService {
       }
     } catch (error) {
       console.error(error);
-      throw new NotFound("Protocol metrics not available");
+      throw new NotFound('Protocol metrics not available');
     }
 
     if (!result) {
-      throw new NotFound("Protocol metrics not available");
+      throw new NotFound('Protocol metrics not available');
     }
 
     return result;

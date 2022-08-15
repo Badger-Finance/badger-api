@@ -1,4 +1,4 @@
 export enum Stage {
-  Staging = "staging",
-  Production = "prod"
+  Staging = 'staging',
+  Production = 'prod'
 }

@@ -1,14 +1,14 @@
 /************************************************************************/
 /*                       Seed utils section start                       */
 /************************************************************************/
-import { RegistryVault } from "@badger-dao/sdk";
-import { writeFileSync } from "fs";
-import { resolve } from "path";
+import { RegistryVault } from '@badger-dao/sdk';
+import { writeFileSync } from 'fs';
+import { resolve } from 'path';
 
-import { VaultDefinitionModel } from "../aws/models/vault-definition.model";
-import { SUPPORTED_CHAINS } from "../chains/chain";
-import { constructVaultDefinition } from "../indexers/indexer.utils";
-import { VAULT_SEED_DIR } from "./dev.constants";
+import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
+import { SUPPORTED_CHAINS } from '../chains/chain';
+import { constructVaultDefinition } from '../indexers/indexer.utils';
+import { VAULT_SEED_DIR } from './dev.constants';
 
 export async function getVaultsDefinitionSeedData(): Promise<VaultDefinitionModel[]> {
   const seedVaults: VaultDefinitionModel[] = [];
@@ -45,7 +45,7 @@ export async function getVaultsDefinitionSeedData(): Promise<VaultDefinitionMode
 }
 
 export function saveSeedJSONFile<T>(data: T, filename: string) {
-  writeFileSync(resolve(__dirname, "../../../", VAULT_SEED_DIR, filename), JSON.stringify(data, null, 2));
+  writeFileSync(resolve(__dirname, '../../../', VAULT_SEED_DIR, filename), JSON.stringify(data, null, 2));
 }
 
 /************************************************************************/

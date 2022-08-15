@@ -1,7 +1,7 @@
-import { Service } from "@tsed/di";
+import { Service } from '@tsed/di';
 
-import { VAULT_DEFINITION_SEED_NAME } from "./dev.constants";
-import { getVaultsDefinitionSeedData, saveSeedJSONFile } from "./dev.utils";
+import { VAULT_DEFINITION_SEED_NAME } from './dev.constants';
+import { getVaultsDefinitionSeedData, saveSeedJSONFile } from './dev.utils';
 
 @Service()
 export class DevelopmentService {
@@ -10,6 +10,6 @@ export class DevelopmentService {
 
     saveSeedJSONFile(vaultsDefinitions, VAULT_DEFINITION_SEED_NAME);
 
-    return { status: "success" };
+    return { status: 'success' };
   }
 }

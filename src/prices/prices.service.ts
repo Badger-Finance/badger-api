@@ -1,9 +1,9 @@
-import { Currency } from "@badger-dao/sdk";
-import { Service } from "@tsed/common";
+import { Currency } from '@badger-dao/sdk';
+import { Service } from '@tsed/common';
 
-import { PriceSnapshots } from "../tokens/interfaces/price-snapshots.interface";
-import { PriceSummary } from "../tokens/interfaces/price-summary.interface";
-import { convert, getPriceSnapshotsAtTimestamps, queryPrice } from "./prices.utils";
+import { PriceSnapshots } from '../tokens/interfaces/price-snapshots.interface';
+import { PriceSummary } from '../tokens/interfaces/price-summary.interface';
+import { convert, getPriceSnapshotsAtTimestamps, queryPrice } from './prices.utils';
 
 /**
  * API price oracle service. Uses CoinGecko as a source of truth for most

@@ -1,6 +1,6 @@
-import { BouncerType, Network, Protocol, VaultBehavior, VaultState, VaultVersion } from "@badger-dao/sdk";
+import { BouncerType, Network, Protocol, VaultBehavior, VaultState, VaultVersion } from '@badger-dao/sdk';
 
-import { Stage } from "../../config/enums/stage.enum";
+import { Stage } from '../../config/enums/stage.enum';
 
 export interface IVaultDefinition {
   address: string;

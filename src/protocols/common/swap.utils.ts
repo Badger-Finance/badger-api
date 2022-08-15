@@ -1,11 +1,11 @@
-import { formatBalance } from "@badger-dao/sdk";
-import { NotFound, UnprocessableEntity } from "@tsed/exceptions";
+import { formatBalance } from '@badger-dao/sdk';
+import { NotFound, UnprocessableEntity } from '@tsed/exceptions';
 
-import { Chain } from "../../chains/config/chain.config";
-import { UniV2__factory } from "../../contracts";
-import { TokenPrice } from "../../prices/interface/token-price.interface";
-import { queryPrice } from "../../prices/prices.utils";
-import { getFullToken } from "../../tokens/tokens.utils";
+import { Chain } from '../../chains/config/chain.config';
+import { UniV2__factory } from '../../contracts';
+import { TokenPrice } from '../../prices/interface/token-price.interface';
+import { queryPrice } from '../../prices/prices.utils';
+import { getFullToken } from '../../tokens/tokens.utils';
 
 interface LiquidityData {
   contract: string;

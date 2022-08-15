@@ -1,4 +1,4 @@
-import { attribute } from "@aws/dynamodb-data-mapper-annotations";
+import { attribute } from '@aws/dynamodb-data-mapper-annotations';
 
 export class BoostDestructor {
   @attribute()

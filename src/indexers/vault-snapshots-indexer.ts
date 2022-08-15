@@ -1,9 +1,9 @@
-import { getDataMapper, getVaultEntityId } from "../aws/dynamodb.utils";
-import { CurrentVaultSnapshotModel } from "../aws/models/current-vault-snapshot.model";
-import { HistoricVaultSnapshotModel } from "../aws/models/historic-vault-snapshot.model";
-import { SUPPORTED_CHAINS } from "../chains/chain";
-import { updateSnapshots } from "../charts/charts.utils";
-import { vaultToSnapshot } from "./indexer.utils";
+import { getDataMapper, getVaultEntityId } from '../aws/dynamodb.utils';
+import { CurrentVaultSnapshotModel } from '../aws/models/current-vault-snapshot.model';
+import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
+import { SUPPORTED_CHAINS } from '../chains/chain';
+import { updateSnapshots } from '../charts/charts.utils';
+import { vaultToSnapshot } from './indexer.utils';
 
 export async function refreshVaultSnapshots() {
   const timestamp = Date.now();
@@ -35,5 +35,5 @@ export async function refreshVaultSnapshots() {
     );
   }
 
-  return "done";
+  return 'done';
 }

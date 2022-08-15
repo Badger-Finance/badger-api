@@ -1,5 +1,5 @@
-import { ApiErrorCode } from "../enums/error.codes.enum";
-import { NotFoundError } from "./not.found.error";
+import { ApiErrorCode } from '../enums/error.codes.enum';
+import { NotFoundError } from './not.found.error';
 
 export class NodataForChainError extends NotFoundError {
   constructor(chain: string) {

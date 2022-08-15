@@ -1,4 +1,4 @@
-import { BoostRange } from "./boost-range.interface";
+import { BoostRange } from './boost-range.interface';
 
 export interface BoostMultiplierData {
   [contract: string]: BoostRange;

@@ -1,38 +1,38 @@
-import { Description, Example, Property, Title } from "@tsed/schema";
+import { Description, Example, Property, Title } from '@tsed/schema';
 
-import { firstVaultAddr, rewardSchedules } from "../examples/reward-schedules-vaults.mock";
-import { EmissionSchedule } from "./reward-schedules-vault.interface";
+import { firstVaultAddr, rewardSchedules } from '../examples/reward-schedules-vaults.mock';
+import { EmissionSchedule } from './reward-schedules-vault.interface';
 
-@Description("Rewards schedules by vaults map")
+@Description('Rewards schedules by vaults map')
 @Example(rewardSchedules[firstVaultAddr])
 export class RewardSchedulesByVaultModel implements EmissionSchedule {
-  @Title("beneficiary")
-  @Description("To whom token emmited")
+  @Title('beneficiary')
+  @Description('To whom token emmited')
   @Property()
   public beneficiary: string;
 
-  @Title("token")
-  @Description("Token addr")
+  @Title('token')
+  @Description('Token addr')
   @Property()
   public token: string;
 
-  @Title("amount")
-  @Description("Total amount of emmited token")
+  @Title('amount')
+  @Description('Total amount of emmited token')
   @Property()
   public amount: number;
 
-  @Title("start")
-  @Description("Schedule start timestamp")
+  @Title('start')
+  @Description('Schedule start timestamp')
   @Property()
   public start: number;
 
-  @Title("end")
-  @Description("Schedule end timestamp")
+  @Title('end')
+  @Description('Schedule end timestamp')
   @Property()
   public end: number;
 
-  @Title("compPercent")
-  @Description("Percent of schedule completion")
+  @Title('compPercent')
+  @Description('Percent of schedule completion')
   @Property()
   public compPercent: number;
 

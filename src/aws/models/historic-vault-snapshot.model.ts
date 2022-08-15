@@ -1,12 +1,12 @@
-import { embed } from "@aws/dynamodb-data-mapper";
-import { attribute } from "@aws/dynamodb-data-mapper-annotations";
-import { VaultSnapshot } from "@badger-dao/sdk";
+import { embed } from '@aws/dynamodb-data-mapper';
+import { attribute } from '@aws/dynamodb-data-mapper-annotations';
+import { VaultSnapshot } from '@badger-dao/sdk';
 
-import { ChartData } from "../../charts/chart-data.model";
-import { VaultStrategy } from "../../vaults/interfaces/vault-strategy.interface";
+import { ChartData } from '../../charts/chart-data.model';
+import { VaultStrategy } from '../../vaults/interfaces/vault-strategy.interface';
 
 export class HistoricVaultSnapshotModel extends ChartData<HistoricVaultSnapshotModel> implements VaultSnapshot {
-  static NAMESPACE = "vault";
+  static NAMESPACE = 'vault';
 
   @attribute()
   chain!: string;

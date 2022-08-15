@@ -1,11 +1,11 @@
-import { Network, ONE_MINUTE_MS } from "@badger-dao/sdk";
-import { NotFound } from "@tsed/exceptions";
-import { ethers } from "ethers";
+import { Network, ONE_MINUTE_MS } from '@badger-dao/sdk';
+import { NotFound } from '@tsed/exceptions';
+import { ethers } from 'ethers';
 
-import { getDataMapper } from "../../aws/dynamodb.utils";
-import { VaultDefinitionModel } from "../../aws/models/vault-definition.model";
-import { STAGE } from "../../config/constants";
-import { Stage } from "../../config/enums/stage.enum";
+import { getDataMapper } from '../../aws/dynamodb.utils';
+import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
+import { STAGE } from '../../config/constants';
+import { Stage } from '../../config/enums/stage.enum';
 
 export class ChainVaults {
   network: Network;
@@ -46,7 +46,7 @@ export class ChainVaults {
       const query = mapper.query(
         VaultDefinitionModel,
         { chain: this.network, isProduction: 1 },
-        { indexName: "IndexVaultCompoundDataChainIsProd" }
+        { indexName: 'IndexVaultCompoundDataChainIsProd' }
       );
 
       try {
