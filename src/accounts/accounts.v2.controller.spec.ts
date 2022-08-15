@@ -1,36 +1,42 @@
-import { PlatformTest } from "@tsed/common";
-import { BadRequest, NotFound } from "@tsed/exceptions";
-import SuperTest from "supertest";
+import { PlatformServerless } from "@tsed/platform-serverless";
+import { PlatformServerlessTest } from "@tsed/platform-serverless-testing";
 
-import { Server } from "../server";
+import { NetworkStatus } from "../errors/enums/network-status.enum";
 import { TEST_ADDR } from "../test/constants";
+import { setupMockChain } from "../test/mocks.utils";
 import { setupMockAccounts } from "../test/tests.utils";
 import * as accountsUtils from "./accounts.utils";
+import { AccountsV2Controller } from "./accounts.v2.controller";
 
-describe("AccountsController", () => {
-  let request: SuperTest.SuperTest<SuperTest.Test>;
+describe("accounts.v2.controller", () => {
+  beforeEach(
+    PlatformServerlessTest.bootstrap(PlatformServerless, {
+      lambda: [AccountsV2Controller]
+    })
+  );
+  afterEach(() => PlatformServerlessTest.reset());
 
-  beforeEach(PlatformTest.bootstrap(Server));
-  beforeEach(async () => {
-    request = SuperTest(PlatformTest.callback());
+  beforeEach(() => {
+    setupMockChain();
     setupMockAccounts();
   });
-
-  afterEach(PlatformTest.reset);
 
   describe("GET /v2/accounts", () => {
     describe("with no specified account", () => {
       it("returns a not found response", async () => {
-        const { body } = await request.get("/v2/accounts").expect(NotFound.STATUS);
-        expect(body).toMatchSnapshot();
+        const { statusCode } = await PlatformServerlessTest.request.get("/accounts");
+        expect(statusCode).toEqual(NetworkStatus.NotFound);
       });
     });
+
     describe("with an invalid account input", () => {
       it("returns a bad request response", async () => {
-        const { body } = await request.get("/v2/accounts/0xjintao").expect(BadRequest.STATUS);
-        expect(body).toMatchSnapshot();
+        const { body, statusCode } = await PlatformServerlessTest.request.get("/accounts/0xjintao");
+        expect(statusCode).toEqual(NetworkStatus.BadRequest);
+        expect(JSON.parse(body)).toMatchSnapshot();
       });
     });
+
     describe("with a non participant account", () => {
       it("returns a default account response", async () => {
         jest.spyOn(accountsUtils, "getCachedAccount").mockImplementation(async (_chain, address) => ({
@@ -50,10 +56,12 @@ describe("AccountsController", () => {
           nativeBalance: 0,
           nonNativeBalance: 0
         }));
-        const { body } = await request.get("/v2/accounts/" + TEST_ADDR).expect(200);
-        expect(body).toMatchSnapshot();
+        const { body, statusCode } = await PlatformServerlessTest.request.get("/accounts/" + TEST_ADDR);
+        expect(statusCode).toEqual(NetworkStatus.Success);
+        expect(JSON.parse(body)).toMatchSnapshot();
       });
     });
+
     describe("with a participant account", () => {
       it("returns a cached account response", async () => {
         jest.spyOn(accountsUtils, "getCachedAccount").mockImplementation(async (_chain, address) => ({
@@ -73,8 +81,9 @@ describe("AccountsController", () => {
           nativeBalance: 3,
           nonNativeBalance: 5
         }));
-        const { body } = await request.get("/v2/accounts/" + TEST_ADDR).expect(200);
-        expect(body).toMatchSnapshot();
+        const { body, statusCode } = await PlatformServerlessTest.request.get("/accounts/" + TEST_ADDR);
+        expect(statusCode).toEqual(NetworkStatus.Success);
+        expect(JSON.parse(body)).toMatchSnapshot();
       });
     });
   });

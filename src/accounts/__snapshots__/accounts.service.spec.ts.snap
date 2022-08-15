@@ -2,7 +2,7 @@
 
 exports[`accounts.service getAccount returns the expected account 1`] = `
 Object {
-  "address": "0x2B5455aac8d64C14786c3a29858E43b5945819C0",
+  "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
   "boost": 2000,
   "boostRank": 1,
   "bveCvxBalance": 1,

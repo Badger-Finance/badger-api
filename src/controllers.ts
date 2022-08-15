@@ -1,5 +1,5 @@
-import { AccountV3Controller } from "./accounts/account.v3.controller";
 import { AccountsV2Controller } from "./accounts/accounts.v2.controller";
+import { AccountsV3Controller } from "./accounts/accounts.v3.controller";
 import { ChartsController } from "./charts/charts.controller";
 import { DevelopmentController } from "./dev/dev.controller";
 import { GasController } from "./gas/gas.controller";
@@ -47,7 +47,7 @@ export const V3_CONTROLLERS = [
 
   DevelopmentController,
 
-  AccountV3Controller,
+  AccountsV3Controller,
   ProofsV3Controller,
   RewardsV3Controller,
   VaultsV3Controller

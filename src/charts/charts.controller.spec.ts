@@ -1,48 +1,48 @@
 import { ChartTimeFrame } from "@badger-dao/sdk";
-import { PlatformTest } from "@tsed/common";
-import SuperTest from "supertest";
+import { PlatformServerless } from "@tsed/platform-serverless";
+import { PlatformServerlessTest } from "@tsed/platform-serverless-testing";
 
 import { NetworkStatus } from "../errors/enums/network-status.enum";
-import { Server } from "../server";
 import { TEST_ADDR } from "../test/constants";
 import { setupMockChain } from "../test/mocks.utils";
+import { ChartsController } from "./charts.controller";
 
 describe("ChartsController", () => {
-  let request: SuperTest.SuperTest<SuperTest.Test>;
+  beforeEach(
+    PlatformServerlessTest.bootstrap(PlatformServerless, {
+      lambda: [ChartsController]
+    })
+  );
+  afterEach(() => PlatformServerlessTest.reset());
 
-  beforeAll(PlatformTest.bootstrap(Server));
-  beforeAll(() => {
-    request = SuperTest(PlatformTest.callback());
-  });
-  afterAll(PlatformTest.reset);
+  beforeEach(setupMockChain);
 
-  beforeEach(() => {
-    setupMockChain();
-  });
-
-  describe("GET /v3/charts/vault", () => {
+  describe("GET /charts/vault", () => {
     describe("with a missing vault address", () => {
       it("returns 400, QueryParamError", async () => {
-        const { body } = await request.get("/v3/charts/vault").expect(NetworkStatus.BadRequest);
-        expect(body).toMatchSnapshot();
+        const { body, statusCode } = await PlatformServerlessTest.request.get("/v3/charts/vault");
+        expect(statusCode).toEqual(NetworkStatus.BadRequest);
+        expect(JSON.parse(body)).toMatchSnapshot();
       });
     });
 
     describe("get vault data with different timeframes", () => {
       it("should return vault data for YTD", async () => {
-        const { body } = await request
-          .get(`/v3/charts/vault?address=${TEST_ADDR}&timeframe=${ChartTimeFrame.YTD}`)
-          .expect(NetworkStatus.Success);
+        const { body, statusCode } = await PlatformServerlessTest.request
+          .get("/charts/vault")
+          .query({ address: TEST_ADDR, timeframe: ChartTimeFrame.YTD });
 
-        expect(body).toMatchSnapshot();
+        expect(statusCode).toEqual(NetworkStatus.Success);
+        expect(JSON.parse(body)).toMatchSnapshot();
       });
 
       it("should return vault data for 1Y", async () => {
-        const { body } = await request
-          .get(`/v3/charts/vault?address=${TEST_ADDR}&timeframe=${ChartTimeFrame.Year}`)
-          .expect(NetworkStatus.Success);
+        const { body, statusCode } = await PlatformServerlessTest.request
+          .get("/vcharts/vault")
+          .query({ address: TEST_ADDR, timeframe: ChartTimeFrame.Year });
 
-        expect(body).toMatchSnapshot();
+        expect(statusCode).toEqual(NetworkStatus.Success);
+        expect(JSON.parse(body)).toMatchSnapshot();
       });
     });
   });

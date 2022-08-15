@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`AccountsController GET /v2/accounts with a non participant account returns a default account response 1`] = `
+exports[`accounts.v2.controller GET /v2/accounts with a non participant account returns a default account response 1`] = `
 Object {
-  "address": "0x2B5455aac8d64C14786c3a29858E43b5945819C0",
+  "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
   "boost": 1,
   "boostRank": 1035,
   "bveCvxBalance": 0,
@@ -18,9 +18,9 @@ Object {
 }
 `;
 
-exports[`AccountsController GET /v2/accounts with a participant account returns a cached account response 1`] = `
+exports[`accounts.v2.controller GET /v2/accounts with a participant account returns a cached account response 1`] = `
 Object {
-  "address": "0x2B5455aac8d64C14786c3a29858E43b5945819C0",
+  "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
   "boost": 2000,
   "boostRank": 1,
   "bveCvxBalance": 0,
@@ -36,15 +36,11 @@ Object {
 }
 `;
 
-exports[`AccountsController GET /v2/accounts with an invalid account input returns a bad request response 1`] = `
+exports[`accounts.v2.controller GET /v2/accounts with an invalid account input returns a bad request response 1`] = `
 Object {
-  "code": 1001,
+  "errors": Array [],
   "message": "Addr 0xjintao is not a valid account",
-}
-`;
-
-exports[`AccountsController GET /v2/accounts with no specified account returns a not found response 1`] = `
-Object {
-  "message": "Resource \\"/v2/accounts\\" not found",
+  "name": "Error",
+  "status": 400,
 }
 `;
