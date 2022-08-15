@@ -3,10 +3,10 @@ import { BadgerGraph, BadgerSDK, RegistryVault, VaultsService } from "@badger-da
 import * as gqlGenT from "@badger-dao/sdk/lib/graphql/generated/badger";
 import graphVaults from "@badger-dao/sdk-mocks/generated/ethereum/graph/loadSetts.json";
 import registryVaults from "@badger-dao/sdk-mocks/generated/ethereum/vaults/loadVaults.json";
-import { mockQuery } from "src/test/mocks.utils";
 
 import { SUPPORTED_CHAINS } from "../chains/chain";
 import { TEST_CURRENT_TIMESTAMP } from "../test/constants";
+import { mockQuery } from "../test/mocks.utils";
 import { mockSupportedChains, setupVaultsCoumpoundDDB } from "../test/tests.utils";
 import { captureVaultData } from "./vault-definition-indexer";
 

@@ -1,9 +1,9 @@
 import { DataMapper } from "@aws/dynamodb-data-mapper";
 import { RewardsService } from "@badger-dao/sdk";
-import { BigNumber } from "@ethersproject/bignumber";
+import { BigNumber } from "ethers";
 
 import * as accountsUtils from "../accounts/accounts.utils";
-import * as dynamodbUtils from "../aws/dynamodb.utils";
+import { getChainStartBlockKey } from "../aws/dynamodb.utils";
 import { UserClaimSnapshot } from "../aws/models/user-claim-snapshot.model";
 import { Chain } from "../chains/config/chain.config";
 import { TOKENS } from "../config/tokens.config";
@@ -13,7 +13,7 @@ import { RewardMerkleDistribution } from "../rewards/interfaces/merkle-distribut
 import * as rewardsUtils from "../rewards/rewards.utils";
 import { MOCK_DISTRIBUTION_FILE, TEST_CURRENT_BLOCK } from "../test/constants";
 import { mockBatchPut, setupMockChain } from "../test/mocks.utils";
-import * as accountsIndexer from "./accounts-indexer";
+import { refreshClaimableBalances } from "./accounts-indexer";
 
 describe("accounts-indexer", () => {
   let chain: Chain;
@@ -31,7 +31,7 @@ describe("accounts-indexer", () => {
     getAccounts = jest.spyOn(accountsUtils, "getAccounts").mockImplementation();
     getLatestMetadata = jest.spyOn(accountsUtils, "getLatestMetadata").mockImplementation(async (chain: Chain) => {
       return Object.assign(new UserClaimMetadata(), {
-        chainStartBlock: dynamodbUtils.getChainStartBlockKey(chain.network, previousMockedBlockNumber),
+        chainStartBlock: getChainStartBlockKey(chain.network, previousMockedBlockNumber),
         chain: chain.network,
         startBlock: previousMockedBlockNumber,
         endBlock: startMockedBlockNumber - 1
@@ -42,7 +42,7 @@ describe("accounts-indexer", () => {
   describe("refreshClaimableBalances", () => {
     it("takes no action on chains with no rewards", async () => {
       jest.spyOn(RewardsService.prototype, "hasBadgerTree").mockImplementation(() => false);
-      await accountsIndexer.refreshClaimableBalances(chain);
+      await refreshClaimableBalances(chain);
       expect(getAccounts.mock.calls.length).toEqual(0);
     });
 
@@ -74,7 +74,7 @@ describe("accounts-indexer", () => {
       for (const acc of testAccounts) {
         expected.push(
           Object.assign(new UserClaimSnapshot(), {
-            chainStartBlock: dynamodbUtils.getChainStartBlockKey(chain.network, startMockedBlockNumber),
+            chainStartBlock: getChainStartBlockKey(chain.network, startMockedBlockNumber),
             chain: chain.network,
             startBlock: startMockedBlockNumber,
             address: acc,
@@ -85,7 +85,7 @@ describe("accounts-indexer", () => {
       }
       const put = jest.spyOn(DataMapper.prototype, "put").mockImplementation();
       const expectedMetadata = Object.assign(new UserClaimMetadata(), {
-        chainStartBlock: dynamodbUtils.getChainStartBlockKey(chain.network, startMockedBlockNumber),
+        chainStartBlock: getChainStartBlockKey(chain.network, startMockedBlockNumber),
         chain: chain.network,
         startBlock: startMockedBlockNumber,
         endBlock: endMockedBlockNumber,
@@ -93,7 +93,7 @@ describe("accounts-indexer", () => {
         count: expected.length
       });
       const batchPut = mockBatchPut(expected);
-      await accountsIndexer.refreshClaimableBalances(chain);
+      await refreshClaimableBalances(chain);
       // verify get accounts was called, and the proper expected accounts were returned
       expect(getAccounts.mock.calls.length).toEqual(1);
       expect(getAccounts.mock.calls[0][0]).toMatchObject(chain);

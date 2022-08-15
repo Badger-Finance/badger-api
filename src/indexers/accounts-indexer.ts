@@ -15,7 +15,12 @@ export async function refreshClaimableBalances(chain: Chain) {
   const distribution = await getTreeDistribution(chain);
   const sdk = await chain.getSdk();
 
+  console.log({
+    distribution,
+    hasTree: sdk.rewards.hasBadgerTree()
+  });
   if (!distribution || !sdk.rewards.hasBadgerTree()) {
+    console.log("returned");
     return;
   }
 

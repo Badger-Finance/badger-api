@@ -4,7 +4,7 @@ export interface ProtocolMetrics {
   totalValueLocked: number;
 }
 
-export interface ProtocolSettsMetrics {
+export interface VaultMetrics {
   totalVaults: number;
   totalValueLocked: number;
 }
