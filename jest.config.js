@@ -3,10 +3,10 @@ module.exports = {
   coveragePathIgnorePatterns: ["index.ts", "/node_modules/", "/contracts/", "/generated/", "/interfaces/", "/enums/"],
   coverageThreshold: {
     global: {
-      branches: 70,
-      functions: 70,
-      lines: 70,
-      statements: 70
+      branches: 35,
+      functions: 60,
+      lines: 60,
+      statements: 60
     }
   },
   moduleFileExtensions: ["js", "json", "jsx", "ts", "tsx", "node"],
