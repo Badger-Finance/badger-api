@@ -40,6 +40,7 @@ import { HarvestType } from './enums/harvest.enum';
 import { VaultHarvestData } from './interfaces/vault-harvest-data.interface';
 import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
 import { VaultStrategy } from './interfaces/vault-strategy.interface';
+import { isInfluenceVault } from './yields.config';
 import { aggregateSources, createYieldSource } from './yields.utils';
 
 export const VAULT_SOURCE = 'Vault Compounding';
@@ -282,8 +283,7 @@ export async function loadVaultEventPerformances(chain: Chain, vault: VaultDefin
     throw new Error('Network does not have standardized vaults!');
   }
 
-  // TODO: refactor this to a known list of any external harvest processor vaults
-  if (vault.address === TOKENS.BVECVX) {
+  if (isInfluenceVault(vault.address)) {
     throw new Error('Vault utilizes external harvest processor, not compatible with event lookup');
   }
 
@@ -352,12 +352,6 @@ export function estimateDerivativeEmission(
 // should we put this into the sdk?
 export async function loadVaultGraphPerformances(chain: Chain, vault: VaultDefinitionModel): Promise<YieldSource[]> {
   const { address } = vault;
-
-  // TODO: bruh wtf bls what do, need to fix / remove this probably
-  // digg does not play well with this accounting
-  if (address === TOKENS.DIGG) {
-    return [];
-  }
 
   const { graph } = chain.sdk;
   const now = Math.floor(Date.now() / 1000);
@@ -484,10 +478,12 @@ export async function estimateVaultPerformance(
     throw new Error(`${vault.name} does not have adequate harvest history`);
   }
 
+  const isInfluece = isInfluenceVault(vault.address);
+
   let totalDuration;
 
-  // TODO: generalize this for voting vaults + look up their voting periods
-  if (vault.address === TOKENS.BVECVX) {
+  // TODO: add voting period
+  if (isInfluece) {
     totalDuration = ONE_DAY_SECONDS * 14;
   } else {
     totalDuration = recentHarvests[0].timestamp - recentHarvests[data.length - 1].timestamp;
@@ -497,7 +493,7 @@ export async function estimateVaultPerformance(
 
   let measuredHarvests;
 
-  if (vault.address === TOKENS.BVECVX) {
+  if (isInfluece) {
     const cutoff = recentHarvests[0].timestamp - totalDuration;
     measuredHarvests = recentHarvests.filter((h) => h.timestamp > cutoff).slice(0, recentHarvests.length - 1);
   } else {
@@ -514,8 +510,7 @@ export async function estimateVaultPerformance(
   let weightedBalance = 0;
   const depositToken = await getFullToken(chain, vault.depositToken);
 
-  // this will probably need more generalization, quickly becoming a huge pain in the ass
-  if (vault.address === TOKENS.BVECVX) {
+  if (isInfluece) {
     const sdk = await chain.getSdk();
     const targetBlock = recentHarvests[0].treeDistributions[0].block;
     const vaultContract = Vault__factory.connect(vault.address, sdk.provider);
@@ -548,9 +543,9 @@ export async function estimateVaultPerformance(
   }
 
   const { price } = await getPrice(vault.depositToken);
-  const measuredBalance = weightedBalance / totalDuration;
+  const measuredBalance = isInfluece ? weightedBalance : weightedBalance / totalDuration;
   // lord, forgive me for my sins... we will generalize this shortly I hope
-  const measuredValue = (vault.address === TOKENS.BVECVX ? weightedBalance : measuredBalance) * price;
+  const measuredValue = measuredBalance * price;
   const totalHarvestedTokens = formatBalance(totalHarvested, depositToken.decimals);
   // count of harvests is exclusive of the 0th element
   const durationScalar = ONE_YEAR_SECONDS / totalDuration;
