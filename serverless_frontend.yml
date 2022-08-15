@@ -27,29 +27,26 @@ custom:
         sources:
           - table: ${self:custom.table.TOKEN_PRICE_DATA}
             sources: [./seed/prices.json]
-          - table: ${self:custom.table.APY_SNAPSHOTS_DATA}
-            sources: [./seed/value-sources.json]
-          # deprecated, rm after regV2
           - table: ${self:custom.table.VAULT_SNAPSHOTS_DATA}
             sources: [./seed/vault-snapshots.json]
-          - table: ${self:custom.table.VAULT_COMPOUND_DATA}
-            sources: [./seed/vaults-compound.json]
           - table: ${self:custom.table.TOKEN_INFORMATION_DATA}
             sources: [./seed/token-info.json]
+          - table: ${self:custom.table.VAULT_DEFINITION_DATA}
+            sources: [./seed/vault-definition.json]
+          - table: ${self:custom.table.CHART_DATA}
+            sources: [./seed/chart-data.json]
 
   serverless-offline:
     noPrependStageInUrl: true
 
   table:
-    APY_SNAPSHOTS_DATA: apy-snapshots-${self:custom.stage}
-    SETT_HISTORIC_DATA: sett-historic-snapshots-${self:custom.stage}
-    # deprecated
+    YIELD_SNAPSHOTS_DATA: yield-snapshots-${self:custom.stage}
+    YIELD_ESTIMATES_DATA: yield-estimates-${self:custom.stage}
     VAULT_SNAPSHOTS_DATA: vaults-snapshots-${self:custom.stage}
-    VAULT_COMPOUND_DATA: vaults-compound-${self:custom.stage}
+    VAULT_DEFINITION_DATA: vaults-definitions-${self:custom.stage}
     VAULT_BALANCES_DATA: vault-balances-${self:custom.stage}
     TOKEN_PRICE_DATA: token-prices-${self:custom.stage}
     TOKEN_INFORMATION_DATA: token-information-${self:custom.stage}
-    HARVEST_DATA: harvest-data-${self:custom.stage}
     HARVEST_COMPOUND_DATA: harvest-compound-data-${self:custom.stage}
     ACCOUNT_DATA: accounts-${self:custom.stage}
     METADATA_DATA: metadata-${self:custom.stage}
@@ -58,10 +55,8 @@ custom:
     LEADERBOARD_DATA: leaderboards-data-${self:custom.stage}
     LEADERBOARD_SUMMARY_DATA: leaderboards-summary-${self:custom.stage}
     CYCLE_ANALYTICS_DATA: rewards-${self:custom.stage}
-    TREASURY_SNAPSHOT_DATA: treasury-snapshot-${self:custom.stage}
     PROTOCOL_DATA: protocol-data-${self:custom.stage}
     CHART_DATA: chart-data-${self:custom.stage}
-    CITADEL_REWARDS_DATA: citadel-rewards-snapshot-${self:custom.stage}
 
   merkleProofs:
     staging: 'badger-staging-merkle-proofs'
@@ -90,11 +85,8 @@ provider:
     BSC_RPC: ${env:BSC_RPC}
     MATIC_RPC: ${env:MATIC_RPC}
     ARBITRUM_RPC: ${env:ARBITRUM_RPC}
-    # etherscan secrets
-    ETHERSCAN_API_KEY: ${env:ETHERSCAN_API_KEY}
-    ARBISCAN_API_KEY: ${env:ARBISCAN_API_KEY}
     # 3rd party API keys
-    BLOCKNATIVE_API_KEY: ${env:BLOCKNATIVE_API_KEY}
+    DISCORD_WEBHOOK_URL: ${env:DISCORD_WEBHOOK_URL}
     UNISWAP: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2'
     SUSHISWAP: 'https://api.thegraph.com/subgraphs/name/sushiswap/exchange'
     SUSHISWAP_MATIC: 'https://api.thegraph.com/subgraphs/name/sushiswap/matic-exchange'
@@ -102,16 +94,15 @@ provider:
     PANCAKESWAP: 'https://api.thegraph.com/subgraphs/name/pancakeswap/exchange'
     QUICKSWAP: 'https://api.thegraph.com/subgraphs/name/sameepsi/quickswap06'
     SWAPR: 'https://api.thegraph.com/subgraphs/name/dxgraphs/swapr-arbitrum-one-v3'
+    BALANCER: 'https://api.thegraph.com/subgraphs/name/balancer-labs/balancer-v2'
     # Table Defintions
-    APY_SNAPSHOTS_DATA: ${self:custom.table.APY_SNAPSHOTS_DATA}
-    SETT_HISTORIC_DATA: ${self:custom.table.SETT_HISTORIC_DATA}
-    # deprecated
+    YIELD_SNAPSHOTS_DATA: ${self:custom.table.YIELD_SNAPSHOTS_DATA}
     VAULT_SNAPSHOTS_DATA: ${self:custom.table.VAULT_SNAPSHOTS_DATA}
-    VAULT_COMPOUND_DATA: ${self:custom.table.VAULT_COMPOUND_DATA}
+    VAULT_DEFINITION_DATA: ${self:custom.table.VAULT_DEFINITION_DATA}
     VAULT_BALANCES_DATA: ${self:custom.table.VAULT_BALANCES_DATA}
     TOKEN_PRICE_DATA: ${self:custom.table.TOKEN_PRICE_DATA}
     TOKEN_INFORMATION_DATA: ${self:custom.table.TOKEN_INFORMATION_DATA}
-    HARVEST_DATA: ${self:custom.table.HARVEST_DATA}
+    YIELD_ESTIMATES_DATA: ${self:custom.table.YIELD_ESTIMATES_DATA}
     HARVEST_COMPOUND_DATA: ${self:custom.table.HARVEST_COMPOUND_DATA}
     ACCOUNT_DATA: ${self:custom.table.ACCOUNT_DATA}
     METADATA_DATA: ${self:custom.table.METADATA_DATA}
@@ -119,10 +110,8 @@ provider:
     LEADERBOARD_DATA: ${self:custom.table.LEADERBOARD_DATA}
     LEADERBOARD_SUMMARY_DATA: ${self:custom.table.LEADERBOARD_SUMMARY_DATA}
     UNCLAIMED_SNAPSHOTS_DATA: ${self:custom.table.UNCLAIMED_SNAPSHOTS_DATA}
-    TREASURY_SNAPSHOT_DATA: ${self:custom.table.TREASURY_SNAPSHOT_DATA}
     PROTOCOL_DATA: ${self:custom.table.PROTOCOL_DATA}
     CHART_DATA: ${self:custom.table.CHART_DATA}
-    CITADEL_REWARDS_DATA: ${self:custom.table.CITADEL_REWARDS_DATA}
     # General Defintions
     REWARD_DATA: ${self:custom.merkleProofs.${self:custom.stage}}
     STAGE: ${opt:stage, self:provider.stage}
@@ -141,42 +130,26 @@ resources:
           - AttributeName: 'address'
             AttributeType: 'S'
 
-    apySnapshotsTable:
+    yieldSnapshotsTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:custom.table.APY_SNAPSHOTS_DATA}
+        TableName: ${self:custom.table.YIELD_SNAPSHOTS_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
-          - AttributeName: 'addressValueSourceType'
+          - AttributeName: 'id'
             KeyType: 'HASH'
         AttributeDefinitions:
-          - AttributeName: 'addressValueSourceType'
+          - AttributeName: 'id'
             AttributeType: 'S'
-          - AttributeName: 'address'
+          - AttributeName: 'chainAddress'
             AttributeType: 'S'
         GlobalSecondaryIndexes:
           - IndexName: IndexApySnapshotsOnAddress
             KeySchema:
-              - AttributeName: address
+              - AttributeName: chainAddress
                 KeyType: 'HASH'
             Projection:
               ProjectionType: ALL
-
-    settHistoricSnapshots:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: ${self:custom.table.SETT_HISTORIC_DATA}
-        BillingMode: PAY_PER_REQUEST
-        KeySchema:
-          - AttributeName: 'address'
-            KeyType: 'HASH'
-          - AttributeName: 'timestamp'
-            KeyType: 'RANGE'
-        AttributeDefinitions:
-          - AttributeName: 'address'
-            AttributeType: 'S'
-          - AttributeName: 'timestamp'
-            AttributeType: 'N'
 
     priceTable:
       Type: AWS::DynamoDB::Table
@@ -222,7 +195,6 @@ resources:
           - AttributeName: 'timestamp'
             AttributeType: 'N'
 
-    # deprecated
     vaultsSnapshotsTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -238,18 +210,14 @@ resources:
     vaultsCompoundTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:custom.table.VAULT_COMPOUND_DATA}
+        TableName: ${self:custom.table.VAULT_DEFINITION_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
-          - AttributeName: 'address'
+          - AttributeName: 'id'
             KeyType: 'HASH'
-          - AttributeName: 'createdAt'
-            KeyType: 'RANGE'
         AttributeDefinitions:
-          - AttributeName: 'address'
+          - AttributeName: 'id'
             AttributeType: 'S'
-          - AttributeName: 'createdAt'
-            AttributeType: 'N'
           - AttributeName: 'chain'
             AttributeType: 'S'
           - AttributeName: 'isProduction'
@@ -374,10 +342,10 @@ resources:
           AttributeName: 'expiresAt'
           Enabled: true
 
-    harvestDataTable:
+    yieldEstimatesTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:custom.table.HARVEST_DATA}
+        TableName: ${self:custom.table.YIELD_ESTIMATES_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
           - AttributeName: 'vault'
@@ -446,18 +414,6 @@ resources:
             Projection:
               ProjectionType: ALL
 
-    treasurySnapshotData:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: ${self:custom.table.TREASURY_SNAPSHOT_DATA}
-        BillingMode: PAY_PER_REQUEST
-        KeySchema:
-          - AttributeName: 'address'
-            KeyType: 'HASH'
-        AttributeDefinitions:
-          - AttributeName: 'address'
-            AttributeType: 'S'
-
     protocolData:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -482,59 +438,6 @@ resources:
           - AttributeName: 'id'
             AttributeType: 'S'
 
-    citadelRewardsData:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: ${self:custom.table.CITADEL_REWARDS_DATA}
-        BillingMode: PAY_PER_REQUEST
-        KeySchema:
-          - AttributeName: 'account'
-            KeyType: 'HASH'
-          - AttributeName: 'createdAt'
-            KeyType: 'RANGE'
-        AttributeDefinitions:
-          - AttributeName: 'account'
-            AttributeType: 'S'
-          - AttributeName: 'createdAt'
-            AttributeType: 'N'
-          - AttributeName: 'payType'
-            AttributeType: 'S'
-          - AttributeName: 'token'
-            AttributeType: 'S'
-          - AttributeName: 'block'
-            AttributeType: 'N'
-        GlobalSecondaryIndexes:
-          - IndexName: IndexCitadelRewardsDataPayType
-            KeySchema:
-              - AttributeName: 'payType'
-                KeyType: 'HASH'
-            Projection:
-              ProjectionType: ALL
-          - IndexName: IndexCitadelRewardsDataPayTypeBlock
-            KeySchema:
-              - AttributeName: 'payType'
-                KeyType: 'HASH'
-              - AttributeName: 'block'
-                KeyType: 'RANGE'
-            Projection:
-              ProjectionType: ALL
-          - IndexName: IndexCitadelRewardsDataPayTypeAccount
-            KeySchema:
-              - AttributeName: 'payType'
-                KeyType: 'HASH'
-              - AttributeName: 'account'
-                KeyType: 'RANGE'
-            Projection:
-              ProjectionType: ALL
-          - IndexName: IndexCitadelRewardsDataPayTypeToken
-            KeySchema:
-              - AttributeName: 'payType'
-                KeyType: 'HASH'
-              - AttributeName: 'token'
-                KeyType: 'RANGE'
-            Projection:
-              ProjectionType: ALL
-
 functions:
   request-handler:
     handler: src/LambdaServer.handler
@@ -549,15 +452,6 @@ functions:
           path: /
           method: any
           cors: true
-
-  index-vaults:
-    handler: src/indexers/vaults-indexer.indexProtocolVaults
-    timeout: 480
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-vaults-history
-          description: 'index historical data for all vaults'
-          rate: rate(30 minutes)
 
   index-apy-snapshots:
     handler: src/indexers/apy-snapshots-indexer.refreshApySnapshots
@@ -587,23 +481,23 @@ functions:
           description: 'index data for supported vaults'
           rate: rate(5 minutes)
   
-  index-vault-compound:
-    handler: src/indexers/vault-compound-indexer.captureVaultData
+  index-vault-definitions:
+    handler: src/indexers/vault-definition-indexer.captureVaultData
     timeout: 150
     events:
       - schedule:
-          name: ${self:service}-${self:custom.stage}-index-vault-compound
-          description: 'index data for supported vaults'
+          name: ${self:service}-${self:custom.stage}-index-vault-definition
+          description: 'index definitions for supported vaults'
           rate: rate(5 minutes)
 
-  index-vault-harvests:
-    handler: src/indexers/vault-harvests-indexer.refreshVaultHarvests
+  index-yield-estimates:
+    handler: src/indexers/yield-estimates-indexer.refreshYieldEstimates
     timeout: 150
     events:
       - schedule:
-          name: ${self:service}-${self:custom.stage}-index-vault-harvests
-          description: 'index harvests data for supported vaults'
-          rate: rate(1 hour)
+          name: ${self:service}-${self:custom.stage}-index-yield-estimates
+          description: 'index yield estimate data for supported vaults'
+          rate: rate(5 minutes)
 
   index-harvest-compound:
     handler: src/indexers/harvest-compound-indexer.indexVaultsHarvestsCompund
@@ -651,21 +545,3 @@ functions:
           name: ${self:service}-${self:custom.stage}-index-protocol-metrics-snapshots
           description: 'index protocol metrics'
           rate: rate(1 day)
-
-  index-citadel-treasury:
-    handler: src/indexers/citadel-indexer.snapshotTreasury
-    timeout: 480
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-citadel-treasury
-          description: 'index citadel treasury holdings'
-          rate: rate(5 minutes)
-
-  index-citadel-rewards:
-    handler: src/indexers/citadel-rewards-indexer.indexAllRewards
-    timeout: 480
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-citadel-rewards
-          description: 'index citadel rewards'
-          rate: rate(2 hours)
