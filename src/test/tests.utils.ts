@@ -32,6 +32,7 @@ import { ChainVaults } from '../chains/vaults/chain.vaults';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import * as pricesUtils from '../prices/prices.utils';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
+import { Nullable } from '../utils/types.utils';
 import { historicVaultSnapshotsMock } from '../vaults/mocks/historic-vault-snapshots.mock';
 import { vaultsChartDataMock } from '../vaults/mocks/vaults-chart-data.mock';
 import { MOCK_VAULT_DEFINITION, MOCK_VAULTS, TEST_ADDR } from './constants';
@@ -87,7 +88,8 @@ export function mockBatchDelete(items: unknown[]) {
   return jest.spyOn(DataMapper.prototype, 'batchDelete').mockImplementation(() => qi);
 }
 
-export function setupVaultsCoumpoundDDB() {
+// @ts-ignore
+export function setupVaultsCoumpoundDDB(customFilter: Nullable<(v: any) => boolean> = null) {
   // @ts-ignore
   jest.spyOn(DataMapper.prototype, 'query').mockImplementation((model, keys) => {
     let dataSource = VaultsCompoundMock;
@@ -96,6 +98,7 @@ export function setupVaultsCoumpoundDDB() {
 
     if (keys.chain) dataSource = dataSource.filter((v) => v.chain === keys.chain);
     if (keys.isProduction) dataSource = dataSource.filter((v) => v.isProduction === keys.isProduction);
+    if (customFilter) dataSource = dataSource.filter(customFilter);
 
     // @ts-ignore
     qi[Symbol.iterator] = jest.fn(() => dataSource.map((obj) => Object.assign(new model(), obj)).values());
@@ -337,4 +340,13 @@ export async function mockBadgerSdk(
     network: network,
     provider: mockProvider,
   });
+}
+
+// mb use this function is jest.setup to mock all sdk inits for all chains
+export async function mockSupportedChains() {
+  for (const chain of SUPPORTED_CHAINS) {
+    const sdk = mockBadgerSdk({ network: chain.network });
+
+    jest.spyOn(chain.constructor.prototype, 'getSdk').mockImplementation(async () => sdk);
+  }
 }
