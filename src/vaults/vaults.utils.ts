@@ -387,7 +387,12 @@ export async function estimateVaultPerformance(
 
   if (isInfluece) {
     const sdk = await chain.getSdk();
-    const targetBlock = recentHarvests[0].treeDistributions[0].block;
+    let targetBlock = 0;
+    if (recentHarvests[0].treeDistributions.length > 0) {
+      targetBlock = recentHarvests[0].treeDistributions[0].block;
+    } else {
+      targetBlock = recentHarvests[0].harvests[0].block;
+    }
     const vaultContract = Vault__factory.connect(vault.address, sdk.provider);
     const strategyBalance = await vaultContract.totalSupply({ blockTag: targetBlock });
     weightedBalance = formatBalance(strategyBalance);
