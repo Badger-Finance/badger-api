@@ -1,4 +1,4 @@
-import { RegistryVault } from '@badger-dao/sdk';
+import { Network, RegistryVault } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 
 import { getDataMapper } from '../aws/dynamodb.utils';
@@ -9,6 +9,9 @@ import { constructVaultDefinition } from './indexer.utils';
 
 export async function captureVaultData() {
   for (const chain of SUPPORTED_CHAINS) {
+    if (chain.network !== Network.Ethereum) {
+      return;
+    }
     const sdk = await chain.getSdk();
 
     let registryVaults: RegistryVault[] = [];

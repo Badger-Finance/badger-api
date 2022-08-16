@@ -17,12 +17,13 @@ import { getFullToken, getVaultTokens } from '../tokens/tokens.utils';
 import { getCachedVault } from '../vaults/vaults.utils';
 import { CachedSettBalance } from './interfaces/cached-sett-balance.interface';
 
-export async function getBoostFile(chain: Chain): Promise<BoostData | null> {
+export async function getBoostFile(chain: Chain): Promise<BoostData> {
   try {
     const boostFile = await getObject(REWARD_DATA, `badger-boosts-${chain.chainId}.json`);
     return JSON.parse(boostFile.toString('utf-8'));
-  } catch (err) {
-    return null;
+  } catch {
+    // TODO: add some warnings here or checks to see if we expect a boost file for a given chain
+    return { multiplierData: {}, userData: {} };
   }
 }
 
@@ -111,6 +112,7 @@ export async function toVaultBalance(
   const earnedBalance = balanceTokens - depositedTokens + withdrawnTokens;
   const [depositTokenPrice, earnedTokens, tokens] = await Promise.all([
     queryPrice(vaultDefinition.depositToken),
+    // TODO: pretty sure this is actually wrong
     getVaultTokens(chain, vault, currency),
     getVaultTokens(chain, vault, currency),
   ]);

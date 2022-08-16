@@ -25,6 +25,7 @@ import { BoostRange } from '../rewards/interfaces/boost-range.interface';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
 import { YieldSources } from './interfaces/yield-sources.interface';
 import { estimateVaultPerformance, queryYieldSources, VAULT_SOURCE } from './vaults.utils';
+import { isInfluenceVault } from './yields.config';
 
 const VAULT_TWAY_PERIOD = 15;
 
@@ -324,13 +325,14 @@ export function createYieldSource(
   const isBoostable = min != max;
   const boostModifier = isBoostable ? 'Boosted' : 'Flat';
   const id = [vaultId, type, name, boostModifier].map((p) => p.replace(/ /g, '_').toLowerCase()).join('_');
+  const modifiedName = isBoostable ? `Boosted ${name}` : name;
   return Object.assign(new YieldSource(), {
     id,
     chainAddress: vaultId,
     chain,
     address,
     type,
-    name,
+    name: modifiedName,
     apr,
     boostable: isBoostable,
     minApr: apr * min,
@@ -344,8 +346,7 @@ export async function loadVaultEventPerformances(chain: Chain, vault: VaultDefin
     throw new Error('Network does not have standardized vaults!');
   }
 
-  // TODO: refactor this to a known list of any external harvest processor vaults
-  if (vault.address === TOKENS.BVECVX) {
+  if (isInfluenceVault(vault.address)) {
     throw new Error('Vault utilizes external harvest processor, not compatible with event lookup');
   }
 

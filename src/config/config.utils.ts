@@ -1,5 +1,6 @@
 import { ethers } from 'ethers';
 
+import { envs } from './envs';
 import { ContractRegistry } from './interfaces/contract-registry.interface';
 
 export const checksumEntries = (registry: ContractRegistry): ContractRegistry => {
@@ -7,9 +8,11 @@ export const checksumEntries = (registry: ContractRegistry): ContractRegistry =>
 };
 
 export const getEnvVar = (envName: string): string => {
-  const variable = process.env[envName];
+  const variable = envs[envName];
 
-  if (variable) return variable;
+  if (variable) {
+    return variable;
+  }
 
   const errMsg = `Missing required env var: ${envName}`;
 

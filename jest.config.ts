@@ -1,4 +1,6 @@
-module.exports = {
+import type { Config } from '@jest/types';
+
+const config: Config.InitialOptions = {
   clearMocks: true,
   coveragePathIgnorePatterns: ['index.ts', '/node_modules/', '/contracts/', '/generated/', '/interfaces/', '/enums/'],
   coverageThreshold: {
@@ -19,3 +21,5 @@ module.exports = {
     '\\.(ts)$': 'ts-jest',
   },
 };
+
+export default config;

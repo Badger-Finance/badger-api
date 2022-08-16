@@ -42,7 +42,9 @@ export class ChainVaults {
 
   async #updateCachedVaults() {
     if (this.#shouldUpdate()) {
+      console.log('UPDATING VAULTS!!!');
       const mapper = getDataMapper();
+      console.log('got mapper');
       const query = mapper.query(
         VaultDefinitionModel,
         { chain: this.network, isProduction: 1 },

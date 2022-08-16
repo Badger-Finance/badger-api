@@ -1,0 +1,16 @@
+import { PlatformExpress } from '@tsed/platform-express';
+
+import { Server } from './Server';
+
+async function bootstrap() {
+  const platform = await PlatformExpress.bootstrap(Server, {
+    httpsPort: false,
+    httpPort: process.env.PORT || 3000,
+  });
+
+  await platform.listen();
+
+  return platform;
+}
+
+bootstrap();

@@ -1,8 +1,8 @@
 import { YieldSource } from '../aws/models/yield-source.model';
 import { Chain } from '../chains/config/chain.config';
-import * as rewardsUtils from '../rewards/rewards.utils';
 import { MOCK_VAULT_DEFINITION } from '../test/constants';
 import { mockBatchDelete, mockBatchPut, mockQuery, setupMockChain } from '../test/mocks.utils';
+import * as vaultsUtils from '../vaults/vaults.utils';
 import { refreshChainApySnapshots } from './apy-snapshots-indexer';
 
 describe('apy-snapshots-indexer', () => {
@@ -44,7 +44,7 @@ describe('apy-snapshots-indexer', () => {
   describe('refreshChainApySnapshots', () => {
     it('calls batchPut for valid value source', async () => {
       const batchPut = mockBatchPut([mockValueSource]);
-      jest.spyOn(rewardsUtils, 'getVaultValueSources').mockReturnValue(Promise.resolve([mockValueSource]));
+      jest.spyOn(vaultsUtils, 'getVaultPerformance').mockReturnValue(Promise.resolve([mockValueSource]));
       await refreshChainApySnapshots(chain, MOCK_VAULT_DEFINITION);
       expect(batchPut.mock.calls[0][0]).toEqual([mockValueSource]);
       // Make sure was called for each sett in the chain
@@ -54,7 +54,7 @@ describe('apy-snapshots-indexer', () => {
 
     it('doesnt call batch put if value source invalid', async () => {
       const batchPut = mockBatchPut([mockInvalidValueSource]);
-      jest.spyOn(rewardsUtils, 'getVaultValueSources').mockReturnValue(Promise.resolve([mockInvalidValueSource]));
+      jest.spyOn(vaultsUtils, 'getVaultPerformance').mockReturnValue(Promise.resolve([mockInvalidValueSource]));
       await refreshChainApySnapshots(chain, MOCK_VAULT_DEFINITION);
       expect(batchPut.mock.calls).toEqual([]);
     });

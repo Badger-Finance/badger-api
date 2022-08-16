@@ -26,6 +26,7 @@ export class VaultsV2Controller {
     @QueryParams('chain') chain?: Network,
     @QueryParams('currency') currency?: Currency,
   ): Promise<VaultModel[]> {
+    console.log(`Inboked listVaults(${chain}, ${currency})`);
     return this.vaultService.listVaults(Chain.getChain(chain), currency);
   }
 

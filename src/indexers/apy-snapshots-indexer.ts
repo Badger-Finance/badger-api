@@ -3,8 +3,8 @@ import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { YieldSource } from '../aws/models/yield-source.model';
 import { SUPPORTED_CHAINS } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
-import { getVaultValueSources } from '../rewards/rewards.utils';
-import { queryYieldSources } from '../vaults/vaults.utils';
+import { TOKENS } from '../config/tokens.config';
+import { getVaultPerformance, queryYieldSources } from '../vaults/vaults.utils';
 
 export async function refreshApySnapshots() {
   for (const chain of SUPPORTED_CHAINS) {
@@ -17,7 +17,10 @@ export async function refreshApySnapshots() {
 
 export async function refreshChainApySnapshots(chain: Chain, vault: VaultDefinitionModel) {
   try {
-    const reportedYieldSources = await getVaultValueSources(chain, vault);
+    if (vault.address !== TOKENS.GRAVI_AURA && vault.address !== TOKENS.BVECVX) {
+      return;
+    }
+    const reportedYieldSources = await getVaultPerformance(chain, vault);
     const currentYieldSources = reportedYieldSources.filter((s) => !isNaN(s.apr) && isFinite(s.apr));
     const currentApr = currentYieldSources.reduce((total, s) => (total += s.apr), 0);
     const previousYieldSources = await queryYieldSources(vault);

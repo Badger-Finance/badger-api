@@ -17,6 +17,7 @@ export class VaultDefinitionModel implements IVaultDefinition {
   createdAt!: number;
 
   @attribute({
+    type: 'String',
     indexKeyConfigurations: {
       IndexVaultCompoundDataChain: 'HASH',
       IndexVaultCompoundDataChainIsProd: 'HASH',

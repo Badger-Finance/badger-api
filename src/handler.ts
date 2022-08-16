@@ -1,13 +1,10 @@
-import { PlatformServerless } from '@tsed/platform-serverless';
+import { PlatformExpress } from '@tsed/platform-express';
+import { PlatformServerlessHttp } from '@tsed/platform-serverless-http';
 
-import { V2_CONTROLLERS, V3_CONTROLLERS } from './controllers';
-// import { swaggerConfig } from './config/constants';
+import { Server } from './Server';
 
-const platform = PlatformServerless.bootstrap({
-  mount: {
-    '/v2': [V2_CONTROLLERS],
-    '/v3': [V3_CONTROLLERS],
-  },
+const platform = PlatformServerlessHttp.bootstrap(Server, {
+  adapter: PlatformExpress,
 });
 
 export const handler = platform.handler();

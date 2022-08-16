@@ -2,14 +2,16 @@ import { DataMapper } from '@aws/dynamodb-data-mapper';
 import { Network } from '@badger-dao/sdk';
 import DynamoDB from 'aws-sdk/clients/dynamodb';
 
+import { isProduction } from '../config/envs';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import { Chainish } from './interfaces/chainish.interface';
 import { Vaultish } from './interfaces/vaultish.interface';
 
 export function getDataMapper(): DataMapper {
-  const offline = process.env.IS_OFFLINE;
   let client: DynamoDB;
-  if (offline) {
+  console.log('somehow getting called');
+  if (!isProduction) {
+    console.log('returning mock ddb');
     client = new DynamoDB({
       region: 'localhost',
       endpoint: 'http://localhost:8000',
@@ -17,6 +19,7 @@ export function getDataMapper(): DataMapper {
       secretAccessKey: '',
     });
   } else {
+    console.log('returning real ddb');
     client = new DynamoDB();
   }
   return new DataMapper({ client });

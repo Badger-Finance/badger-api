@@ -1,6 +1,7 @@
-import { Catch, ExceptionFilterMethods, PlatformContext } from '@tsed/common';
+import { PlatformContext } from '@tsed/common';
 import { isObject, isString } from '@tsed/core';
 import { Exception, InternalServerError } from '@tsed/exceptions';
+import { Catch, ExceptionFilterMethods } from '@tsed/platform-exceptions';
 
 interface ExceptionBody {
   message?: string;

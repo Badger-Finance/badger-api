@@ -166,7 +166,7 @@ describe('vaults.utils', () => {
         jest.spyOn(yieldsUtils, 'loadVaultEventPerformances').mockImplementation(async () => []);
         const graphMock = jest.spyOn(yieldsUtils, 'loadVaultGraphPerformances');
         jest.spyOn(rewardsUtils, 'getRewardEmission').mockImplementation(async () => []);
-        jest.spyOn(rewardsUtils, 'getProtocolValueSources').mockImplementation(async () => []);
+        // jest.spyOn(rewardsUtils, 'getProtocolValueSources').mockImplementation(async () => []);
         const result = await getVaultPerformance(chain, MOCK_VAULT_DEFINITION);
         expect(result).toMatchSnapshot();
         expect(graphMock.mock.calls.length).toEqual(0);
@@ -184,7 +184,7 @@ describe('vaults.utils', () => {
             yieldsUtils.createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Distribution, 'Graph Badger', 10.3),
           ]);
         jest.spyOn(rewardsUtils, 'getRewardEmission').mockImplementation(async () => []);
-        jest.spyOn(rewardsUtils, 'getProtocolValueSources').mockImplementation(async () => []);
+        // jest.spyOn(rewardsUtils, 'getProtocolValueSources').mockImplementation(async () => []);
         const result = await getVaultPerformance(chain, MOCK_VAULT_DEFINITION);
         expect(result).toMatchSnapshot();
       });
@@ -201,11 +201,11 @@ describe('vaults.utils', () => {
             max: 4,
           }),
         ]);
-        jest
-          .spyOn(rewardsUtils, 'getProtocolValueSources')
-          .mockImplementation(async () => [
-            yieldsUtils.createYieldSource(MOCK_VAULT_DEFINITION, SourceType.TradeFee, 'Curve LP Fee', 0.03),
-          ]);
+        // jest
+        //   .spyOn(rewardsUtils, 'getProtocolValueSources')
+        //   .mockImplementation(async () => [
+        //     yieldsUtils.createYieldSource(MOCK_VAULT_DEFINITION, SourceType.TradeFee, 'Curve LP Fee', 0.03),
+        //   ]);
         const result = await getVaultPerformance(chain, MOCK_VAULT_DEFINITION);
         expect(result).toMatchSnapshot();
       });

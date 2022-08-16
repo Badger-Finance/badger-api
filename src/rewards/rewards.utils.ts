@@ -1,4 +1,4 @@
-import { Network, ONE_YEAR_SECONDS, Protocol } from '@badger-dao/sdk';
+import { Network, ONE_SECOND_MS } from '@badger-dao/sdk';
 import { BigNumber } from 'ethers';
 
 import { getBoostFile, getCachedAccount } from '../accounts/accounts.utils';
@@ -9,15 +9,9 @@ import { Chain } from '../chains/config/chain.config';
 import { REWARD_DATA } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
 import { queryPrice } from '../prices/prices.utils';
-import { BalancerStrategy } from '../protocols/strategies/balancer.strategy';
-import { ConvexStrategy } from '../protocols/strategies/convex.strategy';
-import { OxDaoStrategy } from '../protocols/strategies/oxdao.strategy';
-import { SushiswapStrategy } from '../protocols/strategies/sushiswap.strategy';
-import { SwaprStrategy } from '../protocols/strategies/swapr.strategy';
-import { UniswapStrategy } from '../protocols/strategies/uniswap.strategy';
 import { getFullToken } from '../tokens/tokens.utils';
-import { getCachedVault, getVaultPerformance } from '../vaults/vaults.utils';
-import { createYieldSource } from '../vaults/yields.utils';
+import { getCachedVault } from '../vaults/vaults.utils';
+import { calculateYield, createYieldSource } from '../vaults/yields.utils';
 import { SourceType } from './enums/source-type.enum';
 import { RewardMerkleDistribution } from './interfaces/merkle-distributor.interface';
 
@@ -76,11 +70,14 @@ export async function getRewardEmission(chain: Chain, vault: VaultDefinitionMode
   const boostFile = await getBoostFile(chain);
   const sdk = await chain.getSdk();
 
-  if (!sdk.rewards.hasRewardsLogger() || vault.depositToken === TOKENS.DIGG || !boostFile) {
+  if (!sdk.rewards.hasRewardsLogger() || !boostFile) {
     return [];
   }
   const { address } = vault;
-  const cachedVault = await getCachedVault(chain, vault);
+  const {
+    value: vaultTVL,
+    boost: { weight: boostWeight },
+  } = await getCachedVault(chain, vault);
 
   if (address === TOKENS.BVECVX) {
     delete boostFile.multiplierData[address];
@@ -103,6 +100,8 @@ export async function getRewardEmission(chain: Chain, vault: VaultDefinitionMode
       .map((s) => (s ? s.value : 0))
       .reduce((total, value) => total + value, 0);
   }
+
+  const earningValue = vaultTVL - ignoredTVL;
 
   /**
    * Calculate rewards emission percentages:
@@ -128,72 +127,21 @@ export async function getRewardEmission(chain: Chain, vault: VaultDefinitionMode
     const tokenPrice = await queryPrice(schedule.token);
     const token = await getFullToken(chain, schedule.token);
 
-    const durationScalar = ONE_YEAR_SECONDS / (schedule.end - schedule.start);
-    const yearlyEmission = tokenPrice.price * schedule.amount * durationScalar;
-    const apr = (yearlyEmission / (cachedVault.value - ignoredTVL)) * 100;
+    const durationMs = (schedule.end - schedule.start) * ONE_SECOND_MS;
+    const earnedAmount = tokenPrice.price * schedule.amount;
+    const apr = calculateYield(earningValue, earnedAmount, durationMs);
+    const isBadgerEmission = token.address === chain.getBadgerTokenAddress();
+
     let proRataApr = apr;
-    if (cachedVault.boost.enabled && token.address === chain.getBadgerTokenAddress()) {
-      const boostedApr = (cachedVault.boost.weight / 10_000) * proRataApr;
+    if (isBadgerEmission && boostWeight > 0) {
+      const boostedApr = (boostWeight / 10_000) * proRataApr;
       proRataApr = proRataApr - boostedApr;
-      const boostedName = `Boosted ${token.name}`;
-      const boostYieldSource = createYieldSource(vault, SourceType.Emission, boostedName, boostedApr, boostRange);
+      const boostYieldSource = createYieldSource(vault, SourceType.Emission, token.name, boostedApr, boostRange);
       emissionSources.push(boostYieldSource);
     }
+
     const proRataYieldSource = createYieldSource(vault, SourceType.Emission, token.name, proRataApr);
     emissionSources.push(proRataYieldSource);
   }
   return emissionSources;
-}
-
-export async function getVaultValueSources(
-  chain: Chain,
-  vaultDefinition: VaultDefinitionModel,
-): Promise<YieldSource[]> {
-  // manual over ride for removed compounding of vaults - this can be empty
-  const NO_COMPOUND_VAULTS = new Set([TOKENS.BREMBADGER, TOKENS.BVECVX, TOKENS.BCVX]);
-
-  let sources: YieldSource[] = [];
-  try {
-    sources = await getVaultPerformance(chain, vaultDefinition);
-
-    const hasNoUnderlying = NO_COMPOUND_VAULTS.has(vaultDefinition.address);
-    if (hasNoUnderlying) {
-      sources = sources.filter((s) => s.type !== SourceType.Compound && s.type !== SourceType.PreCompound);
-    }
-
-    return sources;
-  } catch (err) {
-    console.log({ vaultDefinition, err, sources });
-    return [];
-  }
-}
-
-export async function getProtocolValueSources(
-  chain: Chain,
-  vaultDefinition: VaultDefinitionModel,
-): Promise<YieldSource[]> {
-  try {
-    switch (vaultDefinition.protocol) {
-      case Protocol.Sushiswap:
-        return SushiswapStrategy.getValueSources(chain, vaultDefinition);
-      case Protocol.Curve:
-      case Protocol.Convex:
-        return ConvexStrategy.getValueSources(chain, vaultDefinition);
-      case Protocol.Uniswap:
-        return UniswapStrategy.getValueSources(vaultDefinition);
-      case Protocol.Swapr:
-        return SwaprStrategy.getValueSources(chain, vaultDefinition);
-      case Protocol.OxDAO:
-        return OxDaoStrategy.getValueSources(chain, vaultDefinition);
-      case Protocol.Aura:
-      case Protocol.Balancer:
-        return BalancerStrategy.getValueSources(vaultDefinition);
-      default: {
-        return [];
-      }
-    }
-  } catch (error) {
-    console.log({ error, message: `Failed to update value sources for ${vaultDefinition.protocol}` });
-    return [];
-  }
 }

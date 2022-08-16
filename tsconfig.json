@@ -20,10 +20,10 @@
     "noEmit": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "lib": ["es7", "dom", "ESNext.AsyncIterable"],
+    "lib": ["esnext", "esnext.asynciterable"],
     "typeRoots": ["./node_modules/@types"]
   },
-  "exclude": ["node_modules", "./public", "dist", "test"],
+  "exclude": ["node_modules", "dist", "test"],
   "linterOptions": {
     "exclude": []
   }
