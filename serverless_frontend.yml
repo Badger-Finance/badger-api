@@ -1,6 +1,6 @@
 ---
 service: badger-frontend-api-v2
-frameworkVersion: '2'
+frameworkVersion: '3.21.0'
 useDotenv: true
 
 plugins:
