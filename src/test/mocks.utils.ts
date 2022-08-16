@@ -19,7 +19,7 @@ import { mock } from 'jest-mock-extended';
 import { getVaultEntityId } from '../aws/dynamodb.utils';
 import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
 import { Chain } from '../chains/config/chain.config';
-import { TestEthereum } from '../chains/config/teth.config';
+import { TestEthereum } from '../chains/config/test.config';
 import { ChainVaults } from '../chains/vaults/chain.vaults';
 import * as chartsUtils from '../charts/charts.utils';
 import * as pricesUtils from '../prices/prices.utils';
