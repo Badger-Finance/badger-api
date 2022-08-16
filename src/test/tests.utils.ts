@@ -15,7 +15,7 @@ import { SUPPORTED_CHAINS } from '../chains/chain';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import { Nullable } from '../utils/types.utils';
 import { vaultsChartDataMock } from '../vaults/mocks/vaults-chart-data.mock';
-import { MOCK_VAULT_DEFINITION, TEST_ADDR, TEST_CURRENT_BLOCK } from './constants';
+import { MOCK_VAULT_DEFINITION, TEST_ADDR, TEST_CURRENT_BLOCK, TEST_DEFAULT_GAS_PRICE } from './constants';
 
 // @ts-ignore
 export function setupVaultsCoumpoundDDB(customFilter: Nullable<(v: any) => boolean> = null) {
@@ -166,28 +166,28 @@ export async function mockBadgerSdk(
     network: Network.Ethereum,
     currBlock: TEST_CURRENT_BLOCK,
   },
-): Promise<BadgerSDK> {
+): Promise<{ sdk: BadgerSDK; provider: JsonRpcProvider }> {
   const mockSigner = mock<JsonRpcSigner>();
   mockSigner.getAddress.calledWith().mockImplementation(async () => addr);
   const mockProvider = mock<JsonRpcProvider>();
   jest.spyOn(mockProvider, 'getSigner').mockImplementation(() => mockSigner);
   jest.spyOn(mockProvider, 'getBlockNumber').mockImplementation(async () => currBlock);
-  jest.spyOn(mockProvider, 'getGasPrice').mockImplementation(async () => BigNumber.from(DEFAULT_GAS_PRICE));
+  jest.spyOn(mockProvider, 'getGasPrice').mockImplementation(async () => BigNumber.from(TEST_DEFAULT_GAS_PRICE));
 
   // Services that will force contracts connection in sdk constructor
   jest.spyOn(RegistryService.prototype, 'ready').mockImplementation();
   jest.spyOn(RewardsService.prototype, 'ready').mockImplementation();
 
-  return new BadgerSDK({
-    network: network,
+  return {
+    sdk: new BadgerSDK({ provider: mockProvider, network }),
     provider: mockProvider,
-  });
+  };
 }
 
 // mb use this function is jest.setup to mock all sdk inits for all chains
 export async function mockSupportedChains() {
   for (const chain of SUPPORTED_CHAINS) {
-    const sdk = mockBadgerSdk({ network: chain.network });
+    const { sdk } = await mockBadgerSdk({ network: chain.network });
 
     jest.spyOn(chain.constructor.prototype, 'getSdk').mockImplementation(async () => sdk);
   }

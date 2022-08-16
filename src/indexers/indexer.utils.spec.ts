@@ -16,11 +16,12 @@ import { NotFound } from '@tsed/exceptions';
 import { BigNumber } from 'ethers';
 import { mock } from 'jest-mock-extended';
 
-import { Ethereum } from '../chains/config/eth.config';
+import { TestEthereum } from '../chains/config/test.config';
 import { TOKENS } from '../config/tokens.config';
 import { EmissionControl, EmissionControl__factory, UniV2, UniV2__factory } from '../contracts';
 import { MOCK_VAULT, MOCK_VAULT_DEFINITION, TEST_CURRENT_TIMESTAMP } from '../test/constants';
-import { mockBadgerSdk, mockPricing, setFullTokenDataMock, TEST_CHAIN } from '../test/tests.utils';
+import { setupMockChain } from '../test/mocks.utils';
+import { mockBadgerSdk } from '../test/tests.utils';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import * as apiVaults from '../vaults/vaults.service';
 import * as vaultsUtils from '../vaults/vaults.utils';
@@ -52,10 +53,12 @@ describe('indexer.utils', () => {
 
     jest.spyOn(emissionControl, 'boostedEmissionRate').mockImplementation(async () => BigNumber.from(1));
 
-    const sdk = await mockBadgerSdk();
+    const { sdk } = await mockBadgerSdk();
 
-    jest.spyOn(Ethereum.prototype, 'getSdk').mockImplementation(async () => sdk);
-    jest.spyOn(Ethereum.prototype, 'provider', 'get').mockReturnValue(sdk.provider);
+    const chain = setupMockChain();
+
+    jest.spyOn(TestEthereum.prototype, 'getSdk').mockImplementation(async () => sdk);
+    jest.spyOn(TestEthereum.prototype, 'provider', 'get').mockReturnValue(sdk.provider);
 
     jest.spyOn(VaultsService.prototype, 'loadVault').mockImplementation(async function ({ address }) {
       return <RegistryVault>registryVaults.find((v) => v.address === address);
@@ -70,18 +73,22 @@ describe('indexer.utils', () => {
       return { sett: <gqlGenT.SettQuery['sett']>graphVault, __typename: 'Query' };
     });
 
-    mockPricing();
-
     jest.spyOn(apiVaults.VaultsService, 'loadVault').mockImplementation(async () => MOCK_VAULT);
 
-    return { sdk, strategyMock, vaultV15Mock };
+    return { chain, sdk, strategyMock, vaultV15Mock };
   }
 
   describe('vaultToSnapshot', () => {
-    beforeEach(setupBaseUtilFixture);
+    let testChain: TestEthereum;
+
+    beforeEach(async () => {
+      const { chain } = await setupBaseUtilFixture();
+
+      testChain = chain;
+    });
 
     it('should return valid snapshot of the vault', async () => {
-      const snapshot = await vaultToSnapshot(TEST_CHAIN, MOCK_VAULT_DEFINITION);
+      const snapshot = await vaultToSnapshot(testChain, MOCK_VAULT_DEFINITION);
 
       // small lol here
       expect(snapshot).toMatchSnapshot();
@@ -89,22 +96,32 @@ describe('indexer.utils', () => {
   });
 
   describe('constructVaultsDefinition', () => {
-    beforeEach(setupBaseUtilFixture);
+    let testChain: TestEthereum;
+
+    beforeEach(async () => {
+      const { chain } = await setupBaseUtilFixture();
+
+      testChain = chain;
+    });
 
     it('should construct vault definition', async () => {
-      expect(await constructVaultDefinition(TEST_CHAIN, <RegistryVault>registryVaults[0])).toMatchSnapshot();
+      expect(await constructVaultDefinition(testChain, <RegistryVault>registryVaults[0])).toMatchSnapshot();
     });
 
     it('should return null if no data on the Graph', async () => {
       jest.spyOn(BadgerGraph.prototype, 'loadSett').mockImplementation(async () => ({ sett: null }));
 
-      expect(await constructVaultDefinition(TEST_CHAIN, <RegistryVault>registryVaults[1])).toBeNull();
+      expect(await constructVaultDefinition(testChain, <RegistryVault>registryVaults[1])).toBeNull();
     });
   });
 
   describe('getLpTokenBalances', () => {
+    let testChain: TestEthereum;
+
     beforeEach(async () => {
-      await setupBaseUtilFixture();
+      const { chain } = await setupBaseUtilFixture();
+
+      testChain = chain;
 
       const pairContractMock = mock<UniV2>();
 
@@ -122,14 +139,12 @@ describe('indexer.utils', () => {
 
       jest.spyOn(TokensService.prototype, 'loadTokens').mockImplementation(async () => fullTokenMockMap);
 
-      setFullTokenDataMock();
-
-      const cachedVault = await vaultsUtils.defaultVault(TEST_CHAIN, MOCK_VAULT_DEFINITION);
+      const cachedVault = await vaultsUtils.defaultVault(testChain, MOCK_VAULT_DEFINITION);
       jest.spyOn(vaultsUtils, 'getCachedVault').mockImplementation(async (_c, _v) => cachedVault);
     });
 
     it('should return token balances of the vault', async () => {
-      const lpTokenBalances = await getLpTokenBalances(TEST_CHAIN, MOCK_VAULT_DEFINITION);
+      const lpTokenBalances = await getLpTokenBalances(testChain, MOCK_VAULT_DEFINITION);
 
       expect(lpTokenBalances).toMatchSnapshot();
     });
@@ -139,15 +154,21 @@ describe('indexer.utils', () => {
         throw new Error();
       });
 
-      await expect(getLpTokenBalances(TEST_CHAIN, MOCK_VAULT_DEFINITION)).rejects.toThrow(NotFound);
+      await expect(getLpTokenBalances(testChain, MOCK_VAULT_DEFINITION)).rejects.toThrow(NotFound);
     });
   });
 
   describe('getVault', () => {
-    beforeEach(setupBaseUtilFixture);
+    let testChain: TestEthereum;
+
+    beforeEach(async () => {
+      const { chain } = await setupBaseUtilFixture();
+
+      testChain = chain;
+    });
 
     it('should return graph vault sequence', async () => {
-      const graphVault = await getVault(TEST_CHAIN, MOCK_VAULT_DEFINITION.address);
+      const graphVault = await getVault(testChain, MOCK_VAULT_DEFINITION.address);
 
       expect(graphVault).toMatchSnapshot();
     });
