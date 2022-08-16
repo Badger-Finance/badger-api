@@ -91,6 +91,7 @@ describe('accounts.utils', () => {
     setupMockChain();
   });
 
+  // TODO: re enable this test once more time is allowed for fixing test leaks
   // describe("queryCachedAccount", () => {
   //   describe("no saved account", () => {
   //     it("returns undefined", async () => {
@@ -154,6 +155,7 @@ describe('accounts.utils', () => {
     });
   });
 
+  // TODO: re enable this test once more time is allowed for fixing test leaks
   // describe("toVaultBalance", () => {
   //   it.each([
   //     [undefined, Currency.USD],

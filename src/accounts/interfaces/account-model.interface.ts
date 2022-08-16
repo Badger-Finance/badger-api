@@ -39,6 +39,7 @@ export class AccountModel implements Account {
   @Title('data')
   @Description('Account sett balance information, positions, earnings, and tokens keyed by vault address')
   @Example({
+    // TODO: re-enable these mocks once we have cleared out issues with mock test files
     // [TOKENS.BADGER]: {
     //   address: TOKENS.BADGER,
     //   name: fullTokenMockMap[TOKENS.BADGER].name,

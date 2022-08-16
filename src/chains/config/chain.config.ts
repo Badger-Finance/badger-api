@@ -89,7 +89,6 @@ export abstract class Chain {
   }
 
   async getGasPrices(): Promise<GasPrices> {
-    console.log('invoked get gas prices');
     let gasPrice;
     try {
       gasPrice = Number(ethers.utils.formatUnits(await this.provider.getGasPrice(), 9));
