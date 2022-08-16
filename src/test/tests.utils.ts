@@ -3,7 +3,7 @@
 import { DataMapper, QueryIterator, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
 import BadgerSDK, { Network, ONE_DAY_MS, RegistryService, RewardsService, VaultSnapshot } from '@badger-dao/sdk';
 import { JsonRpcProvider, JsonRpcSigner } from '@ethersproject/providers';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import createMockInstance from 'jest-create-mock-instance';
 import { mock } from 'jest-mock-extended';
 
@@ -170,8 +170,9 @@ export async function mockBadgerSdk(
   const mockSigner = mock<JsonRpcSigner>();
   mockSigner.getAddress.calledWith().mockImplementation(async () => addr);
   const mockProvider = mock<JsonRpcProvider>();
-  mockProvider.getSigner.calledWith().mockImplementation(() => mockSigner);
-  mockProvider.getBlockNumber.calledWith().mockImplementation(async () => currBlock);
+  jest.spyOn(mockProvider, 'getSigner').mockImplementation(() => mockSigner);
+  jest.spyOn(mockProvider, 'getBlockNumber').mockImplementation(async () => currBlock);
+  jest.spyOn(mockProvider, 'getGasPrice').mockImplementation(async () => BigNumber.from(DEFAULT_GAS_PRICE));
 
   // Services that will force contracts connection in sdk constructor
   jest.spyOn(RegistryService.prototype, 'ready').mockImplementation();
