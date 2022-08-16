@@ -1,0 +1,11 @@
+dist
+docs
+node_modules
+*-lock.json
+*.lock
+.build
+.serverless
+contracts
+generated
+build
+coverage 

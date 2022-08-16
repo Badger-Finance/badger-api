@@ -6,7 +6,7 @@ import { Chain } from './chain.config';
 
 export class Optimism extends Chain {
   constructor() {
-    super(Network.Optimism, {}, rpc[Network.Optimism], new BaseStrategy(Network.Optimism, Object.keys({})));
+    super(Network.Optimism, {}, rpc[Network.Optimism], new BaseStrategy(Network.Optimism));
     Chain.register(this.network, this);
   }
 }

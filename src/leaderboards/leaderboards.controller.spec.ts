@@ -1,20 +1,27 @@
-import { BadgerType } from '@badger-dao/sdk';
+import { BadgerType, Network } from '@badger-dao/sdk';
 import { PlatformTest } from '@tsed/common';
-import SuperTest from 'supertest';
+import { PlatformServerless } from '@tsed/platform-serverless';
+import { PlatformServerlessTest } from '@tsed/platform-serverless-testing';
 
 import { Chain } from '../chains/config/chain.config';
-import { Server } from '../Server';
+import { NetworkStatus } from '../errors/enums/network-status.enum';
+import { TEST_CURRENT_TIMESTAMP } from '../test/constants';
+import { setupMockChain } from '../test/mocks.utils';
+import { LeaderBoardsController } from './leaderboards.controller';
 import { LeaderBoardsService } from './leaderboards.service';
 
-describe('LeaderBoardsController', () => {
-  let request: SuperTest.SuperTest<SuperTest.Test>;
-  let service: LeaderBoardsService;
+describe('leaderboards.controller', () => {
+  beforeEach(
+    PlatformServerlessTest.bootstrap(PlatformServerless, {
+      lambda: [LeaderBoardsController],
+    }),
+  );
+  afterEach(() => PlatformServerlessTest.reset());
 
-  beforeEach(PlatformTest.bootstrap(Server));
+  beforeEach(setupMockChain);
+
   beforeEach(async () => {
-    request = SuperTest(PlatformTest.callback());
-    service = PlatformTest.get<LeaderBoardsService>(LeaderBoardsService);
-    jest.spyOn(service, 'fetchLeaderboardSummary').mockImplementation(async (chain: Chain) => {
+    jest.spyOn(LeaderBoardsService.prototype, 'fetchLeaderboardSummary').mockImplementation(async (chain: Chain) => {
       const multiplier = Number(chain.chainId);
       return {
         summary: {
@@ -24,27 +31,29 @@ describe('LeaderBoardsController', () => {
           [BadgerType.Hyper]: multiplier * 25,
           [BadgerType.Frenzy]: multiplier * 40,
         },
-        updatedAt: 133742069,
+        updatedAt: TEST_CURRENT_TIMESTAMP,
       };
     });
   });
 
   afterEach(PlatformTest.reset);
 
-  describe('GET /v2/leaderboards', () => {
+  describe('GET /leaderboards', () => {
     describe('with no specified chain', () => {
-      it('returns the ethereum leaderboard', async (done: jest.DoneCallback) => {
-        const { body } = await request.get('/v2/leaderboards').expect(200);
-        expect(body).toMatchSnapshot();
-        done();
+      it('returns the ethereum leaderboard', async () => {
+        const { body, statusCode } = await PlatformServerlessTest.request.get('/leaderboards');
+        expect(statusCode).toEqual(NetworkStatus.Success);
+        expect(JSON.parse(body)).toMatchSnapshot();
       });
     });
 
     describe('with a specified chain', () => {
-      it('returns the specified chain leaderboard', async (done: jest.DoneCallback) => {
-        const { body } = await request.get('/v2/leaderboards?chain=arbitrum').expect(200);
-        expect(body).toMatchSnapshot();
-        done();
+      it('returns the specified chain leaderboard', async () => {
+        const { body, statusCode } = await PlatformServerlessTest.request
+          .get('/leaderboards')
+          .query({ chain: Network.Arbitrum });
+        expect(statusCode).toEqual(NetworkStatus.Success);
+        expect(JSON.parse(body)).toMatchSnapshot();
       });
     });
   });

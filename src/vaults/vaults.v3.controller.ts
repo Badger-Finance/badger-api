@@ -1,6 +1,8 @@
 import { Currency, Network, VaultSnapshot } from '@badger-dao/sdk';
-import { Controller, Get, Inject, QueryParams, UseCache } from '@tsed/common';
-import { ContentType, Description, Hidden, Returns, Summary } from '@tsed/schema';
+import { Controller, Inject } from '@tsed/di';
+import { UseCache } from '@tsed/platform-cache';
+import { QueryParams } from '@tsed/platform-params';
+import { ContentType, Description, Get, Hidden, Returns, Summary } from '@tsed/schema';
 
 import { Chain } from '../chains/config/chain.config';
 import { QueryParamError } from '../errors/validation/query.param.error';
@@ -60,7 +62,9 @@ export class VaultsV3Controller {
     @QueryParams('vault') vault: string,
     @QueryParams('chain') chain?: Network,
   ): Promise<VaultHarvestsExtendedResp[]> {
-    if (!vault) throw new QueryParamError('vault');
+    if (!vault) {
+      throw new QueryParamError('vault');
+    }
 
     return this.vaultService.getVaultHarvests(Chain.getChain(chain), vault);
   }

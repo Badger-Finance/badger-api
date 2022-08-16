@@ -206,7 +206,7 @@ resources:
         AttributeDefinitions:
           - AttributeName: 'address'
             AttributeType: 'S'
-    
+
     vaultsCompoundTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -236,7 +236,7 @@ resources:
               - AttributeName: 'isProduction'
                 KeyType: 'RANGE'
             Projection:
-              ProjectionType: ALL     
+              ProjectionType: ALL
 
     leaderboardsTable:
       Type: AWS::DynamoDB::Table
@@ -480,7 +480,7 @@ functions:
           name: ${self:service}-${self:custom.stage}-index-vault-snapshots
           description: 'index data for supported vaults'
           rate: rate(5 minutes)
-  
+
   index-vault-definitions:
     handler: src/indexers/vault-definition-indexer.captureVaultData
     timeout: 150

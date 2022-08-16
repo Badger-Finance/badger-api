@@ -1,41 +1,64 @@
-import { PlatformTest } from '@tsed/common';
-import { BadRequest, NotFound } from '@tsed/exceptions';
-import SuperTest from 'supertest';
+import { Network } from '@badger-dao/sdk';
+import { PlatformServerless } from '@tsed/platform-serverless';
+import { PlatformServerlessTest } from '@tsed/platform-serverless-testing';
 
-import { Server } from '../Server';
+import { getChainStartBlockKey } from '../aws/dynamodb.utils';
+import { NetworkStatus } from '../errors/enums/network-status.enum';
 import { TEST_ADDR } from '../test/constants';
-import { setupMockAccounts } from '../test/tests.utils';
+import { setupMockChain } from '../test/mocks.utils';
 import * as accountsUtils from './accounts.utils';
+import { AccountsV2Controller } from './accounts.v2.controller';
 
-describe('AccountsController', () => {
-  let request: SuperTest.SuperTest<SuperTest.Test>;
+export function setupMockAccounts() {
+  jest.spyOn(accountsUtils, 'getClaimableBalanceSnapshot').mockImplementation(async () => ({
+    chainStartBlock: getChainStartBlockKey(Network.Ethereum, 10),
+    address: TEST_ADDR,
+    chain: Network.Ethereum,
+    startBlock: 100,
+    claimableBalances: [],
+    expiresAt: Date.now(),
+    pageId: 0,
+  }));
+  jest.spyOn(accountsUtils, 'getLatestMetadata').mockImplementation(async (chain) => ({
+    startBlock: 10,
+    endBlock: 15,
+    chainStartBlock: getChainStartBlockKey(Network.Ethereum, 10),
+    chain: chain.network,
+    cycle: 10,
+    count: 0,
+  }));
+}
 
-  beforeEach(PlatformTest.bootstrap(Server));
-  beforeEach(async () => {
-    request = SuperTest(PlatformTest.callback());
-    jest.resetAllMocks();
-    setupMockAccounts();
+describe('accounts.v2.controller', () => {
+  beforeEach(
+    PlatformServerlessTest.bootstrap(PlatformServerless, {
+      lambda: [AccountsV2Controller],
+    }),
+  );
+  afterEach(() => PlatformServerlessTest.reset());
+
+  beforeEach(() => {
+    setupMockChain();
   });
-
-  afterEach(PlatformTest.reset);
 
   describe('GET /v2/accounts', () => {
     describe('with no specified account', () => {
-      it('returns a not found response', async (done: jest.DoneCallback) => {
-        const { body } = await request.get('/v2/accounts').expect(NotFound.STATUS);
-        expect(body).toMatchSnapshot();
-        done();
+      it('returns a not found response', async () => {
+        const { statusCode } = await PlatformServerlessTest.request.get('/accounts');
+        expect(statusCode).toEqual(NetworkStatus.NotFound);
       });
     });
+
     describe('with an invalid account input', () => {
-      it('returns a bad request response', async (done: jest.DoneCallback) => {
-        const { body } = await request.get('/v2/accounts/0xjintao').expect(BadRequest.STATUS);
-        expect(body).toMatchSnapshot();
-        done();
+      it('returns a bad request response', async () => {
+        const { body, statusCode } = await PlatformServerlessTest.request.get('/accounts/0xjintao');
+        expect(statusCode).toEqual(NetworkStatus.BadRequest);
+        expect(JSON.parse(body)).toMatchSnapshot();
       });
     });
+
     describe('with a non participant account', () => {
-      it('returns a default account response', async (done: jest.DoneCallback) => {
+      it('returns a default account response', async () => {
         jest.spyOn(accountsUtils, 'getCachedAccount').mockImplementation(async (_chain, address) => ({
           address,
           value: 0,
@@ -53,13 +76,14 @@ describe('AccountsController', () => {
           nativeBalance: 0,
           nonNativeBalance: 0,
         }));
-        const { body } = await request.get('/v2/accounts/' + TEST_ADDR).expect(200);
-        expect(body).toMatchSnapshot();
-        done();
+        const { body, statusCode } = await PlatformServerlessTest.request.get('/accounts/' + TEST_ADDR);
+        expect(statusCode).toEqual(NetworkStatus.Success);
+        expect(JSON.parse(body)).toMatchSnapshot();
       });
     });
+
     describe('with a participant account', () => {
-      it('returns a cached account response', async (done: jest.DoneCallback) => {
+      it('returns a cached account response', async () => {
         jest.spyOn(accountsUtils, 'getCachedAccount').mockImplementation(async (_chain, address) => ({
           address,
           value: 10,
@@ -77,9 +101,9 @@ describe('AccountsController', () => {
           nativeBalance: 3,
           nonNativeBalance: 5,
         }));
-        const { body } = await request.get('/v2/accounts/' + TEST_ADDR).expect(200);
-        expect(body).toMatchSnapshot();
-        done();
+        const { body, statusCode } = await PlatformServerlessTest.request.get('/accounts/' + TEST_ADDR);
+        expect(statusCode).toEqual(NetworkStatus.Success);
+        expect(JSON.parse(body)).toMatchSnapshot();
       });
     });
   });

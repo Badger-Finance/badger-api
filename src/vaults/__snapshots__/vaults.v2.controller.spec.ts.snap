@@ -1,26 +1,108 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`VaultsController GET /v2/harvests error cases returns a 400 for invalide chain 1`] = `
+exports[`vaults.v2.controller GET /harvests error cases returns a 400 for invalide chain 1`] = `
 Object {
+  "errors": Array [],
   "message": "invalid is not a supported chain",
+  "name": "BAD_REQUEST",
+  "status": 400,
 }
 `;
 
-exports[`VaultsController GET /v2/harvests success cases Return extended harvest for chain vaults 1`] = `
+exports[`vaults.v2.controller GET /harvests success cases Return extended harvest for chain vaults 1`] = `
 Object {
-  "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28": Array [],
+  "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28": Array [
+    Object {
+      "amount": 0.019444617913515275,
+      "block": 13610723,
+      "estimatedApr": 0,
+      "eventType": "Harvest",
+      "strategyBalance": 675.7270352627328,
+      "timestamp": 1636848055,
+      "token": "0x64eda51d3ad40d56b9dfc5554e06f94e1dd786fd",
+    },
+    Object {
+      "amount": 519.4928843851667,
+      "block": 13610723,
+      "estimatedApr": 0,
+      "eventType": "TreeDistribution",
+      "strategyBalance": 675.7270352627328,
+      "timestamp": 1636848055,
+      "token": "0x64eda51d3ad40d56b9dfc5554e06f94e1dd786fd",
+    },
+    Object {
+      "amount": 127.77060811430661,
+      "block": 13610723,
+      "estimatedApr": 0,
+      "eventType": "TreeDistribution",
+      "strategyBalance": 675.7270352627328,
+      "timestamp": 1636848055,
+      "token": "0x64eda51d3ad40d56b9dfc5554e06f94e1dd786fd",
+    },
+    Object {
+      "amount": 0.19661862226091095,
+      "block": 13647052,
+      "estimatedApr": 0,
+      "eventType": "Harvest",
+      "strategyBalance": 671.2872269577839,
+      "timestamp": 1637345136,
+      "token": "0x64eda51d3ad40d56b9dfc5554e06f94e1dd786fd",
+    },
+  ],
 }
 `;
 
-exports[`VaultsController GET /v2/harvests/:vault error cases returns a 400 for invalide chain 1`] = `
+exports[`vaults.v2.controller GET /harvests/:vault error cases returns a 400 for invalide chain 1`] = `
 Object {
+  "errors": Array [],
   "message": "invalid is not a supported chain",
+  "name": "BAD_REQUEST",
+  "status": 400,
 }
 `;
 
-exports[`VaultsController GET /v2/harvests/:vault success cases Return extended harvests for chain vault by addr 1`] = `Array []`;
+exports[`vaults.v2.controller GET /harvests/:vault success cases Return extended harvests for chain vault by addr 1`] = `
+Array [
+  Object {
+    "amount": 0.019444617913515275,
+    "block": 13610723,
+    "estimatedApr": 0,
+    "eventType": "Harvest",
+    "strategyBalance": 675.7270352627328,
+    "timestamp": 1636848055,
+    "token": "0x64eda51d3ad40d56b9dfc5554e06f94e1dd786fd",
+  },
+  Object {
+    "amount": 519.4928843851667,
+    "block": 13610723,
+    "estimatedApr": 0,
+    "eventType": "TreeDistribution",
+    "strategyBalance": 675.7270352627328,
+    "timestamp": 1636848055,
+    "token": "0x64eda51d3ad40d56b9dfc5554e06f94e1dd786fd",
+  },
+  Object {
+    "amount": 127.77060811430661,
+    "block": 13610723,
+    "estimatedApr": 0,
+    "eventType": "TreeDistribution",
+    "strategyBalance": 675.7270352627328,
+    "timestamp": 1636848055,
+    "token": "0x64eda51d3ad40d56b9dfc5554e06f94e1dd786fd",
+  },
+  Object {
+    "amount": 0.19661862226091095,
+    "block": 13647052,
+    "estimatedApr": 0,
+    "eventType": "Harvest",
+    "strategyBalance": 671.2872269577839,
+    "timestamp": 1637345136,
+    "token": "0x64eda51d3ad40d56b9dfc5554e06f94e1dd786fd",
+  },
+]
+`;
 
-exports[`VaultsController GET /v2/vaults with a specified chain returns the vaults for bsc 1`] = `
+exports[`vaults.v2.controller GET /vaults with a specified chain returns the vaults for bsc 1`] = `
 Array [
   Object {
     "apr": 8.26,
@@ -198,7 +280,7 @@ Array [
 ]
 `;
 
-exports[`VaultsController GET /v2/vaults with a specified chain returns the vaults for eth 1`] = `
+exports[`vaults.v2.controller GET /vaults with a specified chain returns the vaults for eth 1`] = `
 Array [
   Object {
     "apr": 8.26,
@@ -376,13 +458,16 @@ Array [
 ]
 `;
 
-exports[`VaultsController GET /v2/vaults with an invalid specified chain returns a 400 1`] = `
+exports[`vaults.v2.controller GET /vaults with an invalid specified chain returns a 400 1`] = `
 Object {
+  "errors": Array [],
   "message": "invalid is not a supported chain",
+  "name": "BAD_REQUEST",
+  "status": 400,
 }
 `;
 
-exports[`VaultsController GET /v2/vaults with no specified chain returns eth vaults 1`] = `
+exports[`vaults.v2.controller GET /vaults with no specified chain returns eth vaults 1`] = `
 Array [
   Object {
     "apr": 8.26,

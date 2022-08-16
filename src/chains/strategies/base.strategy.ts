@@ -12,9 +12,8 @@ import { Chain } from '../config/chain.config';
 import { ChainStrategy } from './chain.strategy';
 
 export class BaseStrategy extends ChainStrategy {
-  constructor(private network: Network, tokens: string[]) {
+  constructor(private network: Network) {
     super();
-    ChainStrategy.register(this, tokens);
   }
 
   async getPrice(address: string): Promise<TokenPrice> {

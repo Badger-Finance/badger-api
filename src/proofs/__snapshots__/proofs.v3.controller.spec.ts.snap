@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`proofs.v3.controller GET /v3/proofs returns 200 and the merkle proof for a user on the bouncer list 1`] = `
+Array [
+  "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+  "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+  "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+]
+`;
+
+exports[`proofs.v3.controller GET /v3/proofs returns 404 for a chain with no bouncer file 1`] = `
+Object {
+  "errors": Array [],
+  "message": "ethereum does not have requested data",
+  "name": "Error",
+  "status": 404,
+}
+`;
+
+exports[`proofs.v3.controller GET /v3/proofs returns 404 for users not on the bouncer list 1`] = `
+Object {
+  "errors": Array [],
+  "message": "No data for specified address: 0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+  "name": "Error",
+  "status": 404,
+}
+`;

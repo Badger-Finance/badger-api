@@ -1,6 +1,8 @@
 import { Currency, Network } from '@badger-dao/sdk';
-import { Controller, Get, Inject, QueryParams, UseCache } from '@tsed/common';
-import { ContentType, Description, Hidden, Returns, Summary } from '@tsed/schema';
+import { Controller, Inject } from '@tsed/di';
+import { UseCache } from '@tsed/platform-cache';
+import { QueryParams } from '@tsed/platform-params';
+import { ContentType, Description, Get, Hidden, Returns, Summary } from '@tsed/schema';
 
 import { Chain } from '../chains/config/chain.config';
 import { PriceSnapshots } from '../tokens/interfaces/price-snapshots.interface';
@@ -9,7 +11,7 @@ import { PriceSummaryModel } from '../tokens/interfaces/price-summary-model.inte
 import { PricesService } from './prices.service';
 
 @Controller('/prices')
-export class PriceController {
+export class PricesController {
   @Inject()
   pricesService!: PricesService;
 

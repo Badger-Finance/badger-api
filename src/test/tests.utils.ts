@@ -1,92 +1,21 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
 import { DataMapper, QueryIterator, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
-import BadgerSDK, {
-  Currency,
-  Network,
-  ONE_DAY_MS,
-  RegistryService,
-  RewardsService,
-  VaultDTO,
-  VaultSnapshot,
-} from '@badger-dao/sdk';
-import { TokensService } from '@badger-dao/sdk/lib/tokens/tokens.service';
+import BadgerSDK, { Network, ONE_DAY_MS, RegistryService, RewardsService, VaultSnapshot } from '@badger-dao/sdk';
 import { JsonRpcProvider, JsonRpcSigner } from '@ethersproject/providers';
 import { ethers } from 'ethers';
 import createMockInstance from 'jest-create-mock-instance';
 import { mock } from 'jest-mock-extended';
 
 import VaultsCompoundMock from '../../seed/vault-definition.json';
-import * as accountsUtils from '../accounts/accounts.utils';
-import * as dynamodbUtils from '../aws/dynamodb.utils';
 import { CachedAccount } from '../aws/models/cached-account.model';
 import { CachedBoost } from '../aws/models/cached-boost.model';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { SUPPORTED_CHAINS } from '../chains/chain';
-import { Arbitrum } from '../chains/config/arbitrum.config';
-import { BinanceSmartChain } from '../chains/config/bsc.config';
-import { Ethereum } from '../chains/config/eth.config';
-import { Fantom } from '../chains/config/fantom.config';
-import { Polygon } from '../chains/config/polygon.config';
-import { ChainVaults } from '../chains/vaults/chain.vaults';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
-import * as pricesUtils from '../prices/prices.utils';
-import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import { Nullable } from '../utils/types.utils';
-import { historicVaultSnapshotsMock } from '../vaults/mocks/historic-vault-snapshots.mock';
 import { vaultsChartDataMock } from '../vaults/mocks/vaults-chart-data.mock';
-import { MOCK_VAULT_DEFINITION, MOCK_VAULTS, TEST_ADDR } from './constants';
-
-export const TEST_CHAIN = SUPPORTED_CHAINS[0];
-export const CURRENT_BLOCK = 0;
-
-export function mockVaultDTO(address: string): VaultDTO {
-  const vault = MOCK_VAULTS.find((v) => v.vaultToken === address);
-  if (!vault) {
-    throw new Error(`DTO for ${address} does not exist`);
-  }
-  return vault;
-}
-
-export function setupMapper(items: unknown[], filter?: (items: unknown[]) => unknown[]) {
-  // @ts-ignore
-  const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
-  let result = items;
-  if (filter) {
-    result = filter(items);
-  }
-  // @ts-ignore
-  qi[Symbol.iterator] = jest.fn(() => result.values());
-  return jest.spyOn(DataMapper.prototype, 'query').mockImplementation(() => qi);
-}
-
-export function setupBatchGet(items: unknown[], filter?: (items: unknown[]) => unknown[]) {
-  // @ts-ignore
-  const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
-  let result = items;
-  if (filter) {
-    result = filter(items);
-  }
-  // @ts-ignore
-  qi[Symbol.iterator] = jest.fn(() => result.values());
-  return jest.spyOn(DataMapper.prototype, 'batchGet').mockImplementation(() => qi);
-}
-
-export function mockBatchPut(items: unknown[]) {
-  // @ts-ignore
-  const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
-  // @ts-ignore
-  qi[Symbol.iterator] = jest.fn(() => items.values());
-  return jest.spyOn(DataMapper.prototype, 'batchPut').mockImplementation(() => qi);
-}
-
-export function mockBatchDelete(items: unknown[]) {
-  // @ts-ignore
-  const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
-  // @ts-ignore
-  qi[Symbol.iterator] = jest.fn(() => items.values());
-  return jest.spyOn(DataMapper.prototype, 'batchDelete').mockImplementation(() => qi);
-}
+import { MOCK_VAULT_DEFINITION, TEST_ADDR, TEST_CURRENT_BLOCK } from './constants';
 
 // @ts-ignore
 export function setupVaultsCoumpoundDDB(customFilter: Nullable<(v: any) => boolean> = null) {
@@ -106,26 +35,7 @@ export function setupVaultsCoumpoundDDB(customFilter: Nullable<(v: any) => boole
   });
 }
 
-export function setupVaultsHistoricDDB() {
-  // @ts-ignore
-  jest.spyOn(DataMapper.prototype, 'query').mockImplementation((model, keys) => {
-    let dataSource = historicVaultSnapshotsMock;
-    // @ts-ignore
-    const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
-
-    if (keys.id) {
-      dataSource = dataSource.filter((v) => v.id === keys.id);
-    }
-
-    // @ts-ignore
-    qi[Symbol.iterator] = jest.fn(() => dataSource.map((obj) => Object.assign(new model(), obj)).values());
-    return qi;
-  });
-}
-
 export function setupDdbVaultsChartsData() {
-  jest.spyOn(BadgerSDK.prototype, 'ready').mockImplementation();
-
   /* eslint-disable @typescript-eslint/ban-ts-comment */
   // @ts-ignore
   jest.spyOn(DataMapper.prototype, 'query').mockImplementation((_model, _condition) => {
@@ -218,27 +128,6 @@ export function randomSnapshots(vaultDefinition?: VaultDefinitionModel, count?: 
   return snapshots;
 }
 
-export function setupChainGasPrices() {
-  jest.spyOn(Ethereum.prototype, 'getGasPrices').mockImplementation(async () => ({
-    rapid: { maxFeePerGas: 223.06, maxPriorityFeePerGas: 3.04 },
-    fast: { maxFeePerGas: 221.96, maxPriorityFeePerGas: 1.94 },
-    standard: { maxFeePerGas: 221.91, maxPriorityFeePerGas: 1.89 },
-    slow: { maxFeePerGas: 221.81, maxPriorityFeePerGas: 1.79 },
-  }));
-  jest
-    .spyOn(BinanceSmartChain.prototype, 'getGasPrices')
-    .mockImplementation(async () => ({ rapid: 38, fast: 33, standard: 33, slow: 33 }));
-  jest
-    .spyOn(Arbitrum.prototype, 'getGasPrices')
-    .mockImplementation(async () => ({ rapid: 38, fast: 33, standard: 33, slow: 33 }));
-  jest
-    .spyOn(Polygon.prototype, 'getGasPrices')
-    .mockImplementation(async () => ({ rapid: 38, fast: 33, standard: 33, slow: 33 }));
-  jest
-    .spyOn(Fantom.prototype, 'getGasPrices')
-    .mockImplementation(async () => ({ rapid: 38, fast: 33, standard: 33, slow: 33 }));
-}
-
 export function randomCachedBoosts(count: number): CachedBoost[] {
   const boosts = [];
   for (let i = 0; i < count; i += 1) {
@@ -260,60 +149,12 @@ export function randomCachedBoosts(count: number): CachedBoost[] {
   return boosts;
 }
 
-export function setupMockAccounts() {
-  jest.spyOn(accountsUtils, 'getClaimableBalanceSnapshot').mockImplementation(async () => ({
-    chainStartBlock: dynamodbUtils.getChainStartBlockKey(TEST_CHAIN, 10),
-    address: TEST_ADDR,
-    chain: TEST_CHAIN.network,
-    startBlock: 100,
-    claimableBalances: [],
-    expiresAt: Date.now(),
-    pageId: 0,
-  }));
-  jest.spyOn(accountsUtils, 'getLatestMetadata').mockImplementation(async (chain) => ({
-    startBlock: 10,
-    endBlock: 15,
-    chainStartBlock: dynamodbUtils.getChainStartBlockKey(chain, 10),
-    chain: chain.network,
-    cycle: 10,
-    count: 0,
-  }));
-}
-
-export function setFullTokenDataMock() {
-  const fullTokenObjList = Object.values(fullTokenMockMap);
-
-  setupBatchGet(fullTokenObjList);
-  mockBatchPut(fullTokenObjList);
-
-  jest.spyOn(TokensService.prototype, 'loadTokens').mockImplementation(async () => fullTokenMockMap);
-}
-
-export function mockPricing() {
-  jest.spyOn(pricesUtils, 'getPrice').mockImplementation(async (token: string, _currency?: Currency) => ({
-    address: token,
-    price: parseInt(token.slice(0, 5), 16),
-    updatedAt: Date.now(),
-  }));
-  jest.spyOn(pricesUtils, 'convert').mockImplementation(async (price: number, currency?: Currency) => {
-    if (!currency || currency === Currency.USD) {
-      return price;
-    }
-    return price / 2;
-  });
-}
-
-export function mockChainVaults() {
-  jest.spyOn(ChainVaults.prototype, 'getVault').mockImplementation(async (_) => MOCK_VAULT_DEFINITION);
-  jest.spyOn(ChainVaults.prototype, 'all').mockImplementation(async () => [MOCK_VAULT_DEFINITION]);
-}
-
 export async function mockBadgerSdk(
   // in case u want to skip one param
   {
     addr = TEST_ADDR,
     network = Network.Ethereum,
-    currBlock = CURRENT_BLOCK,
+    currBlock = TEST_CURRENT_BLOCK,
   }: {
     // type description
     addr?: string;
@@ -323,7 +164,7 @@ export async function mockBadgerSdk(
     // in case u want to skip all params
     addr: TEST_ADDR,
     network: Network.Ethereum,
-    currBlock: CURRENT_BLOCK,
+    currBlock: TEST_CURRENT_BLOCK,
   },
 ): Promise<BadgerSDK> {
   const mockSigner = mock<JsonRpcSigner>();

@@ -1,6 +1,7 @@
 import {
   BouncerType,
   gqlGenT,
+  ONE_WEEK_SECONDS,
   Protocol,
   RegistryVault,
   VaultBehavior,
@@ -14,9 +15,8 @@ import { getVaultEntityId } from '../aws/dynamodb.utils';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { VaultTokenBalance } from '../aws/models/vault-token-balance.model';
 import { Chain } from '../chains/config/chain.config';
-import { ONE_WEEK_SECONDS } from '../config/constants';
 import { Stage } from '../config/enums/stage.enum';
-import { getPrice } from '../prices/prices.utils';
+import { queryPrice } from '../prices/prices.utils';
 import { getLiquidityData } from '../protocols/common/swap.utils';
 import { getFullTokens, toBalance } from '../tokens/tokens.utils';
 import { Nullable } from '../utils/types.utils';
@@ -39,7 +39,7 @@ export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefini
   } catch (err) {} // block is not super important here - just continue on
 
   const [tokenPriceData, strategyInfo, boostWeight, cachedVault] = await Promise.all([
-    getPrice(vaultDefinition.depositToken),
+    queryPrice(vaultDefinition.depositToken),
     getStrategyInfo(chain, vaultDefinition),
     getBoostWeight(chain, vaultDefinition),
     VaultsService.loadVault(chain, vaultDefinition),

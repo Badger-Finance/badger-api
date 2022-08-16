@@ -1,121 +1,93 @@
-import BadgerSDK, { RewardsService } from '@badger-dao/sdk';
-import rewardsLoadSchedulesMock from '@badger-dao/sdk-mocks/generated/ethereum/rewards/loadSchedules.json';
-import { PlatformTest } from '@tsed/common';
-import { BadRequest, NotFound } from '@tsed/exceptions';
-import SuperTest from 'supertest';
+import { BadRequest } from '@tsed/exceptions';
+import { PlatformServerless } from '@tsed/platform-serverless';
+import { PlatformServerlessTest } from '@tsed/platform-serverless-testing';
 
+import { Chain } from '../chains/config/chain.config';
 import { ChainVaults } from '../chains/vaults/chain.vaults';
-import { TOKENS } from '../config/tokens.config';
-import { Server } from '../Server';
-import { mockChainVaults } from '../test/tests.utils';
+import { NetworkStatus } from '../errors/enums/network-status.enum';
+import { TEST_ADDR } from '../test/constants';
+import { setupMockChain } from '../test/mocks.utils';
+import { RewardV2Controller } from './reward.v2.controller';
 
-describe('RewardController', () => {
-  let request: SuperTest.SuperTest<SuperTest.Test>;
+describe('reward.v2.controller', () => {
+  beforeEach(
+    PlatformServerlessTest.bootstrap(PlatformServerless, {
+      lambda: [RewardV2Controller],
+    }),
+  );
+  afterEach(() => PlatformServerlessTest.reset());
 
-  const schedulesMockMap = {
-    [TOKENS.BBADGER]: rewardsLoadSchedulesMock,
-    [TOKENS.BCVX]: rewardsLoadSchedulesMock.map((rw) => ({
-      ...rw,
-      beneficiary: TOKENS.BCVX,
-    })),
-  };
-
-  const activeSchedulesMockMap = {
-    [TOKENS.BBADGER]: schedulesMockMap[TOKENS.BBADGER].map((rw) => ({
-      ...rw,
-      compPercent: 50,
-    })),
-    [TOKENS.BCVX]: schedulesMockMap[TOKENS.BCVX].map((rw) => ({
-      ...rw,
-      compPercent: 70,
-    })),
-  };
-
-  function setupDefaultMocks() {
-    jest.spyOn(RewardsService.prototype, 'loadSchedules').mockImplementation(async (beneficiary) => {
-      return schedulesMockMap[beneficiary];
-    });
-    jest.spyOn(RewardsService.prototype, 'loadActiveSchedules').mockImplementation(async (beneficiary) => {
-      return activeSchedulesMockMap[beneficiary];
-    });
-    jest.spyOn(BadgerSDK.prototype, 'ready').mockImplementation();
-    mockChainVaults();
-  }
-
-  beforeAll(PlatformTest.bootstrap(Server));
-  beforeAll(async () => {
-    request = SuperTest(PlatformTest.callback());
-  });
-  afterAll(PlatformTest.reset);
+  beforeEach(setupMockChain);
 
   describe('GET /v2/reward/schedules', () => {
     describe('with no specified chain', () => {
-      it('returns schedules for default chain and all vaults', async (done: jest.DoneCallback) => {
-        setupDefaultMocks();
-        const { body } = await request.get('/v2/reward/schedules').expect(200);
-        expect(body).toMatchSnapshot();
-        done();
+      it('returns schedules for default chain and all vaults', async () => {
+        const { body, statusCode } = await PlatformServerlessTest.request.get('/reward/schedules');
+        expect(statusCode).toEqual(NetworkStatus.Success);
+        expect(JSON.parse(body)).toMatchSnapshot();
       });
     });
 
     describe('with active param true', () => {
-      it('returns active schedules for default chain and all vaults', async (done: jest.DoneCallback) => {
-        setupDefaultMocks();
-        const { body } = await request.get('/v2/reward/schedules?active=true').expect(200);
-        expect(body).toMatchSnapshot();
-        done();
+      it('returns active schedules for default chain and all vaults', async () => {
+        const { body, statusCode } = await PlatformServerlessTest.request.get('/reward/schedules?active=true');
+        expect(statusCode).toEqual(NetworkStatus.Success);
+        expect(JSON.parse(body)).toMatchSnapshot();
       });
     });
 
     describe('with an invalid specified chain', () => {
-      it('returns a 400', async (done: jest.DoneCallback) => {
-        setupDefaultMocks();
-        const { body } = await request.get('/v2/reward/schedules?chain=invalid').expect(BadRequest.STATUS);
-        expect(body).toMatchSnapshot();
-        done();
+      it('returns a 400', async () => {
+        jest.spyOn(Chain, 'getChain').mockImplementation(() => {
+          throw new BadRequest(`invalid is not a supported chain`);
+        });
+        const { body, statusCode } = await PlatformServerlessTest.request.get('/reward/schedules?chain=invalid');
+        expect(statusCode).toEqual(NetworkStatus.BadRequest);
+        expect(JSON.parse(body)).toMatchSnapshot();
       });
     });
   });
 
   describe('GET /v2/reward/schedules/<beneficiary>', () => {
     describe('with no specified chain', () => {
-      it('returns schedule for default chain and one vault', async (done: jest.DoneCallback) => {
-        setupDefaultMocks();
-        const { body } = await request.get(`/v2/reward/schedules/${TOKENS.BBADGER}`).expect(200);
-        expect(body).toMatchSnapshot();
-        done();
+      it('returns schedule for default chain and one vault', async () => {
+        const { body, statusCode } = await PlatformServerlessTest.request.get(`/reward/schedules/${TEST_ADDR}`);
+        expect(statusCode).toEqual(NetworkStatus.Success);
+        expect(JSON.parse(body)).toMatchSnapshot();
       });
     });
 
     describe('with active param true', () => {
-      it('returns schedules for default chain and one vault', async (done: jest.DoneCallback) => {
-        setupDefaultMocks();
-        const { body } = await request.get(`/v2/reward/schedules/${TOKENS.BBADGER}?active=true`).expect(200);
-        expect(body).toMatchSnapshot();
-        done();
+      it('returns schedules for default chain and one vault', async () => {
+        const { body, statusCode } = await PlatformServerlessTest.request.get(
+          `/reward/schedules/${TEST_ADDR}?active=true`,
+        );
+        expect(statusCode).toEqual(NetworkStatus.Success);
+        expect(JSON.parse(body)).toMatchSnapshot();
       });
     });
 
     describe('with an invalid specified chain', () => {
-      it('returns a 400', async (done: jest.DoneCallback) => {
-        setupDefaultMocks();
-        const { body } = await request
-          .get(`/v2/reward/schedules/${TOKENS.BBADGER}?chain=invalid`)
-          .expect(BadRequest.STATUS);
-        expect(body).toMatchSnapshot();
-        done();
+      it('returns a 400', async () => {
+        jest.spyOn(Chain, 'getChain').mockImplementation(() => {
+          throw new BadRequest(`invalid is not a supported chain`);
+        });
+        const { body, statusCode } = await PlatformServerlessTest.request.get(
+          `/reward/schedules/${TEST_ADDR}?chain=invalid`,
+        );
+        expect(statusCode).toEqual(NetworkStatus.BadRequest);
+        expect(JSON.parse(body)).toMatchSnapshot();
       });
     });
 
     describe('with invalid param specified', () => {
-      it('returns a 400, NotFound', async (done: jest.DoneCallback) => {
-        setupDefaultMocks();
+      it('returns a 400, NotFound', async () => {
         jest.spyOn(ChainVaults.prototype, 'getVault').mockImplementation(async (_) => {
           throw new Error('Missing Vault');
         });
-        const { body } = await request.get(`/v2/reward/schedules/unknowsvaultdata`).expect(NotFound.STATUS);
-        expect(body).toMatchSnapshot();
-        done();
+        const { body, statusCode } = await PlatformServerlessTest.request.get(`/reward/schedules/unknowsvaultdata`);
+        expect(statusCode).toEqual(NetworkStatus.NotFound);
+        expect(JSON.parse(body)).toMatchSnapshot();
       });
     });
   });

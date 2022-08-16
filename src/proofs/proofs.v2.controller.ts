@@ -1,7 +1,7 @@
-import { Network } from '@badger-dao/sdk';
-import { MerkleProof } from '@badger-dao/sdk/lib/api/types/merkle-proof';
-import { Controller, Get, Inject, PathParams, QueryParams } from '@tsed/common';
-import { ContentType, Deprecated } from '@tsed/schema';
+import { MerkleProof, Network } from '@badger-dao/sdk';
+import { Controller, Inject } from '@tsed/di';
+import { PathParams, QueryParams } from '@tsed/platform-params';
+import { ContentType, Deprecated, Get } from '@tsed/schema';
 
 import { Chain } from '../chains/config/chain.config';
 import { ProofsService } from './proofs.service';

@@ -3,8 +3,7 @@ import { Description, Example, Property, Title } from '@tsed/schema';
 import { ethers } from 'ethers';
 
 import { TOKENS } from '../../config/tokens.config';
-import { fullTokenMockMap } from '../../tokens/mocks/full-token.mock';
-import { mockBalance } from '../../tokens/tokens.utils';
+// import { fullTokenMockMap } from '../../tokens/mocks/full-token.mock';
 
 export class AccountModel implements Account {
   @Title('id')
@@ -40,28 +39,29 @@ export class AccountModel implements Account {
   @Title('data')
   @Description('Account sett balance information, positions, earnings, and tokens keyed by vault address')
   @Example({
-    [TOKENS.BADGER]: {
-      address: TOKENS.BADGER,
-      name: fullTokenMockMap[TOKENS.BADGER].name,
-      symbol: fullTokenMockMap[TOKENS.BADGER].symbol,
-      balance: 3.4,
-      value: mockBalance(fullTokenMockMap[TOKENS.BADGER], 3.4).value,
-      tokens: [mockBalance(fullTokenMockMap[TOKENS.BADGER], 3.4)],
-      earnedBalance: 0.4,
-      earnedValue: mockBalance(fullTokenMockMap[TOKENS.BADGER], 0.4).value,
-      earnedTokens: [mockBalance(fullTokenMockMap[TOKENS.BADGER], 0.4)],
-    },
-    [TOKENS.DIGG]: {
-      address: TOKENS.DIGG,
-      name: fullTokenMockMap[TOKENS.DIGG].name,
-      symbol: fullTokenMockMap[TOKENS.DIGG].symbol,
-      balance: 3.4,
-      value: mockBalance(fullTokenMockMap[TOKENS.DIGG], 3.4).value,
-      tokens: [mockBalance(fullTokenMockMap[TOKENS.DIGG], 3.4)],
-      earnedBalance: 0.4,
-      earnedValue: mockBalance(fullTokenMockMap[TOKENS.DIGG], 0.4).value,
-      earnedTokens: [mockBalance(fullTokenMockMap[TOKENS.DIGG], 0.4)],
-    },
+    // TODO: re-enable these mocks once we have cleared out issues with mock test files
+    // [TOKENS.BADGER]: {
+    //   address: TOKENS.BADGER,
+    //   name: fullTokenMockMap[TOKENS.BADGER].name,
+    //   symbol: fullTokenMockMap[TOKENS.BADGER].symbol,
+    //   balance: 3.4,
+    //   value: mockBalance(fullTokenMockMap[TOKENS.BADGER], 3.4).value,
+    //   tokens: [mockBalance(fullTokenMockMap[TOKENS.BADGER], 3.4)],
+    //   earnedBalance: 0.4,
+    //   earnedValue: mockBalance(fullTokenMockMap[TOKENS.BADGER], 0.4).value,
+    //   earnedTokens: [mockBalance(fullTokenMockMap[TOKENS.BADGER], 0.4)],
+    // },
+    // [TOKENS.DIGG]: {
+    //   address: TOKENS.DIGG,
+    //   name: fullTokenMockMap[TOKENS.DIGG].name,
+    //   symbol: fullTokenMockMap[TOKENS.DIGG].symbol,
+    //   balance: 3.4,
+    //   value: mockBalance(fullTokenMockMap[TOKENS.DIGG], 3.4).value,
+    //   tokens: [mockBalance(fullTokenMockMap[TOKENS.DIGG], 3.4)],
+    //   earnedBalance: 0.4,
+    //   earnedValue: mockBalance(fullTokenMockMap[TOKENS.DIGG], 0.4).value,
+    //   earnedTokens: [mockBalance(fullTokenMockMap[TOKENS.DIGG], 0.4)],
+    // },
   })
   @Property()
   public data: Record<string, VaultData>;

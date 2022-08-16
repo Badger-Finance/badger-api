@@ -29,7 +29,7 @@ export const indexBoostLeaderBoard = async () => {
 
       const chainEntries = [];
 
-      for await (const entry of mapper.query(CachedBoost, { leaderboard: getLeaderboardKey(chain) })) {
+      for await (const entry of mapper.query(CachedBoost, { leaderboard: getLeaderboardKey(chain.network) })) {
         chainEntries.push(entry);
       }
 
@@ -41,7 +41,7 @@ export const indexBoostLeaderBoard = async () => {
 
       await mapper.put(
         Object.assign(new CachedLeaderboardSummary(), {
-          leaderboard: getLeaderboardKey(chain),
+          leaderboard: getLeaderboardKey(chain.network),
           rankSummaries,
         }),
       );
@@ -72,7 +72,7 @@ async function generateChainBoostsLeaderBoard(chain: Chain): Promise<CachedBoost
         const { boost, stakeRatio, nftBalance, bveCvxBalance, diggBalance, nativeBalance, nonNativeBalance } =
           userBoost;
         const cachedBoost: CachedBoost = {
-          leaderboard: getLeaderboardKey(chain),
+          leaderboard: getLeaderboardKey(chain.network),
           boostRank: i + 1,
           address: ethers.utils.getAddress(address),
           boost,

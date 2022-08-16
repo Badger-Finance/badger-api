@@ -1,21 +1,18 @@
 import { providers } from '@0xsequence/multicall';
-import BadgerSDK, { getNetworkConfig, Network } from '@badger-dao/sdk';
+import BadgerSDK, { GasPrices, getNetworkConfig, Network, SDKProvider } from '@badger-dao/sdk';
 import { BadRequest, NotFound } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 
 import { TOKENS } from '../../config/tokens.config';
-import { GasPrices } from '../../gas/interfaces/gas-prices.interface';
 import { TokenConfig } from '../../tokens/interfaces/token-config.interface';
 import { ChainStrategy } from '../strategies/chain.strategy';
 import { ChainVaults } from '../vaults/chain.vaults';
 
 type Chains = Record<string, Chain>;
-type Sdks = Record<string, BadgerSDK>;
 
 export abstract class Chain {
   private static chains: Chains = {};
-  private static chainsByNetworkId: Record<string, Chain> = {};
-  private static sdks: Sdks = {};
+  private static chainsByNetworkId: Chains = {};
 
   readonly chainId: number;
   readonly sdk: BadgerSDK;
@@ -27,7 +24,7 @@ export abstract class Chain {
   constructor(
     readonly network: Network,
     readonly tokens: TokenConfig,
-    readonly rpcUrl: string,
+    provider: string | SDKProvider,
     strategy: ChainStrategy,
     emissionControl?: string,
   ) {
@@ -35,7 +32,7 @@ export abstract class Chain {
     const { chainId } = config;
     this.chainId = chainId;
     this.vaults = new ChainVaults(network);
-    this.sdk = new BadgerSDK({ network, provider: rpcUrl });
+    this.sdk = new BadgerSDK({ network, provider });
     this.strategy = strategy;
     this.emissionControl = emissionControl;
   }
@@ -57,16 +54,6 @@ export abstract class Chain {
     }
     if (network === Network.BinanceSmartChain) {
       Chain.chains['binancesmartchain'] = chain;
-    }
-
-    // Register sdk objects
-    const { sdk } = chain;
-    Chain.sdks[network] = sdk;
-    if (network === Network.Polygon) {
-      Chain.sdks['matic'] = sdk;
-    }
-    if (network === Network.BinanceSmartChain) {
-      Chain.sdks['binancesmartchain'] = sdk;
     }
   }
 
@@ -93,9 +80,8 @@ export abstract class Chain {
   }
 
   async getSdk(): Promise<BadgerSDK> {
-    const sdk = Chain.sdks[this.network];
-    await sdk.ready();
-    return sdk;
+    await this.sdk.ready();
+    return this.sdk;
   }
 
   getBadgerTokenAddress(): string {

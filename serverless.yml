@@ -1,6 +1,6 @@
 ---
 service: badger-v2
-frameworkVersion: '2'
+frameworkVersion: '3.21.0'
 useDotenv: true
 
 plugins:
@@ -38,6 +38,7 @@ custom:
 
   serverless-offline:
     noPrependStageInUrl: true
+    useDocker: true
 
   table:
     YIELD_SNAPSHOTS_DATA: yield-snapshots-${self:custom.stage}
@@ -444,7 +445,7 @@ resources:
 
 functions:
   request-handler:
-    handler: src/LambdaServer.handler
+    handler: src/handler.handler
     timeout: 30
     memorySize: 4096
     events:

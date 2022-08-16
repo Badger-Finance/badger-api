@@ -6,7 +6,7 @@ import { SUPPORTED_CHAINS } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import * as chartUtils from '../charts/charts.utils';
 import { MOCK_VAULT_DEFINITION, MOCK_VAULT_SNAPSHOT } from '../test/constants';
-import { mockChainVaults } from '../test/tests.utils';
+import { setupMockChain } from '../test/mocks.utils';
 import * as indexerUtils from './indexer.utils';
 import { refreshVaultSnapshots } from './vault-snapshots-indexer';
 
@@ -17,7 +17,7 @@ describe('refreshVaultSnapshots', () => {
   let put: jest.SpyInstance<Promise<StringToAnyObjectMap>, [items: PutParameters<StringToAnyObjectMap>]>;
 
   beforeEach(async () => {
-    mockChainVaults();
+    setupMockChain();
 
     jest.spyOn(chartUtils, 'updateSnapshots').mockImplementation();
     const baseSnapshot: VaultSnapshot = JSON.parse(JSON.stringify(MOCK_VAULT_SNAPSHOT));

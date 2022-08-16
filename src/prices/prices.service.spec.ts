@@ -1,6 +1,7 @@
 import { PlatformTest } from '@tsed/common';
 
-import { mockPricing, TEST_CHAIN } from '../test/tests.utils';
+import { TEST_ADDR, TEST_TOKEN } from '../test/constants';
+import { setupMockChain } from '../test/mocks.utils';
 import { PricesService } from './prices.service';
 
 describe('leaderboards.service', () => {
@@ -15,8 +16,8 @@ describe('leaderboards.service', () => {
 
   describe('getPriceSummary', () => {
     it('returns a price summary for the requested chains tokens', async () => {
-      mockPricing();
-      const results = await service.getPriceSummary(Object.keys(TEST_CHAIN.tokens));
+      setupMockChain();
+      const results = await service.getPriceSummary([TEST_TOKEN, TEST_ADDR]);
       expect(results).toMatchSnapshot();
     });
   });
