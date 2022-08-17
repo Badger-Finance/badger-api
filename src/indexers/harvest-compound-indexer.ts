@@ -1,8 +1,8 @@
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { HarvestCompoundData } from '../aws/models/harvest-compound.model';
-import { SUPPORTED_CHAINS } from '../chains/chain';
+import { getSupportedChains } from '../chains/chains.utils';
+import { getLastCompoundHarvest, getVaultHarvestsOnChain } from '../vaults/harvests.utils';
 import { VaultHarvestsExtended } from '../vaults/interfaces/vault-harvest-extended.interface';
-import { getLastCompoundHarvest, getVaultHarvestsOnChain } from '../vaults/vaults.utils';
 
 /**
  * Save compound data for all vaults harvests, on all chains
@@ -10,7 +10,7 @@ import { getLastCompoundHarvest, getVaultHarvestsOnChain } from '../vaults/vault
 export async function indexVaultsHarvestsCompund() {
   console.log('IndexVaultsHarvestsCompund job has started!');
 
-  for (const chain of SUPPORTED_CHAINS) {
+  for (const chain of getSupportedChains()) {
     const mapper = getDataMapper();
     const vaults = await chain.vaults.all();
 

@@ -1,11 +1,11 @@
 import { DataMapper, PutParameters, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
 
 import { HarvestCompoundData } from '../aws/models/harvest-compound.model';
-import { SUPPORTED_CHAINS } from '../chains/chain';
+import { getSupportedChains } from '../chains/chains.utils';
 import { MOCK_VAULT_DEFINITION } from '../test/constants';
 import { setupMockChain } from '../test/mocks.utils';
+import * as vaultsUtils from '../vaults/harvests.utils';
 import { vaultHarvestsOnChainMock } from '../vaults/mocks/vault-harvests-on-chain';
-import * as vaultsUtils from '../vaults/vaults.utils';
 import { indexVaultsHarvestsCompund } from './harvest-compound-indexer';
 
 describe('harvest-compound.indexer', () => {
@@ -37,7 +37,7 @@ describe('harvest-compound.indexer', () => {
     it('should save all harvests from all chains to ddb', async () => {
       await indexVaultsHarvestsCompund();
       expect(put.mock.calls.length).toBe(
-        SUPPORTED_CHAINS.length * vaultHarvestsOnChainMock[MOCK_VAULT_DEFINITION.address].length,
+        getSupportedChains().length * vaultHarvestsOnChainMock[MOCK_VAULT_DEFINITION.address].length,
       );
     });
 
@@ -54,7 +54,7 @@ describe('harvest-compound.indexer', () => {
       await indexVaultsHarvestsCompund();
 
       // mock data intentionally includes
-      expect(put.mock.calls.length).toBe(SUPPORTED_CHAINS.length * conformingHarvests.length);
+      expect(put.mock.calls.length).toBe(getSupportedChains().length * conformingHarvests.length);
     });
   });
 });

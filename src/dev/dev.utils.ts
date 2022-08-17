@@ -6,14 +6,14 @@ import { writeFileSync } from 'fs';
 import { resolve } from 'path';
 
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
-import { SUPPORTED_CHAINS } from '../chains/chain';
+import { getSupportedChains } from '../chains/chains.utils';
 import { constructVaultDefinition } from '../indexers/indexer.utils';
 import { VAULT_SEED_DIR } from './dev.constants';
 
 export async function getVaultsDefinitionSeedData(): Promise<VaultDefinitionModel[]> {
   const seedVaults: VaultDefinitionModel[] = [];
 
-  for (const chain of SUPPORTED_CHAINS) {
+  for (const chain of getSupportedChains()) {
     const sdk = await chain.getSdk();
     let registryVaults: RegistryVault[] = [];
 

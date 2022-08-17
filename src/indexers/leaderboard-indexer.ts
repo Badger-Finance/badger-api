@@ -5,12 +5,12 @@ import { getBoostFile } from '../accounts/accounts.utils';
 import { getDataMapper, getLeaderboardKey } from '../aws/dynamodb.utils';
 import { CachedBoost } from '../aws/models/cached-boost.model';
 import { CachedLeaderboardSummary } from '../aws/models/cached-leaderboard-summary.model';
-import { SUPPORTED_CHAINS } from '../chains/chain';
+import { getSupportedChains } from '../chains/chains.utils';
 import { Chain } from '../chains/config/chain.config';
 import { getBadgerType } from '../leaderboards/leaderboards.config';
 
 export async function indexBoostLeaderBoard() {
-  for (const chain of SUPPORTED_CHAINS) {
+  for (const chain of getSupportedChains()) {
     const chainResults = await generateChainBoostsLeaderBoard(chain);
     const summary: BadgerTypeMap = {
       [BadgerType.Basic]: 0,

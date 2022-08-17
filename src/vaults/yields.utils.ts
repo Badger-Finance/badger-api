@@ -2,7 +2,6 @@ import {
   gqlGenT,
   keyBy,
   Network,
-  ONE_DAY_MS,
   ONE_DAY_SECONDS,
   ONE_YEAR_MS,
   TokenRate,
@@ -19,10 +18,10 @@ import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { YieldEstimate } from '../aws/models/yield-estimate.model';
 import { YieldSource } from '../aws/models/yield-source.model';
 import { Chain } from '../chains/config/chain.config';
-import { TOKENS } from '../config/tokens.config';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { BoostRange } from '../rewards/interfaces/boost-range.interface';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
+import { isInfluenceVault } from './influence.utils';
 import { YieldSources } from './interfaces/yield-sources.interface';
 import { estimateVaultPerformance, queryYieldSources, VAULT_SOURCE } from './vaults.utils';
 
@@ -344,8 +343,7 @@ export async function loadVaultEventPerformances(chain: Chain, vault: VaultDefin
     throw new Error('Network does not have standardized vaults!');
   }
 
-  // TODO: refactor this to a known list of any external harvest processor vaults
-  if (vault.address === TOKENS.BVECVX) {
+  if (isInfluenceVault(vault.address)) {
     throw new Error('Vault utilizes external harvest processor, not compatible with event lookup');
   }
 
@@ -363,23 +361,15 @@ export async function loadVaultEventPerformances(chain: Chain, vault: VaultDefin
   return estimateVaultPerformance(chain, vault, data);
 }
 
-// subgraph based emissions retrieval
-// should we put this into the sdk?
 export async function loadVaultGraphPerformances(chain: Chain, vault: VaultDefinitionModel): Promise<YieldSource[]> {
+  const sdk = await chain.getSdk();
+  const { graph } = sdk;
   const { address } = vault;
 
-  // TODO: bruh wtf bls what do, need to fix / remove this probably
-  // digg does not play well with this accounting
-  if (address === TOKENS.DIGG) {
-    return [];
-  }
-
-  const { graph } = chain.sdk;
   const now = Math.floor(Date.now() / 1000);
-
   const cutoff = Math.floor(now - VAULT_TWAY_PERIOD * ONE_DAY_SECONDS);
 
-  let [vaultHarvests, treeDistributions] = await Promise.all([
+  const [vaultHarvests, treeDistributions] = await Promise.all([
     graph.loadSettHarvests({
       where: {
         sett: address.toLowerCase(),
@@ -394,38 +384,9 @@ export async function loadVaultGraphPerformances(chain: Chain, vault: VaultDefin
     }),
   ]);
 
-  let { settHarvests } = vaultHarvests;
-  let { badgerTreeDistributions } = treeDistributions;
-
-  let data = constructGraphVaultData(vault, settHarvests, badgerTreeDistributions);
-  // if there are no recent viable options, attempt to use the full vault history
-  if (data.length <= 1) {
-    // take the last 6 weeks as the "full graph" to avoid really old data
-    const cutoff = Number(((Date.now() - ONE_DAY_MS * 42) / 1000).toFixed());
-    [vaultHarvests, treeDistributions] = await Promise.all([
-      graph.loadSettHarvests({
-        where: {
-          sett: address.toLowerCase(),
-          timestamp_gte: cutoff,
-        },
-      }),
-      graph.loadBadgerTreeDistributions({
-        where: {
-          sett: address.toLowerCase(),
-          timestamp_gte: cutoff,
-        },
-      }),
-    ]);
-    settHarvests = vaultHarvests.settHarvests;
-    badgerTreeDistributions = treeDistributions.badgerTreeDistributions;
-    data = constructGraphVaultData(vault, settHarvests, badgerTreeDistributions);
-  }
-
-  // if we still don't have harvests or distributions - don't bother there is nothing to compute
-  if (data.length <= 1) {
-    return [];
-  }
-
+  const { settHarvests } = vaultHarvests;
+  const { badgerTreeDistributions } = treeDistributions;
+  const data = constructGraphVaultData(vault, settHarvests, badgerTreeDistributions);
   return estimateVaultPerformance(chain, vault, data);
 }
 

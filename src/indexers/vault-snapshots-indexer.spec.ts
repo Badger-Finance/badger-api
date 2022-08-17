@@ -2,7 +2,6 @@ import { DataMapper, PutParameters, StringToAnyObjectMap } from '@aws/dynamodb-d
 import { VaultSnapshot } from '@badger-dao/sdk';
 
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
-import { SUPPORTED_CHAINS } from '../chains/chain';
 import { Chain } from '../chains/config/chain.config';
 import * as chartUtils from '../charts/charts.utils';
 import { MOCK_VAULT_DEFINITION, MOCK_VAULT_SNAPSHOT } from '../test/constants';
@@ -11,7 +10,7 @@ import * as indexerUtils from './indexer.utils';
 import { refreshVaultSnapshots } from './vault-snapshots-indexer';
 
 describe('refreshVaultSnapshots', () => {
-  const supportedAddresses = Array.from({ length: SUPPORTED_CHAINS.length }, () => MOCK_VAULT_DEFINITION.address);
+  const supportedAddresses = Array.from({ length: 1 }, () => MOCK_VAULT_DEFINITION.address);
 
   let vaultToSnapshot: jest.SpyInstance<Promise<VaultSnapshot>, [chain: Chain, vault: VaultDefinitionModel]>;
   let put: jest.SpyInstance<Promise<StringToAnyObjectMap>, [items: PutParameters<StringToAnyObjectMap>]>;

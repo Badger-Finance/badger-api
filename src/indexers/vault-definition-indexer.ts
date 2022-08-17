@@ -3,12 +3,12 @@ import { ethers } from 'ethers';
 
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
-import { SUPPORTED_CHAINS } from '../chains/chain';
+import { getSupportedChains } from '../chains/chains.utils';
 import { Chain } from '../chains/config/chain.config';
 import { constructVaultDefinition } from './indexer.utils';
 
 export async function captureVaultData() {
-  for (const chain of SUPPORTED_CHAINS) {
+  for (const chain of getSupportedChains()) {
     const sdk = await chain.getSdk();
 
     let registryVaults: RegistryVault[] = [];
