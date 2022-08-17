@@ -18,7 +18,7 @@ describe('leaderboards.controller', () => {
   );
   afterEach(() => PlatformServerlessTest.reset());
 
-  beforeEach(setupMockChain);
+  beforeEach(() => setupMockChain());
 
   beforeEach(async () => {
     jest.spyOn(LeaderBoardsService.prototype, 'fetchLeaderboardSummary').mockImplementation(async (chain: Chain) => {

@@ -17,7 +17,7 @@ describe('rewards.v3.controller', () => {
   );
   afterEach(() => PlatformServerlessTest.reset());
 
-  beforeEach(setupMockChain);
+  beforeEach(() => setupMockChain());
 
   describe('GET /v3/rewards/schedules/list', () => {
     describe('with no specified chain', () => {
@@ -91,7 +91,7 @@ describe('rewards.v3.controller', () => {
         jest.spyOn(ChainVaults.prototype, 'getVault').mockImplementation(async (v) => {
           throw new NotFound(`No vault exists with address ${v}`);
         });
-        const { body, statusCode } = await PlatformServerlessTest.request
+        const { statusCode } = await PlatformServerlessTest.request
           .get(`/v3/rewards/schedules`)
           .query({ address: 'unknowsvaultdata' });
         expect(statusCode).toEqual(NetworkStatus.NotFound);

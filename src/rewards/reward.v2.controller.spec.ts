@@ -17,7 +17,7 @@ describe('reward.v2.controller', () => {
   );
   afterEach(() => PlatformServerlessTest.reset());
 
-  beforeEach(setupMockChain);
+  beforeEach(() => setupMockChain());
 
   describe('GET /v2/reward/schedules', () => {
     describe('with no specified chain', () => {

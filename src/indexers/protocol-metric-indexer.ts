@@ -1,7 +1,6 @@
-import { SUPPORTED_CHAINS } from 'src/chains/chain';
-
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { ProtocolMetricSnapshot } from '../aws/models/protocol-metric-snapshot.model';
+import { SUPPORTED_CHAINS } from '../chains/chain';
 import { MetricType } from '../metrics/enums/metric-type';
 import { getChainMetrics } from '../metrics/metrics.utils';
 

@@ -1,7 +1,6 @@
 import { DataMapper } from '@aws/dynamodb-data-mapper';
-import BadgerSDK, { gqlGenT, Network, Protocol, VaultBehavior, VaultStatus, VaultVersion } from '@badger-dao/sdk';
+import BadgerSDK, { gqlGenT, Network } from '@badger-dao/sdk';
 
-import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
@@ -9,7 +8,6 @@ import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 import { TEST_ADDR, TEST_CURRENT_BLOCK } from '../test/constants';
 import { mockQuery, setupMockChain } from '../test/mocks.utils';
 // import { defaultAccount, randomSnapshot } from "../test/tests.utils";
-import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import { getAccounts, getCachedBoost, getLatestMetadata } from './accounts.utils';
 
 describe('accounts.utils', () => {
@@ -27,60 +25,60 @@ describe('accounts.utils', () => {
     updatedAt: 0,
   };
 
-  function testVaultBalance(vaultDefinition: VaultDefinitionModel): gqlGenT.UserSettBalance {
-    const vaultToken = fullTokenMockMap[vaultDefinition.address];
-    const depositToken = fullTokenMockMap[vaultDefinition.depositToken];
-    const toWei = (amt: number) => {
-      const values = amt * Math.pow(10, vaultToken.decimals);
-      return values.toString();
-    };
-    return {
-      id: TEST_ADDR,
-      netDeposit: 4,
-      netShareDeposit: toWei(4),
-      grossDeposit: 9,
-      grossShareDeposit: toWei(9),
-      grossWithdraw: 5,
-      grossShareWithdraw: toWei(5),
-      user: {
-        id: TEST_ADDR,
-        settBalances: [],
-      },
-      sett: {
-        id: vaultToken.address,
-        name: vaultToken.name,
-        symbol: vaultToken.symbol,
-        available: 1,
-        pricePerFullShare: 1034039284374221,
-        balance: 3,
-        totalSupply: 5,
-        netDeposit: 4,
-        netShareDeposit: toWei(4),
-        grossDeposit: 9,
-        grossShareDeposit: toWei(9),
-        grossWithdraw: 5,
-        grossShareWithdraw: toWei(5),
-        decimals: 18,
-        token: {
-          id: depositToken.address,
-          name: depositToken.name,
-          symbol: depositToken.symbol,
-          decimals: depositToken.decimals,
-          totalSupply: 21000000,
-        },
-        treeDistributions: [],
-        harvests: [],
-        version: VaultVersion.v1_5,
-        status: VaultStatus.guarded,
-        isProduction: true,
-        protocol: Protocol.Badger,
-        createdAt: 0,
-        behavior: VaultBehavior.Compounder,
-        lastUpdatedAt: 0,
-        releasedAt: 0,
-      },
-    };
-  }
+  // function testVaultBalance(vaultDefinition: VaultDefinitionModel): gqlGenT.UserSettBalance {
+  //   const vaultToken = fullTokenMockMap[vaultDefinition.address];
+  //   const depositToken = fullTokenMockMap[vaultDefinition.depositToken];
+  //   const toWei = (amt: number) => {
+  //     const values = amt * Math.pow(10, vaultToken.decimals);
+  //     return values.toString();
+  //   };
+  //   return {
+  //     id: TEST_ADDR,
+  //     netDeposit: 4,
+  //     netShareDeposit: toWei(4),
+  //     grossDeposit: 9,
+  //     grossShareDeposit: toWei(9),
+  //     grossWithdraw: 5,
+  //     grossShareWithdraw: toWei(5),
+  //     user: {
+  //       id: TEST_ADDR,
+  //       settBalances: [],
+  //     },
+  //     sett: {
+  //       id: vaultToken.address,
+  //       name: vaultToken.name,
+  //       symbol: vaultToken.symbol,
+  //       available: 1,
+  //       pricePerFullShare: 1034039284374221,
+  //       balance: 3,
+  //       totalSupply: 5,
+  //       netDeposit: 4,
+  //       netShareDeposit: toWei(4),
+  //       grossDeposit: 9,
+  //       grossShareDeposit: toWei(9),
+  //       grossWithdraw: 5,
+  //       grossShareWithdraw: toWei(5),
+  //       decimals: 18,
+  //       token: {
+  //         id: depositToken.address,
+  //         name: depositToken.name,
+  //         symbol: depositToken.symbol,
+  //         decimals: depositToken.decimals,
+  //         totalSupply: 21000000,
+  //       },
+  //       treeDistributions: [],
+  //       harvests: [],
+  //       version: VaultVersion.v1_5,
+  //       status: VaultStatus.guarded,
+  //       isProduction: true,
+  //       protocol: Protocol.Badger,
+  //       createdAt: 0,
+  //       behavior: VaultBehavior.Compounder,
+  //       lastUpdatedAt: 0,
+  //       releasedAt: 0,
+  //     },
+  //   };
+  // }
 
   beforeEach(() => {
     jest.spyOn(DataMapper.prototype, 'put').mockImplementation(async (o) => ({

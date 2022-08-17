@@ -14,10 +14,10 @@ import mockTokens from '@badger-dao/sdk-mocks/generated/ethereum/api/loadTokens.
 import mockVaultSnapshots from '@badger-dao/sdk-mocks/generated/ethereum/api/loadVaultChart.json';
 import mockVaults from '@badger-dao/sdk-mocks/generated/ethereum/api/loadVaults.json';
 import mockVaultHarvests from '@badger-dao/sdk-mocks/generated/ethereum/api/loadVaultsHarvests.json';
-import { VaultHarvestsExtendedResp } from 'src/vaults/interfaces/vault-harvest-extended-resp.interface';
 
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { Stage } from '../config/enums/stage.enum';
+import { VaultHarvestsExtendedResp } from '../vaults/interfaces/vault-harvest-extended-resp.interface';
 
 export const TEST_TOKEN = '0x3472A5A71965499acd81997a54BBA8D852C6E53d';
 export const TEST_ADDR = '0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28';

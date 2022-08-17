@@ -12,7 +12,7 @@ describe('gas.controller', () => {
   );
   afterEach(() => PlatformServerlessTest.reset());
 
-  beforeEach(setupMockChain);
+  beforeEach(() => setupMockChain());
 
   describe('GET /gas', () => {
     it('returns gas price options in eip-1559 format', async () => {
