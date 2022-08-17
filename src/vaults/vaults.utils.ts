@@ -12,6 +12,7 @@ import {
   VaultType,
   VaultV15__factory,
   VaultVersion,
+  ONE_DAY_MS,
 } from '@badger-dao/sdk';
 import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';
@@ -40,6 +41,7 @@ import { VaultStrategy } from './interfaces/vault-strategy.interface';
 import { isInfluenceVault } from './yields.config';
 import {
   aggregateSources,
+  calculateYield,
   createYieldSource,
   loadVaultEventPerformances,
   loadVaultGraphPerformances,
@@ -347,7 +349,62 @@ export async function estimateVaultPerformance(
   vault: VaultDefinitionModel,
   data: VaultHarvestData[],
 ): Promise<YieldSource[]> {
+  const sdk = await chain.getSdk();
   const recentHarvests = data.sort((a, b) => b.timestamp - a.timestamp);
+
+  /**
+   * ON 8/15 AN INCORREC PROCESSING OF A BADGER REWARDS PROCESSOR OCCURED.
+   * AS A RESULT, THE EVENTS INCLUDED IN TREE DISTRIBUTIONS DID NOT MAKE IT
+   * TO THE GRAPH, OR ANY SOURCE OF ON CHAIN DATA CURRENTLY SUPPORTED BY
+   * THE CURRENT YIELD SYSTEM.
+   *
+   * https://etherscan.io/tx/0x1e3e7c71012d36e936b768a37e9784125a00f205a22bd808f045968a506bb1ce#eventlog
+   *
+   * THIS TRANSACTION CONTAINS THE SINGLE BADGER TREE DISTRIBUTION WE ARE
+   * ALLOCATING TO GRAVI_AURA VAULT AS A MISSED - AND NOT CAPTURED SOURCE.
+   *
+   * THIS CODE SHOULD BE REMOVED BY 08/29.
+   */
+  if (vault.address === TOKENS.GRAVI_AURA) {
+    const targetBlock = 15344809;
+    const block = await sdk.provider.getBlock(targetBlock);
+    const targetedInsertion = recentHarvests[0].treeDistributions;
+    targetedInsertion.push({
+      timestamp: block.timestamp,
+      block: targetBlock,
+      token: TOKENS.BADGER,
+      amount: BigNumber.from('1928771715566995688546'),
+    });
+  }
+
+  /**
+   * THIS SECTION WILL REMAIN FOR A QUICK RUN DOWN OF HARVEST INPUTS.
+   * THERE WILL BE A DEDICATED PERSISTENCE LAYER FOR THIS INFORMATION
+   * AS WELL AS A QUERYABLE ENDPOINT TO FACILITATE ASCERTAINING YIELD
+   * MATHS INPUT FOR THE FUTURE.
+   */
+  const allEvents = recentHarvests
+    .flatMap((h) => h.harvests)
+    .concat(recentHarvests.flatMap((h) => h.treeDistributions))
+    .sort((a, b) => b.timestamp - a.timestamp);
+
+  let totalAccumulated = 0;
+  for (const event of allEvents) {
+    const token = await getFullToken(chain, event.token);
+    const amount = formatBalance(event.amount, token.decimals);
+    const price = await queryPrice(token.address);
+    console.log(
+      `[${new Date(event.timestamp * 1000).toLocaleString()}] ${amount.toFixed(2)} ${token.symbol} ($${(
+        price.price * amount
+      ).toFixed(2)})`,
+    );
+    totalAccumulated += price.price * amount;
+  }
+  const v = await getCachedVault(chain, vault);
+  const apr = calculateYield(v.value, totalAccumulated, ONE_DAY_MS * 14);
+  console.log(
+    `Vault Holdings: $${v.value}, Total Earned: $${totalAccumulated.toFixed(2)}, Est. Yield: ${apr.toFixed(2)}%`,
+  );
 
   if (recentHarvests.length <= 1) {
     throw new Error(`${vault.name} does not have adequate harvest history`);
@@ -386,7 +443,6 @@ export async function estimateVaultPerformance(
   const depositToken = await getFullToken(chain, vault.depositToken);
 
   if (isInfluece) {
-    const sdk = await chain.getSdk();
     let targetBlock = 0;
     if (recentHarvests[0].treeDistributions.length > 0) {
       targetBlock = recentHarvests[0].treeDistributions[0].block;
