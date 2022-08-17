@@ -28,6 +28,8 @@ jobs:
         run: cp serverless_frontend.yml serverless.yml
       - name: Install Dependencies
         run: yarn install --frozen-lockfile
+      - name: Cleanse Dependencies
+        run: yarn clean-modules --exclude "/**/*serverless/**" "@tsed/**" -y
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
