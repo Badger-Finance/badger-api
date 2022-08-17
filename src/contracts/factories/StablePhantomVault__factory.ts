@@ -3,10 +3,11 @@
 /* eslint-disable */
 
 import { Contract, Signer, utils } from "ethers";
-import type { Provider } from "@ethersproject/providers";
+import { Provider } from "@ethersproject/providers";
 import type {
   StablePhantomVault,
   StablePhantomVaultInterface,
+  StablePhantomPool,
 } from "../StablePhantomVault";
 
 const _abi = [
