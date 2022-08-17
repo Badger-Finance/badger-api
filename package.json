@@ -18,7 +18,7 @@
     "dev:node:api": "ts-node -r dotenv/config src/index.ts",
     "format": "pretty-quick",
     "lint": "eslint \"src/**/*.ts\" --fix",
-    "test": "node --expose-gc --no-compilation-cache ./node_modules/.bin/jest --detectOpenHandles --runInBand --logHeapUsage --detectLeaks",
+    "test": "node --expose-gc --no-compilation-cache ./node_modules/.bin/jest",
     "test:upd": "yarn test -u",
     "test:path": "yarn test --no-cache --testPathPattern",
     "test:clean": "jest --clearCache",
