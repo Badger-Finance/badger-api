@@ -14,7 +14,7 @@ describe('PricesController', () => {
   );
   afterEach(() => PlatformServerlessTest.reset());
 
-  beforeEach(setupMockChain);
+  beforeEach(() => setupMockChain());
 
   describe('GET /v2/prices', () => {
     describe('with a valid specified chain', () => {

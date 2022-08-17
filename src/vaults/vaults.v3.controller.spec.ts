@@ -18,7 +18,7 @@ describe('vaults.v3.controller', () => {
   );
   afterEach(() => PlatformServerlessTest.reset());
 
-  beforeEach(setupMockChain);
+  beforeEach(() => setupMockChain());
 
   describe('GET /vaults/list', () => {
     describe('with no specified chain', () => {

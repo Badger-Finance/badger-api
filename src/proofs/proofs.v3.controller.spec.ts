@@ -19,7 +19,7 @@ describe('proofs.v3.controller', () => {
   );
   afterEach(() => PlatformServerlessTest.reset());
 
-  beforeEach(setupMockChain);
+  beforeEach(() => setupMockChain());
 
   describe('GET /v3/proofs', () => {
     it('returns 404 for a chain with no bouncer file', async () => {

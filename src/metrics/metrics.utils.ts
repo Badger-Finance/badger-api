@@ -1,6 +1,5 @@
-import { Chain } from 'src/chains/config/chain.config';
-
 import { getAccounts } from '../accounts/accounts.utils';
+import { Chain } from '../chains/config/chain.config';
 import { getCachedVault } from '../vaults/vaults.utils';
 import { ProtocolMetrics } from './interfaces/metrics.interface';
 

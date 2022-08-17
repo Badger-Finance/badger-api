@@ -15,14 +15,12 @@ describe('charts.controller', () => {
   );
   afterEach(() => PlatformServerlessTest.reset());
 
-  beforeEach(setupMockChain);
+  beforeEach(() => setupMockChain());
 
   describe('GET /charts/vault', () => {
     describe('with a missing vault address', () => {
       it('returns 400, QueryParamError', async () => {
-        const { body, statusCode } = await PlatformServerlessTest.request
-          .get('/v3/charts/vault')
-          .query({ address: '' });
+        const { statusCode } = await PlatformServerlessTest.request.get('/v3/charts/vault').query({ address: '' });
         // TODO: inspect whats going on here with responses
         expect(statusCode).toEqual(NetworkStatus.NotFound);
         // expect(JSON.parse(body)).toMatchSnapshot();
