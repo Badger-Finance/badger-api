@@ -7,8 +7,8 @@ import { QueryParamError } from '../errors/validation/query.param.error';
 import { AccountsService } from './accounts.service';
 import { AccountModel } from './interfaces/account-model.interface';
 
-@Controller('/account')
-export class AccountV3Controller {
+@Controller('/accounts')
+export class AccountsV3Controller {
   @Inject()
   accountsService!: AccountsService;
 

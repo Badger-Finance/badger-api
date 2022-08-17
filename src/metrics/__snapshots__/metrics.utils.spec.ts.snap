@@ -1,18 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`metrics.utils getProtocolMetrics returns protocolMetrics 1`] = `
+exports[`metrics.utils getChainMetrics returns total users, value, and vaults for all requested chains 1`] = `
 Object {
-  "totalUsers": 7,
+  "totalUsers": 2,
   "totalValueLocked": 0,
-  "totalVaults": 6,
-}
-`;
-
-exports[`metrics.utils getProtocolUsersMetric returns total users 1`] = `7`;
-
-exports[`metrics.utils getSettsMetrics returns setts metrics 1`] = `
-Object {
-  "totalValueLocked": 0,
-  "totalVaults": 6,
+  "totalVaults": 1,
 }
 `;

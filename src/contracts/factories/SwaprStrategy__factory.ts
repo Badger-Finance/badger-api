@@ -2,23 +2,23 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Contract, Signer, utils } from 'ethers';
-import { Provider } from '@ethersproject/providers';
-import type { SwaprStrategy, SwaprStrategyInterface } from '../SwaprStrategy';
+import { Contract, Signer, utils } from "ethers";
+import { Provider } from "@ethersproject/providers";
+import type { SwaprStrategy, SwaprStrategyInterface } from "../SwaprStrategy";
 
 const _abi = [
   {
     inputs: [],
-    name: 'stakingContract',
+    name: "stakingContract",
     outputs: [
       {
-        internalType: 'address',
-        name: '',
-        type: 'address',
+        internalType: "address",
+        name: "",
+        type: "address",
       },
     ],
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
   },
 ];
 
@@ -27,7 +27,10 @@ export class SwaprStrategy__factory {
   static createInterface(): SwaprStrategyInterface {
     return new utils.Interface(_abi) as SwaprStrategyInterface;
   }
-  static connect(address: string, signerOrProvider: Signer | Provider): SwaprStrategy {
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): SwaprStrategy {
     return new Contract(address, _abi, signerOrProvider) as SwaprStrategy;
   }
 }

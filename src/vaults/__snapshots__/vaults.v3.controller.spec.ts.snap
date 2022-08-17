@@ -1,26 +1,108 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`VaultsController GET /v2/harvests error cases returns a 400 for invalide chain 1`] = `
+exports[`vaults.v2.controller GET /harvests error cases returns a 400 for invalide chain 1`] = `
 Object {
+  "errors": Array [],
   "message": "invalid is not a supported chain",
+  "name": "BAD_REQUEST",
+  "status": 400,
 }
 `;
 
-exports[`VaultsController GET /v2/harvests success cases Return extended harvest for chain vaults 1`] = `
+exports[`vaults.v2.controller GET /harvests success cases Return extended harvest for chain vaults 1`] = `
 Object {
-  "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28": Array [],
+  "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28": Array [
+    Object {
+      "amount": 0.019444617913515275,
+      "block": 13610723,
+      "estimatedApr": 0,
+      "eventType": "Harvest",
+      "strategyBalance": 675.7270352627328,
+      "timestamp": 1636848055,
+      "token": "0x64eda51d3ad40d56b9dfc5554e06f94e1dd786fd",
+    },
+    Object {
+      "amount": 519.4928843851667,
+      "block": 13610723,
+      "estimatedApr": 0,
+      "eventType": "TreeDistribution",
+      "strategyBalance": 675.7270352627328,
+      "timestamp": 1636848055,
+      "token": "0x64eda51d3ad40d56b9dfc5554e06f94e1dd786fd",
+    },
+    Object {
+      "amount": 127.77060811430661,
+      "block": 13610723,
+      "estimatedApr": 0,
+      "eventType": "TreeDistribution",
+      "strategyBalance": 675.7270352627328,
+      "timestamp": 1636848055,
+      "token": "0x64eda51d3ad40d56b9dfc5554e06f94e1dd786fd",
+    },
+    Object {
+      "amount": 0.19661862226091095,
+      "block": 13647052,
+      "estimatedApr": 0,
+      "eventType": "Harvest",
+      "strategyBalance": 671.2872269577839,
+      "timestamp": 1637345136,
+      "token": "0x64eda51d3ad40d56b9dfc5554e06f94e1dd786fd",
+    },
+  ],
 }
 `;
 
-exports[`VaultsController GET /v2/harvests/:vault error cases returns a 400 for invalide chain 1`] = `
+exports[`vaults.v2.controller GET /harvests/:vault error cases returns a 400 for invalide chain 1`] = `
 Object {
+  "errors": Array [],
   "message": "invalid is not a supported chain",
+  "name": "BAD_REQUEST",
+  "status": 400,
 }
 `;
 
-exports[`VaultsController GET /v2/harvests/:vault success cases Return extended harvests for chain vault by addr 1`] = `Array []`;
+exports[`vaults.v2.controller GET /harvests/:vault success cases Return extended harvests for chain vault by addr 1`] = `
+Array [
+  Object {
+    "amount": 0.019444617913515275,
+    "block": 13610723,
+    "estimatedApr": 0,
+    "eventType": "Harvest",
+    "strategyBalance": 675.7270352627328,
+    "timestamp": 1636848055,
+    "token": "0x64eda51d3ad40d56b9dfc5554e06f94e1dd786fd",
+  },
+  Object {
+    "amount": 519.4928843851667,
+    "block": 13610723,
+    "estimatedApr": 0,
+    "eventType": "TreeDistribution",
+    "strategyBalance": 675.7270352627328,
+    "timestamp": 1636848055,
+    "token": "0x64eda51d3ad40d56b9dfc5554e06f94e1dd786fd",
+  },
+  Object {
+    "amount": 127.77060811430661,
+    "block": 13610723,
+    "estimatedApr": 0,
+    "eventType": "TreeDistribution",
+    "strategyBalance": 675.7270352627328,
+    "timestamp": 1636848055,
+    "token": "0x64eda51d3ad40d56b9dfc5554e06f94e1dd786fd",
+  },
+  Object {
+    "amount": 0.19661862226091095,
+    "block": 13647052,
+    "estimatedApr": 0,
+    "eventType": "Harvest",
+    "strategyBalance": 671.2872269577839,
+    "timestamp": 1637345136,
+    "token": "0x64eda51d3ad40d56b9dfc5554e06f94e1dd786fd",
+  },
+]
+`;
 
-exports[`VaultsController GET /v2/vaults with a specified chain returns the vaults for bsc 1`] = `
+exports[`vaults.v2.controller GET /vaults with a specified chain returns the vaults for bsc 1`] = `
 Array [
   Object {
     "apr": 8.26,
@@ -198,7 +280,7 @@ Array [
 ]
 `;
 
-exports[`VaultsController GET /v2/vaults with a specified chain returns the vaults for eth 1`] = `
+exports[`vaults.v2.controller GET /vaults with a specified chain returns the vaults for eth 1`] = `
 Array [
   Object {
     "apr": 8.26,
@@ -376,13 +458,16 @@ Array [
 ]
 `;
 
-exports[`VaultsController GET /v2/vaults with an invalid specified chain returns a 400 1`] = `
+exports[`vaults.v2.controller GET /vaults with an invalid specified chain returns a 400 1`] = `
 Object {
+  "errors": Array [],
   "message": "invalid is not a supported chain",
+  "name": "BAD_REQUEST",
+  "status": 400,
 }
 `;
 
-exports[`VaultsController GET /v2/vaults with no specified chain returns eth vaults 1`] = `
+exports[`vaults.v2.controller GET /vaults with no specified chain returns eth vaults 1`] = `
 Array [
   Object {
     "apr": 8.26,
@@ -560,644 +645,658 @@ Array [
 ]
 `;
 
-exports[`VaultsController GET /v3/vaults/harvests error cases returns a 400 for invalide chain 1`] = `
+exports[`vaults.v3.controller GET /vaults/harvests error cases returns a 400 for invalid chain 1`] = `
 Object {
-  "message": "invalid is not a supported chain",
-}
-`;
-
-exports[`VaultsController GET /v3/vaults/harvests success cases Return extended harvests for chain vault by addr 1`] = `Array []`;
-
-exports[`VaultsController GET /v3/vaults/list with a specified chain returns the vaults for eth 1`] = `
-Array [
-  Object {
-    "apr": 8.26,
-    "apy": 12.39,
-    "asset": "BADGER",
-    "available": 0,
-    "balance": 10,
-    "behavior": "Compounder",
-    "boost": Object {
-      "enabled": false,
-      "weight": 0,
-    },
-    "bouncer": "none",
-    "lastHarvest": 1656606946,
-    "maxApr": 8.26,
-    "maxApy": 12.39,
-    "minApr": 8.26,
-    "minApy": 12.39,
-    "name": "Badger",
-    "pricePerFullShare": 1,
-    "protocol": "Badger",
-    "sources": Array [
-      Object {
-        "apr": 4.13,
-        "boostable": false,
-        "maxApr": 4.13,
-        "minApr": 4.13,
-        "name": "Badger Rewards",
-      },
-      Object {
-        "apr": 4.13,
-        "boostable": false,
-        "maxApr": 4.13,
-        "minApr": 4.13,
-        "name": "Curve LP Fees",
-      },
-    ],
-    "sourcesApy": Array [
-      Object {
-        "apr": 4.13,
-        "boostable": false,
-        "maxApr": 4.13,
-        "minApr": 4.13,
-        "name": "Vault Compounding",
-      },
-      Object {
-        "apr": 4.13,
-        "boostable": false,
-        "maxApr": 4.13,
-        "minApr": 4.13,
-        "name": "Badger Rewards",
-      },
-      Object {
-        "apr": 4.13,
-        "boostable": false,
-        "maxApr": 4.13,
-        "minApr": 4.13,
-        "name": "Curve LP Fees",
-      },
-    ],
-    "state": "open",
-    "strategy": Object {
-      "address": "0x0000000000000000000000000000000000000000",
-      "aumFee": 0,
-      "performanceFee": 0,
-      "strategistFee": 0,
-      "withdrawFee": 0,
-    },
-    "tokens": Array [],
-    "type": "native",
-    "underlyingToken": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
-    "value": 105879,
-    "vaultAsset": "bBADGER",
-    "vaultToken": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "version": "v1",
-    "yieldProjection": Object {
-      "harvestApr": 0.22498409152323756,
-      "harvestPeriodApr": 0,
-      "harvestPeriodApy": 0,
-      "harvestPeriodSources": Array [
-        Object {
-          "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
-          "apr": 0,
-          "balance": 0,
-          "decimals": 18,
-          "name": "Convex Token",
-          "symbol": "CVX",
-          "value": 0,
-        },
-      ],
-      "harvestPeriodSourcesApy": Array [
-        Object {
-          "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
-          "apr": 0,
-          "balance": 0,
-          "decimals": 18,
-          "name": "Convex Token",
-          "symbol": "CVX",
-          "value": 0,
-        },
-      ],
-      "harvestTokens": Array [
-        Object {
-          "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
-          "apr": 0.22498409152323756,
-          "balance": 10,
-          "decimals": 18,
-          "name": "Convex Token",
-          "symbol": "CVX",
-          "value": 12510,
-        },
-      ],
-      "harvestValue": 12510,
-      "nonHarvestApr": 8.26,
-      "nonHarvestApy": 8.26,
-      "nonHarvestSources": Array [
-        Object {
-          "apr": 4.13,
-          "boostable": false,
-          "maxApr": 4.13,
-          "minApr": 4.13,
-          "name": "Badger Rewards",
-        },
-        Object {
-          "apr": 4.13,
-          "boostable": false,
-          "maxApr": 4.13,
-          "minApr": 4.13,
-          "name": "Curve LP Fees",
-        },
-      ],
-      "nonHarvestSourcesApy": Array [
-        Object {
-          "apr": 4.13,
-          "boostable": false,
-          "maxApr": 4.13,
-          "minApr": 4.13,
-          "name": "Badger Rewards",
-        },
-        Object {
-          "apr": 4.13,
-          "boostable": false,
-          "maxApr": 4.13,
-          "minApr": 4.13,
-          "name": "Curve LP Fees",
-        },
-      ],
-      "yieldApr": 0.22498409152323756,
-      "yieldPeriodApr": 0,
-      "yieldPeriodSources": Array [
-        Object {
-          "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
-          "apr": 0,
-          "balance": 0,
-          "decimals": 18,
-          "name": "Convex Token",
-          "symbol": "CVX",
-          "value": 0,
-        },
-      ],
-      "yieldTokens": Array [
-        Object {
-          "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
-          "apr": 0.22498409152323756,
-          "balance": 10,
-          "decimals": 18,
-          "name": "Convex Token",
-          "symbol": "CVX",
-          "value": 12510,
-        },
-      ],
-      "yieldValue": 12510,
-    },
-  },
-]
-`;
-
-exports[`VaultsController GET /v3/vaults/list with a specified chain returns the vaults for polygon 1`] = `
-Array [
-  Object {
-    "apr": 8.26,
-    "apy": 12.39,
-    "asset": "BADGER",
-    "available": 0,
-    "balance": 10,
-    "behavior": "Compounder",
-    "boost": Object {
-      "enabled": false,
-      "weight": 0,
-    },
-    "bouncer": "none",
-    "lastHarvest": 1656606946,
-    "maxApr": 8.26,
-    "maxApy": 12.39,
-    "minApr": 8.26,
-    "minApy": 12.39,
-    "name": "Badger",
-    "pricePerFullShare": 1,
-    "protocol": "Badger",
-    "sources": Array [
-      Object {
-        "apr": 4.13,
-        "boostable": false,
-        "maxApr": 4.13,
-        "minApr": 4.13,
-        "name": "Badger Rewards",
-      },
-      Object {
-        "apr": 4.13,
-        "boostable": false,
-        "maxApr": 4.13,
-        "minApr": 4.13,
-        "name": "Curve LP Fees",
-      },
-    ],
-    "sourcesApy": Array [
-      Object {
-        "apr": 4.13,
-        "boostable": false,
-        "maxApr": 4.13,
-        "minApr": 4.13,
-        "name": "Vault Compounding",
-      },
-      Object {
-        "apr": 4.13,
-        "boostable": false,
-        "maxApr": 4.13,
-        "minApr": 4.13,
-        "name": "Badger Rewards",
-      },
-      Object {
-        "apr": 4.13,
-        "boostable": false,
-        "maxApr": 4.13,
-        "minApr": 4.13,
-        "name": "Curve LP Fees",
-      },
-    ],
-    "state": "open",
-    "strategy": Object {
-      "address": "0x0000000000000000000000000000000000000000",
-      "aumFee": 0,
-      "performanceFee": 0,
-      "strategistFee": 0,
-      "withdrawFee": 0,
-    },
-    "tokens": Array [],
-    "type": "native",
-    "underlyingToken": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
-    "value": 105879,
-    "vaultAsset": "bBADGER",
-    "vaultToken": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "version": "v1",
-    "yieldProjection": Object {
-      "harvestApr": 0.22498409152323756,
-      "harvestPeriodApr": 0,
-      "harvestPeriodApy": 0,
-      "harvestPeriodSources": Array [
-        Object {
-          "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
-          "apr": 0,
-          "balance": 0,
-          "decimals": 18,
-          "name": "Convex Token",
-          "symbol": "CVX",
-          "value": 0,
-        },
-      ],
-      "harvestPeriodSourcesApy": Array [
-        Object {
-          "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
-          "apr": 0,
-          "balance": 0,
-          "decimals": 18,
-          "name": "Convex Token",
-          "symbol": "CVX",
-          "value": 0,
-        },
-      ],
-      "harvestTokens": Array [
-        Object {
-          "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
-          "apr": 0.22498409152323756,
-          "balance": 10,
-          "decimals": 18,
-          "name": "Convex Token",
-          "symbol": "CVX",
-          "value": 12510,
-        },
-      ],
-      "harvestValue": 12510,
-      "nonHarvestApr": 8.26,
-      "nonHarvestApy": 8.26,
-      "nonHarvestSources": Array [
-        Object {
-          "apr": 4.13,
-          "boostable": false,
-          "maxApr": 4.13,
-          "minApr": 4.13,
-          "name": "Badger Rewards",
-        },
-        Object {
-          "apr": 4.13,
-          "boostable": false,
-          "maxApr": 4.13,
-          "minApr": 4.13,
-          "name": "Curve LP Fees",
-        },
-      ],
-      "nonHarvestSourcesApy": Array [
-        Object {
-          "apr": 4.13,
-          "boostable": false,
-          "maxApr": 4.13,
-          "minApr": 4.13,
-          "name": "Badger Rewards",
-        },
-        Object {
-          "apr": 4.13,
-          "boostable": false,
-          "maxApr": 4.13,
-          "minApr": 4.13,
-          "name": "Curve LP Fees",
-        },
-      ],
-      "yieldApr": 0.22498409152323756,
-      "yieldPeriodApr": 0,
-      "yieldPeriodSources": Array [
-        Object {
-          "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
-          "apr": 0,
-          "balance": 0,
-          "decimals": 18,
-          "name": "Convex Token",
-          "symbol": "CVX",
-          "value": 0,
-        },
-      ],
-      "yieldTokens": Array [
-        Object {
-          "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
-          "apr": 0.22498409152323756,
-          "balance": 10,
-          "decimals": 18,
-          "name": "Convex Token",
-          "symbol": "CVX",
-          "value": 12510,
-        },
-      ],
-      "yieldValue": 12510,
-    },
-  },
-]
-`;
-
-exports[`VaultsController GET /v3/vaults/list with an invalid specified chain returns a 400 1`] = `
-Object {
-  "message": "invalid is not a supported chain",
-}
-`;
-
-exports[`VaultsController GET /v3/vaults/list with no specified chain returns eth vaults 1`] = `
-Array [
-  Object {
-    "apr": 8.26,
-    "apy": 12.39,
-    "asset": "BADGER",
-    "available": 0,
-    "balance": 10,
-    "behavior": "Compounder",
-    "boost": Object {
-      "enabled": false,
-      "weight": 0,
-    },
-    "bouncer": "none",
-    "lastHarvest": 1656606946,
-    "maxApr": 8.26,
-    "maxApy": 12.39,
-    "minApr": 8.26,
-    "minApy": 12.39,
-    "name": "Badger",
-    "pricePerFullShare": 1,
-    "protocol": "Badger",
-    "sources": Array [
-      Object {
-        "apr": 4.13,
-        "boostable": false,
-        "maxApr": 4.13,
-        "minApr": 4.13,
-        "name": "Badger Rewards",
-      },
-      Object {
-        "apr": 4.13,
-        "boostable": false,
-        "maxApr": 4.13,
-        "minApr": 4.13,
-        "name": "Curve LP Fees",
-      },
-    ],
-    "sourcesApy": Array [
-      Object {
-        "apr": 4.13,
-        "boostable": false,
-        "maxApr": 4.13,
-        "minApr": 4.13,
-        "name": "Vault Compounding",
-      },
-      Object {
-        "apr": 4.13,
-        "boostable": false,
-        "maxApr": 4.13,
-        "minApr": 4.13,
-        "name": "Badger Rewards",
-      },
-      Object {
-        "apr": 4.13,
-        "boostable": false,
-        "maxApr": 4.13,
-        "minApr": 4.13,
-        "name": "Curve LP Fees",
-      },
-    ],
-    "state": "open",
-    "strategy": Object {
-      "address": "0x0000000000000000000000000000000000000000",
-      "aumFee": 0,
-      "performanceFee": 0,
-      "strategistFee": 0,
-      "withdrawFee": 0,
-    },
-    "tokens": Array [],
-    "type": "native",
-    "underlyingToken": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
-    "value": 105879,
-    "vaultAsset": "bBADGER",
-    "vaultToken": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "version": "v1",
-    "yieldProjection": Object {
-      "harvestApr": 0.22498409152323756,
-      "harvestPeriodApr": 0,
-      "harvestPeriodApy": 0,
-      "harvestPeriodSources": Array [
-        Object {
-          "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
-          "apr": 0,
-          "balance": 0,
-          "decimals": 18,
-          "name": "Convex Token",
-          "symbol": "CVX",
-          "value": 0,
-        },
-      ],
-      "harvestPeriodSourcesApy": Array [
-        Object {
-          "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
-          "apr": 0,
-          "balance": 0,
-          "decimals": 18,
-          "name": "Convex Token",
-          "symbol": "CVX",
-          "value": 0,
-        },
-      ],
-      "harvestTokens": Array [
-        Object {
-          "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
-          "apr": 0.22498409152323756,
-          "balance": 10,
-          "decimals": 18,
-          "name": "Convex Token",
-          "symbol": "CVX",
-          "value": 12510,
-        },
-      ],
-      "harvestValue": 12510,
-      "nonHarvestApr": 8.26,
-      "nonHarvestApy": 8.26,
-      "nonHarvestSources": Array [
-        Object {
-          "apr": 4.13,
-          "boostable": false,
-          "maxApr": 4.13,
-          "minApr": 4.13,
-          "name": "Badger Rewards",
-        },
-        Object {
-          "apr": 4.13,
-          "boostable": false,
-          "maxApr": 4.13,
-          "minApr": 4.13,
-          "name": "Curve LP Fees",
-        },
-      ],
-      "nonHarvestSourcesApy": Array [
-        Object {
-          "apr": 4.13,
-          "boostable": false,
-          "maxApr": 4.13,
-          "minApr": 4.13,
-          "name": "Badger Rewards",
-        },
-        Object {
-          "apr": 4.13,
-          "boostable": false,
-          "maxApr": 4.13,
-          "minApr": 4.13,
-          "name": "Curve LP Fees",
-        },
-      ],
-      "yieldApr": 0.22498409152323756,
-      "yieldPeriodApr": 0,
-      "yieldPeriodSources": Array [
-        Object {
-          "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
-          "apr": 0,
-          "balance": 0,
-          "decimals": 18,
-          "name": "Convex Token",
-          "symbol": "CVX",
-          "value": 0,
-        },
-      ],
-      "yieldTokens": Array [
-        Object {
-          "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
-          "apr": 0.22498409152323756,
-          "balance": 10,
-          "decimals": 18,
-          "name": "Convex Token",
-          "symbol": "CVX",
-          "value": 12510,
-        },
-      ],
-      "yieldValue": 12510,
-    },
-  },
-]
-`;
-
-exports[`VaultsController GET /v3/vaults/list/harvests error cases returns a 400 for invalide chain 1`] = `
-Object {
-  "message": "invalid is not a supported chain",
-}
-`;
-
-exports[`VaultsController GET /v3/vaults/list/harvests success cases Return extended harvest for chain vaults 1`] = `
-Object {
-  "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28": Array [],
-}
-`;
-
-exports[`VaultsController GET /v3/vaults/snapshots error cases returns a 400 for invalide chain 1`] = `
-Object {
-  "message": "invalid is not a supported chain",
-}
-`;
-
-exports[`VaultsController GET /v3/vaults/snapshots error cases returns a 400 for invalide timestamps 1`] = `
-Object {
-  "code": 1000,
-  "message": "Query param timestamps invalid",
-}
-`;
-
-exports[`VaultsController GET /v3/vaults/snapshots error cases returns a 400 for missed vault address param 1`] = `
-Object {
-  "code": 1000,
+  "errors": Array [],
   "message": "Query param vault invalid",
+  "name": "Error",
+  "status": 400,
 }
 `;
 
-exports[`VaultsController GET /v3/vaults/snapshots success cases return 200 and vaults snapshots for all dates, without duplications 1`] = `
+exports[`vaults.v3.controller GET /vaults/harvests success cases Return extended harvests for chain vault by addr 1`] = `
 Array [
   Object {
-    "address": "0x4591890225394BF66044347653e112621AF7DDeb",
-    "available": 0.8441047101358636,
-    "balance": 1313.2024161551205,
-    "id": "0x4591890225394BF66044347653e112621AF7DDeb_arbitrum",
-    "pricePerFullShare": 1.0318408019214105,
-    "ratio": 1.0318408019214105,
+    "amount": 0.019444617913515275,
+    "block": 13610723,
+    "estimatedApr": 0,
+    "eventType": "Harvest",
+    "strategyBalance": 675.7270352627328,
+    "timestamp": 1636848055,
+    "token": "0x64eda51d3ad40d56b9dfc5554e06f94e1dd786fd",
+  },
+  Object {
+    "amount": 519.4928843851667,
+    "block": 13610723,
+    "estimatedApr": 0,
+    "eventType": "TreeDistribution",
+    "strategyBalance": 675.7270352627328,
+    "timestamp": 1636848055,
+    "token": "0x64eda51d3ad40d56b9dfc5554e06f94e1dd786fd",
+  },
+  Object {
+    "amount": 127.77060811430661,
+    "block": 13610723,
+    "estimatedApr": 0,
+    "eventType": "TreeDistribution",
+    "strategyBalance": 675.7270352627328,
+    "timestamp": 1636848055,
+    "token": "0x64eda51d3ad40d56b9dfc5554e06f94e1dd786fd",
+  },
+  Object {
+    "amount": 0.19661862226091095,
+    "block": 13647052,
+    "estimatedApr": 0,
+    "eventType": "Harvest",
+    "strategyBalance": 671.2872269577839,
+    "timestamp": 1637345136,
+    "token": "0x64eda51d3ad40d56b9dfc5554e06f94e1dd786fd",
+  },
+]
+`;
+
+exports[`vaults.v3.controller GET /vaults/list with a specified chain returns the requested vaults 1`] = `
+Array [
+  Object {
+    "apr": 8.26,
+    "apy": 12.39,
+    "asset": "BADGER",
+    "available": 0,
+    "balance": 10,
+    "behavior": "Compounder",
+    "boost": Object {
+      "enabled": false,
+      "weight": 0,
+    },
+    "bouncer": "none",
+    "lastHarvest": 1656606946,
+    "maxApr": 8.26,
+    "maxApy": 12.39,
+    "minApr": 8.26,
+    "minApy": 12.39,
+    "name": "Badger",
+    "pricePerFullShare": 1,
+    "protocol": "Badger",
+    "sources": Array [
+      Object {
+        "apr": 4.13,
+        "boostable": false,
+        "maxApr": 4.13,
+        "minApr": 4.13,
+        "name": "Badger Rewards",
+      },
+      Object {
+        "apr": 4.13,
+        "boostable": false,
+        "maxApr": 4.13,
+        "minApr": 4.13,
+        "name": "Curve LP Fees",
+      },
+    ],
+    "sourcesApy": Array [
+      Object {
+        "apr": 4.13,
+        "boostable": false,
+        "maxApr": 4.13,
+        "minApr": 4.13,
+        "name": "Vault Compounding",
+      },
+      Object {
+        "apr": 4.13,
+        "boostable": false,
+        "maxApr": 4.13,
+        "minApr": 4.13,
+        "name": "Badger Rewards",
+      },
+      Object {
+        "apr": 4.13,
+        "boostable": false,
+        "maxApr": 4.13,
+        "minApr": 4.13,
+        "name": "Curve LP Fees",
+      },
+    ],
+    "state": "open",
+    "strategy": Object {
+      "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
+      "performanceFee": 0,
+      "strategistFee": 0,
+      "withdrawFee": 0,
+    },
+    "tokens": Array [],
+    "type": "native",
+    "underlyingToken": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+    "value": 105879,
+    "vaultAsset": "bBADGER",
+    "vaultToken": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "version": "v1",
+    "yieldProjection": Object {
+      "harvestApr": 0.22498409152323756,
+      "harvestPeriodApr": 0,
+      "harvestPeriodApy": 0,
+      "harvestPeriodSources": Array [
+        Object {
+          "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
+          "apr": 0,
+          "balance": 0,
+          "decimals": 18,
+          "name": "Convex Token",
+          "symbol": "CVX",
+          "value": 0,
+        },
+      ],
+      "harvestPeriodSourcesApy": Array [
+        Object {
+          "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
+          "apr": 0,
+          "balance": 0,
+          "decimals": 18,
+          "name": "Convex Token",
+          "symbol": "CVX",
+          "value": 0,
+        },
+      ],
+      "harvestTokens": Array [
+        Object {
+          "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
+          "apr": 0.22498409152323756,
+          "balance": 10,
+          "decimals": 18,
+          "name": "Convex Token",
+          "symbol": "CVX",
+          "value": 12510,
+        },
+      ],
+      "harvestValue": 12510,
+      "nonHarvestApr": 8.26,
+      "nonHarvestApy": 8.26,
+      "nonHarvestSources": Array [
+        Object {
+          "apr": 4.13,
+          "boostable": false,
+          "maxApr": 4.13,
+          "minApr": 4.13,
+          "name": "Badger Rewards",
+        },
+        Object {
+          "apr": 4.13,
+          "boostable": false,
+          "maxApr": 4.13,
+          "minApr": 4.13,
+          "name": "Curve LP Fees",
+        },
+      ],
+      "nonHarvestSourcesApy": Array [
+        Object {
+          "apr": 4.13,
+          "boostable": false,
+          "maxApr": 4.13,
+          "minApr": 4.13,
+          "name": "Badger Rewards",
+        },
+        Object {
+          "apr": 4.13,
+          "boostable": false,
+          "maxApr": 4.13,
+          "minApr": 4.13,
+          "name": "Curve LP Fees",
+        },
+      ],
+      "yieldApr": 0.22498409152323756,
+      "yieldPeriodApr": 0,
+      "yieldPeriodSources": Array [
+        Object {
+          "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
+          "apr": 0,
+          "balance": 0,
+          "decimals": 18,
+          "name": "Convex Token",
+          "symbol": "CVX",
+          "value": 0,
+        },
+      ],
+      "yieldTokens": Array [
+        Object {
+          "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
+          "apr": 0.22498409152323756,
+          "balance": 10,
+          "decimals": 18,
+          "name": "Convex Token",
+          "symbol": "CVX",
+          "value": 12510,
+        },
+      ],
+      "yieldValue": 12510,
+    },
+  },
+]
+`;
+
+exports[`vaults.v3.controller GET /vaults/list with an invalid specified chain returns a 400 1`] = `
+Object {
+  "errors": Array [],
+  "message": "invalid is not a supported chain",
+  "name": "BAD_REQUEST",
+  "status": 400,
+}
+`;
+
+exports[`vaults.v3.controller GET /vaults/list with no specified chain returns eth vaults 1`] = `
+Array [
+  Object {
+    "apr": 8.26,
+    "apy": 12.39,
+    "asset": "BADGER",
+    "available": 0,
+    "balance": 10,
+    "behavior": "Compounder",
+    "boost": Object {
+      "enabled": false,
+      "weight": 0,
+    },
+    "bouncer": "none",
+    "lastHarvest": 1656606946,
+    "maxApr": 8.26,
+    "maxApy": 12.39,
+    "minApr": 8.26,
+    "minApy": 12.39,
+    "name": "Badger",
+    "pricePerFullShare": 1,
+    "protocol": "Badger",
+    "sources": Array [
+      Object {
+        "apr": 4.13,
+        "boostable": false,
+        "maxApr": 4.13,
+        "minApr": 4.13,
+        "name": "Badger Rewards",
+      },
+      Object {
+        "apr": 4.13,
+        "boostable": false,
+        "maxApr": 4.13,
+        "minApr": 4.13,
+        "name": "Curve LP Fees",
+      },
+    ],
+    "sourcesApy": Array [
+      Object {
+        "apr": 4.13,
+        "boostable": false,
+        "maxApr": 4.13,
+        "minApr": 4.13,
+        "name": "Vault Compounding",
+      },
+      Object {
+        "apr": 4.13,
+        "boostable": false,
+        "maxApr": 4.13,
+        "minApr": 4.13,
+        "name": "Badger Rewards",
+      },
+      Object {
+        "apr": 4.13,
+        "boostable": false,
+        "maxApr": 4.13,
+        "minApr": 4.13,
+        "name": "Curve LP Fees",
+      },
+    ],
+    "state": "open",
+    "strategy": Object {
+      "address": "0x0000000000000000000000000000000000000000",
+      "aumFee": 0,
+      "performanceFee": 0,
+      "strategistFee": 0,
+      "withdrawFee": 0,
+    },
+    "tokens": Array [],
+    "type": "native",
+    "underlyingToken": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+    "value": 105879,
+    "vaultAsset": "bBADGER",
+    "vaultToken": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "version": "v1",
+    "yieldProjection": Object {
+      "harvestApr": 0.22498409152323756,
+      "harvestPeriodApr": 0,
+      "harvestPeriodApy": 0,
+      "harvestPeriodSources": Array [
+        Object {
+          "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
+          "apr": 0,
+          "balance": 0,
+          "decimals": 18,
+          "name": "Convex Token",
+          "symbol": "CVX",
+          "value": 0,
+        },
+      ],
+      "harvestPeriodSourcesApy": Array [
+        Object {
+          "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
+          "apr": 0,
+          "balance": 0,
+          "decimals": 18,
+          "name": "Convex Token",
+          "symbol": "CVX",
+          "value": 0,
+        },
+      ],
+      "harvestTokens": Array [
+        Object {
+          "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
+          "apr": 0.22498409152323756,
+          "balance": 10,
+          "decimals": 18,
+          "name": "Convex Token",
+          "symbol": "CVX",
+          "value": 12510,
+        },
+      ],
+      "harvestValue": 12510,
+      "nonHarvestApr": 8.26,
+      "nonHarvestApy": 8.26,
+      "nonHarvestSources": Array [
+        Object {
+          "apr": 4.13,
+          "boostable": false,
+          "maxApr": 4.13,
+          "minApr": 4.13,
+          "name": "Badger Rewards",
+        },
+        Object {
+          "apr": 4.13,
+          "boostable": false,
+          "maxApr": 4.13,
+          "minApr": 4.13,
+          "name": "Curve LP Fees",
+        },
+      ],
+      "nonHarvestSourcesApy": Array [
+        Object {
+          "apr": 4.13,
+          "boostable": false,
+          "maxApr": 4.13,
+          "minApr": 4.13,
+          "name": "Badger Rewards",
+        },
+        Object {
+          "apr": 4.13,
+          "boostable": false,
+          "maxApr": 4.13,
+          "minApr": 4.13,
+          "name": "Curve LP Fees",
+        },
+      ],
+      "yieldApr": 0.22498409152323756,
+      "yieldPeriodApr": 0,
+      "yieldPeriodSources": Array [
+        Object {
+          "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
+          "apr": 0,
+          "balance": 0,
+          "decimals": 18,
+          "name": "Convex Token",
+          "symbol": "CVX",
+          "value": 0,
+        },
+      ],
+      "yieldTokens": Array [
+        Object {
+          "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
+          "apr": 0.22498409152323756,
+          "balance": 10,
+          "decimals": 18,
+          "name": "Convex Token",
+          "symbol": "CVX",
+          "value": 12510,
+        },
+      ],
+      "yieldValue": 12510,
+    },
+  },
+]
+`;
+
+exports[`vaults.v3.controller GET /vaults/list/harvests error cases returns a 400 for invalid chain 1`] = `
+Object {
+  "errors": Array [],
+  "message": "invalid is not a supported chain",
+  "name": "BAD_REQUEST",
+  "status": 400,
+}
+`;
+
+exports[`vaults.v3.controller GET /vaults/list/harvests success cases Return extended harvest for chain vaults 1`] = `
+Object {
+  "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28": Array [
+    Object {
+      "amount": 0.019444617913515275,
+      "block": 13610723,
+      "estimatedApr": 0,
+      "eventType": "Harvest",
+      "strategyBalance": 675.7270352627328,
+      "timestamp": 1636848055,
+      "token": "0x64eda51d3ad40d56b9dfc5554e06f94e1dd786fd",
+    },
+    Object {
+      "amount": 519.4928843851667,
+      "block": 13610723,
+      "estimatedApr": 0,
+      "eventType": "TreeDistribution",
+      "strategyBalance": 675.7270352627328,
+      "timestamp": 1636848055,
+      "token": "0x64eda51d3ad40d56b9dfc5554e06f94e1dd786fd",
+    },
+    Object {
+      "amount": 127.77060811430661,
+      "block": 13610723,
+      "estimatedApr": 0,
+      "eventType": "TreeDistribution",
+      "strategyBalance": 675.7270352627328,
+      "timestamp": 1636848055,
+      "token": "0x64eda51d3ad40d56b9dfc5554e06f94e1dd786fd",
+    },
+    Object {
+      "amount": 0.19661862226091095,
+      "block": 13647052,
+      "estimatedApr": 0,
+      "eventType": "Harvest",
+      "strategyBalance": 671.2872269577839,
+      "timestamp": 1637345136,
+      "token": "0x64eda51d3ad40d56b9dfc5554e06f94e1dd786fd",
+    },
+  ],
+}
+`;
+
+exports[`vaults.v3.controller GET /vaults/snapshots error cases returns a 400 for invalid chain 1`] = `
+Object {
+  "errors": Array [],
+  "message": "invalid is not a supported chain",
+  "name": "BAD_REQUEST",
+  "status": 400,
+}
+`;
+
+exports[`vaults.v3.controller GET /vaults/snapshots error cases returns a 400 for invalid timestamps 1`] = `
+Object {
+  "errors": Array [],
+  "message": "Query param timestamps invalid",
+  "name": "Error",
+  "status": 400,
+}
+`;
+
+exports[`vaults.v3.controller GET /vaults/snapshots error cases returns a 400 for missed vault address param 1`] = `
+Object {
+  "errors": Array [],
+  "message": "Query param vault invalid",
+  "name": "Error",
+  "status": 400,
+}
+`;
+
+exports[`vaults.v3.controller GET /vaults/snapshots success cases return 200 and vaults snapshots for all dates, without duplications 1`] = `
+Array [
+  Object {
+    "address": "0x937B8E917d0F36eDEBBA8E459C5FB16F3b315551",
+    "apr": 36.42043576354977,
+    "available": 93.04307958110472,
+    "balance": 160912.73437961238,
+    "block": 15291696,
+    "boostWeight": 0,
+    "chain": "ethereum",
+    "harvestApr": 36.42043576354977,
+    "id": "ethereum-0x937B8E917d0F36eDEBBA8E459C5FB16F3b315551",
+    "pricePerFullShare": 1,
+    "ratio": 1,
+    "strategy": Object {
+      "address": "0x98Ca7AFa876f0e15494E76E92C5b3658cdE1Ffe1",
+      "aumFee": 0,
+      "performanceFee": 0,
+      "strategistFee": 0,
+      "withdrawFee": 10,
+    },
+    "strategyBalance": 160819.69130003126,
     "timestamp": 1645103004000,
-    "value": 2032359.1094,
+    "totalSupply": 160912.73437961238,
+    "value": 1137078.69,
+    "yieldApr": 36.42043576354977,
   },
   Object {
-    "address": "0x4591890225394BF66044347653e112621AF7DDeb",
-    "available": 0,
-    "balance": 1312.1235049307659,
-    "id": "0x4591890225394BF66044347653e112621AF7DDeb_arbitrum",
-    "pricePerFullShare": 1.0316911107514206,
-    "ratio": 1.0316911107514206,
+    "address": "0x937B8E917d0F36eDEBBA8E459C5FB16F3b315551",
+    "apr": 36.058699370488235,
+    "available": 227.79837966012852,
+    "balance": 159193.72047228398,
+    "block": 15285176,
+    "boostWeight": 0,
+    "chain": "ethereum",
+    "harvestApr": 36.058699370488235,
+    "id": "ethereum-0x937B8E917d0F36eDEBBA8E459C5FB16F3b315551",
+    "pricePerFullShare": 1,
+    "ratio": 1,
+    "strategy": Object {
+      "address": "0x98Ca7AFa876f0e15494E76E92C5b3658cdE1Ffe1",
+      "aumFee": 0,
+      "performanceFee": 0,
+      "strategistFee": 0,
+      "withdrawFee": 10,
+    },
+    "strategyBalance": 158965.92209262386,
     "timestamp": 1645015261000,
-    "value": 2061137.5997,
+    "totalSupply": 159193.72047228398,
+    "value": 1128118.19,
+    "yieldApr": 36.058699370488235,
   },
   Object {
-    "address": "0x4591890225394BF66044347653e112621AF7DDeb",
-    "available": 0.09301841726863323,
-    "balance": 1331.85239374146,
-    "id": "0x4591890225394BF66044347653e112621AF7DDeb_arbitrum",
-    "pricePerFullShare": 1.0315443246375726,
-    "ratio": 1.0315443246375726,
+    "address": "0x937B8E917d0F36eDEBBA8E459C5FB16F3b315551",
+    "apr": 36.18786526089967,
+    "available": 227.79837966012852,
+    "balance": 159193.72047228398,
+    "block": 15278533,
+    "boostWeight": 0,
+    "chain": "ethereum",
+    "harvestApr": 0.006305366586500938,
+    "id": "ethereum-0x937B8E917d0F36eDEBBA8E459C5FB16F3b315551",
+    "pricePerFullShare": 1,
+    "ratio": 1,
+    "strategy": Object {
+      "address": "0x98Ca7AFa876f0e15494E76E92C5b3658cdE1Ffe1",
+      "aumFee": 0,
+      "performanceFee": 0,
+      "strategistFee": 0,
+      "withdrawFee": 10,
+    },
+    "strategyBalance": 158965.92209262386,
     "timestamp": 1644928124000,
-    "value": 2087438.8599,
+    "totalSupply": 159193.72047228398,
+    "value": 1097323.6,
+    "yieldApr": 0.006305366586500938,
   },
 ]
 `;
 
-exports[`VaultsController GET /v3/vaults/snapshots success cases return 200 with 1 relevant vault and 2 old snapshots 1`] = `
+exports[`vaults.v3.controller GET /vaults/snapshots success cases return 200 with 1 relevant vault and 2 old snapshots 1`] = `
 Array [
   Object {
-    "address": "0x4591890225394BF66044347653e112621AF7DDeb",
-    "available": 0.8441047101358636,
-    "balance": 1313.2024161551205,
-    "id": "0x4591890225394BF66044347653e112621AF7DDeb_arbitrum",
-    "pricePerFullShare": 1.0318408019214105,
-    "ratio": 1.0318408019214105,
-    "timestamp": 1634821933000,
-    "value": 2032359.1094,
+    "address": "0x937B8E917d0F36eDEBBA8E459C5FB16F3b315551",
+    "apr": 36.42043576354977,
+    "available": 93.04307958110472,
+    "balance": 160912.73437961238,
+    "block": 15291696,
+    "boostWeight": 0,
+    "chain": "ethereum",
+    "harvestApr": 36.42043576354977,
+    "id": "ethereum-0x937B8E917d0F36eDEBBA8E459C5FB16F3b315551",
+    "pricePerFullShare": 1,
+    "ratio": 1,
+    "strategy": Object {
+      "address": "0x98Ca7AFa876f0e15494E76E92C5b3658cdE1Ffe1",
+      "aumFee": 0,
+      "performanceFee": 0,
+      "strategistFee": 0,
+      "withdrawFee": 10,
+    },
+    "strategyBalance": 160819.69130003126,
+    "timestamp": 1645189933000,
+    "totalSupply": 160912.73437961238,
+    "value": 1137078.69,
+    "yieldApr": 36.42043576354977,
   },
   Object {
-    "address": "0x4591890225394BF66044347653e112621AF7DDeb",
-    "available": 0,
-    "balance": 1306.3528590407586,
-    "id": "0x4591890225394BF66044347653e112621AF7DDeb_arbitrum",
-    "pricePerFullShare": 1.031977892102678,
-    "ratio": 1.031977892102678,
+    "address": "0x937B8E917d0F36eDEBBA8E459C5FB16F3b315551",
+    "apr": 36.058699370488235,
+    "available": 227.79837966012852,
+    "balance": 159193.72047228398,
+    "block": 15285176,
+    "boostWeight": 0,
+    "chain": "ethereum",
+    "harvestApr": 36.058699370488235,
+    "id": "ethereum-0x937B8E917d0F36eDEBBA8E459C5FB16F3b315551",
+    "pricePerFullShare": 1,
+    "ratio": 1,
+    "strategy": Object {
+      "address": "0x98Ca7AFa876f0e15494E76E92C5b3658cdE1Ffe1",
+      "aumFee": 0,
+      "performanceFee": 0,
+      "strategistFee": 0,
+      "withdrawFee": 10,
+    },
+    "strategyBalance": 158965.92209262386,
+    "timestamp": 1634821933000,
+    "totalSupply": 159193.72047228398,
+    "value": 1128118.19,
+    "yieldApr": 36.058699370488235,
+  },
+  Object {
+    "address": "0x937B8E917d0F36eDEBBA8E459C5FB16F3b315551",
+    "apr": 36.18786526089967,
+    "available": 227.79837966012852,
+    "balance": 159193.72047228398,
+    "block": 15278533,
+    "boostWeight": 0,
+    "chain": "ethereum",
+    "harvestApr": 0.006305366586500938,
+    "id": "ethereum-0x937B8E917d0F36eDEBBA8E459C5FB16F3b315551",
+    "pricePerFullShare": 1,
+    "ratio": 1,
+    "strategy": Object {
+      "address": "0x98Ca7AFa876f0e15494E76E92C5b3658cdE1Ffe1",
+      "aumFee": 0,
+      "performanceFee": 0,
+      "strategistFee": 0,
+      "withdrawFee": 10,
+    },
+    "strategyBalance": 158965.92209262386,
     "timestamp": 1634821931000,
-    "value": 1945766.2918,
+    "totalSupply": 159193.72047228398,
+    "value": 1097323.6,
+    "yieldApr": 0.006305366586500938,
   },
 ]
 `;
 
-exports[`VaultsController GET /v3/vaults/snapshots success cases return 200 with empty array, got unmached data 1`] = `Array []`;
+exports[`vaults.v3.controller GET /vaults/snapshots success cases return 200 with empty array, got unmatched data 1`] = `Array []`;

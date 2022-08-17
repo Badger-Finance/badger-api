@@ -1,15 +1,22 @@
 import { BadgerType } from '@badger-dao/sdk';
 
 import { getLeaderboardKey } from '../aws/dynamodb.utils';
-import { setupMapper, TEST_CHAIN } from '../test/tests.utils';
+import { Chain } from '../chains/config/chain.config';
+import { mockQuery, setupMockChain } from '../test/mocks.utils';
 import { queryLeaderboardSummary } from './leaderboards.utils';
 
 describe('leaderboards.utils', () => {
   describe('queryLeaderboardSummary', () => {
+    let chain: Chain;
+
+    beforeEach(() => {
+      chain = setupMockChain();
+    });
+
     describe('no saved leaderboard summary data', () => {
       it('returns a map of all badger ranks with zero entries', async () => {
-        setupMapper([]);
-        const result = await queryLeaderboardSummary(TEST_CHAIN);
+        mockQuery([]);
+        const result = await queryLeaderboardSummary(chain);
         // result date will always update due to nature of function
         result.updatedAt = 133742069;
         expect(result).toMatchSnapshot();
@@ -18,9 +25,9 @@ describe('leaderboards.utils', () => {
 
     describe('saved leaderboard summary data', () => {
       it('returns the appropriate TEST_CHAIN summary data', async () => {
-        setupMapper([
+        mockQuery([
           {
-            leaderboard: getLeaderboardKey(TEST_CHAIN),
+            leaderboard: getLeaderboardKey(chain.network),
             rankSummaries: [
               {
                 badgerType: BadgerType.Basic,
@@ -46,7 +53,7 @@ describe('leaderboards.utils', () => {
             updatedAt: 133742069,
           },
         ]);
-        const result = await queryLeaderboardSummary(TEST_CHAIN);
+        const result = await queryLeaderboardSummary(chain);
         expect(result).toMatchSnapshot();
       });
     });

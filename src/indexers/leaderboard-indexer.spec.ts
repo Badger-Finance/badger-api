@@ -4,7 +4,8 @@ import * as accountsUtils from '../accounts/accounts.utils';
 import { CachedBoost } from '../aws/models/cached-boost.model';
 import { TOKENS } from '../config/tokens.config';
 import { BoostData } from '../rewards/interfaces/boost-data.interface';
-import { mockBatchDelete, mockBatchPut, randomCachedBoosts, setupMapper } from '../test/tests.utils';
+import { mockBatchDelete, mockBatchPut, mockQuery } from '../test/mocks.utils';
+import { randomCachedBoosts } from '../test/tests.utils';
 import { indexBoostLeaderBoard } from './leaderboard-indexer';
 
 describe('leaderboard-indexer', () => {
@@ -30,7 +31,7 @@ describe('leaderboard-indexer', () => {
   >;
 
   beforeEach(async () => {
-    setupMapper([]);
+    mockQuery([]);
     batchPut = mockBatchPut([]);
     mockBatchDelete([]);
     jest.spyOn(Date, 'now').mockImplementation(() => 1000);

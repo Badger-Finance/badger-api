@@ -1,14 +1,19 @@
 import { Account } from '@badger-dao/sdk';
 import { PlatformTest } from '@tsed/common';
 
-import { Ethereum } from '../chains/config/eth.config';
+import { Chain } from '../chains/config/chain.config';
 import { TEST_ADDR } from '../test/constants';
+import { setupMockChain } from '../test/mocks.utils';
 import { AccountsService } from './accounts.service';
 import * as accountsUtils from './accounts.utils';
 
 describe('accounts.service', () => {
-  const chain = new Ethereum();
   let service: AccountsService;
+  let chain: Chain;
+
+  beforeEach(() => {
+    chain = setupMockChain();
+  });
 
   beforeAll(async () => {
     await PlatformTest.create();

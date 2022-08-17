@@ -2,46 +2,46 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Contract, Signer, utils } from 'ethers';
-import { Provider } from '@ethersproject/providers';
-import type { CurvePool, CurvePoolInterface } from '../CurvePool';
+import { Contract, Signer, utils } from "ethers";
+import { Provider } from "@ethersproject/providers";
+import type { CurvePool, CurvePoolInterface } from "../CurvePool";
 
 const _abi = [
   {
     constant: true,
     inputs: [
       {
-        type: 'int128',
-        name: 'arg0',
+        type: "int128",
+        name: "arg0",
       },
     ],
-    name: 'coins',
+    name: "coins",
     outputs: [
       {
-        type: 'address',
-        name: '',
+        type: "address",
+        name: "",
       },
     ],
     payable: false,
-    type: 'function',
+    type: "function",
   },
   {
     constant: true,
     inputs: [
       {
-        type: 'int128',
-        name: 'arg0',
+        type: "int128",
+        name: "arg0",
       },
     ],
-    name: 'balances',
+    name: "balances",
     outputs: [
       {
-        type: 'uint256',
-        name: '',
+        type: "uint256",
+        name: "",
       },
     ],
     payable: false,
-    type: 'function',
+    type: "function",
   },
 ];
 
@@ -50,7 +50,10 @@ export class CurvePool__factory {
   static createInterface(): CurvePoolInterface {
     return new utils.Interface(_abi) as CurvePoolInterface;
   }
-  static connect(address: string, signerOrProvider: Signer | Provider): CurvePool {
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): CurvePool {
     return new Contract(address, _abi, signerOrProvider) as CurvePool;
   }
 }

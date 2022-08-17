@@ -15,7 +15,12 @@ export async function refreshClaimableBalances(chain: Chain) {
   const distribution = await getTreeDistribution(chain);
   const sdk = await chain.getSdk();
 
+  console.log({
+    distribution,
+    hasTree: sdk.rewards.hasBadgerTree(),
+  });
   if (!distribution || !sdk.rewards.hasBadgerTree()) {
+    console.log('returned');
     return;
   }
 
@@ -49,7 +54,7 @@ export async function refreshClaimableBalances(chain: Chain) {
       });
     });
     const snapshot = Object.assign(new UserClaimSnapshot(), {
-      chainStartBlock: getChainStartBlockKey(chain, snapshotStartBlock),
+      chainStartBlock: getChainStartBlockKey(chain.network, snapshotStartBlock),
       chain: chain.network,
       startBlock: snapshotStartBlock,
       address: user,
@@ -67,7 +72,7 @@ export async function refreshClaimableBalances(chain: Chain) {
 
   // Create new metadata entry after user claim snapshots are calculated
   const metadata = Object.assign(new UserClaimMetadata(), {
-    chainStartBlock: getChainStartBlockKey(chain, snapshotStartBlock),
+    chainStartBlock: getChainStartBlockKey(chain.network, snapshotStartBlock),
     chain: chain.network,
     startBlock: snapshotStartBlock,
     endBlock: snapshotEndBlock,
@@ -89,7 +94,7 @@ export async function refreshUserAccounts() {
         await refreshClaimableBalances(chain);
       } catch (err) {
         console.log(`Failed to refresh claimable balances for ${chain.network}`);
-        console.log(`Chain information: ${(chain.network, chain.chainId, chain.rpcUrl)}`);
+        console.log(`Chain information: ${(chain.network, chain.chainId)}`);
         console.error(err);
       }
     }),

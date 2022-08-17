@@ -2,262 +2,265 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Contract, Signer, utils } from 'ethers';
-import { Provider } from '@ethersproject/providers';
-import type { EmissionControl, EmissionControlInterface } from '../EmissionControl';
+import { Contract, Signer, utils } from "ethers";
+import { Provider } from "@ethersproject/providers";
+import type {
+  EmissionControl,
+  EmissionControlInterface,
+} from "../EmissionControl";
 
 const _abi = [
   {
     inputs: [
       {
-        internalType: 'address',
-        name: '_vault',
-        type: 'address',
+        internalType: "address",
+        name: "_vault",
+        type: "address",
       },
     ],
-    stateMutability: 'nonpayable',
-    type: 'constructor',
+    stateMutability: "nonpayable",
+    type: "constructor",
   },
   {
     anonymous: false,
     inputs: [
       {
         indexed: true,
-        internalType: 'address',
-        name: 'previousOwner',
-        type: 'address',
+        internalType: "address",
+        name: "previousOwner",
+        type: "address",
       },
       {
         indexed: true,
-        internalType: 'address',
-        name: 'newOwner',
-        type: 'address',
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
       },
     ],
-    name: 'OwnershipTransferred',
-    type: 'event',
+    name: "OwnershipTransferred",
+    type: "event",
   },
   {
     anonymous: false,
     inputs: [
       {
         indexed: true,
-        internalType: 'address',
-        name: '_vault',
-        type: 'address',
+        internalType: "address",
+        name: "_vault",
+        type: "address",
       },
       {
         indexed: true,
-        internalType: 'uint256',
-        name: '_weight',
-        type: 'uint256',
+        internalType: "uint256",
+        name: "_weight",
+        type: "uint256",
       },
     ],
-    name: 'TokenBoostedEmissionChanged',
-    type: 'event',
+    name: "TokenBoostedEmissionChanged",
+    type: "event",
   },
   {
     anonymous: false,
     inputs: [
       {
         indexed: true,
-        internalType: 'address',
-        name: '_token',
-        type: 'address',
+        internalType: "address",
+        name: "_token",
+        type: "address",
       },
       {
         indexed: true,
-        internalType: 'uint256',
-        name: '_weight',
-        type: 'uint256',
+        internalType: "uint256",
+        name: "_weight",
+        type: "uint256",
       },
     ],
-    name: 'TokenWeightChanged',
-    type: 'event',
+    name: "TokenWeightChanged",
+    type: "event",
   },
   {
     inputs: [],
-    name: 'MAX_BPS',
+    name: "MAX_BPS",
     outputs: [
       {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
       },
     ],
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
   },
   {
     inputs: [
       {
-        internalType: 'address',
-        name: '_manager',
-        type: 'address',
+        internalType: "address",
+        name: "_manager",
+        type: "address",
       },
     ],
-    name: 'addManager',
+    name: "addManager",
     outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     inputs: [
       {
-        internalType: 'address',
-        name: '',
-        type: 'address',
+        internalType: "address",
+        name: "",
+        type: "address",
       },
     ],
-    name: 'boostedEmissionRate',
+    name: "boostedEmissionRate",
     outputs: [
       {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
       },
     ],
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
   },
   {
     inputs: [
       {
-        internalType: 'address',
-        name: '',
-        type: 'address',
+        internalType: "address",
+        name: "",
+        type: "address",
       },
     ],
-    name: 'manager',
+    name: "manager",
     outputs: [
       {
-        internalType: 'bool',
-        name: '',
-        type: 'bool',
+        internalType: "bool",
+        name: "",
+        type: "bool",
       },
     ],
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
   },
   {
     inputs: [],
-    name: 'owner',
+    name: "owner",
     outputs: [
       {
-        internalType: 'address',
-        name: '',
-        type: 'address',
+        internalType: "address",
+        name: "",
+        type: "address",
       },
     ],
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
   },
   {
     inputs: [
       {
-        internalType: 'address',
-        name: '_vault',
-        type: 'address',
+        internalType: "address",
+        name: "_vault",
+        type: "address",
       },
     ],
-    name: 'proRataEmissionRate',
+    name: "proRataEmissionRate",
     outputs: [
       {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
       },
     ],
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
   },
   {
     inputs: [
       {
-        internalType: 'address',
-        name: '_manager',
-        type: 'address',
+        internalType: "address",
+        name: "_manager",
+        type: "address",
       },
     ],
-    name: 'removeManager',
+    name: "removeManager",
     outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     inputs: [],
-    name: 'renounceOwnership',
+    name: "renounceOwnership",
     outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     inputs: [
       {
-        internalType: 'address',
-        name: '_vault',
-        type: 'address',
+        internalType: "address",
+        name: "_vault",
+        type: "address",
       },
       {
-        internalType: 'uint256',
-        name: '_weight',
-        type: 'uint256',
+        internalType: "uint256",
+        name: "_weight",
+        type: "uint256",
       },
     ],
-    name: 'setBoostedEmission',
+    name: "setBoostedEmission",
     outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     inputs: [
       {
-        internalType: 'address',
-        name: '_token',
-        type: 'address',
+        internalType: "address",
+        name: "_token",
+        type: "address",
       },
       {
-        internalType: 'uint256',
-        name: '_weight',
-        type: 'uint256',
+        internalType: "uint256",
+        name: "_weight",
+        type: "uint256",
       },
     ],
-    name: 'setTokenWeight',
+    name: "setTokenWeight",
     outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     inputs: [
       {
-        internalType: 'address',
-        name: '',
-        type: 'address',
+        internalType: "address",
+        name: "",
+        type: "address",
       },
     ],
-    name: 'tokenWeight',
+    name: "tokenWeight",
     outputs: [
       {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
       },
     ],
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
   },
   {
     inputs: [
       {
-        internalType: 'address',
-        name: 'newOwner',
-        type: 'address',
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
       },
     ],
-    name: 'transferOwnership',
+    name: "transferOwnership",
     outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
   },
 ];
 
@@ -266,7 +269,10 @@ export class EmissionControl__factory {
   static createInterface(): EmissionControlInterface {
     return new utils.Interface(_abi) as EmissionControlInterface;
   }
-  static connect(address: string, signerOrProvider: Signer | Provider): EmissionControl {
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): EmissionControl {
     return new Contract(address, _abi, signerOrProvider) as EmissionControl;
   }
 }

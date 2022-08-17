@@ -4,5 +4,5 @@
   },
   "extends": "./tsconfig.json",
   "include": ["./src/**/*.ts", "./seed/scripts/*.ts"],
-  "exclude": ["build", "node_modules"]
+  "exclude": ["build", "node_modules", "contracts"]
 }

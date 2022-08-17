@@ -1,4 +1,4 @@
-import { Account, Currency, formatBalance, gqlGenT, ONE_MIN_MS } from '@badger-dao/sdk';
+import { Account, Currency, formatBalance, gqlGenT, Network, ONE_MINUTE_MS } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 
 import { getChainStartBlockKey, getDataMapper, getLeaderboardKey } from '../aws/dynamodb.utils';
@@ -10,7 +10,7 @@ import { Chain } from '../chains/config/chain.config';
 import { PRODUCTION, REWARD_DATA } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
-import { convert, getPrice } from '../prices/prices.utils';
+import { convert, queryPrice } from '../prices/prices.utils';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 import { BoostData } from '../rewards/interfaces/boost-data.interface';
 import { getFullToken, getVaultTokens } from '../tokens/tokens.utils';
@@ -110,7 +110,7 @@ export async function toVaultBalance(
   const balanceTokens = currentTokens * pricePerFullShare;
   const earnedBalance = balanceTokens - depositedTokens + withdrawnTokens;
   const [depositTokenPrice, earnedTokens, tokens] = await Promise.all([
-    getPrice(vaultDefinition.depositToken),
+    queryPrice(vaultDefinition.depositToken),
     getVaultTokens(chain, vault, currency),
     getVaultTokens(chain, vault, currency),
   ]);
@@ -134,11 +134,11 @@ export async function toVaultBalance(
   });
 }
 
-export async function getCachedBoost(chain: Chain, address: string): Promise<CachedBoost> {
+export async function getCachedBoost(network: Network, address: string): Promise<CachedBoost> {
   const mapper = getDataMapper();
   for await (const entry of mapper.query(
     CachedBoost,
-    { leaderboard: getLeaderboardKey(chain), address: ethers.utils.getAddress(address) },
+    { leaderboard: getLeaderboardKey(network), address: ethers.utils.getAddress(address) },
     { limit: 1, indexName: 'IndexLeaderBoardRankOnAddressAndLeaderboard' },
   )) {
     return entry;
@@ -149,7 +149,7 @@ export async function getCachedBoost(chain: Chain, address: string): Promise<Cac
     boostRank: 0,
     bveCvxBalance: 0,
     diggBalance: 0,
-    leaderboard: `${chain.network}_${LeaderBoardType.BadgerBoost}`,
+    leaderboard: `${network}_${LeaderBoardType.BadgerBoost}`,
     nativeBalance: 0,
     nftBalance: 0,
     nonNativeBalance: 0,
@@ -160,7 +160,7 @@ export async function getCachedBoost(chain: Chain, address: string): Promise<Cac
 
 export async function getCachedAccount(chain: Chain, address: string): Promise<Account> {
   const [cachedAccount, metadata] = await Promise.all([queryCachedAccount(address), getLatestMetadata(chain)]);
-  if (!cachedAccount.updatedAt || cachedAccount.updatedAt + ONE_MIN_MS < Date.now()) {
+  if (!cachedAccount.updatedAt || cachedAccount.updatedAt + ONE_MINUTE_MS < Date.now()) {
     await refreshAccountVaultBalances(chain, address);
   }
   const claimableBalanceSnapshot = await getClaimableBalanceSnapshot(chain, address, metadata.startBlock);
@@ -176,7 +176,7 @@ export async function getCachedAccount(chain: Chain, address: string): Promise<A
   const claimableBalances = Object.fromEntries(
     claimableBalanceSnapshot.claimableBalances.map((bal) => [bal.address, bal.balance]),
   );
-  const cachedBoost = await getCachedBoost(chain, cachedAccount.address);
+  const cachedBoost = await getCachedBoost(network, cachedAccount.address);
   const { boost, boostRank, stakeRatio, nftBalance, bveCvxBalance, nativeBalance, nonNativeBalance, diggBalance } =
     cachedBoost;
   const value = balances.map((b) => b.value).reduce((total, value) => (total += value), 0);
@@ -207,13 +207,13 @@ export async function getClaimableBalanceSnapshot(
   const mapper = getDataMapper();
   for await (const entry of mapper.query(
     UserClaimSnapshot,
-    { chainStartBlock: getChainStartBlockKey(chain, startBlock), address: ethers.utils.getAddress(address) },
+    { chainStartBlock: getChainStartBlockKey(chain.network, startBlock), address: ethers.utils.getAddress(address) },
     { limit: 1, indexName: 'IndexUnclaimedSnapshotsOnAddressAndChainStartBlock' },
   )) {
     return entry;
   }
   return {
-    chainStartBlock: getChainStartBlockKey(chain, startBlock),
+    chainStartBlock: getChainStartBlockKey(chain.network, startBlock),
     address,
     chain: chain.network,
     startBlock,
@@ -225,27 +225,24 @@ export async function getClaimableBalanceSnapshot(
 
 export async function getLatestMetadata(chain: Chain): Promise<UserClaimMetadata> {
   const mapper = getDataMapper();
-  let result: UserClaimMetadata | null = null;
   for await (const metric of mapper.query(
     UserClaimMetadata,
     { chain: chain.network },
     { indexName: 'IndexMetadataChainAndStartBlock', scanIndexForward: false, limit: 1 },
   )) {
-    result = metric;
+    return metric;
   }
+
   // In case there UserClaimMetadata wasn't created yet, create it with default values
-  if (!result) {
-    const blockNumber = await chain.provider.getBlockNumber();
-    const metaData = Object.assign(new UserClaimMetadata(), {
-      startBlock: blockNumber,
-      endBlock: blockNumber + 1,
-      chainStartBlock: getChainStartBlockKey(chain, blockNumber),
-      chain: chain.network,
-      count: 0,
-    });
-    result = await mapper.put(metaData);
-  }
-  return result;
+  const blockNumber = await chain.provider.getBlockNumber();
+  const metaData = Object.assign(new UserClaimMetadata(), {
+    startBlock: blockNumber,
+    endBlock: blockNumber + 1,
+    chainStartBlock: getChainStartBlockKey(chain.network, blockNumber),
+    chain: chain.network,
+    count: 0,
+  });
+  return mapper.put(metaData);
 }
 
 export async function refreshAccountVaultBalances(chain: Chain, account: string) {

@@ -1,19 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`LeaderBoardsController GET /v2/leaderboards with a specified chain returns the specified chain leaderboard 1`] = `
-Object {
-  "summary": Object {
-    "basic": 42161000,
-    "frenzy": 1686440,
-    "hero": 1475635,
-    "hyper": 1054025,
-    "neo": 843220,
-  },
-  "updatedAt": 133742069,
-}
-`;
-
-exports[`LeaderBoardsController GET /v2/leaderboards with no specified chain returns the ethereum leaderboard 1`] = `
+exports[`leaderboards.controller GET /leaderboards with a specified chain returns the specified chain leaderboard 1`] = `
 Object {
   "summary": Object {
     "basic": 1000,
@@ -22,6 +9,19 @@ Object {
     "hyper": 25,
     "neo": 20,
   },
-  "updatedAt": 133742069,
+  "updatedAt": 1660223160457,
+}
+`;
+
+exports[`leaderboards.controller GET /leaderboards with no specified chain returns the ethereum leaderboard 1`] = `
+Object {
+  "summary": Object {
+    "basic": 1000,
+    "frenzy": 40,
+    "hero": 35,
+    "hyper": 25,
+    "neo": 20,
+  },
+  "updatedAt": 1660223160457,
 }
 `;

@@ -8,12 +8,7 @@ import { Chain } from './chain.config';
 
 export class Polygon extends Chain {
   constructor() {
-    super(
-      Network.Polygon,
-      maticTokensConfig,
-      rpc[Network.Polygon],
-      new BaseStrategy(Network.Polygon, Object.keys(maticTokensConfig)),
-    );
+    super(Network.Polygon, maticTokensConfig, rpc[Network.Polygon], new BaseStrategy(Network.Polygon));
     Chain.register(this.network, this);
   }
 

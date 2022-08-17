@@ -6,7 +6,8 @@ import registryVaults from '@badger-dao/sdk-mocks/generated/ethereum/vaults/load
 
 import { SUPPORTED_CHAINS } from '../chains/chain';
 import { TEST_CURRENT_TIMESTAMP } from '../test/constants';
-import { mockSupportedChains, setupMapper, setupVaultsCoumpoundDDB } from '../test/tests.utils';
+import { mockQuery } from '../test/mocks.utils';
+import { mockSupportedChains, setupVaultsCoumpoundDDB } from '../test/tests.utils';
 import { captureVaultData } from './vault-definition-indexer';
 
 describe('vault-definition-indexer', () => {
@@ -18,7 +19,7 @@ describe('vault-definition-indexer', () => {
       jest.spyOn(console, 'error').mockImplementation();
       jest.spyOn(console, 'warn').mockImplementation();
 
-      setupMapper([]);
+      mockQuery([]);
 
       jest.spyOn(VaultsService.prototype, 'loadVaults').mockImplementation(async function () {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -42,6 +43,7 @@ describe('vault-definition-indexer', () => {
     it('should construct and save vaults definitions to ddb', async () => {
       await captureVaultData();
 
+      // TODO: remove magic numbers - let's tie this back somewhere
       expect(put.mock.calls.length).toBe(24);
     });
 
@@ -63,6 +65,7 @@ describe('vault-definition-indexer', () => {
 
       await captureVaultData();
 
+      // TODO: remove magic numbers - let's tie this back somewhere
       expect(consoleWarnMock.mock.calls.length).toBe(29);
       expect(put.mock.calls.length).toBe(0);
     });

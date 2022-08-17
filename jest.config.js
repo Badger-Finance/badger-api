@@ -1,19 +1,21 @@
-const nodeEnv = process.env.NODE_ENV || 'test';
-process.env.NODE_ENV = nodeEnv;
-
-if (nodeEnv !== 'test' && nodeEnv !== 'ci') {
-  throw new Error(`Wrong environment for running tests, should be 'test' or 'ci'. NODE_ENV=${nodeEnv}`);
-}
-
 module.exports = {
   clearMocks: true,
-  moduleFileExtensions: ['js', 'json', 'ts'],
-  resetMocks: true,
-  restoreMocks: true,
+  coveragePathIgnorePatterns: ['index.ts', '/node_modules/', '/contracts/', '/generated/', '/interfaces/', '/enums/'],
+  coverageThreshold: {
+    global: {
+      branches: 35,
+      functions: 50,
+      lines: 50,
+      statements: 50,
+    },
+  },
+  moduleFileExtensions: ['js', 'json', 'jsx', 'ts', 'tsx', 'node'],
+  moduleNameMapper: {
+    '^uuid$': '<rootDir>/node_modules/uuid/dist/index.js',
+  },
   testEnvironment: 'node',
   testRegex: '.spec.ts$',
-  testTimeout: 10000,
-  setupFilesAfterEnv: ['./src/test/jest.setup.ts'],
-  transform: { '^.+\\.ts$': 'ts-jest' },
-  coveragePathIgnorePatterns: ['interfaces', 'enums', 'generated', 'chains', 'abi', 'contracts'],
+  transform: {
+    '\\.(ts)$': 'ts-jest',
+  },
 };

@@ -10,7 +10,7 @@ import cors from 'cors';
 import methodOverride from 'method-override';
 
 import { swaggerConfig } from './config/constants';
-import { V2_CONTROLLERS, V3_CONTROLLERS } from './ControllerRegistry';
+import { V2_CONTROLLERS, V3_CONTROLLERS } from './controllers';
 
 @Configuration({
   rootDir: __dirname,

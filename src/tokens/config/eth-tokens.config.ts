@@ -4,7 +4,6 @@ import { TOKENS } from '../../config/tokens.config';
 import { PricingType } from '../../prices/enums/pricing-type.enum';
 import { resolveBalancerPoolTokenPrice } from '../../protocols/strategies/balancer.strategy';
 import { resolveCurveStablePoolTokenPrice } from '../../protocols/strategies/convex.strategy';
-import { getImBtcPrice, getMhBtcPrice } from '../../protocols/strategies/mstable.strategy';
 import { TokenConfig } from '../interfaces/token-config.interface';
 
 export const ethTokensConfig: TokenConfig = {
@@ -41,12 +40,10 @@ export const ethTokensConfig: TokenConfig = {
     type: PricingType.LookupName,
   },
   [TOKENS.IMBTC]: {
-    getPrice: getImBtcPrice,
-    type: PricingType.Custom,
+    type: PricingType.Contract,
   },
   [TOKENS.MHBTC]: {
-    getPrice: getMhBtcPrice,
-    type: PricingType.Custom,
+    type: PricingType.Contract,
   },
   [TOKENS.CRV_CVXBVECVX]: {
     type: PricingType.CurveLP,

@@ -1,94 +1,60 @@
-# Badger Serverless API
+<p style="text-align: center" align="center">
+  <a href="https://tsed.io" target="_blank"><img src="https://tsed.io/tsed-og.png" width="200" alt="Ts.ED logo"/></a>
+</p>
 
-[![Service Tests](https://github.com/Badger-Finance/badger-api/actions/workflows/test.yml/badge.svg)](https://github.com/Badger-Finance/badger-api/actions/workflows/test.yml)
-[![Deploy](https://github.com/Badger-Finance/badger-api/actions/workflows/deploy.yml/badge.svg)](https://github.com/Badger-Finance/badger-api/actions/workflows/deploy.yml)
-[![Test Coverage](https://github.com/Badger-Finance/badger-api/actions/workflows/coverage.yml/badge.svg)](https://github.com/Badger-Finance/badger-api/actions/workflows/coverage.yml)
+<div align="center">
+  <h1>Ts.ED - badger-api</h1>
+  <br />
+  <div align="center">
+    <a href="https://cli.tsed.io/">Website</a>
+    <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
+    <a href="https://cli.tsed.io/getting-started.html">Getting started</a>
+    <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
+    <a href="https://api.tsed.io/rest/slack/tsedio/tsed">Slack</a>
+    <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
+    <a href="https://twitter.com/TsED_io">Twitter</a>
+  </div>
+  <hr />
+</div>
 
-Collection of serverless API to enable public access to data surrounding the Badger protocol.
+> An awesome project based on Ts.ED framework
 
-Interactive Swagger Documentation  
-https://docs.badger.finance/
+## Getting started
 
-## Docs:
+> **Important!** Ts.ED requires Node >= 14, Express >= 4 and TypeScript >= 4.
 
-- [Api v2](https://api.badger.com/docs/)
-- [MFA](./docs/mfa.md)
+```batch
+# install dependencies
+$ yarn install
 
-## Development
+# serve
+$ yarn start
 
-To get started, install the following dependencies:
-
-- Node
-- Java
-
-**Note: If you are running on an M1 Mac you will have to install the x86 version of Java and run the following commands in [Rosetta](https://osxdaily.com/2020/11/18/how-run-homebrew-x86-terminal-apple-silicon-mac/)**
-
-
-Setup project dependencies:
-
-```bash
-yarn install --frozen-lockfile
-npm install -g serverless
-sls dynamodb install
+# build for production
+$ yarn build
+$ yarn start:prod
 ```
 
-In case if u don't have `.aws` credentials yet
-
-```sh
-sls config credentials --provider aws \
- --key <aws_access_key_id>
- --secret <aws_secret_access_key>
-```
-
-> Contact **Tritium | BadgerDAO#4816** for AWS access if required.
-> After getting keys, complite the [MFA](./docs/mfa.md) section.
-
-#### Git
-
-Badger accepts only verified commits, this can be done by signing
-them with gpg keys. For more info, proceed to
-[github gpg doc](https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key).
-
-### Environment Variables
-
-Variables are handled by a combination of dot env files, and the serverless manifest.
-An example file is available at [.env.example](./.env.example).
-
-Before running the API, make sure to create a local `.env` file:
+## Docker
 
 ```
-cp .env.example .env
+# build docker image
+docker compose build
+
+# start docker image
+docker compose up
 ```
 
-Update the RPC values and Graph API key with data from the DevOps team or your own endpoints.
+## Barrelsby
 
-> Contact **jintao#0713** for RPC or TheGraph access if required.
+This project uses [barrelsby](https://www.npmjs.com/package/barrelsby) to generate index files to import the controllers.
 
-### AWS Lambda Environment
+Edit `.barreslby.json` to customize it:
 
+```json
+{
+  "directory": ["./src/controllers/rest", "./src/controllers/pages"],
+  "exclude": ["__mock__", "__mocks__", ".spec.ts"],
+  "delete": true
+}
 ```
-yarn dev
-```
-
-**Note: You cannot view Swagger documentation via Serverless**
-
-### Express Environment
-
-```
-npx ts-node src/index.ts
-```
-
-- [Swagger UI](http://localhost:8080/docs)
-- [Swagger JSON](http://localhost:8080/docs/swagger.json)
-
-Express is not the recommended development environment as implmentations will execute in lambda.
-Serverless offline framework is the closest to production execution environment.
-
-### Local Testing
-
-The API supports local (offline) testing of nearly all endpoints.
-Certain endpoints which require access to AWS resources may not work appropriately without AWS credentials.
-The databased used for local testing DynamoDB - a local version with exact table copies of production.
-These tables are seeded with data located in the [seed folder](./seed).
-
-**Note: Running only sls offline will not start or seed dynamo. Run sls offline start, or yarn dev instead.**

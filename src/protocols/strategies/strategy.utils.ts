@@ -3,7 +3,7 @@ import { GraphQLClient } from 'graphql-request';
 import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
 import { YieldSource } from '../../aws/models/yield-source.model';
 import { getSdk as getUniswapSdk, OrderDirection, PairDayData_OrderBy } from '../../graphql/generated/uniswap';
-import { getPrice } from '../../prices/prices.utils';
+import { queryPrice } from '../../prices/prices.utils';
 import { SourceType } from '../../rewards/enums/source-type.enum';
 import { createYieldSource } from '../../vaults/yields.utils';
 import { PairDayData } from '../interfaces/pair-day-data.interface';
@@ -29,8 +29,8 @@ async function getUniSwapValue(vault: VaultDefinitionModel, tradeData: UniPairDa
     return createYieldSource(vault, SourceType.TradeFee, name, 0);
   }
   const [token0Price, token1Price] = await Promise.all([
-    getPrice(tradeData[0].token0.id),
-    getPrice(tradeData[0].token1.id),
+    queryPrice(tradeData[0].token0.id),
+    queryPrice(tradeData[0].token1.id),
   ]);
   let totalApy = 0;
   let currentApy = 0;

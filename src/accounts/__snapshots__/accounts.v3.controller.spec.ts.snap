@@ -1,0 +1,100 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`accounts.v2.controller GET /v2/accounts with a non participant account returns a default account response 1`] = `
+Object {
+  "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+  "boost": 1,
+  "boostRank": 1035,
+  "bveCvxBalance": 0,
+  "claimableBalances": Object {},
+  "data": Object {},
+  "diggBalance": 0,
+  "earnedValue": 0,
+  "nativeBalance": 0,
+  "nftBalance": 0,
+  "nonNativeBalance": 0,
+  "stakeRatio": 0,
+  "value": 0,
+}
+`;
+
+exports[`accounts.v2.controller GET /v2/accounts with a participant account returns a cached account response 1`] = `
+Object {
+  "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+  "boost": 2000,
+  "boostRank": 1,
+  "bveCvxBalance": 0,
+  "claimableBalances": Object {},
+  "data": Object {},
+  "diggBalance": 0,
+  "earnedValue": 1,
+  "nativeBalance": 3,
+  "nftBalance": 3,
+  "nonNativeBalance": 5,
+  "stakeRatio": 1,
+  "value": 10,
+}
+`;
+
+exports[`accounts.v2.controller GET /v2/accounts with an invalid account input returns a bad request response 1`] = `
+Object {
+  "errors": Array [],
+  "message": "Addr 0xjintao is not a valid account",
+  "name": "Error",
+  "status": 400,
+}
+`;
+
+exports[`accounts.v3.controller GET /v3/account with a non participant account returns a default account response 1`] = `
+Object {
+  "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+  "boost": 1,
+  "boostRank": 1035,
+  "bveCvxBalance": 0,
+  "claimableBalances": Object {},
+  "data": Object {},
+  "diggBalance": 0,
+  "earnedValue": 0,
+  "nativeBalance": 0,
+  "nftBalance": 0,
+  "nonNativeBalance": 0,
+  "stakeRatio": 0,
+  "value": 0,
+}
+`;
+
+exports[`accounts.v3.controller GET /v3/account with a participant account returns a cached account response 1`] = `
+Object {
+  "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+  "boost": 2000,
+  "boostRank": 1,
+  "bveCvxBalance": 0,
+  "claimableBalances": Object {},
+  "data": Object {},
+  "diggBalance": 0,
+  "earnedValue": 1,
+  "nativeBalance": 3,
+  "nftBalance": 3,
+  "nonNativeBalance": 5,
+  "stakeRatio": 1,
+  "value": 10,
+}
+`;
+
+exports[`accounts.v3.controller GET /v3/account with an invalid account input returns a bad request response 1`] = `
+Object {
+  "errors": Array [],
+  "message": "Addr 0xjintao is not a valid account",
+  "name": "Error",
+  "status": 400,
+}
+`;
+
+exports[`accounts.v3.controller GET /v3/account with no specified account returns a not found response 1`] = `
+Object {
+  "errors": Array [],
+  "message": "Query param address invalid",
+  "name": "Error",
+  "status": 400,
+}
+`;

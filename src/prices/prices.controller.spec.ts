@@ -1,60 +1,38 @@
-import { PlatformTest } from '@tsed/common';
 import { BadRequest } from '@tsed/exceptions';
-import SuperTest from 'supertest';
+import { PlatformServerless } from '@tsed/platform-serverless';
+import { PlatformServerlessTest } from '@tsed/platform-serverless-testing';
 
-import { Server } from '../Server';
-import { bscTokensConfig } from '../tokens/config/bsc-tokens.config';
-import { ethTokensConfig } from '../tokens/config/eth-tokens.config';
-import { PricesService } from './prices.service';
+import { Chain } from '../chains/config/chain.config';
+import { setupMockChain } from '../test/mocks.utils';
+import { PricesController } from './prices.controller';
 
 describe('PricesController', () => {
-  let request: SuperTest.SuperTest<SuperTest.Test>;
-  let pricesService: PricesService;
+  beforeEach(
+    PlatformServerlessTest.bootstrap(PlatformServerless, {
+      lambda: [PricesController],
+    }),
+  );
+  afterEach(() => PlatformServerlessTest.reset());
 
-  beforeEach(PlatformTest.bootstrap(Server));
-  beforeEach(async () => {
-    request = SuperTest(PlatformTest.callback());
-    pricesService = PlatformTest.get<PricesService>(PricesService);
-  });
-
-  afterEach(PlatformTest.reset);
-
-  const getPrice = (address: string): number => parseInt(address.slice(0, 3), 16);
+  beforeEach(() => setupMockChain());
 
   describe('GET /v2/prices', () => {
-    describe('with no specified chain', () => {
-      it('returns eth token config', async (done: jest.DoneCallback) => {
-        const result = Object.fromEntries(Object.keys(ethTokensConfig).map((token) => [token, getPrice(token)]));
-        jest.spyOn(pricesService, 'getPriceSummary').mockImplementationOnce(() => Promise.resolve(result));
-        const { body } = await request.get('/v2/prices').expect(200);
-        expect(body).toMatchSnapshot();
-        done();
-      });
-    });
-
-    describe('with a specified chain', () => {
-      it('returns the specified token config for eth', async (done: jest.DoneCallback) => {
-        const result = Object.fromEntries(Object.keys(ethTokensConfig).map((token) => [token, getPrice(token)]));
-        jest.spyOn(pricesService, 'getPriceSummary').mockImplementationOnce(() => Promise.resolve(result));
-        const { body } = await request.get('/v2/prices?chain=ethereum').expect(200);
-        expect(body).toMatchSnapshot();
-        done();
-      });
-
-      it('returns the specified token config for bsc', async (done: jest.DoneCallback) => {
-        const result = Object.fromEntries(Object.keys(bscTokensConfig).map((token) => [token, getPrice(token)]));
-        jest.spyOn(pricesService, 'getPriceSummary').mockImplementationOnce(() => Promise.resolve(result));
-        const { body } = await request.get('/v2/prices?chain=binancesmartchain').expect(200);
-        expect(body).toMatchSnapshot();
-        done();
+    describe('with a valid specified chain', () => {
+      it('returns token config', async () => {
+        const { body, statusCode } = await PlatformServerlessTest.request.get('/prices');
+        expect(statusCode).toEqual(200);
+        expect(JSON.parse(body)).toMatchSnapshot();
       });
     });
 
     describe('with an invalid specified chain', () => {
-      it('returns a 400', async (done: jest.DoneCallback) => {
-        const { body } = await request.get('/v2/prices?chain=invalid').expect(BadRequest.STATUS);
-        expect(body).toMatchSnapshot();
-        done();
+      it('returns a 400', async () => {
+        jest.spyOn(Chain, 'getChain').mockImplementation(() => {
+          throw new BadRequest(`invalid is not a supported chain`);
+        });
+        const { body, statusCode } = await PlatformServerlessTest.request.get('/prices?chain=invalid');
+        expect(statusCode).toEqual(400);
+        expect(JSON.parse(body)).toMatchSnapshot();
       });
     });
   });

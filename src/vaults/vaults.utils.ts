@@ -1,14 +1,12 @@
 import {
   Currency,
   formatBalance,
-  gqlGenT,
-  keyBy,
   ListHarvestOptions,
-  Network,
   ONE_DAY_MS,
+  ONE_DAY_SECONDS,
+  ONE_YEAR_SECONDS,
   Protocol,
   Strategy__factory,
-  Vault__factory,
   VaultDTO,
   VaultPerformanceEvent,
   VaultType,
@@ -25,26 +23,30 @@ import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { YieldEstimate } from '../aws/models/yield-estimate.model';
 import { YieldSource } from '../aws/models/yield-source.model';
 import { Chain } from '../chains/config/chain.config';
-import { ONE_DAY_SECONDS, ONE_YEAR_SECONDS } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
 import { EmissionControl__factory } from '../contracts';
 import { getVault } from '../indexers/indexer.utils';
 import { PricingType } from '../prices/enums/pricing-type.enum';
 import { TokenPrice } from '../prices/interface/token-price.interface';
-import { convert, getPrice } from '../prices/prices.utils';
+import { convert, queryPrice } from '../prices/prices.utils';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { getProtocolValueSources, getRewardEmission } from '../rewards/rewards.utils';
 import { getFullToken, getVaultTokens } from '../tokens/tokens.utils';
 import { Nullable } from '../utils/types.utils';
 import { HarvestType } from './enums/harvest.enum';
+import { getInfuelnceVaultYieldBalance, isInfluenceVault } from './influence.utils';
 import { VaultHarvestData } from './interfaces/vault-harvest-data.interface';
 import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
 import { VaultStrategy } from './interfaces/vault-strategy.interface';
-import { isInfluenceVault } from './yields.config';
-import { aggregateSources, createYieldSource } from './yields.utils';
+import {
+  aggregateSources,
+  calculateYield,
+  createYieldSource,
+  loadVaultEventPerformances,
+  loadVaultGraphPerformances,
+} from './yields.utils';
 
 export const VAULT_SOURCE = 'Vault Compounding';
-const VAULT_TWAY_PERIOD = 15;
 
 export async function defaultVault(chain: Chain, vault: VaultDefinitionModel): Promise<VaultDTO> {
   const { state, bouncer, behavior, version, protocol, name, depositToken, address } = vault;
@@ -243,7 +245,7 @@ export async function getVaultTokenPrice(chain: Chain, address: string): Promise
   const targetVault = isCrossChainVault ? vaultToken.address : token.address;
   const vault = await targetChain.vaults.getVault(targetVault);
   const [underlyingTokenPrice, vaultTokenSnapshot] = await Promise.all([
-    getPrice(vaultToken.address),
+    queryPrice(vaultToken.address),
     getCachedVault(chain, vault),
   ]);
   return {
@@ -251,8 +253,6 @@ export async function getVaultTokenPrice(chain: Chain, address: string): Promise
     price: underlyingTokenPrice.price * vaultTokenSnapshot.pricePerFullShare,
   };
 }
-
-const vaultLookupMethod: Record<string, string> = {};
 
 /**
  * Load a Badger vault measured performance.
@@ -271,36 +271,9 @@ export async function getVaultPerformance(chain: Chain, vault: VaultDefinitionMo
   } catch {
     vaultSources = await loadVaultGraphPerformances(chain, vault);
   }
-  console.log(`${vault.name}: ${vaultLookupMethod[vault.address]}`);
   // handle aggregation of various sources - this unfortunately loses the ddb schemas and need to be reassigned
   const aggregatedSources = aggregateSources([...vaultSources, ...rewardEmissions, ...protocol], (s) => s.id);
   return aggregatedSources.map((s) => Object.assign(new YieldSource(), s));
-}
-
-export async function loadVaultEventPerformances(chain: Chain, vault: VaultDefinitionModel): Promise<YieldSource[]> {
-  const incompatibleNetworks = new Set<Network>([Network.BinanceSmartChain, Network.Polygon, Network.Arbitrum]);
-  if (incompatibleNetworks.has(chain.network)) {
-    throw new Error('Network does not have standardized vaults!');
-  }
-
-  if (isInfluenceVault(vault.address)) {
-    throw new Error('Vault utilizes external harvest processor, not compatible with event lookup');
-  }
-
-  const sdk = await chain.getSdk();
-  const cutoffPeriod = VAULT_TWAY_PERIOD * ONE_DAY_SECONDS;
-  const cutoff = Date.now() / 1000 - cutoffPeriod;
-  const startBlock = (await sdk.provider.getBlockNumber()) - Math.floor(cutoffPeriod / 13);
-  const { data } = await sdk.vaults.listHarvests({
-    address: vault.address,
-    timestamp_gte: cutoff,
-    version: vault.version ?? VaultVersion.v1,
-    startBlock,
-  });
-
-  vaultLookupMethod[vault.address] = 'EventAPR';
-
-  return estimateVaultPerformance(chain, vault, data);
 }
 
 /**
@@ -348,103 +321,6 @@ export function estimateDerivativeEmission(
   return (currentValueEmittedCompounded / total) * 100;
 }
 
-// subgraph based emissions retrieval
-// should we put this into the sdk?
-export async function loadVaultGraphPerformances(chain: Chain, vault: VaultDefinitionModel): Promise<YieldSource[]> {
-  const { address } = vault;
-
-  const { graph } = chain.sdk;
-  const now = Math.floor(Date.now() / 1000);
-
-  const cutoff = Math.floor(now - VAULT_TWAY_PERIOD * ONE_DAY_SECONDS);
-
-  let [vaultHarvests, treeDistributions] = await Promise.all([
-    graph.loadSettHarvests({
-      where: {
-        sett: address.toLowerCase(),
-        timestamp_gte: cutoff,
-      },
-    }),
-    graph.loadBadgerTreeDistributions({
-      where: {
-        sett: address.toLowerCase(),
-        timestamp_gte: cutoff,
-      },
-    }),
-  ]);
-
-  let { settHarvests } = vaultHarvests;
-  let { badgerTreeDistributions } = treeDistributions;
-
-  vaultLookupMethod[address] = 'GraphAPR';
-  let data = constructGraphVaultData(vault, settHarvests, badgerTreeDistributions);
-  // if there are no recent viable options, attempt to use the full vault history
-  if (data.length <= 1) {
-    // take the last 6 weeks as the "full graph" to avoid really old data
-    const cutoff = Number(((Date.now() - ONE_DAY_MS * 42) / 1000).toFixed());
-    [vaultHarvests, treeDistributions] = await Promise.all([
-      graph.loadSettHarvests({
-        where: {
-          sett: address.toLowerCase(),
-          timestamp_gte: cutoff,
-        },
-      }),
-      graph.loadBadgerTreeDistributions({
-        where: {
-          sett: address.toLowerCase(),
-          timestamp_gte: cutoff,
-        },
-      }),
-    ]);
-    settHarvests = vaultHarvests.settHarvests;
-    badgerTreeDistributions = treeDistributions.badgerTreeDistributions;
-    vaultLookupMethod[address] = 'FullGraphAPR';
-    data = constructGraphVaultData(vault, settHarvests, badgerTreeDistributions);
-  }
-
-  // if we still don't have harvests or distributions - don't bother there is nothing to compute
-  if (data.length <= 1) {
-    return [];
-  }
-
-  return estimateVaultPerformance(chain, vault, data);
-}
-
-function constructGraphVaultData(
-  vault: VaultDefinitionModel,
-  settHarvests: gqlGenT.SettHarvestsQuery['settHarvests'],
-  badgerTreeDistributions: gqlGenT.BadgerTreeDistributionsQuery['badgerTreeDistributions'],
-): VaultHarvestData[] {
-  const harvestsByTimestamp = keyBy(settHarvests, (harvest) => harvest.timestamp);
-  const treeDistributionsByTimestamp = keyBy(badgerTreeDistributions, (distribution) => distribution.timestamp);
-  const timestamps = Array.from(
-    new Set([...harvestsByTimestamp.keys(), ...treeDistributionsByTimestamp.keys()]).values(),
-  );
-  return timestamps.map((t) => {
-    const timestamp = Number(t);
-    const currentHarvests = harvestsByTimestamp.get(timestamp) ?? [];
-    const currentDistributions = treeDistributionsByTimestamp.get(timestamp) ?? [];
-    return {
-      timestamp,
-      harvests: currentHarvests.map((h) => ({
-        timestamp,
-        block: Number(h.blockNumber),
-        token: vault.depositToken,
-        amount: h.amount,
-      })),
-      treeDistributions: currentDistributions.map((d) => {
-        const tokenAddress = d.token.id.startsWith('0x0x') ? d.token.id.slice(2) : d.token.id;
-        return {
-          timestamp,
-          block: Number(d.blockNumber),
-          token: tokenAddress,
-          amount: d.amount,
-        };
-      }),
-    };
-  });
-}
-
 export async function estimateHarvestEventApr(
   chain: Chain,
   token: VaultPerformanceEvent['token'],
@@ -472,7 +348,58 @@ export async function estimateVaultPerformance(
   vault: VaultDefinitionModel,
   data: VaultHarvestData[],
 ): Promise<YieldSource[]> {
+  const sdk = await chain.getSdk();
   const recentHarvests = data.sort((a, b) => b.timestamp - a.timestamp);
+
+  /**
+   * ON 8/15 AN INCORREC PROCESSING OF A BADGER REWARDS PROCESSOR OCCURED.
+   * AS A RESULT, THE EVENTS INCLUDED IN TREE DISTRIBUTIONS DID NOT MAKE IT
+   * TO THE GRAPH, OR ANY SOURCE OF ON CHAIN DATA CURRENTLY SUPPORTED BY
+   * THE CURRENT YIELD SYSTEM.
+   *
+   * https://etherscan.io/tx/0x1e3e7c71012d36e936b768a37e9784125a00f205a22bd808f045968a506bb1ce#eventlog
+   *
+   * THIS TRANSACTION CONTAINS THE SINGLE BADGER TREE DISTRIBUTION WE ARE
+   * ALLOCATING TO GRAVI_AURA VAULT AS A MISSED - AND NOT CAPTURED SOURCE.
+   *
+   * THIS CODE SHOULD BE REMOVED BY 08/29.
+   */
+  if (vault.address === TOKENS.GRAVI_AURA) {
+    const targetBlock = 15344809;
+    const block = await sdk.provider.getBlock(targetBlock);
+    const targetedInsertion = recentHarvests[0].treeDistributions;
+    targetedInsertion.push({
+      timestamp: block.timestamp,
+      block: targetBlock,
+      token: TOKENS.BADGER,
+      amount: BigNumber.from('1928771715566995688546'),
+    });
+  }
+
+  /**
+   * THIS SECTION WILL REMAIN FOR A QUICK RUN DOWN OF HARVEST INPUTS.
+   * THERE WILL BE A DEDICATED PERSISTENCE LAYER FOR THIS INFORMATION
+   * AS WELL AS A QUERYABLE ENDPOINT TO FACILITATE ASCERTAINING YIELD
+   * MATHS INPUT FOR THE FUTURE.
+   */
+  const allEvents = recentHarvests
+    .flatMap((h) => h.harvests)
+    .concat(recentHarvests.flatMap((h) => h.treeDistributions))
+    .sort((a, b) => b.timestamp - a.timestamp);
+
+  let harvestReport = `${vault.name} Harvest Report\n`;
+  let totalAccumulated = 0;
+  for (const event of allEvents) {
+    const token = await getFullToken(chain, event.token);
+    const amount = formatBalance(event.amount, token.decimals);
+    const price = await queryPrice(token.address);
+    harvestReport = harvestReport.concat(
+      `[${new Date(event.timestamp * 1000).toLocaleString()}] ${amount.toFixed(2)} ${token.symbol} ($${(
+        price.price * amount
+      ).toFixed(2)})\n`,
+    );
+    totalAccumulated += price.price * amount;
+  }
 
   if (recentHarvests.length <= 1) {
     throw new Error(`${vault.name} does not have adequate harvest history`);
@@ -510,17 +437,10 @@ export async function estimateVaultPerformance(
   let weightedBalance = 0;
   const depositToken = await getFullToken(chain, vault.depositToken);
 
+  let targetBlock = 0;
   if (isInfluece) {
-    const sdk = await chain.getSdk();
-    let targetBlock = 0;
-    if (recentHarvests[0].treeDistributions.length > 0) {
-      targetBlock = recentHarvests[0].treeDistributions[0].block;
-    } else {
-      targetBlock = recentHarvests[0].harvests[0].block;
-    }
-    const vaultContract = Vault__factory.connect(vault.address, sdk.provider);
-    const strategyBalance = await vaultContract.totalSupply({ blockTag: targetBlock });
-    weightedBalance = formatBalance(strategyBalance);
+    targetBlock = allEvents[0].block;
+    weightedBalance = await getInfuelnceVaultYieldBalance(chain, vault.address, targetBlock);
   } else {
     const allHarvests = recentHarvests.flatMap((h) => h.harvests);
     // use the full harvests to construct all intervals for durations, nth element is ignored for distributions
@@ -547,10 +467,17 @@ export async function estimateVaultPerformance(
     weightedBalance = cachedVault.balance * totalDuration;
   }
 
-  const { price } = await getPrice(vault.depositToken);
+  const { price } = await queryPrice(vault.depositToken);
   const measuredBalance = isInfluece ? weightedBalance : weightedBalance / totalDuration;
   // lord, forgive me for my sins... we will generalize this shortly I hope
   const measuredValue = measuredBalance * price;
+  const apr = calculateYield(measuredValue, totalAccumulated, ONE_DAY_MS * 14);
+  harvestReport = harvestReport.concat(
+    `Vault Holdings: $${measuredValue.toFixed()} (${measuredBalance.toFixed()} tokens), Total Earned: $${totalAccumulated.toFixed(
+      2,
+    )}, Est. Yield: ${apr.toFixed(2)}%, Block: ${targetBlock}`,
+  );
+  console.log(harvestReport);
   const totalHarvestedTokens = formatBalance(totalHarvested, depositToken.decimals);
   // count of harvests is exclusive of the 0th element
   const durationScalar = ONE_YEAR_SECONDS / totalDuration;
@@ -582,7 +509,7 @@ export async function estimateVaultPerformance(
   let flywheelCompounding = 0;
 
   for (const [token, amount] of tokensEmitted.entries()) {
-    const { price } = await getPrice(token);
+    const { price } = await queryPrice(token);
     if (price === 0) {
       continue;
     }

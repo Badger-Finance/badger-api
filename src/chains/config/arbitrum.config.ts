@@ -12,7 +12,7 @@ export class Arbitrum extends Chain {
       Network.Arbitrum,
       arbitrumTokensConfig,
       RPC[Network.Arbitrum],
-      new BaseStrategy(Network.Arbitrum, Object.keys(arbitrumTokensConfig)),
+      new BaseStrategy(Network.Arbitrum),
       '0x78418681f9ed228d627f785fb9607ed5175518fd',
     );
     Chain.register(this.network, this);

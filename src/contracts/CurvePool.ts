@@ -10,29 +10,32 @@ import {
   PopulatedTransaction,
   Signer,
   utils,
-} from 'ethers';
-import { FunctionFragment, Result } from '@ethersproject/abi';
-import { Listener, Provider } from '@ethersproject/providers';
-import { TypedEventFilter, TypedEvent, TypedListener, OnEvent } from './common';
+} from "ethers";
+import { FunctionFragment, Result } from "@ethersproject/abi";
+import { Listener, Provider } from "@ethersproject/providers";
+import { TypedEventFilter, TypedEvent, TypedListener, OnEvent } from "./common";
 
 export interface CurvePoolInterface extends utils.Interface {
-  contractName: 'CurvePool';
+  contractName: "CurvePool";
   functions: {
-    'coins(int128)': FunctionFragment;
-    'balances(int128)': FunctionFragment;
+    "coins(int128)": FunctionFragment;
+    "balances(int128)": FunctionFragment;
   };
 
-  encodeFunctionData(functionFragment: 'coins', values: [BigNumberish]): string;
-  encodeFunctionData(functionFragment: 'balances', values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: "coins", values: [BigNumberish]): string;
+  encodeFunctionData(
+    functionFragment: "balances",
+    values: [BigNumberish]
+  ): string;
 
-  decodeFunctionResult(functionFragment: 'coins', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'balances', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "coins", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "balances", data: BytesLike): Result;
 
   events: {};
 }
 
 export interface CurvePool extends BaseContract {
-  contractName: 'CurvePool';
+  contractName: "CurvePool";
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -42,12 +45,16 @@ export interface CurvePool extends BaseContract {
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
     fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined,
+    toBlock?: string | number | undefined
   ): Promise<Array<TEvent>>;
 
-  listeners<TEvent extends TypedEvent>(eventFilter?: TypedEventFilter<TEvent>): Array<TypedListener<TEvent>>;
+  listeners<TEvent extends TypedEvent>(
+    eventFilter?: TypedEventFilter<TEvent>
+  ): Array<TypedListener<TEvent>>;
   listeners(eventName?: string): Array<Listener>;
-  removeAllListeners<TEvent extends TypedEvent>(eventFilter: TypedEventFilter<TEvent>): this;
+  removeAllListeners<TEvent extends TypedEvent>(
+    eventFilter: TypedEventFilter<TEvent>
+  ): this;
   removeAllListeners(eventName?: string): this;
   off: OnEvent<this>;
   on: OnEvent<this>;
@@ -57,7 +64,10 @@ export interface CurvePool extends BaseContract {
   functions: {
     coins(arg0: BigNumberish, overrides?: CallOverrides): Promise<[string]>;
 
-    balances(arg0: BigNumberish, overrides?: CallOverrides): Promise<[BigNumber]>;
+    balances(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
   };
 
   coins(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
@@ -79,8 +89,14 @@ export interface CurvePool extends BaseContract {
   };
 
   populateTransaction: {
-    coins(arg0: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    coins(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
-    balances(arg0: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    balances(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
   };
 }

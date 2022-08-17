@@ -1,29 +1,29 @@
-import { Network } from '@badger-dao/sdk';
+import { Network, ONE_MINUTE_MS } from '@badger-dao/sdk';
 import { NotFound } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 
 import { getDataMapper } from '../../aws/dynamodb.utils';
 import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
-import { ONE_MINUTE_SECONDS, STAGE } from '../../config/constants';
+import { STAGE } from '../../config/constants';
 import { Stage } from '../../config/enums/stage.enum';
 
 export class ChainVaults {
   network: Network;
   cachedVaults: VaultDefinitionModel[] = [];
 
-  readonly cacheTtl = ONE_MINUTE_SECONDS * 2 * 1000;
+  readonly cacheTtl = ONE_MINUTE_MS * 2;
   private updatedAt!: number;
 
   constructor(network: Network) {
     this.network = network;
   }
 
-  async all() {
+  async all(): Promise<VaultDefinitionModel[]> {
     await this.#updateCachedVaults();
     return this.cachedVaults;
   }
 
-  async getVault(address: string) {
+  async getVault(address: string): Promise<VaultDefinitionModel> {
     await this.#updateCachedVaults();
     const requestAddress = ethers.utils.getAddress(address);
     const vault = Object.fromEntries(this.cachedVaults.map((v) => [v.address, v]))[requestAddress];

@@ -1,34 +1,33 @@
 import { DataMapper } from '@aws/dynamodb-data-mapper';
-import AWS from 'aws-sdk';
+import { Network } from '@badger-dao/sdk';
+import DynamoDB from 'aws-sdk/clients/dynamodb';
 
-import { Chain } from '../chains/config/chain.config';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import { Chainish } from './interfaces/chainish.interface';
 import { Vaultish } from './interfaces/vaultish.interface';
 
-const offline = process.env.IS_OFFLINE;
-
 export function getDataMapper(): DataMapper {
-  let client: AWS.DynamoDB;
+  const offline = process.env.IS_OFFLINE;
+  let client: DynamoDB;
   if (offline) {
-    client = new AWS.DynamoDB({
+    client = new DynamoDB({
       region: 'localhost',
       endpoint: 'http://localhost:8000',
       accessKeyId: '',
       secretAccessKey: '',
     });
   } else {
-    client = new AWS.DynamoDB();
+    client = new DynamoDB();
   }
   return new DataMapper({ client });
 }
 
-export function getLeaderboardKey(chain: Chain): string {
-  return `${chain.network}_${LeaderBoardType.BadgerBoost}`;
+export function getLeaderboardKey(network: Network): string {
+  return `${network}_${LeaderBoardType.BadgerBoost}`;
 }
 
-export function getChainStartBlockKey(chain: Chain, block: number): string {
-  return `${chain.network}_${block}`;
+export function getChainStartBlockKey(network: Network, block: number): string {
+  return `${network}_${block}`;
 }
 
 export function getVaultEntityId({ network }: Chainish, { address }: Vaultish): string {

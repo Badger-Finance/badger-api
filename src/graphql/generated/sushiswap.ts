@@ -57,7 +57,7 @@ export type Bundle_Filter = {
 
 export enum Bundle_OrderBy {
   EthPrice = 'ethPrice',
-  Id = 'id',
+  Id = 'id'
 }
 
 export type Burn = {
@@ -225,7 +225,7 @@ export enum Burn_OrderBy {
   Sender = 'sender',
   Timestamp = 'timestamp',
   To = 'to',
-  Transaction = 'transaction',
+  Transaction = 'transaction'
 }
 
 export type DayData = {
@@ -340,7 +340,7 @@ export enum DayData_OrderBy {
   TxCount = 'txCount',
   UntrackedVolume = 'untrackedVolume',
   VolumeEth = 'volumeETH',
-  VolumeUsd = 'volumeUSD',
+  VolumeUsd = 'volumeUSD'
 }
 
 export type Factory = {
@@ -361,6 +361,7 @@ export type Factory = {
   volumeUSD: Scalars['BigDecimal'];
 };
 
+
 export type FactoryDayDataArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<DayData_OrderBy>;
@@ -368,6 +369,7 @@ export type FactoryDayDataArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<DayData_Filter>;
 };
+
 
 export type FactoryHourDataArgs = {
   first?: InputMaybe<Scalars['Int']>;
@@ -377,6 +379,7 @@ export type FactoryHourDataArgs = {
   where?: InputMaybe<HourData_Filter>;
 };
 
+
 export type FactoryPairsArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Pair_OrderBy>;
@@ -384,6 +387,7 @@ export type FactoryPairsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<Pair_Filter>;
 };
+
 
 export type FactoryTokensArgs = {
   first?: InputMaybe<Scalars['Int']>;
@@ -496,7 +500,7 @@ export enum Factory_OrderBy {
   UntrackedVolumeUsd = 'untrackedVolumeUSD',
   UserCount = 'userCount',
   VolumeEth = 'volumeETH',
-  VolumeUsd = 'volumeUSD',
+  VolumeUsd = 'volumeUSD'
 }
 
 export type HourData = {
@@ -611,7 +615,7 @@ export enum HourData_OrderBy {
   TxCount = 'txCount',
   UntrackedVolume = 'untrackedVolume',
   VolumeEth = 'volumeETH',
-  VolumeUsd = 'volumeUSD',
+  VolumeUsd = 'volumeUSD'
 }
 
 export type LiquidityPosition = {
@@ -624,6 +628,7 @@ export type LiquidityPosition = {
   timestamp: Scalars['Int'];
   user: User;
 };
+
 
 export type LiquidityPositionSnapshotsArgs = {
   first?: InputMaybe<Scalars['Int']>;
@@ -811,7 +816,7 @@ export enum LiquidityPositionSnapshot_OrderBy {
   Timestamp = 'timestamp',
   Token0PriceUsd = 'token0PriceUSD',
   Token1PriceUsd = 'token1PriceUSD',
-  User = 'user',
+  User = 'user'
 }
 
 export type LiquidityPosition_Filter = {
@@ -901,7 +906,7 @@ export enum LiquidityPosition_OrderBy {
   Pair = 'pair',
   Snapshots = 'snapshots',
   Timestamp = 'timestamp',
-  User = 'user',
+  User = 'user'
 }
 
 export type Mint = {
@@ -1063,13 +1068,13 @@ export enum Mint_OrderBy {
   Sender = 'sender',
   Timestamp = 'timestamp',
   To = 'to',
-  Transaction = 'transaction',
+  Transaction = 'transaction'
 }
 
 /** Defines the order direction, either ascending or descending */
 export enum OrderDirection {
   Asc = 'asc',
-  Desc = 'desc',
+  Desc = 'desc'
 }
 
 export type Pair = {
@@ -1104,6 +1109,7 @@ export type Pair = {
   volumeUSD: Scalars['BigDecimal'];
 };
 
+
 export type PairBurnsArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Burn_OrderBy>;
@@ -1111,6 +1117,7 @@ export type PairBurnsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<Burn_Filter>;
 };
+
 
 export type PairDayDataArgs = {
   first?: InputMaybe<Scalars['Int']>;
@@ -1120,6 +1127,7 @@ export type PairDayDataArgs = {
   where?: InputMaybe<PairDayData_Filter>;
 };
 
+
 export type PairHourDataArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<PairHourData_OrderBy>;
@@ -1127,6 +1135,7 @@ export type PairHourDataArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<PairHourData_Filter>;
 };
+
 
 export type PairLiquidityPositionSnapshotsArgs = {
   first?: InputMaybe<Scalars['Int']>;
@@ -1136,6 +1145,7 @@ export type PairLiquidityPositionSnapshotsArgs = {
   where?: InputMaybe<LiquidityPositionSnapshot_Filter>;
 };
 
+
 export type PairLiquidityPositionsArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<LiquidityPosition_OrderBy>;
@@ -1144,6 +1154,7 @@ export type PairLiquidityPositionsArgs = {
   where?: InputMaybe<LiquidityPosition_Filter>;
 };
 
+
 export type PairMintsArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Mint_OrderBy>;
@@ -1151,6 +1162,7 @@ export type PairMintsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<Mint_Filter>;
 };
+
 
 export type PairSwapsArgs = {
   first?: InputMaybe<Scalars['Int']>;
@@ -1338,7 +1350,7 @@ export enum PairDayData_OrderBy {
   TxCount = 'txCount',
   VolumeToken0 = 'volumeToken0',
   VolumeToken1 = 'volumeToken1',
-  VolumeUsd = 'volumeUSD',
+  VolumeUsd = 'volumeUSD'
 }
 
 export type PairHourData = {
@@ -1463,7 +1475,7 @@ export enum PairHourData_OrderBy {
   TxCount = 'txCount',
   VolumeToken0 = 'volumeToken0',
   VolumeToken1 = 'volumeToken1',
-  VolumeUsd = 'volumeUSD',
+  VolumeUsd = 'volumeUSD'
 }
 
 export type Pair_Filter = {
@@ -1725,7 +1737,7 @@ export enum Pair_OrderBy {
   UntrackedVolumeUsd = 'untrackedVolumeUSD',
   VolumeToken0 = 'volumeToken0',
   VolumeToken1 = 'volumeToken1',
-  VolumeUsd = 'volumeUSD',
+  VolumeUsd = 'volumeUSD'
 }
 
 export type Query = {
@@ -1771,15 +1783,18 @@ export type Query = {
   users: Array<User>;
 };
 
+
 export type Query_MetaArgs = {
   block?: InputMaybe<Block_Height>;
 };
+
 
 export type QueryBundleArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type QueryBundlesArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1791,11 +1806,13 @@ export type QueryBundlesArgs = {
   where?: InputMaybe<Bundle_Filter>;
 };
 
+
 export type QueryBurnArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type QueryBurnsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1807,11 +1824,13 @@ export type QueryBurnsArgs = {
   where?: InputMaybe<Burn_Filter>;
 };
 
+
 export type QueryDayDataArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type QueryDayDatasArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1823,6 +1842,7 @@ export type QueryDayDatasArgs = {
   where?: InputMaybe<DayData_Filter>;
 };
 
+
 export type QueryFactoriesArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -1833,17 +1853,20 @@ export type QueryFactoriesArgs = {
   where?: InputMaybe<Factory_Filter>;
 };
 
+
 export type QueryFactoryArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+
 export type QueryHourDataArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type QueryHourDatasArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1855,17 +1878,20 @@ export type QueryHourDatasArgs = {
   where?: InputMaybe<HourData_Filter>;
 };
 
+
 export type QueryLiquidityPositionArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+
 export type QueryLiquidityPositionSnapshotArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type QueryLiquidityPositionSnapshotsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1877,6 +1903,7 @@ export type QueryLiquidityPositionSnapshotsArgs = {
   where?: InputMaybe<LiquidityPositionSnapshot_Filter>;
 };
 
+
 export type QueryLiquidityPositionsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -1887,11 +1914,13 @@ export type QueryLiquidityPositionsArgs = {
   where?: InputMaybe<LiquidityPosition_Filter>;
 };
 
+
 export type QueryMintArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type QueryMintsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1903,17 +1932,20 @@ export type QueryMintsArgs = {
   where?: InputMaybe<Mint_Filter>;
 };
 
+
 export type QueryPairArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+
 export type QueryPairDayDataArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type QueryPairDayDatasArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1925,11 +1957,13 @@ export type QueryPairDayDatasArgs = {
   where?: InputMaybe<PairDayData_Filter>;
 };
 
+
 export type QueryPairHourDataArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type QueryPairHourDatasArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1941,6 +1975,7 @@ export type QueryPairHourDatasArgs = {
   where?: InputMaybe<PairHourData_Filter>;
 };
 
+
 export type QueryPairSearchArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -1948,6 +1983,7 @@ export type QueryPairSearchArgs = {
   subgraphError?: _SubgraphErrorPolicy_;
   text: Scalars['String'];
 };
+
 
 export type QueryPairsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1959,11 +1995,13 @@ export type QueryPairsArgs = {
   where?: InputMaybe<Pair_Filter>;
 };
 
+
 export type QuerySwapArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type QuerySwapsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1975,17 +2013,20 @@ export type QuerySwapsArgs = {
   where?: InputMaybe<Swap_Filter>;
 };
 
+
 export type QueryTokenArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+
 export type QueryTokenDayDataArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type QueryTokenDayDatasArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1997,11 +2038,13 @@ export type QueryTokenDayDatasArgs = {
   where?: InputMaybe<TokenDayData_Filter>;
 };
 
+
 export type QueryTokenHourDataArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type QueryTokenHourDatasArgs = {
   block?: InputMaybe<Block_Height>;
@@ -2013,6 +2056,7 @@ export type QueryTokenHourDatasArgs = {
   where?: InputMaybe<TokenHourData_Filter>;
 };
 
+
 export type QueryTokenSearchArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2020,6 +2064,7 @@ export type QueryTokenSearchArgs = {
   subgraphError?: _SubgraphErrorPolicy_;
   text: Scalars['String'];
 };
+
 
 export type QueryTokensArgs = {
   block?: InputMaybe<Block_Height>;
@@ -2031,11 +2076,13 @@ export type QueryTokensArgs = {
   where?: InputMaybe<Token_Filter>;
 };
 
+
 export type QueryTransactionArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type QueryTransactionsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -2047,11 +2094,13 @@ export type QueryTransactionsArgs = {
   where?: InputMaybe<Transaction_Filter>;
 };
 
+
 export type QueryUserArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type QueryUserSearchArgs = {
   block?: InputMaybe<Block_Height>;
@@ -2060,6 +2109,7 @@ export type QueryUserSearchArgs = {
   subgraphError?: _SubgraphErrorPolicy_;
   text: Scalars['String'];
 };
+
 
 export type QueryUsersArgs = {
   block?: InputMaybe<Block_Height>;
@@ -2111,15 +2161,18 @@ export type Subscription = {
   users: Array<User>;
 };
 
+
 export type Subscription_MetaArgs = {
   block?: InputMaybe<Block_Height>;
 };
+
 
 export type SubscriptionBundleArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type SubscriptionBundlesArgs = {
   block?: InputMaybe<Block_Height>;
@@ -2131,11 +2184,13 @@ export type SubscriptionBundlesArgs = {
   where?: InputMaybe<Bundle_Filter>;
 };
 
+
 export type SubscriptionBurnArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type SubscriptionBurnsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -2147,11 +2202,13 @@ export type SubscriptionBurnsArgs = {
   where?: InputMaybe<Burn_Filter>;
 };
 
+
 export type SubscriptionDayDataArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type SubscriptionDayDatasArgs = {
   block?: InputMaybe<Block_Height>;
@@ -2163,6 +2220,7 @@ export type SubscriptionDayDatasArgs = {
   where?: InputMaybe<DayData_Filter>;
 };
 
+
 export type SubscriptionFactoriesArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2173,17 +2231,20 @@ export type SubscriptionFactoriesArgs = {
   where?: InputMaybe<Factory_Filter>;
 };
 
+
 export type SubscriptionFactoryArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+
 export type SubscriptionHourDataArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type SubscriptionHourDatasArgs = {
   block?: InputMaybe<Block_Height>;
@@ -2195,17 +2256,20 @@ export type SubscriptionHourDatasArgs = {
   where?: InputMaybe<HourData_Filter>;
 };
 
+
 export type SubscriptionLiquidityPositionArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+
 export type SubscriptionLiquidityPositionSnapshotArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type SubscriptionLiquidityPositionSnapshotsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -2217,6 +2281,7 @@ export type SubscriptionLiquidityPositionSnapshotsArgs = {
   where?: InputMaybe<LiquidityPositionSnapshot_Filter>;
 };
 
+
 export type SubscriptionLiquidityPositionsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2227,11 +2292,13 @@ export type SubscriptionLiquidityPositionsArgs = {
   where?: InputMaybe<LiquidityPosition_Filter>;
 };
 
+
 export type SubscriptionMintArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type SubscriptionMintsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -2243,17 +2310,20 @@ export type SubscriptionMintsArgs = {
   where?: InputMaybe<Mint_Filter>;
 };
 
+
 export type SubscriptionPairArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+
 export type SubscriptionPairDayDataArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type SubscriptionPairDayDatasArgs = {
   block?: InputMaybe<Block_Height>;
@@ -2265,11 +2335,13 @@ export type SubscriptionPairDayDatasArgs = {
   where?: InputMaybe<PairDayData_Filter>;
 };
 
+
 export type SubscriptionPairHourDataArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type SubscriptionPairHourDatasArgs = {
   block?: InputMaybe<Block_Height>;
@@ -2281,6 +2353,7 @@ export type SubscriptionPairHourDatasArgs = {
   where?: InputMaybe<PairHourData_Filter>;
 };
 
+
 export type SubscriptionPairsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2291,11 +2364,13 @@ export type SubscriptionPairsArgs = {
   where?: InputMaybe<Pair_Filter>;
 };
 
+
 export type SubscriptionSwapArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type SubscriptionSwapsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -2307,17 +2382,20 @@ export type SubscriptionSwapsArgs = {
   where?: InputMaybe<Swap_Filter>;
 };
 
+
 export type SubscriptionTokenArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+
 export type SubscriptionTokenDayDataArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type SubscriptionTokenDayDatasArgs = {
   block?: InputMaybe<Block_Height>;
@@ -2329,11 +2407,13 @@ export type SubscriptionTokenDayDatasArgs = {
   where?: InputMaybe<TokenDayData_Filter>;
 };
 
+
 export type SubscriptionTokenHourDataArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type SubscriptionTokenHourDatasArgs = {
   block?: InputMaybe<Block_Height>;
@@ -2345,6 +2425,7 @@ export type SubscriptionTokenHourDatasArgs = {
   where?: InputMaybe<TokenHourData_Filter>;
 };
 
+
 export type SubscriptionTokensArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -2355,11 +2436,13 @@ export type SubscriptionTokensArgs = {
   where?: InputMaybe<Token_Filter>;
 };
 
+
 export type SubscriptionTransactionArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type SubscriptionTransactionsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -2371,11 +2454,13 @@ export type SubscriptionTransactionsArgs = {
   where?: InputMaybe<Transaction_Filter>;
 };
 
+
 export type SubscriptionUserArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type SubscriptionUsersArgs = {
   block?: InputMaybe<Block_Height>;
@@ -2538,7 +2623,7 @@ export enum Swap_OrderBy {
   Sender = 'sender',
   Timestamp = 'timestamp',
   To = 'to',
-  Transaction = 'transaction',
+  Transaction = 'transaction'
 }
 
 export type Token = {
@@ -2563,6 +2648,7 @@ export type Token = {
   volumeUSD: Scalars['BigDecimal'];
 };
 
+
 export type TokenBasePairsArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Pair_OrderBy>;
@@ -2570,6 +2656,7 @@ export type TokenBasePairsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<Pair_Filter>;
 };
+
 
 export type TokenBasePairsDayDataArgs = {
   first?: InputMaybe<Scalars['Int']>;
@@ -2579,6 +2666,7 @@ export type TokenBasePairsDayDataArgs = {
   where?: InputMaybe<PairDayData_Filter>;
 };
 
+
 export type TokenDayDataArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<TokenDayData_OrderBy>;
@@ -2586,6 +2674,7 @@ export type TokenDayDataArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<TokenDayData_Filter>;
 };
+
 
 export type TokenHourDataArgs = {
   first?: InputMaybe<Scalars['Int']>;
@@ -2595,6 +2684,7 @@ export type TokenHourDataArgs = {
   where?: InputMaybe<TokenHourData_Filter>;
 };
 
+
 export type TokenQuotePairsArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Pair_OrderBy>;
@@ -2602,6 +2692,7 @@ export type TokenQuotePairsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<Pair_Filter>;
 };
+
 
 export type TokenQuotePairsDayDataArgs = {
   first?: InputMaybe<Scalars['Int']>;
@@ -2743,7 +2834,7 @@ export enum TokenDayData_OrderBy {
   TxCount = 'txCount',
   Volume = 'volume',
   VolumeEth = 'volumeETH',
-  VolumeUsd = 'volumeUSD',
+  VolumeUsd = 'volumeUSD'
 }
 
 export type TokenHourData = {
@@ -2878,7 +2969,7 @@ export enum TokenHourData_OrderBy {
   TxCount = 'txCount',
   Volume = 'volume',
   VolumeEth = 'volumeETH',
-  VolumeUsd = 'volumeUSD',
+  VolumeUsd = 'volumeUSD'
 }
 
 export type Token_Filter = {
@@ -3043,7 +3134,7 @@ export enum Token_OrderBy {
   TxCount = 'txCount',
   UntrackedVolumeUsd = 'untrackedVolumeUSD',
   Volume = 'volume',
-  VolumeUsd = 'volumeUSD',
+  VolumeUsd = 'volumeUSD'
 }
 
 export type Transaction = {
@@ -3056,6 +3147,7 @@ export type Transaction = {
   timestamp: Scalars['BigInt'];
 };
 
+
 export type TransactionBurnsArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Burn_OrderBy>;
@@ -3064,6 +3156,7 @@ export type TransactionBurnsArgs = {
   where?: InputMaybe<Burn_Filter>;
 };
 
+
 export type TransactionMintsArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Mint_OrderBy>;
@@ -3071,6 +3164,7 @@ export type TransactionMintsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<Mint_Filter>;
 };
+
 
 export type TransactionSwapsArgs = {
   first?: InputMaybe<Scalars['Int']>;
@@ -3136,7 +3230,7 @@ export enum Transaction_OrderBy {
   Id = 'id',
   Mints = 'mints',
   Swaps = 'swaps',
-  Timestamp = 'timestamp',
+  Timestamp = 'timestamp'
 }
 
 export type User = {
@@ -3144,6 +3238,7 @@ export type User = {
   id: Scalars['ID'];
   liquidityPositions: Array<LiquidityPosition>;
 };
+
 
 export type UserLiquidityPositionsArgs = {
   first?: InputMaybe<Scalars['Int']>;
@@ -3169,7 +3264,7 @@ export type User_Filter = {
 
 export enum User_OrderBy {
   Id = 'id',
-  LiquidityPositions = 'liquidityPositions',
+  LiquidityPositions = 'liquidityPositions'
 }
 
 export type _Block_ = {
@@ -3201,58 +3296,43 @@ export enum _SubgraphErrorPolicy_ {
   /** Data will be returned even if the subgraph has indexing errors */
   Allow = 'allow',
   /** If the subgraph has indexing errors, data will be omitted. The default. */
-  Deny = 'deny',
+  Deny = 'deny'
 }
 
 export const SushiPairDayDataFragmentDoc = gql`
-  fragment SushiPairDayData on PairDayData {
-    reserveUSD
-    volumeUSD
-    date
-  }
-`;
+    fragment SushiPairDayData on PairDayData {
+  reserveUSD
+  volumeUSD
+  date
+}
+    `;
 export const SushiPairDayDatasDocument = gql`
-  query SushiPairDayDatas(
-    $first: Int
-    $where: PairDayData_filter
-    $orderBy: PairDayData_orderBy
-    $orderDirection: OrderDirection
+    query SushiPairDayDatas($first: Int, $where: PairDayData_filter, $orderBy: PairDayData_orderBy, $orderDirection: OrderDirection) {
+  pairDayDatas(
+    first: $first
+    where: $where
+    orderBy: $orderBy
+    orderDirection: $orderDirection
   ) {
-    pairDayDatas(first: $first, where: $where, orderBy: $orderBy, orderDirection: $orderDirection) {
-      ...SushiPairDayData
-    }
+    ...SushiPairDayData
   }
-  ${SushiPairDayDataFragmentDoc}
-`;
+}
+    ${SushiPairDayDataFragmentDoc}`;
 
-export type SdkFunctionWrapper = <T>(
-  action: (requestHeaders?: Record<string, string>) => Promise<T>,
-  operationName: string,
-  operationType?: string,
-) => Promise<T>;
+export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string) => Promise<T>;
+
 
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    SushiPairDayDatas(
-      variables?: SushiPairDayDatasQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<SushiPairDayDatasQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<SushiPairDayDatasQuery>(SushiPairDayDatasDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'SushiPairDayDatas',
-        'query',
-      );
-    },
+    SushiPairDayDatas(variables?: SushiPairDayDatasQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SushiPairDayDatasQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<SushiPairDayDatasQuery>(SushiPairDayDatasDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'SushiPairDayDatas', 'query');
+    }
   };
 }
 export type Sdk = ReturnType<typeof getSdk>;
-export type SushiPairDayDataFragment = { __typename?: 'PairDayData'; reserveUSD: any; volumeUSD: any; date: number };
+export type SushiPairDayDataFragment = { __typename?: 'PairDayData', reserveUSD: any, volumeUSD: any, date: number };
 
 export type SushiPairDayDatasQueryVariables = Exact<{
   first?: InputMaybe<Scalars['Int']>;
@@ -3261,7 +3341,5 @@ export type SushiPairDayDatasQueryVariables = Exact<{
   orderDirection?: InputMaybe<OrderDirection>;
 }>;
 
-export type SushiPairDayDatasQuery = {
-  __typename?: 'Query';
-  pairDayDatas: Array<{ __typename?: 'PairDayData'; reserveUSD: any; volumeUSD: any; date: number }>;
-};
+
+export type SushiPairDayDatasQuery = { __typename?: 'Query', pairDayDatas: Array<{ __typename?: 'PairDayData', reserveUSD: any, volumeUSD: any, date: number }> };
