@@ -28,8 +28,6 @@ jobs:
         run: cp serverless_frontend.yml serverless.yml
       - name: Install Dependencies
         run: yarn install --frozen-lockfile
-      - name: Codegen
-        run: yarn codegen:contracts
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:

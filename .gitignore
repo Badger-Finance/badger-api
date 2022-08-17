@@ -60,6 +60,4 @@ test/**/*.js.map
 .dynamodb
 .serverless
 .env
-contracts
-generated
 build
