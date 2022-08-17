@@ -68,7 +68,7 @@ package:
 
 provider:
   name: aws
-  runtime: nodejs12.x
+  runtime: nodejs16.x
   memorySize: 2048
   stage: staging
   region: us-west-1
@@ -446,6 +446,7 @@ functions:
   request-handler:
     handler: src/LambdaServer.handler
     timeout: 30
+    memorySize: 4096
     events:
       - http:
           path: /{proxy+}

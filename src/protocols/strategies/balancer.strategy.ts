@@ -49,7 +49,11 @@ export async function getBPTPrice(chain: Chain, token: string): Promise<TokenPri
   };
 }
 
-export async function getBalancerPoolTokens(chain: Chain, token: string): Promise<CachedTokenBalance[]> {
+export async function getBalancerPoolTokens(
+  chain: Chain,
+  token: string,
+  block?: number,
+): Promise<CachedTokenBalance[]> {
   const sdk = await chain.getSdk();
 
   const maybePhantomPool = StablePhantomVault__factory.connect(token, sdk.provider);
@@ -62,7 +66,7 @@ export async function getBalancerPoolTokens(chain: Chain, token: string): Promis
   const pool = WeightedPool__factory.connect(token, sdk.provider);
   const [vault, poolId] = await Promise.all([pool.getVault(), pool.getPoolId()]);
   const vaultContract = BalancerVault__factory.connect(vault, sdk.provider);
-  const poolTokens = await vaultContract.getPoolTokens(poolId);
+  const poolTokens = await vaultContract.getPoolTokens(poolId, { blockTag: block });
 
   const tokens: CachedTokenBalance[] = [];
 
