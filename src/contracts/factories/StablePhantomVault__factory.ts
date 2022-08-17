@@ -7,7 +7,6 @@ import { Provider } from "@ethersproject/providers";
 import type {
   StablePhantomVault,
   StablePhantomVaultInterface,
-  StablePhantomPool,
 } from "../StablePhantomVault";
 
 const _abi = [
