@@ -2,17 +2,16 @@ import {
   Currency,
   formatBalance,
   ListHarvestOptions,
+  ONE_DAY_MS,
   ONE_DAY_SECONDS,
   ONE_YEAR_SECONDS,
   Protocol,
   Strategy__factory,
-  Vault__factory,
   VaultDTO,
   VaultPerformanceEvent,
   VaultType,
   VaultV15__factory,
   VaultVersion,
-  ONE_DAY_MS,
 } from '@badger-dao/sdk';
 import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';
@@ -35,10 +34,10 @@ import { getProtocolValueSources, getRewardEmission } from '../rewards/rewards.u
 import { getFullToken, getVaultTokens } from '../tokens/tokens.utils';
 import { Nullable } from '../utils/types.utils';
 import { HarvestType } from './enums/harvest.enum';
+import { getInfuelnceVaultYieldBalance, isInfluenceVault } from './influence.utils';
 import { VaultHarvestData } from './interfaces/vault-harvest-data.interface';
 import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
 import { VaultStrategy } from './interfaces/vault-strategy.interface';
-import { isInfluenceVault } from './yields.config';
 import {
   aggregateSources,
   calculateYield,
@@ -400,11 +399,6 @@ export async function estimateVaultPerformance(
     );
     totalAccumulated += price.price * amount;
   }
-  const v = await getCachedVault(chain, vault);
-  const apr = calculateYield(v.value, totalAccumulated, ONE_DAY_MS * 14);
-  console.log(
-    `Vault Holdings: $${v.value}, Total Earned: $${totalAccumulated.toFixed(2)}, Est. Yield: ${apr.toFixed(2)}%`,
-  );
 
   if (recentHarvests.length <= 1) {
     throw new Error(`${vault.name} does not have adequate harvest history`);
@@ -442,16 +436,10 @@ export async function estimateVaultPerformance(
   let weightedBalance = 0;
   const depositToken = await getFullToken(chain, vault.depositToken);
 
+  let targetBlock = 0;
   if (isInfluece) {
-    let targetBlock = 0;
-    if (recentHarvests[0].treeDistributions.length > 0) {
-      targetBlock = recentHarvests[0].treeDistributions[0].block;
-    } else {
-      targetBlock = recentHarvests[0].harvests[0].block;
-    }
-    const vaultContract = Vault__factory.connect(vault.address, sdk.provider);
-    const strategyBalance = await vaultContract.totalSupply({ blockTag: targetBlock });
-    weightedBalance = formatBalance(strategyBalance);
+    targetBlock = allEvents[0].block;
+    weightedBalance = await getInfuelnceVaultYieldBalance(chain, vault.address, targetBlock);
   } else {
     const allHarvests = recentHarvests.flatMap((h) => h.harvests);
     // use the full harvests to construct all intervals for durations, nth element is ignored for distributions
@@ -482,6 +470,12 @@ export async function estimateVaultPerformance(
   const measuredBalance = isInfluece ? weightedBalance : weightedBalance / totalDuration;
   // lord, forgive me for my sins... we will generalize this shortly I hope
   const measuredValue = measuredBalance * price;
+  const apr = calculateYield(measuredValue, totalAccumulated, ONE_DAY_MS * 14);
+  console.log(
+    `Vault Holdings: $${measuredValue.toFixed()} (${measuredBalance.toFixed()} tokens), Total Earned: $${totalAccumulated.toFixed(
+      2,
+    )}, Est. Yield: ${apr.toFixed(2)}%, Block: ${targetBlock}`,
+  );
   const totalHarvestedTokens = formatBalance(totalHarvested, depositToken.decimals);
   // count of harvests is exclusive of the 0th element
   const durationScalar = ONE_YEAR_SECONDS / totalDuration;
