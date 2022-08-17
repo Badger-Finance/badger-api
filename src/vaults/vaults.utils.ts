@@ -387,15 +387,16 @@ export async function estimateVaultPerformance(
     .concat(recentHarvests.flatMap((h) => h.treeDistributions))
     .sort((a, b) => b.timestamp - a.timestamp);
 
+  let harvestReport = `${vault.name} Harvest Report\n`;
   let totalAccumulated = 0;
   for (const event of allEvents) {
     const token = await getFullToken(chain, event.token);
     const amount = formatBalance(event.amount, token.decimals);
     const price = await queryPrice(token.address);
-    console.log(
+    harvestReport = harvestReport.concat(
       `[${new Date(event.timestamp * 1000).toLocaleString()}] ${amount.toFixed(2)} ${token.symbol} ($${(
         price.price * amount
-      ).toFixed(2)})`,
+      ).toFixed(2)})\n`,
     );
     totalAccumulated += price.price * amount;
   }
@@ -471,11 +472,12 @@ export async function estimateVaultPerformance(
   // lord, forgive me for my sins... we will generalize this shortly I hope
   const measuredValue = measuredBalance * price;
   const apr = calculateYield(measuredValue, totalAccumulated, ONE_DAY_MS * 14);
-  console.log(
+  harvestReport = harvestReport.concat(
     `Vault Holdings: $${measuredValue.toFixed()} (${measuredBalance.toFixed()} tokens), Total Earned: $${totalAccumulated.toFixed(
       2,
     )}, Est. Yield: ${apr.toFixed(2)}%, Block: ${targetBlock}`,
   );
+  console.log(harvestReport);
   const totalHarvestedTokens = formatBalance(totalHarvested, depositToken.decimals);
   // count of harvests is exclusive of the 0th element
   const durationScalar = ONE_YEAR_SECONDS / totalDuration;
