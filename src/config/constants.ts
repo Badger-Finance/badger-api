@@ -37,6 +37,8 @@ export const STAGE = getEnvVar('STAGE');
 export const API_VERSION = 'v2.0.0';
 export const PRODUCTION = STAGE === Stage.Production;
 export const DISCORD_WEBHOOK_URL = getEnvVar('DISCORD_WEBHOOK_URL');
+export const ENV = getEnvVar('NODE_ENV');
+export const IS_TEST = ENV === 'test';
 
 export const DEFAULT_PAGE_SIZE = 20;
 
