@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy - Frontend AWS
 
 permissions:
   id-token: write
@@ -34,11 +34,21 @@ jobs:
           role-to-assume: ${{ env.ASSUME_ROLE }}
           role-session-name: ${{ env.SESSION_NAME }}
           aws-region: ${{ env.AWS_REGION }}
+      - name: Create Staging Domain
+        uses: serverless/github-action@v3.0.0
+        with:
+          args: create_domain
+        if: contains(github.ref, 'staging')
       - name: Deploy Staging
         uses: serverless/github-action@v3.0.0
         with:
           args: deploy
         if: contains(github.ref, 'staging')
+      - name: Create Production Domain
+        uses: serverless/github-action@v3.0.0
+        with:
+          args: create_domain --stage prod
+        if: contains(github.ref, 'main')
       - name: Deploy Production
         uses: serverless/github-action@v3.0.0
         with:
