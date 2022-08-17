@@ -1,12 +1,13 @@
 ---
 service: badger-frontend-api-v2
-frameworkVersion: '3.21.0'
+frameworkVersion: '2'
 useDotenv: true
 
 plugins:
   - serverless-plugin-typescript
   - serverless-dynamodb-local
   - serverless-offline
+  - serverless-domain-manager
 
 custom:
   stage: ${opt:stage, self:provider.stage}
@@ -61,6 +62,20 @@ custom:
   merkleProofs:
     staging: 'badger-staging-merkle-proofs'
     prod: 'badger-merkle-proofs'
+  
+  domainPrefix:
+    staging: 'staging-api'
+    prod: 'api'
+  
+  customDomain:
+    domainName: ${self:custom.domainPrefix.${self:custom.stage}}.badger.tools
+    certificateName: '*.badger.tools'
+    createRoute53Record: true
+    createRoute53IPv6Record: true
+    endpointType: EDGE
+    securityPolicy: tls_1_2
+    apiType: rest
+    autoDomain: false
 
 package:
   exclude:
@@ -68,7 +83,7 @@ package:
 
 provider:
   name: aws
-  runtime: nodejs12.x
+  runtime: nodejs16.x
   memorySize: 2048
   stage: staging
   region: us-west-1
@@ -440,7 +455,7 @@ resources:
 
 functions:
   request-handler:
-    handler: src/handler.handler
+    handler: src/LambdaServer.handler
     timeout: 30
     memorySize: 4096
     events:

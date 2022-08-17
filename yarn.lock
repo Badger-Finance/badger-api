@@ -4720,6 +4720,22 @@ aws-sdk@^2.1045.0, aws-sdk@^2.1076.0, aws-sdk@^2.1078.0, aws-sdk@^2.7.0:
     uuid "3.3.2"
     xml2js "0.4.19"
 
+aws-sdk@^2.1191.0:
+  version "2.1197.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1197.0.tgz#d679f52353f03e598ffed5609ed65593cef1f83f"
+  integrity sha512-BUxYU+gzxCylEM37NeGcS5kWotXVmKrOBG9+/+U+tnOTW7/3yNBrBfhPrs5IgMhm7H38CLWgOqwJaGDlYzwH/Q==
+  dependencies:
+    buffer "4.9.2"
+    events "1.1.1"
+    ieee754 "1.1.13"
+    jmespath "0.16.0"
+    querystring "0.2.0"
+    sax "1.2.1"
+    url "0.10.3"
+    util "^0.12.4"
+    uuid "8.0.0"
+    xml2js "0.4.19"
+
 aws-sdk@^2.814.0:
   version "2.1196.0"
   resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1196.0.tgz#28951e1c742373397514f295f742eb3a9497c02d"
@@ -14000,6 +14016,13 @@ serve-static@1.14.2:
     escape-html "~1.0.3"
     parseurl "~1.3.3"
     send "0.17.2"
+
+serverless-domain-manager@^6.1.0:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/serverless-domain-manager/-/serverless-domain-manager-6.1.0.tgz#3aec5f9c693fbc6482bcf48a593a9e09f440025c"
+  integrity sha512-jj+Iq/1Ri+IN0X7z6b7FIdE0azf+PX1qegZy61+yL5lohUnYekL38z2QJaTDALy375e+jtWZF0mjp9TiS59TIg==
+  dependencies:
+    aws-sdk "^2.1191.0"
 
 serverless-dynamodb-local@^0.2.39:
   version "0.2.40"
