@@ -8,8 +8,7 @@ import { BouncerType } from '../rewards/enums/bouncer-type.enum';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import * as rewardsUtils from '../rewards/rewards.utils';
 import { MOCK_VAULT, MOCK_VAULT_DEFINITION } from '../test/constants';
-import { mockQuery, setupMockChain } from '../test/mocks.utils';
-import { randomSnapshot } from '../test/tests.utils';
+import { mockQuery, randomSnapshot,setupMockChain } from '../test/mocks.utils';
 import { TokenNotFound } from '../tokens/errors/token.error';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import {

@@ -20,8 +20,8 @@ import { TestEthereum } from '../chains/config/test.config';
 import { TOKENS } from '../config/tokens.config';
 import { EmissionControl, EmissionControl__factory, UniV2, UniV2__factory } from '../contracts';
 import { MOCK_VAULT, MOCK_VAULT_DEFINITION, TEST_CURRENT_TIMESTAMP } from '../test/constants';
-import { setupMockChain } from '../test/mocks.utils';
-import { mockBadgerSdk } from '../test/tests.utils';
+import { mockBadgerSdk, setupMockChain } from '../test/mocks.utils';
+import { mockContract } from '../test/mocks.utils/contracts/mock.contract.base';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import * as apiVaults from '../vaults/vaults.service';
 import * as vaultsUtils from '../vaults/vaults.utils';
@@ -34,13 +34,9 @@ describe('indexer.utils', () => {
     jest.spyOn(console, 'error').mockImplementation();
     jest.spyOn(console, 'warn').mockImplementation();
 
-    const strategyMock = mock<Strategy>();
-    const vaultV15Mock = mock<VaultV15>();
-    const emissionControl = mock<EmissionControl>();
-
-    jest.spyOn(Strategy__factory, 'connect').mockImplementation(() => strategyMock);
-    jest.spyOn(VaultV15__factory, 'connect').mockImplementation(() => vaultV15Mock);
-    jest.spyOn(EmissionControl__factory, 'connect').mockImplementation(() => emissionControl);
+    const strategyMock = mockContract<Strategy>(Strategy__factory);
+    const vaultV15Mock = mockContract<VaultV15>(VaultV15__factory);
+    const emissionControl = mockContract<EmissionControl>(EmissionControl__factory);
 
     jest.spyOn(strategyMock, 'withdrawalFee').mockImplementation(async () => BigNumber.from(1));
     jest.spyOn(strategyMock, 'performanceFeeGovernance').mockImplementation(async () => BigNumber.from(2));
