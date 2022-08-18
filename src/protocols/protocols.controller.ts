@@ -2,7 +2,7 @@ import { Currency, Network } from '@badger-dao/sdk';
 import { Controller, Get, Inject, QueryParams } from '@tsed/common';
 import { ContentType, Description, Returns, Summary } from '@tsed/schema';
 
-import { Chain } from '../chains/config/chain.config';
+import { getOrCreateChain } from '../chains/chains.utils';
 import { VaultsService } from '../vaults/vaults.service';
 import { ProtocolSummaryModel } from './interfaces/protocol-summary-model.interface';
 
@@ -21,6 +21,6 @@ export class ProtocolController {
     @QueryParams('chain') chain?: Network,
     @QueryParams('currency') currency?: Currency,
   ): Promise<ProtocolSummaryModel> {
-    return this.vaultsService.getProtocolSummary(Chain.getChain(chain), currency);
+    return this.vaultsService.getProtocolSummary(getOrCreateChain(chain), currency);
   }
 }

@@ -479,6 +479,7 @@ export async function estimateVaultPerformance(
     .filter((e) => BigNumber.from(e.amount).gt(ethers.constants.Zero))
     .sort((a, b) => b.timestamp - a.timestamp);
 
+  // TODO: extract this entire process out to a helper function
   let harvestReport = `${vault.name} Harvest Report\n`;
 
   let totalHarvested = 0;

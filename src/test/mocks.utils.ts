@@ -126,6 +126,7 @@ export function setupMockChain(
   const chain = new TestEthereum(mockProvider, network);
 
   jest.spyOn(Chain, 'getChain').mockImplementation(() => chain);
+  // jest.spyOn(chainsUtils, 'getOrCreateChain').mockImplementation((_n) => chain);
   jest.spyOn(chainsUtils, 'getSupportedChains').mockImplementation(() => [chain]);
 
   // setup chain pricing

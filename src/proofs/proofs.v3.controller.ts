@@ -3,7 +3,7 @@ import { Controller, Inject } from '@tsed/di';
 import { QueryParams } from '@tsed/platform-params';
 import { ContentType, Get } from '@tsed/schema';
 
-import { Chain } from '../chains/config/chain.config';
+import { getOrCreateChain } from '../chains/chains.utils';
 import { QueryParamError } from '../errors/validation/query.param.error';
 import { ProofsService } from './proofs.service';
 
@@ -21,6 +21,6 @@ export class ProofsV3Controller {
     if (!address) {
       throw new QueryParamError('address');
     }
-    return this.proofsService.getBouncerProof(Chain.getChain(chain), address);
+    return this.proofsService.getBouncerProof(getOrCreateChain(chain), address);
   }
 }

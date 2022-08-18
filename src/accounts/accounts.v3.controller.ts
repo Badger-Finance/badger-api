@@ -2,7 +2,7 @@ import { Network } from '@badger-dao/sdk';
 import { Controller, Get, Inject, QueryParams } from '@tsed/common';
 import { ContentType, Description, Returns, Summary } from '@tsed/schema';
 
-import { Chain } from '../chains/config/chain.config';
+import { getOrCreateChain } from '../chains/chains.utils';
 import { QueryParamError } from '../errors/validation/query.param.error';
 import { AccountsService } from './accounts.service';
 import { AccountModel } from './interfaces/account-model.interface';
@@ -27,6 +27,6 @@ export class AccountsV3Controller {
   ): Promise<AccountModel> {
     if (!address) throw new QueryParamError('address');
 
-    return this.accountsService.getAccount(Chain.getChain(chain), address);
+    return this.accountsService.getAccount(getOrCreateChain(chain), address);
   }
 }

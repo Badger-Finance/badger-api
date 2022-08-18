@@ -2,7 +2,7 @@ import { Network } from '@badger-dao/sdk';
 import { Controller, Get, Inject, PathParams, QueryParams } from '@tsed/common';
 import { ContentType, Deprecated, Description, Returns, Summary } from '@tsed/schema';
 
-import { Chain } from '../chains/config/chain.config';
+import { getOrCreateChain } from '../chains/chains.utils';
 import { AccountsService } from './accounts.service';
 import { AccountModel } from './interfaces/account-model.interface';
 
@@ -25,6 +25,6 @@ export class AccountsV2Controller {
     @PathParams('accountId') userId: string,
     @QueryParams('chain') chain: Network,
   ): Promise<AccountModel> {
-    return this.accountsService.getAccount(Chain.getChain(chain), userId);
+    return this.accountsService.getAccount(getOrCreateChain(chain), userId);
   }
 }

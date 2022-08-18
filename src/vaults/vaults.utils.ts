@@ -15,6 +15,7 @@ import { CurrentVaultSnapshotModel } from '../aws/models/current-vault-snapshot.
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { YieldEstimate } from '../aws/models/yield-estimate.model';
 import { YieldSource } from '../aws/models/yield-source.model';
+import { getOrCreateChain } from '../chains/chains.utils';
 import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
 import { EmissionControl__factory } from '../contracts';
@@ -221,7 +222,7 @@ export async function getVaultTokenPrice(chain: Chain, address: string): Promise
     throw new UnprocessableEntity(`${token.name} vault token missing`);
   }
   const isCrossChainVault = chain.network !== vaultToken.network;
-  const targetChain = isCrossChainVault ? Chain.getChain(vaultToken.network) : chain;
+  const targetChain = isCrossChainVault ? getOrCreateChain(vaultToken.network) : chain;
   const targetVault = isCrossChainVault ? vaultToken.address : token.address;
   const vault = await targetChain.vaults.getVault(targetVault);
   const [underlyingTokenPrice, vaultTokenSnapshot] = await Promise.all([

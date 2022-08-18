@@ -2,7 +2,7 @@ import { Currency, Network } from '@badger-dao/sdk';
 import { Controller, Get, Inject, PathParams, QueryParams, UseCache } from '@tsed/common';
 import { ContentType, Deprecated, Description, Returns, Summary } from '@tsed/schema';
 
-import { Chain } from '../chains/config/chain.config';
+import { getOrCreateChain } from '../chains/chains.utils';
 import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
 import { VaultHarvestsMap } from './interfaces/vault-harvest-map';
 import { VaultHarvestsMapModel } from './interfaces/vault-harvests-list-model.interface';
@@ -26,7 +26,7 @@ export class VaultsV2Controller {
     @QueryParams('chain') chain?: Network,
     @QueryParams('currency') currency?: Currency,
   ): Promise<VaultModel[]> {
-    return this.vaultService.listVaults(Chain.getChain(chain), currency);
+    return this.vaultService.listVaults(getOrCreateChain(chain), currency);
   }
 
   @Get('/harvests')
@@ -37,7 +37,7 @@ export class VaultsV2Controller {
   @Returns(200, VaultHarvestsMapModel)
   @Returns(400).Description('Not a valid chain')
   async getlistVaultHarvests(@QueryParams('chain') chain?: Network): Promise<VaultHarvestsMap> {
-    return this.vaultService.listVaultHarvests(Chain.getChain(chain));
+    return this.vaultService.listVaultHarvests(getOrCreateChain(chain));
   }
 
   @Get('/harvests/:vault')
@@ -50,7 +50,7 @@ export class VaultsV2Controller {
     @PathParams('vault') vault: string,
     @QueryParams('chain') chain?: Network,
   ): Promise<VaultHarvestsExtendedResp[]> {
-    return this.vaultService.getVaultHarvests(Chain.getChain(chain), vault);
+    return this.vaultService.getVaultHarvests(getOrCreateChain(chain), vault);
   }
 
   @Get('/:vault')
@@ -65,7 +65,7 @@ export class VaultsV2Controller {
     @QueryParams('chain') chain?: Network,
     @QueryParams('currency') currency?: Currency,
   ): Promise<VaultModel> {
-    const chainInst = Chain.getChain(chain);
+    const chainInst = getOrCreateChain(chain);
     const vaultDef = await chainInst.vaults.getVault(vault);
 
     return VaultsService.loadVault(chainInst, vaultDef, currency);

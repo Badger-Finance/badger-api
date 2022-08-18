@@ -127,7 +127,7 @@ describe('vaults.v2.controller', () => {
         jest.spyOn(Chain, 'getChain').mockImplementation(() => {
           throw new BadRequest(`invalid is not a supported chain`);
         });
-        const { body, statusCode } = await PlatformServerlessTest.request.get('/vaults?chain=invalid');
+        const { body, statusCode } = await PlatformServerlessTest.request.get('/vaults').query({ chain: 'invalid' });
         expect(statusCode).toEqual(BadRequest.STATUS);
         expect(JSON.parse(body)).toMatchSnapshot();
       });
@@ -150,7 +150,9 @@ describe('vaults.v2.controller', () => {
         jest.spyOn(Chain, 'getChain').mockImplementation(() => {
           throw new BadRequest(`invalid is not a supported chain`);
         });
-        const { body, statusCode } = await PlatformServerlessTest.request.get('/vaults/harvests?chain=invalid');
+        const { body, statusCode } = await PlatformServerlessTest.request
+          .get('/vaults/harvests')
+          .query({ chain: 'invalid' });
         expect(statusCode).toEqual(BadRequest.STATUS);
         expect(JSON.parse(body)).toMatchSnapshot();
       });
@@ -172,9 +174,9 @@ describe('vaults.v2.controller', () => {
         jest.spyOn(Chain, 'getChain').mockImplementation(() => {
           throw new BadRequest(`invalid is not a supported chain`);
         });
-        const { body, statusCode } = await PlatformServerlessTest.request.get(
-          `/vaults/harvests/${TEST_ADDR}?chain=invalid`,
-        );
+        const { body, statusCode } = await PlatformServerlessTest.request
+          .get(`/vaults/harvests/${TEST_ADDR}`)
+          .query({ chain: 'invalid' });
         expect(statusCode).toEqual(BadRequest.STATUS);
         expect(JSON.parse(body)).toMatchSnapshot();
       });
