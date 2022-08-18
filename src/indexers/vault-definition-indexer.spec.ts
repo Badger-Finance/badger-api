@@ -4,10 +4,11 @@ import * as gqlGenT from '@badger-dao/sdk/lib/graphql/generated/badger';
 import graphVaults from '@badger-dao/sdk-mocks/generated/ethereum/graph/loadSetts.json';
 import registryVaults from '@badger-dao/sdk-mocks/generated/ethereum/vaults/loadVaults.json';
 
+import VaultsCompoundMock from '../../seed/vault-definition.json';
+import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { getSupportedChains } from '../chains/chains.utils';
 import { TEST_CURRENT_TIMESTAMP } from '../test/constants';
 import { mockQuery, setupMockChain } from '../test/mocks.utils';
-import { setupVaultsCoumpoundDDB } from '../test/tests.utils';
 import { captureVaultData } from './vault-definition-indexer';
 
 describe('vault-definition-indexer', () => {
@@ -81,8 +82,19 @@ describe('vault-definition-indexer', () => {
         return <RegistryVault[]>registryVaults.filter((v) => !savedVaults.map((v) => v.address).includes(v.address));
       });
 
-      setupVaultsCoumpoundDDB((v) => {
-        return savedVaults.map((v) => v.address).includes(v.address);
+      mockQuery<typeof VaultsCompoundMock[0], VaultDefinitionModel>(VaultsCompoundMock, (_, keyCondition) => {
+        return (items) => {
+          let dataSource = items;
+          const savedAddrs = savedVaults.map((v) => v.address);
+
+          if (keyCondition.chain) dataSource = dataSource.filter((v) => v.chain === keyCondition.chain);
+          if (keyCondition.isProduction)
+            dataSource = dataSource.filter((v) => v.isProduction === keyCondition.isProduction);
+
+          dataSource = dataSource.filter((v) => savedAddrs.includes(v.address));
+
+          return dataSource;
+        };
       });
 
       jest.spyOn(DataMapper.prototype, 'put').mockImplementation(async (inst) => {

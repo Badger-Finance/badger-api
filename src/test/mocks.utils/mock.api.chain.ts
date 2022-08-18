@@ -1,30 +1,18 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-
 import { providers } from '@0xsequence/multicall';
-import { DataMapper, QueryIterator, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
-import BadgerSDK, {
-  Currency,
-  Network,
-  RegistryService,
-  RewardsService,
-  Token,
-  TokensService,
-  TokenValue,
-} from '@badger-dao/sdk';
+import BadgerSDK, { Currency, Network, RegistryService, RewardsService, TokensService } from '@badger-dao/sdk';
 import rewardsLoadSchedulesMock from '@badger-dao/sdk-mocks/generated/ethereum/rewards/loadSchedules.json';
 import { JsonRpcProvider, JsonRpcSigner } from '@ethersproject/providers';
-import createMockInstance from 'jest-create-mock-instance';
 import { mock } from 'jest-mock-extended';
 
-import { getVaultEntityId } from '../aws/dynamodb.utils';
-import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
-import * as chainsUtils from '../chains/chains.utils';
-import { Chain } from '../chains/config/chain.config';
-import { TestEthereum } from '../chains/config/test.config';
-import { ChainVaults } from '../chains/vaults/chain.vaults';
-import * as chartsUtils from '../charts/charts.utils';
-import * as pricesUtils from '../prices/prices.utils';
-import * as rewardsUtils from '../rewards/rewards.utils';
+import { getVaultEntityId } from '../../aws/dynamodb.utils';
+import { HistoricVaultSnapshotModel } from '../../aws/models/historic-vault-snapshot.model';
+import * as chainsUtils from '../../chains/chains.utils';
+import { Chain } from '../../chains/config/chain.config';
+import { TestEthereum } from '../../chains/config/test.config';
+import { ChainVaults } from '../../chains/vaults/chain.vaults';
+import * as chartsUtils from '../../charts/charts.utils';
+import * as pricesUtils from '../../prices/prices.utils';
+import * as rewardsUtils from '../../rewards/rewards.utils';
 import {
   MOCK_DISTRIBUTION_FILE,
   MOCK_TOKENS,
@@ -35,8 +23,9 @@ import {
   TEST_CURRENT_BLOCK,
   TEST_CURRENT_TIMESTAMP,
   TEST_TOKEN,
-} from './constants';
-import { MockOptions } from './interfaces/mock-options.interface';
+} from '../constants';
+import { MockOptions } from '../interfaces/mock-options.interface';
+import { mockBatchGet, mockBatchPut } from './dynamo.db/mock.calls';
 
 export function setupMockChain(
   { network, pricing }: MockOptions = {
@@ -143,59 +132,4 @@ export function setupMockChain(
   }
 
   return chain;
-}
-
-export function mockBalance(token: Token, balance: number, currency?: Currency): TokenValue {
-  let price = parseInt(token.address.slice(0, 5), 16);
-  if (currency && currency !== Currency.USD) {
-    price /= 2;
-  }
-  return {
-    address: token.address,
-    name: token.name,
-    symbol: token.symbol,
-    decimals: token.decimals,
-    balance: balance,
-    value: balance * price,
-  };
-}
-
-export function mockQuery(items: unknown[], filter?: (items: unknown[]) => unknown[]) {
-  // @ts-ignore
-  const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
-  let result = items;
-  if (filter) {
-    result = filter(items);
-  }
-  // @ts-ignore
-  qi[Symbol.iterator] = jest.fn(() => result.values());
-  return jest.spyOn(DataMapper.prototype, 'query').mockImplementation(() => qi);
-}
-
-export function mockBatchGet(items: unknown[], filter?: (items: unknown[]) => unknown[]) {
-  // @ts-ignore
-  const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
-  let result = items;
-  if (filter) {
-    result = filter(items);
-  }
-  // @ts-ignore
-  qi[Symbol.iterator] = jest.fn(() => result.values());
-  return jest.spyOn(DataMapper.prototype, 'batchGet').mockImplementation(() => qi);
-}
-
-export function mockBatchPut(items: unknown[]) {
-  // @ts-ignore
-  const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
-  // @ts-ignore
-  qi[Symbol.iterator] = jest.fn(() => items.values());
-  return jest.spyOn(DataMapper.prototype, 'batchPut').mockImplementation(() => qi);
-}
-
-export function mockBatchDelete(items: unknown[]) {
-  // @ts-ignore
-  const qi: QueryIterator<StringToAnyObjectMap> = createMockInstance(QueryIterator);
-  // @ts-ignore
-  qi[Symbol.iterator] = jest.fn(() => items.values());
-  return jest.spyOn(DataMapper.prototype, 'batchDelete').mockImplementation(() => qi);
 }
