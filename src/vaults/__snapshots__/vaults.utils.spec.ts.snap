@@ -1,7 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`vaults.utils getVaultHarvestsOnChain returns vaults harvests with apr 1`] = `Array []`;
-
 exports[`vaults.utils getVaultPerformance error getting on chain events attempts to load data from the graph 1`] = `
 Array [
   YieldSource {

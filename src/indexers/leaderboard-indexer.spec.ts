@@ -4,7 +4,7 @@ import * as accountsUtils from '../accounts/accounts.utils';
 import { CachedBoost } from '../aws/models/cached-boost.model';
 import { TOKENS } from '../config/tokens.config';
 import { BoostData } from '../rewards/interfaces/boost-data.interface';
-import { mockBatchDelete, mockBatchPut, mockQuery } from '../test/mocks.utils';
+import { mockBatchDelete, mockBatchPut, mockQuery, setupMockChain } from '../test/mocks.utils';
 import { randomCachedBoosts } from '../test/tests.utils';
 import { indexBoostLeaderBoard } from './leaderboard-indexer';
 
@@ -31,6 +31,7 @@ describe('leaderboard-indexer', () => {
   >;
 
   beforeEach(async () => {
+    setupMockChain();
     mockQuery([]);
     batchPut = mockBatchPut([]);
     mockBatchDelete([]);

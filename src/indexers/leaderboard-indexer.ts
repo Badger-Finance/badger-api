@@ -5,50 +5,48 @@ import { getBoostFile } from '../accounts/accounts.utils';
 import { getDataMapper, getLeaderboardKey } from '../aws/dynamodb.utils';
 import { CachedBoost } from '../aws/models/cached-boost.model';
 import { CachedLeaderboardSummary } from '../aws/models/cached-leaderboard-summary.model';
-import { SUPPORTED_CHAINS } from '../chains/chain';
+import { getSupportedChains } from '../chains/chains.utils';
 import { Chain } from '../chains/config/chain.config';
 import { getBadgerType } from '../leaderboards/leaderboards.config';
 
-export const indexBoostLeaderBoard = async () => {
-  await Promise.all(
-    SUPPORTED_CHAINS.map(async (chain) => {
-      const chainResults = await generateChainBoostsLeaderBoard(chain);
-      const summary: BadgerTypeMap = {
-        [BadgerType.Basic]: 0,
-        [BadgerType.Neo]: 0,
-        [BadgerType.Hero]: 0,
-        [BadgerType.Hyper]: 0,
-        [BadgerType.Frenzy]: 0,
-      };
-      const mapper = getDataMapper();
-      chainResults.forEach((result) => summary[getBadgerType(result.boost)]++);
-      const rankSummaries = Object.entries(summary).map((e) => ({
-        badgerType: e[0],
-        amount: e[1],
-      }));
+export async function indexBoostLeaderBoard() {
+  for (const chain of getSupportedChains()) {
+    const chainResults = await generateChainBoostsLeaderBoard(chain);
+    const summary: BadgerTypeMap = {
+      [BadgerType.Basic]: 0,
+      [BadgerType.Neo]: 0,
+      [BadgerType.Hero]: 0,
+      [BadgerType.Hyper]: 0,
+      [BadgerType.Frenzy]: 0,
+    };
+    const mapper = getDataMapper();
+    chainResults.forEach((result) => summary[getBadgerType(result.boost)]++);
+    const rankSummaries = Object.entries(summary).map((e) => ({
+      badgerType: e[0],
+      amount: e[1],
+    }));
 
-      const chainEntries = [];
+    const chainEntries = [];
 
-      for await (const entry of mapper.query(CachedBoost, { leaderboard: getLeaderboardKey(chain.network) })) {
-        chainEntries.push(entry);
-      }
+    for await (const entry of mapper.query(CachedBoost, { leaderboard: getLeaderboardKey(chain.network) })) {
+      chainEntries.push(entry);
+    }
 
-      for await (const _item of mapper.batchDelete(chainEntries)) {
-      }
+    for await (const _item of mapper.batchDelete(chainEntries)) {
+    }
 
-      for await (const _item of mapper.batchPut(chainResults)) {
-      }
+    for await (const _item of mapper.batchPut(chainResults)) {
+    }
 
-      await mapper.put(
-        Object.assign(new CachedLeaderboardSummary(), {
-          leaderboard: getLeaderboardKey(chain.network),
-          rankSummaries,
-        }),
-      );
-    }),
-  );
+    await mapper.put(
+      Object.assign(new CachedLeaderboardSummary(), {
+        leaderboard: getLeaderboardKey(chain.network),
+        rankSummaries,
+      }),
+    );
+  }
   return 'done';
-};
+}
 
 async function generateChainBoostsLeaderBoard(chain: Chain): Promise<CachedBoost[]> {
   try {

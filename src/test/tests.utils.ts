@@ -11,7 +11,6 @@ import VaultsCompoundMock from '../../seed/vault-definition.json';
 import { CachedAccount } from '../aws/models/cached-account.model';
 import { CachedBoost } from '../aws/models/cached-boost.model';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
-import { SUPPORTED_CHAINS } from '../chains/chain';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import { Nullable } from '../utils/types.utils';
 import { vaultsChartDataMock } from '../vaults/mocks/vaults-chart-data.mock';
@@ -182,13 +181,4 @@ export async function mockBadgerSdk(
     sdk: new BadgerSDK({ provider: mockProvider, network }),
     provider: mockProvider,
   };
-}
-
-// mb use this function is jest.setup to mock all sdk inits for all chains
-export async function mockSupportedChains() {
-  for (const chain of SUPPORTED_CHAINS) {
-    const { sdk } = await mockBadgerSdk({ network: chain.network });
-
-    jest.spyOn(chain.constructor.prototype, 'getSdk').mockImplementation(async () => sdk);
-  }
 }

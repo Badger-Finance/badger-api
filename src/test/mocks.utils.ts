@@ -18,6 +18,7 @@ import { mock } from 'jest-mock-extended';
 
 import { getVaultEntityId } from '../aws/dynamodb.utils';
 import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
+import * as chainsUtils from '../chains/chains.utils';
 import { Chain } from '../chains/config/chain.config';
 import { TestEthereum } from '../chains/config/test.config';
 import { ChainVaults } from '../chains/vaults/chain.vaults';
@@ -125,6 +126,7 @@ export function setupMockChain(
   const chain = new TestEthereum(mockProvider, network);
 
   jest.spyOn(Chain, 'getChain').mockImplementation(() => chain);
+  jest.spyOn(chainsUtils, 'getSupportedChains').mockImplementation(() => [chain]);
 
   // setup chain pricing
   if (pricing) {
