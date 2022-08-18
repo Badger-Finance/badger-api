@@ -4,7 +4,7 @@ import { UseCache } from '@tsed/platform-cache';
 import { QueryParams } from '@tsed/platform-params';
 import { ContentType, Description, Get, Hidden, Returns, Summary } from '@tsed/schema';
 
-import { Chain } from '../chains/config/chain.config';
+import { getOrCreateChain } from '../chains/chains.utils';
 import { PriceSnapshots } from '../tokens/interfaces/price-snapshots.interface';
 import { PriceSummary } from '../tokens/interfaces/price-summary.interface';
 import { PriceSummaryModel } from '../tokens/interfaces/price-summary-model.interface';
@@ -27,7 +27,7 @@ export class PricesController {
     @QueryParams('currency') currency?: Currency,
   ): Promise<PriceSummary> {
     return this.pricesService.getPriceSummary(
-      tokens?.split(',') ?? Object.keys(Chain.getChain(chain).tokens),
+      tokens?.split(',') ?? Object.keys(getOrCreateChain(chain).tokens),
       currency,
     );
   }

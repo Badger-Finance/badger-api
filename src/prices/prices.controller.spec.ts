@@ -30,7 +30,7 @@ describe('PricesController', () => {
         jest.spyOn(Chain, 'getChain').mockImplementation(() => {
           throw new BadRequest(`invalid is not a supported chain`);
         });
-        const { body, statusCode } = await PlatformServerlessTest.request.get('/prices?chain=invalid');
+        const { body, statusCode } = await PlatformServerlessTest.request.get('/prices').query({ chain: 'invalid' });
         expect(statusCode).toEqual(400);
         expect(JSON.parse(body)).toMatchSnapshot();
       });

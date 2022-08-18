@@ -4,7 +4,7 @@ import { UseCache } from '@tsed/platform-cache';
 import { QueryParams } from '@tsed/platform-params';
 import { ContentType, Description, Get, Hidden, Returns, Summary } from '@tsed/schema';
 
-import { Chain } from '../chains/config/chain.config';
+import { getOrCreateChain } from '../chains/chains.utils';
 import { QueryParamError } from '../errors/validation/query.param.error';
 import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
 import { VaultHarvestsMap } from './interfaces/vault-harvest-map';
@@ -34,7 +34,7 @@ export class VaultsV3Controller {
       throw new QueryParamError('vault');
     }
 
-    const chainInst = Chain.getChain(chain);
+    const chainInst = getOrCreateChain(chain);
     const compoundVault = await chainInst.vaults.getVault(address);
     return VaultsService.loadVault(chainInst, compoundVault, currency);
   }
@@ -49,7 +49,7 @@ export class VaultsV3Controller {
     @QueryParams('chain') chain?: Network,
     @QueryParams('currency') currency?: Currency,
   ): Promise<VaultModel[]> {
-    return this.vaultService.listVaults(Chain.getChain(chain), currency);
+    return this.vaultService.listVaults(getOrCreateChain(chain), currency);
   }
 
   @Get('/harvests')
@@ -66,7 +66,7 @@ export class VaultsV3Controller {
       throw new QueryParamError('vault');
     }
 
-    return this.vaultService.getVaultHarvests(Chain.getChain(chain), vault);
+    return this.vaultService.getVaultHarvests(getOrCreateChain(chain), vault);
   }
 
   @Get('/list/harvests')
@@ -77,7 +77,7 @@ export class VaultsV3Controller {
   @Returns(200, VaultHarvestsMapModel)
   @Returns(400).Description('Not a valid chain')
   async getlistVaultHarvests(@QueryParams('chain') chain?: Network): Promise<VaultHarvestsMap> {
-    return this.vaultService.listVaultHarvests(Chain.getChain(chain));
+    return this.vaultService.listVaultHarvests(getOrCreateChain(chain));
   }
 
   @Hidden()
@@ -103,6 +103,6 @@ export class VaultsV3Controller {
       throw new QueryParamError('timestamps');
     }
 
-    return this.vaultService.getVaultChartDataByTimestamps(vault, Chain.getChain(chain), timestampsList);
+    return this.vaultService.getVaultChartDataByTimestamps(vault, getOrCreateChain(chain), timestampsList);
   }
 }

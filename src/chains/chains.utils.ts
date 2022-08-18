@@ -1,4 +1,5 @@
 import { Network } from '@badger-dao/sdk';
+import { BadRequest } from '@tsed/exceptions';
 
 import { Arbitrum } from './config/arbitrum.config';
 import { BinanceSmartChain } from './config/bsc.config';
@@ -21,7 +22,7 @@ export function getSupportedChains(): Chain[] {
   return SUPPORTED_NETWORKS.map((n) => getOrCreateChain(n));
 }
 
-export function getOrCreateChain(network: Network): Chain {
+export function getOrCreateChain(network?: Network): Chain {
   try {
     return Chain.getChain(network);
   } catch {
@@ -42,8 +43,11 @@ export function getOrCreateChain(network: Network): Chain {
       case Network.Optimism:
         chain = new Optimism();
         break;
-      default:
+      case Network.Ethereum:
         chain = new Ethereum();
+        break;
+      default:
+        throw new BadRequest(`${network} is not a supported chain`);
     }
     Chain.register(network, chain);
     return chain;

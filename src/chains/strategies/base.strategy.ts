@@ -8,7 +8,7 @@ import { getBPTPrice } from '../../protocols/strategies/balancer.strategy';
 import { getCurveTokenPrice } from '../../protocols/strategies/convex.strategy';
 import { getFullToken } from '../../tokens/tokens.utils';
 import { getVaultTokenPrice } from '../../vaults/vaults.utils';
-import { Chain } from '../config/chain.config';
+import { getOrCreateChain } from '../chains.utils';
 import { ChainStrategy } from './chain.strategy';
 
 export class BaseStrategy extends ChainStrategy {
@@ -17,7 +17,7 @@ export class BaseStrategy extends ChainStrategy {
   }
 
   async getPrice(address: string): Promise<TokenPrice> {
-    const chain = Chain.getChain(this.network);
+    const chain = getOrCreateChain(this.network);
     const token = await getFullToken(chain, address);
     const tokenConfig = chain.tokens[address];
 

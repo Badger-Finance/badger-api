@@ -4,6 +4,7 @@ import { GraphQLClient } from 'graphql-request';
 import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
 import { VaultTokenBalance } from '../../aws/models/vault-token-balance.model';
 import { YieldSource } from '../../aws/models/yield-source.model';
+import { getOrCreateChain } from '../../chains/chains.utils';
 import { Chain } from '../../chains/config/chain.config';
 import { BALANCER_URL } from '../../config/constants';
 import {
@@ -195,7 +196,7 @@ export async function resolveBalancerPoolTokenPrice(chain: Chain, token: Token, 
 
 export async function getBalancerSwapFees(vault: VaultDefinitionModel): Promise<YieldSource[]> {
   try {
-    const chain = Chain.getChain(Network.Ethereum);
+    const chain = getOrCreateChain(Network.Ethereum);
     const client = new GraphQLClient(BALANCER_URL);
     const sdk = getBalancerSdk(client);
 

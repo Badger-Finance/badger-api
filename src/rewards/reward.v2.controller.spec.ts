@@ -30,7 +30,9 @@ describe('reward.v2.controller', () => {
 
     describe('with active param true', () => {
       it('returns active schedules for default chain and all vaults', async () => {
-        const { body, statusCode } = await PlatformServerlessTest.request.get('/reward/schedules?active=true');
+        const { body, statusCode } = await PlatformServerlessTest.request
+          .get('/reward/schedules')
+          .query({ active: true });
         expect(statusCode).toEqual(NetworkStatus.Success);
         expect(JSON.parse(body)).toMatchSnapshot();
       });
@@ -41,7 +43,9 @@ describe('reward.v2.controller', () => {
         jest.spyOn(Chain, 'getChain').mockImplementation(() => {
           throw new BadRequest(`invalid is not a supported chain`);
         });
-        const { body, statusCode } = await PlatformServerlessTest.request.get('/reward/schedules?chain=invalid');
+        const { body, statusCode } = await PlatformServerlessTest.request
+          .get('/reward/schedules')
+          .query({ chain: 'invalid' });
         expect(statusCode).toEqual(NetworkStatus.BadRequest);
         expect(JSON.parse(body)).toMatchSnapshot();
       });
@@ -59,9 +63,9 @@ describe('reward.v2.controller', () => {
 
     describe('with active param true', () => {
       it('returns schedules for default chain and one vault', async () => {
-        const { body, statusCode } = await PlatformServerlessTest.request.get(
-          `/reward/schedules/${TEST_ADDR}?active=true`,
-        );
+        const { body, statusCode } = await PlatformServerlessTest.request
+          .get(`/reward/schedules/${TEST_ADDR}`)
+          .query({ active: true });
         expect(statusCode).toEqual(NetworkStatus.Success);
         expect(JSON.parse(body)).toMatchSnapshot();
       });
@@ -72,9 +76,9 @@ describe('reward.v2.controller', () => {
         jest.spyOn(Chain, 'getChain').mockImplementation(() => {
           throw new BadRequest(`invalid is not a supported chain`);
         });
-        const { body, statusCode } = await PlatformServerlessTest.request.get(
-          `/reward/schedules/${TEST_ADDR}?chain=invalid`,
-        );
+        const { body, statusCode } = await PlatformServerlessTest.request
+          .get(`/reward/schedules/${TEST_ADDR}`)
+          .query({ chain: 'invalid' });
         expect(statusCode).toEqual(NetworkStatus.BadRequest);
         expect(JSON.parse(body)).toMatchSnapshot();
       });

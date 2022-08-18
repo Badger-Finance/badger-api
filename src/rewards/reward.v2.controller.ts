@@ -2,7 +2,7 @@ import { Network } from '@badger-dao/sdk';
 import { Controller, Get, Inject, PathParams, QueryParams, UseCache } from '@tsed/common';
 import { ContentType, Deprecated, Description, Hidden, Returns, Summary } from '@tsed/schema';
 
-import { Chain } from '../chains/config/chain.config';
+import { getOrCreateChain } from '../chains/chains.utils';
 import { AirdropMerkleClaim } from './interfaces/merkle-distributor.interface';
 import { RewardMerkleClaimModel } from './interfaces/reward-merkle-claim-model.interface';
 import { EmissionSchedule, RewardSchedulesByVaults } from './interfaces/reward-schedules-vault.interface';
@@ -23,7 +23,7 @@ export class RewardV2Controller {
     @PathParams('address') address: string,
     @QueryParams('chain') chain?: Network,
   ): Promise<AirdropMerkleClaim> {
-    return this.rewardsService.getBouncerProof(Chain.getChain(chain), address);
+    return this.rewardsService.getBouncerProof(getOrCreateChain(chain), address);
   }
 
   @Get('/tree/:address')
@@ -36,7 +36,7 @@ export class RewardV2Controller {
     @PathParams('address') address: string,
     @QueryParams('chain') chain?: Network,
   ): Promise<RewardMerkleClaimModel> {
-    return this.rewardsService.getUserRewards(Chain.getChain(chain), address);
+    return this.rewardsService.getUserRewards(getOrCreateChain(chain), address);
   }
 
   @UseCache()
@@ -49,7 +49,7 @@ export class RewardV2Controller {
     @QueryParams('chain') chain?: Network,
     @QueryParams('active') active?: boolean,
   ): Promise<RewardSchedulesByVaults> {
-    return this.rewardsService.rewardSchedulesVaultsList(Chain.getChain(chain), Boolean(active));
+    return this.rewardsService.rewardSchedulesVaultsList(getOrCreateChain(chain), Boolean(active));
   }
 
   @UseCache()
@@ -64,6 +64,6 @@ export class RewardV2Controller {
     @QueryParams('chain') chain?: Network,
     @QueryParams('active') active?: boolean,
   ): Promise<EmissionSchedule[]> {
-    return this.rewardsService.rewardSchedulesByVault(Chain.getChain(chain), address, Boolean(active));
+    return this.rewardsService.rewardSchedulesByVault(getOrCreateChain(chain), address, Boolean(active));
   }
 }

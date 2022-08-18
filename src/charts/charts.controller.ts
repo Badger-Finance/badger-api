@@ -3,7 +3,7 @@ import { Controller, Get, Inject, QueryParams, UseCache } from '@tsed/common';
 import { ContentType } from '@tsed/schema';
 
 import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
-import { Chain } from '../chains/config/chain.config';
+import { getOrCreateChain } from '../chains/chains.utils';
 import { QueryParamError } from '../errors/validation/query.param.error';
 import { ChartsService } from './charts.service';
 
@@ -23,6 +23,6 @@ export class ChartsController {
     if (!address) {
       throw new QueryParamError('address');
     }
-    return this.chartsService.loadVaultChartData(address, timeframe, Chain.getChain(chain));
+    return this.chartsService.loadVaultChartData(address, timeframe, getOrCreateChain(chain));
   }
 }
