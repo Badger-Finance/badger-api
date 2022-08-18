@@ -24,7 +24,7 @@ import { YieldEstimate } from '../aws/models/yield-estimate.model';
 import { YieldSource } from '../aws/models/yield-source.model';
 import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
-import { queryPrice, queryPriceAtTimestamp } from '../prices/prices.utils';
+import { queryPriceAtTimestamp } from '../prices/prices.utils';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { BoostRange } from '../rewards/interfaces/boost-range.interface';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
@@ -485,6 +485,7 @@ export async function estimateVaultPerformance(
   let totalAccumulated = 0;
   let totalVaultTokens = 0;
   let totalVaultPrincipal = 0;
+  const tokensEmitted = new Map<string, number>();
 
   console.log(`Evaluating ${allEvents.length} events for ${vault.name}`);
   for (const event of allEvents) {
@@ -496,6 +497,9 @@ export async function estimateVaultPerformance(
     totalAccumulated += tokenEarned;
     if (event.type === HarvestType.Harvest) {
       totalHarvested += amount;
+    } else {
+      const entry = tokensEmitted.get(token.address) ?? 0;
+      tokensEmitted.set(token.address, entry + tokenEarned);
     }
 
     let balance = 0;
@@ -540,24 +544,10 @@ export async function estimateVaultPerformance(
   const compoundedYieldSource = createYieldSource(vault, SourceType.Compound, VAULT_SOURCE, compoundApy);
   valueSources.push(compoundedYieldSource);
 
-  const tokensEmitted = new Map<string, BigNumber>();
-  for (const distribution of allDistributions) {
-    const { token, amount } = distribution;
-    let entry = tokensEmitted.get(token);
-    if (!entry) {
-      entry = BigNumber.from(0);
-      tokensEmitted.set(token, entry);
-    }
-    tokensEmitted.set(token, entry.add(amount));
-  }
-
   let flywheelCompounding = 0;
 
-  for (const [token, amount] of tokensEmitted.entries()) {
-    const { price } = await queryPrice(token);
+  for (const [token, valueEmitted] of tokensEmitted.entries()) {
     const tokenEmitted = await getFullToken(chain, token);
-    const tokensEmitted = formatBalance(amount, tokenEmitted.decimals);
-    const valueEmitted = tokensEmitted * price;
     const emissionApr = calculateYield(averagePrincipal, valueEmitted, duration);
     const emissionYieldSource = createYieldSource(vault, SourceType.Distribution, tokenEmitted.name, emissionApr);
     valueSources.push(emissionYieldSource);
