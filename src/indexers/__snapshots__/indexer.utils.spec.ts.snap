@@ -86,8 +86,8 @@ exports[`indexer.utils vaultToSnapshot should return valid snapshot of the vault
 Object {
   "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
   "apr": 0.3067433490728799,
-  "available": 1006608.3689849223,
-  "balance": 1006608.3689849223,
+  "available": 1006783.508602638,
+  "balance": 1006783.508602638,
   "block": 13500500,
   "boostWeight": 1,
   "harvestApr": 0.3067433490728799,
@@ -101,8 +101,8 @@ Object {
   },
   "strategyBalance": 0,
   "timestamp": 1660223160457,
-  "totalSupply": 815145.5950925058,
-  "value": 13514723961.99,
+  "totalSupply": 815287.4221349842,
+  "value": 13517075386.5,
   "yieldApr": 0.3067433490728799,
 }
 `;

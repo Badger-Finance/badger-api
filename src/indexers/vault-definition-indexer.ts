@@ -11,16 +11,10 @@ export async function captureVaultData() {
   for (const chain of getSupportedChains()) {
     const sdk = await chain.getSdk();
 
-    let registryVaults: RegistryVault[] = [];
-
-    try {
-      registryVaults = await sdk.vaults.loadVaults();
-    } catch (_) {
-      console.error(`Registry is not defined for ${chain.network}`);
-    }
+    const registryVaults = await sdk.vaults.loadVaults();
 
     if (registryVaults.length === 0) {
-      console.warn(`No vault was found for chain: ${chain.network}`);
+      console.warn(`No vaults found for chain: ${chain.network}`);
       continue;
     }
 

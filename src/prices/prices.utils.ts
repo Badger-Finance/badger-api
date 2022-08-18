@@ -141,3 +141,20 @@ export async function getPriceSnapshotsAtTimestamps(
     return [];
   }
 }
+
+export async function queryPriceAtTimestamp(
+  address: string,
+  timestamp: number,
+  currency = Currency.USD,
+): Promise<TokenPrice> {
+  const mapper = getDataMapper();
+  for await (const snapshot of mapper.query(
+    TokenPriceSnapshot,
+    { address: ethers.utils.getAddress(address), updatedAt: greaterThanOrEqualTo(timestamp) },
+    { limit: 1 },
+  )) {
+    snapshot.price = await convert(snapshot.price ?? snapshot.usd, currency);
+    return snapshot;
+  }
+  return queryPrice(address, currency);
+}
