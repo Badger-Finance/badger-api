@@ -68,7 +68,7 @@ package:
 
 provider:
   name: aws
-  runtime: nodejs16.x
+  runtime: nodejs14.x
   memorySize: 2048
   stage: staging
   region: us-west-1

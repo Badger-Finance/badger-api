@@ -30,6 +30,7 @@ import { BoostRange } from '../rewards/interfaces/boost-range.interface';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
 import { getFullToken } from '../tokens/tokens.utils';
 import { getInfuelnceVaultYieldBalance, isInfluenceVault } from './influence.utils';
+import { HarvestReport } from './interfaces/harvest-report.interface';
 import { YieldSources } from './interfaces/yield-sources.interface';
 import { estimateDerivativeEmission, queryYieldSources, VAULT_SOURCE } from './vaults.utils';
 
@@ -479,8 +480,8 @@ export async function estimateVaultPerformance(
     .filter((e) => BigNumber.from(e.amount).gt(ethers.constants.Zero))
     .sort((a, b) => b.timestamp - a.timestamp);
 
-  // TODO: extract this entire process out to a helper function
-  let harvestReport = `${vault.name} Harvest Report\n`;
+  const duration = VAULT_TWAY_PERIOD * ONE_DAY_MS;
+  const harvestReport: HarvestReport[] = [];
 
   let totalHarvested = 0;
   let totalAccumulated = 0;
@@ -497,7 +498,7 @@ export async function estimateVaultPerformance(
     const tokenEarned = price * amount;
     totalAccumulated += tokenEarned;
     if (event.type === HarvestType.Harvest) {
-      totalHarvested += amount;
+      totalHarvested += tokenEarned;
     } else {
       const entry = tokensEmitted.get(token.address) ?? 0;
       tokensEmitted.set(token.address, entry + tokenEarned);
@@ -512,36 +513,42 @@ export async function estimateVaultPerformance(
       balance = formatBalance(totalSupply);
     }
     const { price: vaultPrice } = await queryPriceAtTimestamp(vault.address, event.timestamp * 1000);
+    const vaultPrincipal = vaultPrice * balance;
     totalVaultTokens += balance;
-    totalVaultPrincipal += vaultPrice * balance;
+    totalVaultPrincipal += vaultPrincipal;
 
-    harvestReport = harvestReport.concat(
-      `[${new Date(event.timestamp * 1000).toDateString()}] ${amount.toFixed(2)} ${
-        token.symbol
-      } ($${tokenEarned.toFixed(2)}) - Balance: ${balance.toFixed(2)}\n`,
-    );
+    const eventApr = calculateYield(vaultPrincipal, tokenEarned, duration);
+    const report: HarvestReport = {
+      date: new Date(event.timestamp * 1000).toDateString(),
+      amount: amount.toFixed(2),
+      type: event.type,
+      value: `$${tokenEarned.toFixed(2)}`,
+      balance: balance.toFixed(2),
+      apr: `${eventApr.toFixed(2)}%`,
+    };
+    harvestReport.push(report);
   }
 
-  const duration = VAULT_TWAY_PERIOD * ONE_DAY_MS;
   const averagePrincipal = totalVaultPrincipal / allEvents.length;
   const averageTokens = totalVaultTokens / allEvents.length;
   const apr = calculateYield(averagePrincipal, totalAccumulated, duration);
-  harvestReport = harvestReport.concat(
+  console.log(`${vault.name} Harvest Report`);
+  console.table(harvestReport);
+  console.log(
     `Vault Holdings: $${averagePrincipal.toFixed()} (${averageTokens.toFixed()} tokens), Total Earned: $${totalAccumulated.toFixed(
       2,
     )}, Est. Yield: ${apr.toFixed(2)}%`,
   );
-  console.log(harvestReport);
 
   const valueSources = [];
 
   // create the apr source for harvests
-  const compoundApr = calculateYield(totalVaultTokens, totalHarvested, duration);
+  const compoundApr = calculateYield(averagePrincipal, totalHarvested, duration);
   const compoundYieldSource = createYieldSource(vault, SourceType.PreCompound, VAULT_SOURCE, compoundApr);
   valueSources.push(compoundYieldSource);
 
   // create the apy source for harvests
-  const compoundApy = calculateYield(totalVaultTokens, totalHarvested, duration, totalHarvested);
+  const compoundApy = calculateYield(averagePrincipal, totalHarvested, duration, totalHarvested);
   const compoundedYieldSource = createYieldSource(vault, SourceType.Compound, VAULT_SOURCE, compoundApy);
   valueSources.push(compoundedYieldSource);
 
