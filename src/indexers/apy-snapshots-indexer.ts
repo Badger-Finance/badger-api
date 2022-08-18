@@ -1,13 +1,12 @@
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { YieldSource } from '../aws/models/yield-source.model';
-import { SUPPORTED_CHAINS } from '../chains/chain';
+import { getSupportedChains } from '../chains/chains.utils';
 import { Chain } from '../chains/config/chain.config';
-import { getVaultValueSources } from '../rewards/rewards.utils';
-import { queryYieldSources } from '../vaults/vaults.utils';
+import { getVaultPerformance, queryYieldSources } from '../vaults/vaults.utils';
 
 export async function refreshApySnapshots() {
-  for (const chain of SUPPORTED_CHAINS) {
+  for (const chain of getSupportedChains()) {
     const vaults = await chain.vaults.all();
     await Promise.all(vaults.map(async (vault) => refreshChainApySnapshots(chain, vault)));
   }
@@ -17,7 +16,7 @@ export async function refreshApySnapshots() {
 
 export async function refreshChainApySnapshots(chain: Chain, vault: VaultDefinitionModel) {
   try {
-    const reportedYieldSources = await getVaultValueSources(chain, vault);
+    const reportedYieldSources = await getVaultPerformance(chain, vault);
     const currentYieldSources = reportedYieldSources.filter((s) => !isNaN(s.apr) && isFinite(s.apr));
     const currentApr = currentYieldSources.reduce((total, s) => (total += s.apr), 0);
     const previousYieldSources = await queryYieldSources(vault);

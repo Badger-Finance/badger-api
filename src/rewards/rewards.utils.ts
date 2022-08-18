@@ -16,7 +16,7 @@ import { SushiswapStrategy } from '../protocols/strategies/sushiswap.strategy';
 import { SwaprStrategy } from '../protocols/strategies/swapr.strategy';
 import { UniswapStrategy } from '../protocols/strategies/uniswap.strategy';
 import { getFullToken } from '../tokens/tokens.utils';
-import { getCachedVault, getVaultPerformance } from '../vaults/vaults.utils';
+import { getCachedVault } from '../vaults/vaults.utils';
 import { createYieldSource } from '../vaults/yields.utils';
 import { SourceType } from './enums/source-type.enum';
 import { RewardMerkleDistribution } from './interfaces/merkle-distributor.interface';
@@ -143,29 +143,6 @@ export async function getRewardEmission(chain: Chain, vault: VaultDefinitionMode
     emissionSources.push(proRataYieldSource);
   }
   return emissionSources;
-}
-
-export async function getVaultValueSources(
-  chain: Chain,
-  vaultDefinition: VaultDefinitionModel,
-): Promise<YieldSource[]> {
-  // manual over ride for removed compounding of vaults - this can be empty
-  const NO_COMPOUND_VAULTS = new Set([TOKENS.BREMBADGER, TOKENS.BVECVX, TOKENS.BCVX]);
-
-  let sources: YieldSource[] = [];
-  try {
-    sources = await getVaultPerformance(chain, vaultDefinition);
-
-    const hasNoUnderlying = NO_COMPOUND_VAULTS.has(vaultDefinition.address);
-    if (hasNoUnderlying) {
-      sources = sources.filter((s) => s.type !== SourceType.Compound && s.type !== SourceType.PreCompound);
-    }
-
-    return sources;
-  } catch (err) {
-    console.log({ vaultDefinition, err, sources });
-    return [];
-  }
 }
 
 export async function getProtocolValueSources(

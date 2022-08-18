@@ -3,7 +3,7 @@ import { Protocol } from '@badger-dao/sdk';
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { VaultTokenBalance } from '../aws/models/vault-token-balance.model';
-import { SUPPORTED_CHAINS } from '../chains/chain';
+import { getSupportedChains } from '../chains/chains.utils';
 import { Chain } from '../chains/config/chain.config';
 import { getBalancerVaultTokenBalance } from '../protocols/strategies/balancer.strategy';
 import { getCurveVaultTokenBalance } from '../protocols/strategies/convex.strategy';
@@ -12,7 +12,7 @@ import { getCachedVault } from '../vaults/vaults.utils';
 import { getLpTokenBalances } from './indexer.utils';
 
 export async function refreshVaultBalances() {
-  for (const chain of SUPPORTED_CHAINS) {
+  for (const chain of getSupportedChains()) {
     const vaults = await chain.vaults.all();
     await Promise.all(vaults.map(async (v) => updateVaultTokenBalances(chain, v)));
   }
