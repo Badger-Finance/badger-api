@@ -7,7 +7,7 @@ import {
 
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { YieldEstimate } from '../aws/models/yield-estimate.model';
-import { SUPPORTED_CHAINS } from '../chains/chain';
+import { getSupportedChains } from '../chains/chains.utils';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
 import { getFullToken, toBalance } from '../tokens/tokens.utils';
 import { sendPlainTextToDiscord } from '../utils/discord.utils';
@@ -16,7 +16,7 @@ import { calculateBalanceDifference } from '../vaults/yields.utils';
 
 export async function refreshYieldEstimates() {
   await Promise.all(
-    SUPPORTED_CHAINS.map(async (chain) => {
+    getSupportedChains().map(async (chain) => {
       const sdk = await chain.getSdk();
       const mapper = getDataMapper();
       const vaults = await chain.vaults.all();

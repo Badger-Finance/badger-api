@@ -6,7 +6,7 @@ Object {
     Object {
       "amount": 2035.82,
       "beneficiary": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28",
-      "compPercent": 100,
+      "compPercent": 50,
       "end": 1619715600,
       "start": 1619110800,
       "token": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -14,7 +14,7 @@ Object {
     Object {
       "amount": 0.094819176,
       "beneficiary": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28",
-      "compPercent": 100,
+      "compPercent": 50,
       "end": 1617901200,
       "start": 1617296400,
       "token": "0x798D1bE841a82a273720CE31c822C61a67a601C3",
@@ -22,7 +22,7 @@ Object {
     Object {
       "amount": 1865.215,
       "beneficiary": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28",
-      "compPercent": 100,
+      "compPercent": 50,
       "end": 1620320400,
       "start": 1619715600,
       "token": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -76,7 +76,7 @@ Array [
   Object {
     "amount": 2035.82,
     "beneficiary": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28",
-    "compPercent": 100,
+    "compPercent": 50,
     "end": 1619715600,
     "start": 1619110800,
     "token": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
@@ -84,7 +84,7 @@ Array [
   Object {
     "amount": 0.094819176,
     "beneficiary": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28",
-    "compPercent": 100,
+    "compPercent": 50,
     "end": 1617901200,
     "start": 1617296400,
     "token": "0x798D1bE841a82a273720CE31c822C61a67a601C3",
@@ -92,7 +92,7 @@ Array [
   Object {
     "amount": 1865.215,
     "beneficiary": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28",
-    "compPercent": 100,
+    "compPercent": 50,
     "end": 1620320400,
     "start": 1619715600,
     "token": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",

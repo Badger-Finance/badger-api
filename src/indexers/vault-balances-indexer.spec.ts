@@ -2,8 +2,7 @@ import { DataMapper, PutParameters, StringToAnyObjectMap } from '@aws/dynamodb-d
 
 import { Chain } from '../chains/config/chain.config';
 import { MOCK_VAULT_DEFINITION } from '../test/constants';
-import { mockQuery, setupMockChain } from '../test/mocks.utils';
-import { randomSnapshot } from '../test/tests.utils';
+import { mockQuery, randomSnapshot,setupMockChain } from '../test/mocks.utils';
 import { updateVaultTokenBalances } from './vault-balances-indexer';
 
 describe('vault-balances-indexer', () => {

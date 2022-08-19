@@ -70,7 +70,9 @@ describe('vaults.v3.controller', () => {
         jest.spyOn(Chain, 'getChain').mockImplementation(() => {
           throw new BadRequest(`invalid is not a supported chain`);
         });
-        const { body, statusCode } = await PlatformServerlessTest.request.get('/vaults/list/harvests?chain=invalid');
+        const { body, statusCode } = await PlatformServerlessTest.request
+          .get('/vaults/list/harvests')
+          .query({ chain: 'invalid' });
         expect(statusCode).toEqual(NetworkStatus.BadRequest);
         expect(JSON.parse(body)).toMatchSnapshot();
       });

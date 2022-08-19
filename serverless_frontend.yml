@@ -62,14 +62,14 @@ custom:
   merkleProofs:
     staging: 'badger-staging-merkle-proofs'
     prod: 'badger-merkle-proofs'
-  
+
   domainPrefix:
     staging: 'staging-api'
     prod: 'api'
-  
+
   customDomain:
     domainName: ${self:custom.domainPrefix.${self:custom.stage}}.badger.tools
-    certificateName: '*.badger.tools'
+    certificateArn: ${env:TOOLS_CERTIFICATE_ARN}
     createRoute53Record: true
     createRoute53IPv6Record: true
     endpointType: EDGE
@@ -83,7 +83,7 @@ package:
 
 provider:
   name: aws
-  runtime: nodejs16.x
+  runtime: nodejs14.x
   memorySize: 2048
   stage: staging
   region: us-west-1

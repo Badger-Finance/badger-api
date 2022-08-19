@@ -3,7 +3,7 @@ import { Network } from '@badger-dao/sdk';
 import { getAccounts, getLatestMetadata } from '../accounts/accounts.utils';
 import { getChainStartBlockKey, getDataMapper } from '../aws/dynamodb.utils';
 import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
-import { SUPPORTED_CHAINS } from '../chains/chain';
+import { getSupportedChains } from '../chains/chains.utils';
 import { Chain } from '../chains/config/chain.config';
 import { PRODUCTION } from '../config/constants';
 import { ClaimableBalance } from '../rewards/entities/claimable-balance';
@@ -87,7 +87,7 @@ export async function refreshClaimableBalances(chain: Chain) {
 }
 
 export async function refreshUserAccounts() {
-  const chains = SUPPORTED_CHAINS.filter((c) => c.network !== Network.BinanceSmartChain);
+  const chains = getSupportedChains().filter((c) => c.network !== Network.BinanceSmartChain);
   await Promise.all(
     chains.map(async (chain) => {
       try {

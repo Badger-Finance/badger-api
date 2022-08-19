@@ -1,14 +1,24 @@
 import { DataMapper } from '@aws/dynamodb-data-mapper';
-import BadgerSDK, { gqlGenT, Network } from '@badger-dao/sdk';
+import BadgerSDK, {
+  Currency,
+  gqlGenT,
+  Network,
+  Protocol,
+  VaultBehavior,
+  VaultStatus,
+  VaultVersion,
+} from '@badger-dao/sdk';
 
+import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
-import { TEST_ADDR, TEST_CURRENT_BLOCK } from '../test/constants';
-import { mockQuery, setupMockChain } from '../test/mocks.utils';
-// import { defaultAccount, randomSnapshot } from "../test/tests.utils";
-import { getAccounts, getCachedBoost, getLatestMetadata } from './accounts.utils';
+import { MOCK_VAULT_DEFINITION, TEST_ADDR, TEST_CURRENT_BLOCK } from '../test/constants';
+import { defaultAccount, mockBalance, mockQuery, randomSnapshot,setupMockChain } from '../test/mocks.utils';
+import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
+import * as vaultsUtils from '../vaults/vaults.utils';
+import { getAccounts, getCachedBoost, getLatestMetadata, queryCachedAccount, toVaultBalance } from './accounts.utils';
 
 describe('accounts.utils', () => {
   const mockBoost = {
@@ -25,60 +35,60 @@ describe('accounts.utils', () => {
     updatedAt: 0,
   };
 
-  // function testVaultBalance(vaultDefinition: VaultDefinitionModel): gqlGenT.UserSettBalance {
-  //   const vaultToken = fullTokenMockMap[vaultDefinition.address];
-  //   const depositToken = fullTokenMockMap[vaultDefinition.depositToken];
-  //   const toWei = (amt: number) => {
-  //     const values = amt * Math.pow(10, vaultToken.decimals);
-  //     return values.toString();
-  //   };
-  //   return {
-  //     id: TEST_ADDR,
-  //     netDeposit: 4,
-  //     netShareDeposit: toWei(4),
-  //     grossDeposit: 9,
-  //     grossShareDeposit: toWei(9),
-  //     grossWithdraw: 5,
-  //     grossShareWithdraw: toWei(5),
-  //     user: {
-  //       id: TEST_ADDR,
-  //       settBalances: [],
-  //     },
-  //     sett: {
-  //       id: vaultToken.address,
-  //       name: vaultToken.name,
-  //       symbol: vaultToken.symbol,
-  //       available: 1,
-  //       pricePerFullShare: 1034039284374221,
-  //       balance: 3,
-  //       totalSupply: 5,
-  //       netDeposit: 4,
-  //       netShareDeposit: toWei(4),
-  //       grossDeposit: 9,
-  //       grossShareDeposit: toWei(9),
-  //       grossWithdraw: 5,
-  //       grossShareWithdraw: toWei(5),
-  //       decimals: 18,
-  //       token: {
-  //         id: depositToken.address,
-  //         name: depositToken.name,
-  //         symbol: depositToken.symbol,
-  //         decimals: depositToken.decimals,
-  //         totalSupply: 21000000,
-  //       },
-  //       treeDistributions: [],
-  //       harvests: [],
-  //       version: VaultVersion.v1_5,
-  //       status: VaultStatus.guarded,
-  //       isProduction: true,
-  //       protocol: Protocol.Badger,
-  //       createdAt: 0,
-  //       behavior: VaultBehavior.Compounder,
-  //       lastUpdatedAt: 0,
-  //       releasedAt: 0,
-  //     },
-  //   };
-  // }
+  function testVaultBalance(vaultDefinition: VaultDefinitionModel): gqlGenT.UserSettBalance {
+    const vaultToken = fullTokenMockMap[vaultDefinition.address];
+    const depositToken = fullTokenMockMap[vaultDefinition.depositToken];
+    const toWei = (amt: number) => {
+      const values = amt * Math.pow(10, vaultToken.decimals);
+      return values.toString();
+    };
+    return {
+      id: TEST_ADDR,
+      netDeposit: 4,
+      netShareDeposit: toWei(4),
+      grossDeposit: 9,
+      grossShareDeposit: toWei(9),
+      grossWithdraw: 5,
+      grossShareWithdraw: toWei(5),
+      user: {
+        id: TEST_ADDR,
+        settBalances: [],
+      },
+      sett: {
+        id: vaultToken.address,
+        name: vaultToken.name,
+        symbol: vaultToken.symbol,
+        available: 1,
+        pricePerFullShare: 1034039284374221,
+        balance: 3,
+        totalSupply: 5,
+        netDeposit: 4,
+        netShareDeposit: toWei(4),
+        grossDeposit: 9,
+        grossShareDeposit: toWei(9),
+        grossWithdraw: 5,
+        grossShareWithdraw: toWei(5),
+        decimals: 18,
+        token: {
+          id: depositToken.address,
+          name: depositToken.name,
+          symbol: depositToken.symbol,
+          decimals: depositToken.decimals,
+          totalSupply: 21000000,
+        },
+        treeDistributions: [],
+        harvests: [],
+        version: VaultVersion.v1_5,
+        status: VaultStatus.guarded,
+        isProduction: true,
+        protocol: Protocol.Badger,
+        createdAt: 0,
+        behavior: VaultBehavior.Compounder,
+        lastUpdatedAt: 0,
+        releasedAt: 0,
+      },
+    };
+  }
 
   beforeEach(() => {
     jest.spyOn(DataMapper.prototype, 'put').mockImplementation(async (o) => ({
@@ -89,35 +99,34 @@ describe('accounts.utils', () => {
     setupMockChain();
   });
 
-  // TODO: re enable this test once more time is allowed for fixing test leaks
-  // describe("queryCachedAccount", () => {
-  //   describe("no saved account", () => {
-  //     it("returns undefined", async () => {
-  //       mockQuery([]);
-  //       const actual = await queryCachedAccount(TEST_ADDR);
-  //       expect(actual).toMatchObject(defaultAccount(TEST_ADDR));
-  //     });
-  //   });
+  describe('queryCachedAccount', () => {
+    describe('no saved account', () => {
+      it('returns undefined', async () => {
+        mockQuery([]);
+        const actual = await queryCachedAccount(TEST_ADDR);
+        expect(actual).toMatchObject(defaultAccount(TEST_ADDR));
+      });
+    });
 
-  //   describe("encounters an errors", () => {
-  //     it("returns undefined", async () => {
-  //       jest.spyOn(DataMapper.prototype, "query").mockImplementation(() => {
-  //         throw new Error();
-  //       });
-  //       const actual = await queryCachedAccount(TEST_ADDR);
-  //       expect(actual).toMatchObject(defaultAccount(TEST_ADDR));
-  //     });
-  //   });
+    describe('encounters an errors', () => {
+      it('returns undefined', async () => {
+        jest.spyOn(DataMapper.prototype, 'query').mockImplementation(() => {
+          throw new Error();
+        });
+        const actual = await queryCachedAccount(TEST_ADDR);
+        expect(actual).toMatchObject(defaultAccount(TEST_ADDR));
+      });
+    });
 
-  //   describe("a saved account", () => {
-  //     it("returns the stored account", async () => {
-  //       const expected = { address: TEST_ADDR, claimableBalances: [] };
-  //       mockQuery([expected]);
-  //       const actual = await queryCachedAccount(TEST_ADDR);
-  //       expect(actual).toMatchObject(expected);
-  //     });
-  //   });
-  // });
+    describe('a saved account', () => {
+      it('returns the stored account', async () => {
+        const expected = { address: TEST_ADDR, claimableBalances: [] };
+        mockQuery([expected]);
+        const actual = await queryCachedAccount(TEST_ADDR);
+        expect(actual).toMatchObject(expected);
+      });
+    });
+  });
 
   describe('getAccounts', () => {
     describe('users exist', () => {
@@ -153,33 +162,32 @@ describe('accounts.utils', () => {
     });
   });
 
-  // TODO: re enable this test once more time is allowed for fixing test leaks
-  // describe("toVaultBalance", () => {
-  //   it.each([
-  //     [undefined, Currency.USD],
-  //     [Currency.USD, Currency.USD],
-  //     [Currency.ETH, Currency.ETH]
-  //   ])("returns vault balance request in %s currency with %s denominated value", async (currency, _toCurrency) => {
-  //     const chain = setupMockChain();
-  //     const snapshot = randomSnapshot(MOCK_VAULT_DEFINITION);
-  //     const cachedVault = await vaultsUtils.defaultVault(chain, MOCK_VAULT_DEFINITION);
-  //     cachedVault.balance = snapshot.balance;
-  //     cachedVault.pricePerFullShare = snapshot.balance / snapshot.totalSupply;
-  //     jest.spyOn(vaultsUtils, "getCachedVault").mockImplementation(async (_c, _v) => cachedVault);
-  //     const depositToken = fullTokenMockMap[cachedVault.underlyingToken];
-  //     const wbtc = fullTokenMockMap[TOKENS.WBTC];
-  //     const weth = fullTokenMockMap[TOKENS.WETH];
-  //     const tokenBalances = [mockBalance(wbtc, 1), mockBalance(weth, 20)];
-  //     const cached = { vault: MOCK_VAULT_DEFINITION.address, tokenBalances };
-  //     mockQuery([cached]);
-  //     const mockedBalance = testVaultBalance(MOCK_VAULT_DEFINITION);
-  //     const actual = await toVaultBalance(chain, mockedBalance, currency);
-  //     expect(actual).toBeTruthy();
-  //     expect(actual.name).toEqual(MOCK_VAULT_DEFINITION.name);
-  //     expect(actual.symbol).toEqual(depositToken.symbol);
-  //     expect(actual.pricePerFullShare).toEqual(snapshot.balance / snapshot.totalSupply);
-  //   });
-  // });
+  describe('toVaultBalance', () => {
+    it.each([
+      [undefined, Currency.USD],
+      [Currency.USD, Currency.USD],
+      [Currency.ETH, Currency.ETH],
+    ])('returns vault balance request in %s currency with %s denominated value', async (currency, _toCurrency) => {
+      const chain = setupMockChain();
+      const snapshot = randomSnapshot(MOCK_VAULT_DEFINITION);
+      const cachedVault = await vaultsUtils.defaultVault(chain, MOCK_VAULT_DEFINITION);
+      cachedVault.balance = snapshot.balance;
+      cachedVault.pricePerFullShare = snapshot.balance / snapshot.totalSupply;
+      jest.spyOn(vaultsUtils, 'getCachedVault').mockImplementation(async (_c, _v) => cachedVault);
+      const depositToken = fullTokenMockMap[cachedVault.underlyingToken];
+      const wbtc = fullTokenMockMap[TOKENS.WBTC];
+      const weth = fullTokenMockMap[TOKENS.WETH];
+      const tokenBalances = [mockBalance(wbtc, 1), mockBalance(weth, 20)];
+      const cached = { vault: MOCK_VAULT_DEFINITION.address, tokenBalances };
+      mockQuery([cached]);
+      const mockedBalance = testVaultBalance(MOCK_VAULT_DEFINITION);
+      const actual = await toVaultBalance(chain, mockedBalance, currency);
+      expect(actual).toBeTruthy();
+      expect(actual.name).toEqual(MOCK_VAULT_DEFINITION.name);
+      expect(actual.symbol).toEqual(depositToken.symbol);
+      expect(actual.pricePerFullShare).toEqual(snapshot.balance / snapshot.totalSupply);
+    });
+  });
 
   describe('getCachedBoost', () => {
     describe('no cached boost', () => {

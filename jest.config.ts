@@ -1,6 +1,16 @@
-module.exports = {
+import type { Config } from '@jest/types';
+
+const config: Config.InitialOptions = {
   clearMocks: true,
-  coveragePathIgnorePatterns: ['index.ts', '/node_modules/', '/contracts/', '/generated/', '/interfaces/', '/enums/'],
+  coveragePathIgnorePatterns: [
+    'index.ts',
+    '/node_modules/',
+    '/contracts/',
+    '/generated/',
+    '/interfaces/',
+    '/enums/',
+    'test',
+  ],
   coverageThreshold: {
     global: {
       branches: 35,
@@ -9,7 +19,7 @@ module.exports = {
       statements: 50,
     },
   },
-  moduleFileExtensions: ['js', 'json', 'jsx', 'ts', 'tsx', 'node'],
+  moduleFileExtensions: ['js', 'json', 'ts', 'node'],
   moduleNameMapper: {
     '^uuid$': '<rootDir>/node_modules/uuid/dist/index.js',
   },
@@ -19,3 +29,5 @@ module.exports = {
     '\\.(ts)$': 'ts-jest',
   },
 };
+
+export default config;

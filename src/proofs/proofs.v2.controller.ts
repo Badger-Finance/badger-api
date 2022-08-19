@@ -3,7 +3,7 @@ import { Controller, Inject } from '@tsed/di';
 import { PathParams, QueryParams } from '@tsed/platform-params';
 import { ContentType, Deprecated, Get } from '@tsed/schema';
 
-import { Chain } from '../chains/config/chain.config';
+import { getOrCreateChain } from '../chains/chains.utils';
 import { ProofsService } from './proofs.service';
 
 @Deprecated()
@@ -18,6 +18,6 @@ export class ProofsV2Controller {
     @PathParams('address') address: string,
     @QueryParams('chain') chain?: Network,
   ): Promise<MerkleProof> {
-    return this.proofsService.getBouncerProof(Chain.getChain(chain), address);
+    return this.proofsService.getBouncerProof(getOrCreateChain(chain), address);
   }
 }

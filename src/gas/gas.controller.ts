@@ -4,7 +4,7 @@ import { UseCache } from '@tsed/platform-cache';
 import { QueryParams } from '@tsed/platform-params';
 import { ContentType, Description, Get, Returns, Summary } from '@tsed/schema';
 
-import { Chain } from '../chains/config/chain.config';
+import { getOrCreateChain } from '../chains/chains.utils';
 
 @Controller('/gas')
 export class GasController {
@@ -16,7 +16,7 @@ export class GasController {
   @Returns(200)
   @Returns(404).Description('Chain gas prices not available')
   async getGasPrices(@QueryParams('chain') chain?: Network): Promise<GasPrices> {
-    const targetChain = Chain.getChain(chain);
+    const targetChain = getOrCreateChain(chain);
     return targetChain.getGasPrices();
   }
 }

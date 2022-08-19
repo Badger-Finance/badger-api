@@ -6,6 +6,7 @@ import { ContentType, Description, Get, Hidden, Returns, Summary } from '@tsed/s
 import { BigNumber, ethers } from 'ethers';
 
 import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
+import { getOrCreateChain } from '../chains/chains.utils';
 import { Chain } from '../chains/config/chain.config';
 import { DEFAULT_PAGE_SIZE } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
@@ -35,7 +36,7 @@ export class RewardsV3Controller {
   ): Promise<AirdropMerkleClaim> {
     if (!address) throw new QueryParamError('address');
 
-    return this.rewardsService.getBouncerProof(Chain.getChain(chain), ethers.utils.getAddress(address));
+    return this.rewardsService.getBouncerProof(getOrCreateChain(chain), ethers.utils.getAddress(address));
   }
 
   @Get('/list')
@@ -87,7 +88,7 @@ export class RewardsV3Controller {
     if (!address) {
       throw new QueryParamError('address');
     }
-    return this.rewardsService.getUserRewards(Chain.getChain(chain), ethers.utils.getAddress(address));
+    return this.rewardsService.getUserRewards(getOrCreateChain(chain), ethers.utils.getAddress(address));
   }
 
   @UseCache()
@@ -105,7 +106,7 @@ export class RewardsV3Controller {
     if (!address) {
       throw new QueryParamError('address');
     }
-    return this.rewardsService.rewardSchedulesByVault(Chain.getChain(chain), address, Boolean(active));
+    return this.rewardsService.rewardSchedulesByVault(getOrCreateChain(chain), address, Boolean(active));
   }
 
   @UseCache()
@@ -118,6 +119,6 @@ export class RewardsV3Controller {
     @QueryParams('chain') chain?: Network,
     @QueryParams('active') active?: boolean,
   ): Promise<RewardSchedulesByVaults> {
-    return this.rewardsService.rewardSchedulesVaultsList(Chain.getChain(chain), Boolean(active));
+    return this.rewardsService.rewardSchedulesVaultsList(getOrCreateChain(chain), Boolean(active));
   }
 }

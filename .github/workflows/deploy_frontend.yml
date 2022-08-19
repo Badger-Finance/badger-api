@@ -36,11 +36,11 @@ jobs:
           role-to-assume: ${{ env.ASSUME_ROLE }}
           role-session-name: ${{ env.SESSION_NAME }}
           aws-region: ${{ env.AWS_REGION }}
-      - name: Create Staging Domain
-        uses: serverless/github-action@v3.0.0
-        with:
-          args: create_domain
-        if: contains(github.ref, 'staging')
+      # - name: Create Staging Domain
+      #   uses: serverless/github-action@v3.0.0
+      #   with:
+      #     args: create_domain
+      #   if: contains(github.ref, 'staging')
       - name: Deploy Staging
         uses: serverless/github-action@v3.0.0
         with:
@@ -71,3 +71,4 @@ env:
   ARBISCAN_API_KEY: ${{ secrets.ARBISCAN_API_KEY }}
   BLOCKNATIVE_API_KEY: ${{ secrets.BLOCKNATIVE_API_KEY }}
   DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+  TOOLS_CERTIFICATE_ARN: ${{ secrets.TOOLS_CERTIFICATE_ARN }}

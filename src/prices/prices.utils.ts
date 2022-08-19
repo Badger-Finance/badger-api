@@ -121,18 +121,10 @@ export async function getPriceSnapshotsAtTimestamps(
 ): Promise<TokenPriceSnapshot[]> {
   try {
     const snapshots = [];
-    const mapper = getDataMapper();
 
     for (const timestamp of timestamps) {
-      for await (const snapshot of mapper.query(
-        TokenPriceSnapshot,
-        { address: ethers.utils.getAddress(address), updatedAt: greaterThanOrEqualTo(timestamp) },
-        { limit: 1 },
-      )) {
-        snapshot.price = await convert(snapshot.price ?? snapshot.usd, currency);
-        snapshot.updatedAt = timestamp;
-        snapshots.push(snapshot);
-      }
+      const snapshot = await queryPriceAtTimestamp(address, timestamp, currency);
+      snapshots.push(snapshot);
     }
 
     return snapshots;
@@ -140,4 +132,26 @@ export async function getPriceSnapshotsAtTimestamps(
     console.error(err);
     return [];
   }
+}
+
+export async function queryPriceAtTimestamp(
+  address: string,
+  timestamp: number,
+  currency = Currency.USD,
+): Promise<TokenPriceSnapshot> {
+  const mapper = getDataMapper();
+  for await (const snapshot of mapper.query(
+    TokenPriceSnapshot,
+    { address: ethers.utils.getAddress(address), updatedAt: greaterThanOrEqualTo(timestamp) },
+    { limit: 1 },
+  )) {
+    snapshot.price = await convert(snapshot.price ?? snapshot.usd, currency);
+    snapshot.updatedAt = timestamp;
+    return snapshot;
+  }
+  const currentPrice = await queryPrice(address, currency);
+  return {
+    ...currentPrice,
+    updatedAt: timestamp,
+  };
 }

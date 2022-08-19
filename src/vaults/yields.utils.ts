@@ -1,5 +1,7 @@
 import {
+  formatBalance,
   gqlGenT,
+  HarvestType,
   keyBy,
   Network,
   ONE_DAY_MS,
@@ -8,23 +10,29 @@ import {
   TokenRate,
   TokenValue,
   ValueSource,
+  Vault__factory,
   VaultDTO,
   VaultHarvestData,
   VaultState,
   VaultVersion,
   VaultYieldProjection,
 } from '@badger-dao/sdk';
+import { BigNumber, ethers } from 'ethers';
 
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { YieldEstimate } from '../aws/models/yield-estimate.model';
 import { YieldSource } from '../aws/models/yield-source.model';
 import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
+import { queryPriceAtTimestamp } from '../prices/prices.utils';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { BoostRange } from '../rewards/interfaces/boost-range.interface';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
+import { getFullToken } from '../tokens/tokens.utils';
+import { getInfuelnceVaultYieldBalance, isInfluenceVault } from './influence.utils';
+import { HarvestReport } from './interfaces/harvest-report.interface';
 import { YieldSources } from './interfaces/yield-sources.interface';
-import { estimateVaultPerformance, queryYieldSources, VAULT_SOURCE } from './vaults.utils';
+import { estimateDerivativeEmission, queryYieldSources, VAULT_SOURCE } from './vaults.utils';
 
 const VAULT_TWAY_PERIOD = 15;
 
@@ -344,8 +352,7 @@ export async function loadVaultEventPerformances(chain: Chain, vault: VaultDefin
     throw new Error('Network does not have standardized vaults!');
   }
 
-  // TODO: refactor this to a known list of any external harvest processor vaults
-  if (vault.address === TOKENS.BVECVX) {
+  if (isInfluenceVault(vault.address)) {
     throw new Error('Vault utilizes external harvest processor, not compatible with event lookup');
   }
 
@@ -363,23 +370,15 @@ export async function loadVaultEventPerformances(chain: Chain, vault: VaultDefin
   return estimateVaultPerformance(chain, vault, data);
 }
 
-// subgraph based emissions retrieval
-// should we put this into the sdk?
 export async function loadVaultGraphPerformances(chain: Chain, vault: VaultDefinitionModel): Promise<YieldSource[]> {
+  const sdk = await chain.getSdk();
+  const { graph } = sdk;
   const { address } = vault;
 
-  // TODO: bruh wtf bls what do, need to fix / remove this probably
-  // digg does not play well with this accounting
-  if (address === TOKENS.DIGG) {
-    return [];
-  }
-
-  const { graph } = chain.sdk;
   const now = Math.floor(Date.now() / 1000);
-
   const cutoff = Math.floor(now - VAULT_TWAY_PERIOD * ONE_DAY_SECONDS);
 
-  let [vaultHarvests, treeDistributions] = await Promise.all([
+  const [vaultHarvests, treeDistributions] = await Promise.all([
     graph.loadSettHarvests({
       where: {
         sett: address.toLowerCase(),
@@ -394,38 +393,9 @@ export async function loadVaultGraphPerformances(chain: Chain, vault: VaultDefin
     }),
   ]);
 
-  let { settHarvests } = vaultHarvests;
-  let { badgerTreeDistributions } = treeDistributions;
-
-  let data = constructGraphVaultData(vault, settHarvests, badgerTreeDistributions);
-  // if there are no recent viable options, attempt to use the full vault history
-  if (data.length <= 1) {
-    // take the last 6 weeks as the "full graph" to avoid really old data
-    const cutoff = Number(((Date.now() - ONE_DAY_MS * 42) / 1000).toFixed());
-    [vaultHarvests, treeDistributions] = await Promise.all([
-      graph.loadSettHarvests({
-        where: {
-          sett: address.toLowerCase(),
-          timestamp_gte: cutoff,
-        },
-      }),
-      graph.loadBadgerTreeDistributions({
-        where: {
-          sett: address.toLowerCase(),
-          timestamp_gte: cutoff,
-        },
-      }),
-    ]);
-    settHarvests = vaultHarvests.settHarvests;
-    badgerTreeDistributions = treeDistributions.badgerTreeDistributions;
-    data = constructGraphVaultData(vault, settHarvests, badgerTreeDistributions);
-  }
-
-  // if we still don't have harvests or distributions - don't bother there is nothing to compute
-  if (data.length <= 1) {
-    return [];
-  }
-
+  const { settHarvests } = vaultHarvests;
+  const { badgerTreeDistributions } = treeDistributions;
+  const data = constructGraphVaultData(vault, settHarvests, badgerTreeDistributions);
   return estimateVaultPerformance(chain, vault, data);
 }
 
@@ -462,4 +432,151 @@ function constructGraphVaultData(
       }),
     };
   });
+}
+
+export async function estimateVaultPerformance(
+  chain: Chain,
+  vault: VaultDefinitionModel,
+  data: VaultHarvestData[],
+): Promise<YieldSource[]> {
+  if (data.length === 0) {
+    return [];
+  }
+
+  const sdk = await chain.getSdk();
+  const recentHarvests = data.sort((a, b) => b.timestamp - a.timestamp);
+
+  /**
+   * ON 8/15 AN INCORREC PROCESSING OF A BADGER REWARDS PROCESSOR OCCURED.
+   * AS A RESULT, THE EVENTS INCLUDED IN TREE DISTRIBUTIONS DID NOT MAKE IT
+   * TO THE GRAPH, OR ANY SOURCE OF ON CHAIN DATA CURRENTLY SUPPORTED BY
+   * THE CURRENT YIELD SYSTEM.
+   *
+   * https://etherscan.io/tx/0x1e3e7c71012d36e936b768a37e9784125a00f205a22bd808f045968a506bb1ce#eventlog
+   *
+   * THIS TRANSACTION CONTAINS THE SINGLE BADGER TREE DISTRIBUTION WE ARE
+   * ALLOCATING TO GRAVI_AURA VAULT AS A MISSED - AND NOT CAPTURED SOURCE.
+   *
+   * THIS CODE SHOULD BE REMOVED BY 08/29.
+   */
+  if (vault.address === TOKENS.GRAVI_AURA) {
+    const targetBlock = 15344809;
+    const block = await sdk.provider.getBlock(targetBlock);
+    const targetedInsertion = recentHarvests[0].treeDistributions;
+    targetedInsertion.push({
+      timestamp: block.timestamp,
+      block: targetBlock,
+      token: TOKENS.BADGER,
+      amount: BigNumber.from('1928771715566995688546'),
+    });
+  }
+
+  const allHarvests = recentHarvests.flatMap((h) => h.harvests.map((h) => ({ ...h, type: HarvestType.Harvest })));
+  const allDistributions = recentHarvests.flatMap((h) =>
+    h.treeDistributions.map((d) => ({ ...d, type: HarvestType.TreeDistribution })),
+  );
+  const allEvents = allHarvests
+    .concat(allDistributions)
+    .filter((e) => BigNumber.from(e.amount).gt(ethers.constants.Zero))
+    .sort((a, b) => b.timestamp - a.timestamp);
+
+  const duration = VAULT_TWAY_PERIOD * ONE_DAY_MS;
+  const harvestReport: HarvestReport[] = [];
+
+  let totalHarvested = 0;
+  let totalAccumulated = 0;
+  let totalVaultTokens = 0;
+  let totalVaultPrincipal = 0;
+  const tokensEmitted = new Map<string, number>();
+
+  console.log(`Evaluating ${allEvents.length} events for ${vault.name}`);
+  for (const event of allEvents) {
+    const token = await getFullToken(chain, event.token);
+    const amount = formatBalance(event.amount, token.decimals);
+    const { price } = await queryPriceAtTimestamp(token.address, event.timestamp * 1000);
+
+    const tokenEarned = price * amount;
+    totalAccumulated += tokenEarned;
+    if (event.type === HarvestType.Harvest) {
+      totalHarvested += tokenEarned;
+    } else {
+      const entry = tokensEmitted.get(token.address) ?? 0;
+      tokensEmitted.set(token.address, entry + tokenEarned);
+    }
+
+    let balance = 0;
+    if (isInfluenceVault(vault.address)) {
+      balance = await getInfuelnceVaultYieldBalance(chain, vault.address, event.block);
+    } else {
+      const vaultContract = Vault__factory.connect(vault.address, sdk.provider);
+      const totalSupply = await vaultContract.totalSupply({ blockTag: event.block });
+      balance = formatBalance(totalSupply);
+    }
+    const { price: vaultPrice } = await queryPriceAtTimestamp(vault.address, event.timestamp * 1000);
+    const vaultPrincipal = vaultPrice * balance;
+    totalVaultTokens += balance;
+    totalVaultPrincipal += vaultPrincipal;
+
+    const eventApr = calculateYield(vaultPrincipal, tokenEarned, duration);
+    const report: HarvestReport = {
+      date: new Date(event.timestamp * 1000).toDateString(),
+      amount: amount.toFixed(2),
+      type: event.type,
+      value: `$${tokenEarned.toFixed(2)}`,
+      balance: balance.toFixed(2),
+      apr: `${eventApr.toFixed(2)}%`,
+    };
+    harvestReport.push(report);
+  }
+
+  const averagePrincipal = totalVaultPrincipal / allEvents.length;
+  const averageTokens = totalVaultTokens / allEvents.length;
+  const apr = calculateYield(averagePrincipal, totalAccumulated, duration);
+  console.log(`${vault.name} Harvest Report`);
+  console.table(harvestReport);
+  console.log(
+    `Vault Holdings: $${averagePrincipal.toFixed()} (${averageTokens.toFixed()} tokens), Total Earned: $${totalAccumulated.toFixed(
+      2,
+    )}, Est. Yield: ${apr.toFixed(2)}%`,
+  );
+
+  const valueSources = [];
+
+  // create the apr source for harvests
+  const compoundApr = calculateYield(averagePrincipal, totalHarvested, duration);
+  const compoundYieldSource = createYieldSource(vault, SourceType.PreCompound, VAULT_SOURCE, compoundApr);
+  valueSources.push(compoundYieldSource);
+
+  // create the apy source for harvests
+  const compoundApy = calculateYield(averagePrincipal, totalHarvested, duration, totalHarvested);
+  const compoundedYieldSource = createYieldSource(vault, SourceType.Compound, VAULT_SOURCE, compoundApy);
+  valueSources.push(compoundedYieldSource);
+
+  let flywheelCompounding = 0;
+
+  for (const [token, valueEmitted] of tokensEmitted.entries()) {
+    const tokenEmitted = await getFullToken(chain, token);
+    const emissionApr = calculateYield(averagePrincipal, valueEmitted, duration);
+    const emissionYieldSource = createYieldSource(vault, SourceType.Distribution, tokenEmitted.name, emissionApr);
+    valueSources.push(emissionYieldSource);
+
+    // try to add underlying emitted vault value sources if applicable
+    try {
+      const emittedVault = await chain.vaults.getVault(tokenEmitted.address);
+      const vaultValueSources = await queryYieldSources(emittedVault);
+      // search for the persisted apr variant of the compounding vault source, if any
+      const compoundingSource = vaultValueSources.find((source) => source.type === SourceType.PreCompound);
+      if (compoundingSource) {
+        flywheelCompounding += estimateDerivativeEmission(compoundApr, emissionApr, compoundingSource.apr / 100);
+      }
+    } catch {} // ignore error for non vaults
+  }
+
+  if (flywheelCompounding > 0) {
+    const sourceName = `Vault Flywheel`;
+    const flywheelYieldSource = createYieldSource(vault, SourceType.Flywheel, sourceName, flywheelCompounding);
+    valueSources.push(flywheelYieldSource);
+  }
+
+  return valueSources;
 }
