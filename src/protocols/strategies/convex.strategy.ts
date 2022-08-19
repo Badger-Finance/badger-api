@@ -99,8 +99,8 @@ async function getLiquiditySources(chain: Chain, vaultDefinition: VaultDefinitio
   const lpSources = bveCVXSources.map((s) => {
     const { apr, minApr, maxApr, name, type } = s;
     const scaledApr = apr * scalar;
-    const min = minApr / apr;
-    const max = maxApr / apr;
+    const min = apr > 0 ? minApr / apr : 0;
+    const max = apr > 0 ? maxApr / apr : 0;
     return createYieldSource(vaultDefinition, type, name, scaledApr, { min, max });
   });
   const cachedTradeFees = await getCurvePerformance(chain, vaultDefinition);
