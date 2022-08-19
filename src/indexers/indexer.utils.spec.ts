@@ -20,7 +20,7 @@ import { TestEthereum } from '../chains/config/test.config';
 import { TOKENS } from '../config/tokens.config';
 import { EmissionControl, EmissionControl__factory, UniV2, UniV2__factory } from '../contracts';
 import { MOCK_VAULT, MOCK_VAULT_DEFINITION, TEST_CURRENT_TIMESTAMP } from '../test/constants';
-import { mockBadgerSdk, setupMockChain } from '../test/mocks.utils';
+import { setupMockChain } from '../test/mocks.utils';
 import { mockContract } from '../test/mocks.utils/contracts/mock.contract.base';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import * as apiVaults from '../vaults/vaults.service';
@@ -49,12 +49,7 @@ describe('indexer.utils', () => {
 
     jest.spyOn(emissionControl, 'boostedEmissionRate').mockImplementation(async () => BigNumber.from(1));
 
-    const { sdk } = await mockBadgerSdk();
-
     const chain = setupMockChain();
-
-    jest.spyOn(TestEthereum.prototype, 'getSdk').mockImplementation(async () => sdk);
-    jest.spyOn(TestEthereum.prototype, 'provider', 'get').mockReturnValue(sdk.provider);
 
     jest.spyOn(VaultsService.prototype, 'loadVault').mockImplementation(async function ({ address }) {
       return <RegistryVault>registryVaults.find((v) => v.address === address);
@@ -71,7 +66,7 @@ describe('indexer.utils', () => {
 
     jest.spyOn(apiVaults.VaultsService, 'loadVault').mockImplementation(async () => MOCK_VAULT);
 
-    return { chain, sdk, strategyMock, vaultV15Mock };
+    return { chain, strategyMock, vaultV15Mock };
   }
 
   describe('vaultToSnapshot', () => {
