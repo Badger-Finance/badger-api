@@ -521,6 +521,7 @@ export async function estimateVaultPerformance(
     const report: HarvestReport = {
       date: new Date(event.timestamp * 1000).toDateString(),
       amount: amount.toFixed(2),
+      token: token.symbol,
       type: event.type,
       value: `$${tokenEarned.toFixed(2)}`,
       balance: balance.toFixed(2),
