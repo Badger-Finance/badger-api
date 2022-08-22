@@ -27,8 +27,6 @@ import { getFullToken, getVaultTokens } from '../tokens/tokens.utils';
 import { VaultStrategy } from './interfaces/vault-strategy.interface';
 import { aggregateSources, loadVaultEventPerformances, loadVaultGraphPerformances } from './yields.utils';
 
-export const VAULT_SOURCE = 'Vault Compounding';
-
 export async function defaultVault(chain: Chain, vault: VaultDefinitionModel): Promise<VaultDTO> {
   const { state, bouncer, behavior, version, protocol, name, depositToken, address } = vault;
   const [assetToken, vaultToken] = await Promise.all([getFullToken(chain, depositToken), getFullToken(chain, address)]);
@@ -131,7 +129,8 @@ export async function getCachedVault(
       return vault;
     }
     return vault;
-  } catch {
+  } catch (err) {
+    console.error(err);
     return vault;
   }
 }
@@ -302,19 +301,33 @@ export function estimateDerivativeEmission(
   return (currentValueEmittedCompounded / total) * 100;
 }
 
+/**
+ * Query a vault yield sources.
+ * @param vault requested vault definition
+ * @returns cached yield sources
+ */
 export async function queryYieldSources(vault: VaultDefinitionModel): Promise<YieldSource[]> {
   const valueSources = [];
-  const mapper = getDataMapper();
-  for await (const source of mapper.query(
-    YieldSource,
-    { chainAddress: vault.id },
-    { indexName: 'IndexApySnapshotsOnAddress' },
-  )) {
-    valueSources.push(source);
+  try {
+    const mapper = getDataMapper();
+    for await (const source of mapper.query(
+      YieldSource,
+      { chainAddress: vault.id },
+      { indexName: 'IndexApySnapshotsOnAddress' },
+    )) {
+      valueSources.push(source);
+    }
+  } catch (err) {
+    console.error(err);
   }
   return valueSources;
 }
 
+/**
+ * Query a vault yield estimate. Only exist for v1.5 vaults.
+ * @param vault requested vault definition
+ * @returns cached yield estimate, or a default if none exists
+ */
 export async function queryYieldEstimate(vault: VaultDefinitionModel): Promise<YieldEstimate> {
   const yieldEstimate: YieldEstimate = {
     vault: vault.address,

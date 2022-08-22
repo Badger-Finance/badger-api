@@ -9,7 +9,8 @@ import { MOCK_TOKENS, MOCK_VAULT_DEFINITION, TEST_TOKEN } from '../test/constant
 import { mockBalance, mockBatchGet, mockBatchPut, mockQuery, setupMockChain } from '../test/mocks.utils';
 import * as vaultUtils from '../vaults/vaults.utils';
 import { TokenNotFound } from './errors/token.error';
-import { getFullToken, getFullTokens, getVaultTokens, toBalance } from './tokens.utils';
+import { fullTokenMockMap } from './mocks/full-token.mock';
+import { calculateBalanceDifference, getFullToken, getFullTokens, getVaultTokens, toBalance } from './tokens.utils';
 
 describe('token.utils', () => {
   let chain: Chain;
@@ -231,6 +232,16 @@ describe('token.utils', () => {
       expect(sdkLoadMock).toBeCalled();
 
       expect(tokens).toMatchObject(expectedTokensMap);
+    });
+  });
+
+  describe('calculateBalanceDifference', () => {
+    it('returns an array with the difference in token amounts', () => {
+      const badger = fullTokenMockMap[TOKENS.BADGER];
+      const wbtc = fullTokenMockMap[TOKENS.WBTC];
+      const listA = [mockBalance(badger, 10), mockBalance(wbtc, 2)];
+      const listB = [mockBalance(badger, 25), mockBalance(wbtc, 5)];
+      expect(calculateBalanceDifference(listA, listB)).toMatchObject([mockBalance(badger, 15), mockBalance(wbtc, 3)]);
     });
   });
 });

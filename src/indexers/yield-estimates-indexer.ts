@@ -9,10 +9,10 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { YieldEstimate } from '../aws/models/yield-estimate.model';
 import { getSupportedChains } from '../chains/chains.utils';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
-import { getFullToken, toBalance } from '../tokens/tokens.utils';
+import { calculateBalanceDifference, getFullToken, toBalance } from '../tokens/tokens.utils';
 import { sendPlainTextToDiscord } from '../utils/discord.utils';
-import { getCachedVault, queryYieldEstimate, VAULT_SOURCE } from '../vaults/vaults.utils';
-import { calculateBalanceDifference } from '../vaults/yields.utils';
+import { VAULT_SOURCE } from '../vaults/vaults.config';
+import { getCachedVault, queryYieldEstimate } from '../vaults/vaults.utils';
 
 export async function refreshYieldEstimates() {
   await Promise.all(

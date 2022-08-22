@@ -3,12 +3,10 @@ import {
   gqlGenT,
   HarvestType,
   keyBy,
-  Network,
   ONE_DAY_MS,
   ONE_DAY_SECONDS,
   ONE_YEAR_MS,
   TokenRate,
-  TokenValue,
   ValueSource,
   Vault__factory,
   VaultDTO,
@@ -28,13 +26,12 @@ import { queryPriceAtTimestamp } from '../prices/prices.utils';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { BoostRange } from '../rewards/interfaces/boost-range.interface';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
-import { getFullToken } from '../tokens/tokens.utils';
+import { calculateBalanceDifference, getFullToken } from '../tokens/tokens.utils';
 import { getInfuelnceVaultYieldBalance, isInfluenceVault } from './influence.utils';
 import { HarvestReport } from './interfaces/harvest-report.interface';
 import { YieldSources } from './interfaces/yield-sources.interface';
-import { estimateDerivativeEmission, queryYieldSources, VAULT_SOURCE } from './vaults.utils';
-
-const VAULT_TWAY_PERIOD = 15;
+import { VAULT_SOURCE, VAULT_TWAY_PERIOD } from './vaults.config';
+import { estimateDerivativeEmission, queryYieldSources } from './vaults.utils';
 
 /**
  * Determine if a yield source in relevant in a given context.
@@ -184,32 +181,6 @@ export function calculateYield(principal: number, earned: number, duration: numb
 }
 
 /**
- * Calculate the difference in two lists of tokens.
- * @param listA reference previous list
- * @param listB reference current list
- * @returns difference between previous and current list
- */
-export function calculateBalanceDifference(listA: TokenValue[], listB: TokenValue[]): TokenValue[] {
-  // we need to construct a measurement diff from the originally measured tokens and the new tokens
-  const listAByToken = keyBy(listA, (t) => t.address);
-  const listBCopy: CachedTokenBalance[] = JSON.parse(JSON.stringify(listB));
-
-  listBCopy.forEach((t) => {
-    const yieldedTokens = listAByToken.get(t.address);
-    if (yieldedTokens) {
-      // lock in current price and caculate value on updated balance
-      for (const token of yieldedTokens) {
-        const price = t.value / t.balance;
-        t.balance -= token.balance;
-        t.value = t.balance * price;
-      }
-    }
-  });
-
-  return listBCopy;
-}
-
-/**
  * Query and filter cached yield sources into respective categories
  * @param vault vault to query yield sources against
  * @returns categorized yield sources
@@ -347,11 +318,6 @@ export function createYieldSource(
 }
 
 export async function loadVaultEventPerformances(chain: Chain, vault: VaultDefinitionModel): Promise<YieldSource[]> {
-  const incompatibleNetworks = new Set<Network>([Network.BinanceSmartChain, Network.Polygon, Network.Arbitrum]);
-  if (incompatibleNetworks.has(chain.network)) {
-    throw new Error('Network does not have standardized vaults!');
-  }
-
   if (isInfluenceVault(vault.address)) {
     throw new Error('Vault utilizes external harvest processor, not compatible with event lookup');
   }

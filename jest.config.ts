@@ -23,6 +23,7 @@ const config: Config.InitialOptions = {
   moduleNameMapper: {
     '^uuid$': '<rootDir>/node_modules/uuid/dist/index.js',
   },
+  restoreMocks: true,
   testEnvironment: 'node',
   testRegex: '.spec.ts$',
   transform: {
