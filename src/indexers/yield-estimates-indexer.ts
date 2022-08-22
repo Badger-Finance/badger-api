@@ -52,8 +52,7 @@ export async function refreshYieldEstimates() {
             harvestData.lastHarvestedAt = pendingHarvest.lastHarvestedAt * 1000;
           } catch {
             shouldCheckGraph = true;
-            // only report an error with the vault every eight hours
-            if (now - ONE_DAY_MS / 3 > harvestData.lastReportedAt) {
+            if (now - ONE_DAY_MS > harvestData.lastReportedAt) {
               sendPlainTextToDiscord(
                 `${chain.network} ${vault.name} (${vault.protocol}, ${vault.version}, ${
                   vault.state ?? VaultState.Open
