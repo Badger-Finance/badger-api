@@ -3,7 +3,6 @@ import {
   gqlGenT,
   HarvestType,
   keyBy,
-  ONE_DAY_MS,
   ONE_DAY_SECONDS,
   ONE_YEAR_MS,
   TokenRate,
@@ -29,8 +28,10 @@ import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.in
 import { calculateBalanceDifference, getFullToken } from '../tokens/tokens.utils';
 import { getInfuelnceVaultYieldBalance, isInfluenceVault } from './influence.utils';
 import { HarvestReport } from './interfaces/harvest-report.interface';
+import { VaultPerformanceItem } from './interfaces/vault-performance-item.interface';
+import { VaultYieldSummary } from './interfaces/vault-yield-summary.interface';
 import { YieldSources } from './interfaces/yield-sources.interface';
-import { VAULT_SOURCE, VAULT_TWAY_PERIOD } from './vaults.config';
+import { VAULT_SOURCE, VAULT_TWAY_DURATION, VAULT_TWAY_PERIOD } from './vaults.config';
 import { estimateDerivativeEmission, queryYieldSources } from './vaults.utils';
 
 /**
@@ -284,22 +285,23 @@ export function getVaultYieldProjection(
 }
 
 /**
- *
- * @param vault
- * @param type
- * @param name
- * @param apr
- * @param param4
- * @returns
+ * Create a yield source for a given vault.
+ * @param vault vault associated with yield
+ * @param type source type of the reported yeild
+ * @param name display name for the yield
+ * @param apr performance of the vault
+ * @param boost optional boost params for the yield source
+ * @returns collision resistant yield source with boost support
  */
 export function createYieldSource(
   vault: VaultDefinitionModel,
   type: SourceType,
   name: string,
   apr: number,
-  { min, max }: BoostRange = { min: 1, max: 1 },
+  boost: BoostRange = { min: 1, max: 1 },
 ): YieldSource {
   const { id: vaultId, address, chain } = vault;
+  const { min, max } = boost;
   const isBoostable = min != max;
   const boostModifier = isBoostable ? 'Boosted' : 'Flat';
   const id = [vaultId, type, name, boostModifier].map((p) => p.replace(/ /g, '_').toLowerCase()).join('_');
@@ -317,6 +319,12 @@ export function createYieldSource(
   });
 }
 
+/**
+ * Fetch Harvest and Tree Distribution events for a given vault.
+ * @param chain network vault is deployed on
+ * @param vault vault requesting emitted events
+ * @returns yield sources representing the vault performance
+ */
 export async function loadVaultEventPerformances(chain: Chain, vault: VaultDefinitionModel): Promise<YieldSource[]> {
   if (isInfluenceVault(vault.address)) {
     throw new Error('Vault utilizes external harvest processor, not compatible with event lookup');
@@ -336,6 +344,54 @@ export async function loadVaultEventPerformances(chain: Chain, vault: VaultDefin
   return estimateVaultPerformance(chain, vault, data);
 }
 
+/**
+ * Modify subgraph response to match on chain event data allowing it to fit into our estimation functions.
+ * @param vault vault requesting graph data transformation
+ * @param harvests harvests data retrieved from the graph
+ * @param distributions distribution data retrieved from the graph
+ * @returns vault harvest data in the same form as delivered via event logs
+ */
+function constructGraphVaultData(
+  vault: VaultDefinitionModel,
+  harvests: gqlGenT.SettHarvestsQuery['settHarvests'],
+  distributions: gqlGenT.BadgerTreeDistributionsQuery['badgerTreeDistributions'],
+): VaultHarvestData[] {
+  const harvestsByTimestamp = keyBy(harvests, (harvest) => harvest.timestamp);
+  const treeDistributionsByTimestamp = keyBy(distributions, (distribution) => distribution.timestamp);
+  const timestamps = Array.from(
+    new Set([...harvestsByTimestamp.keys(), ...treeDistributionsByTimestamp.keys()]).values(),
+  );
+  return timestamps.map((t) => {
+    const timestamp = Number(t);
+    const currentHarvests = harvestsByTimestamp.get(timestamp) ?? [];
+    const currentDistributions = treeDistributionsByTimestamp.get(timestamp) ?? [];
+    return {
+      timestamp,
+      harvests: currentHarvests.map((h) => ({
+        timestamp,
+        block: Number(h.blockNumber),
+        token: vault.depositToken,
+        amount: h.amount,
+      })),
+      treeDistributions: currentDistributions.map((d) => {
+        const tokenAddress = d.token.id.startsWith('0x0x') ? d.token.id.slice(2) : d.token.id;
+        return {
+          timestamp,
+          block: Number(d.blockNumber),
+          token: tokenAddress,
+          amount: d.amount,
+        };
+      }),
+    };
+  });
+}
+
+/**
+ * Create yield sources from TheGraph event performance data.
+ * @param chain network the vault is deployed on
+ * @param vault vault requesting data from the graph
+ * @returns yield sources corresponding to the vault performance based on the graph data
+ */
 export async function loadVaultGraphPerformances(chain: Chain, vault: VaultDefinitionModel): Promise<YieldSource[]> {
   const sdk = await chain.getSdk();
   const { graph } = sdk;
@@ -365,41 +421,129 @@ export async function loadVaultGraphPerformances(chain: Chain, vault: VaultDefin
   return estimateVaultPerformance(chain, vault, data);
 }
 
-function constructGraphVaultData(
+/**
+ * Constructs yield sources from collected emission apr for a given vault.
+ * @param chain network vault is deployed on
+ * @param vault vault requesting yield sources
+ * @param compoundApr baseline compound apr associated with the vault
+ * @param tokenAprs tre distribution cumulative aprs
+ * @returns yield sources for all captured tokens including any flywheel effects
+ */
+async function constructEmissionYieldSources(
+  chain: Chain,
   vault: VaultDefinitionModel,
-  settHarvests: gqlGenT.SettHarvestsQuery['settHarvests'],
-  badgerTreeDistributions: gqlGenT.BadgerTreeDistributionsQuery['badgerTreeDistributions'],
-): VaultHarvestData[] {
-  const harvestsByTimestamp = keyBy(settHarvests, (harvest) => harvest.timestamp);
-  const treeDistributionsByTimestamp = keyBy(badgerTreeDistributions, (distribution) => distribution.timestamp);
-  const timestamps = Array.from(
-    new Set([...harvestsByTimestamp.keys(), ...treeDistributionsByTimestamp.keys()]).values(),
-  );
-  return timestamps.map((t) => {
-    const timestamp = Number(t);
-    const currentHarvests = harvestsByTimestamp.get(timestamp) ?? [];
-    const currentDistributions = treeDistributionsByTimestamp.get(timestamp) ?? [];
-    return {
-      timestamp,
-      harvests: currentHarvests.map((h) => ({
-        timestamp,
-        block: Number(h.blockNumber),
-        token: vault.depositToken,
-        amount: h.amount,
-      })),
-      treeDistributions: currentDistributions.map((d) => {
-        const tokenAddress = d.token.id.startsWith('0x0x') ? d.token.id.slice(2) : d.token.id;
-        return {
-          timestamp,
-          block: Number(d.blockNumber),
-          token: tokenAddress,
-          amount: d.amount,
-        };
-      }),
-    };
-  });
+  compoundApr: number,
+  tokenAprs: Map<string, number>,
+): Promise<YieldSource[]> {
+  const valueSources = [];
+
+  let flywheelCompounding = 0;
+
+  for (const [token, emissionApr] of tokenAprs.entries()) {
+    const tokenEmitted = await getFullToken(chain, token);
+    const emissionYieldSource = createYieldSource(vault, SourceType.Distribution, tokenEmitted.name, emissionApr);
+    valueSources.push(emissionYieldSource);
+
+    // try to add underlying emitted vault value sources if applicable
+    try {
+      const emittedVault = await chain.vaults.getVault(tokenEmitted.address);
+      const vaultValueSources = await queryYieldSources(emittedVault);
+      // search for the persisted apr variant of the compounding vault source, if any
+      const compoundingSource = vaultValueSources.find((source) => source.type === SourceType.PreCompound);
+      if (compoundingSource) {
+        flywheelCompounding += estimateDerivativeEmission(compoundApr, emissionApr, compoundingSource.apr / 100);
+      }
+    } catch {} // ignore error for non vaults
+  }
+
+  if (flywheelCompounding > 0) {
+    const sourceName = `Vault Flywheel`;
+    const flywheelYieldSource = createYieldSource(vault, SourceType.Flywheel, sourceName, flywheelCompounding);
+    valueSources.push(flywheelYieldSource);
+  }
+
+  return valueSources;
 }
 
+/**
+ * Evaluate yield events to derivate base apr, and apy as well as apr of any emitted tokens.
+ * @param chain network the vault is deployed on
+ * @param vault vault requested yield event evaluation
+ * @param yieldEvents events sourced from either on chain or the graph
+ * @returns yield summary providing the base information for construction of yield sources
+ */
+async function evaluateYieldEvents(
+  chain: Chain,
+  vault: VaultDefinitionModel,
+  yieldEvents: VaultPerformanceItem[],
+): Promise<VaultYieldSummary> {
+  const sdk = await chain.getSdk();
+  const harvestReport: HarvestReport[] = [];
+
+  let totalHarvested = 0;
+  let totalVaultPrincipal = 0;
+  const tokenEmissionAprs = new Map<string, number>();
+
+  for (const event of yieldEvents) {
+    const token = await getFullToken(chain, event.token);
+    const amount = formatBalance(event.amount, token.decimals);
+    const { price } = await queryPriceAtTimestamp(token.address, event.timestamp * 1000);
+
+    const tokenEarned = price * amount;
+
+    let balance = 0;
+    if (isInfluenceVault(vault.address)) {
+      balance = await getInfuelnceVaultYieldBalance(chain, vault.address, event.block);
+    } else {
+      const vaultContract = Vault__factory.connect(vault.address, sdk.provider);
+      const totalSupply = await vaultContract.totalSupply({ blockTag: event.block });
+      balance = formatBalance(totalSupply);
+    }
+    const { price: vaultPrice } = await queryPriceAtTimestamp(vault.address, event.timestamp * 1000);
+    const vaultPrincipal = vaultPrice * balance;
+    totalVaultPrincipal += vaultPrincipal;
+
+    const eventApr = calculateYield(vaultPrincipal, tokenEarned, VAULT_TWAY_DURATION);
+    const report: HarvestReport = {
+      date: event.timestamp * 1000,
+      amount,
+      token: token.symbol,
+      type: event.type,
+      value: tokenEarned,
+      balance,
+      apr: eventApr,
+    };
+    harvestReport.push(report);
+
+    if (event.type === HarvestType.Harvest) {
+      totalHarvested += tokenEarned;
+    } else {
+      const entry = tokenEmissionAprs.get(token.address) ?? 0;
+      tokenEmissionAprs.set(token.address, entry + eventApr);
+    }
+  }
+
+  const averagePrincipal = totalVaultPrincipal / yieldEvents.length;
+  const compoundApr = calculateYield(averagePrincipal, totalHarvested, VAULT_TWAY_DURATION);
+  const compoundApy = calculateYield(averagePrincipal, totalHarvested, VAULT_TWAY_DURATION, totalHarvested);
+
+  console.log(`${vault.name} Harvest Report`);
+  console.table(harvestReport);
+
+  return {
+    compoundApr,
+    compoundApy,
+    tokenEmissionAprs,
+  };
+}
+
+/**
+ * Estimate the event based APR of a given vault.
+ * @param chain network vault is deployed on
+ * @param vault vault requesting apr estimation
+ * @param data harvest and tree distribution event information
+ * @returns yield sources estimating the aggregate performance
+ */
 export async function estimateVaultPerformance(
   chain: Chain,
   vault: VaultDefinitionModel,
@@ -446,104 +590,18 @@ export async function estimateVaultPerformance(
     .filter((e) => BigNumber.from(e.amount).gt(ethers.constants.Zero))
     .sort((a, b) => b.timestamp - a.timestamp);
 
-  const duration = VAULT_TWAY_PERIOD * ONE_DAY_MS;
-  const harvestReport: HarvestReport[] = [];
+  const { compoundApr, compoundApy, tokenEmissionAprs } = await evaluateYieldEvents(chain, vault, allEvents);
 
-  let totalHarvested = 0;
-  let totalAccumulated = 0;
-  let totalVaultTokens = 0;
-  let totalVaultPrincipal = 0;
-  const tokensEmitted = new Map<string, number>();
-
-  console.log(`Evaluating ${allEvents.length} events for ${vault.name}`);
-  for (const event of allEvents) {
-    const token = await getFullToken(chain, event.token);
-    const amount = formatBalance(event.amount, token.decimals);
-    const { price } = await queryPriceAtTimestamp(token.address, event.timestamp * 1000);
-
-    const tokenEarned = price * amount;
-    totalAccumulated += tokenEarned;
-    if (event.type === HarvestType.Harvest) {
-      totalHarvested += tokenEarned;
-    } else {
-      const entry = tokensEmitted.get(token.address) ?? 0;
-      tokensEmitted.set(token.address, entry + tokenEarned);
-    }
-
-    let balance = 0;
-    if (isInfluenceVault(vault.address)) {
-      balance = await getInfuelnceVaultYieldBalance(chain, vault.address, event.block);
-    } else {
-      const vaultContract = Vault__factory.connect(vault.address, sdk.provider);
-      const totalSupply = await vaultContract.totalSupply({ blockTag: event.block });
-      balance = formatBalance(totalSupply);
-    }
-    const { price: vaultPrice } = await queryPriceAtTimestamp(vault.address, event.timestamp * 1000);
-    const vaultPrincipal = vaultPrice * balance;
-    totalVaultTokens += balance;
-    totalVaultPrincipal += vaultPrincipal;
-
-    const eventApr = calculateYield(vaultPrincipal, tokenEarned, duration);
-    const report: HarvestReport = {
-      date: new Date(event.timestamp * 1000).toDateString(),
-      amount: amount.toFixed(2),
-      token: token.symbol,
-      type: event.type,
-      value: `$${tokenEarned.toFixed(2)}`,
-      balance: balance.toFixed(2),
-      apr: `${eventApr.toFixed(2)}%`,
-    };
-    harvestReport.push(report);
-  }
-
-  const averagePrincipal = totalVaultPrincipal / allEvents.length;
-  const averageTokens = totalVaultTokens / allEvents.length;
-  const apr = calculateYield(averagePrincipal, totalAccumulated, duration);
-  console.log(`${vault.name} Harvest Report`);
-  console.table(harvestReport);
-  console.log(
-    `Vault Holdings: $${averagePrincipal.toFixed()} (${averageTokens.toFixed()} tokens), Total Earned: $${totalAccumulated.toFixed(
-      2,
-    )}, Est. Yield: ${apr.toFixed(2)}%`,
-  );
-
-  const valueSources = [];
+  const compoundSources = [];
 
   // create the apr source for harvests
-  const compoundApr = calculateYield(averagePrincipal, totalHarvested, duration);
   const compoundYieldSource = createYieldSource(vault, SourceType.PreCompound, VAULT_SOURCE, compoundApr);
-  valueSources.push(compoundYieldSource);
+  compoundSources.push(compoundYieldSource);
 
   // create the apy source for harvests
-  const compoundApy = calculateYield(averagePrincipal, totalHarvested, duration, totalHarvested);
   const compoundedYieldSource = createYieldSource(vault, SourceType.Compound, VAULT_SOURCE, compoundApy);
-  valueSources.push(compoundedYieldSource);
+  compoundSources.push(compoundedYieldSource);
 
-  let flywheelCompounding = 0;
-
-  for (const [token, valueEmitted] of tokensEmitted.entries()) {
-    const tokenEmitted = await getFullToken(chain, token);
-    const emissionApr = calculateYield(averagePrincipal, valueEmitted, duration);
-    const emissionYieldSource = createYieldSource(vault, SourceType.Distribution, tokenEmitted.name, emissionApr);
-    valueSources.push(emissionYieldSource);
-
-    // try to add underlying emitted vault value sources if applicable
-    try {
-      const emittedVault = await chain.vaults.getVault(tokenEmitted.address);
-      const vaultValueSources = await queryYieldSources(emittedVault);
-      // search for the persisted apr variant of the compounding vault source, if any
-      const compoundingSource = vaultValueSources.find((source) => source.type === SourceType.PreCompound);
-      if (compoundingSource) {
-        flywheelCompounding += estimateDerivativeEmission(compoundApr, emissionApr, compoundingSource.apr / 100);
-      }
-    } catch {} // ignore error for non vaults
-  }
-
-  if (flywheelCompounding > 0) {
-    const sourceName = `Vault Flywheel`;
-    const flywheelYieldSource = createYieldSource(vault, SourceType.Flywheel, sourceName, flywheelCompounding);
-    valueSources.push(flywheelYieldSource);
-  }
-
-  return valueSources;
+  const emissionSources = await constructEmissionYieldSources(chain, vault, compoundApr, tokenEmissionAprs);
+  return compoundSources.concat(emissionSources);
 }

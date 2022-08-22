@@ -1,11 +1,11 @@
 import { HarvestType } from '@badger-dao/sdk';
 
 export interface HarvestReport {
-  date: string;
+  date: number;
   type: HarvestType;
-  amount: string;
+  amount: number;
   token: string;
-  value: string;
-  balance: string;
-  apr: string;
+  value: number;
+  balance: number;
+  apr: number;
 }
