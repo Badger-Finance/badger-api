@@ -2,7 +2,6 @@ import {
   BouncerType,
   Network,
   Protocol,
-  Token,
   ValueSource,
   VaultBehavior,
   VaultDTO,
@@ -17,6 +16,7 @@ import mockVaultHarvests from '@badger-dao/sdk-mocks/generated/ethereum/api/load
 
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { Stage } from '../config/enums/stage.enum';
+import { TokenFullMap } from '../tokens/interfaces/token-full.interface';
 import { VaultHarvestsExtendedResp } from '../vaults/interfaces/vault-harvest-extended-resp.interface';
 
 export const TEST_TOKEN = '0x3472A5A71965499acd81997a54BBA8D852C6E53d';
@@ -85,7 +85,7 @@ export const MOCK_VAULT_SNAPSHOT = MOCK_VAULT_SNAPSHOTS[0];
 
 export const MOCK_YIELD_SOURCES: ValueSource[] = MOCK_VAULT.sources;
 
-export const MOCK_TOKENS: Record<string, Token> = mockTokens;
+export const MOCK_TOKENS = mockTokens as TokenFullMap;
 
 export const MOCK_VAULTS_HARVESTS = mockVaultHarvests as Record<string, VaultHarvestsExtendedResp[]>;
 export const MOCK_VAULT_HARVESTS = MOCK_VAULTS_HARVESTS[TEST_ADDR];

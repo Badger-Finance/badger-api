@@ -5,14 +5,8 @@ import { SourceType } from '../rewards/enums/source-type.enum';
 import { MOCK_VAULT, MOCK_VAULT_DEFINITION } from '../test/constants';
 import { mockBalance, mockQuery } from '../test/mocks.utils';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
-import { VAULT_SOURCE } from './vaults.utils';
-import {
-  calculateBalanceDifference,
-  calculateYield,
-  createYieldSource,
-  getVaultYieldProjection,
-  getYieldSources,
-} from './yields.utils';
+import { VAULT_SOURCE } from './vaults.config';
+import { calculateYield, createYieldSource, getVaultYieldProjection, getYieldSources } from './yields.utils';
 
 describe('yields.utils', () => {
   const baseMockSources = [
@@ -45,16 +39,6 @@ describe('yields.utils', () => {
       expect(() => calculateYield(365, 1, ONE_DAY_MS, 2)).toThrow(
         'Compounding value must be less than or equal to earned',
       );
-    });
-  });
-
-  describe('calculateBalanceDifference', () => {
-    it('returns an array with the difference in token amounts', () => {
-      const badger = fullTokenMockMap[TOKENS.BADGER];
-      const wbtc = fullTokenMockMap[TOKENS.WBTC];
-      const listA = [mockBalance(badger, 10), mockBalance(wbtc, 2)];
-      const listB = [mockBalance(badger, 25), mockBalance(wbtc, 5)];
-      expect(calculateBalanceDifference(listA, listB)).toMatchObject([mockBalance(badger, 15), mockBalance(wbtc, 3)]);
     });
   });
 
