@@ -12,6 +12,7 @@ describe('vault-balances-indexer', () => {
 
   beforeEach(() => {
     chain = setupMockChain();
+    jest.spyOn(console, 'error').mockImplementation(jest.fn);
     mockQuery([randomSnapshot(MOCK_VAULT_DEFINITION)]);
     put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
     jest.spyOn(vaultsUtils, 'getCachedVault').mockImplementation(async () => MOCK_VAULT);
