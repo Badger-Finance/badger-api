@@ -18,7 +18,6 @@ import { YieldSource } from '../aws/models/yield-source.model';
 import { getOrCreateChain } from '../chains/chains.utils';
 import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
-import { EmissionControl__factory } from '../contracts';
 import { PricingType } from '../prices/enums/pricing-type.enum';
 import { TokenPrice } from '../prices/interface/token-price.interface';
 import { convert, queryPrice } from '../prices/prices.utils';
@@ -26,8 +25,6 @@ import { getProtocolValueSources, getRewardEmission } from '../rewards/rewards.u
 import { getFullToken, getVaultTokens } from '../tokens/tokens.utils';
 import { VaultStrategy } from './interfaces/vault-strategy.interface';
 import { aggregateSources, loadVaultEventPerformances, loadVaultGraphPerformances } from './yields.utils';
-
-export const VAULT_SOURCE = 'Vault Compounding';
 
 export async function defaultVault(chain: Chain, vault: VaultDefinitionModel): Promise<VaultDTO> {
   const { state, bouncer, behavior, version, protocol, name, depositToken, address } = vault;
@@ -131,7 +128,8 @@ export async function getCachedVault(
       return vault;
     }
     return vault;
-  } catch {
+  } catch (err) {
+    console.error(err);
     return vault;
   }
 }
@@ -146,9 +144,9 @@ export async function getStrategyInfo(chain: Chain, vault: VaultDefinitionModel)
   };
   try {
     const sdk = await chain.getSdk();
-    const version = vault.version ?? VaultVersion.v1;
+    const { version, address } = vault;
     const strategyAddress = await sdk.vaults.getVaultStrategy({
-      address: vault.address,
+      address,
       version,
     });
     if (version === VaultVersion.v1) {
@@ -161,7 +159,7 @@ export async function getStrategyInfo(chain: Chain, vault: VaultDefinitionModel)
         strategy.performanceFeeStrategist(),
       ]);
       // bveCVX does not have a way to capture materially its performance fee
-      if (vault.address === TOKENS.BVECVX) {
+      if (address === TOKENS.BVECVX) {
         performanceFee = BigNumber.from('1500'); // set performance fee to 15%
       }
       return {
@@ -172,7 +170,7 @@ export async function getStrategyInfo(chain: Chain, vault: VaultDefinitionModel)
         aumFee: 0,
       };
     } else {
-      const vaultContract = VaultV15__factory.connect(vault.address, sdk.provider);
+      const vaultContract = VaultV15__factory.connect(address, sdk.provider);
       const [withdrawFee, performanceFee, strategistFee, aumFee] = await Promise.all([
         vaultContract.withdrawalFee(),
         vaultContract.performanceFeeGovernance(),
@@ -190,19 +188,6 @@ export async function getStrategyInfo(chain: Chain, vault: VaultDefinitionModel)
   } catch (err) {
     console.error(err);
     return defaultStrategyInfo;
-  }
-}
-
-export async function getBoostWeight(chain: Chain, vault: VaultDefinitionModel): Promise<BigNumber> {
-  if (!chain.emissionControl) {
-    return ethers.constants.Zero;
-  }
-  try {
-    const emissionControl = EmissionControl__factory.connect(chain.emissionControl, chain.provider);
-    return emissionControl.boostedEmissionRate(vault.address);
-  } catch (err) {
-    console.error(err);
-    return ethers.constants.Zero;
   }
 }
 
@@ -302,19 +287,33 @@ export function estimateDerivativeEmission(
   return (currentValueEmittedCompounded / total) * 100;
 }
 
+/**
+ * Query a vault yield sources.
+ * @param vault requested vault definition
+ * @returns cached yield sources
+ */
 export async function queryYieldSources(vault: VaultDefinitionModel): Promise<YieldSource[]> {
   const valueSources = [];
-  const mapper = getDataMapper();
-  for await (const source of mapper.query(
-    YieldSource,
-    { chainAddress: vault.id },
-    { indexName: 'IndexApySnapshotsOnAddress' },
-  )) {
-    valueSources.push(source);
+  try {
+    const mapper = getDataMapper();
+    for await (const source of mapper.query(
+      YieldSource,
+      { chainAddress: vault.id },
+      { indexName: 'IndexApySnapshotsOnAddress' },
+    )) {
+      valueSources.push(source);
+    }
+  } catch (err) {
+    console.error(err);
   }
   return valueSources;
 }
 
+/**
+ * Query a vault yield estimate. Only exist for v1.5 vaults.
+ * @param vault requested vault definition
+ * @returns cached yield estimate, or a default if none exists
+ */
 export async function queryYieldEstimate(vault: VaultDefinitionModel): Promise<YieldEstimate> {
   const yieldEstimate: YieldEstimate = {
     vault: vault.address,

@@ -16,6 +16,7 @@ import { mockBalance, setupMockChain } from '../test/mocks.utils';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import * as tokensUtils from '../tokens/tokens.utils';
 import { vaultsHarvestsMapMock } from './mocks/vaults-harvests-map.mock';
+import { VAULT_SOURCE } from './vaults.config';
 import * as vaultsUtils from './vaults.utils';
 import { VaultsV2Controller } from './vaults.v2.controller';
 import { createYieldSource } from './yields.utils';
@@ -67,7 +68,7 @@ export function setupTestVault() {
     .spyOn(vaultsUtils, 'queryYieldSources')
     .mockImplementation(async (vault: VaultDefinitionModel): Promise<YieldSource[]> => {
       const performance = parseInt(vault.address.slice(0, 5), 16) / 100;
-      const underlying = createYieldSource(vault, SourceType.Compound, vaultsUtils.VAULT_SOURCE, performance);
+      const underlying = createYieldSource(vault, SourceType.Compound, VAULT_SOURCE, performance);
       const badger = createYieldSource(vault, SourceType.Emission, 'Badger Rewards', performance);
       const fees = createYieldSource(vault, SourceType.TradeFee, 'Curve LP Fees', performance);
       return [underlying, badger, fees];

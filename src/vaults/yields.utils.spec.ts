@@ -1,17 +1,23 @@
-import { ONE_DAY_MS, VaultState } from '@badger-dao/sdk';
+import { ONE_DAY_MS, Vault, Vault__factory,VaultState  } from '@badger-dao/sdk';
+import { BigNumber } from 'ethers';
 
+import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
+import * as pricesUtils from '../prices/prices.utils';
 import { SourceType } from '../rewards/enums/source-type.enum';
-import { MOCK_VAULT, MOCK_VAULT_DEFINITION } from '../test/constants';
-import { mockBalance, mockQuery } from '../test/mocks.utils';
+import { MOCK_TOKENS, MOCK_VAULT, MOCK_VAULT_DEFINITION, TEST_CURRENT_TIMESTAMP } from '../test/constants';
+import { mockBalance, mockQuery, setupMockChain } from '../test/mocks.utils';
+import { mockContract } from '../test/mocks.utils/contracts/mock.contract.base';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
-import { VAULT_SOURCE } from './vaults.utils';
+import * as tokensUtils from '../tokens/tokens.utils';
+import * as vaultsUtils from '../vaults/vaults.utils';
+import { VAULT_SOURCE } from './vaults.config';
 import {
-  calculateBalanceDifference,
   calculateYield,
   createYieldSource,
   getVaultYieldProjection,
   getYieldSources,
+  loadVaultEventPerformances,
 } from './yields.utils';
 
 describe('yields.utils', () => {
@@ -25,6 +31,12 @@ describe('yields.utils', () => {
     createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Distribution, 'Badger', 3),
     createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Distribution, 'Irrelevant', 0.0001),
   ];
+
+  let chain: Chain;
+
+  beforeEach(() => {
+    chain = setupMockChain();
+  });
 
   describe('calculateYield', () => {
     it.each([
@@ -45,16 +57,6 @@ describe('yields.utils', () => {
       expect(() => calculateYield(365, 1, ONE_DAY_MS, 2)).toThrow(
         'Compounding value must be less than or equal to earned',
       );
-    });
-  });
-
-  describe('calculateBalanceDifference', () => {
-    it('returns an array with the difference in token amounts', () => {
-      const badger = fullTokenMockMap[TOKENS.BADGER];
-      const wbtc = fullTokenMockMap[TOKENS.WBTC];
-      const listA = [mockBalance(badger, 10), mockBalance(wbtc, 2)];
-      const listB = [mockBalance(badger, 25), mockBalance(wbtc, 5)];
-      expect(calculateBalanceDifference(listA, listB)).toMatchObject([mockBalance(badger, 15), mockBalance(wbtc, 3)]);
     });
   });
 
@@ -106,6 +108,44 @@ describe('yields.utils', () => {
       };
       const result = getVaultYieldProjection(mockVault, yieldSources, mockYieldEstimate);
       expect(result).toMatchSnapshot();
+    });
+  });
+
+  describe('loadVaultEventPerformances', () => {
+    describe('requests an influence vault', () => {
+      it('throws a bad request', async () => {
+        const mockVault = JSON.parse(JSON.stringify(MOCK_VAULT_DEFINITION));
+        mockVault.address = TOKENS.BVECVX;
+        expect(loadVaultEventPerformances(chain, mockVault)).rejects.toThrow(
+          'Vault utilizes external harvest processor, not compatible with event lookup',
+        );
+      });
+    });
+
+    describe('requests a standard vault', () => {
+      it('provides evaluated yield data', async () => {
+        // setup token responses
+        jest.spyOn(tokensUtils, 'getFullToken').mockImplementation(async (_c, t) => MOCK_TOKENS[t]);
+        jest.spyOn(pricesUtils, 'queryPriceAtTimestamp').mockImplementation(async (token, _t, _c) => {
+          const basePrice = await chain.strategy.getPrice(token);
+          return {
+            ...basePrice,
+            updatedAt: TEST_CURRENT_TIMESTAMP,
+          };
+        });
+
+        // setup contract interactions
+        const vaultMock = mockContract<Vault>(Vault__factory);
+        // mock a supply of 10000000 tokens
+        jest
+          .spyOn(vaultMock, 'totalSupply')
+          .mockImplementation(async (_o) => BigNumber.from('10000000000000000000000000'));
+
+        jest.spyOn(vaultsUtils, 'queryYieldSources').mockImplementation(async () => []);
+
+        const result = await loadVaultEventPerformances(chain, MOCK_VAULT_DEFINITION);
+        expect(result).toMatchSnapshot();
+      });
     });
   });
 });

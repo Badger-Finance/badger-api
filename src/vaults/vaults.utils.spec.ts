@@ -1,22 +1,28 @@
 import { Protocol, VaultBehavior, VaultDTO, VaultType, VaultVersion } from '@badger-dao/sdk';
-import { BadRequest } from '@tsed/exceptions';
+import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 
+import * as dynamoDbUtils from '../aws/dynamodb.utils';
+import { YieldEstimate } from '../aws/models/yield-estimate.model';
 import { Chain } from '../chains/config/chain.config';
-import { TOKENS } from '../config/tokens.config';
+import { PricingType } from '../prices/enums/pricing-type.enum';
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import * as rewardsUtils from '../rewards/rewards.utils';
-import { MOCK_VAULT, MOCK_VAULT_DEFINITION } from '../test/constants';
-import { mockQuery, randomSnapshot,setupMockChain } from '../test/mocks.utils';
+import { MOCK_TOKEN, MOCK_TOKENS, MOCK_VAULT, MOCK_VAULT_DEFINITION, TEST_ADDR, TEST_TOKEN } from '../test/constants';
+import { mockBalance, mockQuery, randomSnapshot, setupMockChain } from '../test/mocks.utils';
 import { TokenNotFound } from '../tokens/errors/token.error';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
+import * as tokensUtils from '../tokens/tokens.utils';
+import { VAULT_SOURCE } from './vaults.config';
 import {
   defaultVault,
   estimateDerivativeEmission,
   getCachedVault,
   getVaultPerformance,
   getVaultTokenPrice,
+  queryYieldEstimate,
+  queryYieldSources,
 } from './vaults.utils';
 import * as yieldsUtils from './yields.utils';
 
@@ -25,6 +31,7 @@ describe('vaults.utils', () => {
 
   beforeEach(() => {
     chain = setupMockChain();
+    jest.spyOn(console, 'error').mockImplementation(jest.fn);
   });
 
   describe('defaultVault', () => {
@@ -93,8 +100,26 @@ describe('vaults.utils', () => {
   });
 
   describe('getCachedVault', () => {
+    beforeEach(() => {
+      jest.spyOn(tokensUtils, 'getFullToken').mockImplementation(async (_c, token) => MOCK_TOKENS[token]);
+      jest
+        .spyOn(tokensUtils, 'getVaultTokens')
+        .mockImplementation(async (_c, _v) => [mockBalance(MOCK_TOKENS[TEST_ADDR], 42_069)]);
+    });
+
+    describe('encounters an error', () => {
+      it('returns the default vault', async () => {
+        jest.spyOn(dynamoDbUtils, 'getDataMapper').mockImplementationOnce(() => {
+          throw new Error('Expected test error: getCachedVault error');
+        });
+        const cached = await getCachedVault(chain, MOCK_VAULT_DEFINITION);
+        const defaultVaultInst = await defaultVault(chain, MOCK_VAULT_DEFINITION);
+        expect(cached).toMatchObject(defaultVaultInst);
+      });
+    });
+
     describe('no cached vault exists', () => {
-      it('returns the default sett', async () => {
+      it('returns the default vault', async () => {
         mockQuery([]);
         const cached = await getCachedVault(chain, MOCK_VAULT_DEFINITION);
         const defaultVaultInst = await defaultVault(chain, MOCK_VAULT_DEFINITION);
@@ -108,6 +133,7 @@ describe('vaults.utils', () => {
         mockQuery([snapshot]);
         const cached = await getCachedVault(chain, MOCK_VAULT_DEFINITION);
         const expected = await defaultVault(chain, MOCK_VAULT_DEFINITION);
+        expected.tokens = [mockBalance(MOCK_TOKENS[TEST_ADDR], 42_069)];
         expected.available = snapshot.available;
         expected.pricePerFullShare = snapshot.balance / snapshot.totalSupply;
         expected.balance = snapshot.balance;
@@ -124,13 +150,22 @@ describe('vaults.utils', () => {
   describe('getVaultTokenPrice', () => {
     describe('look up non vault token price', () => {
       it('throws a bad request error', async () => {
-        await expect(getVaultTokenPrice(chain, TOKENS.BADGER)).rejects.toThrow(BadRequest);
+        await expect(getVaultTokenPrice(chain, TEST_TOKEN)).rejects.toThrow(BadRequest);
+      });
+    });
+
+    describe('look up unknown token', () => {
+      it('throws a token not found error', async () => {
+        await expect(getVaultTokenPrice(chain, ethers.constants.AddressZero)).rejects.toThrow(TokenNotFound);
       });
     });
 
     describe('look up malformed token configuration', () => {
       it('throws an unprocessable entity error', async () => {
-        await expect(getVaultTokenPrice(chain, ethers.constants.AddressZero)).rejects.toThrow(TokenNotFound);
+        const tokenCopy = JSON.parse(JSON.stringify(MOCK_TOKEN));
+        tokenCopy.type = PricingType.Vault;
+        jest.spyOn(tokensUtils, 'getFullToken').mockImplementation(async (_c, _t) => tokenCopy);
+        await expect(getVaultTokenPrice(chain, TEST_ADDR)).rejects.toThrow(UnprocessableEntity);
       });
     });
 
@@ -214,5 +249,88 @@ describe('vaults.utils', () => {
         expect(estimateDerivativeEmission(compound, emission, compoundEmission)).toEqual(expected);
       },
     );
+  });
+
+  describe('queryYieldSources', () => {
+    describe('encounters an error', () => {
+      it('returns an empty list', async () => {
+        jest.spyOn(dynamoDbUtils, 'getDataMapper').mockImplementationOnce(() => {
+          throw new Error('Expected test error: queryYieldSources error');
+        });
+        const result = await queryYieldSources(MOCK_VAULT_DEFINITION);
+        expect(result).toMatchObject([]);
+      });
+    });
+
+    describe('no yield sources exists', () => {
+      it('returns an empty list', async () => {
+        mockQuery([]);
+        const result = await queryYieldSources(MOCK_VAULT_DEFINITION);
+        expect(result).toMatchObject([]);
+      });
+    });
+
+    describe('system has saved data', () => {
+      it('returns the cached yield sources', async () => {
+        const expected = [
+          yieldsUtils.createYieldSource(MOCK_VAULT_DEFINITION, SourceType.PreCompound, VAULT_SOURCE, 8),
+          yieldsUtils.createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Compound, VAULT_SOURCE, 10),
+        ];
+        mockQuery(expected);
+        const result = await queryYieldSources(MOCK_VAULT_DEFINITION);
+        expect(result).toMatchObject(expected);
+      });
+    });
+  });
+
+  describe('queryYieldEstimate', () => {
+    const defaultExpectedMock: YieldEstimate = {
+      vault: MOCK_VAULT_DEFINITION.address,
+      yieldTokens: [],
+      harvestTokens: [],
+      lastHarvestedAt: 0,
+      previousYieldTokens: [],
+      previousHarvestTokens: [],
+      lastMeasuredAt: 0,
+      duration: 0,
+      lastReportedAt: 0,
+    };
+
+    describe('encounters an error', () => {
+      it('returns the default projection', async () => {
+        jest.spyOn(dynamoDbUtils, 'getDataMapper').mockImplementationOnce(() => {
+          throw new Error('Expected test error: queryYieldEstimate error');
+        });
+        const result = await queryYieldEstimate(MOCK_VAULT_DEFINITION);
+        expect(result).toMatchObject(defaultExpectedMock);
+      });
+    });
+
+    describe('no projection exists', () => {
+      it('returns the default projection', async () => {
+        mockQuery([]);
+        const result = await queryYieldEstimate(MOCK_VAULT_DEFINITION);
+        expect(result).toMatchObject(defaultExpectedMock);
+      });
+    });
+
+    describe('system has saved data', () => {
+      it('returns the cached yield projection', async () => {
+        const cachedYield: YieldEstimate = {
+          vault: MOCK_VAULT_DEFINITION.address,
+          yieldTokens: [mockBalance(fullTokenMockMap[TEST_TOKEN], 1)],
+          harvestTokens: [mockBalance(fullTokenMockMap[TEST_TOKEN], 1)],
+          lastHarvestedAt: 0,
+          previousYieldTokens: [mockBalance(fullTokenMockMap[TEST_TOKEN], 0.998)],
+          previousHarvestTokens: [mockBalance(fullTokenMockMap[TEST_TOKEN], 0.998)],
+          lastMeasuredAt: 0,
+          duration: 68400,
+          lastReportedAt: 0,
+        };
+        mockQuery([cachedYield]);
+        const result = await queryYieldEstimate(MOCK_VAULT_DEFINITION);
+        expect(result).toMatchObject(cachedYield);
+      });
+    });
   });
 });

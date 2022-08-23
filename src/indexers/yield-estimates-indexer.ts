@@ -9,10 +9,10 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { YieldEstimate } from '../aws/models/yield-estimate.model';
 import { getSupportedChains } from '../chains/chains.utils';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
-import { getFullToken, toBalance } from '../tokens/tokens.utils';
+import { calculateBalanceDifference, getFullToken, toBalance } from '../tokens/tokens.utils';
 import { sendPlainTextToDiscord } from '../utils/discord.utils';
-import { getCachedVault, queryYieldEstimate, VAULT_SOURCE } from '../vaults/vaults.utils';
-import { calculateBalanceDifference } from '../vaults/yields.utils';
+import { VAULT_SOURCE } from '../vaults/vaults.config';
+import { getCachedVault, queryYieldEstimate } from '../vaults/vaults.utils';
 
 export async function refreshYieldEstimates() {
   await Promise.all(
@@ -52,8 +52,7 @@ export async function refreshYieldEstimates() {
             harvestData.lastHarvestedAt = pendingHarvest.lastHarvestedAt * 1000;
           } catch {
             shouldCheckGraph = true;
-            // only report an error with the vault every eight hours
-            if (now - ONE_DAY_MS / 3 > harvestData.lastReportedAt) {
+            if (now - ONE_DAY_MS > harvestData.lastReportedAt) {
               sendPlainTextToDiscord(
                 `${chain.network} ${vault.name} (${vault.protocol}, ${vault.version}, ${
                   vault.state ?? VaultState.Open
