@@ -7,6 +7,7 @@ import createMockInstance from 'jest-create-mock-instance';
 import { Nullable } from '../../../utils/types.utils';
 
 type ddbKeysCondition = {
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   [propertyName: string]: ConditionExpressionPredicate | any;
 };
 

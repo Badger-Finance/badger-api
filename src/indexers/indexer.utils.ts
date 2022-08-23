@@ -21,7 +21,7 @@ import { getLiquidityData } from '../protocols/common/swap.utils';
 import { getFullTokens, toBalance } from '../tokens/tokens.utils';
 import { Nullable } from '../utils/types.utils';
 import { VaultsService } from '../vaults/vaults.service';
-import { getBoostWeight, getCachedVault, getStrategyInfo } from '../vaults/vaults.utils';
+import { getCachedVault, getStrategyInfo } from '../vaults/vaults.utils';
 
 export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<VaultSnapshot> {
   const sdk = await chain.getSdk();
@@ -29,7 +29,7 @@ export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefini
     address: vaultDefinition.address,
     requireRegistry: false,
     state: VaultState.Open,
-    version: vaultDefinition.version ?? VaultVersion.v1,
+    version: vaultDefinition.version,
     update: true,
   });
 
@@ -41,7 +41,7 @@ export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefini
   const [tokenPriceData, strategyInfo, boostWeight, cachedVault] = await Promise.all([
     queryPrice(vaultDefinition.depositToken),
     getStrategyInfo(chain, vaultDefinition),
-    getBoostWeight(chain, vaultDefinition),
+    sdk.rewards.getBoostWeight(vaultDefinition.address),
     VaultsService.loadVault(chain, vaultDefinition),
   ]);
 

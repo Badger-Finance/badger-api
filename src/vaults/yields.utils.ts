@@ -3,7 +3,6 @@ import {
   gqlGenT,
   HarvestType,
   keyBy,
-  ONE_DAY_SECONDS,
   ONE_YEAR_MS,
   TokenRate,
   ValueSource,
@@ -11,9 +10,9 @@ import {
   VaultDTO,
   VaultHarvestData,
   VaultState,
-  VaultVersion,
   VaultYieldProjection,
 } from '@badger-dao/sdk';
+import { BadRequest } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';
 
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
@@ -31,8 +30,16 @@ import { HarvestReport } from './interfaces/harvest-report.interface';
 import { VaultPerformanceItem } from './interfaces/vault-performance-item.interface';
 import { VaultYieldSummary } from './interfaces/vault-yield-summary.interface';
 import { YieldSources } from './interfaces/yield-sources.interface';
-import { VAULT_SOURCE, VAULT_TWAY_DURATION, VAULT_TWAY_PERIOD } from './vaults.config';
+import { VAULT_SOURCE, VAULT_TWAY_DURATION, VAULT_TWAY_DURATION_SECONDS } from './vaults.config';
 import { estimateDerivativeEmission, queryYieldSources } from './vaults.utils';
+
+/**
+ * Get the TWAY cutoff in seconds.
+ * @returns cutoff for tway period in seconds
+ */
+function getTwayCutoff(): number {
+  return Math.floor(Date.now() / 1000) - VAULT_TWAY_DURATION_SECONDS;
+}
 
 /**
  * Determine if a yield source in relevant in a given context.
@@ -326,18 +333,21 @@ export function createYieldSource(
  * @returns yield sources representing the vault performance
  */
 export async function loadVaultEventPerformances(chain: Chain, vault: VaultDefinitionModel): Promise<YieldSource[]> {
-  if (isInfluenceVault(vault.address)) {
-    throw new Error('Vault utilizes external harvest processor, not compatible with event lookup');
+  const { address, version } = vault;
+
+  if (isInfluenceVault(address)) {
+    throw new BadRequest('Vault utilizes external harvest processor, not compatible with event lookup');
   }
 
   const sdk = await chain.getSdk();
-  const cutoffPeriod = VAULT_TWAY_PERIOD * ONE_DAY_SECONDS;
-  const cutoff = Date.now() / 1000 - cutoffPeriod;
-  const startBlock = (await sdk.provider.getBlockNumber()) - Math.floor(cutoffPeriod / 13);
+  const cutoff = getTwayCutoff();
+  const currentBlock = await sdk.provider.getBlockNumber();
+  const offset = Math.floor(VAULT_TWAY_DURATION / 13000);
+  const startBlock = currentBlock - offset;
   const { data } = await sdk.vaults.listHarvests({
-    address: vault.address,
+    address,
     timestamp_gte: cutoff,
-    version: vault.version ?? VaultVersion.v1,
+    version,
     startBlock,
   });
 
@@ -397,8 +407,7 @@ export async function loadVaultGraphPerformances(chain: Chain, vault: VaultDefin
   const { graph } = sdk;
   const { address } = vault;
 
-  const now = Math.floor(Date.now() / 1000);
-  const cutoff = Math.floor(now - VAULT_TWAY_PERIOD * ONE_DAY_SECONDS);
+  const cutoff = getTwayCutoff();
 
   const [vaultHarvests, treeDistributions] = await Promise.all([
     graph.loadSettHarvests({

@@ -30,7 +30,7 @@
   "dependencies": {
     "@aws/dynamodb-data-mapper": "^0.7.3",
     "@aws/dynamodb-data-mapper-annotations": "^0.7.3",
-    "@badger-dao/sdk": "^1.17.3",
+    "@badger-dao/sdk": "^1.17.5",
     "@tsed/common": "6.95.9",
     "@tsed/core": "6.95.9",
     "@tsed/di": "6.95.9",
@@ -57,7 +57,7 @@
     "tslib": "^2.2.0"
   },
   "devDependencies": {
-    "@badger-dao/sdk-mocks": "^1.17.3",
+    "@badger-dao/sdk-mocks": "^1.17.5",
     "@graphql-codegen/cli": "^2.3.0",
     "@graphql-codegen/typescript": "^2.7.3",
     "@graphql-codegen/typescript-graphql-request": "^4.5.3",

@@ -8,13 +8,7 @@ import { Chain } from './chain.config';
 
 export class Arbitrum extends Chain {
   constructor() {
-    super(
-      Network.Arbitrum,
-      arbitrumTokensConfig,
-      RPC[Network.Arbitrum],
-      new BaseStrategy(Network.Arbitrum),
-      '0x78418681f9ed228d627f785fb9607ed5175518fd',
-    );
+    super(Network.Arbitrum, arbitrumTokensConfig, RPC[Network.Arbitrum], new BaseStrategy(Network.Arbitrum));
     Chain.register(this.network, this);
   }
 

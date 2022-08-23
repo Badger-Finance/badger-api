@@ -8,13 +8,7 @@ import { Chain } from './chain.config';
 
 export class Fantom extends Chain {
   constructor() {
-    super(
-      Network.Fantom,
-      fantomTokensConfig,
-      rpc[Network.Fantom],
-      new BaseStrategy(Network.Fantom),
-      '0x89122c767A5F543e663DB536b603123225bc3823',
-    );
+    super(Network.Fantom, fantomTokensConfig, rpc[Network.Fantom], new BaseStrategy(Network.Fantom));
     Chain.register(this.network, this);
   }
 

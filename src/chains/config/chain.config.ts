@@ -26,7 +26,6 @@ export abstract class Chain {
     readonly tokens: TokenConfig,
     provider: string | SDKProvider,
     strategy: ChainStrategy,
-    emissionControl?: string,
   ) {
     const config = getNetworkConfig(network);
     const { chainId } = config;
@@ -34,7 +33,6 @@ export abstract class Chain {
     this.vaults = new ChainVaults(network);
     this.sdk = new BadgerSDK({ network, provider });
     this.strategy = strategy;
-    this.emissionControl = emissionControl;
   }
 
   get provider(): providers.MulticallProvider {
