@@ -291,3 +291,44 @@ Object {
   ],
 }
 `;
+
+exports[`yields.utils loadVaultEventPerformances requests a standard vault provides evaluated yield data 1`] = `
+Array [
+  YieldSource {
+    "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "apr": 334.03940297295594,
+    "boostable": false,
+    "chain": "ethereum",
+    "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_precompound_vault_compounding_flat",
+    "maxApr": 334.03940297295594,
+    "minApr": 334.03940297295594,
+    "name": "Vault Compounding",
+    "type": "precompound",
+  },
+  YieldSource {
+    "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "apr": 2187.7432391785987,
+    "boostable": false,
+    "chain": "ethereum",
+    "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_compound_vault_compounding_flat",
+    "maxApr": 2187.7432391785987,
+    "minApr": 2187.7432391785987,
+    "name": "Vault Compounding",
+    "type": "compound",
+  },
+  YieldSource {
+    "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "apr": 30.160171426789905,
+    "boostable": false,
+    "chain": "ethereum",
+    "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_distribution_badger_vested_escrow_convex_token_flat",
+    "maxApr": 30.160171426789905,
+    "minApr": 30.160171426789905,
+    "name": "Badger Vested Escrow Convex Token",
+    "type": "distribution",
+  },
+]
+`;

@@ -1,11 +1,16 @@
-import { ONE_DAY_MS, VaultState } from '@badger-dao/sdk';
+import { ONE_DAY_MS, Vault, Vault__factory,VaultState  } from '@badger-dao/sdk';
+import { BigNumber } from 'ethers';
 
 import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
+import * as pricesUtils from '../prices/prices.utils';
 import { SourceType } from '../rewards/enums/source-type.enum';
-import { MOCK_VAULT, MOCK_VAULT_DEFINITION } from '../test/constants';
+import { MOCK_TOKENS, MOCK_VAULT, MOCK_VAULT_DEFINITION, TEST_CURRENT_TIMESTAMP } from '../test/constants';
 import { mockBalance, mockQuery, setupMockChain } from '../test/mocks.utils';
+import { mockContract } from '../test/mocks.utils/contracts/mock.contract.base';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
+import * as tokensUtils from '../tokens/tokens.utils';
+import * as vaultsUtils from '../vaults/vaults.utils';
 import { VAULT_SOURCE } from './vaults.config';
 import {
   calculateYield,
@@ -14,7 +19,6 @@ import {
   getYieldSources,
   loadVaultEventPerformances,
 } from './yields.utils';
-// import * as tokensUtils from '../tokens/tokens.utils';
 
 describe('yields.utils', () => {
   const baseMockSources = [
@@ -118,13 +122,30 @@ describe('yields.utils', () => {
       });
     });
 
-    // TODO: enable once mocks are updated
-    // describe('requests a standard vault', () => {
-    //   it('provides evaluated yield data', async () => {
-    //     jest.spyOn(tokensUtils, 'getFullToken').mockImplementation(async (_c, t) => MOCK_TOKENS[t]);
-    //     const result = await loadVaultEventPerformances(chain, MOCK_VAULT_DEFINITION);
-    //     expect(result).toMatchSnapshot();
-    //   });
-    // })
+    describe('requests a standard vault', () => {
+      it('provides evaluated yield data', async () => {
+        // setup token responses
+        jest.spyOn(tokensUtils, 'getFullToken').mockImplementation(async (_c, t) => MOCK_TOKENS[t]);
+        jest.spyOn(pricesUtils, 'queryPriceAtTimestamp').mockImplementation(async (token, _t, _c) => {
+          const basePrice = await chain.strategy.getPrice(token);
+          return {
+            ...basePrice,
+            updatedAt: TEST_CURRENT_TIMESTAMP,
+          };
+        });
+
+        // setup contract interactions
+        const vaultMock = mockContract<Vault>(Vault__factory);
+        // mock a supply of 10000000 tokens
+        jest
+          .spyOn(vaultMock, 'totalSupply')
+          .mockImplementation(async (_o) => BigNumber.from('10000000000000000000000000'));
+
+        jest.spyOn(vaultsUtils, 'queryYieldSources').mockImplementation(async () => []);
+
+        const result = await loadVaultEventPerformances(chain, MOCK_VAULT_DEFINITION);
+        expect(result).toMatchSnapshot();
+      });
+    });
   });
 });

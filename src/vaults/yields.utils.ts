@@ -599,7 +599,6 @@ export async function estimateVaultPerformance(
     .filter((e) => BigNumber.from(e.amount).gt(ethers.constants.Zero))
     .sort((a, b) => b.timestamp - a.timestamp);
 
-  console.log(allEvents);
   const { compoundApr, compoundApy, tokenEmissionAprs } = await evaluateYieldEvents(chain, vault, allEvents);
 
   const compoundSources = [];
