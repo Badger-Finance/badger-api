@@ -6,6 +6,7 @@ export type { CurveBaseRegistry } from "./CurveBaseRegistry";
 export type { CurvePool3 } from "./CurvePool3";
 export type { CurvePool } from "./CurvePool";
 export type { CurveRegistry } from "./CurveRegistry";
+export type { CvxLocker } from "./CvxLocker";
 export type { Imbtc } from "./Imbtc";
 export type { Mhbtc } from "./Mhbtc";
 export type { MstableVault } from "./MstableVault";
@@ -22,6 +23,7 @@ export { CurveBaseRegistry__factory } from "./factories/CurveBaseRegistry__facto
 export { CurvePool3__factory } from "./factories/CurvePool3__factory";
 export { CurvePool__factory } from "./factories/CurvePool__factory";
 export { CurveRegistry__factory } from "./factories/CurveRegistry__factory";
+export { CvxLocker__factory } from "./factories/CvxLocker__factory";
 export { Imbtc__factory } from "./factories/Imbtc__factory";
 export { Mhbtc__factory } from "./factories/Mhbtc__factory";
 export { MstableVault__factory } from "./factories/MstableVault__factory";
