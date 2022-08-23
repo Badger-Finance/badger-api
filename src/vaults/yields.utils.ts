@@ -25,7 +25,7 @@ import { SourceType } from '../rewards/enums/source-type.enum';
 import { BoostRange } from '../rewards/interfaces/boost-range.interface';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
 import { calculateBalanceDifference, getFullToken } from '../tokens/tokens.utils';
-import { getInfuelnceVaultYieldBalance, isInfluenceVault } from './influence.utils';
+import { filterInfluenceEvents, getInfuelnceVaultYieldBalance, isInfluenceVault } from './influence.utils';
 import { HarvestReport } from './interfaces/harvest-report.interface';
 import { VaultPerformanceItem } from './interfaces/vault-performance-item.interface';
 import { VaultYieldSummary } from './interfaces/vault-yield-summary.interface';
@@ -388,7 +388,7 @@ function constructGraphVaultData(
         return {
           timestamp,
           block: Number(d.blockNumber),
-          token: tokenAddress,
+          token: ethers.utils.getAddress(tokenAddress),
           amount: d.amount,
         };
       }),
@@ -493,7 +493,9 @@ async function evaluateYieldEvents(
   let totalVaultPrincipal = 0;
   const tokenEmissionAprs = new Map<string, number>();
 
-  for (const event of yieldEvents) {
+  const relevantYieldEvents = filterInfluenceEvents(vault, yieldEvents);
+
+  for (const event of relevantYieldEvents) {
     const token = await getFullToken(chain, event.token);
     const amount = formatBalance(event.amount, token.decimals);
     const { price } = await queryPriceAtTimestamp(token.address, event.timestamp * 1000);
@@ -502,7 +504,7 @@ async function evaluateYieldEvents(
 
     let balance = 0;
     if (isInfluenceVault(vault.address)) {
-      balance = await getInfuelnceVaultYieldBalance(chain, vault.address, event.block);
+      balance = await getInfuelnceVaultYieldBalance(chain, vault, event.block);
     } else {
       const vaultContract = Vault__factory.connect(vault.address, sdk.provider);
       const totalSupply = await vaultContract.totalSupply({ blockTag: event.block });
@@ -536,8 +538,23 @@ async function evaluateYieldEvents(
   const compoundApr = calculateYield(averagePrincipal, totalHarvested, VAULT_TWAY_DURATION);
   const compoundApy = calculateYield(averagePrincipal, totalHarvested, VAULT_TWAY_DURATION, totalHarvested);
 
-  console.log(`${vault.name} Harvest Report`);
-  console.table(harvestReport);
+  const formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  });
+  console.log(`\n${vault.name} Harvest Report`);
+  console.table(
+    harvestReport.map((r) => ({
+      ...r,
+      date: new Date(r.date).toLocaleDateString(),
+      amount: r.amount.toLocaleString(),
+      value: formatter.format(r.value),
+      balance: r.balance.toLocaleString(),
+      apr: `${r.apr.toFixed(2)}%`,
+    })),
+  );
+  const aggregateApr = harvestReport.reduce((total, report) => (total += report.apr), 0);
+  console.log(`${vault.name}: ${aggregateApr.toFixed(2)}%`);
 
   return {
     compoundApr,
