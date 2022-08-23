@@ -10,7 +10,6 @@ import { YieldEstimate } from '../aws/models/yield-estimate.model';
 import { getSupportedChains } from '../chains/chains.utils';
 import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
 import { calculateBalanceDifference, getFullToken, toBalance } from '../tokens/tokens.utils';
-import { sendPlainTextToDiscord } from '../utils/discord.utils';
 import { VAULT_SOURCE } from '../vaults/vaults.config';
 import { getCachedVault, queryYieldEstimate } from '../vaults/vaults.utils';
 
@@ -53,11 +52,12 @@ export async function refreshYieldEstimates() {
           } catch {
             shouldCheckGraph = true;
             if (now - ONE_DAY_MS > harvestData.lastReportedAt) {
-              sendPlainTextToDiscord(
-                `${chain.network} ${vault.name} (${vault.protocol}, ${vault.version}, ${
-                  vault.state ?? VaultState.Open
-                }) failed to harvest!`,
-              );
+              // TODO: enable once its not busted
+              // sendPlainTextToDiscord(
+              //   `${chain.network} ${vault.name} (${vault.protocol}, ${vault.version}, ${
+              //     vault.state ?? VaultState.Open
+              //   }) failed to harvest!`,
+              // );
               harvestData.lastReportedAt = now;
             }
           }
