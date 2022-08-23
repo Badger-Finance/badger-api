@@ -1,5 +1,12 @@
 import { providers } from '@0xsequence/multicall';
-import BadgerSDK, { Currency, Network, RegistryService, RewardsService, TokensService } from '@badger-dao/sdk';
+import BadgerSDK, {
+  Currency,
+  Network,
+  RegistryService,
+  RewardsService,
+  TokensService,
+  VaultsService,
+} from '@badger-dao/sdk';
 import rewardsLoadSchedulesMock from '@badger-dao/sdk-mocks/generated/ethereum/rewards/loadSchedules.json';
 import { JsonRpcProvider, JsonRpcSigner } from '@ethersproject/providers';
 import { mock } from 'jest-mock-extended';
@@ -15,6 +22,7 @@ import * as pricesUtils from '../../prices/prices.utils';
 import * as rewardsUtils from '../../rewards/rewards.utils';
 import {
   MOCK_DISTRIBUTION_FILE,
+  MOCK_HARVESTS,
   MOCK_TOKENS,
   MOCK_VAULT_DEFINITION,
   MOCK_VAULT_SNAPSHOT,
@@ -89,6 +97,7 @@ export function setupMockChain(
   const chainTokensList = Object.values(MOCK_TOKENS);
   mockBatchGet(chainTokensList);
   mockBatchPut(chainTokensList);
+  jest.spyOn(VaultsService.prototype, 'listHarvests').mockImplementation(async () => MOCK_HARVESTS);
 
   // for some reason this causes tests leaks
   jest.spyOn(rewardsUtils, 'getTreeDistribution').mockImplementation(async (requestedChain: Chain) => {

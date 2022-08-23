@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import {
   BouncerType,
   Network,
@@ -5,6 +6,7 @@ import {
   ValueSource,
   VaultBehavior,
   VaultDTO,
+  VaultHarvestData,
   VaultSnapshot,
   VaultState,
   VaultVersion,
@@ -13,6 +15,8 @@ import mockTokens from '@badger-dao/sdk-mocks/generated/ethereum/api/loadTokens.
 import mockVaultSnapshots from '@badger-dao/sdk-mocks/generated/ethereum/api/loadVaultChart.json';
 import mockVaults from '@badger-dao/sdk-mocks/generated/ethereum/api/loadVaults.json';
 import mockVaultHarvests from '@badger-dao/sdk-mocks/generated/ethereum/api/loadVaultsHarvests.json';
+import mockListHarvests from '@badger-dao/sdk-mocks/generated/ethereum/vaults/listHarvests.json';
+import { BigNumber } from 'ethers';
 
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { Stage } from '../config/enums/stage.enum';
@@ -86,6 +90,21 @@ export const MOCK_VAULT_SNAPSHOT = MOCK_VAULT_SNAPSHOTS[0];
 export const MOCK_YIELD_SOURCES: ValueSource[] = MOCK_VAULT.sources;
 
 export const MOCK_TOKENS = mockTokens as TokenFullMap;
+export const MOCK_TOKEN = MOCK_TOKENS[TEST_TOKEN];
 
 export const MOCK_VAULTS_HARVESTS = mockVaultHarvests as Record<string, VaultHarvestsExtendedResp[]>;
 export const MOCK_VAULT_HARVESTS = MOCK_VAULTS_HARVESTS[TEST_ADDR];
+
+const mockListHarvestsCopy = JSON.parse(JSON.stringify(mockListHarvests));
+// @ts-ignore
+mockListHarvestsCopy.data.forEach((d) => {
+  // @ts-ignore
+  d.harvests.forEach((h) => {
+    h.amount = BigNumber.from(h.amount.hex);
+  });
+  // @ts-ignore
+  d.treeDistributions.forEach((h) => {
+    h.amount = BigNumber.from(h.amount.hex);
+  });
+});
+export const MOCK_HARVESTS: { data: VaultHarvestData[] } = mockListHarvestsCopy;

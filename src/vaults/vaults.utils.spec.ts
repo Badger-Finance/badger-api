@@ -1,14 +1,15 @@
 import { Protocol, VaultBehavior, VaultDTO, VaultType, VaultVersion } from '@badger-dao/sdk';
-import { BadRequest } from '@tsed/exceptions';
+import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 
 import * as dynamoDbUtils from '../aws/dynamodb.utils';
 import { YieldEstimate } from '../aws/models/yield-estimate.model';
 import { Chain } from '../chains/config/chain.config';
+import { PricingType } from '../prices/enums/pricing-type.enum';
 import { BouncerType } from '../rewards/enums/bouncer-type.enum';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import * as rewardsUtils from '../rewards/rewards.utils';
-import { MOCK_TOKENS, MOCK_VAULT, MOCK_VAULT_DEFINITION, TEST_ADDR, TEST_TOKEN } from '../test/constants';
+import { MOCK_TOKEN, MOCK_TOKENS, MOCK_VAULT, MOCK_VAULT_DEFINITION, TEST_ADDR, TEST_TOKEN } from '../test/constants';
 import { mockBalance, mockQuery, randomSnapshot, setupMockChain } from '../test/mocks.utils';
 import { TokenNotFound } from '../tokens/errors/token.error';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
@@ -30,6 +31,7 @@ describe('vaults.utils', () => {
 
   beforeEach(() => {
     chain = setupMockChain();
+    jest.spyOn(console, 'error').mockImplementation(jest.fn);
   });
 
   describe('defaultVault', () => {
@@ -152,9 +154,18 @@ describe('vaults.utils', () => {
       });
     });
 
-    describe('look up malformed token configuration', () => {
-      it('throws an token not found error', async () => {
+    describe('look up unknown token', () => {
+      it('throws a token not found error', async () => {
         await expect(getVaultTokenPrice(chain, ethers.constants.AddressZero)).rejects.toThrow(TokenNotFound);
+      });
+    });
+
+    describe('look up malformed token configuration', () => {
+      it('throws an unprocessable entity error', async () => {
+        const tokenCopy = JSON.parse(JSON.stringify(MOCK_TOKEN));
+        tokenCopy.type = PricingType.Vault;
+        jest.spyOn(tokensUtils, 'getFullToken').mockImplementation(async (_c, _t) => tokenCopy);
+        await expect(getVaultTokenPrice(chain, TEST_ADDR)).rejects.toThrow(UnprocessableEntity);
       });
     });
 

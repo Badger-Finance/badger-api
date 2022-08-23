@@ -1,5 +1,7 @@
 import {
   BadgerGraph,
+  EmissionControl,
+  EmissionControl__factory,
   RegistryVault,
   Strategy__factory,
   VaultsService,
@@ -18,7 +20,7 @@ import { mock } from 'jest-mock-extended';
 
 import { TestEthereum } from '../chains/config/test.config';
 import { TOKENS } from '../config/tokens.config';
-import { EmissionControl, EmissionControl__factory, UniV2, UniV2__factory } from '../contracts';
+import { UniV2, UniV2__factory } from '../contracts';
 import { MOCK_VAULT, MOCK_VAULT_DEFINITION, TEST_CURRENT_TIMESTAMP } from '../test/constants';
 import { setupMockChain } from '../test/mocks.utils';
 import { mockContract } from '../test/mocks.utils/contracts/mock.contract.base';
