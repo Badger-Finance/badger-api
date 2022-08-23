@@ -460,7 +460,11 @@ async function constructEmissionYieldSources(
       // search for the persisted apr variant of the compounding vault source, if any
       const compoundingSource = vaultValueSources.find((source) => source.type === SourceType.PreCompound);
       if (compoundingSource) {
-        flywheelCompounding += estimateDerivativeEmission(compoundApr, emissionApr, compoundingSource.apr / 100);
+        flywheelCompounding += estimateDerivativeEmission(
+          compoundApr / 100,
+          emissionApr / 100,
+          compoundingSource.apr / 100,
+        );
       }
     } catch {} // ignore error for non vaults
   }
