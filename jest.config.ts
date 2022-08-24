@@ -13,10 +13,10 @@ const config: Config.InitialOptions = {
   ],
   coverageThreshold: {
     global: {
-      branches: 35,
-      functions: 50,
-      lines: 50,
-      statements: 50,
+      branches: 40,
+      functions: 55,
+      lines: 65,
+      statements: 65,
     },
   },
   moduleFileExtensions: ['js', 'json', 'ts', 'node'],

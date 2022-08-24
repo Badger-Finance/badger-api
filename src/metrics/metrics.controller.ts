@@ -1,15 +1,12 @@
-import { Controller, Get, Inject } from '@tsed/common';
+import { ProtocolMetrics } from '@badger-dao/sdk';
+import { Controller, Get } from '@tsed/common';
 import { ContentType, Description, Returns, Summary } from '@tsed/schema';
 
-import { ProtocolMetrics } from './interfaces/metrics.interface';
 import { ProtocolMetricModel } from './interfaces/protocol-metric-model';
-import { MetricsService } from './metrics.service';
+import { queryProtocolMetrics } from './metrics.utils';
 
 @Controller('/metrics')
 export class MetricsController {
-  @Inject()
-  metricsService!: MetricsService;
-
   @Get('')
   @ContentType('json')
   @Summary('Get a metric of the protocol across all chains')
@@ -17,6 +14,6 @@ export class MetricsController {
   @Returns(200, ProtocolMetricModel)
   @Returns(404).Description('Protocol metrics not available')
   async getProtocolMetrics(): Promise<ProtocolMetrics> {
-    return this.metricsService.getProtocolMetrics();
+    return queryProtocolMetrics();
   }
 }
