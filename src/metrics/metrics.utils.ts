@@ -1,3 +1,4 @@
+import { ProtocolMetrics } from '@badger-dao/sdk';
 import { NotFound } from '@tsed/exceptions';
 
 import { getAccounts } from '../accounts/accounts.utils';
@@ -6,7 +7,6 @@ import { ProtocolMetricSnapshot } from '../aws/models/protocol-metric-snapshot.m
 import { Chain } from '../chains/config/chain.config';
 import { getCachedVault } from '../vaults/vaults.utils';
 import { MetricType } from './enums/metric-type';
-import { ProtocolMetrics } from './interfaces/metrics.interface';
 
 export async function getChainMetrics(chains: Chain[]): Promise<ProtocolMetrics> {
   let totalUsers = 0;
