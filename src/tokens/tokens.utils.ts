@@ -1,4 +1,4 @@
-import { Currency, keyBy, Token, TokenValue, VaultDTO } from '@badger-dao/sdk';
+import { Currency, keyBy, Token, TokenBalance, TokenValue, VaultDTO } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 
 import { getDataMapper } from '../aws/dynamodb.utils';
@@ -154,4 +154,8 @@ export function calculateBalanceDifference(listA: TokenValue[], listB: TokenValu
   });
 
   return listBCopy;
+}
+
+export async function toTokenValue(chain: Chain, t: TokenBalance): Promise<TokenValue> {
+  return toBalance(await getFullToken(chain, t.address), t.balance);
 }

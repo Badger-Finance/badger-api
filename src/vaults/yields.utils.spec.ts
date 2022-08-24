@@ -1,4 +1,4 @@
-import { ONE_DAY_MS, Vault, Vault__factory,VaultState  } from '@badger-dao/sdk';
+import { ONE_DAY_MS, Vault, Vault__factory, VaultState } from '@badger-dao/sdk';
 import { BigNumber } from 'ethers';
 
 import { Chain } from '../chains/config/chain.config';
@@ -136,12 +136,14 @@ describe('yields.utils', () => {
 
         // setup contract interactions
         const vaultMock = mockContract<Vault>(Vault__factory);
-        // mock a supply of 10000000 tokens
+        // mock a supply of 100000000 tokens
         jest
           .spyOn(vaultMock, 'totalSupply')
-          .mockImplementation(async (_o) => BigNumber.from('10000000000000000000000000'));
+          .mockImplementation(async (_o) => BigNumber.from('100000000000000000000000000'));
 
-        jest.spyOn(vaultsUtils, 'queryYieldSources').mockImplementation(async () => []);
+        jest
+          .spyOn(vaultsUtils, 'queryYieldSources')
+          .mockImplementation(async (v) => [createYieldSource(v, SourceType.PreCompound, VAULT_SOURCE, 3)]);
 
         const result = await loadVaultEventPerformances(chain, MOCK_VAULT_DEFINITION);
         expect(result).toMatchSnapshot();
