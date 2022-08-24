@@ -96,6 +96,7 @@ export const MOCK_VAULTS_HARVESTS = mockVaultHarvests as Record<string, VaultHar
 export const MOCK_VAULT_HARVESTS = MOCK_VAULTS_HARVESTS[TEST_ADDR];
 
 const mockListHarvestsCopy = JSON.parse(JSON.stringify(mockListHarvests));
+mockListHarvestsCopy.data = mockListHarvestsCopy.data.slice(0, 5);
 // @ts-ignore
 mockListHarvestsCopy.data.forEach((d) => {
   // @ts-ignore
