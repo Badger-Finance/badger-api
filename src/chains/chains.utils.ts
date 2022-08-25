@@ -26,6 +26,10 @@ export function getOrCreateChain(network?: Network): Chain {
   try {
     return Chain.getChain(network);
   } catch {
+    if (!network) {
+      network = Network.Ethereum;
+    }
+
     let chain: Chain;
     switch (network) {
       case Network.BinanceSmartChain:

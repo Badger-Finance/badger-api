@@ -237,7 +237,7 @@ export function getVaultYieldProjection(
   yieldSources: YieldSources,
   yieldEstimate: YieldEstimate,
 ): VaultYieldProjection {
-  const { value, balance, available, lastHarvest } = vault;
+  const { value, balance, available } = vault;
   const { nonHarvestSources, nonHarvestSourcesApy } = yieldSources;
   const {
     yieldTokens,
@@ -245,6 +245,7 @@ export function getVaultYieldProjection(
     harvestTokens,
     previousHarvestTokens,
     duration: periodDuration,
+    lastHarvestedAt,
   } = yieldEstimate;
 
   const yieldTokensCurrent = calculateBalanceDifference(previousYieldTokens, yieldTokens);
@@ -253,7 +254,7 @@ export function getVaultYieldProjection(
   // calculate the overall harvest values
   const harvestValue = harvestTokens.reduce((total, token) => (total += token.value), 0);
   const yieldValue = yieldTokens.reduce((total, token) => (total += token.value), 0);
-  const harvestDuration = Date.now() - lastHarvest;
+  const harvestDuration = Date.now() - lastHarvestedAt;
 
   // calculate the current measurement periods values
   const harvestValuePerPeriod = harvestTokensCurrent.reduce((total, token) => (total += token.value), 0);
