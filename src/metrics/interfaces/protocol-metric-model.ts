@@ -1,6 +1,5 @@
+import { ProtocolMetrics } from '@badger-dao/sdk';
 import { Description, Example, Property, Title } from '@tsed/schema';
-
-import { ProtocolMetrics } from './metrics.interface';
 
 export class ProtocolMetricModel implements ProtocolMetrics {
   @Title('totalUsers')

@@ -1,7 +1,12 @@
+import { ProtocolMetrics } from '@badger-dao/sdk';
+import { NotFound } from '@tsed/exceptions';
+
 import { getAccounts } from '../accounts/accounts.utils';
+import { getDataMapper } from '../aws/dynamodb.utils';
+import { ProtocolMetricSnapshot } from '../aws/models/protocol-metric-snapshot.model';
 import { Chain } from '../chains/config/chain.config';
 import { getCachedVault } from '../vaults/vaults.utils';
-import { ProtocolMetrics } from './interfaces/metrics.interface';
+import { MetricType } from './enums/metric-type';
 
 export async function getChainMetrics(chains: Chain[]): Promise<ProtocolMetrics> {
   let totalUsers = 0;
@@ -21,4 +26,22 @@ export async function getChainMetrics(chains: Chain[]): Promise<ProtocolMetrics>
   }
 
   return { totalValueLocked, totalVaults, totalUsers };
+}
+
+export async function queryProtocolMetrics(): Promise<ProtocolMetrics> {
+  const errorMessage = 'Protocol metrics not available';
+  try {
+    const mapper = getDataMapper();
+    for await (const metric of mapper.query(
+      ProtocolMetricSnapshot,
+      { type: MetricType.protocol },
+      { scanIndexForward: false, limit: 1 },
+    )) {
+      return metric;
+    }
+    throw new NotFound(errorMessage);
+  } catch (error) {
+    console.error(error);
+    throw new NotFound(errorMessage);
+  }
 }

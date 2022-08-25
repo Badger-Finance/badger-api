@@ -11,6 +11,7 @@ import {
   VaultState,
   VaultVersion,
 } from '@badger-dao/sdk';
+import mockMetrics from '@badger-dao/sdk-mocks/generated/ethereum/api/loadProtocolMetrics.json';
 import mockTokens from '@badger-dao/sdk-mocks/generated/ethereum/api/loadTokens.json';
 import mockVaultSnapshots from '@badger-dao/sdk-mocks/generated/ethereum/api/loadVaultChart.json';
 import mockVaults from '@badger-dao/sdk-mocks/generated/ethereum/api/loadVaults.json';
@@ -96,6 +97,7 @@ export const MOCK_VAULTS_HARVESTS = mockVaultHarvests as Record<string, VaultHar
 export const MOCK_VAULT_HARVESTS = MOCK_VAULTS_HARVESTS[TEST_ADDR];
 
 const mockListHarvestsCopy = JSON.parse(JSON.stringify(mockListHarvests));
+mockListHarvestsCopy.data = mockListHarvestsCopy.data.slice(0, 5);
 // @ts-ignore
 mockListHarvestsCopy.data.forEach((d) => {
   // @ts-ignore
@@ -108,3 +110,5 @@ mockListHarvestsCopy.data.forEach((d) => {
   });
 });
 export const MOCK_HARVESTS: { data: VaultHarvestData[] } = mockListHarvestsCopy;
+
+export const MOCK_PROTOCOL_METRICS = mockMetrics;

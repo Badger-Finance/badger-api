@@ -21,6 +21,7 @@ export const YIELD_ESTIMATES_DATA = getEnvVar('YIELD_ESTIMATES_DATA');
 export const HARVEST_COMPOUND_DATA = getEnvVar('HARVEST_COMPOUND_DATA');
 export const PROTOCOL_DATA = getEnvVar('PROTOCOL_DATA');
 export const CHART_DATA = getEnvVar('CHART_DATA');
+export const YIELD_PROJECTIONS_DATA = getEnvVar('YIELD_PROJECTIONS_DATA');
 
 // thegraph constants
 export const UNISWAP_URL = getEnvVar('UNISWAP');

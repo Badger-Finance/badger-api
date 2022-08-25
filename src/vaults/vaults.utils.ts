@@ -6,11 +6,13 @@ import {
   VaultType,
   VaultV15__factory,
   VaultVersion,
+  VaultYieldProjection,
 } from '@badger-dao/sdk';
 import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';
 
-import { getDataMapper } from '../aws/dynamodb.utils';
+import { getDataMapper, getVaultEntityId } from '../aws/dynamodb.utils';
+import { CachedYieldProjection } from '../aws/models/cached-yield-projection.model';
 import { CurrentVaultSnapshotModel } from '../aws/models/current-vault-snapshot.model';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { YieldEstimate } from '../aws/models/yield-estimate.model';
@@ -335,5 +337,37 @@ export async function queryYieldEstimate(vault: VaultDefinitionModel): Promise<Y
   } catch (err) {
     console.error(err);
     return yieldEstimate;
+  }
+}
+
+export async function queryYieldProjection(vault: VaultDefinitionModel): Promise<VaultYieldProjection> {
+  const yieldProjection: VaultYieldProjection = {
+    harvestValue: 0,
+    harvestApr: 0,
+    harvestTokens: [],
+    harvestPeriodApr: 0,
+    harvestPeriodApy: 0,
+    harvestPeriodSources: [],
+    harvestPeriodSourcesApy: [],
+    yieldValue: 0,
+    yieldApr: 0,
+    yieldTokens: [],
+    yieldPeriodApr: 0,
+    yieldPeriodSources: [],
+    nonHarvestApr: 0,
+    nonHarvestApy: 0,
+    nonHarvestSources: [],
+    nonHarvestSourcesApy: [],
+  };
+  try {
+    const mapper = getDataMapper();
+    const id = getVaultEntityId({ network: vault.chain }, vault);
+    for await (const projection of mapper.query(CachedYieldProjection, { id }, { limit: 1 })) {
+      return projection;
+    }
+    return yieldProjection;
+  } catch (err) {
+    console.error(err);
+    return yieldProjection;
   }
 }
