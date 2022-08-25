@@ -42,6 +42,7 @@ custom:
   table:
     YIELD_SNAPSHOTS_DATA: yield-snapshots-${self:custom.stage}
     YIELD_ESTIMATES_DATA: yield-estimates-${self:custom.stage}
+    YIELD_PROJECTIONS_DATA: yield-projections-${self:custom.stage}
     VAULT_SNAPSHOTS_DATA: vaults-snapshots-${self:custom.stage}
     VAULT_DEFINITION_DATA: vaults-definitions-${self:custom.stage}
     VAULT_BALANCES_DATA: vault-balances-${self:custom.stage}
@@ -107,6 +108,7 @@ provider:
     TOKEN_PRICE_DATA: ${self:custom.table.TOKEN_PRICE_DATA}
     TOKEN_INFORMATION_DATA: ${self:custom.table.TOKEN_INFORMATION_DATA}
     YIELD_ESTIMATES_DATA: ${self:custom.table.YIELD_ESTIMATES_DATA}
+    YIELD_PROJECTIONS_DATA: ${self:custom.table.YIELD_PROJECTIONS_DATA}
     HARVEST_COMPOUND_DATA: ${self:custom.table.HARVEST_COMPOUND_DATA}
     ACCOUNT_DATA: ${self:custom.table.ACCOUNT_DATA}
     METADATA_DATA: ${self:custom.table.METADATA_DATA}
@@ -434,6 +436,18 @@ resources:
       Type: AWS::DynamoDB::Table
       Properties:
         TableName: ${self:custom.table.CHART_DATA}
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: 'id'
+            KeyType: 'HASH'
+        AttributeDefinitions:
+          - AttributeName: 'id'
+            AttributeType: 'S'
+
+    yieldProjectionsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.table.YIELD_PROJECTIONS_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
           - AttributeName: 'id'
