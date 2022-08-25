@@ -2,12 +2,12 @@ import { Currency, keyBy, Token, TokenBalance, TokenValue, VaultDTO } from '@bad
 import { ethers } from 'ethers';
 
 import { getDataMapper } from '../aws/dynamodb.utils';
+import { CachedTokenBalance } from '../aws/models/cached-token-balance.interface';
 import { TokenInformationSnapshot } from '../aws/models/token-information-snapshot.model';
 import { VaultTokenBalance } from '../aws/models/vault-token-balance.model';
 import { Chain } from '../chains/config/chain.config';
 import { convert, queryPrice } from '../prices/prices.utils';
 import { TokenNotFound } from './errors/token.error';
-import { CachedTokenBalance } from './interfaces/cached-token-balance.interface';
 import { TokenFull, TokenFullMap } from './interfaces/token-full.interface';
 
 export async function toBalance(token: Token, balance: number, currency?: Currency): Promise<TokenValue> {

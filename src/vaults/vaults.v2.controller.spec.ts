@@ -11,7 +11,7 @@ import { YieldSource } from '../aws/models/yield-source.model';
 import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
 import { SourceType } from '../rewards/enums/source-type.enum';
-import { TEST_ADDR } from '../test/constants';
+import { MOCK_VAULTS, TEST_ADDR } from '../test/constants';
 import { mockBalance, setupMockChain } from '../test/mocks.utils';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import * as tokensUtils from '../tokens/tokens.utils';
@@ -56,6 +56,7 @@ export function setupTestVault() {
       lastReportedAt: 0,
     }),
   );
+  jest.spyOn(vaultsUtils, 'queryYieldProjection').mockImplementation(async () => MOCK_VAULTS[14].yieldProjection);
   jest
     .spyOn(vaultsUtils, 'getCachedVault')
     .mockImplementation(async (chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<VaultDTO> => {

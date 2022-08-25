@@ -1,6 +1,7 @@
 import { Erc20__factory, formatBalance, Network, Token } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 
+import { CachedTokenBalance } from '../../aws/models/cached-token-balance.interface';
 import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
 import { VaultTokenBalance } from '../../aws/models/vault-token-balance.model';
 import { YieldSource } from '../../aws/models/yield-source.model';
@@ -17,7 +18,6 @@ import {
 import { TokenPrice } from '../../prices/interface/token-price.interface';
 import { queryPrice } from '../../prices/prices.utils';
 import { SourceType } from '../../rewards/enums/source-type.enum';
-import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
 import { getFullToken, getVaultTokens, toBalance } from '../../tokens/tokens.utils';
 import { getCachedVault, queryYieldSources } from '../../vaults/vaults.utils';
 import { createYieldSource } from '../../vaults/yields.utils';

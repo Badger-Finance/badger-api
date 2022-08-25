@@ -4,6 +4,7 @@ import { ethers } from 'ethers';
 import { getChainStartBlockKey, getDataMapper, getLeaderboardKey } from '../aws/dynamodb.utils';
 import { CachedAccount } from '../aws/models/cached-account.model';
 import { CachedBoost } from '../aws/models/cached-boost.model';
+import { CachedSettBalance } from '../aws/models/cached-sett-balance.interface';
 import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
 import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
@@ -15,7 +16,6 @@ import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 import { BoostData } from '../rewards/interfaces/boost-data.interface';
 import { getFullToken, getVaultTokens } from '../tokens/tokens.utils';
 import { getCachedVault } from '../vaults/vaults.utils';
-import { CachedSettBalance } from './interfaces/cached-sett-balance.interface';
 
 export async function getBoostFile(chain: Chain): Promise<BoostData | null> {
   try {
