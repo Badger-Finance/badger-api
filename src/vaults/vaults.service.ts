@@ -11,8 +11,8 @@ import { convert } from '../prices/prices.utils';
 import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interface';
 import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
 import { VaultHarvestsMap } from './interfaces/vault-harvest-map';
-import { getCachedVault, queryYieldEstimate } from './vaults.utils';
-import { getVaultYieldProjection, getYieldSources } from './yields.utils';
+import { getCachedVault, queryYieldEstimate, queryYieldProjection } from './vaults.utils';
+import { getYieldSources } from './yields.utils';
 
 @Service()
 export class VaultsService {
@@ -83,13 +83,14 @@ export class VaultsService {
   }
 
   static async loadVault(chain: Chain, vaultDefinition: VaultDefinitionModel, currency?: Currency): Promise<VaultDTO> {
-    const [vault, yieldSources, pendingHarvest] = await Promise.all([
+    const [vault, yieldSources, yieldEstimate, yieldProjection] = await Promise.all([
       getCachedVault(chain, vaultDefinition, currency),
       getYieldSources(vaultDefinition),
       queryYieldEstimate(vaultDefinition),
+      queryYieldProjection(vaultDefinition),
     ]);
-    const { lastHarvestedAt } = pendingHarvest;
     const { apr, sources, apy, sourcesApy } = yieldSources;
+    const { lastHarvestedAt } = yieldEstimate;
 
     vault.lastHarvest = lastHarvestedAt;
     vault.sources = sources;
@@ -100,7 +101,7 @@ export class VaultsService {
     vault.maxApr = vault.sources.map((s) => s.maxApr).reduce((total, apr) => (total += apr), 0);
     vault.minApy = vault.sourcesApy.map((s) => s.minApr).reduce((total, apr) => (total += apr), 0);
     vault.maxApy = vault.sourcesApy.map((s) => s.maxApr).reduce((total, apr) => (total += apr), 0);
-    vault.yieldProjection = getVaultYieldProjection(vault, yieldSources, pendingHarvest);
+    vault.yieldProjection = yieldProjection;
 
     const hasBoostedApr = vault.sources.some((source) => source.boostable);
     if (vault.boost.enabled && hasBoostedApr) {

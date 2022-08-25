@@ -15,6 +15,7 @@ import {
 import { BadRequest } from '@tsed/exceptions';
 import { BigNumber, ethers } from 'ethers';
 
+import { CachedTokenBalance } from '../aws/models/cached-token-balance.interface';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { YieldEstimate } from '../aws/models/yield-estimate.model';
 import { YieldSource } from '../aws/models/yield-source.model';
@@ -23,7 +24,6 @@ import { TOKENS } from '../config/tokens.config';
 import { queryPriceAtTimestamp } from '../prices/prices.utils';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { BoostRange } from '../rewards/interfaces/boost-range.interface';
-import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
 import { calculateBalanceDifference, getFullToken } from '../tokens/tokens.utils';
 import { filterInfluenceEvents, getInfuelnceVaultYieldBalance, isInfluenceVault } from './influence.utils';
 import { HarvestReport } from './interfaces/harvest-report.interface';

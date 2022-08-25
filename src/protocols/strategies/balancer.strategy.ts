@@ -1,6 +1,7 @@
 import { Erc20__factory, formatBalance, Network, Token } from '@badger-dao/sdk';
 import { GraphQLClient } from 'graphql-request';
 
+import { CachedTokenBalance } from '../../aws/models/cached-token-balance.interface';
 import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
 import { VaultTokenBalance } from '../../aws/models/vault-token-balance.model';
 import { YieldSource } from '../../aws/models/yield-source.model';
@@ -16,7 +17,6 @@ import {
 import { getSdk as getBalancerSdk, OrderDirection, PoolSnapshot_OrderBy } from '../../graphql/generated/balancer';
 import { TokenPrice } from '../../prices/interface/token-price.interface';
 import { SourceType } from '../../rewards/enums/source-type.enum';
-import { CachedTokenBalance } from '../../tokens/interfaces/cached-token-balance.interface';
 import { getFullToken, toBalance } from '../../tokens/tokens.utils';
 import { getCachedVault } from '../../vaults/vaults.utils';
 import { createYieldSource } from '../../vaults/yields.utils';

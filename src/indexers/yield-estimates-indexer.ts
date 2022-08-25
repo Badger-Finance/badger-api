@@ -6,15 +6,17 @@ import {
 } from '@badger-dao/sdk/lib/graphql/generated/badger';
 import { UnprocessableEntity } from '@tsed/exceptions';
 
-import { getDataMapper } from '../aws/dynamodb.utils';
+import { getDataMapper, getVaultEntityId } from '../aws/dynamodb.utils';
+import { CachedTokenBalance } from '../aws/models/cached-token-balance.interface';
+import { CachedYieldProjection } from '../aws/models/cached-yield-projection.model';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { YieldEstimate } from '../aws/models/yield-estimate.model';
 import { getSupportedChains } from '../chains/chains.utils';
 import { Chain } from '../chains/config/chain.config';
-import { CachedTokenBalance } from '../tokens/interfaces/cached-token-balance.interface';
 import { calculateBalanceDifference, toTokenValue } from '../tokens/tokens.utils';
 import { VAULT_SOURCE } from '../vaults/vaults.config';
 import { getCachedVault, queryYieldEstimate } from '../vaults/vaults.utils';
+import { getVaultYieldProjection, getYieldSources } from '../vaults/yields.utils';
 
 function toTableRow({ balance, symbol, value }: CachedTokenBalance) {
   const formatter = new Intl.NumberFormat('en-US', {
@@ -71,33 +73,6 @@ async function applyProtocolFees(chain: Chain, vault: VaultDefinitionModel, yiel
   };
   yieldEstimate.harvestTokens.forEach(feeScalingFunction);
   yieldEstimate.yieldTokens.forEach(feeScalingFunction);
-  yieldEstimate.harvestTokens.forEach((t) => {
-    if (t.address === vault.depositToken) {
-      t.name = VAULT_SOURCE;
-    }
-  });
-
-  const harvestDifference = calculateBalanceDifference(
-    yieldEstimate.previousHarvestTokens,
-    yieldEstimate.harvestTokens,
-  );
-  const hasNegatives = harvestDifference.some((b) => b.balance < 0);
-
-  // if the difference incur negative values due to slippage or otherwise, force a comparison against the full harvest
-  if (hasNegatives) {
-    yieldEstimate.previousHarvestTokens = [];
-    console.warn(`${vault.name} flashed negative balance earnings!`);
-  }
-
-  console.log(`${vault.name} Yield Estimates`);
-  console.log('Current Yield Tokens');
-  console.table(yieldEstimate.yieldTokens.map(toTableRow));
-  console.log('Previous Yield Tokens');
-  console.table(yieldEstimate.previousYieldTokens.map(toTableRow));
-  console.log('Current Harvest Tokens');
-  console.table(yieldEstimate.harvestTokens.map(toTableRow));
-  console.log('Previous Harvest Tokens');
-  console.table(yieldEstimate.previousHarvestTokens.map(toTableRow));
 }
 
 function defaultEstimate(vault: VaultDefinitionModel, existingEstimate: YieldEstimate): YieldEstimate {
@@ -114,7 +89,7 @@ function defaultEstimate(vault: VaultDefinitionModel, existingEstimate: YieldEst
   };
 }
 
-async function captureVaultReports(chain: Chain, vault: VaultDefinitionModel, now: number) {
+async function captureYieldEstimate(chain: Chain, vault: VaultDefinitionModel, now: number): Promise<YieldEstimate> {
   const convert = async (t: TokenBalance) => toTokenValue(chain, t);
   try {
     const sdk = await chain.getSdk();
@@ -159,6 +134,33 @@ async function captureVaultReports(chain: Chain, vault: VaultDefinitionModel, no
     applyProtocolFees(chain, vault, yieldEstimate);
     yieldEstimate.duration = now - yieldEstimate.lastMeasuredAt;
     yieldEstimate.lastMeasuredAt = now;
+    yieldEstimate.harvestTokens.forEach((t) => {
+      if (t.address === vault.depositToken) {
+        t.name = VAULT_SOURCE;
+      }
+    });
+
+    const harvestDifference = calculateBalanceDifference(
+      yieldEstimate.previousHarvestTokens,
+      yieldEstimate.harvestTokens,
+    );
+    const hasNegatives = harvestDifference.some((b) => b.balance < 0);
+
+    // if the difference incur negative values due to slippage or otherwise, force a comparison against the full harvest
+    if (hasNegatives) {
+      yieldEstimate.previousHarvestTokens = [];
+      console.warn(`${vault.name} flashed negative balance earnings!`);
+    }
+
+    console.log(`${vault.name} Yield Estimates`);
+    console.log('Current Yield Tokens');
+    console.table(yieldEstimate.yieldTokens.map(toTableRow));
+    console.log('Previous Yield Tokens');
+    console.table(yieldEstimate.previousYieldTokens.map(toTableRow));
+    console.log('Current Harvest Tokens');
+    console.table(yieldEstimate.harvestTokens.map(toTableRow));
+    console.log('Previous Harvest Tokens');
+    console.table(yieldEstimate.previousHarvestTokens.map(toTableRow));
 
     return mapper.put(Object.assign(new YieldEstimate(), yieldEstimate));
   } catch (err) {
@@ -180,9 +182,19 @@ export async function refreshYieldEstimates() {
       }
 
       try {
-        // TODO: utilize yield estimate to subsequently calculate the projection
-        // save a persisted copy of a validated projection
-        await captureVaultReports(chain, vault, now);
+        const yieldEstimate = await captureYieldEstimate(chain, vault, now);
+        const yieldSources = await getYieldSources(vault);
+        const cachedVault = await getCachedVault(chain, vault);
+        const yieldProjection = getVaultYieldProjection(cachedVault, yieldSources, yieldEstimate);
+
+        const mapper = getDataMapper();
+        const id = getVaultEntityId(chain, vault);
+        await mapper.put(
+          Object.assign(new CachedYieldProjection(), {
+            id,
+            ...yieldProjection,
+          }),
+        );
       } catch (err) {
         console.error(err);
       }

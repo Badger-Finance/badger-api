@@ -2,8 +2,8 @@
 
 exports[`MetricsController GET /v2/metrics returns metric 1`] = `
 Object {
-  "totalUsers": 30000,
-  "totalValueLocked": 100000000000,
-  "totalVaults": 30,
+  "totalUsers": 24392,
+  "totalValueLocked": 100170376.98,
+  "totalVaults": 63,
 }
 `;
