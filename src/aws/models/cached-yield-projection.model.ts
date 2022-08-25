@@ -56,6 +56,6 @@ export class CachedYieldProjection implements VaultYieldProjection {
   @attribute({ memberType: embed(CachedYieldSource) })
   nonHarvestSources!: Array<CachedYieldSource>;
 
-  @attribute({ memberType: embed(CachedTokenRate) })
+  @attribute({ memberType: embed(CachedYieldSource) })
   nonHarvestSourcesApy!: Array<CachedYieldSource>;
 }

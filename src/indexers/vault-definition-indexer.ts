@@ -8,7 +8,8 @@ import { Chain } from '../chains/config/chain.config';
 import { constructVaultDefinition } from './indexer.utils';
 
 export async function captureVaultData() {
-  for (const chain of getSupportedChains()) {
+  const chains = getSupportedChains();
+  for (const chain of chains) {
     const sdk = await chain.getSdk();
 
     const registryVaults = await sdk.vaults.loadVaults();

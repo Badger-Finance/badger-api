@@ -18,18 +18,6 @@ import { VAULT_SOURCE } from '../vaults/vaults.config';
 import { getCachedVault, queryYieldEstimate } from '../vaults/vaults.utils';
 import { getVaultYieldProjection, getYieldSources } from '../vaults/yields.utils';
 
-function toTableRow({ balance, symbol, value }: CachedTokenBalance) {
-  const formatter = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  });
-  return {
-    name: symbol,
-    amount: balance.toFixed(2),
-    value: formatter.format(value),
-  };
-}
-
 async function loadGraphTimestamp(sdk: BadgerSDK, vault: VaultDefinitionModel): Promise<number> {
   let lastHarvestedAt = 0;
 
@@ -152,16 +140,6 @@ async function captureYieldEstimate(chain: Chain, vault: VaultDefinitionModel, n
       console.warn(`${vault.name} flashed negative balance earnings!`);
     }
 
-    console.log(`${vault.name} Yield Estimates`);
-    console.log('Current Yield Tokens');
-    console.table(yieldEstimate.yieldTokens.map(toTableRow));
-    console.log('Previous Yield Tokens');
-    console.table(yieldEstimate.previousYieldTokens.map(toTableRow));
-    console.log('Current Harvest Tokens');
-    console.table(yieldEstimate.harvestTokens.map(toTableRow));
-    console.log('Previous Harvest Tokens');
-    console.table(yieldEstimate.previousHarvestTokens.map(toTableRow));
-
     return mapper.put(Object.assign(new YieldEstimate(), yieldEstimate));
   } catch (err) {
     const message = `Failed to estimate yield for ${vault.name}`;
@@ -187,14 +165,14 @@ export async function refreshYieldEstimates() {
         const cachedVault = await getCachedVault(chain, vault);
         const yieldProjection = getVaultYieldProjection(cachedVault, yieldSources, yieldEstimate);
 
-        const mapper = getDataMapper();
         const id = getVaultEntityId(chain, vault);
-        await mapper.put(
-          Object.assign(new CachedYieldProjection(), {
-            id,
-            ...yieldProjection,
-          }),
-        );
+        const entity = Object.assign(new CachedYieldProjection(), {
+          id,
+          ...yieldProjection,
+        });
+
+        const mapper = getDataMapper();
+        await mapper.put(entity);
       } catch (err) {
         console.error(err);
       }
