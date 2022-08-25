@@ -1,4 +1,4 @@
-import { formatBalance, Vault__factory } from '@badger-dao/sdk';
+import { formatBalance, HarvestType, Vault__factory } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
@@ -24,27 +24,28 @@ export function filterInfluenceEvents(
   const { address } = vault;
   let relevantEvents = yieldEvents.slice();
 
-  if (address === TOKENS.BVECVX) {
-    let processedBadger = false;
-    let processedUnderlying = false;
-    relevantEvents = relevantEvents.filter((e) => {
-      if (e.token === TOKENS.BADGER) {
-        if (processedBadger) {
-          return false;
-        }
-        processedBadger = true;
-        return true;
-      }
-      if (e.token === address) {
-        if (processedUnderlying) {
-          return false;
-        }
-        processedUnderlying = true;
-        return true;
-      }
+  let processedBadger = false;
+  let processedUnderlying = false;
+  relevantEvents = relevantEvents.filter((e) => {
+    if (e.type === HarvestType.Harvest) {
       return true;
-    });
-  }
+    }
+    if (e.token === TOKENS.BADGER) {
+      if (processedBadger) {
+        return false;
+      }
+      processedBadger = true;
+      return true;
+    }
+    if (e.token === address) {
+      if (processedUnderlying) {
+        return false;
+      }
+      processedUnderlying = true;
+      return true;
+    }
+    return true;
+  });
 
   return relevantEvents;
 }
