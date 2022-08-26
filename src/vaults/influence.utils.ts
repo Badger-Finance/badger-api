@@ -21,6 +21,10 @@ export function filterInfluenceEvents(
   vault: VaultDefinitionModel,
   yieldEvents: VaultPerformanceItem[],
 ): VaultPerformanceItem[] {
+  if (!isInfluenceVault(vault.address)) {
+    return yieldEvents;
+  }
+
   const { address } = vault;
   let relevantEvents = yieldEvents.slice();
 
