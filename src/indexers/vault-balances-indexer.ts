@@ -7,9 +7,9 @@ import { getSupportedChains } from '../chains/chains.utils';
 import { Chain } from '../chains/config/chain.config';
 import { getBalancerVaultTokenBalance } from '../protocols/strategies/balancer.strategy';
 import { getCurveVaultTokenBalance } from '../protocols/strategies/convex.strategy';
+import { getLpTokenBalances } from '../protocols/strategies/uniswap.strategy';
 import { getFullToken, toBalance } from '../tokens/tokens.utils';
 import { getCachedVault } from '../vaults/vaults.utils';
-import { getLpTokenBalances } from './indexer.utils';
 
 export async function refreshVaultBalances() {
   for (const chain of getSupportedChains()) {

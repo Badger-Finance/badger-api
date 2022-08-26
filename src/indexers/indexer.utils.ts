@@ -9,19 +9,15 @@ import {
   VaultState,
   VaultVersion,
 } from '@badger-dao/sdk';
-import { NotFound } from '@tsed/exceptions';
 
 import { getVaultEntityId } from '../aws/dynamodb.utils';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
-import { VaultTokenBalance } from '../aws/models/vault-token-balance.model';
 import { Chain } from '../chains/config/chain.config';
 import { Stage } from '../config/enums/stage.enum';
 import { queryPrice } from '../prices/prices.utils';
-import { getLiquidityData } from '../protocols/common/swap.utils';
-import { getFullTokens, toBalance } from '../tokens/tokens.utils';
 import { Nullable } from '../utils/types.utils';
 import { VaultsService } from '../vaults/vaults.service';
-import { getCachedVault, getStrategyInfo } from '../vaults/vaults.utils';
+import { getStrategyInfo } from '../vaults/vaults.utils';
 
 export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<VaultSnapshot> {
   const sdk = await chain.getSdk();
@@ -103,31 +99,6 @@ export async function constructVaultDefinition(
     bouncer: BouncerType.None,
     isNew: Date.now() / 1000 - Number(releasedAt) <= ONE_WEEK_SECONDS * 2,
   });
-}
-
-export async function getLpTokenBalances(chain: Chain, vault: VaultDefinitionModel): Promise<VaultTokenBalance> {
-  const { depositToken, address } = vault;
-  try {
-    const liquidityData = await getLiquidityData(chain, depositToken);
-    const { token0, token1, reserve0, reserve1, totalSupply } = liquidityData;
-    const tokenData = await getFullTokens(chain, [token0, token1]);
-    const t0Token = tokenData[token0];
-    const t1Token = tokenData[token1];
-
-    // poolData returns the full liquidity pool, valueScalar acts to calculate the portion within the sett
-    const settSnapshot = await getCachedVault(chain, vault);
-    const valueScalar = totalSupply > 0 ? settSnapshot.balance / totalSupply : 0;
-    const t0TokenBalance = reserve0 * valueScalar;
-    const t1TokenBalance = reserve1 * valueScalar;
-    const tokenBalances = await Promise.all([toBalance(t0Token, t0TokenBalance), toBalance(t1Token, t1TokenBalance)]);
-
-    return Object.assign(new VaultTokenBalance(), {
-      vault: address,
-      tokenBalances,
-    });
-  } catch (err) {
-    throw new NotFound(`${vault.protocol} pool pair ${depositToken} does not exist`);
-  }
 }
 
 export async function getVault(chain: Chain, contract: string, block?: number): Promise<gqlGenT.SettQuery> {
