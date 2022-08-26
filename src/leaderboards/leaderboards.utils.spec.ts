@@ -3,7 +3,7 @@ import { BadgerType } from '@badger-dao/sdk';
 import { getLeaderboardKey } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
 import { mockQuery, setupMockChain } from '../test/mocks.utils';
-import { queryLeaderboardSummary } from './leaderboards.utils';
+import { getBadgerType, queryLeaderboardSummary } from './leaderboards.utils';
 
 describe('leaderboards.utils', () => {
   describe('queryLeaderboardSummary', () => {
@@ -56,6 +56,20 @@ describe('leaderboards.utils', () => {
         const result = await queryLeaderboardSummary(chain);
         expect(result).toMatchSnapshot();
       });
+    });
+  });
+
+  describe('getBadgerType', () => {
+    it.each([
+      [BadgerType.Basic, 1, 19],
+      [BadgerType.Neo, 20, 199],
+      [BadgerType.Hero, 200, 599],
+      [BadgerType.Hyper, 600, 1399],
+      [BadgerType.Frenzy, 1400, 2000],
+    ])('returns %s badger for scores %d to %d', (badgerType: BadgerType, start: number, end: number) => {
+      for (let i = start; i < end; i++) {
+        expect(getBadgerType(i)).toEqual(badgerType);
+      }
     });
   });
 });

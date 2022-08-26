@@ -7,7 +7,7 @@ import { CachedBoost } from '../aws/models/cached-boost.model';
 import { CachedLeaderboardSummary } from '../aws/models/cached-leaderboard-summary.model';
 import { getSupportedChains } from '../chains/chains.utils';
 import { Chain } from '../chains/config/chain.config';
-import { getBadgerType } from '../leaderboards/leaderboards.config';
+import { getBadgerType } from '../leaderboards/leaderboards.utils';
 
 export async function indexBoostLeaderBoard() {
   for (const chain of getSupportedChains()) {

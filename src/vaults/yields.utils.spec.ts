@@ -41,6 +41,8 @@ describe('yields.utils', () => {
   });
 
   function setupYieldMocks() {
+    jest.spyOn(console, 'log').mockImplementation();
+
     // setup token responses
     jest.spyOn(tokensUtils, 'getFullToken').mockImplementation(async (_c, t) => MOCK_TOKENS[t]);
     jest.spyOn(pricesUtils, 'queryPriceAtTimestamp').mockImplementation(async (token, _t, _c) => {
