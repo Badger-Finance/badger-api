@@ -1,6 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`PricesController GET /v2/prices with a valid specified chain returns token config 1`] = `
+exports[`PricesController GET /prices with a valid specified chain and specific tokens returns token config 1`] = `
+Object {
+  "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28": 6617,
+  "0x3472A5A71965499acd81997a54BBA8D852C6E53d": 13426,
+}
+`;
+
+exports[`PricesController GET /prices with a valid specified chain returns token config 1`] = `
 Object {
   "0x0316EB71485b0Ab14103307bf65a021042c6d380": 790,
   "0x04c90C198b2eFF55716079bc06d7CCc4aa4d7512": 1225,
@@ -111,11 +118,24 @@ Object {
 }
 `;
 
-exports[`PricesController GET /v2/prices with an invalid specified chain returns a 400 1`] = `
+exports[`PricesController GET /prices with an invalid specified chain returns a 400 1`] = `
 Object {
   "errors": Array [],
   "message": "invalid is not a supported chain",
   "name": "BAD_REQUEST",
   "status": 400,
+}
+`;
+
+exports[`PricesController GET /prices/snapshots request two tokens across two timestamps returns snapshots of requested tokens at given times 1`] = `
+Object {
+  "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28": Object {
+    "1650549796": 249440.8033852199,
+    "1660549796": 250952.0622638658,
+  },
+  "0x3472A5A71965499acd81997a54BBA8D852C6E53d": Object {
+    "1650549796": 122936.82377476538,
+    "1660549796": 123681.64725160137,
+  },
 }
 `;
