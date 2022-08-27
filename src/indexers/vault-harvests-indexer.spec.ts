@@ -6,9 +6,9 @@ import { MOCK_VAULT_DEFINITION } from '../test/constants';
 import { setupMockChain } from '../test/mocks.utils';
 import * as vaultsUtils from '../vaults/harvests.utils';
 import { vaultHarvestsOnChainMock } from '../vaults/mocks/vault-harvests-on-chain';
-import { indexVaultsHarvestsCompund } from './harvest-compound-indexer';
+import { indexVaultsHarvestsCompund } from './vault-harvests-indexer';
 
-describe('harvest-compound.indexer', () => {
+describe('vault-harvests-indexer', () => {
   let put: jest.SpyInstance<Promise<StringToAnyObjectMap>, [parameters: PutParameters]>;
 
   beforeEach(() => {

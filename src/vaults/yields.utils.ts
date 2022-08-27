@@ -1,7 +1,6 @@
 import {
   formatBalance,
   gqlGenT,
-  HarvestType,
   keyBy,
   ONE_YEAR_MS,
   TokenRate,
@@ -25,10 +24,11 @@ import { queryPriceAtTimestamp } from '../prices/prices.utils';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { BoostRange } from '../rewards/interfaces/boost-range.interface';
 import { calculateBalanceDifference, getFullToken } from '../tokens/tokens.utils';
-import { filterInfluenceEvents, getInfuelnceVaultYieldBalance, isInfluenceVault } from './influence.utils';
-import { HarvestReport } from './interfaces/harvest-report.interface';
+import { YieldType } from './enums/yield-type.enum';
+import { filterPerformanceItems, getInfuelnceVaultYieldBalance, isInfluenceVault } from './influence.utils';
 import { VaultPerformanceItem } from './interfaces/vault-performance-item.interface';
 import { VaultYieldSummary } from './interfaces/vault-yield-summary.interface';
+import { YieldEvent } from './interfaces/yield-event';
 import { YieldSources } from './interfaces/yield-sources.interface';
 import { VAULT_SOURCE, VAULT_TWAY_DURATION, VAULT_TWAY_DURATION_SECONDS } from './vaults.config';
 import { estimateDerivativeEmission, queryYieldSources } from './vaults.utils';
@@ -345,6 +345,7 @@ export async function loadVaultEventPerformances(chain: Chain, vault: VaultDefin
   const currentBlock = await sdk.provider.getBlockNumber();
   const offset = Math.floor(VAULT_TWAY_DURATION / 13000);
   const startBlock = currentBlock - offset;
+
   const { data } = await sdk.vaults.listHarvests({
     address,
     timestamp_gte: cutoff,
@@ -362,7 +363,7 @@ export async function loadVaultEventPerformances(chain: Chain, vault: VaultDefin
  * @param distributions distribution data retrieved from the graph
  * @returns vault harvest data in the same form as delivered via event logs
  */
-function constructGraphVaultData(
+export function constructGraphVaultData(
   vault: VaultDefinitionModel,
   harvests: gqlGenT.SettHarvestsQuery['settHarvests'],
   distributions: gqlGenT.BadgerTreeDistributionsQuery['badgerTreeDistributions'],
@@ -492,13 +493,13 @@ async function evaluateYieldEvents(
   yieldEvents: VaultPerformanceItem[],
 ): Promise<VaultYieldSummary> {
   const sdk = await chain.getSdk();
-  const harvestReport: HarvestReport[] = [];
+  const harvestReport: YieldEvent[] = [];
 
   let totalHarvested = 0;
   let totalVaultPrincipal = 0;
   const tokenEmissionAprs = new Map<string, number>();
 
-  const relevantYieldEvents = filterInfluenceEvents(vault, yieldEvents);
+  const relevantYieldEvents = filterPerformanceItems(vault, yieldEvents);
 
   for (const event of relevantYieldEvents) {
     const token = await getFullToken(chain, event.token);
@@ -520,18 +521,20 @@ async function evaluateYieldEvents(
     totalVaultPrincipal += vaultPrincipal;
 
     const eventApr = calculateYield(vaultPrincipal, tokenEarned, VAULT_TWAY_DURATION);
-    const report: HarvestReport = {
-      date: event.timestamp * 1000,
+    const yieldEvent: YieldEvent = {
+      block: event.block,
+      timestamp: event.timestamp * 1000,
       amount,
       token: token.symbol,
       type: event.type,
-      value: tokenEarned,
+      value: vaultPrincipal,
       balance,
+      earned: tokenEarned,
       apr: eventApr,
     };
-    harvestReport.push(report);
+    harvestReport.push(yieldEvent);
 
-    if (event.type === HarvestType.Harvest) {
+    if (event.type === YieldType.Harvest) {
       totalHarvested += tokenEarned;
     } else {
       const entry = tokenEmissionAprs.get(token.address) ?? 0;
@@ -551,7 +554,7 @@ async function evaluateYieldEvents(
   console.table(
     harvestReport.map((r) => ({
       ...r,
-      date: new Date(r.date).toLocaleDateString(),
+      date: new Date(r.timestamp).toLocaleDateString(),
       amount: r.amount.toLocaleString(),
       value: formatter.format(r.value),
       balance: r.balance.toLocaleString(),
@@ -612,9 +615,9 @@ export async function estimateVaultPerformance(
     });
   }
 
-  const allHarvests = recentHarvests.flatMap((h) => h.harvests.map((h) => ({ ...h, type: HarvestType.Harvest })));
+  const allHarvests = recentHarvests.flatMap((h) => h.harvests.map((h) => ({ ...h, type: YieldType.Harvest })));
   const allDistributions = recentHarvests.flatMap((h) =>
-    h.treeDistributions.map((d) => ({ ...d, type: HarvestType.TreeDistribution })),
+    h.treeDistributions.map((d) => ({ ...d, type: YieldType.Distribution })),
   );
   const allEvents = allHarvests
     .concat(allDistributions)

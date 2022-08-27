@@ -1,4 +1,4 @@
-import { formatBalance, HarvestType, Vault__factory } from '@badger-dao/sdk';
+import { formatBalance, Vault__factory } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
@@ -7,6 +7,7 @@ import { TOKENS } from '../config/tokens.config';
 import { CvxLocker__factory } from '../contracts/factories/CvxLocker__factory';
 import { getBalancerPoolTokens } from '../protocols/strategies/balancer.strategy';
 import { CVX_LOCKER } from '../protocols/strategies/convex.strategy';
+import { YieldType } from './enums/yield-type.enum';
 import { VaultPerformanceItem } from './interfaces/vault-performance-item.interface';
 import { getCachedVault } from './vaults.utils';
 
@@ -17,7 +18,7 @@ export function isInfluenceVault(address: string) {
   return influenceVaults.has(ethers.utils.getAddress(address));
 }
 
-export function filterInfluenceEvents(
+export function filterPerformanceItems(
   vault: VaultDefinitionModel,
   yieldEvents: VaultPerformanceItem[],
 ): VaultPerformanceItem[] {
@@ -31,7 +32,7 @@ export function filterInfluenceEvents(
   let processedBadger = false;
   let processedUnderlying = false;
   relevantEvents = relevantEvents.filter((e) => {
-    if (e.type === HarvestType.Harvest) {
+    if (e.type === YieldType.Harvest) {
       return true;
     }
     if (e.token === TOKENS.BADGER) {

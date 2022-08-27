@@ -57,11 +57,11 @@ export class VaultsService {
     const mapper = getDataMapper();
     const vault = await chain.vaults.getVault(address);
 
-    const queryHarvests = mapper.query(
-      HarvestCompoundData,
-      { vault: vault.address },
-      { indexName: 'IndexHarvestCompoundDataVault' },
-    );
+    console.log({
+      vault: vault.name,
+    });
+
+    const queryHarvests = mapper.query(HarvestCompoundData, { vault: vault.address });
 
     try {
       for await (const harvest of queryHarvests) {
