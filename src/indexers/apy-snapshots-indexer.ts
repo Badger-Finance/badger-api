@@ -3,7 +3,6 @@ import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { YieldSource } from '../aws/models/yield-source.model';
 import { getSupportedChains } from '../chains/chains.utils';
 import { Chain } from '../chains/config/chain.config';
-import { TOKENS } from '../config/tokens.config';
 import { getVaultPerformance, queryYieldSources } from '../vaults/vaults.utils';
 
 export async function refreshApySnapshots() {
@@ -16,9 +15,6 @@ export async function refreshApySnapshots() {
 }
 
 export async function refreshChainApySnapshots(chain: Chain, vault: VaultDefinitionModel) {
-  if (vault.address !== TOKENS.GRAVI_AURA) {
-    return;
-  }
   try {
     const reportedYieldSources = await getVaultPerformance(chain, vault);
     const currentYieldSources = reportedYieldSources.filter((s) => !isNaN(s.apr) && isFinite(s.apr));
