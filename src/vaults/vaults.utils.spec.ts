@@ -184,37 +184,16 @@ describe('vaults.utils', () => {
   describe('getVaultPerformance', () => {
     describe('no rewards or harvests', () => {
       it('returns no value sources', async () => {
-        jest.spyOn(yieldsUtils, 'loadVaultEventPerformances').mockImplementation(async () => []);
-        const graphMock = jest.spyOn(yieldsUtils, 'loadVaultGraphPerformances');
         jest.spyOn(rewardsUtils, 'getRewardEmission').mockImplementation(async () => []);
         jest.spyOn(rewardsUtils, 'getProtocolValueSources').mockImplementation(async () => []);
-        const result = await getVaultPerformance(chain, MOCK_VAULT_DEFINITION);
-        expect(result).toMatchSnapshot();
-        expect(graphMock.mock.calls.length).toEqual(0);
-      });
-    });
-
-    describe('error getting on chain events', () => {
-      it('attempts to load data from the graph', async () => {
-        jest.spyOn(yieldsUtils, 'loadVaultEventPerformances').mockImplementation(async () => {
-          throw new Error('Expected test error: on chain event failure');
-        });
-        jest
-          .spyOn(yieldsUtils, 'loadVaultGraphPerformances')
-          .mockImplementation(async () => [
-            yieldsUtils.createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Distribution, 'Graph Badger', 10.3),
-          ]);
-        jest.spyOn(rewardsUtils, 'getRewardEmission').mockImplementation(async () => []);
-        jest.spyOn(rewardsUtils, 'getProtocolValueSources').mockImplementation(async () => []);
+        jest.spyOn(yieldsUtils, 'queryVaultYieldSources').mockImplementation(async () => []);
         const result = await getVaultPerformance(chain, MOCK_VAULT_DEFINITION);
         expect(result).toMatchSnapshot();
       });
     });
 
-    describe('evaluate vaults with emissions or third party yield', () => {
-      it('includes protocol reward emissions and additional yield sources', async () => {
-        jest.spyOn(yieldsUtils, 'loadVaultEventPerformances').mockImplementation(async () => []);
-        jest.spyOn(yieldsUtils, 'loadVaultGraphPerformances').mockImplementation(async () => []);
+    describe('available reward, protocol, and persisted yields', () => {
+      it('includes protocol, reward emissions, and yield sources', async () => {
         jest.spyOn(rewardsUtils, 'getRewardEmission').mockImplementation(async () => [
           yieldsUtils.createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Emission, 'Badger', 1.3),
           yieldsUtils.createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Emission, 'Boosted Badger', 6.9, {
@@ -226,6 +205,12 @@ describe('vaults.utils', () => {
           .spyOn(rewardsUtils, 'getProtocolValueSources')
           .mockImplementation(async () => [
             yieldsUtils.createYieldSource(MOCK_VAULT_DEFINITION, SourceType.TradeFee, 'Curve LP Fee', 0.03),
+          ]);
+        jest
+          .spyOn(yieldsUtils, 'queryVaultYieldSources')
+          .mockImplementation(async () => [
+            yieldsUtils.createYieldSource(MOCK_VAULT_DEFINITION, SourceType.PreCompound, VAULT_SOURCE, 10),
+            yieldsUtils.createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Compound, VAULT_SOURCE, 14),
           ]);
         const result = await getVaultPerformance(chain, MOCK_VAULT_DEFINITION);
         expect(result).toMatchSnapshot();

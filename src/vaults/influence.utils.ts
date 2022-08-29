@@ -2,13 +2,13 @@ import { formatBalance, Vault__factory } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
+import { VaultYieldEvent } from '../aws/models/vault-yield-event.model';
 import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
 import { CvxLocker__factory } from '../contracts/factories/CvxLocker__factory';
 import { getBalancerPoolTokens } from '../protocols/strategies/balancer.strategy';
 import { CVX_LOCKER } from '../protocols/strategies/convex.strategy';
 import { YieldType } from './enums/yield-type.enum';
-import { VaultPerformanceItem } from './interfaces/vault-performance-item.interface';
 import { getCachedVault } from './vaults.utils';
 
 // TODO: setup influence configs, voting periods, etc.
@@ -18,16 +18,13 @@ export function isInfluenceVault(address: string) {
   return influenceVaults.has(ethers.utils.getAddress(address));
 }
 
-export function filterPerformanceItems(
-  vault: VaultDefinitionModel,
-  yieldEvents: VaultPerformanceItem[],
-): VaultPerformanceItem[] {
+export function filterPerformanceItems(vault: VaultDefinitionModel, yieldEvents: VaultYieldEvent[]): VaultYieldEvent[] {
   if (!isInfluenceVault(vault.address)) {
     return yieldEvents;
   }
 
   const { address } = vault;
-  let relevantEvents = yieldEvents.slice();
+  let relevantEvents = yieldEvents.slice().sort((a, b) => b.timestamp - a.timestamp);
 
   let processedBadger = false;
   let processedUnderlying = false;

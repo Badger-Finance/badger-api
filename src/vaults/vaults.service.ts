@@ -1,14 +1,14 @@
 import { Currency, VaultDTO, VaultType } from '@badger-dao/sdk';
 import { Service } from '@tsed/common';
 
-import { getDataMapper, getVaultEntityId } from '../aws/dynamodb.utils';
-import { HarvestCompoundData } from '../aws/models/harvest-compound.model';
+import { getVaultEntityId } from '../aws/dynamodb.utils';
 import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { Chain } from '../chains/config/chain.config';
 import { CHART_GRANULARITY_TIMEFRAMES, queryVaultCharts, toChartDataKey } from '../charts/charts.utils';
 import { convert } from '../prices/prices.utils';
 import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interface';
+import { queryVaultHistoricYieldEvents } from './harvests.utils';
 import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
 import { VaultHarvestsMap } from './interfaces/vault-harvest-map';
 import { getCachedVault, queryYieldEstimate, queryYieldProjection } from './vaults.utils';
@@ -40,7 +40,7 @@ export class VaultsService {
       vaults.map(async (vault) => {
         return {
           vault: vault.address,
-          harvests: await this.getVaultHarvests(chain, vault.address),
+          harvests: await this.getVaultHarvests(chain, vault),
         };
       }),
     );
@@ -51,24 +51,16 @@ export class VaultsService {
     }, <VaultHarvestsMap>{});
   }
 
-  async getVaultHarvests(chain: Chain, address: string): Promise<VaultHarvestsExtendedResp[]> {
+  async getVaultHarvests(chain: Chain, vault: VaultDefinitionModel): Promise<VaultHarvestsExtendedResp[]> {
     const vaultHarvests: VaultHarvestsExtendedResp[] = [];
-
-    const mapper = getDataMapper();
-    const vault = await chain.vaults.getVault(address);
-
-    console.log({
-      vault: vault.name,
-    });
-
-    const queryHarvests = mapper.query(HarvestCompoundData, { vault: vault.address });
+    const queryHarvests = await queryVaultHistoricYieldEvents(chain, vault);
 
     try {
       for await (const harvest of queryHarvests) {
         vaultHarvests.push({
-          eventType: harvest.eventType,
-          strategyBalance: harvest.strategyBalance,
-          estimatedApr: harvest.estimatedApr,
+          eventType: harvest.type,
+          strategyBalance: harvest.balance,
+          estimatedApr: harvest.apr,
           timestamp: harvest.timestamp,
           block: harvest.block,
           token: harvest.token,

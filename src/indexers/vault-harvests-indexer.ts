@@ -1,7 +1,6 @@
 import { getDataMapper, getVaultEntityId } from '../aws/dynamodb.utils';
 import { VaultYieldEvent } from '../aws/models/vault-yield-event.model';
 import { getSupportedChains } from '../chains/chains.utils';
-import { TOKENS } from '../config/tokens.config';
 import { loadYieldEvents, queryLastHarvestBlock } from '../vaults/harvests.utils';
 
 export async function updateVaultHarvests() {
@@ -12,9 +11,6 @@ export async function updateVaultHarvests() {
     const vaults = await chain.vaults.all();
 
     for (const vault of vaults) {
-      if (vault.address !== TOKENS.GRAVI_AURA) {
-        continue;
-      }
       try {
         const lastHarvestBlock = await queryLastHarvestBlock(chain, vault);
         const yieldEvents = await loadYieldEvents(chain, vault, lastHarvestBlock);

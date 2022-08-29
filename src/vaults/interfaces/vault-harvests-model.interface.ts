@@ -1,7 +1,7 @@
 import { Description, Example, Property, Title } from '@tsed/schema';
 
 import { TOKENS } from '../../config/tokens.config';
-import { HarvestType } from '../enums/harvest.enum';
+import { YieldType } from '../enums/yield-type.enum';
 import { VaultHarvestsExtendedResp } from './vault-harvest-extended-resp.interface';
 
 export class VaultHarvestsModel implements VaultHarvestsExtendedResp {
@@ -31,9 +31,9 @@ export class VaultHarvestsModel implements VaultHarvestsExtendedResp {
 
   @Title('eventType')
   @Description('Harvest or TreeDistribution')
-  @Example(HarvestType.TreeDistribution)
+  @Example(YieldType.Distribution)
   @Property()
-  public eventType: HarvestType;
+  public eventType: YieldType;
 
   @Title('strategyBalance')
   @Description('balance of strategy on time of harvest')

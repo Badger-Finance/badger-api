@@ -1,47 +1,45 @@
-import { BadgerGraph, gqlGenT, VaultsService } from '@badger-dao/sdk';
-
 import { Chain } from '../chains/config/chain.config';
-import { ChainVaults } from '../chains/vaults/chain.vaults';
-import { TEST_ADDR } from '../test/constants';
-import { setupMockChain } from '../test/mocks.utils';
-import { getVaultHarvestsOnChain } from './harvests.utils';
-import { vaultsGraphSdkMapMock } from './mocks/vaults-graph-sdk-map.mock';
-import { vaultsHarvestsSdkMock } from './mocks/vaults-harvests-sdk.mock';
+import { TOKENS } from '../config/tokens.config';
+import { MOCK_VAULT_DEFINITION, TEST_CURRENT_BLOCK, TEST_CURRENT_TIMESTAMP } from '../test/constants';
+import { mockQuery, setupMockChain } from '../test/mocks.utils';
+import { YieldType } from './enums/yield-type.enum';
+import { queryLastHarvestBlock } from './harvests.utils';
+import { YieldEvent } from './interfaces/yield-event';
 
-describe('vaults.utils', () => {
+// TODO: replace once available from mocks
+export const MOCK_YIELD_EVENT: YieldEvent = {
+  block: TEST_CURRENT_BLOCK,
+  amount: 10,
+  token: TOKENS.GRAVI_AURA,
+  type: YieldType.Distribution,
+  timestamp: TEST_CURRENT_TIMESTAMP,
+  balance: 1_000_000,
+  value: 10_000,
+  earned: 3_500,
+  apr: 230,
+};
+
+describe('harvests.utils', () => {
   let chain: Chain;
 
   beforeEach(() => {
     chain = setupMockChain();
   });
 
-  describe('getVaultHarvestsOnChain', () => {
-    function setupOnChainHarvests() {
-      // eslint-disable-next-line
-      jest.spyOn(VaultsService.prototype, 'listHarvests').mockImplementation(async ({ address }): Promise<any> => {
-        return vaultsHarvestsSdkMock[address];
+  describe('queryLastHarvestBlock', () => {
+    describe('no saved data', () => {
+      it('returns 0', async () => {
+        mockQuery([]);
+        const result = await queryLastHarvestBlock(chain, MOCK_VAULT_DEFINITION);
+        expect(result).toEqual(0);
       });
-      /* eslint-disable @typescript-eslint/ban-ts-comment */
-      jest
-        .spyOn(BadgerGraph.prototype, 'loadSett')
-        .mockImplementation(async ({ id, block }): Promise<gqlGenT.SettQuery> => {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          return vaultsGraphSdkMapMock[`${id.toLowerCase()}-${(block || {}).number || 0}`];
-        });
-    }
-
-    it('returns vaults harvests with apr', async () => {
-      setupOnChainHarvests();
-      expect(await getVaultHarvestsOnChain(chain, TEST_ADDR)).toMatchSnapshot();
     });
-
-    it('returns empty harvests for unknown vault', async () => {
-      setupOnChainHarvests();
-      jest.spyOn(ChainVaults.prototype, 'getVault').mockImplementation(async (_) => {
-        throw new Error('Missing Vault');
+    describe('previously stored harvest data', () => {
+      it('returns last block harvested', async () => {
+        mockQuery([MOCK_YIELD_EVENT]);
+        const result = await queryLastHarvestBlock(chain, MOCK_VAULT_DEFINITION);
+        expect(result).toEqual(TEST_CURRENT_BLOCK);
       });
-      await expect(getVaultHarvestsOnChain(chain, '0x000000000000')).rejects.toThrow(Error);
     });
   });
 });

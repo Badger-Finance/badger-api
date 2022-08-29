@@ -40,17 +40,19 @@ export class VaultsV2Controller {
     return this.vaultService.listVaultHarvests(getOrCreateChain(chain));
   }
 
-  @Get('/harvests/:vault')
+  @Get('/harvests/:address')
   @ContentType('json')
   @Summary('Get harvests on a specific vault')
   @Description('Return full list of vault`s harvests')
   @Returns(200, Array).Of(VaultHarvestsModel)
   @Returns(400).Description('Not a valid chain')
   async getVaultsHarvests(
-    @PathParams('vault') vault: string,
+    @PathParams('address') address: string,
     @QueryParams('chain') chain?: Network,
   ): Promise<VaultHarvestsExtendedResp[]> {
-    return this.vaultService.getVaultHarvests(getOrCreateChain(chain), vault);
+    const targetChain = getOrCreateChain(chain);
+    const vault = await targetChain.vaults.getVault(address);
+    return this.vaultService.getVaultHarvests(targetChain, vault);
   }
 
   @Get('/:vault')

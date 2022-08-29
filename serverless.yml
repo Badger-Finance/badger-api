@@ -456,14 +456,14 @@ functions:
           method: any
           cors: true
 
-  # index-apy-snapshots:
-  #   handler: src/indexers/apy-snapshots-indexer.refreshApySnapshots
-  #   timeout: 180
-  #   events:
-  #     - schedule:
-  #         name: ${self:service}-${self:custom.stage}-index-apy-snapshots
-  #         description: 'index data for sett apy'
-  #         rate: rate(5 minutes)
+  index-apy-snapshots:
+    handler: src/indexers/apy-snapshots-indexer.refreshApySnapshots
+    timeout: 180
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-apy-snapshots
+          description: 'index data for sett apy'
+          rate: rate(2 minutes)
 
   # index-prices:
   #   handler: src/indexers/prices-indexer.indexPrices

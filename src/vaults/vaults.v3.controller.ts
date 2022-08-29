@@ -66,7 +66,9 @@ export class VaultsV3Controller {
       throw new QueryParamError('address');
     }
 
-    return this.vaultService.getVaultHarvests(getOrCreateChain(chain), address);
+    const targetChain = getOrCreateChain(chain);
+    const vault = await targetChain.vaults.getVault(address);
+    return this.vaultService.getVaultHarvests(targetChain, vault);
   }
 
   @Get('/list/harvests')
