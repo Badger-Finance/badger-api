@@ -83,7 +83,8 @@ export async function constructVaultDefinition(
   return Object.assign(new VaultDefinitionModel(), {
     id: getVaultEntityId(chain, vault),
     address,
-    createdAt: Number(createdAt),
+    // can be null for old from registryV1, legacy issue
+    createdAt: !!createdAt ? Number(createdAt) : null,
     chain: chain.network,
     isProduction: 1,
     version: vault.version as VaultVersion,

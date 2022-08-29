@@ -7,7 +7,7 @@ VaultDefinitionModel {
   "bouncer": "none",
   "chain": "ethereum",
   "client": "",
-  "createdAt": NaN,
+  "createdAt": null,
   "depositToken": "0x075b1bb99792c9E1041bA13afEf80C91a1e70fB3",
   "id": "ethereum-0xd04c48A53c111300aD41190D63681ed3dAd998eC",
   "isNew": false,
