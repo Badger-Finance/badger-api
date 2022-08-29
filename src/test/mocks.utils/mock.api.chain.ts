@@ -9,7 +9,8 @@ import BadgerSDK, {
 } from '@badger-dao/sdk';
 import rewardsLoadSchedulesMock from '@badger-dao/sdk-mocks/generated/ethereum/rewards/loadSchedules.json';
 import { JsonRpcProvider, JsonRpcSigner } from '@ethersproject/providers';
-import { mock } from 'jest-mock-extended';
+import { BigNumber } from 'ethers';
+import { any, mock } from 'jest-mock-extended';
 
 import { getVaultEntityId } from '../../aws/dynamodb.utils';
 import { HistoricVaultSnapshotModel } from '../../aws/models/historic-vault-snapshot.model';
@@ -54,6 +55,20 @@ export function setupMockChain(
 
   const mockMulticall = mock<providers.MulticallProvider>();
   mockMulticall.getBlockNumber.calledWith().mockImplementation(async () => TEST_CURRENT_BLOCK);
+  mockMulticall.getBlock.calledWith(any()).mockImplementation(async (_n) => ({
+    hash: '',
+    transactions: [],
+    number: TEST_CURRENT_BLOCK,
+    timestamp: TEST_CURRENT_TIMESTAMP,
+    parentHash: '',
+    nonce: '',
+    difficulty: 0,
+    _difficulty: BigNumber.from('0'),
+    gasLimit: BigNumber.from('0'),
+    gasUsed: BigNumber.from('0'),
+    miner: '',
+    extraData: '',
+  }));
 
   // setup chain sdk
   jest.spyOn(BadgerSDK.prototype, 'getMulticallProvider').mockImplementation((_p) => mockMulticall);

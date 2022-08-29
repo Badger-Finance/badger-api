@@ -188,6 +188,13 @@ async function loadEventYieldData(
   }
 }
 
+/**
+ *
+ * @param chain
+ * @param vault
+ * @param lastHarvestBlock
+ * @returns
+ */
 export async function loadYieldEvents(
   chain: Chain,
   vault: VaultDefinitionModel,
@@ -208,6 +215,12 @@ export async function loadYieldEvents(
   return evaluateYieldItems(chain, vault, yieldItems);
 }
 
+/**
+ *
+ * @param chain
+ * @param vault
+ * @returns
+ */
 export async function queryLastHarvestBlock(chain: Chain, vault: VaultDefinitionModel): Promise<number> {
   const mapper = getDataMapper();
   const id = getVaultEntityId(chain, vault);
@@ -217,6 +230,12 @@ export async function queryLastHarvestBlock(chain: Chain, vault: VaultDefinition
   return 0;
 }
 
+/**
+ *
+ * @param chain
+ * @param vault
+ * @returns
+ */
 export async function queryVaultYieldEvents(chain: Chain, vault: VaultDefinitionModel): Promise<VaultYieldEvent[]> {
   const mapper = getDataMapper();
   const id = getVaultEntityId(chain, vault);
