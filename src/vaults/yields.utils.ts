@@ -394,6 +394,7 @@ async function evaluateYieldEvents(chain: Chain, vault: VaultDefinitionModel): P
       id: '',
       chain: Network.Ethereum,
       vault: vault.address,
+      chainAddress: '',
       timestamp,
       block: targetBlock,
       token: TOKENS.BADGER,

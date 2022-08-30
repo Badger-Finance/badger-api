@@ -19,6 +19,13 @@ export class VaultYieldEvent implements YieldEvent {
   @attribute()
   vault!: string;
 
+  @attribute({
+    indexKeyConfigurations: {
+      IndexYieldDataOnAddress: 'HASH',
+    },
+  })
+  chainAddress!: string;
+
   @attribute()
   block!: number;
 

@@ -20,9 +20,11 @@ export async function updateVaultHarvests() {
           continue;
         }
 
+        const baseId = getVaultEntityId(chain, vault);
         const yieldEventEntities: VaultYieldEvent[] = yieldEvents.map((e) => {
           const yieldEvent: VaultYieldEvent = {
-            id: getVaultEntityId(chain, vault),
+            id: [baseId, e.token, e.type].join('-').replace(/ /g, '-').toLowerCase(),
+            chainAddress: baseId,
             chain: chain.network,
             vault: vault.address,
             ...e,

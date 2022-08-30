@@ -265,14 +265,14 @@ export async function queryLastHarvestBlock(chain: Chain, vault: VaultDefinition
  */
 export async function queryVaultYieldEvents(chain: Chain, vault: VaultDefinitionModel): Promise<VaultYieldEvent[]> {
   const mapper = getDataMapper();
-  const id = getVaultEntityId(chain, vault);
+  const chainAddress = getVaultEntityId(chain, vault);
   const cutoff = Date.now() - VAULT_TWAY_DURATION;
 
   const yieldEvents = [];
   for await (const yieldEvent of mapper.query(
     VaultYieldEvent,
-    { id, timestamp: greaterThanOrEqualTo(cutoff) },
-    { scanIndexForward: false },
+    { chainAddress, timestamp: greaterThanOrEqualTo(cutoff) },
+    { indexName: 'IndexYieldDataOnAddress', scanIndexForward: false },
   )) {
     yieldEvents.push(yieldEvent);
   }
