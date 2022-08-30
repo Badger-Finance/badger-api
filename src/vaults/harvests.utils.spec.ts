@@ -1,39 +1,30 @@
-import { Vault, Vault__factory } from '@badger-dao/sdk';
+import { Vault, Vault__factory,VaultsService } from '@badger-dao/sdk';
 import { BigNumber } from 'ethers';
 
 import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
 import * as pricesUtils from '../prices/prices.utils';
 import { SourceType } from '../rewards/enums/source-type.enum';
-import { MOCK_TOKENS, MOCK_VAULT_DEFINITION, TEST_CURRENT_BLOCK, TEST_CURRENT_TIMESTAMP } from '../test/constants';
+import {
+  MOCK_TOKENS,
+  MOCK_VAULT_DEFINITION,
+  MOCK_YIELD_EVENT,
+  TEST_CURRENT_BLOCK,
+  TEST_CURRENT_TIMESTAMP,
+} from '../test/constants';
 import { mockQuery, setupMockChain } from '../test/mocks.utils';
 import { mockContract } from '../test/mocks.utils/contracts/mock.contract.base';
 import * as tokensUtils from '../tokens/tokens.utils';
 import * as influenceUtils from '../vaults/influence.utils';
 import * as vaultsUtils from '../vaults/vaults.utils';
-import { YieldType } from './enums/yield-type.enum';
 import {
   loadYieldEvents,
   queryLastHarvestBlock,
   queryVaultHistoricYieldEvents,
   queryVaultYieldEvents,
 } from './harvests.utils';
-import { YieldEvent } from './interfaces/yield-event';
 import { VAULT_SOURCE } from './vaults.config';
 import { createYieldSource } from './yields.utils';
-
-// TODO: replace once available from mocks
-export const MOCK_YIELD_EVENT: YieldEvent = {
-  block: TEST_CURRENT_BLOCK,
-  amount: 10,
-  token: TOKENS.GRAVI_AURA,
-  type: YieldType.Distribution,
-  timestamp: TEST_CURRENT_TIMESTAMP,
-  balance: 1_000_000,
-  value: 10_000,
-  earned: 3_500,
-  apr: 230,
-};
 
 describe('harvests.utils', () => {
   let chain: Chain;
@@ -257,6 +248,16 @@ describe('harvests.utils', () => {
 
     describe('requesting an standard vault', () => {
       it('loads yield events from the subgraph', async () => {
+        const result = await loadYieldEvents(chain, MOCK_VAULT_DEFINITION, TEST_CURRENT_BLOCK);
+        expect(result).toMatchSnapshot();
+      });
+    });
+
+    describe('encounters an error requesting an standard vault', () => {
+      it('loads yield events from the subgraph', async () => {
+        jest.spyOn(VaultsService.prototype, 'listHarvests').mockImplementation(async () => {
+          throw new Error('Expected test error: listHarvests');
+        });
         const result = await loadYieldEvents(chain, MOCK_VAULT_DEFINITION, TEST_CURRENT_BLOCK);
         expect(result).toMatchSnapshot();
       });

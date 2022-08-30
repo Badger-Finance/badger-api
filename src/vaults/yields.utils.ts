@@ -464,13 +464,15 @@ export async function queryVaultYieldSources(chain: Chain, vault: VaultDefinitio
 
   const compoundSources = [];
 
-  // create the apr source for harvests
-  const compoundYieldSource = createYieldSource(vault, SourceType.PreCompound, VAULT_SOURCE, compoundApr);
-  compoundSources.push(compoundYieldSource);
+  if (compoundApr > 0) {
+    // create the apr source for harvests
+    const compoundYieldSource = createYieldSource(vault, SourceType.PreCompound, VAULT_SOURCE, compoundApr);
+    compoundSources.push(compoundYieldSource);
 
-  // create the apy source for harvests
-  const compoundedYieldSource = createYieldSource(vault, SourceType.Compound, VAULT_SOURCE, compoundApy);
-  compoundSources.push(compoundedYieldSource);
+    // create the apy source for harvests
+    const compoundedYieldSource = createYieldSource(vault, SourceType.Compound, VAULT_SOURCE, compoundApy);
+    compoundSources.push(compoundedYieldSource);
+  }
 
   const emissionSources = await constructEmissionYieldSources(chain, vault, compoundApr, tokenEmissionAprs);
   return compoundSources.concat(emissionSources);

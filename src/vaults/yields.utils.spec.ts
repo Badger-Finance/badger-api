@@ -1,12 +1,22 @@
 import { ONE_DAY_MS, VaultState } from '@badger-dao/sdk';
 
+import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
 import { SourceType } from '../rewards/enums/source-type.enum';
-import { MOCK_VAULT, MOCK_VAULT_DEFINITION } from '../test/constants';
-import { mockBalance, mockQuery } from '../test/mocks.utils';
+import { MOCK_TOKENS, MOCK_VAULT, MOCK_VAULT_DEFINITION, MOCK_YIELD_EVENT } from '../test/constants';
+import { mockBalance, mockQuery, setupMockChain } from '../test/mocks.utils';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
+import * as tokensUtils from '../tokens/tokens.utils';
+import * as vaultsUtils from '../vaults/vaults.utils';
+import { YieldType } from './enums/yield-type.enum';
 import { VAULT_SOURCE } from './vaults.config';
-import { calculateYield, createYieldSource, getVaultYieldProjection, getYieldSources } from './yields.utils';
+import {
+  calculateYield,
+  createYieldSource,
+  getVaultYieldProjection,
+  getYieldSources,
+  queryVaultYieldSources,
+} from './yields.utils';
 
 describe('yields.utils', () => {
   const baseMockSources = [
@@ -19,6 +29,12 @@ describe('yields.utils', () => {
     createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Distribution, 'Badger', 3),
     createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Distribution, 'Irrelevant', 0.0001),
   ];
+
+  let chain: Chain;
+
+  beforeEach(() => {
+    chain = setupMockChain();
+  });
 
   describe('calculateYield', () => {
     it.each([
@@ -90,6 +106,40 @@ describe('yields.utils', () => {
       };
       const result = getVaultYieldProjection(mockVault, yieldSources, mockYieldEstimate);
       expect(result).toMatchSnapshot();
+    });
+  });
+
+  describe('queryVaultYieldSources', () => {
+    beforeEach(() => {
+      jest
+        .spyOn(tokensUtils, 'getFullTokens')
+        .mockImplementation(async (_, tokens) => Object.fromEntries(tokens.map((t) => [t, MOCK_TOKENS[t]])));
+    });
+
+    describe('vault with no compounding yield', () => {
+      it('contains no compounding vault sources', async () => {
+        mockQuery([MOCK_YIELD_EVENT]);
+        jest
+          .spyOn(tokensUtils, 'getFullTokens')
+          .mockImplementation(async (_, tokens) => Object.fromEntries(tokens.map((t) => [t, MOCK_TOKENS[t]])));
+        const result = await queryVaultYieldSources(chain, MOCK_VAULT_DEFINITION);
+        expect(result).toMatchSnapshot();
+      });
+    });
+
+    describe('vault with compounding yield', () => {
+      it('contains no compounding vault sources', async () => {
+        jest
+          .spyOn(vaultsUtils, 'queryYieldSources')
+          .mockImplementation(async (v) => [createYieldSource(v, SourceType.PreCompound, VAULT_SOURCE, 3)]);
+        const mockEvent = JSON.parse(JSON.stringify(MOCK_YIELD_EVENT));
+        mockEvent.type = YieldType.Harvest;
+        mockQuery([mockEvent]);
+        const mockDefinition = JSON.parse(JSON.stringify(MOCK_VAULT_DEFINITION));
+        mockDefinition.address = TOKENS.GRAVI_AURA;
+        const result = await queryVaultYieldSources(chain, mockDefinition);
+        expect(result).toMatchSnapshot();
+      });
     });
   });
 });

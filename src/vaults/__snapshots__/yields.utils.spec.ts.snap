@@ -291,3 +291,73 @@ Object {
   ],
 }
 `;
+
+exports[`yields.utils queryVaultYieldSources vault with compounding yield contains no compounding vault sources 1`] = `
+Array [
+  YieldSource {
+    "address": "0xBA485b556399123261a5F9c95d413B4f93107407",
+    "apr": 230,
+    "boostable": false,
+    "chain": "ethereum",
+    "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_precompound_vault_compounding_flat",
+    "maxApr": 230,
+    "minApr": 230,
+    "name": "Vault Compounding",
+    "type": "precompound",
+  },
+  YieldSource {
+    "address": "0xBA485b556399123261a5F9c95d413B4f93107407",
+    "apr": 800.4273964093828,
+    "boostable": false,
+    "chain": "ethereum",
+    "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_compound_vault_compounding_flat",
+    "maxApr": 800.4273964093828,
+    "minApr": 800.4273964093828,
+    "name": "Vault Compounding",
+    "type": "compound",
+  },
+  YieldSource {
+    "address": "0xBA485b556399123261a5F9c95d413B4f93107407",
+    "apr": 72.2,
+    "boostable": false,
+    "chain": "ethereum",
+    "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_distribution_badger_flat",
+    "maxApr": 72.2,
+    "minApr": 72.2,
+    "name": "Badger",
+    "type": "distribution",
+  },
+  YieldSource {
+    "address": "0xBA485b556399123261a5F9c95d413B4f93107407",
+    "apr": 0.2151821909384493,
+    "boostable": false,
+    "chain": "ethereum",
+    "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_flywheel_vault_flywheel_flat",
+    "maxApr": 0.2151821909384493,
+    "minApr": 0.2151821909384493,
+    "name": "Vault Flywheel",
+    "type": "flywheel",
+  },
+]
+`;
+
+exports[`yields.utils queryVaultYieldSources vault with no compounding yield contains no compounding vault sources 1`] = `
+Array [
+  YieldSource {
+    "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "apr": 230,
+    "boostable": false,
+    "chain": "ethereum",
+    "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_distribution_gravitationally_bound_aura_flat",
+    "maxApr": 230,
+    "minApr": 230,
+    "name": "Gravitationally Bound AURA",
+    "type": "distribution",
+  },
+]
+`;

@@ -1,9 +1,8 @@
 import { getVaultEntityId } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
-import { MOCK_VAULT_DEFINITION, TEST_CURRENT_BLOCK } from '../test/constants';
+import { MOCK_VAULT_DEFINITION, MOCK_YIELD_EVENT, TEST_CURRENT_BLOCK } from '../test/constants';
 import { mockBatchPut, setupMockChain } from '../test/mocks.utils';
 import * as harvestsUtils from '../vaults/harvests.utils';
-import { MOCK_YIELD_EVENT } from '../vaults/harvests.utils.spec';
 import { updateVaultHarvests } from './vault-harvests-indexer';
 
 describe('vault-harvests-indexer', () => {

@@ -1,5 +1,98 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`harvests.utils loadYieldEvents encounters an error requesting an standard vault loads yield events from the subgraph 1`] = `
+Array [
+  Object {
+    "amount": 18087.137228369163,
+    "apr": 43.08283925122179,
+    "balance": 10000000,
+    "block": 15396257,
+    "earned": 1171558139.6931558,
+    "timestamp": 1661253900000,
+    "token": "0xfd05D3C7fe2924020620A8bE4961bBaA747e6305",
+    "type": "Tree Distribution",
+    "value": 66170000000,
+  },
+  Object {
+    "amount": 8273.444229204368,
+    "apr": 4.084825017457429,
+    "balance": 10000000,
+    "block": 15396257,
+    "earned": 111079262.22129785,
+    "timestamp": 1661253900000,
+    "token": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+    "type": "Tree Distribution",
+    "value": 66170000000,
+  },
+  Object {
+    "amount": 4261.975371596002,
+    "apr": 1.7384462495527824,
+    "balance": 10000000,
+    "block": 15388629,
+    "earned": 47273830.821742855,
+    "timestamp": 1661148573000,
+    "token": "0x2B5455aac8d64C14786c3a29858E43b5945819C0",
+    "type": "Tree Distribution",
+    "value": 66170000000,
+  },
+  Object {
+    "amount": 4223.102994638644,
+    "apr": 1.7225903301631276,
+    "balance": 10000000,
+    "block": 15363244,
+    "earned": 46842658.416531846,
+    "timestamp": 1660800880000,
+    "token": "0x2B5455aac8d64C14786c3a29858E43b5945819C0",
+    "type": "Tree Distribution",
+    "value": 66170000000,
+  },
+  Object {
+    "amount": 4285.530143667973,
+    "apr": 1.7480541664451443,
+    "balance": 10000000,
+    "block": 15337891,
+    "earned": 47535100.35356516,
+    "timestamp": 1660455256000,
+    "token": "0x2B5455aac8d64C14786c3a29858E43b5945819C0",
+    "type": "Tree Distribution",
+    "value": 66170000000,
+  },
+  Object {
+    "amount": 18705.595517466125,
+    "apr": 44.55598222107543,
+    "balance": 10000000,
+    "block": 15314213,
+    "earned": 1211617538.4528334,
+    "timestamp": 1660132736000,
+    "token": "0xfd05D3C7fe2924020620A8bE4961bBaA747e6305",
+    "type": "Tree Distribution",
+    "value": 66170000000,
+  },
+  Object {
+    "amount": 8418.142660217834,
+    "apr": 4.156266578506966,
+    "balance": 10000000,
+    "block": 15314213,
+    "earned": 113021983.35608464,
+    "timestamp": 1660132736000,
+    "token": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+    "type": "Tree Distribution",
+    "value": 66170000000,
+  },
+  Object {
+    "amount": 5603.2033092929305,
+    "apr": 2.285528875516314,
+    "balance": 10000000,
+    "block": 15312417,
+    "earned": 62150731.10667718,
+    "timestamp": 1660107820000,
+    "token": "0x2B5455aac8d64C14786c3a29858E43b5945819C0",
+    "type": "Tree Distribution",
+    "value": 66170000000,
+  },
+]
+`;
+
 exports[`harvests.utils loadYieldEvents requesting an influence vault loads yield events from the subgraph 1`] = `
 Array [
   Object {

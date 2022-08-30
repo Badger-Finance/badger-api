@@ -59,6 +59,11 @@ function constructGraphVaultData(
   });
 }
 
+/**
+ *
+ * @param data
+ * @returns
+ */
 function constructYieldItems(data: VaultHarvestData[]): VaultYieldItem[] {
   const recentHarvests = data.sort((a, b) => b.timestamp - a.timestamp);
   const allHarvests = recentHarvests.flatMap((h) => h.harvests.map((h) => ({ ...h, type: YieldType.Harvest })));
@@ -71,6 +76,13 @@ function constructYieldItems(data: VaultHarvestData[]): VaultYieldItem[] {
     .sort((a, b) => b.timestamp - a.timestamp);
 }
 
+/**
+ *
+ * @param chain
+ * @param vault
+ * @param block
+ * @returns
+ */
 async function getVaultBalance(chain: Chain, vault: VaultDefinitionModel, block: number): Promise<number> {
   const sdk = await chain.getSdk();
 
@@ -135,6 +147,13 @@ async function evaluateYieldItems(
   return yieldEvents;
 }
 
+/**
+ *
+ * @param chain
+ * @param vault
+ * @param cutoff
+ * @returns
+ */
 async function loadGraphYieldData(
   chain: Chain,
   vault: VaultDefinitionModel,
@@ -167,6 +186,14 @@ async function loadGraphYieldData(
   return constructGraphVaultData(vault, settHarvests, badgerTreeDistributions);
 }
 
+/**
+ *
+ * @param chain
+ * @param vault
+ * @param lastHarvestBlock
+ * @param cutoff
+ * @returns
+ */
 async function loadEventYieldData(
   chain: Chain,
   vault: VaultDefinitionModel,
@@ -252,14 +279,20 @@ export async function queryVaultYieldEvents(chain: Chain, vault: VaultDefinition
   return yieldEvents;
 }
 
-// TODO: construct a new paginated 'all harvests' table
-// allow for page queries, timestamp based page queries
-// all pages will be the same size, new pages are only added after x entries to a given page
-// we can follow similar to the charting pattern with this data
+/**
+ *
+ * @param chain
+ * @param vault
+ * @returns
+ */
 export async function queryVaultHistoricYieldEvents(
   chain: Chain,
   vault: VaultDefinitionModel,
 ): Promise<VaultYieldEvent[]> {
+  // TODO: construct a new paginated 'all harvests' table
+  // allow for page queries, timestamp based page queries
+  // all pages will be the same size, new pages are only added after x entries to a given page
+  // we can follow similar to the charting pattern with this data
   const mapper = getDataMapper();
   const id = getVaultEntityId(chain, vault);
 
