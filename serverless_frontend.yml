@@ -510,14 +510,14 @@ functions:
           description: 'index yield estimate data for supported vaults'
           rate: rate(5 minutes)
 
-  index-harvest-compound:
-    handler: src/indexers/harvest-compound-indexer.indexVaultsHarvestsCompund
+  index-vault-yield-events:
+    handler: src/indexers/vault-harvests-indexer.updateVaultHarvests
     timeout: 360
     events:
       - schedule:
-          name: ${self:service}-${self:custom.stage}-index-harvest-compound
+          name: ${self:service}-${self:custom.stage}-index-vault-harvests
           description: 'index onchain harvests for all vaults'
-          rate: rate(2 hours)
+          rate: rate(10 minutes)
 
   index-leaderboard:
     handler: src/indexers/leaderboard-indexer.indexBoostLeaderBoard
