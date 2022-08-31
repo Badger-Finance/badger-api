@@ -1,4 +1,4 @@
-import { Vault, Vault__factory,VaultsService } from '@badger-dao/sdk';
+import { Vault, Vault__factory, VaultsService } from '@badger-dao/sdk';
 import { BigNumber } from 'ethers';
 
 import { Chain } from '../chains/config/chain.config';
@@ -18,6 +18,7 @@ import * as tokensUtils from '../tokens/tokens.utils';
 import * as influenceUtils from '../vaults/influence.utils';
 import * as vaultsUtils from '../vaults/vaults.utils';
 import {
+  HARVEST_SCAN_START_BLOCK,
   loadYieldEvents,
   queryLastHarvestBlock,
   queryVaultHistoricYieldEvents,
@@ -278,7 +279,7 @@ describe('harvests.utils', () => {
       it('returns 0', async () => {
         mockQuery([]);
         const result = await queryLastHarvestBlock(chain, MOCK_VAULT_DEFINITION);
-        expect(result).toEqual(0);
+        expect(result).toEqual(HARVEST_SCAN_START_BLOCK);
       });
     });
     describe('previously stored harvest data', () => {

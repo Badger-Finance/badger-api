@@ -17,6 +17,10 @@ import { YieldEvent } from './interfaces/yield-event';
 import { VAULT_TWAY_DURATION } from './vaults.config';
 import { calculateYield } from './yields.utils';
 
+// (Oct-06-2020 04:17:04 AM +UTC)
+export const HARVEST_SCAN_START_BLOCK = 11_000_000;
+export const HARVEST_SCAN_BLOCK_INCREMENT = 500_000;
+
 /**
  * Modify subgraph response to match on chain event data allowing it to fit into our estimation functions.
  * @param vault vault requesting graph data transformation
@@ -208,7 +212,7 @@ async function loadEventYieldData(
       timestamp_gte: cutoff,
       version,
       startBlock: lastHarvestBlock,
-      endBlock: lastHarvestBlock + 500_000,
+      endBlock: lastHarvestBlock + HARVEST_SCAN_BLOCK_INCREMENT,
     });
     return data;
   } catch {
@@ -251,11 +255,15 @@ export async function loadYieldEvents(
  */
 export async function queryLastHarvestBlock(chain: Chain, vault: VaultDefinitionModel): Promise<number> {
   const mapper = getDataMapper();
-  const id = getVaultEntityId(chain, vault);
-  for await (const yieldEvent of mapper.query(VaultYieldEvent, { id }, { limit: 1, scanIndexForward: false })) {
+  const chainAddress = getVaultEntityId(chain, vault);
+  for await (const yieldEvent of mapper.query(
+    VaultYieldEvent,
+    { chainAddress },
+    { limit: 1, indexName: 'IndexYieldDataOnAddress', scanIndexForward: false },
+  )) {
     return yieldEvent.block;
   }
-  return 0;
+  return HARVEST_SCAN_START_BLOCK;
 }
 
 /**
