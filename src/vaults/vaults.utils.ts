@@ -26,7 +26,7 @@ import { convert, queryPrice } from '../prices/prices.utils';
 import { getProtocolValueSources, getRewardEmission } from '../rewards/rewards.utils';
 import { getFullToken, getVaultTokens } from '../tokens/tokens.utils';
 import { VaultStrategy } from './interfaces/vault-strategy.interface';
-import { aggregateSources, loadVaultEventPerformances, loadVaultGraphPerformances } from './yields.utils';
+import { aggregateSources, queryVaultYieldSources } from './yields.utils';
 
 export async function defaultVault(chain: Chain, vault: VaultDefinitionModel): Promise<VaultDTO> {
   const { state, bouncer, behavior, version, protocol, name, depositToken, address } = vault;
@@ -229,16 +229,11 @@ export async function getVaultTokenPrice(chain: Chain, address: string): Promise
  * @returns Value source array describing vault performance
  */
 export async function getVaultPerformance(chain: Chain, vault: VaultDefinitionModel): Promise<YieldSource[]> {
-  const [rewardEmissions, protocol] = await Promise.all([
+  const [rewardEmissions, protocol, vaultSources] = await Promise.all([
     getRewardEmission(chain, vault),
     getProtocolValueSources(chain, vault),
+    queryVaultYieldSources(chain, vault),
   ]);
-  let vaultSources: YieldSource[] = [];
-  try {
-    vaultSources = await loadVaultEventPerformances(chain, vault);
-  } catch {
-    vaultSources = await loadVaultGraphPerformances(chain, vault);
-  }
   // handle aggregation of various sources - this unfortunately loses the ddb schemas and need to be reassigned
   const aggregatedSources = aggregateSources([...vaultSources, ...rewardEmissions, ...protocol], (s) => s.id);
   return aggregatedSources.map((s) => Object.assign(new YieldSource(), s));

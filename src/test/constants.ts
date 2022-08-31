@@ -21,11 +21,14 @@ import { BigNumber } from 'ethers';
 
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { Stage } from '../config/enums/stage.enum';
+import { TOKENS } from '../config/tokens.config';
 import { TokenFullMap } from '../tokens/interfaces/token-full.interface';
+import { YieldType } from '../vaults/enums/yield-type.enum';
 import { VaultHarvestsExtendedResp } from '../vaults/interfaces/vault-harvest-extended-resp.interface';
+import { YieldEvent } from '../vaults/interfaces/yield-event';
 
-export const TEST_TOKEN = '0x3472A5A71965499acd81997a54BBA8D852C6E53d';
-export const TEST_ADDR = '0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28';
+export const TEST_TOKEN = TOKENS.BADGER;
+export const TEST_ADDR = TOKENS.BBADGER;
 export const TEST_CURRENT_TIMESTAMP = 1660223160457;
 export const TEST_CURRENT_BLOCK = 13_500_500;
 export const TEST_DEFAULT_GAS_PRICE = '1000000';
@@ -112,3 +115,16 @@ mockListHarvestsCopy.data.forEach((d) => {
 export const MOCK_HARVESTS: { data: VaultHarvestData[] } = mockListHarvestsCopy;
 
 export const MOCK_PROTOCOL_METRICS = mockMetrics;
+
+// TODO: replace once available from mocks
+export const MOCK_YIELD_EVENT: YieldEvent = {
+  block: TEST_CURRENT_BLOCK,
+  amount: 10,
+  token: TOKENS.GRAVI_AURA,
+  type: YieldType.Distribution,
+  timestamp: TEST_CURRENT_TIMESTAMP,
+  balance: 1_000_000,
+  value: 10_000,
+  earned: 3_500,
+  apr: 230,
+};

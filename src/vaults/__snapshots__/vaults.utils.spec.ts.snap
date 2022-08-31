@@ -1,24 +1,31 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`vaults.utils getVaultPerformance error getting on chain events attempts to load data from the graph 1`] = `
+exports[`vaults.utils getVaultPerformance available reward, protocol, and persisted yields includes protocol, reward emissions, and yield sources 1`] = `
 Array [
   YieldSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "apr": 10.3,
+    "apr": 10,
     "boostable": false,
     "chain": "ethereum",
     "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_distribution_graph_badger_flat",
-    "maxApr": 10.3,
-    "minApr": 10.3,
-    "name": "Graph Badger",
-    "type": "distribution",
+    "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_precompound_vault_compounding_flat",
+    "maxApr": 10,
+    "minApr": 10,
+    "name": "Vault Compounding",
+    "type": "precompound",
   },
-]
-`;
-
-exports[`vaults.utils getVaultPerformance evaluate vaults with emissions or third party yield includes protocol reward emissions and additional yield sources 1`] = `
-Array [
+  YieldSource {
+    "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "apr": 14,
+    "boostable": false,
+    "chain": "ethereum",
+    "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_compound_vault_compounding_flat",
+    "maxApr": 14,
+    "minApr": 14,
+    "name": "Vault Compounding",
+    "type": "compound",
+  },
   YieldSource {
     "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
     "apr": 1.3,

@@ -48,7 +48,7 @@ custom:
     VAULT_BALANCES_DATA: vault-balances-${self:custom.stage}
     TOKEN_PRICE_DATA: token-prices-${self:custom.stage}
     TOKEN_INFORMATION_DATA: token-information-${self:custom.stage}
-    HARVEST_COMPOUND_DATA: harvest-compound-data-${self:custom.stage}
+    VAULT_YIELD_DATA: vault-yield-data-${self:custom.stage}
     ACCOUNT_DATA: accounts-${self:custom.stage}
     METADATA_DATA: metadata-${self:custom.stage}
     METRICS_SNAPSHOTS_DATA: metrics-snapshots-${self:custom.stage}
@@ -118,7 +118,7 @@ provider:
     TOKEN_PRICE_DATA: ${self:custom.table.TOKEN_PRICE_DATA}
     TOKEN_INFORMATION_DATA: ${self:custom.table.TOKEN_INFORMATION_DATA}
     YIELD_ESTIMATES_DATA: ${self:custom.table.YIELD_ESTIMATES_DATA}
-    HARVEST_COMPOUND_DATA: ${self:custom.table.HARVEST_COMPOUND_DATA}
+    VAULT_YIELD_DATA: ${self:custom.table.VAULT_YIELD_DATA}
     ACCOUNT_DATA: ${self:custom.table.ACCOUNT_DATA}
     METADATA_DATA: ${self:custom.table.METADATA_DATA}
     METRICS_SNAPSHOTS_DATA: ${self:custom.table.METRICS_SNAPSHOTS_DATA}
@@ -369,34 +369,30 @@ resources:
           - AttributeName: 'vault'
             AttributeType: 'S'
 
-    harvestCompoundDataTable:
+    vaultYieldDataTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:custom.table.HARVEST_COMPOUND_DATA}
+        TableName: ${self:custom.table.VAULT_YIELD_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
-          - AttributeName: 'vault'
+          - AttributeName: 'id'
             KeyType: 'HASH'
           - AttributeName: 'timestamp'
             KeyType: 'RANGE'
         AttributeDefinitions:
-          - AttributeName: 'vault'
+          - AttributeName: 'id'
             AttributeType: 'S'
           - AttributeName: 'timestamp'
             AttributeType: 'N'
-          - AttributeName: 'block'
-            AttributeType: 'N'
+          - AttributeName: 'chainAddress'
+            AttributeType: 'S'
         GlobalSecondaryIndexes:
-          - IndexName: IndexHarvestCompoundDataBlock
+          - IndexName: IndexYieldDataOnAddress
             KeySchema:
-              - AttributeName: 'block'
+              - AttributeName: chainAddress
                 KeyType: 'HASH'
-            Projection:
-              ProjectionType: ALL
-          - IndexName: IndexHarvestCompoundDataVault
-            KeySchema:
-              - AttributeName: 'vault'
-                KeyType: 'HASH'
+              - AttributeName: 'timestamp'
+                KeyType: 'RANGE'
             Projection:
               ProjectionType: ALL
 
