@@ -1,164 +1,305 @@
-import {
-  formatBalance,
-  HarvestType,
-  ListHarvestOptions,
-  ONE_YEAR_SECONDS,
-  VaultHarvestData,
-  VaultPerformanceEvent,
-} from '@badger-dao/sdk';
-import { BigNumber } from 'ethers';
+import { greaterThanOrEqualTo } from '@aws/dynamodb-expressions';
+import { formatBalance, gqlGenT, keyBy, Vault__factory, VaultHarvestData } from '@badger-dao/sdk';
+import { BadgerTreeDistribution_OrderBy, SettHarvest_OrderBy } from '@badger-dao/sdk/lib/graphql/generated/badger';
+import { BigNumber, ethers } from 'ethers';
 
-import { getDataMapper } from '../aws/dynamodb.utils';
-import { HarvestCompoundData } from '../aws/models/harvest-compound.model';
+import { getDataMapper, getVaultEntityId } from '../aws/dynamodb.utils';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
+import { VaultYieldEvent } from '../aws/models/vault-yield-event.model';
 import { Chain } from '../chains/config/chain.config';
+import { OrderDirection } from '../graphql/generated/balancer';
+import { queryPriceAtTimestamp } from '../prices/prices.utils';
 import { getFullToken } from '../tokens/tokens.utils';
-import { Nullable } from '../utils/types.utils';
-import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
+import { YieldType } from './enums/yield-type.enum';
+import { getInfuelnceVaultYieldBalance, isInfluenceVault } from './influence.utils';
+import { VaultYieldItem } from './interfaces/vault-yield-item.interface';
+import { YieldEvent } from './interfaces/yield-event';
+import { VAULT_TWAY_DURATION } from './vaults.config';
+import { calculateYield } from './yields.utils';
 
-export async function estimateHarvestEventApr(
-  chain: Chain,
-  token: VaultPerformanceEvent['token'],
-  start: number,
-  end: number,
-  amount: VaultPerformanceEvent['amount'],
-  balance: BigNumber,
-): Promise<number> {
-  const duration = end - start;
-
-  const depositToken = await getFullToken(chain, token);
-
-  const fmtBalance = formatBalance(balance, depositToken.decimals);
-
-  const totalHarvestedTokens = formatBalance(amount || BigNumber.from(0), depositToken.decimals);
-  const durationScalar = ONE_YEAR_SECONDS / duration;
-
-  const compoundApr = (totalHarvestedTokens / fmtBalance) * durationScalar * 100;
-
-  return parseFloat(compoundApr.toFixed(2));
-}
-
-export async function getVaultHarvestsOnChain(
-  chain: Chain,
-  address: VaultDefinitionModel['address'],
-  startFromBlock: Nullable<number> = null,
-): Promise<VaultHarvestsExtendedResp[]> {
-  const vaultHarvests: VaultHarvestsExtendedResp[] = [];
-
-  const sdk = await chain.getSdk();
-  const { version, depositToken } = await chain.vaults.getVault(address);
-
-  let sdkVaultHarvestsResp: {
-    data: VaultHarvestData[];
-  } = { data: [] };
-
-  try {
-    const listHarvestsArgs: ListHarvestOptions = {
-      address,
-      version,
+/**
+ * Modify subgraph response to match on chain event data allowing it to fit into our estimation functions.
+ * @param vault vault requesting graph data transformation
+ * @param harvests harvests data retrieved from the graph
+ * @param distributions distribution data retrieved from the graph
+ * @returns vault harvest data in the same form as delivered via event logs
+ */
+function constructGraphVaultData(
+  vault: VaultDefinitionModel,
+  harvests: gqlGenT.SettHarvestsQuery['settHarvests'],
+  distributions: gqlGenT.BadgerTreeDistributionsQuery['badgerTreeDistributions'],
+): VaultHarvestData[] {
+  const harvestsByTimestamp = keyBy(harvests, (harvest) => harvest.timestamp);
+  const treeDistributionsByTimestamp = keyBy(distributions, (distribution) => distribution.timestamp);
+  const timestamps = Array.from(
+    new Set([...harvestsByTimestamp.keys(), ...treeDistributionsByTimestamp.keys()]).values(),
+  );
+  return timestamps.map((t) => {
+    const timestamp = Number(t);
+    const currentHarvests = harvestsByTimestamp.get(timestamp) ?? [];
+    const currentDistributions = treeDistributionsByTimestamp.get(timestamp) ?? [];
+    return {
+      timestamp,
+      harvests: currentHarvests.map((h) => ({
+        timestamp,
+        block: Number(h.blockNumber),
+        token: vault.depositToken,
+        amount: h.amount,
+      })),
+      treeDistributions: currentDistributions.map((d) => {
+        const tokenAddress = d.token.id.startsWith('0x0x') ? d.token.id.slice(2) : d.token.id;
+        return {
+          timestamp,
+          block: Number(d.blockNumber),
+          token: ethers.utils.getAddress(tokenAddress),
+          amount: d.amount,
+        };
+      }),
     };
-
-    if (startFromBlock) listHarvestsArgs.startBlock = startFromBlock;
-
-    sdkVaultHarvestsResp = await sdk.vaults.listHarvests(listHarvestsArgs);
-  } catch (e) {
-    console.warn(`Failed to get harvests list ${e}`);
-  }
-
-  if (!sdkVaultHarvestsResp || sdkVaultHarvestsResp?.data?.length === 0) {
-    return vaultHarvests;
-  }
-
-  const sdkVaultHarvests = sdkVaultHarvestsResp.data;
-
-  const harvestsStartEndMap: Record<string, number> = {};
-
-  const _extend_harvests_data = async (harvestsList: VaultPerformanceEvent[], eventType: HarvestType) => {
-    if (!harvestsList || harvestsList?.length === 0) return;
-
-    for (let i = 0; i < harvestsList.length; i++) {
-      const harvest = harvestsList[i];
-
-      const vaultGraph = await sdk.graph.loadSett({
-        id: address.toLowerCase(),
-        block: { number: harvest.block },
-      });
-
-      const harvestToken = harvest.token || depositToken;
-
-      const depositTokenInfo = await getFullToken(chain, harvestToken);
-
-      const harvestAmount = formatBalance(harvest.amount || BigNumber.from(0), depositTokenInfo.decimals);
-
-      const extendedHarvest = {
-        ...harvest,
-        token: harvestToken,
-        amount: harvestAmount,
-        eventType,
-        strategyBalance: 0,
-        estimatedApr: 0,
-      };
-
-      if (vaultGraph?.sett) {
-        const balance = BigNumber.from(vaultGraph.sett?.strategy?.balance || vaultGraph.sett.balance || 0);
-
-        extendedHarvest.strategyBalance = formatBalance(balance, depositTokenInfo.decimals);
-
-        if (i === harvestsList.length - 1 && eventType === HarvestType.Harvest) {
-          vaultHarvests.push(extendedHarvest);
-          continue;
-        }
-
-        const startOfHarvest = harvest.timestamp;
-        let endOfCurrentHarvest: Nullable<number>;
-
-        if (eventType === HarvestType.Harvest) {
-          endOfCurrentHarvest = harvestsList[i + 1].timestamp;
-          harvestsStartEndMap[`${startOfHarvest}`] = endOfCurrentHarvest;
-        } else if (eventType === HarvestType.TreeDistribution) {
-          endOfCurrentHarvest = harvestsStartEndMap[`${harvest.timestamp}`];
-        }
-
-        if (endOfCurrentHarvest) {
-          extendedHarvest.estimatedApr = await estimateHarvestEventApr(
-            chain,
-            harvestToken,
-            startOfHarvest,
-            endOfCurrentHarvest,
-            harvest.amount,
-            balance,
-          );
-        }
-      }
-
-      vaultHarvests.push(extendedHarvest);
-    }
-  };
-
-  const allHarvests = sdkVaultHarvests.flatMap((h) => h.harvests).sort((a, b) => a.timestamp - b.timestamp);
-  const allTreeDistributions = sdkVaultHarvests
-    .flatMap((h) => h.treeDistributions)
-    .sort((a, b) => a.timestamp - b.timestamp);
-
-  await _extend_harvests_data(allHarvests, HarvestType.Harvest);
-  await _extend_harvests_data(allTreeDistributions, HarvestType.TreeDistribution);
-
-  return vaultHarvests;
+  });
 }
 
-export async function getLastCompoundHarvest(vault: string): Promise<Nullable<HarvestCompoundData>> {
-  const mapper = getDataMapper();
-  const query = mapper.query(HarvestCompoundData, { vault }, { limit: 1, scanIndexForward: false });
+/**
+ *
+ * @param data
+ * @returns
+ */
+function constructYieldItems(data: VaultHarvestData[]): VaultYieldItem[] {
+  const recentHarvests = data.sort((a, b) => b.timestamp - a.timestamp);
+  const allHarvests = recentHarvests.flatMap((h) => h.harvests.map((h) => ({ ...h, type: YieldType.Harvest })));
+  const allDistributions = recentHarvests.flatMap((h) =>
+    h.treeDistributions.map((d) => ({ ...d, type: YieldType.Distribution })),
+  );
+  return allHarvests
+    .concat(allDistributions)
+    .filter((e) => BigNumber.from(e.amount).gt(ethers.constants.Zero))
+    .sort((a, b) => b.timestamp - a.timestamp);
+}
 
-  let lastHarvest = null;
+/**
+ *
+ * @param chain
+ * @param vault
+ * @param block
+ * @returns
+ */
+async function getVaultBalance(chain: Chain, vault: VaultDefinitionModel, block: number): Promise<number> {
+  const sdk = await chain.getSdk();
 
-  try {
-    for await (const harvest of query) {
-      lastHarvest = harvest;
-    }
-  } catch (e) {
-    console.error(`Failed to get compound harvest from ddb for vault: ${vault}; ${e}`);
+  let balance = 0;
+  if (isInfluenceVault(vault.address)) {
+    balance = await getInfuelnceVaultYieldBalance(chain, vault, block);
+  } else {
+    const vaultContract = Vault__factory.connect(vault.address, sdk.provider);
+    const totalSupply = await vaultContract.totalSupply({ blockTag: block });
+    balance = formatBalance(totalSupply);
   }
 
-  return lastHarvest;
+  return balance;
+}
+
+/**
+ * Evaluate yield events to derivate base apr, and apy as well as apr of any emitted tokens.
+ * @param chain network the vault is deployed on
+ * @param vault vault requested yield event evaluation
+ * @param yieldEvents events sourced from either on chain or the graph
+ * @returns yield summary providing the base information for construction of yield sources
+ */
+async function evaluateYieldItems(
+  chain: Chain,
+  vault: VaultDefinitionModel,
+  yieldItems: VaultYieldItem[],
+): Promise<YieldEvent[]> {
+  const yieldEvents: YieldEvent[] = [];
+  const tokenEmissionAprs = new Map<string, number>();
+  for (const item of yieldItems) {
+    const block = item.block;
+    const token = await getFullToken(chain, item.token);
+    const amount = formatBalance(item.amount, token.decimals);
+    const { price } = await queryPriceAtTimestamp(token.address, item.timestamp * 1000);
+
+    const tokenEarned = price * amount;
+
+    const balance = await getVaultBalance(chain, vault, item.block);
+    const { price: vaultPrice } = await queryPriceAtTimestamp(vault.address, item.timestamp * 1000);
+    const vaultPrincipal = vaultPrice * balance;
+
+    const eventApr = calculateYield(vaultPrincipal, tokenEarned, VAULT_TWAY_DURATION);
+    const yieldEvent: YieldEvent = {
+      block,
+      timestamp: item.timestamp * 1000,
+      amount,
+      token: token.address,
+      type: item.type,
+      value: vaultPrincipal,
+      balance,
+      earned: tokenEarned,
+      apr: eventApr,
+    };
+    yieldEvents.push(yieldEvent);
+
+    if (item.type === YieldType.Distribution) {
+      const entry = tokenEmissionAprs.get(token.address) ?? 0;
+      tokenEmissionAprs.set(token.address, entry + eventApr);
+    }
+  }
+
+  return yieldEvents;
+}
+
+/**
+ *
+ * @param chain
+ * @param vault
+ * @param cutoff
+ * @returns
+ */
+async function loadGraphYieldData(
+  chain: Chain,
+  vault: VaultDefinitionModel,
+  cutoff: number,
+): Promise<VaultHarvestData[]> {
+  const { graph } = await chain.getSdk();
+  const { address } = vault;
+  const [vaultHarvests, treeDistributions] = await Promise.all([
+    graph.loadSettHarvests({
+      first: 100,
+      where: {
+        sett: address.toLowerCase(),
+        timestamp_gt: cutoff,
+      },
+      orderBy: SettHarvest_OrderBy.Timestamp,
+      orderDirection: OrderDirection.Asc,
+    }),
+    graph.loadBadgerTreeDistributions({
+      first: 100,
+      where: {
+        sett: address.toLowerCase(),
+        timestamp_gt: cutoff,
+      },
+      orderBy: BadgerTreeDistribution_OrderBy.Timestamp,
+      orderDirection: OrderDirection.Asc,
+    }),
+  ]);
+  const { settHarvests } = vaultHarvests;
+  const { badgerTreeDistributions } = treeDistributions;
+  return constructGraphVaultData(vault, settHarvests, badgerTreeDistributions);
+}
+
+/**
+ *
+ * @param chain
+ * @param vault
+ * @param lastHarvestBlock
+ * @param cutoff
+ * @returns
+ */
+async function loadEventYieldData(
+  chain: Chain,
+  vault: VaultDefinitionModel,
+  lastHarvestBlock: number,
+  cutoff: number,
+): Promise<VaultHarvestData[]> {
+  const { vaults } = await chain.getSdk();
+  const { address, version } = vault;
+  try {
+    const { data } = await vaults.listHarvests({
+      address,
+      timestamp_gte: cutoff,
+      version,
+      startBlock: lastHarvestBlock,
+      endBlock: lastHarvestBlock + 500_000,
+    });
+    return data;
+  } catch {
+    return loadGraphYieldData(chain, vault, cutoff);
+  }
+}
+
+/**
+ *
+ * @param chain
+ * @param vault
+ * @param lastHarvestBlock
+ * @returns
+ */
+export async function loadYieldEvents(
+  chain: Chain,
+  vault: VaultDefinitionModel,
+  lastHarvestBlock: number,
+): Promise<YieldEvent[]> {
+  const { provider } = await chain.getSdk();
+  const block = await provider.getBlock(lastHarvestBlock);
+  const cutoff = block.timestamp;
+
+  let data: VaultHarvestData[] = [];
+  if (isInfluenceVault(vault.address)) {
+    data = await loadGraphYieldData(chain, vault, cutoff);
+  } else {
+    data = await loadEventYieldData(chain, vault, lastHarvestBlock, cutoff);
+  }
+
+  const yieldItems = constructYieldItems(data);
+  return evaluateYieldItems(chain, vault, yieldItems);
+}
+
+/**
+ *
+ * @param chain
+ * @param vault
+ * @returns
+ */
+export async function queryLastHarvestBlock(chain: Chain, vault: VaultDefinitionModel): Promise<number> {
+  const mapper = getDataMapper();
+  const id = getVaultEntityId(chain, vault);
+  for await (const yieldEvent of mapper.query(VaultYieldEvent, { id }, { limit: 1, scanIndexForward: false })) {
+    return yieldEvent.block;
+  }
+  return 0;
+}
+
+/**
+ *
+ * @param chain
+ * @param vault
+ * @returns
+ */
+export async function queryVaultYieldEvents(chain: Chain, vault: VaultDefinitionModel): Promise<VaultYieldEvent[]> {
+  const mapper = getDataMapper();
+  const chainAddress = getVaultEntityId(chain, vault);
+  const cutoff = Date.now() - VAULT_TWAY_DURATION;
+
+  const yieldEvents = [];
+  for await (const yieldEvent of mapper.query(
+    VaultYieldEvent,
+    { chainAddress, timestamp: greaterThanOrEqualTo(cutoff) },
+    { indexName: 'IndexYieldDataOnAddress', scanIndexForward: false },
+  )) {
+    yieldEvents.push(yieldEvent);
+  }
+  return yieldEvents;
+}
+
+/**
+ *
+ * @param chain
+ * @param vault
+ * @returns
+ */
+export async function queryVaultHistoricYieldEvents(
+  chain: Chain,
+  vault: VaultDefinitionModel,
+): Promise<VaultYieldEvent[]> {
+  // TODO: construct a new paginated 'all harvests' table
+  // allow for page queries, timestamp based page queries
+  // all pages will be the same size, new pages are only added after x entries to a given page
+  // we can follow similar to the charting pattern with this data
+  const mapper = getDataMapper();
+  const id = getVaultEntityId(chain, vault);
+
+  const yieldEvents = [];
+  for await (const yieldEvent of mapper.query(VaultYieldEvent, { id }, { scanIndexForward: false })) {
+    yieldEvents.push(yieldEvent);
+  }
+  return yieldEvents;
 }

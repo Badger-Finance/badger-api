@@ -86,7 +86,7 @@ describe('vaults.v3.controller', () => {
       it('Return extended harvests for chain vault by addr', async () => {
         const { body, statusCode } = await PlatformServerlessTest.request
           .get('/vaults/harvests')
-          .query({ vault: TEST_ADDR });
+          .query({ address: TEST_ADDR });
         expect(statusCode).toEqual(NetworkStatus.Success);
         expect(JSON.parse(body)).toMatchSnapshot();
       });

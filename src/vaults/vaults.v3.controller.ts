@@ -59,14 +59,16 @@ export class VaultsV3Controller {
   @Returns(200, Array).Of(VaultHarvestsModel)
   @Returns(400).Description('Not a valid chain')
   async getVaultsHarvests(
-    @QueryParams('vault') vault: string,
+    @QueryParams('address') address: string,
     @QueryParams('chain') chain?: Network,
   ): Promise<VaultHarvestsExtendedResp[]> {
-    if (!vault) {
-      throw new QueryParamError('vault');
+    if (!address) {
+      throw new QueryParamError('address');
     }
 
-    return this.vaultService.getVaultHarvests(getOrCreateChain(chain), vault);
+    const targetChain = getOrCreateChain(chain);
+    const vault = await targetChain.vaults.getVault(address);
+    return this.vaultService.getVaultHarvests(targetChain, vault);
   }
 
   @Get('/list/harvests')

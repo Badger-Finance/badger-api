@@ -3,9 +3,9 @@ import { UnprocessableEntity } from '@tsed/exceptions';
 
 import { PricingType } from '../../prices/enums/pricing-type.enum';
 import { TokenPrice } from '../../prices/interface/token-price.interface';
-import { getOnChainLiquidityPrice, resolveTokenPrice } from '../../protocols/common/swap.utils';
 import { getBPTPrice } from '../../protocols/strategies/balancer.strategy';
 import { getCurveTokenPrice } from '../../protocols/strategies/convex.strategy';
+import { getOnChainLiquidityPrice, resolveTokenPrice } from '../../protocols/strategies/uniswap.strategy';
 import { getFullToken } from '../../tokens/tokens.utils';
 import { getVaultTokenPrice } from '../../vaults/vaults.utils';
 import { getOrCreateChain } from '../chains.utils';

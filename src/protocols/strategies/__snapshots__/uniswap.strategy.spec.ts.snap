@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`uniswap.strategy getLpTokenBalances should return token balances of the vault 1`] = `
+VaultTokenBalance {
+  "tokenBalances": Array [
+    Object {
+      "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+      "balance": 0,
+      "decimals": 18,
+      "name": "Badger",
+      "symbol": "BADGER",
+      "value": 0,
+    },
+    Object {
+      "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+      "balance": 0,
+      "decimals": 8,
+      "name": "Wrapped BTC",
+      "symbol": "WBTC",
+      "value": 0,
+    },
+  ],
+  "vault": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+}
+`;

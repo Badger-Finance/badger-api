@@ -1,9 +1,10 @@
 import { Currency } from '@badger-dao/sdk';
 import { Service } from '@tsed/common';
 
+import { TokenPriceSnapshot } from '../aws/models/token-price-snapshot.model';
 import { PriceSnapshots } from '../tokens/interfaces/price-snapshots.interface';
 import { PriceSummary } from '../tokens/interfaces/price-summary.interface';
-import { convert, getPriceSnapshotsAtTimestamps, queryPrice } from './prices.utils';
+import { convert, queryPrice, queryPriceAtTimestamp } from './prices.utils';
 
 /**
  * API price oracle service. Uses CoinGecko as a source of truth for most
@@ -26,11 +27,31 @@ export class PricesService {
   async getPriceSnapshots(tokens: string[], timestamps: number[], currency?: Currency): Promise<PriceSnapshots> {
     const entries = await Promise.all(
       tokens.map(async (t) => {
-        const snapshots = await getPriceSnapshotsAtTimestamps(t, timestamps, currency);
+        const snapshots = await this.#getPriceSnapshotsAtTimestamps(t, timestamps, currency);
         const snapshotEntries = snapshots.map((s) => [s.updatedAt, s.price]);
         return [t, Object.fromEntries(snapshotEntries)];
       }),
     );
     return Object.fromEntries(entries);
+  }
+
+  async #getPriceSnapshotsAtTimestamps(
+    address: string,
+    timestamps: number[],
+    currency?: Currency,
+  ): Promise<TokenPriceSnapshot[]> {
+    try {
+      const snapshots = [];
+
+      for (const timestamp of timestamps) {
+        const snapshot = await queryPriceAtTimestamp(address, timestamp, currency);
+        snapshots.push(snapshot);
+      }
+
+      return snapshots;
+    } catch (err) {
+      console.error(err);
+      return [];
+    }
   }
 }

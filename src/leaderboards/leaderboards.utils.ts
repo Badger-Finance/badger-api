@@ -1,8 +1,16 @@
-import { BadgerType } from '@badger-dao/sdk';
+import { BadgerType, BadgerTypeMap } from '@badger-dao/sdk';
 
 import { getDataMapper, getLeaderboardKey } from '../aws/dynamodb.utils';
 import { CachedLeaderboardSummary } from '../aws/models/cached-leaderboard-summary.model';
 import { Chain } from '../chains/config/chain.config';
+
+const BADGER_RANKS: BadgerTypeMap = {
+  [BadgerType.Basic]: 1,
+  [BadgerType.Neo]: 20,
+  [BadgerType.Hero]: 200,
+  [BadgerType.Hyper]: 600,
+  [BadgerType.Frenzy]: 1400,
+};
 
 export async function queryLeaderboardSummary(chain: Chain): Promise<CachedLeaderboardSummary> {
   const mapper = getDataMapper();
@@ -41,4 +49,20 @@ export async function queryLeaderboardSummary(chain: Chain): Promise<CachedLeade
     ],
     updatedAt: Date.now(),
   };
+}
+
+export function getBadgerType(score: number): BadgerType {
+  if (score >= BADGER_RANKS[BadgerType.Frenzy]) {
+    return BadgerType.Frenzy;
+  }
+  if (score >= BADGER_RANKS[BadgerType.Hyper]) {
+    return BadgerType.Hyper;
+  }
+  if (score >= BADGER_RANKS[BadgerType.Hero]) {
+    return BadgerType.Hero;
+  }
+  if (score >= BADGER_RANKS[BadgerType.Neo]) {
+    return BadgerType.Neo;
+  }
+  return BadgerType.Basic;
 }

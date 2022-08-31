@@ -7,7 +7,7 @@ VaultDefinitionModel {
   "bouncer": "none",
   "chain": "ethereum",
   "client": "",
-  "createdAt": NaN,
+  "createdAt": null,
   "depositToken": "0x075b1bb99792c9E1041bA13afEf80C91a1e70fB3",
   "id": "ethereum-0xd04c48A53c111300aD41190D63681ed3dAd998eC",
   "isNew": false,
@@ -19,30 +19,6 @@ VaultDefinitionModel {
   "state": "discontinued",
   "updatedAt": NaN,
   "version": "v1",
-}
-`;
-
-exports[`indexer.utils getLpTokenBalances should return token balances of the vault 1`] = `
-VaultTokenBalance {
-  "tokenBalances": Array [
-    Object {
-      "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
-      "balance": 0,
-      "decimals": 18,
-      "name": "Badger",
-      "symbol": "BADGER",
-      "value": 0,
-    },
-    Object {
-      "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
-      "balance": 0,
-      "decimals": 8,
-      "name": "Wrapped BTC",
-      "symbol": "WBTC",
-      "value": 0,
-    },
-  ],
-  "vault": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
 }
 `;
 

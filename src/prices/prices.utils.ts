@@ -114,44 +114,29 @@ export async function fetchPrices(chain: Chain, inputs: string[], lookupName = f
   return request<CoinGeckoPriceResponse>(baseURL, params);
 }
 
-export async function getPriceSnapshotsAtTimestamps(
-  address: string,
-  timestamps: number[],
-  currency?: Currency,
-): Promise<TokenPriceSnapshot[]> {
-  try {
-    const snapshots = [];
-
-    for (const timestamp of timestamps) {
-      const snapshot = await queryPriceAtTimestamp(address, timestamp, currency);
-      snapshots.push(snapshot);
-    }
-
-    return snapshots;
-  } catch (err) {
-    console.error(err);
-    return [];
-  }
-}
-
 export async function queryPriceAtTimestamp(
   address: string,
   timestamp: number,
   currency = Currency.USD,
 ): Promise<TokenPriceSnapshot> {
-  const mapper = getDataMapper();
-  for await (const snapshot of mapper.query(
-    TokenPriceSnapshot,
-    { address: ethers.utils.getAddress(address), updatedAt: greaterThanOrEqualTo(timestamp) },
-    { limit: 1 },
-  )) {
-    snapshot.price = await convert(snapshot.price ?? snapshot.usd, currency);
-    snapshot.updatedAt = timestamp;
-    return snapshot;
+  try {
+    const mapper = getDataMapper();
+    for await (const snapshot of mapper.query(
+      TokenPriceSnapshot,
+      { address: ethers.utils.getAddress(address), updatedAt: greaterThanOrEqualTo(timestamp) },
+      { limit: 1 },
+    )) {
+      snapshot.price = await convert(snapshot.price ?? snapshot.usd, currency);
+      snapshot.updatedAt = timestamp;
+      return snapshot;
+    }
+    const currentPrice = await queryPrice(address, currency);
+    return {
+      ...currentPrice,
+      updatedAt: timestamp,
+    };
+  } catch (err) {
+    console.error(err);
+    return { address, price: 0, updatedAt: timestamp };
   }
-  const currentPrice = await queryPrice(address, currency);
-  return {
-    ...currentPrice,
-    updatedAt: timestamp,
-  };
 }
