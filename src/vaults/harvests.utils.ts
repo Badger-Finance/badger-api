@@ -208,6 +208,7 @@ async function loadEventYieldData(
       timestamp_gte: cutoff,
       version,
       startBlock: lastHarvestBlock,
+      endBlock: lastHarvestBlock + 500_000,
     });
     return data;
   } catch {

@@ -34,6 +34,7 @@ export async function updateVaultHarvests() {
 
         for await (const _ of mapper.batchPut(yieldEventEntities)) {
         }
+        console.log(`[${vault.name}]: Persisted ${yieldEventEntities.length} yield events`);
       } catch (err) {
         console.error(err);
       }

@@ -519,7 +519,7 @@ functions:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-vault-harvests
           description: 'index onchain harvests for all vaults'
-          rate: rate(15 minutes)
+          rate: rate(10 minutes)
 
   index-leaderboard:
     handler: src/indexers/leaderboard-indexer.indexBoostLeaderBoard
