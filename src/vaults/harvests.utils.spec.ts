@@ -17,13 +17,7 @@ import { mockContract } from '../test/mocks.utils/contracts/mock.contract.base';
 import * as tokensUtils from '../tokens/tokens.utils';
 import * as influenceUtils from '../vaults/influence.utils';
 import * as vaultsUtils from '../vaults/vaults.utils';
-import {
-  HARVEST_SCAN_START_BLOCK,
-  loadYieldEvents,
-  queryLastHarvestBlock,
-  queryVaultHistoricYieldEvents,
-  queryVaultYieldEvents,
-} from './harvests.utils';
+import { loadYieldEvents, queryVaultHistoricYieldEvents, queryVaultYieldEvents } from './harvests.utils';
 import { VAULT_SOURCE } from './vaults.config';
 import { createYieldSource } from './yields.utils';
 
@@ -270,23 +264,6 @@ describe('harvests.utils', () => {
         mockVault.address = TOKENS.BVECVX;
         const result = await loadYieldEvents(chain, mockVault, TEST_CURRENT_BLOCK);
         expect(result).toMatchSnapshot();
-      });
-    });
-  });
-
-  describe('queryLastHarvestBlock', () => {
-    describe('no saved data', () => {
-      it('returns 0', async () => {
-        mockQuery([]);
-        const result = await queryLastHarvestBlock(chain, MOCK_VAULT_DEFINITION);
-        expect(result).toEqual(HARVEST_SCAN_START_BLOCK);
-      });
-    });
-    describe('previously stored harvest data', () => {
-      it('returns last block harvested', async () => {
-        mockQuery([MOCK_YIELD_EVENT]);
-        const result = await queryLastHarvestBlock(chain, MOCK_VAULT_DEFINITION);
-        expect(result).toEqual(TEST_CURRENT_BLOCK);
       });
     });
   });

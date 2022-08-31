@@ -83,6 +83,7 @@ export const MOCK_VAULT_DEFINITION: VaultDefinitionModel = {
   version: VaultVersion.v1,
   client: '',
   depositToken: TEST_TOKEN,
+  lastHarvestIndexedBlock: TEST_CURRENT_BLOCK,
 };
 
 export const MOCK_VAULTS: VaultDTO[] = mockVaults as VaultDTO[];

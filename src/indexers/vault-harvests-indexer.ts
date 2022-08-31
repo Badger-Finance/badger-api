@@ -1,7 +1,8 @@
 import { getDataMapper, getVaultEntityId } from '../aws/dynamodb.utils';
+import { HARVEST_SCAN_START_BLOCK } from '../aws/models/vault-definition.model';
 import { VaultYieldEvent } from '../aws/models/vault-yield-event.model';
 import { getSupportedChains } from '../chains/chains.utils';
-import { HARVEST_SCAN_BLOCK_INCREMENT, loadYieldEvents, queryLastHarvestBlock } from '../vaults/harvests.utils';
+import { HARVEST_SCAN_BLOCK_INCREMENT, loadYieldEvents } from '../vaults/harvests.utils';
 import { YieldEvent } from '../vaults/interfaces/yield-event';
 
 export async function updateVaultHarvests() {
@@ -15,7 +16,8 @@ export async function updateVaultHarvests() {
 
     for (const vault of vaults) {
       try {
-        let lastHarvestBlock = await queryLastHarvestBlock(chain, vault);
+        // temporary fallback for handling non updated last harvest indexed blocks
+        let lastHarvestBlock = vault.lastHarvestIndexedBlock ?? HARVEST_SCAN_START_BLOCK;
         let yieldEvents: YieldEvent[] = [];
 
         console.log(`[${vault.name}]: Last Indexed Block ${lastHarvestBlock}`);
@@ -60,6 +62,11 @@ export async function updateVaultHarvests() {
 
         for await (const _ of mapper.batchPut(yieldEventEntities)) {
         }
+
+        // update the vault's last harvested indexed block
+        vault.lastHarvestIndexedBlock = lastHarvestBlock;
+        await mapper.put(vault);
+
         console.log(`[${vault.name}]: Persisted ${yieldEventEntities.length} yield events`);
       } catch (err) {
         console.error(err);
