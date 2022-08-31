@@ -44,7 +44,7 @@ custom:
     YIELD_ESTIMATES_DATA: yield-estimates-${self:custom.stage}
     YIELD_PROJECTIONS_DATA: yield-projections-${self:custom.stage}
     VAULT_SNAPSHOTS_DATA: vaults-snapshots-${self:custom.stage}
-    VAULT_DEFINITION_DATA: vaults-definitions-${self:custom.stage}
+    VAULT_DEFINITION_DATA: vault-definitions-${self:custom.stage}
     VAULT_BALANCES_DATA: vault-balances-${self:custom.stage}
     TOKEN_PRICE_DATA: token-prices-${self:custom.stage}
     TOKEN_INFORMATION_DATA: token-information-${self:custom.stage}
