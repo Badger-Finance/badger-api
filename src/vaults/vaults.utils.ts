@@ -9,7 +9,7 @@ import {
   VaultYieldProjection,
 } from '@badger-dao/sdk';
 import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
-import { BigNumber, ethers } from 'ethers';
+import { BigNumber, CallOverrides, ethers } from 'ethers';
 
 import { getDataMapper, getVaultEntityId } from '../aws/dynamodb.utils';
 import { CachedYieldProjection } from '../aws/models/cached-yield-projection.model';
@@ -136,7 +136,11 @@ export async function getCachedVault(
   }
 }
 
-export async function getStrategyInfo(chain: Chain, vault: VaultDefinitionModel): Promise<VaultStrategy> {
+export async function getStrategyInfo(
+  chain: Chain,
+  vault: VaultDefinitionModel,
+  overrides?: CallOverrides,
+): Promise<VaultStrategy> {
   const defaultStrategyInfo: VaultStrategy = {
     address: ethers.constants.AddressZero,
     withdrawFee: 0,
@@ -147,18 +151,21 @@ export async function getStrategyInfo(chain: Chain, vault: VaultDefinitionModel)
   try {
     const sdk = await chain.getSdk();
     const { version, address } = vault;
-    const strategyAddress = await sdk.vaults.getVaultStrategy({
-      address,
-      version,
-    });
+    const strategyAddress = await sdk.vaults.getVaultStrategy(
+      {
+        address,
+        version,
+      },
+      overrides,
+    );
     if (version === VaultVersion.v1) {
       const strategy = Strategy__factory.connect(strategyAddress, sdk.provider);
       // you know, these things happen...
       // eslint-disable-next-line prefer-const
       let [withdrawFee, performanceFee, strategistFee] = await Promise.all([
-        strategy.withdrawalFee(),
-        strategy.performanceFeeGovernance(),
-        strategy.performanceFeeStrategist(),
+        strategy.withdrawalFee(overrides),
+        strategy.performanceFeeGovernance(overrides),
+        strategy.performanceFeeStrategist(overrides),
       ]);
       // bveCVX does not have a way to capture materially its performance fee
       if (address === TOKENS.BVECVX) {
@@ -174,10 +181,10 @@ export async function getStrategyInfo(chain: Chain, vault: VaultDefinitionModel)
     } else {
       const vaultContract = VaultV15__factory.connect(address, sdk.provider);
       const [withdrawFee, performanceFee, strategistFee, aumFee] = await Promise.all([
-        vaultContract.withdrawalFee(),
-        vaultContract.performanceFeeGovernance(),
-        vaultContract.performanceFeeStrategist(),
-        vaultContract.managementFee(),
+        vaultContract.withdrawalFee(overrides),
+        vaultContract.performanceFeeGovernance(overrides),
+        vaultContract.performanceFeeStrategist(overrides),
+        vaultContract.managementFee(overrides),
       ]);
       return {
         address: strategyAddress,

@@ -1,6 +1,7 @@
 import { getDataMapper, getVaultEntityId } from '../aws/dynamodb.utils';
 import { VaultYieldEvent } from '../aws/models/vault-yield-event.model';
 import { getSupportedChains } from '../chains/chains.utils';
+import { TOKENS } from '../config/tokens.config';
 import { HARVEST_SCAN_BLOCK_INCREMENT, loadYieldEvents } from '../vaults/harvests.utils';
 
 export async function updateVaultHarvests() {
@@ -13,6 +14,9 @@ export async function updateVaultHarvests() {
     const vaults = await chain.vaults.all();
 
     for (const vault of vaults) {
+      if (vault.address !== TOKENS.BVECVX) {
+        continue;
+      }
       try {
         const { name, lastHarvestIndexedBlock } = vault;
 

@@ -164,6 +164,7 @@ async function loadGraphYieldData(
 ): Promise<VaultHarvestData[]> {
   const { graph } = await chain.getSdk();
   const { address } = vault;
+  console.log(`[${vault.name}]: Load Graph Yield Data`);
   const [vaultHarvests, treeDistributions] = await Promise.all([
     graph.loadSettHarvests({
       first: 100,
@@ -205,6 +206,7 @@ async function loadEventYieldData(
 ): Promise<VaultHarvestData[]> {
   const { vaults } = await chain.getSdk();
   const { address, version } = vault;
+  console.log(`[${vault.name}]: Load Event Yield Data`);
   try {
     const { data } = await vaults.listHarvests({
       address,
@@ -242,6 +244,7 @@ export async function loadYieldEvents(
     data = await loadEventYieldData(chain, vault, lastHarvestBlock, cutoff);
   }
 
+  console.log(data);
   const yieldItems = constructYieldItems(data);
   return evaluateYieldItems(chain, vault, yieldItems);
 }
