@@ -28,7 +28,9 @@ export async function updateVaultHarvests() {
           continue;
         }
 
-        vault.lastHarvestIndexedBlock = yieldEvents[yieldEvents.length - 1].block;
+        // sort to highest timestamp (block) is at the end
+        const sortedEvents = yieldEvents.sort((a, b) => a.timestamp - b.timestamp);
+        vault.lastHarvestIndexedBlock = sortedEvents[sortedEvents.length - 1].block;
         const baseId = getVaultEntityId(chain, vault);
         const yieldEventEntities: VaultYieldEvent[] = yieldEvents.map((e) => {
           const yieldEvent: VaultYieldEvent = {
