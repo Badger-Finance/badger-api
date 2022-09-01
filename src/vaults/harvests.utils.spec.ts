@@ -9,6 +9,7 @@ import {
   MOCK_TOKENS,
   MOCK_VAULT_DEFINITION,
   MOCK_YIELD_EVENT,
+  TEST_ADDR,
   TEST_CURRENT_BLOCK,
   TEST_CURRENT_TIMESTAMP,
 } from '../test/constants';
@@ -43,6 +44,13 @@ describe('harvests.utils', () => {
     const vaultMock = mockContract<Vault>(Vault__factory);
     jest.spyOn(vaultMock, 'totalSupply').mockImplementation(async (_o) => BigNumber.from('10000000000000000000000000'));
 
+    jest.spyOn(vaultsUtils, 'getStrategyInfo').mockImplementation(async () => ({
+      performanceFee: 1_000,
+      withdrawFee: 100,
+      aumFee: 0,
+      strategistFee: 0,
+      address: TEST_ADDR,
+    }));
     jest
       .spyOn(vaultsUtils, 'queryYieldSources')
       .mockImplementation(async (v) => [createYieldSource(v, SourceType.PreCompound, VAULT_SOURCE, 3)]);

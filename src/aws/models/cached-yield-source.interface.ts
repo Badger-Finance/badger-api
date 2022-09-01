@@ -1,19 +1,11 @@
 import { attribute } from '@aws/dynamodb-data-mapper-annotations';
-import { ValueSource } from '@badger-dao/sdk';
 
-export class CachedYieldSource implements ValueSource {
+import { YieldSource } from './yield-source.model';
+
+export class CachedYieldSource implements YieldSource {
   @attribute()
   name!: string;
 
   @attribute()
-  apr!: number;
-
-  @attribute()
   boostable!: boolean;
-
-  @attribute()
-  minApr!: number;
-
-  @attribute()
-  maxApr!: number;
 }
