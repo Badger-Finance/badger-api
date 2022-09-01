@@ -1,9 +1,7 @@
 import { getDataMapper, getVaultEntityId } from '../aws/dynamodb.utils';
-import { HARVEST_SCAN_START_BLOCK } from '../aws/models/vault-definition.model';
 import { VaultYieldEvent } from '../aws/models/vault-yield-event.model';
 import { getSupportedChains } from '../chains/chains.utils';
-import { HARVEST_SCAN_BLOCK_INCREMENT, loadYieldEvents } from '../vaults/harvests.utils';
-import { YieldEvent } from '../vaults/interfaces/yield-event';
+import { loadYieldEvents } from '../vaults/harvests.utils';
 
 export async function updateVaultHarvests() {
   const chains = getSupportedChains();
@@ -16,42 +14,23 @@ export async function updateVaultHarvests() {
 
     for (const vault of vaults) {
       try {
-        // temporary fallback for handling non updated last harvest indexed blocks
-        let lastHarvestBlock = vault.lastHarvestIndexedBlock ?? HARVEST_SCAN_START_BLOCK;
-        let yieldEvents: YieldEvent[] = [];
+        const { name, lastHarvestIndexedBlock } = vault;
 
-        console.log(`[${vault.name}]: Last Indexed Block ${lastHarvestBlock}`);
-        while (true) {
-          yieldEvents = await loadYieldEvents(chain, vault, lastHarvestBlock);
-          console.log(`[${vault.name}]: Discovered ${yieldEvents.length} yield events`);
-
-          // found some events, let's check them out
-          if (yieldEvents.length > 0) {
-            break;
-          } else {
-            lastHarvestBlock += HARVEST_SCAN_BLOCK_INCREMENT;
-            console.log(
-              `[${vault.name}]: Increment block scan to ${lastHarvestBlock} - ${
-                lastHarvestBlock + HARVEST_SCAN_BLOCK_INCREMENT
-              }`,
-            );
-          }
-
-          // we are checking blocks that do not exist yet, and found no sources - we are up to date!
-          if (lastHarvestBlock >= currentBlock) {
-            break;
-          }
-        }
-
-        vault.lastHarvestIndexedBlock = lastHarvestBlock;
+        console.log(`[${name}]: Last Indexed Block ${lastHarvestIndexedBlock}`);
+        const yieldEvents = await loadYieldEvents(chain, vault, lastHarvestIndexedBlock);
+        console.log(`[${name}]: Discovered ${yieldEvents.length} yield events`);
 
         if (yieldEvents.length === 0) {
-          console.log(`${vault.name} is up to date.`);
+          vault.lastHarvestIndexedBlock = currentBlock;
+          console.log(`[${vault.name}]: Yield events up to date as of block: ${vault.lastHarvestIndexedBlock}`);
           // update the vault's last harvested indexed block, done twice to not update before persist
           await mapper.put(vault);
           continue;
         }
 
+        // sort to highest timestamp (block) is at the end
+        const sortedEvents = yieldEvents.sort((a, b) => a.timestamp - b.timestamp);
+        vault.lastHarvestIndexedBlock = sortedEvents[sortedEvents.length - 1].block;
         const baseId = getVaultEntityId(chain, vault);
         const yieldEventEntities: VaultYieldEvent[] = yieldEvents.map((e) => {
           const yieldEvent: VaultYieldEvent = {
@@ -68,6 +47,7 @@ export async function updateVaultHarvests() {
         }
 
         // update the vault's last harvested indexed block
+        console.log(`[${vault.name}]: Yield events up to date as of block: ${vault.lastHarvestIndexedBlock}`);
         await mapper.put(vault);
 
         console.log(`[${vault.name}]: Persisted ${yieldEventEntities.length} yield events`);
