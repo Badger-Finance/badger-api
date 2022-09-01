@@ -383,6 +383,10 @@ async function evaluateYieldEvents(chain: Chain, vault: VaultDefinitionModel): P
    * ALLOCATING TO GRAVI_AURA VAULT AS A MISSED - AND NOT CAPTURED SOURCE.
    *
    * THIS CODE SHOULD BE REMOVED BY 08/29.
+   *
+   * 08/31: update, due to filtering this event may stay in place and should until
+   * it is manually accounted for the yield event indexer. it will not impact any
+   * apr shown in the app as it is now filtered out.
    */
   if (vault.address === TOKENS.GRAVI_AURA) {
     const targetBlock = 15344809;
@@ -403,6 +407,7 @@ async function evaluateYieldEvents(chain: Chain, vault: VaultDefinitionModel): P
       earned: 7845.98,
       type: YieldType.Distribution,
       apr: 72.2,
+      grossApr: 72.2 * (1 / 0.9),
       balance: 99624.998,
     });
   }

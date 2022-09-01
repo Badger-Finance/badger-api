@@ -15,6 +15,7 @@ import { getInfuelnceVaultYieldBalance, isInfluenceVault } from './influence.uti
 import { VaultYieldItem } from './interfaces/vault-yield-item.interface';
 import { YieldEvent } from './interfaces/yield-event';
 import { VAULT_TWAY_DURATION } from './vaults.config';
+import { getStrategyInfo } from './vaults.utils';
 import { calculateYield } from './yields.utils';
 
 // this allows three chunks of 10k blocks per index
@@ -115,6 +116,7 @@ async function evaluateYieldItems(
 ): Promise<YieldEvent[]> {
   const yieldEvents: YieldEvent[] = [];
   const tokenEmissionAprs = new Map<string, number>();
+
   for (const item of yieldItems) {
     const block = item.block;
     const token = await getFullToken(chain, item.token);
@@ -126,6 +128,8 @@ async function evaluateYieldItems(
     const balance = await getVaultBalance(chain, vault, item.block);
     const { price: vaultPrice } = await queryPriceAtTimestamp(vault.address, item.timestamp * 1000);
     const vaultPrincipal = vaultPrice * balance;
+    const strategyInfo = await getStrategyInfo(chain, vault, { blockTag: item.block });
+    const performanceScalar = 1 / (1 - strategyInfo.performanceFee / 10_000);
 
     const eventApr = calculateYield(vaultPrincipal, tokenEarned, VAULT_TWAY_DURATION);
     const yieldEvent: YieldEvent = {
@@ -138,6 +142,7 @@ async function evaluateYieldItems(
       balance,
       earned: tokenEarned,
       apr: eventApr,
+      grossApr: eventApr * performanceScalar,
     };
     yieldEvents.push(yieldEvent);
 
@@ -167,7 +172,7 @@ async function loadGraphYieldData(
   console.log(`[${vault.name}]: Load Graph Yield Data`);
   const [vaultHarvests, treeDistributions] = await Promise.all([
     graph.loadSettHarvests({
-      first: 100,
+      first: 25,
       where: {
         sett: address.toLowerCase(),
         timestamp_gt: cutoff,
@@ -176,7 +181,7 @@ async function loadGraphYieldData(
       orderDirection: OrderDirection.Asc,
     }),
     graph.loadBadgerTreeDistributions({
-      first: 100,
+      first: 25,
       where: {
         sett: address.toLowerCase(),
         timestamp_gt: cutoff,
@@ -244,7 +249,6 @@ export async function loadYieldEvents(
     data = await loadEventYieldData(chain, vault, lastHarvestBlock, cutoff);
   }
 
-  console.log(data);
   const yieldItems = constructYieldItems(data);
   return evaluateYieldItems(chain, vault, yieldItems);
 }

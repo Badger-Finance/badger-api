@@ -1,5 +1,5 @@
 import { formatBalance, Vault__factory } from '@badger-dao/sdk';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { VaultYieldEvent } from '../aws/models/vault-yield-event.model';
@@ -59,6 +59,7 @@ export async function getInfuelnceVaultYieldBalance(
 ): Promise<number> {
   const sdk = await chain.getSdk();
   const { address, version } = vault;
+  const vaultContract = Vault__factory.connect(address, sdk.provider);
 
   if (address === TOKENS.BVECVX) {
     // there is no balance possible before the deployment block
@@ -67,11 +68,18 @@ export async function getInfuelnceVaultYieldBalance(
     }
     const strategyAddress = await sdk.vaults.getVaultStrategy({ address, version }, { blockTag });
     const locker = CvxLocker__factory.connect(CVX_LOCKER, sdk.provider);
-    const lockedBalance = await locker.lockedBalanceOf(strategyAddress, { blockTag });
+
+    let lockedBalance = BigNumber.from('0');
+
+    try {
+      lockedBalance = await locker.lockedBalanceOf(strategyAddress, { blockTag });
+    } catch (err) {
+      lockedBalance = await vaultContract.totalSupply({ blockTag });
+    }
+
     return formatBalance(lockedBalance);
   }
 
-  const vaultContract = Vault__factory.connect(address, sdk.provider);
   const strategyBalance = await vaultContract.totalSupply({ blockTag });
   const maxBalance = formatBalance(strategyBalance);
 

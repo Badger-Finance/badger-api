@@ -128,4 +128,5 @@ export const MOCK_YIELD_EVENT: YieldEvent = {
   value: 10_000,
   earned: 3_500,
   apr: 230,
+  grossApr: 230 * (1 / 0.9),
 };
