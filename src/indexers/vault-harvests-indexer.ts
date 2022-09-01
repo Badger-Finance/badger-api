@@ -1,7 +1,7 @@
 import { getDataMapper, getVaultEntityId } from '../aws/dynamodb.utils';
 import { VaultYieldEvent } from '../aws/models/vault-yield-event.model';
 import { getSupportedChains } from '../chains/chains.utils';
-import { HARVEST_SCAN_BLOCK_INCREMENT, loadYieldEvents } from '../vaults/harvests.utils';
+import { loadYieldEvents } from '../vaults/harvests.utils';
 
 export async function updateVaultHarvests() {
   const chains = getSupportedChains();
@@ -20,19 +20,15 @@ export async function updateVaultHarvests() {
         const yieldEvents = await loadYieldEvents(chain, vault, lastHarvestIndexedBlock);
         console.log(`[${name}]: Discovered ${yieldEvents.length} yield events`);
 
-        if (lastHarvestIndexedBlock + HARVEST_SCAN_BLOCK_INCREMENT > currentBlock) {
-          vault.lastHarvestIndexedBlock = currentBlock;
-        } else {
-          vault.lastHarvestIndexedBlock += HARVEST_SCAN_BLOCK_INCREMENT;
-        }
-
         if (yieldEvents.length === 0) {
+          vault.lastHarvestIndexedBlock = currentBlock;
           console.log(`[${vault.name}]: Yield events up to date as of block: ${vault.lastHarvestIndexedBlock}`);
           // update the vault's last harvested indexed block, done twice to not update before persist
           await mapper.put(vault);
           continue;
         }
 
+        vault.lastHarvestIndexedBlock = yieldEvents[yieldEvents.length - 1].block;
         const baseId = getVaultEntityId(chain, vault);
         const yieldEventEntities: VaultYieldEvent[] = yieldEvents.map((e) => {
           const yieldEvent: VaultYieldEvent = {
