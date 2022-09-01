@@ -11,7 +11,7 @@ import {
 } from '@badger-dao/sdk';
 
 import { getVaultEntityId } from '../aws/dynamodb.utils';
-import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
+import { HARVEST_SCAN_START_BLOCK, VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { Chain } from '../chains/config/chain.config';
 import { Stage } from '../config/enums/stage.enum';
 import { queryPrice } from '../prices/prices.utils';
@@ -80,11 +80,18 @@ export async function constructVaultDefinition(
 
   const { createdAt, releasedAt, lastUpdatedAt } = sett;
 
-  return Object.assign(new VaultDefinitionModel(), {
+  let lastHarvestIndexedBlock = HARVEST_SCAN_START_BLOCK;
+
+  try {
+    const existingDefinition = await chain.vaults.getVault(vault.address);
+    lastHarvestIndexedBlock = existingDefinition.lastHarvestIndexedBlock;
+  } catch {} // ignore errors for vaults who do not exist
+
+  const definition: VaultDefinitionModel = {
     id: getVaultEntityId(chain, vault),
     address,
     // can be null for old from registryV1, legacy issue
-    createdAt: !!createdAt ? Number(createdAt) : null,
+    createdAt: !!createdAt ? Number(createdAt) : 0,
     chain: chain.network,
     isProduction: 1,
     version: vault.version as VaultVersion,
@@ -99,7 +106,10 @@ export async function constructVaultDefinition(
     stage: vault.state === VaultState.Experimental ? Stage.Staging : Stage.Production,
     bouncer: BouncerType.None,
     isNew: Date.now() / 1000 - Number(releasedAt) <= ONE_WEEK_SECONDS * 2,
-  });
+    lastHarvestIndexedBlock,
+  };
+
+  return Object.assign(new VaultDefinitionModel(), definition);
 }
 
 export async function getVault(chain: Chain, contract: string, block?: number): Promise<gqlGenT.SettQuery> {
