@@ -43,8 +43,12 @@ export async function updateVaultHarvests() {
           }
         }
 
+        vault.lastHarvestIndexedBlock = lastHarvestBlock;
+
         if (yieldEvents.length === 0) {
           console.log(`${vault.name} is up to date.`);
+          // update the vault's last harvested indexed block, done twice to not update before persist
+          await mapper.put(vault);
           continue;
         }
 
@@ -64,7 +68,6 @@ export async function updateVaultHarvests() {
         }
 
         // update the vault's last harvested indexed block
-        vault.lastHarvestIndexedBlock = lastHarvestBlock;
         await mapper.put(vault);
 
         console.log(`[${vault.name}]: Persisted ${yieldEventEntities.length} yield events`);
