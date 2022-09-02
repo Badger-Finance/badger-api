@@ -1,7 +1,9 @@
+import { Network } from '@badger-dao/sdk';
+
 import { getDataMapper, getVaultEntityId } from '../aws/dynamodb.utils';
 import { VaultYieldEvent } from '../aws/models/vault-yield-event.model';
 import { getSupportedChains } from '../chains/chains.utils';
-import { loadYieldEvents } from '../vaults/harvests.utils';
+import { HARVEST_SCAN_BLOCK_INCREMENT, loadYieldEvents } from '../vaults/harvests.utils';
 
 export async function updateVaultHarvests() {
   const chains = getSupportedChains();
@@ -12,6 +14,10 @@ export async function updateVaultHarvests() {
     const currentBlock = await sdk.provider.getBlockNumber();
     const vaults = await chain.vaults.all();
 
+    if (chain.network !== Network.Ethereum) {
+      continue;
+    }
+
     for (const vault of vaults) {
       try {
         const { name, lastHarvestIndexedBlock } = vault;
@@ -21,7 +27,10 @@ export async function updateVaultHarvests() {
         console.log(`[${name}]: Discovered ${yieldEvents.length} yield events`);
 
         if (yieldEvents.length === 0) {
-          vault.lastHarvestIndexedBlock = currentBlock;
+          vault.lastHarvestIndexedBlock = Math.min(
+            vault.lastHarvestIndexedBlock + HARVEST_SCAN_BLOCK_INCREMENT,
+            currentBlock,
+          );
           console.log(`[${vault.name}]: Yield events up to date as of block: ${vault.lastHarvestIndexedBlock}`);
           // update the vault's last harvested indexed block, done twice to not update before persist
           await mapper.put(vault);

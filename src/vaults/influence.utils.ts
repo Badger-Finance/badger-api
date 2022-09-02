@@ -62,6 +62,10 @@ export async function getInfuelnceVaultYieldBalance(
   const { address } = vault;
 
   if (address === TOKENS.BVECVX) {
+    // there is no balance possible before the deployment block
+    if (blockTag <= 14320609) {
+      return 0;
+    }
     const {
       strategy: { address: strategyAddress },
     } = await getCachedVault(chain, vault);
