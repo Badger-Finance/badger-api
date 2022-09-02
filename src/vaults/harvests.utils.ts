@@ -17,7 +17,8 @@ import { YieldEvent } from './interfaces/yield-event';
 import { VAULT_TWAY_DURATION } from './vaults.config';
 import { calculateYield } from './yields.utils';
 
-export const HARVEST_SCAN_BLOCK_INCREMENT = 100_000;
+// this allows three chunks of 10k blocks per index
+export const HARVEST_SCAN_BLOCK_INCREMENT = 30_000;
 
 /**
  * Modify subgraph response to match on chain event data allowing it to fit into our estimation functions.
