@@ -1,8 +1,9 @@
 import {
-  Currency,
   Protocol,
   Strategy__factory,
   VaultDTO,
+  VaultDTOV2,
+  VaultDTOV3,
   VaultType,
   VaultV15__factory,
   VaultVersion,
@@ -22,25 +23,20 @@ import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
 import { PricingType } from '../prices/enums/pricing-type.enum';
 import { TokenPrice } from '../prices/interface/token-price.interface';
-import { convert, queryPrice } from '../prices/prices.utils';
+import { queryPrice } from '../prices/prices.utils';
 import { getProtocolValueSources, getRewardEmission } from '../rewards/rewards.utils';
-import { getFullToken, getVaultTokens } from '../tokens/tokens.utils';
+import { getFullToken } from '../tokens/tokens.utils';
+import { Nullable } from '../utils/types.utils';
 import { VaultStrategy } from './interfaces/vault-strategy.interface';
 import { aggregateSources, queryVaultYieldSources } from './yields.utils';
 
-export async function defaultVault(chain: Chain, vault: VaultDefinitionModel): Promise<VaultDTO> {
+export async function defaultVaultDto(chain: Chain, vault: VaultDefinitionModel): Promise<VaultDTO> {
   const { state, bouncer, behavior, version, protocol, name, depositToken, address } = vault;
   const [assetToken, vaultToken] = await Promise.all([getFullToken(chain, depositToken), getFullToken(chain, address)]);
 
   const type = protocol === Protocol.Badger ? VaultType.Native : VaultType.Standard;
 
   return {
-    apr: 0,
-    apy: 0,
-    minApr: 0,
-    maxApr: 0,
-    minApy: 0,
-    maxApy: 0,
     asset: assetToken.symbol,
     available: 0,
     balance: 0,
@@ -53,8 +49,6 @@ export async function defaultVault(chain: Chain, vault: VaultDefinitionModel): P
     name,
     pricePerFullShare: 1,
     protocol: vault.protocol,
-    sources: [],
-    sourcesApy: [],
     state,
     tokens: [],
     strategy: {
@@ -92,13 +86,51 @@ export async function defaultVault(chain: Chain, vault: VaultDefinitionModel): P
   };
 }
 
+export async function defaultVault(chain: Chain, vault: VaultDefinitionModel): Promise<VaultDTOV2> {
+  const baseVault = await defaultVaultDto(chain, vault);
+  return {
+    ...baseVault,
+    apr: 0,
+    apy: 0,
+    minApr: 0,
+    maxApr: 0,
+    minApy: 0,
+    maxApy: 0,
+    sources: [],
+    sourcesApy: [],
+  };
+}
+
+export async function defaultVaultV3(chain: Chain, vault: VaultDefinitionModel): Promise<VaultDTOV3> {
+  const baseVault = await defaultVaultDto(chain, vault);
+  return {
+    ...baseVault,
+    apr: {
+      yield: 0,
+      minYield: 0,
+      maxYield: 0,
+      grossYield: 0,
+      minGrossYield: 0,
+      maxGrossYield: 0,
+      sources: [],
+    },
+    apy: {
+      yield: 0,
+      minYield: 0,
+      maxYield: 0,
+      grossYield: 0,
+      minGrossYield: 0,
+      maxGrossYield: 0,
+      sources: [],
+    },
+  };
+}
+
 // TODO: vault should migration from address -> id where id = chain.network-vault.address
 export async function getCachedVault(
   chain: Chain,
   vaultDefinition: VaultDefinitionModel,
-  currency = Currency.USD,
-): Promise<VaultDTO> {
-  const vault = await defaultVault(chain, vaultDefinition);
+): Promise<Nullable<CurrentVaultSnapshotModel>> {
   try {
     const mapper = getDataMapper();
     for await (const item of mapper.query(
@@ -106,33 +138,12 @@ export async function getCachedVault(
       { address: vaultDefinition.address },
       { limit: 1, scanIndexForward: false },
     )) {
-      vault.available = item.available;
-      vault.balance = item.balance;
-      vault.value = item.value;
-      if (item.balance === 0 || item.totalSupply === 0) {
-        vault.pricePerFullShare = 1;
-      } else if (vaultDefinition.address === TOKENS.BDIGG) {
-        vault.pricePerFullShare = item.balance / item.totalSupply;
-      } else {
-        vault.pricePerFullShare = item.pricePerFullShare;
-      }
-      vault.strategy = item.strategy;
-      vault.boost = {
-        enabled: item.boostWeight > 0,
-        weight: item.boostWeight,
-      };
-      const [tokens, convertedValue] = await Promise.all([
-        getVaultTokens(chain, vault, currency),
-        convert(item.value, currency),
-      ]);
-      vault.tokens = tokens;
-      vault.value = convertedValue;
-      return vault;
+      return item;
     }
-    return vault;
+    return null;
   } catch (err) {
     console.error(err);
-    return vault;
+    return null;
   }
 }
 
@@ -223,9 +234,10 @@ export async function getVaultTokenPrice(chain: Chain, address: string): Promise
     queryPrice(vaultToken.address),
     getCachedVault(chain, vault),
   ]);
+  const pricePerFullShare = vaultTokenSnapshot ? vaultTokenSnapshot.pricePerFullShare : 1;
   return {
     address: token.address,
-    price: underlyingTokenPrice.price * vaultTokenSnapshot.pricePerFullShare,
+    price: underlyingTokenPrice.price * pricePerFullShare,
   };
 }
 
