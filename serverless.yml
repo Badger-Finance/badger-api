@@ -207,10 +207,10 @@ resources:
         TableName: ${self:custom.table.VAULT_SNAPSHOTS_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
-          - AttributeName: 'address'
+          - AttributeName: 'id'
             KeyType: 'HASH'
         AttributeDefinitions:
-          - AttributeName: 'address'
+          - AttributeName: 'id'
             AttributeType: 'S'
 
     vaultDefinitionsTable:

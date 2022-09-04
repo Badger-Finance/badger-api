@@ -4,7 +4,7 @@ import {
   TokenValue,
   ValueSource,
   VaultBehavior,
-  VaultDTO,
+  VaultDTOV2,
   VaultState,
   VaultType,
   VaultVersion,
@@ -17,7 +17,7 @@ import { TOKENS } from '../../config/tokens.config';
 import { BouncerType } from '../../rewards/enums/bouncer-type.enum';
 import { VaultStrategy } from './vault-strategy.interface';
 
-export class VaultModel implements VaultDTO {
+export class VaultModel implements VaultDTOV2 {
   @Title('name')
   @Description('vault display name')
   @Example('Convex Tricrypto')
@@ -228,7 +228,7 @@ export class VaultModel implements VaultDTO {
     yieldProjection,
     lastHarvest,
     version,
-  }: VaultDTO) {
+  }: VaultDTOV2) {
     this.name = name;
     this.state = state;
     this.asset = asset;

@@ -26,7 +26,6 @@ import { TokenPrice } from '../prices/interface/token-price.interface';
 import { queryPrice } from '../prices/prices.utils';
 import { getProtocolValueSources, getRewardEmission } from '../rewards/rewards.utils';
 import { getFullToken } from '../tokens/tokens.utils';
-import { Nullable } from '../utils/types.utils';
 import { VaultStrategy } from './interfaces/vault-strategy.interface';
 import { aggregateSources, queryVaultYieldSources } from './yields.utils';
 
@@ -126,24 +125,55 @@ export async function defaultVaultV3(chain: Chain, vault: VaultDefinitionModel):
   };
 }
 
-// TODO: vault should migration from address -> id where id = chain.network-vault.address
+/**
+ * 
+ * @param chain 
+ * @param vault 
+ * @returns 
+ */
 export async function getCachedVault(
   chain: Chain,
-  vaultDefinition: VaultDefinitionModel,
-): Promise<Nullable<CurrentVaultSnapshotModel>> {
+  vault: VaultDefinitionModel,
+): Promise<CurrentVaultSnapshotModel> {
+  const id = getVaultEntityId(chain, vault);
+  const defaultSnapshot: CurrentVaultSnapshotModel = {
+    id,
+    address: vault.address,
+    chain: chain.network,
+    block: 0,
+    timestamp: 0,
+    balance: 0,
+    strategy: {
+      address: ethers.constants.AddressZero,
+      aumFee: 0,
+      performanceFee: 0,
+      strategistFee: 0,
+      withdrawFee: 0,
+    },
+    strategyBalance: 0,
+    available: 0,
+    pricePerFullShare: 1,
+    totalSupply: 0,
+    boostWeight: 0,
+    apr: 0,
+    grossApr: 0,
+    value: 0,
+    yieldApr: 0,
+    harvestApr: 0.
+  };
   try {
     const mapper = getDataMapper();
     for await (const item of mapper.query(
       CurrentVaultSnapshotModel,
-      { address: vaultDefinition.address },
+      { id },
       { limit: 1, scanIndexForward: false },
     )) {
       return item;
     }
-    return null;
+    return defaultSnapshot;
   } catch (err) {
     console.error(err);
-    return null;
+    return defaultSnapshot;
   }
 }
 

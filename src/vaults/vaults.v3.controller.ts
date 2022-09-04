@@ -29,14 +29,14 @@ export class VaultsV3Controller {
     @QueryParams('address') address: string,
     @QueryParams('chain') chain?: Network,
     @QueryParams('currency') currency?: Currency,
-  ): Promise<VaultModel> {
+  ): Promise<VaultDTOV3> {
     if (!address) {
       throw new QueryParamError('vault');
     }
 
     const chainInst = getOrCreateChain(chain);
     const compoundVault = await chainInst.vaults.getVault(address);
-    return VaultsService.loadVault(chainInst, compoundVault, currency);
+    return VaultsService.loadVaultV3(chainInst, compoundVault, currency);
   }
 
   @Get('/list')
@@ -50,7 +50,7 @@ export class VaultsV3Controller {
     @QueryParams('chain') chain?: Network,
     @QueryParams('currency') currency?: Currency,
   ): Promise<VaultDTOV3[]> {
-    return this.vaultService.listVaults(getOrCreateChain(chain), currency);
+    return this.vaultService.listVaultsV3(getOrCreateChain(chain), currency);
   }
 
   @Get('/harvests')

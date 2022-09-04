@@ -38,7 +38,7 @@ export class VaultsService {
     return { totalValue, vaults: summaries, setts: summaries };
   }
 
-  async listVaults(chain: Chain, currency?: Currency): Promise<VaultDTO[]> {
+  async listVaults(chain: Chain, currency?: Currency): Promise<VaultDTOV2[]> {
     const vaults = await chain.vaults.all();
     return Promise.all(vaults.map((vault) => VaultsService.loadVaultV2(chain, vault, currency)));
   }

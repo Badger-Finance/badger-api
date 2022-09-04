@@ -1,20 +1,26 @@
 import { embed } from '@aws/dynamodb-data-mapper';
 import { attribute, hashKey, table } from '@aws/dynamodb-data-mapper-annotations';
-import { VaultSnapshot } from '@badger-dao/sdk';
+import { Network, VaultSnapshot } from '@badger-dao/sdk';
 
 import { VAULT_SNAPSHOTS_DATA } from '../../config/constants';
 import { VaultStrategy } from '../../vaults/interfaces/vault-strategy.interface';
 
 @table(VAULT_SNAPSHOTS_DATA)
 export class CurrentVaultSnapshotModel implements VaultSnapshot {
+  @hashKey()
+  id!: string;
+
   @attribute()
   block!: number;
 
   @attribute({ defaultProvider: () => Date.now() })
   timestamp!: number;
 
-  @hashKey()
+  @attribute()
   address!: string;
+
+  @attribute()
+  chain!: Network;
 
   @attribute()
   available!: number;
