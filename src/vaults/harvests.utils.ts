@@ -283,10 +283,14 @@ export async function queryVaultHistoricYieldEvents(
   // all pages will be the same size, new pages are only added after x entries to a given page
   // we can follow similar to the charting pattern with this data
   const mapper = getDataMapper();
-  const id = getVaultEntityId(chain, vault);
+  const chainAddress = getVaultEntityId(chain, vault);
 
   const yieldEvents = [];
-  for await (const yieldEvent of mapper.query(VaultYieldEvent, { id }, { scanIndexForward: false })) {
+  for await (const yieldEvent of mapper.query(
+    VaultYieldEvent,
+    { chainAddress },
+    { indexName: 'IndexYieldDataOnAddress', scanIndexForward: false },
+  )) {
     yieldEvents.push(yieldEvent);
   }
   return yieldEvents;
