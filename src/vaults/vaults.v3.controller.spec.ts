@@ -65,6 +65,7 @@ describe('vaults.v3.controller', () => {
         expect(JSON.parse(body)).toMatchSnapshot();
       });
     });
+
     describe('error cases', () => {
       it('returns a 400 for invalid chain', async () => {
         jest.spyOn(Chain, 'getChain').mockImplementation(() => {
