@@ -4,12 +4,12 @@ import { UseCache } from '@tsed/platform-cache';
 import { QueryParams } from '@tsed/platform-params';
 import { ContentType, Description, Get, Hidden, Returns, Summary } from '@tsed/schema';
 
+import { VaultYieldEvent } from '../aws/models/vault-yield-event.model';
 import { getOrCreateChain } from '../chains/chains.utils';
 import { QueryParamError } from '../errors/validation/query.param.error';
-import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
+import { queryVaultHistoricYieldEvents } from './harvests.utils';
 import { VaultHarvestsMap } from './interfaces/vault-harvest-map';
 import { VaultHarvestsMapModel } from './interfaces/vault-harvests-list-model.interface';
-import { VaultHarvestsModel } from './interfaces/vault-harvests-model.interface';
 import { VaultModel } from './interfaces/vault-model.interface';
 import { VaultsService } from './vaults.service';
 
@@ -57,19 +57,20 @@ export class VaultsV3Controller {
   @ContentType('json')
   @Summary('Get harvests on a specific vault')
   @Description('Return full list of vault`s harvests')
-  @Returns(200, Array).Of(VaultHarvestsModel)
+  // TODO: create a yield event model
+  // @Returns(200, Array).Of(VaultHarvestsModel)
   @Returns(400).Description('Not a valid chain')
   async getVaultsHarvests(
     @QueryParams('address') address: string,
     @QueryParams('chain') chain?: Network,
-  ): Promise<VaultHarvestsExtendedResp[]> {
+  ): Promise<VaultYieldEvent[]> {
     if (!address) {
       throw new QueryParamError('address');
     }
 
     const targetChain = getOrCreateChain(chain);
     const vault = await targetChain.vaults.getVault(address);
-    return this.vaultService.getVaultHarvests(targetChain, vault);
+    return queryVaultHistoricYieldEvents(targetChain, vault);
   }
 
   @Get('/list/harvests')
