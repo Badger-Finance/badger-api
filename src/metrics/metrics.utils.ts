@@ -18,9 +18,14 @@ export async function getChainMetrics(chains: Chain[]): Promise<ProtocolMetrics>
     totalUsers += accounts.length;
 
     const vaults = await chain.vaults.all();
-    const chainVaults = await Promise.all(vaults.map((vault) => getCachedVault(chain, vault)));
-    const totalValue = chainVaults.reduce((total, vault) => total + vault.value, 0);
-    const vaultSummaries = chainVaults.map(({ name, balance, value }) => ({ name, balance, value }));
+    const vaultSummaries = await Promise.all(
+      vaults.map(async (vault) => {
+        const { balance, value } = await getCachedVault(chain, vault);
+        return { name: vault.name, balance, value };
+      }),
+    );
+    const totalValue = vaultSummaries.reduce((total, vault) => total + vault.value, 0);
+
     totalValueLocked += totalValue;
     totalVaults += vaultSummaries.length;
   }

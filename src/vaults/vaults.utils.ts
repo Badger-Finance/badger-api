@@ -7,17 +7,17 @@ import {
   VaultType,
   VaultV15__factory,
   VaultVersion,
-  VaultYieldProjection,
+  VaultYieldProjectionV3,
 } from '@badger-dao/sdk';
 import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
 import { BigNumber, CallOverrides, ethers } from 'ethers';
 
 import { getDataMapper, getVaultEntityId } from '../aws/dynamodb.utils';
 import { CachedYieldProjection } from '../aws/models/cached-yield-projection.model';
+import { CachedYieldSource } from '../aws/models/cached-yield-source.interface';
 import { CurrentVaultSnapshotModel } from '../aws/models/current-vault-snapshot.model';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { YieldEstimate } from '../aws/models/yield-estimate.model';
-import { YieldSource } from '../aws/models/yield-source.model';
 import { getOrCreateChain } from '../chains/chains.utils';
 import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
@@ -28,6 +28,25 @@ import { getProtocolValueSources, getRewardEmission } from '../rewards/rewards.u
 import { getFullToken } from '../tokens/tokens.utils';
 import { VaultStrategy } from './interfaces/vault-strategy.interface';
 import { aggregateSources, queryVaultYieldSources } from './yields.utils';
+
+const defaultYieldProjection = {
+  yieldApr: 0,
+  yieldTokens: [],
+  yieldPeriodApr: 0,
+  yieldPeriodSources: [],
+  yieldValue: 0,
+  harvestApr: 0,
+  harvestPeriodApr: 0,
+  harvestPeriodApy: 0,
+  harvestTokens: [],
+  harvestPeriodSources: [],
+  harvestPeriodSourcesApy: [],
+  harvestValue: 0,
+  nonHarvestApr: 0,
+  nonHarvestSources: [],
+  nonHarvestApy: 0,
+  nonHarvestSourcesApy: [],
+};
 
 export async function defaultVaultDto(chain: Chain, vault: VaultDefinitionModel): Promise<VaultDTO> {
   const { state, bouncer, behavior, version, protocol, name, depositToken, address } = vault;
@@ -62,24 +81,6 @@ export async function defaultVaultDto(chain: Chain, vault: VaultDefinitionModel)
     value: 0,
     vaultAsset: vaultToken.symbol,
     vaultToken: address,
-    yieldProjection: {
-      yieldApr: 0,
-      yieldTokens: [],
-      yieldPeriodApr: 0,
-      yieldPeriodSources: [],
-      yieldValue: 0,
-      harvestApr: 0,
-      harvestPeriodApr: 0,
-      harvestPeriodApy: 0,
-      harvestTokens: [],
-      harvestPeriodSources: [],
-      harvestPeriodSourcesApy: [],
-      harvestValue: 0,
-      nonHarvestApr: 0,
-      nonHarvestSources: [],
-      nonHarvestApy: 0,
-      nonHarvestSourcesApy: [],
-    },
     lastHarvest: 0,
     version,
   };
@@ -97,6 +98,7 @@ export async function defaultVault(chain: Chain, vault: VaultDefinitionModel): P
     maxApy: 0,
     sources: [],
     sourcesApy: [],
+    yieldProjection: defaultYieldProjection,
   };
 }
 
@@ -104,8 +106,9 @@ export async function defaultVaultV3(chain: Chain, vault: VaultDefinitionModel):
   const baseVault = await defaultVaultDto(chain, vault);
   return {
     ...baseVault,
+    address: vault.address,
     apr: {
-      yield: 0,
+      baseYield: 0,
       minYield: 0,
       maxYield: 0,
       grossYield: 0,
@@ -114,7 +117,7 @@ export async function defaultVaultV3(chain: Chain, vault: VaultDefinitionModel):
       sources: [],
     },
     apy: {
-      yield: 0,
+      baseYield: 0,
       minYield: 0,
       maxYield: 0,
       grossYield: 0,
@@ -122,19 +125,17 @@ export async function defaultVaultV3(chain: Chain, vault: VaultDefinitionModel):
       maxGrossYield: 0,
       sources: [],
     },
+    yieldProjection: defaultYieldProjection,
   };
 }
 
 /**
- * 
- * @param chain 
- * @param vault 
- * @returns 
+ *
+ * @param chain
+ * @param vault
+ * @returns
  */
-export async function getCachedVault(
-  chain: Chain,
-  vault: VaultDefinitionModel,
-): Promise<CurrentVaultSnapshotModel> {
+export async function getCachedVault(chain: Chain, vault: VaultDefinitionModel): Promise<CurrentVaultSnapshotModel> {
   const id = getVaultEntityId(chain, vault);
   const defaultSnapshot: CurrentVaultSnapshotModel = {
     id,
@@ -159,15 +160,11 @@ export async function getCachedVault(
     grossApr: 0,
     value: 0,
     yieldApr: 0,
-    harvestApr: 0.
+    harvestApr: 0,
   };
   try {
     const mapper = getDataMapper();
-    for await (const item of mapper.query(
-      CurrentVaultSnapshotModel,
-      { id },
-      { limit: 1, scanIndexForward: false },
-    )) {
+    for await (const item of mapper.query(CurrentVaultSnapshotModel, { id }, { limit: 1, scanIndexForward: false })) {
       return item;
     }
     return defaultSnapshot;
@@ -277,7 +274,7 @@ export async function getVaultTokenPrice(chain: Chain, address: string): Promise
  * @param vault Vault definition of requested vault
  * @returns Value source array describing vault performance
  */
-export async function getVaultPerformance(chain: Chain, vault: VaultDefinitionModel): Promise<YieldSource[]> {
+export async function getVaultPerformance(chain: Chain, vault: VaultDefinitionModel): Promise<CachedYieldSource[]> {
   const [rewardEmissions, protocol, vaultSources] = await Promise.all([
     getRewardEmission(chain, vault),
     getProtocolValueSources(chain, vault),
@@ -285,7 +282,7 @@ export async function getVaultPerformance(chain: Chain, vault: VaultDefinitionMo
   ]);
   // handle aggregation of various sources - this unfortunately loses the ddb schemas and need to be reassigned
   const aggregatedSources = aggregateSources([...vaultSources, ...rewardEmissions, ...protocol], (s) => s.id);
-  return aggregatedSources.map((s) => Object.assign(new YieldSource(), s));
+  return aggregatedSources.map((s) => Object.assign(new CachedYieldSource(), s));
 }
 
 /**
@@ -338,12 +335,12 @@ export function estimateDerivativeEmission(
  * @param vault requested vault definition
  * @returns cached yield sources
  */
-export async function queryYieldSources(vault: VaultDefinitionModel): Promise<YieldSource[]> {
+export async function queryYieldSources(vault: VaultDefinitionModel): Promise<CachedYieldSource[]> {
   const valueSources = [];
   try {
     const mapper = getDataMapper();
     for await (const source of mapper.query(
-      YieldSource,
+      CachedYieldSource,
       { chainAddress: vault.id },
       { indexName: 'IndexApySnapshotsOnAddress' },
     )) {
@@ -384,34 +381,16 @@ export async function queryYieldEstimate(vault: VaultDefinitionModel): Promise<Y
   }
 }
 
-export async function queryYieldProjection(vault: VaultDefinitionModel): Promise<VaultYieldProjection> {
-  const yieldProjection: VaultYieldProjection = {
-    harvestValue: 0,
-    harvestApr: 0,
-    harvestTokens: [],
-    harvestPeriodApr: 0,
-    harvestPeriodApy: 0,
-    harvestPeriodSources: [],
-    harvestPeriodSourcesApy: [],
-    yieldValue: 0,
-    yieldApr: 0,
-    yieldTokens: [],
-    yieldPeriodApr: 0,
-    yieldPeriodSources: [],
-    nonHarvestApr: 0,
-    nonHarvestApy: 0,
-    nonHarvestSources: [],
-    nonHarvestSourcesApy: [],
-  };
+export async function queryYieldProjection(vault: VaultDefinitionModel): Promise<VaultYieldProjectionV3> {
   try {
     const mapper = getDataMapper();
     const id = getVaultEntityId({ network: vault.chain }, vault);
     for await (const projection of mapper.query(CachedYieldProjection, { id }, { limit: 1 })) {
       return projection;
     }
-    return yieldProjection;
+    return defaultYieldProjection;
   } catch (err) {
     console.error(err);
-    return yieldProjection;
+    return defaultYieldProjection;
   }
 }

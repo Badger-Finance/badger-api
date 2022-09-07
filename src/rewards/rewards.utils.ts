@@ -2,8 +2,8 @@ import { Network, ONE_YEAR_SECONDS, Protocol } from '@badger-dao/sdk';
 import { BigNumber } from 'ethers';
 
 import { getBoostFile, getCachedAccount } from '../accounts/accounts.utils';
+import { CachedYieldSource } from '../aws/models/cached-yield-source.interface';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
-import { YieldSource } from '../aws/models/yield-source.model';
 import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
 import { REWARD_DATA } from '../config/constants';
@@ -72,7 +72,7 @@ export async function getClaimableRewards(
   return Promise.all(requests);
 }
 
-export async function getRewardEmission(chain: Chain, vault: VaultDefinitionModel): Promise<YieldSource[]> {
+export async function getRewardEmission(chain: Chain, vault: VaultDefinitionModel): Promise<CachedYieldSource[]> {
   const boostFile = await getBoostFile(chain);
   const sdk = await chain.getSdk();
 
@@ -132,8 +132,8 @@ export async function getRewardEmission(chain: Chain, vault: VaultDefinitionMode
     const yearlyEmission = tokenPrice.price * schedule.amount * durationScalar;
     const apr = (yearlyEmission / (cachedVault.value - ignoredTVL)) * 100;
     let proRataApr = apr;
-    if (cachedVault.boost.enabled && token.address === chain.getBadgerTokenAddress()) {
-      const boostedApr = (cachedVault.boost.weight / 10_000) * proRataApr;
+    if (cachedVault.boostWeight > 0 && token.address === chain.getBadgerTokenAddress()) {
+      const boostedApr = (cachedVault.boostWeight / 10_000) * proRataApr;
       proRataApr = proRataApr - boostedApr;
       const boostedName = `Boosted ${token.name}`;
       const boostYieldSource = createYieldSource(vault, SourceType.Emission, boostedName, boostedApr, boostRange);
@@ -148,7 +148,7 @@ export async function getRewardEmission(chain: Chain, vault: VaultDefinitionMode
 export async function getProtocolValueSources(
   chain: Chain,
   vaultDefinition: VaultDefinitionModel,
-): Promise<YieldSource[]> {
+): Promise<CachedYieldSource[]> {
   try {
     switch (vaultDefinition.protocol) {
       case Protocol.Sushiswap:

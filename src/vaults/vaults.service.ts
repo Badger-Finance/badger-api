@@ -1,4 +1,4 @@
-import { Currency, VaultDTO, VaultDTOV2, VaultDTOV3, VaultType } from '@badger-dao/sdk';
+import { Currency, VaultDTO, VaultDTOV2, VaultDTOV3, VaultType, VaultYieldProjectionV2 } from '@badger-dao/sdk';
 import { Service } from '@tsed/common';
 
 import { getVaultEntityId } from '../aws/dynamodb.utils';
@@ -14,14 +14,8 @@ import { getVaultTokens } from '../tokens/tokens.utils';
 import { queryVaultHistoricYieldEvents } from './harvests.utils';
 import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
 import { VaultHarvestsMap } from './interfaces/vault-harvest-map';
-import {
-  defaultVault,
-  defaultVaultV3,
-  getCachedVault,
-  queryYieldEstimate,
-  queryYieldProjection,
-} from './vaults.utils';
-import { getYieldSources } from './yields.utils';
+import { defaultVault, defaultVaultV3, getCachedVault, queryYieldEstimate, queryYieldProjection } from './vaults.utils';
+import { getYieldSources, yieldToValueSource } from './yields.utils';
 
 @Service()
 export class VaultsService {
@@ -99,10 +93,38 @@ export class VaultsService {
     const baseVault = await defaultVaultV3(chain, vaultDefinition);
     const vault = await VaultsService.loadVault(chain, vaultDefinition, baseVault, currency);
 
-    const { apr: vaultApr, apy: vaultApy } = vault;
-    vaultApr.sources = sources;
+    const yieldProjection = await queryYieldProjection(vaultDefinition);
+    vault.yieldProjection = yieldProjection;
 
-    const hasBoostedApr = vault.sources.some((source) => source.boostable);
+    const minApr = sources.map((s) => s.performance.minYield).reduce((total, apr) => (total += apr), 0);
+    const maxApr = sources.map((s) => s.performance.maxYield).reduce((total, apr) => (total += apr), 0);
+
+    vault.apr = {
+      baseYield: apr,
+      minYield: minApr,
+      maxYield: maxApr,
+      grossYield: apr,
+      minGrossYield: apr,
+      maxGrossYield: apr,
+      sources,
+    };
+
+    const minApy = sourcesApy.map((s) => s.performance.minYield).reduce((total, apr) => (total += apr), 0);
+    const maxApy = sourcesApy.map((s) => s.performance.maxYield).reduce((total, apr) => (total += apr), 0);
+
+    vault.apy = {
+      baseYield: apy,
+      minYield: minApy,
+      maxYield: maxApy,
+      grossYield: apy,
+      minGrossYield: apy,
+      maxGrossYield: apy,
+      sources: sourcesApy,
+    };
+
+    const { apr: vaultApr } = vault;
+
+    const hasBoostedApr = vaultApr.sources.some((source) => source.boostable);
     if (vault.boost.enabled && hasBoostedApr) {
       if (vault.type !== VaultType.Native) {
         vault.type = VaultType.Boosted;
@@ -129,8 +151,14 @@ export class VaultsService {
     const baseVault = await defaultVault(chain, vaultDefinition);
     const vault = await VaultsService.loadVault(chain, vaultDefinition, baseVault, currency);
 
-    vault.sources = sources;
-    vault.sourcesApy = sourcesApy;
+    const yieldProjection = await queryYieldProjection(vaultDefinition);
+    const convertedYieldProjection: VaultYieldProjectionV2 = JSON.parse(JSON.stringify(yieldProjection));
+    convertedYieldProjection.nonHarvestSources = yieldProjection.nonHarvestSources.map(yieldToValueSource);
+    convertedYieldProjection.nonHarvestSourcesApy = yieldProjection.nonHarvestSourcesApy.map(yieldToValueSource);
+    vault.yieldProjection = convertedYieldProjection;
+
+    vault.sources = sources.map(yieldToValueSource);
+    vault.sourcesApy = sourcesApy.map(yieldToValueSource);
     vault.apr = apr;
     vault.apy = apy;
     vault.minApr = vault.sources.map((s) => s.minApr).reduce((total, apr) => (total += apr), 0);
@@ -160,10 +188,9 @@ export class VaultsService {
     vault: T,
     currency?: Currency,
   ): Promise<T> {
-    const [snapshot, yieldEstimate, yieldProjection] = await Promise.all([
+    const [snapshot, yieldEstimate] = await Promise.all([
       getCachedVault(chain, definition),
       queryYieldEstimate(definition),
-      queryYieldProjection(definition),
     ]);
     const { lastHarvestedAt } = yieldEstimate;
 
@@ -172,7 +199,6 @@ export class VaultsService {
     }
 
     vault.lastHarvest = lastHarvestedAt;
-    vault.yieldProjection = yieldProjection;
 
     return vault;
   }
@@ -261,7 +287,7 @@ export class VaultsService {
       weight: item.boostWeight,
     };
     const [tokens, convertedValue] = await Promise.all([
-      getVaultTokens(chain, vault, currency),
+      getVaultTokens(chain, { address: vault.vaultToken }, currency),
       convert(item.value, currency),
     ]);
     vault.tokens = tokens;

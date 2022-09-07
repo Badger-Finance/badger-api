@@ -6,14 +6,15 @@ import {
   ValueSource,
   VaultDTO,
   VaultState,
-  VaultYieldProjection,
+  VaultYieldProjectionV3,
+  YieldSource,
 } from '@badger-dao/sdk';
 import { BigNumber } from 'ethers';
 
 import { CachedTokenBalance } from '../aws/models/cached-token-balance.interface';
+import { CachedYieldSource } from '../aws/models/cached-yield-source.interface';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { YieldEstimate } from '../aws/models/yield-estimate.model';
-import { YieldSource } from '../aws/models/yield-source.model';
 import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
 import { SourceType } from '../rewards/enums/source-type.enum';
@@ -35,8 +36,9 @@ import { estimateDerivativeEmission, queryYieldSources } from './vaults.utils';
  * @param state state of the vault the yield source references
  * @returns true if the source is relevant, false if not
  */
-function isRelevantSource(source: YieldSource, state: VaultState): boolean {
-  if (source.apr < 0.001) {
+function isRelevantSource(source: CachedYieldSource, state: VaultState): boolean {
+  const { baseYield } = source.performance;
+  if (baseYield < 0.001) {
     return false;
   }
   if (state === VaultState.Discontinued) {
@@ -50,7 +52,7 @@ function isRelevantSource(source: YieldSource, state: VaultState): boolean {
  * @param source yield source to validate
  * @returns true if source does not originate from any harvest, false if so
  */
-function isPassiveSource(source: YieldSource): boolean {
+function isPassiveSource(source: CachedYieldSource): boolean {
   return isNonHarvestSource(source) && source.type !== SourceType.Flywheel;
 }
 
@@ -59,7 +61,7 @@ function isPassiveSource(source: YieldSource): boolean {
  * @param source yield source to validate
  * @returns true if source does not originate directly from a singular harvest, false if so
  */
-function isNonHarvestSource(source: YieldSource): boolean {
+function isNonHarvestSource(source: CachedYieldSource): boolean {
   return (
     source.type !== SourceType.Compound &&
     source.type !== SourceType.PreCompound &&
@@ -73,7 +75,7 @@ function isNonHarvestSource(source: YieldSource): boolean {
  * @param source yield source to validate
  * @returns true if source is not compounded
  */
-function isAprSource(source: YieldSource): boolean {
+function isAprSource(source: CachedYieldSource): boolean {
   return source.type !== SourceType.Compound && source.type !== SourceType.Flywheel;
 }
 
@@ -83,7 +85,7 @@ function isAprSource(source: YieldSource): boolean {
  * @param source yield source to validate
  * @returns true if source is compounded
  */
-function isApySource(source: YieldSource): boolean {
+function isApySource(source: CachedYieldSource): boolean {
   return source.type !== SourceType.PreCompound;
 }
 
@@ -108,13 +110,14 @@ function balanceToTokenRate(balance: CachedTokenBalance, principal: number, dura
  * @param source yield source to be converted
  * @returns value source derived from yield source
  */
-function yieldToValueSource(source: YieldSource): ValueSource {
+export function yieldToValueSource(source: YieldSource): ValueSource {
+  const { baseYield, minYield, maxYield } = source.performance;
   return {
     name: source.name,
-    apr: source.apr,
+    apr: baseYield,
     boostable: source.boostable,
-    minApr: source.minApr,
-    maxApr: source.maxApr,
+    minApr: minYield,
+    maxApr: maxYield,
   };
 }
 
@@ -123,20 +126,23 @@ function yieldToValueSource(source: YieldSource): ValueSource {
  * @param sources source list to aggregate
  * @returns source list with all unique elements by name with aggregated values
  */
-export function aggregateSources<T extends ValueSource>(
+export function aggregateSources<T extends YieldSource>(
   sources: T[],
   accessor: (source: T) => string = (s) => s.name,
 ): T[] {
   const sourceMap: Record<string, T> = {};
-  const sourcesCopy = JSON.parse(JSON.stringify(sources));
+  const sourcesCopy: T[] = JSON.parse(JSON.stringify(sources));
   for (const source of sourcesCopy) {
     if (!sourceMap[accessor(source)]) {
       sourceMap[accessor(source)] = source;
     } else {
-      const { apr, minApr, maxApr } = source;
-      sourceMap[accessor(source)].apr += apr;
-      sourceMap[accessor(source)].minApr += minApr;
-      sourceMap[accessor(source)].maxApr += maxApr;
+      const {
+        performance: { baseYield, minYield, maxYield },
+      } = source;
+      const existingSource = sourceMap[accessor(source)];
+      existingSource.performance.baseYield += baseYield;
+      existingSource.performance.minYield += minYield;
+      existingSource.performance.maxYield += maxYield;
     }
   }
   return Object.values(sourceMap);
@@ -184,16 +190,16 @@ export async function getYieldSources(vault: VaultDefinitionModel): Promise<Yiel
 
   const relevantSources = yieldSources.filter((s) => isRelevantSource(s, vault.state));
   const sources = relevantSources.filter(isAprSource);
-  const apr = sources.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
+  const apr = sources.map((s) => s.performance.baseYield).reduce((total, apr) => (total += apr), 0);
   const sourcesApy = relevantSources.filter(isApySource);
-  const apy = sourcesApy.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
+  const apy = sourcesApy.map((s) => s.performance.baseYield).reduce((total, apr) => (total += apr), 0);
   const nonHarvestSources = sourcesApy.filter(isPassiveSource);
   const nonHarvestSourcesApy = sourcesApy.filter(isNonHarvestSource);
 
-  const aggregatedSources = aggregateSources(sources.map(yieldToValueSource));
-  const aggregatedSourcesApy = aggregateSources(sourcesApy.map(yieldToValueSource));
-  const nonHarvestAggregatedSources = aggregateSources(nonHarvestSources.map(yieldToValueSource));
-  const nonHarvestAggregatedSourcesApy = aggregateSources(nonHarvestSourcesApy.map(yieldToValueSource));
+  const aggregatedSources = aggregateSources(sources);
+  const aggregatedSourcesApy = aggregateSources(sourcesApy);
+  const nonHarvestAggregatedSources = aggregateSources(nonHarvestSources);
+  const nonHarvestAggregatedSourcesApy = aggregateSources(nonHarvestSourcesApy);
 
   return {
     apr,
@@ -222,7 +228,7 @@ export function getVaultYieldProjection(
   vault: VaultDTO,
   yieldSources: YieldSources,
   yieldEstimate: YieldEstimate,
-): VaultYieldProjection {
+): VaultYieldProjectionV3 {
   const { value, balance, available } = vault;
   const { nonHarvestSources, nonHarvestSourcesApy } = yieldSources;
   const {
@@ -250,8 +256,8 @@ export function getVaultYieldProjection(
     .reduce((total, token) => (total += token.value), 0);
 
   const earningValue = balance > 0 ? value * ((balance - available) / balance) : 0;
-  const nonHarvestApr = nonHarvestSources.reduce((total, token) => (total += token.apr), 0);
-  const nonHarvestApy = nonHarvestSourcesApy.reduce((total, token) => (total += token.apr), 0);
+  const nonHarvestApr = nonHarvestSources.reduce((total, source) => (total += source.performance.baseYield), 0);
+  const nonHarvestApy = nonHarvestSourcesApy.reduce((total, source) => (total += source.performance.baseYield), 0);
 
   return {
     harvestValue,
@@ -293,24 +299,29 @@ export function createYieldSource(
   name: string,
   apr: number,
   boost: BoostRange = { min: 1, max: 1 },
-): YieldSource {
-  const { id: vaultId, address, chain } = vault;
+): CachedYieldSource {
+  const { id: vaultId, chain } = vault;
   const { min, max } = boost;
   const isBoostable = min != max;
   const boostModifier = isBoostable ? 'Boosted' : 'Flat';
   const id = [vaultId, type, name, boostModifier].map((p) => p.replace(/ /g, '_').toLowerCase()).join('_');
-  return Object.assign(new YieldSource(), {
+  const yieldSource: CachedYieldSource = {
     id,
     chainAddress: vaultId,
     chain,
-    address,
     type,
     name,
-    apr,
+    performance: {
+      baseYield: apr,
+      minYield: apr * min,
+      maxYield: apr * max,
+      grossYield: apr,
+      minGrossYield: apr * min,
+      maxGrossYield: apr * max,
+    },
     boostable: isBoostable,
-    minApr: apr * min,
-    maxApr: apr * max,
-  });
+  };
+  return Object.assign(new CachedYieldSource(), yieldSource);
 }
 
 /**
@@ -326,7 +337,7 @@ async function constructEmissionYieldSources(
   vault: VaultDefinitionModel,
   compoundApr: number,
   tokenAprs: Map<string, number>,
-): Promise<YieldSource[]> {
+): Promise<CachedYieldSource[]> {
   const valueSources = [];
 
   let flywheelCompounding = 0;
@@ -343,11 +354,8 @@ async function constructEmissionYieldSources(
       // search for the persisted apr variant of the compounding vault source, if any
       const compoundingSource = vaultValueSources.find((source) => source.type === SourceType.PreCompound);
       if (compoundingSource) {
-        flywheelCompounding += estimateDerivativeEmission(
-          compoundApr / 100,
-          emissionApr / 100,
-          compoundingSource.apr / 100,
-        );
+        const compoundingApr = compoundingSource.performance.baseYield;
+        flywheelCompounding += estimateDerivativeEmission(compoundApr / 100, emissionApr / 100, compoundingApr / 100);
       }
     } catch {} // ignore error for non vaults
   }
@@ -465,7 +473,7 @@ async function evaluateYieldEvents(chain: Chain, vault: VaultDefinitionModel): P
  * @param data harvest and tree distribution event information
  * @returns yield sources estimating the aggregate performance
  */
-export async function queryVaultYieldSources(chain: Chain, vault: VaultDefinitionModel): Promise<YieldSource[]> {
+export async function queryVaultYieldSources(chain: Chain, vault: VaultDefinitionModel): Promise<CachedYieldSource[]> {
   const { compoundApr, compoundApy, tokenEmissionAprs } = await evaluateYieldEvents(chain, vault);
 
   const compoundSources = [];

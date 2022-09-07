@@ -289,10 +289,10 @@ resources:
         TableName: ${self:custom.table.VAULT_BALANCES_DATA}
         BillingMode: PAY_PER_REQUEST
         KeySchema:
-          - AttributeName: 'vault'
+          - AttributeName: 'id'
             KeyType: 'HASH'
         AttributeDefinitions:
-          - AttributeName: 'vault'
+          - AttributeName: 'id'
             AttributeType: 'S'
 
     metadataTable:

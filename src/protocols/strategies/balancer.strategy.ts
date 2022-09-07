@@ -2,9 +2,9 @@ import { Erc20__factory, formatBalance, Network, Token } from '@badger-dao/sdk';
 import { GraphQLClient } from 'graphql-request';
 
 import { CachedTokenBalance } from '../../aws/models/cached-token-balance.interface';
+import { CachedYieldSource } from '../../aws/models/cached-yield-source.interface';
 import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
 import { VaultTokenBalance } from '../../aws/models/vault-token-balance.model';
-import { YieldSource } from '../../aws/models/yield-source.model';
 import { getOrCreateChain } from '../../chains/chains.utils';
 import { Chain } from '../../chains/config/chain.config';
 import { BALANCER_URL } from '../../config/constants';
@@ -24,7 +24,7 @@ import { createYieldSource } from '../../vaults/yields.utils';
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 export class BalancerStrategy {
-  static async getValueSources(vault: VaultDefinitionModel): Promise<YieldSource[]> {
+  static async getValueSources(vault: VaultDefinitionModel): Promise<CachedYieldSource[]> {
     return getBalancerSwapFees(vault);
   }
 }
@@ -194,7 +194,7 @@ export async function resolveBalancerPoolTokenPrice(chain: Chain, token: Token, 
   };
 }
 
-export async function getBalancerSwapFees(vault: VaultDefinitionModel): Promise<YieldSource[]> {
+export async function getBalancerSwapFees(vault: VaultDefinitionModel): Promise<CachedYieldSource[]> {
   try {
     const chain = getOrCreateChain(Network.Ethereum);
     const client = new GraphQLClient(BALANCER_URL);

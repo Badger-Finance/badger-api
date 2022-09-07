@@ -62,12 +62,12 @@ Object {
 exports[`indexer.utils vaultToSnapshot should return valid snapshot of the vault 1`] = `
 Object {
   "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-  "apr": 0.3067433490728799,
+  "apr": 0,
   "available": 1006655.3375347335,
   "balance": 1006655.3375347335,
   "block": 13500500,
   "boostWeight": 0,
-  "harvestApr": 0.3067433490728799,
+  "harvestApr": 0,
   "pricePerFullShare": 1.2348816886763505,
   "strategy": Object {
     "address": "0x32BdF2B35Bbf8dAca3561C3ADE59c941488E9c69",
@@ -80,6 +80,6 @@ Object {
   "timestamp": 1660223160457,
   "totalSupply": 815183.6299506156,
   "value": 13515354561.74,
-  "yieldApr": 0.3067433490728799,
+  "yieldApr": 0,
 }
 `;

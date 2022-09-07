@@ -14,7 +14,8 @@ import { getSupportedChains } from '../chains/chains.utils';
 import { Chain } from '../chains/config/chain.config';
 import { calculateBalanceDifference, toTokenValue } from '../tokens/tokens.utils';
 import { VAULT_SOURCE } from '../vaults/vaults.config';
-import { getCachedVault, queryYieldEstimate } from '../vaults/vaults.utils';
+import { VaultsService } from '../vaults/vaults.service';
+import { queryYieldEstimate } from '../vaults/vaults.utils';
 import { getVaultYieldProjection, getYieldSources } from '../vaults/yields.utils';
 
 async function loadGraphTimestamp(sdk: BadgerSDK, vault: VaultDefinitionModel): Promise<number> {
@@ -145,7 +146,7 @@ export async function refreshYieldEstimates() {
       try {
         const yieldEstimate = await captureYieldEstimate(chain, vault, now);
         const yieldSources = await getYieldSources(vault);
-        const cachedVault = await getCachedVault(chain, vault);
+        const cachedVault = await VaultsService.loadVaultV3(chain, vault);
         const yieldProjection = getVaultYieldProjection(cachedVault, yieldSources, yieldEstimate);
 
         const id = getVaultEntityId(chain, vault);

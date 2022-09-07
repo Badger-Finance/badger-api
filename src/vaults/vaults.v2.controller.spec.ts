@@ -1,17 +1,19 @@
 import { DataMapper, QueryIterator, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
-import { ONE_DAY_MS, TokenValue, VaultDTO } from '@badger-dao/sdk';
+import { ONE_DAY_MS, TokenValue, VaultYieldProjectionV3 } from '@badger-dao/sdk';
 import { BadRequest } from '@tsed/exceptions';
 import { PlatformServerless } from '@tsed/platform-serverless';
 import { PlatformServerlessTest } from '@tsed/platform-serverless-testing';
 import createMockInstance from 'jest-create-mock-instance';
 
+import { Vaultish } from '../aws/interfaces/vaultish.interface';
+import { CachedYieldSource } from '../aws/models/cached-yield-source.interface';
+import { CurrentVaultSnapshotModel } from '../aws/models/current-vault-snapshot.model';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { YieldEstimate } from '../aws/models/yield-estimate.model';
-import { YieldSource } from '../aws/models/yield-source.model';
 import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
 import { SourceType } from '../rewards/enums/source-type.enum';
-import { MOCK_VAULTS, TEST_ADDR } from '../test/constants';
+import { MOCK_VAULT_SNAPSHOT, MOCK_VAULTS, TEST_ADDR } from '../test/constants';
 import { mockBalance, setupMockChain } from '../test/mocks.utils';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import * as tokensUtils from '../tokens/tokens.utils';
@@ -56,18 +58,40 @@ export function setupTestVault() {
       lastReportedAt: 0,
     }),
   );
-  jest.spyOn(vaultsUtils, 'queryYieldProjection').mockImplementation(async () => MOCK_VAULTS[14].yieldProjection);
+  jest.spyOn(vaultsUtils, 'queryYieldProjection').mockImplementation(async () => {
+    const baseProjection: VaultYieldProjectionV3 = JSON.parse(JSON.stringify(MOCK_VAULTS[14].yieldProjection));
+    baseProjection.nonHarvestSources = MOCK_VAULTS[14].yieldProjection.nonHarvestSources.map((s) => ({
+      ...s,
+      performance: {
+        baseYield: s.apr,
+        minYield: s.minApr,
+        maxYield: s.maxApr,
+        grossYield: s.apr,
+        minGrossYield: s.minApr,
+        maxGrossYield: s.maxApr,
+      },
+    }));
+    baseProjection.nonHarvestSourcesApy = MOCK_VAULTS[14].yieldProjection.nonHarvestSourcesApy.map((s) => ({
+      ...s,
+      performance: {
+        baseYield: s.apr,
+        minYield: s.minApr,
+        maxYield: s.maxApr,
+        grossYield: s.apr,
+        minGrossYield: s.minApr,
+        maxGrossYield: s.maxApr,
+      },
+    }));
+    return baseProjection;
+  });
   jest
     .spyOn(vaultsUtils, 'getCachedVault')
-    .mockImplementation(async (chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<VaultDTO> => {
-      const vault = await vaultsUtils.defaultVault(chain, vaultDefinition);
-      vault.value = parseInt(vaultDefinition.address.slice(0, 7), 16);
-      vault.balance = 10;
-      return vault;
-    });
+    .mockImplementation(
+      async (_c: Chain, _v: VaultDefinitionModel) => MOCK_VAULT_SNAPSHOT as CurrentVaultSnapshotModel,
+    );
   jest
     .spyOn(vaultsUtils, 'queryYieldSources')
-    .mockImplementation(async (vault: VaultDefinitionModel): Promise<YieldSource[]> => {
+    .mockImplementation(async (vault: VaultDefinitionModel): Promise<CachedYieldSource[]> => {
       const performance = parseInt(vault.address.slice(0, 5), 16) / 100;
       const underlying = createYieldSource(vault, SourceType.Compound, VAULT_SOURCE, performance);
       const badger = createYieldSource(vault, SourceType.Emission, 'Badger Rewards', performance);
@@ -76,8 +100,8 @@ export function setupTestVault() {
     });
   jest
     .spyOn(tokensUtils, 'getVaultTokens')
-    .mockImplementation(async (_chain: Chain, vault: VaultDTO, _currency?: string): Promise<TokenValue[]> => {
-      const token = fullTokenMockMap[vault.underlyingToken] || fullTokenMockMap[TOKENS.BADGER];
+    .mockImplementation(async (_chain: Chain, _vault: Vaultish, _currency?: string): Promise<TokenValue[]> => {
+      const token = fullTokenMockMap[TOKENS.BADGER];
       if (token.lpToken) {
         const bal0 = parseInt(token.address.slice(0, 4), 16);
         const bal1 = parseInt(token.address.slice(0, 6), 16);

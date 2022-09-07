@@ -1,7 +1,8 @@
 import * as accountsUtils from '../accounts/accounts.utils';
 import * as dynamoDbUtils from '../aws/dynamodb.utils';
+import { CurrentVaultSnapshotModel } from '../aws/models/current-vault-snapshot.model';
 import { Chain } from '../chains/config/chain.config';
-import { MOCK_PROTOCOL_METRICS, MOCK_VAULT, TEST_ADDR, TEST_TOKEN } from '../test/constants';
+import { MOCK_PROTOCOL_METRICS, MOCK_VAULT_SNAPSHOT, TEST_ADDR, TEST_TOKEN } from '../test/constants';
 import { mockQuery, setupMockChain } from '../test/mocks.utils';
 import * as vaultsUtils from '../vaults/vaults.utils';
 import { getChainMetrics, queryProtocolMetrics } from './metrics.utils';
@@ -13,7 +14,9 @@ describe('metrics.utils', () => {
     chain = setupMockChain();
     jest.spyOn(console, 'error').mockImplementation();
     jest.spyOn(accountsUtils, 'getAccounts').mockImplementation(async (_c) => [TEST_ADDR, TEST_TOKEN]);
-    jest.spyOn(vaultsUtils, 'getCachedVault').mockImplementation(async () => MOCK_VAULT);
+    jest
+      .spyOn(vaultsUtils, 'getCachedVault')
+      .mockImplementation(async () => MOCK_VAULT_SNAPSHOT as CurrentVaultSnapshotModel);
   });
 
   describe('getChainMetrics', () => {

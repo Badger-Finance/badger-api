@@ -8,7 +8,7 @@ import {
   VaultState,
   VaultType,
   VaultVersion,
-  VaultYieldProjection,
+  VaultYieldProjectionV2,
 } from '@badger-dao/sdk';
 import { Description, Example, Property, Title } from '@tsed/schema';
 import { ethers } from 'ethers';
@@ -185,7 +185,7 @@ export class VaultModel implements VaultDTOV2 {
     harvestValue: 35,
   })
   @Property()
-  public yieldProjection: VaultYieldProjection;
+  public yieldProjection: VaultYieldProjectionV2;
 
   @Title('lastHarvest')
   @Description('Timestamp of the previous harvest')

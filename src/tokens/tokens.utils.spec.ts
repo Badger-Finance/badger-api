@@ -1,11 +1,12 @@
 import { Currency, TokensService } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 
+import { CurrentVaultSnapshotModel } from '../aws/models/current-vault-snapshot.model';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
 import * as priceUtils from '../prices/prices.utils';
-import { MOCK_TOKENS, MOCK_VAULT_DEFINITION, TEST_TOKEN } from '../test/constants';
+import { MOCK_TOKENS, MOCK_VAULT_DEFINITION, MOCK_VAULT_SNAPSHOT, TEST_TOKEN } from '../test/constants';
 import { mockBalance, mockBatchGet, mockBatchPut, mockQuery, setupMockChain } from '../test/mocks.utils';
 import * as vaultUtils from '../vaults/vaults.utils';
 import { TokenNotFound } from './errors/token.error';
@@ -17,11 +18,11 @@ describe('token.utils', () => {
 
   beforeEach(() => {
     chain = setupMockChain();
-    jest.spyOn(vaultUtils, 'getCachedVault').mockImplementation(async (chain: Chain, vault: VaultDefinitionModel) => {
-      const defaultVault = await vaultUtils.defaultVault(chain, vault);
-      defaultVault.balance = 10;
-      return defaultVault;
-    });
+    jest
+      .spyOn(vaultUtils, 'getCachedVault')
+      .mockImplementation(
+        async (_c: Chain, _v: VaultDefinitionModel) => MOCK_VAULT_SNAPSHOT as CurrentVaultSnapshotModel,
+      );
   });
 
   describe('toBalance', () => {
@@ -119,7 +120,7 @@ describe('token.utils', () => {
         const expected = mockBalance(badger, 10);
         mockQuery([{ vault: MOCK_VAULT_DEFINITION.address, tokenBalances: [expected] }]);
         const dto = await vaultUtils.defaultVault(chain, MOCK_VAULT_DEFINITION);
-        const result = await getVaultTokens(chain, dto);
+        const result = await getVaultTokens(chain, { address: dto.vaultToken });
         expect(result).toMatchObject([expected]);
       });
     });
@@ -133,7 +134,7 @@ describe('token.utils', () => {
           const tokenBalances = [mockBalance(wbtc, 1), mockBalance(weth, 20)];
           const cached = { vault: MOCK_VAULT_DEFINITION.address, tokenBalances };
           mockQuery([cached]);
-          const actual = await getVaultTokens(chain, dto);
+          const actual = await getVaultTokens(chain, { address: dto.vaultToken });
           expect(actual).toMatchObject(tokenBalances);
         });
       });
@@ -147,7 +148,7 @@ describe('token.utils', () => {
           const cached = { vault: MOCK_VAULT_DEFINITION.address, tokenBalances };
           mockQuery([cached]);
           const expected = [mockBalance(wbtc, 1, currency), mockBalance(weth, 20, currency)];
-          const actual = await getVaultTokens(chain, dto, currency);
+          const actual = await getVaultTokens(chain, { address: dto.vaultToken }, currency);
           expect(actual).toMatchObject(expected);
         });
       });

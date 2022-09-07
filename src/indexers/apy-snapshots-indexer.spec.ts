@@ -1,4 +1,4 @@
-import { YieldSource } from '../aws/models/yield-source.model';
+import { CachedYieldSource } from '../aws/models/cached-yield-source.interface';
 import { Chain } from '../chains/config/chain.config';
 import { MOCK_VAULT_DEFINITION } from '../test/constants';
 import { mockBatchDelete, mockBatchPut, mockQuery, setupMockChain } from '../test/mocks.utils';
@@ -8,7 +8,7 @@ import { refreshChainApySnapshots } from './apy-snapshots-indexer';
 describe('apy-snapshots-indexer', () => {
   let chain: Chain;
 
-  const mockValueSource = Object.assign(new YieldSource(), {
+  const mockValueSource = Object.assign(new CachedYieldSource(), {
     addressValueSourceType: '0xfd05D3C7fe2924020620A8bE4961bBaA747e6305_flat_CVX_emission',
     address: '0xfd05D3C7fe2924020620A8bE4961bBaA747e6305',
     type: 'flat_CVX_emission',
@@ -23,7 +23,7 @@ describe('apy-snapshots-indexer', () => {
     maxApr: 1,
     boostable: false,
   });
-  const mockInvalidValueSource = Object.assign(new YieldSource(), {
+  const mockInvalidValueSource = Object.assign(new CachedYieldSource(), {
     addressValueSourceType: null,
     address: null,
     type: null,
