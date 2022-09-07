@@ -12,6 +12,7 @@ export const vaultHarvestsOnChainMock: Record<string, VaultHarvestsExtendedResp[
       eventType: YieldType.Harvest,
       strategyBalance: 2481.941296192305,
       estimatedApr: 0.01,
+      tx: '0x23423',
     },
     {
       timestamp: 1637346968,
@@ -21,6 +22,7 @@ export const vaultHarvestsOnChainMock: Record<string, VaultHarvestsExtendedResp[
       eventType: YieldType.Harvest,
       strategyBalance: 2366.0613517200886,
       estimatedApr: 0.06,
+      tx: '0x23423',
     },
     {
       timestamp: 1637717848,
@@ -30,6 +32,7 @@ export const vaultHarvestsOnChainMock: Record<string, VaultHarvestsExtendedResp[
       eventType: YieldType.Harvest,
       strategyBalance: 2314.0426476124358,
       estimatedApr: 0.09,
+      tx: '0x23423',
     },
     {
       timestamp: 1638065247,
@@ -39,6 +42,7 @@ export const vaultHarvestsOnChainMock: Record<string, VaultHarvestsExtendedResp[
       eventType: YieldType.Harvest,
       strategyBalance: 2300.047794001301,
       estimatedApr: 0.01,
+      tx: '0x23423',
     },
     {
       timestamp: 1640034477,
@@ -48,6 +52,7 @@ export const vaultHarvestsOnChainMock: Record<string, VaultHarvestsExtendedResp[
       eventType: YieldType.Harvest,
       strategyBalance: 2285.8514972932135,
       estimatedApr: 0.15,
+      tx: '0x23423',
     },
     {
       timestamp: 1640380383,
@@ -57,6 +62,7 @@ export const vaultHarvestsOnChainMock: Record<string, VaultHarvestsExtendedResp[
       eventType: YieldType.Harvest,
       strategyBalance: 2257.6472384811345,
       estimatedApr: 0,
+      tx: '0x23423',
     },
     {
       timestamp: 1640731025,
@@ -66,6 +72,7 @@ export const vaultHarvestsOnChainMock: Record<string, VaultHarvestsExtendedResp[
       eventType: YieldType.Harvest,
       strategyBalance: 2255.6396126895474,
       estimatedApr: 0,
+      tx: '0x23423',
     },
     {
       timestamp: 1636878824,
@@ -75,6 +82,7 @@ export const vaultHarvestsOnChainMock: Record<string, VaultHarvestsExtendedResp[
       eventType: YieldType.Distribution,
       strategyBalance: 2481.941296192305,
       estimatedApr: 0.01,
+      tx: '0x23423',
     },
     {
       timestamp: 1637346968,
@@ -84,6 +92,7 @@ export const vaultHarvestsOnChainMock: Record<string, VaultHarvestsExtendedResp[
       eventType: YieldType.Distribution,
       strategyBalance: 2366.0613517200886,
       estimatedApr: 0.06,
+      tx: '0x23423',
     },
     {
       timestamp: 1637717848,
@@ -93,6 +102,7 @@ export const vaultHarvestsOnChainMock: Record<string, VaultHarvestsExtendedResp[
       eventType: YieldType.Distribution,
       strategyBalance: 2314.0426476124358,
       estimatedApr: 0.09,
+      tx: '0x23423',
     },
     {
       timestamp: 1638065247,
@@ -102,6 +112,7 @@ export const vaultHarvestsOnChainMock: Record<string, VaultHarvestsExtendedResp[
       eventType: YieldType.Distribution,
       strategyBalance: 2300.047794001301,
       estimatedApr: 0.01,
+      tx: '0x23423',
     },
     {
       timestamp: 1640034477,
@@ -111,6 +122,7 @@ export const vaultHarvestsOnChainMock: Record<string, VaultHarvestsExtendedResp[
       eventType: YieldType.Distribution,
       strategyBalance: 2285.8514972932135,
       estimatedApr: 0.15,
+      tx: '0x23423',
     },
     {
       timestamp: 1640380383,
@@ -120,6 +132,7 @@ export const vaultHarvestsOnChainMock: Record<string, VaultHarvestsExtendedResp[
       eventType: YieldType.Distribution,
       strategyBalance: 2257.6472384811345,
       estimatedApr: 0,
+      tx: '0x23423',
     },
     {
       timestamp: 1640731025,
@@ -129,6 +142,7 @@ export const vaultHarvestsOnChainMock: Record<string, VaultHarvestsExtendedResp[
       eventType: YieldType.Distribution,
       strategyBalance: 2255.6396126895474,
       estimatedApr: 0,
+      tx: '0x23423',
     },
   ],
   [TEST_ADDR]: [
@@ -140,6 +154,7 @@ export const vaultHarvestsOnChainMock: Record<string, VaultHarvestsExtendedResp[
       eventType: YieldType.Harvest,
       strategyBalance: 2340.323802791289,
       estimatedApr: 0.41,
+      tx: '0x23423',
     },
     {
       timestamp: 1637345324,
@@ -149,6 +164,7 @@ export const vaultHarvestsOnChainMock: Record<string, VaultHarvestsExtendedResp[
       eventType: YieldType.Harvest,
       strategyBalance: 3245.35879183169,
       estimatedApr: 0.09,
+      tx: '0x23423',
     },
     {
       timestamp: 1640044054,
@@ -158,6 +174,7 @@ export const vaultHarvestsOnChainMock: Record<string, VaultHarvestsExtendedResp[
       eventType: YieldType.Harvest,
       strategyBalance: 5282.35224785979,
       estimatedApr: 681.2,
+      tx: '0x23423',
     },
     {
       timestamp: 1640044922,
@@ -167,6 +184,7 @@ export const vaultHarvestsOnChainMock: Record<string, VaultHarvestsExtendedResp[
       eventType: YieldType.Harvest,
       strategyBalance: 5282.352366981134,
       estimatedApr: 0,
+      tx: '0x23423',
     },
     {
       timestamp: 1636874531,
@@ -176,6 +194,7 @@ export const vaultHarvestsOnChainMock: Record<string, VaultHarvestsExtendedResp[
       eventType: YieldType.Distribution,
       strategyBalance: 2340.323802791289,
       estimatedApr: 0.41,
+      tx: '0x23423',
     },
     {
       timestamp: 1637345324,
@@ -185,6 +204,7 @@ export const vaultHarvestsOnChainMock: Record<string, VaultHarvestsExtendedResp[
       eventType: YieldType.Distribution,
       strategyBalance: 3245.35879183169,
       estimatedApr: 0.09,
+      tx: '0x23423',
     },
     {
       timestamp: 1640044054,
@@ -194,6 +214,7 @@ export const vaultHarvestsOnChainMock: Record<string, VaultHarvestsExtendedResp[
       eventType: YieldType.Distribution,
       strategyBalance: 5282.35224785979,
       estimatedApr: 681.2,
+      tx: '0x23423',
     },
     {
       timestamp: 1640044922,
@@ -203,6 +224,7 @@ export const vaultHarvestsOnChainMock: Record<string, VaultHarvestsExtendedResp[
       eventType: YieldType.Distribution,
       strategyBalance: 5282.352366981134,
       estimatedApr: 0,
+      tx: '0x23423',
     },
   ],
 };

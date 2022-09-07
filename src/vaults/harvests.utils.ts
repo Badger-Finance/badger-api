@@ -21,6 +21,14 @@ import { calculateYield } from './yields.utils';
 // this allows three chunks of 10k blocks per index
 export const HARVEST_SCAN_BLOCK_INCREMENT = 30_000;
 
+function grabYieldGraphTx(graphTxId?: string): string {
+  if (!graphTxId) return '';
+
+  if (!graphTxId.includes('-')) return graphTxId;
+
+  return graphTxId.split('-')[0];
+}
+
 /**
  * Modify subgraph response to match on chain event data allowing it to fit into our estimation functions.
  * @param vault vault requesting graph data transformation
@@ -45,6 +53,7 @@ function constructGraphVaultData(
     return {
       timestamp,
       harvests: currentHarvests.map((h) => ({
+        tx: grabYieldGraphTx(h.id),
         timestamp,
         block: Number(h.blockNumber),
         token: vault.depositToken,
@@ -53,6 +62,7 @@ function constructGraphVaultData(
       treeDistributions: currentDistributions.map((d) => {
         const tokenAddress = d.token.id.startsWith('0x0x') ? d.token.id.slice(2) : d.token.id;
         return {
+          tx: grabYieldGraphTx(d.id),
           timestamp,
           block: Number(d.blockNumber),
           token: ethers.utils.getAddress(tokenAddress),
@@ -143,6 +153,7 @@ async function evaluateYieldItems(
       earned: tokenEarned,
       apr: eventApr,
       grossApr: eventApr * performanceScalar,
+      tx: item.tx,
     };
     yieldEvents.push(yieldEvent);
 

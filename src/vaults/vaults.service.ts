@@ -73,6 +73,7 @@ export class VaultsService {
           block: harvest.block,
           token: harvest.token,
           amount: harvest.amount,
+          tx: harvest.tx,
         });
       }
     } catch (e) {

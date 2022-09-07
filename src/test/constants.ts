@@ -97,6 +97,7 @@ export const MOCK_YIELD_SOURCES: ValueSource[] = MOCK_VAULT.sources;
 export const MOCK_TOKENS = mockTokens as TokenFullMap;
 export const MOCK_TOKEN = MOCK_TOKENS[TEST_TOKEN];
 
+// @ts-ignore (need to update Mocks lib)
 export const MOCK_VAULTS_HARVESTS = mockVaultHarvests as Record<string, VaultHarvestsExtendedResp[]>;
 export const MOCK_VAULT_HARVESTS = MOCK_VAULTS_HARVESTS[TEST_ADDR];
 
@@ -129,4 +130,5 @@ export const MOCK_YIELD_EVENT: YieldEvent = {
   earned: 3_500,
   apr: 230,
   grossApr: 230 * (1 / 0.9),
+  tx: '0x123',
 };
