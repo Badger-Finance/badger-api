@@ -43,6 +43,7 @@ Object {
   "nonHarvestApy": 17,
   "nonHarvestSources": Array [
     Object {
+      "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
       "boostable": false,
       "chain": "ethereum",
       "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -59,6 +60,7 @@ Object {
       "type": "lp_fee",
     },
     Object {
+      "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
       "boostable": false,
       "chain": "ethereum",
       "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -75,6 +77,7 @@ Object {
       "type": "emission",
     },
     Object {
+      "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
       "boostable": true,
       "chain": "ethereum",
       "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -93,6 +96,7 @@ Object {
   ],
   "nonHarvestSourcesApy": Array [
     Object {
+      "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
       "boostable": false,
       "chain": "ethereum",
       "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -109,6 +113,7 @@ Object {
       "type": "lp_fee",
     },
     Object {
+      "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
       "boostable": false,
       "chain": "ethereum",
       "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -125,6 +130,7 @@ Object {
       "type": "emission",
     },
     Object {
+      "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
       "boostable": true,
       "chain": "ethereum",
       "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -141,6 +147,7 @@ Object {
       "type": "emission",
     },
     Object {
+      "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
       "boostable": false,
       "chain": "ethereum",
       "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -191,6 +198,7 @@ Object {
   "apy": 2,
   "nonHarvestSources": Array [
     Object {
+      "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
       "boostable": false,
       "chain": "ethereum",
       "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -209,6 +217,7 @@ Object {
   ],
   "nonHarvestSourcesApy": Array [
     Object {
+      "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
       "boostable": false,
       "chain": "ethereum",
       "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -227,6 +236,7 @@ Object {
   ],
   "sources": Array [
     Object {
+      "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
       "boostable": false,
       "chain": "ethereum",
       "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -245,6 +255,7 @@ Object {
   ],
   "sourcesApy": Array [
     Object {
+      "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
       "boostable": false,
       "chain": "ethereum",
       "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -270,6 +281,7 @@ Object {
   "apy": 31,
   "nonHarvestSources": Array [
     Object {
+      "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
       "boostable": false,
       "chain": "ethereum",
       "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -286,6 +298,7 @@ Object {
       "type": "lp_fee",
     },
     Object {
+      "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
       "boostable": false,
       "chain": "ethereum",
       "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -302,6 +315,7 @@ Object {
       "type": "emission",
     },
     Object {
+      "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
       "boostable": true,
       "chain": "ethereum",
       "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -320,6 +334,7 @@ Object {
   ],
   "nonHarvestSourcesApy": Array [
     Object {
+      "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
       "boostable": false,
       "chain": "ethereum",
       "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -336,6 +351,7 @@ Object {
       "type": "lp_fee",
     },
     Object {
+      "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
       "boostable": false,
       "chain": "ethereum",
       "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -352,6 +368,7 @@ Object {
       "type": "emission",
     },
     Object {
+      "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
       "boostable": true,
       "chain": "ethereum",
       "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -368,6 +385,7 @@ Object {
       "type": "emission",
     },
     Object {
+      "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
       "boostable": false,
       "chain": "ethereum",
       "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -386,6 +404,7 @@ Object {
   ],
   "sources": Array [
     Object {
+      "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
       "boostable": false,
       "chain": "ethereum",
       "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -402,6 +421,7 @@ Object {
       "type": "precompound",
     },
     Object {
+      "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
       "boostable": false,
       "chain": "ethereum",
       "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -418,6 +438,7 @@ Object {
       "type": "lp_fee",
     },
     Object {
+      "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
       "boostable": false,
       "chain": "ethereum",
       "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -434,6 +455,7 @@ Object {
       "type": "emission",
     },
     Object {
+      "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
       "boostable": true,
       "chain": "ethereum",
       "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -452,6 +474,7 @@ Object {
   ],
   "sourcesApy": Array [
     Object {
+      "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
       "boostable": false,
       "chain": "ethereum",
       "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -468,6 +491,7 @@ Object {
       "type": "compound",
     },
     Object {
+      "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
       "boostable": false,
       "chain": "ethereum",
       "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -484,6 +508,7 @@ Object {
       "type": "lp_fee",
     },
     Object {
+      "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
       "boostable": false,
       "chain": "ethereum",
       "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -500,6 +525,7 @@ Object {
       "type": "emission",
     },
     Object {
+      "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
       "boostable": true,
       "chain": "ethereum",
       "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -516,6 +542,7 @@ Object {
       "type": "emission",
     },
     Object {
+      "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
       "boostable": false,
       "chain": "ethereum",
       "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -538,6 +565,7 @@ Object {
 exports[`yields.utils queryVaultYieldSources vault with compounding yield contains no compounding vault sources 1`] = `
 Array [
   CachedYieldSource {
+    "address": "0xBA485b556399123261a5F9c95d413B4f93107407",
     "boostable": false,
     "chain": "ethereum",
     "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -554,6 +582,7 @@ Array [
     "type": "precompound",
   },
   CachedYieldSource {
+    "address": "0xBA485b556399123261a5F9c95d413B4f93107407",
     "boostable": false,
     "chain": "ethereum",
     "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -570,6 +599,7 @@ Array [
     "type": "compound",
   },
   CachedYieldSource {
+    "address": "0xBA485b556399123261a5F9c95d413B4f93107407",
     "boostable": false,
     "chain": "ethereum",
     "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -586,6 +616,7 @@ Array [
     "type": "distribution",
   },
   CachedYieldSource {
+    "address": "0xBA485b556399123261a5F9c95d413B4f93107407",
     "boostable": false,
     "chain": "ethereum",
     "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -607,6 +638,7 @@ Array [
 exports[`yields.utils queryVaultYieldSources vault with no compounding yield contains no compounding vault sources 1`] = `
 Array [
   CachedYieldSource {
+    "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
     "boostable": false,
     "chain": "ethereum",
     "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",

@@ -21,6 +21,9 @@ export class CachedYieldSource implements YieldSource {
   chain!: Network;
 
   @attribute()
+  address!: string;
+
+  @attribute()
   type!: SourceType;
 
   @attribute()

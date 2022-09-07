@@ -734,6 +734,7 @@ Array [
       "minYield": 8.26,
       "sources": Array [
         Object {
+          "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
           "boostable": false,
           "chain": "ethereum",
           "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -750,6 +751,7 @@ Array [
           "type": "emission",
         },
         Object {
+          "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
           "boostable": false,
           "chain": "ethereum",
           "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -776,6 +778,7 @@ Array [
       "minYield": 12.39,
       "sources": Array [
         Object {
+          "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
           "boostable": false,
           "chain": "ethereum",
           "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -792,6 +795,7 @@ Array [
           "type": "compound",
         },
         Object {
+          "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
           "boostable": false,
           "chain": "ethereum",
           "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -808,6 +812,7 @@ Array [
           "type": "emission",
         },
         Object {
+          "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
           "boostable": false,
           "chain": "ethereum",
           "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -1048,6 +1053,7 @@ Array [
       "minYield": 8.26,
       "sources": Array [
         Object {
+          "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
           "boostable": false,
           "chain": "ethereum",
           "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -1064,6 +1070,7 @@ Array [
           "type": "emission",
         },
         Object {
+          "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
           "boostable": false,
           "chain": "ethereum",
           "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -1090,6 +1097,7 @@ Array [
       "minYield": 12.39,
       "sources": Array [
         Object {
+          "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
           "boostable": false,
           "chain": "ethereum",
           "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -1106,6 +1114,7 @@ Array [
           "type": "compound",
         },
         Object {
+          "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
           "boostable": false,
           "chain": "ethereum",
           "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -1122,6 +1131,7 @@ Array [
           "type": "emission",
         },
         Object {
+          "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
           "boostable": false,
           "chain": "ethereum",
           "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",

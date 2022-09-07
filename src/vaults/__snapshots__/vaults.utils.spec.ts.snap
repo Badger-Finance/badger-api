@@ -3,6 +3,7 @@
 exports[`vaults.utils getVaultPerformance available reward, protocol, and persisted yields includes protocol, reward emissions, and yield sources 1`] = `
 Array [
   CachedYieldSource {
+    "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
     "boostable": false,
     "chain": "ethereum",
     "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -19,6 +20,7 @@ Array [
     "type": "precompound",
   },
   CachedYieldSource {
+    "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
     "boostable": false,
     "chain": "ethereum",
     "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -35,6 +37,7 @@ Array [
     "type": "compound",
   },
   CachedYieldSource {
+    "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
     "boostable": false,
     "chain": "ethereum",
     "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -51,6 +54,7 @@ Array [
     "type": "emission",
   },
   CachedYieldSource {
+    "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
     "boostable": true,
     "chain": "ethereum",
     "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
@@ -67,6 +71,7 @@ Array [
     "type": "emission",
   },
   CachedYieldSource {
+    "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
     "boostable": false,
     "chain": "ethereum",
     "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",

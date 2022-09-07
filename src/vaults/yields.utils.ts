@@ -300,12 +300,13 @@ export function createYieldSource(
   apr: number,
   boost: BoostRange = { min: 1, max: 1 },
 ): CachedYieldSource {
-  const { id: vaultId, chain } = vault;
+  const { id: vaultId, chain, address } = vault;
   const { min, max } = boost;
   const isBoostable = min != max;
   const boostModifier = isBoostable ? 'Boosted' : 'Flat';
   const id = [vaultId, type, name, boostModifier].map((p) => p.replace(/ /g, '_').toLowerCase()).join('_');
   const yieldSource: CachedYieldSource = {
+    address,
     id,
     chainAddress: vaultId,
     chain,
