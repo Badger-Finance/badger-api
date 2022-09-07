@@ -418,6 +418,7 @@ async function evaluateYieldEvents(chain: Chain, vault: VaultDefinitionModel): P
       apr: 72.2,
       grossApr: 72.2 * (1 / 0.9),
       balance: 99624.998,
+      tx: '0x30bc2ab3a59f7923ea20f7b99331dbc974130dc8b7152bb897d393fc2c506214',
     });
   }
 

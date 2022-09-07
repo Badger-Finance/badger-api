@@ -11,4 +11,5 @@ export interface YieldEvent {
   token: string;
   type: YieldType;
   value: number;
+  tx: string;
 }

@@ -30,7 +30,7 @@
   "dependencies": {
     "@aws/dynamodb-data-mapper": "^0.7.3",
     "@aws/dynamodb-data-mapper-annotations": "^0.7.3",
-    "@badger-dao/sdk": "^1.17.11",
+    "@badger-dao/sdk": "^1.18.0",
     "@tsed/common": "6.95.9",
     "@tsed/core": "6.95.9",
     "@tsed/di": "6.95.9",
@@ -55,7 +55,7 @@
     "tslib": "^2.2.0"
   },
   "devDependencies": {
-    "@badger-dao/sdk-mocks": "^1.17.11",
+    "@badger-dao/sdk-mocks": "^1.18.0",
     "@graphql-codegen/cli": "^2.3.0",
     "@graphql-codegen/typescript": "^2.7.3",
     "@graphql-codegen/typescript-graphql-request": "^4.5.3",
@@ -75,7 +75,7 @@
     "@typescript-eslint/eslint-plugin": "^5.33.0",
     "@typescript-eslint/parser": "^5.33.0",
     "clean-modules": "^2.0.6",
-    "eslint": "^8.21.0",
+    "eslint": "^8.22.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jest": "26.8.3",

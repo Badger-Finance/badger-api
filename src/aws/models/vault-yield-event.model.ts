@@ -52,4 +52,7 @@ export class VaultYieldEvent implements YieldEvent {
 
   @attribute()
   token!: string;
+
+  @attribute()
+  tx!: string;
 }

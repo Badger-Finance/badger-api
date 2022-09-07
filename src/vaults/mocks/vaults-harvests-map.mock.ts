@@ -12,6 +12,7 @@ export const vaultsHarvestsMapMock: Record<string, VaultHarvestsExtendedResp[]> 
       eventType: YieldType.Harvest,
       strategyBalance: 2481.941296192305,
       estimatedApr: 30,
+      tx: '0x3324231',
     },
     {
       timestamp: 1636878824,
@@ -21,6 +22,7 @@ export const vaultsHarvestsMapMock: Record<string, VaultHarvestsExtendedResp[]> 
       eventType: YieldType.Distribution,
       strategyBalance: 2481.941296192305,
       estimatedApr: 5,
+      tx: '0x3324232',
     },
   ],
   [TEST_ADDR]: [
@@ -32,6 +34,7 @@ export const vaultsHarvestsMapMock: Record<string, VaultHarvestsExtendedResp[]> 
       eventType: YieldType.Harvest,
       strategyBalance: 675.7270352627328,
       estimatedApr: 0,
+      tx: '0x3324233',
     },
     {
       timestamp: 1636848055,
@@ -41,6 +44,7 @@ export const vaultsHarvestsMapMock: Record<string, VaultHarvestsExtendedResp[]> 
       eventType: YieldType.Distribution,
       strategyBalance: 675.7270352627328,
       estimatedApr: 0,
+      tx: '0x3324234',
     },
     {
       timestamp: 1636848055,
@@ -50,6 +54,7 @@ export const vaultsHarvestsMapMock: Record<string, VaultHarvestsExtendedResp[]> 
       eventType: YieldType.Distribution,
       strategyBalance: 675.7270352627328,
       estimatedApr: 0,
+      tx: '0x3324235',
     },
     {
       timestamp: 1637345136,
@@ -59,6 +64,7 @@ export const vaultsHarvestsMapMock: Record<string, VaultHarvestsExtendedResp[]> 
       eventType: YieldType.Harvest,
       strategyBalance: 671.2872269577839,
       estimatedApr: 0,
+      tx: '0x3324236',
     },
   ],
 };

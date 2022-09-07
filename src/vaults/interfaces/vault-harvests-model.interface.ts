@@ -47,6 +47,12 @@ export class VaultHarvestsModel implements VaultHarvestsExtendedResp {
   @Property()
   public estimatedApr?: number;
 
+  @Title('tx')
+  @Description('Event transaction hash')
+  @Example('0x30bc2ab3a59f7923ea20f7b99331dbc974130dc8b7152bb897d393fc2c506214')
+  @Property()
+  public tx!: string;
+
   constructor({
     timestamp,
     block,
@@ -55,6 +61,7 @@ export class VaultHarvestsModel implements VaultHarvestsExtendedResp {
     eventType,
     strategyBalance,
     estimatedApr,
+    tx,
   }: VaultHarvestsExtendedResp) {
     this.timestamp = timestamp;
     this.block = block;
@@ -63,5 +70,6 @@ export class VaultHarvestsModel implements VaultHarvestsExtendedResp {
     this.eventType = eventType;
     this.strategyBalance = strategyBalance;
     this.estimatedApr = estimatedApr;
+    this.tx = tx;
   }
 }
