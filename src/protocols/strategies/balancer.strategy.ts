@@ -1,6 +1,7 @@
 import { Erc20__factory, formatBalance, Network, Token } from '@badger-dao/sdk';
 import { GraphQLClient } from 'graphql-request';
 
+import { getVaultEntityId } from '../../aws/dynamodb.utils';
 import { CachedTokenBalance } from '../../aws/models/cached-token-balance.interface';
 import { CachedYieldSource } from '../../aws/models/cached-yield-source.interface';
 import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
@@ -106,7 +107,9 @@ export async function getBalancerVaultTokenBalance(chain: Chain, token: string):
     cachedToken.balance *= scalar;
     cachedToken.value *= scalar;
   });
-  const vaultTokenBalance = {
+  const vaultTokenBalance: VaultTokenBalance = {
+    id: getVaultEntityId(chain, vaultDefinition),
+    chain: chain.network,
     vault: address,
     tokenBalances: cachedTokens,
   };
