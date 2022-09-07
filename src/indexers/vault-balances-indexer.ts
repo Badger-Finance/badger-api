@@ -1,6 +1,6 @@
 import { Protocol } from '@badger-dao/sdk';
 
-import { getDataMapper } from '../aws/dynamodb.utils';
+import { getDataMapper, getVaultEntityId } from '../aws/dynamodb.utils';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { VaultTokenBalance } from '../aws/models/vault-token-balance.model';
 import { getSupportedChains } from '../chains/chains.utils';
@@ -57,10 +57,13 @@ export async function updateVaultTokenBalances(chain: Chain, vault: VaultDefinit
     }
 
     if (!cachedTokenBalance || cachedTokenBalance.tokenBalances.length === 0) {
-      cachedTokenBalance = Object.assign(new VaultTokenBalance(), {
+      const singleTokenBalance: VaultTokenBalance = {
+        id: getVaultEntityId(chain, vault),
+        chain: chain.network,
         vault: vault.address,
         tokenBalances: [await toBalance(depositToken, cachedVault.balance)],
-      });
+      };
+      cachedTokenBalance = Object.assign(new VaultTokenBalance(), singleTokenBalance);
     }
 
     await mapper.put(cachedTokenBalance);

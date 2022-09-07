@@ -1,6 +1,7 @@
 import { formatBalance, UniV2__factory } from '@badger-dao/sdk';
 import { NotFound, UnprocessableEntity } from '@tsed/exceptions';
 
+import { getVaultEntityId } from '../../aws/dynamodb.utils';
 import { CachedYieldSource } from '../../aws/models/cached-yield-source.interface';
 import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
 import { VaultTokenBalance } from '../../aws/models/vault-token-balance.model';
@@ -125,10 +126,14 @@ export async function getLpTokenBalances(chain: Chain, vault: VaultDefinitionMod
     const t1TokenBalance = reserve1 * valueScalar;
     const tokenBalances = await Promise.all([toBalance(t0Token, t0TokenBalance), toBalance(t1Token, t1TokenBalance)]);
 
-    return Object.assign(new VaultTokenBalance(), {
+    const vaultBalance: VaultTokenBalance = {
+      id: getVaultEntityId(chain, vault),
+      chain: chain.network,
       vault: address,
       tokenBalances,
-    });
+    };
+
+    return Object.assign(new VaultTokenBalance(), vaultBalance);
   } catch (err) {
     throw new NotFound(`${vault.protocol} pool pair ${depositToken} does not exist`);
   }

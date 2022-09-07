@@ -193,13 +193,8 @@ export class VaultsService {
       queryYieldEstimate(definition),
     ]);
     const { lastHarvestedAt } = yieldEstimate;
-
-    if (snapshot) {
-      await VaultsService.setVaultInformation(chain, vault, snapshot, currency);
-    }
-
     vault.lastHarvest = lastHarvestedAt;
-
+    await VaultsService.setVaultInformation(chain, vault, snapshot, currency);
     return vault;
   }
 

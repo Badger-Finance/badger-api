@@ -2,6 +2,8 @@
 
 exports[`uniswap.strategy getLpTokenBalances should return token balances of the vault 1`] = `
 VaultTokenBalance {
+  "chain": "ethereum",
+  "id": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
   "tokenBalances": Array [
     Object {
       "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",

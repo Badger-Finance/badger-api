@@ -1,6 +1,7 @@
 import { Erc20__factory, formatBalance, Network, Token } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 
+import { getVaultEntityId } from '../../aws/dynamodb.utils';
 import { CachedTokenBalance } from '../../aws/models/cached-token-balance.interface';
 import { CachedYieldSource } from '../../aws/models/cached-yield-source.interface';
 import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
@@ -230,10 +231,13 @@ export async function getCurveVaultTokenBalance(
     cachedToken.balance *= scalar;
     cachedToken.value *= scalar;
   });
-  return Object.assign(new VaultTokenBalance(), {
+  const vaultBalance: VaultTokenBalance = {
+    id: getVaultEntityId(chain, vault),
+    chain: chain.network,
     vault: address,
     tokenBalances: cachedTokens,
-  });
+  };
+  return Object.assign(new VaultTokenBalance(), vaultBalance);
 }
 
 // this should really only be used on 50:50 curve v2 crypto pools
