@@ -45,6 +45,9 @@ export class VaultYieldEvent implements YieldEvent {
   apr!: number;
 
   @attribute()
+  grossApr!: number;
+
+  @attribute()
   type!: YieldType;
 
   @attribute()

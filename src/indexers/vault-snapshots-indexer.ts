@@ -15,14 +15,17 @@ export async function refreshVaultSnapshots() {
       vaults.map(async (vault) => {
         try {
           const snapshot = await vaultToSnapshot(chain, vault);
+          const baseEntity = {
+            ...snapshot,
+            id: getVaultEntityId(chain, vault),
+          };
 
           // save a current snapshot of the vault
-          await mapper.put(Object.assign(new CurrentVaultSnapshotModel(), snapshot));
+          await mapper.put(Object.assign(new CurrentVaultSnapshotModel(), baseEntity));
 
           // create a historic vault entry from the same data
           const historicSnapshot = Object.assign(new HistoricVaultSnapshotModel(), {
-            ...snapshot,
-            id: getVaultEntityId(chain, vault),
+            ...baseEntity,
             timestamp,
           });
 

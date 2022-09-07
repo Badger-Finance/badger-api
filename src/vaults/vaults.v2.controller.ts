@@ -70,6 +70,6 @@ export class VaultsV2Controller {
     const chainInst = getOrCreateChain(chain);
     const vaultDef = await chainInst.vaults.getVault(vault);
 
-    return VaultsService.loadVault(chainInst, vaultDef, currency);
+    return VaultsService.loadVaultV2(chainInst, vaultDef, currency);
   }
 }

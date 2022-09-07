@@ -4,11 +4,11 @@ import {
   TokenValue,
   ValueSource,
   VaultBehavior,
-  VaultDTO,
+  VaultDTOV2,
   VaultState,
   VaultType,
   VaultVersion,
-  VaultYieldProjection,
+  VaultYieldProjectionV2,
 } from '@badger-dao/sdk';
 import { Description, Example, Property, Title } from '@tsed/schema';
 import { ethers } from 'ethers';
@@ -17,7 +17,7 @@ import { TOKENS } from '../../config/tokens.config';
 import { BouncerType } from '../../rewards/enums/bouncer-type.enum';
 import { VaultStrategy } from './vault-strategy.interface';
 
-export class VaultModel implements VaultDTO {
+export class VaultModel implements VaultDTOV2 {
   @Title('name')
   @Description('vault display name')
   @Example('Convex Tricrypto')
@@ -185,7 +185,7 @@ export class VaultModel implements VaultDTO {
     harvestValue: 35,
   })
   @Property()
-  public yieldProjection: VaultYieldProjection;
+  public yieldProjection: VaultYieldProjectionV2;
 
   @Title('lastHarvest')
   @Description('Timestamp of the previous harvest')
@@ -228,7 +228,7 @@ export class VaultModel implements VaultDTO {
     yieldProjection,
     lastHarvest,
     version,
-  }: VaultDTO) {
+  }: VaultDTOV2) {
     this.name = name;
     this.state = state;
     this.asset = asset;

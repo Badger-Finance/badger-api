@@ -3,9 +3,10 @@ import { NotFound } from '@tsed/exceptions';
 import { BigNumber } from 'ethers';
 import { mock } from 'jest-mock-extended';
 
+import { CurrentVaultSnapshotModel } from '../../aws/models/current-vault-snapshot.model';
 import { Chain } from '../../chains/config/chain.config';
 import { TOKENS } from '../../config/tokens.config';
-import { MOCK_VAULT_DEFINITION } from '../../test/constants';
+import { MOCK_VAULT_DEFINITION, MOCK_VAULT_SNAPSHOT } from '../../test/constants';
 import { setupMockChain } from '../../test/mocks.utils';
 import { fullTokenMockMap } from '../../tokens/mocks/full-token.mock';
 import * as vaultsUtils from '../../vaults/vaults.utils';
@@ -36,8 +37,9 @@ describe('uniswap.strategy', () => {
 
       jest.spyOn(TokensService.prototype, 'loadTokens').mockImplementation(async () => fullTokenMockMap);
 
-      const cachedVault = await vaultsUtils.defaultVault(chain, MOCK_VAULT_DEFINITION);
-      jest.spyOn(vaultsUtils, 'getCachedVault').mockImplementation(async (_c, _v) => cachedVault);
+      jest
+        .spyOn(vaultsUtils, 'getCachedVault')
+        .mockImplementation(async (_c, _v) => MOCK_VAULT_SNAPSHOT as CurrentVaultSnapshotModel);
     });
 
     it('should return token balances of the vault', async () => {

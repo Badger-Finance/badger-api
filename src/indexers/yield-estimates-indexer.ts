@@ -7,7 +7,6 @@ import {
 import { UnprocessableEntity } from '@tsed/exceptions';
 
 import { getDataMapper, getVaultEntityId } from '../aws/dynamodb.utils';
-import { CachedTokenBalance } from '../aws/models/cached-token-balance.interface';
 import { CachedYieldProjection } from '../aws/models/cached-yield-projection.model';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { YieldEstimate } from '../aws/models/yield-estimate.model';
@@ -15,7 +14,8 @@ import { getSupportedChains } from '../chains/chains.utils';
 import { Chain } from '../chains/config/chain.config';
 import { calculateBalanceDifference, toTokenValue } from '../tokens/tokens.utils';
 import { VAULT_SOURCE } from '../vaults/vaults.config';
-import { getCachedVault, queryYieldEstimate } from '../vaults/vaults.utils';
+import { VaultsService } from '../vaults/vaults.service';
+import { queryYieldEstimate } from '../vaults/vaults.utils';
 import { getVaultYieldProjection, getYieldSources } from '../vaults/yields.utils';
 
 async function loadGraphTimestamp(sdk: BadgerSDK, vault: VaultDefinitionModel): Promise<number> {
@@ -46,21 +46,6 @@ async function loadGraphTimestamp(sdk: BadgerSDK, vault: VaultDefinitionModel): 
   }
 
   return lastHarvestedAt;
-}
-
-async function applyProtocolFees(chain: Chain, vault: VaultDefinitionModel, yieldEstimate: YieldEstimate) {
-  const cachedVault = await getCachedVault(chain, vault);
-  const {
-    strategy: { performanceFee },
-  } = cachedVault;
-  // max fee bps is 10_000, this scales values by the remainder after fees
-  const feeMultiplier = 1 - performanceFee / 10_000;
-  const feeScalingFunction = (t: CachedTokenBalance) => {
-    t.balance *= feeMultiplier;
-    t.value *= feeMultiplier;
-  };
-  yieldEstimate.harvestTokens.forEach(feeScalingFunction);
-  yieldEstimate.yieldTokens.forEach(feeScalingFunction);
 }
 
 function defaultEstimate(vault: VaultDefinitionModel, existingEstimate: YieldEstimate): YieldEstimate {
@@ -119,7 +104,6 @@ async function captureYieldEstimate(chain: Chain, vault: VaultDefinitionModel, n
       yieldEstimate.previousYieldTokens = [];
     }
 
-    applyProtocolFees(chain, vault, yieldEstimate);
     yieldEstimate.duration = now - yieldEstimate.lastMeasuredAt;
     yieldEstimate.lastMeasuredAt = now;
     yieldEstimate.harvestTokens.forEach((t) => {
@@ -162,7 +146,7 @@ export async function refreshYieldEstimates() {
       try {
         const yieldEstimate = await captureYieldEstimate(chain, vault, now);
         const yieldSources = await getYieldSources(vault);
-        const cachedVault = await getCachedVault(chain, vault);
+        const cachedVault = await VaultsService.loadVaultV3(chain, vault);
         const yieldProjection = getVaultYieldProjection(cachedVault, yieldSources, yieldEstimate);
 
         const id = getVaultEntityId(chain, vault);

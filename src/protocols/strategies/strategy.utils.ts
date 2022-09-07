@@ -1,7 +1,7 @@
 import { GraphQLClient } from 'graphql-request';
 
+import { CachedYieldSource } from '../../aws/models/cached-yield-source.interface';
 import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
-import { YieldSource } from '../../aws/models/yield-source.model';
 import { getSdk as getUniswapSdk, OrderDirection, PairDayData_OrderBy } from '../../graphql/generated/uniswap';
 import { queryPrice } from '../../prices/prices.utils';
 import { SourceType } from '../../rewards/enums/source-type.enum';
@@ -9,7 +9,7 @@ import { createYieldSource } from '../../vaults/yields.utils';
 import { PairDayData } from '../interfaces/pair-day-data.interface';
 import { UniPairDayData } from '../interfaces/uni-pair-day-data.interface';
 
-export async function getUniV2SwapValue(graphUrl: string, vault: VaultDefinitionModel): Promise<YieldSource> {
+export async function getUniV2SwapValue(graphUrl: string, vault: VaultDefinitionModel): Promise<CachedYieldSource> {
   const client = new GraphQLClient(graphUrl);
   const sdk = getUniswapSdk(client);
   const { pairDayDatas } = await sdk.UniPairDayDatas({
@@ -23,7 +23,7 @@ export async function getUniV2SwapValue(graphUrl: string, vault: VaultDefinition
   return getUniSwapValue(vault, pairDayDatas);
 }
 
-async function getUniSwapValue(vault: VaultDefinitionModel, tradeData: UniPairDayData[]): Promise<YieldSource> {
+async function getUniSwapValue(vault: VaultDefinitionModel, tradeData: UniPairDayData[]): Promise<CachedYieldSource> {
   const name = `${vault.protocol} LP Fees`;
   if (!tradeData || tradeData.length === 0) {
     return createYieldSource(vault, SourceType.TradeFee, name, 0);
@@ -45,7 +45,7 @@ async function getUniSwapValue(vault: VaultDefinitionModel, tradeData: UniPairDa
   return createYieldSource(vault, SourceType.TradeFee, name, currentApy);
 }
 
-export function getSwapValue(vault: VaultDefinitionModel, tradeData: PairDayData[]): YieldSource {
+export function getSwapValue(vault: VaultDefinitionModel, tradeData: PairDayData[]): CachedYieldSource {
   const name = `${vault.protocol} LP Fees`;
   if (!tradeData || tradeData.length === 0) {
     return createYieldSource(vault, SourceType.TradeFee, name, 0);

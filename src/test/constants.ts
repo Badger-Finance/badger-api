@@ -5,7 +5,7 @@ import {
   Protocol,
   ValueSource,
   VaultBehavior,
-  VaultDTO,
+  VaultDTOV2,
   VaultHarvestData,
   VaultSnapshot,
   VaultState,
@@ -86,8 +86,8 @@ export const MOCK_VAULT_DEFINITION: VaultDefinitionModel = {
   lastHarvestIndexedBlock: TEST_CURRENT_BLOCK,
 };
 
-export const MOCK_VAULTS: VaultDTO[] = mockVaults as VaultDTO[];
-export const MOCK_VAULT: VaultDTO = MOCK_VAULTS[0];
+export const MOCK_VAULTS: VaultDTOV2[] = mockVaults as VaultDTOV2[];
+export const MOCK_VAULT: VaultDTOV2 = MOCK_VAULTS[0];
 
 export const MOCK_VAULT_SNAPSHOTS: VaultSnapshot[] = mockVaultSnapshots;
 export const MOCK_VAULT_SNAPSHOT = MOCK_VAULT_SNAPSHOTS[0];
@@ -128,4 +128,5 @@ export const MOCK_YIELD_EVENT: YieldEvent = {
   value: 10_000,
   earned: 3_500,
   apr: 230,
+  grossApr: 230 * (1 / 0.9),
 };

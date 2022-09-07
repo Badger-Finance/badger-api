@@ -1,9 +1,9 @@
 import { formatBalance, UniV2__factory } from '@badger-dao/sdk';
 import { NotFound, UnprocessableEntity } from '@tsed/exceptions';
 
+import { CachedYieldSource } from '../../aws/models/cached-yield-source.interface';
 import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
 import { VaultTokenBalance } from '../../aws/models/vault-token-balance.model';
-import { YieldSource } from '../../aws/models/yield-source.model';
 import { Chain } from '../../chains/config/chain.config';
 import { UNISWAP_URL } from '../../config/constants';
 import { TokenPrice } from '../../prices/interface/token-price.interface';
@@ -14,7 +14,7 @@ import { UniV2PoolData } from '../interfaces/uni-v2-pool-data.interface';
 import { getUniV2SwapValue } from './strategy.utils';
 
 export class UniswapStrategy {
-  static async getValueSources(vault: VaultDefinitionModel): Promise<YieldSource[]> {
+  static async getValueSources(vault: VaultDefinitionModel): Promise<CachedYieldSource[]> {
     return Promise.all([getUniV2SwapValue(UNISWAP_URL, vault)]);
   }
 }

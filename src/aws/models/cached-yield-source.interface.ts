@@ -1,19 +1,37 @@
-import { attribute } from '@aws/dynamodb-data-mapper-annotations';
-import { ValueSource } from '@badger-dao/sdk';
+import { attribute, hashKey, table } from '@aws/dynamodb-data-mapper-annotations';
+import { Network, YieldSource } from '@badger-dao/sdk';
 
-export class CachedYieldSource implements ValueSource {
+import { YIELD_SNAPSHOTS_DATA } from '../../config/constants';
+import { SourceType } from '../../rewards/enums/source-type.enum';
+import { YieldSummary } from './yield-summary.model';
+
+@table(YIELD_SNAPSHOTS_DATA)
+export class CachedYieldSource implements YieldSource {
+  @hashKey()
+  id!: string;
+
+  @attribute({
+    indexKeyConfigurations: {
+      IndexApySnapshotsOnAddress: 'HASH',
+    },
+  })
+  chainAddress!: string;
+
+  @attribute()
+  chain!: Network;
+
+  @attribute()
+  address!: string;
+
+  @attribute()
+  type!: SourceType;
+
   @attribute()
   name!: string;
-
-  @attribute()
-  apr!: number;
 
   @attribute()
   boostable!: boolean;
 
   @attribute()
-  minApr!: number;
-
-  @attribute()
-  maxApr!: number;
+  performance!: YieldSummary;
 }

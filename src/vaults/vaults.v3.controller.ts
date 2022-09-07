@@ -1,4 +1,4 @@
-import { Currency, Network, VaultSnapshot } from '@badger-dao/sdk';
+import { Currency, Network, VaultDTOV3, VaultSnapshot } from '@badger-dao/sdk';
 import { Controller, Inject } from '@tsed/di';
 import { UseCache } from '@tsed/platform-cache';
 import { QueryParams } from '@tsed/platform-params';
@@ -29,27 +29,28 @@ export class VaultsV3Controller {
     @QueryParams('address') address: string,
     @QueryParams('chain') chain?: Network,
     @QueryParams('currency') currency?: Currency,
-  ): Promise<VaultModel> {
+  ): Promise<VaultDTOV3> {
     if (!address) {
       throw new QueryParamError('vault');
     }
 
     const chainInst = getOrCreateChain(chain);
     const compoundVault = await chainInst.vaults.getVault(address);
-    return VaultsService.loadVault(chainInst, compoundVault, currency);
+    return VaultsService.loadVaultV3(chainInst, compoundVault, currency);
   }
 
   @Get('/list')
   @ContentType('json')
   @Summary('Get a list of protocol vaults')
   @Description('Return a list of protocol vaults for the requested chain')
-  @Returns(200, VaultModel)
+  // TODO: follow up with a swagger model pr
+  // @Returns(200, VaultModel)
   @Returns(400).Description('Not a valid chain')
   async listVaults(
     @QueryParams('chain') chain?: Network,
     @QueryParams('currency') currency?: Currency,
-  ): Promise<VaultModel[]> {
-    return this.vaultService.listVaults(getOrCreateChain(chain), currency);
+  ): Promise<VaultDTOV3[]> {
+    return this.vaultService.listVaultsV3(getOrCreateChain(chain), currency);
   }
 
   @Get('/harvests')

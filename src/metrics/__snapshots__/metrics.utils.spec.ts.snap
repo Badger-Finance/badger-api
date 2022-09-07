@@ -3,7 +3,7 @@
 exports[`metrics.utils getChainMetrics returns total users, value, and vaults for all requested chains 1`] = `
 Object {
   "totalUsers": 2,
-  "totalValueLocked": 258.42,
+  "totalValueLocked": 1116121.18,
   "totalVaults": 1,
 }
 `;

@@ -1,7 +1,8 @@
-import { Currency, keyBy, Token, TokenBalance, TokenValue, VaultDTO } from '@badger-dao/sdk';
+import { Currency, keyBy, Token, TokenBalance, TokenValue } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 
-import { getDataMapper } from '../aws/dynamodb.utils';
+import { getDataMapper, getVaultEntityId } from '../aws/dynamodb.utils';
+import { Vaultish } from '../aws/interfaces/vaultish.interface';
 import { CachedTokenBalance } from '../aws/models/cached-token-balance.interface';
 import { TokenInformationSnapshot } from '../aws/models/token-information-snapshot.model';
 import { VaultTokenBalance } from '../aws/models/vault-token-balance.model';
@@ -22,10 +23,11 @@ export async function toBalance(token: Token, balance: number, currency?: Curren
   };
 }
 
-export async function getVaultTokens(chain: Chain, vault: VaultDTO, currency?: Currency): Promise<TokenValue[]> {
+export async function getVaultTokens(chain: Chain, vault: Vaultish, currency?: Currency): Promise<TokenValue[]> {
   let tokens: TokenValue[] = [];
   const mapper = getDataMapper();
-  for await (const record of mapper.query(VaultTokenBalance, { vault: vault.vaultToken }, { limit: 1 })) {
+  const id = getVaultEntityId(chain, vault);
+  for await (const record of mapper.query(VaultTokenBalance, { id }, { limit: 1 })) {
     tokens = await Promise.all(
       record.tokenBalances.map(async (b) => ({
         ...b,

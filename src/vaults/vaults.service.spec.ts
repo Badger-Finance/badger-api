@@ -1,8 +1,9 @@
 import { Currency } from '@badger-dao/sdk';
 import { PlatformTest } from '@tsed/common';
 
+import { CurrentVaultSnapshotModel } from '../aws/models/current-vault-snapshot.model';
 import { Chain } from '../chains/config/chain.config';
-import { MOCK_VAULT } from '../test/constants';
+import { MOCK_VAULT_SNAPSHOT } from '../test/constants';
 import { setupMockChain } from '../test/mocks.utils';
 import { VaultsService } from './vaults.service';
 import * as vaultsUtils from './vaults.utils';
@@ -17,7 +18,9 @@ describe('vaults.service', () => {
   beforeEach(() => {
     service = PlatformTest.get<VaultsService>(VaultsService);
     chain = setupMockChain();
-    jest.spyOn(vaultsUtils, 'getCachedVault').mockImplementation(async () => MOCK_VAULT);
+    jest
+      .spyOn(vaultsUtils, 'getCachedVault')
+      .mockImplementation(async () => MOCK_VAULT_SNAPSHOT as CurrentVaultSnapshotModel);
   });
 
   describe('getProtocolSummary', () => {

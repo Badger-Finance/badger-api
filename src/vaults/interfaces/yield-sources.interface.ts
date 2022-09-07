@@ -1,10 +1,10 @@
-import { ValueSource } from '@badger-dao/sdk';
+import { YieldSource } from '@badger-dao/sdk';
 
 export interface YieldSources {
   apr: number;
-  sources: ValueSource[];
+  sources: YieldSource[];
   apy: number;
-  sourcesApy: ValueSource[];
-  nonHarvestSources: ValueSource[];
-  nonHarvestSourcesApy: ValueSource[];
+  sourcesApy: YieldSource[];
+  nonHarvestSources: YieldSource[];
+  nonHarvestSourcesApy: YieldSource[];
 }

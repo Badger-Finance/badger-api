@@ -2,9 +2,9 @@ import { Erc20__factory, formatBalance, Network, Token } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 
 import { CachedTokenBalance } from '../../aws/models/cached-token-balance.interface';
+import { CachedYieldSource } from '../../aws/models/cached-yield-source.interface';
 import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
 import { VaultTokenBalance } from '../../aws/models/vault-token-balance.model';
-import { YieldSource } from '../../aws/models/yield-source.model';
 import { Chain } from '../../chains/config/chain.config';
 import { request } from '../../common/request';
 import { ContractRegistry } from '../../config/interfaces/contract-registry.interface';
@@ -73,7 +73,7 @@ interface FactoryAPYResonse {
 }
 
 export class ConvexStrategy {
-  static async getValueSources(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<YieldSource[]> {
+  static async getValueSources(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<CachedYieldSource[]> {
     switch (vaultDefinition.address) {
       case TOKENS.BVECVX:
         return [];
@@ -85,7 +85,7 @@ export class ConvexStrategy {
   }
 }
 
-async function getLiquiditySources(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<YieldSource[]> {
+async function getLiquiditySources(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<CachedYieldSource[]> {
   const bveCVXVault = await chain.vaults.getVault(TOKENS.BVECVX);
   const [bveCVXLP, bveCVXSources] = await Promise.all([
     getCachedVault(chain, vaultDefinition),
@@ -98,17 +98,24 @@ async function getLiquiditySources(chain: Chain, vaultDefinition: VaultDefinitio
     .reduce((total, val) => (total += val), 0);
   const scalar = bveCVXValue / bveCVXLP.value;
   const lpSources = bveCVXSources.map((s) => {
-    const { apr, minApr, maxApr, name, type } = s;
-    const scaledApr = apr * scalar;
-    const min = apr > 0 ? minApr / apr : 0;
-    const max = apr > 0 ? maxApr / apr : 0;
+    const {
+      performance: { grossYield, minGrossYield, maxGrossYield },
+      name,
+      type,
+    } = s;
+    const scaledApr = grossYield * scalar;
+    const min = grossYield > 0 ? minGrossYield / grossYield : 0;
+    const max = grossYield > 0 ? maxGrossYield / grossYield : 0;
     return createYieldSource(vaultDefinition, type, name, scaledApr, { min, max });
   });
   const cachedTradeFees = await getCurvePerformance(chain, vaultDefinition);
   return [cachedTradeFees, ...lpSources];
 }
 
-export async function getCurvePerformance(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<YieldSource> {
+export async function getCurvePerformance(
+  chain: Chain,
+  vaultDefinition: VaultDefinitionModel,
+): Promise<CachedYieldSource> {
   let defaultUrl;
   switch (chain.network) {
     case Network.Polygon:
