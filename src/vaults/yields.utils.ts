@@ -190,11 +190,23 @@ export async function getYieldSources(vault: VaultDefinitionModel): Promise<Yiel
 
   const relevantSources = yieldSources.filter((s) => isRelevantSource(s, vault.state));
   const sources = relevantSources.filter(isAprSource);
-  const apr = sources.map((s) => s.performance.baseYield).reduce((total, apr) => (total += apr), 0);
   const sourcesApy = relevantSources.filter(isApySource);
-  const apy = sourcesApy.map((s) => s.performance.baseYield).reduce((total, apr) => (total += apr), 0);
   const nonHarvestSources = sourcesApy.filter(isPassiveSource);
   const nonHarvestSourcesApy = sourcesApy.filter(isNonHarvestSource);
+
+  const apr = sources.map((s) => s.performance.baseYield).reduce((total, apr) => (total += apr), 0);
+  const minApr = sources.map((s) => s.performance.minYield).reduce((total, apr) => (total += apr), 0);
+  const maxApr = sources.map((s) => s.performance.maxYield).reduce((total, apr) => (total += apr), 0);
+  const grossApr = sources.map((s) => s.performance.grossYield).reduce((total, apr) => (total += apr), 0);
+  const minGrossApr = sources.map((s) => s.performance.minGrossYield).reduce((total, apr) => (total += apr), 0);
+  const maxGrossApr = sources.map((s) => s.performance.maxGrossYield).reduce((total, apr) => (total += apr), 0);
+
+  const apy = sourcesApy.map((s) => s.performance.baseYield).reduce((total, apr) => (total += apr), 0);
+  const minApy = sourcesApy.map((s) => s.performance.minYield).reduce((total, apr) => (total += apr), 0);
+  const maxApy = sourcesApy.map((s) => s.performance.maxYield).reduce((total, apr) => (total += apr), 0);
+  const grossApy = sourcesApy.map((s) => s.performance.grossYield).reduce((total, apr) => (total += apr), 0);
+  const minGrossApy = sourcesApy.map((s) => s.performance.minGrossYield).reduce((total, apr) => (total += apr), 0);
+  const maxGrossApy = sourcesApy.map((s) => s.performance.maxGrossYield).reduce((total, apr) => (total += apr), 0);
 
   const aggregatedSources = aggregateSources(sources);
   const aggregatedSourcesApy = aggregateSources(sourcesApy);
@@ -202,10 +214,24 @@ export async function getYieldSources(vault: VaultDefinitionModel): Promise<Yiel
   const nonHarvestAggregatedSourcesApy = aggregateSources(nonHarvestSourcesApy);
 
   return {
-    apr,
-    sources: aggregatedSources,
-    apy,
-    sourcesApy: aggregatedSourcesApy,
+    apr: {
+      baseYield: apr,
+      minYield: minApr,
+      maxYield: maxApr,
+      grossYield: grossApr,
+      minGrossYield: minGrossApr,
+      maxGrossYield: maxGrossApr,
+      sources: aggregatedSources,
+    },
+    apy: {
+      baseYield: apy,
+      minYield: minApy,
+      maxYield: maxApy,
+      grossYield: grossApy,
+      minGrossYield: minGrossApy,
+      maxGrossYield: maxGrossApy,
+      sources: aggregatedSourcesApy,
+    },
     nonHarvestSources: nonHarvestAggregatedSources,
     nonHarvestSourcesApy: nonHarvestAggregatedSourcesApy,
   };
