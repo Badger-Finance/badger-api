@@ -24,8 +24,8 @@ import { VAULT_TWAY_DURATION } from './vaults.config';
 import { getStrategyInfo } from './vaults.utils';
 import { calculateYield } from './yields.utils';
 
-// this allows three chunks of 10k blocks per index
-export const HARVEST_SCAN_BLOCK_INCREMENT = 30_000;
+// this allows five chunks of 10k blocks per index, approx 1 week
+export const HARVEST_SCAN_BLOCK_INCREMENT = 50_000;
 
 function grabYieldGraphTx(graphTxId?: string): string {
   if (!graphTxId) return '';

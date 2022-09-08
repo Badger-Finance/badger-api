@@ -12,52 +12,54 @@ export async function updateVaultHarvests() {
     const currentBlock = await sdk.provider.getBlockNumber();
     const vaults = await chain.vaults.all();
 
-    for (const vault of vaults) {
-      try {
-        const { name, lastHarvestIndexedBlock } = vault;
+    await Promise.all(
+      vaults.map(async (vault) => {
+        try {
+          const { name, lastHarvestIndexedBlock } = vault;
 
-        console.log(`[${name}]: Last Indexed Block ${lastHarvestIndexedBlock}`);
-        const yieldEvents = await loadYieldEvents(chain, vault, lastHarvestIndexedBlock);
-        console.log(`[${name}]: Discovered ${yieldEvents.length} yield events`);
+          console.log(`[${name}]: Last Indexed Block ${lastHarvestIndexedBlock}`);
+          const yieldEvents = await loadYieldEvents(chain, vault, lastHarvestIndexedBlock);
+          console.log(`[${name}]: Discovered ${yieldEvents.length} yield events`);
 
-        if (yieldEvents.length === 0) {
-          vault.lastHarvestIndexedBlock = Math.min(
-            vault.lastHarvestIndexedBlock + HARVEST_SCAN_BLOCK_INCREMENT,
-            currentBlock,
-          );
+          if (yieldEvents.length === 0) {
+            vault.lastHarvestIndexedBlock = Math.min(
+              vault.lastHarvestIndexedBlock + HARVEST_SCAN_BLOCK_INCREMENT,
+              currentBlock,
+            );
+            console.log(`[${vault.name}]: Yield events up to date as of block: ${vault.lastHarvestIndexedBlock}`);
+            // update the vault's last harvested indexed block, done twice to not update before persist
+            await mapper.put(vault);
+            return;
+          }
+
+          // sort to highest timestamp (block) is at the end
+          const sortedEvents = yieldEvents.sort((a, b) => a.timestamp - b.timestamp);
+          vault.lastHarvestIndexedBlock = sortedEvents[sortedEvents.length - 1].block;
+          const baseId = getVaultEntityId(chain, vault);
+          const yieldEventEntities: VaultYieldEvent[] = yieldEvents.map((e) => {
+            const yieldEvent: VaultYieldEvent = {
+              id: [baseId, e.token, e.type].join('-').replace(/ /g, '-').toLowerCase(),
+              chainAddress: baseId,
+              chain: chain.network,
+              vault: vault.address,
+              ...e,
+            };
+            return Object.assign(new VaultYieldEvent(), yieldEvent);
+          });
+
+          for await (const _ of mapper.batchPut(yieldEventEntities)) {
+          }
+
+          // update the vault's last harvested indexed block
           console.log(`[${vault.name}]: Yield events up to date as of block: ${vault.lastHarvestIndexedBlock}`);
-          // update the vault's last harvested indexed block, done twice to not update before persist
           await mapper.put(vault);
-          continue;
+
+          console.log(`[${vault.name}]: Persisted ${yieldEventEntities.length} yield events`);
+        } catch (err) {
+          console.error(err);
         }
-
-        // sort to highest timestamp (block) is at the end
-        const sortedEvents = yieldEvents.sort((a, b) => a.timestamp - b.timestamp);
-        vault.lastHarvestIndexedBlock = sortedEvents[sortedEvents.length - 1].block;
-        const baseId = getVaultEntityId(chain, vault);
-        const yieldEventEntities: VaultYieldEvent[] = yieldEvents.map((e) => {
-          const yieldEvent: VaultYieldEvent = {
-            id: [baseId, e.token, e.type].join('-').replace(/ /g, '-').toLowerCase(),
-            chainAddress: baseId,
-            chain: chain.network,
-            vault: vault.address,
-            ...e,
-          };
-          return Object.assign(new VaultYieldEvent(), yieldEvent);
-        });
-
-        for await (const _ of mapper.batchPut(yieldEventEntities)) {
-        }
-
-        // update the vault's last harvested indexed block
-        console.log(`[${vault.name}]: Yield events up to date as of block: ${vault.lastHarvestIndexedBlock}`);
-        await mapper.put(vault);
-
-        console.log(`[${vault.name}]: Persisted ${yieldEventEntities.length} yield events`);
-      } catch (err) {
-        console.error(err);
-      }
-    }
+      }),
+    );
   }
 
   return 'done';
