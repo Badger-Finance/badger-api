@@ -11,6 +11,8 @@ describe('vault-harvests-indexer', () => {
   let chain: Chain;
 
   beforeEach(() => {
+    jest.spyOn(console, 'log').mockImplementation();
+
     chain = setupMockChain();
   });
 
