@@ -3,8 +3,8 @@
 /* eslint-disable */
 export type { BalancerVault } from "./BalancerVault";
 export type { CurveBaseRegistry } from "./CurveBaseRegistry";
-export type { CurvePool3 } from "./CurvePool3";
 export type { CurvePool } from "./CurvePool";
+export type { CurvePool3 } from "./CurvePool3";
 export type { CurveRegistry } from "./CurveRegistry";
 export type { CvxLocker } from "./CvxLocker";
 export type { Imbtc } from "./Imbtc";
@@ -17,7 +17,7 @@ export type { SwaprStaking } from "./SwaprStaking";
 export type { SwaprStrategy } from "./SwaprStrategy";
 export type { UniV2 } from "./UniV2";
 export type { WeightedPool } from "./WeightedPool";
-
+export * as factories from "./factories";
 export { BalancerVault__factory } from "./factories/BalancerVault__factory";
 export { CurveBaseRegistry__factory } from "./factories/CurveBaseRegistry__factory";
 export { CurvePool3__factory } from "./factories/CurvePool3__factory";

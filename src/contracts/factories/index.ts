@@ -6,7 +6,7 @@ export { CurveBaseRegistry__factory } from "./CurveBaseRegistry__factory";
 export { CurvePool__factory } from "./CurvePool__factory";
 export { CurvePool3__factory } from "./CurvePool3__factory";
 export { CurveRegistry__factory } from "./CurveRegistry__factory";
-export { EmissionControl__factory } from "./EmissionControl__factory";
+export { CvxLocker__factory } from "./CvxLocker__factory";
 export { Imbtc__factory } from "./Imbtc__factory";
 export { Mhbtc__factory } from "./Mhbtc__factory";
 export { MstableVault__factory } from "./MstableVault__factory";

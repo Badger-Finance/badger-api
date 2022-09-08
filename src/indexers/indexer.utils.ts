@@ -1,6 +1,5 @@
 import {
   BouncerType,
-  gqlGenT,
   ONE_WEEK_SECONDS,
   Protocol,
   RegistryVault,
@@ -11,7 +10,7 @@ import {
 } from '@badger-dao/sdk';
 
 import { getVaultEntityId } from '../aws/dynamodb.utils';
-import { HARVEST_SCAN_START_BLOCK, VaultDefinitionModel } from '../aws/models/vault-definition.model';
+import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { Chain } from '../chains/config/chain.config';
 import { Stage } from '../config/enums/stage.enum';
 import { queryPrice } from '../prices/prices.utils';
@@ -74,13 +73,13 @@ export async function constructVaultDefinition(
   const { sett } = await sdk.graph.loadSett({ id: address.toLowerCase() });
 
   if (!sett) {
-    console.warn(`Cant fetch vault data from The Graph for chain ${chain.network}, ${address}`);
+    console.warn(`Can't fetch vault data from The Graph for chain ${chain.network}, ${address}`);
     return null;
   }
 
-  const { createdAt, releasedAt, lastUpdatedAt } = sett;
+  const { createdAt, createdAtBlock, releasedAt, lastUpdatedAt } = sett;
 
-  let lastHarvestIndexedBlock = HARVEST_SCAN_START_BLOCK;
+  let lastHarvestIndexedBlock = Number(createdAtBlock);
 
   try {
     const existingDefinition = await chain.vaults.getVault(vault.address);
@@ -110,14 +109,4 @@ export async function constructVaultDefinition(
   };
 
   return Object.assign(new VaultDefinitionModel(), definition);
-}
-
-export async function getVault(chain: Chain, contract: string, block?: number): Promise<gqlGenT.SettQuery> {
-  const sdk = await chain.getSdk();
-  const settId = contract.toLowerCase();
-  const vars = { id: settId };
-  if (block) {
-    return sdk.graph.loadSett({ ...vars, block: { number: block } });
-  }
-  return sdk.graph.loadSett(vars);
 }
