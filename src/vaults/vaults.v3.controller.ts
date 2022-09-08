@@ -1,4 +1,4 @@
-import { Currency, Network, VaultDTOV3, VaultSnapshot } from '@badger-dao/sdk';
+import { Currency, Network, VaultSnapshot } from '@badger-dao/sdk';
 import { Controller, Inject } from '@tsed/di';
 import { UseCache } from '@tsed/platform-cache';
 import { QueryParams } from '@tsed/platform-params';
@@ -10,7 +10,8 @@ import { QueryParamError } from '../errors/validation/query.param.error';
 import { queryVaultHistoricYieldEvents } from './harvests.utils';
 import { VaultHarvestsMap } from './interfaces/vault-harvest-map';
 import { VaultHarvestsMapModel } from './interfaces/vault-harvests-list-model.interface';
-import { VaultModel } from './interfaces/vault-model.interface';
+import { VaultHarvestV3Model } from './interfaces/vault-harvests-model-v3.interface';
+import { VaultModelV3 } from './interfaces/vault-model-v3.interface';
 import { VaultsService } from './vaults.service';
 
 @Controller('/vaults')
@@ -22,14 +23,14 @@ export class VaultsV3Controller {
   @ContentType('json')
   @Summary('Get a specific vault')
   @Description('Return a specific vault for the requested chain')
-  @Returns(200, VaultModel)
+  @Returns(200, VaultModelV3)
   @Returns(400).Description('Not a valid chain')
   @Returns(404).Description('Not a valid vault')
   async getVault(
     @QueryParams('address') address: string,
     @QueryParams('chain') chain?: Network,
     @QueryParams('currency') currency?: Currency,
-  ): Promise<VaultDTOV3> {
+  ): Promise<VaultModelV3> {
     if (!address) {
       throw new QueryParamError('vault');
     }
@@ -43,13 +44,12 @@ export class VaultsV3Controller {
   @ContentType('json')
   @Summary('Get a list of protocol vaults')
   @Description('Return a list of protocol vaults for the requested chain')
-  // TODO: follow up with a swagger model pr
-  // @Returns(200, VaultModel)
+  @Returns(200, Array.of(VaultModelV3))
   @Returns(400).Description('Not a valid chain')
   async listVaults(
     @QueryParams('chain') chain?: Network,
     @QueryParams('currency') currency?: Currency,
-  ): Promise<VaultDTOV3[]> {
+  ): Promise<VaultModelV3[]> {
     return this.vaultService.listVaultsV3(getOrCreateChain(chain), currency);
   }
 
@@ -57,8 +57,7 @@ export class VaultsV3Controller {
   @ContentType('json')
   @Summary('Get harvests on a specific vault')
   @Description('Return full list of vault`s harvests')
-  // TODO: create a yield event model
-  // @Returns(200, Array).Of(VaultHarvestsModel)
+  @Returns(200, Array).Of(VaultHarvestV3Model)
   @Returns(400).Description('Not a valid chain')
   async getVaultsHarvests(
     @QueryParams('address') address: string,

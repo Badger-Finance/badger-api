@@ -1,4 +1,4 @@
-import { formatBalance, Vault__factory } from '@badger-dao/sdk';
+import { formatBalance, Vault__factory, YieldType } from '@badger-dao/sdk';
 import { BigNumber, ethers } from 'ethers';
 
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
@@ -8,7 +8,6 @@ import { TOKENS } from '../config/tokens.config';
 import { CvxLocker__factory } from '../contracts/factories/CvxLocker__factory';
 import { getBalancerPoolTokens } from '../protocols/strategies/balancer.strategy';
 import { CVX_LOCKER } from '../protocols/strategies/convex.strategy';
-import { YieldType } from './enums/yield-type.enum';
 
 // TODO: setup influence configs, voting periods, etc.
 const influenceVaults = new Set([TOKENS.BVECVX, TOKENS.GRAVI_AURA]);

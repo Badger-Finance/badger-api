@@ -12,8 +12,8 @@ import { convert } from '../prices/prices.utils';
 import { ProtocolSummary } from '../protocols/interfaces/protocol-summary.interface';
 import { getVaultTokens } from '../tokens/tokens.utils';
 import { queryVaultHistoricYieldEvents } from './harvests.utils';
-import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
 import { VaultHarvestsMap } from './interfaces/vault-harvest-map';
+import { YieldEventV2 } from './interfaces/yield-event-v2.interface';
 import { defaultVault, defaultVaultV3, getCachedVault, queryYieldEstimate, queryYieldProjection } from './vaults.utils';
 import { getYieldSources, yieldToValueSource } from './yields.utils';
 
@@ -59,8 +59,8 @@ export class VaultsService {
     }, <VaultHarvestsMap>{});
   }
 
-  async getVaultHarvests(chain: Chain, vault: VaultDefinitionModel): Promise<VaultHarvestsExtendedResp[]> {
-    const vaultHarvests: VaultHarvestsExtendedResp[] = [];
+  async getVaultHarvests(chain: Chain, vault: VaultDefinitionModel): Promise<YieldEventV2[]> {
+    const vaultHarvests: YieldEventV2[] = [];
     const queryHarvests = await queryVaultHistoricYieldEvents(chain, vault);
 
     try {

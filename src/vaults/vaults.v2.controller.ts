@@ -1,9 +1,8 @@
-import { Currency, Network } from '@badger-dao/sdk';
+import { Currency, Network, VaultEarning } from '@badger-dao/sdk';
 import { Controller, Get, Inject, PathParams, QueryParams, UseCache } from '@tsed/common';
 import { ContentType, Deprecated, Description, Returns, Summary } from '@tsed/schema';
 
 import { getOrCreateChain } from '../chains/chains.utils';
-import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
 import { VaultHarvestsMap } from './interfaces/vault-harvest-map';
 import { VaultHarvestsMapModel } from './interfaces/vault-harvests-list-model.interface';
 import { VaultHarvestsModel } from './interfaces/vault-harvests-model.interface';
@@ -49,7 +48,7 @@ export class VaultsV2Controller {
   async getVaultsHarvests(
     @PathParams('address') address: string,
     @QueryParams('chain') chain?: Network,
-  ): Promise<VaultHarvestsExtendedResp[]> {
+  ): Promise<VaultEarning[]> {
     const targetChain = getOrCreateChain(chain);
     const vault = await targetChain.vaults.getVault(address);
     return this.vaultService.getVaultHarvests(targetChain, vault);
