@@ -515,12 +515,12 @@ functions:
 
   index-vault-yield-events:
     handler: src/indexers/vault-harvests-indexer.updateVaultHarvests
-    timeout: 900
+    timeout: 360
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-vault-harvests
           description: 'index onchain harvests for all vaults'
-          rate: rate(20 minutes)
+          rate: rate(8 minutes)
 
   index-leaderboard:
     handler: src/indexers/leaderboard-indexer.indexBoostLeaderBoard
