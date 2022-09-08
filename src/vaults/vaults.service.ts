@@ -88,44 +88,18 @@ export class VaultsService {
     vaultDefinition: VaultDefinitionModel,
     currency?: Currency,
   ): Promise<VaultDTOV3> {
-    const yieldSources = await getYieldSources(vaultDefinition);
-    const { apr, sources, apy, sourcesApy } = yieldSources;
-
     const baseVault = await defaultVaultV3(chain, vaultDefinition);
     const vault = await VaultsService.loadVault(chain, vaultDefinition, baseVault, currency);
+
+    const yieldSources = await getYieldSources(vaultDefinition);
+    const { apr, apy } = yieldSources;
+    vault.apr = apr;
+    vault.apy = apy;
 
     const yieldProjection = await queryYieldProjection(vaultDefinition);
     vault.yieldProjection = yieldProjection;
 
-    const minApr = sources.map((s) => s.performance.minYield).reduce((total, apr) => (total += apr), 0);
-    const maxApr = sources.map((s) => s.performance.maxYield).reduce((total, apr) => (total += apr), 0);
-
-    vault.apr = {
-      baseYield: apr,
-      minYield: minApr,
-      maxYield: maxApr,
-      grossYield: apr,
-      minGrossYield: apr,
-      maxGrossYield: apr,
-      sources,
-    };
-
-    const minApy = sourcesApy.map((s) => s.performance.minYield).reduce((total, apr) => (total += apr), 0);
-    const maxApy = sourcesApy.map((s) => s.performance.maxYield).reduce((total, apr) => (total += apr), 0);
-
-    vault.apy = {
-      baseYield: apy,
-      minYield: minApy,
-      maxYield: maxApy,
-      grossYield: apy,
-      minGrossYield: apy,
-      maxGrossYield: apy,
-      sources: sourcesApy,
-    };
-
-    const { apr: vaultApr } = vault;
-
-    const hasBoostedApr = vaultApr.sources.some((source) => source.boostable);
+    const hasBoostedApr = apr.sources.some((source) => source.boostable);
     if (vault.boost.enabled && hasBoostedApr) {
       if (vault.type !== VaultType.Native) {
         vault.type = VaultType.Boosted;
@@ -147,7 +121,7 @@ export class VaultsService {
     currency?: Currency,
   ): Promise<VaultDTOV2> {
     const yieldSources = await getYieldSources(vaultDefinition);
-    const { apr, sources, apy, sourcesApy } = yieldSources;
+    const { apr, apy } = yieldSources;
 
     const baseVault = await defaultVault(chain, vaultDefinition);
     const vault = await VaultsService.loadVault(chain, vaultDefinition, baseVault, currency);
@@ -158,10 +132,10 @@ export class VaultsService {
     convertedYieldProjection.nonHarvestSourcesApy = yieldProjection.nonHarvestSourcesApy.map(yieldToValueSource);
     vault.yieldProjection = convertedYieldProjection;
 
-    vault.sources = sources.map(yieldToValueSource);
-    vault.sourcesApy = sourcesApy.map(yieldToValueSource);
-    vault.apr = apr;
-    vault.apy = apy;
+    vault.sources = apr.sources.map(yieldToValueSource);
+    vault.sourcesApy = apy.sources.map(yieldToValueSource);
+    vault.apr = apr.baseYield;
+    vault.apy = apy.baseYield;
     vault.minApr = vault.sources.map((s) => s.minApr).reduce((total, apr) => (total += apr), 0);
     vault.maxApr = vault.sources.map((s) => s.maxApr).reduce((total, apr) => (total += apr), 0);
     vault.minApy = vault.sourcesApy.map((s) => s.minApr).reduce((total, apr) => (total += apr), 0);
