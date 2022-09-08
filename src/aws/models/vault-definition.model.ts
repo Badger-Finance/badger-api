@@ -5,9 +5,6 @@ import { VAULT_DEFINITION_DATA } from '../../config/constants';
 import { Stage } from '../../config/enums/stage.enum';
 import { IVaultDefinition } from '../interfaces/vault-definition-model.interface';
 
-// (Oct-06-2020 04:17:04 AM +UTC)
-export const HARVEST_SCAN_START_BLOCK = 11_000_000;
-
 @table(VAULT_DEFINITION_DATA)
 export class VaultDefinitionModel implements IVaultDefinition {
   @hashKey()
@@ -71,6 +68,6 @@ export class VaultDefinitionModel implements IVaultDefinition {
   @attribute()
   isNew!: boolean;
 
-  @attribute({ defaultProvider: () => HARVEST_SCAN_START_BLOCK })
+  @attribute({ defaultProvider: () => 0 })
   lastHarvestIndexedBlock!: number;
 }

@@ -83,6 +83,7 @@ describe('accounts.utils', () => {
         isProduction: true,
         protocol: Protocol.Badger,
         createdAt: 0,
+        createdAtBlock: 0,
         behavior: VaultBehavior.Compounder,
         lastUpdatedAt: 0,
         releasedAt: 0,

@@ -23,42 +23,6 @@ VaultDefinitionModel {
 }
 `;
 
-exports[`indexer.utils getVault should return graph vault sequence 1`] = `
-Object {
-  "__typename": "Query",
-  "sett": Object {
-    "available": "1213945495264444893468113",
-    "balance": "1213945495264444893468113",
-    "controller": Object {
-      "id": "0x63cf44b2548e4493fd099222a1ec79f3344d9682",
-    },
-    "decimals": "18",
-    "grossDeposit": "18406633496620429219098123",
-    "grossShareDeposit": "15571214606848692106223327",
-    "grossShareWithdraw": "14588168614349076090183817",
-    "grossWithdraw": "17527900740448259273124826",
-    "id": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28",
-    "name": "Badger Sett Badger",
-    "netDeposit": "878732756172169945973297",
-    "netShareDeposit": "983045992499616016039510",
-    "pricePerFullShare": "1234881688676350581",
-    "strategy": Object {
-      "balance": "0",
-      "id": "0x75b8e21bd623012efb3b69e1b562465a68944ee6",
-    },
-    "symbol": "bBADGER",
-    "token": Object {
-      "decimals": "18",
-      "id": "0x3472a5a71965499acd81997a54bba8d852c6e53d",
-      "name": "Badger",
-      "symbol": "BADGER",
-      "totalSupply": "21000000000000000000000000",
-    },
-    "totalSupply": "983045992499616016039510",
-  },
-}
-`;
-
 exports[`indexer.utils vaultToSnapshot should return valid snapshot of the vault 1`] = `
 Object {
   "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",

@@ -20,7 +20,7 @@ import { MOCK_VAULT, MOCK_VAULT_DEFINITION, TEST_CURRENT_TIMESTAMP } from '../te
 import { setupMockChain } from '../test/mocks.utils';
 import { mockContract } from '../test/mocks.utils/contracts/mock.contract.base';
 import * as apiVaults from '../vaults/vaults.service';
-import { constructVaultDefinition, getVault, vaultToSnapshot } from './indexer.utils';
+import { constructVaultDefinition, vaultToSnapshot } from './indexer.utils';
 
 describe('indexer.utils', () => {
   async function setupBaseUtilFixture() {
@@ -98,22 +98,6 @@ describe('indexer.utils', () => {
       jest.spyOn(BadgerGraph.prototype, 'loadSett').mockImplementation(async () => ({ sett: null }));
 
       expect(await constructVaultDefinition(testChain, <RegistryVault>registryVaults[1])).toBeNull();
-    });
-  });
-
-  describe('getVault', () => {
-    let testChain: TestEthereum;
-
-    beforeEach(async () => {
-      const { chain } = await setupBaseUtilFixture();
-
-      testChain = chain;
-    });
-
-    it('should return graph vault sequence', async () => {
-      const graphVault = await getVault(testChain, MOCK_VAULT_DEFINITION.address);
-
-      expect(graphVault).toMatchSnapshot();
     });
   });
 });
