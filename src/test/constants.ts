@@ -25,6 +25,7 @@ import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { Stage } from '../config/enums/stage.enum';
 import { TOKENS } from '../config/tokens.config';
 import { TokenFullMap } from '../tokens/interfaces/token-full.interface';
+import { VaultHarvestsMap } from '../vaults/interfaces/vault-harvest-map';
 
 export const TEST_TOKEN = TOKENS.BADGER;
 export const TEST_ADDR = TOKENS.BBADGER;
@@ -96,8 +97,7 @@ export const MOCK_YIELD_SOURCES: ValueSource[] = MOCK_VAULT.sources;
 export const MOCK_TOKENS = mockTokens as TokenFullMap;
 export const MOCK_TOKEN = MOCK_TOKENS[TEST_TOKEN];
 
-// @ts-ignore (need to update Mocks lib)
-export const MOCK_VAULTS_HARVESTS = mockVaultHarvests as Record<string, VaultHarvestsExtendedResp[]>;
+export const MOCK_VAULTS_HARVESTS = <VaultHarvestsMap>mockVaultHarvests;
 export const MOCK_VAULT_HARVESTS = MOCK_VAULTS_HARVESTS[TEST_ADDR];
 
 const mockListHarvestsCopy = JSON.parse(JSON.stringify(mockListHarvests));
