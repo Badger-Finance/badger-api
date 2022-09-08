@@ -1,9 +1,7 @@
 import { attribute, hashKey, rangeKey, table } from '@aws/dynamodb-data-mapper-annotations';
-import { Network } from '@badger-dao/sdk';
+import { Network, YieldEvent, YieldType } from '@badger-dao/sdk';
 
 import { VAULT_YIELD_DATA } from '../../config/constants';
-import { YieldType } from '../../vaults/enums/yield-type.enum';
-import { YieldEvent } from '../../vaults/interfaces/yield-event';
 
 @table(VAULT_YIELD_DATA)
 export class VaultYieldEvent implements YieldEvent {

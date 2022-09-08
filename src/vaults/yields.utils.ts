@@ -8,6 +8,7 @@ import {
   VaultState,
   VaultYieldProjectionV3,
   YieldSource,
+  YieldType,
 } from '@badger-dao/sdk';
 import { BigNumber } from 'ethers';
 
@@ -20,10 +21,9 @@ import { TOKENS } from '../config/tokens.config';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { BoostRange } from '../rewards/interfaces/boost-range.interface';
 import { calculateBalanceDifference, getFullToken, getFullTokens } from '../tokens/tokens.utils';
-import { YieldType } from './enums/yield-type.enum';
 import { queryVaultYieldEvents } from './harvests.utils';
 import { filterPerformanceItems } from './influence.utils';
-import { VaultYieldSummary } from './interfaces/vault-yield-summary.interface';
+import { VaultYieldEvaluation } from './interfaces/vault-yield-evaluation.interface';
 import { YieldSources } from './interfaces/yield-sources.interface';
 import { VAULT_SOURCE, VAULT_TWAY_DURATION } from './vaults.config';
 import { estimateDerivativeEmission, queryYieldSources } from './vaults.utils';
@@ -377,7 +377,7 @@ async function constructEmissionYieldSources(
  * @param yieldEvents events sourced from either on chain or the graph
  * @returns yield summary providing the base information for construction of yield sources
  */
-async function evaluateYieldEvents(chain: Chain, vault: VaultDefinitionModel): Promise<VaultYieldSummary> {
+async function evaluateYieldEvents(chain: Chain, vault: VaultDefinitionModel): Promise<VaultYieldEvaluation> {
   const yieldEvents = await queryVaultYieldEvents(chain, vault);
 
   /**
@@ -414,7 +414,7 @@ async function evaluateYieldEvents(chain: Chain, vault: VaultDefinitionModel): P
       amount: formatBalance(BigNumber.from('1928771715566995688546')),
       value: 282542.53,
       earned: 7845.98,
-      type: YieldType.Distribution,
+      type: YieldType.TreeDistribution,
       apr: 72.2,
       grossApr: 72.2 * (1 / 0.9),
       balance: 99624.998,

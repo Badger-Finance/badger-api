@@ -1,8 +1,9 @@
-import { TEST_ADDR, TEST_TOKEN } from '../../test/constants';
-import { YieldType } from '../enums/yield-type.enum';
-import { VaultHarvestsExtendedResp } from '../interfaces/vault-harvest-extended-resp.interface';
+import { YieldType } from '@badger-dao/sdk';
 
-export const vaultsHarvestsMapMock: Record<string, VaultHarvestsExtendedResp[]> = {
+import { TEST_ADDR, TEST_TOKEN } from '../../test/constants';
+import { YieldEventV2 } from '../interfaces/yield-event-v2.interface';
+
+export const vaultsHarvestsMapMock: Record<string, YieldEventV2[]> = {
   [TEST_TOKEN]: [
     {
       timestamp: 1636878824,
@@ -19,7 +20,7 @@ export const vaultsHarvestsMapMock: Record<string, VaultHarvestsExtendedResp[]> 
       block: 13612910,
       token: '0x075b1bb99792c9e1041ba13afef80c91a1e70fb3',
       amount: 84.17266705379542,
-      eventType: YieldType.Distribution,
+      eventType: YieldType.TreeDistribution,
       strategyBalance: 2481.941296192305,
       estimatedApr: 5,
       tx: '0x3324232',
@@ -41,7 +42,7 @@ export const vaultsHarvestsMapMock: Record<string, VaultHarvestsExtendedResp[]> 
       block: 13610723,
       token: '0x64eda51d3ad40d56b9dfc5554e06f94e1dd786fd',
       amount: 519.4928843851667,
-      eventType: YieldType.Distribution,
+      eventType: YieldType.TreeDistribution,
       strategyBalance: 675.7270352627328,
       estimatedApr: 0,
       tx: '0x3324234',
@@ -51,7 +52,7 @@ export const vaultsHarvestsMapMock: Record<string, VaultHarvestsExtendedResp[]> 
       block: 13610723,
       token: '0x64eda51d3ad40d56b9dfc5554e06f94e1dd786fd',
       amount: 127.77060811430661,
-      eventType: YieldType.Distribution,
+      eventType: YieldType.TreeDistribution,
       strategyBalance: 675.7270352627328,
       estimatedApr: 0,
       tx: '0x3324235',

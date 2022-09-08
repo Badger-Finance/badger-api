@@ -1,4 +1,4 @@
-import { ONE_DAY_MS, VaultState } from '@badger-dao/sdk';
+import { ONE_DAY_MS, VaultState, YieldType } from '@badger-dao/sdk';
 
 import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
@@ -8,7 +8,6 @@ import { mockBalance, mockQuery, setupMockChain } from '../test/mocks.utils';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import * as tokensUtils from '../tokens/tokens.utils';
 import * as vaultsUtils from '../vaults/vaults.utils';
-import { YieldType } from './enums/yield-type.enum';
 import { VAULT_SOURCE } from './vaults.config';
 import {
   calculateYield,

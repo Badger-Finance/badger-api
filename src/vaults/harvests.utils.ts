@@ -1,5 +1,13 @@
 import { greaterThanOrEqualTo } from '@aws/dynamodb-expressions';
-import { formatBalance, gqlGenT, keyBy, Vault__factory, VaultHarvestData } from '@badger-dao/sdk';
+import {
+  formatBalance,
+  gqlGenT,
+  keyBy,
+  Vault__factory,
+  VaultHarvestData,
+  YieldEvent,
+  YieldType,
+} from '@badger-dao/sdk';
 import { BadgerTreeDistribution_OrderBy, SettHarvest_OrderBy } from '@badger-dao/sdk/lib/graphql/generated/badger';
 import { BigNumber, ethers } from 'ethers';
 
@@ -10,10 +18,8 @@ import { Chain } from '../chains/config/chain.config';
 import { OrderDirection } from '../graphql/generated/balancer';
 import { queryPriceAtTimestamp } from '../prices/prices.utils';
 import { getFullToken } from '../tokens/tokens.utils';
-import { YieldType } from './enums/yield-type.enum';
 import { getInfuelnceVaultYieldBalance, isInfluenceVault } from './influence.utils';
 import { VaultYieldItem } from './interfaces/vault-yield-item.interface';
-import { YieldEvent } from './interfaces/yield-event';
 import { VAULT_TWAY_DURATION } from './vaults.config';
 import { getStrategyInfo } from './vaults.utils';
 import { calculateYield } from './yields.utils';
@@ -82,7 +88,7 @@ function constructYieldItems(data: VaultHarvestData[]): VaultYieldItem[] {
   const recentHarvests = data.sort((a, b) => b.timestamp - a.timestamp);
   const allHarvests = recentHarvests.flatMap((h) => h.harvests.map((h) => ({ ...h, type: YieldType.Harvest })));
   const allDistributions = recentHarvests.flatMap((h) =>
-    h.treeDistributions.map((d) => ({ ...d, type: YieldType.Distribution })),
+    h.treeDistributions.map((d) => ({ ...d, type: YieldType.TreeDistribution })),
   );
   return allHarvests
     .concat(allDistributions)
@@ -157,7 +163,7 @@ async function evaluateYieldItems(
     };
     yieldEvents.push(yieldEvent);
 
-    if (item.type === YieldType.Distribution) {
+    if (item.type === YieldType.TreeDistribution) {
       const entry = tokenEmissionAprs.get(token.address) ?? 0;
       tokenEmissionAprs.set(token.address, entry + eventApr);
     }

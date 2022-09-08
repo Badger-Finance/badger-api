@@ -10,6 +10,8 @@ import {
   VaultSnapshot,
   VaultState,
   VaultVersion,
+  YieldEvent,
+  YieldType,
 } from '@badger-dao/sdk';
 import mockMetrics from '@badger-dao/sdk-mocks/generated/ethereum/api/loadProtocolMetrics.json';
 import mockTokens from '@badger-dao/sdk-mocks/generated/ethereum/api/loadTokens.json';
@@ -23,9 +25,6 @@ import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { Stage } from '../config/enums/stage.enum';
 import { TOKENS } from '../config/tokens.config';
 import { TokenFullMap } from '../tokens/interfaces/token-full.interface';
-import { YieldType } from '../vaults/enums/yield-type.enum';
-import { VaultHarvestsExtendedResp } from '../vaults/interfaces/vault-harvest-extended-resp.interface';
-import { YieldEvent } from '../vaults/interfaces/yield-event';
 
 export const TEST_TOKEN = TOKENS.BADGER;
 export const TEST_ADDR = TOKENS.BBADGER;
@@ -123,7 +122,7 @@ export const MOCK_YIELD_EVENT: YieldEvent = {
   block: TEST_CURRENT_BLOCK,
   amount: 10,
   token: TOKENS.GRAVI_AURA,
-  type: YieldType.Distribution,
+  type: YieldType.TreeDistribution,
   timestamp: TEST_CURRENT_TIMESTAMP,
   balance: 1_000_000,
   value: 10_000,

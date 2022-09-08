@@ -2,13 +2,13 @@
 
 exports[`yields.utils getVaultYieldProjection returns a yield projection estimation from given inputs 1`] = `
 Object {
-  "harvestApr": 23.564030131826737,
-  "harvestPeriodApr": 22.787193973634643,
-  "harvestPeriodApy": 22.787193973634643,
+  "harvestApr": 27.046043378488417,
+  "harvestPeriodApr": 26.15441557480198,
+  "harvestPeriodApy": 26.15441557480198,
   "harvestPeriodSources": Array [
     Object {
       "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
-      "apr": 22.787193973634643,
+      "apr": 26.15441557480198,
       "balance": 0.0044,
       "decimals": 8,
       "name": "Wrapped Bitcoin",
@@ -19,7 +19,7 @@ Object {
   "harvestPeriodSourcesApy": Array [
     Object {
       "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
-      "apr": 22.787193973634643,
+      "apr": 26.15441557480198,
       "balance": 0.0044,
       "decimals": 8,
       "name": "Wrapped Bitcoin",
@@ -30,7 +30,7 @@ Object {
   "harvestTokens": Array [
     Object {
       "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
-      "apr": 23.564030131826737,
+      "apr": 27.046043378488417,
       "balance": 0.0091,
       "decimals": 8,
       "name": "Wrapped Bitcoin",
@@ -164,12 +164,12 @@ Object {
       "type": "flywheel",
     },
   ],
-  "yieldApr": 23.822975517890768,
-  "yieldPeriodApr": 22.787193973634643,
+  "yieldApr": 27.34325264638389,
+  "yieldPeriodApr": 26.15441557480198,
   "yieldPeriodSources": Array [
     Object {
       "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
-      "apr": 22.787193973634643,
+      "apr": 26.15441557480198,
       "balance": 0.0044,
       "decimals": 8,
       "name": "Wrapped Bitcoin",
@@ -180,7 +180,7 @@ Object {
   "yieldTokens": Array [
     Object {
       "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
-      "apr": 23.822975517890768,
+      "apr": 27.34325264638389,
       "balance": 0.0092,
       "decimals": 8,
       "name": "Wrapped Bitcoin",

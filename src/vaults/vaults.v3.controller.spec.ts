@@ -7,7 +7,7 @@ import { Chain } from '../chains/config/chain.config';
 import { NetworkStatus } from '../errors/enums/network-status.enum';
 import { TEST_ADDR } from '../test/constants';
 import { setupMockChain } from '../test/mocks.utils';
-import { setupDdbHarvests, setupTestVault } from './vaults.v2.controller.spec';
+import { setupDdbHarvests, setupTestVault } from '../test/mocks.utils/mock.api.chain';
 import { VaultsV3Controller } from './vaults.v3.controller';
 
 describe('vaults.v3.controller', () => {

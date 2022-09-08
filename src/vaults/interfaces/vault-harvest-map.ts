@@ -1,6 +1,6 @@
 import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
-import { VaultHarvestsExtendedResp } from './vault-harvest-extended-resp.interface';
+import { YieldEventV2 } from './yield-event-v2.interface';
 
 export interface VaultHarvestsMap {
-  [address: VaultDefinitionModel['address']]: VaultHarvestsExtendedResp[];
+  [address: VaultDefinitionModel['address']]: YieldEventV2[];
 }
