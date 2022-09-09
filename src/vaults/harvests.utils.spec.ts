@@ -1,4 +1,4 @@
-import { Vault, Vault__factory, VaultsService } from '@badger-dao/sdk';
+import { Vault, Vault__factory } from '@badger-dao/sdk';
 import { BigNumber } from 'ethers';
 
 import { Chain } from '../chains/config/chain.config';
@@ -258,21 +258,25 @@ describe('harvests.utils', () => {
     });
 
     describe('encounters an error requesting an standard vault', () => {
-      it('loads yield events from the subgraph', async () => {
-        jest.spyOn(VaultsService.prototype, 'listHarvests').mockImplementation(async () => {
-          throw new Error('Expected test error: listHarvests');
+      it('loads yield events from on chain', async () => {
+        jest.spyOn(chain.sdk.graph, 'loadSettHarvests').mockImplementation(async () => {
+          throw new Error('Expected test error: loadSettHarvests');
         });
         const result = await loadYieldEvents(chain, MOCK_VAULT_DEFINITION, TEST_CURRENT_BLOCK);
         expect(result).toMatchSnapshot();
       });
     });
 
-    describe('requesting an influence vault', () => {
-      it('loads yield events from the subgraph', async () => {
+    describe('encounters an error requesting an influence vault', () => {
+      it('loads yield events from on chain', async () => {
+        jest.spyOn(chain.sdk.graph, 'loadSettHarvests').mockImplementation(async () => {
+          throw new Error('Expected test error: loadSettHarvests');
+        });
         const mockVault = JSON.parse(JSON.stringify(MOCK_VAULT_DEFINITION));
         mockVault.address = TOKENS.BVECVX;
-        const result = await loadYieldEvents(chain, mockVault, TEST_CURRENT_BLOCK);
-        expect(result).toMatchSnapshot();
+        await expect(() => loadYieldEvents(chain, mockVault, TEST_CURRENT_BLOCK)).rejects.toThrow(
+          `Unable to load ${mockVault.name} yield events from TheGraph`,
+        );
       });
     });
   });
