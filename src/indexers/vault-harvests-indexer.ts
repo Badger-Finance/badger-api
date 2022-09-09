@@ -15,18 +15,17 @@ export async function updateVaultHarvests() {
     await Promise.all(
       vaults.map(async (vault) => {
         try {
-          const { name, lastHarvestIndexedBlock } = vault;
+          const { name, protocol, lastHarvestIndexedBlock } = vault;
+          const vaultId = [protocol, name].join(' ');
 
-          console.log(`[${name}]: Last Indexed Block ${lastHarvestIndexedBlock}`);
           const yieldEvents = await loadYieldEvents(chain, vault, lastHarvestIndexedBlock);
-          console.log(`[${name}]: Discovered ${yieldEvents.length} yield events`);
 
           if (yieldEvents.length === 0) {
             vault.lastHarvestIndexedBlock = Math.min(
               vault.lastHarvestIndexedBlock + HARVEST_SCAN_BLOCK_INCREMENT,
               currentBlock,
             );
-            console.log(`[${vault.name}]: Yield events up to date as of block: ${vault.lastHarvestIndexedBlock}`);
+            console.log(`[${vaultId}]: Yield events up to date as of block: ${vault.lastHarvestIndexedBlock}`);
             // update the vault's last harvested indexed block, done twice to not update before persist
             await mapper.put(vault);
             return;
@@ -51,10 +50,8 @@ export async function updateVaultHarvests() {
           }
 
           // update the vault's last harvested indexed block
-          console.log(`[${vault.name}]: Yield events up to date as of block: ${vault.lastHarvestIndexedBlock}`);
           await mapper.put(vault);
-
-          console.log(`[${vault.name}]: Persisted ${yieldEventEntities.length} yield events`);
+          console.log(`[${vaultId}]: Yield events up to date as of block: ${vault.lastHarvestIndexedBlock}`);
         } catch (err) {
           console.error(err);
         }

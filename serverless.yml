@@ -515,7 +515,7 @@ functions:
 
   index-vault-yield-events:
     handler: src/indexers/vault-harvests-indexer.updateVaultHarvests
-    timeout: 180
+    timeout: 240
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-vault-harvests
