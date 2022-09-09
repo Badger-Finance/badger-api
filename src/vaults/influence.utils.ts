@@ -7,7 +7,7 @@ import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
 import { CvxLocker__factory } from '../contracts/factories/CvxLocker__factory';
 import { getBalancerPoolTokens } from '../protocols/strategies/balancer.strategy';
-import { CVX_LOCKER } from '../protocols/strategies/convex.strategy';
+import { CVX_LOCKER, OLD_CVX_LOCKER } from '../protocols/strategies/convex.strategy';
 
 // TODO: setup influence configs, voting periods, etc.
 const influenceVaults = new Set([TOKENS.BVECVX, TOKENS.GRAVI_AURA]);
@@ -62,11 +62,12 @@ export async function getInfuelnceVaultYieldBalance(
 
   if (address === TOKENS.BVECVX) {
     // there is no balance possible before the deployment block
-    if (blockTag <= 14320609) {
+    if (blockTag <= 13153663) {
       return 0;
     }
+    const lockerAddress = blockTag < 14320609 ? OLD_CVX_LOCKER : CVX_LOCKER;
     const strategyAddress = await sdk.vaults.getVaultStrategy({ address, version }, { blockTag });
-    const locker = CvxLocker__factory.connect(CVX_LOCKER, sdk.provider);
+    const locker = CvxLocker__factory.connect(lockerAddress, sdk.provider);
 
     let lockedBalance = BigNumber.from('0');
 
