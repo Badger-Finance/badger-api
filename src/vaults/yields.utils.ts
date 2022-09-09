@@ -415,6 +415,13 @@ async function constructEmissionYieldSources(
 async function evaluateYieldEvents(chain: Chain, vault: VaultDefinitionModel): Promise<VaultYieldEvaluation> {
   const yieldEvents = await queryVaultYieldEvents(chain, vault);
 
+  // this error should bubble up to yield source persistence
+  // from a practical perspective this is here to allow vaults to retain calculated yield if there is no history
+  // this is primary needed for a clean resync of harvest data without impacting 'synced' data
+  if (vault.state !== VaultState.Discontinued && yieldEvents.length === 0) {
+    throw new Error(`${vault.name} has no recent harvests, it is either not synced, or effectively deprecated`);
+  }
+
   /**
    * ON 8/15 AN INCORREC PROCESSING OF A BADGER REWARDS PROCESSOR OCCURED.
    * AS A RESULT, THE EVENTS INCLUDED IN TREE DISTRIBUTIONS DID NOT MAKE IT
