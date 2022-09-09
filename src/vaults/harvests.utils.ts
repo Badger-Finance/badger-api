@@ -269,7 +269,7 @@ export async function loadYieldEvents(
     data = await loadGraphYieldData(chain, vault, cutoff);
   } catch (err) {
     if (isInfluenceVault(vault.address)) {
-      throw err;
+      throw new Error(`Unable to load ${vault.name} yield events from TheGraph`);
     } else {
       data = await loadEventYieldData(chain, vault, lastHarvestBlock, cutoff);
     }
