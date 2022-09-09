@@ -264,10 +264,15 @@ export async function loadYieldEvents(
   const cutoff = block.timestamp;
 
   let data: VaultHarvestData[] = [];
-  if (isInfluenceVault(vault.address)) {
+
+  try {
     data = await loadGraphYieldData(chain, vault, cutoff);
-  } else {
-    data = await loadEventYieldData(chain, vault, lastHarvestBlock, cutoff);
+  } catch (err) {
+    if (isInfluenceVault(vault.address)) {
+      throw err;
+    } else {
+      data = await loadEventYieldData(chain, vault, lastHarvestBlock, cutoff);
+    }
   }
 
   const yieldItems = constructYieldItems(data);
