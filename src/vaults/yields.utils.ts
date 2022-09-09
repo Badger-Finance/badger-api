@@ -25,6 +25,7 @@ import { queryVaultYieldEvents } from './harvests.utils';
 import { filterPerformanceItems } from './influence.utils';
 import { VaultYieldEvaluation } from './interfaces/vault-yield-evaluation.interface';
 import { YieldSources } from './interfaces/yield-sources.interface';
+import { VaultEmissionData } from './types/vault-emission-data';
 import { VAULT_SOURCE, VAULT_TWAY_DURATION } from './vaults.config';
 import { estimateDerivativeEmission, queryYieldSources } from './vaults.utils';
 
@@ -325,6 +326,7 @@ export function createYieldSource(
   type: SourceType,
   name: string,
   apr: number,
+  grossApr: number = apr,
   boost: BoostRange = { min: 1, max: 1 },
 ): CachedYieldSource {
   const { id: vaultId, chain, address } = vault;
@@ -343,9 +345,9 @@ export function createYieldSource(
       baseYield: apr,
       minYield: apr * min,
       maxYield: apr * max,
-      grossYield: apr,
-      minGrossYield: apr * min,
-      maxGrossYield: apr * max,
+      grossYield: grossApr,
+      minGrossYield: grossApr * min,
+      maxGrossYield: grossApr * max,
     },
     boostable: isBoostable,
   };
@@ -364,15 +366,21 @@ async function constructEmissionYieldSources(
   chain: Chain,
   vault: VaultDefinitionModel,
   compoundApr: number,
-  tokenAprs: Map<string, number>,
+  tokenAprs: VaultEmissionData,
 ): Promise<CachedYieldSource[]> {
   const valueSources = [];
 
   let flywheelCompounding = 0;
 
-  for (const [token, emissionApr] of tokenAprs.entries()) {
+  for (const [token, { baseYield, grossYield }] of tokenAprs.entries()) {
     const tokenEmitted = await getFullToken(chain, token);
-    const emissionYieldSource = createYieldSource(vault, SourceType.Distribution, tokenEmitted.name, emissionApr);
+    const emissionYieldSource = createYieldSource(
+      vault,
+      SourceType.Distribution,
+      tokenEmitted.name,
+      baseYield,
+      grossYield,
+    );
     valueSources.push(emissionYieldSource);
 
     // try to add underlying emitted vault value sources if applicable
@@ -383,7 +391,7 @@ async function constructEmissionYieldSources(
       const compoundingSource = vaultValueSources.find((source) => source.type === SourceType.PreCompound);
       if (compoundingSource) {
         const compoundingApr = compoundingSource.performance.baseYield;
-        flywheelCompounding += estimateDerivativeEmission(compoundApr / 100, emissionApr / 100, compoundingApr / 100);
+        flywheelCompounding += estimateDerivativeEmission(compoundApr / 100, baseYield / 100, compoundingApr / 100);
       }
     } catch {} // ignore error for non vaults
   }
@@ -450,16 +458,22 @@ async function evaluateYieldEvents(chain: Chain, vault: VaultDefinitionModel): P
   }
 
   const relevantYieldEvents = filterPerformanceItems(vault, yieldEvents);
-  const tokenEmissionAprs = new Map();
+  const tokenEmissionAprs = new Map<
+    string,
+    {
+      baseYield: number;
+      grossYield: number;
+    }
+  >();
 
   let compoundApr = 0;
   for (const event of relevantYieldEvents) {
-    const { token, apr } = event;
+    const { token, apr, grossApr } = event;
     if (event.type === YieldType.Harvest) {
       compoundApr += apr;
     } else {
-      const entry = tokenEmissionAprs.get(token) ?? 0;
-      tokenEmissionAprs.set(token, entry + apr);
+      const entry = tokenEmissionAprs.get(token) ?? { baseYield: 0, grossYield: 0 };
+      tokenEmissionAprs.set(token, { baseYield: entry.baseYield + apr, grossYield: entry.grossYield + grossApr });
     }
   }
 

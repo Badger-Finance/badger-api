@@ -23,7 +23,7 @@ describe('yields.utils', () => {
     createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Compound, VAULT_SOURCE, 11),
     createYieldSource(MOCK_VAULT_DEFINITION, SourceType.TradeFee, 'LP Fees', 2),
     createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Emission, 'Badger', 4),
-    createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Emission, 'Boosted Badger', 6, { min: 0.5, max: 2 }),
+    createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Emission, 'Boosted Badger', 6, 8, { min: 0.5, max: 2 }),
     createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Flywheel, 'Vault Flywheel', 5),
     createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Distribution, 'Badger', 3),
     createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Distribution, 'Irrelevant', 0.0001),
