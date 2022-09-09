@@ -190,10 +190,9 @@ async function loadGraphYieldData(
 ): Promise<VaultHarvestData[]> {
   const { graph } = await chain.getSdk();
   const { address } = vault;
-  console.log(`[${vault.name}]: Load Graph Yield Data`);
   const [vaultHarvests, treeDistributions] = await Promise.all([
     graph.loadSettHarvests({
-      first: 10,
+      first: 25,
       where: {
         sett: address.toLowerCase(),
         timestamp_gt: cutoff,
@@ -202,7 +201,7 @@ async function loadGraphYieldData(
       orderDirection: OrderDirection.Asc,
     }),
     graph.loadBadgerTreeDistributions({
-      first: 10,
+      first: 25,
       where: {
         sett: address.toLowerCase(),
         timestamp_gt: cutoff,
