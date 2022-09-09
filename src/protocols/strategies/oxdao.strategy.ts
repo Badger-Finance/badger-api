@@ -38,6 +38,6 @@ async function getLiquiditySources(chain: Chain, vaultDefinition: VaultDefinitio
     const scaledApr = grossYield * scalar;
     const min = grossYield > 0 ? minGrossYield / grossYield : 0;
     const max = grossYield > 0 ? maxGrossYield / grossYield : 0;
-    return createYieldSource(vaultDefinition, type, name, scaledApr, { min, max });
+    return createYieldSource(vaultDefinition, type, name, scaledApr, scaledApr, { min, max });
   });
 }

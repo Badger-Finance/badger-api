@@ -196,7 +196,7 @@ describe('vaults.utils', () => {
       it('includes protocol, reward emissions, and yield sources', async () => {
         jest.spyOn(rewardsUtils, 'getRewardEmission').mockImplementation(async () => [
           yieldsUtils.createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Emission, 'Badger', 1.3),
-          yieldsUtils.createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Emission, 'Boosted Badger', 6.9, {
+          yieldsUtils.createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Emission, 'Boosted Badger', 6.9, 8, {
             min: 0.2,
             max: 4,
           }),

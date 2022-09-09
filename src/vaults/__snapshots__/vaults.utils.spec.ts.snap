@@ -62,10 +62,10 @@ Array [
     "name": "Boosted Badger",
     "performance": Object {
       "baseYield": 6.9,
-      "grossYield": 6.9,
-      "maxGrossYield": 27.6,
+      "grossYield": 8,
+      "maxGrossYield": 32,
       "maxYield": 27.6,
-      "minGrossYield": 1.3800000000000001,
+      "minGrossYield": 1.6,
       "minYield": 1.3800000000000001,
     },
     "type": "emission",

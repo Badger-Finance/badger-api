@@ -136,7 +136,14 @@ export async function getRewardEmission(chain: Chain, vault: VaultDefinitionMode
       const boostedApr = (cachedVault.boostWeight / 10_000) * proRataApr;
       proRataApr = proRataApr - boostedApr;
       const boostedName = `Boosted ${token.name}`;
-      const boostYieldSource = createYieldSource(vault, SourceType.Emission, boostedName, boostedApr, boostRange);
+      const boostYieldSource = createYieldSource(
+        vault,
+        SourceType.Emission,
+        boostedName,
+        boostedApr,
+        boostedApr,
+        boostRange,
+      );
       emissionSources.push(boostYieldSource);
     }
     const proRataYieldSource = createYieldSource(vault, SourceType.Emission, token.name, proRataApr);
