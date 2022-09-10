@@ -59,6 +59,8 @@ export async function getInfuelnceVaultYieldBalance(
   const sdk = await chain.getSdk();
   const { address, version } = vault;
   const vaultContract = Vault__factory.connect(address, sdk.provider);
+  const strategyBalance = await vaultContract.totalSupply({ blockTag });
+  const maxBalance = formatBalance(strategyBalance);
 
   if (address === TOKENS.BVECVX) {
     // there is no balance possible before the deployment block
@@ -77,11 +79,15 @@ export async function getInfuelnceVaultYieldBalance(
       lockedBalance = await vaultContract.totalSupply({ blockTag });
     }
 
-    return formatBalance(lockedBalance);
-  }
+    const votingBalance = formatBalance(lockedBalance);
 
-  const strategyBalance = await vaultContract.totalSupply({ blockTag });
-  const maxBalance = formatBalance(strategyBalance);
+    // there is some weirdness with swapping contracts at block 14353146 - just use a fallback
+    if (votingBalance > 0) {
+      return votingBalance;
+    } else {
+      return maxBalance;
+    }
+  }
 
   // one strange thing to note here is when a pool didn't exist - and we are trying to check on it
   // deal with GRAVI_AURA - this won't scale so we need to figure out how to generalize it
