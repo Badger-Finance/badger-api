@@ -626,40 +626,6 @@ Array [
     },
     "type": "compound",
   },
-  CachedYieldSource {
-    "address": "0xBA485b556399123261a5F9c95d413B4f93107407",
-    "boostable": false,
-    "chain": "ethereum",
-    "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_distribution_badger_flat",
-    "name": "Badger",
-    "performance": Object {
-      "baseYield": 72.2,
-      "grossYield": 80.22222222222223,
-      "maxGrossYield": 80.22222222222223,
-      "maxYield": 72.2,
-      "minGrossYield": 80.22222222222223,
-      "minYield": 72.2,
-    },
-    "type": "distribution",
-  },
-  CachedYieldSource {
-    "address": "0xBA485b556399123261a5F9c95d413B4f93107407",
-    "boostable": false,
-    "chain": "ethereum",
-    "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-    "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_flywheel_vault_flywheel_flat",
-    "name": "Vault Flywheel",
-    "performance": Object {
-      "baseYield": 0.2151821909384493,
-      "grossYield": 0.2151821909384493,
-      "maxGrossYield": 0.2151821909384493,
-      "maxYield": 0.2151821909384493,
-      "minGrossYield": 0.2151821909384493,
-      "minYield": 0.2151821909384493,
-    },
-    "type": "flywheel",
-  },
 ]
 `;
 
