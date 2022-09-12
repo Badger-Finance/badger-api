@@ -1,9 +1,8 @@
-import { Currency, Network } from '@badger-dao/sdk';
+import { Currency, Network, VaultEarning } from '@badger-dao/sdk';
 import { Controller, Get, Inject, PathParams, QueryParams, UseCache } from '@tsed/common';
 import { ContentType, Deprecated, Description, Returns, Summary } from '@tsed/schema';
 
 import { getOrCreateChain } from '../chains/chains.utils';
-import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
 import { VaultHarvestsMap } from './interfaces/vault-harvest-map';
 import { VaultHarvestsMapModel } from './interfaces/vault-harvests-list-model.interface';
 import { VaultHarvestsModel } from './interfaces/vault-harvests-model.interface';
@@ -40,17 +39,19 @@ export class VaultsV2Controller {
     return this.vaultService.listVaultHarvests(getOrCreateChain(chain));
   }
 
-  @Get('/harvests/:vault')
+  @Get('/harvests/:address')
   @ContentType('json')
   @Summary('Get harvests on a specific vault')
   @Description('Return full list of vault`s harvests')
   @Returns(200, Array).Of(VaultHarvestsModel)
   @Returns(400).Description('Not a valid chain')
   async getVaultsHarvests(
-    @PathParams('vault') vault: string,
+    @PathParams('address') address: string,
     @QueryParams('chain') chain?: Network,
-  ): Promise<VaultHarvestsExtendedResp[]> {
-    return this.vaultService.getVaultHarvests(getOrCreateChain(chain), vault);
+  ): Promise<VaultEarning[]> {
+    const targetChain = getOrCreateChain(chain);
+    const vault = await targetChain.vaults.getVault(address);
+    return this.vaultService.getVaultHarvests(targetChain, vault);
   }
 
   @Get('/:vault')
@@ -68,6 +69,6 @@ export class VaultsV2Controller {
     const chainInst = getOrCreateChain(chain);
     const vaultDef = await chainInst.vaults.getVault(vault);
 
-    return VaultsService.loadVault(chainInst, vaultDef, currency);
+    return VaultsService.loadVaultV2(chainInst, vaultDef, currency);
   }
 }

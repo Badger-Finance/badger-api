@@ -1,10 +1,10 @@
+import { YieldType } from '@badger-dao/sdk';
 import { Description, Example, Property, Title } from '@tsed/schema';
 
 import { TOKENS } from '../../config/tokens.config';
-import { HarvestType } from '../enums/harvest.enum';
-import { VaultHarvestsExtendedResp } from './vault-harvest-extended-resp.interface';
+import { YieldEventV2 } from './yield-event-v2.interface';
 
-export class VaultHarvestsModel implements VaultHarvestsExtendedResp {
+export class VaultHarvestsModel implements YieldEventV2 {
   @Title('timestamp')
   @Description('time of harvest emitted')
   @Example(Date.now())
@@ -31,9 +31,9 @@ export class VaultHarvestsModel implements VaultHarvestsExtendedResp {
 
   @Title('eventType')
   @Description('Harvest or TreeDistribution')
-  @Example(HarvestType.TreeDistribution)
+  @Example(YieldType.TreeDistribution)
   @Property()
-  public eventType: HarvestType;
+  public eventType: YieldType;
 
   @Title('strategyBalance')
   @Description('balance of strategy on time of harvest')
@@ -47,15 +47,13 @@ export class VaultHarvestsModel implements VaultHarvestsExtendedResp {
   @Property()
   public estimatedApr?: number;
 
-  constructor({
-    timestamp,
-    block,
-    token,
-    amount,
-    eventType,
-    strategyBalance,
-    estimatedApr,
-  }: VaultHarvestsExtendedResp) {
+  @Title('tx')
+  @Description('Event transaction hash')
+  @Example('0x30bc2ab3a59f7923ea20f7b99331dbc974130dc8b7152bb897d393fc2c506214')
+  @Property()
+  public tx!: string;
+
+  constructor({ timestamp, block, token, amount, eventType, strategyBalance, estimatedApr, tx }: YieldEventV2) {
     this.timestamp = timestamp;
     this.block = block;
     this.token = token;
@@ -63,5 +61,6 @@ export class VaultHarvestsModel implements VaultHarvestsExtendedResp {
     this.eventType = eventType;
     this.strategyBalance = strategyBalance;
     this.estimatedApr = estimatedApr;
+    this.tx = tx;
   }
 }

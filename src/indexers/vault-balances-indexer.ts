@@ -1,15 +1,15 @@
 import { Protocol } from '@badger-dao/sdk';
 
-import { getDataMapper } from '../aws/dynamodb.utils';
+import { getDataMapper, getVaultEntityId } from '../aws/dynamodb.utils';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { VaultTokenBalance } from '../aws/models/vault-token-balance.model';
 import { getSupportedChains } from '../chains/chains.utils';
 import { Chain } from '../chains/config/chain.config';
 import { getBalancerVaultTokenBalance } from '../protocols/strategies/balancer.strategy';
 import { getCurveVaultTokenBalance } from '../protocols/strategies/convex.strategy';
+import { getLpTokenBalances } from '../protocols/strategies/uniswap.strategy';
 import { getFullToken, toBalance } from '../tokens/tokens.utils';
 import { getCachedVault } from '../vaults/vaults.utils';
-import { getLpTokenBalances } from './indexer.utils';
 
 export async function refreshVaultBalances() {
   for (const chain of getSupportedChains()) {
@@ -57,10 +57,13 @@ export async function updateVaultTokenBalances(chain: Chain, vault: VaultDefinit
     }
 
     if (!cachedTokenBalance || cachedTokenBalance.tokenBalances.length === 0) {
-      cachedTokenBalance = Object.assign(new VaultTokenBalance(), {
+      const singleTokenBalance: VaultTokenBalance = {
+        id: getVaultEntityId(chain, vault),
+        chain: chain.network,
         vault: vault.address,
         tokenBalances: [await toBalance(depositToken, cachedVault.balance)],
-      });
+      };
+      cachedTokenBalance = Object.assign(new VaultTokenBalance(), singleTokenBalance);
     }
 
     await mapper.put(cachedTokenBalance);

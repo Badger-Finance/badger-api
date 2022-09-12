@@ -1,10 +1,11 @@
 import { Erc20__factory, formatBalance, Network, Token } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 
+import { getVaultEntityId } from '../../aws/dynamodb.utils';
 import { CachedTokenBalance } from '../../aws/models/cached-token-balance.interface';
+import { CachedYieldSource } from '../../aws/models/cached-yield-source.interface';
 import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
 import { VaultTokenBalance } from '../../aws/models/vault-token-balance.model';
-import { YieldSource } from '../../aws/models/yield-source.model';
 import { Chain } from '../../chains/config/chain.config';
 import { request } from '../../common/request';
 import { ContractRegistry } from '../../config/interfaces/contract-registry.interface';
@@ -35,6 +36,7 @@ export const CURVE_BASE_REGISTRY = '0x0000000022D53366457F9d5E68Ec105046FC4383';
 export const HARVEST_FORWARDER = '0xA84B663837D94ec41B0f99903f37e1d69af9Ed3E';
 export const BRIBES_PROCESSOR = '0xb2Bf1d48F2C2132913278672e6924efda3385de2';
 export const OLD_BRIBES_PROCESSOR = '0xbeD8f323456578981952e33bBfbE80D23289246B';
+export const OLD_CVX_LOCKER = '0xD18140b4B819b895A3dba5442F959fA44994AF50';
 export const CVX_LOCKER = '0x72a19342e8F1838460eBFCCEf09F6585e32db86E';
 
 /* Protocol Definitions */
@@ -73,7 +75,7 @@ interface FactoryAPYResonse {
 }
 
 export class ConvexStrategy {
-  static async getValueSources(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<YieldSource[]> {
+  static async getValueSources(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<CachedYieldSource[]> {
     switch (vaultDefinition.address) {
       case TOKENS.BVECVX:
         return [];
@@ -85,7 +87,7 @@ export class ConvexStrategy {
   }
 }
 
-async function getLiquiditySources(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<YieldSource[]> {
+async function getLiquiditySources(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<CachedYieldSource[]> {
   const bveCVXVault = await chain.vaults.getVault(TOKENS.BVECVX);
   const [bveCVXLP, bveCVXSources] = await Promise.all([
     getCachedVault(chain, vaultDefinition),
@@ -98,17 +100,24 @@ async function getLiquiditySources(chain: Chain, vaultDefinition: VaultDefinitio
     .reduce((total, val) => (total += val), 0);
   const scalar = bveCVXValue / bveCVXLP.value;
   const lpSources = bveCVXSources.map((s) => {
-    const { apr, minApr, maxApr, name, type } = s;
-    const scaledApr = apr * scalar;
-    const min = apr > 0 ? minApr / apr : 0;
-    const max = apr > 0 ? maxApr / apr : 0;
-    return createYieldSource(vaultDefinition, type, name, scaledApr, { min, max });
+    const {
+      performance: { grossYield, minGrossYield, maxGrossYield },
+      name,
+      type,
+    } = s;
+    const scaledApr = grossYield * scalar;
+    const min = grossYield > 0 ? minGrossYield / grossYield : 0;
+    const max = grossYield > 0 ? maxGrossYield / grossYield : 0;
+    return createYieldSource(vaultDefinition, type, name, scaledApr, scaledApr, { min, max });
   });
   const cachedTradeFees = await getCurvePerformance(chain, vaultDefinition);
   return [cachedTradeFees, ...lpSources];
 }
 
-export async function getCurvePerformance(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<YieldSource> {
+export async function getCurvePerformance(
+  chain: Chain,
+  vaultDefinition: VaultDefinitionModel,
+): Promise<CachedYieldSource> {
   let defaultUrl;
   switch (chain.network) {
     case Network.Polygon:
@@ -223,10 +232,13 @@ export async function getCurveVaultTokenBalance(
     cachedToken.balance *= scalar;
     cachedToken.value *= scalar;
   });
-  return Object.assign(new VaultTokenBalance(), {
+  const vaultBalance: VaultTokenBalance = {
+    id: getVaultEntityId(chain, vault),
+    chain: chain.network,
     vault: address,
     tokenBalances: cachedTokens,
-  });
+  };
+  return Object.assign(new VaultTokenBalance(), vaultBalance);
 }
 
 // this should really only be used on 50:50 curve v2 crypto pools
@@ -249,7 +261,6 @@ export async function resolveCurveStablePoolTokenPrice(chain: Chain, token: Toke
   // TODO: figure out how to get this from the registry or crypto registry (?) properly
   const pool = nonRegistryPools[token.address];
   const balances = await getCurvePoolBalance(chain, pool);
-  const sdk = await chain.getSdk();
 
   try {
     if (balances.length != 2) {
@@ -257,7 +268,7 @@ export async function resolveCurveStablePoolTokenPrice(chain: Chain, token: Toke
     }
 
     // we can calculate "x" in terms of "y" - this is our token in terms of some known token
-    const swapPool = CurvePool3__factory.connect(pool, sdk.provider);
+    const swapPool = CurvePool3__factory.connect(pool, chain.provider);
 
     const requestTokenIndex = balances[0].address === token.address ? 0 : 1;
     const pairToken = balances[1 - requestTokenIndex];

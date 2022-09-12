@@ -67,4 +67,7 @@ export class VaultDefinitionModel implements IVaultDefinition {
 
   @attribute()
   isNew!: boolean;
+
+  @attribute({ defaultProvider: () => 0 })
+  lastHarvestIndexedBlock!: number;
 }

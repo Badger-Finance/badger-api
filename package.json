@@ -18,7 +18,7 @@
     "dev:node:api": "ts-node -r dotenv/config src/index.ts",
     "format": "pretty-quick",
     "lint": "eslint \"src/**/*.ts\" --fix",
-    "test": "node --expose-gc --no-compilation-cache ./node_modules/.bin/jest --detectLeaks",
+    "test": "node --expose-gc --no-compilation-cache ./node_modules/.bin/jest --detectOpenHandles --runInBand --logHeapUsage",
     "test:upd": "yarn test -u",
     "test:path": "yarn test --no-cache --testPathPattern",
     "test:clean": "jest --clearCache",
@@ -30,7 +30,7 @@
   "dependencies": {
     "@aws/dynamodb-data-mapper": "^0.7.3",
     "@aws/dynamodb-data-mapper-annotations": "^0.7.3",
-    "@badger-dao/sdk": "^1.17.6",
+    "@badger-dao/sdk": "^1.18.8",
     "@tsed/common": "6.95.9",
     "@tsed/core": "6.95.9",
     "@tsed/di": "6.95.9",
@@ -55,14 +55,14 @@
     "tslib": "^2.2.0"
   },
   "devDependencies": {
-    "@badger-dao/sdk-mocks": "^1.17.5",
+    "@badger-dao/sdk-mocks": "^1.18.8",
     "@graphql-codegen/cli": "^2.3.0",
     "@graphql-codegen/typescript": "^2.7.3",
     "@graphql-codegen/typescript-graphql-request": "^4.5.3",
     "@graphql-codegen/typescript-operations": "^2.5.3",
     "@tsed/platform-serverless": "6.95.9",
     "@tsed/platform-serverless-testing": "6.95.9",
-    "@typechain/ethers-v5": "^9.0.0",
+    "@typechain/ethers-v5": "10.1.0",
     "@types/cookie-parser": "^1.4.2",
     "@types/express": "^4.17.11",
     "@types/jest": "^28.1.7",
@@ -75,7 +75,7 @@
     "@typescript-eslint/eslint-plugin": "^5.33.0",
     "@typescript-eslint/parser": "^5.33.0",
     "clean-modules": "^2.0.6",
-    "eslint": "^8.21.0",
+    "eslint": "8.22.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jest": "26.8.3",
@@ -98,7 +98,11 @@
     "serverless-plugin-typescript": "^2.1.2",
     "ts-jest": "^28.0.8",
     "ts-node": "^10.0.0",
-    "typechain": "^7.0.0",
+    "typechain": "^8.1.0",
     "typescript": "^4.7.4"
+  },
+  "resolutions": {
+    "@types/cacheable-request": "^6.0.2",
+    "@types/responselike": "^1.0.0"
   }
 }

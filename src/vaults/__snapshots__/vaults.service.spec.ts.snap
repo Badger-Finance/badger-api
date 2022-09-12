@@ -4,17 +4,17 @@ exports[`vaults.service getProtocolSummary request with currency returns the pro
 Object {
   "setts": Array [
     Object {
-      "balance": 0.01073050870987165,
+      "balance": 160912.73437961238,
       "name": "Badger",
-      "value": 129.21,
+      "value": 558060.59,
     },
   ],
-  "totalValue": 129.21,
+  "totalValue": 558060.59,
   "vaults": Array [
     Object {
-      "balance": 0.01073050870987165,
+      "balance": 160912.73437961238,
       "name": "Badger",
-      "value": 129.21,
+      "value": 558060.59,
     },
   ],
 }
@@ -24,17 +24,17 @@ exports[`vaults.service getProtocolSummary request with no currency returns the 
 Object {
   "setts": Array [
     Object {
-      "balance": 0.01073050870987165,
+      "balance": 160912.73437961238,
       "name": "Badger",
-      "value": 258.42,
+      "value": 1116121.18,
     },
   ],
-  "totalValue": 258.42,
+  "totalValue": 1116121.18,
   "vaults": Array [
     Object {
-      "balance": 0.01073050870987165,
+      "balance": 160912.73437961238,
       "name": "Badger",
-      "value": 258.42,
+      "value": 1116121.18,
     },
   ],
 }

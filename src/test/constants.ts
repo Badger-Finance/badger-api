@@ -5,11 +5,13 @@ import {
   Protocol,
   ValueSource,
   VaultBehavior,
-  VaultDTO,
+  VaultDTOV2,
   VaultHarvestData,
   VaultSnapshot,
   VaultState,
   VaultVersion,
+  YieldEvent,
+  YieldType,
 } from '@badger-dao/sdk';
 import mockMetrics from '@badger-dao/sdk-mocks/generated/ethereum/api/loadProtocolMetrics.json';
 import mockTokens from '@badger-dao/sdk-mocks/generated/ethereum/api/loadTokens.json';
@@ -21,11 +23,13 @@ import { BigNumber } from 'ethers';
 
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { Stage } from '../config/enums/stage.enum';
+import { TOKENS } from '../config/tokens.config';
 import { TokenFullMap } from '../tokens/interfaces/token-full.interface';
-import { VaultHarvestsExtendedResp } from '../vaults/interfaces/vault-harvest-extended-resp.interface';
+import { VaultHarvestsMap } from '../vaults/interfaces/vault-harvest-map';
+import { VAULT_TWAY_DURATION } from '../vaults/vaults.config';
 
-export const TEST_TOKEN = '0x3472A5A71965499acd81997a54BBA8D852C6E53d';
-export const TEST_ADDR = '0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28';
+export const TEST_TOKEN = TOKENS.BADGER;
+export const TEST_ADDR = TOKENS.BBADGER;
 export const TEST_CURRENT_TIMESTAMP = 1660223160457;
 export const TEST_CURRENT_BLOCK = 13_500_500;
 export const TEST_DEFAULT_GAS_PRICE = '1000000';
@@ -80,10 +84,11 @@ export const MOCK_VAULT_DEFINITION: VaultDefinitionModel = {
   version: VaultVersion.v1,
   client: '',
   depositToken: TEST_TOKEN,
+  lastHarvestIndexedBlock: TEST_CURRENT_BLOCK,
 };
 
-export const MOCK_VAULTS: VaultDTO[] = mockVaults as VaultDTO[];
-export const MOCK_VAULT: VaultDTO = MOCK_VAULTS[0];
+export const MOCK_VAULTS: VaultDTOV2[] = mockVaults as VaultDTOV2[];
+export const MOCK_VAULT: VaultDTOV2 = MOCK_VAULTS[0];
 
 export const MOCK_VAULT_SNAPSHOTS: VaultSnapshot[] = mockVaultSnapshots;
 export const MOCK_VAULT_SNAPSHOT = MOCK_VAULT_SNAPSHOTS[0];
@@ -93,7 +98,7 @@ export const MOCK_YIELD_SOURCES: ValueSource[] = MOCK_VAULT.sources;
 export const MOCK_TOKENS = mockTokens as TokenFullMap;
 export const MOCK_TOKEN = MOCK_TOKENS[TEST_TOKEN];
 
-export const MOCK_VAULTS_HARVESTS = mockVaultHarvests as Record<string, VaultHarvestsExtendedResp[]>;
+export const MOCK_VAULTS_HARVESTS = <VaultHarvestsMap>mockVaultHarvests;
 export const MOCK_VAULT_HARVESTS = MOCK_VAULTS_HARVESTS[TEST_ADDR];
 
 const mockListHarvestsCopy = JSON.parse(JSON.stringify(mockListHarvests));
@@ -112,3 +117,19 @@ mockListHarvestsCopy.data.forEach((d) => {
 export const MOCK_HARVESTS: { data: VaultHarvestData[] } = mockListHarvestsCopy;
 
 export const MOCK_PROTOCOL_METRICS = mockMetrics;
+
+// TODO: replace once available from mocks
+export const MOCK_YIELD_EVENT: YieldEvent = {
+  block: TEST_CURRENT_BLOCK,
+  amount: 10,
+  token: TOKENS.GRAVI_AURA,
+  type: YieldType.TreeDistribution,
+  timestamp: TEST_CURRENT_TIMESTAMP,
+  balance: 1_000_000,
+  duration: VAULT_TWAY_DURATION,
+  value: 10_000,
+  earned: 3_500,
+  apr: 230,
+  grossApr: 230 * (1 / 0.9),
+  tx: '0x123',
+};

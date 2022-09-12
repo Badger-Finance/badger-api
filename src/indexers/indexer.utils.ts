@@ -1,6 +1,5 @@
 import {
   BouncerType,
-  gqlGenT,
   ONE_WEEK_SECONDS,
   Protocol,
   RegistryVault,
@@ -9,19 +8,15 @@ import {
   VaultState,
   VaultVersion,
 } from '@badger-dao/sdk';
-import { NotFound } from '@tsed/exceptions';
 
 import { getVaultEntityId } from '../aws/dynamodb.utils';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
-import { VaultTokenBalance } from '../aws/models/vault-token-balance.model';
 import { Chain } from '../chains/config/chain.config';
 import { Stage } from '../config/enums/stage.enum';
 import { queryPrice } from '../prices/prices.utils';
-import { getLiquidityData } from '../protocols/common/swap.utils';
-import { getFullTokens, toBalance } from '../tokens/tokens.utils';
 import { Nullable } from '../utils/types.utils';
 import { VaultsService } from '../vaults/vaults.service';
-import { getCachedVault, getStrategyInfo } from '../vaults/vaults.utils';
+import { getStrategyInfo } from '../vaults/vaults.utils';
 
 export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<VaultSnapshot> {
   const sdk = await chain.getSdk();
@@ -42,7 +37,7 @@ export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefini
     queryPrice(vaultDefinition.depositToken),
     getStrategyInfo(chain, vaultDefinition),
     sdk.rewards.getBoostWeight(vaultDefinition.address),
-    VaultsService.loadVault(chain, vaultDefinition),
+    VaultsService.loadVaultV2(chain, vaultDefinition),
   ]);
 
   const value = balance * tokenPriceData.price;
@@ -78,16 +73,26 @@ export async function constructVaultDefinition(
   const { sett } = await sdk.graph.loadSett({ id: address.toLowerCase() });
 
   if (!sett) {
-    console.warn(`Cant fetch vault data from The Graph for chain ${chain.network}, ${address}`);
+    console.warn(`Can't fetch vault data from The Graph for chain ${chain.network}, ${address}`);
     return null;
   }
 
-  const { createdAt, releasedAt, lastUpdatedAt } = sett;
+  const { createdAt, createdAtBlock, releasedAt, lastUpdatedAt } = sett;
 
-  return Object.assign(new VaultDefinitionModel(), {
+  let lastHarvestIndexedBlock = Number(createdAtBlock);
+
+  try {
+    const existingDefinition = await chain.vaults.getVault(vault.address);
+    if (existingDefinition.lastHarvestIndexedBlock > createdAtBlock) {
+      lastHarvestIndexedBlock = existingDefinition.lastHarvestIndexedBlock;
+    }
+  } catch {} // ignore errors for vaults who do not exist
+
+  const definition: VaultDefinitionModel = {
     id: getVaultEntityId(chain, vault),
     address,
-    createdAt: Number(createdAt),
+    // can be null for old from registryV1, legacy issue
+    createdAt: !!createdAt ? Number(createdAt) : 0,
     chain: chain.network,
     isProduction: 1,
     version: vault.version as VaultVersion,
@@ -102,40 +107,8 @@ export async function constructVaultDefinition(
     stage: vault.state === VaultState.Experimental ? Stage.Staging : Stage.Production,
     bouncer: BouncerType.None,
     isNew: Date.now() / 1000 - Number(releasedAt) <= ONE_WEEK_SECONDS * 2,
-  });
-}
+    lastHarvestIndexedBlock,
+  };
 
-export async function getLpTokenBalances(chain: Chain, vault: VaultDefinitionModel): Promise<VaultTokenBalance> {
-  const { depositToken, address } = vault;
-  try {
-    const liquidityData = await getLiquidityData(chain, depositToken);
-    const { token0, token1, reserve0, reserve1, totalSupply } = liquidityData;
-    const tokenData = await getFullTokens(chain, [token0, token1]);
-    const t0Token = tokenData[token0];
-    const t1Token = tokenData[token1];
-
-    // poolData returns the full liquidity pool, valueScalar acts to calculate the portion within the sett
-    const settSnapshot = await getCachedVault(chain, vault);
-    const valueScalar = totalSupply > 0 ? settSnapshot.balance / totalSupply : 0;
-    const t0TokenBalance = reserve0 * valueScalar;
-    const t1TokenBalance = reserve1 * valueScalar;
-    const tokenBalances = await Promise.all([toBalance(t0Token, t0TokenBalance), toBalance(t1Token, t1TokenBalance)]);
-
-    return Object.assign(new VaultTokenBalance(), {
-      vault: address,
-      tokenBalances,
-    });
-  } catch (err) {
-    throw new NotFound(`${vault.protocol} pool pair ${depositToken} does not exist`);
-  }
-}
-
-export async function getVault(chain: Chain, contract: string, block?: number): Promise<gqlGenT.SettQuery> {
-  const sdk = await chain.getSdk();
-  const settId = contract.toLowerCase();
-  const vars = { id: settId };
-  if (block) {
-    return sdk.graph.loadSett({ ...vars, block: { number: block } });
-  }
-  return sdk.graph.loadSett(vars);
+  return Object.assign(new VaultDefinitionModel(), definition);
 }

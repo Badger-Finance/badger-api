@@ -7,90 +7,31 @@ VaultDefinitionModel {
   "bouncer": "none",
   "chain": "ethereum",
   "client": "",
-  "createdAt": NaN,
+  "createdAt": 1607018449,
   "depositToken": "0x075b1bb99792c9E1041bA13afEf80C91a1e70fB3",
   "id": "ethereum-0xd04c48A53c111300aD41190D63681ed3dAd998eC",
   "isNew": false,
   "isProduction": 1,
+  "lastHarvestIndexedBlock": 13500500,
   "name": "renBTC/wBTC/sBTC",
   "protocol": "Convex",
-  "releasedAt": NaN,
+  "releasedAt": 1654738224,
   "stage": "prod",
   "state": "discontinued",
-  "updatedAt": NaN,
+  "updatedAt": 1654738224,
   "version": "v1",
-}
-`;
-
-exports[`indexer.utils getLpTokenBalances should return token balances of the vault 1`] = `
-VaultTokenBalance {
-  "tokenBalances": Array [
-    Object {
-      "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
-      "balance": 0,
-      "decimals": 18,
-      "name": "Badger",
-      "symbol": "BADGER",
-      "value": 0,
-    },
-    Object {
-      "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
-      "balance": 0,
-      "decimals": 8,
-      "name": "Wrapped BTC",
-      "symbol": "WBTC",
-      "value": 0,
-    },
-  ],
-  "vault": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-}
-`;
-
-exports[`indexer.utils getVault should return graph vault sequence 1`] = `
-Object {
-  "__typename": "Query",
-  "sett": Object {
-    "available": "1213945495264444893468113",
-    "balance": "1213945495264444893468113",
-    "controller": Object {
-      "id": "0x63cf44b2548e4493fd099222a1ec79f3344d9682",
-    },
-    "decimals": "18",
-    "grossDeposit": "18406633496620429219098123",
-    "grossShareDeposit": "15571214606848692106223327",
-    "grossShareWithdraw": "14588168614349076090183817",
-    "grossWithdraw": "17527900740448259273124826",
-    "id": "0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28",
-    "name": "Badger Sett Badger",
-    "netDeposit": "878732756172169945973297",
-    "netShareDeposit": "983045992499616016039510",
-    "pricePerFullShare": "1234881688676350581",
-    "strategy": Object {
-      "balance": "0",
-      "id": "0x75b8e21bd623012efb3b69e1b562465a68944ee6",
-    },
-    "symbol": "bBADGER",
-    "token": Object {
-      "decimals": "18",
-      "id": "0x3472a5a71965499acd81997a54bba8d852c6e53d",
-      "name": "Badger",
-      "symbol": "BADGER",
-      "totalSupply": "21000000000000000000000000",
-    },
-    "totalSupply": "983045992499616016039510",
-  },
 }
 `;
 
 exports[`indexer.utils vaultToSnapshot should return valid snapshot of the vault 1`] = `
 Object {
   "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-  "apr": 0.3067433490728799,
+  "apr": 0,
   "available": 1006655.3375347335,
   "balance": 1006655.3375347335,
   "block": 13500500,
   "boostWeight": 0,
-  "harvestApr": 0.3067433490728799,
+  "harvestApr": 0,
   "pricePerFullShare": 1.2348816886763505,
   "strategy": Object {
     "address": "0x32BdF2B35Bbf8dAca3561C3ADE59c941488E9c69",
@@ -103,6 +44,6 @@ Object {
   "timestamp": 1660223160457,
   "totalSupply": 815183.6299506156,
   "value": 13515354561.74,
-  "yieldApr": 0.3067433490728799,
+  "yieldApr": 0,
 }
 `;

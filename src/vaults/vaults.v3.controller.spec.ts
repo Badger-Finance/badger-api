@@ -7,7 +7,7 @@ import { Chain } from '../chains/config/chain.config';
 import { NetworkStatus } from '../errors/enums/network-status.enum';
 import { TEST_ADDR } from '../test/constants';
 import { setupMockChain } from '../test/mocks.utils';
-import { setupDdbHarvests, setupTestVault } from './vaults.v2.controller.spec';
+import { setupDdbHarvests, setupTestVault } from '../test/mocks.utils/mock.api.chain';
 import { VaultsV3Controller } from './vaults.v3.controller';
 
 describe('vaults.v3.controller', () => {
@@ -65,6 +65,7 @@ describe('vaults.v3.controller', () => {
         expect(JSON.parse(body)).toMatchSnapshot();
       });
     });
+
     describe('error cases', () => {
       it('returns a 400 for invalid chain', async () => {
         jest.spyOn(Chain, 'getChain').mockImplementation(() => {
@@ -86,7 +87,7 @@ describe('vaults.v3.controller', () => {
       it('Return extended harvests for chain vault by addr', async () => {
         const { body, statusCode } = await PlatformServerlessTest.request
           .get('/vaults/harvests')
-          .query({ vault: TEST_ADDR });
+          .query({ address: TEST_ADDR });
         expect(statusCode).toEqual(NetworkStatus.Success);
         expect(JSON.parse(body)).toMatchSnapshot();
       });

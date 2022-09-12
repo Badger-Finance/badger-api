@@ -1,14 +1,16 @@
 import { DataMapper } from '@aws/dynamodb-data-mapper';
 import { Currency } from '@badger-dao/sdk';
 
+import * as dynamoDbUtils from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
 import * as requestUtils from '../common/request';
-import { TEST_ADDR, TEST_TOKEN } from '../test/constants';
+import { TEST_ADDR, TEST_CURRENT_TIMESTAMP, TEST_TOKEN } from '../test/constants';
 import { mockQuery, setupMockChain } from '../test/mocks.utils';
-import { convert, fetchPrices, queryPrice, updatePrice } from './prices.utils';
+import { convert, fetchPrices, queryPrice, queryPriceAtTimestamp, updatePrice } from './prices.utils';
 
 describe('prices.utils', () => {
   const missingPrice = { address: TEST_TOKEN, price: 0 };
+  const missingPriceSnapshot = { ...missingPrice, updatedAt: TEST_CURRENT_TIMESTAMP };
 
   let chain: Chain;
 
@@ -78,9 +80,11 @@ describe('prices.utils', () => {
 
   describe('convert', () => {
     it.each([
+      [3600, 3600, undefined],
       [3600, 3600, Currency.USD],
       [3600, 2, Currency.ETH],
       [3600, 1800, Currency.FTM],
+      [3600, 1200, Currency.AVAX],
       [3600, 2400, Currency.MATIC],
     ])('converts %d USD to %s %s', async (price, conversion, currency) => {
       let cachedPrice;
@@ -90,6 +94,9 @@ describe('prices.utils', () => {
           break;
         case Currency.FTM:
           cachedPrice = { address: TEST_TOKEN, price: 2 };
+          break;
+        case Currency.AVAX:
+          cachedPrice = { address: TEST_TOKEN, price: 3 };
           break;
         default:
           cachedPrice = { address: TEST_TOKEN, price: 1800 };
@@ -140,6 +147,39 @@ describe('prices.utils', () => {
         jest.spyOn(requestUtils, 'request').mockImplementation(async () => mockResponse);
         const result = await fetchPrices(chain, ['badger', 'wrapped-bitcoin'], true);
         expect(result).toMatchSnapshot();
+      });
+    });
+  });
+
+  describe('queryPriceAtTimestamp', () => {
+    describe('encounters an error', () => {
+      it('returns the default projection', async () => {
+        jest.spyOn(dynamoDbUtils, 'getDataMapper').mockImplementationOnce(() => {
+          throw new Error('Expected test error: queryYieldEstimate error');
+        });
+        const result = await queryPriceAtTimestamp(TEST_TOKEN, TEST_CURRENT_TIMESTAMP);
+        expect(result).toMatchObject(missingPriceSnapshot);
+      });
+    });
+
+    describe('no token price exists', () => {
+      it('returns the default token price', async () => {
+        mockQuery([]);
+        const result = await queryPriceAtTimestamp(TEST_TOKEN, TEST_CURRENT_TIMESTAMP);
+        expect(result).toMatchObject(missingPriceSnapshot);
+      });
+    });
+
+    describe('system has saved data', () => {
+      it('returns the cached token price', async () => {
+        const cachedPrice = await chain.strategy.getPrice(TEST_TOKEN);
+        const mockPrice = {
+          ...cachedPrice,
+          updatedAt: TEST_CURRENT_TIMESTAMP,
+        };
+        mockQuery([mockPrice]);
+        const result = await queryPriceAtTimestamp(TEST_TOKEN, TEST_CURRENT_TIMESTAMP);
+        expect(result).toMatchObject(mockPrice);
       });
     });
   });

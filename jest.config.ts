@@ -10,6 +10,7 @@ const config: Config.InitialOptions = {
     '/interfaces/',
     '/enums/',
     'test',
+    'patches',
   ],
   coverageThreshold: {
     global: {

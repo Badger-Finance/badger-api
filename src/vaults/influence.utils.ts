@@ -1,14 +1,13 @@
-import { formatBalance, HarvestType, Vault__factory } from '@badger-dao/sdk';
-import { ethers } from 'ethers';
+import { formatBalance, Vault__factory, YieldType } from '@badger-dao/sdk';
+import { BigNumber, ethers } from 'ethers';
 
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
+import { VaultYieldEvent } from '../aws/models/vault-yield-event.model';
 import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
 import { CvxLocker__factory } from '../contracts/factories/CvxLocker__factory';
 import { getBalancerPoolTokens } from '../protocols/strategies/balancer.strategy';
-import { CVX_LOCKER } from '../protocols/strategies/convex.strategy';
-import { VaultPerformanceItem } from './interfaces/vault-performance-item.interface';
-import { getCachedVault } from './vaults.utils';
+import { CVX_LOCKER, OLD_CVX_LOCKER } from '../protocols/strategies/convex.strategy';
 
 // TODO: setup influence configs, voting periods, etc.
 const influenceVaults = new Set([TOKENS.BVECVX, TOKENS.GRAVI_AURA]);
@@ -17,21 +16,18 @@ export function isInfluenceVault(address: string) {
   return influenceVaults.has(ethers.utils.getAddress(address));
 }
 
-export function filterInfluenceEvents(
-  vault: VaultDefinitionModel,
-  yieldEvents: VaultPerformanceItem[],
-): VaultPerformanceItem[] {
+export function filterPerformanceItems(vault: VaultDefinitionModel, yieldEvents: VaultYieldEvent[]): VaultYieldEvent[] {
   if (!isInfluenceVault(vault.address)) {
     return yieldEvents;
   }
 
   const { address } = vault;
-  let relevantEvents = yieldEvents.slice();
+  let relevantEvents = yieldEvents.slice().sort((a, b) => b.timestamp - a.timestamp);
 
   let processedBadger = false;
   let processedUnderlying = false;
   relevantEvents = relevantEvents.filter((e) => {
-    if (e.type === HarvestType.Harvest) {
+    if (e.type === YieldType.Harvest) {
       return true;
     }
     if (e.token === TOKENS.BADGER) {
@@ -61,20 +57,37 @@ export async function getInfuelnceVaultYieldBalance(
   blockTag: number,
 ): Promise<number> {
   const sdk = await chain.getSdk();
-  const { address } = vault;
-
-  if (address === TOKENS.BVECVX) {
-    const {
-      strategy: { address: strategyAddress },
-    } = await getCachedVault(chain, vault);
-    const locker = CvxLocker__factory.connect(CVX_LOCKER, sdk.provider);
-    const lockedBalance = await locker.lockedBalanceOf(strategyAddress, { blockTag });
-    return formatBalance(lockedBalance);
-  }
-
+  const { address, version } = vault;
   const vaultContract = Vault__factory.connect(address, sdk.provider);
   const strategyBalance = await vaultContract.totalSupply({ blockTag });
   const maxBalance = formatBalance(strategyBalance);
+
+  if (address === TOKENS.BVECVX) {
+    // there is no balance possible before the deployment block
+    if (blockTag <= 13153663) {
+      return 0;
+    }
+    const lockerAddress = blockTag < 14320609 ? OLD_CVX_LOCKER : CVX_LOCKER;
+    const strategyAddress = await sdk.vaults.getVaultStrategy({ address, version }, { blockTag });
+    const locker = CvxLocker__factory.connect(lockerAddress, sdk.provider);
+
+    let lockedBalance = BigNumber.from('0');
+
+    try {
+      lockedBalance = await locker.lockedBalanceOf(strategyAddress, { blockTag });
+    } catch (err) {
+      lockedBalance = await vaultContract.totalSupply({ blockTag });
+    }
+
+    const votingBalance = formatBalance(lockedBalance);
+
+    // there is some weirdness with swapping contracts at block 14353146 - just use a fallback
+    if (votingBalance > 0) {
+      return votingBalance;
+    } else {
+      return maxBalance;
+    }
+  }
 
   // one strange thing to note here is when a pool didn't exist - and we are trying to check on it
   // deal with GRAVI_AURA - this won't scale so we need to figure out how to generalize it

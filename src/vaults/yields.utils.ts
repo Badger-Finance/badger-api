@@ -1,45 +1,30 @@
 import {
-  formatBalance,
-  gqlGenT,
-  HarvestType,
-  keyBy,
+  ONE_DAY_MS,
   ONE_YEAR_MS,
   TokenRate,
   ValueSource,
-  Vault__factory,
   VaultDTO,
-  VaultHarvestData,
   VaultState,
-  VaultYieldProjection,
+  VaultYieldProjectionV3,
+  YieldSource,
+  YieldType,
 } from '@badger-dao/sdk';
-import { BadRequest } from '@tsed/exceptions';
-import { BigNumber, ethers } from 'ethers';
 
 import { CachedTokenBalance } from '../aws/models/cached-token-balance.interface';
+import { CachedYieldSource } from '../aws/models/cached-yield-source.interface';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { YieldEstimate } from '../aws/models/yield-estimate.model';
-import { YieldSource } from '../aws/models/yield-source.model';
 import { Chain } from '../chains/config/chain.config';
-import { TOKENS } from '../config/tokens.config';
-import { queryPriceAtTimestamp } from '../prices/prices.utils';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { BoostRange } from '../rewards/interfaces/boost-range.interface';
-import { calculateBalanceDifference, getFullToken } from '../tokens/tokens.utils';
-import { filterInfluenceEvents, getInfuelnceVaultYieldBalance, isInfluenceVault } from './influence.utils';
-import { HarvestReport } from './interfaces/harvest-report.interface';
-import { VaultPerformanceItem } from './interfaces/vault-performance-item.interface';
-import { VaultYieldSummary } from './interfaces/vault-yield-summary.interface';
+import { calculateBalanceDifference, getFullToken, getFullTokens } from '../tokens/tokens.utils';
+import { queryVaultYieldEvents } from './harvests.utils';
+import { filterPerformanceItems } from './influence.utils';
+import { VaultYieldEvaluation } from './interfaces/vault-yield-evaluation.interface';
 import { YieldSources } from './interfaces/yield-sources.interface';
-import { VAULT_SOURCE, VAULT_TWAY_DURATION, VAULT_TWAY_DURATION_SECONDS } from './vaults.config';
+import { VaultEmissionData } from './types/vault-emission-data';
+import { VAULT_SOURCE } from './vaults.config';
 import { estimateDerivativeEmission, queryYieldSources } from './vaults.utils';
-
-/**
- * Get the TWAY cutoff in seconds.
- * @returns cutoff for tway period in seconds
- */
-function getTwayCutoff(): number {
-  return Math.floor(Date.now() / 1000) - VAULT_TWAY_DURATION_SECONDS;
-}
 
 /**
  * Determine if a yield source in relevant in a given context.
@@ -49,8 +34,9 @@ function getTwayCutoff(): number {
  * @param state state of the vault the yield source references
  * @returns true if the source is relevant, false if not
  */
-function isRelevantSource(source: YieldSource, state: VaultState): boolean {
-  if (source.apr < 0.001) {
+function isRelevantSource(source: CachedYieldSource, state: VaultState): boolean {
+  const { baseYield } = source.performance;
+  if (baseYield < 0.001) {
     return false;
   }
   if (state === VaultState.Discontinued) {
@@ -64,7 +50,7 @@ function isRelevantSource(source: YieldSource, state: VaultState): boolean {
  * @param source yield source to validate
  * @returns true if source does not originate from any harvest, false if so
  */
-function isPassiveSource(source: YieldSource): boolean {
+function isPassiveSource(source: CachedYieldSource): boolean {
   return isNonHarvestSource(source) && source.type !== SourceType.Flywheel;
 }
 
@@ -73,7 +59,7 @@ function isPassiveSource(source: YieldSource): boolean {
  * @param source yield source to validate
  * @returns true if source does not originate directly from a singular harvest, false if so
  */
-function isNonHarvestSource(source: YieldSource): boolean {
+function isNonHarvestSource(source: CachedYieldSource): boolean {
   return (
     source.type !== SourceType.Compound &&
     source.type !== SourceType.PreCompound &&
@@ -87,7 +73,7 @@ function isNonHarvestSource(source: YieldSource): boolean {
  * @param source yield source to validate
  * @returns true if source is not compounded
  */
-function isAprSource(source: YieldSource): boolean {
+function isAprSource(source: CachedYieldSource): boolean {
   return source.type !== SourceType.Compound && source.type !== SourceType.Flywheel;
 }
 
@@ -97,7 +83,7 @@ function isAprSource(source: YieldSource): boolean {
  * @param source yield source to validate
  * @returns true if source is compounded
  */
-function isApySource(source: YieldSource): boolean {
+function isApySource(source: CachedYieldSource): boolean {
   return source.type !== SourceType.PreCompound;
 }
 
@@ -122,13 +108,14 @@ function balanceToTokenRate(balance: CachedTokenBalance, principal: number, dura
  * @param source yield source to be converted
  * @returns value source derived from yield source
  */
-function yieldToValueSource(source: YieldSource): ValueSource {
+export function yieldToValueSource(source: YieldSource): ValueSource {
+  const { baseYield, minYield, maxYield } = source.performance;
   return {
     name: source.name,
-    apr: source.apr,
+    apr: baseYield,
     boostable: source.boostable,
-    minApr: source.minApr,
-    maxApr: source.maxApr,
+    minApr: minYield,
+    maxApr: maxYield,
   };
 }
 
@@ -137,20 +124,23 @@ function yieldToValueSource(source: YieldSource): ValueSource {
  * @param sources source list to aggregate
  * @returns source list with all unique elements by name with aggregated values
  */
-export function aggregateSources<T extends ValueSource>(
+export function aggregateSources<T extends YieldSource>(
   sources: T[],
   accessor: (source: T) => string = (s) => s.name,
 ): T[] {
   const sourceMap: Record<string, T> = {};
-  const sourcesCopy = JSON.parse(JSON.stringify(sources));
+  const sourcesCopy: T[] = JSON.parse(JSON.stringify(sources));
   for (const source of sourcesCopy) {
     if (!sourceMap[accessor(source)]) {
       sourceMap[accessor(source)] = source;
     } else {
-      const { apr, minApr, maxApr } = source;
-      sourceMap[accessor(source)].apr += apr;
-      sourceMap[accessor(source)].minApr += minApr;
-      sourceMap[accessor(source)].maxApr += maxApr;
+      const {
+        performance: { baseYield, minYield, maxYield },
+      } = source;
+      const existingSource = sourceMap[accessor(source)];
+      existingSource.performance.baseYield += baseYield;
+      existingSource.performance.minYield += minYield;
+      existingSource.performance.maxYield += maxYield;
     }
   }
   return Object.values(sourceMap);
@@ -198,22 +188,49 @@ export async function getYieldSources(vault: VaultDefinitionModel): Promise<Yiel
 
   const relevantSources = yieldSources.filter((s) => isRelevantSource(s, vault.state));
   const sources = relevantSources.filter(isAprSource);
-  const apr = sources.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
   const sourcesApy = relevantSources.filter(isApySource);
-  const apy = sourcesApy.map((s) => s.apr).reduce((total, apr) => (total += apr), 0);
   const nonHarvestSources = sourcesApy.filter(isPassiveSource);
   const nonHarvestSourcesApy = sourcesApy.filter(isNonHarvestSource);
 
-  const aggregatedSources = aggregateSources(sources.map(yieldToValueSource));
-  const aggregatedSourcesApy = aggregateSources(sourcesApy.map(yieldToValueSource));
-  const nonHarvestAggregatedSources = aggregateSources(nonHarvestSources.map(yieldToValueSource));
-  const nonHarvestAggregatedSourcesApy = aggregateSources(nonHarvestSourcesApy.map(yieldToValueSource));
+  const sum = (total: number, apr: number) => (total += apr);
+  const apr = sources.map((s) => s.performance.baseYield).reduce(sum, 0);
+  const minApr = sources.map((s) => s.performance.minYield).reduce(sum, 0);
+  const maxApr = sources.map((s) => s.performance.maxYield).reduce(sum, 0);
+  const grossApr = sources.map((s) => s.performance.grossYield).reduce(sum, 0);
+  const minGrossApr = sources.map((s) => s.performance.minGrossYield).reduce(sum, 0);
+  const maxGrossApr = sources.map((s) => s.performance.maxGrossYield).reduce(sum, 0);
+
+  const apy = sourcesApy.map((s) => s.performance.baseYield).reduce(sum, 0);
+  const minApy = sourcesApy.map((s) => s.performance.minYield).reduce(sum, 0);
+  const maxApy = sourcesApy.map((s) => s.performance.maxYield).reduce(sum, 0);
+  const grossApy = sourcesApy.map((s) => s.performance.grossYield).reduce(sum, 0);
+  const minGrossApy = sourcesApy.map((s) => s.performance.minGrossYield).reduce(sum, 0);
+  const maxGrossApy = sourcesApy.map((s) => s.performance.maxGrossYield).reduce(sum, 0);
+
+  const aggregatedSources = aggregateSources(sources);
+  const aggregatedSourcesApy = aggregateSources(sourcesApy);
+  const nonHarvestAggregatedSources = aggregateSources(nonHarvestSources);
+  const nonHarvestAggregatedSourcesApy = aggregateSources(nonHarvestSourcesApy);
 
   return {
-    apr,
-    sources: aggregatedSources,
-    apy,
-    sourcesApy: aggregatedSourcesApy,
+    apr: {
+      baseYield: apr,
+      minYield: minApr,
+      maxYield: maxApr,
+      grossYield: grossApr,
+      minGrossYield: minGrossApr,
+      maxGrossYield: maxGrossApr,
+      sources: aggregatedSources,
+    },
+    apy: {
+      baseYield: apy,
+      minYield: minApy,
+      maxYield: maxApy,
+      grossYield: grossApy,
+      minGrossYield: minGrossApy,
+      maxGrossYield: maxGrossApy,
+      sources: aggregatedSourcesApy,
+    },
     nonHarvestSources: nonHarvestAggregatedSources,
     nonHarvestSourcesApy: nonHarvestAggregatedSourcesApy,
   };
@@ -236,7 +253,7 @@ export function getVaultYieldProjection(
   vault: VaultDTO,
   yieldSources: YieldSources,
   yieldEstimate: YieldEstimate,
-): VaultYieldProjection {
+): VaultYieldProjectionV3 {
   const { value, balance, available } = vault;
   const { nonHarvestSources, nonHarvestSourcesApy } = yieldSources;
   const {
@@ -264,8 +281,8 @@ export function getVaultYieldProjection(
     .reduce((total, token) => (total += token.value), 0);
 
   const earningValue = balance > 0 ? value * ((balance - available) / balance) : 0;
-  const nonHarvestApr = nonHarvestSources.reduce((total, token) => (total += token.apr), 0);
-  const nonHarvestApy = nonHarvestSourcesApy.reduce((total, token) => (total += token.apr), 0);
+  const nonHarvestApr = nonHarvestSources.reduce((total, source) => (total += source.performance.baseYield), 0);
+  const nonHarvestApy = nonHarvestSourcesApy.reduce((total, source) => (total += source.performance.baseYield), 0);
 
   return {
     harvestValue,
@@ -306,129 +323,32 @@ export function createYieldSource(
   type: SourceType,
   name: string,
   apr: number,
+  grossApr: number = apr,
   boost: BoostRange = { min: 1, max: 1 },
-): YieldSource {
-  const { id: vaultId, address, chain } = vault;
+): CachedYieldSource {
+  const { id: vaultId, chain, address } = vault;
   const { min, max } = boost;
   const isBoostable = min != max;
   const boostModifier = isBoostable ? 'Boosted' : 'Flat';
   const id = [vaultId, type, name, boostModifier].map((p) => p.replace(/ /g, '_').toLowerCase()).join('_');
-  return Object.assign(new YieldSource(), {
+  const yieldSource: CachedYieldSource = {
+    address,
     id,
     chainAddress: vaultId,
     chain,
-    address,
     type,
     name,
-    apr,
+    performance: {
+      baseYield: apr,
+      minYield: apr * min,
+      maxYield: apr * max,
+      grossYield: grossApr,
+      minGrossYield: grossApr * min,
+      maxGrossYield: grossApr * max,
+    },
     boostable: isBoostable,
-    minApr: apr * min,
-    maxApr: apr * max,
-  });
-}
-
-/**
- * Fetch Harvest and Tree Distribution events for a given vault.
- * @param chain network vault is deployed on
- * @param vault vault requesting emitted events
- * @returns yield sources representing the vault performance
- */
-export async function loadVaultEventPerformances(chain: Chain, vault: VaultDefinitionModel): Promise<YieldSource[]> {
-  const { address, version } = vault;
-
-  if (isInfluenceVault(address)) {
-    throw new BadRequest('Vault utilizes external harvest processor, not compatible with event lookup');
-  }
-
-  const sdk = await chain.getSdk();
-  const cutoff = getTwayCutoff();
-  const currentBlock = await sdk.provider.getBlockNumber();
-  const offset = Math.floor(VAULT_TWAY_DURATION / 13000);
-  const startBlock = currentBlock - offset;
-  const { data } = await sdk.vaults.listHarvests({
-    address,
-    timestamp_gte: cutoff,
-    version,
-    startBlock,
-  });
-
-  return estimateVaultPerformance(chain, vault, data);
-}
-
-/**
- * Modify subgraph response to match on chain event data allowing it to fit into our estimation functions.
- * @param vault vault requesting graph data transformation
- * @param harvests harvests data retrieved from the graph
- * @param distributions distribution data retrieved from the graph
- * @returns vault harvest data in the same form as delivered via event logs
- */
-function constructGraphVaultData(
-  vault: VaultDefinitionModel,
-  harvests: gqlGenT.SettHarvestsQuery['settHarvests'],
-  distributions: gqlGenT.BadgerTreeDistributionsQuery['badgerTreeDistributions'],
-): VaultHarvestData[] {
-  const harvestsByTimestamp = keyBy(harvests, (harvest) => harvest.timestamp);
-  const treeDistributionsByTimestamp = keyBy(distributions, (distribution) => distribution.timestamp);
-  const timestamps = Array.from(
-    new Set([...harvestsByTimestamp.keys(), ...treeDistributionsByTimestamp.keys()]).values(),
-  );
-  return timestamps.map((t) => {
-    const timestamp = Number(t);
-    const currentHarvests = harvestsByTimestamp.get(timestamp) ?? [];
-    const currentDistributions = treeDistributionsByTimestamp.get(timestamp) ?? [];
-    return {
-      timestamp,
-      harvests: currentHarvests.map((h) => ({
-        timestamp,
-        block: Number(h.blockNumber),
-        token: vault.depositToken,
-        amount: h.amount,
-      })),
-      treeDistributions: currentDistributions.map((d) => {
-        const tokenAddress = d.token.id.startsWith('0x0x') ? d.token.id.slice(2) : d.token.id;
-        return {
-          timestamp,
-          block: Number(d.blockNumber),
-          token: ethers.utils.getAddress(tokenAddress),
-          amount: d.amount,
-        };
-      }),
-    };
-  });
-}
-
-/**
- * Create yield sources from TheGraph event performance data.
- * @param chain network the vault is deployed on
- * @param vault vault requesting data from the graph
- * @returns yield sources corresponding to the vault performance based on the graph data
- */
-export async function loadVaultGraphPerformances(chain: Chain, vault: VaultDefinitionModel): Promise<YieldSource[]> {
-  const sdk = await chain.getSdk();
-  const { graph } = sdk;
-  const { address } = vault;
-
-  const cutoff = getTwayCutoff();
-
-  const [vaultHarvests, treeDistributions] = await Promise.all([
-    graph.loadSettHarvests({
-      where: {
-        sett: address.toLowerCase(),
-        timestamp_gte: cutoff,
-      },
-    }),
-    graph.loadBadgerTreeDistributions({
-      where: {
-        sett: address.toLowerCase(),
-        timestamp_gte: cutoff,
-      },
-    }),
-  ]);
-
-  const { settHarvests } = vaultHarvests;
-  const { badgerTreeDistributions } = treeDistributions;
-  const data = constructGraphVaultData(vault, settHarvests, badgerTreeDistributions);
-  return estimateVaultPerformance(chain, vault, data);
+  };
+  return Object.assign(new CachedYieldSource(), yieldSource);
 }
 
 /**
@@ -443,15 +363,21 @@ async function constructEmissionYieldSources(
   chain: Chain,
   vault: VaultDefinitionModel,
   compoundApr: number,
-  tokenAprs: Map<string, number>,
-): Promise<YieldSource[]> {
+  tokenAprs: VaultEmissionData,
+): Promise<CachedYieldSource[]> {
   const valueSources = [];
 
   let flywheelCompounding = 0;
 
-  for (const [token, emissionApr] of tokenAprs.entries()) {
+  for (const [token, { baseYield, grossYield }] of tokenAprs.entries()) {
     const tokenEmitted = await getFullToken(chain, token);
-    const emissionYieldSource = createYieldSource(vault, SourceType.Distribution, tokenEmitted.name, emissionApr);
+    const emissionYieldSource = createYieldSource(
+      vault,
+      SourceType.Distribution,
+      tokenEmitted.name,
+      baseYield,
+      grossYield,
+    );
     valueSources.push(emissionYieldSource);
 
     // try to add underlying emitted vault value sources if applicable
@@ -461,11 +387,8 @@ async function constructEmissionYieldSources(
       // search for the persisted apr variant of the compounding vault source, if any
       const compoundingSource = vaultValueSources.find((source) => source.type === SourceType.PreCompound);
       if (compoundingSource) {
-        flywheelCompounding += estimateDerivativeEmission(
-          compoundApr / 100,
-          emissionApr / 100,
-          compoundingSource.apr / 100,
-        );
+        const compoundingApr = compoundingSource.performance.baseYield;
+        flywheelCompounding += estimateDerivativeEmission(compoundApr / 100, baseYield / 100, compoundingApr / 100);
       }
     } catch {} // ignore error for non vaults
   }
@@ -486,84 +409,102 @@ async function constructEmissionYieldSources(
  * @param yieldEvents events sourced from either on chain or the graph
  * @returns yield summary providing the base information for construction of yield sources
  */
-async function evaluateYieldEvents(
-  chain: Chain,
-  vault: VaultDefinitionModel,
-  yieldEvents: VaultPerformanceItem[],
-): Promise<VaultYieldSummary> {
-  const sdk = await chain.getSdk();
-  const harvestReport: HarvestReport[] = [];
+async function evaluateYieldEvents(chain: Chain, vault: VaultDefinitionModel): Promise<VaultYieldEvaluation> {
+  const yieldEvents = await queryVaultYieldEvents(chain, vault);
 
-  let totalHarvested = 0;
-  let totalVaultPrincipal = 0;
-  const tokenEmissionAprs = new Map<string, number>();
+  // this error should bubble up to yield source persistence
+  // from a practical perspective this is here to allow vaults to retain calculated yield if there is no history
+  // this is primary needed for a clean resync of harvest data without impacting 'synced' data
+  if (vault.state !== VaultState.Discontinued && yieldEvents.length === 0) {
+    throw new Error(`${vault.name} has no recent harvests, it is either not synced, or effectively deprecated`);
+  }
 
-  const relevantYieldEvents = filterInfluenceEvents(vault, yieldEvents);
+  const relevantYieldEvents = filterPerformanceItems(vault, yieldEvents).sort((a, b) => a.timestamp - b.timestamp);
+  const tokenEmissionAprs: VaultEmissionData = new Map();
+  const start = relevantYieldEvents[0].timestamp - relevantYieldEvents[0].duration;
+  const measuredDuration = relevantYieldEvents[relevantYieldEvents.length - 1].timestamp - start;
 
+  let totalHarvestApr = 0;
+  let totalGrossHarvestApr = 0;
+  let totalHarvestEvents = 0;
+
+  // let compoundApr = 0;
   for (const event of relevantYieldEvents) {
-    const token = await getFullToken(chain, event.token);
-    const amount = formatBalance(event.amount, token.decimals);
-    const { price } = await queryPriceAtTimestamp(token.address, event.timestamp * 1000);
-
-    const tokenEarned = price * amount;
-
-    let balance = 0;
-    if (isInfluenceVault(vault.address)) {
-      balance = await getInfuelnceVaultYieldBalance(chain, vault, event.block);
+    const { token, apr, grossApr } = event;
+    if (event.type === YieldType.Harvest) {
+      totalHarvestApr += apr;
+      totalGrossHarvestApr += grossApr;
+      totalHarvestEvents++;
     } else {
-      const vaultContract = Vault__factory.connect(vault.address, sdk.provider);
-      const totalSupply = await vaultContract.totalSupply({ blockTag: event.block });
-      balance = formatBalance(totalSupply);
-    }
-    const { price: vaultPrice } = await queryPriceAtTimestamp(vault.address, event.timestamp * 1000);
-    const vaultPrincipal = vaultPrice * balance;
-    totalVaultPrincipal += vaultPrincipal;
-
-    const eventApr = calculateYield(vaultPrincipal, tokenEarned, VAULT_TWAY_DURATION);
-    const report: HarvestReport = {
-      date: event.timestamp * 1000,
-      amount,
-      token: token.symbol,
-      type: event.type,
-      value: tokenEarned,
-      balance,
-      apr: eventApr,
-    };
-    harvestReport.push(report);
-
-    if (event.type === HarvestType.Harvest) {
-      totalHarvested += tokenEarned;
-    } else {
-      const entry = tokenEmissionAprs.get(token.address) ?? 0;
-      tokenEmissionAprs.set(token.address, entry + eventApr);
+      const entry = tokenEmissionAprs.get(token) ?? { baseYield: 0, grossYield: 0, events: 0 };
+      tokenEmissionAprs.set(token, {
+        baseYield: entry.baseYield + apr,
+        grossYield: entry.grossYield + grossApr,
+        events: entry.events + 1,
+      });
     }
   }
 
-  const averagePrincipal = totalVaultPrincipal / yieldEvents.length;
-  const compoundApr = calculateYield(averagePrincipal, totalHarvested, VAULT_TWAY_DURATION);
-  const compoundApy = calculateYield(averagePrincipal, totalHarvested, VAULT_TWAY_DURATION, totalHarvested);
+  const compoundApr = totalHarvestEvents > 0 ? totalHarvestApr / totalHarvestEvents : 0;
+  const grossCompoundApr = totalHarvestEvents > 0 ? totalGrossHarvestApr / totalHarvestEvents : 0;
+  const periods = ONE_YEAR_MS / measuredDuration;
 
+  let compoundApy = 0;
+  let grossCompoundApy = 0;
+
+  if (compoundApr > 0) {
+    compoundApy = ((1 + compoundApr / 100 / periods) ** periods - 1) * 100;
+    grossCompoundApy = ((1 + grossCompoundApr / 100 / periods) ** periods - 1) * 100;
+  }
+
+  const earnedTokens = new Set(yieldEvents.map((y) => y.token));
+  const earnedTokensInfo = await getFullTokens(chain, Array.from(earnedTokens));
+
+  // TODO: remove all the noise once yields math is fully sorted + we can easiliy display this info
   const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
   });
   console.log(`\n${vault.name} Harvest Report`);
   console.table(
-    harvestReport.map((r) => ({
-      ...r,
-      date: new Date(r.date).toLocaleDateString(),
+    relevantYieldEvents.map((r) => ({
+      date: new Date(r.timestamp).toISOString(),
+      type: r.type,
+      token: earnedTokensInfo[r.token].symbol,
       amount: r.amount.toLocaleString(),
-      value: formatter.format(r.value),
-      balance: r.balance.toLocaleString(),
+      earned: formatter.format(r.earned),
       apr: `${r.apr.toFixed(2)}%`,
+      grossApr: `${r.grossApr.toFixed(2)}%`,
+      duration: `${(r.duration / ONE_DAY_MS).toFixed(1)} days`,
+      vault_balance: r.balance.toLocaleString(),
+      vault_principal: formatter.format(r.value),
     })),
   );
-  const aggregateApr = harvestReport.reduce((total, report) => (total += report.apr), 0);
-  console.log(`${vault.name}: ${aggregateApr.toFixed(2)}%`);
+
+  console.log(`\nDuration: ${(measuredDuration / ONE_DAY_MS).toFixed(2)} days`);
+  console.log(`\n${vault.name}: ${compoundApr.toFixed(2)}% (gross: ${grossCompoundApr.toFixed(2)}%)`);
+  console.log(`${vault.name}: ${compoundApy.toFixed(2)}% (gross: ${grossCompoundApy.toFixed(2)}%) APY`);
+
+  let totalYield = compoundApr;
+  let totalGrossYield = grossCompoundApr;
+
+  for (const entry of tokenEmissionAprs.entries()) {
+    const [token, emissionApr] = entry;
+    emissionApr.baseYield /= emissionApr.events;
+    emissionApr.grossYield /= emissionApr.events;
+    totalYield += emissionApr.baseYield;
+    totalGrossYield += emissionApr.grossYield;
+    console.log(`\n${token} Distribution`);
+    console.log(`${emissionApr.baseYield.toFixed(2)}% (gross: ${emissionApr.grossYield.toFixed(2)}%)`);
+  }
+
+  console.log(`\nTotal Yield: ${totalYield.toFixed(2)}% Gross: ${totalGrossYield.toFixed(2)}%`);
 
   return {
     compoundApr,
+    grossCompoundApr,
     compoundApy,
+    grossCompoundApy,
     tokenEmissionAprs,
   };
 }
@@ -575,63 +516,35 @@ async function evaluateYieldEvents(
  * @param data harvest and tree distribution event information
  * @returns yield sources estimating the aggregate performance
  */
-export async function estimateVaultPerformance(
-  chain: Chain,
-  vault: VaultDefinitionModel,
-  data: VaultHarvestData[],
-): Promise<YieldSource[]> {
-  if (data.length === 0) {
-    return [];
-  }
-
-  const sdk = await chain.getSdk();
-  const recentHarvests = data.sort((a, b) => b.timestamp - a.timestamp);
-
-  /**
-   * ON 8/15 AN INCORREC PROCESSING OF A BADGER REWARDS PROCESSOR OCCURED.
-   * AS A RESULT, THE EVENTS INCLUDED IN TREE DISTRIBUTIONS DID NOT MAKE IT
-   * TO THE GRAPH, OR ANY SOURCE OF ON CHAIN DATA CURRENTLY SUPPORTED BY
-   * THE CURRENT YIELD SYSTEM.
-   *
-   * https://etherscan.io/tx/0x1e3e7c71012d36e936b768a37e9784125a00f205a22bd808f045968a506bb1ce#eventlog
-   *
-   * THIS TRANSACTION CONTAINS THE SINGLE BADGER TREE DISTRIBUTION WE ARE
-   * ALLOCATING TO GRAVI_AURA VAULT AS A MISSED - AND NOT CAPTURED SOURCE.
-   *
-   * THIS CODE SHOULD BE REMOVED BY 08/29.
-   */
-  if (vault.address === TOKENS.GRAVI_AURA) {
-    const targetBlock = 15344809;
-    const block = await sdk.provider.getBlock(targetBlock);
-    const targetedInsertion = recentHarvests[0].treeDistributions;
-    targetedInsertion.push({
-      timestamp: block.timestamp,
-      block: targetBlock,
-      token: TOKENS.BADGER,
-      amount: BigNumber.from('1928771715566995688546'),
-    });
-  }
-
-  const allHarvests = recentHarvests.flatMap((h) => h.harvests.map((h) => ({ ...h, type: HarvestType.Harvest })));
-  const allDistributions = recentHarvests.flatMap((h) =>
-    h.treeDistributions.map((d) => ({ ...d, type: HarvestType.TreeDistribution })),
+export async function queryVaultYieldSources(chain: Chain, vault: VaultDefinitionModel): Promise<CachedYieldSource[]> {
+  const { compoundApr, compoundApy, grossCompoundApr, grossCompoundApy, tokenEmissionAprs } = await evaluateYieldEvents(
+    chain,
+    vault,
   );
-  const allEvents = allHarvests
-    .concat(allDistributions)
-    .filter((e) => BigNumber.from(e.amount).gt(ethers.constants.Zero))
-    .sort((a, b) => b.timestamp - a.timestamp);
-
-  const { compoundApr, compoundApy, tokenEmissionAprs } = await evaluateYieldEvents(chain, vault, allEvents);
 
   const compoundSources = [];
 
-  // create the apr source for harvests
-  const compoundYieldSource = createYieldSource(vault, SourceType.PreCompound, VAULT_SOURCE, compoundApr);
-  compoundSources.push(compoundYieldSource);
+  if (compoundApr > 0) {
+    // create the apr source for harvests
+    const compoundYieldSource = createYieldSource(
+      vault,
+      SourceType.PreCompound,
+      VAULT_SOURCE,
+      compoundApr,
+      grossCompoundApr,
+    );
+    compoundSources.push(compoundYieldSource);
 
-  // create the apy source for harvests
-  const compoundedYieldSource = createYieldSource(vault, SourceType.Compound, VAULT_SOURCE, compoundApy);
-  compoundSources.push(compoundedYieldSource);
+    // create the apy source for harvests
+    const compoundedYieldSource = createYieldSource(
+      vault,
+      SourceType.Compound,
+      VAULT_SOURCE,
+      compoundApy,
+      grossCompoundApy,
+    );
+    compoundSources.push(compoundedYieldSource);
+  }
 
   const emissionSources = await constructEmissionYieldSources(chain, vault, compoundApr, tokenEmissionAprs);
   return compoundSources.concat(emissionSources);

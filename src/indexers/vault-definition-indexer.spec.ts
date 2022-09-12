@@ -44,8 +44,8 @@ describe('vault-definition-indexer', () => {
     it('should construct and save vaults definitions to ddb', async () => {
       await captureVaultData();
 
-      // TODO: remove magic numbers - let's tie this back somewhere
-      expect(put.mock.calls.length).toBe(30);
+      // TODO: remove magic numbers - let's tie this back somewhere waaaaaa
+      expect(put.mock.calls.length).toBe(36);
     });
 
     it('should skip, and warn if no vault was fetched from registry', async () => {

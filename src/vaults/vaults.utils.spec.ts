@@ -3,6 +3,8 @@ import { BadRequest, UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 
 import * as dynamoDbUtils from '../aws/dynamodb.utils';
+import { CurrentVaultSnapshotModel } from '../aws/models/current-vault-snapshot.model';
+import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { YieldEstimate } from '../aws/models/yield-estimate.model';
 import { Chain } from '../chains/config/chain.config';
 import { PricingType } from '../prices/enums/pricing-type.enum';
@@ -42,12 +44,6 @@ describe('vaults.utils', () => {
         asset: depositToken.symbol,
         vaultAsset: settToken.symbol,
         state: MOCK_VAULT_DEFINITION.state,
-        apr: 0,
-        apy: 0,
-        minApr: 0,
-        minApy: 0,
-        maxApr: 0,
-        maxApy: 0,
         balance: 0,
         available: 0,
         boost: {
@@ -58,8 +54,6 @@ describe('vaults.utils', () => {
         name: MOCK_VAULT_DEFINITION.name,
         protocol: Protocol.Badger,
         pricePerFullShare: 1,
-        sources: [],
-        sourcesApy: [],
         tokens: [],
         underlyingToken: MOCK_VAULT_DEFINITION.depositToken,
         value: 0,
@@ -74,24 +68,6 @@ describe('vaults.utils', () => {
         type: MOCK_VAULT_DEFINITION.protocol === Protocol.Badger ? VaultType.Native : VaultType.Standard,
         behavior: MOCK_VAULT_DEFINITION.behavior ?? VaultBehavior.None,
         lastHarvest: 0,
-        yieldProjection: {
-          yieldApr: 0,
-          yieldTokens: [],
-          yieldPeriodApr: 0,
-          yieldPeriodSources: [],
-          yieldValue: 0,
-          harvestApr: 0,
-          harvestPeriodApr: 0,
-          harvestPeriodApy: 0,
-          harvestTokens: [],
-          harvestPeriodSources: [],
-          harvestPeriodSourcesApy: [],
-          harvestValue: 0,
-          nonHarvestApr: 0,
-          nonHarvestApy: 0,
-          nonHarvestSources: [],
-          nonHarvestSourcesApy: [],
-        },
         version: VaultVersion.v1,
       };
       const actual = await defaultVault(chain, MOCK_VAULT_DEFINITION);
@@ -100,6 +76,35 @@ describe('vaults.utils', () => {
   });
 
   describe('getCachedVault', () => {
+    function defaultSnapshot({ address }: VaultDefinitionModel): CurrentVaultSnapshotModel {
+      const id = dynamoDbUtils.getVaultEntityId(chain, { address });
+      return {
+        id,
+        address,
+        chain: chain.network,
+        block: 0,
+        timestamp: 0,
+        balance: 0,
+        strategy: {
+          address: ethers.constants.AddressZero,
+          aumFee: 0,
+          performanceFee: 0,
+          strategistFee: 0,
+          withdrawFee: 0,
+        },
+        strategyBalance: 0,
+        available: 0,
+        pricePerFullShare: 1,
+        totalSupply: 0,
+        boostWeight: 0,
+        apr: 0,
+        grossApr: 0,
+        value: 0,
+        yieldApr: 0,
+        harvestApr: 0,
+      };
+    }
+
     beforeEach(() => {
       jest.spyOn(tokensUtils, 'getFullToken').mockImplementation(async (_c, token) => MOCK_TOKENS[token]);
       jest
@@ -113,7 +118,7 @@ describe('vaults.utils', () => {
           throw new Error('Expected test error: getCachedVault error');
         });
         const cached = await getCachedVault(chain, MOCK_VAULT_DEFINITION);
-        const defaultVaultInst = await defaultVault(chain, MOCK_VAULT_DEFINITION);
+        const defaultVaultInst = defaultSnapshot(MOCK_VAULT_DEFINITION);
         expect(cached).toMatchObject(defaultVaultInst);
       });
     });
@@ -122,7 +127,7 @@ describe('vaults.utils', () => {
       it('returns the default vault', async () => {
         mockQuery([]);
         const cached = await getCachedVault(chain, MOCK_VAULT_DEFINITION);
-        const defaultVaultInst = await defaultVault(chain, MOCK_VAULT_DEFINITION);
+        const defaultVaultInst = defaultSnapshot(MOCK_VAULT_DEFINITION);
         expect(cached).toMatchObject(defaultVaultInst);
       });
     });
@@ -132,16 +137,11 @@ describe('vaults.utils', () => {
         const snapshot = randomSnapshot(MOCK_VAULT_DEFINITION);
         mockQuery([snapshot]);
         const cached = await getCachedVault(chain, MOCK_VAULT_DEFINITION);
-        const expected = await defaultVault(chain, MOCK_VAULT_DEFINITION);
-        expected.tokens = [mockBalance(MOCK_TOKENS[TEST_ADDR], 42_069)];
+        const expected = JSON.parse(JSON.stringify(snapshot));
         expected.available = snapshot.available;
         expected.pricePerFullShare = snapshot.balance / snapshot.totalSupply;
         expected.balance = snapshot.balance;
         expected.value = snapshot.value;
-        expected.boost = {
-          enabled: snapshot.boostWeight > 0,
-          weight: snapshot.boostWeight,
-        };
         expect(cached).toMatchObject(expected);
       });
     });
@@ -184,40 +184,19 @@ describe('vaults.utils', () => {
   describe('getVaultPerformance', () => {
     describe('no rewards or harvests', () => {
       it('returns no value sources', async () => {
-        jest.spyOn(yieldsUtils, 'loadVaultEventPerformances').mockImplementation(async () => []);
-        const graphMock = jest.spyOn(yieldsUtils, 'loadVaultGraphPerformances');
         jest.spyOn(rewardsUtils, 'getRewardEmission').mockImplementation(async () => []);
         jest.spyOn(rewardsUtils, 'getProtocolValueSources').mockImplementation(async () => []);
-        const result = await getVaultPerformance(chain, MOCK_VAULT_DEFINITION);
-        expect(result).toMatchSnapshot();
-        expect(graphMock.mock.calls.length).toEqual(0);
-      });
-    });
-
-    describe('error getting on chain events', () => {
-      it('attempts to load data from the graph', async () => {
-        jest.spyOn(yieldsUtils, 'loadVaultEventPerformances').mockImplementation(async () => {
-          throw new Error('Expected test error: on chain event failure');
-        });
-        jest
-          .spyOn(yieldsUtils, 'loadVaultGraphPerformances')
-          .mockImplementation(async () => [
-            yieldsUtils.createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Distribution, 'Graph Badger', 10.3),
-          ]);
-        jest.spyOn(rewardsUtils, 'getRewardEmission').mockImplementation(async () => []);
-        jest.spyOn(rewardsUtils, 'getProtocolValueSources').mockImplementation(async () => []);
+        jest.spyOn(yieldsUtils, 'queryVaultYieldSources').mockImplementation(async () => []);
         const result = await getVaultPerformance(chain, MOCK_VAULT_DEFINITION);
         expect(result).toMatchSnapshot();
       });
     });
 
-    describe('evaluate vaults with emissions or third party yield', () => {
-      it('includes protocol reward emissions and additional yield sources', async () => {
-        jest.spyOn(yieldsUtils, 'loadVaultEventPerformances').mockImplementation(async () => []);
-        jest.spyOn(yieldsUtils, 'loadVaultGraphPerformances').mockImplementation(async () => []);
+    describe('available reward, protocol, and persisted yields', () => {
+      it('includes protocol, reward emissions, and yield sources', async () => {
         jest.spyOn(rewardsUtils, 'getRewardEmission').mockImplementation(async () => [
           yieldsUtils.createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Emission, 'Badger', 1.3),
-          yieldsUtils.createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Emission, 'Boosted Badger', 6.9, {
+          yieldsUtils.createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Emission, 'Boosted Badger', 6.9, 8, {
             min: 0.2,
             max: 4,
           }),
@@ -226,6 +205,12 @@ describe('vaults.utils', () => {
           .spyOn(rewardsUtils, 'getProtocolValueSources')
           .mockImplementation(async () => [
             yieldsUtils.createYieldSource(MOCK_VAULT_DEFINITION, SourceType.TradeFee, 'Curve LP Fee', 0.03),
+          ]);
+        jest
+          .spyOn(yieldsUtils, 'queryVaultYieldSources')
+          .mockImplementation(async () => [
+            yieldsUtils.createYieldSource(MOCK_VAULT_DEFINITION, SourceType.PreCompound, VAULT_SOURCE, 10),
+            yieldsUtils.createYieldSource(MOCK_VAULT_DEFINITION, SourceType.Compound, VAULT_SOURCE, 14),
           ]);
         const result = await getVaultPerformance(chain, MOCK_VAULT_DEFINITION);
         expect(result).toMatchSnapshot();

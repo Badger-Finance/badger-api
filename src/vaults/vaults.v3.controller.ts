@@ -4,13 +4,14 @@ import { UseCache } from '@tsed/platform-cache';
 import { QueryParams } from '@tsed/platform-params';
 import { ContentType, Description, Get, Hidden, Returns, Summary } from '@tsed/schema';
 
+import { VaultYieldEvent } from '../aws/models/vault-yield-event.model';
 import { getOrCreateChain } from '../chains/chains.utils';
 import { QueryParamError } from '../errors/validation/query.param.error';
-import { VaultHarvestsExtendedResp } from './interfaces/vault-harvest-extended-resp.interface';
+import { queryVaultHistoricYieldEvents } from './harvests.utils';
 import { VaultHarvestsMap } from './interfaces/vault-harvest-map';
 import { VaultHarvestsMapModel } from './interfaces/vault-harvests-list-model.interface';
-import { VaultHarvestsModel } from './interfaces/vault-harvests-model.interface';
-import { VaultModel } from './interfaces/vault-model.interface';
+import { VaultHarvestV3Model } from './interfaces/vault-harvests-model-v3.interface';
+import { VaultModelV3 } from './interfaces/vault-model-v3.interface';
 import { VaultsService } from './vaults.service';
 
 @Controller('/vaults')
@@ -22,51 +23,53 @@ export class VaultsV3Controller {
   @ContentType('json')
   @Summary('Get a specific vault')
   @Description('Return a specific vault for the requested chain')
-  @Returns(200, VaultModel)
+  @Returns(200, VaultModelV3)
   @Returns(400).Description('Not a valid chain')
   @Returns(404).Description('Not a valid vault')
   async getVault(
     @QueryParams('address') address: string,
     @QueryParams('chain') chain?: Network,
     @QueryParams('currency') currency?: Currency,
-  ): Promise<VaultModel> {
+  ): Promise<VaultModelV3> {
     if (!address) {
       throw new QueryParamError('vault');
     }
 
     const chainInst = getOrCreateChain(chain);
     const compoundVault = await chainInst.vaults.getVault(address);
-    return VaultsService.loadVault(chainInst, compoundVault, currency);
+    return VaultsService.loadVaultV3(chainInst, compoundVault, currency);
   }
 
   @Get('/list')
   @ContentType('json')
   @Summary('Get a list of protocol vaults')
   @Description('Return a list of protocol vaults for the requested chain')
-  @Returns(200, VaultModel)
+  @Returns(200, Array.of(VaultModelV3))
   @Returns(400).Description('Not a valid chain')
   async listVaults(
     @QueryParams('chain') chain?: Network,
     @QueryParams('currency') currency?: Currency,
-  ): Promise<VaultModel[]> {
-    return this.vaultService.listVaults(getOrCreateChain(chain), currency);
+  ): Promise<VaultModelV3[]> {
+    return this.vaultService.listVaultsV3(getOrCreateChain(chain), currency);
   }
 
   @Get('/harvests')
   @ContentType('json')
   @Summary('Get harvests on a specific vault')
   @Description('Return full list of vault`s harvests')
-  @Returns(200, Array).Of(VaultHarvestsModel)
+  @Returns(200, Array).Of(VaultHarvestV3Model)
   @Returns(400).Description('Not a valid chain')
   async getVaultsHarvests(
-    @QueryParams('vault') vault: string,
+    @QueryParams('address') address: string,
     @QueryParams('chain') chain?: Network,
-  ): Promise<VaultHarvestsExtendedResp[]> {
-    if (!vault) {
-      throw new QueryParamError('vault');
+  ): Promise<VaultYieldEvent[]> {
+    if (!address) {
+      throw new QueryParamError('address');
     }
 
-    return this.vaultService.getVaultHarvests(getOrCreateChain(chain), vault);
+    const targetChain = getOrCreateChain(chain);
+    const vault = await targetChain.vaults.getVault(address);
+    return queryVaultHistoricYieldEvents(targetChain, vault);
   }
 
   @Get('/list/harvests')
