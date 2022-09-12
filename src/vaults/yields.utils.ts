@@ -23,7 +23,7 @@ import { filterPerformanceItems } from './influence.utils';
 import { VaultYieldEvaluation } from './interfaces/vault-yield-evaluation.interface';
 import { YieldSources } from './interfaces/yield-sources.interface';
 import { VaultEmissionData } from './types/vault-emission-data';
-import { VAULT_SOURCE, VAULT_TWAY_DURATION } from './vaults.config';
+import { VAULT_SOURCE } from './vaults.config';
 import { estimateDerivativeEmission, queryYieldSources } from './vaults.utils';
 
 /**
@@ -419,25 +419,48 @@ async function evaluateYieldEvents(chain: Chain, vault: VaultDefinitionModel): P
     throw new Error(`${vault.name} has no recent harvests, it is either not synced, or effectively deprecated`);
   }
 
-  const relevantYieldEvents = filterPerformanceItems(vault, yieldEvents);
+  const relevantYieldEvents = filterPerformanceItems(vault, yieldEvents).sort((a, b) => a.timestamp - b.timestamp);
   const tokenEmissionAprs: VaultEmissionData = new Map();
+  const start = relevantYieldEvents[0].timestamp - relevantYieldEvents[0].duration;
+  const measuredDuration = relevantYieldEvents[relevantYieldEvents.length - 1].timestamp - start;
 
-  let compoundApr = 0;
+  let totalHarvestApr = 0;
+  let totalGrossHarvestApr = 0;
+  let totalHarvestEvents = 0;
+
+  // let compoundApr = 0;
   for (const event of relevantYieldEvents) {
     const { token, apr, grossApr } = event;
     if (event.type === YieldType.Harvest) {
-      compoundApr += apr;
+      totalHarvestApr += apr;
+      totalGrossHarvestApr += grossApr;
+      totalHarvestEvents++;
     } else {
-      const entry = tokenEmissionAprs.get(token) ?? { baseYield: 0, grossYield: 0 };
-      tokenEmissionAprs.set(token, { baseYield: entry.baseYield + apr, grossYield: entry.grossYield + grossApr });
+      const entry = tokenEmissionAprs.get(token) ?? { baseYield: 0, grossYield: 0, events: 0 };
+      tokenEmissionAprs.set(token, {
+        baseYield: entry.baseYield + apr,
+        grossYield: entry.grossYield + grossApr,
+        events: entry.events + 1,
+      });
     }
   }
 
-  const periods = ONE_YEAR_MS / VAULT_TWAY_DURATION;
-  const compoundApy = ((1 + compoundApr / 100 / periods) ** periods - 1) * 100;
+  const compoundApr = totalHarvestEvents > 0 ? totalHarvestApr / totalHarvestEvents : 0;
+  const grossCompoundApr = totalHarvestEvents > 0 ? totalGrossHarvestApr / totalHarvestEvents : 0;
+  const periods = ONE_YEAR_MS / measuredDuration;
+
+  let compoundApy = 0;
+  let grossCompoundApy = 0;
+
+  if (compoundApr > 0) {
+    compoundApy = ((1 + compoundApr / 100 / periods) ** periods - 1) * 100;
+    grossCompoundApy = ((1 + grossCompoundApr / 100 / periods) ** periods - 1) * 100;
+  }
+
   const earnedTokens = new Set(yieldEvents.map((y) => y.token));
   const earnedTokensInfo = await getFullTokens(chain, Array.from(earnedTokens));
 
+  // TODO: remove all the noise once yields math is fully sorted + we can easiliy display this info
   const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -445,25 +468,43 @@ async function evaluateYieldEvents(chain: Chain, vault: VaultDefinitionModel): P
   console.log(`\n${vault.name} Harvest Report`);
   console.table(
     relevantYieldEvents.map((r) => ({
-      date: new Date(r.timestamp).toLocaleDateString(),
+      date: new Date(r.timestamp).toISOString(),
       type: r.type,
       token: earnedTokensInfo[r.token].symbol,
       amount: r.amount.toLocaleString(),
       earned: formatter.format(r.earned),
       apr: `${r.apr.toFixed(2)}%`,
       grossApr: `${r.grossApr.toFixed(2)}%`,
-      duration: `${r.duration / ONE_DAY_MS} days`,
+      duration: `${(r.duration / ONE_DAY_MS).toFixed(1)} days`,
       vault_balance: r.balance.toLocaleString(),
       vault_principal: formatter.format(r.value),
     })),
   );
-  const aggregateApr = relevantYieldEvents.reduce((total, report) => (total += report.apr), 0);
-  const aggregateGrossApr = relevantYieldEvents.reduce((total, report) => (total += report.grossApr), 0);
-  console.log(`${vault.name}: ${aggregateApr.toFixed(2)}% (gross: ${aggregateGrossApr.toFixed(2)}%)`);
+
+  console.log(`\nDuration: ${(measuredDuration / ONE_DAY_MS).toFixed(2)} days`);
+  console.log(`\n${vault.name}: ${compoundApr.toFixed(2)}% (gross: ${grossCompoundApr.toFixed(2)}%)`);
+  console.log(`${vault.name}: ${compoundApy.toFixed(2)}% (gross: ${grossCompoundApy.toFixed(2)}%) APY`);
+
+  let totalYield = compoundApr;
+  let totalGrossYield = grossCompoundApr;
+
+  for (const entry of tokenEmissionAprs.entries()) {
+    const [token, emissionApr] = entry;
+    emissionApr.baseYield /= emissionApr.events;
+    emissionApr.grossYield /= emissionApr.events;
+    totalYield += emissionApr.baseYield;
+    totalGrossYield += emissionApr.grossYield;
+    console.log(`\n${token} Distribution`);
+    console.log(`${emissionApr.baseYield.toFixed(2)}% (gross: ${emissionApr.grossYield.toFixed(2)}%)`);
+  }
+
+  console.log(`\nTotal Yield: ${totalYield.toFixed(2)}% Gross: ${totalGrossYield.toFixed(2)}%`);
 
   return {
     compoundApr,
+    grossCompoundApr,
     compoundApy,
+    grossCompoundApy,
     tokenEmissionAprs,
   };
 }
@@ -476,17 +517,32 @@ async function evaluateYieldEvents(chain: Chain, vault: VaultDefinitionModel): P
  * @returns yield sources estimating the aggregate performance
  */
 export async function queryVaultYieldSources(chain: Chain, vault: VaultDefinitionModel): Promise<CachedYieldSource[]> {
-  const { compoundApr, compoundApy, tokenEmissionAprs } = await evaluateYieldEvents(chain, vault);
+  const { compoundApr, compoundApy, grossCompoundApr, grossCompoundApy, tokenEmissionAprs } = await evaluateYieldEvents(
+    chain,
+    vault,
+  );
 
   const compoundSources = [];
 
   if (compoundApr > 0) {
     // create the apr source for harvests
-    const compoundYieldSource = createYieldSource(vault, SourceType.PreCompound, VAULT_SOURCE, compoundApr);
+    const compoundYieldSource = createYieldSource(
+      vault,
+      SourceType.PreCompound,
+      VAULT_SOURCE,
+      compoundApr,
+      grossCompoundApr,
+    );
     compoundSources.push(compoundYieldSource);
 
     // create the apy source for harvests
-    const compoundedYieldSource = createYieldSource(vault, SourceType.Compound, VAULT_SOURCE, compoundApy);
+    const compoundedYieldSource = createYieldSource(
+      vault,
+      SourceType.Compound,
+      VAULT_SOURCE,
+      compoundApy,
+      grossCompoundApy,
+    );
     compoundSources.push(compoundedYieldSource);
   }
 

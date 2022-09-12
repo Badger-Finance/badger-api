@@ -3,6 +3,7 @@ import {
   formatBalance,
   gqlGenT,
   keyBy,
+  ONE_DAY_MS,
   Vault__factory,
   VaultHarvestData,
   YieldEvent,
@@ -188,7 +189,8 @@ async function evaluateYieldItems(
         const performanceScalar = 1 / (1 - strategyInfo.performanceFee / 10_000);
 
         if (isInfluence && isIncentiveDistribution(vault, item)) {
-          duration = VAULT_TWAY_DURATION;
+          // TODO: codify this into influence configs or smth
+          duration = 14 * ONE_DAY_MS;
         } else if (currentTimestamp !== previousTimestamp) {
           previousTimestamp = currentTimestamp;
         }
@@ -272,7 +274,6 @@ async function loadEventYieldData(
 ): Promise<VaultHarvestData[]> {
   const { vaults } = await chain.getSdk();
   const { address, version } = vault;
-  console.log(`[${vault.name}]: Load Event Yield Data`);
   try {
     const { data } = await vaults.listHarvests({
       address,

@@ -79,7 +79,7 @@ export async function constructVaultDefinition(
 
   const { createdAt, createdAtBlock, releasedAt, lastUpdatedAt } = sett;
 
-  let lastHarvestIndexedBlock = 15314213; // Number(createdAtBlock);
+  let lastHarvestIndexedBlock = Number(createdAtBlock);
 
   try {
     const existingDefinition = await chain.vaults.getVault(vault.address);

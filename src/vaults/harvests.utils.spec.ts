@@ -1,11 +1,13 @@
-import { Vault, Vault__factory } from '@badger-dao/sdk';
+import { Vault, Vault__factory, VaultsService } from '@badger-dao/sdk';
 import { BigNumber } from 'ethers';
 
 import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
+// import { TOKENS } from '../config/tokens.config';
 import * as pricesUtils from '../prices/prices.utils';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import {
+  MOCK_HARVESTS,
   MOCK_TOKENS,
   MOCK_VAULT_DEFINITION,
   MOCK_YIELD_EVENT,
@@ -19,7 +21,7 @@ import * as tokensUtils from '../tokens/tokens.utils';
 import * as influenceUtils from '../vaults/influence.utils';
 import * as vaultsUtils from '../vaults/vaults.utils';
 import { loadYieldEvents, queryVaultHistoricYieldEvents, queryVaultYieldEvents } from './harvests.utils';
-import { VAULT_SOURCE } from './vaults.config';
+import { VAULT_SOURCE, VAULT_TWAY_DURATION_SECONDS } from './vaults.config';
 import { createYieldSource } from './yields.utils';
 
 describe('harvests.utils', () => {
@@ -56,6 +58,7 @@ describe('harvests.utils', () => {
       .spyOn(vaultsUtils, 'queryYieldSources')
       .mockImplementation(async (v) => [createYieldSource(v, SourceType.PreCompound, VAULT_SOURCE, 3)]);
 
+    jest.spyOn(VaultsService.prototype, 'listHarvests').mockImplementation(async () => MOCK_HARVESTS);
     jest.spyOn(influenceUtils, 'getInfuelnceVaultYieldBalance').mockImplementation(async (_c, _v) => 4_500_000);
     jest.spyOn(chain.sdk.graph, 'loadSettHarvests').mockImplementation(async () => ({
       settHarvests: [
@@ -252,6 +255,9 @@ describe('harvests.utils', () => {
 
     describe('requesting an standard vault', () => {
       it('loads yield events from the subgraph', async () => {
+        const expected = [MOCK_YIELD_EVENT];
+        MOCK_YIELD_EVENT.timestamp = Math.floor(TEST_CURRENT_TIMESTAMP / 1000 - VAULT_TWAY_DURATION_SECONDS);
+        mockQuery(expected);
         const result = await loadYieldEvents(chain, MOCK_VAULT_DEFINITION, TEST_CURRENT_BLOCK);
         expect(result).toMatchSnapshot();
       });
@@ -262,13 +268,16 @@ describe('harvests.utils', () => {
         jest.spyOn(chain.sdk.graph, 'loadSettHarvests').mockImplementation(async () => {
           throw new Error('Expected test error: loadSettHarvests');
         });
+        const expected = [MOCK_YIELD_EVENT];
+        MOCK_YIELD_EVENT.timestamp = Math.floor(TEST_CURRENT_TIMESTAMP / 1000 - VAULT_TWAY_DURATION_SECONDS * 10);
+        mockQuery(expected);
         const result = await loadYieldEvents(chain, MOCK_VAULT_DEFINITION, TEST_CURRENT_BLOCK);
         expect(result).toMatchSnapshot();
       });
     });
 
     describe('encounters an error requesting an influence vault', () => {
-      it('loads yield events from on chain', async () => {
+      it('rejects with an error, influence vaults require the graph', async () => {
         jest.spyOn(chain.sdk.graph, 'loadSettHarvests').mockImplementation(async () => {
           throw new Error('Expected test error: loadSettHarvests');
         });
