@@ -33,6 +33,7 @@ describe('yields.utils', () => {
 
   beforeEach(() => {
     chain = setupMockChain();
+    jest.spyOn(console, 'log').mockImplementation();
   });
 
   describe('calculateYield', () => {

@@ -7,7 +7,7 @@ VaultDefinitionModel {
   "bouncer": "none",
   "chain": "ethereum",
   "client": "",
-  "createdAt": 0,
+  "createdAt": 1607018449,
   "depositToken": "0x075b1bb99792c9E1041bA13afEf80C91a1e70fB3",
   "id": "ethereum-0xd04c48A53c111300aD41190D63681ed3dAd998eC",
   "isNew": false,
@@ -15,10 +15,10 @@ VaultDefinitionModel {
   "lastHarvestIndexedBlock": 13500500,
   "name": "renBTC/wBTC/sBTC",
   "protocol": "Convex",
-  "releasedAt": NaN,
+  "releasedAt": 1654738224,
   "stage": "prod",
   "state": "discontinued",
-  "updatedAt": NaN,
+  "updatedAt": 1654738224,
   "version": "v1",
 }
 `;

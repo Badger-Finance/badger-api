@@ -474,8 +474,8 @@ functions:
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-apy-snapshots
-          description: 'index data for sett apy'
-          rate: rate(15 minutes)
+          description: 'index data for vault yields'
+          rate: rate(30 minutes)
 
   index-prices:
     handler: src/indexers/prices-indexer.indexPrices
@@ -511,7 +511,7 @@ functions:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-yield-estimates
           description: 'index yield estimate data for supported vaults'
-          rate: rate(5 minutes)
+          rate: rate(30 minutes)
 
   index-vault-yield-events:
     handler: src/indexers/vault-harvests-indexer.updateVaultHarvests

@@ -3,5 +3,6 @@ export type VaultEmissionData = Map<
   {
     baseYield: number;
     grossYield: number;
+    events: number;
   }
 >;

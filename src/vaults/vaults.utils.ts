@@ -201,9 +201,9 @@ export async function getStrategyInfo(
       // you know, these things happen...
       // eslint-disable-next-line prefer-const
       let [withdrawFee, performanceFee, strategistFee] = await Promise.all([
-        strategy.withdrawalFee(overrides),
-        strategy.performanceFeeGovernance(overrides),
-        strategy.performanceFeeStrategist(overrides),
+        strategy.withdrawalFee({ ...overrides }),
+        strategy.performanceFeeGovernance({ ...overrides }),
+        strategy.performanceFeeStrategist({ ...overrides }),
       ]);
       // bveCVX does not have a way to capture materially its performance fee
       if (address === TOKENS.BVECVX) {
@@ -219,10 +219,10 @@ export async function getStrategyInfo(
     } else {
       const vaultContract = VaultV15__factory.connect(address, sdk.provider);
       const [withdrawFee, performanceFee, strategistFee, aumFee] = await Promise.all([
-        vaultContract.withdrawalFee(overrides),
-        vaultContract.performanceFeeGovernance(overrides),
-        vaultContract.performanceFeeStrategist(overrides),
-        vaultContract.managementFee(overrides),
+        vaultContract.withdrawalFee({ ...overrides }),
+        vaultContract.performanceFeeGovernance({ ...overrides }),
+        vaultContract.performanceFeeStrategist({ ...overrides }),
+        vaultContract.managementFee({ ...overrides }),
       ]);
       return {
         address: strategyAddress,

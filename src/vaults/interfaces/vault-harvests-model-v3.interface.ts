@@ -28,6 +28,12 @@ export class VaultHarvestV3Model implements YieldEvent {
   @Property()
   public amount!: number;
 
+  @Title('duration')
+  @Description('duration in ms harvest lasted')
+  @Example('360_000')
+  @Property()
+  public duration!: number;
+
   @Title('earned')
   @Description('amount of token earned in usd')
   @Example('15.3452')
