@@ -1,6 +1,7 @@
 import { getDataMapper, getVaultEntityId } from '../aws/dynamodb.utils';
 import { VaultYieldEvent } from '../aws/models/vault-yield-event.model';
 import { getSupportedChains } from '../chains/chains.utils';
+import { TOKENS } from '../config/tokens.config';
 import { HARVEST_SCAN_BLOCK_INCREMENT, loadYieldEvents } from '../vaults/harvests.utils';
 
 export async function updateVaultHarvests() {
@@ -15,10 +16,15 @@ export async function updateVaultHarvests() {
     await Promise.all(
       vaults.map(async (vault) => {
         try {
+          if (vault.address !== TOKENS.BVECVX) {
+            return;
+          }
           const { name, protocol, lastHarvestIndexedBlock } = vault;
           const vaultId = [protocol, name].join(' ');
 
+          console.time(`${vault.address}`);
           const yieldEvents = await loadYieldEvents(chain, vault, lastHarvestIndexedBlock);
+          console.timeEnd(`${vault.address}`);
 
           if (yieldEvents.length === 0) {
             vault.lastHarvestIndexedBlock = Math.min(

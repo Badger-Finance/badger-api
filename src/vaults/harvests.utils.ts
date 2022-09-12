@@ -1,4 +1,4 @@
-import { greaterThanOrEqualTo } from '@aws/dynamodb-expressions';
+import { greaterThanOrEqualTo, lessThan } from '@aws/dynamodb-expressions';
 import {
   formatBalance,
   gqlGenT,
@@ -15,9 +15,11 @@ import { getDataMapper, getVaultEntityId } from '../aws/dynamodb.utils';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { VaultYieldEvent } from '../aws/models/vault-yield-event.model';
 import { Chain } from '../chains/config/chain.config';
+import { TOKENS } from '../config/tokens.config';
 import { OrderDirection } from '../graphql/generated/balancer';
 import { queryPriceAtTimestamp } from '../prices/prices.utils';
 import { getFullToken } from '../tokens/tokens.utils';
+import { Nullable } from '../utils/types.utils';
 import { getInfuelnceVaultYieldBalance, isInfluenceVault } from './influence.utils';
 import { VaultYieldItem } from './interfaces/vault-yield-item.interface';
 import { VAULT_TWAY_DURATION } from './vaults.config';
@@ -122,6 +124,16 @@ async function getVaultBalance(chain: Chain, vault: VaultDefinitionModel, block:
   return balance;
 }
 
+function isIncentiveDistribution(vault: VaultDefinitionModel, event: VaultYieldItem): boolean {
+  if (event.type !== YieldType.TreeDistribution) {
+    return false;
+  }
+  if (event.token !== TOKENS.BADGER && event.token !== vault.address) {
+    return false;
+  }
+  return true;
+}
+
 /**
  * Evaluate yield events to derivate base apr, and apy as well as apr of any emitted tokens.
  * @param chain network the vault is deployed on
@@ -134,42 +146,71 @@ async function evaluateYieldItems(
   vault: VaultDefinitionModel,
   yieldItems: VaultYieldItem[],
 ): Promise<YieldEvent[]> {
+  const eventsByTimestamp = keyBy(yieldItems, (i) => i.timestamp);
+  const eventTimestamps = Array.from(new Set(yieldItems.map((i) => i.timestamp))).sort((a, b) => a - b);
+
+  if (eventTimestamps.length === 0) {
+    return [];
+  }
+
+  const recentTimestamp = eventTimestamps[0];
+  const lastEvent = await queryVaultPreviousYieldEvents(chain, vault, recentTimestamp);
+  const baseEventTime = lastEvent ? lastEvent.timestamp : vault.createdAt;
+
+  const isInfluence = isInfluenceVault(vault.address);
+  // this is a special case, bvecvx at some point had harvests and they must be ignored!
+  const ignoreHarvests = vault.address === TOKENS.BVECVX;
+
   const yieldEvents: YieldEvent[] = [];
-  const tokenEmissionAprs = new Map<string, number>();
+  let previousTimestamp = baseEventTime;
+  for (let i = 0; i < eventTimestamps.length; i++) {
+    const currentTimestamp = eventTimestamps[i];
 
-  for (const item of yieldItems) {
-    const block = item.block;
-    const token = await getFullToken(chain, item.token);
-    const amount = formatBalance(item.amount, token.decimals);
-    const { price } = await queryPriceAtTimestamp(token.address, item.timestamp * 1000);
+    let duration = (currentTimestamp - previousTimestamp) * 1000;
+    const timestampYieldItems = eventsByTimestamp.get(currentTimestamp);
+    if (timestampYieldItems) {
+      for (const item of timestampYieldItems) {
+        if (ignoreHarvests && item.type === YieldType.Harvest) {
+          continue;
+        }
 
-    const tokenEarned = price * amount;
+        const block = item.block;
+        const token = await getFullToken(chain, item.token);
+        const amount = formatBalance(item.amount, token.decimals);
+        const { price } = await queryPriceAtTimestamp(token.address, item.timestamp * 1000);
 
-    const balance = await getVaultBalance(chain, vault, item.block);
-    const { price: vaultPrice } = await queryPriceAtTimestamp(vault.address, item.timestamp * 1000);
-    const vaultPrincipal = vaultPrice * balance;
-    const strategyInfo = await getStrategyInfo(chain, vault, { blockTag: item.block });
-    const performanceScalar = 1 / (1 - strategyInfo.performanceFee / 10_000);
+        const tokenEarned = price * amount;
 
-    const eventApr = calculateYield(vaultPrincipal, tokenEarned, VAULT_TWAY_DURATION);
-    const yieldEvent: YieldEvent = {
-      block,
-      timestamp: item.timestamp * 1000,
-      amount,
-      token: token.address,
-      type: item.type,
-      value: vaultPrincipal,
-      balance,
-      earned: tokenEarned,
-      apr: eventApr,
-      grossApr: eventApr * performanceScalar,
-      tx: item.tx,
-    };
-    yieldEvents.push(yieldEvent);
+        const balance = await getVaultBalance(chain, vault, item.block);
+        const { price: vaultPrice } = await queryPriceAtTimestamp(vault.address, item.timestamp * 1000);
+        const vaultPrincipal = vaultPrice * balance;
+        const strategyInfo = await getStrategyInfo(chain, vault, { blockTag: item.block });
+        const performanceScalar = 1 / (1 - strategyInfo.performanceFee / 10_000);
 
-    if (item.type === YieldType.TreeDistribution) {
-      const entry = tokenEmissionAprs.get(token.address) ?? 0;
-      tokenEmissionAprs.set(token.address, entry + eventApr);
+        if (isInfluence && isIncentiveDistribution(vault, item)) {
+          duration = VAULT_TWAY_DURATION;
+        } else if (currentTimestamp !== previousTimestamp) {
+          previousTimestamp = currentTimestamp;
+        }
+
+        const eventApr = calculateYield(vaultPrincipal, tokenEarned, duration);
+        const yieldEvent: YieldEvent = {
+          block,
+          timestamp: item.timestamp * 1000,
+          amount,
+          duration,
+          token: token.address,
+          type: item.type,
+          value: vaultPrincipal,
+          balance,
+          earned: tokenEarned,
+          apr: eventApr,
+          grossApr: eventApr * performanceScalar,
+          tx: item.tx,
+        };
+
+        yieldEvents.push(yieldEvent);
+      }
     }
   }
 
@@ -298,6 +339,30 @@ export async function queryVaultYieldEvents(chain: Chain, vault: VaultDefinition
     yieldEvents.push(yieldEvent);
   }
   return yieldEvents;
+}
+
+/**
+ *
+ * @param chain
+ * @param vault
+ * @returns
+ */
+export async function queryVaultPreviousYieldEvents(
+  chain: Chain,
+  vault: VaultDefinitionModel,
+  timestamp: number,
+): Promise<Nullable<VaultYieldEvent>> {
+  const mapper = getDataMapper();
+  const chainAddress = getVaultEntityId(chain, vault);
+
+  for await (const yieldEvent of mapper.query(
+    VaultYieldEvent,
+    { chainAddress, timestamp: lessThan(timestamp) },
+    { indexName: 'IndexYieldDataOnAddress', scanIndexForward: false, limit: 1 },
+  )) {
+    return yieldEvent;
+  }
+  return null;
 }
 
 /**

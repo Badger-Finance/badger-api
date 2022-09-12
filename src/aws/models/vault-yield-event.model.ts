@@ -31,6 +31,9 @@ export class VaultYieldEvent implements YieldEvent {
   amount!: number;
 
   @attribute()
+  duration!: number;
+
+  @attribute()
   balance!: number;
 
   @attribute()

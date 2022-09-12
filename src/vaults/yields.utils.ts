@@ -1,4 +1,5 @@
 import {
+  ONE_DAY_MS,
   ONE_YEAR_MS,
   TokenRate,
   ValueSource,
@@ -450,12 +451,15 @@ async function evaluateYieldEvents(chain: Chain, vault: VaultDefinitionModel): P
       amount: r.amount.toLocaleString(),
       earned: formatter.format(r.earned),
       apr: `${r.apr.toFixed(2)}%`,
+      grossApr: `${r.grossApr.toFixed(2)}%`,
+      duration: `${r.duration / ONE_DAY_MS} days`,
       vault_balance: r.balance.toLocaleString(),
       vault_principal: formatter.format(r.value),
     })),
   );
   const aggregateApr = relevantYieldEvents.reduce((total, report) => (total += report.apr), 0);
-  console.log(`${vault.name}: ${aggregateApr.toFixed(2)}%`);
+  const aggregateGrossApr = relevantYieldEvents.reduce((total, report) => (total += report.grossApr), 0);
+  console.log(`${vault.name}: ${aggregateApr.toFixed(2)}% (gross: ${aggregateGrossApr.toFixed(2)}%)`);
 
   return {
     compoundApr,

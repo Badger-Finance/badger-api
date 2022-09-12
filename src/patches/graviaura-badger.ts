@@ -50,6 +50,7 @@ async function seedBadgerIncentive() {
     timestamp,
     block: targetBlock,
     token: TOKENS.BADGER,
+    duration: 1209600000,
     amount: formatBalance(BigNumber.from('1928771715566995688546')),
     value: 282542.53,
     earned: 7845.98,

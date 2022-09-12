@@ -26,6 +26,7 @@ import { Stage } from '../config/enums/stage.enum';
 import { TOKENS } from '../config/tokens.config';
 import { TokenFullMap } from '../tokens/interfaces/token-full.interface';
 import { VaultHarvestsMap } from '../vaults/interfaces/vault-harvest-map';
+import { VAULT_TWAY_DURATION } from '../vaults/vaults.config';
 
 export const TEST_TOKEN = TOKENS.BADGER;
 export const TEST_ADDR = TOKENS.BBADGER;
@@ -125,6 +126,7 @@ export const MOCK_YIELD_EVENT: YieldEvent = {
   type: YieldType.TreeDistribution,
   timestamp: TEST_CURRENT_TIMESTAMP,
   balance: 1_000_000,
+  duration: VAULT_TWAY_DURATION,
   value: 10_000,
   earned: 3_500,
   apr: 230,

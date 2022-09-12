@@ -79,11 +79,13 @@ export async function constructVaultDefinition(
 
   const { createdAt, createdAtBlock, releasedAt, lastUpdatedAt } = sett;
 
-  let lastHarvestIndexedBlock = Number(createdAtBlock);
+  let lastHarvestIndexedBlock = 15314213; // Number(createdAtBlock);
 
   try {
     const existingDefinition = await chain.vaults.getVault(vault.address);
-    lastHarvestIndexedBlock = existingDefinition.lastHarvestIndexedBlock;
+    if (existingDefinition.lastHarvestIndexedBlock > createdAtBlock) {
+      lastHarvestIndexedBlock = existingDefinition.lastHarvestIndexedBlock;
+    }
   } catch {} // ignore errors for vaults who do not exist
 
   const definition: VaultDefinitionModel = {

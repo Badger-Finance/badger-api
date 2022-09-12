@@ -87,9 +87,10 @@ export abstract class Chain {
   }
 
   async getGasPrices(): Promise<GasPrices> {
+    const sdk = await this.getSdk();
     let gasPrice;
     try {
-      gasPrice = Number(ethers.utils.formatUnits(await this.provider.getGasPrice(), 9));
+      gasPrice = Number(ethers.utils.formatUnits(await sdk.provider.getGasPrice(), 9));
     } catch (err) {
       console.log(err);
       gasPrice = this.network === Network.Ethereum ? 60 : 5;

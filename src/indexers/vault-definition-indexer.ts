@@ -5,6 +5,7 @@ import { getDataMapper } from '../aws/dynamodb.utils';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { getSupportedChains } from '../chains/chains.utils';
 import { Chain } from '../chains/config/chain.config';
+import { TOKENS } from '../config/tokens.config';
 import { constructVaultDefinition } from './indexer.utils';
 
 export async function captureVaultData() {
@@ -57,6 +58,9 @@ export async function captureVaultData() {
 }
 
 async function updateVaultDefinition(chain: Chain, vault: RegistryVault) {
+  if (vault.address !== TOKENS.BVECVX) {
+    return;
+  }
   let compoundVault;
   try {
     compoundVault = await constructVaultDefinition(chain, vault);
