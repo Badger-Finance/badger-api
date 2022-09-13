@@ -9,7 +9,9 @@ export const checksumEntries = (registry: ContractRegistry): ContractRegistry =>
 export const getEnvVar = (envName: string): string => {
   const variable = process.env[envName];
 
-  if (variable) return variable;
+  if (variable) {
+    return variable;
+  }
 
   const errMsg = `Missing required env var: ${envName}`;
 

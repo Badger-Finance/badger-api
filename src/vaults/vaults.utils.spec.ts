@@ -270,6 +270,8 @@ describe('vaults.utils', () => {
 
   describe('queryYieldEstimate', () => {
     const defaultExpectedMock: YieldEstimate = {
+      id: dynamoDbUtils.getVaultEntityId({ network: chain.network }, MOCK_VAULT_DEFINITION),
+      chain: chain.network,
       vault: MOCK_VAULT_DEFINITION.address,
       yieldTokens: [],
       harvestTokens: [],
@@ -302,6 +304,8 @@ describe('vaults.utils', () => {
     describe('system has saved data', () => {
       it('returns the cached yield projection', async () => {
         const cachedYield: YieldEstimate = {
+          id: dynamoDbUtils.getVaultEntityId({ network: chain.network }, MOCK_VAULT_DEFINITION),
+          chain: chain.network,
           vault: MOCK_VAULT_DEFINITION.address,
           yieldTokens: [mockBalance(fullTokenMockMap[TEST_TOKEN], 1)],
           harvestTokens: [mockBalance(fullTokenMockMap[TEST_TOKEN], 1)],

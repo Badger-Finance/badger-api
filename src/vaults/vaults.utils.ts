@@ -359,6 +359,8 @@ export async function queryYieldSources(vault: VaultDefinitionModel): Promise<Ca
  */
 export async function queryYieldEstimate(vault: VaultDefinitionModel): Promise<YieldEstimate> {
   const yieldEstimate: YieldEstimate = {
+    id: getVaultEntityId({ network: vault.chain }, vault),
+    chain: vault.chain,
     vault: vault.address,
     yieldTokens: [],
     harvestTokens: [],
