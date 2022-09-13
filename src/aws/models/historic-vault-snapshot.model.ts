@@ -48,6 +48,9 @@ export class HistoricVaultSnapshotModel extends ChartData<HistoricVaultSnapshotM
   apr!: number;
 
   @attribute()
+  grossApr!: number;
+
+  @attribute()
   yieldApr!: number;
 
   @attribute()

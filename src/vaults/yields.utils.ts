@@ -3,14 +3,15 @@ import {
   ONE_YEAR_MS,
   TokenRate,
   ValueSource,
-  VaultDTO,
+  VaultDTOV3,
   VaultState,
-  VaultYieldProjectionV3,
   YieldSource,
   YieldType,
 } from '@badger-dao/sdk';
 
+import { getVaultEntityId } from '../aws/dynamodb.utils';
 import { CachedTokenBalance } from '../aws/models/cached-token-balance.interface';
+import { CachedYieldProjection } from '../aws/models/cached-yield-projection.model';
 import { CachedYieldSource } from '../aws/models/cached-yield-source.interface';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { YieldEstimate } from '../aws/models/yield-estimate.model';
@@ -250,10 +251,11 @@ export async function getYieldSources(vault: VaultDefinitionModel): Promise<Yiel
  * @returns evaluated vault yield projection
  */
 export function getVaultYieldProjection(
-  vault: VaultDTO,
+  chain: Chain,
+  vault: VaultDTOV3,
   yieldSources: YieldSources,
   yieldEstimate: YieldEstimate,
-): VaultYieldProjectionV3 {
+): CachedYieldProjection {
   const { value, balance, available } = vault;
   const { nonHarvestSources, nonHarvestSourcesApy } = yieldSources;
   const {
@@ -284,7 +286,11 @@ export function getVaultYieldProjection(
   const nonHarvestApr = nonHarvestSources.reduce((total, source) => (total += source.performance.baseYield), 0);
   const nonHarvestApy = nonHarvestSourcesApy.reduce((total, source) => (total += source.performance.baseYield), 0);
 
+  const id = getVaultEntityId(chain, vault);
   return {
+    id,
+    chain: chain.network,
+    vault: vault.address,
     harvestValue,
     harvestApr: calculateYield(earningValue, harvestValue, harvestDuration),
     harvestPeriodApr: calculateYield(earningValue, harvestValuePerPeriod, periodDuration),
@@ -415,7 +421,7 @@ async function evaluateYieldEvents(chain: Chain, vault: VaultDefinitionModel): P
   // this error should bubble up to yield source persistence
   // from a practical perspective this is here to allow vaults to retain calculated yield if there is no history
   // this is primary needed for a clean resync of harvest data without impacting 'synced' data
-  if (vault.state !== VaultState.Discontinued && yieldEvents.length === 0) {
+  if (yieldEvents.length === 0) {
     throw new Error(`${vault.name} has no recent harvests, it is either not synced, or effectively deprecated`);
   }
 

@@ -31,6 +31,7 @@ Object {
   "balance": 1006655.3375347335,
   "block": 13500500,
   "boostWeight": 0,
+  "grossApr": 0,
   "harvestApr": 0,
   "pricePerFullShare": 1.2348816886763505,
   "strategy": Object {

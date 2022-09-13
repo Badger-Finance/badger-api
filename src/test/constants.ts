@@ -90,7 +90,10 @@ export const MOCK_VAULT_DEFINITION: VaultDefinitionModel = {
 export const MOCK_VAULTS: VaultDTOV2[] = mockVaults as VaultDTOV2[];
 export const MOCK_VAULT: VaultDTOV2 = MOCK_VAULTS[0];
 
-export const MOCK_VAULT_SNAPSHOTS: VaultSnapshot[] = mockVaultSnapshots;
+export const MOCK_VAULT_SNAPSHOTS: VaultSnapshot[] = mockVaultSnapshots.map((s) => ({
+  ...s,
+  grossApr: s.apr * 1.15,
+}));
 export const MOCK_VAULT_SNAPSHOT = MOCK_VAULT_SNAPSHOTS[0];
 
 export const MOCK_YIELD_SOURCES: ValueSource[] = MOCK_VAULT.sources;

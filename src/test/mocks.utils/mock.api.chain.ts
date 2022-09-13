@@ -202,6 +202,8 @@ export function setupTestVault() {
   jest.spyOn(Date, 'now').mockImplementation(() => baseTime * 1000 + ONE_DAY_MS * 14);
   jest.spyOn(vaultsUtils, 'queryYieldEstimate').mockImplementation(
     async (vaultDefinition: VaultDefinitionModel): Promise<YieldEstimate> => ({
+      id: getVaultEntityId({ network: vaultDefinition.chain }, vaultDefinition),
+      chain: vaultDefinition.chain,
       vault: vaultDefinition.address,
       yieldTokens: [mockBalance(fullTokenMockMap[TOKENS.CVX], 10)],
       harvestTokens: [mockBalance(fullTokenMockMap[TOKENS.CVX], 10)],
