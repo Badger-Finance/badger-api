@@ -27,6 +27,8 @@ import { VaultEmissionData } from './types/vault-emission-data';
 import { VAULT_SOURCE } from './vaults.config';
 import { estimateDerivativeEmission, queryYieldSources } from './vaults.utils';
 
+export const NO_HARVESTS_MESSAGE = 'has no recent harvests, it is either not synced, or effectively deprecated';
+
 /**
  * Determine if a yield source in relevant in a given context.
  * Only sources not stemming from a DAO action are considered relevant in discontinued state.
@@ -421,12 +423,22 @@ async function evaluateYieldEvents(chain: Chain, vault: VaultDefinitionModel): P
   // this error should bubble up to yield source persistence
   // from a practical perspective this is here to allow vaults to retain calculated yield if there is no history
   // this is primary needed for a clean resync of harvest data without impacting 'synced' data
-  if (yieldEvents.length === 0) {
-    throw new Error(`${vault.name} has no recent harvests, it is either not synced, or effectively deprecated`);
+  if (vault.state !== VaultState.Discontinued && yieldEvents.length === 0) {
+    throw new Error(`${vault.name} ${NO_HARVESTS_MESSAGE}`);
   }
 
-  const relevantYieldEvents = filterPerformanceItems(vault, yieldEvents).sort((a, b) => a.timestamp - b.timestamp);
   const tokenEmissionAprs: VaultEmissionData = new Map();
+
+  if (vault.state === VaultState.Discontinued) {
+    return {
+      compoundApr: 0,
+      grossCompoundApr: 0,
+      compoundApy: 0,
+      grossCompoundApy: 0,
+      tokenEmissionAprs,
+    };
+  }
+  const relevantYieldEvents = filterPerformanceItems(vault, yieldEvents).sort((a, b) => a.timestamp - b.timestamp);
   const start = relevantYieldEvents[0].timestamp - relevantYieldEvents[0].duration;
   const measuredDuration = relevantYieldEvents[relevantYieldEvents.length - 1].timestamp - start;
 
@@ -523,35 +535,40 @@ async function evaluateYieldEvents(chain: Chain, vault: VaultDefinitionModel): P
  * @returns yield sources estimating the aggregate performance
  */
 export async function queryVaultYieldSources(chain: Chain, vault: VaultDefinitionModel): Promise<CachedYieldSource[]> {
-  const { compoundApr, compoundApy, grossCompoundApr, grossCompoundApy, tokenEmissionAprs } = await evaluateYieldEvents(
-    chain,
-    vault,
-  );
+  try {
+    const { compoundApr, compoundApy, grossCompoundApr, grossCompoundApy, tokenEmissionAprs } =
+      await evaluateYieldEvents(chain, vault);
 
-  const compoundSources = [];
+    const compoundSources = [];
 
-  if (compoundApr > 0) {
-    // create the apr source for harvests
-    const compoundYieldSource = createYieldSource(
-      vault,
-      SourceType.PreCompound,
-      VAULT_SOURCE,
-      compoundApr,
-      grossCompoundApr,
-    );
-    compoundSources.push(compoundYieldSource);
+    if (compoundApr > 0) {
+      // create the apr source for harvests
+      const compoundYieldSource = createYieldSource(
+        vault,
+        SourceType.PreCompound,
+        VAULT_SOURCE,
+        compoundApr,
+        grossCompoundApr,
+      );
+      compoundSources.push(compoundYieldSource);
 
-    // create the apy source for harvests
-    const compoundedYieldSource = createYieldSource(
-      vault,
-      SourceType.Compound,
-      VAULT_SOURCE,
-      compoundApy,
-      grossCompoundApy,
-    );
-    compoundSources.push(compoundedYieldSource);
+      // create the apy source for harvests
+      const compoundedYieldSource = createYieldSource(
+        vault,
+        SourceType.Compound,
+        VAULT_SOURCE,
+        compoundApy,
+        grossCompoundApy,
+      );
+      compoundSources.push(compoundedYieldSource);
+    }
+
+    const emissionSources = await constructEmissionYieldSources(chain, vault, compoundApr, tokenEmissionAprs);
+    return compoundSources.concat(emissionSources);
+  } catch (err) {
+    if (err instanceof Error && !err.message.includes(NO_HARVESTS_MESSAGE)) {
+      console.error({ err, message: `${chain.network} failed to update APY snapshots for vaults` });
+    }
+    return [];
   }
-
-  const emissionSources = await constructEmissionYieldSources(chain, vault, compoundApr, tokenEmissionAprs);
-  return compoundSources.concat(emissionSources);
 }

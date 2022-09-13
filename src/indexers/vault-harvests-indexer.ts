@@ -25,9 +25,12 @@ export async function updateVaultHarvests() {
               vault.lastHarvestIndexedBlock + HARVEST_SCAN_BLOCK_INCREMENT,
               currentBlock,
             );
-            console.log(`[${vaultId}]: Yield events up to date as of block: ${vault.lastHarvestIndexedBlock}`);
             // update the vault's last harvested indexed block, done twice to not update before persist
-            await mapper.put(vault);
+            try {
+              await mapper.put(vault);
+            } catch (err) {
+              console.log({ err, vault, message: `Failed to persist vault definition for ${vault.name}` });
+            }
             return;
           }
 
@@ -53,7 +56,7 @@ export async function updateVaultHarvests() {
           await mapper.put(vault);
           console.log(`[${vaultId}]: Yield events up to date as of block: ${vault.lastHarvestIndexedBlock}`);
         } catch (err) {
-          console.error(err);
+          console.log({ err, vault, message: `Failed to persist vault definition for ${vault.name}` });
         }
       }),
     );
