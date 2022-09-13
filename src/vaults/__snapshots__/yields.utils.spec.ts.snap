@@ -2,6 +2,7 @@
 
 exports[`yields.utils getVaultYieldProjection returns a yield projection estimation from given inputs 1`] = `
 Object {
+  "chain": "ethereum",
   "harvestApr": 27.046043378488417,
   "harvestPeriodApr": 26.15441557480198,
   "harvestPeriodApy": 26.15441557480198,
@@ -39,6 +40,7 @@ Object {
     },
   ],
   "harvestValue": 5.005,
+  "id": "ethereum-undefined",
   "nonHarvestApr": 12,
   "nonHarvestApy": 17,
   "nonHarvestSources": Array [
@@ -164,6 +166,7 @@ Object {
       "type": "flywheel",
     },
   ],
+  "vault": undefined,
   "yieldApr": 27.34325264638389,
   "yieldPeriodApr": 26.15441557480198,
   "yieldPeriodSources": Array [

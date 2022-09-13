@@ -49,7 +49,10 @@ async function loadGraphTimestamp(sdk: BadgerSDK, vault: VaultDefinitionModel): 
 }
 
 function defaultEstimate(vault: VaultDefinitionModel, existingEstimate: YieldEstimate): YieldEstimate {
+  const id = getVaultEntityId({ network: vault.chain }, vault);
   return {
+    id,
+    chain: vault.chain,
     vault: vault.address,
     yieldTokens: [],
     harvestTokens: [],
@@ -147,13 +150,8 @@ export async function refreshYieldEstimates() {
         const yieldEstimate = await captureYieldEstimate(chain, vault, now);
         const yieldSources = await getYieldSources(vault);
         const cachedVault = await VaultsService.loadVaultV3(chain, vault);
-        const yieldProjection = getVaultYieldProjection(cachedVault, yieldSources, yieldEstimate);
-
-        const id = getVaultEntityId(chain, vault);
-        const entity = Object.assign(new CachedYieldProjection(), {
-          id,
-          ...yieldProjection,
-        });
+        const yieldProjection = getVaultYieldProjection(chain, cachedVault, yieldSources, yieldEstimate);
+        const entity = Object.assign(new CachedYieldProjection(), yieldProjection);
 
         const mapper = getDataMapper();
         await mapper.put(entity);

@@ -1,5 +1,6 @@
 import { ONE_DAY_MS, VaultState, YieldType } from '@badger-dao/sdk';
 
+import { getVaultEntityId } from '../aws/dynamodb.utils';
 import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
 import { SourceType } from '../rewards/enums/source-type.enum';
@@ -94,6 +95,8 @@ describe('yields.utils', () => {
       const mockVault = JSON.parse(JSON.stringify(MOCK_VAULT));
       mockVault.lastHarvest = referenceTime - ONE_DAY_MS * 30;
       const mockYieldEstimate = {
+        id: getVaultEntityId(chain, mockDefinition),
+        chain: chain.network,
         vault: MOCK_VAULT.vaultToken,
         yieldTokens: [mockBalance(wbtc, 0.0092)],
         harvestTokens: [mockBalance(wbtc, 0.0091)],
@@ -104,7 +107,7 @@ describe('yields.utils', () => {
         lastReportedAt: 0,
         lastHarvestedAt: referenceTime - ONE_DAY_MS * 30,
       };
-      const result = getVaultYieldProjection(mockVault, yieldSources, mockYieldEstimate);
+      const result = getVaultYieldProjection(chain, mockVault, yieldSources, mockYieldEstimate);
       expect(result).toMatchSnapshot();
     });
   });

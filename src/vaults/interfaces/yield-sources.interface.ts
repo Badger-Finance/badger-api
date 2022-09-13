@@ -1,8 +1,10 @@
-import { VaultYieldSummary, YieldSource } from '@badger-dao/sdk';
+import { VaultYieldSummary } from '@badger-dao/sdk';
+
+import { CachedYieldSource } from '../../aws/models/cached-yield-source.interface';
 
 export interface YieldSources {
   apr: VaultYieldSummary;
   apy: VaultYieldSummary;
-  nonHarvestSources: YieldSource[];
-  nonHarvestSourcesApy: YieldSource[];
+  nonHarvestSources: CachedYieldSource[];
+  nonHarvestSourcesApy: CachedYieldSource[];
 }

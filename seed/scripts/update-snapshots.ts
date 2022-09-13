@@ -7,7 +7,7 @@ async function updatePrices() {
   for (const network of Object.values(Network)) {
     try {
       const api = new BadgerAPI({ network, baseURL: 'https://staging-api.badger.com/' });
-      const networkVaults = await api.loadVaults();
+      const networkVaults = await api.loadVaultsV3();
       networkVaults.forEach((vault) => {
         vaults.push({
           address: vault.vaultToken,
@@ -23,7 +23,8 @@ async function updatePrices() {
           pricePerFullShare: vault.pricePerFullShare,
           strategy: vault.strategy,
           value: vault.value,
-          apr: vault.apr,
+          apr: vault.apr.baseYield,
+          grossApr: vault.apr.grossYield,
         });
       });
     } catch {}

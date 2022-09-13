@@ -34,6 +34,7 @@ export function randomSnapshot(vaultDefinition?: VaultDefinitionModel): VaultSna
     boostWeight: 5100,
     available,
     apr: 8.323,
+    grossApr: 10.323,
     yieldApr: 8.4,
     harvestApr: 8.37,
   };
@@ -65,6 +66,7 @@ export function randomSnapshots(vaultDefinition?: VaultDefinitionModel, count?: 
       },
       boostWeight: 5100,
       apr: 13.254,
+      grossApr: 15.23,
       yieldApr: 8.4,
       harvestApr: 8.37,
     });

@@ -18,9 +18,7 @@ export async function updateVaultHarvests() {
           const { name, protocol, lastHarvestIndexedBlock } = vault;
           const vaultId = [protocol, name].join(' ');
 
-          console.time(`${vault.address}`);
           const yieldEvents = await loadYieldEvents(chain, vault, lastHarvestIndexedBlock);
-          console.timeEnd(`${vault.address}`);
 
           if (yieldEvents.length === 0) {
             vault.lastHarvestIndexedBlock = Math.min(

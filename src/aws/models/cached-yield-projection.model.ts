@@ -1,6 +1,6 @@
 import { embed } from '@aws/dynamodb-data-mapper';
 import { attribute, hashKey, table } from '@aws/dynamodb-data-mapper-annotations';
-import { VaultYieldProjection } from '@badger-dao/sdk';
+import { Network, VaultYieldProjection } from '@badger-dao/sdk';
 
 import { YIELD_PROJECTIONS_DATA } from '../../config/constants';
 import { CachedTokenRate } from './cached-token-rate.interface';
@@ -10,6 +10,12 @@ import { CachedYieldSource } from './cached-yield-source.interface';
 export class CachedYieldProjection implements VaultYieldProjection {
   @hashKey()
   id!: string;
+
+  @attribute()
+  chain!: Network;
+
+  @attribute()
+  vault!: string;
 
   @attribute()
   harvestValue!: number;
