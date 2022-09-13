@@ -84,7 +84,7 @@ export async function constructVaultDefinition(
 
   try {
     const existingDefinition = await chain.vaults.getVault(vault.address);
-    if (existingDefinition.lastHarvestIndexedBlock > createdAtBlock) {
+    if (existingDefinition.lastHarvestIndexedBlock && existingDefinition.lastHarvestIndexedBlock > createdAtBlock) {
       lastHarvestIndexedBlock = existingDefinition.lastHarvestIndexedBlock;
     }
   } catch {} // ignore errors for vaults who do not exist
