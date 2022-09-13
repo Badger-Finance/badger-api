@@ -30,10 +30,24 @@ import * as yieldsUtils from './yields.utils';
 
 describe('vaults.utils', () => {
   let chain: Chain;
+  let defaultExpectedMock: YieldEstimate;
 
   beforeEach(() => {
     chain = setupMockChain();
     jest.spyOn(console, 'error').mockImplementation(jest.fn);
+    defaultExpectedMock = {
+      id: dynamoDbUtils.getVaultEntityId({ network: chain.network }, MOCK_VAULT_DEFINITION),
+      chain: chain.network,
+      vault: MOCK_VAULT_DEFINITION.address,
+      yieldTokens: [],
+      harvestTokens: [],
+      lastHarvestedAt: 0,
+      previousYieldTokens: [],
+      previousHarvestTokens: [],
+      lastMeasuredAt: 0,
+      duration: 0,
+      lastReportedAt: 0,
+    };
   });
 
   describe('defaultVault', () => {
@@ -269,20 +283,6 @@ describe('vaults.utils', () => {
   });
 
   describe('queryYieldEstimate', () => {
-    const defaultExpectedMock: YieldEstimate = {
-      id: dynamoDbUtils.getVaultEntityId({ network: chain.network }, MOCK_VAULT_DEFINITION),
-      chain: chain.network,
-      vault: MOCK_VAULT_DEFINITION.address,
-      yieldTokens: [],
-      harvestTokens: [],
-      lastHarvestedAt: 0,
-      previousYieldTokens: [],
-      previousHarvestTokens: [],
-      lastMeasuredAt: 0,
-      duration: 0,
-      lastReportedAt: 0,
-    };
-
     describe('encounters an error', () => {
       it('returns the default projection', async () => {
         jest.spyOn(dynamoDbUtils, 'getDataMapper').mockImplementationOnce(() => {

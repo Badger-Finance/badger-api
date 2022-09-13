@@ -37,7 +37,7 @@ export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefini
     queryPrice(vaultDefinition.depositToken),
     getStrategyInfo(chain, vaultDefinition),
     sdk.rewards.getBoostWeight(vaultDefinition.address),
-    VaultsService.loadVaultV2(chain, vaultDefinition),
+    VaultsService.loadVaultV3(chain, vaultDefinition),
   ]);
 
   const value = balance * tokenPriceData.price;
@@ -57,7 +57,8 @@ export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefini
     available,
     strategy: strategyInfo,
     boostWeight: boostWeight.toNumber(),
-    apr: cachedVault.apr,
+    apr: cachedVault.apr.baseYield,
+    grossApr: cachedVault.apr.grossYield,
     yieldApr: yieldPeriodApr + nonHarvestApr,
     harvestApr: harvestPeriodApr + nonHarvestApr,
   };
