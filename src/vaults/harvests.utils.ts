@@ -167,7 +167,7 @@ async function evaluateYieldItems(
   for (let i = 0; i < eventTimestamps.length; i++) {
     const currentTimestamp = eventTimestamps[i];
 
-    let duration = (currentTimestamp - previousTimestamp) * 1000;
+    const duration = (currentTimestamp - previousTimestamp) * 1000;
     const timestampYieldItems = eventsByTimestamp.get(currentTimestamp);
     if (timestampYieldItems) {
       for (const item of timestampYieldItems) {
@@ -188,9 +188,10 @@ async function evaluateYieldItems(
         const strategyInfo = await getStrategyInfo(chain, vault, { blockTag: item.block });
         const performanceScalar = 1 / (1 - strategyInfo.performanceFee / 10_000);
 
+        let eventDuration = duration;
         if (isInfluence && isIncentiveDistribution(vault, item)) {
           // TODO: codify this into influence configs or smth
-          duration = 14 * ONE_DAY_MS;
+          eventDuration = 14 * ONE_DAY_MS;
         } else if (currentTimestamp !== previousTimestamp) {
           previousTimestamp = currentTimestamp;
         }
@@ -200,7 +201,7 @@ async function evaluateYieldItems(
           block,
           timestamp: item.timestamp * 1000,
           amount,
-          duration,
+          duration: eventDuration,
           token: token.address,
           type: item.type,
           value: vaultPrincipal,

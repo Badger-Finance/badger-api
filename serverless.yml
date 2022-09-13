@@ -475,7 +475,25 @@ functions:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-apy-snapshots
           description: 'index data for vault yields'
-          rate: rate(30 minutes)
+          rate: rate(15 minutes)
+
+  index-vault-definitions:
+    handler: src/indexers/vault-definition-indexer.captureVaultData
+    timeout: 150
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-vault-definition
+          description: 'index definitions for supported vaults'
+          rate: rate(10 minutes)
+
+  index-vault-yield-events:
+    handler: src/indexers/vault-harvests-indexer.updateVaultHarvests
+    timeout: 900
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-vault-harvests
+          description: 'index onchain harvests for all vaults'
+          rate: rate(20 minutes)
 
   index-prices:
     handler: src/indexers/prices-indexer.indexPrices
@@ -495,15 +513,6 @@ functions:
           description: 'index data for supported vaults'
           rate: rate(5 minutes)
 
-  index-vault-definitions:
-    handler: src/indexers/vault-definition-indexer.captureVaultData
-    timeout: 150
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-vault-definition
-          description: 'index definitions for supported vaults'
-          rate: rate(15 minutes)
-
   index-yield-estimates:
     handler: src/indexers/yield-estimates-indexer.refreshYieldEstimates
     timeout: 150
@@ -512,15 +521,6 @@ functions:
           name: ${self:service}-${self:custom.stage}-index-yield-estimates
           description: 'index yield estimate data for supported vaults'
           rate: rate(30 minutes)
-
-  index-vault-yield-events:
-    handler: src/indexers/vault-harvests-indexer.updateVaultHarvests
-    timeout: 900
-    events:
-      - schedule:
-          name: ${self:service}-${self:custom.stage}-index-vault-harvests
-          description: 'index onchain harvests for all vaults'
-          rate: rate(20 minutes)
 
   index-leaderboard:
     handler: src/indexers/leaderboard-indexer.indexBoostLeaderBoard
