@@ -16,6 +16,7 @@ export async function captureVaultData() {
     const developmentVaults = await sdk.registry.getDevelopmentVaults();
 
     if (productionVaults.length === 0) {
+      console.warn(`Found no vaults for ${chain.network}`);
       continue;
     }
 

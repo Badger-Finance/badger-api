@@ -62,7 +62,7 @@ describe('vault-definition-indexer', () => {
           return <RegistryVault>vault;
         }
         return <RegistryVault>mockVaults[0];
-      })
+      });
 
       await setupMockChain();
 
@@ -104,7 +104,7 @@ describe('vault-definition-indexer', () => {
       const savedProductionValues = [];
       const savedVaults = [registryVaults[0], registryVaults[1], registryVaults[2]];
 
-      jest.spyOn(VaultsService.prototype, 'loadVaults').mockImplementation(async function () {
+      jest.spyOn(RegistryService.prototype, 'getProductionVaults').mockImplementation(async function () {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         if ((<BadgerSDK>this).config.network != 'ethereum') {
@@ -112,6 +112,7 @@ describe('vault-definition-indexer', () => {
         }
         return <RegistryVault[]>registryVaults.filter((v) => !savedVaults.map((v) => v.address).includes(v.address));
       });
+      jest.spyOn(RegistryService.prototype, 'getDevelopmentVaults').mockImplementation(async () => []);
 
       mockQuery<typeof VaultsCompoundMock[0], VaultDefinitionModel>(VaultsCompoundMock, (_, keyCondition) => {
         return (items) => {
