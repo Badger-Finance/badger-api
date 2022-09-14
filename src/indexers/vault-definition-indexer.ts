@@ -12,18 +12,26 @@ export async function captureVaultData() {
   for (const chain of chains) {
     const sdk = await chain.getSdk();
 
-    const registryVaults = await sdk.vaults.loadVaults();
+    const productionVaults = await sdk.registry.getProductionVaults();
+    const developmentVaults = await sdk.registry.getDevelopmentVaults();
 
-    if (registryVaults.length === 0) {
-      console.warn(`No vaults found for chain: ${chain.network}`);
+    if (productionVaults.length === 0) {
+      console.warn(`Found no vaults for ${chain.network}`);
       continue;
     }
 
+    const allRegistryVaults = [...productionVaults, ...developmentVaults];
+
     // update vaults from chain
-    await Promise.all(registryVaults.map(async (vault) => updateVaultDefinition(chain, vault)));
+    await Promise.all(
+      allRegistryVaults.map(async (vault) => {
+        const fullVaultData = await sdk.vaults.loadVault({ address: vault.address });
+        return updateVaultDefinition(chain, fullVaultData);
+      }),
+    );
 
     // update isProduction status, for vaults that were already saved in ddb
-    const prdVaultsAddrs = registryVaults
+    const productionVaultAddresses = productionVaults
       .map((v) => {
         try {
           return ethers.utils.getAddress(v.address);
@@ -41,11 +49,11 @@ export async function captureVaultData() {
     );
 
     try {
-      for await (const compoundVault of query) {
-        if (!prdVaultsAddrs.includes(compoundVault.address)) {
+      for await (const cachedVaultDefinition of query) {
+        if (!productionVaultAddresses.includes(cachedVaultDefinition.address)) {
           // mark this vault as not a prod one, mb just delete it, not sure
-          compoundVault.isProduction = 0;
-          await mapper.put(compoundVault);
+          cachedVaultDefinition.isProduction = 0;
+          await mapper.put(cachedVaultDefinition);
         }
       }
     } catch (e) {
@@ -56,10 +64,10 @@ export async function captureVaultData() {
   return 'done';
 }
 
-async function updateVaultDefinition(chain: Chain, vault: RegistryVault) {
+async function updateVaultDefinition(chain: Chain, vault: RegistryVault, isProduction = true) {
   let compoundVault;
   try {
-    compoundVault = await constructVaultDefinition(chain, vault);
+    compoundVault = await constructVaultDefinition(chain, vault, isProduction);
     if (compoundVault) {
       const mapper = getDataMapper();
       await mapper.put(compoundVault);

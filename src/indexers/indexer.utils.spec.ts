@@ -91,13 +91,13 @@ describe('indexer.utils', () => {
     });
 
     it('should construct vault definition', async () => {
-      expect(await constructVaultDefinition(testChain, <RegistryVault>registryVaults[0])).toMatchSnapshot();
+      expect(await constructVaultDefinition(testChain, <RegistryVault>registryVaults[0], true)).toMatchSnapshot();
     });
 
     it('should return null if no data on the Graph', async () => {
       jest.spyOn(BadgerGraph.prototype, 'loadSett').mockImplementation(async () => ({ sett: null }));
 
-      expect(await constructVaultDefinition(testChain, <RegistryVault>registryVaults[1])).toBeNull();
+      expect(await constructVaultDefinition(testChain, <RegistryVault>registryVaults[1], true)).toBeNull();
     });
   });
 });
