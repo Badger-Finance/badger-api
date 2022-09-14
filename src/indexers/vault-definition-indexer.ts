@@ -15,8 +15,6 @@ export async function captureVaultData() {
     const productionVaults = await sdk.registry.getProductionVaults();
     const developmentVaults = await sdk.registry.getDevelopmentVaults();
 
-    console.log({ productionVaults, developmentVaults });
-
     if (productionVaults.length === 0) {
       continue;
     }

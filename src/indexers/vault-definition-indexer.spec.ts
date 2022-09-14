@@ -11,6 +11,7 @@ import * as gqlGenT from '@badger-dao/sdk/lib/graphql/generated/badger';
 import graphVaults from '@badger-dao/sdk-mocks/generated/ethereum/graph/loadSetts.json';
 import developmentVaults from '@badger-dao/sdk-mocks/generated/ethereum/registry/getDevelopmentVaults.json';
 import registryVaults from '@badger-dao/sdk-mocks/generated/ethereum/registry/getProductionVaults.json';
+import mockVaults from '@badger-dao/sdk-mocks/generated/ethereum/vaults/loadVaults.json';
 
 import VaultsCompoundMock from '../../seed/vault-definition.json';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
@@ -55,6 +56,13 @@ describe('vault-definition-indexer', () => {
 
         return { sett: <gqlGenT.SettQuery['sett']>graphVault, __typename: 'Query' };
       });
+      jest.spyOn(VaultsService.prototype, 'loadVault').mockImplementation(async (v) => {
+        const vault = mockVaults.find((vault) => vault.address === v.address);
+        if (vault) {
+          return <RegistryVault>vault;
+        }
+        return <RegistryVault>mockVaults[0];
+      })
 
       await setupMockChain();
 
@@ -65,11 +73,12 @@ describe('vault-definition-indexer', () => {
       await captureVaultData();
 
       // TODO: remove magic numbers - let's tie this back somewhere waaaaaa
-      expect(put.mock.calls.length).toBe(36);
+      expect(put.mock.calls.length).toBe(38);
     });
 
     it('should skip, and warn if no vault was fetched from registry', async () => {
-      jest.spyOn(VaultsService.prototype, 'loadVaults').mockImplementation(async () => []);
+      jest.spyOn(RegistryService.prototype, 'getProductionVaults').mockImplementation(async () => []);
+      jest.spyOn(RegistryService.prototype, 'getDevelopmentVaults').mockImplementation(async () => []);
 
       const consoleWarnMock = jest.spyOn(console, 'warn').mockImplementation();
 
@@ -87,7 +96,7 @@ describe('vault-definition-indexer', () => {
       await captureVaultData();
 
       // TODO: remove magic numbers - let's tie this back somewhere
-      expect(consoleWarnMock.mock.calls.length).toBe(36);
+      expect(consoleWarnMock.mock.calls.length).toBe(38);
       expect(put.mock.calls.length).toBe(0);
     });
 
