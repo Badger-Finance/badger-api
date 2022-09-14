@@ -20,15 +20,11 @@ export async function captureVaultData() {
       continue;
     }
 
+    const allRegistryVaults = [...productionVaults, ...developmentVaults];
+
     // update vaults from chain
     await Promise.all(
-      productionVaults.map(async (vault) => {
-        const fullVaultData = await sdk.vaults.loadVault({ address: vault.address });
-        return updateVaultDefinition(chain, fullVaultData);
-      }),
-    );
-    await Promise.all(
-      developmentVaults.map(async (vault) => {
+      allRegistryVaults.map(async (vault) => {
         const fullVaultData = await sdk.vaults.loadVault({ address: vault.address });
         return updateVaultDefinition(chain, fullVaultData);
       }),
