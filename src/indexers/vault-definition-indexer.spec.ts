@@ -1,8 +1,16 @@
 import { DataMapper, PutParameters, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
-import { BadgerGraph, BadgerSDK, RegistryVault, VaultsService } from '@badger-dao/sdk';
+import {
+  BadgerGraph,
+  BadgerSDK,
+  RegistryService,
+  RegistryVault,
+  VaultRegistryEntry,
+  VaultsService,
+} from '@badger-dao/sdk';
 import * as gqlGenT from '@badger-dao/sdk/lib/graphql/generated/badger';
 import graphVaults from '@badger-dao/sdk-mocks/generated/ethereum/graph/loadSetts.json';
-import registryVaults from '@badger-dao/sdk-mocks/generated/ethereum/vaults/loadVaults.json';
+import developmentVaults from '@badger-dao/sdk-mocks/generated/ethereum/registry/getDevelopmentVaults.json';
+import registryVaults from '@badger-dao/sdk-mocks/generated/ethereum/registry/getProductionVaults.json';
 
 import VaultsCompoundMock from '../../seed/vault-definition.json';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
@@ -22,16 +30,28 @@ describe('vault-definition-indexer', () => {
 
       mockQuery([]);
 
-      jest.spyOn(VaultsService.prototype, 'loadVaults').mockImplementation(async function () {
+      jest.spyOn(RegistryService.prototype, 'getProductionVaults').mockImplementation(async function () {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        if ((<BadgerSDK>this).config.network != 'ethereum') return [];
-        return <RegistryVault[]>registryVaults;
+        if ((<BadgerSDK>this).config.network != 'ethereum') {
+          return [];
+        }
+        return <VaultRegistryEntry[]>registryVaults;
+      });
+      jest.spyOn(RegistryService.prototype, 'getDevelopmentVaults').mockImplementation(async function () {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        if ((<BadgerSDK>this).config.network != 'ethereum') {
+          return [];
+        }
+        return <VaultRegistryEntry[]>developmentVaults;
       });
       jest.spyOn(BadgerGraph.prototype, 'loadSett').mockImplementation(async ({ id }) => {
         const graphVault = graphVaults.setts.find((v) => v.id === id);
 
-        if (!graphVault) return { sett: null };
+        if (!graphVault) {
+          return { sett: null };
+        }
 
         return { sett: <gqlGenT.SettQuery['sett']>graphVault, __typename: 'Query' };
       });
@@ -78,7 +98,9 @@ describe('vault-definition-indexer', () => {
       jest.spyOn(VaultsService.prototype, 'loadVaults').mockImplementation(async function () {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        if ((<BadgerSDK>this).config.network != 'ethereum') return [];
+        if ((<BadgerSDK>this).config.network != 'ethereum') {
+          return [];
+        }
         return <RegistryVault[]>registryVaults.filter((v) => !savedVaults.map((v) => v.address).includes(v.address));
       });
 
