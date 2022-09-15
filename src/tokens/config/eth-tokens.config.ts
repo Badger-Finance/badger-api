@@ -22,6 +22,14 @@ export const ethTokensConfig: TokenConfig = {
     lookupName: 'renbtc',
     type: PricingType.LookupName,
   },
+  [TOKENS.RETH]: {
+    lookupName: 'rocket-pool-eth',
+    type: PricingType.LookupName,
+  },
+  [TOKENS.WSTETH]: {
+    lookupName: 'wrapped-steth',
+    type: PricingType.LookupName,
+  },
   [TOKENS.CRV_RENBTC]: {
     type: PricingType.CurveLP,
   },
