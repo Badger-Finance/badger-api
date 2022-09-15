@@ -1,8 +1,17 @@
 import { DataMapper, PutParameters, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
-import { BadgerGraph, BadgerSDK, RegistryVault, VaultsService } from '@badger-dao/sdk';
+import {
+  BadgerGraph,
+  BadgerSDK,
+  RegistryService,
+  RegistryVault,
+  VaultRegistryEntry,
+  VaultsService,
+} from '@badger-dao/sdk';
 import * as gqlGenT from '@badger-dao/sdk/lib/graphql/generated/badger';
 import graphVaults from '@badger-dao/sdk-mocks/generated/ethereum/graph/loadSetts.json';
-import registryVaults from '@badger-dao/sdk-mocks/generated/ethereum/vaults/loadVaults.json';
+import developmentVaults from '@badger-dao/sdk-mocks/generated/ethereum/registry/getDevelopmentVaults.json';
+import registryVaults from '@badger-dao/sdk-mocks/generated/ethereum/registry/getProductionVaults.json';
+import mockVaults from '@badger-dao/sdk-mocks/generated/ethereum/vaults/loadVaults.json';
 
 import VaultsCompoundMock from '../../seed/vault-definition.json';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
@@ -19,21 +28,41 @@ describe('vault-definition-indexer', () => {
       jest.spyOn(Date, 'now').mockImplementation(() => TEST_CURRENT_TIMESTAMP);
       jest.spyOn(console, 'error').mockImplementation();
       jest.spyOn(console, 'warn').mockImplementation();
+      jest.spyOn(RegistryService.prototype, 'hasRegistry').mockImplementation(() => true);
 
       mockQuery([]);
 
-      jest.spyOn(VaultsService.prototype, 'loadVaults').mockImplementation(async function () {
+      jest.spyOn(RegistryService.prototype, 'getProductionVaults').mockImplementation(async function () {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        if ((<BadgerSDK>this).config.network != 'ethereum') return [];
-        return <RegistryVault[]>registryVaults;
+        if ((<BadgerSDK>this).config.network != 'ethereum') {
+          return [];
+        }
+        return <VaultRegistryEntry[]>registryVaults;
+      });
+      jest.spyOn(RegistryService.prototype, 'getDevelopmentVaults').mockImplementation(async function () {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        if ((<BadgerSDK>this).config.network != 'ethereum') {
+          return [];
+        }
+        return <VaultRegistryEntry[]>developmentVaults;
       });
       jest.spyOn(BadgerGraph.prototype, 'loadSett').mockImplementation(async ({ id }) => {
         const graphVault = graphVaults.setts.find((v) => v.id === id);
 
-        if (!graphVault) return { sett: null };
+        if (!graphVault) {
+          return { sett: null };
+        }
 
         return { sett: <gqlGenT.SettQuery['sett']>graphVault, __typename: 'Query' };
+      });
+      jest.spyOn(VaultsService.prototype, 'loadVault').mockImplementation(async (v) => {
+        const vault = mockVaults.find((vault) => vault.address === v.address);
+        if (vault) {
+          return <RegistryVault>vault;
+        }
+        return <RegistryVault>mockVaults[0];
       });
 
       await setupMockChain();
@@ -45,11 +74,12 @@ describe('vault-definition-indexer', () => {
       await captureVaultData();
 
       // TODO: remove magic numbers - let's tie this back somewhere waaaaaa
-      expect(put.mock.calls.length).toBe(36);
+      expect(put.mock.calls.length).toBe(38);
     });
 
     it('should skip, and warn if no vault was fetched from registry', async () => {
-      jest.spyOn(VaultsService.prototype, 'loadVaults').mockImplementation(async () => []);
+      jest.spyOn(RegistryService.prototype, 'getProductionVaults').mockImplementation(async () => []);
+      jest.spyOn(RegistryService.prototype, 'getDevelopmentVaults').mockImplementation(async () => []);
 
       const consoleWarnMock = jest.spyOn(console, 'warn').mockImplementation();
 
@@ -67,7 +97,7 @@ describe('vault-definition-indexer', () => {
       await captureVaultData();
 
       // TODO: remove magic numbers - let's tie this back somewhere
-      expect(consoleWarnMock.mock.calls.length).toBe(36);
+      expect(consoleWarnMock.mock.calls.length).toBe(38);
       expect(put.mock.calls.length).toBe(0);
     });
 
@@ -75,12 +105,15 @@ describe('vault-definition-indexer', () => {
       const savedProductionValues = [];
       const savedVaults = [registryVaults[0], registryVaults[1], registryVaults[2]];
 
-      jest.spyOn(VaultsService.prototype, 'loadVaults').mockImplementation(async function () {
+      jest.spyOn(RegistryService.prototype, 'getProductionVaults').mockImplementation(async function () {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        if ((<BadgerSDK>this).config.network != 'ethereum') return [];
+        if ((<BadgerSDK>this).config.network != 'ethereum') {
+          return [];
+        }
         return <RegistryVault[]>registryVaults.filter((v) => !savedVaults.map((v) => v.address).includes(v.address));
       });
+      jest.spyOn(RegistryService.prototype, 'getDevelopmentVaults').mockImplementation(async () => []);
 
       mockQuery<typeof VaultsCompoundMock[0], VaultDefinitionModel>(VaultsCompoundMock, (_, keyCondition) => {
         return (items) => {

@@ -1,3 +1,4 @@
+import { QueryIterator } from '@aws/dynamodb-data-mapper';
 import { Network, ONE_MINUTE_MS } from '@badger-dao/sdk';
 import { NotFound } from '@tsed/exceptions';
 import { ethers } from 'ethers';
@@ -48,23 +49,35 @@ export class ChainVaults {
         { chain: this.network, isProduction: 1 },
         { indexName: 'IndexVaultCompoundDataChainIsProd' },
       );
+      await this.#updateFromQuery(query);
 
-      try {
-        for await (const vault of query) {
-          const index = this.cachedVaults.findIndex((v) => v.address === vault.address);
-          if (index >= 0) {
-            this.cachedVaults[index] = vault;
-          } else {
-            if (vault.stage === Stage.Production || vault.stage === STAGE) {
-              this.cachedVaults.push(vault);
-            }
-          }
-        }
-      } catch (e) {
-        console.error(`Failed to update cached vaults for ${this.network} network. ${e}`);
+      if (STAGE === Stage.Staging) {
+        const developmentQuery = mapper.query(
+          VaultDefinitionModel,
+          { chain: this.network, isProduction: 0 },
+          { indexName: 'IndexVaultCompoundDataChainIsProd' },
+        );
+        await this.#updateFromQuery(developmentQuery);
       }
 
       this.updatedAt = Date.now();
+    }
+  }
+
+  async #updateFromQuery(query: QueryIterator<VaultDefinitionModel>) {
+    try {
+      for await (const vault of query) {
+        const index = this.cachedVaults.findIndex((v) => v.address === vault.address);
+        if (index >= 0) {
+          this.cachedVaults[index] = vault;
+        } else {
+          if (vault.stage === Stage.Production || vault.stage === STAGE) {
+            this.cachedVaults.push(vault);
+          }
+        }
+      }
+    } catch (e) {
+      console.error(`Failed to update cached vaults for ${this.network} network. ${e}`);
     }
   }
 }

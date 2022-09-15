@@ -32,8 +32,8 @@ Array [
     "apr": 8.26,
     "apy": 12.39,
     "asset": "BADGER",
-    "available": 93.04307958110472,
-    "balance": 160912.73437961238,
+    "available": 23.49448708126997,
+    "balance": 48405.45345505732,
     "behavior": "Compounder",
     "boost": Object {
       "enabled": false,
@@ -46,7 +46,7 @@ Array [
     "minApr": 8.26,
     "minApy": 12.39,
     "name": "Badger",
-    "pricePerFullShare": 1,
+    "pricePerFullShare": 1.0407227909820436,
     "protocol": "Badger",
     "sources": Array [
       Object {
@@ -89,11 +89,11 @@ Array [
     ],
     "state": "open",
     "strategy": Object {
-      "address": "0x98Ca7AFa876f0e15494E76E92C5b3658cdE1Ffe1",
+      "address": "0x32BdF2B35Bbf8dAca3561C3ADE59c941488E9c69",
       "aumFee": 0,
-      "performanceFee": 0,
+      "performanceFee": 1000,
       "strategistFee": 0,
-      "withdrawFee": 10,
+      "withdrawFee": 0,
     },
     "tokens": Array [
       Object {
@@ -107,7 +107,7 @@ Array [
     ],
     "type": "native",
     "underlyingToken": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
-    "value": 1116121.18,
+    "value": 836910.63,
     "vaultAsset": "bBADGER",
     "vaultToken": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
     "version": "v1",
@@ -258,8 +258,8 @@ Array [
     "apr": 8.26,
     "apy": 12.39,
     "asset": "BADGER",
-    "available": 93.04307958110472,
-    "balance": 160912.73437961238,
+    "available": 23.49448708126997,
+    "balance": 48405.45345505732,
     "behavior": "Compounder",
     "boost": Object {
       "enabled": false,
@@ -272,7 +272,7 @@ Array [
     "minApr": 8.26,
     "minApy": 12.39,
     "name": "Badger",
-    "pricePerFullShare": 1,
+    "pricePerFullShare": 1.0407227909820436,
     "protocol": "Badger",
     "sources": Array [
       Object {
@@ -315,11 +315,11 @@ Array [
     ],
     "state": "open",
     "strategy": Object {
-      "address": "0x98Ca7AFa876f0e15494E76E92C5b3658cdE1Ffe1",
+      "address": "0x32BdF2B35Bbf8dAca3561C3ADE59c941488E9c69",
       "aumFee": 0,
-      "performanceFee": 0,
+      "performanceFee": 1000,
       "strategistFee": 0,
-      "withdrawFee": 10,
+      "withdrawFee": 0,
     },
     "tokens": Array [
       Object {
@@ -333,7 +333,7 @@ Array [
     ],
     "type": "native",
     "underlyingToken": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
-    "value": 1116121.18,
+    "value": 836910.63,
     "vaultAsset": "bBADGER",
     "vaultToken": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
     "version": "v1",
@@ -493,8 +493,8 @@ Array [
     "apr": 8.26,
     "apy": 12.39,
     "asset": "BADGER",
-    "available": 93.04307958110472,
-    "balance": 160912.73437961238,
+    "available": 23.49448708126997,
+    "balance": 48405.45345505732,
     "behavior": "Compounder",
     "boost": Object {
       "enabled": false,
@@ -507,7 +507,7 @@ Array [
     "minApr": 8.26,
     "minApy": 12.39,
     "name": "Badger",
-    "pricePerFullShare": 1,
+    "pricePerFullShare": 1.0407227909820436,
     "protocol": "Badger",
     "sources": Array [
       Object {
@@ -550,11 +550,11 @@ Array [
     ],
     "state": "open",
     "strategy": Object {
-      "address": "0x98Ca7AFa876f0e15494E76E92C5b3658cdE1Ffe1",
+      "address": "0x32BdF2B35Bbf8dAca3561C3ADE59c941488E9c69",
       "aumFee": 0,
-      "performanceFee": 0,
+      "performanceFee": 1000,
       "strategistFee": 0,
-      "withdrawFee": 10,
+      "withdrawFee": 0,
     },
     "tokens": Array [
       Object {
@@ -568,7 +568,7 @@ Array [
     ],
     "type": "native",
     "underlyingToken": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
-    "value": 1116121.18,
+    "value": 836910.63,
     "vaultAsset": "bBADGER",
     "vaultToken": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
     "version": "v1",

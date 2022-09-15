@@ -32,7 +32,7 @@ export async function getVaultsDefinitionSeedData(): Promise<VaultDefinitionMode
       registryVaults.map(async (vault) => {
         let compoundVault;
         try {
-          compoundVault = await constructVaultDefinition(chain, vault);
+          compoundVault = await constructVaultDefinition(chain, vault, true);
           if (compoundVault) seedVaults.push(compoundVault);
         } catch (err) {
           console.error({ err, vault: vault.name });

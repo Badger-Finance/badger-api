@@ -21,9 +21,7 @@ describe('charts.controller', () => {
     describe('with a missing vault address', () => {
       it('returns 400, QueryParamError', async () => {
         const { statusCode } = await PlatformServerlessTest.request.get('/v3/charts/vault').query({ address: '' });
-        // TODO: inspect whats going on here with responses
         expect(statusCode).toEqual(NetworkStatus.NotFound);
-        // expect(JSON.parse(body)).toMatchSnapshot();
       });
     });
 
