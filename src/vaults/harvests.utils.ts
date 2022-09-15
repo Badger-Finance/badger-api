@@ -147,6 +147,8 @@ async function evaluateYieldItems(
   vault: VaultDefinitionModel,
   yieldItems: VaultYieldItem[],
 ): Promise<YieldEvent[]> {
+  // dates return from the chain or graph are in seconds, and persisted in ms - convert here!
+  yieldItems.forEach((i) => (i.timestamp *= 1000));
   const eventsByTimestamp = keyBy(yieldItems, (i) => i.timestamp);
   const eventTimestamps = Array.from(new Set(yieldItems.map((i) => i.timestamp))).sort((a, b) => a - b);
 
@@ -167,7 +169,7 @@ async function evaluateYieldItems(
   for (let i = 0; i < eventTimestamps.length; i++) {
     const currentTimestamp = eventTimestamps[i];
 
-    const duration = (currentTimestamp - previousTimestamp) * 1000;
+    const duration = currentTimestamp - previousTimestamp;
     const timestampYieldItems = eventsByTimestamp.get(currentTimestamp);
     if (timestampYieldItems) {
       for (const item of timestampYieldItems) {
@@ -199,7 +201,7 @@ async function evaluateYieldItems(
         const eventApr = calculateYield(vaultPrincipal, tokenEarned, eventDuration);
         const yieldEvent: YieldEvent = {
           block,
-          timestamp: item.timestamp * 1000,
+          timestamp: item.timestamp,
           amount,
           duration: eventDuration,
           token: token.address,
@@ -311,6 +313,7 @@ export async function loadYieldEvents(
     data = await loadGraphYieldData(chain, vault, cutoff);
   } catch (err) {
     if (isInfluenceVault(vault.address)) {
+      console.error(err);
       throw new Error(`Unable to load ${vault.name} yield events from TheGraph`);
     } else {
       data = await loadEventYieldData(chain, vault, lastHarvestBlock, cutoff);
@@ -359,7 +362,7 @@ export async function queryVaultPreviousYieldEvents(
   for await (const yieldEvent of mapper.query(
     VaultYieldEvent,
     { chainAddress, timestamp: lessThan(timestamp) },
-    { indexName: 'IndexYieldDataOnAddress', limit: 1 },
+    { indexName: 'IndexYieldDataOnAddress', limit: 1, scanIndexForward: false },
   )) {
     return yieldEvent;
   }
