@@ -196,7 +196,7 @@ async function evaluateYieldItems(
           previousTimestamp = currentTimestamp;
         }
 
-        const eventApr = calculateYield(vaultPrincipal, tokenEarned, duration);
+        const eventApr = calculateYield(vaultPrincipal, tokenEarned, eventDuration);
         const yieldEvent: YieldEvent = {
           block,
           timestamp: item.timestamp * 1000,
@@ -356,11 +356,10 @@ export async function queryVaultPreviousYieldEvents(
 ): Promise<Nullable<VaultYieldEvent>> {
   const mapper = getDataMapper();
   const chainAddress = getVaultEntityId(chain, vault);
-
   for await (const yieldEvent of mapper.query(
     VaultYieldEvent,
     { chainAddress, timestamp: lessThan(timestamp) },
-    { indexName: 'IndexYieldDataOnAddress', scanIndexForward: false, limit: 1 },
+    { indexName: 'IndexYieldDataOnAddress', limit: 1 },
   )) {
     return yieldEvent;
   }
