@@ -28,6 +28,7 @@ describe('vault-definition-indexer', () => {
       jest.spyOn(Date, 'now').mockImplementation(() => TEST_CURRENT_TIMESTAMP);
       jest.spyOn(console, 'error').mockImplementation();
       jest.spyOn(console, 'warn').mockImplementation();
+      jest.spyOn(RegistryService.prototype, 'hasRegistry').mockImplementation(() => true);
 
       mockQuery([]);
 

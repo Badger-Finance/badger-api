@@ -438,6 +438,7 @@ async function evaluateYieldEvents(chain: Chain, vault: VaultDefinitionModel): P
       tokenEmissionAprs,
     };
   }
+
   const relevantYieldEvents = filterPerformanceItems(vault, yieldEvents).sort((a, b) => a.timestamp - b.timestamp);
   const start = relevantYieldEvents[0].timestamp - relevantYieldEvents[0].duration;
   const measuredDuration = relevantYieldEvents[relevantYieldEvents.length - 1].timestamp - start;

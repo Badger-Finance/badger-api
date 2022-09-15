@@ -12,6 +12,10 @@ export async function captureVaultData() {
   for (const chain of chains) {
     const sdk = await chain.getSdk();
 
+    if (!sdk.registry.hasRegistry()) {
+      continue;
+    }
+
     const productionVaults = await sdk.registry.getProductionVaults();
     const developmentVaults = await sdk.registry.getDevelopmentVaults();
 

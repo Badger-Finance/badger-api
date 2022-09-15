@@ -94,7 +94,7 @@ export async function constructVaultDefinition(
     id: getVaultEntityId(chain, vault),
     address,
     // can be null for old from registryV1, legacy issue
-    createdAt: !!createdAt ? Number(createdAt) : 0,
+    createdAt: !!createdAt ? Number(createdAt * 1000) : 0,
     chain: chain.network,
     isProduction: isProduction ? 1 : 0,
     version: vault.version as VaultVersion,
