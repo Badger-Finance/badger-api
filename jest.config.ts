@@ -11,6 +11,7 @@ const config: Config.InitialOptions = {
     '/enums/',
     'test',
     'patches',
+    'models',
   ],
   coverageThreshold: {
     global: {
