@@ -1,4 +1,5 @@
 import { ChartTimeFrame } from '@badger-dao/sdk';
+import { ethers } from 'ethers';
 
 import { getDataMapper, getVaultEntityId } from '../aws/dynamodb.utils';
 import { ChartDataBlob } from '../aws/models/chart-data-blob.model';
@@ -49,20 +50,14 @@ async function vaultHistoricDataRefetch() {
       continue;
     }
 
-    let cachedChart: ChartDataBlob<HistoricVaultSnapshotModel> | undefined;
     const vaultEntityId = getVaultEntityId(chain, vault);
 
     let strategyInfo: VaultStrategy | undefined;
 
-    try {
-      strategyInfo = await getStrategyInfo(chain, vault);
-    } catch (err) {
-      console.error(`Patch:VaultSnapshotRefetch - Failed to fetch strategyInfo: ${err}`);
-      continue;
-    }
-
     for (const timeframe of Object.values(ChartTimeFrame)) {
       const vaultChartDataKey = toChartDataKey(HistoricVaultSnapshotModel.NAMESPACE, vaultEntityId, timeframe);
+
+      let cachedChart: ChartDataBlob<HistoricVaultSnapshotModel> | undefined;
 
       try {
         const searchKey = Object.assign(new ChartDataBlob<HistoricVaultSnapshotModel>(), {
@@ -82,7 +77,18 @@ async function vaultHistoricDataRefetch() {
       if (!cachedChart) continue;
 
       for (const snapshot of cachedChart.data) {
-        if (!snapshot.strategy || (snapshot.strategy && snapshot.strategy.address.startsWith('0x0000'))) {
+        if (!snapshot.strategy || (snapshot.strategy && snapshot.strategy.address === ethers.constants.AddressZero)) {
+          try {
+            strategyInfo = await getStrategyInfo(chain, vault, { blockTag: snapshot.block });
+          } catch (err) {
+            console.error(`
+              Patch:VaultSnapshotRefetch - Failed to fetch strategyInfo
+              for vaultChartDataKey ${vaultChartDataKey}
+            ${err}`);
+
+            continue;
+          }
+
           snapshot.strategy = strategyInfo;
         }
       }
