@@ -22,6 +22,14 @@ export const ethTokensConfig: TokenConfig = {
     lookupName: 'renbtc',
     type: PricingType.LookupName,
   },
+  [TOKENS.RETH]: {
+    lookupName: 'rocket-pool-eth',
+    type: PricingType.LookupName,
+  },
+  [TOKENS.WSTETH]: {
+    lookupName: 'wrapped-steth',
+    type: PricingType.LookupName,
+  },
   [TOKENS.CRV_RENBTC]: {
     type: PricingType.CurveLP,
   },
@@ -231,6 +239,12 @@ export const ethTokensConfig: TokenConfig = {
     type: PricingType.BalancerLP,
   },
   [TOKENS.BPT_GRAV_DIGG_WBTC]: {
+    type: PricingType.BalancerLP,
+  },
+  [TOKENS.BPT_RETH_ETH]: {
+    type: PricingType.BalancerLP,
+  },
+  [TOKENS.BPT_WSTETH_ETH]: {
     type: PricingType.BalancerLP,
   },
   [TOKENS.BBADGER]: {
@@ -482,6 +496,20 @@ export const ethTokensConfig: TokenConfig = {
     type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.BPT_GRAV_DIGG_WBTC,
+      network: Network.Ethereum,
+    },
+  },
+  [TOKENS.BBPT_RETH_ETH]: {
+    type: PricingType.Vault,
+    vaultToken: {
+      address: TOKENS.BPT_RETH_ETH,
+      network: Network.Ethereum,
+    },
+  },
+  [TOKENS.BBPT_WSTETH_ETH]: {
+    type: PricingType.Vault,
+    vaultToken: {
+      address: TOKENS.BPT_WSTETH_ETH,
       network: Network.Ethereum,
     },
   },
