@@ -29,7 +29,7 @@ export async function captureVaultData() {
     // update vaults from chain
     await Promise.all(
       allRegistryVaults.map(async (vault) => {
-        const fullVaultData = await sdk.vaults.loadVault({ address: vault.address });
+        const fullVaultData = await sdk.vaults.loadVault({ address: vault.address, update: true });
         return updateVaultDefinition(chain, fullVaultData);
       }),
     );
