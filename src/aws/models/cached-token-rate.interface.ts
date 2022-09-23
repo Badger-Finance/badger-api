@@ -1,9 +1,25 @@
 import { attribute } from '@aws/dynamodb-data-mapper-annotations';
 import { TokenRate } from '@badger-dao/sdk';
 
-import { CachedTokenBalance } from './cached-token-balance.interface';
+export class CachedTokenRate implements TokenRate {
+  @attribute()
+  address!: string;
 
-export class CachedTokenRate extends CachedTokenBalance implements TokenRate {
+  @attribute()
+  name!: string;
+
+  @attribute()
+  symbol!: string;
+
+  @attribute()
+  decimals!: number;
+
+  @attribute()
+  balance!: number;
+
+  @attribute()
+  value!: number;
+
   @attribute()
   apr!: number;
 }
