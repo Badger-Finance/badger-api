@@ -1,5 +1,4 @@
 import { RegistryVault } from '@badger-dao/sdk';
-import { ethers } from 'ethers';
 
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
@@ -17,33 +16,24 @@ export async function captureVaultData() {
     }
 
     const productionVaults = await sdk.registry.getProductionVaults();
-    const developmentVaults = await sdk.registry.getDevelopmentVaults();
+    let developmentVaults = await sdk.registry.getDevelopmentVaults();
 
-    if (productionVaults.length === 0) {
+    const productionVaultAddresses = productionVaults.map((v) => v.address);
+    developmentVaults = developmentVaults.filter((v) => !productionVaultAddresses.includes(v.address));
+
+    const allRegistryVaults = [...productionVaults, ...developmentVaults];
+    if (allRegistryVaults.length === 0) {
       console.warn(`Found no vaults for ${chain.network}`);
       continue;
     }
 
-    const allRegistryVaults = [...productionVaults, ...developmentVaults];
-
     // update vaults from chain
     await Promise.all(
       allRegistryVaults.map(async (vault) => {
-        const fullVaultData = await sdk.vaults.loadVault({ address: vault.address });
+        const fullVaultData = await sdk.vaults.loadVault({ address: vault.address, update: true });
         return updateVaultDefinition(chain, fullVaultData);
       }),
     );
-
-    // update isProduction status, for vaults that were already saved in ddb
-    const productionVaultAddresses = productionVaults
-      .map((v) => {
-        try {
-          return ethers.utils.getAddress(v.address);
-        } catch (_) {
-          return null;
-        }
-      })
-      .filter((v) => v);
 
     const mapper = getDataMapper();
     const query = mapper.query(
@@ -69,12 +59,12 @@ export async function captureVaultData() {
 }
 
 async function updateVaultDefinition(chain: Chain, vault: RegistryVault, isProduction = true) {
-  let compoundVault;
+  let vaultDefinition;
   try {
-    compoundVault = await constructVaultDefinition(chain, vault, isProduction);
-    if (compoundVault) {
+    vaultDefinition = await constructVaultDefinition(chain, vault, isProduction);
+    if (vaultDefinition) {
       const mapper = getDataMapper();
-      await mapper.put(compoundVault);
+      await mapper.put(vaultDefinition);
     }
   } catch (err) {
     console.error({ err, vault: vault.name });
