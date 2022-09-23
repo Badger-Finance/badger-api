@@ -72,9 +72,9 @@ async function vaultHistoricDataRefetch() {
           ${e}
         `);
         cachedChart = undefined;
-      }
 
-      if (!cachedChart) continue;
+        continue;
+      }
 
       for (const snapshot of cachedChart.data) {
         if (!snapshot.strategy || (snapshot.strategy && snapshot.strategy.address === ethers.constants.AddressZero)) {
@@ -98,6 +98,8 @@ async function vaultHistoricDataRefetch() {
       } catch (err) {
         console.error(`Patch:VaultSnapshotRefetch - Failed to save 
         vault chart data for ${vaultChartDataKey}. ${err}`);
+
+        continue;
       }
 
       console.log(`Patch:VaultSnapshotRefetch - Chart ${cachedChart.id} updated.`);
