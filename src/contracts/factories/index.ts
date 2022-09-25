@@ -10,7 +10,5 @@ export { CvxLocker__factory } from "./CvxLocker__factory";
 export { SolidlyPair__factory } from "./SolidlyPair__factory";
 export { StablePhantomVault__factory } from "./StablePhantomVault__factory";
 export { StablePool__factory } from "./StablePool__factory";
-export { SwaprStaking__factory } from "./SwaprStaking__factory";
-export { SwaprStrategy__factory } from "./SwaprStrategy__factory";
 export { UniV2__factory } from "./UniV2__factory";
 export { WeightedPool__factory } from "./WeightedPool__factory";
