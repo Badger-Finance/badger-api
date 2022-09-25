@@ -11,7 +11,6 @@ import { TOKENS } from '../config/tokens.config';
 import { queryPrice } from '../prices/prices.utils';
 import { BalancerStrategy } from '../protocols/strategies/balancer.strategy';
 import { ConvexStrategy } from '../protocols/strategies/convex.strategy';
-import { OxDaoStrategy } from '../protocols/strategies/oxdao.strategy';
 import { SushiswapStrategy } from '../protocols/strategies/sushiswap.strategy';
 import { SwaprStrategy } from '../protocols/strategies/swapr.strategy';
 import { UniswapStrategy } from '../protocols/strategies/uniswap.strategy';
@@ -167,8 +166,6 @@ export async function getProtocolValueSources(
         return UniswapStrategy.getValueSources(vaultDefinition);
       case Protocol.Swapr:
         return SwaprStrategy.getValueSources(chain, vaultDefinition);
-      case Protocol.OxDAO:
-        return OxDaoStrategy.getValueSources(chain, vaultDefinition);
       case Protocol.Aura:
       case Protocol.Balancer:
         return BalancerStrategy.getValueSources(vaultDefinition);
