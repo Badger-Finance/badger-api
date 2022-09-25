@@ -1,5 +1,6 @@
 import { formatBalance, UniV2__factory } from '@badger-dao/sdk';
 import { NotFound, UnprocessableEntity } from '@tsed/exceptions';
+import { GraphQLClient } from 'graphql-request';
 
 import { getVaultEntityId } from '../../aws/dynamodb.utils';
 import { CachedYieldSource } from '../../aws/models/cached-yield-source.interface';
@@ -7,12 +8,14 @@ import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
 import { VaultTokenBalance } from '../../aws/models/vault-token-balance.model';
 import { Chain } from '../../chains/config/chain.config';
 import { UNISWAP_URL } from '../../config/constants';
+import { getSdk as getUniswapSdk, OrderDirection, PairDayData_OrderBy } from '../../graphql/generated/uniswap';
 import { TokenPrice } from '../../prices/interface/token-price.interface';
 import { queryPrice } from '../../prices/prices.utils';
+import { SourceType } from '../../rewards/enums/source-type.enum';
 import { getFullToken, getFullTokens, toBalance } from '../../tokens/tokens.utils';
 import { getCachedVault } from '../../vaults/vaults.utils';
+import { createYieldSource } from '../../vaults/yields.utils';
 import { UniV2PoolData } from '../interfaces/uni-v2-pool-data.interface';
-import { getUniV2SwapValue } from './strategy.utils';
 
 export class UniswapStrategy {
   static async getValueSources(vault: VaultDefinitionModel): Promise<CachedYieldSource[]> {
@@ -137,4 +140,41 @@ export async function getLpTokenBalances(chain: Chain, vault: VaultDefinitionMod
   } catch (err) {
     throw new NotFound(`${vault.protocol} pool pair ${depositToken} does not exist`);
   }
+}
+
+export async function getUniV2SwapValue(graphUrl: string, vault: VaultDefinitionModel): Promise<CachedYieldSource> {
+  const client = new GraphQLClient(graphUrl);
+  const sdk = getUniswapSdk(client);
+
+  const { pairDayDatas } = await sdk.UniPairDayDatas({
+    first: 30,
+    orderBy: PairDayData_OrderBy.Date,
+    orderDirection: OrderDirection.Desc,
+    where: {
+      pairAddress: vault.depositToken.toLowerCase(),
+    },
+  });
+
+  const name = `${vault.protocol} LP Fees`;
+  if (!pairDayDatas || pairDayDatas.length === 0) {
+    return createYieldSource(vault, SourceType.TradeFee, name, 0);
+  }
+
+  const [token0Price, token1Price] = await Promise.all([
+    queryPrice(pairDayDatas[0].token0.id),
+    queryPrice(pairDayDatas[0].token1.id),
+  ]);
+
+  let totalApy = 0;
+  let currentApy = 0;
+  for (let i = 0; i < pairDayDatas.length; i++) {
+    const token0Volume = Number(pairDayDatas[i].dailyVolumeToken0) * token0Price.price;
+    const token1Volume = Number(pairDayDatas[i].dailyVolumeToken1) * token1Price.price;
+    const poolReserve = Number(pairDayDatas[i].reserveUSD);
+    const fees = (token0Volume + token1Volume) * 0.003;
+    totalApy += (fees / poolReserve) * 365 * 100;
+    currentApy = totalApy / (i + 1);
+  }
+
+  return createYieldSource(vault, SourceType.TradeFee, name, currentApy);
 }
