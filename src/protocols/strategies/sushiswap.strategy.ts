@@ -54,14 +54,13 @@ function getSwapValue(vault: VaultDefinitionModel, tradeData: PairDayData[]): Ca
   if (!tradeData || tradeData.length === 0) {
     return createYieldSource(vault, SourceType.TradeFee, name, 0);
   }
-  let totalApy = 0;
-  let currentApy = 0;
+  let totalApr = 0;
   for (let i = 0; i < tradeData.length; i++) {
     const volume = Number(tradeData[i].dailyVolumeUSD);
     const poolReserve = Number(tradeData[i].reserveUSD);
     const fees = volume * 0.0025;
-    totalApy += (fees / poolReserve) * 365 * 100;
-    currentApy = totalApy / (i + 1);
+    totalApr += (fees / poolReserve) * 365 * 100;
   }
-  return createYieldSource(vault, SourceType.TradeFee, name, currentApy);
+  const averageApr = totalApr / tradeData.length;
+  return createYieldSource(vault, SourceType.TradeFee, name, averageApr);
 }

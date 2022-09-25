@@ -1,9 +1,8 @@
 import { Network } from '@badger-dao/sdk';
 import { Controller, Get, Inject, PathParams, QueryParams, UseCache } from '@tsed/common';
-import { ContentType, Deprecated, Description, Hidden, Returns, Summary } from '@tsed/schema';
+import { ContentType, Deprecated, Description, Returns, Summary } from '@tsed/schema';
 
 import { getOrCreateChain } from '../chains/chains.utils';
-import { AirdropMerkleClaim } from './interfaces/merkle-distributor.interface';
 import { RewardMerkleClaimModel } from './interfaces/reward-merkle-claim-model.interface';
 import { EmissionSchedule, RewardSchedulesByVaults } from './interfaces/reward-schedules-vault.interface';
 import { RewardSchedulesByVaultModel } from './interfaces/reward-schedules-vault-model.interface';
@@ -15,16 +14,6 @@ import { RewardsService } from './rewards.service';
 export class RewardV2Controller {
   @Inject()
   rewardsService!: RewardsService;
-
-  @Hidden()
-  @Get('/bouncer/:address')
-  @ContentType('json')
-  async getBouncerProof(
-    @PathParams('address') address: string,
-    @QueryParams('chain') chain?: Network,
-  ): Promise<AirdropMerkleClaim> {
-    return this.rewardsService.getBouncerProof(getOrCreateChain(chain), address);
-  }
 
   @Get('/tree/:address')
   @ContentType('json')

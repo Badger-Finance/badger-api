@@ -6,6 +6,7 @@ import { Chain } from '../chains/config/chain.config';
 import * as requestUtils from '../common/request';
 import { TEST_ADDR, TEST_CURRENT_TIMESTAMP, TEST_TOKEN } from '../test/constants';
 import { mockQuery, setupMockChain } from '../test/mocks.utils';
+import { mockPrice } from '../test/mocks.utils/mock.helpers';
 import { convert, fetchPrices, queryPrice, queryPriceAtTimestamp, updatePrice } from './prices.utils';
 
 describe('prices.utils', () => {
@@ -40,7 +41,7 @@ describe('prices.utils', () => {
 
     describe('when price is available', () => {
       it('returns a token snapshot with the latest price data', async () => {
-        const price = chain.strategy.getPrice(TEST_TOKEN);
+        const price = mockPrice(TEST_TOKEN);
         mockQuery([price]);
         const queriedTokenPrice = await queryPrice(TEST_TOKEN);
         expect(queriedTokenPrice).toMatchObject(price);
@@ -172,14 +173,14 @@ describe('prices.utils', () => {
 
     describe('system has saved data', () => {
       it('returns the cached token price', async () => {
-        const cachedPrice = await chain.strategy.getPrice(TEST_TOKEN);
-        const mockPrice = {
+        const cachedPrice = await mockPrice(TEST_TOKEN);
+        const mockedPrice = {
           ...cachedPrice,
           updatedAt: TEST_CURRENT_TIMESTAMP,
         };
-        mockQuery([mockPrice]);
+        mockQuery([mockedPrice]);
         const result = await queryPriceAtTimestamp(TEST_TOKEN, TEST_CURRENT_TIMESTAMP);
-        expect(result).toMatchObject(mockPrice);
+        expect(result).toMatchObject(mockedPrice);
       });
     });
   });

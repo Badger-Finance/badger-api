@@ -1,12 +1,11 @@
 import { Network, ONE_YEAR_SECONDS, Protocol } from '@badger-dao/sdk';
 import { BigNumber } from 'ethers';
 
-import { getBoostFile, getCachedAccount } from '../accounts/accounts.utils';
+import { getCachedAccount } from '../accounts/accounts.utils';
 import { CachedYieldSource } from '../aws/models/cached-yield-source.interface';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
-import { getObject } from '../aws/s3.utils';
+import { getBoostFile } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
-import { REWARD_DATA } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
 import { queryPrice } from '../prices/prices.utils';
 import { BalancerStrategy } from '../protocols/strategies/balancer.strategy';
@@ -19,19 +18,6 @@ import { getCachedVault } from '../vaults/vaults.utils';
 import { createYieldSource } from '../vaults/yields.utils';
 import { SourceType } from './enums/source-type.enum';
 import { RewardMerkleDistribution } from './interfaces/merkle-distributor.interface';
-
-export const DIGG_SHARE_PER_FRAGMENT = '222256308823765331027878635805365830922307440079959220679625904457';
-
-export async function getTreeDistribution(chain: Chain): Promise<RewardMerkleDistribution | null> {
-  try {
-    const fileName = `badger-tree-${chain.chainId}.json`;
-    const rewardFile = await getObject(REWARD_DATA, fileName);
-    return JSON.parse(rewardFile.toString('utf-8'));
-  } catch (err) {
-    console.error({ message: `Missing expected badger tree file for ${chain.network}`, err });
-    return null;
-  }
-}
 
 export async function getClaimableRewards(
   chain: Chain,
@@ -57,7 +43,9 @@ export async function getClaimableRewards(
         for (let i = 0; i < proof.tokens.length; i++) {
           const token = proof.tokens[i];
           const amount = await badgerTree.claimed(user, token);
-          if (BigNumber.from(proof.cumulativeAmounts[i]).lt(amount)) proof.cumulativeAmounts[i] = amount.toString();
+          if (BigNumber.from(proof.cumulativeAmounts[i]).lt(amount)) {
+            proof.cumulativeAmounts[i] = amount.toString();
+          }
         }
         attempt++;
         // report a recurring issue for claimable

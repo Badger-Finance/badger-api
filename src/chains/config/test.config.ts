@@ -2,12 +2,11 @@ import { GasPrices, Network, SDKProvider } from '@badger-dao/sdk';
 import mockTokensMap from '@badger-dao/sdk-mocks/generated/ethereum/api/loadTokens.json';
 
 import { TokenConfig } from '../../tokens/interfaces/token-config.interface';
-import { TestStrategy } from '../strategies/test.strategy';
 import { Chain } from './chain.config';
 
 export class TestEthereum extends Chain {
   constructor(provider: SDKProvider, network = Network.Ethereum) {
-    super(network, mockTokensMap as TokenConfig, provider, new TestStrategy());
+    super(network, mockTokensMap as TokenConfig, provider);
     Chain.register(this.network, this);
   }
 

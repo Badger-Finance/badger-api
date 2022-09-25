@@ -7,6 +7,7 @@ import { TEST_ADDR, TEST_TOKEN } from '../test/constants';
 import { setupMockChain } from '../test/mocks.utils';
 import { PricesController } from './prices.controller';
 import * as pricesUtils from './prices.utils';
+import { getPrice } from './prices.utils';
 
 describe('PricesController', () => {
   let chain: Chain;
@@ -57,7 +58,7 @@ describe('PricesController', () => {
     describe('request two tokens across two timestamps', () => {
       it('returns snapshots of requested tokens at given times', async () => {
         jest.spyOn(pricesUtils, 'queryPriceAtTimestamp').mockImplementation(async (token, timestamp, _c) => {
-          const basePrice = await chain.strategy.getPrice(token);
+          const basePrice = await getPrice(chain, token);
           return {
             ...basePrice,
             price: timestamp / basePrice.price,

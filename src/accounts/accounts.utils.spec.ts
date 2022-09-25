@@ -9,11 +9,11 @@ import BadgerSDK, {
   VaultVersion,
 } from '@badger-dao/sdk';
 
+import { UserClaimMetadata } from '../aws/models/user-claim-metadata.model';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
-import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 import { MOCK_VAULT_DEFINITION, MOCK_VAULT_SNAPSHOT, TEST_ADDR, TEST_CURRENT_BLOCK } from '../test/constants';
 import { defaultAccount, mockBalance, mockQuery, randomSnapshot, setupMockChain } from '../test/mocks.utils';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
@@ -200,6 +200,7 @@ describe('accounts.utils', () => {
         expect(result).toMatchObject(mockBoost);
       });
     });
+
     describe('a previously cached boost', () => {
       it('returns the default boost', async () => {
         const chain = setupMockChain();
@@ -218,13 +219,15 @@ describe('accounts.utils', () => {
     it('should not create new meta obj if exists', async () => {
       const chain = setupMockChain();
       const put = jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
-      const cachedMetadata = Object.assign(new UserClaimMetadata(), {
+      const mockMetadata: UserClaimMetadata = {
         startBlock: 100,
         endBlock: 101,
         chainStartBlock: `${chain.network}_123123`,
         chain: chain.network,
         count: 0,
-      });
+        cycle: 10,
+      };
+      const cachedMetadata = Object.assign(new UserClaimMetadata(), mockMetadata);
       mockQuery([cachedMetadata]);
       const latestMetadata = await getLatestMetadata(chain);
       expect(latestMetadata).toEqual(cachedMetadata);
@@ -233,13 +236,15 @@ describe('accounts.utils', () => {
 
     it('should create new meta if no meta obj found', async () => {
       const chain = setupMockChain();
-      const expected = Object.assign(new UserClaimMetadata(), {
+      const mockMetadata: UserClaimMetadata = {
         startBlock: TEST_CURRENT_BLOCK,
         endBlock: TEST_CURRENT_BLOCK + 1,
         chainStartBlock: `${chain.network}_${TEST_CURRENT_BLOCK}`,
         chain: chain.network,
         count: 0,
-      });
+        cycle: 0,
+      };
+      const expected = Object.assign(new UserClaimMetadata(), mockMetadata);
       mockQuery([]);
       const latestMetadata = await getLatestMetadata(chain);
       expect(latestMetadata).toMatchObject(expected);

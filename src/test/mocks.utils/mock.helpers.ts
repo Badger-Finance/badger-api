@@ -5,8 +5,14 @@ import { CachedAccount } from '../../aws/models/cached-account.model';
 import { CachedBoost } from '../../aws/models/cached-boost.model';
 import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
 import { LeaderBoardType } from '../../leaderboards/enums/leaderboard-type.enum';
+import { TokenPrice } from '../../prices/interface/token-price.interface';
 import { MOCK_VAULT_DEFINITION, TEST_ADDR } from '../constants';
 import { randomValue } from '../tests.utils';
+
+export function mockPrice(address: string): TokenPrice {
+  const price = parseInt(address.slice(0, 6), 16);
+  return { address, price };
+}
 
 export function randomSnapshot(vaultDefinition?: VaultDefinitionModel): VaultSnapshot {
   const vault = vaultDefinition ?? MOCK_VAULT_DEFINITION;

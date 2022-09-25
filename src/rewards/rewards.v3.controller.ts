@@ -1,8 +1,8 @@
-import { formatBalance, Network } from '@badger-dao/sdk';
+import { DiggService, formatBalance, Network } from '@badger-dao/sdk';
 import { Controller, Inject } from '@tsed/di';
 import { UseCache } from '@tsed/platform-cache';
 import { QueryParams } from '@tsed/platform-params';
-import { ContentType, Description, Get, Hidden, Returns, Summary } from '@tsed/schema';
+import { ContentType, Description, Get, Returns, Summary } from '@tsed/schema';
 import { BigNumber, ethers } from 'ethers';
 
 import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
@@ -14,30 +14,16 @@ import { QueryParamError } from '../errors/validation/query.param.error';
 import { getFullToken } from '../tokens/tokens.utils';
 import { DebankUser } from './interfaces/debank-user.interface';
 import { ListRewardsResponse } from './interfaces/list-rewards-response.interface';
-import { AirdropMerkleClaim } from './interfaces/merkle-distributor.interface';
 import { RewardMerkleClaimModel } from './interfaces/reward-merkle-claim-model.interface';
 import { EmissionSchedule, RewardSchedulesByVaults } from './interfaces/reward-schedules-vault.interface';
 import { RewardSchedulesByVaultModel } from './interfaces/reward-schedules-vault-model.interface';
 import { RewardSchedulesByVaultsModel } from './interfaces/reward-schedules-vaults-model.interface';
 import { RewardsService } from './rewards.service';
-import { DIGG_SHARE_PER_FRAGMENT } from './rewards.utils';
 
 @Controller('/rewards')
 export class RewardsV3Controller {
   @Inject()
   rewardsService!: RewardsService;
-
-  @Hidden()
-  @Get('/bouncer')
-  @ContentType('json')
-  async getBouncerProof(
-    @QueryParams('address') address: string,
-    @QueryParams('chain') chain?: Network,
-  ): Promise<AirdropMerkleClaim> {
-    if (!address) throw new QueryParamError('address');
-
-    return this.rewardsService.getBouncerProof(getOrCreateChain(chain), ethers.utils.getAddress(address));
-  }
 
   @Get('/list')
   @ContentType('json')
@@ -64,7 +50,10 @@ export class RewardsV3Controller {
       const { address, balance } = record;
       const token = await getFullToken(chain, address);
       if (token.address === TOKENS.DIGG) {
-        rewards[address] = formatBalance(BigNumber.from(balance).div(DIGG_SHARE_PER_FRAGMENT), token.decimals);
+        rewards[address] = formatBalance(
+          BigNumber.from(balance).div(DiggService.DIGG_SHARES_PER_FRAGMENT),
+          token.decimals,
+        );
       } else {
         rewards[address] = formatBalance(balance, token.decimals);
       }
