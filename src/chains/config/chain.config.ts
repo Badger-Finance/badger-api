@@ -5,7 +5,6 @@ import { ethers } from 'ethers';
 
 import { TOKENS } from '../../config/tokens.config';
 import { TokenConfig } from '../../tokens/interfaces/token-config.interface';
-import { ChainStrategy } from '../strategies/chain.strategy';
 import { ChainVaults } from '../vaults/chain.vaults';
 
 type Chains = Record<string, Chain>;
@@ -17,22 +16,13 @@ export abstract class Chain {
   readonly chainId: number;
   readonly sdk: BadgerSDK;
   readonly vaults: ChainVaults;
-  readonly strategy: ChainStrategy;
-  // TODO: add emission control support to sdk
-  readonly emissionControl?: string;
 
-  constructor(
-    readonly network: Network,
-    readonly tokens: TokenConfig,
-    provider: string | SDKProvider,
-    strategy: ChainStrategy,
-  ) {
+  constructor(readonly network: Network, readonly tokens: TokenConfig, provider: string | SDKProvider) {
     const config = getNetworkConfig(network);
     const { chainId } = config;
     this.chainId = chainId;
     this.vaults = new ChainVaults(network);
     this.sdk = new BadgerSDK({ network, provider });
-    this.strategy = strategy;
   }
 
   get provider(): providers.MulticallProvider {

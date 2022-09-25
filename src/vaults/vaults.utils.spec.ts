@@ -13,6 +13,7 @@ import { SourceType } from '../rewards/enums/source-type.enum';
 import * as rewardsUtils from '../rewards/rewards.utils';
 import { MOCK_TOKEN, MOCK_TOKENS, MOCK_VAULT, MOCK_VAULT_DEFINITION, TEST_ADDR, TEST_TOKEN } from '../test/constants';
 import { mockBalance, mockQuery, randomSnapshot, setupMockChain } from '../test/mocks.utils';
+import { mockPrice } from '../test/mocks.utils/mock.helpers';
 import { TokenNotFound } from '../tokens/errors/token.error';
 import { fullTokenMockMap } from '../tokens/mocks/full-token.mock';
 import * as tokensUtils from '../tokens/tokens.utils';
@@ -186,7 +187,7 @@ describe('vaults.utils', () => {
     describe('look up valid, properly configured vault', () => {
       it('returns a valid token price for the vault base on price per full share', async () => {
         mockQuery([MOCK_VAULT]);
-        const expected = await chain.strategy.getPrice(MOCK_VAULT_DEFINITION.depositToken);
+        const expected = await mockPrice(MOCK_VAULT_DEFINITION.depositToken);
         expected.address = MOCK_VAULT_DEFINITION.address;
         expected.price *= MOCK_VAULT.pricePerFullShare;
         const vaultPrice = await getVaultTokenPrice(chain, MOCK_VAULT_DEFINITION.address);

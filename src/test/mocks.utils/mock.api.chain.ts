@@ -54,7 +54,7 @@ import {
 } from '../constants';
 import { MockOptions } from '../interfaces/mock-options.interface';
 import { mockBatchGet, mockBatchPut } from './dynamo.db/mock.calls';
-import { mockBalance } from './mock.helpers';
+import { mockBalance, mockPrice } from './mock.helpers';
 
 export function setupMockChain(
   { network, pricing, rewards }: MockOptions = {
@@ -166,9 +166,8 @@ export function setupMockChain(
 
   // setup chain pricing
   if (pricing) {
-    jest
-      .spyOn(pricesUtils, 'queryPrice')
-      .mockImplementation(async (token, _currency) => chain.strategy.getPrice(token));
+    jest.spyOn(pricesUtils, 'queryPrice').mockImplementation(async (token, _currency) => mockPrice(token));
+    jest.spyOn(pricesUtils, 'getPrice').mockImplementation(async (_chain, token) => mockPrice(token));
     jest.spyOn(pricesUtils, 'convert').mockImplementation(async (price: number, currency?: Currency) => {
       if (!currency || currency === Currency.USD) {
         return price;
