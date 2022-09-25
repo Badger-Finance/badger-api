@@ -5,26 +5,15 @@ import { getChainStartBlockKey, getDataMapper, getLeaderboardKey } from '../aws/
 import { CachedAccount } from '../aws/models/cached-account.model';
 import { CachedBoost } from '../aws/models/cached-boost.model';
 import { CachedSettBalance } from '../aws/models/cached-sett-balance.interface';
+import { UserClaimMetadata } from '../aws/models/user-claim-metadata.model';
 import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
-import { getObject } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
-import { PRODUCTION, REWARD_DATA } from '../config/constants';
+import { PRODUCTION } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import { convert, queryPrice } from '../prices/prices.utils';
-import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
-import { BoostData } from '../rewards/interfaces/boost-data.interface';
 import { getFullToken, getVaultTokens } from '../tokens/tokens.utils';
 import { getCachedVault } from '../vaults/vaults.utils';
-
-export async function getBoostFile(chain: Chain): Promise<BoostData | null> {
-  try {
-    const boostFile = await getObject(REWARD_DATA, `badger-boosts-${chain.chainId}.json`);
-    return JSON.parse(boostFile.toString('utf-8'));
-  } catch (err) {
-    return null;
-  }
-}
 
 export async function getAccounts(chain: Chain): Promise<string[]> {
   const sdk = await chain.getSdk();
@@ -235,13 +224,15 @@ export async function getLatestMetadata(chain: Chain): Promise<UserClaimMetadata
 
   // In case there UserClaimMetadata wasn't created yet, create it with default values
   const blockNumber = await chain.provider.getBlockNumber();
-  const metaData = Object.assign(new UserClaimMetadata(), {
+  const defaultMetadata: UserClaimMetadata = {
     startBlock: blockNumber,
     endBlock: blockNumber + 1,
     chainStartBlock: getChainStartBlockKey(chain.network, blockNumber),
     chain: chain.network,
     count: 0,
-  });
+    cycle: 0,
+  };
+  const metaData = Object.assign(new UserClaimMetadata(), defaultMetadata);
   return mapper.put(metaData);
 }
 

@@ -1,7 +1,7 @@
 import { DataMapper, StringToAnyObjectMap, SyncOrAsyncIterable } from '@aws/dynamodb-data-mapper';
 
-import * as accountsUtils from '../accounts/accounts.utils';
 import { CachedBoost } from '../aws/models/cached-boost.model';
+import * as s3Utils from '../aws/s3.utils';
 import { TOKENS } from '../config/tokens.config';
 import { BoostData } from '../rewards/interfaces/boost-data.interface';
 import { mockBatchDelete, mockBatchPut, mockQuery, randomCachedBoosts, setupMockChain } from '../test/mocks.utils';
@@ -36,7 +36,7 @@ describe('leaderboard-indexer', () => {
     mockBatchDelete([]);
     jest.spyOn(Date, 'now').mockImplementation(() => 1000);
     jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
-    jest.spyOn(accountsUtils, 'getBoostFile').mockImplementation(() => Promise.resolve(boostData));
+    jest.spyOn(s3Utils, 'getBoostFile').mockImplementation(() => Promise.resolve(boostData));
     await indexBoostLeaderBoard();
   });
 

@@ -2,34 +2,24 @@ import { Network } from '@badger-dao/sdk';
 
 import { getAccounts, getLatestMetadata } from '../accounts/accounts.utils';
 import { getChainStartBlockKey, getDataMapper } from '../aws/dynamodb.utils';
+import { ClaimableBalance } from '../aws/models/claimable-balance.model';
+import { UserClaimMetadata } from '../aws/models/user-claim-metadata.model';
 import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
+import { getTreeDistribution } from '../aws/s3.utils';
 import { getSupportedChains } from '../chains/chains.utils';
 import { Chain } from '../chains/config/chain.config';
-import { PRODUCTION } from '../config/constants';
-import { ClaimableBalance } from '../rewards/entities/claimable-balance';
-import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
-import { getClaimableRewards, getTreeDistribution } from '../rewards/rewards.utils';
+import { getClaimableRewards } from '../rewards/rewards.utils';
 
 export async function refreshClaimableBalances(chain: Chain) {
   const mapper = getDataMapper();
   const distribution = await getTreeDistribution(chain);
   const sdk = await chain.getSdk();
 
-  console.log({
-    distribution,
-    hasTree: sdk.rewards.hasBadgerTree(),
-  });
   if (!distribution || !sdk.rewards.hasBadgerTree()) {
-    console.log('returned');
     return;
   }
 
   const latestMetadata = await getLatestMetadata(chain);
-  if (PRODUCTION) {
-    console.log(
-      `Updating Claimable Balances for ${chain.network} (prev. ${latestMetadata.startBlock} - ${latestMetadata.endBlock})`,
-    );
-  }
   const { endBlock } = latestMetadata;
   const snapshotStartBlock = endBlock + 1;
   const snapshotEndBlock = await chain.provider.getBlockNumber();
@@ -64,26 +54,21 @@ export async function refreshClaimableBalances(chain: Chain) {
     userClaimSnapshots.push(snapshot);
   }
 
-  if (PRODUCTION) {
-    console.log(`Updated ${userClaimSnapshots.length} claimable balances for ${chain.network}`);
-  }
   for await (const _item of mapper.batchPut(userClaimSnapshots)) {
   }
 
-  // Create new metadata entry after user claim snapshots are calculated
-  const metadata = Object.assign(new UserClaimMetadata(), {
+  const metadataModel: UserClaimMetadata = {
     chainStartBlock: getChainStartBlockKey(chain.network, snapshotStartBlock),
     chain: chain.network,
     startBlock: snapshotStartBlock,
     endBlock: snapshotEndBlock,
     cycle: distribution.cycle,
     count: userClaimSnapshots.length,
-  });
+  };
+  // Create new metadata entry after user claim snapshots are calculated
+  const metadata = Object.assign(new UserClaimMetadata(), metadataModel);
 
   await mapper.put(metadata);
-  if (PRODUCTION) {
-    console.log(`Completed balance snapshot for ${chain.network} up to ${snapshotEndBlock}`);
-  }
 }
 
 export async function refreshUserAccounts() {

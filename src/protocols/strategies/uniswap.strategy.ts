@@ -165,16 +165,14 @@ export async function getUniV2SwapValue(graphUrl: string, vault: VaultDefinition
     queryPrice(pairDayDatas[0].token1.id),
   ]);
 
-  let totalApy = 0;
-  let currentApy = 0;
+  let totalApr = 0;
   for (let i = 0; i < pairDayDatas.length; i++) {
     const token0Volume = Number(pairDayDatas[i].dailyVolumeToken0) * token0Price.price;
     const token1Volume = Number(pairDayDatas[i].dailyVolumeToken1) * token1Price.price;
     const poolReserve = Number(pairDayDatas[i].reserveUSD);
     const fees = (token0Volume + token1Volume) * 0.003;
-    totalApy += (fees / poolReserve) * 365 * 100;
-    currentApy = totalApy / (i + 1);
+    totalApr += (fees / poolReserve) * 365 * 100;
   }
-
-  return createYieldSource(vault, SourceType.TradeFee, name, currentApy);
+  const averageApr = totalApr / pairDayDatas.length;
+  return createYieldSource(vault, SourceType.TradeFee, name, averageApr);
 }

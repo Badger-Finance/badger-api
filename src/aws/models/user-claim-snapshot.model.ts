@@ -3,7 +3,7 @@ import { attribute, hashKey, rangeKey, table } from '@aws/dynamodb-data-mapper-a
 import { ONE_DAY_SECONDS } from '@badger-dao/sdk';
 
 import { PRODUCTION, UNCLAIMED_SNAPSHOTS_DATA } from '../../config/constants';
-import { ClaimableBalance } from '../../rewards/entities/claimable-balance';
+import { ClaimableBalance } from './claimable-balance.model';
 
 @table(UNCLAIMED_SNAPSHOTS_DATA)
 export class UserClaimSnapshot {

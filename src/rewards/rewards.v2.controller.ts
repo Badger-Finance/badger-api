@@ -1,4 +1,4 @@
-import { formatBalance } from '@badger-dao/sdk';
+import { DiggService, formatBalance } from '@badger-dao/sdk';
 import { Controller, Get, Inject, QueryParams } from '@tsed/common';
 import { ContentType, Deprecated, Description, Returns, Summary } from '@tsed/schema';
 import { BigNumber } from 'ethers';
@@ -11,7 +11,6 @@ import { getFullToken } from '../tokens/tokens.utils';
 import { DebankUser } from './interfaces/debank-user.interface';
 import { ListRewardsResponse } from './interfaces/list-rewards-response.interface';
 import { RewardsService } from './rewards.service';
-import { DIGG_SHARE_PER_FRAGMENT } from './rewards.utils';
 
 @Deprecated()
 @Controller('/rewards')
@@ -44,7 +43,10 @@ export class RewardsV2Controller {
       const { address, balance } = record;
       const token = await getFullToken(chain, address);
       if (token.address === TOKENS.DIGG) {
-        rewards[address] = formatBalance(BigNumber.from(balance).div(DIGG_SHARE_PER_FRAGMENT), token.decimals);
+        rewards[address] = formatBalance(
+          BigNumber.from(balance).div(DiggService.DIGG_SHARES_PER_FRAGMENT),
+          token.decimals,
+        );
       } else {
         rewards[address] = formatBalance(balance, token.decimals);
       }

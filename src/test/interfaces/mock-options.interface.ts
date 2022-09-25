@@ -1,6 +1,7 @@
 import { Network } from '@badger-dao/sdk';
 
 export interface MockOptions {
-  pricing?: boolean;
   network?: Network;
+  pricing?: boolean;
+  rewards?: boolean;
 }
