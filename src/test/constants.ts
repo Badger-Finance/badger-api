@@ -16,6 +16,7 @@ import {
 import mockMetrics from '@badger-dao/sdk-mocks/generated/ethereum/api/loadProtocolMetrics.json';
 import mockTokens from '@badger-dao/sdk-mocks/generated/ethereum/api/loadTokens.json';
 import mockVaultSnapshots from '@badger-dao/sdk-mocks/generated/ethereum/api/loadVaultChart.json';
+import mockYieldEvents from '@badger-dao/sdk-mocks/generated/ethereum/api/loadVaultHarvestsV3.json';
 import mockVaults from '@badger-dao/sdk-mocks/generated/ethereum/api/loadVaults.json';
 import mockVaultHarvests from '@badger-dao/sdk-mocks/generated/ethereum/api/loadVaultsHarvests.json';
 import mockListHarvests from '@badger-dao/sdk-mocks/generated/ethereum/vaults/listHarvests.json';
@@ -136,3 +137,11 @@ export const MOCK_YIELD_EVENT: YieldEvent = {
   grossApr: 230 * (1 / 0.9),
   tx: '0x123',
 };
+
+const mockYieldEventsCopy = JSON.parse(JSON.stringify(mockYieldEvents));
+// @ts-ignore
+mockYieldEventsCopy.forEach((e) => {
+  e.duration = VAULT_TWAY_DURATION;
+  e.type = e.type.replace(' ', '');
+});
+export const MOCK_YIELD_EVENTS = <YieldEvent[]>mockYieldEventsCopy;
