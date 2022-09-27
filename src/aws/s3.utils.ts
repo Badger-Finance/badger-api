@@ -5,6 +5,8 @@ import { ethers } from 'ethers';
 
 import { Chain } from '../chains/config/chain.config';
 import { REWARD_DATA } from '../config/constants';
+import { NodataForAddrError } from '../errors/allocation/nodata.for.addr.error';
+import { NodataForChainError } from '../errors/allocation/nodata.for.chain.error';
 import { BoostData } from '../rewards/interfaces/boost-data.interface';
 import {
   AirdropMerkleDistribution,
@@ -74,11 +76,12 @@ export async function getTreeDistribution(chain: Chain): Promise<Nullable<Reward
 export async function getBouncerProof(chain: Chain, address: string): Promise<MerkleProof> {
   const bouncerFile = await getFile<AirdropMerkleDistribution>(`badger-bouncer-${chain.chainId}.json`);
   if (!bouncerFile) {
-    return [];
+    throw new NodataForChainError(chain.network);
   }
-  const claim = bouncerFile.claims[ethers.utils.getAddress(address)];
+  const userAddress = ethers.utils.getAddress(address);
+  const claim = bouncerFile.claims[userAddress];
   if (!claim) {
-    return [];
+    throw new NodataForAddrError(userAddress);
   }
   return claim.proof;
 }

@@ -32,6 +32,12 @@ describe('proofs.v3.controller', () => {
       expect(JSON.parse(body)).toMatchSnapshot();
     });
 
+    it('returns 400 for a request with no address query', async () => {
+      const { body, statusCode } = await PlatformServerlessTest.request.get(`/proofs`);
+      expect(statusCode).toEqual(NetworkStatus.BadRequest);
+      expect(JSON.parse(body)).toMatchSnapshot();
+    });
+
     it('returns 404 for users not on the bouncer list', async () => {
       const badAddress = TOKENS.BADGER;
       jest.spyOn(s3Utils, 'getBouncerProof').mockImplementation(async () => {

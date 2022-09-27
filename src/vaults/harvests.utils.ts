@@ -1,14 +1,5 @@
 import { greaterThanOrEqualTo, lessThan } from '@aws/dynamodb-expressions';
-import {
-  formatBalance,
-  gqlGenT,
-  keyBy,
-  ONE_DAY_MS,
-  Vault__factory,
-  VaultHarvestData,
-  YieldEvent,
-  YieldType,
-} from '@badger-dao/sdk';
+import { formatBalance, gqlGenT, keyBy, ONE_DAY_MS, VaultHarvestData, YieldEvent, YieldType } from '@badger-dao/sdk';
 import { BadgerTreeDistribution_OrderBy, SettHarvest_OrderBy } from '@badger-dao/sdk/lib/graphql/generated/badger';
 import { BigNumber, ethers } from 'ethers';
 
@@ -21,7 +12,7 @@ import { OrderDirection } from '../graphql/generated/balancer';
 import { queryPriceAtTimestamp } from '../prices/prices.utils';
 import { getFullToken } from '../tokens/tokens.utils';
 import { Nullable } from '../utils/types.utils';
-import { getInfuelnceVaultYieldBalance, isInfluenceVault } from './influence.utils';
+import { getVaultHarvestBalance, isInfluenceVault } from './influence.utils';
 import { VaultYieldItem } from './interfaces/vault-yield-item.interface';
 import { VAULT_TWAY_DURATION } from './vaults.config';
 import { getStrategyInfo } from './vaults.utils';
@@ -103,28 +94,6 @@ function constructYieldItems(data: VaultHarvestData[]): VaultYieldItem[] {
     .sort((a, b) => b.timestamp - a.timestamp);
 }
 
-/**
- *
- * @param chain
- * @param vault
- * @param block
- * @returns
- */
-async function getVaultBalance(chain: Chain, vault: VaultDefinitionModel, block: number): Promise<number> {
-  const sdk = await chain.getSdk();
-
-  let balance = 0;
-  if (isInfluenceVault(vault.address)) {
-    balance = await getInfuelnceVaultYieldBalance(chain, vault, block);
-  } else {
-    const vaultContract = Vault__factory.connect(vault.address, sdk.provider);
-    const totalSupply = await vaultContract.totalSupply({ blockTag: block });
-    balance = formatBalance(totalSupply);
-  }
-
-  return balance;
-}
-
 function isIncentiveDistribution(vault: VaultDefinitionModel, event: VaultYieldItem): boolean {
   if (event.type !== YieldType.TreeDistribution) {
     return false;
@@ -184,7 +153,7 @@ async function evaluateYieldItems(
 
         const tokenEarned = price * amount;
 
-        const balance = await getVaultBalance(chain, vault, item.block);
+        const balance = await getVaultHarvestBalance(chain, vault, item.block);
         const { price: vaultPrice } = await queryPriceAtTimestamp(vault.address, item.timestamp * 1000);
         const vaultPrincipal = vaultPrice * balance;
         const strategyInfo = await getStrategyInfo(chain, vault, { blockTag: item.block });

@@ -138,10 +138,4 @@ export const MOCK_YIELD_EVENT: YieldEvent = {
   tx: '0x123',
 };
 
-const mockYieldEventsCopy = JSON.parse(JSON.stringify(mockYieldEvents));
-// @ts-ignore
-mockYieldEventsCopy.forEach((e) => {
-  e.duration = VAULT_TWAY_DURATION;
-  e.type = e.type.replace(' ', '');
-});
-export const MOCK_YIELD_EVENTS = <YieldEvent[]>mockYieldEventsCopy;
+export const MOCK_YIELD_EVENTS = <YieldEvent[]>mockYieldEvents;

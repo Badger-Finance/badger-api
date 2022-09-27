@@ -8,6 +8,15 @@ Array [
 ]
 `;
 
+exports[`proofs.v3.controller GET /v3/proofs returns 400 for a request with no address query 1`] = `
+Object {
+  "errors": Array [],
+  "message": "Query param address invalid",
+  "name": "Error",
+  "status": 400,
+}
+`;
+
 exports[`proofs.v3.controller GET /v3/proofs returns 404 for a chain with no bouncer file 1`] = `
 Object {
   "errors": Array [],

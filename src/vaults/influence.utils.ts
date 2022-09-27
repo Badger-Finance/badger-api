@@ -12,10 +12,25 @@ import { CVX_LOCKER, OLD_CVX_LOCKER } from '../protocols/strategies/convex.strat
 // TODO: setup influence configs, voting periods, etc.
 const influenceVaults = new Set([TOKENS.BVECVX, TOKENS.GRAVI_AURA]);
 
+/**
+ * Determines if a given address is a known influence vault.
+ * @param address target vault address
+ * @returns returns true if vault is an influence vault, and false if not
+ */
 export function isInfluenceVault(address: string) {
   return influenceVaults.has(ethers.utils.getAddress(address));
 }
 
+/**
+ * Filters non relevant yield events from influence vaults.
+ * Limits results to harvests, and a single badger distribution and
+ * underlying token distribution garnered from incentives.
+ *
+ * Non influence vaults return all events given for filtering.
+ * @param vault target vault address
+ * @param yieldEvents yield events requested for filtering
+ * @returns relevant yield events based on the vault type
+ */
 export function filterPerformanceItems(vault: VaultDefinitionModel, yieldEvents: VaultYieldEvent[]): VaultYieldEvent[] {
   if (!isInfluenceVault(vault.address)) {
     return yieldEvents;
@@ -27,9 +42,12 @@ export function filterPerformanceItems(vault: VaultDefinitionModel, yieldEvents:
   let processedBadger = false;
   let processedUnderlying = false;
   relevantEvents = relevantEvents.filter((e) => {
+    // always return harvests events
     if (e.type === YieldType.Harvest) {
       return true;
     }
+
+    // only allow a single badger distribution
     if (e.token === TOKENS.BADGER) {
       if (processedBadger) {
         return false;
@@ -37,6 +55,8 @@ export function filterPerformanceItems(vault: VaultDefinitionModel, yieldEvents:
       processedBadger = true;
       return true;
     }
+
+    // only allow a single underlying distribution
     if (e.token === address) {
       if (processedUnderlying) {
         return false;
@@ -50,8 +70,14 @@ export function filterPerformanceItems(vault: VaultDefinitionModel, yieldEvents:
   return relevantEvents;
 }
 
-// TODO: think about this... ironically nearly doing the same for other vaults...
-export async function getInfuelnceVaultYieldBalance(
+/**
+ * Asses the vault strategy funds being used at time of harvest.
+ * @param chain network of associated vault
+ * @param vault target vault information
+ * @param blockTag block requesting data at
+ * @returns the balance the strategy of the requested vault is farming with at the given block
+ */
+export async function getVaultHarvestBalance(
   chain: Chain,
   vault: VaultDefinitionModel,
   blockTag: number,
@@ -61,6 +87,10 @@ export async function getInfuelnceVaultYieldBalance(
   const vaultContract = Vault__factory.connect(address, sdk.provider);
   const strategyBalance = await vaultContract.totalSupply({ blockTag });
   const maxBalance = formatBalance(strategyBalance);
+
+  if (!isInfluenceVault(address)) {
+    return maxBalance;
+  }
 
   if (address === TOKENS.BVECVX) {
     // there is no balance possible before the deployment block
@@ -76,7 +106,7 @@ export async function getInfuelnceVaultYieldBalance(
     try {
       lockedBalance = await locker.lockedBalanceOf(strategyAddress, { blockTag });
     } catch (err) {
-      lockedBalance = await vaultContract.totalSupply({ blockTag });
+      lockedBalance = strategyBalance;
     }
 
     const votingBalance = formatBalance(lockedBalance);

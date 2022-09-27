@@ -15,16 +15,17 @@ export const CHART_GRANULARITY_TIMEFRAMES = [ChartTimeFrame.Max, ChartTimeFrame.
  * @param data
  * @returns
  */
-export function toChartDataBlob<T extends ChartData<T>>(
+export function toChartDataBlob<T extends ChartData>(
   id: string,
   timeframe: ChartTimeFrame,
   data: T[],
 ): ChartDataBlob<T> {
-  return Object.assign(new ChartDataBlob(), {
+  const blob: ChartDataBlob<T> = {
     id,
     timeframe,
     data,
-  });
+  };
+  return Object.assign(new ChartDataBlob(), blob);
 }
 
 /**
@@ -104,7 +105,7 @@ export function shouldTrim(reference: number, timestamp: number, timeframe: Char
  * @param namespace
  * @param snapshot
  */
-export async function updateSnapshots<T extends ChartData<T>>(namespace: string, snapshot: T) {
+export async function updateSnapshots<T extends ChartData>(namespace: string, snapshot: T) {
   const mapper = getDataMapper();
   const isFirstOfYear = (date: Date) => date.getDay() === 0 && date.getMonth() === 0;
 
