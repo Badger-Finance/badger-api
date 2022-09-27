@@ -6,7 +6,7 @@ import {
 } from '@badger-dao/sdk/lib/graphql/generated/badger';
 import { UnprocessableEntity } from '@tsed/exceptions';
 
-import { getDataMapper, getVaultEntityId } from '../aws/dynamodb.utils';
+import { getDataMapper } from '../aws/dynamodb.utils';
 import { CachedYieldProjection } from '../aws/models/cached-yield-projection.model';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { YieldEstimate } from '../aws/models/yield-estimate.model';
@@ -48,30 +48,12 @@ async function loadGraphTimestamp(sdk: BadgerSDK, vault: VaultDefinitionModel): 
   return lastHarvestedAt;
 }
 
-function defaultEstimate(vault: VaultDefinitionModel, existingEstimate: YieldEstimate): YieldEstimate {
-  const id = getVaultEntityId({ network: vault.chain }, vault);
-  return {
-    id,
-    chain: vault.chain,
-    vault: vault.address,
-    yieldTokens: [],
-    harvestTokens: [],
-    lastHarvestedAt: 0,
-    previousYieldTokens: existingEstimate.yieldTokens,
-    previousHarvestTokens: existingEstimate.harvestTokens,
-    lastMeasuredAt: existingEstimate.lastMeasuredAt ?? 0,
-    duration: existingEstimate.duration ?? Number.MAX_SAFE_INTEGER,
-    lastReportedAt: existingEstimate.lastReportedAt ?? 0,
-  };
-}
-
 async function captureYieldEstimate(chain: Chain, vault: VaultDefinitionModel, now: number): Promise<YieldEstimate> {
   const convert = async (t: TokenBalance) => toTokenValue(chain, t);
   try {
     const sdk = await chain.getSdk();
     const mapper = getDataMapper();
-    const existingEstimate = await queryYieldEstimate(vault);
-    const yieldEstimate = defaultEstimate(vault, existingEstimate);
+    const yieldEstimate = await queryYieldEstimate(vault);
 
     let shouldCheckGraph = true;
 
@@ -127,7 +109,9 @@ async function captureYieldEstimate(chain: Chain, vault: VaultDefinitionModel, n
       console.warn(`${vault.name} flashed negative balance earnings!`);
     }
 
-    return mapper.put(Object.assign(new YieldEstimate(), yieldEstimate));
+    // purposefully await result to leverage try catch
+    const result = await mapper.put(Object.assign(new YieldEstimate(), yieldEstimate));
+    return result;
   } catch (err) {
     const message = `Failed to estimate yield for ${vault.name}`;
     throw new UnprocessableEntity(message, err);
@@ -156,7 +140,7 @@ export async function refreshYieldEstimates() {
         const mapper = getDataMapper();
         await mapper.put(entity);
       } catch (err) {
-        console.error(err);
+        console.error({ err, vault: vault.name });
       }
     }
   }
