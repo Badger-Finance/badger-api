@@ -9,7 +9,7 @@ import { getSupportedChains } from '../chains/chains.utils';
 import { toChartDataKey } from '../charts/charts.utils';
 import { getEnvVar } from '../config/config.utils';
 import { VaultStrategy } from '../vaults/interfaces/vault-strategy.interface';
-import { getStrategyInfo } from '../vaults/vaults.utils';
+import { getStrategyInfoRfw } from '../vaults/vaults.utils';
 
 /**
  * Run Patch
@@ -79,7 +79,7 @@ async function vaultHistoricDataRefetch() {
       for (const snapshot of cachedChart.data) {
         if (!snapshot.strategy || (snapshot.strategy && snapshot.strategy.address === ethers.constants.AddressZero)) {
           try {
-            strategyInfo = await getStrategyInfo(chain, vault, { blockTag: snapshot.block });
+            strategyInfo = await getStrategyInfoRfw(chain, vault, { blockTag: snapshot.block });
           } catch (err) {
             console.error(`
               Patch:VaultSnapshotRefetch - Failed to fetch strategyInfo
