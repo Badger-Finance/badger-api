@@ -59,7 +59,7 @@ describe('harvests.utils', () => {
       .mockImplementation(async (v) => [createYieldSource(v, SourceType.PreCompound, VAULT_SOURCE, 3)]);
 
     jest.spyOn(VaultsService.prototype, 'listHarvests').mockImplementation(async () => MOCK_HARVESTS);
-    jest.spyOn(influenceUtils, 'getInfuelnceVaultYieldBalance').mockImplementation(async (_c, _v) => 4_500_000);
+    jest.spyOn(influenceUtils, 'getVaultHarvestBalance').mockImplementation(async (_c, _v) => 4_500_000);
     jest.spyOn(chain.sdk.graph, 'loadSettHarvests').mockImplementation(async () => ({
       settHarvests: [
         {
