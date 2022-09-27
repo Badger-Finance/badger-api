@@ -147,7 +147,7 @@ export function calculateBalanceDifference(listA: TokenValue[], listB: TokenValu
     if (yieldedTokens) {
       // lock in current price and caculate value on updated balance
       for (const token of yieldedTokens) {
-        const price = t.value / t.balance;
+        const price = t.balance > 0 ? t.value / t.balance : 0;
         t.balance -= token.balance;
         t.value = t.balance * price;
       }
