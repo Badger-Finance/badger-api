@@ -24,6 +24,7 @@ import { CurrentVaultSnapshotModel } from '../../aws/models/current-vault-snapsh
 import { HistoricVaultSnapshotModel } from '../../aws/models/historic-vault-snapshot.model';
 import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
 import { YieldEstimate } from '../../aws/models/yield-estimate.model';
+import * as s3Utils from '../../aws/s3.utils';
 import * as chainsUtils from '../../chains/chains.utils';
 import { Chain } from '../../chains/config/chain.config';
 import { TestEthereum } from '../../chains/config/test.config';
@@ -32,7 +33,6 @@ import * as chartsUtils from '../../charts/charts.utils';
 import { TOKENS } from '../../config/tokens.config';
 import * as pricesUtils from '../../prices/prices.utils';
 import { SourceType } from '../../rewards/enums/source-type.enum';
-import * as rewardsUtils from '../../rewards/rewards.utils';
 import { fullTokenMockMap } from '../../tokens/mocks/full-token.mock';
 import * as tokensUtils from '../../tokens/tokens.utils';
 import { vaultsHarvestsMapMock } from '../../vaults/mocks/vaults-harvests-map.mock';
@@ -54,12 +54,13 @@ import {
 } from '../constants';
 import { MockOptions } from '../interfaces/mock-options.interface';
 import { mockBatchGet, mockBatchPut } from './dynamo.db/mock.calls';
-import { mockBalance } from './mock.helpers';
+import { mockBalance, mockPrice } from './mock.helpers';
 
 export function setupMockChain(
-  { network, pricing }: MockOptions = {
+  { network, pricing, rewards }: MockOptions = {
     network: Network.Ethereum,
     pricing: true,
+    rewards: true,
   },
 ) {
   // setup chain vaults
@@ -134,13 +135,14 @@ export function setupMockChain(
   mockBatchPut(chainTokensList);
   jest.spyOn(VaultsService.prototype, 'listHarvests').mockImplementation(async () => MOCK_HARVESTS);
 
-  // for some reason this causes tests leaks
-  jest.spyOn(rewardsUtils, 'getTreeDistribution').mockImplementation(async (requestedChain: Chain) => {
-    if (requestedChain.network !== Network.Ethereum) {
-      return null;
-    }
-    return MOCK_DISTRIBUTION_FILE;
-  });
+  if (rewards) {
+    jest.spyOn(s3Utils, 'getTreeDistribution').mockImplementation(async (requestedChain: Chain) => {
+      if (requestedChain.network !== Network.Ethereum) {
+        throw new Error('Expected test error: getObject');
+      }
+      return MOCK_DISTRIBUTION_FILE;
+    });
+  }
 
   // setup vault charts for the mock vault
   jest.spyOn(chartsUtils, 'queryVaultCharts').mockImplementation(async (_k) =>
@@ -164,9 +166,8 @@ export function setupMockChain(
 
   // setup chain pricing
   if (pricing) {
-    jest
-      .spyOn(pricesUtils, 'queryPrice')
-      .mockImplementation(async (token, _currency) => chain.strategy.getPrice(token));
+    jest.spyOn(pricesUtils, 'queryPrice').mockImplementation(async (token, _currency) => mockPrice(token));
+    jest.spyOn(pricesUtils, 'getPrice').mockImplementation(async (_chain, token) => mockPrice(token));
     jest.spyOn(pricesUtils, 'convert').mockImplementation(async (price: number, currency?: Currency) => {
       if (!currency || currency === Currency.USD) {
         return price;

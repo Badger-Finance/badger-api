@@ -6,8 +6,9 @@ import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
 import { Chain } from '../../chains/config/chain.config';
 import { SUSHISWAP_ARBITRUM_URL, SUSHISWAP_MATIC_URL, SUSHISWAP_URL } from '../../config/constants';
 import { getSdk as getSushiswapSdk, OrderDirection, PairDayData_OrderBy } from '../../graphql/generated/sushiswap';
+import { SourceType } from '../../rewards/enums/source-type.enum';
+import { createYieldSource } from '../../vaults/yields.utils';
 import { PairDayData } from '../interfaces/pair-day-data.interface';
-import { getSwapValue } from './strategy.utils';
 
 export class SushiswapStrategy {
   static async getValueSources(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<CachedYieldSource[]> {
@@ -46,4 +47,20 @@ export async function getSushiSwapValue(
   });
   const converted = pairDayDatas.map((d): PairDayData => ({ reserveUSD: d.reserveUSD, dailyVolumeUSD: d.volumeUSD }));
   return getSwapValue(vaultDefinition, converted);
+}
+
+function getSwapValue(vault: VaultDefinitionModel, tradeData: PairDayData[]): CachedYieldSource {
+  const name = `${vault.protocol} LP Fees`;
+  if (!tradeData || tradeData.length === 0) {
+    return createYieldSource(vault, SourceType.TradeFee, name, 0);
+  }
+  let totalApr = 0;
+  for (let i = 0; i < tradeData.length; i++) {
+    const volume = Number(tradeData[i].dailyVolumeUSD);
+    const poolReserve = Number(tradeData[i].reserveUSD);
+    const fees = volume * 0.0025;
+    totalApr += (fees / poolReserve) * 365 * 100;
+  }
+  const averageApr = totalApr / tradeData.length;
+  return createYieldSource(vault, SourceType.TradeFee, name, averageApr);
 }

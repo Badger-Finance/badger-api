@@ -1,9 +1,8 @@
-import { Currency, keyBy, Token, TokenBalance, TokenValue } from '@badger-dao/sdk';
+import { Currency, Token, TokenBalance, TokenValue } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 
 import { getDataMapper, getVaultEntityId } from '../aws/dynamodb.utils';
 import { Vaultish } from '../aws/interfaces/vaultish.interface';
-import { CachedTokenBalance } from '../aws/models/cached-token-balance.interface';
 import { TokenInformationSnapshot } from '../aws/models/token-information-snapshot.model';
 import { VaultTokenBalance } from '../aws/models/vault-token-balance.model';
 import { Chain } from '../chains/config/chain.config';
@@ -130,32 +129,6 @@ export function lookUpAddrByTokenName(chain: Chain, name: string): Token['addres
   }));
 
   return Object.values(tokensWithAddr).find((token) => token.lookupName === name)?.address;
-}
-
-/**
- * Calculate the difference in two lists of tokens.
- * @param listA reference previous list
- * @param listB reference current list
- * @returns difference between previous and current list
- */
-export function calculateBalanceDifference(listA: TokenValue[], listB: TokenValue[]): TokenValue[] {
-  // we need to construct a measurement diff from the originally measured tokens and the new tokens
-  const listAByToken = keyBy(listA, (t) => t.address);
-  const listBCopy: CachedTokenBalance[] = JSON.parse(JSON.stringify(listB));
-
-  listBCopy.forEach((t) => {
-    const yieldedTokens = listAByToken.get(t.address);
-    if (yieldedTokens) {
-      // lock in current price and caculate value on updated balance
-      for (const token of yieldedTokens) {
-        const price = t.value / t.balance;
-        t.balance -= token.balance;
-        t.value = t.balance * price;
-      }
-    }
-  });
-
-  return listBCopy;
 }
 
 export async function toTokenValue(chain: Chain, t: TokenBalance): Promise<TokenValue> {

@@ -18,7 +18,7 @@ import { YieldEstimate } from '../aws/models/yield-estimate.model';
 import { Chain } from '../chains/config/chain.config';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import { BoostRange } from '../rewards/interfaces/boost-range.interface';
-import { calculateBalanceDifference, getFullToken, getFullTokens } from '../tokens/tokens.utils';
+import { getFullToken, getFullTokens } from '../tokens/tokens.utils';
 import { queryVaultYieldEvents } from './harvests.utils';
 import { filterPerformanceItems } from './influence.utils';
 import { VaultYieldEvaluation } from './interfaces/vault-yield-evaluation.interface';
@@ -260,29 +260,15 @@ export function getVaultYieldProjection(
 ): CachedYieldProjection {
   const { value, balance, available } = vault;
   const { nonHarvestSources, nonHarvestSourcesApy } = yieldSources;
-  const {
-    yieldTokens,
-    previousYieldTokens,
-    harvestTokens,
-    previousHarvestTokens,
-    duration: periodDuration,
-    lastHarvestedAt,
-  } = yieldEstimate;
-
-  const yieldTokensCurrent = calculateBalanceDifference(previousYieldTokens, yieldTokens);
-  const harvestTokensCurrent = calculateBalanceDifference(previousHarvestTokens, harvestTokens);
+  const { yieldTokens, harvestTokens, lastHarvestedAt } = yieldEstimate;
 
   // calculate the overall harvest values
   const harvestValue = harvestTokens.reduce((total, token) => (total += token.value), 0);
   const yieldValue = yieldTokens.reduce((total, token) => (total += token.value), 0);
-  const harvestDuration = Date.now() - lastHarvestedAt;
-
-  // calculate the current measurement periods values
-  const harvestValuePerPeriod = harvestTokensCurrent.reduce((total, token) => (total += token.value), 0);
-  const yieldValuePerPeriod = yieldTokensCurrent.reduce((total, token) => (total += token.value), 0);
-  const harvestCompoundValuePerPeriod = harvestTokensCurrent
+  const harvestCompoundValue = harvestTokens
     .filter((t) => vault.underlyingToken === t.address)
     .reduce((total, token) => (total += token.value), 0);
+  const harvestDuration = Date.now() - lastHarvestedAt;
 
   const earningValue = balance > 0 ? value * ((balance - available) / balance) : 0;
   const nonHarvestApr = nonHarvestSources.reduce((total, source) => (total += source.performance.baseYield), 0);
@@ -295,21 +281,16 @@ export function getVaultYieldProjection(
     vault: vault.address,
     harvestValue,
     harvestApr: calculateYield(earningValue, harvestValue, harvestDuration),
-    harvestPeriodApr: calculateYield(earningValue, harvestValuePerPeriod, periodDuration),
-    harvestPeriodApy: calculateYield(
-      earningValue,
-      harvestValuePerPeriod,
-      periodDuration,
-      harvestCompoundValuePerPeriod,
-    ),
+    harvestPeriodApr: calculateYield(earningValue, harvestValue, harvestDuration),
+    harvestPeriodApy: calculateYield(earningValue, harvestValue, harvestDuration, harvestCompoundValue),
     harvestTokens: harvestTokens.map((t) => balanceToTokenRate(t, earningValue, harvestDuration)),
-    harvestPeriodSources: harvestTokensCurrent.map((t) => balanceToTokenRate(t, earningValue, periodDuration)),
-    harvestPeriodSourcesApy: harvestTokensCurrent.map((t) => balanceToTokenRate(t, earningValue, periodDuration)),
+    harvestPeriodSources: harvestTokens.map((t) => balanceToTokenRate(t, earningValue, harvestDuration)),
+    harvestPeriodSourcesApy: harvestTokens.map((t) => balanceToTokenRate(t, earningValue, harvestDuration)),
     yieldValue,
     yieldApr: calculateYield(earningValue, yieldValue, harvestDuration),
     yieldTokens: yieldTokens.map((t) => balanceToTokenRate(t, earningValue, harvestDuration)),
-    yieldPeriodApr: calculateYield(earningValue, yieldValuePerPeriod, periodDuration),
-    yieldPeriodSources: yieldTokensCurrent.map((t) => balanceToTokenRate(t, earningValue, periodDuration)),
+    yieldPeriodApr: calculateYield(earningValue, yieldValue, harvestDuration),
+    yieldPeriodSources: yieldTokens.map((t) => balanceToTokenRate(t, earningValue, harvestDuration)),
     nonHarvestApr,
     nonHarvestSources,
     nonHarvestApy,

@@ -2,7 +2,7 @@ import { CachedYieldSource } from '../../aws/models/cached-yield-source.interfac
 import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
 import { Chain } from '../../chains/config/chain.config';
 import { SWAPR_URL } from '../../config/constants';
-import { getUniV2SwapValue } from './strategy.utils';
+import { getUniV2SwapValue } from './uniswap.strategy';
 
 export class SwaprStrategy {
   static async getValueSources(_chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<CachedYieldSource[]> {

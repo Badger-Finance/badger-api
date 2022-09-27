@@ -5,7 +5,7 @@ import { VaultSnapshot } from '@badger-dao/sdk';
 import { ChartData } from '../../charts/chart-data.model';
 import { VaultStrategy } from '../../vaults/interfaces/vault-strategy.interface';
 
-export class HistoricVaultSnapshotModel extends ChartData<HistoricVaultSnapshotModel> implements VaultSnapshot {
+export class HistoricVaultSnapshotModel extends ChartData implements VaultSnapshot {
   static NAMESPACE = 'vault';
 
   @attribute()

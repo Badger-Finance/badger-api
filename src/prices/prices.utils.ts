@@ -1,5 +1,6 @@
 import { greaterThanOrEqualTo } from '@aws/dynamodb-expressions';
 import { Currency } from '@badger-dao/sdk';
+import { UnprocessableEntity } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 
 import { getDataMapper } from '../aws/dynamodb.utils';
@@ -7,6 +8,12 @@ import { TokenPriceSnapshot } from '../aws/models/token-price-snapshot.model';
 import { Chain } from '../chains/config/chain.config';
 import { request } from '../common/request';
 import { TOKENS } from '../config/tokens.config';
+import { getBPTPrice } from '../protocols/strategies/balancer.strategy';
+import { getCurveTokenPrice } from '../protocols/strategies/convex.strategy';
+import { getOnChainLiquidityPrice, resolveTokenPrice } from '../protocols/strategies/uniswap.strategy';
+import { getFullToken } from '../tokens/tokens.utils';
+import { getVaultTokenPrice } from '../vaults/vaults.utils';
+import { PricingType } from './enums/pricing-type.enum';
 import { CoinGeckoPriceResponse } from './interface/coingecko-price-response.interface';
 import { TokenPrice } from './interface/token-price.interface';
 
@@ -88,6 +95,13 @@ export async function convert(value: number, currency?: Currency): Promise<numbe
   }
 }
 
+/**
+ *
+ * @param chain
+ * @param inputs
+ * @param lookupName
+ * @returns
+ */
 export async function fetchPrices(chain: Chain, inputs: string[], lookupName = false): Promise<CoinGeckoPriceResponse> {
   if (inputs.length === 0) {
     return {};
@@ -114,6 +128,13 @@ export async function fetchPrices(chain: Chain, inputs: string[], lookupName = f
   return request<CoinGeckoPriceResponse>(baseURL, params);
 }
 
+/**
+ *
+ * @param address
+ * @param timestamp
+ * @param currency
+ * @returns
+ */
 export async function queryPriceAtTimestamp(
   address: string,
   timestamp: number,
@@ -138,5 +159,36 @@ export async function queryPriceAtTimestamp(
   } catch (err) {
     console.error(err);
     return { address, price: 0, updatedAt: timestamp };
+  }
+}
+
+export async function getPrice(chain: Chain, address: string): Promise<TokenPrice> {
+  const token = await getFullToken(chain, address);
+  const tokenConfig = chain.tokens[address];
+
+  switch (token.type) {
+    case PricingType.Custom:
+      if (!token.getPrice) {
+        throw new UnprocessableEntity(`${token.name} requires custom price implementation`);
+      }
+      return token.getPrice(chain, token, tokenConfig.lookupName);
+    case PricingType.OnChainUniV2LP:
+      if (!token.lookupName) {
+        throw new UnprocessableEntity(`${token.name} required lookupName to utilize OnChainUniV2LP pricing`);
+      }
+      return resolveTokenPrice(chain, token.address, token.lookupName);
+    case PricingType.BalancerLP:
+      return getBPTPrice(chain, token.address);
+    case PricingType.CurveLP:
+      return getCurveTokenPrice(chain, token.address);
+    case PricingType.UniV2LP:
+      return getOnChainLiquidityPrice(chain, token.address);
+    case PricingType.Vault:
+      return getVaultTokenPrice(chain, token.address);
+    case PricingType.Contract:
+    case PricingType.LookupName:
+      throw new UnprocessableEntity('CoinGecko pricing should utilize fetchPrices via utilities');
+    default:
+      throw new UnprocessableEntity('Unsupported PricingType');
   }
 }

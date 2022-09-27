@@ -6,7 +6,7 @@ import { shouldTrim, shouldUpdate, toChartDataBlob, toChartDataKey } from './cha
 describe('charts.utils', () => {
   describe('toChartDataBlob', () => {
     it('converts arbitrary data array into a chart data blob', () => {
-      class AnimalData extends ChartData<AnimalData> {
+      class AnimalData extends ChartData {
         animal!: string;
         noise!: string;
 

@@ -42,7 +42,7 @@ export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefini
 
   const value = balance * tokenPriceData.price;
   const {
-    yieldProjection: { yieldPeriodApr, harvestPeriodApr, nonHarvestApr },
+    yieldProjection: { yieldApr, harvestApr, nonHarvestApr },
   } = cachedVault;
 
   return {
@@ -59,8 +59,8 @@ export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefini
     boostWeight: boostWeight.toNumber(),
     apr: cachedVault.apr.baseYield,
     grossApr: cachedVault.apr.grossYield,
-    yieldApr: yieldPeriodApr + nonHarvestApr,
-    harvestApr: harvestPeriodApr + nonHarvestApr,
+    yieldApr: yieldApr + nonHarvestApr,
+    harvestApr: harvestApr + nonHarvestApr,
   };
 }
 

@@ -3,7 +3,6 @@ import { BigNumber } from 'ethers';
 
 import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
-// import { TOKENS } from '../config/tokens.config';
 import * as pricesUtils from '../prices/prices.utils';
 import { SourceType } from '../rewards/enums/source-type.enum';
 import {
@@ -17,6 +16,7 @@ import {
 } from '../test/constants';
 import { mockQuery, setupMockChain } from '../test/mocks.utils';
 import { mockContract } from '../test/mocks.utils/contracts/mock.contract.base';
+import { mockPrice } from '../test/mocks.utils/mock.helpers';
 import * as tokensUtils from '../tokens/tokens.utils';
 import * as influenceUtils from '../vaults/influence.utils';
 import * as vaultsUtils from '../vaults/vaults.utils';
@@ -36,7 +36,7 @@ describe('harvests.utils', () => {
     // setup token responses
     jest.spyOn(tokensUtils, 'getFullToken').mockImplementation(async (_c, t) => MOCK_TOKENS[t]);
     jest.spyOn(pricesUtils, 'queryPriceAtTimestamp').mockImplementation(async (token, _t, _c) => {
-      const basePrice = await chain.strategy.getPrice(token);
+      const basePrice = await mockPrice(token);
       return {
         ...basePrice,
         updatedAt: TEST_CURRENT_TIMESTAMP,
@@ -59,7 +59,7 @@ describe('harvests.utils', () => {
       .mockImplementation(async (v) => [createYieldSource(v, SourceType.PreCompound, VAULT_SOURCE, 3)]);
 
     jest.spyOn(VaultsService.prototype, 'listHarvests').mockImplementation(async () => MOCK_HARVESTS);
-    jest.spyOn(influenceUtils, 'getInfuelnceVaultYieldBalance').mockImplementation(async (_c, _v) => 4_500_000);
+    jest.spyOn(influenceUtils, 'getVaultHarvestBalance').mockImplementation(async (_c, _v) => 4_500_000);
     jest.spyOn(chain.sdk.graph, 'loadSettHarvests').mockImplementation(async () => ({
       settHarvests: [
         {

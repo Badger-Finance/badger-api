@@ -4,11 +4,11 @@ import { BigNumber } from 'ethers';
 
 import * as accountsUtils from '../accounts/accounts.utils';
 import { getChainStartBlockKey } from '../aws/dynamodb.utils';
+import { ClaimableBalance } from '../aws/models/claimable-balance.model';
+import { UserClaimMetadata } from '../aws/models/user-claim-metadata.model';
 import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
 import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
-import { ClaimableBalance } from '../rewards/entities/claimable-balance';
-import { UserClaimMetadata } from '../rewards/entities/user-claim-metadata';
 import { RewardMerkleDistribution } from '../rewards/interfaces/merkle-distributor.interface';
 import * as rewardsUtils from '../rewards/rewards.utils';
 import { MOCK_DISTRIBUTION_FILE, TEST_CURRENT_BLOCK } from '../test/constants';
