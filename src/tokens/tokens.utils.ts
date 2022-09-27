@@ -3,7 +3,6 @@ import { ethers } from 'ethers';
 
 import { getDataMapper, getVaultEntityId } from '../aws/dynamodb.utils';
 import { Vaultish } from '../aws/interfaces/vaultish.interface';
-import { CachedTokenBalance } from '../aws/models/cached-token-balance.interface';
 import { TokenInformationSnapshot } from '../aws/models/token-information-snapshot.model';
 import { VaultTokenBalance } from '../aws/models/vault-token-balance.model';
 import { Chain } from '../chains/config/chain.config';
@@ -141,7 +140,7 @@ export function lookUpAddrByTokenName(chain: Chain, name: string): Token['addres
 export function calculateBalanceDifference(listA: TokenValue[], listB: TokenValue[]): TokenValue[] {
   // we need to construct a measurement diff from the originally measured tokens and the new tokens
   const listAByToken = keyBy(listA, (t) => t.address);
-  const listBCopy: CachedTokenBalance[] = JSON.parse(JSON.stringify(listB));
+  const listBCopy: TokenValue[] = JSON.parse(JSON.stringify(listB));
 
   listBCopy.forEach((t) => {
     const yieldedTokens = listAByToken.get(t.address);
