@@ -12,7 +12,7 @@ import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { YieldEstimate } from '../aws/models/yield-estimate.model';
 import { getSupportedChains } from '../chains/chains.utils';
 import { Chain } from '../chains/config/chain.config';
-import { calculateBalanceDifference, toTokenValue } from '../tokens/tokens.utils';
+import { toTokenValue } from '../tokens/tokens.utils';
 import { VAULT_SOURCE } from '../vaults/vaults.config';
 import { VaultsService } from '../vaults/vaults.service';
 import { queryYieldEstimate } from '../vaults/vaults.utils';
@@ -96,18 +96,6 @@ async function captureYieldEstimate(chain: Chain, vault: VaultDefinitionModel, n
         t.name = VAULT_SOURCE;
       }
     });
-
-    const harvestDifference = calculateBalanceDifference(
-      yieldEstimate.previousHarvestTokens,
-      yieldEstimate.harvestTokens,
-    );
-    const hasNegatives = harvestDifference.some((b) => b.balance < 0);
-
-    // if the difference incur negative values due to slippage or otherwise, force a comparison against the full harvest
-    if (hasNegatives) {
-      yieldEstimate.previousHarvestTokens = [];
-      console.warn(`${vault.name} flashed negative balance earnings!`);
-    }
 
     // purposefully await result to leverage try catch
     const result = await mapper.put(Object.assign(new YieldEstimate(), yieldEstimate));
