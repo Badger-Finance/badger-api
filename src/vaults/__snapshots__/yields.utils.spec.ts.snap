@@ -4,28 +4,28 @@ exports[`yields.utils getVaultYieldProjection returns a yield projection estimat
 Object {
   "chain": "ethereum",
   "harvestApr": 27.046043378488417,
-  "harvestPeriodApr": 26.15441557480198,
-  "harvestPeriodApy": 26.15441557480198,
+  "harvestPeriodApr": 27.046043378488417,
+  "harvestPeriodApy": 27.046043378488417,
   "harvestPeriodSources": Array [
     Object {
       "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
-      "apr": 26.15441557480198,
-      "balance": 0.0044,
+      "apr": 27.046043378488417,
+      "balance": 0.0091,
       "decimals": 8,
       "name": "Wrapped Bitcoin",
       "symbol": "WBTC",
-      "value": 2.42,
+      "value": 5.005,
     },
   ],
   "harvestPeriodSourcesApy": Array [
     Object {
       "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
-      "apr": 26.15441557480198,
-      "balance": 0.0044,
+      "apr": 27.046043378488417,
+      "balance": 0.0091,
       "decimals": 8,
       "name": "Wrapped Bitcoin",
       "symbol": "WBTC",
-      "value": 2.42,
+      "value": 5.005,
     },
   ],
   "harvestTokens": Array [
@@ -168,16 +168,16 @@ Object {
   ],
   "vault": undefined,
   "yieldApr": 27.34325264638389,
-  "yieldPeriodApr": 26.15441557480198,
+  "yieldPeriodApr": 27.34325264638389,
   "yieldPeriodSources": Array [
     Object {
       "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
-      "apr": 26.15441557480198,
-      "balance": 0.0044,
+      "apr": 27.34325264638389,
+      "balance": 0.0092,
       "decimals": 8,
       "name": "Wrapped Bitcoin",
       "symbol": "WBTC",
-      "value": 2.42,
+      "value": 5.06,
     },
   ],
   "yieldTokens": Array [
