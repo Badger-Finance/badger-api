@@ -1,9 +1,11 @@
 // improve, add list of errors to retry (can be only IO errors, or whatever)
-export function retryFuncWrapper<A, R>(func: A, retryTimes: number = 2) {
+// almost died typing this function, `any` for now, type flow is working fine with generic
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function retryFuncWrapper<A extends (...args: any[]) => any>(func: A, retryTimes: number = 2) {
   if (!func) throw new Error('func is required');
   if (typeof func !== 'function') throw new Error('func must be a function');
 
-  return async function (...args: A extends (...args: infer P) => R ? P : never[]) {
+  return async function (...args: Parameters<A>): Promise<ReturnType<A>> {
     let retryCount = 0;
 
     let lastError: Error | unknown = null;

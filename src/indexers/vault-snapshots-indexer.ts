@@ -3,6 +3,7 @@ import { CurrentVaultSnapshotModel } from '../aws/models/current-vault-snapshot.
 import { HistoricVaultSnapshotModel } from '../aws/models/historic-vault-snapshot.model';
 import { getSupportedChains } from '../chains/chains.utils';
 import { updateSnapshots } from '../charts/charts.utils';
+import { rfw } from '../utils/retry.utils';
 import { vaultToSnapshot } from './indexer.utils';
 
 export async function refreshVaultSnapshots() {
@@ -10,11 +11,11 @@ export async function refreshVaultSnapshots() {
   const mapper = getDataMapper();
 
   for (const chain of getSupportedChains()) {
-    const vaults = await chain.vaults.all();
+    const vaults = await rfw(chain.vaults.all)();
     await Promise.all(
       vaults.map(async (vault) => {
         try {
-          const snapshot = await vaultToSnapshot(chain, vault);
+          const snapshot = await rfw(vaultToSnapshot)(chain, vault);
           const baseEntity = {
             ...snapshot,
             id: getVaultEntityId(chain, vault),

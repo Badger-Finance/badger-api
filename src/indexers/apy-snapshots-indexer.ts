@@ -3,6 +3,7 @@ import { CachedYieldSource } from '../aws/models/cached-yield-source.interface';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { getSupportedChains } from '../chains/chains.utils';
 import { Chain } from '../chains/config/chain.config';
+import { rfw } from '../utils/retry.utils';
 import { getVaultPerformance, queryYieldSources } from '../vaults/vaults.utils';
 
 export async function refreshApySnapshots() {
@@ -16,7 +17,7 @@ export async function refreshApySnapshots() {
 
 export async function refreshChainApySnapshots(chain: Chain, vault: VaultDefinitionModel) {
   try {
-    const reportedYieldSources = await getVaultPerformance(chain, vault);
+    const reportedYieldSources = await rfw(getVaultPerformance)(chain, vault);
     const currentYieldSources = reportedYieldSources.filter(
       (s) => !isNaN(s.performance.baseYield) && isFinite(s.performance.baseYield),
     );
