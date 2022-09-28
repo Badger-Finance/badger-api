@@ -26,6 +26,7 @@ import { TokenPrice } from '../prices/interface/token-price.interface';
 import { queryPrice } from '../prices/prices.utils';
 import { getProtocolValueSources, getRewardEmission } from '../rewards/rewards.utils';
 import { getFullToken } from '../tokens/tokens.utils';
+import { rfw } from '../utils/retry.utils';
 import { VaultStrategy } from './interfaces/vault-strategy.interface';
 import { aggregateSources, queryVaultYieldSources } from './yields.utils';
 
@@ -179,6 +180,54 @@ export async function getStrategyInfo(
   vault: VaultDefinitionModel,
   overrides?: CallOverrides,
 ): Promise<VaultStrategy> {
+  const sdk = await chain.getSdk();
+  const { version, address } = vault;
+  const strategyAddress = await sdk.vaults.getVaultStrategy(
+    {
+      address,
+      version,
+    },
+    overrides,
+  );
+  if (version === VaultVersion.v1) {
+    const strategy = Strategy__factory.connect(strategyAddress, sdk.provider);
+    // you know, these things happen...
+    // eslint-disable-next-line prefer-const
+    let [withdrawFee, performanceFee, strategistFee] = await Promise.all([
+      strategy.withdrawalFee({ ...overrides }),
+      strategy.performanceFeeGovernance({ ...overrides }),
+      strategy.performanceFeeStrategist({ ...overrides }),
+    ]);
+    // bveCVX does not have a way to capture materially its performance fee
+    if (address === TOKENS.BVECVX) {
+      performanceFee = BigNumber.from('1500'); // set performance fee to 15%
+    }
+    return {
+      address: strategyAddress,
+      withdrawFee: withdrawFee.toNumber(),
+      performanceFee: performanceFee.toNumber(),
+      strategistFee: strategistFee.toNumber(),
+      aumFee: 0,
+    };
+  } else {
+    const vaultContract = VaultV15__factory.connect(address, sdk.provider);
+    const [withdrawFee, performanceFee, strategistFee, aumFee] = await Promise.all([
+      vaultContract.withdrawalFee({ ...overrides }),
+      vaultContract.performanceFeeGovernance({ ...overrides }),
+      vaultContract.performanceFeeStrategist({ ...overrides }),
+      vaultContract.managementFee({ ...overrides }),
+    ]);
+    return {
+      address: strategyAddress,
+      withdrawFee: withdrawFee.toNumber(),
+      performanceFee: performanceFee.toNumber(),
+      strategistFee: strategistFee.toNumber(),
+      aumFee: aumFee.toNumber(),
+    };
+  }
+}
+
+export async function getStrategyInfoRfw(...args: Parameters<typeof getStrategyInfo>): Promise<VaultStrategy> {
   const defaultStrategyInfo: VaultStrategy = {
     address: ethers.constants.AddressZero,
     withdrawFee: 0,
@@ -186,52 +235,9 @@ export async function getStrategyInfo(
     strategistFee: 0,
     aumFee: 0,
   };
+
   try {
-    const sdk = await chain.getSdk();
-    const { version, address } = vault;
-    const strategyAddress = await sdk.vaults.getVaultStrategy(
-      {
-        address,
-        version,
-      },
-      overrides,
-    );
-    if (version === VaultVersion.v1) {
-      const strategy = Strategy__factory.connect(strategyAddress, sdk.provider);
-      // you know, these things happen...
-      // eslint-disable-next-line prefer-const
-      let [withdrawFee, performanceFee, strategistFee] = await Promise.all([
-        strategy.withdrawalFee({ ...overrides }),
-        strategy.performanceFeeGovernance({ ...overrides }),
-        strategy.performanceFeeStrategist({ ...overrides }),
-      ]);
-      // bveCVX does not have a way to capture materially its performance fee
-      if (address === TOKENS.BVECVX) {
-        performanceFee = BigNumber.from('1500'); // set performance fee to 15%
-      }
-      return {
-        address: strategyAddress,
-        withdrawFee: withdrawFee.toNumber(),
-        performanceFee: performanceFee.toNumber(),
-        strategistFee: strategistFee.toNumber(),
-        aumFee: 0,
-      };
-    } else {
-      const vaultContract = VaultV15__factory.connect(address, sdk.provider);
-      const [withdrawFee, performanceFee, strategistFee, aumFee] = await Promise.all([
-        vaultContract.withdrawalFee({ ...overrides }),
-        vaultContract.performanceFeeGovernance({ ...overrides }),
-        vaultContract.performanceFeeStrategist({ ...overrides }),
-        vaultContract.managementFee({ ...overrides }),
-      ]);
-      return {
-        address: strategyAddress,
-        withdrawFee: withdrawFee.toNumber(),
-        performanceFee: performanceFee.toNumber(),
-        strategistFee: strategistFee.toNumber(),
-        aumFee: aumFee.toNumber(),
-      };
-    }
+    return rfw(getStrategyInfo)(...args);
   } catch (err) {
     console.error(err);
     return defaultStrategyInfo;

@@ -15,7 +15,7 @@ import { Nullable } from '../utils/types.utils';
 import { getVaultHarvestBalance, isInfluenceVault } from './influence.utils';
 import { VaultYieldItem } from './interfaces/vault-yield-item.interface';
 import { VAULT_TWAY_DURATION } from './vaults.config';
-import { getStrategyInfo } from './vaults.utils';
+import { getStrategyInfoRfw } from './vaults.utils';
 import { calculateYield } from './yields.utils';
 
 // this allows five chunks of 10k blocks per index, approx 2 week
@@ -156,7 +156,7 @@ async function evaluateYieldItems(
         const balance = await getVaultHarvestBalance(chain, vault, item.block);
         const { price: vaultPrice } = await queryPriceAtTimestamp(vault.address, item.timestamp * 1000);
         const vaultPrincipal = vaultPrice * balance;
-        const strategyInfo = await getStrategyInfo(chain, vault, { blockTag: item.block });
+        const strategyInfo = await getStrategyInfoRfw(chain, vault, { blockTag: item.block });
         const performanceScalar = 1 / (1 - strategyInfo.performanceFee / 10_000);
 
         let eventDuration = duration;

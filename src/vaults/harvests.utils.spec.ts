@@ -47,7 +47,7 @@ describe('harvests.utils', () => {
     const vaultMock = mockContract<Vault>(Vault__factory);
     jest.spyOn(vaultMock, 'totalSupply').mockImplementation(async (_o) => BigNumber.from('10000000000000000000000000'));
 
-    jest.spyOn(vaultsUtils, 'getStrategyInfo').mockImplementation(async () => ({
+    jest.spyOn(vaultsUtils, 'getStrategyInfoRfw').mockImplementation(async () => ({
       performanceFee: 1_000,
       withdrawFee: 100,
       aumFee: 0,
