@@ -16,8 +16,8 @@ export async function captureVaultData() {
       continue;
     }
 
-    const productionVaults = await rfw(sdk.registry.getProductionVaults)();
-    let developmentVaults = await rfw(sdk.registry.getDevelopmentVaults)();
+    const productionVaults = await rfw(sdk.registry.getProductionVaults, sdk.registry)();
+    let developmentVaults = await rfw(sdk.registry.getDevelopmentVaults, sdk.registry)();
 
     const productionVaultAddresses = productionVaults.map((v) => v.address);
     developmentVaults = developmentVaults.filter((v) => !productionVaultAddresses.includes(v.address));
@@ -31,7 +31,7 @@ export async function captureVaultData() {
     // update vaults from chain
     await Promise.all(
       allRegistryVaults.map(async (vault) => {
-        const fullVaultData = await rfw(sdk.vaults.loadVault)({ address: vault.address, update: true });
+        const fullVaultData = await rfw(sdk.vaults.loadVault, sdk.vaults)({ address: vault.address, update: true });
         return updateVaultDefinition(chain, fullVaultData);
       }),
     );

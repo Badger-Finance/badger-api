@@ -11,7 +11,7 @@ export async function updateVaultHarvests() {
   for (const chain of chains) {
     const sdk = await chain.getSdk();
     const currentBlock = await rfw(sdk.provider.getBlockNumber)();
-    const vaults = await rfw(chain.vaults.all)();
+    const vaults = await rfw(chain.vaults.all, chain.vaults)();
 
     await Promise.all(
       vaults.map(async (vault) => {

@@ -22,7 +22,10 @@ import { getVaultYieldProjection, getYieldSources } from '../vaults/yields.utils
 async function loadGraphTimestamp(sdk: BadgerSDK, vault: VaultDefinitionModel): Promise<number> {
   let lastHarvestedAt = 0;
 
-  const { settHarvests } = await rfw(sdk.graph.loadSettHarvests)({
+  const { settHarvests } = await rfw(
+    sdk.graph.loadSettHarvests,
+    sdk.graph,
+  )({
     first: 1,
     where: {
       sett: vault.address.toLowerCase(),
@@ -30,7 +33,10 @@ async function loadGraphTimestamp(sdk: BadgerSDK, vault: VaultDefinitionModel): 
     orderBy: SettHarvest_OrderBy.Timestamp,
     orderDirection: OrderDirection.Desc,
   });
-  const { badgerTreeDistributions } = await rfw(sdk.graph.loadBadgerTreeDistributions)({
+  const { badgerTreeDistributions } = await rfw(
+    sdk.graph.loadBadgerTreeDistributions,
+    sdk.graph,
+  )({
     first: 1,
     where: {
       sett: vault.address.toLowerCase(),
@@ -52,7 +58,7 @@ async function loadGraphTimestamp(sdk: BadgerSDK, vault: VaultDefinitionModel): 
 async function captureYieldEstimate(chain: Chain, vault: VaultDefinitionModel, now: number): Promise<YieldEstimate> {
   const convert = async (t: TokenBalance) => toTokenValue(chain, t);
   try {
-    const sdk = await rfw(chain.getSdk)();
+    const sdk = await chain.getSdk();
     const mapper = getDataMapper();
     const yieldEstimate = await queryYieldEstimate(vault);
 
@@ -60,7 +66,7 @@ async function captureYieldEstimate(chain: Chain, vault: VaultDefinitionModel, n
 
     if (vault.version === VaultVersion.v1_5) {
       try {
-        const pendingHarvest = await rfw(sdk.vaults.getPendingHarvest)(vault.address);
+        const pendingHarvest = await rfw(sdk.vaults.getPendingHarvest, sdk.vaults)(vault.address);
         yieldEstimate.harvestTokens = await Promise.all(pendingHarvest.tokenRewards.map(convert));
         yieldEstimate.lastHarvestedAt = pendingHarvest.lastHarvestedAt * 1000;
         shouldCheckGraph = false;
@@ -76,7 +82,7 @@ async function captureYieldEstimate(chain: Chain, vault: VaultDefinitionModel, n
         }
       }
 
-      const pendingYield = await rfw(sdk.vaults.getPendingYield)(vault.address);
+      const pendingYield = await rfw(sdk.vaults.getPendingYield, sdk.vaults)(vault.address);
       yieldEstimate.yieldTokens = await Promise.all(pendingYield.tokenRewards.map(convert));
     }
 

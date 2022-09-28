@@ -11,7 +11,7 @@ export async function refreshVaultSnapshots() {
   const mapper = getDataMapper();
 
   for (const chain of getSupportedChains()) {
-    const vaults = await rfw(chain.vaults.all)();
+    const vaults = await rfw(chain.vaults.all, chain.vaults)();
     await Promise.all(
       vaults.map(async (vault) => {
         try {
