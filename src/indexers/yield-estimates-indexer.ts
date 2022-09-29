@@ -13,6 +13,7 @@ import { YieldEstimate } from '../aws/models/yield-estimate.model';
 import { getSupportedChains } from '../chains/chains.utils';
 import { Chain } from '../chains/config/chain.config';
 import { toTokenValue } from '../tokens/tokens.utils';
+import { rfw } from '../utils/retry.utils';
 import { VAULT_SOURCE } from '../vaults/vaults.config';
 import { VaultsService } from '../vaults/vaults.service';
 import { queryYieldEstimate } from '../vaults/vaults.utils';
@@ -21,7 +22,10 @@ import { getVaultYieldProjection, getYieldSources } from '../vaults/yields.utils
 async function loadGraphTimestamp(sdk: BadgerSDK, vault: VaultDefinitionModel): Promise<number> {
   let lastHarvestedAt = 0;
 
-  const { settHarvests } = await sdk.graph.loadSettHarvests({
+  const { settHarvests } = await rfw(
+    sdk.graph.loadSettHarvests,
+    sdk.graph,
+  )({
     first: 1,
     where: {
       sett: vault.address.toLowerCase(),
@@ -29,7 +33,10 @@ async function loadGraphTimestamp(sdk: BadgerSDK, vault: VaultDefinitionModel): 
     orderBy: SettHarvest_OrderBy.Timestamp,
     orderDirection: OrderDirection.Desc,
   });
-  const { badgerTreeDistributions } = await sdk.graph.loadBadgerTreeDistributions({
+  const { badgerTreeDistributions } = await rfw(
+    sdk.graph.loadBadgerTreeDistributions,
+    sdk.graph,
+  )({
     first: 1,
     where: {
       sett: vault.address.toLowerCase(),
@@ -59,7 +66,7 @@ async function captureYieldEstimate(chain: Chain, vault: VaultDefinitionModel, n
 
     if (vault.version === VaultVersion.v1_5) {
       try {
-        const pendingHarvest = await sdk.vaults.getPendingHarvest(vault.address);
+        const pendingHarvest = await rfw(sdk.vaults.getPendingHarvest, sdk.vaults)(vault.address);
         yieldEstimate.harvestTokens = await Promise.all(pendingHarvest.tokenRewards.map(convert));
         yieldEstimate.lastHarvestedAt = pendingHarvest.lastHarvestedAt * 1000;
         shouldCheckGraph = false;
@@ -75,12 +82,12 @@ async function captureYieldEstimate(chain: Chain, vault: VaultDefinitionModel, n
         }
       }
 
-      const pendingYield = await sdk.vaults.getPendingYield(vault.address);
+      const pendingYield = await rfw(sdk.vaults.getPendingYield, sdk.vaults)(vault.address);
       yieldEstimate.yieldTokens = await Promise.all(pendingYield.tokenRewards.map(convert));
     }
 
     if (shouldCheckGraph) {
-      yieldEstimate.lastHarvestedAt = await loadGraphTimestamp(sdk, vault);
+      yieldEstimate.lastHarvestedAt = await rfw(loadGraphTimestamp)(sdk, vault);
     }
 
     // a harvest happened since we last measured, all previous data is now invalid
@@ -119,9 +126,9 @@ export async function refreshYieldEstimates() {
       }
 
       try {
-        const yieldEstimate = await captureYieldEstimate(chain, vault, now);
-        const yieldSources = await getYieldSources(vault);
-        const cachedVault = await VaultsService.loadVaultV3(chain, vault);
+        const yieldEstimate = await rfw(captureYieldEstimate)(chain, vault, now);
+        const yieldSources = await rfw(getYieldSources)(vault);
+        const cachedVault = await rfw(VaultsService.loadVaultV3)(chain, vault);
         const yieldProjection = getVaultYieldProjection(chain, cachedVault, yieldSources, yieldEstimate);
         const entity = Object.assign(new CachedYieldProjection(), yieldProjection);
 

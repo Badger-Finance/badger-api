@@ -3,10 +3,11 @@ import { ProtocolMetricSnapshot } from '../aws/models/protocol-metric-snapshot.m
 import { getSupportedChains } from '../chains/chains.utils';
 import { MetricType } from '../metrics/enums/metric-type';
 import { getChainMetrics } from '../metrics/metrics.utils';
+import { rfw } from '../utils/retry.utils';
 
 export const indexProtocolMetrics = async () => {
   const mapper = getDataMapper();
-  const metric = await getChainMetrics(getSupportedChains());
+  const metric = await rfw(getChainMetrics)(getSupportedChains());
   const metricSnapshot = Object.assign(new ProtocolMetricSnapshot(), { ...metric, type: MetricType.protocol });
 
   try {

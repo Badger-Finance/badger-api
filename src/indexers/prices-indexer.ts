@@ -4,6 +4,7 @@ import { PricingType } from '../prices/enums/pricing-type.enum';
 import { CoinGeckoPriceResponse } from '../prices/interface/coingecko-price-response.interface';
 import { fetchPrices, getPrice, updatePrice } from '../prices/prices.utils';
 import { lookUpAddrByTokenName } from '../tokens/tokens.utils';
+import { rfw } from '../utils/retry.utils';
 
 export async function indexPrices() {
   for (const chain of getSupportedChains()) {
@@ -24,15 +25,17 @@ export async function indexPrices() {
         (t) => t.type !== PricingType.Contract && t.type !== PricingType.LookupName,
       );
 
+      const fetchPriceRwf = rfw(fetchPrices);
+
       // execute price look ups
       const [contractPrices, lookupNamePrices] = await Promise.all([
-        fetchPrices(chain, contractTokenAddresses),
-        fetchPrices(chain, lookupNames, true),
+        fetchPriceRwf(chain, contractTokenAddresses),
+        fetchPriceRwf(chain, lookupNames, true),
       ]);
       const onChainPrices = await Promise.all(
         onChainTokens.map(async (t) => {
           try {
-            const result = await getPrice(chain, t.address);
+            const result = await rfw(getPrice)(chain, t.address);
             // allow catch to handle any issues
             return result;
           } catch (err) {

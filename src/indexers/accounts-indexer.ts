@@ -9,6 +9,7 @@ import { getTreeDistribution } from '../aws/s3.utils';
 import { getSupportedChains } from '../chains/chains.utils';
 import { Chain } from '../chains/config/chain.config';
 import { getClaimableRewards } from '../rewards/rewards.utils';
+import { rfw } from '../utils/retry.utils';
 
 export async function refreshClaimableBalances(chain: Chain) {
   const mapper = getDataMapper();
@@ -19,10 +20,10 @@ export async function refreshClaimableBalances(chain: Chain) {
     return;
   }
 
-  const latestMetadata = await getLatestMetadata(chain);
+  const latestMetadata = await rfw(getLatestMetadata)(chain);
   const { endBlock } = latestMetadata;
   const snapshotStartBlock = endBlock + 1;
-  const snapshotEndBlock = await chain.provider.getBlockNumber();
+  const snapshotEndBlock = await rfw(chain.provider.getBlockNumber)();
 
   if (snapshotEndBlock <= snapshotStartBlock) {
     throw new Error(`${chain} invalid snapshot period (${snapshotStartBlock} - ${snapshotEndBlock})`);

@@ -470,7 +470,7 @@ functions:
 
   index-apy-snapshots:
     handler: src/indexers/apy-snapshots-indexer.refreshApySnapshots
-    timeout: 180
+    timeout: 240
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-apy-snapshots
@@ -479,7 +479,7 @@ functions:
 
   index-vault-definitions:
     handler: src/indexers/vault-definition-indexer.captureVaultData
-    timeout: 150
+    timeout: 280
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-vault-definition
@@ -497,7 +497,7 @@ functions:
 
   index-prices:
     handler: src/indexers/prices-indexer.indexPrices
-    timeout: 150
+    timeout: 240
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-prices
@@ -506,7 +506,7 @@ functions:
 
   index-vault-snapshots:
     handler: src/indexers/vault-snapshots-indexer.refreshVaultSnapshots
-    timeout: 150
+    timeout: 280
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-vault-snapshots
@@ -515,7 +515,7 @@ functions:
 
   index-yield-estimates:
     handler: src/indexers/yield-estimates-indexer.refreshYieldEstimates
-    timeout: 150
+    timeout: 280
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-yield-estimates
@@ -533,7 +533,7 @@ functions:
 
   index-vault-balances:
     handler: src/indexers/vault-balances-indexer.refreshVaultBalances
-    timeout: 180
+    timeout: 320
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-vault-balances
@@ -553,7 +553,7 @@ functions:
 
   index-protocol-metrics-snapshots:
     handler: src/indexers/protocol-metric-indexer.indexProtocolMetrics
-    timeout: 240
+    timeout: 320
     events:
       - schedule:
           name: ${self:service}-${self:custom.stage}-index-protocol-metrics-snapshots

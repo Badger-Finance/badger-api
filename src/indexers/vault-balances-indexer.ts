@@ -9,6 +9,7 @@ import { getBalancerVaultTokenBalance } from '../protocols/strategies/balancer.s
 import { getCurveVaultTokenBalance } from '../protocols/strategies/convex.strategy';
 import { getLpTokenBalances } from '../protocols/strategies/uniswap.strategy';
 import { getFullToken, toBalance } from '../tokens/tokens.utils';
+import { rfw } from '../utils/retry.utils';
 import { getCachedVault } from '../vaults/vaults.utils';
 
 export async function refreshVaultBalances() {
@@ -39,15 +40,15 @@ export async function updateVaultTokenBalances(chain: Chain, vault: VaultDefinit
         case Protocol.Solidly:
         case Protocol.Sushiswap:
         case Protocol.Uniswap:
-          cachedTokenBalance = await getLpTokenBalances(chain, vault);
+          cachedTokenBalance = await rfw(getLpTokenBalances)(chain, vault);
           break;
         case Protocol.Convex:
         case Protocol.Curve:
-          cachedTokenBalance = await getCurveVaultTokenBalance(chain, vault);
+          cachedTokenBalance = await rfw(getCurveVaultTokenBalance)(chain, vault);
           break;
         case Protocol.Aura:
         case Protocol.Balancer:
-          cachedTokenBalance = await getBalancerVaultTokenBalance(chain, vault.address);
+          cachedTokenBalance = await rfw(getBalancerVaultTokenBalance)(chain, vault.address);
           break;
         default:
           break;
@@ -61,7 +62,7 @@ export async function updateVaultTokenBalances(chain: Chain, vault: VaultDefinit
         id: getVaultEntityId(chain, vault),
         chain: chain.network,
         vault: vault.address,
-        tokenBalances: [await toBalance(depositToken, cachedVault.balance)],
+        tokenBalances: [await rfw(toBalance)(depositToken, cachedVault.balance)],
       };
       cachedTokenBalance = Object.assign(new VaultTokenBalance(), singleTokenBalance);
     }
