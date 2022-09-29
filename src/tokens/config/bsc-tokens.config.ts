@@ -18,19 +18,15 @@ export const bscTokensConfig: TokenConfig = {
     type: PricingType.LookupName,
   },
   [TOKENS.PANCAKE_BNB_BTCB]: {
-    lpToken: true,
     type: PricingType.UniV2LP,
   },
   [TOKENS.PANCAKE_OLD_BNB_BTCB]: {
-    lpToken: true,
     type: PricingType.UniV2LP,
   },
   [TOKENS.PANCAKE_BBADGER_BTCB]: {
-    lpToken: true,
     type: PricingType.UniV2LP,
   },
   [TOKENS.PANCAKE_BDIGG_BTCB]: {
-    lpToken: true,
     type: PricingType.UniV2LP,
   },
   [TOKENS.MULTI_BADGER]: {
@@ -52,7 +48,6 @@ export const bscTokensConfig: TokenConfig = {
     },
   },
   [TOKENS.BPANCAKE_BNB_BTCB]: {
-    lpToken: true,
     type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.PANCAKE_BNB_BTCB,
@@ -60,7 +55,6 @@ export const bscTokensConfig: TokenConfig = {
     },
   },
   [TOKENS.BPANCAKE_BBADGER_BTCB]: {
-    lpToken: true,
     type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.PANCAKE_BBADGER_BTCB,
@@ -68,7 +62,6 @@ export const bscTokensConfig: TokenConfig = {
     },
   },
   [TOKENS.BPANCAKE_BDIGG_BTCB]: {
-    lpToken: true,
     type: PricingType.Vault,
     vaultToken: {
       address: TOKENS.PANCAKE_BDIGG_BTCB,

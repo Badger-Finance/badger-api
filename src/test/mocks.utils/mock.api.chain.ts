@@ -31,6 +31,7 @@ import { TestEthereum } from '../../chains/config/test.config';
 import { ChainVaults } from '../../chains/vaults/chain.vaults';
 import * as chartsUtils from '../../charts/charts.utils';
 import { TOKENS } from '../../config/tokens.config';
+import { PricingType } from '../../prices/enums/pricing-type.enum';
 import * as pricesUtils from '../../prices/prices.utils';
 import { SourceType } from '../../rewards/enums/source-type.enum';
 import { fullTokenMockMap } from '../../tokens/mocks/full-token.mock';
@@ -174,6 +175,12 @@ export function setupMockChain(
       }
       return price / 2;
     });
+    jest.spyOn(pricesUtils, 'queryPriceAtTimestamp').mockImplementation(async (token, timestamp, _c) => {
+      const { price } = mockPrice(token);
+      // deterministic price modulation using a really shit hash like fn
+      const timestampPrice = (price * (timestamp % price)) / 73;
+      return { price: timestampPrice, updatedAt: timestamp, address: token };
+    });
   }
 
   return chain;
@@ -260,7 +267,7 @@ export function setupTestVault() {
     .spyOn(tokensUtils, 'getVaultTokens')
     .mockImplementation(async (_chain: Chain, _vault: Vaultish, _currency?: string): Promise<TokenValue[]> => {
       const token = fullTokenMockMap[TOKENS.BADGER];
-      if (token.lpToken) {
+      if (token.type === PricingType.UniV2LP) {
         const bal0 = parseInt(token.address.slice(0, 4), 16);
         const bal1 = parseInt(token.address.slice(0, 6), 16);
         return [mockBalance(token, bal0), mockBalance(token, bal1)];
