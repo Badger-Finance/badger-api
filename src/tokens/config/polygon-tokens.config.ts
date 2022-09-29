@@ -66,11 +66,9 @@ export const maticTokensConfig: TokenConfig = {
     type: PricingType.LookupName,
   },
   [TOKENS.MATIC_SUSHI_IBBTC_WBTC]: {
-    lpToken: true,
     type: PricingType.UniV2LP,
   },
   [TOKENS.MATIC_QUICK_USDC_WBTC]: {
-    lpToken: true,
     type: PricingType.UniV2LP,
   },
   [TOKENS.MATIC_CRV_AM3CRV]: {

@@ -42,11 +42,9 @@ export const arbitrumTokensConfig: TokenConfig = {
     type: PricingType.LookupName,
   },
   [TOKENS.ARB_SUSHI_WETH_SUSHI]: {
-    lpToken: true,
     type: PricingType.UniV2LP,
   },
   [TOKENS.ARB_SUSHI_WETH_WBTC]: {
-    lpToken: true,
     type: PricingType.UniV2LP,
   },
   [TOKENS.ARB_CRV_RENBTC]: {
@@ -56,19 +54,15 @@ export const arbitrumTokensConfig: TokenConfig = {
     type: PricingType.CurveLP,
   },
   [TOKENS.ARB_SWP_SWPR_WETH]: {
-    lpToken: true,
     type: PricingType.UniV2LP,
   },
   [TOKENS.ARB_SWP_WBTC_WETH]: {
-    lpToken: true,
     type: PricingType.UniV2LP,
   },
   [TOKENS.ARB_SWP_BADGER_WETH]: {
-    lpToken: true,
     type: PricingType.UniV2LP,
   },
   [TOKENS.ARB_SWP_IBBTC_WETH]: {
-    lpToken: true,
     type: PricingType.UniV2LP,
   },
   [TOKENS.BARB_SUSHI_WETH_SUSHI]: {

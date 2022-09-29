@@ -4,6 +4,7 @@ import { PlatformTest } from '@tsed/common';
 import { TEST_ADDR, TEST_CURRENT_TIMESTAMP, TEST_TOKEN } from '../test/constants';
 import { setupMockChain } from '../test/mocks.utils';
 import { PricesService } from './prices.service';
+import * as pricesUtils from './prices.utils';
 
 describe('prices.service', () => {
   let service: PricesService;
@@ -34,6 +35,20 @@ describe('prices.service', () => {
     describe('request with no timestamps', () => {
       it('returns an empty map', async () => {
         const results = await service.getPriceSnapshots([TEST_TOKEN, TEST_ADDR], []);
+        expect(results).toMatchObject({
+          [TEST_TOKEN]: {},
+          [TEST_ADDR]: {},
+        });
+      });
+    });
+
+    describe('encounters query errors', () => {
+      it('returns an empty map', async () => {
+        jest.spyOn(console, 'error').mockImplementation(jest.fn);
+        jest.spyOn(pricesUtils, 'queryPriceAtTimestamp').mockImplementation(async (_t, _ts, _c) => {
+          throw new Error('Expected test error: queryPriceAtTimestamp');
+        });
+        const results = await service.getPriceSnapshots([TEST_TOKEN, TEST_ADDR], [TEST_CURRENT_TIMESTAMP]);
         expect(results).toMatchObject({
           [TEST_TOKEN]: {},
           [TEST_ADDR]: {},
