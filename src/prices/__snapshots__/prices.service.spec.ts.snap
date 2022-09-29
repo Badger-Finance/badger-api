@@ -1,6 +1,32 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`leaderboards.service getPriceSummary returns a price summary for the requested chains tokens 1`] = `
+exports[`prices.service getPriceSnapshots proper full request with currency returns an empty map 1`] = `
+Object {
+  "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28": Object {
+    "1660136760457": 540237.2602739726,
+    "1660223160457": 106415.86301369863,
+  },
+  "0x3472A5A71965499acd81997a54BBA8D852C6E53d": Object {
+    "1660136760457": 974580.4657534247,
+    "1660223160457": 1653237.1780821919,
+  },
+}
+`;
+
+exports[`prices.service getPriceSnapshots proper full request with no currency returns an empty map 1`] = `
+Object {
+  "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28": Object {
+    "1660136760457": 540237.2602739726,
+    "1660223160457": 106415.86301369863,
+  },
+  "0x3472A5A71965499acd81997a54BBA8D852C6E53d": Object {
+    "1660136760457": 974580.4657534247,
+    "1660223160457": 1653237.1780821919,
+  },
+}
+`;
+
+exports[`prices.service getPriceSummary returns a price summary for the requested chains tokens 1`] = `
 Object {
   "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28": 6617,
   "0x3472A5A71965499acd81997a54BBA8D852C6E53d": 13426,

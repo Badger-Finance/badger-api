@@ -96,11 +96,11 @@ export async function convert(value: number, currency?: Currency): Promise<numbe
 }
 
 /**
- *
- * @param chain
- * @param inputs
- * @param lookupName
- * @returns
+ * Batch fetch token prices from CoinGecko.
+ * @param chain requested chain for price address lookup
+ * @param inputs addresses or token ids for query
+ * @param lookupName flag to utilize token ids vs. addresses
+ * @returns typed response from coingecko API for tokens in USD values
  */
 export async function fetchPrices(chain: Chain, inputs: string[], lookupName = false): Promise<CoinGeckoPriceResponse> {
   if (inputs.length === 0) {
@@ -129,11 +129,11 @@ export async function fetchPrices(chain: Chain, inputs: string[], lookupName = f
 }
 
 /**
- *
- * @param address
- * @param timestamp
- * @param currency
- * @returns
+ * Fetch token price at or nearest to the requested price, favoring more recent data.
+ * @param address requested token address
+ * @param timestamp requested lookup timestamp
+ * @param currency requested currency conversion
+ * @returns price snapshot for requested token most near to requested timestamp in requested currency
  */
 export async function queryPriceAtTimestamp(
   address: string,
@@ -162,6 +162,12 @@ export async function queryPriceAtTimestamp(
   }
 }
 
+/**
+ * Evaluate a current toen price from given price lookup implementations.
+ * @param chain requested chain for price lookup
+ * @param address requested token address
+ * @returns token price for requested token based on look up parameters
+ */
 export async function getPrice(chain: Chain, address: string): Promise<TokenPrice> {
   const token = await getFullToken(chain, address);
   const tokenConfig = chain.tokens[address];

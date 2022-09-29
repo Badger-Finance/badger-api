@@ -174,6 +174,12 @@ export function setupMockChain(
       }
       return price / 2;
     });
+    jest.spyOn(pricesUtils, 'queryPriceAtTimestamp').mockImplementation(async (token, timestamp, _c) => {
+      const { price } = mockPrice(token);
+      // deterministic price modulation using a really shit hash like fn
+      const timestampPrice = (price * (timestamp % price)) / 73;
+      return { price: timestampPrice, updatedAt: timestamp, address: token };
+    });
   }
 
   return chain;
