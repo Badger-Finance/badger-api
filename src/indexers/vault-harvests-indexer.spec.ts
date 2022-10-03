@@ -32,5 +32,47 @@ describe('vault-harvests-indexer', () => {
         await updateVaultHarvests();
       });
     });
+
+    describe('vault has recent harvests and encounters and update error', () => {
+      it('does not update any metadata information', async () => {
+        mockBatchPut([]);
+        jest.spyOn(DataMapper.prototype, 'put').mockImplementation(() => {
+          throw new Error('Expected test error: put');
+        });
+        jest.spyOn(harvestsUtils, 'loadYieldEvents').mockImplementation(async () => [
+          {
+            id: getVaultEntityId(chain, MOCK_VAULT_DEFINITION),
+            chain: chain.network,
+            vault: MOCK_VAULT_DEFINITION.address,
+            ...MOCK_YIELD_EVENT,
+          },
+        ]);
+        await updateVaultHarvests();
+      });
+    });
+
+    describe('vault has no recent harvests', () => {
+      it('updates the last harvested block', async () => {
+        const batchPut = mockBatchPut([]);
+        jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
+        jest.spyOn(harvestsUtils, 'loadYieldEvents').mockImplementation(async () => []);
+        await updateVaultHarvests();
+        // verify we did not try to update yield events
+        expect(batchPut.mock.calls.length).toEqual(0);
+      });
+    });
+
+    describe('vault has no recent harvests and encounters an update error', () => {
+      it('does not update any information', async () => {
+        const batchPut = mockBatchPut([]);
+        jest.spyOn(DataMapper.prototype, 'put').mockImplementation(() => {
+          throw new Error('Expected test error: put');
+        });
+        jest.spyOn(harvestsUtils, 'loadYieldEvents').mockImplementation(async () => []);
+        await updateVaultHarvests();
+        // verify we did not try to update yield events
+        expect(batchPut.mock.calls.length).toEqual(0);
+      });
+    });
   });
 });
