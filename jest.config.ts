@@ -14,6 +14,7 @@ const config: Config.InitialOptions = {
     'models',
     'config',
     'mocks',
+    'errors',
   ],
   coverageThreshold: {
     global: {
