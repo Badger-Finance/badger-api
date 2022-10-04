@@ -27,7 +27,7 @@ export async function indexBoostLeaderBoard() {
     }));
 
     if (chainResults.length === 0) {
-      return;
+      return 'done';
     }
 
     const chainEntries = [];
