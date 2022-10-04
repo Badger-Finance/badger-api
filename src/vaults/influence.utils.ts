@@ -133,7 +133,7 @@ export async function getVaultHarvestBalance(
         blacklistedBalance += graviAura.balance;
       }
     } catch (err) {
-      console.debug({
+      console.error({
         chain: chain.network,
         vault: address,
         blockTag,

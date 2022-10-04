@@ -132,7 +132,7 @@ describe('influence.utils', () => {
       it('returns max balance after locker deployment, if locked balance is zero', async () => {
         jest.spyOn(locker, 'lockedBalanceOf').mockImplementation(async () => ethers.constants.Zero);
         const result = await getVaultHarvestBalance(chain, bveCVXDefinition, TEST_CURRENT_BLOCK);
-        expect(result).toEqual(formatBalance(vaultSupply.div(2)));
+        expect(result).toEqual(formatBalance(vaultSupply));
       });
 
       it('returns vault balance after locker deployment, and encountering an error', async () => {
