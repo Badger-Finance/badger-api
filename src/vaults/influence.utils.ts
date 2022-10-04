@@ -64,6 +64,7 @@ export function filterPerformanceItems(vault: VaultDefinitionModel, yieldEvents:
       processedUnderlying = true;
       return true;
     }
+
     return true;
   });
 
