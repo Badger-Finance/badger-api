@@ -20,14 +20,9 @@ export async function refreshVaultBalances() {
   return 'done';
 }
 
-export async function updateVaultTokenBalances(chain: Chain, vault: VaultDefinitionModel): Promise<void> {
+async function updateVaultTokenBalances(chain: Chain, vault: VaultDefinitionModel): Promise<void> {
   try {
     const mapper = getDataMapper();
-    const [depositToken, cachedVault] = await Promise.all([
-      getFullToken(chain, vault.depositToken),
-      getCachedVault(chain, vault),
-    ]);
-
     let cachedTokenBalance: VaultTokenBalance | undefined;
 
     try {
@@ -58,6 +53,10 @@ export async function updateVaultTokenBalances(chain: Chain, vault: VaultDefinit
     }
 
     if (!cachedTokenBalance || cachedTokenBalance.tokenBalances.length === 0) {
+      const [depositToken, cachedVault] = await Promise.all([
+        getFullToken(chain, vault.depositToken),
+        getCachedVault(chain, vault),
+      ]);
       const singleTokenBalance: VaultTokenBalance = {
         id: getVaultEntityId(chain, vault),
         chain: chain.network,
