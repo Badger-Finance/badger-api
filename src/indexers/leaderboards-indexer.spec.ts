@@ -5,10 +5,10 @@ import * as s3Utils from '../aws/s3.utils';
 import { TOKENS } from '../config/tokens.config';
 import { BoostData } from '../rewards/interfaces/boost-data.interface';
 import { mockBatchDelete, mockBatchPut, mockQuery, randomCachedBoosts, setupMockChain } from '../test/mocks.utils';
-import { indexBoostLeaderBoard } from './leaderboard-indexer';
+import { indexBoostLeaderBoard } from './leaderboards-indexer';
 
 describe('leaderboard-indexer', () => {
-  const seeded = randomCachedBoosts(2);
+  const seeded = randomCachedBoosts(4);
   const addresses = Object.values(TOKENS);
   const boostData: BoostData = {
     userData: Object.fromEntries(
@@ -31,41 +31,45 @@ describe('leaderboard-indexer', () => {
 
   beforeEach(async () => {
     setupMockChain();
-    mockQuery([]);
+    mockQuery([seeded]);
     batchPut = mockBatchPut([]);
     mockBatchDelete([]);
     jest.spyOn(Date, 'now').mockImplementation(() => 1000);
     jest.spyOn(DataMapper.prototype, 'put').mockImplementation();
-    jest.spyOn(s3Utils, 'getBoostFile').mockImplementation(() => Promise.resolve(boostData));
-    await indexBoostLeaderBoard();
   });
 
-  afterAll(() => jest.resetAllMocks());
-
   describe('generateBoostsLeaderBoard', () => {
-    it('indexes all user accounts', async () => {
-      expect(batchPut.mock.calls[0][0]).toMatchObject(Object.values(seeded));
-    });
-
-    it('sorts ranks by boosts', async () => {
-      let last: number | undefined;
+    it('sorts ranks by boosts, and resovles boost rank ties with stake ratio score', async () => {
+      jest.spyOn(s3Utils, 'getBoostFile').mockImplementation(async () => boostData);
+      await indexBoostLeaderBoard();
+      expect(batchPut.mock.calls[0][0]).toMatchObject(seeded);
+      let lastRank: number | undefined;
+      let lastStakeRatio: number | undefined;
       for (const boost of batchPut.mock.calls[0][0] as CachedBoost[]) {
-        if (last) {
-          expect(last).toBeLessThan(boost.boostRank);
+        if (lastRank) {
+          expect(lastRank).toBeLessThan(boost.boostRank);
         }
-        last = boost.boostRank;
+        lastRank = boost.boostRank;
+        if (lastStakeRatio) {
+          expect(lastStakeRatio).toBeGreaterThanOrEqual(boost.stakeRatio);
+        }
+        lastStakeRatio = boost.stakeRatio;
       }
     });
 
-    // seeded data has 2 of each boost rank
-    it('resovles boost rank ties with stake ratio score', async () => {
-      let last: number | undefined;
-      for (const boost of batchPut.mock.calls[0][0] as CachedBoost[]) {
-        if (last) {
-          expect(last).toBeGreaterThanOrEqual(boost.stakeRatio);
-        }
-        last = boost.stakeRatio;
-      }
+    it('returns no data given a missing boost file', async () => {
+      jest.spyOn(s3Utils, 'getBoostFile').mockImplementation(async () => null);
+      await indexBoostLeaderBoard();
+      expect(batchPut.mock.calls.length).toEqual(0);
+    });
+
+    it('returns no data given a error loading boost file', async () => {
+      jest.spyOn(console, 'log').mockImplementation();
+      jest.spyOn(s3Utils, 'getBoostFile').mockImplementation(async () => {
+        throw new Error('Expected test error: getBoostFile');
+      });
+      await indexBoostLeaderBoard();
+      expect(batchPut.mock.calls.length).toEqual(0);
     });
   });
 });
