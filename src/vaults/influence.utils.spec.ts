@@ -1,12 +1,16 @@
-import { YieldType } from '@badger-dao/sdk';
+import { formatBalance, Vault, Vault__factory, VaultsService, YieldType } from '@badger-dao/sdk';
+import { ethers } from 'ethers';
+import { mock, MockProxy } from 'jest-mock-extended';
 
 import { getVaultEntityId } from '../aws/dynamodb.utils';
 import { VaultYieldEvent } from '../aws/models/vault-yield-event.model';
 import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
-import { MOCK_VAULT_DEFINITION, MOCK_YIELD_EVENTS } from '../test/constants';
-import { setupMockChain } from '../test/mocks.utils';
-import { filterPerformanceItems, isInfluenceVault } from './influence.utils';
+import { CvxLocker, CvxLocker__factory } from '../contracts';
+import * as balanceStrategy from '../protocols/strategies/balancer.strategy';
+import { MOCK_TOKENS, MOCK_VAULT_DEFINITION, MOCK_YIELD_EVENTS, TEST_CURRENT_BLOCK } from '../test/constants';
+import { mockBalance, setupMockChain } from '../test/mocks.utils';
+import { filterPerformanceItems, getVaultHarvestBalance, isInfluenceVault } from './influence.utils';
 
 describe('influence.utils', () => {
   let chain: Chain;
@@ -83,6 +87,91 @@ describe('influence.utils', () => {
         expect(treeDistributions).toEqual(2);
         expect(badgerDistributions).toEqual(1);
         expect(graviAuraDistributions).toEqual(1);
+      });
+    });
+  });
+
+  describe('getVaultHarvestBalance', () => {
+    const vaultSupply = ethers.constants.WeiPerEther.mul(10);
+    let vault: MockProxy<Vault>;
+    let locker: MockProxy<CvxLocker>;
+
+    beforeEach(() => {
+      vault = mock<Vault>();
+      locker = mock<CvxLocker>();
+      jest.spyOn(Vault__factory, 'connect').mockImplementation(() => vault);
+      jest.spyOn(CvxLocker__factory, 'connect').mockImplementation(() => locker);
+      jest.spyOn(vault, 'totalSupply').mockImplementation(async () => vaultSupply);
+      jest
+        .spyOn(VaultsService.prototype, 'getVaultStrategy')
+        .mockImplementation(async () => ethers.constants.AddressZero);
+    });
+
+    describe('requests balance for a non influence vault', () => {
+      it('returns the vault total supply', async () => {
+        const result = await getVaultHarvestBalance(chain, MOCK_VAULT_DEFINITION, TEST_CURRENT_BLOCK);
+        expect(result).toEqual(formatBalance(vaultSupply));
+      });
+    });
+
+    describe('requests balance for bvecvx', () => {
+      const bveCVXDefinition = JSON.parse(JSON.stringify(MOCK_VAULT_DEFINITION));
+      bveCVXDefinition.address = TOKENS.BVECVX;
+
+      it('returns 0 for block tags before locker deployment', async () => {
+        const result = await getVaultHarvestBalance(chain, bveCVXDefinition, 13153662);
+        expect(result).toEqual(0);
+      });
+
+      it('returns locked balance after locker deployment', async () => {
+        jest.spyOn(locker, 'lockedBalanceOf').mockImplementation(async () => vaultSupply.div(2));
+        const result = await getVaultHarvestBalance(chain, bveCVXDefinition, TEST_CURRENT_BLOCK);
+        expect(result).toEqual(formatBalance(vaultSupply.div(2)));
+      });
+
+      it('returns max balance after locker deployment, if locked balance is zero', async () => {
+        jest.spyOn(locker, 'lockedBalanceOf').mockImplementation(async () => ethers.constants.Zero);
+        const result = await getVaultHarvestBalance(chain, bveCVXDefinition, TEST_CURRENT_BLOCK);
+        expect(result).toEqual(formatBalance(vaultSupply));
+      });
+
+      it('returns vault balance after locker deployment, and encountering an error', async () => {
+        jest.spyOn(locker, 'lockedBalanceOf').mockImplementation(async () => {
+          throw new Error('Expected test error: lockedBalanceOf');
+        });
+        jest.spyOn(console, 'error').mockImplementation();
+        const result = await getVaultHarvestBalance(chain, bveCVXDefinition, TEST_CURRENT_BLOCK);
+        expect(result).toEqual(formatBalance(vaultSupply));
+      });
+    });
+
+    describe('requests balance for graviaura', () => {
+      const graviAuraDefinition = JSON.parse(JSON.stringify(MOCK_VAULT_DEFINITION));
+      graviAuraDefinition.address = TOKENS.GRAVI_AURA;
+
+      it('returns total supply if pools contain no graviaura', async () => {
+        jest.spyOn(balanceStrategy, 'getBalancerPoolTokens').mockImplementation(async () => []);
+        const result = await getVaultHarvestBalance(chain, graviAuraDefinition, TEST_CURRENT_BLOCK);
+        expect(result).toEqual(formatBalance(vaultSupply));
+      });
+
+      it('returns total supply if pool queries throw errors', async () => {
+        jest.spyOn(balanceStrategy, 'getBalancerPoolTokens').mockImplementation(async () => {
+          throw new Error('Expected test error: getBalancerPoolTokens');
+        });
+        jest.spyOn(console, 'error').mockImplementation();
+        const result = await getVaultHarvestBalance(chain, graviAuraDefinition, TEST_CURRENT_BLOCK);
+        expect(result).toEqual(formatBalance(vaultSupply));
+      });
+
+      it('returns total supply with blacklisted pools balance removed', async () => {
+        const graviAuraToken = MOCK_TOKENS[TOKENS.GRAVI_AURA];
+        jest
+          .spyOn(balanceStrategy, 'getBalancerPoolTokens')
+          .mockImplementation(async () => [mockBalance(graviAuraToken, 2.5)]);
+        const result = await getVaultHarvestBalance(chain, graviAuraDefinition, TEST_CURRENT_BLOCK);
+        // two blacklisted pools, each with 2.5, 10 max balance, 10 - (2 * 2.5)
+        expect(result).toEqual(5);
       });
     });
   });
