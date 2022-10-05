@@ -7,6 +7,7 @@ import { Chain } from '../../chains/config/chain.config';
 import { SUSHISWAP_ARBITRUM_URL, SUSHISWAP_MATIC_URL, SUSHISWAP_URL } from '../../config/constants';
 import { getSdk as getSushiswapSdk, OrderDirection, PairDayData_OrderBy } from '../../graphql/generated/sushiswap';
 import { SourceType } from '../../rewards/enums/source-type.enum';
+import { Nullable } from '../../utils/types.utils';
 import { createYieldSource } from '../../vaults/yields.utils';
 import { PairDayData } from '../interfaces/pair-day-data.interface';
 
@@ -20,10 +21,6 @@ export async function getSushiswapYieldSources(
   chain: Chain,
   vaultDefinition: VaultDefinitionModel,
 ): Promise<CachedYieldSource[]> {
-  return Promise.all([getSushiswapSwapValue(chain, vaultDefinition)]);
-}
-
-async function getSushiswapSwapValue(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<CachedYieldSource> {
   let graphUrl;
   switch (chain.network) {
     case Network.Polygon:
@@ -35,10 +32,17 @@ async function getSushiswapSwapValue(chain: Chain, vaultDefinition: VaultDefinit
     default:
       graphUrl = SUSHISWAP_URL;
   }
-  return getSushiSwapValue(vaultDefinition, graphUrl);
+  const result = await getSushiSwapValue(vaultDefinition, graphUrl);
+  if (result) {
+    return [result];
+  }
+  return [];
 }
 
-async function getSushiSwapValue(vaultDefinition: VaultDefinitionModel, graphUrl: string): Promise<CachedYieldSource> {
+async function getSushiSwapValue(
+  vaultDefinition: VaultDefinitionModel,
+  graphUrl: string,
+): Promise<Nullable<CachedYieldSource>> {
   const client = new GraphQLClient(graphUrl);
   const sdk = getSushiswapSdk(client);
   const { pairDayDatas } = await sdk.SushiPairDayDatas({
@@ -49,14 +53,9 @@ async function getSushiSwapValue(vaultDefinition: VaultDefinitionModel, graphUrl
       pair: vaultDefinition.depositToken.toLowerCase(),
     },
   });
-  const converted = pairDayDatas.map((d): PairDayData => ({ reserveUSD: d.reserveUSD, dailyVolumeUSD: d.volumeUSD }));
-  return getSwapValue(vaultDefinition, converted);
-}
-
-function getSwapValue(vault: VaultDefinitionModel, tradeData: PairDayData[]): CachedYieldSource {
-  const name = `${vault.protocol} LP Fees`;
+  const tradeData = pairDayDatas.map((d): PairDayData => ({ reserveUSD: d.reserveUSD, dailyVolumeUSD: d.volumeUSD }));
   if (!tradeData || tradeData.length === 0) {
-    return createYieldSource(vault, SourceType.TradeFee, name, 0);
+    return null;
   }
   let totalApr = 0;
   for (let i = 0; i < tradeData.length; i++) {
@@ -66,5 +65,5 @@ function getSwapValue(vault: VaultDefinitionModel, tradeData: PairDayData[]): Ca
     totalApr += (fees / poolReserve) * 365 * 100;
   }
   const averageApr = totalApr / tradeData.length;
-  return createYieldSource(vault, SourceType.TradeFee, name, averageApr);
+  return createYieldSource(vaultDefinition, SourceType.TradeFee, `${vaultDefinition.protocol} LP Fees`, averageApr);
 }

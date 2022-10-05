@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`sushiswap.strategy getSushiswapYieldSources returns trade fees for the pair given trade data in the subgraph for arbitrum 1`] = `
+Array [
+  CachedYieldSource {
+    "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "boostable": false,
+    "chain": "ethereum",
+    "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_lp_fee_badger_lp_fees_flat",
+    "name": "Badger LP Fees",
+    "performance": Object {
+      "baseYield": 5703.125,
+      "grossYield": 5703.125,
+      "maxGrossYield": 5703.125,
+      "maxYield": 5703.125,
+      "minGrossYield": 5703.125,
+      "minYield": 5703.125,
+    },
+    "type": "lp_fee",
+  },
+]
+`;
+
+exports[`sushiswap.strategy getSushiswapYieldSources returns trade fees for the pair given trade data in the subgraph for ethereum 1`] = `
+Array [
+  CachedYieldSource {
+    "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "boostable": false,
+    "chain": "ethereum",
+    "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_lp_fee_badger_lp_fees_flat",
+    "name": "Badger LP Fees",
+    "performance": Object {
+      "baseYield": 5703.125,
+      "grossYield": 5703.125,
+      "maxGrossYield": 5703.125,
+      "maxYield": 5703.125,
+      "minGrossYield": 5703.125,
+      "minYield": 5703.125,
+    },
+    "type": "lp_fee",
+  },
+]
+`;
+
+exports[`sushiswap.strategy getSushiswapYieldSources returns trade fees for the pair given trade data in the subgraph for polygon 1`] = `
+Array [
+  CachedYieldSource {
+    "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "boostable": false,
+    "chain": "ethereum",
+    "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_lp_fee_badger_lp_fees_flat",
+    "name": "Badger LP Fees",
+    "performance": Object {
+      "baseYield": 5703.125,
+      "grossYield": 5703.125,
+      "maxGrossYield": 5703.125,
+      "maxYield": 5703.125,
+      "minGrossYield": 5703.125,
+      "minYield": 5703.125,
+    },
+    "type": "lp_fee",
+  },
+]
+`;
