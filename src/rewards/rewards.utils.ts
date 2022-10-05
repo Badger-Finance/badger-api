@@ -10,9 +10,9 @@ import { TOKENS } from '../config/tokens.config';
 import { queryPrice } from '../prices/prices.utils';
 import { BalancerStrategy } from '../protocols/strategies/balancer.strategy';
 import { ConvexStrategy } from '../protocols/strategies/convex.strategy';
-import { SushiswapStrategy } from '../protocols/strategies/sushiswap.strategy';
-import { SwaprStrategy } from '../protocols/strategies/swapr.strategy';
-import { UniswapStrategy } from '../protocols/strategies/uniswap.strategy';
+import { getSushiswapYieldSources } from '../protocols/strategies/sushiswap.strategy';
+import { getSwaprYieldSources } from '../protocols/strategies/swapr.strategy';
+import { getUniswapV2YieldSources } from '../protocols/strategies/uniswap.strategy';
 import { getFullToken } from '../tokens/tokens.utils';
 import { getCachedVault } from '../vaults/vaults.utils';
 import { createYieldSource } from '../vaults/yields.utils';
@@ -146,14 +146,14 @@ export async function getProtocolValueSources(
   try {
     switch (vaultDefinition.protocol) {
       case Protocol.Sushiswap:
-        return SushiswapStrategy.getValueSources(chain, vaultDefinition);
+        return getSushiswapYieldSources(chain, vaultDefinition);
       case Protocol.Curve:
       case Protocol.Convex:
         return ConvexStrategy.getValueSources(chain, vaultDefinition);
       case Protocol.Uniswap:
-        return UniswapStrategy.getValueSources(vaultDefinition);
+        return getUniswapV2YieldSources(vaultDefinition);
       case Protocol.Swapr:
-        return SwaprStrategy.getValueSources(chain, vaultDefinition);
+        return getSwaprYieldSources(vaultDefinition);
       case Protocol.Aura:
       case Protocol.Balancer:
         return BalancerStrategy.getValueSources(vaultDefinition);
