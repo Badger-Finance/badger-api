@@ -39,7 +39,7 @@ export async function queryProtocolMetrics(): Promise<ProtocolMetrics> {
     const mapper = getDataMapper();
     for await (const metric of mapper.query(
       ProtocolMetricSnapshot,
-      { type: MetricType.protocol },
+      { type: MetricType.Protocol },
       { scanIndexForward: false, limit: 1 },
     )) {
       return metric;

@@ -8,7 +8,7 @@ import { getBoostFile } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
 import { queryPrice } from '../prices/prices.utils';
-import { BalancerStrategy } from '../protocols/strategies/balancer.strategy';
+import { getBalancerYieldSources } from '../protocols/strategies/balancer.strategy';
 import { ConvexStrategy } from '../protocols/strategies/convex.strategy';
 import { getSushiswapYieldSources } from '../protocols/strategies/sushiswap.strategy';
 import { getSwaprYieldSources } from '../protocols/strategies/swapr.strategy';
@@ -156,7 +156,7 @@ export async function getProtocolValueSources(
         return getSwaprYieldSources(vaultDefinition);
       case Protocol.Aura:
       case Protocol.Balancer:
-        return BalancerStrategy.getValueSources(vaultDefinition);
+        return getBalancerYieldSources(vaultDefinition);
       default: {
         return [];
       }
