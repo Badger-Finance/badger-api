@@ -6,13 +6,20 @@ import { mock, MockProxy } from 'jest-mock-extended';
 import { CurrentVaultSnapshotModel } from '../../aws/models/current-vault-snapshot.model';
 import { Chain } from '../../chains/config/chain.config';
 import { TOKENS } from '../../config/tokens.config';
+import * as uniswapGraph from '../../graphql/generated/uniswap';
 import * as pricesUtils from '../../prices/prices.utils';
 import { MOCK_VAULT_DEFINITION, MOCK_VAULT_SNAPSHOT, TEST_ADDR, TEST_TOKEN } from '../../test/constants';
 import { setupMockChain } from '../../test/mocks.utils';
 import { mockPrice } from '../../test/mocks.utils/mock.helpers';
 import { fullTokenMockMap } from '../../tokens/mocks/full-token.mock';
 import * as vaultsUtils from '../../vaults/vaults.utils';
-import { getLpTokenBalances, getOnChainLiquidityPrice, resolveTokenPrice } from './uniswap.strategy';
+import { getSwaprYieldSources } from './swapr.strategy';
+import {
+  getLpTokenBalances,
+  getOnChainLiquidityPrice,
+  getUniswapV2YieldSources,
+  resolveTokenPrice,
+} from './uniswap.strategy';
 
 describe('uniswap.strategy', () => {
   let chain: Chain;
@@ -116,6 +123,58 @@ describe('uniswap.strategy', () => {
     it('scales unknown token price by the known token price based on uniswap invariants', async () => {
       const result = await resolveTokenPrice(chain, TEST_TOKEN, TEST_ADDR);
       expect(result).toMatchSnapshot();
+    });
+  });
+
+  describe('getUniswapV2YieldSources', () => {
+    it('returns no value sources given no trade data in the subgraph', async () => {
+      jest.spyOn(uniswapGraph, 'getSdk').mockImplementation((_client) => {
+        return {
+          UniPairDayDatas(_v, _r): Promise<uniswapGraph.UniPairDayDatasQuery> {
+            return Promise.resolve({ pairDayDatas: [] });
+          },
+          UniV2Pair(_v, _r): Promise<uniswapGraph.UniV2PairQuery> {
+            return Promise.resolve({});
+          },
+        };
+      });
+      const result = await getUniswapV2YieldSources(MOCK_VAULT_DEFINITION);
+      expect(result).toMatchObject([]);
+      const swaprResult = await getSwaprYieldSources(MOCK_VAULT_DEFINITION);
+      expect(swaprResult).toMatchObject(result);
+    });
+
+    it('returns trade fees for the pair given trade data in the subgraph', async () => {
+      jest.spyOn(uniswapGraph, 'getSdk').mockImplementation((_client) => {
+        return {
+          UniPairDayDatas(_v, _r): Promise<uniswapGraph.UniPairDayDatasQuery> {
+            return Promise.resolve({
+              pairDayDatas: [
+                {
+                  token0: {
+                    id: TOKENS.BADGER,
+                  },
+                  token1: {
+                    id: TOKENS.WBTC,
+                  },
+                  reserve0: 5000,
+                  reserve1: 1,
+                  reserveUSD: 40000,
+                  dailyVolumeToken0: 1000000,
+                  dailyVolumeToken1: 2000000,
+                },
+              ],
+            });
+          },
+          UniV2Pair(_v, _r): Promise<uniswapGraph.UniV2PairQuery> {
+            return Promise.resolve({});
+          },
+        };
+      });
+      const result = await getUniswapV2YieldSources(MOCK_VAULT_DEFINITION);
+      expect(result).toMatchSnapshot();
+      const swaprResult = await getSwaprYieldSources(MOCK_VAULT_DEFINITION);
+      expect(swaprResult).toMatchObject(result);
     });
   });
 });

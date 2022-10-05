@@ -14,14 +14,22 @@ import { TokenPrice } from '../../prices/interface/token-price.interface';
 import { queryPrice } from '../../prices/prices.utils';
 import { SourceType } from '../../rewards/enums/source-type.enum';
 import { getFullToken, getFullTokens, toBalance } from '../../tokens/tokens.utils';
+import { Nullable } from '../../utils/types.utils';
 import { getCachedVault } from '../../vaults/vaults.utils';
 import { createYieldSource } from '../../vaults/yields.utils';
 import { UniV2PoolData } from '../interfaces/uni-v2-pool-data.interface';
 
-export class UniswapStrategy {
-  static async getValueSources(vault: VaultDefinitionModel): Promise<CachedYieldSource[]> {
-    return Promise.all([getUniV2SwapValue(UNISWAP_URL, vault)]);
+/**
+ * Load uniswap v2 non-emitted yield sources.
+ * @param vaultDefinition requested vault
+ * @returns yield sources vault earns that are not harvested
+ */
+export async function getUniswapV2YieldSources(vault: VaultDefinitionModel): Promise<CachedYieldSource[]> {
+  const feeSource = await getUniV2SwapValue(UNISWAP_URL, vault);
+  if (feeSource) {
+    return [feeSource];
   }
+  return [];
 }
 
 /**
@@ -159,8 +167,16 @@ export async function getLpTokenBalances(chain: Chain, vault: VaultDefinitionMod
   }
 }
 
-// TODO: move univ2 graph queries to the sdk to allow for proper mocking and testing
-export async function getUniV2SwapValue(graphUrl: string, vault: VaultDefinitionModel): Promise<CachedYieldSource> {
+/**
+ * Loads trade data from the uniswap v2 subgraph.
+ * @param graphUrl graph url to target
+ * @param vault vault pair to query
+ * @returns trade fee yield data if trading data exists
+ */
+export async function getUniV2SwapValue(
+  graphUrl: string,
+  vault: VaultDefinitionModel,
+): Promise<Nullable<CachedYieldSource>> {
   const client = new GraphQLClient(graphUrl);
   const sdk = getUniswapSdk(client);
 
@@ -173,9 +189,8 @@ export async function getUniV2SwapValue(graphUrl: string, vault: VaultDefinition
     },
   });
 
-  const name = `${vault.protocol} LP Fees`;
   if (!pairDayDatas || pairDayDatas.length === 0) {
-    return createYieldSource(vault, SourceType.TradeFee, name, 0);
+    return null;
   }
 
   const [token0Price, token1Price] = await Promise.all([
@@ -192,5 +207,5 @@ export async function getUniV2SwapValue(graphUrl: string, vault: VaultDefinition
     totalApr += (fees / poolReserve) * 365 * 100;
   }
   const averageApr = totalApr / pairDayDatas.length;
-  return createYieldSource(vault, SourceType.TradeFee, name, averageApr);
+  return createYieldSource(vault, SourceType.TradeFee, `${vault.protocol} LP Fees`, averageApr);
 }

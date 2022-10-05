@@ -10,10 +10,17 @@ import { SourceType } from '../../rewards/enums/source-type.enum';
 import { createYieldSource } from '../../vaults/yields.utils';
 import { PairDayData } from '../interfaces/pair-day-data.interface';
 
-export class SushiswapStrategy {
-  static async getValueSources(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<CachedYieldSource[]> {
-    return Promise.all([getSushiswapSwapValue(chain, vaultDefinition)]);
-  }
+/**
+ * Load sushiswap non-emitted yield sources.
+ * @param chain network vault is deployed
+ * @param vaultDefinition requested vault
+ * @returns yield sources vault earns that are not harvested
+ */
+export async function getSushiswapYieldSources(
+  chain: Chain,
+  vaultDefinition: VaultDefinitionModel,
+): Promise<CachedYieldSource[]> {
+  return Promise.all([getSushiswapSwapValue(chain, vaultDefinition)]);
 }
 
 async function getSushiswapSwapValue(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<CachedYieldSource> {
@@ -31,10 +38,7 @@ async function getSushiswapSwapValue(chain: Chain, vaultDefinition: VaultDefinit
   return getSushiSwapValue(vaultDefinition, graphUrl);
 }
 
-export async function getSushiSwapValue(
-  vaultDefinition: VaultDefinitionModel,
-  graphUrl: string,
-): Promise<CachedYieldSource> {
+async function getSushiSwapValue(vaultDefinition: VaultDefinitionModel, graphUrl: string): Promise<CachedYieldSource> {
   const client = new GraphQLClient(graphUrl);
   const sdk = getSushiswapSdk(client);
   const { pairDayDatas } = await sdk.SushiPairDayDatas({

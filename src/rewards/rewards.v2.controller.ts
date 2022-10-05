@@ -1,6 +1,6 @@
 import { DiggService, formatBalance } from '@badger-dao/sdk';
 import { Controller, Get, Inject, QueryParams } from '@tsed/common';
-import { ContentType, Deprecated, Description, Returns, Summary } from '@tsed/schema';
+import { ContentType, Description, Returns, Summary } from '@tsed/schema';
 import { BigNumber } from 'ethers';
 
 import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
@@ -12,7 +12,6 @@ import { DebankUser } from './interfaces/debank-user.interface';
 import { ListRewardsResponse } from './interfaces/list-rewards-response.interface';
 import { RewardsService } from './rewards.service';
 
-@Deprecated()
 @Controller('/rewards')
 export class RewardsV2Controller {
   @Inject()

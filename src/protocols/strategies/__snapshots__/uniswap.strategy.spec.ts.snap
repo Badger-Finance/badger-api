@@ -40,6 +40,28 @@ Object {
 }
 `;
 
+exports[`uniswap.strategy getUniswapV2YieldSources returns trade fees for the pair given trade data in the subgraph 1`] = `
+Array [
+  CachedYieldSource {
+    "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "boostable": false,
+    "chain": "ethereum",
+    "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_lp_fee_badger_lp_fees_flat",
+    "name": "Badger LP Fees",
+    "performance": Object {
+      "baseYield": 84933674.99999999,
+      "grossYield": 84933674.99999999,
+      "maxGrossYield": 84933674.99999999,
+      "maxYield": 84933674.99999999,
+      "minGrossYield": 84933674.99999999,
+      "minYield": 84933674.99999999,
+    },
+    "type": "lp_fee",
+  },
+]
+`;
+
 exports[`uniswap.strategy resolveTokenPrice scales unknown token price by the known token price based on uniswap invariants 1`] = `
 Object {
   "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
