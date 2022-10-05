@@ -24,12 +24,6 @@ import { createYieldSource } from '../../vaults/yields.utils';
 
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
-export class BalancerStrategy {
-  static async getValueSources(vault: VaultDefinitionModel): Promise<CachedYieldSource[]> {
-    return getBalancerSwapFees(vault);
-  }
-}
-
 export async function getBPTPrice(chain: Chain, token: string): Promise<TokenPrice> {
   let totalSupply;
 
@@ -197,7 +191,7 @@ export async function resolveBalancerPoolTokenPrice(chain: Chain, token: Token, 
   };
 }
 
-export async function getBalancerSwapFees(vault: VaultDefinitionModel): Promise<CachedYieldSource[]> {
+export async function getBalancerYieldSources(vault: VaultDefinitionModel): Promise<CachedYieldSource[]> {
   try {
     const chain = getOrCreateChain(Network.Ethereum);
     const client = new GraphQLClient(BALANCER_URL);

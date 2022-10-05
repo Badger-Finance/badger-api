@@ -1,0 +1,148 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`balancer.strategy getBPTPrice calculates price for the phantom pool 1`] = `
+Object {
+  "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+  "price": 81435,
+}
+`;
+
+exports[`balancer.strategy getBPTPrice calculates price for the weighted pool 1`] = `
+Object {
+  "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+  "price": 81435,
+}
+`;
+
+exports[`balancer.strategy getBalancerPoolTokens returns all relevant pool tokens 1`] = `
+Array [
+  Object {
+    "address": "0x2BBf681cC4eb09218BEe85EA2a5d3D13Fa40fC0C",
+    "balance": 1,
+    "decimals": 18,
+    "name": "Balancer Aave Boosted Pool (USDT)",
+    "symbol": "bb-a-USDT",
+    "value": 11199,
+  },
+  Object {
+    "address": "0x9210F1204b5a24742Eba12f710636D76240dF3d0",
+    "balance": 1,
+    "decimals": 18,
+    "name": "Balancer Aave Boosted Pool (USDC)",
+    "symbol": "bb-a-USDC",
+    "value": 37392,
+  },
+  Object {
+    "address": "0x804CdB9116a10bB78768D3252355a1b18067bF8f",
+    "balance": 1,
+    "decimals": 18,
+    "name": "Balancer Aave Boosted Pool (DAI)",
+    "symbol": "bb-a-DAI",
+    "value": 32844,
+  },
+]
+`;
+
+exports[`balancer.strategy getBalancerVaultTokenBalance returns vault tokens for a stable pool 1`] = `
+VaultTokenBalance {
+  "chain": "ethereum",
+  "id": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+  "tokenBalances": Array [
+    Object {
+      "address": "0x2BBf681cC4eb09218BEe85EA2a5d3D13Fa40fC0C",
+      "balance": 48405.45345505732,
+      "decimals": 18,
+      "name": "Balancer Aave Boosted Pool (USDT)",
+      "symbol": "bb-a-USDT",
+      "value": 542092673.243187,
+    },
+    Object {
+      "address": "0x9210F1204b5a24742Eba12f710636D76240dF3d0",
+      "balance": 48405.45345505732,
+      "decimals": 18,
+      "name": "Balancer Aave Boosted Pool (USDC)",
+      "symbol": "bb-a-USDC",
+      "value": 1809976715.5915034,
+    },
+    Object {
+      "address": "0x804CdB9116a10bB78768D3252355a1b18067bF8f",
+      "balance": 48405.45345505732,
+      "decimals": 18,
+      "name": "Balancer Aave Boosted Pool (DAI)",
+      "symbol": "bb-a-DAI",
+      "value": 1589828713.2779026,
+    },
+  ],
+  "vault": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+}
+`;
+
+exports[`balancer.strategy getBalancerVaultTokenBalance returns vault tokens for a weighted pool 1`] = `
+VaultTokenBalance {
+  "chain": "ethereum",
+  "id": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+  "tokenBalances": Array [
+    Object {
+      "address": "0x2BBf681cC4eb09218BEe85EA2a5d3D13Fa40fC0C",
+      "balance": 48405.45345505732,
+      "decimals": 18,
+      "name": "Balancer Aave Boosted Pool (USDT)",
+      "symbol": "bb-a-USDT",
+      "value": 542092673.243187,
+    },
+    Object {
+      "address": "0x9210F1204b5a24742Eba12f710636D76240dF3d0",
+      "balance": 48405.45345505732,
+      "decimals": 18,
+      "name": "Balancer Aave Boosted Pool (USDC)",
+      "symbol": "bb-a-USDC",
+      "value": 1809976715.5915034,
+    },
+    Object {
+      "address": "0x804CdB9116a10bB78768D3252355a1b18067bF8f",
+      "balance": 48405.45345505732,
+      "decimals": 18,
+      "name": "Balancer Aave Boosted Pool (DAI)",
+      "symbol": "bb-a-DAI",
+      "value": 1589828713.2779026,
+    },
+  ],
+  "vault": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+}
+`;
+
+exports[`balancer.strategy getBalancerYieldSources returns fee data for the requested pool 1`] = `
+Array [
+  CachedYieldSource {
+    "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "boostable": false,
+    "chain": "ethereum",
+    "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_lp_fee_balancer_lp_fees_flat",
+    "name": "Balancer LP Fees",
+    "performance": Object {
+      "baseYield": -1825000,
+      "grossYield": -1825000,
+      "maxGrossYield": -1825000,
+      "maxYield": -1825000,
+      "minGrossYield": -1825000,
+      "minYield": -1825000,
+    },
+    "type": "lp_fee",
+  },
+]
+`;
+
+exports[`balancer.strategy resolveBalancerPoolTokenPrice returns the price of a token in a stable pool 1`] = `
+Object {
+  "address": "0x2BBf681cC4eb09218BEe85EA2a5d3D13Fa40fC0C",
+  "price": 0,
+}
+`;
+
+exports[`balancer.strategy resolveBalancerPoolTokenPrice returns the price of a token in a weighted pool 1`] = `
+Object {
+  "address": "0x2BBf681cC4eb09218BEe85EA2a5d3D13Fa40fC0C",
+  "price": -72657.93103448277,
+}
+`;
