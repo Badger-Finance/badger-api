@@ -1,7 +1,17 @@
+import { DataMapper } from '@aws/dynamodb-data-mapper';
 import { ChartTimeFrame, ONE_DAY_MS, ONE_HOUR_MS } from '@badger-dao/sdk';
 
+import { MOCK_VAULT_SNAPSHOTS, TEST_ADDR, TEST_CURRENT_TIMESTAMP, TEST_TOKEN } from '../test/constants';
+import { mockQuery } from '../test/mocks.utils';
 import { ChartData } from './chart-data.model';
-import { shouldTrim, shouldUpdate, toChartDataBlob, toChartDataKey } from './charts.utils';
+import {
+  queryVaultCharts,
+  shouldTrim,
+  shouldUpdate,
+  toChartDataBlob,
+  toChartDataKey,
+  updateSnapshots,
+} from './charts.utils';
 
 describe('charts.utils', () => {
   describe('toChartDataBlob', () => {
@@ -87,6 +97,108 @@ describe('charts.utils', () => {
       [ONE_DAY_MS * 730, 0, ChartTimeFrame.Max, false],
     ])('%d to %d on %s timeframe returns %s', (start, end, timeframe, result) => {
       expect(shouldTrim(start, end, timeframe)).toEqual(result);
+    });
+  });
+
+  describe('updateSnapshots', () => {
+    beforeEach(() => {
+      jest.spyOn(console, 'log').mockImplementation();
+      jest.spyOn(console, 'debug').mockImplementation();
+    });
+
+    describe('add snapshot blob', () => {
+      it('creates a new data blob and saves the new snapshot data', async () => {
+        const snapshot = {
+          id: TEST_ADDR,
+          timestamp: TEST_CURRENT_TIMESTAMP,
+        };
+        const dataBlob = toChartDataBlob(TEST_ADDR, ChartTimeFrame.Week, [snapshot]);
+        jest.spyOn(console, 'error').mockImplementation();
+        jest.spyOn(DataMapper.prototype, 'get').mockImplementation(() => {
+          throw new Error('Expected test error: get');
+        });
+        jest.spyOn(DataMapper.prototype, 'put').mockImplementation(async () => dataBlob);
+        await updateSnapshots('TEST_NAMESPACE', snapshot);
+      });
+    });
+
+    describe('update snapshot blob', () => {
+      it('creates a new data blob and saves the new snapshot data', async () => {
+        const snapshot = {
+          id: TEST_ADDR,
+          timestamp: TEST_CURRENT_TIMESTAMP,
+        };
+        const dataBlob = toChartDataBlob(TEST_ADDR, ChartTimeFrame.Week, [snapshot]);
+        jest.spyOn(DataMapper.prototype, 'get').mockImplementation();
+        jest.spyOn(DataMapper.prototype, 'put').mockImplementation(async () => dataBlob);
+        await updateSnapshots('TEST_NAMESPACE', snapshot);
+      });
+
+      it('drops data blob and saves the new snapshot data', async () => {
+        const snapshot = {
+          id: TEST_ADDR,
+          // january 1st
+          timestamp: 1640995200000,
+          data: [{ id: TEST_TOKEN }],
+        };
+        const dataBlob = toChartDataBlob(TEST_ADDR, ChartTimeFrame.Week, [snapshot]);
+        jest.spyOn(DataMapper.prototype, 'get').mockImplementation();
+        jest.spyOn(DataMapper.prototype, 'put').mockImplementation(async () => dataBlob);
+        await updateSnapshots('TEST_NAMESPACE', snapshot);
+      });
+
+      it('updates existing snapshot data', async () => {
+        const snapshot = {
+          id: TEST_ADDR,
+          timestamp: TEST_CURRENT_TIMESTAMP,
+        };
+        const dataBlob = toChartDataBlob(TEST_ADDR, ChartTimeFrame.Week, [snapshot]);
+        jest.spyOn(DataMapper.prototype, 'get').mockImplementation(async () => dataBlob);
+        jest.spyOn(DataMapper.prototype, 'put').mockImplementation(async () => dataBlob);
+        await updateSnapshots('TEST_NAMESPACE', snapshot);
+      });
+
+      it('does not save data when encountering errors', async () => {
+        const snapshot = {
+          id: TEST_ADDR,
+          timestamp: TEST_CURRENT_TIMESTAMP,
+        };
+        const dataBlob = toChartDataBlob(TEST_ADDR, ChartTimeFrame.Week, [snapshot]);
+        jest.spyOn(DataMapper.prototype, 'get').mockImplementation(async () => dataBlob);
+        jest.spyOn(DataMapper.prototype, 'put').mockImplementation(async () => {
+          throw new Error('Expected test error: put');
+        });
+        await updateSnapshots('TEST_NAMESPACE', snapshot);
+      });
+    });
+  });
+
+  describe('queryVaultCharts', () => {
+    describe('system has saved data', () => {
+      it('returns the requested chart data', async () => {
+        mockQuery([{ data: MOCK_VAULT_SNAPSHOTS }]);
+        const result = await queryVaultCharts(TEST_ADDR);
+        expect(result).toMatchObject(MOCK_VAULT_SNAPSHOTS);
+      });
+    });
+
+    describe('system has no data', () => {
+      it('returns no data', async () => {
+        mockQuery([]);
+        const result = await queryVaultCharts(TEST_ADDR);
+        expect(result).toMatchObject([]);
+      });
+    });
+
+    describe('encounters an error', () => {
+      it('returns no data', async () => {
+        jest.spyOn(console, 'error').mockImplementation();
+        jest.spyOn(DataMapper.prototype, 'query').mockImplementation(() => {
+          throw new Error('Expected test error: query');
+        });
+        const result = await queryVaultCharts(TEST_ADDR);
+        expect(result).toMatchObject([]);
+      });
     });
   });
 });

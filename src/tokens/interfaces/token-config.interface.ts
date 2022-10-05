@@ -8,7 +8,6 @@ import { WrappedToken } from './wrapped-token.interface';
 export type TokenConfigBody = {
   getPrice?: (chain: Chain, token: Token, pool?: string) => Promise<TokenPrice>;
   lookupName?: string;
-  lpToken?: boolean;
   type: PricingType;
   vaultToken?: WrappedToken;
 };

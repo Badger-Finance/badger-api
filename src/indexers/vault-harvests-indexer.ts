@@ -1,6 +1,7 @@
 import { getDataMapper, getVaultEntityId } from '../aws/dynamodb.utils';
 import { VaultYieldEvent } from '../aws/models/vault-yield-event.model';
 import { getSupportedChains } from '../chains/chains.utils';
+import { rfw } from '../utils/retry.utils';
 import { HARVEST_SCAN_BLOCK_INCREMENT, loadYieldEvents } from '../vaults/harvests.utils';
 
 export async function updateVaultHarvests() {
@@ -9,8 +10,8 @@ export async function updateVaultHarvests() {
 
   for (const chain of chains) {
     const sdk = await chain.getSdk();
-    const currentBlock = await sdk.provider.getBlockNumber();
-    const vaults = await chain.vaults.all();
+    const currentBlock = await rfw(sdk.provider.getBlockNumber)();
+    const vaults = await rfw(chain.vaults.all, chain.vaults)();
 
     await Promise.all(
       vaults.map(async (vault) => {
@@ -18,7 +19,7 @@ export async function updateVaultHarvests() {
           const { name, protocol, lastHarvestIndexedBlock } = vault;
           const vaultId = [protocol, name].join(' ');
 
-          const yieldEvents = await loadYieldEvents(chain, vault, lastHarvestIndexedBlock);
+          const yieldEvents = await rfw(loadYieldEvents)(chain, vault, lastHarvestIndexedBlock);
 
           if (yieldEvents.length === 0) {
             vault.lastHarvestIndexedBlock = Math.min(

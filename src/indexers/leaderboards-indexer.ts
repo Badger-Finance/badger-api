@@ -26,6 +26,10 @@ export async function indexBoostLeaderBoard() {
       amount: e[1],
     }));
 
+    if (chainResults.length === 0) {
+      return 'done';
+    }
+
     const chainEntries = [];
 
     for await (const entry of mapper.query(CachedBoost, { leaderboard: getLeaderboardKey(chain.network) })) {

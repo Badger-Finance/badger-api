@@ -4,26 +4,33 @@ import { Service } from '@tsed/common';
 import { TokenPriceSnapshot } from '../aws/models/token-price-snapshot.model';
 import { PriceSnapshots } from '../tokens/interfaces/price-snapshots.interface';
 import { PriceSummary } from '../tokens/interfaces/price-summary.interface';
-import { convert, queryPrice, queryPriceAtTimestamp } from './prices.utils';
+import { queryPrice, queryPriceAtTimestamp } from './prices.utils';
 
 /**
  * API price oracle service. Uses CoinGecko as a source of truth for most
  * tokens when possible, and TheGraph for AMM pairs when not available
- * via CG. Prices are cached for 5 minutes at a time, but may live up to 8.
+ * via CG.
  */
 @Service()
 export class PricesService {
+  /**
+   * Retrieves a full price mapping for all requested tokens.
+   * @param tokens requested token prices
+   * @param currency requested currency conversion
+   * @returns summary of converted token prices where available
+   */
   async getPriceSummary(tokens: string[], currency?: Currency): Promise<PriceSummary> {
-    const prices = await Promise.all(tokens.map(async (token) => queryPrice(token)));
-    const entries = await Promise.all(
-      prices.map(async (tokenPrice) => {
-        const convertedPrice = await convert(tokenPrice.price, currency);
-        return [tokenPrice.address, convertedPrice];
-      }),
-    );
-    return Object.fromEntries(entries);
+    const prices = await Promise.all(tokens.map(async (token) => queryPrice(token, currency)));
+    return Object.fromEntries(prices.map((p) => [p.address, p.price]));
   }
 
+  /**
+   * Fetch price history at timestamps for all tokens at the same timestamps.
+   * @param tokens requested token addresses
+   * @param timestamps requested timestamps to return
+   * @param currency requested currency conversion
+   * @returns mapping of tokens from address to a map of timestamps to token prices in currency
+   */
   async getPriceSnapshots(tokens: string[], timestamps: number[], currency?: Currency): Promise<PriceSnapshots> {
     const entries = await Promise.all(
       tokens.map(async (t) => {
@@ -35,6 +42,13 @@ export class PricesService {
     return Object.fromEntries(entries);
   }
 
+  /**
+   * Fetch token prices at given timestamps
+   * @param address target token address
+   * @param timestamps target timestamps for look up
+   * @param currency requested currency conversion
+   * @returns list of token prices at or nearest to the requested timestamps
+   */
   async #getPriceSnapshotsAtTimestamps(
     address: string,
     timestamps: number[],

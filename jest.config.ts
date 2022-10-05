@@ -14,13 +14,14 @@ const config: Config.InitialOptions = {
     'models',
     'config',
     'mocks',
+    'errors',
   ],
   coverageThreshold: {
     global: {
-      branches: 40,
-      functions: 65,
-      lines: 65,
-      statements: 65,
+      branches: 55,
+      functions: 70,
+      lines: 75,
+      statements: 75,
     },
   },
   moduleFileExtensions: ['js', 'json', 'ts', 'node'],

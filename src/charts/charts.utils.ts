@@ -9,11 +9,11 @@ import { ChartData } from './chart-data.model';
 export const CHART_GRANULARITY_TIMEFRAMES = [ChartTimeFrame.Max, ChartTimeFrame.Week, ChartTimeFrame.Day];
 
 /**
- *
- * @param id
- * @param timeframe
- * @param data
- * @returns
+ * Converts array of data to a timeframe associated data blob.
+ * @param id id to associate the blob to
+ * @param timeframe timeframe to associate the blob to
+ * @param data data to include within the data blob
+ * @returns namespace and timeframe asscoiated data blob
  */
 export function toChartDataBlob<T extends ChartData>(
   id: string,
@@ -29,22 +29,22 @@ export function toChartDataBlob<T extends ChartData>(
 }
 
 /**
- *
- * @param namespace
- * @param id
- * @param timeframe
- * @returns
+ * Utilize input parameters to create a blob data key.
+ * @param namespace blob data namespace association
+ * @param id blob entity id
+ * @param timeframe blob timeframe association
+ * @returns data key representing the mapping for the namespace, id and timeframe association
  */
 export function toChartDataKey(namespace: string, id: string, timeframe: ChartTimeFrame): string {
   return [namespace, id, timeframe].join('_');
 }
 
 /**
- *
- * @param reference
- * @param timestamp
- * @param timeframe
- * @returns
+ * Identify if a data blob requires or should have new data pushed into it.
+ * @param reference the reference (current) timestamp
+ * @param timestamp the previous timestamp
+ * @param timeframe the timeframe we are measuring against
+ * @returns true if the blob should be updated, false if not
  */
 export function shouldUpdate(reference: number, timestamp: number, timeframe: ChartTimeFrame): boolean {
   const difference = reference - timestamp;
@@ -67,11 +67,11 @@ export function shouldUpdate(reference: number, timestamp: number, timeframe: Ch
 }
 
 /**
- *
- * @param reference
- * @param timestamp
- * @param timeframe
- * @returns
+ * Identify if a data blob requires or should have old data dropped from it.
+ * @param reference the reference (current) timestamp
+ * @param timestamp the previous timestamp
+ * @param timeframe the timeframe we are measuring against
+ * @returns true if the blob should be updated, false if not
  */
 export function shouldTrim(reference: number, timestamp: number, timeframe: ChartTimeFrame): boolean {
   const difference = reference - timestamp;
@@ -101,9 +101,9 @@ export function shouldTrim(reference: number, timestamp: number, timeframe: Char
 }
 
 /**
- *
- * @param namespace
- * @param snapshot
+ * Identify and update all time frame data blobs that a given snapshot is elligible for.
+ * @param namespace blob namespace to query and iterate over
+ * @param snapshot snapshot to insert into elligible blobs
  */
 export async function updateSnapshots<T extends ChartData>(namespace: string, snapshot: T) {
   const mapper = getDataMapper();
@@ -135,10 +135,10 @@ export async function updateSnapshots<T extends ChartData>(namespace: string, sn
       console.debug(`Create blob for ${searchKey.id}`);
       try {
         cachedChart = await mapper.put(blob);
+        updateCache = true;
       } catch (err) {
         console.error({ message: 'Unable to save blob', err });
       }
-      updateCache = true;
     } else {
       const { timeframe, data } = cachedChart;
       const recentSnapshot = data[0].timestamp;
@@ -162,11 +162,16 @@ export async function updateSnapshots<T extends ChartData>(namespace: string, sn
   }
 }
 
+/**
+ * Query vault chart information.
+ * @param id blob data key
+ * @returns data associated with the chart data blob
+ */
 export async function queryVaultCharts(id: string): Promise<HistoricVaultSnapshotModel[]> {
   try {
     const mapper = getDataMapper();
     for await (const item of mapper.query(ChartDataBlob, { id }, { limit: 1, scanIndexForward: false })) {
-      return item.data as HistoricVaultSnapshotModel[];
+      return <HistoricVaultSnapshotModel[]>item.data;
     }
     return [];
   } catch (err) {

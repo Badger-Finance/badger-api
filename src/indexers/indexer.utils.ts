@@ -16,7 +16,7 @@ import { Stage } from '../config/enums/stage.enum';
 import { queryPrice } from '../prices/prices.utils';
 import { Nullable } from '../utils/types.utils';
 import { VaultsService } from '../vaults/vaults.service';
-import { getStrategyInfo } from '../vaults/vaults.utils';
+import { getStrategyInfoRfw } from '../vaults/vaults.utils';
 
 export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<VaultSnapshot> {
   const sdk = await chain.getSdk();
@@ -35,7 +35,7 @@ export async function vaultToSnapshot(chain: Chain, vaultDefinition: VaultDefini
 
   const [tokenPriceData, strategyInfo, boostWeight, cachedVault] = await Promise.all([
     queryPrice(vaultDefinition.depositToken),
-    getStrategyInfo(chain, vaultDefinition),
+    getStrategyInfoRfw(chain, vaultDefinition),
     sdk.rewards.getBoostWeight(vaultDefinition.address),
     VaultsService.loadVaultV3(chain, vaultDefinition),
   ]);

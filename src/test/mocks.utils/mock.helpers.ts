@@ -87,7 +87,7 @@ export function randomCachedBoosts(count: number): CachedBoost[] {
       leaderboard: `${Network.Ethereum}_${LeaderBoardType.BadgerBoost}`,
       boostRank: i + 1,
       address: TEST_ADDR,
-      boost: 2000 - i * 10,
+      boost: 3000 - Math.floor(i / 2) * 10,
       nftBalance: 1,
       stakeRatio: 1 - i * 0.01,
       nativeBalance: 100000 / (i + 1),

@@ -1,5 +1,6 @@
 import { formatBalance, UniV2__factory } from '@badger-dao/sdk';
 import { NotFound, UnprocessableEntity } from '@tsed/exceptions';
+import { ethers } from 'ethers';
 import { GraphQLClient } from 'graphql-request';
 
 import { getVaultEntityId } from '../../aws/dynamodb.utils';
@@ -13,16 +14,30 @@ import { TokenPrice } from '../../prices/interface/token-price.interface';
 import { queryPrice } from '../../prices/prices.utils';
 import { SourceType } from '../../rewards/enums/source-type.enum';
 import { getFullToken, getFullTokens, toBalance } from '../../tokens/tokens.utils';
+import { Nullable } from '../../utils/types.utils';
 import { getCachedVault } from '../../vaults/vaults.utils';
 import { createYieldSource } from '../../vaults/yields.utils';
 import { UniV2PoolData } from '../interfaces/uni-v2-pool-data.interface';
 
-export class UniswapStrategy {
-  static async getValueSources(vault: VaultDefinitionModel): Promise<CachedYieldSource[]> {
-    return Promise.all([getUniV2SwapValue(UNISWAP_URL, vault)]);
+/**
+ * Load uniswap v2 non-emitted yield sources.
+ * @param vaultDefinition requested vault
+ * @returns yield sources vault earns that are not harvested
+ */
+export async function getUniswapV2YieldSources(vault: VaultDefinitionModel): Promise<CachedYieldSource[]> {
+  const feeSource = await getUniV2SwapValue(UNISWAP_URL, vault);
+  if (feeSource) {
+    return [feeSource];
   }
+  return [];
 }
 
+/**
+ * Get UniV2 on chain liquidity data.
+ * @param chain chain pool is deployed
+ * @param contract pool address
+ * @returns liquidity data for requested pool
+ */
 async function getLiquidityData(chain: Chain, contract: string): Promise<UniV2PoolData> {
   const sdk = await chain.getSdk();
   const pairContract = UniV2__factory.connect(contract, sdk.provider);
@@ -46,12 +61,18 @@ async function getLiquidityData(chain: Chain, contract: string): Promise<UniV2Po
   };
 }
 
+/**
+ * Resolves price of a UniV2 liquidity pool.
+ * @param chain chain pool is deployed
+ * @param poolAddress pool address
+ * @returns price for the liquidity pool token
+ */
 export async function getOnChainLiquidityPrice(chain: Chain, poolAddress: string): Promise<TokenPrice> {
   try {
     const liquidityData = await getLiquidityData(chain, poolAddress);
+
     if (liquidityData.totalSupply === 0) {
       const token = await getFullToken(chain, poolAddress);
-
       return {
         address: token.address,
         price: 0,
@@ -59,41 +80,39 @@ export async function getOnChainLiquidityPrice(chain: Chain, poolAddress: string
     }
 
     const { contract, token0, token1, reserve0, reserve1, totalSupply } = liquidityData;
-    let [t0Price, t1Price] = await Promise.all([queryPrice(token0), queryPrice(token1)]);
-    if (!t0Price && !t1Price) {
+    let [{ price: t0Price }, { price: t1Price }] = await Promise.all([queryPrice(token0), queryPrice(token1)]);
+
+    if (t0Price === 0 && t1Price === 0) {
       throw new UnprocessableEntity(`Token pair ${contract} cannot be priced`);
     }
-    if (!t0Price) {
+
+    if (t0Price === 0) {
       const t1Scalar = reserve0 / reserve1;
-      const t0Info = await getFullToken(chain, token0);
-
-      t0Price = {
-        address: t0Info.address,
-        price: t1Price.price * t1Scalar,
-      };
+      t0Price = t1Price * t1Scalar;
     }
-    if (!t1Price) {
+    if (t1Price === 0) {
       const t0Scalar = reserve1 / reserve0;
-      const t1Info = await getFullToken(chain, token1);
-
-      t1Price = {
-        address: t1Info.address,
-        price: t0Price.price * t0Scalar,
-      };
+      t1Price = t0Price * t0Scalar;
     }
-    const token = await getFullToken(chain, contract);
 
-    const price = (t0Price.price * reserve0 + t1Price.price * reserve1) / totalSupply;
+    const price = (t0Price * reserve0 + t1Price * reserve1) / totalSupply;
     return {
-      address: token.address,
+      address: ethers.utils.getAddress(poolAddress),
       price,
     };
   } catch (err) {
-    console.log(err);
-    throw new NotFound(`No pair found for ${poolAddress}`);
+    console.error(err);
+    throw new NotFound(`Unable to price pool, or not found for ${poolAddress}`);
   }
 }
 
+/**
+ * Resolve the price of a token in a UniV2 liquidity pool using 50/50 invariant.
+ * @param chain chain pool is deployed
+ * @param token token requested for pricing
+ * @param contract pool address
+ * @returns token price requested, if a price exists for the paired token
+ */
 export async function resolveTokenPrice(chain: Chain, token: string, contract: string): Promise<TokenPrice> {
   const { token0, token1, reserve0, reserve1 } = await getLiquidityData(chain, contract);
   const sdk = await chain.getSdk();
@@ -101,18 +120,24 @@ export async function resolveTokenPrice(chain: Chain, token: string, contract: s
   const isToken0 = pricingToken.address === token0;
   const knownToken = isToken0 ? token1 : token0;
   const [divisor, dividend] = isToken0 ? [reserve1, reserve0] : [reserve0, reserve1];
-  const knownTokenPrice = await queryPrice(knownToken);
-  if (!knownTokenPrice) {
+  const { price: knownTokenPrice } = await queryPrice(knownToken);
+  if (knownTokenPrice === 0) {
     throw new UnprocessableEntity(`Token ${pricingToken.name} cannot be priced`);
   }
   const scalar = divisor / dividend;
-  const price = knownTokenPrice.price * scalar;
+  const price = knownTokenPrice * scalar;
   return {
     address: pricingToken.address,
     price,
   };
 }
 
+/**
+ * Retrieve underlying tokens in a given UniV2 vault position.
+ * @param chain chain vault is deployed
+ * @param vault requested vault
+ * @returns underlying token balances represented by pool tokens held by the vault
+ */
 export async function getLpTokenBalances(chain: Chain, vault: VaultDefinitionModel): Promise<VaultTokenBalance> {
   const { depositToken, address } = vault;
   try {
@@ -142,7 +167,16 @@ export async function getLpTokenBalances(chain: Chain, vault: VaultDefinitionMod
   }
 }
 
-export async function getUniV2SwapValue(graphUrl: string, vault: VaultDefinitionModel): Promise<CachedYieldSource> {
+/**
+ * Loads trade data from the uniswap v2 subgraph.
+ * @param graphUrl graph url to target
+ * @param vault vault pair to query
+ * @returns trade fee yield data if trading data exists
+ */
+export async function getUniV2SwapValue(
+  graphUrl: string,
+  vault: VaultDefinitionModel,
+): Promise<Nullable<CachedYieldSource>> {
   const client = new GraphQLClient(graphUrl);
   const sdk = getUniswapSdk(client);
 
@@ -155,9 +189,8 @@ export async function getUniV2SwapValue(graphUrl: string, vault: VaultDefinition
     },
   });
 
-  const name = `${vault.protocol} LP Fees`;
   if (!pairDayDatas || pairDayDatas.length === 0) {
-    return createYieldSource(vault, SourceType.TradeFee, name, 0);
+    return null;
   }
 
   const [token0Price, token1Price] = await Promise.all([
@@ -174,5 +207,5 @@ export async function getUniV2SwapValue(graphUrl: string, vault: VaultDefinition
     totalApr += (fees / poolReserve) * 365 * 100;
   }
   const averageApr = totalApr / pairDayDatas.length;
-  return createYieldSource(vault, SourceType.TradeFee, name, averageApr);
+  return createYieldSource(vault, SourceType.TradeFee, `${vault.protocol} LP Fees`, averageApr);
 }

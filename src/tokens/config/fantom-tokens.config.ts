@@ -113,59 +113,45 @@ export const fantomTokensConfig: TokenConfig = {
     type: PricingType.LookupName,
   },
   [TOKENS.SMM_BOO_XBOO]: {
-    lpToken: true,
     type: PricingType.UniV2LP,
   },
   [TOKENS.SMM_WBTC_RENBTC]: {
-    lpToken: true,
     type: PricingType.UniV2LP,
   },
   [TOKENS.SMM_WFTM_SEX]: {
-    lpToken: true,
     type: PricingType.UniV2LP,
   },
   [TOKENS.SMM_SOLID_SOLIDSEX]: {
-    lpToken: true,
     type: PricingType.UniV2LP,
   },
   [TOKENS.SMM_WEVE_USDC]: {
-    lpToken: true,
     type: PricingType.UniV2LP,
   },
   [TOKENS.SMM_OXD_USDC]: {
-    lpToken: true,
     type: PricingType.UniV2LP,
   },
   [TOKENS.SMM_WFTM_CRV]: {
-    lpToken: true,
     type: PricingType.UniV2LP,
   },
   [TOKENS.SMM_USDC_MIM]: {
-    lpToken: true,
     type: PricingType.UniV2LP,
   },
   [TOKENS.SMM_WFTM_RENBTC]: {
-    lpToken: true,
     type: PricingType.UniV2LP,
   },
   [TOKENS.SMM_GEIST_3CRV]: {
-    lpToken: true,
     type: PricingType.UniV2LP,
   },
   [TOKENS.SMM_WFTM_SCREAM]: {
-    lpToken: true,
     type: PricingType.UniV2LP,
   },
   [TOKENS.SMM_WFTM_TOMB]: {
-    lpToken: true,
     type: PricingType.UniV2LP,
   },
   [TOKENS.SMM_BVEOXD_OXD]: {
-    lpToken: true,
     type: PricingType.UniV2LP,
   },
   [TOKENS.SMM_USDC_DEI]: {
-    lpToken: true,
     type: PricingType.UniV2LP,
   },
   [TOKENS.BSMM_GEIST_3CRV_DCA]: {
