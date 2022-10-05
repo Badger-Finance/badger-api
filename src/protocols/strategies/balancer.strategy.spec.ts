@@ -50,7 +50,7 @@ describe('balancer.strategy', () => {
             poolSnapshots: [
               {
                 id: TEST_TOKEN,
-                swapFees: 1500000,
+                swapFees: 1700000,
                 liquidity: 1000,
                 amounts: [],
                 timestamp: TEST_CURRENT_TIMESTAMP,
@@ -68,7 +68,7 @@ describe('balancer.strategy', () => {
               },
               {
                 id: TEST_TOKEN,
-                swapFees: 1700000,
+                swapFees: 1500000,
                 liquidity: 1000,
                 amounts: [],
                 timestamp: TEST_CURRENT_TIMESTAMP,
@@ -205,9 +205,9 @@ describe('balancer.strategy', () => {
       jest
         .spyOn(weightedPool, 'getNormalizedWeights')
         .mockImplementation(async () => [
-          ethers.constants.WeiPerEther.mul(30),
-          ethers.constants.WeiPerEther.mul(40),
-          ethers.constants.WeiPerEther.mul(30),
+          ethers.constants.WeiPerEther.mul(30).div(100),
+          ethers.constants.WeiPerEther.mul(40).div(100),
+          ethers.constants.WeiPerEther.mul(30).div(100),
         ]);
       const { price } = await resolveBalancerPoolTokenPrice(chain, MOCK_TOKEN, TEST_ADDR);
       expect(price).toEqual(0);
@@ -217,9 +217,9 @@ describe('balancer.strategy', () => {
       jest
         .spyOn(weightedPool, 'getNormalizedWeights')
         .mockImplementation(async () => [
-          ethers.constants.WeiPerEther.mul(30),
-          ethers.constants.WeiPerEther.mul(40),
-          ethers.constants.WeiPerEther.mul(30),
+          BigNumber.from('500000000000000000'),
+          BigNumber.from('250000000000000000'),
+          BigNumber.from('250000000000000000'),
         ]);
       const token = MOCK_TOKENS[TOKENS.BB_A_USDT];
       const result = await resolveBalancerPoolTokenPrice(chain, token, TEST_ADDR);
@@ -237,9 +237,9 @@ describe('balancer.strategy', () => {
           precision: BigNumber;
         }
       >{
-        value: ethers.constants.WeiPerEther,
+        value: BigNumber.from('25000'),
         isUpdating: false,
-        precision: BigNumber.from('1000000'),
+        precision: BigNumber.from('1000'),
       };
       jest.spyOn(stablePool, 'getAmplificationParameter').mockImplementation(async () => amplificationData);
       const invariantData = <
@@ -248,8 +248,8 @@ describe('balancer.strategy', () => {
           lastInvariantAmp: BigNumber;
         }
       >{
-        lastInvariant: ethers.constants.WeiPerEther,
-        lastInvariantAmp: BigNumber.from('1000000'),
+        lastInvariant: BigNumber.from('1001528561292882759522421'),
+        lastInvariantAmp: BigNumber.from('25000'),
       };
       jest.spyOn(stablePool, 'getLastInvariant').mockImplementation(async () => invariantData);
 

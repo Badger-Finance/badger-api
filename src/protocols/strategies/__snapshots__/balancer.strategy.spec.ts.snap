@@ -121,12 +121,12 @@ Array [
     "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_lp_fee_balancer_lp_fees_flat",
     "name": "Balancer LP Fees",
     "performance": Object {
-      "baseYield": -1825000,
-      "grossYield": -1825000,
-      "maxGrossYield": -1825000,
-      "maxYield": -1825000,
-      "minGrossYield": -1825000,
-      "minYield": -1825000,
+      "baseYield": 1825000,
+      "grossYield": 1825000,
+      "maxGrossYield": 1825000,
+      "maxYield": 1825000,
+      "minGrossYield": 1825000,
+      "minYield": 1825000,
     },
     "type": "lp_fee",
   },
@@ -143,6 +143,6 @@ Object {
 exports[`balancer.strategy resolveBalancerPoolTokenPrice returns the price of a token in a weighted pool 1`] = `
 Object {
   "address": "0x2BBf681cC4eb09218BEe85EA2a5d3D13Fa40fC0C",
-  "price": -72657.93103448277,
+  "price": 70236,
 }
 `;
