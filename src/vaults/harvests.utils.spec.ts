@@ -278,6 +278,7 @@ describe('harvests.utils', () => {
 
     describe('encounters an error requesting an influence vault', () => {
       it('rejects with an error, influence vaults require the graph', async () => {
+        jest.spyOn(console, 'error').mockImplementation();
         jest.spyOn(chain.sdk.graph, 'loadSettHarvests').mockImplementation(async () => {
           throw new Error('Expected test error: loadSettHarvests');
         });
