@@ -131,7 +131,6 @@ export function setupMockChain(
       Object.fromEntries(Object.entries(MOCK_TOKENS).filter((e) => tokens.includes(e[0]))),
     );
   jest.spyOn(TokensService.prototype, 'loadToken').mockImplementation(async (token) => MOCK_TOKENS[token]);
-  jest.spyOn(tokensUtils, 'getFullToken').mockImplementation(async (_, token) => MOCK_TOKENS[token]);
   const chainTokensList = Object.values(MOCK_TOKENS);
   mockBatchGet(chainTokensList);
   mockBatchPut(chainTokensList);
@@ -204,6 +203,7 @@ export function setupDdbHarvests() {
 }
 
 export function setupTestVault() {
+  jest.spyOn(tokensUtils, 'getFullToken').mockImplementation(async (_, token) => MOCK_TOKENS[token]);
   const baseTime = 1656606946;
   jest.spyOn(Date, 'now').mockImplementation(() => baseTime * 1000 + ONE_DAY_MS * 14);
   jest.spyOn(vaultsUtils, 'queryYieldEstimate').mockImplementation(

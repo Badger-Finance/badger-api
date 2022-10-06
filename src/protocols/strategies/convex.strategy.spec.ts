@@ -138,6 +138,8 @@ describe('convex.strategy', () => {
         },
       },
     }));
+
+    jest.spyOn(tokensUtils, 'getFullToken').mockImplementation(async (_, token) => MOCK_TOKENS[token]);
   });
 
   describe('getCurveYieldSources', () => {
