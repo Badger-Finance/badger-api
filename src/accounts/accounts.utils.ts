@@ -214,12 +214,12 @@ export async function getClaimableBalanceSnapshot(
 
 export async function getLatestMetadata(chain: Chain): Promise<UserClaimMetadata> {
   const mapper = getDataMapper();
-  for await (const metric of mapper.query(
+  for await (const metadata of mapper.query(
     UserClaimMetadata,
     { chain: chain.network },
     { indexName: 'IndexMetadataChainAndStartBlock', scanIndexForward: false, limit: 1 },
   )) {
-    return metric;
+    return metadata;
   }
 
   // In case there UserClaimMetadata wasn't created yet, create it with default values

@@ -1,12 +1,16 @@
-import { Currency, Network, ONE_DAY_MS, Token, TokenValue, VaultSnapshot } from '@badger-dao/sdk';
+import { Currency, DiggService, Network, ONE_DAY_MS, Token, TokenValue, VaultSnapshot } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 
 import { CachedAccount } from '../../aws/models/cached-account.model';
 import { CachedBoost } from '../../aws/models/cached-boost.model';
+import { ClaimableBalance } from '../../aws/models/claimable-balance.model';
+import { UserClaimSnapshot } from '../../aws/models/user-claim-snapshot.model';
 import { VaultDefinitionModel } from '../../aws/models/vault-definition.model';
+import { DEFAULT_PAGE_SIZE } from '../../config/constants';
+import { TOKENS } from '../../config/tokens.config';
 import { LeaderBoardType } from '../../leaderboards/enums/leaderboard-type.enum';
 import { TokenPrice } from '../../prices/interface/token-price.interface';
-import { MOCK_VAULT_DEFINITION, TEST_ADDR } from '../constants';
+import { MOCK_VAULT_DEFINITION, TEST_ADDR, TEST_CURRENT_BLOCK, TEST_CURRENT_TIMESTAMP } from '../constants';
 import { randomValue } from '../tests.utils';
 
 export function mockPrice(address: string): TokenPrice {
@@ -122,4 +126,41 @@ export function mockBalance(token: Token, balance: number, currency?: Currency):
     balance: balance,
     value: balance * price,
   };
+}
+
+export function randomClaimSnapshots(count: number, pageSize = DEFAULT_PAGE_SIZE): UserClaimSnapshot[] {
+  const snapshots: UserClaimSnapshot[] = [];
+
+  for (let i = 0; i < count; i++) {
+    let claimableBalances: ClaimableBalance[] = [];
+
+    if (i % DEFAULT_PAGE_SIZE < 5) {
+      claimableBalances = [{ address: TOKENS.BADGER, balance: ethers.constants.WeiPerEther.toString() }];
+    } else if (i % DEFAULT_PAGE_SIZE < 10) {
+      claimableBalances = [
+        { address: TOKENS.BADGER, balance: ethers.constants.WeiPerEther.toString() },
+        { address: TOKENS.BVECVX, balance: ethers.constants.WeiPerEther.toString() },
+      ];
+    } else if (i % DEFAULT_PAGE_SIZE < 15) {
+      claimableBalances = [
+        { address: TOKENS.BADGER, balance: ethers.constants.WeiPerEther.toString() },
+        { address: TOKENS.DIGG, balance: DiggService.DIGG_SHARES_PER_FRAGMENT.mul(2).toString() },
+      ];
+    } else if (i % DEFAULT_PAGE_SIZE < DEFAULT_PAGE_SIZE) {
+      claimableBalances = [{ address: TOKENS.GRAVI_AURA, balance: ethers.constants.WeiPerEther.toString() }];
+    }
+
+    const snapshot: UserClaimSnapshot = {
+      chain: Network.Ethereum,
+      chainStartBlock: TEST_CURRENT_BLOCK.toFixed(),
+      startBlock: TEST_CURRENT_BLOCK,
+      address: TEST_ADDR,
+      expiresAt: TEST_CURRENT_TIMESTAMP,
+      claimableBalances,
+      pageId: Math.floor(i / pageSize),
+    };
+    snapshots.push(snapshot);
+  }
+
+  return snapshots;
 }

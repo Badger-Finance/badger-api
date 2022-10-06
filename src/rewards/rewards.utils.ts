@@ -1,8 +1,9 @@
-import { Network, ONE_YEAR_SECONDS, Protocol } from '@badger-dao/sdk';
+import { DiggService, formatBalance, Network, ONE_YEAR_SECONDS, Protocol } from '@badger-dao/sdk';
 import { BigNumber } from 'ethers';
 
 import { getCachedAccount } from '../accounts/accounts.utils';
 import { CachedYieldSource } from '../aws/models/cached-yield-source.interface';
+import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { getBoostFile } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
@@ -17,6 +18,7 @@ import { getFullToken } from '../tokens/tokens.utils';
 import { getCachedVault } from '../vaults/vaults.utils';
 import { createYieldSource } from '../vaults/yields.utils';
 import { SourceType } from './enums/source-type.enum';
+import { DebankUser } from './interfaces/debank-user.interface';
 import { RewardMerkleDistribution } from './interfaces/merkle-distributor.interface';
 
 export async function getClaimableRewards(
@@ -165,4 +167,24 @@ export async function getProtocolValueSources(
     console.log({ error, message: `Failed to update value sources for ${vaultDefinition.protocol}` });
     return [];
   }
+}
+
+export async function userClaimedSnapshotToDebankUser(chain: Chain, snapshot: UserClaimSnapshot): Promise<DebankUser> {
+  const rewards: Record<string, number> = {};
+  for (const record of snapshot.claimableBalances) {
+    const { address, balance } = record;
+    const token = await getFullToken(chain, address);
+    if (token.address === TOKENS.DIGG) {
+      rewards[address] = formatBalance(
+        BigNumber.from(balance).div(DiggService.DIGG_SHARES_PER_FRAGMENT),
+        token.decimals,
+      );
+    } else {
+      rewards[address] = formatBalance(balance, token.decimals);
+    }
+  }
+  return {
+    user_addr: snapshot.address,
+    rewards,
+  };
 }
