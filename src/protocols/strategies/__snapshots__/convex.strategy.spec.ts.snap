@@ -1,0 +1,313 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`convex.strategy getCurvePerformance requests trade fees from the curve api on arbitrum 1`] = `
+CachedYieldSource {
+  "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+  "boostable": false,
+  "chain": "ethereum",
+  "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+  "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_lp_fee_curve_lp_fees_flat",
+  "name": "Curve LP Fees",
+  "performance": Object {
+    "baseYield": 20,
+    "grossYield": 20,
+    "maxGrossYield": 20,
+    "maxYield": 20,
+    "minGrossYield": 20,
+    "minYield": 20,
+  },
+  "type": "lp_fee",
+}
+`;
+
+exports[`convex.strategy getCurvePerformance requests trade fees from the curve api on ethereum 1`] = `
+CachedYieldSource {
+  "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+  "boostable": false,
+  "chain": "ethereum",
+  "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+  "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_lp_fee_curve_lp_fees_flat",
+  "name": "Curve LP Fees",
+  "performance": Object {
+    "baseYield": 20,
+    "grossYield": 20,
+    "maxGrossYield": 20,
+    "maxYield": 20,
+    "minGrossYield": 20,
+    "minYield": 20,
+  },
+  "type": "lp_fee",
+}
+`;
+
+exports[`convex.strategy getCurvePerformance requests trade fees from the curve api on polygon 1`] = `
+CachedYieldSource {
+  "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+  "boostable": false,
+  "chain": "ethereum",
+  "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+  "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_lp_fee_curve_lp_fees_flat",
+  "name": "Curve LP Fees",
+  "performance": Object {
+    "baseYield": 20,
+    "grossYield": 20,
+    "maxGrossYield": 20,
+    "maxYield": 20,
+    "minGrossYield": 20,
+    "minYield": 20,
+  },
+  "type": "lp_fee",
+}
+`;
+
+exports[`convex.strategy getCurvePerformance utilizes crypto factory api fallback option if required 1`] = `
+CachedYieldSource {
+  "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+  "boostable": false,
+  "chain": "ethereum",
+  "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+  "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_lp_fee_curve_lp_fees_flat",
+  "name": "Curve LP Fees",
+  "performance": Object {
+    "baseYield": 1.2,
+    "grossYield": 1.2,
+    "maxGrossYield": 1.2,
+    "maxYield": 1.2,
+    "minGrossYield": 1.2,
+    "minYield": 1.2,
+  },
+  "type": "lp_fee",
+}
+`;
+
+exports[`convex.strategy getCurvePerformance utilizes factory 2 api fallback option if required 1`] = `
+CachedYieldSource {
+  "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+  "boostable": false,
+  "chain": "ethereum",
+  "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+  "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_lp_fee_curve_lp_fees_flat",
+  "name": "Curve LP Fees",
+  "performance": Object {
+    "baseYield": 1.2,
+    "grossYield": 1.2,
+    "maxGrossYield": 1.2,
+    "maxYield": 1.2,
+    "minGrossYield": 1.2,
+    "minYield": 1.2,
+  },
+  "type": "lp_fee",
+}
+`;
+
+exports[`convex.strategy getCurvePoolBalance falls back to older pool abi when new pools fail 1`] = `
+Array [
+  Object {
+    "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+    "balance": 10000000000,
+    "decimals": 8,
+    "name": "Wrapped BTC",
+    "symbol": "WBTC",
+    "value": 88000000000000,
+  },
+  Object {
+    "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+    "balance": 5000,
+    "decimals": 18,
+    "name": "Badger",
+    "symbol": "BADGER",
+    "value": 67130000,
+  },
+]
+`;
+
+exports[`convex.strategy getCurvePoolBalance falls back to pool definitions for pools missing from the registry 1`] = `
+Array [
+  Object {
+    "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+    "balance": 10000000000,
+    "decimals": 8,
+    "name": "Wrapped BTC",
+    "symbol": "WBTC",
+    "value": 88000000000000,
+  },
+  Object {
+    "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+    "balance": 5000,
+    "decimals": 18,
+    "name": "Badger",
+    "symbol": "BADGER",
+    "value": 67130000,
+  },
+]
+`;
+
+exports[`convex.strategy getCurvePoolBalance returns curve pool underlying pool 1`] = `
+Array [
+  Object {
+    "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+    "balance": 10000000000,
+    "decimals": 8,
+    "name": "Wrapped BTC",
+    "symbol": "WBTC",
+    "value": 88000000000000,
+  },
+  Object {
+    "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+    "balance": 5000,
+    "decimals": 18,
+    "name": "Badger",
+    "symbol": "BADGER",
+    "value": 67130000,
+  },
+]
+`;
+
+exports[`convex.strategy getCurveTokenPrice returns the price of a curve pool token 1`] = `
+Object {
+  "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+  "price": 88000067130000,
+}
+`;
+
+exports[`convex.strategy getCurveVaultTokenBalance returns vault tokens built on a curve pool 1`] = `
+VaultTokenBalance {
+  "chain": "ethereum",
+  "id": "ethereum-0x37d9D2C6035b744849C15F1BFEE8F268a20fCBd8",
+  "tokenBalances": Array [
+    Object {
+      "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+      "balance": 484054534550573.25,
+      "decimals": 8,
+      "name": "Wrapped BTC",
+      "symbol": "WBTC",
+      "value": 4259679904045044000,
+    },
+    Object {
+      "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+      "balance": 242027267.2752866,
+      "decimals": 18,
+      "name": "Badger",
+      "symbol": "BADGER",
+      "value": 3249458090437.998,
+    },
+  ],
+  "vault": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+}
+`;
+
+exports[`convex.strategy getCurveYieldSources returns derived data for liquidity pool vault 1`] = `
+Array [
+  CachedYieldSource {
+    "address": "0x937B8E917d0F36eDEBBA8E459C5FB16F3b315551",
+    "boostable": false,
+    "chain": "ethereum",
+    "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_lp_fee_curve_lp_fees_flat",
+    "name": "Curve LP Fees",
+    "performance": Object {
+      "baseYield": 0,
+      "grossYield": 0,
+      "maxGrossYield": 0,
+      "maxYield": 0,
+      "minGrossYield": 0,
+      "minYield": 0,
+    },
+    "type": "lp_fee",
+  },
+  CachedYieldSource {
+    "address": "0x937B8E917d0F36eDEBBA8E459C5FB16F3b315551",
+    "boostable": false,
+    "chain": "ethereum",
+    "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_compound_vault_compounding_flat",
+    "name": "Vault Compounding",
+    "performance": Object {
+      "baseYield": 0.3196181652036132,
+      "grossYield": 0.3196181652036132,
+      "maxGrossYield": 0.3196181652036132,
+      "maxYield": 0.3196181652036132,
+      "minGrossYield": 0.3196181652036132,
+      "minYield": 0.3196181652036132,
+    },
+    "type": "compound",
+  },
+  CachedYieldSource {
+    "address": "0x937B8E917d0F36eDEBBA8E459C5FB16F3b315551",
+    "boostable": false,
+    "chain": "ethereum",
+    "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_emission_badger_rewards_flat",
+    "name": "Badger Rewards",
+    "performance": Object {
+      "baseYield": 0.3196181652036132,
+      "grossYield": 0.3196181652036132,
+      "maxGrossYield": 0.3196181652036132,
+      "maxYield": 0.3196181652036132,
+      "minGrossYield": 0.3196181652036132,
+      "minYield": 0.3196181652036132,
+    },
+    "type": "emission",
+  },
+  CachedYieldSource {
+    "address": "0x937B8E917d0F36eDEBBA8E459C5FB16F3b315551",
+    "boostable": false,
+    "chain": "ethereum",
+    "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_lp_fee_curve_lp_fees_flat",
+    "name": "Curve LP Fees",
+    "performance": Object {
+      "baseYield": 0.3196181652036132,
+      "grossYield": 0.3196181652036132,
+      "maxGrossYield": 0.3196181652036132,
+      "maxYield": 0.3196181652036132,
+      "minGrossYield": 0.3196181652036132,
+      "minYield": 0.3196181652036132,
+    },
+    "type": "lp_fee",
+  },
+]
+`;
+
+exports[`convex.strategy getCurveYieldSources returns trade fees for standard vaults 1`] = `
+Array [
+  CachedYieldSource {
+    "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "boostable": false,
+    "chain": "ethereum",
+    "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_lp_fee_curve_lp_fees_flat",
+    "name": "Curve LP Fees",
+    "performance": Object {
+      "baseYield": 20,
+      "grossYield": 20,
+      "maxGrossYield": 20,
+      "maxYield": 20,
+      "minGrossYield": 20,
+      "minYield": 20,
+    },
+    "type": "lp_fee",
+  },
+]
+`;
+
+exports[`convex.strategy resolveCurvePoolTokenPrice resolves the requested token0 price based off paired token price 1`] = `
+Object {
+  "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+  "price": 0.006713,
+}
+`;
+
+exports[`convex.strategy resolveCurvePoolTokenPrice resolves the requested token1 price based off paired token price 1`] = `
+Object {
+  "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+  "price": 17600000000,
+}
+`;
+
+exports[`convex.strategy resolveCurveStablePoolTokenPrice returns price derived from pool price oracle 1`] = `
+Object {
+  "address": "0xFEEf77d3f69374f66429C91d732A244f074bdf74",
+  "price": 8481.843538170837,
+}
+`;
