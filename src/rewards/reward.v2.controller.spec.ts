@@ -19,6 +19,16 @@ describe('reward.v2.controller', () => {
 
   beforeEach(() => setupMockChain());
 
+  describe('GET /v2/reward/tree/:address', () => {
+    describe('request user with saved claims', () => {
+      it('returns requested address claim', async () => {
+        const { body, statusCode } = await PlatformServerlessTest.request.get(`/reward/tree/${TEST_ADDR}`);
+        expect(statusCode).toEqual(NetworkStatus.Success);
+        expect(JSON.parse(body)).toMatchSnapshot();
+      });
+    });
+  });
+
   describe('GET /v2/reward/schedules', () => {
     describe('with no specified chain', () => {
       it('returns schedules for default chain and all vaults', async () => {

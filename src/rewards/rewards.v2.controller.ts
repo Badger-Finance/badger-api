@@ -1,16 +1,11 @@
-import { DiggService, formatBalance } from '@badger-dao/sdk';
 import { Controller, Get, Inject, QueryParams } from '@tsed/common';
 import { ContentType, Description, Returns, Summary } from '@tsed/schema';
-import { BigNumber } from 'ethers';
 
-import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
 import { Chain } from '../chains/config/chain.config';
 import { DEFAULT_PAGE_SIZE } from '../config/constants';
-import { TOKENS } from '../config/tokens.config';
-import { getFullToken } from '../tokens/tokens.utils';
-import { DebankUser } from './interfaces/debank-user.interface';
 import { ListRewardsResponse } from './interfaces/list-rewards-response.interface';
 import { RewardsService } from './rewards.service';
+import { userClaimedSnapshotToDebankUser } from './rewards.utils';
 
 @Controller('/rewards')
 export class RewardsV2Controller {
@@ -32,27 +27,7 @@ export class RewardsV2Controller {
     return {
       total_count: count,
       total_page_num: Math.ceil(count / (pageCount || DEFAULT_PAGE_SIZE)),
-      users: await Promise.all(records.map((record) => this.userClaimedSnapshotToDebankUser(chain, record))),
-    };
-  }
-
-  private async userClaimedSnapshotToDebankUser(chain: Chain, snapshot: UserClaimSnapshot): Promise<DebankUser> {
-    const rewards: Record<string, number> = {};
-    for (const record of snapshot.claimableBalances) {
-      const { address, balance } = record;
-      const token = await getFullToken(chain, address);
-      if (token.address === TOKENS.DIGG) {
-        rewards[address] = formatBalance(
-          BigNumber.from(balance).div(DiggService.DIGG_SHARES_PER_FRAGMENT),
-          token.decimals,
-        );
-      } else {
-        rewards[address] = formatBalance(balance, token.decimals);
-      }
-    }
-    return {
-      user_addr: snapshot.address,
-      rewards,
+      users: await Promise.all(records.map((record) => userClaimedSnapshotToDebankUser(chain, record))),
     };
   }
 }
