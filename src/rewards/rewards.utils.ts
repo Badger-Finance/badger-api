@@ -9,7 +9,7 @@ import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
 import { queryPrice } from '../prices/prices.utils';
 import { getBalancerYieldSources } from '../protocols/strategies/balancer.strategy';
-import { ConvexStrategy } from '../protocols/strategies/convex.strategy';
+import { getCurveYieldSources } from '../protocols/strategies/convex.strategy';
 import { getSushiswapYieldSources } from '../protocols/strategies/sushiswap.strategy';
 import { getSwaprYieldSources } from '../protocols/strategies/swapr.strategy';
 import { getUniswapV2YieldSources } from '../protocols/strategies/uniswap.strategy';
@@ -149,7 +149,7 @@ export async function getProtocolValueSources(
         return getSushiswapYieldSources(chain, vaultDefinition);
       case Protocol.Curve:
       case Protocol.Convex:
-        return ConvexStrategy.getValueSources(chain, vaultDefinition);
+        return getCurveYieldSources(chain, vaultDefinition);
       case Protocol.Uniswap:
         return getUniswapV2YieldSources(vaultDefinition);
       case Protocol.Swapr:
