@@ -62,19 +62,25 @@ export async function getClaimableRewards(
 }
 
 export async function getRewardEmission(chain: Chain, vault: VaultDefinitionModel): Promise<CachedYieldSource[]> {
-  const boostFile = await getBoostFile(chain);
   const sdk = await chain.getSdk();
 
-  if (!sdk.rewards.hasRewardsLogger() || vault.depositToken === TOKENS.DIGG || !boostFile) {
+  if (!sdk.rewards.hasRewardsLogger()) {
     return [];
   }
   const { address } = vault;
   const cachedVault = await getCachedVault(chain, vault);
+  const boostFile = await getBoostFile(chain);
 
-  if (address === TOKENS.BVECVX) {
-    delete boostFile.multiplierData[address];
+  const defaultRange = { min: 1, max: 1 };
+  let boostRange = defaultRange;
+  if (boostFile) {
+    // this is an artifact of some rewards boost file weirdness, bvecvx shouldn't have a boost
+    if (address === TOKENS.BVECVX) {
+      delete boostFile.multiplierData[address];
+    }
+    boostRange = boostFile.multiplierData[address] ?? defaultRange;
   }
-  const boostRange = boostFile.multiplierData[address] ?? { min: 1, max: 1 };
+
   const activeSchedules = await sdk.rewards.loadActiveSchedules(address);
 
   // Badger controlled addresses are blacklisted from receiving rewards. We only dogfood on ETH
@@ -146,23 +152,29 @@ export async function getProtocolValueSources(
   vaultDefinition: VaultDefinitionModel,
 ): Promise<CachedYieldSource[]> {
   try {
+    let results: CachedYieldSource[] = [];
     switch (vaultDefinition.protocol) {
       case Protocol.Sushiswap:
-        return getSushiswapYieldSources(chain, vaultDefinition);
+        results = await getSushiswapYieldSources(chain, vaultDefinition);
+        break;
       case Protocol.Curve:
       case Protocol.Convex:
-        return getCurveYieldSources(chain, vaultDefinition);
+        results = await getCurveYieldSources(chain, vaultDefinition);
+        break;
       case Protocol.Uniswap:
-        return getUniswapV2YieldSources(vaultDefinition);
+        results = await getUniswapV2YieldSources(vaultDefinition);
+        break;
       case Protocol.Swapr:
-        return getSwaprYieldSources(vaultDefinition);
+        results = await getSwaprYieldSources(vaultDefinition);
+        break;
       case Protocol.Aura:
       case Protocol.Balancer:
-        return getBalancerYieldSources(vaultDefinition);
-      default: {
-        return [];
-      }
+        results = await getBalancerYieldSources(vaultDefinition);
+        break;
+      default:
+        break;
     }
+    return results;
   } catch (error) {
     console.log({ error, message: `Failed to update value sources for ${vaultDefinition.protocol}` });
     return [];
