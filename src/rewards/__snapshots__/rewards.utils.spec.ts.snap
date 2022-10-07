@@ -1,0 +1,213 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`rewards.utils getRewardEmission evaluates non boosted vaults properly 1`] = `
+Array [
+  CachedYieldSource {
+    "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "boostable": false,
+    "chain": "ethereum",
+    "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_emission_badger_flat",
+    "name": "Badger",
+    "performance": Object {
+      "baseYield": 170294.9462357767,
+      "grossYield": 170294.9462357767,
+      "maxGrossYield": 170294.9462357767,
+      "maxYield": 170294.9462357767,
+      "minGrossYield": 170294.9462357767,
+      "minYield": 170294.9462357767,
+    },
+    "type": "emission",
+  },
+  CachedYieldSource {
+    "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "boostable": false,
+    "chain": "ethereum",
+    "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_emission_digg_flat",
+    "name": "Digg",
+    "performance": Object {
+      "baseYield": 18.382714281845978,
+      "grossYield": 18.382714281845978,
+      "maxGrossYield": 18.382714281845978,
+      "maxYield": 18.382714281845978,
+      "minGrossYield": 18.382714281845978,
+      "minYield": 18.382714281845978,
+    },
+    "type": "emission",
+  },
+  CachedYieldSource {
+    "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "boostable": false,
+    "chain": "ethereum",
+    "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_emission_badger_flat",
+    "name": "Badger",
+    "performance": Object {
+      "baseYield": 156023.95503687175,
+      "grossYield": 156023.95503687175,
+      "maxGrossYield": 156023.95503687175,
+      "maxYield": 156023.95503687175,
+      "minGrossYield": 156023.95503687175,
+      "minYield": 156023.95503687175,
+    },
+    "type": "emission",
+  },
+]
+`;
+
+exports[`rewards.utils getRewardEmission ignores any extraneous bvecvx multiplier data 1`] = `
+Array [
+  CachedYieldSource {
+    "address": "0xfd05D3C7fe2924020620A8bE4961bBaA747e6305",
+    "boostable": false,
+    "chain": "ethereum",
+    "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_emission_badger_flat",
+    "name": "Badger",
+    "performance": Object {
+      "baseYield": 170294.9462357767,
+      "grossYield": 170294.9462357767,
+      "maxGrossYield": 170294.9462357767,
+      "maxYield": 170294.9462357767,
+      "minGrossYield": 170294.9462357767,
+      "minYield": 170294.9462357767,
+    },
+    "type": "emission",
+  },
+  CachedYieldSource {
+    "address": "0xfd05D3C7fe2924020620A8bE4961bBaA747e6305",
+    "boostable": false,
+    "chain": "ethereum",
+    "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_emission_digg_flat",
+    "name": "Digg",
+    "performance": Object {
+      "baseYield": 18.382714281845978,
+      "grossYield": 18.382714281845978,
+      "maxGrossYield": 18.382714281845978,
+      "maxYield": 18.382714281845978,
+      "minGrossYield": 18.382714281845978,
+      "minYield": 18.382714281845978,
+    },
+    "type": "emission",
+  },
+  CachedYieldSource {
+    "address": "0xfd05D3C7fe2924020620A8bE4961bBaA747e6305",
+    "boostable": false,
+    "chain": "ethereum",
+    "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_emission_badger_flat",
+    "name": "Badger",
+    "performance": Object {
+      "baseYield": 156023.95503687175,
+      "grossYield": 156023.95503687175,
+      "maxGrossYield": 156023.95503687175,
+      "maxYield": 156023.95503687175,
+      "minGrossYield": 156023.95503687175,
+      "minYield": 156023.95503687175,
+    },
+    "type": "emission",
+  },
+]
+`;
+
+exports[`rewards.utils getRewardEmission utilizes the boost file to determine emission yields 1`] = `
+Array [
+  CachedYieldSource {
+    "address": "0x2B5455aac8d64C14786c3a29858E43b5945819C0",
+    "boostable": true,
+    "chain": "ethereum",
+    "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_emission_boosted_badger_boosted",
+    "name": "Boosted Badger",
+    "performance": Object {
+      "baseYield": 170294.9462357767,
+      "grossYield": 170294.9462357767,
+      "maxGrossYield": 340589.8924715534,
+      "maxYield": 340589.8924715534,
+      "minGrossYield": 42573.736558944176,
+      "minYield": 42573.736558944176,
+    },
+    "type": "emission",
+  },
+  CachedYieldSource {
+    "address": "0x2B5455aac8d64C14786c3a29858E43b5945819C0",
+    "boostable": false,
+    "chain": "ethereum",
+    "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_emission_badger_flat",
+    "name": "Badger",
+    "performance": Object {
+      "baseYield": 0,
+      "grossYield": 0,
+      "maxGrossYield": 0,
+      "maxYield": 0,
+      "minGrossYield": 0,
+      "minYield": 0,
+    },
+    "type": "emission",
+  },
+  CachedYieldSource {
+    "address": "0x2B5455aac8d64C14786c3a29858E43b5945819C0",
+    "boostable": false,
+    "chain": "ethereum",
+    "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_emission_digg_flat",
+    "name": "Digg",
+    "performance": Object {
+      "baseYield": 18.382714281845978,
+      "grossYield": 18.382714281845978,
+      "maxGrossYield": 18.382714281845978,
+      "maxYield": 18.382714281845978,
+      "minGrossYield": 18.382714281845978,
+      "minYield": 18.382714281845978,
+    },
+    "type": "emission",
+  },
+  CachedYieldSource {
+    "address": "0x2B5455aac8d64C14786c3a29858E43b5945819C0",
+    "boostable": true,
+    "chain": "ethereum",
+    "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_emission_boosted_badger_boosted",
+    "name": "Boosted Badger",
+    "performance": Object {
+      "baseYield": 156023.95503687175,
+      "grossYield": 156023.95503687175,
+      "maxGrossYield": 312047.9100737435,
+      "maxYield": 312047.9100737435,
+      "minGrossYield": 39005.98875921794,
+      "minYield": 39005.98875921794,
+    },
+    "type": "emission",
+  },
+  CachedYieldSource {
+    "address": "0x2B5455aac8d64C14786c3a29858E43b5945819C0",
+    "boostable": false,
+    "chain": "ethereum",
+    "chainAddress": "ethereum-0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+    "id": "ethereum-0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28_emission_badger_flat",
+    "name": "Badger",
+    "performance": Object {
+      "baseYield": 0,
+      "grossYield": 0,
+      "maxGrossYield": 0,
+      "maxYield": 0,
+      "minGrossYield": 0,
+      "minYield": 0,
+    },
+    "type": "emission",
+  },
+]
+`;
+
+exports[`rewards.utils userClaimedSnapshotToDebankUser converts a user claimed snapshot to a debank user response 1`] = `
+Object {
+  "rewards": Object {
+    "0x3472A5A71965499acd81997a54BBA8D852C6E53d": 1,
+    "0x798D1bE841a82a273720CE31c822C61a67a601C3": 2e-9,
+  },
+  "user_addr": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
+}
+`;
