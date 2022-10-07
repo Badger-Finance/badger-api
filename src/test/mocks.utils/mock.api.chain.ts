@@ -203,9 +203,7 @@ export function setupDdbHarvests() {
 }
 
 export function setupTestVault() {
-  jest.spyOn(tokensUtils, 'getFullToken').mockImplementation(async (_, tokenAddr) => {
-    return fullTokenMockMap[tokenAddr] || fullTokenMockMap[TOKENS.BADGER];
-  });
+  jest.spyOn(tokensUtils, 'getFullToken').mockImplementation(async (_, token) => MOCK_TOKENS[token]);
   const baseTime = 1656606946;
   jest.spyOn(Date, 'now').mockImplementation(() => baseTime * 1000 + ONE_DAY_MS * 14);
   jest.spyOn(vaultsUtils, 'queryYieldEstimate').mockImplementation(

@@ -1,15 +1,16 @@
-import { Network, ONE_YEAR_SECONDS, Protocol } from '@badger-dao/sdk';
+import { DiggService, formatBalance, Network, ONE_YEAR_SECONDS, Protocol } from '@badger-dao/sdk';
 import { BigNumber } from 'ethers';
 
 import { getCachedAccount } from '../accounts/accounts.utils';
 import { CachedYieldSource } from '../aws/models/cached-yield-source.interface';
+import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
 import { getBoostFile } from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
 import { TOKENS } from '../config/tokens.config';
 import { queryPrice } from '../prices/prices.utils';
-import { BalancerStrategy } from '../protocols/strategies/balancer.strategy';
-import { ConvexStrategy } from '../protocols/strategies/convex.strategy';
+import { getBalancerYieldSources } from '../protocols/strategies/balancer.strategy';
+import { getCurveYieldSources } from '../protocols/strategies/convex.strategy';
 import { getSushiswapYieldSources } from '../protocols/strategies/sushiswap.strategy';
 import { getSwaprYieldSources } from '../protocols/strategies/swapr.strategy';
 import { getUniswapV2YieldSources } from '../protocols/strategies/uniswap.strategy';
@@ -17,6 +18,7 @@ import { getFullToken } from '../tokens/tokens.utils';
 import { getCachedVault } from '../vaults/vaults.utils';
 import { createYieldSource } from '../vaults/yields.utils';
 import { SourceType } from './enums/source-type.enum';
+import { DebankUser } from './interfaces/debank-user.interface';
 import { RewardMerkleDistribution } from './interfaces/merkle-distributor.interface';
 
 export async function getClaimableRewards(
@@ -60,19 +62,25 @@ export async function getClaimableRewards(
 }
 
 export async function getRewardEmission(chain: Chain, vault: VaultDefinitionModel): Promise<CachedYieldSource[]> {
-  const boostFile = await getBoostFile(chain);
   const sdk = await chain.getSdk();
 
-  if (!sdk.rewards.hasRewardsLogger() || vault.depositToken === TOKENS.DIGG || !boostFile) {
+  if (!sdk.rewards.hasRewardsLogger()) {
     return [];
   }
   const { address } = vault;
   const cachedVault = await getCachedVault(chain, vault);
+  const boostFile = await getBoostFile(chain);
 
-  if (address === TOKENS.BVECVX) {
-    delete boostFile.multiplierData[address];
+  const defaultRange = { min: 1, max: 1 };
+  let boostRange = defaultRange;
+  if (boostFile) {
+    // this is an artifact of some rewards boost file weirdness, bvecvx shouldn't have a boost
+    if (address === TOKENS.BVECVX) {
+      delete boostFile.multiplierData[address];
+    }
+    boostRange = boostFile.multiplierData[address] ?? defaultRange;
   }
-  const boostRange = boostFile.multiplierData[address] ?? { min: 1, max: 1 };
+
   const activeSchedules = await sdk.rewards.loadActiveSchedules(address);
 
   // Badger controlled addresses are blacklisted from receiving rewards. We only dogfood on ETH
@@ -144,25 +152,51 @@ export async function getProtocolValueSources(
   vaultDefinition: VaultDefinitionModel,
 ): Promise<CachedYieldSource[]> {
   try {
+    let results: CachedYieldSource[] = [];
     switch (vaultDefinition.protocol) {
       case Protocol.Sushiswap:
-        return getSushiswapYieldSources(chain, vaultDefinition);
+        results = await getSushiswapYieldSources(chain, vaultDefinition);
+        break;
       case Protocol.Curve:
       case Protocol.Convex:
-        return ConvexStrategy.getValueSources(chain, vaultDefinition);
+        results = await getCurveYieldSources(chain, vaultDefinition);
+        break;
       case Protocol.Uniswap:
-        return getUniswapV2YieldSources(vaultDefinition);
+        results = await getUniswapV2YieldSources(vaultDefinition);
+        break;
       case Protocol.Swapr:
-        return getSwaprYieldSources(vaultDefinition);
+        results = await getSwaprYieldSources(vaultDefinition);
+        break;
       case Protocol.Aura:
       case Protocol.Balancer:
-        return BalancerStrategy.getValueSources(vaultDefinition);
-      default: {
-        return [];
-      }
+        results = await getBalancerYieldSources(vaultDefinition);
+        break;
+      default:
+        break;
     }
+    return results;
   } catch (error) {
     console.log({ error, message: `Failed to update value sources for ${vaultDefinition.protocol}` });
     return [];
   }
+}
+
+export async function userClaimedSnapshotToDebankUser(chain: Chain, snapshot: UserClaimSnapshot): Promise<DebankUser> {
+  const rewards: Record<string, number> = {};
+  for (const record of snapshot.claimableBalances) {
+    const { address, balance } = record;
+    const token = await getFullToken(chain, address);
+    if (token.address === TOKENS.DIGG) {
+      rewards[address] = formatBalance(
+        BigNumber.from(balance).div(DiggService.DIGG_SHARES_PER_FRAGMENT),
+        token.decimals,
+      );
+    } else {
+      rewards[address] = formatBalance(balance, token.decimals);
+    }
+  }
+  return {
+    user_addr: snapshot.address,
+    rewards,
+  };
 }

@@ -1,4 +1,11 @@
-import { Erc20__factory, formatBalance, Network, Token } from '@badger-dao/sdk';
+import {
+  CurveBaseRegistry__factory,
+  CurveRegistry__factory,
+  Erc20__factory,
+  formatBalance,
+  Network,
+  Token,
+} from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 
 import { getVaultEntityId } from '../../aws/dynamodb.utils';
@@ -10,12 +17,7 @@ import { Chain } from '../../chains/config/chain.config';
 import { request } from '../../common/request';
 import { ContractRegistry } from '../../config/interfaces/contract-registry.interface';
 import { TOKENS } from '../../config/tokens.config';
-import {
-  CurveBaseRegistry__factory,
-  CurvePool__factory,
-  CurvePool3__factory,
-  CurveRegistry__factory,
-} from '../../contracts';
+import { CurvePool__factory, CurvePool3__factory } from '../../contracts';
 import { TokenPrice } from '../../prices/interface/token-price.interface';
 import { queryPrice } from '../../prices/prices.utils';
 import { SourceType } from '../../rewards/enums/source-type.enum';
@@ -23,6 +25,7 @@ import { getFullToken, getVaultTokens, toBalance } from '../../tokens/tokens.uti
 import { getCachedVault, queryYieldSources } from '../../vaults/vaults.utils';
 import { createYieldSource } from '../../vaults/yields.utils';
 import { CurveAPIResponse } from '../interfaces/curve-api-response.interrface';
+import { FactoryAPYResonse } from '../interfaces/factory-apy-response.interface';
 
 /* Protocol Constants */
 export const CURVE_API_URL = 'https://stats.curve.fi/raw-stats/apys.json';
@@ -65,25 +68,17 @@ const nonRegistryPools: ContractRegistry = {
   [TOKENS.CVXFXS]: '0xd658A338613198204DCa1143Ac3F01A722b5d94A',
 };
 
-interface FactoryAPYResonse {
-  data: {
-    poolDetails: {
-      apy: number;
-      poolAddress: string;
-    }[];
-  };
-}
-
-export class ConvexStrategy {
-  static async getValueSources(chain: Chain, vaultDefinition: VaultDefinitionModel): Promise<CachedYieldSource[]> {
-    switch (vaultDefinition.address) {
-      case TOKENS.BVECVX:
-        return [];
-      case TOKENS.BCRV_CVXBVECVX:
-        return getLiquiditySources(chain, vaultDefinition);
-      default:
-        return Promise.all([getCurvePerformance(chain, vaultDefinition)]);
-    }
+export async function getCurveYieldSources(
+  chain: Chain,
+  vaultDefinition: VaultDefinitionModel,
+): Promise<CachedYieldSource[]> {
+  switch (vaultDefinition.address) {
+    case TOKENS.BVECVX:
+      return [];
+    case TOKENS.BCRV_CVXBVECVX:
+      return getLiquiditySources(chain, vaultDefinition);
+    default:
+      return Promise.all([getCurvePerformance(chain, vaultDefinition)]);
   }
 }
 
@@ -262,11 +257,11 @@ export async function resolveCurveStablePoolTokenPrice(chain: Chain, token: Toke
   const pool = nonRegistryPools[token.address];
   const balances = await getCurvePoolBalance(chain, pool);
 
-  try {
-    if (balances.length != 2) {
-      throw new Error('Pool has unexpected number of tokens!');
-    }
+  if (balances.length != 2) {
+    throw new Error('Pool has unexpected number of tokens!');
+  }
 
+  try {
     // we can calculate "x" in terms of "y" - this is our token in terms of some known token
     const swapPool = CurvePool3__factory.connect(pool, chain.provider);
 

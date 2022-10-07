@@ -523,7 +523,7 @@ functions:
           rate: rate(30 minutes)
 
   index-leaderboard:
-    handler: src/indexers/leaderboard-indexer.indexBoostLeaderBoard
+    handler: src/indexers/leaderboards-indexer.indexBoostLeaderBoard
     timeout: 120
     events:
       - schedule:

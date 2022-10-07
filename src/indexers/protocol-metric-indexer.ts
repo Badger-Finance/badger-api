@@ -8,7 +8,7 @@ import { rfw } from '../utils/retry.utils';
 export const indexProtocolMetrics = async () => {
   const mapper = getDataMapper();
   const metric = await rfw(getChainMetrics)(getSupportedChains());
-  const metricSnapshot = Object.assign(new ProtocolMetricSnapshot(), { ...metric, type: MetricType.protocol });
+  const metricSnapshot = Object.assign(new ProtocolMetricSnapshot(), { ...metric, type: MetricType.Protocol });
 
   try {
     await mapper.put(metricSnapshot);

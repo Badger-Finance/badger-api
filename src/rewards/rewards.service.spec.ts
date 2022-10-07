@@ -1,33 +1,27 @@
-import { Network } from '@badger-dao/sdk';
 import { PlatformTest } from '@tsed/common';
 
 import * as accountsUtils from '../accounts/accounts.utils';
 import * as dynamodbUtils from '../aws/dynamodb.utils';
 import { UserClaimMetadata } from '../aws/models/user-claim-metadata.model';
-import { UserClaimSnapshot } from '../aws/models/user-claim-snapshot.model';
+import * as s3Utils from '../aws/s3.utils';
 import { Chain } from '../chains/config/chain.config';
-import { TEST_ADDR } from '../test/constants';
+import { TOKENS } from '../config/tokens.config';
+import { MOCK_DISTRIBUTION_FILE, TEST_ADDR } from '../test/constants';
 import { mockQuery, setupMockChain } from '../test/mocks.utils';
+import { randomClaimSnapshots } from '../test/mocks.utils/mock.helpers';
 import { RewardsService } from './rewards.service';
 
 describe('rewards.service', () => {
   let service: RewardsService;
+  let chain: Chain;
 
   beforeEach(async () => {
     await PlatformTest.create();
     service = PlatformTest.get<RewardsService>(RewardsService);
+    chain = setupMockChain();
   });
 
   afterEach(PlatformTest.reset);
-
-  describe('getUserRewards', () => {
-    it('throws a bad request on chains with no rewards', async () => {
-      const chain = setupMockChain({ network: Network.Arbitrum });
-      await expect(service.getUserRewards(chain, TEST_ADDR)).rejects.toThrow(
-        `${chain.network} is not supportable for request`,
-      );
-    });
-  });
 
   describe('list', () => {
     it('returns a chunk of claimable snapshots', async () => {
@@ -45,21 +39,31 @@ describe('rewards.service', () => {
         };
         return Object.assign(new UserClaimMetadata(), mockMetadata);
       });
-      const entries: UserClaimSnapshot[] = [
-        {
-          address: '0x0',
-          chain: 'eth',
-          chainStartBlock: '0',
-          claimableBalances: [],
-          expiresAt: 0,
-          pageId: 0,
-          startBlock: 0,
-        },
-      ];
-      mockQuery(entries);
+      const snapshots = randomClaimSnapshots(5);
+      mockQuery(snapshots);
 
       const { records } = await service.list({ chain });
-      expect(records).toEqual(entries);
+      expect(records).toEqual(snapshots);
+    });
+  });
+
+  describe('getUserRewards', () => {
+    it('returns user claim data when available', async () => {
+      const rewards = await service.getUserRewards(chain, TEST_ADDR);
+      expect(rewards).toMatchObject(MOCK_DISTRIBUTION_FILE.claims[TEST_ADDR]);
+    });
+
+    it('throws an error on a missing distribution file', async () => {
+      jest.spyOn(s3Utils, 'getTreeDistribution').mockImplementation(async () => null);
+      await expect(service.getUserRewards(chain, TEST_ADDR)).rejects.toThrow(
+        `${chain.network} is not supportable for request`,
+      );
+    });
+
+    it('throws an error on missing requested address data', async () => {
+      await expect(service.getUserRewards(chain, TOKENS.DIGG)).rejects.toThrow(
+        `No data for specified address: ${TOKENS.DIGG}`,
+      );
     });
   });
 });
