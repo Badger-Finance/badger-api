@@ -23,11 +23,7 @@ import { V2_CONTROLLERS, V3_CONTROLLERS } from './controllers';
   logger: {
     disableRoutesSummary: true,
     disableBootstrapLog: true,
-    logRequest: false,
-  },
-  cache: {
-    ttl: 300, // default TTL
-    store: 'memory',
+    logRequest: true,
   },
   exclude: ['**/*.spec.ts'],
 })
