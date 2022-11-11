@@ -12,7 +12,7 @@ import { PRODUCTION } from '../config/constants';
 import { TOKENS } from '../config/tokens.config';
 import { LeaderBoardType } from '../leaderboards/enums/leaderboard-type.enum';
 import { convert, queryPrice } from '../prices/prices.utils';
-import { getFullToken, getVaultTokens } from '../tokens/tokens.utils';
+import { getFullToken, getUserTokens } from '../tokens/tokens.utils';
 import { getCachedVault } from '../vaults/vaults.utils';
 
 export async function getAccounts(chain: Chain): Promise<string[]> {
@@ -98,10 +98,12 @@ export async function toVaultBalance(
   const withdrawnTokens = formatBalance(grossWithdraw, depositTokenDecimals);
   const balanceTokens = currentTokens * pricePerFullShare;
   const earnedBalance = balanceTokens - depositedTokens + withdrawnTokens;
+
+  const holdingScalar = currentTokens / vault.totalSupply;
   const [depositTokenPrice, earnedTokens, tokens] = await Promise.all([
     queryPrice(vaultDefinition.depositToken),
-    getVaultTokens(chain, vault, currency),
-    getVaultTokens(chain, vault, currency),
+    getUserTokens(chain, holdingScalar, vault, currency),
+    getUserTokens(chain, holdingScalar, vault, currency),
   ]);
 
   const depositTokenConvertedPrice = await convert(depositTokenPrice.price, currency);
