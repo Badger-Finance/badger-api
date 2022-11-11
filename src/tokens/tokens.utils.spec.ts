@@ -10,7 +10,7 @@ import { MOCK_TOKENS, MOCK_VAULT_DEFINITION, MOCK_VAULT_SNAPSHOT, TEST_TOKEN } f
 import { mockBalance, mockBatchGet, mockBatchPut, mockQuery, setupMockChain } from '../test/mocks.utils';
 import * as vaultUtils from '../vaults/vaults.utils';
 import { TokenNotFound } from './errors/token.error';
-import { getFullToken, getFullTokens, getVaultTokens, toBalance } from './tokens.utils';
+import { getFullToken, getFullTokens, getUserTokens, getVaultTokens, toBalance } from './tokens.utils';
 
 describe('token.utils', () => {
   let chain: Chain;
@@ -149,6 +149,54 @@ describe('token.utils', () => {
           const expected = [mockBalance(wbtc, 1, currency), mockBalance(weth, 20, currency)];
           const actual = await getVaultTokens(chain, { address: dto.vaultToken }, currency);
           expect(actual).toMatchObject(expected);
+        });
+      });
+    });
+  });
+
+  describe('getUserTokens', () => {
+    describe('no saved balances', () => {
+      it('returns single token underlying balance', async () => {
+        const badger = MOCK_TOKENS[TEST_TOKEN];
+        const expected = mockBalance(badger, 10);
+        mockQuery([{ vault: MOCK_VAULT_DEFINITION.address, tokenBalances: [expected] }]);
+        const dto = await vaultUtils.defaultVault(chain, MOCK_VAULT_DEFINITION);
+        const result = await getUserTokens(chain, 0.25, { address: dto.vaultToken });
+        expect(result).toMatchObject([{ ...expected, balance: expected.balance * 0.25, value: expected.value * 0.25 }]);
+      });
+    });
+
+    describe('saved balances', () => {
+      describe('no requested currency', () => {
+        it('converts to a usd based token balance', async () => {
+          const wbtc = MOCK_TOKENS[TOKENS.WBTC];
+          const weth = MOCK_TOKENS[TOKENS.WETH];
+          const dto = await vaultUtils.defaultVault(chain, MOCK_VAULT_DEFINITION);
+          const tokenBalances = [mockBalance(wbtc, 1), mockBalance(weth, 20)];
+          const cached = { vault: MOCK_VAULT_DEFINITION.address, tokenBalances };
+          mockQuery([cached]);
+          const scalar = 0.25;
+          const actual = await getUserTokens(chain, scalar, { address: dto.vaultToken });
+          expect(actual).toMatchObject(
+            tokenBalances.map((b) => ({ ...b, balance: b.balance * scalar, value: b.value * scalar })),
+          );
+        });
+      });
+
+      describe('with a requested currency', () => {
+        it.each([Currency.ETH, Currency.USD])('converts to an %s based token balance', async (currency) => {
+          const wbtc = MOCK_TOKENS[TOKENS.WBTC];
+          const weth = MOCK_TOKENS[TOKENS.WETH];
+          const dto = await vaultUtils.defaultVault(chain, MOCK_VAULT_DEFINITION);
+          const tokenBalances = [mockBalance(wbtc, 1), mockBalance(weth, 20)];
+          const cached = { vault: MOCK_VAULT_DEFINITION.address, tokenBalances };
+          mockQuery([cached]);
+          const scalar = 0.25;
+          const expected = [mockBalance(wbtc, 1, currency), mockBalance(weth, 20, currency)];
+          const actual = await getUserTokens(chain, scalar, { address: dto.vaultToken }, currency);
+          expect(actual).toMatchObject(
+            expected.map((e) => ({ ...e, balance: e.balance * scalar, value: e.value * scalar })),
+          );
         });
       });
     });

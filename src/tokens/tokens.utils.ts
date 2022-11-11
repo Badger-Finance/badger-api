@@ -37,6 +37,21 @@ export async function getVaultTokens(chain: Chain, vault: Vaultish, currency?: C
   return tokens;
 }
 
+export async function getUserTokens(
+  chain: Chain,
+  scalar: number,
+  vault: Vaultish,
+  currency?: Currency,
+): Promise<TokenValue[]> {
+  let underlyingTokens = await getVaultTokens(chain, vault, currency);
+  underlyingTokens = underlyingTokens.map((t) => ({
+    ...t,
+    balance: t.balance * scalar,
+    value: t.value * scalar,
+  }));
+  return underlyingTokens;
+}
+
 export async function getFullToken(chain: Chain, tokenAddr: Token['address']): Promise<TokenFull> {
   const address = ethers.utils.getAddress(tokenAddr);
   const fullTokenMap = await getFullTokens(chain, [address]);
