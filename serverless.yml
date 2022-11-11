@@ -59,6 +59,7 @@ custom:
     CYCLE_ANALYTICS_DATA: rewards-${self:custom.stage}
     PROTOCOL_DATA: protocol-data-${self:custom.stage}
     CHART_DATA: chart-data-${self:custom.stage}
+    GOVERNANCE_PROPOSALS_DATA: governance-proposals-data-${self:custom.stage}
 
   merkleProofs:
     staging: 'badger-staging-merkle-proofs'
@@ -119,6 +120,7 @@ provider:
     UNCLAIMED_SNAPSHOTS_DATA: ${self:custom.table.UNCLAIMED_SNAPSHOTS_DATA}
     PROTOCOL_DATA: ${self:custom.table.PROTOCOL_DATA}
     CHART_DATA: ${self:custom.table.CHART_DATA}
+    GOVERNANCE_PROPOSALS_DATA: ${self:custom.table.GOVERNANCE_PROPOSALS_DATA}
     # General Defintions
     REWARD_DATA: ${self:custom.merkleProofs.${self:custom.stage}}
     STAGE: ${opt:stage, self:provider.stage}
@@ -439,6 +441,22 @@ resources:
             KeyType: 'HASH'
         AttributeDefinitions:
           - AttributeName: 'id'
+            AttributeType: 'S'
+
+    governanceProposalsData:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.table.GOVERNANCE_PROPOSALS_DATA}
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: 'idx'
+            KeyType: 'HASH'
+          - AttributeName: 'createdAt'
+            KeyType: 'RANGE'
+        AttributeDefinitions:
+          - AttributeName: 'idx'
+            AttributeType: 'S'
+          - AttributeName: 'createdAt'
             AttributeType: 'S'
 
     yieldProjectionsTable:
