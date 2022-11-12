@@ -457,7 +457,20 @@ resources:
           - AttributeName: 'idx'
             AttributeType: 'S'
           - AttributeName: 'createdAt'
+            AttributeType: 'N'
+          - AttributeName: 'network'
             AttributeType: 'S'
+          - AttributeName: 'updateBlock'
+            AttributeType: 'N'
+        GlobalSecondaryIndexes:
+          - IndexName: IndexGovernanceProposalsUpdateBlock
+            KeySchema:
+              - AttributeName: 'network'
+                KeyType: 'HASH'
+              - AttributeName: 'updateBlock'
+                KeyType: 'RANGE'
+            Projection:
+              ProjectionType: ALL
 
     yieldProjectionsTable:
       Type: AWS::DynamoDB::Table
@@ -577,3 +590,12 @@ functions:
           name: ${self:service}-${self:custom.stage}-index-protocol-metrics-snapshots
           description: 'index protocol metrics'
           rate: rate(1 day)
+
+  index-governance-proposals-events:
+    handler: src/indexers/governance-proposals-indexer.updateGovernanceProposals
+    timeout: 900
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-governance-proposals
+          description: 'index onchain governance proposals events'
+          rate: rate(20 minutes)

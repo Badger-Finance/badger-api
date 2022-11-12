@@ -17,7 +17,11 @@ export class GovernanceProposals {
   @attribute()
   proposalId!: string;
 
-  @attribute()
+  @attribute({
+    indexKeyConfigurations: {
+      IndexGovernanceProposalsUpdateBlock: 'HASH',
+    },
+  })
   network!: string;
 
   @attribute()
@@ -43,6 +47,16 @@ export class GovernanceProposals {
 
   @attribute()
   currentStatus!: string;
+
+  @attribute()
+  creationBlock!: number;
+
+  @attribute({
+    indexKeyConfigurations: {
+      IndexGovernanceProposalsUpdateBlock: 'RANGE',
+    },
+  })
+  updateBlock!: number;
 
   @attribute({ memberType: embed(GovernanceProposalsStatuses) })
   statuses!: Array<GovernanceProposalsStatuses>;
