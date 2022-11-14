@@ -11,7 +11,13 @@ export class GovernanceProposalsDisputes {
   sender!: string;
 
   @attribute()
+  status!: string;
+
+  @attribute()
   transactionHash!: string;
+
+  @attribute()
+  blockNumber!: number;
 
   @attribute()
   updatedAt!: number;

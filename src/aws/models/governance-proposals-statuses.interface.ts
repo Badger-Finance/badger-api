@@ -8,7 +8,13 @@ export class GovernanceProposalsStatuses {
   sender!: string;
 
   @attribute()
+  status!: string;
+
+  @attribute()
   transactionHash!: string;
+
+  @attribute()
+  blockNumber!: number;
 
   @attribute()
   updatedAt!: number;
