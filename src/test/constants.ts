@@ -6,6 +6,7 @@ import {
   ValueSource,
   VaultBehavior,
   VaultDTOV2,
+  VaultDTOV3,
   VaultHarvestData,
   VaultSnapshot,
   VaultState,
@@ -19,6 +20,7 @@ import mockVaultSnapshots from '@badger-dao/sdk-mocks/generated/ethereum/api/loa
 import mockYieldEvents from '@badger-dao/sdk-mocks/generated/ethereum/api/loadVaultHarvestsV3.json';
 import mockVaults from '@badger-dao/sdk-mocks/generated/ethereum/api/loadVaults.json';
 import mockVaultHarvests from '@badger-dao/sdk-mocks/generated/ethereum/api/loadVaultsHarvests.json';
+import mockVaultsV3 from '@badger-dao/sdk-mocks/generated/ethereum/api/loadVaultsV3.json';
 import mockListHarvests from '@badger-dao/sdk-mocks/generated/ethereum/vaults/listHarvests.json';
 import { BigNumber } from 'ethers';
 
@@ -90,6 +92,9 @@ export const MOCK_VAULT_DEFINITION: VaultDefinitionModel = {
 
 export const MOCK_VAULTS: VaultDTOV2[] = mockVaults as VaultDTOV2[];
 export const MOCK_VAULT: VaultDTOV2 = MOCK_VAULTS[0];
+
+export const MOCK_VAULTS_V3: VaultDTOV3[] = mockVaultsV3 as VaultDTOV3[];
+export const MOCK_VAULT_V3: VaultDTOV3 = MOCK_VAULTS_V3[0];
 
 export const MOCK_VAULT_SNAPSHOTS: VaultSnapshot[] = mockVaultSnapshots.map((s) => ({
   ...s,
