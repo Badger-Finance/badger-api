@@ -1,16 +1,20 @@
+import { DataMapper } from '@aws/dynamodb-data-mapper';
 import {
   CallDisputedEvent,
   CallDisputedResolvedEvent,
   CallExecutedEvent,
+  CallScheduledEvent,
   CancelledEvent,
 } from '@badger-dao/sdk/lib/contracts/TimelockController';
 import { GovernanceProxyMock } from '@badger-dao/sdk/lib/governance/mocks/governance.proxy.mock';
 
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { GovernanceProposals } from '../aws/models/governance-proposals.model';
+import { GovernanceProposalsChild } from '../aws/models/governance-proposals-child.interface';
 import { GovernanceProposalsDisputes } from '../aws/models/governance-proposals-disputes.interface';
 import { GovernanceProposalsStatuses } from '../aws/models/governance-proposals-statuses.interface';
 import { getSupportedChains } from '../chains/chains.utils';
+import { Chain } from '../chains/config/chain.config';
 import { getLastProposalUpdateBlock } from '../governance/governance.utils';
 
 export async function updateGovernanceProposals() {
@@ -59,91 +63,30 @@ export async function updateGovernanceProposals() {
     const updatedProposalsDisputes: (CallDisputedEvent | CallDisputedResolvedEvent)[] = [];
 
     // save new created proposals
-    const createdProposals: GovernanceProposals[] = [];
+    const updatedProposals: GovernanceProposals[] = [];
 
     for (const proposal of proposalsCreated) {
-      let latestEvent!: GovernanceProposalsStatuses | GovernanceProposalsDisputes;
-      const block = await proposal.getBlock();
+      const isBatchChild = proposal.args.index.toNumber() > 0;
 
-      const proposalsStatuses = await Promise.all(
-        proposalsStatusesChanged
-          .filter((e) => e.args.id === proposal.args.id)
-          .map(async (e) => {
-            const block = await e.getBlock();
+      if (!isBatchChild) {
+        const { proposalModel, statuses, disputes } = await saveRelativeProposal(
+          chain,
+          timelockAddress,
+          proposal,
+          proposalsStatusesChanged,
+          proposalsDisputed,
+        );
+        updatedProposals.push(proposalModel);
+        updatedProposalsStatuses.push(...statuses);
+        updatedProposalsDisputes.push(...disputes);
+        continue;
+      }
 
-            updatedProposalsStatuses.push(e);
-
-            const proposalStatus = Object.assign(new GovernanceProposalsStatuses(), {
-              name: e.event,
-              sender: e.args.sender,
-              status: e.args.status,
-              transactionHash: e.transactionHash,
-              blockNumber: block.number,
-              updatedAt: block.timestamp,
-            });
-
-            if (!latestEvent || block.number > (latestEvent && latestEvent?.blockNumber)) {
-              latestEvent = proposalStatus;
-            }
-
-            return proposalStatus;
-          }),
-      );
-
-      const proposalsDisputes = await Promise.all(
-        proposalsDisputed
-          .filter((e) => e.args.id === proposal.args.id)
-          .map(async (e) => {
-            const block = await e.getBlock();
-
-            updatedProposalsDisputes.push(e);
-
-            const proposalDispute = Object.assign(new GovernanceProposalsDisputes(), {
-              name: e.event,
-              ruling: e.event === 'CallDisputedResolved' ? (<CallDisputedResolvedEvent>e).args.ruling : null,
-              sender: e.args.sender,
-              status: e.args.status,
-              transactionHash: e.transactionHash,
-              blockNumber: block.number,
-              updatedAt: block.timestamp,
-            });
-
-            if (!latestEvent || block.number > (latestEvent && latestEvent?.blockNumber)) {
-              latestEvent = proposalDispute;
-            }
-
-            return proposalDispute;
-          }),
-      );
-
-      const proposalDdbIdx = GovernanceProposals.genIdx(chain.network, timelockAddress, proposal.args.id);
-
-      createdProposals.push(Object.assign(new GovernanceProposals()), {
-        idx: proposalDdbIdx,
-        proposalId: proposal.args.id,
-        network: chain.network,
-        createdAt: Date.now() / 1000,
-        contractAddr: timelockAddress,
-        targetAddr: proposal.args.target,
-        value: proposal.args.value.toNumber(),
-        callData: proposal.args.data,
-        predecessor: proposal.args.predecessor,
-        readyTime: proposal.args.readyTime.toNumber(),
-        sender: proposal.args.sender,
-        currentStatus: !latestEvent ? proposal.args.status : latestEvent.status,
-        creationBlock: block.number,
-        updateBlock: !latestEvent ? block.number : latestEvent.blockNumber,
-        statuses: proposalsStatuses,
-        disputes: proposalsDisputes,
-      });
-
-      console.info(
-        `New proposal ${proposalDdbIdx} with ${proposalsStatuses.length} statuses and ${proposalsDisputes.length} disputes added`,
-      );
+      await saveChildProposal(chain, timelockAddress, proposal, updatedProposals, mapper);
     }
 
     try {
-      createdProposals.length > 0 && (await mapper.put(createdProposals));
+      updatedProposals.length > 0 && (await mapper.put(updatedProposals));
     } catch (err) {
       console.error({ message: 'Unable to save governance proposals', err });
     }
@@ -248,4 +191,139 @@ export async function updateGovernanceProposals() {
   }
 
   console.info('Updating governance proposals ended');
+}
+
+async function saveRelativeProposal(
+  chain: Chain,
+  timelockAddress: string,
+  proposal: CallScheduledEvent,
+  proposalsStatusesChanged: (CallExecutedEvent | CancelledEvent)[],
+  proposalsDisputed: (CallDisputedEvent | CallDisputedResolvedEvent)[],
+) {
+  let latestEvent!: GovernanceProposalsStatuses | GovernanceProposalsDisputes;
+  const updatedProposalsStatuses: (CallExecutedEvent | CancelledEvent)[] = [];
+  const updatedProposalsDisputes: (CallDisputedEvent | CallDisputedResolvedEvent)[] = [];
+
+  const block = await proposal.getBlock();
+
+  const proposalsStatuses = await Promise.all(
+    proposalsStatusesChanged
+      .filter((e) => e.args.id === proposal.args.id)
+      .map(async (e) => {
+        const block = await e.getBlock();
+
+        updatedProposalsStatuses.push(e);
+
+        const proposalStatus = Object.assign(new GovernanceProposalsStatuses(), {
+          name: e.event,
+          sender: e.args.sender,
+          status: e.args.status,
+          transactionHash: e.transactionHash,
+          blockNumber: block.number,
+          updatedAt: block.timestamp,
+        });
+
+        if (!latestEvent || block.number > (latestEvent && latestEvent?.blockNumber)) {
+          latestEvent = proposalStatus;
+        }
+
+        return proposalStatus;
+      }),
+  );
+
+  const proposalsDisputes = await Promise.all(
+    proposalsDisputed
+      .filter((e) => e.args.id === proposal.args.id)
+      .map(async (e) => {
+        const block = await e.getBlock();
+
+        updatedProposalsDisputes.push(e);
+
+        const proposalDispute = Object.assign(new GovernanceProposalsDisputes(), {
+          name: e.event,
+          ruling: e.event === 'CallDisputedResolved' ? (<CallDisputedResolvedEvent>e).args.ruling : null,
+          sender: e.args.sender,
+          status: e.args.status,
+          transactionHash: e.transactionHash,
+          blockNumber: block.number,
+          updatedAt: block.timestamp,
+        });
+
+        if (!latestEvent || block.number > (latestEvent && latestEvent?.blockNumber)) {
+          latestEvent = proposalDispute;
+        }
+
+        return proposalDispute;
+      }),
+  );
+
+  const proposalDdbIdx = GovernanceProposals.genIdx(chain.network, timelockAddress, proposal.args.id);
+
+  console.info(
+    `New proposal ${proposalDdbIdx} with ${proposalsStatuses.length} 
+        statuses and ${proposalsDisputes.length} disputes added`,
+  );
+
+  return {
+    proposalModel: Object.assign(new GovernanceProposals(), {
+      idx: proposalDdbIdx,
+      proposalId: proposal.args.id,
+      network: chain.network,
+      createdAt: Date.now() / 1000,
+      contractAddr: timelockAddress,
+      targetAddr: proposal.args.target,
+      value: proposal.args.value.toNumber(),
+      callData: proposal.args.data,
+      predecessor: proposal.args.predecessor,
+      readyTime: proposal.args.readyTime.toNumber(),
+      sender: proposal.args.sender,
+      currentStatus: !latestEvent ? proposal.args.status : latestEvent.status,
+      creationBlock: block.number,
+      updateBlock: !latestEvent ? block.number : latestEvent.blockNumber,
+      statuses: proposalsStatuses,
+      disputes: proposalsDisputes,
+    }),
+    statuses: updatedProposalsStatuses,
+    disputes: updatedProposalsDisputes,
+  };
+}
+
+async function saveChildProposal(
+  chain: Chain,
+  timelockAddress: string,
+  proposal: CallScheduledEvent,
+  updatedProposals: GovernanceProposals[],
+  mapper: DataMapper,
+) {
+  let relativeFromDdb = false;
+  let relativeProposal: GovernanceProposals | undefined;
+
+  if (updatedProposals.length > 0) {
+    relativeProposal = updatedProposals.find((p) => p.proposalId === proposal.args.id);
+  }
+
+  if (!relativeProposal) {
+    try {
+      const proposalDdbIdx = GovernanceProposals.genIdx(chain.network, timelockAddress, proposal.args.id);
+      relativeProposal = await mapper.get(Object.assign(new GovernanceProposals(), { idx: proposalDdbIdx }));
+      relativeFromDdb = true;
+    } catch (err) {
+      console.error({ message: `Unable to find proposal ${proposal.args.id} to update`, err });
+      return;
+    }
+  }
+
+  const childProposal = Object.assign(new GovernanceProposalsChild(), {
+    index: proposal.args.index.toNumber(),
+    value: proposal.args.value.toNumber(),
+    callData: proposal.args.data,
+    sender: proposal.args.sender,
+    targetAddr: proposal.args.target,
+  });
+
+  relativeProposal.children.push(childProposal);
+
+  if (relativeFromDdb) updatedProposals.push(relativeProposal);
+
+  console.info(`New child proposal ${proposal.args.index} for ${relativeProposal.idx} added`);
 }

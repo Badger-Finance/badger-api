@@ -3,6 +3,7 @@ import { attribute, hashKey, rangeKey, table } from '@aws/dynamodb-data-mapper-a
 import { Network } from '@badger-dao/sdk';
 
 import { GOVERNANCE_PROPOSALS_DATA } from '../../config/constants';
+import { GovernanceProposalsChild } from './governance-proposals-child.interface';
 import { GovernanceProposalsDisputes } from './governance-proposals-disputes.interface';
 import { GovernanceProposalsStatuses } from './governance-proposals-statuses.interface';
 
@@ -63,6 +64,9 @@ export class GovernanceProposals {
 
   @attribute({ memberType: embed(GovernanceProposalsDisputes) })
   disputes!: Array<GovernanceProposalsDisputes>;
+
+  @attribute({ memberType: embed(GovernanceProposalsChild) })
+  children!: Array<GovernanceProposalsChild>;
 
   static genIdx(network: Network, contractAddr: string, proposalId: string) {
     return `${network}-${contractAddr}-${proposalId}`;
