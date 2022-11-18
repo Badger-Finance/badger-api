@@ -12,11 +12,11 @@ export class GovernanceProposals {
   @hashKey()
   idx!: string;
 
-  @rangeKey()
-  createdAt!: number;
-
   @attribute()
   proposalId!: string;
+
+  @rangeKey()
+  createdAt!: number;
 
   @attribute({
     indexKeyConfigurations: {
@@ -36,9 +36,6 @@ export class GovernanceProposals {
 
   @attribute()
   callData!: string;
-
-  @attribute()
-  predecessor!: string;
 
   @attribute()
   readyTime!: number;

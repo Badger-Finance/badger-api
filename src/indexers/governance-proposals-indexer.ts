@@ -15,9 +15,15 @@ import { GovernanceProposalsDisputes } from '../aws/models/governance-proposals-
 import { GovernanceProposalsStatuses } from '../aws/models/governance-proposals-statuses.interface';
 import { getSupportedChains } from '../chains/chains.utils';
 import { Chain } from '../chains/config/chain.config';
+import { PRODUCTION } from '../config/constants';
 import { getLastProposalUpdateBlock } from '../governance/governance.utils';
 
 export async function updateGovernanceProposals() {
+  if (PRODUCTION) {
+    console.info('Governance proposals not rdy for production, skipping');
+    return;
+  }
+
   console.info('Updating governance proposals started');
 
   const mapper = getDataMapper();
@@ -32,6 +38,7 @@ export async function updateGovernanceProposals() {
 
     const lastScannedBlock = await getLastProposalUpdateBlock(chain.network);
 
+    // there is sense to expose this as a method in sdk, wo any proxies
     const governanceProxy = new GovernanceProxyMock(chain.sdk);
 
     const scanRangeOpts = {
@@ -68,25 +75,40 @@ export async function updateGovernanceProposals() {
     for (const proposal of proposalsCreated) {
       const isBatchChild = proposal.args.index.toNumber() > 0;
 
+      // We have 2 types of proposals: Single and Batch
+      // Single(Relative) proposal is a proposal that has only one transaction (target, callData, value)
+      // Batch(Relative+Children) proposal is a proposal that has more than one transaction(action), still they share same id,
+      // but they have different index and different target, callData, value
+      // For sake of simplicity we save batch proposals as children of the main proposal with index 0
       if (!isBatchChild) {
-        const { proposalModel, statuses, disputes } = await saveRelativeProposal(
+        await saveRelativeProposal(
           chain,
           timelockAddress,
           proposal,
           proposalsStatusesChanged,
           proposalsDisputed,
+          updatedProposals,
+          updatedProposalsStatuses,
+          updatedProposalsDisputes,
         );
-        updatedProposals.push(proposalModel);
-        updatedProposalsStatuses.push(...statuses);
-        updatedProposalsDisputes.push(...disputes);
-        continue;
+      } else {
+        await saveChildProposal(
+          chain,
+          mapper,
+          timelockAddress,
+          proposal,
+          proposalsStatusesChanged,
+          updatedProposals,
+          updatedProposalsStatuses,
+        );
       }
-
-      await saveChildProposal(chain, timelockAddress, proposal, updatedProposals, mapper);
     }
 
     try {
-      updatedProposals.length > 0 && (await mapper.put(updatedProposals));
+      if (updatedProposals.length > 0) {
+        for await (const _ of mapper.batchPut(updatedProposals)) {
+        }
+      }
     } catch (err) {
       console.error({ message: 'Unable to save governance proposals', err });
     }
@@ -130,7 +152,26 @@ export async function updateGovernanceProposals() {
         updatedAt: block.timestamp,
       });
 
-      proposal.statuses.push(proposalStatus);
+      if (status.event === 'CallExecuted') {
+        proposalStatus.value = (<CallExecutedEvent>status).args.value.toNumber();
+
+        if ((<CallExecutedEvent>status).args.index.toNumber() === 0) {
+          proposal.statuses.push(proposalStatus);
+        } else {
+          const child = proposal.children.find((c) => c.index === (<CallExecutedEvent>status).args.index.toNumber());
+          if (!child) {
+            console.error({
+              message: `Unable to find child ${(<CallExecutedEvent>(
+                status
+              )).args.index.toNumber()} proposal ${proposalDdbIdx} to update`,
+            });
+            continue;
+          }
+          child.executed = proposalStatus;
+        }
+      } else {
+        proposal.statuses.push(proposalStatus);
+      }
 
       proposal.currentStatus = status.args.status;
       proposal.updateBlock = block.number;
@@ -199,16 +240,24 @@ async function saveRelativeProposal(
   proposal: CallScheduledEvent,
   proposalsStatusesChanged: (CallExecutedEvent | CancelledEvent)[],
   proposalsDisputed: (CallDisputedEvent | CallDisputedResolvedEvent)[],
+  updatedProposals: GovernanceProposals[],
+  updatedProposalsStatuses: (CallExecutedEvent | CancelledEvent)[],
+  updatedProposalsDisputes: (CallDisputedEvent | CallDisputedResolvedEvent)[],
 ) {
   let latestEvent!: GovernanceProposalsStatuses | GovernanceProposalsDisputes;
-  const updatedProposalsStatuses: (CallExecutedEvent | CancelledEvent)[] = [];
-  const updatedProposalsDisputes: (CallDisputedEvent | CallDisputedResolvedEvent)[] = [];
 
   const block = await proposal.getBlock();
 
   const proposalsStatuses = await Promise.all(
     proposalsStatusesChanged
-      .filter((e) => e.args.id === proposal.args.id)
+      .filter((e) => {
+        return (
+          e.args.id === proposal.args.id ||
+          (e.args.id === proposal.args.id &&
+            e.event === 'CallExecuted' &&
+            (<CallExecutedEvent>e).args.index.toNumber() === 0)
+        );
+      })
       .map(async (e) => {
         const block = await e.getBlock();
 
@@ -222,6 +271,10 @@ async function saveRelativeProposal(
           blockNumber: block.number,
           updatedAt: block.timestamp,
         });
+
+        if (e.event === 'CallExecuted') {
+          proposalStatus.value = (<CallExecutedEvent>e).args.value.toNumber();
+        }
 
         if (!latestEvent || block.number > (latestEvent && latestEvent?.blockNumber)) {
           latestEvent = proposalStatus;
@@ -259,13 +312,8 @@ async function saveRelativeProposal(
 
   const proposalDdbIdx = GovernanceProposals.genIdx(chain.network, timelockAddress, proposal.args.id);
 
-  console.info(
-    `New proposal ${proposalDdbIdx} with ${proposalsStatuses.length} 
-        statuses and ${proposalsDisputes.length} disputes added`,
-  );
-
-  return {
-    proposalModel: Object.assign(new GovernanceProposals(), {
+  updatedProposals.push(
+    Object.assign(new GovernanceProposals(), {
       idx: proposalDdbIdx,
       proposalId: proposal.args.id,
       network: chain.network,
@@ -274,7 +322,6 @@ async function saveRelativeProposal(
       targetAddr: proposal.args.target,
       value: proposal.args.value.toNumber(),
       callData: proposal.args.data,
-      predecessor: proposal.args.predecessor,
       readyTime: proposal.args.readyTime.toNumber(),
       sender: proposal.args.sender,
       currentStatus: !latestEvent ? proposal.args.status : latestEvent.status,
@@ -283,17 +330,22 @@ async function saveRelativeProposal(
       statuses: proposalsStatuses,
       disputes: proposalsDisputes,
     }),
-    statuses: updatedProposalsStatuses,
-    disputes: updatedProposalsDisputes,
-  };
+  );
+
+  console.info(
+    `New proposal ${proposalDdbIdx} with ${proposalsStatuses.length} 
+        statuses and ${proposalsDisputes.length} disputes added`,
+  );
 }
 
 async function saveChildProposal(
   chain: Chain,
+  mapper: DataMapper,
   timelockAddress: string,
   proposal: CallScheduledEvent,
+  proposalsStatusesChanged: (CallExecutedEvent | CancelledEvent)[],
   updatedProposals: GovernanceProposals[],
-  mapper: DataMapper,
+  updatedProposalsStatuses: (CallExecutedEvent | CancelledEvent)[],
 ) {
   let relativeFromDdb = false;
   let relativeProposal: GovernanceProposals | undefined;
@@ -313,13 +365,41 @@ async function saveChildProposal(
     }
   }
 
+  const executedStatusEvent = proposalsStatusesChanged.find((e) => {
+    return (
+      e.args.id === proposal.args.id &&
+      e.event === 'CallExecuted' &&
+      (<CallExecutedEvent>e).args.index.toNumber() === proposal.args.index.toNumber()
+    );
+  });
+
   const childProposal = Object.assign(new GovernanceProposalsChild(), {
     index: proposal.args.index.toNumber(),
     value: proposal.args.value.toNumber(),
     callData: proposal.args.data,
     sender: proposal.args.sender,
     targetAddr: proposal.args.target,
+    predecessor: proposal.args.predecessor,
   });
+
+  if (executedStatusEvent) {
+    const block = await executedStatusEvent.getBlock();
+
+    updatedProposalsStatuses.push(executedStatusEvent);
+
+    childProposal.executed = Object.assign(new GovernanceProposalsStatuses(), {
+      name: executedStatusEvent.event,
+      sender: executedStatusEvent.args.sender,
+      status: executedStatusEvent.args.status,
+      transactionHash: executedStatusEvent.transactionHash,
+      blockNumber: block.number,
+      updatedAt: block.timestamp,
+    });
+
+    if (executedStatusEvent.event === 'CallExecuted') {
+      childProposal.executed.value = (<CallExecutedEvent>executedStatusEvent).args.index.toNumber();
+    }
+  }
 
   relativeProposal.children.push(childProposal);
 
