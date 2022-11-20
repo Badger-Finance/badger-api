@@ -31,14 +31,16 @@ export async function updateGovernanceProposals() {
   for (const chain of getSupportedChains()) {
     const timelockAddress = chain.sdk.governance.timelockAddress;
 
+    await chain.sdk.ready();
+
     if (!timelockAddress) {
-      console.info(`No timelock address for ${chain.network}`);
+      console.info(`No timelock address for ${chain.network}, skipping`);
       continue;
     }
 
     const lastScannedBlock = await getLastProposalUpdateBlock(chain.network);
 
-    // there is sense to expose this as a method in sdk, wo any proxies
+    // nit: there is sense to expose this as a method in sdk, wo any proxies
     const governanceProxy = new GovernanceProxyMock(chain.sdk);
 
     const scanRangeOpts = {
@@ -46,14 +48,9 @@ export async function updateGovernanceProposals() {
       endBlock: 0,
     };
 
-    // in sake of MVP, arbitrum gens blocks too fast, so we need to limit the range
-    // otherwise this schedulle won't complete in hours for the 1st run
-    if (!lastScannedBlock) {
-      await governanceProxy.processEventsScanRangePr(timelockAddress, scanRangeOpts);
-      if (scanRangeOpts.endBlock - scanRangeOpts.startBlock > 2_000_000) {
-        scanRangeOpts.startBlock = scanRangeOpts.endBlock - 2_000_000 + 1;
-      }
-    } else {
+    await governanceProxy.processEventsScanRangePr(timelockAddress, scanRangeOpts);
+
+    if (lastScannedBlock) {
       scanRangeOpts.startBlock = lastScannedBlock + 1;
     }
 
@@ -329,6 +326,7 @@ async function saveRelativeProposal(
       updateBlock: !latestEvent ? block.number : latestEvent.blockNumber,
       statuses: proposalsStatuses,
       disputes: proposalsDisputes,
+      children: [],
     }),
   );
 
@@ -401,7 +399,11 @@ async function saveChildProposal(
     }
   }
 
-  relativeProposal.children.push(childProposal);
+  if (relativeProposal.children) {
+    relativeProposal.children.push(childProposal);
+  } else {
+    relativeProposal.children = [childProposal];
+  }
 
   if (relativeFromDdb) updatedProposals.push(relativeProposal);
 

@@ -12,7 +12,7 @@ export async function getLastProposalUpdateBlock(network: Network) {
   try {
     for await (const item of mapper.query(
       GovernanceProposals,
-      { network: network },
+      { network },
       { limit: 1, indexName: 'IndexGovernanceProposalsUpdateBlock', scanIndexForward: false },
     )) {
       return item.updateBlock || null;
@@ -61,10 +61,11 @@ export async function countProposalsByNetwork(network: Network) {
   let count = 0;
 
   try {
-    for await (const _ of mapper.query(GovernanceProposals, {
-      network,
-      indexName: 'IndexGovernanceProposalsUpdateBlock',
-    })) {
+    for await (const _ of mapper.query(
+      GovernanceProposals,
+      { network },
+      { indexName: 'IndexGovernanceProposalsUpdateBlock' },
+    )) {
       count++;
     }
   } catch (err) {
