@@ -16,7 +16,7 @@ import registryVaults from '@badger-dao/sdk-mocks/generated/ethereum/vaults/load
 import { BigNumber } from 'ethers';
 
 import { TestEthereum } from '../chains/config/test.config';
-import { MOCK_VAULT, MOCK_VAULT_DEFINITION, TEST_CURRENT_TIMESTAMP } from '../test/constants';
+import { MOCK_VAULT, MOCK_VAULT_DEFINITION, MOCK_VAULT_V3, TEST_CURRENT_TIMESTAMP } from '../test/constants';
 import { setupMockChain } from '../test/mocks.utils';
 import { mockContract } from '../test/mocks.utils/contracts/mock.contract.base';
 import * as apiVaults from '../vaults/vaults.service';
@@ -60,6 +60,7 @@ describe('indexer.utils', () => {
     });
 
     jest.spyOn(apiVaults.VaultsService, 'loadVault').mockImplementation(async () => MOCK_VAULT);
+    jest.spyOn(apiVaults.VaultsService, 'loadVaultV3').mockImplementation(async () => MOCK_VAULT_V3);
 
     return { chain, strategyMock, vaultV15Mock };
   }
