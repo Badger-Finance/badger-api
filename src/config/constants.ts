@@ -21,6 +21,7 @@ export const YIELD_ESTIMATES_DATA = getEnvVar('YIELD_ESTIMATES_DATA');
 export const VAULT_YIELD_DATA = getEnvVar('VAULT_YIELD_DATA');
 export const PROTOCOL_DATA = getEnvVar('PROTOCOL_DATA');
 export const CHART_DATA = getEnvVar('CHART_DATA');
+export const GOVERNANCE_PROPOSALS_DATA = getEnvVar('GOVERNANCE_PROPOSALS_DATA');
 export const YIELD_PROJECTIONS_DATA = getEnvVar('YIELD_PROJECTIONS_DATA');
 
 // thegraph constants
