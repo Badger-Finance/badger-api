@@ -62,8 +62,8 @@ custom:
     GOVERNANCE_PROPOSALS_DATA: governance-proposals-data-${self:custom.stage}
 
   merkleProofs:
-    staging: 'badger-staging-merkle-proofs'
-    prod: 'badger-merkle-proofs'
+    staging: 'badger-staging-merkle-proofs-v2'
+    prod: 'badger-merkle-proofs-v2'
 
 package:
   exclude:
