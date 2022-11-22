@@ -60,8 +60,8 @@ custom:
     CHART_DATA: chart-data-${self:custom.stage}
 
   merkleProofs:
-    staging: 'badger-staging-merkle-proofs'
-    prod: 'badger-merkle-proofs'
+    staging: 'badger-staging-merkle-proofs-v2'
+    prod: 'badger-merkle-proofs-v2'
 
   domainPrefix:
     staging: 'staging-api'
