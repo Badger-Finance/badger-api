@@ -9,6 +9,7 @@ export enum ApiErrorCode {
   NoDataForChain = 2000,
   NoDataForAddress = 2001,
   NoDataForVault = 2002,
+  NoResourceAt = 2003,
 
   UnknownVault = 2100,
 

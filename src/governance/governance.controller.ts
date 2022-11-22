@@ -5,6 +5,8 @@ import { ContentType, Description, Get, Returns, Summary } from '@tsed/schema';
 
 import { GovernanceProposals } from '../aws/models/governance-proposals.model';
 import { getOrCreateChain } from '../chains/chains.utils';
+import { PRODUCTION } from '../config/constants';
+import { NotFoundError } from '../errors/allocation/not.found.error';
 import { QueryParamError } from '../errors/validation/query.param.error';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE } from './governance.constants';
 import { GovernanceService } from './governance.service';
@@ -33,6 +35,8 @@ export class GovernanceController {
       throw new QueryParamError('id');
     }
 
+    if (PRODUCTION) throw new NotFoundError();
+
     return this.governanceService.getGovernanceProposal(getOrCreateChain(chain), id);
   }
 
@@ -47,6 +51,8 @@ export class GovernanceController {
     @QueryParams('page') page?: number,
     @QueryParams('perPage') perPage?: number,
   ): Promise<GovernanceProposalsList> {
+    if (PRODUCTION) throw new NotFoundError();
+
     const pageInt = page ? Number(page) : DEFAULT_PAGE;
     let perPageInt = perPage ? Number(perPage) : DEFAULT_PAGE_SIZE;
 
