@@ -26,12 +26,12 @@ VaultDefinitionModel {
 exports[`indexer.utils vaultToSnapshot should return valid snapshot of the vault 1`] = `
 Object {
   "address": "0x19D97D8fA813EE2f51aD4B4e04EA08bAf4DFfC28",
-  "apr": 0,
+  "apr": 0.3067433490728799,
   "available": 1006655.3375347335,
   "balance": 1006655.3375347335,
   "block": 13500500,
   "boostWeight": 0,
-  "grossApr": 0,
+  "grossApr": 0.3067433490728799,
   "harvestApr": 0,
   "pricePerFullShare": 1.2348816886763505,
   "strategy": Object {
