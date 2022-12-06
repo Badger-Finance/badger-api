@@ -3,16 +3,14 @@ import { Controller, Inject } from '@tsed/di';
 import { QueryParams } from '@tsed/platform-params';
 import { ContentType, Description, Get, Returns, Summary } from '@tsed/schema';
 
-import { GovernanceProposals } from '../aws/models/governance-proposals.model';
 import { getOrCreateChain } from '../chains/chains.utils';
 import { PRODUCTION } from '../config/constants';
 import { NotFoundError } from '../errors/allocation/not.found.error';
 import { QueryParamError } from '../errors/validation/query.param.error';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE } from './governance.constants';
 import { GovernanceService } from './governance.service';
-import { GovernanceProposalsList } from './interfaces/governance.proposals.list';
-import { ProposalListResponse } from './responses/proposal.list.response';
-import { ProposalResponse } from './responses/proposal.response';
+import { ProposalListResponse } from './responses/proposal-list-response.interface';
+import { ProposalResponse } from './responses/proposal-response.interface';
 
 @Controller('/governance')
 export class GovernanceController {
@@ -27,10 +25,7 @@ export class GovernanceController {
   @Returns(400).Description('Not a valid chain')
   @Returns(404).Description('No data for id proposal')
   @Returns(404).Description('Chain does not have requested data')
-  async getProposal(
-    @QueryParams('id') id: string,
-    @QueryParams('chain') chain?: Network,
-  ): Promise<GovernanceProposals> {
+  async getProposal(@QueryParams('id') id: string, @QueryParams('chain') chain?: Network): Promise<ProposalResponse> {
     if (!id) {
       throw new QueryParamError('id');
     }
@@ -50,7 +45,7 @@ export class GovernanceController {
     @QueryParams('chain') chain?: Network,
     @QueryParams('page') page?: number,
     @QueryParams('perPage') perPage?: number,
-  ): Promise<GovernanceProposalsList> {
+  ): Promise<ProposalListResponse> {
     if (PRODUCTION) throw new NotFoundError();
 
     const pageInt = page ? Number(page) : DEFAULT_PAGE;
