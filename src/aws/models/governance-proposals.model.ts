@@ -38,6 +38,9 @@ export class GovernanceProposals {
   callData!: string;
 
   @attribute()
+  decodedCallData!: string | null;
+
+  @attribute()
   readyTime!: number;
 
   @attribute()
@@ -48,6 +51,9 @@ export class GovernanceProposals {
 
   @attribute()
   creationBlock!: number;
+
+  @attribute()
+  transactionHash!: string;
 
   @attribute({
     indexKeyConfigurations: {

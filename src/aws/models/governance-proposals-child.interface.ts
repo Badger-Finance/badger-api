@@ -14,10 +14,16 @@ export class GovernanceProposalsChild {
   callData!: string;
 
   @attribute()
+  decodedCallData!: string | null;
+
+  @attribute()
   targetAddr!: string;
 
   @attribute()
   predecessor!: string;
+
+  @attribute()
+  transactionHash!: string;
 
   @attribute({ memberType: embed(GovernanceProposalsStatuses) })
   executed!: GovernanceProposalsStatuses;

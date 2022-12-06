@@ -1,12 +1,13 @@
-import { GovernanceProposals } from '../aws/models/governance-proposals.model';
+import { GovernanceProposal } from '@badger-dao/sdk/lib/api/interfaces/governance-proposal.interface';
+import { GovernanceProposalsList } from '@badger-dao/sdk/lib/api/interfaces/governance-proposals-list.interface';
+
 import { Chain } from '../chains/config/chain.config';
 import { NodataForAddrError } from '../errors/allocation/nodata.for.addr.error';
 import { OutOfRangeError } from '../errors/validation/out.of.range.error';
 import { countProposalsByNetwork, getProposalByIdx, getProposalsList } from './governance.utils';
-import { GovernanceProposalsList } from './interfaces/governance.proposals.list';
 
 export class GovernanceService {
-  async getGovernanceProposal(chain: Chain, id: string): Promise<GovernanceProposals> {
+  async getGovernanceProposal(chain: Chain, id: string): Promise<GovernanceProposal> {
     const proposal = await getProposalByIdx(chain, id);
 
     if (!proposal) {

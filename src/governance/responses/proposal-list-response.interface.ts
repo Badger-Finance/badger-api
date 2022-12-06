@@ -1,7 +1,6 @@
+import { GovernanceProposalsList } from '@badger-dao/sdk';
+import { GovernanceProposal } from '@badger-dao/sdk/lib/api/interfaces/governance-proposal.interface';
 import { Description, Example, Property, Title } from '@tsed/schema';
-
-import { GovernanceProposals } from '../../aws/models/governance-proposals.model';
-import { GovernanceProposalsList } from '../interfaces/governance.proposals.list';
 
 export class ProposalListResponse implements GovernanceProposalsList {
   @Title('page')
@@ -31,5 +30,5 @@ export class ProposalListResponse implements GovernanceProposalsList {
   @Title('items')
   @Description('Proposals items')
   @Property()
-  items!: GovernanceProposals[];
+  items!: GovernanceProposal[];
 }

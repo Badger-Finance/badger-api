@@ -1,10 +1,11 @@
+import { GovernanceProposal } from '@badger-dao/sdk/lib/api/interfaces/governance-proposal.interface';
 import { Description, Example, Property, Title } from '@tsed/schema';
 
 import { GovernanceProposalsChild } from '../../aws/models/governance-proposals-child.interface';
 import { GovernanceProposalsDisputes } from '../../aws/models/governance-proposals-disputes.interface';
 import { GovernanceProposalsStatuses } from '../../aws/models/governance-proposals-statuses.interface';
 
-export class ProposalResponse {
+export class ProposalResponse implements Omit<GovernanceProposal, 'contractAddr'> {
   @Title('proposalId')
   @Description('id of the proposal sequence')
   @Example('0xe9bfab585a583ae5cc2395f40bfb61b5c93dee4356079f1c642d7157be8300c8')
@@ -21,7 +22,7 @@ export class ProposalResponse {
   @Description('target address of the proposal')
   @Example('0x2260fac5e5542a773aa44fbcfedf7c193bc2c599')
   @Property()
-  public target!: string;
+  public targetAddr!: string;
 
   @Title('value')
   @Description('value of the proposal')
@@ -34,6 +35,12 @@ export class ProposalResponse {
   @Example('0xc7b9d530000000000000000000000000e8ea1d8b3a5a4cec7e94ae330ff18e82b5d22fa6')
   @Property()
   public callData!: string;
+
+  @Title('decodedCallData')
+  @Description('decoded call data of the proposal to be execute')
+  @Example('0xc7b9d530000000000000000000000000e8ea1d8b3a5a4cec7e94ae330ff18e82b5d22fa6')
+  @Property()
+  public decodedCallData!: string | null;
 
   @Title('readyTime')
   @Description('time when proposal is ready to be executed')
@@ -52,6 +59,24 @@ export class ProposalResponse {
   @Example('queued')
   @Property()
   public currentStatus!: string;
+
+  @Title('creationBlock')
+  @Description('creation block of the proposal')
+  @Example(234234)
+  @Property()
+  public creationBlock!: number;
+
+  @Title('transactionHash')
+  @Description('hash of the transaction')
+  @Example('0x2260fac5e5542a773aa44fbcfedf7c193bc2c599')
+  @Property()
+  public transactionHash!: string;
+
+  @Title('updateBlock')
+  @Description('update block of the proposal')
+  @Example(245888713)
+  @Property()
+  public updateBlock!: number;
 
   @Title('statuses')
   @Description('status history of the proposal')
