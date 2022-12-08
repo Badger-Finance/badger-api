@@ -94,7 +94,7 @@ export async function getProposalsList(network: Network, limit: number, offset: 
         scanIndexForward: false,
       },
     )) {
-      if (offsetCounter <= offset && offset !== 0) {
+      if (offsetCounter < offset && offset !== 0) {
         offsetCounter++;
         continue;
       }
