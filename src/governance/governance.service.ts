@@ -4,7 +4,12 @@ import { GovernanceProposalsList } from '@badger-dao/sdk/lib/api/interfaces/gove
 import { Chain } from '../chains/config/chain.config';
 import { NodataForAddrError } from '../errors/allocation/nodata.for.addr.error';
 import { OutOfRangeError } from '../errors/validation/out.of.range.error';
-import { countProposalsByNetwork, getProposalByIdx, getProposalsList } from './governance.utils';
+import {
+  countProposalsByNetwork,
+  getProposalByIdx,
+  getProposalsList,
+  packDdbProposalForResponse,
+} from './governance.utils';
 
 export class GovernanceService {
   async getGovernanceProposal(chain: Chain, id: string): Promise<GovernanceProposal> {
@@ -14,7 +19,7 @@ export class GovernanceService {
       throw new NodataForAddrError(id);
     }
 
-    return proposal;
+    return packDdbProposalForResponse(proposal);
   }
 
   async listGovernanceProposals(chain: Chain, page: number, perPage: number): Promise<GovernanceProposalsList> {
@@ -28,12 +33,14 @@ export class GovernanceService {
       throw new OutOfRangeError(page);
     }
 
+    const proposals = await getProposalsList(chain.network, perPage, offset);
+
     return {
       page,
       perPage,
       totalItems,
       totalPages,
-      items: await getProposalsList(chain.network, perPage, offset),
+      items: proposals.map(packDdbProposalForResponse),
     };
   }
 }

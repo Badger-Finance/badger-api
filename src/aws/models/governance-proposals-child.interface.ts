@@ -14,7 +14,7 @@ export class GovernanceProposalsChild {
   callData!: string;
 
   @attribute()
-  decodedCallData!: string | null;
+  decodedCallData!: string;
 
   @attribute()
   targetAddr!: string;

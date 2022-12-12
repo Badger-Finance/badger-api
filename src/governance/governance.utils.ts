@@ -1,4 +1,5 @@
 import { Network } from '@badger-dao/sdk';
+import { GovernanceProposal } from '@badger-dao/sdk/lib/api/interfaces/governance-proposal.interface';
 
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { GovernanceProposals } from '../aws/models/governance-proposals.model';
@@ -107,4 +108,51 @@ export async function getProposalsList(network: Network, limit: number, offset: 
   }
 
   return proposals;
+}
+
+export async function getProposalsWithEmptyDecodedCallData() {
+  const mapper = getDataMapper();
+
+  const proposals: GovernanceProposals[] = [];
+
+  try {
+    for await (const proposal of mapper.query(
+      GovernanceProposals,
+      { decodedCallData: 'null' },
+      {
+        limit: 100,
+        indexName: 'IndexGovernanceProposalsDecodedCallData',
+      },
+    )) {
+      proposals.push(proposal);
+    }
+  } catch (err) {
+    console.error(err);
+    throw new DdbError(`${err}`);
+  }
+
+  return proposals;
+}
+
+export function unpackDdbDecodedCallData(callData: string): GovernanceProposal['decodedCallData'] {
+  const emptyIndexedString = 'null';
+
+  if (callData === emptyIndexedString) return null;
+
+  try {
+    return JSON.parse(callData);
+  } catch (_) {
+    return null;
+  }
+}
+
+export function packDdbProposalForResponse(proposal: GovernanceProposals): GovernanceProposal {
+  return {
+    ...proposal,
+    children: proposal.children.map((child) => ({
+      ...child,
+      decodedCallData: unpackDdbDecodedCallData(child.callData),
+    })),
+    decodedCallData: unpackDdbDecodedCallData(proposal.decodedCallData),
+  };
 }
