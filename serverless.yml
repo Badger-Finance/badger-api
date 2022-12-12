@@ -462,10 +462,20 @@ resources:
             AttributeType: 'S'
           - AttributeName: 'updateBlock'
             AttributeType: 'N'
+          - AttributeName: 'decodedCallData'
+            AttributeType: 'S'
         GlobalSecondaryIndexes:
           - IndexName: IndexGovernanceProposalsUpdateBlock
             KeySchema:
               - AttributeName: 'network'
+                KeyType: 'HASH'
+              - AttributeName: 'updateBlock'
+                KeyType: 'RANGE'
+            Projection:
+              ProjectionType: ALL
+          - IndexName: IndexGovernanceProposalsDecodedCallData
+            KeySchema:
+              - AttributeName: 'decodedCallData'
                 KeyType: 'HASH'
               - AttributeName: 'updateBlock'
                 KeyType: 'RANGE'
@@ -599,3 +609,12 @@ functions:
           name: ${self:service}-${self:custom.stage}-index-governance-proposals
           description: 'index onchain governance proposals events'
           rate: rate(20 minutes)
+
+  index-governance-proposals-calldata:
+    handler: src/indexers/governance-proposals-calldata-indexer.decodeGavernanceProposalsCallData
+    timeout: 900
+    events:
+      - schedule:
+          name: ${self:service}-${self:custom.stage}-index-governance-proposals-calldata
+          description: 'decoded indexed governance proposals calldata'
+          rate: rate(5 minutes)

@@ -30,7 +30,7 @@
   "dependencies": {
     "@aws/dynamodb-data-mapper": "^0.7.3",
     "@aws/dynamodb-data-mapper-annotations": "^0.7.3",
-    "@badger-dao/sdk": "^1.20.5",
+    "@badger-dao/sdk": "^1.20.7",
     "@tsed/common": "6.95.9",
     "@tsed/core": "6.95.9",
     "@tsed/di": "6.95.9",
@@ -47,6 +47,7 @@
     "class-validator": "^0.13.2",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
+    "ethers-proxies": "^1.0.0",
     "globby": "^12.0.2",
     "graphql": "^16.1.0",
     "graphql-request": "^3.7.0",

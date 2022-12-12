@@ -37,8 +37,12 @@ export class GovernanceProposals {
   @attribute()
   callData!: string;
 
-  @attribute()
-  decodedCallData!: string | null;
+  @attribute({
+    indexKeyConfigurations: {
+      IndexGovernanceProposalsDecodedCallData: 'HASH',
+    },
+  })
+  decodedCallData!: string;
 
   @attribute()
   readyTime!: number;
@@ -58,6 +62,7 @@ export class GovernanceProposals {
   @attribute({
     indexKeyConfigurations: {
       IndexGovernanceProposalsUpdateBlock: 'RANGE',
+      IndexGovernanceProposalsDecodedCallData: 'RANGE',
     },
   })
   updateBlock!: number;
