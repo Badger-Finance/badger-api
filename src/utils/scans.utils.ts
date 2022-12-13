@@ -50,6 +50,12 @@ export async function getContractAbi(
       abi: contractAbi,
       ttl: Date.now() + defaultTtl,
     };
+
+    for (const address of Object.keys(abiCacheMap)) {
+      if (abiCacheMap[address].ttl <= Date.now()) {
+        delete abiCacheMap[address];
+      }
+    }
   }
 
   return contractAbi;
