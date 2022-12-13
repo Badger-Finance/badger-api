@@ -3,8 +3,13 @@ import { RawAbiDefinition } from 'typechain/dist/parser/abiParser';
 
 import { sleep } from './process.utils';
 
+const defaultTtl = 60 * 5 * 1000; // 5 minutes
+
 const abiCacheMap: {
-  [key: string]: RawAbiDefinition[];
+  [key: string]: {
+    ttl: number;
+    abi: RawAbiDefinition[];
+  };
 } = {};
 
 export function formScanApiUrl(explorerUrl: string): string {
@@ -18,8 +23,8 @@ export async function getContractAbi(
   withThreshold = true,
   useCache = true,
 ): Promise<RawAbiDefinition[] | null> {
-  if (useCache && abiCacheMap[address]) {
-    return abiCacheMap[address];
+  if (useCache && abiCacheMap[address] && abiCacheMap[address].ttl >= Date.now()) {
+    return abiCacheMap[address].abi;
   }
 
   // if we don't use private keys for scans they can block us, so it's better to use sleep
@@ -41,7 +46,10 @@ export async function getContractAbi(
   const contractAbi = JSON.parse(scanRespJson.result);
 
   if (useCache) {
-    abiCacheMap[address] = contractAbi;
+    abiCacheMap[address] = {
+      abi: contractAbi,
+      ttl: Date.now() + defaultTtl,
+    };
   }
 
   return contractAbi;
