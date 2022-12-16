@@ -1,5 +1,3 @@
-// optimize getContractAbi, so we don't fetch the same contract abi twice
-
 import { NETWORK_CONFIGS } from '@badger-dao/sdk';
 import { GovernanceProposalsDecodedData } from '@badger-dao/sdk/lib/api/interfaces/governance-proposals-decoded-data.interface';
 import { Network } from '@badger-dao/sdk/lib/config/enums/network.enum';
@@ -9,6 +7,7 @@ import detectProxyTarget from 'ethers-proxies';
 
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { getOrCreateChain } from '../chains/chains.utils';
+import { COMPLITED_DECODED_CALLDATA_INDEXED, EMPTY_DECODED_CALLDATA_INDEXED } from '../governance/governance.constants';
 import { getProposalsWithEmptyDecodedCallData } from '../governance/governance.utils';
 import { extendAbiMethodsWithMeta } from '../utils/contract.utils';
 import { rfw } from '../utils/retry.utils';
@@ -29,33 +28,17 @@ export async function decodeGavernanceProposalsCallData() {
 
     const scanApiUrl = formScanApiUrl(NETWORK_CONFIGS[chain.network].explorerUrl);
 
-    const decodedTargetMethod = await getTargetMethodDecoded(
-      proposal.targetAddr,
-      proposal.callData,
-      scanApiUrl,
-      chain.provider,
-    );
+    for (const action of proposal.actions) {
+      if (action.decodedCallData !== EMPTY_DECODED_CALLDATA_INDEXED) continue;
 
-    if (!decodedTargetMethod) continue;
+      const decodedData = await getTargetMethodDecoded(action.targetAddr, action.callData, scanApiUrl, chain.provider);
 
-    // indexed fields cant contain objects, so we need to stringify it
-    proposal.decodedCallData = JSON.stringify(decodedTargetMethod);
+      if (!decodedData) continue;
 
-    if (proposal.children.length > 0) {
-      for (const child of proposal.children) {
-        const decodedChildTargetMethod = await getTargetMethodDecoded(
-          child.targetAddr,
-          child.callData,
-          scanApiUrl,
-          chain.provider,
-        );
-
-        if (!decodedChildTargetMethod) continue;
-
-        // same as for parent proposal
-        child.decodedCallData = JSON.stringify(decodedChildTargetMethod);
-      }
+      action.decodedCallData = JSON.stringify(decodedData);
     }
+
+    proposal.decodedCallData = COMPLITED_DECODED_CALLDATA_INDEXED;
   }
 
   try {

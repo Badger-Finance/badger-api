@@ -26,11 +26,11 @@ export class GovernanceController {
   @Returns(404).Description('No data for id proposal')
   @Returns(404).Description('Chain does not have requested data')
   async getProposal(@QueryParams('id') id: string, @QueryParams('chain') chain?: Network): Promise<ProposalResponse> {
+    if (PRODUCTION) throw new NotFoundError();
+
     if (!id) {
       throw new QueryParamError('id');
     }
-
-    if (PRODUCTION) throw new NotFoundError();
 
     return this.governanceService.getGovernanceProposal(getOrCreateChain(chain), id);
   }

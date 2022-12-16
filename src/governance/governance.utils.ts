@@ -6,6 +6,7 @@ import { GovernanceProposals } from '../aws/models/governance-proposals.model';
 import { Chain } from '../chains/config/chain.config';
 import { NodataForChainError } from '../errors/allocation/nodata.for.chain.error';
 import { DdbError } from '../errors/internal/ddb.error';
+import { EMPTY_DECODED_CALLDATA_INDEXED } from './governance.constants';
 
 export async function getLastProposalUpdateBlock(network: Network) {
   const mapper = getDataMapper();
@@ -118,7 +119,7 @@ export async function getProposalsWithEmptyDecodedCallData() {
   try {
     for await (const proposal of mapper.query(
       GovernanceProposals,
-      { decodedCallData: 'null' },
+      { decodedCallData: EMPTY_DECODED_CALLDATA_INDEXED },
       {
         limit: 100,
         indexName: 'IndexGovernanceProposalsDecodedCallData',
@@ -134,10 +135,8 @@ export async function getProposalsWithEmptyDecodedCallData() {
   return proposals;
 }
 
-export function unpackDdbDecodedCallData(callData: string): GovernanceProposal['decodedCallData'] {
-  const emptyIndexedString = 'null';
-
-  if (callData === emptyIndexedString) return null;
+export function unpackDdbDecodedCallData(callData: string): GovernanceProposal['actions'][0]['decodedCallData'] {
+  if (callData === EMPTY_DECODED_CALLDATA_INDEXED) return null;
 
   try {
     return JSON.parse(callData);
@@ -148,11 +147,18 @@ export function unpackDdbDecodedCallData(callData: string): GovernanceProposal['
 
 export function packDdbProposalForResponse(proposal: GovernanceProposals): GovernanceProposal {
   return {
-    ...proposal,
-    children: proposal.children.map((child) => ({
-      ...child,
-      decodedCallData: unpackDdbDecodedCallData(child.callData),
+    proposalId: proposal.proposalId,
+    createdAt: proposal.createdAt,
+    contractAddr: proposal.contractAddr,
+    readyTime: proposal.readyTime,
+    currentStatus: proposal.currentStatus,
+    creationBlock: proposal.creationBlock,
+    updateBlock: proposal.updateBlock,
+    statuses: proposal.statuses,
+    disputes: proposal.disputes,
+    actions: proposal.actions.map((action) => ({
+      ...action,
+      decodedCallData: unpackDdbDecodedCallData(action.callData),
     })),
-    decodedCallData: unpackDdbDecodedCallData(proposal.decodedCallData),
   };
 }
