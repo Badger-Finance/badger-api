@@ -451,12 +451,12 @@ resources:
         KeySchema:
           - AttributeName: 'idx'
             KeyType: 'HASH'
-          - AttributeName: 'createdAt'
+          - AttributeName: 'creationBlock'
             KeyType: 'RANGE'
         AttributeDefinitions:
           - AttributeName: 'idx'
             AttributeType: 'S'
-          - AttributeName: 'createdAt'
+          - AttributeName: 'creationBlock'
             AttributeType: 'N'
           - AttributeName: 'network'
             AttributeType: 'S'

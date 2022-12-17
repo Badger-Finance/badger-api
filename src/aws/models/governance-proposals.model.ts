@@ -16,7 +16,7 @@ export class GovernanceProposals {
   proposalId!: string;
 
   @rangeKey()
-  createdAt!: number;
+  creationBlock!: number;
 
   @attribute({
     indexKeyConfigurations: {
@@ -41,9 +41,6 @@ export class GovernanceProposals {
   @attribute()
   currentStatus!: string;
 
-  @attribute()
-  creationBlock!: number;
-
   @attribute({
     indexKeyConfigurations: {
       IndexGovernanceProposalsUpdateBlock: 'RANGE',
@@ -51,6 +48,9 @@ export class GovernanceProposals {
     },
   })
   updateBlock!: number;
+
+  @attribute()
+  createdAt!: number;
 
   @attribute({ memberType: embed(GovernanceProposalsStatuses) })
   statuses!: Array<GovernanceProposalsStatuses>;

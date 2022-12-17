@@ -135,11 +135,11 @@ export async function getProposalsWithEmptyDecodedCallData() {
   return proposals;
 }
 
-export function unpackDdbDecodedCallData(callData: string): GovernanceProposal['actions'][0]['decodedCallData'] {
-  if (callData === EMPTY_DECODED_CALLDATA_INDEXED) return null;
+export function unpackDdbDecodedCallData(decodedCallData: string): GovernanceProposal['actions'][0]['decodedCallData'] {
+  if (decodedCallData === EMPTY_DECODED_CALLDATA_INDEXED) return null;
 
   try {
-    return JSON.parse(callData);
+    return JSON.parse(decodedCallData);
   } catch (_) {
     return null;
   }
@@ -158,7 +158,7 @@ export function packDdbProposalForResponse(proposal: GovernanceProposals): Gover
     disputes: proposal.disputes,
     actions: proposal.actions.map((action) => ({
       ...action,
-      decodedCallData: unpackDdbDecodedCallData(action.callData),
+      decodedCallData: unpackDdbDecodedCallData(action.decodedCallData),
     })),
   };
 }

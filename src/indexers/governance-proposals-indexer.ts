@@ -22,7 +22,7 @@ import { getLastProposalUpdateBlock } from '../governance/governance.utils';
 export async function updateGovernanceProposals() {
   if (PRODUCTION) {
     console.info('Governance proposals not rdy for production, skipping');
-    return;
+    return 'done';
   }
 
   console.info('Updating governance proposals started');
@@ -223,6 +223,8 @@ export async function updateGovernanceProposals() {
   }
 
   console.info('Updating governance proposals ended');
+
+  return 'done';
 }
 
 async function saveRootProposal(

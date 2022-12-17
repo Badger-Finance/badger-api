@@ -18,7 +18,7 @@ export async function decodeGavernanceProposalsCallData() {
 
   if (proposals.length === 0) {
     console.log('No proposals with empty decoded call data found');
-    return;
+    return 'done';
   }
 
   const mapper = getDataMapper();
@@ -47,6 +47,8 @@ export async function decodeGavernanceProposalsCallData() {
   } catch (err) {
     console.error({ message: 'Unable to save governance proposals with decoded call data', err });
   }
+
+  return 'done';
 }
 
 async function getTargetMethodDecoded(targetAddr: string, callData: string, scanApiUrl: string, provider: Provider) {
