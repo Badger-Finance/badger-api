@@ -3,7 +3,7 @@ import { attribute } from '@aws/dynamodb-data-mapper-annotations';
 
 import { GovernanceProposalsStatuses } from './governance-proposals-statuses.interface';
 
-export class GovernanceProposalsChild {
+export class GovernanceProposalsAction {
   @attribute()
   index!: number;
 
@@ -26,7 +26,7 @@ export class GovernanceProposalsChild {
   transactionHash!: string;
 
   @attribute({ memberType: embed(GovernanceProposalsStatuses) })
-  executed!: GovernanceProposalsStatuses;
+  executed!: string;
 
   @attribute()
   sender!: string;
