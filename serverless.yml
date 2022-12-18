@@ -59,7 +59,7 @@ custom:
     CYCLE_ANALYTICS_DATA: rewards-${self:custom.stage}
     PROTOCOL_DATA: protocol-data-${self:custom.stage}
     CHART_DATA: chart-data-${self:custom.stage}
-    GOVERNANCE_PROPOSALS_DATA: governance-proposal-data-${self:custom.stage}
+    GOVERNANCE_PROPOSALS_DATA: governance-proposals-data-${self:custom.stage}
 
   merkleProofs:
     staging: 'badger-staging-merkle-proofs-v2'
