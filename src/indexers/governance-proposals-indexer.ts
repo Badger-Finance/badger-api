@@ -17,7 +17,14 @@ import { getSupportedChains } from '../chains/chains.utils';
 import { Chain } from '../chains/config/chain.config';
 import { PRODUCTION } from '../config/constants';
 import { EMPTY_DECODED_CALLDATA_INDEXED } from '../governance/governance.constants';
-import { getLastProposalUpdateBlock } from '../governance/governance.utils';
+import {
+  getLastScannedBlockDefault,
+  getOrCreateMetadata,
+  getScanRangeOpts,
+  saveIndexingMetadata,
+} from './utils/scan.utils';
+
+const TASK_NAME = 'govenance-proposals-indexer';
 
 export async function updateGovernanceProposals() {
   if (PRODUCTION) {
@@ -29,6 +36,8 @@ export async function updateGovernanceProposals() {
 
   const mapper = getDataMapper();
 
+  const indexingMeta = await getOrCreateMetadata(TASK_NAME, getLastScannedBlockDefault());
+
   for (const chain of getSupportedChains()) {
     const timelockAddress = chain.sdk.governance.timelockAddress;
 
@@ -39,21 +48,21 @@ export async function updateGovernanceProposals() {
       continue;
     }
 
-    const lastScannedBlock = await getLastProposalUpdateBlock(chain.network);
+    const lastScannedBlock = indexingMeta.data[`${chain.network}`].lastScannedBlock;
 
     // nit: there is sense to expose this as a method in sdk, wo any proxies
     const governanceProxy = new GovernanceProxyMock(chain.sdk);
 
-    const scanRangeOpts = {
+    const chainScanRange = {
       startBlock: 0,
       endBlock: 0,
     };
 
-    await governanceProxy.processEventsScanRangePr(timelockAddress, scanRangeOpts);
+    await governanceProxy.processEventsScanRangePr(timelockAddress, chainScanRange);
 
-    if (lastScannedBlock) {
-      scanRangeOpts.startBlock = lastScannedBlock + 1;
-    }
+    const scanRangeOpts = getScanRangeOpts(chainScanRange, lastScannedBlock);
+
+    indexingMeta.data[chain.network].lastScannedBlock = scanRangeOpts.endBlock;
 
     const proposalsCreated = await chain.sdk.governance.loadScheduledProposals(scanRangeOpts);
     const proposalsStatusesChanged = await chain.sdk.governance.loadProposalsStatusChange(scanRangeOpts);
@@ -221,6 +230,8 @@ export async function updateGovernanceProposals() {
       console.info(`New dispute ${dispute.transactionHash} for proposal ${proposalDdbIdx} added`);
     }
   }
+
+  await saveIndexingMetadata(indexingMeta);
 
   console.info('Updating governance proposals ended');
 
