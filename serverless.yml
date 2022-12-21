@@ -60,6 +60,7 @@ custom:
     PROTOCOL_DATA: protocol-data-${self:custom.stage}
     CHART_DATA: chart-data-${self:custom.stage}
     GOVERNANCE_PROPOSALS_DATA: governance-proposals-data-${self:custom.stage}
+    INDEXING_META_DATA: indexing-meta-data-${self:custom.stage}
 
   merkleProofs:
     staging: 'badger-staging-merkle-proofs-v2'
@@ -121,6 +122,7 @@ provider:
     PROTOCOL_DATA: ${self:custom.table.PROTOCOL_DATA}
     CHART_DATA: ${self:custom.table.CHART_DATA}
     GOVERNANCE_PROPOSALS_DATA: ${self:custom.table.GOVERNANCE_PROPOSALS_DATA}
+    INDEXING_META_DATA: ${self:custom.table.INDEXING_META_DATA}
     # General Defintions
     REWARD_DATA: ${self:custom.merkleProofs.${self:custom.stage}}
     STAGE: ${opt:stage, self:provider.stage}
@@ -481,6 +483,18 @@ resources:
                 KeyType: 'RANGE'
             Projection:
               ProjectionType: ALL
+
+    indexingMetaData:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.table.INDEXING_META_DATA}
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: 'task'
+            KeyType: 'HASH'
+        AttributeDefinitions:
+          - AttributeName: 'task'
+            AttributeType: 'S'
 
     yieldProjectionsTable:
       Type: AWS::DynamoDB::Table
