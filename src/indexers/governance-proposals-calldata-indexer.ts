@@ -14,6 +14,8 @@ import { rfw } from '../utils/retry.utils';
 import { formScanApiUrl, getContractAbi } from '../utils/scans.utils';
 
 export async function decodeGavernanceProposalsCallData() {
+  console.info('Decoding of governance proposals calldata started');
+
   const proposals = await getProposalsWithEmptyDecodedCallData();
 
   if (proposals.length === 0) {
@@ -47,6 +49,8 @@ export async function decodeGavernanceProposalsCallData() {
   } catch (err) {
     console.error({ message: 'Unable to save governance proposals with decoded call data', err });
   }
+
+  console.info('Decoding of governance proposals calldata finished');
 
   return 'done';
 }
