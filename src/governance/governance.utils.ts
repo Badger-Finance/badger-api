@@ -154,6 +154,7 @@ export function packDdbProposalForResponse(proposal: GovernanceProposals): Gover
     currentStatus: proposal.currentStatus,
     creationBlock: proposal.creationBlock,
     updateBlock: proposal.updateBlock,
+    description: proposal.description,
     statuses: proposal.statuses,
     disputes: proposal.disputes,
     actions: proposal.actions.map((action) => ({

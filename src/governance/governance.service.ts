@@ -28,6 +28,16 @@ export class GovernanceService {
     const totalItems = await countProposalsByNetwork(chain.network);
     const totalPages = Math.ceil(totalItems / perPage);
 
+    const defaultResp: GovernanceProposalsList = {
+      page,
+      perPage,
+      totalItems,
+      totalPages,
+      items: [],
+    };
+
+    if (totalPages === 0) return defaultResp;
+
     if (page > totalPages) {
       console.error(`Page ${page} is out of range`);
       throw new OutOfRangeError(page);
@@ -35,12 +45,8 @@ export class GovernanceService {
 
     const proposals = await getProposalsList(chain.network, perPage, offset);
 
-    return {
-      page,
-      perPage,
-      totalItems,
-      totalPages,
-      items: proposals.map(packDdbProposalForResponse),
-    };
+    defaultResp.items = proposals.map(packDdbProposalForResponse);
+
+    return defaultResp;
   }
 }

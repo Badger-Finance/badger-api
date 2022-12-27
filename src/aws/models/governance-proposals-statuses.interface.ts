@@ -14,6 +14,9 @@ export class GovernanceProposalsStatuses {
   value!: number;
 
   @attribute()
+  reasoning!: string;
+
+  @attribute()
   transactionHash!: string;
 
   @attribute()
