@@ -41,6 +41,12 @@ export class ProposalResponse implements Omit<GovernanceProposal, 'contractAddr'
   @Property()
   public updateBlock!: number;
 
+  @Title('description')
+  @Description('description of the proposal')
+  @Example('Add a new token to the Sett')
+  @Property()
+  public description!: string;
+
   @Title('statuses')
   @Description('status history of the proposal')
   @Example([

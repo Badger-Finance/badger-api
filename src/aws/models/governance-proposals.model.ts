@@ -52,6 +52,9 @@ export class GovernanceProposals {
   @attribute()
   createdAt!: number;
 
+  @attribute()
+  description!: string;
+
   @attribute({ memberType: embed(GovernanceProposalsStatuses) })
   statuses!: Array<GovernanceProposalsStatuses>;
 

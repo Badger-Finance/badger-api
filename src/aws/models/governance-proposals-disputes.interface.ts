@@ -5,16 +5,10 @@ export class GovernanceProposalsDisputes {
   name!: string;
 
   @attribute()
-  ruling!: boolean | null;
-
-  @attribute()
   sender!: string;
 
   @attribute()
   status!: string;
-
-  @attribute()
-  data!: string | null;
 
   @attribute()
   transactionHash!: string;

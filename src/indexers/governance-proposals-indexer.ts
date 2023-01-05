@@ -1,12 +1,11 @@
 import { DataMapper } from '@aws/dynamodb-data-mapper';
 import {
   CallDisputedEvent,
-  CallDisputedResolvedEvent,
   CallExecutedEvent,
   CallScheduledEvent,
   CancelledEvent,
+  RejectedEvent,
 } from '@badger-dao/sdk/lib/contracts/TimelockController';
-import { GovernanceProxyMock } from '@badger-dao/sdk/lib/governance/mocks/governance.proxy.mock';
 
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { GovernanceProposals } from '../aws/models/governance-proposals.model';
@@ -50,15 +49,12 @@ export async function updateGovernanceProposals() {
 
     const lastScannedBlock = indexingMeta.data[`${chain.network}`].lastScannedBlock;
 
-    // nit: there is sense to expose this as a method in sdk, wo any proxies
-    const governanceProxy = new GovernanceProxyMock(chain.sdk);
-
     const chainScanRange = {
       startBlock: 0,
       endBlock: 0,
     };
 
-    await governanceProxy.processEventsScanRangePr(timelockAddress, chainScanRange);
+    await chain.sdk.governance.processEventsScanRange(timelockAddress, chainScanRange);
 
     const scanRangeOpts = getScanRangeOpts(chainScanRange, lastScannedBlock);
 
@@ -73,8 +69,8 @@ export async function updateGovernanceProposals() {
       continue;
     }
 
-    const updatedProposalsStatuses: (CallExecutedEvent | CancelledEvent)[] = [];
-    const updatedProposalsDisputes: (CallDisputedEvent | CallDisputedResolvedEvent)[] = [];
+    const updatedProposalsStatuses: (CallExecutedEvent | CancelledEvent | RejectedEvent)[] = [];
+    const updatedProposalsDisputes: CallDisputedEvent[] = [];
 
     // save new created proposals
     const updatedProposals: GovernanceProposals[] = [];
@@ -149,6 +145,7 @@ export async function updateGovernanceProposals() {
         name: status.event,
         sender: status.args.sender,
         status: status.args.status,
+        reasoning: _isControllEvent(status.event) ? (<ControllEvents>status).args.reasoning : '',
         transactionHash: status.transactionHash,
         blockNumber: block.number,
         updatedAt: block.timestamp,
@@ -207,10 +204,8 @@ export async function updateGovernanceProposals() {
 
       const proposalDispute = Object.assign(new GovernanceProposalsDisputes(), {
         name: dispute.event,
-        ruling: dispute.event === 'CallDisputedResolved' ? (<CallDisputedResolvedEvent>dispute).args.ruling : null,
         sender: dispute.args.sender,
         status: dispute.args.status,
-        data: dispute.event === 'CallDisputedResolved' ? (<CallDisputedResolvedEvent>dispute).args.data : null,
         transactionHash: dispute.transactionHash,
         blockNumber: block.number,
         updatedAt: block.timestamp,
@@ -242,11 +237,11 @@ async function saveRootProposal(
   chain: Chain,
   timelockAddress: string,
   proposal: CallScheduledEvent,
-  proposalsStatusesChanged: (CallExecutedEvent | CancelledEvent)[],
-  proposalsDisputed: (CallDisputedEvent | CallDisputedResolvedEvent)[],
+  proposalsStatusesChanged: (CallExecutedEvent | CancelledEvent | RejectedEvent)[],
+  proposalsDisputed: CallDisputedEvent[],
   updatedProposals: GovernanceProposals[],
-  updatedProposalsStatuses: (CallExecutedEvent | CancelledEvent)[],
-  updatedProposalsDisputes: (CallDisputedEvent | CallDisputedResolvedEvent)[],
+  updatedProposalsStatuses: (CallExecutedEvent | CancelledEvent | RejectedEvent)[],
+  updatedProposalsDisputes: CallDisputedEvent[],
 ) {
   let latestEvent!: GovernanceProposalsStatuses | GovernanceProposalsDisputes;
 
@@ -264,6 +259,7 @@ async function saveRootProposal(
           name: e.event,
           sender: e.args.sender,
           status: e.args.status,
+          reasoning: _isControllEvent(e.event) ? (<ControllEvents>e).args.reasoning : '',
           transactionHash: e.transactionHash,
           blockNumber: block.number,
           updatedAt: block.timestamp,
@@ -291,7 +287,6 @@ async function saveRootProposal(
 
         const proposalDispute = Object.assign(new GovernanceProposalsDisputes(), {
           name: e.event,
-          ruling: e.event === 'CallDisputedResolved' ? (<CallDisputedResolvedEvent>e).args.ruling : null,
           sender: e.args.sender,
           status: e.args.status,
           transactionHash: e.transactionHash,
@@ -326,6 +321,7 @@ async function saveRootProposal(
       readyTime: proposal.args.readyTime.toNumber(),
       currentStatus: !latestEvent ? proposal.args.status : latestEvent.status,
       creationBlock: block.number,
+      description: proposal.args.description,
       updateBlock: !latestEvent ? block.number : latestEvent.blockNumber,
       statuses: proposalsStatuses,
       disputes: proposalsDisputes,
@@ -356,9 +352,9 @@ async function saveProposalsAction(
   mapper: DataMapper,
   timelockAddress: string,
   proposal: CallScheduledEvent,
-  proposalsStatusesChanged: (CallExecutedEvent | CancelledEvent)[],
+  proposalsStatusesChanged: (CallExecutedEvent | CancelledEvent | RejectedEvent)[],
   updatedProposals: GovernanceProposals[],
-  updatedProposalsStatuses: (CallExecutedEvent | CancelledEvent)[],
+  updatedProposalsStatuses: (CallExecutedEvent | CancelledEvent | RejectedEvent)[],
 ) {
   let rootFromDdb = false;
   let rootProposal: GovernanceProposals | undefined;
@@ -414,4 +410,10 @@ async function saveProposalsAction(
   }
 
   console.info(`New action ${proposal.args.index} for ${rootProposal.idx} added`);
+}
+
+type ControllEvents = CancelledEvent | RejectedEvent;
+
+function _isControllEvent(eventName: string | undefined) {
+  return ['Cancelled', 'Rejected'].includes(eventName || '');
 }
