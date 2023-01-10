@@ -1,12 +1,12 @@
+import { Network } from '@badger-dao/sdk';
 import { BlocksRangeOptions } from '@badger-dao/sdk/lib/common';
-import { Network } from '@badger-dao/sdk/lib/config/enums/network.enum';
 
 import { getDataMapper } from '../../aws/dynamodb.utils';
 import { IndexingMetadata } from '../../aws/models/indexing-metadata.model';
 import { MAX_SCAN_RANGE } from '../constants/scan.constants';
 import { LastScannedBlockMeta } from '../interfaces/last-scanned-block-meta.interface';
 
-export async function getOrCreateMetadata<T>(task: string, defaultValue: T): Promise<IndexingMetadata<T>> {
+export async function getOrCreateMetadata<T>(task: string): Promise<IndexingMetadata<T>> {
   const mapper = getDataMapper();
 
   let metadata!: IndexingMetadata<T>;
@@ -14,17 +14,18 @@ export async function getOrCreateMetadata<T>(task: string, defaultValue: T): Pro
   try {
     metadata = await mapper.get(Object.assign(new IndexingMetadata<T>(), { task }));
   } catch (e) {
-    metadata = Object.assign(new IndexingMetadata<T>(), { task, data: defaultValue });
+    metadata = Object.assign(new IndexingMetadata<T>(), { task, data: {} });
   }
 
   return metadata;
 }
 
-export function getLastScannedBlockDefault(): LastScannedBlockMeta {
-  return Object.values(Network).reduce((acc, network) => {
-    acc[`${<Network>network}`] = { lastScannedBlock: 0 };
-    return acc;
-  }, <LastScannedBlockMeta>{});
+export function getLastScanedBlock<T extends LastScannedBlockMeta>(
+  indexingMetaData: T,
+  network: Network,
+  address: string,
+) {
+  return indexingMetaData[network]?.[address]?.lastScannedBlock || 0;
 }
 
 export function getScanRangeOpts(

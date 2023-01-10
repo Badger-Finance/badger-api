@@ -16,12 +16,8 @@ import { getSupportedChains } from '../chains/chains.utils';
 import { Chain } from '../chains/config/chain.config';
 import { PRODUCTION } from '../config/constants';
 import { EMPTY_DECODED_CALLDATA_INDEXED } from '../governance/governance.constants';
-import {
-  getLastScannedBlockDefault,
-  getOrCreateMetadata,
-  getScanRangeOpts,
-  saveIndexingMetadata,
-} from './utils/scan.utils';
+import { LastScannedBlockMeta } from './interfaces/last-scanned-block-meta.interface';
+import { getLastScanedBlock, getOrCreateMetadata, getScanRangeOpts, saveIndexingMetadata } from './utils/scan.utils';
 
 const TASK_NAME = 'govenance-proposals-indexer';
 
@@ -35,7 +31,7 @@ export async function updateGovernanceProposals() {
 
   const mapper = getDataMapper();
 
-  const indexingMeta = await getOrCreateMetadata(TASK_NAME, getLastScannedBlockDefault());
+  const indexingMeta = await getOrCreateMetadata<LastScannedBlockMeta>(TASK_NAME);
 
   for (const chain of getSupportedChains()) {
     const timelockAddress = chain.sdk.governance.timelockAddress;
@@ -47,7 +43,7 @@ export async function updateGovernanceProposals() {
       continue;
     }
 
-    const lastScannedBlock = indexingMeta.data[`${chain.network}`].lastScannedBlock;
+    const lastScannedBlock = getLastScanedBlock(indexingMeta.data, chain.network, timelockAddress);
 
     const chainScanRange = {
       startBlock: 0,
@@ -58,7 +54,12 @@ export async function updateGovernanceProposals() {
 
     const scanRangeOpts = getScanRangeOpts(chainScanRange, lastScannedBlock);
 
-    indexingMeta.data[chain.network].lastScannedBlock = scanRangeOpts.endBlock;
+    indexingMeta.data[chain.network] = {
+      ...(indexingMeta.data[chain.network] || {}),
+      [timelockAddress]: {
+        lastScannedBlock: chainScanRange.endBlock,
+      },
+    };
 
     const proposalsCreated = await chain.sdk.governance.loadScheduledProposals(scanRangeOpts);
     const proposalsStatusesChanged = await chain.sdk.governance.loadProposalsStatusChange(scanRangeOpts);
