@@ -4,4 +4,4 @@ export interface LastScannedBlock {
   lastScannedBlock: number;
 }
 
-export type LastScannedBlockMeta = Record<Network, LastScannedBlock>;
+export type LastScannedBlockMeta = Record<Network, Record<string, LastScannedBlock>>;
