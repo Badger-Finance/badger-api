@@ -34,9 +34,9 @@ export async function updateGovernanceProposals() {
   const indexingMeta = await getOrCreateMetadata<LastScannedBlockMeta>(TASK_NAME);
 
   for (const chain of getSupportedChains()) {
-    const timelockAddress = chain.sdk.governance.timelockAddress;
-
     await chain.sdk.ready();
+
+    const timelockAddress = chain.sdk.governance.timelockAddress;
 
     if (!timelockAddress) {
       console.info(`No timelock address for ${chain.network}, skipping`);
