@@ -28,6 +28,9 @@ export async function getLastProposalUpdateBlock(network: Network) {
 
 export async function getProposalByIdx(chain: Chain, proposalId: string) {
   const mapper = getDataMapper();
+
+  await chain.sdk.ready();
+
   const timelockAddress = chain.sdk.governance.timelockAddress;
 
   if (!timelockAddress) {
