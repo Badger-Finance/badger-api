@@ -3,6 +3,7 @@ import BadgerSDK, { GasPrices, getNetworkConfig, Network, SDKProvider } from '@b
 import { BadRequest, NotFound } from '@tsed/exceptions';
 import { ethers } from 'ethers';
 
+import { GRAPH_URL } from '../../config/constants';
 import { TOKENS } from '../../config/tokens.config';
 import { TokenConfig } from '../../tokens/interfaces/token-config.interface';
 import { ChainVaults } from '../vaults/chain.vaults';
@@ -22,7 +23,7 @@ export abstract class Chain {
     const { chainId } = config;
     this.chainId = chainId;
     this.vaults = new ChainVaults(network);
-    this.sdk = new BadgerSDK({ network, provider });
+    this.sdk = new BadgerSDK({ network, provider, ...(GRAPH_URL ? { graphURL: GRAPH_URL } : {}) });
   }
 
   get provider(): providers.MulticallProvider {

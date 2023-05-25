@@ -34,6 +34,7 @@ export const PANCAKESWAP_URL = getEnvVar('PANCAKESWAP');
 export const QUICKSWAP_URL = getEnvVar('QUICKSWAP');
 export const SWAPR_URL = getEnvVar('SWAPR');
 export const BALANCER_URL = getEnvVar('BALANCER');
+export const GRAPH_URL = getEnvVar('GRAPH_URL');
 
 // general constants
 export const STAGE = getEnvVar('STAGE');
