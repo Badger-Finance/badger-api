@@ -94,6 +94,7 @@ provider:
     MATIC_RPC: ${env:MATIC_RPC}
     ARBITRUM_RPC: ${env:ARBITRUM_RPC}
     # 3rd party API keys
+    GRAPH_URL: ${env:GRAPH_URL}
     DISCORD_WEBHOOK_URL: ${env:DISCORD_WEBHOOK_URL}
     UNISWAP: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2'
     SUSHISWAP: 'https://api.thegraph.com/subgraphs/name/sushiswap/exchange'
