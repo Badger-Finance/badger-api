@@ -1,3 +1,5 @@
+import { Network } from '@badger-dao/sdk';
+
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { CachedYieldSource } from '../aws/models/cached-yield-source.interface';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
@@ -7,7 +9,7 @@ import { rfw } from '../utils/retry.utils';
 import { getVaultPerformance, queryYieldSources } from '../vaults/vaults.utils';
 
 export async function refreshApySnapshots() {
-  for (const chain of getSupportedChains()) {
+  for (const chain of getSupportedChains([Network.Ethereum])) {
     const vaults = await chain.vaults.all();
     await Promise.all(vaults.map(async (vault) => refreshChainApySnapshots(chain, vault)));
   }
