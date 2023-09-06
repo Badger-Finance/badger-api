@@ -1,3 +1,5 @@
+import { Network } from '@badger-dao/sdk';
+
 import { getSupportedChains } from '../chains/chains.utils';
 import { Chain } from '../chains/config/chain.config';
 import { PricingType } from '../prices/enums/pricing-type.enum';
@@ -7,7 +9,7 @@ import { lookUpAddrByTokenName } from '../tokens/tokens.utils';
 import { rfw } from '../utils/retry.utils';
 
 export async function indexPrices() {
-  for (const chain of getSupportedChains()) {
+  for (const chain of getSupportedChains([Network.Ethereum])) {
     try {
       const { tokens } = chain;
       const chainTokens = Object.entries(tokens).map((e) => ({

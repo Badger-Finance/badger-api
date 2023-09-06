@@ -18,8 +18,8 @@ export const SUPPORTED_NETWORKS = [
   Network.Optimism,
 ];
 
-export function getSupportedChains(): Chain[] {
-  return SUPPORTED_NETWORKS.map((n) => getOrCreateChain(n));
+export function getSupportedChains(supportedNetworks = SUPPORTED_NETWORKS): Chain[] {
+  return supportedNetworks.map((n) => getOrCreateChain(n));
 }
 
 export function getOrCreateChain(network?: Network): Chain {

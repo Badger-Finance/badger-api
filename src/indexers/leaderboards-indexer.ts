@@ -1,4 +1,4 @@
-import { BadgerType, BadgerTypeMap } from '@badger-dao/sdk';
+import { BadgerType, BadgerTypeMap, Network } from '@badger-dao/sdk';
 import { ethers } from 'ethers';
 
 import { getDataMapper, getLeaderboardKey } from '../aws/dynamodb.utils';
@@ -10,7 +10,7 @@ import { Chain } from '../chains/config/chain.config';
 import { getBadgerType } from '../leaderboards/leaderboards.utils';
 
 export async function indexBoostLeaderBoard() {
-  for (const chain of getSupportedChains()) {
+  for (const chain of getSupportedChains([Network.Ethereum])) {
     const chainResults = await generateChainBoostsLeaderBoard(chain);
     const summary: BadgerTypeMap = {
       [BadgerType.Basic]: 0,

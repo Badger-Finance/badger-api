@@ -73,7 +73,7 @@ export async function refreshClaimableBalances(chain: Chain) {
 }
 
 export async function refreshUserAccounts() {
-  const chains = getSupportedChains().filter((c) => c.network !== Network.BinanceSmartChain);
+  const chains = getSupportedChains([Network.Ethereum]);
   await Promise.all(
     chains.map(async (chain) => {
       try {

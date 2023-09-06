@@ -1,4 +1,4 @@
-import { Protocol } from '@badger-dao/sdk';
+import { Network, Protocol } from '@badger-dao/sdk';
 
 import { getDataMapper, getVaultEntityId } from '../aws/dynamodb.utils';
 import { VaultDefinitionModel } from '../aws/models/vault-definition.model';
@@ -13,7 +13,7 @@ import { rfw } from '../utils/retry.utils';
 import { getCachedVault } from '../vaults/vaults.utils';
 
 export async function refreshVaultBalances() {
-  for (const chain of getSupportedChains()) {
+  for (const chain of getSupportedChains([Network.Ethereum])) {
     const vaults = await chain.vaults.all();
     await Promise.all(vaults.map(async (v) => updateVaultTokenBalances(chain, v)));
   }

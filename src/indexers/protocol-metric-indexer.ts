@@ -1,3 +1,5 @@
+import { Network } from '@badger-dao/sdk';
+
 import { getDataMapper } from '../aws/dynamodb.utils';
 import { ProtocolMetricSnapshot } from '../aws/models/protocol-metric-snapshot.model';
 import { getSupportedChains } from '../chains/chains.utils';
@@ -7,7 +9,7 @@ import { rfw } from '../utils/retry.utils';
 
 export const indexProtocolMetrics = async () => {
   const mapper = getDataMapper();
-  const metric = await rfw(getChainMetrics)(getSupportedChains());
+  const metric = await rfw(getChainMetrics)(getSupportedChains([Network.Ethereum]));
   const metricSnapshot = Object.assign(new ProtocolMetricSnapshot(), { ...metric, type: MetricType.Protocol });
 
   try {

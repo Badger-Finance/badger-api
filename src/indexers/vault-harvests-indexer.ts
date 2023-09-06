@@ -1,3 +1,5 @@
+import { Network } from '@badger-dao/sdk';
+
 import { getDataMapper, getVaultEntityId } from '../aws/dynamodb.utils';
 import { VaultYieldEvent } from '../aws/models/vault-yield-event.model';
 import { getSupportedChains } from '../chains/chains.utils';
@@ -5,7 +7,7 @@ import { rfw } from '../utils/retry.utils';
 import { HARVEST_SCAN_BLOCK_INCREMENT, loadYieldEvents } from '../vaults/harvests.utils';
 
 export async function updateVaultHarvests() {
-  const chains = getSupportedChains();
+  const chains = getSupportedChains([Network.Ethereum]);
   const mapper = getDataMapper();
 
   for (const chain of chains) {

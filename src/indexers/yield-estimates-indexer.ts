@@ -1,4 +1,4 @@
-import BadgerSDK, { ONE_DAY_MS, TokenBalance, VaultState, VaultVersion } from '@badger-dao/sdk';
+import BadgerSDK, { Network, ONE_DAY_MS, TokenBalance, VaultState, VaultVersion } from '@badger-dao/sdk';
 import {
   BadgerTreeDistribution_OrderBy,
   OrderDirection,
@@ -114,7 +114,7 @@ async function captureYieldEstimate(chain: Chain, vault: VaultDefinitionModel, n
 }
 
 export async function refreshYieldEstimates() {
-  const chains = getSupportedChains();
+  const chains = getSupportedChains([Network.Ethereum]);
   const now = Date.now();
 
   for (const chain of chains) {

@@ -1,4 +1,5 @@
 import { DataMapper } from '@aws/dynamodb-data-mapper';
+import { Network } from '@badger-dao/sdk';
 import {
   CallDisputedEvent,
   CallExecutedEvent,
@@ -33,7 +34,7 @@ export async function updateGovernanceProposals() {
 
   const indexingMeta = await getOrCreateMetadata<LastScannedBlockMeta>(TASK_NAME);
 
-  for (const chain of getSupportedChains()) {
+  for (const chain of getSupportedChains([Network.Ethereum])) {
     await chain.sdk.ready();
 
     const timelockAddress = chain.sdk.governance.timelockAddress;
