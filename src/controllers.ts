@@ -3,7 +3,6 @@ import { AccountsV3Controller } from './accounts/accounts.v3.controller';
 import { ChartsController } from './charts/charts.controller';
 import { DevelopmentController } from './dev/dev.controller';
 import { GasController } from './gas/gas.controller';
-import { GovernanceController } from './governance/governance.controller';
 import { LeaderBoardsController } from './leaderboards/leaderboards.controller';
 import { MetricsController } from './metrics/metrics.controller';
 import { PricesController } from './prices/prices.controller';
@@ -45,7 +44,6 @@ export const V3_CONTROLLERS = [
   MetricsController,
   PricesController,
   TokensController,
-  GovernanceController,
 
   DevelopmentController,
 

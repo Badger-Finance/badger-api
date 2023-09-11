@@ -47,7 +47,6 @@
     "class-validator": "^0.13.2",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
-    "ethers-proxies": "^1.0.0",
     "globby": "^12.0.2",
     "graphql": "^16.1.0",
     "graphql-request": "^3.7.0",
