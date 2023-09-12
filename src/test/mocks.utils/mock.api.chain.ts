@@ -2,7 +2,6 @@ import { providers } from '@0xsequence/multicall';
 import { DataMapper, QueryIterator, StringToAnyObjectMap } from '@aws/dynamodb-data-mapper';
 import BadgerSDK, {
   Currency,
-  GovernanceService,
   Network,
   ONE_DAY_MS,
   RegistryService,
@@ -96,7 +95,6 @@ export function setupMockChain(
   // setup chain sdk
   jest.spyOn(BadgerSDK.prototype, 'getMulticallProvider').mockImplementation((_p) => mockMulticall);
   jest.spyOn(RegistryService.prototype, 'ready').mockImplementation();
-  jest.spyOn(GovernanceService.prototype, 'ready').mockImplementation();
   jest.spyOn(RewardsService.prototype, 'ready').mockImplementation();
   jest.spyOn(RewardsService.prototype, 'hasBadgerTree').mockImplementation(() => true);
 
