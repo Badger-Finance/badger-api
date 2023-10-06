@@ -28,5 +28,5 @@ export function isSlsOffline() {
 }
 
 export function isJestEnv() {
-  return process.env.NODE_ENV === 'test';
+  return process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'local_test';
 }
