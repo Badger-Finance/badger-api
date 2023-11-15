@@ -63,6 +63,7 @@ env:
   SESSION_NAME: badger-api-deployer
   AWS_REGION: us-west-1
   GRAPH_API_KEY: ${{ secrets.GRAPH_API_KEY }}
+  GRAPH_URL: ${{ secrets.GRAPH_URL }}
   ETH_RPC: ${{ secrets.ETH_RPC }}
   BSC_RPC: ${{ secrets.BSC_RPC }}
   MATIC_RPC: ${{ secrets.MATIC_RPC }}
